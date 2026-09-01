@@ -1,9 +1,6 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# anduinos-installer-beta translations.
+# Copyright (C) 2026 AnduinOS contributors
+# This file is distributed under the same license as anduinos-installer-beta.
 msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-installer-beta\n"
@@ -1443,10 +1440,15 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root and Swap partitions with exact sizes."
+msgid ""
+"Keep Windows or other partitions, reuse or create an ESP, and design Root "
+"and Swap partitions with exact sizes."
 msgstr ""
 
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgid ""
+"Manual changes are destructive. Existing partition starts are never moved. "
+"Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
+" or unclean volumes are never resized."
 msgstr ""
 
 msgid "Install Alongside Automatically"
@@ -1474,7 +1476,9 @@ msgstr ""
 msgid "Advanced: Manual Partitioning"
 msgstr ""
 
-msgid "Windows was detected. Its partitions remain preserved unless you explicitly mark them for deletion."
+msgid ""
+"Windows was detected. Its partitions remain preserved unless you explicitly "
+"mark them for deletion."
 msgstr ""
 
 msgid "Initialize New GPT"
@@ -1483,13 +1487,17 @@ msgstr ""
 msgid "Existing partitions"
 msgstr ""
 
-msgid "Reuse a healthy existing ESP without formatting it, or create a new one in available space."
+msgid ""
+"Reuse a healthy existing ESP without formatting it, or create a new one in "
+"available space."
 msgstr ""
 
 msgid "Add a partition"
 msgstr ""
 
-msgid "Choose an available range, exact start position, and size. Nothing is written until installation begins."
+msgid ""
+"Choose an available range, exact start position, and size. Nothing is "
+"written until installation begins."
 msgstr ""
 
 msgid "Role"
@@ -1523,7 +1531,9 @@ msgstr ""
 msgid "Edit {role} partition"
 msgstr ""
 
-msgid "Choose an exact position and size inside the available range. Other planned partitions are not moved."
+msgid ""
+"Choose an exact position and size inside the available range. Other planned "
+"partitions are not moved."
 msgstr ""
 
 msgid "Apply Changes"
@@ -1532,22 +1542,40 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-msgid "BitLocker was detected. Return to Windows, open Manage BitLocker, choose Turn off BitLocker, and wait until decryption reaches 100%. Suspending protection is not enough. Back up the recovery key, fully shut Windows down, then start the installer again."
+msgid ""
+"BitLocker was detected. Return to Windows, open Manage BitLocker, choose "
+"Turn off BitLocker, and wait until decryption reaches 100%. Suspending "
+"protection is not enough. Back up the recovery key, fully shut Windows down,"
+" then start the installer again."
 msgstr ""
 
-msgid "Windows is hibernated or Fast Startup is active. In an Administrator Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s /t 0'. Start the installer again only after Windows has fully shut down."
+msgid ""
+"Windows is hibernated or Fast Startup is active. In an Administrator "
+"Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s "
+"/t 0'. Start the installer again only after Windows has fully shut down."
 msgstr ""
 
-msgid "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk C: /f', allow every requested reboot to finish, then fully shut Windows down before trying again."
+msgid ""
+"Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk"
+" C: /f', allow every requested reboot to finish, then fully shut Windows "
+"down before trying again."
 msgstr ""
 
-msgid "This target would require moving critical NTFS MFT metadata through a currently unsafe upstream code path. Choose a larger Windows size or shrink the volume from Windows."
+msgid ""
+"This target would require moving critical NTFS MFT metadata through a "
+"currently unsafe upstream code path. Choose a larger Windows size or shrink "
+"the volume from Windows."
 msgstr ""
 
-msgid "This NTFS volume is mounted or in use. Unmount it and rescan storage before continuing."
+msgid ""
+"This NTFS volume is mounted or in use. Unmount it and rescan storage before "
+"continuing."
 msgstr ""
 
-msgid "This operation moves NTFS data and changes the GPT partition boundary. A power loss, failing drive, firmware fault or filesystem bug can cause permanent data loss. Back up all important Windows files before continuing."
+msgid ""
+"This operation moves NTFS data and changes the GPT partition boundary. A "
+"power loss, failing drive, firmware fault or filesystem bug can cause "
+"permanent data loss. Back up all important Windows files before continuing."
 msgstr ""
 
 msgid "New Windows partition size"
@@ -1564,14 +1592,18 @@ msgstr ""
 msgid "Windows: {windows} · New unallocated space: {free}"
 msgstr ""
 
-msgid "I have backed up my data and understand that shrinking an existing Windows partition can cause permanent data loss."
+msgid ""
+"I have backed up my data and understand that shrinking an existing Windows "
+"partition can cause permanent data loss."
 msgstr ""
 
 #, python-brace-format
 msgid "Change the size of {partition}?"
 msgstr ""
 
-msgid "The partition start will not move. Only its end will move left, creating unallocated space immediately after it."
+msgid ""
+"The partition start will not move. Only its end will move left, creating "
+"unallocated space immediately after it."
 msgstr ""
 
 msgid "Undo Planned Resize"
@@ -1646,7 +1678,9 @@ msgstr ""
 msgid "New"
 msgstr ""
 
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
+msgid ""
+"No new partitions yet. Add an ESP if needed, one Root partition, and "
+"optionally Swap."
 msgstr ""
 
 #, python-brace-format
@@ -1663,7 +1697,9 @@ msgstr ""
 msgid "Complete the plan: {requirements}."
 msgstr ""
 
-msgid "Layout is valid. Only the listed resizes, deletes, creates and formats will be sent to the privileged executor."
+msgid ""
+"Layout is valid. Only the listed resizes, deletes, creates and formats will "
+"be sent to the privileged executor."
 msgstr ""
 
 msgid "That partition role already exists."
@@ -1672,7 +1708,9 @@ msgstr ""
 msgid "Initialize a new GPT?"
 msgstr ""
 
-msgid "Every existing partition and all data on this disk will be deleted. You must then create a new ESP and Root partition."
+msgid ""
+"Every existing partition and all data on this disk will be deleted. You must"
+" then create a new ESP and Root partition."
 msgstr ""
 
 msgid "Initialize GPT"
@@ -1720,13 +1758,19 @@ msgstr ""
 msgid "Resized partitions"
 msgstr ""
 
-msgid "Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS NVRAM entry."
+msgid ""
+"Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS "
+"NVRAM entry."
 msgstr ""
 
 msgid "Manual storage selection is missing. Return and review it."
 msgstr ""
 
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgid ""
+"⚠ Listed NTFS resizes will move filesystem data and partition boundaries. "
+"Listed partitions will be deleted and every listed new partition will be "
+"formatted. Back up important data first; these partitioning operations "
+"cannot be undone."
 msgstr ""
 
 msgid "Apply this manual disk layout?"
@@ -1741,14 +1785,70 @@ msgid ""
 "\n"
 msgstr ""
 
-msgid "Only the explicitly listed partitions will be deleted or formatted. Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
+msgid ""
+"Only the explicitly listed partitions will be deleted or formatted. "
+"Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
 msgstr ""
 
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
+msgid ""
+"Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
+"shrunk after safety checks."
 msgstr ""
 
 msgid "XFS (classic, scalable)"
 msgstr ""
 
 msgid "F2FS (flash-optimized)"
+msgstr ""
+
+#: src/pages.py:3004
+msgid "0 GiB · ZRAM only"
+msgstr ""
+
+#: src/pages.py:2900
+msgid ""
+"Disk Swap will not be created. ZRAM remains enabled, but sustained memory "
+"pressure can terminate applications and hibernation is unavailable. This is "
+"strongly discouraged."
+msgstr ""
+
+#: src/pages.py:6695
+msgid "Review your custom Swap size"
+msgstr ""
+
+#: src/pages.py:2927
+msgid ""
+"This exceeds the AnduinOS recommendation. It consumes more disk space and "
+"normally does not improve runtime performance."
+msgstr ""
+
+#: src/pages.py:2913
+msgid ""
+"This is below AnduinOS's runtime safety target. ZRAM still works, but heavy "
+"browser or application workloads can run out of backing memory sooner; "
+"hibernation is also unavailable."
+msgstr ""
+
+#: src/pages.py:2920
+msgid ""
+"This size protects ordinary memory pressure, but is smaller than the "
+"hibernation target. Hibernation may fail or be unavailable."
+msgstr ""
+
+#: src/pages.py:3028
+msgid ""
+"ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses"
+" priority 10."
+msgstr ""
+
+#: src/pages.py:6698
+msgid "ZRAM will remain enabled regardless of this choice."
+msgstr ""
+
+#: src/pages.py:3008
+msgid "{size} GiB · Max"
+msgstr ""
+
+#: src/pages.py:2895
+msgid "✓ Best performance — AnduinOS recommended Swap size."
 msgstr ""

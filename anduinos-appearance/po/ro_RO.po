@@ -2,7 +2,7 @@
 # Copyright (C) 2026 AnduinOS Team
 msgid ""
 msgstr ""
-"Project-Id-Version: anduinos-appearance 2.0\n"
+"Project-Id-Version: anduinos-appearance\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-27 05:08+0000\n"
 "Language-Team: Romanian\n"
@@ -10,7 +10,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);\n"
 
 #: src/anduinos-appearance:535
 msgid "About AnduinOS Appearance"
@@ -287,6 +287,187 @@ msgstr "Statistici de rețea"
 #: src/anduinos-appearance:344
 msgid "Simple Weather"
 msgstr "Simple Weather"
+
+#: src/anduinos-appearance:550
+msgid "Backup and Restore"
+msgstr "Copie de rezervă și restaurare"
+
+#: src/anduinos-appearance:664
+msgid "Strict Restore"
+msgstr "Restaurare completă"
+
+#: src/anduinos-appearance:629
+msgid "✓ GNOME settings exported"
+msgstr "✓ Setările GNOME au fost exportate"
+
+#: src/anduinos-appearance:472
+msgid "Failed to configure the weather extension."
+msgstr "Nu s-a putut configura extensia meteo."
+
+#: src/anduinos-appearance:693
+msgid "✗ Import failed; previous settings were restored"
+msgstr "✗ Importul a eșuat; setările anterioare au fost restaurate"
+
+#: src/anduinos-appearance:566
+msgid "Import GNOME settings"
+msgstr "Importă setările GNOME"
+
+#: src/anduinos-appearance:353
+msgid ""
+"1. Approximate location (ipapi.co)\n"
+"AnduinOS will make one HTTPS request to ipapi.co. Its operator, Kloudend, Inc., will see your public IP address and may use it to estimate your city, country, and approximate coordinates.\n"
+"\n"
+"2. Weather data (Open-Meteo)\n"
+"The weather extension will send the selected approximate coordinates to Open-Meteo, operated by OpenMeteo GmbH. The service will also see your public IP address and may retain API logs for up to 90 days.\n"
+"\n"
+"AnduinOS is not affiliated with, sponsored by, or endorsed by either third-party service. If location detection fails, AnduinOS will use an offline estimate based on your system timezone.\n"
+"\n"
+"Privacy policies:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+msgstr ""
+"1. Locație aproximativă (ipapi.co)\n"
+"AnduinOS va efectua o singură cerere HTTPS către ipapi.co. Operatorul acestuia, Kloudend, Inc., va vedea adresa IP publică și o poate folosi pentru a estima orașul, țara și coordonatele aproximative.\n"
+"\n"
+"2. Date meteo (Open-Meteo)\n"
+"Extensia de prognoză meteo va trimite coordonatele aproximative selectate către Open-Meteo, operat de OpenMeteo GmbH. Serviciul va vedea, de asemenea, adresa IP publică și poate păstra jurnalele API până la 90 de zile.\n"
+"\n"
+"AnduinOS nu este afiliat, sponsorizat sau recomandat de niciunul dintre aceste servicii terțe. Dacă detectarea locației eșuează, AnduinOS va folosi o estimare offline bazată pe fusul orar al sistemului.\n"
+"\n"
+"Politici de confidențialitate:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+
+#: src/anduinos-appearance:373
+msgid "Decline"
+msgstr "Respinge"
+
+#: src/anduinos-appearance:275
+msgid "Update approximate weather location"
+msgstr "Actualizează locația aproximativă pentru prognoza meteo"
+
+#: src/anduinos-appearance:370
+msgid "Weather Services Privacy Agreement"
+msgstr "Acord de confidențialitate pentru serviciile meteo"
+
+#: src/anduinos-appearance:558
+msgid "Save the current settings as a readable INI file"
+msgstr "Salvează setările curente într-un fișier INI ușor de citit"
+
+#: src/anduinos-appearance:663
+msgid "Merge Import"
+msgstr "Import cu îmbinare"
+
+#: src/anduinos-appearance:622 src/anduinos-appearance:626
+msgid "✗ Failed to export GNOME settings"
+msgstr "✗ Eșec la exportul setărilor GNOME"
+
+#: src/anduinos-appearance:414
+msgid "Failed to save weather permission."
+msgstr "Nu s-a putut salva permisiunea pentru funcția meteo."
+
+#: src/anduinos-appearance:656
+msgid "How should these settings be imported?"
+msgstr "Cum ar trebui importate aceste setări?"
+
+#: src/anduinos-appearance:482
+#, python-brace-format
+msgid "Location service unavailable; using {location} from your timezone."
+msgstr ""
+"Serviciul de localizare nu este disponibil; se utilizează {location}, pe "
+"baza fusului orar al sistemului."
+
+#: src/anduinos-appearance:478
+#, python-brace-format
+msgid "Weather location set to {location}."
+msgstr "Locația pentru funcția meteo a fost setată la {location}."
+
+#: src/anduinos-appearance:599
+msgid "INI settings files"
+msgstr "Fișiere de setări INI"
+
+#: src/anduinos-appearance:706
+msgid "✓ Settings imported. Log out and back in to apply all changes."
+msgstr ""
+"✓ Setările au fost importate. Deconectează-te și reconectează-te pentru a "
+"aplica toate modificările."
+
+#: src/anduinos-appearance:559
+msgid "Export…"
+msgstr "Exportă…"
+
+#: src/anduinos-appearance:699
+msgid "✗ Failed to import GNOME settings"
+msgstr "✗ Eșec la importul setărilor GNOME"
+
+#: src/anduinos-appearance:607
+msgid "Export GNOME Settings"
+msgstr "Exportă setările GNOME"
+
+#: src/anduinos-appearance:347
+msgid "Weather was disabled, but its saved permission could not be cleared."
+msgstr ""
+"Funcția meteo a fost dezactivată, dar permisiunea salvată nu a putut fi "
+"ștearsă."
+
+#: src/anduinos-appearance:647 src/anduinos-appearance:651
+msgid "✗ Failed to read the settings file"
+msgstr "✗ Nu s-a putut citi fișierul de setări"
+
+#: src/anduinos-appearance:695
+msgid "✗ Import and automatic rollback both failed"
+msgstr "✗ Importul și restaurarea automată au eșuat ambele"
+
+#: src/anduinos-appearance:393
+msgid "Weather was not enabled because permission was declined."
+msgstr ""
+"Prognoza meteo nu a fost activată deoarece permisiunea a fost respinsă."
+
+#: src/anduinos-appearance:552
+msgid ""
+"Back up GNOME settings, layouts, and extension preferences. Personal files "
+"are not included."
+msgstr ""
+"Creați o copie de rezervă a setărilor GNOME, a aranjamentelor și a "
+"preferințelor extensiilor. Fișierele personale nu sunt incluse."
+
+#: src/anduinos-appearance:633
+msgid "Import GNOME Settings"
+msgstr "Importă setările GNOME"
+
+#: src/anduinos-appearance:567
+msgid "Restore settings from a dconf INI file"
+msgstr "Restaurează setările dintr-un fișier dconf în format INI"
+
+#: src/anduinos-appearance:374
+msgid "Agree to All"
+msgstr "Sunt de acord cu toate"
+
+#: src/anduinos-appearance:423
+msgid "Determining your approximate location…"
+msgstr "Se determină locația aproximativă…"
+
+#: src/anduinos-appearance:657
+msgid ""
+"Merge import keeps current values that are absent from the file.\n"
+"\n"
+"Strict restore resets all /org/gnome/ settings first; values absent from the file return to their defaults. A safety backup is saved before either operation."
+msgstr ""
+"Importul cu îmbinare păstrează valorile curente care nu sunt prezente în fișier.\n"
+"\n"
+"Restaurarea completă resetează mai întâi toate setările din /org/gnome/; valorile care nu sunt prezente în fișier revin la valorile implicite. Înainte de fiecare operație se salvează o copie de rezervă."
+
+#: src/anduinos-appearance:557
+msgid "Export GNOME settings"
+msgstr "Exportă setările GNOME"
+
+#: src/anduinos-appearance:568
+msgid "Import…"
+msgstr "Importă…"
+
+#: src/anduinos-appearance:688
+msgid "✗ The selected file is not a valid dconf INI file"
+msgstr "✗ Fișierul selectat nu este un fișier dconf valid în format INI"
 
 #~ msgid "Effects"
 #~ msgstr "Effects"

@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-whisper-gtk</PackageName>
-    <PackageVersion>2.0.2-16+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-17+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Voice Typing settings, microphone training, GNOME shortcut, and non-focusing floating microphone bar.</PackageDescription>
     <Section>gnome</Section>
@@ -35,6 +35,7 @@
     <IncludeScript Include="src/anduinos-whisper-gtk" Target="/usr/bin/anduinos-whisper-gtk" />
     <IncludeFolder Include="src/anduinos_whisper_gtk" Target="/usr/lib/python3/dist-packages/anduinos_whisper_gtk" />
     <IncludeFolder Include="data/voice-typing@anduinos.com" Target="/usr/share/gnome-shell/extensions/voice-typing@anduinos.com" />
+    <IncludeFolder Include="locale/" Target="/usr/share/locale/" />
     <IncludeFile Include="resources/com.anduinos.VoiceTyping.Settings.svg" Target="/usr/share/icons/hicolor/scalable/apps/com.anduinos.VoiceTyping.Settings.svg" />
   </ItemGroup>
 
@@ -43,6 +44,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:../anduinos-whisper-framework/src python3 -m unittest discover -s tests -v" />
+    <PrebuildCommand Run="./compile-locales.sh &amp;&amp; PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:../anduinos-whisper-framework/src python3 -m unittest discover -s tests -v" />
   </ItemGroup>
 </Project>

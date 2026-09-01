@@ -2,7 +2,7 @@
 # Copyright (C) 2026 AnduinOS Team
 msgid ""
 msgstr ""
-"Project-Id-Version: anduinos-appearance 2.0\n"
+"Project-Id-Version: anduinos-appearance\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-27 05:08+0000\n"
 "Language-Team: Dutch\n"
@@ -280,6 +280,186 @@ msgstr "Netwerkstatistieken"
 #: src/anduinos-appearance:344
 msgid "Simple Weather"
 msgstr "Eenvoudige Weerbericht"
+
+#: src/anduinos-appearance:699
+msgid "✗ Failed to import GNOME settings"
+msgstr "✗ Het importeren van GNOME-instellingen is mislukt"
+
+#: src/anduinos-appearance:414
+msgid "Failed to save weather permission."
+msgstr "Het opslaan van de toestemming voor de weerfunctie is mislukt."
+
+#: src/anduinos-appearance:566
+msgid "Import GNOME settings"
+msgstr "GNOME-instellingen importeren"
+
+#: src/anduinos-appearance:370
+msgid "Weather Services Privacy Agreement"
+msgstr "Privacyovereenkomst voor weerdiensten"
+
+#: src/anduinos-appearance:629
+msgid "✓ GNOME settings exported"
+msgstr "✓ GNOME-instellingen geëxporteerd"
+
+#: src/anduinos-appearance:423
+msgid "Determining your approximate location…"
+msgstr "Uw geschatte locatie wordt bepaald…"
+
+#: src/anduinos-appearance:559
+msgid "Export…"
+msgstr "Exporteren…"
+
+#: src/anduinos-appearance:482
+#, python-brace-format
+msgid "Location service unavailable; using {location} from your timezone."
+msgstr ""
+"Locatieservice niet beschikbaar; {location} uit uw tijdzone wordt gebruikt."
+
+#: src/anduinos-appearance:599
+msgid "INI settings files"
+msgstr "INI-instellingsbestanden"
+
+#: src/anduinos-appearance:664
+msgid "Strict Restore"
+msgstr "Volledig herstellen"
+
+#: src/anduinos-appearance:393
+msgid "Weather was not enabled because permission was declined."
+msgstr ""
+"De weerfunctie is niet ingeschakeld omdat de toestemming is geweigerd."
+
+#: src/anduinos-appearance:706
+msgid "✓ Settings imported. Log out and back in to apply all changes."
+msgstr ""
+"✓ Instellingen geïmporteerd. Meld u af en meld u daarna opnieuw aan om alle "
+"wijzigingen toe te passen."
+
+#: src/anduinos-appearance:567
+msgid "Restore settings from a dconf INI file"
+msgstr "Instellingen herstellen uit een INI-bestand van dconf"
+
+#: src/anduinos-appearance:657
+msgid ""
+"Merge import keeps current values that are absent from the file.\n"
+"\n"
+"Strict restore resets all /org/gnome/ settings first; values absent from the file return to their defaults. A safety backup is saved before either operation."
+msgstr ""
+"Bij importeren met samenvoegen blijven huidige waarden behouden die niet in het bestand staan.\n"
+"\n"
+"Bij volledig herstellen worden eerst alle instellingen onder /org/gnome/ teruggezet; waarden die niet in het bestand staan, keren terug naar hun standaardwaarden. Vóór elk van beide bewerkingen wordt een veiligheidsback-up gemaakt."
+
+#: src/anduinos-appearance:558
+msgid "Save the current settings as a readable INI file"
+msgstr "Sla de huidige instellingen op als een leesbaar INI-bestand"
+
+#: src/anduinos-appearance:695
+msgid "✗ Import and automatic rollback both failed"
+msgstr "✗ Zowel het importeren als het automatische herstel zijn mislukt"
+
+#: src/anduinos-appearance:472
+msgid "Failed to configure the weather extension."
+msgstr "Configureren van de weersextensie is mislukt."
+
+#: src/anduinos-appearance:633
+msgid "Import GNOME Settings"
+msgstr "GNOME-instellingen importeren"
+
+#: src/anduinos-appearance:552
+msgid ""
+"Back up GNOME settings, layouts, and extension preferences. Personal files "
+"are not included."
+msgstr ""
+"Maak een back-up van GNOME-instellingen, indelingen en extensievoorkeuren. "
+"Persoonlijke bestanden worden niet meegenomen."
+
+#: src/anduinos-appearance:550
+msgid "Backup and Restore"
+msgstr "Back-up en herstel"
+
+#: src/anduinos-appearance:663
+msgid "Merge Import"
+msgstr "Importeren en samenvoegen"
+
+#: src/anduinos-appearance:353
+msgid ""
+"1. Approximate location (ipapi.co)\n"
+"AnduinOS will make one HTTPS request to ipapi.co. Its operator, Kloudend, Inc., will see your public IP address and may use it to estimate your city, country, and approximate coordinates.\n"
+"\n"
+"2. Weather data (Open-Meteo)\n"
+"The weather extension will send the selected approximate coordinates to Open-Meteo, operated by OpenMeteo GmbH. The service will also see your public IP address and may retain API logs for up to 90 days.\n"
+"\n"
+"AnduinOS is not affiliated with, sponsored by, or endorsed by either third-party service. If location detection fails, AnduinOS will use an offline estimate based on your system timezone.\n"
+"\n"
+"Privacy policies:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+msgstr ""
+"1. Geschatte locatie (ipapi.co)\n"
+"AnduinOS doet één HTTPS-verzoek aan ipapi.co. De beheerder, Kloudend, Inc., ziet uw openbare IP-adres en kan dit gebruiken om uw stad, land en geschatte coördinaten te bepalen.\n"
+"\n"
+"2. Weergegevens (Open-Meteo)\n"
+"De weersextensie stuurt de geselecteerde geschatte coördinaten naar Open-Meteo, dat wordt beheerd door OpenMeteo GmbH. De dienst ziet ook uw openbare IP-adres en kan API-logboeken maximaal 90 dagen bewaren.\n"
+"\n"
+"AnduinOS is niet gelieerd aan, wordt niet gesponsord door en wordt niet aanbevolen door een van beide diensten van derden. Als de locatie niet kan worden bepaald, gebruikt AnduinOS een offline schatting op basis van de tijdzone van uw systeem.\n"
+"\n"
+"Privacybeleid:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+
+#: src/anduinos-appearance:478
+#, python-brace-format
+msgid "Weather location set to {location}."
+msgstr "Weerlocatie ingesteld op {location}."
+
+#: src/anduinos-appearance:347
+msgid "Weather was disabled, but its saved permission could not be cleared."
+msgstr ""
+"De weerfunctie is uitgeschakeld, maar de opgeslagen toestemming kon niet "
+"worden gewist."
+
+#: src/anduinos-appearance:568
+msgid "Import…"
+msgstr "Importeren…"
+
+#: src/anduinos-appearance:656
+msgid "How should these settings be imported?"
+msgstr "Hoe moeten deze instellingen worden geïmporteerd?"
+
+#: src/anduinos-appearance:374
+msgid "Agree to All"
+msgstr "Alles accepteren"
+
+#: src/anduinos-appearance:557
+msgid "Export GNOME settings"
+msgstr "GNOME-instellingen exporteren"
+
+#: src/anduinos-appearance:622 src/anduinos-appearance:626
+msgid "✗ Failed to export GNOME settings"
+msgstr "✗ Het exporteren van GNOME-instellingen is mislukt"
+
+#: src/anduinos-appearance:607
+msgid "Export GNOME Settings"
+msgstr "GNOME-instellingen exporteren"
+
+#: src/anduinos-appearance:373
+msgid "Decline"
+msgstr "Weigeren"
+
+#: src/anduinos-appearance:693
+msgid "✗ Import failed; previous settings were restored"
+msgstr "✗ Het importeren is mislukt; de eerdere instellingen zijn hersteld"
+
+#: src/anduinos-appearance:275
+msgid "Update approximate weather location"
+msgstr "Geschatte locatie voor de weerfunctie bijwerken"
+
+#: src/anduinos-appearance:688
+msgid "✗ The selected file is not a valid dconf INI file"
+msgstr "✗ Het geselecteerde bestand is geen geldig INI-bestand van dconf"
+
+#: src/anduinos-appearance:647 src/anduinos-appearance:651
+msgid "✗ Failed to read the settings file"
+msgstr "✗ Lezen van het instellingenbestand mislukt"
 
 #~ msgid "Effects"
 #~ msgstr "Effects"

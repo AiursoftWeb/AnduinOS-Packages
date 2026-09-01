@@ -1,7 +1,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: anduinos-btrfs-snapshots-manager 0.1.0\n"
+"Project-Id-Version: anduinos-btrfs-snapshots-manager\n"
 "POT-Creation-Date: 2026-08-06 00:00+0800\n"
 "PO-Revision-Date: 2026-08-06 00:00+0800\n"
 "Last-Translator: Automatically generated\n"
@@ -10,6 +10,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "A critical threshold is failing now"
@@ -1808,3 +1809,15 @@ msgstr "{0}% · 警告臨界值 {1}%"
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "{0}/s"
 msgstr "{0}/s"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs could not complete the integrity check."
+msgstr "Btrfs 無法完成完整性檢查。"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Details: {0}"
+msgstr "詳細資料：{0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Failed"
+msgstr "完整性檢查失敗"

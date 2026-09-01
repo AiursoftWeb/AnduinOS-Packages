@@ -2,7 +2,7 @@
 # Copyright (C) 2026 AnduinOS Team
 msgid ""
 msgstr ""
-"Project-Id-Version: anduinos-appearance 2.0\n"
+"Project-Id-Version: anduinos-appearance\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-27 05:08+0000\n"
 "Language-Team: Japanese\n"
@@ -10,7 +10,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/anduinos-appearance:535
 msgid "About AnduinOS Appearance"
@@ -282,6 +282,178 @@ msgstr "Network Stats"
 #: src/anduinos-appearance:344
 msgid "Simple Weather"
 msgstr "Simple Weather"
+
+#: src/anduinos-appearance:706
+msgid "✓ Settings imported. Log out and back in to apply all changes."
+msgstr "✓ 設定がインポートされました。すべての変更を適用するには、ログアウトしてから再度ログインしてください。"
+
+#: src/anduinos-appearance:482
+#, python-brace-format
+msgid "Location service unavailable; using {location} from your timezone."
+msgstr "位置情報サービスが利用できないため、タイムゾーンに基づいて {location} を使用しています。"
+
+#: src/anduinos-appearance:633
+msgid "Import GNOME Settings"
+msgstr "GNOME の設定をインポート"
+
+#: src/anduinos-appearance:599
+msgid "INI settings files"
+msgstr "INI 設定ファイル"
+
+#: src/anduinos-appearance:664
+msgid "Strict Restore"
+msgstr "完全復元"
+
+#: src/anduinos-appearance:353
+msgid ""
+"1. Approximate location (ipapi.co)\n"
+"AnduinOS will make one HTTPS request to ipapi.co. Its operator, Kloudend, Inc., will see your public IP address and may use it to estimate your city, country, and approximate coordinates.\n"
+"\n"
+"2. Weather data (Open-Meteo)\n"
+"The weather extension will send the selected approximate coordinates to Open-Meteo, operated by OpenMeteo GmbH. The service will also see your public IP address and may retain API logs for up to 90 days.\n"
+"\n"
+"AnduinOS is not affiliated with, sponsored by, or endorsed by either third-party service. If location detection fails, AnduinOS will use an offline estimate based on your system timezone.\n"
+"\n"
+"Privacy policies:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+msgstr ""
+"1. 概略位置 (ipapi.co)\n"
+"AnduinOS は ipapi.co に対して 1 回の HTTPS リクエストを行います。その運営者である Kloudend, Inc. は、あなたのパブリック IP アドレスを確認し、それを使ってあなたの都市、国、および概略座標を推定する可能性があります。\n"
+"\n"
+"2. 天気データ (Open-Meteo)\n"
+"天気拡張機能は、選択された概略座標を、OpenMeteo GmbH が運営する Open-Meteo に送信します。このサービスはあなたのパブリック IP アドレスも確認し、API ログを最大 90 日間保持する可能性があります。\n"
+"\n"
+"AnduinOS は、いずれのサードパーティサービスとも提携しておらず、スポンサー提供も受けておらず、推奨もされていません。位置情報の検出に失敗した場合、AnduinOS はシステムのタイムゾーンに基づくオフライン推定を使用します。\n"
+"\n"
+"プライバシーポリシー:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+
+#: src/anduinos-appearance:373
+msgid "Decline"
+msgstr "同意しない"
+
+#: src/anduinos-appearance:567
+msgid "Restore settings from a dconf INI file"
+msgstr "dconf INI ファイルから設定を復元します"
+
+#: src/anduinos-appearance:656
+msgid "How should these settings be imported?"
+msgstr "これらの設定をどのようにインポートしますか？"
+
+#: src/anduinos-appearance:699
+msgid "✗ Failed to import GNOME settings"
+msgstr "✗ GNOME の設定をインポートできませんでした"
+
+#: src/anduinos-appearance:695
+msgid "✗ Import and automatic rollback both failed"
+msgstr "✗ インポートと自動ロールバックの両方に失敗しました"
+
+#: src/anduinos-appearance:275
+msgid "Update approximate weather location"
+msgstr "天気情報に使用するおおよその位置を更新"
+
+#: src/anduinos-appearance:688
+msgid "✗ The selected file is not a valid dconf INI file"
+msgstr "✗ 選択されたファイルは有効な dconf INI ファイルではありません"
+
+#: src/anduinos-appearance:566
+msgid "Import GNOME settings"
+msgstr "GNOME の設定をインポート"
+
+#: src/anduinos-appearance:622 src/anduinos-appearance:626
+msgid "✗ Failed to export GNOME settings"
+msgstr "✗ GNOME の設定のエクスポートに失敗しました"
+
+#: src/anduinos-appearance:657
+msgid ""
+"Merge import keeps current values that are absent from the file.\n"
+"\n"
+"Strict restore resets all /org/gnome/ settings first; values absent from the file return to their defaults. A safety backup is saved before either operation."
+msgstr ""
+"マージインポートでは、ファイルにない値について現在の値が保持されます。\n"
+"\n"
+"完全復元では、最初に /org/gnome/ 以下のすべての設定をリセットします。ファイルにない値はデフォルトに戻ります。いずれの操作の前にも、安全のためバックアップが保存されます。"
+
+#: src/anduinos-appearance:552
+msgid ""
+"Back up GNOME settings, layouts, and extension preferences. Personal files "
+"are not included."
+msgstr "GNOME の設定、レイアウト、拡張機能の設定をバックアップします。個人ファイルは含まれません。"
+
+#: src/anduinos-appearance:558
+msgid "Save the current settings as a readable INI file"
+msgstr "現在の設定を読みやすい INI ファイルとして保存します"
+
+#: src/anduinos-appearance:647 src/anduinos-appearance:651
+msgid "✗ Failed to read the settings file"
+msgstr "✗ 設定ファイルの読み取りに失敗しました"
+
+#: src/anduinos-appearance:559
+msgid "Export…"
+msgstr "エクスポート…"
+
+#: src/anduinos-appearance:370
+msgid "Weather Services Privacy Agreement"
+msgstr "天気サービスのプライバシーに関する同意"
+
+#: src/anduinos-appearance:550
+msgid "Backup and Restore"
+msgstr "バックアップと復元"
+
+#: src/anduinos-appearance:472
+msgid "Failed to configure the weather extension."
+msgstr "天気拡張機能の設定に失敗しました。"
+
+#: src/anduinos-appearance:393
+msgid "Weather was not enabled because permission was declined."
+msgstr "同意されなかったため、天気機能は有効になりませんでした。"
+
+#: src/anduinos-appearance:557
+msgid "Export GNOME settings"
+msgstr "GNOME の設定をエクスポート"
+
+#: src/anduinos-appearance:414
+msgid "Failed to save weather permission."
+msgstr "天気機能の利用許可を保存できませんでした。"
+
+#: src/anduinos-appearance:663
+msgid "Merge Import"
+msgstr "マージしてインポート"
+
+#: src/anduinos-appearance:423
+msgid "Determining your approximate location…"
+msgstr "概略位置を特定しています…"
+
+#: src/anduinos-appearance:568
+msgid "Import…"
+msgstr "インポート…"
+
+#: src/anduinos-appearance:374
+msgid "Agree to All"
+msgstr "すべてに同意"
+
+#: src/anduinos-appearance:478
+#, python-brace-format
+msgid "Weather location set to {location}."
+msgstr "天気拡張機能の位置情報を {location} に設定しました。"
+
+#: src/anduinos-appearance:607
+msgid "Export GNOME Settings"
+msgstr "GNOME の設定をエクスポート"
+
+#: src/anduinos-appearance:347
+msgid "Weather was disabled, but its saved permission could not be cleared."
+msgstr "天気拡張機能は無効化されましたが、保存された許可を削除できませんでした。"
+
+#: src/anduinos-appearance:629
+msgid "✓ GNOME settings exported"
+msgstr "✓ GNOME の設定をエクスポートしました"
+
+#: src/anduinos-appearance:693
+msgid "✗ Import failed; previous settings were restored"
+msgstr "✗ インポートに失敗しました。以前の設定が復元されました"
 
 #~ msgid "Effects"
 #~ msgstr "Effects"

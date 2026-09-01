@@ -2,7 +2,7 @@
 # Copyright (C) 2026 AnduinOS Team
 msgid ""
 msgstr ""
-"Project-Id-Version: anduinos-appearance 2.0\n"
+"Project-Id-Version: anduinos-appearance\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-27 05:08+0000\n"
 "Language-Team: Greek\n"
@@ -289,6 +289,188 @@ msgstr "Network Stats"
 #: src/anduinos-appearance:344
 msgid "Simple Weather"
 msgstr "Simple Weather"
+
+#: src/anduinos-appearance:695
+msgid "✗ Import and automatic rollback both failed"
+msgstr "✗ Απέτυχαν τόσο η εισαγωγή όσο και η αυτόματη επαναφορά"
+
+#: src/anduinos-appearance:633
+msgid "Import GNOME Settings"
+msgstr "Εισαγωγή ρυθμίσεων GNOME"
+
+#: src/anduinos-appearance:699
+msgid "✗ Failed to import GNOME settings"
+msgstr "✗ Απέτυχε η εισαγωγή των ρυθμίσεων GNOME"
+
+#: src/anduinos-appearance:693
+msgid "✗ Import failed; previous settings were restored"
+msgstr "✗ Απέτυχε η εισαγωγή· επαναφέρθηκαν οι προηγούμενες ρυθμίσεις"
+
+#: src/anduinos-appearance:664
+msgid "Strict Restore"
+msgstr "Πλήρης επαναφορά"
+
+#: src/anduinos-appearance:599
+msgid "INI settings files"
+msgstr "Αρχεία ρυθμίσεων INI"
+
+#: src/anduinos-appearance:550
+msgid "Backup and Restore"
+msgstr "Αντίγραφο ασφαλείας και επαναφορά"
+
+#: src/anduinos-appearance:423
+msgid "Determining your approximate location…"
+msgstr "Προσδιορισμός της κατά προσέγγιση τοποθεσίας σας…"
+
+#: src/anduinos-appearance:275
+msgid "Update approximate weather location"
+msgstr ""
+"Ενημέρωση της κατά προσέγγιση τοποθεσίας που χρησιμοποιείται για τον καιρό"
+
+#: src/anduinos-appearance:647 src/anduinos-appearance:651
+msgid "✗ Failed to read the settings file"
+msgstr "✗ Απέτυχε η ανάγνωση του αρχείου ρυθμίσεων"
+
+#: src/anduinos-appearance:353
+msgid ""
+"1. Approximate location (ipapi.co)\n"
+"AnduinOS will make one HTTPS request to ipapi.co. Its operator, Kloudend, Inc., will see your public IP address and may use it to estimate your city, country, and approximate coordinates.\n"
+"\n"
+"2. Weather data (Open-Meteo)\n"
+"The weather extension will send the selected approximate coordinates to Open-Meteo, operated by OpenMeteo GmbH. The service will also see your public IP address and may retain API logs for up to 90 days.\n"
+"\n"
+"AnduinOS is not affiliated with, sponsored by, or endorsed by either third-party service. If location detection fails, AnduinOS will use an offline estimate based on your system timezone.\n"
+"\n"
+"Privacy policies:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+msgstr ""
+"1. Κατά προσέγγιση τοποθεσία (ipapi.co)\n"
+"Το AnduinOS θα υποβάλει ένα αίτημα HTTPS στο ipapi.co. Ο φορέας εκμετάλλευσής του, η Kloudend, Inc., θα δει τη δημόσια διεύθυνση IP σας και ενδέχεται να τη χρησιμοποιήσει για να εκτιμήσει την πόλη, τη χώρα και τις κατά προσέγγιση συντεταγμένες σας.\n"
+"\n"
+"2. Δεδομένα καιρού (Open-Meteo)\n"
+"Η επέκταση καιρού θα στείλει τις επιλεγμένες κατά προσέγγιση συντεταγμένες στο Open-Meteo, το οποίο διαχειρίζεται η OpenMeteo GmbH. Η υπηρεσία θα δει επίσης τη δημόσια διεύθυνση IP σας και ενδέχεται να διατηρεί αρχεία καταγραφής API για έως και 90 ημέρες.\n"
+"\n"
+"Το AnduinOS δεν συνδέεται με, δεν χρηματοδοτείται από και δεν έχει την έγκριση καμίας από τις δύο υπηρεσίες τρίτων. Αν αποτύχει ο εντοπισμός της τοποθεσίας, το AnduinOS θα χρησιμοποιήσει μια εκτίμηση εκτός σύνδεσης βάσει της ζώνης ώρας του συστήματός σας.\n"
+"\n"
+"Πολιτικές απορρήτου:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+
+#: src/anduinos-appearance:478
+#, python-brace-format
+msgid "Weather location set to {location}."
+msgstr "Η τοποθεσία για τον καιρό ορίστηκε σε {location}."
+
+#: src/anduinos-appearance:656
+msgid "How should these settings be imported?"
+msgstr "Πώς πρέπει να εισαχθούν αυτές οι ρυθμίσεις;"
+
+#: src/anduinos-appearance:663
+msgid "Merge Import"
+msgstr "Εισαγωγή με συγχώνευση"
+
+#: src/anduinos-appearance:373
+msgid "Decline"
+msgstr "Απόρριψη"
+
+#: src/anduinos-appearance:657
+msgid ""
+"Merge import keeps current values that are absent from the file.\n"
+"\n"
+"Strict restore resets all /org/gnome/ settings first; values absent from the file return to their defaults. A safety backup is saved before either operation."
+msgstr ""
+"Η εισαγωγή με συγχώνευση διατηρεί τις τρέχουσες τιμές που απουσιάζουν από το αρχείο.\n"
+"\n"
+"Η πλήρης επαναφορά επαναφέρει αρχικά όλες τις ρυθμίσεις /org/gnome/ στις προεπιλεγμένες τιμές τους· οι τιμές που απουσιάζουν από το αρχείο παραμένουν στις προεπιλεγμένες τιμές τους. Πριν από καθεμία από τις δύο ενέργειες αποθηκεύεται ένα αντίγραφο ασφαλείας."
+
+#: src/anduinos-appearance:374
+msgid "Agree to All"
+msgstr "Συμφωνώ με όλα"
+
+#: src/anduinos-appearance:706
+msgid "✓ Settings imported. Log out and back in to apply all changes."
+msgstr ""
+"✓ Οι ρυθμίσεις εισήχθησαν. Αποσυνδεθείτε και συνδεθείτε ξανά για να "
+"εφαρμοστούν όλες οι αλλαγές."
+
+#: src/anduinos-appearance:482
+#, python-brace-format
+msgid "Location service unavailable; using {location} from your timezone."
+msgstr ""
+"Η υπηρεσία τοποθεσίας δεν είναι διαθέσιμη· χρησιμοποιείται η τοποθεσία "
+"{location} βάσει της ζώνης ώρας σας."
+
+#: src/anduinos-appearance:393
+msgid "Weather was not enabled because permission was declined."
+msgstr "Η επέκταση καιρού δεν ενεργοποιήθηκε επειδή απορρίφθηκε η άδεια."
+
+#: src/anduinos-appearance:568
+msgid "Import…"
+msgstr "Εισαγωγή…"
+
+#: src/anduinos-appearance:558
+msgid "Save the current settings as a readable INI file"
+msgstr ""
+"Αποθήκευση των τρεχουσών ρυθμίσεων σε αρχείο INI αναγνώσιμο από άνθρωπο"
+
+#: src/anduinos-appearance:347
+msgid "Weather was disabled, but its saved permission could not be cleared."
+msgstr ""
+"Η λειτουργία καιρού απενεργοποιήθηκε, αλλά δεν ήταν δυνατή η διαγραφή της "
+"αποθηκευμένης άδειάς της."
+
+#: src/anduinos-appearance:472
+msgid "Failed to configure the weather extension."
+msgstr "Δεν ήταν δυνατή η ρύθμιση της επέκτασης καιρού."
+
+#: src/anduinos-appearance:559
+msgid "Export…"
+msgstr "Εξαγωγή…"
+
+#: src/anduinos-appearance:552
+msgid ""
+"Back up GNOME settings, layouts, and extension preferences. Personal files "
+"are not included."
+msgstr ""
+"Αντίγραφο ασφαλείας ρυθμίσεων GNOME, διατάξεων και προτιμήσεων επεκτάσεων. "
+"Τα προσωπικά αρχεία δεν περιλαμβάνονται."
+
+#: src/anduinos-appearance:566
+msgid "Import GNOME settings"
+msgstr "Εισαγωγή ρυθμίσεων GNOME"
+
+#: src/anduinos-appearance:557
+msgid "Export GNOME settings"
+msgstr "Εξαγωγή ρυθμίσεων GNOME"
+
+#: src/anduinos-appearance:629
+msgid "✓ GNOME settings exported"
+msgstr "✓ Οι ρυθμίσεις GNOME εξήχθησαν"
+
+#: src/anduinos-appearance:370
+msgid "Weather Services Privacy Agreement"
+msgstr "Συμφωνία απορρήτου υπηρεσιών καιρού"
+
+#: src/anduinos-appearance:607
+msgid "Export GNOME Settings"
+msgstr "Εξαγωγή ρυθμίσεων GNOME"
+
+#: src/anduinos-appearance:622 src/anduinos-appearance:626
+msgid "✗ Failed to export GNOME settings"
+msgstr "✗ Απέτυχε η εξαγωγή των ρυθμίσεων GNOME"
+
+#: src/anduinos-appearance:414
+msgid "Failed to save weather permission."
+msgstr "Απέτυχε η αποθήκευση της άδειας για τη λειτουργία καιρού."
+
+#: src/anduinos-appearance:688
+msgid "✗ The selected file is not a valid dconf INI file"
+msgstr "✗ Το επιλεγμένο αρχείο δεν είναι έγκυρο αρχείο dconf σε μορφή INI"
+
+#: src/anduinos-appearance:567
+msgid "Restore settings from a dconf INI file"
+msgstr "Επαναφορά ρυθμίσεων από αρχείο dconf σε μορφή INI"
 
 #~ msgid "Effects"
 #~ msgstr "Effects"

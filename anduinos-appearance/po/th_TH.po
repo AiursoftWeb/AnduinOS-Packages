@@ -2,7 +2,7 @@
 # Copyright (C) 2026 AnduinOS Team
 msgid ""
 msgstr ""
-"Project-Id-Version: anduinos-appearance 2.0\n"
+"Project-Id-Version: anduinos-appearance\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-27 05:08+0000\n"
 "Language-Team: Thai\n"
@@ -10,7 +10,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/anduinos-appearance:535
 msgid "About AnduinOS Appearance"
@@ -280,6 +280,182 @@ msgstr "สถิติเครือข่าย"
 #: src/anduinos-appearance:344
 msgid "Simple Weather"
 msgstr "Simple Weather"
+
+#: src/anduinos-appearance:622 src/anduinos-appearance:626
+msgid "✗ Failed to export GNOME settings"
+msgstr "✗ ไม่สามารถส่งออกการตั้งค่า GNOME ได้"
+
+#: src/anduinos-appearance:374
+msgid "Agree to All"
+msgstr "ยอมรับทั้งหมด"
+
+#: src/anduinos-appearance:478
+#, python-brace-format
+msgid "Weather location set to {location}."
+msgstr "ตั้งค่าตำแหน่งสภาพอากาศเป็น {location} แล้ว"
+
+#: src/anduinos-appearance:633
+msgid "Import GNOME Settings"
+msgstr "นำเข้าการตั้งค่า GNOME"
+
+#: src/anduinos-appearance:629
+msgid "✓ GNOME settings exported"
+msgstr "✓ ส่งออกการตั้งค่า GNOME แล้ว"
+
+#: src/anduinos-appearance:695
+msgid "✗ Import and automatic rollback both failed"
+msgstr "✗ ทั้งการนำเข้าและการย้อนกลับอัตโนมัติล้มเหลว"
+
+#: src/anduinos-appearance:370
+msgid "Weather Services Privacy Agreement"
+msgstr "ข้อตกลงความเป็นส่วนตัวของบริการสภาพอากาศ"
+
+#: src/anduinos-appearance:599
+msgid "INI settings files"
+msgstr "ไฟล์การตั้งค่า INI"
+
+#: src/anduinos-appearance:347
+msgid "Weather was disabled, but its saved permission could not be cleared."
+msgstr "ปิดใช้งานคุณสมบัติสภาพอากาศแล้ว แต่ไม่สามารถล้างสิทธิ์ที่บันทึกไว้ได้"
+
+#: src/anduinos-appearance:656
+msgid "How should these settings be imported?"
+msgstr "ควรนำเข้าการตั้งค่าเหล่านี้อย่างไร?"
+
+#: src/anduinos-appearance:657
+msgid ""
+"Merge import keeps current values that are absent from the file.\n"
+"\n"
+"Strict restore resets all /org/gnome/ settings first; values absent from the file return to their defaults. A safety backup is saved before either operation."
+msgstr ""
+"การนำเข้าแบบผสานจะคงค่าปัจจุบันที่ไม่มีอยู่ในไฟล์ไว้\n"
+"\n"
+"การคืนค่าแบบสมบูรณ์จะรีเซ็ตการตั้งค่า /org/gnome/ ทั้งหมดก่อน ค่าที่ไม่มีอยู่ในไฟล์จะกลับเป็นค่าเริ่มต้น ระบบจะสร้างข้อมูลสำรองเพื่อความปลอดภัยก่อนดำเนินการแต่ละแบบ"
+
+#: src/anduinos-appearance:552
+msgid ""
+"Back up GNOME settings, layouts, and extension preferences. Personal files "
+"are not included."
+msgstr ""
+"สำรองข้อมูลการตั้งค่า GNOME เค้าโครง และการกำหนดค่าส่วนขยาย "
+"ไฟล์ส่วนตัวจะไม่รวมอยู่ในข้อมูลสำรอง"
+
+#: src/anduinos-appearance:557
+msgid "Export GNOME settings"
+msgstr "ส่งออกการตั้งค่า GNOME"
+
+#: src/anduinos-appearance:393
+msgid "Weather was not enabled because permission was declined."
+msgstr "ไม่ได้เปิดใช้งานฟีเจอร์สภาพอากาศเนื่องจากคุณปฏิเสธการอนุญาต"
+
+#: src/anduinos-appearance:688
+msgid "✗ The selected file is not a valid dconf INI file"
+msgstr "✗ ไฟล์ที่เลือกไม่ใช่ไฟล์ dconf INI ที่ถูกต้อง"
+
+#: src/anduinos-appearance:414
+msgid "Failed to save weather permission."
+msgstr "ไม่สามารถบันทึกการอนุญาตสำหรับฟีเจอร์สภาพอากาศได้"
+
+#: src/anduinos-appearance:423
+msgid "Determining your approximate location…"
+msgstr "กำลังระบุตำแหน่งโดยประมาณของคุณ…"
+
+#: src/anduinos-appearance:559
+msgid "Export…"
+msgstr "ส่งออก…"
+
+#: src/anduinos-appearance:706
+msgid "✓ Settings imported. Log out and back in to apply all changes."
+msgstr ""
+"✓ นำเข้าการตั้งค่าแล้ว "
+"ออกจากระบบแล้วเข้าสู่ระบบอีกครั้งเพื่อให้การเปลี่ยนแปลงทั้งหมดมีผล"
+
+#: src/anduinos-appearance:693
+msgid "✗ Import failed; previous settings were restored"
+msgstr "✗ นำเข้าไม่สำเร็จ แต่กู้คืนการตั้งค่าเดิมแล้ว"
+
+#: src/anduinos-appearance:353
+msgid ""
+"1. Approximate location (ipapi.co)\n"
+"AnduinOS will make one HTTPS request to ipapi.co. Its operator, Kloudend, Inc., will see your public IP address and may use it to estimate your city, country, and approximate coordinates.\n"
+"\n"
+"2. Weather data (Open-Meteo)\n"
+"The weather extension will send the selected approximate coordinates to Open-Meteo, operated by OpenMeteo GmbH. The service will also see your public IP address and may retain API logs for up to 90 days.\n"
+"\n"
+"AnduinOS is not affiliated with, sponsored by, or endorsed by either third-party service. If location detection fails, AnduinOS will use an offline estimate based on your system timezone.\n"
+"\n"
+"Privacy policies:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+msgstr ""
+"1. ตำแหน่งโดยประมาณ (ipapi.co)\n"
+"AnduinOS จะส่งคำขอ HTTPS เพียงครั้งเดียวไปยัง ipapi.co ผู้ดำเนินการคือ Kloudend, Inc. ซึ่งจะเห็นที่อยู่ IP สาธารณะของคุณ และอาจใช้ข้อมูลนี้เพื่อประมาณเมือง ประเทศ และพิกัดโดยประมาณของคุณ\n"
+"\n"
+"2. ข้อมูลสภาพอากาศ (Open-Meteo)\n"
+"ส่วนขยายสภาพอากาศจะส่งพิกัดโดยประมาณที่คุณเลือกไปยัง Open-Meteo ซึ่งดำเนินการโดย OpenMeteo GmbH บริการนี้จะเห็นที่อยู่ IP สาธารณะของคุณเช่นกัน และอาจเก็บบันทึก API ไว้ได้นานถึง 90 วัน\n"
+"\n"
+"AnduinOS ไม่มีส่วนเกี่ยวข้อง ไม่ได้รับการสนับสนุน และไม่ได้รับการรับรองจากบริการของบุคคลที่สามทั้งสองนี้ หากการตรวจจับตำแหน่งล้มเหลว AnduinOS จะใช้ค่าประมาณแบบออฟไลน์โดยอิงจากเขตเวลาของระบบของคุณ\n"
+"\n"
+"นโยบายความเป็นส่วนตัว:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+
+#: src/anduinos-appearance:567
+msgid "Restore settings from a dconf INI file"
+msgstr "กู้คืนการตั้งค่าจากไฟล์ dconf INI"
+
+#: src/anduinos-appearance:699
+msgid "✗ Failed to import GNOME settings"
+msgstr "✗ ไม่สามารถนำเข้าการตั้งค่า GNOME ได้"
+
+#: src/anduinos-appearance:664
+msgid "Strict Restore"
+msgstr "คืนค่าแบบสมบูรณ์"
+
+#: src/anduinos-appearance:550
+msgid "Backup and Restore"
+msgstr "สำรองข้อมูลและกู้คืน"
+
+#: src/anduinos-appearance:647 src/anduinos-appearance:651
+msgid "✗ Failed to read the settings file"
+msgstr "✗ ไม่สามารถอ่านไฟล์การตั้งค่าได้"
+
+#: src/anduinos-appearance:275
+msgid "Update approximate weather location"
+msgstr "อัปเดตตำแหน่งสภาพอากาศโดยประมาณ"
+
+#: src/anduinos-appearance:558
+msgid "Save the current settings as a readable INI file"
+msgstr "บันทึกการตั้งค่าปัจจุบันเป็นไฟล์ INI ที่อ่านง่าย"
+
+#: src/anduinos-appearance:482
+#, python-brace-format
+msgid "Location service unavailable; using {location} from your timezone."
+msgstr "บริการระบุตำแหน่งไม่พร้อมใช้งาน จึงใช้ {location} จากเขตเวลาของคุณแทน"
+
+#: src/anduinos-appearance:472
+msgid "Failed to configure the weather extension."
+msgstr "ไม่สามารถกำหนดค่าส่วนขยายสภาพอากาศได้"
+
+#: src/anduinos-appearance:568
+msgid "Import…"
+msgstr "นำเข้า…"
+
+#: src/anduinos-appearance:607
+msgid "Export GNOME Settings"
+msgstr "ส่งออกการตั้งค่า GNOME"
+
+#: src/anduinos-appearance:566
+msgid "Import GNOME settings"
+msgstr "นำเข้าการตั้งค่า GNOME"
+
+#: src/anduinos-appearance:663
+msgid "Merge Import"
+msgstr "นำเข้าแบบรวม"
+
+#: src/anduinos-appearance:373
+msgid "Decline"
+msgstr "ปฏิเสธ"
 
 #~ msgid "Effects"
 #~ msgstr "Effects"

@@ -2,7 +2,7 @@
 # Copyright (C) 2026 AnduinOS Team
 msgid ""
 msgstr ""
-"Project-Id-Version: anduinos-appearance 2.0\n"
+"Project-Id-Version: anduinos-appearance\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-27 05:08+0000\n"
 "Language-Team: Chinese (China Mainland)\n"
@@ -10,7 +10,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/anduinos-appearance:535
 msgid "About AnduinOS Appearance"
@@ -289,33 +289,24 @@ msgstr "天气服务隐私许可协议"
 
 msgid ""
 "1. Approximate location (ipapi.co)\n"
-"AnduinOS will make one HTTPS request to ipapi.co. Its operator, Kloudend, "
-"Inc., will see your public IP address and may use it to estimate your city, "
-"country, and approximate coordinates.\n"
+"AnduinOS will make one HTTPS request to ipapi.co. Its operator, Kloudend, Inc., will see your public IP address and may use it to estimate your city, country, and approximate coordinates.\n"
 "\n"
 "2. Weather data (Open-Meteo)\n"
-"The weather extension will send the selected approximate coordinates to Open-"
-"Meteo, operated by OpenMeteo GmbH. The service will also see your public IP "
-"address and may retain API logs for up to 90 days.\n"
+"The weather extension will send the selected approximate coordinates to Open-Meteo, operated by OpenMeteo GmbH. The service will also see your public IP address and may retain API logs for up to 90 days.\n"
 "\n"
-"AnduinOS is not affiliated with, sponsored by, or endorsed by either third-"
-"party service. If location detection fails, AnduinOS will use an offline "
-"estimate based on your system timezone.\n"
+"AnduinOS is not affiliated with, sponsored by, or endorsed by either third-party service. If location detection fails, AnduinOS will use an offline estimate based on your system timezone.\n"
 "\n"
 "Privacy policies:\n"
 "https://ipapi.co/privacy/\n"
 "https://open-meteo.com/en/terms"
 msgstr ""
 "1. 大致位置（ipapi.co）\n"
-"AnduinOS 将向 ipapi.co 发起一次 HTTPS 请求。其运营方 Kloudend, Inc. 将能看"
-"到您的公网 IP 地址，并可能使用它来估算您的城市、国家和大致经纬度。\n"
+"AnduinOS 将向 ipapi.co 发起一次 HTTPS 请求。其运营方 Kloudend, Inc. 将能看到您的公网 IP 地址，并可能使用它来估算您的城市、国家和大致经纬度。\n"
 "\n"
 "2. 天气数据（Open-Meteo）\n"
-"天气扩展会将所选的大致经纬度发送给由 OpenMeteo GmbH 运营的 Open-Meteo。"
-"该服务也将看到您的公网 IP 地址，并可能将 API 日志保留最长 90 天。\n"
+"天气扩展会将所选的大致经纬度发送给由 OpenMeteo GmbH 运营的 Open-Meteo。该服务也将看到您的公网 IP 地址，并可能将 API 日志保留最长 90 天。\n"
 "\n"
-"AnduinOS 与上述任何第三方服务均无隶属、赞助或背书关系。如果定位失败，"
-"AnduinOS 将使用根据系统时区生成的离线估算位置。\n"
+"AnduinOS 与上述任何第三方服务均无隶属、赞助或背书关系。如果定位失败，AnduinOS 将使用根据系统时区生成的离线估算位置。\n"
 "\n"
 "隐私政策：\n"
 "https://ipapi.co/privacy/\n"
@@ -349,6 +340,106 @@ msgstr "定位服务不可用；正在使用根据您所在时区推测的 {loca
 
 msgid "Weather was disabled, but its saved permission could not be cleared."
 msgstr "天气功能已关闭，但无法清除已保存的许可。"
+
+#: src/anduinos-appearance:699
+msgid "✗ Failed to import GNOME settings"
+msgstr "✗ 导入 GNOME 设置失败"
+
+#: src/anduinos-appearance:663
+msgid "Merge Import"
+msgstr "合并导入"
+
+#: src/anduinos-appearance:656
+msgid "How should these settings be imported?"
+msgstr "如何导入这些设置？"
+
+#: src/anduinos-appearance:568
+msgid "Import…"
+msgstr "导入…"
+
+#: src/anduinos-appearance:657
+msgid ""
+"Merge import keeps current values that are absent from the file.\n"
+"\n"
+"Strict restore resets all /org/gnome/ settings first; values absent from the file return to their defaults. A safety backup is saved before either operation."
+msgstr ""
+"合并导入会保留文件中未包含的当前值。\n"
+"\n"
+"完整还原会先重置所有 /org/gnome/ 设置；文件中未包含的值将恢复为默认值。在执行任一操作之前，都会保存安全备份。"
+
+#: src/anduinos-appearance:566
+msgid "Import GNOME settings"
+msgstr "导入 GNOME 设置"
+
+#: src/anduinos-appearance:550
+msgid "Backup and Restore"
+msgstr "备份和恢复"
+
+#: src/anduinos-appearance:688
+msgid "✗ The selected file is not a valid dconf INI file"
+msgstr "✗ 所选文件不是有效的 dconf INI 文件"
+
+#: src/anduinos-appearance:664
+msgid "Strict Restore"
+msgstr "完整还原"
+
+#: src/anduinos-appearance:622 src/anduinos-appearance:626
+msgid "✗ Failed to export GNOME settings"
+msgstr "✗ 导出 GNOME 设置失败"
+
+#: src/anduinos-appearance:607
+msgid "Export GNOME Settings"
+msgstr "导出 GNOME 设置"
+
+#: src/anduinos-appearance:567
+msgid "Restore settings from a dconf INI file"
+msgstr "从 dconf INI 文件恢复设置"
+
+#: src/anduinos-appearance:559
+msgid "Export…"
+msgstr "导出…"
+
+#: src/anduinos-appearance:552
+msgid ""
+"Back up GNOME settings, layouts, and extension preferences. Personal files "
+"are not included."
+msgstr "备份 GNOME 设置、布局和扩展偏好设置。不包含个人文件。"
+
+#: src/anduinos-appearance:633
+msgid "Import GNOME Settings"
+msgstr "导入 GNOME 设置"
+
+#: src/anduinos-appearance:706
+msgid "✓ Settings imported. Log out and back in to apply all changes."
+msgstr "✓ 设置已导入。请注销并重新登录以应用所有更改。"
+
+#: src/anduinos-appearance:599
+msgid "INI settings files"
+msgstr "INI 设置文件"
+
+#: src/anduinos-appearance:695
+msgid "✗ Import and automatic rollback both failed"
+msgstr "✗ 导入和自动回滚均失败"
+
+#: src/anduinos-appearance:647 src/anduinos-appearance:651
+msgid "✗ Failed to read the settings file"
+msgstr "✗ 读取设置文件失败"
+
+#: src/anduinos-appearance:693
+msgid "✗ Import failed; previous settings were restored"
+msgstr "✗ 导入失败；已恢复之前的设置"
+
+#: src/anduinos-appearance:629
+msgid "✓ GNOME settings exported"
+msgstr "✓ GNOME 设置已导出"
+
+#: src/anduinos-appearance:558
+msgid "Save the current settings as a readable INI file"
+msgstr "将当前设置保存为易读的 INI 文件"
+
+#: src/anduinos-appearance:557
+msgid "Export GNOME settings"
+msgstr "导出 GNOME 设置"
 
 #~ msgid "Effects"
 #~ msgstr "效果"

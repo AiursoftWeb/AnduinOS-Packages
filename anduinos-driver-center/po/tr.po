@@ -1,21 +1,19 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2026 THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the anduinos-driver-center package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
-#
+# anduinos-driver-center translations.
+# Copyright (C) 2026 AnduinOS contributors
+# This file is distributed under the same license as anduinos-driver-center.
 msgid ""
 msgstr ""
-"Project-Id-Version: anduinos-driver-center 2.0.0\n"
+"Project-Id-Version: anduinos-driver-center\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-11 16:11+0800\n"
 "PO-Revision-Date: 2026-08-06 07:08+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: tr\n"
-"Language: tr\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Generated-By: Babel 2.17.0\n"
 
 #: src/anduinos_driver_center/app.py:113 src/anduinos_driver_center/app.py:211
@@ -97,6 +95,7 @@ msgstr "Yapılandırılmış yazıcı yok"
 msgid "%d printer configured"
 msgid_plural "%d printers configured"
 msgstr[0] "%d yazıcı yapılandırıldı"
+msgstr[1] "%d yazıcı yapılandırıldı"
 
 #: src/anduinos_driver_center/app.py:375 src/anduinos_driver_center/app.py:378
 msgid "Printers"
@@ -167,6 +166,7 @@ msgstr "Yeniden Başlatma Gerekli"
 msgid "%d firmware update available"
 msgid_plural "%d firmware updates available"
 msgstr[0] "%d ürün yazılımı güncellemesi mevcut"
+msgstr[1] "%d ürün yazılımı güncellemesi mevcut"
 
 #: src/anduinos_driver_center/app.py:500
 msgid "No supported devices"
@@ -226,6 +226,7 @@ msgstr "Desteklenen ürün yazılımı cihazı yok"
 msgid "%d device is up to date"
 msgid_plural "%d devices are up to date"
 msgstr[0] "%d cihaz güncel"
+msgstr[1] "%d cihaz güncel"
 
 #: src/anduinos_driver_center/app.py:530 src/anduinos_driver_center/app.py:844
 #: src/anduinos_driver_center/app.py:908 src/anduinos_driver_center/app.py:932
@@ -511,6 +512,7 @@ msgstr "Desteklenen cihazlar"
 msgid "%d device detected"
 msgid_plural "%d devices detected"
 msgstr[0] "%d cihaz algılandı"
+msgstr[1] "%d cihaz algılandı"
 
 #: src/anduinos_driver_center/app.py:1253
 msgid "Available firmware updates"
@@ -521,6 +523,7 @@ msgstr "Mevcut ürün yazılımı güncellemeleri"
 msgid "%d update available"
 msgid_plural "%d updates available"
 msgstr[0] "%d güncelleme mevcut"
+msgstr[1] "%d güncelleme mevcut"
 
 #: src/anduinos_driver_center/app.py:1267
 msgid "Firmware actions"
@@ -556,6 +559,7 @@ msgstr "Tüm Firmware'i Güncelle"
 msgid "Install %d available update."
 msgid_plural "Install all %d available updates."
 msgstr[0] "Mevcut %d güncellemeyi yükle."
+msgstr[1] "Mevcut %d güncellemenin tümünü yükle."
 
 #: src/anduinos_driver_center/app.py:1306
 msgid "Update All"
@@ -683,6 +687,7 @@ msgstr ""
 msgid "Install %d available firmware update?"
 msgid_plural "Install all %d available firmware updates?"
 msgstr[0] "Mevcut %d ürün yazılımı güncellemesi yüklensin mi?"
+msgstr[1] "Mevcut %d ürün yazılımı güncellemesinin tümü yüklensin mi?"
 
 #: src/anduinos_driver_center/app.py:1491
 msgid "Keep the computer connected to AC power."
@@ -911,6 +916,7 @@ msgstr "Etkinleştirildi"
 msgid "%d configured printer"
 msgid_plural "%d configured printers"
 msgstr[0] "%d yapılandırılmış yazıcı"
+msgstr[1] "%d yapılandırılmış yazıcı"
 
 #: src/anduinos_driver_center/app.py:1971
 msgid "Configured printers"
@@ -933,6 +939,7 @@ msgstr "Yapılandırılmış kuyruk yok"
 msgid "%d queue paused"
 msgid_plural "%d queues paused"
 msgstr[0] "%d kuyruk duraklatıldı"
+msgstr[1] "%d kuyruk duraklatıldı"
 
 #: src/anduinos_driver_center/app.py:1991
 msgid "All queues enabled"

@@ -1,9 +1,6 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# anduinos-appearance translations.
+# Copyright (C) 2026 AnduinOS contributors
+# This file is distributed under the same license as anduinos-appearance.
 msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-appearance\n"
@@ -292,18 +289,12 @@ msgstr ""
 
 msgid ""
 "1. Approximate location (ipapi.co)\n"
-"AnduinOS will make one HTTPS request to ipapi.co. Its operator, Kloudend, "
-"Inc., will see your public IP address and may use it to estimate your city, "
-"country, and approximate coordinates.\n"
+"AnduinOS will make one HTTPS request to ipapi.co. Its operator, Kloudend, Inc., will see your public IP address and may use it to estimate your city, country, and approximate coordinates.\n"
 "\n"
 "2. Weather data (Open-Meteo)\n"
-"The weather extension will send the selected approximate coordinates to Open-"
-"Meteo, operated by OpenMeteo GmbH. The service will also see your public IP "
-"address and may retain API logs for up to 90 days.\n"
+"The weather extension will send the selected approximate coordinates to Open-Meteo, operated by OpenMeteo GmbH. The service will also see your public IP address and may retain API logs for up to 90 days.\n"
 "\n"
-"AnduinOS is not affiliated with, sponsored by, or endorsed by either third-"
-"party service. If location detection fails, AnduinOS will use an offline "
-"estimate based on your system timezone.\n"
+"AnduinOS is not affiliated with, sponsored by, or endorsed by either third-party service. If location detection fails, AnduinOS will use an offline estimate based on your system timezone.\n"
 "\n"
 "Privacy policies:\n"
 "https://ipapi.co/privacy/\n"
@@ -337,4 +328,101 @@ msgid "Location service unavailable; using {location} from your timezone."
 msgstr ""
 
 msgid "Weather was disabled, but its saved permission could not be cleared."
+msgstr ""
+
+#: src/anduinos-appearance:552
+msgid ""
+"Back up GNOME settings, layouts, and extension preferences. Personal files "
+"are not included."
+msgstr ""
+
+#: src/anduinos-appearance:550
+msgid "Backup and Restore"
+msgstr ""
+
+#: src/anduinos-appearance:607
+msgid "Export GNOME Settings"
+msgstr ""
+
+#: src/anduinos-appearance:557
+msgid "Export GNOME settings"
+msgstr ""
+
+#: src/anduinos-appearance:559
+msgid "Export…"
+msgstr ""
+
+#: src/anduinos-appearance:656
+msgid "How should these settings be imported?"
+msgstr ""
+
+#: src/anduinos-appearance:599
+msgid "INI settings files"
+msgstr ""
+
+#: src/anduinos-appearance:633
+msgid "Import GNOME Settings"
+msgstr ""
+
+#: src/anduinos-appearance:566
+msgid "Import GNOME settings"
+msgstr ""
+
+#: src/anduinos-appearance:568
+msgid "Import…"
+msgstr ""
+
+#: src/anduinos-appearance:663
+msgid "Merge Import"
+msgstr ""
+
+#: src/anduinos-appearance:657
+msgid ""
+"Merge import keeps current values that are absent from the file.\n"
+"\n"
+"Strict restore resets all /org/gnome/ settings first; values absent from the file return to their defaults. A safety backup is saved before either operation."
+msgstr ""
+
+#: src/anduinos-appearance:567
+msgid "Restore settings from a dconf INI file"
+msgstr ""
+
+#: src/anduinos-appearance:558
+msgid "Save the current settings as a readable INI file"
+msgstr ""
+
+#: src/anduinos-appearance:664
+msgid "Strict Restore"
+msgstr ""
+
+#: src/anduinos-appearance:629
+msgid "✓ GNOME settings exported"
+msgstr ""
+
+#: src/anduinos-appearance:706
+msgid "✓ Settings imported. Log out and back in to apply all changes."
+msgstr ""
+
+#: src/anduinos-appearance:622 src/anduinos-appearance:626
+msgid "✗ Failed to export GNOME settings"
+msgstr ""
+
+#: src/anduinos-appearance:699
+msgid "✗ Failed to import GNOME settings"
+msgstr ""
+
+#: src/anduinos-appearance:647 src/anduinos-appearance:651
+msgid "✗ Failed to read the settings file"
+msgstr ""
+
+#: src/anduinos-appearance:695
+msgid "✗ Import and automatic rollback both failed"
+msgstr ""
+
+#: src/anduinos-appearance:693
+msgid "✗ Import failed; previous settings were restored"
+msgstr ""
+
+#: src/anduinos-appearance:688
+msgid "✗ The selected file is not a valid dconf INI file"
 msgstr ""

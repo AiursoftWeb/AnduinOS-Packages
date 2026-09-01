@@ -1,7 +1,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: anduinos-btrfs-snapshots-manager 0.1.0\n"
+"Project-Id-Version: anduinos-btrfs-snapshots-manager\n"
 "POT-Creation-Date: 2026-08-06 00:00+0800\n"
 "PO-Revision-Date: 2026-08-06 00:00+0800\n"
 "Last-Translator: Automatically generated\n"
@@ -10,6 +10,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "A critical threshold is failing now"
@@ -1853,3 +1854,15 @@ msgstr "{0}% · عتبة التحذير {1}%"
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "{0}/s"
 msgstr "{0}/ثانية"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs could not complete the integrity check."
+msgstr "تعذر على Btrfs إكمال فحص السلامة."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Details: {0}"
+msgstr "التفاصيل: {0}"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Failed"
+msgstr "فشل فحص السلامة"

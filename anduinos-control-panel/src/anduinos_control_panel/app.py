@@ -1712,8 +1712,10 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                     if return_code != 0:
                         GLib.idle_add(
                             failure,
-                            _("%s exited with status %d")
-                            % (Path(arguments[0]).name, return_code),
+                            _("{command} exited with status {status}").format(
+                                command=Path(arguments[0]).name,
+                                status=return_code,
+                            ),
                         )
                         return
                     GLib.idle_add(

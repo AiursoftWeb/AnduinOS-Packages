@@ -2,7 +2,7 @@
 # Copyright (C) 2026 AnduinOS Team
 msgid ""
 msgstr ""
-"Project-Id-Version: anduinos-appearance 2.0\n"
+"Project-Id-Version: anduinos-appearance\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-27 05:08+0000\n"
 "Language-Team: Italian\n"
@@ -143,7 +143,9 @@ msgstr "Reimpostare le impostazioni del desktop?"
 
 #: src/anduinos-appearance:368
 msgid "Restore all GNOME Shell settings to factory defaults"
-msgstr "Ripristina tutte le impostazioni di GNOME Shell ai valori predefiniti di fabbrica"
+msgstr ""
+"Ripristina tutte le impostazioni di GNOME Shell ai valori predefiniti di "
+"fabbrica"
 
 #: src/anduinos-appearance:57
 msgid "Right"
@@ -219,7 +221,8 @@ msgstr "✓ Applicato — {style} | {pos}"
 
 #: src/anduinos-appearance:387
 msgid "✓ Desktop settings reset. Restart Shell to apply."
-msgstr "✓ Impostazioni del desktop reimpostate. Riavvia la shell per applicarle."
+msgstr ""
+"✓ Impostazioni del desktop reimpostate. Riavvia la shell per applicarle."
 
 #: src/anduinos-appearance:502
 msgid "✓ GDM wallpaper applied"
@@ -280,6 +283,190 @@ msgstr "Network Stats"
 #: src/anduinos-appearance:344
 msgid "Simple Weather"
 msgstr "Simple Weather"
+
+#: src/anduinos-appearance:552
+msgid ""
+"Back up GNOME settings, layouts, and extension preferences. Personal files "
+"are not included."
+msgstr ""
+"Esegui il backup delle impostazioni GNOME, dei layout e delle preferenze "
+"delle estensioni. I file personali non sono inclusi."
+
+#: src/anduinos-appearance:699
+msgid "✗ Failed to import GNOME settings"
+msgstr "✗ Impossibile importare le impostazioni GNOME"
+
+#: src/anduinos-appearance:558
+msgid "Save the current settings as a readable INI file"
+msgstr "Salva le impostazioni attuali come file INI leggibile"
+
+#: src/anduinos-appearance:622 src/anduinos-appearance:626
+msgid "✗ Failed to export GNOME settings"
+msgstr "✗ Impossibile esportare le impostazioni GNOME"
+
+#: src/anduinos-appearance:568
+msgid "Import…"
+msgstr "Importa…"
+
+#: src/anduinos-appearance:706
+msgid "✓ Settings imported. Log out and back in to apply all changes."
+msgstr ""
+"✓ Impostazioni importate. Termina la sessione e accedi nuovamente per "
+"applicare tutte le modifiche."
+
+#: src/anduinos-appearance:393
+msgid "Weather was not enabled because permission was declined."
+msgstr ""
+"La funzione meteo non è stata abilitata perché l'autorizzazione è stata "
+"rifiutata."
+
+#: src/anduinos-appearance:629
+msgid "✓ GNOME settings exported"
+msgstr "✓ Impostazioni GNOME esportate"
+
+#: src/anduinos-appearance:373
+msgid "Decline"
+msgstr "Rifiuta"
+
+#: src/anduinos-appearance:607
+msgid "Export GNOME Settings"
+msgstr "Esporta impostazioni GNOME"
+
+#: src/anduinos-appearance:370
+msgid "Weather Services Privacy Agreement"
+msgstr "Accordo sulla privacy dei servizi meteo"
+
+#: src/anduinos-appearance:275
+msgid "Update approximate weather location"
+msgstr "Aggiorna la posizione approssimativa usata per il meteo"
+
+#: src/anduinos-appearance:663
+msgid "Merge Import"
+msgstr "Importa e unisci"
+
+#: src/anduinos-appearance:647 src/anduinos-appearance:651
+msgid "✗ Failed to read the settings file"
+msgstr "✗ Impossibile leggere il file di impostazioni"
+
+#: src/anduinos-appearance:482
+#, python-brace-format
+msgid "Location service unavailable; using {location} from your timezone."
+msgstr ""
+"Servizio di localizzazione non disponibile; viene usata la posizione "
+"{location} ricavata dal tuo fuso orario."
+
+#: src/anduinos-appearance:656
+msgid "How should these settings be imported?"
+msgstr "Come devono essere importate queste impostazioni?"
+
+#: src/anduinos-appearance:557
+msgid "Export GNOME settings"
+msgstr "Esporta impostazioni GNOME"
+
+#: src/anduinos-appearance:472
+msgid "Failed to configure the weather extension."
+msgstr "Impossibile configurare l'estensione meteo."
+
+#: src/anduinos-appearance:559
+msgid "Export…"
+msgstr "Esporta…"
+
+#: src/anduinos-appearance:664
+msgid "Strict Restore"
+msgstr "Ripristino completo"
+
+#: src/anduinos-appearance:347
+msgid "Weather was disabled, but its saved permission could not be cleared."
+msgstr ""
+"La funzione meteo è stata disabilitata, ma non è stato possibile eliminare "
+"l'autorizzazione salvata."
+
+#: src/anduinos-appearance:566
+msgid "Import GNOME settings"
+msgstr "Importa impostazioni GNOME"
+
+#: src/anduinos-appearance:688
+msgid "✗ The selected file is not a valid dconf INI file"
+msgstr "✗ Il file selezionato non è un file INI dconf valido"
+
+#: src/anduinos-appearance:633
+msgid "Import GNOME Settings"
+msgstr "Importa impostazioni GNOME"
+
+#: src/anduinos-appearance:693
+msgid "✗ Import failed; previous settings were restored"
+msgstr ""
+"✗ Importazione non riuscita; le impostazioni precedenti sono state "
+"ripristinate"
+
+#: src/anduinos-appearance:695
+msgid "✗ Import and automatic rollback both failed"
+msgstr "✗ Sia l'importazione sia il ripristino automatico non sono riusciti"
+
+#: src/anduinos-appearance:374
+msgid "Agree to All"
+msgstr "Accetta tutto"
+
+#: src/anduinos-appearance:414
+msgid "Failed to save weather permission."
+msgstr "Impossibile salvare l'autorizzazione per la funzione meteo."
+
+#: src/anduinos-appearance:657
+msgid ""
+"Merge import keeps current values that are absent from the file.\n"
+"\n"
+"Strict restore resets all /org/gnome/ settings first; values absent from the file return to their defaults. A safety backup is saved before either operation."
+msgstr ""
+"L'opzione «Importa e unisci» mantiene i valori attuali che non sono presenti nel file.\n"
+"\n"
+"Il ripristino completo reimposta prima tutte le impostazioni in /org/gnome/; i valori non presenti nel file tornano ai valori predefiniti. Prima di ciascuna operazione viene salvato un backup di sicurezza."
+
+#: src/anduinos-appearance:567
+msgid "Restore settings from a dconf INI file"
+msgstr "Ripristina le impostazioni da un file INI dconf"
+
+#: src/anduinos-appearance:478
+#, python-brace-format
+msgid "Weather location set to {location}."
+msgstr "La posizione usata per il meteo è stata impostata su {location}."
+
+#: src/anduinos-appearance:353
+msgid ""
+"1. Approximate location (ipapi.co)\n"
+"AnduinOS will make one HTTPS request to ipapi.co. Its operator, Kloudend, Inc., will see your public IP address and may use it to estimate your city, country, and approximate coordinates.\n"
+"\n"
+"2. Weather data (Open-Meteo)\n"
+"The weather extension will send the selected approximate coordinates to Open-Meteo, operated by OpenMeteo GmbH. The service will also see your public IP address and may retain API logs for up to 90 days.\n"
+"\n"
+"AnduinOS is not affiliated with, sponsored by, or endorsed by either third-party service. If location detection fails, AnduinOS will use an offline estimate based on your system timezone.\n"
+"\n"
+"Privacy policies:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+msgstr ""
+"1. Posizione approssimativa (ipapi.co)\n"
+"AnduinOS effettuerà una sola richiesta HTTPS a ipapi.co. Il gestore del servizio, Kloudend, Inc., vedrà il tuo indirizzo IP pubblico e potrebbe utilizzarlo per stimare la tua città, il tuo paese e le tue coordinate approssimative.\n"
+"\n"
+"2. Dati meteo (Open-Meteo)\n"
+"L'estensione meteo invierà le coordinate approssimative selezionate a Open-Meteo, un servizio gestito da OpenMeteo GmbH. Anche questo servizio vedrà il tuo indirizzo IP pubblico e potrebbe conservare i log API per un massimo di 90 giorni.\n"
+"\n"
+"AnduinOS non è affiliato a nessuno dei due servizi di terze parti, né è sponsorizzato o sostenuto da essi. Se il rilevamento della posizione non riesce, AnduinOS utilizzerà una stima offline basata sul fuso orario del sistema.\n"
+"\n"
+"Informative sulla privacy:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+
+#: src/anduinos-appearance:423
+msgid "Determining your approximate location…"
+msgstr "Determinazione della tua posizione approssimativa…"
+
+#: src/anduinos-appearance:550
+msgid "Backup and Restore"
+msgstr "Backup e ripristino"
+
+#: src/anduinos-appearance:599
+msgid "INI settings files"
+msgstr "File di impostazioni INI"
 
 #~ msgid "Effects"
 #~ msgstr "Effects"

@@ -2887,19 +2887,20 @@ def _validated_swap_size(shared, swap_sizing):
     return requested_swap
 
 
-def _swap_assessment(swap_sizing, swap_size_mib):
+def _swap_assessment(swap_sizing, swap_size_mib, lang):
     if swap_size_mib == swap_sizing.swap_size_mib:
         return (
             "emblem-ok-symbolic",
             "installer-success-card",
-            "✓ Best performance — AnduinOS recommended Swap size.",
+            _("✓ Best performance — AnduinOS recommended Swap size.", lang),
             None,
         )
     if swap_size_mib == 0:
-        message = (
+        message = _(
             "Disk Swap will not be created. ZRAM remains enabled, "
             "but sustained memory pressure can terminate applications "
-            "and hibernation is unavailable. This is strongly discouraged."
+            "and hibernation is unavailable. This is strongly discouraged.",
+            lang,
         )
         return (
             "dialog-error-symbolic",
@@ -2908,21 +2909,24 @@ def _swap_assessment(swap_sizing, swap_size_mib):
             message,
         )
     if swap_size_mib < swap_sizing.runtime_target_mib:
-        message = (
+        message = _(
             "This is below AnduinOS's runtime safety target. ZRAM still "
             "works, but heavy browser or application workloads can run out "
-            "of backing memory sooner; hibernation is also unavailable."
+            "of backing memory sooner; hibernation is also unavailable.",
+            lang,
         )
     elif swap_size_mib < swap_sizing.hibernation_target_mib:
-        message = (
+        message = _(
             "This size protects ordinary memory pressure, but is smaller "
             "than the hibernation target. Hibernation may fail or be "
-            "unavailable."
+            "unavailable.",
+            lang,
         )
     else:
-        message = (
+        message = _(
             "This exceeds the AnduinOS recommendation. It consumes more "
-            "disk space and normally does not improve runtime performance."
+            "disk space and normally does not improve runtime performance.",
+            lang,
         )
     return (
         "dialog-warning-symbolic",
@@ -2997,11 +3001,13 @@ def _swap_control(swap_sizing, selected_swap_size_mib, lang, on_changed,
 
     scale_ends = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
     scale_ends.append(
-        Gtk.Label(label="0 GiB · ZRAM only", xalign=0, hexpand=True)
+        Gtk.Label(label=_("0 GiB · ZRAM only", lang), xalign=0, hexpand=True)
     )
     scale_ends.append(
         Gtk.Label(
-            label=f"{swap_sizing.maximum_custom_mib // 1024} GiB · Max",
+            label=_("{size} GiB · Max", lang).format(
+                size=swap_sizing.maximum_custom_mib // 1024
+            ),
             xalign=1,
         )
     )
@@ -3018,9 +3024,10 @@ def _swap_control(swap_sizing, selected_swap_size_mib, lang, on_changed,
     control.append(status)
 
     zram_status = Gtk.Label(
-        label=(
+        label=_(
             "ZRAM always remains enabled: 50% of RAM · LZ4 · "
-            "priority 100. Disk Swap uses priority 10."
+            "priority 100. Disk Swap uses priority 10.",
+            lang,
         ),
         xalign=0,
         wrap=True,
@@ -3031,7 +3038,7 @@ def _swap_control(swap_sizing, selected_swap_size_mib, lang, on_changed,
     def _set_choice(swap_size_mib):
         size_label.set_label(f"{swap_size_mib // 1024} GiB")
         icon_name, css_class, status_text, _warning_text = (
-            _swap_assessment(swap_sizing, swap_size_mib)
+            _swap_assessment(swap_sizing, swap_size_mib, lang)
         )
         status_icon.set_from_icon_name(icon_name)
         status_label.set_label(status_text)
@@ -6416,6 +6423,7 @@ def build_summary_page(shared, nav_view):
         swap_warning_for_install = _swap_assessment(
             swap_sizing,
             selected_swap_size_mib,
+            lang,
         )[3]
 
         # Guided storage is retained for compatibility with unfinished flows.
@@ -6429,6 +6437,7 @@ def build_summary_page(shared, nav_view):
                 swap_warning_for_install = _swap_assessment(
                     swap_sizing,
                     swap_size_mib,
+                    lang,
                 )[3]
                 workflow = shared.get("_guided_storage_workflow_model")
                 if isinstance(workflow, StorageWorkflow) and isinstance(
@@ -6683,10 +6692,10 @@ def build_summary_page(shared, nav_view):
             return
         warning = Adw.MessageDialog(
             transient_for=nav_view.get_root(),
-            heading="Review your custom Swap size",
+            heading=_("Review your custom Swap size", lang),
             body=(
                 f"{swap_warning_for_install}\n\n"
-                "ZRAM will remain enabled regardless of this choice."
+                + _("ZRAM will remain enabled regardless of this choice.", lang)
             ),
         )
         warning.add_response("back", _("Back", lang))

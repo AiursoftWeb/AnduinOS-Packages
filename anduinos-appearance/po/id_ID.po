@@ -2,7 +2,7 @@
 # Copyright (C) 2026 AnduinOS Team
 msgid ""
 msgstr ""
-"Project-Id-Version: anduinos-appearance 2.0\n"
+"Project-Id-Version: anduinos-appearance\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-27 05:08+0000\n"
 "Language-Team: Indonesian\n"
@@ -282,6 +282,185 @@ msgstr "Statistik Jaringan"
 #: src/anduinos-appearance:344
 msgid "Simple Weather"
 msgstr "Cuaca Sederhana"
+
+#: src/anduinos-appearance:633
+msgid "Import GNOME Settings"
+msgstr "Impor Pengaturan GNOME"
+
+#: src/anduinos-appearance:647 src/anduinos-appearance:651
+msgid "✗ Failed to read the settings file"
+msgstr "✗ Gagal membaca file pengaturan"
+
+#: src/anduinos-appearance:373
+msgid "Decline"
+msgstr "Tolak"
+
+#: src/anduinos-appearance:557
+msgid "Export GNOME settings"
+msgstr "Ekspor Pengaturan GNOME"
+
+#: src/anduinos-appearance:663
+msgid "Merge Import"
+msgstr "Impor Gabungan"
+
+#: src/anduinos-appearance:559
+msgid "Export…"
+msgstr "Ekspor…"
+
+#: src/anduinos-appearance:353
+msgid ""
+"1. Approximate location (ipapi.co)\n"
+"AnduinOS will make one HTTPS request to ipapi.co. Its operator, Kloudend, Inc., will see your public IP address and may use it to estimate your city, country, and approximate coordinates.\n"
+"\n"
+"2. Weather data (Open-Meteo)\n"
+"The weather extension will send the selected approximate coordinates to Open-Meteo, operated by OpenMeteo GmbH. The service will also see your public IP address and may retain API logs for up to 90 days.\n"
+"\n"
+"AnduinOS is not affiliated with, sponsored by, or endorsed by either third-party service. If location detection fails, AnduinOS will use an offline estimate based on your system timezone.\n"
+"\n"
+"Privacy policies:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+msgstr ""
+"1. Perkiraan lokasi (ipapi.co)\n"
+"AnduinOS akan mengirim satu permintaan HTTPS ke ipapi.co. Pengelolanya, Kloudend, Inc., akan melihat alamat IP publik Anda dan dapat menggunakannya untuk memperkirakan kota, negara, serta koordinat Anda secara kasar.\n"
+"\n"
+"2. Data cuaca (Open-Meteo)\n"
+"Ekstensi cuaca akan mengirim koordinat perkiraan yang dipilih ke Open-Meteo, yang dioperasikan oleh OpenMeteo GmbH. Layanan ini juga akan melihat alamat IP publik Anda dan dapat menyimpan log API hingga 90 hari.\n"
+"\n"
+"AnduinOS tidak berafiliasi dengan salah satu pun dari kedua layanan pihak ketiga tersebut, serta tidak disponsori atau didukung oleh keduanya. Jika deteksi lokasi gagal, AnduinOS akan menggunakan perkiraan luring berdasarkan zona waktu sistem Anda.\n"
+"\n"
+"Kebijakan privasi:\n"
+"https://ipapi.co/privacy/\n"
+"https://open-meteo.com/en/terms"
+
+#: src/anduinos-appearance:275
+msgid "Update approximate weather location"
+msgstr "Perbarui perkiraan lokasi yang digunakan oleh fitur cuaca"
+
+#: src/anduinos-appearance:656
+msgid "How should these settings be imported?"
+msgstr "Bagaimana pengaturan ini harus diimpor?"
+
+#: src/anduinos-appearance:607
+msgid "Export GNOME Settings"
+msgstr "Ekspor Pengaturan GNOME"
+
+#: src/anduinos-appearance:657
+msgid ""
+"Merge import keeps current values that are absent from the file.\n"
+"\n"
+"Strict restore resets all /org/gnome/ settings first; values absent from the file return to their defaults. A safety backup is saved before either operation."
+msgstr ""
+"Impor gabungan mempertahankan nilai saat ini yang tidak terdapat dalam berkas.\n"
+"\n"
+"Pemulihan penuh terlebih dahulu mengatur ulang semua pengaturan /org/gnome/; nilai yang tidak terdapat dalam berkas akan dikembalikan ke nilai defaultnya. Cadangan pengaman dibuat sebelum salah satu operasi dijalankan."
+
+#: src/anduinos-appearance:370
+msgid "Weather Services Privacy Agreement"
+msgstr "Perjanjian Privasi Layanan Cuaca"
+
+#: src/anduinos-appearance:393
+msgid "Weather was not enabled because permission was declined."
+msgstr "Fitur cuaca tidak diaktifkan karena izin ditolak."
+
+#: src/anduinos-appearance:664
+msgid "Strict Restore"
+msgstr "Pemulihan Penuh"
+
+#: src/anduinos-appearance:706
+msgid "✓ Settings imported. Log out and back in to apply all changes."
+msgstr ""
+"✓ Pengaturan diimpor. Keluar dan masuk kembali untuk menerapkan semua "
+"perubahan."
+
+#: src/anduinos-appearance:699
+msgid "✗ Failed to import GNOME settings"
+msgstr "✗ Gagal mengimpor pengaturan GNOME"
+
+#: src/anduinos-appearance:695
+msgid "✗ Import and automatic rollback both failed"
+msgstr "✗ Impor dan pemulihan otomatis sama-sama gagal"
+
+#: src/anduinos-appearance:566
+msgid "Import GNOME settings"
+msgstr "Impor Pengaturan GNOME"
+
+#: src/anduinos-appearance:622 src/anduinos-appearance:626
+msgid "✗ Failed to export GNOME settings"
+msgstr "✗ Gagal mengekspor pengaturan GNOME"
+
+#: src/anduinos-appearance:482
+#, python-brace-format
+msgid "Location service unavailable; using {location} from your timezone."
+msgstr ""
+"Layanan lokasi tidak tersedia; {location} digunakan berdasarkan zona waktu "
+"Anda."
+
+#: src/anduinos-appearance:558
+msgid "Save the current settings as a readable INI file"
+msgstr "Simpan pengaturan saat ini sebagai berkas INI yang mudah dibaca"
+
+#: src/anduinos-appearance:599
+msgid "INI settings files"
+msgstr "Berkas pengaturan INI"
+
+#: src/anduinos-appearance:693
+msgid "✗ Import failed; previous settings were restored"
+msgstr "✗ Impor gagal; pengaturan sebelumnya dipulihkan"
+
+#: src/anduinos-appearance:478
+#, python-brace-format
+msgid "Weather location set to {location}."
+msgstr "Lokasi untuk cuaca telah ditetapkan ke {location}."
+
+#: src/anduinos-appearance:414
+msgid "Failed to save weather permission."
+msgstr "Gagal menyimpan izin untuk fitur cuaca."
+
+#: src/anduinos-appearance:423
+msgid "Determining your approximate location…"
+msgstr "Menentukan lokasi perkiraan Anda…"
+
+#: src/anduinos-appearance:550
+msgid "Backup and Restore"
+msgstr "Pencadangan dan Pemulihan"
+
+#: src/anduinos-appearance:552
+msgid ""
+"Back up GNOME settings, layouts, and extension preferences. Personal files "
+"are not included."
+msgstr ""
+"Cadangkan pengaturan GNOME, tata letak, dan preferensi ekstensi. File "
+"pribadi tidak disertakan."
+
+#: src/anduinos-appearance:374
+msgid "Agree to All"
+msgstr "Setujui Semua"
+
+#: src/anduinos-appearance:472
+msgid "Failed to configure the weather extension."
+msgstr "Gagal mengonfigurasi ekstensi cuaca."
+
+#: src/anduinos-appearance:347
+msgid "Weather was disabled, but its saved permission could not be cleared."
+msgstr ""
+"Fitur cuaca dinonaktifkan, tetapi izin yang tersimpan tidak dapat dihapus."
+
+#: src/anduinos-appearance:568
+msgid "Import…"
+msgstr "Impor…"
+
+#: src/anduinos-appearance:567
+msgid "Restore settings from a dconf INI file"
+msgstr "Pulihkan pengaturan dari berkas dconf berformat INI"
+
+#: src/anduinos-appearance:629
+msgid "✓ GNOME settings exported"
+msgstr "✓ Pengaturan GNOME diekspor"
+
+#: src/anduinos-appearance:688
+msgid "✗ The selected file is not a valid dconf INI file"
+msgstr "✗ Berkas yang dipilih bukan berkas dconf berformat INI yang valid"
 
 #~ msgid "Effects"
 #~ msgstr "Effects"
