@@ -52,23 +52,15 @@ test -f "$ROOT/data/anduinos-btrfs-snapshots-manager-notifier.service"
 test -f "$ROOT/data/org.anduinos.BtrfsSnapshotsManager.Session.service"
 test -f "$ROOT/data/anduinos_btrfs_snapshots_manager_file_history.py"
 test -x "$ROOT/compile-locales.sh"
-test -f "$ROOT/po/anduinos-btrfs-snapshots-manager.pot"
-python3 - "$ROOT/po" <<'PY'
-from pathlib import Path
-import polib
-
-directory = Path(__import__('sys').argv[1])
-template = polib.pofile(str(directory / "anduinos-btrfs-snapshots-manager.pot"))
-expected = {entry.msgid for entry in template if entry.msgid}
-for catalog_path in sorted(directory.glob("*.po")):
-    catalog = polib.pofile(str(catalog_path))
-    entries = {entry.msgid: entry for entry in catalog if entry.msgid}
-    if set(entries) != expected:
-        raise SystemExit(f"{catalog_path.name}: catalog does not match the template")
-    missing = [msgid for msgid, entry in entries.items() if not entry.msgstr]
-    if missing:
-        raise SystemExit(f"{catalog_path.name}: untranslated message: {missing[0]!r}")
-PY
+template="$ROOT/po/anduinos-btrfs-snapshots-manager.pot"
+test -f "$template"
+# Keep the release gate self-contained in a clean APKG runner.  msgcmp is
+# provided by gettext (already required by compile-locales.sh) and verifies
+# both template coverage and non-empty translations without a third-party
+# Python module.
+for catalog in "$ROOT"/po/*.po; do
+    msgcmp --no-fuzzy-matching "$catalog" "$template" >/dev/null
+done
 test -f "$ROOT/data/dracut/91anduinos-btrfs-snapshots-manager/module-setup.sh"
 test -f "$ROOT/data/dracut/91anduinos-btrfs-snapshots-manager/anduinos-btrfs-snapshots-manager.sh"
 grep -Fq '<Dependency Include="dracut"' \
