@@ -102,6 +102,15 @@ class RemoveLivePackagesStep:
                     + filesystem_tool
                 )
             retained += (filesystem_tool,)
+        if (
+            context.plan.storage.filesystem is Filesystem.BTRFS
+            and _is_installed(self.runner, target, SNAPSHOTS_MANAGER_PACKAGE)
+        ):
+            # The ISO deliberately carries this package for offline Btrfs
+            # installations. Do not rely on the copied Live system's APT mark:
+            # make the selected-filesystem capability explicit before the
+            # installer package and its orphaned dependencies are removed.
+            retained += (SNAPSHOTS_MANAGER_PACKAGE,)
         for package in retained:
             self.runner.run(
                 ("chroot", str(target), "apt-mark", "manual", package),

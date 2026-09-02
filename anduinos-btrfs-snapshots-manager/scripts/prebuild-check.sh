@@ -99,6 +99,9 @@ if rg -n 'path[[:space:]]*=[[:space:]]*"src/bin/' \
     exit 1
 fi
 test -f "$ROOT/data/90-anduinos-btrfs-snapshots-manager"
+grep -Fxq \
+    'APT::NeverAutoRemove:: "^anduinos-btrfs-snapshots-manager$";' \
+    "$ROOT/data/90-anduinos-btrfs-snapshots-manager"
 grep -Fxq 'd /var/lib/btrfs 0755 root root -' \
     "$ROOT/data/anduinos-btrfs-snapshots-manager.tmpfiles"
 grep -Fxq 'StateDirectory=btrfs' \

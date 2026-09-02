@@ -122,6 +122,11 @@ class RemoveLivePackagesTests(unittest.TestCase):
             runner = FakeRunner()
             for package in ("anduinos-live-layers", "anduinos-installer-beta"):
                 runner.outputs[_query(target, package)] = ("ii \n", "", 0)
+            runner.outputs[_query(target, SNAPSHOTS_MANAGER_PACKAGE)] = (
+                "ii \n",
+                "",
+                0,
+            )
             context = _context(target)
             step = RemoveLivePackagesStep(runner)
             step.preflight(context)
@@ -140,9 +145,23 @@ class RemoveLivePackagesTests(unittest.TestCase):
         }
         self.assertEqual(
             queried,
-            set(EXPECTED_LIVE_ONLY_PACKAGES) | {"openssh-server"},
+            set(EXPECTED_LIVE_ONLY_PACKAGES)
+            | {"openssh-server", SNAPSHOTS_MANAGER_PACKAGE},
         )
-        self.assertNotIn(SNAPSHOTS_MANAGER_PACKAGE, queried)
+        self.assertIn(
+            (
+                "chroot",
+                str(target),
+                "apt-mark",
+                "manual",
+                SNAPSHOTS_MANAGER_PACKAGE,
+            ),
+            [command for command, _kwargs in runner.commands],
+        )
+        self.assertIn(
+            SNAPSHOTS_MANAGER_PACKAGE,
+            context.values["persistent_target_packages"],
+        )
 
     def test_marks_live_composed_openssh_as_a_persistent_target_package(self):
         messages = []
