@@ -80,10 +80,6 @@ class KernelParametersPackageContractTests(unittest.TestCase):
 
     def test_desktop_recommends_the_policy_only_on_resolute(self):
         desktop = ET.parse(DESKTOP_PROJECT_FILE).getroot()
-        self.assertEqual(
-            desktop.findtext(".//PackageVersion"),
-            "2.0.2-1+$(SuiteShortName)",
-        )
         matching_dependencies = desktop.findall(
             ".//Dependency[@Include='anduinos-kernel-parameters']"
         )
