@@ -1474,9 +1474,8 @@ msgid ""
 "Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
 " or unclean volumes are never resized."
 msgstr ""
-"Manual changes are destructive. Existing partition starts are never moved. "
-"Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
-" or unclean volumes are never resized."
+"手動變更具有破壞性。現有分割區的起始位置絕不會移動。只有通過嚴格的安全檢查後，才可縮小未加密的 NTFS "
+"磁碟區；加密、已掛載或未正常卸載的磁碟區絕不會調整大小。"
 
 msgid "Install Alongside Automatically"
 msgstr "自動並排安裝"
@@ -1567,7 +1566,7 @@ msgid "Apply Changes"
 msgstr "套用變更"
 
 msgid "Close"
-msgstr "Close"
+msgstr "關閉"
 
 msgid ""
 "BitLocker was detected. Return to Windows, open Manage BitLocker, choose "
@@ -1575,56 +1574,47 @@ msgid ""
 "protection is not enough. Back up the recovery key, fully shut Windows down,"
 " then start the installer again."
 msgstr ""
-"BitLocker was detected. Return to Windows, open Manage BitLocker, choose "
-"Turn off BitLocker, and wait until decryption reaches 100%. Suspending "
-"protection is not enough. Back up the recovery key, fully shut Windows down,"
-" then start the installer again."
+"偵測到 BitLocker。請返回 Windows，開啟「管理 BitLocker」，選擇「關閉 BitLocker」，並等待解密進度達到 "
+"100%。僅暫停保護是不夠的。請備份復原金鑰，將 Windows 完全關機，然後再次啟動安裝程式。"
 
 msgid ""
 "Windows is hibernated or Fast Startup is active. In an Administrator "
 "Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s "
 "/t 0'. Start the installer again only after Windows has fully shut down."
 msgstr ""
-"Windows is hibernated or Fast Startup is active. In an Administrator "
-"Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s "
-"/t 0'. Start the installer again only after Windows has fully shut down."
+"Windows 處於休眠狀態或已啟用快速啟動。請在管理員終端機中執行 'powercfg /h off'，停用快速啟動，然後執行 'shutdown "
+"/s /t 0'。只有在 Windows 完全關機後，才能再次啟動安裝程式。"
 
 msgid ""
 "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk"
 " C: /f', allow every requested reboot to finish, then fully shut Windows "
 "down before trying again."
 msgstr ""
-"Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk"
-" C: /f', allow every requested reboot to finish, then fully shut Windows "
-"down before trying again."
+"Windows 未將此 NTFS 磁碟區正常卸載。請返回 Windows，執行 'chkdsk C: "
+"/f'，讓所有要求的重新啟動完成，然後在再次嘗試前將 Windows 完全關機。"
 
 msgid ""
 "This target would require moving critical NTFS MFT metadata through a "
 "currently unsafe upstream code path. Choose a larger Windows size or shrink "
 "the volume from Windows."
 msgstr ""
-"This target would require moving critical NTFS MFT metadata through a "
-"currently unsafe upstream code path. Choose a larger Windows size or shrink "
-"the volume from Windows."
+"此目標需要透過目前不安全的上游程式碼路徑移動關鍵的 NTFS MFT 中繼資料。請選擇較大的 Windows 大小，或從 Windows 中縮小磁碟區。"
 
 msgid ""
 "This NTFS volume is mounted or in use. Unmount it and rescan storage before "
 "continuing."
-msgstr ""
-"This NTFS volume is mounted or in use. Unmount it and rescan storage before "
-"continuing."
+msgstr "此 NTFS 磁碟區已掛載或正在使用中。請取消掛載並重新掃描儲存裝置，然後繼續。"
 
 msgid ""
 "This operation moves NTFS data and changes the GPT partition boundary. A "
 "power loss, failing drive, firmware fault or filesystem bug can cause "
 "permanent data loss. Back up all important Windows files before continuing."
 msgstr ""
-"This operation moves NTFS data and changes the GPT partition boundary. A "
-"power loss, failing drive, firmware fault or filesystem bug can cause "
-"permanent data loss. Back up all important Windows files before continuing."
+"此操作將移動 NTFS 資料並變更 GPT 分割區邊界。斷電、磁碟故障、韌體錯誤或檔案系統錯誤均可能導致永久性資料損失。請在繼續前備份所有重要的 "
+"Windows 檔案。"
 
 msgid "New Windows partition size"
-msgstr "New Windows partition size"
+msgstr "新的 Windows 分割區大小"
 
 msgid "MiB"
 msgstr "MiB"
@@ -1635,44 +1625,40 @@ msgstr "Allowed: {minimum}–{maximum}"
 
 #, python-brace-format
 msgid "Windows: {windows} · New unallocated space: {free}"
-msgstr "Windows: {windows} · New unallocated space: {free}"
+msgstr "Windows：{windows} · 新增未分配空間：{free}"
 
 msgid ""
 "I have backed up my data and understand that shrinking an existing Windows "
 "partition can cause permanent data loss."
-msgstr ""
-"I have backed up my data and understand that shrinking an existing Windows "
-"partition can cause permanent data loss."
+msgstr "我已備份我的資料，並明白縮小現有的 Windows 分割區可能會導致永久性資料損失。"
 
 #, python-brace-format
 msgid "Change the size of {partition}?"
-msgstr "Change the size of {partition}?"
+msgstr "要調整 {partition} 的大小嗎？"
 
 msgid ""
 "The partition start will not move. Only its end will move left, creating "
 "unallocated space immediately after it."
-msgstr ""
-"The partition start will not move. Only its end will move left, creating "
-"unallocated space immediately after it."
+msgstr "分割區的起始位置不會移動。只有結束位置會向左移，並在分割區後方立即建立未分配空間。"
 
 msgid "Undo Planned Resize"
-msgstr "Undo Planned Resize"
+msgstr "撤銷已規劃的大小調整"
 
 msgid "Plan Resize"
-msgstr "Plan Resize"
+msgstr "規劃調整大小"
 
 msgid "Turn off BitLocker before shrinking"
-msgstr "Turn off BitLocker before shrinking"
+msgstr "縮小前請先關閉 BitLocker"
 
 #, python-brace-format
 msgid "Checking whether {partition} can be resized safely…"
-msgstr "Checking whether {partition} can be resized safely…"
+msgstr "正在檢查 {partition} 是否可以安全地調整大小…"
 
 msgid "NTFS safety check failed"
-msgstr "NTFS safety check failed"
+msgstr "NTFS 安全檢查失敗"
 
 msgid "This partition cannot be resized safely"
-msgstr "This partition cannot be resized safely"
+msgstr "此分割區無法安全地調整大小"
 
 msgid "New empty GPT — every existing partition will be deleted"
 msgstr "新的空白 GPT — 所有現有分割區都將被刪除"
@@ -1694,7 +1680,7 @@ msgstr "保留"
 
 #, python-brace-format
 msgid "Planned size: {size}"
-msgstr "Planned size: {size}"
+msgstr "規劃大小：{size}"
 
 msgid "Deleted by new GPT"
 msgstr "被新 GPT 刪除"
@@ -1709,7 +1695,7 @@ msgid "RESIZE"
 msgstr "RESIZE"
 
 msgid "Change Size"
-msgstr "Change Size"
+msgstr "調整大小"
 
 msgid "This disk has no existing partitions."
 msgstr "此磁碟沒有現有分割區。"
@@ -1749,9 +1735,7 @@ msgstr "完成規劃：{requirements}。"
 msgid ""
 "Layout is valid. Only the listed resizes, deletes, creates and formats will "
 "be sent to the privileged executor."
-msgstr ""
-"Layout is valid. Only the listed resizes, deletes, creates and formats will "
-"be sent to the privileged executor."
+msgstr "佈局有效。只有列出的調整大小、刪除、建立及格式化操作將被傳送至特權執行程式。"
 
 msgid "That partition role already exists."
 msgstr "該分割區角色已存在。"
@@ -1807,7 +1791,7 @@ msgid "Deleted partitions"
 msgstr "已刪除的分割區"
 
 msgid "Resized partitions"
-msgstr "Resized partitions"
+msgstr "已調整大小的分割區"
 
 msgid ""
 "Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS "
@@ -1823,10 +1807,8 @@ msgid ""
 "formatted. Back up important data first; these partitioning operations "
 "cannot be undone."
 msgstr ""
-"⚠ Listed NTFS resizes will move filesystem data and partition boundaries. "
-"Listed partitions will be deleted and every listed new partition will be "
-"formatted. Back up important data first; these partitioning operations "
-"cannot be undone."
+"⚠ 列出的 NTFS "
+"調整大小操作將移動檔案系統資料及分割區邊界。列出的分割區將被刪除，所有列出的新分割區都將被格式化。請先備份重要資料；這些分割區操作無法撤銷。"
 
 msgid "Apply this manual disk layout?"
 msgstr "套用此手動磁碟佈局？"
@@ -1850,12 +1832,63 @@ msgstr "只會刪除或格式化明確列出的分割區。未涉及的分割區
 msgid ""
 "Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
 "shrunk after safety checks."
-msgstr ""
-"Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
-"shrunk after safety checks."
+msgstr "編輯單一 GPT 磁碟。分割區的起始位置絕不會移動；未加密的 NTFS 磁碟區在通過安全檢查後可被縮小。"
 
 msgid "XFS (classic, scalable)"
 msgstr "XFS（傳統、可擴展）"
 
 msgid "F2FS (flash-optimized)"
 msgstr "F2FS（快閃記憶體最佳化）"
+
+#: src/pages.py:2900
+msgid ""
+"Disk Swap will not be created. ZRAM remains enabled, but sustained memory "
+"pressure can terminate applications and hibernation is unavailable. This is "
+"strongly discouraged."
+msgstr "將不會建立磁碟交換空間。ZRAM 仍會啟用，但持續的記憶體壓力可能會終止應用程式，且休眠功能將無法使用。強烈建議避免此設定。"
+
+#: src/pages.py:3008
+msgid "{size} GiB · Max"
+msgstr "{size} GiB · 最大值"
+
+#: src/pages.py:2913
+msgid ""
+"This is below AnduinOS's runtime safety target. ZRAM still works, but heavy "
+"browser or application workloads can run out of backing memory sooner; "
+"hibernation is also unavailable."
+msgstr ""
+"此大小低於 AnduinOS 建議的日常使用安全下限。ZRAM 仍可運作，但大量使用瀏覽器或應用程式時，可用交換空間可能會更快耗盡；休眠功能亦無法使用。"
+
+#: src/pages.py:2895
+msgid "✓ Best performance — AnduinOS recommended Swap size."
+msgstr "✓ 最佳效能 — AnduinOS 建議的交換空間大小。"
+
+#: src/pages.py:2920
+msgid ""
+"This size protects ordinary memory pressure, but is smaller than the "
+"hibernation target. Hibernation may fail or be unavailable."
+msgstr "此大小可應對一般記憶體壓力，但低於休眠目標值。休眠功能可能失敗或無法使用。"
+
+#: src/pages.py:2927
+msgid ""
+"This exceeds the AnduinOS recommendation. It consumes more disk space and "
+"normally does not improve runtime performance."
+msgstr "此大小超過 AnduinOS 建議值，會佔用更多磁碟空間，且通常不會改善日常使用效能。"
+
+#: src/pages.py:3028
+msgid ""
+"ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses"
+" priority 10."
+msgstr "ZRAM 始終保持啟用：50% 的 RAM · LZ4 · 優先級 100。磁碟交換空間使用優先級 10。"
+
+#: src/pages.py:6698
+msgid "ZRAM will remain enabled regardless of this choice."
+msgstr "無論您選擇何種設定，ZRAM 將保持啟用。"
+
+#: src/pages.py:6695
+msgid "Review your custom Swap size"
+msgstr "請檢查您的自訂交換空間大小"
+
+#: src/pages.py:3004
+msgid "0 GiB · ZRAM only"
+msgstr "0 GiB · 僅 ZRAM"

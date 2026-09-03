@@ -1821,3 +1821,140 @@ msgstr "詳細資料：{0}"
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Integrity Check Failed"
 msgstr "完整性檢查失敗"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:60
+msgid "Authentication is required to access historical Personal Files"
+msgstr "存取歷史個人檔案需要身分驗證"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:37
+msgid "btrfs"
+msgstr "btrfs"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:36
+msgid "recovery"
+msgstr "復原"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:70
+msgid "Create a Home history snapshot"
+msgstr "建立家目錄歷史快照"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:5
+msgid "Show system snapshot notifications"
+msgstr "顯示系統快照通知"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:24
+msgid "Authentication is required to delete a system snapshot"
+msgstr "刪除系統快照需要身分驗證"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:12
+msgid "Authentication is required to create a system snapshot"
+msgstr "建立系統快照需要身分驗證"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:3
+msgid "Disk Snapshots Manager Notifications"
+msgstr "磁碟快照管理員通知"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:35
+msgid "restore"
+msgstr "復原"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:14
+msgid ""
+"Automatic schedules can show desktop notifications after successful "
+"creation, while retention cleanup is reported as one quiet aggregate "
+"notification."
+msgstr "自動排程可在成功建立快照後顯示桌面通知，而保留策略清理則以一則低干擾的彙總通知回報。"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:13
+msgid ""
+"Nautilus provides File History actions for one selected home item and for a "
+"folder background, opening a focused Disk Snapshots Manager window for "
+"earlier versions and deleted files."
+msgstr ""
+"Nautilus 為家目錄中選取的單一項目及資料夾空白處提供檔案歷史記錄操作，並開啟專用的磁碟快照管理員視窗，以瀏覽早期版本和已刪除的檔案。"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:82
+msgid "Override the Home snapshot creation limit"
+msgstr "覆寫家目錄快照建立限制"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:72
+msgid "A local active user may create a Home history snapshot"
+msgstr "本機活動使用者可以建立家目錄歷史快照"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:30
+msgid "System Recovery and File History"
+msgstr "系統復原與檔案歷史記錄"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:12
+msgid ""
+"Independent Home snapshots capture the @home subvolume on a separate "
+"schedule. Users can browse earlier versions and recover files or folders "
+"without rolling back the operating system."
+msgstr "獨立的家目錄快照會依獨立排程擷取 @home 子卷。使用者可以瀏覽早期版本並復原檔案或資料夾，而無需回滾作業系統。"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:41
+msgid ""
+"snapshot;snapshots;restore;recovery;btrfs;rollback;backup;backups;time "
+"machine;file history;deleted files;"
+msgstr "快照;快照;復原;復原;btrfs;復原;備份;備份;時光機;檔案歷史記錄;已刪除的檔案;"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:46
+msgid "Configure AnduinOS recovery"
+msgstr "設定 AnduinOS 復原"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:84
+msgid ""
+"Authentication is required to create more than four Home snapshots per "
+"minute"
+msgstr "每分鐘建立超過四個家目錄快照需要身分驗證"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:58
+msgid "Browse and export historical Personal Files"
+msgstr "瀏覽並匯出歷史個人檔案"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:34
+msgid "snapshot"
+msgstr "快照"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:32
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:7
+msgid "Recover AnduinOS and restore deleted Personal Files"
+msgstr "復原 AnduinOS 並復原已刪除的個人檔案"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:38
+msgid "backup"
+msgstr "備份"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:22
+msgid "Delete an AnduinOS system snapshot"
+msgstr "刪除 AnduinOS 系統快照"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
+msgid "Create an AnduinOS system snapshot"
+msgstr "建立 AnduinOS 系統快照"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:48
+msgid "Authentication is required to change recovery settings"
+msgstr "變更復原設定需要身分驗證"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:10
+msgid ""
+"Disk Snapshots Manager creates immutable Btrfs system snapshots for the "
+"AnduinOS system and independent snapshots for Personal Files."
+msgstr "磁碟快照管理員為 AnduinOS 系統建立不可變的 Btrfs 系統快照，並為個人檔案建立獨立快照。"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:34
+msgid "Access or restore an AnduinOS system snapshot"
+msgstr "存取或復原 AnduinOS 系統快照"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:36
+msgid "Authentication is required to access or restore a system snapshot"
+msgstr "存取或復原系統快照需要身分驗證"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:11
+msgid ""
+"A system rollback validates the selected snapshot, protects a current-system"
+" fallback while the transaction is pending, and prepares a verified one-shot"
+" GRUB entry. Personal Files are explicitly unchanged."
+msgstr ""
+"系統復原會驗證所選快照，在復原作業完成前保留目前系統作為備援，並準備經過驗證、僅供下次開機使用的 GRUB 開機項目。個人檔案明確維持不變。"

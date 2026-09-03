@@ -718,10 +718,8 @@ msgid ""
 "OpenSSH finished creating the key, but the YubiKey could not be verified afterward: {0}\n"
 "Do not immediately retry; inspect the key first to avoid creating a duplicate."
 msgstr ""
-"OpenSSH ukończył tworzenie klucza, ale YubiKey nie mógł zostać zweryfikowany"
-" później: {0}\n"
-"Nie próbuj od razu ponownie; najpierw sprawdź klucz, aby uniknąć utworzenia "
-"duplikatu."
+"OpenSSH ukończył tworzenie klucza, ale YubiKey nie mógł zostać zweryfikowany później: {0}\n"
+"Nie próbuj od razu ponownie; najpierw sprawdź klucz, aby uniknąć utworzenia duplikatu."
 
 #: src/ssh.rs:292
 msgid ""
@@ -1823,6 +1821,16 @@ msgid ""
 msgstr ""
 "Opcjonalnie: utwórz nowy klucz rezydenta tylko wtedy, gdy potrzebujesz innej"
 " tożsamości SSH. Jego klucz prywatny nigdy nie opuszcza wybranej YubiKey."
+
+#: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:8
+msgid "Manage YubiKey security settings"
+msgstr "Zarządzaj ustawieniami bezpieczeństwa YubiKey"
+
+#: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:10
+msgid "Authentication is required to change security settings or install Git"
+msgstr ""
+"Wymagane jest uwierzytelnienie, aby zmienić ustawienia bezpieczeństwa lub "
+"zainstalować Gita"
 
 #~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
 #~ msgstr "Aby używać kluczy dostępu, należy zainstalować Yubico Authenticator."

@@ -1493,9 +1493,8 @@ msgid ""
 "Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
 " or unclean volumes are never resized."
 msgstr ""
-"Manual changes are destructive. Existing partition starts are never moved. "
-"Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
-" or unclean volumes are never resized."
+"手動での変更は破壊的な操作です。既存のパーティションの開始位置は移動されません。暗号化されていない NTFS "
+"は、厳格な安全性チェックに合格した場合にのみ縮小できます。暗号化されている、マウントされている、または正常に終了していないボリュームのサイズは変更されません。"
 
 msgid "Install Alongside Automatically"
 msgstr "自動で並列インストール"
@@ -1586,7 +1585,7 @@ msgid "Apply Changes"
 msgstr "変更を適用"
 
 msgid "Close"
-msgstr "Close"
+msgstr "閉じる"
 
 msgid ""
 "BitLocker was detected. Return to Windows, open Manage BitLocker, choose "
@@ -1594,56 +1593,52 @@ msgid ""
 "protection is not enough. Back up the recovery key, fully shut Windows down,"
 " then start the installer again."
 msgstr ""
-"BitLocker was detected. Return to Windows, open Manage BitLocker, choose "
-"Turn off BitLocker, and wait until decryption reaches 100%. Suspending "
-"protection is not enough. Back up the recovery key, fully shut Windows down,"
-" then start the installer again."
+"BitLocker が検出されました。Windows に戻り、［BitLocker の管理］を開いて［BitLocker "
+"を無効にする］を選択し、復号化が 100% "
+"に達するまで待ってください。［保護の中断］だけでは不十分です。［回復キーのバックアップ］を選択し、Windows "
+"を完全にシャットダウンしてから、インストーラーを再度起動してください。"
 
 msgid ""
 "Windows is hibernated or Fast Startup is active. In an Administrator "
 "Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s "
 "/t 0'. Start the installer again only after Windows has fully shut down."
 msgstr ""
-"Windows is hibernated or Fast Startup is active. In an Administrator "
-"Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s "
-"/t 0'. Start the installer again only after Windows has fully shut down."
+"Windows が休止状態になっているか、高速スタートアップが有効になっています。管理者権限のターミナルで 'powercfg /h off' "
+"を実行し、高速スタートアップを無効にしてから 'shutdown /s /t 0' を実行してください。Windows "
+"が完全にシャットダウンした後にのみ、インストーラーを再度起動してください。"
 
 msgid ""
 "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk"
 " C: /f', allow every requested reboot to finish, then fully shut Windows "
 "down before trying again."
 msgstr ""
-"Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk"
-" C: /f', allow every requested reboot to finish, then fully shut Windows "
-"down before trying again."
+"この NTFS ボリュームは Windows によってクリーンな状態にされていません。Windows に戻り、'chkdsk C: /f' "
+"を実行し、要求されたすべての再起動が完了するまで待ってから、Windows を完全にシャットダウンして再試行してください。"
 
 msgid ""
 "This target would require moving critical NTFS MFT metadata through a "
 "currently unsafe upstream code path. Choose a larger Windows size or shrink "
 "the volume from Windows."
 msgstr ""
-"This target would require moving critical NTFS MFT metadata through a "
-"currently unsafe upstream code path. Choose a larger Windows size or shrink "
-"the volume from Windows."
+"このサイズを選ぶと、元のプロジェクトのコードにある現時点では安全でない処理経路を通じて、NTFS の重要な MFT "
+"メタデータを移動する必要があります。Windows パーティションをより大きくするか、Windows 上でボリュームを縮小してください。"
 
 msgid ""
 "This NTFS volume is mounted or in use. Unmount it and rescan storage before "
 "continuing."
-msgstr ""
-"This NTFS volume is mounted or in use. Unmount it and rescan storage before "
-"continuing."
+msgstr "この NTFS ボリュームはマウント中または使用中です。続行する前に、アンマウントしてストレージを再スキャンしてください。"
 
 msgid ""
 "This operation moves NTFS data and changes the GPT partition boundary. A "
 "power loss, failing drive, firmware fault or filesystem bug can cause "
 "permanent data loss. Back up all important Windows files before continuing."
 msgstr ""
-"This operation moves NTFS data and changes the GPT partition boundary. A "
-"power loss, failing drive, firmware fault or filesystem bug can cause "
-"permanent data loss. Back up all important Windows files before continuing."
+"この操作では、NTFS データを移動し、GPT "
+"パーティションの境界を変更します。停電、ドライブの故障、ファームウェアの障害、またはファイルシステムのバグにより、データが永久に失われる可能性があります。続行する前に、重要な"
+" Windows ファイルをすべてバックアップしてください。"
 
 msgid "New Windows partition size"
-msgstr "New Windows partition size"
+msgstr "新しい Windows パーティションのサイズ"
 
 msgid "MiB"
 msgstr "MiB"
@@ -1654,44 +1649,40 @@ msgstr "Allowed: {minimum}–{maximum}"
 
 #, python-brace-format
 msgid "Windows: {windows} · New unallocated space: {free}"
-msgstr "Windows: {windows} · New unallocated space: {free}"
+msgstr "Windows: {windows} · 新しい未割り当て領域: {free}"
 
 msgid ""
 "I have backed up my data and understand that shrinking an existing Windows "
 "partition can cause permanent data loss."
-msgstr ""
-"I have backed up my data and understand that shrinking an existing Windows "
-"partition can cause permanent data loss."
+msgstr "データはバックアップ済みであり、既存の Windows パーティションを縮小するとデータが永久に失われる可能性があることを理解しています。"
 
 #, python-brace-format
 msgid "Change the size of {partition}?"
-msgstr "Change the size of {partition}?"
+msgstr "{partition} のサイズを変更しますか？"
 
 msgid ""
 "The partition start will not move. Only its end will move left, creating "
 "unallocated space immediately after it."
-msgstr ""
-"The partition start will not move. Only its end will move left, creating "
-"unallocated space immediately after it."
+msgstr "パーティションの開始位置は移動しません。終了位置のみが左に移動し、直後に未割り当て領域が作成されます。"
 
 msgid "Undo Planned Resize"
-msgstr "Undo Planned Resize"
+msgstr "計画されたサイズ変更を取り消す"
 
 msgid "Plan Resize"
-msgstr "Plan Resize"
+msgstr "サイズ変更を計画"
 
 msgid "Turn off BitLocker before shrinking"
-msgstr "Turn off BitLocker before shrinking"
+msgstr "縮小する前に BitLocker を無効にしてください"
 
 #, python-brace-format
 msgid "Checking whether {partition} can be resized safely…"
-msgstr "Checking whether {partition} can be resized safely…"
+msgstr "{partition} が安全にサイズ変更できるか確認中…"
 
 msgid "NTFS safety check failed"
-msgstr "NTFS safety check failed"
+msgstr "NTFSの安全性チェックに失敗しました"
 
 msgid "This partition cannot be resized safely"
-msgstr "This partition cannot be resized safely"
+msgstr "このパーティションは安全にサイズ変更できません"
 
 msgid "New empty GPT — every existing partition will be deleted"
 msgstr "新しい空のGPT — 既存のすべてのパーティションが削除されます"
@@ -1713,7 +1704,7 @@ msgstr "保持"
 
 #, python-brace-format
 msgid "Planned size: {size}"
-msgstr "Planned size: {size}"
+msgstr "計画サイズ: {size}"
 
 msgid "Deleted by new GPT"
 msgstr "新しいGPTにより削除されました"
@@ -1728,7 +1719,7 @@ msgid "RESIZE"
 msgstr "RESIZE"
 
 msgid "Change Size"
-msgstr "Change Size"
+msgstr "サイズを変更"
 
 msgid "This disk has no existing partitions."
 msgstr "このディスクには既存のパーティションがありません。"
@@ -1768,9 +1759,7 @@ msgstr "プランを完成してください: {requirements}。"
 msgid ""
 "Layout is valid. Only the listed resizes, deletes, creates and formats will "
 "be sent to the privileged executor."
-msgstr ""
-"Layout is valid. Only the listed resizes, deletes, creates and formats will "
-"be sent to the privileged executor."
+msgstr "レイアウトは有効です。一覧に示されたサイズ変更、削除、作成、フォーマットだけが特権実行プログラムに送信されます。"
 
 msgid "That partition role already exists."
 msgstr "そのパーティションの役割は既に存在しています。"
@@ -1826,7 +1815,7 @@ msgid "Deleted partitions"
 msgstr "削除されたパーティション"
 
 msgid "Resized partitions"
-msgstr "Resized partitions"
+msgstr "サイズ変更されたパーティション"
 
 msgid ""
 "Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS "
@@ -1842,10 +1831,8 @@ msgid ""
 "formatted. Back up important data first; these partitioning operations "
 "cannot be undone."
 msgstr ""
-"⚠ Listed NTFS resizes will move filesystem data and partition boundaries. "
-"Listed partitions will be deleted and every listed new partition will be "
-"formatted. Back up important data first; these partitioning operations "
-"cannot be undone."
+"⚠ "
+"一覧に示されたNTFSのサイズ変更により、ファイルシステムデータとパーティションの境界が移動します。一覧に示されたパーティションは削除され、一覧に示されたすべての新しいパーティションはフォーマットされます。まず重要なデータをバックアップしてください。これらのパーティション操作は取り消せません。"
 
 msgid "Apply this manual disk layout?"
 msgstr "この手動ディスクレイアウトを適用しますか？"
@@ -1871,11 +1858,75 @@ msgid ""
 "Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
 "shrunk after safety checks."
 msgstr ""
-"Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
-"shrunk after safety checks."
+"1つの GPT ディスクを編集します。パーティションの開始位置は移動しません。暗号化されていない NTFS "
+"は、安全性チェックに合格した場合に縮小できます。"
 
 msgid "XFS (classic, scalable)"
-msgstr "XFS (classic, scalable)"
+msgstr "XFS（クラシック、スケーラブル）"
 
 msgid "F2FS (flash-optimized)"
-msgstr "F2FS (flash-optimized)"
+msgstr "F2FS（フラッシュ向け最適化）"
+
+#: src/pages.py:2895
+msgid "✓ Best performance — AnduinOS recommended Swap size."
+msgstr "✓ 最高のパフォーマンス — AnduinOS 推奨のスワップサイズ。"
+
+#: src/pages.py:3004
+msgid "0 GiB · ZRAM only"
+msgstr "0 GiB · ZRAM のみ"
+
+#: src/pages.py:6695
+msgid "Review your custom Swap size"
+msgstr "カスタムスワップサイズを確認してください"
+
+#: src/pages.py:2927
+msgid ""
+"This exceeds the AnduinOS recommendation. It consumes more disk space and "
+"normally does not improve runtime performance."
+msgstr "これはAnduinOSの推奨値を超えています。ディスク領域をより多く消費しますが、通常利用時の性能向上にはつながりません。"
+
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:11
+msgid "Authorization is required to inspect disk partition geometry"
+msgstr "ディスクパーティションの正確な位置とサイズを確認するには、認証が必要です。"
+
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:10
+msgid "Read exact disk partition geometry for the AnduinOS installer"
+msgstr "AnduinOS インストーラー用に、ディスクパーティションの正確な位置とサイズを読み取る"
+
+#: src/pages.py:2913
+msgid ""
+"This is below AnduinOS's runtime safety target. ZRAM still works, but heavy "
+"browser or application workloads can run out of backing memory sooner; "
+"hibernation is also unavailable."
+msgstr ""
+"これはAnduinOSが推奨する通常利用時の安全な最小値を下回っています。ZRAMは引き続き機能しますが、ブラウザーやアプリケーションの負荷が高い場合、利用可能なスワップ領域が早く不足する可能性があります。また、休止状態も利用できません。"
+
+#: src/pages.py:2900
+msgid ""
+"Disk Swap will not be created. ZRAM remains enabled, but sustained memory "
+"pressure can terminate applications and hibernation is unavailable. This is "
+"strongly discouraged."
+msgstr ""
+"ディスクスワップは作成されません。ZRAM "
+"は引き続き有効ですが、メモリ負荷が持続するとアプリケーションが強制終了される可能性があり、休止状態も利用できません。この設定は強くお勧めしません。"
+
+#: src/pages.py:2920
+msgid ""
+"This size protects ordinary memory pressure, but is smaller than the "
+"hibernation target. Hibernation may fail or be unavailable."
+msgstr ""
+"このサイズは通常のメモリ負荷に対応できますが、休止状態に必要なサイズより小さくなっています。休止状態が失敗するか、利用できない可能性があります。"
+
+#: src/pages.py:6698
+msgid "ZRAM will remain enabled regardless of this choice."
+msgstr "この選択にかかわらず、ZRAM は有効なままです。"
+
+#: src/pages.py:3028
+msgid ""
+"ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses"
+" priority 10."
+msgstr "ZRAM は常に有効なままです：RAM の 50% · LZ4 · 優先度 100。ディスクスワップの優先度は 10 です。"
+
+#: src/pages.py:3008
+msgid "{size} GiB · Max"
+msgstr "{size} GiB · 最大"

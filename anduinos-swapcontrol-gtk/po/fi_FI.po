@@ -35,7 +35,7 @@ msgstr "Käytä asetuksia"
 
 #: src/views/swap_view.rs:667
 msgid "Applying settings…"
-msgstr "Käytä asetuksia"
+msgstr "Asetuksia otetaan käyttöön…"
 
 #: src/views/dashboard_view.rs:370
 msgid "Auth needed"
@@ -174,11 +174,11 @@ msgstr "Kasvunopeus"
 
 #: src/views/dashboard_view.rs:269
 msgid "Hibernation"
-msgstr "Talviunta"
+msgstr "Horrostila"
 
 #: src/views/swap_view.rs:597 src/views/swap_view.rs:704
 msgid "Hibernation Warning"
-msgstr "Levon varoitus"
+msgstr "Horrostilavaroitus"
 
 #: src/views/dashboard_view.rs:517 src/views/swap_view.rs:810
 msgid "Inactive"
@@ -445,17 +445,17 @@ msgid ""
 "This swap file is the configured resume target. Disabling it will break "
 "hibernation. Continue?"
 msgstr ""
-"Tämä vaihtotiedosto on määritetty herätyskohde. Sen poistaminen käytöstä "
-"rikkoisi talviunnan. Haluatko jatkaa?"
+"Tämä swap-tiedosto on määritetty horrostilasta palautumisen kohteeksi. Sen "
+"poistaminen käytöstä estää horrostilan käytön. Jatketaanko?"
 
 #: src/views/swap_view.rs:705
 msgid ""
 "This swap file is the configured resume target. Its physical offset would "
 "change, so resize is blocked until hibernation is disabled."
 msgstr ""
-"Tämä vaihtotiedosto on määritetty herätyskohde. Sen fyysinen siirtymä "
-"muuttuisi, joten koon muutos on estetty, kunnes talviunta on poistettu "
-"käytöstä."
+"Tämä swap-tiedosto on määritetty horrostilasta palautumisen kohteeksi. Sen "
+"fyysinen siirtymä muuttuisi, joten tiedoston koon muuttaminen on estetty, "
+"kunnes horrostila poistetaan käytöstä."
 
 #: src/views/swap_view.rs:722
 msgid "unknown"
@@ -491,8 +491,8 @@ msgid ""
 "Resize is locked because this file is the configured hibernation resume "
 "target"
 msgstr ""
-"Koon muutos on lukittu, koska tämä tiedosto on määritetty talviunnan "
-"herätyskohde"
+"Koon muuttaminen on estetty, koska tämä tiedosto on määritetty horrostilasta"
+" palautumisen kohteeksi"
 
 #: src/views/swap_view.rs:832
 msgid ""

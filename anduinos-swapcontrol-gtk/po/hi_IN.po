@@ -123,19 +123,19 @@ msgstr "स्वाप को अक्षम कर रहे हैं..."
 
 #: src/views/swap_view.rs:577
 msgid "Disabling swap…"
-msgstr "स्वाप को अक्षम कर रहे हैं..."
+msgstr "स्वैप अक्षम किया जा रहा है…"
 
 #: src/views/swap_view.rs:97
 msgid "Disk Swap Configuration"
-msgstr "डिस्क वर्चुअल मेमोरी विन्यास"
+msgstr "डिस्क स्वैप कॉन्फ़िगरेशन"
 
 #: src/views/dashboard_view.rs:614
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
 msgstr ""
-"डिस्क स्विप मेमोरी संपीड़न के साथ सक्रिय है — आपका सिस्टम मेमोरी दबाव से "
-"सुरक्षित है।"
+"डिस्क स्वैप मेमोरी संपीड़न के साथ सक्रिय है — आपका सिस्टम मेमोरी दबाव से "
+"अच्छी तरह सुरक्षित है।"
 
 #: src/views/stress_test_view.rs:605 src/views/stress_test_view.rs:617
 msgid "Duration:"
@@ -146,8 +146,8 @@ msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
 msgstr ""
-"Zram सक्षम करें ताकि RAM में तेज़ संपीड़ित स्विप मिले — यह डिस्क स्विप से "
-"10× तेज़ है और मेमोरी दबाव के दौरान I/O को काफी कम करता है।"
+"RAM में तेज़ संपीड़ित स्वैप के लिए Zram सक्षम करें — यह डिस्क स्वैप से 10× "
+"तेज़ है और मेमोरी दबाव के दौरान I/O को बहुत कम करता है।"
 
 #: src/views/swap_view.rs:519
 msgid "Enabling Zswap..."
@@ -155,7 +155,7 @@ msgstr "स्वाप को सक्षम कर रहे हैं..."
 
 #: src/views/swap_view.rs:579
 msgid "Enabling swap…"
-msgstr "स्वाप को सक्षम कर रहे हैं..."
+msgstr "स्वैप सक्षम किया जा रहा है…"
 
 #: src/views/stress_test_view.rs:609 src/views/swap_view.rs:505
 #: src/views/zram_view.rs:182
@@ -209,7 +209,7 @@ msgstr "कोई उपकरण नहीं"
 
 #: src/views/dashboard_view.rs:592
 msgid "No disk swap detected"
-msgstr "कोई डिस्क वर्चुअल मेमोरी नहीं मिली"
+msgstr "डिस्क स्वैप का पता नहीं चला"
 
 #: src/views/dashboard_view.rs:608
 msgid "No memory acceleration enabled"
@@ -282,15 +282,15 @@ msgstr "स्ट्रेस टेस्ट"
 #: src/views/dashboard_view.rs:252 src/views/dashboard_view.rs:266
 #: src/window.rs:112
 msgid "Swap"
-msgstr "स्विप"
+msgstr "स्वैप"
 
 #: src/progress_dialog.rs:24 src/window.rs:59
 msgid "Swap Control"
-msgstr "वर्चुअल मेमोरी नियंत्रण"
+msgstr "स्वैप नियंत्रण"
 
 #: src/views/swap_view.rs:147
 msgid "Swap usage"
-msgstr "वर्चुअल मेमोरी का उपयोग"
+msgstr "स्वैप का उपयोग"
 
 #: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
 #: src/views/swap_view.rs:677
@@ -326,8 +326,8 @@ msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
 msgstr ""
-"जब RAM भर जाती है, तो कर्नेल एप्लिकेशन बंद कर सकता है। एक विश्वसनीय सुरक्षा "
-"जाल के लिए डिस्क स्विप सक्षम करें।"
+"RAM भर जाने पर कर्नेल एप्लिकेशन बंद कर सकता है। एक भरोसेमंद सुरक्षा उपाय के "
+"लिए डिस्क स्वैप सक्षम करें।"
 
 #: src/views/dashboard_view.rs:244 src/views/dashboard_view.rs:268
 #: src/window.rs:111
@@ -408,7 +408,7 @@ msgstr "रीज़्यूम टारगेट निष्क्रिय"
 
 #: src/views/dashboard_view.rs:562
 msgid "Swap too small"
-msgstr "स्विप बहुत छोटा है"
+msgstr "स्वैप बहुत छोटा है"
 
 #: src/views/dashboard_view.rs:564
 msgid "Not ready"
@@ -419,40 +419,41 @@ msgid ""
 "Review installer-managed swap partitions and manage the legacy supplementary"
 " swap file"
 msgstr ""
-"इंस्टॉलर द्वारा प्रबंधित स्विप पार्शन की समीक्षा करें और पुराने पूरक स्विप "
-"फ़ाइल का प्रबंधन करें"
+"इंस्टॉलर द्वारा प्रबंधित स्वैप पार्टिशनों की समीक्षा करें और पुरानी अतिरिक्त"
+" स्वैप फ़ाइल को प्रबंधित करें"
 
 #: src/views/swap_view.rs:155
 msgid "Swap partition"
-msgstr "स्विप पार्शन"
+msgstr "स्वैप पार्टिशन"
 
 #: src/views/swap_view.rs:169
 msgid "Additional swap file"
-msgstr "अतिरिक्त स्विप फ़ाइल"
+msgstr "अतिरिक्त स्वैप फ़ाइल"
 
 #: src/views/swap_view.rs:195
 msgid "Additional swap file size"
-msgstr "अतिरिक्त स्विप फ़ाइल का आकार"
+msgstr "अतिरिक्त स्वैप फ़ाइल का आकार"
 
 #: src/views/swap_view.rs:196
 msgid "0 GiB means no supplementary swap file"
-msgstr "0 GiB का अर्थ है कोई अतिरिक्त स्विप फ़ाइल नहीं"
+msgstr "0 GiB का अर्थ है कि कोई अतिरिक्त स्वैप फ़ाइल नहीं होगी"
 
 #: src/views/swap_view.rs:598
 msgid ""
 "This swap file is the configured resume target. Disabling it will break "
 "hibernation. Continue?"
 msgstr ""
-"यह स्विप फ़ाइल कन्फ़िगर किया गया रीज़्यूम टारगेट है। इसे अक्षम करने से "
-"हाइबरनेशन काम करना बंद कर देगा। आगे बढ़ें?"
+"यह स्वैप फ़ाइल हाइबरनेशन से पुनः शुरू करने के लिए निर्धारित है। इसे अक्षम "
+"करने से हाइबरनेशन काम नहीं करेगा। जारी रखें?"
 
 #: src/views/swap_view.rs:705
 msgid ""
 "This swap file is the configured resume target. Its physical offset would "
 "change, so resize is blocked until hibernation is disabled."
 msgstr ""
-"यह स्विप फ़ाइल कन्फ़िगर किया गया रीज़्यूम टारगेट है। इसका भौतिक ऑफ़सेट बदल "
-"जाएगा, इसलिए हाइबरनेशन अक्षम होने तक आकार बदलना (resize) अवरुद्ध है।"
+"यह स्वैप फ़ाइल हाइबरनेशन से पुनः शुरू करने के लिए निर्धारित है। इसका भौतिक "
+"ऑफ़सेट बदल जाएगा, इसलिए हाइबरनेशन अक्षम किए जाने तक इसका आकार बदलना अवरुद्ध "
+"है।"
 
 #: src/views/swap_view.rs:722
 msgid "unknown"
@@ -461,7 +462,8 @@ msgstr "अज्ञात"
 #: src/views/swap_view.rs:738
 msgid "No swap partition — a legacy swap file can be managed below"
 msgstr ""
-"कोई स्विप पार्शन नहीं — नीचे पुरानी स्विप फ़ाइल का प्रबंधन किया जा सकता है"
+"कोई स्वैप पार्टिशन नहीं है — नीचे एक पुरानी स्वैप फ़ाइल को प्रबंधित किया जा "
+"सकता है"
 
 #: src/views/swap_view.rs:207
 msgid "Remove incompatible file"
@@ -469,7 +471,7 @@ msgstr "असंगत फ़ाइल हटाएँ"
 
 #: src/views/swap_view.rs:377
 msgid "Removing incompatible swap file…"
-msgstr "असंगत स्विप फ़ाइल हटाई जा रही है…"
+msgstr "असंगत स्वैप फ़ाइल हटाई जा रही है…"
 
 #: src/views/swap_view.rs:790
 msgid "Present but inactive"
@@ -504,13 +506,15 @@ msgid ""
 "Disabled on Btrfs because a root-subvolume swap file would prevent Disk "
 "Snapshots Manager recovery points"
 msgstr ""
-"Btrfs पर अक्षम है क्योंकि रूट-सबवॉल्यूम स्विप फ़ाइल डिस्क स्नैपशॉट्स मैनेजर "
-"रिकवरी पॉइंट्स को रोक सकती है"
+"Btrfs पर अक्षम है क्योंकि रूट सबवॉल्यूम में मौजूद स्वैप फ़ाइल डिस्क स्नैपशॉट"
+" मैनेजर के रिकवरी पॉइंट बनने से रोकेगी"
 
 #: src/views/zram_view.rs:120
 msgid ""
 "Create a compressed RAM swap device for faster memory pressure handling."
-msgstr "तेज़ मेमोरी दबाव प्रबंधन के लिए एक संपीड़ित RAM स्विप डिवाइस बनाएं।"
+msgstr ""
+"मेमोरी दबाव को अधिक तेज़ी से संभालने के लिए RAM में एक संपीड़ित स्वैप डिवाइस"
+" बनाएँ।"
 
 #: src/views/stress_test_view.rs:171
 msgid "Ensure important work is saved before running this test."
@@ -523,7 +527,7 @@ msgstr "संपीड़ित पूल द्वारा व्याप्
 
 #: src/views/dashboard_view.rs:141
 msgid "Real-time RAM, swap, and compression subsystem status"
-msgstr "रियल-टाइम RAM, स्विप और संपीड़न सबसिस्टम स्थिति"
+msgstr "RAM, स्वैप और संपीड़न सबसिस्टम की रीयल-टाइम स्थिति"
 
 #: src/views/swap_view.rs:308
 msgid "Reclaim pool pages under memory pressure. Recommended: ON"
@@ -757,6 +761,14 @@ msgid ""
 "{0} — installer-managed; size cannot be changed while the system is running"
 msgstr ""
 "{0} — इंस्टॉलर द्वारा प्रबंधित; सिस्टम चल रहे समय आकार नहीं बदला जा सकता"
+
+#: data/com.anduinos.swapcontrol.desktop:99
+msgid "swap;memory;zswap;zram;swappiness;virtual memory;compression;RAM;"
+msgstr "स्वैप;मेमोरी;zswap;zram;swappiness;वर्चुअल मेमोरी;संपीड़न;RAM;"
+
+#: data/com.anduinos.swapcontrol.desktop:70
+msgid "Manage virtual memory, compression, and swap settings"
+msgstr "वर्चुअल मेमोरी, संपीड़न और स्वैप सेटिंग्स प्रबंधित करें"
 
 #~ msgid "Disabling swap will break hibernation. Continue?"
 #~ msgstr "स्वाप को अक्षम करने से हाइबरनेशन खराब हो जाएगा। जारी रखें?"

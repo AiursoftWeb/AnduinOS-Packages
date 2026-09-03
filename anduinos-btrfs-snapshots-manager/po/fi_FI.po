@@ -1252,8 +1252,8 @@ msgstr "Palaaminen tilannekuvaan {0} suoritetaan käynnistyksen aikana."
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback to {0} is ready. Restart to apply it."
 msgstr ""
-"Palaaminen tilannekuvaan {0} on valmis. Käynnistä uudelleen ottaaksesi "
-"muutokset käyttöön."
+"Palautus tilannekuvaan {0} on valmis. Ota se käyttöön käynnistämällä "
+"järjestelmä uudelleen."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid ""
@@ -1904,3 +1904,159 @@ msgstr "Tiedot: {0}"
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Integrity Check Failed"
 msgstr "Eheystarkistus epäonnistui"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:38
+msgid "backup"
+msgstr "varmuuskopiointi"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:24
+msgid "Authentication is required to delete a system snapshot"
+msgstr "Järjestelmätilannekuvan poistaminen vaatii todennuksen"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:82
+msgid "Override the Home snapshot creation limit"
+msgstr "Ohita Koti-tilannekuvan luontirajoitus"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:11
+msgid ""
+"A system rollback validates the selected snapshot, protects a current-system"
+" fallback while the transaction is pending, and prepares a verified one-shot"
+" GRUB entry. Personal Files are explicitly unchanged."
+msgstr ""
+"Järjestelmäpalautus tarkistaa valitun tilannekuvan, turvaa mahdollisuuden "
+"palata nykyiseen järjestelmään palautuksen ollessa vireillä ja valmistelee "
+"varmennetun kertakäyttöisen GRUB-käynnistysmerkinnän. Omat tiedostot "
+"jätetään nimenomaisesti muuttamatta."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:36
+msgid "Authentication is required to access or restore a system snapshot"
+msgstr ""
+"Järjestelmätilannekuvan selaaaminen tai palauttaminen vaatii todennuksen"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:3
+msgid "Disk Snapshots Manager Notifications"
+msgstr "Tilannekuvien hallinnan ilmoitukset"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:10
+msgid ""
+"Disk Snapshots Manager creates immutable Btrfs system snapshots for the "
+"AnduinOS system and independent snapshots for Personal Files."
+msgstr ""
+"Tilannekuvien hallinta luo AnduinOS-järjestelmälle muuttumattomia Btrfs-"
+"järjestelmätilannekuvia sekä erillisiä tilannekuvia omista tiedostoista."
+
+#: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:5
+msgid "Show system snapshot notifications"
+msgstr "Näytä järjestelmätilannekuvien ilmoitukset"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:30
+msgid "System Recovery and File History"
+msgstr "Järjestelmän palautus ja tiedostohistoria"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:35
+msgid "restore"
+msgstr "palauttaminen"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:70
+msgid "Create a Home history snapshot"
+msgstr "Luo Koti-historian tilannekuva"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:46
+msgid "Configure AnduinOS recovery"
+msgstr "Määritä AnduinOS-järjestelmän palautus"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:36
+msgid "recovery"
+msgstr "palautus"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:34
+msgid "snapshot"
+msgstr "tilannekuva"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:84
+msgid ""
+"Authentication is required to create more than four Home snapshots per "
+"minute"
+msgstr ""
+"Enemmän kuin neljän Koti-tilannekuvan luonti minuutissa vaatii todennuksen"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:12
+msgid "Authentication is required to create a system snapshot"
+msgstr "Järjestelmätilannekuvan luonti vaatii todennuksen"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:22
+msgid "Delete an AnduinOS system snapshot"
+msgstr "Poista AnduinOS-järjestelmätilannekuva"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:48
+msgid "Authentication is required to change recovery settings"
+msgstr "Palautusasetusten muuttaminen vaatii todennuksen"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:60
+msgid "Authentication is required to access historical Personal Files"
+msgstr ""
+"Omien tiedostojen aiempien versioiden käyttö edellyttää tunnistautumista"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:58
+msgid "Browse and export historical Personal Files"
+msgstr "Selaa ja vie omien tiedostojen aiempia versioita"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:13
+msgid ""
+"Nautilus provides File History actions for one selected home item and for a "
+"folder background, opening a focused Disk Snapshots Manager window for "
+"earlier versions and deleted files."
+msgstr ""
+"Nautilus tarjoaa Tiedostohistoria-toiminnot yhdelle valitulle kotihakemiston"
+" kohteelle ja kansion taustalle sekä avaa Tilannekuvien hallinnan erillisen "
+"ikkunan aiempien versioiden ja poistettujen tiedostojen selaamista varten."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:34
+msgid "Access or restore an AnduinOS system snapshot"
+msgstr "Selaa tai palauta AnduinOS-järjestelmätilannekuva"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:37
+msgid "btrfs"
+msgstr "btrfs"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:41
+msgid ""
+"snapshot;snapshots;restore;recovery;btrfs;rollback;backup;backups;time "
+"machine;file history;deleted files;"
+msgstr ""
+"tilannekuva;tilannekuvat;palauttaminen;palautus;btrfs;palaaminen;varmuuskopiointi;varmuuskopiot;ajankone;tiedostohistoria;poistetut"
+" tiedostot;"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:32
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:7
+msgid "Recover AnduinOS and restore deleted Personal Files"
+msgstr "Palauta AnduinOS ja poistetut Omat tiedostot"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:14
+msgid ""
+"Automatic schedules can show desktop notifications after successful "
+"creation, while retention cleanup is reported as one quiet aggregate "
+"notification."
+msgstr ""
+"Automaattiset aikataulut voivat näyttää työpöytäilmoituksen, kun tilannekuva"
+" on luotu onnistuneesti, kun taas säilytyskäytännön mukaisesta siivouksesta "
+"ilmoitetaan yhdellä huomaamattomalla yhteenvetoilmoituksella."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
+msgid "Create an AnduinOS system snapshot"
+msgstr "Luo AnduinOS-järjestelmätilannekuva"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:72
+msgid "A local active user may create a Home history snapshot"
+msgstr "Paikallinen aktiivinen käyttäjä voi luoda Koti-historian tilannekuvan"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:12
+msgid ""
+"Independent Home snapshots capture the @home subvolume on a separate "
+"schedule. Users can browse earlier versions and recover files or folders "
+"without rolling back the operating system."
+msgstr ""
+"Erilliset Koti-tilannekuvat tallentavat @home-alitaltion tilan oman "
+"aikataulunsa mukaan. Käyttäjät voivat selata aiempia versioita ja palauttaa "
+"tiedostoja tai kansioita palauttamatta koko käyttöjärjestelmää aiempaan "
+"tilaan."

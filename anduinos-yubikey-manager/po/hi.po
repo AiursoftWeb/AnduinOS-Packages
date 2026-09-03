@@ -711,8 +711,7 @@ msgid ""
 "OpenSSH finished creating the key, but the YubiKey could not be verified afterward: {0}\n"
 "Do not immediately retry; inspect the key first to avoid creating a duplicate."
 msgstr ""
-"OpenSSH ने कुंजी बनाना पूरा कर लिया, लेकिन बाद में YubiKey को सत्यापित नहीं "
-"किया जा सका: {0}\n"
+"OpenSSH ने कुंजी बनाना पूरा कर लिया, लेकिन बाद में YubiKey को सत्यापित नहीं किया जा सका: {0}\n"
 "तुरंत पुनः प्रयास न करें; डुप्लिकेट बनने से बचने के लिए पहले कुंजी की जाँच करें।"
 
 #: src/ssh.rs:292
@@ -1803,6 +1802,15 @@ msgid ""
 msgstr ""
 "वैकल्पिक: केवल तभी एक नया निवासी कुंजी बनाएं जब आपको एक और SSH पहचान चाहिए "
 "हो। इसकी निजी कुंजी कभी भी चयनित YubiKey से बाहर नहीं जाती।"
+
+#: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:10
+msgid "Authentication is required to change security settings or install Git"
+msgstr ""
+"सुरक्षा सेटिंग्स बदलने या Git इंस्टॉल करने के लिए प्रमाणीकरण आवश्यक है"
+
+#: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:8
+msgid "Manage YubiKey security settings"
+msgstr "YubiKey सुरक्षा सेटिंग्स प्रबंधित करें"
 
 #~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
 #~ msgstr ""
