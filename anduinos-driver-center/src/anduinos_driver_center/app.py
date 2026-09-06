@@ -17,6 +17,8 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
+from .computer_ui import ComputerPage
+
 from .core import (
     AudioState,
     DkmsState,
@@ -123,6 +125,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         super().__init__(application=app, title=_("AnduinOS Driver Center"))
         self.set_default_size(1250, 810)
         self.set_size_request(720, 520)
+        self._computer_page: ComputerPage | None = None
         self._graphics: list[HardwareDevice] = []
         self._secure_boot: SecureBootState | None = None
         self._xbox: XboxState | None = None
@@ -429,6 +432,18 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self._firmware_row = firmware_row
         self.device_list.append(firmware_row)
         self.stack.add_named(self._firmware_page(firmware_snapshot), "firmware")
+
+        computer_row = self._device_row(
+            "computer-symbolic", _("About This Computer"), _("Hardware overview")
+        )
+        computer_row.page_name = "computer"
+        computer_row.page_title = _("About This Computer")
+        self.device_list.append(computer_row)
+        if self._computer_page is None:
+            self._computer_page = ComputerPage()
+        else:
+            self._computer_page.reload()
+        self.stack.add_named(self._computer_page, "computer")
 
         selected = None
         row = self.device_list.get_row_at_index(0)
@@ -2310,7 +2325,7 @@ class DriverCenterApplication(Adw.Application):
                 continue
             command_line.printerr("Unknown option: %s\n" % argument)
             return 2
-        if requested_page not in {"home", "secure-boot"}:
+        if requested_page not in {"home", "secure-boot", "computer"}:
             command_line.printerr("Unknown Driver Center page: %s\n" % requested_page)
             return 2
 

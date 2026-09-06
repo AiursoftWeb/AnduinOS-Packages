@@ -17,4 +17,17 @@
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/anduinos-driver-center/driver-helper</annotate>
   </action>
+  <action id="com.anduinos.DriverCenter.read-memory">
+    <description>Read memory specifications</description>
+    <description xml:lang="zh_CN">读取内存规格</description>
+    <message>Authentication is required to read memory module type and speed</message>
+    <message xml:lang="zh_CN">读取内存条类型和速度需要身份验证</message>
+    <icon_name>com.anduinos.DriverCenter</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/anduinos-driver-center/memory-helper</annotate>
+  </action>
 </policyconfig>

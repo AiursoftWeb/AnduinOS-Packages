@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-driver-center</PackageName>
-    <PackageVersion>2.0.2-9+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-11+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Driver Center — manage hardware drivers, device firmware, printing, controllers, and Secure Boot support.</PackageDescription>
     <Section>admin</Section>
@@ -32,14 +32,19 @@
     <Dependency Include="anduinos-secureboot-toolkit (&gt;= 2.0.2-3)" />
     <Dependency Include="pkexec" />
     <Dependency Include="pciutils" />
+    <Dependency Include="util-linux" />
+    <Dependency Include="dmidecode" />
   </ItemGroup>
 
   <ItemGroup>
     <IncludeScript Include="scripts/anduinos-driver-center" Target="/usr/bin/anduinos-driver-center" />
+    <IncludeScript Include="scripts/memory-helper" Target="/usr/libexec/anduinos-driver-center/memory-helper" />
     <IncludeScript Include="scripts/driver-helper" Target="/usr/libexec/anduinos-driver-center/driver-helper" />
     <IncludeFile Include="src/anduinos_driver_center/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/__init__.py" />
     <IncludeFile Include="src/anduinos_driver_center/__main__.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/__main__.py" />
     <IncludeFile Include="src/anduinos_driver_center/app.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/app.py" />
+    <IncludeFile Include="src/anduinos_driver_center/computer.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/computer.py" />
+    <IncludeFile Include="src/anduinos_driver_center/computer_ui.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/computer_ui.py" />
     <IncludeFile Include="src/anduinos_driver_center/core.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/core.py" />
     <IncludeFile Include="src/anduinos_driver_center/firmware.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/firmware.py" />
     <IncludeFolder Include="resources" Target="/usr/share/anduinos-driver-center/illustrations" />
