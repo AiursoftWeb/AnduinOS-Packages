@@ -37,6 +37,10 @@
       <default>true</default>
       <summary>Show periodically refreshed partial transcripts while speaking</summary>
     </key>
+    <key name="noise-reduction" type="b">
+      <default>false</default>
+      <summary>Apply moderate WebRTC noise suppression and bounded microphone gain</summary>
+    </key>
     <key name="preview-delay" type="u">
       <default>350</default>
       <range min="0" max="2000"/>
@@ -45,7 +49,7 @@
     <key name="silence-threshold" type="d">
       <default>-42.0</default>
       <range min="-60.0" max="-20.0"/>
-      <summary>Voice activity threshold in decibels</summary>
+      <summary>Legacy energy threshold (unused by WebRTC voice detection)</summary>
     </key>
     <key name="overlay-x" type="i">
       <default>0</default>

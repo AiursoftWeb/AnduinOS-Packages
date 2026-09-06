@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-whisper-gtk</PackageName>
-    <PackageVersion>2.0.2-19+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-20+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Voice Typing settings, microphone training, GNOME shortcut, and non-focusing floating microphone bar.</PackageDescription>
     <Section>gnome</Section>
@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Dependency Include="anduinos-whisper-framework (&gt;= 2.0.2-8)" />
+    <Dependency Include="anduinos-whisper-framework (&gt;= 2.0.2-11)" />
     <Dependency Include="python3" />
     <Dependency Include="python3-gi" />
     <Dependency Include="gir1.2-gtk-4.0" />

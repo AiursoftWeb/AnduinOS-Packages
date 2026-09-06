@@ -110,15 +110,16 @@ class LiveTranscriptionTests(unittest.TestCase):
             on_level=lambda _level: None,
             on_error=lambda _message: None,
             on_no_speech=lambda: None,
+            partial_interval=0.5,
         )
         loud_audio = array("h", [12_000] * 1_600).tobytes()
-        timestamps = [index / 10 for index in range(11)]
+        timestamps = [index / 10 for index in range(13)]
         with patch(
             "anduinos_whisper_framework.audio.time.monotonic",
             side_effect=timestamps,
         ):
             for _timestamp in timestamps:
-                capture._consume(loud_audio)
+                capture._consume(loud_audio, voiced=True)
         self.assertEqual(len(partials), 2)
         self.assertGreaterEqual(
             len(partials[0]), AudioCapture.BYTES_PER_SECOND // 2
@@ -209,9 +210,9 @@ class PackageTests(unittest.TestCase):
 
         audio = (ROOT / "src/anduinos_whisper_framework/audio.py").read_text()
         daemon = (ROOT / "src/anduinos_whisper_framework/daemon.py").read_text()
-        self.assertIn("partial_interval: float = 0.5", audio)
+        self.assertIn("partial_interval: float = 0.8", audio)
         self.assertIn("self.on_partial(partial)", audio)
-        self.assertIn("queue.PriorityQueue", daemon)
+        self.assertIn("RecognitionQueue()", daemon)
         self.assertIn('self._put_work(0, "final"', daemon)
         self.assertIn('self._put_work(1, "partial"', daemon)
         self.assertIn('GLib.Variant("(sb)", (text, False))', daemon)

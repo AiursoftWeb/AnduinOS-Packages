@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import queue
+import logging
 import sys
 import threading
 import time
@@ -17,7 +17,8 @@ from . import APP_ID, INTERFACE, OBJECT_PATH
 from .audio import AudioCapture
 from .commands import apply_voice_command, remove_punctuation
 from .config import SETTINGS_SCHEMA, model_installed, model_path
-from .engine import WhisperEngine
+from .engine import RecognitionCancelled, WhisperEngine
+from .work_queue import RecognitionQueue
 
 
 INTROSPECTION_XML = f"""
@@ -25,6 +26,7 @@ INTROSPECTION_XML = f"""
   <interface name="{INTERFACE}">
     <method name="Start"/>
     <method name="Stop"/>
+    <method name="Finish"/>
     <method name="Quit"/>
     <method name="StartTest"/>
     <method name="StopTest"/>
@@ -46,7 +48,7 @@ INTROSPECTION_XML = f"""
 """
 
 SHELL_BUS_NAME = "org.gnome.Shell"
-SHELL_CONTROL_METHODS = frozenset({"Start", "Stop", "Quit"})
+SHELL_CONTROL_METHODS = frozenset({"Start", "Stop", "Finish", "Quit"})
 
 
 class VoiceTypingService:
@@ -69,11 +71,12 @@ class VoiceTypingService:
         self.partial_floor = 0
         self.work_sequence = 0
         self.work_lock = threading.Lock()
+        self.current_cancel = None
+        self.current_kind = None
+        self.finish_message = ""
         self.shutting_down = False
         self.last_activity = time.monotonic()
-        self.audio_queue: queue.PriorityQueue[
-            tuple[int, int, str, int, int, bytes]
-        ] = queue.PriorityQueue()
+        self.audio_queue = RecognitionQueue()
         self.worker = threading.Thread(target=self._recognition_worker, daemon=True)
         self.worker.start()
 
@@ -127,7 +130,9 @@ class VoiceTypingService:
             if method == "Start":
                 self.start()
             elif method == "Stop":
-                self.stop()
+                self.stop()  # Retain cancellation semantics for older clients.
+            elif method == "Finish":
+                self.finish()
             elif method == "StartTest":
                 self.start_test()
             elif method == "StopTest":
@@ -155,6 +160,9 @@ class VoiceTypingService:
             return
         if self.testing:
             self.stop_test()
+        # Starting again explicitly cancels any previous finishing session.
+        self._cancel_work()
+        self.finish_message = ""
         selected_model = self.settings.get_string("model") or "base"
         if not model_installed(selected_model):
             raise RuntimeError("The selected speech model is not installed")
@@ -164,7 +172,11 @@ class VoiceTypingService:
         self.pending = 0
         self.active = True
         self.capture = self._new_capture(session_id=session_id)
-        self.capture.start()
+        try:
+            self.capture.start()
+        except Exception:
+            self.stop()
+            raise
         self._play_cue("audio-volume-change")
         self._set_state("listening", "Listening…")
 
@@ -174,6 +186,7 @@ class VoiceTypingService:
         self.testing = False
         self.session_id += 1
         self._invalidate_partials()
+        self._cancel_work()
         self.pending = 0
         if self.capture:
             self.capture.stop(flush=False)
@@ -182,6 +195,28 @@ class VoiceTypingService:
             self._play_cue("audio-volume-change")
         self._set_state("idle", "Ready")
 
+    def finish(self) -> None:
+        """Stop recording, but retain this session until its final text arrives."""
+        if not self.active:
+            return
+        capture, self.capture = self.capture, None
+        if capture:
+            # Flush before clearing active: _queue_audio must accept this phrase.
+            capture.stop(flush=True)
+        self.active = False
+        self._invalidate_partials()
+        self._play_cue("audio-volume-change")
+        if self.pending:
+            self._set_state("finishing", "Finishing recognition…")
+        else:
+            self._set_state("idle", "Ready")
+
+    def _cancel_work(self) -> None:
+        with self.work_lock:
+            if self.current_cancel is not None:
+                self.current_cancel.set()
+            self.audio_queue.clear()
+
     def start_test(self) -> None:
         if self.active:
             self.stop()
@@ -189,6 +224,7 @@ class VoiceTypingService:
             return
         self.session_id += 1
         self._invalidate_partials()
+        self._cancel_work()
         session_id = self.session_id
         self.pending = 0
         self.testing = True
@@ -200,6 +236,7 @@ class VoiceTypingService:
         self.testing = False
         self.session_id += 1
         self._invalidate_partials()
+        self._cancel_work()
         self.pending = 0
         if self.capture:
             self.capture.stop(flush=False)
@@ -222,7 +259,7 @@ class VoiceTypingService:
                 self._capture_failed, session_id, message
             ),
             on_no_speech=lambda: GLib.idle_add(self._no_speech, session_id),
-            silence_threshold=self.settings.get_double("silence-threshold"),
+            noise_reduction=self.settings.get_boolean("noise-reduction"),
         )
 
     def _queue_audio(self, session_id: int | None, pcm: bytes) -> None:
@@ -230,10 +267,25 @@ class VoiceTypingService:
             return
         generation = self._invalidate_partials()
         self.pending += 1
+        if not self._put_work(0, "final", session_id, generation, pcm):
+            self.pending -= 1
+            GLib.idle_add(self._overloaded, session_id)
+            return
         GLib.idle_add(
             self._set_session_state, session_id, "recognizing", "Recognizing…"
         )
-        self._put_work(0, "final", session_id, generation, pcm)
+
+    def _overloaded(self, session_id):
+        if session_id != self.session_id:
+            return GLib.SOURCE_REMOVE
+        self.active = False
+        if self.capture:
+            self.capture.stop(flush=False)
+            self.capture = None
+        self._invalidate_partials()
+        self.finish_message = "Recognition cannot keep up. The last phrase was not accepted; try a smaller model."
+        self._set_state("finishing" if self.pending else "error", self.finish_message)
+        return GLib.SOURCE_REMOVE
 
     def _queue_partial(self, session_id: int | None, pcm: bytes) -> None:
         if (
@@ -249,6 +301,10 @@ class VoiceTypingService:
         with self.work_lock:
             self.partial_generation += 1
             self.partial_floor = self.partial_generation
+            if getattr(self, "current_kind", None) == "partial" and self.current_cancel is not None:
+                self.current_cancel.set()
+            if hasattr(self, "audio_queue"):
+                self.audio_queue.clear(partial_only=True)
             return self.partial_generation
 
     def _next_partial(self) -> int:
@@ -263,13 +319,13 @@ class VoiceTypingService:
         session_id: int | None,
         generation: int,
         pcm: bytes,
-    ) -> None:
+    ) -> bool:
         if session_id is None:
-            return
+            return False
         with self.work_lock:
             sequence = self.work_sequence
             self.work_sequence += 1
-        self.audio_queue.put(
+        return self.audio_queue.put(
             (priority, sequence, kind, session_id, generation, pcm)
         )
 
@@ -307,12 +363,22 @@ class VoiceTypingService:
                     session_id, generation
                 ):
                     continue
+                cancel = threading.Event()
+                with self.work_lock:
+                    self.current_cancel, self.current_kind = cancel, kind
+                    # A final/cancel may have arrived between get() and this lock.
+                    if session_id != self.session_id or (kind == "partial" and
+                            (generation <= self.partial_floor or not self.active)):
+                        continue
                 selected_model = self.settings.get_string("model") or "base"
                 engine = WhisperEngine(
                     model_path(selected_model),
                     self.settings.get_string("language") or "auto",
                 )
-                text = engine.transcribe(pcm)
+                started = time.monotonic()
+                text = engine.transcribe(pcm, cancel=cancel)
+                logging.debug("Voice task %s: audio=%.2fs inference=%.2fs", kind,
+                              len(pcm) / 32000, time.monotonic() - started)
                 if not self.settings.get_boolean("automatic-punctuation"):
                     text = remove_punctuation(text)
                 if kind == "partial":
@@ -324,11 +390,16 @@ class VoiceTypingService:
                     text, self.settings.get_boolean("voice-commands")
                 )
                 GLib.idle_add(self._recognition_finished, session_id, text, action)
+            except RecognitionCancelled:
+                continue
             except Exception as error:
                 if kind == "final":
                     GLib.idle_add(self._recognition_failed, session_id, str(error))
+                else:
+                    logging.warning("Voice preview failed (%s)", type(error).__name__)
             finally:
-                self.audio_queue.task_done()
+                with self.work_lock:
+                    self.current_cancel, self.current_kind = None, None
 
     def _partial_finished(
         self, session_id: int, generation: int, text: str
@@ -348,18 +419,33 @@ class VoiceTypingService:
         if action == "stop":
             self.stop()
         elif self.pending:
-            self._set_state("recognizing", "Recognizing…")
+            self._set_state("recognizing" if self.active else "finishing", "Recognizing…")
         elif self.active:
-            self._set_state("listening", "Listening…")
+            if text:
+                self._set_state("listening", "Listening…")
+            else:
+                self._set_state("no-speech", "No speech detected")
+                GLib.timeout_add(1800, self._restore_listening_state, session_id)
         elif not self.pending and not self.testing:
-            self._set_state("idle", "Ready")
+            if self.finish_message:
+                self._set_state("error", self.finish_message)
+            else:
+                self._set_state("idle", "Ready")
         return GLib.SOURCE_REMOVE
 
     def _recognition_failed(self, session_id: int, message: str) -> bool:
         if session_id != self.session_id:
             return GLib.SOURCE_REMOVE
         self.pending = max(0, self.pending - 1)
-        self._set_state("error", message)
+        # Stop collecting more audio after a backend failure, but preserve
+        # accepted final work instead of silently throwing away the queue.
+        self.active = False
+        if self.capture:
+            self.capture.stop(flush=False)
+            self.capture = None
+        self._invalidate_partials()
+        self.finish_message = message
+        self._set_state("finishing" if self.pending else "error", message)
         return GLib.SOURCE_REMOVE
 
     def _capture_failed(self, session_id: int | None, message: str) -> bool:
@@ -369,6 +455,7 @@ class VoiceTypingService:
         self.testing = False
         self.session_id += 1
         self._invalidate_partials()
+        self._cancel_work()
         self.pending = 0
         if self.capture:
             self.capture.stop(flush=False)
@@ -432,7 +519,11 @@ class VoiceTypingService:
         if self.shutting_down:
             return GLib.SOURCE_REMOVE
         self.shutting_down = True
+        self.stop()
         self._put_work(-1, "quit", 0, 0, b"")
+        # Let cancellation reap whisper-cli and remove its private WAV before
+        # exiting the interpreter (the worker itself is a daemon thread).
+        self.worker.join(timeout=1.0)
         if self.connection and self.registration_id:
             self.connection.unregister_object(self.registration_id)
         if self.shell_watch_id:

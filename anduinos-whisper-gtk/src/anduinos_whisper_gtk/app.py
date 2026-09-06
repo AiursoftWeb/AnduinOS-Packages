@@ -161,6 +161,11 @@ class SettingsWindow(Adw.PreferencesWindow):
         behavior.add(self.shortcut_row)
         for title, subtitle, key in (
             (
+                _("Noise reduction"),
+                _("Reduce background noise and balance microphone level; restart listening after changing this"),
+                "noise-reduction",
+            ),
+            (
                 _("Automatic punctuation"),
                 _("Keep punctuation recognized from speech"),
                 "automatic-punctuation",
@@ -231,10 +236,11 @@ class SettingsWindow(Adw.PreferencesWindow):
         )
         self.add(page)
         group = Adw.PreferencesGroup(
-            title=_("Calibrate your speaking setup"),
+            title=_("Check your speaking setup"),
             description=_(
                 "Whisper does not need a personal voice profile. Use this page to "
-                "check microphone level, distance, and background noise."
+                "check the processed microphone level, distance, and background noise. "
+                "This test does not train the model or measure recognition accuracy."
             ),
         )
         page.add(group)

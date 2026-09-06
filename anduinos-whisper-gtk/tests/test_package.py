@@ -1,6 +1,8 @@
 from pathlib import Path
 import json
 import re
+import shutil
+import subprocess
 import sys
 import unittest
 import xml.etree.ElementTree as ET
@@ -22,6 +24,10 @@ from anduinos_whisper_gtk import app as settings_app  # noqa: E402
 
 
 class PackageTests(unittest.TestCase):
+    @unittest.skipUnless(shutil.which('node'), 'Node is needed for controller behavior tests')
+    def test_finish_and_cancel_controller_behavior(self):
+        subprocess.run(['node', str(ROOT / 'tests/test_finishing.mjs')], check=True)
+
     def test_importing_settings_does_not_load_the_audio_backend(self):
         self.assertNotIn("anduinos_whisper_framework.audio", sys.modules)
 

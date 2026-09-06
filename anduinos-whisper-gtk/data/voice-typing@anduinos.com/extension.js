@@ -32,6 +32,7 @@ const DBUS_XML = `
   <interface name="com.anduinos.VoiceTyping">
     <method name="Start"/>
     <method name="Stop"/>
+    <method name="Finish"/>
     <method name="Quit"/>
     <method name="GetState">
       <arg name="state" type="s" direction="out"/>
@@ -64,6 +65,7 @@ const STATE_TEXT = {
     idle: 'Ready',
     listening: 'Listening…',
     recognizing: 'Recognizing…',
+    finishing: 'Finishing recognition…',
     testing: 'Testing microphone…',
     'no-speech': 'No speech detected',
     error: 'Microphone unavailable',
@@ -90,6 +92,8 @@ export default class VoiceTypingExtension extends Extension {
         this._targetWindow = global.display.focus_window;
         this._previewTimer = 0;
         this._pasteTimer = 0;
+        this._finishPending = false;
+        this._finalQueue = [];
         this._proxy = null;
         this._proxyReady = false;
         this._pendingCall = null;
@@ -172,6 +176,8 @@ export default class VoiceTypingExtension extends Extension {
 
     disable() {
         this._enabled = false;
+        this._finalQueue = [];
+        this._finishPending = false;
         if (this._shutdownSignal)
             global.disconnect(this._shutdownSignal);
         this._shutdownSignal = 0;
@@ -346,6 +352,14 @@ export default class VoiceTypingExtension extends Extension {
     }
 
     _startListening() {
+        this._finishPending = false;
+        this._finalQueue = [];
+        if (this._previewTimer)
+            GLib.Source.remove(this._previewTimer);
+        if (this._pasteTimer)
+            GLib.Source.remove(this._pasteTimer);
+        this._previewTimer = 0;
+        this._pasteTimer = 0;
         this._targetWindow = global.display.focus_window ?? this._targetWindow;
         this._setUiState(UI_STATE.LISTENING, _('Listening…'));
         this._call('Start');
@@ -354,9 +368,10 @@ export default class VoiceTypingExtension extends Extension {
     _stopListening() {
         if (this._uiState === UI_STATE.CLOSED)
             return;
-        this._setUiState(UI_STATE.READY, _('Ready'));
+        this._finishPending = true;
+        this._setUiState(UI_STATE.READY, _('Finishing recognition…'));
         if (this._proxy || this._pendingCall)
-            this._call('Stop');
+            this._call('Finish');
     }
 
     _dismissOverlay() {
@@ -364,6 +379,8 @@ export default class VoiceTypingExtension extends Extension {
     }
 
     _closeUi() {
+        this._finishPending = false;
+        this._finalQueue = [];
         this._setUiState(UI_STATE.CLOSED, _('Off'));
         this._hidePreview();
         if (this._previewTimer)
@@ -444,9 +461,11 @@ export default class VoiceTypingExtension extends Extension {
         if (!this._enabled || !this._root)
             return;
         this._state = state;
+        if (state === 'finishing' && this._uiState !== UI_STATE.CLOSED)
+            this._finishPending = true;
         this._detail = detail;
         if (ACTIVE_DAEMON_STATES.has(state) &&
-            this._uiState !== UI_STATE.LISTENING) {
+            this._uiState !== UI_STATE.LISTENING && !this._finishPending) {
             this._invoke(this._uiState === UI_STATE.CLOSED ? 'Quit' : 'Stop');
             return;
         }
@@ -454,7 +473,9 @@ export default class VoiceTypingExtension extends Extension {
             this._uiState === UI_STATE.LISTENING) {
             this._setUiState(UI_STATE.READY, detail || _('Ready'));
         }
-        this._statusLabel.text = _(STATE_TEXT[state] ?? detail ?? state);
+        this._statusLabel.text = state === 'finishing'
+            ? _(detail || STATE_TEXT.finishing)
+            : _(STATE_TEXT[state] ?? detail ?? state);
         this._bar.remove_style_class_name('listening');
         this._bar.remove_style_class_name('error');
         this._micButton.remove_style_class_name('listening');
@@ -494,10 +515,15 @@ export default class VoiceTypingExtension extends Extension {
     }
 
     _previewAndInsert(text) {
-        if (!this._enabled || this._uiState !== UI_STATE.LISTENING || !text)
+        if (!this._enabled || this._uiState === UI_STATE.CLOSED ||
+            (this._uiState !== UI_STATE.LISTENING && !this._finishPending) || !text)
             return;
-        if (this._previewTimer)
-            GLib.Source.remove(this._previewTimer);
+        // Final results may arrive in a burst after slow inference. Never replace
+        // a pending final/clipboard paste with the next phrase.
+        if (this._previewTimer || this._pasteTimer) {
+            this._finalQueue.push(text);
+            return;
+        }
         const delay = this._settings.get_boolean('show-preview')
             ? this._settings.get_uint('preview-delay')
             : 0;
@@ -537,11 +563,13 @@ export default class VoiceTypingExtension extends Extension {
         const purpose = Main.inputMethod?.content_purpose;
         if (Clutter.InputContentPurpose &&
             [Clutter.InputContentPurpose.PASSWORD, Clutter.InputContentPurpose.PIN].includes(purpose)) {
+            this._finalQueue = [];
             this._setState('error', _('Voice typing is disabled in password fields'));
             return;
         }
         const focused = global.display.focus_window ?? this._targetWindow;
         if (!focused) {
+            this._finalQueue = [];
             this._setState('error', _('Select a text field before dictating'));
             return;
         }
@@ -556,6 +584,8 @@ export default class VoiceTypingExtension extends Extension {
             const terminal = ['terminal', 'kgx', 'console', 'alacritty', 'kitty', 'konsole']
                 .some(name => windowClass.includes(name));
             this._pressPaste(terminal);
+            if (this._finalQueue.length)
+                this._previewAndInsert(this._finalQueue.shift());
             return GLib.SOURCE_REMOVE;
         });
     }
