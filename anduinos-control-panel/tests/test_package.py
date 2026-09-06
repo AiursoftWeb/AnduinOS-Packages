@@ -370,11 +370,20 @@ class PackageTests(unittest.TestCase):
             "anduinos-ufwall-gtk",
             "anduinos-swapcontrol-gtk",
             "anduinos-yubikey-manager",
-            "anduinos-btrfs-snapshots-manager",
         ):
             self.assertIn(f'<Dependency Include="{package}" />', project)
             self.assertNotIn(f'<Suggest Include="{package}"', project)
-        self.assertNotIn('<Suggest Include="anduinos-btrfs-snapshots-manager', project)
+
+    def test_btrfs_snapshots_manager_is_an_optional_suggestion(self):
+        project = (ROOT / "anduinos-control-panel.aosproj").read_text()
+        self.assertIn(
+            '<Suggest Include="anduinos-btrfs-snapshots-manager" />',
+            project,
+        )
+        self.assertNotIn(
+            '<Dependency Include="anduinos-btrfs-snapshots-manager"',
+            project,
+        )
 
     def test_removable_hardware_helpers_are_recommended_and_reinstallable(self):
         project = (ROOT / "anduinos-control-panel.aosproj").read_text()

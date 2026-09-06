@@ -90,6 +90,14 @@ class PackageTests(unittest.TestCase):
 
     def test_extension_supports_shortcut_overlay_and_desktop_injection(self):
         extension = (ROOT / "data/voice-typing@anduinos.com/extension.js").read_text()
+        for constant in ("STATE_TEXT", "LANGUAGE_TEXT"):
+            text_block = re.search(
+                rf"const {constant} = \{{(?P<body>.*?)\n\}};",
+                extension,
+                re.DOTALL,
+            )
+            self.assertIsNotNone(text_block)
+            self.assertNotIn("_(", text_block.group("body"))
         for contract in (
             "Main.wm.addKeybinding(",
             "Main.layoutManager.addChrome(",

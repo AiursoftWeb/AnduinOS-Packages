@@ -1496,9 +1496,9 @@ msgid ""
 "Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
 " or unclean volumes are never resized."
 msgstr ""
-"Manual changes are destructive. Existing partition starts are never moved. "
-"Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
-" or unclean volumes are never resized."
+"수동 변경은 데이터를 손상시킬 수 있습니다. 기존 파티션의 시작 위치는 절대 이동하지 않습니다. 암호화되지 않은 NTFS는 엄격한 안전 "
+"검사를 통과한 경우에만 축소할 수 있으며, 암호화되었거나 마운트되어 있거나 정상적으로 종료되지 않은 볼륨의 크기는 절대 조정하지 "
+"않습니다."
 
 msgid "Install Alongside Automatically"
 msgstr "자동으로 나란히 설치"
@@ -1589,7 +1589,7 @@ msgid "Apply Changes"
 msgstr "변경 사항 적용"
 
 msgid "Close"
-msgstr "Close"
+msgstr "닫기"
 
 msgid ""
 "BitLocker was detected. Return to Windows, open Manage BitLocker, choose "
@@ -1597,56 +1597,50 @@ msgid ""
 "protection is not enough. Back up the recovery key, fully shut Windows down,"
 " then start the installer again."
 msgstr ""
-"BitLocker was detected. Return to Windows, open Manage BitLocker, choose "
-"Turn off BitLocker, and wait until decryption reaches 100%. Suspending "
-"protection is not enough. Back up the recovery key, fully shut Windows down,"
-" then start the installer again."
+"BitLocker가 감지되었습니다. Windows로 돌아가 'BitLocker 관리'를 열고 'BitLocker 끄기'를 선택한 후 "
+"복호화가 100%가 될 때까지 기다리십시오. 보호를 일시 중지하는 것만으로는 충분하지 않습니다. 복구 키를 백업하고 Windows를 "
+"완전히 종료한 다음 설치 프로그램을 다시 시작하십시오."
 
 msgid ""
 "Windows is hibernated or Fast Startup is active. In an Administrator "
 "Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s "
 "/t 0'. Start the installer again only after Windows has fully shut down."
 msgstr ""
-"Windows is hibernated or Fast Startup is active. In an Administrator "
-"Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s "
-"/t 0'. Start the installer again only after Windows has fully shut down."
+"Windows가 최대 절전 모드이거나 빠른 시작이 활성화되어 있습니다. 관리자 터미널에서 'powercfg /h off'를 실행하고 빠른"
+" 시작을 비활성화한 다음, 'shutdown /s /t 0'을 실행하십시오. Windows가 완전히 종료된 후에만 설치 프로그램을 다시 "
+"시작하십시오."
 
 msgid ""
 "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk"
 " C: /f', allow every requested reboot to finish, then fully shut Windows "
 "down before trying again."
 msgstr ""
-"Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk"
-" C: /f', allow every requested reboot to finish, then fully shut Windows "
-"down before trying again."
+"Windows가 이 NTFS 볼륨을 정상적으로 종료하지 않았습니다. Windows로 돌아가 'chkdsk C: /f'를 실행하고, "
+"필요하다고 안내되는 모든 재부팅이 완료될 때까지 기다린 다음, 다시 시도하기 전에 Windows를 완전히 종료하십시오."
 
 msgid ""
 "This target would require moving critical NTFS MFT metadata through a "
 "currently unsafe upstream code path. Choose a larger Windows size or shrink "
 "the volume from Windows."
 msgstr ""
-"This target would require moving critical NTFS MFT metadata through a "
-"currently unsafe upstream code path. Choose a larger Windows size or shrink "
-"the volume from Windows."
+"이 크기를 선택하면 현재 안전하지 않은 원본 프로젝트의 코드 경로를 통해 중요한 NTFS MFT 메타데이터를 이동해야 합니다. "
+"Windows 파티션에 더 큰 크기를 선택하거나 Windows에서 볼륨을 축소하세요."
 
 msgid ""
 "This NTFS volume is mounted or in use. Unmount it and rescan storage before "
 "continuing."
-msgstr ""
-"This NTFS volume is mounted or in use. Unmount it and rescan storage before "
-"continuing."
+msgstr "이 NTFS 볼륨이 마운트되어 있거나 사용 중입니다. 계속하기 전에 마운트를 해제하고 저장소를 다시 스캔하십시오."
 
 msgid ""
 "This operation moves NTFS data and changes the GPT partition boundary. A "
 "power loss, failing drive, firmware fault or filesystem bug can cause "
 "permanent data loss. Back up all important Windows files before continuing."
 msgstr ""
-"This operation moves NTFS data and changes the GPT partition boundary. A "
-"power loss, failing drive, firmware fault or filesystem bug can cause "
-"permanent data loss. Back up all important Windows files before continuing."
+"이 작업은 NTFS 데이터를 이동하고 GPT 파티션 경계를 변경합니다. 전원 단절, 디스크 장애, 펌웨어 결함 또는 파일 시스템 오류로 "
+"인해 영구적인 데이터 손실이 발생할 수 있습니다. 계속하기 전에 중요한 Windows 파일을 모두 백업하십시오."
 
 msgid "New Windows partition size"
-msgstr "New Windows partition size"
+msgstr "새 Windows 파티션 크기"
 
 msgid "MiB"
 msgstr "MiB"
@@ -1657,44 +1651,41 @@ msgstr "Allowed: {minimum}–{maximum}"
 
 #, python-brace-format
 msgid "Windows: {windows} · New unallocated space: {free}"
-msgstr "Windows: {windows} · New unallocated space: {free}"
+msgstr "Windows: {windows} · 새 할당되지 않은 공간: {free}"
 
 msgid ""
 "I have backed up my data and understand that shrinking an existing Windows "
 "partition can cause permanent data loss."
 msgstr ""
-"I have backed up my data and understand that shrinking an existing Windows "
-"partition can cause permanent data loss."
+"데이터를 백업했으며, 기존 Windows 파티션의 크기를 줄이는 것이 영구적인 데이터 손실을 초래할 수 있음을 이해하고 있습니다."
 
 #, python-brace-format
 msgid "Change the size of {partition}?"
-msgstr "Change the size of {partition}?"
+msgstr "{partition}의 크기를 변경하시겠습니까?"
 
 msgid ""
 "The partition start will not move. Only its end will move left, creating "
 "unallocated space immediately after it."
-msgstr ""
-"The partition start will not move. Only its end will move left, creating "
-"unallocated space immediately after it."
+msgstr "파티션의 시작 위치는 이동하지 않습니다. 끝 위치만 왼쪽으로 이동하여 바로 뒤에 할당되지 않은 공간이 생성됩니다."
 
 msgid "Undo Planned Resize"
-msgstr "Undo Planned Resize"
+msgstr "계획된 크기 조정 취소"
 
 msgid "Plan Resize"
-msgstr "Plan Resize"
+msgstr "크기 조정 계획"
 
 msgid "Turn off BitLocker before shrinking"
-msgstr "Turn off BitLocker before shrinking"
+msgstr "축소하기 전에 BitLocker를 끄세요"
 
 #, python-brace-format
 msgid "Checking whether {partition} can be resized safely…"
-msgstr "Checking whether {partition} can be resized safely…"
+msgstr "{partition}의 크기를 안전하게 조정할 수 있는지 확인 중…"
 
 msgid "NTFS safety check failed"
-msgstr "NTFS safety check failed"
+msgstr "NTFS 안전성 검사 실패"
 
 msgid "This partition cannot be resized safely"
-msgstr "This partition cannot be resized safely"
+msgstr "이 파티션의 크기를 안전하게 조정할 수 없습니다"
 
 msgid "New empty GPT — every existing partition will be deleted"
 msgstr "새로운 빈 GPT — 모든 기존 파티션이 삭제됩니다"
@@ -1716,7 +1707,7 @@ msgstr "보존"
 
 #, python-brace-format
 msgid "Planned size: {size}"
-msgstr "Planned size: {size}"
+msgstr "계획된 크기: {size}"
 
 msgid "Deleted by new GPT"
 msgstr "新しいGPTによって削除"
@@ -1731,7 +1722,7 @@ msgid "RESIZE"
 msgstr "RESIZE"
 
 msgid "Change Size"
-msgstr "Change Size"
+msgstr "크기 변경"
 
 msgid "This disk has no existing partitions."
 msgstr "이 디스크에는 기존 파티션이 없습니다."
@@ -1771,9 +1762,7 @@ msgstr "계획을 완성하십시오: {requirements}."
 msgid ""
 "Layout is valid. Only the listed resizes, deletes, creates and formats will "
 "be sent to the privileged executor."
-msgstr ""
-"Layout is valid. Only the listed resizes, deletes, creates and formats will "
-"be sent to the privileged executor."
+msgstr "레이아웃이 유효합니다. 나열된 크기 조정, 삭제, 생성 및 포맷 작업만 특권 실행자에 전송됩니다."
 
 msgid "That partition role already exists."
 msgstr "해당 파티션 역할이 이미 존재합니다."
@@ -1829,7 +1818,7 @@ msgid "Deleted partitions"
 msgstr "削除されたパーティション"
 
 msgid "Resized partitions"
-msgstr "Resized partitions"
+msgstr "크기 조정된 파티션"
 
 msgid ""
 "Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS "
@@ -1845,10 +1834,8 @@ msgid ""
 "formatted. Back up important data first; these partitioning operations "
 "cannot be undone."
 msgstr ""
-"⚠ Listed NTFS resizes will move filesystem data and partition boundaries. "
-"Listed partitions will be deleted and every listed new partition will be "
-"formatted. Back up important data first; these partitioning operations "
-"cannot be undone."
+"⚠ 나열된 NTFS 크기 조정은 파일 시스템 데이터와 파티션 경계를 이동합니다. 나열된 파티션은 삭제되며, 나열된 모든 새 파티션은 "
+"포맷됩니다. 중요한 데이터를 먼저 백업하십시오. 이러한 파티션 작업은 되돌릴 수 없습니다."
 
 msgid "Apply this manual disk layout?"
 msgstr "この手動ディスクレイアウトを適用しますか?"
@@ -1873,11 +1860,71 @@ msgid ""
 "Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
 "shrunk after safety checks."
 msgstr ""
-"Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
-"shrunk after safety checks."
+"GPT 디스크 하나를 편집합니다. 파티션의 시작 위치는 절대 이동하지 않으며, 암호화되지 않은 NTFS는 안전성 검사를 통과한 후에만 "
+"축소할 수 있습니다."
 
 msgid "XFS (classic, scalable)"
-msgstr "XFS (classic, scalable)"
+msgstr "XFS (클래식, 확장 가능)"
 
 msgid "F2FS (flash-optimized)"
-msgstr "F2FS (flash-optimized)"
+msgstr "F2FS (플래시 최적화)"
+
+#: src/pages.py:3008
+msgid "{size} GiB · Max"
+msgstr "{size} GiB · 최대"
+
+#: src/pages.py:6695
+msgid "Review your custom Swap size"
+msgstr "사용자가 설정한 스왑 크기를 검토하세요"
+
+#: src/pages.py:2895
+msgid "✓ Best performance — AnduinOS recommended Swap size."
+msgstr "✓ 최적의 성능 — AnduinOS 권장 스왑 크기."
+
+#: src/pages.py:3004
+msgid "0 GiB · ZRAM only"
+msgstr "0 GiB · ZRAM만 사용"
+
+#: src/pages.py:6698
+msgid "ZRAM will remain enabled regardless of this choice."
+msgstr "ZRAM은 이 선택과 관계없이 계속 활성화됩니다."
+
+#: src/pages.py:3028
+msgid ""
+"ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses"
+" priority 10."
+msgstr ""
+"ZRAM은 항상 활성화된 상태로 유지됩니다: RAM의 50% · LZ4 · 우선순위 100. 디스크 스왑은 우선순위 10을 사용합니다."
+
+#: src/pages.py:2900
+msgid ""
+"Disk Swap will not be created. ZRAM remains enabled, but sustained memory "
+"pressure can terminate applications and hibernation is unavailable. This is "
+"strongly discouraged."
+msgstr ""
+"디스크 스왑은 생성되지 않습니다. ZRAM은 계속 활성화되지만, 메모리 압박이 지속되면 애플리케이션이 강제 종료될 수 있고 최대 절전 "
+"모드를 사용할 수 없습니다. 이 설정은 절대로 권장하지 않습니다."
+
+#: src/pages.py:2913
+msgid ""
+"This is below AnduinOS's runtime safety target. ZRAM still works, but heavy "
+"browser or application workloads can run out of backing memory sooner; "
+"hibernation is also unavailable."
+msgstr ""
+"이 크기는 AnduinOS가 일반적인 사용을 위해 권장하는 안전한 최소값보다 작습니다. ZRAM은 계속 작동하지만, 브라우저나 "
+"애플리케이션의 부하가 크면 사용 가능한 스왑 공간이 더 빨리 소진될 수 있으며 최대 절전 모드도 사용할 수 없습니다."
+
+#: src/pages.py:2927
+msgid ""
+"This exceeds the AnduinOS recommendation. It consumes more disk space and "
+"normally does not improve runtime performance."
+msgstr ""
+"이 크기는 AnduinOS 권장 크기를 초과합니다. 디스크 공간을 더 많이 차지하지만 일반적인 사용 성능은 대개 향상되지 않습니다."
+
+#: src/pages.py:2920
+msgid ""
+"This size protects ordinary memory pressure, but is smaller than the "
+"hibernation target. Hibernation may fail or be unavailable."
+msgstr ""
+"이 크기는 일반적인 메모리 압박에 대응하기에는 충분하지만, 최대 절전 모드에 필요한 크기보다 작습니다. 최대 절전 모드가 실패하거나 사용"
+" 불가능할 수 있습니다."

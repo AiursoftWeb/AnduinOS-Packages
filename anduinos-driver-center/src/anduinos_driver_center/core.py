@@ -382,9 +382,14 @@ def secure_boot_state(
     private_key: Path = MOK_PRIVATE_KEY,
     certificate: Path = MOK_CERTIFICATE,
     configuration: Path = Path("/etc/dkms/framework.conf.d/anduinos-sb-sign.conf"),
+    efi_firmware: Path = Path("/sys/firmware/efi"),
 ) -> SecureBootState:
     return _inspect_secure_boot(
-        runner, private_key, certificate, configuration=configuration
+        runner,
+        private_key,
+        certificate,
+        configuration=configuration,
+        efi_firmware=efi_firmware,
     )
 
 

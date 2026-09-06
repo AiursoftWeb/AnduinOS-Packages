@@ -61,20 +61,20 @@ const UI_DBUS_XML = `
 </node>`;
 
 const STATE_TEXT = {
-    idle: _('Ready'),
-    listening: _('Listening…'),
-    recognizing: _('Recognizing…'),
-    testing: _('Testing microphone…'),
-    'no-speech': _('No speech detected'),
-    error: _('Microphone unavailable'),
+    idle: 'Ready',
+    listening: 'Listening…',
+    recognizing: 'Recognizing…',
+    testing: 'Testing microphone…',
+    'no-speech': 'No speech detected',
+    error: 'Microphone unavailable',
 };
 
 const LANGUAGE_TEXT = {
-    auto: _('Auto'), zh: _('Simplified Chinese'),
-    'zh-Hans': _('Simplified Chinese'), 'zh-Hant': _('Traditional Chinese'),
-    en: _('English'), es: _('Spanish'),
-    fr: _('French'), de: _('German'), ja: _('Japanese'), ko: _('Korean'),
-    ru: _('Russian'), pt: _('Portuguese'),
+    auto: 'Auto', zh: 'Simplified Chinese',
+    'zh-Hans': 'Simplified Chinese', 'zh-Hant': 'Traditional Chinese',
+    en: 'English', es: 'Spanish',
+    fr: 'French', de: 'German', ja: 'Japanese', ko: 'Korean',
+    ru: 'Russian', pt: 'Portuguese',
 };
 
 export default class VoiceTypingExtension extends Extension {

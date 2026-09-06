@@ -10,6 +10,7 @@ source "$SCRIPT_DIR/../lib/gnome-versions.sh"
 source "$SCRIPT_DIR/../lib/build-guards.sh"
 need_cmd msgunfmt gettext
 need_cmd msgfmt gettext
+need_cmd patch patch
 
 UUID="dash-to-panel@jderose9.github.com"
 
@@ -24,6 +25,28 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
     python3 "$SCRIPT_DIR/../lib/resolve-gnome-ext.py" "$UUID" --target "$TARGET" --download --out "$DEPLOY_DIR"
 
     # ── AnduinOS customizations ───────────────────────────────────────────
+    # GNOME Shell loads extensions with more explicitly supported session modes
+    # first. Start Dash to Panel before ArcMenu so the stock panel is already
+    # hidden when ArcMenu attaches during asynchronous panel initialization.
+    echo "[$SUITE] Prioritizing Dash to Panel in the AnduinOS session..."
+    python3 - "$DEPLOY_DIR/metadata.json" <<'PY'
+import json
+from pathlib import Path
+import sys
+
+metadata_path = Path(sys.argv[1])
+metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+metadata["session-modes"] = ["user", "anduinos"]
+metadata_path.write_text(
+    json.dumps(metadata, ensure_ascii=False, indent=2) + "\n",
+    encoding="utf-8",
+)
+PY
+
+    echo "[$SUITE] Hiding GNOME's stock panel until Dash to Panel is ready..."
+    patch --batch --forward --directory="$DEPLOY_DIR" --strip=1 \
+        < "$SCRIPT_DIR/patches/hide-stock-panel-during-startup.patch"
+
     echo "[$SUITE] Applying AnduinOS panel layout to $DEPLOY_DIR/panelPositions.js..."
 
     sed -i '/export const defaults = \[/,/^\]$/c\

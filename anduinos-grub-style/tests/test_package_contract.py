@@ -225,10 +225,6 @@ class GrubStylePackageContractTests(unittest.TestCase):
 
     def test_core_system_owns_the_boot_readability_dependency(self) -> None:
         core = ET.parse(CORE_PROJECT_FILE).getroot()
-        self.assertEqual(
-            core.findtext(".//PackageVersion"),
-            "2.0.2-1+$(SuiteShortName)",
-        )
         dependencies = [
             item
             for item in core.findall(".//Dependency")

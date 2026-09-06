@@ -23,11 +23,11 @@ msgstr "Ohjauspaneeli"
 
 #: src/anduinos_control_panel/app.py:95
 msgid "AnduinOS"
-msgstr ""
+msgstr "AnduinOS"
 
 #: src/anduinos_control_panel/app.py:99 src/anduinos_control_panel/app.py:1750
 msgid "Search Control Panel"
-msgstr ""
+msgstr "Hae Ohjauspaneelista"
 
 #: src/anduinos_control_panel/app.py:100
 msgid "Search settings"
@@ -55,11 +55,11 @@ msgstr "Asetuksia ei löytynyt"
 
 #: src/anduinos_control_panel/app.py:151
 msgid "Try a different search."
-msgstr ""
+msgstr "Kokeile eri hakua."
 
 #: src/anduinos_control_panel/app.py:236
 msgid "Configure NetworkManager connection profiles"
-msgstr ""
+msgstr "Määritä NetworkManagerin yhteysprofiilit"
 
 #: src/anduinos_control_panel/app.py:238
 msgid "Install Advanced Network Configuration"
@@ -67,11 +67,11 @@ msgstr "Asenna verkon lisäasetukset"
 
 #: src/anduinos_control_panel/app.py:245
 msgid "System"
-msgstr ""
+msgstr "Järjestelmä"
 
 #: src/anduinos_control_panel/app.py:250
 msgid "Security"
-msgstr ""
+msgstr "Turvallisuus"
 
 #: src/anduinos_control_panel/app.py:255
 msgid "Network and Internet"
@@ -79,7 +79,7 @@ msgstr "Verkko ja internet"
 
 #: src/anduinos_control_panel/app.py:260
 msgid "User Accounts"
-msgstr ""
+msgstr "Käyttäjätilit"
 
 #: src/anduinos_control_panel/app.py:268
 msgid "Hardware and Drivers"
@@ -91,19 +91,19 @@ msgstr "Skannaa asiakirjoja ja valitse skanneri"
 
 #: src/anduinos_control_panel/app.py:278
 msgid "Install Document Scanner"
-msgstr ""
+msgstr "Asenna asiakirjaskanneri"
 
 #: src/anduinos_control_panel/app.py:284
 msgid "Appearance"
-msgstr ""
+msgstr "Ulkoasu"
 
 #: src/anduinos_control_panel/app.py:292
 msgid "Programs"
-msgstr ""
+msgstr "Ohjelmat"
 
 #: src/anduinos_control_panel/app.py:299
 msgid "Manage application permissions with Flatseal"
-msgstr ""
+msgstr "Hallitse sovellusten lupia Flatsealin avulla"
 
 #: src/anduinos_control_panel/app.py:301
 msgid "Install Flatseal to manage application permissions"
@@ -119,15 +119,15 @@ msgstr "Asennettu"
 
 #: src/anduinos_control_panel/app.py:312
 msgid "Not installed"
-msgstr ""
+msgstr "Ei asennettu"
 
 #: src/anduinos_control_panel/app.py:317
 msgid "Configure microphone, language, shortcut, and training"
-msgstr ""
+msgstr "Määritä mikrofoni, kieli, pikanäppäin ja koulutus"
 
 #: src/anduinos_control_panel/app.py:319
 msgid "Install private, offline speech-to-text"
-msgstr ""
+msgstr "Asenna yksityinen, ilman verkkoyhteyttä toimiva puheentunnistus"
 
 #: src/anduinos_control_panel/app.py:325 src/anduinos_control_panel/app.py:860
 msgid "Windows Compatibility"
@@ -175,7 +175,7 @@ msgstr "OK"
 #: src/anduinos_control_panel/app.py:552 src/anduinos_control_panel/app.py:830
 #, python-format
 msgid "Install %s?"
-msgstr ""
+msgstr "Asennetaanko %s?"
 
 #: src/anduinos_control_panel/app.py:554
 #, python-format
@@ -211,7 +211,7 @@ msgstr "%s asennettu"
 
 #: src/anduinos_control_panel/app.py:585 src/anduinos_control_panel/app.py:798
 msgid "Authentication was cancelled."
-msgstr ""
+msgstr "Todennus peruutettiin."
 
 #: src/anduinos_control_panel/app.py:587
 msgid "The recommended component could not be installed."
@@ -219,7 +219,7 @@ msgstr "Suositeltua komponenttia ei voitu asentaa."
 
 #: src/anduinos_control_panel/app.py:588
 msgid "Installation failed"
-msgstr ""
+msgstr "Asennus epäonnistui"
 
 #: src/anduinos_control_panel/app.py:635
 msgid "Startup and Boot"
@@ -227,20 +227,24 @@ msgstr "Käynnistysasetukset"
 
 #: src/anduinos_control_panel/app.py:653
 msgid "Boot menu"
-msgstr ""
+msgstr "Käynnistysvalikko"
 
 #: src/anduinos_control_panel/app.py:655
 msgid ""
 "Choose how long the boot menu waits before starting the default system."
 msgstr ""
+"Valitse, kuinka kauan käynnistysvalikko odottaa ennen oletusjärjestelmän "
+"käynnistämistä."
 
 #: src/anduinos_control_panel/app.py:659
 msgid "Boot menu wait time"
-msgstr ""
+msgstr "Käynnistysvalikon odotusaika"
 
 #: src/anduinos_control_panel/app.py:661
 msgid "The same delay is used after an interrupted or unsuccessful startup."
 msgstr ""
+"Samaa viivettä käytetään keskeytyneen tai epäonnistuneen käynnistyksen "
+"jälkeen."
 
 #: src/anduinos_control_panel/app.py:668
 #, python-format
@@ -249,7 +253,7 @@ msgstr "%d s"
 
 #: src/anduinos_control_panel/app.py:676
 msgid "Boot display"
-msgstr ""
+msgstr "Käynnistysnäyttö"
 
 #: src/anduinos_control_panel/app.py:678
 msgid "Choose the size of the GRUB menu and startup logo."
@@ -257,19 +261,21 @@ msgstr "Valitse GRUB-valikon ja käynnistyslogon koko."
 
 #: src/anduinos_control_panel/app.py:682
 msgid "Display mode"
-msgstr ""
+msgstr "Näyttötila"
 
 #: src/anduinos_control_panel/app.py:684
 msgid "Native resolution shows more detail; large text is easier to read."
 msgstr ""
+"Alkuperäinen resoluutio näyttää enemmän yksityiskohtia; suuri teksti on "
+"helpompi lukea."
 
 #: src/anduinos_control_panel/app.py:692
 msgid "Native resolution"
-msgstr ""
+msgstr "Alkuperäinen resoluutio"
 
 #: src/anduinos_control_panel/app.py:692
 msgid "Large text mode"
-msgstr ""
+msgstr "Suuri teksti"
 
 #: src/anduinos_control_panel/app.py:714
 #: src/anduinos_control_panel/app.py:1007
@@ -277,13 +283,13 @@ msgstr ""
 #: src/anduinos_control_panel/app.py:1431
 #: src/anduinos_control_panel/app.py:1623
 msgid "Close"
-msgstr ""
+msgstr "Sulje"
 
 #: src/anduinos_control_panel/app.py:716
 #: src/anduinos_control_panel/app.py:1540
 #: src/anduinos_control_panel/app.py:1544
 msgid "Apply"
-msgstr ""
+msgstr "Käytä"
 
 #: src/anduinos_control_panel/app.py:776
 msgid "Updating the boot menu…"
@@ -292,6 +298,8 @@ msgstr "Päivitetään käynnistysvalikkoa…"
 #: src/anduinos_control_panel/app.py:790
 msgid "Boot settings updated. The change applies on the next startup."
 msgstr ""
+"Käynnistysasetukset päivitetty. Muutos tulee voimaan seuraavassa "
+"käynnistyksessä."
 
 #: src/anduinos_control_panel/app.py:793
 msgid "Boot settings updated"
@@ -303,11 +311,11 @@ msgstr "Käynnistysasetusta ei voitu muuttaa."
 
 #: src/anduinos_control_panel/app.py:831
 msgid "This application is available from the app store."
-msgstr ""
+msgstr "Tämä sovellus on saatavilla sovelluskaupasta."
 
 #: src/anduinos_control_panel/app.py:834
 msgid "Open App Store"
-msgstr ""
+msgstr "Avaa sovelluskauppa"
 
 #: src/anduinos_control_panel/app.py:878
 msgid "Bottles"
@@ -318,14 +326,16 @@ msgid ""
 "Run Windows applications in isolated compatibility environments powered by "
 "Wine and Bottles."
 msgstr ""
+"Suorita Windows-sovelluksia Wineen ja Bottlesiin perustuvissa eristetyissä "
+"yhteensopivuusympäristöissä."
 
 #: src/anduinos_control_panel/app.py:885
 msgid "Install Bottles"
-msgstr ""
+msgstr "Asenna Bottles"
 
 #: src/anduinos_control_panel/app.py:886
 msgid "Downloads Bottles and its runtime from Flathub"
-msgstr ""
+msgstr "Lataa Bottles ja sen suoritusympäristö Flathubista"
 
 #: src/anduinos_control_panel/app.py:902
 #: src/anduinos_control_panel/app.py:1109
@@ -337,17 +347,17 @@ msgstr "Lisätiedot"
 #: src/anduinos_control_panel/app.py:936
 #: src/anduinos_control_panel/app.py:1143
 msgid "Start"
-msgstr ""
+msgstr "Aloita"
 
 #: src/anduinos_control_panel/app.py:978
 #: src/anduinos_control_panel/app.py:1185
 #: src/anduinos_control_panel/app.py:1371
 msgid "Installing…"
-msgstr ""
+msgstr "Asennetaan…"
 
 #: src/anduinos_control_panel/app.py:980
 msgid "Downloading and installing Bottles… This may take a few minutes."
-msgstr ""
+msgstr "Ladataan ja asennetaan Bottles… Tämä voi kestää muutaman minuutin."
 
 #: src/anduinos_control_panel/app.py:985
 msgid "Preparing Flathub and Bottles installation…"
@@ -355,7 +365,7 @@ msgstr "Valmistellaan Flathub- ja Bottles-asennusta…"
 
 #: src/anduinos_control_panel/app.py:999
 msgid "✓ Bottles is ready."
-msgstr ""
+msgstr "✓ Bottles on valmis."
 
 #: src/anduinos_control_panel/app.py:1003
 #: src/anduinos_control_panel/app.py:1210
@@ -366,7 +376,7 @@ msgstr "✓ Asennus suoritettu onnistuneesti."
 
 #: src/anduinos_control_panel/app.py:1005
 msgid "Open Bottles"
-msgstr ""
+msgstr "Avaa Bottles"
 
 #: src/anduinos_control_panel/app.py:1010
 msgid "Bottles installed"
@@ -394,11 +404,11 @@ msgstr "Yritä uudelleen"
 
 #: src/anduinos_control_panel/app.py:1053
 msgid "Deja Dup Backups"
-msgstr ""
+msgstr "Deja Dup -varmuuskopiot"
 
 #: src/anduinos_control_panel/app.py:1067
 msgid "Permission Settings"
-msgstr ""
+msgstr "Lupa-asetukset"
 
 #: src/anduinos_control_panel/app.py:1085
 msgid "Flatseal"
@@ -409,6 +419,8 @@ msgid ""
 "Review and control what files, devices, network connections, and services "
 "Flatpak applications can access."
 msgstr ""
+"Tarkista ja hallitse, mihin tiedostoihin, laitteisiin, verkkoyhteyksiin ja "
+"palveluihin Flatpak-sovellukset voivat päästä käsiksi."
 
 #: src/anduinos_control_panel/app.py:1092
 msgid "Install Flatseal"
@@ -420,7 +432,7 @@ msgstr "Ylläpitäjän todennus vaaditaan asennuksen alkaessa."
 
 #: src/anduinos_control_panel/app.py:1186
 msgid "Downloading and installing Flatseal…"
-msgstr ""
+msgstr "Ladataan ja asennetaan Flatseal…"
 
 #: src/anduinos_control_panel/app.py:1191
 msgid "Preparing Flatseal installation…"
@@ -444,7 +456,7 @@ msgstr "Asenna äänikirjoitus"
 
 #: src/anduinos_control_panel/app.py:1267
 msgid "Offline Voice Typing"
-msgstr ""
+msgstr "Äänikirjoitus ilman verkkoyhteyttä"
 
 #: src/anduinos_control_panel/app.py:1269
 msgid ""
@@ -461,7 +473,7 @@ msgstr "Yksityisyys oletuksena"
 
 #: src/anduinos_control_panel/app.py:1275
 msgid "Speech is recognized locally with whisper.cpp"
-msgstr ""
+msgstr "Puhe tunnistetaan tällä tietokoneella whisper.cpp:llä"
 
 #: src/anduinos_control_panel/app.py:1280
 msgid "About 140 MB to download"
@@ -471,6 +483,8 @@ msgstr "Noin 140 Mt latausta"
 msgid ""
 "Includes the multilingual Base model; optional models are available later"
 msgstr ""
+"Sisältää monikielisen Base-mallin; valinnaisia malleja on saatavilla "
+"myöhemmin"
 
 #: src/anduinos_control_panel/app.py:1291
 msgid "Administrator authentication is required when installation starts."
@@ -478,7 +492,7 @@ msgstr "Ylläpitäjän todennus vaaditaan asennuksen alkaessa."
 
 #: src/anduinos_control_panel/app.py:1376
 msgid "Downloading the local engine and multilingual speech model…"
-msgstr ""
+msgstr "Ladataan paikallinen moottori ja monikielinen puheentunnistusmalli…"
 
 #: src/anduinos_control_panel/app.py:1382
 msgid "Preparing Voice Typing installation…"
@@ -494,11 +508,11 @@ msgstr ""
 
 #: src/anduinos_control_panel/app.py:1429
 msgid "Open Settings"
-msgstr ""
+msgstr "Avaa asetukset"
 
 #: src/anduinos_control_panel/app.py:1435
 msgid "Voice Typing installed — sign out to finish"
-msgstr ""
+msgstr "Äänikirjoitus on asennettu — viimeistele kirjautumalla ulos"
 
 #: src/anduinos_control_panel/app.py:1466
 msgid "On-device AI"
@@ -513,6 +527,8 @@ msgid ""
 "Run the Why AI assistant locally. The model and runtime are installed only "
 "when this option is enabled."
 msgstr ""
+"Suorita Why AI -avustaja tällä tietokoneella. Malli ja suoritusympäristö "
+"asennetaan vain, kun tämä vaihtoehto on käytössä."
 
 #: src/anduinos_control_panel/app.py:1491
 msgid "Install on-device AI"
@@ -520,7 +536,7 @@ msgstr "Asenna laitteessa toimiva tekoäly"
 
 #: src/anduinos_control_panel/app.py:1492
 msgid "Enable the local Why AI stack on this computer"
-msgstr ""
+msgstr "Ota Why AI -pino käyttöön tällä tietokoneella"
 
 #: src/anduinos_control_panel/app.py:1586
 msgid "Applying…"
@@ -528,11 +544,11 @@ msgstr "Otetaan käyttöön…"
 
 #: src/anduinos_control_panel/app.py:1588
 msgid "Downloading and installing Why AI… This may take about 10 minutes."
-msgstr ""
+msgstr "Ladataan ja asennetaan Why AI… Tämä voi kestää noin 10 minuuttia."
 
 #: src/anduinos_control_panel/app.py:1590
 msgid "Disabling the local Why AI stack…"
-msgstr ""
+msgstr "Poistetaan paikallinen Why AI -pino käytöstä…"
 
 #: src/anduinos_control_panel/app.py:1597
 msgid "Preparing package operation…"
@@ -548,7 +564,7 @@ msgstr "✓ Laitteessa toimiva tekoäly on poistettu käytöstä."
 
 #: src/anduinos_control_panel/app.py:1619
 msgid "✓ Change completed successfully."
-msgstr ""
+msgstr "✓ Muutos suoritettu onnistuneesti."
 
 #: src/anduinos_control_panel/app.py:1628
 msgid "On-device AI enabled"
@@ -569,7 +585,7 @@ msgstr "{command} päättyi tilakoodilla {status}"
 
 #: src/anduinos_control_panel/app.py:1742
 msgid "Open a Control Panel topic"
-msgstr ""
+msgstr "Avaa Ohjauspaneelin kohde"
 
 #: src/anduinos_control_panel/app.py:1743
 msgid "TOPIC"
@@ -581,12 +597,17 @@ msgstr "TERMIT"
 
 #: src/anduinos_control_panel/app.py:1788
 msgid "AnduinOS Control Panel"
-msgstr ""
+msgstr "AnduinOS Ohjauspaneeli"
 
 #: src/anduinos_control_panel/app.py:1790
 msgid "AnduinOS Team"
-msgstr ""
+msgstr "AnduinOS-tiimi"
 
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
+msgstr "Etsi ja hallitse AnduinOS-järjestelmän asetuksia."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
 msgstr ""
+"asetukset;ohjaus;järjestelmä;laitteisto;ohjaimet;tilit;varmuuskopiointi;"

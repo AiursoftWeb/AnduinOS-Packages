@@ -202,6 +202,7 @@ class PackageTests(unittest.TestCase):
         schema = ET.parse(
             ROOT / "data/com.anduinos.voice-typing.gschema.xml"
         ).getroot()
+        self.assertEqual(schema.get("gettext-domain"), "anduinos-whisper-gtk")
         live_key = schema.find(".//key[@name='live-transcription']")
         self.assertIsNotNone(live_key)
         self.assertEqual(live_key.findtext("default"), "true")

@@ -1839,3 +1839,57 @@ msgstr "XFS（经典、可扩展）"
 
 msgid "F2FS (flash-optimized)"
 msgstr "F2FS（闪存优化）"
+
+#: src/pages.py:3008
+msgid "{size} GiB · Max"
+msgstr "{size} GiB · 最大"
+
+#: src/pages.py:2913
+msgid ""
+"This is below AnduinOS's runtime safety target. ZRAM still works, but heavy "
+"browser or application workloads can run out of backing memory sooner; "
+"hibernation is also unavailable."
+msgstr ""
+"此大小低于 AnduinOS 为日常使用建议的安全下限。ZRAM "
+"仍可正常工作，但大量使用浏览器或应用程序时，可用交换空间可能会更快耗尽；休眠功能也不可用。"
+
+#: src/pages.py:3004
+msgid "0 GiB · ZRAM only"
+msgstr "0 GiB · 仅 ZRAM"
+
+#: src/pages.py:2927
+msgid ""
+"This exceeds the AnduinOS recommendation. It consumes more disk space and "
+"normally does not improve runtime performance."
+msgstr "此大小超过 AnduinOS 的建议值。它会占用更多磁盘空间，通常不会提升日常使用性能。"
+
+#: src/pages.py:2900
+msgid ""
+"Disk Swap will not be created. ZRAM remains enabled, but sustained memory "
+"pressure can terminate applications and hibernation is unavailable. This is "
+"strongly discouraged."
+msgstr "不会创建磁盘交换空间。ZRAM 仍将保持启用，但持续的内存压力可能导致应用程序被终止，且休眠功能不可用。强烈不建议这样做。"
+
+#: src/pages.py:2895
+msgid "✓ Best performance — AnduinOS recommended Swap size."
+msgstr "✓ 最佳性能 — AnduinOS 建议的交换空间大小。"
+
+#: src/pages.py:6698
+msgid "ZRAM will remain enabled regardless of this choice."
+msgstr "无论您做出何种选择，ZRAM 都将保持启用。"
+
+#: src/pages.py:2920
+msgid ""
+"This size protects ordinary memory pressure, but is smaller than the "
+"hibernation target. Hibernation may fail or be unavailable."
+msgstr "该大小足以应对一般的内存压力，但小于休眠所需的大小。休眠可能失败或不可用。"
+
+#: src/pages.py:3028
+msgid ""
+"ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses"
+" priority 10."
+msgstr "ZRAM 始终保持启用：50% 的 RAM · LZ4 · 优先级 100。磁盘交换空间使用优先级 10。"
+
+#: src/pages.py:6695
+msgid "Review your custom Swap size"
+msgstr "请检查您的自定义交换空间大小"

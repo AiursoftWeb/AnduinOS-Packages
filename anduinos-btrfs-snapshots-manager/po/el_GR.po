@@ -36,7 +36,8 @@ msgstr ""
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "A scheduled Home snapshot will start in 10 seconds."
 msgstr ""
-"Ένα προγραμματισμένο στιγμιότυπο του προφίλ θα ξεκινήσει σε 10 δευτερόλεπτα."
+"Η δημιουργία προγραμματισμένου στιγμιότυπου του προσωπικού φακέλου θα "
+"ξεκινήσει σε 10 δευτερόλεπτα."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "A scheduled system snapshot will start in 10 seconds."
@@ -49,7 +50,7 @@ msgstr "Ένα όριο υπερβλήθηκε στο παρελθόν"
 
 #: src/btrfs-snapshots-manager/src/ui/mod.rs
 msgid "About Disk Snapshots Manager"
-msgstr "Σχετικά με τη Διαχείριση Στιγμιότυπων Δίσκου"
+msgstr "Σχετικά με τη Διαχείριση στιγμιοτύπων δίσκου"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "About {0} remaining"
@@ -66,7 +67,7 @@ msgstr "Προχωρημένες ρυθμίσεις διατήρησης"
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 #: src/btrfs-snapshots-manager/src/ui/mod.rs
 msgid "Advanced Settings"
-msgstr "Προχωρημένες Ρυθμίσεις"
+msgstr "Προχωρημένες ρυθμίσεις"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "After Package Change"
@@ -123,7 +124,7 @@ msgstr "Ολοκληρώθηκε ο αυτόματος καθαρισμός"
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Automatic Home Snapshots"
-msgstr "Αυτόματα στιγμιότυπα του προφίλ"
+msgstr "Αυτόματα στιγμιότυπα του προσωπικού φακέλου"
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "Automatic Snapshot Failed"
@@ -172,7 +173,7 @@ msgstr "Μέσος ρυθμός: {0}/δευτ."
 
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 msgid "Background Service"
-msgstr "Υπηρεσία Παρασκηνίου"
+msgstr "Υπηρεσία παρασκηνίου"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "Based on the manufacturer endurance counter"
@@ -222,7 +223,8 @@ msgstr "Περιήγηση στο ιστορικό του φακέλου…"
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Btrfs could not complete Home file defragmentation."
 msgstr ""
-"Το Btrfs δεν μπόρεσε να ολοκληρώσει τον αποθρακισμό των αρχείων του προφίλ."
+"Το Btrfs δεν μπόρεσε να ολοκληρώσει την ανασυγκρότηση των αρχείων του "
+"προσωπικού φακέλου."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Btrfs could not complete the limited balance."
@@ -350,7 +352,7 @@ msgstr "Έλεγχος ακεραιότητας συστήματος αρχεί�
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Check Snapshot Availability"
-msgstr "Έλεγχος Διαθεσιμότητας Στιγμιοτύπου"
+msgstr "Έλεγχος διαθεσιμότητας στιγμιοτύπου"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Checked: {0}"
@@ -500,11 +502,11 @@ msgstr "Αποθρακισμός"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Defragment Home files"
-msgstr "Αποθρακισμός αρχείων του προφίλ"
+msgstr "Ανασυγκρότηση αρχείων του προσωπικού φακέλου"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Defragment Home files?"
-msgstr "Αποθρακισμός αρχείων του προφίλ;"
+msgstr "Να γίνει ανασυγκρότηση των αρχείων του προσωπικού φακέλου;"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid ""
@@ -597,7 +599,7 @@ msgstr "Η κατάσταση υγείας του δίσκου δεν είναι
 #: src/btrfs-snapshots-manager/src/ui/mod.rs
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Disk Snapshots Manager"
-msgstr "Διαχείριση Στιγμιότυπων Δίσκου"
+msgstr "Διαχείριση στιγμιοτύπων δίσκου"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Disk Snapshots Manager requires the standard AnduinOS Btrfs layout."
@@ -717,32 +719,34 @@ msgstr "Υγιής"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Home Defragmentation Cancelled"
-msgstr "Ακυρώθηκε ο αποθρακισμός του προφίλ"
+msgstr "Η ανασυγκρότηση του προσωπικού φακέλου ακυρώθηκε"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Home Defragmentation Complete"
-msgstr "Ολοκληρώθηκε ο αποθρακισμός των αρχείων του προφίλ"
+msgstr "Η ανασυγκρότηση του προσωπικού φακέλου ολοκληρώθηκε"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Home Defragmentation Failed"
-msgstr "Αποτυχία αποθρακισμού προφίλ"
+msgstr "Η ανασυγκρότηση του προσωπικού φακέλου απέτυχε"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Home Defragmentation Result Unavailable"
-msgstr "Μη διαθέσιμο αποτέλεσμα αποθρακισμού προφίλ"
+msgstr ""
+"Το αποτέλεσμα της ανασυγκρότησης του προσωπικού φακέλου δεν είναι διαθέσιμο"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Home file defragmentation was cancelled before it finished."
 msgstr ""
-"Η λειτουργία αποθρακισμού των αρχείων του προφίλ ακυρώθηκε πριν ολοκληρωθεί."
+"Η ανασυγκρότηση των αρχείων του προσωπικού φακέλου ακυρώθηκε πριν "
+"ολοκληρωθεί."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Home snapshot"
-msgstr "Στιγμιότυπο αρχικής σελίδας"
+msgstr "Στιγμιότυπο προσωπικού φακέλου"
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "Home Snapshot Created"
-msgstr "Δημιουργήθηκε στιγμιότυπο προφίλ"
+msgstr "Δημιουργήθηκε στιγμιότυπο του προσωπικού φακέλου"
 
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
 msgid "Hours"
@@ -799,7 +803,7 @@ msgstr "Διατήρηση όλων των στιγμιοτύπων για"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Keep Forever"
-msgstr "Διατήρηση Μόνιμα"
+msgstr "Διατήρηση μόνιμα"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Kernel"
@@ -942,7 +946,7 @@ msgstr "Μη διορθώσιμα σφάλματα εκτός σύνδεσης"
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "old Home snapshot(s) were removed."
-msgstr "Τα παλιά στιγμιότυπα του προφίλ αφαιρέθηκαν."
+msgstr "Τα παλιά στιγμιότυπα του προσωπικού φακέλου αφαιρέθηκαν."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "old system snapshot(s) and"
@@ -1119,7 +1123,7 @@ msgstr "Έτοιμο για έλεγχο"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "Ready to defragment Home files"
-msgstr "Έτοιμο για αποθρακισμό αρχείων προφίλ"
+msgstr "Έτοιμο για ανασυγκρότηση των αρχείων του προσωπικού φακέλου"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "Ready to optimize allocation"
@@ -1227,7 +1231,9 @@ msgstr "Εξετάστε τους επισημασμένους δείκτες σ
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Rewriting Home file extents with ZSTD compression…"
-msgstr "Επαναγραφή διαστημάτων αρχείων του προφίλ με συμπίεση ZSTD…"
+msgstr ""
+"Επανεγγραφή των περιοχών δεδομένων των αρχείων του προσωπικού φακέλου με "
+"συμπίεση ZSTD…"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Roll Back"
@@ -1300,7 +1306,7 @@ msgstr "Αποθήκευση"
 
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 msgid "Save Advanced Settings"
-msgstr "Αποθήκευση Προχωρημένων Ρυθμίσεων"
+msgstr "Αποθήκευση προχωρημένων ρυθμίσεων"
 
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
@@ -1383,7 +1389,7 @@ msgstr "Λεπτομέρειες στιγμιοτύπου"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Snapshot {0} · Folder"
-msgstr "Στιγμιότυπο {0} · Φάκελος"
+msgstr "Στιγμιότυπο {0} · φάκελος"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Snapshot {0} · {1} bytes · modified {2}"
@@ -1415,7 +1421,7 @@ msgstr "Ορισμένοι δίσκοι του συστήματος χρειάζ
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Space Accounting"
-msgstr "Παρακολούθηση Χώρου"
+msgstr "Παρακολούθηση χώρου"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Space Allocation"
@@ -1479,7 +1485,7 @@ msgstr "Η κατάσταση δεν είναι διαθέσιμη"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Storage Behavior"
-msgstr "Συμπεριφορά Αποθήκευσης"
+msgstr "Συμπεριφορά αποθήκευσης"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Storage layout: {0}"
@@ -1521,7 +1527,7 @@ msgstr "Αρχεία και πακέτα συστήματος"
 
 #: src/btrfs-snapshots-manager/src/ui/mod.rs
 msgid "System Recovery"
-msgstr "Ανάκτηση Συστήματος"
+msgstr "Ανάκτηση συστήματος"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "system snapshot"
@@ -1561,7 +1567,7 @@ msgstr "Η συσκευή δεν παρείχε επιβεβαιωτικό απ�
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "The Home snapshot was created successfully."
-msgstr "Το στιγμιότυπο του προφίλ δημιουργήθηκε επιτυχώς."
+msgstr "Το στιγμιότυπο του προσωπικού φακέλου δημιουργήθηκε με επιτυχία."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "The integrity check was cancelled before it finished."
@@ -1598,12 +1604,15 @@ msgid ""
 "The scheduled Home snapshot could not be created. Check Disk Snapshots "
 "Manager for details."
 msgstr ""
-"Δεν ήταν δυνατή η δημιουργία του προγραμματισμένου στιγμιοτύπου του προφίλ. "
-"Ελέγξτε τη Διαχείριση Στιγμιότυπων Δίσκου για λεπτομέρειες."
+"Δεν ήταν δυνατή η δημιουργία του προγραμματισμένου στιγμιότυπου του "
+"προσωπικού φακέλου. Ελέγξτε τη Διαχείριση στιγμιότυπων δίσκου για "
+"λεπτομέρειες."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "The scheduled Home snapshot was created successfully."
-msgstr "Το προγραμματισμένο στιγμιότυπο του προφίλ δημιουργήθηκε επιτυχώς."
+msgstr ""
+"Το προγραμματισμένο στιγμιότυπο του προσωπικού φακέλου δημιουργήθηκε με "
+"επιτυχία."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid ""
@@ -1659,7 +1668,9 @@ msgstr "Ο φάκελος είναι κενός"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "This item was not present in the available Home snapshots."
-msgstr "Αυτό το στοιχείο δεν ήταν διαθέσιμο στα στιγμιότυπα του προφίλ."
+msgstr ""
+"Αυτό το στοιχείο δεν υπήρχε στα διαθέσιμα στιγμιότυπα του προσωπικού "
+"φακέλου."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid ""
@@ -1914,3 +1925,68 @@ msgstr "Λεπτομέρειες: {0}"
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Integrity Check Failed"
 msgstr "Αποτυχία ελέγχου ακεραιότητας"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:84
+msgid ""
+"Authentication is required to create more than four Home snapshots per "
+"minute"
+msgstr ""
+"Απαιτείται έλεγχος ταυτότητας όταν δημιουργούνται πάνω από τέσσερα "
+"στιγμιότυπα του προσωπικού φακέλου ανά λεπτό."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:70
+msgid "Create a Home history snapshot"
+msgstr "Δημιουργία στιγμιότυπου ιστορικού του προσωπικού φακέλου"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:72
+msgid "A local active user may create a Home history snapshot"
+msgstr ""
+"Ένας τοπικός ενεργός χρήστης μπορεί να δημιουργήσει ένα στιγμιότυπο "
+"ιστορικού του προσωπικού φακέλου"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:12
+msgid ""
+"Independent Home snapshots capture the @home subvolume on a separate "
+"schedule. Users can browse earlier versions and recover files or folders "
+"without rolling back the operating system."
+msgstr ""
+"Τα ανεξάρτητα στιγμιότυπα του προσωπικού φακέλου καταγράφουν τον υποτόμο "
+"@home σε ξεχωριστό χρονοδιάγραμμα. Οι χρήστες μπορούν να περιηγούνται σε "
+"προηγούμενες εκδόσεις και να ανακτούν αρχεία ή φακέλους χωρίς να επαναφέρουν"
+" το λειτουργικό σύστημα."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:82
+msgid "Override the Home snapshot creation limit"
+msgstr "Παράκαμψη του ορίου δημιουργίας στιγμιότυπων του προσωπικού φακέλου"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:11
+msgid ""
+"A system rollback validates the selected snapshot, protects a current-system"
+" fallback while the transaction is pending, and prepares a verified one-shot"
+" GRUB entry. Personal Files are explicitly unchanged."
+msgstr ""
+"Η επαναφορά συστήματος επαληθεύει το επιλεγμένο στιγμιότυπο, διατηρεί "
+"διαθέσιμο το τρέχον σύστημα ως εναλλακτική επιλογή όσο εκκρεμεί η συναλλαγή "
+"και προετοιμάζει μια επαληθευμένη καταχώριση GRUB για μία μόνο εκκίνηση. Τα "
+"προσωπικά αρχεία παραμένουν ρητά αμετάβλητα."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:14
+msgid ""
+"Automatic schedules can show desktop notifications after successful "
+"creation, while retention cleanup is reported as one quiet aggregate "
+"notification."
+msgstr ""
+"Τα αυτόματα χρονοδιαγράμματα μπορούν να εμφανίζουν ειδοποιήσεις στην "
+"επιφάνεια εργασίας μετά την επιτυχή δημιουργία, ενώ η εκκαθάριση βάσει της "
+"πολιτικής διατήρησης αναφέρεται με μία διακριτική συγκεντρωτική ειδοποίηση."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:13
+msgid ""
+"Nautilus provides File History actions for one selected home item and for a "
+"folder background, opening a focused Disk Snapshots Manager window for "
+"earlier versions and deleted files."
+msgstr ""
+"Το Nautilus παρέχει ενέργειες ιστορικού αρχείων για ένα επιλεγμένο στοιχείο "
+"του προσωπικού φακέλου και για το φόντο ενός φακέλου, ανοίγοντας ένα ειδικό "
+"παράθυρο της Διαχείρισης Στιγμιότυπων Δίσκου για την προβολή προηγούμενων "
+"εκδόσεων και διαγραμμένων αρχείων."
