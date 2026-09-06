@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-apt-config-dev</PackageName>
-    <PackageVersion>2.0.2-4+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>APT pinning: AnduinOS packages always take precedence over Ubuntu</PackageDescription>
     <Section>admin</Section>
@@ -26,7 +26,7 @@
 
     <!-- APT pinning: prefer AnduinOS packages over upstream Ubuntu -->
     <IncludeFile Include="assets/anduinos" Target="/etc/apt/preferences.d/anduinos" />
-    <IncludeFile Include="../anduinos-apt-config/assets/52anduinos-unattended-upgrades" Target="/etc/apt/apt.conf.d/52anduinos-unattended-upgrades" />
+    <IncludeFile Include="assets/52anduinos-unattended-upgrades" Target="/etc/apt/apt.conf.d/52anduinos-unattended-upgrades" />
 
     <!-- Per-arch per-suite APT sources — architectures match the target -->
     <IncludeFile Include="assets/amd64/noble/anduinos.sources"      Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'noble-addon' and '$(Arch)' == 'amd64'" />

@@ -1,4 +1,8 @@
+// Add defaults without clearing administrator-defined upgrade rules.
+// Match the official host too: the Apkg Origin is shared by other servers.
 Unattended-Upgrade::Origins-Pattern {
     "o=Ubuntu,a=${distro_codename}";
     "o=Ubuntu,a=${distro_codename}-security";
+    "o=Aiursoft Apkg,a=${distro_codename}-addon,site=packages.anduinos.com";
+    "o=Aiursoft Apkg,a=${distro_codename}-webapps,site=packages.anduinos.com";
 };
