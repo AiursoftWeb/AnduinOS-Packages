@@ -12,8 +12,10 @@ try:
     from gi.repository import Adw, Gdk, GLib, Gtk
     from anduinos_driver_center import computer_ui as ui
     from anduinos_driver_center.computer import Computer, Disk, SystemDetails, FilesystemUsage
-    Adw.init()
+    Gtk.init()
     HAS_DISPLAY = Gdk.Display.get_default() is not None
+    if HAS_DISPLAY:
+        Adw.init()
 except (ImportError, ValueError):
     HAS_DISPLAY = False
 

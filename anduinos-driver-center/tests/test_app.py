@@ -52,16 +52,22 @@ class AppTests(unittest.TestCase):
         self.assertEqual(message, "Done")
 
     def test_failure_dialog_has_scrollable_copyable_details(self):
-        with patch("anduinos_driver_center.app.Adw.MessageDialog") as dialog_type:
+        with (
+            patch("anduinos_driver_center.app.Adw.MessageDialog") as dialog_type,
+            patch("anduinos_driver_center.app.Gtk.TextView") as text_view_type,
+            patch("anduinos_driver_center.app._scrolled_window") as scrolled_type,
+        ):
             message = "E: Package unavailable\n" + "package details\n" * 200
             DriverCenterWindow._action_error(None, message)
         dialog = dialog_type.return_value
         scroll = dialog.set_extra_child.call_args.args[0]
-        details = scroll.get_child()
-        buffer = details.get_buffer()
-        self.assertEqual(buffer.get_text(*buffer.get_bounds(), True), message)
-        self.assertFalse(details.get_editable())
-        self.assertEqual(scroll.get_max_content_height(), 360)
+        self.assertIs(scroll, scrolled_type.return_value)
+        details = text_view_type.return_value
+        scroll.set_child.assert_called_once_with(details)
+        details.get_buffer.return_value.set_text.assert_called_once_with(message)
+        self.assertFalse(text_view_type.call_args.kwargs["editable"])
+        self.assertFalse(text_view_type.call_args.kwargs["cursor_visible"])
+        self.assertEqual(scrolled_type.call_args.kwargs["max_content_height"], 360)
         self.assertNotIn(message, dialog_type.call_args.kwargs["heading"])
         dialog.present.assert_called_once()
 
