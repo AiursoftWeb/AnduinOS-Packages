@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-script = Path(__file__).resolve().parents[1] / "scripts/smoke-shell.py"
+script = Path(__file__).resolve().parents[1] / "tests/integration/smoke-shell.py"
 spec = importlib.util.spec_from_file_location("shell_smoke", script)
 smoke = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(smoke)

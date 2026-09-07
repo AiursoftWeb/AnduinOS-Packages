@@ -28,4 +28,4 @@ fetch_headers 'pool/universe/g/ggml/libggml-dev_0.9.11-1_amd64.deb' \
 "$compiler" -std=gnu11 -O2 -Wall -Wextra -Werror -fstack-protector-strong \
     -D_FORTIFY_SOURCE=2 -Wl,-z,relro,-z,now -I obj/headers/usr/include \
     src/worker.c -ldl -o "obj/$1/anduinos-whisper-worker"
-bash build-state-metrics.sh "$1"
+bash scripts/build-state-metrics.sh "$1"

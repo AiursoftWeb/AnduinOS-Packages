@@ -15,11 +15,11 @@ import time
 import wave
 
 sys.dont_write_bytecode = True
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'src'))
 from anduinos_whisper_framework.vad import VadEngine
 
-spec = importlib.util.spec_from_file_location('resident_stress', ROOT / 'scripts/stress-resident.py')
+spec = importlib.util.spec_from_file_location('resident_stress', ROOT / 'tests/benchmarks/stress-resident.py')
 resident_stress = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(resident_stress)
 

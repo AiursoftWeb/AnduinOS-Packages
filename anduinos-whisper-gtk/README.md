@@ -29,8 +29,8 @@ boundary or when the user stops recording to finish a phrase.
 
 ## Noise handling and finishing
 
-The capture pipeline uses GStreamer's WebRTC voice detector rather than a
-fixed RMS gate. Moderate noise suppression and bounded automatic gain are
+The capture pipeline uses an isolated streaming Silero voice detector.
+WebRTC noise suppression and bounded automatic gain are
 available as an opt-in setting: processing can also harm recognition, so it
 is not enabled blindly for every microphone. The
 legacy `silence-threshold` preference is retained for compatibility but is no
@@ -55,22 +55,15 @@ there are at most eight queued final phrases. Overload stops capture with an
 explicit warning while accepted final phrases finish. No audio or transcript
 is written to diagnostic logs; timing logs contain only task type and durations.
 
-Regression coverage includes synthetic low-level speech decisions, loud
-non-speech decisions, a real WebRTC white-noise pipeline, maximum phrase
-length, cancellation, bounded scheduling and a mocked desktop controller.
-Real laptop microphones, Chinese speech, competing voices, CPU load and
-speaker playback still require end-to-end acceptance tests before release.
-
-For repeatable offline checks, run the sibling framework's
-`scripts/benchmark-audio.py sample.wav --noise-dbfs -35 --transcribe` with a
-public or consented 16 kHz mono PCM16 sample. Compare `--noise-reduction` and
-`--gain 0.08 --noise-dbfs -100`. The script never opens a microphone or uploads
-audio. It reports audio-timeline endpoints separately from processing time;
-its single-file results are not a general accuracy benchmark.
+Regression coverage includes public bilingual clean/noisy audio, native speech
+detection, cancellation, bounded scheduling and isolated desktop insertion.
+See the framework's [testing guide](../anduinos-whisper-framework/docs/testing.md)
+for reproducible commands and limitations. Desktop integration tools live in
+`tests/integration/`; they never replace the user's running Shell.
 
 The feature is intentionally optional. Installing it does not enable cloud
-speech services. Each captured phrase is written to a private temporary WAV
-for local transcription and deleted immediately afterwards.
+speech services. Captured audio is passed through private pipes to a persistent
+local worker; the service does not write recordings or transcripts to disk.
 
 The optional Tiny and Small models are hosted by Hugging Face. Before a direct
 download begins, the settings app identifies Hugging Face as an unaffiliated

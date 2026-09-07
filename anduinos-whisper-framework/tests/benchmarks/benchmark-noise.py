@@ -14,8 +14,8 @@ import random
 import sys
 
 sys.dont_write_bytecode = True
-ROOT = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location('capture_probe', ROOT / 'scripts/benchmark-capture.py')
+ROOT = Path(__file__).resolve().parents[2]
+spec = importlib.util.spec_from_file_location('capture_probe', ROOT / 'tests/benchmarks/benchmark-capture.py')
 capture = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(capture)
 

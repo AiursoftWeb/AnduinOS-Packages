@@ -8,7 +8,7 @@ import unittest
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location("corpus_benchmark", ROOT / "scripts" / "benchmark-corpus.py")
+spec = importlib.util.spec_from_file_location("corpus_benchmark", ROOT / "tests" / "benchmarks" / "benchmark-corpus.py")
 corpus = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(corpus)
 

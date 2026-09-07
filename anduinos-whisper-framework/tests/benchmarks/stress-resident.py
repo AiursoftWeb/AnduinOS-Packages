@@ -17,7 +17,7 @@ import time
 import wave
 
 sys.dont_write_bytecode = True
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 from anduinos_whisper_framework.resident import ResidentEngine
 from anduinos_whisper_framework.errors import RecognitionCancelled

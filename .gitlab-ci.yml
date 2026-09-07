@@ -20,7 +20,8 @@ voice-cpu-acceptance:
       gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad
       libopencc1.1 libggml0 whisper.cpp gettext nodejs dbus xvfb xauth
   script:
-    - bash lib/test-voice-cpu.sh
+    - PYTHONDONTWRITEBYTECODE=1 python3 anduinos-whisper-framework/tests/integration/test-ci-gate.py
+    - bash anduinos-whisper-framework/tests/run-cpu.sh
   artifacts:
     when: always
     paths:
@@ -34,7 +35,6 @@ verify-ci-package-needs:
   stage: lint
   script:
     - python3 lib/verify-ci-package-needs.py
-    - PYTHONDONTWRITEBYTECODE=1 python3 lib/test-voice-ci-gate.py
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH
@@ -436,6 +436,7 @@ anduinos-whisper-worker:
     - voice-cpu-acceptance
   variables:
     PACKAGE_DIR: anduinos-whisper-worker
+    QUALITY_GATE: voice-cpu-acceptance
 
 anduinos-whisper-framework:
   extends: .publish

@@ -3,12 +3,13 @@ import math
 from array import array
 from pathlib import Path
 import unittest
+from unittest.mock import Mock
 
 ROOT = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location('capture_benchmark', ROOT / 'scripts/benchmark-capture.py')
+spec = importlib.util.spec_from_file_location('capture_benchmark', ROOT / 'tests/benchmarks/benchmark-capture.py')
 capture = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(capture)
-noise_spec = importlib.util.spec_from_file_location('noise_benchmark', ROOT / 'scripts/benchmark-noise.py')
+noise_spec = importlib.util.spec_from_file_location('noise_benchmark', ROOT / 'tests/benchmarks/benchmark-noise.py')
 noise = importlib.util.module_from_spec(noise_spec)
 noise_spec.loader.exec_module(noise)
 
@@ -40,7 +41,9 @@ class CaptureCorpusTests(unittest.TestCase):
         if capture.Gst.ElementFactory.find('webrtcdsp') is None:
             self.skipTest('WebRTC DSP is unavailable')
         for reduction in (False, True):
-            chunks, events, listening = capture.capture_fixture(b'\0' * 32000, reduction, reference_webrtc=True)
+            detector = Mock()
+            detector.classify.return_value = 0.0
+            chunks, events, listening = capture.capture_fixture(b'\0' * 32000, reduction, detector)
             self.assertEqual(chunks, [])
             self.assertEqual(events, [])
             self.assertFalse(listening)

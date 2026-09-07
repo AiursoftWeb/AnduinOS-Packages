@@ -3,7 +3,7 @@
 # opens a microphone, or claims GPU coverage. Output contains public-fixture
 # test results and performance metadata only.
 set -euo pipefail
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 voice_root="$PWD"
 export PYTHONDONTWRITEBYTECODE=1
 for tool in python3 node dbus-run-session glib-compile-schemas whisper-cli xvfb-run msgfmt; do
@@ -44,18 +44,18 @@ dbus-run-session -- env GSETTINGS_BACKEND=memory ANDUINOS_GTK_SMOKE=1 xvfb-run -
     python3 -m unittest discover -s "$voice_stage/anduinos-whisper-gtk/tests" -v 2>&1 | tee voice-test-results/gtk.log
 node "$voice_stage/anduinos-whisper-gtk/tests/test_finishing.mjs"
 dbus-run-session -- env GSETTINGS_BACKEND=memory ANDUINOS_ISOLATED_TEST_BUS=1 \
-    python3 "$voice_stage/anduinos-whisper-framework/scripts/smoke-diagnostics.py"
-python3 "$voice_stage/anduinos-whisper-framework/scripts/benchmark-corpus.py" \
+    python3 "$voice_stage/anduinos-whisper-framework/tests/integration/smoke-diagnostics.py"
+python3 "$voice_stage/anduinos-whisper-framework/tests/benchmarks/benchmark-corpus.py" \
     --worker "$ANDUINOS_VOICE_WORKER" --model "$ANDUINOS_VOICE_MODEL" > voice-test-results/cpu-corpus.json
-python3 "$voice_stage/anduinos-whisper-framework/scripts/stress-resident.py" \
+python3 "$voice_stage/anduinos-whisper-framework/tests/benchmarks/stress-resident.py" \
     --worker "$ANDUINOS_VOICE_WORKER" --model "$ANDUINOS_VOICE_MODEL" \
     --backend cpu --requests 100 > voice-test-results/cpu-stress.json 2> voice-test-results/cpu-stress-progress.log
-python3 "$voice_stage/anduinos-whisper-framework/scripts/benchmark-capture.py" \
+python3 "$voice_stage/anduinos-whisper-framework/tests/benchmarks/benchmark-capture.py" \
     --worker "$ANDUINOS_VOICE_WORKER" --model "$ANDUINOS_VOICE_MODEL" \
     --vad-model "$ANDUINOS_VAD_MODEL" --normalize-dbfs -26 > voice-test-results/capture-corpus-ci.json
-python3 "$voice_stage/anduinos-whisper-framework/scripts/benchmark-noise.py" \
+python3 "$voice_stage/anduinos-whisper-framework/tests/benchmarks/benchmark-noise.py" \
     --worker "$ANDUINOS_VOICE_WORKER" --vad-model "$ANDUINOS_VAD_MODEL" > voice-test-results/noise-shapes-ci.json
-python3 "$voice_stage/anduinos-whisper-framework/scripts/stress-vad.py" \
+python3 "$voice_stage/anduinos-whisper-framework/tests/benchmarks/stress-vad.py" \
     --worker "$ANDUINOS_VOICE_WORKER" --vad-model "$ANDUINOS_VAD_MODEL" \
     > voice-test-results/vad-stress-ci.json 2> voice-test-results/vad-stress-ci-progress.log
 echo "CPU acceptance passed; reports: $voice_root/voice-test-results; staging: $voice_stage"

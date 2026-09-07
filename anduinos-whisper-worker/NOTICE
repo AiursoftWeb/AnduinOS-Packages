@@ -5,7 +5,7 @@ The local state-metrics.cpp extension reads six accumulated state timing
 counters and exposes CPU streaming VAD using the pinned upstream graph while
 retaining its recurrent state between frames. It does not change speech
 recognition model computation or decoding. The source and
-license downloads are SHA-256 pinned in build-state-metrics.sh.
+license downloads are SHA-256 pinned in scripts/build-state-metrics.sh.
 
 GGML and its CPU/GPU implementations remain separately installed distribution
 libraries. No GGML backend, model, toolchain or development headers are bundled.

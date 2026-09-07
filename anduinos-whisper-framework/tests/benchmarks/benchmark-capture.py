@@ -17,14 +17,14 @@ import sys
 import time
 import wave
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(ROOT / 'src'))
 from anduinos_whisper_framework.audio import AudioCapture, Gst
 from anduinos_whisper_framework.resident import ResidentEngine
 from anduinos_whisper_framework.vad import VadEngine, VAD_MODEL
 
-spec = importlib.util.spec_from_file_location('corpus_scoring', ROOT / 'scripts/benchmark-corpus.py')
+spec = importlib.util.spec_from_file_location('corpus_scoring', ROOT / 'tests/benchmarks/benchmark-corpus.py')
 scoring = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(scoring)
 
@@ -55,7 +55,7 @@ def rms_dbfs(pcm):
     return 20 * math.log10(max(rms, 1e-9) / 32768)
 
 
-def capture_fixture(pcm, reduction, vad=None, reference_webrtc=False):
+def capture_fixture(pcm, reduction, vad):
     chunks, events, errors = [], [], []
     capture = AudioCapture('', chunks.append, lambda _: None, lambda _: None,
                            errors.append, lambda: None, noise_reduction=reduction, vad=vad)
@@ -69,31 +69,14 @@ def capture_fixture(pcm, reduction, vad=None, reference_webrtc=False):
         'webrtcdsp name=dsp ! appsink name=output emit-signals=true sync=false')
     AudioCapture.configure_processor(pipeline.get_by_name('dsp'), reduction)
     bus = pipeline.get_bus()
-    if reference_webrtc:
-        pipeline.get_by_name('dsp').set_property('voice-detection', True)
-        voice = False
-        def reference_activity(_bus, message, _data=None):
-            nonlocal voice
-            structure = message.get_structure()
-            if structure and structure.get_name() == 'voice-activity':
-                voice = bool(structure.get_value('stream-has-voice'))
-            return Gst.BusSyncReply.PASS
-        bus.set_sync_handler(reference_activity)
-        def reference_sample(sink):
-            sample = sink.emit('pull-sample')
-            buffer = sample.get_buffer()
-            capture._consume(buffer.extract_dup(0, buffer.get_size()), voiced=voice)
-            return Gst.FlowReturn.OK
-        pipeline.get_by_name('output').connect('new-sample', reference_sample)
-    else:
-        if vad is None:
-            raise ValueError('A prepared native VAD is required')
-        pipeline.get_by_name('output').connect('new-sample', capture._new_sample)
+    if vad is None:
+        raise ValueError('A prepared native VAD is required')
+    pipeline.get_by_name('output').connect('new-sample', capture._new_sample)
     try:
         if pipeline.set_state(Gst.State.PLAYING) == Gst.StateChangeReturn.FAILURE:
             raise RuntimeError('Fixture DSP pipeline failed to start')
         source = pipeline.get_by_name('input')
-        # Actual DSP posts voice activity synchronously before each 10 ms buffer.
+        # Feed the actual capture callback with DSP-processed 10 ms buffers.
         for offset in range(0, len(pcm), 320):
             data = pcm[offset:offset+320].ljust(320, b'\0')
             buffer = Gst.Buffer.new_allocate(None, len(data), None)
@@ -121,8 +104,6 @@ def main():
     parser.add_argument('--model', type=Path, default=Path('/usr/share/anduinos-whisper-framework/models/ggml-base.bin'))
     parser.add_argument('--threads', type=int, default=4)
     parser.add_argument('--vad-model', type=Path, default=VAD_MODEL)
-    parser.add_argument('--reference-webrtc', action='store_true',
-                        help='Compare the former built-in WebRTC detector, not production VAD')
     parser.add_argument('--normalize-dbfs', type=float,
                         help='Explicit test input RMS level; omitted preserves source level')
     args = parser.parse_args()
@@ -156,10 +137,9 @@ def main():
                 for reduction in (False, True):
                     vad = None
                     try:
-                        if not args.reference_webrtc:
-                            vad = VadEngine(args.vad_model, args.worker)
-                            vad.start()
-                        chunks, events, still_listening = capture_fixture(data, reduction, vad, args.reference_webrtc)
+                        vad = VadEngine(args.vad_model, args.worker)
+                        vad.start()
+                        chunks, events, still_listening = capture_fixture(data, reduction, vad)
                     finally:
                         if vad is not None:
                             vad.close()
@@ -182,7 +162,7 @@ def main():
     print(json.dumps({'schema_version': 1, 'microphone_opened': False,
         'backend': 'cpu', 'corpus_version': manifest['version'],
         'normalization_dbfs': args.normalize_dbfs,
-        'detector': 'webrtc-reference' if args.reference_webrtc else 'silero-streaming-pipe',
+        'detector': 'silero-streaming-pipe',
         'endpoint_passed': endpoint_passed,
         'accuracy_nonregression': all(r['frontend_errors'] <= r['raw_errors'] for r in results),
         'results': results}, indent=2))

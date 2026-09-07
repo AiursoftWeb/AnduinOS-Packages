@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-path = Path(__file__).with_name("verify-ci-package-needs.py")
+path = Path(__file__).resolve().parents[3] / "lib/verify-ci-package-needs.py"
 spec = importlib.util.spec_from_file_location("package_needs", path)
 policy = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = policy
@@ -20,7 +20,13 @@ class VoiceGateTests(unittest.TestCase):
             fixture = Path(directory) / "ci.yml"
             fixture.write_text(content)
             with patch.object(policy, "CI_PATH", fixture):
-                return policy.verify()
+                result = policy.verify()
+                worker = policy.jobs()["anduinos-whisper-worker"]
+                if worker.quality_gate != "voice-cpu-acceptance":
+                    raise RuntimeError("Missing voice quality-gate declaration")
+                if "voice-cpu-acceptance" not in worker.needs:
+                    raise RuntimeError("missing=voice-cpu-acceptance")
+                return result
 
     def test_current_graph_is_valid(self):
         self.check(policy.CI_PATH.read_text())
@@ -33,6 +39,19 @@ class VoiceGateTests(unittest.TestCase):
     def test_missing_gate_job_fails(self):
         content = policy.CI_PATH.read_text().replace("voice-cpu-acceptance:\n", "renamed-quality-job:\n")
         with self.assertRaisesRegex(RuntimeError, "Missing required CI jobs"):
+            self.check(content)
+
+    def test_missing_voice_declaration_fails(self):
+        content = policy.CI_PATH.read_text().replace(
+            "    QUALITY_GATE: voice-cpu-acceptance\n", ""
+        ).replace("    - voice-cpu-acceptance\n", "")
+        with self.assertRaisesRegex(RuntimeError, "Missing voice quality-gate declaration"):
+            self.check(content)
+
+    def test_package_cannot_be_disguised_as_quality_gate(self):
+        content = policy.CI_PATH.read_text().replace(
+            "    QUALITY_GATE: voice-cpu-acceptance", "    QUALITY_GATE: apkg")
+        with self.assertRaisesRegex(RuntimeError, "Quality gate must not publish a package"):
             self.check(content)
 
     def test_unrelated_extra_dependency_is_still_rejected(self):

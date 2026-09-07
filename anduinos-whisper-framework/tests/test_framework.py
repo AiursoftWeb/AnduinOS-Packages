@@ -21,7 +21,7 @@ from anduinos_whisper_framework.chinese import (  # noqa: E402
     normalize_chinese_script,
     whisper_language,
 )
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tests" / "benchmarks"))
 from benchmark_engine import WhisperEngine
 from anduinos_whisper_framework.config import MODELS  # noqa: E402
 from anduinos_whisper_framework.audio import AudioCapture  # noqa: E402

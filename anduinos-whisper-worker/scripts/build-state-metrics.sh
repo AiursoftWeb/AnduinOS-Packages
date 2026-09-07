@@ -1,7 +1,7 @@
 #!/bin/bash
 # Private whisper.cpp library; distro GGML remains a separately updated backend.
 set -euo pipefail
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 architecture="${1:?Expected amd64 or arm64}"
 mkdir -p obj/state-metrics obj/downloads "obj/$architecture/anduinos-whisper"
 fetch() {

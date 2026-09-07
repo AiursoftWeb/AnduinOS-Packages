@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 ROOT = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location("resident_stress", ROOT / "scripts/stress-resident.py")
+spec = importlib.util.spec_from_file_location("resident_stress", ROOT / "tests/benchmarks/stress-resident.py")
 stress = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(stress)
 

@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location("selected_corpus", ROOT / "scripts/benchmark-selected.py")
+spec = importlib.util.spec_from_file_location("selected_corpus", ROOT / "tests/benchmarks/benchmark-selected.py")
 selected = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(selected)
 
