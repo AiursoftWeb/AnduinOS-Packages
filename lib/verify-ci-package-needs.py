@@ -38,6 +38,9 @@ RELEASE_ONLY_RELATIONSHIPS = {
     },
 }
 
+# Non-package quality gates are explicit so arbitrary extra needs still fail.
+QUALITY_GATE_JOBS = {"anduinos-whisper-worker": {"voice-cpu-acceptance"}}
+
 
 @dataclass
 class Job:
@@ -179,6 +182,9 @@ def verify() -> tuple[int, int]:
             package, set()
         )
         expected_jobs = {package_to_job[item] for item in ordered_packages}
+        expected_jobs |= QUALITY_GATE_JOBS.get(package, set())
+        if not expected_jobs <= job_map.keys():
+            raise RuntimeError(f"Missing required CI jobs for {package}")
         actual_jobs = set(job_map[job_name].needs)
         missing = sorted(expected_jobs - actual_jobs)
         extra = sorted(actual_jobs - expected_jobs)

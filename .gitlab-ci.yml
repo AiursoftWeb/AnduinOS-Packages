@@ -3,10 +3,38 @@ stages:
   - publish
   - meta
 
+voice-cpu-acceptance:
+  stage: lint
+  image: ubuntu:26.04
+  timeout: 20m
+  before_script:
+    # Do not let a shell executor install packages on its persistent host.
+    - test -f /.dockerenv
+    - apt-get update
+    - >-
+      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
+      ca-certificates curl gcc gcc-aarch64-linux-gnu libc6-dev dpkg-dev
+      libc6-dev-arm64-cross libstdc++6-arm64-cross
+      python3 python3-gi gir1.2-gtk-4.0 gir1.2-adw-1
+      gir1.2-gstreamer-1.0 gir1.2-gst-plugins-base-1.0
+      gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad
+      libopencc1.1 libggml0 whisper.cpp gettext nodejs dbus xvfb xauth
+  script:
+    - bash lib/test-voice-cpu.sh
+  artifacts:
+    when: always
+    paths:
+      - voice-test-results/
+    expire_in: 14 days
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
 verify-ci-package-needs:
   stage: lint
   script:
     - python3 lib/verify-ci-package-needs.py
+    - PYTHONDONTWRITEBYTECODE=1 python3 lib/test-voice-ci-gate.py
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH
@@ -402,8 +430,17 @@ anduinos-why-ai:
   variables:
     PACKAGE_DIR: anduinos-why-ai
 
+anduinos-whisper-worker:
+  extends: .publish
+  needs:
+    - voice-cpu-acceptance
+  variables:
+    PACKAGE_DIR: anduinos-whisper-worker
+
 anduinos-whisper-framework:
   extends: .publish
+  needs:
+    - anduinos-whisper-worker
   variables:
     PACKAGE_DIR: anduinos-whisper-framework
 
