@@ -201,10 +201,9 @@ desktop-file-validate path/to/application.desktop
 ```
 
 Changing a Desktop Entry changes installed package content, so bump
-`PackageVersion`. The repository's `desktop-entry-policy` CI job rejects GNOME
-Control Center panel categories before any package is published. If AnduinOS
-ever ships a real embedded Control Center panel, its integration and a narrow
-CI exception must be reviewed explicitly.
+`PackageVersion`. Validate the package’s own desktop entries in its
+`PrebuildCommand`; do not add an application-specific CI job. Embedded Control
+Center panels require explicit review of their integration.
 
 ### Graphical application source layout
 

@@ -257,8 +257,17 @@ future hardware-enablement track.
 Each package is built via the GitLab CI pipeline (`.gitlab-ci.yml`). Packages use the `Aiursoft.Apkg.Sdk` and can be built locally with:
 
 ```
-apkg publish
+apkg build --all
 ```
+
+Each package owns its source, tests and build helpers. Run package tests through
+its `PrebuildCommand`; do not place package tests at the repository root or add
+package-specific policy to `lib/`. Shared helpers must be genuinely generic.
+
+CI uses one common package recipe: branches and merge requests build all targets;
+`master` and `prod` build and deploy all targets with duplicate upload skipping.
+Existing versions do not skip the build or its tests. Package `needs` preserve
+publication ordering; they do not introduce separate acceptance jobs.
 
 ### TL;DR: What needs manual effort vs what auto-builds
 

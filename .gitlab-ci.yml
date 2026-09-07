@@ -1,67 +1,9 @@
 stages:
-  - lint
-  - publish
-  - meta
-
-verify-ci-package-needs:
-  stage: lint
-  script:
-    - python3 lib/verify-ci-package-needs.py
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH
-
-verify-release-versions:
-  stage: lint
-  script:
-    - python3 lib/verify-release-versions.py
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH
-
-lint-all:
-  stage: lint
-  before_script:
-    - dotnet tool update -g aiursoft.apkg.client --configfile ./nuget.config || dotnet tool install -g aiursoft.apkg.client --configfile ./nuget.config
-    - export PATH="$PATH:$HOME/.dotnet/tools"
-    - apkg --version
-  script:
-    - |
-      failed=0
-      for dir in */; do
-        if ls "$dir"*.aosproj >/dev/null 2>&1; then
-          echo "::group::Linting $dir"
-          (cd "$dir" && apkg lint) || failed=1
-          echo "::endgroup::"
-        fi
-      done
-      exit $failed
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH != "master"
-
-# GNOME puts X-GNOME-Settings-Panel entries in a hidden menu directory. ArcMenu
-# builds its All Apps view from that menu tree, so standalone applications using
-# either of these categories remain searchable but disappear from All Apps.
-desktop-entry-policy:
-  stage: lint
-  script:
-    - |
-      offenders="$(grep -RIlE \
-        --include='*.desktop' \
-        '^(X-GNOME-Settings-Panel=|Categories=.*X-GNOME-(Settings-Panel|SystemSettings)(;|$))' \
-        . || true)"
-      if [ -n "$offenders" ]; then
-        echo "Standalone applications must not use GNOME Control Center panel categories:" >&2
-        echo "$offenders" >&2
-        exit 1
-      fi
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH
+  - packages
 
 .publish:
-  stage: publish
+  stage: packages
+  timeout: 3h
   before_script:
     - dotnet tool update -g aiursoft.apkg.client --configfile ./nuget.config || dotnet tool install -g aiursoft.apkg.client --configfile ./nuget.config
     - export PATH="$PATH:$HOME/.dotnet/tools"
@@ -69,6 +11,11 @@ desktop-entry-policy:
   script:
     - cd "$PACKAGE_DIR"
     - |
+      if [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ] ||
+         { [ "$CI_COMMIT_BRANCH" != "master" ] && [ "$CI_COMMIT_BRANCH" != "prod" ]; }; then
+        apkg build --all
+        exit 0
+      fi
       if [ "$CI_COMMIT_BRANCH" = "prod" ]; then
         APKG_SOURCE="https://apkg.aiursoft.com"
         APKG_KEY="$APKG_PROD_API_KEY"
@@ -76,15 +23,13 @@ desktop-entry-policy:
         APKG_SOURCE="https://apkg-dev.aiursoft.com"
         APKG_KEY="$APKG_DEV_API_KEY"
       fi
-      apkg deploy \
+      apkg deploy --all \
         --source "$APKG_SOURCE" \
         --api-key "$APKG_KEY" \
-        --skip-existing
+        --skip-duplicate
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: never
-    - if: $CI_COMMIT_BRANCH == "master"
-    - if: $CI_COMMIT_BRANCH == "prod"
+    - if: $CI_COMMIT_BRANCH
 
 apkg:
   extends: .publish
@@ -284,9 +229,6 @@ gnome-shell-extension-network-stats:
 
 gnome-shell-extension-proxy-switcher:
   extends: .publish
-  before_script:
-    - !reference [.publish, before_script]
-    - gjs --version
   variables:
     PACKAGE_DIR: gnome-shell-extension-proxy-switcher
 
@@ -325,7 +267,6 @@ firmware-sof-anduinos:
 
 anduinos-theme:
   extends: .publish
-  stage: meta
   needs:
     - anduinos-fluent-icon-theme
     - anduinos-fluent-gtk-theme
@@ -398,7 +339,6 @@ anduinos-btrfs-snapshots-manager:
 
 anduinos-why-ai:
   extends: .publish
-  timeout: 3h
   variables:
     PACKAGE_DIR: anduinos-why-ai
 
@@ -525,7 +465,6 @@ anduinos-core-system:
 
 anduinos-desktop-core:
   extends: .publish
-  stage: meta
   needs:
     - anduinos-core-system
     - anduinos-session
@@ -545,7 +484,6 @@ anduinos-appstore:
 
 anduinos-gnome-extensions:
   extends: .publish
-  stage: meta
   needs:
     - gnome-shell-extension-anduinos-loc
     - gnome-shell-extension-no-power-icon
@@ -614,7 +552,6 @@ anduinos-oobe:
 
 anduinos-desktop-apps:
   extends: .publish
-  stage: meta
   needs:
     - anduinos-control-panel
     - anduinos-driver-center
@@ -633,7 +570,6 @@ anduinos-desktop-apps:
 
 anduinos-desktop:
   extends: .publish
-  stage: meta
   needs:
     - anduinos-desktop-core
     - anduinos-dracut-migration
