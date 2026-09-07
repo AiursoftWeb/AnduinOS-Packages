@@ -16,7 +16,8 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 from anduinos_whisper_framework.audio import AudioCapture, Gst
 from anduinos_whisper_framework.config import model_path
-from anduinos_whisper_framework.engine import WhisperEngine
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+from benchmark_engine import WhisperEngine
 
 
 def main():

@@ -195,6 +195,104 @@ class SettingsWindow(Adw.PreferencesWindow):
             self.settings.bind(key, row, "active", Gio.SettingsBindFlags.DEFAULT)
             behavior.add(row)
         page.add(behavior)
+        page.add(self._build_performance_group())
+        diagnostics = Adw.PreferencesGroup(
+            title=_("Performance diagnostics"),
+            description=_("Export timings from the current voice session. No recordings or recognized text are included."),
+        )
+        export_row = Adw.ActionRow(title=_("Export diagnostic report"))
+        self.export_button = Gtk.Button(label=_("Export"), valign=Gtk.Align.CENTER)
+        self.export_button.connect("clicked", self._export_diagnostics)
+        export_row.add_suffix(self.export_button)
+        diagnostics.add(export_row)
+        page.add(diagnostics)
+
+    def _build_performance_group(self):
+        group = Adw.PreferencesGroup(
+            title=_("Recognition performance"),
+            description=_("Changes apply next time listening starts. Automatic selection measures bundled audio without using your microphone or changing your model.") + " " + _("First use or retesting may take about a minute. Results are cached. Wait for Listening before speaking; press the microphone button again to cancel preparation."),
+        )
+        self.backend_row = Adw.ComboRow(
+            title=_("Recognition backend"),
+            model=Gtk.StringList.new([_("Automatic (measured)"), _("CPU"), _("GPU (CPU fallback)")]),
+        )
+        self.backend_row.set_selected(("auto", "cpu", "gpu").index(
+            self.settings.get_string("recognition-backend")))
+        self.backend_row.connect("notify::selected", self._backend_changed)
+        group.add(self.backend_row)
+        self.threads_row = Adw.SpinRow(
+            title=_("Recognition threads"), subtitle=_("0 selects automatically; more threads are not always faster"),
+            adjustment=Gtk.Adjustment(lower=0, upper=256, step_increment=1, page_increment=4),
+            digits=0,
+        )
+        self.settings.bind("recognition-threads", self.threads_row, "value", Gio.SettingsBindFlags.DEFAULT)
+        group.add(self.threads_row)
+        for title, label, callback in (
+            (_("Measure again on next start"), _("Retest"), self._retest_performance),
+            (_("Restore automatic backend and thread selection"), _("Restore defaults"), self._reset_performance),
+        ):
+            row = Adw.ActionRow(title=title)
+            button = Gtk.Button(label=label, valign=Gtk.Align.CENTER)
+            button.connect("clicked", callback)
+            row.add_suffix(button)
+            row.set_activatable_widget(button)
+            group.add(row)
+        return group
+
+    def _backend_changed(self, row, _parameter):
+        selected = row.get_selected()
+        if selected < 3:
+            self.settings.set_string("recognition-backend", ("auto", "cpu", "gpu")[selected])
+
+    def _retest_performance(self, _button):
+        self.settings.set_string("recognition-backend", "auto")
+        self.backend_row.set_selected(0)
+        self.settings.set_uint("tuning-generation",
+                               (self.settings.get_uint("tuning-generation") + 1) & 0xffffffff)
+        self.add_toast(Adw.Toast(title=_("Performance will be measured next time listening starts")))
+
+    def _reset_performance(self, button):
+        # Deliberately leave model, language, microphone and privacy settings alone.
+        self.settings.reset("recognition-threads")
+        self._retest_performance(button)
+
+    def _export_diagnostics(self, _button):
+        self.export_button.set_sensitive(False)
+        self.client.diagnostics(self._diagnostics_received)
+
+    def _diagnostics_received(self, report):
+        self.export_button.set_sensitive(True)
+        if report is None:
+            dialog = Adw.AlertDialog(
+                heading=_("No diagnostic report available"),
+                body=_("Start a voice session, then export its report before closing the microphone bar."),
+            )
+            dialog.add_response("close", _("Close"))
+            dialog.present(self)
+            return
+        dialog = Gtk.FileDialog(title=_("Export diagnostic report"),
+                                initial_name="voice-performance.json")
+        dialog.save(self, None, self._diagnostics_file_selected, report)
+
+    def _diagnostics_file_selected(self, dialog, result, report):
+        try:
+            destination = dialog.save_finish(result)
+        except GLib.Error:
+            return  # The user may dismiss the save chooser.
+        destination.replace_contents_async(
+            report.encode("utf-8"), None, False,
+            Gio.FileCreateFlags.PRIVATE | Gio.FileCreateFlags.REPLACE_DESTINATION,
+            None, self._diagnostics_saved, None,
+        )
+
+    def _diagnostics_saved(self, destination, result, _data):
+        try:
+            destination.replace_contents_finish(result)
+        except GLib.Error:
+            dialog = Adw.AlertDialog(heading=_("Could not save diagnostic report"),
+                                     body=_("Check that the selected folder is writable and has free space."))
+            dialog.add_response("close", _("Close"))
+            dialog.present(self)
 
     def _build_models_page(self) -> None:
         page = Adw.PreferencesPage(title=_("Models"), icon_name="folder-download-symbolic")

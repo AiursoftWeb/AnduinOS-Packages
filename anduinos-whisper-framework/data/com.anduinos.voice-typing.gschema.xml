@@ -17,6 +17,20 @@
       <default>'base'</default>
       <summary>Speech recognition model</summary>
     </key>
+    <key name="recognition-backend" type="s">
+      <choices><choice value="auto"/><choice value="cpu"/><choice value="gpu"/></choices>
+      <default>'auto'</default>
+      <summary>Measured automatic backend selection or manual override</summary>
+    </key>
+    <key name="recognition-threads" type="u">
+      <default>0</default>
+      <range min="0" max="256"/>
+      <summary>Recognition threads, or zero for automatic selection</summary>
+    </key>
+    <key name="tuning-generation" type="u">
+      <default>0</default>
+      <summary>Increment to request fresh performance measurements on next start</summary>
+    </key>
     <key name="automatic-punctuation" type="b">
       <default>true</default>
       <summary>Keep punctuation recognized by Whisper</summary>

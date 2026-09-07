@@ -113,7 +113,7 @@ class PackageTests(unittest.TestCase):
             "St.ClipboardType.CLIPBOARD",
             "Clutter.KEY_Control_L",
             "Clutter.KEY_Shift_L",
-            "_previewAndInsert(text)",
+            "_previewAndInsert(text, ticket = 0)",
             "_showPartial(text)",
             "get_boolean('live-transcription')",
             "overlay-x",

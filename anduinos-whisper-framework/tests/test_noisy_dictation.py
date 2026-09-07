@@ -2,6 +2,7 @@
 from array import array
 from pathlib import Path
 import subprocess
+import os
 import sys
 import random
 import threading
@@ -12,7 +13,9 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 from anduinos_whisper_framework.audio import AudioCapture, Gst
 from anduinos_whisper_framework.daemon import VoiceTypingService
-from anduinos_whisper_framework.engine import WhisperEngine, RecognitionCancelled
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+from benchmark_engine import WhisperEngine
+from anduinos_whisper_framework.errors import RecognitionCancelled
 from anduinos_whisper_framework.work_queue import RecognitionQueue
 
 
@@ -70,28 +73,60 @@ class EndpointTests(unittest.TestCase):
         self.assertIn('stopped providing audio', self.errors[0])
         self.capture._pipeline = None
 
+    def test_native_frames_preserve_order_and_finish_keeps_partial_tail(self):
+        self.capture._vad = Mock()
+        detector = self.capture._vad
+        detector.classify.side_effect = [0.1, 0.9]
+        self.capture._consume = Mock()
+        data = pcm() * 3 + pcm()[:320]  # 2240 bytes, two complete frames and a tail
+        for offset in range(0, len(data), 320):
+            self.capture._process_pcm(data[offset:offset+320])
+        self.assertEqual([call.args[0] for call in detector.classify.call_args_list],
+                         [data[:1024], data[1024:2048]])
+        self.assertEqual([call.kwargs['voiced'] for call in self.capture._consume.call_args_list],
+                         [False, True])
+        self.capture.stop(flush=True)
+        self.capture._consume.assert_called_with(data[2048:], voiced=True)
+        self.assertEqual(detector.classify.call_count, 2)
+        detector.close.assert_called_once()
+        self.assertEqual(self.capture._pending_pcm, b'')
+
+    def test_cancel_discards_unclassified_audio_and_closes_detector(self):
+        detector = self.capture._vad = Mock()
+        self.capture._consume = Mock()
+        self.capture._process_pcm(b'\0' * 320)
+        self.capture.stop(flush=False)
+        self.capture._consume.assert_not_called()
+        detector.classify.assert_not_called()
+        detector.close.assert_called_once()
+        self.assertIsNone(self.capture._vad)
+
+    def test_microphone_test_meter_does_not_require_native_detector(self):
+        self.capture._detect_speech = False
+        self.capture._consume = Mock()
+        self.capture._process_pcm(pcm())
+        self.capture._consume.assert_called_once_with(pcm(), voiced=False)
+
     def test_dsp_uses_vad_and_moderate_processing_without_fake_aec(self):
         dsp = Gst.ElementFactory.make('webrtcdsp')
         if dsp is None:
             self.skipTest('Install gstreamer1.0-plugins-bad for DSP integration')
         AudioCapture.configure_processor(dsp, True)
-        self.assertTrue(dsp.get_property('voice-detection'))
+        self.assertFalse(dsp.get_property('voice-detection'))
         self.assertTrue(dsp.get_property('noise-suppression'))
         self.assertFalse(dsp.get_property('echo-cancel'))
         AudioCapture.configure_processor(dsp, False)
-        self.assertTrue(dsp.get_property('voice-detection'))
+        self.assertFalse(dsp.get_property('voice-detection'))
         self.assertFalse(dsp.get_property('noise-suppression'))
         self.assertFalse(dsp.get_property('gain-control'))
 
-    def test_vad_transitions_are_applied_synchronously(self):
-        for value in (True, False):
-            structure = Gst.Structure.new_empty('voice-activity')
-            structure.set_value('stream-has-voice', value)
-            message = Gst.Message.new_element(None, structure)
-            self.capture._voice_message(None, message)
-            self.assertEqual(self.capture._voice_detected, value)
-
     def test_real_dsp_rejects_stationary_noise_without_opening_microphone(self):
+        if not os.environ.get('ANDUINOS_VAD_MODEL') or not os.environ.get('ANDUINOS_VOICE_WORKER'):
+            self.skipTest('Native VAD worker/model not supplied')
+        from anduinos_whisper_framework.vad import VadEngine
+        self.capture._vad = VadEngine(os.environ['ANDUINOS_VAD_MODEL'], os.environ['ANDUINOS_VOICE_WORKER'])
+        self.capture._vad.start()
+        self.addCleanup(self.capture.stop, False)
         if Gst.ElementFactory.find('webrtcdsp') is None:
             self.skipTest('Install gstreamer1.0-plugins-bad for DSP integration')
         pipeline = Gst.parse_launch('appsrc name=input format=time ! '
@@ -100,7 +135,6 @@ class EndpointTests(unittest.TestCase):
         AudioCapture.configure_processor(pipeline.get_by_name('dsp'), False)
         pipeline.get_by_name('output').connect('new-sample', self.capture._new_sample)
         bus = pipeline.get_bus()
-        bus.set_sync_handler(self.capture._voice_message)
         rng = random.Random(42)
         try:
             pipeline.set_state(Gst.State.PLAYING)
@@ -147,6 +181,7 @@ class QueueTests(unittest.TestCase):
 
 
 def service_stub():
+    from anduinos_whisper_framework.diagnostics import PerformanceHistory
     service = VoiceTypingService.__new__(VoiceTypingService)
     service.active, service.testing, service.pending = True, False, 0
     service.session_id = 7
@@ -154,6 +189,7 @@ def service_stub():
     service.work_lock = threading.Lock()
     service.current_cancel = service.current_kind = None
     service.audio_queue = RecognitionQueue()
+    service.performance = PerformanceHistory()
     service.settings = Mock()
     service.settings.get_string.return_value = 'base'
     service.settings.get_boolean.return_value = True
@@ -166,6 +202,186 @@ def service_stub():
 
 
 class ServiceTests(unittest.TestCase):
+    @patch('anduinos_whisper_framework.daemon.model_installed', return_value=True)
+    def test_start_prepares_without_opening_microphone_and_finish_cancels(self, _installed):
+        service = service_stub()
+        service.active = False
+        service.settings.get_string.side_effect = lambda key: {
+            'model': 'base', 'language': 'zh', 'recognition-backend': 'auto'}[key]
+        service.settings.get_uint.return_value = 0
+        service._new_capture = Mock()
+        service.start()
+        session = service.session_id
+        work = service.audio_queue.get(timeout=0)
+        self.assertEqual(work[2], 'prepare')
+        self.assertEqual(work[7]['model'], 'base')
+        service._new_capture.assert_not_called()
+        service._set_state.assert_called_with('preparing', 'Preparing recognition…')
+        cancel = service.current_cancel = threading.Event()
+        service.finish()
+        self.assertTrue(cancel.is_set())
+        service._prepared(session, {'model': 'base'})
+        service._new_capture.assert_not_called()
+
+    def test_prepared_opens_microphone_only_for_active_session(self):
+        service = service_stub()
+        service.capture = None
+        service._new_capture = Mock()
+        config = {'model': 'base', 'backend': 'cpu', 'threads': 2}
+        service._prepared(6, config)
+        service._new_capture.assert_not_called()
+        service._prepared(7, config)
+        service._new_capture.return_value.start.assert_called_once()
+        self.assertEqual(service.session_config, config)
+        service._set_state.assert_called_with('listening', 'Listening…')
+
+    def test_cancel_releases_prepared_detector_before_idle_handoff(self):
+        service = service_stub()
+        detector = service.prepared_vad = Mock()
+        service._new_capture = Mock()
+        service.stop()
+        detector.close.assert_called_once()
+        self.assertIsNone(service.prepared_vad)
+        service._prepared(7, {'model': 'base'}, detector)
+        service._new_capture.assert_not_called()
+        self.assertEqual(detector.close.call_count, 2)  # Idempotent stale handoff.
+
+    def test_successful_handoff_transfers_detector_to_capture(self):
+        service = service_stub()
+        detector = service.prepared_vad = Mock()
+        service._new_capture = Mock()
+        service._prepared(7, {'model': 'base'}, detector)
+        self.assertIsNone(service.prepared_vad)
+        service._new_capture.assert_called_once_with(session_id=7, vad=detector)
+        detector.close.assert_not_called()
+
+    @patch('anduinos_whisper_framework.daemon.GLib.idle_add', return_value=1)
+    def test_cancel_during_detector_start_never_opens_microphone(self, idle):
+        service = service_stub()
+        service.capture = None
+        service._new_capture = Mock()
+        config = dict(model='base', language='en', backend='cpu', threads=4, generation=0)
+        service._put_work(0, 'prepare', 7, 0, b'', config)
+        with patch('anduinos_whisper_framework.daemon.SessionEngine') as engine, \
+                patch('anduinos_whisper_framework.daemon.AutomaticSelector') as selector, \
+                patch('anduinos_whisper_framework.daemon.VadEngine') as vad:
+            vad.return_value.ready_metrics = {}
+            engine.return_value.last_metrics = {}
+            selector.return_value.status = 'manual'
+            selector.return_value.measurements = []
+            selector.return_value.select.return_value = {'backend': 'cpu', 'threads': 4}
+            selector.return_value.calibration.return_value = (b'fixture', {})
+            def cancel_start(event):
+                service.stop()
+                self.assertTrue(event.is_set())
+                service._put_work(-1, 'quit', 0, 0, b'')
+            vad.return_value.start.side_effect = cancel_start
+            thread = threading.Thread(target=service._recognition_worker, daemon=True)
+            thread.start(); thread.join(2)
+            self.assertFalse(thread.is_alive())
+            vad.return_value.close.assert_called_once()
+            self.assertIsNone(service.prepared_vad)
+            self.assertFalse(any(call.args[0] == service._prepared for call in idle.call_args_list))
+            service._new_capture.assert_not_called()
+
+    def test_preparation_notice_cannot_revive_cancelled_or_recording_session(self):
+        service = service_stub()
+        service.capture = None
+        service._preparation_state(7, 'calibrating')
+        service._set_state.assert_called_once_with(
+            'calibrating', 'Measuring performance — microphone off')
+        service._set_state.reset_mock()
+        service._preparation_state(6, 'calibrating')
+        service.active = False
+        service._preparation_state(7, 'preparing')
+        service.active = True
+        service.capture = Mock()
+        service._preparation_state(7, 'calibrating')
+        service._set_state.assert_not_called()
+
+    @patch('anduinos_whisper_framework.daemon.GLib.idle_add', return_value=1)
+    def test_prepare_worker_warms_selected_engine_without_emitting_fixture_text(self, idle):
+        service = service_stub()
+        config = dict(model='base', language='zh', backend='auto', threads=0, generation=2)
+        service._put_work(0, 'prepare', 7, 0, b'', config)
+        with patch('anduinos_whisper_framework.daemon.SessionEngine') as engine, \
+                patch('anduinos_whisper_framework.daemon.AutomaticSelector') as selector, \
+                patch('anduinos_whisper_framework.daemon.VadEngine') as vad:
+            vad.return_value.ready_metrics = {'initialization_ms': 12}
+            def select(*args, **kwargs):
+                engine.return_value.close.assert_not_called()
+                kwargs['on_measure']()
+                engine.return_value.close.assert_called_once()
+                return {'backend': 'cpu', 'threads': 2}
+            selector.return_value.select.side_effect = select
+            selector.return_value.measurements = [{"kind": "benchmark", "phase": "cold",
+                "inference_ms": 123, "backend": "cpu", "text": "PRIVATE CALIBRATION"}]
+            selector.return_value.calibration.return_value = (b'public fixture', {})
+            engine.return_value.last_metrics = {}
+            engine.return_value.prepare.return_value = True
+            # End only after the preparation completion has been posted.
+            idle.side_effect = lambda *args: service._put_work(-1, 'quit', 0, 0, b'')
+            thread = threading.Thread(target=service._recognition_worker, daemon=True)
+            thread.start()
+            thread.join(2)
+            self.assertFalse(thread.is_alive())
+            self.assertEqual(engine.return_value.prepare.call_args.args[2], b'public fixture')
+            self.assertEqual(engine.return_value.prepare.call_args.kwargs['threads'], 2)
+            self.assertEqual(idle.call_args.args[0], service._prepared)
+            self.assertEqual(idle.call_args.args[2]['backend'], 'cpu')
+            self.assertIs(idle.call_args.args[3], vad.return_value)
+            vad.return_value.start.assert_called_once()
+            self.assertEqual([call.args[2] for call in idle.call_args_list[:-1]],
+                             ['calibrating', 'preparing'])
+            service._emit.assert_not_called()
+            report = service.performance.export_json()
+            self.assertIn('"inference_ms": 123', report)
+            self.assertIn('"phase": "cold"', report)
+            self.assertNotIn('PRIVATE', report)
+            self.assertIn('"engine": "vad"', report)
+
+    @patch('anduinos_whisper_framework.daemon.GLib.idle_add', return_value=1)
+    def test_preparation_invalidates_only_revalidated_or_manual_failed_gpu(self, idle):
+        cases = [
+            ('measured', 'gpu', True, True),
+            ('measured', 'cpu', False, True),
+            ('cached', 'gpu', True, False),
+            ('cached', 'gpu', False, False),
+            ('manual', 'gpu', True, True),
+            ('manual', 'gpu', False, False),
+            ('manual', 'cpu', True, False),
+            ('fallback', 'cpu', True, False),
+        ]
+        for status, backend, failed, invalidate in cases:
+            with self.subTest(status=status, backend=backend, failed=failed):
+                service = service_stub()
+                config = dict(model='base', language='en', backend='auto',
+                              threads=4, generation=2)
+                service._put_work(0, 'prepare', 7, 0, b'', config)
+                with patch('anduinos_whisper_framework.daemon.SessionEngine') as factory, \
+                        patch('anduinos_whisper_framework.daemon.AutomaticSelector') as selector, \
+                        patch('anduinos_whisper_framework.daemon.VadEngine') as vad:
+                    vad.return_value.ready_metrics = {}
+                    engine = factory.return_value
+                    engine.gpu_failed = failed
+                    engine.last_metrics = {}
+                    selected = selector.return_value
+                    selected.status = status
+                    selected.measurements = []
+                    selected.select.return_value = {'backend': backend, 'threads': 4}
+                    selected.calibration.return_value = (b'public fixture', {})
+                    def warm(*args, **kwargs):
+                        self.assertEqual(engine.invalidate.call_count, int(invalidate))
+                        return 'discard fixture text'
+                    engine.prepare.side_effect = warm
+                    idle.side_effect = lambda *args: service._put_work(-1, 'quit', 0, 0, b'')
+                    thread = threading.Thread(target=service._recognition_worker, daemon=True)
+                    thread.start()
+                    thread.join(2)
+                    self.assertFalse(thread.is_alive())
+                    engine.prepare.assert_called_once()
+                    self.assertEqual(engine.invalidate.call_count, int(invalidate))
+
     def test_overload_stops_capture_without_cancelling_accepted_work(self):
         service = service_stub()
         service.pending = 1
@@ -238,7 +454,7 @@ class ServiceTests(unittest.TestCase):
         service = service_stub()
         entered, final_done = threading.Event(), threading.Event()
 
-        def transcribe(data, cancel):
+        def transcribe(model, language, data, cancel):
             if data == b'partial':
                 entered.set()
                 if not cancel.wait(2):
@@ -247,8 +463,9 @@ class ServiceTests(unittest.TestCase):
             final_done.set()
             return 'hello'
 
-        with patch('anduinos_whisper_framework.daemon.WhisperEngine') as engine:
+        with patch('anduinos_whisper_framework.daemon.SessionEngine') as engine:
             engine.return_value.transcribe.side_effect = transcribe
+            engine.return_value.last_metrics = {}
             thread = threading.Thread(target=service._recognition_worker, daemon=True)
             service._queue_partial(7, b'partial')
             thread.start()
@@ -277,7 +494,7 @@ class CancellationTests(unittest.TestCase):
     def test_cancelled_job_never_starts_a_process(self):
         event = threading.Event()
         event.set()
-        with patch('anduinos_whisper_framework.engine.subprocess.Popen') as popen:
+        with patch('benchmark_engine.subprocess.Popen') as popen:
             with self.assertRaises(RecognitionCancelled):
                 WhisperEngine._run_cancellable(['unused'], event)
             popen.assert_not_called()
@@ -294,7 +511,7 @@ class CancellationTests(unittest.TestCase):
             return '', ''
 
         process.communicate.side_effect = communicate
-        with patch('anduinos_whisper_framework.engine.subprocess.Popen', return_value=process):
+        with patch('benchmark_engine.subprocess.Popen', return_value=process):
             with self.assertRaises(RecognitionCancelled):
                 WhisperEngine._run_cancellable(['whisper'], event)
         process.terminate.assert_called_once()

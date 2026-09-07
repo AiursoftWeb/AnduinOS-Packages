@@ -1,0 +1,18 @@
+This package contains a private build of whisper.cpp 1.8.3, from
+https://github.com/ggml-org/whisper.cpp/tree/v1.8.3, under the MIT license.
+The upstream copyright and permission notice is included in WHISPER-LICENSE.
+The local state-metrics.cpp extension reads six accumulated state timing
+counters and exposes CPU streaming VAD using the pinned upstream graph while
+retaining its recurrent state between frames. It does not change speech
+recognition model computation or decoding. The source and
+license downloads are SHA-256 pinned in build-state-metrics.sh.
+
+GGML and its CPU/GPU implementations remain separately installed distribution
+libraries. No GGML backend, model, toolchain or development headers are bundled.
+Build headers are SHA-256 pinned from Ubuntu libwhisper-dev 1.8.3+dfsg-2 and
+libggml-dev 0.9.11-1. See https://github.com/ggml-org/ggml and the distribution's
+installed GGML copyright file for its MIT license.
+
+The private library is loaded by an explicit sibling path, not by searching for
+a system libwhisper. Upstream changes require rebuilding and validating this
+package; no binary state layout is guessed by the worker.

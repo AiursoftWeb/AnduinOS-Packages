@@ -9,6 +9,9 @@ import threading
 import time
 from typing import Callable
 
+from .errors import RecognitionError
+from .vad import VadEngine
+
 import gi
 
 gi.require_version("Gst", "1.0")
@@ -68,9 +71,13 @@ class AudioCapture:
         silence_seconds: float = 0.8,
         max_phrase_seconds: float = 12.0,
         partial_interval: float = 0.8,
+        on_chunk_metrics: Callable[[bytes, dict], None] | None = None,
+        vad: VadEngine | None = None,
+        detect_speech: bool = True,
     ):
         self.microphone = microphone
         self.on_chunk = on_chunk
+        self.on_chunk_metrics = on_chunk_metrics
         self.on_partial = on_partial
         self.on_level = on_level
         self.on_error = on_error
@@ -89,16 +96,21 @@ class AudioCapture:
         self._last_speech_notice = time.monotonic()
         self._last_level_update = 0.0
         self._lock = threading.Lock()
-        self._voice_detected = False
         self._onset_seconds = 0.0
         self._audio_seconds = 0.0
         self._last_sample = time.monotonic()
         self._watchdog = 0
         self._bus = None
+        self._vad = vad
+        self._detect_speech = detect_speech
+        self._pending_pcm = bytearray()
+        self._last_frame_voiced = False
 
     def start(self) -> None:
         if self._pipeline is not None:
             return
+        if self._detect_speech and (self._vad is None or not self._vad.started):
+            raise RuntimeError("Speech detection must be prepared before opening the microphone")
         pipeline = Gst.Pipeline.new("anduinos-voice-capture")
         source = Gst.ElementFactory.make("pipewiresrc", "microphone")
         convert = Gst.ElementFactory.make("audioconvert", "convert")
@@ -135,9 +147,6 @@ class AudioCapture:
             raise RuntimeError("Could not build the microphone capture pipeline")
 
         bus = pipeline.get_bus()
-        # The DSP posts transitions before forwarding its PCM buffer. A sync
-        # handler preserves this ordering; the UI/main-loop bus watch does not.
-        bus.set_sync_handler(self._voice_message)
         bus.add_signal_watch()
         bus.connect("message::error", self._pipeline_error)
         bus.connect("message::eos", lambda *_args: self.on_error("Microphone stream ended"))
@@ -145,7 +154,6 @@ class AudioCapture:
         change = pipeline.set_state(Gst.State.PLAYING)
         if change == Gst.StateChangeReturn.FAILURE:
             pipeline.set_state(Gst.State.NULL)
-            bus.set_sync_handler(None)
             bus.remove_signal_watch()
             self._bus = None
             raise RuntimeError("The selected microphone could not be opened")
@@ -156,23 +164,17 @@ class AudioCapture:
 
     @staticmethod
     def configure_processor(dsp, noise_reduction: bool) -> None:
-        prop = dsp.find_property("voice-detection")
-        if prop is None or "deprecated" in prop.blurb.lower():
-            raise RuntimeError("This WebRTC audio plugin does not support voice detection")
         dsp.set_property("echo-cancel", False)  # No playback reference in this pipeline.
-        dsp.set_property("voice-detection", True)
+        # Detection is handled by the isolated streaming model, independently
+        # of the optional DSP. Newer WebRTC builds removed their built-in VAD.
+        if dsp.find_property("voice-detection"):
+            dsp.set_property("voice-detection", False)
         dsp.set_property("noise-suppression", noise_reduction)
         dsp.set_property("noise-suppression-level", 1)  # Moderate: avoid excessive distortion.
         dsp.set_property("gain-control", noise_reduction)
         dsp.set_property("compression-gain-db", 6)
         dsp.set_property("limiter", True)
         dsp.set_property("high-pass-filter", True)
-
-    def _voice_message(self, _bus, message, _data=None):
-        structure = message.get_structure()
-        if structure and structure.get_name() == "voice-activity":
-            self._voice_detected = bool(structure.get_value("stream-has-voice"))
-        return Gst.BusSyncReply.PASS
 
     def _check_stall(self) -> bool:
         if self._pipeline is None:
@@ -191,18 +193,35 @@ class AudioCapture:
         pipeline, self._pipeline = self._pipeline, None
         if pipeline is not None:
             pipeline.set_state(Gst.State.NULL)
+        # Streaming has stopped, so ownership can safely return from its thread.
+        # Preserve the final <32 ms without starting another native operation.
+        if flush and self._pending_pcm:
+            self._consume(bytes(self._pending_pcm), voiced=self._last_frame_voiced)
+        self._pending_pcm.clear()
+        if self._vad is not None:
+            self._vad.close()
+            self._vad = None
         if self._bus is not None:
-            self._bus.set_sync_handler(None)
             self._bus.remove_signal_watch()
             self._bus = None
         chunk = b""
+        endpoint_ms = 0.0
         with self._lock:
             if flush and self._speaking:
                 chunk = bytes(self._phrase)
+                endpoint_ms = max(0.0, self._audio_seconds - self._last_voice) * 1000
             self._reset_phrase()
         if chunk:
             # Preserve short deliberate utterances; the engine expects >=0.5 s.
             chunk += b"\0" * max(0, self.BYTES_PER_SECOND // 2 - len(chunk))
+            self._deliver_chunk(chunk, endpoint_ms, "finish")
+
+    def _deliver_chunk(self, chunk, endpoint_ms, reason):
+        # This is the captured-audio interval since the last VAD-positive
+        # frame, not a claim to know the human speaker's exact acoustic endpoint.
+        if self.on_chunk_metrics is not None:
+            self.on_chunk_metrics(chunk, {"endpoint_ms": endpoint_ms, "endpoint_reason": reason})
+        else:
             self.on_chunk(chunk)
 
     def _new_sample(self, sink: Gst.Element) -> Gst.FlowReturn:
@@ -217,10 +236,27 @@ class AudioCapture:
             data = bytes(mapped.data)
         finally:
             buffer.unmap(mapped)
-        self._consume(data)
+        try:
+            self._process_pcm(data)
+        except RecognitionError as error:
+            self.on_error(str(error))
+            return Gst.FlowReturn.ERROR
         return Gst.FlowReturn.OK
 
-    def _consume(self, data: bytes, voiced: bool | None = None) -> None:
+    def _process_pcm(self, data):
+        if not self._detect_speech:
+            self._consume(data, voiced=False)
+            return
+        if self._vad is None:
+            raise RecognitionError("Speech detection is not running")
+        self._pending_pcm.extend(data)
+        while len(self._pending_pcm) >= VadEngine.FRAME_BYTES:
+            frame = bytes(self._pending_pcm[:VadEngine.FRAME_BYTES])
+            del self._pending_pcm[:VadEngine.FRAME_BYTES]
+            self._last_frame_voiced = self._vad.classify(frame) >= 0.5
+            self._consume(frame, voiced=self._last_frame_voiced)
+
+    def _consume(self, data: bytes, voiced: bool) -> None:
         samples = array("h")
         samples.frombytes(data)
         if not samples:
@@ -235,11 +271,13 @@ class AudioCapture:
         duration = len(data) / self.BYTES_PER_SECOND
         self._audio_seconds += duration
         audio_time = self._audio_seconds
-        is_voice = self._voice_detected if voiced is None else voiced
+        is_voice = voiced
         if now - self._last_level_update >= 0.08:
             self._last_level_update = now
             self.on_level(level)
         completed = b""
+        endpoint_ms = 0.0
+        endpoint_reason = "silence"
         partial = b""
         notify_no_speech = False
         with self._lock:
@@ -270,6 +308,9 @@ class AudioCapture:
             )
             if phrase_complete:
                 completed = bytes(self._phrase)
+                endpoint_ms = max(0.0, audio_time - self._last_voice) * 1000
+                if len(self._phrase) >= self.max_phrase_bytes:
+                    endpoint_reason = "max-duration"
                 self._reset_phrase()
             elif (
                 self._speaking
@@ -282,7 +323,7 @@ class AudioCapture:
                 self._last_speech_notice = now
                 notify_no_speech = True
         if completed:
-            self.on_chunk(completed)
+            self._deliver_chunk(completed, endpoint_ms, endpoint_reason)
         elif partial:
             self.on_partial(partial)
         if notify_no_speech:

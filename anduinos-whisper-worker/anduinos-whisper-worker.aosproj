@@ -1,0 +1,33 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-whisper-worker</PackageName>
+    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Private persistent whisper.cpp inference worker for AnduinOS Voice Typing.</PackageDescription>
+    <Section>utils</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+  </PropertyGroup>
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute" />
+    <Dependency Include="libc6 (&gt;= 2.34)" />
+    <Dependency Include="libggml0 (&gt;= 0.9.11)" />
+    <Recommend Include="libggml0-backend-vulkan (&gt;= 0.9.11)" />
+    <Dependency Include="libstdc++6" />
+    <Dependency Include="libgcc-s1" />
+    <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
+    <IncludeScript Include="obj/amd64/anduinos-whisper-worker" Target="/usr/libexec/anduinos-whisper-worker" Condition="'$(Arch)' == 'amd64'" />
+    <IncludeScript Include="obj/arm64/anduinos-whisper-worker" Target="/usr/libexec/anduinos-whisper-worker" Condition="'$(Arch)' == 'arm64'" />
+    <IncludeFile Include="obj/amd64/anduinos-whisper/libanduinos-whisper.so.1" Target="/usr/libexec/anduinos-whisper/libanduinos-whisper.so.1" Condition="'$(Arch)' == 'amd64'" />
+    <IncludeFile Include="obj/arm64/anduinos-whisper/libanduinos-whisper.so.1" Target="/usr/libexec/anduinos-whisper/libanduinos-whisper.so.1" Condition="'$(Arch)' == 'arm64'" />
+    <IncludeFile Include="obj/state-metrics/LICENSE" Target="/usr/share/doc/anduinos-whisper-worker/WHISPER-LICENSE" />
+    <IncludeFile Include="NOTICE" Target="/usr/share/doc/anduinos-whisper-worker/NOTICE" />
+  </ItemGroup>
+</Project>

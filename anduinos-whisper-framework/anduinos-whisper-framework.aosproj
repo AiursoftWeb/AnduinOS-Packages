@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-whisper-framework</PackageName>
-    <PackageVersion>2.0.2-11+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-12+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Offline voice-typing engine for AnduinOS, using PipeWire and whisper.cpp.</PackageDescription>
     <Section>utils</Section>
@@ -29,7 +29,7 @@
     <Dependency Include="gstreamer1.0-plugins-base" />
     <Dependency Include="gstreamer1.0-plugins-good" />
     <Dependency Include="gstreamer1.0-plugins-bad" />
-    <Dependency Include="whisper.cpp (&gt;= 1.8.3)" />
+    <Dependency Include="anduinos-whisper-worker (&gt;= 2.0.2-1)" />
     <Dependency Include="pipewire-bin" />
     <Dependency Include="sound-theme-freedesktop" />
     <Dependency Include="libopencc1.1" />
@@ -38,15 +38,21 @@
   <ItemGroup>
     <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v" />
     <PrebuildCommand Run="bash scripts/download-model.sh" />
+    <PrebuildCommand Run="bash scripts/download-vad-model.sh" />
   </ItemGroup>
 
   <ItemGroup>
     <IncludeScript Include="src/anduinos-whisper-framework" Target="/usr/libexec/anduinos-whisper-framework" />
+    <IncludeScript Include="src/anduinos-voice-diagnostics" Target="/usr/bin/anduinos-voice-diagnostics" />
     <IncludeFolder Include="src/anduinos_whisper_framework" Target="/usr/lib/python3/dist-packages/anduinos_whisper_framework" />
     <IncludeFile Include="data/com.anduinos.VoiceTyping.service" Target="/usr/share/dbus-1/services/com.anduinos.VoiceTyping.service" />
     <IncludeFile Include="data/com.anduinos.voice-typing.gschema.xml" Target="/usr/share/glib-2.0/schemas/com.anduinos.voice-typing.gschema.xml" />
     <IncludeFile Include="obj/models/ggml-base.bin" Target="/usr/share/anduinos-whisper-framework/models/ggml-base.bin" />
+    <IncludeFile Include="obj/models/ggml-silero-v6.2.0.bin" Target="/usr/share/anduinos-whisper-framework/models/ggml-silero-v6.2.0.bin" />
+    <IncludeFile Include="VAD-NOTICE" Target="/usr/share/doc/anduinos-whisper-framework/VAD-NOTICE" />
+    <IncludeFile Include="VAD-LICENSE" Target="/usr/share/doc/anduinos-whisper-framework/VAD-LICENSE" />
     <IncludeFile Include="MODEL-NOTICE" Target="/usr/share/doc/anduinos-whisper-framework/MODEL-NOTICE" />
     <IncludeFile Include="MODEL-LICENSE" Target="/usr/share/doc/anduinos-whisper-framework/MODEL-LICENSE" />
+    <IncludeFolder Include="data/benchmark" Target="/usr/share/anduinos-whisper-framework/benchmark" />
   </ItemGroup>
 </Project>

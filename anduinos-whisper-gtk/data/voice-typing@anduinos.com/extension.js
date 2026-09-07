@@ -25,7 +25,7 @@ const TOGGLE_TRANSITION = Object.freeze({
     [UI_STATE.READY]: UI_STATE.LISTENING,
     [UI_STATE.LISTENING]: UI_STATE.READY,
 });
-const ACTIVE_DAEMON_STATES = new Set(['listening', 'recognizing', 'no-speech']);
+const ACTIVE_DAEMON_STATES = new Set(['calibrating', 'preparing', 'listening', 'recognizing', 'no-speech']);
 
 const DBUS_XML = `
 <node>
@@ -34,6 +34,8 @@ const DBUS_XML = `
     <method name="Stop"/>
     <method name="Finish"/>
     <method name="Quit"/>
+    <method name="ReportDelivery"><arg type="u" direction="in"/></method>
+    <signal name="DeliveryTicket"><arg type="u"/></signal>
     <method name="GetState">
       <arg name="state" type="s" direction="out"/>
       <arg name="detail" type="s" direction="out"/>
@@ -63,6 +65,8 @@ const UI_DBUS_XML = `
 
 const STATE_TEXT = {
     idle: 'Ready',
+    preparing: 'Preparing recognition…',
+    calibrating: 'Measuring performance — microphone off',
     listening: 'Listening…',
     recognizing: 'Recognizing…',
     finishing: 'Finishing recognition…',
@@ -94,6 +98,7 @@ export default class VoiceTypingExtension extends Extension {
         this._pasteTimer = 0;
         this._finishPending = false;
         this._finalQueue = [];
+        this._deliveryTicket = 0;
         this._proxy = null;
         this._proxyReady = false;
         this._pendingCall = null;
@@ -154,10 +159,14 @@ export default class VoiceTypingExtension extends Extension {
                         this._setState(state, detail)),
                     proxy.connectSignal('LevelChanged', (_source, _sender, [level]) =>
                         this._setLevel(level)),
+                    proxy.connectSignal('DeliveryTicket', (_source, _sender, [ticket]) => {
+                        this._deliveryTicket = ticket;
+                    }),
                     proxy.connectSignal('Transcript', (_source, _sender, [text, final]) => {
-                        if (final)
-                            this._previewAndInsert(text);
-                        else
+                        if (final) {
+                            this._previewAndInsert(text, this._deliveryTicket);
+                            this._deliveryTicket = 0;
+                        } else
                             this._showPartial(text);
                     }),
                 );
@@ -230,7 +239,8 @@ export default class VoiceTypingExtension extends Extension {
     _quitForShellShutdown() {
         this._enabled = false;
         this._uiState = UI_STATE.CLOSED;
-        this._root?.hide();
+        // Shell may already have disposed chrome actors before this signal.
+        // Only stop work here; actor cleanup belongs to Shell/disable().
         // Never activate an unused daemon while the session is closing.
         if (this._proxyReady && this._proxy?.get_name_owner())
             this._invoke('Quit');
@@ -352,6 +362,7 @@ export default class VoiceTypingExtension extends Extension {
     }
 
     _startListening() {
+        this._deliveryTicket = 0;
         this._finishPending = false;
         this._finalQueue = [];
         if (this._previewTimer)
@@ -379,6 +390,7 @@ export default class VoiceTypingExtension extends Extension {
     }
 
     _closeUi() {
+        this._deliveryTicket = 0;
         this._finishPending = false;
         this._finalQueue = [];
         this._setUiState(UI_STATE.CLOSED, _('Off'));
@@ -446,7 +458,7 @@ export default class VoiceTypingExtension extends Extension {
         if (this._uiState === UI_STATE.READY)
             return _('Ready');
         return ACTIVE_DAEMON_STATES.has(this._state)
-            ? this._detail || _('Listening…')
+            ? _(STATE_TEXT[this._state] ?? this._detail ?? 'Listening…')
             : _('Listening…');
     }
 
@@ -491,7 +503,8 @@ export default class VoiceTypingExtension extends Extension {
         if (this._uiState !== UI_STATE.CLOSED) {
             this._root.show();
             this._positionOverlay();
-            this._emitUiState(detail || this._uiDetail());
+            this._emitUiState(ACTIVE_DAEMON_STATES.has(state)
+                ? this._uiDetail() : detail || this._uiDetail());
         } else {
             this._root.hide();
         }
@@ -514,14 +527,14 @@ export default class VoiceTypingExtension extends Extension {
         });
     }
 
-    _previewAndInsert(text) {
+    _previewAndInsert(text, ticket = 0) {
         if (!this._enabled || this._uiState === UI_STATE.CLOSED ||
             (this._uiState !== UI_STATE.LISTENING && !this._finishPending) || !text)
             return;
         // Final results may arrive in a burst after slow inference. Never replace
         // a pending final/clipboard paste with the next phrase.
         if (this._previewTimer || this._pasteTimer) {
-            this._finalQueue.push(text);
+            this._finalQueue.push([text, ticket]);
             return;
         }
         const delay = this._settings.get_boolean('show-preview')
@@ -533,7 +546,7 @@ export default class VoiceTypingExtension extends Extension {
         this._previewTimer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, delay, () => {
             this._previewTimer = 0;
             this._hidePreview();
-            this._insertText(text);
+            this._insertText(text, ticket);
             return GLib.SOURCE_REMOVE;
         });
     }
@@ -559,7 +572,7 @@ export default class VoiceTypingExtension extends Extension {
         this._positionOverlay();
     }
 
-    _insertText(text) {
+    _insertText(text, ticket = 0) {
         const purpose = Main.inputMethod?.content_purpose;
         if (Clutter.InputContentPurpose &&
             [Clutter.InputContentPurpose.PASSWORD, Clutter.InputContentPurpose.PIN].includes(purpose)) {
@@ -580,12 +593,24 @@ export default class VoiceTypingExtension extends Extension {
             GLib.Source.remove(this._pasteTimer);
         this._pasteTimer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 35, () => {
             this._pasteTimer = 0;
+            // Focus/purpose may change during the clipboard-to-paste delay.
+            const purposeNow = Main.inputMethod?.content_purpose;
+            if (global.display.focus_window !== focused ||
+                (Clutter.InputContentPurpose &&
+                 [Clutter.InputContentPurpose.PASSWORD, Clutter.InputContentPurpose.PIN].includes(purposeNow))) {
+                this._finalQueue = [];
+                return GLib.SOURCE_REMOVE;
+            }
             const windowClass = (focused.get_wm_class() ?? '').toLowerCase();
             const terminal = ['terminal', 'kgx', 'console', 'alacritty', 'kitty', 'konsole']
                 .some(name => windowClass.includes(name));
             this._pressPaste(terminal);
+            // This acknowledges dispatch of the compositor paste shortcut, not
+            // proof that a target application accepted or rendered the text.
+            if (ticket && this._proxyReady)
+                this._proxy.ReportDeliveryRemote(ticket, () => {});
             if (this._finalQueue.length)
-                this._previewAndInsert(this._finalQueue.shift());
+                this._previewAndInsert(...this._finalQueue.shift());
             return GLib.SOURCE_REMOVE;
         });
     }

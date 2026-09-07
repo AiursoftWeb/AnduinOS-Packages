@@ -29,9 +29,10 @@ class RecognitionQueue:
             self._ready.notify()
             return True
 
-    def get(self):
+    def get(self, timeout=None):
         with self._ready:
-            self._ready.wait_for(lambda: self._quit or self._finals or self._partial)
+            if not self._ready.wait_for(lambda: self._quit or self._finals or self._partial, timeout):
+                return None
             if self._quit:
                 return self._quit
             if self._finals:
