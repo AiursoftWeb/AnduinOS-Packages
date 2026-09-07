@@ -21,7 +21,6 @@ EXPECTED_LIVE_ONLY_PACKAGES = (
     "anduinos-live-layers",
     "discover",
     "laptop-detect",
-    "os-prober",
     "gparted",
     "anduinos-installer-beta",
     "anduinos-live-settings",
