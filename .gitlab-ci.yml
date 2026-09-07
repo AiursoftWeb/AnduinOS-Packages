@@ -54,7 +54,7 @@ lint-all:
       apkg deploy --all \
         --source "$APKG_SOURCE" \
         --api-key "$APKG_KEY" \
-        --skip-duplicate
+        --skip-existing
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH
