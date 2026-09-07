@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "제어 패널"
 
@@ -127,7 +128,7 @@ msgstr "마이크, 언어, 단축키 및 학습 구성"
 
 #: src/anduinos_control_panel/app.py:319
 msgid "Install private, offline speech-to-text"
-msgstr "비공개 오프라인 음성 입력 설치"
+msgstr "개인 정보를 보호하는 오프라인 음성 텍스트 변환 설치"
 
 #: src/anduinos_control_panel/app.py:325 src/anduinos_control_panel/app.py:860
 msgid "Windows Compatibility"
@@ -454,7 +455,7 @@ msgstr ""
 
 #: src/anduinos_control_panel/app.py:1274
 msgid "Private by default"
-msgstr "기본적으로 비공개"
+msgstr "기본적으로 개인 정보를 보호합니다"
 
 #: src/anduinos_control_panel/app.py:1275
 msgid "Speech is recognized locally with whisper.cpp"
@@ -462,7 +463,7 @@ msgstr "whisper.cpp를 사용해 이 기기에서 음성을 인식합니다"
 
 #: src/anduinos_control_panel/app.py:1280
 msgid "About 140 MB to download"
-msgstr "약 140MB 다운로드"
+msgstr "다운로드 크기 약 140 MB"
 
 #: src/anduinos_control_panel/app.py:1282
 msgid ""
@@ -475,7 +476,7 @@ msgstr "설치가 시작되면 관리자 인증이 필요합니다."
 
 #: src/anduinos_control_panel/app.py:1376
 msgid "Downloading the local engine and multilingual speech model…"
-msgstr "로컬 엔진 및 다국어 음성 모델 다운로드 중…"
+msgstr "로컬 엔진 및 다국어 음성 인식 모델 다운로드 중…"
 
 #: src/anduinos_control_panel/app.py:1382
 msgid "Preparing Voice Typing installation…"
@@ -493,7 +494,7 @@ msgstr "설정 열기"
 
 #: src/anduinos_control_panel/app.py:1435
 msgid "Voice Typing installed — sign out to finish"
-msgstr "음성 입력 설치 완료 — 완료하려면 로그아웃하세요"
+msgstr "음성 입력이 설치되었습니다 — 설치를 완료하려면 로그아웃하세요"
 
 #: src/anduinos_control_panel/app.py:1466
 msgid "On-device AI"
@@ -584,4 +585,20 @@ msgstr "AnduinOS 팀"
 
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
+msgstr "AnduinOS 시스템 설정을 찾고 관리합니다."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr "설정;제어;시스템;하드웨어;드라이버;계정;백업;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "부팅 메뉴 설정 변경"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr "부팅 메뉴 설정을 변경하려면 인증이 필요합니다"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
 msgstr "AnduinOS 시스템 설정을 찾고 관리합니다."

@@ -17,19 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/pages.py:2092
+#: src/pages.py:2244
 msgid "Installing an input method requires an Internet connection."
 msgstr "การติดตั้งวิธีป้อนข้อมูลต้องใช้การเชื่อมต่ออินเทอร์เน็ต"
 
-#: src/pages.py:2103
-msgid ""
-"No Internet connection. Input methods cannot be installed. You can install "
-"them later when connected."
-msgstr ""
-"ไม่มีการเชื่อมต่ออินเทอร์เน็ต จึงไม่สามารถติดตั้งวิธีป้อนข้อมูลได้ "
-"คุณสามารถติดตั้งภายหลังเมื่อเชื่อมต่ออินเทอร์เน็ตแล้ว"
+#: src/pages.py:2255
+msgid "No Internet connection. Input methods cannot be installed. You can install them later when connected."
+msgstr "ไม่มีการเชื่อมต่ออินเทอร์เน็ต จึงไม่สามารถติดตั้งวิธีป้อนข้อมูลได้ คุณสามารถติดตั้งภายหลังเมื่อเชื่อมต่ออินเทอร์เน็ตแล้ว"
 
-#: src/pages.py:4933
+#: src/pages.py:7174
 msgid ""
 "\n"
 "\n"
@@ -39,7 +35,7 @@ msgstr ""
 "\n"
 "การติดตั้งจริงจะสร้าง MOK เฉพาะเครื่อง หลังจากเริ่มต้นระบบใหม่ ให้เลือก Enroll MOK → Continue → Yes ใน MOKManager และป้อนรหัสผ่าน 123456"
 
-#: src/pages.py:4944
+#: src/pages.py:7185
 msgid ""
 "\n"
 "On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
@@ -47,51 +43,39 @@ msgstr ""
 "\n"
 "บนหน้าจอ MOKManager สีน้ำเงิน ให้เลือก Enroll MOK → Continue → Yes รหัสผ่าน: 123456"
 
-#: src/pages.py:4085
+#: src/pages.py:6191
 msgid "; sudo does not require a password"
 msgstr "; sudo ไม่จำเป็นต้องใช้รหัสผ่าน"
 
-#: src/pages.py:4087
+#: src/pages.py:6193
 msgid "; sudo requires the account password"
 msgstr "; sudo จำเป็นต้องใช้รหัสผ่านของบัญชี"
 
-#: src/pages.py:129
-msgid ""
-"A partition on this disk is mounted. Unmount it and rescan storage before "
-"continuing."
-msgstr ""
-"มีพาร์ติชันดิสก์นี้ถูกเมาต์อยู่ "
-"โปรดยกเลิกการเมาต์และสแกนพื้นที่จัดเก็บข้อมูลใหม่ก่อนดำเนินการต่อ"
+#: src/pages.py:160
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "มีพาร์ติชันดิสก์นี้ถูกเมาต์อยู่ โปรดยกเลิกการเมาต์และสแกนพื้นที่จัดเก็บข้อมูลใหม่ก่อนดำเนินการต่อ"
 
-#: src/pages.py:2899
+#: src/pages.py:3241
 msgid "ALL DATA on {disk} will be permanently erased."
 msgstr "ข้อมูลทั้งหมดบน {disk} จะถูกลบอย่างถาวร"
 
-#: src/pages.py:4082
+#: src/pages.py:6188
 msgid "Account security"
 msgstr "ความปลอดภัยของบัญชี"
 
-#: src/pages.py:2980
+#: src/pages.py:4066
 msgid "Advanced Storage"
 msgstr "พื้นที่จัดเก็บข้อมูลขั้นสูง"
 
-#: src/pages.py:164
-msgid ""
-"After changing partitions or unmounting a volume, rescan storage and select "
-"the target again."
-msgstr ""
-"หลังจากเปลี่ยนพาร์ติชันหรือยกเลิกการเมาต์ปริมาณข้อมูล "
-"โปรดสแกนพื้นที่จัดเก็บข้อมูลใหม่และเลือกเป้าหมายอีกครั้ง"
+#: src/pages.py:195
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "หลังจากเปลี่ยนพาร์ติชันหรือยกเลิกการเมาต์ปริมาณข้อมูล โปรดสแกนพื้นที่จัดเก็บข้อมูลใหม่และเลือกเป้าหมายอีกครั้ง"
 
-#: src/pages.py:4801
-msgid ""
-"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
-"then enter password 123456."
-msgstr ""
-"หลังจากเริ่มระบบใหม่ MOKManager จะเปิดขึ้น ให้เลือก Enroll MOK → Continue → "
-"Yes จากนั้นป้อนรหัสผ่าน 123456"
+#: src/pages.py:7042
+msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
+msgstr "หลังจากเริ่มระบบใหม่ MOKManager จะเปิดขึ้น ให้เลือก Enroll MOK → Continue → Yes จากนั้นป้อนรหัสผ่าน 123456"
 
-#: src/pages.py:4432
+#: src/pages.py:6636
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -99,60 +83,56 @@ msgstr ""
 "พาร์ติชันและข้อมูลทั้งหมดบน {disk} จะถูกทำลาย\n"
 "\n"
 
-#: src/pages.py:155
-msgid ""
-"Alternatively, you may explicitly select one entire partition to erase. "
-"Everything in that selected partition will be destroyed; it is never "
-"selected automatically."
-msgstr ""
-"หรือคุณสามารถเลือกพาร์ติชันทั้งหมดเพื่อลบอย่างชัดเจน "
-"ทุกสิ่งในพาร์ติชันที่เลือกจะถูกทำลาย; จะไม่มีการเลือกโดยอัตโนมัติ"
+#: src/pages.py:186
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "หรือคุณสามารถเลือกพาร์ติชันทั้งหมดเพื่อลบอย่างชัดเจน ทุกสิ่งในพาร์ติชันที่เลือกจะถูกทำลาย; จะไม่มีการเลือกโดยอัตโนมัติ"
 
-#: src/pages.py:924 src/pages.py:986
+#: src/pages.py:991 src/pages.py:1053
 msgid "Battery power is too low for a safe installation."
 msgstr "ระดับแบตเตอรี่ต่ำเกินไปสำหรับการติดตั้งอย่างปลอดภัย"
 
-#: src/pages.py:895
+#: src/pages.py:962
 msgid "Charge to at least 80% before starting the installation."
 msgstr "โปรดชาร์จแบตเตอรี่ให้ได้อย่างน้อย 80% ก่อนเริ่มการติดตั้ง"
 
-#: src/pages.py:1041 src/pages.py:1016
+#: src/pages.py:1108 src/pages.py:1083
 msgid "Continue Anyway"
 msgstr "ดำเนินการต่อไป"
 
-#: src/pages.py:1000
+#: src/pages.py:1067
 msgid "Current battery level: {percent}%"
 msgstr "ระดับแบตเตอรี่ปัจจุบัน: {percent}%"
 
-#: src/pages.py:1006
+#: src/pages.py:1073
 msgid "External power is connected."
 msgstr "เชื่อมต่อแหล่งจ่ายไฟภายนอกแล้ว"
 
-#: src/pages.py:1008
+#: src/pages.py:1075
 msgid "External power is not connected."
 msgstr "ไม่ได้เชื่อมต่อแหล่งจ่ายไฟภายนอก"
 
-#: src/pages.py:954
+#: src/pages.py:1021
 msgid "I understand the risks and insist on installing with low battery."
 msgstr "ฉันเข้าใจความเสี่ยงและยืนยันที่จะติดตั้งขณะแบตเตอรี่ต่ำ"
 
-#: src/pages.py:894 src/pages.py:889 src/pages.py:967 src/pages.py:969
+#: src/pages.py:961 src/pages.py:956 src/pages.py:1034 src/pages.py:1036
 msgid "Low battery"
 msgstr "แบตเตอรี่ต่ำ"
 
-#: src/pages.py:948
+#: src/pages.py:1015
 msgid "Recheck"
 msgstr "ตรวจสอบอีกครั้ง"
 
-#: src/main.py:110 src/pages.py:731 src/pages.py:815
+#: src/main.py:114 src/pages.py:794 src/pages.py:881
+#: assets/anduinos-installer-beta.desktop:30
 msgid "AnduinOS Installer"
 msgstr "โปรแกรมติดตั้ง AnduinOS"
 
-#: src/main.py:108
+#: src/main.py:112
 msgid "AnduinOS Installer (Development)"
 msgstr "โปรแกรมติดตั้ง AnduinOS (Development)"
 
-#: src/pages.py:4425
+#: src/pages.py:6623
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
@@ -160,163 +140,140 @@ msgstr ""
 "AnduinOS จะใช้พื้นที่ที่ยังไม่ได้จัดสรรที่เลือกไว้บน {disk} เท่านั้น พาร์ติชันที่มีอยู่จะถูกเก็บรักษาไว้\n"
 "\n"
 
-#: src/pages.py:133
-msgid ""
-"AnduinOS will use only the selected unallocated space. The installer will "
-"not shrink or move an existing filesystem."
-msgstr ""
-"AnduinOS จะใช้พื้นที่ที่ยังไม่ได้จัดสรรที่เลือกไว้เท่านั้น "
-"โปรแกรมติดตั้งจะไม่ย่อขนาดหรือย้ายระบบไฟล์ที่มีอยู่"
+#: src/pages.py:164
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS จะใช้พื้นที่ที่ยังไม่ได้จัดสรรที่เลือกไว้เท่านั้น โปรแกรมติดตั้งจะไม่ย่อขนาดหรือย้ายระบบไฟล์ที่มีอยู่"
 
 #: data/languages.json:keyboard_layouts
 msgid "Arabic"
 msgstr "ภาษาอาหรับ"
 
-#: src/pages.py:268 src/pages.py:4461 src/pages.py:817
+#: src/pages.py:322 src/pages.py:6672 src/pages.py:6708 src/pages.py:883
 msgid "Back"
 msgstr "ย้อนกลับ"
 
-#: src/pages.py:3014
-msgid ""
-"Before continuing: finish Windows updates, disable Fast Startup and "
-"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
-"measurements and boot order can change."
-msgstr ""
-"ก่อนดำเนินการต่อ: อัปเดต Windows ให้เสร็จสิ้น "
-"ปิดใช้งานการเริ่มต้นแบบเร็วและโหมดพักเครื่อง และสำรองรหัสกู้คืน BitLocker "
-"ค่า EFI, Secure Boot, การวัดค่า TPM และลำดับการบูตอาจเปลี่ยนแปลงได้"
+#: src/pages.py:3439
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "ก่อนดำเนินการต่อ: อัปเดต Windows ให้เสร็จสิ้น ปิดใช้งานการเริ่มต้นแบบเร็วและโหมดพักเครื่อง และสำรองรหัสกู้คืน BitLocker ค่า EFI, Secure Boot, การวัดค่า TPM และลำดับการบูตอาจเปลี่ยนแปลงได้"
 
-#: src/pages.py:2470
+#: src/pages.py:2622
 msgid "BitLocker detected"
 msgstr "ตรวจพบ BitLocker"
 
-#: src/pages.py:146
-msgid ""
-"BitLocker storage will be preserved. The installer will not unlock, resize, "
-"repair or otherwise modify it."
-msgstr ""
-"พื้นที่จัดเก็บข้อมูล BitLocker จะถูกเก็บรักษาไว้ โปรแกรมติดตั้งจะไม่ปลดล็อก "
-"ปรับขนาด ซ่อมแซม หรือแก้ไขในรูปแบบอื่น ๆ"
+#: src/pages.py:177
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "พื้นที่จัดเก็บข้อมูล BitLocker จะถูกเก็บรักษาไว้ โปรแกรมติดตั้งจะไม่ปลดล็อก ปรับขนาด ซ่อมแซม หรือแก้ไขในรูปแบบอื่น ๆ"
 
-#: src/pages.py:4186
+#: src/pages.py:6282 src/pages.py:6342
 msgid "Boot policy"
 msgstr "นโยบายการบูต"
 
-#: src/pages.py:3055
+#: src/pages.py:3480 src/pages.py:5117
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (แนะนำ)"
 
-#: src/pages.py:2817
+#: src/pages.py:3158
 msgid "Btrfs — recommended"
 msgstr "Btrfs — แนะนำ"
 
-#: src/pages.py:4361
+#: src/pages.py:6554
 msgid "Cannot create installation plan"
 msgstr "ไม่สามารถสร้างแผนการติดตั้งได้"
 
-#: src/pages.py:2727
+#: src/pages.py:3068
 msgid "Choose Installation Method"
 msgstr "เลือกวิธีการติดตั้ง"
 
-#: src/pages.py:2498
+#: src/pages.py:2650
 msgid "Choose one target disk. Storage settings come next."
-msgstr ""
-"เลือกดิสก์เป้าหมายหนึ่งรายการ การตั้งค่าพื้นที่จัดเก็บจะตามมาในลำดับถัดไป"
+msgstr "เลือกดิสก์เป้าหมายหนึ่งรายการ การตั้งค่าพื้นที่จัดเก็บจะตามมาในลำดับถัดไป"
 
-#: src/pages.py:2199
+#: src/pages.py:2351
 msgid "Choose optional software to install"
 msgstr "เลือกซอฟต์แวร์เสริมที่ต้องการติดตั้ง"
 
-#: src/pages.py:813
+#: src/pages.py:879
 msgid "Choose your language to begin installation"
 msgstr "เลือกภาษาของคุณเพื่อเริ่มต้นการติดตั้ง"
 
-#: src/pages.py:3819
+#: src/pages.py:5906
 msgid "Choose your location to set the system clock"
 msgstr "เลือกตำแหน่งที่ตั้งของคุณเพื่อตั้งนาฬิกาของระบบ"
 
-#: src/pages.py:4838
+#: src/pages.py:7079
 msgid "Complete"
 msgstr "เสร็จสิ้น"
 
-#: src/pages.py:3506 src/pages.py:3513 src/pages.py:4101 src/pages.py:3601
-#: src/pages.py:4440
+#: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
+#: src/pages.py:6644
 msgid "Computer Name"
 msgstr "ชื่อคอมพิวเตอร์"
 
-#: src/pages.py:3594
+#: src/pages.py:5679
 msgid "Computer name contains invalid characters."
 msgstr "ชื่อคอมพิวเตอร์มีอักขระที่ไม่ถูกต้อง"
 
-#: src/pages.py:4589
+#: src/pages.py:6828
 msgid "Configure account, region, timezone, and machine identity"
 msgstr "กำหนดค่าบัญชี ภูมิภาค เขตเวลา และข้อมูลประจำเครื่อง"
 
-#: src/pages.py:4578
+#: src/pages.py:3339 src/pages.py:6817 src/pages.py:3323
 msgid "Configure storage and swap"
 msgstr "กำหนดการจัดเก็บข้อมูลและ swap"
 
-#: src/pages.py:3480 src/pages.py:3488
+#: src/pages.py:5565 src/pages.py:5573
 msgid "Confirm Password"
 msgstr "ยืนยันรหัสผ่าน"
 
-#: src/pages.py:1939
+#: src/pages.py:2003
 msgid "Confirm your keyboard layout"
 msgstr "ยืนยันเค้าโครงคีย์บอร์ดของคุณ"
 
-#: src/main.py:153 src/pages.py:1911
+#: src/main.py:157 src/pages.py:1978
 msgid "Continue Installation"
 msgstr "ดำเนินการติดตั้งต่อ"
 
-#: src/pages.py:4574
+#: src/pages.py:6813
 msgid "Copy AnduinOS system"
 msgstr "คัดลอกระบบ AnduinOS"
 
-#: src/pages.py:4675
+#: src/pages.py:6916
 msgid "Copy Log"
 msgstr "คัดลอกรายการบันทึก"
 
-#: src/pages.py:3146
+#: src/pages.py:3572
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
 msgstr "สร้างพาร์ติชัน EFI System สำหรับ AnduinOS ขนาด 1 GiB ใหม่"
 
-#: src/pages.py:4163
-msgid ""
-"Create and format a dedicated AnduinOS EFI System Partition inside the "
-"selected space."
-msgstr ""
-"สร้างและจัดรูปแบบพาร์ติชัน EFI System สำหรับ AnduinOS "
-"เฉพาะภายในพื้นที่ที่เลือก"
+#: src/pages.py:6260
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "สร้างและจัดรูปแบบพาร์ติชัน EFI System สำหรับ AnduinOS เฉพาะภายในพื้นที่ที่เลือก"
 
-#: src/pages.py:3447
+#: src/pages.py:5532
 msgid "Create your user account"
 msgstr "สร้างบัญชีผู้ใช้ของคุณ"
 
-#: src/pages.py:2412
+#: src/pages.py:2564
 msgid "Current disk layout"
 msgstr "แผนผังดิสก์ปัจจุบัน"
 
-#: src/pages.py:3979
-msgid ""
-"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
-"executor or disk command can run."
-msgstr ""
-"โหมดพัฒนา — แผนจะได้รับการตรวจสอบและจำลอง "
-"จะไม่มีการเรียกใช้กระบวนการบริการที่มีสิทธิ์ระดับสูงหรือคำสั่งดิสก์ใด ๆ"
+#: src/pages.py:6071
+msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
+msgstr "โหมดพัฒนา — แผนจะได้รับการตรวจสอบและจำลอง จะไม่มีการเรียกใช้กระบวนการบริการที่มีสิทธิ์ระดับสูงหรือคำสั่งดิสก์ใด ๆ"
 
 #: data/languages.json:keyboard_layouts
 msgid "Danish"
 msgstr "ภาษาเดนมาร์ก"
 
-#: src/pages.py:4569
+#: src/pages.py:6808
 msgid "Detect Internet connectivity"
 msgstr "ตรวจจับการเชื่อมต่ออินเทอร์เน็ต"
 
-#: src/pages.py:4566
+#: src/pages.py:6805
 msgid "Detect firmware and Secure Boot"
 msgstr "ตรวจจับเฟิร์มแวร์และ Secure Boot"
 
-#: src/pages.py:4419
+#: src/pages.py:6617
 msgid ""
 "Development mode will simulate installation to {disk}. No disk data will be changed.\n"
 "\n"
@@ -324,15 +281,15 @@ msgstr ""
 "โหมดพัฒนาจะจำลองการติดตั้งไปยัง {disk} ข้อมูลบนดิสก์จะไม่มีการเปลี่ยนแปลง\n"
 "\n"
 
-#: src/pages.py:4923
+#: src/pages.py:7164
 msgid "Development simulation completed"
 msgstr "การจำลองการพัฒนาเสร็จสิ้น"
 
-#: src/pages.py:4832
+#: src/pages.py:7073
 msgid "Discover AnduinOS"
 msgstr "สำรวจ AnduinOS"
 
-#: src/pages.py:1216 src/pages.py:2218
+#: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
 msgstr "ดาวน์โหลดและติดตั้งอัปเดตระบบระหว่างการติดตั้ง"
 
@@ -340,22 +297,21 @@ msgstr "ดาวน์โหลดและติดตั้งอัปเด
 msgid "Dutch"
 msgstr "ภาษาดัตช์"
 
-#: src/pages.py:3073
+#: src/pages.py:4210 src/pages.py:3498 src/pages.py:5013
 msgid "EFI System Partition"
 msgstr "พาร์ติชันระบบ EFI"
 
-#: src/pages.py:4184
+#: src/pages.py:6341 src/pages.py:6281
 msgid "EFI policy"
 msgstr "นโยบาย EFI"
 
-#: src/pages.py:2455
+#: src/pages.py:2607
 msgid "Empty disk — no partitions"
 msgstr "ดิสก์ว่าง — ไม่มีพาร์ติชัน"
 
-#: src/pages.py:2821
+#: src/pages.py:3162
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
-msgstr ""
-"เปิดใช้งาน subvolumes แบบแชร์พื้นที่, snapshots และ Disk Snapshots Manager"
+msgstr "เปิดใช้งาน subvolumes แบบแชร์พื้นที่, snapshots และ Disk Snapshots Manager"
 
 #: data/languages.json:keyboard_layouts
 msgid "English (UK)"
@@ -365,53 +321,39 @@ msgstr "ภาษาอังกฤษ (สหราชอาณาจักร)
 msgid "English (US)"
 msgstr "ภาษาอังกฤษ (สหรัฐอเมริกา)"
 
-#: src/pages.py:4601
+#: src/pages.py:6840
 msgid "Ensure Disk Snapshots Manager is available"
 msgstr "ตรวจสอบว่า Disk Snapshots Manager พร้อมใช้งาน"
 
-#: src/pages.py:4412
+#: src/pages.py:6610
 msgid "Erase Disk and Install"
 msgstr "ลบดิสก์และติดตั้ง"
 
-#: src/pages.py:2813 src/pages.py:4226
+#: src/pages.py:3154 src/pages.py:6382
 msgid "Erase every partition and all data on the selected disk."
 msgstr "ลบข้อมูลทุกพาร์ติชันและข้อมูลทั้งหมดบนดิสก์ที่เลือก"
 
-#: src/pages.py:4411
+#: src/pages.py:6609
 msgid "Erase the entire selected disk?"
 msgstr "ต้องการลบดิสก์ที่เลือกทั้งหมดหรือไม่?"
 
-#: src/pages.py:137
-msgid ""
-"Existing Windows, recovery and data partitions remain outside the write set "
-"and will be preserved."
-msgstr ""
-"พาร์ติชัน Windows, recovery "
-"และข้อมูลที่มีอยู่เดิมจะไม่ถูกเขียนทับและจะได้รับการรักษาไว้"
+#: src/pages.py:168
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "พาร์ติชัน Windows, recovery และข้อมูลที่มีอยู่เดิมจะไม่ถูกเขียนทับและจะได้รับการรักษาไว้"
 
-#: src/pages.py:2945
-msgid ""
-"Existing partitions were detected. The first two choices delete them; "
-"Advanced is the preservation path."
-msgstr ""
-"ตรวจพบพาร์ติชันที่มีอยู่เดิม สองตัวเลือกแรกจะลบพาร์ติชันเหล่านี้; "
-"ตัวเลือกขั้นสูงคือการรักษาพาร์ติชันไว้"
+#: src/pages.py:3287
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "ตรวจพบพาร์ติชันที่มีอยู่เดิม สองตัวเลือกแรกจะลบพาร์ติชันเหล่านี้; ตัวเลือกขั้นสูงคือการรักษาพาร์ติชันไว้"
 
-#: src/pages.py:4446
-msgid ""
-"Existing partitions will be preserved. New AnduinOS partitions will be "
-"created only in the selected unallocated extent; EFI vendor files and the "
-"AnduinOS firmware boot entry may be updated."
-msgstr ""
-"พาร์ติชันที่มีอยู่เดิมจะถูกเก็บรักษาไว้ พาร์ติชัน AnduinOS "
-"ใหม่จะถูกสร้างขึ้นเฉพาะในพื้นที่ที่ยังไม่ได้จัดสรรเท่านั้น ไฟล์ผู้ผลิต EFI "
-"และรายการเริ่มต้นระบบเฟิร์มแวร์ของ AnduinOS อาจได้รับการอัปเดต"
+#: src/pages.py:6650
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "พาร์ติชันที่มีอยู่เดิมจะถูกเก็บรักษาไว้ พาร์ติชัน AnduinOS ใหม่จะถูกสร้างขึ้นเฉพาะในพื้นที่ที่ยังไม่ได้จัดสรรเท่านั้น ไฟล์ผู้ผลิต EFI และรายการเริ่มต้นระบบเฟิร์มแวร์ของ AnduinOS อาจได้รับการอัปเดต"
 
-#: src/pages.py:3052 src/pages.py:4049
+#: src/pages.py:3477 src/pages.py:6155 src/pages.py:5127
 msgid "Filesystem"
 msgstr "ระบบไฟล์"
 
-#: src/pages.py:4613
+#: src/pages.py:6852
 msgid "Finalize target environment"
 msgstr "สรุปสภาพแวดล้อมเป้าหมาย"
 
@@ -419,7 +361,7 @@ msgstr "สรุปสภาพแวดล้อมเป้าหมาย"
 msgid "Finnish"
 msgstr "ภาษาฟินแลนด์"
 
-#: src/pages.py:4182
+#: src/pages.py:6340 src/pages.py:6279
 msgid "Formats"
 msgstr "จัดรูปแบบ"
 
@@ -427,7 +369,7 @@ msgstr "จัดรูปแบบ"
 msgid "French"
 msgstr "ภาษาฝรั่งเศส"
 
-#: src/pages.py:3462 src/pages.py:3464
+#: src/pages.py:5547 src/pages.py:5549
 msgid "Full Name"
 msgstr "ชื่อเต็ม"
 
@@ -439,27 +381,19 @@ msgstr "ภาษาเยอรมัน"
 msgid "Greek"
 msgstr "ภาษากรีก"
 
-#: src/pages.py:111
-msgid ""
-"Guided coexistence requires a system booted in UEFI mode and a GPT target "
-"disk. This disk cannot continue in guided mode."
-msgstr ""
-"การอยู่ร่วมกันแบบมีผู้แนะนำต้องการระบบที่บูตในโหมด UEFI "
-"และดิสก์เป้าหมายรูปแบบ GPT "
-"ดิสก์นี้ไม่สามารถดำเนินการต่อในโหมดที่มีผู้แนะนำได้"
+#: src/pages.py:142
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "การอยู่ร่วมกันแบบมีผู้แนะนำต้องการระบบที่บูตในโหมด UEFI และดิสก์เป้าหมายรูปแบบ GPT ดิสก์นี้ไม่สามารถดำเนินการต่อในโหมดที่มีผู้แนะนำได้"
 
-#: src/pages.py:4131
-msgid ""
-"Guided storage selection is missing. Rescan and select the target again."
-msgstr ""
-"ตัวเลือกการจัดเก็บข้อมูลแบบมีผู้แนะนำหายไป "
-"กรุณาสแกนใหม่และเลือกเป้าหมายอีกครั้ง"
+#: src/pages.py:6393
+msgid "Guided storage selection is missing. Rescan and select the target again."
+msgstr "ตัวเลือกการจัดเก็บข้อมูลแบบมีผู้แนะนำหายไป กรุณาสแกนใหม่และเลือกเป้าหมายอีกครั้ง"
 
 #: data/languages.json:keyboard_layouts
 msgid "Hindi (India)"
 msgstr "ภาษาฮินดี (อินเดีย)"
 
-#: src/pages.py:2741
+#: src/pages.py:3082
 msgid "How should AnduinOS use this disk?"
 msgstr "AnduinOS ควรใช้งานดิสก์นี้อย่างไร?"
 
@@ -467,87 +401,83 @@ msgstr "AnduinOS ควรใช้งานดิสก์นี้อย่า
 msgid "Indonesian"
 msgstr "ภาษาอินโดนีเซีย"
 
-#: src/pages.py:4498
+#: src/pages.py:6737
 msgid "Install"
 msgstr "ติดตั้ง"
 
-#: src/pages.py:4559 src/pages.py:1221 src/pages.py:4125
+#: src/pages.py:6798 src/pages.py:1288 src/pages.py:6231
 msgid "Install input method"
 msgstr "ติดตั้งวิธีการป้อนข้อมูล"
 
-#: src/pages.py:625
+#: src/pages.py:684
 msgid "Install {language} input method: {name}"
 msgstr "ติดตั้งวิธีป้อนข้อมูล{language}: {name}"
 
-#: src/pages.py:4409 src/pages.py:4496
+#: src/pages.py:3405 src/pages.py:6604 src/pages.py:6733
 msgid "Install Alongside"
 msgstr "ติดตั้งพร้อมกัน"
 
-#: src/pages.py:4169
+#: src/pages.py:6266
 msgid "Install alongside"
 msgstr "ติดตั้งพร้อมกัน"
 
-#: src/pages.py:4608
+#: src/pages.py:6847
 msgid "Install bootloader"
 msgstr "ติดตั้ง bootloader"
 
-#: src/pages.py:4611
+#: src/pages.py:6850
 msgid "Check systems on other disks"
 msgstr "ตรวจสอบระบบในดิสก์อื่น"
 
-#: src/pages.py:1217 src/pages.py:4603
+#: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
 msgstr "ติดตั้งไดรเวอร์ฮาร์ดแวร์"
 
-#: src/pages.py:4408
+#: src/pages.py:6603
 msgid "Install in the selected free space?"
 msgstr "ต้องการติดตั้งในเนื้อที่ว่างที่เลือกหรือไม่?"
 
-#: src/pages.py:4596
+#: src/pages.py:6835
 msgid "Ensure required language packs are installed"
 msgstr "ตรวจสอบให้แน่ใจว่าได้ติดตั้งแพ็กเกจภาษาที่จำเป็นแล้ว"
 
-#: src/pages.py:4599
+#: src/pages.py:6838
 msgid "Install system updates"
 msgstr "ติดตั้งอัปเดตระบบ"
 
-#: src/pages.py:2229
+#: src/pages.py:2381
 msgid "Install third-party drivers for this device"
 msgstr "ติดตั้งไดรเวอร์บุคคลที่สามสำหรับอุปกรณ์นี้"
 
-#: src/pages.py:5093 src/pages.py:5095 src/pages.py:4940 src/pages.py:4950
+#: src/pages.py:7334 src/pages.py:7336 src/pages.py:7181 src/pages.py:7191
 msgid "Installation Complete"
 msgstr "การติดตั้งเสร็จสมบูรณ์"
 
-#: src/pages.py:4970
+#: src/pages.py:7211
 msgid "Installation Failed"
 msgstr "การติดตั้งล้มเหลว"
 
-#: src/pages.py:4639
+#: src/pages.py:6878
 msgid "Installation Steps"
 msgstr "ขั้นตอนการติดตั้ง"
 
-#: src/pages.py:160
-msgid ""
-"Installation cannot continue with this selection. There is no force-continue"
-" option around storage safety checks."
-msgstr ""
-"ไม่สามารถดำเนินการติดตั้งต่อได้ด้วยการเลือกนี้ "
-"ไม่มีตัวเลือกบังคับให้ดำเนินการต่อบนการตรวจสอบความปลอดภัยการจัดเก็บข้อมูล"
+#: src/pages.py:191
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "ไม่สามารถดำเนินการติดตั้งต่อได้ด้วยการเลือกนี้ ไม่มีตัวเลือกบังคับให้ดำเนินการต่อบนการตรวจสอบความปลอดภัยการจัดเก็บข้อมูล"
 
-#: src/pages.py:4919 src/pages.py:4985
+#: src/pages.py:7160 src/pages.py:7226
 msgid "Installation complete"
 msgstr "การติดตั้งเสร็จสมบูรณ์"
 
-#: src/pages.py:4968
+#: src/pages.py:7209
 msgid "Installation failed"
 msgstr "การติดตั้งล้มเหลว"
 
-#: src/main.py:145
+#: src/main.py:149
 msgid "Installation in progress"
 msgstr "กำลังดำเนินการติดตั้ง"
 
-#: src/pages.py:4547 src/pages.py:4541
+#: src/pages.py:6786 src/pages.py:6780
 msgid "Installing AnduinOS"
 msgstr "กำลังติดตั้ง AnduinOS"
 
@@ -559,19 +489,19 @@ msgstr "ภาษาอิตาลี"
 msgid "Japanese (JIS keyboard)"
 msgstr "ภาษาญี่ปุ่น (แป้นพิมพ์ JIS)"
 
-#: src/pages.py:4040
+#: src/pages.py:6147
 msgid "Keyboard"
 msgstr "คีย์บอร์ด"
 
-#: src/pages.py:1938 src/pages.py:1932 src/pages.py:2075
+#: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
 msgid "Keyboard Layout"
 msgstr "เลย์เอาต์คีย์บอร์ด"
 
-#: src/pages.py:2031
+#: src/pages.py:2077
 msgid "Layout Variant"
 msgstr "รูปแบบย่อยของเลย์เอาต์"
 
-#: src/pages.py:4582
+#: src/pages.py:6821
 msgid "Configure physical keyboard layout"
 msgstr "กำหนดค่ารูปแบบแป้นพิมพ์จริง"
 
@@ -579,103 +509,91 @@ msgstr "กำหนดค่ารูปแบบแป้นพิมพ์จ
 msgid "Korean"
 msgstr "ภาษากาหลี"
 
-#: src/pages.py:4039
+#: src/pages.py:6146
 msgid "Language"
 msgstr "ภาษา"
 
-#: src/pages.py:2472
+#: src/pages.py:2624
 msgid "Live USB — excluded"
 msgstr "USB แบบ Live — ถูกละเว้น"
 
-#: src/pages.py:4573
+#: src/pages.py:6812
 msgid "Mount target filesystems"
 msgstr "Mount ระบบไฟล์เป้าหมาย"
 
-#: src/pages.py:851
+#: src/pages.py:918
 msgid "Navigation error"
 msgstr "ข้อผิดพลาดในการนำทาง"
 
-#: src/pages.py:4180 src/pages.py:4229
+#: src/pages.py:4232 src/pages.py:6339 src/pages.py:6277 src/pages.py:6385
 msgid "New partitions"
 msgstr "Partition ใหม่"
 
-#: src/pages.py:261 src/pages.py:818 src/pages.py:1016
+#: src/pages.py:315 src/pages.py:884 src/pages.py:1083
 msgid "Next"
 msgstr "ถัดไป"
 
-#: src/pages.py:4756
+#: src/pages.py:6997
 msgid "Next slide"
 msgstr "สไลด์ถัดไป"
 
-#: src/pages.py:2389
+#: src/pages.py:2541
 msgid "No partition table"
 msgstr "ไม่มีตารางพาร์ติชัน"
 
-#: src/pages.py:2631
+#: src/pages.py:2782
 msgid "No suitable disks found."
 msgstr "ไม่พบดิสก์ที่เหมาะสม"
 
-#: src/pages.py:170
-msgid ""
-"No suitable unallocated space was found. To protect your data, create "
-"unallocated space with Windows Disk Management, then boot the installer "
-"again and rescan the disk."
-msgstr ""
-"ไม่พบพื้นที่ที่ไม่ได้จัดสรรที่เหมาะสม เพื่อปกป้องข้อมูลของคุณ "
-"โปรดสร้างพื้นที่ที่ไม่ได้จัดสรรด้วย Windows Disk Management "
-"จากนั้นบูตโปรแกรมติดตั้งอีกครั้งและสแกนดิสก์ใหม่"
+#: src/pages.py:201
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "ไม่พบพื้นที่ที่ไม่ได้จัดสรรที่เหมาะสม เพื่อปกป้องข้อมูลของคุณ โปรดสร้างพื้นที่ที่ไม่ได้จัดสรรด้วย Windows Disk Management จากนั้นบูตโปรแกรมติดตั้งอีกครั้งและสแกนดิสก์ใหม่"
 
-#: src/pages.py:175
-msgid ""
-"No suitable unallocated space was found. To protect your data, create "
-"unallocated space with a partitioning tool, then boot the installer again "
-"and rescan the disk."
-msgstr ""
-"ไม่พบพื้นที่ที่ไม่ได้จัดสรรที่เหมาะสม เพื่อปกป้องข้อมูลของคุณ "
-"โปรดสร้างพื้นที่ที่ไม่ได้จัดสรรด้วยเครื่องมือจัดการพาร์ติชัน "
-"จากนั้นบูตโปรแกรมติดตั้งอีกครั้งและสแกนดิสก์ใหม่"
+#: src/pages.py:206
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "ไม่พบพื้นที่ที่ไม่ได้จัดสรรที่เหมาะสม เพื่อปกป้องข้อมูลของคุณ โปรดสร้างพื้นที่ที่ไม่ได้จัดสรรด้วยเครื่องมือจัดการพาร์ติชัน จากนั้นบูตโปรแกรมติดตั้งอีกครั้งและสแกนดิสก์ใหม่"
 
 #: data/languages.json:keyboard_layouts
 msgid "Norwegian"
 msgstr "ภาษานอร์เวย์"
 
-#: src/pages.py:1124 src/pages.py:1375 src/pages.py:4370 src/pages.py:854
+#: src/pages.py:1191 src/pages.py:1442 src/pages.py:6563 src/pages.py:921
 msgid "OK"
 msgstr "ตกลง"
 
-#: src/pages.py:4835
+#: src/pages.py:7076
 msgid "Output"
 msgstr "ผลลัพธ์"
 
-#: src/pages.py:4973 src/pages.py:5028
+#: src/pages.py:7214 src/pages.py:7269
 msgid "Output • Error"
 msgstr "ผลลัพธ์ • ข้อผิดพลาด"
 
-#: src/pages.py:5023
+#: src/pages.py:7264
 msgid "Output • {count} warning(s)"
 msgstr "ผลลัพธ์ • คำเตือน {count} รายการ"
 
-#: src/pages.py:2453
+#: src/pages.py:2605
 msgid "Partition details unavailable"
 msgstr "ไม่สามารถดูรายละเอียดพาร์ติชันได้"
 
-#: src/pages.py:3476 src/pages.py:3487 src/pages.py:1466 src/pages.py:1525
+#: src/pages.py:5561 src/pages.py:5572 src/pages.py:1533 src/pages.py:1592
 msgid "Password"
 msgstr "รหัสผ่าน"
 
-#: src/pages.py:3584
+#: src/pages.py:5669
 msgid "Password must be at least 6 characters."
 msgstr "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
 
-#: src/pages.py:4048
+#: src/pages.py:6154
 msgid "Platform"
 msgstr "แพลตฟอร์ม"
 
-#: src/pages.py:4548
+#: src/pages.py:6787
 msgid "Please do not turn off your computer"
 msgstr "กรุณาอย่าปิดเครื่องคอมพิวเตอร์ของคุณ"
 
-#: src/pages.py:3965
+#: src/pages.py:6055
 msgid "Please review your choices before proceeding"
 msgstr "โปรดตรวจสอบการเลือกของคุณก่อนดำเนินการต่อ"
 
@@ -691,86 +609,78 @@ msgstr "ภาษาโปรตุเกส"
 msgid "Portuguese (Brazil)"
 msgstr "ภาษาโปรตุเกส (บราซิล)"
 
-#: src/pages.py:4594
+#: src/pages.py:6833
 msgid "Prepare Secure Boot"
 msgstr "เตรียม Secure Boot"
 
-#: src/pages.py:4572
+#: src/pages.py:6811
 msgid "Prepare installation disk"
 msgstr "เตรียมดิสก์ติดตั้ง"
 
-#: src/pages.py:4579
+#: src/pages.py:6818
 msgid "Prepare target environment"
 msgstr "เตรียมสภาพแวดล้อมเป้าหมาย"
 
-#: src/pages.py:4871
+#: src/pages.py:7112
 msgid "Preparing installation…"
 msgstr "กำลังเตรียมการติดตั้ง…"
 
-#: src/pages.py:4175
+#: src/pages.py:6336 src/pages.py:6272
 msgid "Preserved partitions"
 msgstr "Partition ที่เก็บรักษาไว้"
 
-#: src/pages.py:4750
+#: src/pages.py:6991
 msgid "Previous slide"
 msgstr "สไลด์ก่อนหน้า"
 
-#: src/pages.py:3964 src/pages.py:3958
+#: src/pages.py:6054 src/pages.py:6048
 msgid "Ready to Install"
 msgstr "พร้อมที่จะติดตั้ง"
 
-#: src/pages.py:4811
+#: src/pages.py:7052
 msgid "Reboot Now"
 msgstr "เริ่มระบบใหม่ตอนนี้"
 
-#: src/pages.py:4598
+#: src/pages.py:6837
 msgid "Refresh package indexes"
 msgstr "รีเฟรชดัชนีแพ็กเกจ"
 
-#: src/pages.py:4580
+#: src/pages.py:6819
 msgid "Remove live-session components"
 msgstr "ลบส่วนประกอบของเซสชันแบบ live"
 
-#: src/pages.py:4951 src/pages.py:4942
+#: src/pages.py:7192 src/pages.py:7183
 msgid "Remove the installation media and restart your computer"
 msgstr "นำสื่อติดตั้งออกและเริ่มคอมพิวเตอร์ของคุณใหม่"
 
-#: src/pages.py:1177 src/pages.py:1205 src/pages.py:2220 src/pages.py:675
-#: src/pages.py:1362 src/pages.py:2233
-msgid ""
-"Requires an Internet connection. The base installation remains available "
-"when offline."
-msgstr ""
-"ต้องการการเชื่อมต่ออินเทอร์เน็ต "
-"การติดตั้งพื้นฐานจะยังคงใช้งานได้ในขณะที่ออฟไลน์"
+#: src/pages.py:1244 src/pages.py:1272 src/pages.py:2372 src/pages.py:734
+#: src/pages.py:1429 src/pages.py:2385
+msgid "Requires an Internet connection. The base installation remains available when offline."
+msgstr "ต้องการการเชื่อมต่ออินเทอร์เน็ต การติดตั้งพื้นฐานจะยังคงใช้งานได้ในขณะที่ออฟไลน์"
 
-#: src/pages.py:2550
+#: src/pages.py:2701
 msgid "Rescan Storage"
 msgstr "สแกนพื้นที่เก็บข้อมูลใหม่"
 
-#: src/pages.py:3101
+#: src/pages.py:3526
 msgid "Rescan and Reselect Disk"
 msgstr "สแกนใหม่และเลือกดิสก์ใหม่"
 
-#: src/pages.py:4809
+#: src/pages.py:7050
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "เริ่มระบบใหม่และลงทะเบียนคีย์ Secure Boot"
 
-#: src/pages.py:4960
+#: src/pages.py:7201
 msgid "Restart is disabled in development protection mode"
 msgstr "การเริ่มระบบใหม่ถูกปิดใช้งานในโหมดป้องกันการพัฒนา"
 
-#: src/pages.py:3150
+#: src/pages.py:3576 src/pages.py:5081
 msgid "Reuse {path} ({size})"
 msgstr "นำ {path} ({size}) กลับมาใช้งานอีกครั้ง"
 
-#: src/pages.py:4155
-msgid ""
-"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
-"before writing."
-msgstr ""
-"นำ {path} กลับมาใช้งานอีกครั้ง; ห้ามจัดรูปแบบเลย; ตรวจสอบสุขภาพ FAT, ตัวระบุ"
-" และพื้นที่ว่าง 64 MiB ก่อนเขียนข้อมูล"
+#: src/pages.py:6254
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "นำ {path} กลับมาใช้งานอีกครั้ง; ห้ามจัดรูปแบบเลย; ตรวจสอบสุขภาพ FAT, ตัวระบุ และพื้นที่ว่าง 64 MiB ก่อนเขียนข้อมูล"
 
 #: data/languages.json:keyboard_layouts
 msgid "Romanian"
@@ -780,43 +690,43 @@ msgstr "ภาษาโรมาเนีย"
 msgid "Russian"
 msgstr "ภาษารัสเซีย"
 
-#: src/pages.py:4679
+#: src/pages.py:6920
 msgid "Save Log"
 msgstr "บันทึกรายการบันทึก"
 
-#: src/pages.py:4609
+#: src/pages.py:6848
 msgid "Schedule MOK enrollment"
 msgstr "กำหนดเวลาการลงทะเบียน MOK"
 
-#: src/pages.py:3831
+#: src/pages.py:5918
 msgid "Search timezones…"
 msgstr "ค้นหาเขตเวลา…"
 
-#: src/pages.py:4069
+#: src/pages.py:6175
 msgid "Secure Boot enrollment"
 msgstr "การลงทะเบียน Secure Boot"
 
-#: src/pages.py:2497 src/pages.py:2491
+#: src/pages.py:2649 src/pages.py:2643
 msgid "Select Installation Disk"
 msgstr "เลือกดิสก์ติดตั้ง"
 
-#: src/pages.py:3818 src/pages.py:3812
+#: src/pages.py:5905 src/pages.py:5899
 msgid "Select Timezone"
 msgstr "เลือกเขตเวลา"
 
-#: src/pages.py:4592
+#: src/pages.py:6831
 msgid "Select fastest package mirror"
 msgstr "เลือกมิเรอร์แพ็กเกจที่เร็วที่สุด"
 
-#: src/pages.py:3884
+#: src/pages.py:5974
 msgid "Selected timezone"
 msgstr "เขตเวลาที่เลือก"
 
-#: src/pages.py:4170
+#: src/pages.py:6267
 msgid "Selected unallocated space"
 msgstr "พื้นที่ที่ยังไม่ได้จัดสรรที่เลือกไว้"
 
-#: src/pages.py:2239
+#: src/pages.py:2391
 msgid "Some drivers are proprietary or otherwise non-free software."
 msgstr "ไดรเวอร์บางตัวเป็นซอฟต์แวร์เฉพาะหรือซอฟต์แวร์ที่ไม่ใช่โอเพนซอร์ส"
 
@@ -824,11 +734,11 @@ msgstr "ไดรเวอร์บางตัวเป็นซอฟต์แ
 msgid "Spanish"
 msgstr "ภาษาสเปน"
 
-#: src/pages.py:4046
+#: src/pages.py:6152
 msgid "Stable disk identity"
 msgstr "เอกลักษณ์ดิสก์ที่เสถียร"
 
-#: src/pages.py:4437
+#: src/pages.py:6641
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -836,19 +746,19 @@ msgstr ""
 "เอกลักษณ์ที่เสถียร: {stable_id}\n"
 "\n"
 
-#: src/pages.py:2380
+#: src/pages.py:2532
 msgid "Storage Device"
 msgstr "อุปกรณ์จัดเก็บข้อมูล"
 
-#: src/pages.py:4168 src/pages.py:4224
+#: src/pages.py:6265 src/pages.py:6333 src/pages.py:6380
 msgid "Storage mode"
 msgstr "โหมดการเก็บข้อมูล"
 
-#: src/pages.py:4050
+#: src/pages.py:6156
 msgid "Subvolumes"
 msgstr "ย่อยวอลุ่ม (Subvolumes)"
 
-#: src/pages.py:4268
+#: src/pages.py:2968 src/pages.py:3851
 msgid "Swap"
 msgstr "สวอป (Swap)"
 
@@ -856,19 +766,19 @@ msgstr "สวอป (Swap)"
 msgid "Swedish"
 msgstr "ภาษาสวีเดน"
 
-#: src/pages.py:4051
+#: src/pages.py:6157
 msgid "System updates"
 msgstr "อัปเดตระบบ"
 
-#: src/pages.py:4042
+#: src/pages.py:6148
 msgid "Target Disk"
 msgstr "ดิสก์เป้าหมาย"
 
-#: src/pages.py:2993 src/pages.py:3260
+#: src/pages.py:3418 src/pages.py:3686 src/pages.py:4091
 msgid "Target: {disk} ({size} — {model})"
 msgstr "เป้าหมาย: {disk} ({size} — {model})"
 
-#: src/pages.py:1964 src/pages.py:2076
+#: src/pages.py:2083 src/pages.py:2228
 msgid "Test your keyboard here…"
 msgstr "ทดสอบคีย์บอร์ดของคุณที่นี่…"
 
@@ -876,120 +786,75 @@ msgstr "ทดสอบคีย์บอร์ดของคุณที่น
 msgid "Thai"
 msgstr "ภาษาไทย"
 
-#: src/pages.py:120
-msgid ""
-"The GPT disk or one of its partitions has no unique stable identifier. "
-"Guided coexistence cannot safely authorize preservation or writes on this "
-"disk."
-msgstr ""
-"ดิสก์ GPT หรือพาร์ติชันใดพาร์ติชันหนึ่งไม่มีตัวระบุที่เสถียรและไม่ซ้ำใคร "
-"การอยู่ร่วมกันแบบแนะนำไม่สามารถอนุญาตการเก็บรักษาหรือการเขียนบนดิสก์นี้ได้อย่างปลอดภัย"
+#: src/pages.py:151
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "ดิสก์ GPT หรือพาร์ติชันใดพาร์ติชันหนึ่งไม่มีตัวระบุที่เสถียรและไม่ซ้ำใคร การอยู่ร่วมกันแบบแนะนำไม่สามารถอนุญาตการเก็บรักษาหรือการเขียนบนดิสก์นี้ได้อย่างปลอดภัย"
 
-#: src/pages.py:115
-msgid ""
-"The complete partition map and free-space geometry could not be read "
-"consistently. No space on this disk is authorized for installation."
-msgstr ""
-"ไม่อาจอ่านแผนที่พาร์ติชันและเรขาคณิตของพื้นที่ว่างได้อย่างสอดคล้องกัน "
-"ไม่มีพื้นที่บนดิสก์นี้ได้รับอนุญาตสำหรับการติดตั้ง"
+#: src/pages.py:146
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "ไม่อาจอ่านแผนที่พาร์ติชันและเรขาคณิตของพื้นที่ว่างได้อย่างสอดคล้องกัน ไม่มีพื้นที่บนดิสก์นี้ได้รับอนุญาตสำหรับการติดตั้ง"
 
-#: src/pages.py:141
-msgid ""
-"The existing EFI System Partition is only a candidate. Health and free-space"
-" checks must pass before it can be reused, and it will never be formatted."
-msgstr ""
-"พาร์ติชันระบบ EFI ที่มีอยู่เป็นเพียงตัวเลือกเท่านั้น "
-"ต้องผ่านการตรวจสอบสุขภาพและพื้นที่ว่างก่อนจึงจะสามารถนำกลับมาใช้ใหม่ได้ "
-"และจะไม่มีการจัดรูปแบบใดๆ"
+#: src/pages.py:172
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "พาร์ติชันระบบ EFI ที่มีอยู่เป็นเพียงตัวเลือกเท่านั้น ต้องผ่านการตรวจสอบสุขภาพและพื้นที่ว่างก่อนจึงจะสามารถนำกลับมาใช้ใหม่ได้ และจะไม่มีการจัดรูปแบบใดๆ"
 
-#: src/pages.py:4926
-msgid ""
-"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
-" state, or installed system was changed."
-msgstr ""
-"แผนการติดตั้งถูกต้อง ไม่มีดิสก์ ระบบไฟล์ bootloader สถานะ Secure Boot "
-"หรือระบบที่ติดตั้งถูกเปลี่ยนแปลง"
+#: src/pages.py:7167
+msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
+msgstr "แผนการติดตั้งถูกต้อง ไม่มีดิสก์ ระบบไฟล์ bootloader สถานะ Secure Boot หรือระบบที่ติดตั้งถูกเปลี่ยนแปลง"
 
-#: src/main.py:147
+#: src/main.py:151
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr "โปรแกรมติดตั้งไม่สามารถปิดได้ขณะกำลังแก้ไขดิสก์เป้าหมาย"
 
-#: src/pages.py:150
-msgid ""
-"The installer will not mount, repair or infer the safety of Windows volumes "
-"from hibernation or Fast Startup state. Any required Windows maintenance "
-"must be completed in Windows."
-msgstr ""
-"โปรแกรมติดตั้งจะไม่ทำการเมาต์ ซ่อมแซม หรือประเมินความปลอดภัยของโวลุ่ม "
-"Windows จากสถานะพักเครื่อง (Hibernation) หรือการเริ่มต้นอย่างรวดเร็ว (Fast "
-"Startup) การบำรุงรักษา Windows ที่จำเป็นทั้งหมดต้องดำเนินการเสร็จสิ้นใน "
-"Windows"
+#: src/pages.py:181
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "โปรแกรมติดตั้งจะไม่ทำการเมาต์ ซ่อมแซม หรือประเมินความปลอดภัยของโวลุ่ม Windows จากสถานะพักเครื่อง (Hibernation) หรือการเริ่มต้นอย่างรวดเร็ว (Fast Startup) การบำรุงรักษา Windows ที่จำเป็นทั้งหมดต้องดำเนินการเสร็จสิ้นใน Windows"
 
-#: src/pages.py:4443
+#: src/pages.py:6647
 msgid "The privileged executor is disabled."
 msgstr "กระบวนการบริการที่มีสิทธิ์ระดับสูงถูกปิดใช้งานอยู่"
 
-#: src/pages.py:3228
-msgid ""
-"The selected disk changed or disappeared. Return to the disk page and select"
-" it again. {error}"
-msgstr ""
-"ดิสก์ที่เลือกเปลี่ยนไปหรือหายไป กรุณากลับไปที่หน้าดิสก์และเลือกอีกครั้ง "
-"{error}"
+#: src/pages.py:3654
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "ดิสก์ที่เลือกเปลี่ยนไปหรือหายไป กรุณากลับไปที่หน้าดิสก์และเลือกอีกครั้ง {error}"
 
-#: src/pages.py:3241
+#: src/pages.py:3667
 msgid "The selected disk size changed. Return and select it again."
 msgstr "ขนาดของดิสก์ที่เลือกเปลี่ยนไป กรุณากลับไปและเลือกอีกครั้ง"
 
-#: src/pages.py:3251
-msgid ""
-"The selected disk topology changed. Review the disk and installation method "
-"again."
-msgstr ""
-"โครงสร้างของดิสก์ที่เลือกเปลี่ยนแปลงไป "
-"กรุณาตรวจสอบดิสก์และวิธีการติดตั้งอีกครั้ง"
+#: src/pages.py:3677
+msgid "The selected disk topology changed. Review the disk and installation method again."
+msgstr "โครงสร้างของดิสก์ที่เลือกเปลี่ยนแปลงไป กรุณาตรวจสอบดิสก์และวิธีการติดตั้งอีกครั้ง"
 
-#: src/pages.py:3580
+#: src/pages.py:5665
 msgid "The two passwords do not match."
 msgstr "รหัสผ่านทั้งสองไม่ตรงกัน"
 
-#: src/pages.py:4057
+#: src/pages.py:6163
 msgid "Third-party drivers"
 msgstr "ไดรเวอร์บุคคลที่สาม"
 
-#: src/pages.py:3021
-msgid ""
-"This advanced path preserves existing partitions but changes the selected "
-"disk's partition table and the machine's EFI boot state."
-msgstr ""
-"เส้นทางขั้นสูงนี้จะรักษาพาร์ติชันที่มีอยู่ไว้ "
-"แต่จะเปลี่ยนแปลงตารางพาร์ติชันของดิสก์ที่เลือกและสถานะการบูต EFI ของเครื่อง"
+#: src/pages.py:3446
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "เส้นทางขั้นสูงนี้จะรักษาพาร์ติชันที่มีอยู่ไว้ แต่จะเปลี่ยนแปลงตารางพาร์ติชันของดิสก์ที่เลือกและสถานะการบูต EFI ของเครื่อง"
 
-#: src/pages.py:125
-msgid ""
-"This disk contains an active mapper, array or other nested block-device "
-"topology that guided coexistence does not support."
-msgstr ""
-"ดิสก์นี้มีแมปเปอร์ แอเรย์ หรือโทโพโลยีบล็อกอุปกรณ์แบบซ้อนอื่นๆ ที่ใช้งานอยู่"
-" ซึ่งการอยู่ร่วมกันแบบมีคำแนะนำไม่รองรับ"
+#: src/pages.py:156
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "ดิสก์นี้มีแมปเปอร์ แอเรย์ หรือโทโพโลยีบล็อกอุปกรณ์แบบซ้อนอื่นๆ ที่ใช้งานอยู่ ซึ่งการอยู่ร่วมกันแบบมีคำแนะนำไม่รองรับ"
 
-#: src/pages.py:2935
-msgid ""
-"This disk is too small for whole-disk installation. Advanced may continue "
-"only if suitable unallocated space exists."
-msgstr ""
-"dิสก์นี้มีขนาดเล็กเกินไปสำหรับการติดตั้งทั้งดิสก์ "
-"ขั้นสูงอาจดำเนินการต่อได้ก็ต่อเมื่อมีพื้นที่ที่ยังไม่ได้จัดสรรที่เหมาะสมเท่านั้น"
+#: src/pages.py:3277
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "dิสก์นี้มีขนาดเล็กเกินไปสำหรับการติดตั้งทั้งดิสก์ ขั้นสูงอาจดำเนินการต่อได้ก็ต่อเมื่อมีพื้นที่ที่ยังไม่ได้จัดสรรที่เหมาะสมเท่านั้น"
 
-#: src/pages.py:4454
+#: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
 msgstr "โปรแกรมติดตั้งนี้ไม่สามารถย่อหรือรักษาระบบอื่นไว้ได้"
 
-#: src/pages.py:4103
+#: src/pages.py:6209
 msgid "Timezone"
 msgstr "เขตเวลา"
 
-#: src/pages.py:2474
+#: src/pages.py:2626
 msgid "Too small"
 msgstr "เล็กเกินไป"
 
@@ -1001,72 +866,67 @@ msgstr "ภาษาตุรกี"
 msgid "Ukrainian"
 msgstr "ภาษาอูเครน"
 
-#: src/pages.py:3065
+#: src/pages.py:3490
 msgid "Unallocated space"
 msgstr "พื้นที่ที่ยังไม่ได้จัดสรร"
 
-#: src/pages.py:2445
+#: src/pages.py:2597
 msgid "Unallocated · {size}"
 msgstr "ยังไม่ได้จัดสรร · {size}"
 
-#: src/pages.py:4014 src/pages.py:1710
+#: src/pages.py:6106 src/pages.py:1777
 msgid "Unavailable: {error}"
 msgstr "ใช้ไม่ได้: {error}"
 
-#: src/pages.py:2432
+#: src/pages.py:2584
 msgid "Unknown filesystem"
 msgstr "ระบบไฟล์ที่ไม่รู้จัก"
 
-#: src/pages.py:4614
+#: src/pages.py:6853
 msgid "Unmount installed system"
 msgstr "Unmount ระบบที่ติดตั้ง"
 
-#: src/pages.py:2198 src/pages.py:1196 src/pages.py:2192
+#: src/pages.py:2350 src/pages.py:1263 src/pages.py:2344
 msgid "Updates and Drivers"
 msgstr "อัปเดตและไดรเวอร์"
 
-#: src/pages.py:2986
+#: src/pages.py:3411
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "ใช้เฉพาะพื้นที่ที่ยังไม่ได้จัดสรรที่มีอยู่บนดิสก์ที่เลือก"
 
-#: src/pages.py:4079
+#: src/pages.py:6185
 msgid "User"
 msgstr "ผู้ใช้"
 
-#: src/pages.py:3446 src/pages.py:3440
+#: src/pages.py:5531 src/pages.py:5525
 msgid "User Account"
 msgstr "บัญชีผู้ใช้"
 
-#: src/pages.py:3468 src/pages.py:3472
+#: src/pages.py:5553 src/pages.py:5557
 msgid "Username"
 msgstr "ชื่อผู้ใช้"
 
-#: src/pages.py:3568
-msgid ""
-"Username must start with a lowercase ASCII letter and contain only lowercase"
-" ASCII letters or digits (maximum 16 characters)."
-msgstr ""
-"ชื่อผู้ใช้ต้องเริ่มต้นด้วยตัวอักษร ASCII "
-"ตัวพิมพ์เล็กและประกอบด้วยเฉพาะตัวอักษร ASCII ตัวพิมพ์เล็กหรือตัวเลขเท่านั้น "
-"(สูงสุด 16 อักขระ)"
+#: src/pages.py:5653
+msgid "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
+msgstr "ชื่อผู้ใช้ต้องเริ่มต้นด้วยตัวอักษร ASCII ตัวพิมพ์เล็กและประกอบด้วยเฉพาะตัวอักษร ASCII ตัวพิมพ์เล็กหรือตัวเลขเท่านั้น (สูงสุด 16 อักขระ)"
 
-#: src/pages.py:2832
+#: src/pages.py:3173
 msgid "Uses a traditional single root filesystem."
 msgstr "ใช้ระบบไฟล์รูทแบบดั้งเดิมเพียงอันเดียว"
 
-#: src/pages.py:4406
+#: src/pages.py:6601
 msgid "Validate Plan (No Installation)"
 msgstr "ตรวจสอบแผน (ไม่ติดตั้ง)"
 
-#: src/pages.py:4405
+#: src/pages.py:6600
 msgid "Validate this installation plan?"
 msgstr "ต้องการตรวจสอบแผนการติดตั้งนี้หรือไม่?"
 
-#: src/pages.py:4606
+#: src/pages.py:6845
 msgid "Verify kernel module signatures"
 msgstr "ตรวจสอบลายเซ็นของโมดูลเคอร์เนล"
 
-#: src/pages.py:4571
+#: src/pages.py:6810
 msgid "Verify target disk isolation"
 msgstr "ตรวจสอบการแยกตัวของดิสก์เป้าหมาย"
 
@@ -1074,888 +934,819 @@ msgstr "ตรวจสอบการแยกตัวของดิสก์
 msgid "Vietnamese"
 msgstr "ภาษาเวียดนาม"
 
-#: src/pages.py:811
+#: src/pages.py:877
 msgid "Welcome to AnduinOS"
 msgstr "ยินดีต้อนรับสู่ AnduinOS"
 
-#: src/pages.py:2468
+#: src/pages.py:2620
 msgid "Windows detected"
 msgstr "ตรวจพบ Windows"
 
-#: src/pages.py:4188
-msgid ""
-"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
-"AnduinOS NVRAM entry."
-msgstr ""
-"เขียนเฉพาะ EFI/AnduinOS ห้ามเขียนทับ EFI/BOOT และต้องมีรายการ AnduinOS ใน "
-"NVRAM ที่ผ่านการตรวจสอบแล้ว"
+#: src/pages.py:6284
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "เขียนเฉพาะ EFI/AnduinOS ห้ามเขียนทับ EFI/BOOT และต้องมีรายการ AnduinOS ใน NVRAM ที่ผ่านการตรวจสอบแล้ว"
 
-#: src/pages.py:4072
+#: src/pages.py:6178
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
-msgstr ""
-"สร้าง MOK เฉพาะเครื่อง; ลงทะเบียนหลังจากเริ่มระบบใหม่ด้วยรหัสผ่าน 123456"
+msgstr "สร้าง MOK เฉพาะเครื่อง; ลงทะเบียนหลังจากเริ่มระบบใหม่ด้วยรหัสผ่าน 123456"
 
-#: src/pages.py:4059
+#: src/pages.py:6165
 msgid "detect and install (may include non-free software)"
 msgstr "ตรวจจับและติดตั้ง (อาจรวมซอฟต์แวร์ที่ไม่ใช่โอเพนซอร์ส)"
 
-#: src/pages.py:4121 src/pages.py:4055 src/pages.py:4061 src/pages.py:4067
+#: src/pages.py:6227 src/pages.py:6161 src/pages.py:6167 src/pages.py:6173
 msgid "do not install"
 msgstr "ไม่ติดตั้ง"
 
-#: src/pages.py:4053 src/pages.py:4065
+#: src/pages.py:6159 src/pages.py:6171
 msgid "download and install"
 msgstr "ดาวน์โหลดและติดตั้ง"
 
-#: src/pages.py:3055
+#: src/pages.py:3480 src/pages.py:5118
 msgid "ext4 (classic)"
 msgstr "ext4 (คลาสสิก)"
 
-#: src/pages.py:2829
+#: src/pages.py:3170
 msgid "ext4 — classic"
 msgstr "ext4 — คลาสสิก"
 
-#: src/pages.py:4077
+#: src/pages.py:6183
 msgid "not required"
 msgstr "ไม่จำเป็น"
 
-#: src/pages.py:4083
+#: src/pages.py:6189
 msgid "password required for login"
 msgstr "จำเป็นต้องใช้รหัสผ่านสำหรับเข้าสู่ระบบ"
 
-#: src/pages.py:4024
+#: src/pages.py:6117
 msgid "single ext4 root filesystem"
 msgstr "ระบบไฟล์ ext4 แบบรากเดียว"
 
-#: src/pages.py:4005
+#: src/pages.py:6097
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
-msgstr ""
-"สถาปัตยกรรม: {architecture} / เฟิร์มแวร์: {firmware} / การบูตแบบปลอดภัย: "
-"{secure_boot}"
+msgstr "สถาปัตยกรรม: {architecture} / เฟิร์มแวร์: {firmware} / การบูตแบบปลอดภัย: {secure_boot}"
 
-#: src/pages.py:4176
+#: src/pages.py:6273
 msgid "{count}: {paths}"
 msgstr "{count}: {paths}"
 
-#: src/pages.py:4139
+#: src/pages.py:6238
 msgid "{name}: {start}–{end} MiB"
 msgstr "{name}: {start}–{end} MiB"
 
-#: src/pages.py:4147
+#: src/pages.py:6246 src/pages.py:6313
 msgid "{path} as {filesystem}"
 msgstr "{path} เป็น {filesystem}"
 
-#: src/pages.py:4171
+#: src/pages.py:6268
 msgid "{size} at {offset}"
 msgstr "{size} ที่ {offset}"
 
-#: src/pages.py:3288
+#: src/pages.py:3714
 msgid "{size} unallocated at {offset}"
 msgstr "พื้นที่ที่ไม่ได้จัดสรร {size} ที่ {offset}"
 
-#: src/pages.py:5031
+#: src/pages.py:7272
 msgid "{step} failed"
 msgstr "{step} ล้มเหลว"
 
-#: src/pages.py:4303
-msgid ""
-"⚠ Only the selected unallocated space will be partitioned and formatted. "
-"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
-"firmware boot entry may change. This installer will not shrink Windows for "
-"you."
-msgstr ""
-"⚠ "
-"จะทำการแบ่งพาร์ติชันและจัดรูปแบบเฉพาะพื้นที่ที่ไม่ได้จัดสรรที่เลือกไว้เท่านั้น"
-" พาร์ติชันที่มีอยู่เดิมจะได้รับการรักษาไว้ แต่ไฟล์ EFI/AnduinOS "
-"และรายการบูตเฟิร์มแวร์ AnduinOS อาจเปลี่ยนแปลง ตัวติดตั้งนี้จะไม่ย่อขนาด "
-"Windows ให้คุณ"
+#: src/pages.py:6488
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ จะทำการแบ่งพาร์ติชันและจัดรูปแบบเฉพาะพื้นที่ที่ไม่ได้จัดสรรที่เลือกไว้เท่านั้น พาร์ติชันที่มีอยู่เดิมจะได้รับการรักษาไว้ แต่ไฟล์ EFI/AnduinOS และรายการบูตเฟิร์มแวร์ AnduinOS อาจเปลี่ยนแปลง ตัวติดตั้งนี้จะไม่ย่อขนาด Windows ให้คุณ"
 
-#: src/pages.py:4311
-msgid ""
-"⚠ This will erase ALL data on the selected disk. This action cannot be "
-"undone."
-msgstr ""
-"⚠ การกระทำนี้จะลบข้อมูลทั้งหมดบนดิสก์ที่เลือก "
-"ไม่สามารถย้อนกลับการกระทำนี้ได้"
+#: src/pages.py:6504
+msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
+msgstr "⚠ การกระทำนี้จะลบข้อมูลทั้งหมดบนดิสก์ที่เลือก ไม่สามารถย้อนกลับการกระทำนี้ได้"
 
-#: src/pages.py:1176 src/pages.py:667 src/pages.py:1171
+#: src/pages.py:1243 src/pages.py:726 src/pages.py:1238
 msgid "Connect to the Internet"
 msgstr "เชื่อมต่ออินเทอร์เน็ต"
 
-#: src/pages.py:1343
+#: src/pages.py:1410
 msgid "Internet connection is ready."
 msgstr "การเชื่อมต่ออินเทอร์เน็ตพร้อมใช้งานแล้ว"
 
-#: src/pages.py:1250
+#: src/pages.py:1317
 msgid "Available Wi-Fi Networks"
 msgstr "เครือข่าย Wi-Fi ที่พร้อมใช้งาน"
 
-#: src/pages.py:4576
+#: src/pages.py:6815
 msgid "Preserve connected Wi-Fi network"
 msgstr "เก็บเครือข่าย Wi-Fi ที่เชื่อมต่อไว้"
 
-#: src/pages.py:2540 src/pages.py:3092
+#: src/pages.py:2691 src/pages.py:3517 src/pages.py:4166 src/pages.py:5388
+#: src/pages.py:4139 src/pages.py:4305
 msgid "Loading storage devices…"
 msgstr "กำลังโหลดอุปกรณ์จัดเก็บข้อมูล…"
 
-#: src/pages.py:4335
+#: src/pages.py:6528
 msgid "Rechecking target disk…"
 msgstr "กำลังตรวจสอบดิสก์เป้าหมายอีกครั้ง…"
 
-#: src/pages.py:2609 src/pages.py:3213 src/pages.py:4364
+#: src/pages.py:2760 src/pages.py:3639 src/pages.py:5336 src/pages.py:6557
 msgid "Storage devices could not be loaded: {error}"
 msgstr "ไม่สามารถโหลดอุปกรณ์จัดเก็บข้อมูลได้: {error}"
 
-#: src/pages.py:1218 src/pages.py:4586 src/pages.py:2252
+#: src/pages.py:1285 src/pages.py:6825 src/pages.py:2404
 msgid "Install extended multimedia format support"
 msgstr "ติดตั้งการรองรับรูปแบบสื่อแบบขยาย"
 
-#: src/pages.py:4063
+#: src/pages.py:6169
 msgid "Extended multimedia formats"
 msgstr "รูปแบบสื่อแบบขยาย"
 
-#: src/pages.py:2256
-msgid ""
-"Adds wider GStreamer compatibility and support for additional legacy and "
-"specialist media formats. Some components may be subject to patent or "
-"redistribution terms."
-msgstr ""
-"เพิ่มความเข้ากันได้กับ GStreamer ที่กว้างขึ้น "
-"และรองรับรูปแบบสื่อรุ่นเก่าและเฉพาะทางเพิ่มเติม "
-"ส่วนประกอบบางรายการอาจอยู่ภายใต้สิทธิบัตรหรือเงื่อนไขการแจกจ่ายต่อ"
+#: src/pages.py:2408
+msgid "Adds wider GStreamer compatibility and support for additional legacy and specialist media formats. Some components may be subject to patent or redistribution terms."
+msgstr "เพิ่มความเข้ากันได้กับ GStreamer ที่กว้างขึ้น และรองรับรูปแบบสื่อรุ่นเก่าและเฉพาะทางเพิ่มเติม ส่วนประกอบบางรายการอาจอยู่ภายใต้สิทธิบัตรหรือเงื่อนไขการแจกจ่ายต่อ"
 
-#: src/pages.py:1473
+#: src/pages.py:1540
 msgid "A saved profile exists. Entering a password updates it securely."
 msgstr "มีโปรไฟล์ที่บันทึกไว้แล้ว การป้อนรหัสผ่านจะทำการอัปเดตอย่างปลอดภัย"
 
-#: src/pages.py:1524
+#: src/pages.py:1591
 msgid "Anonymous identity (optional)"
 msgstr "ตัวตนแบบไม่ระบุชื่อ (ไม่บังคับ)"
 
-#: src/pages.py:1530
+#: src/pages.py:1597
 msgid "CA certificate path (optional)"
 msgstr "เส้นทางใบรับรอง CA (ไม่บังคับ)"
 
-#: src/pages.py:1239 src/pages.py:1409 src/pages.py:1482 src/pages.py:1600
-#: src/pages.py:1816
+#: src/pages.py:1306 src/pages.py:1476 src/pages.py:1549 src/pages.py:1667
+#: src/pages.py:1883 src/pages.py:4626 src/pages.py:4845 src/pages.py:5309
 msgid "Cancel"
 msgstr "ยกเลิก"
 
-#: src/pages.py:1786
+#: src/pages.py:1853
 msgid "Cancelling Wi-Fi operation…"
 msgstr "กำลังยกเลิกการดำเนินการ Wi-Fi…"
 
-#: src/pages.py:1532
+#: src/pages.py:1599
 msgid "Client certificate path"
 msgstr "เส้นทางใบรับรองไคลเอนต์"
 
-#: src/pages.py:1483 src/pages.py:1601
+#: src/pages.py:1550 src/pages.py:1668
 msgid "Connect"
-msgstr "Connect"
+msgstr "เชื่อมต่อ"
 
-#: src/pages.py:1817
+#: src/pages.py:1884 src/pages.py:6709
 msgid "Continue"
 msgstr "ดำเนินการต่อ"
 
-#: src/pages.py:1259 src/pages.py:1809
+#: src/pages.py:1326 src/pages.py:1876
 msgid "Connect to a hidden network"
 msgstr "เชื่อมต่อกับเครือข่ายที่ซ่อนอยู่"
 
-#: src/pages.py:1478 src/pages.py:1593
+#: src/pages.py:1545 src/pages.py:1660
 #, python-brace-format
 msgid "Connect to {network}"
 msgstr "เชื่อมต่อกับ {network}"
 
-#: src/pages.py:1654
+#: src/pages.py:1721
 msgid "Connected"
-msgstr "Connected"
+msgstr "เชื่อมต่อแล้ว"
 
-#: src/pages.py:1453
+#: src/pages.py:1520
 #, python-brace-format
 msgid "Connecting to {network}…"
 msgstr "กำลังเชื่อมต่อกับ {network}…"
 
-#: src/pages.py:1755
+#: src/pages.py:1822
 msgid "Could not change the Wi-Fi connection"
 msgstr "ไม่สามารถเปลี่ยนการเชื่อมต่อ Wi-Fi ได้"
 
-#: src/pages.py:1410
+#: src/pages.py:1477
 msgid "Disconnect"
-msgstr "Disconnect"
+msgstr "ตัดการเชื่อมต่อ"
 
-#: src/pages.py:1401
+#: src/pages.py:1468
 #, python-brace-format
 msgid "Disconnect from {network}?"
 msgstr "ต้องการตัดการเชื่อมต่อจาก {network} หรือไม่?"
 
-#: src/pages.py:1420
+#: src/pages.py:1487
 #, python-brace-format
 msgid "Disconnecting from {network}…"
 msgstr "กำลังตัดการเชื่อมต่อจาก {network}…"
 
-#: src/pages.py:1531
+#: src/pages.py:1598
 msgid "Domain suffix match (optional)"
 msgstr "การจับคู่คำต่อท้ายโดเมน (ไม่บังคับ)"
 
-#: src/pages.py:1515
+#: src/pages.py:1582
 msgid "EAP method"
 msgstr "วิธีการ EAP"
 
-#: src/pages.py:1387 src/pages.py:1796
+#: src/pages.py:1454 src/pages.py:1863
 msgid "Enhanced Open (OWE)"
 msgstr "เปิดแบบเสริม (OWE)"
 
-#: src/pages.py:1595
-msgid ""
-"Enter the credentials supplied by your organization. Certificate validation "
-"is strongly recommended."
-msgstr ""
-"ใส่ข้อมูลประจำตัวที่องค์กรของคุณให้มา การตรวจสอบใบรับรองนั้นแนะนำอย่างยิ่ง"
+#: src/pages.py:1662
+msgid "Enter the credentials supplied by your organization. Certificate validation is strongly recommended."
+msgstr "ใส่ข้อมูลประจำตัวที่องค์กรของคุณให้มา การตรวจสอบใบรับรองนั้นแนะนำอย่างยิ่ง"
 
-#: src/pages.py:1811
+#: src/pages.py:1878
 msgid "Enter the exact network name and choose its security type."
 msgstr "ป้อนชื่อเครือข่ายที่ถูกต้องและเลือกประเภทความปลอดภัยของเครือข่ายนั้น"
 
-#: src/pages.py:1390 src/pages.py:1800
+#: src/pages.py:1457 src/pages.py:1867
 msgid "Enterprise Wi-Fi"
 msgstr "Wi-Fi ระดับองค์กร"
 
-#: src/pages.py:1523
+#: src/pages.py:1590
 msgid "Identity"
-msgstr "Identity"
+msgstr "ข้อมูลประจำตัว"
 
-#: src/pages.py:1527
+#: src/pages.py:1594
 msgid "Inner authentication"
 msgstr "การตรวจสอบสิทธิ์ภายใน"
 
-#: src/pages.py:1790
+#: src/pages.py:1857
 msgid "Network name (SSID)"
 msgstr "ชื่อเครือข่าย (SSID)"
 
-#: src/pages.py:1645
+#: src/pages.py:1712
 msgid "No Wi-Fi networks found."
 msgstr "ไม่พบเครือข่าย Wi-Fi"
 
-#: src/pages.py:1386 src/pages.py:1795
+#: src/pages.py:1453 src/pages.py:1862
 msgid "Open network"
 msgstr "เครือข่ายแบบเปิด"
 
-#: src/pages.py:1389 src/pages.py:1797 src/pages.py:1798
+#: src/pages.py:1456 src/pages.py:1864 src/pages.py:1865
 msgid "Personal Wi-Fi"
 msgstr "Wi-Fi ส่วนบุคคล"
 
-#: src/pages.py:1535
+#: src/pages.py:1602
 msgid "Private key password (optional)"
 msgstr "รหัสผ่านของคีย์ส่วนตัว (ไม่บังคับ)"
 
-#: src/pages.py:1533
+#: src/pages.py:1600
 msgid "Private key path"
 msgstr "เส้นทางคีย์ส่วนตัว"
 
-#: src/pages.py:1284
+#: src/pages.py:1351
 msgid "Refresh Wi-Fi networks"
 msgstr "รีเฟรชเครือข่าย Wi-Fi"
 
-#: src/pages.py:1656
+#: src/pages.py:1723
 msgid "Saved"
-msgstr "Saved"
+msgstr "บันทึกไว้แล้ว"
 
-#: src/pages.py:1792
+#: src/pages.py:1859
 msgid "Security"
-msgstr "Security"
+msgstr "ความปลอดภัย"
 
-#: src/pages.py:1405
-msgid ""
-"The installer will keep the saved network profile so it can be used again."
-msgstr ""
-"โปรแกรมติดตั้งจะเก็บโปรไฟล์เครือข่ายที่บันทึกไว้ "
-"เพื่อให้สามารถนำกลับมาใช้ใหม่ได้"
+#: src/pages.py:1472
+msgid "The installer will keep the saved network profile so it can be used again."
+msgstr "โปรแกรมติดตั้งจะเก็บโปรไฟล์เครือข่ายที่บันทึกไว้ เพื่อให้สามารถนำกลับมาใช้ใหม่ได้"
 
-#: src/pages.py:1356
+#: src/pages.py:1423
 msgid "The local network is connected, but Internet access is unavailable."
 msgstr "เชื่อมต่อเครือข่ายท้องถิ่นแล้ว แต่ไม่สามารถเข้าถึงอินเทอร์เน็ตได้"
 
-#: src/pages.py:1856
+#: src/pages.py:1923
 msgid "Turning Wi-Fi off…"
 msgstr "กำลังปิด Wi-Fi…"
 
-#: src/pages.py:1854
+#: src/pages.py:1921
 msgid "Turning Wi-Fi on…"
 msgstr "กำลังเปิด Wi-Fi…"
 
-#: src/pages.py:1485
+#: src/pages.py:1552
 msgid "Use WPS"
 msgstr "ใช้ WPS"
 
-#: src/pages.py:1388 src/pages.py:1799
+#: src/pages.py:1455 src/pages.py:1866
 msgid "WEP (legacy)"
 msgstr "WEP (รุ่นเก่า)"
 
-#: src/pages.py:1347
-msgid ""
-"Wi-Fi is connected, but the network requires sign-in through a captive "
-"portal."
-msgstr ""
-"Wi-Fi เชื่อมต่อแล้ว "
-"แต่เครือข่ายนี้จำเป็นต้องเข้าสู่ระบบผ่านหน้าเว็บของเกตเวย์ (Captive Portal)"
+#: src/pages.py:1414
+msgid "Wi-Fi is connected, but the network requires sign-in through a captive portal."
+msgstr "Wi-Fi เชื่อมต่อแล้ว แต่เครือข่ายนี้จำเป็นต้องเข้าสู่ระบบผ่านหน้าเว็บของเกตเวย์ (Captive Portal)"
 
-#: src/pages.py:1449
+#: src/pages.py:1516
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "กำลังรอ WPS บน {network} กดปุ่ม WPS บนเราเตอร์…"
 
-#: src/pages.py:3576
+#: src/pages.py:5661
 msgid "A password is required."
 msgstr "จำเป็นต้องใช้รหัสผ่าน"
 
-#: src/pages.py:3731
+#: src/pages.py:5817
 msgid "Administrative commands will no longer ask for your password."
 msgstr "คำสั่งดูแลระบบจะไม่ขอรหัสผ่านของคุณอีกต่อไป"
 
-#: src/pages.py:3681 src/pages.py:3675
+#: src/pages.py:5767 src/pages.py:5761
 msgid "Advanced Options"
 msgstr "ตัวเลือกขั้นสูง"
 
-#: src/pages.py:3747
+#: src/pages.py:5833
 msgid "Allow SSH login with the account password"
 msgstr "อนุญาตให้เข้าสู่ระบบ SSH ด้วยรหัสผ่านของบัญชี"
 
-#: src/pages.py:4089
+#: src/pages.py:6195
 msgid "Automatic desktop login"
 msgstr "เข้าสู่ระบบเดสก์ท็อปโดยอัตโนมัติ"
 
-#: src/pages.py:3701
-msgid ""
-"Choose how the local administrator account signs in and authorizes system "
-"changes."
-msgstr ""
-"เลือกวิธีที่บัญชีผู้ดูแลระบบภายในเครื่องใช้เข้าสู่ระบบและอนุญาตการเปลี่ยนแปลงระบบ"
+#: src/pages.py:5787
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "เลือกวิธีที่บัญชีผู้ดูแลระบบภายในเครื่องใช้เข้าสู่ระบบและอนุญาตการเปลี่ยนแปลงระบบ"
 
-#: src/pages.py:3682
+#: src/pages.py:5768
 msgid "Choose optional access and sign-in policies"
 msgstr "เลือกนโยบายการเข้าถึงและการเข้าสู่ระบบเพิ่มเติม"
 
-#: src/pages.py:3709
+#: src/pages.py:5795
 msgid "Choose whether this computer accepts remote Secure Shell connections."
-msgstr ""
-"เลือกว่าคอมพิวเตอร์เครื่องนี้จะยอมรับการเชื่อมต่อ Secure Shell "
-"จากระยะไกลหรือไม่"
+msgstr "เลือกว่าคอมพิวเตอร์เครื่องนี้จะยอมรับการเชื่อมต่อ Secure Shell จากระยะไกลหรือไม่"
 
-#: src/pages.py:4604
+#: src/pages.py:6843
 msgid "Configure Secure Shell"
 msgstr "กำหนดค่า Secure Shell"
 
-#: src/pages.py:3699
+#: src/pages.py:5785
 msgid "Local Access"
 msgstr "การเข้าถึงภายในเครื่อง"
 
-#: src/pages.py:3737
+#: src/pages.py:5823
 msgid "Log in to the desktop without a password"
 msgstr "เข้าสู่ระบบเดสก์ท็อปโดยไม่ใช้รหัสผ่าน"
 
-#: src/pages.py:3739
+#: src/pages.py:5825
 msgid "Open this account's desktop automatically when the computer starts."
 msgstr "เปิดเดสก์ท็อปของบัญชีนี้โดยอัตโนมัติเมื่อคอมพิวเตอร์เริ่มทำงาน"
 
-#: src/pages.py:3707
+#: src/pages.py:5793
 msgid "Remote Access"
 msgstr "การเข้าถึงจากระยะไกล"
 
-#: src/pages.py:3730
+#: src/pages.py:5816
 msgid "Run sudo commands without a password"
 msgstr "เรียกใช้คำสั่ง sudo โดยไม่ใช้รหัสผ่าน"
 
-#: src/pages.py:4095
+#: src/pages.py:6201
 msgid "SSH password login"
 msgstr "เข้าสู่ระบบ SSH ด้วยรหัสผ่าน"
 
-#: src/pages.py:3749
+#: src/pages.py:5835
 msgid "Start Secure Shell and accept this account password over the network."
 msgstr "เริ่ม Secure Shell และยอมรับรหัสผ่านของบัญชีนี้ผ่านเครือข่าย"
 
-#: src/pages.py:3759
+#: src/pages.py:5845
 msgid "This will reduce the security of the installed system."
 msgstr "การดำเนินการนี้จะลดความปลอดภัยของระบบที่ติดตั้ง"
 
-#: src/pages.py:4093 src/pages.py:4099
+#: src/pages.py:6199 src/pages.py:6205
 msgid "disabled"
 msgstr "ปิดใช้งาน"
 
-#: src/pages.py:4091 src/pages.py:4097
+#: src/pages.py:6197 src/pages.py:6203
 msgid "enabled"
 msgstr "เปิดใช้งาน"
 
-#: src/pages.py:349
-msgid ""
-"AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently"
-" enabled on this computer, and we recommend enabling it for additional "
-"protection."
-msgstr ""
-"AnduinOS รองรับการป้องกัน Secure Boot อย่างครบถ้วน Secure Boot "
-"ยังไม่ได้เปิดใช้งานบนคอมพิวเตอร์เครื่องนี้ "
-"และเราแนะนำให้เปิดใช้งานเพื่อความปลอดภัยเพิ่มเติม"
+#: src/pages.py:403
+msgid "AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently enabled on this computer, and we recommend enabling it for additional protection."
+msgstr "AnduinOS รองรับการป้องกัน Secure Boot อย่างครบถ้วน Secure Boot ยังไม่ได้เปิดใช้งานบนคอมพิวเตอร์เครื่องนี้ และเราแนะนำให้เปิดใช้งานเพื่อความปลอดภัยเพิ่มเติม"
 
-#: src/pages.py:331
+#: src/pages.py:385
 msgid "AnduinOS supports Secure Boot"
 msgstr "AnduinOS รองรับ Secure Boot"
 
-#: src/pages.py:360
-msgid ""
-"Battery power is sufficient or reliable power is connected. You can continue"
-" with the installation."
-msgstr ""
-"แบตเตอรี่มีไฟเพียงพอหรือเชื่อมต่อแหล่งจ่ายไฟที่เชื่อถือได้แล้ว "
-"คุณสามารถดำเนินการติดตั้งต่อได้"
+#: src/pages.py:414
+msgid "Battery power is sufficient or reliable power is connected. You can continue with the installation."
+msgstr "แบตเตอรี่มีไฟเพียงพอหรือเชื่อมต่อแหล่งจ่ายไฟที่เชื่อถือได้แล้ว คุณสามารถดำเนินการติดตั้งต่อได้"
 
-#: src/pages.py:366
-msgid ""
-"Connect reliable external power and charge above 25%, or charge above 45% "
-"while unplugged."
-msgstr ""
-"เชื่อมต่อแหล่งจ่ายไฟภายนอกที่เชื่อถือได้และชาร์จไฟให้มากกว่า 25% "
-"หรือชาร์จไฟให้มากกว่า 45% ในขณะที่ไม่ได้เชื่อมต่อไฟ"
+#: src/pages.py:420
+msgid "Connect reliable external power and charge above 25%, or charge above 45% while unplugged."
+msgstr "เชื่อมต่อแหล่งจ่ายไฟภายนอกที่เชื่อถือได้และชาร์จไฟให้มากกว่า 25% หรือชาร์จไฟให้มากกว่า 45% ในขณะที่ไม่ได้เชื่อมต่อไฟ"
 
-#: src/pages.py:338
+#: src/pages.py:392
 msgid "Could not open UEFI firmware settings"
 msgstr "ไม่สามารถเปิดการตั้งค่าเฟิร์มแวร์ UEFI ได้"
 
-#: src/pages.py:333
+#: src/pages.py:387
 msgid "Get additional protection before installing AnduinOS."
 msgstr "เพิ่มความปลอดภัยก่อนติดตั้ง AnduinOS"
 
-#: src/pages.py:364
+#: src/pages.py:418
 msgid "Power conditions are safe for installation."
 msgstr "สภาพการจ่ายไฟปลอดภัยสำหรับการติดตั้งแล้ว"
 
-#: src/pages.py:363
+#: src/pages.py:417
 msgid "Power ready"
 msgstr "พร้อมใช้งาน"
 
-#: src/pages.py:335
+#: src/pages.py:389
 msgid "Restart to UEFI Firmware Settings"
 msgstr "รีสตาร์ทไปยังการตั้งค่าเฟิร์มแวร์ UEFI"
 
-#: src/pages.py:345
-msgid ""
-"Secure Boot is a UEFI security feature that verifies trusted, digitally "
-"signed software while your computer starts."
-msgstr ""
-"Secure Boot เป็นฟีเจอร์ความปลอดภัยของ UEFI "
-"ที่ตรวจสอบซอฟต์แวร์ที่เชื่อถือได้และลงนามดิจิทัลแล้วในขณะที่คอมพิวเตอร์เริ่มต้นระบบ"
+#: src/pages.py:399
+msgid "Secure Boot is a UEFI security feature that verifies trusted, digitally signed software while your computer starts."
+msgstr "Secure Boot เป็นฟีเจอร์ความปลอดภัยของ UEFI ที่ตรวจสอบซอฟต์แวร์ที่เชื่อถือได้และลงนามดิจิทัลแล้วในขณะที่คอมพิวเตอร์เริ่มต้นระบบ"
 
-#: src/pages.py:336
+#: src/pages.py:390
 msgid "Skip"
 msgstr "ข้าม"
 
-#: src/pages.py:341
+#: src/pages.py:395
 msgid "The firmware settings could not be opened on this computer."
 msgstr "ไม่สามารถเปิดการตั้งค่าเฟิร์มแวร์บนคอมพิวเตอร์นี้ได้"
 
-#: src/pages.py:354
-msgid ""
-"To enable it, open the UEFI firmware settings and look under Boot, Security,"
-" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
-"Firmware wording varies by manufacturer."
-msgstr ""
-"เพื่อเปิดใช้งาน ให้เปิดการตั้งค่าเฟิร์มแวร์ UEFI แล้วดูภายใต้หัวข้อ Boot, "
-"Security หรือ Secure Boot เลือก Microsoft & 3rd-party CA หรือเปิดใช้งาน "
-"Secure Boot คำศัพท์ของเฟิร์มแวร์อาจแตกต่างกันไปตามผู้ผลิต"
+#: src/pages.py:408
+msgid "To enable it, open the UEFI firmware settings and look under Boot, Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. Firmware wording varies by manufacturer."
+msgstr "เพื่อเปิดใช้งาน ให้เปิดการตั้งค่าเฟิร์มแวร์ UEFI แล้วดูภายใต้หัวข้อ Boot, Security หรือ Secure Boot เลือก Microsoft & 3rd-party CA หรือเปิดใช้งาน Secure Boot คำศัพท์ของเฟิร์มแวร์อาจแตกต่างกันไปตามผู้ผลิต"
 
+#: src/pages.py:3179
 msgid "Advanced"
 msgstr "ขั้นสูง"
 
-msgid ""
-"Keep Windows or other partitions, reuse or create an ESP, and design Root "
-"and Swap partitions with exact sizes."
-msgstr ""
-"เก็บ Windows หรือพาร์ทิชันอื่นไว้ ใช้ ESP เดิมหรือสร้างใหม่ "
-"และกำหนดขนาดพาร์ทิชัน Root และ Swap อย่างแม่นยำ"
+#: src/pages.py:3181
+msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root and Swap partitions with exact sizes."
+msgstr "เก็บ Windows หรือพาร์ทิชันอื่นไว้ ใช้ ESP เดิมหรือสร้างใหม่ และกำหนดขนาดพาร์ทิชัน Root และ Swap อย่างแม่นยำ"
 
-msgid ""
-"Manual changes are destructive. Existing partition starts are never moved. "
-"Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
-" or unclean volumes are never resized."
-msgstr ""
-"การเปลี่ยนแปลงด้วยตนเองอาจทำให้ข้อมูลเสียหาย "
-"จุดเริ่มต้นของพาร์ทิชันที่มีอยู่เดิมจะไม่ถูกเคลื่อนย้าย NTFS "
-"ที่ไม่ได้เข้ารหัสจะย่อขนาดได้ต่อเมื่อผ่านการตรวจสอบความปลอดภัยอย่างเข้มงวดเท่านั้น"
-" ส่วนโวลุ่มที่เข้ารหัส เมานต์อยู่ "
-"หรือไม่ได้ปิดอย่างถูกต้องจะไม่ถูกปรับขนาดโดยเด็ดขาด"
+#: src/pages.py:3230
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "การเปลี่ยนแปลงด้วยตนเองอาจทำให้ข้อมูลเสียหาย จุดเริ่มต้นของพาร์ทิชันที่มีอยู่เดิมจะไม่ถูกเคลื่อนย้าย NTFS ที่ไม่ได้เข้ารหัสจะย่อขนาดได้ต่อเมื่อผ่านการตรวจสอบความปลอดภัยอย่างเข้มงวดเท่านั้น ส่วนโวลุ่มที่เข้ารหัส เมานต์อยู่ หรือไม่ได้ปิดอย่างถูกต้องจะไม่ถูกปรับขนาดโดยเด็ดขาด"
 
+#: src/pages.py:3410
 msgid "Install Alongside Automatically"
 msgstr "ติดตั้งควบคู่กันอัตโนมัติ"
 
+#: src/pages.py:3849
 msgid "ESP"
 msgstr "ESP"
 
+#: src/pages.py:3850
 msgid "Root"
-msgstr "Root"
+msgstr "พาร์ทิชันราก"
 
+#: src/pages.py:3866
 msgid "Unallocated"
 msgstr "ยังไม่ได้จัดสรร"
 
+#: src/pages.py:3973
 #, python-brace-format
 msgid "{name} · {size} · {start}–{end} MiB"
 msgstr "{name} · {size} · {start}–{end} MiB"
 
+#: src/pages.py:4045
 msgid "Current disk"
 msgstr "ดิสก์ปัจจุบัน"
 
+#: src/pages.py:4151 src/pages.py:4047
 msgid "Planned result"
 msgstr "ผลลัพธ์ที่วางแผนไว้"
 
+#: src/pages.py:4071
 msgid "Advanced: Manual Partitioning"
 msgstr "ขั้นสูง: การแบ่งพาร์ทิชันด้วยตนเอง"
 
-msgid ""
-"Windows was detected. Its partitions remain preserved unless you explicitly "
-"mark them for deletion."
-msgstr ""
-"ตรวจพบ Windows พาร์ทิชันของ Windows จะถูกเก็บไว้ "
-"เว้นแต่คุณจะทำเครื่องหมายเพื่อลบอย่างชัดเจน"
+#: src/pages.py:4104
+msgid "Windows was detected. Its partitions remain preserved unless you explicitly mark them for deletion."
+msgstr "ตรวจพบ Windows พาร์ทิชันของ Windows จะถูกเก็บไว้ เว้นแต่คุณจะทำเครื่องหมายเพื่อลบอย่างชัดเจน"
 
+#: src/pages.py:4173 src/pages.py:4958
 msgid "Initialize New GPT"
 msgstr "สร้าง GPT ใหม่"
 
+#: src/pages.py:4193
 msgid "Existing partitions"
 msgstr "พาร์ทิชันที่มีอยู่"
 
-msgid ""
-"Reuse a healthy existing ESP without formatting it, or create a new one in "
-"available space."
+#: src/pages.py:4214
+msgid "Reuse a healthy existing ESP without formatting it, or create a new one in available space."
 msgstr "ใช้ ESP เดิมที่สมบูรณ์โดยไม่ฟอร์แมต หรือสร้าง ESP ใหม่ในพื้นที่ว่าง"
 
+#: src/pages.py:4248
 msgid "Add a partition"
 msgstr "เพิ่มพาร์ทิชัน"
 
-msgid ""
-"Choose an available range, exact start position, and size. Nothing is "
-"written until installation begins."
-msgstr ""
-"เลือกช่วงที่ว่าง ตำแหน่งเริ่มต้นที่แน่นอน และขนาด "
-"จะไม่มีการเขียนข้อมูลจนกว่าจะเริ่มการติดตั้ง"
+#: src/pages.py:4252
+msgid "Choose an available range, exact start position, and size. Nothing is written until installation begins."
+msgstr "เลือกช่วงที่ว่าง ตำแหน่งเริ่มต้นที่แน่นอน และขนาด จะไม่มีการเขียนข้อมูลจนกว่าจะเริ่มการติดตั้ง"
 
+#: src/pages.py:4266
 msgid "Role"
 msgstr "บทบาท"
 
+#: src/pages.py:4267
 msgid "Available space"
 msgstr "พื้นที่ว่าง"
 
+#: src/pages.py:4268 src/pages.py:4560
 msgid "Start (MiB)"
 msgstr "จุดเริ่มต้น (MiB)"
 
+#: src/pages.py:4269 src/pages.py:4574
 msgid "Size (MiB)"
 msgstr "ขนาด (MiB)"
 
+#: src/pages.py:4283
 msgid "Use All"
 msgstr "ใช้ทั้งหมด"
 
+#: src/pages.py:4287
 msgid "Add Partition"
 msgstr "เพิ่มพาร์ทิชัน"
 
+#: src/pages.py:4321 src/pages.py:5146
 msgid "Edit"
 msgstr "แก้ไข"
 
+#: src/pages.py:4548
 msgid "That partition can no longer be edited safely."
 msgstr "ไม่สามารถแก้ไขพาร์ทิชันนั้นได้อย่างปลอดภัยอีกต่อไป"
 
+#: src/pages.py:4587
 msgid "Use All Available Space"
 msgstr "ใช้พื้นที่ว่างทั้งหมด"
 
+#: src/pages.py:4616
 #, python-brace-format
 msgid "Edit {role} partition"
 msgstr "แก้ไขพาร์ทิชัน {role}"
 
-msgid ""
-"Choose an exact position and size inside the available range. Other planned "
-"partitions are not moved."
-msgstr ""
-"เลือกตำแหน่งและขนาดที่แน่นอนภายในช่วงที่ว่าง "
-"พาร์ทิชันอื่นที่วางแผนไว้จะไม่ถูกย้าย"
+#: src/pages.py:4620
+msgid "Choose an exact position and size inside the available range. Other planned partitions are not moved."
+msgstr "เลือกตำแหน่งและขนาดที่แน่นอนภายในช่วงที่ว่าง พาร์ทิชันอื่นที่วางแผนไว้จะไม่ถูกย้าย"
 
+#: src/pages.py:4627
 msgid "Apply Changes"
 msgstr "นำการเปลี่ยนแปลงไปใช้"
 
+#: src/pages.py:4665
 msgid "Close"
 msgstr "ปิด"
 
-msgid ""
-"BitLocker was detected. Return to Windows, open Manage BitLocker, choose "
-"Turn off BitLocker, and wait until decryption reaches 100%. Suspending "
-"protection is not enough. Back up the recovery key, fully shut Windows down,"
-" then start the installer again."
-msgstr ""
-"ตรวจพบ BitLocker โปรดกลับไปที่ Windows เปิด Manage BitLocker เลือก Turn off "
-"BitLocker และรอจนกว่าการถอดรหัสจะเสร็จสมบูรณ์ 100% "
-"การระงับการป้องกันเพียงอย่างเดียวนั้นไม่เพียงพอ โปรดสำรองรหัสกู้คืน ปิดระบบ "
-"Windows โดยสมบูรณ์ แล้วจึงเริ่มโปรแกรมติดตั้งอีกครั้ง"
+#: src/pages.py:4673 src/pages.py:4897
+msgid "BitLocker was detected. Return to Windows, open Manage BitLocker, choose Turn off BitLocker, and wait until decryption reaches 100%. Suspending protection is not enough. Back up the recovery key, fully shut Windows down, then start the installer again."
+msgstr "ตรวจพบ BitLocker โปรดกลับไปที่ Windows เปิด “จัดการ BitLocker” เลือก “ปิด BitLocker” และรอจนกว่าการถอดรหัสจะเสร็จสมบูรณ์ 100% การระงับการป้องกันเพียงอย่างเดียวนั้นไม่เพียงพอ โปรดสำรองคีย์การกู้คืน ปิดระบบ Windows โดยสมบูรณ์ แล้วจึงเริ่มโปรแกรมติดตั้งอีกครั้ง"
 
-msgid ""
-"Windows is hibernated or Fast Startup is active. In an Administrator "
-"Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s "
-"/t 0'. Start the installer again only after Windows has fully shut down."
-msgstr ""
-"Windows อยู่ในสถานะพักเครื่อง (Hibernation) "
-"หรือมีการเปิดใช้งานการเริ่มต้นอย่างรวดเร็ว (Fast Startup) "
-"ในเทอร์มินอลที่มีสิทธิ์ผู้ดูแลระบบ ให้รันคำสั่ง 'powercfg /h off' "
-"ปิดใช้งานการเริ่มต้นอย่างรวดเร็ว จากนั้นรันคำสั่ง 'shutdown /s /t 0' "
-"เริ่มโปรแกรมติดตั้งอีกครั้งได้ก็ต่อเมื่อ Windows "
-"ปิดระบบลงอย่างสมบูรณ์แล้วเท่านั้น"
+#: src/pages.py:4682
+msgid "Windows is hibernated or Fast Startup is active. In an Administrator Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s /t 0'. Start the installer again only after Windows has fully shut down."
+msgstr "Windows อยู่ในสถานะพักเครื่อง (Hibernation) หรือมีการเปิดใช้งานการเริ่มต้นอย่างรวดเร็ว (Fast Startup) ในเทอร์มินอลที่มีสิทธิ์ผู้ดูแลระบบ ให้รันคำสั่ง 'powercfg /h off' ปิดใช้งานการเริ่มต้นอย่างรวดเร็ว จากนั้นรันคำสั่ง 'shutdown /s /t 0' เริ่มโปรแกรมติดตั้งอีกครั้งได้ก็ต่อเมื่อ Windows ปิดระบบลงอย่างสมบูรณ์แล้วเท่านั้น"
 
-msgid ""
-"Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk"
-" C: /f', allow every requested reboot to finish, then fully shut Windows "
-"down before trying again."
-msgstr ""
-"Windows ไม่ได้ปิดโวลุ่ม NTFS นี้อย่างถูกต้อง โปรดกลับไปที่ Windows "
-"แล้วเรียกใช้ 'chkdsk C: /f' "
-"ปล่อยให้การรีสตาร์ททุกครั้งตามที่ระบบร้องขอเสร็จสิ้น จากนั้นปิด Windows "
-"โดยสมบูรณ์ก่อนลองอีกครั้ง"
+#: src/pages.py:4694
+msgid "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk C: /f', allow every requested reboot to finish, then fully shut Windows down before trying again."
+msgstr "Windows ไม่ได้ปิดโวลุ่ม NTFS นี้อย่างถูกต้อง โปรดกลับไปที่ Windows แล้วเรียกใช้ 'chkdsk C: /f' ปล่อยให้การรีสตาร์ททุกครั้งตามที่ระบบร้องขอเสร็จสิ้น จากนั้นปิด Windows โดยสมบูรณ์ก่อนลองอีกครั้ง"
 
-msgid ""
-"This target would require moving critical NTFS MFT metadata through a "
-"currently unsafe upstream code path. Choose a larger Windows size or shrink "
-"the volume from Windows."
-msgstr ""
-"ขนาดที่เลือกนี้จะทำให้ต้องย้ายข้อมูลเมตา MFT ที่สำคัญของ NTFS "
-"ผ่านเส้นทางการทำงานในโค้ดของโครงการต้นทางซึ่งยังไม่ปลอดภัยในขณะนี้ "
-"โปรดเลือกขนาดพาร์ทิชัน Windows ที่ใหญ่ขึ้น หรือย่อขนาดโวลุ่มจากภายใน Windows"
+#: src/pages.py:4701
+msgid "This target would require moving critical NTFS MFT metadata through a currently unsafe upstream code path. Choose a larger Windows size or shrink the volume from Windows."
+msgstr "ขนาดที่เลือกนี้จะทำให้ต้องย้ายข้อมูลเมตา MFT ที่สำคัญของ NTFS ผ่านเส้นทางการทำงานในโค้ดของโครงการต้นทางซึ่งยังไม่ปลอดภัยในขณะนี้ โปรดเลือกขนาดพาร์ทิชัน Windows ที่ใหญ่ขึ้น หรือย่อขนาดโวลุ่มจากภายใน Windows"
 
-msgid ""
-"This NTFS volume is mounted or in use. Unmount it and rescan storage before "
-"continuing."
-msgstr ""
-"โวลุ่ม NTFS นี้ถูกเมาต์อยู่หรือกำลังถูกใช้งานอยู่ "
-"โปรดยกเลิกการเมาต์และสแกนพื้นที่จัดเก็บข้อมูลใหม่ก่อนดำเนินการต่อ"
+#: src/pages.py:4711
+msgid "This NTFS volume is mounted or in use. Unmount it and rescan storage before continuing."
+msgstr "โวลุ่ม NTFS นี้ถูกเมาต์อยู่หรือกำลังถูกใช้งานอยู่ โปรดยกเลิกการเมาต์และสแกนพื้นที่จัดเก็บข้อมูลใหม่ก่อนดำเนินการต่อ"
 
-msgid ""
-"This operation moves NTFS data and changes the GPT partition boundary. A "
-"power loss, failing drive, firmware fault or filesystem bug can cause "
-"permanent data loss. Back up all important Windows files before continuing."
-msgstr ""
-"การดำเนินการนี้จะย้ายข้อมูล NTFS และเปลี่ยนขอบเขตของพาร์ทิชัน GPT ไฟฟ้าดับ "
-"ไดรฟ์ขัดข้อง ข้อผิดพลาดของเฟิร์มแวร์ "
-"หรือบั๊กของระบบไฟล์อาจทำให้ข้อมูลสูญหายอย่างถาวร โปรดสำรองไฟล์ Windows "
-"ที่สำคัญทั้งหมดก่อนดำเนินการต่อ"
+#: src/pages.py:4736
+msgid "This operation moves NTFS data and changes the GPT partition boundary. A power loss, failing drive, firmware fault or filesystem bug can cause permanent data loss. Back up all important Windows files before continuing."
+msgstr "การดำเนินการนี้จะย้ายข้อมูล NTFS และเปลี่ยนขอบเขตของพาร์ทิชัน GPT ไฟฟ้าดับ ไดรฟ์ขัดข้อง ข้อผิดพลาดของเฟิร์มแวร์ หรือบั๊กของระบบไฟล์อาจทำให้ข้อมูลสูญหายอย่างถาวร โปรดสำรองไฟล์ Windows ที่สำคัญทั้งหมดก่อนดำเนินการต่อ"
 
+#: src/pages.py:4749
 msgid "New Windows partition size"
 msgstr "ขนาดพาร์ทิชัน Windows ใหม่"
 
+#: src/pages.py:4772
 msgid "MiB"
 msgstr "MiB"
 
+#: src/pages.py:4774
 #, python-brace-format
 msgid "Allowed: {minimum}–{maximum}"
-msgstr "Allowed: {minimum}–{maximum}"
+msgstr "ค่าที่อนุญาต: {minimum}–{maximum}"
 
+#: src/pages.py:4794
 #, python-brace-format
 msgid "Windows: {windows} · New unallocated space: {free}"
 msgstr "Windows: {windows} · พื้นที่ใหม่ที่ยังไม่ได้จัดสรร: {free}"
 
-msgid ""
-"I have backed up my data and understand that shrinking an existing Windows "
-"partition can cause permanent data loss."
-msgstr ""
-"ฉันได้สำรองข้อมูลแล้วและเข้าใจว่าการย่อขนาดพาร์ทิชัน Windows "
-"ที่มีอยู่อาจทำให้เกิดการสูญเสียข้อมูลอย่างถาวร"
+#: src/pages.py:4826
+msgid "I have backed up my data and understand that shrinking an existing Windows partition can cause permanent data loss."
+msgstr "ฉันได้สำรองข้อมูลแล้วและเข้าใจว่าการย่อขนาดพาร์ทิชัน Windows ที่มีอยู่อาจทำให้เกิดการสูญเสียข้อมูลอย่างถาวร"
 
+#: src/pages.py:4835
 #, python-brace-format
 msgid "Change the size of {partition}?"
 msgstr "ต้องการปรับขนาด {partition} หรือไม่?"
 
-msgid ""
-"The partition start will not move. Only its end will move left, creating "
-"unallocated space immediately after it."
-msgstr ""
-"จุดเริ่มต้นของพาร์ทิชันจะไม่มีการเคลื่อนย้าย "
-"มีเพียงจุดสิ้นสุดเท่านั้นที่จะเลื่อนไปทางซ้าย "
-"ส่งผลให้เกิดพื้นที่ว่างที่ยังไม่ได้จัดสรรขึ้นทันทีหลังพาร์ทิชันนั้น"
+#: src/pages.py:4839
+msgid "The partition start will not move. Only its end will move left, creating unallocated space immediately after it."
+msgstr "จุดเริ่มต้นของพาร์ทิชันจะไม่มีการเคลื่อนย้าย มีเพียงจุดสิ้นสุดเท่านั้นที่จะเลื่อนไปทางซ้าย ส่งผลให้เกิดพื้นที่ว่างที่ยังไม่ได้จัดสรรขึ้นทันทีหลังพาร์ทิชันนั้น"
 
+#: src/pages.py:4847
 msgid "Undo Planned Resize"
 msgstr "เลิกทำแผนปรับขนาด"
 
+#: src/pages.py:4848
 msgid "Plan Resize"
 msgstr "วางแผนปรับขนาด"
 
+#: src/pages.py:4895
 msgid "Turn off BitLocker before shrinking"
 msgstr "ปิด BitLocker ก่อนย่อขนาด"
 
+#: src/pages.py:4907
 #, python-brace-format
 msgid "Checking whether {partition} can be resized safely…"
 msgstr "กำลังตรวจสอบว่า {partition} สามารถปรับขนาดได้อย่างปลอดภัยหรือไม่…"
 
+#: src/pages.py:4918
 msgid "NTFS safety check failed"
 msgstr "การตรวจสอบความปลอดภัย NTFS ล้มเหลว"
 
+#: src/pages.py:4925
 msgid "This partition cannot be resized safely"
 msgstr "ไม่สามารถปรับขนาดพาร์ทิชันนี้ได้อย่างปลอดภัย"
 
+#: src/pages.py:4951
 msgid "New empty GPT — every existing partition will be deleted"
 msgstr "GPT ว่างใหม่ — พาร์ทิชันที่มีอยู่ทั้งหมด将被ลบออก"
 
+#: src/pages.py:4953
 msgid "Keep current GPT — only marked partitions are deleted"
 msgstr "เก็บ GPT ปัจจุบัน — จะลบเฉพาะพาร์ทิชันที่ถูกทำเครื่องหมาย"
 
+#: src/pages.py:4956
 msgid "Keep Current GPT"
 msgstr "เก็บ GPT ปัจจุบัน"
 
+#: src/pages.py:4969
 msgid "unknown"
 msgstr "ไม่ทราบ"
 
+#: src/pages.py:4970
 msgid "WILL DELETE"
 msgstr "จะถูกลบ"
 
+#: src/pages.py:4970
 msgid "Preserve"
 msgstr "รักษาไว้"
 
+#: src/pages.py:5005
 #, python-brace-format
 msgid "Planned size: {size}"
 msgstr "ขนาดที่วางแผนไว้: {size}"
 
+#: src/pages.py:5020
 msgid "Deleted by new GPT"
 msgstr "ถูกลบโดย GPT ใหม่"
 
+#: src/pages.py:5022
 msgid "Undo"
 msgstr "เลิกทำ"
 
+#: src/pages.py:5024
 msgid "Delete"
 msgstr "ลบ"
 
+#: src/pages.py:5029
 msgid "RESIZE"
-msgstr "RESIZE"
+msgstr "ปรับขนาด"
 
+#: src/pages.py:5047
 msgid "Change Size"
 msgstr "ปรับขนาด"
 
+#: src/pages.py:5062
 msgid "This disk has no existing partitions."
 msgstr "ดิสก์นี้ไม่มีพาร์ทิชันเดิม"
 
+#: src/pages.py:5079
 msgid "Create a new ESP partition"
 msgstr "สร้างพาร์ทิชัน ESP ใหม่"
 
+#: src/pages.py:5136
 #, python-brace-format
 msgid "{size} · {start}–{end} MiB"
 msgstr "{size} · {start}–{end} MiB"
 
+#: src/pages.py:5141
 msgid "Remove"
 msgstr "ลบ"
 
+#: src/pages.py:3914 src/pages.py:3925 src/pages.py:5143
 msgid "New"
 msgstr "ใหม่"
 
-msgid ""
-"No new partitions yet. Add an ESP if needed, one Root partition, and "
-"optionally Swap."
-msgstr ""
-"ยังไม่มีพาร์ทิชันใหม่ เพิ่ม ESP หากจำเป็น เพิ่มพาร์ทิชัน Root หนึ่งพาร์ทิชัน"
-" และ Swap ตามต้องการ"
+#: src/pages.py:5156
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
+msgstr "ยังไม่มีพาร์ทิชันใหม่ เพิ่ม ESP หากจำเป็น เพิ่มพาร์ทิชัน Root หนึ่งพาร์ทิชัน และ Swap ตามต้องการ"
 
+#: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
 msgstr "{size} ที่ {start} MiB"
 
+#: src/pages.py:5205
 msgid "an ESP of at least 512 MiB"
 msgstr "ESP อย่างน้อย 512 MiB"
 
+#: src/pages.py:5207
 msgid "a Root partition of at least 20 GiB"
 msgstr "พาร์ทิชัน Root อย่างน้อย 20 GiB"
 
+#: src/pages.py:5209
 #, python-brace-format
 msgid "Complete the plan: {requirements}."
 msgstr "จัดทำแผนให้สมบูรณ์: {requirements}"
 
-msgid ""
-"Layout is valid. Only the listed resizes, deletes, creates and formats will "
-"be sent to the privileged executor."
-msgstr ""
-"รูปแบบการแบ่งพาร์ทิชันถูกต้อง เฉพาะการปรับขนาด การลบ การสร้าง "
-"และการจัดรูปแบบที่ระบุไว้เท่านั้นที่จะถูกส่งไปยังกระบวนการบริการที่มีสิทธิ์ระดับสูง"
+#: src/pages.py:5222
+msgid "Layout is valid. Only the listed resizes, deletes, creates and formats will be sent to the privileged executor."
+msgstr "รูปแบบการแบ่งพาร์ทิชันถูกต้อง เฉพาะการปรับขนาด การลบ การสร้าง และการจัดรูปแบบที่ระบุไว้เท่านั้นที่จะถูกส่งไปยังกระบวนการบริการที่มีสิทธิ์ระดับสูง"
 
+#: src/pages.py:5262
 msgid "That partition role already exists."
 msgstr "บทบาทของพาร์ติชันนี้มีอยู่แล้ว"
 
+#: src/pages.py:5302
 msgid "Initialize a new GPT?"
 msgstr "สร้าง GPT ใหม่?"
 
-msgid ""
-"Every existing partition and all data on this disk will be deleted. You must"
-" then create a new ESP and Root partition."
-msgstr ""
-"พาร์ทิชันที่มีอยู่ทั้งหมดและข้อมูลทั้งหมดบนดิสก์นี้将被ลบออก "
-"จากนั้นคุณต้องสร้างพาร์ทิชัน ESP และ Root ใหม่"
+#: src/pages.py:5304
+msgid "Every existing partition and all data on this disk will be deleted. You must then create a new ESP and Root partition."
+msgstr "พาร์ทิชันที่มีอยู่ทั้งหมดและข้อมูลทั้งหมดบนดิสก์นี้将被ลบออก จากนั้นคุณต้องสร้างพาร์ทิชัน ESP และ Root ใหม่"
 
+#: src/pages.py:5310
 msgid "Initialize GPT"
 msgstr "สร้าง GPT ใหม่"
 
+#: src/pages.py:5346
 msgid "The selected disk changed or disappeared."
 msgstr "ดิสก์ที่เลือกมีการเปลี่ยนแปลงหรือหายไป"
 
+#: src/pages.py:5351
 msgid "The selected disk topology changed. Select it again."
 msgstr "โทโพโลยีของดิสก์ที่เลือกมีการเปลี่ยนแปลง กรุณาเลือกอีกครั้ง"
 
+#: src/pages.py:6292 src/pages.py:6293 src/pages.py:6302
 msgid "none"
 msgstr "ไม่มี"
 
+#: src/pages.py:6295
 #, python-brace-format
 msgid "{path}: {before} → {after} (free {reclaimed})"
-msgstr "{path}: {before} → {after} (free {reclaimed})"
+msgstr "{path}: {before} → {after} (พื้นที่ที่ได้คืน {reclaimed})"
 
+#: src/pages.py:6304
 #, python-brace-format
 msgid "{name}: {size} MiB ({start}–{end})"
 msgstr "{name}: {size} MiB ({start}–{end})"
 
+#: src/pages.py:6320
 msgid "Initialize a new empty GPT"
 msgstr "สร้าง GPT ว่างใหม่"
 
+#: src/pages.py:6322
 msgid "Keep the current GPT"
 msgstr "เก็บ GPT ปัจจุบัน"
 
+#: src/pages.py:6326
 #, python-brace-format
 msgid "Reuse {path}; inspect it and never format it."
 msgstr "ใช้ซ้ำ {path}; ตรวจสอบและอย่าจัดรูปแบบ"
 
+#: src/pages.py:6330
 msgid "Create and format a new EFI System Partition."
 msgstr "สร้างและฟอร์แมตพาร์ทิชันระบบ EFI ใหม่"
 
+#: src/pages.py:6334
 msgid "Advanced manual GPT"
 msgstr "GPT แบบกำหนดเองขั้นสูง"
 
+#: src/pages.py:6335
 msgid "Partition table"
 msgstr "ตารางพาร์ติชัน"
 
+#: src/pages.py:6337
 msgid "Deleted partitions"
 msgstr "พาร์ทิชันที่ถูกลบ"
 
+#: src/pages.py:6338
 msgid "Resized partitions"
 msgstr "พาร์ทิชันที่ปรับขนาดแล้ว"
 
-msgid ""
-"Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS "
-"NVRAM entry."
-msgstr ""
-"เขียนเฉพาะ EFI/AnduinOS รักษา EFI/BOOT และสร้างรายการ NVRAM ของ AnduinOS "
-"ที่ผ่านการตรวจสอบ"
+#: src/pages.py:6344
+msgid "Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS NVRAM entry."
+msgstr "เขียนเฉพาะ EFI/AnduinOS รักษา EFI/BOOT และสร้างรายการ NVRAM ของ AnduinOS ที่ผ่านการตรวจสอบ"
 
+#: src/pages.py:6402
 msgid "Manual storage selection is missing. Return and review it."
 msgstr "ขาดการเลือกพื้นที่จัดเก็บข้อมูลด้วยตนเอง กรุณากลับไปตรวจสอบ"
 
-msgid ""
-"⚠ Listed NTFS resizes will move filesystem data and partition boundaries. "
-"Listed partitions will be deleted and every listed new partition will be "
-"formatted. Back up important data first; these partitioning operations "
-"cannot be undone."
-msgstr ""
-"⚠ การปรับขนาด NTFS ที่ระบุไว้จะย้ายข้อมูลระบบไฟล์และขอบเขตพาร์ทิชัน "
-"พาร์ทิชันที่ระบุไว้จะถูกลบ และพาร์ทิชันใหม่ทั้งหมดที่ระบุไว้จะถูกจัดรูปแบบ "
-"โปรดสำรองข้อมูลสำคัญก่อน "
-"เนื่องจากการดำเนินการแบ่งพาร์ทิชันเหล่านี้ไม่สามารถเลิกทำได้"
+#: src/pages.py:6496
+msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ การปรับขนาด NTFS ที่ระบุไว้จะย้ายข้อมูลระบบไฟล์และขอบเขตพาร์ทิชัน พาร์ทิชันที่ระบุไว้จะถูกลบ และพาร์ทิชันใหม่ทั้งหมดที่ระบุไว้จะถูกจัดรูปแบบ โปรดสำรองข้อมูลสำคัญก่อน เนื่องจากการดำเนินการแบ่งพาร์ทิชันเหล่านี้ไม่สามารถเลิกทำได้"
 
+#: src/pages.py:6606
 msgid "Apply this manual disk layout?"
 msgstr "ใช้เลย์เอาต์ดิสก์ด้วยตนเองนี้หรือไม่"
 
+#: src/pages.py:6607 src/pages.py:6735
 msgid "Apply Layout and Install"
 msgstr "ใช้เลย์เอาต์และติดตั้ง"
 
+#: src/pages.py:6630
 #, python-brace-format
 msgid ""
 "AnduinOS will apply only the reviewed manual changes to {disk}.\n"
@@ -1964,101 +1755,74 @@ msgstr ""
 "AnduinOS จะทำการเปลี่ยนแปลงด้วยตนเองที่ผ่านการตรวจสอบแล้วเท่านั้นไปยัง {disk}.\n"
 "\n"
 
-msgid ""
-"Only the explicitly listed partitions will be deleted or formatted. "
-"Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
-msgstr ""
-"เฉพาะพาร์ติชันที่ระบุไว้เท่านั้นที่จะถูกลบหรือจัดรูปแบบ "
-"พาร์ติชันที่ไม่เกี่ยวข้องจะยังคงเดิม ไม่เขียนทับ EFI/BOOT"
+#: src/pages.py:6658
+msgid "Only the explicitly listed partitions will be deleted or formatted. Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
+msgstr "เฉพาะพาร์ติชันที่ระบุไว้เท่านั้นที่จะถูกลบหรือจัดรูปแบบ พาร์ติชันที่ไม่เกี่ยวข้องจะยังคงเดิม ไม่เขียนทับ EFI/BOOT"
 
-msgid ""
-"Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
-"shrunk after safety checks."
-msgstr ""
-"แก้ไขดิสก์ GPT หนึ่งตัว จุดเริ่มต้นของพาร์ทิชันจะไม่ถูกเคลื่อนย้าย "
-"และสามารถย่อขนาด NTFS "
-"ที่ไม่ได้เข้ารหัสได้หลังผ่านการตรวจสอบความปลอดภัยเท่านั้น"
+#: src/pages.py:4072
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
+msgstr "แก้ไขดิสก์ GPT หนึ่งตัว จุดเริ่มต้นของพาร์ทิชันจะไม่ถูกเคลื่อนย้าย และสามารถย่อขนาด NTFS ที่ไม่ได้เข้ารหัสได้หลังผ่านการตรวจสอบความปลอดภัยเท่านั้น"
 
+#: src/pages.py:5119
 msgid "XFS (classic, scalable)"
 msgstr "XFS (คลาสสิก, ขยายขนาดได้)"
 
+#: src/pages.py:5120
 msgid "F2FS (flash-optimized)"
 msgstr "F2FS (ปรับให้เหมาะสำหรับหน่วยความจำแฟลช)"
-
-#: src/pages.py:3028
-msgid ""
-"ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses"
-" priority 10."
-msgstr ""
-"ZRAM ยังคงเปิดใช้งานอยู่เสมอ: 50% ของ RAM · LZ4 · ลำดับความสำคัญ 100 "
-"ส่วนสวอปบนดิสก์ใช้ลำดับความสำคัญ 10"
 
 #: src/pages.py:3004
 msgid "0 GiB · ZRAM only"
 msgstr "0 GiB · ZRAM เท่านั้น"
 
-#: src/pages.py:2920
-msgid ""
-"This size protects ordinary memory pressure, but is smaller than the "
-"hibernation target. Hibernation may fail or be unavailable."
-msgstr ""
-"ขนาดนี้เพียงพอสำหรับรองรับภาวะหน่วยความจำตึงตัวตามปกติ "
-"แต่เล็กกว่าขนาดที่จำเป็นสำหรับโหมดพักเครื่อง (Hibernation) "
-"การพักเครื่องอาจล้มเหลวหรือไม่พร้อมใช้งาน"
+#: src/pages.py:2900
+msgid "Disk Swap will not be created. ZRAM remains enabled, but sustained memory pressure can terminate applications and hibernation is unavailable. This is strongly discouraged."
+msgstr "จะไม่มีการสร้างพื้นที่ Swap บนดิสก์ ZRAM ยังคงเปิดใช้งานอยู่ แต่ภาวะหน่วยความจำตึงตัวต่อเนื่องอาจทำให้แอปพลิเคชันถูกปิด และไม่สามารถใช้โหมดพักเครื่อง (Hibernation) ได้ ไม่แนะนำให้เลือกตัวเลือกนี้อย่างยิ่ง"
 
-#: src/pages.py:6698
+#: src/pages.py:6702
+msgid "Review your custom Swap size"
+msgstr "ตรวจสอบขนาด Swap ที่กำหนดเองของคุณ"
+
+#: src/pages.py:2927
+msgid "This exceeds the AnduinOS recommendation. It consumes more disk space and normally does not improve runtime performance."
+msgstr "ขนาดนี้เกินกว่าที่ AnduinOS แนะนำ จึงใช้พื้นที่ดิสก์มากขึ้น และโดยปกติไม่ได้ช่วยเพิ่มประสิทธิภาพในการใช้งาน"
+
+#: src/pages.py:2913
+msgid "This is below AnduinOS's runtime safety target. ZRAM still works, but heavy browser or application workloads can run out of backing memory sooner; hibernation is also unavailable."
+msgstr "ขนาดนี้ต่ำกว่าขีดจำกัดขั้นต่ำที่ปลอดภัยของ AnduinOS สำหรับการใช้งานทั่วไป ZRAM ยังคงทำงานได้ แต่การใช้งานเบราว์เซอร์หรือแอปพลิเคชันอย่างหนักอาจทำให้พื้นที่สวอปที่พร้อมใช้งานหมดเร็วขึ้น และไม่สามารถใช้การพักเครื่องได้"
+
+#: src/pages.py:2920
+msgid "This size protects ordinary memory pressure, but is smaller than the hibernation target. Hibernation may fail or be unavailable."
+msgstr "ขนาดนี้เพียงพอสำหรับรองรับภาวะหน่วยความจำตึงตัวตามปกติ แต่เล็กกว่าขนาดที่จำเป็นสำหรับโหมดพักเครื่อง (Hibernation) การพักเครื่องอาจล้มเหลวหรือไม่พร้อมใช้งาน"
+
+#: src/pages.py:3028
+msgid "ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses priority 10."
+msgstr "ZRAM ยังคงเปิดใช้งานอยู่เสมอ: 50% ของ RAM · LZ4 · ลำดับความสำคัญ 100 ส่วนสวอปบนดิสก์ใช้ลำดับความสำคัญ 10"
+
+#: src/pages.py:6705
 msgid "ZRAM will remain enabled regardless of this choice."
 msgstr "ZRAM จะยังคงเปิดใช้งานอยู่ไม่ว่าคุณจะเลือกอย่างไร"
 
-#: src/pages.py:2913
-msgid ""
-"This is below AnduinOS's runtime safety target. ZRAM still works, but heavy "
-"browser or application workloads can run out of backing memory sooner; "
-"hibernation is also unavailable."
-msgstr ""
-"ขนาดนี้ต่ำกว่าขีดจำกัดขั้นต่ำที่ปลอดภัยของ AnduinOS สำหรับการใช้งานทั่วไป "
-"ZRAM ยังคงทำงานได้ "
-"แต่การใช้งานเบราว์เซอร์หรือแอปพลิเคชันอย่างหนักอาจทำให้พื้นที่สวอปที่พร้อมใช้งานหมดเร็วขึ้น"
-" และไม่สามารถใช้การพักเครื่องได้"
-
-#: src/pages.py:2927
-msgid ""
-"This exceeds the AnduinOS recommendation. It consumes more disk space and "
-"normally does not improve runtime performance."
-msgstr ""
-"ขนาดนี้เกินกว่าที่ AnduinOS แนะนำ "
-"ซึ่งใช้พื้นที่ดิสก์มากขึ้นและโดยปกติแล้วไม่ช่วยปรับปรุงประสิทธิภาพการทำงาน"
+#: src/pages.py:3008
+msgid "{size} GiB · Max"
+msgstr "{size} GiB · สูงสุด"
 
 #: src/pages.py:2895
 msgid "✓ Best performance — AnduinOS recommended Swap size."
 msgstr "✓ ประสิทธิภาพสูงสุด — ขนาด Swap ที่ AnduinOS แนะนำ"
 
-#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:10
-msgid "Read exact disk partition geometry for the AnduinOS installer"
-msgstr ""
-"อ่านข้อมูลตำแหน่งและขนาดที่แน่นอนของพาร์ทิชันบนดิสก์สำหรับโปรแกรมติดตั้ง "
-"AnduinOS"
-
 #: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:11
 msgid "Authorization is required to inspect disk partition geometry"
-msgstr ""
-"จำเป็นต้องมีการยืนยันสิทธิ์เพื่อดูข้อมูลตำแหน่งและขนาดที่แน่นอนของพาร์ทิชันบนดิสก์"
+msgstr "จำเป็นต้องมีการยืนยันสิทธิ์เพื่อดูข้อมูลตำแหน่งและขนาดที่แน่นอนของพาร์ทิชันบนดิสก์"
 
-#: src/pages.py:2900
-msgid ""
-"Disk Swap will not be created. ZRAM remains enabled, but sustained memory "
-"pressure can terminate applications and hibernation is unavailable. This is "
-"strongly discouraged."
-msgstr ""
-"จะไม่มีการสร้างพื้นที่ Swap บนดิสก์ ZRAM ยังคงเปิดใช้งานอยู่ "
-"แต่ภาวะหน่วยความจำตึงตัวต่อเนื่องอาจทำให้แอปพลิเคชันถูกปิด "
-"และไม่สามารถใช้โหมดพักเครื่อง (Hibernation) ได้ "
-"ไม่แนะนำให้เลือกตัวเลือกนี้อย่างยิ่ง"
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:10
+msgid "Read exact disk partition geometry for the AnduinOS installer"
+msgstr "อ่านข้อมูลตำแหน่งและขนาดที่แน่นอนของพาร์ทิชันบนดิสก์สำหรับโปรแกรมติดตั้ง AnduinOS"
 
-#: src/pages.py:6695
-msgid "Review your custom Swap size"
-msgstr "ตรวจสอบขนาด Swap ที่กำหนดเองของคุณ"
+#: assets/anduinos-installer-beta-live-shortcut.desktop:3
+msgid "Prepare and start AnduinOS Installer"
+msgstr "เตรียมและเริ่มโปรแกรมติดตั้ง AnduinOS"
 
-#: src/pages.py:3008
-msgid "{size} GiB · Max"
-msgstr "{size} GiB · สูงสุด"
+#: assets/anduinos-installer-beta.desktop:59
+msgid "Install AnduinOS to your computer"
+msgstr "ติดตั้ง AnduinOS ลงในคอมพิวเตอร์ของคุณ"

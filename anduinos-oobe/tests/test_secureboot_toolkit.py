@@ -119,6 +119,26 @@ class SecureBootToolkitTests(unittest.TestCase):
         )
         with tempfile.TemporaryDirectory() as temporary_directory:
             extracted = Path(temporary_directory) / "messages.pot"
+            metadata_messages = set()
+            for folder in (ROOT / "assets", ROOT / "data"):
+                for desktop in folder.rglob("*.desktop"):
+                    for line in desktop.read_text(encoding="utf-8").splitlines():
+                        key, separator, value = line.partition("=")
+                        if separator and value and key in {"Name", "GenericName", "Comment", "Keywords"}:
+                            metadata_messages.add(value)
+                for policy in folder.rglob("*.policy"):
+                    for action in ET.parse(policy).getroot().findall("action"):
+                        for tag in ("description", "message"):
+                            for element in action.findall(tag):
+                                if "{http://www.w3.org/XML/1998/namespace}lang" not in element.attrib:
+                                    value = (element.text or "").strip()
+                                    if value:
+                                        metadata_messages.add(value)
+            metadata_source = Path(temporary_directory) / "metadata.py"
+            metadata_source.write_text(
+                "\n".join(f"_({message!r})" for message in sorted(metadata_messages)) + "\n",
+                encoding="utf-8",
+            )
             subprocess.run(
                 [
                     "xgettext",
@@ -129,6 +149,7 @@ class SecureBootToolkitTests(unittest.TestCase):
                     f"--output={extracted}",
                     str(ROOT / "assets" / "anduinos-oobe"),
                     str(toolkit_ui),
+                    str(metadata_source),
                 ],
                 check=True,
             )

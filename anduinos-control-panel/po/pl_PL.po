@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Panel sterowania"
 
@@ -470,7 +471,7 @@ msgstr ""
 
 #: src/anduinos_control_panel/app.py:1274
 msgid "Private by default"
-msgstr "Prywatne domyślnie"
+msgstr "Domyślnie prywatne"
 
 #: src/anduinos_control_panel/app.py:1275
 msgid "Speech is recognized locally with whisper.cpp"
@@ -493,7 +494,8 @@ msgstr ""
 
 #: src/anduinos_control_panel/app.py:1376
 msgid "Downloading the local engine and multilingual speech model…"
-msgstr "Pobieranie lokalnego silnika i wielojęzycznego modelu mowy…"
+msgstr ""
+"Pobieranie lokalnego silnika i wielojęzycznego modelu rozpoznawania mowy…"
 
 #: src/anduinos_control_panel/app.py:1382
 msgid "Preparing Voice Typing installation…"
@@ -579,7 +581,8 @@ msgstr "Sztuczna inteligencja działająca na urządzeniu została wyłączona"
 #: src/anduinos_control_panel/app.py:1638
 msgid "✗ Package operation failed. Review Advanced Output."
 msgstr ""
-"✗ Operacja pakietowa nie powiodła się. Sprawdź zaawansowane dane wyjściowe."
+"✗ Operacja na pakiecie nie powiodła się. Sprawdź zaawansowane dane "
+"wyjściowe."
 
 #: src/anduinos_control_panel/app.py:1715
 #, python-brace-format
@@ -609,3 +612,19 @@ msgstr "Zespół AnduinOS"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "Znajdź i zarządzaj ustawieniami systemu AnduinOS."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr "ustawienia;sterowanie;system;sprzęt;sterowniki;konta;kopia zapasowa;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "Zmiana ustawień menu rozruchu"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr "Wymagane jest uwierzytelnienie, aby zmienić ustawienia menu rozruchu"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "Znajdź i zarządzaj ustawieniami systemu AnduinOS"

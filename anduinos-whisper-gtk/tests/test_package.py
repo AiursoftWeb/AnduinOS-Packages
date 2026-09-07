@@ -1,6 +1,7 @@
 from pathlib import Path
 import json
 import re
+import subprocess
 import sys
 import unittest
 import xml.etree.ElementTree as ET
@@ -88,6 +89,28 @@ class PackageTests(unittest.TestCase):
         self.assertNotIn("anduinos-whisper", desktop)
         self.assertNotIn("anduinos-whisper", core)
 
+    def test_extension_table_messages_are_extractable_without_early_gettext(self):
+        extension_path = ROOT / "data/voice-typing@anduinos.com/extension.js"
+        extension = extension_path.read_text()
+        self.assertIn("const N_ = text => text;", extension)
+        table_sources = set()
+        for name in ("STATE_TEXT", "LANGUAGE_TEXT"):
+            block = re.search(rf"const {name} = \{{(.*?)\n\}};", extension, re.DOTALL)
+            self.assertIsNotNone(block)
+            self.assertNotRegex(block.group(1), r""":\s*['\"]""")
+            values = re.findall(r"N_\('([^']+)'\)", block.group(1))
+            self.assertTrue(values)
+            table_sources.update(values)
+        result = subprocess.run([
+            "xgettext", "--language=JavaScript", "--from-code=UTF-8",
+            "--keyword=_:1", "--keyword=N_:1", "--no-wrap",
+            "--output=-", str(extension_path),
+        ], check=True, capture_output=True, text=True)
+        for message in table_sources:
+            self.assertIn(f"msgid {json.dumps(message, ensure_ascii=False)}", result.stdout)
+        self.assertIn("_(STATE_TEXT[state] ?? detail ?? state)", extension)
+        self.assertIn("_(LANGUAGE_TEXT[language] ?? language)", extension)
+
     def test_extension_supports_shortcut_overlay_and_desktop_injection(self):
         extension = (ROOT / "data/voice-typing@anduinos.com/extension.js").read_text()
         for constant in ("STATE_TEXT", "LANGUAGE_TEXT"):
@@ -97,7 +120,7 @@ class PackageTests(unittest.TestCase):
                 re.DOTALL,
             )
             self.assertIsNotNone(text_block)
-            self.assertNotIn("_(", text_block.group("body"))
+            self.assertNotRegex(text_block.group("body"), r"(?<!\w)_\(")
         for contract in (
             "Main.wm.addKeybinding(",
             "Main.layoutManager.addChrome(",

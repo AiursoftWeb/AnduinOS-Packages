@@ -58,23 +58,23 @@ msgstr "Профілі застосунків"
 msgid "Audit"
 msgstr "Аудит"
 
-#: src/views/network_audit_view.rs:277
+#: src/views/network_audit_view.rs:278
 msgid "Auditor Error"
 msgstr "Помилка аудитора"
 
-#: src/views/network_audit_view.rs:504
+#: src/views/network_audit_view.rs:505
 msgid "Block"
 msgstr "Блокувати"
 
-#: src/views/network_audit_view.rs:500
+#: src/views/network_audit_view.rs:501
 msgid "Block Connection?"
 msgstr "Блокувати з'єднання?"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid "Block inbound traffic from"
 msgstr "Заблокувати вхідний трафік від"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid "Block outbound traffic to"
 msgstr "Заблокувати вихідний трафік до"
 
@@ -82,7 +82,7 @@ msgstr "Заблокувати вихідний трафік до"
 msgid "Blocked Events"
 msgstr "Заблоковані події"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Blocked Successfully"
 msgstr "Успішно заблоковано"
 
@@ -90,7 +90,7 @@ msgstr "Успішно заблоковано"
 msgid "Both"
 msgstr "Обидва"
 
-#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/views/network_audit_view.rs:504 src/views/rules_view.rs:121
 #: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "Скасувати"
@@ -188,11 +188,12 @@ msgstr "Напрямок"
 msgid "Error"
 msgstr "Помилка"
 
-#: src/views/network_audit_view.rs:554
+#: src/views/network_audit_view.rs:555
 msgid "Failed to Block"
 msgstr "Не вдалося заблокувати"
 
 #: src/views/status_view.rs:95 src/window.rs:64
+#: data/com.anduinos.ufwall.desktop:29 data/com.anduinos.ufwall.desktop:57
 msgid "Firewall"
 msgstr "Файрвол"
 
@@ -345,7 +346,7 @@ msgstr "Відхилити"
 msgid "Resolve Domains"
 msgstr "Розв'язати домени"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Rule added to block"
 msgstr "Правило додано до блокування"
 
@@ -395,13 +396,13 @@ msgstr ""
 "Це призведе до видалення всіх користувацьких правил. Цю дію не можна "
 "скасувати."
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr ""
 "Це запобігатиме надсиланню пакетів від віддаленого хоста на ваш комп'ютер."
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr ""
@@ -495,7 +496,7 @@ msgstr "Мережева файловая система (NFS)"
 
 #: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
-msgstr "Порт / Протокол"
+msgstr "Протокол мережевого часу"
 
 #: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
@@ -519,7 +520,7 @@ msgstr "Сервер бази даних PostgreSQL"
 
 #: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
-msgstr "Порт / Протокол"
+msgstr "Протокол віддаленого робочого столу"
 
 #: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
@@ -541,7 +542,7 @@ msgstr "Віддалений робочий стіл VNC"
 msgid "Windows file and printer sharing"
 msgstr "Спільний доступ до файлів і принтерів Windows"
 
-#: src/views/network_audit_view.rs:534
+#: src/views/network_audit_view.rs:535
 msgid "Audit Block"
 msgstr "Блокування аудиту"
 
@@ -611,27 +612,27 @@ msgstr ""
 msgid "Network service command failed"
 msgstr "Команду мережевої служби не вдалося виконати"
 
-#: src/views/network_audit_view.rs:371
+#: src/views/network_audit_view.rs:372
 msgid "No Active Connections"
 msgstr "Немає активних з'єднань"
 
-#: src/views/network_audit_view.rs:361
+#: src/views/network_audit_view.rs:362
 msgid "No Inbound Connections"
 msgstr "Немає вхідних з'єднань"
 
-#: src/views/network_audit_view.rs:366
+#: src/views/network_audit_view.rs:367
 msgid "No Outbound Connections"
 msgstr "Немає вихідних з'єднань"
 
-#: src/views/network_audit_view.rs:367
+#: src/views/network_audit_view.rs:368
 msgid "No applications are sending data to the internet."
 msgstr "Немає застосунків, які надсилають дані в інтернет."
 
-#: src/views/network_audit_view.rs:362
+#: src/views/network_audit_view.rs:363
 msgid "No external devices are connecting to your open ports."
 msgstr "Зовнішні пристрої не підключаються до ваших відкритих портів."
 
-#: src/views/network_audit_view.rs:372
+#: src/views/network_audit_view.rs:373
 msgid "No network activity detected."
 msgstr "Мережеву активність не виявлено."
 
@@ -650,3 +651,27 @@ msgstr "Відвантажити"
 #: src/ufw/backend.rs:48
 msgid "pkexec failed"
 msgstr "Помилка pkexec"
+
+#: data/com.anduinos.ufwall.desktop:124
+msgid "firewall;ufw;security;network;"
+msgstr "файрвол;ufw;безпека;мережа;"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:82
+msgid "Authentication is required to change local network discovery"
+msgstr "Потрібна автентифікація для зміни виявлення в локальній мережі"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:80
+msgid "Manage local network discovery"
+msgstr "Керування виявленням у локальній мережі"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:39
+msgid "Authentication is required to modify firewall settings"
+msgstr "Потрібна автентифікація для зміни налаштувань брандмауера"
+
+#: data/com.anduinos.ufwall.desktop:85
+msgid "Configure your firewall"
+msgstr "Налаштуйте файрвол"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:9
+msgid "Manage UFW firewall settings"
+msgstr "Керування налаштуваннями файрволу UFW"

@@ -17,19 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/pages.py:2092
+#: src/pages.py:2244
 msgid "Installing an input method requires an Internet connection."
 msgstr "Memasang metode masukan memerlukan koneksi Internet."
 
-#: src/pages.py:2103
-msgid ""
-"No Internet connection. Input methods cannot be installed. You can install "
-"them later when connected."
-msgstr ""
-"Tidak ada koneksi Internet. Metode masukan tidak dapat dipasang. Anda dapat "
-"memasangnya nanti saat terhubung."
+#: src/pages.py:2255
+msgid "No Internet connection. Input methods cannot be installed. You can install them later when connected."
+msgstr "Tidak ada koneksi Internet. Metode masukan tidak dapat dipasang. Anda dapat memasangnya nanti saat terhubung."
 
-#: src/pages.py:4933
+#: src/pages.py:7174
 msgid ""
 "\n"
 "\n"
@@ -39,7 +35,7 @@ msgstr ""
 "\n"
 "Pemasangan asli akan membuat MOK lokal mesin. Setelah reboot, pilih Enroll MOK → Lanjutkan → Ya di MOKManager dan masukkan kata sandi 123456."
 
-#: src/pages.py:4944
+#: src/pages.py:7185
 msgid ""
 "\n"
 "On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
@@ -47,51 +43,39 @@ msgstr ""
 "\n"
 "Pada layar biru MOKManager, pilih Enroll MOK → Lanjutkan → Ya, kata sandi: 123456"
 
-#: src/pages.py:4085
+#: src/pages.py:6191
 msgid "; sudo does not require a password"
 msgstr "; sudo tidak memerlukan kata sandi"
 
-#: src/pages.py:4087
+#: src/pages.py:6193
 msgid "; sudo requires the account password"
 msgstr "; sudo memerlukan kata sandi akun"
 
-#: src/pages.py:129
-msgid ""
-"A partition on this disk is mounted. Unmount it and rescan storage before "
-"continuing."
-msgstr ""
-"Sebuah partisi pada disk ini sedang dipasang (mounted). Lepaskan pemasangan "
-"dan pindai ulang penyimpanan sebelum melanjutkan."
+#: src/pages.py:160
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "Sebuah partisi pada disk ini sedang dipasang (mounted). Lepaskan pemasangan dan pindai ulang penyimpanan sebelum melanjutkan."
 
-#: src/pages.py:2899
+#: src/pages.py:3241
 msgid "ALL DATA on {disk} will be permanently erased."
 msgstr "SEMUA DATA pada {disk} akan dihapus secara permanen."
 
-#: src/pages.py:4082
+#: src/pages.py:6188
 msgid "Account security"
 msgstr "Keamanan akun"
 
-#: src/pages.py:2980
+#: src/pages.py:4066
 msgid "Advanced Storage"
 msgstr "Penyimpanan Lanjutan"
 
-#: src/pages.py:164
-msgid ""
-"After changing partitions or unmounting a volume, rescan storage and select "
-"the target again."
-msgstr ""
-"Setelah mengubah partisi atau melepaskan pemasangan volume, pindai ulang "
-"penyimpanan dan pilih target lagi."
+#: src/pages.py:195
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "Setelah mengubah partisi atau melepaskan pemasangan volume, pindai ulang penyimpanan dan pilih target lagi."
 
-#: src/pages.py:4801
-msgid ""
-"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
-"then enter password 123456."
-msgstr ""
-"Setelah restart, MOKManager akan terbuka. Pilih Enroll MOK → Lanjutkan → Ya,"
-" lalu masukkan kata sandi 123456."
+#: src/pages.py:7042
+msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
+msgstr "Setelah restart, MOKManager akan terbuka. Pilih Enroll MOK → Lanjutkan → Ya, lalu masukkan kata sandi 123456."
 
-#: src/pages.py:4432
+#: src/pages.py:6636
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -99,63 +83,56 @@ msgstr ""
 "Semua partisi dan data pada {disk} akan hancur.\n"
 "\n"
 
-#: src/pages.py:155
-msgid ""
-"Alternatively, you may explicitly select one entire partition to erase. "
-"Everything in that selected partition will be destroyed; it is never "
-"selected automatically."
-msgstr ""
-"Sebagai alternatif, Anda dapat secara eksplisit memilih satu partisi utuh "
-"untuk dihapus. Semua isi pada partisi yang dipilih akan dihancurkan; partisi"
-" ini tidak pernah dipilih secara otomatis."
+#: src/pages.py:186
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "Sebagai alternatif, Anda dapat secara eksplisit memilih satu partisi utuh untuk dihapus. Semua isi pada partisi yang dipilih akan dihancurkan; partisi ini tidak pernah dipilih secara otomatis."
 
-#: src/pages.py:924 src/pages.py:986
+#: src/pages.py:991 src/pages.py:1053
 msgid "Battery power is too low for a safe installation."
 msgstr "Daya baterai terlalu rendah untuk instalasi yang aman."
 
-#: src/pages.py:895
+#: src/pages.py:962
 msgid "Charge to at least 80% before starting the installation."
 msgstr "Isi daya hingga setidaknya 80% sebelum memulai instalasi."
 
-#: src/pages.py:1041 src/pages.py:1016
+#: src/pages.py:1108 src/pages.py:1083
 msgid "Continue Anyway"
 msgstr "Tetap Lanjutkan"
 
-#: src/pages.py:1000
+#: src/pages.py:1067
 msgid "Current battery level: {percent}%"
 msgstr "Tingkat baterai saat ini: {percent}%"
 
-#: src/pages.py:1006
+#: src/pages.py:1073
 msgid "External power is connected."
 msgstr "Daya eksternal tersambung."
 
-#: src/pages.py:1008
+#: src/pages.py:1075
 msgid "External power is not connected."
 msgstr "Daya eksternal tidak tersambung."
 
-#: src/pages.py:954
+#: src/pages.py:1021
 msgid "I understand the risks and insist on installing with low battery."
-msgstr ""
-"Saya memahami risikonya dan tetap ingin menginstal dengan daya baterai "
-"rendah."
+msgstr "Saya memahami risikonya dan tetap ingin menginstal dengan daya baterai rendah."
 
-#: src/pages.py:894 src/pages.py:889 src/pages.py:967 src/pages.py:969
+#: src/pages.py:961 src/pages.py:956 src/pages.py:1034 src/pages.py:1036
 msgid "Low battery"
 msgstr "Baterai lemah"
 
-#: src/pages.py:948
+#: src/pages.py:1015
 msgid "Recheck"
 msgstr "Periksa ulang"
 
-#: src/main.py:110 src/pages.py:731 src/pages.py:815
+#: src/main.py:114 src/pages.py:794 src/pages.py:881
+#: assets/anduinos-installer-beta.desktop:30
 msgid "AnduinOS Installer"
 msgstr "Penginstal AnduinOS"
 
-#: src/main.py:108
+#: src/main.py:112
 msgid "AnduinOS Installer (Development)"
 msgstr "Penginstal AnduinOS (Pengembangan)"
 
-#: src/pages.py:4425
+#: src/pages.py:6623
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
@@ -163,162 +140,140 @@ msgstr ""
 "AnduinOS hanya akan menggunakan ruang yang belum dialokasikan yang dipilih pada {disk}. Partisi yang ada akan dipertahankan.\n"
 "\n"
 
-#: src/pages.py:133
-msgid ""
-"AnduinOS will use only the selected unallocated space. The installer will "
-"not shrink or move an existing filesystem."
-msgstr ""
-"AnduinOS hanya akan menggunakan ruang yang belum dialokasikan yang dipilih. "
-"Pemasang tidak akan mengecilkan atau memindahkan sistem berkas yang ada."
+#: src/pages.py:164
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS hanya akan menggunakan ruang yang belum dialokasikan yang dipilih. Pemasang tidak akan mengecilkan atau memindahkan sistem berkas yang ada."
 
 #: data/languages.json:keyboard_layouts
 msgid "Arabic"
 msgstr "Arab"
 
-#: src/pages.py:268 src/pages.py:4461 src/pages.py:817
+#: src/pages.py:322 src/pages.py:6672 src/pages.py:6708 src/pages.py:883
 msgid "Back"
 msgstr "Kembali"
 
-#: src/pages.py:3014
-msgid ""
-"Before continuing: finish Windows updates, disable Fast Startup and "
-"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
-"measurements and boot order can change."
-msgstr ""
-"Sebelum melanjutkan: selesaikan pembaruan Windows, nonaktifkan Startup Cepat"
-" dan hibernasi, serta cadangkan kunci pemulihan BitLocker. EFI, Secure Boot,"
-" pengukuran TPM, dan urutan boot dapat berubah."
+#: src/pages.py:3439
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Sebelum melanjutkan: selesaikan pembaruan Windows, nonaktifkan Startup Cepat dan hibernasi, serta cadangkan kunci pemulihan BitLocker. EFI, Secure Boot, pengukuran TPM, dan urutan boot dapat berubah."
 
-#: src/pages.py:2470
+#: src/pages.py:2622
 msgid "BitLocker detected"
 msgstr "BitLocker terdeteksi"
 
-#: src/pages.py:146
-msgid ""
-"BitLocker storage will be preserved. The installer will not unlock, resize, "
-"repair or otherwise modify it."
-msgstr ""
-"Penyimpanan BitLocker akan dipertahankan. Pemasang tidak akan membuka kunci,"
-" mengubah ukuran, memperbaiki, atau memodifikasinya dengan cara lain."
+#: src/pages.py:177
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "Penyimpanan BitLocker akan dipertahankan. Pemasang tidak akan membuka kunci, mengubah ukuran, memperbaiki, atau memodifikasinya dengan cara lain."
 
-#: src/pages.py:4186
+#: src/pages.py:6282 src/pages.py:6342
 msgid "Boot policy"
 msgstr "Kebijakan boot"
 
-#: src/pages.py:3055
+#: src/pages.py:3480 src/pages.py:5117
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (direkomendasikan)"
 
-#: src/pages.py:2817
+#: src/pages.py:3158
 msgid "Btrfs — recommended"
 msgstr "Btrfs — direkomendasikan"
 
-#: src/pages.py:4361
+#: src/pages.py:6554
 msgid "Cannot create installation plan"
 msgstr "Tidak dapat membuat rencana instalasi"
 
-#: src/pages.py:2727
+#: src/pages.py:3068
 msgid "Choose Installation Method"
 msgstr "Pilih Metode Instalasi"
 
-#: src/pages.py:2498
+#: src/pages.py:2650
 msgid "Choose one target disk. Storage settings come next."
 msgstr "Pilih satu disk target. Pengaturan penyimpanan akan menyusul."
 
-#: src/pages.py:2199
+#: src/pages.py:2351
 msgid "Choose optional software to install"
 msgstr "Pilih perangkat lunak opsional untuk diinstal"
 
-#: src/pages.py:813
+#: src/pages.py:879
 msgid "Choose your language to begin installation"
 msgstr "Pilih bahasa Anda untuk memulai instalasi"
 
-#: src/pages.py:3819
+#: src/pages.py:5906
 msgid "Choose your location to set the system clock"
 msgstr "Pilih lokasi Anda untuk mengatur jam sistem"
 
-#: src/pages.py:4838
+#: src/pages.py:7079
 msgid "Complete"
 msgstr "Selesai"
 
-#: src/pages.py:3506 src/pages.py:3513 src/pages.py:4101 src/pages.py:3601
-#: src/pages.py:4440
+#: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
+#: src/pages.py:6644
 msgid "Computer Name"
 msgstr "Nama Komputer"
 
-#: src/pages.py:3594
+#: src/pages.py:5679
 msgid "Computer name contains invalid characters."
 msgstr "Nama komputer berisi karakter tidak valid."
 
-#: src/pages.py:4589
+#: src/pages.py:6828
 msgid "Configure account, region, timezone, and machine identity"
 msgstr "Konfigurasi akun, wilayah, zona waktu, dan identitas mesin"
 
-#: src/pages.py:4578
+#: src/pages.py:3339 src/pages.py:6817 src/pages.py:3323
 msgid "Configure storage and swap"
 msgstr "Konfigurasi penyimpanan dan swap"
 
-#: src/pages.py:3480 src/pages.py:3488
+#: src/pages.py:5565 src/pages.py:5573
 msgid "Confirm Password"
 msgstr "Konfirmasi Kata Sandi"
 
-#: src/pages.py:1939
+#: src/pages.py:2003
 msgid "Confirm your keyboard layout"
 msgstr "Konfirmasi tata letak keyboard Anda"
 
-#: src/main.py:153 src/pages.py:1911
+#: src/main.py:157 src/pages.py:1978
 msgid "Continue Installation"
 msgstr "Lanjutkan Instalasi"
 
-#: src/pages.py:4574
+#: src/pages.py:6813
 msgid "Copy AnduinOS system"
 msgstr "Salin sistem AnduinOS"
 
-#: src/pages.py:4675
+#: src/pages.py:6916
 msgid "Copy Log"
 msgstr "Salin Log"
 
-#: src/pages.py:3146
+#: src/pages.py:3572
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
 msgstr "Buat Partisi Sistem EFI AnduinOS 1 GiB baru"
 
-#: src/pages.py:4163
-msgid ""
-"Create and format a dedicated AnduinOS EFI System Partition inside the "
-"selected space."
-msgstr ""
-"Buat dan format Partisi Sistem EFI AnduinOS khusus di dalam ruang yang "
-"dipilih."
+#: src/pages.py:6260
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Buat dan format Partisi Sistem EFI AnduinOS khusus di dalam ruang yang dipilih."
 
-#: src/pages.py:3447
+#: src/pages.py:5532
 msgid "Create your user account"
 msgstr "Buat akun pengguna Anda"
 
-#: src/pages.py:2412
+#: src/pages.py:2564
 msgid "Current disk layout"
 msgstr "Tata letak disk saat ini"
 
-#: src/pages.py:3979
-msgid ""
-"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
-"executor or disk command can run."
-msgstr ""
-"MODE PENGEMBANGAN — rencana akan divalidasi dan disimulasikan. Tidak ada "
-"eksekutor hak istimewa atau perintah disk yang dapat dijalankan."
+#: src/pages.py:6071
+msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
+msgstr "MODE PENGEMBANGAN — rencana akan divalidasi dan disimulasikan. Tidak ada proses layanan dengan hak istimewa atau perintah disk yang dapat dijalankan."
 
 #: data/languages.json:keyboard_layouts
 msgid "Danish"
 msgstr "Denmark"
 
-#: src/pages.py:4569
+#: src/pages.py:6808
 msgid "Detect Internet connectivity"
 msgstr "Deteksi koneksi internet"
 
-#: src/pages.py:4566
+#: src/pages.py:6805
 msgid "Detect firmware and Secure Boot"
 msgstr "Deteksi firmware dan Secure Boot"
 
-#: src/pages.py:4419
+#: src/pages.py:6617
 msgid ""
 "Development mode will simulate installation to {disk}. No disk data will be changed.\n"
 "\n"
@@ -326,15 +281,15 @@ msgstr ""
 "Mode pengembangan akan mensimulasikan instalasi ke {disk}. Tidak ada data disk yang akan diubah.\n"
 "\n"
 
-#: src/pages.py:4923
+#: src/pages.py:7164
 msgid "Development simulation completed"
 msgstr "Simulasi pengembangan selesai"
 
-#: src/pages.py:4832
+#: src/pages.py:7073
 msgid "Discover AnduinOS"
 msgstr "Jelajahi AnduinOS"
 
-#: src/pages.py:1216 src/pages.py:2218
+#: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
 msgstr "Unduh dan instal pembaruan sistem selama instalasi"
 
@@ -342,22 +297,21 @@ msgstr "Unduh dan instal pembaruan sistem selama instalasi"
 msgid "Dutch"
 msgstr "Belanda"
 
-#: src/pages.py:3073
+#: src/pages.py:4210 src/pages.py:3498 src/pages.py:5013
 msgid "EFI System Partition"
 msgstr "Partisi Sistem EFI"
 
-#: src/pages.py:4184
+#: src/pages.py:6341 src/pages.py:6281
 msgid "EFI policy"
 msgstr "Kebijakan EFI"
 
-#: src/pages.py:2455
+#: src/pages.py:2607
 msgid "Empty disk — no partitions"
 msgstr "Disk kosong — tidak ada partisi"
 
-#: src/pages.py:2821
+#: src/pages.py:3162
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
-msgstr ""
-"Mengaktifkan subvolume ruang bersama, snapshot, dan Disk Snapshots Manager."
+msgstr "Mengaktifkan subvolume ruang bersama, snapshot, dan Disk Snapshots Manager."
 
 #: data/languages.json:keyboard_layouts
 msgid "English (UK)"
@@ -367,53 +321,39 @@ msgstr "Bahasa Inggris (UK)"
 msgid "English (US)"
 msgstr "Bahasa Inggris (AS)"
 
-#: src/pages.py:4601
+#: src/pages.py:6840
 msgid "Ensure Disk Snapshots Manager is available"
 msgstr "Pastikan Disk Snapshots Manager tersedia"
 
-#: src/pages.py:4412
+#: src/pages.py:6610
 msgid "Erase Disk and Install"
 msgstr "Hapus Disk dan Instal"
 
-#: src/pages.py:2813 src/pages.py:4226
+#: src/pages.py:3154 src/pages.py:6382
 msgid "Erase every partition and all data on the selected disk."
 msgstr "Hapus setiap partisi dan semua data pada disk yang dipilih."
 
-#: src/pages.py:4411
+#: src/pages.py:6609
 msgid "Erase the entire selected disk?"
 msgstr "Hapus seluruh disk yang dipilih?"
 
-#: src/pages.py:137
-msgid ""
-"Existing Windows, recovery and data partitions remain outside the write set "
-"and will be preserved."
-msgstr ""
-"Partisi Windows, pemulihan, dan data yang ada tetap berada di luar set "
-"penulisan dan akan dipertahankan."
+#: src/pages.py:168
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "Partisi Windows, pemulihan, dan data yang ada tetap berada di luar set penulisan dan akan dipertahankan."
 
-#: src/pages.py:2945
-msgid ""
-"Existing partitions were detected. The first two choices delete them; "
-"Advanced is the preservation path."
-msgstr ""
-"Partisi yang ada terdeteksi. Dua pilihan pertama menghapusnya; Lanjutan "
-"adalah jalur pelestarian."
+#: src/pages.py:3287
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Partisi yang ada terdeteksi. Dua pilihan pertama menghapusnya; Lanjutan adalah jalur pelestarian."
 
-#: src/pages.py:4446
-msgid ""
-"Existing partitions will be preserved. New AnduinOS partitions will be "
-"created only in the selected unallocated extent; EFI vendor files and the "
-"AnduinOS firmware boot entry may be updated."
-msgstr ""
-"Partisi yang ada akan dipertahankan. Partisi AnduinOS baru hanya akan dibuat"
-" di area yang belum dialokasikan; file vendor EFI dan entri boot firmware "
-"AnduinOS mungkin diperbarui."
+#: src/pages.py:6650
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Partisi yang ada akan dipertahankan. Partisi AnduinOS baru hanya akan dibuat di area yang belum dialokasikan; file vendor EFI dan entri boot firmware AnduinOS mungkin diperbarui."
 
-#: src/pages.py:3052 src/pages.py:4049
+#: src/pages.py:3477 src/pages.py:6155 src/pages.py:5127
 msgid "Filesystem"
 msgstr "Sistem file"
 
-#: src/pages.py:4613
+#: src/pages.py:6852
 msgid "Finalize target environment"
 msgstr "Selesaikan lingkungan target"
 
@@ -421,7 +361,7 @@ msgstr "Selesaikan lingkungan target"
 msgid "Finnish"
 msgstr "Finlandia"
 
-#: src/pages.py:4182
+#: src/pages.py:6340 src/pages.py:6279
 msgid "Formats"
 msgstr "Memformat"
 
@@ -429,7 +369,7 @@ msgstr "Memformat"
 msgid "French"
 msgstr "Prancis"
 
-#: src/pages.py:3462 src/pages.py:3464
+#: src/pages.py:5547 src/pages.py:5549
 msgid "Full Name"
 msgstr "Nama Lengkap"
 
@@ -441,25 +381,19 @@ msgstr "Jerman"
 msgid "Greek"
 msgstr "Yunani"
 
-#: src/pages.py:111
-msgid ""
-"Guided coexistence requires a system booted in UEFI mode and a GPT target "
-"disk. This disk cannot continue in guided mode."
-msgstr ""
-"Koeksistensi terpandu memerlukan sistem yang dimulai dalam mode UEFI dan "
-"disk target GPT. Disk ini tidak dapat melanjutkan dalam mode terpandu."
+#: src/pages.py:142
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "Koeksistensi terpandu memerlukan sistem yang dimulai dalam mode UEFI dan disk target GPT. Disk ini tidak dapat melanjutkan dalam mode terpandu."
 
-#: src/pages.py:4131
-msgid ""
-"Guided storage selection is missing. Rescan and select the target again."
-msgstr ""
-"Pemilihan penyimpanan terpandu hilang. Pindai ulang dan pilih target lagi."
+#: src/pages.py:6393
+msgid "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Pemilihan penyimpanan terpandu hilang. Pindai ulang dan pilih target lagi."
 
 #: data/languages.json:keyboard_layouts
 msgid "Hindi (India)"
 msgstr "India (Hindi)"
 
-#: src/pages.py:2741
+#: src/pages.py:3082
 msgid "How should AnduinOS use this disk?"
 msgstr "Bagaimana AnduinOS harus menggunakan disk ini?"
 
@@ -467,87 +401,83 @@ msgstr "Bagaimana AnduinOS harus menggunakan disk ini?"
 msgid "Indonesian"
 msgstr "Indonesia"
 
-#: src/pages.py:4498
+#: src/pages.py:6737
 msgid "Install"
 msgstr "Instal"
 
-#: src/pages.py:4559 src/pages.py:1221 src/pages.py:4125
+#: src/pages.py:6798 src/pages.py:1288 src/pages.py:6231
 msgid "Install input method"
 msgstr "Instal metode masukan"
 
-#: src/pages.py:625
+#: src/pages.py:684
 msgid "Install {language} input method: {name}"
 msgstr "Instal metode input {language}: {name}"
 
-#: src/pages.py:4409 src/pages.py:4496
+#: src/pages.py:3405 src/pages.py:6604 src/pages.py:6733
 msgid "Install Alongside"
 msgstr "Instal Bersama Sistem yang Ada"
 
-#: src/pages.py:4169
+#: src/pages.py:6266
 msgid "Install alongside"
 msgstr "Instal bersama sistem yang ada"
 
-#: src/pages.py:4608
+#: src/pages.py:6847
 msgid "Install bootloader"
 msgstr "Instal bootloader"
 
-#: src/pages.py:4611
+#: src/pages.py:6850
 msgid "Check systems on other disks"
 msgstr "Periksa sistem di disk lain"
 
-#: src/pages.py:1217 src/pages.py:4603
+#: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
 msgstr "Instal driver perangkat keras"
 
-#: src/pages.py:4408
+#: src/pages.py:6603
 msgid "Install in the selected free space?"
 msgstr "Instal di ruang kosong yang dipilih?"
 
-#: src/pages.py:4596
+#: src/pages.py:6835
 msgid "Ensure required language packs are installed"
 msgstr "Pastikan paket bahasa yang diperlukan telah terpasang"
 
-#: src/pages.py:4599
+#: src/pages.py:6838
 msgid "Install system updates"
 msgstr "Instal pembaruan sistem"
 
-#: src/pages.py:2229
+#: src/pages.py:2381
 msgid "Install third-party drivers for this device"
 msgstr "Instal driver pihak ketiga untuk perangkat ini"
 
-#: src/pages.py:5093 src/pages.py:5095 src/pages.py:4940 src/pages.py:4950
+#: src/pages.py:7334 src/pages.py:7336 src/pages.py:7181 src/pages.py:7191
 msgid "Installation Complete"
 msgstr "Instalasi Selesai"
 
-#: src/pages.py:4970
+#: src/pages.py:7211
 msgid "Installation Failed"
 msgstr "Instalasi Gagal"
 
-#: src/pages.py:4639
+#: src/pages.py:6878
 msgid "Installation Steps"
 msgstr "Langkah Instalasi"
 
-#: src/pages.py:160
-msgid ""
-"Installation cannot continue with this selection. There is no force-continue"
-" option around storage safety checks."
-msgstr ""
-"Pemasangan tidak dapat dilanjutkan dengan pilihan ini. Tidak ada opsi paksa-"
-"lanjutkan di sekitar pemeriksaan keamanan penyimpanan."
+#: src/pages.py:191
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "Pemasangan tidak dapat dilanjutkan dengan pilihan ini. Tidak ada opsi paksa-lanjutkan di sekitar pemeriksaan keamanan penyimpanan."
 
-#: src/pages.py:4919 src/pages.py:4985
+#: src/pages.py:7160 src/pages.py:7226
 msgid "Installation complete"
 msgstr "Instalasi selesai"
 
-#: src/pages.py:4968
+#: src/pages.py:7209
 msgid "Installation failed"
 msgstr "Instalasi gagal"
 
-#: src/main.py:145
+#: src/main.py:149
 msgid "Installation in progress"
 msgstr "Instalasi sedang berlangsung"
 
-#: src/pages.py:4547 src/pages.py:4541
+#: src/pages.py:6786 src/pages.py:6780
 msgid "Installing AnduinOS"
 msgstr "Menginstal AnduinOS"
 
@@ -559,19 +489,19 @@ msgstr "Italia"
 msgid "Japanese (JIS keyboard)"
 msgstr "Jepang (papan ketik JIS)"
 
-#: src/pages.py:4040
+#: src/pages.py:6147
 msgid "Keyboard"
 msgstr "Papan ketik"
 
-#: src/pages.py:1938 src/pages.py:1932 src/pages.py:2075
+#: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
 msgid "Keyboard Layout"
 msgstr "Tata Letak Keyboard"
 
-#: src/pages.py:2031
+#: src/pages.py:2077
 msgid "Layout Variant"
 msgstr "Varian Tata Letak"
 
-#: src/pages.py:4582
+#: src/pages.py:6821
 msgid "Configure physical keyboard layout"
 msgstr "Konfigurasikan tata letak keyboard fisik"
 
@@ -579,103 +509,91 @@ msgstr "Konfigurasikan tata letak keyboard fisik"
 msgid "Korean"
 msgstr "Korea"
 
-#: src/pages.py:4039
+#: src/pages.py:6146
 msgid "Language"
 msgstr "Bahasa"
 
-#: src/pages.py:2472
+#: src/pages.py:2624
 msgid "Live USB — excluded"
 msgstr "USB Langsung — dikecualikan"
 
-#: src/pages.py:4573
+#: src/pages.py:6812
 msgid "Mount target filesystems"
 msgstr "Pasang sistem file target"
 
-#: src/pages.py:851
+#: src/pages.py:918
 msgid "Navigation error"
 msgstr "Kesalahan navigasi"
 
-#: src/pages.py:4180 src/pages.py:4229
+#: src/pages.py:4232 src/pages.py:6339 src/pages.py:6277 src/pages.py:6385
 msgid "New partitions"
 msgstr "Partisi baru"
 
-#: src/pages.py:261 src/pages.py:818 src/pages.py:1016
+#: src/pages.py:315 src/pages.py:884 src/pages.py:1083
 msgid "Next"
 msgstr "Selanjutnya"
 
-#: src/pages.py:4756
+#: src/pages.py:6997
 msgid "Next slide"
 msgstr "Slide berikutnya"
 
-#: src/pages.py:2389
+#: src/pages.py:2541
 msgid "No partition table"
 msgstr "Tidak ada tabel partisi"
 
-#: src/pages.py:2631
+#: src/pages.py:2782
 msgid "No suitable disks found."
 msgstr "Tidak ditemukan disk yang sesuai."
 
-#: src/pages.py:170
-msgid ""
-"No suitable unallocated space was found. To protect your data, create "
-"unallocated space with Windows Disk Management, then boot the installer "
-"again and rescan the disk."
-msgstr ""
-"Tidak ditemukan ruang yang belum dialokasikan yang sesuai. Untuk melindungi "
-"data Anda, buat ruang yang belum dialokasikan dengan Manajemen Disk Windows,"
-" lalu boot installer lagi dan pindai ulang disk."
+#: src/pages.py:201
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "Tidak ditemukan ruang yang belum dialokasikan yang sesuai. Untuk melindungi data Anda, buat ruang yang belum dialokasikan dengan Manajemen Disk Windows, lalu boot installer lagi dan pindai ulang disk."
 
-#: src/pages.py:175
-msgid ""
-"No suitable unallocated space was found. To protect your data, create "
-"unallocated space with a partitioning tool, then boot the installer again "
-"and rescan the disk."
-msgstr ""
-"Tidak ditemukan ruang yang belum dialokasikan yang sesuai. Untuk melindungi "
-"data Anda, buat ruang yang belum dialokasikan dengan alat partisi, lalu boot"
-" installer lagi dan pindai ulang disk."
+#: src/pages.py:206
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "Tidak ditemukan ruang yang belum dialokasikan yang sesuai. Untuk melindungi data Anda, buat ruang yang belum dialokasikan dengan alat partisi, lalu boot installer lagi dan pindai ulang disk."
 
 #: data/languages.json:keyboard_layouts
 msgid "Norwegian"
 msgstr "Norwegia"
 
-#: src/pages.py:1124 src/pages.py:1375 src/pages.py:4370 src/pages.py:854
+#: src/pages.py:1191 src/pages.py:1442 src/pages.py:6563 src/pages.py:921
 msgid "OK"
 msgstr "OKE"
 
-#: src/pages.py:4835
+#: src/pages.py:7076
 msgid "Output"
 msgstr "Hasil"
 
-#: src/pages.py:4973 src/pages.py:5028
+#: src/pages.py:7214 src/pages.py:7269
 msgid "Output • Error"
 msgstr "Output • Kesalahan"
 
-#: src/pages.py:5023
+#: src/pages.py:7264
 msgid "Output • {count} warning(s)"
 msgstr "Output • {count} peringatan"
 
-#: src/pages.py:2453
+#: src/pages.py:2605
 msgid "Partition details unavailable"
 msgstr "Rincian partisi tidak tersedia"
 
-#: src/pages.py:3476 src/pages.py:3487 src/pages.py:1466 src/pages.py:1525
+#: src/pages.py:5561 src/pages.py:5572 src/pages.py:1533 src/pages.py:1592
 msgid "Password"
 msgstr "Kata Sandi"
 
-#: src/pages.py:3584
+#: src/pages.py:5669
 msgid "Password must be at least 6 characters."
 msgstr "Kata sandi harus minimal 6 karakter."
 
-#: src/pages.py:4048
+#: src/pages.py:6154
 msgid "Platform"
 msgstr "Platform"
 
-#: src/pages.py:4548
+#: src/pages.py:6787
 msgid "Please do not turn off your computer"
 msgstr "Mohon jangan matikan komputer Anda"
 
-#: src/pages.py:3965
+#: src/pages.py:6055
 msgid "Please review your choices before proceeding"
 msgstr "Mohon tinjau pilihan Anda sebelum melanjutkan"
 
@@ -691,85 +609,78 @@ msgstr "Portugis"
 msgid "Portuguese (Brazil)"
 msgstr "Portugis (Brasil)"
 
-#: src/pages.py:4594
+#: src/pages.py:6833
 msgid "Prepare Secure Boot"
 msgstr "Siapkan Secure Boot"
 
-#: src/pages.py:4572
+#: src/pages.py:6811
 msgid "Prepare installation disk"
 msgstr "Siapkan disk instalasi"
 
-#: src/pages.py:4579
+#: src/pages.py:6818
 msgid "Prepare target environment"
 msgstr "Siapkan lingkungan target"
 
-#: src/pages.py:4871
+#: src/pages.py:7112
 msgid "Preparing installation…"
 msgstr "Mempersiapkan instalasi…"
 
-#: src/pages.py:4175
+#: src/pages.py:6336 src/pages.py:6272
 msgid "Preserved partitions"
 msgstr "Partisi yang dipertahankan"
 
-#: src/pages.py:4750
+#: src/pages.py:6991
 msgid "Previous slide"
 msgstr "Slide sebelumnya"
 
-#: src/pages.py:3964 src/pages.py:3958
+#: src/pages.py:6054 src/pages.py:6048
 msgid "Ready to Install"
 msgstr "Siap untuk Diinstal"
 
-#: src/pages.py:4811
+#: src/pages.py:7052
 msgid "Reboot Now"
 msgstr "Restart Sekarang"
 
-#: src/pages.py:4598
+#: src/pages.py:6837
 msgid "Refresh package indexes"
 msgstr "Segarkan indeks paket"
 
-#: src/pages.py:4580
+#: src/pages.py:6819
 msgid "Remove live-session components"
 msgstr "Hapus komponen sesi langsung"
 
-#: src/pages.py:4951 src/pages.py:4942
+#: src/pages.py:7192 src/pages.py:7183
 msgid "Remove the installation media and restart your computer"
 msgstr "Lepaskan media instalasi dan restart komputer Anda"
 
-#: src/pages.py:1177 src/pages.py:1205 src/pages.py:2220 src/pages.py:675
-#: src/pages.py:1362 src/pages.py:2233
-msgid ""
-"Requires an Internet connection. The base installation remains available "
-"when offline."
-msgstr ""
-"Memerlukan koneksi Internet. Instalasi dasar tetap tersedia saat offline."
+#: src/pages.py:1244 src/pages.py:1272 src/pages.py:2372 src/pages.py:734
+#: src/pages.py:1429 src/pages.py:2385
+msgid "Requires an Internet connection. The base installation remains available when offline."
+msgstr "Memerlukan koneksi Internet. Instalasi dasar tetap tersedia saat offline."
 
-#: src/pages.py:2550
+#: src/pages.py:2701
 msgid "Rescan Storage"
 msgstr "Pindai Ulang Penyimpanan"
 
-#: src/pages.py:3101
+#: src/pages.py:3526
 msgid "Rescan and Reselect Disk"
 msgstr "Pindai dan Pilih Ulang Cakram"
 
-#: src/pages.py:4809
+#: src/pages.py:7050
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "Restart dan Daftarkan Kunci Secure Boot"
 
-#: src/pages.py:4960
+#: src/pages.py:7201
 msgid "Restart is disabled in development protection mode"
 msgstr "Restart dinonaktifkan dalam mode perlindungan pengembangan"
 
-#: src/pages.py:3150
+#: src/pages.py:3576 src/pages.py:5081
 msgid "Reuse {path} ({size})"
 msgstr "Gunakan kembali {path} ({size})"
 
-#: src/pages.py:4155
-msgid ""
-"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
-"before writing."
-msgstr ""
-"Gunakan kembali {path}; jangan pernah memformatnya; verifikasi kesehatan "
-"FAT, identitas, dan 64 MiB ruang kosong sebelum menulis."
+#: src/pages.py:6254
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Gunakan kembali {path}; jangan pernah memformatnya; verifikasi kesehatan FAT, identitas, dan 64 MiB ruang kosong sebelum menulis."
 
 #: data/languages.json:keyboard_layouts
 msgid "Romanian"
@@ -779,56 +690,55 @@ msgstr "Rumania"
 msgid "Russian"
 msgstr "Rusia"
 
-#: src/pages.py:4679
+#: src/pages.py:6920
 msgid "Save Log"
 msgstr "Simpan Log"
 
-#: src/pages.py:4609
+#: src/pages.py:6848
 msgid "Schedule MOK enrollment"
 msgstr "Jadwalkan pendaftaran MOK"
 
-#: src/pages.py:3831
+#: src/pages.py:5918
 msgid "Search timezones…"
 msgstr "Cari zona waktu…"
 
-#: src/pages.py:4069
+#: src/pages.py:6175
 msgid "Secure Boot enrollment"
 msgstr "Pendaftaran Secure Boot"
 
-#: src/pages.py:2497 src/pages.py:2491
+#: src/pages.py:2649 src/pages.py:2643
 msgid "Select Installation Disk"
 msgstr "Pilih Disk Instalasi"
 
-#: src/pages.py:3818 src/pages.py:3812
+#: src/pages.py:5905 src/pages.py:5899
 msgid "Select Timezone"
 msgstr "Pilih Zona Waktu"
 
-#: src/pages.py:4592
+#: src/pages.py:6831
 msgid "Select fastest package mirror"
 msgstr "Pilih mirror paket tercepat"
 
-#: src/pages.py:3884
+#: src/pages.py:5974
 msgid "Selected timezone"
 msgstr "Zona waktu yang dipilih"
 
-#: src/pages.py:4170
+#: src/pages.py:6267
 msgid "Selected unallocated space"
 msgstr "Ruang yang tidak dialokasikan telah dipilih"
 
-#: src/pages.py:2239
+#: src/pages.py:2391
 msgid "Some drivers are proprietary or otherwise non-free software."
-msgstr ""
-"Beberapa driver bersifat proprietary atau perangkat lunak non-bebas lainnya."
+msgstr "Beberapa driver bersifat proprietary atau perangkat lunak non-bebas lainnya."
 
 #: data/languages.json:keyboard_layouts
 msgid "Spanish"
 msgstr "Spanyol"
 
-#: src/pages.py:4046
+#: src/pages.py:6152
 msgid "Stable disk identity"
 msgstr "Identitas disk stabil"
 
-#: src/pages.py:4437
+#: src/pages.py:6641
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -836,19 +746,19 @@ msgstr ""
 "Identitas stabil: {stable_id}\n"
 "\n"
 
-#: src/pages.py:2380
+#: src/pages.py:2532
 msgid "Storage Device"
 msgstr "Perangkat Penyimpanan"
 
-#: src/pages.py:4168 src/pages.py:4224
+#: src/pages.py:6265 src/pages.py:6333 src/pages.py:6380
 msgid "Storage mode"
 msgstr "Mode penyimpanan"
 
-#: src/pages.py:4050
+#: src/pages.py:6156
 msgid "Subvolumes"
 msgstr "Subvolume"
 
-#: src/pages.py:4268
+#: src/pages.py:2968 src/pages.py:3851
 msgid "Swap"
 msgstr "Swap"
 
@@ -856,19 +766,19 @@ msgstr "Swap"
 msgid "Swedish"
 msgstr "Swedia"
 
-#: src/pages.py:4051
+#: src/pages.py:6157
 msgid "System updates"
 msgstr "Pembaruan sistem"
 
-#: src/pages.py:4042
+#: src/pages.py:6148
 msgid "Target Disk"
 msgstr "Disk Target"
 
-#: src/pages.py:2993 src/pages.py:3260
+#: src/pages.py:3418 src/pages.py:3686 src/pages.py:4091
 msgid "Target: {disk} ({size} — {model})"
 msgstr "Tujuan: {disk} ({size} — {model})"
 
-#: src/pages.py:1964 src/pages.py:2076
+#: src/pages.py:2083 src/pages.py:2228
 msgid "Test your keyboard here…"
 msgstr "Uji keyboard Anda di sini…"
 
@@ -876,120 +786,75 @@ msgstr "Uji keyboard Anda di sini…"
 msgid "Thai"
 msgstr "Bahasa Thailand"
 
-#: src/pages.py:120
-msgid ""
-"The GPT disk or one of its partitions has no unique stable identifier. "
-"Guided coexistence cannot safely authorize preservation or writes on this "
-"disk."
-msgstr ""
-"Disk GPT atau salah satu partisi-nya tidak memiliki pengenal stabil yang "
-"unik. Koeksistensi terpandu tidak dapat secara aman mengotorisasi "
-"pelestarian atau penulisan pada disk ini."
+#: src/pages.py:151
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "Disk GPT atau salah satu partisi-nya tidak memiliki pengenal stabil yang unik. Koeksistensi terpandu tidak dapat secara aman mengotorisasi pelestarian atau penulisan pada disk ini."
 
-#: src/pages.py:115
-msgid ""
-"The complete partition map and free-space geometry could not be read "
-"consistently. No space on this disk is authorized for installation."
-msgstr ""
-"Peta partisi lengkap dan geometri ruang kosong tidak dapat dibaca secara "
-"konsisten. Tidak ada ruang pada disk ini yang diotorisasi untuk instalasi."
+#: src/pages.py:146
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "Peta partisi lengkap dan geometri ruang kosong tidak dapat dibaca secara konsisten. Tidak ada ruang pada disk ini yang diotorisasi untuk instalasi."
 
-#: src/pages.py:141
-msgid ""
-"The existing EFI System Partition is only a candidate. Health and free-space"
-" checks must pass before it can be reused, and it will never be formatted."
-msgstr ""
-"Partisi Sistem EFI yang ada hanyalah kandidat. Pemeriksaan kesehatan dan "
-"ruang kosong harus lulus sebelum dapat digunakan kembali, dan tidak akan "
-"pernah diformat."
+#: src/pages.py:172
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "Partisi Sistem EFI yang ada hanyalah kandidat. Pemeriksaan kesehatan dan ruang kosong harus lulus sebelum dapat digunakan kembali, dan tidak akan pernah diformat."
 
-#: src/pages.py:4926
-msgid ""
-"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
-" state, or installed system was changed."
-msgstr ""
-"Rencana instalasi valid. Tidak ada disk, sistem file, bootloader, status "
-"Secure Boot, atau sistem yang terinstal yang diubah."
+#: src/pages.py:7167
+msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
+msgstr "Rencana instalasi valid. Tidak ada disk, sistem file, bootloader, status Secure Boot, atau sistem yang terinstal yang diubah."
 
-#: src/main.py:147
+#: src/main.py:151
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr "Penginstal tidak dapat ditutup saat memodifikasi disk target."
 
-#: src/pages.py:150
-msgid ""
-"The installer will not mount, repair or infer the safety of Windows volumes "
-"from hibernation or Fast Startup state. Any required Windows maintenance "
-"must be completed in Windows."
-msgstr ""
-"Penginstal tidak akan memasang, memperbaiki, atau menyimpulkan keamanan "
-"volume Windows dari status hibernasi atau Startup Cepat. Pemeliharaan "
-"Windows yang diperlukan harus diselesaikan di Windows."
+#: src/pages.py:181
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "Penginstal tidak akan memasang, memperbaiki, atau menyimpulkan keamanan volume Windows dari status hibernasi atau Startup Cepat. Pemeliharaan Windows yang diperlukan harus diselesaikan di Windows."
 
-#: src/pages.py:4443
+#: src/pages.py:6647
 msgid "The privileged executor is disabled."
-msgstr "Eksekutor hak istimewa dinonaktifkan."
+msgstr "Proses layanan dengan hak istimewa dinonaktifkan."
 
-#: src/pages.py:3228
-msgid ""
-"The selected disk changed or disappeared. Return to the disk page and select"
-" it again. {error}"
-msgstr ""
-"Disk yang dipilih berubah atau hilang. Kembali ke halaman disk dan pilih "
-"lagi. {error}"
+#: src/pages.py:3654
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "Disk yang dipilih berubah atau hilang. Kembali ke halaman disk dan pilih lagi. {error}"
 
-#: src/pages.py:3241
+#: src/pages.py:3667
 msgid "The selected disk size changed. Return and select it again."
 msgstr "Ukuran disk yang dipilih berubah. Kembali dan pilih lagi."
 
-#: src/pages.py:3251
-msgid ""
-"The selected disk topology changed. Review the disk and installation method "
-"again."
-msgstr ""
-"Topologi disk yang dipilih berubah. Tinjau kembali disk dan metode "
-"instalasi."
+#: src/pages.py:3677
+msgid "The selected disk topology changed. Review the disk and installation method again."
+msgstr "Topologi disk yang dipilih berubah. Tinjau kembali disk dan metode instalasi."
 
-#: src/pages.py:3580
+#: src/pages.py:5665
 msgid "The two passwords do not match."
 msgstr "Kedua kata sandi tidak cocok."
 
-#: src/pages.py:4057
+#: src/pages.py:6163
 msgid "Third-party drivers"
 msgstr "Driver pihak ketiga"
 
-#: src/pages.py:3021
-msgid ""
-"This advanced path preserves existing partitions but changes the selected "
-"disk's partition table and the machine's EFI boot state."
-msgstr ""
-"Jalur lanjutan ini mempertahankan partisi yang ada tetapi mengubah tabel "
-"partisi disk yang dipilih dan status boot EFI mesin."
+#: src/pages.py:3446
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "Jalur lanjutan ini mempertahankan partisi yang ada tetapi mengubah tabel partisi disk yang dipilih dan status boot EFI mesin."
 
-#: src/pages.py:125
-msgid ""
-"This disk contains an active mapper, array or other nested block-device "
-"topology that guided coexistence does not support."
-msgstr ""
-"Disk ini berisi mapper aktif, array, atau topologi perangkat blok bersarang "
-"lainnya yang tidak didukung oleh koeksistensi terpandu."
+#: src/pages.py:156
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "Disk ini berisi mapper aktif, array, atau topologi perangkat blok bersarang lainnya yang tidak didukung oleh koeksistensi terpandu."
 
-#: src/pages.py:2935
-msgid ""
-"This disk is too small for whole-disk installation. Advanced may continue "
-"only if suitable unallocated space exists."
-msgstr ""
-"Disk ini terlalu kecil untuk instalasi seluruh-disk. Lanjutan hanya dapat "
-"dilanjutkan jika ada ruang belum dialokasikan yang sesuai."
+#: src/pages.py:3277
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "Disk ini terlalu kecil untuk instalasi seluruh-disk. Lanjutan hanya dapat dilanjutkan jika ada ruang belum dialokasikan yang sesuai."
 
-#: src/pages.py:4454
+#: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
 msgstr "Penginstal ini tidak mengecilkan atau melestarikan sistem lain."
 
-#: src/pages.py:4103
+#: src/pages.py:6209
 msgid "Timezone"
 msgstr "Zona Waktu"
 
-#: src/pages.py:2474
+#: src/pages.py:2626
 msgid "Too small"
 msgstr "Terlalu kecil"
 
@@ -1001,71 +866,67 @@ msgstr "Turki"
 msgid "Ukrainian"
 msgstr "Ukraina"
 
-#: src/pages.py:3065
+#: src/pages.py:3490
 msgid "Unallocated space"
 msgstr "Ruang belum dialokasikan"
 
-#: src/pages.py:2445
+#: src/pages.py:2597
 msgid "Unallocated · {size}"
 msgstr "Tidak dialokasikan · {size}"
 
-#: src/pages.py:4014 src/pages.py:1710
+#: src/pages.py:6106 src/pages.py:1777
 msgid "Unavailable: {error}"
 msgstr "Tidak tersedia: {error}"
 
-#: src/pages.py:2432
+#: src/pages.py:2584
 msgid "Unknown filesystem"
 msgstr "Sistem file tidak dikenal"
 
-#: src/pages.py:4614
+#: src/pages.py:6853
 msgid "Unmount installed system"
 msgstr "Lepas sistem yang terinstal"
 
-#: src/pages.py:2198 src/pages.py:1196 src/pages.py:2192
+#: src/pages.py:2350 src/pages.py:1263 src/pages.py:2344
 msgid "Updates and Drivers"
 msgstr "Pembaruan dan Driver"
 
-#: src/pages.py:2986
+#: src/pages.py:3411
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "Hanya gunakan ruang yang belum dialokasikan pada disk yang dipilih."
 
-#: src/pages.py:4079
+#: src/pages.py:6185
 msgid "User"
 msgstr "Pengguna"
 
-#: src/pages.py:3446 src/pages.py:3440
+#: src/pages.py:5531 src/pages.py:5525
 msgid "User Account"
 msgstr "Akun Pengguna"
 
-#: src/pages.py:3468 src/pages.py:3472
+#: src/pages.py:5553 src/pages.py:5557
 msgid "Username"
 msgstr "Nama Pengguna"
 
-#: src/pages.py:3568
-msgid ""
-"Username must start with a lowercase ASCII letter and contain only lowercase"
-" ASCII letters or digits (maximum 16 characters)."
-msgstr ""
-"Nama pengguna harus diawali dengan huruf kecil ASCII dan hanya boleh berisi "
-"huruf kecil ASCII atau angka (maksimal 16 karakter)."
+#: src/pages.py:5653
+msgid "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
+msgstr "Nama pengguna harus diawali dengan huruf kecil ASCII dan hanya boleh berisi huruf kecil ASCII atau angka (maksimal 16 karakter)."
 
-#: src/pages.py:2832
+#: src/pages.py:3173
 msgid "Uses a traditional single root filesystem."
 msgstr "Menggunakan sistem file root tunggal tradisional."
 
-#: src/pages.py:4406
+#: src/pages.py:6601
 msgid "Validate Plan (No Installation)"
 msgstr "Validasi Rencana (Tanpa Instalasi)"
 
-#: src/pages.py:4405
+#: src/pages.py:6600
 msgid "Validate this installation plan?"
 msgstr "Validasi rencana instalasi ini?"
 
-#: src/pages.py:4606
+#: src/pages.py:6845
 msgid "Verify kernel module signatures"
 msgstr "Verifikasi tanda tangan modul kernel"
 
-#: src/pages.py:4571
+#: src/pages.py:6810
 msgid "Verify target disk isolation"
 msgstr "Verifikasi isolasi disk target"
 
@@ -1073,887 +934,819 @@ msgstr "Verifikasi isolasi disk target"
 msgid "Vietnamese"
 msgstr "Vietnam"
 
-#: src/pages.py:811
+#: src/pages.py:877
 msgid "Welcome to AnduinOS"
 msgstr "Selamat datang di AnduinOS"
 
-#: src/pages.py:2468
+#: src/pages.py:2620
 msgid "Windows detected"
 msgstr "Windows terdeteksi"
 
-#: src/pages.py:4188
-msgid ""
-"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
-"AnduinOS NVRAM entry."
-msgstr ""
-"Tulis hanya EFI/AnduinOS, jangan timpa EFI/BOOT, dan memerlukan entri NVRAM "
-"AnduinOS yang terverifikasi."
+#: src/pages.py:6284
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Tulis hanya EFI/AnduinOS, jangan timpa EFI/BOOT, dan memerlukan entri NVRAM AnduinOS yang terverifikasi."
 
-#: src/pages.py:4072
+#: src/pages.py:6178
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
-msgstr ""
-"membuat MOK lokal mesin; daftarkan setelah reboot dengan kata sandi 123456"
+msgstr "membuat MOK lokal mesin; daftarkan setelah reboot dengan kata sandi 123456"
 
-#: src/pages.py:4059
+#: src/pages.py:6165
 msgid "detect and install (may include non-free software)"
 msgstr "deteksi dan instal (mungkin termasuk perangkat lunak non-bebas)"
 
-#: src/pages.py:4121 src/pages.py:4055 src/pages.py:4061 src/pages.py:4067
+#: src/pages.py:6227 src/pages.py:6161 src/pages.py:6167 src/pages.py:6173
 msgid "do not install"
 msgstr "jangan instal"
 
-#: src/pages.py:4053 src/pages.py:4065
+#: src/pages.py:6159 src/pages.py:6171
 msgid "download and install"
 msgstr "unduh dan instal"
 
-#: src/pages.py:3055
+#: src/pages.py:3480 src/pages.py:5118
 msgid "ext4 (classic)"
 msgstr "ext4 (klasik)"
 
-#: src/pages.py:2829
+#: src/pages.py:3170
 msgid "ext4 — classic"
 msgstr "ext4 — klasik"
 
-#: src/pages.py:4077
+#: src/pages.py:6183
 msgid "not required"
 msgstr "tidak diperlukan"
 
-#: src/pages.py:4083
+#: src/pages.py:6189
 msgid "password required for login"
 msgstr "kata sandi diperlukan untuk login"
 
-#: src/pages.py:4024
+#: src/pages.py:6117
 msgid "single ext4 root filesystem"
 msgstr "sistem file root ext4 tunggal"
 
-#: src/pages.py:4005
+#: src/pages.py:6097
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / Boot Aman: {secure_boot}"
 
-#: src/pages.py:4176
+#: src/pages.py:6273
 msgid "{count}: {paths}"
 msgstr "{count}: {paths}"
 
-#: src/pages.py:4139
+#: src/pages.py:6238
 msgid "{name}: {start}–{end} MiB"
 msgstr "{name}: {start}–{end} MiB"
 
-#: src/pages.py:4147
+#: src/pages.py:6246 src/pages.py:6313
 msgid "{path} as {filesystem}"
 msgstr "{path} sebagai {filesystem}"
 
-#: src/pages.py:4171
+#: src/pages.py:6268
 msgid "{size} at {offset}"
 msgstr "{size} pada {offset}"
 
-#: src/pages.py:3288
+#: src/pages.py:3714
 msgid "{size} unallocated at {offset}"
 msgstr "{size} tidak dialokasikan pada {offset}"
 
-#: src/pages.py:5031
+#: src/pages.py:7272
 msgid "{step} failed"
 msgstr "{step} gagal"
 
-#: src/pages.py:4303
-msgid ""
-"⚠ Only the selected unallocated space will be partitioned and formatted. "
-"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
-"firmware boot entry may change. This installer will not shrink Windows for "
-"you."
-msgstr ""
-"⚠ Hanya ruang tidak dialokasikan yang dipilih akan dipartisi dan diformat. "
-"Partisi yang ada tetap dipertahankan, tetapi file EFI/AnduinOS dan entri "
-"boot firmware AnduinOS mungkin berubah. Pemasang ini tidak akan mengecilkan "
-"Windows untuk Anda."
+#: src/pages.py:6488
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Hanya ruang tidak dialokasikan yang dipilih akan dipartisi dan diformat. Partisi yang ada tetap dipertahankan, tetapi file EFI/AnduinOS dan entri boot firmware AnduinOS mungkin berubah. Pemasang ini tidak akan mengecilkan Windows untuk Anda."
 
-#: src/pages.py:4311
-msgid ""
-"⚠ This will erase ALL data on the selected disk. This action cannot be "
-"undone."
-msgstr ""
-"⚠ Ini akan menghapus SEMUA data pada disk yang dipilih. Tindakan ini tidak "
-"dapat dibatalkan."
+#: src/pages.py:6504
+msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
+msgstr "⚠ Ini akan menghapus SEMUA data pada disk yang dipilih. Tindakan ini tidak dapat diurungkan."
 
-#: src/pages.py:1176 src/pages.py:667 src/pages.py:1171
+#: src/pages.py:1243 src/pages.py:726 src/pages.py:1238
 msgid "Connect to the Internet"
 msgstr "Hubungkan ke Internet"
 
-#: src/pages.py:1343
+#: src/pages.py:1410
 msgid "Internet connection is ready."
 msgstr "Koneksi Internet siap."
 
-#: src/pages.py:1250
+#: src/pages.py:1317
 msgid "Available Wi-Fi Networks"
 msgstr "Jaringan Wi-Fi yang Tersedia"
 
-#: src/pages.py:4576
+#: src/pages.py:6815
 msgid "Preserve connected Wi-Fi network"
 msgstr "Pertahankan jaringan Wi-Fi yang terhubung"
 
-#: src/pages.py:2540 src/pages.py:3092
+#: src/pages.py:2691 src/pages.py:3517 src/pages.py:4166 src/pages.py:5388
+#: src/pages.py:4139 src/pages.py:4305
 msgid "Loading storage devices…"
 msgstr "Memuat perangkat penyimpanan…"
 
-#: src/pages.py:4335
+#: src/pages.py:6528
 msgid "Rechecking target disk…"
 msgstr "Memeriksa ulang disk target…"
 
-#: src/pages.py:2609 src/pages.py:3213 src/pages.py:4364
+#: src/pages.py:2760 src/pages.py:3639 src/pages.py:5336 src/pages.py:6557
 msgid "Storage devices could not be loaded: {error}"
 msgstr "Perangkat penyimpanan tidak dapat dimuat: {error}"
 
-#: src/pages.py:1218 src/pages.py:4586 src/pages.py:2252
+#: src/pages.py:1285 src/pages.py:6825 src/pages.py:2404
 msgid "Install extended multimedia format support"
 msgstr "Pasang dukungan format multimedia yang diperluas"
 
-#: src/pages.py:4063
+#: src/pages.py:6169
 msgid "Extended multimedia formats"
 msgstr "Format multimedia yang diperluas"
 
-#: src/pages.py:2256
-msgid ""
-"Adds wider GStreamer compatibility and support for additional legacy and "
-"specialist media formats. Some components may be subject to patent or "
-"redistribution terms."
-msgstr ""
-"Menambahkan kompatibilitas GStreamer yang lebih luas serta dukungan untuk "
-"format media lawas dan khusus tambahan. Beberapa komponen mungkin tunduk "
-"pada ketentuan paten atau distribusi ulang."
+#: src/pages.py:2408
+msgid "Adds wider GStreamer compatibility and support for additional legacy and specialist media formats. Some components may be subject to patent or redistribution terms."
+msgstr "Menambahkan kompatibilitas GStreamer yang lebih luas serta dukungan untuk format media lawas dan khusus tambahan. Beberapa komponen mungkin tunduk pada ketentuan paten atau distribusi ulang."
 
-#: src/pages.py:1473
+#: src/pages.py:1540
 msgid "A saved profile exists. Entering a password updates it securely."
-msgstr ""
-"Profil yang disimpan sudah ada. Memasukkan kata sandi akan memperbaruinya "
-"dengan aman."
+msgstr "Profil yang disimpan sudah ada. Memasukkan kata sandi akan memperbaruinya dengan aman."
 
-#: src/pages.py:1524
+#: src/pages.py:1591
 msgid "Anonymous identity (optional)"
 msgstr "Identitas anonim (opsional)"
 
-#: src/pages.py:1530
+#: src/pages.py:1597
 msgid "CA certificate path (optional)"
 msgstr "Jalur sertifikat CA (opsional)"
 
-#: src/pages.py:1239 src/pages.py:1409 src/pages.py:1482 src/pages.py:1600
-#: src/pages.py:1816
+#: src/pages.py:1306 src/pages.py:1476 src/pages.py:1549 src/pages.py:1667
+#: src/pages.py:1883 src/pages.py:4626 src/pages.py:4845 src/pages.py:5309
 msgid "Cancel"
 msgstr "Batal"
 
-#: src/pages.py:1786
+#: src/pages.py:1853
 msgid "Cancelling Wi-Fi operation…"
 msgstr "Membatalkan operasi Wi-Fi…"
 
-#: src/pages.py:1532
+#: src/pages.py:1599
 msgid "Client certificate path"
 msgstr "Jalur sertifikat klien"
 
-#: src/pages.py:1483 src/pages.py:1601
+#: src/pages.py:1550 src/pages.py:1668
 msgid "Connect"
-msgstr "Connect"
+msgstr "Sambungkan"
 
-#: src/pages.py:1817
+#: src/pages.py:1884 src/pages.py:6709
 msgid "Continue"
 msgstr "Lanjutkan"
 
-#: src/pages.py:1259 src/pages.py:1809
+#: src/pages.py:1326 src/pages.py:1876
 msgid "Connect to a hidden network"
 msgstr "Sambungkan ke jaringan tersembunyi"
 
-#: src/pages.py:1478 src/pages.py:1593
+#: src/pages.py:1545 src/pages.py:1660
 #, python-brace-format
 msgid "Connect to {network}"
 msgstr "Sambungkan ke {network}"
 
-#: src/pages.py:1654
+#: src/pages.py:1721
 msgid "Connected"
-msgstr "Connected"
+msgstr "Terhubung"
 
-#: src/pages.py:1453
+#: src/pages.py:1520
 #, python-brace-format
 msgid "Connecting to {network}…"
 msgstr "Sambungkan ke {network}…"
 
-#: src/pages.py:1755
+#: src/pages.py:1822
 msgid "Could not change the Wi-Fi connection"
 msgstr "Tidak dapat mengubah koneksi Wi-Fi"
 
-#: src/pages.py:1410
+#: src/pages.py:1477
 msgid "Disconnect"
-msgstr "Disconnect"
+msgstr "Putuskan sambungan"
 
-#: src/pages.py:1401
+#: src/pages.py:1468
 #, python-brace-format
 msgid "Disconnect from {network}?"
 msgstr "Putuskan sambungan dari {network}?"
 
-#: src/pages.py:1420
+#: src/pages.py:1487
 #, python-brace-format
 msgid "Disconnecting from {network}…"
 msgstr "Menghubungkan ulang dari {network}…"
 
-#: src/pages.py:1531
+#: src/pages.py:1598
 msgid "Domain suffix match (optional)"
 msgstr "Cocokkan akhiran domain (opsional)"
 
-#: src/pages.py:1515
+#: src/pages.py:1582
 msgid "EAP method"
 msgstr "Metode EAP"
 
-#: src/pages.py:1387 src/pages.py:1796
+#: src/pages.py:1454 src/pages.py:1863
 msgid "Enhanced Open (OWE)"
 msgstr "Buka Ditingkatkan (OWE)"
 
-#: src/pages.py:1595
-msgid ""
-"Enter the credentials supplied by your organization. Certificate validation "
-"is strongly recommended."
-msgstr ""
-"Masukkan kredensial yang disediakan oleh organisasi Anda. Validasi "
-"sertifikat sangat disarankan."
+#: src/pages.py:1662
+msgid "Enter the credentials supplied by your organization. Certificate validation is strongly recommended."
+msgstr "Masukkan kredensial yang disediakan oleh organisasi Anda. Validasi sertifikat sangat disarankan."
 
-#: src/pages.py:1811
+#: src/pages.py:1878
 msgid "Enter the exact network name and choose its security type."
 msgstr "Masukkan nama jaringan yang tepat dan pilih jenis keamanannya."
 
-#: src/pages.py:1390 src/pages.py:1800
+#: src/pages.py:1457 src/pages.py:1867
 msgid "Enterprise Wi-Fi"
 msgstr "Wi-Fi Perusahaan"
 
-#: src/pages.py:1523
+#: src/pages.py:1590
 msgid "Identity"
-msgstr "Identity"
+msgstr "Identitas"
 
-#: src/pages.py:1527
+#: src/pages.py:1594
 msgid "Inner authentication"
 msgstr "Otentikasi internal"
 
-#: src/pages.py:1790
+#: src/pages.py:1857
 msgid "Network name (SSID)"
 msgstr "Nama jaringan (SSID)"
 
-#: src/pages.py:1645
+#: src/pages.py:1712
 msgid "No Wi-Fi networks found."
 msgstr "Tidak ditemukan jaringan Wi-Fi."
 
-#: src/pages.py:1386 src/pages.py:1795
+#: src/pages.py:1453 src/pages.py:1862
 msgid "Open network"
 msgstr "Jaringan Terbuka"
 
-#: src/pages.py:1389 src/pages.py:1797 src/pages.py:1798
+#: src/pages.py:1456 src/pages.py:1864 src/pages.py:1865
 msgid "Personal Wi-Fi"
 msgstr "Wi-Fi Pribadi"
 
-#: src/pages.py:1535
+#: src/pages.py:1602
 msgid "Private key password (optional)"
 msgstr "Kata sandi kunci privat (opsional)"
 
-#: src/pages.py:1533
+#: src/pages.py:1600
 msgid "Private key path"
 msgstr "Jalur kunci privat"
 
-#: src/pages.py:1284
+#: src/pages.py:1351
 msgid "Refresh Wi-Fi networks"
 msgstr "Segarkan jaringan Wi-Fi"
 
-#: src/pages.py:1656
+#: src/pages.py:1723
 msgid "Saved"
-msgstr "Saved"
+msgstr "Tersimpan"
 
-#: src/pages.py:1792
+#: src/pages.py:1859
 msgid "Security"
-msgstr "Security"
+msgstr "Keamanan"
 
-#: src/pages.py:1405
-msgid ""
-"The installer will keep the saved network profile so it can be used again."
-msgstr ""
-"Penginstal akan menyimpan profil jaringan yang disimpan agar dapat digunakan"
-" kembali."
+#: src/pages.py:1472
+msgid "The installer will keep the saved network profile so it can be used again."
+msgstr "Penginstal akan menyimpan profil jaringan yang disimpan agar dapat digunakan kembali."
 
-#: src/pages.py:1356
+#: src/pages.py:1423
 msgid "The local network is connected, but Internet access is unavailable."
 msgstr "Jaringan lokal terhubung, tetapi akses Internet tidak tersedia."
 
-#: src/pages.py:1856
+#: src/pages.py:1923
 msgid "Turning Wi-Fi off…"
 msgstr "Mengaktifkan Wi-Fi..."
 
-#: src/pages.py:1854
+#: src/pages.py:1921
 msgid "Turning Wi-Fi on…"
 msgstr "Mengaktifkan Wi-Fi…"
 
-#: src/pages.py:1485
+#: src/pages.py:1552
 msgid "Use WPS"
 msgstr "Gunakan WPS"
 
-#: src/pages.py:1388 src/pages.py:1799
+#: src/pages.py:1455 src/pages.py:1866
 msgid "WEP (legacy)"
 msgstr "WEP (lama)"
 
-#: src/pages.py:1347
-msgid ""
-"Wi-Fi is connected, but the network requires sign-in through a captive "
-"portal."
-msgstr ""
-"Wi-Fi terhubung, tetapi jaringan memerlukan masuk melalui portal tertahan."
+#: src/pages.py:1414
+msgid "Wi-Fi is connected, but the network requires sign-in through a captive portal."
+msgstr "Wi-Fi terhubung, tetapi jaringan memerlukan masuk melalui portal tertahan."
 
-#: src/pages.py:1449
+#: src/pages.py:1516
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Menunggu WPS pada {network}. Tekan tombol WPS di router…"
 
-#: src/pages.py:3576
+#: src/pages.py:5661
 msgid "A password is required."
 msgstr "Kata sandi diperlukan."
 
-#: src/pages.py:3731
+#: src/pages.py:5817
 msgid "Administrative commands will no longer ask for your password."
 msgstr "Perintah administratif tidak akan lagi meminta kata sandi Anda."
 
-#: src/pages.py:3681 src/pages.py:3675
+#: src/pages.py:5767 src/pages.py:5761
 msgid "Advanced Options"
 msgstr "Opsi Lanjutan"
 
-#: src/pages.py:3747
+#: src/pages.py:5833
 msgid "Allow SSH login with the account password"
 msgstr "Izinkan masuk SSH dengan kata sandi akun"
 
-#: src/pages.py:4089
+#: src/pages.py:6195
 msgid "Automatic desktop login"
 msgstr "Masuk desktop otomatis"
 
-#: src/pages.py:3701
-msgid ""
-"Choose how the local administrator account signs in and authorizes system "
-"changes."
-msgstr ""
-"Pilih cara akun administrator lokal masuk dan mengotorisasi perubahan "
-"sistem."
+#: src/pages.py:5787
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Pilih cara akun administrator lokal masuk dan mengotorisasi perubahan sistem."
 
-#: src/pages.py:3682
+#: src/pages.py:5768
 msgid "Choose optional access and sign-in policies"
 msgstr "Pilih kebijakan akses dan masuk opsional"
 
-#: src/pages.py:3709
+#: src/pages.py:5795
 msgid "Choose whether this computer accepts remote Secure Shell connections."
 msgstr "Pilih apakah komputer ini menerima koneksi Secure Shell jarak jauh."
 
-#: src/pages.py:4604
+#: src/pages.py:6843
 msgid "Configure Secure Shell"
 msgstr "Konfigurasikan Secure Shell"
 
-#: src/pages.py:3699
+#: src/pages.py:5785
 msgid "Local Access"
 msgstr "Akses Lokal"
 
-#: src/pages.py:3737
+#: src/pages.py:5823
 msgid "Log in to the desktop without a password"
 msgstr "Masuk ke desktop tanpa kata sandi"
 
-#: src/pages.py:3739
+#: src/pages.py:5825
 msgid "Open this account's desktop automatically when the computer starts."
 msgstr "Buka desktop akun ini secara otomatis saat komputer dinyalakan."
 
-#: src/pages.py:3707
+#: src/pages.py:5793
 msgid "Remote Access"
 msgstr "Akses Jarak Jauh"
 
-#: src/pages.py:3730
+#: src/pages.py:5816
 msgid "Run sudo commands without a password"
 msgstr "Jalankan perintah sudo tanpa kata sandi"
 
-#: src/pages.py:4095
+#: src/pages.py:6201
 msgid "SSH password login"
 msgstr "Masuk SSH dengan kata sandi"
 
-#: src/pages.py:3749
+#: src/pages.py:5835
 msgid "Start Secure Shell and accept this account password over the network."
-msgstr ""
-"Jalankan Secure Shell dan terima kata sandi akun ini melalui jaringan."
+msgstr "Jalankan Secure Shell dan terima kata sandi akun ini melalui jaringan."
 
-#: src/pages.py:3759
+#: src/pages.py:5845
 msgid "This will reduce the security of the installed system."
 msgstr "Ini akan mengurangi keamanan sistem yang terpasang."
 
-#: src/pages.py:4093 src/pages.py:4099
+#: src/pages.py:6199 src/pages.py:6205
 msgid "disabled"
 msgstr "dinonaktifkan"
 
-#: src/pages.py:4091 src/pages.py:4097
+#: src/pages.py:6197 src/pages.py:6203
 msgid "enabled"
 msgstr "diaktifkan"
 
-#: src/pages.py:349
-msgid ""
-"AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently"
-" enabled on this computer, and we recommend enabling it for additional "
-"protection."
-msgstr ""
-"AnduinOS memiliki dukungan Secure Boot yang komprehensif. Secure Boot saat "
-"ini tidak diaktifkan pada komputer ini, dan kami merekomendasikan untuk "
-"mengaktifkannya demi perlindungan tambahan."
+#: src/pages.py:403
+msgid "AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently enabled on this computer, and we recommend enabling it for additional protection."
+msgstr "AnduinOS memiliki dukungan Secure Boot yang komprehensif. Secure Boot saat ini tidak diaktifkan pada komputer ini, dan kami merekomendasikan untuk mengaktifkannya demi perlindungan tambahan."
 
-#: src/pages.py:331
+#: src/pages.py:385
 msgid "AnduinOS supports Secure Boot"
 msgstr "AnduinOS mendukung Secure Boot"
 
-#: src/pages.py:360
-msgid ""
-"Battery power is sufficient or reliable power is connected. You can continue"
-" with the installation."
-msgstr ""
-"Daya baterai cukup atau daya eksternal yang andal tersambung. Anda dapat "
-"melanjutkan instalasi."
+#: src/pages.py:414
+msgid "Battery power is sufficient or reliable power is connected. You can continue with the installation."
+msgstr "Daya baterai cukup atau daya eksternal yang andal tersambung. Anda dapat melanjutkan instalasi."
 
-#: src/pages.py:366
-msgid ""
-"Connect reliable external power and charge above 25%, or charge above 45% "
-"while unplugged."
-msgstr ""
-"Hubungkan daya eksternal yang andal dan isi daya di atas 25%, atau isi daya "
-"di atas 45% saat tidak terhubung."
+#: src/pages.py:420
+msgid "Connect reliable external power and charge above 25%, or charge above 45% while unplugged."
+msgstr "Hubungkan daya eksternal yang andal dan isi daya di atas 25%, atau isi daya di atas 45% saat tidak terhubung."
 
-#: src/pages.py:338
+#: src/pages.py:392
 msgid "Could not open UEFI firmware settings"
 msgstr "Tidak dapat membuka pengaturan firmware UEFI"
 
-#: src/pages.py:333
+#: src/pages.py:387
 msgid "Get additional protection before installing AnduinOS."
 msgstr "Dapatkan perlindungan tambahan sebelum menginstal AnduinOS."
 
-#: src/pages.py:364
+#: src/pages.py:418
 msgid "Power conditions are safe for installation."
 msgstr "Kondisi daya aman untuk instalasi."
 
-#: src/pages.py:363
+#: src/pages.py:417
 msgid "Power ready"
 msgstr "Daya siap"
 
-#: src/pages.py:335
+#: src/pages.py:389
 msgid "Restart to UEFI Firmware Settings"
 msgstr "Mulai Ulang ke Pengaturan Firmware UEFI"
 
-#: src/pages.py:345
-msgid ""
-"Secure Boot is a UEFI security feature that verifies trusted, digitally "
-"signed software while your computer starts."
-msgstr ""
-"Secure Boot adalah fitur keamanan UEFI yang memverifikasi perangkat lunak "
-"yang tepercaya dan ditandatangani secara digital saat komputer Anda dimulai."
+#: src/pages.py:399
+msgid "Secure Boot is a UEFI security feature that verifies trusted, digitally signed software while your computer starts."
+msgstr "Secure Boot adalah fitur keamanan UEFI yang memverifikasi perangkat lunak yang tepercaya dan ditandatangani secara digital saat komputer Anda dimulai."
 
-#: src/pages.py:336
+#: src/pages.py:390
 msgid "Skip"
 msgstr "Lewati"
 
-#: src/pages.py:341
+#: src/pages.py:395
 msgid "The firmware settings could not be opened on this computer."
 msgstr "Pengaturan firmware tidak dapat dibuka di komputer ini."
 
-#: src/pages.py:354
-msgid ""
-"To enable it, open the UEFI firmware settings and look under Boot, Security,"
-" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
-"Firmware wording varies by manufacturer."
-msgstr ""
-"Untuk mengaktifkannya, buka pengaturan firmware UEFI dan cari di bawah Boot,"
-" Security, atau Secure Boot. Pilih Microsoft & 3rd-party CA atau aktifkan "
-"Secure Boot. Istilah firmware bervariasi tergantung produsen."
+#: src/pages.py:408
+msgid "To enable it, open the UEFI firmware settings and look under Boot, Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. Firmware wording varies by manufacturer."
+msgstr "Untuk mengaktifkannya, buka pengaturan firmware UEFI dan cari di bawah Boot, Security, atau Secure Boot. Pilih Microsoft & 3rd-party CA atau aktifkan Secure Boot. Istilah firmware bervariasi tergantung produsen."
 
+#: src/pages.py:3179
 msgid "Advanced"
 msgstr "Lanjutan"
 
-msgid ""
-"Keep Windows or other partitions, reuse or create an ESP, and design Root "
-"and Swap partitions with exact sizes."
-msgstr ""
-"Pertahankan Windows atau partisi lain, gunakan kembali atau buat ESP, dan "
-"rancang partisi Root serta Swap dengan ukuran yang tepat."
+#: src/pages.py:3181
+msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root and Swap partitions with exact sizes."
+msgstr "Pertahankan Windows atau partisi lain, gunakan kembali atau buat ESP, dan rancang partisi Root serta Swap dengan ukuran yang tepat."
 
-msgid ""
-"Manual changes are destructive. Existing partition starts are never moved. "
-"Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
-" or unclean volumes are never resized."
-msgstr ""
-"Perubahan manual bersifat merusak. Posisi awal partisi yang ada tidak pernah"
-" dipindahkan. NTFS tanpa enkripsi hanya dapat diperkecil setelah pemeriksaan"
-" keamanan yang ketat; volume terenkripsi, terpasang, atau yang sistem "
-"berkasnya tidak ditutup dengan benar tidak pernah diubah ukurannya."
+#: src/pages.py:3230
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Perubahan manual bersifat merusak. Posisi awal partisi yang ada tidak pernah dipindahkan. NTFS tanpa enkripsi hanya dapat diperkecil setelah pemeriksaan keamanan yang ketat; volume terenkripsi, terpasang, atau yang sistem berkasnya tidak ditutup dengan benar tidak pernah diubah ukurannya."
 
+#: src/pages.py:3410
 msgid "Install Alongside Automatically"
 msgstr "Instal Bersamaan Secara Otomatis"
 
+#: src/pages.py:3849
 msgid "ESP"
 msgstr "ESP"
 
+#: src/pages.py:3850
 msgid "Root"
-msgstr "Root"
+msgstr "Partisi root"
 
+#: src/pages.py:3866
 msgid "Unallocated"
 msgstr "Belum dialokasikan"
 
+#: src/pages.py:3973
 #, python-brace-format
 msgid "{name} · {size} · {start}–{end} MiB"
 msgstr "{name} · {size} · {start}–{end} MiB"
 
+#: src/pages.py:4045
 msgid "Current disk"
 msgstr "Disk saat ini"
 
+#: src/pages.py:4151 src/pages.py:4047
 msgid "Planned result"
 msgstr "Hasil yang direncanakan"
 
+#: src/pages.py:4071
 msgid "Advanced: Manual Partitioning"
 msgstr "Lanjutan: Partisi Manual"
 
-msgid ""
-"Windows was detected. Its partitions remain preserved unless you explicitly "
-"mark them for deletion."
-msgstr ""
-"Windows terdeteksi. Partisinya tetap dipertahankan kecuali Anda menandainya "
-"secara eksplisit untuk dihapus."
+#: src/pages.py:4104
+msgid "Windows was detected. Its partitions remain preserved unless you explicitly mark them for deletion."
+msgstr "Windows terdeteksi. Partisinya tetap dipertahankan kecuali Anda menandainya secara eksplisit untuk dihapus."
 
+#: src/pages.py:4173 src/pages.py:4958
 msgid "Initialize New GPT"
 msgstr "Inisialisasi GPT Baru"
 
+#: src/pages.py:4193
 msgid "Existing partitions"
 msgstr "Partisi yang ada"
 
-msgid ""
-"Reuse a healthy existing ESP without formatting it, or create a new one in "
-"available space."
-msgstr ""
-"Gunakan kembali ESP yang ada dan sehat tanpa memformatnya, atau buat yang "
-"baru di ruang yang tersedia."
+#: src/pages.py:4214
+msgid "Reuse a healthy existing ESP without formatting it, or create a new one in available space."
+msgstr "Gunakan kembali ESP yang ada dan sehat tanpa memformatnya, atau buat yang baru di ruang yang tersedia."
 
+#: src/pages.py:4248
 msgid "Add a partition"
 msgstr "Tambah partisi"
 
-msgid ""
-"Choose an available range, exact start position, and size. Nothing is "
-"written until installation begins."
-msgstr ""
-"Pilih rentang yang tersedia, posisi awal yang tepat, dan ukuran. Tidak ada "
-"yang ditulis sampai instalasi dimulai."
+#: src/pages.py:4252
+msgid "Choose an available range, exact start position, and size. Nothing is written until installation begins."
+msgstr "Pilih rentang yang tersedia, posisi awal yang tepat, dan ukuran. Tidak ada yang ditulis sampai instalasi dimulai."
 
+#: src/pages.py:4266
 msgid "Role"
 msgstr "Peran"
 
+#: src/pages.py:4267
 msgid "Available space"
 msgstr "Ruang tersedia"
 
+#: src/pages.py:4268 src/pages.py:4560
 msgid "Start (MiB)"
 msgstr "Mulai (MiB)"
 
+#: src/pages.py:4269 src/pages.py:4574
 msgid "Size (MiB)"
 msgstr "Ukuran (MiB)"
 
+#: src/pages.py:4283
 msgid "Use All"
 msgstr "Gunakan Semua"
 
+#: src/pages.py:4287
 msgid "Add Partition"
 msgstr "Tambahkan Partisi"
 
+#: src/pages.py:4321 src/pages.py:5146
 msgid "Edit"
 msgstr "Sunting"
 
+#: src/pages.py:4548
 msgid "That partition can no longer be edited safely."
 msgstr "Partisi itu tidak dapat lagi diedit dengan aman."
 
+#: src/pages.py:4587
 msgid "Use All Available Space"
 msgstr "Gunakan Semua Ruang Tersedia"
 
+#: src/pages.py:4616
 #, python-brace-format
 msgid "Edit {role} partition"
 msgstr "Edit partisi {role}"
 
-msgid ""
-"Choose an exact position and size inside the available range. Other planned "
-"partitions are not moved."
-msgstr ""
-"Pilih posisi dan ukuran yang tepat di dalam rentang yang tersedia. Partisi "
-"terencana lainnya tidak dipindahkan."
+#: src/pages.py:4620
+msgid "Choose an exact position and size inside the available range. Other planned partitions are not moved."
+msgstr "Pilih posisi dan ukuran yang tepat di dalam rentang yang tersedia. Partisi terencana lainnya tidak dipindahkan."
 
+#: src/pages.py:4627
 msgid "Apply Changes"
 msgstr "Terapkan Perubahan"
 
+#: src/pages.py:4665
 msgid "Close"
 msgstr "Tutup"
 
-msgid ""
-"BitLocker was detected. Return to Windows, open Manage BitLocker, choose "
-"Turn off BitLocker, and wait until decryption reaches 100%. Suspending "
-"protection is not enough. Back up the recovery key, fully shut Windows down,"
-" then start the installer again."
-msgstr ""
-"BitLocker terdeteksi. Kembali ke Windows, buka Kelola BitLocker, pilih "
-"Nonaktifkan BitLocker, lalu tunggu hingga dekripsi mencapai 100%. "
-"Menangguhkan perlindungan saja tidak cukup. Cadangkan kunci pemulihan, "
-"matikan Windows sepenuhnya, lalu jalankan kembali penginstal."
+#: src/pages.py:4673 src/pages.py:4897
+msgid "BitLocker was detected. Return to Windows, open Manage BitLocker, choose Turn off BitLocker, and wait until decryption reaches 100%. Suspending protection is not enough. Back up the recovery key, fully shut Windows down, then start the installer again."
+msgstr "BitLocker terdeteksi. Kembali ke Windows, buka Kelola BitLocker, pilih Nonaktifkan BitLocker, lalu tunggu hingga dekripsi mencapai 100%. Menangguhkan perlindungan saja tidak cukup. Cadangkan kunci pemulihan, matikan Windows sepenuhnya, lalu jalankan kembali penginstal."
 
-msgid ""
-"Windows is hibernated or Fast Startup is active. In an Administrator "
-"Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s "
-"/t 0'. Start the installer again only after Windows has fully shut down."
-msgstr ""
-"Windows sedang dalam hibernasi atau Startup Cepat aktif. Di Terminal "
-"Administrator, jalankan 'powercfg /h off', nonaktifkan Startup Cepat, lalu "
-"jalankan 'shutdown /s /t 0'. Jalankan kembali penginstal hanya setelah "
-"Windows benar-benar dimatikan."
+#: src/pages.py:4682
+msgid "Windows is hibernated or Fast Startup is active. In an Administrator Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s /t 0'. Start the installer again only after Windows has fully shut down."
+msgstr "Windows sedang dalam hibernasi atau Startup Cepat aktif. Di Terminal Administrator, jalankan 'powercfg /h off', nonaktifkan Startup Cepat, lalu jalankan 'shutdown /s /t 0'. Jalankan kembali penginstal hanya setelah Windows benar-benar dimatikan."
 
-msgid ""
-"Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk"
-" C: /f', allow every requested reboot to finish, then fully shut Windows "
-"down before trying again."
-msgstr ""
-"Windows tidak menutup volume NTFS ini dengan benar. Kembali ke Windows, "
-"jalankan 'chkdsk C: /f', biarkan setiap mulai ulang yang diminta selesai, "
-"lalu matikan Windows sepenuhnya sebelum mencoba lagi."
+#: src/pages.py:4694
+msgid "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk C: /f', allow every requested reboot to finish, then fully shut Windows down before trying again."
+msgstr "Windows tidak menutup volume NTFS ini dengan benar. Kembali ke Windows, jalankan 'chkdsk C: /f', biarkan setiap mulai ulang yang diminta selesai, lalu matikan Windows sepenuhnya sebelum mencoba lagi."
 
-msgid ""
-"This target would require moving critical NTFS MFT metadata through a "
-"currently unsafe upstream code path. Choose a larger Windows size or shrink "
-"the volume from Windows."
-msgstr ""
-"Ukuran yang dipilih ini mengharuskan pemindahan metadata MFT NTFS penting "
-"melalui jalur dalam kode proyek sumber yang saat ini tidak aman. Pilih "
-"ukuran partisi Windows yang lebih besar atau perkecil volume dari Windows."
+#: src/pages.py:4701
+msgid "This target would require moving critical NTFS MFT metadata through a currently unsafe upstream code path. Choose a larger Windows size or shrink the volume from Windows."
+msgstr "Ukuran yang dipilih ini mengharuskan pemindahan metadata MFT NTFS penting melalui jalur dalam kode proyek sumber yang saat ini tidak aman. Pilih ukuran partisi Windows yang lebih besar atau perkecil volume dari Windows."
 
-msgid ""
-"This NTFS volume is mounted or in use. Unmount it and rescan storage before "
-"continuing."
-msgstr ""
-"Volume NTFS ini sedang dikaitkan atau digunakan. Lepas kait volume ini dan "
-"pindai ulang penyimpanan sebelum melanjutkan."
+#: src/pages.py:4711
+msgid "This NTFS volume is mounted or in use. Unmount it and rescan storage before continuing."
+msgstr "Volume NTFS ini sedang dikaitkan atau digunakan. Lepas kait volume ini dan pindai ulang penyimpanan sebelum melanjutkan."
 
-msgid ""
-"This operation moves NTFS data and changes the GPT partition boundary. A "
-"power loss, failing drive, firmware fault or filesystem bug can cause "
-"permanent data loss. Back up all important Windows files before continuing."
-msgstr ""
-"Operasi ini memindahkan data NTFS dan mengubah batas partisi GPT. Kehilangan"
-" daya, kerusakan disk, kesalahan firmware, atau bug sistem berkas dapat "
-"menyebabkan hilangnya data secara permanen. Cadangkan semua file Windows "
-"yang penting sebelum melanjutkan."
+#: src/pages.py:4736
+msgid "This operation moves NTFS data and changes the GPT partition boundary. A power loss, failing drive, firmware fault or filesystem bug can cause permanent data loss. Back up all important Windows files before continuing."
+msgstr "Operasi ini memindahkan data NTFS dan mengubah batas partisi GPT. Kehilangan daya, kerusakan disk, kesalahan firmware, atau bug sistem berkas dapat menyebabkan hilangnya data secara permanen. Cadangkan semua file Windows yang penting sebelum melanjutkan."
 
+#: src/pages.py:4749
 msgid "New Windows partition size"
 msgstr "Ukuran partisi Windows baru"
 
+#: src/pages.py:4772
 msgid "MiB"
 msgstr "MiB"
 
+#: src/pages.py:4774
 #, python-brace-format
 msgid "Allowed: {minimum}–{maximum}"
-msgstr "Allowed: {minimum}–{maximum}"
+msgstr "Diizinkan: {minimum}–{maximum}"
 
+#: src/pages.py:4794
 #, python-brace-format
 msgid "Windows: {windows} · New unallocated space: {free}"
 msgstr "Windows: {windows} · Ruang baru yang belum dialokasikan: {free}"
 
-msgid ""
-"I have backed up my data and understand that shrinking an existing Windows "
-"partition can cause permanent data loss."
-msgstr ""
-"Saya telah mencadangkan data saya dan memahami bahwa memperkecil partisi "
-"Windows yang ada dapat menyebabkan hilangnya data secara permanen."
+#: src/pages.py:4826
+msgid "I have backed up my data and understand that shrinking an existing Windows partition can cause permanent data loss."
+msgstr "Saya telah mencadangkan data saya dan memahami bahwa memperkecil partisi Windows yang ada dapat menyebabkan hilangnya data secara permanen."
 
+#: src/pages.py:4835
 #, python-brace-format
 msgid "Change the size of {partition}?"
 msgstr "Ubah ukuran {partition}?"
 
-msgid ""
-"The partition start will not move. Only its end will move left, creating "
-"unallocated space immediately after it."
-msgstr ""
-"Titik awal partisi tidak akan dipindahkan. Hanya titik akhirnya yang akan "
-"bergeser ke kiri, sehingga menciptakan ruang yang belum dialokasikan tepat "
-"setelahnya."
+#: src/pages.py:4839
+msgid "The partition start will not move. Only its end will move left, creating unallocated space immediately after it."
+msgstr "Titik awal partisi tidak akan dipindahkan. Hanya titik akhirnya yang akan bergeser ke kiri, sehingga menciptakan ruang yang belum dialokasikan tepat setelahnya."
 
+#: src/pages.py:4847
 msgid "Undo Planned Resize"
 msgstr "Urungkan Perubahan Ukuran yang Direncanakan"
 
+#: src/pages.py:4848
 msgid "Plan Resize"
 msgstr "Rencanakan Perubahan Ukuran"
 
+#: src/pages.py:4895
 msgid "Turn off BitLocker before shrinking"
 msgstr "Nonaktifkan BitLocker sebelum memperkecil partisi"
 
+#: src/pages.py:4907
 #, python-brace-format
 msgid "Checking whether {partition} can be resized safely…"
 msgstr "Memeriksa apakah {partition} dapat diubah ukurannya dengan aman…"
 
+#: src/pages.py:4918
 msgid "NTFS safety check failed"
 msgstr "Pemeriksaan keamanan NTFS gagal"
 
+#: src/pages.py:4925
 msgid "This partition cannot be resized safely"
 msgstr "Partisi ini tidak dapat diubah ukurannya dengan aman"
 
+#: src/pages.py:4951
 msgid "New empty GPT — every existing partition will be deleted"
 msgstr "GPT kosong baru — setiap partisi yang ada akan dihapus"
 
+#: src/pages.py:4953
 msgid "Keep current GPT — only marked partitions are deleted"
-msgstr ""
-"Pertahankan GPT saat ini — hanya partisi yang ditandai yang akan dihapus"
+msgstr "Pertahankan GPT saat ini — hanya partisi yang ditandai yang akan dihapus"
 
+#: src/pages.py:4956
 msgid "Keep Current GPT"
 msgstr "Pertahankan GPT Saat Ini"
 
+#: src/pages.py:4969
 msgid "unknown"
 msgstr "tidak diketahui"
 
+#: src/pages.py:4970
 msgid "WILL DELETE"
 msgstr "AKAN MENGHAPUS"
 
+#: src/pages.py:4970
 msgid "Preserve"
 msgstr "Pertahankan"
 
+#: src/pages.py:5005
 #, python-brace-format
 msgid "Planned size: {size}"
 msgstr "Ukuran yang direncanakan: {size}"
 
+#: src/pages.py:5020
 msgid "Deleted by new GPT"
 msgstr "Dihapus oleh GPT baru"
 
+#: src/pages.py:5022
 msgid "Undo"
 msgstr "Urungkan"
 
+#: src/pages.py:5024
 msgid "Delete"
 msgstr "Hapus"
 
+#: src/pages.py:5029
 msgid "RESIZE"
-msgstr "RESIZE"
+msgstr "UBAH UKURAN"
 
+#: src/pages.py:5047
 msgid "Change Size"
 msgstr "Ubah Ukuran"
 
+#: src/pages.py:5062
 msgid "This disk has no existing partitions."
 msgstr "Disk ini tidak memiliki partisi yang sudah ada."
 
+#: src/pages.py:5079
 msgid "Create a new ESP partition"
 msgstr "Buat partisi ESP baru"
 
+#: src/pages.py:5136
 #, python-brace-format
 msgid "{size} · {start}–{end} MiB"
 msgstr "{size} · {start}–{end} MiB"
 
+#: src/pages.py:5141
 msgid "Remove"
 msgstr "Hapus"
 
+#: src/pages.py:3914 src/pages.py:3925 src/pages.py:5143
 msgid "New"
 msgstr "Baru"
 
-msgid ""
-"No new partitions yet. Add an ESP if needed, one Root partition, and "
-"optionally Swap."
-msgstr ""
-"Belum ada partisi baru. Tambahkan ESP jika diperlukan, satu partisi Root, "
-"dan Swap opsional."
+#: src/pages.py:5156
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
+msgstr "Belum ada partisi baru. Tambahkan ESP jika diperlukan, satu partisi Root, dan Swap opsional."
 
+#: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
 msgstr "{size} di {start} MiB"
 
+#: src/pages.py:5205
 msgid "an ESP of at least 512 MiB"
 msgstr "ESP minimal 512 MiB"
 
+#: src/pages.py:5207
 msgid "a Root partition of at least 20 GiB"
 msgstr "partisi Root minimal 20 GiB"
 
+#: src/pages.py:5209
 #, python-brace-format
 msgid "Complete the plan: {requirements}."
 msgstr "Lengkapi rencana: {requirements}."
 
-msgid ""
-"Layout is valid. Only the listed resizes, deletes, creates and formats will "
-"be sent to the privileged executor."
-msgstr ""
-"Tata letak partisi valid. Hanya operasi pengubahan ukuran, penghapusan, "
-"pembuatan, dan pemformatan yang tercantum yang akan dikirim ke proses "
-"layanan dengan hak istimewa."
+#: src/pages.py:5222
+msgid "Layout is valid. Only the listed resizes, deletes, creates and formats will be sent to the privileged executor."
+msgstr "Tata letak partisi valid. Hanya operasi pengubahan ukuran, penghapusan, pembuatan, dan pemformatan yang tercantum yang akan dikirim ke proses layanan dengan hak istimewa."
 
+#: src/pages.py:5262
 msgid "That partition role already exists."
 msgstr "Peran partisi tersebut sudah ada."
 
+#: src/pages.py:5302
 msgid "Initialize a new GPT?"
 msgstr "Inisialisasi GPT baru?"
 
-msgid ""
-"Every existing partition and all data on this disk will be deleted. You must"
-" then create a new ESP and Root partition."
-msgstr ""
-"Setiap partisi yang ada dan semua data di disk ini akan dihapus. Anda "
-"kemudian harus membuat partisi ESP dan Root baru."
+#: src/pages.py:5304
+msgid "Every existing partition and all data on this disk will be deleted. You must then create a new ESP and Root partition."
+msgstr "Setiap partisi yang ada dan semua data di disk ini akan dihapus. Anda kemudian harus membuat partisi ESP dan Root baru."
 
+#: src/pages.py:5310
 msgid "Initialize GPT"
 msgstr "Inisialisasi GPT"
 
+#: src/pages.py:5346
 msgid "The selected disk changed or disappeared."
 msgstr "Disk yang dipilih telah berubah atau hilang."
 
+#: src/pages.py:5351
 msgid "The selected disk topology changed. Select it again."
 msgstr "Topologi disk yang dipilih telah berubah. Pilih kembali."
 
+#: src/pages.py:6292 src/pages.py:6293 src/pages.py:6302
 msgid "none"
 msgstr "tidak ada"
 
+#: src/pages.py:6295
 #, python-brace-format
 msgid "{path}: {before} → {after} (free {reclaimed})"
-msgstr "{path}: {before} → {after} (free {reclaimed})"
+msgstr "{path}: {before} → {after} (ruang yang dibebaskan {reclaimed})"
 
+#: src/pages.py:6304
 #, python-brace-format
 msgid "{name}: {size} MiB ({start}–{end})"
 msgstr "{name}: {size} MiB ({start}–{end})"
 
+#: src/pages.py:6320
 msgid "Initialize a new empty GPT"
 msgstr "Inisialisasi GPT baru yang kosong"
 
+#: src/pages.py:6322
 msgid "Keep the current GPT"
 msgstr "Pertahankan GPT saat ini"
 
+#: src/pages.py:6326
 #, python-brace-format
 msgid "Reuse {path}; inspect it and never format it."
 msgstr "Gunakan ulang {path}; periksa dan jangan pernah memformatnya."
 
+#: src/pages.py:6330
 msgid "Create and format a new EFI System Partition."
 msgstr "Buat dan format Partisi Sistem EFI baru."
 
+#: src/pages.py:6334
 msgid "Advanced manual GPT"
 msgstr "GPT manual lanjutan"
 
+#: src/pages.py:6335
 msgid "Partition table"
 msgstr "Tabel partisi"
 
+#: src/pages.py:6337
 msgid "Deleted partitions"
 msgstr "Partisi yang dihapus"
 
+#: src/pages.py:6338
 msgid "Resized partitions"
 msgstr "Partisi yang diubah ukurannya"
 
-msgid ""
-"Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS "
-"NVRAM entry."
-msgstr ""
-"Tulis hanya EFI/AnduinOS, pertahankan EFI/BOOT, dan buat entri NVRAM "
-"AnduinOS yang terverifikasi."
+#: src/pages.py:6344
+msgid "Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS NVRAM entry."
+msgstr "Tulis hanya EFI/AnduinOS, pertahankan EFI/BOOT, dan buat entri NVRAM AnduinOS yang terverifikasi."
 
+#: src/pages.py:6402
 msgid "Manual storage selection is missing. Return and review it."
 msgstr "Pemilihan penyimpanan manual tidak ada. Kembali dan tinjau."
 
-msgid ""
-"⚠ Listed NTFS resizes will move filesystem data and partition boundaries. "
-"Listed partitions will be deleted and every listed new partition will be "
-"formatted. Back up important data first; these partitioning operations "
-"cannot be undone."
-msgstr ""
-"⚠ Perubahan ukuran NTFS yang terdaftar akan memindahkan data sistem berkas "
-"dan batas partisi. Partisi yang terdaftar akan dihapus dan setiap partisi "
-"baru yang terdaftar akan diformat. Cadangkan data penting terlebih dahulu; "
-"operasi partisi ini tidak dapat dibatalkan."
+#: src/pages.py:6496
+msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Perubahan ukuran NTFS yang terdaftar akan memindahkan data sistem berkas dan batas partisi. Partisi yang terdaftar akan dihapus dan setiap partisi baru yang terdaftar akan diformat. Cadangkan data penting terlebih dahulu; operasi partisi ini tidak dapat diurungkan."
 
+#: src/pages.py:6606
 msgid "Apply this manual disk layout?"
 msgstr "Terapkan tata letak disk manual ini?"
 
+#: src/pages.py:6607 src/pages.py:6735
 msgid "Apply Layout and Install"
 msgstr "Terapkan Tata Letak dan Instal"
 
+#: src/pages.py:6630
 #, python-brace-format
 msgid ""
 "AnduinOS will apply only the reviewed manual changes to {disk}.\n"
@@ -1962,89 +1755,74 @@ msgstr ""
 "AnduinOS hanya akan menerapkan perubahan manual yang ditinjau ke {disk}.\n"
 "\n"
 
-msgid ""
-"Only the explicitly listed partitions will be deleted or formatted. "
-"Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
-msgstr ""
-"Hanya partisi yang secara eksplisit terdaftar yang akan dihapus atau "
-"diformat. Partisi yang tidak terlibat tetap tidak berubah; EFI/BOOT tidak "
-"ditimpa."
+#: src/pages.py:6658
+msgid "Only the explicitly listed partitions will be deleted or formatted. Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
+msgstr "Hanya partisi yang secara eksplisit terdaftar yang akan dihapus atau diformat. Partisi yang tidak terlibat tetap tidak berubah; EFI/BOOT tidak ditimpa."
 
-msgid ""
-"Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
-"shrunk after safety checks."
-msgstr ""
-"Sunting satu disk GPT. Titik awal partisi tidak pernah dipindahkan; partisi "
-"NTFS biasa dapat diperkecil setelah pemeriksaan keamanan."
+#: src/pages.py:4072
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
+msgstr "Sunting satu disk GPT. Titik awal partisi tidak pernah dipindahkan; partisi NTFS biasa dapat diperkecil setelah pemeriksaan keamanan."
 
+#: src/pages.py:5119
 msgid "XFS (classic, scalable)"
 msgstr "XFS (klasik, dapat diskalakan)"
 
+#: src/pages.py:5120
 msgid "F2FS (flash-optimized)"
 msgstr "F2FS (dioptimalkan untuk flash)"
-
-#: src/pages.py:2920
-msgid ""
-"This size protects ordinary memory pressure, but is smaller than the "
-"hibernation target. Hibernation may fail or be unavailable."
-msgstr ""
-"Ukuran ini melindungi dari tekanan memori biasa, tetapi lebih kecil dari "
-"target hibernasi. Hibernasi mungkin gagal atau tidak tersedia."
-
-#: src/pages.py:2927
-msgid ""
-"This exceeds the AnduinOS recommendation. It consumes more disk space and "
-"normally does not improve runtime performance."
-msgstr ""
-"Ukuran ini lebih besar daripada ukuran yang direkomendasikan AnduinOS. "
-"Ukuran ini menggunakan lebih banyak ruang disk dan biasanya tidak "
-"meningkatkan kinerja sistem saat digunakan."
-
-#: src/pages.py:6698
-msgid "ZRAM will remain enabled regardless of this choice."
-msgstr "ZRAM akan tetap diaktifkan terlepas dari pilihan ini."
-
-#: src/pages.py:2913
-msgid ""
-"This is below AnduinOS's runtime safety target. ZRAM still works, but heavy "
-"browser or application workloads can run out of backing memory sooner; "
-"hibernation is also unavailable."
-msgstr ""
-"Ukuran ini berada di bawah batas aman minimum AnduinOS untuk penggunaan "
-"normal. ZRAM tetap berfungsi, tetapi beban kerja browser atau aplikasi yang "
-"berat dapat lebih cepat menghabiskan ruang swap yang tersedia; hibernasi "
-"juga tidak tersedia."
 
 #: src/pages.py:3004
 msgid "0 GiB · ZRAM only"
 msgstr "0 GiB · Hanya ZRAM"
 
 #: src/pages.py:2900
-msgid ""
-"Disk Swap will not be created. ZRAM remains enabled, but sustained memory "
-"pressure can terminate applications and hibernation is unavailable. This is "
-"strongly discouraged."
-msgstr ""
-"Swap pada disk tidak akan dibuat. ZRAM tetap aktif, tetapi tekanan memori "
-"berkepanjangan dapat menyebabkan aplikasi dihentikan, dan hibernasi tidak "
-"tersedia. Pilihan ini sangat tidak disarankan."
+msgid "Disk Swap will not be created. ZRAM remains enabled, but sustained memory pressure can terminate applications and hibernation is unavailable. This is strongly discouraged."
+msgstr "Swap pada disk tidak akan dibuat. ZRAM tetap aktif, tetapi tekanan memori berkepanjangan dapat menyebabkan aplikasi dihentikan, dan hibernasi tidak tersedia. Pilihan ini sangat tidak disarankan."
 
-#: src/pages.py:2895
-msgid "✓ Best performance — AnduinOS recommended Swap size."
-msgstr "✓ Kinerja terbaik — ukuran Swap yang direkomendasikan AnduinOS."
+#: src/pages.py:6702
+msgid "Review your custom Swap size"
+msgstr "Tinjau ukuran Swap kustom Anda"
+
+#: src/pages.py:2927
+msgid "This exceeds the AnduinOS recommendation. It consumes more disk space and normally does not improve runtime performance."
+msgstr "Ukuran ini lebih besar daripada ukuran yang direkomendasikan AnduinOS. Ukuran ini menggunakan lebih banyak ruang disk dan biasanya tidak meningkatkan kinerja sistem saat digunakan."
+
+#: src/pages.py:2913
+msgid "This is below AnduinOS's runtime safety target. ZRAM still works, but heavy browser or application workloads can run out of backing memory sooner; hibernation is also unavailable."
+msgstr "Ukuran ini berada di bawah batas aman minimum AnduinOS untuk penggunaan normal. ZRAM tetap berfungsi, tetapi beban kerja browser atau aplikasi yang berat dapat lebih cepat menghabiskan ruang swap yang tersedia; hibernasi juga tidak tersedia."
+
+#: src/pages.py:2920
+msgid "This size protects ordinary memory pressure, but is smaller than the hibernation target. Hibernation may fail or be unavailable."
+msgstr "Ukuran ini cukup untuk menangani tekanan memori biasa, tetapi lebih kecil daripada ukuran yang diperlukan untuk hibernasi. Hibernasi mungkin gagal atau tidak tersedia."
 
 #: src/pages.py:3028
-msgid ""
-"ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses"
-" priority 10."
-msgstr ""
-"ZRAM selalu aktif: 50% RAM · LZ4 · prioritas 100. Swap pada disk menggunakan"
-" prioritas 10."
+msgid "ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses priority 10."
+msgstr "ZRAM selalu aktif: 50% RAM · LZ4 · prioritas 100. Swap pada disk menggunakan prioritas 10."
+
+#: src/pages.py:6705
+msgid "ZRAM will remain enabled regardless of this choice."
+msgstr "ZRAM akan tetap diaktifkan terlepas dari pilihan ini."
 
 #: src/pages.py:3008
 msgid "{size} GiB · Max"
 msgstr "{size} GiB · Maks"
 
-#: src/pages.py:6695
-msgid "Review your custom Swap size"
-msgstr "Tinjau ukuran Swap kustom Anda"
+#: src/pages.py:2895
+msgid "✓ Best performance — AnduinOS recommended Swap size."
+msgstr "✓ Kinerja terbaik — ukuran Swap yang direkomendasikan AnduinOS."
+
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:11
+msgid "Authorization is required to inspect disk partition geometry"
+msgstr "Otorisasi diperlukan untuk memeriksa posisi dan ukuran pasti partisi disk"
+
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:10
+msgid "Read exact disk partition geometry for the AnduinOS installer"
+msgstr "Baca posisi dan ukuran pasti partisi disk untuk penginstal AnduinOS"
+
+#: assets/anduinos-installer-beta-live-shortcut.desktop:3
+msgid "Prepare and start AnduinOS Installer"
+msgstr "Siapkan dan jalankan Penginstal AnduinOS"
+
+#: assets/anduinos-installer-beta.desktop:59
+msgid "Install AnduinOS to your computer"
+msgstr "Instal AnduinOS ke komputer Anda"

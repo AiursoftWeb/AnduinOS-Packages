@@ -3833,6 +3833,17 @@ def build_guided_storage_page(shared, nav_view):
 
 # ── page 6: Manual GPT storage ──────────────────────────────────────────
 
+MANUAL_PARTITION_ROLES = (
+    ManualPartitionRole.EFI_SYSTEM,
+    ManualPartitionRole.ROOT,
+    ManualPartitionRole.SWAP,
+)
+
+
+def _manual_role_choices(lang):
+    return [_manual_role_title(role, lang) for role in MANUAL_PARTITION_ROLES]
+
+
 def _manual_role_title(role, lang):
     return {
         ManualPartitionRole.EFI_SYSTEM: _("ESP", lang),
@@ -4257,7 +4268,7 @@ def build_advanced_storage_page(shared, nav_view):
     create_grid.attach(Gtk.Label(label=_("Start (MiB)", lang)), 0, 2, 1, 1)
     create_grid.attach(Gtk.Label(label=_("Size (MiB)", lang)), 1, 2, 1, 1)
     role_dropdown = Gtk.DropDown(
-        model=Gtk.StringList.new(["ESP", "Root", "Swap"]),
+        model=Gtk.StringList.new(_manual_role_choices(lang)),
         sensitive=False,
     )
     role_dropdown.set_selected(1)
@@ -4344,11 +4355,7 @@ def build_advanced_storage_page(shared, nav_view):
             next_button.set_sensitive(enabled)
 
     def _role():
-        return (
-            ManualPartitionRole.EFI_SYSTEM,
-            ManualPartitionRole.ROOT,
-            ManualPartitionRole.SWAP,
-        )[role_dropdown.get_selected()]
+        return MANUAL_PARTITION_ROLES[role_dropdown.get_selected()]
 
     def _replace_draft(**changes):
         nonlocal draft

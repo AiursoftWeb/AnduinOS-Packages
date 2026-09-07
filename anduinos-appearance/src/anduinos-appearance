@@ -307,7 +307,10 @@ class PanelWidgetsPage(Adw.PreferencesPage):
             subprocess.run(['dconf', 'write', f'{ARC}/show-activities-button', v], check=True)
             # Force refresh Dash-to-Panel to override legacy 2.0.0 invisible state
             apply_style_and_position(self.win.current_style, self.win.current_position)
-            self.win._toast(_('✓ Activities button — {action}n').format(action=('shown' if visible else 'hidden')))
+            self.win._toast(
+                _('✓ Activities button shown')
+                if visible else _('✓ Activities button hidden')
+            )
         except subprocess.CalledProcessError:
             self.win._toast(_('✗ Failed to toggle activities button'))
             self._busy = True
@@ -333,7 +336,10 @@ class PanelWidgetsPage(Adw.PreferencesPage):
         try:
             subprocess.run(['gnome-extensions', action, uuid], check=True)
         except subprocess.CalledProcessError:
-            self.win._toast(_('✗ Failed to {action} {label}').format(action=action, label=label))
+            self.win._toast(
+                (_('✗ Failed to enable {label}') if state
+                 else _('✗ Failed to disable {label}')).format(label=label)
+            )
             # revert switch
             self._busy = True
             switch_row.set_active(not state)
@@ -346,7 +352,10 @@ class PanelWidgetsPage(Adw.PreferencesPage):
             except Exception:
                 self.win._toast(_('Weather was disabled, but its saved permission could not be cleared.'))
             self.weather_location_button.set_sensitive(False)
-        self.win._toast(_('✓ {label} — {action}d').format(label=label, action=action))
+        self.win._toast(
+            (_('✓ {label} enabled') if state
+             else _('✓ {label} disabled')).format(label=label)
+        )
 
     def _show_weather_consent(self, on_accept, on_reject):
         body = _(

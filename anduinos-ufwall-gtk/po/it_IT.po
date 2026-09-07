@@ -58,23 +58,23 @@ msgstr "Profili delle applicazioni"
 msgid "Audit"
 msgstr "Verifica"
 
-#: src/views/network_audit_view.rs:277
+#: src/views/network_audit_view.rs:278
 msgid "Auditor Error"
 msgstr "Errore dell'auditor"
 
-#: src/views/network_audit_view.rs:504
+#: src/views/network_audit_view.rs:505
 msgid "Block"
 msgstr "Blocca"
 
-#: src/views/network_audit_view.rs:500
+#: src/views/network_audit_view.rs:501
 msgid "Block Connection?"
 msgstr "Bloccare connessione?"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid "Block inbound traffic from"
 msgstr "Blocca il traffico in ingresso da"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid "Block outbound traffic to"
 msgstr "Blocca il traffico in uscita verso"
 
@@ -82,7 +82,7 @@ msgstr "Blocca il traffico in uscita verso"
 msgid "Blocked Events"
 msgstr "Eventi bloccati"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Blocked Successfully"
 msgstr "Bloccato con successo"
 
@@ -90,7 +90,7 @@ msgstr "Bloccato con successo"
 msgid "Both"
 msgstr "Entrambi"
 
-#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/views/network_audit_view.rs:504 src/views/rules_view.rs:121
 #: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "Annulla"
@@ -193,11 +193,12 @@ msgstr "Direzione"
 msgid "Error"
 msgstr "Errore"
 
-#: src/views/network_audit_view.rs:554
+#: src/views/network_audit_view.rs:555
 msgid "Failed to Block"
 msgstr "Impossibile bloccare"
 
 #: src/views/status_view.rs:95 src/window.rs:64
+#: data/com.anduinos.ufwall.desktop:29 data/com.anduinos.ufwall.desktop:57
 msgid "Firewall"
 msgstr "Firewall"
 
@@ -291,7 +292,7 @@ msgstr "Nessuna porta in ascolto rilevata"
 
 #: src/views/status_view.rs:152
 msgid "Off"
-msgstr "Off"
+msgstr "Disattivato"
 
 #: src/widgets/add_rule_dialog.rs:117
 msgid "Out"
@@ -350,7 +351,7 @@ msgstr "Rifiuta"
 msgid "Resolve Domains"
 msgstr "Risolvi i domini"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Rule added to block"
 msgstr "Regola aggiunta alla lista di blocco"
 
@@ -400,12 +401,12 @@ msgstr ""
 "Questa azione cancellerà tutte le regole personalizzate. L'operazione non "
 "può essere annullata."
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr "Ciò impedirà all'host remoto di inviare pacchetti alla tua macchina."
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr "Ciò impedirà alla tua macchina di inviare pacchetti all'host remoto."
@@ -542,7 +543,7 @@ msgstr "Virtual Network Computing desktop remoto"
 msgid "Windows file and printer sharing"
 msgstr "Condivisione file e stampanti Windows"
 
-#: src/views/network_audit_view.rs:534
+#: src/views/network_audit_view.rs:535
 msgid "Audit Block"
 msgstr "Blocco audit"
 
@@ -612,27 +613,27 @@ msgstr ""
 msgid "Network service command failed"
 msgstr "Comando del servizio di rete non riuscito"
 
-#: src/views/network_audit_view.rs:371
+#: src/views/network_audit_view.rs:372
 msgid "No Active Connections"
 msgstr "Nessuna connessione attiva"
 
-#: src/views/network_audit_view.rs:361
+#: src/views/network_audit_view.rs:362
 msgid "No Inbound Connections"
 msgstr "Nessuna connessione in entrata"
 
-#: src/views/network_audit_view.rs:366
+#: src/views/network_audit_view.rs:367
 msgid "No Outbound Connections"
 msgstr "Nessuna connessione in uscita"
 
-#: src/views/network_audit_view.rs:367
+#: src/views/network_audit_view.rs:368
 msgid "No applications are sending data to the internet."
 msgstr "Nessuna applicazione sta inviando dati a Internet."
 
-#: src/views/network_audit_view.rs:362
+#: src/views/network_audit_view.rs:363
 msgid "No external devices are connecting to your open ports."
 msgstr "Nessun dispositivo esterno si sta collegando alle porte aperte."
 
-#: src/views/network_audit_view.rs:372
+#: src/views/network_audit_view.rs:373
 msgid "No network activity detected."
 msgstr "Nessuna attività di rete rilevata."
 
@@ -651,3 +652,29 @@ msgstr "Upload"
 #: src/ufw/backend.rs:48
 msgid "pkexec failed"
 msgstr "pkexec non riuscito"
+
+#: data/com.anduinos.ufwall.desktop:124
+msgid "firewall;ufw;security;network;"
+msgstr "firewall;ufw;sicurezza;rete;"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:82
+msgid "Authentication is required to change local network discovery"
+msgstr ""
+"È richiesta l'autenticazione per modificare la scoperta della rete locale"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:80
+msgid "Manage local network discovery"
+msgstr "Gestisci la scoperta della rete locale"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:39
+msgid "Authentication is required to modify firewall settings"
+msgstr ""
+"È richiesta l'autenticazione per modificare le impostazioni del firewall"
+
+#: data/com.anduinos.ufwall.desktop:85
+msgid "Configure your firewall"
+msgstr "Configura il tuo firewall"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:9
+msgid "Manage UFW firewall settings"
+msgstr "Gestisci impostazioni firewall UFW"

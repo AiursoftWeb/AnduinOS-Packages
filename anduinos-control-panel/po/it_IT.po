@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Pannello di controllo"
 
@@ -123,7 +124,7 @@ msgstr "Non installato"
 
 #: src/anduinos_control_panel/app.py:317
 msgid "Configure microphone, language, shortcut, and training"
-msgstr "Configura microfono, lingua, scorciatoia e addestramento"
+msgstr "Configura microfono, lingua, scorciatoia e calibrazione"
 
 #: src/anduinos_control_panel/app.py:319
 msgid "Install private, offline speech-to-text"
@@ -498,7 +499,9 @@ msgstr ""
 
 #: src/anduinos_control_panel/app.py:1376
 msgid "Downloading the local engine and multilingual speech model…"
-msgstr "Scaricamento del motore locale e del modello vocale multilingue…"
+msgstr ""
+"Scaricamento del motore locale e del modello multilingue di riconoscimento "
+"vocale…"
 
 #: src/anduinos_control_panel/app.py:1382
 msgid "Preparing Voice Typing installation…"
@@ -518,7 +521,7 @@ msgstr "Apri le impostazioni"
 
 #: src/anduinos_control_panel/app.py:1435
 msgid "Voice Typing installed — sign out to finish"
-msgstr "Digitazione vocale installata — esci per completare"
+msgstr "Digitazione vocale installata — esci per completare l'installazione"
 
 #: src/anduinos_control_panel/app.py:1466
 msgid "On-device AI"
@@ -614,3 +617,21 @@ msgstr "Team di AnduinOS"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "Trova e gestisci le impostazioni di sistema di AnduinOS."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr "impostazioni;controllo;sistema;hardware;driver;account;backup;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "Modifica le impostazioni del menu di avvio"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr ""
+"L'autenticazione è richiesta per modificare le impostazioni del menu di "
+"avvio"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "Trova e gestisci le impostazioni di sistema di AnduinOS"

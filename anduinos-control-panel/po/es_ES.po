@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Panel de control"
 
@@ -123,7 +124,7 @@ msgstr "No instalado"
 
 #: src/anduinos_control_panel/app.py:317
 msgid "Configure microphone, language, shortcut, and training"
-msgstr "Configurar micrófono, idioma, atajo y entrenamiento"
+msgstr "Configurar el micrófono, el idioma, el atajo y la calibración"
 
 #: src/anduinos_control_panel/app.py:319
 msgid "Install private, offline speech-to-text"
@@ -242,7 +243,7 @@ msgstr "Tiempo de espera del menú de arranque"
 
 #: src/anduinos_control_panel/app.py:661
 msgid "The same delay is used after an interrupted or unsuccessful startup."
-msgstr "El mismo retraso se utiliza tras un inicio interrumpido o no exitoso."
+msgstr "El mismo retraso se utiliza tras un inicio interrumpido o fallido."
 
 #: src/anduinos_control_panel/app.py:668
 #, python-format
@@ -325,7 +326,7 @@ msgid ""
 "Wine and Bottles."
 msgstr ""
 "Ejecute aplicaciones de Windows en entornos de compatibilidad aislados "
-"impulsados por Wine y Bottles."
+"basados en Wine y Bottles."
 
 #: src/anduinos_control_panel/app.py:885
 msgid "Install Bottles"
@@ -605,3 +606,22 @@ msgstr "Equipo de AnduinOS"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "Encuentre y gestione la configuración del sistema de AnduinOS."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr ""
+"configuración;control;sistema;hardware;controladores;cuentas;copia de "
+"seguridad;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "Cambiar la configuración del menú de arranque"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr ""
+"Se requiere autenticación para cambiar la configuración del menú de arranque"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "Encuentre y gestione la configuración del sistema de AnduinOS"

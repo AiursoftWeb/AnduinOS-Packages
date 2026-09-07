@@ -17,20 +17,12 @@ msgid "A critical threshold is failing now"
 msgstr "Una soglia critica è attualmente superata"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
-msgid ""
-"A limited balance improves allocation layout. It does not check file "
-"integrity or guarantee that visible free space will increase."
-msgstr ""
-"Un bilanciamento limitato migliora il layout di allocazione. Non verifica "
-"l'integrità dei file né garantisce che lo spazio libero visibile aumenterà."
+msgid "A limited balance improves allocation layout. It does not check file integrity or guarantee that visible free space will increase."
+msgstr "Un bilanciamento limitato migliora il layout di allocazione. Non verifica l'integrità dei file né garantisce che lo spazio libero visibile aumenterà."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
-msgid ""
-"A limited balance only relocates data and metadata block groups that are at "
-"most 50% full."
-msgstr ""
-"Un bilanciamento limitato sposta solo i gruppi di blocchi di dati e metadati"
-" che sono riempiti al massimo per il 50%."
+msgid "A limited balance only relocates data and metadata block groups that are at most 50% full."
+msgstr "Un bilanciamento limitato sposta solo i gruppi di blocchi di dati e metadati che sono riempiti al massimo per il 50%."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "A scheduled Home snapshot will start in 10 seconds."
@@ -219,6 +211,10 @@ msgstr "Sfoglia la cronologia di questa cartella…"
 msgid "Btrfs could not complete Home file defragmentation."
 msgstr "Btrfs non è riuscito a completare la deframmentazione dei file Home."
 
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs could not complete the integrity check."
+msgstr "Btrfs non è riuscito a completare il controllo d’integrità."
+
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Btrfs could not complete the limited balance."
 msgstr "Btrfs non è riuscito a completare il bilanciamento limitato."
@@ -244,17 +240,8 @@ msgid "Btrfs did not start a new maintenance task"
 msgstr "Btrfs non ha avviato una nuova attività di manutenzione"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Btrfs does not provide an on/off real-time deduplication switch. Tools such "
-"as duperemove and BEES use different strategies, resource limits, and scan "
-"scopes. Disk Snapshots Manager will not silently install or run one without "
-"a complete policy."
-msgstr ""
-"Btrfs non offre un interruttore on/off per la deduplicazione in tempo reale."
-" Strumenti come duperemove e BEES utilizzano strategie diverse, limiti di "
-"risorse e ambiti di scansione differenti. Disk Snapshots Manager non "
-"installerà o eseguirà uno di questi strumenti in silenzio senza una politica"
-" completa."
+msgid "Btrfs does not provide an on/off real-time deduplication switch. Tools such as duperemove and BEES use different strategies, resource limits, and scan scopes. Disk Snapshots Manager will not silently install or run one without a complete policy."
+msgstr "Btrfs non offre un interruttore on/off per la deduplicazione in tempo reale. Strumenti come duperemove e BEES utilizzano strategie diverse, limiti di risorse e ambiti di scansione differenti. Disk Snapshots Manager non installerà o eseguirà uno di questi strumenti in silenzio senza una politica completa."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Btrfs examined {0} block groups and relocated {1}."
@@ -262,25 +249,15 @@ msgstr "Btrfs ha analizzato {0} gruppi di blocchi e riposizionato {1}."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Btrfs finished relocating underused data and metadata block groups."
-msgstr ""
-"Btrfs ha terminato la ridistribuzione dei gruppi di blocchi di dati e "
-"metadati sottoutilizzati."
+msgstr "Btrfs ha terminato la ridistribuzione dei gruppi di blocchi di dati e metadati sottoutilizzati."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
-msgid ""
-"Btrfs finished rewriting eligible file extents below /home with ZSTD "
-"compression."
-msgstr ""
-"Btrfs ha terminato la riscrittura degli extent dei file idonei sotto /home "
-"con compressione ZSTD."
+msgid "Btrfs finished rewriting eligible file extents below /home with ZSTD compression."
+msgstr "Btrfs ha terminato la riscrittura degli extent dei file idonei sotto /home con compressione ZSTD."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid ""
-"Btrfs found errors that could not be repaired. Back up important files and "
-"investigate the storage device."
-msgstr ""
-"Btrfs ha rilevato errori che non possono essere riparati. Effettua il backup"
-" dei file importanti e investiga sul dispositivo di archiviazione."
+msgid "Btrfs found errors that could not be repaired. Back up important files and investigate the storage device."
+msgstr "Btrfs ha rilevato errori che non possono essere riparati. Effettua il backup dei file importanti e investiga sul dispositivo di archiviazione."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "Btrfs maintenance status is unavailable"
@@ -292,20 +269,15 @@ msgstr "L'operazione Btrfs non è riuscita"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Btrfs repaired {0} damaged copies using valid redundant data."
-msgstr ""
-"Btrfs ha riparato {0} copie danneggiate utilizzando dati ridondanti validi."
+msgstr "Btrfs ha riparato {0} copie danneggiate utilizzando dati ridondanti validi."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
 msgid "Btrfs request completed"
 msgstr "Richiesta Btrfs completata"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Btrfs will scan existing subvolumes in the background. Size statistics may "
-"remain incomplete until the scan finishes."
-msgstr ""
-"Btrfs analizzerà i sottovolumi esistenti in background. Le statistiche sulle"
-" dimensioni potrebbero rimanere incomplete fino al termine dell'analisi."
+msgid "Btrfs will scan existing subvolumes in the background. Size statistics may remain incomplete until the scan finishes."
+msgstr "Btrfs analizzerà i sottovolumi esistenti in background. Le statistiche sulle dimensioni potrebbero rimanere incomplete fino al termine dell'analisi."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Calculating snapshot size…"
@@ -384,12 +356,8 @@ msgid "Choose a local filesystem destination."
 msgstr "Scegli una destinazione nel file system locale."
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
-msgid ""
-"Choose an earlier version to browse or recover. Your current files will not "
-"be changed automatically."
-msgstr ""
-"Scegli una versione precedente da esplorare o recuperare. I file attuali non"
-" verranno modificati automaticamente."
+msgid "Choose an earlier version to browse or recover. Your current files will not be changed automatically."
+msgstr "Scegli una versione precedente da esplorare o recuperare. I file attuali non verranno modificati automaticamente."
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Choose Where to Recover This Folder"
@@ -500,21 +468,12 @@ msgid "Defragment Home files?"
 msgstr "Deframmentare i file Home?"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
-msgid ""
-"Defragmentation can increase disk usage when files share data with snapshots"
-" or reflinks."
-msgstr ""
-"La deframmentazione può aumentare l'utilizzo del disco quando i file "
-"condividono dati con istantanee o reflink."
+msgid "Defragmentation can increase disk usage when files share data with snapshots or reflinks."
+msgstr "La deframmentazione può aumentare l'utilizzo del disco quando i file condividono dati con istantanee o reflink."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
-msgid ""
-"Defragmentation rewrites file extents and can increase disk usage by "
-"breaking shared snapshot or reflink data."
-msgstr ""
-"La deframmentazione riscrive gli extent dei file e può aumentare l'utilizzo "
-"del disco interrompendo la condivisione dei dati delle istantanee o dei "
-"reflink."
+msgid "Defragmentation rewrites file extents and can increase disk usage by breaking shared snapshot or reflink data."
+msgstr "La deframmentazione riscrive gli extent dei file e può aumentare l'utilizzo del disco interrompendo la condivisione dei dati delle istantanee o dei reflink."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Defragment…"
@@ -538,9 +497,7 @@ msgstr "Eliminare le istantanee?"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Delete {0} selected snapshot(s)? This cannot be undone."
-msgstr ""
-"Eliminare le istantanee selezionate ({0})? Questa azione non può essere "
-"annullata."
+msgstr "Eliminare le istantanee selezionate ({0})? Questa azione non può essere annullata."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Deleting"
@@ -549,6 +506,10 @@ msgstr "Eliminazione in corso"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Deleting snapshots…"
 msgstr "Eliminazione delle istantanee in corso…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Details: {0}"
+msgstr "Dettagli: {0}"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "Device reliability is degraded"
@@ -590,14 +551,14 @@ msgstr "Salute del disco non disponibile"
 #: src/btrfs-snapshots-manager/src/application.rs
 #: src/btrfs-snapshots-manager/src/ui/mod.rs
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:29
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:6
 msgid "Disk Snapshots Manager"
 msgstr "Gestore delle istantanee del disco"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Disk Snapshots Manager requires the standard AnduinOS Btrfs layout."
-msgstr ""
-"Gestore delle istantanee del disco richiede la struttura Btrfs standard di "
-"AnduinOS."
+msgstr "Gestore delle istantanee del disco richiede la struttura Btrfs standard di AnduinOS."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Duration: {0}"
@@ -682,8 +643,7 @@ msgstr "File recuperati"
 
 #: data/anduinos_btrfs_snapshots_manager_file_history.py
 msgid "Find files that existed earlier in this Personal Files folder"
-msgstr ""
-"Cerca file presenti in precedenza in questa cartella dei file personali"
+msgstr "Cerca file presenti in precedenza in questa cartella dei file personali"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Folder History"
@@ -698,12 +658,8 @@ msgid "Forever"
 msgstr "Per sempre"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Four copies on separate devices · damaged copies can be repaired "
-"automatically"
-msgstr ""
-"Quattro copie su dispositivi separati · le copie danneggiate possono essere "
-"riparate automaticamente"
+msgid "Four copies on separate devices · damaged copies can be repaired automatically"
+msgstr "Quattro copie su dispositivi separati · le copie danneggiate possono essere riparate automaticamente"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "Healthy"
@@ -727,8 +683,7 @@ msgstr "Risultato della deframmentazione di Home non disponibile"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Home file defragmentation was cancelled before it finished."
-msgstr ""
-"La deframmentazione dei file Home è stata annullata prima del termine."
+msgstr "La deframmentazione dei file Home è stata annullata prima del termine."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Home snapshot"
@@ -770,6 +725,10 @@ msgstr "Verifica integrità completata"
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Integrity Check Complete — Repairs Made"
 msgstr "Verifica integrità completata: riparazioni eseguite"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Failed"
+msgstr "Controllo d’integrità non riuscito"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Integrity Check Result Unavailable"
@@ -844,12 +803,8 @@ msgid "Media errors"
 msgstr "Errori del supporto di archiviazione"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Mirrored and striped across devices · redundant copies are available for "
-"repair"
-msgstr ""
-"Duplicato e distribuito su più dispositivi · le copie ridondanti sono "
-"disponibili per la riparazione"
+msgid "Mirrored and striped across devices · redundant copies are available for repair"
+msgstr "Duplicato e distribuito su più dispositivi · le copie ridondanti sono disponibili per la riparazione"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Name"
@@ -868,11 +823,8 @@ msgid "No errors detected so far"
 msgstr "Nessun errore rilevato finora"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid ""
-"No file system integrity errors were found in allocated data and metadata."
-msgstr ""
-"Nessun errore di integrità del file system è stato trovato nei dati e nei "
-"metadati allocati."
+msgid "No file system integrity errors were found in allocated data and metadata."
+msgstr "Nessun errore di integrità del file system è stato trovato nei dati e nei metadati allocati."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "No important S.M.A.R.T. warning signs were detected"
@@ -944,16 +896,11 @@ msgstr "vecchie istantanee di sistema sono state rimosse."
 
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
 msgid "Older snapshots are kept less frequently to save disk space."
-msgstr ""
-"Le istantanee più vecchie vengono conservate con minore frequenza per "
-"risparmiare spazio su disco."
+msgstr "Le istantanee più vecchie vengono conservate con minore frequenza per risparmiare spazio su disco."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"One copy · damage can be detected, but there is no spare copy for repair"
-msgstr ""
-"Una copia · i danni possono essere rilevati, ma non è disponibile una copia "
-"di riserva per la riparazione"
+msgid "One copy · damage can be detected, but there is no spare copy for repair"
+msgstr "Una copia · i danni possono essere rilevati, ma non è disponibile una copia di riserva per la riparazione"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "One or more reliability indicators should be reviewed"
@@ -964,24 +911,16 @@ msgid "Only /home · snapshot storage is excluded"
 msgstr "Solo /home · è esclusa l'archiviazione delle istantanee"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
-msgid ""
-"Only block groups at most 50% full will be relocated. The operation can use "
-"significant disk bandwidth but can be cancelled safely."
-msgstr ""
-"Solo i gruppi di blocchi riempiti al massimo per il 50% verranno "
-"riposizionati. L'operazione può utilizzare una banda significativa del "
-"disco, ma può essere annullata in sicurezza."
+msgid "Only block groups at most 50% full will be relocated. The operation can use significant disk bandwidth but can be cancelled safely."
+msgstr "Solo i gruppi di blocchi riempiti al massimo per il 50% verranno riposizionati. L'operazione può utilizzare una banda significativa del disco, ma può essere annullata in sicurezza."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "Only partial S.M.A.R.T. data was returned"
 msgstr "È stato restituito solo un set parziale di dati S.M.A.R.T."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
-msgid ""
-"Only physical drives backing the current root Btrfs file system are shown."
-msgstr ""
-"Vengono mostrati solo i dischi fisici che supportano il file system Btrfs di"
-" root corrente."
+msgid "Only physical drives backing the current root Btrfs file system are shown."
+msgstr "Vengono mostrati solo i dischi fisici che supportano il file system Btrfs di root corrente."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Only the display name changes."
@@ -997,8 +936,7 @@ msgstr "L'operazione non è riuscita"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Otherwise automatic cleanup may remove it later."
-msgstr ""
-"In caso contrario, la rimozione automatica potrebbe eliminarla in seguito."
+msgstr "In caso contrario, la rimozione automatica potrebbe eliminarla in seguito."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "Overall health"
@@ -1065,13 +1003,8 @@ msgid "Preparing safe rollback…"
 msgstr "Preparazione del rollback sicuro…"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Preparing the rollback will arm recovery immediately and automatically "
-"restart this computer within 60 seconds. Save your work before continuing."
-msgstr ""
-"La preparazione del rollback attiverà immediatamente il recupero e riavvierà"
-" automaticamente questo computer entro 60 secondi. Salva il tuo lavoro prima"
-" di continuare."
+msgid "Preparing the rollback will arm recovery immediately and automatically restart this computer within 60 seconds. Save your work before continuing."
+msgstr "La preparazione del rollback attiverà immediatamente il recupero e riavvierà automaticamente questo computer entro 60 secondi. Salva il tuo lavoro prima di continuare."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Properties"
@@ -1082,12 +1015,8 @@ msgid "Protected while the rollback is pending"
 msgstr "Protetta finché il rollback è in sospeso"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Quota accounting provides shared and exclusive sizes for subvolumes, but its"
-" initial scan can take time."
-msgstr ""
-"Il controllo delle quote fornisce dimensioni condivise ed esclusive per i "
-"sottovolumi, ma la scansione iniziale può richiedere del tempo."
+msgid "Quota accounting provides shared and exclusive sizes for subvolumes, but its initial scan can take time."
+msgstr "Il controllo delle quote fornisce dimensioni condivise ed esclusive per i sottovolumi, ma la scansione iniziale può richiedere del tempo."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Read errors: {0}"
@@ -1230,22 +1159,12 @@ msgid "Roll Back to {0}?"
 msgstr "Eseguire il rollback a {0}?"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Rollback confirmation failed. The protected previous system is being "
-"restored."
-msgstr ""
-"La conferma del rollback non è riuscita. Il sistema precedente protetto "
-"viene ripristinato."
+msgid "Rollback confirmation failed. The protected previous system is being restored."
+msgstr "La conferma del rollback non è riuscita. Il sistema precedente protetto viene ripristinato."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Rollback is armed. To prevent new system changes from being lost, this "
-"computer will restart automatically when the 60-second countdown ends. Save "
-"any open personal files now."
-msgstr ""
-"Il rollback è pronto. Per evitare che le nuove modifiche al sistema vengano "
-"perse, il computer si riavvierà automaticamente al termine del conto alla "
-"rovescia di 60 secondi. Salva ora tutti i file personali aperti."
+msgid "Rollback is armed. To prevent new system changes from being lost, this computer will restart automatically when the 60-second countdown ends. Save any open personal files now."
+msgstr "Il rollback è pronto. Per evitare che le nuove modifiche al sistema vengano perse, il computer si riavvierà automaticamente al termine del conto alla rovescia di 60 secondi. Salva ora tutti i file personali aperti."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback to {0} is being applied during startup."
@@ -1256,11 +1175,8 @@ msgid "Rollback to {0} is ready. Restart to apply it."
 msgstr "Il rollback a {0} è pronto. Riavvia per applicarlo."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Rollback to {0} was applied, but system confirmation has not completed."
-msgstr ""
-"Il rollback a {0} è stato applicato, ma la conferma di sistema non è stata "
-"completata."
+msgid "Rollback to {0} was applied, but system confirmation has not completed."
+msgstr "Il rollback a {0} è stato applicato, ma la conferma di sistema non è stata completata."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
@@ -1301,20 +1217,12 @@ msgid "Scanning data and metadata…"
 msgstr "Scansione di dati e metadati…"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
-msgid ""
-"Scrub reads allocated data and metadata, verifies checksums, and reports "
-"damage without modifying file data."
-msgstr ""
-"La verifica legge i dati e i metadati allocati, verifica le checksum e "
-"segnala eventuali danni senza modificare i dati dei file."
+msgid "Scrub reads allocated data and metadata, verifies checksums, and reports damage without modifying file data."
+msgstr "La verifica legge i dati e i metadati allocati, verifica le checksum e segnala eventuali danni senza modificare i dati dei file."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid ""
-"Scrub verifies allocated Btrfs data and metadata. It does not test unused "
-"space or predict sudden drive failure."
-msgstr ""
-"La verifica (scrub) controlla i dati e i metadati Btrfs allocati. Non "
-"verifica lo spazio non utilizzato né prevede guasti improvvisi del disco."
+msgid "Scrub verifies allocated Btrfs data and metadata. It does not test unused space or predict sudden drive failure."
+msgstr "La verifica (scrub) controlla i dati e i metadati Btrfs allocati. Non verifica lo spazio non utilizzato né prevede guasti improvvisi del disco."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Search snapshots"
@@ -1337,12 +1245,8 @@ msgid "Selected file · {0}"
 msgstr "File selezionato · {0}"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Shared and exclusive size statistics and any subvolume limits will be "
-"removed. Snapshots themselves are not deleted."
-msgstr ""
-"I dati sulle dimensioni condivise ed esclusive e eventuali limiti dei "
-"sottovolumi verranno rimossi. Le istantanee non vengono eliminate."
+msgid "Shared and exclusive size statistics and any subvolume limits will be removed. Snapshots themselves are not deleted."
+msgstr "I dati sulle dimensioni condivise ed esclusive e eventuali limiti dei sottovolumi verranno rimossi. Le istantanee non vengono eliminate."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Shared Data"
@@ -1478,19 +1382,15 @@ msgstr "Supporto di archiviazione in sola lettura"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Striped across devices with one parity block for recovery"
-msgstr ""
-"Distribuito su più dispositivi con un blocco di parità per il recupero"
+msgstr "Distribuito su più dispositivi con un blocco di parità per il recupero"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Striped across devices with two parity blocks for recovery"
-msgstr ""
-"Distribuito su più dispositivi con due blocchi di parità per il recupero"
+msgstr "Distribuito su più dispositivi con due blocchi di parità per il recupero"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Striped across devices · no redundant copy is available for repair"
-msgstr ""
-"Distribuito su più dispositivi · nessuna copia ridondante è disponibile per "
-"la riparazione"
+msgstr "Distribuito su più dispositivi · nessuna copia ridondante è disponibile per la riparazione"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Subvolume quota accounting"
@@ -1538,9 +1438,7 @@ msgstr "La temperatura è al di fuori dell'intervallo sicuro"
 
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 msgid "The automatic snapshot infrastructure cannot be disabled here."
-msgstr ""
-"L'infrastruttura per le istantanee automatiche non può essere disabilitata "
-"qui."
+msgstr "L'infrastruttura per le istantanee automatiche non può essere disabilitata qui."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "The device reported an unknown warning bit"
@@ -1548,8 +1446,7 @@ msgstr "Il dispositivo ha segnalato un bit di avviso sconosciuto"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "The drive did not provide a conclusive health result"
-msgstr ""
-"L'unità non ha fornito un risultato conclusivo sul proprio stato di salute"
+msgstr "L'unità non ha fornito un risultato conclusivo sul proprio stato di salute"
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "The Home snapshot was created successfully."
@@ -1561,19 +1458,15 @@ msgstr "La verifica dell'integrità è stata annullata prima del termine."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "The limited balance was cancelled safely before it finished."
-msgstr ""
-"Il bilanciamento limitato è stato annullato in sicurezza prima del termine."
+msgstr "Il bilanciamento limitato è stato annullato in sicurezza prima del termine."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "The rollback completed, but recovery cleanup has not completed."
-msgstr ""
-"Il rollback è stato completato, ma la pulizia del recupero non è stata "
-"completata."
+msgstr "Il rollback è stato completato, ma la pulizia del recupero non è stata completata."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "The rollback failed. Recovery cleanup has not completed."
-msgstr ""
-"Il rollback non è riuscito. La pulizia del recupero non è stata completata."
+msgstr "Il rollback non è riuscito. La pulizia del recupero non è stata completata."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "The rollback failed: {0}"
@@ -1581,33 +1474,23 @@ msgstr "Il rollback non è riuscito: {0}"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "The rollback was reverted, but recovery cleanup has not completed."
-msgstr ""
-"Il rollback è stato annullato, ma la pulizia del recupero non è stata "
-"completata."
+msgstr "Il rollback è stato annullato, ma la pulizia del recupero non è stata completata."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "The root filesystem is {0}."
 msgstr "Il file system di root è {0}."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid ""
-"The scheduled Home snapshot could not be created. Check Disk Snapshots "
-"Manager for details."
-msgstr ""
-"L'istantanea di Home pianificata non è stata creata. Verifica il Gestore "
-"delle istantanee del disco per i dettagli."
+msgid "The scheduled Home snapshot could not be created. Check Disk Snapshots Manager for details."
+msgstr "L'istantanea di Home pianificata non è stata creata. Verifica il Gestore delle istantanee del disco per i dettagli."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "The scheduled Home snapshot was created successfully."
 msgstr "L'istantanea programmata di Home è stata creata con successo."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid ""
-"The scheduled system snapshot could not be created. Check Disk Snapshots "
-"Manager for details."
-msgstr ""
-"L'istantanea di sistema pianificata non è stata creata. Verifica il Gestore "
-"delle istantanee del disco per i dettagli."
+msgid "The scheduled system snapshot could not be created. Check Disk Snapshots Manager for details."
+msgstr "L'istantanea di sistema pianificata non è stata creata. Verifica il Gestore delle istantanee del disco per i dettagli."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "The scheduled system snapshot was created successfully."
@@ -1655,18 +1538,11 @@ msgstr "Questa cartella è vuota"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "This item was not present in the available Home snapshots."
-msgstr ""
-"Questo elemento non era presente nelle istantanee di Home disponibili."
+msgstr "Questo elemento non era presente nelle istantanee di Home disponibili."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
-msgid ""
-"This rewrites files below /home using ZSTD compression. It does not enter "
-"/.snapshots, but shared extents with existing snapshots may become private "
-"and consume more space."
-msgstr ""
-"Questo riscrive i file sotto /home utilizzando la compressione ZSTD. Non "
-"entra in /.snapshots, ma gli extent condivisi con le istantanee esistenti "
-"potrebbero diventare privati e occupare più spazio."
+msgid "This rewrites files below /home using ZSTD compression. It does not enter /.snapshots, but shared extents with existing snapshots may become private and consume more space."
+msgstr "Questo riscrive i file sotto /home utilizzando la compressione ZSTD. Non entra in /.snapshots, ma gli extent condivisi con le istantanee esistenti potrebbero diventare privati e occupare più spazio."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "This snapshot is available for recovery."
@@ -1677,12 +1553,8 @@ msgid "This snapshot is not available for recovery."
 msgstr "Istantanea non disponibile per il recupero."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Three copies on separate devices · damaged copies can be repaired "
-"automatically"
-msgstr ""
-"Tre copie su dispositivi separati · le copie danneggiate possono essere "
-"riparate automaticamente"
+msgid "Three copies on separate devices · damaged copies can be repaired automatically"
+msgstr "Tre copie su dispositivi separati · le copie danneggiate possono essere riparate automaticamente"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "Time above critical temperature"
@@ -1713,19 +1585,12 @@ msgid "Try a different name, date, or snapshot reason."
 msgstr "Prova un nome, una data o un motivo dell'istantanea diversi."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Two copies on separate devices · a damaged copy can be repaired "
-"automatically"
-msgstr ""
-"Due copie su dispositivi separati · una copia danneggiata può essere "
-"riparata automaticamente"
+msgid "Two copies on separate devices · a damaged copy can be repaired automatically"
+msgstr "Due copie su dispositivi separati · una copia danneggiata può essere riparata automaticamente"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Two copies on this device · a damaged copy can be repaired automatically"
-msgstr ""
-"Due copie su questo dispositivo · una copia danneggiata può essere riparata "
-"automaticamente"
+msgid "Two copies on this device · a damaged copy can be repaired automatically"
+msgstr "Due copie su questo dispositivo · una copia danneggiata può essere riparata automaticamente"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Unable to calculate"
@@ -1899,14 +1764,119 @@ msgstr "{0}% · soglia di avviso {1}%"
 msgid "{0}/s"
 msgstr "{0}/s"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid "Btrfs could not complete the integrity check."
-msgstr "Btrfs non è riuscito a completare il controllo d’integrità."
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:38
+msgid "backup"
+msgstr "backup"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid "Details: {0}"
-msgstr "Dettagli: {0}"
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:41
+msgid "snapshot;snapshots;restore;recovery;btrfs;rollback;backup;backups;time machine;file history;deleted files;"
+msgstr "istantanea;istantanee;ripristino;recupero;btrfs;rollback;backup;backups;macchina del tempo;cronologia file;file eliminati;"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid "Integrity Check Failed"
-msgstr "Controllo d’integrità non riuscito"
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:24
+msgid "Authentication is required to delete a system snapshot"
+msgstr "È richiesta l'autenticazione per eliminare un'istantanea di sistema"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:82
+msgid "Override the Home snapshot creation limit"
+msgstr "Ignora il limite di creazione delle istantanee di Home"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:11
+msgid "A system rollback validates the selected snapshot, protects a current-system fallback while the transaction is pending, and prepares a verified one-shot GRUB entry. Personal Files are explicitly unchanged."
+msgstr "Un ripristino del sistema convalida l’istantanea selezionata, conserva il sistema attuale come soluzione di ripristino fino al completamento dell’operazione e prepara una voce GRUB verificata utilizzabile solo al prossimo avvio. I file personali rimangono esplicitamente invariati."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:37
+msgid "btrfs"
+msgstr "btrfs"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:36
+msgid "Authentication is required to access or restore a system snapshot"
+msgstr "È richiesta l'autenticazione per accedere o ripristinare un'istantanea di sistema"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:36
+msgid "recovery"
+msgstr "recupero"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:3
+msgid "Disk Snapshots Manager Notifications"
+msgstr "Notifiche del Gestore delle istantanee del disco"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:35
+msgid "restore"
+msgstr "ripristino"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:10
+msgid "Disk Snapshots Manager creates immutable Btrfs system snapshots for the AnduinOS system and independent snapshots for Personal Files."
+msgstr "Gestore delle istantanee del disco crea istantanee di sistema Btrfs immutabili per il sistema AnduinOS e istantanee indipendenti per i file personali."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:34
+msgid "snapshot"
+msgstr "istantanea"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:5
+msgid "Show system snapshot notifications"
+msgstr "Mostra le notifiche delle istantanee di sistema"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:30
+msgid "System Recovery and File History"
+msgstr "Recupero di sistema e cronologia file"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:84
+msgid "Authentication is required to create more than four Home snapshots per minute"
+msgstr "È richiesta l'autenticazione per creare più di quattro istantanee di Home al minuto"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:70
+msgid "Create a Home history snapshot"
+msgstr "Crea un'istantanea della cronologia di Home"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:72
+msgid "A local active user may create a Home history snapshot"
+msgstr "Un utente locale attivo può creare un’istantanea della cronologia della cartella personale"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:12
+msgid "Independent Home snapshots capture the @home subvolume on a separate schedule. Users can browse earlier versions and recover files or folders without rolling back the operating system."
+msgstr "Le istantanee indipendenti di Home catturano il sottovolume @home secondo una pianificazione separata. Gli utenti possono sfogliare le versioni precedenti e recuperare file o cartelle senza effettuare un rollback del sistema operativo."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:13
+msgid "Nautilus provides File History actions for one selected home item and for a folder background, opening a focused Disk Snapshots Manager window for earlier versions and deleted files."
+msgstr "Nautilus offre azioni di cronologia file per un singolo elemento selezionato nella cartella personale e per lo sfondo di una cartella, aprendo una finestra dedicata del Gestore delle istantanee del disco per le versioni precedenti e i file eliminati."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:60
+msgid "Authentication is required to access historical Personal Files"
+msgstr "È richiesta l'autenticazione per accedere ai file personali storici"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:46
+msgid "Configure AnduinOS recovery"
+msgstr "Configura il recupero di AnduinOS"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:12
+msgid "Authentication is required to create a system snapshot"
+msgstr "È richiesta l'autenticazione per creare un'istantanea di sistema"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:22
+msgid "Delete an AnduinOS system snapshot"
+msgstr "Elimina un'istantanea di sistema di AnduinOS"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:48
+msgid "Authentication is required to change recovery settings"
+msgstr "È richiesta l'autenticazione per modificare le impostazioni di recupero"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:14
+msgid "Automatic schedules can show desktop notifications after successful creation, while retention cleanup is reported as one quiet aggregate notification."
+msgstr "Le pianificazioni automatiche possono mostrare notifiche desktop dopo la creazione riuscita, mentre la pulizia della ritenzione viene riportata come una singola notifica aggregata silenziosa."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:58
+msgid "Browse and export historical Personal Files"
+msgstr "Sfoglia ed esporta i file personali storici"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:34
+msgid "Access or restore an AnduinOS system snapshot"
+msgstr "Accedi o ripristina un'istantanea di sistema di AnduinOS"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:32
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:7
+msgid "Recover AnduinOS and restore deleted Personal Files"
+msgstr "Recupera AnduinOS e ripristina i file personali eliminati"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
+msgid "Create an AnduinOS system snapshot"
+msgstr "Crea un'istantanea di sistema di AnduinOS"

@@ -17,19 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/pages.py:2092
+#: src/pages.py:2244
 msgid "Installing an input method requires an Internet connection."
 msgstr "Cần kết nối Internet để cài đặt bộ gõ."
 
-#: src/pages.py:2103
-msgid ""
-"No Internet connection. Input methods cannot be installed. You can install "
-"them later when connected."
-msgstr ""
-"Không có kết nối Internet. Không thể cài đặt bộ gõ. Bạn có thể cài đặt sau "
-"khi kết nối."
+#: src/pages.py:2255
+msgid "No Internet connection. Input methods cannot be installed. You can install them later when connected."
+msgstr "Không có kết nối Internet. Không thể cài đặt bộ gõ. Bạn có thể cài đặt sau khi kết nối."
 
-#: src/pages.py:4933
+#: src/pages.py:7174
 msgid ""
 "\n"
 "\n"
@@ -39,7 +35,7 @@ msgstr ""
 "\n"
 "Cài đặt thực tế sẽ tạo MOK cục bộ cho máy. Sau khi khởi động lại, hãy chọn Enroll MOK → Continue → Yes trong MOKManager và nhập mật khẩu 123456."
 
-#: src/pages.py:4944
+#: src/pages.py:7185
 msgid ""
 "\n"
 "On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
@@ -47,51 +43,39 @@ msgstr ""
 "\n"
 "Trên màn hình MOKManager màu xanh lam, hãy chọn Enroll MOK → Continue → Yes, mật khẩu: 123456"
 
-#: src/pages.py:4085
+#: src/pages.py:6191
 msgid "; sudo does not require a password"
 msgstr "; sudo không yêu cầu mật khẩu"
 
-#: src/pages.py:4087
+#: src/pages.py:6193
 msgid "; sudo requires the account password"
 msgstr "; sudo yêu cầu mật khẩu tài khoản"
 
-#: src/pages.py:129
-msgid ""
-"A partition on this disk is mounted. Unmount it and rescan storage before "
-"continuing."
-msgstr ""
-"Một phân vùng trên ổ đĩa này đang được gắn kết. Hãy ngắt kết nối nó và quét "
-"lại bộ nhớ trước khi tiếp tục."
+#: src/pages.py:160
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "Một phân vùng trên ổ đĩa này đang được gắn kết. Hãy ngắt kết nối nó và quét lại bộ nhớ trước khi tiếp tục."
 
-#: src/pages.py:2899
+#: src/pages.py:3241
 msgid "ALL DATA on {disk} will be permanently erased."
 msgstr "TẤT CẢ DỮ LIỆU trên {disk} sẽ bị xóa vĩnh viễn."
 
-#: src/pages.py:4082
+#: src/pages.py:6188
 msgid "Account security"
 msgstr "Bảo mật tài khoản"
 
-#: src/pages.py:2980
+#: src/pages.py:4066
 msgid "Advanced Storage"
 msgstr "Bộ nhớ nâng cao"
 
-#: src/pages.py:164
-msgid ""
-"After changing partitions or unmounting a volume, rescan storage and select "
-"the target again."
-msgstr ""
-"Sau khi thay đổi phân vùng hoặc ngắt kết nối một vùng lưu trữ, hãy quét lại "
-"bộ nhớ và chọn đích lần nữa."
+#: src/pages.py:195
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "Sau khi thay đổi phân vùng hoặc ngắt kết nối một vùng lưu trữ, hãy quét lại bộ nhớ và chọn đích lần nữa."
 
-#: src/pages.py:4801
-msgid ""
-"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
-"then enter password 123456."
-msgstr ""
-"Sau khi khởi động lại, MOKManager sẽ mở ra. Hãy chọn Enroll MOK → Continue →"
-" Yes, sau đó nhập mật khẩu 123456."
+#: src/pages.py:7042
+msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
+msgstr "Sau khi khởi động lại, MOKManager sẽ mở ra. Hãy chọn Enroll MOK → Continue → Yes, sau đó nhập mật khẩu 123456."
 
-#: src/pages.py:4432
+#: src/pages.py:6636
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -99,61 +83,56 @@ msgstr ""
 "Tất cả các phân vùng và dữ liệu trên {disk} sẽ bị phá hủy.\n"
 "\n"
 
-#: src/pages.py:155
-msgid ""
-"Alternatively, you may explicitly select one entire partition to erase. "
-"Everything in that selected partition will be destroyed; it is never "
-"selected automatically."
-msgstr ""
-"Ngoài ra, bạn có thể chọn rõ ràng toàn bộ một phân vùng để xóa. Mọi thứ "
-"trong phân vùng được chọn đó sẽ bị phá hủy; nó không bao giờ được chọn tự "
-"động."
+#: src/pages.py:186
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "Ngoài ra, bạn có thể chọn rõ ràng toàn bộ một phân vùng để xóa. Mọi thứ trong phân vùng được chọn đó sẽ bị phá hủy; nó không bao giờ được chọn tự động."
 
-#: src/pages.py:924 src/pages.py:986
+#: src/pages.py:991 src/pages.py:1053
 msgid "Battery power is too low for a safe installation."
 msgstr "Mức pin quá thấp để cài đặt an toàn."
 
-#: src/pages.py:895
+#: src/pages.py:962
 msgid "Charge to at least 80% before starting the installation."
 msgstr "Hãy sạc pin lên ít nhất 80% trước khi bắt đầu cài đặt."
 
-#: src/pages.py:1041 src/pages.py:1016
+#: src/pages.py:1108 src/pages.py:1083
 msgid "Continue Anyway"
 msgstr "Vẫn tiếp tục"
 
-#: src/pages.py:1000
+#: src/pages.py:1067
 msgid "Current battery level: {percent}%"
 msgstr "Mức pin hiện tại: {percent}%"
 
-#: src/pages.py:1006
+#: src/pages.py:1073
 msgid "External power is connected."
 msgstr "Đã kết nối nguồn điện ngoài."
 
-#: src/pages.py:1008
+#: src/pages.py:1075
 msgid "External power is not connected."
 msgstr "Chưa kết nối nguồn điện ngoài."
 
-#: src/pages.py:954
+#: src/pages.py:1021
 msgid "I understand the risks and insist on installing with low battery."
 msgstr "Tôi hiểu các rủi ro và vẫn muốn cài đặt khi pin yếu."
 
-#: src/pages.py:894 src/pages.py:889 src/pages.py:967 src/pages.py:969
+#: src/pages.py:961 src/pages.py:956 src/pages.py:1034 src/pages.py:1036
 msgid "Low battery"
 msgstr "Pin yếu"
 
-#: src/pages.py:948
+#: src/pages.py:1015
 msgid "Recheck"
 msgstr "Kiểm tra lại"
 
-#: src/main.py:110 src/pages.py:731 src/pages.py:815
+#: src/main.py:114 src/pages.py:794 src/pages.py:881
+#: assets/anduinos-installer-beta.desktop:30
 msgid "AnduinOS Installer"
 msgstr "Cài đặt AnduinOS"
 
-#: src/main.py:108
+#: src/main.py:112
 msgid "AnduinOS Installer (Development)"
 msgstr "Cài đặt AnduinOS (Phát triển)"
 
-#: src/pages.py:4425
+#: src/pages.py:6623
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
@@ -161,162 +140,140 @@ msgstr ""
 "AnduinOS sẽ chỉ sử dụng phần dung lượng chưa được phân bổ đã chọn trên {disk}. Các phân vùng hiện có sẽ được giữ nguyên.\n"
 "\n"
 
-#: src/pages.py:133
-msgid ""
-"AnduinOS will use only the selected unallocated space. The installer will "
-"not shrink or move an existing filesystem."
-msgstr ""
-"AnduinOS sẽ chỉ sử dụng phần dung lượng chưa được phân bổ đã chọn. Trình cài"
-" đặt sẽ không thu nhỏ hoặc di chuyển hệ thống tệp hiện có."
+#: src/pages.py:164
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS sẽ chỉ sử dụng phần dung lượng chưa được phân bổ đã chọn. Trình cài đặt sẽ không thu nhỏ hoặc di chuyển hệ thống tệp hiện có."
 
 #: data/languages.json:keyboard_layouts
 msgid "Arabic"
 msgstr "Tiếng Ả Rập"
 
-#: src/pages.py:268 src/pages.py:4461 src/pages.py:817
+#: src/pages.py:322 src/pages.py:6672 src/pages.py:6708 src/pages.py:883
 msgid "Back"
 msgstr "Quay lại"
 
-#: src/pages.py:3014
-msgid ""
-"Before continuing: finish Windows updates, disable Fast Startup and "
-"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
-"measurements and boot order can change."
-msgstr ""
-"Trước khi tiếp tục: hoàn tất các bản cập nhật Windows, tắt Khởi động nhanh "
-"và chế độ ngủ đông, sao lưu khóa khôi phục BitLocker. EFI, Khởi động an "
-"toàn, đo lường TPM và thứ tự khởi động có thể thay đổi."
+#: src/pages.py:3439
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Trước khi tiếp tục: hoàn tất các bản cập nhật Windows, tắt Khởi động nhanh và chế độ ngủ đông, sao lưu khóa khôi phục BitLocker. EFI, Khởi động an toàn, đo lường TPM và thứ tự khởi động có thể thay đổi."
 
-#: src/pages.py:2470
+#: src/pages.py:2622
 msgid "BitLocker detected"
 msgstr "Phát hiện BitLocker"
 
-#: src/pages.py:146
-msgid ""
-"BitLocker storage will be preserved. The installer will not unlock, resize, "
-"repair or otherwise modify it."
-msgstr ""
-"Lưu trữ BitLocker sẽ được giữ nguyên. Trình cài đặt sẽ không mở khóa, thay "
-"đổi kích thước, sửa chữa hoặc sửa đổi nó theo bất kỳ cách nào khác."
+#: src/pages.py:177
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "Lưu trữ BitLocker sẽ được giữ nguyên. Trình cài đặt sẽ không mở khóa, thay đổi kích thước, sửa chữa hoặc sửa đổi nó theo bất kỳ cách nào khác."
 
-#: src/pages.py:4186
+#: src/pages.py:6282 src/pages.py:6342
 msgid "Boot policy"
 msgstr "Chính sách khởi động"
 
-#: src/pages.py:3055
+#: src/pages.py:3480 src/pages.py:5117
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (được khuyến nghị)"
 
-#: src/pages.py:2817
+#: src/pages.py:3158
 msgid "Btrfs — recommended"
 msgstr "Btrfs — được khuyến nghị"
 
-#: src/pages.py:4361
+#: src/pages.py:6554
 msgid "Cannot create installation plan"
 msgstr "Không thể tạo kế hoạch cài đặt"
 
-#: src/pages.py:2727
+#: src/pages.py:3068
 msgid "Choose Installation Method"
 msgstr "Chọn Phương thức Cài đặt"
 
-#: src/pages.py:2498
+#: src/pages.py:2650
 msgid "Choose one target disk. Storage settings come next."
 msgstr "Chọn một ổ đĩa đích. Cài đặt lưu trữ sẽ được thực hiện tiếp theo."
 
-#: src/pages.py:2199
+#: src/pages.py:2351
 msgid "Choose optional software to install"
 msgstr "Chọn phần mềm tùy chọn để cài đặt"
 
-#: src/pages.py:813
+#: src/pages.py:879
 msgid "Choose your language to begin installation"
 msgstr "Chọn ngôn ngữ của bạn để bắt đầu cài đặt"
 
-#: src/pages.py:3819
+#: src/pages.py:5906
 msgid "Choose your location to set the system clock"
 msgstr "Chọn vị trí của bạn để thiết lập đồng hồ hệ thống"
 
-#: src/pages.py:4838
+#: src/pages.py:7079
 msgid "Complete"
 msgstr "Hoàn tất"
 
-#: src/pages.py:3506 src/pages.py:3513 src/pages.py:4101 src/pages.py:3601
-#: src/pages.py:4440
+#: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
+#: src/pages.py:6644
 msgid "Computer Name"
 msgstr "Tên máy tính"
 
-#: src/pages.py:3594
+#: src/pages.py:5679
 msgid "Computer name contains invalid characters."
 msgstr "Tên máy tính chứa ký tự không hợp lệ."
 
-#: src/pages.py:4589
+#: src/pages.py:6828
 msgid "Configure account, region, timezone, and machine identity"
 msgstr "Cấu hình tài khoản, khu vực, múi giờ và danh tính máy"
 
-#: src/pages.py:4578
+#: src/pages.py:3339 src/pages.py:6817 src/pages.py:3323
 msgid "Configure storage and swap"
 msgstr "Cấu hình lưu trữ và swap"
 
-#: src/pages.py:3480 src/pages.py:3488
+#: src/pages.py:5565 src/pages.py:5573
 msgid "Confirm Password"
 msgstr "Xác nhận mật khẩu"
 
-#: src/pages.py:1939
+#: src/pages.py:2003
 msgid "Confirm your keyboard layout"
 msgstr "Xác nhận bố cục bàn phím của bạn"
 
-#: src/main.py:153 src/pages.py:1911
+#: src/main.py:157 src/pages.py:1978
 msgid "Continue Installation"
 msgstr "Tiếp tục cài đặt"
 
-#: src/pages.py:4574
+#: src/pages.py:6813
 msgid "Copy AnduinOS system"
 msgstr "Sao chép hệ thống AnduinOS"
 
-#: src/pages.py:4675
+#: src/pages.py:6916
 msgid "Copy Log"
 msgstr "Sao chép nhật ký"
 
-#: src/pages.py:3146
+#: src/pages.py:3572
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
 msgstr "Tạo phân vùng EFI Hệ thống AnduinOS mới 1 GiB"
 
-#: src/pages.py:4163
-msgid ""
-"Create and format a dedicated AnduinOS EFI System Partition inside the "
-"selected space."
-msgstr ""
-"Tạo và định dạng một phân vùng EFI Hệ thống AnduinOS chuyên dụng bên trong "
-"không gian đã chọn."
+#: src/pages.py:6260
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Tạo và định dạng một phân vùng EFI Hệ thống AnduinOS chuyên dụng bên trong không gian đã chọn."
 
-#: src/pages.py:3447
+#: src/pages.py:5532
 msgid "Create your user account"
 msgstr "Tạo tài khoản người dùng của bạn"
 
-#: src/pages.py:2412
+#: src/pages.py:2564
 msgid "Current disk layout"
 msgstr "Bố cục đĩa hiện tại"
 
-#: src/pages.py:3979
-msgid ""
-"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
-"executor or disk command can run."
-msgstr ""
-"CHẾ ĐỘ PHÁT TRIỂN — kế hoạch sẽ được xác thực và mô phỏng. Không có trình "
-"điều khiển đặc quyền hoặc lệnh đĩa nào có thể chạy."
+#: src/pages.py:6071
+msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
+msgstr "CHẾ ĐỘ PHÁT TRIỂN — kế hoạch sẽ được xác thực và mô phỏng. Tiến trình dịch vụ có đặc quyền nâng cao và mọi lệnh ổ đĩa đều không thể chạy."
 
 #: data/languages.json:keyboard_layouts
 msgid "Danish"
 msgstr "Tiếng Đan Mạch"
 
-#: src/pages.py:4569
+#: src/pages.py:6808
 msgid "Detect Internet connectivity"
 msgstr "Phát hiện kết nối Internet"
 
-#: src/pages.py:4566
+#: src/pages.py:6805
 msgid "Detect firmware and Secure Boot"
 msgstr "Phát hiện firmware và Secure Boot"
 
-#: src/pages.py:4419
+#: src/pages.py:6617
 msgid ""
 "Development mode will simulate installation to {disk}. No disk data will be changed.\n"
 "\n"
@@ -324,15 +281,15 @@ msgstr ""
 "Chế độ phát triển sẽ mô phỏng cài đặt lên {disk}. Dữ liệu đĩa sẽ không bị thay đổi.\n"
 "\n"
 
-#: src/pages.py:4923
+#: src/pages.py:7164
 msgid "Development simulation completed"
 msgstr "Mô phỏng phát triển đã hoàn tất"
 
-#: src/pages.py:4832
+#: src/pages.py:7073
 msgid "Discover AnduinOS"
 msgstr "Khám phá AnduinOS"
 
-#: src/pages.py:1216 src/pages.py:2218
+#: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
 msgstr "Tải xuống và cài đặt bản cập nhật hệ thống trong quá trình cài đặt"
 
@@ -340,23 +297,21 @@ msgstr "Tải xuống và cài đặt bản cập nhật hệ thống trong quá
 msgid "Dutch"
 msgstr "Tiếng Hà Lan"
 
-#: src/pages.py:3073
+#: src/pages.py:4210 src/pages.py:3498 src/pages.py:5013
 msgid "EFI System Partition"
 msgstr "Phân vùng Hệ thống EFI"
 
-#: src/pages.py:4184
+#: src/pages.py:6341 src/pages.py:6281
 msgid "EFI policy"
 msgstr "Chính sách EFI"
 
-#: src/pages.py:2455
+#: src/pages.py:2607
 msgid "Empty disk — no partitions"
 msgstr "Đĩa trống — không có phân vùng"
 
-#: src/pages.py:2821
+#: src/pages.py:3162
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
-msgstr ""
-"Kích hoạt các subvolume không gian chia sẻ, snapshot và Disk Snapshots "
-"Manager."
+msgstr "Kích hoạt các subvolume không gian chia sẻ, snapshot và Disk Snapshots Manager."
 
 #: data/languages.json:keyboard_layouts
 msgid "English (UK)"
@@ -366,53 +321,39 @@ msgstr "Tiếng Anh (Anh)"
 msgid "English (US)"
 msgstr "Tiếng Anh (Mỹ)"
 
-#: src/pages.py:4601
+#: src/pages.py:6840
 msgid "Ensure Disk Snapshots Manager is available"
 msgstr "Đảm bảo Disk Snapshots Manager khả dụng"
 
-#: src/pages.py:4412
+#: src/pages.py:6610
 msgid "Erase Disk and Install"
 msgstr "Xóa đĩa và Cài đặt"
 
-#: src/pages.py:2813 src/pages.py:4226
+#: src/pages.py:3154 src/pages.py:6382
 msgid "Erase every partition and all data on the selected disk."
 msgstr "Xóa mọi phân vùng và tất cả dữ liệu trên đĩa đã chọn."
 
-#: src/pages.py:4411
+#: src/pages.py:6609
 msgid "Erase the entire selected disk?"
 msgstr "Xóa toàn bộ đĩa đã chọn?"
 
-#: src/pages.py:137
-msgid ""
-"Existing Windows, recovery and data partitions remain outside the write set "
-"and will be preserved."
-msgstr ""
-"Các phân vùng Windows, khôi phục và dữ liệu hiện có sẽ nằm ngoài tập hợp ghi"
-" và được bảo tồn."
+#: src/pages.py:168
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "Các phân vùng Windows, khôi phục và dữ liệu hiện có sẽ nằm ngoài tập hợp ghi và được bảo tồn."
 
-#: src/pages.py:2945
-msgid ""
-"Existing partitions were detected. The first two choices delete them; "
-"Advanced is the preservation path."
-msgstr ""
-"Đã phát hiện các phân vùng hiện có. Hai lựa chọn đầu tiên sẽ xóa chúng; Nâng"
-" cao là đường dẫn bảo tồn."
+#: src/pages.py:3287
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Đã phát hiện các phân vùng hiện có. Hai lựa chọn đầu tiên sẽ xóa chúng; Nâng cao là đường dẫn bảo tồn."
 
-#: src/pages.py:4446
-msgid ""
-"Existing partitions will be preserved. New AnduinOS partitions will be "
-"created only in the selected unallocated extent; EFI vendor files and the "
-"AnduinOS firmware boot entry may be updated."
-msgstr ""
-"Các phân vùng hiện có sẽ được bảo tồn. Các phân vùng AnduinOS mới chỉ được "
-"tạo trong phần mở rộng chưa cấp phát đã chọn; các tệp nhà cung cấp EFI và "
-"mục khởi động firmware AnduinOS có thể được cập nhật."
+#: src/pages.py:6650
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Các phân vùng hiện có sẽ được bảo tồn. Các phân vùng AnduinOS mới chỉ được tạo trong phần mở rộng chưa cấp phát đã chọn; các tệp nhà cung cấp EFI và mục khởi động firmware AnduinOS có thể được cập nhật."
 
-#: src/pages.py:3052 src/pages.py:4049
+#: src/pages.py:3477 src/pages.py:6155 src/pages.py:5127
 msgid "Filesystem"
 msgstr "Hệ thống tập tin"
 
-#: src/pages.py:4613
+#: src/pages.py:6852
 msgid "Finalize target environment"
 msgstr "Hoàn thiện môi trường đích"
 
@@ -420,7 +361,7 @@ msgstr "Hoàn thiện môi trường đích"
 msgid "Finnish"
 msgstr "Tiếng Phần Lan"
 
-#: src/pages.py:4182
+#: src/pages.py:6340 src/pages.py:6279
 msgid "Formats"
 msgstr "Định dạng"
 
@@ -428,7 +369,7 @@ msgstr "Định dạng"
 msgid "French"
 msgstr "Tiếng Pháp"
 
-#: src/pages.py:3462 src/pages.py:3464
+#: src/pages.py:5547 src/pages.py:5549
 msgid "Full Name"
 msgstr "Họ và tên đầy đủ"
 
@@ -440,25 +381,19 @@ msgstr "Tiếng Đức"
 msgid "Greek"
 msgstr "Tiếng Hy Lạp"
 
-#: src/pages.py:111
-msgid ""
-"Guided coexistence requires a system booted in UEFI mode and a GPT target "
-"disk. This disk cannot continue in guided mode."
-msgstr ""
-"Sự cùng tồn tại có hướng dẫn yêu cầu hệ thống khởi động ở chế độ UEFI và đĩa"
-" đích GPT. Đĩa này không thể tiếp tục ở chế độ hướng dẫn."
+#: src/pages.py:142
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "Sự cùng tồn tại có hướng dẫn yêu cầu hệ thống khởi động ở chế độ UEFI và đĩa đích GPT. Đĩa này không thể tiếp tục ở chế độ hướng dẫn."
 
-#: src/pages.py:4131
-msgid ""
-"Guided storage selection is missing. Rescan and select the target again."
-msgstr ""
-"Thiếu lựa chọn lưu trữ được hướng dẫn. Quét lại và chọn đích một lần nữa."
+#: src/pages.py:6393
+msgid "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Thiếu lựa chọn lưu trữ được hướng dẫn. Quét lại và chọn đích một lần nữa."
 
 #: data/languages.json:keyboard_layouts
 msgid "Hindi (India)"
 msgstr "Tiếng Hindi (Ấn Độ)"
 
-#: src/pages.py:2741
+#: src/pages.py:3082
 msgid "How should AnduinOS use this disk?"
 msgstr "AnduinOS nên sử dụng đĩa này như thế nào?"
 
@@ -466,87 +401,83 @@ msgstr "AnduinOS nên sử dụng đĩa này như thế nào?"
 msgid "Indonesian"
 msgstr "Tiếng Indonesia"
 
-#: src/pages.py:4498
+#: src/pages.py:6737
 msgid "Install"
 msgstr "Cài đặt"
 
-#: src/pages.py:4559 src/pages.py:1221 src/pages.py:4125
+#: src/pages.py:6798 src/pages.py:1288 src/pages.py:6231
 msgid "Install input method"
 msgstr "Cài đặt bộ gõ"
 
-#: src/pages.py:625
+#: src/pages.py:684
 msgid "Install {language} input method: {name}"
 msgstr "Cài đặt bộ gõ {language}: {name}"
 
-#: src/pages.py:4409 src/pages.py:4496
+#: src/pages.py:3405 src/pages.py:6604 src/pages.py:6733
 msgid "Install Alongside"
 msgstr "Cài đặt song song"
 
-#: src/pages.py:4169
+#: src/pages.py:6266
 msgid "Install alongside"
 msgstr "Cài đặt song song"
 
-#: src/pages.py:4608
+#: src/pages.py:6847
 msgid "Install bootloader"
 msgstr "Cài đặt trình khởi động"
 
-#: src/pages.py:4611
+#: src/pages.py:6850
 msgid "Check systems on other disks"
 msgstr "Kiểm tra hệ thống trên các ổ đĩa khác"
 
-#: src/pages.py:1217 src/pages.py:4603
+#: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
 msgstr "Cài đặt trình điều khiển phần cứng"
 
-#: src/pages.py:4408
+#: src/pages.py:6603
 msgid "Install in the selected free space?"
 msgstr "Cài đặt trong khoảng trống đã chọn?"
 
-#: src/pages.py:4596
+#: src/pages.py:6835
 msgid "Ensure required language packs are installed"
 msgstr "Đảm bảo các gói ngôn ngữ cần thiết đã được cài đặt"
 
-#: src/pages.py:4599
+#: src/pages.py:6838
 msgid "Install system updates"
 msgstr "Cài đặt bản cập nhật hệ thống"
 
-#: src/pages.py:2229
+#: src/pages.py:2381
 msgid "Install third-party drivers for this device"
 msgstr "Cài đặt trình điều khiển bên thứ ba cho thiết bị này"
 
-#: src/pages.py:5093 src/pages.py:5095 src/pages.py:4940 src/pages.py:4950
+#: src/pages.py:7334 src/pages.py:7336 src/pages.py:7181 src/pages.py:7191
 msgid "Installation Complete"
 msgstr "Cài đặt hoàn tất"
 
-#: src/pages.py:4970
+#: src/pages.py:7211
 msgid "Installation Failed"
 msgstr "Cài đặt thất bại"
 
-#: src/pages.py:4639
+#: src/pages.py:6878
 msgid "Installation Steps"
 msgstr "Các bước cài đặt"
 
-#: src/pages.py:160
-msgid ""
-"Installation cannot continue with this selection. There is no force-continue"
-" option around storage safety checks."
-msgstr ""
-"Quá trình cài đặt không thể tiếp tục với lựa chọn này. Không có tùy chọn "
-"buộc tiếp tục xung quanh các kiểm tra an toàn lưu trữ."
+#: src/pages.py:191
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "Quá trình cài đặt không thể tiếp tục với lựa chọn này. Không có tùy chọn buộc tiếp tục xung quanh các kiểm tra an toàn lưu trữ."
 
-#: src/pages.py:4919 src/pages.py:4985
+#: src/pages.py:7160 src/pages.py:7226
 msgid "Installation complete"
 msgstr "Cài đặt đã hoàn tất"
 
-#: src/pages.py:4968
+#: src/pages.py:7209
 msgid "Installation failed"
 msgstr "Cài đặt thất bại"
 
-#: src/main.py:145
+#: src/main.py:149
 msgid "Installation in progress"
 msgstr "Đang cài đặt"
 
-#: src/pages.py:4547 src/pages.py:4541
+#: src/pages.py:6786 src/pages.py:6780
 msgid "Installing AnduinOS"
 msgstr "Đang cài đặt AnduinOS"
 
@@ -558,19 +489,19 @@ msgstr "Tiếng Ý"
 msgid "Japanese (JIS keyboard)"
 msgstr "Tiếng Nhật (bàn phím JIS)"
 
-#: src/pages.py:4040
+#: src/pages.py:6147
 msgid "Keyboard"
 msgstr "Bàn phím"
 
-#: src/pages.py:1938 src/pages.py:1932 src/pages.py:2075
+#: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
 msgid "Keyboard Layout"
 msgstr "Bố cục bàn phím"
 
-#: src/pages.py:2031
+#: src/pages.py:2077
 msgid "Layout Variant"
 msgstr "Biến thể bố cục"
 
-#: src/pages.py:4582
+#: src/pages.py:6821
 msgid "Configure physical keyboard layout"
 msgstr "Cấu hình bố cục bàn phím vật lý"
 
@@ -578,103 +509,91 @@ msgstr "Cấu hình bố cục bàn phím vật lý"
 msgid "Korean"
 msgstr "Tiếng Hàn"
 
-#: src/pages.py:4039
+#: src/pages.py:6146
 msgid "Language"
 msgstr "Ngôn ngữ"
 
-#: src/pages.py:2472
+#: src/pages.py:2624
 msgid "Live USB — excluded"
 msgstr "USB Live — đã loại trừ"
 
-#: src/pages.py:4573
+#: src/pages.py:6812
 msgid "Mount target filesystems"
 msgstr "Gắn các hệ thống tập tin đích"
 
-#: src/pages.py:851
+#: src/pages.py:918
 msgid "Navigation error"
 msgstr "Lỗi điều hướng"
 
-#: src/pages.py:4180 src/pages.py:4229
+#: src/pages.py:4232 src/pages.py:6339 src/pages.py:6277 src/pages.py:6385
 msgid "New partitions"
 msgstr "Nhóm phân vùng mới"
 
-#: src/pages.py:261 src/pages.py:818 src/pages.py:1016
+#: src/pages.py:315 src/pages.py:884 src/pages.py:1083
 msgid "Next"
 msgstr "Tiếp theo"
 
-#: src/pages.py:4756
+#: src/pages.py:6997
 msgid "Next slide"
 msgstr "Slide tiếp theo"
 
-#: src/pages.py:2389
+#: src/pages.py:2541
 msgid "No partition table"
 msgstr "Không có bảng phân vùng"
 
-#: src/pages.py:2631
+#: src/pages.py:2782
 msgid "No suitable disks found."
 msgstr "Không tìm thấy đĩa phù hợp."
 
-#: src/pages.py:170
-msgid ""
-"No suitable unallocated space was found. To protect your data, create "
-"unallocated space with Windows Disk Management, then boot the installer "
-"again and rescan the disk."
-msgstr ""
-"Không tìm thấy khoảng trống chưa phân bổ phù hợp. Để bảo vệ dữ liệu của bạn,"
-" hãy tạo không gian chưa phân bổ bằng Quản lý đĩa Windows, sau đó khởi động "
-"trình cài đặt lại và quét lại đĩa."
+#: src/pages.py:201
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "Không tìm thấy khoảng trống chưa phân bổ phù hợp. Để bảo vệ dữ liệu của bạn, hãy tạo không gian chưa phân bổ bằng Quản lý đĩa Windows, sau đó khởi động trình cài đặt lại và quét lại đĩa."
 
-#: src/pages.py:175
-msgid ""
-"No suitable unallocated space was found. To protect your data, create "
-"unallocated space with a partitioning tool, then boot the installer again "
-"and rescan the disk."
-msgstr ""
-"Không tìm thấy khoảng trống chưa phân bổ phù hợp. Để bảo vệ dữ liệu của bạn,"
-" hãy tạo không gian chưa phân bổ bằng công cụ phân vùng, sau đó khởi động "
-"trình cài đặt lại và quét lại đĩa."
+#: src/pages.py:206
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "Không tìm thấy khoảng trống chưa phân bổ phù hợp. Để bảo vệ dữ liệu của bạn, hãy tạo không gian chưa phân bổ bằng công cụ phân vùng, sau đó khởi động trình cài đặt lại và quét lại đĩa."
 
 #: data/languages.json:keyboard_layouts
 msgid "Norwegian"
 msgstr "Tiếng Na Uy"
 
-#: src/pages.py:1124 src/pages.py:1375 src/pages.py:4370 src/pages.py:854
+#: src/pages.py:1191 src/pages.py:1442 src/pages.py:6563 src/pages.py:921
 msgid "OK"
 msgstr "Đồng ý"
 
-#: src/pages.py:4835
+#: src/pages.py:7076
 msgid "Output"
 msgstr "Đầu ra"
 
-#: src/pages.py:4973 src/pages.py:5028
+#: src/pages.py:7214 src/pages.py:7269
 msgid "Output • Error"
 msgstr "Đầu ra • Lỗi"
 
-#: src/pages.py:5023
+#: src/pages.py:7264
 msgid "Output • {count} warning(s)"
 msgstr "Đầu ra • {count} cảnh báo"
 
-#: src/pages.py:2453
+#: src/pages.py:2605
 msgid "Partition details unavailable"
 msgstr "Không thể xác định chi tiết phân vùng"
 
-#: src/pages.py:3476 src/pages.py:3487 src/pages.py:1466 src/pages.py:1525
+#: src/pages.py:5561 src/pages.py:5572 src/pages.py:1533 src/pages.py:1592
 msgid "Password"
 msgstr "Mật khẩu"
 
-#: src/pages.py:3584
+#: src/pages.py:5669
 msgid "Password must be at least 6 characters."
 msgstr "Mật khẩu phải có ít nhất 6 ký tự."
 
-#: src/pages.py:4048
+#: src/pages.py:6154
 msgid "Platform"
 msgstr "Nền tảng"
 
-#: src/pages.py:4548
+#: src/pages.py:6787
 msgid "Please do not turn off your computer"
 msgstr "Vui lòng không tắt máy tính của bạn"
 
-#: src/pages.py:3965
+#: src/pages.py:6055
 msgid "Please review your choices before proceeding"
 msgstr "Vui lòng xem lại các lựa chọn của bạn trước khi tiếp tục"
 
@@ -690,85 +609,78 @@ msgstr "Tiếng Bồ Đào Nha"
 msgid "Portuguese (Brazil)"
 msgstr "Tiếng Bồ Đào Nha (Brazil)"
 
-#: src/pages.py:4594
+#: src/pages.py:6833
 msgid "Prepare Secure Boot"
 msgstr "Chuẩn bị Secure Boot"
 
-#: src/pages.py:4572
+#: src/pages.py:6811
 msgid "Prepare installation disk"
 msgstr "Chuẩn bị đĩa cài đặt"
 
-#: src/pages.py:4579
+#: src/pages.py:6818
 msgid "Prepare target environment"
 msgstr "Chuẩn bị môi trường đích"
 
-#: src/pages.py:4871
+#: src/pages.py:7112
 msgid "Preparing installation…"
 msgstr "Đang chuẩn bị cài đặt…"
 
-#: src/pages.py:4175
+#: src/pages.py:6336 src/pages.py:6272
 msgid "Preserved partitions"
 msgstr "Các phân vùng được bảo lưu"
 
-#: src/pages.py:4750
+#: src/pages.py:6991
 msgid "Previous slide"
 msgstr "Slide trước đó"
 
-#: src/pages.py:3964 src/pages.py:3958
+#: src/pages.py:6054 src/pages.py:6048
 msgid "Ready to Install"
 msgstr "Sẵn sàng để cài đặt"
 
-#: src/pages.py:4811
+#: src/pages.py:7052
 msgid "Reboot Now"
 msgstr "Khởi động lại ngay"
 
-#: src/pages.py:4598
+#: src/pages.py:6837
 msgid "Refresh package indexes"
 msgstr "Làm mới chỉ mục gói"
 
-#: src/pages.py:4580
+#: src/pages.py:6819
 msgid "Remove live-session components"
 msgstr "Gỡ bỏ các thành phần phiên live"
 
-#: src/pages.py:4951 src/pages.py:4942
+#: src/pages.py:7192 src/pages.py:7183
 msgid "Remove the installation media and restart your computer"
 msgstr "Gỡ thiết bị cài đặt và khởi động lại máy tính của bạn"
 
-#: src/pages.py:1177 src/pages.py:1205 src/pages.py:2220 src/pages.py:675
-#: src/pages.py:1362 src/pages.py:2233
-msgid ""
-"Requires an Internet connection. The base installation remains available "
-"when offline."
-msgstr ""
-"Yêu cầu kết nối Internet. Bản cài đặt cơ bản vẫn khả dụng khi ngoại tuyến."
+#: src/pages.py:1244 src/pages.py:1272 src/pages.py:2372 src/pages.py:734
+#: src/pages.py:1429 src/pages.py:2385
+msgid "Requires an Internet connection. The base installation remains available when offline."
+msgstr "Yêu cầu kết nối Internet. Bản cài đặt cơ bản vẫn khả dụng khi ngoại tuyến."
 
-#: src/pages.py:2550
+#: src/pages.py:2701
 msgid "Rescan Storage"
 msgstr "Tìm lại bộ nhớ"
 
-#: src/pages.py:3101
+#: src/pages.py:3526
 msgid "Rescan and Reselect Disk"
 msgstr "Tìm lại và chọn lại đĩa"
 
-#: src/pages.py:4809
+#: src/pages.py:7050
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "Khởi động lại và Đăng ký Khóa Secure Boot"
 
-#: src/pages.py:4960
+#: src/pages.py:7201
 msgid "Restart is disabled in development protection mode"
 msgstr "Khởi động lại bị vô hiệu hóa trong chế độ bảo vệ phát triển"
 
-#: src/pages.py:3150
+#: src/pages.py:3576 src/pages.py:5081
 msgid "Reuse {path} ({size})"
 msgstr "Tái sử dụng {path} ({size})"
 
-#: src/pages.py:4155
-msgid ""
-"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
-"before writing."
-msgstr ""
-"Tái sử dụng {path}; không bao giờ định dạng nó; xác minh sức khỏe FAT, danh "
-"tính và 64 MiB trống trước khi ghi."
+#: src/pages.py:6254
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Tái sử dụng {path}; không bao giờ định dạng nó; xác minh sức khỏe FAT, danh tính và 64 MiB trống trước khi ghi."
 
 #: data/languages.json:keyboard_layouts
 msgid "Romanian"
@@ -778,56 +690,55 @@ msgstr "Tiếng Rumani"
 msgid "Russian"
 msgstr "Tiếng Nga"
 
-#: src/pages.py:4679
+#: src/pages.py:6920
 msgid "Save Log"
 msgstr "Lưu nhật ký"
 
-#: src/pages.py:4609
+#: src/pages.py:6848
 msgid "Schedule MOK enrollment"
 msgstr "Lên lịch đăng ký MOK"
 
-#: src/pages.py:3831
+#: src/pages.py:5918
 msgid "Search timezones…"
 msgstr "Tìm kiếm múi giờ…"
 
-#: src/pages.py:4069
+#: src/pages.py:6175
 msgid "Secure Boot enrollment"
 msgstr "Đăng ký Secure Boot"
 
-#: src/pages.py:2497 src/pages.py:2491
+#: src/pages.py:2649 src/pages.py:2643
 msgid "Select Installation Disk"
 msgstr "Chọn đĩa cài đặt"
 
-#: src/pages.py:3818 src/pages.py:3812
+#: src/pages.py:5905 src/pages.py:5899
 msgid "Select Timezone"
 msgstr "Chọn múi giờ"
 
-#: src/pages.py:4592
+#: src/pages.py:6831
 msgid "Select fastest package mirror"
 msgstr "Chọn máy chủ gói nhanh nhất"
 
-#: src/pages.py:3884
+#: src/pages.py:5974
 msgid "Selected timezone"
 msgstr "Múi giờ đã chọn"
 
-#: src/pages.py:4170
+#: src/pages.py:6267
 msgid "Selected unallocated space"
 msgstr "Không gian chưa phân bổ được chọn"
 
-#: src/pages.py:2239
+#: src/pages.py:2391
 msgid "Some drivers are proprietary or otherwise non-free software."
-msgstr ""
-"Một số trình điều khiển là phần mềm độc quyền hoặc không miễn phí khác."
+msgstr "Một số trình điều khiển là phần mềm độc quyền hoặc không miễn phí khác."
 
 #: data/languages.json:keyboard_layouts
 msgid "Spanish"
 msgstr "Tiếng Tây Ban Nha"
 
-#: src/pages.py:4046
+#: src/pages.py:6152
 msgid "Stable disk identity"
 msgstr "Danh tính đĩa ổn định"
 
-#: src/pages.py:4437
+#: src/pages.py:6641
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -835,19 +746,19 @@ msgstr ""
 "Danh tính ổn định: {stable_id}\n"
 "\n"
 
-#: src/pages.py:2380
+#: src/pages.py:2532
 msgid "Storage Device"
 msgstr "Thiết bị lưu trữ"
 
-#: src/pages.py:4168 src/pages.py:4224
+#: src/pages.py:6265 src/pages.py:6333 src/pages.py:6380
 msgid "Storage mode"
 msgstr "Chế độ lưu trữ"
 
-#: src/pages.py:4050
+#: src/pages.py:6156
 msgid "Subvolumes"
 msgstr "Cục con (Subvolumes)"
 
-#: src/pages.py:4268
+#: src/pages.py:2968 src/pages.py:3851
 msgid "Swap"
 msgstr "Swap"
 
@@ -855,19 +766,19 @@ msgstr "Swap"
 msgid "Swedish"
 msgstr "Tiếng Thụy Điển"
 
-#: src/pages.py:4051
+#: src/pages.py:6157
 msgid "System updates"
 msgstr "Bản cập nhật hệ thống"
 
-#: src/pages.py:4042
+#: src/pages.py:6148
 msgid "Target Disk"
 msgstr "Đĩa đích"
 
-#: src/pages.py:2993 src/pages.py:3260
+#: src/pages.py:3418 src/pages.py:3686 src/pages.py:4091
 msgid "Target: {disk} ({size} — {model})"
 msgstr "Mục tiêu: {disk} ({size} — {model})"
 
-#: src/pages.py:1964 src/pages.py:2076
+#: src/pages.py:2083 src/pages.py:2228
 msgid "Test your keyboard here…"
 msgstr "Thử bàn phím của bạn ở đây…"
 
@@ -875,120 +786,75 @@ msgstr "Thử bàn phím của bạn ở đây…"
 msgid "Thai"
 msgstr "Tiếng Thái"
 
-#: src/pages.py:120
-msgid ""
-"The GPT disk or one of its partitions has no unique stable identifier. "
-"Guided coexistence cannot safely authorize preservation or writes on this "
-"disk."
-msgstr ""
-"Đĩa GPT hoặc một trong các phân vùng của nó không có định danh ổn định duy "
-"nhất. Chế độ cùng tồn tại có hướng dẫn không thể an toàn ủy quyền bảo lưu "
-"hoặc ghi vào đĩa này."
+#: src/pages.py:151
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "Đĩa GPT hoặc một trong các phân vùng của nó không có định danh ổn định duy nhất. Chế độ cùng tồn tại có hướng dẫn không thể an toàn ủy quyền bảo lưu hoặc ghi vào đĩa này."
 
-#: src/pages.py:115
-msgid ""
-"The complete partition map and free-space geometry could not be read "
-"consistently. No space on this disk is authorized for installation."
-msgstr ""
-"Bản đồ phân vùng hoàn chỉnh và hình học không gian trống không thể đọc được "
-"một cách nhất quán. Không có không gian nào trên đĩa này được ủy quyền để "
-"cài đặt."
+#: src/pages.py:146
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "Bản đồ phân vùng hoàn chỉnh và hình học không gian trống không thể đọc được một cách nhất quán. Không có không gian nào trên đĩa này được ủy quyền để cài đặt."
 
-#: src/pages.py:141
-msgid ""
-"The existing EFI System Partition is only a candidate. Health and free-space"
-" checks must pass before it can be reused, and it will never be formatted."
-msgstr ""
-"Phân vùng Hệ thống EFI hiện có chỉ là ứng viên. Các kiểm tra tình trạng và "
-"không gian trống phải đạt yêu cầu trước khi nó có thể được tái sử dụng, và "
-"nó sẽ không bao giờ được định dạng lại."
+#: src/pages.py:172
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "Phân vùng Hệ thống EFI hiện có chỉ là ứng viên. Các kiểm tra tình trạng và không gian trống phải đạt yêu cầu trước khi nó có thể được tái sử dụng, và nó sẽ không bao giờ được định dạng lại."
 
-#: src/pages.py:4926
-msgid ""
-"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
-" state, or installed system was changed."
-msgstr ""
-"Kế hoạch cài đặt hợp lệ. Không có đĩa, hệ thống tập tin, trình khởi động, "
-"trạng thái Secure Boot hoặc hệ thống đã cài đặt nào bị thay đổi."
+#: src/pages.py:7167
+msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
+msgstr "Kế hoạch cài đặt hợp lệ. Không có đĩa, hệ thống tập tin, trình khởi động, trạng thái Secure Boot hoặc hệ thống đã cài đặt nào bị thay đổi."
 
-#: src/main.py:147
+#: src/main.py:151
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr "Trình cài đặt không thể đóng trong khi nó đang sửa đổi đĩa đích."
 
-#: src/pages.py:150
-msgid ""
-"The installer will not mount, repair or infer the safety of Windows volumes "
-"from hibernation or Fast Startup state. Any required Windows maintenance "
-"must be completed in Windows."
-msgstr ""
-"Cài đặt sẽ không gắn kết, sửa chữa hoặc suy luận tính an toàn của các ổ "
-"Windows từ trạng thái ngủ đông hoặc Khởi động nhanh. Mọi bảo trì Windows cần"
-" thiết phải được hoàn tất trong Windows."
+#: src/pages.py:181
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "Cài đặt sẽ không gắn kết, sửa chữa hoặc suy luận tính an toàn của các ổ Windows từ trạng thái ngủ đông hoặc Khởi động nhanh. Mọi bảo trì Windows cần thiết phải được hoàn tất trong Windows."
 
-#: src/pages.py:4443
+#: src/pages.py:6647
 msgid "The privileged executor is disabled."
-msgstr "Trình điều khiển đặc quyền bị vô hiệu hóa."
+msgstr "Tiến trình dịch vụ có đặc quyền nâng cao đã bị vô hiệu hóa."
 
-#: src/pages.py:3228
-msgid ""
-"The selected disk changed or disappeared. Return to the disk page and select"
-" it again. {error}"
-msgstr ""
-"Đĩa đã chọn bị thay đổi hoặc biến mất. Quay lại trang đĩa và chọn lại. "
-"{error}"
+#: src/pages.py:3654
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "Đĩa đã chọn bị thay đổi hoặc biến mất. Quay lại trang đĩa và chọn lại. {error}"
 
-#: src/pages.py:3241
+#: src/pages.py:3667
 msgid "The selected disk size changed. Return and select it again."
 msgstr "Kích thước đĩa đã chọn bị thay đổi. Quay lại và chọn lại."
 
-#: src/pages.py:3251
-msgid ""
-"The selected disk topology changed. Review the disk and installation method "
-"again."
-msgstr ""
-"Cấu trúc đĩa đã chọn bị thay đổi. Xem xét lại đĩa và phương pháp cài đặt."
+#: src/pages.py:3677
+msgid "The selected disk topology changed. Review the disk and installation method again."
+msgstr "Cấu trúc đĩa đã chọn bị thay đổi. Xem xét lại đĩa và phương pháp cài đặt."
 
-#: src/pages.py:3580
+#: src/pages.py:5665
 msgid "The two passwords do not match."
 msgstr "Hai mật khẩu không khớp nhau."
 
-#: src/pages.py:4057
+#: src/pages.py:6163
 msgid "Third-party drivers"
 msgstr "Trình điều khiển bên thứ ba"
 
-#: src/pages.py:3021
-msgid ""
-"This advanced path preserves existing partitions but changes the selected "
-"disk's partition table and the machine's EFI boot state."
-msgstr ""
-"Path nâng cao này bảo toàn các phân vùng hiện có nhưng thay đổi bảng phân "
-"vùng của ổ đĩa đã chọn và trạng thái khởi động EFI của máy."
+#: src/pages.py:3446
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "Path nâng cao này bảo toàn các phân vùng hiện có nhưng thay đổi bảng phân vùng của ổ đĩa đã chọn và trạng thái khởi động EFI của máy."
 
-#: src/pages.py:125
-msgid ""
-"This disk contains an active mapper, array or other nested block-device "
-"topology that guided coexistence does not support."
-msgstr ""
-"Oss đĩa này chứa một trình ánh xạ, mảng hoặc cấu trúc thiết bị khối lồng "
-"nhau khác mà chế độ cùng tồn tại có hướng dẫn không hỗ trợ."
+#: src/pages.py:156
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "Oss đĩa này chứa một trình ánh xạ, mảng hoặc cấu trúc thiết bị khối lồng nhau khác mà chế độ cùng tồn tại có hướng dẫn không hỗ trợ."
 
-#: src/pages.py:2935
-msgid ""
-"This disk is too small for whole-disk installation. Advanced may continue "
-"only if suitable unallocated space exists."
-msgstr ""
-"Ổ đĩa này quá nhỏ để cài đặt toàn bộ ổ đĩa. Chế độ nâng cao chỉ có thể tiếp "
-"tục nếu có đủ không gian chưa phân bổ phù hợp."
+#: src/pages.py:3277
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "Ổ đĩa này quá nhỏ để cài đặt toàn bộ ổ đĩa. Chế độ nâng cao chỉ có thể tiếp tục nếu có đủ không gian chưa phân bổ phù hợp."
 
-#: src/pages.py:4454
+#: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
 msgstr "Trình cài đặt này không thu nhỏ hoặc bảo lưu các hệ thống khác."
 
-#: src/pages.py:4103
+#: src/pages.py:6209
 msgid "Timezone"
 msgstr "Múi giờ"
 
-#: src/pages.py:2474
+#: src/pages.py:2626
 msgid "Too small"
 msgstr "Qúa nhỏ"
 
@@ -1000,71 +866,67 @@ msgstr "Tiếng Thổ Nhĩ Kỳ"
 msgid "Ukrainian"
 msgstr "Tiếng Ukraina"
 
-#: src/pages.py:3065
+#: src/pages.py:3490
 msgid "Unallocated space"
 msgstr "Khoảng trống chưa phân bổ"
 
-#: src/pages.py:2445
+#: src/pages.py:2597
 msgid "Unallocated · {size}"
 msgstr "Chưa được phân bổ · {size}"
 
-#: src/pages.py:4014 src/pages.py:1710
+#: src/pages.py:6106 src/pages.py:1777
 msgid "Unavailable: {error}"
 msgstr "Khả dụng: {error}"
 
-#: src/pages.py:2432
+#: src/pages.py:2584
 msgid "Unknown filesystem"
 msgstr "Hệ thống tệp không xác định"
 
-#: src/pages.py:4614
+#: src/pages.py:6853
 msgid "Unmount installed system"
 msgstr "Gỡ cài đặt hệ thống đã cài đặt"
 
-#: src/pages.py:2198 src/pages.py:1196 src/pages.py:2192
+#: src/pages.py:2350 src/pages.py:1263 src/pages.py:2344
 msgid "Updates and Drivers"
 msgstr "Bản cập nhật và Trình điều khiển"
 
-#: src/pages.py:2986
+#: src/pages.py:3411
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "Chỉ sử dụng khoảng trống chưa phân bổ hiện có trên ổ đĩa đã chọn."
 
-#: src/pages.py:4079
+#: src/pages.py:6185
 msgid "User"
 msgstr "Người dùng"
 
-#: src/pages.py:3446 src/pages.py:3440
+#: src/pages.py:5531 src/pages.py:5525
 msgid "User Account"
 msgstr "Tài khoản người dùng"
 
-#: src/pages.py:3468 src/pages.py:3472
+#: src/pages.py:5553 src/pages.py:5557
 msgid "Username"
 msgstr "Tên người dùng"
 
-#: src/pages.py:3568
-msgid ""
-"Username must start with a lowercase ASCII letter and contain only lowercase"
-" ASCII letters or digits (maximum 16 characters)."
-msgstr ""
-"Tên người dùng phải bắt đầu bằng chữ cái thường ASCII và chỉ chứa chữ cái "
-"thường hoặc chữ số ASCII (tối đa 16 ký tự)."
+#: src/pages.py:5653
+msgid "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
+msgstr "Tên người dùng phải bắt đầu bằng chữ cái thường ASCII và chỉ chứa chữ cái thường hoặc chữ số ASCII (tối đa 16 ký tự)."
 
-#: src/pages.py:2832
+#: src/pages.py:3173
 msgid "Uses a traditional single root filesystem."
 msgstr "Sử dụng hệ thống tệp gốc đơn truyền thống."
 
-#: src/pages.py:4406
+#: src/pages.py:6601
 msgid "Validate Plan (No Installation)"
 msgstr "Xác thực Kế hoạch (Không cài đặt)"
 
-#: src/pages.py:4405
+#: src/pages.py:6600
 msgid "Validate this installation plan?"
 msgstr "Xác thực kế hoạch cài đặt này?"
 
-#: src/pages.py:4606
+#: src/pages.py:6845
 msgid "Verify kernel module signatures"
 msgstr "Xác minh chữ ký mô đun kernel"
 
-#: src/pages.py:4571
+#: src/pages.py:6810
 msgid "Verify target disk isolation"
 msgstr "Xác minh cách ly đĩa đích"
 
@@ -1072,886 +934,819 @@ msgstr "Xác minh cách ly đĩa đích"
 msgid "Vietnamese"
 msgstr "Tiếng Việt"
 
-#: src/pages.py:811
+#: src/pages.py:877
 msgid "Welcome to AnduinOS"
 msgstr "Chào mừng đến với AnduinOS"
 
-#: src/pages.py:2468
+#: src/pages.py:2620
 msgid "Windows detected"
 msgstr "Windows đã được phát hiện"
 
-#: src/pages.py:4188
-msgid ""
-"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
-"AnduinOS NVRAM entry."
-msgstr ""
-"Chỉ ghi EFI/AnduinOS, không ghi đè lên EFI/BOOT và yêu cầu mục NVRAM "
-"AnduinOS đã được xác minh."
+#: src/pages.py:6284
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Chỉ ghi EFI/AnduinOS, không ghi đè lên EFI/BOOT và yêu cầu mục NVRAM AnduinOS đã được xác minh."
 
-#: src/pages.py:4072
+#: src/pages.py:6178
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
-msgstr ""
-"tạo MOK cục bộ cho máy; đăng ký sau khi khởi động lại với mật khẩu 123456"
+msgstr "tạo MOK cục bộ cho máy; đăng ký sau khi khởi động lại với mật khẩu 123456"
 
-#: src/pages.py:4059
+#: src/pages.py:6165
 msgid "detect and install (may include non-free software)"
 msgstr "p phát hiện và cài đặt (có thể bao gồm phần mềm không miễn phí)"
 
-#: src/pages.py:4121 src/pages.py:4055 src/pages.py:4061 src/pages.py:4067
+#: src/pages.py:6227 src/pages.py:6161 src/pages.py:6167 src/pages.py:6173
 msgid "do not install"
 msgstr "không cài đặt"
 
-#: src/pages.py:4053 src/pages.py:4065
+#: src/pages.py:6159 src/pages.py:6171
 msgid "download and install"
 msgstr "tải xuống và cài đặt"
 
-#: src/pages.py:3055
+#: src/pages.py:3480 src/pages.py:5118
 msgid "ext4 (classic)"
 msgstr "ext4 (cổ điển)"
 
-#: src/pages.py:2829
+#: src/pages.py:3170
 msgid "ext4 — classic"
 msgstr "ext4 — cổ điển"
 
-#: src/pages.py:4077
+#: src/pages.py:6183
 msgid "not required"
 msgstr "khob bắt buộc"
 
-#: src/pages.py:4083
+#: src/pages.py:6189
 msgid "password required for login"
 msgstr "yêu cầu mật khẩu để đăng nhập"
 
-#: src/pages.py:4024
+#: src/pages.py:6117
 msgid "single ext4 root filesystem"
 msgstr "hệ thống tập tin gốc ext4 đơn"
 
-#: src/pages.py:4005
+#: src/pages.py:6097
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / Khởi động an toàn: {secure_boot}"
 
-#: src/pages.py:4176
+#: src/pages.py:6273
 msgid "{count}: {paths}"
 msgstr "{count} mục: {paths}"
 
-#: src/pages.py:4139
+#: src/pages.py:6238
 msgid "{name}: {start}–{end} MiB"
 msgstr "{name}: {start}–{end} MiB"
 
-#: src/pages.py:4147
+#: src/pages.py:6246 src/pages.py:6313
 msgid "{path} as {filesystem}"
 msgstr "{path} dưới dạng {filesystem}"
 
-#: src/pages.py:4171
+#: src/pages.py:6268
 msgid "{size} at {offset}"
 msgstr "{size} tại {offset}"
 
-#: src/pages.py:3288
+#: src/pages.py:3714
 msgid "{size} unallocated at {offset}"
 msgstr "{size} chưa phân bổ tại {offset}"
 
-#: src/pages.py:5031
+#: src/pages.py:7272
 msgid "{step} failed"
 msgstr "{step} thất bại"
 
-#: src/pages.py:4303
-msgid ""
-"⚠ Only the selected unallocated space will be partitioned and formatted. "
-"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
-"firmware boot entry may change. This installer will not shrink Windows for "
-"you."
-msgstr ""
-"⚠ Chỉ vùng trống chưa được phân bổ đã chọn sẽ được chia và định dạng. Các "
-"phân vùng hiện có sẽ được giữ nguyên, nhưng các tệp EFI/AnduinOS và mục khởi"
-" động firmware AnduinOS có thể thay đổi. Trình cài đặt này sẽ không thu nhỏ "
-"Windows cho bạn."
+#: src/pages.py:6488
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Chỉ vùng trống chưa được phân bổ đã chọn sẽ được chia và định dạng. Các phân vùng hiện có sẽ được giữ nguyên, nhưng các tệp EFI/AnduinOS và mục khởi động firmware AnduinOS có thể thay đổi. Trình cài đặt này sẽ không thu nhỏ Windows cho bạn."
 
-#: src/pages.py:4311
-msgid ""
-"⚠ This will erase ALL data on the selected disk. This action cannot be "
-"undone."
-msgstr ""
-"⚠ Điều này sẽ xóa TẤT CẢ dữ liệu trên đĩa đã chọn. Hành động này không thể "
-"hoàn tác."
+#: src/pages.py:6504
+msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
+msgstr "⚠ Điều này sẽ xóa TẤT CẢ dữ liệu trên đĩa đã chọn. Hành động này không thể hoàn tác."
 
-#: src/pages.py:1176 src/pages.py:667 src/pages.py:1171
+#: src/pages.py:1243 src/pages.py:726 src/pages.py:1238
 msgid "Connect to the Internet"
 msgstr "Kết nối Internet"
 
-#: src/pages.py:1343
+#: src/pages.py:1410
 msgid "Internet connection is ready."
 msgstr "Kết nối Internet đã sẵn sàng."
 
-#: src/pages.py:1250
+#: src/pages.py:1317
 msgid "Available Wi-Fi Networks"
 msgstr "Các mạng Wi-Fi khả dụng"
 
-#: src/pages.py:4576
+#: src/pages.py:6815
 msgid "Preserve connected Wi-Fi network"
 msgstr "Giữ mạng Wi-Fi đang kết nối"
 
-#: src/pages.py:2540 src/pages.py:3092
+#: src/pages.py:2691 src/pages.py:3517 src/pages.py:4166 src/pages.py:5388
+#: src/pages.py:4139 src/pages.py:4305
 msgid "Loading storage devices…"
 msgstr "Đang tải thiết bị lưu trữ…"
 
-#: src/pages.py:4335
+#: src/pages.py:6528
 msgid "Rechecking target disk…"
 msgstr "Đang kiểm tra lại đĩa đích…"
 
-#: src/pages.py:2609 src/pages.py:3213 src/pages.py:4364
+#: src/pages.py:2760 src/pages.py:3639 src/pages.py:5336 src/pages.py:6557
 msgid "Storage devices could not be loaded: {error}"
 msgstr "Không thể tải thiết bị lưu trữ: {error}"
 
-#: src/pages.py:1218 src/pages.py:4586 src/pages.py:2252
+#: src/pages.py:1285 src/pages.py:6825 src/pages.py:2404
 msgid "Install extended multimedia format support"
 msgstr "Cài đặt hỗ trợ định dạng đa phương tiện mở rộng"
 
-#: src/pages.py:4063
+#: src/pages.py:6169
 msgid "Extended multimedia formats"
 msgstr "Các định dạng đa phương tiện mở rộng"
 
-#: src/pages.py:2256
-msgid ""
-"Adds wider GStreamer compatibility and support for additional legacy and "
-"specialist media formats. Some components may be subject to patent or "
-"redistribution terms."
-msgstr ""
-"Mở rộng khả năng tương thích với GStreamer và hỗ trợ thêm các định dạng "
-"phương tiện cũ và chuyên dụng. Một số thành phần có thể chịu các điều khoản "
-"về bằng sáng chế hoặc phân phối lại."
+#: src/pages.py:2408
+msgid "Adds wider GStreamer compatibility and support for additional legacy and specialist media formats. Some components may be subject to patent or redistribution terms."
+msgstr "Mở rộng khả năng tương thích với GStreamer và hỗ trợ thêm các định dạng phương tiện cũ và chuyên dụng. Một số thành phần có thể chịu các điều khoản về bằng sáng chế hoặc phân phối lại."
 
-#: src/pages.py:1473
+#: src/pages.py:1540
 msgid "A saved profile exists. Entering a password updates it securely."
 msgstr "Đã có hồ sơ được lưu. Nhập mật khẩu sẽ cập nhật nó một cách an toàn."
 
-#: src/pages.py:1524
+#: src/pages.py:1591
 msgid "Anonymous identity (optional)"
 msgstr "Danh tính ẩn danh (tùy chọn)"
 
-#: src/pages.py:1530
+#: src/pages.py:1597
 msgid "CA certificate path (optional)"
 msgstr "Đường dẫn chứng chỉ CA (tùy chọn)"
 
-#: src/pages.py:1239 src/pages.py:1409 src/pages.py:1482 src/pages.py:1600
-#: src/pages.py:1816
+#: src/pages.py:1306 src/pages.py:1476 src/pages.py:1549 src/pages.py:1667
+#: src/pages.py:1883 src/pages.py:4626 src/pages.py:4845 src/pages.py:5309
 msgid "Cancel"
 msgstr "Hủy"
 
-#: src/pages.py:1786
+#: src/pages.py:1853
 msgid "Cancelling Wi-Fi operation…"
 msgstr "Hủy bỏ thao tác Wi-Fi…"
 
-#: src/pages.py:1532
+#: src/pages.py:1599
 msgid "Client certificate path"
 msgstr "Đường dẫn chứng chỉ máy khách"
 
-#: src/pages.py:1483 src/pages.py:1601
+#: src/pages.py:1550 src/pages.py:1668
 msgid "Connect"
-msgstr "Connect"
+msgstr "Kết nối"
 
-#: src/pages.py:1817
+#: src/pages.py:1884 src/pages.py:6709
 msgid "Continue"
 msgstr "Tiếp tục"
 
-#: src/pages.py:1259 src/pages.py:1809
+#: src/pages.py:1326 src/pages.py:1876
 msgid "Connect to a hidden network"
 msgstr "Kết nối với mạng ẩn"
 
-#: src/pages.py:1478 src/pages.py:1593
+#: src/pages.py:1545 src/pages.py:1660
 #, python-brace-format
 msgid "Connect to {network}"
 msgstr "Kết nối với {network}"
 
-#: src/pages.py:1654
+#: src/pages.py:1721
 msgid "Connected"
-msgstr "Connected"
+msgstr "Đã kết nối"
 
-#: src/pages.py:1453
+#: src/pages.py:1520
 #, python-brace-format
 msgid "Connecting to {network}…"
 msgstr "Đang kết nối với {network}…"
 
-#: src/pages.py:1755
+#: src/pages.py:1822
 msgid "Could not change the Wi-Fi connection"
 msgstr "Không thể thay đổi kết nối Wi-Fi"
 
-#: src/pages.py:1410
+#: src/pages.py:1477
 msgid "Disconnect"
-msgstr "Disconnect"
+msgstr "Ngắt kết nối"
 
-#: src/pages.py:1401
+#: src/pages.py:1468
 #, python-brace-format
 msgid "Disconnect from {network}?"
 msgstr "Ngắt kết nối khỏi {network}?"
 
-#: src/pages.py:1420
+#: src/pages.py:1487
 #, python-brace-format
 msgid "Disconnecting from {network}…"
 msgstr "Đang ngắt kết nối khỏi {network}…"
 
-#: src/pages.py:1531
+#: src/pages.py:1598
 msgid "Domain suffix match (optional)"
 msgstr "Khớp hậu tố miền (tùy chọn)"
 
-#: src/pages.py:1515
+#: src/pages.py:1582
 msgid "EAP method"
 msgstr "Phương thức EAP"
 
-#: src/pages.py:1387 src/pages.py:1796
+#: src/pages.py:1454 src/pages.py:1863
 msgid "Enhanced Open (OWE)"
 msgstr "Mở nâng cao (OWE)"
 
-#: src/pages.py:1595
-msgid ""
-"Enter the credentials supplied by your organization. Certificate validation "
-"is strongly recommended."
-msgstr ""
-"Nhập thông tin xác thực do tổ chức của bạn cung cấp. Việc xác thực chứng chỉ"
-" được khuyến nghị mạnh mẽ."
+#: src/pages.py:1662
+msgid "Enter the credentials supplied by your organization. Certificate validation is strongly recommended."
+msgstr "Nhập thông tin xác thực do tổ chức của bạn cung cấp. Việc xác thực chứng chỉ được khuyến nghị mạnh mẽ."
 
-#: src/pages.py:1811
+#: src/pages.py:1878
 msgid "Enter the exact network name and choose its security type."
 msgstr "Nhập chính xác tên mạng và chọn loại bảo mật của nó."
 
-#: src/pages.py:1390 src/pages.py:1800
+#: src/pages.py:1457 src/pages.py:1867
 msgid "Enterprise Wi-Fi"
 msgstr "Mạng Wi-Fi doanh nghiệp"
 
-#: src/pages.py:1523
+#: src/pages.py:1590
 msgid "Identity"
-msgstr "Identity"
+msgstr "Danh tính"
 
-#: src/pages.py:1527
+#: src/pages.py:1594
 msgid "Inner authentication"
 msgstr "Xác thực bên trong"
 
-#: src/pages.py:1790
+#: src/pages.py:1857
 msgid "Network name (SSID)"
 msgstr "Tên mạng (SSID)"
 
-#: src/pages.py:1645
+#: src/pages.py:1712
 msgid "No Wi-Fi networks found."
 msgstr "Không tìm thấy mạng Wi-Fi nào."
 
-#: src/pages.py:1386 src/pages.py:1795
+#: src/pages.py:1453 src/pages.py:1862
 msgid "Open network"
 msgstr "Mạng mở"
 
-#: src/pages.py:1389 src/pages.py:1797 src/pages.py:1798
+#: src/pages.py:1456 src/pages.py:1864 src/pages.py:1865
 msgid "Personal Wi-Fi"
 msgstr "Mạng Wi-Fi cá nhân"
 
-#: src/pages.py:1535
+#: src/pages.py:1602
 msgid "Private key password (optional)"
 msgstr "Mật khẩu khóa riêng (tùy chọn)"
 
-#: src/pages.py:1533
+#: src/pages.py:1600
 msgid "Private key path"
 msgstr "Đường dẫn khóa riêng"
 
-#: src/pages.py:1284
+#: src/pages.py:1351
 msgid "Refresh Wi-Fi networks"
 msgstr "Làm mới mạng Wi-Fi"
 
-#: src/pages.py:1656
+#: src/pages.py:1723
 msgid "Saved"
-msgstr "Saved"
+msgstr "Đã lưu"
 
-#: src/pages.py:1792
+#: src/pages.py:1859
 msgid "Security"
-msgstr "Security"
+msgstr "Bảo mật"
 
-#: src/pages.py:1405
-msgid ""
-"The installer will keep the saved network profile so it can be used again."
-msgstr ""
-"Trình cài đặt sẽ giữ lại cấu hình mạng đã lưu để bạn có thể sử dụng lại."
+#: src/pages.py:1472
+msgid "The installer will keep the saved network profile so it can be used again."
+msgstr "Trình cài đặt sẽ giữ lại cấu hình mạng đã lưu để bạn có thể sử dụng lại."
 
-#: src/pages.py:1356
+#: src/pages.py:1423
 msgid "The local network is connected, but Internet access is unavailable."
 msgstr "Mạng cục bộ đã được kết nối, nhưng truy cập Internet không khả dụng."
 
-#: src/pages.py:1856
+#: src/pages.py:1923
 msgid "Turning Wi-Fi off…"
 msgstr "Tắt Wi-Fi…"
 
-#: src/pages.py:1854
+#: src/pages.py:1921
 msgid "Turning Wi-Fi on…"
 msgstr "Bật Wi-Fi…"
 
-#: src/pages.py:1485
+#: src/pages.py:1552
 msgid "Use WPS"
 msgstr "Sử dụng WPS"
 
-#: src/pages.py:1388 src/pages.py:1799
+#: src/pages.py:1455 src/pages.py:1866
 msgid "WEP (legacy)"
 msgstr "WEP (lỗi thời)"
 
-#: src/pages.py:1347
-msgid ""
-"Wi-Fi is connected, but the network requires sign-in through a captive "
-"portal."
+#: src/pages.py:1414
+msgid "Wi-Fi is connected, but the network requires sign-in through a captive portal."
 msgstr "Đã kết nối Wi-Fi, nhưng mạng yêu cầu đăng nhập qua cổng bắt buộc."
 
-#: src/pages.py:1449
+#: src/pages.py:1516
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Đang chờ WPS trên {network}. Nhấn nút WPS trên bộ định tuyến…"
 
-#: src/pages.py:3576
+#: src/pages.py:5661
 msgid "A password is required."
 msgstr "Cần có mật khẩu."
 
-#: src/pages.py:3731
+#: src/pages.py:5817
 msgid "Administrative commands will no longer ask for your password."
 msgstr "Các lệnh quản trị sẽ không còn hỏi mật khẩu của bạn."
 
-#: src/pages.py:3681 src/pages.py:3675
+#: src/pages.py:5767 src/pages.py:5761
 msgid "Advanced Options"
 msgstr "Tùy chọn nâng cao"
 
-#: src/pages.py:3747
+#: src/pages.py:5833
 msgid "Allow SSH login with the account password"
 msgstr "Cho phép đăng nhập SSH bằng mật khẩu tài khoản"
 
-#: src/pages.py:4089
+#: src/pages.py:6195
 msgid "Automatic desktop login"
 msgstr "Tự động đăng nhập màn hình nền"
 
-#: src/pages.py:3701
-msgid ""
-"Choose how the local administrator account signs in and authorizes system "
-"changes."
-msgstr ""
-"Chọn cách tài khoản quản trị viên cục bộ đăng nhập và cho phép thay đổi hệ "
-"thống."
+#: src/pages.py:5787
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Chọn cách tài khoản quản trị viên cục bộ đăng nhập và cho phép thay đổi hệ thống."
 
-#: src/pages.py:3682
+#: src/pages.py:5768
 msgid "Choose optional access and sign-in policies"
 msgstr "Chọn chính sách truy cập và đăng nhập tùy chọn"
 
-#: src/pages.py:3709
+#: src/pages.py:5795
 msgid "Choose whether this computer accepts remote Secure Shell connections."
-msgstr ""
-"Chọn có cho phép máy tính này chấp nhận kết nối Secure Shell từ xa hay "
-"không."
+msgstr "Chọn có cho phép máy tính này chấp nhận kết nối Secure Shell từ xa hay không."
 
-#: src/pages.py:4604
+#: src/pages.py:6843
 msgid "Configure Secure Shell"
 msgstr "Cấu hình Secure Shell"
 
-#: src/pages.py:3699
+#: src/pages.py:5785
 msgid "Local Access"
 msgstr "Truy cập cục bộ"
 
-#: src/pages.py:3737
+#: src/pages.py:5823
 msgid "Log in to the desktop without a password"
 msgstr "Đăng nhập vào màn hình nền không cần mật khẩu"
 
-#: src/pages.py:3739
+#: src/pages.py:5825
 msgid "Open this account's desktop automatically when the computer starts."
 msgstr "Tự động mở màn hình nền của tài khoản này khi máy tính khởi động."
 
-#: src/pages.py:3707
+#: src/pages.py:5793
 msgid "Remote Access"
 msgstr "Truy cập từ xa"
 
-#: src/pages.py:3730
+#: src/pages.py:5816
 msgid "Run sudo commands without a password"
 msgstr "Chạy lệnh sudo mà không cần mật khẩu"
 
-#: src/pages.py:4095
+#: src/pages.py:6201
 msgid "SSH password login"
 msgstr "Đăng nhập SSH bằng mật khẩu"
 
-#: src/pages.py:3749
+#: src/pages.py:5835
 msgid "Start Secure Shell and accept this account password over the network."
-msgstr ""
-"Khởi động Secure Shell và chấp nhận mật khẩu của tài khoản này qua mạng."
+msgstr "Khởi động Secure Shell và chấp nhận mật khẩu của tài khoản này qua mạng."
 
-#: src/pages.py:3759
+#: src/pages.py:5845
 msgid "This will reduce the security of the installed system."
 msgstr "Điều này sẽ làm giảm tính bảo mật của hệ thống đã cài đặt."
 
-#: src/pages.py:4093 src/pages.py:4099
+#: src/pages.py:6199 src/pages.py:6205
 msgid "disabled"
 msgstr "đã tắt"
 
-#: src/pages.py:4091 src/pages.py:4097
+#: src/pages.py:6197 src/pages.py:6203
 msgid "enabled"
 msgstr "đã bật"
 
-#: src/pages.py:349
-msgid ""
-"AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently"
-" enabled on this computer, and we recommend enabling it for additional "
-"protection."
-msgstr ""
-"AnduinOS hỗ trợ đầy đủ tính năng Secure Boot. Secure Boot hiện chưa được bật"
-" trên máy tính này, và chúng tôi khuyến nghị bật tính năng này để bảo vệ "
-"thêm."
+#: src/pages.py:403
+msgid "AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently enabled on this computer, and we recommend enabling it for additional protection."
+msgstr "AnduinOS hỗ trợ đầy đủ tính năng Secure Boot. Secure Boot hiện chưa được bật trên máy tính này, và chúng tôi khuyến nghị bật tính năng này để bảo vệ thêm."
 
-#: src/pages.py:331
+#: src/pages.py:385
 msgid "AnduinOS supports Secure Boot"
 msgstr "AnduinOS hỗ trợ Secure Boot"
 
-#: src/pages.py:360
-msgid ""
-"Battery power is sufficient or reliable power is connected. You can continue"
-" with the installation."
-msgstr ""
-"Nguồn điện pin đủ hoặc nguồn điện ổn định đã được kết nối. Bạn có thể tiếp "
-"tục cài đặt."
+#: src/pages.py:414
+msgid "Battery power is sufficient or reliable power is connected. You can continue with the installation."
+msgstr "Nguồn điện pin đủ hoặc nguồn điện ổn định đã được kết nối. Bạn có thể tiếp tục cài đặt."
 
-#: src/pages.py:366
-msgid ""
-"Connect reliable external power and charge above 25%, or charge above 45% "
-"while unplugged."
-msgstr ""
-"Cắm nguồn điện ngoài ổn định và sạc trên 25%, hoặc sạc trên 45% khi không "
-"cắm sạc."
+#: src/pages.py:420
+msgid "Connect reliable external power and charge above 25%, or charge above 45% while unplugged."
+msgstr "Cắm nguồn điện ngoài ổn định và sạc trên 25%, hoặc sạc trên 45% khi không cắm sạc."
 
-#: src/pages.py:338
+#: src/pages.py:392
 msgid "Could not open UEFI firmware settings"
 msgstr "Không thể mở cài đặt firmware UEFI"
 
-#: src/pages.py:333
+#: src/pages.py:387
 msgid "Get additional protection before installing AnduinOS."
 msgstr "Bật các biện pháp bảo vệ bổ sung trước khi cài đặt AnduinOS."
 
-#: src/pages.py:364
+#: src/pages.py:418
 msgid "Power conditions are safe for installation."
 msgstr "Điều kiện nguồn điện an toàn để cài đặt."
 
-#: src/pages.py:363
+#: src/pages.py:417
 msgid "Power ready"
 msgstr "Nguồn điện sẵn sàng"
 
-#: src/pages.py:335
+#: src/pages.py:389
 msgid "Restart to UEFI Firmware Settings"
 msgstr "Khởi động lại vào Cài đặt Firmware UEFI"
 
-#: src/pages.py:345
-msgid ""
-"Secure Boot is a UEFI security feature that verifies trusted, digitally "
-"signed software while your computer starts."
-msgstr ""
-"Secure Boot là tính năng bảo mật UEFI xác minh phần mềm được tin cậy, có chữ"
-" ký số khi máy tính khởi động."
+#: src/pages.py:399
+msgid "Secure Boot is a UEFI security feature that verifies trusted, digitally signed software while your computer starts."
+msgstr "Secure Boot là tính năng bảo mật UEFI xác minh phần mềm được tin cậy, có chữ ký số khi máy tính khởi động."
 
-#: src/pages.py:336
+#: src/pages.py:390
 msgid "Skip"
 msgstr "Bỏ qua"
 
-#: src/pages.py:341
+#: src/pages.py:395
 msgid "The firmware settings could not be opened on this computer."
 msgstr "Không thể mở cài đặt firmware trên máy tính này."
 
-#: src/pages.py:354
-msgid ""
-"To enable it, open the UEFI firmware settings and look under Boot, Security,"
-" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
-"Firmware wording varies by manufacturer."
-msgstr ""
-"Để bật tính năng này, hãy mở cài đặt firmware UEFI và tìm trong mục Boot, "
-"Security, hoặc Secure Boot. Chọn Microsoft & 3rd-party CA hoặc bật Secure "
-"Boot. Từ ngữ trong firmware có thể khác nhau tùy theo nhà sản xuất."
+#: src/pages.py:408
+msgid "To enable it, open the UEFI firmware settings and look under Boot, Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. Firmware wording varies by manufacturer."
+msgstr "Để bật tính năng này, hãy mở cài đặt firmware UEFI và tìm trong mục Boot, Security, hoặc Secure Boot. Chọn Microsoft & 3rd-party CA hoặc bật Secure Boot. Từ ngữ trong firmware có thể khác nhau tùy theo nhà sản xuất."
 
+#: src/pages.py:3179
 msgid "Advanced"
 msgstr "Nâng cao"
 
-msgid ""
-"Keep Windows or other partitions, reuse or create an ESP, and design Root "
-"and Swap partitions with exact sizes."
-msgstr ""
-"Giữ Windows hoặc các phân vùng khác, dùng lại hoặc tạo ESP và thiết kế phân "
-"vùng Root cùng Swap với kích thước chính xác."
+#: src/pages.py:3181
+msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root and Swap partitions with exact sizes."
+msgstr "Giữ Windows hoặc các phân vùng khác, dùng lại hoặc tạo ESP và thiết kế phân vùng Root cùng Swap với kích thước chính xác."
 
-msgid ""
-"Manual changes are destructive. Existing partition starts are never moved. "
-"Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
-" or unclean volumes are never resized."
-msgstr ""
-"Các thay đổi thủ công mang tính phá hủy. Vị trí bắt đầu của các phân vùng "
-"hiện có không bao giờ bị di chuyển. Chỉ có thể thu nhỏ phân vùng NTFS không "
-"mã hóa sau khi vượt qua các bước kiểm tra an toàn nghiêm ngặt; các phân vùng"
-" được mã hóa, đang được gắn kết hoặc có hệ thống tệp ở trạng thái không sạch"
-" sẽ không bao giờ bị thay đổi kích thước."
+#: src/pages.py:3230
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Các thay đổi thủ công mang tính phá hủy. Vị trí bắt đầu của các phân vùng hiện có không bao giờ bị di chuyển. Chỉ có thể thu nhỏ phân vùng NTFS không mã hóa sau khi vượt qua các bước kiểm tra an toàn nghiêm ngặt; các phân vùng được mã hóa, đang được gắn kết hoặc có hệ thống tệp ở trạng thái không sạch sẽ không bao giờ bị thay đổi kích thước."
 
+#: src/pages.py:3410
 msgid "Install Alongside Automatically"
 msgstr "Cài đặt song song tự động"
 
+#: src/pages.py:3849
 msgid "ESP"
 msgstr "ESP"
 
+#: src/pages.py:3850
 msgid "Root"
-msgstr "Root"
+msgstr "Phân vùng gốc"
 
+#: src/pages.py:3866
 msgid "Unallocated"
 msgstr "Chưa phân bổ"
 
+#: src/pages.py:3973
 #, python-brace-format
 msgid "{name} · {size} · {start}–{end} MiB"
 msgstr "{name} · {size} · {start}–{end} MiB"
 
+#: src/pages.py:4045
 msgid "Current disk"
 msgstr "Đĩa hiện tại"
 
+#: src/pages.py:4151 src/pages.py:4047
 msgid "Planned result"
 msgstr "Kết quả dự kiến"
 
+#: src/pages.py:4071
 msgid "Advanced: Manual Partitioning"
 msgstr "Nâng cao: Phân vùng thủ công"
 
-msgid ""
-"Windows was detected. Its partitions remain preserved unless you explicitly "
-"mark them for deletion."
-msgstr ""
-"Đã phát hiện Windows. Các phân vùng của Windows sẽ được giữ nguyên trừ khi "
-"bạn đánh dấu rõ ràng để xóa."
+#: src/pages.py:4104
+msgid "Windows was detected. Its partitions remain preserved unless you explicitly mark them for deletion."
+msgstr "Đã phát hiện Windows. Các phân vùng của Windows sẽ được giữ nguyên trừ khi bạn đánh dấu rõ ràng để xóa."
 
+#: src/pages.py:4173 src/pages.py:4958
 msgid "Initialize New GPT"
 msgstr "Khởi tạo GPT mới"
 
+#: src/pages.py:4193
 msgid "Existing partitions"
 msgstr "Các phân vùng hiện có"
 
-msgid ""
-"Reuse a healthy existing ESP without formatting it, or create a new one in "
-"available space."
-msgstr ""
-"Dùng lại ESP hiện có đang hoạt động tốt mà không định dạng, hoặc tạo ESP mới"
-" trong vùng trống."
+#: src/pages.py:4214
+msgid "Reuse a healthy existing ESP without formatting it, or create a new one in available space."
+msgstr "Dùng lại ESP hiện có đang hoạt động tốt mà không định dạng, hoặc tạo ESP mới trong vùng trống."
 
+#: src/pages.py:4248
 msgid "Add a partition"
 msgstr "Thêm phân vùng"
 
-msgid ""
-"Choose an available range, exact start position, and size. Nothing is "
-"written until installation begins."
-msgstr ""
-"Chọn một vùng trống, vị trí bắt đầu chính xác và kích thước. Không có dữ "
-"liệu nào được ghi cho đến khi bắt đầu cài đặt."
+#: src/pages.py:4252
+msgid "Choose an available range, exact start position, and size. Nothing is written until installation begins."
+msgstr "Chọn một vùng trống, vị trí bắt đầu chính xác và kích thước. Không có dữ liệu nào được ghi cho đến khi bắt đầu cài đặt."
 
+#: src/pages.py:4266
 msgid "Role"
 msgstr "Vai trò"
 
+#: src/pages.py:4267
 msgid "Available space"
 msgstr "Dung lượng khả dụng"
 
+#: src/pages.py:4268 src/pages.py:4560
 msgid "Start (MiB)"
 msgstr "Bắt đầu (MiB)"
 
+#: src/pages.py:4269 src/pages.py:4574
 msgid "Size (MiB)"
 msgstr "Kích thước (MiB)"
 
+#: src/pages.py:4283
 msgid "Use All"
 msgstr "Dùng tất cả"
 
+#: src/pages.py:4287
 msgid "Add Partition"
 msgstr "Thêm phân vùng"
 
+#: src/pages.py:4321 src/pages.py:5146
 msgid "Edit"
 msgstr "Chỉnh sửa"
 
+#: src/pages.py:4548
 msgid "That partition can no longer be edited safely."
 msgstr "Không thể tiếp tục chỉnh sửa phân vùng đó một cách an toàn."
 
+#: src/pages.py:4587
 msgid "Use All Available Space"
 msgstr "Dùng toàn bộ vùng trống"
 
+#: src/pages.py:4616
 #, python-brace-format
 msgid "Edit {role} partition"
 msgstr "Chỉnh sửa phân vùng {role}"
 
-msgid ""
-"Choose an exact position and size inside the available range. Other planned "
-"partitions are not moved."
-msgstr ""
-"Chọn vị trí và kích thước chính xác trong vùng trống. Các phân vùng đã lên "
-"kế hoạch khác sẽ không bị di chuyển."
+#: src/pages.py:4620
+msgid "Choose an exact position and size inside the available range. Other planned partitions are not moved."
+msgstr "Chọn vị trí và kích thước chính xác trong vùng trống. Các phân vùng đã lên kế hoạch khác sẽ không bị di chuyển."
 
+#: src/pages.py:4627
 msgid "Apply Changes"
 msgstr "Áp dụng thay đổi"
 
+#: src/pages.py:4665
 msgid "Close"
 msgstr "Đóng"
 
-msgid ""
-"BitLocker was detected. Return to Windows, open Manage BitLocker, choose "
-"Turn off BitLocker, and wait until decryption reaches 100%. Suspending "
-"protection is not enough. Back up the recovery key, fully shut Windows down,"
-" then start the installer again."
-msgstr ""
-"Đã phát hiện BitLocker. Hãy quay lại Windows, mở Quản lý BitLocker, chọn Tắt"
-" BitLocker và chờ cho đến khi quá trình giải mã đạt 100%. Việc tạm dừng bảo "
-"vệ là chưa đủ. Hãy sao lưu khóa khôi phục, tắt hoàn toàn Windows, sau đó "
-"khởi động trình cài đặt lại."
+#: src/pages.py:4673 src/pages.py:4897
+msgid "BitLocker was detected. Return to Windows, open Manage BitLocker, choose Turn off BitLocker, and wait until decryption reaches 100%. Suspending protection is not enough. Back up the recovery key, fully shut Windows down, then start the installer again."
+msgstr "Đã phát hiện BitLocker. Hãy quay lại Windows, mở Quản lý BitLocker, chọn Tắt BitLocker và chờ cho đến khi quá trình giải mã đạt 100%. Việc tạm dừng bảo vệ là chưa đủ. Hãy sao lưu khóa khôi phục, tắt hoàn toàn Windows, sau đó khởi động trình cài đặt lại."
 
-msgid ""
-"Windows is hibernated or Fast Startup is active. In an Administrator "
-"Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s "
-"/t 0'. Start the installer again only after Windows has fully shut down."
-msgstr ""
-"Windows đang ở chế độ ngủ đông hoặc Khởi động nhanh đang được bật. Trong "
-"Terminal Quản trị viên, chạy 'powercfg /h off', tắt Khởi động nhanh, sau đó "
-"chạy 'shutdown /s /t 0'. Chỉ khởi động trình cài đặt lại sau khi Windows đã "
-"tắt hoàn toàn."
+#: src/pages.py:4682
+msgid "Windows is hibernated or Fast Startup is active. In an Administrator Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s /t 0'. Start the installer again only after Windows has fully shut down."
+msgstr "Windows đang ở chế độ ngủ đông hoặc Khởi động nhanh đang được bật. Trong Terminal Quản trị viên, chạy 'powercfg /h off', tắt Khởi động nhanh, sau đó chạy 'shutdown /s /t 0'. Chỉ khởi động trình cài đặt lại sau khi Windows đã tắt hoàn toàn."
 
-msgid ""
-"Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk"
-" C: /f', allow every requested reboot to finish, then fully shut Windows "
-"down before trying again."
-msgstr ""
-"Windows không để phân vùng NTFS này ở trạng thái sạch. Hãy quay lại Windows,"
-" chạy 'chkdsk C: /f', chờ mọi lần khởi động lại được yêu cầu hoàn tất, sau "
-"đó tắt hoàn toàn Windows trước khi thử lại."
+#: src/pages.py:4694
+msgid "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk C: /f', allow every requested reboot to finish, then fully shut Windows down before trying again."
+msgstr "Windows đã không đóng ổ đĩa NTFS này đúng cách. Hãy quay lại Windows, chạy 'chkdsk C: /f', chờ tất cả các lần khởi động lại được yêu cầu hoàn tất, rồi tắt Windows hoàn toàn trước khi thử lại."
 
-msgid ""
-"This target would require moving critical NTFS MFT metadata through a "
-"currently unsafe upstream code path. Choose a larger Windows size or shrink "
-"the volume from Windows."
-msgstr ""
-"Với kích thước đã chọn này, cần phải di chuyển siêu dữ liệu MFT quan trọng "
-"của NTFS qua một đường dẫn hiện không an toàn trong mã nguồn của dự án gốc. "
-"Hãy chọn kích thước lớn hơn cho phân vùng Windows hoặc thu nhỏ phân vùng "
-"ngay trong Windows."
+#: src/pages.py:4701
+msgid "This target would require moving critical NTFS MFT metadata through a currently unsafe upstream code path. Choose a larger Windows size or shrink the volume from Windows."
+msgstr "Với kích thước đã chọn này, cần phải di chuyển siêu dữ liệu MFT quan trọng của NTFS qua một đường dẫn hiện không an toàn trong mã nguồn của dự án gốc. Hãy chọn kích thước lớn hơn cho phân vùng Windows hoặc thu nhỏ phân vùng ngay trong Windows."
 
-msgid ""
-"This NTFS volume is mounted or in use. Unmount it and rescan storage before "
-"continuing."
-msgstr ""
-"Phân vùng NTFS này đang được gắn kết hoặc đang được sử dụng. Hãy ngắt kết "
-"nối nó và quét lại bộ nhớ trước khi tiếp tục."
+#: src/pages.py:4711
+msgid "This NTFS volume is mounted or in use. Unmount it and rescan storage before continuing."
+msgstr "Phân vùng NTFS này đang được gắn kết hoặc đang được sử dụng. Hãy ngắt kết nối nó và quét lại bộ nhớ trước khi tiếp tục."
 
-msgid ""
-"This operation moves NTFS data and changes the GPT partition boundary. A "
-"power loss, failing drive, firmware fault or filesystem bug can cause "
-"permanent data loss. Back up all important Windows files before continuing."
-msgstr ""
-"Thao tác này sẽ di chuyển dữ liệu NTFS và thay đổi ranh giới phân vùng GPT. "
-"Mất điện, ổ đĩa hỏng, lỗi firmware hoặc lỗi hệ thống tệp có thể gây mất dữ "
-"liệu vĩnh viễn. Hãy sao lưu tất cả các tệp Windows quan trọng trước khi tiếp"
-" tục."
+#: src/pages.py:4736
+msgid "This operation moves NTFS data and changes the GPT partition boundary. A power loss, failing drive, firmware fault or filesystem bug can cause permanent data loss. Back up all important Windows files before continuing."
+msgstr "Thao tác này sẽ di chuyển dữ liệu NTFS và thay đổi ranh giới phân vùng GPT. Mất điện, ổ đĩa hỏng, lỗi firmware hoặc lỗi hệ thống tệp có thể gây mất dữ liệu vĩnh viễn. Hãy sao lưu tất cả các tệp Windows quan trọng trước khi tiếp tục."
 
+#: src/pages.py:4749
 msgid "New Windows partition size"
 msgstr "Kích thước phân vùng Windows mới"
 
+#: src/pages.py:4772
 msgid "MiB"
 msgstr "MiB"
 
+#: src/pages.py:4774
 #, python-brace-format
 msgid "Allowed: {minimum}–{maximum}"
-msgstr "Allowed: {minimum}–{maximum}"
+msgstr "Cho phép: {minimum}–{maximum}"
 
+#: src/pages.py:4794
 #, python-brace-format
 msgid "Windows: {windows} · New unallocated space: {free}"
 msgstr "Windows: {windows} · Khoảng trống chưa phân bổ mới: {free}"
 
-msgid ""
-"I have backed up my data and understand that shrinking an existing Windows "
-"partition can cause permanent data loss."
-msgstr ""
-"Tôi đã sao lưu dữ liệu của mình và hiểu rằng việc thu nhỏ một phân vùng "
-"Windows hiện có có thể gây mất dữ liệu vĩnh viễn."
+#: src/pages.py:4826
+msgid "I have backed up my data and understand that shrinking an existing Windows partition can cause permanent data loss."
+msgstr "Tôi đã sao lưu dữ liệu của mình và hiểu rằng việc thu nhỏ một phân vùng Windows hiện có có thể gây mất dữ liệu vĩnh viễn."
 
+#: src/pages.py:4835
 #, python-brace-format
 msgid "Change the size of {partition}?"
 msgstr "Thay đổi kích thước của {partition}?"
 
-msgid ""
-"The partition start will not move. Only its end will move left, creating "
-"unallocated space immediately after it."
-msgstr ""
-"Điểm bắt đầu của phân vùng sẽ không thay đổi. Chỉ điểm kết thúc sẽ di chuyển"
-" sang trái, tạo ra khoảng trống chưa phân bổ ngay sau đó."
+#: src/pages.py:4839
+msgid "The partition start will not move. Only its end will move left, creating unallocated space immediately after it."
+msgstr "Điểm bắt đầu của phân vùng sẽ không thay đổi. Chỉ điểm kết thúc sẽ di chuyển sang trái, tạo ra khoảng trống chưa phân bổ ngay sau đó."
 
+#: src/pages.py:4847
 msgid "Undo Planned Resize"
 msgstr "Hoàn tác kế hoạch thay đổi kích thước"
 
+#: src/pages.py:4848
 msgid "Plan Resize"
 msgstr "Lên kế hoạch thay đổi kích thước"
 
+#: src/pages.py:4895
 msgid "Turn off BitLocker before shrinking"
 msgstr "Tắt BitLocker trước khi thu nhỏ"
 
+#: src/pages.py:4907
 #, python-brace-format
 msgid "Checking whether {partition} can be resized safely…"
-msgstr ""
-"Đang kiểm tra xem {partition} có thể được thay đổi kích thước an toàn hay "
-"không…"
+msgstr "Đang kiểm tra xem {partition} có thể được thay đổi kích thước an toàn hay không…"
 
+#: src/pages.py:4918
 msgid "NTFS safety check failed"
 msgstr "Kiểm tra an toàn NTFS thất bại"
 
+#: src/pages.py:4925
 msgid "This partition cannot be resized safely"
 msgstr "Không thể thay đổi kích thước phân vùng này một cách an toàn."
 
+#: src/pages.py:4951
 msgid "New empty GPT — every existing partition will be deleted"
 msgstr "GPT trống mới — mọi phân vùng hiện có sẽ bị xóa"
 
+#: src/pages.py:4953
 msgid "Keep current GPT — only marked partitions are deleted"
 msgstr "Giữ GPT hiện tại — chỉ các phân vùng được đánh dấu sẽ bị xóa"
 
+#: src/pages.py:4956
 msgid "Keep Current GPT"
 msgstr "Giữ GPT hiện tại"
 
+#: src/pages.py:4969
 msgid "unknown"
 msgstr "không xác định"
 
+#: src/pages.py:4970
 msgid "WILL DELETE"
 msgstr "SẼ XÓA"
 
+#: src/pages.py:4970
 msgid "Preserve"
 msgstr "Giữ lại"
 
+#: src/pages.py:5005
 #, python-brace-format
 msgid "Planned size: {size}"
 msgstr "Kích thước dự kiến: {size}"
 
+#: src/pages.py:5020
 msgid "Deleted by new GPT"
 msgstr "Bị xóa bởi GPT mới"
 
+#: src/pages.py:5022
 msgid "Undo"
 msgstr "Hoàn tác"
 
+#: src/pages.py:5024
 msgid "Delete"
 msgstr "Xóa"
 
+#: src/pages.py:5029
 msgid "RESIZE"
-msgstr "RESIZE"
+msgstr "ĐỔI KÍCH THƯỚC"
 
+#: src/pages.py:5047
 msgid "Change Size"
 msgstr "Thay đổi kích thước"
 
+#: src/pages.py:5062
 msgid "This disk has no existing partitions."
 msgstr "Đĩa này không có phân vùng hiện hữu."
 
+#: src/pages.py:5079
 msgid "Create a new ESP partition"
 msgstr "Tạo phân vùng ESP mới"
 
+#: src/pages.py:5136
 #, python-brace-format
 msgid "{size} · {start}–{end} MiB"
 msgstr "{size} · {start}–{end} MiB"
 
+#: src/pages.py:5141
 msgid "Remove"
 msgstr "Xóa"
 
+#: src/pages.py:3914 src/pages.py:3925 src/pages.py:5143
 msgid "New"
 msgstr "Mới"
 
-msgid ""
-"No new partitions yet. Add an ESP if needed, one Root partition, and "
-"optionally Swap."
-msgstr ""
-"Chưa có phân vùng mới. Hãy thêm ESP nếu cần, một phân vùng Root và Swap tùy "
-"chọn."
+#: src/pages.py:5156
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
+msgstr "Chưa có phân vùng mới. Hãy thêm ESP nếu cần, một phân vùng Root và Swap tùy chọn."
 
+#: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
 msgstr "{size} tại {start} MiB"
 
+#: src/pages.py:5205
 msgid "an ESP of at least 512 MiB"
 msgstr "một ESP ít nhất 512 MiB"
 
+#: src/pages.py:5207
 msgid "a Root partition of at least 20 GiB"
 msgstr "một phân vùng Root ít nhất 20 GiB"
 
+#: src/pages.py:5209
 #, python-brace-format
 msgid "Complete the plan: {requirements}."
 msgstr "Hoàn tất kế hoạch: {requirements}."
 
-msgid ""
-"Layout is valid. Only the listed resizes, deletes, creates and formats will "
-"be sent to the privileged executor."
-msgstr ""
-"Bố cục hợp lệ. Chỉ các thao tác thay đổi kích thước, xóa, tạo và định dạng "
-"được liệt kê sẽ được gửi đến trình điều khiển đặc quyền."
+#: src/pages.py:5222
+msgid "Layout is valid. Only the listed resizes, deletes, creates and formats will be sent to the privileged executor."
+msgstr "Bố cục hợp lệ. Chỉ các thao tác thay đổi kích thước, xóa, tạo và định dạng được liệt kê sẽ được gửi đến tiến trình dịch vụ có đặc quyền nâng cao."
 
+#: src/pages.py:5262
 msgid "That partition role already exists."
 msgstr "Vai trò phân vùng đó đã tồn tại."
 
+#: src/pages.py:5302
 msgid "Initialize a new GPT?"
 msgstr "Khởi tạo GPT mới?"
 
-msgid ""
-"Every existing partition and all data on this disk will be deleted. You must"
-" then create a new ESP and Root partition."
-msgstr ""
-"Mọi phân vùng hiện có và tất cả dữ liệu trên ổ đĩa này sẽ bị xóa. Bạn cần "
-"tạo một phân vùng ESP và phân vùng Root mới."
+#: src/pages.py:5304
+msgid "Every existing partition and all data on this disk will be deleted. You must then create a new ESP and Root partition."
+msgstr "Mọi phân vùng hiện có và tất cả dữ liệu trên ổ đĩa này sẽ bị xóa. Bạn cần tạo một phân vùng ESP và phân vùng Root mới."
 
+#: src/pages.py:5310
 msgid "Initialize GPT"
 msgstr "Khởi tạo GPT"
 
+#: src/pages.py:5346
 msgid "The selected disk changed or disappeared."
 msgstr "Đĩa được chọn đã thay đổi hoặc biến mất."
 
+#: src/pages.py:5351
 msgid "The selected disk topology changed. Select it again."
 msgstr "Cấu trúc đĩa được chọn đã thay đổi. Hãy chọn lại."
 
+#: src/pages.py:6292 src/pages.py:6293 src/pages.py:6302
 msgid "none"
 msgstr "không"
 
+#: src/pages.py:6295
 #, python-brace-format
 msgid "{path}: {before} → {after} (free {reclaimed})"
-msgstr "{path}: {before} → {after} (free {reclaimed})"
+msgstr "{path}: {before} → {after} (dung lượng thu hồi: {reclaimed})"
 
+#: src/pages.py:6304
 #, python-brace-format
 msgid "{name}: {size} MiB ({start}–{end})"
 msgstr "{name}: {size} MiB ({start}–{end})"
 
+#: src/pages.py:6320
 msgid "Initialize a new empty GPT"
 msgstr "Khởi tạo GPT trống mới"
 
+#: src/pages.py:6322
 msgid "Keep the current GPT"
 msgstr "Giữ GPT hiện tại"
 
+#: src/pages.py:6326
 #, python-brace-format
 msgid "Reuse {path}; inspect it and never format it."
 msgstr "Tái sử dụng {path}; kiểm tra nó và không bao giờ định dạng."
 
+#: src/pages.py:6330
 msgid "Create and format a new EFI System Partition."
 msgstr "Tạo và định dạng phân vùng Hệ thống EFI mới."
 
+#: src/pages.py:6334
 msgid "Advanced manual GPT"
 msgstr "GPT thủ công nâng cao"
 
+#: src/pages.py:6335
 msgid "Partition table"
 msgstr "Bảng phân vùng"
 
+#: src/pages.py:6337
 msgid "Deleted partitions"
 msgstr "Các phân vùng đã bị xóa"
 
+#: src/pages.py:6338
 msgid "Resized partitions"
 msgstr "Các phân vùng đã thay đổi kích thước"
 
-msgid ""
-"Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS "
-"NVRAM entry."
-msgstr ""
-"Chỉ ghi EFI/AnduinOS, giữ EFI/BOOT và tạo một mục NVRAM AnduinOS đã xác "
-"minh."
+#: src/pages.py:6344
+msgid "Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS NVRAM entry."
+msgstr "Chỉ ghi EFI/AnduinOS, giữ EFI/BOOT và tạo một mục NVRAM AnduinOS đã xác minh."
 
+#: src/pages.py:6402
 msgid "Manual storage selection is missing. Return and review it."
 msgstr "Thiếu lựa chọn lưu trữ thủ công. Quay lại và xem xét lại."
 
-msgid ""
-"⚠ Listed NTFS resizes will move filesystem data and partition boundaries. "
-"Listed partitions will be deleted and every listed new partition will be "
-"formatted. Back up important data first; these partitioning operations "
-"cannot be undone."
-msgstr ""
-"⚠ Việc thay đổi kích thước các phân vùng NTFS được liệt kê sẽ di chuyển dữ "
-"liệu hệ thống tệp và ranh giới phân vùng. Các phân vùng được liệt kê sẽ bị "
-"xóa và mọi phân vùng mới được liệt kê sẽ được định dạng. Hãy sao lưu dữ liệu"
-" quan trọng trước; các thao tác phân vùng này không thể hoàn tác."
+#: src/pages.py:6496
+msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Việc thay đổi kích thước các phân vùng NTFS được liệt kê sẽ di chuyển dữ liệu hệ thống tệp và ranh giới phân vùng. Các phân vùng được liệt kê sẽ bị xóa và mọi phân vùng mới được liệt kê sẽ được định dạng. Hãy sao lưu dữ liệu quan trọng trước; các thao tác phân vùng này không thể hoàn tác."
 
+#: src/pages.py:6606
 msgid "Apply this manual disk layout?"
 msgstr "Áp dụng bố cục ổ đĩa thủ công này?"
 
+#: src/pages.py:6607 src/pages.py:6735
 msgid "Apply Layout and Install"
 msgstr "Áp dụng bố cục và cài đặt"
 
+#: src/pages.py:6630
 #, python-brace-format
 msgid ""
 "AnduinOS will apply only the reviewed manual changes to {disk}.\n"
@@ -1960,89 +1755,74 @@ msgstr ""
 "AnduinOS sẽ chỉ áp dụng các thay đổi thủ công đã được xem xét cho {disk}.\n"
 "\n"
 
-msgid ""
-"Only the explicitly listed partitions will be deleted or formatted. "
-"Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
-msgstr ""
-"Chỉ các phân vùng được liệt kê rõ ràng sẽ bị xóa hoặc định dạng. Các phân "
-"vùng không liên quan vẫn giữ nguyên; EFI/BOOT không bị ghi đè."
+#: src/pages.py:6658
+msgid "Only the explicitly listed partitions will be deleted or formatted. Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
+msgstr "Chỉ các phân vùng được liệt kê rõ ràng sẽ bị xóa hoặc định dạng. Các phân vùng không liên quan vẫn giữ nguyên; EFI/BOOT không bị ghi đè."
 
-msgid ""
-"Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
-"shrunk after safety checks."
-msgstr ""
-"Chỉnh sửa một đĩa GPT. Vị trí bắt đầu của phân vùng sẽ không bao giờ bị dịch"
-" chuyển; phân vùng NTFS không mã hóa có thể được thu nhỏ sau khi kiểm tra an"
-" toàn."
+#: src/pages.py:4072
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
+msgstr "Chỉnh sửa một đĩa GPT. Vị trí bắt đầu của phân vùng sẽ không bao giờ bị dịch chuyển; phân vùng NTFS không mã hóa có thể được thu nhỏ sau khi kiểm tra an toàn."
 
+#: src/pages.py:5119
 msgid "XFS (classic, scalable)"
 msgstr "XFS (cổ điển, có thể mở rộng)"
 
+#: src/pages.py:5120
 msgid "F2FS (flash-optimized)"
 msgstr "F2FS (tối ưu cho flash)"
-
-#: src/pages.py:3008
-msgid "{size} GiB · Max"
-msgstr "{size} GiB · Tối đa"
-
-#: src/pages.py:6698
-msgid "ZRAM will remain enabled regardless of this choice."
-msgstr "ZRAM sẽ vẫn được bật bất kể lựa chọn này."
-
-#: src/pages.py:3028
-msgid ""
-"ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses"
-" priority 10."
-msgstr ""
-"ZRAM luôn được bật: 50% RAM · LZ4 · độ ưu tiên 100. Swap trên đĩa sử dụng độ"
-" ưu tiên 10."
 
 #: src/pages.py:3004
 msgid "0 GiB · ZRAM only"
 msgstr "0 GiB · Chỉ ZRAM"
 
-#: src/pages.py:2927
-msgid ""
-"This exceeds the AnduinOS recommendation. It consumes more disk space and "
-"normally does not improve runtime performance."
-msgstr ""
-"Kích thước này vượt quá khuyến nghị của AnduinOS. Nó chiếm nhiều dung lượng "
-"ổ đĩa hơn và thường không cải thiện hiệu suất khi sử dụng thông thường."
-
 #: src/pages.py:2900
-msgid ""
-"Disk Swap will not be created. ZRAM remains enabled, but sustained memory "
-"pressure can terminate applications and hibernation is unavailable. This is "
-"strongly discouraged."
-msgstr ""
-"Swap trên đĩa sẽ không được tạo. ZRAM vẫn được bật, nhưng áp lực bộ nhớ kéo "
-"dài có thể khiến ứng dụng bị buộc dừng và chế độ ngủ đông sẽ không khả dụng."
-" Rất không nên sử dụng cấu hình này."
+msgid "Disk Swap will not be created. ZRAM remains enabled, but sustained memory pressure can terminate applications and hibernation is unavailable. This is strongly discouraged."
+msgstr "Swap trên đĩa sẽ không được tạo. ZRAM vẫn được bật, nhưng áp lực bộ nhớ kéo dài có thể khiến ứng dụng bị buộc dừng và chế độ ngủ đông sẽ không khả dụng. Rất không nên sử dụng cấu hình này."
+
+#: src/pages.py:6702
+msgid "Review your custom Swap size"
+msgstr "Xem lại kích thước Swap tùy chỉnh của bạn"
+
+#: src/pages.py:2927
+msgid "This exceeds the AnduinOS recommendation. It consumes more disk space and normally does not improve runtime performance."
+msgstr "Kích thước này vượt quá khuyến nghị của AnduinOS. Nó chiếm nhiều dung lượng ổ đĩa hơn và thường không cải thiện hiệu suất khi sử dụng thông thường."
+
+#: src/pages.py:2913
+msgid "This is below AnduinOS's runtime safety target. ZRAM still works, but heavy browser or application workloads can run out of backing memory sooner; hibernation is also unavailable."
+msgstr "Kích thước này thấp hơn mức tối thiểu an toàn mà AnduinOS khuyến nghị cho việc sử dụng thông thường. ZRAM vẫn hoạt động, nhưng khi trình duyệt hoặc ứng dụng chạy tác vụ nặng, dung lượng Swap khả dụng có thể cạn kiệt nhanh hơn; chế độ ngủ đông cũng không khả dụng."
 
 #: src/pages.py:2920
-msgid ""
-"This size protects ordinary memory pressure, but is smaller than the "
-"hibernation target. Hibernation may fail or be unavailable."
-msgstr ""
-"Kích thước này đủ để ứng phó với tình trạng thiếu bộ nhớ thông thường, nhưng"
-" nhỏ hơn dung lượng cần thiết cho chế độ ngủ đông. Chế độ ngủ đông có thể "
-"thất bại hoặc không khả dụng."
+msgid "This size protects ordinary memory pressure, but is smaller than the hibernation target. Hibernation may fail or be unavailable."
+msgstr "Kích thước này đủ để ứng phó với tình trạng thiếu bộ nhớ thông thường, nhưng nhỏ hơn dung lượng cần thiết cho chế độ ngủ đông. Chế độ ngủ đông có thể thất bại hoặc không khả dụng."
+
+#: src/pages.py:3028
+msgid "ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses priority 10."
+msgstr "ZRAM luôn được bật: 50% RAM · LZ4 · độ ưu tiên 100. Swap trên đĩa sử dụng độ ưu tiên 10."
+
+#: src/pages.py:6705
+msgid "ZRAM will remain enabled regardless of this choice."
+msgstr "ZRAM sẽ vẫn được bật bất kể lựa chọn này."
+
+#: src/pages.py:3008
+msgid "{size} GiB · Max"
+msgstr "{size} GiB · Tối đa"
 
 #: src/pages.py:2895
 msgid "✓ Best performance — AnduinOS recommended Swap size."
 msgstr "✓ Hiệu suất tối ưu — Kích thước Swap được AnduinOS khuyến nghị."
 
-#: src/pages.py:2913
-msgid ""
-"This is below AnduinOS's runtime safety target. ZRAM still works, but heavy "
-"browser or application workloads can run out of backing memory sooner; "
-"hibernation is also unavailable."
-msgstr ""
-"Kích thước này thấp hơn mức tối thiểu an toàn mà AnduinOS khuyến nghị cho "
-"việc sử dụng thông thường. ZRAM vẫn hoạt động, nhưng khi trình duyệt hoặc "
-"ứng dụng chạy tác vụ nặng, dung lượng Swap khả dụng có thể cạn kiệt nhanh "
-"hơn; chế độ ngủ đông cũng không khả dụng."
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:11
+msgid "Authorization is required to inspect disk partition geometry"
+msgstr "Yêu cầu ủy quyền để kiểm tra vị trí và kích thước chính xác của các phân vùng ổ đĩa"
 
-#: src/pages.py:6695
-msgid "Review your custom Swap size"
-msgstr "Xem lại kích thước Swap tùy chỉnh của bạn"
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:10
+msgid "Read exact disk partition geometry for the AnduinOS installer"
+msgstr "Đọc vị trí và kích thước chính xác của các phân vùng ổ đĩa cho trình cài đặt AnduinOS"
+
+#: assets/anduinos-installer-beta-live-shortcut.desktop:3
+msgid "Prepare and start AnduinOS Installer"
+msgstr "Chuẩn bị và khởi động trình cài đặt AnduinOS"
+
+#: assets/anduinos-installer-beta.desktop:59
+msgid "Install AnduinOS to your computer"
+msgstr "Cài đặt AnduinOS vào máy tính của bạn"

@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Panel Kontrol"
 
@@ -487,7 +488,7 @@ msgstr "Otentikasi administrator diperlukan saat instalasi dimulai."
 
 #: src/anduinos_control_panel/app.py:1376
 msgid "Downloading the local engine and multilingual speech model…"
-msgstr "Mengunduh mesin lokal dan model ucapan multibahasa…"
+msgstr "Mengunduh mesin lokal dan model pengenalan ucapan multibahasa…"
 
 #: src/anduinos_control_panel/app.py:1382
 msgid "Preparing Voice Typing installation…"
@@ -581,7 +582,7 @@ msgstr "{command} berakhir dengan kode keluar {status}"
 
 #: src/anduinos_control_panel/app.py:1742
 msgid "Open a Control Panel topic"
-msgstr "Buka topik Panel Kontrol"
+msgstr "Buka pengaturan Panel Kontrol"
 
 #: src/anduinos_control_panel/app.py:1743
 msgid "TOPIC"
@@ -602,3 +603,19 @@ msgstr "Tim AnduinOS"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "Temukan dan kelola pengaturan sistem AnduinOS."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr "pengaturan;kontrol;sistem;perangkat keras;driver;akun;pencadangan;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "Ubah pengaturan menu boot"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr "Otentikasi diperlukan untuk mengubah pengaturan menu boot"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "Temukan dan kelola pengaturan sistem AnduinOS"

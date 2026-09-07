@@ -570,6 +570,8 @@ msgstr ""
 #: src/btrfs-snapshots-manager/src/application.rs
 #: src/btrfs-snapshots-manager/src/ui/mod.rs
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:29
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:6
 msgid "Disk Snapshots Manager"
 msgstr ""
 
@@ -1819,9 +1821,11 @@ msgid "{0}/s"
 msgstr ""
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:38
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:38
 msgid "backup"
 msgstr ""
 
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:41
 #: data/org.anduinos.BtrfsSnapshotsManager.desktop:41
 msgid ""
 "snapshot;snapshots;restore;recovery;btrfs;rollback;backup;backups;time "
@@ -1829,13 +1833,16 @@ msgid ""
 msgstr ""
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:24
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:24
 msgid "Authentication is required to delete a system snapshot"
 msgstr ""
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:82
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:82
 msgid "Override the Home snapshot creation limit"
 msgstr ""
 
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:11
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:11
 msgid ""
 "A system rollback validates the selected snapshot, protects a current-system"
@@ -1844,25 +1851,31 @@ msgid ""
 msgstr ""
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:37
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:37
 msgid "btrfs"
 msgstr ""
 
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:36
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:36
 msgid "Authentication is required to access or restore a system snapshot"
 msgstr ""
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:36
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:36
 msgid "recovery"
 msgstr ""
 
+#: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:3
 #: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:3
 msgid "Disk Snapshots Manager Notifications"
 msgstr ""
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:35
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:35
 msgid "restore"
 msgstr ""
 
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:10
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:10
 msgid ""
 "Disk Snapshots Manager creates immutable Btrfs system snapshots for the "
@@ -1870,17 +1883,21 @@ msgid ""
 msgstr ""
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:34
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:34
 msgid "snapshot"
 msgstr ""
 
+#: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:5
 #: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:5
 msgid "Show system snapshot notifications"
 msgstr ""
 
 #: data/org.anduinos.BtrfsSnapshotsManager.desktop:30
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:30
 msgid "System Recovery and File History"
 msgstr ""
 
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:84
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:84
 msgid ""
 "Authentication is required to create more than four Home snapshots per "
@@ -1888,13 +1905,16 @@ msgid ""
 msgstr ""
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:70
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:70
 msgid "Create a Home history snapshot"
 msgstr ""
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:72
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:72
 msgid "A local active user may create a Home history snapshot"
 msgstr ""
 
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:12
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:12
 msgid ""
 "Independent Home snapshots capture the @home subvolume on a separate "
@@ -1903,6 +1923,7 @@ msgid ""
 msgstr ""
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:13
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:13
 msgid ""
 "Nautilus provides File History actions for one selected home item and for a "
 "folder background, opening a focused Disk Snapshots Manager window for "
@@ -1910,25 +1931,31 @@ msgid ""
 msgstr ""
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:60
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:60
 msgid "Authentication is required to access historical Personal Files"
 msgstr ""
 
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:46
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:46
 msgid "Configure AnduinOS recovery"
 msgstr ""
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:12
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:12
 msgid "Authentication is required to create a system snapshot"
 msgstr ""
 
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:22
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:22
 msgid "Delete an AnduinOS system snapshot"
 msgstr ""
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:48
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:48
 msgid "Authentication is required to change recovery settings"
 msgstr ""
 
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:14
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:14
 msgid ""
 "Automatic schedules can show desktop notifications after successful "
@@ -1937,18 +1964,23 @@ msgid ""
 msgstr ""
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:58
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:58
 msgid "Browse and export historical Personal Files"
 msgstr ""
 
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:34
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:34
 msgid "Access or restore an AnduinOS system snapshot"
 msgstr ""
 
 #: data/org.anduinos.BtrfsSnapshotsManager.desktop:32
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:7
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:32
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:7
 msgid "Recover AnduinOS and restore deleted Personal Files"
 msgstr ""
 
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
 msgid "Create an AnduinOS system snapshot"
 msgstr ""

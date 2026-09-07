@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "لوحة التحكم"
 
@@ -83,7 +84,7 @@ msgstr "حسابات المستخدمين"
 
 #: src/anduinos_control_panel/app.py:268
 msgid "Hardware and Drivers"
-msgstr "الأجهزة والمُشغِّلات"
+msgstr "الأجهزة وبرامج التشغيل"
 
 #: src/anduinos_control_panel/app.py:276
 msgid "Scan documents and select a scanner"
@@ -470,7 +471,7 @@ msgstr "حجم التنزيل حوالي 140 ميغابايت"
 #: src/anduinos_control_panel/app.py:1282
 msgid ""
 "Includes the multilingual Base model; optional models are available later"
-msgstr "يتضمن النموذج الأساسي متعدد اللغات؛ تتوفر نماذج اختيارية لاحقًا"
+msgstr "يتضمن نموذج Base متعدد اللغات؛ تتوفر نماذج اختيارية لاحقًا"
 
 #: src/anduinos_control_panel/app.py:1291
 msgid "Administrator authentication is required when installation starts."
@@ -478,7 +479,7 @@ msgstr "يتطلب بدء التثبيت مصادقة المسؤول."
 
 #: src/anduinos_control_panel/app.py:1376
 msgid "Downloading the local engine and multilingual speech model…"
-msgstr "جارٍ تنزيل المحرك المحلي ونموذج الكلام متعدد اللغات…"
+msgstr "جارٍ تنزيل المحرك المحلي ونموذج التعرف على الكلام متعدد اللغات…"
 
 #: src/anduinos_control_panel/app.py:1382
 msgid "Preparing Voice Typing installation…"
@@ -562,7 +563,7 @@ msgstr "تم تعطيل الذكاء الاصطناعي على الجهاز"
 
 #: src/anduinos_control_panel/app.py:1638
 msgid "✗ Package operation failed. Review Advanced Output."
-msgstr "✗ فشلت عملية الحزم. راجع الإخراج المتقدم."
+msgstr "✗ فشلت العملية على الحزمة. راجع الإخراج المتقدم."
 
 #: src/anduinos_control_panel/app.py:1715
 #, python-brace-format
@@ -575,7 +576,7 @@ msgstr "فتح موضوع في لوحة التحكم"
 
 #: src/anduinos_control_panel/app.py:1743
 msgid "TOPIC"
-msgstr "TOPIC"
+msgstr "موضوع"
 
 #: src/anduinos_control_panel/app.py:1751
 msgid "TERMS"
@@ -592,3 +593,19 @@ msgstr "فريق AnduinOS"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "البحث في إعدادات نظام AnduinOS وإدارتها."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr "إعدادات;تحكم;نظام;أجهزة;برامج تشغيل;حسابات;نسخ احتياطي;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "تغيير إعدادات قائمة الإقلاع"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr "يتطلب تغيير إعدادات قائمة الإقلاع المصادقة"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "البحث في إعدادات نظام AnduinOS وإدارتها"

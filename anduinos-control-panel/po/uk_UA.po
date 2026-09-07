@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Панель керування"
 
@@ -92,7 +93,7 @@ msgstr "Скануйте документи та виберіть сканер"
 
 #: src/anduinos_control_panel/app.py:278
 msgid "Install Document Scanner"
-msgstr "Встановити сканер документів"
+msgstr "Встановити Сканер документів"
 
 #: src/anduinos_control_panel/app.py:284
 msgid "Appearance"
@@ -470,7 +471,7 @@ msgstr ""
 
 #: src/anduinos_control_panel/app.py:1274
 msgid "Private by default"
-msgstr "Конфіденційність за замовчуванням"
+msgstr "Приватне за замовчуванням"
 
 #: src/anduinos_control_panel/app.py:1275
 msgid "Speech is recognized locally with whisper.cpp"
@@ -480,7 +481,7 @@ msgstr ""
 
 #: src/anduinos_control_panel/app.py:1280
 msgid "About 140 MB to download"
-msgstr "Близько 140 МБ для завантаження"
+msgstr "Розмір завантаження — близько 140 МБ"
 
 #: src/anduinos_control_panel/app.py:1282
 msgid ""
@@ -515,7 +516,9 @@ msgstr "Відкрити налаштування"
 
 #: src/anduinos_control_panel/app.py:1435
 msgid "Voice Typing installed — sign out to finish"
-msgstr "Голосове введення встановлено — вийдіть із системи, щоб завершити"
+msgstr ""
+"Голосове введення встановлено — вийдіть із системи, щоб завершити "
+"встановлення"
 
 #: src/anduinos_control_panel/app.py:1466
 msgid "On-device AI"
@@ -611,3 +614,20 @@ msgstr "Команда AnduinOS"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "Знаходьте системні налаштування AnduinOS і керуйте ними."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr ""
+"налаштування;керування;система;обладнання;драйвери;облікові_записи;резервне_копіювання;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "Змінити налаштування меню завантаження"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr "Для зміни налаштувань меню завантаження потрібна автентифікація"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "Знаходьте та керуйте системними налаштуваннями AnduinOS"

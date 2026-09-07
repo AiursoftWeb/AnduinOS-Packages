@@ -58,23 +58,23 @@ msgstr "Applicatieprofielen"
 msgid "Audit"
 msgstr "Auditie"
 
-#: src/views/network_audit_view.rs:277
+#: src/views/network_audit_view.rs:278
 msgid "Auditor Error"
 msgstr "Auditorfout"
 
-#: src/views/network_audit_view.rs:504
+#: src/views/network_audit_view.rs:505
 msgid "Block"
 msgstr "Blokkeren"
 
-#: src/views/network_audit_view.rs:500
+#: src/views/network_audit_view.rs:501
 msgid "Block Connection?"
 msgstr "Verbinding blokkeren?"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid "Block inbound traffic from"
 msgstr "Blokeer inkomend verkeer van"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid "Block outbound traffic to"
 msgstr "Blokeer uitgaand verkeer naar"
 
@@ -82,7 +82,7 @@ msgstr "Blokeer uitgaand verkeer naar"
 msgid "Blocked Events"
 msgstr "Geblokkeerde gebeurtenissen"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Blocked Successfully"
 msgstr "Met succes geblokkeerd"
 
@@ -90,7 +90,7 @@ msgstr "Met succes geblokkeerd"
 msgid "Both"
 msgstr "Beide"
 
-#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/views/network_audit_view.rs:504 src/views/rules_view.rs:121
 #: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "Annuleren"
@@ -188,11 +188,12 @@ msgstr "Richting"
 msgid "Error"
 msgstr "Fout"
 
-#: src/views/network_audit_view.rs:554
+#: src/views/network_audit_view.rs:555
 msgid "Failed to Block"
 msgstr "Kan niet blokkeren"
 
 #: src/views/status_view.rs:95 src/window.rs:64
+#: data/com.anduinos.ufwall.desktop:29 data/com.anduinos.ufwall.desktop:57
 msgid "Firewall"
 msgstr "Firewall"
 
@@ -345,7 +346,7 @@ msgstr "Weigeren"
 msgid "Resolve Domains"
 msgstr "Domeinen oplossen"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Rule added to block"
 msgstr "Regel toegevoegd aan blok"
 
@@ -395,13 +396,13 @@ msgstr ""
 "Hierdoor worden alle aangepaste regels verwijderd. Deze actie kan niet "
 "ongedaan worden gemaakt."
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr ""
 "Dit voorkomt dat de externe host pakketten naar uw computer verstuurt."
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr ""
@@ -493,7 +494,7 @@ msgstr "Netwerkbestandssysteem"
 
 #: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
-msgstr "Poort / Protocol"
+msgstr "Netwerktijdprotocol"
 
 #: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
@@ -517,7 +518,7 @@ msgstr "PostgreSQL-database-server"
 
 #: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
-msgstr "Poort / Protocol"
+msgstr "Protocol voor extern bureaublad"
 
 #: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
@@ -539,7 +540,7 @@ msgstr "Virtual Network Computing-afstandsbediening"
 msgid "Windows file and printer sharing"
 msgstr "Windows-bestands- en afdrukdeling"
 
-#: src/views/network_audit_view.rs:534
+#: src/views/network_audit_view.rs:535
 msgid "Audit Block"
 msgstr "Auditblokkering"
 
@@ -609,27 +610,27 @@ msgstr ""
 msgid "Network service command failed"
 msgstr "Netwerkdienstcommando mislukt"
 
-#: src/views/network_audit_view.rs:371
+#: src/views/network_audit_view.rs:372
 msgid "No Active Connections"
 msgstr "Geen actieve verbindingen"
 
-#: src/views/network_audit_view.rs:361
+#: src/views/network_audit_view.rs:362
 msgid "No Inbound Connections"
 msgstr "Geen inkomende verbindingen"
 
-#: src/views/network_audit_view.rs:366
+#: src/views/network_audit_view.rs:367
 msgid "No Outbound Connections"
 msgstr "Geen uitgaande verbindingen"
 
-#: src/views/network_audit_view.rs:367
+#: src/views/network_audit_view.rs:368
 msgid "No applications are sending data to the internet."
 msgstr "Geen toepassingen verzenden gegevens naar het internet."
 
-#: src/views/network_audit_view.rs:362
+#: src/views/network_audit_view.rs:363
 msgid "No external devices are connecting to your open ports."
 msgstr "Geen externe apparaten verbinden met uw open poorten."
 
-#: src/views/network_audit_view.rs:372
+#: src/views/network_audit_view.rs:373
 msgid "No network activity detected."
 msgstr "Geen netwerkactiviteit gedetecteerd."
 
@@ -648,3 +649,27 @@ msgstr "Upload"
 #: src/ufw/backend.rs:48
 msgid "pkexec failed"
 msgstr "pkexec mislukt"
+
+#: data/com.anduinos.ufwall.desktop:124
+msgid "firewall;ufw;security;network;"
+msgstr "firewall;ufw;beveiliging;netwerk;"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:82
+msgid "Authentication is required to change local network discovery"
+msgstr "Authenticatie is vereist om lokale netwerkdetectie te wijzigen"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:80
+msgid "Manage local network discovery"
+msgstr "Lokale netwerkdetectie beheren"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:39
+msgid "Authentication is required to modify firewall settings"
+msgstr "Authenticatie is vereist om firewallinstellingen te wijzigen"
+
+#: data/com.anduinos.ufwall.desktop:85
+msgid "Configure your firewall"
+msgstr "Configureer uw firewall"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:9
+msgid "Manage UFW firewall settings"
+msgstr "UFW-firewallinstellingen beheren"

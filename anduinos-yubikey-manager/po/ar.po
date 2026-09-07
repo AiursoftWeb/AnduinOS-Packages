@@ -17,19 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
 
-#: src/window.rs:2020
+#: src/window.rs:2022
 msgid "1 identity is currently available to SSH applications."
 msgstr "هوية واحدة متاحة حالياً لتطبيقات SSH."
 
-#: src/window.rs:2304
+#: src/window.rs:2306
 msgid "1 resident SSH key is available from your connected YubiKey."
 msgstr "مفتاح SSH مقيم واحد متاح من مفتاح YubiKey المتصل لديك."
 
-#: src/window.rs:1814
+#: src/window.rs:1816
 msgid "1 resident SSH key · {0}"
 msgstr "مفتاح SSH مقيم واحد · {0}"
 
-#: src/window.rs:1474 src/window.rs:1652
+#: src/window.rs:1476 src/window.rs:1654
 msgid "A key must be connected before it can be enrolled."
 msgstr "يجب توصيل المفتاح قبل أن يمكن تسجيله."
 
@@ -37,55 +37,55 @@ msgstr "يجب توصيل المفتاح قبل أن يمكن تسجيله."
 msgid "About"
 msgstr "حول"
 
-#: src/home.rs:381 src/home.rs:402
+#: src/home.rs:383 src/home.rs:404
 msgid "Account password"
 msgstr "كلمة مرور الحساب"
 
-#: src/window.rs:2490
+#: src/window.rs:2492
 msgid "Add another SSH key"
 msgstr "إضافة مفتاح SSH آخر"
 
-#: src/window.rs:1314
+#: src/window.rs:1316
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "أضف مفتاح التوقيع العام هذا إلى GitHub كـ \"مفتاح توقيع\"."
 
-#: src/home.rs:336 src/home.rs:389
+#: src/home.rs:338 src/home.rs:391
 msgid "Administrator access"
 msgstr "وصول المسؤول"
 
-#: src/window.rs:2667
+#: src/window.rs:2669
 msgid "Advanced options"
 msgstr "خيارات متقدمة"
 
-#: src/window.rs:2619
+#: src/window.rs:2621
 msgid "Algorithm"
 msgstr "تخوارزمية"
 
-#: src/window.rs:1582
+#: src/window.rs:1584
 msgid "Allow sudo without authentication"
 msgstr "السماح بـ sudo دون مصادقة"
 
-#: src/window.rs:1672
+#: src/window.rs:1674
 msgid "Allowed for sudo · not currently connected"
 msgstr "مسموح به لـ sudo · غير متصل حالياً"
 
-#: src/window.rs:1674
+#: src/window.rs:1676
 msgid "Allowed to authorize sudo"
 msgstr "مسموح بتفويض sudo"
 
-#: src/window.rs:1494
+#: src/window.rs:1496
 msgid "Allowed to unlock this user"
 msgstr "مسموح بإلغاء قفل هذا المستخدم"
 
-#: src/window.rs:1492
+#: src/window.rs:1494
 msgid "Allowed to unlock this user · not currently connected"
 msgstr "مسموح بإلغاء قفل هذا المستخدم · غير متصل حالياً"
 
-#: src/window.rs:1902
+#: src/window.rs:1904
 msgid "Already loaded"
 msgstr "تم تحميله بالفعل"
 
-#: src/window.rs:1639
+#: src/window.rs:1641
 msgid "An enrolled YubiKey or the account password can authorize sudo."
 msgstr "يمكن لمفتاح YubiKey مسجل أو كلمة مرور الحساب تفويض sudo."
 
@@ -97,11 +97,11 @@ msgstr "فريق AnduinOS"
 msgid "AnduinOS YubiKey Security Center"
 msgstr "مركز أمان AnduinOS YubiKey"
 
-#: src/home.rs:126
+#: src/home.rs:128
 msgid "AnduinOS works more securely with a YubiKey"
 msgstr "يعمل AnduinOS بأمان أكبر مع YubiKey"
 
-#: src/window.rs:2625
+#: src/window.rs:2627
 msgid "Application"
 msgstr "تطبيق"
 
@@ -113,23 +113,23 @@ msgstr ""
 "يجب أن يبدأ التطبيق بـ ssh:، ولا يحتوي على مسافات بيضاء، وأن يكون طوله 253 "
 "بايت كحد أقصى."
 
-#: src/home.rs:411 src/window.rs:631
+#: src/home.rs:413 src/window.rs:631
 msgid "Available"
 msgstr "متاح"
 
-#: src/window.rs:1255
+#: src/window.rs:1257
 msgid "Available through SSH agent"
 msgstr "متوفر عبر وكيل SSH"
 
-#: src/window.rs:1253
+#: src/window.rs:1255
 msgid "Available through local key handle"
 msgstr "متاح من خلال معرّف المفتاح المحلي"
 
-#: src/home.rs:172
+#: src/home.rs:174
 msgid "Buy a YubiKey"
 msgstr "شراء YubiKey"
 
-#: src/window.rs:2698 src/window.rs:2755 src/window.rs:3027
+#: src/window.rs:2700 src/window.rs:2757 src/window.rs:3029
 msgid "Cancel"
 msgstr "إلغاء"
 
@@ -141,15 +141,15 @@ msgstr "جارٍ التحقق من مفاتيح SSH..."
 msgid "Checking SSH support…"
 msgstr "جارٍ التحقق من دعم SSH…"
 
-#: src/home.rs:65 src/window.rs:478
+#: src/home.rs:67 src/window.rs:478
 msgid "Checking connected YubiKeys"
 msgstr "جارٍ التحقق من مفاتيح YubiKey المتصلة"
 
-#: src/home.rs:428
+#: src/home.rs:430
 msgid "Choose a YubiKey-backed SSH key"
 msgstr "اختر مفتاح SSH مدعوم بـ YubiKey"
 
-#: src/window.rs:2639
+#: src/window.rs:2641
 msgid "Choose a local key-handle file"
 msgstr "اختر ملف معرّف مفتاح محلي"
 
@@ -169,11 +169,11 @@ msgstr "اختر مجلد إخراج صالحاً."
 msgid "Choose an SSH key for Git signing."
 msgstr "اختر مفتاح SSH لتوقيع Git."
 
-#: src/window.rs:2650
+#: src/window.rs:2652
 msgid "Choose local SSH key-handle path"
 msgstr "اختر مسار معرّف مفتاح SSH محلي"
 
-#: src/window.rs:1218
+#: src/window.rs:1220
 msgid ""
 "Choose one SSH key. The selection takes effect immediately for this user's "
 "Git commits."
@@ -181,14 +181,14 @@ msgstr ""
 "اختر مفتاح SSH واحد. ستنطبق الاختيار فوراً على عمليات الالتزام (commits) في "
 "Git لهذا المستخدم."
 
-#: src/window.rs:1465
+#: src/window.rs:1467
 msgid ""
 "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
 msgstr ""
 "اختر أي مفاتيح YubiKey يمكنها إلغاء قفل {0}. يظل تسجيل الدخول بكلمة المرور "
 "متاحاً."
 
-#: src/window.rs:3074 src/window.rs:3096
+#: src/window.rs:3076 src/window.rs:3098
 msgid "Close"
 msgstr "إغلاق"
 
@@ -200,51 +200,51 @@ msgstr "انتهت الأوامر بـ"
 msgid "Command exited with {0}"
 msgstr "انتهت الأوامر بـ {0}"
 
-#: src/window.rs:1217
+#: src/window.rs:1219
 msgid "Commit signing"
 msgstr "توقيع الالتزامات (Commit signing)"
 
-#: src/home.rs:596
+#: src/home.rs:598
 msgid "Configured YubiKeys"
 msgstr "مفاتيح YubiKey المهيئة"
 
-#: src/home.rs:627
+#: src/home.rs:629
 msgid "Configured for {0} · Not connected"
 msgstr "تم التكوين لـ {0} · غير متصل"
 
-#: src/window.rs:2505
+#: src/window.rs:2507
 msgid "Connect a FIDO security key first"
 msgstr "قم بتوصيل مفتاح أمان FIDO أولاً"
 
-#: src/window.rs:2262
+#: src/window.rs:2264
 msgid "Connect a YubiKey"
 msgstr "اتصل بـ YubiKey"
 
-#: src/home.rs:158
+#: src/home.rs:160
 msgid "Connect a YubiKey to get started"
 msgstr "قم بتوصيل YubiKey للبدء"
 
-#: src/home.rs:124
+#: src/home.rs:126
 msgid "Connect your YubiKey"
 msgstr "قم بتوصيل YubiKey الخاص بك"
 
-#: src/home.rs:243 src/home.rs:315
+#: src/home.rs:245 src/home.rs:317
 msgid "Connected"
 msgstr "متصل"
 
-#: src/home.rs:300
+#: src/home.rs:302
 msgid "Connected YubiKeys"
 msgstr "مفاتيح YubiKey المتصلة"
 
-#: src/window.rs:2699
+#: src/window.rs:2701
 msgid "Continue"
 msgstr "متابعة"
 
-#: src/window.rs:3028
+#: src/window.rs:3030
 msgid "Continue to PIN"
 msgstr "متابعة إلى الرمز السري الشخصي (PIN)"
 
-#: src/window.rs:1326 src/window.rs:2778
+#: src/window.rs:1328 src/window.rs:2780
 msgid "Copy public key"
 msgstr "نسخ المفتاح العام"
 
@@ -264,11 +264,11 @@ msgstr "فشل إنشاء بيانات توقيع Git المؤقتة: {0}"
 msgid "Could not create {0}: {1}"
 msgstr "تعذر إنشاء {0}: {1}"
 
-#: src/window.rs:2839
+#: src/window.rs:2841
 msgid "Could not export the public key: {0}"
 msgstr "تعذر تصدير المفتاح العام: {0}"
 
-#: src/window.rs:2337
+#: src/window.rs:2339
 msgid "Could not find security keys"
 msgstr "تعذر العثور على مفاتيح الأمان"
 
@@ -280,11 +280,11 @@ msgstr "تعذر تفريغ المفتاح العام المؤقت: {0}"
 msgid "Could not inspect USB devices: {0}"
 msgstr "تعذر فحص أجهزة USB: {0}"
 
-#: src/window.rs:1991
+#: src/window.rs:1993
 msgid "Could not inspect this YubiKey"
 msgstr "تعذر فحص هذا YubiKey"
 
-#: src/window.rs:540 src/window.rs:1554 src/window.rs:1734
+#: src/window.rs:540 src/window.rs:1556 src/window.rs:1736
 msgid "Could not list YubiKeys"
 msgstr "تعذر إدراج مفاتيح YubiKey"
 
@@ -316,7 +316,7 @@ msgstr "تعذر تشغيل {0}: {1}"
 msgid "Could not start {0}: {1}"
 msgstr "تعذر بدء {0}: {1}"
 
-#: src/home.rs:101
+#: src/home.rs:103
 msgid "Could not update security keys"
 msgstr "تعذر تحديث مفاتيح الأمان"
 
@@ -324,32 +324,32 @@ msgstr "تعذر تحديث مفاتيح الأمان"
 msgid "Could not write the temporary public key: {0}"
 msgstr "تعذر كتابة المفتاح العام المؤقت: {0}"
 
-#: src/window.rs:2533
+#: src/window.rs:2535
 msgid "Create"
 msgstr "إنشاء"
 
-#: src/window.rs:2507
+#: src/window.rs:2509
 msgid "Create a resident SSH credential on a selected device"
 msgstr "إنشاء بيانات اعتماد SSH مقيمة على جهاز محدد"
 
-#: src/window.rs:2692
+#: src/window.rs:2694
 msgid "Create a resident SSH key"
 msgstr "إنشاء مفتاح SSH مقيم"
 
-#: src/window.rs:2501
+#: src/window.rs:2503
 msgid "Create…"
 msgstr "إنشاء…"
 
-#: src/window.rs:2962
+#: src/window.rs:2964
 msgid "Deletion result is unknown"
 msgstr "نتيجة الحذف غير معروفة"
 
-#: src/window.rs:1586
+#: src/window.rs:1588
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr ""
 "معطل · يجب أن يقوم sudo بالمصادقة باستخدام YubiKey أو كلمة مرور الحساب"
 
-#: src/window.rs:2321
+#: src/window.rs:2323
 msgid "Discover SSH keys on your YubiKeys"
 msgstr "اكتشف مفاتيح SSH على مفاتيح YubiKey الخاصة بك"
 
@@ -358,11 +358,11 @@ msgid ""
 "Display label must be at most 200 bytes and contain no control characters."
 msgstr "يجب ألا يتجاوز تسمية العرض 200 بايت وأن لا يحتوي على أحرف تحكم."
 
-#: src/window.rs:1222
+#: src/window.rs:1224
 msgid "Do not sign new commits by default"
 msgstr "عدم توقيع الالتزامات الجديدة افتراضياً"
 
-#: src/window.rs:1563
+#: src/window.rs:1565
 msgid ""
 "During enrollment, disconnect all other security keys. The selected key will"
 " blink; touch it to continue. Multiple keys can be enrolled one at a time."
@@ -370,44 +370,44 @@ msgstr ""
 "أثناء التسجيل، افصل جميع مفاتيح الأمان الأخرى. سيومض المفتاح المحدد؛ لمسه "
 "للمتابعة. يمكن تسجيل مفاتيح متعددة واحدة تلو الأخرى."
 
-#: src/window.rs:2610
+#: src/window.rs:2612
 msgid "ECDSA-SK (recommended compatibility)"
 msgstr "ECDSA-SK (توافق موصى به)"
 
-#: src/window.rs:2620
+#: src/window.rs:2622
 msgid "ECDSA-SK works with the widest range of YubiKeys"
 msgstr "يعمل ECDSA-SK مع أوسع نطاق من مفاتيح YubiKey"
 
-#: src/window.rs:2497
+#: src/window.rs:2499
 msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
 msgstr "ECDSA-SK · مقيم · يتطلب اللمس · إعدادات توافق آمنة افتراضية"
 
-#: src/window.rs:2611
+#: src/window.rs:2613
 msgid "Ed25519-SK (newer YubiKeys)"
 msgstr "Ed25519-SK (مفاتيح YubiKey الأحدث)"
 
-#: src/home.rs:374 src/home.rs:393 src/home.rs:421
+#: src/home.rs:376 src/home.rs:395 src/home.rs:423
 msgid "Enabled"
 msgstr "مفعّل"
 
-#: src/window.rs:1584
+#: src/window.rs:1586
 msgid ""
 "Enabled · programs can obtain administrator privileges without confirmation"
 msgstr "مفعّل · يمكن للبرامج الحصول على صلاحيات المسؤول دون تأكيد"
 
-#: src/window.rs:1610
+#: src/window.rs:1612
 msgid "Enabling passwordless sudo…"
 msgstr "تمكين sudo بدون كلمة مرور…"
 
-#: src/window.rs:1612
+#: src/window.rs:1614
 msgid "Enabling sudo authentication…"
 msgstr "تمكين مصادقة sudo…"
 
-#: src/window.rs:1670
+#: src/window.rs:1672
 msgid "Enrolled · inactive while sudo authentication is bypassed"
 msgstr "مسجل · غير نشط أثناء تجاوز مصادقة sudo"
 
-#: src/window.rs:1562
+#: src/window.rs:1564
 msgid "Enrollment safety"
 msgstr "تسجيل الأمان"
 
@@ -417,7 +417,7 @@ msgid ""
 msgstr ""
 "أدخل رمز PIN الخاص بـ FIDO لـ {0}. المسه إذا وامض. لن يتم تخزين الرمز أبداً."
 
-#: src/window.rs:1419
+#: src/window.rs:1421
 msgid ""
 "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No "
 "commit will be created."
@@ -425,7 +425,7 @@ msgstr ""
 "أدخل رقم تعريف المستخدم (PIN) الخاص بـ FIDO، ثم المس مفتاح YubiKey المحدد "
 "عند وميضه. لن يتم إنشاء أي التزام."
 
-#: src/window.rs:1172
+#: src/window.rs:1174
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "أدخل رقم تعريف شخصي FIDO. اللمس YubiKey إذا كانت تومض."
 
@@ -435,23 +435,23 @@ msgstr ""
 "أدخل رقم تعريف المستخدم (PIN) الخاص بـ YubiKey لاختبار معالج المفتاح المحلي "
 "هذا."
 
-#: src/window.rs:2531 src/window.rs:2920
+#: src/window.rs:2533 src/window.rs:2922
 msgid "Enter the selected YubiKey FIDO PIN"
 msgstr "أدخل PIN لـ YubiKey المحدد FIDO"
 
-#: src/window.rs:2779
+#: src/window.rs:2781
 msgid "Export .pub"
 msgstr "تصدير .pub"
 
-#: src/window.rs:2821
+#: src/window.rs:2823
 msgid "Export SSH public key"
 msgstr "تصدير مفتاح SSH العام"
 
-#: src/window.rs:2745
+#: src/window.rs:2747
 msgid "FIDO PIN"
 msgstr "PIN لـ FIDO"
 
-#: src/window.rs:1200 src/window.rs:2001 src/window.rs:2506
+#: src/window.rs:1202 src/window.rs:2003 src/window.rs:2508
 msgid "FIDO device discovery is unavailable"
 msgstr "اكتشاف جهاز FIDO غير متاح"
 
@@ -459,11 +459,11 @@ msgstr "اكتشاف جهاز FIDO غير متاح"
 msgid "FIDO security key"
 msgstr "مفتاح أمان FIDO"
 
-#: src/window.rs:2323
+#: src/window.rs:2325
 msgid "Finish inspecting your YubiKeys"
 msgstr "إنهاء فحص مفاتيح YubiKey الخاصة بك"
 
-#: src/home.rs:663
+#: src/home.rs:665
 msgid "Firmware {0}"
 msgstr "البرنامج الثابت {0}"
 
@@ -474,11 +474,11 @@ msgid ""
 msgstr ""
 "للتسجيل الآمن، افصل كل مفاتيح الأمان الأخرى واترك فقط YubiKey المحدد متصلاً."
 
-#: src/home.rs:419 src/window.rs:112 src/window.rs:161 src/window.rs:239
+#: src/home.rs:421 src/window.rs:112 src/window.rs:161 src/window.rs:239
 msgid "Git signing"
 msgstr "توقيع Git"
 
-#: src/window.rs:1311
+#: src/window.rs:1313
 msgid "Git signing is enabled"
 msgstr "تم تمكين توقيع Git"
 
@@ -490,19 +490,19 @@ msgstr ""
 "فشل اختبار توقيع Git:\n"
 "{0}"
 
-#: src/window.rs:1446
+#: src/window.rs:1448
 msgid "Git signing test passed"
 msgstr "نجح اختبار توقيع Git"
 
-#: src/window.rs:1081
+#: src/window.rs:1083
 msgid "Git is not installed"
 msgstr "لم يتم تثبيت Git"
 
-#: src/window.rs:1103
+#: src/window.rs:1105
 msgid "The Git installation task stopped unexpectedly."
 msgstr "توقفت عملية تثبيت Git بشكل غير متوقع."
 
-#: src/window.rs:1082
+#: src/window.rs:1084
 msgid "Git is required for commit signing. Install it to continue."
 msgstr "يتطلب توقيع الالتزامات (commits) Git. قم بتثبيته للمتابعة."
 
@@ -510,23 +510,23 @@ msgstr "يتطلب توقيع الالتزامات (commits) Git. قم بتثب�
 msgid "Home"
 msgstr "الرئيسية"
 
-#: src/window.rs:1473 src/window.rs:1651
+#: src/window.rs:1475 src/window.rs:1653
 msgid "Insert a YubiKey"
 msgstr "أدخل YubiKey"
 
-#: src/window.rs:1129
+#: src/window.rs:1131
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "أدخل YubiKey، ثم اضغط على تحديث."
 
-#: src/window.rs:1785
+#: src/window.rs:1787
 msgid "Insert a YubiKey. This page will detect it when you refresh."
 msgstr "أدخل YubiKey. سيقوم هذا الصفحة بالكشف عنه عند التحديث."
 
-#: src/window.rs:738 src/window.rs:1840
+#: src/window.rs:738 src/window.rs:1842
 msgid "Inspect"
 msgstr "fحص"
 
-#: src/window.rs:2391
+#: src/window.rs:2393
 msgid "Inspect YubiKey"
 msgstr "فحص YubiKey"
 
@@ -534,11 +534,11 @@ msgstr "فحص YubiKey"
 msgid "Inspect YubiKey {0} of {1}"
 msgstr "فحص YubiKey {0} من {1}"
 
-#: src/window.rs:1838
+#: src/window.rs:1840
 msgid "Inspect again"
 msgstr "الفحص مرة أخرى"
 
-#: src/window.rs:2393
+#: src/window.rs:2395
 msgid "Inspect all keys"
 msgstr "فحص جميع المفاتيح"
 
@@ -546,11 +546,11 @@ msgstr "فحص جميع المفاتيح"
 msgid "Inspect this YubiKey"
 msgstr "فحص هذا YubiKey"
 
-#: src/window.rs:1831
+#: src/window.rs:1833
 msgid "Inspected"
 msgstr "تم الفحص"
 
-#: src/window.rs:1821
+#: src/window.rs:1823
 msgid "Inspection needs attention · {0}"
 msgstr "الفحص يحتاج إلى انتباه · {0}"
 
@@ -558,51 +558,51 @@ msgstr "الفحص يحتاج إلى انتباه · {0}"
 msgid "Invalid FIDO device path."
 msgstr "مسار جهاز FIDO غير صالح."
 
-#: src/window.rs:1777
+#: src/window.rs:1779
 msgid "Keys stored on your YubiKeys"
 msgstr "المفاتيح المخزنة على مفاتيح YubiKey الخاصة بك"
 
-#: src/window.rs:1173 src/window.rs:1880
+#: src/window.rs:1175 src/window.rs:1882
 msgid "Load"
 msgstr "تحميل"
 
-#: src/window.rs:1171
+#: src/window.rs:1173
 msgid "Load SSH keys"
 msgstr "تحميل مفاتيح SSH"
 
-#: src/window.rs:1864
+#: src/window.rs:1866
 msgid "Load all"
 msgstr "تحميل الكل"
 
-#: src/window.rs:1157
+#: src/window.rs:1159
 msgid "Load keys"
 msgstr "تحميل المفاتيح"
 
-#: src/window.rs:1878
+#: src/window.rs:1880
 msgid "Load resident SSH keys"
 msgstr "تحميل مفاتيح SSH المقيمة"
 
-#: src/window.rs:1866
+#: src/window.rs:1868
 msgid "Load this YubiKey's resident SSH keys into the agent"
 msgstr "تحميل مفاتيح SSH المقيمة لهذا YubiKey إلى الوكيل"
 
-#: src/window.rs:1257
+#: src/window.rs:1259
 msgid "Load this resident key into the SSH agent before signing"
 msgstr "قم بتحميل مفتاح المقيم هذا إلى وكيل SSH قبل التوقيع"
 
-#: src/window.rs:1923
+#: src/window.rs:1925
 msgid "Loaded"
 msgstr "تم التحميل"
 
-#: src/window.rs:1182
+#: src/window.rs:1184
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "جارٍ تحميل مفاتيح SSH... اللمس YubiKey إذا كانت تومض."
 
-#: src/window.rs:2633
+#: src/window.rs:2635
 msgid "Local key handle path"
 msgstr "مسار معرّف المفتاح المحلي"
 
-#: src/window.rs:2605
+#: src/window.rs:2607
 msgid "Local key label"
 msgstr "تسمية المفتاح المحلي"
 
@@ -610,71 +610,71 @@ msgstr "تسمية المفتاح المحلي"
 msgid "Looking for your SSH agent and connected YubiKeys."
 msgstr "البحث عن وكيل SSH ومفاتيح YubiKey المتصلة لديك."
 
-#: src/window.rs:1832 src/window.rs:2124
+#: src/window.rs:1834 src/window.rs:2126
 msgid "Needs attention"
 msgstr "يحتاج إلى انتباه"
 
-#: src/window.rs:2496
+#: src/window.rs:2498
 msgid "New hardware-backed SSH key"
 msgstr "مفتاح SSH جديد مدعوم من العتاد"
 
-#: src/window.rs:1128
+#: src/window.rs:1130
 msgid "No FIDO security key detected"
 msgstr "لم يتم اكتشاف أي مفتاح أمان FIDO"
 
-#: src/window.rs:2037
+#: src/window.rs:2039
 msgid "No SSH agent was detected"
 msgstr "لم يتم اكتشاف أي وكيل SSH"
 
-#: src/window.rs:1784
+#: src/window.rs:1786
 msgid "No YubiKey connected"
 msgstr "لا يوجد YubiKey متصل"
 
-#: src/home.rs:653
+#: src/home.rs:655
 msgid "No hardware serial"
 msgstr "لا يوجد رقم تسلسلي للمعدات"
 
-#: src/window.rs:1930
+#: src/window.rs:1932
 msgid "No resident SSH keys"
 msgstr "لا توجد مفاتيح SSH مقيمة"
 
-#: src/window.rs:1144
+#: src/window.rs:1146
 msgid "No resident SSH keys found"
 msgstr "لم يتم العثور على أي مفاتيح SSH مقيمة"
 
-#: src/window.rs:1811
+#: src/window.rs:1813
 msgid "No resident SSH keys found · {0}"
 msgstr "لم يتم العثور على مفاتيح SSH مقيمة · {0}"
 
-#: src/window.rs:2302
+#: src/window.rs:2304
 msgid "No resident SSH keys were found on the connected YubiKeys."
 msgstr "لم يتم العثور على مفاتيح SSH مقيمة على مفاتيح YubiKey المتصلة."
 
-#: src/window.rs:1221
+#: src/window.rs:1223
 msgid "No signing"
 msgstr "بدون توقيع"
 
-#: src/home.rs:376 src/home.rs:395 src/home.rs:423
+#: src/home.rs:378 src/home.rs:397 src/home.rs:425
 msgid "Not configured"
 msgstr "غير مهيأ"
 
-#: src/window.rs:1833
+#: src/window.rs:1835
 msgid "Not inspected"
 msgstr "لم يتم فحصه"
 
-#: src/window.rs:1823
+#: src/window.rs:1825
 msgid "Not inspected yet · {0}"
 msgstr "لم يتم فحصه بعد · {0}"
 
-#: src/home.rs:174
+#: src/home.rs:176
 msgid "Open the official Yubico Store"
 msgstr "افتح متجر Yubico الرسمي"
 
-#: src/window.rs:1089 src/window.rs:1111
+#: src/window.rs:1091 src/window.rs:1113
 msgid "Install Git"
 msgstr "تثبيت Git"
 
-#: src/window.rs:1096
+#: src/window.rs:1098
 msgid "Installing Git…"
 msgstr "جارٍ تثبيت Git…"
 
@@ -718,35 +718,35 @@ msgstr ""
 "أبلغ OpenSSH عن النجاح، لكن لم يتم اكتشاف أي بيانات اعتماد مقيمة جديدة. لا "
 "تعيد المحاولة حتى تفحص YubiKey."
 
-#: src/window.rs:2668
+#: src/window.rs:2670
 msgid "OpenSSH/FIDO credential metadata and local file location"
 msgstr "بيانات وصفية لبيانات الاعتماد OpenSSH/FIDO وموقع الملف المحلي"
 
-#: src/home.rs:391
+#: src/home.rs:393
 msgid "Passwordless"
 msgstr "بدون كلمة مرور"
 
-#: src/window.rs:2922
+#: src/window.rs:2924
 msgid "Permanently delete"
 msgstr "حذف نهائي"
 
-#: src/window.rs:2782
+#: src/window.rs:2784
 msgid "Permanently delete from YubiKey…"
 msgstr "حذف نهائي من YubiKey…"
 
-#: src/window.rs:3021
+#: src/window.rs:3023
 msgid "Permanently delete this resident SSH credential?"
 msgstr "هل تريد حذف المدخل المقيم لـ SSH هذا نهائياً؟"
 
-#: src/home.rs:342
+#: src/home.rs:344
 msgid "Protect authentication and commit signing"
 msgstr "حماية المصادقة وتوقيع الالتزامات"
 
-#: src/home.rs:193 src/home.rs:288
+#: src/home.rs:195 src/home.rs:290
 msgid "Protection for {0}"
 msgstr "الحماية لـ {0}"
 
-#: src/window.rs:2325
+#: src/window.rs:2327
 msgid ""
 "Read the resident SSH keys already stored on your YubiKeys. You will enter "
 "each key's FIDO PIN and may need to touch it."
@@ -762,15 +762,15 @@ msgstr "جارٍ قراءة مفاتيح SSH من {0}… المسه إذا وا�
 msgid "Reading account security settings…"
 msgstr "جارٍ قراءة إعدادات أمان الحساب…"
 
-#: src/window.rs:2028 src/window.rs:2314
+#: src/window.rs:2030 src/window.rs:2316
 msgid "Ready"
 msgstr "جاهز"
 
-#: src/home.rs:366
+#: src/home.rs:368
 msgid "Ready to inspect"
 msgstr "جاهز للفحص"
 
-#: src/home.rs:266
+#: src/home.rs:268
 msgid "Ready to protect {0}"
 msgstr "جاهز لحماية {0}"
 
@@ -778,35 +778,35 @@ msgstr "جاهز لحماية {0}"
 msgid "Refresh connected YubiKeys"
 msgstr "تحديث مفاتيح YubiKey المتصلة"
 
-#: src/window.rs:2781
+#: src/window.rs:2783
 msgid "Remove from agent"
 msgstr "إزالة من الوكيل"
 
-#: src/window.rs:2882
+#: src/window.rs:2884
 msgid "Removing this key from the SSH agent…"
 msgstr "إزالة هذا المفتاح من وكيل SSH…"
 
-#: src/window.rs:2662
+#: src/window.rs:2664
 msgid "Require verification for every signature"
 msgstr "تطلب التحقق لكل توقيع"
 
-#: src/window.rs:2663
+#: src/window.rs:2665
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "يتطلب PIN لـ FIDO في كل مرة يوقع فيها هذا المفتاح"
 
-#: src/window.rs:2561
+#: src/window.rs:2563
 msgid "Resident SSH key created"
 msgstr "تم إنشاء مفتاح SSH مقيم"
 
-#: src/window.rs:2955
+#: src/window.rs:2957
 msgid "Resident credential permanently deleted"
 msgstr "تم حذف المدخل المقيم نهائياً"
 
-#: src/window.rs:1907
+#: src/window.rs:1909
 msgid "Resident keys loaded"
 msgstr "تم تحميل المفاتيح المقيمة"
 
-#: src/window.rs:2629
+#: src/window.rs:2631
 msgid "Resident username"
 msgstr "اسم المستخدم المقيم"
 
@@ -815,35 +815,35 @@ msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr ""
 "يجب أن يحتوي اسم المستخدم المقيم على 1-64 بايت ولا يحتوي على أحرف تحكم."
 
-#: src/home.rs:341
+#: src/home.rs:343
 msgid "SSH & Git"
 msgstr "SSH و Git"
 
-#: src/window.rs:2010
+#: src/window.rs:2012
 msgid "SSH agent"
 msgstr "وكيل SSH"
 
-#: src/window.rs:2018
+#: src/window.rs:2020
 msgid "SSH agent is ready"
 msgstr "وكيل SSH جاهز"
 
-#: src/window.rs:2033
+#: src/window.rs:2035
 msgid "SSH agent unavailable"
 msgstr "وكيل SSH غير متاح"
 
-#: src/home.rs:426
+#: src/home.rs:428
 msgid "SSH commit signing"
 msgstr "توقيع الالتزامات عبر SSH"
 
-#: src/window.rs:2797
+#: src/window.rs:2799
 msgid "SSH key actions"
 msgstr "تجراءات مفتاح SSH"
 
-#: src/window.rs:2461
+#: src/window.rs:2463
 msgid "SSH key for {0}"
 msgstr "مفتاح SSH لـ {0}"
 
-#: src/home.rs:410 src/window.rs:111 src/window.rs:157 src/window.rs:238
+#: src/home.rs:412 src/window.rs:111 src/window.rs:157 src/window.rs:238
 msgid "SSH keys"
 msgstr "مفاتيح SSH"
 
@@ -851,7 +851,7 @@ msgstr "مفاتيح SSH"
 msgid "SSH_AUTH_SOCK is not set"
 msgstr "لم يتم تعيين SSH_AUTH_SOCK"
 
-#: src/window.rs:2693
+#: src/window.rs:2695
 msgid ""
 "Safe defaults use ECDSA-SK, require touch, and store a discoverable "
 "credential on the selected YubiKey."
@@ -859,7 +859,7 @@ msgstr ""
 "تستخدم الإعدادات الافتراضية الآمنة ECDSA-SK، وتتطلب اللمس، وتخزن بيانات "
 "اعتماد قابلة للاكتشاف على YubiKey المحدد."
 
-#: src/home.rs:337
+#: src/home.rs:339
 msgid "Secure sudo authorization"
 msgstr "تفويض sudo الآمن"
 
@@ -867,21 +867,21 @@ msgstr "تفويض sudo الآمن"
 msgid "Security Center"
 msgstr "مركز الأمان"
 
-#: src/home.rs:655
+#: src/home.rs:657
 msgid "Serial {0}"
 msgstr "التسلسلي {0}"
 
-#: src/home.rs:132
+#: src/home.rs:134
 msgid ""
 "Sign in, authorize sudo, and protect SSH and Git identities with a physical "
 "touch."
 msgstr "قم بتسجيل الدخول، وتفويض sudo، وحماية هويات SSH و Git بلمسة فيزيائية."
 
-#: src/home.rs:331 src/home.rs:372 src/home.rs:614
+#: src/home.rs:333 src/home.rs:374 src/home.rs:616
 msgid "Sign-in"
 msgstr "تسجيل الدخول"
 
-#: src/window.rs:2863
+#: src/window.rs:2865
 msgid "Signing test passed"
 msgstr "نجحت تجربة التوقيع"
 
@@ -889,15 +889,15 @@ msgstr "نجحت تجربة التوقيع"
 msgid "Temporary public-key path is invalid."
 msgstr "مسار المفتاح العام المؤقت غير صالح."
 
-#: src/window.rs:1420
+#: src/window.rs:1422
 msgid "Test"
 msgstr "اختبار"
 
-#: src/window.rs:1418
+#: src/window.rs:1420
 msgid "Test Git signing"
 msgstr "اختبار توقيع Git"
 
-#: src/window.rs:1345 src/window.rs:2780
+#: src/window.rs:1347 src/window.rs:2782
 msgid "Test signing"
 msgstr "اختبار التوقيع"
 
@@ -908,11 +908,11 @@ msgid ""
 msgstr ""
 "أداة تسجيل FIDO غير مثبتة. قم بتثبيت حزمة libpam-u2f، ثم حاول مرة أخرى."
 
-#: src/window.rs:1879
+#: src/window.rs:1881
 msgid "The PIN is sent directly to ssh-add and is never stored."
 msgstr "يتم إرسال PIN مباشرة إلى ssh-add ولا يتم تخزينه أبداً."
 
-#: src/window.rs:2532
+#: src/window.rs:2534
 msgid ""
 "The PIN is sent through a private pipe to OpenSSH. It is never stored or "
 "placed in command arguments."
@@ -920,7 +920,7 @@ msgstr ""
 "يتم إرسال PIN عبر أنبوب خاص إلى OpenSSH. لا يتم تخزينه أو وضعه في حجج "
 "الأوامر أبداً."
 
-#: src/window.rs:2864
+#: src/window.rs:2866
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "قام وكيل SSH بالتوقيع والتحقق من البيانات بنجاح باستخدام هذا المفتاح."
 
@@ -928,7 +928,7 @@ msgstr "قام وكيل SSH بالتوقيع والتحقق من البيانا�
 msgid "The YubiKey operation stopped unexpectedly."
 msgstr "توقفت عملية YubiKey بشكل غير متوقع."
 
-#: src/window.rs:2598
+#: src/window.rs:2600
 msgid "The credential will be created only on this exact device"
 msgstr "سيتم إنشاء بيانات الاعتماد على هذا الجهاز الدقيق فقط"
 
@@ -940,11 +940,11 @@ msgstr ""
 "انتهت عملية الحذف، لكن لم يكن من الممكن فحص YubiKey المحدد بعدها: {0}\n"
 "قد يكون تم حذف المدخل أو لا. لا تحاول إعادة المحاولة. أعد الاتصال وفحص YubiKey أولاً."
 
-#: src/window.rs:541 src/window.rs:1536 src/window.rs:1716
+#: src/window.rs:541 src/window.rs:1538 src/window.rs:1718
 msgid "The enrollment task failed."
 msgstr "فشلت مهمة التسجيل."
 
-#: src/window.rs:2956
+#: src/window.rs:2958
 msgid ""
 "The exact resident credential is no longer present on the selected YubiKey. "
 "Local .pub or key-handle files and any SSH-agent entry were not removed."
@@ -952,7 +952,7 @@ msgstr ""
 "المدخل المقيم الدقيق لم يعد موجوداً على YubiKey المحدد. لم تتم إزالة ملفات "
 ".pub المحلية أو ملفات معرّف المفتاح، ولا أي إدخال في وكيل SSH."
 
-#: src/window.rs:1903
+#: src/window.rs:1905
 msgid ""
 "The inspected resident SSH credentials are already available in this agent."
 msgstr "بيانات اعتماد SSH المقيمة التي تم فحصها متوفرة بالفعل في هذا الوكيل."
@@ -969,7 +969,7 @@ msgstr "مسار معالج مفتاح SSH المحلي ليس بتنسيق UTF-
 msgid "The local key path must be absolute."
 msgstr "يجب أن يكون مسار المفتاح المحلي مطلقاً."
 
-#: src/window.rs:2563
+#: src/window.rs:2565
 msgid ""
 "The non-exportable private key remains protected by the selected YubiKey.\n"
 "\n"
@@ -1057,7 +1057,7 @@ msgid ""
 "The selected FIDO device is no longer connected. Refresh and try again."
 msgstr "لم يعد جهاز FIDO المحدد متصلاً. قم بالتحديث وحاول مرة أخرى."
 
-#: src/window.rs:1447
+#: src/window.rs:1449
 msgid ""
 "The selected credential created a valid Git-format SSH signature. No "
 "repository or commit was changed."
@@ -1089,7 +1089,7 @@ msgstr ""
 msgid "The signature was created but could not be verified: {0}"
 msgstr "تم إنشاء التوقيع ولكن لم يمكن التحقق منه: {0}"
 
-#: src/window.rs:1618
+#: src/window.rs:1620
 msgid "The sudo policy task failed."
 msgstr "فشلت مهمة سياسة sudo."
 
@@ -1101,12 +1101,12 @@ msgstr "مسار توقيع Git المؤقت غير صالح."
 msgid "The temporary Git signing path is invalid."
 msgstr "مسار توقيع Git المؤقت غير صالح."
 
-#: src/home.rs:597
+#: src/home.rs:599
 msgid ""
 "These keys are trusted by this account but are not currently connected."
 msgstr "هذه المفاتيح موثوقة من قبل هذا الحساب لكنها غير متصلة حاليًا."
 
-#: src/window.rs:2921
+#: src/window.rs:2923
 msgid ""
 "This PIN authorizes permanent deletion of the exact credential shown in the "
 "previous step. It is never stored."
@@ -1114,7 +1114,7 @@ msgstr ""
 "هذا الرمز السري الشخصي (PIN) يُصرح بالحذف النهائي للمدخل الدقيق المعروض في "
 "الخطوة السابقة. لا يتم تخزينه أبداً."
 
-#: src/window.rs:1931
+#: src/window.rs:1933
 msgid "This YubiKey has no discoverable ssh:* credentials."
 msgstr "لا يحتوي هذا YubiKey على أي بيانات اعتماد ssh:* قابلة للكشف."
 
@@ -1122,7 +1122,7 @@ msgstr "لا يحتوي هذا YubiKey على أي بيانات اعتماد ssh
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "هذا ليس مفتاحًا عامًا لمفتاح أمان OpenSSH مدعوم."
 
-#: src/window.rs:3022
+#: src/window.rs:3024
 msgid ""
 "This removes the private credential from the selected YubiKey and cannot be "
 "undone. It does not remove local files or an identity already loaded in the "
@@ -1131,56 +1131,56 @@ msgstr ""
 "يؤدي هذا إلى إزالة المدخل الخاص من YubiKey المحدد ولا يمكن التراجع عنه. لا "
 "يقوم بإزالة الملفات المحلية أو الهوية المحملة بالفعل في وكيل SSH."
 
-#: src/window.rs:1579
+#: src/window.rs:1581
 msgid "This setting applies only to the current user."
 msgstr "تطبق هذه الإعدادات على المستخدم الحالي فقط."
 
-#: src/home.rs:66
+#: src/home.rs:68
 msgid "This will only take a moment."
 msgstr "لن يستغرق هذا سوى لحظة."
 
-#: src/window.rs:1888
+#: src/window.rs:1890
 msgid ""
 "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr "لمس YubiKey عند الطلب. تحميل المفاتيح المقيمة إلى وكيل SSH…"
 
-#: src/window.rs:1433
+#: src/window.rs:1435
 msgid ""
 "Touch the YubiKey. Creating and verifying a temporary Git-format SSH "
 "signature…"
 msgstr "امسح مفتاح YubiKey. جاري إنشاء والتحقق من توقيع SSH مؤقت بصيغة Git…"
 
-#: src/window.rs:2856
+#: src/window.rs:2858
 msgid "Touch the YubiKey. Testing SSH signing and verification…"
 msgstr "لمس YubiKey. اختبار التوقيع والتحقق من SSH…"
 
-#: src/window.rs:2544
+#: src/window.rs:2546
 msgid ""
 "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not "
 "remove the key."
 msgstr "لمس YubiKey المحدد. إنشاء مفتاح SSH مقيم على {0}… لا تزيل المفتاح."
 
-#: src/window.rs:1496
+#: src/window.rs:1498
 msgid "Touch this key when prompted to enroll it"
 msgstr "لمس هذا المفتاح عند الطلب لتسجيله"
 
-#: src/window.rs:1676
+#: src/window.rs:1678
 msgid "Touch this key when prompted to enroll it for sudo"
 msgstr "لمس هذا المفتاح عند الطلب لتسجيله لـ sudo"
 
-#: src/window.rs:1527 src/window.rs:1707
+#: src/window.rs:1529 src/window.rs:1709
 msgid "Touch your security key to continue."
 msgstr "لمس مفتاح الأمان للمتابعة."
 
-#: src/home.rs:93
+#: src/home.rs:95
 msgid "Try Again"
 msgstr "حاول مرة أخرى"
 
-#: src/window.rs:3008
+#: src/window.rs:3010
 msgid "Type {0} to confirm"
 msgstr "اكتب {0} للتأكيد"
 
-#: src/window.rs:688 src/window.rs:2039 src/window.rs:2340
+#: src/window.rs:688 src/window.rs:2041 src/window.rs:2342
 msgid "Unavailable"
 msgstr "غير متاح"
 
@@ -1196,15 +1196,15 @@ msgstr "إلغاء قفل GDM"
 msgid "Unlock sudo"
 msgstr "إلغاء قفل sudo"
 
-#: src/window.rs:1463
+#: src/window.rs:1465
 msgid "Unlock the current user"
 msgstr "إلغاء قفل المستخدم الحالي"
 
-#: src/home.rs:332
+#: src/home.rs:334
 msgid "Unlock your account with a touch"
 msgstr "قم بإلغاء قفل حسابك بلمسة واحدة"
 
-#: src/ssh.rs:735 src/window.rs:1251 src/window.rs:2467 src/window.rs:2987
+#: src/ssh.rs:735 src/window.rs:1253 src/window.rs:2469 src/window.rs:2989
 msgid "Unnamed SSH credential"
 msgstr "بيانات اعتماد SSH بدون اسم"
 
@@ -1212,23 +1212,23 @@ msgstr "بيانات اعتماد SSH بدون اسم"
 msgid "Unsupported resident SSH public-key algorithm."
 msgstr "خوارزمية المفتاح العام لـ SSH المقيم غير مدعومة."
 
-#: src/window.rs:1397
+#: src/window.rs:1399
 msgid "Updating Git commit signing…"
 msgstr "جارٍ تحديث توقيع التزام Git..."
 
-#: src/window.rs:1529
+#: src/window.rs:1531
 msgid "Updating sign-in settings…"
 msgstr "ت تحديث إعدادات تسجيل الدخول…"
 
-#: src/window.rs:1709
+#: src/window.rs:1711
 msgid "Updating sudo settings…"
 msgstr "تحديث إعدادات sudo…"
 
-#: src/window.rs:1635
+#: src/window.rs:1637
 msgid "Use YubiKey to unlock sudo"
 msgstr "استخدم YubiKey لإلغاء قفل sudo"
 
-#: src/window.rs:2934
+#: src/window.rs:2936
 msgid ""
 "Verifying and permanently deleting the selected resident credential. Do not "
 "unplug the YubiKey…"
@@ -1238,15 +1238,15 @@ msgstr "التحقق والحذف النهائي للمدخل المقيم ال�
 msgid "View in App Store"
 msgstr "عرض في متجر التطبيقات"
 
-#: src/window.rs:2267
+#: src/window.rs:2269
 msgid "Waiting"
 msgstr "في الانتظار"
 
-#: src/home.rs:156
+#: src/home.rs:158
 msgid "Waiting for a configured YubiKey"
 msgstr "في انتظار YubiKey مهيأ"
 
-#: src/window.rs:1637
+#: src/window.rs:1639
 msgid ""
 "You may enroll keys now, but sudo bypasses PAM while passwordless access is "
 "enabled."
@@ -1254,52 +1254,52 @@ msgstr ""
 "يمكنك تسجيل المفاتيح الآن، لكن sudo يتجاوز PAM أثناء تمكين الوصول بدون كلمة "
 "مرور."
 
-#: src/window.rs:2297
+#: src/window.rs:2299
 msgid "Your YubiKeys are inspected"
 msgstr "تم فحص مفاتيح YubiKey الخاصة بك"
 
-#: src/window.rs:2299
+#: src/window.rs:2301
 msgid "Your hardware-backed SSH keys"
 msgstr "مفاتيح SSH المدعومة من الأجهزة لديك"
 
-#: src/window.rs:2263
+#: src/window.rs:2265
 msgid ""
 "Your resident SSH keys stay on the security key. Insert it to view and use "
 "them."
 msgstr ""
 "تبقى مفاتيح SSH المقيمة لديك على مفتاح الأمان. أدخله لعرضها واستخدامها."
 
-#: src/home.rs:130
+#: src/home.rs:132
 msgid ""
 "Your security settings are ready. Connect a configured YubiKey when you need"
 " it."
 msgstr "إعدادات الأمان الخاصة بك جاهزة. قم بتوصيل YubiKey مهيأ عند الحاجة."
 
-#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1755 src/window.rs:2597
+#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1757 src/window.rs:2599
 msgid "YubiKey"
 msgstr "YubiKey"
 
-#: src/window.rs:3088
+#: src/window.rs:3090
 msgid "YubiKey configuration failed"
 msgstr "فشل تكوين YubiKey"
 
-#: src/home.rs:251
+#: src/home.rs:253
 msgid "YubiKey connected"
 msgstr "تم توصيل YubiKey"
 
-#: src/home.rs:379 src/home.rs:400
+#: src/home.rs:381 src/home.rs:402
 msgid "YubiKey or account password"
 msgstr "YubiKey أو كلمة مرور الحساب"
 
-#: src/home.rs:622
+#: src/home.rs:624
 msgid "YubiKey without hardware serial"
 msgstr "YubiKey بدون رقم تسلسلي للمعدات"
 
-#: src/home.rs:624
+#: src/home.rs:626
 msgid "YubiKey · Serial {0}"
 msgstr "YubiKey · الرقم التسلسلي {0}"
 
-#: src/window.rs:2993
+#: src/window.rs:2995
 msgid ""
 "YubiKey: {0}\n"
 "Device: {1}\n"
@@ -1315,11 +1315,11 @@ msgstr ""
 "الخوارزمية: {4}\n"
 "البصمة: {5}"
 
-#: src/window.rs:1124
+#: src/window.rs:1126
 msgid "YubiKeys"
 msgstr "YubiKeys"
 
-#: src/window.rs:1955
+#: src/window.rs:1957
 msgid "agent"
 msgstr "وكيل"
 
@@ -1331,11 +1331,11 @@ msgstr ""
 "أبلغ fido2-token عن النجاح، لكن المدخل المقيم لا يزال موجوداً. لا تحاول "
 "إعادة المحاولة حتى تقوم بالتحديث وفحص YubiKey."
 
-#: src/home.rs:398
+#: src/home.rs:400
 msgid "sudo authentication is bypassed"
 msgstr "تم تجاوز مصادقة sudo"
 
-#: src/window.rs:1578
+#: src/window.rs:1580
 msgid "sudo authentication policy"
 msgstr "ت سياسة مصادقة sudo"
 
@@ -1343,15 +1343,15 @@ msgstr "ت سياسة مصادقة sudo"
 msgid "unknown"
 msgstr "غير معروف"
 
-#: src/window.rs:2519
+#: src/window.rs:2521
 msgid "user"
 msgstr "المستخدم"
 
-#: src/window.rs:1146
+#: src/window.rs:1148
 msgid "{0} SSH keys loaded"
 msgstr "تم تحميل {0} مفاتيح SSH"
 
-#: src/home.rs:254
+#: src/home.rs:256
 msgid "{0} YubiKeys connected"
 msgstr "{0} مفاتيح YubiKey متصلة"
 
@@ -1363,51 +1363,51 @@ msgstr "{0} انتهى بـ {1}"
 msgid "{0} failed: {1}"
 msgstr "{0} فشل: {1}"
 
-#: src/window.rs:2023
+#: src/window.rs:2025
 msgid "{0} identities are currently available to SSH applications."
 msgstr "هويات {0} متاحة حالياً لتطبيقات SSH."
 
-#: src/window.rs:1056
+#: src/window.rs:1058
 msgid "{0} is enabled for this YubiKey"
 msgstr "{0} مفعّل لهذا YubiKey"
 
-#: src/window.rs:1061
+#: src/window.rs:1063
 msgid "{0} is not configured for this YubiKey"
 msgstr "{0} غير مُعدّ لهذا YubiKey"
 
-#: src/window.rs:1911
+#: src/window.rs:1913
 msgid "{0} new SSH identities were added to the agent."
 msgstr "تمت إضافة {0} هويات SSH جديدة إلى الوكيل."
 
-#: src/window.rs:1909
+#: src/window.rs:1911
 msgid "{0} new SSH identity was added to the agent."
 msgstr "تمت إضافة هوية SSH جديدة واحدة {0} إلى الوكيل."
 
-#: src/window.rs:2307
+#: src/window.rs:2309
 msgid "{0} resident SSH keys are available from your connected YubiKeys."
 msgstr "مفاتيح SSH مقيمة {0} متاحة من مفاتيح YubiKey المتصلة لديك."
 
-#: src/window.rs:1817
+#: src/window.rs:1819
 msgid "{0} resident SSH keys · {1}"
 msgstr "مفاتيح SSH مقيمة {0} · {1}"
 
-#: src/home.rs:362
+#: src/home.rs:364
 msgid "{0} resident credentials inspected"
 msgstr "فُحصت {0} بيانات اعتماد مقيمة"
 
-#: src/window.rs:2328
+#: src/window.rs:2330
 msgid "{0} to inspect"
 msgstr "{0} للفحص"
 
-#: src/window.rs:1487 src/window.rs:1665
+#: src/window.rs:1489 src/window.rs:1667
 msgid "{0} · no hardware serial"
 msgstr "{0} · لا يوجد رقم تسلسلي للعتاد"
 
-#: src/window.rs:1489 src/window.rs:1667
+#: src/window.rs:1491 src/window.rs:1669
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
 
-#: src/window.rs:999
+#: src/window.rs:1001
 msgid "Checking Passkeys support…"
 msgstr "جارٍ التحقق من دعم مفاتيح المرور…"
 
@@ -1442,7 +1442,7 @@ msgid ""
 "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
 msgstr "أدخل YubiKey، وأدخل رمز FIDO PIN عند طلبه، ثم المس المفتاح."
 
-#: src/window.rs:1778
+#: src/window.rs:1780
 msgid ""
 "Inspect a connected YubiKey to reveal its resident SSH keys and available "
 "actions."
@@ -1494,7 +1494,7 @@ msgstr "تسجيل مفتاح مرور"
 msgid "Sign in next time"
 msgstr "تسجيل الدخول في المرة القادمة"
 
-#: src/window.rs:2011
+#: src/window.rs:2013
 msgid ""
 "The SSH agent makes selected keys available to SSH applications during this "
 "session."
@@ -1522,7 +1522,7 @@ msgstr ""
 msgid "A file already exists at the managed SSH configuration path: {0}"
 msgstr "يوجد ملف بالفعل في مسار تكوين SSH المُدار: {0}"
 
-#: src/window.rs:2068
+#: src/window.rs:2070
 msgid ""
 "After the first YubiKey authentication, later SSH sessions can reuse the "
 "connection. The last session remains available in the background for 10 "
@@ -1559,7 +1559,7 @@ msgstr "تعذر استبدال {0}: {1}"
 msgid "Could not synchronize {0}: {1}"
 msgstr "تعذر مزامنة {0}: {1}"
 
-#: src/window.rs:2173 src/window.rs:2184
+#: src/window.rs:2175 src/window.rs:2186
 msgid "Could not update SSH connection persistence"
 msgstr "تعذر تحديث استمرار اتصال SSH"
 
@@ -1571,11 +1571,11 @@ msgstr "تعذر التحقق من تكوين SSH: {0}"
 msgid "Could not write the temporary SSH configuration in {0}: {1}"
 msgstr "تعذر كتابة تكوين SSH المؤقت في {0}: {1}"
 
-#: src/window.rs:2086 src/window.rs:2159
+#: src/window.rs:2088 src/window.rs:2161
 msgid "Disabled · each new connection authenticates separately"
 msgstr "معطل · يتم مصادقة كل اتصال جديد بشكل منفصل"
 
-#: src/window.rs:2078 src/window.rs:2152
+#: src/window.rs:2080 src/window.rs:2154
 msgid "Enabled · idle connections remain available for 10 minutes"
 msgstr "مفعّل · تظل الاتصالات الخاملة متاحة لمدة 10 دقائق"
 
@@ -1587,31 +1587,31 @@ msgstr "HOME لا يشير إلى مجلد صالح: {0}"
 msgid "HOME is not set. The SSH configuration cannot be located."
 msgstr "لم يتم تعيين HOME. لا يمكن العثور على تكوين SSH."
 
-#: src/window.rs:2105
+#: src/window.rs:2107
 msgid "Main SSH configuration unavailable"
 msgstr "تكوين SSH الرئيسي غير متاح"
 
-#: src/window.rs:2106
+#: src/window.rs:2108
 msgid "Managed SSH configuration unavailable"
 msgstr "تكوين SSH المُدار غير متاح"
 
-#: src/window.rs:2222
+#: src/window.rs:2224
 msgid "Managed configuration preview"
 msgstr "معاينة الإعدادات المُدارة"
 
-#: src/window.rs:2202
+#: src/window.rs:2204
 msgid "Manual review required"
 msgstr "مراجعة يدوية مطلوبة"
 
-#: src/window.rs:2094 src/window.rs:2167
+#: src/window.rs:2096 src/window.rs:2169
 msgid "Needs attention · review the SSH configuration before continuing"
 msgstr "يحتاج إلى انتباهك · راجع تكوين SSH قبل المتابعة"
 
-#: src/window.rs:2103
+#: src/window.rs:2105
 msgid "Needs attention · the SSH configuration could not be located"
 msgstr "يحتاج إلى انتباهك · تعذر العثور على تكوين SSH"
 
-#: src/window.rs:2210
+#: src/window.rs:2212
 msgid ""
 "Only new SSH connections are affected. Turning this off does not stop "
 "existing background connections. Earlier host-specific OpenSSH settings "
@@ -1629,11 +1629,11 @@ msgstr "رفض OpenSSH الإعدادات المولّدة."
 msgid "OpenSSH rejected the generated configuration: {0}"
 msgstr "رفض OpenSSH الإعدادات المولّدة: {0}"
 
-#: src/window.rs:2111
+#: src/window.rs:2113
 msgid "Reuse SSH connections in the background"
 msgstr "إعادة استخدام اتصالات SSH في الخلفية"
 
-#: src/window.rs:2067
+#: src/window.rs:2069
 msgid "SSH connection persistence"
 msgstr "استمرار اتصال SSH"
 
@@ -1685,7 +1685,7 @@ msgstr "مسار SSH ليس مجلداً عادياً آمناً: {0}"
 msgid "The SSH path is not owned by the current user: {0}"
 msgstr "مسار SSH ليس مملوكًا للمستخدم الحالي: {0}"
 
-#: src/window.rs:2144
+#: src/window.rs:2146
 msgid "The SSH persistence update stopped unexpectedly."
 msgstr "توقفت عملية تحديث استمرار SSH بشكل غير متوقع."
 
@@ -1742,15 +1742,15 @@ msgstr ""
 "يتم الإشارة إلى ملف SSH المُدار خارج الكتلة التي يديرها التطبيق. قم بإزالة "
 "أمر Include هذا قبل استخدام هذا الإعداد."
 
-#: src/window.rs:2209
+#: src/window.rs:2211
 msgid "What this setting changes"
 msgstr "ما الذي يغيّره هذا الإعداد"
 
-#: src/window.rs:2224
+#: src/window.rs:2226
 msgid "{0} includes {1}"
-msgstr "{0} includes {1}"
+msgstr "يتضمن {0} {1}"
 
-#: src/window.rs:2491
+#: src/window.rs:2493
 msgid ""
 "Optional: create a new resident key only when you need another SSH identity."
 " Its private key never leaves the selected YubiKey."
@@ -1758,13 +1758,29 @@ msgstr ""
 "اختياري: أنشئ مفتاح مقيم جديد فقط عند الحاجة إلى هوية SSH أخرى. لا تغادر "
 "المفتاح الخاص أبداً الـ YubiKey المختار."
 
+#: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:10
+msgid "Authentication is required to change security settings or install Git"
+msgstr "يتطلب تغيير إعدادات الأمان أو تثبيت Git المصادقة"
+
 #: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:8
 msgid "Manage YubiKey security settings"
 msgstr "إدارة إعدادات أمان YubiKey"
 
-#: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:10
-msgid "Authentication is required to change security settings or install Git"
-msgstr "يتطلب تغيير إعدادات الأمان أو تثبيت Git المصادقة"
+#: data/com.anduinos.yubikeymanager.desktop:114
+msgid "YubiKey;FIDO2;U2F;security;login;GDM;"
+msgstr "YubiKey;FIDO2;U2F;أمان;تسجيل الدخول;GDM;"
+
+#: data/com.anduinos.yubikeymanager.desktop:54
+msgid "Security Key Settings"
+msgstr "إعدادات مفتاح الأمان"
+
+#: data/com.anduinos.yubikeymanager.desktop:28
+msgid "YubiKey Security Center"
+msgstr "مركز أمان YubiKey"
+
+#: data/com.anduinos.yubikeymanager.desktop:82
+msgid "Protect sign-in, sudo, SSH, and Git with YubiKeys"
+msgstr "احمِ تسجيل الدخول وsudo وSSH وGit باستخدام مفاتيح YubiKey"
 
 #~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
 #~ msgstr "يجب تثبيت Yubico Authenticator قبل أن تتمكن من استخدام مفاتيح المرور."

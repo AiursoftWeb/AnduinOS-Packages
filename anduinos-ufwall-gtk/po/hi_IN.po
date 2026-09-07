@@ -58,23 +58,23 @@ msgstr "एप्लिकेशन प्रोफ़ाइलें"
 msgid "Audit"
 msgstr "audit"
 
-#: src/views/network_audit_view.rs:277
+#: src/views/network_audit_view.rs:278
 msgid "Auditor Error"
 msgstr "ऑडिटर त्रुटि"
 
-#: src/views/network_audit_view.rs:504
+#: src/views/network_audit_view.rs:505
 msgid "Block"
 msgstr "ब्लॉक करें"
 
-#: src/views/network_audit_view.rs:500
+#: src/views/network_audit_view.rs:501
 msgid "Block Connection?"
 msgstr "कनेक्शन ब्लॉक करें?"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid "Block inbound traffic from"
 msgstr "Inbound ट्रैफ़िक को ब्लॉक करें"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid "Block outbound traffic to"
 msgstr "Outbound ट्रैफ़िक को ब्लॉक करें"
 
@@ -82,7 +82,7 @@ msgstr "Outbound ट्रैफ़िक को ब्लॉक करें"
 msgid "Blocked Events"
 msgstr "अवरुद्ध घटनाएँ"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Blocked Successfully"
 msgstr "सफलतापूर्वक ब्लॉक किया गया"
 
@@ -90,7 +90,7 @@ msgstr "सफलतापूर्वक ब्लॉक किया गया
 msgid "Both"
 msgstr "दोनों"
 
-#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/views/network_audit_view.rs:504 src/views/rules_view.rs:121
 #: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "रद्द करें"
@@ -187,11 +187,12 @@ msgstr "दिशा"
 msgid "Error"
 msgstr "त्रुटि"
 
-#: src/views/network_audit_view.rs:554
+#: src/views/network_audit_view.rs:555
 msgid "Failed to Block"
 msgstr "ब्लॉक करने में विफल रहा"
 
 #: src/views/status_view.rs:95 src/window.rs:64
+#: data/com.anduinos.ufwall.desktop:29 data/com.anduinos.ufwall.desktop:57
 msgid "Firewall"
 msgstr "फ़ायरवॉल"
 
@@ -217,7 +218,7 @@ msgstr "असक्रिय"
 
 #: src/views/network_audit_view.rs:201
 msgid "Inbound"
-msgstr "Inbound"
+msgstr "आने वाले"
 
 #: src/views/status_view.rs:124
 msgid "Incoming"
@@ -293,7 +294,7 @@ msgstr "बाहर"
 
 #: src/views/network_audit_view.rs:202
 msgid "Outbound"
-msgstr "Outbound"
+msgstr "जाने वाले"
 
 #: src/views/status_view.rs:133
 msgid "Outgoing"
@@ -344,7 +345,7 @@ msgstr "अस्वीकार करें"
 msgid "Resolve Domains"
 msgstr "डोमेन रिज़ॉल्व करें"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Rule added to block"
 msgstr "ब्लॉक करने के लिए नियम जोड़ा गया"
 
@@ -393,12 +394,12 @@ msgid "This will delete all custom rules. This action cannot be undone."
 msgstr ""
 "यह सभी कस्टम नियमों को हटा देगा। इस कार्रवाई को पूर्ववत नहीं किया जा सकता।"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr "यह दूरस्थ होस्ट को आपके मशीन पर कोई पैकेट भेजने से रोक देगा।"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr "यह आपकी मशीन को दूरस्थ होस्ट पर कोई पैकेट भेजने से रोक देगा।"
@@ -489,7 +490,7 @@ msgstr "नेटवर्क फ़ाइल सिस्टम"
 
 #: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
-msgstr "पोर्ट / प्रोटोकॉल"
+msgstr "नेटवर्क समय प्रोटोकॉल"
 
 #: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
@@ -513,7 +514,7 @@ msgstr "PostgreSQL डेटाबेस सर्वर"
 
 #: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
-msgstr "पोर्ट / प्रोटोकॉल"
+msgstr "दूरस्थ डेस्कटॉप प्रोटोकॉल"
 
 #: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
@@ -535,7 +536,7 @@ msgstr "वर्चुअल नेटवर्क कंप्यूटिं�
 msgid "Windows file and printer sharing"
 msgstr "विंडोज़ फ़ाइल और प्रिंटर शेयरिंग"
 
-#: src/views/network_audit_view.rs:534
+#: src/views/network_audit_view.rs:535
 msgid "Audit Block"
 msgstr "ऑडिट ब्लॉक"
 
@@ -545,7 +546,7 @@ msgstr "प्रमाणीकरण रद्द कर दिया गय�
 
 #: src/views/network_audit_view.rs:160
 msgid "Download"
-msgstr "डाउनलोड"
+msgstr "डाउनलोड करें"
 
 #: src/ufw/backend.rs:384
 msgid "Failed to execute network service helper"
@@ -605,27 +606,27 @@ msgstr ""
 msgid "Network service command failed"
 msgstr "नेटवर्क सेवा कमांड विफल रहा"
 
-#: src/views/network_audit_view.rs:371
+#: src/views/network_audit_view.rs:372
 msgid "No Active Connections"
 msgstr "कोई सक्रिय कनेक्शन नहीं"
 
-#: src/views/network_audit_view.rs:361
+#: src/views/network_audit_view.rs:362
 msgid "No Inbound Connections"
 msgstr "कोई इनबाउंड कनेक्शन नहीं"
 
-#: src/views/network_audit_view.rs:366
+#: src/views/network_audit_view.rs:367
 msgid "No Outbound Connections"
 msgstr "कोई आउटबाउंड कनेक्शन नहीं"
 
-#: src/views/network_audit_view.rs:367
+#: src/views/network_audit_view.rs:368
 msgid "No applications are sending data to the internet."
 msgstr "कोई भी ऐप्लिकेशन इंटरनेट पर डेटा नहीं भेज रहा है।"
 
-#: src/views/network_audit_view.rs:362
+#: src/views/network_audit_view.rs:363
 msgid "No external devices are connecting to your open ports."
 msgstr "कोई बाहरी डिवाइस आपके खुले पोर्ट से कनेक्ट नहीं हो रहा है।"
 
-#: src/views/network_audit_view.rs:372
+#: src/views/network_audit_view.rs:373
 msgid "No network activity detected."
 msgstr "कोई नेटवर्क गतिविधि नहीं मिली।"
 
@@ -644,3 +645,27 @@ msgstr "अपलोड"
 #: src/ufw/backend.rs:48
 msgid "pkexec failed"
 msgstr "pkexec विफल रहा"
+
+#: data/com.anduinos.ufwall.desktop:124
+msgid "firewall;ufw;security;network;"
+msgstr "फ़ायरवॉल;ufw;सुरक्षा;नेटवर्क;"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:82
+msgid "Authentication is required to change local network discovery"
+msgstr "स्थानीय नेटवर्क खोज बदलने के लिए प्रमाणीकरण आवश्यक है"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:80
+msgid "Manage local network discovery"
+msgstr "स्थानीय नेटवर्क खोज प्रबंधित करें"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:39
+msgid "Authentication is required to modify firewall settings"
+msgstr "फ़ायरवॉल सेटिंग्स को संशोधित करने के लिए प्रमाणीकरण आवश्यक है"
+
+#: data/com.anduinos.ufwall.desktop:85
+msgid "Configure your firewall"
+msgstr "अपना फ़ायरवॉल कॉन्फ़िगर करें"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:9
+msgid "Manage UFW firewall settings"
+msgstr "UFW फ़ायरवॉल सेटिंग्स प्रबंधित करें"

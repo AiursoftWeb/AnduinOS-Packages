@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "コントロールパネル"
 
@@ -221,7 +222,7 @@ msgstr "インストールに失敗しました"
 
 #: src/anduinos_control_panel/app.py:635
 msgid "Startup and Boot"
-msgstr "起動とブート"
+msgstr "システム起動"
 
 #: src/anduinos_control_panel/app.py:653
 msgid "Boot menu"
@@ -584,4 +585,20 @@ msgstr "AnduinOS チーム"
 
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
+msgstr "AnduinOS のシステム設定を検索して管理します。"
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr "設定;コントロール;システム;ハードウェア;ドライバー;アカウント;バックアップ;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "ブートメニュー設定を変更"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr "ブートメニュー設定を変更するには認証が必要です"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
 msgstr "AnduinOS のシステム設定を検索して管理します。"

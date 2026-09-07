@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Ohjauspaneeli"
 
@@ -91,7 +92,7 @@ msgstr "Skannaa asiakirjoja ja valitse skanneri"
 
 #: src/anduinos_control_panel/app.py:278
 msgid "Install Document Scanner"
-msgstr "Asenna asiakirjaskanneri"
+msgstr "Asenna Asiakirjaskanneri"
 
 #: src/anduinos_control_panel/app.py:284
 msgid "Appearance"
@@ -123,7 +124,7 @@ msgstr "Ei asennettu"
 
 #: src/anduinos_control_panel/app.py:317
 msgid "Configure microphone, language, shortcut, and training"
-msgstr "Määritä mikrofoni, kieli, pikanäppäin ja koulutus"
+msgstr "Määritä mikrofoni, kieli, pikanäppäin ja kalibrointi"
 
 #: src/anduinos_control_panel/app.py:319
 msgid "Install private, offline speech-to-text"
@@ -271,7 +272,7 @@ msgstr ""
 
 #: src/anduinos_control_panel/app.py:692
 msgid "Native resolution"
-msgstr "Alkuperäinen resoluutio"
+msgstr "Näytön alkuperäinen tarkkuus"
 
 #: src/anduinos_control_panel/app.py:692
 msgid "Large text mode"
@@ -581,11 +582,11 @@ msgstr "✗ Pakettitoiminto epäonnistui. Tarkista lisätiedot."
 #: src/anduinos_control_panel/app.py:1715
 #, python-brace-format
 msgid "{command} exited with status {status}"
-msgstr "{command} päättyi tilakoodilla {status}"
+msgstr "{command} päättyi paluukoodiin {status}"
 
 #: src/anduinos_control_panel/app.py:1742
 msgid "Open a Control Panel topic"
-msgstr "Avaa Ohjauspaneelin kohde"
+msgstr "Avaa Ohjauspaneelin asetus"
 
 #: src/anduinos_control_panel/app.py:1743
 msgid "TOPIC"
@@ -597,7 +598,7 @@ msgstr "TERMIT"
 
 #: src/anduinos_control_panel/app.py:1788
 msgid "AnduinOS Control Panel"
-msgstr "AnduinOS Ohjauspaneeli"
+msgstr "AnduinOS-ohjauspaneeli"
 
 #: src/anduinos_control_panel/app.py:1790
 msgid "AnduinOS Team"
@@ -611,3 +612,15 @@ msgstr "Etsi ja hallitse AnduinOS-järjestelmän asetuksia."
 msgid "settings;control;system;hardware;drivers;accounts;backup;"
 msgstr ""
 "asetukset;ohjaus;järjestelmä;laitteisto;ohjaimet;tilit;varmuuskopiointi;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "Muuta käynnistysvalikon asetuksia"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr "Käynnistysvalikon asetuksia ei voi muuttaa ilman todennusta."
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "Etsi ja hallitse AnduinOS-järjestelmän asetuksia"

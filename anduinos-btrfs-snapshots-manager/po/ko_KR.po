@@ -17,15 +17,11 @@ msgid "A critical threshold is failing now"
 msgstr "현재 심각한 임계값 조건을 충족하지 못하고 있습니다"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
-msgid ""
-"A limited balance improves allocation layout. It does not check file "
-"integrity or guarantee that visible free space will increase."
+msgid "A limited balance improves allocation layout. It does not check file integrity or guarantee that visible free space will increase."
 msgstr "제한된 밸런스는 할당 레이아웃을 개선합니다. 파일 무결성을 검사하거나 가시적인 여유 공간이 증가할 것을 보장하지는 않습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
-msgid ""
-"A limited balance only relocates data and metadata block groups that are at "
-"most 50% full."
+msgid "A limited balance only relocates data and metadata block groups that are at most 50% full."
 msgstr "제한된 밸런스는 최대 50%만 채워진 데이터 및 메타데이터 블록 그룹만 재배치합니다."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
@@ -215,6 +211,10 @@ msgstr "이 폴더의 기록 탐색…"
 msgid "Btrfs could not complete Home file defragmentation."
 msgstr "Btrfs가 홈 파일 디프래그먼트를 완료하지 못했습니다."
 
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs could not complete the integrity check."
+msgstr "Btrfs가 무결성 검사를 완료하지 못했습니다."
+
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Btrfs could not complete the limited balance."
 msgstr "Btrfs가 제한된 밸런스를 완료하지 못했습니다."
@@ -240,14 +240,8 @@ msgid "Btrfs did not start a new maintenance task"
 msgstr "Btrfs가 새 유지 관리 작업을 시작하지 않았습니다"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Btrfs does not provide an on/off real-time deduplication switch. Tools such "
-"as duperemove and BEES use different strategies, resource limits, and scan "
-"scopes. Disk Snapshots Manager will not silently install or run one without "
-"a complete policy."
-msgstr ""
-"Btrfs에는 실시간 중복 제거의 켜기/끄기 전환 기능이 제공되지 않습니다. duperemove 및 BEES와 같은 도구는 서로 다른 "
-"전략, 리소스 제한, 스캔 범위를 사용합니다. 디스크 스냅샷 관리자는 완전한 정책이 없으면 이를 자동으로 설치하거나 실행하지 않습니다."
+msgid "Btrfs does not provide an on/off real-time deduplication switch. Tools such as duperemove and BEES use different strategies, resource limits, and scan scopes. Disk Snapshots Manager will not silently install or run one without a complete policy."
+msgstr "Btrfs에는 실시간 중복 제거의 켜기/끄기 전환 기능이 제공되지 않습니다. duperemove 및 BEES와 같은 도구는 서로 다른 전략, 리소스 제한, 스캔 범위를 사용합니다. 디스크 스냅샷 관리자는 완전한 정책이 없으면 이를 자동으로 설치하거나 실행하지 않습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Btrfs examined {0} block groups and relocated {1}."
@@ -258,15 +252,11 @@ msgid "Btrfs finished relocating underused data and metadata block groups."
 msgstr "Btrfs가 사용량이 적은 데이터 및 메타데이터 블록 그룹 재배치를 완료했습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
-msgid ""
-"Btrfs finished rewriting eligible file extents below /home with ZSTD "
-"compression."
+msgid "Btrfs finished rewriting eligible file extents below /home with ZSTD compression."
 msgstr "Btrfs가 ZSTD 압축을 사용하여 /home 아래에 있는 대상 파일 범위를 다시 작성했습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid ""
-"Btrfs found errors that could not be repaired. Back up important files and "
-"investigate the storage device."
+msgid "Btrfs found errors that could not be repaired. Back up important files and investigate the storage device."
 msgstr "Btrfs에서 복구할 수 없는 오류를 발견했습니다. 중요한 파일을 백업하고 저장 장치를 조사하세요."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
@@ -286,9 +276,7 @@ msgid "Btrfs request completed"
 msgstr "Btrfs 요청이 완료되었습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Btrfs will scan existing subvolumes in the background. Size statistics may "
-"remain incomplete until the scan finishes."
+msgid "Btrfs will scan existing subvolumes in the background. Size statistics may remain incomplete until the scan finishes."
 msgstr "Btrfs가 백그라운드에서 기존 서브볼륨을 스캔합니다. 스캔이 완료될 때까지 크기 통계는 불완전할 수 있습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -368,9 +356,7 @@ msgid "Choose a local filesystem destination."
 msgstr "로컬 파일 시스템 대상을 선택하세요."
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
-msgid ""
-"Choose an earlier version to browse or recover. Your current files will not "
-"be changed automatically."
+msgid "Choose an earlier version to browse or recover. Your current files will not be changed automatically."
 msgstr "탐색하거나 복구할 이전 버전을 선택하세요. 현재 파일은 자동으로 변경되지 않습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
@@ -482,17 +468,12 @@ msgid "Defragment Home files?"
 msgstr "홈 파일을 디프래그먼트하시겠습니까?"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
-msgid ""
-"Defragmentation can increase disk usage when files share data with snapshots"
-" or reflinks."
+msgid "Defragmentation can increase disk usage when files share data with snapshots or reflinks."
 msgstr "디프래그먼트는 파일이 스냅샷이나 리플링크와 데이터를 공유할 경우 디스크 사용량을 증가시킬 수 있습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
-msgid ""
-"Defragmentation rewrites file extents and can increase disk usage by "
-"breaking shared snapshot or reflink data."
-msgstr ""
-"디프래그먼트는 파일 범위를 다시 작성하므로, 스냅샷이나 리플링크와 공유된 데이터가 분리되어 디스크 사용량이 증가할 수 있습니다."
+msgid "Defragmentation rewrites file extents and can increase disk usage by breaking shared snapshot or reflink data."
+msgstr "디프래그먼트는 파일 범위를 다시 작성하므로, 스냅샷이나 리플링크와 공유된 데이터가 분리되어 디스크 사용량이 증가할 수 있습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Defragment…"
@@ -525,6 +506,10 @@ msgstr "삭제 중"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Deleting snapshots…"
 msgstr "스냅샷 삭제 중…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Details: {0}"
+msgstr "세부 정보: {0}"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "Device reliability is degraded"
@@ -566,6 +551,8 @@ msgstr "디스크 상태를 사용할 수 없습니다"
 #: src/btrfs-snapshots-manager/src/application.rs
 #: src/btrfs-snapshots-manager/src/ui/mod.rs
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:29
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:6
 msgid "Disk Snapshots Manager"
 msgstr "디스크 스냅샷 관리자"
 
@@ -671,9 +658,7 @@ msgid "Forever"
 msgstr "영구 유지"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Four copies on separate devices · damaged copies can be repaired "
-"automatically"
+msgid "Four copies on separate devices · damaged copies can be repaired automatically"
 msgstr "별도 장치에 4개의 사본 · 손상된 사본은 자동으로 복구됩니다"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
@@ -740,6 +725,10 @@ msgstr "무결성 검사 완료됨"
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Integrity Check Complete — Repairs Made"
 msgstr "무결성 검사 완료 — 오류 수정됨"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Failed"
+msgstr "무결성 검사 실패"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Integrity Check Result Unavailable"
@@ -814,9 +803,7 @@ msgid "Media errors"
 msgstr "미디어 오류"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Mirrored and striped across devices · redundant copies are available for "
-"repair"
+msgid "Mirrored and striped across devices · redundant copies are available for repair"
 msgstr "여러 장치에 미러링 및 스트라이핑됨 · 복구에 사용할 수 있는 중복 사본 있음"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -836,8 +823,7 @@ msgid "No errors detected so far"
 msgstr "지금까지 오류가 감지되지 않았습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid ""
-"No file system integrity errors were found in allocated data and metadata."
+msgid "No file system integrity errors were found in allocated data and metadata."
 msgstr "할당된 데이터 및 메타데이터에서 파일 시스템 무결성 오류를 발견하지 못했습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
@@ -913,8 +899,7 @@ msgid "Older snapshots are kept less frequently to save disk space."
 msgstr "디스크 공간 절약을 위해 이전 스냅샷은 덜 자주 유지됩니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"One copy · damage can be detected, but there is no spare copy for repair"
+msgid "One copy · damage can be detected, but there is no spare copy for repair"
 msgstr "사본 1개 · 오류 감지는 가능하나 복구를 위한 여유 사본이 없습니다"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
@@ -926,9 +911,7 @@ msgid "Only /home · snapshot storage is excluded"
 msgstr "/home만 포함 · 스냅샷 저장소는 제외됨"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
-msgid ""
-"Only block groups at most 50% full will be relocated. The operation can use "
-"significant disk bandwidth but can be cancelled safely."
+msgid "Only block groups at most 50% full will be relocated. The operation can use significant disk bandwidth but can be cancelled safely."
 msgstr "50% 이하로 채워진 블록 그룹만 재배치됩니다. 이 작업은 상당한 디스크 대역폭을 사용하지만 안전하게 취소할 수 있습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
@@ -936,8 +919,7 @@ msgid "Only partial S.M.A.R.T. data was returned"
 msgstr "S.M.A.R.T. 데이터가 일부만 반환되었습니다"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
-msgid ""
-"Only physical drives backing the current root Btrfs file system are shown."
+msgid "Only physical drives backing the current root Btrfs file system are shown."
 msgstr "현재 루트 Btrfs 파일 시스템을 백업하는 물리적 드라이브만 표시됩니다."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -1021,11 +1003,8 @@ msgid "Preparing safe rollback…"
 msgstr "안전한 롤백 준비 중…"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Preparing the rollback will arm recovery immediately and automatically "
-"restart this computer within 60 seconds. Save your work before continuing."
-msgstr ""
-"롤백을 준비하면 복구가 즉시 활성화되고 이 컴퓨터가 60초 이내에 자동으로 다시 시작됩니다. 계속하기 전에 작업을 저장하세요."
+msgid "Preparing the rollback will arm recovery immediately and automatically restart this computer within 60 seconds. Save your work before continuing."
+msgstr "롤백을 준비하면 복구가 즉시 활성화되고 이 컴퓨터가 60초 이내에 자동으로 다시 시작됩니다. 계속하기 전에 작업을 저장하세요."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Properties"
@@ -1036,9 +1015,7 @@ msgid "Protected while the rollback is pending"
 msgstr "롤백 대기 중 보호됨"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Quota accounting provides shared and exclusive sizes for subvolumes, but its"
-" initial scan can take time."
+msgid "Quota accounting provides shared and exclusive sizes for subvolumes, but its initial scan can take time."
 msgstr "할당량 회계는 서브볼륨의 공유 및 전용 크기를 제공하지만 초기 스캔에 시간이 걸릴 수 있습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
@@ -1182,19 +1159,12 @@ msgid "Roll Back to {0}?"
 msgstr "{0}으로 롤백하시겠습니까?"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Rollback confirmation failed. The protected previous system is being "
-"restored."
+msgid "Rollback confirmation failed. The protected previous system is being restored."
 msgstr "롤백 확인이 실패했습니다. 보호된 이전 시스템이 복구되고 있습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Rollback is armed. To prevent new system changes from being lost, this "
-"computer will restart automatically when the 60-second countdown ends. Save "
-"any open personal files now."
-msgstr ""
-"롤백이 준비되었습니다. 새로운 시스템 변경 사항이 손실되는 것을 방지하기 위해, 60초 카운트다운이 종료되면 이 컴퓨터가 자동으로 다시 "
-"시작됩니다. 지금 열린 개인 파일을 저장하세요."
+msgid "Rollback is armed. To prevent new system changes from being lost, this computer will restart automatically when the 60-second countdown ends. Save any open personal files now."
+msgstr "롤백이 준비되었습니다. 새로운 시스템 변경 사항이 손실되는 것을 방지하기 위해, 60초 카운트다운이 종료되면 이 컴퓨터가 자동으로 다시 시작됩니다. 지금 열린 개인 파일을 저장하세요."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback to {0} is being applied during startup."
@@ -1205,8 +1175,7 @@ msgid "Rollback to {0} is ready. Restart to apply it."
 msgstr "{0}(으)로 롤백이 준비되었습니다. 적용하려면 다시 시작하세요."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Rollback to {0} was applied, but system confirmation has not completed."
+msgid "Rollback to {0} was applied, but system confirmation has not completed."
 msgstr "{0}(으)로 롤백이 적용되었지만 시스템 확인이 완료되지 않았습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
@@ -1248,18 +1217,12 @@ msgid "Scanning data and metadata…"
 msgstr "데이터 및 메타데이터 스캔 중…"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
-msgid ""
-"Scrub reads allocated data and metadata, verifies checksums, and reports "
-"damage without modifying file data."
+msgid "Scrub reads allocated data and metadata, verifies checksums, and reports damage without modifying file data."
 msgstr "스크러브는 할당된 데이터 및 메타데이터를 읽고, 체크섬을 확인하며, 파일 데이터를 수정하지 않고 손상을 보고합니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid ""
-"Scrub verifies allocated Btrfs data and metadata. It does not test unused "
-"space or predict sudden drive failure."
-msgstr ""
-"스크러브는 할당된 Btrfs 데이터 및 메타데이터의 무결성을 확인합니다. 사용하지 않는 공간을 테스트하거나 드라이브의 갑작스러운 고장을 "
-"예측하지는 않습니다."
+msgid "Scrub verifies allocated Btrfs data and metadata. It does not test unused space or predict sudden drive failure."
+msgstr "스크러브는 할당된 Btrfs 데이터 및 메타데이터의 무결성을 확인합니다. 사용하지 않는 공간을 테스트하거나 드라이브의 갑작스러운 고장을 예측하지는 않습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Search snapshots"
@@ -1282,9 +1245,7 @@ msgid "Selected file · {0}"
 msgstr "선택된 파일 · {0}"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Shared and exclusive size statistics and any subvolume limits will be "
-"removed. Snapshots themselves are not deleted."
+msgid "Shared and exclusive size statistics and any subvolume limits will be removed. Snapshots themselves are not deleted."
 msgstr "공유 및 전용 크기 통계와 서브볼륨 제한이 제거됩니다. 스냅샷 자체는 삭제되지 않습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -1520,9 +1481,7 @@ msgid "The root filesystem is {0}."
 msgstr "루트 파일 시스템은 {0}(이)입니다."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid ""
-"The scheduled Home snapshot could not be created. Check Disk Snapshots "
-"Manager for details."
+msgid "The scheduled Home snapshot could not be created. Check Disk Snapshots Manager for details."
 msgstr "예약된 홈 스냅샷을 생성할 수 없습니다. 자세한 내용은 디스크 스냅샷 관리자를 확인하세요."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
@@ -1530,9 +1489,7 @@ msgid "The scheduled Home snapshot was created successfully."
 msgstr "예약된 홈 스냅샷이 성공적으로 생성되었습니다."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid ""
-"The scheduled system snapshot could not be created. Check Disk Snapshots "
-"Manager for details."
+msgid "The scheduled system snapshot could not be created. Check Disk Snapshots Manager for details."
 msgstr "예약된 시스템 스냅샷을 생성할 수 없습니다. 자세한 내용은 디스크 스냅샷 관리자를 확인하세요."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
@@ -1584,13 +1541,8 @@ msgid "This item was not present in the available Home snapshots."
 msgstr "이 항목은 사용 가능한 홈 스냅샷에 없습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
-msgid ""
-"This rewrites files below /home using ZSTD compression. It does not enter "
-"/.snapshots, but shared extents with existing snapshots may become private "
-"and consume more space."
-msgstr ""
-"/home 아래 파일을 ZSTD 압축을 사용하여 다시 작성합니다. /.snapshots는 진입하지 않지만, 기존 스냅샷과 공유된 범위가 "
-"개인용으로 전환되어 더 많은 공간을 차지할 수 있습니다."
+msgid "This rewrites files below /home using ZSTD compression. It does not enter /.snapshots, but shared extents with existing snapshots may become private and consume more space."
+msgstr "/home 아래 파일을 ZSTD 압축을 사용하여 다시 작성합니다. /.snapshots는 진입하지 않지만, 기존 스냅샷과 공유된 범위가 개인용으로 전환되어 더 많은 공간을 차지할 수 있습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "This snapshot is available for recovery."
@@ -1601,9 +1553,7 @@ msgid "This snapshot is not available for recovery."
 msgstr "이 스냅샷은 복구에 사용할 수 없습니다."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Three copies on separate devices · damaged copies can be repaired "
-"automatically"
+msgid "Three copies on separate devices · damaged copies can be repaired automatically"
 msgstr "별도 장치에 3개의 사본 · 손상된 사본은 자동으로 복구됩니다"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
@@ -1635,14 +1585,11 @@ msgid "Try a different name, date, or snapshot reason."
 msgstr "다른 이름, 날짜 또는 스냅샷 사유를 시도해 보세요."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Two copies on separate devices · a damaged copy can be repaired "
-"automatically"
+msgid "Two copies on separate devices · a damaged copy can be repaired automatically"
 msgstr "별도 장치에 2개의 사본 · 손상된 사본은 자동으로 복구됩니다"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Two copies on this device · a damaged copy can be repaired automatically"
+msgid "Two copies on this device · a damaged copy can be repaired automatically"
 msgstr "이 장치에 2개의 사본 · 손상된 사본은 자동으로 복구됩니다"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -1817,14 +1764,119 @@ msgstr "{0}% · 경고 임계값 {1}%"
 msgid "{0}/s"
 msgstr "{0}/s"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid "Btrfs could not complete the integrity check."
-msgstr "Btrfs가 무결성 검사를 완료하지 못했습니다."
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:38
+msgid "backup"
+msgstr "백업"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid "Details: {0}"
-msgstr "세부 정보: {0}"
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:41
+msgid "snapshot;snapshots;restore;recovery;btrfs;rollback;backup;backups;time machine;file history;deleted files;"
+msgstr "스냅샷;시스템 스냅샷;복원;복구;btrfs;롤백;백업;백업본;타임 머신;파일 기록;삭제된 파일;"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid "Integrity Check Failed"
-msgstr "무결성 검사 실패"
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:24
+msgid "Authentication is required to delete a system snapshot"
+msgstr "시스템 스냅샷을 삭제하려면 인증이 필요합니다"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:82
+msgid "Override the Home snapshot creation limit"
+msgstr "홈 스냅샷 생성 빈도 제한 초과"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:11
+msgid "A system rollback validates the selected snapshot, protects a current-system fallback while the transaction is pending, and prepares a verified one-shot GRUB entry. Personal Files are explicitly unchanged."
+msgstr "시스템 롤백은 선택한 스냅샷을 검증하고, 롤백 작업이 완료될 때까지 현재 시스템을 복구 대안으로 보존하며, 검증된 다음 1회 부팅용 GRUB 항목을 준비합니다. 개인 파일은 명시적으로 변경되지 않습니다."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:37
+msgid "btrfs"
+msgstr "btrfs"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:36
+msgid "Authentication is required to access or restore a system snapshot"
+msgstr "시스템 스냅샷에 액세스하거나 복구하려면 인증이 필요합니다"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:36
+msgid "recovery"
+msgstr "복구"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:3
+msgid "Disk Snapshots Manager Notifications"
+msgstr "디스크 스냅샷 관리자 알림"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:35
+msgid "restore"
+msgstr "복구"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:10
+msgid "Disk Snapshots Manager creates immutable Btrfs system snapshots for the AnduinOS system and independent snapshots for Personal Files."
+msgstr "디스크 스냅샷 관리자는 AnduinOS 시스템용 불변 Btrfs 시스템 스냅샷과 개인 파일용 독립 스냅샷을 생성합니다."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:34
+msgid "snapshot"
+msgstr "스냅샷"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:5
+msgid "Show system snapshot notifications"
+msgstr "시스템 스냅샷 알림 표시"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:30
+msgid "System Recovery and File History"
+msgstr "시스템 복구 및 파일 기록"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:84
+msgid "Authentication is required to create more than four Home snapshots per minute"
+msgstr "1분당 4개 이상의 홈 스냅샷을 생성하려면 인증이 필요합니다"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:70
+msgid "Create a Home history snapshot"
+msgstr "홈 스냅샷 생성"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:72
+msgid "A local active user may create a Home history snapshot"
+msgstr "로컬 활성 사용자는 홈 스냅샷을 생성할 수 있습니다"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:12
+msgid "Independent Home snapshots capture the @home subvolume on a separate schedule. Users can browse earlier versions and recover files or folders without rolling back the operating system."
+msgstr "독립적인 홈 스냅샷은 별도의 일정에 따라 @home 서브볼륨을 캡처합니다. 사용자는 운영 체제를 롤백하지 않고도 이전 버전을 살펴보고 파일이나 폴더를 복구할 수 있습니다."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:13
+msgid "Nautilus provides File History actions for one selected home item and for a folder background, opening a focused Disk Snapshots Manager window for earlier versions and deleted files."
+msgstr "Nautilus는 선택된 홈 항목 1개와 폴더 배경에 대해 파일 기록 작업을 제공하며, 이전 버전과 삭제된 파일을 확인하기 위해 해당 컨텍스트에 직접 연결된 전용 디스크 스냅샷 관리자 창을 엽니다."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:60
+msgid "Authentication is required to access historical Personal Files"
+msgstr "개인 파일의 이전 버전에 액세스하려면 인증이 필요합니다"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:46
+msgid "Configure AnduinOS recovery"
+msgstr "AnduinOS 복구 구성"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:12
+msgid "Authentication is required to create a system snapshot"
+msgstr "시스템 스냅샷을 생성하려면 인증이 필요합니다"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:22
+msgid "Delete an AnduinOS system snapshot"
+msgstr "AnduinOS 시스템 스냅샷 삭제"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:48
+msgid "Authentication is required to change recovery settings"
+msgstr "복구 설정을 변경하려면 인증이 필요합니다"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:14
+msgid "Automatic schedules can show desktop notifications after successful creation, while retention cleanup is reported as one quiet aggregate notification."
+msgstr "자동 스케줄은 생성이 성공한 후 데스크톱 알림을 표시할 수 있으며, 유지 정책 정리는 조용한 단일 요약 알림으로 보고됩니다."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:58
+msgid "Browse and export historical Personal Files"
+msgstr "개인 파일의 이전 버전 탐색 및 내보내기"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:34
+msgid "Access or restore an AnduinOS system snapshot"
+msgstr "AnduinOS 시스템 스냅샷 액세스 또는 복구"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:32
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:7
+msgid "Recover AnduinOS and restore deleted Personal Files"
+msgstr "AnduinOS 복구 및 삭제된 개인 파일 복구"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
+msgid "Create an AnduinOS system snapshot"
+msgstr "AnduinOS 시스템 스냅샷 생성"

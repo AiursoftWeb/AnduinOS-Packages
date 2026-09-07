@@ -19,6 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Bảng điều khiển"
 
@@ -124,7 +125,7 @@ msgstr "Chưa cài đặt"
 
 #: src/anduinos_control_panel/app.py:317
 msgid "Configure microphone, language, shortcut, and training"
-msgstr "Cấu hình micro, ngôn ngữ, phím tắt và huấn luyện"
+msgstr "Cấu hình micrô, ngôn ngữ, phím tắt và hiệu chỉnh"
 
 #: src/anduinos_control_panel/app.py:319
 msgid "Install private, offline speech-to-text"
@@ -477,7 +478,7 @@ msgstr "Giọng nói được nhận dạng trên máy tính này bằng whisper
 
 #: src/anduinos_control_panel/app.py:1280
 msgid "About 140 MB to download"
-msgstr "Khoảng 140 MB để tải xuống"
+msgstr "Dung lượng tải xuống khoảng 140 MB"
 
 #: src/anduinos_control_panel/app.py:1282
 msgid ""
@@ -583,7 +584,7 @@ msgstr "✗ Thao tác gói không thành công. Hãy kiểm tra Đầu ra nâng 
 #: src/anduinos_control_panel/app.py:1715
 #, python-brace-format
 msgid "{command} exited with status {status}"
-msgstr "{command} đã thoát với mã trạng thái {status}"
+msgstr "Lệnh {command} kết thúc với trạng thái thoát {status}"
 
 #: src/anduinos_control_panel/app.py:1742
 msgid "Open a Control Panel topic"
@@ -608,3 +609,20 @@ msgstr "Đội ngũ AnduinOS"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "Tìm và quản lý các cài đặt hệ thống của AnduinOS."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr ""
+"cài đặt;điều khiển;hệ thống;phần cứng;trình điều khiển;tài khoản;sao lưu;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "Thay đổi cài đặt menu khởi động"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr "Yêu cầu xác thực để thay đổi cài đặt menu khởi động"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "Tìm và quản lý các cài đặt hệ thống của AnduinOS"

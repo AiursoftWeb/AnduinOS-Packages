@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Systemsteuerung"
 
@@ -271,7 +272,7 @@ msgstr ""
 
 #: src/anduinos_control_panel/app.py:692
 msgid "Native resolution"
-msgstr "Nativ"
+msgstr "Native Auflösung"
 
 #: src/anduinos_control_panel/app.py:692
 msgid "Large text mode"
@@ -468,8 +469,8 @@ msgid ""
 "other applications. Audio stays on this computer."
 msgstr ""
 "Drücken Sie Super + H, um in Browsern, Editoren, Nachrichten, Terminals und "
-"anderen Anwendungen zu diktieren. Die Audioaufnahme bleibt auf diesem "
-"Computer."
+"anderen Anwendungen zu diktieren. Die Audiodaten werden auf diesem Computer "
+"verarbeitet und niemals hochgeladen."
 
 #: src/anduinos_control_panel/app.py:1274
 msgid "Private by default"
@@ -619,3 +620,21 @@ msgstr "AnduinOS-Team"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "AnduinOS-Systemeinstellungen finden und verwalten."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr "einstellungen;steuerung;system;hardware;treiber;konten;sicherung;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "Boot-Menü-Einstellungen ändern"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr ""
+"Zur Änderung der Boot-Menü-Einstellungen ist eine Authentifizierung "
+"erforderlich."
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "AnduinOS-Systemeinstellungen finden und verwalten"

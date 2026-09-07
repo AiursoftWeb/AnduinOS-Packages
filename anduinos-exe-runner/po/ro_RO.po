@@ -17,19 +17,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);\n"
 
-#: assets/anduinos-exe-runner:319
+#: assets/anduinos-exe-runner:329
 msgid "==> Executing command: {}"
 msgstr "Executând comanda: {}"
 
-#: assets/anduinos-exe-runner:315
+#: assets/anduinos-exe-runner:325
 msgid "About to start downloading Bottles..."
 msgstr "Pregătit să încearcă descărcarea Bottles..."
 
-#: assets/anduinos-exe-runner:170
+#: assets/anduinos-exe-runner:180
 msgid "Advanced Status and Logs"
 msgstr "Status avansat și jurnaluri"
 
-#: assets/anduinos-exe-runner:430
+#: assets/anduinos-exe-runner:368 assets/anduinos-exe-runner:375
+#: assets/anduinos-exe-runner:400
 msgid ""
 "An error occurred while initializing the bottle. Please expand advanced "
 "status to view logs."
@@ -37,7 +38,7 @@ msgstr ""
 "A apărut o eroare la inițializarea sticlei. Extindeți starea avansată pentru"
 " a vedea jurnalele."
 
-#: assets/anduinos-exe-runner:351
+#: assets/anduinos-exe-runner:361
 msgid ""
 "An error occurred while installing Bottles. Please expand advanced status to"
 " view logs."
@@ -45,199 +46,206 @@ msgstr ""
 "A apărut o eroare la instalarea Bottles. Extindeți starea avansată pentru a "
 "vedea jurnalele."
 
-#: assets/anduinos-exe-runner:20
+#: assets/anduinos-exe-runner:22
 msgid "App"
 msgstr "Aplicație"
 
-#: assets/anduinos-exe-runner:537
+#: assets/anduinos-exe-runner:447
 msgid "Automatically hiding launcher window, enjoy!"
 msgstr "Fereastra launcherului se ascunde automat, te bucuri!"
 
-#: assets/anduinos-exe-runner:494
+#: assets/anduinos-exe-runner:404
 msgid "Bottle is ready, about to launch application..."
 msgstr "Sticla (bottle) este pregătită, urmează lansarea aplicației..."
 
-#: assets/anduinos-exe-runner:329
+#: assets/anduinos-exe-runner:339
 msgid "Bottles installation not found."
 msgstr "Instalarea Bottles nu a fost găsită."
 
-#: assets/anduinos-exe-runner:158 assets/anduinos-exe-runner:216
+#: assets/anduinos-exe-runner:168 assets/anduinos-exe-runner:226
 msgid "Cancel"
 msgstr "Anulează"
 
-#: assets/anduinos-exe-runner:327
+#: assets/anduinos-exe-runner:337
 msgid "Checking Bottles installation status via filesystem..."
 msgstr "Verificarea statusului instalării Bottles prin sistemul de fișiere..."
 
-#: assets/anduinos-exe-runner:333
+#: assets/anduinos-exe-runner:343
 msgid "Checking if Default bottle exists via filesystem..."
 msgstr ""
 "Verificarea existenței sticlei (bottle) implicite prin sistemul de "
 "fișiere..."
 
-#: assets/anduinos-exe-runner:140
+#: assets/anduinos-exe-runner:150
 msgid "Checking system compatibility layer..."
 msgstr "Verificarea stratului de compatibilitate al sistemului..."
 
-#: assets/anduinos-exe-runner:339
+#: assets/anduinos-exe-runner:349
 msgid "Compatibility layer is ready, preparing to start program..."
 msgstr ""
 "Stratul de compatibilitate este pregătit, pregătirea pentru pornirea "
 "programului..."
 
-#: assets/anduinos-exe-runner:430
+#: assets/anduinos-exe-runner:368 assets/anduinos-exe-runner:375
+#: assets/anduinos-exe-runner:400
 msgid "Configuration Failed"
 msgstr "Configurarea a eșuat"
 
-#: assets/anduinos-exe-runner:426
+#: assets/anduinos-exe-runner:364
 msgid "Configuring Bottle"
 msgstr "Configurarea sticlei"
 
-#: assets/anduinos-exe-runner:433
+#: assets/anduinos-exe-runner:371
 msgid "Configuring Fonts"
 msgstr "Se configurează fonturile"
 
-#: assets/anduinos-exe-runner:340
+#: assets/anduinos-exe-runner:350
 msgid "Configuring runtime environment, please wait..."
 msgstr "Se configurează mediul de rulare, vă rugăm să așteptați..."
 
-#: assets/anduinos-exe-runner:335
+#: assets/anduinos-exe-runner:345
 msgid "Default bottle not found."
 msgstr "Sticla (bottle) implicită nu a fost găsită."
 
 #: assets/anduinos-exe-runner:354
-msgid "Downloading Components"
-msgstr "Descărcarea componentelor"
-
-#: assets/anduinos-exe-runner:344
 msgid "Downloading and installing Bottles via Flatpak..."
 msgstr "Descărcarea și instalarea Bottles prin Flatpak..."
 
-#: assets/anduinos-exe-runner:217
+#: assets/anduinos-exe-runner:227
 msgid "Force Run Anyway"
 msgstr "Forțează rularea oricum"
 
-#: assets/anduinos-exe-runner:223
+#: assets/anduinos-exe-runner:233
 msgid "Get {}"
 msgstr "Obține {}"
 
-#: assets/anduinos-exe-runner:426
+#: assets/anduinos-exe-runner:364
 msgid "Initializing Windows virtual bottle (Default)..."
 msgstr "Inițializarea sticlei virtuale Windows (Implicită)..."
 
-#: assets/anduinos-exe-runner:354
-msgid "Initializing core gaming components (DXVK, VKD3D, Runner, etc.)..."
-msgstr ""
-"Inițializarea componentelor de bază pentru jocuri (DXVK, VKD3D, Runner "
-"etc.)..."
-
-#: assets/anduinos-exe-runner:161
+#: assets/anduinos-exe-runner:171
 msgid "Install and Configure"
 msgstr "Instalează și configurează"
 
-#: assets/anduinos-exe-runner:351
+#: assets/anduinos-exe-runner:361
 msgid "Installation Failed"
 msgstr "Instalare eșuată"
 
-#: assets/anduinos-exe-runner:493
+#: assets/anduinos-exe-runner:403
 msgid "Installation and configuration complete!"
 msgstr "Instalarea și configurarea sunt complete!"
 
-#: assets/anduinos-exe-runner:344
+#: assets/anduinos-exe-runner:354
 msgid "Installing Environment"
 msgstr "Instalarea mediului"
 
-#: assets/anduinos-exe-runner:433
+#: assets/anduinos-exe-runner:371
 msgid "Installing core fonts to prevent text rendering issues..."
 msgstr ""
 "Se instalează fonturile de bază pentru a preveni problemele de redare a "
 "textului..."
 
-#: assets/anduinos-exe-runner:551
+#: assets/anduinos-exe-runner:461
 msgid "Launch Exception"
 msgstr "Exceptie la lansare"
 
-#: assets/anduinos-exe-runner:516
+#: assets/anduinos-exe-runner:426
 msgid "Launch Failed"
 msgstr "Lansare eșuată"
 
-#: assets/anduinos-exe-runner:515
+#: assets/anduinos-exe-runner:425
 msgid "Launch failed: {}"
 msgstr "Lansare eșuată: {}"
 
-#: assets/anduinos-exe-runner:551
+#: assets/anduinos-exe-runner:461
 msgid "Launch or configuration failed, please check advanced logs."
 msgstr ""
 "Lansarea sau configurarea a eșuat, te rog să verifici jurnalurile avansate."
 
-#: assets/anduinos-exe-runner:536
+#: assets/anduinos-exe-runner:446
 msgid "Launcher mission complete, program is running in the background."
 msgstr "Misiunea launcherului este completă, programul rulează în fundal."
 
-#: assets/anduinos-exe-runner:19
+#: assets/anduinos-exe-runner:21
 msgid "Notice"
 msgstr "Notificare"
 
-#: assets/anduinos-exe-runner:133
+#: assets/anduinos-exe-runner:143
 msgid "Preparing environment..."
 msgstr "Pregătirea mediului..."
 
-#: assets/anduinos-exe-runner:498
+#: assets/anduinos-exe-runner:408
 msgid "Preparing to launch EXE: {}"
 msgstr "Pregătirea lansării EXE: {}"
 
-#: assets/anduinos-exe-runner:315
+#: assets/anduinos-exe-runner:325
 msgid "Preparing..."
 msgstr "Pregătire..."
 
-#: assets/anduinos-exe-runner:553
+#: assets/anduinos-exe-runner:463
 msgid "Process finished normally."
 msgstr "Procesul s-a finalizat normal."
 
-#: assets/anduinos-exe-runner:513
+#: assets/anduinos-exe-runner:423
 msgid "Process successfully started in the background, listening to logs..."
 msgstr "Procesul a pornit cu succes în fundal, se ascultă jurnalurile..."
 
-#: assets/anduinos-exe-runner:550
+#: assets/anduinos-exe-runner:460
 msgid "Process terminated abnormally (exit code {})."
 msgstr "Procesul s-a terminat anormal (cod de ieșire {})."
 
-#: assets/anduinos-exe-runner:494
+#: assets/anduinos-exe-runner:404
 msgid "Starting program"
 msgstr "Pornirea programului"
 
-#: assets/anduinos-exe-runner:340
+#: assets/anduinos-exe-runner:350
 msgid "Starting program..."
 msgstr "Pornirea programului..."
 
-#: assets/anduinos-exe-runner:310
+#: assets/anduinos-exe-runner:320
 msgid "The system is not configured with the Bottles compatibility layer."
 msgstr "Sistemul nu este configurat cu stratul de compatibilitate Bottles."
 
-#: assets/anduinos-exe-runner:516
+#: assets/anduinos-exe-runner:426
 msgid "Unable to start program, please check advanced logs."
 msgstr ""
 "Imposibil de pornit programul, te rog să verifici jurnalurile avansate."
 
-#: assets/anduinos-exe-runner:227
+#: assets/anduinos-exe-runner:237
 msgid "View Documentation"
 msgstr "Vezi documentația"
 
-#: assets/anduinos-exe-runner:109
+#: assets/anduinos-exe-runner:119
 msgid "Windows Application Runner"
 msgstr "Rulator de aplicații Windows"
 
-#: assets/anduinos-exe-runner:310
+#: assets/anduinos-exe-runner:320
 msgid "Windows Compatibility Environment Required"
 msgstr "Mediu de compatibilitate Windows necesar"
 
-#: assets/anduinos-exe-runner:310
+#: assets/anduinos-exe-runner:320
 msgid ""
 "Would you like to automatically download and install it? This may take a few"
 " minutes."
 msgstr ""
 "Doriți să îl descărcați și să îl instalați automat? Poate dura câteva "
 "minute."
+
+#: data/com.anduinos.ExeRunner.desktop:56
+msgid "Run Windows executables seamlessly via Bottles"
+msgstr "Rulează fișierele executabile Windows fără probleme prin Bottles"
+
+#: data/com.anduinos.ExeRunner.desktop:28
+msgid "AnduinOS Windows EXE Runner"
+msgstr "Lansator de fișiere EXE Windows pentru AnduinOS"
+
+#~ msgid "Downloading Components"
+#~ msgstr "Descărcarea componentelor"
+
+#~ msgid "Initializing core gaming components (DXVK, VKD3D, Runner, etc.)..."
+#~ msgstr ""
+#~ "Inițializarea componentelor de bază pentru jocuri (DXVK, VKD3D, Runner "
+#~ "etc.)..."
 
 #~ msgid " MusicBrainz Picard"
 #~ msgstr " MusicBrainz Picard"

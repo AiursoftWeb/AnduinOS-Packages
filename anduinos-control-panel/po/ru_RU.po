@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Панель управления"
 
@@ -123,7 +124,7 @@ msgstr "Не установлено"
 
 #: src/anduinos_control_panel/app.py:317
 msgid "Configure microphone, language, shortcut, and training"
-msgstr "Настроить микрофон, язык, горячую клавишу и обучение"
+msgstr "Настроить микрофон, язык, горячую клавишу и калибровку"
 
 #: src/anduinos_control_panel/app.py:319
 msgid "Install private, offline speech-to-text"
@@ -474,7 +475,7 @@ msgstr "Речь распознаётся на этом компьютере с 
 
 #: src/anduinos_control_panel/app.py:1280
 msgid "About 140 MB to download"
-msgstr "Около 140 МБ для загрузки"
+msgstr "Размер загрузки — около 140 МБ"
 
 #: src/anduinos_control_panel/app.py:1282
 msgid ""
@@ -575,12 +576,12 @@ msgstr "ИИ на устройстве отключен"
 
 #: src/anduinos_control_panel/app.py:1638
 msgid "✗ Package operation failed. Review Advanced Output."
-msgstr "✗ Операция с пакетом не выполнена. Просмотрите Дополнительный вывод."
+msgstr "✗ Операция с пакетом не выполнена. Просмотрите дополнительный вывод."
 
 #: src/anduinos_control_panel/app.py:1715
 #, python-brace-format
 msgid "{command} exited with status {status}"
-msgstr "Команда {command} завершилась с кодом {status}"
+msgstr "Команда {command} завершилась с кодом выхода {status}"
 
 #: src/anduinos_control_panel/app.py:1742
 msgid "Open a Control Panel topic"
@@ -605,3 +606,21 @@ msgstr "Команда AnduinOS"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "Находите системные настройки AnduinOS и управляйте ими."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr ""
+"настройки;управление;система;оборудование;драйверы;учётные записи;резервное "
+"копирование;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "Изменить настройки меню загрузки"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr "Для изменения настроек меню загрузки требуется аутентификация"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "Находите и управляйте системными настройками AnduinOS"

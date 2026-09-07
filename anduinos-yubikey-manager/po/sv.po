@@ -17,19 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/window.rs:2020
+#: src/window.rs:2022
 msgid "1 identity is currently available to SSH applications."
 msgstr "1 identitet är för närvarande tillgänglig för SSH-program."
 
-#: src/window.rs:2304
+#: src/window.rs:2306
 msgid "1 resident SSH key is available from your connected YubiKey."
-msgstr "En boende SSH-nyckel är tillgänglig från din anslutna YubiKey."
+msgstr "En enhetslagrad SSH-nyckel är tillgänglig på din anslutna YubiKey."
 
-#: src/window.rs:1814
+#: src/window.rs:1816
 msgid "1 resident SSH key · {0}"
-msgstr "1 boende SSH-nyckel · {0}"
+msgstr "1 enhetslagrad SSH-nyckel · {0}"
 
-#: src/window.rs:1474 src/window.rs:1652
+#: src/window.rs:1476 src/window.rs:1654
 msgid "A key must be connected before it can be enrolled."
 msgstr "En nyckel måste vara ansluten innan den kan registreras."
 
@@ -37,55 +37,55 @@ msgstr "En nyckel måste vara ansluten innan den kan registreras."
 msgid "About"
 msgstr "Om"
 
-#: src/home.rs:381 src/home.rs:402
+#: src/home.rs:383 src/home.rs:404
 msgid "Account password"
 msgstr "Kontrollösenord"
 
-#: src/window.rs:2490
+#: src/window.rs:2492
 msgid "Add another SSH key"
 msgstr "Lägg till en annan SSH-nyckel"
 
-#: src/window.rs:1314
+#: src/window.rs:1316
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "Lägg till denna offentliga nyckel på GitHub som en signaturnyckel."
 
-#: src/home.rs:336 src/home.rs:389
+#: src/home.rs:338 src/home.rs:391
 msgid "Administrator access"
 msgstr "Administratör åtkomst"
 
-#: src/window.rs:2667
+#: src/window.rs:2669
 msgid "Advanced options"
 msgstr "Avancerade alternativ"
 
-#: src/window.rs:2619
+#: src/window.rs:2621
 msgid "Algorithm"
 msgstr "Algoritm"
 
-#: src/window.rs:1582
+#: src/window.rs:1584
 msgid "Allow sudo without authentication"
 msgstr "Tillåt sudo utan autentisering"
 
-#: src/window.rs:1672
+#: src/window.rs:1674
 msgid "Allowed for sudo · not currently connected"
 msgstr "Tillåten för sudo · för närvarande inte ansluten"
 
-#: src/window.rs:1674
+#: src/window.rs:1676
 msgid "Allowed to authorize sudo"
 msgstr "Får godkänna sudo"
 
-#: src/window.rs:1494
+#: src/window.rs:1496
 msgid "Allowed to unlock this user"
 msgstr "Får låsa upp den här användaren"
 
-#: src/window.rs:1492
+#: src/window.rs:1494
 msgid "Allowed to unlock this user · not currently connected"
 msgstr "Får låsa upp den här användaren · för närvarande inte ansluten"
 
-#: src/window.rs:1902
+#: src/window.rs:1904
 msgid "Already loaded"
 msgstr "Redan inläst"
 
-#: src/window.rs:1639
+#: src/window.rs:1641
 msgid "An enrolled YubiKey or the account password can authorize sudo."
 msgstr "Ett registrerat YubiKey eller kontolösenordet kan godkänna sudo."
 
@@ -97,11 +97,11 @@ msgstr "AnduinOS-teamet"
 msgid "AnduinOS YubiKey Security Center"
 msgstr "AnduinOS YubiKey Säkerhetscenter"
 
-#: src/home.rs:126
+#: src/home.rs:128
 msgid "AnduinOS works more securely with a YubiKey"
 msgstr "AnduinOS fungerar säkrare med en YubiKey"
 
-#: src/window.rs:2625
+#: src/window.rs:2627
 msgid "Application"
 msgstr "Program"
 
@@ -113,23 +113,23 @@ msgstr ""
 "Programnamnet måste börja med ssh:, innehålla inga mellanslag och vara högst"
 " 253 byte."
 
-#: src/home.rs:411 src/window.rs:631
+#: src/home.rs:413 src/window.rs:631
 msgid "Available"
 msgstr "Tillgänglig"
 
-#: src/window.rs:1255
+#: src/window.rs:1257
 msgid "Available through SSH agent"
 msgstr "Tillgänglig via SSH-agenten"
 
-#: src/window.rs:1253
+#: src/window.rs:1255
 msgid "Available through local key handle"
 msgstr "Tillgänglig via lokalt nyckelhandtag"
 
-#: src/home.rs:172
+#: src/home.rs:174
 msgid "Buy a YubiKey"
 msgstr "Köp en YubiKey"
 
-#: src/window.rs:2698 src/window.rs:2755 src/window.rs:3027
+#: src/window.rs:2700 src/window.rs:2757 src/window.rs:3029
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -141,15 +141,15 @@ msgstr "Kontrollerar SSH-nycklar…"
 msgid "Checking SSH support…"
 msgstr "Kontrollerar SSH-stöd…"
 
-#: src/home.rs:65 src/window.rs:478
+#: src/home.rs:67 src/window.rs:478
 msgid "Checking connected YubiKeys"
 msgstr "Kontrollerar anslutna YubiKeys"
 
-#: src/home.rs:428
+#: src/home.rs:430
 msgid "Choose a YubiKey-backed SSH key"
 msgstr "Välj en SSH-nyckel som stöds av YubiKey"
 
-#: src/window.rs:2639
+#: src/window.rs:2641
 msgid "Choose a local key-handle file"
 msgstr "Välj en lokal fil för nyckelhandtag"
 
@@ -169,11 +169,11 @@ msgstr "Välj en giltig utdatakatalog."
 msgid "Choose an SSH key for Git signing."
 msgstr "Välj en SSH-nyckel för Git-signering."
 
-#: src/window.rs:2650
+#: src/window.rs:2652
 msgid "Choose local SSH key-handle path"
 msgstr "Välj sökväg till lokalt SSH-nyckelhandtag"
 
-#: src/window.rs:1218
+#: src/window.rs:1220
 msgid ""
 "Choose one SSH key. The selection takes effect immediately for this user's "
 "Git commits."
@@ -181,14 +181,14 @@ msgstr ""
 "Välj en SSH-nyckel. Valet träder i kraft omedelbart för denna användares "
 "Git-commit."
 
-#: src/window.rs:1465
+#: src/window.rs:1467
 msgid ""
 "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
 msgstr ""
 "Välj vilka YubiKeys som får låsa upp {0}. Inloggning med lösenord finns "
 "fortfarande tillgängligt."
 
-#: src/window.rs:3074 src/window.rs:3096
+#: src/window.rs:3076 src/window.rs:3098
 msgid "Close"
 msgstr "Stäng"
 
@@ -200,51 +200,51 @@ msgstr "Kommandot avslutades med"
 msgid "Command exited with {0}"
 msgstr "Kommandot avslutades med {0}"
 
-#: src/window.rs:1217
+#: src/window.rs:1219
 msgid "Commit signing"
 msgstr "Kommittsignering"
 
-#: src/home.rs:596
+#: src/home.rs:598
 msgid "Configured YubiKeys"
 msgstr "Konfigurerade YubiKeys"
 
-#: src/home.rs:627
+#: src/home.rs:629
 msgid "Configured for {0} · Not connected"
 msgstr "Konfigurerad för {0} · Inte ansluten"
 
-#: src/window.rs:2505
+#: src/window.rs:2507
 msgid "Connect a FIDO security key first"
 msgstr ">Anslut en FIDO-säkerhetsnyckel först"
 
-#: src/window.rs:2262
+#: src/window.rs:2264
 msgid "Connect a YubiKey"
 msgstr "Anslut en YubiKey"
 
-#: src/home.rs:158
+#: src/home.rs:160
 msgid "Connect a YubiKey to get started"
 msgstr "Anslut en YubiKey för att komma igång"
 
-#: src/home.rs:124
+#: src/home.rs:126
 msgid "Connect your YubiKey"
 msgstr "Anslut din YubiKey"
 
-#: src/home.rs:243 src/home.rs:315
+#: src/home.rs:245 src/home.rs:317
 msgid "Connected"
 msgstr "Ansluten"
 
-#: src/home.rs:300
+#: src/home.rs:302
 msgid "Connected YubiKeys"
 msgstr "Anslutna YubiKeys"
 
-#: src/window.rs:2699
+#: src/window.rs:2701
 msgid "Continue"
 msgstr "Fortsätt"
 
-#: src/window.rs:3028
+#: src/window.rs:3030
 msgid "Continue to PIN"
 msgstr "Fortsätt till PIN-kod"
 
-#: src/window.rs:1326 src/window.rs:2778
+#: src/window.rs:1328 src/window.rs:2780
 msgid "Copy public key"
 msgstr "Kopiera publik nyckel"
 
@@ -264,11 +264,11 @@ msgstr "Det gick inte att skapa tillfällig Git-signeringsdata: {0}"
 msgid "Could not create {0}: {1}"
 msgstr "Kunde inte skapa {0}: {1}"
 
-#: src/window.rs:2839
+#: src/window.rs:2841
 msgid "Could not export the public key: {0}"
 msgstr "Kunde inte exportera den offentliga nyckeln: {0}"
 
-#: src/window.rs:2337
+#: src/window.rs:2339
 msgid "Could not find security keys"
 msgstr "Kunde inte hitta säkerhetsnycklar"
 
@@ -280,11 +280,11 @@ msgstr "Kunde inte tömma den tillfälliga publika nyckeln: {0}"
 msgid "Could not inspect USB devices: {0}"
 msgstr "Kunde inte inspektera USB-enheter: {0}"
 
-#: src/window.rs:1991
+#: src/window.rs:1993
 msgid "Could not inspect this YubiKey"
 msgstr "Kunde inte inspektera denna YubiKey"
 
-#: src/window.rs:540 src/window.rs:1554 src/window.rs:1734
+#: src/window.rs:540 src/window.rs:1556 src/window.rs:1736
 msgid "Could not list YubiKeys"
 msgstr "Kunde inte lista YubiKeys"
 
@@ -316,7 +316,7 @@ msgstr "Kunde inte köra {0}: {1}"
 msgid "Could not start {0}: {1}"
 msgstr "Kunde inte starta {0}: {1}"
 
-#: src/home.rs:101
+#: src/home.rs:103
 msgid "Could not update security keys"
 msgstr "Kunde inte uppdatera säkerhetsnycklar"
 
@@ -324,32 +324,32 @@ msgstr "Kunde inte uppdatera säkerhetsnycklar"
 msgid "Could not write the temporary public key: {0}"
 msgstr "Kunde inte skriva den tillfälliga publika nyckeln: {0}"
 
-#: src/window.rs:2533
+#: src/window.rs:2535
 msgid "Create"
 msgstr "Skapa"
 
-#: src/window.rs:2507
+#: src/window.rs:2509
 msgid "Create a resident SSH credential on a selected device"
-msgstr "Skapa ett resident SSH-legitimationsuppgift på en vald enhet"
+msgstr "Skapa en enhetslagrad SSH-autentiseringsuppgift på en vald enhet"
 
-#: src/window.rs:2692
+#: src/window.rs:2694
 msgid "Create a resident SSH key"
-msgstr "Skapa en resident SSH-nyckel"
+msgstr "Skapa en enhetslagrad SSH-nyckel"
 
-#: src/window.rs:2501
+#: src/window.rs:2503
 msgid "Create…"
 msgstr "Skapa…"
 
-#: src/window.rs:2962
+#: src/window.rs:2964
 msgid "Deletion result is unknown"
 msgstr "Okänt resultat av borttagning"
 
-#: src/window.rs:1586
+#: src/window.rs:1588
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr ""
 "Inaktiverad · sudo måste autentisera med en YubiKey eller kontolösenord"
 
-#: src/window.rs:2321
+#: src/window.rs:2323
 msgid "Discover SSH keys on your YubiKeys"
 msgstr "Uppdagad SSH-nycklar på dina YubiKeys"
 
@@ -360,11 +360,11 @@ msgstr ""
 "Visningsetikett får vara högst 200 byte och innehåller inga "
 "kontrollkaraktärer."
 
-#: src/window.rs:1222
+#: src/window.rs:1224
 msgid "Do not sign new commits by default"
 msgstr "Signera inte nya incheckningar som standard"
 
-#: src/window.rs:1563
+#: src/window.rs:1565
 msgid ""
 "During enrollment, disconnect all other security keys. The selected key will"
 " blink; touch it to continue. Multiple keys can be enrolled one at a time."
@@ -373,47 +373,47 @@ msgstr ""
 "nyckeln kommer att blinka; tryck på den för att fortsätta. Flera nycklar kan"
 " registreras en efter en."
 
-#: src/window.rs:2610
+#: src/window.rs:2612
 msgid "ECDSA-SK (recommended compatibility)"
 msgstr "ECDSA-SK (rekommenderad kompatibilitet)"
 
-#: src/window.rs:2620
+#: src/window.rs:2622
 msgid "ECDSA-SK works with the widest range of YubiKeys"
 msgstr "ECDSA-SK fungerar med det bredaste utbudet av YubiKeys"
 
-#: src/window.rs:2497
+#: src/window.rs:2499
 msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
 msgstr ""
-"ECDSA-SK · resident · kräver tryckning · säkra standardalternativ för "
+"ECDSA-SK · enhetslagrad · beröring krävs · säkra standardinställningar för "
 "kompatibilitet"
 
-#: src/window.rs:2611
+#: src/window.rs:2613
 msgid "Ed25519-SK (newer YubiKeys)"
 msgstr "Ed25519-SK (nyare YubiKeys)"
 
-#: src/home.rs:374 src/home.rs:393 src/home.rs:421
+#: src/home.rs:376 src/home.rs:395 src/home.rs:423
 msgid "Enabled"
 msgstr "Aktiverad"
 
-#: src/window.rs:1584
+#: src/window.rs:1586
 msgid ""
 "Enabled · programs can obtain administrator privileges without confirmation"
 msgstr ""
 "Aktiverad · program kan erhålla administratörsrättigheter utan bekräftelse"
 
-#: src/window.rs:1610
+#: src/window.rs:1612
 msgid "Enabling passwordless sudo…"
 msgstr "Aktiverar lösenordsfri sudo…"
 
-#: src/window.rs:1612
+#: src/window.rs:1614
 msgid "Enabling sudo authentication…"
 msgstr "Aktiverar sudo-autentisering…"
 
-#: src/window.rs:1670
+#: src/window.rs:1672
 msgid "Enrolled · inactive while sudo authentication is bypassed"
 msgstr "Registrerad · inaktiv medan sudo-autentisering kringgås"
 
-#: src/window.rs:1562
+#: src/window.rs:1564
 msgid "Enrollment safety"
 msgstr "Säkerhet vid registrering"
 
@@ -423,7 +423,7 @@ msgid ""
 msgstr ""
 "Ange FIDO-PIN för {0}. Tryck på den om den blinkar. PIN-koden lagras aldrig."
 
-#: src/window.rs:1419
+#: src/window.rs:1421
 msgid ""
 "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No "
 "commit will be created."
@@ -431,7 +431,7 @@ msgstr ""
 "Ange FIDO-PIN-koden och rör sedan vid den valda YubiKey-enheten när den "
 "blinkar. Ingen commit kommer att skapas."
 
-#: src/window.rs:1172
+#: src/window.rs:1174
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "Ange FIDO-PIN-koden. Tryck på YubiKey om den blinkar."
 
@@ -439,23 +439,23 @@ msgstr "Ange FIDO-PIN-koden. Tryck på YubiKey om den blinkar."
 msgid "Enter the YubiKey FIDO PIN to test this local key handle."
 msgstr "Ange YubiKey:s FIDO-PIN för att testa detta lokala nyckelhandtag."
 
-#: src/window.rs:2531 src/window.rs:2920
+#: src/window.rs:2533 src/window.rs:2922
 msgid "Enter the selected YubiKey FIDO PIN"
 msgstr "Ange FIDO-PIN-koden för den valda YubiKey"
 
-#: src/window.rs:2779
+#: src/window.rs:2781
 msgid "Export .pub"
 msgstr "Exportera .pub"
 
-#: src/window.rs:2821
+#: src/window.rs:2823
 msgid "Export SSH public key"
 msgstr "Exportera SSH-offentlig nyckel"
 
-#: src/window.rs:2745
+#: src/window.rs:2747
 msgid "FIDO PIN"
 msgstr "FIDO-PIN-kod"
 
-#: src/window.rs:1200 src/window.rs:2001 src/window.rs:2506
+#: src/window.rs:1202 src/window.rs:2003 src/window.rs:2508
 msgid "FIDO device discovery is unavailable"
 msgstr "Uppdagande av FIDO-enhet är inte tillgängligt"
 
@@ -463,11 +463,11 @@ msgstr "Uppdagande av FIDO-enhet är inte tillgängligt"
 msgid "FIDO security key"
 msgstr "FIDO-säkerhetsnyckel"
 
-#: src/window.rs:2323
+#: src/window.rs:2325
 msgid "Finish inspecting your YubiKeys"
 msgstr "Avsluta inspektion av dina YubiKeys"
 
-#: src/home.rs:663
+#: src/home.rs:665
 msgid "Firmware {0}"
 msgstr "Mjukvara {0}"
 
@@ -479,11 +479,11 @@ msgstr ""
 "För säker registrering, koppla från alla andra säkerhetsnycklar och låt "
 "endast den valda YubiKey vara ansluten."
 
-#: src/home.rs:419 src/window.rs:112 src/window.rs:161 src/window.rs:239
+#: src/home.rs:421 src/window.rs:112 src/window.rs:161 src/window.rs:239
 msgid "Git signing"
 msgstr "Git-signering"
 
-#: src/window.rs:1311
+#: src/window.rs:1313
 msgid "Git signing is enabled"
 msgstr "Git-signering är aktiverad"
 
@@ -495,19 +495,19 @@ msgstr ""
 "Git-signeringstestet misslyckades:\n"
 "{0}"
 
-#: src/window.rs:1446
+#: src/window.rs:1448
 msgid "Git signing test passed"
 msgstr "Git-signeringstestet lyckades"
 
-#: src/window.rs:1081
+#: src/window.rs:1083
 msgid "Git is not installed"
 msgstr "Git är inte installerat"
 
-#: src/window.rs:1103
+#: src/window.rs:1105
 msgid "The Git installation task stopped unexpectedly."
 msgstr "Git-installationsuppgiften stoppades oväntat."
 
-#: src/window.rs:1082
+#: src/window.rs:1084
 msgid "Git is required for commit signing. Install it to continue."
 msgstr "Git krävs för commit-signering. Installera det för att fortsätta."
 
@@ -515,23 +515,23 @@ msgstr "Git krävs för commit-signering. Installera det för att fortsätta."
 msgid "Home"
 msgstr "Hem"
 
-#: src/window.rs:1473 src/window.rs:1651
+#: src/window.rs:1475 src/window.rs:1653
 msgid "Insert a YubiKey"
 msgstr "Infoga en YubiKey"
 
-#: src/window.rs:1129
+#: src/window.rs:1131
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "Infoga en YubiKey och tryck sedan på Uppdatera."
 
-#: src/window.rs:1785
+#: src/window.rs:1787
 msgid "Insert a YubiKey. This page will detect it when you refresh."
 msgstr "Infoga en YubiKey. Denna sida upptäcker den när du uppdaterar."
 
-#: src/window.rs:738 src/window.rs:1840
+#: src/window.rs:738 src/window.rs:1842
 msgid "Inspect"
 msgstr "Inspektera"
 
-#: src/window.rs:2391
+#: src/window.rs:2393
 msgid "Inspect YubiKey"
 msgstr "Inspektera YubiKey"
 
@@ -539,11 +539,11 @@ msgstr "Inspektera YubiKey"
 msgid "Inspect YubiKey {0} of {1}"
 msgstr "Inspektera YubiKey {0} av {1}"
 
-#: src/window.rs:1838
+#: src/window.rs:1840
 msgid "Inspect again"
 msgstr "Inspektera igen"
 
-#: src/window.rs:2393
+#: src/window.rs:2395
 msgid "Inspect all keys"
 msgstr "Inspektera alla nycklar"
 
@@ -551,11 +551,11 @@ msgstr "Inspektera alla nycklar"
 msgid "Inspect this YubiKey"
 msgstr "Inspektera denna YubiKey"
 
-#: src/window.rs:1831
+#: src/window.rs:1833
 msgid "Inspected"
 msgstr "Inspekterad"
 
-#: src/window.rs:1821
+#: src/window.rs:1823
 msgid "Inspection needs attention · {0}"
 msgstr "Inspektion kräver uppmärksamhet · {0}"
 
@@ -563,51 +563,51 @@ msgstr "Inspektion kräver uppmärksamhet · {0}"
 msgid "Invalid FIDO device path."
 msgstr "Ogiltig sökväg för FIDO-enhet."
 
-#: src/window.rs:1777
+#: src/window.rs:1779
 msgid "Keys stored on your YubiKeys"
 msgstr "Nycklar som lagras på dina YubiKeys"
 
-#: src/window.rs:1173 src/window.rs:1880
+#: src/window.rs:1175 src/window.rs:1882
 msgid "Load"
 msgstr "Ladda"
 
-#: src/window.rs:1171
+#: src/window.rs:1173
 msgid "Load SSH keys"
 msgstr "Ladda SSH-nycklar"
 
-#: src/window.rs:1864
+#: src/window.rs:1866
 msgid "Load all"
 msgstr "Ladda alla"
 
-#: src/window.rs:1157
+#: src/window.rs:1159
 msgid "Load keys"
 msgstr "Ladda nycklar"
 
-#: src/window.rs:1878
+#: src/window.rs:1880
 msgid "Load resident SSH keys"
-msgstr "Ladda boende SSH-nycklar"
+msgstr "Läs in enhetslagrade SSH-nycklar"
 
-#: src/window.rs:1866
+#: src/window.rs:1868
 msgid "Load this YubiKey's resident SSH keys into the agent"
-msgstr "Ladda in boende SSH-nycklar från denna YubiKey till agenten"
+msgstr "Läs in den här YubiKey-enhetens lagrade SSH-nycklar i SSH-agenten"
 
-#: src/window.rs:1257
+#: src/window.rs:1259
 msgid "Load this resident key into the SSH agent before signing"
-msgstr "Ladda in denna inhemska nyckel i SSH-agenten innan signering"
+msgstr "Läs in den här enhetslagrade nyckeln i SSH-agenten före signering"
 
-#: src/window.rs:1923
+#: src/window.rs:1925
 msgid "Loaded"
 msgstr "Lastad"
 
-#: src/window.rs:1182
+#: src/window.rs:1184
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "Laddar SSH-nycklar… Tryck på YubiKey om den blinkar."
 
-#: src/window.rs:2633
+#: src/window.rs:2635
 msgid "Local key handle path"
 msgstr "Sökväg för lokal nyckelhanterare"
 
-#: src/window.rs:2605
+#: src/window.rs:2607
 msgid "Local key label"
 msgstr "Etikett för lokal nyckel"
 
@@ -615,71 +615,72 @@ msgstr "Etikett för lokal nyckel"
 msgid "Looking for your SSH agent and connected YubiKeys."
 msgstr "Söker efter din SSH-agent och anslutna YubiKeys."
 
-#: src/window.rs:1832 src/window.rs:2124
+#: src/window.rs:1834 src/window.rs:2126
 msgid "Needs attention"
 msgstr "Kräver uppmärksamhet"
 
-#: src/window.rs:2496
+#: src/window.rs:2498
 msgid "New hardware-backed SSH key"
 msgstr "Ny hårdvarubaserad SSH-nyckel"
 
-#: src/window.rs:1128
+#: src/window.rs:1130
 msgid "No FIDO security key detected"
 msgstr "Ingen FIDO-säkerhetsnyckel upptäcktes"
 
-#: src/window.rs:2037
+#: src/window.rs:2039
 msgid "No SSH agent was detected"
 msgstr "Ingen SSH-agent upptäcktes"
 
-#: src/window.rs:1784
+#: src/window.rs:1786
 msgid "No YubiKey connected"
 msgstr "Ingen YubiKey ansluten"
 
-#: src/home.rs:653
+#: src/home.rs:655
 msgid "No hardware serial"
 msgstr "Ingen hårdvaruserienummer"
 
-#: src/window.rs:1930
+#: src/window.rs:1932
 msgid "No resident SSH keys"
-msgstr "Inga boende SSH-nycklar"
+msgstr "Inga enhetslagrade SSH-nycklar"
 
-#: src/window.rs:1144
+#: src/window.rs:1146
 msgid "No resident SSH keys found"
-msgstr "Inga boende SSH-nycklar hittades"
+msgstr "Inga enhetslagrade SSH-nycklar hittades"
 
-#: src/window.rs:1811
+#: src/window.rs:1813
 msgid "No resident SSH keys found · {0}"
-msgstr "Inga boende SSH-nycklar hittades · {0}"
+msgstr "Inga enhetslagrade SSH-nycklar hittades · {0}"
 
-#: src/window.rs:2302
+#: src/window.rs:2304
 msgid "No resident SSH keys were found on the connected YubiKeys."
-msgstr "Inga boende SSH-nycklar hittades på de anslutna YubiKeys."
+msgstr ""
+"Inga enhetslagrade SSH-nycklar hittades på de anslutna YubiKey-enheterna."
 
-#: src/window.rs:1221
+#: src/window.rs:1223
 msgid "No signing"
 msgstr "Ingen signering"
 
-#: src/home.rs:376 src/home.rs:395 src/home.rs:423
+#: src/home.rs:378 src/home.rs:397 src/home.rs:425
 msgid "Not configured"
 msgstr "Inte konfigurerad"
 
-#: src/window.rs:1833
+#: src/window.rs:1835
 msgid "Not inspected"
 msgstr "Inte inspekterad"
 
-#: src/window.rs:1823
+#: src/window.rs:1825
 msgid "Not inspected yet · {0}"
 msgstr "Inte inspekterad ännu · {0}"
 
-#: src/home.rs:174
+#: src/home.rs:176
 msgid "Open the official Yubico Store"
 msgstr "Öppna den officiella Yubico-butiken"
 
-#: src/window.rs:1089 src/window.rs:1111
+#: src/window.rs:1091 src/window.rs:1113
 msgid "Install Git"
 msgstr "Installera Git"
 
-#: src/window.rs:1096
+#: src/window.rs:1098
 msgid "Installing Git…"
 msgstr "Installerar Git…"
 
@@ -688,15 +689,15 @@ msgid ""
 "OpenSSH could not load resident keys. The SSH agent contains no newly loaded"
 " identity."
 msgstr ""
-"OpenSSH kunde inte ladda boende nycklar. SSH-agenten innehåller inga nyligen"
-" laddade identiteter."
+"OpenSSH kunde inte läsa in de enhetslagrade nycklarna. SSH-agenten "
+"innehåller ingen nyligen inläst identitet."
 
 #: src/ssh.rs:574
 msgid ""
 "OpenSSH could not load resident keys:\n"
 "{0}"
 msgstr ""
-"OpenSSH kunde inte läsa in inhemska nycklar:\n"
+"OpenSSH kunde inte läsa in de enhetslagrade nycklarna:\n"
 "{0}"
 
 #: src/ssh.rs:287
@@ -704,7 +705,7 @@ msgid ""
 "OpenSSH did not create a resident key:\n"
 "{0}"
 msgstr ""
-"OpenSSH skapade ingen inhemsk nyckel:\n"
+"OpenSSH skapade ingen enhetslagrad nyckel:\n"
 "{0}"
 
 #: src/ssh.rs:270
@@ -720,44 +721,46 @@ msgid ""
 "OpenSSH reported success, but no new resident credential was detected. Do "
 "not retry until you inspect the YubiKey."
 msgstr ""
-"OpenSSH rapporterade framgång, men ingen ny boende uppgift detekterades. "
-"Försök inte igen förrän du har inspekterat YubiKey."
+"OpenSSH rapporterade att åtgärden lyckades, men ingen ny enhetslagrad "
+"autentiseringsuppgift upptäcktes. Försök inte igen förrän du har granskat "
+"YubiKey-enheten."
 
-#: src/window.rs:2668
+#: src/window.rs:2670
 msgid "OpenSSH/FIDO credential metadata and local file location"
 msgstr "Metadata för OpenSSH/FIDO-uppgifter och plats för lokal fil"
 
-#: src/home.rs:391
+#: src/home.rs:393
 msgid "Passwordless"
 msgstr "Lösenordsfri"
 
-#: src/window.rs:2922
+#: src/window.rs:2924
 msgid "Permanently delete"
 msgstr "Ta bort permanent"
 
-#: src/window.rs:2782
+#: src/window.rs:2784
 msgid "Permanently delete from YubiKey…"
 msgstr "Ta bort permanent från YubiKey…"
 
-#: src/window.rs:3021
+#: src/window.rs:3023
 msgid "Permanently delete this resident SSH credential?"
-msgstr "Vill du ta bort denna boende SSH-legitimering permanent?"
+msgstr ""
+"Vill du ta bort den här enhetslagrade SSH-autentiseringsuppgiften permanent?"
 
-#: src/home.rs:342
+#: src/home.rs:344
 msgid "Protect authentication and commit signing"
 msgstr "Skydda autentisering och signering av commits"
 
-#: src/home.rs:193 src/home.rs:288
+#: src/home.rs:195 src/home.rs:290
 msgid "Protection for {0}"
 msgstr "Skydd för {0}"
 
-#: src/window.rs:2325
+#: src/window.rs:2327
 msgid ""
 "Read the resident SSH keys already stored on your YubiKeys. You will enter "
 "each key's FIDO PIN and may need to touch it."
 msgstr ""
-"Läs de boende SSH-nycklar som redan lagras på dina YubiKeys. Du kommer att "
-"ange varje nyckels FIDO-PIN och kan behöva trycka på den."
+"Läs de enhetslagrade SSH-nycklar som redan finns på dina YubiKey-enheter. "
+"Ange FIDO-PIN-koden för varje nyckel och vidrör den vid behov."
 
 #: src/window.rs:748
 msgid "Reading SSH keys from {0}… Touch it if it flashes."
@@ -767,15 +770,15 @@ msgstr "Läser SSH-nycklar från {0}… Tryck på den om den blinkar."
 msgid "Reading account security settings…"
 msgstr "Läser in kontons säkerhetsinställningar…"
 
-#: src/window.rs:2028 src/window.rs:2314
+#: src/window.rs:2030 src/window.rs:2316
 msgid "Ready"
 msgstr "Klar"
 
-#: src/home.rs:366
+#: src/home.rs:368
 msgid "Ready to inspect"
 msgstr "Redo att inspektera"
 
-#: src/home.rs:266
+#: src/home.rs:268
 msgid "Ready to protect {0}"
 msgstr "Redo att skydda {0}"
 
@@ -783,72 +786,73 @@ msgstr "Redo att skydda {0}"
 msgid "Refresh connected YubiKeys"
 msgstr "Uppdatera anslutna YubiKeys"
 
-#: src/window.rs:2781
+#: src/window.rs:2783
 msgid "Remove from agent"
 msgstr "Ta bort från agenten"
 
-#: src/window.rs:2882
+#: src/window.rs:2884
 msgid "Removing this key from the SSH agent…"
 msgstr "Tar bort denna nyckel från SSH-agenten…"
 
-#: src/window.rs:2662
+#: src/window.rs:2664
 msgid "Require verification for every signature"
 msgstr "Krav på verifiering för varje signatur"
 
-#: src/window.rs:2663
+#: src/window.rs:2665
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "Kräver FIDO-PIN varje gång denna nyckel signerar"
 
-#: src/window.rs:2561
+#: src/window.rs:2563
 msgid "Resident SSH key created"
-msgstr "Boende SSH-nyckel skapad"
+msgstr "Enhetslagrad SSH-nyckel skapades"
 
-#: src/window.rs:2955
+#: src/window.rs:2957
 msgid "Resident credential permanently deleted"
-msgstr "Boende legitimationsuppgift har tagits bort permanent"
+msgstr "Den enhetslagrade autentiseringsuppgiften togs bort permanent"
 
-#: src/window.rs:1907
+#: src/window.rs:1909
 msgid "Resident keys loaded"
-msgstr "Boende nycklar laddade"
+msgstr "Enhetslagrade nycklar lästes in"
 
-#: src/window.rs:2629
+#: src/window.rs:2631
 msgid "Resident username"
-msgstr "Boende användarnamn"
+msgstr "Användarnamn för lagrad autentiseringsuppgift"
 
 #: src/ssh.rs:458
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr ""
-"Boende användarnamn måste innehålla 1–64 byte och inga kontrolltecken."
+"Användarnamnet för den lagrade autentiseringsuppgiften måste bestå av 1–64 "
+"byte och får inte innehålla några kontrolltecken."
 
-#: src/home.rs:341
+#: src/home.rs:343
 msgid "SSH & Git"
 msgstr "SSH och Git"
 
-#: src/window.rs:2010
+#: src/window.rs:2012
 msgid "SSH agent"
 msgstr "SSH-agent"
 
-#: src/window.rs:2018
+#: src/window.rs:2020
 msgid "SSH agent is ready"
 msgstr "SSH-agenten är klar"
 
-#: src/window.rs:2033
+#: src/window.rs:2035
 msgid "SSH agent unavailable"
 msgstr "SSH-agent otillgänglig"
 
-#: src/home.rs:426
+#: src/home.rs:428
 msgid "SSH commit signing"
 msgstr "SSH signering av commits"
 
-#: src/window.rs:2797
+#: src/window.rs:2799
 msgid "SSH key actions"
 msgstr "SSH-nyckelåtgärder"
 
-#: src/window.rs:2461
+#: src/window.rs:2463
 msgid "SSH key for {0}"
 msgstr "SSH-nyckel för {0}"
 
-#: src/home.rs:410 src/window.rs:111 src/window.rs:157 src/window.rs:238
+#: src/home.rs:412 src/window.rs:111 src/window.rs:157 src/window.rs:238
 msgid "SSH keys"
 msgstr "SSH-nycklar"
 
@@ -856,7 +860,7 @@ msgstr "SSH-nycklar"
 msgid "SSH_AUTH_SOCK is not set"
 msgstr "SSH_AUTH_SOCK är inte inställt"
 
-#: src/window.rs:2693
+#: src/window.rs:2695
 msgid ""
 "Safe defaults use ECDSA-SK, require touch, and store a discoverable "
 "credential on the selected YubiKey."
@@ -864,7 +868,7 @@ msgstr ""
 "Säkra standardvärden använder ECDSA-SK, kräver beröring och lagrar en "
 "upptäckningsbar uppgift på det valda YubiKey."
 
-#: src/home.rs:337
+#: src/home.rs:339
 msgid "Secure sudo authorization"
 msgstr "Säker sudo-autorisering"
 
@@ -872,11 +876,11 @@ msgstr "Säker sudo-autorisering"
 msgid "Security Center"
 msgstr "Säkerhetscenter"
 
-#: src/home.rs:655
+#: src/home.rs:657
 msgid "Serial {0}"
 msgstr "Serienummer {0}"
 
-#: src/home.rs:132
+#: src/home.rs:134
 msgid ""
 "Sign in, authorize sudo, and protect SSH and Git identities with a physical "
 "touch."
@@ -884,11 +888,11 @@ msgstr ""
 "Logga in, auktorisera sudo och skydda SSH- och Git-identiteter med ett "
 "fysiskt tryck."
 
-#: src/home.rs:331 src/home.rs:372 src/home.rs:614
+#: src/home.rs:333 src/home.rs:374 src/home.rs:616
 msgid "Sign-in"
 msgstr "Inloggning"
 
-#: src/window.rs:2863
+#: src/window.rs:2865
 msgid "Signing test passed"
 msgstr "Signeringstestet lyckades"
 
@@ -896,15 +900,15 @@ msgstr "Signeringstestet lyckades"
 msgid "Temporary public-key path is invalid."
 msgstr "Tillfällig sökväg för nyckel är ogiltig."
 
-#: src/window.rs:1420
+#: src/window.rs:1422
 msgid "Test"
 msgstr "Test"
 
-#: src/window.rs:1418
+#: src/window.rs:1420
 msgid "Test Git signing"
 msgstr "Testa Git-signering"
 
-#: src/window.rs:1345 src/window.rs:2780
+#: src/window.rs:1347 src/window.rs:2782
 msgid "Test signing"
 msgstr "Testsignering"
 
@@ -916,11 +920,11 @@ msgstr ""
 "FIDO-registreringsverktyget är inte installerat. Installera paketet "
 "libpam-u2f och försök igen."
 
-#: src/window.rs:1879
+#: src/window.rs:1881
 msgid "The PIN is sent directly to ssh-add and is never stored."
 msgstr "PIN-koden skickas direkt till ssh-add och lagras aldrig."
 
-#: src/window.rs:2532
+#: src/window.rs:2534
 msgid ""
 "The PIN is sent through a private pipe to OpenSSH. It is never stored or "
 "placed in command arguments."
@@ -928,7 +932,7 @@ msgstr ""
 "PIN-koden skickas genom ett privat rör till OpenSSH. Den lagras aldrig eller"
 " placeras i kommandoradsargument."
 
-#: src/window.rs:2864
+#: src/window.rs:2866
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "SSH-agenten signerade och verifierade data med denna nyckel."
 
@@ -936,7 +940,7 @@ msgstr "SSH-agenten signerade och verifierade data med denna nyckel."
 msgid "The YubiKey operation stopped unexpectedly."
 msgstr "YubiKey-operationen stoppades oväntat."
 
-#: src/window.rs:2598
+#: src/window.rs:2600
 msgid "The credential will be created only on this exact device"
 msgstr "Credentialen skapas endast på just den här enheten"
 
@@ -948,25 +952,25 @@ msgstr ""
 "Borttagningskommandot slutfördes, men den valda YubiKey:n kunde inte inspekteras efteråt: {0}\n"
 "Legitimeringen kan ha tagits bort eller inte. Försök inte igen. Anslut om och inspektera YubiKey:n först."
 
-#: src/window.rs:541 src/window.rs:1536 src/window.rs:1716
+#: src/window.rs:541 src/window.rs:1538 src/window.rs:1718
 msgid "The enrollment task failed."
 msgstr "Registreringsuppgiften misslyckades."
 
-#: src/window.rs:2956
+#: src/window.rs:2958
 msgid ""
 "The exact resident credential is no longer present on the selected YubiKey. "
 "Local .pub or key-handle files and any SSH-agent entry were not removed."
 msgstr ""
-"De exakta boende legitimationsuppgifterna finns inte längre på den valda "
-"YubiKey:n. Lokala .pub-filer eller nyckelhanteringsfiler och eventuella SSH-"
-"agent-poster togs inte bort."
+"Den exakta enhetslagrade autentiseringsuppgiften finns inte längre på vald "
+"YubiKey. Lokala .pub-filer eller nyckelreferensfiler och en eventuell post i"
+" SSH-agenten togs inte bort."
 
-#: src/window.rs:1903
+#: src/window.rs:1905
 msgid ""
 "The inspected resident SSH credentials are already available in this agent."
 msgstr ""
-"Den inspicerade resident-SSH-credentialen finns redan tillgänglig i denna "
-"agent."
+"De granskade enhetslagrade SSH-autentiseringsuppgifterna är redan "
+"tillgängliga i den här SSH-agenten."
 
 #: src/ssh.rs:627
 msgid "The local SSH key-handle path is invalid."
@@ -980,7 +984,7 @@ msgstr "Sökvägen för det lokala SSH-nyckelhandtaget är inte giltig UTF-8."
 msgid "The local key path must be absolute."
 msgstr "Sökvägen för den lokala nyckeln måste vara absolut."
 
-#: src/window.rs:2563
+#: src/window.rs:2565
 msgid ""
 "The non-exportable private key remains protected by the selected YubiKey.\n"
 "\n"
@@ -994,15 +998,15 @@ msgid ""
 "\n"
 "The key is not automatically loaded into the SSH agent."
 msgstr ""
-"Den icke-exporterbara privata nyckeln skyddas fortfarande av den valda YubiKey.\n"
+"Den privata nyckeln kan inte exporteras och skyddas fortfarande av vald YubiKey.\n"
 "\n"
-"Algorithm: {0}\n"
-"Application: {1}\n"
-"Resident username: {2}\n"
-"Fingerprint: {3}\n"
+"Algoritm: {0}\n"
+"Program: {1}\n"
+"Användarnamn för lagrad autentiseringsuppgift: {2}\n"
+"Fingeravtryck: {3}\n"
 "\n"
-"Local key handle: {4}\n"
-"Public key: {5}\n"
+"Lokal nyckelreferens: {4}\n"
+"Offentlig nyckel: {5}\n"
 "\n"
 "Nyckeln läses inte automatiskt in i SSH-agenten."
 
@@ -1017,36 +1021,42 @@ msgstr "Utmappningen finns inte: {0}"
 #: src/ssh.rs:317
 msgid "The resident credential ID is invalid. Refresh before deleting."
 msgstr ""
-"ID:t för den boende legitimationsuppgiften är ogiltigt. Uppdatera innan du "
-"tar bort."
+"Identifieraren för den enhetslagrade autentiseringsuppgiften är ogiltig. "
+"Uppdatera innan du tar bort den."
 
 #: src/ssh.rs:744
 msgid "The resident credential did not return a public key."
-msgstr "Den resident-credentialen returnerade ingen offentlig nyckel."
+msgstr ""
+"Den enhetslagrade autentiseringsuppgiften returnerade ingen offentlig "
+"nyckel."
 
 #: src/ssh.rs:382
 msgid ""
 "The resident credential is still present. Deletion was not completed: {0}"
 msgstr ""
-"Den boende legitimationsuppgiften finns fortfarande kvar. Borttagningen "
-"slutfördes inte: {0}"
+"Den enhetslagrade autentiseringsuppgiften finns fortfarande kvar. "
+"Borttagningen slutfördes inte: {0}"
 
 #: src/ssh.rs:749
 msgid "The resident credential returned an incomplete public key."
 msgstr ""
-"Den resident-credentialen returnerade en ofullständig offentlig nyckel."
+"Den enhetslagrade autentiseringsuppgiften returnerade en ofullständig "
+"offentlig nyckel."
 
 #: src/ssh.rs:756
 msgid "The resident credential returned malformed PEM data."
-msgstr "Den resident-credentialen returnerade felaktig PEM-data."
+msgstr ""
+"Den enhetslagrade autentiseringsuppgiften returnerade felaktigt formaterade "
+"PEM-data."
 
 #: src/ssh.rs:296
 msgid ""
 "The resident credential {0} exists on the YubiKey, but its local handle "
 "files are incomplete. Do not retry creation."
 msgstr ""
-"Den resident-credentialen {0} finns på YubiKey, men dess lokala "
-"hanteringsfiler är ofullständiga. Försök inte skapa igen."
+"Den enhetslagrade autentiseringsuppgiften {0} finns på YubiKey-enheten, men "
+"dess lokala nyckelreferensfiler är ofullständiga. Försök inte skapa den "
+"igen."
 
 #: src/ssh.rs:282
 msgid ""
@@ -1054,9 +1064,9 @@ msgid ""
 "{1}\n"
 "Do not retry creation. Inspect the key and preserve any local files that were written."
 msgstr ""
-"De inhemska uppgifterna {0} skapades på YubiKey, men OpenSSH slutförde inte framgångsrikt:\n"
+"Den enhetslagrade autentiseringsuppgiften {0} skapades på YubiKey-enheten, men OpenSSH slutförde inte åtgärden:\n"
 "{1}\n"
-"Försök inte skapa igen. Inspektera nyckeln och bevara eventuella lokala filer som skrivits."
+"Försök inte skapa den igen. Granska nyckeln och behåll alla lokala filer som skrevs."
 
 #: src/backend.rs:303 src/backend.rs:312
 msgid "The security key returned an invalid PAM credential."
@@ -1076,7 +1086,7 @@ msgid ""
 msgstr ""
 "Den valda FIDO-enheten är inte längre ansluten. Uppdatera och försök igen."
 
-#: src/window.rs:1447
+#: src/window.rs:1449
 msgid ""
 "The selected credential created a valid Git-format SSH signature. No "
 "repository or commit was changed."
@@ -1094,22 +1104,22 @@ msgid ""
 "The selected resident credential changed since it was inspected. Nothing was"
 " deleted; refresh and verify the key."
 msgstr ""
-"De valda boende legitimationsuppgifterna har ändrats sedan de inspekterades."
-" Ingenting togs bort; uppdatera och verifiera nyckeln."
+"Den valda enhetslagrade autentiseringsuppgiften har ändrats sedan den "
+"granskades. Inget togs bort. Uppdatera och verifiera nyckeln."
 
 #: src/ssh.rs:335
 msgid ""
 "The selected resident credential is no longer present on this YubiKey. "
 "Nothing was deleted."
 msgstr ""
-"Den valda boende legitimationsuppgiften finns inte längre på denna YubiKey. "
-"Ingenting togs bort."
+"Den valda enhetslagrade autentiseringsuppgiften finns inte längre på denna "
+"YubiKey. Inget togs bort."
 
 #: src/ssh.rs:672
 msgid "The signature was created but could not be verified: {0}"
 msgstr "Signaturen skapades men kunde inte verifieras: {0}"
 
-#: src/window.rs:1618
+#: src/window.rs:1620
 msgid "The sudo policy task failed."
 msgstr "Sudo-policyuppgiften misslyckades."
 
@@ -1121,13 +1131,13 @@ msgstr "Sökvägen för den tillfälliga Git-signaturen är ogiltig."
 msgid "The temporary Git signing path is invalid."
 msgstr "Sökvägen för den tillfälliga Git-signeringen är ogiltig."
 
-#: src/home.rs:597
+#: src/home.rs:599
 msgid ""
 "These keys are trusted by this account but are not currently connected."
 msgstr ""
 "Dessa nycklar litar på detta konto men är inte för närvarande anslutna."
 
-#: src/window.rs:2921
+#: src/window.rs:2923
 msgid ""
 "This PIN authorizes permanent deletion of the exact credential shown in the "
 "previous step. It is never stored."
@@ -1135,7 +1145,7 @@ msgstr ""
 "Denna PIN-kod godkänner permanent borttagning av den exakta "
 "legitimationsuppgift som visas i föregående steg. Den lagras aldrig."
 
-#: src/window.rs:1931
+#: src/window.rs:1933
 msgid "This YubiKey has no discoverable ssh:* credentials."
 msgstr "Denna YubiKey har inga upptäckbara ssh:*-inloggningsuppgifter."
 
@@ -1144,7 +1154,7 @@ msgid "This is not a supported OpenSSH security-key public key."
 msgstr ""
 "Detta är inte en supporterad offentligt nyckel för OpenSSH-säkerhetsnyckel."
 
-#: src/window.rs:3022
+#: src/window.rs:3024
 msgid ""
 "This removes the private credential from the selected YubiKey and cannot be "
 "undone. It does not remove local files or an identity already loaded in the "
@@ -1154,22 +1164,22 @@ msgstr ""
 "och kan inte ångras. Det tar inte bort lokala filer eller en identitet som "
 "redan laddats i SSH-agenten."
 
-#: src/window.rs:1579
+#: src/window.rs:1581
 msgid "This setting applies only to the current user."
 msgstr "Denna inställning gäller endast för den aktuella användaren."
 
-#: src/home.rs:66
+#: src/home.rs:68
 msgid "This will only take a moment."
 msgstr "Detta kommer bara att ta en stund."
 
-#: src/window.rs:1888
+#: src/window.rs:1890
 msgid ""
 "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr ""
-"Berör YubiKey när du uppmanas att göra det. Laddar in resident-nycklar till "
+"Vidrör YubiKey-enheten när du uppmanas. Enhetslagrade nycklar läses in i "
 "SSH-agenten…"
 
-#: src/window.rs:1433
+#: src/window.rs:1435
 msgid ""
 "Touch the YubiKey. Creating and verifying a temporary Git-format SSH "
 "signature…"
@@ -1177,39 +1187,39 @@ msgstr ""
 "Rör vid YubiKey-enheten. Skapar och verifierar en tillfällig SSH-signatur i "
 "Git-format…"
 
-#: src/window.rs:2856
+#: src/window.rs:2858
 msgid "Touch the YubiKey. Testing SSH signing and verification…"
 msgstr "Berör YubiKey. Testar SSH-signering och verifiering…"
 
-#: src/window.rs:2544
+#: src/window.rs:2546
 msgid ""
 "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not "
 "remove the key."
 msgstr ""
-"Berör den valda YubiKey. Skapar en SSH-resident-nyckel på {0}… Ta inte bort "
+"Vidrör vald YubiKey. En enhetslagrad SSH-nyckel skapas på {0}… Ta inte bort "
 "nyckeln."
 
-#: src/window.rs:1496
+#: src/window.rs:1498
 msgid "Touch this key when prompted to enroll it"
 msgstr "Berör denna nyckel när du uppmanas att registrera den"
 
-#: src/window.rs:1676
+#: src/window.rs:1678
 msgid "Touch this key when prompted to enroll it for sudo"
 msgstr "Berör denna nyckel när du uppmanas att registrera den för sudo"
 
-#: src/window.rs:1527 src/window.rs:1707
+#: src/window.rs:1529 src/window.rs:1709
 msgid "Touch your security key to continue."
 msgstr "Tryck på säkerhetsnyckeln för att fortsätta."
 
-#: src/home.rs:93
+#: src/home.rs:95
 msgid "Try Again"
 msgstr "Försök igen"
 
-#: src/window.rs:3008
+#: src/window.rs:3010
 msgid "Type {0} to confirm"
 msgstr "Skriv {0} för att bekräfta"
 
-#: src/window.rs:688 src/window.rs:2039 src/window.rs:2340
+#: src/window.rs:688 src/window.rs:2041 src/window.rs:2342
 msgid "Unavailable"
 msgstr "Icke tillgänglig"
 
@@ -1225,59 +1235,59 @@ msgstr "Lås upp GDM"
 msgid "Unlock sudo"
 msgstr "Lås upp sudo"
 
-#: src/window.rs:1463
+#: src/window.rs:1465
 msgid "Unlock the current user"
 msgstr "Lås upp den aktuella användaren"
 
-#: src/home.rs:332
+#: src/home.rs:334
 msgid "Unlock your account with a touch"
 msgstr "Lås upp ditt konto med ett tryck"
 
-#: src/ssh.rs:735 src/window.rs:1251 src/window.rs:2467 src/window.rs:2987
+#: src/ssh.rs:735 src/window.rs:1253 src/window.rs:2469 src/window.rs:2989
 msgid "Unnamed SSH credential"
 msgstr "Namnlös SSH-legitimeringsuppgift"
 
 #: src/ssh.rs:782
 msgid "Unsupported resident SSH public-key algorithm."
-msgstr "Icke-stödd algoritm för lokal SSH-offentlig nyckel."
+msgstr "Algoritmen för den enhetslagrade offentliga SSH-nyckeln stöds inte."
 
-#: src/window.rs:1397
+#: src/window.rs:1399
 msgid "Updating Git commit signing…"
 msgstr "Uppdaterar signering av Git-commit…"
 
-#: src/window.rs:1529
+#: src/window.rs:1531
 msgid "Updating sign-in settings…"
 msgstr "Uppdaterar inloggningsinställningar…"
 
-#: src/window.rs:1709
+#: src/window.rs:1711
 msgid "Updating sudo settings…"
 msgstr "Uppdaterar sudo-inställningar…"
 
-#: src/window.rs:1635
+#: src/window.rs:1637
 msgid "Use YubiKey to unlock sudo"
 msgstr "Använd YubiKey för att låsa upp sudo"
 
-#: src/window.rs:2934
+#: src/window.rs:2936
 msgid ""
 "Verifying and permanently deleting the selected resident credential. Do not "
 "unplug the YubiKey…"
 msgstr ""
-"Verifierar och tar permanent bort den valda boende legitimationsuppgiften. "
-"Dra inte ur YubiKey:n…"
+"Den valda enhetslagrade autentiseringsuppgiften verifieras och tas bort "
+"permanent. Koppla inte från YubiKey-enheten…"
 
 #: src/window.rs:695
 msgid "View in App Store"
 msgstr "Visa i appbutiken"
 
-#: src/window.rs:2267
+#: src/window.rs:2269
 msgid "Waiting"
 msgstr "Väntar"
 
-#: src/home.rs:156
+#: src/home.rs:158
 msgid "Waiting for a configured YubiKey"
 msgstr "Väntar på en konfigurerad YubiKey"
 
-#: src/window.rs:1637
+#: src/window.rs:1639
 msgid ""
 "You may enroll keys now, but sudo bypasses PAM while passwordless access is "
 "enabled."
@@ -1285,23 +1295,23 @@ msgstr ""
 "Du kan registrera nycklar nu, men sudo kringgår PAM när lösenordslös åtkomst"
 " är aktiverat."
 
-#: src/window.rs:2297
+#: src/window.rs:2299
 msgid "Your YubiKeys are inspected"
 msgstr "Dina YubiKeys är inspekterade"
 
-#: src/window.rs:2299
+#: src/window.rs:2301
 msgid "Your hardware-backed SSH keys"
 msgstr "Dina hårdvarubaserade SSH-nycklar"
 
-#: src/window.rs:2263
+#: src/window.rs:2265
 msgid ""
 "Your resident SSH keys stay on the security key. Insert it to view and use "
 "them."
 msgstr ""
-"Dina boende SSH-nycklar förblir på säkerhetsnyckeln. Infoga den för att visa"
-" och använda dem."
+"Dina enhetslagrade SSH-nycklar finns kvar på säkerhetsnyckeln. Anslut den "
+"för att visa och använda dem."
 
-#: src/home.rs:130
+#: src/home.rs:132
 msgid ""
 "Your security settings are ready. Connect a configured YubiKey when you need"
 " it."
@@ -1309,31 +1319,31 @@ msgstr ""
 "Dina säkerhetsinställningar är klara. Anslut en konfigurerad YubiKey när du "
 "behöver den."
 
-#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1755 src/window.rs:2597
+#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1757 src/window.rs:2599
 msgid "YubiKey"
 msgstr "YubiKey"
 
-#: src/window.rs:3088
+#: src/window.rs:3090
 msgid "YubiKey configuration failed"
 msgstr "Konfigurationen av YubiKey misslyckades"
 
-#: src/home.rs:251
+#: src/home.rs:253
 msgid "YubiKey connected"
 msgstr "YubiKey ansluten"
 
-#: src/home.rs:379 src/home.rs:400
+#: src/home.rs:381 src/home.rs:402
 msgid "YubiKey or account password"
 msgstr "YubiKey eller kontrollösenord"
 
-#: src/home.rs:622
+#: src/home.rs:624
 msgid "YubiKey without hardware serial"
 msgstr "YubiKey utan hårdvaruserienummer"
 
-#: src/home.rs:624
+#: src/home.rs:626
 msgid "YubiKey · Serial {0}"
 msgstr "YubiKey · Serienummer {0}"
 
-#: src/window.rs:2993
+#: src/window.rs:2995
 msgid ""
 "YubiKey: {0}\n"
 "Device: {1}\n"
@@ -1344,16 +1354,16 @@ msgid ""
 msgstr ""
 "YubiKey: {0}\n"
 "Enhet: {1}\n"
-"Applikation: {2}\n"
-"Boende användarnamn: {3}\n"
+"Program: {2}\n"
+"Användarnamn för lagrad autentiseringsuppgift: {3}\n"
 "Algoritm: {4}\n"
 "Fingeravtryck: {5}"
 
-#: src/window.rs:1124
+#: src/window.rs:1126
 msgid "YubiKeys"
 msgstr "YubiKeys"
 
-#: src/window.rs:1955
+#: src/window.rs:1957
 msgid "agent"
 msgstr "agent"
 
@@ -1362,15 +1372,15 @@ msgid ""
 "fido2-token reported success, but the resident credential is still present. "
 "Do not retry until you refresh and inspect the YubiKey."
 msgstr ""
-"fido2-token rapporterade framgång, men den boende legitimationsuppgiften "
-"finns fortfarande kvar. Försök inte igen förrän du har uppdaterat och "
-"inspekterat YubiKey:n."
+"fido2-token rapporterade att åtgärden lyckades, men den enhetslagrade "
+"autentiseringsuppgiften finns fortfarande kvar. Försök inte igen förrän du "
+"har uppdaterat och granskat YubiKey-enheten."
 
-#: src/home.rs:398
+#: src/home.rs:400
 msgid "sudo authentication is bypassed"
 msgstr "sudo-autentisering kringgås"
 
-#: src/window.rs:1578
+#: src/window.rs:1580
 msgid "sudo authentication policy"
 msgstr "sudo-autenticeringspolicy"
 
@@ -1378,15 +1388,15 @@ msgstr "sudo-autenticeringspolicy"
 msgid "unknown"
 msgstr "okänd"
 
-#: src/window.rs:2519
+#: src/window.rs:2521
 msgid "user"
 msgstr "användare"
 
-#: src/window.rs:1146
+#: src/window.rs:1148
 msgid "{0} SSH keys loaded"
 msgstr "{0} SSH-nycklar inlästa"
 
-#: src/home.rs:254
+#: src/home.rs:256
 msgid "{0} YubiKeys connected"
 msgstr "{0} YubiKeys anslutna"
 
@@ -1398,51 +1408,53 @@ msgstr "{0} avslutades med {1}"
 msgid "{0} failed: {1}"
 msgstr "{0} misslyckades: {1}"
 
-#: src/window.rs:2023
+#: src/window.rs:2025
 msgid "{0} identities are currently available to SSH applications."
 msgstr "{0} identiteter är för närvarande tillgängliga för SSH-program."
 
-#: src/window.rs:1056
+#: src/window.rs:1058
 msgid "{0} is enabled for this YubiKey"
 msgstr "{0} är aktiverat för denna YubiKey"
 
-#: src/window.rs:1061
+#: src/window.rs:1063
 msgid "{0} is not configured for this YubiKey"
 msgstr "{0} är inte konfigurerat för denna YubiKey"
 
-#: src/window.rs:1911
+#: src/window.rs:1913
 msgid "{0} new SSH identities were added to the agent."
 msgstr "{0} nya SSH-identiteter har lagts till i agenten."
 
-#: src/window.rs:1909
+#: src/window.rs:1911
 msgid "{0} new SSH identity was added to the agent."
 msgstr "{0} En ny SSH-identitet har lagts till i agenter."
 
-#: src/window.rs:2307
+#: src/window.rs:2309
 msgid "{0} resident SSH keys are available from your connected YubiKeys."
-msgstr "{0} boende SSH-nycklar är tillgängliga från dina anslutna YubiKeys."
+msgstr ""
+"{0} enhetslagrade SSH-nycklar är tillgängliga på dina anslutna YubiKey-"
+"enheter."
 
-#: src/window.rs:1817
+#: src/window.rs:1819
 msgid "{0} resident SSH keys · {1}"
-msgstr "{0} boende SSH-nycklar · {1}"
+msgstr "{0} enhetslagrade SSH-nycklar · {1}"
 
-#: src/home.rs:362
+#: src/home.rs:364
 msgid "{0} resident credentials inspected"
-msgstr "{0} boende inloggningsuppgifter inspekterade"
+msgstr "{0} enhetslagrade autentiseringsuppgifter granskades"
 
-#: src/window.rs:2328
+#: src/window.rs:2330
 msgid "{0} to inspect"
 msgstr "{0} att inspektera"
 
-#: src/window.rs:1487 src/window.rs:1665
+#: src/window.rs:1489 src/window.rs:1667
 msgid "{0} · no hardware serial"
 msgstr "{0} · ingen hårdvaruserienummer"
 
-#: src/window.rs:1489 src/window.rs:1667
+#: src/window.rs:1491 src/window.rs:1669
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
 
-#: src/window.rs:999
+#: src/window.rs:1001
 msgid "Checking Passkeys support…"
 msgstr "Kontrollerar stöd för lösenordsnycklar…"
 
@@ -1481,12 +1493,12 @@ msgstr ""
 "Sätt i din YubiKey, ange dess FIDO-PIN när du uppmanas och rör sedan vid "
 "nyckeln."
 
-#: src/window.rs:1778
+#: src/window.rs:1780
 msgid ""
 "Inspect a connected YubiKey to reveal its resident SSH keys and available "
 "actions."
 msgstr ""
-"Inspektera en ansluten YubiKey för att visa dess residenta SSH-nycklar och "
+"Granska en ansluten YubiKey för att visa dess lagrade SSH-nycklar och "
 "tillgängliga åtgärder."
 
 #: src/window.rs:690
@@ -1539,7 +1551,7 @@ msgstr "Registrera en nyckel"
 msgid "Sign in next time"
 msgstr "Logga in nästa gång"
 
-#: src/window.rs:2011
+#: src/window.rs:2013
 msgid ""
 "The SSH agent makes selected keys available to SSH applications during this "
 "session."
@@ -1570,7 +1582,7 @@ msgid "A file already exists at the managed SSH configuration path: {0}"
 msgstr ""
 "En fil finns redan på sökvägen för den hanterade SSH-konfigurationen: {0}"
 
-#: src/window.rs:2068
+#: src/window.rs:2070
 msgid ""
 "After the first YubiKey authentication, later SSH sessions can reuse the "
 "connection. The last session remains available in the background for 10 "
@@ -1609,7 +1621,7 @@ msgstr "Det gick inte att ersätta {0}: {1}"
 msgid "Could not synchronize {0}: {1}"
 msgstr "Det gick inte att synkronisera {0}: {1}"
 
-#: src/window.rs:2173 src/window.rs:2184
+#: src/window.rs:2175 src/window.rs:2186
 msgid "Could not update SSH connection persistence"
 msgstr "Det gick inte att uppdatera beständigheten för SSH-anslutningar"
 
@@ -1622,11 +1634,11 @@ msgid "Could not write the temporary SSH configuration in {0}: {1}"
 msgstr ""
 "Det gick inte att skriva den tillfälliga SSH-konfigurationen i {0}: {1}"
 
-#: src/window.rs:2086 src/window.rs:2159
+#: src/window.rs:2088 src/window.rs:2161
 msgid "Disabled · each new connection authenticates separately"
 msgstr "Inaktiverad · varje ny anslutning autentiseras separat"
 
-#: src/window.rs:2078 src/window.rs:2152
+#: src/window.rs:2080 src/window.rs:2154
 msgid "Enabled · idle connections remain available for 10 minutes"
 msgstr "Aktiverad · inaktiva anslutningar förblir tillgängliga i 10 minuter"
 
@@ -1638,31 +1650,31 @@ msgstr "HOME pekar inte på en giltig mapp: {0}"
 msgid "HOME is not set. The SSH configuration cannot be located."
 msgstr "HOME är inte inställd. SSH-konfigurationen kan inte hittas."
 
-#: src/window.rs:2105
+#: src/window.rs:2107
 msgid "Main SSH configuration unavailable"
 msgstr "Huvud-SSH-konfigurationen är inte tillgänglig"
 
-#: src/window.rs:2106
+#: src/window.rs:2108
 msgid "Managed SSH configuration unavailable"
 msgstr "Hanterad SSH-konfiguration är inte tillgänglig"
 
-#: src/window.rs:2222
+#: src/window.rs:2224
 msgid "Managed configuration preview"
 msgstr "Förhandsgranskning av hanterad konfiguration"
 
-#: src/window.rs:2202
+#: src/window.rs:2204
 msgid "Manual review required"
 msgstr "Manuell granskning krävs"
 
-#: src/window.rs:2094 src/window.rs:2167
+#: src/window.rs:2096 src/window.rs:2169
 msgid "Needs attention · review the SSH configuration before continuing"
 msgstr "Kräver åtgärd · granska SSH-konfigurationen innan du fortsätter"
 
-#: src/window.rs:2103
+#: src/window.rs:2105
 msgid "Needs attention · the SSH configuration could not be located"
 msgstr "Kräver åtgärd · SSH-konfigurationen kunde inte hittas"
 
-#: src/window.rs:2210
+#: src/window.rs:2212
 msgid ""
 "Only new SSH connections are affected. Turning this off does not stop "
 "existing background connections. Earlier host-specific OpenSSH settings "
@@ -1680,11 +1692,11 @@ msgstr "OpenSSH avvisade den genererade konfigurationen."
 msgid "OpenSSH rejected the generated configuration: {0}"
 msgstr "OpenSSH avvisade den genererade konfigurationen: {0}"
 
-#: src/window.rs:2111
+#: src/window.rs:2113
 msgid "Reuse SSH connections in the background"
 msgstr "Återanvänd SSH-anslutningar i bakgrunden"
 
-#: src/window.rs:2067
+#: src/window.rs:2069
 msgid "SSH connection persistence"
 msgstr "Beständiga SSH-anslutningar"
 
@@ -1742,7 +1754,7 @@ msgstr "Sökvägen för SSH är inte en säker, vanlig katalog: {0}"
 msgid "The SSH path is not owned by the current user: {0}"
 msgstr "Sökvägen för SSH är inte ägd av den aktuella användaren: {0}"
 
-#: src/window.rs:2144
+#: src/window.rs:2146
 msgid "The SSH persistence update stopped unexpectedly."
 msgstr "Uppdateringen av SSH-anslutningarnas beständighet stoppades oväntat."
 
@@ -1804,21 +1816,21 @@ msgstr ""
 "Den hanterade SSH-filen refereras utanför det programhanterade blocket. Ta "
 "bort Include-raden innan du använder den här inställningen."
 
-#: src/window.rs:2209
+#: src/window.rs:2211
 msgid "What this setting changes"
 msgstr "Vad den här inställningen ändrar"
 
-#: src/window.rs:2224
+#: src/window.rs:2226
 msgid "{0} includes {1}"
-msgstr "{0} includes {1}"
+msgstr "{0} innehåller {1}"
 
-#: src/window.rs:2491
+#: src/window.rs:2493
 msgid ""
 "Optional: create a new resident key only when you need another SSH identity."
 " Its private key never leaves the selected YubiKey."
 msgstr ""
-"Valfritt: Skapa en ny resident nyckel endast om du behöver en annan SSH-"
-"identitet. Dess privata nyckel lämnar aldrig den valda YubiKey-enheten."
+"Valfritt: skapa en ny enhetslagrad nyckel endast när du behöver en annan "
+"SSH-identitet. Dess privata nyckel lämnar aldrig vald YubiKey."
 
 #: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:10
 msgid "Authentication is required to change security settings or install Git"
@@ -1829,6 +1841,22 @@ msgstr ""
 #: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:8
 msgid "Manage YubiKey security settings"
 msgstr "Hantera säkerhetsinställningar för YubiKey"
+
+#: data/com.anduinos.yubikeymanager.desktop:114
+msgid "YubiKey;FIDO2;U2F;security;login;GDM;"
+msgstr "YubiKey;FIDO2;U2F;säkerhet;inloggning;GDM;"
+
+#: data/com.anduinos.yubikeymanager.desktop:54
+msgid "Security Key Settings"
+msgstr "Säkerhetsnyckelinställningar"
+
+#: data/com.anduinos.yubikeymanager.desktop:28
+msgid "YubiKey Security Center"
+msgstr "YubiKey Säkerhetscenter"
+
+#: data/com.anduinos.yubikeymanager.desktop:82
+msgid "Protect sign-in, sudo, SSH, and Git with YubiKeys"
+msgstr "Skydda inloggning, sudo, SSH och Git med YubiKeys"
 
 #~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
 #~ msgstr ""
