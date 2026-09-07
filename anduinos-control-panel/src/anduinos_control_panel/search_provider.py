@@ -159,9 +159,12 @@ class ControlPanelSearchProvider:
 
             if method_name == "GetSubsearchResultSet":
                 previous_results, terms = parameters.unpack()
+                # Shell may return [] for a cancelled cold-start query while
+                # the user keeps typing. Search the catalog again in that case
+                # instead of trapping subsequent queries in an empty set.
                 invocation.return_value(
                     GLib.Variant(
-                        "(as)", (_result_ids(terms, previous_results),)
+                        "(as)", (_result_ids(terms, previous_results or None),)
                     )
                 )
                 return

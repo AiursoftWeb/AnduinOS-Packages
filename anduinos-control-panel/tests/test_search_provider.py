@@ -1,7 +1,7 @@
 from pathlib import Path
 import sys
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from gi.repository import Gio, GLib
 
@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from anduinos_control_panel.search_provider import (  # noqa: E402
     CONTROL_PANEL_EXECUTABLE,
+    ControlPanelSearchProvider,
     SEARCH_PROVIDER_XML,
     _activation_arguments,
     _result_ids,
@@ -48,6 +49,23 @@ class SearchProviderTests(unittest.TestCase):
         previous = _result_ids(["memory"])
         refined = _result_ids(["virtual", "memory"], previous)
         self.assertEqual(refined, ["system.virtual-memory"])
+
+    def test_subsearch_recovers_after_cancelled_initial_query(self):
+        # Shell can turn a cancelled cold-start query into an empty result set
+        # and pass it back while the user continues typing.
+        provider = ControlPanelSearchProvider.__new__(ControlPanelSearchProvider)
+        provider._touch = Mock()
+        invocation = Mock()
+        provider._handle_method_call(
+            None, None, None, None,
+            "GetSubsearchResultSet",
+            GLib.Variant("(asas)", ([], ["driver"])),
+            invocation,
+        )
+        invocation.return_dbus_error.assert_not_called()
+        invocation.return_value.assert_called_once()
+        results = invocation.return_value.call_args.args[0].unpack()[0]
+        self.assertEqual(results, ["hardware.drivers", "security.secure-boot"])
 
     def test_external_results_open_directly_and_internal_results_deep_link(self):
         self.assertEqual(_activation_arguments("network.firewall"), ["ufwall-gtk"])
