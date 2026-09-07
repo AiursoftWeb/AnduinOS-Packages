@@ -6,8 +6,60 @@
   <vendor_url>https://www.anduinos.com</vendor_url>
   <action id="com.anduinos.DriverCenter.manage-drivers">
     <description>Install and repair hardware drivers</description>
+    <description xml:lang="ar_SA">تثبيت برامج تشغيل الأجهزة وإصلاحها</description>
+    <description xml:lang="da_DK">Installer og reparer hardwaredrivere</description>
+    <description xml:lang="de_DE">Hardwaretreiber installieren und reparieren</description>
+    <description xml:lang="el_GR">Εγκατάσταση και επισκευή προγραμμάτων οδήγησης υλικού</description>
+    <description xml:lang="en_GB">Install and repair hardware drivers</description>
+    <description xml:lang="es_ES">Instalar y reparar controladores de hardware</description>
+    <description xml:lang="fi_FI">Asenna ja korjaa laiteohjaimet</description>
+    <description xml:lang="fr_FR">Installer et réparer les pilotes matériels</description>
+    <description xml:lang="hi_IN">हार्डवेयर ड्राइवर स्थापित करें और मरम्मत करें</description>
+    <description xml:lang="id_ID">Instal dan perbaiki driver perangkat keras</description>
+    <description xml:lang="it_IT">Installa e ripara i driver hardware</description>
+    <description xml:lang="ja_JP">ハードウェアドライバーのインストールと修復</description>
+    <description xml:lang="ko_KR">하드웨어 드라이버 설치 및 복구</description>
+    <description xml:lang="nl_NL">Hardwarestuurprogramma's installeren en repareren</description>
+    <description xml:lang="pl_PL">Zainstaluj i napraw sterowniki sprzętu</description>
+    <description xml:lang="pt_BR">Instalar e reparar drivers de hardware</description>
+    <description xml:lang="pt_PT">Instalar e reparar controladores de hardware</description>
+    <description xml:lang="ro_RO">Instalați și reparați driverele hardware</description>
+    <description xml:lang="ru_RU">Установка и восстановление драйверов оборудования</description>
+    <description xml:lang="sv_SE">Installera och reparera hårdvarudrivrutiner</description>
+    <description xml:lang="th_TH">ติดตั้งและซ่อมแซมไดรเวอร์ฮาร์ดแวร์</description>
+    <description xml:lang="tr_TR">Donanım sürücülerini yükleyin ve onarın</description>
+    <description xml:lang="uk_UA">Встановлення та відновлення драйверів апаратного забезпечення</description>
+    <description xml:lang="vi_VN">Cài đặt và sửa chữa trình điều khiển phần cứng</description>
+    <description xml:lang="zh_HK">安裝及修復硬體驅動程式</description>
+    <description xml:lang="zh_TW">安裝與修復硬體驅動程式</description>
     <description xml:lang="zh_CN">安装和修复硬件驱动程序</description>
     <message>Authentication is required to change hardware drivers</message>
+    <message xml:lang="ar_SA">المصادقة مطلوبة لتغيير برامج تشغيل الأجهزة</message>
+    <message xml:lang="da_DK">Godkendelse er påkrævet for at ændre hardwaredrivere</message>
+    <message xml:lang="de_DE">Authentifizierung ist erforderlich, um Hardwaretreiber zu ändern</message>
+    <message xml:lang="el_GR">Απαιτείται έλεγχος ταυτότητας για την αλλαγή προγραμμάτων οδήγησης υλικού</message>
+    <message xml:lang="en_GB">Authentication is required to change hardware drivers</message>
+    <message xml:lang="es_ES">Se requiere autenticación para cambiar los controladores de hardware</message>
+    <message xml:lang="fi_FI">Laitteisto-ohjainten muuttaminen vaatii todennuksen</message>
+    <message xml:lang="fr_FR">L'authentification est requise pour modifier les pilotes matériels</message>
+    <message xml:lang="hi_IN">हार्डवेयर ड्राइवर बदलने के लिए प्रमाणीकरण आवश्यक है</message>
+    <message xml:lang="id_ID">Otentikasi diperlukan untuk mengubah driver perangkat keras</message>
+    <message xml:lang="it_IT">È richiesta l'autenticazione per modificare i driver hardware</message>
+    <message xml:lang="ja_JP">ハードウェアドライバーを変更するには認証が必要です</message>
+    <message xml:lang="ko_KR">하드웨어 드라이버를 변경하려면 인증이 필요합니다</message>
+    <message xml:lang="nl_NL">Authenticatie is vereist om hardwarestuurprogramma's te wijzigen</message>
+    <message xml:lang="pl_PL">Wymagane jest uwierzytelnienie, aby zmienić sterowniki sprzętu</message>
+    <message xml:lang="pt_BR">É necessária autenticação para alterar drivers de hardware</message>
+    <message xml:lang="pt_PT">É necessária autenticação para alterar controladores de hardware</message>
+    <message xml:lang="ro_RO">Este necesară autentificarea pentru a modifica driverele hardware</message>
+    <message xml:lang="ru_RU">Требуется аутентификация для изменения драйверов оборудования</message>
+    <message xml:lang="sv_SE">Autentisering krävs för att ändra hårdvarudrivrutiner</message>
+    <message xml:lang="th_TH">จำเป็นต้องมีการตรวจสอบสิทธิ์เพื่อเปลี่ยนไดรเวอร์ฮาร์ดแวร์</message>
+    <message xml:lang="tr_TR">Donanım sürücülerini değiştirmek için kimlik doğrulaması gereklidir</message>
+    <message xml:lang="uk_UA">Потрібна автентифікація для зміни драйверів апаратного забезпечення</message>
+    <message xml:lang="vi_VN">Yêu cầu xác thực để thay đổi trình điều khiển phần cứng</message>
+    <message xml:lang="zh_HK">變更硬體驅動程式需要身分驗證</message>
+    <message xml:lang="zh_TW">變更硬體驅動程式需要身分驗證</message>
     <message xml:lang="zh_CN">更改硬件驱动程序需要身份验证</message>
     <icon_name>com.anduinos.DriverCenter</icon_name>
     <defaults>

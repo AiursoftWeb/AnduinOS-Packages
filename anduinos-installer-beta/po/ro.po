@@ -17,20 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);\n"
 
-#: src/pages.py:2092
+#: src/pages.py:2244
 msgid "Installing an input method requires an Internet connection."
-msgstr ""
-"Instalarea unei metode de introducere necesită o conexiune la internet."
+msgstr "Instalarea unei metode de introducere necesită o conexiune la internet."
 
-#: src/pages.py:2103
-msgid ""
-"No Internet connection. Input methods cannot be installed. You can install "
-"them later when connected."
-msgstr ""
-"Nu există conexiune la internet. Metodele de introducere nu pot fi "
-"instalate. Le puteți instala mai târziu, când sunteți conectat."
+#: src/pages.py:2255
+msgid "No Internet connection. Input methods cannot be installed. You can install them later when connected."
+msgstr "Nu există conexiune la internet. Metodele de introducere nu pot fi instalate. Le puteți instala mai târziu, când sunteți conectat."
 
-#: src/pages.py:4933
+#: src/pages.py:7174
 msgid ""
 "\n"
 "\n"
@@ -40,7 +35,7 @@ msgstr ""
 "\n"
 "Instalarea reală va crea un MOK local pe mașină. După repornire, alegeți Enroll MOK → Continue → Yes în MOKManager și introduceți parola 123456."
 
-#: src/pages.py:4944
+#: src/pages.py:7185
 msgid ""
 "\n"
 "On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
@@ -48,51 +43,39 @@ msgstr ""
 "\n"
 "Pe ecranul albastru MOKManager alegeți Enroll MOK → Continue → Yes, parolă: 123456"
 
-#: src/pages.py:4085
+#: src/pages.py:6191
 msgid "; sudo does not require a password"
 msgstr "; sudo nu necesită o parolă"
 
-#: src/pages.py:4087
+#: src/pages.py:6193
 msgid "; sudo requires the account password"
 msgstr "; sudo necesită parola contului"
 
-#: src/pages.py:129
-msgid ""
-"A partition on this disk is mounted. Unmount it and rescan storage before "
-"continuing."
-msgstr ""
-"O partiție de pe acest disc este montată. Demontați-o și rescanați stocarea "
-"înainte de a continua."
+#: src/pages.py:160
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "O partiție de pe acest disc este montată. Demontați-o și rescanați stocarea înainte de a continua."
 
-#: src/pages.py:2899
+#: src/pages.py:3241
 msgid "ALL DATA on {disk} will be permanently erased."
 msgstr "TOATE DATELE de pe {disk} vor fi șterse definitiv."
 
-#: src/pages.py:4082
+#: src/pages.py:6188
 msgid "Account security"
 msgstr "Securitatea contului"
 
-#: src/pages.py:2980
+#: src/pages.py:4066
 msgid "Advanced Storage"
 msgstr "Stocare avansată"
 
-#: src/pages.py:164
-msgid ""
-"After changing partitions or unmounting a volume, rescan storage and select "
-"the target again."
-msgstr ""
-"După modificarea partițiilor sau demontarea unui volum, rescanați stocarea "
-"și selectați din nou ținta."
+#: src/pages.py:195
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "După modificarea partițiilor sau demontarea unui volum, rescanați stocarea și selectați din nou ținta."
 
-#: src/pages.py:4801
-msgid ""
-"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
-"then enter password 123456."
-msgstr ""
-"După repornire, MOKManager se va deschide. Alegeți Enroll MOK → Continue → "
-"Yes, apoi introduceți parola 123456."
+#: src/pages.py:7042
+msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
+msgstr "După repornire, MOKManager se va deschide. Alegeți Enroll MOK → Continue → Yes, apoi introduceți parola 123456."
 
-#: src/pages.py:4432
+#: src/pages.py:6636
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -100,61 +83,56 @@ msgstr ""
 "Totale partițiile și datele de pe {disk} vor fi distruse.\n"
 "\n"
 
-#: src/pages.py:155
-msgid ""
-"Alternatively, you may explicitly select one entire partition to erase. "
-"Everything in that selected partition will be destroyed; it is never "
-"selected automatically."
-msgstr ""
-"Alternativ, puteți selecta explicit o întreagă partiție pentru a fi ștearsă."
-" Tot ceea ce se află în acea partiție selectată va fi distrus; aceasta nu "
-"este niciodată selectată automat."
+#: src/pages.py:186
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "Alternativ, puteți selecta explicit o întreagă partiție pentru a fi ștearsă. Tot ceea ce se află în acea partiție selectată va fi distrus; aceasta nu este niciodată selectată automat."
 
-#: src/pages.py:924 src/pages.py:986
+#: src/pages.py:991 src/pages.py:1053
 msgid "Battery power is too low for a safe installation."
 msgstr "Nivelul bateriei este prea scăzut pentru o instalare sigură."
 
-#: src/pages.py:895
+#: src/pages.py:962
 msgid "Charge to at least 80% before starting the installation."
 msgstr "Încărcați bateria la cel puțin 80% înainte de a începe instalarea."
 
-#: src/pages.py:1041 src/pages.py:1016
+#: src/pages.py:1108 src/pages.py:1083
 msgid "Continue Anyway"
 msgstr "Continuă oricum"
 
-#: src/pages.py:1000
+#: src/pages.py:1067
 msgid "Current battery level: {percent}%"
 msgstr "Nivelul actual al bateriei: {percent}%"
 
-#: src/pages.py:1006
+#: src/pages.py:1073
 msgid "External power is connected."
 msgstr "Alimentarea externă este conectată."
 
-#: src/pages.py:1008
+#: src/pages.py:1075
 msgid "External power is not connected."
 msgstr "Alimentarea externă nu este conectată."
 
-#: src/pages.py:954
+#: src/pages.py:1021
 msgid "I understand the risks and insist on installing with low battery."
 msgstr "Înțeleg riscurile și insist să instalez cu bateria descărcată."
 
-#: src/pages.py:894 src/pages.py:889 src/pages.py:967 src/pages.py:969
+#: src/pages.py:961 src/pages.py:956 src/pages.py:1034 src/pages.py:1036
 msgid "Low battery"
 msgstr "Baterie descărcată"
 
-#: src/pages.py:948
+#: src/pages.py:1015
 msgid "Recheck"
 msgstr "Verifică din nou"
 
-#: src/main.py:110 src/pages.py:731 src/pages.py:815
+#: src/main.py:114 src/pages.py:794 src/pages.py:881
+#: assets/anduinos-installer-beta.desktop:30
 msgid "AnduinOS Installer"
 msgstr "Instalator AnduinOS"
 
-#: src/main.py:108
+#: src/main.py:112
 msgid "AnduinOS Installer (Development)"
 msgstr "Instalator AnduinOS (Dezvoltare)"
 
-#: src/pages.py:4425
+#: src/pages.py:6623
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
@@ -162,164 +140,140 @@ msgstr ""
 "AnduinOS va folosi doar spațiul nealocat selectat de pe {disk}. Partițiile existente vor fi păstrate.\n"
 "\n"
 
-#: src/pages.py:133
-msgid ""
-"AnduinOS will use only the selected unallocated space. The installer will "
-"not shrink or move an existing filesystem."
-msgstr ""
-"AnduinOS va folosi doar spațiul nealocat selectat. Programul de instalare nu"
-" va reduce sau muta un sistem de fișiere existent."
+#: src/pages.py:164
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS va folosi doar spațiul nealocat selectat. Programul de instalare nu va reduce sau muta un sistem de fișiere existent."
 
 #: data/languages.json:keyboard_layouts
 msgid "Arabic"
 msgstr "Arabă"
 
-#: src/pages.py:268 src/pages.py:4461 src/pages.py:817
+#: src/pages.py:322 src/pages.py:6672 src/pages.py:6708 src/pages.py:883
 msgid "Back"
 msgstr "Înapoi"
 
-#: src/pages.py:3014
-msgid ""
-"Before continuing: finish Windows updates, disable Fast Startup and "
-"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
-"measurements and boot order can change."
-msgstr ""
-"Înainte de a continua: finalizați actualizările Windows, dezactivați "
-"Pornirea rapidă și hibernarea, iar apoi faceți o copie de rezervă a cheii de"
-" recuperare BitLocker. EFI, Secure Boot, măsurătorile TPM și ordinea de boot"
-" pot suferi modificări."
+#: src/pages.py:3439
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Înainte de a continua: finalizați actualizările Windows, dezactivați Pornirea rapidă și hibernarea, iar apoi faceți o copie de rezervă a cheii de recuperare BitLocker. EFI, Secure Boot, măsurătorile TPM și ordinea de boot pot suferi modificări."
 
-#: src/pages.py:2470
+#: src/pages.py:2622
 msgid "BitLocker detected"
 msgstr "BitLocker detectat"
 
-#: src/pages.py:146
-msgid ""
-"BitLocker storage will be preserved. The installer will not unlock, resize, "
-"repair or otherwise modify it."
-msgstr ""
-"Spațiul de stocare BitLocker va fi păstrat. Programul de instalare nu îl va "
-"debloca, redimensiona, repara sau modifica în vreun alt fel."
+#: src/pages.py:177
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "Spațiul de stocare BitLocker va fi păstrat. Programul de instalare nu îl va debloca, redimensiona, repara sau modifica în vreun alt fel."
 
-#: src/pages.py:4186
+#: src/pages.py:6282 src/pages.py:6342
 msgid "Boot policy"
 msgstr "Politică de boot"
 
-#: src/pages.py:3055
+#: src/pages.py:3480 src/pages.py:5117
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (recomandat)"
 
-#: src/pages.py:2817
+#: src/pages.py:3158
 msgid "Btrfs — recommended"
 msgstr "Btrfs — recomandat"
 
-#: src/pages.py:4361
+#: src/pages.py:6554
 msgid "Cannot create installation plan"
 msgstr "Nu se poate crea planul de instalare"
 
-#: src/pages.py:2727
+#: src/pages.py:3068
 msgid "Choose Installation Method"
 msgstr "Alegeți metoda de instalare"
 
-#: src/pages.py:2498
+#: src/pages.py:2650
 msgid "Choose one target disk. Storage settings come next."
 msgstr "Alegeți un disc țintă. Setările de stocare urmează."
 
-#: src/pages.py:2199
+#: src/pages.py:2351
 msgid "Choose optional software to install"
 msgstr "Alegeți software opțional pentru instalare"
 
-#: src/pages.py:813
+#: src/pages.py:879
 msgid "Choose your language to begin installation"
 msgstr "Alegeți limba pentru a începe instalarea"
 
-#: src/pages.py:3819
+#: src/pages.py:5906
 msgid "Choose your location to set the system clock"
 msgstr "Alegeți locația dvs. pentru a seta ceasul sistemului"
 
-#: src/pages.py:4838
+#: src/pages.py:7079
 msgid "Complete"
 msgstr "Completat"
 
-#: src/pages.py:3506 src/pages.py:3513 src/pages.py:4101 src/pages.py:3601
-#: src/pages.py:4440
+#: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
+#: src/pages.py:6644
 msgid "Computer Name"
 msgstr "Numele calculatorului"
 
-#: src/pages.py:3594
+#: src/pages.py:5679
 msgid "Computer name contains invalid characters."
 msgstr "Numele calculatorului conține caractere nevalide."
 
-#: src/pages.py:4589
+#: src/pages.py:6828
 msgid "Configure account, region, timezone, and machine identity"
-msgstr ""
-"Configurează contul, regiunea, fusul orar și identitatea dispozitivului"
+msgstr "Configurează contul, regiunea, fusul orar și identitatea dispozitivului"
 
-#: src/pages.py:4578
+#: src/pages.py:3339 src/pages.py:6817 src/pages.py:3323
 msgid "Configure storage and swap"
 msgstr "Configurează stocarea și swap-ul"
 
-#: src/pages.py:3480 src/pages.py:3488
+#: src/pages.py:5565 src/pages.py:5573
 msgid "Confirm Password"
 msgstr "Confirmă parola"
 
-#: src/pages.py:1939
+#: src/pages.py:2003
 msgid "Confirm your keyboard layout"
 msgstr "Confirmați configurația tastaturii"
 
-#: src/main.py:153 src/pages.py:1911
+#: src/main.py:157 src/pages.py:1978
 msgid "Continue Installation"
 msgstr "Continuă instalarea"
 
-#: src/pages.py:4574
+#: src/pages.py:6813
 msgid "Copy AnduinOS system"
 msgstr "Copiază sistemul AnduinOS"
 
-#: src/pages.py:4675
+#: src/pages.py:6916
 msgid "Copy Log"
 msgstr "Copiază jurnalul"
 
-#: src/pages.py:3146
+#: src/pages.py:3572
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
 msgstr "Creați o nouă partiție EFI de sistem AnduinOS de 1 GiB"
 
-#: src/pages.py:4163
-msgid ""
-"Create and format a dedicated AnduinOS EFI System Partition inside the "
-"selected space."
-msgstr ""
-"Creați și formatați o partiție dedicată EFI de sistem AnduinOS în spațiul "
-"selectat."
+#: src/pages.py:6260
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Creați și formatați o partiție dedicată EFI de sistem AnduinOS în spațiul selectat."
 
-#: src/pages.py:3447
+#: src/pages.py:5532
 msgid "Create your user account"
 msgstr "Creați contul dvs. de utilizator"
 
-#: src/pages.py:2412
+#: src/pages.py:2564
 msgid "Current disk layout"
 msgstr "Structura curentă a discului"
 
-#: src/pages.py:3979
-msgid ""
-"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
-"executor or disk command can run."
-msgstr ""
-"MOD DE DEZVOLTARE — planul va fi validat și simulat. Niciun executor "
-"privilegiat sau comandă pe disc nu poate rula."
+#: src/pages.py:6071
+msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
+msgstr "MOD DE DEZVOLTARE — planul va fi validat și simulat. Procesul de serviciu cu privilegii ridicate nu va porni și nicio comandă de gestionare a discului nu va fi executată."
 
 #: data/languages.json:keyboard_layouts
 msgid "Danish"
 msgstr "Daneză"
 
-#: src/pages.py:4569
+#: src/pages.py:6808
 msgid "Detect Internet connectivity"
 msgstr "Detectează conexiunea la internet"
 
-#: src/pages.py:4566
+#: src/pages.py:6805
 msgid "Detect firmware and Secure Boot"
 msgstr "Detectează firmware-ul și Secure Boot"
 
-#: src/pages.py:4419
+#: src/pages.py:6617
 msgid ""
 "Development mode will simulate installation to {disk}. No disk data will be changed.\n"
 "\n"
@@ -327,15 +281,15 @@ msgstr ""
 "Modul de dezvoltare va simula instalarea pe {disk}. Datele de pe disc nu vor fi modificate.\n"
 "\n"
 
-#: src/pages.py:4923
+#: src/pages.py:7164
 msgid "Development simulation completed"
 msgstr "Simularea de dezvoltare s-a încheiat"
 
-#: src/pages.py:4832
+#: src/pages.py:7073
 msgid "Discover AnduinOS"
 msgstr "Explorează AnduinOS"
 
-#: src/pages.py:1216 src/pages.py:2218
+#: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
 msgstr "Descarcă și instalează actualizările sistemului în timpul instalării"
 
@@ -343,23 +297,21 @@ msgstr "Descarcă și instalează actualizările sistemului în timpul instalăr
 msgid "Dutch"
 msgstr "Olandeză"
 
-#: src/pages.py:3073
+#: src/pages.py:4210 src/pages.py:3498 src/pages.py:5013
 msgid "EFI System Partition"
 msgstr "Partiție de sistem EFI"
 
-#: src/pages.py:4184
+#: src/pages.py:6341 src/pages.py:6281
 msgid "EFI policy"
 msgstr "Politica EFI"
 
-#: src/pages.py:2455
+#: src/pages.py:2607
 msgid "Empty disk — no partitions"
 msgstr "Disc gol — fără partiții"
 
-#: src/pages.py:2821
+#: src/pages.py:3162
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
-msgstr ""
-"Activează subvolumuri în spațiu partajat, instantanee și Disk Snapshots "
-"Manager."
+msgstr "Activează subvolumuri în spațiu partajat, instantanee și Disk Snapshots Manager."
 
 #: data/languages.json:keyboard_layouts
 msgid "English (UK)"
@@ -369,53 +321,39 @@ msgstr "Engleză (UK)"
 msgid "English (US)"
 msgstr "Engleză (US)"
 
-#: src/pages.py:4601
+#: src/pages.py:6840
 msgid "Ensure Disk Snapshots Manager is available"
 msgstr "Asigură-te că Disk Snapshots Manager este disponibil"
 
-#: src/pages.py:4412
+#: src/pages.py:6610
 msgid "Erase Disk and Install"
 msgstr "Șterge discul și instalează"
 
-#: src/pages.py:2813 src/pages.py:4226
+#: src/pages.py:3154 src/pages.py:6382
 msgid "Erase every partition and all data on the selected disk."
 msgstr "Ștergeți fiecare partiție și toate datele de pe discul selectat."
 
-#: src/pages.py:4411
+#: src/pages.py:6609
 msgid "Erase the entire selected disk?"
 msgstr "Șterge întregul disc selectat?"
 
-#: src/pages.py:137
-msgid ""
-"Existing Windows, recovery and data partitions remain outside the write set "
-"and will be preserved."
-msgstr ""
-"Partițiile existente Windows, de recuperare și de date rămân în afara "
-"setului de scriere și vor fi păstrate."
+#: src/pages.py:168
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "Partițiile existente Windows, de recuperare și de date rămân în afara setului de scriere și vor fi păstrate."
 
-#: src/pages.py:2945
-msgid ""
-"Existing partitions were detected. The first two choices delete them; "
-"Advanced is the preservation path."
-msgstr ""
-"S-au detectat partiții existente. Primele două opțiuni le șterg; Avansată "
-"este calea de conservare."
+#: src/pages.py:3287
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "S-au detectat partiții existente. Primele două opțiuni le șterg; Avansată este calea de conservare."
 
-#: src/pages.py:4446
-msgid ""
-"Existing partitions will be preserved. New AnduinOS partitions will be "
-"created only in the selected unallocated extent; EFI vendor files and the "
-"AnduinOS firmware boot entry may be updated."
-msgstr ""
-"Partițiile existente vor fi păstrate. Partițiile noi AnduinOS vor fi create "
-"doar în extinderea nealocată selectată; fișierele vendor EFI și intrarea de "
-"boot a firmware-ului AnduinOS pot fi actualizate."
+#: src/pages.py:6650
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Partițiile existente vor fi păstrate. Partițiile noi AnduinOS vor fi create doar în extinderea nealocată selectată; fișierele vendor EFI și intrarea de boot a firmware-ului AnduinOS pot fi actualizate."
 
-#: src/pages.py:3052 src/pages.py:4049
+#: src/pages.py:3477 src/pages.py:6155 src/pages.py:5127
 msgid "Filesystem"
 msgstr "Sistem de fișiere"
 
-#: src/pages.py:4613
+#: src/pages.py:6852
 msgid "Finalize target environment"
 msgstr "Finalizează mediul țintă"
 
@@ -423,7 +361,7 @@ msgstr "Finalizează mediul țintă"
 msgid "Finnish"
 msgstr "Finlandeză"
 
-#: src/pages.py:4182
+#: src/pages.py:6340 src/pages.py:6279
 msgid "Formats"
 msgstr "Formatează"
 
@@ -431,7 +369,7 @@ msgstr "Formatează"
 msgid "French"
 msgstr "Franceză"
 
-#: src/pages.py:3462 src/pages.py:3464
+#: src/pages.py:5547 src/pages.py:5549
 msgid "Full Name"
 msgstr "Nume complet"
 
@@ -443,25 +381,19 @@ msgstr "Germană"
 msgid "Greek"
 msgstr "Greacă"
 
-#: src/pages.py:111
-msgid ""
-"Guided coexistence requires a system booted in UEFI mode and a GPT target "
-"disk. This disk cannot continue in guided mode."
-msgstr ""
-"Coexistența ghidată necesită un sistem pornit în modul UEFI și un disc țintă"
-" GPT. Acest disc nu poate continua în modul ghidat."
+#: src/pages.py:142
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "Coexistența ghidată necesită un sistem pornit în modul UEFI și un disc țintă GPT. Acest disc nu poate continua în modul ghidat."
 
-#: src/pages.py:4131
-msgid ""
-"Guided storage selection is missing. Rescan and select the target again."
-msgstr ""
-"Selecția stocării ghidate lipsește. Rescanați și selectați din nou ținta."
+#: src/pages.py:6393
+msgid "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Selecția stocării ghidate lipsește. Rescanați și selectați din nou ținta."
 
 #: data/languages.json:keyboard_layouts
 msgid "Hindi (India)"
 msgstr "Hindi (India)"
 
-#: src/pages.py:2741
+#: src/pages.py:3082
 msgid "How should AnduinOS use this disk?"
 msgstr "Cum ar trebui ca AnduinOS să utilizeze acest disc?"
 
@@ -469,87 +401,83 @@ msgstr "Cum ar trebui ca AnduinOS să utilizeze acest disc?"
 msgid "Indonesian"
 msgstr "Indoneziană"
 
-#: src/pages.py:4498
+#: src/pages.py:6737
 msgid "Install"
 msgstr "Instalează"
 
-#: src/pages.py:4559 src/pages.py:1221 src/pages.py:4125
+#: src/pages.py:6798 src/pages.py:1288 src/pages.py:6231
 msgid "Install input method"
 msgstr "Instalează metoda de introducere"
 
-#: src/pages.py:625
+#: src/pages.py:684
 msgid "Install {language} input method: {name}"
 msgstr "Instalează metoda de introducere pentru {language}: {name}"
 
-#: src/pages.py:4409 src/pages.py:4496
+#: src/pages.py:3405 src/pages.py:6604 src/pages.py:6733
 msgid "Install Alongside"
 msgstr "Instalează alături de sistemul existent"
 
-#: src/pages.py:4169
+#: src/pages.py:6266
 msgid "Install alongside"
 msgstr "Instalează alături de sistemul existent"
 
-#: src/pages.py:4608
+#: src/pages.py:6847
 msgid "Install bootloader"
 msgstr "Instalează bootloader-ul"
 
-#: src/pages.py:4611
+#: src/pages.py:6850
 msgid "Check systems on other disks"
 msgstr "Verifică sistemele de pe alte discuri"
 
-#: src/pages.py:1217 src/pages.py:4603
+#: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
 msgstr "Instalează driverele hardware"
 
-#: src/pages.py:4408
+#: src/pages.py:6603
 msgid "Install in the selected free space?"
 msgstr "Doriți să instalați în spațiul liber selectat?"
 
-#: src/pages.py:4596
+#: src/pages.py:6835
 msgid "Ensure required language packs are installed"
 msgstr "Asigură-te că pachetele lingvistice necesare sunt instalate"
 
-#: src/pages.py:4599
+#: src/pages.py:6838
 msgid "Install system updates"
 msgstr "Instalează actualizările sistemului"
 
-#: src/pages.py:2229
+#: src/pages.py:2381
 msgid "Install third-party drivers for this device"
 msgstr "Instalează drivere terțe pentru acest dispozitiv"
 
-#: src/pages.py:5093 src/pages.py:5095 src/pages.py:4940 src/pages.py:4950
+#: src/pages.py:7334 src/pages.py:7336 src/pages.py:7181 src/pages.py:7191
 msgid "Installation Complete"
 msgstr "Instalare completă"
 
-#: src/pages.py:4970
+#: src/pages.py:7211
 msgid "Installation Failed"
 msgstr "Instalare eșuată"
 
-#: src/pages.py:4639
+#: src/pages.py:6878
 msgid "Installation Steps"
 msgstr "Etapa instalării"
 
-#: src/pages.py:160
-msgid ""
-"Installation cannot continue with this selection. There is no force-continue"
-" option around storage safety checks."
-msgstr ""
-"Instalarea nu poate continua cu această selecție. Nu există o opțiune de "
-"continuare forțată în jurul verificărilor de siguranță a stocării."
+#: src/pages.py:191
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "Instalarea nu poate continua cu această selecție. Nu există o opțiune de continuare forțată în jurul verificărilor de siguranță a stocării."
 
-#: src/pages.py:4919 src/pages.py:4985
+#: src/pages.py:7160 src/pages.py:7226
 msgid "Installation complete"
 msgstr "Instalarea s-a finalizat"
 
-#: src/pages.py:4968
+#: src/pages.py:7209
 msgid "Installation failed"
 msgstr "Instalarea a eșuat"
 
-#: src/main.py:145
+#: src/main.py:149
 msgid "Installation in progress"
 msgstr "Instalare în curs"
 
-#: src/pages.py:4547 src/pages.py:4541
+#: src/pages.py:6786 src/pages.py:6780
 msgid "Installing AnduinOS"
 msgstr "Se instalează AnduinOS"
 
@@ -561,19 +489,19 @@ msgstr "Italienă"
 msgid "Japanese (JIS keyboard)"
 msgstr "Japoneză (tastatură JIS)"
 
-#: src/pages.py:4040
+#: src/pages.py:6147
 msgid "Keyboard"
 msgstr "Tastatură"
 
-#: src/pages.py:1938 src/pages.py:1932 src/pages.py:2075
+#: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
 msgid "Keyboard Layout"
 msgstr "Așezare tastatură"
 
-#: src/pages.py:2031
+#: src/pages.py:2077
 msgid "Layout Variant"
 msgstr "Variantă de așezare"
 
-#: src/pages.py:4582
+#: src/pages.py:6821
 msgid "Configure physical keyboard layout"
 msgstr "Configurează așezarea tastaturii fizice"
 
@@ -581,103 +509,91 @@ msgstr "Configurează așezarea tastaturii fizice"
 msgid "Korean"
 msgstr "Coreeană"
 
-#: src/pages.py:4039
+#: src/pages.py:6146
 msgid "Language"
 msgstr "Limbă"
 
-#: src/pages.py:2472
+#: src/pages.py:2624
 msgid "Live USB — excluded"
 msgstr "USB live — exclus"
 
-#: src/pages.py:4573
+#: src/pages.py:6812
 msgid "Mount target filesystems"
 msgstr "Montează sistemele de fișiere țintă"
 
-#: src/pages.py:851
+#: src/pages.py:918
 msgid "Navigation error"
 msgstr "Eroare de navigare"
 
-#: src/pages.py:4180 src/pages.py:4229
+#: src/pages.py:4232 src/pages.py:6339 src/pages.py:6277 src/pages.py:6385
 msgid "New partitions"
 msgstr "Partiții noi"
 
-#: src/pages.py:261 src/pages.py:818 src/pages.py:1016
+#: src/pages.py:315 src/pages.py:884 src/pages.py:1083
 msgid "Next"
 msgstr "Următorul"
 
-#: src/pages.py:4756
+#: src/pages.py:6997
 msgid "Next slide"
 msgstr "Diafoa următoare"
 
-#: src/pages.py:2389
+#: src/pages.py:2541
 msgid "No partition table"
 msgstr "Fără tabel de partiții"
 
-#: src/pages.py:2631
+#: src/pages.py:2782
 msgid "No suitable disks found."
 msgstr "Nu s-au găsit discuri potrivite."
 
-#: src/pages.py:170
-msgid ""
-"No suitable unallocated space was found. To protect your data, create "
-"unallocated space with Windows Disk Management, then boot the installer "
-"again and rescan the disk."
-msgstr ""
-"Nu s-a găsit spațiu nealocat potrivit. Pentru a vă proteja datele, creați "
-"spațiu nealocat cu Gestionarea discului din Windows, apoi porniți din nou "
-"instalatorul și rescanati discul."
+#: src/pages.py:201
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "Nu s-a găsit spațiu nealocat potrivit. Pentru a vă proteja datele, creați spațiu nealocat cu Gestionarea discului din Windows, apoi porniți din nou instalatorul și rescanati discul."
 
-#: src/pages.py:175
-msgid ""
-"No suitable unallocated space was found. To protect your data, create "
-"unallocated space with a partitioning tool, then boot the installer again "
-"and rescan the disk."
-msgstr ""
-"Nu s-a găsit spațiu nealocat potrivit. Pentru a vă proteja datele, creați "
-"spațiu nealocat cu un instrument de partiționare, apoi porniți din nou "
-"instalatorul și rescanati discul."
+#: src/pages.py:206
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "Nu s-a găsit spațiu nealocat potrivit. Pentru a vă proteja datele, creați spațiu nealocat cu un instrument de partiționare, apoi porniți din nou instalatorul și rescanati discul."
 
 #: data/languages.json:keyboard_layouts
 msgid "Norwegian"
 msgstr "Norvegiană"
 
-#: src/pages.py:1124 src/pages.py:1375 src/pages.py:4370 src/pages.py:854
+#: src/pages.py:1191 src/pages.py:1442 src/pages.py:6563 src/pages.py:921
 msgid "OK"
 msgstr "OK"
 
-#: src/pages.py:4835
+#: src/pages.py:7076
 msgid "Output"
 msgstr "Ieșire"
 
-#: src/pages.py:4973 src/pages.py:5028
+#: src/pages.py:7214 src/pages.py:7269
 msgid "Output • Error"
 msgstr "Ieșire • Eroare"
 
-#: src/pages.py:5023
+#: src/pages.py:7264
 msgid "Output • {count} warning(s)"
 msgstr "Ieșire • {count} avertisment(e)"
 
-#: src/pages.py:2453
+#: src/pages.py:2605
 msgid "Partition details unavailable"
 msgstr "Detaliile partiției indisponibile"
 
-#: src/pages.py:3476 src/pages.py:3487 src/pages.py:1466 src/pages.py:1525
+#: src/pages.py:5561 src/pages.py:5572 src/pages.py:1533 src/pages.py:1592
 msgid "Password"
 msgstr "Parolă"
 
-#: src/pages.py:3584
+#: src/pages.py:5669
 msgid "Password must be at least 6 characters."
 msgstr "Parola trebuie să aibă cel puțin 6 caractere."
 
-#: src/pages.py:4048
+#: src/pages.py:6154
 msgid "Platform"
 msgstr "Platformă"
 
-#: src/pages.py:4548
+#: src/pages.py:6787
 msgid "Please do not turn off your computer"
 msgstr "Vă rugăm să nu opriți calculatorul"
 
-#: src/pages.py:3965
+#: src/pages.py:6055
 msgid "Please review your choices before proceeding"
 msgstr "Vă rugăm să revizuiți alegerile înainte de a continua"
 
@@ -693,86 +609,78 @@ msgstr "Portugheză"
 msgid "Portuguese (Brazil)"
 msgstr "Portugheză (Brazilia)"
 
-#: src/pages.py:4594
+#: src/pages.py:6833
 msgid "Prepare Secure Boot"
 msgstr "Pregătește Secure Boot"
 
-#: src/pages.py:4572
+#: src/pages.py:6811
 msgid "Prepare installation disk"
 msgstr "Pregătește discul de instalare"
 
-#: src/pages.py:4579
+#: src/pages.py:6818
 msgid "Prepare target environment"
 msgstr "Pregătește mediul țintă"
 
-#: src/pages.py:4871
+#: src/pages.py:7112
 msgid "Preparing installation…"
 msgstr "Pregătire instalare…"
 
-#: src/pages.py:4175
+#: src/pages.py:6336 src/pages.py:6272
 msgid "Preserved partitions"
 msgstr "Partiții păstrate"
 
-#: src/pages.py:4750
+#: src/pages.py:6991
 msgid "Previous slide"
 msgstr "Diafoa anterioară"
 
-#: src/pages.py:3964 src/pages.py:3958
+#: src/pages.py:6054 src/pages.py:6048
 msgid "Ready to Install"
 msgstr "Gata pentru instalare"
 
-#: src/pages.py:4811
+#: src/pages.py:7052
 msgid "Reboot Now"
 msgstr "Repornire acum"
 
-#: src/pages.py:4598
+#: src/pages.py:6837
 msgid "Refresh package indexes"
 msgstr "Reîmprospătează indexele pachetelor"
 
-#: src/pages.py:4580
+#: src/pages.py:6819
 msgid "Remove live-session components"
 msgstr "Îndepărtează componentele sesiunii live"
 
-#: src/pages.py:4951 src/pages.py:4942
+#: src/pages.py:7192 src/pages.py:7183
 msgid "Remove the installation media and restart your computer"
 msgstr "Îndepărtați media de instalare și reporniți calculatorul"
 
-#: src/pages.py:1177 src/pages.py:1205 src/pages.py:2220 src/pages.py:675
-#: src/pages.py:1362 src/pages.py:2233
-msgid ""
-"Requires an Internet connection. The base installation remains available "
-"when offline."
-msgstr ""
-"Necesită o conexiune la Internet. Instalarea de bază rămâne disponibilă "
-"offline."
+#: src/pages.py:1244 src/pages.py:1272 src/pages.py:2372 src/pages.py:734
+#: src/pages.py:1429 src/pages.py:2385
+msgid "Requires an Internet connection. The base installation remains available when offline."
+msgstr "Necesită o conexiune la Internet. Instalarea de bază rămâne disponibilă offline."
 
-#: src/pages.py:2550
+#: src/pages.py:2701
 msgid "Rescan Storage"
 msgstr "Rescanare stocare"
 
-#: src/pages.py:3101
+#: src/pages.py:3526
 msgid "Rescan and Reselect Disk"
 msgstr "Rescanare și respunere disc"
 
-#: src/pages.py:4809
+#: src/pages.py:7050
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "Repornire și înregistrare cheie Secure Boot"
 
-#: src/pages.py:4960
+#: src/pages.py:7201
 msgid "Restart is disabled in development protection mode"
 msgstr "Repornirea este dezactivată în modul de protecție pentru dezvoltare"
 
-#: src/pages.py:3150
+#: src/pages.py:3576 src/pages.py:5081
 msgid "Reuse {path} ({size})"
 msgstr "Reutilizare {path} ({size})"
 
-#: src/pages.py:4155
-msgid ""
-"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
-"before writing."
-msgstr ""
-"Reutilizează {path}; nu-l formata niciodată; verifică sănătatea FAT, "
-"identitatea și spațiul liber de 64 MiB înainte de scriere."
+#: src/pages.py:6254
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Reutilizează {path}; nu-l formata niciodată; verifică sănătatea FAT, identitatea și spațiul liber de 64 MiB înainte de scriere."
 
 #: data/languages.json:keyboard_layouts
 msgid "Romanian"
@@ -782,43 +690,43 @@ msgstr "Română"
 msgid "Russian"
 msgstr "Rusă"
 
-#: src/pages.py:4679
+#: src/pages.py:6920
 msgid "Save Log"
 msgstr "Salvează jurnalul"
 
-#: src/pages.py:4609
+#: src/pages.py:6848
 msgid "Schedule MOK enrollment"
 msgstr "Programează înregistrarea MOK"
 
-#: src/pages.py:3831
+#: src/pages.py:5918
 msgid "Search timezones…"
 msgstr "Caută fusuri orare…"
 
-#: src/pages.py:4069
+#: src/pages.py:6175
 msgid "Secure Boot enrollment"
 msgstr "Înregistrare Secure Boot"
 
-#: src/pages.py:2497 src/pages.py:2491
+#: src/pages.py:2649 src/pages.py:2643
 msgid "Select Installation Disk"
 msgstr "Selectează discul de instalare"
 
-#: src/pages.py:3818 src/pages.py:3812
+#: src/pages.py:5905 src/pages.py:5899
 msgid "Select Timezone"
 msgstr "Selectează fusul orar"
 
-#: src/pages.py:4592
+#: src/pages.py:6831
 msgid "Select fastest package mirror"
 msgstr "Selectează cel mai rapid oglindă pachete"
 
-#: src/pages.py:3884
+#: src/pages.py:5974
 msgid "Selected timezone"
 msgstr "Fus orar selectat"
 
-#: src/pages.py:4170
+#: src/pages.py:6267
 msgid "Selected unallocated space"
 msgstr "Spațiu nealocat selectat"
 
-#: src/pages.py:2239
+#: src/pages.py:2391
 msgid "Some drivers are proprietary or otherwise non-free software."
 msgstr "Unele drivere sunt proprietare sau altfel software ne-liber."
 
@@ -826,11 +734,11 @@ msgstr "Unele drivere sunt proprietare sau altfel software ne-liber."
 msgid "Spanish"
 msgstr "Spainiolă"
 
-#: src/pages.py:4046
+#: src/pages.py:6152
 msgid "Stable disk identity"
 msgstr "Identitate stabilă a discului"
 
-#: src/pages.py:4437
+#: src/pages.py:6641
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -838,19 +746,19 @@ msgstr ""
 "Identitate stabilă: {stable_id}\n"
 "\n"
 
-#: src/pages.py:2380
+#: src/pages.py:2532
 msgid "Storage Device"
 msgstr "Dispozitiv de stocare"
 
-#: src/pages.py:4168 src/pages.py:4224
+#: src/pages.py:6265 src/pages.py:6333 src/pages.py:6380
 msgid "Storage mode"
 msgstr "Mod stocare"
 
-#: src/pages.py:4050
+#: src/pages.py:6156
 msgid "Subvolumes"
 msgstr "Subvolume"
 
-#: src/pages.py:4268
+#: src/pages.py:2968 src/pages.py:3851
 msgid "Swap"
 msgstr "Swap"
 
@@ -858,19 +766,19 @@ msgstr "Swap"
 msgid "Swedish"
 msgstr "Suedeză"
 
-#: src/pages.py:4051
+#: src/pages.py:6157
 msgid "System updates"
 msgstr "Actualizări sistem"
 
-#: src/pages.py:4042
+#: src/pages.py:6148
 msgid "Target Disk"
 msgstr "Disc țintă"
 
-#: src/pages.py:2993 src/pages.py:3260
+#: src/pages.py:3418 src/pages.py:3686 src/pages.py:4091
 msgid "Target: {disk} ({size} — {model})"
 msgstr "Țintă: {disk} ({size} — {model})"
 
-#: src/pages.py:1964 src/pages.py:2076
+#: src/pages.py:2083 src/pages.py:2228
 msgid "Test your keyboard here…"
 msgstr "Testează tastatura aici…"
 
@@ -878,123 +786,75 @@ msgstr "Testează tastatura aici…"
 msgid "Thai"
 msgstr "Tai"
 
-#: src/pages.py:120
-msgid ""
-"The GPT disk or one of its partitions has no unique stable identifier. "
-"Guided coexistence cannot safely authorize preservation or writes on this "
-"disk."
-msgstr ""
-"Discul GPT sau una dintre partițiile sale nu are un identificator stabil "
-"unic. Coexistența ghidată nu poate autoriza în siguranță păstrarea sau "
-"scrierea pe acest disc."
+#: src/pages.py:151
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "Discul GPT sau una dintre partițiile sale nu are un identificator stabil unic. Coexistența ghidată nu poate autoriza în siguranță păstrarea sau scrierea pe acest disc."
 
-#: src/pages.py:115
-msgid ""
-"The complete partition map and free-space geometry could not be read "
-"consistently. No space on this disk is authorized for installation."
-msgstr ""
-"Harta completă a partițiilor și geometria spațiului liber nu au putut fi "
-"citite consistent. Niciun spațiu de pe acest disc nu este autorizat pentru "
-"instalare."
+#: src/pages.py:146
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "Harta completă a partițiilor și geometria spațiului liber nu au putut fi citite consistent. Niciun spațiu de pe acest disc nu este autorizat pentru instalare."
 
-#: src/pages.py:141
-msgid ""
-"The existing EFI System Partition is only a candidate. Health and free-space"
-" checks must pass before it can be reused, and it will never be formatted."
-msgstr ""
-"Partiția existentă de sistem EFI este doar un candidat. Verificările stării "
-"de sănătate și a spațiului liber trebuie să treacă înainte ca aceasta să "
-"poată fi reutilizată, iar ea nu va fi niciodată formatată."
+#: src/pages.py:172
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "Partiția existentă de sistem EFI este doar un candidat. Verificările stării de sănătate și a spațiului liber trebuie să treacă înainte ca aceasta să poată fi reutilizată, iar ea nu va fi niciodată formatată."
 
-#: src/pages.py:4926
-msgid ""
-"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
-" state, or installed system was changed."
-msgstr ""
-"Planul de instalare este valid. Niciun disc, sistem de fișiere, bootloader, "
-"stare Secure Boot sau sistem instalat nu a fost modificat."
+#: src/pages.py:7167
+msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
+msgstr "Planul de instalare este valid. Niciun disc, sistem de fișiere, bootloader, stare Secure Boot sau sistem instalat nu a fost modificat."
 
-#: src/main.py:147
+#: src/main.py:151
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr "Instalatorul nu poate fi închis în timp ce modifică discul țintă."
 
-#: src/pages.py:150
-msgid ""
-"The installer will not mount, repair or infer the safety of Windows volumes "
-"from hibernation or Fast Startup state. Any required Windows maintenance "
-"must be completed in Windows."
-msgstr ""
-"Instalatorul nu va monta, repara sau deduce siguranța volumelor Windows din "
-"starea de hibernare sau Pornire rapidă. Orice întreținere necesară a Windows"
-" trebuie finalizată în Windows."
+#: src/pages.py:181
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "Instalatorul nu va monta, repara sau deduce siguranța volumelor Windows din starea de hibernare sau Pornire rapidă. Orice întreținere necesară a Windows trebuie finalizată în Windows."
 
-#: src/pages.py:4443
+#: src/pages.py:6647
 msgid "The privileged executor is disabled."
-msgstr "Executorul privilegiat este dezactivat."
+msgstr "Procesul de serviciu cu privilegii ridicate este dezactivat."
 
-#: src/pages.py:3228
-msgid ""
-"The selected disk changed or disappeared. Return to the disk page and select"
-" it again. {error}"
-msgstr ""
-"Discul selectat s-a schimbat sau a dispărut. Întoarceți-vă la pagina "
-"discului și selectați-l din nou. {error}"
+#: src/pages.py:3654
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "Discul selectat s-a schimbat sau a dispărut. Întoarceți-vă la pagina discului și selectați-l din nou. {error}"
 
-#: src/pages.py:3241
+#: src/pages.py:3667
 msgid "The selected disk size changed. Return and select it again."
-msgstr ""
-"Dimensiunea discului selectat s-a schimbat. Întoarceți-vă și selectați-l din"
-" nou."
+msgstr "Dimensiunea discului selectat s-a schimbat. Întoarceți-vă și selectați-l din nou."
 
-#: src/pages.py:3251
-msgid ""
-"The selected disk topology changed. Review the disk and installation method "
-"again."
-msgstr ""
-"Topologia discului selectat s-a schimbat. Revizuiți discul și metoda de "
-"instalare din nou."
+#: src/pages.py:3677
+msgid "The selected disk topology changed. Review the disk and installation method again."
+msgstr "Topologia discului selectat s-a schimbat. Revizuiți discul și metoda de instalare din nou."
 
-#: src/pages.py:3580
+#: src/pages.py:5665
 msgid "The two passwords do not match."
 msgstr "Cele două parole nu se potrivesc."
 
-#: src/pages.py:4057
+#: src/pages.py:6163
 msgid "Third-party drivers"
 msgstr "Drivere terțe"
 
-#: src/pages.py:3021
-msgid ""
-"This advanced path preserves existing partitions but changes the selected "
-"disk's partition table and the machine's EFI boot state."
-msgstr ""
-"Această cale avansată păstrează partițiile existente, dar modifică tabela de"
-" partiții a discului selectat și starea de boot EFI a mașinii."
+#: src/pages.py:3446
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "Această cale avansată păstrează partițiile existente, dar modifică tabela de partiții a discului selectat și starea de boot EFI a mașinii."
 
-#: src/pages.py:125
-msgid ""
-"This disk contains an active mapper, array or other nested block-device "
-"topology that guided coexistence does not support."
-msgstr ""
-"Acest disc conține un mapper activ, o matrice sau altă topologie imbricată "
-"de dispozitive bloc pe care coexistența ghidată nu o suportă."
+#: src/pages.py:156
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "Acest disc conține un mapper activ, o matrice sau altă topologie imbricată de dispozitive bloc pe care coexistența ghidată nu o suportă."
 
-#: src/pages.py:2935
-msgid ""
-"This disk is too small for whole-disk installation. Advanced may continue "
-"only if suitable unallocated space exists."
-msgstr ""
-"Acest disc este prea mic pentru instalarea pe întregul disc. Calea avansată "
-"poate continua doar dacă există spațiu nealocat adecvat."
+#: src/pages.py:3277
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "Acest disc este prea mic pentru instalarea pe întregul disc. Calea avansată poate continua doar dacă există spațiu nealocat adecvat."
 
-#: src/pages.py:4454
+#: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
 msgstr "Acest instalator nu reduce sau păstrează alte sisteme."
 
-#: src/pages.py:4103
+#: src/pages.py:6209
 msgid "Timezone"
 msgstr "Fus orar"
 
-#: src/pages.py:2474
+#: src/pages.py:2626
 msgid "Too small"
 msgstr "Prea mic"
 
@@ -1006,71 +866,67 @@ msgstr "Turcă"
 msgid "Ukrainian"
 msgstr "Ucraineană"
 
-#: src/pages.py:3065
+#: src/pages.py:3490
 msgid "Unallocated space"
 msgstr "Spațiu nealocat"
 
-#: src/pages.py:2445
+#: src/pages.py:2597
 msgid "Unallocated · {size}"
 msgstr "Nealocat · {size}"
 
-#: src/pages.py:4014 src/pages.py:1710
+#: src/pages.py:6106 src/pages.py:1777
 msgid "Unavailable: {error}"
 msgstr "Indisponibil: {error}"
 
-#: src/pages.py:2432
+#: src/pages.py:2584
 msgid "Unknown filesystem"
 msgstr "Sistem de fișiere necunoscut"
 
-#: src/pages.py:4614
+#: src/pages.py:6853
 msgid "Unmount installed system"
 msgstr "Demontează sistemul instalat"
 
-#: src/pages.py:2198 src/pages.py:1196 src/pages.py:2192
+#: src/pages.py:2350 src/pages.py:1263 src/pages.py:2344
 msgid "Updates and Drivers"
 msgstr "Actualizări și drivere"
 
-#: src/pages.py:2986
+#: src/pages.py:3411
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "Utilizează doar spațiul nealocat existent pe discul selectat."
 
-#: src/pages.py:4079
+#: src/pages.py:6185
 msgid "User"
 msgstr "Utuzator"
 
-#: src/pages.py:3446 src/pages.py:3440
+#: src/pages.py:5531 src/pages.py:5525
 msgid "User Account"
 msgstr "Cont utilizator"
 
-#: src/pages.py:3468 src/pages.py:3472
+#: src/pages.py:5553 src/pages.py:5557
 msgid "Username"
 msgstr "Nume utilizator"
 
-#: src/pages.py:3568
-msgid ""
-"Username must start with a lowercase ASCII letter and contain only lowercase"
-" ASCII letters or digits (maximum 16 characters)."
-msgstr ""
-"Numele de utilizator trebuie să înceapă cu o literă ASCII mică și să conțină"
-" doar litere mici ASCII sau cifre (maximum 16 caractere)."
+#: src/pages.py:5653
+msgid "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
+msgstr "Numele de utilizator trebuie să înceapă cu o literă ASCII mică și să conțină doar litere mici ASCII sau cifre (maximum 16 caractere)."
 
-#: src/pages.py:2832
+#: src/pages.py:3173
 msgid "Uses a traditional single root filesystem."
 msgstr "Utilizează un sistem de fișiere rădăcină unic tradițional."
 
-#: src/pages.py:4406
+#: src/pages.py:6601
 msgid "Validate Plan (No Installation)"
 msgstr "Validează planul (fără instalare)"
 
-#: src/pages.py:4405
+#: src/pages.py:6600
 msgid "Validate this installation plan?"
 msgstr "Validați acest plan de instalare?"
 
-#: src/pages.py:4606
+#: src/pages.py:6845
 msgid "Verify kernel module signatures"
 msgstr "Verifică semnăturile modulelor kernel"
 
-#: src/pages.py:4571
+#: src/pages.py:6810
 msgid "Verify target disk isolation"
 msgstr "Verifică izolarea discului țintă"
 
@@ -1078,896 +934,819 @@ msgstr "Verifică izolarea discului țintă"
 msgid "Vietnamese"
 msgstr "Vietnameză"
 
-#: src/pages.py:811
+#: src/pages.py:877
 msgid "Welcome to AnduinOS"
 msgstr "Bine ați venit la AnduinOS"
 
-#: src/pages.py:2468
+#: src/pages.py:2620
 msgid "Windows detected"
 msgstr "Windows detectat"
 
-#: src/pages.py:4188
-msgid ""
-"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
-"AnduinOS NVRAM entry."
-msgstr ""
-"Scrie doar EFI/AnduinOS, nu suprascrie EFI/BOOT și necesită o intrare NVRAM "
-"AnduinOS verificată."
+#: src/pages.py:6284
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Scrie doar EFI/AnduinOS, nu suprascrie EFI/BOOT și necesită o intrare NVRAM AnduinOS verificată."
 
-#: src/pages.py:4072
+#: src/pages.py:6178
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
-msgstr ""
-"creează un MOK local pe mașină; înregistrează după repornire cu parola "
-"123456"
+msgstr "creează un MOK local pe mașină; înregistrează după repornire cu parola 123456"
 
-#: src/pages.py:4059
+#: src/pages.py:6165
 msgid "detect and install (may include non-free software)"
 msgstr "detectează și instalează (poate include software ne-liber)"
 
-#: src/pages.py:4121 src/pages.py:4055 src/pages.py:4061 src/pages.py:4067
+#: src/pages.py:6227 src/pages.py:6161 src/pages.py:6167 src/pages.py:6173
 msgid "do not install"
 msgstr "nu instala"
 
-#: src/pages.py:4053 src/pages.py:4065
+#: src/pages.py:6159 src/pages.py:6171
 msgid "download and install"
 msgstr "descarcă și instalează"
 
-#: src/pages.py:3055
+#: src/pages.py:3480 src/pages.py:5118
 msgid "ext4 (classic)"
 msgstr "ext4 (clasic)"
 
-#: src/pages.py:2829
+#: src/pages.py:3170
 msgid "ext4 — classic"
 msgstr "ext4 — clasic"
 
-#: src/pages.py:4077
+#: src/pages.py:6183
 msgid "not required"
 msgstr "nu este necesar"
 
-#: src/pages.py:4083
+#: src/pages.py:6189
 msgid "password required for login"
 msgstr "parolă necesară pentru conectare"
 
-#: src/pages.py:4024
+#: src/pages.py:6117
 msgid "single ext4 root filesystem"
 msgstr "sistem de fișiere ext4 root unic"
 
-#: src/pages.py:4005
+#: src/pages.py:6097
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / Pornire securizată: {secure_boot}"
 
-#: src/pages.py:4176
+#: src/pages.py:6273
 msgid "{count}: {paths}"
 msgstr "{count}: {paths}"
 
-#: src/pages.py:4139
+#: src/pages.py:6238
 msgid "{name}: {start}–{end} MiB"
 msgstr "{name}: {start}–{end} MiB"
 
-#: src/pages.py:4147
+#: src/pages.py:6246 src/pages.py:6313
 msgid "{path} as {filesystem}"
 msgstr "{path} ca {filesystem}"
 
-#: src/pages.py:4171
+#: src/pages.py:6268
 msgid "{size} at {offset}"
 msgstr "{size} la {offset}"
 
-#: src/pages.py:3288
+#: src/pages.py:3714
 msgid "{size} unallocated at {offset}"
 msgstr "{size} nealocat la {offset}"
 
-#: src/pages.py:5031
+#: src/pages.py:7272
 msgid "{step} failed"
 msgstr "{step} eșuat"
 
-#: src/pages.py:4303
-msgid ""
-"⚠ Only the selected unallocated space will be partitioned and formatted. "
-"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
-"firmware boot entry may change. This installer will not shrink Windows for "
-"you."
-msgstr ""
-"⚠ Doar spațiul nealocat selectat va fi partitionat și formatat. Partițiile "
-"existente sunt păstrate, dar fișierele EFI/AnduinOS și intrarea de boot a "
-"firmware-ului AnduinOS se pot schimba. Acest instalator nu va reduce "
-"partiția Windows pentru dumneavoastră."
+#: src/pages.py:6488
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Doar spațiul nealocat selectat va fi partitionat și formatat. Partițiile existente sunt păstrate, dar fișierele EFI/AnduinOS și intrarea de boot a firmware-ului AnduinOS se pot schimba. Acest instalator nu va reduce partiția Windows pentru dumneavoastră."
 
-#: src/pages.py:4311
-msgid ""
-"⚠ This will erase ALL data on the selected disk. This action cannot be "
-"undone."
-msgstr ""
-"⚠ Aceasta va șterge TOATE DATELE de pe discul selectat. Această acțiune nu "
-"poate fi anulată."
+#: src/pages.py:6504
+msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
+msgstr "⚠ Aceasta va șterge TOATE DATELE de pe discul selectat. Această acțiune nu poate fi inversată."
 
-#: src/pages.py:1176 src/pages.py:667 src/pages.py:1171
+#: src/pages.py:1243 src/pages.py:726 src/pages.py:1238
 msgid "Connect to the Internet"
 msgstr "Conectare la internet"
 
-#: src/pages.py:1343
+#: src/pages.py:1410
 msgid "Internet connection is ready."
 msgstr "Conexiunea la internet este pregătită."
 
-#: src/pages.py:1250
+#: src/pages.py:1317
 msgid "Available Wi-Fi Networks"
 msgstr "Rețele Wi-Fi disponibile"
 
-#: src/pages.py:4576
+#: src/pages.py:6815
 msgid "Preserve connected Wi-Fi network"
 msgstr "Păstrează rețeaua Wi-Fi conectată"
 
-#: src/pages.py:2540 src/pages.py:3092
+#: src/pages.py:2691 src/pages.py:3517 src/pages.py:4166 src/pages.py:5388
+#: src/pages.py:4139 src/pages.py:4305
 msgid "Loading storage devices…"
 msgstr "Se încarcă dispozitivele de stocare…"
 
-#: src/pages.py:4335
+#: src/pages.py:6528
 msgid "Rechecking target disk…"
 msgstr "Se verifică din nou discul țintă…"
 
-#: src/pages.py:2609 src/pages.py:3213 src/pages.py:4364
+#: src/pages.py:2760 src/pages.py:3639 src/pages.py:5336 src/pages.py:6557
 msgid "Storage devices could not be loaded: {error}"
 msgstr "Dispozitivele de stocare nu au putut fi încărcate: {error}"
 
-#: src/pages.py:1218 src/pages.py:4586 src/pages.py:2252
+#: src/pages.py:1285 src/pages.py:6825 src/pages.py:2404
 msgid "Install extended multimedia format support"
 msgstr "Instalează suport extins pentru formate multimedia"
 
-#: src/pages.py:4063
+#: src/pages.py:6169
 msgid "Extended multimedia formats"
 msgstr "Formate multimedia extinse"
 
-#: src/pages.py:2256
-msgid ""
-"Adds wider GStreamer compatibility and support for additional legacy and "
-"specialist media formats. Some components may be subject to patent or "
-"redistribution terms."
-msgstr ""
-"Adaugă compatibilitate GStreamer mai largă și suport pentru formate media "
-"vechi și specializate suplimentare. Unele componente pot fi supuse "
-"brevetelor sau condițiilor de redistribuire."
+#: src/pages.py:2408
+msgid "Adds wider GStreamer compatibility and support for additional legacy and specialist media formats. Some components may be subject to patent or redistribution terms."
+msgstr "Adaugă compatibilitate GStreamer mai largă și suport pentru formate media vechi și specializate suplimentare. Unele componente pot fi supuse brevetelor sau condițiilor de redistribuire."
 
-#: src/pages.py:1473
+#: src/pages.py:1540
 msgid "A saved profile exists. Entering a password updates it securely."
-msgstr ""
-"Există un profil salvat. Introducerea unei parole îl actualizează în "
-"siguranță."
+msgstr "Există un profil salvat. Introducerea unei parole îl actualizează în siguranță."
 
-#: src/pages.py:1524
+#: src/pages.py:1591
 msgid "Anonymous identity (optional)"
 msgstr "Identitate anonimă (opțional)"
 
-#: src/pages.py:1530
+#: src/pages.py:1597
 msgid "CA certificate path (optional)"
 msgstr "Calea certificatului CA (opțional)"
 
-#: src/pages.py:1239 src/pages.py:1409 src/pages.py:1482 src/pages.py:1600
-#: src/pages.py:1816
+#: src/pages.py:1306 src/pages.py:1476 src/pages.py:1549 src/pages.py:1667
+#: src/pages.py:1883 src/pages.py:4626 src/pages.py:4845 src/pages.py:5309
 msgid "Cancel"
 msgstr "Anulează"
 
-#: src/pages.py:1786
+#: src/pages.py:1853
 msgid "Cancelling Wi-Fi operation…"
 msgstr "Se anulează operația Wi-Fi…"
 
-#: src/pages.py:1532
+#: src/pages.py:1599
 msgid "Client certificate path"
 msgstr "Calea certificatului de client"
 
-#: src/pages.py:1483 src/pages.py:1601
+#: src/pages.py:1550 src/pages.py:1668
 msgid "Connect"
-msgstr "Connect"
+msgstr "Conectează"
 
-#: src/pages.py:1817
+#: src/pages.py:1884 src/pages.py:6709
 msgid "Continue"
 msgstr "Continuă"
 
-#: src/pages.py:1259 src/pages.py:1809
+#: src/pages.py:1326 src/pages.py:1876
 msgid "Connect to a hidden network"
 msgstr "Conectează-te la o rețea ascunsă"
 
-#: src/pages.py:1478 src/pages.py:1593
+#: src/pages.py:1545 src/pages.py:1660
 #, python-brace-format
 msgid "Connect to {network}"
 msgstr "Conectează-te la {network}"
 
-#: src/pages.py:1654
+#: src/pages.py:1721
 msgid "Connected"
-msgstr "Connected"
+msgstr "Conectat"
 
-#: src/pages.py:1453
+#: src/pages.py:1520
 #, python-brace-format
 msgid "Connecting to {network}…"
 msgstr "Se conectează la {network}…"
 
-#: src/pages.py:1755
+#: src/pages.py:1822
 msgid "Could not change the Wi-Fi connection"
 msgstr "Nu s-a putut modifica conexiunea Wi-Fi."
 
-#: src/pages.py:1410
+#: src/pages.py:1477
 msgid "Disconnect"
-msgstr "Disconnect"
+msgstr "Deconectează"
 
-#: src/pages.py:1401
+#: src/pages.py:1468
 #, python-brace-format
 msgid "Disconnect from {network}?"
 msgstr "Doriți să vă deconectați de la {network}?"
 
-#: src/pages.py:1420
+#: src/pages.py:1487
 #, python-brace-format
 msgid "Disconnecting from {network}…"
 msgstr "Se deconectează de la {network}…"
 
-#: src/pages.py:1531
+#: src/pages.py:1598
 msgid "Domain suffix match (optional)"
 msgstr "Potrivire sufix domeniu (opțional)"
 
-#: src/pages.py:1515
+#: src/pages.py:1582
 msgid "EAP method"
 msgstr "Metodă EAP"
 
-#: src/pages.py:1387 src/pages.py:1796
+#: src/pages.py:1454 src/pages.py:1863
 msgid "Enhanced Open (OWE)"
 msgstr "Deschidere îmbunătățită (OWE)"
 
-#: src/pages.py:1595
-msgid ""
-"Enter the credentials supplied by your organization. Certificate validation "
-"is strongly recommended."
-msgstr ""
-"Introduceți acreditările furnizate de organizația dumneavoastră. Validarea "
-"certificatului este recomandată cu tărie."
+#: src/pages.py:1662
+msgid "Enter the credentials supplied by your organization. Certificate validation is strongly recommended."
+msgstr "Introduceți acreditările furnizate de organizația dumneavoastră. Validarea certificatului este recomandată cu tărie."
 
-#: src/pages.py:1811
+#: src/pages.py:1878
 msgid "Enter the exact network name and choose its security type."
 msgstr "Tastați numele exact al rețelei și alegeți tipul său de securitate."
 
-#: src/pages.py:1390 src/pages.py:1800
+#: src/pages.py:1457 src/pages.py:1867
 msgid "Enterprise Wi-Fi"
 msgstr "Wi-Fi de întreprindere"
 
-#: src/pages.py:1523
+#: src/pages.py:1590
 msgid "Identity"
-msgstr "Identity"
+msgstr "Identitate"
 
-#: src/pages.py:1527
+#: src/pages.py:1594
 msgid "Inner authentication"
 msgstr "Autentificare internă"
 
-#: src/pages.py:1790
+#: src/pages.py:1857
 msgid "Network name (SSID)"
 msgstr "Numele rețelei (SSID)"
 
-#: src/pages.py:1645
+#: src/pages.py:1712
 msgid "No Wi-Fi networks found."
 msgstr "Nicio rețea Wi-Fi găsită."
 
-#: src/pages.py:1386 src/pages.py:1795
+#: src/pages.py:1453 src/pages.py:1862
 msgid "Open network"
 msgstr "Rețea deschisă"
 
-#: src/pages.py:1389 src/pages.py:1797 src/pages.py:1798
+#: src/pages.py:1456 src/pages.py:1864 src/pages.py:1865
 msgid "Personal Wi-Fi"
 msgstr "Wi-Fi personal"
 
-#: src/pages.py:1535
+#: src/pages.py:1602
 msgid "Private key password (optional)"
 msgstr "Parola cheii private (opțional)"
 
-#: src/pages.py:1533
+#: src/pages.py:1600
 msgid "Private key path"
 msgstr "Calea cheii private"
 
-#: src/pages.py:1284
+#: src/pages.py:1351
 msgid "Refresh Wi-Fi networks"
 msgstr "Reîmprospătează rețelele Wi-Fi"
 
-#: src/pages.py:1656
+#: src/pages.py:1723
 msgid "Saved"
-msgstr "Saved"
+msgstr "Salvat"
 
-#: src/pages.py:1792
+#: src/pages.py:1859
 msgid "Security"
-msgstr "Security"
+msgstr "Securitate"
 
-#: src/pages.py:1405
-msgid ""
-"The installer will keep the saved network profile so it can be used again."
-msgstr ""
-"Instalatorul va păstra profilul de rețea salvat, astfel încât acesta să "
-"poată fi utilizat din nou."
+#: src/pages.py:1472
+msgid "The installer will keep the saved network profile so it can be used again."
+msgstr "Instalatorul va păstra profilul de rețea salvat, astfel încât acesta să poată fi utilizat din nou."
 
-#: src/pages.py:1356
+#: src/pages.py:1423
 msgid "The local network is connected, but Internet access is unavailable."
-msgstr ""
-"Rețeaua locală este conectată, dar accesul la Internet este indisponibil."
+msgstr "Rețeaua locală este conectată, dar accesul la Internet este indisponibil."
 
-#: src/pages.py:1856
+#: src/pages.py:1923
 msgid "Turning Wi-Fi off…"
 msgstr "Se dezactivează Wi-Fi…"
 
-#: src/pages.py:1854
+#: src/pages.py:1921
 msgid "Turning Wi-Fi on…"
 msgstr "Se activează Wi-Fi…"
 
-#: src/pages.py:1485
+#: src/pages.py:1552
 msgid "Use WPS"
 msgstr "Folosește WPS"
 
-#: src/pages.py:1388 src/pages.py:1799
+#: src/pages.py:1455 src/pages.py:1866
 msgid "WEP (legacy)"
 msgstr "WEP (învechit)"
 
-#: src/pages.py:1347
-msgid ""
-"Wi-Fi is connected, but the network requires sign-in through a captive "
-"portal."
-msgstr ""
-"Wi-Fi este conectat, dar rețeaua necesită autentificare printr-un portal "
-"captiv."
+#: src/pages.py:1414
+msgid "Wi-Fi is connected, but the network requires sign-in through a captive portal."
+msgstr "Wi-Fi este conectat, dar rețeaua necesită autentificare printr-un portal captiv."
 
-#: src/pages.py:1449
+#: src/pages.py:1516
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
-msgstr ""
-"Se așteaptă conectarea prin WPS la {network}. Apăsați butonul WPS de pe "
-"router…"
+msgstr "Se așteaptă conectarea prin WPS la {network}. Apăsați butonul WPS de pe router…"
 
-#: src/pages.py:3576
+#: src/pages.py:5661
 msgid "A password is required."
 msgstr "Este necesară o parolă."
 
-#: src/pages.py:3731
+#: src/pages.py:5817
 msgid "Administrative commands will no longer ask for your password."
 msgstr "Comenzile administrative nu vor mai solicita parola."
 
-#: src/pages.py:3681 src/pages.py:3675
+#: src/pages.py:5767 src/pages.py:5761
 msgid "Advanced Options"
 msgstr "Opțiuni avansate"
 
-#: src/pages.py:3747
+#: src/pages.py:5833
 msgid "Allow SSH login with the account password"
 msgstr "Permite autentificarea SSH cu parola contului"
 
-#: src/pages.py:4089
+#: src/pages.py:6195
 msgid "Automatic desktop login"
 msgstr "Autentificare automată pe desktop"
 
-#: src/pages.py:3701
-msgid ""
-"Choose how the local administrator account signs in and authorizes system "
-"changes."
-msgstr ""
-"Alegeți cum se autentifică contul de administrator local și cum autorizează "
-"modificările sistemului."
+#: src/pages.py:5787
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Alegeți cum se autentifică contul de administrator local și cum autorizează modificările sistemului."
 
-#: src/pages.py:3682
+#: src/pages.py:5768
 msgid "Choose optional access and sign-in policies"
 msgstr "Alegeți politici opționale de acces și autentificare"
 
-#: src/pages.py:3709
+#: src/pages.py:5795
 msgid "Choose whether this computer accepts remote Secure Shell connections."
-msgstr ""
-"Alegeți dacă acest computer acceptă conexiuni Secure Shell la distanță."
+msgstr "Alegeți dacă acest computer acceptă conexiuni Secure Shell la distanță."
 
-#: src/pages.py:4604
+#: src/pages.py:6843
 msgid "Configure Secure Shell"
 msgstr "Configurează Secure Shell"
 
-#: src/pages.py:3699
+#: src/pages.py:5785
 msgid "Local Access"
 msgstr "Acces local"
 
-#: src/pages.py:3737
+#: src/pages.py:5823
 msgid "Log in to the desktop without a password"
 msgstr "Autentificare pe desktop fără parolă"
 
-#: src/pages.py:3739
+#: src/pages.py:5825
 msgid "Open this account's desktop automatically when the computer starts."
 msgstr "Deschide automat desktopul acestui cont la pornirea computerului."
 
-#: src/pages.py:3707
+#: src/pages.py:5793
 msgid "Remote Access"
 msgstr "Acces la distanță"
 
-#: src/pages.py:3730
+#: src/pages.py:5816
 msgid "Run sudo commands without a password"
 msgstr "Rulează comenzi sudo fără parolă"
 
-#: src/pages.py:4095
+#: src/pages.py:6201
 msgid "SSH password login"
 msgstr "Autentificare SSH cu parolă"
 
-#: src/pages.py:3749
+#: src/pages.py:5835
 msgid "Start Secure Shell and accept this account password over the network."
 msgstr "Pornește Secure Shell și acceptă parola acestui cont prin rețea."
 
-#: src/pages.py:3759
+#: src/pages.py:5845
 msgid "This will reduce the security of the installed system."
 msgstr "Aceasta va reduce securitatea sistemului instalat."
 
-#: src/pages.py:4093 src/pages.py:4099
+#: src/pages.py:6199 src/pages.py:6205
 msgid "disabled"
 msgstr "dezactivat"
 
-#: src/pages.py:4091 src/pages.py:4097
+#: src/pages.py:6197 src/pages.py:6203
 msgid "enabled"
 msgstr "activat"
 
-#: src/pages.py:349
-msgid ""
-"AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently"
-" enabled on this computer, and we recommend enabling it for additional "
-"protection."
-msgstr ""
-"AnduinOS arenează suport complet pentru Secure Boot. Secure Boot nu este "
-"activat în prezent pe acest computer, iar vă recomandăm să-l activați pentru"
-" protecție suplimentară."
+#: src/pages.py:403
+msgid "AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently enabled on this computer, and we recommend enabling it for additional protection."
+msgstr "AnduinOS arenează suport complet pentru Secure Boot. Secure Boot nu este activat în prezent pe acest computer, iar vă recomandăm să-l activați pentru protecție suplimentară."
 
-#: src/pages.py:331
+#: src/pages.py:385
 msgid "AnduinOS supports Secure Boot"
 msgstr "AnduinOS acceptă Secure Boot"
 
-#: src/pages.py:360
-msgid ""
-"Battery power is sufficient or reliable power is connected. You can continue"
-" with the installation."
-msgstr ""
-"Încărcarea bateriei este suficientă sau este conectată o sursă de alimentare"
-" fiabilă. Puteți continua cu instalarea."
+#: src/pages.py:414
+msgid "Battery power is sufficient or reliable power is connected. You can continue with the installation."
+msgstr "Încărcarea bateriei este suficientă sau este conectată o sursă de alimentare fiabilă. Puteți continua cu instalarea."
 
-#: src/pages.py:366
-msgid ""
-"Connect reliable external power and charge above 25%, or charge above 45% "
-"while unplugged."
-msgstr ""
-"Conectați o sursă de alimentare externă fiabilă și încărcați la peste 25%, "
-"sau încărcați la peste 45% dacă nu este conectat la priză."
+#: src/pages.py:420
+msgid "Connect reliable external power and charge above 25%, or charge above 45% while unplugged."
+msgstr "Conectați o sursă de alimentare externă fiabilă și încărcați la peste 25%, sau încărcați la peste 45% dacă nu este conectat la priză."
 
-#: src/pages.py:338
+#: src/pages.py:392
 msgid "Could not open UEFI firmware settings"
 msgstr "Nu s-a putut deschide setările firmware-ului UEFI"
 
-#: src/pages.py:333
+#: src/pages.py:387
 msgid "Get additional protection before installing AnduinOS."
 msgstr "Obțineți protecție suplimentară înainte de a instala AnduinOS."
 
-#: src/pages.py:364
+#: src/pages.py:418
 msgid "Power conditions are safe for installation."
 msgstr "Condițiile de alimentare sunt sigure pentru instalare."
 
-#: src/pages.py:363
+#: src/pages.py:417
 msgid "Power ready"
 msgstr "Alimentare pregătită"
 
-#: src/pages.py:335
+#: src/pages.py:389
 msgid "Restart to UEFI Firmware Settings"
 msgstr "Repornește în Setările firmware-ului UEFI"
 
-#: src/pages.py:345
-msgid ""
-"Secure Boot is a UEFI security feature that verifies trusted, digitally "
-"signed software while your computer starts."
-msgstr ""
-"Secure Boot este o funcție de securitate UEFI care verifică software-ul de "
-"încredere, semnat digital, în timpul pornirii computerului."
+#: src/pages.py:399
+msgid "Secure Boot is a UEFI security feature that verifies trusted, digitally signed software while your computer starts."
+msgstr "Secure Boot este o funcție de securitate UEFI care verifică software-ul de încredere, semnat digital, în timpul pornirii computerului."
 
-#: src/pages.py:336
+#: src/pages.py:390
 msgid "Skip"
 msgstr "Omite"
 
-#: src/pages.py:341
+#: src/pages.py:395
 msgid "The firmware settings could not be opened on this computer."
 msgstr "Setările firmware-ului nu au putut fi deschise pe acest computer."
 
-#: src/pages.py:354
-msgid ""
-"To enable it, open the UEFI firmware settings and look under Boot, Security,"
-" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
-"Firmware wording varies by manufacturer."
-msgstr ""
-"Pentru a-l activa, deschideți setările firmware-ului UEFI și căutați la "
-"secțiunea Boot, Security sau Secure Boot. Selectați Microsoft & 3rd-party CA"
-" sau activați Secure Boot. Formularea din firmware variază în funcție de "
-"producător."
+#: src/pages.py:408
+msgid "To enable it, open the UEFI firmware settings and look under Boot, Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. Firmware wording varies by manufacturer."
+msgstr "Pentru a-l activa, deschideți setările firmware-ului UEFI și căutați la secțiunea Boot, Security sau Secure Boot. Selectați Microsoft & 3rd-party CA sau activați Secure Boot. Formularea din firmware variază în funcție de producător."
 
+#: src/pages.py:3179
 msgid "Advanced"
 msgstr "Avansat"
 
-msgid ""
-"Keep Windows or other partitions, reuse or create an ESP, and design Root "
-"and Swap partitions with exact sizes."
-msgstr ""
-"Păstrează Windows sau alte partiții, reutilizează ori creează un ESP și "
-"proiectează partiții Root și Swap cu dimensiuni exacte."
+#: src/pages.py:3181
+msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root and Swap partitions with exact sizes."
+msgstr "Păstrează Windows sau alte partiții, reutilizează ori creează un ESP și proiectează partiții Root și Swap cu dimensiuni exacte."
 
-msgid ""
-"Manual changes are destructive. Existing partition starts are never moved. "
-"Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
-" or unclean volumes are never resized."
-msgstr ""
-"Modificările manuale sunt distructive. Pozițiile de început ale partițiilor "
-"existente nu sunt mutate niciodată. Volumele NTFS necriptate pot fi "
-"micșorate numai după verificări stricte de siguranță; volumele criptate, "
-"montate sau ale căror sisteme de fișiere nu se află într-o stare curată nu "
-"sunt niciodată redimensionate."
+#: src/pages.py:3230
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Modificările manuale sunt distructive. Pozițiile de început ale partițiilor existente nu sunt mutate niciodată. Volumele NTFS necriptate pot fi micșorate numai după verificări stricte de siguranță; volumele criptate, montate sau ale căror sisteme de fișiere nu se află într-o stare curată nu sunt niciodată redimensionate."
 
+#: src/pages.py:3410
 msgid "Install Alongside Automatically"
 msgstr "Instalare alături automat"
 
+#: src/pages.py:3849
 msgid "ESP"
 msgstr "ESP"
 
+#: src/pages.py:3850
 msgid "Root"
-msgstr "Root"
+msgstr "Partiția rădăcină"
 
+#: src/pages.py:3866
 msgid "Unallocated"
 msgstr "Nealocat"
 
+#: src/pages.py:3973
 #, python-brace-format
 msgid "{name} · {size} · {start}–{end} MiB"
 msgstr "{name} · {size} · {start}–{end} MiB"
 
+#: src/pages.py:4045
 msgid "Current disk"
 msgstr "Discul curent"
 
+#: src/pages.py:4151 src/pages.py:4047
 msgid "Planned result"
 msgstr "Rezultatul planificat"
 
+#: src/pages.py:4071
 msgid "Advanced: Manual Partitioning"
 msgstr "Avansat: Partiționare manuală"
 
-msgid ""
-"Windows was detected. Its partitions remain preserved unless you explicitly "
-"mark them for deletion."
-msgstr ""
-"Windows a fost detectat. Partițiile sale rămân păstrate dacă nu le marchezi "
-"explicit pentru ștergere."
+#: src/pages.py:4104
+msgid "Windows was detected. Its partitions remain preserved unless you explicitly mark them for deletion."
+msgstr "Windows a fost detectat. Partițiile sale rămân păstrate dacă nu le marchezi explicit pentru ștergere."
 
+#: src/pages.py:4173 src/pages.py:4958
 msgid "Initialize New GPT"
 msgstr "Inițializare GPT nou"
 
+#: src/pages.py:4193
 msgid "Existing partitions"
 msgstr "Partiții existente"
 
-msgid ""
-"Reuse a healthy existing ESP without formatting it, or create a new one in "
-"available space."
-msgstr ""
-"Reutilizează un ESP existent și sănătos fără a-l formata sau creează unul "
-"nou în spațiul disponibil."
+#: src/pages.py:4214
+msgid "Reuse a healthy existing ESP without formatting it, or create a new one in available space."
+msgstr "Reutilizează un ESP existent și sănătos fără a-l formata sau creează unul nou în spațiul disponibil."
 
+#: src/pages.py:4248
 msgid "Add a partition"
 msgstr "Adaugă o partiție"
 
-msgid ""
-"Choose an available range, exact start position, and size. Nothing is "
-"written until installation begins."
-msgstr ""
-"Alege un interval disponibil, poziția exactă de început și dimensiunea. Nu "
-"se scrie nimic până la începerea instalării."
+#: src/pages.py:4252
+msgid "Choose an available range, exact start position, and size. Nothing is written until installation begins."
+msgstr "Alege un interval disponibil, poziția exactă de început și dimensiunea. Nu se scrie nimic până la începerea instalării."
 
+#: src/pages.py:4266
 msgid "Role"
 msgstr "Rol"
 
+#: src/pages.py:4267
 msgid "Available space"
 msgstr "Spațiu disponibil"
 
+#: src/pages.py:4268 src/pages.py:4560
 msgid "Start (MiB)"
 msgstr "Început (MiB)"
 
+#: src/pages.py:4269 src/pages.py:4574
 msgid "Size (MiB)"
 msgstr "Dimensiune (MiB)"
 
+#: src/pages.py:4283
 msgid "Use All"
 msgstr "Folosește tot"
 
+#: src/pages.py:4287
 msgid "Add Partition"
 msgstr "Adăugare partiție"
 
+#: src/pages.py:4321 src/pages.py:5146
 msgid "Edit"
 msgstr "Editează"
 
+#: src/pages.py:4548
 msgid "That partition can no longer be edited safely."
 msgstr "Acea partiție nu mai poate fi editată în siguranță."
 
+#: src/pages.py:4587
 msgid "Use All Available Space"
 msgstr "Folosește tot spațiul disponibil"
 
+#: src/pages.py:4616
 #, python-brace-format
 msgid "Edit {role} partition"
 msgstr "Editează partiția {role}"
 
-msgid ""
-"Choose an exact position and size inside the available range. Other planned "
-"partitions are not moved."
-msgstr ""
-"Alege o poziție și o dimensiune exacte în intervalul disponibil. Celelalte "
-"partiții planificate nu sunt mutate."
+#: src/pages.py:4620
+msgid "Choose an exact position and size inside the available range. Other planned partitions are not moved."
+msgstr "Alege o poziție și o dimensiune exacte în intervalul disponibil. Celelalte partiții planificate nu sunt mutate."
 
+#: src/pages.py:4627
 msgid "Apply Changes"
 msgstr "Aplică modificările"
 
+#: src/pages.py:4665
 msgid "Close"
 msgstr "Închide"
 
-msgid ""
-"BitLocker was detected. Return to Windows, open Manage BitLocker, choose "
-"Turn off BitLocker, and wait until decryption reaches 100%. Suspending "
-"protection is not enough. Back up the recovery key, fully shut Windows down,"
-" then start the installer again."
-msgstr ""
-"BitLocker a fost detectat. Întoarceți-vă în Windows, deschideți Gestionare "
-"BitLocker, alegeți Dezactivare BitLocker și așteptați până când decriptarea "
-"atinge 100%. Suspendarea protecției nu este suficientă. Faceți o copie de "
-"rezervă a cheii de recuperare, opriți complet Windows, apoi reporniți "
-"instalatorul."
+#: src/pages.py:4673 src/pages.py:4897
+msgid "BitLocker was detected. Return to Windows, open Manage BitLocker, choose Turn off BitLocker, and wait until decryption reaches 100%. Suspending protection is not enough. Back up the recovery key, fully shut Windows down, then start the installer again."
+msgstr "BitLocker a fost detectat. Întoarceți-vă în Windows, deschideți Gestionare BitLocker, alegeți Dezactivare BitLocker și așteptați până când decriptarea atinge 100%. Suspendarea protecției nu este suficientă. Faceți o copie de rezervă a cheii de recuperare, opriți complet Windows, apoi reporniți instalatorul."
 
-msgid ""
-"Windows is hibernated or Fast Startup is active. In an Administrator "
-"Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s "
-"/t 0'. Start the installer again only after Windows has fully shut down."
-msgstr ""
-"Windows este în hibernare sau pornirea rapidă este activă. Deschideți un "
-"terminal folosind opțiunea „Executare ca administrator”, rulați 'powercfg /h"
-" off', dezactivați pornirea rapidă, apoi rulați 'shutdown /s /t 0'. Porniți "
-"din nou programul de instalare numai după oprirea completă a sistemului "
-"Windows."
+#: src/pages.py:4682
+msgid "Windows is hibernated or Fast Startup is active. In an Administrator Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s /t 0'. Start the installer again only after Windows has fully shut down."
+msgstr "Windows este în hibernare sau pornirea rapidă este activă. Deschideți un terminal folosind opțiunea „Executare ca administrator”, rulați 'powercfg /h off', dezactivați pornirea rapidă, apoi rulați 'shutdown /s /t 0'. Porniți din nou programul de instalare numai după oprirea completă a sistemului Windows."
 
-msgid ""
-"Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk"
-" C: /f', allow every requested reboot to finish, then fully shut Windows "
-"down before trying again."
-msgstr ""
-"Windows nu a lăsat acest volum NTFS într-o stare curată. Întoarceți-vă în "
-"Windows, rulați 'chkdsk C: /f', permiteți finalizarea tuturor repornirilor "
-"solicitate, apoi opriți complet Windows înainte de a încerca din nou."
+#: src/pages.py:4694
+msgid "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk C: /f', allow every requested reboot to finish, then fully shut Windows down before trying again."
+msgstr "Windows nu a lăsat acest volum NTFS într-o stare curată. Întoarceți-vă în Windows, rulați 'chkdsk C: /f', permiteți finalizarea tuturor repornirilor solicitate, apoi opriți complet Windows înainte de a încerca din nou."
 
-msgid ""
-"This target would require moving critical NTFS MFT metadata through a "
-"currently unsafe upstream code path. Choose a larger Windows size or shrink "
-"the volume from Windows."
-msgstr ""
-"Această dimensiune ar necesita mutarea metadatelor critice MFT ale NTFS "
-"printr-o cale din codul proiectului-sursă care este momentan nesigură. "
-"Alegeți o dimensiune mai mare pentru Windows sau micșorați volumul din "
-"Windows."
+#: src/pages.py:4701
+msgid "This target would require moving critical NTFS MFT metadata through a currently unsafe upstream code path. Choose a larger Windows size or shrink the volume from Windows."
+msgstr "Această dimensiune ar necesita mutarea metadatelor critice MFT ale NTFS printr-o cale din codul proiectului-sursă care este momentan nesigură. Alegeți o dimensiune mai mare pentru Windows sau micșorați volumul din Windows."
 
-msgid ""
-"This NTFS volume is mounted or in use. Unmount it and rescan storage before "
-"continuing."
-msgstr ""
-"Acest volum NTFS este montat sau este în utilizare. Demontați-l și rescanați"
-" stocarea înainte de a continua."
+#: src/pages.py:4711
+msgid "This NTFS volume is mounted or in use. Unmount it and rescan storage before continuing."
+msgstr "Acest volum NTFS este montat sau este în utilizare. Demontați-l și rescanați stocarea înainte de a continua."
 
-msgid ""
-"This operation moves NTFS data and changes the GPT partition boundary. A "
-"power loss, failing drive, firmware fault or filesystem bug can cause "
-"permanent data loss. Back up all important Windows files before continuing."
-msgstr ""
-"Această operațiune mută datele NTFS și modifică limita partiției GPT. O "
-"întrerupere a alimentării, o unitate de stocare defectă, o eroare de "
-"firmware sau o eroare a sistemului de fișiere pot cauza pierderea definitivă"
-" a datelor. Faceți o copie de rezervă a tuturor fișierelor Windows "
-"importante înainte de a continua."
+#: src/pages.py:4736
+msgid "This operation moves NTFS data and changes the GPT partition boundary. A power loss, failing drive, firmware fault or filesystem bug can cause permanent data loss. Back up all important Windows files before continuing."
+msgstr "Această operațiune mută datele NTFS și modifică limita partiției GPT. O întrerupere a alimentării, o unitate de stocare defectă, o eroare de firmware sau o eroare a sistemului de fișiere pot cauza pierderea definitivă a datelor. Faceți o copie de rezervă a tuturor fișierelor Windows importante înainte de a continua."
 
+#: src/pages.py:4749
 msgid "New Windows partition size"
 msgstr "Dimensiunea noii partiții Windows"
 
+#: src/pages.py:4772
 msgid "MiB"
 msgstr "MiB"
 
+#: src/pages.py:4774
 #, python-brace-format
 msgid "Allowed: {minimum}–{maximum}"
-msgstr "Allowed: {minimum}–{maximum}"
+msgstr "Permis: {minimum}–{maximum}"
 
+#: src/pages.py:4794
 #, python-brace-format
 msgid "Windows: {windows} · New unallocated space: {free}"
 msgstr "Windows: {windows} · Spațiu nealocat nou: {free}"
 
-msgid ""
-"I have backed up my data and understand that shrinking an existing Windows "
-"partition can cause permanent data loss."
-msgstr ""
-"Am făcut o copie de rezervă a datelor mele și înțeleg că reducerea unei "
-"partiții Windows existente poate cauza pierderea definitivă a datelor."
+#: src/pages.py:4826
+msgid "I have backed up my data and understand that shrinking an existing Windows partition can cause permanent data loss."
+msgstr "Am făcut o copie de rezervă a datelor mele și înțeleg că reducerea unei partiții Windows existente poate cauza pierderea definitivă a datelor."
 
+#: src/pages.py:4835
 #, python-brace-format
 msgid "Change the size of {partition}?"
 msgstr "Doriți să modificați dimensiunea {partition}?"
 
-msgid ""
-"The partition start will not move. Only its end will move left, creating "
-"unallocated space immediately after it."
-msgstr ""
-"Începutul partiției nu se va deplasa. Doar finalul ei se va deplasa spre "
-"stânga, creând spațiu nealocat imediat după ea."
+#: src/pages.py:4839
+msgid "The partition start will not move. Only its end will move left, creating unallocated space immediately after it."
+msgstr "Începutul partiției nu se va deplasa. Doar finalul ei se va deplasa spre stânga, creând spațiu nealocat imediat după ea."
 
+#: src/pages.py:4847
 msgid "Undo Planned Resize"
 msgstr "Anulează redimensionarea planificată"
 
+#: src/pages.py:4848
 msgid "Plan Resize"
 msgstr "Planifică redimensionarea"
 
+#: src/pages.py:4895
 msgid "Turn off BitLocker before shrinking"
 msgstr "Alegeți Dezactivare BitLocker înainte de a micșora volumul"
 
+#: src/pages.py:4907
 #, python-brace-format
 msgid "Checking whether {partition} can be resized safely…"
 msgstr "Se verifică dacă {partition} poate fi redimensionată în siguranță…"
 
+#: src/pages.py:4918
 msgid "NTFS safety check failed"
 msgstr "Verificarea de siguranță NTFS a eșuat"
 
+#: src/pages.py:4925
 msgid "This partition cannot be resized safely"
 msgstr "Această partiție nu poate fi redimensionată în siguranță"
 
+#: src/pages.py:4951
 msgid "New empty GPT — every existing partition will be deleted"
 msgstr "GPT nou gol — toate partitiiile existente vor fi șterse"
 
+#: src/pages.py:4953
 msgid "Keep current GPT — only marked partitions are deleted"
 msgstr "Păstrare GPT curent — sunt șterse doar partitiiile marcate"
 
+#: src/pages.py:4956
 msgid "Keep Current GPT"
 msgstr "Păstrare GPT curent"
 
+#: src/pages.py:4969
 msgid "unknown"
 msgstr "necunoscut"
 
+#: src/pages.py:4970
 msgid "WILL DELETE"
 msgstr "VĂ ȘTERGE"
 
+#: src/pages.py:4970
 msgid "Preserve"
 msgstr "Păstrează"
 
+#: src/pages.py:5005
 #, python-brace-format
 msgid "Planned size: {size}"
 msgstr "Dimensiunea planificată: {size}"
 
+#: src/pages.py:5020
 msgid "Deleted by new GPT"
 msgstr "Șterse de GPT-ul nou"
 
+#: src/pages.py:5022
 msgid "Undo"
 msgstr "Anulează"
 
+#: src/pages.py:5024
 msgid "Delete"
 msgstr "Ștergere"
 
+#: src/pages.py:5029
 msgid "RESIZE"
-msgstr "RESIZE"
+msgstr "REDIMENSIONARE"
 
+#: src/pages.py:5047
 msgid "Change Size"
 msgstr "Modifică dimensiunea"
 
+#: src/pages.py:5062
 msgid "This disk has no existing partitions."
 msgstr "Acest disc nu are partiții existente."
 
+#: src/pages.py:5079
 msgid "Create a new ESP partition"
 msgstr "Creați o partiție ESP nouă"
 
+#: src/pages.py:5136
 #, python-brace-format
 msgid "{size} · {start}–{end} MiB"
 msgstr "{size} · {start}–{end} MiB"
 
+#: src/pages.py:5141
 msgid "Remove"
 msgstr "Elimină"
 
+#: src/pages.py:3914 src/pages.py:3925 src/pages.py:5143
 msgid "New"
 msgstr "Nouă"
 
-msgid ""
-"No new partitions yet. Add an ESP if needed, one Root partition, and "
-"optionally Swap."
-msgstr ""
-"Nu există încă partiții noi. Adaugă un ESP dacă este necesar, o partiție "
-"Root și, opțional, Swap."
+#: src/pages.py:5156
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
+msgstr "Nu există încă partiții noi. Adaugă un ESP dacă este necesar, o partiție Root și, opțional, Swap."
 
+#: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
 msgstr "{size} la {start} MiB"
 
+#: src/pages.py:5205
 msgid "an ESP of at least 512 MiB"
 msgstr "un ESP de cel puțin 512 MiB"
 
+#: src/pages.py:5207
 msgid "a Root partition of at least 20 GiB"
 msgstr "o partiție Root de cel puțin 20 GiB"
 
+#: src/pages.py:5209
 #, python-brace-format
 msgid "Complete the plan: {requirements}."
 msgstr "Finalizează planul: {requirements}."
 
-msgid ""
-"Layout is valid. Only the listed resizes, deletes, creates and formats will "
-"be sent to the privileged executor."
-msgstr ""
-"Configurația partițiilor este validă. Doar operațiunile enumerate de "
-"redimensionare, ștergere, creare și formatare vor fi trimise procesului de "
-"serviciu cu privilegii ridicate."
+#: src/pages.py:5222
+msgid "Layout is valid. Only the listed resizes, deletes, creates and formats will be sent to the privileged executor."
+msgstr "Configurația partițiilor este validă. Doar operațiunile enumerate de redimensionare, ștergere, creare și formatare vor fi trimise procesului de serviciu cu privilegii ridicate."
 
+#: src/pages.py:5262
 msgid "That partition role already exists."
 msgstr "Rolul acelei partii există deja."
 
+#: src/pages.py:5302
 msgid "Initialize a new GPT?"
 msgstr "Inițializați un GPT nou?"
 
-msgid ""
-"Every existing partition and all data on this disk will be deleted. You must"
-" then create a new ESP and Root partition."
-msgstr ""
-"Toate partitiiile existente și toate datele de pe acest disc vor fi șterse. "
-"Trebuie apoi să creați o nouă partiție ESP și o partiție Root."
+#: src/pages.py:5304
+msgid "Every existing partition and all data on this disk will be deleted. You must then create a new ESP and Root partition."
+msgstr "Toate partitiiile existente și toate datele de pe acest disc vor fi șterse. Trebuie apoi să creați o nouă partiție ESP și o partiție Root."
 
+#: src/pages.py:5310
 msgid "Initialize GPT"
 msgstr "Inițializare GPT"
 
+#: src/pages.py:5346
 msgid "The selected disk changed or disappeared."
 msgstr "Discul selectat s-a modificat sau a dispărut."
 
+#: src/pages.py:5351
 msgid "The selected disk topology changed. Select it again."
 msgstr "Topologia discului selectat s-a modificat. Selectați-l din nou."
 
+#: src/pages.py:6292 src/pages.py:6293 src/pages.py:6302
 msgid "none"
 msgstr "niciunul"
 
+#: src/pages.py:6295
 #, python-brace-format
 msgid "{path}: {before} → {after} (free {reclaimed})"
-msgstr "{path}: {before} → {after} (free {reclaimed})"
+msgstr "{path}: {before} → {after} (spațiu eliberat: {reclaimed})"
 
+#: src/pages.py:6304
 #, python-brace-format
 msgid "{name}: {size} MiB ({start}–{end})"
 msgstr "{name}: {size} MiB ({start}–{end})"
 
+#: src/pages.py:6320
 msgid "Initialize a new empty GPT"
 msgstr "Inițializați un GPT nou gol"
 
+#: src/pages.py:6322
 msgid "Keep the current GPT"
 msgstr "Păstrarea GPT-ului curent"
 
+#: src/pages.py:6326
 #, python-brace-format
 msgid "Reuse {path}; inspect it and never format it."
 msgstr "Reutilizează {path}; inspecționează-l și nu-l formata niciodată."
 
+#: src/pages.py:6330
 msgid "Create and format a new EFI System Partition."
 msgstr "Creați și formatați o Partiție de Sistem EFI nouă."
 
+#: src/pages.py:6334
 msgid "Advanced manual GPT"
 msgstr "GPT manual avansat"
 
+#: src/pages.py:6335
 msgid "Partition table"
 msgstr "Tabelul de partiții"
 
+#: src/pages.py:6337
 msgid "Deleted partitions"
 msgstr "Partiții șterse"
 
+#: src/pages.py:6338
 msgid "Resized partitions"
 msgstr "Partiții redimensionate"
 
-msgid ""
-"Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS "
-"NVRAM entry."
-msgstr ""
-"Scrie doar EFI/AnduinOS, păstrează EFI/BOOT și creează o intrare verificată "
-"NVRAM pentru AnduinOS."
+#: src/pages.py:6344
+msgid "Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS NVRAM entry."
+msgstr "Scrie doar EFI/AnduinOS, păstrează EFI/BOOT și creează o intrare verificată NVRAM pentru AnduinOS."
 
+#: src/pages.py:6402
 msgid "Manual storage selection is missing. Return and review it."
 msgstr "Selecția manuală a stocării lipsește. Întoarceți-vă și examinați-o."
 
-msgid ""
-"⚠ Listed NTFS resizes will move filesystem data and partition boundaries. "
-"Listed partitions will be deleted and every listed new partition will be "
-"formatted. Back up important data first; these partitioning operations "
-"cannot be undone."
-msgstr ""
-"⚠ Redimensionările NTFS enumerate vor deplasa datele sistemului de fișiere "
-"și limitele partițiilor. Partițiile enumerate vor fi șterse, iar fiecare "
-"partiție nouă enumerată va fi formatată. Faceți mai întâi o copie de rezervă"
-" a datelor importante; aceste operațiuni de partiționare nu pot fi anulate."
+#: src/pages.py:6496
+msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Redimensionările NTFS enumerate vor deplasa datele sistemului de fișiere și limitele partițiilor. Partițiile enumerate vor fi șterse, iar fiecare partiție nouă enumerată va fi formatată. Faceți mai întâi o copie de rezervă a datelor importante; aceste operațiuni de partiționare nu pot fi inversate."
 
+#: src/pages.py:6606
 msgid "Apply this manual disk layout?"
 msgstr "Aplicați această așezare manuală a discului?"
 
+#: src/pages.py:6607 src/pages.py:6735
 msgid "Apply Layout and Install"
 msgstr "Aplicare așezare și instalare"
 
+#: src/pages.py:6630
 #, python-brace-format
 msgid ""
 "AnduinOS will apply only the reviewed manual changes to {disk}.\n"
@@ -1976,63 +1755,51 @@ msgstr ""
 "AnduinOS va aplica doar modificările manuale verificate pe {disk}.\n"
 "\n"
 
-msgid ""
-"Only the explicitly listed partitions will be deleted or formatted. "
-"Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
-msgstr ""
-"Doar partițiile explicit enumerate vor fi șterse sau formate. Partițiile "
-"neimplicate rămân neschimbate; EFI/BOOT nu este suprascris."
+#: src/pages.py:6658
+msgid "Only the explicitly listed partitions will be deleted or formatted. Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
+msgstr "Doar partițiile explicit enumerate vor fi șterse sau formate. Partițiile neimplicate rămân neschimbate; EFI/BOOT nu este suprascris."
 
-msgid ""
-"Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
-"shrunk after safety checks."
-msgstr ""
-"Editați un singur disc GPT. Pozițiile de început ale partițiilor nu sunt "
-"mutate niciodată; volumele NTFS necriptate pot fi micșorate după "
-"verificările de siguranță."
+#: src/pages.py:4072
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
+msgstr "Editați un singur disc GPT. Pozițiile de început ale partițiilor nu sunt mutate niciodată; volumele NTFS necriptate pot fi micșorate după verificările de siguranță."
 
+#: src/pages.py:5119
 msgid "XFS (classic, scalable)"
 msgstr "XFS (clasic, scalabil)"
 
+#: src/pages.py:5120
 msgid "F2FS (flash-optimized)"
 msgstr "F2FS (optimizat pentru flash)"
-
-#: src/pages.py:2913
-msgid ""
-"This is below AnduinOS's runtime safety target. ZRAM still works, but heavy "
-"browser or application workloads can run out of backing memory sooner; "
-"hibernation is also unavailable."
-msgstr ""
-"Această dimensiune este sub pragul minim de siguranță recomandat de AnduinOS"
-" pentru utilizarea obișnuită. ZRAM continuă să funcționeze, dar utilizarea "
-"intensă a browserului sau a aplicațiilor poate epuiza mai repede spațiul "
-"Swap disponibil; nici hibernarea nu este disponibilă."
 
 #: src/pages.py:3004
 msgid "0 GiB · ZRAM only"
 msgstr "0 GiB · doar ZRAM"
 
-#: src/pages.py:3028
-msgid ""
-"ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses"
-" priority 10."
-msgstr ""
-"ZRAM rămâne întotdeauna activat: 50% din RAM · LZ4 · prioritate 100. Swap-ul"
-" pe disc utilizează prioritatea 10."
+#: src/pages.py:2900
+msgid "Disk Swap will not be created. ZRAM remains enabled, but sustained memory pressure can terminate applications and hibernation is unavailable. This is strongly discouraged."
+msgstr "Swap-ul pe disc nu va fi creat. ZRAM rămâne activat, dar presiunea susținută asupra memoriei poate forța închiderea aplicațiilor, iar hibernarea nu este disponibilă. Se recomandă ferm să nu alegeți această opțiune."
 
-#: src/pages.py:2927
-msgid ""
-"This exceeds the AnduinOS recommendation. It consumes more disk space and "
-"normally does not improve runtime performance."
-msgstr ""
-"Această dimensiune depășește recomandarea AnduinOS. Consumă mai mult spațiu "
-"pe disc și, de obicei, nu îmbunătățește performanța în utilizarea obișnuită."
-
-#: src/pages.py:6695
+#: src/pages.py:6702
 msgid "Review your custom Swap size"
 msgstr "Verificați dimensiunea personalizată a spațiului Swap"
 
-#: src/pages.py:6698
+#: src/pages.py:2927
+msgid "This exceeds the AnduinOS recommendation. It consumes more disk space and normally does not improve runtime performance."
+msgstr "Această dimensiune depășește recomandarea AnduinOS. Consumă mai mult spațiu pe disc și, de obicei, nu îmbunătățește performanța în utilizarea obișnuită."
+
+#: src/pages.py:2913
+msgid "This is below AnduinOS's runtime safety target. ZRAM still works, but heavy browser or application workloads can run out of backing memory sooner; hibernation is also unavailable."
+msgstr "Această dimensiune este sub pragul minim de siguranță recomandat de AnduinOS pentru utilizarea obișnuită. ZRAM continuă să funcționeze, dar utilizarea intensă a browserului sau a aplicațiilor poate epuiza mai repede spațiul Swap disponibil; nici hibernarea nu este disponibilă."
+
+#: src/pages.py:2920
+msgid "This size protects ordinary memory pressure, but is smaller than the hibernation target. Hibernation may fail or be unavailable."
+msgstr "Această dimensiune este suficientă pentru a face față presiunii obișnuite asupra memoriei, dar este mai mică decât dimensiunea necesară pentru hibernare. Hibernarea poate eșua sau poate fi indisponibilă."
+
+#: src/pages.py:3028
+msgid "ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses priority 10."
+msgstr "ZRAM rămâne întotdeauna activat: 50% din RAM · LZ4 · prioritate 100. Swap-ul pe disc utilizează prioritatea 10."
+
+#: src/pages.py:6705
 msgid "ZRAM will remain enabled regardless of this choice."
 msgstr "ZRAM va rămâne activat indiferent de această alegere."
 
@@ -2040,25 +1807,22 @@ msgstr "ZRAM va rămâne activat indiferent de această alegere."
 msgid "{size} GiB · Max"
 msgstr "{size} GiB · Maxim"
 
-#: src/pages.py:2920
-msgid ""
-"This size protects ordinary memory pressure, but is smaller than the "
-"hibernation target. Hibernation may fail or be unavailable."
-msgstr ""
-"Această dimensiune este suficientă pentru a face față presiunii obișnuite "
-"asupra memoriei, dar este mai mică decât dimensiunea necesară pentru "
-"hibernare. Hibernarea poate eșua sau poate fi indisponibilă."
-
 #: src/pages.py:2895
 msgid "✓ Best performance — AnduinOS recommended Swap size."
 msgstr "✓ Performanță optimă — dimensiunea Swap recomandată de AnduinOS."
 
-#: src/pages.py:2900
-msgid ""
-"Disk Swap will not be created. ZRAM remains enabled, but sustained memory "
-"pressure can terminate applications and hibernation is unavailable. This is "
-"strongly discouraged."
-msgstr ""
-"Swap-ul pe disc nu va fi creat. ZRAM rămâne activat, dar presiunea susținută"
-" asupra memoriei poate forța închiderea aplicațiilor, iar hibernarea nu este"
-" disponibilă. Se recomandă ferm să nu alegeți această opțiune."
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:11
+msgid "Authorization is required to inspect disk partition geometry"
+msgstr "Autentificarea este necesară pentru a inspecta pozițiile și dimensiunile exacte ale partițiilor discului."
+
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:10
+msgid "Read exact disk partition geometry for the AnduinOS installer"
+msgstr "Citirea geometriei exacte a partițiilor discului pentru instalatorul AnduinOS"
+
+#: assets/anduinos-installer-beta-live-shortcut.desktop:3
+msgid "Prepare and start AnduinOS Installer"
+msgstr "Pregătește și pornește Instalatorul AnduinOS"
+
+#: assets/anduinos-installer-beta.desktop:59
+msgid "Install AnduinOS to your computer"
+msgstr "Instalează AnduinOS pe calculatorul tău"

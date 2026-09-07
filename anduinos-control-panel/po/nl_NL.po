@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Configuratiescherm"
 
@@ -123,7 +124,7 @@ msgstr "Niet geïnstalleerd"
 
 #: src/anduinos_control_panel/app.py:317
 msgid "Configure microphone, language, shortcut, and training"
-msgstr "Microfoon, taal, sneltoets en training configureren"
+msgstr "Microfoon, taal, sneltoets en kalibratie configureren"
 
 #: src/anduinos_control_panel/app.py:319
 msgid "Install private, offline speech-to-text"
@@ -581,7 +582,7 @@ msgstr "✗ Pakketoperatie mislukt. Bekijk de geavanceerde uitvoer."
 #: src/anduinos_control_panel/app.py:1715
 #, python-brace-format
 msgid "{command} exited with status {status}"
-msgstr "{command} is geëindigd met status {status}"
+msgstr "{command} is beëindigd met afsluitstatus {status}"
 
 #: src/anduinos_control_panel/app.py:1742
 msgid "Open a Control Panel topic"
@@ -606,6 +607,24 @@ msgstr "AnduinOS-team"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "AnduinOS-systeeminstellingen vinden en beheren."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr ""
+"instellingen;configuratiescherm;systeem;hardware;stuurprogramma's;accounts;back-"
+"up;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "Opstartmenu-instellingen wijzigen"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr "Authenticatie is vereist om de opstartmenu-instellingen te wijzigen"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "AnduinOS-systeeminstellingen vinden en beheren"
 
 #: src/anduinos_control_panel/app.py
 msgid "Authentication is required to read the boot menu."

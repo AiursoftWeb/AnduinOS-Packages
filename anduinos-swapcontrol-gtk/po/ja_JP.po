@@ -13,71 +13,71 @@ msgstr ""
 msgid "About"
 msgstr "概要"
 
-#: src/views/swap_view.rs:300
+#: src/views/swap_view.rs:305
 msgid "Accept threshold percent"
 msgstr "許容しきい値（％）"
 
-#: src/views/zram_view.rs:247
+#: src/views/zram_view.rs:252
 msgid "Advanced options"
 msgstr "高度なオプション"
 
-#: src/views/stress_test_view.rs:225 src/views/swap_view.rs:225
+#: src/views/stress_test_view.rs:230 src/views/swap_view.rs:230
 msgid "Advanced settings"
 msgstr "詳細設定"
 
-#: src/views/zram_view.rs:348
+#: src/views/zram_view.rs:353
 msgid "Algorithm"
 msgstr "アルゴリズム"
 
-#: src/views/swap_view.rs:334
+#: src/views/swap_view.rs:339
 msgid "Apply Settings"
 msgstr "設定を適用"
 
-#: src/views/swap_view.rs:667
+#: src/views/swap_view.rs:672
 msgid "Applying settings…"
-msgstr "設定を適用"
+msgstr "設定を適用しています…"
 
-#: src/views/dashboard_view.rs:370
+#: src/views/dashboard_view.rs:392
 msgid "Auth needed"
 msgstr "認証が必要です"
 
-#: src/views/dashboard_view.rs:413
+#: src/views/dashboard_view.rs:435
 msgid "Buf"
 msgstr "Buf"
 
-#: src/views/dashboard_view.rs:390
+#: src/views/dashboard_view.rs:412
 msgid "Buffers"
 msgstr "バッファ"
 
-#: src/views/dashboard_view.rs:414
+#: src/views/dashboard_view.rs:436
 msgid "Cache"
 msgstr "キャッシュ"
 
-#: src/views/dashboard_view.rs:395
+#: src/views/dashboard_view.rs:417
 msgid "Cached"
 msgstr "キャッシュ済み"
 
-#: src/views/zram_view.rs:378
+#: src/views/zram_view.rs:383
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: src/views/stress_test_view.rs:318
+#: src/views/stress_test_view.rs:323
 msgid "Cancel Test"
 msgstr "キャンセル"
 
-#: src/views/stress_test_view.rs:601
+#: src/views/stress_test_view.rs:606
 msgid "Cancelled by user."
 msgstr "ユーザーによってキャンセルされました。"
 
-#: src/views/dashboard_view.rs:193
+#: src/views/dashboard_view.rs:209
 msgid "Channels"
 msgstr "チャネル"
 
-#: src/views/stress_test_view.rs:613
+#: src/views/stress_test_view.rs:618
 msgid "Completed successfully — memory pressure test passed."
 msgstr "正常に完了しました—メモリープレッシャーテストに合格しました。"
 
-#: src/views/swap_view.rs:183
+#: src/views/swap_view.rs:188
 msgid ""
 "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
 "Zswap, not both."
@@ -88,15 +88,15 @@ msgstr ""
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "圧縮 RAM ブロックデバイス — インメモリで高速なスワップ"
 
-#: src/views/swap_view.rs:266
+#: src/views/swap_view.rs:271
 msgid "Compression algorithm"
 msgstr "圧縮アルゴリズム"
 
-#: src/views/zram_view.rs:379
+#: src/views/zram_view.rs:384
 msgid "Create"
 msgstr "作成"
 
-#: src/views/zram_view.rs:110 src/views/zram_view.rs:190
+#: src/views/zram_view.rs:110 src/views/zram_view.rs:195
 msgid "Create Zram Device"
 msgstr "Zramデバイスの作成"
 
@@ -104,41 +104,41 @@ msgstr "Zramデバイスの作成"
 msgid "Dashboard"
 msgstr "ダッシュボード"
 
-#: src/views/zram_view.rs:571
+#: src/views/zram_view.rs:576
 msgid "Destroy Zram Device"
 msgstr "Zramデバイスの破棄"
 
-#: src/views/zram_view.rs:439
+#: src/views/zram_view.rs:444
 msgid "Device Created"
 msgstr "デバイスが作成されました"
 
-#: src/views/dashboard_view.rs:503
+#: src/views/dashboard_view.rs:525
 msgid "Disabled"
 msgstr "無効"
 
-#: src/views/swap_view.rs:521
+#: src/views/swap_view.rs:526
 msgid "Disabling Zswap..."
-msgstr "スワップを無効にしています..."
+msgstr "Zswap を無効にしています..."
 
-#: src/views/swap_view.rs:577
+#: src/views/swap_view.rs:582
 msgid "Disabling swap…"
 msgstr "スワップを無効にしています..."
 
-#: src/views/swap_view.rs:97
+#: src/views/swap_view.rs:102
 msgid "Disk Swap Configuration"
 msgstr "仮想メモリのディスク構成"
 
-#: src/views/dashboard_view.rs:614
+#: src/views/dashboard_view.rs:636
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
 msgstr "ディスクスワップとメモリ圧縮が有効です。システムはメモリ圧力から適切に保護されています。"
 
-#: src/views/stress_test_view.rs:605 src/views/stress_test_view.rs:617
+#: src/views/stress_test_view.rs:610 src/views/stress_test_view.rs:622
 msgid "Duration:"
 msgstr "期間："
 
-#: src/views/dashboard_view.rs:609
+#: src/views/dashboard_view.rs:631
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
@@ -146,184 +146,185 @@ msgstr ""
 "RAM 内の高速圧縮スワップのために Zram を有効にしてください — ディスクスワップの 10 倍の速度で、メモリ圧力下の I/O "
 "を大幅に削減します。"
 
-#: src/views/swap_view.rs:519
+#: src/views/swap_view.rs:524
 msgid "Enabling Zswap..."
-msgstr "スワップを有効にしています..."
+msgstr "Zswap を有効にしています..."
 
-#: src/views/swap_view.rs:579
+#: src/views/swap_view.rs:584
 msgid "Enabling swap…"
 msgstr "スワップを有効にしています..."
 
-#: src/views/stress_test_view.rs:609 src/views/swap_view.rs:505
-#: src/views/zram_view.rs:182
+#: src/views/stress_test_view.rs:614 src/views/swap_view.rs:510
+#: src/views/zram_view.rs:187
 msgid "Error"
 msgstr "エラー"
 
-#: src/views/dashboard_view.rs:400 src/views/dashboard_view.rs:415
+#: src/views/dashboard_view.rs:422 src/views/dashboard_view.rs:437
 msgid "Free"
 msgstr "フリー"
 
-#: src/views/stress_test_view.rs:250 src/views/stress_test_view.rs:251
-#: src/views/stress_test_view.rs:401
+#: src/views/stress_test_view.rs:255 src/views/stress_test_view.rs:256
+#: src/views/stress_test_view.rs:406
 msgid "Growth speed"
 msgstr "増加速度"
 
-#: src/views/dashboard_view.rs:269
+#: src/views/dashboard_view.rs:291
 msgid "Hibernation"
 msgstr "冬眠"
 
-#: src/views/swap_view.rs:597 src/views/swap_view.rs:704
+#: src/views/swap_view.rs:602 src/views/swap_view.rs:709
 msgid "Hibernation Warning"
 msgstr "休止状態警告"
 
-#: src/views/dashboard_view.rs:517 src/views/swap_view.rs:810
+#: src/views/dashboard_view.rs:539 src/views/swap_view.rs:815
 msgid "Inactive"
 msgstr "非アクティブ"
 
-#: src/views/swap_view.rs:156 src/views/swap_view.rs:170
+#: src/views/swap_view.rs:161 src/views/swap_view.rs:175
 msgid "Loading..."
 msgstr "読み込み中…"
 
-#: src/views/stress_test_view.rs:232
+#: src/views/stress_test_view.rs:237
 msgid "Maximum hold time"
 msgstr "最大保持時間"
 
-#: src/views/swap_view.rs:282
+#: src/views/swap_view.rs:287
 msgid "Maximum pool percent"
 msgstr "最大プール%"
 
-#: src/views/dashboard_view.rs:134
+#: src/views/dashboard_view.rs:147
 msgid "Memory Overview"
 msgstr "メモリ概要"
 
 #: src/views/zram_view.rs:119
 msgid "No Zram Devices"
-msgstr "Zram デバイス"
+msgstr "Zram デバイスがありません"
 
-#: src/views/dashboard_view.rs:456
+#: src/views/dashboard_view.rs:478
 msgid "No device"
 msgstr "デバイスなし"
 
-#: src/views/dashboard_view.rs:592
+#: src/views/dashboard_view.rs:614
 msgid "No disk swap detected"
 msgstr "スワップの検出はありません"
 
-#: src/views/dashboard_view.rs:608
+#: src/views/dashboard_view.rs:630
 msgid "No memory acceleration enabled"
 msgstr "メモリアクセラレーションが有効ではありません。"
 
-#: src/views/dashboard_view.rs:546
+#: src/views/dashboard_view.rs:568
 msgid "None"
 msgstr "なし"
 
-#: src/views/dashboard_view.rs:530 src/views/dashboard_view.rs:538
+#: src/views/dashboard_view.rs:552 src/views/dashboard_view.rs:560
 msgid "Off"
 msgstr "オフ"
 
-#: src/views/dashboard_view.rs:537
+#: src/views/dashboard_view.rs:559
 msgid "On"
 msgstr "オン"
 
-#: src/views/swap_view.rs:301
+#: src/views/swap_view.rs:306
 msgid ""
 "Only store pages that compress to ≤ this % of original. Higher = more pages "
 "cached. Recommended: 90%"
 msgstr "元のサイズのこの % 以下に圧縮されるページのみを保存します。値が大きいほどキャッシュされるページ数が増加します。推奨: 90%"
 
-#: src/views/dashboard_view.rs:613
+#: src/views/dashboard_view.rs:635
 msgid "Optimal memory configuration"
 msgstr "最適なメモリ構成"
 
-#: src/views/stress_test_view.rs:602 src/views/stress_test_view.rs:614
+#: src/views/stress_test_view.rs:607 src/views/stress_test_view.rs:619
 msgid "Peak allocated:"
 msgstr "割り当てのピーク:"
 
-#: src/views/zram_view.rs:367
+#: src/views/zram_view.rs:372
 msgid "Priority"
 msgstr "優先度"
 
-#: src/views/stress_test_view.rs:209
+#: src/views/stress_test_view.rs:214
 msgid "RAM"
 msgstr "RAM"
 
-#: src/views/zram_view.rs:554
+#: src/views/zram_view.rs:559
 msgid "Remove"
 msgstr "削除"
 
-#: src/views/stress_test_view.rs:360
+#: src/views/stress_test_view.rs:365
 msgid "Run Again"
 msgstr "もう一度実行"
 
-#: src/views/stress_test_view.rs:279
+#: src/views/stress_test_view.rs:284
 msgid "Run Stress Test"
 msgstr "ストレステストを実行"
 
-#: src/views/swap_view.rs:307
+#: src/views/swap_view.rs:312
 msgid "Shrinker"
 msgstr "メモリ縮小"
 
-#: src/views/zram_view.rs:269
+#: src/views/zram_view.rs:274
 msgid "Size (MiB)"
 msgstr "サイズ (MiB)"
 
-#: src/views/dashboard_view.rs:192
+#: src/views/dashboard_view.rs:208
 msgid "Speed"
 msgstr "速度"
 
-#: src/views/stress_test_view.rs:100 src/window.rs:114
+#: src/views/stress_test_view.rs:105 src/window.rs:114
 msgid "Stress Test"
 msgstr "ストレステスト"
 
-#: src/views/dashboard_view.rs:252 src/views/dashboard_view.rs:266
+#: src/views/dashboard_view.rs:271 src/views/dashboard_view.rs:288
 #: src/window.rs:112
 msgid "Swap"
 msgstr "スワップ"
 
 #: src/progress_dialog.rs:24 src/window.rs:59
+#: data/com.anduinos.swapcontrol.desktop:24
 msgid "Swap Control"
 msgstr "仮想メモリ制御"
 
-#: src/views/swap_view.rs:147
+#: src/views/swap_view.rs:152
 msgid "Swap usage"
 msgstr "スワップ領域の使用状況"
 
-#: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
-#: src/views/swap_view.rs:677
+#: src/views/dashboard_view.rs:292 src/views/swap_view.rs:262
+#: src/views/swap_view.rs:682
 msgid "Swappiness"
 msgstr "スワッピング度"
 
-#: src/views/dashboard_view.rs:603
+#: src/views/dashboard_view.rs:625
 msgid "Swappiness not optimized for Zram"
 msgstr "Zram 用にスワップネスが最適化されていません"
 
-#: src/views/stress_test_view.rs:206
+#: src/views/stress_test_view.rs:211
 msgid "Target Pressure"
 msgstr "ターゲットプレッシャー"
 
-#: src/views/stress_test_view.rs:345
+#: src/views/stress_test_view.rs:350
 msgid "Test Complete"
 msgstr "テスト完了"
 
-#: src/views/dashboard_view.rs:190
+#: src/views/dashboard_view.rs:206
 msgid "Total RAM"
 msgstr "合計 RAM"
 
-#: src/views/dashboard_view.rs:191
+#: src/views/dashboard_view.rs:207
 msgid "Type"
 msgstr "タイプ"
 
-#: src/views/dashboard_view.rs:385 src/views/dashboard_view.rs:412
+#: src/views/dashboard_view.rs:407 src/views/dashboard_view.rs:434
 msgid "Used"
 msgstr "使用中"
 
-#: src/views/dashboard_view.rs:593
+#: src/views/dashboard_view.rs:615
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
 msgstr ""
 "RAM が一杯になると、カーネルがアプリケーションを終了させる可能性があります。信頼性の高い安全策としてディスクスワップを有効にしてください。"
 
-#: src/views/dashboard_view.rs:244 src/views/dashboard_view.rs:268
+#: src/views/dashboard_view.rs:263 src/views/dashboard_view.rs:290
 #: src/window.rs:111
 msgid "Zram"
 msgstr "Zram"
@@ -332,11 +333,11 @@ msgstr "Zram"
 msgid "Zram Devices"
 msgstr "Zram デバイス"
 
-#: src/views/dashboard_view.rs:597
+#: src/views/dashboard_view.rs:619
 msgid "Zram and Zswap are both active"
 msgstr "ZramとZswapが両方とも有効です"
 
-#: src/views/dashboard_view.rs:598
+#: src/views/dashboard_view.rs:620
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
 "pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
@@ -345,141 +346,141 @@ msgstr ""
 "Zram と Zswap は排他的です — 各機能は独自の圧縮 RAM プールを作成します。両方を有効にすると CPU "
 "を無駄遣いし、深刻なメモリスラッシングを引き起こす可能性があります。どちらかを無効にしてください。"
 
-#: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
-#: src/views/swap_view.rs:185 src/views/swap_view.rs:686
+#: src/views/dashboard_view.rs:267 src/views/dashboard_view.rs:289
+#: src/views/swap_view.rs:190 src/views/swap_view.rs:691
 msgid "Zswap"
 msgstr "Zswap"
 
-#: src/views/stress_test_view.rs:212
+#: src/views/stress_test_view.rs:217
 msgid "default"
 msgstr "デフォルト"
 
-#: src/views/swap_view.rs:267
+#: src/views/swap_view.rs:272
 msgid ""
 "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires"
 " zswap restart."
 msgstr "lz4 = 高速（推奨）、zstd = 最高の圧縮率、lzo = 旧規格。変更には zswap の再起動が必要です。"
 
-#: src/views/stress_test_view.rs:211
+#: src/views/stress_test_view.rs:216
 msgid "range"
 msgstr "範囲"
 
-#: src/views/stress_test_view.rs:233
+#: src/views/stress_test_view.rs:238
 msgid "seconds"
 msgstr "秒"
 
-#: src/views/swap_view.rs:118
+#: src/views/swap_view.rs:123
 msgid "with Zram"
 msgstr "Zram 有効時"
 
-#: src/views/dashboard_view.rs:154
+#: src/views/dashboard_view.rs:167
 msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr "Zram がアクティブの場合 — ディスクキャッシュよりも高速な圧縮 RAM を優先します"
 
-#: src/views/dashboard_view.rs:552
+#: src/views/dashboard_view.rs:574
 msgid "Ready"
 msgstr "準備完了"
 
-#: src/views/dashboard_view.rs:554
+#: src/views/dashboard_view.rs:576
 msgid "Unsupported"
 msgstr "サポートされていない"
 
-#: src/views/dashboard_view.rs:556
+#: src/views/dashboard_view.rs:578
 msgid "Not configured"
 msgstr "未設定"
 
-#: src/views/dashboard_view.rs:558
+#: src/views/dashboard_view.rs:580
 msgid "Resume target missing"
 msgstr "再開ターゲットがありません"
 
-#: src/views/dashboard_view.rs:560
+#: src/views/dashboard_view.rs:582
 msgid "Resume target inactive"
 msgstr "再開ターゲットが無効です"
 
-#: src/views/dashboard_view.rs:562
+#: src/views/dashboard_view.rs:584
 msgid "Swap too small"
 msgstr "スワップ領域が小さすぎます"
 
-#: src/views/dashboard_view.rs:564
+#: src/views/dashboard_view.rs:586
 msgid "Not ready"
 msgstr "準備が整っていません"
 
-#: src/views/swap_view.rs:104
+#: src/views/swap_view.rs:109
 msgid ""
 "Review installer-managed swap partitions and manage the legacy supplementary"
 " swap file"
 msgstr "インストーラーで管理されているスワップパーティションを確認し、従来の補助スワップファイルを管理します。"
 
-#: src/views/swap_view.rs:155
+#: src/views/swap_view.rs:160
 msgid "Swap partition"
 msgstr "スワップパーティション"
 
-#: src/views/swap_view.rs:169
+#: src/views/swap_view.rs:174
 msgid "Additional swap file"
 msgstr "追加スワップファイル"
 
-#: src/views/swap_view.rs:195
+#: src/views/swap_view.rs:200
 msgid "Additional swap file size"
 msgstr "追加スワップファイルのサイズ"
 
-#: src/views/swap_view.rs:196
+#: src/views/swap_view.rs:201
 msgid "0 GiB means no supplementary swap file"
 msgstr "0 GiB は補助スワップファイルがないことを意味します"
 
-#: src/views/swap_view.rs:598
+#: src/views/swap_view.rs:603
 msgid ""
 "This swap file is the configured resume target. Disabling it will break "
 "hibernation. Continue?"
 msgstr "このスワップファイルは構成済みの再開ターゲットです。無効にするとハイバネーションが破損します。続行しますか？"
 
-#: src/views/swap_view.rs:705
+#: src/views/swap_view.rs:710
 msgid ""
 "This swap file is the configured resume target. Its physical offset would "
 "change, so resize is blocked until hibernation is disabled."
 msgstr ""
 "このスワップファイルは構成済みの再開ターゲットです。物理オフセットが変更されるため、ハイバネーションが無効化されるまでサイズ変更はブロックされます。"
 
-#: src/views/swap_view.rs:722
+#: src/views/swap_view.rs:727
 msgid "unknown"
 msgstr "不明"
 
-#: src/views/swap_view.rs:738
+#: src/views/swap_view.rs:743
 msgid "No swap partition — a legacy swap file can be managed below"
 msgstr "スワップパーティションなし — 従来のスワップファイルを以下で管理できます"
 
-#: src/views/swap_view.rs:207
+#: src/views/swap_view.rs:212
 msgid "Remove incompatible file"
 msgstr "互換性のないファイルを削除"
 
-#: src/views/swap_view.rs:377
+#: src/views/swap_view.rs:382
 msgid "Removing incompatible swap file…"
 msgstr "互換性のないスワップファイルを削除しています…"
 
-#: src/views/swap_view.rs:790
+#: src/views/swap_view.rs:795
 msgid "Present but inactive"
 msgstr "存在しますが無効です"
 
-#: src/views/swap_view.rs:792
+#: src/views/swap_view.rs:797
 msgid "Not created — choose a size below to add one"
 msgstr "未作成 — 以下でサイズを選択して追加してください"
 
-#: src/views/swap_view.rs:794
+#: src/views/swap_view.rs:799
 msgid "Not created — at least 20 GiB must remain free"
 msgstr "未作成 — 少なくとも 20 GiB の空き領域を残す必要があります"
 
-#: src/views/swap_view.rs:830
+#: src/views/swap_view.rs:835
 msgid ""
 "Resize is locked because this file is the configured hibernation resume "
 "target"
 msgstr "ハイバネーション再開のターゲットとして構成されているため、サイズ変更がロックされています"
 
-#: src/views/swap_view.rs:832
+#: src/views/swap_view.rs:837
 msgid ""
 "Optional compatibility file; 0 GiB removes it and 20 GiB remains reserved "
 "for the system"
 msgstr "オプションの互換性ファイルです。0 GiB に設定すると削除され、システム用に 20 GiB が予約されます。"
 
-#: src/views/swap_view.rs:834
+#: src/views/swap_view.rs:839
 msgid ""
 "Disabled on Btrfs because a root-subvolume swap file would prevent Disk "
 "Snapshots Manager recovery points"
@@ -492,35 +493,35 @@ msgid ""
 "Create a compressed RAM swap device for faster memory pressure handling."
 msgstr "メモリ圧力の処理を高速化するための圧縮 RAM スワップデバイスを作成します。"
 
-#: src/views/stress_test_view.rs:171
+#: src/views/stress_test_view.rs:176
 msgid "Ensure important work is saved before running this test."
 msgstr "このテストを実行する前に、重要な作業の保存を確認してください。"
 
-#: src/views/swap_view.rs:283
+#: src/views/swap_view.rs:288
 msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
 msgstr "圧縮プールが占有できるRAMの最大%。推奨値: 20%"
 
-#: src/views/dashboard_view.rs:141
+#: src/views/dashboard_view.rs:154
 msgid "Real-time RAM, swap, and compression subsystem status"
 msgstr "リアルタイムの RAM、スワップ、および圧縮サブシステムのステータス"
 
-#: src/views/swap_view.rs:308
+#: src/views/swap_view.rs:313
 msgid "Reclaim pool pages under memory pressure. Recommended: ON"
 msgstr "メモリプレッシャー下でプールのページを回収する。推奨: ON"
 
-#: src/views/stress_test_view.rs:107
+#: src/views/stress_test_view.rs:112
 msgid "Simulate memory pressure to test swap and OOM behavior"
 msgstr "スワップと OOM の動作をテストするためにメモリ圧力をシミュレートします"
 
-#: src/views/stress_test_view.rs:161
+#: src/views/stress_test_view.rs:166
 msgid "Warning: This will consume system memory and may cause instability"
 msgstr "警告: システムメモリを消費し、システムが不安定になる可能性があります"
 
-#: src/views/zram_view.rs:440
+#: src/views/zram_view.rs:445
 msgid "Zram configuration saved. The device will be created shortly."
 msgstr "Zram の構成が保存されました。デバイスは間もなく作成されます。"
 
-#: src/views/dashboard_view.rs:165 src/views/swap_view.rs:128
+#: src/views/dashboard_view.rs:178 src/views/swap_view.rs:133
 msgid "<i>Recommended swappiness: {0} ({1})</i>"
 msgstr "<i>推奨スワップネス: {0} ({1})</i>"
 
@@ -528,7 +529,7 @@ msgstr "<i>推奨スワップネス: {0} ({1})</i>"
 msgid "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
 msgstr "<i>推奨: {0} MiB, lz4, 優先度 100 ({1} GiB RAM 向け)</i>"
 
-#: src/views/swap_view.rs:772
+#: src/views/swap_view.rs:777
 msgid "Active — {0} GiB used / {1} GiB total"
 msgstr "有効 — {0} GiB使用中 / {1} GiB合計"
 
@@ -588,13 +589,13 @@ msgstr "pkexec の待機に失敗しました: {0}"
 msgid "Hello {0}, you have {1} messages"
 msgstr "こんにちは {0}、{1} メッセージあります"
 
-#: src/views/swap_view.rs:234
+#: src/views/swap_view.rs:239
 msgid ""
 "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
 " {0})"
 msgstr "カーネルがどの程度積極的にスワップを行うか — 低い値ほど RAM に留まる時間が長くなります（推奨: {0}）"
 
-#: src/views/swap_view.rs:231
+#: src/views/swap_view.rs:236
 msgid ""
 "How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
 "fast compressed RAM over disk cache (recommended: {0})"
@@ -602,11 +603,11 @@ msgstr ""
 "カーネルがどの程度積極的にスワップを行うか — Zram がアクティブの場合、ディスクキャッシュよりも高速な圧縮 RAM を優先するには {0} "
 "に設定してください（推奨: {0}）"
 
-#: src/views/dashboard_view.rs:483
+#: src/views/dashboard_view.rs:505
 msgid "Idle ({0} GiB available)"
 msgstr "アイドル中（{0} GiB 使用可能）"
 
-#: src/views/zram_view.rs:531
+#: src/views/zram_view.rs:536
 msgid "Idle — {0} MiB available"
 msgstr "アイドル中 — {0} MiB 使用可能"
 
@@ -614,11 +615,11 @@ msgstr "アイドル中 — {0} MiB 使用可能"
 msgid "MemTotal not found"
 msgstr "MemTotal が見つかりません"
 
-#: src/views/swap_view.rs:786
+#: src/views/swap_view.rs:791
 msgid "Present but inactive — activation is disabled on {0}"
 msgstr "存在しますが非アクティブです — {0} ではアクティベーションが無効化されています"
 
-#: src/views/stress_test_view.rs:676
+#: src/views/stress_test_view.rs:681
 msgid ""
 "RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
 "Swap used: {3} GiB"
@@ -626,11 +627,11 @@ msgstr ""
 "RAM: 合計 {0} GiB · 使用中 {1} GiB · 空き {2} GiB\n"
 "Swap 使用中: {3} GiB"
 
-#: src/views/swap_view.rs:673
+#: src/views/swap_view.rs:678
 msgid "Resize"
 msgstr "サイズ変更"
 
-#: src/views/swap_view.rs:837
+#: src/views/swap_view.rs:842
 msgid "Swap file resizing is unsupported on {0}"
 msgstr "スワップファイルのリサイズは {0} ではサポートされていません"
 
@@ -662,17 +663,17 @@ msgstr ""
 "これがないと、Zswap の変更を適用または永続化できません。\n"
 "この GUI から zswap を管理するには 'anduinos-swap-config' をインストールしてください。"
 
-#: src/views/zram_view.rs:573
+#: src/views/zram_view.rs:578
 msgid ""
 "This will immediately remove {0} and flush its contents to disk swap. "
 "Continue?"
 msgstr "{0} が即座に削除され、その内容はディスクスワップにフラッシュされます。続行しますか？"
 
-#: src/views/swap_view.rs:797
+#: src/views/swap_view.rs:802
 msgid "Unavailable on {0}; the swap partition remains active"
 msgstr "{0} では利用できません; スワップパーティションはアクティブのままです"
 
-#: src/views/dashboard_view.rs:604
+#: src/views/dashboard_view.rs:626
 msgid ""
 "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
 " fast compressed RAM swap — dropping file cache when zram is available "
@@ -697,7 +698,7 @@ msgstr "Zswap の永続化が無効です"
 msgid "Zswap persistence enabled"
 msgstr "Zswap の永続化を有効にしました"
 
-#: src/views/dashboard_view.rs:159 src/views/swap_view.rs:122
+#: src/views/dashboard_view.rs:172 src/views/swap_view.rs:127
 msgid "for {0} GiB RAM"
 msgstr "{0} GiB RAM 向け"
 
@@ -709,26 +710,46 @@ msgstr "スワップネスを更新しました"
 msgid "systemctl {0} failed: {1}"
 msgstr "systemctl {0} が失敗しました: {1}"
 
-#: src/views/zram_view.rs:525
+#: src/views/zram_view.rs:530
 msgid "{0} MiB used (stats reset)"
 msgstr "{0} MiB 使用中（統計がリセットされました）"
 
-#: src/views/zram_view.rs:520
+#: src/views/zram_view.rs:525
 msgid "{0} MiB used · saved {1}%"
 msgstr "{0} MiB 使用中 · 節約 {1}%"
 
-#: src/views/dashboard_view.rs:498
+#: src/views/dashboard_view.rs:520
 msgid "{0} · pool {1}%"
 msgstr "{0} · プール {1}%"
 
-#: src/views/dashboard_view.rs:474
+#: src/views/dashboard_view.rs:496
 msgid "{0} · saved {1}%"
 msgstr "{0} · 節約 {1}%"
 
-#: src/views/swap_view.rs:754
+#: src/views/swap_view.rs:759
 msgid ""
 "{0} — installer-managed; size cannot be changed while the system is running"
 msgstr "{0} — インストーラ管理; システム実行中はサイズを変更できません"
+
+#: data/com.anduinos.swapcontrol.desktop:99
+msgid "swap;memory;zswap;zram;swappiness;virtual memory;compression;RAM;"
+msgstr "swap;メモリ;zswap;zram;swappiness;仮想メモリ;圧縮;RAM;"
+
+#: data/com.anduinos.swapcontrol.desktop:70
+msgid "Manage virtual memory, compression, and swap settings"
+msgstr "仮想メモリ、圧縮、スワップ設定を管理します"
+
+#: data/com.anduinos.swapcontrol.desktop:47
+msgid "Virtual Memory Settings"
+msgstr "仮想メモリ設定"
+
+#: anduinos-swapcontrol-gtk/data/com.anduinos.swapcontrol.policy:39
+msgid "Authentication is required to modify swap, zswap, and zram settings"
+msgstr "スワップ、zswap、zram の設定を変更するには認証が必要です"
+
+#: anduinos-swapcontrol-gtk/data/com.anduinos.swapcontrol.policy:9
+msgid "Manage virtual memory settings"
+msgstr "仮想メモリ設定を管理"
 
 #~ msgid "Disabling swap will break hibernation. Continue?"
 #~ msgstr "スワップ（仮想メモリ）を無効にすると、ハイバネーション機能が使用できなくなります。続行しますか？"

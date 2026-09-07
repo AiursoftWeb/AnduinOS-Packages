@@ -58,23 +58,23 @@ msgstr "โปรไฟล์แอปพลิเคชัน"
 msgid "Audit"
 msgstr "การตรวจสอบ"
 
-#: src/views/network_audit_view.rs:277
+#: src/views/network_audit_view.rs:278
 msgid "Auditor Error"
 msgstr "ข้อผิดพลาดของผู้ตรวจสอบ"
 
-#: src/views/network_audit_view.rs:504
+#: src/views/network_audit_view.rs:505
 msgid "Block"
 msgstr "บล็อก"
 
-#: src/views/network_audit_view.rs:500
+#: src/views/network_audit_view.rs:501
 msgid "Block Connection?"
 msgstr "บล็อกการเชื่อมต่อ?"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid "Block inbound traffic from"
 msgstr "บล็อกการรับข้อมูลจาก"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid "Block outbound traffic to"
 msgstr "บล็อกการส่งข้อมูลไปยัง"
 
@@ -82,7 +82,7 @@ msgstr "บล็อกการส่งข้อมูลไปยัง"
 msgid "Blocked Events"
 msgstr "เหตุการณ์ที่ถูกบล็อก"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Blocked Successfully"
 msgstr "บล็อกสำเร็จ"
 
@@ -90,7 +90,7 @@ msgstr "บล็อกสำเร็จ"
 msgid "Both"
 msgstr "ทั้งสอง"
 
-#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/views/network_audit_view.rs:504 src/views/rules_view.rs:121
 #: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "ยกเลิก"
@@ -187,11 +187,12 @@ msgstr "ทิศทาง"
 msgid "Error"
 msgstr "ข้อผิดพลาด"
 
-#: src/views/network_audit_view.rs:554
+#: src/views/network_audit_view.rs:555
 msgid "Failed to Block"
 msgstr "การบล็อกล้มเหลว"
 
 #: src/views/status_view.rs:95 src/window.rs:64
+#: data/com.anduinos.ufwall.desktop:29 data/com.anduinos.ufwall.desktop:57
 msgid "Firewall"
 msgstr "ไฟร์วอลล์"
 
@@ -344,7 +345,7 @@ msgstr "ปฏิเสธ"
 msgid "Resolve Domains"
 msgstr "แก้ไขโดเมน"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Rule added to block"
 msgstr "เพิ่มกฎลงในรายการบล็อก"
 
@@ -393,13 +394,13 @@ msgid "This will delete all custom rules. This action cannot be undone."
 msgstr ""
 "การดำเนินการนี้จะลบกฎที่กำหนดเองทั้งหมด การดำเนินการนี้ไม่สามารถย้อนกลับได้"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr ""
 "การดำเนินการนี้จะป้องกันไม่ให้โฮสต์ระยะไกลส่งแพ็กเก็ตมายังเครื่องของคุณ"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr ""
@@ -491,7 +492,7 @@ msgstr "ระบบไฟล์เครือข่าย"
 
 #: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
-msgstr "พอร์ต / โปรโตคอล"
+msgstr "โปรโตคอลเวลาเครือข่าย"
 
 #: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
@@ -515,7 +516,7 @@ msgstr "เซิร์ฟเวอร์ฐานข้อมูล PostgreSQL"
 
 #: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
-msgstr "พอร์ต / โปรโตคอล"
+msgstr "โปรโตคอลเดสก์ท็อประยะไกล"
 
 #: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
@@ -537,7 +538,7 @@ msgstr "VNC เดสก์ท็อประยะไกล"
 msgid "Windows file and printer sharing"
 msgstr "การแชร์ไฟล์และเครื่องพิมพ์ของ Windows"
 
-#: src/views/network_audit_view.rs:534
+#: src/views/network_audit_view.rs:535
 msgid "Audit Block"
 msgstr "ตรวจสอบและบล็อก"
 
@@ -607,27 +608,27 @@ msgstr ""
 msgid "Network service command failed"
 msgstr "คำสั่งบริการเครือข่ายล้มเหลว"
 
-#: src/views/network_audit_view.rs:371
+#: src/views/network_audit_view.rs:372
 msgid "No Active Connections"
 msgstr "ไม่มีเชื่อมต่อที่ใช้งานอยู่"
 
-#: src/views/network_audit_view.rs:361
+#: src/views/network_audit_view.rs:362
 msgid "No Inbound Connections"
 msgstr "ไม่มีการเชื่อมต่อขาเข้า"
 
-#: src/views/network_audit_view.rs:366
+#: src/views/network_audit_view.rs:367
 msgid "No Outbound Connections"
 msgstr "ไม่มีการเชื่อมต่อขาออก"
 
-#: src/views/network_audit_view.rs:367
+#: src/views/network_audit_view.rs:368
 msgid "No applications are sending data to the internet."
 msgstr "ไม่มีแอปพลิเคชันกำลังส่งข้อมูลไปยังอินเทอร์เน็ต"
 
-#: src/views/network_audit_view.rs:362
+#: src/views/network_audit_view.rs:363
 msgid "No external devices are connecting to your open ports."
 msgstr "ไม่มีอุปกรณ์ภายนอกเชื่อมต่อกับพอร์ตที่เปิดอยู่ของคุณ"
 
-#: src/views/network_audit_view.rs:372
+#: src/views/network_audit_view.rs:373
 msgid "No network activity detected."
 msgstr "ไม่พบกิจกรรมเครือข่าย"
 
@@ -646,3 +647,27 @@ msgstr "อัปโหลด"
 #: src/ufw/backend.rs:48
 msgid "pkexec failed"
 msgstr "pkexec ไม่สำเร็จ"
+
+#: data/com.anduinos.ufwall.desktop:124
+msgid "firewall;ufw;security;network;"
+msgstr "ไฟร์วอลล์;ufw;ความปลอดภัย;เครือข่าย;"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:82
+msgid "Authentication is required to change local network discovery"
+msgstr "จำเป็นต้องมีการตรวจสอบสิทธิ์เพื่อเปลี่ยนการค้นพบเครือข่ายท้องถิ่น"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:80
+msgid "Manage local network discovery"
+msgstr "จัดการการค้นพบเครือข่ายท้องถิ่น"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:39
+msgid "Authentication is required to modify firewall settings"
+msgstr "จำเป็นต้องมีการตรวจสอบสิทธิ์เพื่อแก้ไขการตั้งค่าไฟร์วอลล์"
+
+#: data/com.anduinos.ufwall.desktop:85
+msgid "Configure your firewall"
+msgstr "กำหนดค่าไฟร์วอลล์ของคุณ"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:9
+msgid "Manage UFW firewall settings"
+msgstr "จัดการการตั้งค่าไฟร์วอลล์ UFW"

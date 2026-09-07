@@ -8,8 +8,60 @@
 
   <action id="org.anduinos.btrfs-snapshots-manager.create-snapshot">
     <description>Create an AnduinOS system snapshot</description>
+    <description xml:lang="ar_SA">إنشاء لقطة النظام الفورية لـ AnduinOS</description>
+    <description xml:lang="da_DK">Opret et AnduinOS-systemøjebliksbillede</description>
+    <description xml:lang="de_DE">AnduinOS-System-Snapshot erstellen</description>
+    <description xml:lang="el_GR">Δημιουργία στιγμιοτύπου συστήματος AnduinOS</description>
+    <description xml:lang="en_GB">Create an AnduinOS system snapshot</description>
+    <description xml:lang="es_ES">Crear una instantánea del sistema de AnduinOS</description>
+    <description xml:lang="fi_FI">Luo AnduinOS-järjestelmätilannekuva</description>
+    <description xml:lang="fr_FR">Créer un instantané système AnduinOS</description>
+    <description xml:lang="hi_IN">AnduinOS सिस्टम स्नैपशॉट बनाएं</description>
+    <description xml:lang="id_ID">Buat snapshot sistem AnduinOS</description>
+    <description xml:lang="it_IT">Crea un'istantanea di sistema di AnduinOS</description>
+    <description xml:lang="ja_JP">AnduinOS システムスナップショットを作成する</description>
+    <description xml:lang="ko_KR">AnduinOS 시스템 스냅샷 생성</description>
+    <description xml:lang="nl_NL">Een AnduinOS-systeemmomentopname maken</description>
+    <description xml:lang="pl_PL">Utwórz migawkę systemu AnduinOS</description>
+    <description xml:lang="pt_BR">Criar um instantâneo do sistema do AnduinOS</description>
+    <description xml:lang="pt_PT">Criar uma captura de estado do sistema AnduinOS</description>
+    <description xml:lang="ro_RO">Creează un instantaneu de sistem AnduinOS</description>
+    <description xml:lang="ru_RU">Создать системный снимок AnduinOS</description>
+    <description xml:lang="sv_SE">Skapa en AnduinOS-systemögonblicksbild</description>
+    <description xml:lang="th_TH">สร้างสแนปชอตระบบ AnduinOS</description>
+    <description xml:lang="tr_TR">AnduinOS sistem anlık görüntüsü oluştur</description>
+    <description xml:lang="uk_UA">Створити системний знімок стану AnduinOS</description>
+    <description xml:lang="vi_VN">Tạo ảnh chụp nhanh hệ thống AnduinOS</description>
+    <description xml:lang="zh_HK">建立 AnduinOS 系統快照</description>
+    <description xml:lang="zh_TW">建立 AnduinOS 系統快照</description>
     <description xml:lang="zh_CN">创建 AnduinOS 系统快照</description>
     <message>Authentication is required to create a system snapshot</message>
+    <message xml:lang="ar_SA">المصادقة مطلوبة لإنشاء لقطة النظام الفورية</message>
+    <message xml:lang="da_DK">Godkendelse er påkrævet for at oprette et systemøjebliksbillede</message>
+    <message xml:lang="de_DE">Authentifizierung ist erforderlich, um einen System-Snapshot zu erstellen</message>
+    <message xml:lang="el_GR">Απαιτείται έλεγχος ταυτότητας για τη δημιουργία στιγμιοτύπου συστήματος</message>
+    <message xml:lang="en_GB">Authentication is required to create a system snapshot</message>
+    <message xml:lang="es_ES">Se requiere autenticación para crear una instantánea del sistema</message>
+    <message xml:lang="fi_FI">Järjestelmätilannekuvan luonti vaatii todennuksen</message>
+    <message xml:lang="fr_FR">L'authentification est requise pour créer un instantané système</message>
+    <message xml:lang="hi_IN">सिस्टम स्नैपशॉट बनाने के लिए प्रमाणीकरण आवश्यक है</message>
+    <message xml:lang="id_ID">Otentikasi diperlukan untuk membuat snapshot sistem</message>
+    <message xml:lang="it_IT">È richiesta l'autenticazione per creare un'istantanea di sistema</message>
+    <message xml:lang="ja_JP">システムスナップショットを作成するには認証が必要です</message>
+    <message xml:lang="ko_KR">시스템 스냅샷을 생성하려면 인증이 필요합니다</message>
+    <message xml:lang="nl_NL">Authenticatie is vereist om een systeemmomentopname te maken</message>
+    <message xml:lang="pl_PL">Wymagane jest uwierzytelnienie, aby utworzyć migawkę systemu</message>
+    <message xml:lang="pt_BR">É necessária autenticação para criar um instantâneo do sistema</message>
+    <message xml:lang="pt_PT">É necessária autenticação para criar uma captura de estado do sistema</message>
+    <message xml:lang="ro_RO">Este necesară autentificarea pentru a crea un instantaneu de sistem</message>
+    <message xml:lang="ru_RU">Требуется аутентификация для создания системного снимка</message>
+    <message xml:lang="sv_SE">Autentisering krävs för att skapa en systemögonblicksbild</message>
+    <message xml:lang="th_TH">จำเป็นต้องมีการตรวจสอบสิทธิ์เพื่อสร้างสแนปชอตระบบ</message>
+    <message xml:lang="tr_TR">Sistem anlık görüntüsü oluşturmak için kimlik doğrulaması gereklidir</message>
+    <message xml:lang="uk_UA">Потрібна автентифікація для створення системного знімка стану</message>
+    <message xml:lang="vi_VN">Yêu cầu xác thực để tạo ảnh chụp nhanh hệ thống</message>
+    <message xml:lang="zh_HK">建立系統快照需要身份驗證</message>
+    <message xml:lang="zh_TW">建立系統快照需要身分驗證</message>
     <message xml:lang="zh_CN">创建系统快照需要身份验证</message>
     <defaults>
       <allow_any>auth_admin</allow_any>
@@ -20,8 +72,60 @@
 
   <action id="org.anduinos.btrfs-snapshots-manager.delete-snapshot">
     <description>Delete an AnduinOS system snapshot</description>
+    <description xml:lang="ar_SA">حذف لقطة النظام الفورية لـ AnduinOS</description>
+    <description xml:lang="da_DK">Slet et AnduinOS-systemøjebliksbillede</description>
+    <description xml:lang="de_DE">AnduinOS-System-Snapshot löschen</description>
+    <description xml:lang="el_GR">Διαγραφή στιγμιοτύπου συστήματος AnduinOS</description>
+    <description xml:lang="en_GB">Delete an AnduinOS system snapshot</description>
+    <description xml:lang="es_ES">Eliminar una instantánea del sistema de AnduinOS</description>
+    <description xml:lang="fi_FI">Poista AnduinOS-järjestelmätilannekuva</description>
+    <description xml:lang="fr_FR">Supprimer un instantané système AnduinOS</description>
+    <description xml:lang="hi_IN">AnduinOS सिस्टम स्नैपशॉट हटाएँ</description>
+    <description xml:lang="id_ID">Hapus snapshot sistem AnduinOS</description>
+    <description xml:lang="it_IT">Elimina un'istantanea di sistema di AnduinOS</description>
+    <description xml:lang="ja_JP">AnduinOS システムスナップショットを削除する</description>
+    <description xml:lang="ko_KR">AnduinOS 시스템 스냅샷 삭제</description>
+    <description xml:lang="nl_NL">Verwijder een AnduinOS-systeemmomentopname</description>
+    <description xml:lang="pl_PL">Usuń migawkę systemu AnduinOS</description>
+    <description xml:lang="pt_BR">Excluir um instantâneo do sistema do AnduinOS</description>
+    <description xml:lang="pt_PT">Eliminar uma captura de estado do sistema AnduinOS</description>
+    <description xml:lang="ro_RO">Șterge un instantaneu de sistem AnduinOS</description>
+    <description xml:lang="ru_RU">Удалить системный снимок AnduinOS</description>
+    <description xml:lang="sv_SE">Ta bort en AnduinOS-systemögonblicksbild</description>
+    <description xml:lang="th_TH">ลบสแนปชอตระบบ AnduinOS</description>
+    <description xml:lang="tr_TR">AnduinOS sistem anlık görüntüsünü sil</description>
+    <description xml:lang="uk_UA">Видалити системний знімок стану AnduinOS</description>
+    <description xml:lang="vi_VN">Xóa ảnh chụp nhanh hệ thống AnduinOS</description>
+    <description xml:lang="zh_HK">刪除 AnduinOS 系統快照</description>
+    <description xml:lang="zh_TW">刪除 AnduinOS 系統快照</description>
     <description xml:lang="zh_CN">删除 AnduinOS 系统快照</description>
     <message>Authentication is required to delete a system snapshot</message>
+    <message xml:lang="ar_SA">المصادقة مطلوبة لحذف لقطة النظام الفورية</message>
+    <message xml:lang="da_DK">Godkendelse er påkrævet for at slette et systemøjebliksbillede</message>
+    <message xml:lang="de_DE">Authentifizierung ist erforderlich, um einen System-Snapshot zu löschen</message>
+    <message xml:lang="el_GR">Απαιτείται έλεγχος ταυτότητας για τη διαγραφή στιγμιοτύπου συστήματος</message>
+    <message xml:lang="en_GB">Authentication is required to delete a system snapshot</message>
+    <message xml:lang="es_ES">Se requiere autenticación para eliminar una instantánea del sistema</message>
+    <message xml:lang="fi_FI">Järjestelmätilannekuvan poistaminen vaatii todennuksen</message>
+    <message xml:lang="fr_FR">L'authentification est requise pour supprimer un instantané système</message>
+    <message xml:lang="hi_IN">सिस्टम स्नैपशॉट हटाने के लिए प्रमाणीकरण आवश्यक है</message>
+    <message xml:lang="id_ID">Otentikasi diperlukan untuk menghapus snapshot sistem</message>
+    <message xml:lang="it_IT">È richiesta l'autenticazione per eliminare un'istantanea di sistema</message>
+    <message xml:lang="ja_JP">システムスナップショットを削除するには認証が必要です</message>
+    <message xml:lang="ko_KR">시스템 스냅샷을 삭제하려면 인증이 필요합니다</message>
+    <message xml:lang="nl_NL">Authenticatie is vereist om een systeemmomentopname te verwijderen</message>
+    <message xml:lang="pl_PL">Wymagane jest uwierzytelnienie, aby usunąć migawkę systemu</message>
+    <message xml:lang="pt_BR">É necessária autenticação para excluir um instantâneo do sistema</message>
+    <message xml:lang="pt_PT">É necessária autenticação para eliminar uma captura de estado do sistema</message>
+    <message xml:lang="ro_RO">Este necesară autentificarea pentru a șterge un instantaneu de sistem</message>
+    <message xml:lang="ru_RU">Требуется аутентификация для удаления системного снимка</message>
+    <message xml:lang="sv_SE">Autentisering krävs för att ta bort en systemögonblicksbild</message>
+    <message xml:lang="th_TH">จำเป็นต้องมีการตรวจสอบสิทธิ์เพื่อลบสแนปชอตระบบ</message>
+    <message xml:lang="tr_TR">Sistem anlık görüntüsünü silmek için kimlik doğrulaması gereklidir</message>
+    <message xml:lang="uk_UA">Потрібна автентифікація для видалення системного знімка стану</message>
+    <message xml:lang="vi_VN">Yêu cầu xác thực để xóa ảnh chụp nhanh hệ thống</message>
+    <message xml:lang="zh_HK">刪除系統快照需要身份驗證</message>
+    <message xml:lang="zh_TW">刪除系統快照需要身分驗證</message>
     <message xml:lang="zh_CN">删除系统快照需要身份验证</message>
     <defaults>
       <allow_any>auth_admin</allow_any>
@@ -32,8 +136,60 @@
 
   <action id="org.anduinos.btrfs-snapshots-manager.restore-snapshot">
     <description>Access or restore an AnduinOS system snapshot</description>
+    <description xml:lang="ar_SA">الوصول إلى لقطة النظام الفورية لـ AnduinOS أو استعادتها</description>
+    <description xml:lang="da_DK">Få adgang til eller gendan et AnduinOS-systemøjebliksbillede</description>
+    <description xml:lang="de_DE">Auf einen AnduinOS-System-Snapshot zugreifen oder ihn wiederherstellen</description>
+    <description xml:lang="el_GR">Πρόσβαση ή επαναφορά στιγμιοτύπου συστήματος AnduinOS</description>
+    <description xml:lang="en_GB">Access or restore an AnduinOS system snapshot</description>
+    <description xml:lang="es_ES">Acceder o restaurar una instantánea del sistema de AnduinOS</description>
+    <description xml:lang="fi_FI">Selaa tai palauta AnduinOS-järjestelmätilannekuva</description>
+    <description xml:lang="fr_FR">Accéder à un instantané système AnduinOS ou le restaurer</description>
+    <description xml:lang="hi_IN">AnduinOS सिस्टम स्नैपशॉट तक पहुँचें या उसे पुनर्स्थापित करें</description>
+    <description xml:lang="id_ID">Akses atau pulihkan snapshot sistem AnduinOS</description>
+    <description xml:lang="it_IT">Accedi o ripristina un'istantanea di sistema di AnduinOS</description>
+    <description xml:lang="ja_JP">AnduinOS システムスナップショットへのアクセスまたは復元</description>
+    <description xml:lang="ko_KR">AnduinOS 시스템 스냅샷 액세스 또는 복구</description>
+    <description xml:lang="nl_NL">Toegang verlenen tot of herstellen van een AnduinOS-systeemmomentopname</description>
+    <description xml:lang="pl_PL">Dostęp do migawki systemu AnduinOS lub jej przywrócenie</description>
+    <description xml:lang="pt_BR">Acessar ou restaurar um instantâneo do sistema do AnduinOS</description>
+    <description xml:lang="pt_PT">Aceder ou restaurar uma captura de estado do sistema AnduinOS</description>
+    <description xml:lang="ro_RO">Accesează sau restaurează un instantaneu de sistem AnduinOS</description>
+    <description xml:lang="ru_RU">Доступ к системному снимку AnduinOS или его восстановление</description>
+    <description xml:lang="sv_SE">Kom åt eller återställ en AnduinOS-systemögonblicksbild</description>
+    <description xml:lang="th_TH">เข้าถึงหรือกู้คืนสแนปชอตระบบ AnduinOS</description>
+    <description xml:lang="tr_TR">AnduinOS sistem anlık görüntüsüne erişin veya geri yükleyin</description>
+    <description xml:lang="uk_UA">Доступ до системного знімка стану AnduinOS або його відновлення</description>
+    <description xml:lang="vi_VN">Truy cập hoặc khôi phục ảnh chụp nhanh hệ thống AnduinOS</description>
+    <description xml:lang="zh_HK">存取或還原 AnduinOS 系統快照</description>
+    <description xml:lang="zh_TW">存取或復原 AnduinOS 系統快照</description>
     <description xml:lang="zh_CN">访问或还原 AnduinOS 系统快照</description>
     <message>Authentication is required to access or restore a system snapshot</message>
+    <message xml:lang="ar_SA">المصادقة مطلوبة للوصول إلى لقطة النظام الفورية أو استعادتها</message>
+    <message xml:lang="da_DK">Godkendelse er påkrævet for at få adgang til eller gendanne et systemøjebliksbillede</message>
+    <message xml:lang="de_DE">Authentifizierung ist erforderlich, um auf einen System-Snapshot zuzugreifen oder ihn wiederherzustellen</message>
+    <message xml:lang="el_GR">Απαιτείται έλεγχος ταυτότητας για την πρόσβαση ή την επαναφορά στιγμιοτύπου συστήματος</message>
+    <message xml:lang="en_GB">Authentication is required to access or restore a system snapshot</message>
+    <message xml:lang="es_ES">Se requiere autenticación para acceder o restaurar una instantánea del sistema</message>
+    <message xml:lang="fi_FI">Järjestelmätilannekuvan selaaaminen tai palauttaminen vaatii todennuksen</message>
+    <message xml:lang="fr_FR">L'authentification est requise pour accéder à un instantané système ou le restaurer</message>
+    <message xml:lang="hi_IN">सिस्टम स्नैपशॉट तक पहुँचने या उसे पुनर्स्थापित करने के लिए प्रमाणीकरण आवश्यक है</message>
+    <message xml:lang="id_ID">Otentikasi diperlukan untuk mengakses atau memulihkan snapshot sistem</message>
+    <message xml:lang="it_IT">È richiesta l'autenticazione per accedere o ripristinare un'istantanea di sistema</message>
+    <message xml:lang="ja_JP">システムスナップショットへのアクセスまたは復元には認証が必要です</message>
+    <message xml:lang="ko_KR">시스템 스냅샷에 액세스하거나 복구하려면 인증이 필요합니다</message>
+    <message xml:lang="nl_NL">Authenticatie is vereist voor toegang tot of herstel van een systeemmomentopname</message>
+    <message xml:lang="pl_PL">Wymagane jest uwierzytelnienie, aby uzyskać dostęp do migawki systemu lub ją przywrócić</message>
+    <message xml:lang="pt_BR">É necessária autenticação para acessar ou restaurar um instantâneo do sistema</message>
+    <message xml:lang="pt_PT">É necessária autenticação para aceder ou restaurar uma captura de estado do sistema</message>
+    <message xml:lang="ro_RO">Este necesară autentificarea pentru a accesa sau restaura un instantaneu de sistem</message>
+    <message xml:lang="ru_RU">Требуется аутентификация для доступа к системному снимку или его восстановления</message>
+    <message xml:lang="sv_SE">Autentisering krävs för att komma åt eller återställa en systemögonblicksbild</message>
+    <message xml:lang="th_TH">จำเป็นต้องมีการตรวจสอบสิทธิ์เพื่อเข้าถึงหรือกู้คืนสแนปชอตระบบ</message>
+    <message xml:lang="tr_TR">Sistem anlık görüntüsüne erişmek veya geri yüklemek için kimlik doğrulaması gereklidir</message>
+    <message xml:lang="uk_UA">Потрібна автентифікація для доступу до системного знімка стану або його відновлення</message>
+    <message xml:lang="vi_VN">Yêu cầu xác thực để truy cập hoặc khôi phục ảnh chụp nhanh hệ thống</message>
+    <message xml:lang="zh_HK">存取或還原系統快照需要身份驗證</message>
+    <message xml:lang="zh_TW">存取或復原系統快照需要身分驗證</message>
     <message xml:lang="zh_CN">访问或还原系统快照需要身份验证</message>
     <defaults>
       <allow_any>auth_admin</allow_any>
@@ -44,8 +200,60 @@
 
   <action id="org.anduinos.btrfs-snapshots-manager.configure-system">
     <description>Configure AnduinOS recovery</description>
+    <description xml:lang="ar_SA">تكوين استرداد AnduinOS</description>
+    <description xml:lang="da_DK">Konfigurer AnduinOS-gendannelse</description>
+    <description xml:lang="de_DE">AnduinOS-Wiederherstellung konfigurieren</description>
+    <description xml:lang="el_GR">Διαμόρφωση ανάκτησης AnduinOS</description>
+    <description xml:lang="en_GB">Configure AnduinOS recovery</description>
+    <description xml:lang="es_ES">Configurar la recuperación de AnduinOS</description>
+    <description xml:lang="fi_FI">Määritä AnduinOS-järjestelmän palautus</description>
+    <description xml:lang="fr_FR">Configurer la récupération d'AnduinOS</description>
+    <description xml:lang="hi_IN">AnduinOS पुनर्प्राप्ति कॉन्फ़िगर करें</description>
+    <description xml:lang="id_ID">Konfigurasikan pemulihan AnduinOS</description>
+    <description xml:lang="it_IT">Configura il recupero di AnduinOS</description>
+    <description xml:lang="ja_JP">AnduinOS の復旧を設定する</description>
+    <description xml:lang="ko_KR">AnduinOS 복구 구성</description>
+    <description xml:lang="nl_NL">AnduinOS-herstel configureren</description>
+    <description xml:lang="pl_PL">Skonfiguruj odzyskiwanie systemu AnduinOS</description>
+    <description xml:lang="pt_BR">Configurar a recuperação do AnduinOS</description>
+    <description xml:lang="pt_PT">Configurar a recuperação do AnduinOS</description>
+    <description xml:lang="ro_RO">Configurează recuperarea AnduinOS</description>
+    <description xml:lang="ru_RU">Настройка восстановления AnduinOS</description>
+    <description xml:lang="sv_SE">Konfigurera AnduinOS-återställning</description>
+    <description xml:lang="th_TH">กำหนดค่าการกู้คืน AnduinOS</description>
+    <description xml:lang="tr_TR">AnduinOS kurtarmasını yapılandır</description>
+    <description xml:lang="uk_UA">Налаштування відновлення системи AnduinOS</description>
+    <description xml:lang="vi_VN">Cấu hình khôi phục AnduinOS</description>
+    <description xml:lang="zh_HK">設定 AnduinOS 復原</description>
+    <description xml:lang="zh_TW">設定 AnduinOS 復原</description>
     <description xml:lang="zh_CN">配置 AnduinOS 系统恢复</description>
     <message>Authentication is required to change recovery settings</message>
+    <message xml:lang="ar_SA">المصادقة مطلوبة لتغيير إعدادات الاسترداد</message>
+    <message xml:lang="da_DK">Godkendelse er påkrævet for at ændre gendannelsesindstillingerne</message>
+    <message xml:lang="de_DE">Authentifizierung ist erforderlich, um die Wiederherstellungseinstellungen zu ändern</message>
+    <message xml:lang="el_GR">Απαιτείται έλεγχος ταυτότητας για την αλλαγή των ρυθμίσεων ανάκτησης</message>
+    <message xml:lang="en_GB">Authentication is required to change recovery settings</message>
+    <message xml:lang="es_ES">Se requiere autenticación para cambiar los ajustes de recuperación</message>
+    <message xml:lang="fi_FI">Palautusasetusten muuttaminen vaatii todennuksen</message>
+    <message xml:lang="fr_FR">L'authentification est requise pour modifier les paramètres de récupération</message>
+    <message xml:lang="hi_IN">पुनर्प्राप्ति सेटिंग्स बदलने के लिए प्रमाणीकरण आवश्यक है</message>
+    <message xml:lang="id_ID">Otentikasi diperlukan untuk mengubah pengaturan pemulihan</message>
+    <message xml:lang="it_IT">È richiesta l'autenticazione per modificare le impostazioni di recupero</message>
+    <message xml:lang="ja_JP">復旧設定を変更するには認証が必要です</message>
+    <message xml:lang="ko_KR">복구 설정을 변경하려면 인증이 필요합니다</message>
+    <message xml:lang="nl_NL">Authenticatie is vereist om de herstelinstellingen te wijzigen</message>
+    <message xml:lang="pl_PL">Wymagane jest uwierzytelnienie, aby zmienić ustawienia odzyskiwania systemu</message>
+    <message xml:lang="pt_BR">É necessária autenticação para alterar as configurações de recuperação</message>
+    <message xml:lang="pt_PT">É necessária autenticação para alterar as definições de recuperação</message>
+    <message xml:lang="ro_RO">Este necesară autentificarea pentru a modifica setările de recuperare</message>
+    <message xml:lang="ru_RU">Требуется аутентификация для изменения настроек восстановления</message>
+    <message xml:lang="sv_SE">Autentisering krävs för att ändra återställningsinställningar</message>
+    <message xml:lang="th_TH">จำเป็นต้องมีการตรวจสอบสิทธิ์เพื่อเปลี่ยนการตั้งค่าการกู้คืน</message>
+    <message xml:lang="tr_TR">Kurtarma ayarlarını değiştirmek için kimlik doğrulaması gereklidir</message>
+    <message xml:lang="uk_UA">Потрібна автентифікація для зміни налаштувань відновлення</message>
+    <message xml:lang="vi_VN">Yêu cầu xác thực để thay đổi cài đặt khôi phục</message>
+    <message xml:lang="zh_HK">變更復原設定需要身分驗證</message>
+    <message xml:lang="zh_TW">變更復原設定需要身分驗證</message>
     <message xml:lang="zh_CN">更改恢复设置需要身份验证</message>
     <defaults>
       <allow_any>auth_admin</allow_any>
@@ -56,8 +264,60 @@
 
   <action id="org.anduinos.btrfs-snapshots-manager.personal-files">
     <description>Browse and export historical Personal Files</description>
+    <description xml:lang="ar_SA">تصفح وتصدير سجل الملفات الشخصية</description>
+    <description xml:lang="da_DK">Gennemse og eksportér tidligere versioner af personlige filer</description>
+    <description xml:lang="de_DE">Historische persönliche Dateien durchsuchen und exportieren</description>
+    <description xml:lang="el_GR">Περιήγηση και εξαγωγή παλαιότερων εκδόσεων προσωπικών αρχείων</description>
+    <description xml:lang="en_GB">Browse and export historical Personal Files</description>
+    <description xml:lang="es_ES">Explorar y exportar archivos personales históricos</description>
+    <description xml:lang="fi_FI">Selaa ja vie omien tiedostojen aiempia versioita</description>
+    <description xml:lang="fr_FR">Parcourir et exporter l'historique des fichiers personnels</description>
+    <description xml:lang="hi_IN">पिछली व्यक्तिगत फ़ाइलें ब्राउज़ करें और निर्यात करें</description>
+    <description xml:lang="id_ID">Jelajahi dan ekspor Berkas Pribadi historis</description>
+    <description xml:lang="it_IT">Sfoglia ed esporta i file personali storici</description>
+    <description xml:lang="ja_JP">個人ファイルの過去のバージョンを参照してエクスポートする</description>
+    <description xml:lang="ko_KR">개인 파일의 이전 버전 탐색 및 내보내기</description>
+    <description xml:lang="nl_NL">Historische persoonlijke bestanden doorzoeken en exporteren</description>
+    <description xml:lang="pl_PL">Przeglądaj i eksportuj historyczne pliki osobiste</description>
+    <description xml:lang="pt_BR">Navegar e exportar versões anteriores dos Arquivos Pessoais</description>
+    <description xml:lang="pt_PT">Navegar e exportar versões anteriores dos Ficheiros Pessoais</description>
+    <description xml:lang="ro_RO">Explorează și exportă fișierele personale istorice</description>
+    <description xml:lang="ru_RU">Просмотр и экспорт истории личных файлов</description>
+    <description xml:lang="sv_SE">Bläddra i och exportera historiska personliga filer</description>
+    <description xml:lang="th_TH">เรียกดูและส่งออกไฟล์ส่วนบุคคลย้อนหลัง</description>
+    <description xml:lang="tr_TR">Geçmiş Kişisel Dosyalara göz atın ve dışa aktarın</description>
+    <description xml:lang="uk_UA">Переглянути та експортувати історичні особисті файли</description>
+    <description xml:lang="vi_VN">Duyệt và xuất các phiên bản trước đây của Tệp cá nhân</description>
+    <description xml:lang="zh_HK">瀏覽及匯出個人檔案歷史記錄</description>
+    <description xml:lang="zh_TW">瀏覽並匯出歷史個人檔案</description>
     <description xml:lang="zh_CN">浏览和导出个人文件历史</description>
     <message>Authentication is required to access historical Personal Files</message>
+    <message xml:lang="ar_SA">المصادقة مطلوبة للوصول إلى سجل الملفات الشخصية</message>
+    <message xml:lang="da_DK">Godkendelse kræves for at få adgang til tidligere versioner af personlige filer</message>
+    <message xml:lang="de_DE">Authentifizierung ist erforderlich, um auf historische persönliche Dateien zuzugreifen</message>
+    <message xml:lang="el_GR">Απαιτείται έλεγχος ταυτότητας για την πρόσβαση σε παλαιότερες εκδόσεις προσωπικών αρχείων</message>
+    <message xml:lang="en_GB">Authentication is required to access historical Personal Files</message>
+    <message xml:lang="es_ES">Se requiere autenticación para acceder a versiones anteriores de los archivos personales</message>
+    <message xml:lang="fi_FI">Omien tiedostojen aiempien versioiden käyttö edellyttää tunnistautumista</message>
+    <message xml:lang="fr_FR">L'authentification est requise pour accéder à l'historique des fichiers personnels</message>
+    <message xml:lang="hi_IN">पिछली व्यक्तिगत फ़ाइलों तक पहुँचने के लिए प्रमाणीकरण आवश्यक है</message>
+    <message xml:lang="id_ID">Otentikasi diperlukan untuk mengakses Berkas Pribadi historis</message>
+    <message xml:lang="it_IT">È richiesta l'autenticazione per accedere ai file personali storici</message>
+    <message xml:lang="ja_JP">個人ファイルの過去のバージョンにアクセスするには認証が必要です</message>
+    <message xml:lang="ko_KR">개인 파일의 이전 버전에 액세스하려면 인증이 필요합니다</message>
+    <message xml:lang="nl_NL">Authenticatie is vereist om toegang te krijgen tot historische persoonlijke bestanden</message>
+    <message xml:lang="pl_PL">Wymagane jest uwierzytelnienie, aby uzyskać dostęp do historycznych plików osobistych</message>
+    <message xml:lang="pt_BR">É necessária autenticação para acessar versões anteriores dos Arquivos Pessoais</message>
+    <message xml:lang="pt_PT">É necessária autenticação para aceder às versões anteriores dos Ficheiros Pessoais</message>
+    <message xml:lang="ro_RO">Este necesară autentificarea pentru a accesa fișierele personale istorice</message>
+    <message xml:lang="ru_RU">Требуется аутентификация для доступа к истории личных файлов</message>
+    <message xml:lang="sv_SE">Autentisering krävs för att komma åt historiska personliga filer</message>
+    <message xml:lang="th_TH">จำเป็นต้องมีการตรวจสอบสิทธิ์เพื่อเข้าถึงไฟล์ส่วนบุคคลย้อนหลัง</message>
+    <message xml:lang="tr_TR">Geçmiş Kişisel Dosyalara erişmek için kimlik doğrulaması gereklidir</message>
+    <message xml:lang="uk_UA">Потрібна автентифікація для доступу до історичних особистих файлів</message>
+    <message xml:lang="vi_VN">Yêu cầu xác thực để truy cập các phiên bản trước đây của Tệp cá nhân</message>
+    <message xml:lang="zh_HK">存取個人檔案的過往版本需要身分驗證</message>
+    <message xml:lang="zh_TW">存取歷史個人檔案需要身分驗證</message>
     <message xml:lang="zh_CN">访问个人文件历史需要身份验证</message>
     <defaults>
       <allow_any>no</allow_any>
@@ -68,9 +328,61 @@
 
   <action id="org.anduinos.btrfs-snapshots-manager.create-personal-snapshot">
     <description>Create a Home history snapshot</description>
-    <description xml:lang="zh_CN">创建用户目录历史快照</description>
+    <description xml:lang="ar_SA">إنشاء لقطة فورية لسجل المجلد المنزلي</description>
+    <description xml:lang="da_DK">Opret et øjebliksbillede af hjemmemappens historik</description>
+    <description xml:lang="de_DE">Snapshot des persönlichen Ordners erstellen</description>
+    <description xml:lang="el_GR">Δημιουργία στιγμιότυπου ιστορικού του προσωπικού φακέλου</description>
+    <description xml:lang="en_GB">Create a Home history snapshot</description>
+    <description xml:lang="es_ES">Crear una instantánea del historial del directorio personal</description>
+    <description xml:lang="fi_FI">Luo Koti-historian tilannekuva</description>
+    <description xml:lang="fr_FR">Créer un instantané de l'historique du dossier personnel</description>
+    <description xml:lang="hi_IN">होम इतिहास स्नैपशॉट बनाएं</description>
+    <description xml:lang="id_ID">Buat snapshot riwayat Beranda</description>
+    <description xml:lang="it_IT">Crea un'istantanea della cronologia di Home</description>
+    <description xml:lang="ja_JP">ホーム履歴スナップショットを作成する</description>
+    <description xml:lang="ko_KR">홈 스냅샷 생성</description>
+    <description xml:lang="nl_NL">Een Home-momentopname maken</description>
+    <description xml:lang="pl_PL">Utwórz migawkę historii katalogu domowego</description>
+    <description xml:lang="pt_BR">Criar um instantâneo do histórico do Home</description>
+    <description xml:lang="pt_PT">Criar uma captura de estado do histórico da pasta pessoal</description>
+    <description xml:lang="ro_RO">Creează un instantaneu al istoricului dosarului personal</description>
+    <description xml:lang="ru_RU">Создать снимок истории домашней папки</description>
+    <description xml:lang="sv_SE">Skapa en ögonblicksbild för hemkatalogens historik</description>
+    <description xml:lang="th_TH">สร้างสแนปชอตประวัติโฟลเดอร์ส่วนตัว</description>
+    <description xml:lang="tr_TR">Ev geçmişi anlık görüntüsü oluştur</description>
+    <description xml:lang="uk_UA">Створити знімок стану історії домашньої директорії</description>
+    <description xml:lang="vi_VN">Tạo ảnh chụp nhanh lịch sử Home</description>
+    <description xml:lang="zh_HK">建立家目錄歷史快照</description>
+    <description xml:lang="zh_TW">建立家目錄歷史快照</description>
+    <description xml:lang="zh_CN">创建主目录历史快照</description>
     <message>A local active user may create a Home history snapshot</message>
-    <message xml:lang="zh_CN">本地活动用户可以创建用户目录历史快照</message>
+    <message xml:lang="ar_SA">يمكن للمستخدم المحلي النشط إنشاء لقطة فورية لسجل المجلد المنزلي</message>
+    <message xml:lang="da_DK">En lokal aktiv bruger kan oprette et øjebliksbillede af hjemmemappens historik</message>
+    <message xml:lang="de_DE">Ein lokaler aktiver Benutzer kann einen Snapshot des persönlichen Ordners erstellen</message>
+    <message xml:lang="el_GR">Ένας τοπικός ενεργός χρήστης μπορεί να δημιουργήσει ένα στιγμιότυπο ιστορικού του προσωπικού φακέλου</message>
+    <message xml:lang="en_GB">A local active user may create a Home history snapshot</message>
+    <message xml:lang="es_ES">Un usuario local activo puede crear una instantánea del historial del directorio personal</message>
+    <message xml:lang="fi_FI">Paikallinen aktiivinen käyttäjä voi luoda Koti-historian tilannekuvan</message>
+    <message xml:lang="fr_FR">Un utilisateur local actif peut créer un instantané de l'historique du dossier personnel</message>
+    <message xml:lang="hi_IN">एक स्थानीय सक्रिय उपयोगकर्ता होम इतिहास स्नैपशॉट बना सकता है</message>
+    <message xml:lang="id_ID">Pengguna lokal yang aktif dapat membuat snapshot riwayat Beranda</message>
+    <message xml:lang="it_IT">Un utente locale attivo può creare un’istantanea della cronologia della cartella personale</message>
+    <message xml:lang="ja_JP">ローカルでアクティブなユーザーはホーム履歴スナップショットを作成できます</message>
+    <message xml:lang="ko_KR">로컬 활성 사용자는 홈 스냅샷을 생성할 수 있습니다</message>
+    <message xml:lang="nl_NL">Een lokale actieve gebruiker kan een Home-momentopname maken</message>
+    <message xml:lang="pl_PL">Aktywny użytkownik lokalny może utworzyć migawkę historii katalogu domowego</message>
+    <message xml:lang="pt_BR">Um usuário local ativo pode criar um instantâneo do histórico do Home</message>
+    <message xml:lang="pt_PT">Um utilizador local ativo pode criar uma captura de estado do histórico da pasta pessoal</message>
+    <message xml:lang="ro_RO">Un utilizator local activ poate crea un instantaneu al istoricului dosarului personal</message>
+    <message xml:lang="ru_RU">Локальный активный пользователь может создать снимок истории домашней папки</message>
+    <message xml:lang="sv_SE">En lokalt aktiv användare kan skapa en ögonblicksbild för hemkatalogens historik</message>
+    <message xml:lang="th_TH">ผู้ใช้ที่กำลังใช้งานเครื่องนี้อาจสร้างสแนปชอตประวัติของโฟลเดอร์ส่วนตัวได้</message>
+    <message xml:lang="tr_TR">Yerel etkin bir kullanıcı, Ev geçmişi anlık görüntüsü oluşturabilir</message>
+    <message xml:lang="uk_UA">Локальний активний користувач може створити знімок стану історії домашньої директорії</message>
+    <message xml:lang="vi_VN">Người dùng cục bộ đang hoạt động có thể tạo ảnh chụp nhanh lịch sử Home</message>
+    <message xml:lang="zh_HK">本機活動使用者可以建立家目錄歷史快照</message>
+    <message xml:lang="zh_TW">本機活動使用者可以建立家目錄歷史快照</message>
+    <message xml:lang="zh_CN">当前处于活动状态的本地用户可以创建主目录历史快照</message>
     <defaults>
       <allow_any>no</allow_any>
       <allow_inactive>no</allow_inactive>
@@ -80,9 +392,61 @@
 
   <action id="org.anduinos.btrfs-snapshots-manager.create-personal-snapshot-override">
     <description>Override the Home snapshot creation limit</description>
-    <description xml:lang="zh_CN">越过用户目录快照创建频率限制</description>
+    <description xml:lang="ar_SA">تجاوز حد إنشاء لقطات المجلد المنزلي</description>
+    <description xml:lang="da_DK">Tilsidesæt grænsen for oprettelse af øjebliksbilleder af hjemmemappen</description>
+    <description xml:lang="de_DE">Begrenzung für die Erstellung von Snapshots des persönlichen Ordners außer Kraft setzen</description>
+    <description xml:lang="el_GR">Παράκαμψη του ορίου δημιουργίας στιγμιότυπων του προσωπικού φακέλου</description>
+    <description xml:lang="en_GB">Override the Home snapshot creation limit</description>
+    <description xml:lang="es_ES">Anular el límite de creación de instantáneas del directorio personal</description>
+    <description xml:lang="fi_FI">Ohita Koti-tilannekuvan luontirajoitus</description>
+    <description xml:lang="fr_FR">Contourner la limite de création d'instantanés du dossier personnel</description>
+    <description xml:lang="hi_IN">होम स्नैपशॉट निर्माण सीमा को ओवरराइड करें</description>
+    <description xml:lang="id_ID">Lewati batas pembuatan snapshot Beranda</description>
+    <description xml:lang="it_IT">Ignora il limite di creazione delle istantanee di Home</description>
+    <description xml:lang="ja_JP">作成制限を超えてホームスナップショットを作成する</description>
+    <description xml:lang="ko_KR">홈 스냅샷 생성 빈도 제한 초과</description>
+    <description xml:lang="nl_NL">Limiet voor het maken van Home-momentopnamen overschrijden</description>
+    <description xml:lang="pl_PL">Obejście limitu tworzenia migawek katalogu domowego</description>
+    <description xml:lang="pt_BR">Ignorar o limite de criação de instantâneos do Home</description>
+    <description xml:lang="pt_PT">Ignorar o limite de criação de capturas de estado da pasta pessoal</description>
+    <description xml:lang="ro_RO">Depășește limita de creare a instantaneei Home</description>
+    <description xml:lang="ru_RU">Переопределить лимит создания снимков домашней папки</description>
+    <description xml:lang="sv_SE">Åsidosätt gränsen för skapande av ögonblicksbilder av hemkatalogen</description>
+    <description xml:lang="th_TH">ละเว้นขีดจำกัดการสร้างสแนปชอตของโฟลเดอร์ส่วนตัว</description>
+    <description xml:lang="tr_TR">Ev anlık görüntüsü oluşturma sınırını geçersiz kıl</description>
+    <description xml:lang="uk_UA">Перевищити ліміт створення знімків стану домашньої директорії</description>
+    <description xml:lang="vi_VN">Vượt qua giới hạn tạo ảnh chụp nhanh Home</description>
+    <description xml:lang="zh_HK">覆寫家目錄快照建立限制</description>
+    <description xml:lang="zh_TW">覆寫家目錄快照建立限制</description>
+    <description xml:lang="zh_CN">绕过主目录快照创建频率限制</description>
     <message>Authentication is required to create more than four Home snapshots per minute</message>
-    <message xml:lang="zh_CN">每分钟创建超过四个用户目录快照需要身份验证</message>
+    <message xml:lang="ar_SA">المصادقة مطلوبة لإنشاء أكثر من أربع لقطات فورية للمجلد المنزلي في الدقيقة</message>
+    <message xml:lang="da_DK">Godkendelse er påkrævet for at oprette mere end fire øjebliksbilleder af hjemmemappen pr. minut</message>
+    <message xml:lang="de_DE">Authentifizierung ist erforderlich, um mehr als vier Snapshots des persönlichen Ordners pro Minute zu erstellen</message>
+    <message xml:lang="el_GR">Απαιτείται έλεγχος ταυτότητας όταν δημιουργούνται πάνω από τέσσερα στιγμιότυπα του προσωπικού φακέλου ανά λεπτό.</message>
+    <message xml:lang="en_GB">Authentication is required to create more than four Home snapshots per minute</message>
+    <message xml:lang="es_ES">Se requiere autenticación para crear más de cuatro instantáneas del directorio personal por minuto</message>
+    <message xml:lang="fi_FI">Enemmän kuin neljän Koti-tilannekuvan luonti minuutissa vaatii todennuksen</message>
+    <message xml:lang="fr_FR">L'authentification est requise pour créer plus de quatre instantanés du dossier personnel par minute</message>
+    <message xml:lang="hi_IN">प्रति मिनट चार से अधिक होम स्नैपशॉट बनाने के लिए प्रमाणीकरण आवश्यक है</message>
+    <message xml:lang="id_ID">Otentikasi diperlukan untuk membuat lebih dari empat snapshot Beranda per menit</message>
+    <message xml:lang="it_IT">È richiesta l'autenticazione per creare più di quattro istantanee di Home al minuto</message>
+    <message xml:lang="ja_JP">1 分間に 4 つを超えるホームスナップショットを作成するには認証が必要です</message>
+    <message xml:lang="ko_KR">1분당 4개 이상의 홈 스냅샷을 생성하려면 인증이 필요합니다</message>
+    <message xml:lang="nl_NL">Authenticatie is vereist om meer dan vier Home-momentopnamen per minuut te maken</message>
+    <message xml:lang="pl_PL">Wymagane jest uwierzytelnienie, aby utworzyć więcej niż cztery migawki katalogu domowego na minutę</message>
+    <message xml:lang="pt_BR">É necessária autenticação para criar mais de quatro instantâneos do Home por minuto</message>
+    <message xml:lang="pt_PT">É necessária autenticação para criar mais de quatro capturas de estado da pasta pessoal por minuto</message>
+    <message xml:lang="ro_RO">Este necesară autentificarea pentru a crea mai mult de patru instantanee Home pe minut</message>
+    <message xml:lang="ru_RU">Требуется аутентификация для создания более четырёх снимков домашней папки в минуту</message>
+    <message xml:lang="sv_SE">Autentisering krävs för att skapa fler än fyra hemögonblicksbilder per minut</message>
+    <message xml:lang="th_TH">จำเป็นต้องมีการตรวจสอบสิทธิ์เพื่อสร้างสแนปชอต Home มากกว่า 4 รายการต่อนาที</message>
+    <message xml:lang="tr_TR">Dakikada dörtten fazla Ev anlık görüntüsü oluşturmak için kimlik doğrulaması gereklidir</message>
+    <message xml:lang="uk_UA">Потрібна автентифікація для створення більше ніж чотирьох знімків стану домашньої директорії за хвилину</message>
+    <message xml:lang="vi_VN">Yêu cầu xác thực để tạo hơn bốn ảnh chụp nhanh Home mỗi phút</message>
+    <message xml:lang="zh_HK">每分鐘建立超過四個家目錄快照需要身分驗證</message>
+    <message xml:lang="zh_TW">每分鐘建立超過四個家目錄快照需要身分驗證</message>
+    <message xml:lang="zh_CN">每分钟创建超过四个主目录快照需要身份验证</message>
     <defaults>
       <allow_any>auth_admin</allow_any>
       <allow_inactive>auth_admin</allow_inactive>

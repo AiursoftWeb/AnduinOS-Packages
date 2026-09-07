@@ -17,19 +17,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: assets/anduinos-exe-runner:319
+#: assets/anduinos-exe-runner:329
 msgid "==> Executing command: {}"
 msgstr "Выполняется команда: {}"
 
-#: assets/anduinos-exe-runner:315
+#: assets/anduinos-exe-runner:325
 msgid "About to start downloading Bottles..."
 msgstr "Начинается загрузка Bottles..."
 
-#: assets/anduinos-exe-runner:170
+#: assets/anduinos-exe-runner:180
 msgid "Advanced Status and Logs"
 msgstr "Расширенный статус и журналы"
 
-#: assets/anduinos-exe-runner:430
+#: assets/anduinos-exe-runner:368 assets/anduinos-exe-runner:375
+#: assets/anduinos-exe-runner:400
 msgid ""
 "An error occurred while initializing the bottle. Please expand advanced "
 "status to view logs."
@@ -37,7 +38,7 @@ msgstr ""
 "При инициализации бутылки произошла ошибка. Разверните расширенный статус, "
 "чтобы просмотреть журналы."
 
-#: assets/anduinos-exe-runner:351
+#: assets/anduinos-exe-runner:361
 msgid ""
 "An error occurred while installing Bottles. Please expand advanced status to"
 " view logs."
@@ -45,195 +46,202 @@ msgstr ""
 "При установке Bottles произошла ошибка. Разверните расширенный статус, чтобы"
 " просмотреть журналы."
 
-#: assets/anduinos-exe-runner:20
+#: assets/anduinos-exe-runner:22
 msgid "App"
 msgstr "Приложение"
 
-#: assets/anduinos-exe-runner:537
+#: assets/anduinos-exe-runner:447
 msgid "Automatically hiding launcher window, enjoy!"
 msgstr "Окно лаунчера автоматически скрывается, приятного использования!"
 
-#: assets/anduinos-exe-runner:494
+#: assets/anduinos-exe-runner:404
 msgid "Bottle is ready, about to launch application..."
 msgstr "Бутылка готова, начинается запуск приложения..."
 
-#: assets/anduinos-exe-runner:329
+#: assets/anduinos-exe-runner:339
 msgid "Bottles installation not found."
 msgstr "Установка Bottles не найдена."
 
-#: assets/anduinos-exe-runner:158 assets/anduinos-exe-runner:216
+#: assets/anduinos-exe-runner:168 assets/anduinos-exe-runner:226
 msgid "Cancel"
 msgstr "Отмена"
 
-#: assets/anduinos-exe-runner:327
+#: assets/anduinos-exe-runner:337
 msgid "Checking Bottles installation status via filesystem..."
 msgstr "Проверка статуса установки Bottles через файловую систему..."
 
-#: assets/anduinos-exe-runner:333
+#: assets/anduinos-exe-runner:343
 msgid "Checking if Default bottle exists via filesystem..."
 msgstr "Проверка существования бутылки по умолчанию через файловую систему..."
 
-#: assets/anduinos-exe-runner:140
+#: assets/anduinos-exe-runner:150
 msgid "Checking system compatibility layer..."
 msgstr "Проверка совместимости системного уровня..."
 
-#: assets/anduinos-exe-runner:339
+#: assets/anduinos-exe-runner:349
 msgid "Compatibility layer is ready, preparing to start program..."
 msgstr "Уровень совместимости готов, подготовка к запуску программы..."
 
-#: assets/anduinos-exe-runner:430
+#: assets/anduinos-exe-runner:368 assets/anduinos-exe-runner:375
+#: assets/anduinos-exe-runner:400
 msgid "Configuration Failed"
 msgstr "Ошибка конфигурации"
 
-#: assets/anduinos-exe-runner:426
+#: assets/anduinos-exe-runner:364
 msgid "Configuring Bottle"
 msgstr "Конфигурация бутылки"
 
-#: assets/anduinos-exe-runner:433
+#: assets/anduinos-exe-runner:371
 msgid "Configuring Fonts"
 msgstr "Настройка шрифтов"
 
-#: assets/anduinos-exe-runner:340
+#: assets/anduinos-exe-runner:350
 msgid "Configuring runtime environment, please wait..."
 msgstr "Настройка среды выполнения, пожалуйста, подождите..."
 
-#: assets/anduinos-exe-runner:335
+#: assets/anduinos-exe-runner:345
 msgid "Default bottle not found."
 msgstr "Бутылка по умолчанию не найдена."
 
 #: assets/anduinos-exe-runner:354
-msgid "Downloading Components"
-msgstr "Загрузка компонентов"
-
-#: assets/anduinos-exe-runner:344
 msgid "Downloading and installing Bottles via Flatpak..."
 msgstr "Загрузка и установка Bottles через Flatpak..."
 
-#: assets/anduinos-exe-runner:217
+#: assets/anduinos-exe-runner:227
 msgid "Force Run Anyway"
 msgstr "Всё равно запустить принудительно"
 
-#: assets/anduinos-exe-runner:223
+#: assets/anduinos-exe-runner:233
 msgid "Get {}"
 msgstr "Получить {}"
 
-#: assets/anduinos-exe-runner:426
+#: assets/anduinos-exe-runner:364
 msgid "Initializing Windows virtual bottle (Default)..."
 msgstr "Инициализация виртуальной бутылки Windows (по умолчанию)..."
 
-#: assets/anduinos-exe-runner:354
-msgid "Initializing core gaming components (DXVK, VKD3D, Runner, etc.)..."
-msgstr ""
-"Инициализация основных игровых компонентов (DXVK, VKD3D, Runner и др.)..."
-
-#: assets/anduinos-exe-runner:161
+#: assets/anduinos-exe-runner:171
 msgid "Install and Configure"
 msgstr "Установка и настройка"
 
-#: assets/anduinos-exe-runner:351
+#: assets/anduinos-exe-runner:361
 msgid "Installation Failed"
 msgstr "Ошибка установки"
 
-#: assets/anduinos-exe-runner:493
+#: assets/anduinos-exe-runner:403
 msgid "Installation and configuration complete!"
 msgstr "Установка и конфигурация завершены!"
 
-#: assets/anduinos-exe-runner:344
+#: assets/anduinos-exe-runner:354
 msgid "Installing Environment"
 msgstr "Установка среды"
 
-#: assets/anduinos-exe-runner:433
+#: assets/anduinos-exe-runner:371
 msgid "Installing core fonts to prevent text rendering issues..."
 msgstr ""
 "Устанавливаются основные шрифты для предотвращения проблем с отображением "
 "текста..."
 
-#: assets/anduinos-exe-runner:551
+#: assets/anduinos-exe-runner:461
 msgid "Launch Exception"
 msgstr "Исключение запуска"
 
-#: assets/anduinos-exe-runner:516
+#: assets/anduinos-exe-runner:426
 msgid "Launch Failed"
 msgstr "Ошибка запуска"
 
-#: assets/anduinos-exe-runner:515
+#: assets/anduinos-exe-runner:425
 msgid "Launch failed: {}"
 msgstr "Запуск не удался: {}"
 
-#: assets/anduinos-exe-runner:551
+#: assets/anduinos-exe-runner:461
 msgid "Launch or configuration failed, please check advanced logs."
 msgstr ""
 "Запуск или конфигурация не удались, пожалуйста, проверьте расширенные "
 "журналы."
 
-#: assets/anduinos-exe-runner:536
+#: assets/anduinos-exe-runner:446
 msgid "Launcher mission complete, program is running in the background."
 msgstr "Миссия лаунчера выполнена, программа работает в фоновом режиме."
 
-#: assets/anduinos-exe-runner:19
+#: assets/anduinos-exe-runner:21
 msgid "Notice"
 msgstr "Уведомление"
 
-#: assets/anduinos-exe-runner:133
+#: assets/anduinos-exe-runner:143
 msgid "Preparing environment..."
 msgstr "Подготовка среды..."
 
-#: assets/anduinos-exe-runner:498
+#: assets/anduinos-exe-runner:408
 msgid "Preparing to launch EXE: {}"
 msgstr "Подготовка к запуску EXE: {}"
 
-#: assets/anduinos-exe-runner:315
+#: assets/anduinos-exe-runner:325
 msgid "Preparing..."
 msgstr "Подготовка..."
 
-#: assets/anduinos-exe-runner:553
+#: assets/anduinos-exe-runner:463
 msgid "Process finished normally."
 msgstr "Процесс завершён нормально."
 
-#: assets/anduinos-exe-runner:513
+#: assets/anduinos-exe-runner:423
 msgid "Process successfully started in the background, listening to logs..."
 msgstr "Процесс успешно запущен в фоновом режиме, прослушивание журналов..."
 
-#: assets/anduinos-exe-runner:550
+#: assets/anduinos-exe-runner:460
 msgid "Process terminated abnormally (exit code {})."
 msgstr "Процесс завершён аномально (код выхода {})."
 
-#: assets/anduinos-exe-runner:494
+#: assets/anduinos-exe-runner:404
 msgid "Starting program"
 msgstr "Запуск программы"
 
-#: assets/anduinos-exe-runner:340
+#: assets/anduinos-exe-runner:350
 msgid "Starting program..."
 msgstr "Запуск программы..."
 
-#: assets/anduinos-exe-runner:310
+#: assets/anduinos-exe-runner:320
 msgid "The system is not configured with the Bottles compatibility layer."
 msgstr "Система не настроена с использованием слоя совместимости Bottles."
 
-#: assets/anduinos-exe-runner:516
+#: assets/anduinos-exe-runner:426
 msgid "Unable to start program, please check advanced logs."
 msgstr ""
 "Не удалось запустить программу, пожалуйста, проверьте расширенные журналы."
 
-#: assets/anduinos-exe-runner:227
+#: assets/anduinos-exe-runner:237
 msgid "View Documentation"
 msgstr "Открыть документацию"
 
-#: assets/anduinos-exe-runner:109
+#: assets/anduinos-exe-runner:119
 msgid "Windows Application Runner"
 msgstr "Запускатель приложений Windows"
 
-#: assets/anduinos-exe-runner:310
+#: assets/anduinos-exe-runner:320
 msgid "Windows Compatibility Environment Required"
 msgstr "Требуется среда совместимости Windows"
 
-#: assets/anduinos-exe-runner:310
+#: assets/anduinos-exe-runner:320
 msgid ""
 "Would you like to automatically download and install it? This may take a few"
 " minutes."
 msgstr ""
 "Хотите автоматически скачать и установить его? Это может занять несколько "
 "минут."
+
+#: data/com.anduinos.ExeRunner.desktop:56
+msgid "Run Windows executables seamlessly via Bottles"
+msgstr "Запускайте исполняемые файлы Windows без проблем с помощью Bottles"
+
+#: data/com.anduinos.ExeRunner.desktop:28
+msgid "AnduinOS Windows EXE Runner"
+msgstr "Запуск EXE-файлов Windows в AnduinOS"
+
+#~ msgid "Downloading Components"
+#~ msgstr "Загрузка компонентов"
+
+#~ msgid "Initializing core gaming components (DXVK, VKD3D, Runner, etc.)..."
+#~ msgstr ""
+#~ "Инициализация основных игровых компонентов (DXVK, VKD3D, Runner и др.)..."
 
 #~ msgid " MusicBrainz Picard"
 #~ msgstr " MusicBrainz Picard"

@@ -58,23 +58,23 @@ msgstr "Uygulama Profilleri"
 msgid "Audit"
 msgstr "Denetim"
 
-#: src/views/network_audit_view.rs:277
+#: src/views/network_audit_view.rs:278
 msgid "Auditor Error"
 msgstr "Denetleyici Hatası"
 
-#: src/views/network_audit_view.rs:504
+#: src/views/network_audit_view.rs:505
 msgid "Block"
 msgstr "Engelle"
 
-#: src/views/network_audit_view.rs:500
+#: src/views/network_audit_view.rs:501
 msgid "Block Connection?"
 msgstr "Bağlantı engellensin mi?"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid "Block inbound traffic from"
 msgstr "Bu kaynaktan gelen giriş trafiğini engelle"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid "Block outbound traffic to"
 msgstr "Hedefe giden çıkış trafiğini engelle"
 
@@ -82,7 +82,7 @@ msgstr "Hedefe giden çıkış trafiğini engelle"
 msgid "Blocked Events"
 msgstr "Engellenen Olaylar"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Blocked Successfully"
 msgstr "Başarıyla Engellendi"
 
@@ -90,7 +90,7 @@ msgstr "Başarıyla Engellendi"
 msgid "Both"
 msgstr "Her ikisi"
 
-#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/views/network_audit_view.rs:504 src/views/rules_view.rs:121
 #: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "İptal"
@@ -187,11 +187,12 @@ msgstr "Yön"
 msgid "Error"
 msgstr "Hata"
 
-#: src/views/network_audit_view.rs:554
+#: src/views/network_audit_view.rs:555
 msgid "Failed to Block"
 msgstr "Engellenemedi"
 
 #: src/views/status_view.rs:95 src/window.rs:64
+#: data/com.anduinos.ufwall.desktop:29 data/com.anduinos.ufwall.desktop:57
 msgid "Firewall"
 msgstr "Güvenlik Duvarı"
 
@@ -344,7 +345,7 @@ msgstr "Reddet"
 msgid "Resolve Domains"
 msgstr "Etki Alanlarını Çözümle"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Rule added to block"
 msgstr "Blok listeye kural eklendi"
 
@@ -392,13 +393,13 @@ msgstr "Henüz yapılandırılmış kural yok."
 msgid "This will delete all custom rules. This action cannot be undone."
 msgstr "Bu işlem tüm özel kuralları silecektir. Bu işlem geri alınamaz."
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr ""
 "Bu, uzaktaki ana makinenin bilgisayarınıza paket göndermesini engeller."
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr "Bu, bilgisayarınızın uzak sunucuya paket göndermesini engeller."
@@ -489,7 +490,7 @@ msgstr "Ağ Dosya Sistemi"
 
 #: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
-msgstr "Bağlantı Noktası / Protokol"
+msgstr "Ağ zaman protokolü"
 
 #: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
@@ -513,7 +514,7 @@ msgstr "PostgreSQL veritabanı sunucusu"
 
 #: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
-msgstr "Bağlantı Noktası / Protokol"
+msgstr "Uzak masaüstü protokolü"
 
 #: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
@@ -535,7 +536,7 @@ msgstr "Virtual Network Computing uzaktan masaüstü"
 msgid "Windows file and printer sharing"
 msgstr "Windows dosya ve yazıcı paylaşımı"
 
-#: src/views/network_audit_view.rs:534
+#: src/views/network_audit_view.rs:535
 msgid "Audit Block"
 msgstr "Denetim Bloğu"
 
@@ -605,27 +606,27 @@ msgstr ""
 msgid "Network service command failed"
 msgstr "Ağ hizmeti komutu başarısız oldu"
 
-#: src/views/network_audit_view.rs:371
+#: src/views/network_audit_view.rs:372
 msgid "No Active Connections"
 msgstr "Aktif Bağlantı Yok"
 
-#: src/views/network_audit_view.rs:361
+#: src/views/network_audit_view.rs:362
 msgid "No Inbound Connections"
 msgstr "Gelen Bağlantı Yok"
 
-#: src/views/network_audit_view.rs:366
+#: src/views/network_audit_view.rs:367
 msgid "No Outbound Connections"
 msgstr "Giden Bağlantı Yok"
 
-#: src/views/network_audit_view.rs:367
+#: src/views/network_audit_view.rs:368
 msgid "No applications are sending data to the internet."
 msgstr "İnternete veri gönderen uygulama yok."
 
-#: src/views/network_audit_view.rs:362
+#: src/views/network_audit_view.rs:363
 msgid "No external devices are connecting to your open ports."
 msgstr "Açık portlarınıza dış cihazlar bağlanmıyor."
 
-#: src/views/network_audit_view.rs:372
+#: src/views/network_audit_view.rs:373
 msgid "No network activity detected."
 msgstr "Ağ etkinliği algılanmadı."
 
@@ -644,3 +645,28 @@ msgstr "Yükleme"
 #: src/ufw/backend.rs:48
 msgid "pkexec failed"
 msgstr "pkexec başarısız oldu"
+
+#: data/com.anduinos.ufwall.desktop:124
+msgid "firewall;ufw;security;network;"
+msgstr "güvenlik duvarı;ufw;güvenlik;ağ;"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:82
+msgid "Authentication is required to change local network discovery"
+msgstr "Yerel ağ keşfini değiştirmek için kimlik doğrulaması gereklidir"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:80
+msgid "Manage local network discovery"
+msgstr "Yerel ağ keşfini yönetin"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:39
+msgid "Authentication is required to modify firewall settings"
+msgstr ""
+"Güvenlik duvarı ayarlarını değiştirmek için kimlik doğrulaması gereklidir"
+
+#: data/com.anduinos.ufwall.desktop:85
+msgid "Configure your firewall"
+msgstr "Güvenlik duvarınızı yapılandırın"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:9
+msgid "Manage UFW firewall settings"
+msgstr "UFW güvenlik duvarı ayarlarını yönet"

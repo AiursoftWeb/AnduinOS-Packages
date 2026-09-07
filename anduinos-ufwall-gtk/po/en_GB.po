@@ -39,7 +39,7 @@ msgstr "Advanced"
 
 #: src/views/network_audit_view.rs:200 src/views/network_audit_view.rs:208
 msgid "All"
-msgstr "Allow"
+msgstr "All"
 
 #: src/views/profiles_view.rs:92 src/views/status_view.rs:127
 #: src/views/status_view.rs:136 src/widgets/add_rule_dialog.rs:96
@@ -58,23 +58,23 @@ msgstr "Application Profiles"
 msgid "Audit"
 msgstr "Audit"
 
-#: src/views/network_audit_view.rs:277
+#: src/views/network_audit_view.rs:278
 msgid "Auditor Error"
 msgstr "Auditor Error"
 
-#: src/views/network_audit_view.rs:504
+#: src/views/network_audit_view.rs:505
 msgid "Block"
-msgstr "Blocked"
+msgstr "Block"
 
-#: src/views/network_audit_view.rs:500
+#: src/views/network_audit_view.rs:501
 msgid "Block Connection?"
-msgstr "Top Blocked Connections"
+msgstr "Block Connection?"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid "Block inbound traffic from"
 msgstr "Block inbound traffic from"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid "Block outbound traffic to"
 msgstr "Block outbound traffic to"
 
@@ -82,15 +82,15 @@ msgstr "Block outbound traffic to"
 msgid "Blocked Events"
 msgstr "Blocked Events"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Blocked Successfully"
-msgstr "Blocked times"
+msgstr "Blocked Successfully"
 
 #: src/widgets/add_rule_dialog.rs:124
 msgid "Both"
 msgstr "Both"
 
-#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/views/network_audit_view.rs:504 src/views/rules_view.rs:121
 #: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "Cancel"
@@ -187,11 +187,12 @@ msgstr "Direction"
 msgid "Error"
 msgstr "Error"
 
-#: src/views/network_audit_view.rs:554
+#: src/views/network_audit_view.rs:555
 msgid "Failed to Block"
 msgstr "Failed to Block"
 
 #: src/views/status_view.rs:95 src/window.rs:64
+#: data/com.anduinos.ufwall.desktop:29 data/com.anduinos.ufwall.desktop:57
 msgid "Firewall"
 msgstr "Firewall"
 
@@ -344,7 +345,7 @@ msgstr "Reject"
 msgid "Resolve Domains"
 msgstr "Resolve Domains"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Rule added to block"
 msgstr "Rule added to block"
 
@@ -358,7 +359,7 @@ msgstr "Save"
 
 #: src/views/network_audit_view.rs:186
 msgid "Search Process or IP..."
-msgstr "Search rules..."
+msgstr "Search Process or IP..."
 
 #: src/views/rules_view.rs:62
 msgid "Search rules..."
@@ -392,13 +393,13 @@ msgstr "There are no rules configured yet."
 msgid "This will delete all custom rules. This action cannot be undone."
 msgstr "This will delete all custom rules. This action cannot be undone."
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr ""
 "This will prevent the remote host from sending any packets to your machine."
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr ""
@@ -490,7 +491,7 @@ msgstr "Network File System"
 
 #: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
-msgstr "Port / Protocol"
+msgstr "Network Time Protocol"
 
 #: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
@@ -514,7 +515,7 @@ msgstr "PostgreSQL database server"
 
 #: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
-msgstr "Port / Protocol"
+msgstr "Remote Desktop Protocol"
 
 #: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
@@ -536,7 +537,7 @@ msgstr "Virtual Network Computing remote desktop"
 msgid "Windows file and printer sharing"
 msgstr "Windows file and printer sharing"
 
-#: src/views/network_audit_view.rs:534
+#: src/views/network_audit_view.rs:535
 msgid "Audit Block"
 msgstr "Audit Block"
 
@@ -606,27 +607,27 @@ msgstr ""
 msgid "Network service command failed"
 msgstr "Network service command failed"
 
-#: src/views/network_audit_view.rs:371
+#: src/views/network_audit_view.rs:372
 msgid "No Active Connections"
 msgstr "No Active Connections"
 
-#: src/views/network_audit_view.rs:361
+#: src/views/network_audit_view.rs:362
 msgid "No Inbound Connections"
 msgstr "No Inbound Connections"
 
-#: src/views/network_audit_view.rs:366
+#: src/views/network_audit_view.rs:367
 msgid "No Outbound Connections"
 msgstr "No Outbound Connections"
 
-#: src/views/network_audit_view.rs:367
+#: src/views/network_audit_view.rs:368
 msgid "No applications are sending data to the internet."
 msgstr "No applications are sending data to the internet."
 
-#: src/views/network_audit_view.rs:362
+#: src/views/network_audit_view.rs:363
 msgid "No external devices are connecting to your open ports."
 msgstr "No external devices are connecting to your open ports."
 
-#: src/views/network_audit_view.rs:372
+#: src/views/network_audit_view.rs:373
 msgid "No network activity detected."
 msgstr "No network activity detected."
 
@@ -645,6 +646,30 @@ msgstr "Upload"
 #: src/ufw/backend.rs:48
 msgid "pkexec failed"
 msgstr "pkexec failed"
+
+#: data/com.anduinos.ufwall.desktop:124
+msgid "firewall;ufw;security;network;"
+msgstr "firewall;ufw;security;network;"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:82
+msgid "Authentication is required to change local network discovery"
+msgstr "Authentication is required to change local network discovery"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:80
+msgid "Manage local network discovery"
+msgstr "Manage local network discovery"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:39
+msgid "Authentication is required to modify firewall settings"
+msgstr "Authentication is required to modify firewall settings"
+
+#: data/com.anduinos.ufwall.desktop:85
+msgid "Configure your firewall"
+msgstr "Configure your firewall"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:9
+msgid "Manage UFW firewall settings"
+msgstr "Manage UFW firewall settings"
 
 #~ msgid "Firewall Active"
 #~ msgstr "Firewall Active"
@@ -672,6 +697,3 @@ msgstr "pkexec failed"
 
 #~ msgid "Click Add Rule to allow a service or port."
 #~ msgstr "Click Add Rule to allow a service or port."
-
-#~ msgid "Authentication is required to modify firewall settings"
-#~ msgstr "Authentication is required to modify firewall settings"

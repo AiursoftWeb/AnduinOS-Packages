@@ -13,71 +13,71 @@ msgstr ""
 msgid "About"
 msgstr "Hakkında"
 
-#: src/views/swap_view.rs:300
+#: src/views/swap_view.rs:305
 msgid "Accept threshold percent"
 msgstr "Kabul eşiği (%)"
 
-#: src/views/zram_view.rs:247
+#: src/views/zram_view.rs:252
 msgid "Advanced options"
 msgstr "Gelişmiş seçenekler"
 
-#: src/views/stress_test_view.rs:225 src/views/swap_view.rs:225
+#: src/views/stress_test_view.rs:230 src/views/swap_view.rs:230
 msgid "Advanced settings"
 msgstr "Gelişmiş ayarlar"
 
-#: src/views/zram_view.rs:348
+#: src/views/zram_view.rs:353
 msgid "Algorithm"
 msgstr "Algoritma"
 
-#: src/views/swap_view.rs:334
+#: src/views/swap_view.rs:339
 msgid "Apply Settings"
 msgstr "Ayarları Uygula"
 
-#: src/views/swap_view.rs:667
+#: src/views/swap_view.rs:672
 msgid "Applying settings…"
-msgstr "Ayarları Uygula"
+msgstr "Ayarlar uygulanıyor…"
 
-#: src/views/dashboard_view.rs:370
+#: src/views/dashboard_view.rs:392
 msgid "Auth needed"
 msgstr "Yetkilendirme gerekli"
 
-#: src/views/dashboard_view.rs:413
+#: src/views/dashboard_view.rs:435
 msgid "Buf"
 msgstr "Buf"
 
-#: src/views/dashboard_view.rs:390
+#: src/views/dashboard_view.rs:412
 msgid "Buffers"
 msgstr "Arabellekler"
 
-#: src/views/dashboard_view.rs:414
+#: src/views/dashboard_view.rs:436
 msgid "Cache"
 msgstr "Önbellek"
 
-#: src/views/dashboard_view.rs:395
+#: src/views/dashboard_view.rs:417
 msgid "Cached"
 msgstr "Önbelleğe Alınan"
 
-#: src/views/zram_view.rs:378
+#: src/views/zram_view.rs:383
 msgid "Cancel"
 msgstr "İptal"
 
-#: src/views/stress_test_view.rs:318
+#: src/views/stress_test_view.rs:323
 msgid "Cancel Test"
 msgstr "İptal"
 
-#: src/views/stress_test_view.rs:601
+#: src/views/stress_test_view.rs:606
 msgid "Cancelled by user."
 msgstr "Kullanıcı tarafından iptal edildi."
 
-#: src/views/dashboard_view.rs:193
+#: src/views/dashboard_view.rs:209
 msgid "Channels"
 msgstr "Kanallar"
 
-#: src/views/stress_test_view.rs:613
+#: src/views/stress_test_view.rs:618
 msgid "Completed successfully — memory pressure test passed."
 msgstr "Başarıyla tamamlandı — bellek basıncı testi geçildi."
 
-#: src/views/swap_view.rs:183
+#: src/views/swap_view.rs:188
 msgid ""
 "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
 "Zswap, not both."
@@ -89,15 +89,15 @@ msgstr ""
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "Sıkıştırılmış RAM blok aygıtı — hızlı bellek içi takas"
 
-#: src/views/swap_view.rs:266
+#: src/views/swap_view.rs:271
 msgid "Compression algorithm"
 msgstr "Sıkıştırma algoritması"
 
-#: src/views/zram_view.rs:379
+#: src/views/zram_view.rs:384
 msgid "Create"
 msgstr "Oluştur"
 
-#: src/views/zram_view.rs:110 src/views/zram_view.rs:190
+#: src/views/zram_view.rs:110 src/views/zram_view.rs:195
 msgid "Create Zram Device"
 msgstr "Zram Aygıtı Oluştur"
 
@@ -105,31 +105,31 @@ msgstr "Zram Aygıtı Oluştur"
 msgid "Dashboard"
 msgstr "Gösterge Paneli"
 
-#: src/views/zram_view.rs:571
+#: src/views/zram_view.rs:576
 msgid "Destroy Zram Device"
 msgstr "Zram Cihazını Yık"
 
-#: src/views/zram_view.rs:439
+#: src/views/zram_view.rs:444
 msgid "Device Created"
 msgstr "Cihaz Oluşturuldu"
 
-#: src/views/dashboard_view.rs:503
+#: src/views/dashboard_view.rs:525
 msgid "Disabled"
 msgstr "Devre Dışı"
 
-#: src/views/swap_view.rs:521
+#: src/views/swap_view.rs:526
 msgid "Disabling Zswap..."
-msgstr "Swap devre dışı bırakılıyor…"
+msgstr "Zswap devre dışı bırakılıyor…"
 
-#: src/views/swap_view.rs:577
+#: src/views/swap_view.rs:582
 msgid "Disabling swap…"
 msgstr "Swap devre dışı bırakılıyor…"
 
-#: src/views/swap_view.rs:97
+#: src/views/swap_view.rs:102
 msgid "Disk Swap Configuration"
 msgstr "Sanal Bellek Yapılandırması"
 
-#: src/views/dashboard_view.rs:614
+#: src/views/dashboard_view.rs:636
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
@@ -137,11 +137,11 @@ msgstr ""
 "Disk takası bellek sıkıştırmasıyla birlikte etkin durumda; sisteminiz bellek"
 " basıncına karşı iyi korunuyor."
 
-#: src/views/stress_test_view.rs:605 src/views/stress_test_view.rs:617
+#: src/views/stress_test_view.rs:610 src/views/stress_test_view.rs:622
 msgid "Duration:"
 msgstr "Süre:"
 
-#: src/views/dashboard_view.rs:609
+#: src/views/dashboard_view.rs:631
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
@@ -150,85 +150,85 @@ msgstr ""
 " 10× daha hızlıdır ve bellek basıncı altında I/O işlemlerini önemli ölçüde "
 "azaltır."
 
-#: src/views/swap_view.rs:519
+#: src/views/swap_view.rs:524
 msgid "Enabling Zswap..."
-msgstr "Swap etkinleştiriliyor…"
+msgstr "Zswap etkinleştiriliyor…"
 
-#: src/views/swap_view.rs:579
+#: src/views/swap_view.rs:584
 msgid "Enabling swap…"
 msgstr "Swap etkinleştiriliyor…"
 
-#: src/views/stress_test_view.rs:609 src/views/swap_view.rs:505
-#: src/views/zram_view.rs:182
+#: src/views/stress_test_view.rs:614 src/views/swap_view.rs:510
+#: src/views/zram_view.rs:187
 msgid "Error"
 msgstr "Hata"
 
-#: src/views/dashboard_view.rs:400 src/views/dashboard_view.rs:415
+#: src/views/dashboard_view.rs:422 src/views/dashboard_view.rs:437
 msgid "Free"
 msgstr "Boş"
 
-#: src/views/stress_test_view.rs:250 src/views/stress_test_view.rs:251
-#: src/views/stress_test_view.rs:401
+#: src/views/stress_test_view.rs:255 src/views/stress_test_view.rs:256
+#: src/views/stress_test_view.rs:406
 msgid "Growth speed"
 msgstr "Büyüme hızı"
 
-#: src/views/dashboard_view.rs:269
+#: src/views/dashboard_view.rs:291
 msgid "Hibernation"
-msgstr "Uykuya Dalma"
+msgstr "Hazırda Bekletme"
 
-#: src/views/swap_view.rs:597 src/views/swap_view.rs:704
+#: src/views/swap_view.rs:602 src/views/swap_view.rs:709
 msgid "Hibernation Warning"
-msgstr "Uyku Modu Uyarısı"
+msgstr "Hazırda Bekletme Uyarısı"
 
-#: src/views/dashboard_view.rs:517 src/views/swap_view.rs:810
+#: src/views/dashboard_view.rs:539 src/views/swap_view.rs:815
 msgid "Inactive"
 msgstr "Etkin Değil"
 
-#: src/views/swap_view.rs:156 src/views/swap_view.rs:170
+#: src/views/swap_view.rs:161 src/views/swap_view.rs:175
 msgid "Loading..."
 msgstr "Yükleniyor..."
 
-#: src/views/stress_test_view.rs:232
+#: src/views/stress_test_view.rs:237
 msgid "Maximum hold time"
 msgstr "Maksimum bekleme süresi"
 
-#: src/views/swap_view.rs:282
+#: src/views/swap_view.rs:287
 msgid "Maximum pool percent"
 msgstr "Maksimum havuz yüzdesi"
 
-#: src/views/dashboard_view.rs:134
+#: src/views/dashboard_view.rs:147
 msgid "Memory Overview"
 msgstr "Bellek Genel Bakış"
 
 #: src/views/zram_view.rs:119
 msgid "No Zram Devices"
-msgstr "Zram Cihazları"
+msgstr "Zram cihazı yok"
 
-#: src/views/dashboard_view.rs:456
+#: src/views/dashboard_view.rs:478
 msgid "No device"
 msgstr "Cihaz yok"
 
-#: src/views/dashboard_view.rs:592
+#: src/views/dashboard_view.rs:614
 msgid "No disk swap detected"
 msgstr "Sanal bellek takası algılanmadı"
 
-#: src/views/dashboard_view.rs:608
+#: src/views/dashboard_view.rs:630
 msgid "No memory acceleration enabled"
 msgstr "Hiçbir bellek hızlandırma etkin değil"
 
-#: src/views/dashboard_view.rs:546
+#: src/views/dashboard_view.rs:568
 msgid "None"
 msgstr "Hiçbiri"
 
-#: src/views/dashboard_view.rs:530 src/views/dashboard_view.rs:538
+#: src/views/dashboard_view.rs:552 src/views/dashboard_view.rs:560
 msgid "Off"
 msgstr "Kapalı"
 
-#: src/views/dashboard_view.rs:537
+#: src/views/dashboard_view.rs:559
 msgid "On"
 msgstr "Açık"
 
-#: src/views/swap_view.rs:301
+#: src/views/swap_view.rs:306
 msgid ""
 "Only store pages that compress to ≤ this % of original. Higher = more pages "
 "cached. Recommended: 90%"
@@ -237,93 +237,94 @@ msgstr ""
 "sakla. Daha yüksek değer, daha fazla sayfanın önbelleğe alınması demektir. "
 "Önerilen: %90"
 
-#: src/views/dashboard_view.rs:613
+#: src/views/dashboard_view.rs:635
 msgid "Optimal memory configuration"
 msgstr "Optimal bellek yapılandırması"
 
-#: src/views/stress_test_view.rs:602 src/views/stress_test_view.rs:614
+#: src/views/stress_test_view.rs:607 src/views/stress_test_view.rs:619
 msgid "Peak allocated:"
 msgstr "En yüksek tahsis edilen:"
 
-#: src/views/zram_view.rs:367
+#: src/views/zram_view.rs:372
 msgid "Priority"
 msgstr "Öncelik"
 
-#: src/views/stress_test_view.rs:209
+#: src/views/stress_test_view.rs:214
 msgid "RAM"
 msgstr "RAM"
 
-#: src/views/zram_view.rs:554
+#: src/views/zram_view.rs:559
 msgid "Remove"
 msgstr "Kaldır"
 
-#: src/views/stress_test_view.rs:360
+#: src/views/stress_test_view.rs:365
 msgid "Run Again"
 msgstr "Yeniden Çalıştır"
 
-#: src/views/stress_test_view.rs:279
+#: src/views/stress_test_view.rs:284
 msgid "Run Stress Test"
 msgstr "Stres Testini Çalıştır"
 
-#: src/views/swap_view.rs:307
+#: src/views/swap_view.rs:312
 msgid "Shrinker"
 msgstr "Bellek küçültme"
 
-#: src/views/zram_view.rs:269
+#: src/views/zram_view.rs:274
 msgid "Size (MiB)"
 msgstr "Boyut (MiB)"
 
-#: src/views/dashboard_view.rs:192
+#: src/views/dashboard_view.rs:208
 msgid "Speed"
 msgstr "Hız"
 
-#: src/views/stress_test_view.rs:100 src/window.rs:114
+#: src/views/stress_test_view.rs:105 src/window.rs:114
 msgid "Stress Test"
 msgstr "Stres Testi"
 
-#: src/views/dashboard_view.rs:252 src/views/dashboard_view.rs:266
+#: src/views/dashboard_view.rs:271 src/views/dashboard_view.rs:288
 #: src/window.rs:112
 msgid "Swap"
 msgstr "Takas"
 
 #: src/progress_dialog.rs:24 src/window.rs:59
+#: data/com.anduinos.swapcontrol.desktop:24
 msgid "Swap Control"
 msgstr "Sanal Bellek Denetimi"
 
-#: src/views/swap_view.rs:147
+#: src/views/swap_view.rs:152
 msgid "Swap usage"
 msgstr "Sanal bellek kullanımı"
 
-#: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
-#: src/views/swap_view.rs:677
+#: src/views/dashboard_view.rs:292 src/views/swap_view.rs:262
+#: src/views/swap_view.rs:682
 msgid "Swappiness"
 msgstr "Takaslanma"
 
-#: src/views/dashboard_view.rs:603
+#: src/views/dashboard_view.rs:625
 msgid "Swappiness not optimized for Zram"
 msgstr "Takaslanma Zram için optimize edilmedi"
 
-#: src/views/stress_test_view.rs:206
+#: src/views/stress_test_view.rs:211
 msgid "Target Pressure"
 msgstr "Hedef Baskı"
 
-#: src/views/stress_test_view.rs:345
+#: src/views/stress_test_view.rs:350
 msgid "Test Complete"
 msgstr "Test Tamamlandı"
 
-#: src/views/dashboard_view.rs:190
+#: src/views/dashboard_view.rs:206
 msgid "Total RAM"
 msgstr "Toplam RAM"
 
-#: src/views/dashboard_view.rs:191
+#: src/views/dashboard_view.rs:207
 msgid "Type"
 msgstr "Tip"
 
-#: src/views/dashboard_view.rs:385 src/views/dashboard_view.rs:412
+#: src/views/dashboard_view.rs:407 src/views/dashboard_view.rs:434
 msgid "Used"
 msgstr "Kullanılan"
 
-#: src/views/dashboard_view.rs:593
+#: src/views/dashboard_view.rs:615
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
@@ -331,7 +332,7 @@ msgstr ""
 "RAM dolduğunda çekirdek uygulamaları sonlandırabilir. Güvenilir bir güvenlik"
 " ağı için disk takasını etkinleştirin."
 
-#: src/views/dashboard_view.rs:244 src/views/dashboard_view.rs:268
+#: src/views/dashboard_view.rs:263 src/views/dashboard_view.rs:290
 #: src/window.rs:111
 msgid "Zram"
 msgstr "Zram"
@@ -340,11 +341,11 @@ msgstr "Zram"
 msgid "Zram Devices"
 msgstr "Zram Cihazları"
 
-#: src/views/dashboard_view.rs:597
+#: src/views/dashboard_view.rs:619
 msgid "Zram and Zswap are both active"
 msgstr "Zram ve Zswap aynı anda etkin"
 
-#: src/views/dashboard_view.rs:598
+#: src/views/dashboard_view.rs:620
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
 "pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
@@ -354,16 +355,16 @@ msgstr ""
 "oluşturur. İkisini birlikte çalıştırmak CPU'yu boşa harcar ve ciddi bellek "
 "çalkalanmasına neden olabilir. Bunlardan birini devre dışı bırakın."
 
-#: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
-#: src/views/swap_view.rs:185 src/views/swap_view.rs:686
+#: src/views/dashboard_view.rs:267 src/views/dashboard_view.rs:289
+#: src/views/swap_view.rs:190 src/views/swap_view.rs:691
 msgid "Zswap"
 msgstr "Zswap"
 
-#: src/views/stress_test_view.rs:212
+#: src/views/stress_test_view.rs:217
 msgid "default"
 msgstr "varsayılan"
 
-#: src/views/swap_view.rs:267
+#: src/views/swap_view.rs:272
 msgid ""
 "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires"
 " zswap restart."
@@ -371,52 +372,52 @@ msgstr ""
 "lz4 = hızlı (önerilen), zstd = en iyi oran, lzo = eski. Değiştirmek, "
 "Zswap'ın yeniden başlatılmasını gerektirir."
 
-#: src/views/stress_test_view.rs:211
+#: src/views/stress_test_view.rs:216
 msgid "range"
 msgstr "aralık"
 
-#: src/views/stress_test_view.rs:233
+#: src/views/stress_test_view.rs:238
 msgid "seconds"
 msgstr "saniye"
 
-#: src/views/swap_view.rs:118
+#: src/views/swap_view.rs:123
 msgid "with Zram"
 msgstr "Zram ile"
 
-#: src/views/dashboard_view.rs:154
+#: src/views/dashboard_view.rs:167
 msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr ""
 "Zram etkin — disk önbelleği yerine hızlı sıkıştırılmış RAM'i tercih edin"
 
-#: src/views/dashboard_view.rs:552
+#: src/views/dashboard_view.rs:574
 msgid "Ready"
 msgstr "Hazır"
 
-#: src/views/dashboard_view.rs:554
+#: src/views/dashboard_view.rs:576
 msgid "Unsupported"
 msgstr "Desteklenmiyor"
 
-#: src/views/dashboard_view.rs:556
+#: src/views/dashboard_view.rs:578
 msgid "Not configured"
 msgstr "Yapılandırılmadı"
 
-#: src/views/dashboard_view.rs:558
+#: src/views/dashboard_view.rs:580
 msgid "Resume target missing"
 msgstr "Uyanma hedefi eksik"
 
-#: src/views/dashboard_view.rs:560
+#: src/views/dashboard_view.rs:582
 msgid "Resume target inactive"
 msgstr "Uyanma hedefi etkin değil"
 
-#: src/views/dashboard_view.rs:562
+#: src/views/dashboard_view.rs:584
 msgid "Swap too small"
 msgstr "Takas çok küçük"
 
-#: src/views/dashboard_view.rs:564
+#: src/views/dashboard_view.rs:586
 msgid "Not ready"
 msgstr "Hazır değil"
 
-#: src/views/swap_view.rs:104
+#: src/views/swap_view.rs:109
 msgid ""
 "Review installer-managed swap partitions and manage the legacy supplementary"
 " swap file"
@@ -424,75 +425,77 @@ msgstr ""
 "Yükleme programı tarafından yönetilen takas bölümlerini gözden geçirin ve "
 "eski ek takas dosyasını yönetin"
 
-#: src/views/swap_view.rs:155
+#: src/views/swap_view.rs:160
 msgid "Swap partition"
 msgstr "Takas bölümü"
 
-#: src/views/swap_view.rs:169
+#: src/views/swap_view.rs:174
 msgid "Additional swap file"
 msgstr "Ek takas dosyası"
 
-#: src/views/swap_view.rs:195
+#: src/views/swap_view.rs:200
 msgid "Additional swap file size"
 msgstr "Ek takas dosyası boyutu"
 
-#: src/views/swap_view.rs:196
+#: src/views/swap_view.rs:201
 msgid "0 GiB means no supplementary swap file"
 msgstr "0 GiB ek takas dosyası yok anlamına gelir"
 
-#: src/views/swap_view.rs:598
+#: src/views/swap_view.rs:603
 msgid ""
 "This swap file is the configured resume target. Disabling it will break "
 "hibernation. Continue?"
 msgstr ""
-"Bu takas dosyası yapılandırılmış uyanma hedefidir. Devre dışı bırakılması "
-"uykuya dalma işlevini bozar. Devam edilsin mi?"
+"Bu takas dosyası hazırda bekletme durumundan devam etmek için "
+"yapılandırılmıştır. Devre dışı bırakılması hazırda bekletme işlevini bozar. "
+"Devam edilsin mi?"
 
-#: src/views/swap_view.rs:705
+#: src/views/swap_view.rs:710
 msgid ""
 "This swap file is the configured resume target. Its physical offset would "
 "change, so resize is blocked until hibernation is disabled."
 msgstr ""
-"Bu takas dosyası yapılandırılmış uyanma hedefidir. Fiziksel kaydırması "
-"değişeceğinden, uykuya dalma devre dışı bırakılana kadar boyutlandırma "
-"engellenmiştir."
+"Bu takas dosyası, hazırda bekletme durumundan devam etmek için "
+"yapılandırılmıştır. Fiziksel ofseti değişeceğinden, hazırda bekletme devre "
+"dışı bırakılana kadar yeniden boyutlandırma engellenir."
 
-#: src/views/swap_view.rs:722
+#: src/views/swap_view.rs:727
 msgid "unknown"
 msgstr "bilinmiyor"
 
-#: src/views/swap_view.rs:738
+#: src/views/swap_view.rs:743
 msgid "No swap partition — a legacy swap file can be managed below"
 msgstr "Takas bölümü yok — aşağıda eski bir takas dosyası yönetilebilir"
 
-#: src/views/swap_view.rs:207
+#: src/views/swap_view.rs:212
 msgid "Remove incompatible file"
 msgstr "Uyumsuz dosyayı kaldır"
 
-#: src/views/swap_view.rs:377
+#: src/views/swap_view.rs:382
 msgid "Removing incompatible swap file…"
 msgstr "Uyumsuz takas dosyası kaldırılıyor…"
 
-#: src/views/swap_view.rs:790
+#: src/views/swap_view.rs:795
 msgid "Present but inactive"
 msgstr "Mevcut ancak etkin değil"
 
-#: src/views/swap_view.rs:792
+#: src/views/swap_view.rs:797
 msgid "Not created — choose a size below to add one"
 msgstr "Oluşturulmadı — aşağıdan bir boyut seçin ve ekleyin"
 
-#: src/views/swap_view.rs:794
+#: src/views/swap_view.rs:799
 msgid "Not created — at least 20 GiB must remain free"
 msgstr "Oluşturulmadı — en az 20 GiB boş alan kalmalıdır"
 
-#: src/views/swap_view.rs:830
+#: src/views/swap_view.rs:835
 msgid ""
 "Resize is locked because this file is the configured hibernation resume "
 "target"
 msgstr ""
-"Boyutlandırma, bu dosya yapılandırılmış uyanma hedefi olduğu için kilitli"
+"Bu dosya hazırda bekletme durumundan devam etmek için yapılandırıldığından "
+"yeniden boyutlandırma kilitlidir"
 
-#: src/views/swap_view.rs:832
+#: src/views/swap_view.rs:837
 msgid ""
 "Optional compatibility file; 0 GiB removes it and 20 GiB remains reserved "
 "for the system"
@@ -500,7 +503,7 @@ msgstr ""
 "İsteğe bağlı uyumluluk dosyası; 0 GiB dosyayı kaldırır ve 20 GiB sistem için"
 " ayrılmış olarak kalır"
 
-#: src/views/swap_view.rs:834
+#: src/views/swap_view.rs:839
 msgid ""
 "Disabled on Btrfs because a root-subvolume swap file would prevent Disk "
 "Snapshots Manager recovery points"
@@ -515,39 +518,39 @@ msgstr ""
 "Bellek baskısını daha hızlı yönetmek için sıkıştırılmış RAM takas aygıtı "
 "oluşturun."
 
-#: src/views/stress_test_view.rs:171
+#: src/views/stress_test_view.rs:176
 msgid "Ensure important work is saved before running this test."
 msgstr ""
 "Bu testi çalıştırmadan önce önemli işlerin kaydedildiğinden emin olun."
 
-#: src/views/swap_view.rs:283
+#: src/views/swap_view.rs:288
 msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
 msgstr ""
 "Sıkıştırılmış havuzun kaplayabileceği maksimum RAM yüzdesi. Önerilen: %20"
 
-#: src/views/dashboard_view.rs:141
+#: src/views/dashboard_view.rs:154
 msgid "Real-time RAM, swap, and compression subsystem status"
 msgstr "Gerçek zamanlı RAM, takas ve sıkıştırma alt sistem durumu"
 
-#: src/views/swap_view.rs:308
+#: src/views/swap_view.rs:313
 msgid "Reclaim pool pages under memory pressure. Recommended: ON"
 msgstr "Bellek basıncı altında havuz sayfalarını geri al. Önerilen: AÇIK"
 
-#: src/views/stress_test_view.rs:107
+#: src/views/stress_test_view.rs:112
 msgid "Simulate memory pressure to test swap and OOM behavior"
 msgstr "Swap ve OOM davranışını test etmek için bellek baskısını simüle et"
 
-#: src/views/stress_test_view.rs:161
+#: src/views/stress_test_view.rs:166
 msgid "Warning: This will consume system memory and may cause instability"
 msgstr ""
 "Uyarı: Bu işlem sistem belleğini tüketir ve sistemde kararsızlığa yol "
 "açabilir."
 
-#: src/views/zram_view.rs:440
+#: src/views/zram_view.rs:445
 msgid "Zram configuration saved. The device will be created shortly."
 msgstr "Zram yapılandırması kaydedildi. Aygıt yakında oluşturulacak."
 
-#: src/views/dashboard_view.rs:165 src/views/swap_view.rs:128
+#: src/views/dashboard_view.rs:178 src/views/swap_view.rs:133
 msgid "<i>Recommended swappiness: {0} ({1})</i>"
 msgstr "<i>Önerilen takaslanma: {0} ({1})</i>"
 
@@ -555,7 +558,7 @@ msgstr "<i>Önerilen takaslanma: {0} ({1})</i>"
 msgid "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
 msgstr "<i>Önerilen: {0} MiB, lz4, öncelik 100 ({1} GiB RAM için)</i>"
 
-#: src/views/swap_view.rs:772
+#: src/views/swap_view.rs:777
 msgid "Active — {0} GiB used / {1} GiB total"
 msgstr "Aktif — {0} GiB kullanılıyor / {1} GiB toplam"
 
@@ -615,7 +618,7 @@ msgstr "pkexec beklenemedi: {0}"
 msgid "Hello {0}, you have {1} messages"
 msgstr "Merhaba {0}, {1} mesajınız var"
 
-#: src/views/swap_view.rs:234
+#: src/views/swap_view.rs:239
 msgid ""
 "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
 " {0})"
@@ -623,7 +626,7 @@ msgstr ""
 "Çekirdeğin ne kadar agresif bir şekilde takas yaptığını belirler — düşük = "
 "RAM'de daha uzun süre kal (önerilen: {0})"
 
-#: src/views/swap_view.rs:231
+#: src/views/swap_view.rs:236
 msgid ""
 "How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
 "fast compressed RAM over disk cache (recommended: {0})"
@@ -632,11 +635,11 @@ msgstr ""
 "etkinse, disk önbelleği yerine hızlı sıkıştırılmış RAM'i tercih etmek için "
 "{0} olarak ayarlayın (önerilen: {0})"
 
-#: src/views/dashboard_view.rs:483
+#: src/views/dashboard_view.rs:505
 msgid "Idle ({0} GiB available)"
 msgstr "Boşta ({0} GiB kullanılabilir)"
 
-#: src/views/zram_view.rs:531
+#: src/views/zram_view.rs:536
 msgid "Idle — {0} MiB available"
 msgstr "Boşta — {0} MiB kullanılabilir"
 
@@ -644,11 +647,11 @@ msgstr "Boşta — {0} MiB kullanılabilir"
 msgid "MemTotal not found"
 msgstr "MemTotal bulunamadı"
 
-#: src/views/swap_view.rs:786
+#: src/views/swap_view.rs:791
 msgid "Present but inactive — activation is disabled on {0}"
 msgstr "Mevcut ancak etkisiz — etkinleştirme {0} üzerinde devre dışı"
 
-#: src/views/stress_test_view.rs:676
+#: src/views/stress_test_view.rs:681
 msgid ""
 "RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
 "Swap used: {3} GiB"
@@ -656,11 +659,11 @@ msgstr ""
 "RAM: {0} GiB toplam · {1} GiB kullanıldı · {2} GiB kullanılabilir\n"
 "Takas kullanımı: {3} GiB"
 
-#: src/views/swap_view.rs:673
+#: src/views/swap_view.rs:678
 msgid "Resize"
 msgstr "Boyutlandır"
 
-#: src/views/swap_view.rs:837
+#: src/views/swap_view.rs:842
 msgid "Swap file resizing is unsupported on {0}"
 msgstr "Takas dosyası boyutlandırma {0} üzerinde desteklenmiyor"
 
@@ -692,7 +695,7 @@ msgstr ""
 "Bu olmadan Zswap değişiklikleri uygulanamaz veya kalıcı hale getirilemez.\n"
 "Zswap'ı bu arayüzden yönetmek için 'anduinos-swap-config' paketini yükleyin."
 
-#: src/views/zram_view.rs:573
+#: src/views/zram_view.rs:578
 msgid ""
 "This will immediately remove {0} and flush its contents to disk swap. "
 "Continue?"
@@ -700,11 +703,11 @@ msgstr ""
 "Bu işlem {0} öğesini hemen kaldıracak ve içeriğini disk takasına "
 "aktaracaktır. Devam edilsin mi?"
 
-#: src/views/swap_view.rs:797
+#: src/views/swap_view.rs:802
 msgid "Unavailable on {0}; the swap partition remains active"
 msgstr "{0} üzerinde kullanılamıyor; takas bölümü aktif kalıyor"
 
-#: src/views/dashboard_view.rs:604
+#: src/views/dashboard_view.rs:626
 msgid ""
 "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
 " fast compressed RAM swap — dropping file cache when zram is available "
@@ -730,7 +733,7 @@ msgstr "Zswap kalıcılığı devre dışı"
 msgid "Zswap persistence enabled"
 msgstr "Zswap kalıcılığı etkinleştirildi"
 
-#: src/views/dashboard_view.rs:159 src/views/swap_view.rs:122
+#: src/views/dashboard_view.rs:172 src/views/swap_view.rs:127
 msgid "for {0} GiB RAM"
 msgstr "{0} GiB RAM için"
 
@@ -742,28 +745,50 @@ msgstr "swappiness güncellendi"
 msgid "systemctl {0} failed: {1}"
 msgstr "systemctl {0} başarısız: {1}"
 
-#: src/views/zram_view.rs:525
+#: src/views/zram_view.rs:530
 msgid "{0} MiB used (stats reset)"
 msgstr "{0} MiB kullanıldı (istatistikler sıfırlandı)"
 
-#: src/views/zram_view.rs:520
+#: src/views/zram_view.rs:525
 msgid "{0} MiB used · saved {1}%"
 msgstr "{0} MiB kullanıldı · %{1} tasarruf edildi"
 
-#: src/views/dashboard_view.rs:498
+#: src/views/dashboard_view.rs:520
 msgid "{0} · pool {1}%"
 msgstr "{0} · havuz %{1}"
 
-#: src/views/dashboard_view.rs:474
+#: src/views/dashboard_view.rs:496
 msgid "{0} · saved {1}%"
 msgstr "{0} · %{1} kaydedildi"
 
-#: src/views/swap_view.rs:754
+#: src/views/swap_view.rs:759
 msgid ""
 "{0} — installer-managed; size cannot be changed while the system is running"
 msgstr ""
 "{0} — kurulum programı tarafından yönetiliyor; sistem çalışırken boyut "
 "değiştirilemez"
+
+#: data/com.anduinos.swapcontrol.desktop:99
+msgid "swap;memory;zswap;zram;swappiness;virtual memory;compression;RAM;"
+msgstr "swap;bellek;zswap;zram;swappiness;sanal bellek;sıkıştırma;RAM;"
+
+#: data/com.anduinos.swapcontrol.desktop:70
+msgid "Manage virtual memory, compression, and swap settings"
+msgstr "Sanal bellek, sıkıştırma ve takas ayarlarını yönetin"
+
+#: data/com.anduinos.swapcontrol.desktop:47
+msgid "Virtual Memory Settings"
+msgstr "Sanal Bellek Ayarları"
+
+#: anduinos-swapcontrol-gtk/data/com.anduinos.swapcontrol.policy:39
+msgid "Authentication is required to modify swap, zswap, and zram settings"
+msgstr ""
+"Swap, zswap ve zram ayarlarını değiştirmek için kimlik doğrulaması "
+"gereklidir"
+
+#: anduinos-swapcontrol-gtk/data/com.anduinos.swapcontrol.policy:9
+msgid "Manage virtual memory settings"
+msgstr "Sanal bellek ayarlarını yönet"
 
 #~ msgid "Disabling swap will break hibernation. Continue?"
 #~ msgstr ""

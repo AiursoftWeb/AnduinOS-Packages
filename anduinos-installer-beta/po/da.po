@@ -17,19 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/pages.py:2092
+#: src/pages.py:2244
 msgid "Installing an input method requires an Internet connection."
 msgstr "Installation af en inputmetode kræver en internetforbindelse."
 
-#: src/pages.py:2103
-msgid ""
-"No Internet connection. Input methods cannot be installed. You can install "
-"them later when connected."
-msgstr ""
-"Ingen internetforbindelse. Inputmetoder kan ikke installeres. Du kan "
-"installere dem senere, når du er online."
+#: src/pages.py:2255
+msgid "No Internet connection. Input methods cannot be installed. You can install them later when connected."
+msgstr "Ingen internetforbindelse. Inputmetoder kan ikke installeres. Du kan installere dem senere, når du er online."
 
-#: src/pages.py:4933
+#: src/pages.py:7174
 msgid ""
 "\n"
 "\n"
@@ -39,7 +35,7 @@ msgstr ""
 "\n"
 "En rigtig installation vil oprette en maskinelokal MOK. Efter genstart skal du vælge Tilmeld MOK → Fortsæt → Ja i MOKManager og indtaste adgangskoden 123456."
 
-#: src/pages.py:4944
+#: src/pages.py:7185
 msgid ""
 "\n"
 "On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
@@ -47,51 +43,39 @@ msgstr ""
 "\n"
 "På den blå MOKManager-skærm vælger du Enroll MOK → Continue → Ja, adgangskode: 123456"
 
-#: src/pages.py:4085
+#: src/pages.py:6191
 msgid "; sudo does not require a password"
 msgstr "; sudo kræver ikke en adgangskode"
 
-#: src/pages.py:4087
+#: src/pages.py:6193
 msgid "; sudo requires the account password"
 msgstr "; sudo kræver kontoens adgangskode"
 
-#: src/pages.py:129
-msgid ""
-"A partition on this disk is mounted. Unmount it and rescan storage before "
-"continuing."
-msgstr ""
-"En partition på denne disk er monteret. Afmonter den og genundersøg lageret,"
-" før du fortsætter."
+#: src/pages.py:160
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "En partition på denne disk er monteret. Afmonter den og genundersøg lageret, før du fortsætter."
 
-#: src/pages.py:2899
+#: src/pages.py:3241
 msgid "ALL DATA on {disk} will be permanently erased."
 msgstr "ALLE DATA på {disk} vil blive permanent slettet."
 
-#: src/pages.py:4082
+#: src/pages.py:6188
 msgid "Account security"
 msgstr "Kontosikkerhed"
 
-#: src/pages.py:2980
+#: src/pages.py:4066
 msgid "Advanced Storage"
 msgstr "Avanceret lager"
 
-#: src/pages.py:164
-msgid ""
-"After changing partitions or unmounting a volume, rescan storage and select "
-"the target again."
-msgstr ""
-"Efter ændring af partitioner eller afmontering af et volumen, skal du "
-"genundersøge lageret og vælge målet igen."
+#: src/pages.py:195
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "Efter ændring af partitioner eller afmontering af et volumen, skal du genundersøge lageret og vælge målet igen."
 
-#: src/pages.py:4801
-msgid ""
-"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
-"then enter password 123456."
-msgstr ""
-"Efter genstart åbnes MOKManager. Vælg Enroll MOK → Continue → Yes, og "
-"indtast derefter adgangskoden 123456."
+#: src/pages.py:7042
+msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
+msgstr "Efter genstart åbnes MOKManager. Vælg Enroll MOK → Continue → Yes, og indtast derefter adgangskoden 123456."
 
-#: src/pages.py:4432
+#: src/pages.py:6636
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -99,61 +83,56 @@ msgstr ""
 "Alle partitioner og data på {disk} vil blive slettet.\n"
 "\n"
 
-#: src/pages.py:155
-msgid ""
-"Alternatively, you may explicitly select one entire partition to erase. "
-"Everything in that selected partition will be destroyed; it is never "
-"selected automatically."
-msgstr ""
-"Alternativt kan du udtrykkeligt vælge en hel partition til sletning. Alt i "
-"den valgte partition vil blive ødelagt; den vælges aldrig automatisk."
+#: src/pages.py:186
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "Alternativt kan du udtrykkeligt vælge en hel partition til sletning. Alt i den valgte partition vil blive ødelagt; den vælges aldrig automatisk."
 
-#: src/pages.py:924 src/pages.py:986
+#: src/pages.py:991 src/pages.py:1053
 msgid "Battery power is too low for a safe installation."
 msgstr "Batteriniveauet er for lavt til en sikker installation."
 
-#: src/pages.py:895
+#: src/pages.py:962
 msgid "Charge to at least 80% before starting the installation."
 msgstr "Oplad til mindst 80 %, før installationen startes."
 
-#: src/pages.py:1041 src/pages.py:1016
+#: src/pages.py:1108 src/pages.py:1083
 msgid "Continue Anyway"
 msgstr "Fortsæt alligevel"
 
-#: src/pages.py:1000
+#: src/pages.py:1067
 msgid "Current battery level: {percent}%"
 msgstr "Aktuelt batteriniveau: {percent}%"
 
-#: src/pages.py:1006
+#: src/pages.py:1073
 msgid "External power is connected."
 msgstr "Ekstern strøm er tilsluttet."
 
-#: src/pages.py:1008
+#: src/pages.py:1075
 msgid "External power is not connected."
 msgstr "Ekstern strøm er ikke tilsluttet."
 
-#: src/pages.py:954
+#: src/pages.py:1021
 msgid "I understand the risks and insist on installing with low battery."
-msgstr ""
-"Jeg forstår risikoen og insisterer på at installere med lavt batteriniveau."
+msgstr "Jeg forstår risikoen og insisterer på at installere med lavt batteriniveau."
 
-#: src/pages.py:894 src/pages.py:889 src/pages.py:967 src/pages.py:969
+#: src/pages.py:961 src/pages.py:956 src/pages.py:1034 src/pages.py:1036
 msgid "Low battery"
 msgstr "Lavt batteriniveau"
 
-#: src/pages.py:948
+#: src/pages.py:1015
 msgid "Recheck"
 msgstr "Kontrollér igen"
 
-#: src/main.py:110 src/pages.py:731 src/pages.py:815
+#: src/main.py:114 src/pages.py:794 src/pages.py:881
+#: assets/anduinos-installer-beta.desktop:30
 msgid "AnduinOS Installer"
 msgstr "AnduinOS-installationsprogram"
 
-#: src/main.py:108
+#: src/main.py:112
 msgid "AnduinOS Installer (Development)"
 msgstr "AnduinOS-installationsprogram (Udvikling)"
 
-#: src/pages.py:4425
+#: src/pages.py:6623
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
@@ -161,162 +140,140 @@ msgstr ""
 "AnduinOS vil kun bruge det valgte, ikke tildelte plads på {disk}. Eksisterende partitioner bevares.\n"
 "\n"
 
-#: src/pages.py:133
-msgid ""
-"AnduinOS will use only the selected unallocated space. The installer will "
-"not shrink or move an existing filesystem."
-msgstr ""
-"AnduinOS vil kun bruge det valgte ubenævnte plads. Installatøren vil ikke "
-"reducere eller flytte et eksisterende filsystem."
+#: src/pages.py:164
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS vil kun bruge det valgte ubenævnte plads. Installatøren vil ikke reducere eller flytte et eksisterende filsystem."
 
 #: data/languages.json:keyboard_layouts
 msgid "Arabic"
 msgstr "Arabisk"
 
-#: src/pages.py:268 src/pages.py:4461 src/pages.py:817
+#: src/pages.py:322 src/pages.py:6672 src/pages.py:6708 src/pages.py:883
 msgid "Back"
 msgstr "Tilbage"
 
-#: src/pages.py:3014
-msgid ""
-"Before continuing: finish Windows updates, disable Fast Startup and "
-"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
-"measurements and boot order can change."
-msgstr ""
-"Før du fortsætter: afslut Windows-opdateringer, deaktiver Hurtig start og "
-"hviletilstand, og sikkerhedskopier BitLocker-gendannelsesnøglen. EFI, Sikker"
-" opstart, TPM-målinger og startsekvens kan ændres."
+#: src/pages.py:3439
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Før du fortsætter: afslut Windows-opdateringer, deaktiver Hurtig start og hviletilstand, og sikkerhedskopier BitLocker-gendannelsesnøglen. EFI, Sikker opstart, TPM-målinger og startsekvens kan ændres."
 
-#: src/pages.py:2470
+#: src/pages.py:2622
 msgid "BitLocker detected"
 msgstr "BitLocker registreret"
 
-#: src/pages.py:146
-msgid ""
-"BitLocker storage will be preserved. The installer will not unlock, resize, "
-"repair or otherwise modify it."
-msgstr ""
-"BitLocker-lager vil blive bevaret. Installatøren vil ikke låse op, ændre "
-"størrelse, reparere eller på anden måde modificere det."
+#: src/pages.py:177
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "BitLocker-lager vil blive bevaret. Installatøren vil ikke låse op, ændre størrelse, reparere eller på anden måde modificere det."
 
-#: src/pages.py:4186
+#: src/pages.py:6282 src/pages.py:6342
 msgid "Boot policy"
 msgstr "Opstartspolitik"
 
-#: src/pages.py:3055
+#: src/pages.py:3480 src/pages.py:5117
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (anbefalet)"
 
-#: src/pages.py:2817
+#: src/pages.py:3158
 msgid "Btrfs — recommended"
 msgstr "Btrfs — anbefalet"
 
-#: src/pages.py:4361
+#: src/pages.py:6554
 msgid "Cannot create installation plan"
 msgstr "Kan ikke oprette installationsplan"
 
-#: src/pages.py:2727
+#: src/pages.py:3068
 msgid "Choose Installation Method"
 msgstr "Vælg installationsmetode"
 
-#: src/pages.py:2498
+#: src/pages.py:2650
 msgid "Choose one target disk. Storage settings come next."
 msgstr "Vælg én målskive. Lagringsindstillingerne følger herefter."
 
-#: src/pages.py:2199
+#: src/pages.py:2351
 msgid "Choose optional software to install"
 msgstr "Vælg valgfri software til installation"
 
-#: src/pages.py:813
+#: src/pages.py:879
 msgid "Choose your language to begin installation"
 msgstr "Vælg dit sprog for at starte installationen"
 
-#: src/pages.py:3819
+#: src/pages.py:5906
 msgid "Choose your location to set the system clock"
 msgstr "Vælg din placering for at indstille systemuret"
 
-#: src/pages.py:4838
+#: src/pages.py:7079
 msgid "Complete"
 msgstr "Fuldført"
 
-#: src/pages.py:3506 src/pages.py:3513 src/pages.py:4101 src/pages.py:3601
-#: src/pages.py:4440
+#: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
+#: src/pages.py:6644
 msgid "Computer Name"
 msgstr "Computernavn"
 
-#: src/pages.py:3594
+#: src/pages.py:5679
 msgid "Computer name contains invalid characters."
 msgstr "Computernavnet indeholder ugyldige tegn."
 
-#: src/pages.py:4589
+#: src/pages.py:6828
 msgid "Configure account, region, timezone, and machine identity"
 msgstr "Konfigurer konto, region, tidszone og maskinidentitet"
 
-#: src/pages.py:4578
+#: src/pages.py:3339 src/pages.py:6817 src/pages.py:3323
 msgid "Configure storage and swap"
 msgstr "Konfigurer lager og swap"
 
-#: src/pages.py:3480 src/pages.py:3488
+#: src/pages.py:5565 src/pages.py:5573
 msgid "Confirm Password"
 msgstr "Bekræft adgangskode"
 
-#: src/pages.py:1939
+#: src/pages.py:2003
 msgid "Confirm your keyboard layout"
 msgstr "Bekræft dit tastaturlayout"
 
-#: src/main.py:153 src/pages.py:1911
+#: src/main.py:157 src/pages.py:1978
 msgid "Continue Installation"
 msgstr "Fortsæt installation"
 
-#: src/pages.py:4574
+#: src/pages.py:6813
 msgid "Copy AnduinOS system"
 msgstr "Kopier AnduinOS-system"
 
-#: src/pages.py:4675
+#: src/pages.py:6916
 msgid "Copy Log"
 msgstr "Kopier log"
 
-#: src/pages.py:3146
+#: src/pages.py:3572
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
 msgstr "Opret en ny 1 GiB AnduinOS EFI-systempartition"
 
-#: src/pages.py:4163
-msgid ""
-"Create and format a dedicated AnduinOS EFI System Partition inside the "
-"selected space."
-msgstr ""
-"Opret og formatter en dedikeret AnduinOS EFI-systempartition i det valgte "
-"område."
+#: src/pages.py:6260
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Opret og formatter en dedikeret AnduinOS EFI-systempartition i det valgte område."
 
-#: src/pages.py:3447
+#: src/pages.py:5532
 msgid "Create your user account"
 msgstr "Opret din brugerkonto"
 
-#: src/pages.py:2412
+#: src/pages.py:2564
 msgid "Current disk layout"
 msgstr "Aktuel disklayout"
 
-#: src/pages.py:3979
-msgid ""
-"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
-"executor or disk command can run."
-msgstr ""
-"UDVIKLINGSTILSTAND — planen vil blive valideret og simuleret. Ingen "
-"privilegerede eksekutorer eller diskkommandoer kan køre."
+#: src/pages.py:6071
+msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
+msgstr "UDVIKLINGSTILSTAND — planen vil blive valideret og simuleret. Ingen privilegerede eksekutorer eller diskkommandoer kan køre."
 
 #: data/languages.json:keyboard_layouts
 msgid "Danish"
 msgstr "Dansk"
 
-#: src/pages.py:4569
+#: src/pages.py:6808
 msgid "Detect Internet connectivity"
 msgstr "Detekter internetforbindelse"
 
-#: src/pages.py:4566
+#: src/pages.py:6805
 msgid "Detect firmware and Secure Boot"
 msgstr "Opdag firmware og Secure Boot"
 
-#: src/pages.py:4419
+#: src/pages.py:6617
 msgid ""
 "Development mode will simulate installation to {disk}. No disk data will be changed.\n"
 "\n"
@@ -324,15 +281,15 @@ msgstr ""
 "Udviklingstilstand vil simulere installation til {disk}. Ingenti diskdata vil blive ændret.\n"
 "\n"
 
-#: src/pages.py:4923
+#: src/pages.py:7164
 msgid "Development simulation completed"
 msgstr "Udviklingssimulation fuldført"
 
-#: src/pages.py:4832
+#: src/pages.py:7073
 msgid "Discover AnduinOS"
 msgstr "Udforsk AnduinOS"
 
-#: src/pages.py:1216 src/pages.py:2218
+#: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
 msgstr "Download og installer systemopdateringer under installationen"
 
@@ -340,19 +297,19 @@ msgstr "Download og installer systemopdateringer under installationen"
 msgid "Dutch"
 msgstr "Hollandsk"
 
-#: src/pages.py:3073
+#: src/pages.py:4210 src/pages.py:3498 src/pages.py:5013
 msgid "EFI System Partition"
 msgstr "EFI-systempartition"
 
-#: src/pages.py:4184
+#: src/pages.py:6341 src/pages.py:6281
 msgid "EFI policy"
 msgstr "EFI-politik"
 
-#: src/pages.py:2455
+#: src/pages.py:2607
 msgid "Empty disk — no partitions"
 msgstr "Tom disk – ingen partitioner"
 
-#: src/pages.py:2821
+#: src/pages.py:3162
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
 msgstr "Aktiverer delte subvolumes, snapshots og Disk Snapshots Manager."
 
@@ -364,53 +321,39 @@ msgstr "Engelsk (UK)"
 msgid "English (US)"
 msgstr "Engelsk (US)"
 
-#: src/pages.py:4601
+#: src/pages.py:6840
 msgid "Ensure Disk Snapshots Manager is available"
 msgstr "Sørg for, at Disk Snapshots Manager er tilgængelig"
 
-#: src/pages.py:4412
+#: src/pages.py:6610
 msgid "Erase Disk and Install"
 msgstr "Slet disk og installer"
 
-#: src/pages.py:2813 src/pages.py:4226
+#: src/pages.py:3154 src/pages.py:6382
 msgid "Erase every partition and all data on the selected disk."
 msgstr "Slet alle partitioner og alle data på den valgte disk."
 
-#: src/pages.py:4411
+#: src/pages.py:6609
 msgid "Erase the entire selected disk?"
 msgstr "Slette hele den valgte disk?"
 
-#: src/pages.py:137
-msgid ""
-"Existing Windows, recovery and data partitions remain outside the write set "
-"and will be preserved."
-msgstr ""
-"Eksisterende Windows-, genoprettelses- og datapartitioner forbliver uden for"
-" skrive-sættet og vil blive bevaret."
+#: src/pages.py:168
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "Eksisterende Windows-, genoprettelses- og datapartitioner forbliver uden for skrive-sættet og vil blive bevaret."
 
-#: src/pages.py:2945
-msgid ""
-"Existing partitions were detected. The first two choices delete them; "
-"Advanced is the preservation path."
-msgstr ""
-"Eksisterende partitioner blev detekteret. De to første valg sletter dem; "
-"Avanceret er vejen til bevaring."
+#: src/pages.py:3287
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Eksisterende partitioner blev detekteret. De to første valg sletter dem; Avanceret er vejen til bevaring."
 
-#: src/pages.py:4446
-msgid ""
-"Existing partitions will be preserved. New AnduinOS partitions will be "
-"created only in the selected unallocated extent; EFI vendor files and the "
-"AnduinOS firmware boot entry may be updated."
-msgstr ""
-"Eksisterende partitioner bevares. Nye AnduinOS-partitioner oprettes kun i "
-"det valgte tildelte område; EFI-leverandørfiler og AnduinOS firmware-"
-"bootindgang kan opdateres."
+#: src/pages.py:6650
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Eksisterende partitioner bevares. Nye AnduinOS-partitioner oprettes kun i det valgte tildelte område; EFI-leverandørfiler og AnduinOS firmware-bootindgang kan opdateres."
 
-#: src/pages.py:3052 src/pages.py:4049
+#: src/pages.py:3477 src/pages.py:6155 src/pages.py:5127
 msgid "Filesystem"
 msgstr "Filsystem"
 
-#: src/pages.py:4613
+#: src/pages.py:6852
 msgid "Finalize target environment"
 msgstr "Afslut mål-miljøet"
 
@@ -418,7 +361,7 @@ msgstr "Afslut mål-miljøet"
 msgid "Finnish"
 msgstr "Finsk"
 
-#: src/pages.py:4182
+#: src/pages.py:6340 src/pages.py:6279
 msgid "Formats"
 msgstr "Formater"
 
@@ -426,7 +369,7 @@ msgstr "Formater"
 msgid "French"
 msgstr "Fransk"
 
-#: src/pages.py:3462 src/pages.py:3464
+#: src/pages.py:5547 src/pages.py:5549
 msgid "Full Name"
 msgstr "Fulde navn"
 
@@ -438,24 +381,19 @@ msgstr "Tysk"
 msgid "Greek"
 msgstr "Græsk"
 
-#: src/pages.py:111
-msgid ""
-"Guided coexistence requires a system booted in UEFI mode and a GPT target "
-"disk. This disk cannot continue in guided mode."
-msgstr ""
-"Styret samexistens kræver et system bootet i UEFI-tilstand og en GPT-"
-"måldisk. Denne disk kan ikke fortsætte i styret tilstand."
+#: src/pages.py:142
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "Styret samexistens kræver et system bootet i UEFI-tilstand og en GPT-måldisk. Denne disk kan ikke fortsætte i styret tilstand."
 
-#: src/pages.py:4131
-msgid ""
-"Guided storage selection is missing. Rescan and select the target again."
+#: src/pages.py:6393
+msgid "Guided storage selection is missing. Rescan and select the target again."
 msgstr "Den vejledte lagerudvælgelse mangler. Genanmeld og vælg målet igen."
 
 #: data/languages.json:keyboard_layouts
 msgid "Hindi (India)"
 msgstr "Hindi (Indien)"
 
-#: src/pages.py:2741
+#: src/pages.py:3082
 msgid "How should AnduinOS use this disk?"
 msgstr "Hvordan skal AnduinOS bruge denne disk?"
 
@@ -463,87 +401,83 @@ msgstr "Hvordan skal AnduinOS bruge denne disk?"
 msgid "Indonesian"
 msgstr "Indonesisk"
 
-#: src/pages.py:4498
+#: src/pages.py:6737
 msgid "Install"
 msgstr "Installer"
 
-#: src/pages.py:4559 src/pages.py:1221 src/pages.py:4125
+#: src/pages.py:6798 src/pages.py:1288 src/pages.py:6231
 msgid "Install input method"
 msgstr "Installer inputmetode"
 
-#: src/pages.py:625
+#: src/pages.py:684
 msgid "Install {language} input method: {name}"
 msgstr "Installer inputmetode til {language}: {name}"
 
-#: src/pages.py:4409 src/pages.py:4496
+#: src/pages.py:3405 src/pages.py:6604 src/pages.py:6733
 msgid "Install Alongside"
 msgstr "Installer ved siden af"
 
-#: src/pages.py:4169
+#: src/pages.py:6266
 msgid "Install alongside"
 msgstr "Installer ved siden af"
 
-#: src/pages.py:4608
+#: src/pages.py:6847
 msgid "Install bootloader"
 msgstr "Installer bootloader"
 
-#: src/pages.py:4611
+#: src/pages.py:6850
 msgid "Check systems on other disks"
 msgstr "Kontrollér systemer på andre diske"
 
-#: src/pages.py:1217 src/pages.py:4603
+#: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
 msgstr "Installer hardware-drivere"
 
-#: src/pages.py:4408
+#: src/pages.py:6603
 msgid "Install in the selected free space?"
 msgstr "Installer i det valgte ledige plads?"
 
-#: src/pages.py:4596
+#: src/pages.py:6835
 msgid "Ensure required language packs are installed"
 msgstr "Sørg for, at de nødvendige sprogpakker er installeret"
 
-#: src/pages.py:4599
+#: src/pages.py:6838
 msgid "Install system updates"
 msgstr "Installer systemopdateringer"
 
-#: src/pages.py:2229
+#: src/pages.py:2381
 msgid "Install third-party drivers for this device"
 msgstr "Installer tredjepartsdrivere til denne enhed"
 
-#: src/pages.py:5093 src/pages.py:5095 src/pages.py:4940 src/pages.py:4950
+#: src/pages.py:7334 src/pages.py:7336 src/pages.py:7181 src/pages.py:7191
 msgid "Installation Complete"
 msgstr "Installation fuldført"
 
-#: src/pages.py:4970
+#: src/pages.py:7211
 msgid "Installation Failed"
 msgstr "Installation mislykkedes"
 
-#: src/pages.py:4639
+#: src/pages.py:6878
 msgid "Installation Steps"
 msgstr "Installationstrin"
 
-#: src/pages.py:160
-msgid ""
-"Installation cannot continue with this selection. There is no force-continue"
-" option around storage safety checks."
-msgstr ""
-"Installationen kan ikke fortsætte med dette valg. Der er ingen tving-fortsat"
-" mulighed omgående sikkerhedstjek for lager."
+#: src/pages.py:191
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "Installationen kan ikke fortsætte med dette valg. Der er ingen tving-fortsat mulighed omgående sikkerhedstjek for lager."
 
-#: src/pages.py:4919 src/pages.py:4985
+#: src/pages.py:7160 src/pages.py:7226
 msgid "Installation complete"
 msgstr "Installation fuldført"
 
-#: src/pages.py:4968
+#: src/pages.py:7209
 msgid "Installation failed"
 msgstr "Installation mislykkedes"
 
-#: src/main.py:145
+#: src/main.py:149
 msgid "Installation in progress"
 msgstr "Installation i gang"
 
-#: src/pages.py:4547 src/pages.py:4541
+#: src/pages.py:6786 src/pages.py:6780
 msgid "Installing AnduinOS"
 msgstr "Installerer AnduinOS"
 
@@ -555,19 +489,19 @@ msgstr "Italiensk"
 msgid "Japanese (JIS keyboard)"
 msgstr "Japansk (JIS-tastatur)"
 
-#: src/pages.py:4040
+#: src/pages.py:6147
 msgid "Keyboard"
 msgstr "Tastatur"
 
-#: src/pages.py:1938 src/pages.py:1932 src/pages.py:2075
+#: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
 msgid "Keyboard Layout"
 msgstr "Tastaturoppæt"
 
-#: src/pages.py:2031
+#: src/pages.py:2077
 msgid "Layout Variant"
 msgstr "Layoutvariant"
 
-#: src/pages.py:4582
+#: src/pages.py:6821
 msgid "Configure physical keyboard layout"
 msgstr "Konfigurer fysisk tastaturopsætning"
 
@@ -575,103 +509,91 @@ msgstr "Konfigurer fysisk tastaturopsætning"
 msgid "Korean"
 msgstr "Koreansk"
 
-#: src/pages.py:4039
+#: src/pages.py:6146
 msgid "Language"
 msgstr "Sprog"
 
-#: src/pages.py:2472
+#: src/pages.py:2624
 msgid "Live USB — excluded"
 msgstr "Live USB — ekskluderet"
 
-#: src/pages.py:4573
+#: src/pages.py:6812
 msgid "Mount target filesystems"
 msgstr "Montér målfilsystemer"
 
-#: src/pages.py:851
+#: src/pages.py:918
 msgid "Navigation error"
 msgstr "Navigationsfejl"
 
-#: src/pages.py:4180 src/pages.py:4229
+#: src/pages.py:4232 src/pages.py:6339 src/pages.py:6277 src/pages.py:6385
 msgid "New partitions"
 msgstr "Nye partitioner"
 
-#: src/pages.py:261 src/pages.py:818 src/pages.py:1016
+#: src/pages.py:315 src/pages.py:884 src/pages.py:1083
 msgid "Next"
 msgstr "Næste"
 
-#: src/pages.py:4756
+#: src/pages.py:6997
 msgid "Next slide"
 msgstr "Næste slide"
 
-#: src/pages.py:2389
+#: src/pages.py:2541
 msgid "No partition table"
 msgstr "Ingen partitionstabel"
 
-#: src/pages.py:2631
+#: src/pages.py:2782
 msgid "No suitable disks found."
 msgstr "Ingen egnede diske fundet."
 
-#: src/pages.py:170
-msgid ""
-"No suitable unallocated space was found. To protect your data, create "
-"unallocated space with Windows Disk Management, then boot the installer "
-"again and rescan the disk."
-msgstr ""
-"Ingen egnet ubenævnt plads blev fundet. For at beskytte dine data, opret "
-"ubenævnt plads med Windows Diskhåndtering, boot derefter installatøren igen "
-"og genundersøg disken."
+#: src/pages.py:201
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "Ingen egnet ubenævnt plads blev fundet. For at beskytte dine data, opret ubenævnt plads med Windows Diskhåndtering, boot derefter installatøren igen og genundersøg disken."
 
-#: src/pages.py:175
-msgid ""
-"No suitable unallocated space was found. To protect your data, create "
-"unallocated space with a partitioning tool, then boot the installer again "
-"and rescan the disk."
-msgstr ""
-"Ingen egnet ubenævnt plads blev fundet. For at beskytte dine data, opret "
-"ubenævnt plads med et partitioneringsværktøj, boot derefter installatøren "
-"igen og genundersøg disken."
+#: src/pages.py:206
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "Ingen egnet ubenævnt plads blev fundet. For at beskytte dine data, opret ubenævnt plads med et partitioneringsværktøj, boot derefter installatøren igen og genundersøg disken."
 
 #: data/languages.json:keyboard_layouts
 msgid "Norwegian"
 msgstr "Norsk"
 
-#: src/pages.py:1124 src/pages.py:1375 src/pages.py:4370 src/pages.py:854
+#: src/pages.py:1191 src/pages.py:1442 src/pages.py:6563 src/pages.py:921
 msgid "OK"
 msgstr "OK"
 
-#: src/pages.py:4835
+#: src/pages.py:7076
 msgid "Output"
 msgstr "Output"
 
-#: src/pages.py:4973 src/pages.py:5028
+#: src/pages.py:7214 src/pages.py:7269
 msgid "Output • Error"
 msgstr "Output • Fejl"
 
-#: src/pages.py:5023
+#: src/pages.py:7264
 msgid "Output • {count} warning(s)"
 msgstr "Output • {count} advarsel/advarsler"
 
-#: src/pages.py:2453
+#: src/pages.py:2605
 msgid "Partition details unavailable"
 msgstr "Partitionsdetaljer utilgængelige"
 
-#: src/pages.py:3476 src/pages.py:3487 src/pages.py:1466 src/pages.py:1525
+#: src/pages.py:5561 src/pages.py:5572 src/pages.py:1533 src/pages.py:1592
 msgid "Password"
 msgstr "Adgangskode"
 
-#: src/pages.py:3584
+#: src/pages.py:5669
 msgid "Password must be at least 6 characters."
 msgstr "Adgangskoden skal være på mindst 6 tegn."
 
-#: src/pages.py:4048
+#: src/pages.py:6154
 msgid "Platform"
 msgstr "Platform"
 
-#: src/pages.py:4548
+#: src/pages.py:6787
 msgid "Please do not turn off your computer"
 msgstr "Udskift venligst ikke din computer"
 
-#: src/pages.py:3965
+#: src/pages.py:6055
 msgid "Please review your choices before proceeding"
 msgstr "Gennemse venligst dine valg, før du fortsætter"
 
@@ -687,86 +609,78 @@ msgstr "Portugisisk"
 msgid "Portuguese (Brazil)"
 msgstr "Portugisisk (Brasilien)"
 
-#: src/pages.py:4594
+#: src/pages.py:6833
 msgid "Prepare Secure Boot"
 msgstr "Fordi Secure Boot"
 
-#: src/pages.py:4572
+#: src/pages.py:6811
 msgid "Prepare installation disk"
 msgstr "Fordi installationsdisk"
 
-#: src/pages.py:4579
+#: src/pages.py:6818
 msgid "Prepare target environment"
 msgstr "Fordi mål-miljøet"
 
-#: src/pages.py:4871
+#: src/pages.py:7112
 msgid "Preparing installation…"
 msgstr "Forbereder installation…"
 
-#: src/pages.py:4175
+#: src/pages.py:6336 src/pages.py:6272
 msgid "Preserved partitions"
 msgstr "Bevarede partitioner"
 
-#: src/pages.py:4750
+#: src/pages.py:6991
 msgid "Previous slide"
 msgstr "Tidligere slide"
 
-#: src/pages.py:3964 src/pages.py:3958
+#: src/pages.py:6054 src/pages.py:6048
 msgid "Ready to Install"
 msgstr "Klar til installation"
 
-#: src/pages.py:4811
+#: src/pages.py:7052
 msgid "Reboot Now"
 msgstr "Genstart nu"
 
-#: src/pages.py:4598
+#: src/pages.py:6837
 msgid "Refresh package indexes"
 msgstr "Opdater pakkeindekser"
 
-#: src/pages.py:4580
+#: src/pages.py:6819
 msgid "Remove live-session components"
 msgstr "Fjern live-session-komponenter"
 
-#: src/pages.py:4951 src/pages.py:4942
+#: src/pages.py:7192 src/pages.py:7183
 msgid "Remove the installation media and restart your computer"
 msgstr "Fjern installationsmediet og genstart din computer"
 
-#: src/pages.py:1177 src/pages.py:1205 src/pages.py:2220 src/pages.py:675
-#: src/pages.py:1362 src/pages.py:2233
-msgid ""
-"Requires an Internet connection. The base installation remains available "
-"when offline."
-msgstr ""
-"Kræver en internetforbindelse. Basisinstallationen forbliver tilgængelig, "
-"når du er offline."
+#: src/pages.py:1244 src/pages.py:1272 src/pages.py:2372 src/pages.py:734
+#: src/pages.py:1429 src/pages.py:2385
+msgid "Requires an Internet connection. The base installation remains available when offline."
+msgstr "Kræver en internetforbindelse. Basisinstallationen forbliver tilgængelig, når du er offline."
 
-#: src/pages.py:2550
+#: src/pages.py:2701
 msgid "Rescan Storage"
 msgstr "Gensøg lagerplads"
 
-#: src/pages.py:3101
+#: src/pages.py:3526
 msgid "Rescan and Reselect Disk"
 msgstr "Gensøg og vælg disk igen"
 
-#: src/pages.py:4809
+#: src/pages.py:7050
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "Genstart og tilmeld Secure Boot-nøgle"
 
-#: src/pages.py:4960
+#: src/pages.py:7201
 msgid "Restart is disabled in development protection mode"
 msgstr "Genstart er deaktiveret i udviklingsbeskyttelsesmodus"
 
-#: src/pages.py:3150
+#: src/pages.py:3576 src/pages.py:5081
 msgid "Reuse {path} ({size})"
 msgstr "Gendan {path} ({size})"
 
-#: src/pages.py:4155
-msgid ""
-"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
-"before writing."
-msgstr ""
-"Gendan {path}; formatter den aldrig; verificer FAT-sundhed, identitet og 64 "
-"MiB fri plads før skrivning."
+#: src/pages.py:6254
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Gendan {path}; formatter den aldrig; verificer FAT-sundhed, identitet og 64 MiB fri plads før skrivning."
 
 #: data/languages.json:keyboard_layouts
 msgid "Romanian"
@@ -776,43 +690,43 @@ msgstr "Rumænsk"
 msgid "Russian"
 msgstr "Russisk"
 
-#: src/pages.py:4679
+#: src/pages.py:6920
 msgid "Save Log"
 msgstr "Gem log"
 
-#: src/pages.py:4609
+#: src/pages.py:6848
 msgid "Schedule MOK enrollment"
 msgstr "Planlæg MOK-tilmelding"
 
-#: src/pages.py:3831
+#: src/pages.py:5918
 msgid "Search timezones…"
 msgstr "Søg tidzoner…"
 
-#: src/pages.py:4069
+#: src/pages.py:6175
 msgid "Secure Boot enrollment"
 msgstr "Secure Boot-tilmelding"
 
-#: src/pages.py:2497 src/pages.py:2491
+#: src/pages.py:2649 src/pages.py:2643
 msgid "Select Installation Disk"
 msgstr "Vælg installationsdisk"
 
-#: src/pages.py:3818 src/pages.py:3812
+#: src/pages.py:5905 src/pages.py:5899
 msgid "Select Timezone"
 msgstr "Vælg tidzone"
 
-#: src/pages.py:4592
+#: src/pages.py:6831
 msgid "Select fastest package mirror"
 msgstr "Vælg hurtigste pakkespejl"
 
-#: src/pages.py:3884
+#: src/pages.py:5974
 msgid "Selected timezone"
 msgstr "Udvalgt tidzone"
 
-#: src/pages.py:4170
+#: src/pages.py:6267
 msgid "Selected unallocated space"
 msgstr "Udvalgt tildelt plads"
 
-#: src/pages.py:2239
+#: src/pages.py:2391
 msgid "Some drivers are proprietary or otherwise non-free software."
 msgstr "Nogle drivere er proprietære eller anden ikke-fri software."
 
@@ -820,11 +734,11 @@ msgstr "Nogle drivere er proprietære eller anden ikke-fri software."
 msgid "Spanish"
 msgstr "Spansk"
 
-#: src/pages.py:4046
+#: src/pages.py:6152
 msgid "Stable disk identity"
 msgstr "Stabil diskidentitet"
 
-#: src/pages.py:4437
+#: src/pages.py:6641
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -832,19 +746,19 @@ msgstr ""
 "Stabil identitet: {stable_id}\n"
 "\n"
 
-#: src/pages.py:2380
+#: src/pages.py:2532
 msgid "Storage Device"
 msgstr "Lagerenhed"
 
-#: src/pages.py:4168 src/pages.py:4224
+#: src/pages.py:6265 src/pages.py:6333 src/pages.py:6380
 msgid "Storage mode"
 msgstr "Lagermodus"
 
-#: src/pages.py:4050
+#: src/pages.py:6156
 msgid "Subvolumes"
 msgstr "Underbindinger"
 
-#: src/pages.py:4268
+#: src/pages.py:2968 src/pages.py:3851
 msgid "Swap"
 msgstr "Swap"
 
@@ -852,19 +766,19 @@ msgstr "Swap"
 msgid "Swedish"
 msgstr "Svensk"
 
-#: src/pages.py:4051
+#: src/pages.py:6157
 msgid "System updates"
 msgstr "Systemopdateringer"
 
-#: src/pages.py:4042
+#: src/pages.py:6148
 msgid "Target Disk"
 msgstr "Måldisk"
 
-#: src/pages.py:2993 src/pages.py:3260
+#: src/pages.py:3418 src/pages.py:3686 src/pages.py:4091
 msgid "Target: {disk} ({size} — {model})"
 msgstr "Mål: {disk} ({size} — {model})"
 
-#: src/pages.py:1964 src/pages.py:2076
+#: src/pages.py:2083 src/pages.py:2228
 msgid "Test your keyboard here…"
 msgstr "Test dit tastatur her…"
 
@@ -872,123 +786,75 @@ msgstr "Test dit tastatur her…"
 msgid "Thai"
 msgstr "Thai"
 
-#: src/pages.py:120
-msgid ""
-"The GPT disk or one of its partitions has no unique stable identifier. "
-"Guided coexistence cannot safely authorize preservation or writes on this "
-"disk."
-msgstr ""
-"GPT-disken eller en af dens partitioner har ingen unik stabil identifikator."
-" Styret samexistens kan ikke sikkert autorisere bevarelse eller skrivning på"
-" denne disk."
+#: src/pages.py:151
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "GPT-disken eller en af dens partitioner har ingen unik stabil identifikator. Styret samexistens kan ikke sikkert autorisere bevarelse eller skrivning på denne disk."
 
-#: src/pages.py:115
-msgid ""
-"The complete partition map and free-space geometry could not be read "
-"consistently. No space on this disk is authorized for installation."
-msgstr ""
-"Hele partitionskortet og fri-plads geometrien kunne ikke læses konsistent. "
-"Ingen plads på denne disk er autoriseret til installation."
+#: src/pages.py:146
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "Hele partitionskortet og fri-plads geometrien kunne ikke læses konsistent. Ingen plads på denne disk er autoriseret til installation."
 
-#: src/pages.py:141
-msgid ""
-"The existing EFI System Partition is only a candidate. Health and free-space"
-" checks must pass before it can be reused, and it will never be formatted."
-msgstr ""
-"Den eksisterende EFI System Partition er kun en kandidat. Sundheds- og fri-"
-"plads tjek skal bestå, før den kan genbruges, og den vil aldrig blive "
-"formateret."
+#: src/pages.py:172
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "Den eksisterende EFI System Partition er kun en kandidat. Sundheds- og fri-plads tjek skal bestå, før den kan genbruges, og den vil aldrig blive formateret."
 
-#: src/pages.py:4926
-msgid ""
-"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
-" state, or installed system was changed."
-msgstr ""
-"Installationsplanen er gyldig. Ingen disk, filsystem, bootloader, Secure "
-"Boot-tilstand eller installeret system blev ændret."
+#: src/pages.py:7167
+msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
+msgstr "Installationsplanen er gyldig. Ingen disk, filsystem, bootloader, Secure Boot-tilstand eller installeret system blev ændret."
 
-#: src/main.py:147
+#: src/main.py:151
 msgid "The installer cannot be closed while it is modifying the target disk."
-msgstr ""
-"Installationsprogrammet kan ikke lukkes, mens det modificerer måldisken."
+msgstr "Installationsprogrammet kan ikke lukkes, mens det modificerer måldisken."
 
-#: src/pages.py:150
-msgid ""
-"The installer will not mount, repair or infer the safety of Windows volumes "
-"from hibernation or Fast Startup state. Any required Windows maintenance "
-"must be completed in Windows."
-msgstr ""
-"Installatøren vil ikke montere, reparere eller udlede sikkerheden af "
-"Windows-volumener fra dvaletilstand eller Hurtig opstart-tilstand. Eventuel "
-"nødvendig Windows vedligeholdelse skal udføres i Windows."
+#: src/pages.py:181
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "Installatøren vil ikke montere, reparere eller udlede sikkerheden af Windows-volumener fra dvaletilstand eller Hurtig opstart-tilstand. Eventuel nødvendig Windows vedligeholdelse skal udføres i Windows."
 
-#: src/pages.py:4443
+#: src/pages.py:6647
 msgid "The privileged executor is disabled."
 msgstr "Den privilegerede eksekutor er deaktiveret."
 
-#: src/pages.py:3228
-msgid ""
-"The selected disk changed or disappeared. Return to the disk page and select"
-" it again. {error}"
-msgstr ""
-"Den valgte disk er ændret eller er forsvundet. Gå tilbage til disksiden og "
-"vælg den igen. {error}"
+#: src/pages.py:3654
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "Den valgte disk er ændret eller er forsvundet. Gå tilbage til disksiden og vælg den igen. {error}"
 
-#: src/pages.py:3241
+#: src/pages.py:3667
 msgid "The selected disk size changed. Return and select it again."
 msgstr "Størrelsen på den valgte disk er ændret. Gå tilbage og vælg den igen."
 
-#: src/pages.py:3251
-msgid ""
-"The selected disk topology changed. Review the disk and installation method "
-"again."
-msgstr ""
-"Topologien på den valgte disk er ændret. Gennemgå disken og "
-"installationsmetoden igen."
+#: src/pages.py:3677
+msgid "The selected disk topology changed. Review the disk and installation method again."
+msgstr "Topologien på den valgte disk er ændret. Gennemgå disken og installationsmetoden igen."
 
-#: src/pages.py:3580
+#: src/pages.py:5665
 msgid "The two passwords do not match."
 msgstr "De to adgangskoder matcher ikke."
 
-#: src/pages.py:4057
+#: src/pages.py:6163
 msgid "Third-party drivers"
 msgstr "Tredjepartsdrivere"
 
-#: src/pages.py:3021
-msgid ""
-"This advanced path preserves existing partitions but changes the selected "
-"disk's partition table and the machine's EFI boot state."
-msgstr ""
-"Denne avancerede sti bevarer eksisterende partitioner, men ændrer den valgte"
-" disks partitionstabel og maskinens EFI-boot-tilstand."
+#: src/pages.py:3446
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "Denne avancerede sti bevarer eksisterende partitioner, men ændrer den valgte disks partitionstabel og maskinens EFI-boot-tilstand."
 
-#: src/pages.py:125
-msgid ""
-"This disk contains an active mapper, array or other nested block-device "
-"topology that guided coexistence does not support."
-msgstr ""
-"Denne disk indeholder en aktiv mapper, array eller anden nested block-device"
-" topologi, som styret samexistens ikke understøtter."
+#: src/pages.py:156
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "Denne disk indeholder en aktiv mapper, array eller anden nested block-device topologi, som styret samexistens ikke understøtter."
 
-#: src/pages.py:2935
-msgid ""
-"This disk is too small for whole-disk installation. Advanced may continue "
-"only if suitable unallocated space exists."
-msgstr ""
-"Disken er for lille til en fuld disk-installation. Avanceret kan kun "
-"fortsætte, hvis der findes egnet tildelt plads."
+#: src/pages.py:3277
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "Disken er for lille til en fuld disk-installation. Avanceret kan kun fortsætte, hvis der findes egnet tildelt plads."
 
-#: src/pages.py:4454
+#: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
-msgstr ""
-"Dette installationsprogram trækker ikke andre systemer tilbage eller bevarer"
-" dem."
+msgstr "Dette installationsprogram trækker ikke andre systemer tilbage eller bevarer dem."
 
-#: src/pages.py:4103
+#: src/pages.py:6209
 msgid "Timezone"
 msgstr "Tidzone"
 
-#: src/pages.py:2474
+#: src/pages.py:2626
 msgid "Too small"
 msgstr "For lille"
 
@@ -1000,71 +866,67 @@ msgstr "Tyrkisk"
 msgid "Ukrainian"
 msgstr "Ukrainsk"
 
-#: src/pages.py:3065
+#: src/pages.py:3490
 msgid "Unallocated space"
 msgstr "Udelt plads"
 
-#: src/pages.py:2445
+#: src/pages.py:2597
 msgid "Unallocated · {size}"
 msgstr "Utildelt · {size}"
 
-#: src/pages.py:4014 src/pages.py:1710
+#: src/pages.py:6106 src/pages.py:1777
 msgid "Unavailable: {error}"
 msgstr "Uutilgængelig: {error}"
 
-#: src/pages.py:2432
+#: src/pages.py:2584
 msgid "Unknown filesystem"
 msgstr "Ukendt filsystem"
 
-#: src/pages.py:4614
+#: src/pages.py:6853
 msgid "Unmount installed system"
 msgstr "Afmonter installeret system"
 
-#: src/pages.py:2198 src/pages.py:1196 src/pages.py:2192
+#: src/pages.py:2350 src/pages.py:1263 src/pages.py:2344
 msgid "Updates and Drivers"
 msgstr "Opdateringer og drivere"
 
-#: src/pages.py:2986
+#: src/pages.py:3411
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "Bruk kun eksisterende udelt plads på det valgte disk."
 
-#: src/pages.py:4079
+#: src/pages.py:6185
 msgid "User"
 msgstr "Bruger"
 
-#: src/pages.py:3446 src/pages.py:3440
+#: src/pages.py:5531 src/pages.py:5525
 msgid "User Account"
 msgstr "Brugerkonto"
 
-#: src/pages.py:3468 src/pages.py:3472
+#: src/pages.py:5553 src/pages.py:5557
 msgid "Username"
 msgstr "Bbrugernavn"
 
-#: src/pages.py:3568
-msgid ""
-"Username must start with a lowercase ASCII letter and contain only lowercase"
-" ASCII letters or digits (maximum 16 characters)."
-msgstr ""
-"Brugernavnet skal starte med et lille ASCII-bogstav og kun indeholde små "
-"ASCII-bogstaver eller cifre (maksimalt 16 tegn)."
+#: src/pages.py:5653
+msgid "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
+msgstr "Brugernavnet skal starte med et lille ASCII-bogstav og kun indeholde små ASCII-bogstaver eller cifre (maksimalt 16 tegn)."
 
-#: src/pages.py:2832
+#: src/pages.py:3173
 msgid "Uses a traditional single root filesystem."
 msgstr "Bruker et traditionelt enkelt rod-filsystem."
 
-#: src/pages.py:4406
+#: src/pages.py:6601
 msgid "Validate Plan (No Installation)"
 msgstr "Valider plan (ingen installation)"
 
-#: src/pages.py:4405
+#: src/pages.py:6600
 msgid "Validate this installation plan?"
 msgstr "Valider denne installationsplan?"
 
-#: src/pages.py:4606
+#: src/pages.py:6845
 msgid "Verify kernel module signatures"
 msgstr "Verificer kernet modul-signaturer"
 
-#: src/pages.py:4571
+#: src/pages.py:6810
 msgid "Verify target disk isolation"
 msgstr "Verificer måldisk-isolering"
 
@@ -1072,888 +934,819 @@ msgstr "Verificer måldisk-isolering"
 msgid "Vietnamese"
 msgstr "Vietnamesisk"
 
-#: src/pages.py:811
+#: src/pages.py:877
 msgid "Welcome to AnduinOS"
 msgstr "Velkommen til AnduinOS"
 
-#: src/pages.py:2468
+#: src/pages.py:2620
 msgid "Windows detected"
 msgstr "Windows opdaget"
 
-#: src/pages.py:4188
-msgid ""
-"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
-"AnduinOS NVRAM entry."
-msgstr ""
-"Skriv kun EFI/AnduinOS, overskriv ikke EFI/BOOT, og kræv en verificeret "
-"AnduinOS NVRAM-post."
+#: src/pages.py:6284
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Skriv kun EFI/AnduinOS, overskriv ikke EFI/BOOT, og kræv en verificeret AnduinOS NVRAM-post."
 
-#: src/pages.py:4072
+#: src/pages.py:6178
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
-msgstr ""
-"opret en maskinelokal MOK; tilmeld efter genstart med adgangskode 123456"
+msgstr "opret en maskinelokal MOK; tilmeld efter genstart med adgangskode 123456"
 
-#: src/pages.py:4059
+#: src/pages.py:6165
 msgid "detect and install (may include non-free software)"
 msgstr "opdag og installer (kan inkludere ikke-fri software)"
 
-#: src/pages.py:4121 src/pages.py:4055 src/pages.py:4061 src/pages.py:4067
+#: src/pages.py:6227 src/pages.py:6161 src/pages.py:6167 src/pages.py:6173
 msgid "do not install"
 msgstr "installer ikke"
 
-#: src/pages.py:4053 src/pages.py:4065
+#: src/pages.py:6159 src/pages.py:6171
 msgid "download and install"
 msgstr "download og installer"
 
-#: src/pages.py:3055
+#: src/pages.py:3480 src/pages.py:5118
 msgid "ext4 (classic)"
 msgstr "ext4 (klassisk)"
 
-#: src/pages.py:2829
+#: src/pages.py:3170
 msgid "ext4 — classic"
 msgstr "ext4 — klassisk"
 
-#: src/pages.py:4077
+#: src/pages.py:6183
 msgid "not required"
 msgstr "ikke påkrævet"
 
-#: src/pages.py:4083
+#: src/pages.py:6189
 msgid "password required for login"
 msgstr "adgangskode påkrævet til login"
 
-#: src/pages.py:4024
+#: src/pages.py:6117
 msgid "single ext4 root filesystem"
 msgstr "enkel ext4 rodfilsystem"
 
-#: src/pages.py:4005
+#: src/pages.py:6097
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / Sikker opstart: {secure_boot}"
 
-#: src/pages.py:4176
+#: src/pages.py:6273
 msgid "{count}: {paths}"
 msgstr "{count}: {paths}"
 
-#: src/pages.py:4139
+#: src/pages.py:6238
 msgid "{name}: {start}–{end} MiB"
 msgstr "{name}: {start}–{end} MiB"
 
-#: src/pages.py:4147
+#: src/pages.py:6246 src/pages.py:6313
 msgid "{path} as {filesystem}"
 msgstr "{path} som {filesystem}"
 
-#: src/pages.py:4171
+#: src/pages.py:6268
 msgid "{size} at {offset}"
 msgstr "{size} ved {offset}"
 
-#: src/pages.py:3288
+#: src/pages.py:3714
 msgid "{size} unallocated at {offset}"
 msgstr "{size} ubenyttet plads ved {offset}"
 
-#: src/pages.py:5031
+#: src/pages.py:7272
 msgid "{step} failed"
 msgstr "{step} mislykkedes"
 
-#: src/pages.py:4303
-msgid ""
-"⚠ Only the selected unallocated space will be partitioned and formatted. "
-"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
-"firmware boot entry may change. This installer will not shrink Windows for "
-"you."
-msgstr ""
-"⚠ Kun det valgte ubenyttede område vil blive op delt og formatteret. "
-"Eksisterende partitioner bevares, men EFI/AnduinOS-filer og AnduinOS-"
-"firmwareens boot-post kan ændres. Denne installationsprogram vil ikke "
-"mindske Windows for dig."
+#: src/pages.py:6488
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Kun det valgte ubenyttede område vil blive op delt og formatteret. Eksisterende partitioner bevares, men EFI/AnduinOS-filer og AnduinOS-firmwareens boot-post kan ændres. Denne installationsprogram vil ikke mindske Windows for dig."
 
-#: src/pages.py:4311
-msgid ""
-"⚠ This will erase ALL data on the selected disk. This action cannot be "
-"undone."
-msgstr ""
-"⚠ Dette vil slette ALLE data på den valgte disk. Denne handling kan ikke "
-"fortrydes."
+#: src/pages.py:6504
+msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
+msgstr "⚠ Dette vil slette ALLE data på den valgte disk. Denne handling kan ikke fortrydes."
 
-#: src/pages.py:1176 src/pages.py:667 src/pages.py:1171
+#: src/pages.py:1243 src/pages.py:726 src/pages.py:1238
 msgid "Connect to the Internet"
 msgstr "Opret forbindelse til internettet"
 
-#: src/pages.py:1343
+#: src/pages.py:1410
 msgid "Internet connection is ready."
 msgstr "Internetforbindelsen er klar."
 
-#: src/pages.py:1250
+#: src/pages.py:1317
 msgid "Available Wi-Fi Networks"
 msgstr "Tilgængelige Wi-Fi-netværk"
 
-#: src/pages.py:4576
+#: src/pages.py:6815
 msgid "Preserve connected Wi-Fi network"
 msgstr "Bevar det tilsluttede Wi-Fi-netværk"
 
-#: src/pages.py:2540 src/pages.py:3092
+#: src/pages.py:2691 src/pages.py:3517 src/pages.py:4166 src/pages.py:5388
+#: src/pages.py:4139 src/pages.py:4305
 msgid "Loading storage devices…"
 msgstr "Indlæser lagerenheder…"
 
-#: src/pages.py:4335
+#: src/pages.py:6528
 msgid "Rechecking target disk…"
 msgstr "Kontrollerer måldisken igen…"
 
-#: src/pages.py:2609 src/pages.py:3213 src/pages.py:4364
+#: src/pages.py:2760 src/pages.py:3639 src/pages.py:5336 src/pages.py:6557
 msgid "Storage devices could not be loaded: {error}"
 msgstr "Lagerenhederne kunne ikke indlæses: {error}"
 
-#: src/pages.py:1218 src/pages.py:4586 src/pages.py:2252
+#: src/pages.py:1285 src/pages.py:6825 src/pages.py:2404
 msgid "Install extended multimedia format support"
 msgstr "Installér udvidet understøttelse af multimedieformater"
 
-#: src/pages.py:4063
+#: src/pages.py:6169
 msgid "Extended multimedia formats"
 msgstr "Udvidede multimedieformater"
 
-#: src/pages.py:2256
-msgid ""
-"Adds wider GStreamer compatibility and support for additional legacy and "
-"specialist media formats. Some components may be subject to patent or "
-"redistribution terms."
-msgstr ""
-"Tilføjer bredere GStreamer-kompatibilitet og understøttelse af flere ældre "
-"og specialiserede medieformater. Nogle komponenter kan være underlagt "
-"patent- eller videredistributionsvilkår."
+#: src/pages.py:2408
+msgid "Adds wider GStreamer compatibility and support for additional legacy and specialist media formats. Some components may be subject to patent or redistribution terms."
+msgstr "Tilføjer bredere GStreamer-kompatibilitet og understøttelse af flere ældre og specialiserede medieformater. Nogle komponenter kan være underlagt patent- eller videredistributionsvilkår."
 
-#: src/pages.py:1473
+#: src/pages.py:1540
 msgid "A saved profile exists. Entering a password updates it securely."
-msgstr ""
-"Der findes en gemt profil. Hvis du indtaster en adgangskode, opdateres den "
-"sikkert."
+msgstr "Der findes en gemt profil. Hvis du indtaster en adgangskode, opdateres den sikkert."
 
-#: src/pages.py:1524
+#: src/pages.py:1591
 msgid "Anonymous identity (optional)"
 msgstr "Anonym identitet (valgfrit)"
 
-#: src/pages.py:1530
+#: src/pages.py:1597
 msgid "CA certificate path (optional)"
 msgstr "Sti til CA-certifikat (valgfrit)"
 
-#: src/pages.py:1239 src/pages.py:1409 src/pages.py:1482 src/pages.py:1600
-#: src/pages.py:1816
+#: src/pages.py:1306 src/pages.py:1476 src/pages.py:1549 src/pages.py:1667
+#: src/pages.py:1883 src/pages.py:4626 src/pages.py:4845 src/pages.py:5309
 msgid "Cancel"
 msgstr "Annullér"
 
-#: src/pages.py:1786
+#: src/pages.py:1853
 msgid "Cancelling Wi-Fi operation…"
 msgstr "Annullerer Wi-Fi-handlingen…"
 
-#: src/pages.py:1532
+#: src/pages.py:1599
 msgid "Client certificate path"
 msgstr "Sti til klientcertifikat"
 
-#: src/pages.py:1483 src/pages.py:1601
+#: src/pages.py:1550 src/pages.py:1668
 msgid "Connect"
-msgstr "Connect"
+msgstr "Opret forbindelse"
 
-#: src/pages.py:1817
+#: src/pages.py:1884 src/pages.py:6709
 msgid "Continue"
 msgstr "Fortsæt"
 
-#: src/pages.py:1259 src/pages.py:1809
+#: src/pages.py:1326 src/pages.py:1876
 msgid "Connect to a hidden network"
 msgstr "Opret forbindelse til et skjult netværk"
 
-#: src/pages.py:1478 src/pages.py:1593
+#: src/pages.py:1545 src/pages.py:1660
 #, python-brace-format
 msgid "Connect to {network}"
 msgstr "Opret forbindelse til {network}"
 
-#: src/pages.py:1654
+#: src/pages.py:1721
 msgid "Connected"
-msgstr "Connected"
+msgstr "Tilsluttet"
 
-#: src/pages.py:1453
+#: src/pages.py:1520
 #, python-brace-format
 msgid "Connecting to {network}…"
 msgstr "Opretter forbindelse til {network}…"
 
-#: src/pages.py:1755
+#: src/pages.py:1822
 msgid "Could not change the Wi-Fi connection"
 msgstr "Kunne ikke ændre Wi-Fi-forbindelsen"
 
-#: src/pages.py:1410
+#: src/pages.py:1477
 msgid "Disconnect"
-msgstr "Disconnect"
+msgstr "Afbryd"
 
-#: src/pages.py:1401
+#: src/pages.py:1468
 #, python-brace-format
 msgid "Disconnect from {network}?"
 msgstr "Forbindelsen til {network} skal afbrydes?"
 
-#: src/pages.py:1420
+#: src/pages.py:1487
 #, python-brace-format
 msgid "Disconnecting from {network}…"
 msgstr "Afbryder forbindelse til {network}…"
 
-#: src/pages.py:1531
+#: src/pages.py:1598
 msgid "Domain suffix match (optional)"
 msgstr "Match af domænesuffiks (valgfrit)"
 
-#: src/pages.py:1515
+#: src/pages.py:1582
 msgid "EAP method"
 msgstr "EAP-metode"
 
-#: src/pages.py:1387 src/pages.py:1796
+#: src/pages.py:1454 src/pages.py:1863
 msgid "Enhanced Open (OWE)"
 msgstr "Forstærket åben (OWE)"
 
-#: src/pages.py:1595
-msgid ""
-"Enter the credentials supplied by your organization. Certificate validation "
-"is strongly recommended."
-msgstr ""
-"Indtast de legitimationsoplysninger, der er leveret af din organisation. "
-"Certifikatvalidering anbefales kraftigt."
+#: src/pages.py:1662
+msgid "Enter the credentials supplied by your organization. Certificate validation is strongly recommended."
+msgstr "Indtast de legitimationsoplysninger, der er leveret af din organisation. Certifikatvalidering anbefales kraftigt."
 
-#: src/pages.py:1811
+#: src/pages.py:1878
 msgid "Enter the exact network name and choose its security type."
 msgstr "Indtast det nøjagtige netværksnavn, og vælg dets sikkerhedstype."
 
-#: src/pages.py:1390 src/pages.py:1800
+#: src/pages.py:1457 src/pages.py:1867
 msgid "Enterprise Wi-Fi"
 msgstr "Wi-Fi til virksomheder"
 
-#: src/pages.py:1523
+#: src/pages.py:1590
 msgid "Identity"
-msgstr "Identity"
+msgstr "Identitet"
 
-#: src/pages.py:1527
+#: src/pages.py:1594
 msgid "Inner authentication"
 msgstr "Indre godkendelse"
 
-#: src/pages.py:1790
+#: src/pages.py:1857
 msgid "Network name (SSID)"
 msgstr "Netværksnavn (SSID)"
 
-#: src/pages.py:1645
+#: src/pages.py:1712
 msgid "No Wi-Fi networks found."
 msgstr "Ingen Wi-Fi-netværk fundet."
 
-#: src/pages.py:1386 src/pages.py:1795
+#: src/pages.py:1453 src/pages.py:1862
 msgid "Open network"
 msgstr "Åbent netværk"
 
-#: src/pages.py:1389 src/pages.py:1797 src/pages.py:1798
+#: src/pages.py:1456 src/pages.py:1864 src/pages.py:1865
 msgid "Personal Wi-Fi"
 msgstr "Personligt Wi-Fi"
 
-#: src/pages.py:1535
+#: src/pages.py:1602
 msgid "Private key password (optional)"
 msgstr "Adgangskode til privat nøgle (valgfrit)"
 
-#: src/pages.py:1533
+#: src/pages.py:1600
 msgid "Private key path"
 msgstr "Sti til privat nøgle"
 
-#: src/pages.py:1284
+#: src/pages.py:1351
 msgid "Refresh Wi-Fi networks"
 msgstr "Opdater Wi-Fi-netværk"
 
-#: src/pages.py:1656
+#: src/pages.py:1723
 msgid "Saved"
-msgstr "Saved"
+msgstr "Gemt"
 
-#: src/pages.py:1792
+#: src/pages.py:1859
 msgid "Security"
-msgstr "Security"
+msgstr "Sikkerhed"
 
-#: src/pages.py:1405
-msgid ""
-"The installer will keep the saved network profile so it can be used again."
-msgstr ""
-"Installationsprogrammet beholder den gemte netværksprofil, så den kan bruges"
-" igen."
+#: src/pages.py:1472
+msgid "The installer will keep the saved network profile so it can be used again."
+msgstr "Installationsprogrammet beholder den gemte netværksprofil, så den kan bruges igen."
 
-#: src/pages.py:1356
+#: src/pages.py:1423
 msgid "The local network is connected, but Internet access is unavailable."
-msgstr ""
-"Der er forbindelse til det lokale netværk, men internetadgang er ikke "
-"tilgængelig."
+msgstr "Der er forbindelse til det lokale netværk, men internetadgang er ikke tilgængelig."
 
-#: src/pages.py:1856
+#: src/pages.py:1923
 msgid "Turning Wi-Fi off…"
 msgstr "Slår Wi-Fi fra…"
 
-#: src/pages.py:1854
+#: src/pages.py:1921
 msgid "Turning Wi-Fi on…"
 msgstr "Slår Wi-Fi til…"
 
-#: src/pages.py:1485
+#: src/pages.py:1552
 msgid "Use WPS"
 msgstr "Brug WPS"
 
-#: src/pages.py:1388 src/pages.py:1799
+#: src/pages.py:1455 src/pages.py:1866
 msgid "WEP (legacy)"
 msgstr "WEP (forældet)"
 
-#: src/pages.py:1347
-msgid ""
-"Wi-Fi is connected, but the network requires sign-in through a captive "
-"portal."
-msgstr ""
-"Der er forbindelse til Wi-Fi, men netværket kræver login via en loginportal."
+#: src/pages.py:1414
+msgid "Wi-Fi is connected, but the network requires sign-in through a captive portal."
+msgstr "Der er forbindelse til Wi-Fi, men netværket kræver login via en loginportal."
 
-#: src/pages.py:1449
+#: src/pages.py:1516
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Venter på WPS for {network}. Tryk på WPS-knappen på routeren…"
 
-#: src/pages.py:3576
+#: src/pages.py:5661
 msgid "A password is required."
 msgstr "Der kræves en adgangskode."
 
-#: src/pages.py:3731
+#: src/pages.py:5817
 msgid "Administrative commands will no longer ask for your password."
 msgstr "Administrative kommandoer vil ikke længere bede om din adgangskode."
 
-#: src/pages.py:3681 src/pages.py:3675
+#: src/pages.py:5767 src/pages.py:5761
 msgid "Advanced Options"
 msgstr "Avancerede indstillinger"
 
-#: src/pages.py:3747
+#: src/pages.py:5833
 msgid "Allow SSH login with the account password"
 msgstr "Tillad SSH-login med kontoens adgangskode"
 
-#: src/pages.py:4089
+#: src/pages.py:6195
 msgid "Automatic desktop login"
 msgstr "Automatisk login på skrivebordet"
 
-#: src/pages.py:3701
-msgid ""
-"Choose how the local administrator account signs in and authorizes system "
-"changes."
-msgstr ""
-"Vælg, hvordan den lokale administratorkonto logger ind og godkender "
-"systemændringer."
+#: src/pages.py:5787
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Vælg, hvordan den lokale administratorkonto logger ind og godkender systemændringer."
 
-#: src/pages.py:3682
+#: src/pages.py:5768
 msgid "Choose optional access and sign-in policies"
 msgstr "Vælg valgfrie politikker for adgang og login"
 
-#: src/pages.py:3709
+#: src/pages.py:5795
 msgid "Choose whether this computer accepts remote Secure Shell connections."
-msgstr ""
-"Vælg, om denne computer skal acceptere eksterne Secure Shell-forbindelser."
+msgstr "Vælg, om denne computer skal acceptere eksterne Secure Shell-forbindelser."
 
-#: src/pages.py:4604
+#: src/pages.py:6843
 msgid "Configure Secure Shell"
 msgstr "Konfigurer Secure Shell"
 
-#: src/pages.py:3699
+#: src/pages.py:5785
 msgid "Local Access"
 msgstr "Lokal adgang"
 
-#: src/pages.py:3737
+#: src/pages.py:5823
 msgid "Log in to the desktop without a password"
 msgstr "Log ind på skrivebordet uden adgangskode"
 
-#: src/pages.py:3739
+#: src/pages.py:5825
 msgid "Open this account's desktop automatically when the computer starts."
 msgstr "Åbn automatisk denne kontos skrivebord, når computeren starter."
 
-#: src/pages.py:3707
+#: src/pages.py:5793
 msgid "Remote Access"
 msgstr "Fjernadgang"
 
-#: src/pages.py:3730
+#: src/pages.py:5816
 msgid "Run sudo commands without a password"
 msgstr "Kør sudo-kommandoer uden en adgangskode"
 
-#: src/pages.py:4095
+#: src/pages.py:6201
 msgid "SSH password login"
 msgstr "SSH-login med adgangskode"
 
-#: src/pages.py:3749
+#: src/pages.py:5835
 msgid "Start Secure Shell and accept this account password over the network."
-msgstr ""
-"Start Secure Shell, og accepter denne kontos adgangskode over netværket."
+msgstr "Start Secure Shell, og accepter denne kontos adgangskode over netværket."
 
-#: src/pages.py:3759
+#: src/pages.py:5845
 msgid "This will reduce the security of the installed system."
 msgstr "Dette reducerer sikkerheden på det installerede system."
 
-#: src/pages.py:4093 src/pages.py:4099
+#: src/pages.py:6199 src/pages.py:6205
 msgid "disabled"
 msgstr "deaktiveret"
 
-#: src/pages.py:4091 src/pages.py:4097
+#: src/pages.py:6197 src/pages.py:6203
 msgid "enabled"
 msgstr "aktiveret"
 
-#: src/pages.py:349
-msgid ""
-"AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently"
-" enabled on this computer, and we recommend enabling it for additional "
-"protection."
-msgstr ""
-"AnduinOS har omfattende understøttelse af Secure Boot. Secure Boot er ikke "
-"aktiveret på denne computer i øjeblikket, og vi anbefaler, at du aktiverer "
-"det for ekstra beskyttelse."
+#: src/pages.py:403
+msgid "AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently enabled on this computer, and we recommend enabling it for additional protection."
+msgstr "AnduinOS har omfattende understøttelse af Secure Boot. Secure Boot er ikke aktiveret på denne computer i øjeblikket, og vi anbefaler, at du aktiverer det for ekstra beskyttelse."
 
-#: src/pages.py:331
+#: src/pages.py:385
 msgid "AnduinOS supports Secure Boot"
 msgstr "AnduinOS understøtter Secure Boot"
 
-#: src/pages.py:360
-msgid ""
-"Battery power is sufficient or reliable power is connected. You can continue"
-" with the installation."
-msgstr ""
-"Batteriet har tilstrækkelig strøm, eller der er tilsluttet en pålidelig "
-"strømforsyning. Du kan fortsætte med installationen."
+#: src/pages.py:414
+msgid "Battery power is sufficient or reliable power is connected. You can continue with the installation."
+msgstr "Batteriet har tilstrækkelig strøm, eller der er tilsluttet en pålidelig strømforsyning. Du kan fortsætte med installationen."
 
-#: src/pages.py:366
-msgid ""
-"Connect reliable external power and charge above 25%, or charge above 45% "
-"while unplugged."
-msgstr ""
-"Forbind en pålidelig ekstern strømforsyning og lad op over 25 %, eller lad "
-"op over 45 %, når den er frastrømt."
+#: src/pages.py:420
+msgid "Connect reliable external power and charge above 25%, or charge above 45% while unplugged."
+msgstr "Forbind en pålidelig ekstern strømforsyning og lad op over 25 %, eller lad op over 45 %, når den er frastrømt."
 
-#: src/pages.py:338
+#: src/pages.py:392
 msgid "Could not open UEFI firmware settings"
 msgstr "Kunne ikke åbne UEFI-firmwareindstillinger"
 
-#: src/pages.py:333
+#: src/pages.py:387
 msgid "Get additional protection before installing AnduinOS."
 msgstr "Få ekstra beskyttelse, før du installerer AnduinOS."
 
-#: src/pages.py:364
+#: src/pages.py:418
 msgid "Power conditions are safe for installation."
 msgstr "Strømforsyningen er sikker til installation."
 
-#: src/pages.py:363
+#: src/pages.py:417
 msgid "Power ready"
 msgstr "Strøm klar"
 
-#: src/pages.py:335
+#: src/pages.py:389
 msgid "Restart to UEFI Firmware Settings"
 msgstr "Genstart til UEFI firmwareindstillinger"
 
-#: src/pages.py:345
-msgid ""
-"Secure Boot is a UEFI security feature that verifies trusted, digitally "
-"signed software while your computer starts."
-msgstr ""
-"Secure Boot er en UEFI-sikkerhedsfunktion, der verificerer betroet, digitalt"
-" signeret software, mens din computer starter."
+#: src/pages.py:399
+msgid "Secure Boot is a UEFI security feature that verifies trusted, digitally signed software while your computer starts."
+msgstr "Secure Boot er en UEFI-sikkerhedsfunktion, der verificerer betroet, digitalt signeret software, mens din computer starter."
 
-#: src/pages.py:336
+#: src/pages.py:390
 msgid "Skip"
 msgstr "Spring over"
 
-#: src/pages.py:341
+#: src/pages.py:395
 msgid "The firmware settings could not be opened on this computer."
 msgstr "Firmwareindstillingerne kunne ikke åbnes på denne computer."
 
-#: src/pages.py:354
-msgid ""
-"To enable it, open the UEFI firmware settings and look under Boot, Security,"
-" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
-"Firmware wording varies by manufacturer."
-msgstr ""
-"For at aktivere det skal du åbne UEFI firmwareindstillingerne og kigge under"
-" Boot, Security eller Secure Boot. Vælg Microsoft & 3rd-party CA eller slå "
-"Secure Boot til. Firmwareens ordvalg varierer efter producent."
+#: src/pages.py:408
+msgid "To enable it, open the UEFI firmware settings and look under Boot, Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. Firmware wording varies by manufacturer."
+msgstr "For at aktivere det skal du åbne UEFI firmwareindstillingerne og kigge under Boot, Security eller Secure Boot. Vælg Microsoft & 3rd-party CA eller slå Secure Boot til. Firmwareens ordvalg varierer efter producent."
 
+#: src/pages.py:3179
 msgid "Advanced"
 msgstr "Avanceret"
 
-msgid ""
-"Keep Windows or other partitions, reuse or create an ESP, and design Root "
-"and Swap partitions with exact sizes."
-msgstr ""
-"Behold Windows eller andre partitioner, genbrug eller opret en ESP, og "
-"planlæg Root- og Swap-partitioner med præcise størrelser."
+#: src/pages.py:3181
+msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root and Swap partitions with exact sizes."
+msgstr "Behold Windows eller andre partitioner, genbrug eller opret en ESP, og planlæg Root- og Swap-partitioner med præcise størrelser."
 
-msgid ""
-"Manual changes are destructive. Existing partition starts are never moved. "
-"Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
-" or unclean volumes are never resized."
-msgstr ""
-"Manuelle ændringer er destruktive. Eksisterende partitioners startpositioner"
-" flyttes aldrig. Almindelige NTFS-diskenheder kan kun formindskes efter "
-"strenge sikkerhedskontroller; krypterede, monterede eller ikke korrekt "
-"afmonterede diskenheder ændres aldrig i størrelse."
+#: src/pages.py:3230
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Manuelle ændringer er destruktive. Eksisterende partitioners startpositioner flyttes aldrig. Almindelige NTFS-diskenheder kan kun formindskes efter strenge sikkerhedskontroller; krypterede, monterede eller ikke korrekt afmonterede diskenheder ændres aldrig i størrelse."
 
+#: src/pages.py:3410
 msgid "Install Alongside Automatically"
 msgstr "Installer ved siden af automatisk"
 
+#: src/pages.py:3849
 msgid "ESP"
 msgstr "ESP"
 
+#: src/pages.py:3850
 msgid "Root"
-msgstr "Root"
+msgstr "Rodpartition"
 
+#: src/pages.py:3866
 msgid "Unallocated"
 msgstr "Ikke-allokeret"
 
+#: src/pages.py:3973
 #, python-brace-format
 msgid "{name} · {size} · {start}–{end} MiB"
 msgstr "{name} · {size} · {start}–{end} MiB"
 
+#: src/pages.py:4045
 msgid "Current disk"
 msgstr "Nuværende disk"
 
+#: src/pages.py:4151 src/pages.py:4047
 msgid "Planned result"
 msgstr "Planlagt resultat"
 
+#: src/pages.py:4071
 msgid "Advanced: Manual Partitioning"
 msgstr "Avanceret: Manuel partitionering"
 
-msgid ""
-"Windows was detected. Its partitions remain preserved unless you explicitly "
-"mark them for deletion."
-msgstr ""
-"Windows blev fundet. Dets partitioner bevares, medmindre du udtrykkeligt "
-"markerer dem til sletning."
+#: src/pages.py:4104
+msgid "Windows was detected. Its partitions remain preserved unless you explicitly mark them for deletion."
+msgstr "Windows blev fundet. Dets partitioner bevares, medmindre du udtrykkeligt markerer dem til sletning."
 
+#: src/pages.py:4173 src/pages.py:4958
 msgid "Initialize New GPT"
 msgstr "Initialisér ny GPT"
 
+#: src/pages.py:4193
 msgid "Existing partitions"
 msgstr "Eksisterende partitioner"
 
-msgid ""
-"Reuse a healthy existing ESP without formatting it, or create a new one in "
-"available space."
-msgstr ""
-"Genbrug en sund eksisterende ESP uden at formatere den, eller opret en ny i "
-"den ledige plads."
+#: src/pages.py:4214
+msgid "Reuse a healthy existing ESP without formatting it, or create a new one in available space."
+msgstr "Genbrug en sund eksisterende ESP uden at formatere den, eller opret en ny i den ledige plads."
 
+#: src/pages.py:4248
 msgid "Add a partition"
 msgstr "Tilføj en partition"
 
-msgid ""
-"Choose an available range, exact start position, and size. Nothing is "
-"written until installation begins."
-msgstr ""
-"Vælg et ledigt område, en præcis startposition og størrelse. Intet skrives, "
-"før installationen begynder."
+#: src/pages.py:4252
+msgid "Choose an available range, exact start position, and size. Nothing is written until installation begins."
+msgstr "Vælg et ledigt område, en præcis startposition og størrelse. Intet skrives, før installationen begynder."
 
+#: src/pages.py:4266
 msgid "Role"
 msgstr "Rolle"
 
+#: src/pages.py:4267
 msgid "Available space"
 msgstr "Tilgængelig plads"
 
+#: src/pages.py:4268 src/pages.py:4560
 msgid "Start (MiB)"
 msgstr "Startposition (MiB)"
 
+#: src/pages.py:4269 src/pages.py:4574
 msgid "Size (MiB)"
 msgstr "Størrelse (MiB)"
 
+#: src/pages.py:4283
 msgid "Use All"
 msgstr "Brug alt"
 
+#: src/pages.py:4287
 msgid "Add Partition"
 msgstr "Tilføj partition"
 
+#: src/pages.py:4321 src/pages.py:5146
 msgid "Edit"
 msgstr "Rediger"
 
+#: src/pages.py:4548
 msgid "That partition can no longer be edited safely."
 msgstr "Denne partition kan ikke længere redigeres sikkert."
 
+#: src/pages.py:4587
 msgid "Use All Available Space"
 msgstr "Brug al ledig plads"
 
+#: src/pages.py:4616
 #, python-brace-format
 msgid "Edit {role} partition"
 msgstr "Rediger partitionen {role}"
 
-msgid ""
-"Choose an exact position and size inside the available range. Other planned "
-"partitions are not moved."
-msgstr ""
-"Vælg en præcis position og størrelse inden for det ledige område. Andre "
-"planlagte partitioner flyttes ikke."
+#: src/pages.py:4620
+msgid "Choose an exact position and size inside the available range. Other planned partitions are not moved."
+msgstr "Vælg en præcis position og størrelse inden for det ledige område. Andre planlagte partitioner flyttes ikke."
 
+#: src/pages.py:4627
 msgid "Apply Changes"
 msgstr "Anvend ændringer"
 
+#: src/pages.py:4665
 msgid "Close"
 msgstr "Luk"
 
-msgid ""
-"BitLocker was detected. Return to Windows, open Manage BitLocker, choose "
-"Turn off BitLocker, and wait until decryption reaches 100%. Suspending "
-"protection is not enough. Back up the recovery key, fully shut Windows down,"
-" then start the installer again."
-msgstr ""
-"BitLocker blev registreret. Gå tilbage til Windows, åbn Administrer "
-"BitLocker, vælg Slå BitLocker fra, og vent, indtil dekrypteringen når 100 %."
-" Det er ikke nok at afbryde beskyttelsen midlertidigt. Sikkerhedskopiér "
-"genoprettelsesnøglen, luk Windows helt ned, og start derefter "
-"installationsprogrammet igen."
+#: src/pages.py:4673 src/pages.py:4897
+msgid "BitLocker was detected. Return to Windows, open Manage BitLocker, choose Turn off BitLocker, and wait until decryption reaches 100%. Suspending protection is not enough. Back up the recovery key, fully shut Windows down, then start the installer again."
+msgstr "BitLocker blev registreret. Gå tilbage til Windows, åbn Administrer BitLocker, vælg Slå BitLocker fra, og vent, indtil dekrypteringen når 100 %. Det er ikke nok at afbryde beskyttelsen midlertidigt. Sikkerhedskopiér genoprettelsesnøglen, luk Windows helt ned, og start derefter installationsprogrammet igen."
 
-msgid ""
-"Windows is hibernated or Fast Startup is active. In an Administrator "
-"Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s "
-"/t 0'. Start the installer again only after Windows has fully shut down."
-msgstr ""
-"Windows er i dvaletilstand, eller Hurtig opstart er aktiv. Kør 'powercfg /h "
-"off' i en administratorterminal, deaktiver Hurtig opstart, og kør derefter "
-"'shutdown /s /t 0'. Start installatøren igen først, når Windows er "
-"fuldstændigt slukket."
+#: src/pages.py:4682
+msgid "Windows is hibernated or Fast Startup is active. In an Administrator Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s /t 0'. Start the installer again only after Windows has fully shut down."
+msgstr "Windows er i dvaletilstand, eller Hurtig opstart er aktiv. Kør 'powercfg /h off' i en administratorterminal, deaktiver Hurtig opstart, og kør derefter 'shutdown /s /t 0'. Start installationsprogrammet igen først, når Windows er fuldstændigt slukket."
 
-msgid ""
-"Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk"
-" C: /f', allow every requested reboot to finish, then fully shut Windows "
-"down before trying again."
-msgstr ""
-"Windows lukkede ikke denne NTFS-diskenhed korrekt. Gå tilbage til Windows, "
-"kør 'chkdsk C: /f', lad alle påkrævede genstarter blive gennemført, og luk "
-"derefter Windows helt ned, før du prøver igen."
+#: src/pages.py:4694
+msgid "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk C: /f', allow every requested reboot to finish, then fully shut Windows down before trying again."
+msgstr "Windows lukkede ikke denne NTFS-diskenhed korrekt. Gå tilbage til Windows, kør 'chkdsk C: /f', lad alle påkrævede genstarter blive gennemført, og luk derefter Windows helt ned, før du prøver igen."
 
-msgid ""
-"This target would require moving critical NTFS MFT metadata through a "
-"currently unsafe upstream code path. Choose a larger Windows size or shrink "
-"the volume from Windows."
-msgstr ""
-"Denne målstørrelse ville kræve, at kritiske NTFS MFT-metadata flyttes gennem"
-" en kodevej i upstream-projektet, som i øjeblikket ikke er sikker. Vælg en "
-"større størrelse til Windows, eller formindsk diskenheden i Windows."
+#: src/pages.py:4701
+msgid "This target would require moving critical NTFS MFT metadata through a currently unsafe upstream code path. Choose a larger Windows size or shrink the volume from Windows."
+msgstr "Denne målstørrelse ville kræve, at kritiske NTFS MFT-metadata flyttes gennem en kodevej i upstream-projektet, som i øjeblikket ikke er sikker. Vælg en større størrelse til Windows, eller formindsk diskenheden i Windows."
 
-msgid ""
-"This NTFS volume is mounted or in use. Unmount it and rescan storage before "
-"continuing."
-msgstr ""
-"Denne NTFS-diskenhed er monteret eller i brug. Afmonter den og genundersøg "
-"lageret, før du fortsætter."
+#: src/pages.py:4711
+msgid "This NTFS volume is mounted or in use. Unmount it and rescan storage before continuing."
+msgstr "Denne NTFS-diskenhed er monteret eller i brug. Afmonter den og genundersøg lageret, før du fortsætter."
 
-msgid ""
-"This operation moves NTFS data and changes the GPT partition boundary. A "
-"power loss, failing drive, firmware fault or filesystem bug can cause "
-"permanent data loss. Back up all important Windows files before continuing."
-msgstr ""
-"Denne operation flytter NTFS-data og ændrer GPT-partitionens grænse. "
-"Strømafbrydelse, en defekt disk, firmwarefejl eller en fejl i filsystemet "
-"kan forårsage permanent datatab. Sikkerhedskopiér alle vigtige Windows-"
-"filer, før du fortsætter."
+#: src/pages.py:4736
+msgid "This operation moves NTFS data and changes the GPT partition boundary. A power loss, failing drive, firmware fault or filesystem bug can cause permanent data loss. Back up all important Windows files before continuing."
+msgstr "Denne operation flytter NTFS-data og ændrer GPT-partitionens grænse. Strømafbrydelse, en defekt disk, firmwarefejl eller en fejl i filsystemet kan forårsage permanent datatab. Sikkerhedskopiér alle vigtige Windows-filer, før du fortsætter."
 
+#: src/pages.py:4749
 msgid "New Windows partition size"
 msgstr "Størrelse på ny Windows-partition"
 
+#: src/pages.py:4772
 msgid "MiB"
 msgstr "MiB"
 
+#: src/pages.py:4774
 #, python-brace-format
 msgid "Allowed: {minimum}–{maximum}"
-msgstr "Allowed: {minimum}–{maximum}"
+msgstr "Tilladt: {minimum}–{maximum}"
 
+#: src/pages.py:4794
 #, python-brace-format
 msgid "Windows: {windows} · New unallocated space: {free}"
 msgstr "Windows: {windows} · Ny ikke-allokeret plads: {free}"
 
-msgid ""
-"I have backed up my data and understand that shrinking an existing Windows "
-"partition can cause permanent data loss."
-msgstr ""
-"Jeg har sikkerhedskopieret mine data og forstår, at formindskelse af en "
-"eksisterende Windows-partition kan medføre permanent datatab."
+#: src/pages.py:4826
+msgid "I have backed up my data and understand that shrinking an existing Windows partition can cause permanent data loss."
+msgstr "Jeg har sikkerhedskopieret mine data og forstår, at formindskelse af en eksisterende Windows-partition kan medføre permanent datatab."
 
+#: src/pages.py:4835
 #, python-brace-format
 msgid "Change the size of {partition}?"
 msgstr "Vil du ændre størrelsen på {partition}?"
 
-msgid ""
-"The partition start will not move. Only its end will move left, creating "
-"unallocated space immediately after it."
-msgstr ""
-"Partitionens startposition flyttes ikke. Kun slutpositionen flyttes mod "
-"venstre, så der oprettes ikke-allokeret plads umiddelbart efter partitionen."
+#: src/pages.py:4839
+msgid "The partition start will not move. Only its end will move left, creating unallocated space immediately after it."
+msgstr "Partitionens startposition flyttes ikke. Kun slutpositionen flyttes mod venstre, så der oprettes ikke-allokeret plads umiddelbart efter partitionen."
 
+#: src/pages.py:4847
 msgid "Undo Planned Resize"
 msgstr "Fortryd planlagt størrelsesændring"
 
+#: src/pages.py:4848
 msgid "Plan Resize"
 msgstr "Planlæg størrelsesændring"
 
+#: src/pages.py:4895
 msgid "Turn off BitLocker before shrinking"
 msgstr "Slå BitLocker fra, før partitionen formindskes"
 
+#: src/pages.py:4907
 #, python-brace-format
 msgid "Checking whether {partition} can be resized safely…"
 msgstr "Tjekker, om {partition} sikkert kan ændres i størrelse…"
 
+#: src/pages.py:4918
 msgid "NTFS safety check failed"
 msgstr "NTFS-sikkerhedstjek mislykkedes"
 
+#: src/pages.py:4925
 msgid "This partition cannot be resized safely"
 msgstr "Denne partition kan ikke ændres i størrelse sikkert"
 
+#: src/pages.py:4951
 msgid "New empty GPT — every existing partition will be deleted"
 msgstr "Ny tom GPT — alle eksisterende partitioner slettes"
 
+#: src/pages.py:4953
 msgid "Keep current GPT — only marked partitions are deleted"
 msgstr "Behold nuværende GPT — kun markerede partitioner slettes"
 
+#: src/pages.py:4956
 msgid "Keep Current GPT"
 msgstr "Behold nuværende GPT"
 
+#: src/pages.py:4969
 msgid "unknown"
 msgstr "ukendt"
 
+#: src/pages.py:4970
 msgid "WILL DELETE"
 msgstr "VIL SLETTE"
 
+#: src/pages.py:4970
 msgid "Preserve"
 msgstr "Bevar"
 
+#: src/pages.py:5005
 #, python-brace-format
 msgid "Planned size: {size}"
 msgstr "Planlagt størrelse: {size}"
 
+#: src/pages.py:5020
 msgid "Deleted by new GPT"
 msgstr "Slettet af ny GPT"
 
+#: src/pages.py:5022
 msgid "Undo"
 msgstr "Fortryd"
 
+#: src/pages.py:5024
 msgid "Delete"
 msgstr "Slet"
 
+#: src/pages.py:5029
 msgid "RESIZE"
-msgstr "RESIZE"
+msgstr "ÆNDR STØRRELSE"
 
+#: src/pages.py:5047
 msgid "Change Size"
 msgstr "Ændr størrelse"
 
+#: src/pages.py:5062
 msgid "This disk has no existing partitions."
 msgstr "Denne disk har ingen eksisterende partitioner."
 
+#: src/pages.py:5079
 msgid "Create a new ESP partition"
 msgstr "Opret en ny ESP-partition"
 
+#: src/pages.py:5136
 #, python-brace-format
 msgid "{size} · {start}–{end} MiB"
 msgstr "{size} · {start}–{end} MiB"
 
+#: src/pages.py:5141
 msgid "Remove"
 msgstr "Fjern"
 
+#: src/pages.py:3914 src/pages.py:3925 src/pages.py:5143
 msgid "New"
 msgstr "Ny"
 
-msgid ""
-"No new partitions yet. Add an ESP if needed, one Root partition, and "
-"optionally Swap."
-msgstr ""
-"Ingen nye partitioner endnu. Tilføj om nødvendigt en ESP, én Root-partition "
-"og eventuelt Swap."
+#: src/pages.py:5156
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
+msgstr "Ingen nye partitioner endnu. Tilføj om nødvendigt en ESP, én Root-partition og eventuelt Swap."
 
+#: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
 msgstr "{size} ved {start} MiB"
 
+#: src/pages.py:5205
 msgid "an ESP of at least 512 MiB"
 msgstr "en ESP på mindst 512 MiB"
 
+#: src/pages.py:5207
 msgid "a Root partition of at least 20 GiB"
 msgstr "en Root-partition på mindst 20 GiB"
 
+#: src/pages.py:5209
 #, python-brace-format
 msgid "Complete the plan: {requirements}."
 msgstr "Fuldfør planen: {requirements}."
 
-msgid ""
-"Layout is valid. Only the listed resizes, deletes, creates and formats will "
-"be sent to the privileged executor."
-msgstr ""
-"Layoutet er gyldigt. Kun de angivne størrelsesændringer, sletninger, "
-"oprettelser og formateringer sendes til processen med forhøjede rettigheder."
+#: src/pages.py:5222
+msgid "Layout is valid. Only the listed resizes, deletes, creates and formats will be sent to the privileged executor."
+msgstr "Layoutet er gyldigt. Kun de angivne størrelsesændringer, sletninger, oprettelser og formateringer sendes til processen med forhøjede rettigheder."
 
+#: src/pages.py:5262
 msgid "That partition role already exists."
 msgstr "Den partitionsrolle findes allerede."
 
+#: src/pages.py:5302
 msgid "Initialize a new GPT?"
 msgstr "Vil du initialisere en ny GPT?"
 
-msgid ""
-"Every existing partition and all data on this disk will be deleted. You must"
-" then create a new ESP and Root partition."
-msgstr ""
-"Alle eksisterende partitioner og alle data på denne disk vil blive slettet. "
-"Du skal derefter oprette en ny ESP- og Root-partition."
+#: src/pages.py:5304
+msgid "Every existing partition and all data on this disk will be deleted. You must then create a new ESP and Root partition."
+msgstr "Alle eksisterende partitioner og alle data på denne disk vil blive slettet. Du skal derefter oprette en ny ESP- og Root-partition."
 
+#: src/pages.py:5310
 msgid "Initialize GPT"
 msgstr "Initialisér GPT"
 
+#: src/pages.py:5346
 msgid "The selected disk changed or disappeared."
 msgstr "Den valgte disk ændrede sig eller forsvandt."
 
+#: src/pages.py:5351
 msgid "The selected disk topology changed. Select it again."
 msgstr "Topologien på den valgte disk ændrede sig. Vælg den igen."
 
+#: src/pages.py:6292 src/pages.py:6293 src/pages.py:6302
 msgid "none"
 msgstr "ingen"
 
+#: src/pages.py:6295
 #, python-brace-format
 msgid "{path}: {before} → {after} (free {reclaimed})"
-msgstr "{path}: {before} → {after} (free {reclaimed})"
+msgstr "{path}: {before} → {after} (frigivet plads: {reclaimed})"
 
+#: src/pages.py:6304
 #, python-brace-format
 msgid "{name}: {size} MiB ({start}–{end})"
 msgstr "{name}: {size} MiB ({start}–{end})"
 
+#: src/pages.py:6320
 msgid "Initialize a new empty GPT"
 msgstr "Initialisér en ny tom GPT"
 
+#: src/pages.py:6322
 msgid "Keep the current GPT"
 msgstr "Behold den nuværende GPT"
 
+#: src/pages.py:6326
 #, python-brace-format
 msgid "Reuse {path}; inspect it and never format it."
 msgstr "Genbrug {path}; inspektér den og formater aldrig den"
 
+#: src/pages.py:6330
 msgid "Create and format a new EFI System Partition."
 msgstr "Opret og formatér en ny EFI-systempartition."
 
+#: src/pages.py:6334
 msgid "Advanced manual GPT"
 msgstr "Avanceret manuel GPT"
 
+#: src/pages.py:6335
 msgid "Partition table"
 msgstr "Partitionsbord"
 
+#: src/pages.py:6337
 msgid "Deleted partitions"
 msgstr "Slettede partitioner"
 
+#: src/pages.py:6338
 msgid "Resized partitions"
 msgstr "Størrelsesændrede partitioner"
 
-msgid ""
-"Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS "
-"NVRAM entry."
-msgstr ""
-"Skriv kun EFI/AnduinOS, bevar EFI/BOOT, og opret en verificeret AnduinOS "
-"NVRAM-post."
+#: src/pages.py:6344
+msgid "Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS NVRAM entry."
+msgstr "Skriv kun EFI/AnduinOS, bevar EFI/BOOT, og opret en verificeret AnduinOS NVRAM-post."
 
+#: src/pages.py:6402
 msgid "Manual storage selection is missing. Return and review it."
 msgstr "Valg af manuel lagerplacering mangler. Gå tilbage og gennemgå det"
 
-msgid ""
-"⚠ Listed NTFS resizes will move filesystem data and partition boundaries. "
-"Listed partitions will be deleted and every listed new partition will be "
-"formatted. Back up important data first; these partitioning operations "
-"cannot be undone."
-msgstr ""
-"⚠ De angivne NTFS-størrelsesændringer vil flytte filsystemdata og "
-"partitionsgrænser. De angivne partitioner vil blive slettet, og alle angivne"
-" nye partitioner vil blive formateret. Sikkerhedskopiér vigtige data først; "
-"disse partitioneringsoperationer kan ikke fortrydes."
+#: src/pages.py:6496
+msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ De angivne NTFS-størrelsesændringer vil flytte filsystemdata og partitionsgrænser. De angivne partitioner vil blive slettet, og alle angivne nye partitioner vil blive formateret. Sikkerhedskopiér vigtige data først; disse partitioneringsoperationer kan ikke fortrydes."
 
+#: src/pages.py:6606
 msgid "Apply this manual disk layout?"
 msgstr "Anvend dette manuelle disklayout?"
 
+#: src/pages.py:6607 src/pages.py:6735
 msgid "Apply Layout and Install"
 msgstr "Anvend layoutet og installer"
 
+#: src/pages.py:6630
 #, python-brace-format
 msgid ""
 "AnduinOS will apply only the reviewed manual changes to {disk}.\n"
@@ -1962,99 +1755,74 @@ msgstr ""
 "AnduinOS anvender kun de gennemgåede manuelle ændringer på {disk}.\n"
 "\n"
 
-msgid ""
-"Only the explicitly listed partitions will be deleted or formatted. "
-"Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
-msgstr ""
-"Kun de eksplicit listede partitioner slettes eller formateres. Ikke-"
-"involverede partitioner forbliver uændrede; EFI/BOOT overskrives ikke"
+#: src/pages.py:6658
+msgid "Only the explicitly listed partitions will be deleted or formatted. Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
+msgstr "Kun de eksplicit listede partitioner slettes eller formateres. Ikke-involverede partitioner forbliver uændrede; EFI/BOOT overskrives ikke"
 
-msgid ""
-"Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
-"shrunk after safety checks."
-msgstr ""
-"Rediger én GPT-disk. Partitionernes startpositioner flyttes aldrig; "
-"almindelige NTFS-partitioner kan formindskes efter sikkerhedstjek."
+#: src/pages.py:4072
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
+msgstr "Rediger én GPT-disk. Partitionernes startpositioner flyttes aldrig; almindelige NTFS-partitioner kan formindskes efter sikkerhedstjek."
 
+#: src/pages.py:5119
 msgid "XFS (classic, scalable)"
 msgstr "XFS (klassisk, skalerbar)"
 
+#: src/pages.py:5120
 msgid "F2FS (flash-optimized)"
 msgstr "F2FS (flash-optimeret)"
-
-#: src/pages.py:3028
-msgid ""
-"ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses"
-" priority 10."
-msgstr ""
-"ZRAM forbliver altid aktiveret: 50 % af RAM · LZ4 · prioritet 100. Swap på "
-"disk bruger prioritet 10."
-
-#: src/pages.py:2900
-msgid ""
-"Disk Swap will not be created. ZRAM remains enabled, but sustained memory "
-"pressure can terminate applications and hibernation is unavailable. This is "
-"strongly discouraged."
-msgstr ""
-"Der oprettes ikke swap på disk. ZRAM forbliver aktiveret, men vedvarende "
-"hukommelsespres kan medføre, at programmer afsluttes, og dvaletilstand er "
-"ikke tilgængelig. Dette frarådes på det kraftigste."
 
 #: src/pages.py:3004
 msgid "0 GiB · ZRAM only"
 msgstr "0 GiB · kun ZRAM"
 
-#: src/pages.py:2927
-msgid ""
-"This exceeds the AnduinOS recommendation. It consumes more disk space and "
-"normally does not improve runtime performance."
-msgstr ""
-"Dette overstiger AnduinOS' anbefaling. Det optager mere diskplads og "
-"forbedrer normalt ikke systemets ydeevne under brug."
+#: src/pages.py:2900
+msgid "Disk Swap will not be created. ZRAM remains enabled, but sustained memory pressure can terminate applications and hibernation is unavailable. This is strongly discouraged."
+msgstr "Der oprettes ikke swap på disk. ZRAM forbliver aktiveret, men vedvarende hukommelsespres kan medføre, at programmer afsluttes, og dvaletilstand er ikke tilgængelig. Dette frarådes på det kraftigste."
 
-#: src/pages.py:2913
-msgid ""
-"This is below AnduinOS's runtime safety target. ZRAM still works, but heavy "
-"browser or application workloads can run out of backing memory sooner; "
-"hibernation is also unavailable."
-msgstr ""
-"Dette er under AnduinOS' sikre minimum for normal brug. ZRAM fungerer "
-"stadig, men krævende brug af browsere eller programmer kan hurtigere opbruge"
-" den tilgængelige swapplads; dvaletilstand er heller ikke tilgængelig."
-
-#: src/pages.py:6695
+#: src/pages.py:6702
 msgid "Review your custom Swap size"
 msgstr "Gennemgå din tilpassede Swap-størrelse"
+
+#: src/pages.py:2927
+msgid "This exceeds the AnduinOS recommendation. It consumes more disk space and normally does not improve runtime performance."
+msgstr "Dette overstiger AnduinOS' anbefaling. Det optager mere diskplads og forbedrer normalt ikke systemets ydeevne under brug."
+
+#: src/pages.py:2913
+msgid "This is below AnduinOS's runtime safety target. ZRAM still works, but heavy browser or application workloads can run out of backing memory sooner; hibernation is also unavailable."
+msgstr "Dette er under AnduinOS' sikre minimum for normal brug. ZRAM fungerer stadig, men krævende brug af browsere eller programmer kan hurtigere opbruge den tilgængelige swapplads; dvaletilstand er heller ikke tilgængelig."
+
+#: src/pages.py:2920
+msgid "This size protects ordinary memory pressure, but is smaller than the hibernation target. Hibernation may fail or be unavailable."
+msgstr "Denne størrelse er tilstrækkelig ved almindeligt hukommelsespres, men er mindre end den størrelse, der kræves til dvaletilstand. Dvaletilstand kan mislykkes eller være utilgængelig."
+
+#: src/pages.py:3028
+msgid "ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses priority 10."
+msgstr "ZRAM forbliver altid aktiveret: 50 % af RAM · LZ4 · prioritet 100. Swap på disk bruger prioritet 10."
+
+#: src/pages.py:6705
+msgid "ZRAM will remain enabled regardless of this choice."
+msgstr "ZRAM forbliver aktiveret uanset dette valg."
 
 #: src/pages.py:3008
 msgid "{size} GiB · Max"
 msgstr "{size} GiB · Maks"
 
-#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:10
-msgid "Read exact disk partition geometry for the AnduinOS installer"
-msgstr ""
-"Læs diskpartitionernes nøjagtige placeringer og størrelser til AnduinOS-"
-"installationsprogrammet"
-
-#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:11
-msgid "Authorization is required to inspect disk partition geometry"
-msgstr ""
-"Godkendelse kræves for at kontrollere diskpartitionernes nøjagtige "
-"placeringer og størrelser"
-
-#: src/pages.py:2920
-msgid ""
-"This size protects ordinary memory pressure, but is smaller than the "
-"hibernation target. Hibernation may fail or be unavailable."
-msgstr ""
-"Denne størrelse er tilstrækkelig ved almindeligt hukommelsespres, men er "
-"mindre end den størrelse, der kræves til dvaletilstand. Dvaletilstand kan "
-"mislykkes eller være utilgængelig."
-
 #: src/pages.py:2895
 msgid "✓ Best performance — AnduinOS recommended Swap size."
 msgstr "✓ Bedste ydeevne — AnduinOS' anbefalede Swap-størrelse."
 
-#: src/pages.py:6698
-msgid "ZRAM will remain enabled regardless of this choice."
-msgstr "ZRAM forbliver aktiveret uanset dette valg."
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:11
+msgid "Authorization is required to inspect disk partition geometry"
+msgstr "Godkendelse kræves for at kontrollere diskpartitionernes nøjagtige placeringer og størrelser"
+
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:10
+msgid "Read exact disk partition geometry for the AnduinOS installer"
+msgstr "Læs diskpartitionernes nøjagtige placeringer og størrelser til AnduinOS-installationsprogrammet"
+
+#: assets/anduinos-installer-beta-live-shortcut.desktop:3
+msgid "Prepare and start AnduinOS Installer"
+msgstr "Forbered og start AnduinOS-installationsprogrammet"
+
+#: assets/anduinos-installer-beta.desktop:59
+msgid "Install AnduinOS to your computer"
+msgstr "Installer AnduinOS på din computer"

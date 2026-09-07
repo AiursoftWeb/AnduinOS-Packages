@@ -63,24 +63,28 @@ const UI_DBUS_XML = `
   </interface>
 </node>`;
 
+// Extraction-only marker: gettext requires an initialized extension instance.
+// Keep raw msgids here and translate them at the runtime display call sites.
+const N_ = text => text;
+
 const STATE_TEXT = {
-    idle: 'Ready',
-    preparing: 'Preparing recognition…',
-    calibrating: 'Measuring performance — microphone off',
-    listening: 'Listening…',
-    recognizing: 'Recognizing…',
-    finishing: 'Finishing recognition…',
-    testing: 'Testing microphone…',
-    'no-speech': 'No speech detected',
-    error: 'Microphone unavailable',
+    idle: N_('Ready'),
+    preparing: N_('Preparing recognition…'),
+    calibrating: N_('Measuring performance — microphone off'),
+    listening: N_('Listening…'),
+    recognizing: N_('Recognizing…'),
+    finishing: N_('Finishing recognition…'),
+    testing: N_('Testing microphone…'),
+    'no-speech': N_('No speech detected'),
+    error: N_('Microphone unavailable'),
 };
 
 const LANGUAGE_TEXT = {
-    auto: 'Auto', zh: 'Simplified Chinese',
-    'zh-Hans': 'Simplified Chinese', 'zh-Hant': 'Traditional Chinese',
-    en: 'English', es: 'Spanish',
-    fr: 'French', de: 'German', ja: 'Japanese', ko: 'Korean',
-    ru: 'Russian', pt: 'Portuguese',
+    auto: N_('Auto'), zh: N_('Simplified Chinese'),
+    'zh-Hans': N_('Simplified Chinese'), 'zh-Hant': N_('Traditional Chinese'),
+    en: N_('English'), es: N_('Spanish'),
+    fr: N_('French'), de: N_('German'), ja: N_('Japanese'), ko: N_('Korean'),
+    ru: N_('Russian'), pt: N_('Portuguese'),
 };
 
 export default class VoiceTypingExtension extends Extension {

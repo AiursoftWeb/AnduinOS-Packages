@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Panneau de configuration"
 
@@ -123,7 +124,7 @@ msgstr "Non installé"
 
 #: src/anduinos_control_panel/app.py:317
 msgid "Configure microphone, language, shortcut, and training"
-msgstr "Configurer le microphone, la langue, le raccourci et l’entraînement"
+msgstr "Configurer le microphone, la langue, le raccourci et l’étalonnage"
 
 #: src/anduinos_control_panel/app.py:319
 msgid "Install private, offline speech-to-text"
@@ -223,7 +224,7 @@ msgstr "Échec de l’installation"
 
 #: src/anduinos_control_panel/app.py:635
 msgid "Startup and Boot"
-msgstr "Démarrage et boot"
+msgstr "Démarrage du système"
 
 #: src/anduinos_control_panel/app.py:653
 msgid "Boot menu"
@@ -467,8 +468,8 @@ msgid ""
 "other applications. Audio stays on this computer."
 msgstr ""
 "Appuyez sur Super + H pour dicter dans les navigateurs, les éditeurs, les "
-"applications de messagerie, les terminaux et d'autres applications. L'audio "
-"reste sur cet ordinateur."
+"applications de messagerie, les terminaux et d'autres applications. Les "
+"données audio restent sur cet ordinateur."
 
 #: src/anduinos_control_panel/app.py:1274
 msgid "Private by default"
@@ -548,7 +549,7 @@ msgstr "Activer la pile IA locale Why AI sur cet ordinateur"
 
 #: src/anduinos_control_panel/app.py:1586
 msgid "Applying…"
-msgstr "Application…"
+msgstr "Application en cours…"
 
 #: src/anduinos_control_panel/app.py:1588
 msgid "Downloading and installing Why AI… This may take about 10 minutes."
@@ -616,6 +617,24 @@ msgstr "Équipe AnduinOS"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "Rechercher et gérer les paramètres système d’AnduinOS."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr "paramètres;configuration;système;matériel;pilotes;comptes;sauvegarde;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "Modifier les paramètres du menu de démarrage"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr ""
+"L’authentification est requise pour modifier les paramètres du menu de "
+"démarrage"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "Rechercher et gérer les paramètres système d’AnduinOS"
 
 #: src/anduinos_control_panel/app.py
 msgid "Authentication is required to read the boot menu."

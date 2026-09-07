@@ -58,23 +58,23 @@ msgstr "Sovellusprofiilit"
 msgid "Audit"
 msgstr "Rekisteri"
 
-#: src/views/network_audit_view.rs:277
+#: src/views/network_audit_view.rs:278
 msgid "Auditor Error"
 msgstr "Tarkastajan virhe"
 
-#: src/views/network_audit_view.rs:504
+#: src/views/network_audit_view.rs:505
 msgid "Block"
 msgstr "Estä"
 
-#: src/views/network_audit_view.rs:500
+#: src/views/network_audit_view.rs:501
 msgid "Block Connection?"
 msgstr "Estä yhteys?"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid "Block inbound traffic from"
 msgstr "Estä saapuva liikenne kohteesta"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid "Block outbound traffic to"
 msgstr "Estä lähtevä liikanne kohteeseen"
 
@@ -82,7 +82,7 @@ msgstr "Estä lähtevä liikanne kohteeseen"
 msgid "Blocked Events"
 msgstr "Estetyt tapahtumat"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Blocked Successfully"
 msgstr "Estetty onnistuneesti"
 
@@ -90,7 +90,7 @@ msgstr "Estetty onnistuneesti"
 msgid "Both"
 msgstr "Molemmat"
 
-#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/views/network_audit_view.rs:504 src/views/rules_view.rs:121
 #: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "Peruuta"
@@ -188,11 +188,12 @@ msgstr "Suunta"
 msgid "Error"
 msgstr "Virhe"
 
-#: src/views/network_audit_view.rs:554
+#: src/views/network_audit_view.rs:555
 msgid "Failed to Block"
 msgstr "Estäminen epäonnistui"
 
 #: src/views/status_view.rs:95 src/window.rs:64
+#: data/com.anduinos.ufwall.desktop:29 data/com.anduinos.ufwall.desktop:57
 msgid "Firewall"
 msgstr "Palomuuri"
 
@@ -345,7 +346,7 @@ msgstr "Hylkää"
 msgid "Resolve Domains"
 msgstr "Nimeä alueet"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Rule added to block"
 msgstr "Sääntö lisätty estoon"
 
@@ -394,12 +395,12 @@ msgid "This will delete all custom rules. This action cannot be undone."
 msgstr ""
 "Tämä poistaa kaikki mukautetut säännöt. Tätä toimintoa ei voi peruuttaa."
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr "Tämä estää etäkoneen lähettämästä paketteja koneeseesi."
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr "Tämä estää konettasi lähettämästä paketteja etäkoneelle."
@@ -490,7 +491,7 @@ msgstr "Tiedostojen verkkojärjestelmä (NFS)"
 
 #: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
-msgstr "Portti / Protokolla"
+msgstr "Verkkoaikaprotokolla"
 
 #: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
@@ -514,7 +515,7 @@ msgstr "PostgreSQL-tietokantapalvelin"
 
 #: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
-msgstr "Portti / Protokolla"
+msgstr "Etätyöpöytäprotokolla"
 
 #: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
@@ -536,7 +537,7 @@ msgstr "Virtual Network Computing -kauko työpöytä"
 msgid "Windows file and printer sharing"
 msgstr "Windows-tiedostojen ja tulostinten jako"
 
-#: src/views/network_audit_view.rs:534
+#: src/views/network_audit_view.rs:535
 msgid "Audit Block"
 msgstr "Tarkastus: Estetty"
 
@@ -606,27 +607,27 @@ msgstr ""
 msgid "Network service command failed"
 msgstr "Verkkopalvelukomento epäonnistui"
 
-#: src/views/network_audit_view.rs:371
+#: src/views/network_audit_view.rs:372
 msgid "No Active Connections"
 msgstr "Ei aktiivisia yhteyksiä"
 
-#: src/views/network_audit_view.rs:361
+#: src/views/network_audit_view.rs:362
 msgid "No Inbound Connections"
 msgstr "Ei saapuvia yhteyksiä"
 
-#: src/views/network_audit_view.rs:366
+#: src/views/network_audit_view.rs:367
 msgid "No Outbound Connections"
 msgstr "Ei lähteviä yhteyksiä"
 
-#: src/views/network_audit_view.rs:367
+#: src/views/network_audit_view.rs:368
 msgid "No applications are sending data to the internet."
 msgstr "Yksikään sovellus ei lähetä tietoja internetiin."
 
-#: src/views/network_audit_view.rs:362
+#: src/views/network_audit_view.rs:363
 msgid "No external devices are connecting to your open ports."
 msgstr "Ei ulkoisia laitteita, jotka yhdistyvät avoimiin portteihisi."
 
-#: src/views/network_audit_view.rs:372
+#: src/views/network_audit_view.rs:373
 msgid "No network activity detected."
 msgstr "Verkkotoimintaa ei havaittu."
 
@@ -646,6 +647,10 @@ msgstr "Lähetys"
 msgid "pkexec failed"
 msgstr "pkexec epäonnistui"
 
+#: data/com.anduinos.ufwall.desktop:124
+msgid "firewall;ufw;security;network;"
+msgstr "palomuuri;ufw;tietoturva;verkko;"
+
 #: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:82
 msgid "Authentication is required to change local network discovery"
 msgstr "Paikallisen verkon havaitsemisen muuttaminen vaatii todennuksen"
@@ -653,3 +658,15 @@ msgstr "Paikallisen verkon havaitsemisen muuttaminen vaatii todennuksen"
 #: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:80
 msgid "Manage local network discovery"
 msgstr "Hallitse paikallisen verkon havaitsemista"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:39
+msgid "Authentication is required to modify firewall settings"
+msgstr "Palomuurin asetusten muuttaminen vaatii todennuksen"
+
+#: data/com.anduinos.ufwall.desktop:85
+msgid "Configure your firewall"
+msgstr "Määritä palomuurisi"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:9
+msgid "Manage UFW firewall settings"
+msgstr "Hallinnoi UFW-palomuurin asetuksia"

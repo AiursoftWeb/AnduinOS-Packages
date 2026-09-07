@@ -17,15 +17,11 @@ msgid "A critical threshold is failing now"
 msgstr "当前有一项关键指标未达到阈值"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
-msgid ""
-"A limited balance improves allocation layout. It does not check file "
-"integrity or guarantee that visible free space will increase."
+msgid "A limited balance improves allocation layout. It does not check file integrity or guarantee that visible free space will increase."
 msgstr "空间优化会改善磁盘空间的分配方式，但不会检查文件完整性，也不保证可用空间一定增加。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
-msgid ""
-"A limited balance only relocates data and metadata block groups that are at "
-"most 50% full."
+msgid "A limited balance only relocates data and metadata block groups that are at most 50% full."
 msgstr "空间优化只迁移使用率不超过 50% 的数据和元数据块组。"
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
@@ -42,7 +38,7 @@ msgstr "过去曾有一项指标超过阈值"
 
 #: src/btrfs-snapshots-manager/src/ui/mod.rs
 msgid "About Disk Snapshots Manager"
-msgstr "关于 Disk Snapshots Manager"
+msgstr "关于磁盘快照管理器"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "About {0} remaining"
@@ -244,14 +240,8 @@ msgid "Btrfs did not start a new maintenance task"
 msgstr "Btrfs 未能启动新的维护任务"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Btrfs does not provide an on/off real-time deduplication switch. Tools such "
-"as duperemove and BEES use different strategies, resource limits, and scan "
-"scopes. Disk Snapshots Manager will not silently install or run one without "
-"a complete policy."
-msgstr ""
-"Btrfs 不提供可直接开关的实时重复数据删除。duperemove 和 BEES 等工具具有不同的策略、资源限制和扫描范围。Disk "
-"Snapshots Manager 不会在缺少完整策略时静默安装或运行这些工具。"
+msgid "Btrfs does not provide an on/off real-time deduplication switch. Tools such as duperemove and BEES use different strategies, resource limits, and scan scopes. Disk Snapshots Manager will not silently install or run one without a complete policy."
+msgstr "Btrfs 不提供可直接开关的实时重复数据删除。duperemove 和 BEES 等工具具有不同的策略、资源限制和扫描范围。Disk Snapshots Manager 不会在缺少完整策略时静默安装或运行这些工具。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Btrfs examined {0} block groups and relocated {1}."
@@ -262,15 +252,11 @@ msgid "Btrfs finished relocating underused data and metadata block groups."
 msgstr "Btrfs 已完成低利用率数据和元数据块组的迁移。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
-msgid ""
-"Btrfs finished rewriting eligible file extents below /home with ZSTD "
-"compression."
+msgid "Btrfs finished rewriting eligible file extents below /home with ZSTD compression."
 msgstr "Btrfs 已使用 ZSTD 压缩重写 /home 下适合处理的文件区段。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid ""
-"Btrfs found errors that could not be repaired. Back up important files and "
-"investigate the storage device."
+msgid "Btrfs found errors that could not be repaired. Back up important files and investigate the storage device."
 msgstr "Btrfs 发现了无法修复的错误。请备份重要文件并进一步检查存储设备。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
@@ -290,9 +276,7 @@ msgid "Btrfs request completed"
 msgstr "Btrfs 请求已完成"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Btrfs will scan existing subvolumes in the background. Size statistics may "
-"remain incomplete until the scan finishes."
+msgid "Btrfs will scan existing subvolumes in the background. Size statistics may remain incomplete until the scan finishes."
 msgstr "Btrfs 将在后台扫描现有子卷。扫描完成前，空间统计可能不完整。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -372,9 +356,7 @@ msgid "Choose a local filesystem destination."
 msgstr "请选择本地文件系统中的目标位置。"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
-msgid ""
-"Choose an earlier version to browse or recover. Your current files will not "
-"be changed automatically."
+msgid "Choose an earlier version to browse or recover. Your current files will not be changed automatically."
 msgstr "选择一个早期版本进行浏览或恢复。当前文件不会被自动更改。"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
@@ -486,15 +468,11 @@ msgid "Defragment Home files?"
 msgstr "整理用户目录文件？"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
-msgid ""
-"Defragmentation can increase disk usage when files share data with snapshots"
-" or reflinks."
+msgid "Defragmentation can increase disk usage when files share data with snapshots or reflinks."
 msgstr "如果文件与快照或 reflink 共享数据，碎片整理可能会增加磁盘占用。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
-msgid ""
-"Defragmentation rewrites file extents and can increase disk usage by "
-"breaking shared snapshot or reflink data."
+msgid "Defragmentation rewrites file extents and can increase disk usage by breaking shared snapshot or reflink data."
 msgstr "碎片整理会重写文件区段，可能打破快照或 reflink 的数据共享并增加磁盘占用。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
@@ -573,6 +551,8 @@ msgstr "无法获取磁盘健康信息"
 #: src/btrfs-snapshots-manager/src/application.rs
 #: src/btrfs-snapshots-manager/src/ui/mod.rs
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:29
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:6
 msgid "Disk Snapshots Manager"
 msgstr "磁盘快照管理器"
 
@@ -678,9 +658,7 @@ msgid "Forever"
 msgstr "永久"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Four copies on separate devices · damaged copies can be repaired "
-"automatically"
+msgid "Four copies on separate devices · damaged copies can be repaired automatically"
 msgstr "在不同硬盘保存四份 · 副本损坏时可以自动修复"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
@@ -825,9 +803,7 @@ msgid "Media errors"
 msgstr "介质错误"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Mirrored and striped across devices · redundant copies are available for "
-"repair"
+msgid "Mirrored and striped across devices · redundant copies are available for repair"
 msgstr "数据镜像并分散存储在多块硬盘 · 可使用备用副本修复"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -847,8 +823,7 @@ msgid "No errors detected so far"
 msgstr "目前未检测到错误"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid ""
-"No file system integrity errors were found in allocated data and metadata."
+msgid "No file system integrity errors were found in allocated data and metadata."
 msgstr "在已分配的数据和元数据中未发现文件系统完整性错误。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
@@ -924,8 +899,7 @@ msgid "Older snapshots are kept less frequently to save disk space."
 msgstr "较旧的快照会逐渐降低保留频率，以节省磁盘空间。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"One copy · damage can be detected, but there is no spare copy for repair"
+msgid "One copy · damage can be detected, but there is no spare copy for repair"
 msgstr "只存一份 · 可以检测损坏，但没有备用副本用于修复"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
@@ -937,9 +911,7 @@ msgid "Only /home · snapshot storage is excluded"
 msgstr "仅限 /home · 不处理快照存储"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
-msgid ""
-"Only block groups at most 50% full will be relocated. The operation can use "
-"significant disk bandwidth but can be cancelled safely."
+msgid "Only block groups at most 50% full will be relocated. The operation can use significant disk bandwidth but can be cancelled safely."
 msgstr "仅移动使用率不超过 50% 的块组。此操作可能占用大量磁盘带宽，但可以安全取消。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
@@ -947,8 +919,7 @@ msgid "Only partial S.M.A.R.T. data was returned"
 msgstr "磁盘仅返回了部分 S.M.A.R.T. 数据"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
-msgid ""
-"Only physical drives backing the current root Btrfs file system are shown."
+msgid "Only physical drives backing the current root Btrfs file system are shown."
 msgstr "仅显示承载当前根 Btrfs 文件系统的物理磁盘。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -1032,9 +1003,7 @@ msgid "Preparing safe rollback…"
 msgstr "正在准备安全回滚…"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Preparing the rollback will arm recovery immediately and automatically "
-"restart this computer within 60 seconds. Save your work before continuing."
+msgid "Preparing the rollback will arm recovery immediately and automatically restart this computer within 60 seconds. Save your work before continuing."
 msgstr "准备回滚后，恢复事务将立即生效，并在 60 秒内自动重启此计算机。继续前请保存工作。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -1046,9 +1015,7 @@ msgid "Protected while the rollback is pending"
 msgstr "在回滚事务进行期间受保护"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Quota accounting provides shared and exclusive sizes for subvolumes, but its"
-" initial scan can take time."
+msgid "Quota accounting provides shared and exclusive sizes for subvolumes, but its initial scan can take time."
 msgstr "配额统计可以提供子卷的共享和独占大小，但初始扫描可能需要一些时间。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
@@ -1192,16 +1159,11 @@ msgid "Roll Back to {0}?"
 msgstr "回滚到 {0}？"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Rollback confirmation failed. The protected previous system is being "
-"restored."
+msgid "Rollback confirmation failed. The protected previous system is being restored."
 msgstr "回滚确认失败，正在恢复受保护的先前系统。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Rollback is armed. To prevent new system changes from being lost, this "
-"computer will restart automatically when the 60-second countdown ends. Save "
-"any open personal files now."
+msgid "Rollback is armed. To prevent new system changes from being lost, this computer will restart automatically when the 60-second countdown ends. Save any open personal files now."
 msgstr "回滚事务已就绪。为防止新的系统更改丢失，此计算机将在 60 秒倒计时结束后自动重启。请立即保存所有打开的个人文件。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -1213,8 +1175,7 @@ msgid "Rollback to {0} is ready. Restart to apply it."
 msgstr "已准备回滚到 {0}，重启后即可应用。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Rollback to {0} was applied, but system confirmation has not completed."
+msgid "Rollback to {0} was applied, but system confirmation has not completed."
 msgstr "已应用到 {0} 的回滚，但系统确认尚未完成。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
@@ -1256,15 +1217,11 @@ msgid "Scanning data and metadata…"
 msgstr "正在扫描数据和元数据…"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
-msgid ""
-"Scrub reads allocated data and metadata, verifies checksums, and reports "
-"damage without modifying file data."
+msgid "Scrub reads allocated data and metadata, verifies checksums, and reports damage without modifying file data."
 msgstr "Scrub 会读取已分配的数据和元数据、验证校验和，并在不修改文件数据的情况下报告损坏。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid ""
-"Scrub verifies allocated Btrfs data and metadata. It does not test unused "
-"space or predict sudden drive failure."
+msgid "Scrub verifies allocated Btrfs data and metadata. It does not test unused space or predict sudden drive failure."
 msgstr "Scrub 会验证已分配的 Btrfs 数据和元数据，但不会测试未使用空间，也无法预测硬盘突然故障。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -1288,9 +1245,7 @@ msgid "Selected file · {0}"
 msgstr "选中的文件 · {0}"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Shared and exclusive size statistics and any subvolume limits will be "
-"removed. Snapshots themselves are not deleted."
+msgid "Shared and exclusive size statistics and any subvolume limits will be removed. Snapshots themselves are not deleted."
 msgstr "共享和独占大小统计及所有子卷限额将被移除，快照本身不会被删除。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -1526,9 +1481,7 @@ msgid "The root filesystem is {0}."
 msgstr "根文件系统为 {0}。"
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid ""
-"The scheduled Home snapshot could not be created. Check Disk Snapshots "
-"Manager for details."
+msgid "The scheduled Home snapshot could not be created. Check Disk Snapshots Manager for details."
 msgstr "计划的主目录快照创建失败。请查看磁盘快照管理器以获取详细信息。"
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
@@ -1536,9 +1489,7 @@ msgid "The scheduled Home snapshot was created successfully."
 msgstr "计划的用户目录快照创建成功。"
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid ""
-"The scheduled system snapshot could not be created. Check Disk Snapshots "
-"Manager for details."
+msgid "The scheduled system snapshot could not be created. Check Disk Snapshots Manager for details."
 msgstr "计划的系统快照创建失败。请查看磁盘快照管理器以获取详细信息。"
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
@@ -1590,12 +1541,8 @@ msgid "This item was not present in the available Home snapshots."
 msgstr "可用的用户目录快照中没有此项目。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
-msgid ""
-"This rewrites files below /home using ZSTD compression. It does not enter "
-"/.snapshots, but shared extents with existing snapshots may become private "
-"and consume more space."
-msgstr ""
-"此操作会使用 ZSTD 压缩重写 /home 下的文件。它不会进入 /.snapshots，但与现有快照共享的区段可能变为独占并占用更多空间。"
+msgid "This rewrites files below /home using ZSTD compression. It does not enter /.snapshots, but shared extents with existing snapshots may become private and consume more space."
+msgstr "此操作会使用 ZSTD 压缩重写 /home 下的文件。它不会进入 /.snapshots，但与现有快照共享的区段可能变为独占并占用更多空间。"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "This snapshot is available for recovery."
@@ -1606,9 +1553,7 @@ msgid "This snapshot is not available for recovery."
 msgstr "此快照不能用于恢复。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Three copies on separate devices · damaged copies can be repaired "
-"automatically"
+msgid "Three copies on separate devices · damaged copies can be repaired automatically"
 msgstr "在不同硬盘保存三份 · 副本损坏时可以自动修复"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
@@ -1640,14 +1585,11 @@ msgid "Try a different name, date, or snapshot reason."
 msgstr "请尝试其他名称、日期或快照原因。"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Two copies on separate devices · a damaged copy can be repaired "
-"automatically"
+msgid "Two copies on separate devices · a damaged copy can be repaired automatically"
 msgstr "在不同硬盘保存两份 · 单份损坏时可以自动修复"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Two copies on this device · a damaged copy can be repaired automatically"
+msgid "Two copies on this device · a damaged copy can be repaired automatically"
 msgstr "同一硬盘保存两份 · 单份损坏时可以自动修复"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
@@ -1822,29 +1764,119 @@ msgstr "{0}% · 警告阈值 {1}%"
 msgid "{0}/s"
 msgstr "{0}/秒"
 
-#: data/org.anduinos.BtrfsSnapshotsManager.desktop:41
-msgid ""
-"snapshot;snapshots;restore;recovery;btrfs;rollback;backup;backups;time "
-"machine;file history;deleted files;"
-msgstr ""
-"快照;备份;还原;恢复;回滚;系统恢复;文件恢复;个人文件;文件历史;误删文件;btrfs;snapshot;restore;recovery;backup;"
-
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:38
 msgid "backup"
 msgstr "备份"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:41
+msgid "snapshot;snapshots;restore;recovery;btrfs;rollback;backup;backups;time machine;file history;deleted files;"
+msgstr "快照;备份;还原;恢复;回滚;系统恢复;文件恢复;个人文件;文件历史;误删文件;btrfs;snapshot;restore;recovery;backup;"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:24
+msgid "Authentication is required to delete a system snapshot"
+msgstr "删除系统快照需要身份验证"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:82
+msgid "Override the Home snapshot creation limit"
+msgstr "绕过主目录快照创建频率限制"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:11
+msgid "A system rollback validates the selected snapshot, protects a current-system fallback while the transaction is pending, and prepares a verified one-shot GRUB entry. Personal Files are explicitly unchanged."
+msgstr "系统回滚会验证所选快照，在回滚事务进行期间保护当前系统作为回退，并准备经过验证的一次性 GRUB 启动项。个人文件明确保持不变。"
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:37
 msgid "btrfs"
 msgstr "btrfs"
 
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:36
+msgid "Authentication is required to access or restore a system snapshot"
+msgstr "访问或还原系统快照需要身份验证"
+
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:36
 msgid "recovery"
 msgstr "恢复"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:3
+msgid "Disk Snapshots Manager Notifications"
+msgstr "磁盘快照管理器通知"
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:35
 msgid "restore"
 msgstr "还原"
 
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:10
+msgid "Disk Snapshots Manager creates immutable Btrfs system snapshots for the AnduinOS system and independent snapshots for Personal Files."
+msgstr "磁盘快照管理器为 AnduinOS 系统创建不可变的 Btrfs 系统快照，并为个人文件创建独立快照。"
+
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:34
 msgid "snapshot"
 msgstr "快照"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:5
+msgid "Show system snapshot notifications"
+msgstr "显示系统快照通知"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:30
+msgid "System Recovery and File History"
+msgstr "系统恢复与文件历史"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:84
+msgid "Authentication is required to create more than four Home snapshots per minute"
+msgstr "每分钟创建超过四个主目录快照需要身份验证"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:70
+msgid "Create a Home history snapshot"
+msgstr "创建主目录历史快照"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:72
+msgid "A local active user may create a Home history snapshot"
+msgstr "当前处于活动状态的本地用户可以创建主目录历史快照"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:12
+msgid "Independent Home snapshots capture the @home subvolume on a separate schedule. Users can browse earlier versions and recover files or folders without rolling back the operating system."
+msgstr "独立的主目录快照按单独的计划为 @home 子卷创建快照。用户无需回滚操作系统，即可浏览早期版本并恢复文件或文件夹。"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:13
+msgid "Nautilus provides File History actions for one selected home item and for a folder background, opening a focused Disk Snapshots Manager window for earlier versions and deleted files."
+msgstr "Nautilus 会为主目录中选中的单个项目及文件夹空白处提供“文件历史”操作，并打开一个专门的“磁盘快照管理器”窗口，用于浏览早期版本和已删除的文件。"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:60
+msgid "Authentication is required to access historical Personal Files"
+msgstr "访问个人文件历史需要身份验证"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:46
+msgid "Configure AnduinOS recovery"
+msgstr "配置 AnduinOS 系统恢复"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:12
+msgid "Authentication is required to create a system snapshot"
+msgstr "创建系统快照需要身份验证"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:22
+msgid "Delete an AnduinOS system snapshot"
+msgstr "删除 AnduinOS 系统快照"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:48
+msgid "Authentication is required to change recovery settings"
+msgstr "更改恢复设置需要身份验证"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:14
+msgid "Automatic schedules can show desktop notifications after successful creation, while retention cleanup is reported as one quiet aggregate notification."
+msgstr "自动计划可在成功创建快照后显示桌面通知；按保留策略清理旧快照时，则只显示一条低干扰的汇总通知。"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:58
+msgid "Browse and export historical Personal Files"
+msgstr "浏览和导出个人文件历史"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:34
+msgid "Access or restore an AnduinOS system snapshot"
+msgstr "访问或还原 AnduinOS 系统快照"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:32
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:7
+msgid "Recover AnduinOS and restore deleted Personal Files"
+msgstr "恢复 AnduinOS 并还原已删除的个人文件"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
+msgid "Create an AnduinOS system snapshot"
+msgstr "创建 AnduinOS 系统快照"

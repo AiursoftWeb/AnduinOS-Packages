@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Kontrolpanel"
 
@@ -263,7 +264,8 @@ msgstr "Visningstilstand"
 #: src/anduinos_control_panel/app.py:684
 msgid "Native resolution shows more detail; large text is easier to read."
 msgstr ""
-"Native opløsning viser flere detaljer; stort skrift er lettere at læse."
+"Skærmens oprindelige opløsning viser flere detaljer; stor tekst er lettere "
+"at læse."
 
 #: src/anduinos_control_panel/app.py:692
 msgid "Native resolution"
@@ -524,8 +526,8 @@ msgid ""
 "Run the Why AI assistant locally. The model and runtime are installed only "
 "when this option is enabled."
 msgstr ""
-"Kør Why AI-assistenten på denne computer. Modellen og runtime installeres "
-"kun, når dette valg er aktiveret."
+"Kør Why AI-assistenten på denne computer. Modellen og kørselsmiljøet "
+"installeres kun, når dette valg er aktiveret."
 
 #: src/anduinos_control_panel/app.py:1491
 msgid "Install on-device AI"
@@ -604,9 +606,22 @@ msgstr "AnduinOS-teamet"
 msgid "Find and manage AnduinOS system settings."
 msgstr "Find og administrér AnduinOS-systemindstillinger."
 
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr ""
+"indstillinger;kontrol;system;hardware;drivere;konti;sikkerhedskopiering;"
+
 #: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
 msgid "Change boot menu settings"
 msgstr "Ændre bootmenuindstillingerne"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr "Autentificering kræves for at ændre bootmenuindstillingerne"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "Find og administrér AnduinOS-systemindstillinger"
 
 #: src/anduinos_control_panel/app.py
 msgid "Authentication is required to read the boot menu."

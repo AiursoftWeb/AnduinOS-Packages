@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "แผงควบคุม"
 
@@ -123,7 +124,7 @@ msgstr "ไม่ได้ติดตั้ง"
 
 #: src/anduinos_control_panel/app.py:317
 msgid "Configure microphone, language, shortcut, and training"
-msgstr "กำหนดค่าไมโครโฟน ภาษา คีย์ลัด และการฝึก"
+msgstr "กำหนดค่าไมโครโฟน ภาษา คีย์ลัด และการปรับเทียบ"
 
 #: src/anduinos_control_panel/app.py:319
 msgid "Install private, offline speech-to-text"
@@ -350,7 +351,7 @@ msgstr "กำลังติดตั้ง…"
 
 #: src/anduinos_control_panel/app.py:980
 msgid "Downloading and installing Bottles… This may take a few minutes."
-msgstr "กำลังดาวน์โหลดและติดตั้ง Bottles… อาจใช้เวลาหลายนาที"
+msgstr "กำลังดาวน์โหลดและติดตั้ง Bottles… อาจใช้เวลาสักสองสามนาที"
 
 #: src/anduinos_control_panel/app.py:985
 msgid "Preparing Flathub and Bottles installation…"
@@ -457,7 +458,8 @@ msgid ""
 "other applications. Audio stays on this computer."
 msgstr ""
 "กด Super + H เพื่อพิมพ์ด้วยเสียงในเบราว์เซอร์ โปรแกรมแก้ไข ข้อความ "
-"เทอร์มินัล และแอปพลิเคชันอื่น ๆ เสียงจะอยู่บนคอมพิวเตอร์เครื่องนี้เท่านั้น"
+"เทอร์มินัล และแอปพลิเคชันอื่น ๆ "
+"ข้อมูลเสียงจะประมวลผลบนคอมพิวเตอร์เครื่องนี้และจะไม่ถูกส่งออกไปภายนอก"
 
 #: src/anduinos_control_panel/app.py:1274
 msgid "Private by default"
@@ -502,7 +504,9 @@ msgstr "เปิดการตั้งค่า"
 
 #: src/anduinos_control_panel/app.py:1435
 msgid "Voice Typing installed — sign out to finish"
-msgstr "ติดตั้งการพิมพ์ด้วยเสียงแล้ว — ออกจากระบบเพื่อเสร็จสิ้น"
+msgstr ""
+"ติดตั้งการพิมพ์ด้วยเสียงแล้ว — "
+"ออกจากระบบเพื่อดำเนินการติดตั้งให้เสร็จสมบูรณ์"
 
 #: src/anduinos_control_panel/app.py:1466
 msgid "On-device AI"
@@ -595,6 +599,22 @@ msgstr "ทีม AnduinOS"
 
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
+msgstr "ค้นหาและจัดการการตั้งค่าระบบของ AnduinOS"
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr "การตั้งค่า;ควบคุม;ระบบ;ฮาร์ดแวร์;ไดรเวอร์;บัญชี;การสำรองข้อมูล;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "เปลี่ยนการตั้งค่าเมนูการบูต"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr "จำเป็นต้องมีการตรวจสอบสิทธิ์เพื่อเปลี่ยนการตั้งค่าเมนูการบูต"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
 msgstr "ค้นหาและจัดการการตั้งค่าระบบของ AnduinOS"
 
 #: src/anduinos_control_panel/app.py

@@ -17,19 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/window.rs:2020
+#: src/window.rs:2022
 msgid "1 identity is currently available to SSH applications."
 msgstr "目前有 1 個身份可供 SSH 應用程式使用。"
 
-#: src/window.rs:2304
+#: src/window.rs:2306
 msgid "1 resident SSH key is available from your connected YubiKey."
 msgstr "已連接的 YubiKey 中有 1 個駐留式 SSH 金鑰可用。"
 
-#: src/window.rs:1814
+#: src/window.rs:1816
 msgid "1 resident SSH key · {0}"
 msgstr "1 個駐留式 SSH 金鑰 · {0}"
 
-#: src/window.rs:1474 src/window.rs:1652
+#: src/window.rs:1476 src/window.rs:1654
 msgid "A key must be connected before it can be enrolled."
 msgstr "必須先連接金鑰，才能進行註冊。"
 
@@ -37,55 +37,55 @@ msgstr "必須先連接金鑰，才能進行註冊。"
 msgid "About"
 msgstr "關於"
 
-#: src/home.rs:381 src/home.rs:402
+#: src/home.rs:383 src/home.rs:404
 msgid "Account password"
 msgstr "帳戶密碼"
 
-#: src/window.rs:2490
+#: src/window.rs:2492
 msgid "Add another SSH key"
 msgstr "新增另一個 SSH 金鑰"
 
-#: src/window.rs:1314
+#: src/window.rs:1316
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "將此公開金鑰新增至 GitHub 作為簽署金鑰。"
 
-#: src/home.rs:336 src/home.rs:389
+#: src/home.rs:338 src/home.rs:391
 msgid "Administrator access"
 msgstr "管理員存取權限"
 
-#: src/window.rs:2667
+#: src/window.rs:2669
 msgid "Advanced options"
 msgstr "進階選項"
 
-#: src/window.rs:2619
+#: src/window.rs:2621
 msgid "Algorithm"
 msgstr "演算法"
 
-#: src/window.rs:1582
+#: src/window.rs:1584
 msgid "Allow sudo without authentication"
 msgstr "允許無需驗證即可執行 sudo"
 
-#: src/window.rs:1672
+#: src/window.rs:1674
 msgid "Allowed for sudo · not currently connected"
 msgstr "允許執行 sudo · 目前未連接"
 
-#: src/window.rs:1674
+#: src/window.rs:1676
 msgid "Allowed to authorize sudo"
 msgstr "獲授權執行 sudo"
 
-#: src/window.rs:1494
+#: src/window.rs:1496
 msgid "Allowed to unlock this user"
 msgstr "獲授權解除鎖定此使用者"
 
-#: src/window.rs:1492
+#: src/window.rs:1494
 msgid "Allowed to unlock this user · not currently connected"
 msgstr "獲授權解除鎖定此使用者 · 目前未連接"
 
-#: src/window.rs:1902
+#: src/window.rs:1904
 msgid "Already loaded"
 msgstr "已載入"
 
-#: src/window.rs:1639
+#: src/window.rs:1641
 msgid "An enrolled YubiKey or the account password can authorize sudo."
 msgstr "已註冊的 YubiKey 或帳戶密碼均可授權執行 sudo。"
 
@@ -97,11 +97,11 @@ msgstr "AnduinOS 團隊"
 msgid "AnduinOS YubiKey Security Center"
 msgstr "AnduinOS YubiKey 安全中心"
 
-#: src/home.rs:126
+#: src/home.rs:128
 msgid "AnduinOS works more securely with a YubiKey"
 msgstr "AnduinOS 配合 YubiKey 使用會更加安全"
 
-#: src/window.rs:2625
+#: src/window.rs:2627
 msgid "Application"
 msgstr "應用程式"
 
@@ -111,23 +111,23 @@ msgid ""
 "bytes."
 msgstr "應用程式必須以 ssh: 開頭，不得包含空白字元，且長度最多為 253 位元組。"
 
-#: src/home.rs:411 src/window.rs:631
+#: src/home.rs:413 src/window.rs:631
 msgid "Available"
 msgstr "可用"
 
-#: src/window.rs:1255
+#: src/window.rs:1257
 msgid "Available through SSH agent"
 msgstr "透過 SSH agent 可用"
 
-#: src/window.rs:1253
+#: src/window.rs:1255
 msgid "Available through local key handle"
 msgstr "可透過本地金鑰處理程序取得"
 
-#: src/home.rs:172
+#: src/home.rs:174
 msgid "Buy a YubiKey"
 msgstr "購買 YubiKey"
 
-#: src/window.rs:2698 src/window.rs:2755 src/window.rs:3027
+#: src/window.rs:2700 src/window.rs:2757 src/window.rs:3029
 msgid "Cancel"
 msgstr "取消"
 
@@ -139,15 +139,15 @@ msgstr "正在檢查 SSH 金鑰…"
 msgid "Checking SSH support…"
 msgstr "正在檢查 SSH 支援…"
 
-#: src/home.rs:65 src/window.rs:478
+#: src/home.rs:67 src/window.rs:478
 msgid "Checking connected YubiKeys"
 msgstr "正在檢查已連接的 YubiKey"
 
-#: src/home.rs:428
+#: src/home.rs:430
 msgid "Choose a YubiKey-backed SSH key"
 msgstr "選擇由 YubiKey 支援的 SSH 金鑰"
 
-#: src/window.rs:2639
+#: src/window.rs:2641
 msgid "Choose a local key-handle file"
 msgstr "選擇本機金鑰句柄檔案"
 
@@ -167,22 +167,22 @@ msgstr "選擇有效的輸出資料夾。"
 msgid "Choose an SSH key for Git signing."
 msgstr "為 Git 簽署選擇一個 SSH 金鑰。"
 
-#: src/window.rs:2650
+#: src/window.rs:2652
 msgid "Choose local SSH key-handle path"
 msgstr "選擇本機 SSH 金鑰句柄路徑"
 
-#: src/window.rs:1218
+#: src/window.rs:1220
 msgid ""
 "Choose one SSH key. The selection takes effect immediately for this user's "
 "Git commits."
 msgstr "選擇一個 SSH 金鑰。此設定會立即對該使用者的 Git 提交生效。"
 
-#: src/window.rs:1465
+#: src/window.rs:1467
 msgid ""
 "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
 msgstr "選擇哪些 YubiKey 可以解除鎖定 {0}。密碼登入仍可使用。"
 
-#: src/window.rs:3074 src/window.rs:3096
+#: src/window.rs:3076 src/window.rs:3098
 msgid "Close"
 msgstr "關閉"
 
@@ -194,51 +194,51 @@ msgstr "命令已退出，返回碼為"
 msgid "Command exited with {0}"
 msgstr "命令已退出，返回碼為 {0}"
 
-#: src/window.rs:1217
+#: src/window.rs:1219
 msgid "Commit signing"
 msgstr "提交簽署"
 
-#: src/home.rs:596
+#: src/home.rs:598
 msgid "Configured YubiKeys"
 msgstr "已設定的 YubiKey"
 
-#: src/home.rs:627
+#: src/home.rs:629
 msgid "Configured for {0} · Not connected"
 msgstr "已為 {0} 設定 · 未連接"
 
-#: src/window.rs:2505
+#: src/window.rs:2507
 msgid "Connect a FIDO security key first"
 msgstr "請先連接 FIDO 安全金鑰"
 
-#: src/window.rs:2262
+#: src/window.rs:2264
 msgid "Connect a YubiKey"
 msgstr "連接 YubiKey"
 
-#: src/home.rs:158
+#: src/home.rs:160
 msgid "Connect a YubiKey to get started"
 msgstr "連接 YubiKey 以開始使用"
 
-#: src/home.rs:124
+#: src/home.rs:126
 msgid "Connect your YubiKey"
 msgstr "連接你的 YubiKey"
 
-#: src/home.rs:243 src/home.rs:315
+#: src/home.rs:245 src/home.rs:317
 msgid "Connected"
 msgstr "已連接"
 
-#: src/home.rs:300
+#: src/home.rs:302
 msgid "Connected YubiKeys"
 msgstr "已連接的 YubiKey"
 
-#: src/window.rs:2699
+#: src/window.rs:2701
 msgid "Continue"
 msgstr "繼續"
 
-#: src/window.rs:3028
+#: src/window.rs:3030
 msgid "Continue to PIN"
 msgstr "繼續輸入 PIN"
 
-#: src/window.rs:1326 src/window.rs:2778
+#: src/window.rs:1328 src/window.rs:2780
 msgid "Copy public key"
 msgstr "複製公開金鑰"
 
@@ -258,11 +258,11 @@ msgstr "無法建立臨時 Git 簽署資料：{0}"
 msgid "Could not create {0}: {1}"
 msgstr "無法建立 {0}：{1}"
 
-#: src/window.rs:2839
+#: src/window.rs:2841
 msgid "Could not export the public key: {0}"
 msgstr "無法匯出公開金鑰：{0}"
 
-#: src/window.rs:2337
+#: src/window.rs:2339
 msgid "Could not find security keys"
 msgstr "找不到安全金鑰"
 
@@ -274,11 +274,11 @@ msgstr "無法清除暫存公開金鑰：{0}"
 msgid "Could not inspect USB devices: {0}"
 msgstr "無法檢查 USB 裝置：{0}"
 
-#: src/window.rs:1991
+#: src/window.rs:1993
 msgid "Could not inspect this YubiKey"
 msgstr "無法檢查此 YubiKey"
 
-#: src/window.rs:540 src/window.rs:1554 src/window.rs:1734
+#: src/window.rs:540 src/window.rs:1556 src/window.rs:1736
 msgid "Could not list YubiKeys"
 msgstr "無法列出 YubiKey"
 
@@ -310,7 +310,7 @@ msgstr "無法執行 {0}：{1}"
 msgid "Could not start {0}: {1}"
 msgstr "無法啟動 {0}：{1}"
 
-#: src/home.rs:101
+#: src/home.rs:103
 msgid "Could not update security keys"
 msgstr "無法更新安全金鑰"
 
@@ -318,31 +318,31 @@ msgstr "無法更新安全金鑰"
 msgid "Could not write the temporary public key: {0}"
 msgstr "無法寫入暫存公開金鑰：{0}"
 
-#: src/window.rs:2533
+#: src/window.rs:2535
 msgid "Create"
 msgstr "建立"
 
-#: src/window.rs:2507
+#: src/window.rs:2509
 msgid "Create a resident SSH credential on a selected device"
 msgstr "在選取的裝置上建立駐留 SSH 憑證"
 
-#: src/window.rs:2692
+#: src/window.rs:2694
 msgid "Create a resident SSH key"
 msgstr "建立駐留 SSH 金鑰"
 
-#: src/window.rs:2501
+#: src/window.rs:2503
 msgid "Create…"
 msgstr "建立…"
 
-#: src/window.rs:2962
+#: src/window.rs:2964
 msgid "Deletion result is unknown"
 msgstr "刪除結果未知"
 
-#: src/window.rs:1586
+#: src/window.rs:1588
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr "已停用 · sudo 必須使用 YubiKey 或帳戶密碼進行驗證"
 
-#: src/window.rs:2321
+#: src/window.rs:2323
 msgid "Discover SSH keys on your YubiKeys"
 msgstr "探索 YubiKey 上的 SSH 金鑰"
 
@@ -351,54 +351,54 @@ msgid ""
 "Display label must be at most 200 bytes and contain no control characters."
 msgstr "顯示標籤最多可包含 200 個位元組，且不得包含控制字元。"
 
-#: src/window.rs:1222
+#: src/window.rs:1224
 msgid "Do not sign new commits by default"
 msgstr "預設不簽署新的提交"
 
-#: src/window.rs:1563
+#: src/window.rs:1565
 msgid ""
 "During enrollment, disconnect all other security keys. The selected key will"
 " blink; touch it to continue. Multiple keys can be enrolled one at a time."
 msgstr "在註冊期間，請斷開所有其他安全金鑰的連接。選取的金鑰將閃爍；觸碰它以繼續。多個金鑰可以逐一註冊。"
 
-#: src/window.rs:2610
+#: src/window.rs:2612
 msgid "ECDSA-SK (recommended compatibility)"
 msgstr "ECDSA-SK（建議相容性）"
 
-#: src/window.rs:2620
+#: src/window.rs:2622
 msgid "ECDSA-SK works with the widest range of YubiKeys"
 msgstr "ECDSA-SK 與最廣泛範圍的 YubiKey 相容"
 
-#: src/window.rs:2497
+#: src/window.rs:2499
 msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
 msgstr "ECDSA-SK · 駐留 · 需要觸碰 · 安全的相容性預設值"
 
-#: src/window.rs:2611
+#: src/window.rs:2613
 msgid "Ed25519-SK (newer YubiKeys)"
 msgstr "Ed25519-SK（新型 YubiKey）"
 
-#: src/home.rs:374 src/home.rs:393 src/home.rs:421
+#: src/home.rs:376 src/home.rs:395 src/home.rs:423
 msgid "Enabled"
 msgstr "已啟用"
 
-#: src/window.rs:1584
+#: src/window.rs:1586
 msgid ""
 "Enabled · programs can obtain administrator privileges without confirmation"
 msgstr "已啟用 · 程式可取得管理員權限而無需確認"
 
-#: src/window.rs:1610
+#: src/window.rs:1612
 msgid "Enabling passwordless sudo…"
 msgstr "正在啟用無密碼 sudo…"
 
-#: src/window.rs:1612
+#: src/window.rs:1614
 msgid "Enabling sudo authentication…"
 msgstr "正在啟用 sudo 驗證…"
 
-#: src/window.rs:1670
+#: src/window.rs:1672
 msgid "Enrolled · inactive while sudo authentication is bypassed"
 msgstr "已註冊 · 在繞過 sudo 驗證時處於非活動狀態"
 
-#: src/window.rs:1562
+#: src/window.rs:1564
 msgid "Enrollment safety"
 msgstr "註冊安全性"
 
@@ -407,13 +407,13 @@ msgid ""
 "Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
 msgstr "輸入 {0} 的 FIDO PIN。如果閃爍請觸碰它。PIN 絕不會儲存。"
 
-#: src/window.rs:1419
+#: src/window.rs:1421
 msgid ""
 "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No "
 "commit will be created."
 msgstr "輸入 FIDO PIN，然後在 YubiKey 閃爍時觸碰已選取的 YubiKey。不會建立任何提交。"
 
-#: src/window.rs:1172
+#: src/window.rs:1174
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "輸入 FIDO PIN。若 YubiKey 閃爍，請觸碰它。"
 
@@ -421,23 +421,23 @@ msgstr "輸入 FIDO PIN。若 YubiKey 閃爍，請觸碰它。"
 msgid "Enter the YubiKey FIDO PIN to test this local key handle."
 msgstr "輸入 YubiKey FIDO PIN 以測試此本地金鑰句柄。"
 
-#: src/window.rs:2531 src/window.rs:2920
+#: src/window.rs:2533 src/window.rs:2922
 msgid "Enter the selected YubiKey FIDO PIN"
 msgstr "輸入所選 YubiKey FIDO PIN"
 
-#: src/window.rs:2779
+#: src/window.rs:2781
 msgid "Export .pub"
 msgstr "匯出 .pub"
 
-#: src/window.rs:2821
+#: src/window.rs:2823
 msgid "Export SSH public key"
 msgstr "匯出 SSH 公鑰"
 
-#: src/window.rs:2745
+#: src/window.rs:2747
 msgid "FIDO PIN"
 msgstr "FIDO PIN"
 
-#: src/window.rs:1200 src/window.rs:2001 src/window.rs:2506
+#: src/window.rs:1202 src/window.rs:2003 src/window.rs:2508
 msgid "FIDO device discovery is unavailable"
 msgstr "FIDO 裝置偵測不可用"
 
@@ -445,11 +445,11 @@ msgstr "FIDO 裝置偵測不可用"
 msgid "FIDO security key"
 msgstr "FIDO 安全金鑰"
 
-#: src/window.rs:2323
+#: src/window.rs:2325
 msgid "Finish inspecting your YubiKeys"
 msgstr "完成檢查 YubiKey"
 
-#: src/home.rs:663
+#: src/home.rs:665
 msgid "Firmware {0}"
 msgstr "韌體 {0}"
 
@@ -459,11 +459,11 @@ msgid ""
 "selected YubiKey connected."
 msgstr "為確保註冊安全，請 disconnect 所有其他安全金鑰，僅保留所選 YubiKey 連接。"
 
-#: src/home.rs:419 src/window.rs:112 src/window.rs:161 src/window.rs:239
+#: src/home.rs:421 src/window.rs:112 src/window.rs:161 src/window.rs:239
 msgid "Git signing"
 msgstr "Git 簽署"
 
-#: src/window.rs:1311
+#: src/window.rs:1313
 msgid "Git signing is enabled"
 msgstr "已啟用 Git 簽署"
 
@@ -475,19 +475,19 @@ msgstr ""
 "Git 簽署測試失敗：\n"
 "{0}"
 
-#: src/window.rs:1446
+#: src/window.rs:1448
 msgid "Git signing test passed"
 msgstr "Git 簽署測試通過"
 
-#: src/window.rs:1081
+#: src/window.rs:1083
 msgid "Git is not installed"
 msgstr "Git 未安裝"
 
-#: src/window.rs:1103
+#: src/window.rs:1105
 msgid "The Git installation task stopped unexpectedly."
 msgstr "Git 安裝工作意外停止。"
 
-#: src/window.rs:1082
+#: src/window.rs:1084
 msgid "Git is required for commit signing. Install it to continue."
 msgstr "提交簽署需要 Git。請安裝後繼續。"
 
@@ -495,23 +495,23 @@ msgstr "提交簽署需要 Git。請安裝後繼續。"
 msgid "Home"
 msgstr "主頁"
 
-#: src/window.rs:1473 src/window.rs:1651
+#: src/window.rs:1475 src/window.rs:1653
 msgid "Insert a YubiKey"
 msgstr "插入 YubiKey"
 
-#: src/window.rs:1129
+#: src/window.rs:1131
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "插入 YubiKey，然後按一下「重新整理」。"
 
-#: src/window.rs:1785
+#: src/window.rs:1787
 msgid "Insert a YubiKey. This page will detect it when you refresh."
 msgstr "插入 YubiKey。重新整理此頁面時將偵測到它。"
 
-#: src/window.rs:738 src/window.rs:1840
+#: src/window.rs:738 src/window.rs:1842
 msgid "Inspect"
 msgstr "檢查"
 
-#: src/window.rs:2391
+#: src/window.rs:2393
 msgid "Inspect YubiKey"
 msgstr "檢查 YubiKey"
 
@@ -519,11 +519,11 @@ msgstr "檢查 YubiKey"
 msgid "Inspect YubiKey {0} of {1}"
 msgstr "檢查第 {0} 個 YubiKey，共 {1} 個"
 
-#: src/window.rs:1838
+#: src/window.rs:1840
 msgid "Inspect again"
 msgstr "再次檢查"
 
-#: src/window.rs:2393
+#: src/window.rs:2395
 msgid "Inspect all keys"
 msgstr "檢查所有金鑰"
 
@@ -531,11 +531,11 @@ msgstr "檢查所有金鑰"
 msgid "Inspect this YubiKey"
 msgstr "檢查此 YubiKey"
 
-#: src/window.rs:1831
+#: src/window.rs:1833
 msgid "Inspected"
 msgstr "已檢查"
 
-#: src/window.rs:1821
+#: src/window.rs:1823
 msgid "Inspection needs attention · {0}"
 msgstr "需要關注 · {0}"
 
@@ -543,51 +543,51 @@ msgstr "需要關注 · {0}"
 msgid "Invalid FIDO device path."
 msgstr "FIDO 裝置路徑無效。"
 
-#: src/window.rs:1777
+#: src/window.rs:1779
 msgid "Keys stored on your YubiKeys"
 msgstr "儲存在您 YubiKey 上的金鑰"
 
-#: src/window.rs:1173 src/window.rs:1880
+#: src/window.rs:1175 src/window.rs:1882
 msgid "Load"
 msgstr "載入"
 
-#: src/window.rs:1171
+#: src/window.rs:1173
 msgid "Load SSH keys"
 msgstr "載入 SSH 金鑰"
 
-#: src/window.rs:1864
+#: src/window.rs:1866
 msgid "Load all"
 msgstr "載入全部"
 
-#: src/window.rs:1157
+#: src/window.rs:1159
 msgid "Load keys"
 msgstr "載入金鑰"
 
-#: src/window.rs:1878
+#: src/window.rs:1880
 msgid "Load resident SSH keys"
 msgstr "載入駐留 SSH 金鑰"
 
-#: src/window.rs:1866
+#: src/window.rs:1868
 msgid "Load this YubiKey's resident SSH keys into the agent"
 msgstr "將此 YubiKey 的駐留式 SSH 金鑰載入代理程式"
 
-#: src/window.rs:1257
+#: src/window.rs:1259
 msgid "Load this resident key into the SSH agent before signing"
 msgstr "在簽署前將此駐留金鑰載入 SSH agent"
 
-#: src/window.rs:1923
+#: src/window.rs:1925
 msgid "Loaded"
 msgstr "已載入"
 
-#: src/window.rs:1182
+#: src/window.rs:1184
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "正在載入 SSH 金鑰…若 YubiKey 閃爍，請觸碰它。"
 
-#: src/window.rs:2633
+#: src/window.rs:2635
 msgid "Local key handle path"
 msgstr "本機金鑰句柄路徑"
 
-#: src/window.rs:2605
+#: src/window.rs:2607
 msgid "Local key label"
 msgstr "本機金鑰標籤"
 
@@ -595,71 +595,71 @@ msgstr "本機金鑰標籤"
 msgid "Looking for your SSH agent and connected YubiKeys."
 msgstr "正在尋找您的 SSH 代理程式及已連接的 YubiKey。"
 
-#: src/window.rs:1832 src/window.rs:2124
+#: src/window.rs:1834 src/window.rs:2126
 msgid "Needs attention"
 msgstr "需要關注"
 
-#: src/window.rs:2496
+#: src/window.rs:2498
 msgid "New hardware-backed SSH key"
 msgstr "新硬體支援的 SSH 金鑰"
 
-#: src/window.rs:1128
+#: src/window.rs:1130
 msgid "No FIDO security key detected"
 msgstr "未偵測到 FIDO 安全金鑰"
 
-#: src/window.rs:2037
+#: src/window.rs:2039
 msgid "No SSH agent was detected"
 msgstr "未偵測到 SSH 代理程式"
 
-#: src/window.rs:1784
+#: src/window.rs:1786
 msgid "No YubiKey connected"
 msgstr "未連接 YubiKey"
 
-#: src/home.rs:653
+#: src/home.rs:655
 msgid "No hardware serial"
 msgstr "無硬體序號"
 
-#: src/window.rs:1930
+#: src/window.rs:1932
 msgid "No resident SSH keys"
 msgstr "沒有駐留式 SSH 金鑰"
 
-#: src/window.rs:1144
+#: src/window.rs:1146
 msgid "No resident SSH keys found"
 msgstr "找不到駐留 SSH 金鑰"
 
-#: src/window.rs:1811
+#: src/window.rs:1813
 msgid "No resident SSH keys found · {0}"
 msgstr "找不到駐留式 SSH 金鑰 · {0}"
 
-#: src/window.rs:2302
+#: src/window.rs:2304
 msgid "No resident SSH keys were found on the connected YubiKeys."
 msgstr "在已連接的 YubiKey 上找不到駐留式 SSH 金鑰。"
 
-#: src/window.rs:1221
+#: src/window.rs:1223
 msgid "No signing"
 msgstr "不簽署"
 
-#: src/home.rs:376 src/home.rs:395 src/home.rs:423
+#: src/home.rs:378 src/home.rs:397 src/home.rs:425
 msgid "Not configured"
 msgstr "未設定"
 
-#: src/window.rs:1833
+#: src/window.rs:1835
 msgid "Not inspected"
 msgstr "未檢查"
 
-#: src/window.rs:1823
+#: src/window.rs:1825
 msgid "Not inspected yet · {0}"
 msgstr "尚未檢查 · {0}"
 
-#: src/home.rs:174
+#: src/home.rs:176
 msgid "Open the official Yubico Store"
 msgstr "開啟官方 Yubico 商店"
 
-#: src/window.rs:1089 src/window.rs:1111
+#: src/window.rs:1091 src/window.rs:1113
 msgid "Install Git"
 msgstr "安裝 Git"
 
-#: src/window.rs:1096
+#: src/window.rs:1098
 msgid "Installing Git…"
 msgstr "正在安裝 Git…"
 
@@ -699,35 +699,35 @@ msgid ""
 "not retry until you inspect the YubiKey."
 msgstr "OpenSSH 回報成功，但未偵測到新的駐留憑證。在檢查 YubiKey 之前請勿重試。"
 
-#: src/window.rs:2668
+#: src/window.rs:2670
 msgid "OpenSSH/FIDO credential metadata and local file location"
 msgstr "OpenSSH/FIDO 憑證中繼資料和本機檔案位置"
 
-#: src/home.rs:391
+#: src/home.rs:393
 msgid "Passwordless"
 msgstr "免密碼"
 
-#: src/window.rs:2922
+#: src/window.rs:2924
 msgid "Permanently delete"
 msgstr "永久刪除"
 
-#: src/window.rs:2782
+#: src/window.rs:2784
 msgid "Permanently delete from YubiKey…"
 msgstr "從 YubiKey 永久刪除…"
 
-#: src/window.rs:3021
+#: src/window.rs:3023
 msgid "Permanently delete this resident SSH credential?"
 msgstr "確定要永久刪除此駐留 SSH 憑證嗎？"
 
-#: src/home.rs:342
+#: src/home.rs:344
 msgid "Protect authentication and commit signing"
 msgstr "保護身份驗證及提交簽署"
 
-#: src/home.rs:193 src/home.rs:288
+#: src/home.rs:195 src/home.rs:290
 msgid "Protection for {0}"
 msgstr "{0} 的保護"
 
-#: src/window.rs:2325
+#: src/window.rs:2327
 msgid ""
 "Read the resident SSH keys already stored on your YubiKeys. You will enter "
 "each key's FIDO PIN and may need to touch it."
@@ -741,15 +741,15 @@ msgstr "正在從 {0} 讀取 SSH 金鑰… 如果閃爍請觸碰它。"
 msgid "Reading account security settings…"
 msgstr "正在讀取帳戶安全設定…"
 
-#: src/window.rs:2028 src/window.rs:2314
+#: src/window.rs:2030 src/window.rs:2316
 msgid "Ready"
 msgstr "就緒"
 
-#: src/home.rs:366
+#: src/home.rs:368
 msgid "Ready to inspect"
 msgstr "準備好進行檢查"
 
-#: src/home.rs:266
+#: src/home.rs:268
 msgid "Ready to protect {0}"
 msgstr "準備好保護 {0}"
 
@@ -757,35 +757,35 @@ msgstr "準備好保護 {0}"
 msgid "Refresh connected YubiKeys"
 msgstr "重新整理已連接的 YubiKey"
 
-#: src/window.rs:2781
+#: src/window.rs:2783
 msgid "Remove from agent"
 msgstr "從 agent 移除"
 
-#: src/window.rs:2882
+#: src/window.rs:2884
 msgid "Removing this key from the SSH agent…"
 msgstr "正在將此金鑰從 SSH agent 移除…"
 
-#: src/window.rs:2662
+#: src/window.rs:2664
 msgid "Require verification for every signature"
 msgstr "每次簽署都需驗證"
 
-#: src/window.rs:2663
+#: src/window.rs:2665
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "此金鑰每次簽署時都需要 FIDO PIN"
 
-#: src/window.rs:2561
+#: src/window.rs:2563
 msgid "Resident SSH key created"
 msgstr "已建立駐留 SSH 金鑰"
 
-#: src/window.rs:2955
+#: src/window.rs:2957
 msgid "Resident credential permanently deleted"
 msgstr "已永久刪除駐留憑證"
 
-#: src/window.rs:1907
+#: src/window.rs:1909
 msgid "Resident keys loaded"
 msgstr "已載入駐留金鑰"
 
-#: src/window.rs:2629
+#: src/window.rs:2631
 msgid "Resident username"
 msgstr "駐留使用者名稱"
 
@@ -793,35 +793,35 @@ msgstr "駐留使用者名稱"
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr "駐留使用者名稱必須包含 1–64 位元組，且不得包含控制字元。"
 
-#: src/home.rs:341
+#: src/home.rs:343
 msgid "SSH & Git"
 msgstr "SSH 及 Git"
 
-#: src/window.rs:2010
+#: src/window.rs:2012
 msgid "SSH agent"
 msgstr "SSH 代理程式"
 
-#: src/window.rs:2018
+#: src/window.rs:2020
 msgid "SSH agent is ready"
 msgstr "SSH 代理程式已就緒"
 
-#: src/window.rs:2033
+#: src/window.rs:2035
 msgid "SSH agent unavailable"
 msgstr "SSH agent 不可用"
 
-#: src/home.rs:426
+#: src/home.rs:428
 msgid "SSH commit signing"
 msgstr "SSH 提交簽署"
 
-#: src/window.rs:2797
+#: src/window.rs:2799
 msgid "SSH key actions"
 msgstr "SSH 金鑰操作"
 
-#: src/window.rs:2461
+#: src/window.rs:2463
 msgid "SSH key for {0}"
 msgstr "{0} 的 SSH 金鑰"
 
-#: src/home.rs:410 src/window.rs:111 src/window.rs:157 src/window.rs:238
+#: src/home.rs:412 src/window.rs:111 src/window.rs:157 src/window.rs:238
 msgid "SSH keys"
 msgstr "SSH 金鑰"
 
@@ -829,13 +829,13 @@ msgstr "SSH 金鑰"
 msgid "SSH_AUTH_SOCK is not set"
 msgstr "未設定 SSH_AUTH_SOCK"
 
-#: src/window.rs:2693
+#: src/window.rs:2695
 msgid ""
 "Safe defaults use ECDSA-SK, require touch, and store a discoverable "
 "credential on the selected YubiKey."
 msgstr "安全預設值使用 ECDSA-SK、需要觸控驗證，並將可發現的憑證儲存在選定的 YubiKey 上。"
 
-#: src/home.rs:337
+#: src/home.rs:339
 msgid "Secure sudo authorization"
 msgstr "安全的 sudo 授權"
 
@@ -843,21 +843,21 @@ msgstr "安全的 sudo 授權"
 msgid "Security Center"
 msgstr "安全中心"
 
-#: src/home.rs:655
+#: src/home.rs:657
 msgid "Serial {0}"
 msgstr "序號 {0}"
 
-#: src/home.rs:132
+#: src/home.rs:134
 msgid ""
 "Sign in, authorize sudo, and protect SSH and Git identities with a physical "
 "touch."
 msgstr "透過實體觸控進行登入、授權 sudo，並保護 SSH 和 Git 身份。"
 
-#: src/home.rs:331 src/home.rs:372 src/home.rs:614
+#: src/home.rs:333 src/home.rs:374 src/home.rs:616
 msgid "Sign-in"
 msgstr "登入"
 
-#: src/window.rs:2863
+#: src/window.rs:2865
 msgid "Signing test passed"
 msgstr "簽署測試通過"
 
@@ -865,15 +865,15 @@ msgstr "簽署測試通過"
 msgid "Temporary public-key path is invalid."
 msgstr "臨時公鑰路徑無效。"
 
-#: src/window.rs:1420
+#: src/window.rs:1422
 msgid "Test"
 msgstr "測試"
 
-#: src/window.rs:1418
+#: src/window.rs:1420
 msgid "Test Git signing"
 msgstr "測試 Git 簽署"
 
-#: src/window.rs:1345 src/window.rs:2780
+#: src/window.rs:1347 src/window.rs:2782
 msgid "Test signing"
 msgstr "測試簽署"
 
@@ -883,17 +883,17 @@ msgid ""
 "then try again."
 msgstr "未安裝 FIDO 註冊工具。請安裝 libpam-u2f 套件，然後再試一次。"
 
-#: src/window.rs:1879
+#: src/window.rs:1881
 msgid "The PIN is sent directly to ssh-add and is never stored."
 msgstr "PIN 碼會直接傳送給 ssh-add，且不會被儲存。"
 
-#: src/window.rs:2532
+#: src/window.rs:2534
 msgid ""
 "The PIN is sent through a private pipe to OpenSSH. It is never stored or "
 "placed in command arguments."
 msgstr "PIN 碼會透過私人管道傳送至 OpenSSH。它絕不會被儲存或放在命令參數中。"
 
-#: src/window.rs:2864
+#: src/window.rs:2866
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "SSH agent 已成功使用此金鑰簽署並驗證資料。"
 
@@ -901,7 +901,7 @@ msgstr "SSH agent 已成功使用此金鑰簽署並驗證資料。"
 msgid "The YubiKey operation stopped unexpectedly."
 msgstr "YubiKey 操作意外停止。"
 
-#: src/window.rs:2598
+#: src/window.rs:2600
 msgid "The credential will be created only on this exact device"
 msgstr "憑證將僅在此特定裝置上建立"
 
@@ -913,18 +913,18 @@ msgstr ""
 "刪除命令已完成，但之後無法檢查選定的 YubiKey：{0}\n"
 "憑證可能已刪除，也可能未刪除。請勿重試。請先重新連接並檢查 YubiKey。"
 
-#: src/window.rs:541 src/window.rs:1536 src/window.rs:1716
+#: src/window.rs:541 src/window.rs:1538 src/window.rs:1718
 msgid "The enrollment task failed."
 msgstr "註冊任務失敗。"
 
-#: src/window.rs:2956
+#: src/window.rs:2958
 msgid ""
 "The exact resident credential is no longer present on the selected YubiKey. "
 "Local .pub or key-handle files and any SSH-agent entry were not removed."
 msgstr ""
 "選定的 YubiKey 上已不存在該確切的駐留憑證。未移除本機 .pub 或 key-handle 檔案以及任何 SSH-agent 項目。"
 
-#: src/window.rs:1903
+#: src/window.rs:1905
 msgid ""
 "The inspected resident SSH credentials are already available in this agent."
 msgstr "所檢查的駐留 SSH 憑證已存在於此 agent 中。"
@@ -941,7 +941,7 @@ msgstr "本地 SSH 金鑰句柄路徑不是有效的 UTF-8。"
 msgid "The local key path must be absolute."
 msgstr "本機金鑰路徑必須為絕對路徑。"
 
-#: src/window.rs:2563
+#: src/window.rs:2565
 msgid ""
 "The non-exportable private key remains protected by the selected YubiKey.\n"
 "\n"
@@ -1027,7 +1027,7 @@ msgid ""
 "The selected FIDO device is no longer connected. Refresh and try again."
 msgstr "選定的 FIDO 裝置已斷開連線。請重新整理後再試一次。"
 
-#: src/window.rs:1447
+#: src/window.rs:1449
 msgid ""
 "The selected credential created a valid Git-format SSH signature. No "
 "repository or commit was changed."
@@ -1054,7 +1054,7 @@ msgstr "此 YubiKey 上已不存在選定的駐留憑證。未刪除任何項目
 msgid "The signature was created but could not be verified: {0}"
 msgstr "已建立簽署但無法驗證：{0}"
 
-#: src/window.rs:1618
+#: src/window.rs:1620
 msgid "The sudo policy task failed."
 msgstr "sudo 政策任務失敗。"
 
@@ -1066,18 +1066,18 @@ msgstr "臨時 Git 簽署路徑無效。"
 msgid "The temporary Git signing path is invalid."
 msgstr "臨時 Git 簽署路徑無效。"
 
-#: src/home.rs:597
+#: src/home.rs:599
 msgid ""
 "These keys are trusted by this account but are not currently connected."
 msgstr "這些金鑰已獲此帳戶信任，但目前未連接。"
 
-#: src/window.rs:2921
+#: src/window.rs:2923
 msgid ""
 "This PIN authorizes permanent deletion of the exact credential shown in the "
 "previous step. It is never stored."
 msgstr "此 PIN 用於授權永久刪除上一步顯示的確切憑證。該 PIN 不會被儲存。"
 
-#: src/window.rs:1931
+#: src/window.rs:1933
 msgid "This YubiKey has no discoverable ssh:* credentials."
 msgstr "此 YubiKey 沒有可發現的 ssh:* 憑證。"
 
@@ -1085,63 +1085,63 @@ msgstr "此 YubiKey 沒有可發現的 ssh:* 憑證。"
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "這不是受支援的 OpenSSH 安全金鑰公開金鑰。"
 
-#: src/window.rs:3022
+#: src/window.rs:3024
 msgid ""
 "This removes the private credential from the selected YubiKey and cannot be "
 "undone. It does not remove local files or an identity already loaded in the "
 "SSH agent."
 msgstr "這將從選定的 YubiKey 中移除私人憑證，且無法復原。它不會移除本機檔案或已載入 SSH 代理程式中的身分識別。"
 
-#: src/window.rs:1579
+#: src/window.rs:1581
 msgid "This setting applies only to the current user."
 msgstr "此設定僅適用於目前使用者。"
 
-#: src/home.rs:66
+#: src/home.rs:68
 msgid "This will only take a moment."
 msgstr "這只需片刻時間。"
 
-#: src/window.rs:1888
+#: src/window.rs:1890
 msgid ""
 "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr "依提示觸控 YubiKey。正在將駐留金鑰載入 SSH agent…"
 
-#: src/window.rs:1433
+#: src/window.rs:1435
 msgid ""
 "Touch the YubiKey. Creating and verifying a temporary Git-format SSH "
 "signature…"
 msgstr "觸碰 YubiKey。正在建立並驗證臨時 Git 格式 SSH 簽署…"
 
-#: src/window.rs:2856
+#: src/window.rs:2858
 msgid "Touch the YubiKey. Testing SSH signing and verification…"
 msgstr "觸控 YubiKey。正在測試 SSH 簽署與驗證…"
 
-#: src/window.rs:2544
+#: src/window.rs:2546
 msgid ""
 "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not "
 "remove the key."
 msgstr "觸控選定的 YubiKey。正在 {0} 上建立 SSH 駐留金鑰… 請勿移除金鑰。"
 
-#: src/window.rs:1496
+#: src/window.rs:1498
 msgid "Touch this key when prompted to enroll it"
 msgstr "依提示觸控此金鑰以註冊"
 
-#: src/window.rs:1676
+#: src/window.rs:1678
 msgid "Touch this key when prompted to enroll it for sudo"
 msgstr "依提示觸控此金鑰以註冊 sudo"
 
-#: src/window.rs:1527 src/window.rs:1707
+#: src/window.rs:1529 src/window.rs:1709
 msgid "Touch your security key to continue."
 msgstr "觸摸您的安全金鑰以繼續。"
 
-#: src/home.rs:93
+#: src/home.rs:95
 msgid "Try Again"
 msgstr "再試一次"
 
-#: src/window.rs:3008
+#: src/window.rs:3010
 msgid "Type {0} to confirm"
 msgstr "輸入 {0} 以確認"
 
-#: src/window.rs:688 src/window.rs:2039 src/window.rs:2340
+#: src/window.rs:688 src/window.rs:2041 src/window.rs:2342
 msgid "Unavailable"
 msgstr "不可用"
 
@@ -1157,15 +1157,15 @@ msgstr "解鎖 GDM"
 msgid "Unlock sudo"
 msgstr "解鎖 sudo"
 
-#: src/window.rs:1463
+#: src/window.rs:1465
 msgid "Unlock the current user"
 msgstr "解鎖當前用戶"
 
-#: src/home.rs:332
+#: src/home.rs:334
 msgid "Unlock your account with a touch"
 msgstr "輕觸即可解鎖你的帳戶"
 
-#: src/ssh.rs:735 src/window.rs:1251 src/window.rs:2467 src/window.rs:2987
+#: src/ssh.rs:735 src/window.rs:1253 src/window.rs:2469 src/window.rs:2989
 msgid "Unnamed SSH credential"
 msgstr "未命名 SSH 憑據"
 
@@ -1173,23 +1173,23 @@ msgstr "未命名 SSH 憑據"
 msgid "Unsupported resident SSH public-key algorithm."
 msgstr "不支援的駐留 SSH 公鑰算法。"
 
-#: src/window.rs:1397
+#: src/window.rs:1399
 msgid "Updating Git commit signing…"
 msgstr "正在更新 Git 提交簽署…"
 
-#: src/window.rs:1529
+#: src/window.rs:1531
 msgid "Updating sign-in settings…"
 msgstr "正在更新登入設定…"
 
-#: src/window.rs:1709
+#: src/window.rs:1711
 msgid "Updating sudo settings…"
 msgstr "正在更新 sudo 設定…"
 
-#: src/window.rs:1635
+#: src/window.rs:1637
 msgid "Use YubiKey to unlock sudo"
 msgstr "使用 YubiKey 解鎖 sudo"
 
-#: src/window.rs:2934
+#: src/window.rs:2936
 msgid ""
 "Verifying and permanently deleting the selected resident credential. Do not "
 "unplug the YubiKey…"
@@ -1199,65 +1199,65 @@ msgstr "正在驗證並永久刪除選定的駐留憑證。請勿拔除 YubiKey�
 msgid "View in App Store"
 msgstr "在應用程式商店中檢視"
 
-#: src/window.rs:2267
+#: src/window.rs:2269
 msgid "Waiting"
 msgstr "等待中"
 
-#: src/home.rs:156
+#: src/home.rs:158
 msgid "Waiting for a configured YubiKey"
 msgstr "等待已設定的 YubiKey"
 
-#: src/window.rs:1637
+#: src/window.rs:1639
 msgid ""
 "You may enroll keys now, but sudo bypasses PAM while passwordless access is "
 "enabled."
 msgstr "您現在可以註冊金鑰，但在啟用無密碼存取時，sudo 會繞過 PAM。"
 
-#: src/window.rs:2297
+#: src/window.rs:2299
 msgid "Your YubiKeys are inspected"
 msgstr "您的 YubiKey 已完成檢查"
 
-#: src/window.rs:2299
+#: src/window.rs:2301
 msgid "Your hardware-backed SSH keys"
 msgstr "您由硬體支援的 SSH 金鑰"
 
-#: src/window.rs:2263
+#: src/window.rs:2265
 msgid ""
 "Your resident SSH keys stay on the security key. Insert it to view and use "
 "them."
 msgstr "您的駐留式 SSH 金鑰保留在安全金鑰上。插入它即可查看和使用它們。"
 
-#: src/home.rs:130
+#: src/home.rs:132
 msgid ""
 "Your security settings are ready. Connect a configured YubiKey when you need"
 " it."
 msgstr "你的安全設定已就緒。需要時請連接已設定的 YubiKey。"
 
-#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1755 src/window.rs:2597
+#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1757 src/window.rs:2599
 msgid "YubiKey"
 msgstr "YubiKey"
 
-#: src/window.rs:3088
+#: src/window.rs:3090
 msgid "YubiKey configuration failed"
 msgstr "YubiKey 設定失敗"
 
-#: src/home.rs:251
+#: src/home.rs:253
 msgid "YubiKey connected"
 msgstr "YubiKey 已連接"
 
-#: src/home.rs:379 src/home.rs:400
+#: src/home.rs:381 src/home.rs:402
 msgid "YubiKey or account password"
 msgstr "YubiKey 或帳戶密碼"
 
-#: src/home.rs:622
+#: src/home.rs:624
 msgid "YubiKey without hardware serial"
 msgstr "無硬體序號的 YubiKey"
 
-#: src/home.rs:624
+#: src/home.rs:626
 msgid "YubiKey · Serial {0}"
 msgstr "YubiKey · 序號 {0}"
 
-#: src/window.rs:2993
+#: src/window.rs:2995
 msgid ""
 "YubiKey: {0}\n"
 "Device: {1}\n"
@@ -1273,11 +1273,11 @@ msgstr ""
 "演算法：{4}\n"
 "指紋：{5}"
 
-#: src/window.rs:1124
+#: src/window.rs:1126
 msgid "YubiKeys"
 msgstr "YubiKey"
 
-#: src/window.rs:1955
+#: src/window.rs:1957
 msgid "agent"
 msgstr "代理程式"
 
@@ -1287,11 +1287,11 @@ msgid ""
 "Do not retry until you refresh and inspect the YubiKey."
 msgstr "fido2-token 回報成功，但駐留憑證仍然存在。在您重新整理並檢查 YubiKey 之前，請勿重試。"
 
-#: src/home.rs:398
+#: src/home.rs:400
 msgid "sudo authentication is bypassed"
 msgstr "sudo 身份驗證已被繞過"
 
-#: src/window.rs:1578
+#: src/window.rs:1580
 msgid "sudo authentication policy"
 msgstr "sudo 驗證策略"
 
@@ -1299,15 +1299,15 @@ msgstr "sudo 驗證策略"
 msgid "unknown"
 msgstr "未知"
 
-#: src/window.rs:2519
+#: src/window.rs:2521
 msgid "user"
 msgstr "用戶"
 
-#: src/window.rs:1146
+#: src/window.rs:1148
 msgid "{0} SSH keys loaded"
 msgstr "已載入 {0} 個 SSH 金鑰"
 
-#: src/home.rs:254
+#: src/home.rs:256
 msgid "{0} YubiKeys connected"
 msgstr "{0} 個 YubiKey 已連接"
 
@@ -1319,51 +1319,51 @@ msgstr "{0} 以 {1} 結束"
 msgid "{0} failed: {1}"
 msgstr "{0} 失敗：{1}"
 
-#: src/window.rs:2023
+#: src/window.rs:2025
 msgid "{0} identities are currently available to SSH applications."
 msgstr "目前有 {0} 個身份可供 SSH 應用程式使用。"
 
-#: src/window.rs:1056
+#: src/window.rs:1058
 msgid "{0} is enabled for this YubiKey"
 msgstr "此 YubiKey 已啟用 {0}"
 
-#: src/window.rs:1061
+#: src/window.rs:1063
 msgid "{0} is not configured for this YubiKey"
 msgstr "此 YubiKey 未設定 {0}"
 
-#: src/window.rs:1911
+#: src/window.rs:1913
 msgid "{0} new SSH identities were added to the agent."
 msgstr "已向代理新增 {0} 個新 SSH 身分。"
 
-#: src/window.rs:1909
+#: src/window.rs:1911
 msgid "{0} new SSH identity was added to the agent."
 msgstr "已向代理新增 {0} 個新 SSH 身分。"
 
-#: src/window.rs:2307
+#: src/window.rs:2309
 msgid "{0} resident SSH keys are available from your connected YubiKeys."
 msgstr "已連接的 YubiKey 中有 {0} 個駐留式 SSH 金鑰可用。"
 
-#: src/window.rs:1817
+#: src/window.rs:1819
 msgid "{0} resident SSH keys · {1}"
 msgstr "{0} 個駐留式 SSH 金鑰 · {1}"
 
-#: src/home.rs:362
+#: src/home.rs:364
 msgid "{0} resident credentials inspected"
 msgstr "已檢查 {0} 個駐留憑證"
 
-#: src/window.rs:2328
+#: src/window.rs:2330
 msgid "{0} to inspect"
 msgstr "待檢查項目：{0}"
 
-#: src/window.rs:1487 src/window.rs:1665
+#: src/window.rs:1489 src/window.rs:1667
 msgid "{0} · no hardware serial"
 msgstr "{0} · 無硬體序列號"
 
-#: src/window.rs:1489 src/window.rs:1667
+#: src/window.rs:1491 src/window.rs:1669
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
 
-#: src/window.rs:999
+#: src/window.rs:1001
 msgid "Checking Passkeys support…"
 msgstr "正在檢查通行密鑰支援…"
 
@@ -1398,7 +1398,7 @@ msgid ""
 "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
 msgstr "插入 YubiKey，按提示輸入 FIDO PIN，然後觸摸密匙。"
 
-#: src/window.rs:1778
+#: src/window.rs:1780
 msgid ""
 "Inspect a connected YubiKey to reveal its resident SSH keys and available "
 "actions."
@@ -1446,7 +1446,7 @@ msgstr "註冊通行密碼匙"
 msgid "Sign in next time"
 msgstr "下次登入"
 
-#: src/window.rs:2011
+#: src/window.rs:2013
 msgid ""
 "The SSH agent makes selected keys available to SSH applications during this "
 "session."
@@ -1473,7 +1473,7 @@ msgstr ""
 msgid "A file already exists at the managed SSH configuration path: {0}"
 msgstr "受管理的 SSH 配置路徑上已存在檔案：{0}"
 
-#: src/window.rs:2068
+#: src/window.rs:2070
 msgid ""
 "After the first YubiKey authentication, later SSH sessions can reuse the "
 "connection. The last session remains available in the background for 10 "
@@ -1508,7 +1508,7 @@ msgstr "無法取代 {0}：{1}"
 msgid "Could not synchronize {0}: {1}"
 msgstr "無法同步 {0}：{1}"
 
-#: src/window.rs:2173 src/window.rs:2184
+#: src/window.rs:2175 src/window.rs:2186
 msgid "Could not update SSH connection persistence"
 msgstr "無法更新 SSH 連線持續性"
 
@@ -1520,11 +1520,11 @@ msgstr "無法驗證 SSH 配置：{0}"
 msgid "Could not write the temporary SSH configuration in {0}: {1}"
 msgstr "無法寫入 {0} 中的臨時 SSH 配置：{1}"
 
-#: src/window.rs:2086 src/window.rs:2159
+#: src/window.rs:2088 src/window.rs:2161
 msgid "Disabled · each new connection authenticates separately"
 msgstr "已停用 · 每個新連線均獨立進行驗證"
 
-#: src/window.rs:2078 src/window.rs:2152
+#: src/window.rs:2080 src/window.rs:2154
 msgid "Enabled · idle connections remain available for 10 minutes"
 msgstr "已啟用 · 閒置連線將保持可用 10 分鐘"
 
@@ -1536,31 +1536,31 @@ msgstr "HOME 未指向有效的資料夾：{0}"
 msgid "HOME is not set. The SSH configuration cannot be located."
 msgstr "HOME 未設定。無法找到 SSH 配置。"
 
-#: src/window.rs:2105
+#: src/window.rs:2107
 msgid "Main SSH configuration unavailable"
 msgstr "主要 SSH 配置不可用"
 
-#: src/window.rs:2106
+#: src/window.rs:2108
 msgid "Managed SSH configuration unavailable"
 msgstr "受管理的 SSH 配置不可用"
 
-#: src/window.rs:2222
+#: src/window.rs:2224
 msgid "Managed configuration preview"
 msgstr "受管理的配置預覽"
 
-#: src/window.rs:2202
+#: src/window.rs:2204
 msgid "Manual review required"
 msgstr "需要手動檢視"
 
-#: src/window.rs:2094 src/window.rs:2167
+#: src/window.rs:2096 src/window.rs:2169
 msgid "Needs attention · review the SSH configuration before continuing"
 msgstr "需要關注 · 繼續前請檢視 SSH 配置"
 
-#: src/window.rs:2103
+#: src/window.rs:2105
 msgid "Needs attention · the SSH configuration could not be located"
 msgstr "需要關注 · 無法找到 SSH 配置"
 
-#: src/window.rs:2210
+#: src/window.rs:2212
 msgid ""
 "Only new SSH connections are affected. Turning this off does not stop "
 "existing background connections. Earlier host-specific OpenSSH settings "
@@ -1575,11 +1575,11 @@ msgstr "OpenSSH 拒絕了產生的配置。"
 msgid "OpenSSH rejected the generated configuration: {0}"
 msgstr "OpenSSH 拒絕了產生的配置：{0}"
 
-#: src/window.rs:2111
+#: src/window.rs:2113
 msgid "Reuse SSH connections in the background"
 msgstr "在背景重用 SSH 連線"
 
-#: src/window.rs:2067
+#: src/window.rs:2069
 msgid "SSH connection persistence"
 msgstr "SSH 連線持續性"
 
@@ -1629,7 +1629,7 @@ msgstr "SSH 路徑不是安全的一般目錄：{0}"
 msgid "The SSH path is not owned by the current user: {0}"
 msgstr "SSH 路徑並非由目前使用者擁有：{0}"
 
-#: src/window.rs:2144
+#: src/window.rs:2146
 msgid "The SSH persistence update stopped unexpectedly."
 msgstr "SSH 持續性更新意外停止。"
 
@@ -1679,27 +1679,43 @@ msgid ""
 "Remove that Include before using this setting."
 msgstr "受管理的 SSH 檔案在應用程式管理區塊之外被引用。在使用此設定前，請移除該 Include。"
 
-#: src/window.rs:2209
+#: src/window.rs:2211
 msgid "What this setting changes"
 msgstr "此設定會產生之變更"
 
-#: src/window.rs:2224
+#: src/window.rs:2226
 msgid "{0} includes {1}"
-msgstr "{0} includes {1}"
+msgstr "{0} 包含 {1}"
 
-#: src/window.rs:2491
+#: src/window.rs:2493
 msgid ""
 "Optional: create a new resident key only when you need another SSH identity."
 " Its private key never leaves the selected YubiKey."
 msgstr "可選：只有當您需要另一個 SSH 身份時，才建立新的常駐金鑰。其私鑰絕不會離開選定的 YubiKey。"
 
+#: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:10
+msgid "Authentication is required to change security settings or install Git"
+msgstr "變更安全設定或安裝 Git 需要身份驗證"
+
 #: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:8
 msgid "Manage YubiKey security settings"
 msgstr "管理 YubiKey 安全設定"
 
-#: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:10
-msgid "Authentication is required to change security settings or install Git"
-msgstr "變更安全設定或安裝 Git 需要身份驗證"
+#: data/com.anduinos.yubikeymanager.desktop:114
+msgid "YubiKey;FIDO2;U2F;security;login;GDM;"
+msgstr "YubiKey;FIDO2;U2F;安全;登入;GDM;"
+
+#: data/com.anduinos.yubikeymanager.desktop:54
+msgid "Security Key Settings"
+msgstr "安全金鑰設定"
+
+#: data/com.anduinos.yubikeymanager.desktop:28
+msgid "YubiKey Security Center"
+msgstr "YubiKey 安全中心"
+
+#: data/com.anduinos.yubikeymanager.desktop:82
+msgid "Protect sign-in, sudo, SSH, and Git with YubiKeys"
+msgstr "使用 YubiKey 保護登入、sudo、SSH 及 Git"
 
 #~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
 #~ msgstr "必須先安裝 Yubico Authenticator，才能使用通行密鑰。"

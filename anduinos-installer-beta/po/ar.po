@@ -17,19 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
 
-#: src/pages.py:2092
+#: src/pages.py:2244
 msgid "Installing an input method requires an Internet connection."
 msgstr "يتطلب تثبيت طريقة إدخال اتصالاً بالإنترنت."
 
-#: src/pages.py:2103
-msgid ""
-"No Internet connection. Input methods cannot be installed. You can install "
-"them later when connected."
-msgstr ""
-"لا يوجد اتصال بالإنترنت. لا يمكن تثبيت طرق الإدخال. يمكنك تثبيتها لاحقًا عند"
-" الاتصال."
+#: src/pages.py:2255
+msgid "No Internet connection. Input methods cannot be installed. You can install them later when connected."
+msgstr "لا يوجد اتصال بالإنترنت. لا يمكن تثبيت طرق الإدخال. يمكنك تثبيتها لاحقًا عند الاتصال."
 
-#: src/pages.py:4933
+#: src/pages.py:7174
 msgid ""
 "\n"
 "\n"
@@ -39,7 +35,7 @@ msgstr ""
 "\n"
 "سيؤدي التثبيت الحقيقي إلى إنشاء MOK محلي للآلة. بعد إعادة التشغيل، اختر Enroll MOK → Continue → Yes في MOKManager وأدخل كلمة المرور 123456."
 
-#: src/pages.py:4944
+#: src/pages.py:7185
 msgid ""
 "\n"
 "On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
@@ -47,51 +43,39 @@ msgstr ""
 "\n"
 "في شاشة MOKManager الزرقاء، اختر Enroll MOK → Continue → Yes، كلمة المرور: 123456"
 
-#: src/pages.py:4085
+#: src/pages.py:6191
 msgid "; sudo does not require a password"
 msgstr "؛ لا تتطلب أمر sudo كلمة مرور"
 
-#: src/pages.py:4087
+#: src/pages.py:6193
 msgid "; sudo requires the account password"
 msgstr "؛ يتطلب الأمر sudo كلمة مرور الحساب"
 
-#: src/pages.py:129
-msgid ""
-"A partition on this disk is mounted. Unmount it and rescan storage before "
-"continuing."
-msgstr ""
-"يتم تحميل إحدى التقسيمات على هذا القرص. قم بإلغاء تحميلها وإعادة مسح التخزين"
-" قبل المتابعة."
+#: src/pages.py:160
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "أحد أقسام هذا القرص مركّب. فكّ تركيبه وأعد مسح التخزين قبل المتابعة."
 
-#: src/pages.py:2899
+#: src/pages.py:3241
 msgid "ALL DATA on {disk} will be permanently erased."
 msgstr "سيتم مسح جميع البيانات على {disk} بشكل دائم."
 
-#: src/pages.py:4082
+#: src/pages.py:6188
 msgid "Account security"
 msgstr "أمان الحساب"
 
-#: src/pages.py:2980
+#: src/pages.py:4066
 msgid "Advanced Storage"
 msgstr "التخزين المتقدم"
 
-#: src/pages.py:164
-msgid ""
-"After changing partitions or unmounting a volume, rescan storage and select "
-"the target again."
-msgstr ""
-"بعد تغيير التقسيمات أو إلغاء تحميل مجلد، أعد مسح التخزين وحدد الهدف مرة "
-"أخرى."
+#: src/pages.py:195
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "بعد تغيير التقسيمات أو إلغاء تحميل مجلد، أعد مسح التخزين وحدد الهدف مرة أخرى."
 
-#: src/pages.py:4801
-msgid ""
-"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
-"then enter password 123456."
-msgstr ""
-"بعد إعادة التشغيل، سيفتح MOKManager. اختر Enroll MOK → Continue → Yes، ثم "
-"أدخل كلمة المرور 123456."
+#: src/pages.py:7042
+msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
+msgstr "بعد إعادة التشغيل، سيفتح MOKManager. اختر Enroll MOK → Continue → Yes، ثم أدخل كلمة المرور 123456."
 
-#: src/pages.py:4432
+#: src/pages.py:6636
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -99,60 +83,56 @@ msgstr ""
 "سيتم تدمير جميع الأقسام والبيانات الموجودة على {disk}.\n"
 "\n"
 
-#: src/pages.py:155
-msgid ""
-"Alternatively, you may explicitly select one entire partition to erase. "
-"Everything in that selected partition will be destroyed; it is never "
-"selected automatically."
-msgstr ""
-"بديلًا عن ذلك، يمكنك تحديد تقسيم كامل محدد لحذفه. سيتم تدمير كل شيء موجود في"
-" هذا التقسيم المحدد؛ ولن يتم تحديده تلقائيًا أبدًا."
+#: src/pages.py:186
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "بديلًا عن ذلك، يمكنك تحديد تقسيم كامل محدد لحذفه. سيتم تدمير كل شيء موجود في هذا التقسيم المحدد؛ ولن يتم تحديده تلقائيًا أبدًا."
 
-#: src/pages.py:924 src/pages.py:986
+#: src/pages.py:991 src/pages.py:1053
 msgid "Battery power is too low for a safe installation."
 msgstr "طاقة البطارية منخفضة جدًا لإجراء تثبيت آمن."
 
-#: src/pages.py:895
+#: src/pages.py:962
 msgid "Charge to at least 80% before starting the installation."
 msgstr "اشحن البطارية إلى 80% على الأقل قبل بدء التثبيت."
 
-#: src/pages.py:1041 src/pages.py:1016
+#: src/pages.py:1108 src/pages.py:1083
 msgid "Continue Anyway"
 msgstr "المتابعة على أي حال"
 
-#: src/pages.py:1000
+#: src/pages.py:1067
 msgid "Current battery level: {percent}%"
 msgstr "مستوى البطارية الحالي: {percent}%"
 
-#: src/pages.py:1006
+#: src/pages.py:1073
 msgid "External power is connected."
 msgstr "مصدر الطاقة الخارجي متصل."
 
-#: src/pages.py:1008
+#: src/pages.py:1075
 msgid "External power is not connected."
 msgstr "مصدر الطاقة الخارجي غير متصل."
 
-#: src/pages.py:954
+#: src/pages.py:1021
 msgid "I understand the risks and insist on installing with low battery."
 msgstr "أفهم المخاطر وأصر على التثبيت مع انخفاض شحن البطارية."
 
-#: src/pages.py:894 src/pages.py:889 src/pages.py:967 src/pages.py:969
+#: src/pages.py:961 src/pages.py:956 src/pages.py:1034 src/pages.py:1036
 msgid "Low battery"
 msgstr "البطارية منخفضة"
 
-#: src/pages.py:948
+#: src/pages.py:1015
 msgid "Recheck"
 msgstr "إعادة الفحص"
 
-#: src/main.py:110 src/pages.py:731 src/pages.py:815
+#: src/main.py:114 src/pages.py:794 src/pages.py:881
+#: assets/anduinos-installer-beta.desktop:30
 msgid "AnduinOS Installer"
 msgstr "برنامج تثبيت AnduinOS"
 
-#: src/main.py:108
+#: src/main.py:112
 msgid "AnduinOS Installer (Development)"
 msgstr "برنامج تثبيت AnduinOS (وضع التطوير)"
 
-#: src/pages.py:4425
+#: src/pages.py:6623
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
@@ -160,160 +140,140 @@ msgstr ""
 "سيقوم AnduinOS باستخدام المساحة غير المخصصة المحددة على {disk} فقط. سيتم الحفاظ على التقسيمات الموجودة.\n"
 "\n"
 
-#: src/pages.py:133
-msgid ""
-"AnduinOS will use only the selected unallocated space. The installer will "
-"not shrink or move an existing filesystem."
-msgstr ""
-"سوف يستخدم AnduinOS فقط المساحة غير المخصصة المحددة. لن يقوم المثبت بتصغير "
-"أو نقل نظام ملفات موجود."
+#: src/pages.py:164
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "سوف يستخدم AnduinOS فقط المساحة غير المخصصة المحددة. لن يقوم المثبت بتصغير أو نقل نظام ملفات موجود."
 
 #: data/languages.json:keyboard_layouts
 msgid "Arabic"
 msgstr "العربية"
 
-#: src/pages.py:268 src/pages.py:4461 src/pages.py:817
+#: src/pages.py:322 src/pages.py:6672 src/pages.py:6708 src/pages.py:883
 msgid "Back"
 msgstr "رجوع"
 
-#: src/pages.py:3014
-msgid ""
-"Before continuing: finish Windows updates, disable Fast Startup and "
-"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
-"measurements and boot order can change."
-msgstr ""
-"قبل المتابعة: أكمل تحديثات Windows، وعطل بدء التشغيل السريع والوضع المعلق، "
-"وقم بنسخ مفتاح استرداد BitLocker احتياطيًا. قد تتغير إعدادات EFI، والتمهيد "
-"الآمن، وقياسات TPM، وترتيب التمهيد."
+#: src/pages.py:3439
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "قبل المتابعة: أكمل تحديثات Windows، وعطل بدء التشغيل السريع والوضع المعلق، وقم بنسخ مفتاح استرداد BitLocker احتياطيًا. قد تتغير إعدادات EFI، والتمهيد الآمن، وقياسات TPM، وترتيب التمهيد."
 
-#: src/pages.py:2470
+#: src/pages.py:2622
 msgid "BitLocker detected"
 msgstr "تم اكتشاف BitLocker"
 
-#: src/pages.py:146
-msgid ""
-"BitLocker storage will be preserved. The installer will not unlock, resize, "
-"repair or otherwise modify it."
-msgstr ""
-"سيتم الحفاظ على تخزين BitLocker. لن يقوم المثبت بفك القفل أو تغيير الحجم أو "
-"إصلاح أو تعديل بطرق أخرى."
+#: src/pages.py:177
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "سيتم الحفاظ على تخزين BitLocker. لن يقوم المثبت بفك القفل أو تغيير الحجم أو إصلاح أو تعديل بطرق أخرى."
 
-#: src/pages.py:4186
+#: src/pages.py:6282 src/pages.py:6342
 msgid "Boot policy"
 msgstr "سياسة الإقلاع"
 
-#: src/pages.py:3055
+#: src/pages.py:3480 src/pages.py:5117
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (موصى به)"
 
-#: src/pages.py:2817
+#: src/pages.py:3158
 msgid "Btrfs — recommended"
 msgstr "Btrfs — موصى به"
 
-#: src/pages.py:4361
+#: src/pages.py:6554
 msgid "Cannot create installation plan"
 msgstr "تعذر إنشاء خطة التثبيت"
 
-#: src/pages.py:2727
+#: src/pages.py:3068
 msgid "Choose Installation Method"
 msgstr "اختر طريقة التثبيت"
 
-#: src/pages.py:2498
+#: src/pages.py:2650
 msgid "Choose one target disk. Storage settings come next."
 msgstr "اختر قرصًا واحدًا كهدف. ستأتي إعدادات التخزين بعد ذلك."
 
-#: src/pages.py:2199
+#: src/pages.py:2351
 msgid "Choose optional software to install"
 msgstr "اختر البرامج الاختيارية للتثبيت"
 
-#: src/pages.py:813
+#: src/pages.py:879
 msgid "Choose your language to begin installation"
 msgstr "اختر لغتك لبدء التثبيت"
 
-#: src/pages.py:3819
+#: src/pages.py:5906
 msgid "Choose your location to set the system clock"
 msgstr "اختر موقعك لضبط ساعة النظام"
 
-#: src/pages.py:4838
+#: src/pages.py:7079
 msgid "Complete"
 msgstr "مكتمل"
 
-#: src/pages.py:3506 src/pages.py:3513 src/pages.py:4101 src/pages.py:3601
-#: src/pages.py:4440
+#: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
+#: src/pages.py:6644
 msgid "Computer Name"
 msgstr "اسم الحاسوب"
 
-#: src/pages.py:3594
+#: src/pages.py:5679
 msgid "Computer name contains invalid characters."
 msgstr "يحتوي اسم الحاسوب على أحرف غير صالحة."
 
-#: src/pages.py:4589
+#: src/pages.py:6828
 msgid "Configure account, region, timezone, and machine identity"
 msgstr "تكوين الحساب والمنطقة والمنطقة الزمنية وهوية الجهاز"
 
-#: src/pages.py:4578
+#: src/pages.py:3339 src/pages.py:6817 src/pages.py:3323
 msgid "Configure storage and swap"
 msgstr "تكوين التخزين ومساحة التبديل (Swap)"
 
-#: src/pages.py:3480 src/pages.py:3488
+#: src/pages.py:5565 src/pages.py:5573
 msgid "Confirm Password"
 msgstr "تأكيد كلمة المرور"
 
-#: src/pages.py:1939
+#: src/pages.py:2003
 msgid "Confirm your keyboard layout"
 msgstr "أعد تأكيد تخطيط لوحة المفاتيح الخاص بك"
 
-#: src/main.py:153 src/pages.py:1911
+#: src/main.py:157 src/pages.py:1978
 msgid "Continue Installation"
 msgstr "متابعة التثبيت"
 
-#: src/pages.py:4574
+#: src/pages.py:6813
 msgid "Copy AnduinOS system"
 msgstr "نسخ نظام AnduinOS"
 
-#: src/pages.py:4675
+#: src/pages.py:6916
 msgid "Copy Log"
 msgstr "نسخ السجل"
 
-#: src/pages.py:3146
+#: src/pages.py:3572
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
 msgstr "إنشاء قسم نظام EFI جديد بحجم 1 GiB لنظام AnduinOS"
 
-#: src/pages.py:4163
-msgid ""
-"Create and format a dedicated AnduinOS EFI System Partition inside the "
-"selected space."
+#: src/pages.py:6260
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
 msgstr "إنشاء وتنسيق قسم نظام EFI مخصص لنظام AnduinOS داخل المساحة المحددة."
 
-#: src/pages.py:3447
+#: src/pages.py:5532
 msgid "Create your user account"
 msgstr "إنشاء حساب المستخدم الخاص بك"
 
-#: src/pages.py:2412
+#: src/pages.py:2564
 msgid "Current disk layout"
 msgstr "تخطيط القرص الحالي"
 
-#: src/pages.py:3979
-msgid ""
-"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
-"executor or disk command can run."
-msgstr ""
-"وضع التطوير — سيتم التحقق من صحة الخطة ومحاكاتها. لا يمكن تشغيل أي منفذ ذي "
-"امتياز أو أمر القرص."
+#: src/pages.py:6071
+msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
+msgstr "وضع التطوير — سيتم التحقق من صحة الخطة ومحاكاتها. لا يمكن تشغيل أي منفذ ذي امتياز أو أمر القرص."
 
 #: data/languages.json:keyboard_layouts
 msgid "Danish"
 msgstr "الدنماركية"
 
-#: src/pages.py:4569
+#: src/pages.py:6808
 msgid "Detect Internet connectivity"
 msgstr "اكتشف اتصال الإنترنت"
 
-#: src/pages.py:4566
+#: src/pages.py:6805
 msgid "Detect firmware and Secure Boot"
 msgstr "كشف البرنامج الثابت (Firmware) وإمهال الإقلاع الآمن"
 
-#: src/pages.py:4419
+#: src/pages.py:6617
 msgid ""
 "Development mode will simulate installation to {disk}. No disk data will be changed.\n"
 "\n"
@@ -321,15 +281,15 @@ msgstr ""
 "سيحاكي وضع التطوير التثبيت على {disk}. لن تتغير أي بيانات على القرص.\n"
 "\n"
 
-#: src/pages.py:4923
+#: src/pages.py:7164
 msgid "Development simulation completed"
 msgstr "اكتملت محاكاة التطوير"
 
-#: src/pages.py:4832
+#: src/pages.py:7073
 msgid "Discover AnduinOS"
 msgstr "اكتشف AnduinOS"
 
-#: src/pages.py:1216 src/pages.py:2218
+#: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
 msgstr "تحميل وتثبيت تحديثات النظام أثناء التثبيت"
 
@@ -337,23 +297,21 @@ msgstr "تحميل وتثبيت تحديثات النظام أثناء التث�
 msgid "Dutch"
 msgstr "الهولندية"
 
-#: src/pages.py:3073
+#: src/pages.py:4210 src/pages.py:3498 src/pages.py:5013
 msgid "EFI System Partition"
 msgstr "قسم نظام EFI"
 
-#: src/pages.py:4184
+#: src/pages.py:6341 src/pages.py:6281
 msgid "EFI policy"
 msgstr "سياسة EFI"
 
-#: src/pages.py:2455
+#: src/pages.py:2607
 msgid "Empty disk — no partitions"
 msgstr "قرص فارغ — لا توجد أقسام"
 
-#: src/pages.py:2821
+#: src/pages.py:3162
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
-msgstr ""
-"تفعيل مجلدات فرعية مشتركة في مساحة واحدة، ولقطات فورية، وآلة Disk Snapshots "
-"Manager."
+msgstr "تفعيل مجلدات فرعية مشتركة في مساحة واحدة، ولقطات فورية، وآلة Disk Snapshots Manager."
 
 #: data/languages.json:keyboard_layouts
 msgid "English (UK)"
@@ -363,53 +321,39 @@ msgstr "الإنجليزية (المملكة المتحدة)"
 msgid "English (US)"
 msgstr "الإنجليزية (الولايات المتحدة)"
 
-#: src/pages.py:4601
+#: src/pages.py:6840
 msgid "Ensure Disk Snapshots Manager is available"
 msgstr "تأكد من توفر Disk Snapshots Manager"
 
-#: src/pages.py:4412
+#: src/pages.py:6610
 msgid "Erase Disk and Install"
 msgstr "مسح القرص والتثبيت"
 
-#: src/pages.py:2813 src/pages.py:4226
+#: src/pages.py:3154 src/pages.py:6382
 msgid "Erase every partition and all data on the selected disk."
 msgstr "محوا كل الأقسام وجميع البيانات على القرص المحدد."
 
-#: src/pages.py:4411
+#: src/pages.py:6609
 msgid "Erase the entire selected disk?"
 msgstr "هل تريد مسح القرص المحدد بالكامل؟"
 
-#: src/pages.py:137
-msgid ""
-"Existing Windows, recovery and data partitions remain outside the write set "
-"and will be preserved."
-msgstr ""
-"تبقى تقسيمات Windows الحالية واستعادة البيانات خارج مجموعة الكتابة وسيتم "
-"الحفاظ عليها."
+#: src/pages.py:168
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "تبقى تقسيمات Windows الحالية واستعادة البيانات خارج مجموعة الكتابة وسيتم الحفاظ عليها."
 
-#: src/pages.py:2945
-msgid ""
-"Existing partitions were detected. The first two choices delete them; "
-"Advanced is the preservation path."
-msgstr ""
-"تم اكتشاف أقسام موجودة. الخياريان الأولان يحذفانها؛ بينما الخيار المتقدم هو "
-"المسار الذي يحافظ عليها."
+#: src/pages.py:3287
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "تم اكتشاف أقسام موجودة. الخياريان الأولان يحذفانها؛ بينما الخيار المتقدم هو المسار الذي يحافظ عليها."
 
-#: src/pages.py:4446
-msgid ""
-"Existing partitions will be preserved. New AnduinOS partitions will be "
-"created only in the selected unallocated extent; EFI vendor files and the "
-"AnduinOS firmware boot entry may be updated."
-msgstr ""
-"سيتم الاحتفاظ بالأقسام الحالية. لن يتم إنشاء أقسام AnduinOS الجديدة إلا في "
-"المساحة غير المخصصة المحددة؛ وقد تُحدَّث ملفات مورّد EFI ومدخل إقلاع "
-"AnduinOS في البرامج الثابتة."
+#: src/pages.py:6650
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "سيتم الاحتفاظ بالأقسام الحالية. لن يتم إنشاء أقسام AnduinOS الجديدة إلا في المساحة غير المخصصة المحددة؛ وقد تُحدَّث ملفات مورّد EFI ومدخل إقلاع AnduinOS في البرامج الثابتة."
 
-#: src/pages.py:3052 src/pages.py:4049
+#: src/pages.py:3477 src/pages.py:6155 src/pages.py:5127
 msgid "Filesystem"
 msgstr "نظام الملفات"
 
-#: src/pages.py:4613
+#: src/pages.py:6852
 msgid "Finalize target environment"
 msgstr "إكمال بيئة الهدف"
 
@@ -417,7 +361,7 @@ msgstr "إكمال بيئة الهدف"
 msgid "Finnish"
 msgstr "الفنلندية"
 
-#: src/pages.py:4182
+#: src/pages.py:6340 src/pages.py:6279
 msgid "Formats"
 msgstr "التنسيقات"
 
@@ -425,7 +369,7 @@ msgstr "التنسيقات"
 msgid "French"
 msgstr "الفرنسية"
 
-#: src/pages.py:3462 src/pages.py:3464
+#: src/pages.py:5547 src/pages.py:5549
 msgid "Full Name"
 msgstr "الاسم الكامل"
 
@@ -437,24 +381,19 @@ msgstr "الألمانية"
 msgid "Greek"
 msgstr "اليونانية"
 
-#: src/pages.py:111
-msgid ""
-"Guided coexistence requires a system booted in UEFI mode and a GPT target "
-"disk. This disk cannot continue in guided mode."
-msgstr ""
-"يتطلب التعايش الموجه نظامًا تم تشغيله في وضع UEFI وقرص هدف GPT. لا يمكن لهذا"
-" القرص الاستمرار في الوضع الموجه."
+#: src/pages.py:142
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "يتطلب التعايش الموجه نظامًا تم تشغيله في وضع UEFI وقرص هدف GPT. لا يمكن لهذا القرص الاستمرار في الوضع الموجه."
 
-#: src/pages.py:4131
-msgid ""
-"Guided storage selection is missing. Rescan and select the target again."
+#: src/pages.py:6393
+msgid "Guided storage selection is missing. Rescan and select the target again."
 msgstr "اختيار التخزين الإرشادي مفقود. أعد المسح واختر الهدف مرة أخرى."
 
 #: data/languages.json:keyboard_layouts
 msgid "Hindi (India)"
 msgstr "الهندية (الهند)"
 
-#: src/pages.py:2741
+#: src/pages.py:3082
 msgid "How should AnduinOS use this disk?"
 msgstr "كيف يجب أن تستخدم AnduinOS هذا القرص؟"
 
@@ -462,87 +401,83 @@ msgstr "كيف يجب أن تستخدم AnduinOS هذا القرص؟"
 msgid "Indonesian"
 msgstr "الإندونيسية"
 
-#: src/pages.py:4498
+#: src/pages.py:6737
 msgid "Install"
 msgstr "تثبيت"
 
-#: src/pages.py:4559 src/pages.py:1221 src/pages.py:4125
+#: src/pages.py:6798 src/pages.py:1288 src/pages.py:6231
 msgid "Install input method"
 msgstr "تثبيت طريقة الإدخال"
 
-#: src/pages.py:625
+#: src/pages.py:684
 msgid "Install {language} input method: {name}"
 msgstr "تثبيت طريقة إدخال {language}: {name}"
 
-#: src/pages.py:4409 src/pages.py:4496
+#: src/pages.py:3405 src/pages.py:6604 src/pages.py:6733
 msgid "Install Alongside"
 msgstr "التثبيت بجانب نظام التشغيل الحالي"
 
-#: src/pages.py:4169
+#: src/pages.py:6266
 msgid "Install alongside"
 msgstr "التثبيت بجانب"
 
-#: src/pages.py:4608
+#: src/pages.py:6847
 msgid "Install bootloader"
 msgstr "تثبيت محمل الإقلاع"
 
-#: src/pages.py:4611
+#: src/pages.py:6850
 msgid "Check systems on other disks"
 msgstr "تحقق من الأنظمة الموجودة على الأقراص الأخرى"
 
-#: src/pages.py:1217 src/pages.py:4603
+#: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
 msgstr "تثبيت برامج تشغيل الأجهزة"
 
-#: src/pages.py:4408
+#: src/pages.py:6603
 msgid "Install in the selected free space?"
 msgstr "هل تريد التثبيت في المساحة الحرة المحددة؟"
 
-#: src/pages.py:4596
+#: src/pages.py:6835
 msgid "Ensure required language packs are installed"
 msgstr "تأكد من تثبيت حزم اللغات المطلوبة"
 
-#: src/pages.py:4599
+#: src/pages.py:6838
 msgid "Install system updates"
 msgstr "تثبيت تحديثات النظام"
 
-#: src/pages.py:2229
+#: src/pages.py:2381
 msgid "Install third-party drivers for this device"
 msgstr "تثبيت برامج تشغيل الجهات الخارجية لهذا الجهاز"
 
-#: src/pages.py:5093 src/pages.py:5095 src/pages.py:4940 src/pages.py:4950
+#: src/pages.py:7334 src/pages.py:7336 src/pages.py:7181 src/pages.py:7191
 msgid "Installation Complete"
 msgstr "اكتمل التثبيت"
 
-#: src/pages.py:4970
+#: src/pages.py:7211
 msgid "Installation Failed"
 msgstr "فشل التثبيت"
 
-#: src/pages.py:4639
+#: src/pages.py:6878
 msgid "Installation Steps"
 msgstr "خطوات التثبيت"
 
-#: src/pages.py:160
-msgid ""
-"Installation cannot continue with this selection. There is no force-continue"
-" option around storage safety checks."
-msgstr ""
-"لا يمكن المتابعة في التثبيت مع هذا الاختيار. لا يوجد خيار للاستمرار القسري "
-"يتجاوز فحوصات سلامة التخزين."
+#: src/pages.py:191
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "لا يمكن المتابعة في التثبيت مع هذا الاختيار. لا يوجد خيار للاستمرار القسري يتجاوز فحوصات سلامة التخزين."
 
-#: src/pages.py:4919 src/pages.py:4985
+#: src/pages.py:7160 src/pages.py:7226
 msgid "Installation complete"
 msgstr "اكتمل التثبيت"
 
-#: src/pages.py:4968
+#: src/pages.py:7209
 msgid "Installation failed"
 msgstr "فشل التثبيت"
 
-#: src/main.py:145
+#: src/main.py:149
 msgid "Installation in progress"
 msgstr "التثبيت قيد التقدم"
 
-#: src/pages.py:4547 src/pages.py:4541
+#: src/pages.py:6786 src/pages.py:6780
 msgid "Installing AnduinOS"
 msgstr "جاري تثبيت AnduinOS"
 
@@ -554,19 +489,19 @@ msgstr "الإيطالية"
 msgid "Japanese (JIS keyboard)"
 msgstr "اليابانية (لوحة مفاتيح JIS)"
 
-#: src/pages.py:4040
+#: src/pages.py:6147
 msgid "Keyboard"
 msgstr "لوحة المفاتيح"
 
-#: src/pages.py:1938 src/pages.py:1932 src/pages.py:2075
+#: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
 msgid "Keyboard Layout"
 msgstr "تخطيط لوحة المفاتيح"
 
-#: src/pages.py:2031
+#: src/pages.py:2077
 msgid "Layout Variant"
 msgstr "متغير التخطيط"
 
-#: src/pages.py:4582
+#: src/pages.py:6821
 msgid "Configure physical keyboard layout"
 msgstr "تهيئة تخطيط لوحة المفاتيح الفعلية"
 
@@ -574,102 +509,91 @@ msgstr "تهيئة تخطيط لوحة المفاتيح الفعلية"
 msgid "Korean"
 msgstr "الكورية"
 
-#: src/pages.py:4039
+#: src/pages.py:6146
 msgid "Language"
 msgstr "اللغة"
 
-#: src/pages.py:2472
+#: src/pages.py:2624
 msgid "Live USB — excluded"
 msgstr "USB حي — مستبعد"
 
-#: src/pages.py:4573
+#: src/pages.py:6812
 msgid "Mount target filesystems"
 msgstr "تركيب أنظمة ملفات الهدف"
 
-#: src/pages.py:851
+#: src/pages.py:918
 msgid "Navigation error"
 msgstr "خطأ في التنقل"
 
-#: src/pages.py:4180 src/pages.py:4229
+#: src/pages.py:4232 src/pages.py:6339 src/pages.py:6277 src/pages.py:6385
 msgid "New partitions"
 msgstr "الأقسام الجديدة"
 
-#: src/pages.py:261 src/pages.py:818 src/pages.py:1016
+#: src/pages.py:315 src/pages.py:884 src/pages.py:1083
 msgid "Next"
 msgstr "التالي"
 
-#: src/pages.py:4756
+#: src/pages.py:6997
 msgid "Next slide"
 msgstr "الشريحة التالية"
 
-#: src/pages.py:2389
+#: src/pages.py:2541
 msgid "No partition table"
 msgstr "لا يوجد جدول أقسام"
 
-#: src/pages.py:2631
+#: src/pages.py:2782
 msgid "No suitable disks found."
 msgstr "لم يتم العثور على أقراص مناسبة."
 
-#: src/pages.py:170
-msgid ""
-"No suitable unallocated space was found. To protect your data, create "
-"unallocated space with Windows Disk Management, then boot the installer "
-"again and rescan the disk."
-msgstr ""
-"لم يتم العثور على مساحة غير مخصصة مناسبة. لحماية بياناتك، قم بإنشاء مساحة "
-"غير مخصصة باستخدام إدارة الأقراص في Windows، ثم أعد تشغيل المثبت وأعد مسح "
-"القرص."
+#: src/pages.py:201
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "لم يتم العثور على مساحة غير مخصصة مناسبة. لحماية بياناتك، قم بإنشاء مساحة غير مخصصة باستخدام إدارة الأقراص في Windows، ثم أعد تشغيل المثبت وأعد مسح القرص."
 
-#: src/pages.py:175
-msgid ""
-"No suitable unallocated space was found. To protect your data, create "
-"unallocated space with a partitioning tool, then boot the installer again "
-"and rescan the disk."
-msgstr ""
-"لم يتم العثور على مساحة غير مخصصة مناسبة. لحماية بياناتك، قم بإنشاء مساحة "
-"غير مخصصة باستخدام أداة تقسيم، ثم أعد تشغيل المثبت وأعد مسح القرص."
+#: src/pages.py:206
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "لم يتم العثور على مساحة غير مخصصة مناسبة. لحماية بياناتك، قم بإنشاء مساحة غير مخصصة باستخدام أداة تقسيم، ثم أعد تشغيل المثبت وأعد مسح القرص."
 
 #: data/languages.json:keyboard_layouts
 msgid "Norwegian"
 msgstr "النرويجية"
 
-#: src/pages.py:1124 src/pages.py:1375 src/pages.py:4370 src/pages.py:854
+#: src/pages.py:1191 src/pages.py:1442 src/pages.py:6563 src/pages.py:921
 msgid "OK"
 msgstr "موافق"
 
-#: src/pages.py:4835
+#: src/pages.py:7076
 msgid "Output"
 msgstr "الإخراج"
 
-#: src/pages.py:4973 src/pages.py:5028
+#: src/pages.py:7214 src/pages.py:7269
 msgid "Output • Error"
 msgstr "الإخراج • خطأ"
 
-#: src/pages.py:5023
+#: src/pages.py:7264
 msgid "Output • {count} warning(s)"
 msgstr "الإخراج • {count} تحذير(ات)"
 
-#: src/pages.py:2453
+#: src/pages.py:2605
 msgid "Partition details unavailable"
 msgstr "تفاصيل القسم غير متوفرة"
 
-#: src/pages.py:3476 src/pages.py:3487 src/pages.py:1466 src/pages.py:1525
+#: src/pages.py:5561 src/pages.py:5572 src/pages.py:1533 src/pages.py:1592
 msgid "Password"
 msgstr "كلمة المرور"
 
-#: src/pages.py:3584
+#: src/pages.py:5669
 msgid "Password must be at least 6 characters."
 msgstr "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل."
 
-#: src/pages.py:4048
+#: src/pages.py:6154
 msgid "Platform"
 msgstr "المنصة"
 
-#: src/pages.py:4548
+#: src/pages.py:6787
 msgid "Please do not turn off your computer"
 msgstr "يرجى عدم إيقاف تشغيل جهاز الكمبيوتر الخاص بك"
 
-#: src/pages.py:3965
+#: src/pages.py:6055
 msgid "Please review your choices before proceeding"
 msgstr "يرجى مراجعة اختياراتك قبل المتابعة"
 
@@ -685,86 +609,78 @@ msgstr "البرتغالية"
 msgid "Portuguese (Brazil)"
 msgstr "البرتغالية (البرازيل)"
 
-#: src/pages.py:4594
+#: src/pages.py:6833
 msgid "Prepare Secure Boot"
 msgstr "التحضير للإقلاع الآمن"
 
-#: src/pages.py:4572
+#: src/pages.py:6811
 msgid "Prepare installation disk"
 msgstr "تحضير قرص التثبيت"
 
-#: src/pages.py:4579
+#: src/pages.py:6818
 msgid "Prepare target environment"
 msgstr "تحضير بيئة الهدف"
 
-#: src/pages.py:4871
+#: src/pages.py:7112
 msgid "Preparing installation…"
 msgstr "جارٍ التحضير للتثبيت…"
 
-#: src/pages.py:4175
+#: src/pages.py:6336 src/pages.py:6272
 msgid "Preserved partitions"
 msgstr "الأقسام المحفوظة"
 
-#: src/pages.py:4750
+#: src/pages.py:6991
 msgid "Previous slide"
 msgstr "الشريحة السابقة"
 
-#: src/pages.py:3964 src/pages.py:3958
+#: src/pages.py:6054 src/pages.py:6048
 msgid "Ready to Install"
 msgstr "جاهز للتثبيت"
 
-#: src/pages.py:4811
+#: src/pages.py:7052
 msgid "Reboot Now"
 msgstr "إعادة التشغيل الآن"
 
-#: src/pages.py:4598
+#: src/pages.py:6837
 msgid "Refresh package indexes"
 msgstr "تحديث فهارس الحزم"
 
-#: src/pages.py:4580
+#: src/pages.py:6819
 msgid "Remove live-session components"
 msgstr "إزالة مكونات الجلسة المباشرة (Live-session)"
 
-#: src/pages.py:4951 src/pages.py:4942
+#: src/pages.py:7192 src/pages.py:7183
 msgid "Remove the installation media and restart your computer"
 msgstr "أزل وسيط التثبيت وأعد تشغيل حاسوبك"
 
-#: src/pages.py:1177 src/pages.py:1205 src/pages.py:2220 src/pages.py:675
-#: src/pages.py:1362 src/pages.py:2233
-msgid ""
-"Requires an Internet connection. The base installation remains available "
-"when offline."
-msgstr ""
-"يتطلب اتصالاً بالإنترنت. يبقى التثبيت الأساسي متاحًا عند عدم الاتصال "
-"بالإنترنت."
+#: src/pages.py:1244 src/pages.py:1272 src/pages.py:2372 src/pages.py:734
+#: src/pages.py:1429 src/pages.py:2385
+msgid "Requires an Internet connection. The base installation remains available when offline."
+msgstr "يتطلب اتصالاً بالإنترنت. يبقى التثبيت الأساسي متاحًا عند عدم الاتصال بالإنترنت."
 
-#: src/pages.py:2550
+#: src/pages.py:2701
 msgid "Rescan Storage"
 msgstr "إعادة مسح التخزين"
 
-#: src/pages.py:3101
+#: src/pages.py:3526
 msgid "Rescan and Reselect Disk"
 msgstr "إعادة المسح وإعادة اختيار القرص"
 
-#: src/pages.py:4809
+#: src/pages.py:7050
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "إعادة التشغيل وتسجيل مفتاح الإقلاع الآمن"
 
-#: src/pages.py:4960
+#: src/pages.py:7201
 msgid "Restart is disabled in development protection mode"
 msgstr "تم تعطيل إعادة التشغيل في وضع حماية التطوير"
 
-#: src/pages.py:3150
+#: src/pages.py:3576 src/pages.py:5081
 msgid "Reuse {path} ({size})"
 msgstr "إعادة استخدام {path} ({size})"
 
-#: src/pages.py:4155
-msgid ""
-"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
-"before writing."
-msgstr ""
-"أعد استخدام {path}؛ لا تقم بتنسيقه أبداً؛ تحقق من صحة نظام الملفات FAT، "
-"والهوية، وتوفر 64 ميغابايت فارغة قبل الكتابة."
+#: src/pages.py:6254
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "أعد استخدام {path}؛ لا تقم بتنسيقه أبداً؛ تحقق من صحة نظام الملفات FAT، والهوية، وتوفر 64 ميغابايت فارغة قبل الكتابة."
 
 #: data/languages.json:keyboard_layouts
 msgid "Romanian"
@@ -774,43 +690,43 @@ msgstr "الرومانية"
 msgid "Russian"
 msgstr "الروسية"
 
-#: src/pages.py:4679
+#: src/pages.py:6920
 msgid "Save Log"
 msgstr "حفظ السجل"
 
-#: src/pages.py:4609
+#: src/pages.py:6848
 msgid "Schedule MOK enrollment"
 msgstr "جدولة تسجيل MOK"
 
-#: src/pages.py:3831
+#: src/pages.py:5918
 msgid "Search timezones…"
 msgstr "البحث عن المناطق الزمنية…"
 
-#: src/pages.py:4069
+#: src/pages.py:6175
 msgid "Secure Boot enrollment"
 msgstr "تسجيل الإقلاع الآمن"
 
-#: src/pages.py:2497 src/pages.py:2491
+#: src/pages.py:2649 src/pages.py:2643
 msgid "Select Installation Disk"
 msgstr "اختيار قرص التثبيت"
 
-#: src/pages.py:3818 src/pages.py:3812
+#: src/pages.py:5905 src/pages.py:5899
 msgid "Select Timezone"
 msgstr "اختيار المنطقة الزمنية"
 
-#: src/pages.py:4592
+#: src/pages.py:6831
 msgid "Select fastest package mirror"
 msgstr "اختيار أسرع مرآة للحزم"
 
-#: src/pages.py:3884
+#: src/pages.py:5974
 msgid "Selected timezone"
 msgstr "المنطقة الزمنية المحددة"
 
-#: src/pages.py:4170
+#: src/pages.py:6267
 msgid "Selected unallocated space"
 msgstr "المساحة غير المخصصة المحددة"
 
-#: src/pages.py:2239
+#: src/pages.py:2391
 msgid "Some drivers are proprietary or otherwise non-free software."
 msgstr "بعض برامج التشغيل مملوكة أو غير حرة بطرق أخرى."
 
@@ -818,11 +734,11 @@ msgstr "بعض برامج التشغيل مملوكة أو غير حرة بطر�
 msgid "Spanish"
 msgstr "الإسبانية"
 
-#: src/pages.py:4046
+#: src/pages.py:6152
 msgid "Stable disk identity"
 msgstr "هوية القرص المستقرة"
 
-#: src/pages.py:4437
+#: src/pages.py:6641
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -830,19 +746,19 @@ msgstr ""
 "هوية مستقرة: {stable_id}\n"
 "\n"
 
-#: src/pages.py:2380
+#: src/pages.py:2532
 msgid "Storage Device"
 msgstr "جهاز التخزين"
 
-#: src/pages.py:4168 src/pages.py:4224
+#: src/pages.py:6265 src/pages.py:6333 src/pages.py:6380
 msgid "Storage mode"
 msgstr "وضع التخزين"
 
-#: src/pages.py:4050
+#: src/pages.py:6156
 msgid "Subvolumes"
 msgstr "المجلدات الفرعية (Subvolumes)"
 
-#: src/pages.py:4268
+#: src/pages.py:2968 src/pages.py:3851
 msgid "Swap"
 msgstr "التبديل (Swap)"
 
@@ -850,19 +766,19 @@ msgstr "التبديل (Swap)"
 msgid "Swedish"
 msgstr "السويدية"
 
-#: src/pages.py:4051
+#: src/pages.py:6157
 msgid "System updates"
 msgstr "تحديثات النظام"
 
-#: src/pages.py:4042
+#: src/pages.py:6148
 msgid "Target Disk"
 msgstr "قرص الهدف"
 
-#: src/pages.py:2993 src/pages.py:3260
+#: src/pages.py:3418 src/pages.py:3686 src/pages.py:4091
 msgid "Target: {disk} ({size} — {model})"
 msgstr "الهدف: {disk} ({size} — {model})"
 
-#: src/pages.py:1964 src/pages.py:2076
+#: src/pages.py:2083 src/pages.py:2228
 msgid "Test your keyboard here…"
 msgstr "اختبر لوحة المفاتيح هنا…"
 
@@ -870,114 +786,75 @@ msgstr "اختبر لوحة المفاتيح هنا…"
 msgid "Thai"
 msgstr "الثايلاندية"
 
-#: src/pages.py:120
-msgid ""
-"The GPT disk or one of its partitions has no unique stable identifier. "
-"Guided coexistence cannot safely authorize preservation or writes on this "
-"disk."
-msgstr ""
-"لا يحتوي قرص GPT أو أحد أقسامه على معرّف فريد ومستقر. لا يمكن للتعايش الموجه"
-" تفويض الحفظ أو الكتابة بأمان على هذا القرص."
+#: src/pages.py:151
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "لا يحتوي قرص GPT أو أحد أقسامه على معرّف فريد ومستقر. لا يمكن للتعايش الموجه تفويض الحفظ أو الكتابة بأمان على هذا القرص."
 
-#: src/pages.py:115
-msgid ""
-"The complete partition map and free-space geometry could not be read "
-"consistently. No space on this disk is authorized for installation."
-msgstr ""
-"لم يتمكن من قراءة خريطة التقسيم الكاملة وهندسة المساحة الحرة بشكل متسق. لم "
-"يتم تفويض أي مساحة على هذا القرص للتثبيت."
+#: src/pages.py:146
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "لم يتمكن من قراءة خريطة التقسيم الكاملة وهندسة المساحة الحرة بشكل متسق. لم يتم تفويض أي مساحة على هذا القرص للتثبيت."
 
-#: src/pages.py:141
-msgid ""
-"The existing EFI System Partition is only a candidate. Health and free-space"
-" checks must pass before it can be reused, and it will never be formatted."
-msgstr ""
-"تعد تقسيم نظام EFI الحالي مرشحًا فقط. يجب اجتياز فحوصات الصحة والمساحة الحرة"
-" قبل إعادة استخدامه، ولن يتم تنسيقه أبدًا."
+#: src/pages.py:172
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "تعد تقسيم نظام EFI الحالي مرشحًا فقط. يجب اجتياز فحوصات الصحة والمساحة الحرة قبل إعادة استخدامه، ولن يتم تنسيقه أبدًا."
 
-#: src/pages.py:4926
-msgid ""
-"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
-" state, or installed system was changed."
-msgstr ""
-"خطة التثبيت صالحة. لم يتم تغيير أي قرص أو نظام ملفات أو محمّل إقلاع أو حالة "
-"الإقلاع الآمن أو النظام المثبت."
+#: src/pages.py:7167
+msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
+msgstr "خطة التثبيت صالحة. لم يتم تغيير أي قرص أو نظام ملفات أو محمّل إقلاع أو حالة الإقلاع الآمن أو النظام المثبت."
 
-#: src/main.py:147
+#: src/main.py:151
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr "لا يمكن إغلاق المثبت أثناء تعديله لقرص الهدف."
 
-#: src/pages.py:150
-msgid ""
-"The installer will not mount, repair or infer the safety of Windows volumes "
-"from hibernation or Fast Startup state. Any required Windows maintenance "
-"must be completed in Windows."
-msgstr ""
-"لن يقوم المثبت بتحميل أو إصلاح أو استنتاج أمان مجلدات Windows من حالة السبات"
-" أو التشغيل السريع. يجب إكمال أي صيانة مطلوبة لـ Windows داخل Windows."
+#: src/pages.py:181
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "لن يقوم المثبت بتحميل أو إصلاح أو استنتاج أمان مجلدات Windows من حالة السبات أو التشغيل السريع. يجب إكمال أي صيانة مطلوبة لـ Windows داخل Windows."
 
-#: src/pages.py:4443
+#: src/pages.py:6647
 msgid "The privileged executor is disabled."
 msgstr "تم تعطيل منفذ الامتيازات (Privileged executor)."
 
-#: src/pages.py:3228
-msgid ""
-"The selected disk changed or disappeared. Return to the disk page and select"
-" it again. {error}"
-msgstr ""
-"تغير القرص المحدد أو اختفى. عد إلى صفحة الأقراص وحدده مرة أخرى. {error}"
+#: src/pages.py:3654
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "تغير القرص المحدد أو اختفى. عد إلى صفحة الأقراص وحدده مرة أخرى. {error}"
 
-#: src/pages.py:3241
+#: src/pages.py:3667
 msgid "The selected disk size changed. Return and select it again."
 msgstr "تغير حجم القرص المحدد. عد واختره مرة أخرى."
 
-#: src/pages.py:3251
-msgid ""
-"The selected disk topology changed. Review the disk and installation method "
-"again."
+#: src/pages.py:3677
+msgid "The selected disk topology changed. Review the disk and installation method again."
 msgstr "تغير هيكلية القرص المحددة. راجع القرص وطريقة التثبيت مرة أخرى."
 
-#: src/pages.py:3580
+#: src/pages.py:5665
 msgid "The two passwords do not match."
 msgstr "كلمتا المرور غير متطابقتين."
 
-#: src/pages.py:4057
+#: src/pages.py:6163
 msgid "Third-party drivers"
 msgstr "برامج تشغيل الجهات الخارجية"
 
-#: src/pages.py:3021
-msgid ""
-"This advanced path preserves existing partitions but changes the selected "
-"disk's partition table and the machine's EFI boot state."
-msgstr ""
-"يحافظ هذا المسار المتقدم على التقسيمات الحالية لكنه يغير جدول تقسيمات القرص "
-"المحدد وحالة تشغيل EFI للجهاز."
+#: src/pages.py:3446
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "يحافظ هذا المسار المتقدم على التقسيمات الحالية لكنه يغير جدول تقسيمات القرص المحدد وحالة تشغيل EFI للجهاز."
 
-#: src/pages.py:125
-msgid ""
-"This disk contains an active mapper, array or other nested block-device "
-"topology that guided coexistence does not support."
-msgstr ""
-"يحتوي هذا القرص على مرساة نشطة، مصفوفة أو طبولوجيا جهاز كتلي متداخل آخر لا "
-"يدعمه التعايش الموجه."
+#: src/pages.py:156
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "يحتوي هذا القرص على مرساة نشطة، مصفوفة أو طبولوجيا جهاز كتلي متداخل آخر لا يدعمه التعايش الموجه."
 
-#: src/pages.py:2935
-msgid ""
-"This disk is too small for whole-disk installation. Advanced may continue "
-"only if suitable unallocated space exists."
-msgstr ""
-"هذا القرص صغير جداً لتركيب النظام بالكامل. يمكن للمطورين المتقدمين المتابعة "
-"فقط إذا كان هناك مساحة غير مخصصة مناسبة."
+#: src/pages.py:3277
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "هذا القرص صغير جداً لتركيب النظام بالكامل. يمكن للمطورين المتقدمين المتابعة فقط إذا كان هناك مساحة غير مخصصة مناسبة."
 
-#: src/pages.py:4454
+#: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
 msgstr "لا يقوم هذا المثبت بتقليص أو الحفاظ على الأنظمة الأخرى."
 
-#: src/pages.py:4103
+#: src/pages.py:6209
 msgid "Timezone"
 msgstr "المنطقة الزمنية"
 
-#: src/pages.py:2474
+#: src/pages.py:2626
 msgid "Too small"
 msgstr "صغير جداً"
 
@@ -989,71 +866,67 @@ msgstr "التركية"
 msgid "Ukrainian"
 msgstr "الأوكرانية"
 
-#: src/pages.py:3065
+#: src/pages.py:3490
 msgid "Unallocated space"
 msgstr "مساحة غير مخصصة"
 
-#: src/pages.py:2445
+#: src/pages.py:2597
 msgid "Unallocated · {size}"
 msgstr "غير مخصص · {size}"
 
-#: src/pages.py:4014 src/pages.py:1710
+#: src/pages.py:6106 src/pages.py:1777
 msgid "Unavailable: {error}"
 msgstr "غير متاح: {error}"
 
-#: src/pages.py:2432
+#: src/pages.py:2584
 msgid "Unknown filesystem"
 msgstr "نظام ملفات غير معروف"
 
-#: src/pages.py:4614
+#: src/pages.py:6853
 msgid "Unmount installed system"
 msgstr "فك تركيب النظام المثبت"
 
-#: src/pages.py:2198 src/pages.py:1196 src/pages.py:2192
+#: src/pages.py:2350 src/pages.py:1263 src/pages.py:2344
 msgid "Updates and Drivers"
 msgstr "التحديثات وبرامج التشغيل"
 
-#: src/pages.py:2986
+#: src/pages.py:3411
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "استخدم فقط المساحة غير المخصصة الموجودة على القرص المحدد."
 
-#: src/pages.py:4079
+#: src/pages.py:6185
 msgid "User"
 msgstr "المستخدم"
 
-#: src/pages.py:3446 src/pages.py:3440
+#: src/pages.py:5531 src/pages.py:5525
 msgid "User Account"
 msgstr "حساب المستخدم"
 
-#: src/pages.py:3468 src/pages.py:3472
+#: src/pages.py:5553 src/pages.py:5557
 msgid "Username"
 msgstr "اسم المستخدم"
 
-#: src/pages.py:3568
-msgid ""
-"Username must start with a lowercase ASCII letter and contain only lowercase"
-" ASCII letters or digits (maximum 16 characters)."
-msgstr ""
-"يجب أن يبدأ اسم المستخدم بحرف ASCII صغير وأن يحتوي فقط على أحرف ASCII صغيرة "
-"أو أرقام (الحد الأقصى 16 حرفاً)."
+#: src/pages.py:5653
+msgid "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
+msgstr "يجب أن يبدأ اسم المستخدم بحرف ASCII صغير وأن يحتوي فقط على أحرف ASCII صغيرة أو أرقام (الحد الأقصى 16 حرفاً)."
 
-#: src/pages.py:2832
+#: src/pages.py:3173
 msgid "Uses a traditional single root filesystem."
 msgstr "يستخدم نظام ملفات جذر واحد تقليدي."
 
-#: src/pages.py:4406
+#: src/pages.py:6601
 msgid "Validate Plan (No Installation)"
 msgstr "التحقق من صحة الخطة (بدون تثبيت)"
 
-#: src/pages.py:4405
+#: src/pages.py:6600
 msgid "Validate this installation plan?"
 msgstr "هل تريد التحقق من صحة خطة التثبيت هذه؟"
 
-#: src/pages.py:4606
+#: src/pages.py:6845
 msgid "Verify kernel module signatures"
 msgstr "التحقق من تواقيع وحدات النواة"
 
-#: src/pages.py:4571
+#: src/pages.py:6810
 msgid "Verify target disk isolation"
 msgstr "التحقق من عزل قرص الهدف"
 
@@ -1061,868 +934,819 @@ msgstr "التحقق من عزل قرص الهدف"
 msgid "Vietnamese"
 msgstr "الفيتنامية"
 
-#: src/pages.py:811
+#: src/pages.py:877
 msgid "Welcome to AnduinOS"
 msgstr "مرحباً بك في AnduinOS"
 
-#: src/pages.py:2468
+#: src/pages.py:2620
 msgid "Windows detected"
 msgstr "تم اكتشاف ويندوز"
 
-#: src/pages.py:4188
-msgid ""
-"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
-"AnduinOS NVRAM entry."
-msgstr ""
-"اكتب EFI/AnduinOS فقط، ولا تجاوز EFI/BOOT، وتطلب إدخال NVRAM موثق لـ "
-"AnduinOS."
+#: src/pages.py:6284
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "اكتب EFI/AnduinOS فقط، ولا تجاوز EFI/BOOT، وتطلب إدخال NVRAM موثق لـ AnduinOS."
 
-#: src/pages.py:4072
+#: src/pages.py:6178
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
 msgstr "إنشاء MOK محلي للآلة؛ تسجيل بعد إعادة التشغيل بكلمة المرور 123456"
 
-#: src/pages.py:4059
+#: src/pages.py:6165
 msgid "detect and install (may include non-free software)"
 msgstr "الكشف والتثبيت (قد يتضمن برمجيات غير حرة)"
 
-#: src/pages.py:4121 src/pages.py:4055 src/pages.py:4061 src/pages.py:4067
+#: src/pages.py:6227 src/pages.py:6161 src/pages.py:6167 src/pages.py:6173
 msgid "do not install"
 msgstr "عدم التثبيت"
 
-#: src/pages.py:4053 src/pages.py:4065
+#: src/pages.py:6159 src/pages.py:6171
 msgid "download and install"
 msgstr "التحميل والتثبيت"
 
-#: src/pages.py:3055
+#: src/pages.py:3480 src/pages.py:5118
 msgid "ext4 (classic)"
 msgstr "ext4 (كلاسيكي)"
 
-#: src/pages.py:2829
+#: src/pages.py:3170
 msgid "ext4 — classic"
 msgstr "ext4 — كلاسيكي"
 
-#: src/pages.py:4077
+#: src/pages.py:6183
 msgid "not required"
 msgstr "غير مطلوب"
 
-#: src/pages.py:4083
+#: src/pages.py:6189
 msgid "password required for login"
 msgstr "كلمة مرور مطلوبة لتسجيل الدخول"
 
-#: src/pages.py:4024
+#: src/pages.py:6117
 msgid "single ext4 root filesystem"
 msgstr "نظام ملفات جذري ext4 واحد"
 
-#: src/pages.py:4005
+#: src/pages.py:6097
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / الإقلاع الآمن: {secure_boot}"
 
-#: src/pages.py:4176
+#: src/pages.py:6273
 msgid "{count}: {paths}"
 msgstr "{count}: {paths}"
 
-#: src/pages.py:4139
+#: src/pages.py:6238
 msgid "{name}: {start}–{end} MiB"
 msgstr "{name}: {start}–{end} ميغابايت"
 
-#: src/pages.py:4147
+#: src/pages.py:6246 src/pages.py:6313
 msgid "{path} as {filesystem}"
 msgstr "{path} كـ {filesystem}"
 
-#: src/pages.py:4171
+#: src/pages.py:6268
 msgid "{size} at {offset}"
 msgstr "{size} عند الإزاحة {offset}"
 
-#: src/pages.py:3288
+#: src/pages.py:3714
 msgid "{size} unallocated at {offset}"
 msgstr "{size} غير مخصص عند الإزاحة {offset}"
 
-#: src/pages.py:5031
+#: src/pages.py:7272
 msgid "{step} failed"
 msgstr "فشل {step}"
 
-#: src/pages.py:4303
-msgid ""
-"⚠ Only the selected unallocated space will be partitioned and formatted. "
-"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
-"firmware boot entry may change. This installer will not shrink Windows for "
-"you."
-msgstr ""
-"⚠ سيتم تقسيم وتنسيق المساحة غير المخصصة المحددة فقط. ستُحفظ الأقسام "
-"الموجودة، لكن قد تتغير ملفات EFI/AnduinOS ودخول إقلاع نظام AnduinOS الثابت. "
-"لن يقوم مثبت النظام هذا بتصغير حجم Windows نيابةً عنك."
+#: src/pages.py:6488
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ سيتم تقسيم وتنسيق المساحة غير المخصصة المحددة فقط. ستُحفظ الأقسام الموجودة، لكن قد تتغير ملفات EFI/AnduinOS ودخول إقلاع نظام AnduinOS الثابت. لن يقوم مثبت النظام هذا بتصغير حجم Windows نيابةً عنك."
 
-#: src/pages.py:4311
-msgid ""
-"⚠ This will erase ALL data on the selected disk. This action cannot be "
-"undone."
-msgstr ""
-"⚠ سيؤدي هذا إلى مسح جميع البيانات الموجودة على القرص المحدد. لا يمكن التراجع"
-" عن هذا الإجراء."
+#: src/pages.py:6504
+msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
+msgstr "⚠ سيؤدي هذا إلى مسح جميع البيانات الموجودة على القرص المحدد. لا يمكن التراجع عن هذا الإجراء."
 
-#: src/pages.py:1176 src/pages.py:667 src/pages.py:1171
+#: src/pages.py:1243 src/pages.py:726 src/pages.py:1238
 msgid "Connect to the Internet"
 msgstr "الاتصال بالإنترنت"
 
-#: src/pages.py:1343
+#: src/pages.py:1410
 msgid "Internet connection is ready."
 msgstr "اتصال الإنترنت جاهز."
 
-#: src/pages.py:1250
+#: src/pages.py:1317
 msgid "Available Wi-Fi Networks"
 msgstr "شبكات Wi-Fi المتاحة"
 
-#: src/pages.py:4576
+#: src/pages.py:6815
 msgid "Preserve connected Wi-Fi network"
 msgstr "الحفاظ على شبكة Wi-Fi المتصلة"
 
-#: src/pages.py:2540 src/pages.py:3092
+#: src/pages.py:2691 src/pages.py:3517 src/pages.py:4166 src/pages.py:5388
+#: src/pages.py:4139 src/pages.py:4305
 msgid "Loading storage devices…"
 msgstr "جارٍ تحميل أجهزة التخزين…"
 
-#: src/pages.py:4335
+#: src/pages.py:6528
 msgid "Rechecking target disk…"
 msgstr "جارٍ إعادة فحص القرص الهدف…"
 
-#: src/pages.py:2609 src/pages.py:3213 src/pages.py:4364
+#: src/pages.py:2760 src/pages.py:3639 src/pages.py:5336 src/pages.py:6557
 msgid "Storage devices could not be loaded: {error}"
 msgstr "تعذر تحميل أجهزة التخزين: {error}"
 
-#: src/pages.py:1218 src/pages.py:4586 src/pages.py:2252
+#: src/pages.py:1285 src/pages.py:6825 src/pages.py:2404
 msgid "Install extended multimedia format support"
 msgstr "تثبيت دعم موسّع لتنسيقات الوسائط المتعددة"
 
-#: src/pages.py:4063
+#: src/pages.py:6169
 msgid "Extended multimedia formats"
 msgstr "تنسيقات وسائط متعددة موسّعة"
 
-#: src/pages.py:2256
-msgid ""
-"Adds wider GStreamer compatibility and support for additional legacy and "
-"specialist media formats. Some components may be subject to patent or "
-"redistribution terms."
-msgstr ""
-"يضيف توافقًا أوسع مع GStreamer ودعمًا لتنسيقات وسائط قديمة ومتخصصة إضافية. "
-"قد تخضع بعض المكونات لبراءات اختراع أو شروط إعادة التوزيع."
+#: src/pages.py:2408
+msgid "Adds wider GStreamer compatibility and support for additional legacy and specialist media formats. Some components may be subject to patent or redistribution terms."
+msgstr "يضيف توافقًا أوسع مع GStreamer ودعمًا لتنسيقات وسائط قديمة ومتخصصة إضافية. قد تخضع بعض المكونات لبراءات اختراع أو شروط إعادة التوزيع."
 
-#: src/pages.py:1473
+#: src/pages.py:1540
 msgid "A saved profile exists. Entering a password updates it securely."
 msgstr "يوجد ملف تعريف محفوظ. يؤدي إدخال كلمة مرور إلى تحديثه بشكل آمن."
 
-#: src/pages.py:1524
+#: src/pages.py:1591
 msgid "Anonymous identity (optional)"
 msgstr "هوية مجهولة (اختياري)"
 
-#: src/pages.py:1530
+#: src/pages.py:1597
 msgid "CA certificate path (optional)"
 msgstr "مسار شهادة CA (اختياري)"
 
-#: src/pages.py:1239 src/pages.py:1409 src/pages.py:1482 src/pages.py:1600
-#: src/pages.py:1816
+#: src/pages.py:1306 src/pages.py:1476 src/pages.py:1549 src/pages.py:1667
+#: src/pages.py:1883 src/pages.py:4626 src/pages.py:4845 src/pages.py:5309
 msgid "Cancel"
 msgstr "إلغاء"
 
-#: src/pages.py:1786
+#: src/pages.py:1853
 msgid "Cancelling Wi-Fi operation…"
 msgstr "جارٍ إلغاء عملية Wi-Fi…"
 
-#: src/pages.py:1532
+#: src/pages.py:1599
 msgid "Client certificate path"
 msgstr "مسار شهادة العميل"
 
-#: src/pages.py:1483 src/pages.py:1601
+#: src/pages.py:1550 src/pages.py:1668
 msgid "Connect"
-msgstr "Connect"
+msgstr "اتصال"
 
-#: src/pages.py:1817
+#: src/pages.py:1884 src/pages.py:6709
 msgid "Continue"
 msgstr "متابعة"
 
-#: src/pages.py:1259 src/pages.py:1809
+#: src/pages.py:1326 src/pages.py:1876
 msgid "Connect to a hidden network"
 msgstr "الاتصال بشبكة مخفية"
 
-#: src/pages.py:1478 src/pages.py:1593
+#: src/pages.py:1545 src/pages.py:1660
 #, python-brace-format
 msgid "Connect to {network}"
 msgstr "الاتصال بـ {network}"
 
-#: src/pages.py:1654
+#: src/pages.py:1721
 msgid "Connected"
-msgstr "Connected"
+msgstr "متصل"
 
-#: src/pages.py:1453
+#: src/pages.py:1520
 #, python-brace-format
 msgid "Connecting to {network}…"
 msgstr "جارٍ الاتصال بـ{network}…"
 
-#: src/pages.py:1755
+#: src/pages.py:1822
 msgid "Could not change the Wi-Fi connection"
 msgstr "تعذر تغيير اتصال Wi-Fi"
 
-#: src/pages.py:1410
+#: src/pages.py:1477
 msgid "Disconnect"
-msgstr "Disconnect"
+msgstr "قطع الاتصال"
 
-#: src/pages.py:1401
+#: src/pages.py:1468
 #, python-brace-format
 msgid "Disconnect from {network}?"
 msgstr "هل تريد قطع الاتصال بالشبكة {network}؟"
 
-#: src/pages.py:1420
+#: src/pages.py:1487
 #, python-brace-format
 msgid "Disconnecting from {network}…"
 msgstr "جارٍ قطع الاتصال بالشبكة {network}…"
 
-#: src/pages.py:1531
+#: src/pages.py:1598
 msgid "Domain suffix match (optional)"
 msgstr "مطابقة لاحقة النطاق (اختياري)"
 
-#: src/pages.py:1515
+#: src/pages.py:1582
 msgid "EAP method"
 msgstr "طريقة EAP"
 
-#: src/pages.py:1387 src/pages.py:1796
+#: src/pages.py:1454 src/pages.py:1863
 msgid "Enhanced Open (OWE)"
 msgstr "مفتوح محسّن (OWE)"
 
-#: src/pages.py:1595
-msgid ""
-"Enter the credentials supplied by your organization. Certificate validation "
-"is strongly recommended."
-msgstr ""
-"أدخل بيانات الاعتماد التي وفرتها مؤسستك. يُنصح بشدة بإجراء التحقق من صحة "
-"الشهادة."
+#: src/pages.py:1662
+msgid "Enter the credentials supplied by your organization. Certificate validation is strongly recommended."
+msgstr "أدخل بيانات الاعتماد التي وفرتها مؤسستك. يُنصح بشدة بإجراء التحقق من صحة الشهادة."
 
-#: src/pages.py:1811
+#: src/pages.py:1878
 msgid "Enter the exact network name and choose its security type."
 msgstr "أدخل اسم الشبكة بالضبط واختر نوع أمانها."
 
-#: src/pages.py:1390 src/pages.py:1800
+#: src/pages.py:1457 src/pages.py:1867
 msgid "Enterprise Wi-Fi"
 msgstr "Wi-Fi للمؤسسات"
 
-#: src/pages.py:1523
+#: src/pages.py:1590
 msgid "Identity"
-msgstr "Identity"
+msgstr "الهوية"
 
-#: src/pages.py:1527
+#: src/pages.py:1594
 msgid "Inner authentication"
 msgstr "المصادقة الداخلية"
 
-#: src/pages.py:1790
+#: src/pages.py:1857
 msgid "Network name (SSID)"
 msgstr "اسم الشبكة (SSID)"
 
-#: src/pages.py:1645
+#: src/pages.py:1712
 msgid "No Wi-Fi networks found."
 msgstr "لم يتم العثور على شبكات Wi-Fi."
 
-#: src/pages.py:1386 src/pages.py:1795
+#: src/pages.py:1453 src/pages.py:1862
 msgid "Open network"
 msgstr "شبكة مفتوحة"
 
-#: src/pages.py:1389 src/pages.py:1797 src/pages.py:1798
+#: src/pages.py:1456 src/pages.py:1864 src/pages.py:1865
 msgid "Personal Wi-Fi"
 msgstr "Wi-Fi الشخصي"
 
-#: src/pages.py:1535
+#: src/pages.py:1602
 msgid "Private key password (optional)"
 msgstr "كلمة مرور المفتاح الخاص (اختياري)"
 
-#: src/pages.py:1533
+#: src/pages.py:1600
 msgid "Private key path"
 msgstr "مسار المفتاح الخاص"
 
-#: src/pages.py:1284
+#: src/pages.py:1351
 msgid "Refresh Wi-Fi networks"
 msgstr "تحديث شبكات Wi-Fi"
 
-#: src/pages.py:1656
+#: src/pages.py:1723
 msgid "Saved"
-msgstr "Saved"
+msgstr "محفوظة"
 
-#: src/pages.py:1792
+#: src/pages.py:1859
 msgid "Security"
-msgstr "Security"
+msgstr "الأمان"
 
-#: src/pages.py:1405
-msgid ""
-"The installer will keep the saved network profile so it can be used again."
+#: src/pages.py:1472
+msgid "The installer will keep the saved network profile so it can be used again."
 msgstr "سيحتفظ المثبّت بملف تعريف الشبكة المحفوظ حتى يمكن استخدامه مرة أخرى."
 
-#: src/pages.py:1356
+#: src/pages.py:1423
 msgid "The local network is connected, but Internet access is unavailable."
 msgstr "الشبكة المحلية متصلة، لكن الوصول إلى الإنترنت غير متاح."
 
-#: src/pages.py:1856
+#: src/pages.py:1923
 msgid "Turning Wi-Fi off…"
 msgstr "جارٍ إيقاف Wi-Fi…"
 
-#: src/pages.py:1854
+#: src/pages.py:1921
 msgid "Turning Wi-Fi on…"
 msgstr "جاري تفعيل Wi-Fi…"
 
-#: src/pages.py:1485
+#: src/pages.py:1552
 msgid "Use WPS"
 msgstr "استخدام WPS"
 
-#: src/pages.py:1388 src/pages.py:1799
+#: src/pages.py:1455 src/pages.py:1866
 msgid "WEP (legacy)"
 msgstr "WEP (قديم)"
 
-#: src/pages.py:1347
-msgid ""
-"Wi-Fi is connected, but the network requires sign-in through a captive "
-"portal."
+#: src/pages.py:1414
+msgid "Wi-Fi is connected, but the network requires sign-in through a captive portal."
 msgstr "اتصال Wi-Fi نشط، لكن الشبكة تتطلب تسجيل الدخول عبر بوابة احتجاز."
 
-#: src/pages.py:1449
+#: src/pages.py:1516
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "في انتظار WPS على {network}. اضغط على زر WPS في جهاز التوجيه…"
 
-#: src/pages.py:3576
+#: src/pages.py:5661
 msgid "A password is required."
 msgstr "كلمة مرور مطلوبة."
 
-#: src/pages.py:3731
+#: src/pages.py:5817
 msgid "Administrative commands will no longer ask for your password."
 msgstr "لن تطلب الأوامر الإدارية كلمة مرورك بعد الآن."
 
-#: src/pages.py:3681 src/pages.py:3675
+#: src/pages.py:5767 src/pages.py:5761
 msgid "Advanced Options"
 msgstr "خيارات متقدمة"
 
-#: src/pages.py:3747
+#: src/pages.py:5833
 msgid "Allow SSH login with the account password"
 msgstr "السماح بتسجيل الدخول عبر SSH باستخدام كلمة مرور الحساب"
 
-#: src/pages.py:4089
+#: src/pages.py:6195
 msgid "Automatic desktop login"
 msgstr "تسجيل الدخول التلقائي إلى سطح المكتب"
 
-#: src/pages.py:3701
-msgid ""
-"Choose how the local administrator account signs in and authorizes system "
-"changes."
+#: src/pages.py:5787
+msgid "Choose how the local administrator account signs in and authorizes system changes."
 msgstr "اختر كيفية تسجيل دخول حساب المسؤول المحلي وتفويض تغييرات النظام."
 
-#: src/pages.py:3682
+#: src/pages.py:5768
 msgid "Choose optional access and sign-in policies"
 msgstr "اختر سياسات اختيارية للوصول وتسجيل الدخول"
 
-#: src/pages.py:3709
+#: src/pages.py:5795
 msgid "Choose whether this computer accepts remote Secure Shell connections."
 msgstr "اختر ما إذا كان هذا الكمبيوتر يقبل اتصالات Secure Shell البعيدة."
 
-#: src/pages.py:4604
+#: src/pages.py:6843
 msgid "Configure Secure Shell"
 msgstr "تهيئة Secure Shell"
 
-#: src/pages.py:3699
+#: src/pages.py:5785
 msgid "Local Access"
 msgstr "الوصول المحلي"
 
-#: src/pages.py:3737
+#: src/pages.py:5823
 msgid "Log in to the desktop without a password"
 msgstr "تسجيل الدخول إلى سطح المكتب بدون كلمة مرور"
 
-#: src/pages.py:3739
+#: src/pages.py:5825
 msgid "Open this account's desktop automatically when the computer starts."
 msgstr "فتح سطح مكتب هذا الحساب تلقائيًا عند بدء تشغيل الكمبيوتر."
 
-#: src/pages.py:3707
+#: src/pages.py:5793
 msgid "Remote Access"
 msgstr "الوصول عن بُعد"
 
-#: src/pages.py:3730
+#: src/pages.py:5816
 msgid "Run sudo commands without a password"
 msgstr "تشغيل أوامر sudo دون كلمة مرور"
 
-#: src/pages.py:4095
+#: src/pages.py:6201
 msgid "SSH password login"
 msgstr "تسجيل الدخول إلى SSH بكلمة مرور"
 
-#: src/pages.py:3749
+#: src/pages.py:5835
 msgid "Start Secure Shell and accept this account password over the network."
 msgstr "تشغيل Secure Shell وقبول كلمة مرور هذا الحساب عبر الشبكة."
 
-#: src/pages.py:3759
+#: src/pages.py:5845
 msgid "This will reduce the security of the installed system."
 msgstr "سيؤدي ذلك إلى تقليل أمان النظام المثبت."
 
-#: src/pages.py:4093 src/pages.py:4099
+#: src/pages.py:6199 src/pages.py:6205
 msgid "disabled"
 msgstr "معطّل"
 
-#: src/pages.py:4091 src/pages.py:4097
+#: src/pages.py:6197 src/pages.py:6203
 msgid "enabled"
 msgstr "مفعّل"
 
-#: src/pages.py:349
-msgid ""
-"AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently"
-" enabled on this computer, and we recommend enabling it for additional "
-"protection."
-msgstr ""
-"يوفر AnduinOS دعمًا شاملاً لإقلاع آمن. الإقلاع الآمن غير مفعّل حاليًا على "
-"هذا الحاسوب، وننصح بتمكينه للحصول على حماية إضافية."
+#: src/pages.py:403
+msgid "AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently enabled on this computer, and we recommend enabling it for additional protection."
+msgstr "يوفر AnduinOS دعمًا شاملاً لإقلاع آمن. الإقلاع الآمن غير مفعّل حاليًا على هذا الحاسوب، وننصح بتمكينه للحصول على حماية إضافية."
 
-#: src/pages.py:331
+#: src/pages.py:385
 msgid "AnduinOS supports Secure Boot"
 msgstr "يدعم AnduinOS ميزة الإقلاع الآمن (Secure Boot)"
 
-#: src/pages.py:360
-msgid ""
-"Battery power is sufficient or reliable power is connected. You can continue"
-" with the installation."
-msgstr ""
-"طاقة البطارية كافية أو تم توصيل مصدر طاقة موثوق. يمكنك المتابعة في التثبيت."
+#: src/pages.py:414
+msgid "Battery power is sufficient or reliable power is connected. You can continue with the installation."
+msgstr "طاقة البطارية كافية أو تم توصيل مصدر طاقة موثوق. يمكنك المتابعة في التثبيت."
 
-#: src/pages.py:366
-msgid ""
-"Connect reliable external power and charge above 25%, or charge above 45% "
-"while unplugged."
-msgstr ""
-"وصّل مصدر طاقة خارجي موثوق وشجّ البطارية فوق 25%، أو ارفع نسبة الشحن فوق 45%"
-" أثناء فصل الجهاز عن مصدر الكهرباء."
+#: src/pages.py:420
+msgid "Connect reliable external power and charge above 25%, or charge above 45% while unplugged."
+msgstr "وصّل مصدر طاقة خارجي موثوق وشجّ البطارية فوق 25%، أو ارفع نسبة الشحن فوق 45% أثناء فصل الجهاز عن مصدر الكهرباء."
 
-#: src/pages.py:338
+#: src/pages.py:392
 msgid "Could not open UEFI firmware settings"
 msgstr "تعذر فتح إعدادات برنامج UEFI الثابت"
 
-#: src/pages.py:333
+#: src/pages.py:387
 msgid "Get additional protection before installing AnduinOS."
 msgstr "احصل على حماية إضافية قبل تثبيت AnduinOS."
 
-#: src/pages.py:364
+#: src/pages.py:418
 msgid "Power conditions are safe for installation."
 msgstr "ظروف الطاقة آمنة للتثبيت."
 
-#: src/pages.py:363
+#: src/pages.py:417
 msgid "Power ready"
 msgstr "الطاقة جاهزة"
 
-#: src/pages.py:335
+#: src/pages.py:389
 msgid "Restart to UEFI Firmware Settings"
 msgstr "إعادة التشغيل إلى إعدادات برنامج UEFI الثابت"
 
-#: src/pages.py:345
-msgid ""
-"Secure Boot is a UEFI security feature that verifies trusted, digitally "
-"signed software while your computer starts."
-msgstr ""
-"الإقلاع الآمن (Secure Boot) هو ميزة أمان في نظام UEFI تقوم بالتحقق من "
-"البرامج الموثوقة والموقّعة رقمياً أثناء بدء تشغيل الحاسوب."
+#: src/pages.py:399
+msgid "Secure Boot is a UEFI security feature that verifies trusted, digitally signed software while your computer starts."
+msgstr "الإقلاع الآمن (Secure Boot) هو ميزة أمان في نظام UEFI تقوم بالتحقق من البرامج الموثوقة والموقّعة رقمياً أثناء بدء تشغيل الحاسوب."
 
-#: src/pages.py:336
+#: src/pages.py:390
 msgid "Skip"
 msgstr "تخطي"
 
-#: src/pages.py:341
+#: src/pages.py:395
 msgid "The firmware settings could not be opened on this computer."
 msgstr "تعذر فتح إعدادات برنامج UEFI الثابت على هذا الحاسوب."
 
-#: src/pages.py:354
-msgid ""
-"To enable it, open the UEFI firmware settings and look under Boot, Security,"
-" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
-"Firmware wording varies by manufacturer."
-msgstr ""
-"لتفعيله، افتح إعدادات نظام UEFI الثابت وابحث تحت قسم \"إقلاع\" (Boot) أو "
-"\"الأمان\" (Security) أو \"الإقلاع الآمن\" (Secure Boot). اختر \"Microsoft &"
-" 3rd-party CA\" أو فعّل \"الإقلاع الآمن\". تختلف الصياغة باختلاف الشركة "
-"المصنّعة."
+#: src/pages.py:408
+msgid "To enable it, open the UEFI firmware settings and look under Boot, Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. Firmware wording varies by manufacturer."
+msgstr "لتفعيله، افتح إعدادات نظام UEFI الثابت وابحث تحت قسم \"إقلاع\" (Boot) أو \"الأمان\" (Security) أو \"الإقلاع الآمن\" (Secure Boot). اختر \"Microsoft & 3rd-party CA\" أو فعّل \"الإقلاع الآمن\". تختلف الصياغة باختلاف الشركة المصنّعة."
 
+#: src/pages.py:3179
 msgid "Advanced"
 msgstr "متقدم"
 
-msgid ""
-"Keep Windows or other partitions, reuse or create an ESP, and design Root "
-"and Swap partitions with exact sizes."
-msgstr ""
-"احتفظ بـ Windows أو الأقسام الأخرى، وأعد استخدام ESP أو أنشئ واحدًا، وصمّم "
-"أقسام Root وSwap بأحجام دقيقة."
+#: src/pages.py:3181
+msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root and Swap partitions with exact sizes."
+msgstr "احتفظ بـ Windows أو الأقسام الأخرى، وأعد استخدام ESP أو أنشئ واحدًا، وصمّم أقسام Root وSwap بأحجام دقيقة."
 
-msgid ""
-"Manual changes are destructive. Existing partition starts are never moved. "
-"Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
-" or unclean volumes are never resized."
-msgstr ""
-"التغييرات اليدوية مدمّرة. لا تُنقل بدايات الأقسام الموجودة مطلقًا. لا يمكن "
-"تصغير وحدة تخزين NTFS غير مشفّرة إلا بعد فحوصات أمان صارمة؛ ولا يُعاد تحجيم "
-"وحدات التخزين المشفّرة أو المركّبة أو التي لم تُغلق أنظمة ملفاتها بشكل سليم "
-"مطلقًا."
+#: src/pages.py:3230
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "التغييرات اليدوية مدمّرة. لا تُنقل بدايات الأقسام الموجودة مطلقًا. لا يمكن تصغير وحدة تخزين NTFS غير مشفّرة إلا بعد فحوصات أمان صارمة؛ ولا يُعاد تحجيم وحدات التخزين المشفّرة أو المركّبة أو التي لم تُغلق أنظمة ملفاتها بشكل سليم مطلقًا."
 
+#: src/pages.py:3410
 msgid "Install Alongside Automatically"
 msgstr "التثبيت جنباً إلى جنب تلقائياً"
 
+#: src/pages.py:3849
 msgid "ESP"
 msgstr "ESP"
 
+#: src/pages.py:3850
 msgid "Root"
-msgstr "Root"
+msgstr "القسم الجذر"
 
+#: src/pages.py:3866
 msgid "Unallocated"
 msgstr "غير مخصصة"
 
+#: src/pages.py:3973
 #, python-brace-format
 msgid "{name} · {size} · {start}–{end} MiB"
 msgstr "{name} · {size} · {start}–{end} MiB"
 
+#: src/pages.py:4045
 msgid "Current disk"
 msgstr "القرص الحالي"
 
+#: src/pages.py:4151 src/pages.py:4047
 msgid "Planned result"
 msgstr "النتيجة المخطط لها"
 
+#: src/pages.py:4071
 msgid "Advanced: Manual Partitioning"
 msgstr "متقدم: التقسيم اليدوي"
 
-msgid ""
-"Windows was detected. Its partitions remain preserved unless you explicitly "
-"mark them for deletion."
+#: src/pages.py:4104
+msgid "Windows was detected. Its partitions remain preserved unless you explicitly mark them for deletion."
 msgstr "تم اكتشاف Windows. ستظل أقسامه محفوظة ما لم تحددها صراحةً للحذف."
 
+#: src/pages.py:4173 src/pages.py:4958
 msgid "Initialize New GPT"
 msgstr "تهيئة GPT جديد"
 
+#: src/pages.py:4193
 msgid "Existing partitions"
 msgstr "الأقسام الموجودة"
 
-msgid ""
-"Reuse a healthy existing ESP without formatting it, or create a new one in "
-"available space."
-msgstr ""
-"أعد استخدام ESP موجود وسليم دون تهيئته، أو أنشئ واحدًا جديدًا في المساحة "
-"المتاحة."
+#: src/pages.py:4214
+msgid "Reuse a healthy existing ESP without formatting it, or create a new one in available space."
+msgstr "أعد استخدام ESP موجود وسليم دون تهيئته، أو أنشئ واحدًا جديدًا في المساحة المتاحة."
 
+#: src/pages.py:4248
 msgid "Add a partition"
 msgstr "إضافة قسم"
 
-msgid ""
-"Choose an available range, exact start position, and size. Nothing is "
-"written until installation begins."
-msgstr ""
-"اختر نطاقًا متاحًا وموضع بدء وحجمًا دقيقين. لن تتم كتابة أي شيء حتى يبدأ "
-"التثبيت."
+#: src/pages.py:4252
+msgid "Choose an available range, exact start position, and size. Nothing is written until installation begins."
+msgstr "اختر نطاقًا متاحًا وموضع بدء وحجمًا دقيقين. لن تتم كتابة أي شيء حتى يبدأ التثبيت."
 
+#: src/pages.py:4266
 msgid "Role"
 msgstr "الدور"
 
+#: src/pages.py:4267
 msgid "Available space"
 msgstr "المساحة المتاحة"
 
+#: src/pages.py:4268 src/pages.py:4560
 msgid "Start (MiB)"
 msgstr "البداية (MiB)"
 
+#: src/pages.py:4269 src/pages.py:4574
 msgid "Size (MiB)"
 msgstr "الحجم (ميغابايت)"
 
+#: src/pages.py:4283
 msgid "Use All"
 msgstr "استخدام الكل"
 
+#: src/pages.py:4287
 msgid "Add Partition"
 msgstr "إضافة قسم"
 
+#: src/pages.py:4321 src/pages.py:5146
 msgid "Edit"
 msgstr "تحرير"
 
+#: src/pages.py:4548
 msgid "That partition can no longer be edited safely."
 msgstr "لم يعد من الممكن تحرير هذا القسم بأمان."
 
+#: src/pages.py:4587
 msgid "Use All Available Space"
 msgstr "استخدام كل المساحة المتاحة"
 
+#: src/pages.py:4616
 #, python-brace-format
 msgid "Edit {role} partition"
 msgstr "تحرير قسم {role}"
 
-msgid ""
-"Choose an exact position and size inside the available range. Other planned "
-"partitions are not moved."
-msgstr ""
-"اختر موضعًا وحجمًا دقيقين داخل النطاق المتاح. لن يتم نقل الأقسام الأخرى "
-"المخطط لها."
+#: src/pages.py:4620
+msgid "Choose an exact position and size inside the available range. Other planned partitions are not moved."
+msgstr "اختر موضعًا وحجمًا دقيقين داخل النطاق المتاح. لن يتم نقل الأقسام الأخرى المخطط لها."
 
+#: src/pages.py:4627
 msgid "Apply Changes"
 msgstr "تطبيق التغييرات"
 
+#: src/pages.py:4665
 msgid "Close"
 msgstr "إغلاق"
 
-msgid ""
-"BitLocker was detected. Return to Windows, open Manage BitLocker, choose "
-"Turn off BitLocker, and wait until decryption reaches 100%. Suspending "
-"protection is not enough. Back up the recovery key, fully shut Windows down,"
-" then start the installer again."
-msgstr ""
-"تم اكتشاف BitLocker. عُد إلى Windows، وافتح Manage BitLocker، واختر إيقاف "
-"تشغيل BitLocker، وانتظر حتى تصل عملية فك التشفير إلى 100%. تعليق الحماية "
-"وحده لا يكفي. انسخ مفتاح الاسترداد احتياطيًا، وأوقف تشغيل Windows بالكامل، "
-"ثم شغّل المثبّت مرة أخرى."
+#: src/pages.py:4673 src/pages.py:4897
+msgid "BitLocker was detected. Return to Windows, open Manage BitLocker, choose Turn off BitLocker, and wait until decryption reaches 100%. Suspending protection is not enough. Back up the recovery key, fully shut Windows down, then start the installer again."
+msgstr "تم اكتشاف BitLocker. عُد إلى Windows، وافتح Manage BitLocker، واختر إيقاف تشغيل BitLocker، وانتظر حتى تصل عملية فك التشفير إلى 100%. تعليق الحماية وحده لا يكفي. انسخ مفتاح الاسترداد احتياطيًا، وأوقف تشغيل Windows بالكامل، ثم شغّل المثبّت مرة أخرى."
 
-msgid ""
-"Windows is hibernated or Fast Startup is active. In an Administrator "
-"Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s "
-"/t 0'. Start the installer again only after Windows has fully shut down."
-msgstr ""
-"Windows في وضع السبات أو بدء التشغيل السريع مفعّل. في طرفية المسؤول، نفّذ "
-"الأمر 'powercfg /h off'، ثم عطّل بدء التشغيل السريع، ثم نفّذ الأمر 'shutdown"
-" /s /t 0'. أعد تشغيل المثبت فقط بعد أن يُغلق Windows بالكامل."
+#: src/pages.py:4682
+msgid "Windows is hibernated or Fast Startup is active. In an Administrator Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s /t 0'. Start the installer again only after Windows has fully shut down."
+msgstr "Windows في وضع السبات أو بدء التشغيل السريع مفعّل. في طرفية المسؤول، نفّذ الأمر 'powercfg /h off'، ثم عطّل بدء التشغيل السريع، ثم نفّذ الأمر 'shutdown /s /t 0'. أعد تشغيل المثبت فقط بعد أن يُغلق Windows بالكامل."
 
-msgid ""
-"Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk"
-" C: /f', allow every requested reboot to finish, then fully shut Windows "
-"down before trying again."
-msgstr ""
-"لم يغلق Windows وحدة تخزين NTFS هذه بشكل صحيح. عُد إلى Windows، ونفّذ الأمر "
-"'chkdsk C: /f'، وانتظر حتى تكتمل كل عملية إعادة تشغيل مطلوبة، ثم أوقف تشغيل "
-"Windows بالكامل قبل المحاولة مرة أخرى."
+#: src/pages.py:4694
+msgid "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk C: /f', allow every requested reboot to finish, then fully shut Windows down before trying again."
+msgstr "لم يغلق Windows وحدة تخزين NTFS هذه بشكل صحيح. عُد إلى Windows، ونفّذ الأمر 'chkdsk C: /f'، وانتظر حتى تكتمل كل عملية إعادة تشغيل مطلوبة، ثم أوقف تشغيل Windows بالكامل قبل المحاولة مرة أخرى."
 
-msgid ""
-"This target would require moving critical NTFS MFT metadata through a "
-"currently unsafe upstream code path. Choose a larger Windows size or shrink "
-"the volume from Windows."
-msgstr ""
-"سيتطلب هذا الحجم المحدد نقل البيانات الوصفية الحرجة لـ MFT في NTFS عبر مسار "
-"غير آمن حاليًا في الشفرة المصدرية الأصلية. اختر حجمًا أكبر لقسم Windows أو "
-"قلّص وحدة التخزين من داخل Windows."
+#: src/pages.py:4701
+msgid "This target would require moving critical NTFS MFT metadata through a currently unsafe upstream code path. Choose a larger Windows size or shrink the volume from Windows."
+msgstr "سيتطلب هذا الحجم المحدد نقل البيانات الوصفية الحرجة لـ MFT في NTFS عبر مسار غير آمن حاليًا في الشفرة المصدرية الأصلية. اختر حجمًا أكبر لقسم Windows أو قلّص وحدة التخزين من داخل Windows."
 
-msgid ""
-"This NTFS volume is mounted or in use. Unmount it and rescan storage before "
-"continuing."
-msgstr ""
-"وحدة تخزين NTFS هذه مركّبة أو قيد الاستخدام. فكّ تركيبها وأعد مسح التخزين "
-"قبل المتابعة."
+#: src/pages.py:4711
+msgid "This NTFS volume is mounted or in use. Unmount it and rescan storage before continuing."
+msgstr "وحدة تخزين NTFS هذه مركّبة أو قيد الاستخدام. فكّ تركيبها وأعد مسح التخزين قبل المتابعة."
 
-msgid ""
-"This operation moves NTFS data and changes the GPT partition boundary. A "
-"power loss, failing drive, firmware fault or filesystem bug can cause "
-"permanent data loss. Back up all important Windows files before continuing."
-msgstr ""
-"تقوم هذه العملية بنقل بيانات NTFS وتغيير الحد الفاصل لقسم GPT. قد يؤدي "
-"انقطاع التيار الكهربائي أو عطل في القرص أو خلل في البرنامج الثابت أو خطأ في "
-"نظام الملفات إلى فقدان دائم للبيانات. قم بنسخ جميع ملفات Windows المهمة "
-"احتياطيًا قبل المتابعة."
+#: src/pages.py:4736
+msgid "This operation moves NTFS data and changes the GPT partition boundary. A power loss, failing drive, firmware fault or filesystem bug can cause permanent data loss. Back up all important Windows files before continuing."
+msgstr "تقوم هذه العملية بنقل بيانات NTFS وتغيير الحد الفاصل لقسم GPT. قد يؤدي انقطاع التيار الكهربائي أو عطل في القرص أو خلل في البرنامج الثابت أو خطأ في نظام الملفات إلى فقدان دائم للبيانات. قم بنسخ جميع ملفات Windows المهمة احتياطيًا قبل المتابعة."
 
+#: src/pages.py:4749
 msgid "New Windows partition size"
 msgstr "حجم قسم Windows الجديد"
 
+#: src/pages.py:4772
 msgid "MiB"
 msgstr "MiB"
 
+#: src/pages.py:4774
 #, python-brace-format
 msgid "Allowed: {minimum}–{maximum}"
-msgstr "Allowed: {minimum}–{maximum}"
+msgstr "المسموح: {minimum}–{maximum}"
 
+#: src/pages.py:4794
 #, python-brace-format
 msgid "Windows: {windows} · New unallocated space: {free}"
 msgstr "Windows: {windows} · مساحة غير مخصصة جديدة: {free}"
 
-msgid ""
-"I have backed up my data and understand that shrinking an existing Windows "
-"partition can cause permanent data loss."
-msgstr ""
-"لقد قمت بنسخ بياناتي احتياطيًا وأفهم أن تصغير قسم Windows الموجود قد يؤدي "
-"إلى فقدان دائم للبيانات."
+#: src/pages.py:4826
+msgid "I have backed up my data and understand that shrinking an existing Windows partition can cause permanent data loss."
+msgstr "لقد قمت بنسخ بياناتي احتياطيًا وأفهم أن تصغير قسم Windows الموجود قد يؤدي إلى فقدان دائم للبيانات."
 
+#: src/pages.py:4835
 #, python-brace-format
 msgid "Change the size of {partition}?"
 msgstr "هل تريد تغيير حجم {partition}؟"
 
-msgid ""
-"The partition start will not move. Only its end will move left, creating "
-"unallocated space immediately after it."
-msgstr ""
-"لن تتحرك بداية القسم. ستتحرك نهايته فقط إلى اليسار، مما يؤدي إلى إنشاء مساحة"
-" غير مخصصة بعده مباشرةً."
+#: src/pages.py:4839
+msgid "The partition start will not move. Only its end will move left, creating unallocated space immediately after it."
+msgstr "لن تتحرك بداية القسم. ستتحرك نهايته فقط إلى اليسار، مما يؤدي إلى إنشاء مساحة غير مخصصة بعده مباشرةً."
 
+#: src/pages.py:4847
 msgid "Undo Planned Resize"
 msgstr "تراجع عن تغيير الحجم المخطط"
 
+#: src/pages.py:4848
 msgid "Plan Resize"
 msgstr "تخطيط تغيير الحجم"
 
+#: src/pages.py:4895
 msgid "Turn off BitLocker before shrinking"
 msgstr "أوقف تشغيل BitLocker قبل تصغير القسم"
 
+#: src/pages.py:4907
 #, python-brace-format
 msgid "Checking whether {partition} can be resized safely…"
 msgstr "جارٍ التحقق مما إذا كان يمكن تغيير حجم {partition} بأمان…"
 
+#: src/pages.py:4918
 msgid "NTFS safety check failed"
 msgstr "فشل فحص سلامة NTFS"
 
+#: src/pages.py:4925
 msgid "This partition cannot be resized safely"
 msgstr "لا يمكن تغيير حجم هذا القسم بأمان"
 
+#: src/pages.py:4951
 msgid "New empty GPT — every existing partition will be deleted"
 msgstr "GPT فارغ جديد — سيتم حذف جميع التقسيمات الموجودة"
 
+#: src/pages.py:4953
 msgid "Keep current GPT — only marked partitions are deleted"
 msgstr "الحفاظ على GPT الحالي — سيتم حذف التقسيمات المحددة فقط"
 
+#: src/pages.py:4956
 msgid "Keep Current GPT"
 msgstr "الاحتفاظ بـ GPT الحالي"
 
+#: src/pages.py:4969
 msgid "unknown"
 msgstr "غير معروف"
 
+#: src/pages.py:4970
 msgid "WILL DELETE"
 msgstr "سيتم الحذف"
 
+#: src/pages.py:4970
 msgid "Preserve"
 msgstr "الحفاظ"
 
+#: src/pages.py:5005
 #, python-brace-format
 msgid "Planned size: {size}"
 msgstr "الحجم المخطط: {size}"
 
+#: src/pages.py:5020
 msgid "Deleted by new GPT"
 msgstr "حُذفت بواسطة GPT جديد"
 
+#: src/pages.py:5022
 msgid "Undo"
 msgstr "تراجع"
 
+#: src/pages.py:5024
 msgid "Delete"
 msgstr "حذف"
 
+#: src/pages.py:5029
 msgid "RESIZE"
-msgstr "RESIZE"
+msgstr "تغيير الحجم"
 
+#: src/pages.py:5047
 msgid "Change Size"
 msgstr "تغيير الحجم"
 
+#: src/pages.py:5062
 msgid "This disk has no existing partitions."
 msgstr "لا يحتوي هذا القرص على أقسام موجودة."
 
+#: src/pages.py:5079
 msgid "Create a new ESP partition"
 msgstr "إنشاء قسم ESP جديد"
 
+#: src/pages.py:5136
 #, python-brace-format
 msgid "{size} · {start}–{end} MiB"
 msgstr "{size} · {start}–{end} ميجابايت"
 
+#: src/pages.py:5141
 msgid "Remove"
 msgstr "الإزالة"
 
+#: src/pages.py:3914 src/pages.py:3925 src/pages.py:5143
 msgid "New"
 msgstr "جديد"
 
-msgid ""
-"No new partitions yet. Add an ESP if needed, one Root partition, and "
-"optionally Swap."
-msgstr ""
-"لا توجد أقسام جديدة بعد. أضف ESP عند الحاجة، وقسم Root واحدًا، وقسم Swap "
-"اختياريًا."
+#: src/pages.py:5156
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
+msgstr "لا توجد أقسام جديدة بعد. أضف ESP عند الحاجة، وقسم Root واحدًا، وقسم Swap اختياريًا."
 
+#: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
 msgstr "{size} عند {start} ميجابايت"
 
+#: src/pages.py:5205
 msgid "an ESP of at least 512 MiB"
 msgstr "قسم ESP بسعة 512 MiB على الأقل"
 
+#: src/pages.py:5207
 msgid "a Root partition of at least 20 GiB"
 msgstr "قسم Root بسعة 20 GiB على الأقل"
 
+#: src/pages.py:5209
 #, python-brace-format
 msgid "Complete the plan: {requirements}."
 msgstr "أكمل الخطة: {requirements}."
 
-msgid ""
-"Layout is valid. Only the listed resizes, deletes, creates and formats will "
-"be sent to the privileged executor."
-msgstr ""
-"التخطيط صالح. لن تُرسل إلى المنفّذ ذي الصلاحيات المرتفعة سوى عمليات تغيير "
-"الحجم والحذف والإنشاء والتهيئة المدرجة."
+#: src/pages.py:5222
+msgid "Layout is valid. Only the listed resizes, deletes, creates and formats will be sent to the privileged executor."
+msgstr "التخطيط صالح. لن تُرسل إلى المنفّذ ذي الصلاحيات المرتفعة سوى عمليات تغيير الحجم والحذف والإنشاء والتهيئة المدرجة."
 
+#: src/pages.py:5262
 msgid "That partition role already exists."
 msgstr "هذا الدور للقسم موجود مسبقًا."
 
+#: src/pages.py:5302
 msgid "Initialize a new GPT?"
 msgstr "تهيئة GPT جديد؟"
 
-msgid ""
-"Every existing partition and all data on this disk will be deleted. You must"
-" then create a new ESP and Root partition."
-msgstr ""
-"سيتم حذف جميع الأقسام الموجودة وجميع البيانات على هذا القرص. يجب عليك بعد "
-"ذلك إنشاء قسم ESP وقسم Root جديد."
+#: src/pages.py:5304
+msgid "Every existing partition and all data on this disk will be deleted. You must then create a new ESP and Root partition."
+msgstr "سيتم حذف جميع الأقسام الموجودة وجميع البيانات على هذا القرص. يجب عليك بعد ذلك إنشاء قسم ESP وقسم Root جديد."
 
+#: src/pages.py:5310
 msgid "Initialize GPT"
 msgstr "تهيئة GPT"
 
+#: src/pages.py:5346
 msgid "The selected disk changed or disappeared."
 msgstr "تغيّر القرص المحدد أو اختفى."
 
+#: src/pages.py:5351
 msgid "The selected disk topology changed. Select it again."
 msgstr "تغيّر هيكل القرص المحدد. اختره مرة أخرى."
 
+#: src/pages.py:6292 src/pages.py:6293 src/pages.py:6302
 msgid "none"
 msgstr "لا شيء"
 
+#: src/pages.py:6295
 #, python-brace-format
 msgid "{path}: {before} → {after} (free {reclaimed})"
-msgstr "{path}: {before} → {after} (free {reclaimed})"
+msgstr "{path}: {before} → {after} (مساحة سيتم تحريرها: {reclaimed})"
 
+#: src/pages.py:6304
 #, python-brace-format
 msgid "{name}: {size} MiB ({start}–{end})"
 msgstr "{name}: {size} ميغابايت ({start}–{end})"
 
+#: src/pages.py:6320
 msgid "Initialize a new empty GPT"
 msgstr "تهيئة GPT جديد فارغ"
 
+#: src/pages.py:6322
 msgid "Keep the current GPT"
 msgstr "الحفاظ على GPT الحالي"
 
+#: src/pages.py:6326
 #, python-brace-format
 msgid "Reuse {path}; inspect it and never format it."
 msgstr "إعادة استخدام {path}؛ افحصها ولا تنسّقها أبدًا."
 
+#: src/pages.py:6330
 msgid "Create and format a new EFI System Partition."
 msgstr "إنشاء وتنسيق قسم نظام EFI جديد."
 
+#: src/pages.py:6334
 msgid "Advanced manual GPT"
 msgstr "GPT يدوي متقدم"
 
+#: src/pages.py:6335
 msgid "Partition table"
 msgstr "جدول التقسيمات"
 
+#: src/pages.py:6337
 msgid "Deleted partitions"
 msgstr "الأقسام المحذوفة"
 
+#: src/pages.py:6338
 msgid "Resized partitions"
 msgstr "الأقسام التي تم تغيير حجمها"
 
-msgid ""
-"Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS "
-"NVRAM entry."
-msgstr ""
-"كتابة EFI/AnduinOS فقط، والحفاظ على EFI/BOOT، وإنشاء إدخال NVRAM موثق لـ "
-"AnduinOS."
+#: src/pages.py:6344
+msgid "Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS NVRAM entry."
+msgstr "كتابة EFI/AnduinOS فقط، والحفاظ على EFI/BOOT، وإنشاء إدخال NVRAM موثق لـ AnduinOS."
 
+#: src/pages.py:6402
 msgid "Manual storage selection is missing. Return and review it."
 msgstr "يُفقد تحديد التخزين يدويًا. عُد راجعها."
 
-msgid ""
-"⚠ Listed NTFS resizes will move filesystem data and partition boundaries. "
-"Listed partitions will be deleted and every listed new partition will be "
-"formatted. Back up important data first; these partitioning operations "
-"cannot be undone."
-msgstr ""
-"⚠ ستؤدي عمليات تغيير حجم NTFS المدرجة إلى نقل بيانات نظام الملفات وحدود "
-"الأقسام. سيتم حذف الأقسام المدرجة وتنسيق كل قسم جديد مدرج. قم بنسخ البيانات "
-"المهمة احتياطيًا أولاً؛ لا يمكن التراجع عن عمليات التقسيم هذه."
+#: src/pages.py:6496
+msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ ستؤدي عمليات تغيير حجم NTFS المدرجة إلى نقل بيانات نظام الملفات وحدود الأقسام. سيتم حذف الأقسام المدرجة وتنسيق كل قسم جديد مدرج. قم بنسخ البيانات المهمة احتياطيًا أولاً؛ لا يمكن التراجع عن عمليات التقسيم هذه."
 
+#: src/pages.py:6606
 msgid "Apply this manual disk layout?"
 msgstr "هل تريد تطبيق هذا التخطيط اليدوي للقرص؟"
 
+#: src/pages.py:6607 src/pages.py:6735
 msgid "Apply Layout and Install"
 msgstr "تطبيق التخطيط والتثبيت"
 
+#: src/pages.py:6630
 #, python-brace-format
 msgid ""
 "AnduinOS will apply only the reviewed manual changes to {disk}.\n"
@@ -1931,86 +1755,74 @@ msgstr ""
 "سوف يطبّق AnduinOS فقط التغييرات اليدوية التي تمّت مراجعتها على {disk}.\n"
 "\n"
 
-msgid ""
-"Only the explicitly listed partitions will be deleted or formatted. "
-"Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
-msgstr ""
-"سيتم حذف أو تنسيق التقسيمات المدرجة صراحةً فقط. تبقى التقسيمات غير المعنية "
-"دون تغيير؛ لن يتم تجاوز EFI/BOOT."
+#: src/pages.py:6658
+msgid "Only the explicitly listed partitions will be deleted or formatted. Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
+msgstr "سيتم حذف أو تنسيق التقسيمات المدرجة صراحةً فقط. تبقى التقسيمات غير المعنية دون تغيير؛ لن يتم تجاوز EFI/BOOT."
 
-msgid ""
-"Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
-"shrunk after safety checks."
-msgstr ""
-"تحرير قرص GPT واحد. لا تُنقل بدايات الأقسام مطلقًا؛ يمكن تقليص وحدة تخزين "
-"NTFS غير مشفّرة بعد فحوصات الأمان."
+#: src/pages.py:4072
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
+msgstr "تحرير قرص GPT واحد. لا تُنقل بدايات الأقسام مطلقًا؛ يمكن تقليص وحدة تخزين NTFS غير مشفّرة بعد فحوصات الأمان."
 
+#: src/pages.py:5119
 msgid "XFS (classic, scalable)"
 msgstr "XFS (كلاسيكي، قابل للتوسع)"
 
+#: src/pages.py:5120
 msgid "F2FS (flash-optimized)"
 msgstr "F2FS (مُحسّن للذاكرة الفلاشية)"
-
-#: src/pages.py:3008
-msgid "{size} GiB · Max"
-msgstr "{size} GiB · الحد الأقصى"
-
-#: src/pages.py:3028
-msgid ""
-"ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses"
-" priority 10."
-msgstr ""
-"يبقى ZRAM مفعلاً دائماً: 50% من ذاكرة RAM · LZ4 · الأولوية 100. يستخدم "
-"التبديل (Swap) على القرص أولوية 10."
-
-#: src/pages.py:2913
-msgid ""
-"This is below AnduinOS's runtime safety target. ZRAM still works, but heavy "
-"browser or application workloads can run out of backing memory sooner; "
-"hibernation is also unavailable."
-msgstr ""
-"هذا الحجم أقل من الحد الأدنى الآمن الذي توصي به AnduinOS للاستخدام العادي. "
-"سيظل ZRAM يعمل، لكن الاستخدام المكثف للمتصفح أو التطبيقات قد يستنفد مساحة "
-"المبادلة المتاحة بسرعة أكبر؛ كما أن وضع السبات غير متاح."
 
 #: src/pages.py:3004
 msgid "0 GiB · ZRAM only"
 msgstr "0 GiB · ZRAM فقط"
 
-#: src/pages.py:6695
+#: src/pages.py:2900
+msgid "Disk Swap will not be created. ZRAM remains enabled, but sustained memory pressure can terminate applications and hibernation is unavailable. This is strongly discouraged."
+msgstr "لن يتم إنشاء التبديل (Swap) على القرص. سيظل ZRAM مفعّلًا، لكن الضغط المستمر على الذاكرة قد يؤدي إلى إنهاء التطبيقات، كما أن وضع السبات غير متاح. يُنصح بشدة بعدم اختيار هذا الخيار."
+
+#: src/pages.py:6702
 msgid "Review your custom Swap size"
 msgstr "راجع حجم التبديل (Swap) المخصص"
 
-#: src/pages.py:6698
+#: src/pages.py:2927
+msgid "This exceeds the AnduinOS recommendation. It consumes more disk space and normally does not improve runtime performance."
+msgstr "يتجاوز هذا الحجم ما توصي به AnduinOS. ويستهلك مساحة أكبر على القرص، ولا يحسّن عادةً الأداء أثناء الاستخدام المعتاد."
+
+#: src/pages.py:2913
+msgid "This is below AnduinOS's runtime safety target. ZRAM still works, but heavy browser or application workloads can run out of backing memory sooner; hibernation is also unavailable."
+msgstr "هذا الحجم أقل من الحد الأدنى الآمن الذي توصي به AnduinOS للاستخدام العادي. سيظل ZRAM يعمل، لكن الاستخدام المكثف للمتصفح أو التطبيقات قد يستنفد مساحة المبادلة المتاحة بسرعة أكبر؛ كما أن وضع السبات غير متاح."
+
+#: src/pages.py:2920
+msgid "This size protects ordinary memory pressure, but is smaller than the hibernation target. Hibernation may fail or be unavailable."
+msgstr "هذا الحجم كافٍ للتعامل مع ضغط الذاكرة المعتاد، لكنه أصغر من الحجم المطلوب لوضع السبات. قد يفشل السبات أو لا يكون متاحًا."
+
+#: src/pages.py:3028
+msgid "ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses priority 10."
+msgstr "يبقى ZRAM مفعلاً دائماً: 50% من ذاكرة RAM · LZ4 · الأولوية 100. يستخدم التبديل (Swap) على القرص أولوية 10."
+
+#: src/pages.py:6705
 msgid "ZRAM will remain enabled regardless of this choice."
 msgstr "سيظل ZRAM مفعّلًا بغض النظر عن هذا الاختيار."
 
-#: src/pages.py:2920
-msgid ""
-"This size protects ordinary memory pressure, but is smaller than the "
-"hibernation target. Hibernation may fail or be unavailable."
-msgstr ""
-"هذا الحجم كافٍ للتعامل مع ضغط الذاكرة المعتاد، لكنه أصغر من الحجم المطلوب "
-"لوضع السبات. قد يفشل السبات أو لا يكون متاحًا."
+#: src/pages.py:3008
+msgid "{size} GiB · Max"
+msgstr "{size} GiB · الحد الأقصى"
 
 #: src/pages.py:2895
 msgid "✓ Best performance — AnduinOS recommended Swap size."
 msgstr "✓ أفضل أداء — حجم التبديل (Swap) الموصى به من AnduinOS."
 
-#: src/pages.py:2927
-msgid ""
-"This exceeds the AnduinOS recommendation. It consumes more disk space and "
-"normally does not improve runtime performance."
-msgstr ""
-"يتجاوز هذا الحجم ما توصي به AnduinOS. ويستهلك مساحة أكبر على القرص، ولا "
-"يحسّن عادةً الأداء أثناء الاستخدام المعتاد."
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:11
+msgid "Authorization is required to inspect disk partition geometry"
+msgstr "يلزم الحصول على التفويض لفحص المواضع والأحجام الدقيقة لتقسيمات القرص"
 
-#: src/pages.py:2900
-msgid ""
-"Disk Swap will not be created. ZRAM remains enabled, but sustained memory "
-"pressure can terminate applications and hibernation is unavailable. This is "
-"strongly discouraged."
-msgstr ""
-"لن يتم إنشاء التبديل (Swap) على القرص. سيظل ZRAM مفعّلًا، لكن الضغط المستمر "
-"على الذاكرة قد يؤدي إلى إنهاء التطبيقات، كما أن وضع السبات غير متاح. يُنصح "
-"بشدة بعدم اختيار هذا الخيار."
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:10
+msgid "Read exact disk partition geometry for the AnduinOS installer"
+msgstr "قراءة المواضع والأحجام الدقيقة لتقسيمات القرص لبرنامج تثبيت AnduinOS"
+
+#: assets/anduinos-installer-beta-live-shortcut.desktop:3
+msgid "Prepare and start AnduinOS Installer"
+msgstr "تجهيز برنامج تثبيت AnduinOS وتشغيله"
+
+#: assets/anduinos-installer-beta.desktop:59
+msgid "Install AnduinOS to your computer"
+msgstr "قم بتثبيت AnduinOS على جهاز الكمبيوتر الخاص بك"

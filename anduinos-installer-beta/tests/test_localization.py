@@ -1,6 +1,7 @@
 import ast
 import gettext
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from i18n import DOMAIN, _, clear_translation_cache
@@ -73,6 +74,21 @@ class LocalizationTests(unittest.TestCase):
 
     def test_catalog_message_set_matches_source_and_policy(self):
         source_messages = set(KEYBOARD_LAYOUTS.values())
+        for desktop in sorted((PACKAGE / "assets").glob("*.desktop")):
+            for line in desktop.read_text(encoding="utf-8").splitlines():
+                key, separator, value = line.partition("=")
+                if separator and key in {"Name", "GenericName", "Comment", "Keywords"}:
+                    if value:
+                        source_messages.add(value)
+        for policy in sorted((PACKAGE / "assets").glob("*.policy")):
+            root = ET.parse(policy).getroot()
+            for action in root.findall("action"):
+                for tag in ("description", "message"):
+                    for element in action.findall(tag):
+                        if "{http://www.w3.org/XML/1998/namespace}lang" not in element.attrib:
+                            value = (element.text or "").strip()
+                            if value:
+                                source_messages.add(value)
         for source in sorted((PACKAGE / "src").rglob("*.py")):
             tree = ast.parse(source.read_text(encoding="utf-8"))
             for node in ast.walk(tree):

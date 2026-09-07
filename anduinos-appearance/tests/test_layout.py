@@ -39,6 +39,21 @@ class LayoutTests(unittest.TestCase):
             self.assertIn(f"_('{title}')", source)
         self.assertNotIn("row.set_title(_(title_key))", source)
 
+    def test_extension_status_messages_translate_complete_actions(self):
+        source = APP_SOURCE.read_text(encoding="utf-8")
+        for message in (
+            "✓ Activities button shown",
+            "✓ Activities button hidden",
+            "✓ {label} enabled",
+            "✓ {label} disabled",
+            "✗ Failed to enable {label}",
+            "✗ Failed to disable {label}",
+        ):
+            self.assertIn(f"_('{message}')", source)
+        self.assertNotIn("{action}n", source)
+        self.assertNotIn("{action}d", source)
+        self.assertNotIn("format(action=action", source)
+
     def test_separated_spelling_is_consistent_in_source_and_catalogs(self):
         misspelling = "Sepe" + "rated"
         source_files = [

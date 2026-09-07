@@ -17,20 +17,12 @@ msgid "A critical threshold is failing now"
 msgstr "Kriittinen kynnysarvo ylittyy nyt"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
-msgid ""
-"A limited balance improves allocation layout. It does not check file "
-"integrity or guarantee that visible free space will increase."
-msgstr ""
-"Rajoitettu tasapainotus parantaa tilanallokaation asetelmaa. Se ei tarkista "
-"tiedostojen eheyttä eikä takaa, että näkyvä vapaa tila kasvaa."
+msgid "A limited balance improves allocation layout. It does not check file integrity or guarantee that visible free space will increase."
+msgstr "Rajoitettu tasapainotus parantaa tilanallokaation asetelmaa. Se ei tarkista tiedostojen eheyttä eikä takaa, että näkyvä vapaa tila kasvaa."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
-msgid ""
-"A limited balance only relocates data and metadata block groups that are at "
-"most 50% full."
-msgstr ""
-"Rajoitettu tasapainotus siirtää vain data- ja metatietolohkoryhmiä, jotka "
-"ovat täynnä enintään 50 %."
+msgid "A limited balance only relocates data and metadata block groups that are at most 50% full."
+msgstr "Rajoitettu tasapainotus siirtää vain data- ja metatietolohkoryhmiä, jotka ovat täynnä enintään 50 %."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "A scheduled Home snapshot will start in 10 seconds."
@@ -217,9 +209,11 @@ msgstr "Selaa tämän kansion historiaa…"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Btrfs could not complete Home file defragmentation."
-msgstr ""
-"Btrfs ei pystynyt suorittamaan kotitiedostojen pirstoutumisen poistoa "
-"loppuun."
+msgstr "Btrfs ei pystynyt suorittamaan kotitiedostojen pirstoutumisen poistoa loppuun."
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Btrfs could not complete the integrity check."
+msgstr "Btrfs ei voinut suorittaa eheystarkistusta loppuun."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Btrfs could not complete the limited balance."
@@ -246,16 +240,8 @@ msgid "Btrfs did not start a new maintenance task"
 msgstr "Btrfs ei aloittanut uutta ylläpitotehtävää."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Btrfs does not provide an on/off real-time deduplication switch. Tools such "
-"as duperemove and BEES use different strategies, resource limits, and scan "
-"scopes. Disk Snapshots Manager will not silently install or run one without "
-"a complete policy."
-msgstr ""
-"Btrfs ei tarjoa reaaliaikaista poistuspäälle/pois-piirrettävää kytkintä. "
-"Tällaiset työkalut kuin duperemove ja BEES käyttävät eri strategioita, "
-"resurssirajoja ja skannausaluetta. Disk Snapshots Manager ei asenna tai "
-"suorita niitä hiljaa ilman täydellistä käytäntöä."
+msgid "Btrfs does not provide an on/off real-time deduplication switch. Tools such as duperemove and BEES use different strategies, resource limits, and scan scopes. Disk Snapshots Manager will not silently install or run one without a complete policy."
+msgstr "Btrfs ei tarjoa reaaliaikaista poistuspäälle/pois-piirrettävää kytkintä. Tällaiset työkalut kuin duperemove ja BEES käyttävät eri strategioita, resurssirajoja ja skannausaluetta. Disk Snapshots Manager ei asenna tai suorita niitä hiljaa ilman täydellistä käytäntöä."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "Btrfs examined {0} block groups and relocated {1}."
@@ -266,20 +252,12 @@ msgid "Btrfs finished relocating underused data and metadata block groups."
 msgstr "Btrfs on siirtänyt vähän käytetyt data- ja metatietolohkoryhmät."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
-msgid ""
-"Btrfs finished rewriting eligible file extents below /home with ZSTD "
-"compression."
-msgstr ""
-"Btrfs kirjoitti kelpaavat tiedostolohkot /home:n alla uudelleen ZSTD-"
-"pakkauksella."
+msgid "Btrfs finished rewriting eligible file extents below /home with ZSTD compression."
+msgstr "Btrfs kirjoitti kelpaavat tiedostolohkot /home:n alla uudelleen ZSTD-pakkauksella."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid ""
-"Btrfs found errors that could not be repaired. Back up important files and "
-"investigate the storage device."
-msgstr ""
-"Btrfs löysi virheitä, joita ei voitu korjata. Tee varmuuskopiot tärkeistä "
-"tiedostoista ja tutki tallennuslaitetta."
+msgid "Btrfs found errors that could not be repaired. Back up important files and investigate the storage device."
+msgstr "Btrfs löysi virheitä, joita ei voitu korjata. Tee varmuuskopiot tärkeistä tiedostoista ja tutki tallennuslaitetta."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
 msgid "Btrfs maintenance status is unavailable"
@@ -291,21 +269,15 @@ msgstr "Btrfs-toiminto epäonnistui"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Btrfs repaired {0} damaged copies using valid redundant data."
-msgstr ""
-"Btrfs korjasi {0} vioittunutta kopiota käyttämällä kelvollisia redundoitua "
-"tietoa."
+msgstr "Btrfs korjasi {0} vioittunutta kopiota käyttämällä kelvollisia redundoitua tietoa."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/shared.rs
 msgid "Btrfs request completed"
 msgstr "Btrfs-pyyntö suoritettu"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Btrfs will scan existing subvolumes in the background. Size statistics may "
-"remain incomplete until the scan finishes."
-msgstr ""
-"Btrfs skannaa olemassa olevat alitilavolyymit taustalla. Kokotiedot voivat "
-"olla epätäydellisiä, kunnes skannaus on valmis."
+msgid "Btrfs will scan existing subvolumes in the background. Size statistics may remain incomplete until the scan finishes."
+msgstr "Btrfs skannaa olemassa olevat alitilavolyymit taustalla. Kokotiedot voivat olla epätäydellisiä, kunnes skannaus on valmis."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Calculating snapshot size…"
@@ -335,7 +307,7 @@ msgstr "Perutaan…"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Change…"
-msgstr "Muuuta…"
+msgstr "Muuta…"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Check file system integrity"
@@ -384,12 +356,8 @@ msgid "Choose a local filesystem destination."
 msgstr "Valitse kohde paikalliselle tiedostojärjestelmälle."
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
-msgid ""
-"Choose an earlier version to browse or recover. Your current files will not "
-"be changed automatically."
-msgstr ""
-"Valitse aiempi versio selattavaksi tai palautettavaksi. Nykyisiä tiedostoja "
-"ei muuteta automaattisesti."
+msgid "Choose an earlier version to browse or recover. Your current files will not be changed automatically."
+msgstr "Valitse aiempi versio selattavaksi tai palautettavaksi. Nykyisiä tiedostoja ei muuteta automaattisesti."
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Choose Where to Recover This Folder"
@@ -500,21 +468,12 @@ msgid "Defragment Home files?"
 msgstr "Haluatko poistaa pirstoutumisen Koti-tiedostoista?"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
-msgid ""
-"Defragmentation can increase disk usage when files share data with snapshots"
-" or reflinks."
-msgstr ""
-"Pirstoutumisen poisto voi lisätä levytilankäyttöä, kun tiedostot jakavat "
-"tietoja tilannekuvien tai reflink-osoitteiden kanssa."
+msgid "Defragmentation can increase disk usage when files share data with snapshots or reflinks."
+msgstr "Pirstoutumisen poisto voi lisätä levytilankäyttöä, kun tiedostot jakavat tietoja tilannekuvien tai reflink-osoitteiden kanssa."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
-msgid ""
-"Defragmentation rewrites file extents and can increase disk usage by "
-"breaking shared snapshot or reflink data."
-msgstr ""
-"Pirstoutumisen poisto kirjoittaa tiedostojen laajennukset uudelleen ja voi "
-"lisätä levytilankäyttöä katkaisemalla tilannekuvien tai reflink-dataan "
-"liittyvät yhteiset tiedot."
+msgid "Defragmentation rewrites file extents and can increase disk usage by breaking shared snapshot or reflink data."
+msgstr "Pirstoutumisen poisto kirjoittaa tiedostojen laajennukset uudelleen ja voi lisätä levytilankäyttöä katkaisemalla tilannekuvien tai reflink-dataan liittyvät yhteiset tiedot."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
 msgid "Defragment…"
@@ -538,8 +497,7 @@ msgstr "Haluatko poistaa tilannekuvat?"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Delete {0} selected snapshot(s)? This cannot be undone."
-msgstr ""
-"Haluatko poistaa {0} valittua tilannekuvaa? Tätä toimintoa ei voi peruuttaa."
+msgstr "Haluatko poistaa {0} valittua tilannekuvaa? Tätä toimintoa ei voi peruuttaa."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Deleting"
@@ -548,6 +506,10 @@ msgstr "Poistetaan"
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Deleting snapshots…"
 msgstr "Tilannekuvia poistetaan…"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Details: {0}"
+msgstr "Tiedot: {0}"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "Device reliability is degraded"
@@ -589,6 +551,8 @@ msgstr "Levyn kunto ei ole saatavilla"
 #: src/btrfs-snapshots-manager/src/application.rs
 #: src/btrfs-snapshots-manager/src/ui/mod.rs
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:29
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:6
 msgid "Disk Snapshots Manager"
 msgstr "Tilannekuvien hallinta"
 
@@ -619,7 +583,7 @@ msgstr "Päällä"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Enabled · initial scan in progress"
-msgstr "Käytössä · alkuscan käynnissä"
+msgstr "Käytössä · alkutarkistus käynnissä"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Enable…"
@@ -679,9 +643,7 @@ msgstr "Tiedostot palautettu"
 
 #: data/anduinos_btrfs_snapshots_manager_file_history.py
 msgid "Find files that existed earlier in this Personal Files folder"
-msgstr ""
-"Etsi tiedostoja, jotka olivat aiemmin olemassa tässä Omat tiedostot "
-"-kansiota vastaavassa hakemistossa"
+msgstr "Etsi tiedostoja, jotka olivat aiemmin olemassa tässä Omat tiedostot -kansiota vastaavassa hakemistossa"
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Folder History"
@@ -696,12 +658,8 @@ msgid "Forever"
 msgstr "Ikuisesti"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Four copies on separate devices · damaged copies can be repaired "
-"automatically"
-msgstr ""
-"Neljä kappaletta erillisillä laitteilla · vioittuneet kopiot voidaan korjata"
-" automaattisesti"
+msgid "Four copies on separate devices · damaged copies can be repaired automatically"
+msgstr "Neljä kappaletta erillisillä laitteilla · vioittuneet kopiot voidaan korjata automaattisesti"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "Healthy"
@@ -725,8 +683,7 @@ msgstr "Kotitiedostojen pirstoutumisen poiston tulos ei ole saatavilla"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
 msgid "Home file defragmentation was cancelled before it finished."
-msgstr ""
-"Kotitiedostojen pirstoutumisen poisto peruttiin ennen sen valmistumista."
+msgstr "Kotitiedostojen pirstoutumisen poisto peruttiin ennen sen valmistumista."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Home snapshot"
@@ -770,6 +727,10 @@ msgid "Integrity Check Complete — Repairs Made"
 msgstr "Eheyystarkistus valmis — korjauksia tehty"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
+msgid "Integrity Check Failed"
+msgstr "Eheystarkistus epäonnistui"
+
+#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Integrity Check Result Unavailable"
 msgstr "Eheyystarkistuksen tulos ei ole saatavilla"
 
@@ -807,8 +768,7 @@ msgstr "Enintään yksi ilmoitus minuutissa"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Live information reported by the mounted Btrfs file system."
-msgstr ""
-"Päässä olevan Btrfs-tiedostojärjestelmän raportoimat reaaliaikaiset tiedot."
+msgstr "Päässä olevan Btrfs-tiedostojärjestelmän raportoimat reaaliaikaiset tiedot."
 
 #: src/btrfs-snapshots-manager/src/ui/personal_history.rs
 msgid "Loading folder…"
@@ -843,12 +803,8 @@ msgid "Media errors"
 msgstr "Median virheet"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Mirrored and striped across devices · redundant copies are available for "
-"repair"
-msgstr ""
-"Päällekkäinen ja raidallinen laitteilla · redundoitut kopiot ovat saatavilla"
-" korjattavaksi"
+msgid "Mirrored and striped across devices · redundant copies are available for repair"
+msgstr "Päällekkäinen ja raidallinen laitteilla · redundoitut kopiot ovat saatavilla korjattavaksi"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Name"
@@ -867,11 +823,8 @@ msgid "No errors detected so far"
 msgstr "Ei virheitä havaittu tähän mennessä"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid ""
-"No file system integrity errors were found in allocated data and metadata."
-msgstr ""
-"Ei tiedostojärjestelmän eheysvirheitä löydetty allokoituista tiedoista ja "
-"metatiedoista."
+msgid "No file system integrity errors were found in allocated data and metadata."
+msgstr "Ei tiedostojärjestelmän eheysvirheitä löydetty allokoituista tiedoista ja metatiedoista."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "No important S.M.A.R.T. warning signs were detected"
@@ -903,9 +856,7 @@ msgstr "Ei laskettu"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Not managed here · Btrfs requires a separate deduplication engine"
-msgstr ""
-"Ei hallinnoida tässä · Btrfs vaatii erillisen päällekkäisyyksien "
-"poistomootorin"
+msgstr "Ei hallinnoida tässä · Btrfs vaatii erillisen päällekkäisyyksien poistomootorin"
 
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 msgid "Notifications"
@@ -948,11 +899,8 @@ msgid "Older snapshots are kept less frequently to save disk space."
 msgstr "Vanhempia tilannekuvia säilytetään harvemmin levytilan säästämiseksi."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"One copy · damage can be detected, but there is no spare copy for repair"
-msgstr ""
-"Yksi kopio · vauriot voidaan havaita, mutta korjausta varten ei ole "
-"varakopiota"
+msgid "One copy · damage can be detected, but there is no spare copy for repair"
+msgstr "Yksi kopio · vauriot voidaan havaita, mutta korjausta varten ei ole varakopiota"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "One or more reliability indicators should be reviewed"
@@ -963,24 +911,16 @@ msgid "Only /home · snapshot storage is excluded"
 msgstr "Ainoastaan /home ja tilannekuvien tallennustila on jätetty pois"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
-msgid ""
-"Only block groups at most 50% full will be relocated. The operation can use "
-"significant disk bandwidth but can be cancelled safely."
-msgstr ""
-"Vain enintään 50 % täynnä olevat lohkoryhmät siirretään. Toiminto voi "
-"kuluttaa huomattavasti levykaistanleveyttä, mutta se voidaan peruuttaa "
-"turvallisesti."
+msgid "Only block groups at most 50% full will be relocated. The operation can use significant disk bandwidth but can be cancelled safely."
+msgstr "Vain enintään 50 % täynnä olevat lohkoryhmät siirretään. Toiminto voi kuluttaa huomattavasti levykaistanleveyttä, mutta se voidaan peruuttaa turvallisesti."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "Only partial S.M.A.R.T. data was returned"
 msgstr "S.M.A.R.T.-tiedot palautuivat vain osittain"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
-msgid ""
-"Only physical drives backing the current root Btrfs file system are shown."
-msgstr ""
-"Näytetään vain fyysiset levyt, jotka tukevat nykyistä juuri-Btrfs-"
-"tiedostojärjestelmää."
+msgid "Only physical drives backing the current root Btrfs file system are shown."
+msgstr "Näytetään vain fyysiset levyt, jotka tukevat nykyistä juuri-Btrfs-tiedostojärjestelmää."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Only the display name changes."
@@ -1063,13 +1003,8 @@ msgid "Preparing safe rollback…"
 msgstr "Valmistellaan turvallista palautusta…"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Preparing the rollback will arm recovery immediately and automatically "
-"restart this computer within 60 seconds. Save your work before continuing."
-msgstr ""
-"Palaamisen valmistelu käynnistää palautuksen välittömästi ja käynnistää "
-"tietokoneen uudelleen automaattisesti 60 sekunnin kuluessa. Tallenna työsi "
-"ennen jatkamista."
+msgid "Preparing the rollback will arm recovery immediately and automatically restart this computer within 60 seconds. Save your work before continuing."
+msgstr "Palaamisen valmistelu käynnistää palautuksen välittömästi ja käynnistää tietokoneen uudelleen automaattisesti 60 sekunnin kuluessa. Tallenna työsi ennen jatkamista."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Properties"
@@ -1080,12 +1015,8 @@ msgid "Protected while the rollback is pending"
 msgstr "Suojattu, kun palaaminen on kesken"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Quota accounting provides shared and exclusive sizes for subvolumes, but its"
-" initial scan can take time."
-msgstr ""
-"Tilan kirjanpito tarjoaa alitilavolyymeille jaetut ja yksinomaiset kokokoat,"
-" mutta sen alkuscan voi kestää aikaa."
+msgid "Quota accounting provides shared and exclusive sizes for subvolumes, but its initial scan can take time."
+msgstr "Tilankäytön kirjanpito näyttää alitaltioiden jaetut ja yksinomaiset koot, mutta sen alkutarkistus voi kestää jonkin aikaa."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Read errors: {0}"
@@ -1228,22 +1159,12 @@ msgid "Roll Back to {0}?"
 msgstr "Palaammeko tilannekuvaan {0}?"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Rollback confirmation failed. The protected previous system is being "
-"restored."
-msgstr ""
-"Palaamisen vahvistus epäonnistui. Suojattua edellistä järjestelmää "
-"palautetaan."
+msgid "Rollback confirmation failed. The protected previous system is being restored."
+msgstr "Palaamisen vahvistus epäonnistui. Suojattua edellistä järjestelmää palautetaan."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Rollback is armed. To prevent new system changes from being lost, this "
-"computer will restart automatically when the 60-second countdown ends. Save "
-"any open personal files now."
-msgstr ""
-"Palaaminen on valmiina. Jotta uudet järjestelmämuutokset eivät menettäisi, "
-"tämä tietokone käynnistyy uudelleen automaattisesti 60 sekunnin odotusajan "
-"päätyttyä. Tallenna avoimet omat tiedostosi nyt."
+msgid "Rollback is armed. To prevent new system changes from being lost, this computer will restart automatically when the 60-second countdown ends. Save any open personal files now."
+msgstr "Palaaminen on valmiina. Jotta uudet järjestelmämuutokset eivät menettäisi, tämä tietokone käynnistyy uudelleen automaattisesti 60 sekunnin odotusajan päätyttyä. Tallenna avoimet omat tiedostosi nyt."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback to {0} is being applied during startup."
@@ -1251,16 +1172,11 @@ msgstr "Palaaminen tilannekuvaan {0} suoritetaan käynnistyksen aikana."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback to {0} is ready. Restart to apply it."
-msgstr ""
-"Palautus tilannekuvaan {0} on valmis. Ota se käyttöön käynnistämällä "
-"järjestelmä uudelleen."
+msgstr "Palautus tilannekuvaan {0} on valmis. Ota se käyttöön käynnistämällä järjestelmä uudelleen."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
-msgid ""
-"Rollback to {0} was applied, but system confirmation has not completed."
-msgstr ""
-"Palaaminen tilannekuvaan {0} suoritettiin, mutta järjestelmän vahvistus ei "
-"ole vielä valmis."
+msgid "Rollback to {0} was applied, but system confirmation has not completed."
+msgstr "Palaaminen tilannekuvaan {0} suoritettiin, mutta järjestelmän vahvistus ei ole vielä valmis."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/task_dialog.rs
@@ -1301,21 +1217,12 @@ msgid "Scanning data and metadata…"
 msgstr "Tiedot ja metatiedot skannataan…"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/mod.rs
-msgid ""
-"Scrub reads allocated data and metadata, verifies checksums, and reports "
-"damage without modifying file data."
-msgstr ""
-"Eheyystarkistus lukee allokoitujen tietojen ja metatietojen, tarkistaa "
-"tarkisteet ja raportoi vauriot ilman tiedostotietojen muuttamista."
+msgid "Scrub reads allocated data and metadata, verifies checksums, and reports damage without modifying file data."
+msgstr "Eheyystarkistus lukee allokoitujen tietojen ja metatietojen, tarkistaa tarkisteet ja raportoi vauriot ilman tiedostotietojen muuttamista."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid ""
-"Scrub verifies allocated Btrfs data and metadata. It does not test unused "
-"space or predict sudden drive failure."
-msgstr ""
-"Eheyystarkistus vahvistaa allokoitujen Btrfs-tietojen ja metatietojen "
-"ehyyden. Se ei testaa käyttämätöntä tilaa eikä ennusta levyn äkillistä "
-"hajoamista."
+msgid "Scrub verifies allocated Btrfs data and metadata. It does not test unused space or predict sudden drive failure."
+msgstr "Eheyystarkistus vahvistaa allokoitujen Btrfs-tietojen ja metatietojen ehyyden. Se ei testaa käyttämätöntä tilaa eikä ennusta levyn äkillistä hajoamista."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Search snapshots"
@@ -1338,12 +1245,8 @@ msgid "Selected file · {0}"
 msgstr "Valittu tiedosto · {0}"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Shared and exclusive size statistics and any subvolume limits will be "
-"removed. Snapshots themselves are not deleted."
-msgstr ""
-"Jaetut ja yksinomaiset kokotilastot sekä mahdolliset alitilavolyymien "
-"rajoitukset poistetaan. Tilannekuvia ei poisteta."
+msgid "Shared and exclusive size statistics and any subvolume limits will be removed. Snapshots themselves are not deleted."
+msgstr "Jaetut ja yksinomaiset kokotilastot sekä mahdolliset alitaltioiden rajoitukset poistetaan. Tilannekuvia ei poisteta."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Shared Data"
@@ -1487,17 +1390,15 @@ msgstr "Laitteet raidattuina, kaksi pariteettilohkoa palautusta varten"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Striped across devices · no redundant copy is available for repair"
-msgstr ""
-"Laitteet raidattuina · korjausta varten ei ole saatavilla redundoitua "
-"kopiota"
+msgstr "Laitteet raidattuina · korjausta varten ei ole saatavilla redundoitua kopiota"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
 msgid "Subvolume quota accounting"
-msgstr "Alitilavolyymien tilan kirjanpito"
+msgstr "Alitaltioiden tilan kirjanpito"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
 msgid "Superblock errors: {0}"
-msgstr "Supablokkivirheet: {0}"
+msgstr "Superlohkovirheet: {0}"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "System Drive Health"
@@ -1537,8 +1438,7 @@ msgstr "Lämpötila on turvallisen alueen ulkopuolella"
 
 #: src/btrfs-snapshots-manager/src/ui/advanced_settings.rs
 msgid "The automatic snapshot infrastructure cannot be disabled here."
-msgstr ""
-"Automaattista tilannekuvainfrastruktuuria ei voi poistaa käytöstä tässä."
+msgstr "Automaattista tilannekuvainfrastruktuuria ei voi poistaa käytöstä tässä."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "The device reported an unknown warning bit"
@@ -1558,13 +1458,11 @@ msgstr "Eheyystarkistus peruttiin ennen sen valmistumista."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/balance.rs
 msgid "The limited balance was cancelled safely before it finished."
-msgstr ""
-"Rajoitettu tasapainotus peruttiin turvallisesti ennen sen valmistumista."
+msgstr "Rajoitettu tasapainotus peruttiin turvallisesti ennen sen valmistumista."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "The rollback completed, but recovery cleanup has not completed."
-msgstr ""
-"Palaaminen suoritettiin, mutta palautuksen siivous ei ole vielä valmis."
+msgstr "Palaaminen suoritettiin, mutta palautuksen siivous ei ole vielä valmis."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "The rollback failed. Recovery cleanup has not completed."
@@ -1576,32 +1474,23 @@ msgstr "Palaaminen epäonnistui: {0}"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "The rollback was reverted, but recovery cleanup has not completed."
-msgstr ""
-"Palaaminen peruutettiin, mutta palautuksen siivous ei ole vielä valmis."
+msgstr "Palaaminen peruutettiin, mutta palautuksen siivous ei ole vielä valmis."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "The root filesystem is {0}."
 msgstr "Juuritiedostojärjestelmä on {0}."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid ""
-"The scheduled Home snapshot could not be created. Check Disk Snapshots "
-"Manager for details."
-msgstr ""
-"Ajoitettua Koti-tilannekuvaa ei voitu luoda. Tarkista lisätietoja "
-"Tilannekuvien hallinnasta."
+msgid "The scheduled Home snapshot could not be created. Check Disk Snapshots Manager for details."
+msgstr "Ajoitettua Koti-tilannekuvaa ei voitu luoda. Tarkista lisätietoja Tilannekuvien hallinnasta."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "The scheduled Home snapshot was created successfully."
 msgstr "Ajoitettu Koti-tilannekuva luotiin onnistuneesti."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
-msgid ""
-"The scheduled system snapshot could not be created. Check Disk Snapshots "
-"Manager for details."
-msgstr ""
-"Ajoitettua järjestelmätilannekuvaa ei voitu luoda. Tarkista lisätietoja "
-"Tilannekuvien hallinnasta."
+msgid "The scheduled system snapshot could not be created. Check Disk Snapshots Manager for details."
+msgstr "Ajoitettua järjestelmätilannekuvaa ei voitu luoda. Tarkista lisätietoja Tilannekuvien hallinnasta."
 
 #: src/btrfs-snapshots-manager-notifier/src/main.rs
 msgid "The scheduled system snapshot was created successfully."
@@ -1652,15 +1541,8 @@ msgid "This item was not present in the available Home snapshots."
 msgstr "Tätä kohdetta ei ollut saatavilla olevissa Koti-tilannekuvissa."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/defrag.rs
-msgid ""
-"This rewrites files below /home using ZSTD compression. It does not enter "
-"/.snapshots, but shared extents with existing snapshots may become private "
-"and consume more space."
-msgstr ""
-"Tämä kirjoittaa hakemiston /home alla olevat tiedostot uudelleen ZSTD-"
-"pakkauksella. Se ei siirry hakemistoon /.snapshots, mutta olemassa olevien "
-"tilannekuvien kanssa jaetut tiedostolohkot voivat muuttua yksityisiksi ja "
-"kuluttaa enemmän tilaa."
+msgid "This rewrites files below /home using ZSTD compression. It does not enter /.snapshots, but shared extents with existing snapshots may become private and consume more space."
+msgstr "Tämä kirjoittaa hakemiston /home alla olevat tiedostot uudelleen ZSTD-pakkauksella. Se ei siirry hakemistoon /.snapshots, mutta olemassa olevien tilannekuvien kanssa jaetut tiedostolohkot voivat muuttua yksityisiksi ja kuluttaa enemmän tilaa."
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "This snapshot is available for recovery."
@@ -1671,12 +1553,8 @@ msgid "This snapshot is not available for recovery."
 msgstr "Tätä tilannekuvaa ei voi palauttaa."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Three copies on separate devices · damaged copies can be repaired "
-"automatically"
-msgstr ""
-"Kolme kappaletta erillisillä laitteilla · vioittuneet kopiot voidaan korjata"
-" automaattisesti"
+msgid "Three copies on separate devices · damaged copies can be repaired automatically"
+msgstr "Kolme kappaletta erillisillä laitteilla · vioittuneet kopiot voidaan korjata automaattisesti"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/health.rs
 msgid "Time above critical temperature"
@@ -1707,19 +1585,12 @@ msgid "Try a different name, date, or snapshot reason."
 msgstr "Kokeile eri nimeä, päivämäärää tai tilannekuvan syytä."
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Two copies on separate devices · a damaged copy can be repaired "
-"automatically"
-msgstr ""
-"Kaksi kappaletta erillisillä laitteilla · vioittunut kopio voidaan korjata "
-"automaattisesti"
+msgid "Two copies on separate devices · a damaged copy can be repaired automatically"
+msgstr "Kaksi kappaletta erillisillä laitteilla · vioittunut kopio voidaan korjata automaattisesti"
 
 #: src/btrfs-snapshots-manager/src/ui/btrfs_settings/filesystem.rs
-msgid ""
-"Two copies on this device · a damaged copy can be repaired automatically"
-msgstr ""
-"Kaksi kappaletta samalla laitteella · vioittunut kopio voidaan korjata "
-"automaattisesti"
+msgid "Two copies on this device · a damaged copy can be repaired automatically"
+msgstr "Kaksi kappaletta samalla laitteella · vioittunut kopio voidaan korjata automaattisesti"
 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Unable to calculate"
@@ -1893,21 +1764,13 @@ msgstr "{0}% · varoitusrajana {1}%"
 msgid "{0}/s"
 msgstr "{0}/s"
 
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid "Btrfs could not complete the integrity check."
-msgstr "Btrfs ei voinut suorittaa eheystarkistusta loppuun."
-
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid "Details: {0}"
-msgstr "Tiedot: {0}"
-
-#: src/btrfs-snapshots-manager/src/ui/btrfs_settings/maintenance/scrub.rs
-msgid "Integrity Check Failed"
-msgstr "Eheystarkistus epäonnistui"
-
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:38
 msgid "backup"
 msgstr "varmuuskopiointi"
+
+#: data/org.anduinos.BtrfsSnapshotsManager.desktop:41
+msgid "snapshot;snapshots;restore;recovery;btrfs;rollback;backup;backups;time machine;file history;deleted files;"
+msgstr "tilannekuva;tilannekuvat;palauttaminen;palautus;btrfs;palaaminen;varmuuskopiointi;varmuuskopiot;ajankone;tiedostohistoria;poistetut tiedostot;"
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:24
 msgid "Authentication is required to delete a system snapshot"
@@ -1918,32 +1781,36 @@ msgid "Override the Home snapshot creation limit"
 msgstr "Ohita Koti-tilannekuvan luontirajoitus"
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:11
-msgid ""
-"A system rollback validates the selected snapshot, protects a current-system"
-" fallback while the transaction is pending, and prepares a verified one-shot"
-" GRUB entry. Personal Files are explicitly unchanged."
-msgstr ""
-"Järjestelmäpalautus tarkistaa valitun tilannekuvan, turvaa mahdollisuuden "
-"palata nykyiseen järjestelmään palautuksen ollessa vireillä ja valmistelee "
-"varmennetun kertakäyttöisen GRUB-käynnistysmerkinnän. Omat tiedostot "
-"jätetään nimenomaisesti muuttamatta."
+msgid "A system rollback validates the selected snapshot, protects a current-system fallback while the transaction is pending, and prepares a verified one-shot GRUB entry. Personal Files are explicitly unchanged."
+msgstr "Järjestelmäpalautus tarkistaa valitun tilannekuvan, turvaa mahdollisuuden palata nykyiseen järjestelmään palautuksen ollessa vireillä ja valmistelee varmennetun kertakäyttöisen GRUB-käynnistysmerkinnän. Omat tiedostot jätetään nimenomaisesti muuttamatta."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:37
+msgid "btrfs"
+msgstr "btrfs"
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:36
 msgid "Authentication is required to access or restore a system snapshot"
-msgstr ""
-"Järjestelmätilannekuvan selaaaminen tai palauttaminen vaatii todennuksen"
+msgstr "Järjestelmätilannekuvan selaaaminen tai palauttaminen vaatii todennuksen"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:36
+msgid "recovery"
+msgstr "palautus"
 
 #: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:3
 msgid "Disk Snapshots Manager Notifications"
 msgstr "Tilannekuvien hallinnan ilmoitukset"
 
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:35
+msgid "restore"
+msgstr "palauttaminen"
+
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:10
-msgid ""
-"Disk Snapshots Manager creates immutable Btrfs system snapshots for the "
-"AnduinOS system and independent snapshots for Personal Files."
-msgstr ""
-"Tilannekuvien hallinta luo AnduinOS-järjestelmälle muuttumattomia Btrfs-"
-"järjestelmätilannekuvia sekä erillisiä tilannekuvia omista tiedostoista."
+msgid "Disk Snapshots Manager creates immutable Btrfs system snapshots for the AnduinOS system and independent snapshots for Personal Files."
+msgstr "Tilannekuvien hallinta luo AnduinOS-järjestelmälle muuttumattomia Btrfs-järjestelmätilannekuvia sekä erillisiä tilannekuvia omista tiedostoista."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:34
+msgid "snapshot"
+msgstr "tilannekuva"
 
 #: data/org.anduinos.BtrfsSnapshotsManager.Notifier.desktop:5
 msgid "Show system snapshot notifications"
@@ -1953,32 +1820,33 @@ msgstr "Näytä järjestelmätilannekuvien ilmoitukset"
 msgid "System Recovery and File History"
 msgstr "Järjestelmän palautus ja tiedostohistoria"
 
-#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:35
-msgid "restore"
-msgstr "palauttaminen"
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:84
+msgid "Authentication is required to create more than four Home snapshots per minute"
+msgstr "Enemmän kuin neljän Koti-tilannekuvan luonti minuutissa vaatii todennuksen"
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:70
 msgid "Create a Home history snapshot"
 msgstr "Luo Koti-historian tilannekuva"
 
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:72
+msgid "A local active user may create a Home history snapshot"
+msgstr "Paikallinen aktiivinen käyttäjä voi luoda Koti-historian tilannekuvan"
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:12
+msgid "Independent Home snapshots capture the @home subvolume on a separate schedule. Users can browse earlier versions and recover files or folders without rolling back the operating system."
+msgstr "Erilliset Koti-tilannekuvat tallentavat @home-alitaltion tilan oman aikataulunsa mukaan. Käyttäjät voivat selata aiempia versioita ja palauttaa tiedostoja tai kansioita palauttamatta koko käyttöjärjestelmää aiempaan tilaan."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:13
+msgid "Nautilus provides File History actions for one selected home item and for a folder background, opening a focused Disk Snapshots Manager window for earlier versions and deleted files."
+msgstr "Nautilus tarjoaa Tiedostohistoria-toiminnot yhdelle valitulle kotihakemiston kohteelle ja kansion taustalle sekä avaa Tilannekuvien hallinnan erillisen ikkunan aiempien versioiden ja poistettujen tiedostojen selaamista varten."
+
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:60
+msgid "Authentication is required to access historical Personal Files"
+msgstr "Omien tiedostojen aiempien versioiden käyttö edellyttää tunnistautumista"
+
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:46
 msgid "Configure AnduinOS recovery"
 msgstr "Määritä AnduinOS-järjestelmän palautus"
-
-#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:36
-msgid "recovery"
-msgstr "palautus"
-
-#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:34
-msgid "snapshot"
-msgstr "tilannekuva"
-
-#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:84
-msgid ""
-"Authentication is required to create more than four Home snapshots per "
-"minute"
-msgstr ""
-"Enemmän kuin neljän Koti-tilannekuvan luonti minuutissa vaatii todennuksen"
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:12
 msgid "Authentication is required to create a system snapshot"
@@ -1992,71 +1860,23 @@ msgstr "Poista AnduinOS-järjestelmätilannekuva"
 msgid "Authentication is required to change recovery settings"
 msgstr "Palautusasetusten muuttaminen vaatii todennuksen"
 
-#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:60
-msgid "Authentication is required to access historical Personal Files"
-msgstr ""
-"Omien tiedostojen aiempien versioiden käyttö edellyttää tunnistautumista"
+#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:14
+msgid "Automatic schedules can show desktop notifications after successful creation, while retention cleanup is reported as one quiet aggregate notification."
+msgstr "Automaattiset aikataulut voivat näyttää työpöytäilmoituksen, kun tilannekuva on luotu onnistuneesti, kun taas säilytyskäytännön mukaisesta siivouksesta ilmoitetaan yhdellä huomaamattomalla yhteenvetoilmoituksella."
 
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:58
 msgid "Browse and export historical Personal Files"
 msgstr "Selaa ja vie omien tiedostojen aiempia versioita"
 
-#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:13
-msgid ""
-"Nautilus provides File History actions for one selected home item and for a "
-"folder background, opening a focused Disk Snapshots Manager window for "
-"earlier versions and deleted files."
-msgstr ""
-"Nautilus tarjoaa Tiedostohistoria-toiminnot yhdelle valitulle kotihakemiston"
-" kohteelle ja kansion taustalle sekä avaa Tilannekuvien hallinnan erillisen "
-"ikkunan aiempien versioiden ja poistettujen tiedostojen selaamista varten."
-
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:34
 msgid "Access or restore an AnduinOS system snapshot"
 msgstr "Selaa tai palauta AnduinOS-järjestelmätilannekuva"
-
-#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:37
-msgid "btrfs"
-msgstr "btrfs"
-
-#: data/org.anduinos.BtrfsSnapshotsManager.desktop:41
-msgid ""
-"snapshot;snapshots;restore;recovery;btrfs;rollback;backup;backups;time "
-"machine;file history;deleted files;"
-msgstr ""
-"tilannekuva;tilannekuvat;palauttaminen;palautus;btrfs;palaaminen;varmuuskopiointi;varmuuskopiot;ajankone;tiedostohistoria;poistetut"
-" tiedostot;"
 
 #: data/org.anduinos.BtrfsSnapshotsManager.desktop:32
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:7
 msgid "Recover AnduinOS and restore deleted Personal Files"
 msgstr "Palauta AnduinOS ja poistetut Omat tiedostot"
 
-#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:14
-msgid ""
-"Automatic schedules can show desktop notifications after successful "
-"creation, while retention cleanup is reported as one quiet aggregate "
-"notification."
-msgstr ""
-"Automaattiset aikataulut voivat näyttää työpöytäilmoituksen, kun tilannekuva"
-" on luotu onnistuneesti, kun taas säilytyskäytännön mukaisesta siivouksesta "
-"ilmoitetaan yhdellä huomaamattomalla yhteenvetoilmoituksella."
-
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
 msgid "Create an AnduinOS system snapshot"
 msgstr "Luo AnduinOS-järjestelmätilannekuva"
-
-#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:72
-msgid "A local active user may create a Home history snapshot"
-msgstr "Paikallinen aktiivinen käyttäjä voi luoda Koti-historian tilannekuvan"
-
-#: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.metainfo.xml:12
-msgid ""
-"Independent Home snapshots capture the @home subvolume on a separate "
-"schedule. Users can browse earlier versions and recover files or folders "
-"without rolling back the operating system."
-msgstr ""
-"Erilliset Koti-tilannekuvat tallentavat @home-alitaltion tilan oman "
-"aikataulunsa mukaan. Käyttäjät voivat selata aiempia versioita ja palauttaa "
-"tiedostoja tai kansioita palauttamatta koko käyttöjärjestelmää aiempaan "
-"tilaan."

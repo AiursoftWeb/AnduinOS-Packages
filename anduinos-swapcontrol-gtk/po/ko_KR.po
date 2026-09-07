@@ -13,71 +13,71 @@ msgstr ""
 msgid "About"
 msgstr "정보"
 
-#: src/views/swap_view.rs:300
+#: src/views/swap_view.rs:305
 msgid "Accept threshold percent"
 msgstr "허용 임계값 (%)"
 
-#: src/views/zram_view.rs:247
+#: src/views/zram_view.rs:252
 msgid "Advanced options"
 msgstr "고급 옵션"
 
-#: src/views/stress_test_view.rs:225 src/views/swap_view.rs:225
+#: src/views/stress_test_view.rs:230 src/views/swap_view.rs:230
 msgid "Advanced settings"
 msgstr "고급 설정"
 
-#: src/views/zram_view.rs:348
+#: src/views/zram_view.rs:353
 msgid "Algorithm"
 msgstr "알고리즘"
 
-#: src/views/swap_view.rs:334
+#: src/views/swap_view.rs:339
 msgid "Apply Settings"
 msgstr "설정 적용"
 
-#: src/views/swap_view.rs:667
+#: src/views/swap_view.rs:672
 msgid "Applying settings…"
-msgstr "설정 적용"
+msgstr "설정 적용 중…"
 
-#: src/views/dashboard_view.rs:370
+#: src/views/dashboard_view.rs:392
 msgid "Auth needed"
 msgstr "인증 필요"
 
-#: src/views/dashboard_view.rs:413
+#: src/views/dashboard_view.rs:435
 msgid "Buf"
 msgstr "버퍼"
 
-#: src/views/dashboard_view.rs:390
+#: src/views/dashboard_view.rs:412
 msgid "Buffers"
 msgstr "버퍼"
 
-#: src/views/dashboard_view.rs:414
+#: src/views/dashboard_view.rs:436
 msgid "Cache"
 msgstr "캐시"
 
-#: src/views/dashboard_view.rs:395
+#: src/views/dashboard_view.rs:417
 msgid "Cached"
 msgstr "캐시됨"
 
-#: src/views/zram_view.rs:378
+#: src/views/zram_view.rs:383
 msgid "Cancel"
 msgstr "취소"
 
-#: src/views/stress_test_view.rs:318
+#: src/views/stress_test_view.rs:323
 msgid "Cancel Test"
 msgstr "취소"
 
-#: src/views/stress_test_view.rs:601
+#: src/views/stress_test_view.rs:606
 msgid "Cancelled by user."
 msgstr "사용자에 의해 취소됨."
 
-#: src/views/dashboard_view.rs:193
+#: src/views/dashboard_view.rs:209
 msgid "Channels"
 msgstr "채널"
 
-#: src/views/stress_test_view.rs:613
+#: src/views/stress_test_view.rs:618
 msgid "Completed successfully — memory pressure test passed."
 msgstr "성공적으로 완료되었습니다 — 메모리 압력 테스트 통과."
 
-#: src/views/swap_view.rs:183
+#: src/views/swap_view.rs:188
 msgid ""
 "Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
 "Zswap, not both."
@@ -87,15 +87,15 @@ msgstr "RAM 풀에서 스왑 페이지를 압축합니다 — 디스크 스왑�
 msgid "Compressed RAM block device — fast in-memory swap"
 msgstr "압축된 RAM 블록 장치 — 빠른 메모리 내 스왑"
 
-#: src/views/swap_view.rs:266
+#: src/views/swap_view.rs:271
 msgid "Compression algorithm"
 msgstr "압축 알고리즘"
 
-#: src/views/zram_view.rs:379
+#: src/views/zram_view.rs:384
 msgid "Create"
 msgstr "생성"
 
-#: src/views/zram_view.rs:110 src/views/zram_view.rs:190
+#: src/views/zram_view.rs:110 src/views/zram_view.rs:195
 msgid "Create Zram Device"
 msgstr "Zram 장치 생성"
 
@@ -103,224 +103,225 @@ msgstr "Zram 장치 생성"
 msgid "Dashboard"
 msgstr "대시보드"
 
-#: src/views/zram_view.rs:571
+#: src/views/zram_view.rs:576
 msgid "Destroy Zram Device"
 msgstr "Zram 장치 파괴"
 
-#: src/views/zram_view.rs:439
+#: src/views/zram_view.rs:444
 msgid "Device Created"
 msgstr "장치 생성됨"
 
-#: src/views/dashboard_view.rs:503
+#: src/views/dashboard_view.rs:525
 msgid "Disabled"
 msgstr "비활성화됨"
 
-#: src/views/swap_view.rs:521
+#: src/views/swap_view.rs:526
 msgid "Disabling Zswap..."
-msgstr "스왑 비활성화 중..."
+msgstr "Zswap 비활성화 중..."
 
-#: src/views/swap_view.rs:577
+#: src/views/swap_view.rs:582
 msgid "Disabling swap…"
 msgstr "스왑 비활성화 중..."
 
-#: src/views/swap_view.rs:97
+#: src/views/swap_view.rs:102
 msgid "Disk Swap Configuration"
 msgstr "가상 메모리 설정"
 
-#: src/views/dashboard_view.rs:614
+#: src/views/dashboard_view.rs:636
 msgid ""
 "Disk swap is active with memory compression — your system is well-protected "
 "against memory pressure."
 msgstr "디스크 스왑과 메모리 압축이 활성화되어 있습니다. 시스템은 메모리 부족 상황에 잘 대비되어 있습니다."
 
-#: src/views/stress_test_view.rs:605 src/views/stress_test_view.rs:617
+#: src/views/stress_test_view.rs:610 src/views/stress_test_view.rs:622
 msgid "Duration:"
 msgstr "지속 시간:"
 
-#: src/views/dashboard_view.rs:609
+#: src/views/dashboard_view.rs:631
 msgid ""
 "Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
 "swap and dramatically reduces I/O under memory pressure."
 msgstr ""
 "RAM에서 빠른 압축 스왑을 위해 Zram을 사용하세요. 디스크 스왑보다 10배 빠르며 메모리 부족 상황에서 I/O를 대폭 줄여줍니다."
 
-#: src/views/swap_view.rs:519
+#: src/views/swap_view.rs:524
 msgid "Enabling Zswap..."
-msgstr "스왑 활성화 중..."
+msgstr "Zswap 활성화 중..."
 
-#: src/views/swap_view.rs:579
+#: src/views/swap_view.rs:584
 msgid "Enabling swap…"
 msgstr "스왑 활성화 중..."
 
-#: src/views/stress_test_view.rs:609 src/views/swap_view.rs:505
-#: src/views/zram_view.rs:182
+#: src/views/stress_test_view.rs:614 src/views/swap_view.rs:510
+#: src/views/zram_view.rs:187
 msgid "Error"
 msgstr "오류"
 
-#: src/views/dashboard_view.rs:400 src/views/dashboard_view.rs:415
+#: src/views/dashboard_view.rs:422 src/views/dashboard_view.rs:437
 msgid "Free"
 msgstr "사용 가능"
 
-#: src/views/stress_test_view.rs:250 src/views/stress_test_view.rs:251
-#: src/views/stress_test_view.rs:401
+#: src/views/stress_test_view.rs:255 src/views/stress_test_view.rs:256
+#: src/views/stress_test_view.rs:406
 msgid "Growth speed"
 msgstr "증가 속도"
 
-#: src/views/dashboard_view.rs:269
+#: src/views/dashboard_view.rs:291
 msgid "Hibernation"
-msgstr "면제"
+msgstr "최대 절전 모드"
 
-#: src/views/swap_view.rs:597 src/views/swap_view.rs:704
+#: src/views/swap_view.rs:602 src/views/swap_view.rs:709
 msgid "Hibernation Warning"
-msgstr "휴면 경고"
+msgstr "최대 절전 모드 경고"
 
-#: src/views/dashboard_view.rs:517 src/views/swap_view.rs:810
+#: src/views/dashboard_view.rs:539 src/views/swap_view.rs:815
 msgid "Inactive"
 msgstr "비활성"
 
-#: src/views/swap_view.rs:156 src/views/swap_view.rs:170
+#: src/views/swap_view.rs:161 src/views/swap_view.rs:175
 msgid "Loading..."
 msgstr "로딩 중..."
 
-#: src/views/stress_test_view.rs:232
+#: src/views/stress_test_view.rs:237
 msgid "Maximum hold time"
 msgstr "최대 유지 시간"
 
-#: src/views/swap_view.rs:282
+#: src/views/swap_view.rs:287
 msgid "Maximum pool percent"
 msgstr "최대 풀 사용률"
 
-#: src/views/dashboard_view.rs:134
+#: src/views/dashboard_view.rs:147
 msgid "Memory Overview"
 msgstr "메모리 개요"
 
 #: src/views/zram_view.rs:119
 msgid "No Zram Devices"
-msgstr "Zram 장치"
+msgstr "Zram 장치 없음"
 
-#: src/views/dashboard_view.rs:456
+#: src/views/dashboard_view.rs:478
 msgid "No device"
 msgstr "디바이스 없음"
 
-#: src/views/dashboard_view.rs:592
+#: src/views/dashboard_view.rs:614
 msgid "No disk swap detected"
 msgstr "디스크 가상 메모리 감지 안됨"
 
-#: src/views/dashboard_view.rs:608
+#: src/views/dashboard_view.rs:630
 msgid "No memory acceleration enabled"
 msgstr "메모리 가속화가 활성화되지 않음"
 
-#: src/views/dashboard_view.rs:546
+#: src/views/dashboard_view.rs:568
 msgid "None"
 msgstr "없음"
 
-#: src/views/dashboard_view.rs:530 src/views/dashboard_view.rs:538
+#: src/views/dashboard_view.rs:552 src/views/dashboard_view.rs:560
 msgid "Off"
 msgstr "끄기"
 
-#: src/views/dashboard_view.rs:537
+#: src/views/dashboard_view.rs:559
 msgid "On"
 msgstr "활성화"
 
-#: src/views/swap_view.rs:301
+#: src/views/swap_view.rs:306
 msgid ""
 "Only store pages that compress to ≤ this % of original. Higher = more pages "
 "cached. Recommended: 90%"
 msgstr "원본의 이 % 이하로 압축되는 페이지만 저장합니다. 높을수록 더 많은 페이지가 캐시됩니다. 권장: 90%"
 
-#: src/views/dashboard_view.rs:613
+#: src/views/dashboard_view.rs:635
 msgid "Optimal memory configuration"
 msgstr "최적의 메모리 구성"
 
-#: src/views/stress_test_view.rs:602 src/views/stress_test_view.rs:614
+#: src/views/stress_test_view.rs:607 src/views/stress_test_view.rs:619
 msgid "Peak allocated:"
 msgstr "최대 할당량:"
 
-#: src/views/zram_view.rs:367
+#: src/views/zram_view.rs:372
 msgid "Priority"
 msgstr "우선순위"
 
-#: src/views/stress_test_view.rs:209
+#: src/views/stress_test_view.rs:214
 msgid "RAM"
 msgstr "RAM"
 
-#: src/views/zram_view.rs:554
+#: src/views/zram_view.rs:559
 msgid "Remove"
 msgstr "제거"
 
-#: src/views/stress_test_view.rs:360
+#: src/views/stress_test_view.rs:365
 msgid "Run Again"
 msgstr "다시 실행"
 
-#: src/views/stress_test_view.rs:279
+#: src/views/stress_test_view.rs:284
 msgid "Run Stress Test"
 msgstr "스트레스 테스트 실행"
 
-#: src/views/swap_view.rs:307
+#: src/views/swap_view.rs:312
 msgid "Shrinker"
 msgstr "메모리 축소기"
 
-#: src/views/zram_view.rs:269
+#: src/views/zram_view.rs:274
 msgid "Size (MiB)"
 msgstr "크기 (MiB)"
 
-#: src/views/dashboard_view.rs:192
+#: src/views/dashboard_view.rs:208
 msgid "Speed"
 msgstr "속도"
 
-#: src/views/stress_test_view.rs:100 src/window.rs:114
+#: src/views/stress_test_view.rs:105 src/window.rs:114
 msgid "Stress Test"
 msgstr "스트레스 테스트"
 
-#: src/views/dashboard_view.rs:252 src/views/dashboard_view.rs:266
+#: src/views/dashboard_view.rs:271 src/views/dashboard_view.rs:288
 #: src/window.rs:112
 msgid "Swap"
 msgstr "스왑"
 
 #: src/progress_dialog.rs:24 src/window.rs:59
+#: data/com.anduinos.swapcontrol.desktop:24
 msgid "Swap Control"
 msgstr "가상 메모리 제어"
 
-#: src/views/swap_view.rs:147
+#: src/views/swap_view.rs:152
 msgid "Swap usage"
 msgstr "가상 메모리 사용량"
 
-#: src/views/dashboard_view.rs:270 src/views/swap_view.rs:257
-#: src/views/swap_view.rs:677
+#: src/views/dashboard_view.rs:292 src/views/swap_view.rs:262
+#: src/views/swap_view.rs:682
 msgid "Swappiness"
 msgstr "스와핑 성향"
 
-#: src/views/dashboard_view.rs:603
+#: src/views/dashboard_view.rs:625
 msgid "Swappiness not optimized for Zram"
 msgstr "Zram에 대한 swappiness 최적화 안 됨"
 
-#: src/views/stress_test_view.rs:206
+#: src/views/stress_test_view.rs:211
 msgid "Target Pressure"
 msgstr "목표 압력"
 
-#: src/views/stress_test_view.rs:345
+#: src/views/stress_test_view.rs:350
 msgid "Test Complete"
 msgstr "테스트 완료"
 
-#: src/views/dashboard_view.rs:190
+#: src/views/dashboard_view.rs:206
 msgid "Total RAM"
 msgstr "총 RAM"
 
-#: src/views/dashboard_view.rs:191
+#: src/views/dashboard_view.rs:207
 msgid "Type"
 msgstr "유형"
 
-#: src/views/dashboard_view.rs:385 src/views/dashboard_view.rs:412
+#: src/views/dashboard_view.rs:407 src/views/dashboard_view.rs:434
 msgid "Used"
 msgstr "사용됨"
 
-#: src/views/dashboard_view.rs:593
+#: src/views/dashboard_view.rs:615
 msgid ""
 "When RAM is full the kernel may kill applications. Enable disk swap for a "
 "reliable safety net."
 msgstr "RAM이 가득 차면 커널이 애플리케이션을 종료할 수 있습니다. 안정적인 안전망을 위해 디스크 스왑을 사용하세요."
 
-#: src/views/dashboard_view.rs:244 src/views/dashboard_view.rs:268
+#: src/views/dashboard_view.rs:263 src/views/dashboard_view.rs:290
 #: src/window.rs:111
 msgid "Zram"
 msgstr "zram"
@@ -329,11 +330,11 @@ msgstr "zram"
 msgid "Zram Devices"
 msgstr "Zram 장치"
 
-#: src/views/dashboard_view.rs:597
+#: src/views/dashboard_view.rs:619
 msgid "Zram and Zswap are both active"
 msgstr "Zram 및 Zswap이 모두 활성화됨"
 
-#: src/views/dashboard_view.rs:598
+#: src/views/dashboard_view.rs:620
 msgid ""
 "Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
 "pool. Running both wastes CPU and can cause severe memory thrashing. Disable"
@@ -342,88 +343,88 @@ msgstr ""
 "Zram과 Zswap은 상호 배타적입니다. 각기 별도의 압축 RAM 풀을 생성하므로 둘 모두 실행하면 CPU가 낭비되고 심각한 메모리 "
 "스러싱이 발생할 수 있습니다. 둘 중 하나를 비활성화하세요."
 
-#: src/views/dashboard_view.rs:248 src/views/dashboard_view.rs:267
-#: src/views/swap_view.rs:185 src/views/swap_view.rs:686
+#: src/views/dashboard_view.rs:267 src/views/dashboard_view.rs:289
+#: src/views/swap_view.rs:190 src/views/swap_view.rs:691
 msgid "Zswap"
 msgstr "즈스왑"
 
-#: src/views/stress_test_view.rs:212
+#: src/views/stress_test_view.rs:217
 msgid "default"
 msgstr "기본값"
 
-#: src/views/swap_view.rs:267
+#: src/views/swap_view.rs:272
 msgid ""
 "lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires"
 " zswap restart."
 msgstr "lz4 = 빠름 (권장), zstd = 최고 압축률, lzo = 레거시. 변경 시 Zswap 재시작이 필요합니다."
 
-#: src/views/stress_test_view.rs:211
+#: src/views/stress_test_view.rs:216
 msgid "range"
 msgstr "범위"
 
-#: src/views/stress_test_view.rs:233
+#: src/views/stress_test_view.rs:238
 msgid "seconds"
 msgstr "초"
 
-#: src/views/swap_view.rs:118
+#: src/views/swap_view.rs:123
 msgid "with Zram"
 msgstr "Zram 사용"
 
-#: src/views/dashboard_view.rs:154
+#: src/views/dashboard_view.rs:167
 msgid "with Zram active — prefer fast compressed RAM over disk cache"
 msgstr "Zram 활성화 — 디스크 캐시보다 빠른 압축된 RAM 우선 사용"
 
-#: src/views/dashboard_view.rs:552
+#: src/views/dashboard_view.rs:574
 msgid "Ready"
 msgstr "준비됨"
 
-#: src/views/dashboard_view.rs:554
+#: src/views/dashboard_view.rs:576
 msgid "Unsupported"
 msgstr "지원되지 않음"
 
-#: src/views/dashboard_view.rs:556
+#: src/views/dashboard_view.rs:578
 msgid "Not configured"
 msgstr "설정되지 않음"
 
-#: src/views/dashboard_view.rs:558
+#: src/views/dashboard_view.rs:580
 msgid "Resume target missing"
 msgstr "최대 절전 모드 복귀 대상 누락"
 
-#: src/views/dashboard_view.rs:560
+#: src/views/dashboard_view.rs:582
 msgid "Resume target inactive"
 msgstr "최대 절전 모드 복귀 대상 비활성"
 
-#: src/views/dashboard_view.rs:562
+#: src/views/dashboard_view.rs:584
 msgid "Swap too small"
 msgstr "스왑 크기가 너무 작습니다"
 
-#: src/views/dashboard_view.rs:564
+#: src/views/dashboard_view.rs:586
 msgid "Not ready"
 msgstr "준비되지 않음"
 
-#: src/views/swap_view.rs:104
+#: src/views/swap_view.rs:109
 msgid ""
 "Review installer-managed swap partitions and manage the legacy supplementary"
 " swap file"
 msgstr "설치 프로그램에서 관리하는 스왑 파티션을 검토하고 레거시 보조 스왑 파일을 관리합니다"
 
-#: src/views/swap_view.rs:155
+#: src/views/swap_view.rs:160
 msgid "Swap partition"
 msgstr "스왑 파티션"
 
-#: src/views/swap_view.rs:169
+#: src/views/swap_view.rs:174
 msgid "Additional swap file"
 msgstr "추가 스왑 파일"
 
-#: src/views/swap_view.rs:195
+#: src/views/swap_view.rs:200
 msgid "Additional swap file size"
 msgstr "추가 스왑 파일 크기"
 
-#: src/views/swap_view.rs:196
+#: src/views/swap_view.rs:201
 msgid "0 GiB means no supplementary swap file"
 msgstr "0 GiB은 보조 스왑 파일이 없음을 의미합니다"
 
-#: src/views/swap_view.rs:598
+#: src/views/swap_view.rs:603
 msgid ""
 "This swap file is the configured resume target. Disabling it will break "
 "hibernation. Continue?"
@@ -431,7 +432,7 @@ msgstr ""
 "이 스왑 파일은 최대 절전 모드에서 복귀할 때 사용하도록 설정되어 있습니다. 이 파일을 비활성화하면 최대 절전 모드가 작동하지 않습니다."
 " 계속하시겠습니까?"
 
-#: src/views/swap_view.rs:705
+#: src/views/swap_view.rs:710
 msgid ""
 "This swap file is the configured resume target. Its physical offset would "
 "change, so resize is blocked until hibernation is disabled."
@@ -439,47 +440,47 @@ msgstr ""
 "이 스왑 파일은 최대 절전 모드에서 복귀할 때 사용하도록 설정되어 있습니다. 파일의 물리적 오프셋이 변경되므로 최대 절전 모드를 "
 "비활성화할 때까지 크기를 조정할 수 없습니다."
 
-#: src/views/swap_view.rs:722
+#: src/views/swap_view.rs:727
 msgid "unknown"
 msgstr "알 수 없음"
 
-#: src/views/swap_view.rs:738
+#: src/views/swap_view.rs:743
 msgid "No swap partition — a legacy swap file can be managed below"
 msgstr "스왑 파티션 없음 — 아래에서 레거시 스왑 파일을 관리할 수 있습니다"
 
-#: src/views/swap_view.rs:207
+#: src/views/swap_view.rs:212
 msgid "Remove incompatible file"
 msgstr "호환되지 않는 파일 제거"
 
-#: src/views/swap_view.rs:377
+#: src/views/swap_view.rs:382
 msgid "Removing incompatible swap file…"
 msgstr "호환되지 않는 스왑 파일 제거 중…"
 
-#: src/views/swap_view.rs:790
+#: src/views/swap_view.rs:795
 msgid "Present but inactive"
 msgstr "존재하지만 비활성화됨"
 
-#: src/views/swap_view.rs:792
+#: src/views/swap_view.rs:797
 msgid "Not created — choose a size below to add one"
 msgstr "생성되지 않음 — 아래에서 크기를 선택하여 추가하세요"
 
-#: src/views/swap_view.rs:794
+#: src/views/swap_view.rs:799
 msgid "Not created — at least 20 GiB must remain free"
 msgstr "생성되지 않음 — 최소 20 GiB가 사용 가능 상태로 유지되어야 합니다"
 
-#: src/views/swap_view.rs:830
+#: src/views/swap_view.rs:835
 msgid ""
 "Resize is locked because this file is the configured hibernation resume "
 "target"
-msgstr "이 파일은 구성된 휴면 복귀 대상이므로 크기 조정이 잠겨 있습니다."
+msgstr "이 파일은 구성된 최대 절전 모드 복귀 대상이므로 크기 조정이 잠겨 있습니다."
 
-#: src/views/swap_view.rs:832
+#: src/views/swap_view.rs:837
 msgid ""
 "Optional compatibility file; 0 GiB removes it and 20 GiB remains reserved "
 "for the system"
 msgstr "선택적 호환성 파일입니다. 0 GiB으로 설정하면 파일이 제거되며, 시스템용으로 20 GiB가 예약됩니다."
 
-#: src/views/swap_view.rs:834
+#: src/views/swap_view.rs:839
 msgid ""
 "Disabled on Btrfs because a root-subvolume swap file would prevent Disk "
 "Snapshots Manager recovery points"
@@ -490,35 +491,35 @@ msgid ""
 "Create a compressed RAM swap device for faster memory pressure handling."
 msgstr "더 빠른 메모리 압력 처리를 위해 압축 RAM 스왑 장치를 생성하세요."
 
-#: src/views/stress_test_view.rs:171
+#: src/views/stress_test_view.rs:176
 msgid "Ensure important work is saved before running this test."
 msgstr "이 테스트를 실행하기 전에 중요한 작업을 저장하세요."
 
-#: src/views/swap_view.rs:283
+#: src/views/swap_view.rs:288
 msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
 msgstr "압축 풀이에서 사용 가능한 최대 RAM %. 권장: 20%"
 
-#: src/views/dashboard_view.rs:141
+#: src/views/dashboard_view.rs:154
 msgid "Real-time RAM, swap, and compression subsystem status"
 msgstr "실시간 RAM, 스왑 및 압축 하위 시스템 상태"
 
-#: src/views/swap_view.rs:308
+#: src/views/swap_view.rs:313
 msgid "Reclaim pool pages under memory pressure. Recommended: ON"
 msgstr "메모리 압력 하에서 풀 페이지를 회수합니다. 권장: 켜짐"
 
-#: src/views/stress_test_view.rs:107
+#: src/views/stress_test_view.rs:112
 msgid "Simulate memory pressure to test swap and OOM behavior"
 msgstr "스왑 및 OOM 동작을 테스트하기 위해 메모리 압력 시뮬레이션"
 
-#: src/views/stress_test_view.rs:161
+#: src/views/stress_test_view.rs:166
 msgid "Warning: This will consume system memory and may cause instability"
 msgstr "경고: 시스템 메모리를 소모하며 불안정성을 유발할 수 있습니다"
 
-#: src/views/zram_view.rs:440
+#: src/views/zram_view.rs:445
 msgid "Zram configuration saved. The device will be created shortly."
 msgstr "Zram 구성이 저장되었습니다. 장치가 곧 생성됩니다."
 
-#: src/views/dashboard_view.rs:165 src/views/swap_view.rs:128
+#: src/views/dashboard_view.rs:178 src/views/swap_view.rs:133
 msgid "<i>Recommended swappiness: {0} ({1})</i>"
 msgstr "<i>권장 swappiness: {0} ({1})</i>"
 
@@ -526,7 +527,7 @@ msgstr "<i>권장 swappiness: {0} ({1})</i>"
 msgid "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
 msgstr "<i>권장: {0} MiB, lz4, 우선순위 100 ({1} GiB RAM 기준)</i>"
 
-#: src/views/swap_view.rs:772
+#: src/views/swap_view.rs:777
 msgid "Active — {0} GiB used / {1} GiB total"
 msgstr "활성 상태 — {0}GiB 사용 / {1}GiB 전체"
 
@@ -586,24 +587,24 @@ msgstr "pkexec 대기 실패: {0}"
 msgid "Hello {0}, you have {1} messages"
 msgstr "안녕하세요 {0}님, {1}개의 메시지가 있습니다"
 
-#: src/views/swap_view.rs:234
+#: src/views/swap_view.rs:239
 msgid ""
 "How aggressively the kernel swaps — lower = stay in RAM longer (recommended:"
 " {0})"
 msgstr "커널의 스왑 강도 — 낮을수록 RAM에 머무는 시간이 길어짐 (권장: {0})"
 
-#: src/views/swap_view.rs:231
+#: src/views/swap_view.rs:236
 msgid ""
 "How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
 "fast compressed RAM over disk cache (recommended: {0})"
 msgstr ""
 "커널의 스왑 강도 — Zram 활성화 시 디스크 캐시보다 빠른 압축된 RAM을 우선 사용하도록 {0}(으)로 설정 (권장: {0})"
 
-#: src/views/dashboard_view.rs:483
+#: src/views/dashboard_view.rs:505
 msgid "Idle ({0} GiB available)"
 msgstr "대기 중 (사용 가능 {0} GiB)"
 
-#: src/views/zram_view.rs:531
+#: src/views/zram_view.rs:536
 msgid "Idle — {0} MiB available"
 msgstr "대기 중 — 사용 가능 {0} MiB"
 
@@ -611,11 +612,11 @@ msgstr "대기 중 — 사용 가능 {0} MiB"
 msgid "MemTotal not found"
 msgstr "MemTotal을(를) 찾을 수 없습니다"
 
-#: src/views/swap_view.rs:786
+#: src/views/swap_view.rs:791
 msgid "Present but inactive — activation is disabled on {0}"
 msgstr "존재하지만 비활성화됨 — {0}에서 활성화가 비활성화됨"
 
-#: src/views/stress_test_view.rs:676
+#: src/views/stress_test_view.rs:681
 msgid ""
 "RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
 "Swap used: {3} GiB"
@@ -623,11 +624,11 @@ msgstr ""
 "RAM: 총 {0} GiB · 사용 {1} GiB · 사용 가능 {2} GiB\n"
 "스왑 사용: {3} GiB"
 
-#: src/views/swap_view.rs:673
+#: src/views/swap_view.rs:678
 msgid "Resize"
 msgstr "크기 조정"
 
-#: src/views/swap_view.rs:837
+#: src/views/swap_view.rs:842
 msgid "Swap file resizing is unsupported on {0}"
 msgstr "{0}에서는 스왑 파일 크기 조정을 지원하지 않습니다"
 
@@ -659,17 +660,17 @@ msgstr ""
 "이 패키지가 없으면 Zswap 변경 사항을 적용하거나 영구적으로 저장할 수 없습니다.\n"
 "이 GUI에서 zswap을 관리하려면 'anduinos-swap-config'를 설치하세요."
 
-#: src/views/zram_view.rs:573
+#: src/views/zram_view.rs:578
 msgid ""
 "This will immediately remove {0} and flush its contents to disk swap. "
 "Continue?"
 msgstr "{0}을(를) 즉시 제거하고 그 내용을 디스크 스왑으로 플러시합니다. 계속하시겠습니까?"
 
-#: src/views/swap_view.rs:797
+#: src/views/swap_view.rs:802
 msgid "Unavailable on {0}; the swap partition remains active"
 msgstr "{0}에서 사용할 수 없음; 스왑 파티션은 활성화된 상태로 유지됨"
 
-#: src/views/dashboard_view.rs:604
+#: src/views/dashboard_view.rs:626
 msgid ""
 "Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer"
 " fast compressed RAM swap — dropping file cache when zram is available "
@@ -694,7 +695,7 @@ msgstr "Zswap 영속성 비활성화됨"
 msgid "Zswap persistence enabled"
 msgstr "Zswap 영속성 활성화됨"
 
-#: src/views/dashboard_view.rs:159 src/views/swap_view.rs:122
+#: src/views/dashboard_view.rs:172 src/views/swap_view.rs:127
 msgid "for {0} GiB RAM"
 msgstr "{0} GiB RAM 기준"
 
@@ -706,26 +707,46 @@ msgstr "swappiness 업데이트됨"
 msgid "systemctl {0} failed: {1}"
 msgstr "systemctl {0} 실패: {1}"
 
-#: src/views/zram_view.rs:525
+#: src/views/zram_view.rs:530
 msgid "{0} MiB used (stats reset)"
 msgstr "{0} MiB 사용 (통계 초기화됨)"
 
-#: src/views/zram_view.rs:520
+#: src/views/zram_view.rs:525
 msgid "{0} MiB used · saved {1}%"
 msgstr "{0} MiB 사용 · {1}% 절약"
 
-#: src/views/dashboard_view.rs:498
+#: src/views/dashboard_view.rs:520
 msgid "{0} · pool {1}%"
 msgstr "{0} · 풀 {1}%"
 
-#: src/views/dashboard_view.rs:474
+#: src/views/dashboard_view.rs:496
 msgid "{0} · saved {1}%"
 msgstr "{0} · {1}% 저장"
 
-#: src/views/swap_view.rs:754
+#: src/views/swap_view.rs:759
 msgid ""
 "{0} — installer-managed; size cannot be changed while the system is running"
 msgstr "{0} — 설치 프로그램 관리 중; 시스템 실행 중에는 크기를 변경할 수 없음"
+
+#: data/com.anduinos.swapcontrol.desktop:99
+msgid "swap;memory;zswap;zram;swappiness;virtual memory;compression;RAM;"
+msgstr "swap;메모리;zswap;zram;swappiness;가상 메모리;압축;RAM;"
+
+#: data/com.anduinos.swapcontrol.desktop:70
+msgid "Manage virtual memory, compression, and swap settings"
+msgstr "가상 메모리, 압축 및 스왑 설정 관리"
+
+#: data/com.anduinos.swapcontrol.desktop:47
+msgid "Virtual Memory Settings"
+msgstr "가상 메모리 설정"
+
+#: anduinos-swapcontrol-gtk/data/com.anduinos.swapcontrol.policy:39
+msgid "Authentication is required to modify swap, zswap, and zram settings"
+msgstr "스왑, zswap 및 zram 설정을 수정하려면 인증이 필요합니다"
+
+#: anduinos-swapcontrol-gtk/data/com.anduinos.swapcontrol.policy:9
+msgid "Manage virtual memory settings"
+msgstr "가상 메모리 설정 관리"
 
 #~ msgid "Disabling swap will break hibernation. Continue?"
 #~ msgstr "스왑을 비활성화하면 절전 기능이 중단됩니다. 계속하시겠습니까?"

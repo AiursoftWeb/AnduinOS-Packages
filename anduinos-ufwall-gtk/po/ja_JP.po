@@ -58,23 +58,23 @@ msgstr "アプリケーションプロファイル"
 msgid "Audit"
 msgstr "監査"
 
-#: src/views/network_audit_view.rs:277
+#: src/views/network_audit_view.rs:278
 msgid "Auditor Error"
 msgstr "審査官エラー"
 
-#: src/views/network_audit_view.rs:504
+#: src/views/network_audit_view.rs:505
 msgid "Block"
 msgstr "ブロック"
 
-#: src/views/network_audit_view.rs:500
+#: src/views/network_audit_view.rs:501
 msgid "Block Connection?"
 msgstr "接続をブロックしますか？"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid "Block inbound traffic from"
 msgstr "次のホストからの着信トラフィックをブロックする"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid "Block outbound traffic to"
 msgstr "次のホストへの送信トラフィックをブロックする"
 
@@ -82,7 +82,7 @@ msgstr "次のホストへの送信トラフィックをブロックする"
 msgid "Blocked Events"
 msgstr "ブロックされたイベント"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Blocked Successfully"
 msgstr "正常にブロックされました"
 
@@ -90,7 +90,7 @@ msgstr "正常にブロックされました"
 msgid "Both"
 msgstr "両方"
 
-#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/views/network_audit_view.rs:504 src/views/rules_view.rs:121
 #: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "キャンセル"
@@ -187,11 +187,12 @@ msgstr "方向"
 msgid "Error"
 msgstr "エラー"
 
-#: src/views/network_audit_view.rs:554
+#: src/views/network_audit_view.rs:555
 msgid "Failed to Block"
 msgstr "ブロックに失敗しました"
 
 #: src/views/status_view.rs:95 src/window.rs:64
+#: data/com.anduinos.ufwall.desktop:29 data/com.anduinos.ufwall.desktop:57
 msgid "Firewall"
 msgstr "ファイアウォール"
 
@@ -344,7 +345,7 @@ msgstr "拒否"
 msgid "Resolve Domains"
 msgstr "ドメインを解決"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Rule added to block"
 msgstr "ルールがブロックリストに追加されました"
 
@@ -392,12 +393,12 @@ msgstr "まだルールが設定されていません。"
 msgid "This will delete all custom rules. This action cannot be undone."
 msgstr "これにより、すべてのカスタムルールが削除されます。この操作は元に戻すことができません。"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr "リモートホストからお使いのマシンへのパケット送信をすべて防止します。"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr "お使いのマシンからリモートホストへのパケット送信をすべて防止します。"
@@ -488,7 +489,7 @@ msgstr "ネットワークファイルシステム"
 
 #: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
-msgstr "ポート / プロトコル"
+msgstr "ネットワーク時刻プロトコル"
 
 #: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
@@ -512,7 +513,7 @@ msgstr "PostgreSQLデータベースサーバー"
 
 #: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
-msgstr "ポート / プロトコル"
+msgstr "リモートデスクトッププロトコル"
 
 #: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
@@ -534,7 +535,7 @@ msgstr "Virtual Network Computingによるリモートデスクトップ"
 msgid "Windows file and printer sharing"
 msgstr "Windowsのファイルおよびプリンター共有"
 
-#: src/views/network_audit_view.rs:534
+#: src/views/network_audit_view.rs:535
 msgid "Audit Block"
 msgstr "監査ブロック"
 
@@ -544,7 +545,7 @@ msgstr "認証がキャンセルされました"
 
 #: src/views/network_audit_view.rs:160
 msgid "Download"
-msgstr "受信"
+msgstr "ダウンロード"
 
 #: src/ufw/backend.rs:384
 msgid "Failed to execute network service helper"
@@ -604,27 +605,27 @@ msgstr ""
 msgid "Network service command failed"
 msgstr "ネットワークサービスのコマンドが失敗しました"
 
-#: src/views/network_audit_view.rs:371
+#: src/views/network_audit_view.rs:372
 msgid "No Active Connections"
 msgstr "アクティブな接続はありません"
 
-#: src/views/network_audit_view.rs:361
+#: src/views/network_audit_view.rs:362
 msgid "No Inbound Connections"
 msgstr "受信接続はありません"
 
-#: src/views/network_audit_view.rs:366
+#: src/views/network_audit_view.rs:367
 msgid "No Outbound Connections"
 msgstr "送信接続はありません"
 
-#: src/views/network_audit_view.rs:367
+#: src/views/network_audit_view.rs:368
 msgid "No applications are sending data to the internet."
 msgstr "インターネットにデータを送信しているアプリケーションはありません。"
 
-#: src/views/network_audit_view.rs:362
+#: src/views/network_audit_view.rs:363
 msgid "No external devices are connecting to your open ports."
 msgstr "開いているポートに外部デバイスが接続していません。"
 
-#: src/views/network_audit_view.rs:372
+#: src/views/network_audit_view.rs:373
 msgid "No network activity detected."
 msgstr "ネットワークアクティビティが検出されませんでした。"
 
@@ -643,3 +644,27 @@ msgstr "アップロード"
 #: src/ufw/backend.rs:48
 msgid "pkexec failed"
 msgstr "pkexec に失敗しました"
+
+#: data/com.anduinos.ufwall.desktop:124
+msgid "firewall;ufw;security;network;"
+msgstr "ファイアウォール;ufw;セキュリティ;ネットワーク;"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:82
+msgid "Authentication is required to change local network discovery"
+msgstr "ローカルネットワーク検出を変更するには認証が必要です"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:80
+msgid "Manage local network discovery"
+msgstr "ローカルネットワーク検出を管理する"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:39
+msgid "Authentication is required to modify firewall settings"
+msgstr "ファイアウォール設定を変更するには認証が必要です"
+
+#: data/com.anduinos.ufwall.desktop:85
+msgid "Configure your firewall"
+msgstr "ファイアウォールを設定"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:9
+msgid "Manage UFW firewall settings"
+msgstr "UFW ファイアウォール設定を管理"

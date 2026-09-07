@@ -58,23 +58,23 @@ msgstr "應用程式設定檔"
 msgid "Audit"
 msgstr "審計"
 
-#: src/views/network_audit_view.rs:277
+#: src/views/network_audit_view.rs:278
 msgid "Auditor Error"
 msgstr "審計員錯誤"
 
-#: src/views/network_audit_view.rs:504
+#: src/views/network_audit_view.rs:505
 msgid "Block"
 msgstr "封鎖"
 
-#: src/views/network_audit_view.rs:500
+#: src/views/network_audit_view.rs:501
 msgid "Block Connection?"
 msgstr "封鎖連線？"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid "Block inbound traffic from"
 msgstr "封鎖來自的入站流量"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid "Block outbound traffic to"
 msgstr "封鎖發往的出站流量"
 
@@ -82,7 +82,7 @@ msgstr "封鎖發往的出站流量"
 msgid "Blocked Events"
 msgstr "已封鎖事件"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Blocked Successfully"
 msgstr "成功封鎖"
 
@@ -90,7 +90,7 @@ msgstr "成功封鎖"
 msgid "Both"
 msgstr "兩者"
 
-#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/views/network_audit_view.rs:504 src/views/rules_view.rs:121
 #: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "取消"
@@ -187,11 +187,12 @@ msgstr "方向"
 msgid "Error"
 msgstr "錯誤"
 
-#: src/views/network_audit_view.rs:554
+#: src/views/network_audit_view.rs:555
 msgid "Failed to Block"
 msgstr "封鎖失敗"
 
 #: src/views/status_view.rs:95 src/window.rs:64
+#: data/com.anduinos.ufwall.desktop:29 data/com.anduinos.ufwall.desktop:57
 msgid "Firewall"
 msgstr "防火牆"
 
@@ -344,7 +345,7 @@ msgstr "拒絕"
 msgid "Resolve Domains"
 msgstr "解析網域"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Rule added to block"
 msgstr "已將規則新增至封鎖清單"
 
@@ -392,12 +393,12 @@ msgstr "目前尚未設定任何規則。"
 msgid "This will delete all custom rules. This action cannot be undone."
 msgstr "此操作將刪除所有自訂規則。此操作無法復原。"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr "這將阻止遠端主機向您的電腦傳送封包。"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr "這將阻止您的電腦向遠端主機傳送封包。"
@@ -488,7 +489,7 @@ msgstr "網路檔案系統"
 
 #: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
-msgstr "通訊埠 / 通訊協定"
+msgstr "網絡時間通訊協定"
 
 #: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
@@ -512,7 +513,7 @@ msgstr "PostgreSQL 資料庫伺服器"
 
 #: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
-msgstr "通訊埠 / 通訊協定"
+msgstr "遠端桌面通訊協定"
 
 #: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
@@ -534,7 +535,7 @@ msgstr "虛擬網路計算遠端桌面"
 msgid "Windows file and printer sharing"
 msgstr "Windows 檔案與印表機共用"
 
-#: src/views/network_audit_view.rs:534
+#: src/views/network_audit_view.rs:535
 msgid "Audit Block"
 msgstr "稽核封鎖"
 
@@ -604,27 +605,27 @@ msgstr ""
 msgid "Network service command failed"
 msgstr "網絡服務命令失敗"
 
-#: src/views/network_audit_view.rs:371
+#: src/views/network_audit_view.rs:372
 msgid "No Active Connections"
 msgstr "沒有活躍連線"
 
-#: src/views/network_audit_view.rs:361
+#: src/views/network_audit_view.rs:362
 msgid "No Inbound Connections"
 msgstr "沒有傳入連線"
 
-#: src/views/network_audit_view.rs:366
+#: src/views/network_audit_view.rs:367
 msgid "No Outbound Connections"
 msgstr "沒有出站連線"
 
-#: src/views/network_audit_view.rs:367
+#: src/views/network_audit_view.rs:368
 msgid "No applications are sending data to the internet."
 msgstr "沒有應用程式正在向互聯網發送數據。"
 
-#: src/views/network_audit_view.rs:362
+#: src/views/network_audit_view.rs:363
 msgid "No external devices are connecting to your open ports."
 msgstr "沒有外部裝置正在連接你的開放埠。"
 
-#: src/views/network_audit_view.rs:372
+#: src/views/network_audit_view.rs:373
 msgid "No network activity detected."
 msgstr "未偵測到網路活動。"
 
@@ -643,3 +644,27 @@ msgstr "上傳"
 #: src/ufw/backend.rs:48
 msgid "pkexec failed"
 msgstr "pkexec 失敗"
+
+#: data/com.anduinos.ufwall.desktop:124
+msgid "firewall;ufw;security;network;"
+msgstr "防火牆;ufw;安全;網絡;"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:82
+msgid "Authentication is required to change local network discovery"
+msgstr "變更本地網絡探索需要身分驗證"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:80
+msgid "Manage local network discovery"
+msgstr "管理本機網絡探索"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:39
+msgid "Authentication is required to modify firewall settings"
+msgstr "修改防火牆設定需要認證"
+
+#: data/com.anduinos.ufwall.desktop:85
+msgid "Configure your firewall"
+msgstr "設定您的防火牆"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:9
+msgid "Manage UFW firewall settings"
+msgstr "管理 UFW 防火牆設定"

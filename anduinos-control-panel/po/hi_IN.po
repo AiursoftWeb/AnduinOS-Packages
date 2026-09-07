@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "कंट्रोल पैनल"
 
@@ -123,7 +124,7 @@ msgstr "इंस्टॉल नहीं है"
 
 #: src/anduinos_control_panel/app.py:317
 msgid "Configure microphone, language, shortcut, and training"
-msgstr "माइक्रोफ़ोन, भाषा, शॉर्टकट और प्रशिक्षण कॉन्फ़िगर करें"
+msgstr "माइक्रोफ़ोन, भाषा, शॉर्टकट और कैलिब्रेशन कॉन्फ़िगर करें"
 
 #: src/anduinos_control_panel/app.py:319
 msgid "Install private, offline speech-to-text"
@@ -460,7 +461,8 @@ msgid ""
 "other applications. Audio stays on this computer."
 msgstr ""
 "Super + H दबाकर ब्राउज़र, एडिटर, संदेश, टर्मिनल और अन्य ऐप्लिकेशन में बोलकर "
-"टाइप करें। ऑडियो इसी कंप्यूटर पर रहता है।"
+"टाइप करें। ऑडियो डेटा इसी कंप्यूटर पर संसाधित होता है और इसके बाहर नहीं भेजा"
+" जाता।"
 
 #: src/anduinos_control_panel/app.py:1274
 msgid "Private by default"
@@ -600,6 +602,22 @@ msgstr "AnduinOS टीम"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "AnduinOS सिस्टम सेटिंग्स खोजें और प्रबंधित करें।"
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr "सेटिंग्स;कंट्रोल;सिस्टम;हार्डवेयर;ड्राइवर;खाते;बैकअप;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "बूट मेनू सेटिंग्स बदलें"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr "बूट मेनू सेटिंग्स बदलने के लिए प्रमाणीकरण आवश्यक है"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "AnduinOS सिस्टम सेटिंग्स खोजें और प्रबंधित करें"
 
 #: src/anduinos_control_panel/app.py
 msgid "Authentication is required to read the boot menu."

@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Πίνακας ελέγχου"
 
@@ -162,7 +163,7 @@ msgstr "Η ρύθμιση δεν βρέθηκε"
 #: src/anduinos_control_panel/app.py:520 src/anduinos_control_panel/app.py:531
 #: src/anduinos_control_panel/app.py:540
 msgid "Could not open this setting"
-msgstr "Δεν ήταν δυνατή η άνοιξη αυτής της ρύθμισης"
+msgstr "Δεν ήταν δυνατό το άνοιγμα αυτής της ρύθμισης"
 
 #: src/anduinos_control_panel/app.py:539
 msgid "The application exited before it could be opened."
@@ -610,6 +611,25 @@ msgstr "Ομάδα AnduinOS"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "Αναζήτηση και διαχείριση των ρυθμίσεων συστήματος του AnduinOS."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr ""
+"ρυθμίσεις;έλεγχος;σύστημα;υλικό;οδηγοί;λογαριασμοί;αντίγραφα ασφαλείας;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "Αλλαγή ρυθμίσεων μενού εκκίνησης"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr ""
+"Απαιτείται έλεγχος ταυτότητας για την αλλαγή των ρυθμίσεων του μενού "
+"εκκίνησης"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "Αναζήτηση και διαχείριση των ρυθμίσεων συστήματος του AnduinOS"
 
 #: src/anduinos_control_panel/app.py
 msgid "Authentication is required to read the boot menu."

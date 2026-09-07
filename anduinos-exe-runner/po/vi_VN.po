@@ -18,19 +18,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: assets/anduinos-exe-runner:319
+#: assets/anduinos-exe-runner:329
 msgid "==> Executing command: {}"
 msgstr "Đang thực thi lệnh: {}"
 
-#: assets/anduinos-exe-runner:315
+#: assets/anduinos-exe-runner:325
 msgid "About to start downloading Bottles..."
 msgstr "Sắp bắt đầu tải xuống Bottles..."
 
-#: assets/anduinos-exe-runner:170
+#: assets/anduinos-exe-runner:180
 msgid "Advanced Status and Logs"
 msgstr "Trạng thái nâng cao và nhật ký"
 
-#: assets/anduinos-exe-runner:430
+#: assets/anduinos-exe-runner:368 assets/anduinos-exe-runner:375
+#: assets/anduinos-exe-runner:400
 msgid ""
 "An error occurred while initializing the bottle. Please expand advanced "
 "status to view logs."
@@ -38,7 +39,7 @@ msgstr ""
 "Đã xảy ra lỗi khi khởi tạo bottle. Hãy mở rộng trạng thái nâng cao để xem "
 "nhật ký."
 
-#: assets/anduinos-exe-runner:351
+#: assets/anduinos-exe-runner:361
 msgid ""
 "An error occurred while installing Bottles. Please expand advanced status to"
 " view logs."
@@ -46,191 +47,198 @@ msgstr ""
 "Đã xảy ra lỗi khi cài đặt Bottles. Hãy mở rộng trạng thái nâng cao để xem "
 "nhật ký."
 
-#: assets/anduinos-exe-runner:20
+#: assets/anduinos-exe-runner:22
 msgid "App"
 msgstr "Ứng dụng"
 
-#: assets/anduinos-exe-runner:537
+#: assets/anduinos-exe-runner:447
 msgid "Automatically hiding launcher window, enjoy!"
 msgstr "Tự động ẩn cửa sổ trình khởi chạy, chúc bạn vui vẻ!"
 
-#: assets/anduinos-exe-runner:494
+#: assets/anduinos-exe-runner:404
 msgid "Bottle is ready, about to launch application..."
 msgstr "Chai (bottle) đã sẵn sàng, sắp khởi chạy ứng dụng..."
 
-#: assets/anduinos-exe-runner:329
+#: assets/anduinos-exe-runner:339
 msgid "Bottles installation not found."
 msgstr "Không tìm thấy cài đặt Bottles."
 
-#: assets/anduinos-exe-runner:158 assets/anduinos-exe-runner:216
+#: assets/anduinos-exe-runner:168 assets/anduinos-exe-runner:226
 msgid "Cancel"
 msgstr "Hủy"
 
-#: assets/anduinos-exe-runner:327
+#: assets/anduinos-exe-runner:337
 msgid "Checking Bottles installation status via filesystem..."
 msgstr "Đang kiểm tra trạng thái cài đặt Bottles qua hệ thống tệp..."
 
-#: assets/anduinos-exe-runner:333
+#: assets/anduinos-exe-runner:343
 msgid "Checking if Default bottle exists via filesystem..."
 msgstr "Đang kiểm tra xem chai mặc định có tồn tại không qua hệ thống tệp..."
 
-#: assets/anduinos-exe-runner:140
+#: assets/anduinos-exe-runner:150
 msgid "Checking system compatibility layer..."
 msgstr "Đang kiểm tra lớp tương thích của hệ thống..."
 
-#: assets/anduinos-exe-runner:339
+#: assets/anduinos-exe-runner:349
 msgid "Compatibility layer is ready, preparing to start program..."
 msgstr "Lớp tương thích đã sẵn sàng, đang chuẩn bị khởi chạy chương trình..."
 
-#: assets/anduinos-exe-runner:430
+#: assets/anduinos-exe-runner:368 assets/anduinos-exe-runner:375
+#: assets/anduinos-exe-runner:400
 msgid "Configuration Failed"
 msgstr "Cấu hình thất bại"
 
-#: assets/anduinos-exe-runner:426
+#: assets/anduinos-exe-runner:364
 msgid "Configuring Bottle"
 msgstr "Đang cấu hình chai (bottle)"
 
-#: assets/anduinos-exe-runner:433
+#: assets/anduinos-exe-runner:371
 msgid "Configuring Fonts"
 msgstr "Đang cấu hình phông chữ"
 
-#: assets/anduinos-exe-runner:340
+#: assets/anduinos-exe-runner:350
 msgid "Configuring runtime environment, please wait..."
 msgstr "Đang cấu hình môi trường thời gian chạy, vui lòng đợi..."
 
-#: assets/anduinos-exe-runner:335
+#: assets/anduinos-exe-runner:345
 msgid "Default bottle not found."
 msgstr "Không tìm thấy chai mặc định."
 
 #: assets/anduinos-exe-runner:354
-msgid "Downloading Components"
-msgstr "Đang tải xuống các thành phần"
-
-#: assets/anduinos-exe-runner:344
 msgid "Downloading and installing Bottles via Flatpak..."
 msgstr "Đang tải xuống và cài đặt Bottles qua Flatpak..."
 
-#: assets/anduinos-exe-runner:217
+#: assets/anduinos-exe-runner:227
 msgid "Force Run Anyway"
 msgstr "Vẫn buộc chạy"
 
-#: assets/anduinos-exe-runner:223
+#: assets/anduinos-exe-runner:233
 msgid "Get {}"
 msgstr "Lấy {}"
 
-#: assets/anduinos-exe-runner:426
+#: assets/anduinos-exe-runner:364
 msgid "Initializing Windows virtual bottle (Default)..."
 msgstr "Đang khởi tạo chai ảo Windows (Mặc định)..."
 
-#: assets/anduinos-exe-runner:354
-msgid "Initializing core gaming components (DXVK, VKD3D, Runner, etc.)..."
-msgstr ""
-"Đang khởi tạo các thành phần cốt lõi của trò chơi (DXVK, VKD3D, Runner, "
-"v.v.)..."
-
-#: assets/anduinos-exe-runner:161
+#: assets/anduinos-exe-runner:171
 msgid "Install and Configure"
 msgstr "Cài đặt và cấu hình"
 
-#: assets/anduinos-exe-runner:351
+#: assets/anduinos-exe-runner:361
 msgid "Installation Failed"
 msgstr "Cài đặt thất bại"
 
-#: assets/anduinos-exe-runner:493
+#: assets/anduinos-exe-runner:403
 msgid "Installation and configuration complete!"
 msgstr "Cài đặt và cấu hình hoàn tất!"
 
-#: assets/anduinos-exe-runner:344
+#: assets/anduinos-exe-runner:354
 msgid "Installing Environment"
 msgstr "Đang cài đặt môi trường"
 
-#: assets/anduinos-exe-runner:433
+#: assets/anduinos-exe-runner:371
 msgid "Installing core fonts to prevent text rendering issues..."
 msgstr "Đang cài đặt các phông chữ cốt lõi để tránh lỗi hiển thị văn bản..."
 
-#: assets/anduinos-exe-runner:551
+#: assets/anduinos-exe-runner:461
 msgid "Launch Exception"
 msgstr "Lỗi khởi chạy"
 
-#: assets/anduinos-exe-runner:516
+#: assets/anduinos-exe-runner:426
 msgid "Launch Failed"
 msgstr "Khởi chạy thất bại"
 
-#: assets/anduinos-exe-runner:515
+#: assets/anduinos-exe-runner:425
 msgid "Launch failed: {}"
 msgstr "Khởi chạy thất bại: {}"
 
-#: assets/anduinos-exe-runner:551
+#: assets/anduinos-exe-runner:461
 msgid "Launch or configuration failed, please check advanced logs."
 msgstr "Khởi chạy hoặc cấu hình thất bại, vui lòng kiểm tra nhật ký nâng cao."
 
-#: assets/anduinos-exe-runner:536
+#: assets/anduinos-exe-runner:446
 msgid "Launcher mission complete, program is running in the background."
 msgstr "Nhiệm vụ trình khởi chạy hoàn tất, chương trình đang chạy trong nền."
 
-#: assets/anduinos-exe-runner:19
+#: assets/anduinos-exe-runner:21
 msgid "Notice"
 msgstr "Thông báo"
 
-#: assets/anduinos-exe-runner:133
+#: assets/anduinos-exe-runner:143
 msgid "Preparing environment..."
 msgstr "Đang chuẩn bị môi trường..."
 
-#: assets/anduinos-exe-runner:498
+#: assets/anduinos-exe-runner:408
 msgid "Preparing to launch EXE: {}"
 msgstr "Đang chuẩn bị để khởi chạy EXE: {}"
 
-#: assets/anduinos-exe-runner:315
+#: assets/anduinos-exe-runner:325
 msgid "Preparing..."
 msgstr "Đang chuẩn bị..."
 
-#: assets/anduinos-exe-runner:553
+#: assets/anduinos-exe-runner:463
 msgid "Process finished normally."
 msgstr "Quá trình kết thúc bình thường."
 
-#: assets/anduinos-exe-runner:513
+#: assets/anduinos-exe-runner:423
 msgid "Process successfully started in the background, listening to logs..."
 msgstr "Quá trình đã bắt đầu thành công trong nền, đang lắng nghe nhật ký..."
 
-#: assets/anduinos-exe-runner:550
+#: assets/anduinos-exe-runner:460
 msgid "Process terminated abnormally (exit code {})."
 msgstr "Quá trình kết thúc bất thường (mã thoát {})."
 
-#: assets/anduinos-exe-runner:494
+#: assets/anduinos-exe-runner:404
 msgid "Starting program"
 msgstr "Bắt đầu chương trình"
 
-#: assets/anduinos-exe-runner:340
+#: assets/anduinos-exe-runner:350
 msgid "Starting program..."
 msgstr "Đang khởi chạy chương trình..."
 
-#: assets/anduinos-exe-runner:310
+#: assets/anduinos-exe-runner:320
 msgid "The system is not configured with the Bottles compatibility layer."
-msgstr "Hệ thống chưa được cấu hình với lớp tương thích của Chai."
+msgstr "Hệ thống chưa được cấu hình với lớp tương thích Bottles."
 
-#: assets/anduinos-exe-runner:516
+#: assets/anduinos-exe-runner:426
 msgid "Unable to start program, please check advanced logs."
 msgstr "Không thể khởi chạy chương trình, vui lòng kiểm tra nhật ký nâng cao."
 
-#: assets/anduinos-exe-runner:227
+#: assets/anduinos-exe-runner:237
 msgid "View Documentation"
 msgstr "Xem tài liệu"
 
-#: assets/anduinos-exe-runner:109
+#: assets/anduinos-exe-runner:119
 msgid "Windows Application Runner"
 msgstr "Trình chạy ứng dụng Windows"
 
-#: assets/anduinos-exe-runner:310
+#: assets/anduinos-exe-runner:320
 msgid "Windows Compatibility Environment Required"
 msgstr "Yêu cầu môi trường tương thích Windows"
 
-#: assets/anduinos-exe-runner:310
+#: assets/anduinos-exe-runner:320
 msgid ""
 "Would you like to automatically download and install it? This may take a few"
 " minutes."
 msgstr ""
 "Bạn có muốn tự động tải xuống và cài đặt không? Quá trình này có thể mất vài"
 " phút."
+
+#: data/com.anduinos.ExeRunner.desktop:56
+msgid "Run Windows executables seamlessly via Bottles"
+msgstr "Chạy các tệp thực thi Windows một cách mượt mà qua Bottles"
+
+#: data/com.anduinos.ExeRunner.desktop:28
+msgid "AnduinOS Windows EXE Runner"
+msgstr "Trình chạy tệp EXE Windows cho AnduinOS"
+
+#~ msgid "Downloading Components"
+#~ msgstr "Đang tải xuống các thành phần"
+
+#~ msgid "Initializing core gaming components (DXVK, VKD3D, Runner, etc.)..."
+#~ msgstr ""
+#~ "Đang khởi tạo các thành phần cốt lõi của trò chơi (DXVK, VKD3D, Runner, "
+#~ "v.v.)..."
 
 #~ msgid " MusicBrainz Picard"
 #~ msgstr " MusicBrainz Picard"

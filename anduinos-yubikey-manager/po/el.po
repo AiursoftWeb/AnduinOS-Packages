@@ -17,20 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/window.rs:2020
+#: src/window.rs:2022
 msgid "1 identity is currently available to SSH applications."
 msgstr "1 ταυτότητα είναι διαθέσιμη αυτή τη στιγμή για εφαρμογές SSH."
 
-#: src/window.rs:2304
+#: src/window.rs:2306
 msgid "1 resident SSH key is available from your connected YubiKey."
-msgstr ""
-"1 τοποθετημένο κλειδί SSH είναι διαθέσιμο από την συνδεδεμένη YubiKey σας."
+msgstr "Υπάρχει διαθέσιμο 1 μόνιμο κλειδί SSH στο συνδεδεμένο YubiKey."
 
-#: src/window.rs:1814
+#: src/window.rs:1816
 msgid "1 resident SSH key · {0}"
-msgstr "1 τοποθετημένο κλειδί SSH · {0}"
+msgstr "1 μόνιμο κλειδί SSH · {0}"
 
-#: src/window.rs:1474 src/window.rs:1652
+#: src/window.rs:1476 src/window.rs:1654
 msgid "A key must be connected before it can be enrolled."
 msgstr "Πρέπει να συνδεθεί ένα κλειδί πριν μπορέσει να καταχωρηθεί."
 
@@ -38,57 +37,57 @@ msgstr "Πρέπει να συνδεθεί ένα κλειδί πριν μπορ
 msgid "About"
 msgstr "Σχετικά με"
 
-#: src/home.rs:381 src/home.rs:402
+#: src/home.rs:383 src/home.rs:404
 msgid "Account password"
 msgstr "Κωδικός πρόσβασης λογαριασμού"
 
-#: src/window.rs:2490
+#: src/window.rs:2492
 msgid "Add another SSH key"
 msgstr "Προσθήκη άλλου κλειδιού SSH"
 
-#: src/window.rs:1314
+#: src/window.rs:1316
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "Προσθέστε αυτό το δημόσιο κλειδί στο GitHub ως Κλειδί Υπογραφής."
 
-#: src/home.rs:336 src/home.rs:389
+#: src/home.rs:338 src/home.rs:391
 msgid "Administrator access"
 msgstr "Πρόσβαση διαχειριστή"
 
-#: src/window.rs:2667
+#: src/window.rs:2669
 msgid "Advanced options"
 msgstr "Εκτεταμένες επιλογές"
 
-#: src/window.rs:2619
+#: src/window.rs:2621
 msgid "Algorithm"
 msgstr "Αλγόριθμος"
 
-#: src/window.rs:1582
+#: src/window.rs:1584
 msgid "Allow sudo without authentication"
 msgstr "Να επιτρέπεται το sudo χωρίς έλεγχο ταυτότητας"
 
-#: src/window.rs:1672
+#: src/window.rs:1674
 msgid "Allowed for sudo · not currently connected"
 msgstr "Επιτρέπεται για sudo · δεν είναι συνδεδεμένο αυτή τη στιγμή"
 
-#: src/window.rs:1674
+#: src/window.rs:1676
 msgid "Allowed to authorize sudo"
 msgstr "Επιτρέπεται να εξουσιοδοτήσει sudo"
 
-#: src/window.rs:1494
+#: src/window.rs:1496
 msgid "Allowed to unlock this user"
 msgstr "Επιτρέπεται να ξεκλειδώσει αυτόν τον χρήστη"
 
-#: src/window.rs:1492
+#: src/window.rs:1494
 msgid "Allowed to unlock this user · not currently connected"
 msgstr ""
 "Επιτρέπεται να ξεκλειδώσει αυτόν τον χρήστη · δεν είναι συνδεδεμένο αυτή τη "
 "στιγμή"
 
-#: src/window.rs:1902
+#: src/window.rs:1904
 msgid "Already loaded"
 msgstr "Ήδη φορτωμένο"
 
-#: src/window.rs:1639
+#: src/window.rs:1641
 msgid "An enrolled YubiKey or the account password can authorize sudo."
 msgstr ""
 "Μια καταχωρημένη YubiKey ή ο κωδικός πρόσβασης του λογαριασμού μπορεί να "
@@ -100,13 +99,13 @@ msgstr "Ομάδα AnduinOS"
 
 #: src/application.rs:66 src/progress_dialog.rs:23 src/window.rs:96
 msgid "AnduinOS YubiKey Security Center"
-msgstr "Κέντρο Ασφαλείας AnduinOS YubiKey"
+msgstr "Κέντρο ασφαλείας YubiKey του AnduinOS"
 
-#: src/home.rs:126
+#: src/home.rs:128
 msgid "AnduinOS works more securely with a YubiKey"
-msgstr "Το AnduinOS λειτουργεί πιο ασφαλείς με μια YubiKey"
+msgstr "Το AnduinOS είναι πιο ασφαλές όταν χρησιμοποιείται με YubiKey"
 
-#: src/window.rs:2625
+#: src/window.rs:2627
 msgid "Application"
 msgstr "Εφαρμογή"
 
@@ -118,23 +117,23 @@ msgstr ""
 "Η εφαρμογή πρέπει να ξεκινά με ssh:, να μην περιέχει κενά και να είναι το "
 "πολύ 253 bytes."
 
-#: src/home.rs:411 src/window.rs:631
+#: src/home.rs:413 src/window.rs:631
 msgid "Available"
 msgstr "Διαθέσιμο"
 
-#: src/window.rs:1255
+#: src/window.rs:1257
 msgid "Available through SSH agent"
 msgstr "Διαθέσιμο μέσω πράκτορα SSH"
 
-#: src/window.rs:1253
+#: src/window.rs:1255
 msgid "Available through local key handle"
 msgstr "Διαθέσιμο μέσω τοπικής διαχείρισης κλειδιού"
 
-#: src/home.rs:172
+#: src/home.rs:174
 msgid "Buy a YubiKey"
 msgstr "Αγοράστε μια YubiKey"
 
-#: src/window.rs:2698 src/window.rs:2755 src/window.rs:3027
+#: src/window.rs:2700 src/window.rs:2757 src/window.rs:3029
 msgid "Cancel"
 msgstr "Ακύρωση"
 
@@ -146,15 +145,15 @@ msgstr "Έλεγχος κλειδιών SSH…"
 msgid "Checking SSH support…"
 msgstr "Έλεγχος υποστήριξης SSH…"
 
-#: src/home.rs:65 src/window.rs:478
+#: src/home.rs:67 src/window.rs:478
 msgid "Checking connected YubiKeys"
 msgstr "Έλεγχος συνδεδεμένων YubiKeys"
 
-#: src/home.rs:428
+#: src/home.rs:430
 msgid "Choose a YubiKey-backed SSH key"
 msgstr "Επιλέξτε ένα κλειδί SSH υποστηριζόμενο από YubiKey"
 
-#: src/window.rs:2639
+#: src/window.rs:2641
 msgid "Choose a local key-handle file"
 msgstr "Επιλέξτε ένα αρχείο χειριστήρου τοπικού κλειδιού"
 
@@ -174,11 +173,11 @@ msgstr "Επιλέξτε έναν έγκυρο φάκελο εξόδου."
 msgid "Choose an SSH key for Git signing."
 msgstr "Επιλέξτε ένα κλειδί SSH για υπογραφή Git."
 
-#: src/window.rs:2650
+#: src/window.rs:2652
 msgid "Choose local SSH key-handle path"
 msgstr "Επιλέξτε διαδρομή αρχείου χειριστήρου τοπικού SSH κλειδιού"
 
-#: src/window.rs:1218
+#: src/window.rs:1220
 msgid ""
 "Choose one SSH key. The selection takes effect immediately for this user's "
 "Git commits."
@@ -186,14 +185,14 @@ msgstr ""
 "Επιλέξτε ένα κλειδί SSH. Η επιλογή ισχύει αμέσως για τις δέσμευσεις Git "
 "αυτού του χρήστη."
 
-#: src/window.rs:1465
+#: src/window.rs:1467
 msgid ""
 "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
 msgstr ""
 "Επιλέξτε ποιες YubiKeys μπορούν να ξεκλειδώσουν το {0}. Η σύνδεση με κωδικό "
 "πρόσβασης παραμένει διαθέσιμη."
 
-#: src/window.rs:3074 src/window.rs:3096
+#: src/window.rs:3076 src/window.rs:3098
 msgid "Close"
 msgstr "Κλείσιμο"
 
@@ -205,51 +204,51 @@ msgstr "Η εντολή τερματίστηκε με"
 msgid "Command exited with {0}"
 msgstr "Η εντολή τερματίστηκε με {0}"
 
-#: src/window.rs:1217
+#: src/window.rs:1219
 msgid "Commit signing"
 msgstr "Υπογραφή δεσμεύσεων"
 
-#: src/home.rs:596
+#: src/home.rs:598
 msgid "Configured YubiKeys"
-msgstr "Ρυθμισμένοι YubiKeys"
+msgstr "Ρυθμισμένα YubiKey"
 
-#: src/home.rs:627
+#: src/home.rs:629
 msgid "Configured for {0} · Not connected"
 msgstr "Ρυθμισμένο για {0} · Μη συνδεδεμένο"
 
-#: src/window.rs:2505
+#: src/window.rs:2507
 msgid "Connect a FIDO security key first"
 msgstr "Συνδέστε πρώτα ένα κλειδί ασφαλείας FIDO"
 
-#: src/window.rs:2262
+#: src/window.rs:2264
 msgid "Connect a YubiKey"
 msgstr "Συνδέστε μια YubiKey"
 
-#: src/home.rs:158
+#: src/home.rs:160
 msgid "Connect a YubiKey to get started"
 msgstr "Συνδέστε έναν YubiKey για να ξεκινήσετε"
 
-#: src/home.rs:124
+#: src/home.rs:126
 msgid "Connect your YubiKey"
 msgstr "Συνδέστε τον YubiKey σας"
 
-#: src/home.rs:243 src/home.rs:315
+#: src/home.rs:245 src/home.rs:317
 msgid "Connected"
 msgstr "Συνδεδεμένο"
 
-#: src/home.rs:300
+#: src/home.rs:302
 msgid "Connected YubiKeys"
-msgstr "Συνδεδεμένοι YubiKeys"
+msgstr "Συνδεδεμένα YubiKey"
 
-#: src/window.rs:2699
+#: src/window.rs:2701
 msgid "Continue"
 msgstr "Συνέχεια"
 
-#: src/window.rs:3028
+#: src/window.rs:3030
 msgid "Continue to PIN"
 msgstr "Συνέχεια στην PIN"
 
-#: src/window.rs:1326 src/window.rs:2778
+#: src/window.rs:1328 src/window.rs:2780
 msgid "Copy public key"
 msgstr "Αντιγραφή δημόσιου κλειδιού"
 
@@ -271,11 +270,11 @@ msgstr ""
 msgid "Could not create {0}: {1}"
 msgstr "Δεν ήταν δυνατή η δημιουργία του {0}: {1}"
 
-#: src/window.rs:2839
+#: src/window.rs:2841
 msgid "Could not export the public key: {0}"
 msgstr "Δεν ήταν δυνατή η εξαγωγή του δημόσιου κλειδιού: {0}"
 
-#: src/window.rs:2337
+#: src/window.rs:2339
 msgid "Could not find security keys"
 msgstr "Δεν βρέθηκαν κλειδιά ασφαλείας"
 
@@ -287,11 +286,11 @@ msgstr "Δεν ήταν δυνατή η εκκαθάριση του προσωρ
 msgid "Could not inspect USB devices: {0}"
 msgstr "Δεν ήταν δυνατή η εξέταση των συσκευών USB: {0}"
 
-#: src/window.rs:1991
+#: src/window.rs:1993
 msgid "Could not inspect this YubiKey"
 msgstr "Δεν ήταν δυνατή η εξέταση αυτού του YubiKey"
 
-#: src/window.rs:540 src/window.rs:1554 src/window.rs:1734
+#: src/window.rs:540 src/window.rs:1556 src/window.rs:1736
 msgid "Could not list YubiKeys"
 msgstr "Δεν ήταν δυνατή η δημιουργία λίστας με τα YubiKeys"
 
@@ -324,7 +323,7 @@ msgstr "Δεν ήταν δυνατή η εκτέλεση του {0}: {1}"
 msgid "Could not start {0}: {1}"
 msgstr "Δεν ήταν δυνατή η εκκίνηση του {0}: {1}"
 
-#: src/home.rs:101
+#: src/home.rs:103
 msgid "Could not update security keys"
 msgstr "Αδυναμία ενημέρωσης των κλειδιών ασφαλείας"
 
@@ -332,34 +331,33 @@ msgstr "Αδυναμία ενημέρωσης των κλειδιών ασφαλ
 msgid "Could not write the temporary public key: {0}"
 msgstr "Δεν ήταν δυνατή η εγγραφή του προσωρινού δημόσιου κλειδιού: {0}"
 
-#: src/window.rs:2533
+#: src/window.rs:2535
 msgid "Create"
 msgstr "Δημιουργία"
 
-#: src/window.rs:2507
+#: src/window.rs:2509
 msgid "Create a resident SSH credential on a selected device"
-msgstr ""
-"Δημιουργία ενός διαμεινόμενου SSH πιστοποιητικού σε μια επιλεγμένη συσκευή"
+msgstr "Δημιουργία μόνιμου διαπιστευτηρίου SSH στην επιλεγμένη συσκευή"
 
-#: src/window.rs:2692
+#: src/window.rs:2694
 msgid "Create a resident SSH key"
-msgstr "Δημιουργία ενός διαμεινόμενου κλειδιού SSH"
+msgstr "Δημιουργία μόνιμου κλειδιού SSH"
 
-#: src/window.rs:2501
+#: src/window.rs:2503
 msgid "Create…"
 msgstr "Δημιουργία…"
 
-#: src/window.rs:2962
+#: src/window.rs:2964
 msgid "Deletion result is unknown"
 msgstr "Το αποτέλεσμα διαγραφής είναι άγνωστο"
 
-#: src/window.rs:1586
+#: src/window.rs:1588
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr ""
 "Απενεργοποιημένο · το sudo πρέπει να πιστοποιείται με YubiKey ή κωδικό "
 "λογαριασμού"
 
-#: src/window.rs:2321
+#: src/window.rs:2323
 msgid "Discover SSH keys on your YubiKeys"
 msgstr "Ανακαλύψτε τα κλειδιά SSH στις YubiKeys σας"
 
@@ -370,11 +368,11 @@ msgstr ""
 "Η ετικέτα προβολής πρέπει να είναι το πολύ 200 bytes και να μην περιέχει "
 "χαρακτήρες ελέγχου."
 
-#: src/window.rs:1222
+#: src/window.rs:1224
 msgid "Do not sign new commits by default"
 msgstr "Μην υπογράφετε νέες δέσμευσεις από προεπιλογή"
 
-#: src/window.rs:1563
+#: src/window.rs:1565
 msgid ""
 "During enrollment, disconnect all other security keys. The selected key will"
 " blink; touch it to continue. Multiple keys can be enrolled one at a time."
@@ -383,48 +381,47 @@ msgstr ""
 " κλειδαριά θα αναβοσβήνει· αγγίξτε τη για να συνεχίσετε. Πολλαπλά κλειδιά "
 "μπορούν να καταχωρηθούν ένα προς ένα."
 
-#: src/window.rs:2610
+#: src/window.rs:2612
 msgid "ECDSA-SK (recommended compatibility)"
 msgstr "ECDSA-SK (προτεινόμενη συμβατότητα)"
 
-#: src/window.rs:2620
+#: src/window.rs:2622
 msgid "ECDSA-SK works with the widest range of YubiKeys"
 msgstr "Το ECDSA-SK λειτουργεί με το ευρύτερο φάσμα YubiKeys"
 
-#: src/window.rs:2497
+#: src/window.rs:2499
 msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
 msgstr ""
-"ECDSA-SK · διαμεινόμενο · απαιτείται άγγιγμα · ασφαλείς προεπιλογές "
-"συμβατότητας"
+"ECDSA-SK · μόνιμο · απαιτεί άγγιγμα · ασφαλείς προεπιλογές συμβατότητας"
 
-#: src/window.rs:2611
+#: src/window.rs:2613
 msgid "Ed25519-SK (newer YubiKeys)"
-msgstr "Ed25519-SK (νέοτερα YubiKeys)"
+msgstr "Ed25519-SK (νεότερα μοντέλα YubiKey)"
 
-#: src/home.rs:374 src/home.rs:393 src/home.rs:421
+#: src/home.rs:376 src/home.rs:395 src/home.rs:423
 msgid "Enabled"
 msgstr "Ενεργοποιημένο"
 
-#: src/window.rs:1584
+#: src/window.rs:1586
 msgid ""
 "Enabled · programs can obtain administrator privileges without confirmation"
 msgstr ""
 "Ενεργοποιημένο · τα προγράμματα μπορούν να αποκτήσουν δικαιώματα διαχειριστή"
 " χωρίς επιβεβαίωση"
 
-#: src/window.rs:1610
+#: src/window.rs:1612
 msgid "Enabling passwordless sudo…"
 msgstr "Ενεργοποίηση sudo χωρίς κωδικό…"
 
-#: src/window.rs:1612
+#: src/window.rs:1614
 msgid "Enabling sudo authentication…"
 msgstr "Ενεργοποίηση ελέγχου ταυτότητας sudo…"
 
-#: src/window.rs:1670
+#: src/window.rs:1672
 msgid "Enrolled · inactive while sudo authentication is bypassed"
 msgstr "Καταχωρημένο · ανενεργό ενώ ο έλεγχος ταυτότητας sudo παρακάμπτεται"
 
-#: src/window.rs:1562
+#: src/window.rs:1564
 msgid "Enrollment safety"
 msgstr "Ασφάλεια κατά την καταχώριση"
 
@@ -435,7 +432,7 @@ msgstr ""
 "Εισαγάγετε τον FIDO PIN για το {0}. Αγγίξτε το αν αναβοσβήνει. Ο PIN δεν "
 "αποθηκεύεται ποτέ."
 
-#: src/window.rs:1419
+#: src/window.rs:1421
 msgid ""
 "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No "
 "commit will be created."
@@ -443,7 +440,7 @@ msgstr ""
 "Εισαγάγετε τον FIDO PIN, στη συνέχεια αγγίξτε την επιλεγμένη YubiKey όταν "
 "αναβοσβήνει. Δεν θα δημιουργηθεί δέσμευση."
 
-#: src/window.rs:1172
+#: src/window.rs:1174
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "Εισαγάγετε τον PIN FIDO. Αγγίξτε το YubiKey αν αναβοσβήνει."
 
@@ -453,23 +450,23 @@ msgstr ""
 "Εισαγάγετε τον FIDO PIN της YubiKey για να δοκιμάσετε αυτήν την τοπική "
 "χειρισμό κλειδιού."
 
-#: src/window.rs:2531 src/window.rs:2920
+#: src/window.rs:2533 src/window.rs:2922
 msgid "Enter the selected YubiKey FIDO PIN"
 msgstr "Εισαγωγή του επιλεγμένου FIDO PIN της YubiKey"
 
-#: src/window.rs:2779
+#: src/window.rs:2781
 msgid "Export .pub"
 msgstr "Εξαγωγή .pub"
 
-#: src/window.rs:2821
+#: src/window.rs:2823
 msgid "Export SSH public key"
 msgstr "Εξαγωγή δημόσιου κλειδιού SSH"
 
-#: src/window.rs:2745
+#: src/window.rs:2747
 msgid "FIDO PIN"
 msgstr "FIDO PIN"
 
-#: src/window.rs:1200 src/window.rs:2001 src/window.rs:2506
+#: src/window.rs:1202 src/window.rs:2003 src/window.rs:2508
 msgid "FIDO device discovery is unavailable"
 msgstr "Η ανακάλυψη συσκευής FIDO δεν είναι διαθέσιμη"
 
@@ -477,11 +474,11 @@ msgstr "Η ανακάλυψη συσκευής FIDO δεν είναι διαθέ
 msgid "FIDO security key"
 msgstr "Κλειδί ασφαλείας FIDO"
 
-#: src/window.rs:2323
+#: src/window.rs:2325
 msgid "Finish inspecting your YubiKeys"
 msgstr "Ολοκληρώστε την επιθεώρηση των YubiKeys σας"
 
-#: src/home.rs:663
+#: src/home.rs:665
 msgid "Firmware {0}"
 msgstr "Λογισμικό υλικού {0}"
 
@@ -493,11 +490,11 @@ msgstr ""
 "Για ασφαλή καταχώριση, αποσυνδέστε κάθε άλλο κλειδί ασφαλείας και αφήστε "
 "μόνο την επιλεγμένη YubiKey συνδεδεμένη."
 
-#: src/home.rs:419 src/window.rs:112 src/window.rs:161 src/window.rs:239
+#: src/home.rs:421 src/window.rs:112 src/window.rs:161 src/window.rs:239
 msgid "Git signing"
 msgstr "Υπογραφή Git"
 
-#: src/window.rs:1311
+#: src/window.rs:1313
 msgid "Git signing is enabled"
 msgstr "Η υπογραφή Git είναι ενεργοποιημένη"
 
@@ -509,19 +506,19 @@ msgstr ""
 "Αποτυχία δοκιμής υπογραφής Git:\n"
 "{0}"
 
-#: src/window.rs:1446
+#: src/window.rs:1448
 msgid "Git signing test passed"
 msgstr "Η δοκιμή υπογραφής Git ολοκληρώθηκε επιτυχώς"
 
-#: src/window.rs:1081
+#: src/window.rs:1083
 msgid "Git is not installed"
 msgstr "Το Git δεν είναι εγκατεστημένο"
 
-#: src/window.rs:1103
+#: src/window.rs:1105
 msgid "The Git installation task stopped unexpectedly."
 msgstr "Η διαδικασία εγκατάστασης του Git διακόπηκε απροσδόκητα."
 
-#: src/window.rs:1082
+#: src/window.rs:1084
 msgid "Git is required for commit signing. Install it to continue."
 msgstr ""
 "Απαιτείται το Git για την υπογραφή δεσμεύσεων. Εγκαταστήστε το για να "
@@ -531,23 +528,23 @@ msgstr ""
 msgid "Home"
 msgstr "Αρχική σελίδα"
 
-#: src/window.rs:1473 src/window.rs:1651
+#: src/window.rs:1475 src/window.rs:1653
 msgid "Insert a YubiKey"
 msgstr "Εισαγάγετε μια YubiKey"
 
-#: src/window.rs:1129
+#: src/window.rs:1131
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "Εισαγάγετε μια YubiKey, στη συνέχεια πατήστε Ανανέωση."
 
-#: src/window.rs:1785
+#: src/window.rs:1787
 msgid "Insert a YubiKey. This page will detect it when you refresh."
 msgstr "Εισάγετε μια YubiKey. Αυτή η σελίδα θα την εντοπίσει όταν ανανεώσετε."
 
-#: src/window.rs:738 src/window.rs:1840
+#: src/window.rs:738 src/window.rs:1842
 msgid "Inspect"
 msgstr "Εξέταση"
 
-#: src/window.rs:2391
+#: src/window.rs:2393
 msgid "Inspect YubiKey"
 msgstr "Επιθεώρηση YubiKey"
 
@@ -555,11 +552,11 @@ msgstr "Επιθεώρηση YubiKey"
 msgid "Inspect YubiKey {0} of {1}"
 msgstr "Επιθεώρηση YubiKey {0} από {1}"
 
-#: src/window.rs:1838
+#: src/window.rs:1840
 msgid "Inspect again"
 msgstr "Επιθεώρηση ξανά"
 
-#: src/window.rs:2393
+#: src/window.rs:2395
 msgid "Inspect all keys"
 msgstr "Επιθεώρηση όλων των κλειδιών"
 
@@ -567,11 +564,11 @@ msgstr "Επιθεώρηση όλων των κλειδιών"
 msgid "Inspect this YubiKey"
 msgstr "Επιθεώρηση αυτής της YubiKey"
 
-#: src/window.rs:1831
+#: src/window.rs:1833
 msgid "Inspected"
 msgstr "Επιθεωρήθηκε"
 
-#: src/window.rs:1821
+#: src/window.rs:1823
 msgid "Inspection needs attention · {0}"
 msgstr "Η επιθεώρηση χρειάζεται προσοχή · {0}"
 
@@ -579,53 +576,52 @@ msgstr "Η επιθεώρηση χρειάζεται προσοχή · {0}"
 msgid "Invalid FIDO device path."
 msgstr "Μη έγκυρη διαδρομή συσκευής FIDO."
 
-#: src/window.rs:1777
+#: src/window.rs:1779
 msgid "Keys stored on your YubiKeys"
 msgstr "Κλειδιά αποθηκευμένα στις YubiKeys σας"
 
-#: src/window.rs:1173 src/window.rs:1880
+#: src/window.rs:1175 src/window.rs:1882
 msgid "Load"
 msgstr "Φόρτωση"
 
-#: src/window.rs:1171
+#: src/window.rs:1173
 msgid "Load SSH keys"
 msgstr "Φόρτωση κλειδιών SSH"
 
-#: src/window.rs:1864
+#: src/window.rs:1866
 msgid "Load all"
 msgstr "Φόρτωση όλων"
 
-#: src/window.rs:1157
+#: src/window.rs:1159
 msgid "Load keys"
 msgstr "Φόρτωση κλειδιών"
 
-#: src/window.rs:1878
+#: src/window.rs:1880
 msgid "Load resident SSH keys"
-msgstr "Φόρτωση τοπικών κλειδιών SSH"
+msgstr "Φόρτωση μόνιμων κλειδιών SSH"
 
-#: src/window.rs:1866
+#: src/window.rs:1868
 msgid "Load this YubiKey's resident SSH keys into the agent"
-msgstr ""
-"Φόρτωση των τοποθετημένων κλειδιών SSH αυτής της YubiKey στον πράκτορα"
+msgstr "Φόρτωση των μόνιμων κλειδιών SSH αυτού του YubiKey στον πράκτορα SSH"
 
-#: src/window.rs:1257
+#: src/window.rs:1259
 msgid "Load this resident key into the SSH agent before signing"
 msgstr ""
-"Φορτώστε αυτό το ενσωματωμένο κλειδί στο παράγοντα SSH πριν την υπογραφή"
+"Φορτώστε αυτό το μόνιμο κλειδί στον πράκτορα SSH πριν από την υπογραφή"
 
-#: src/window.rs:1923
+#: src/window.rs:1925
 msgid "Loaded"
 msgstr "Φορτώθηκε"
 
-#: src/window.rs:1182
+#: src/window.rs:1184
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "Φόρτωση κλειδιών SSH… Αγγίξτε το YubiKey αν αναβοσβήνει."
 
-#: src/window.rs:2633
+#: src/window.rs:2635
 msgid "Local key handle path"
 msgstr "Τοπική διαδρομή χειρισμού κλειδιού"
 
-#: src/window.rs:2605
+#: src/window.rs:2607
 msgid "Local key label"
 msgstr "Τοπική ετικέτα κλειδιού"
 
@@ -633,71 +629,71 @@ msgstr "Τοπική ετικέτα κλειδιού"
 msgid "Looking for your SSH agent and connected YubiKeys."
 msgstr "Αναζήτηση για τον πράκτορα SSH σας και τις συνδεδεμένες YubiKeys."
 
-#: src/window.rs:1832 src/window.rs:2124
+#: src/window.rs:1834 src/window.rs:2126
 msgid "Needs attention"
 msgstr "Χρειάζεται προσοχή"
 
-#: src/window.rs:2496
+#: src/window.rs:2498
 msgid "New hardware-backed SSH key"
 msgstr "Νέο κλειδί SSH με υποστήριξη υλικού"
 
-#: src/window.rs:1128
+#: src/window.rs:1130
 msgid "No FIDO security key detected"
 msgstr "Δεν εντοπίστηκε κλειδί ασφαλείας FIDO"
 
-#: src/window.rs:2037
+#: src/window.rs:2039
 msgid "No SSH agent was detected"
 msgstr "Δεν εντοπίστηκε πράκτορας SSH"
 
-#: src/window.rs:1784
+#: src/window.rs:1786
 msgid "No YubiKey connected"
 msgstr "Δεν έχει συνδεθεί καμία YubiKey"
 
-#: src/home.rs:653
+#: src/home.rs:655
 msgid "No hardware serial"
 msgstr "Χωρίς σειριακό υλικού"
 
-#: src/window.rs:1930
+#: src/window.rs:1932
 msgid "No resident SSH keys"
-msgstr "Δεν υπάρχουν τοποθετημένα κλειδιά SSH"
+msgstr "Δεν υπάρχουν μόνιμα κλειδιά SSH"
 
-#: src/window.rs:1144
+#: src/window.rs:1146
 msgid "No resident SSH keys found"
-msgstr "Δεν βρέθηκαν ενσωματωμένα κλειδιά SSH"
+msgstr "Δεν βρέθηκαν μόνιμα κλειδιά SSH"
 
-#: src/window.rs:1811
+#: src/window.rs:1813
 msgid "No resident SSH keys found · {0}"
-msgstr "Δεν βρέθηκαν τοποθετημένα κλειδιά SSH · {0}"
+msgstr "Δεν βρέθηκαν μόνιμα κλειδιά SSH · {0}"
 
-#: src/window.rs:2302
+#: src/window.rs:2304
 msgid "No resident SSH keys were found on the connected YubiKeys."
-msgstr "Δεν βρέθηκαν τοποθετημένα κλειδιά SSH στις συνδεδεμένες YubiKeys."
+msgstr "Δεν βρέθηκαν μόνιμα κλειδιά SSH στα συνδεδεμένα YubiKey."
 
-#: src/window.rs:1221
+#: src/window.rs:1223
 msgid "No signing"
 msgstr "Χωρίς υπογραφή"
 
-#: src/home.rs:376 src/home.rs:395 src/home.rs:423
+#: src/home.rs:378 src/home.rs:397 src/home.rs:425
 msgid "Not configured"
 msgstr "Μη ρυθμισμένο"
 
-#: src/window.rs:1833
+#: src/window.rs:1835
 msgid "Not inspected"
 msgstr "Δεν έχει επιθεωρηθεί"
 
-#: src/window.rs:1823
+#: src/window.rs:1825
 msgid "Not inspected yet · {0}"
 msgstr "Δεν έχει επιθεωρηθεί ακόμα · {0}"
 
-#: src/home.rs:174
+#: src/home.rs:176
 msgid "Open the official Yubico Store"
 msgstr "Άνοιγμα του επίσημου καταστήματος Yubico"
 
-#: src/window.rs:1089 src/window.rs:1111
+#: src/window.rs:1091 src/window.rs:1113
 msgid "Install Git"
 msgstr "Εγκατάσταση Git"
 
-#: src/window.rs:1096
+#: src/window.rs:1098
 msgid "Installing Git…"
 msgstr "Εγκατάσταση Git…"
 
@@ -706,15 +702,15 @@ msgid ""
 "OpenSSH could not load resident keys. The SSH agent contains no newly loaded"
 " identity."
 msgstr ""
-"Το OpenSSH δεν μπόρεσε να φορτώσει τα ενσωματωμένα κλειδιά. Το SSH agent δεν"
-" περιέχει κάποια νεοφορτωμένη ταυτότητα."
+"Το OpenSSH δεν μπόρεσε να φορτώσει τα μόνιμα κλειδιά. Ο πράκτορας SSH δεν "
+"περιέχει καμία ταυτότητα που να φορτώθηκε πρόσφατα."
 
 #: src/ssh.rs:574
 msgid ""
 "OpenSSH could not load resident keys:\n"
 "{0}"
 msgstr ""
-"Το OpenSSH δεν μπόρεσε να φορτώσει τις εγκατεστημένες κλειδιά:\n"
+"Το OpenSSH δεν μπόρεσε να φορτώσει τα μόνιμα κλειδιά:\n"
 "{0}"
 
 #: src/ssh.rs:287
@@ -722,7 +718,7 @@ msgid ""
 "OpenSSH did not create a resident key:\n"
 "{0}"
 msgstr ""
-"Το OpenSSH δεν δημιούργησε ένα εγκατεστημένο κλειδί:\n"
+"Το OpenSSH δεν δημιούργησε μόνιμο κλειδί:\n"
 "{0}"
 
 #: src/ssh.rs:270
@@ -738,46 +734,46 @@ msgid ""
 "OpenSSH reported success, but no new resident credential was detected. Do "
 "not retry until you inspect the YubiKey."
 msgstr ""
-"Το OpenSSH ανέφερε επιτυχία, αλλά δεν ανιχνεύθηκε νέο ενσωματωμένο "
-"διαπιστευτήριο. Μην προσπαθήσετε ξανά μέχρι να ελέγξετε το YubiKey."
+"Το OpenSSH ανέφερε επιτυχία, αλλά δεν εντοπίστηκε νέο μόνιμο διαπιστευτήριο."
+" Μην προσπαθήσετε ξανά προτού ελέγξετε το YubiKey."
 
-#: src/window.rs:2668
+#: src/window.rs:2670
 msgid "OpenSSH/FIDO credential metadata and local file location"
 msgstr ""
 "Μεταδεδομένα διαπιστευτηρίου OpenSSH/FIDO και τοποθεσία τοπικού αρχείου"
 
-#: src/home.rs:391
+#: src/home.rs:393
 msgid "Passwordless"
 msgstr "Χωρίς κωδικό πρόσβασης"
 
-#: src/window.rs:2922
+#: src/window.rs:2924
 msgid "Permanently delete"
 msgstr "Μόνιμη διαγραφή"
 
-#: src/window.rs:2782
+#: src/window.rs:2784
 msgid "Permanently delete from YubiKey…"
 msgstr "Μόνιμη διαγραφή από το YubiKey…"
 
-#: src/window.rs:3021
+#: src/window.rs:3023
 msgid "Permanently delete this resident SSH credential?"
-msgstr "Να διαγραφούν οριστικά τα διαπιστευτήρια SSH κατοίκου;"
+msgstr "Να διαγραφεί οριστικά αυτό το μόνιμο διαπιστευτήριο SSH;"
 
-#: src/home.rs:342
+#: src/home.rs:344
 msgid "Protect authentication and commit signing"
 msgstr "Προστασία πιστοποίησης και υπογραφής commit"
 
-#: src/home.rs:193 src/home.rs:288
+#: src/home.rs:195 src/home.rs:290
 msgid "Protection for {0}"
 msgstr "Προστασία για {0}"
 
-#: src/window.rs:2325
+#: src/window.rs:2327
 msgid ""
 "Read the resident SSH keys already stored on your YubiKeys. You will enter "
 "each key's FIDO PIN and may need to touch it."
 msgstr ""
-"Ανάγνωση των τοποθετημένων κλειδιών SSH που είναι ήδη αποθηκευμένα στις "
-"YubiKeys σας. Θα εισάγετε τον FIDO PIN κάθε κλειδιού και ενδέχεται να "
-"χρειαστεί να το αγγίξετε."
+"Διαβάστε τα μόνιμα κλειδιά SSH που είναι ήδη αποθηκευμένα στα YubiKey σας. "
+"Θα εισαγάγετε το PIN FIDO κάθε κλειδιού και ίσως χρειαστεί να αγγίξετε το "
+"αντίστοιχο YubiKey."
 
 #: src/window.rs:748
 msgid "Reading SSH keys from {0}… Touch it if it flashes."
@@ -787,15 +783,15 @@ msgstr "Ανάγνωση κλειδιών SSH από το {0}… Αγγίξτε 
 msgid "Reading account security settings…"
 msgstr "Διαβάζονται οι ρυθμίσεις ασφαλείας του λογαριασμού…"
 
-#: src/window.rs:2028 src/window.rs:2314
+#: src/window.rs:2030 src/window.rs:2316
 msgid "Ready"
 msgstr "Έτοιμο"
 
-#: src/home.rs:366
+#: src/home.rs:368
 msgid "Ready to inspect"
 msgstr "Έτοιμο για επιθεώρηση"
 
-#: src/home.rs:266
+#: src/home.rs:268
 msgid "Ready to protect {0}"
 msgstr "Έτοιμο να προστατεύσει το {0}"
 
@@ -803,73 +799,73 @@ msgstr "Έτοιμο να προστατεύσει το {0}"
 msgid "Refresh connected YubiKeys"
 msgstr "Ανανέωση συνδεδεμένων YubiKeys"
 
-#: src/window.rs:2781
+#: src/window.rs:2783
 msgid "Remove from agent"
-msgstr "Αφαίρεση από τον agent"
+msgstr "Αφαίρεση από τον πράκτορα SSH"
 
-#: src/window.rs:2882
+#: src/window.rs:2884
 msgid "Removing this key from the SSH agent…"
-msgstr "Αφαίρεση αυτού του κλειδιού από το SSH agent…"
+msgstr "Αφαίρεση αυτού του κλειδιού από τον πράκτορα SSH…"
 
-#: src/window.rs:2662
+#: src/window.rs:2664
 msgid "Require verification for every signature"
 msgstr "Απαιτείται επαλήθευση για κάθε υπογραφή"
 
-#: src/window.rs:2663
+#: src/window.rs:2665
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "Απαιτείται ο FIDO PIN κάθε φορά που αυτό το κλειδί υπογράφει"
 
-#: src/window.rs:2561
+#: src/window.rs:2563
 msgid "Resident SSH key created"
-msgstr "Δημιουργήθηκε ενσωματωμένο κλειδί SSH"
+msgstr "Δημιουργήθηκε μόνιμο κλειδί SSH"
 
-#: src/window.rs:2955
+#: src/window.rs:2957
 msgid "Resident credential permanently deleted"
 msgstr "Το διαπιστευτήριο κατοίκου διαγράφηκε μόνιμα"
 
-#: src/window.rs:1907
+#: src/window.rs:1909
 msgid "Resident keys loaded"
-msgstr "Φορτώθηκαν τα ενσωματωμένα κλειδιά"
+msgstr "Φορτώθηκαν τα μόνιμα κλειδιά"
 
-#: src/window.rs:2629
+#: src/window.rs:2631
 msgid "Resident username"
-msgstr "Ονομασία χρήστη ενσωματωμένου"
+msgstr "Όνομα χρήστη μόνιμου διαπιστευτηρίου"
 
 #: src/ssh.rs:458
 msgid "Resident username must contain 1–64 bytes and no control characters."
 msgstr ""
-"Η ονομασία χρήστη ενσωματωμένου πρέπει να περιέχει 1–64 bytes και κανένα "
-"χαρακτήρα ελέγχου."
+"Το όνομα χρήστη του μόνιμου διαπιστευτηρίου πρέπει να περιέχει 1–64 byte και"
+" κανέναν χαρακτήρα ελέγχου."
 
-#: src/home.rs:341
+#: src/home.rs:343
 msgid "SSH & Git"
 msgstr "SSH & Git"
 
-#: src/window.rs:2010
+#: src/window.rs:2012
 msgid "SSH agent"
 msgstr "Πράκτορας SSH"
 
-#: src/window.rs:2018
+#: src/window.rs:2020
 msgid "SSH agent is ready"
 msgstr "Ο πράκτορας SSH είναι έτοιμος"
 
-#: src/window.rs:2033
+#: src/window.rs:2035
 msgid "SSH agent unavailable"
-msgstr "Ο SSH agent δεν διατίθεται"
+msgstr "Ο πράκτορας SSH δεν είναι διαθέσιμος"
 
-#: src/home.rs:426
+#: src/home.rs:428
 msgid "SSH commit signing"
 msgstr "Υπογραφή commit SSH"
 
-#: src/window.rs:2797
+#: src/window.rs:2799
 msgid "SSH key actions"
 msgstr "Ενέργειες κλειδιού SSH"
 
-#: src/window.rs:2461
+#: src/window.rs:2463
 msgid "SSH key for {0}"
 msgstr "Κλειδί SSH για το {0}"
 
-#: src/home.rs:410 src/window.rs:111 src/window.rs:157 src/window.rs:238
+#: src/home.rs:412 src/window.rs:111 src/window.rs:157 src/window.rs:238
 msgid "SSH keys"
 msgstr "Κλειδιά SSH"
 
@@ -877,27 +873,27 @@ msgstr "Κλειδιά SSH"
 msgid "SSH_AUTH_SOCK is not set"
 msgstr "Η μεταβλητή SSH_AUTH_SOCK δεν έχει οριστεί"
 
-#: src/window.rs:2693
+#: src/window.rs:2695
 msgid ""
 "Safe defaults use ECDSA-SK, require touch, and store a discoverable "
 "credential on the selected YubiKey."
 msgstr ""
-"Οι ασφαλείς προεπιλογές χρησιμοποιούν ECDSA-SK, απαιτούν αφή και αποθηκεύουν"
-" ένα αναγνωρίσιμο διαπιστευτήριο στο επιλεγμένο YubiKey."
+"Οι ασφαλείς προεπιλογές χρησιμοποιούν ECDSA-SK, απαιτούν φυσικό άγγιγμα και "
+"αποθηκεύουν ένα μόνιμο διαπιστευτήριο στο επιλεγμένο YubiKey."
 
-#: src/home.rs:337
+#: src/home.rs:339
 msgid "Secure sudo authorization"
 msgstr "Ασφαλής εξουσιοδότηση sudo"
 
 #: src/window.rs:126
 msgid "Security Center"
-msgstr "Κέντρο Ασφαλείας"
+msgstr "Κέντρο ασφαλείας"
 
-#: src/home.rs:655
+#: src/home.rs:657
 msgid "Serial {0}"
 msgstr "Σειριακός αριθμός {0}"
 
-#: src/home.rs:132
+#: src/home.rs:134
 msgid ""
 "Sign in, authorize sudo, and protect SSH and Git identities with a physical "
 "touch."
@@ -905,11 +901,11 @@ msgstr ""
 "Σύνδεση, εξουσιοδότηση sudo και προστασία ταυτοτήτων SSH και Git με φυσική "
 "επαφή."
 
-#: src/home.rs:331 src/home.rs:372 src/home.rs:614
+#: src/home.rs:333 src/home.rs:374 src/home.rs:616
 msgid "Sign-in"
 msgstr "Σύνδεση"
 
-#: src/window.rs:2863
+#: src/window.rs:2865
 msgid "Signing test passed"
 msgstr "Η δοκιμή υπογραφής πέρασε"
 
@@ -917,15 +913,15 @@ msgstr "Η δοκιμή υπογραφής πέρασε"
 msgid "Temporary public-key path is invalid."
 msgstr "Ο προσωρινός διαδρομή δημόσιου κλειδιού είναι άκυρη."
 
-#: src/window.rs:1420
+#: src/window.rs:1422
 msgid "Test"
-msgstr "Test"
+msgstr "Δοκιμή"
 
-#: src/window.rs:1418
+#: src/window.rs:1420
 msgid "Test Git signing"
 msgstr "Έλεγχος υπογραφής Git"
 
-#: src/window.rs:1345 src/window.rs:2780
+#: src/window.rs:1347 src/window.rs:2782
 msgid "Test signing"
 msgstr "Έλεγχος υπογραφής"
 
@@ -937,12 +933,12 @@ msgstr ""
 "Το εργαλείο εγγραφής FIDO δεν έχει εγκατασταθεί. Εγκαταστήστε το πακέτο "
 "libpam-u2f και προσπαθήστε ξανά."
 
-#: src/window.rs:1879
+#: src/window.rs:1881
 msgid "The PIN is sent directly to ssh-add and is never stored."
 msgstr ""
 "Ο κωδικός PIN στέλνεται απευθείας στο ssh-add και δεν αποθηκεύεται ποτέ."
 
-#: src/window.rs:2532
+#: src/window.rs:2534
 msgid ""
 "The PIN is sent through a private pipe to OpenSSH. It is never stored or "
 "placed in command arguments."
@@ -950,7 +946,7 @@ msgstr ""
 "Ο κωδικός PIN στέλνεται μέσω ιδιωτικού σωλήνα στο OpenSSH. Δεν αποθηκεύεται "
 "ποτέ ούτε τοποθετείται σε ορίσματα εντολής."
 
-#: src/window.rs:2864
+#: src/window.rs:2866
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr ""
 "Ο πράκτορας SSH υπέγραψε και επαλήθευσε με επιτυχία δεδομένα με αυτό το "
@@ -960,9 +956,9 @@ msgstr ""
 msgid "The YubiKey operation stopped unexpectedly."
 msgstr "Η λειτουργία του YubiKey διακόπηκε απροσδόκητα."
 
-#: src/window.rs:2598
+#: src/window.rs:2600
 msgid "The credential will be created only on this exact device"
-msgstr "Το πιστοποιητικό θα δημιουργηθεί μόνο σε αυτή τη συγκεκριμένη συσκευή"
+msgstr "Το διαπιστευτήριο θα δημιουργηθεί μόνο σε αυτήν ακριβώς τη συσκευή"
 
 #: src/ssh.rs:368
 msgid ""
@@ -972,25 +968,25 @@ msgstr ""
 "Η εντολή διαγραφής ολοκληρώθηκε, αλλά το επιλεγμένο YubiKey δεν μπορούσε να εξεταστεί στη συνέχεια: {0}\n"
 "Είναι πιθανό ή όχι ότι το διαπιστευτήριο διαγράφηκε. Μην επαναλαμβάνετε τη διαδικασία. Συνδεθείτε ξανά και εξετάστε πρώτα το YubiKey."
 
-#: src/window.rs:541 src/window.rs:1536 src/window.rs:1716
+#: src/window.rs:541 src/window.rs:1538 src/window.rs:1718
 msgid "The enrollment task failed."
 msgstr "Η εργασία εγγραφής απέτυχε."
 
-#: src/window.rs:2956
+#: src/window.rs:2958
 msgid ""
 "The exact resident credential is no longer present on the selected YubiKey. "
 "Local .pub or key-handle files and any SSH-agent entry were not removed."
 msgstr ""
-"Το ακριβές διαπιστευτήριο κατοίκου δεν υπάρχει πλέον στο επιλεγμένο YubiKey."
-" Τα τοπικά αρχεία .pub ή key-handle και τυχόν εγγραφή SSH-agent δεν "
-"αφαιρέθηκαν."
+"Το συγκεκριμένο μόνιμο διαπιστευτήριο δεν υπάρχει πλέον στο επιλεγμένο "
+"YubiKey. Τα τοπικά αρχεία .pub ή αρχεία αναγνωριστικού κλειδιού και τυχόν "
+"καταχώριση στον πράκτορα SSH δεν αφαιρέθηκαν."
 
-#: src/window.rs:1903
+#: src/window.rs:1905
 msgid ""
 "The inspected resident SSH credentials are already available in this agent."
 msgstr ""
-"Τα επιθεωρημένα κατοικούντα πιστοποιητικά SSH είναι ήδη διαθέσιμα σε αυτόν "
-"τον πράκτορα."
+"Τα μόνιμα διαπιστευτήρια SSH που ελέγχθηκαν είναι ήδη διαθέσιμα σε αυτόν τον"
+" πράκτορα."
 
 #: src/ssh.rs:627
 msgid "The local SSH key-handle path is invalid."
@@ -1005,7 +1001,7 @@ msgstr ""
 msgid "The local key path must be absolute."
 msgstr "Η τοπική διαδρομή κλειδιού πρέπει να είναι απόλυτη."
 
-#: src/window.rs:2563
+#: src/window.rs:2565
 msgid ""
 "The non-exportable private key remains protected by the selected YubiKey.\n"
 "\n"
@@ -1023,13 +1019,13 @@ msgstr ""
 "\n"
 "Αλγόριθμος: {0}\n"
 "Εφαρμογή: {1}\n"
-"Όνομα χρήστη εγκατεστημένου: {2}\n"
-"Δακτυλικό αποτύπωμα: {3}\n"
+"Όνομα χρήστη μόνιμου διαπιστευτηρίου: {2}\n"
+"Αποτύπωμα: {3}\n"
 "\n"
-"Τοπικός χειρισμός κλειδιού: {4}\n"
+"Τοπικό αναγνωριστικό κλειδιού: {4}\n"
 "Δημόσιο κλειδί: {5}\n"
 "\n"
-"Το κλειδί δεν φορτώνεται αυτόματα στο παράγοντα SSH."
+"Το κλειδί δεν φορτώνεται αυτόματα στον πράκτορα SSH."
 
 #: src/backend.rs:334
 msgid "The operation was cancelled or denied."
@@ -1042,34 +1038,35 @@ msgstr "Ο φάκελος εξόδου δεν υπάρχει: {0}"
 #: src/ssh.rs:317
 msgid "The resident credential ID is invalid. Refresh before deleting."
 msgstr ""
-"Η αναγνωριστική τιμή του διαπιστευτηρίου κατοίκου είναι μη έγκυρη. "
-"Αναπροσαρμόστε πριν τη διαγραφή."
+"Το αναγνωριστικό του μόνιμου διαπιστευτηρίου δεν είναι έγκυρο. Ανανεώστε τα "
+"δεδομένα πριν από τη διαγραφή."
 
 #: src/ssh.rs:744
 msgid "The resident credential did not return a public key."
-msgstr "Το κατοικούντα πιστοποιητικό δεν επέστρεψε δημόσιο κλειδί."
+msgstr "Το μόνιμο διαπιστευτήριο δεν επέστρεψε δημόσιο κλειδί."
 
 #: src/ssh.rs:382
 msgid ""
 "The resident credential is still present. Deletion was not completed: {0}"
 msgstr ""
-"Το διαπιστευτήριο κατοίκου υπάρχει ακόμη. Η διαγραφή δεν ολοκληρώθηκε: {0}"
+"Το μόνιμο διαπιστευτήριο εξακολουθεί να υπάρχει. Η διαγραφή δεν "
+"ολοκληρώθηκε: {0}"
 
 #: src/ssh.rs:749
 msgid "The resident credential returned an incomplete public key."
-msgstr "Το κατοικούντα πιστοποιητικό επέστρεψε ατελές δημόσιο κλειδί."
+msgstr "Το μόνιμο διαπιστευτήριο επέστρεψε ελλιπές δημόσιο κλειδί."
 
 #: src/ssh.rs:756
 msgid "The resident credential returned malformed PEM data."
-msgstr "Το κατοικούντα πιστοποιητικό επέστρεψε κακοσχηματισμένα δεδομένα PEM."
+msgstr "Το μόνιμο διαπιστευτήριο επέστρεψε δεδομένα PEM με λανθασμένη μορφή."
 
 #: src/ssh.rs:296
 msgid ""
 "The resident credential {0} exists on the YubiKey, but its local handle "
 "files are incomplete. Do not retry creation."
 msgstr ""
-"Το κατοικούντα πιστοποιητικό {0} υπάρχει στο YubiKey, αλλά τα τοπικά αρχεία "
-"χειρολαβής του είναι ατελή. Μην επαναλάβετε τη δημιουργία."
+"Το μόνιμο διαπιστευτήριο {0} υπάρχει στο YubiKey, αλλά τα τοπικά αρχεία "
+"αναγνωριστικού κλειδιού είναι ελλιπή. Μην επιχειρήσετε ξανά τη δημιουργία."
 
 #: src/ssh.rs:282
 msgid ""
@@ -1077,13 +1074,13 @@ msgid ""
 "{1}\n"
 "Do not retry creation. Inspect the key and preserve any local files that were written."
 msgstr ""
-"Η εγκατεστημένη πιστοποίηση {0} δημιουργήθηκε στο YubiKey, αλλά το OpenSSH δεν ολοκληρώθηκε με επιτυχία:\n"
+"Το μόνιμο διαπιστευτήριο {0} δημιουργήθηκε στο YubiKey, αλλά το OpenSSH δεν ολοκληρώθηκε με επιτυχία:\n"
 "{1}\n"
-"Μην επαναλάβετε τη δημιουργία. Εξετάστε το κλειδί και διατηρήστε τυχόν τοπικά αρχεία που εγγράφηκαν."
+"Μην επιχειρήσετε ξανά τη δημιουργία. Ελέγξτε το κλειδί και διατηρήστε όλα τα τοπικά αρχεία που γράφτηκαν."
 
 #: src/backend.rs:303 src/backend.rs:312
 msgid "The security key returned an invalid PAM credential."
-msgstr "Το κλειδί ασφαλείας επέστρεψε άκυρο πιστοποιητικό PAM."
+msgstr "Το κλειδί ασφαλείας επέστρεψε μη έγκυρο διαπιστευτήριο PAM."
 
 #: src/ssh.rs:323
 msgid ""
@@ -1100,7 +1097,7 @@ msgstr ""
 "Η επιλεγμένη συσκευή FIDO δεν είναι πλέον συνδεδεμένη. Ανανεώστε και "
 "προσπαθήστε ξανά."
 
-#: src/window.rs:1447
+#: src/window.rs:1449
 msgid ""
 "The selected credential created a valid Git-format SSH signature. No "
 "repository or commit was changed."
@@ -1120,22 +1117,22 @@ msgid ""
 "The selected resident credential changed since it was inspected. Nothing was"
 " deleted; refresh and verify the key."
 msgstr ""
-"Το επιλεγμένο διαπιστευτήριο κατοίκου άλλαξε από τότε που εξετάστηκε. Τίποτα"
-" δεν διαγράφηκε· επαναφορτώστε και επαληθεύστε το κλειδί."
+"Το επιλεγμένο μόνιμο διαπιστευτήριο άλλαξε μετά τον έλεγχο. Δεν διαγράφηκε "
+"τίποτα· ανανεώστε τα δεδομένα και επαληθεύστε το κλειδί."
 
 #: src/ssh.rs:335
 msgid ""
 "The selected resident credential is no longer present on this YubiKey. "
 "Nothing was deleted."
 msgstr ""
-"Το επιλεγμένο διαπιστευτήριο κατοίκου δεν υπάρχει πλέον σε αυτό το YubiKey. "
-"Τίποτα δεν διαγράφηκε."
+"Το επιλεγμένο μόνιμο διαπιστευτήριο δεν υπάρχει πλέον σε αυτό το YubiKey. "
+"Δεν διαγράφηκε τίποτα."
 
 #: src/ssh.rs:672
 msgid "The signature was created but could not be verified: {0}"
 msgstr "Η υπογραφή δημιουργήθηκε, αλλά δεν ήταν δυνατή η επαλήθευσή της: {0}"
 
-#: src/window.rs:1618
+#: src/window.rs:1620
 msgid "The sudo policy task failed."
 msgstr "Η εργασία πολιτικής sudo απέτυχε."
 
@@ -1147,14 +1144,14 @@ msgstr "Η προσωρινή διαδρομή υπογραφής Git είναι
 msgid "The temporary Git signing path is invalid."
 msgstr "Η προσωρινή διαδρομή υπογραφής Git είναι άκυρη."
 
-#: src/home.rs:597
+#: src/home.rs:599
 msgid ""
 "These keys are trusted by this account but are not currently connected."
 msgstr ""
 "Αυτά τα κλειδιά εμπιστεύονται από αυτόν τον λογαριασμό αλλά δεν είναι "
 "τρέχοντα συνδεδεμένα."
 
-#: src/window.rs:2921
+#: src/window.rs:2923
 msgid ""
 "This PIN authorizes permanent deletion of the exact credential shown in the "
 "previous step. It is never stored."
@@ -1162,15 +1159,15 @@ msgstr ""
 "Αυτό το PIN εξουσιοδοτεί τη μόνιμη διαγραφή του ακριβούς διαπιστευτηρίου που"
 " εμφανίζεται στο προηγούμενο βήμα. Ποτέ δεν αποθηκεύεται."
 
-#: src/window.rs:1931
+#: src/window.rs:1933
 msgid "This YubiKey has no discoverable ssh:* credentials."
-msgstr "Αυτή η YubiKey δεν έχει ανακαλυπτά διαπιστευτήρια ssh:*."
+msgstr "Αυτό το YubiKey δεν διαθέτει μόνιμα διαπιστευτήρια ssh:*."
 
 #: src/git_signing.rs:85
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "Αυτό δεν είναι ένα υποστηριζόμενο δημόσιο κλειδί ασφάλειας OpenSSH."
 
-#: src/window.rs:3022
+#: src/window.rs:3024
 msgid ""
 "This removes the private credential from the selected YubiKey and cannot be "
 "undone. It does not remove local files or an identity already loaded in the "
@@ -1180,22 +1177,22 @@ msgstr ""
 "ενέργεια είναι μη αναστρέψιμη. Δεν αφαιρεί τοπικά αρχεία ή ταυτότητα που "
 "έχει ήδη φορτωθεί στον πράκτορα SSH."
 
-#: src/window.rs:1579
+#: src/window.rs:1581
 msgid "This setting applies only to the current user."
 msgstr "Αυτή η ρύθμιση ισχύει μόνο για τον τρέχοντα χρήστη."
 
-#: src/home.rs:66
+#: src/home.rs:68
 msgid "This will only take a moment."
 msgstr "Θα χρειαστεί μόνο μια στιγμή."
 
-#: src/window.rs:1888
+#: src/window.rs:1890
 msgid ""
 "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr ""
-"Αγγίξτε το YubiKey όταν σας ζητηθεί. Φόρτωση κατοικούντων κλειδιών στον "
-"πράκτορα SSH…"
+"Αγγίξτε το YubiKey όταν σας ζητηθεί. Φόρτωση μόνιμων κλειδιών στον πράκτορα "
+"SSH…"
 
-#: src/window.rs:1433
+#: src/window.rs:1435
 msgid ""
 "Touch the YubiKey. Creating and verifying a temporary Git-format SSH "
 "signature…"
@@ -1203,39 +1200,39 @@ msgstr ""
 "Αγγίξτε το YubiKey. Δημιουργία και επαλήθευση μιας προσωρινής υπογραφής SSH "
 "σε μορφή Git…"
 
-#: src/window.rs:2856
+#: src/window.rs:2858
 msgid "Touch the YubiKey. Testing SSH signing and verification…"
 msgstr "Αγγίξτε το YubiKey. Έλεγχος υπογραφής και επαλήθευσης SSH…"
 
-#: src/window.rs:2544
+#: src/window.rs:2546
 msgid ""
 "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not "
 "remove the key."
 msgstr ""
-"Αγγίξτε το επιλεγμένο YubiKey. Δημιουργία κατοικούντος κλειδιού SSH στο {0}…"
-" Μην αφαιρέσετε το κλειδί."
+"Αγγίξτε το επιλεγμένο YubiKey. Δημιουργείται μόνιμο κλειδί SSH στο {0}… Μην "
+"το αφαιρέσετε."
 
-#: src/window.rs:1496
+#: src/window.rs:1498
 msgid "Touch this key when prompted to enroll it"
 msgstr "Αγγίξτε αυτό το κλειδί όταν σας ζητηθεί για να το εγγράψετε"
 
-#: src/window.rs:1676
+#: src/window.rs:1678
 msgid "Touch this key when prompted to enroll it for sudo"
 msgstr "Αγγίξτε αυτό το κλειδί όταν σας ζητηθεί για να το εγγράψετε για sudo"
 
-#: src/window.rs:1527 src/window.rs:1707
+#: src/window.rs:1529 src/window.rs:1709
 msgid "Touch your security key to continue."
 msgstr "Αγγίξτε το κλειδί ασφαλείας σας για να συνεχίσετε."
 
-#: src/home.rs:93
+#: src/home.rs:95
 msgid "Try Again"
 msgstr "Προσπάθεια ξανά"
 
-#: src/window.rs:3008
+#: src/window.rs:3010
 msgid "Type {0} to confirm"
 msgstr "Πληκτρολογήστε {0} για επιβεβαίωση"
 
-#: src/window.rs:688 src/window.rs:2039 src/window.rs:2340
+#: src/window.rs:688 src/window.rs:2041 src/window.rs:2342
 msgid "Unavailable"
 msgstr "Μη διαθέσιμο"
 
@@ -1251,40 +1248,40 @@ msgstr "Ξεκλείδωμα GDM"
 msgid "Unlock sudo"
 msgstr "Ξεκλείδωμα sudo"
 
-#: src/window.rs:1463
+#: src/window.rs:1465
 msgid "Unlock the current user"
 msgstr "Ξεκλείδωμα του τρέχοντος χρήστη"
 
-#: src/home.rs:332
+#: src/home.rs:334
 msgid "Unlock your account with a touch"
 msgstr "Ξεκλείδωμα του λογαριασμού σας με μια αφή"
 
-#: src/ssh.rs:735 src/window.rs:1251 src/window.rs:2467 src/window.rs:2987
+#: src/ssh.rs:735 src/window.rs:1253 src/window.rs:2469 src/window.rs:2989
 msgid "Unnamed SSH credential"
-msgstr "Μη ονοματισμένο πιστοποιητικό SSH"
+msgstr "Διαπιστευτήριο SSH χωρίς όνομα"
 
 #: src/ssh.rs:782
 msgid "Unsupported resident SSH public-key algorithm."
 msgstr ""
-"Αναγνωρισμένος αλγόριθμος δημόσιου κλειδιού SSH που δεν υποστηρίζεται."
+"Ο αλγόριθμος δημόσιου κλειδιού για μόνιμα κλειδιά SSH δεν υποστηρίζεται."
 
-#: src/window.rs:1397
+#: src/window.rs:1399
 msgid "Updating Git commit signing…"
 msgstr "Ενημέρωση υπογραφής δεσμεύσεων Git…"
 
-#: src/window.rs:1529
+#: src/window.rs:1531
 msgid "Updating sign-in settings…"
 msgstr "Ενημέρωση ρυθμίσεων σύνδεσης…"
 
-#: src/window.rs:1709
+#: src/window.rs:1711
 msgid "Updating sudo settings…"
 msgstr "Ενημέρωση ρυθμίσεων sudo…"
 
-#: src/window.rs:1635
+#: src/window.rs:1637
 msgid "Use YubiKey to unlock sudo"
 msgstr "Χρήση YubiKey για ξεκλείδωμα sudo"
 
-#: src/window.rs:2934
+#: src/window.rs:2936
 msgid ""
 "Verifying and permanently deleting the selected resident credential. Do not "
 "unplug the YubiKey…"
@@ -1296,15 +1293,15 @@ msgstr ""
 msgid "View in App Store"
 msgstr "Προβολή στο κατάστημα εφαρμογών"
 
-#: src/window.rs:2267
+#: src/window.rs:2269
 msgid "Waiting"
 msgstr "Περιμένει"
 
-#: src/home.rs:156
+#: src/home.rs:158
 msgid "Waiting for a configured YubiKey"
 msgstr "Αναμονή για ρυθμισμένο YubiKey"
 
-#: src/window.rs:1637
+#: src/window.rs:1639
 msgid ""
 "You may enroll keys now, but sudo bypasses PAM while passwordless access is "
 "enabled."
@@ -1312,23 +1309,23 @@ msgstr ""
 "Μπορείτε να εγγραφείτε κλειδιά τώρα, αλλά το sudo παρακάμπτει το PAM ενώ "
 "είναι ενεργοποιημένη η πρόσβαση χωρίς κωδικό."
 
-#: src/window.rs:2297
+#: src/window.rs:2299
 msgid "Your YubiKeys are inspected"
 msgstr "Οι YubiKeys σας έχουν επιθεωρηθεί"
 
-#: src/window.rs:2299
+#: src/window.rs:2301
 msgid "Your hardware-backed SSH keys"
 msgstr "Τα κλειδιά SSH με υποστήριξη υλικού σας"
 
-#: src/window.rs:2263
+#: src/window.rs:2265
 msgid ""
 "Your resident SSH keys stay on the security key. Insert it to view and use "
 "them."
 msgstr ""
-"Τα τοποθετημένα κλειδιά SSH σας παραμένουν στο κλειδί ασφαλείας. Εισάγετέ το"
-" για να τα δείτε και να τα χρησιμοποιήσετε."
+"Τα μόνιμα κλειδιά SSH παραμένουν στο κλειδί ασφαλείας. Συνδέστε το για να τα"
+" προβάλετε και να τα χρησιμοποιήσετε."
 
-#: src/home.rs:130
+#: src/home.rs:132
 msgid ""
 "Your security settings are ready. Connect a configured YubiKey when you need"
 " it."
@@ -1336,31 +1333,31 @@ msgstr ""
 "Οι ρυθμίσεις ασφαλείας σας είναι έτοιμες. Συνδέστε έναν ρυθμισμένο YubiKey "
 "όταν τον χρειαστείτε."
 
-#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1755 src/window.rs:2597
+#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1757 src/window.rs:2599
 msgid "YubiKey"
 msgstr "YubiKey"
 
-#: src/window.rs:3088
+#: src/window.rs:3090
 msgid "YubiKey configuration failed"
 msgstr "Η διαμόρφωση YubiKey απέτυχε"
 
-#: src/home.rs:251
+#: src/home.rs:253
 msgid "YubiKey connected"
 msgstr "Συνδεδεμένος YubiKey"
 
-#: src/home.rs:379 src/home.rs:400
+#: src/home.rs:381 src/home.rs:402
 msgid "YubiKey or account password"
 msgstr "YubiKey ή κωδικός πρόσβασης λογαριασμού"
 
-#: src/home.rs:622
+#: src/home.rs:624
 msgid "YubiKey without hardware serial"
 msgstr "YubiKey χωρίς σειριακό υλικού"
 
-#: src/home.rs:624
+#: src/home.rs:626
 msgid "YubiKey · Serial {0}"
 msgstr "YubiKey · Σειριακός {0}"
 
-#: src/window.rs:2993
+#: src/window.rs:2995
 msgid ""
 "YubiKey: {0}\n"
 "Device: {1}\n"
@@ -1372,31 +1369,32 @@ msgstr ""
 "YubiKey: {0}\n"
 "Συσκευή: {1}\n"
 "Εφαρμογή: {2}\n"
-"Όνομα χρήστη κατοίκου: {3}\n"
+"Όνομα χρήστη μόνιμου διαπιστευτηρίου: {3}\n"
 "Αλγόριθμος: {4}\n"
-"Δακτυλικό αποτύπωμα: {5}"
+"Αποτύπωμα: {5}"
 
-#: src/window.rs:1124
+#: src/window.rs:1126
 msgid "YubiKeys"
 msgstr "YubiKeys"
 
-#: src/window.rs:1955
+#: src/window.rs:1957
 msgid "agent"
-msgstr "παράγοντας"
+msgstr "πράκτορας"
 
 #: src/ssh.rs:386
 msgid ""
 "fido2-token reported success, but the resident credential is still present. "
 "Do not retry until you refresh and inspect the YubiKey."
 msgstr ""
-"Το fido2-token ανέφερε επιτυχία, αλλά το διαπιστευτήριο κατοίκου υπάρχει "
-"ακόμη. Μην επαναλάβετε μέχρι να κάνετε ανανέωση και εξέταση του YubiKey."
+"Το fido2-token ανέφερε επιτυχία, αλλά το μόνιμο διαπιστευτήριο εξακολουθεί "
+"να υπάρχει. Μην προσπαθήσετε ξανά προτού ανανεώσετε τα δεδομένα και ελέγξετε"
+" το YubiKey."
 
-#: src/home.rs:398
+#: src/home.rs:400
 msgid "sudo authentication is bypassed"
 msgstr "Η πιστοποίηση sudo παρακάμπτεται"
 
-#: src/window.rs:1578
+#: src/window.rs:1580
 msgid "sudo authentication policy"
 msgstr "πολιτική έπαυσης ταυτότητας sudo"
 
@@ -1404,15 +1402,15 @@ msgstr "πολιτική έπαυσης ταυτότητας sudo"
 msgid "unknown"
 msgstr "άγνωστο"
 
-#: src/window.rs:2519
+#: src/window.rs:2521
 msgid "user"
 msgstr "χρήστης"
 
-#: src/window.rs:1146
+#: src/window.rs:1148
 msgid "{0} SSH keys loaded"
 msgstr "Φορτώθηκαν {0} κλειδιά SSH"
 
-#: src/home.rs:254
+#: src/home.rs:256
 msgid "{0} YubiKeys connected"
 msgstr "{0} συνδεδεμένοι YubiKeys"
 
@@ -1424,53 +1422,51 @@ msgstr "Το {0} τερματίστηκε με {1}"
 msgid "{0} failed: {1}"
 msgstr "Το {0} απέτυχε: {1}"
 
-#: src/window.rs:2023
+#: src/window.rs:2025
 msgid "{0} identities are currently available to SSH applications."
 msgstr "{0} ταυτότητες είναι διαθέσιμες αυτή τη στιγμή για εφαρμογές SSH."
 
-#: src/window.rs:1056
+#: src/window.rs:1058
 msgid "{0} is enabled for this YubiKey"
 msgstr "Το {0} είναι ενεργοποιημένο για αυτό το YubiKey"
 
-#: src/window.rs:1061
+#: src/window.rs:1063
 msgid "{0} is not configured for this YubiKey"
 msgstr "Το {0} δεν έχει διαμορφωθεί για αυτό το YubiKey"
 
-#: src/window.rs:1911
+#: src/window.rs:1913
 msgid "{0} new SSH identities were added to the agent."
 msgstr "Προστέθηκαν {0} νέες ταυτότητες SSH στον πράκτορα."
 
-#: src/window.rs:1909
+#: src/window.rs:1911
 msgid "{0} new SSH identity was added to the agent."
 msgstr "Προστέθηκε {0} νέα ταυτότητα SSH στον πράκτορα."
 
-#: src/window.rs:2307
+#: src/window.rs:2309
 msgid "{0} resident SSH keys are available from your connected YubiKeys."
-msgstr ""
-"{0} τοποθετημένα κλειδιά SSH είναι διαθέσιμα από τις συνδεδεμένες YubiKeys "
-"σας."
+msgstr "Στα συνδεδεμένα YubiKey είναι διαθέσιμα {0} μόνιμα κλειδιά SSH."
 
-#: src/window.rs:1817
+#: src/window.rs:1819
 msgid "{0} resident SSH keys · {1}"
-msgstr "{0} τοποθετημένα κλειδιά SSH · {1}"
+msgstr "{0} μόνιμα κλειδιά SSH · {1}"
 
-#: src/home.rs:362
+#: src/home.rs:364
 msgid "{0} resident credentials inspected"
-msgstr "{0} επιθεωρημένα διαπιστευτήρια κατοίκων"
+msgstr "Ελέγχθηκαν {0} μόνιμα διαπιστευτήρια"
 
-#: src/window.rs:2328
+#: src/window.rs:2330
 msgid "{0} to inspect"
 msgstr "{0} προς επιθεώρηση"
 
-#: src/window.rs:1487 src/window.rs:1665
+#: src/window.rs:1489 src/window.rs:1667
 msgid "{0} · no hardware serial"
 msgstr "{0} · χωρίς σειριακό υλικού"
 
-#: src/window.rs:1489 src/window.rs:1667
+#: src/window.rs:1491 src/window.rs:1669
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
 
-#: src/window.rs:999
+#: src/window.rs:1001
 msgid "Checking Passkeys support…"
 msgstr "Έλεγχος υποστήριξης κλειδιών πρόσβασης…"
 
@@ -1509,7 +1505,7 @@ msgstr ""
 "Τοποθετήστε το YubiKey, εισαγάγετε το FIDO PIN όταν σας ζητηθεί και έπειτα "
 "αγγίξτε το κλειδί."
 
-#: src/window.rs:1778
+#: src/window.rs:1780
 msgid ""
 "Inspect a connected YubiKey to reveal its resident SSH keys and available "
 "actions."
@@ -1568,7 +1564,7 @@ msgstr "Εγγραφή κλειδιού πρόσβασης"
 msgid "Sign in next time"
 msgstr "Σύνδεση την επόμενη φορά"
 
-#: src/window.rs:2011
+#: src/window.rs:2013
 msgid ""
 "The SSH agent makes selected keys available to SSH applications during this "
 "session."
@@ -1601,7 +1597,7 @@ msgstr ""
 "Υπάρχει ήδη αρχείο στη διαδρομή ρύθμισης SSH που διαχειρίζεται η εφαρμογή: "
 "{0}"
 
-#: src/window.rs:2068
+#: src/window.rs:2070
 msgid ""
 "After the first YubiKey authentication, later SSH sessions can reuse the "
 "connection. The last session remains available in the background for 10 "
@@ -1639,7 +1635,7 @@ msgstr "Δεν ήταν δυνατή η αντικατάσταση του {0}: {
 msgid "Could not synchronize {0}: {1}"
 msgstr "Δεν ήταν δυνατή η συγχρονισμός του {0}: {1}"
 
-#: src/window.rs:2173 src/window.rs:2184
+#: src/window.rs:2175 src/window.rs:2186
 msgid "Could not update SSH connection persistence"
 msgstr "Δεν ήταν δυνατή η ενημέρωση της διατήρησης σύνδεσης SSH"
 
@@ -1651,11 +1647,11 @@ msgstr "Δεν ήταν δυνατή η επαλήθευση της ρύθμισ
 msgid "Could not write the temporary SSH configuration in {0}: {1}"
 msgstr "Δεν ήταν δυνατή η εγγραφή της προσωρινής ρύθμισης SSH στο {0}: {1}"
 
-#: src/window.rs:2086 src/window.rs:2159
+#: src/window.rs:2088 src/window.rs:2161
 msgid "Disabled · each new connection authenticates separately"
 msgstr "Απενεργοποιημένο · κάθε νέα σύνδεση πιστοποιείται ξεχωριστά"
 
-#: src/window.rs:2078 src/window.rs:2152
+#: src/window.rs:2080 src/window.rs:2154
 msgid "Enabled · idle connections remain available for 10 minutes"
 msgstr ""
 "Ενεργοποιημένο · οι ανενεργές συνδέσεις παραμένουν διαθέσιμες για 10 λεπτά"
@@ -1670,31 +1666,31 @@ msgstr ""
 "Η μεταβλητή HOME δεν είναι ορισμένη. Δεν είναι δυνατός ο εντοπισμός της "
 "ρύθμισης SSH."
 
-#: src/window.rs:2105
+#: src/window.rs:2107
 msgid "Main SSH configuration unavailable"
 msgstr "Η κύρια ρύθμιση SSH δεν είναι διαθέσιμη"
 
-#: src/window.rs:2106
+#: src/window.rs:2108
 msgid "Managed SSH configuration unavailable"
 msgstr "Η διαχειριζόμενη ρύθμιση SSH δεν είναι διαθέσιμη"
 
-#: src/window.rs:2222
+#: src/window.rs:2224
 msgid "Managed configuration preview"
 msgstr "Προεπισκόπηση διαχειριζόμενης ρύθμισης"
 
-#: src/window.rs:2202
+#: src/window.rs:2204
 msgid "Manual review required"
 msgstr "Απαιτείται χειροκίνητος έλεγχος"
 
-#: src/window.rs:2094 src/window.rs:2167
+#: src/window.rs:2096 src/window.rs:2169
 msgid "Needs attention · review the SSH configuration before continuing"
 msgstr "Χρειάζεται προσοχή · ελέγξτε τη ρύθμιση SSH πριν συνεχίσετε"
 
-#: src/window.rs:2103
+#: src/window.rs:2105
 msgid "Needs attention · the SSH configuration could not be located"
 msgstr "Χρειάζεται προσοχή · δεν ήταν δυνατός ο εντοπισμός της ρύθμισης SSH"
 
-#: src/window.rs:2210
+#: src/window.rs:2212
 msgid ""
 "Only new SSH connections are affected. Turning this off does not stop "
 "existing background connections. Earlier host-specific OpenSSH settings "
@@ -1713,11 +1709,11 @@ msgstr "Το OpenSSH απόρριψε τη ρύθμιση που δημιουρ�
 msgid "OpenSSH rejected the generated configuration: {0}"
 msgstr "Το OpenSSH απόρριψε τη ρύθμιση που δημιουργήθηκε: {0}"
 
-#: src/window.rs:2111
+#: src/window.rs:2113
 msgid "Reuse SSH connections in the background"
 msgstr "Επαναχρησιμοποίηση συνδέσεων SSH στο παρασκήνιο"
 
-#: src/window.rs:2067
+#: src/window.rs:2069
 msgid "SSH connection persistence"
 msgstr "Διατήρηση σύνδεσης SSH"
 
@@ -1773,7 +1769,7 @@ msgstr "Η διαδρομή SSH δεν είναι ένας ασφαλής, κα�
 msgid "The SSH path is not owned by the current user: {0}"
 msgstr "Η διαδρομή SSH δεν ανήκει στον τρέχοντα χρήστη: {0}"
 
-#: src/window.rs:2144
+#: src/window.rs:2146
 msgid "The SSH persistence update stopped unexpectedly."
 msgstr "Η ενημέρωση διατήρησης SSH διακόπηκε απροσδόκητα."
 
@@ -1834,21 +1830,21 @@ msgstr ""
 "εφαρμογής. Αφαιρέστε αυτή την εντολή Include πριν χρησιμοποιήσετε αυτήν τη "
 "ρύθμιση."
 
-#: src/window.rs:2209
+#: src/window.rs:2211
 msgid "What this setting changes"
 msgstr "Τι αλλάζει με αυτήν τη ρύθμιση"
 
-#: src/window.rs:2224
+#: src/window.rs:2226
 msgid "{0} includes {1}"
-msgstr "{0} includes {1}"
+msgstr "Το {0} περιλαμβάνει το {1}"
 
-#: src/window.rs:2491
+#: src/window.rs:2493
 msgid ""
 "Optional: create a new resident key only when you need another SSH identity."
 " Its private key never leaves the selected YubiKey."
 msgstr ""
-"Προαιρετικό: δημιουργήστε ένα νέο κατοίκον κλειδί μόνο όταν χρειάζεστε άλλη "
-"ταυτότητα SSH. Το ιδιωτικό του κλειδί δεν αποχωρεί ποτέ από την επιλεγμένη "
+"Προαιρετικά: δημιουργήστε νέο μόνιμο κλειδί μόνο όταν χρειάζεστε άλλη "
+"ταυτότητα SSH. Το ιδιωτικό κλειδί του παραμένει πάντα στο επιλεγμένο "
 "YubiKey."
 
 #: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:10
@@ -1856,6 +1852,26 @@ msgid "Authentication is required to change security settings or install Git"
 msgstr ""
 "Απαιτείται έλεγχος ταυτότητας για την αλλαγή ρυθμίσεων ασφαλείας ή την "
 "εγκατάσταση του Git"
+
+#: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:8
+msgid "Manage YubiKey security settings"
+msgstr "Διαχείριση ρυθμίσεων ασφαλείας YubiKey"
+
+#: data/com.anduinos.yubikeymanager.desktop:114
+msgid "YubiKey;FIDO2;U2F;security;login;GDM;"
+msgstr "YubiKey;FIDO2;U2F;ασφάλεια;σύνδεση;GDM;"
+
+#: data/com.anduinos.yubikeymanager.desktop:54
+msgid "Security Key Settings"
+msgstr "Ρυθμίσεις κλειδιού ασφαλείας"
+
+#: data/com.anduinos.yubikeymanager.desktop:28
+msgid "YubiKey Security Center"
+msgstr "Κέντρο ασφαλείας YubiKey"
+
+#: data/com.anduinos.yubikeymanager.desktop:82
+msgid "Protect sign-in, sudo, SSH, and Git with YubiKeys"
+msgstr "Προστατέψτε την είσοδο, το sudo, το SSH και το Git με YubiKeys"
 
 #~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
 #~ msgstr ""

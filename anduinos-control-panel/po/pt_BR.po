@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Painel de Controle"
 
@@ -123,11 +124,13 @@ msgstr "Não instalado"
 
 #: src/anduinos_control_panel/app.py:317
 msgid "Configure microphone, language, shortcut, and training"
-msgstr "Configurar microfone, idioma, atalho e treinamento"
+msgstr "Configurar microfone, idioma, atalho e calibração"
 
 #: src/anduinos_control_panel/app.py:319
 msgid "Install private, offline speech-to-text"
-msgstr "Instalar Digitação por Voz privada e offline"
+msgstr ""
+"Instalar conversão de fala em texto com proteção de privacidade e "
+"funcionamento offline"
 
 #: src/anduinos_control_panel/app.py:325 src/anduinos_control_panel/app.py:860
 msgid "Windows Compatibility"
@@ -243,7 +246,7 @@ msgstr "Tempo de espera do menu de inicialização"
 #: src/anduinos_control_panel/app.py:661
 msgid "The same delay is used after an interrupted or unsuccessful startup."
 msgstr ""
-"O mesmo atraso é usado após uma inicialização interrompida ou sem sucesso."
+"O mesmo atraso é usado após uma inicialização interrompida ou malsucedida."
 
 #: src/anduinos_control_panel/app.py:668
 #, python-format
@@ -491,7 +494,8 @@ msgstr ""
 
 #: src/anduinos_control_panel/app.py:1376
 msgid "Downloading the local engine and multilingual speech model…"
-msgstr "Baixando o mecanismo local e o modelo de fala multilíngue…"
+msgstr ""
+"Baixando o mecanismo local e o modelo multilíngue de reconhecimento de fala…"
 
 #: src/anduinos_control_panel/app.py:1382
 msgid "Preparing Voice Typing installation…"
@@ -502,8 +506,8 @@ msgid ""
 "✓ Installed. Sign out and back in once, then press Super + H to start Voice "
 "Typing."
 msgstr ""
-"✓ Instalado. Encerre a sessão e inicie novamente uma vez, depois pressione "
-"Super + H para iniciar a Digitação por Voz."
+"✓ Instalado. Encerre a sessão e entre novamente; depois, pressione Super + H"
+" para iniciar a Digitação por Voz."
 
 #: src/anduinos_control_panel/app.py:1429
 msgid "Open Settings"
@@ -605,6 +609,24 @@ msgstr "Equipe AnduinOS"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "Encontre e gerencie as configurações de sistema do AnduinOS."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr "configurações;controle;sistema;hardware;drivers;contas;backup;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "Alterar as configurações do menu de inicialização"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr ""
+"É necessária autenticação para alterar as configurações do menu de "
+"inicialização"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "Encontre e gerencie as configurações de sistema do AnduinOS"
 
 #: src/anduinos_control_panel/app.py
 msgid "Authentication is required to read the boot menu."

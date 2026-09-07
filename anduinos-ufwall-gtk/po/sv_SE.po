@@ -58,23 +58,23 @@ msgstr "Applikationsprofiler"
 msgid "Audit"
 msgstr "Revisions"
 
-#: src/views/network_audit_view.rs:277
+#: src/views/network_audit_view.rs:278
 msgid "Auditor Error"
 msgstr "Fel i revisor"
 
-#: src/views/network_audit_view.rs:504
+#: src/views/network_audit_view.rs:505
 msgid "Block"
 msgstr "Blockera"
 
-#: src/views/network_audit_view.rs:500
+#: src/views/network_audit_view.rs:501
 msgid "Block Connection?"
 msgstr "Blockera anslutning?"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid "Block inbound traffic from"
 msgstr "Blockera inkommande trafik från"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid "Block outbound traffic to"
 msgstr "Blockera utgående trafik till"
 
@@ -82,7 +82,7 @@ msgstr "Blockera utgående trafik till"
 msgid "Blocked Events"
 msgstr "Blockerade händelser"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Blocked Successfully"
 msgstr "Blockering lyckades"
 
@@ -90,7 +90,7 @@ msgstr "Blockering lyckades"
 msgid "Both"
 msgstr "Båda"
 
-#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/views/network_audit_view.rs:504 src/views/rules_view.rs:121
 #: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "Avbryt"
@@ -188,11 +188,12 @@ msgstr "Riktning"
 msgid "Error"
 msgstr "Fel"
 
-#: src/views/network_audit_view.rs:554
+#: src/views/network_audit_view.rs:555
 msgid "Failed to Block"
 msgstr "Misslyckades med att blockera"
 
 #: src/views/status_view.rs:95 src/window.rs:64
+#: data/com.anduinos.ufwall.desktop:29 data/com.anduinos.ufwall.desktop:57
 msgid "Firewall"
 msgstr "Brandvägg"
 
@@ -345,7 +346,7 @@ msgstr "Avvisa"
 msgid "Resolve Domains"
 msgstr "Lös upp domäner"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Rule added to block"
 msgstr "Regel har lagts till för blockering"
 
@@ -395,12 +396,12 @@ msgstr ""
 "Detta kommer att ta bort alla anpassade regler. Denna åtgärd kan inte "
 "ångras."
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr "Detta förhindrar att fjärrvärden skickar paket till din dator."
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr "Detta förhindrar att din dator skickar paket till fjärrvärden."
@@ -491,7 +492,7 @@ msgstr "Nätverksfilsystem"
 
 #: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
-msgstr "Port / Protokoll"
+msgstr "Nätverkstidsprotokoll"
 
 #: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
@@ -515,7 +516,7 @@ msgstr "PostgreSQL-databasserver"
 
 #: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
-msgstr "Port / Protokoll"
+msgstr "Fjärrskrivbordsprotokoll"
 
 #: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
@@ -537,7 +538,7 @@ msgstr "Virtual Network Computing fjärrskrivbord"
 msgid "Windows file and printer sharing"
 msgstr "Fil- och utskriftsdelning i Windows"
 
-#: src/views/network_audit_view.rs:534
+#: src/views/network_audit_view.rs:535
 msgid "Audit Block"
 msgstr "Blockera granskning"
 
@@ -607,27 +608,27 @@ msgstr ""
 msgid "Network service command failed"
 msgstr "Nätverkstjänstkommandot misslyckades"
 
-#: src/views/network_audit_view.rs:371
+#: src/views/network_audit_view.rs:372
 msgid "No Active Connections"
 msgstr "Inga aktiva anslutningar"
 
-#: src/views/network_audit_view.rs:361
+#: src/views/network_audit_view.rs:362
 msgid "No Inbound Connections"
 msgstr "Inga inkommande anslutningar"
 
-#: src/views/network_audit_view.rs:366
+#: src/views/network_audit_view.rs:367
 msgid "No Outbound Connections"
 msgstr "Inga utgående anslutningar"
 
-#: src/views/network_audit_view.rs:367
+#: src/views/network_audit_view.rs:368
 msgid "No applications are sending data to the internet."
 msgstr "Inga appar skickar data till internet."
 
-#: src/views/network_audit_view.rs:362
+#: src/views/network_audit_view.rs:363
 msgid "No external devices are connecting to your open ports."
 msgstr "Inga externa enheter ansluter till dina öppna portar."
 
-#: src/views/network_audit_view.rs:372
+#: src/views/network_audit_view.rs:373
 msgid "No network activity detected."
 msgstr "Ingen nätverksaktivitet upptäckt."
 
@@ -646,3 +647,27 @@ msgstr "Uppladdning"
 #: src/ufw/backend.rs:48
 msgid "pkexec failed"
 msgstr "pkexec misslyckades"
+
+#: data/com.anduinos.ufwall.desktop:124
+msgid "firewall;ufw;security;network;"
+msgstr "brandvägg;ufw;säkerhet;nätverk;"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:82
+msgid "Authentication is required to change local network discovery"
+msgstr "Autentisering krävs för att ändra lokal nätverksupptäckt"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:80
+msgid "Manage local network discovery"
+msgstr "Hantera lokal nätverksupptäckt"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:39
+msgid "Authentication is required to modify firewall settings"
+msgstr "Autentisering krävs för att ändra brandväggsinställningar"
+
+#: data/com.anduinos.ufwall.desktop:85
+msgid "Configure your firewall"
+msgstr "Konfigurera din brandvägg"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:9
+msgid "Manage UFW firewall settings"
+msgstr "Hantera UFW-brandväggsinställningar"

@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Panoul de control"
 
@@ -91,7 +92,7 @@ msgstr "Scanează documente și selectează un scaner"
 
 #: src/anduinos_control_panel/app.py:278
 msgid "Install Document Scanner"
-msgstr "Instalează scanerul de documente"
+msgstr "Instalează Scaner de documente"
 
 #: src/anduinos_control_panel/app.py:284
 msgid "Appearance"
@@ -471,7 +472,7 @@ msgstr ""
 
 #: src/anduinos_control_panel/app.py:1274
 msgid "Private by default"
-msgstr "Confidențialitate implicită"
+msgstr "Privat în mod implicit"
 
 #: src/anduinos_control_panel/app.py:1275
 msgid "Speech is recognized locally with whisper.cpp"
@@ -495,7 +496,8 @@ msgstr ""
 
 #: src/anduinos_control_panel/app.py:1376
 msgid "Downloading the local engine and multilingual speech model…"
-msgstr "Se descarcă motorul local și modelul de vorbire multilingv…"
+msgstr ""
+"Se descarcă motorul local și modelul multilingv de recunoaștere a vorbirii…"
 
 #: src/anduinos_control_panel/app.py:1382
 msgid "Preparing Voice Typing installation…"
@@ -581,7 +583,7 @@ msgstr "IA pe dispozitiv dezactivată"
 
 #: src/anduinos_control_panel/app.py:1638
 msgid "✗ Package operation failed. Review Advanced Output."
-msgstr "✗ Operația de pachet a eșuat. Verificați ieșirea avansată."
+msgstr "✗ Operația asupra pachetului a eșuat. Verificați ieșirea avansată."
 
 #: src/anduinos_control_panel/app.py:1715
 #, python-brace-format
@@ -611,6 +613,23 @@ msgstr "Echipa AnduinOS"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "Găsiți și gestionați setările de sistem AnduinOS."
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr "setări;control;sistem;hardware;drivere;conturi;copie de rezervă;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "Modifică setările meniului de pornire"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr ""
+"Autentificarea este necesară pentru a modifica setările meniului de pornire."
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "Găsiți și gestionați setările de sistem AnduinOS"
 
 #: src/anduinos_control_panel/app.py
 msgid "Authentication is required to read the boot menu."

@@ -17,19 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: src/pages.py:2092
+#: src/pages.py:2244
 msgid "Installing an input method requires an Internet connection."
 msgstr "Для встановлення методу введення потрібне підключення до Інтернету."
 
-#: src/pages.py:2103
-msgid ""
-"No Internet connection. Input methods cannot be installed. You can install "
-"them later when connected."
-msgstr ""
-"Немає підключення до Інтернету. Неможливо встановити методи введення. Їх "
-"можна встановити пізніше після підключення."
+#: src/pages.py:2255
+msgid "No Internet connection. Input methods cannot be installed. You can install them later when connected."
+msgstr "Немає підключення до Інтернету. Неможливо встановити методи введення. Їх можна встановити пізніше після підключення."
 
-#: src/pages.py:4933
+#: src/pages.py:7174
 msgid ""
 "\n"
 "\n"
@@ -39,7 +35,7 @@ msgstr ""
 "\n"
 "Реальна установка створить локальний для машини MOK. Після перезавантаження виберіть Enroll MOK → Continue → Yes у MOKManager і введіть пароль 123456."
 
-#: src/pages.py:4944
+#: src/pages.py:7185
 msgid ""
 "\n"
 "On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
@@ -47,51 +43,39 @@ msgstr ""
 "\n"
 "На синьому екрані MOKManager виберіть Enroll MOK → Continue → Yes, пароль: 123456"
 
-#: src/pages.py:4085
+#: src/pages.py:6191
 msgid "; sudo does not require a password"
 msgstr "; sudo не вимагає пароля"
 
-#: src/pages.py:4087
+#: src/pages.py:6193
 msgid "; sudo requires the account password"
 msgstr "; sudo вимагає пароль облікового запису"
 
-#: src/pages.py:129
-msgid ""
-"A partition on this disk is mounted. Unmount it and rescan storage before "
-"continuing."
-msgstr ""
-"На цьому диску є підключений розділ. Відмонтуйте його та повторно "
-"проскануйте сховище, перш ніж продовжувати."
+#: src/pages.py:160
+msgid "A partition on this disk is mounted. Unmount it and rescan storage before continuing."
+msgstr "На цьому диску є підключений розділ. Відмонтуйте його та повторно проскануйте сховище, перш ніж продовжувати."
 
-#: src/pages.py:2899
+#: src/pages.py:3241
 msgid "ALL DATA on {disk} will be permanently erased."
 msgstr "ВСІ ДАНІ на {disk} буде остаточно видалено."
 
-#: src/pages.py:4082
+#: src/pages.py:6188
 msgid "Account security"
 msgstr "Безпека облікового запису"
 
-#: src/pages.py:2980
+#: src/pages.py:4066
 msgid "Advanced Storage"
 msgstr "Розширені налаштування сховища"
 
-#: src/pages.py:164
-msgid ""
-"After changing partitions or unmounting a volume, rescan storage and select "
-"the target again."
-msgstr ""
-"Після зміни розділів або відмонтування тому повторно проскануйте сховище та "
-"знову виберіть ціль."
+#: src/pages.py:195
+msgid "After changing partitions or unmounting a volume, rescan storage and select the target again."
+msgstr "Після зміни розділів або відмонтування тому повторно проскануйте сховище та знову виберіть ціль."
 
-#: src/pages.py:4801
-msgid ""
-"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
-"then enter password 123456."
-msgstr ""
-"Після перезавантаження відкриється MOKManager. Виберіть Enroll MOK → "
-"Continue → Yes, а потім введіть пароль 123456."
+#: src/pages.py:7042
+msgid "After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, then enter password 123456."
+msgstr "Після перезавантаження відкриється MOKManager. Виберіть Enroll MOK → Continue → Yes, а потім введіть пароль 123456."
 
-#: src/pages.py:4432
+#: src/pages.py:6636
 msgid ""
 "All partitions and data on {disk} will be destroyed.\n"
 "\n"
@@ -99,61 +83,56 @@ msgstr ""
 "Усі розділи та дані на {disk} будуть знищені.\n"
 "\n"
 
-#: src/pages.py:155
-msgid ""
-"Alternatively, you may explicitly select one entire partition to erase. "
-"Everything in that selected partition will be destroyed; it is never "
-"selected automatically."
-msgstr ""
-"Крім того, ви можете явно вибрати один цілий розділ для стирання. Усе у "
-"цьому вибраному розділі буде знищено; він ніколи не обирається автоматично."
+#: src/pages.py:186
+msgid "Alternatively, you may explicitly select one entire partition to erase. Everything in that selected partition will be destroyed; it is never selected automatically."
+msgstr "Крім того, ви можете явно вибрати один цілий розділ для стирання. Усе у цьому вибраному розділі буде знищено; він ніколи не обирається автоматично."
 
-#: src/pages.py:924 src/pages.py:986
+#: src/pages.py:991 src/pages.py:1053
 msgid "Battery power is too low for a safe installation."
 msgstr "Рівень заряду акумулятора надто низький для безпечного встановлення."
 
-#: src/pages.py:895
+#: src/pages.py:962
 msgid "Charge to at least 80% before starting the installation."
 msgstr "Перед початком встановлення зарядіть акумулятор щонайменше до 80%."
 
-#: src/pages.py:1041 src/pages.py:1016
+#: src/pages.py:1108 src/pages.py:1083
 msgid "Continue Anyway"
 msgstr "Усе одно продовжити"
 
-#: src/pages.py:1000
+#: src/pages.py:1067
 msgid "Current battery level: {percent}%"
 msgstr "Поточний рівень заряду: {percent}%"
 
-#: src/pages.py:1006
+#: src/pages.py:1073
 msgid "External power is connected."
 msgstr "Зовнішнє живлення підключено."
 
-#: src/pages.py:1008
+#: src/pages.py:1075
 msgid "External power is not connected."
 msgstr "Зовнішнє живлення не підключено."
 
-#: src/pages.py:954
+#: src/pages.py:1021
 msgid "I understand the risks and insist on installing with low battery."
-msgstr ""
-"Я розумію ризики й наполягаю на встановленні за низького заряду акумулятора."
+msgstr "Я розумію ризики й наполягаю на встановленні за низького заряду акумулятора."
 
-#: src/pages.py:894 src/pages.py:889 src/pages.py:967 src/pages.py:969
+#: src/pages.py:961 src/pages.py:956 src/pages.py:1034 src/pages.py:1036
 msgid "Low battery"
 msgstr "Низький заряд акумулятора"
 
-#: src/pages.py:948
+#: src/pages.py:1015
 msgid "Recheck"
 msgstr "Перевірити знову"
 
-#: src/main.py:110 src/pages.py:731 src/pages.py:815
+#: src/main.py:114 src/pages.py:794 src/pages.py:881
+#: assets/anduinos-installer-beta.desktop:30
 msgid "AnduinOS Installer"
 msgstr "Встановлювач AnduinOS"
 
-#: src/main.py:108
+#: src/main.py:112
 msgid "AnduinOS Installer (Development)"
 msgstr "Встановлювач AnduinOS (Розробка)"
 
-#: src/pages.py:4425
+#: src/pages.py:6623
 msgid ""
 "AnduinOS will use only the selected unallocated space on {disk}. Existing partitions will be preserved.\n"
 "\n"
@@ -161,166 +140,140 @@ msgstr ""
 "AnduinOS використовуватиме лише вибране вільне місце на диску {disk}. Існуючі розділи буде збережено.\n"
 "\n"
 
-#: src/pages.py:133
-msgid ""
-"AnduinOS will use only the selected unallocated space. The installer will "
-"not shrink or move an existing filesystem."
-msgstr ""
-"AnduinOS використовуватиме лише вибране вільне місце. Інсталятор не буде "
-"зменшувати або переміщувати існуючу файлову систему."
+#: src/pages.py:164
+msgid "AnduinOS will use only the selected unallocated space. The installer will not shrink or move an existing filesystem."
+msgstr "AnduinOS використовуватиме лише вибране вільне місце. Інсталятор не буде зменшувати або переміщувати існуючу файлову систему."
 
 #: data/languages.json:keyboard_layouts
 msgid "Arabic"
 msgstr "Арабська"
 
-#: src/pages.py:268 src/pages.py:4461 src/pages.py:817
+#: src/pages.py:322 src/pages.py:6672 src/pages.py:6708 src/pages.py:883
 msgid "Back"
 msgstr "Назад"
 
-#: src/pages.py:3014
-msgid ""
-"Before continuing: finish Windows updates, disable Fast Startup and "
-"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
-"measurements and boot order can change."
-msgstr ""
-"Перш ніж продовжити: завершіть оновлення Windows, вимкніть швидкий запуск та"
-" режим сну, а також створіть резервну копію ключа відновлення BitLocker. "
-"Налаштування EFI, Secure Boot, вимірювання TPM та порядок завантаження "
-"можуть змінитися."
+#: src/pages.py:3439
+msgid "Before continuing: finish Windows updates, disable Fast Startup and hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM measurements and boot order can change."
+msgstr "Перш ніж продовжити: завершіть оновлення Windows, вимкніть швидкий запуск та гібернацію, а також створіть резервну копію ключа відновлення BitLocker. Налаштування EFI, Secure Boot, вимірювання TPM та порядок завантаження можуть змінитися."
 
-#: src/pages.py:2470
+#: src/pages.py:2622
 msgid "BitLocker detected"
 msgstr "Виявлено BitLocker"
 
-#: src/pages.py:146
-msgid ""
-"BitLocker storage will be preserved. The installer will not unlock, resize, "
-"repair or otherwise modify it."
-msgstr ""
-"Зберігання BitLocker буде збережено. Інсталятор не буде розблоковувати, "
-"змінювати розмір, ремонтувати або інакше модифікувати його."
+#: src/pages.py:177
+msgid "BitLocker storage will be preserved. The installer will not unlock, resize, repair or otherwise modify it."
+msgstr "Зберігання BitLocker буде збережено. Інсталятор не буде розблоковувати, змінювати розмір, ремонтувати або інакше модифікувати його."
 
-#: src/pages.py:4186
+#: src/pages.py:6282 src/pages.py:6342
 msgid "Boot policy"
 msgstr "Політика завантаження"
 
-#: src/pages.py:3055
+#: src/pages.py:3480 src/pages.py:5117
 msgid "Btrfs (recommended)"
 msgstr "Btrfs (рекомендовано)"
 
-#: src/pages.py:2817
+#: src/pages.py:3158
 msgid "Btrfs — recommended"
 msgstr "Btrfs — рекомендовано"
 
-#: src/pages.py:4361
+#: src/pages.py:6554
 msgid "Cannot create installation plan"
 msgstr "Не вдається створити план встановлення"
 
-#: src/pages.py:2727
+#: src/pages.py:3068
 msgid "Choose Installation Method"
 msgstr "Оберіть метод встановлення"
 
-#: src/pages.py:2498
+#: src/pages.py:2650
 msgid "Choose one target disk. Storage settings come next."
-msgstr ""
-"Оберіть один цільовий диск. Наступним кроком будуть налаштування сховища."
+msgstr "Оберіть один цільовий диск. Наступним кроком будуть налаштування сховища."
 
-#: src/pages.py:2199
+#: src/pages.py:2351
 msgid "Choose optional software to install"
 msgstr "Оберіть додаткове програмне забезпечення для встановлення"
 
-#: src/pages.py:813
+#: src/pages.py:879
 msgid "Choose your language to begin installation"
 msgstr "Виберіть мову, щоб розпочати встановлення"
 
-#: src/pages.py:3819
+#: src/pages.py:5906
 msgid "Choose your location to set the system clock"
 msgstr "Оберіть ваше місцезнаходження, щоб налаштувати системний годинник"
 
-#: src/pages.py:4838
+#: src/pages.py:7079
 msgid "Complete"
 msgstr "Завершено"
 
-#: src/pages.py:3506 src/pages.py:3513 src/pages.py:4101 src/pages.py:3601
-#: src/pages.py:4440
+#: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
+#: src/pages.py:6644
 msgid "Computer Name"
 msgstr "Ім'я комп'ютера"
 
-#: src/pages.py:3594
+#: src/pages.py:5679
 msgid "Computer name contains invalid characters."
 msgstr "Ім'я комп'ютера містить недопустимі символи."
 
-#: src/pages.py:4589
+#: src/pages.py:6828
 msgid "Configure account, region, timezone, and machine identity"
-msgstr ""
-"Налаштування облікового запису, регіону, часового поясу та ідентифікатора "
-"комп’ютера"
+msgstr "Налаштування облікового запису, регіону, часового поясу та ідентифікатора комп’ютера"
 
-#: src/pages.py:4578
+#: src/pages.py:3339 src/pages.py:6817 src/pages.py:3323
 msgid "Configure storage and swap"
 msgstr "Налаштування сховища та файлу підкачки"
 
-#: src/pages.py:3480 src/pages.py:3488
+#: src/pages.py:5565 src/pages.py:5573
 msgid "Confirm Password"
 msgstr "Підтвердження пароля"
 
-#: src/pages.py:1939
+#: src/pages.py:2003
 msgid "Confirm your keyboard layout"
 msgstr "Підтвердіть розкладку клавіатури"
 
-#: src/main.py:153 src/pages.py:1911
+#: src/main.py:157 src/pages.py:1978
 msgid "Continue Installation"
 msgstr "Продовжити встановлення"
 
-#: src/pages.py:4574
+#: src/pages.py:6813
 msgid "Copy AnduinOS system"
 msgstr "Копіювання системи AnduinOS"
 
-#: src/pages.py:4675
+#: src/pages.py:6916
 msgid "Copy Log"
 msgstr "Копіювати журнал"
 
-#: src/pages.py:3146
+#: src/pages.py:3572
 msgid "Create a new 1 GiB AnduinOS EFI System Partition"
 msgstr "Створіть новий розділ системи EFI AnduinOS розміром 1 ГіБ"
 
-#: src/pages.py:4163
-msgid ""
-"Create and format a dedicated AnduinOS EFI System Partition inside the "
-"selected space."
-msgstr ""
-"Створіть та відформатуйте окремий розділ системи EFI AnduinOS у вибраному "
-"просторі."
+#: src/pages.py:6260
+msgid "Create and format a dedicated AnduinOS EFI System Partition inside the selected space."
+msgstr "Створіть та відформатуйте окремий розділ системи EFI AnduinOS у вибраному просторі."
 
-#: src/pages.py:3447
+#: src/pages.py:5532
 msgid "Create your user account"
 msgstr "Створіть обліковий запис користувача"
 
-#: src/pages.py:2412
+#: src/pages.py:2564
 msgid "Current disk layout"
 msgstr "Поточна структура диска"
 
-#: src/pages.py:3979
-msgid ""
-"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
-"executor or disk command can run."
-msgstr ""
-"РЕЖИМ РОЗРОБКИ — план буде перевірено та імітовано. Жодна привілейована "
-"програма виконання або команда диска не може бути запущена."
+#: src/pages.py:6071
+msgid "DEVELOPMENT MODE — the plan will be validated and simulated. No privileged executor or disk command can run."
+msgstr "РЕЖИМ РОЗРОБКИ — план буде перевірено та змодельовано. Службовий процес із підвищеними привілеями та команди роботи з диском не виконуватимуться."
 
 #: data/languages.json:keyboard_layouts
 msgid "Danish"
 msgstr "Датська"
 
-#: src/pages.py:4569
+#: src/pages.py:6808
 msgid "Detect Internet connectivity"
 msgstr "Визначити підключення до Інтернету"
 
-#: src/pages.py:4566
+#: src/pages.py:6805
 msgid "Detect firmware and Secure Boot"
 msgstr "Виявлення прошивки та Secure Boot"
 
-#: src/pages.py:4419
+#: src/pages.py:6617
 msgid ""
 "Development mode will simulate installation to {disk}. No disk data will be changed.\n"
 "\n"
@@ -328,15 +281,15 @@ msgstr ""
 "Режим розробки імітуватиме встановлення на {disk}. Дані на диску не будуть змінено.\n"
 "\n"
 
-#: src/pages.py:4923
+#: src/pages.py:7164
 msgid "Development simulation completed"
 msgstr "Імітацію розробки завершено"
 
-#: src/pages.py:4832
+#: src/pages.py:7073
 msgid "Discover AnduinOS"
 msgstr "Дізнайтеся більше про AnduinOS"
 
-#: src/pages.py:1216 src/pages.py:2218
+#: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
 msgstr "Завантажити та встановити оновлення системи під час встановлення"
 
@@ -344,23 +297,21 @@ msgstr "Завантажити та встановити оновлення си
 msgid "Dutch"
 msgstr "Нідерландська"
 
-#: src/pages.py:3073
+#: src/pages.py:4210 src/pages.py:3498 src/pages.py:5013
 msgid "EFI System Partition"
 msgstr "Розділ системи EFI"
 
-#: src/pages.py:4184
+#: src/pages.py:6341 src/pages.py:6281
 msgid "EFI policy"
 msgstr "Pолітика EFI"
 
-#: src/pages.py:2455
+#: src/pages.py:2607
 msgid "Empty disk — no partitions"
 msgstr "Порожній диск — немає розділів"
 
-#: src/pages.py:2821
+#: src/pages.py:3162
 msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
-msgstr ""
-"Увімкнути підтомови спільного простору, миттєві знімки та Disk Snapshots "
-"Manager."
+msgstr "Увімкнути підтомови спільного простору, миттєві знімки та Disk Snapshots Manager."
 
 #: data/languages.json:keyboard_layouts
 msgid "English (UK)"
@@ -370,53 +321,39 @@ msgstr "Англійська (Велика Британія)"
 msgid "English (US)"
 msgstr "Англійська (США)"
 
-#: src/pages.py:4601
+#: src/pages.py:6840
 msgid "Ensure Disk Snapshots Manager is available"
 msgstr "Переконайтеся, що Disk Snapshots Manager доступний"
 
-#: src/pages.py:4412
+#: src/pages.py:6610
 msgid "Erase Disk and Install"
 msgstr "Видалити дані диска та встановити"
 
-#: src/pages.py:2813 src/pages.py:4226
+#: src/pages.py:3154 src/pages.py:6382
 msgid "Erase every partition and all data on the selected disk."
 msgstr "Видалити кожну розділ і всі дані на вибраному диску."
 
-#: src/pages.py:4411
+#: src/pages.py:6609
 msgid "Erase the entire selected disk?"
 msgstr "Видалити всі дані на вибраному диску?"
 
-#: src/pages.py:137
-msgid ""
-"Existing Windows, recovery and data partitions remain outside the write set "
-"and will be preserved."
-msgstr ""
-"Існуючі Windows, відновлення та дані розділи залишаться поза межами запису "
-"набору і будуть збережені."
+#: src/pages.py:168
+msgid "Existing Windows, recovery and data partitions remain outside the write set and will be preserved."
+msgstr "Існуючі Windows, відновлення та дані розділи залишаться поза межами запису набору і будуть збережені."
 
-#: src/pages.py:2945
-msgid ""
-"Existing partitions were detected. The first two choices delete them; "
-"Advanced is the preservation path."
-msgstr ""
-"Був виявлено існуючі розділи. Перші два варіанти видаляють їх; Розширений є "
-"шляхом збереження."
+#: src/pages.py:3287
+msgid "Existing partitions were detected. The first two choices delete them; Advanced is the preservation path."
+msgstr "Був виявлено існуючі розділи. Перші два варіанти видаляють їх; Розширений є шляхом збереження."
 
-#: src/pages.py:4446
-msgid ""
-"Existing partitions will be preserved. New AnduinOS partitions will be "
-"created only in the selected unallocated extent; EFI vendor files and the "
-"AnduinOS firmware boot entry may be updated."
-msgstr ""
-"Існуючі розділи будуть збережені. Нові розділи AnduinOS будуть створені "
-"тільки у вибраному невиділеному обсязі; файли постачальника EFI і записовий "
-"пункт прошивки AnduinOS можуть бути оновлені."
+#: src/pages.py:6650
+msgid "Existing partitions will be preserved. New AnduinOS partitions will be created only in the selected unallocated extent; EFI vendor files and the AnduinOS firmware boot entry may be updated."
+msgstr "Існуючі розділи будуть збережені. Нові розділи AnduinOS будуть створені тільки у вибраному невиділеному обсязі; файли постачальника EFI і записовий пункт прошивки AnduinOS можуть бути оновлені."
 
-#: src/pages.py:3052 src/pages.py:4049
+#: src/pages.py:3477 src/pages.py:6155 src/pages.py:5127
 msgid "Filesystem"
 msgstr "Файлова система"
 
-#: src/pages.py:4613
+#: src/pages.py:6852
 msgid "Finalize target environment"
 msgstr "Завершення налаштування цільового середовища"
 
@@ -424,7 +361,7 @@ msgstr "Завершення налаштування цільового сер�
 msgid "Finnish"
 msgstr "Фінська"
 
-#: src/pages.py:4182
+#: src/pages.py:6340 src/pages.py:6279
 msgid "Formats"
 msgstr "Формати"
 
@@ -432,7 +369,7 @@ msgstr "Формати"
 msgid "French"
 msgstr "Французька"
 
-#: src/pages.py:3462 src/pages.py:3464
+#: src/pages.py:5547 src/pages.py:5549
 msgid "Full Name"
 msgstr "Повне ім'я"
 
@@ -444,26 +381,19 @@ msgstr "Німецька"
 msgid "Greek"
 msgstr "Грецька"
 
-#: src/pages.py:111
-msgid ""
-"Guided coexistence requires a system booted in UEFI mode and a GPT target "
-"disk. This disk cannot continue in guided mode."
-msgstr ""
-"Кероване співіснування вимагає завантаження системи в режимі UEFI та диска з"
-" ціллю GPT. Цей диск не може продовжувати роботу в керованому режимі."
+#: src/pages.py:142
+msgid "Guided coexistence requires a system booted in UEFI mode and a GPT target disk. This disk cannot continue in guided mode."
+msgstr "Кероване співіснування вимагає завантаження системи в режимі UEFI та диска з ціллю GPT. Цей диск не може продовжувати роботу в керованому режимі."
 
-#: src/pages.py:4131
-msgid ""
-"Guided storage selection is missing. Rescan and select the target again."
-msgstr ""
-"Вибір керованого сховища відсутній. Повторно проскануйте та виберіть ціль ще"
-" раз."
+#: src/pages.py:6393
+msgid "Guided storage selection is missing. Rescan and select the target again."
+msgstr "Вибір керованого сховища відсутній. Повторно проскануйте та виберіть ціль ще раз."
 
 #: data/languages.json:keyboard_layouts
 msgid "Hindi (India)"
 msgstr "Хінді (Індія)"
 
-#: src/pages.py:2741
+#: src/pages.py:3082
 msgid "How should AnduinOS use this disk?"
 msgstr "Як AnduinOS має використовувати цей диск?"
 
@@ -471,87 +401,83 @@ msgstr "Як AnduinOS має використовувати цей диск?"
 msgid "Indonesian"
 msgstr "Індонезійська"
 
-#: src/pages.py:4498
+#: src/pages.py:6737
 msgid "Install"
 msgstr "Встановити"
 
-#: src/pages.py:4559 src/pages.py:1221 src/pages.py:4125
+#: src/pages.py:6798 src/pages.py:1288 src/pages.py:6231
 msgid "Install input method"
 msgstr "Встановити метод введення"
 
-#: src/pages.py:625
+#: src/pages.py:684
 msgid "Install {language} input method: {name}"
 msgstr "Встановити метод введення для мови {language}: {name}"
 
-#: src/pages.py:4409 src/pages.py:4496
+#: src/pages.py:3405 src/pages.py:6604 src/pages.py:6733
 msgid "Install Alongside"
 msgstr "Встановити поруч"
 
-#: src/pages.py:4169
+#: src/pages.py:6266
 msgid "Install alongside"
 msgstr "Встановити поруч"
 
-#: src/pages.py:4608
+#: src/pages.py:6847
 msgid "Install bootloader"
 msgstr "Встановити завантажувач"
 
-#: src/pages.py:4611
+#: src/pages.py:6850
 msgid "Check systems on other disks"
 msgstr "Перевірити системи на інших дисках"
 
-#: src/pages.py:1217 src/pages.py:4603
+#: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
 msgstr "Встановити драйвери обладнання"
 
-#: src/pages.py:4408
+#: src/pages.py:6603
 msgid "Install in the selected free space?"
 msgstr "Встановити у вибраний вільний простір?"
 
-#: src/pages.py:4596
+#: src/pages.py:6835
 msgid "Ensure required language packs are installed"
 msgstr "Переконатися, що необхідні мовні пакунки встановлено"
 
-#: src/pages.py:4599
+#: src/pages.py:6838
 msgid "Install system updates"
 msgstr "Встановити оновлення системи"
 
-#: src/pages.py:2229
+#: src/pages.py:2381
 msgid "Install third-party drivers for this device"
 msgstr "Встановити сторонні драйвери для цього пристрою"
 
-#: src/pages.py:5093 src/pages.py:5095 src/pages.py:4940 src/pages.py:4950
+#: src/pages.py:7334 src/pages.py:7336 src/pages.py:7181 src/pages.py:7191
 msgid "Installation Complete"
 msgstr "Встановлення завершено"
 
-#: src/pages.py:4970
+#: src/pages.py:7211
 msgid "Installation Failed"
 msgstr "Помилка встановлення"
 
-#: src/pages.py:4639
+#: src/pages.py:6878
 msgid "Installation Steps"
 msgstr "Кроки встановлення"
 
-#: src/pages.py:160
-msgid ""
-"Installation cannot continue with this selection. There is no force-continue"
-" option around storage safety checks."
-msgstr ""
-"Інсталяцію не можна продовжити з цим вибором. Немає опції примусового "
-"продовження для перевірок безпеки сховища."
+#: src/pages.py:191
+msgid "Installation cannot continue with this selection. There is no force-continue option around storage safety checks."
+msgstr "Інсталяцію не можна продовжити з цим вибором. Немає опції примусового продовження для перевірок безпеки сховища."
 
-#: src/pages.py:4919 src/pages.py:4985
+#: src/pages.py:7160 src/pages.py:7226
 msgid "Installation complete"
 msgstr "Встановлення завершено"
 
-#: src/pages.py:4968
+#: src/pages.py:7209
 msgid "Installation failed"
 msgstr "Помилка встановлення"
 
-#: src/main.py:145
+#: src/main.py:149
 msgid "Installation in progress"
 msgstr "Встановлення виконується"
 
-#: src/pages.py:4547 src/pages.py:4541
+#: src/pages.py:6786 src/pages.py:6780
 msgid "Installing AnduinOS"
 msgstr "Встановлення AnduinOS"
 
@@ -563,19 +489,19 @@ msgstr "Італійська"
 msgid "Japanese (JIS keyboard)"
 msgstr "Японська (клавіатура JIS)"
 
-#: src/pages.py:4040
+#: src/pages.py:6147
 msgid "Keyboard"
 msgstr "Клавіатура"
 
-#: src/pages.py:1938 src/pages.py:1932 src/pages.py:2075
+#: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
 msgid "Keyboard Layout"
 msgstr "Розкладка клавіатури"
 
-#: src/pages.py:2031
+#: src/pages.py:2077
 msgid "Layout Variant"
 msgstr "Варіант розкладки"
 
-#: src/pages.py:4582
+#: src/pages.py:6821
 msgid "Configure physical keyboard layout"
 msgstr "Налаштувати фізичну розкладку клавіатури"
 
@@ -583,103 +509,91 @@ msgstr "Налаштувати фізичну розкладку клавіат�
 msgid "Korean"
 msgstr "Корейська"
 
-#: src/pages.py:4039
+#: src/pages.py:6146
 msgid "Language"
 msgstr "Мова"
 
-#: src/pages.py:2472
+#: src/pages.py:2624
 msgid "Live USB — excluded"
 msgstr "Живий USB — виключено"
 
-#: src/pages.py:4573
+#: src/pages.py:6812
 msgid "Mount target filesystems"
 msgstr "Підключення цільових файлових систем"
 
-#: src/pages.py:851
+#: src/pages.py:918
 msgid "Navigation error"
 msgstr "Помилка навігації"
 
-#: src/pages.py:4180 src/pages.py:4229
+#: src/pages.py:4232 src/pages.py:6339 src/pages.py:6277 src/pages.py:6385
 msgid "New partitions"
 msgstr "Нові розділи"
 
-#: src/pages.py:261 src/pages.py:818 src/pages.py:1016
+#: src/pages.py:315 src/pages.py:884 src/pages.py:1083
 msgid "Next"
 msgstr "Далі"
 
-#: src/pages.py:4756
+#: src/pages.py:6997
 msgid "Next slide"
 msgstr "Наступний слайд"
 
-#: src/pages.py:2389
+#: src/pages.py:2541
 msgid "No partition table"
 msgstr "Немає таблиці розділів"
 
-#: src/pages.py:2631
+#: src/pages.py:2782
 msgid "No suitable disks found."
 msgstr "Не знайдено придатних дисків."
 
-#: src/pages.py:170
-msgid ""
-"No suitable unallocated space was found. To protect your data, create "
-"unallocated space with Windows Disk Management, then boot the installer "
-"again and rescan the disk."
-msgstr ""
-"Не знайдено підходящого вільного місця. Щоб захистити ваші дані, створіть "
-"вільне місце за допомогою засобу керування дисками Windows, потім "
-"перезавантажте інсталятор і знову відскануйте диск."
+#: src/pages.py:201
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with Windows Disk Management, then boot the installer again and rescan the disk."
+msgstr "Не знайдено підходящого вільного місця. Щоб захистити ваші дані, створіть вільне місце за допомогою засобу керування дисками Windows, потім перезавантажте інсталятор і знову відскануйте диск."
 
-#: src/pages.py:175
-msgid ""
-"No suitable unallocated space was found. To protect your data, create "
-"unallocated space with a partitioning tool, then boot the installer again "
-"and rescan the disk."
-msgstr ""
-"Не знайдено підходящого вільного місця. Щоб захистити ваші дані, створіть "
-"вільне місце за допомогою засобу розділення диска, потім перезавантажте "
-"інсталятор і знову відскануйте диск."
+#: src/pages.py:206
+msgid "No suitable unallocated space was found. To protect your data, create unallocated space with a partitioning tool, then boot the installer again and rescan the disk."
+msgstr "Не знайдено підходящого вільного місця. Щоб захистити ваші дані, створіть вільне місце за допомогою засобу розділення диска, потім перезавантажте інсталятор і знову відскануйте диск."
 
 #: data/languages.json:keyboard_layouts
 msgid "Norwegian"
 msgstr "Норвезька"
 
-#: src/pages.py:1124 src/pages.py:1375 src/pages.py:4370 src/pages.py:854
+#: src/pages.py:1191 src/pages.py:1442 src/pages.py:6563 src/pages.py:921
 msgid "OK"
 msgstr "Гаразд"
 
-#: src/pages.py:4835
+#: src/pages.py:7076
 msgid "Output"
 msgstr "Вивід"
 
-#: src/pages.py:4973 src/pages.py:5028
+#: src/pages.py:7214 src/pages.py:7269
 msgid "Output • Error"
 msgstr "Вивід • Помилка"
 
-#: src/pages.py:5023
+#: src/pages.py:7264
 msgid "Output • {count} warning(s)"
 msgstr "Вивід • {count} попередженнь(ня)"
 
-#: src/pages.py:2453
+#: src/pages.py:2605
 msgid "Partition details unavailable"
 msgstr "Деталі розділу недоступні"
 
-#: src/pages.py:3476 src/pages.py:3487 src/pages.py:1466 src/pages.py:1525
+#: src/pages.py:5561 src/pages.py:5572 src/pages.py:1533 src/pages.py:1592
 msgid "Password"
 msgstr "Пароль"
 
-#: src/pages.py:3584
+#: src/pages.py:5669
 msgid "Password must be at least 6 characters."
 msgstr "Пароль має містити щонайменше 6 символів."
 
-#: src/pages.py:4048
+#: src/pages.py:6154
 msgid "Platform"
 msgstr "Платформа"
 
-#: src/pages.py:4548
+#: src/pages.py:6787
 msgid "Please do not turn off your computer"
 msgstr "Будь ласка, не вимикайте комп’ютер"
 
-#: src/pages.py:3965
+#: src/pages.py:6055
 msgid "Please review your choices before proceeding"
 msgstr "Будь ласка, перевірте ваші виборі перед продовженням"
 
@@ -695,86 +609,78 @@ msgstr "Португальська"
 msgid "Portuguese (Brazil)"
 msgstr "Португальська (Бразилія)"
 
-#: src/pages.py:4594
+#: src/pages.py:6833
 msgid "Prepare Secure Boot"
 msgstr "Підготовка Secure Boot"
 
-#: src/pages.py:4572
+#: src/pages.py:6811
 msgid "Prepare installation disk"
 msgstr "Підготовка диска встановлення"
 
-#: src/pages.py:4579
+#: src/pages.py:6818
 msgid "Prepare target environment"
 msgstr "Підготовка цільового середовища"
 
-#: src/pages.py:4871
+#: src/pages.py:7112
 msgid "Preparing installation…"
 msgstr "Підготовка до встановлення…"
 
-#: src/pages.py:4175
+#: src/pages.py:6336 src/pages.py:6272
 msgid "Preserved partitions"
 msgstr "Збережені розділи"
 
-#: src/pages.py:4750
+#: src/pages.py:6991
 msgid "Previous slide"
 msgstr "Попередній слайд"
 
-#: src/pages.py:3964 src/pages.py:3958
+#: src/pages.py:6054 src/pages.py:6048
 msgid "Ready to Install"
 msgstr "Готовий до встановлення"
 
-#: src/pages.py:4811
+#: src/pages.py:7052
 msgid "Reboot Now"
 msgstr "Перезавантажити зараз"
 
-#: src/pages.py:4598
+#: src/pages.py:6837
 msgid "Refresh package indexes"
 msgstr "Оновити індекси пакетів"
 
-#: src/pages.py:4580
+#: src/pages.py:6819
 msgid "Remove live-session components"
 msgstr "Видалення компонентів сеансу Live"
 
-#: src/pages.py:4951 src/pages.py:4942
+#: src/pages.py:7192 src/pages.py:7183
 msgid "Remove the installation media and restart your computer"
 msgstr "Видаліть носій встановлення та перезавантажте комп'ютер"
 
-#: src/pages.py:1177 src/pages.py:1205 src/pages.py:2220 src/pages.py:675
-#: src/pages.py:1362 src/pages.py:2233
-msgid ""
-"Requires an Internet connection. The base installation remains available "
-"when offline."
-msgstr ""
-"Вимагає підключення до Інтернету. Базове встановлення залишається доступним "
-"автономно."
+#: src/pages.py:1244 src/pages.py:1272 src/pages.py:2372 src/pages.py:734
+#: src/pages.py:1429 src/pages.py:2385
+msgid "Requires an Internet connection. The base installation remains available when offline."
+msgstr "Вимагає підключення до Інтернету. Базове встановлення залишається доступним автономно."
 
-#: src/pages.py:2550
+#: src/pages.py:2701
 msgid "Rescan Storage"
 msgstr "Повторне сканування сховища"
 
-#: src/pages.py:3101
+#: src/pages.py:3526
 msgid "Rescan and Reselect Disk"
 msgstr "Пересканувати та вибрати диск знову"
 
-#: src/pages.py:4809
+#: src/pages.py:7050
 msgid "Restart and Enroll Secure Boot Key"
 msgstr "Перезавантажити та зареєструвати ключ Secure Boot"
 
-#: src/pages.py:4960
+#: src/pages.py:7201
 msgid "Restart is disabled in development protection mode"
 msgstr "Перезавантаження відключено в режимі захисту розробки"
 
-#: src/pages.py:3150
+#: src/pages.py:3576 src/pages.py:5081
 msgid "Reuse {path} ({size})"
 msgstr "Використати повторно {path} ({size})"
 
-#: src/pages.py:4155
-msgid ""
-"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
-"before writing."
-msgstr ""
-"Використати повторно {path}; ніколи не форматувати; перевірити стан FAT, "
-"ідентифікатор та наявність 64 МБ вільного місця перед записом."
+#: src/pages.py:6254
+msgid "Reuse {path}; never format it; verify FAT health, identity and 64 MiB free before writing."
+msgstr "Використати повторно {path}; ніколи не форматувати; перевірити стан FAT, ідентифікатор та наявність 64 МБ вільного місця перед записом."
 
 #: data/languages.json:keyboard_layouts
 msgid "Romanian"
@@ -784,57 +690,55 @@ msgstr "Румунська"
 msgid "Russian"
 msgstr "Українська"
 
-#: src/pages.py:4679
+#: src/pages.py:6920
 msgid "Save Log"
 msgstr "Зберегти журнал"
 
-#: src/pages.py:4609
+#: src/pages.py:6848
 msgid "Schedule MOK enrollment"
 msgstr "Запланування реєстрації MOK"
 
-#: src/pages.py:3831
+#: src/pages.py:5918
 msgid "Search timezones…"
 msgstr "Пошук часових поясів…"
 
-#: src/pages.py:4069
+#: src/pages.py:6175
 msgid "Secure Boot enrollment"
 msgstr "Реєстрація Secure Boot"
 
-#: src/pages.py:2497 src/pages.py:2491
+#: src/pages.py:2649 src/pages.py:2643
 msgid "Select Installation Disk"
 msgstr "Вибір диска встановлення"
 
-#: src/pages.py:3818 src/pages.py:3812
+#: src/pages.py:5905 src/pages.py:5899
 msgid "Select Timezone"
 msgstr "Вибір часового поясу"
 
-#: src/pages.py:4592
+#: src/pages.py:6831
 msgid "Select fastest package mirror"
 msgstr "Вибір найшвидшого дзеркала пакетів"
 
-#: src/pages.py:3884
+#: src/pages.py:5974
 msgid "Selected timezone"
 msgstr "Обраний часовий пояс"
 
-#: src/pages.py:4170
+#: src/pages.py:6267
 msgid "Selected unallocated space"
 msgstr "Вибрано невиділений простір"
 
-#: src/pages.py:2239
+#: src/pages.py:2391
 msgid "Some drivers are proprietary or otherwise non-free software."
-msgstr ""
-"Деякі драйвери є власницькими або інакше не вільним програмним "
-"забезпеченням."
+msgstr "Деякі драйвери є власницькими або інакше не вільним програмним забезпеченням."
 
 #: data/languages.json:keyboard_layouts
 msgid "Spanish"
 msgstr "Іспанська"
 
-#: src/pages.py:4046
+#: src/pages.py:6152
 msgid "Stable disk identity"
 msgstr "Стабільна ідентичність диска"
 
-#: src/pages.py:4437
+#: src/pages.py:6641
 msgid ""
 "Stable identity: {stable_id}\n"
 "\n"
@@ -842,39 +746,39 @@ msgstr ""
 "Стабільна ідентичність: {stable_id}\n"
 "\n"
 
-#: src/pages.py:2380
+#: src/pages.py:2532
 msgid "Storage Device"
 msgstr "Накопичувач"
 
-#: src/pages.py:4168 src/pages.py:4224
+#: src/pages.py:6265 src/pages.py:6333 src/pages.py:6380
 msgid "Storage mode"
 msgstr "Режим зберігання"
 
-#: src/pages.py:4050
+#: src/pages.py:6156
 msgid "Subvolumes"
 msgstr "Підтомі"
 
-#: src/pages.py:4268
+#: src/pages.py:2968 src/pages.py:3851
 msgid "Swap"
-msgstr "Файл підкачки"
+msgstr "Область підкачки"
 
 #: data/languages.json:keyboard_layouts
 msgid "Swedish"
 msgstr "Шведська"
 
-#: src/pages.py:4051
+#: src/pages.py:6157
 msgid "System updates"
 msgstr "Оновлення системи"
 
-#: src/pages.py:4042
+#: src/pages.py:6148
 msgid "Target Disk"
 msgstr "Цільовий диск"
 
-#: src/pages.py:2993 src/pages.py:3260
+#: src/pages.py:3418 src/pages.py:3686 src/pages.py:4091
 msgid "Target: {disk} ({size} — {model})"
 msgstr "Мета: {disk} ({size} — {model})"
 
-#: src/pages.py:1964 src/pages.py:2076
+#: src/pages.py:2083 src/pages.py:2228
 msgid "Test your keyboard here…"
 msgstr "Перевірте клавіатуру тут…"
 
@@ -882,120 +786,75 @@ msgstr "Перевірте клавіатуру тут…"
 msgid "Thai"
 msgstr "Тайська"
 
-#: src/pages.py:120
-msgid ""
-"The GPT disk or one of its partitions has no unique stable identifier. "
-"Guided coexistence cannot safely authorize preservation or writes on this "
-"disk."
-msgstr ""
-"Disk GPT або одна з його розділів не має унікального стабільного "
-"ідентифікатора. Керований співіснування не може безпечно авторизувати "
-"збереження або записи на цьому диску."
+#: src/pages.py:151
+msgid "The GPT disk or one of its partitions has no unique stable identifier. Guided coexistence cannot safely authorize preservation or writes on this disk."
+msgstr "Disk GPT або одна з його розділів не має унікального стабільного ідентифікатора. Керований співіснування не може безпечно авторизувати збереження або записи на цьому диску."
 
-#: src/pages.py:115
-msgid ""
-"The complete partition map and free-space geometry could not be read "
-"consistently. No space on this disk is authorized for installation."
-msgstr ""
-"Повну карту розділів та геометрію вільного простору не вдалося читати "
-"узгоджено. Жоден простір на цьому диску не авторизований для встановлення."
+#: src/pages.py:146
+msgid "The complete partition map and free-space geometry could not be read consistently. No space on this disk is authorized for installation."
+msgstr "Повну карту розділів та геометрію вільного простору не вдалося читати узгоджено. Жоден простір на цьому диску не авторизований для встановлення."
 
-#: src/pages.py:141
-msgid ""
-"The existing EFI System Partition is only a candidate. Health and free-space"
-" checks must pass before it can be reused, and it will never be formatted."
-msgstr ""
-"Існуючий розділ EFI System Partition є лише кандидатом. Перевірки стану та "
-"вільного місця мають бути успішними, перш ніж його можна буде повторно "
-"використати, і він ніколи не буде відформатований."
+#: src/pages.py:172
+msgid "The existing EFI System Partition is only a candidate. Health and free-space checks must pass before it can be reused, and it will never be formatted."
+msgstr "Існуючий розділ EFI System Partition є лише кандидатом. Перевірки стану та вільного місця мають бути успішними, перш ніж його можна буде повторно використати, і він ніколи не буде відформатований."
 
-#: src/pages.py:4926
-msgid ""
-"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot"
-" state, or installed system was changed."
-msgstr ""
-"План встановлення є валідним. Жоден диск, файлова система, завантажувач, "
-"стан Secure Boot або встановлена система не були змінено."
+#: src/pages.py:7167
+msgid "The installation plan is valid. No disk, filesystem, bootloader, Secure Boot state, or installed system was changed."
+msgstr "План встановлення є валідним. Жоден диск, файлова система, завантажувач, стан Secure Boot або встановлена система не були змінено."
 
-#: src/main.py:147
+#: src/main.py:151
 msgid "The installer cannot be closed while it is modifying the target disk."
 msgstr "Встановлювач не можна закрити під час модифікації цільового диска."
 
-#: src/pages.py:150
-msgid ""
-"The installer will not mount, repair or infer the safety of Windows volumes "
-"from hibernation or Fast Startup state. Any required Windows maintenance "
-"must be completed in Windows."
-msgstr ""
-"Встановлювач не монтуватиме, не ремонтуватиме та не визначатиме безпеку "
-"томів Windows зі стану гибернації або Швидкого запуску. Будь-яке необхідне "
-"обслуговування Windows має бути завершено в Windows."
+#: src/pages.py:181
+msgid "The installer will not mount, repair or infer the safety of Windows volumes from hibernation or Fast Startup state. Any required Windows maintenance must be completed in Windows."
+msgstr "Встановлювач не монтуватиме, не ремонтуватиме та не оцінюватиме безпеку томів Windows на основі стану гібернації або швидкого запуску. Будь-яке необхідне обслуговування Windows має бути завершено в Windows."
 
-#: src/pages.py:4443
+#: src/pages.py:6647
 msgid "The privileged executor is disabled."
-msgstr "Привілейований виконавець відключений."
+msgstr "Службовий процес із підвищеними привілеями вимкнено."
 
-#: src/pages.py:3228
-msgid ""
-"The selected disk changed or disappeared. Return to the disk page and select"
-" it again. {error}"
-msgstr ""
-"Вибраний диск змінився або зник. Поверніться на сторінку диска та виберіть "
-"його знову. {error}"
+#: src/pages.py:3654
+msgid "The selected disk changed or disappeared. Return to the disk page and select it again. {error}"
+msgstr "Вибраний диск змінився або зник. Поверніться на сторінку диска та виберіть його знову. {error}"
 
-#: src/pages.py:3241
+#: src/pages.py:3667
 msgid "The selected disk size changed. Return and select it again."
 msgstr "Розмір вибраного диска змінився. Поверніться та виберіть його знову."
 
-#: src/pages.py:3251
-msgid ""
-"The selected disk topology changed. Review the disk and installation method "
-"again."
-msgstr ""
-"Топологія вибраного диска змінилася. Перевірте диск та метод встановлення ще"
-" раз."
+#: src/pages.py:3677
+msgid "The selected disk topology changed. Review the disk and installation method again."
+msgstr "Топологія вибраного диска змінилася. Перевірте диск та метод встановлення ще раз."
 
-#: src/pages.py:3580
+#: src/pages.py:5665
 msgid "The two passwords do not match."
 msgstr "Два паролі не збігаються."
 
-#: src/pages.py:4057
+#: src/pages.py:6163
 msgid "Third-party drivers"
 msgstr "Сторонні драйвери"
 
-#: src/pages.py:3021
-msgid ""
-"This advanced path preserves existing partitions but changes the selected "
-"disk's partition table and the machine's EFI boot state."
-msgstr ""
-"Цей розширений шлях зберігає існуючі розділи, але змінює таблицю розділів "
-"вибраного диска та стан завантаження EFI машини."
+#: src/pages.py:3446
+msgid "This advanced path preserves existing partitions but changes the selected disk's partition table and the machine's EFI boot state."
+msgstr "Цей розширений шлях зберігає існуючі розділи, але змінює таблицю розділів вибраного диска та стан завантаження EFI машини."
 
-#: src/pages.py:125
-msgid ""
-"This disk contains an active mapper, array or other nested block-device "
-"topology that guided coexistence does not support."
-msgstr ""
-"Цей диск містить активний мапер, масив або іншу вкладену топологію блокового"
-" пристрою, яку підтримка спільного використання не підтримує."
+#: src/pages.py:156
+msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
+msgstr "Цей диск містить активний мапер, масив або іншу вкладену топологію блокового пристрою, яку підтримка спільного використання не підтримує."
 
-#: src/pages.py:2935
-msgid ""
-"This disk is too small for whole-disk installation. Advanced may continue "
-"only if suitable unallocated space exists."
-msgstr ""
-"Цей диск занадто малий для повного встановлення на диск. Розширений режим "
-"може продовжити лише за наявності відповідного невизначеного місця."
+#: src/pages.py:3277
+msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+msgstr "Цей диск занадто малий для повного встановлення на диск. Розширений режим може продовжити лише за наявності відповідного невизначеного місця."
 
-#: src/pages.py:4454
+#: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
 msgstr "Цей встановлювач не стискає та не зберігає інші системи."
 
-#: src/pages.py:4103
+#: src/pages.py:6209
 msgid "Timezone"
 msgstr "Часовий пояс"
 
-#: src/pages.py:2474
+#: src/pages.py:2626
 msgid "Too small"
 msgstr "Занадто мало"
 
@@ -1007,71 +866,67 @@ msgstr "Турецька"
 msgid "Ukrainian"
 msgstr "Українська"
 
-#: src/pages.py:3065
+#: src/pages.py:3490
 msgid "Unallocated space"
 msgstr "Невиділений простір"
 
-#: src/pages.py:2445
+#: src/pages.py:2597
 msgid "Unallocated · {size}"
 msgstr "Невиділено · {size}"
 
-#: src/pages.py:4014 src/pages.py:1710
+#: src/pages.py:6106 src/pages.py:1777
 msgid "Unavailable: {error}"
 msgstr "Недоступно: {error}"
 
-#: src/pages.py:2432
+#: src/pages.py:2584
 msgid "Unknown filesystem"
 msgstr "Невідома файлова система"
 
-#: src/pages.py:4614
+#: src/pages.py:6853
 msgid "Unmount installed system"
 msgstr "Відключення встановленої системи"
 
-#: src/pages.py:2198 src/pages.py:1196 src/pages.py:2192
+#: src/pages.py:2350 src/pages.py:1263 src/pages.py:2344
 msgid "Updates and Drivers"
 msgstr "Оновлення та драйвери"
 
-#: src/pages.py:2986
+#: src/pages.py:3411
 msgid "Use only existing unallocated space on the selected disk."
 msgstr "Використовувати лише наявний невиділений простір на вибраному диску."
 
-#: src/pages.py:4079
+#: src/pages.py:6185
 msgid "User"
 msgstr "Користувач"
 
-#: src/pages.py:3446 src/pages.py:3440
+#: src/pages.py:5531 src/pages.py:5525
 msgid "User Account"
 msgstr "Обліковий запис користувача"
 
-#: src/pages.py:3468 src/pages.py:3472
+#: src/pages.py:5553 src/pages.py:5557
 msgid "Username"
 msgstr "Ім'я користувача"
 
-#: src/pages.py:3568
-msgid ""
-"Username must start with a lowercase ASCII letter and contain only lowercase"
-" ASCII letters or digits (maximum 16 characters)."
-msgstr ""
-"Ім'я користувача має починатися з малої літери ASCII та містити лише малі "
-"літери ASCII або цифри (максимум 16 символів)."
+#: src/pages.py:5653
+msgid "Username must start with a lowercase ASCII letter and contain only lowercase ASCII letters or digits (maximum 16 characters)."
+msgstr "Ім'я користувача має починатися з малої літери ASCII та містити лише малі літери ASCII або цифри (максимум 16 символів)."
 
-#: src/pages.py:2832
+#: src/pages.py:3173
 msgid "Uses a traditional single root filesystem."
 msgstr "Використовує традиційну файлову систему з одним коренем."
 
-#: src/pages.py:4406
+#: src/pages.py:6601
 msgid "Validate Plan (No Installation)"
 msgstr "Перевірити план (без встановлення)"
 
-#: src/pages.py:4405
+#: src/pages.py:6600
 msgid "Validate this installation plan?"
 msgstr "Перевірити цей план встановлення?"
 
-#: src/pages.py:4606
+#: src/pages.py:6845
 msgid "Verify kernel module signatures"
 msgstr "Перевірка підписів модулів ядра"
 
-#: src/pages.py:4571
+#: src/pages.py:6810
 msgid "Verify target disk isolation"
 msgstr "Перевірка ізоляції цільового диска"
 
@@ -1079,891 +934,819 @@ msgstr "Перевірка ізоляції цільового диска"
 msgid "Vietnamese"
 msgstr "В'єтнамська"
 
-#: src/pages.py:811
+#: src/pages.py:877
 msgid "Welcome to AnduinOS"
 msgstr "Ласкаво просимо до AnduinOS"
 
-#: src/pages.py:2468
+#: src/pages.py:2620
 msgid "Windows detected"
 msgstr "Windows виявлено"
 
-#: src/pages.py:4188
-msgid ""
-"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
-"AnduinOS NVRAM entry."
-msgstr ""
-"Записувати лише EFI/AnduinOS, не перезаписувати EFI/BOOT та вимагати "
-"перевіреного запису AnduinOS у NVRAM."
+#: src/pages.py:6284
+msgid "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified AnduinOS NVRAM entry."
+msgstr "Записувати лише EFI/AnduinOS, не перезаписувати EFI/BOOT та вимагати перевіреного запису AnduinOS у NVRAM."
 
-#: src/pages.py:4072
+#: src/pages.py:6178
 msgid "create a machine-local MOK; enroll after reboot with password 123456"
-msgstr ""
-"створити локальний для машини MOK; зареєструвати після перезавантаження з "
-"паролем 123456"
+msgstr "створити локальний для машини MOK; зареєструвати після перезавантаження з паролем 123456"
 
-#: src/pages.py:4059
+#: src/pages.py:6165
 msgid "detect and install (may include non-free software)"
-msgstr ""
-"виявити та встановити (може включати не вільне програмне забезпечення)"
+msgstr "виявити та встановити (може включати не вільне програмне забезпечення)"
 
-#: src/pages.py:4121 src/pages.py:4055 src/pages.py:4061 src/pages.py:4067
+#: src/pages.py:6227 src/pages.py:6161 src/pages.py:6167 src/pages.py:6173
 msgid "do not install"
 msgstr "не встановлювати"
 
-#: src/pages.py:4053 src/pages.py:4065
+#: src/pages.py:6159 src/pages.py:6171
 msgid "download and install"
 msgstr "завантажити та встановити"
 
-#: src/pages.py:3055
+#: src/pages.py:3480 src/pages.py:5118
 msgid "ext4 (classic)"
 msgstr "ext4 (класична)"
 
-#: src/pages.py:2829
+#: src/pages.py:3170
 msgid "ext4 — classic"
 msgstr "ext4 — класичний"
 
-#: src/pages.py:4077
+#: src/pages.py:6183
 msgid "not required"
 msgstr "не обов'язково"
 
-#: src/pages.py:4083
+#: src/pages.py:6189
 msgid "password required for login"
 msgstr "потрібен пароль для входу"
 
-#: src/pages.py:4024
+#: src/pages.py:6117
 msgid "single ext4 root filesystem"
 msgstr "єдина файлова система ext4 кореневого каталогу"
 
-#: src/pages.py:4005
+#: src/pages.py:6097
 msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
 msgstr "{architecture} / {firmware} / Безпечне завантаження: {secure_boot}"
 
-#: src/pages.py:4176
+#: src/pages.py:6273
 msgid "{count}: {paths}"
 msgstr "{count}: {paths}"
 
-#: src/pages.py:4139
+#: src/pages.py:6238
 msgid "{name}: {start}–{end} MiB"
 msgstr "{name}: {start}–{end} MiB"
 
-#: src/pages.py:4147
+#: src/pages.py:6246 src/pages.py:6313
 msgid "{path} as {filesystem}"
 msgstr "{path} як {filesystem}"
 
-#: src/pages.py:4171
+#: src/pages.py:6268
 msgid "{size} at {offset}"
 msgstr "{size} на {offset}"
 
-#: src/pages.py:3288
+#: src/pages.py:3714
 msgid "{size} unallocated at {offset}"
 msgstr "{size} невиділено на {offset}"
 
-#: src/pages.py:5031
+#: src/pages.py:7272
 msgid "{step} failed"
 msgstr "Помилка кроку {step}"
 
-#: src/pages.py:4303
-msgid ""
-"⚠ Only the selected unallocated space will be partitioned and formatted. "
-"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
-"firmware boot entry may change. This installer will not shrink Windows for "
-"you."
-msgstr ""
-"⚠ Розділення та форматування буде виконано лише для вибраної невиділеної "
-"області. Існуючі розділи збережуться, але файли EFI/AnduinOS та запис "
-"автозавантаження прошивки AnduinOS можуть змінитися. Цей установщик не "
-"стисне Windows за вас."
+#: src/pages.py:6488
+msgid "⚠ Only the selected unallocated space will be partitioned and formatted. Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS firmware boot entry may change. This installer will not shrink Windows for you."
+msgstr "⚠ Розділення та форматування буде виконано лише для вибраної невиділеної області. Існуючі розділи збережуться, але файли EFI/AnduinOS та запис автозавантаження прошивки AnduinOS можуть змінитися. Цей установщик не стисне Windows за вас."
 
-#: src/pages.py:4311
-msgid ""
-"⚠ This will erase ALL data on the selected disk. This action cannot be "
-"undone."
+#: src/pages.py:6504
+msgid "⚠ This will erase ALL data on the selected disk. This action cannot be undone."
 msgstr "⚠ Це видалить ВСІ дані на вибраному диску. Цю дію не можна скасувати."
 
-#: src/pages.py:1176 src/pages.py:667 src/pages.py:1171
+#: src/pages.py:1243 src/pages.py:726 src/pages.py:1238
 msgid "Connect to the Internet"
 msgstr "Підключитися до Інтернету"
 
-#: src/pages.py:1343
+#: src/pages.py:1410
 msgid "Internet connection is ready."
 msgstr "Підключення до Інтернету готове."
 
-#: src/pages.py:1250
+#: src/pages.py:1317
 msgid "Available Wi-Fi Networks"
 msgstr "Доступні мережі Wi-Fi"
 
-#: src/pages.py:4576
+#: src/pages.py:6815
 msgid "Preserve connected Wi-Fi network"
 msgstr "Зберегти підключену мережу Wi-Fi"
 
-#: src/pages.py:2540 src/pages.py:3092
+#: src/pages.py:2691 src/pages.py:3517 src/pages.py:4166 src/pages.py:5388
+#: src/pages.py:4139 src/pages.py:4305
 msgid "Loading storage devices…"
 msgstr "Завантаження пристроїв зберігання…"
 
-#: src/pages.py:4335
+#: src/pages.py:6528
 msgid "Rechecking target disk…"
 msgstr "Повторна перевірка цільового диска…"
 
-#: src/pages.py:2609 src/pages.py:3213 src/pages.py:4364
+#: src/pages.py:2760 src/pages.py:3639 src/pages.py:5336 src/pages.py:6557
 msgid "Storage devices could not be loaded: {error}"
 msgstr "Не вдалося завантажити пристрої зберігання: {error}"
 
-#: src/pages.py:1218 src/pages.py:4586 src/pages.py:2252
+#: src/pages.py:1285 src/pages.py:6825 src/pages.py:2404
 msgid "Install extended multimedia format support"
 msgstr "Установити розширену підтримку мультимедійних форматів"
 
-#: src/pages.py:4063
+#: src/pages.py:6169
 msgid "Extended multimedia formats"
 msgstr "Розширені мультимедійні формати"
 
-#: src/pages.py:2256
-msgid ""
-"Adds wider GStreamer compatibility and support for additional legacy and "
-"specialist media formats. Some components may be subject to patent or "
-"redistribution terms."
-msgstr ""
-"Розширює сумісність із GStreamer і додає підтримку застарілих та "
-"спеціалізованих медіаформатів. На деякі компоненти можуть поширюватися "
-"патенти або умови повторного розповсюдження."
+#: src/pages.py:2408
+msgid "Adds wider GStreamer compatibility and support for additional legacy and specialist media formats. Some components may be subject to patent or redistribution terms."
+msgstr "Розширює сумісність із GStreamer і додає підтримку застарілих та спеціалізованих медіаформатів. На деякі компоненти можуть поширюватися патенти або умови повторного розповсюдження."
 
-#: src/pages.py:1473
+#: src/pages.py:1540
 msgid "A saved profile exists. Entering a password updates it securely."
 msgstr "Збережено профіль. Введення пароля безпечно оновлює його."
 
-#: src/pages.py:1524
+#: src/pages.py:1591
 msgid "Anonymous identity (optional)"
-msgstr "Анонімна особистість (необов’язково)"
+msgstr "Анонімний ідентифікатор (необов’язково)"
 
-#: src/pages.py:1530
+#: src/pages.py:1597
 msgid "CA certificate path (optional)"
 msgstr "Шлях до сертифіката CA (необов’язково)"
 
-#: src/pages.py:1239 src/pages.py:1409 src/pages.py:1482 src/pages.py:1600
-#: src/pages.py:1816
+#: src/pages.py:1306 src/pages.py:1476 src/pages.py:1549 src/pages.py:1667
+#: src/pages.py:1883 src/pages.py:4626 src/pages.py:4845 src/pages.py:5309
 msgid "Cancel"
 msgstr "Скасувати"
 
-#: src/pages.py:1786
+#: src/pages.py:1853
 msgid "Cancelling Wi-Fi operation…"
 msgstr "Скасування підключення Wi-Fi…"
 
-#: src/pages.py:1532
+#: src/pages.py:1599
 msgid "Client certificate path"
 msgstr "Шлях до сертифіката клієнта"
 
-#: src/pages.py:1483 src/pages.py:1601
+#: src/pages.py:1550 src/pages.py:1668
 msgid "Connect"
-msgstr "Connect"
+msgstr "Підключитися"
 
-#: src/pages.py:1817
+#: src/pages.py:1884 src/pages.py:6709
 msgid "Continue"
 msgstr "Продовжити"
 
-#: src/pages.py:1259 src/pages.py:1809
+#: src/pages.py:1326 src/pages.py:1876
 msgid "Connect to a hidden network"
 msgstr "Підключитися до прихованої мережі"
 
-#: src/pages.py:1478 src/pages.py:1593
+#: src/pages.py:1545 src/pages.py:1660
 #, python-brace-format
 msgid "Connect to {network}"
 msgstr "Підключитися до {network}"
 
-#: src/pages.py:1654
+#: src/pages.py:1721
 msgid "Connected"
-msgstr "Connected"
+msgstr "Підключено"
 
-#: src/pages.py:1453
+#: src/pages.py:1520
 #, python-brace-format
 msgid "Connecting to {network}…"
 msgstr "Підключення до {network}…"
 
-#: src/pages.py:1755
+#: src/pages.py:1822
 msgid "Could not change the Wi-Fi connection"
 msgstr "Не вдалося змінити підключення Wi-Fi"
 
-#: src/pages.py:1410
+#: src/pages.py:1477
 msgid "Disconnect"
-msgstr "Disconnect"
+msgstr "Від'єднатися"
 
-#: src/pages.py:1401
+#: src/pages.py:1468
 #, python-brace-format
 msgid "Disconnect from {network}?"
 msgstr "Від'єднатися від {network}?"
 
-#: src/pages.py:1420
+#: src/pages.py:1487
 #, python-brace-format
 msgid "Disconnecting from {network}…"
 msgstr "Від'єднання від {network}…"
 
-#: src/pages.py:1531
+#: src/pages.py:1598
 msgid "Domain suffix match (optional)"
 msgstr "Збіг суфіксу домену (необов’язково)"
 
-#: src/pages.py:1515
+#: src/pages.py:1582
 msgid "EAP method"
 msgstr "Метод EAP"
 
-#: src/pages.py:1387 src/pages.py:1796
+#: src/pages.py:1454 src/pages.py:1863
 msgid "Enhanced Open (OWE)"
 msgstr "Pокращене відкриття (OWE)"
 
-#: src/pages.py:1595
-msgid ""
-"Enter the credentials supplied by your organization. Certificate validation "
-"is strongly recommended."
-msgstr ""
-"Введіть облікові дані, надані вашою організацією. Належним чином "
-"рекомендується перевірка сертифіката."
+#: src/pages.py:1662
+msgid "Enter the credentials supplied by your organization. Certificate validation is strongly recommended."
+msgstr "Введіть облікові дані, надані вашою організацією. Належним чином рекомендується перевірка сертифіката."
 
-#: src/pages.py:1811
+#: src/pages.py:1878
 msgid "Enter the exact network name and choose its security type."
 msgstr "Введіть точну назву мережі та оберіть тип її захисту."
 
-#: src/pages.py:1390 src/pages.py:1800
+#: src/pages.py:1457 src/pages.py:1867
 msgid "Enterprise Wi-Fi"
 msgstr "Корпоративна мережа Wi-Fi"
 
-#: src/pages.py:1523
+#: src/pages.py:1590
 msgid "Identity"
-msgstr "Identity"
+msgstr "Ідентифікатор"
 
-#: src/pages.py:1527
+#: src/pages.py:1594
 msgid "Inner authentication"
 msgstr "Внутрішня автентифікація"
 
-#: src/pages.py:1790
+#: src/pages.py:1857
 msgid "Network name (SSID)"
 msgstr "Назва мережі (SSID)"
 
-#: src/pages.py:1645
+#: src/pages.py:1712
 msgid "No Wi-Fi networks found."
 msgstr "Не знайдено мереж Wi-Fi."
 
-#: src/pages.py:1386 src/pages.py:1795
+#: src/pages.py:1453 src/pages.py:1862
 msgid "Open network"
 msgstr "Відкрита мережа"
 
-#: src/pages.py:1389 src/pages.py:1797 src/pages.py:1798
+#: src/pages.py:1456 src/pages.py:1864 src/pages.py:1865
 msgid "Personal Wi-Fi"
 msgstr "Особиста мережа Wi-Fi"
 
-#: src/pages.py:1535
+#: src/pages.py:1602
 msgid "Private key password (optional)"
 msgstr "Пароль приватного ключа (необов’язково)"
 
-#: src/pages.py:1533
+#: src/pages.py:1600
 msgid "Private key path"
 msgstr "Шлях до приватного ключа"
 
-#: src/pages.py:1284
+#: src/pages.py:1351
 msgid "Refresh Wi-Fi networks"
 msgstr "Оновити мережі Wi-Fi"
 
-#: src/pages.py:1656
+#: src/pages.py:1723
 msgid "Saved"
-msgstr "Saved"
+msgstr "Збережено"
 
-#: src/pages.py:1792
+#: src/pages.py:1859
 msgid "Security"
-msgstr "Security"
+msgstr "Безпека"
 
-#: src/pages.py:1405
-msgid ""
-"The installer will keep the saved network profile so it can be used again."
-msgstr ""
-"Інсталятор збереже збережений профіль мережі, щоб його можна було "
-"використати повторно."
+#: src/pages.py:1472
+msgid "The installer will keep the saved network profile so it can be used again."
+msgstr "Інсталятор збереже збережений профіль мережі, щоб його можна було використати повторно."
 
-#: src/pages.py:1356
+#: src/pages.py:1423
 msgid "The local network is connected, but Internet access is unavailable."
 msgstr "Локальна мережа підключена, але доступ до Інтернету недоступний."
 
-#: src/pages.py:1856
+#: src/pages.py:1923
 msgid "Turning Wi-Fi off…"
 msgstr "Вимкнення Wi-Fi…"
 
-#: src/pages.py:1854
+#: src/pages.py:1921
 msgid "Turning Wi-Fi on…"
 msgstr "Увімкнення Wi-Fi…"
 
-#: src/pages.py:1485
+#: src/pages.py:1552
 msgid "Use WPS"
 msgstr "Використати WPS"
 
-#: src/pages.py:1388 src/pages.py:1799
+#: src/pages.py:1455 src/pages.py:1866
 msgid "WEP (legacy)"
 msgstr "WEP (застарілий)"
 
-#: src/pages.py:1347
-msgid ""
-"Wi-Fi is connected, but the network requires sign-in through a captive "
-"portal."
-msgstr ""
-"Підключено до Wi-Fi, але для доступу до мережі потрібно увійти через портал "
-"захоплення."
+#: src/pages.py:1414
+msgid "Wi-Fi is connected, but the network requires sign-in through a captive portal."
+msgstr "Підключено до Wi-Fi, але для доступу до мережі потрібно увійти через портал захоплення."
 
-#: src/pages.py:1449
+#: src/pages.py:1516
 #, python-brace-format
 msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
 msgstr "Очікування WPS для {network}. Натисніть кнопку WPS на маршрутизаторі…"
 
-#: src/pages.py:3576
+#: src/pages.py:5661
 msgid "A password is required."
 msgstr "Потрібен пароль."
 
-#: src/pages.py:3731
+#: src/pages.py:5817
 msgid "Administrative commands will no longer ask for your password."
 msgstr "Адміністративні команди більше не запитуватимуть пароль."
 
-#: src/pages.py:3681 src/pages.py:3675
+#: src/pages.py:5767 src/pages.py:5761
 msgid "Advanced Options"
 msgstr "Додаткові параметри"
 
-#: src/pages.py:3747
+#: src/pages.py:5833
 msgid "Allow SSH login with the account password"
 msgstr "Дозволити вхід через SSH із паролем облікового запису"
 
-#: src/pages.py:4089
+#: src/pages.py:6195
 msgid "Automatic desktop login"
 msgstr "Автоматичний вхід до стільниці"
 
-#: src/pages.py:3701
-msgid ""
-"Choose how the local administrator account signs in and authorizes system "
-"changes."
-msgstr ""
-"Виберіть спосіб входу локального облікового запису адміністратора та "
-"підтвердження системних змін."
+#: src/pages.py:5787
+msgid "Choose how the local administrator account signs in and authorizes system changes."
+msgstr "Виберіть спосіб входу локального облікового запису адміністратора та підтвердження системних змін."
 
-#: src/pages.py:3682
+#: src/pages.py:5768
 msgid "Choose optional access and sign-in policies"
 msgstr "Виберіть додаткові правила доступу та входу"
 
-#: src/pages.py:3709
+#: src/pages.py:5795
 msgid "Choose whether this computer accepts remote Secure Shell connections."
-msgstr ""
-"Виберіть, чи прийматиме цей комп’ютер віддалені з’єднання Secure Shell."
+msgstr "Виберіть, чи прийматиме цей комп’ютер віддалені з’єднання Secure Shell."
 
-#: src/pages.py:4604
+#: src/pages.py:6843
 msgid "Configure Secure Shell"
 msgstr "Налаштувати Secure Shell"
 
-#: src/pages.py:3699
+#: src/pages.py:5785
 msgid "Local Access"
 msgstr "Локальний доступ"
 
-#: src/pages.py:3737
+#: src/pages.py:5823
 msgid "Log in to the desktop without a password"
 msgstr "Входити до стільниці без пароля"
 
-#: src/pages.py:3739
+#: src/pages.py:5825
 msgid "Open this account's desktop automatically when the computer starts."
-msgstr ""
-"Автоматично відкривати стільницю цього облікового запису під час запуску "
-"комп’ютера."
+msgstr "Автоматично відкривати стільницю цього облікового запису під час запуску комп’ютера."
 
-#: src/pages.py:3707
+#: src/pages.py:5793
 msgid "Remote Access"
 msgstr "Віддалений доступ"
 
-#: src/pages.py:3730
+#: src/pages.py:5816
 msgid "Run sudo commands without a password"
 msgstr "Виконувати команди sudo без пароля"
 
-#: src/pages.py:4095
+#: src/pages.py:6201
 msgid "SSH password login"
 msgstr "Вхід через SSH із паролем"
 
-#: src/pages.py:3749
+#: src/pages.py:5835
 msgid "Start Secure Shell and accept this account password over the network."
-msgstr ""
-"Запустити Secure Shell і приймати пароль цього облікового запису через "
-"мережу."
+msgstr "Запустити Secure Shell і приймати пароль цього облікового запису через мережу."
 
-#: src/pages.py:3759
+#: src/pages.py:5845
 msgid "This will reduce the security of the installed system."
 msgstr "Це знизить безпеку встановленої системи."
 
-#: src/pages.py:4093 src/pages.py:4099
+#: src/pages.py:6199 src/pages.py:6205
 msgid "disabled"
 msgstr "вимкнено"
 
-#: src/pages.py:4091 src/pages.py:4097
+#: src/pages.py:6197 src/pages.py:6203
 msgid "enabled"
 msgstr "увімкнено"
 
-#: src/pages.py:349
-msgid ""
-"AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently"
-" enabled on this computer, and we recommend enabling it for additional "
-"protection."
-msgstr ""
-"AnduinOS має повну підтримку Secure Boot. Наразі Secure Boot не увімкнено на"
-" цьому комп'ютері, тому ми рекомендуємо увімкнути його для додаткового "
-"захисту."
+#: src/pages.py:403
+msgid "AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently enabled on this computer, and we recommend enabling it for additional protection."
+msgstr "AnduinOS має повну підтримку Secure Boot. Наразі Secure Boot не увімкнено на цьому комп'ютері, тому ми рекомендуємо увімкнути його для додаткового захисту."
 
-#: src/pages.py:331
+#: src/pages.py:385
 msgid "AnduinOS supports Secure Boot"
 msgstr "AnduinOS підтримує Secure Boot"
 
-#: src/pages.py:360
-msgid ""
-"Battery power is sufficient or reliable power is connected. You can continue"
-" with the installation."
-msgstr ""
-"Заряду акумулятора достатньо або підключено надійне зовнішнє живлення. Ви "
-"можете продовжити встановлення."
+#: src/pages.py:414
+msgid "Battery power is sufficient or reliable power is connected. You can continue with the installation."
+msgstr "Заряду акумулятора достатньо або підключено надійне зовнішнє живлення. Ви можете продовжити встановлення."
 
-#: src/pages.py:366
-msgid ""
-"Connect reliable external power and charge above 25%, or charge above 45% "
-"while unplugged."
-msgstr ""
-"Підключіть надійне зовнішнє живлення та зарядіть акумулятор до 25% або "
-"більше, або до 45% або більше без живлення від мережі."
+#: src/pages.py:420
+msgid "Connect reliable external power and charge above 25%, or charge above 45% while unplugged."
+msgstr "Підключіть надійне зовнішнє живлення та зарядіть акумулятор до 25% або більше, або до 45% або більше без живлення від мережі."
 
-#: src/pages.py:338
+#: src/pages.py:392
 msgid "Could not open UEFI firmware settings"
 msgstr "Не вдалося відкрити параметри прошивки UEFI"
 
-#: src/pages.py:333
+#: src/pages.py:387
 msgid "Get additional protection before installing AnduinOS."
 msgstr "Отримайте додатковий захист перед встановленням AnduinOS."
 
-#: src/pages.py:364
+#: src/pages.py:418
 msgid "Power conditions are safe for installation."
 msgstr "Умови живлення безпечні для встановлення."
 
-#: src/pages.py:363
+#: src/pages.py:417
 msgid "Power ready"
 msgstr "Живлення готове"
 
-#: src/pages.py:335
+#: src/pages.py:389
 msgid "Restart to UEFI Firmware Settings"
 msgstr "Перезавантажити до параметрів прошивки UEFI"
 
-#: src/pages.py:345
-msgid ""
-"Secure Boot is a UEFI security feature that verifies trusted, digitally "
-"signed software while your computer starts."
-msgstr ""
-"Secure Boot — функція безпеки UEFI, яка перевіряє довірене програмне "
-"забезпечення з цифровими підписами під час запуску вашого комп'ютера."
+#: src/pages.py:399
+msgid "Secure Boot is a UEFI security feature that verifies trusted, digitally signed software while your computer starts."
+msgstr "Secure Boot — функція безпеки UEFI, яка перевіряє довірене програмне забезпечення з цифровими підписами під час запуску вашого комп'ютера."
 
-#: src/pages.py:336
+#: src/pages.py:390
 msgid "Skip"
 msgstr "Пропустити"
 
-#: src/pages.py:341
+#: src/pages.py:395
 msgid "The firmware settings could not be opened on this computer."
 msgstr "Не вдалося відкрити налаштування прошивки на цьому комп'ютері."
 
-#: src/pages.py:354
-msgid ""
-"To enable it, open the UEFI firmware settings and look under Boot, Security,"
-" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
-"Firmware wording varies by manufacturer."
-msgstr ""
-"Щоб увімкнути цю функцію, відкрийте параметри прошивки UEFI та шукайте "
-"розділи «Запуск», «Безпека» або «Secure Boot». Виберіть «Microsoft & 3rd-"
-"party CA» або увімкніть Secure Boot. Формулювання в прошивці може "
-"відрізнятися залежно від виробника."
+#: src/pages.py:408
+msgid "To enable it, open the UEFI firmware settings and look under Boot, Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. Firmware wording varies by manufacturer."
+msgstr "Щоб увімкнути цю функцію, відкрийте параметри прошивки UEFI та шукайте розділи «Запуск», «Безпека» або «Secure Boot». Виберіть «Microsoft & 3rd-party CA» або увімкніть Secure Boot. Формулювання в прошивці може відрізнятися залежно від виробника."
 
+#: src/pages.py:3179
 msgid "Advanced"
 msgstr "Розширені налаштування"
 
-msgid ""
-"Keep Windows or other partitions, reuse or create an ESP, and design Root "
-"and Swap partitions with exact sizes."
-msgstr ""
-"Збережіть Windows або інші розділи, повторно використайте чи створіть ESP і "
-"задайте точні розміри розділів Root і Swap."
+#: src/pages.py:3181
+msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root and Swap partitions with exact sizes."
+msgstr "Збережіть Windows або інші розділи, повторно використайте чи створіть ESP і задайте точні розміри розділів Root і Swap."
 
-msgid ""
-"Manual changes are destructive. Existing partition starts are never moved. "
-"Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
-" or unclean volumes are never resized."
-msgstr ""
-"Ручні зміни є руйнівними. Початкові сектори наявних розділів ніколи не "
-"переміщуються. Звичайний том NTFS можна зменшити лише після суворих "
-"перевірок безпеки; зашифровані, змонтовані або некоректно відключені томи "
-"ніколи не змінюються в розмірі."
+#: src/pages.py:3230
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Ручні зміни є руйнівними. Початкові сектори наявних розділів ніколи не переміщуються. Звичайний том NTFS можна зменшити лише після суворих перевірок безпеки; зашифровані, змонтовані або некоректно відключені томи ніколи не змінюються в розмірі."
 
+#: src/pages.py:3410
 msgid "Install Alongside Automatically"
 msgstr "Встановити поруч автоматично"
 
+#: src/pages.py:3849
 msgid "ESP"
 msgstr "ESP"
 
+#: src/pages.py:3850
 msgid "Root"
-msgstr "Root"
+msgstr "Кореневий розділ"
 
+#: src/pages.py:3866
 msgid "Unallocated"
 msgstr "Не розподілено"
 
+#: src/pages.py:3973
 #, python-brace-format
 msgid "{name} · {size} · {start}–{end} MiB"
 msgstr "{name} · {size} · {start}–{end} MiB"
 
+#: src/pages.py:4045
 msgid "Current disk"
 msgstr "Поточний диск"
 
+#: src/pages.py:4151 src/pages.py:4047
 msgid "Planned result"
 msgstr "Запланований результат"
 
+#: src/pages.py:4071
 msgid "Advanced: Manual Partitioning"
 msgstr "Розширений: ручне розбиття"
 
-msgid ""
-"Windows was detected. Its partitions remain preserved unless you explicitly "
-"mark them for deletion."
-msgstr ""
-"Виявлено Windows. Її розділи буде збережено, якщо ви явно не позначите їх "
-"для видалення."
+#: src/pages.py:4104
+msgid "Windows was detected. Its partitions remain preserved unless you explicitly mark them for deletion."
+msgstr "Виявлено Windows. Її розділи буде збережено, якщо ви явно не позначите їх для видалення."
 
+#: src/pages.py:4173 src/pages.py:4958
 msgid "Initialize New GPT"
 msgstr "Ініціалізувати новий GPT"
 
+#: src/pages.py:4193
 msgid "Existing partitions"
 msgstr "Наявні розділи"
 
-msgid ""
-"Reuse a healthy existing ESP without formatting it, or create a new one in "
-"available space."
-msgstr ""
-"Повторно використайте справний наявний ESP без форматування або створіть "
-"новий у доступному просторі."
+#: src/pages.py:4214
+msgid "Reuse a healthy existing ESP without formatting it, or create a new one in available space."
+msgstr "Повторно використайте справний наявний ESP без форматування або створіть новий у доступному просторі."
 
+#: src/pages.py:4248
 msgid "Add a partition"
 msgstr "Додати розділ"
 
-msgid ""
-"Choose an available range, exact start position, and size. Nothing is "
-"written until installation begins."
-msgstr ""
-"Виберіть доступний діапазон, точну початкову позицію та розмір. До початку "
-"встановлення нічого не буде записано."
+#: src/pages.py:4252
+msgid "Choose an available range, exact start position, and size. Nothing is written until installation begins."
+msgstr "Виберіть доступний діапазон, точну початкову позицію та розмір. До початку встановлення нічого не буде записано."
 
+#: src/pages.py:4266
 msgid "Role"
 msgstr "Роль"
 
+#: src/pages.py:4267
 msgid "Available space"
 msgstr "Доступний простір"
 
+#: src/pages.py:4268 src/pages.py:4560
 msgid "Start (MiB)"
 msgstr "Початок (MiB)"
 
+#: src/pages.py:4269 src/pages.py:4574
 msgid "Size (MiB)"
 msgstr "Розмір (МіБ)"
 
+#: src/pages.py:4283
 msgid "Use All"
 msgstr "Використати все"
 
+#: src/pages.py:4287
 msgid "Add Partition"
 msgstr "Додати розділ"
 
+#: src/pages.py:4321 src/pages.py:5146
 msgid "Edit"
 msgstr "Редагувати"
 
+#: src/pages.py:4548
 msgid "That partition can no longer be edited safely."
 msgstr "Цей розділ більше не можна безпечно редагувати."
 
+#: src/pages.py:4587
 msgid "Use All Available Space"
 msgstr "Використати весь доступний простір"
 
+#: src/pages.py:4616
 #, python-brace-format
 msgid "Edit {role} partition"
 msgstr "Редагувати розділ {role}"
 
-msgid ""
-"Choose an exact position and size inside the available range. Other planned "
-"partitions are not moved."
-msgstr ""
-"Виберіть точну позицію та розмір у доступному діапазоні. Інші заплановані "
-"розділи не переміщуються."
+#: src/pages.py:4620
+msgid "Choose an exact position and size inside the available range. Other planned partitions are not moved."
+msgstr "Виберіть точну позицію та розмір у доступному діапазоні. Інші заплановані розділи не переміщуються."
 
+#: src/pages.py:4627
 msgid "Apply Changes"
 msgstr "Застосувати зміни"
 
+#: src/pages.py:4665
 msgid "Close"
 msgstr "Закрити"
 
-msgid ""
-"BitLocker was detected. Return to Windows, open Manage BitLocker, choose "
-"Turn off BitLocker, and wait until decryption reaches 100%. Suspending "
-"protection is not enough. Back up the recovery key, fully shut Windows down,"
-" then start the installer again."
-msgstr ""
-"Виявлено BitLocker. Поверніться до Windows, відкрийте «Керування BitLocker»,"
-" оберіть «Вимкнути BitLocker» та дочекайтеся, доки розшифрування не досягне "
-"100%. Тимчасове припинення захисту недостатнє. Створіть резервну копію ключа"
-" відновлення, повністю вимкніть Windows, а потім запустіть встановлювач "
-"знову."
+#: src/pages.py:4673 src/pages.py:4897
+msgid "BitLocker was detected. Return to Windows, open Manage BitLocker, choose Turn off BitLocker, and wait until decryption reaches 100%. Suspending protection is not enough. Back up the recovery key, fully shut Windows down, then start the installer again."
+msgstr "Виявлено BitLocker. Поверніться до Windows, відкрийте «Керування BitLocker», оберіть «Вимкнути BitLocker» та дочекайтеся, доки розшифрування не досягне 100%. Тимчасове припинення захисту недостатнє. Створіть резервну копію ключа відновлення, повністю вимкніть Windows, а потім запустіть встановлювач знову."
 
-msgid ""
-"Windows is hibernated or Fast Startup is active. In an Administrator "
-"Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s "
-"/t 0'. Start the installer again only after Windows has fully shut down."
-msgstr ""
-"Windows перебуває в режимі гібернації або увімкнено швидкий запуск. У "
-"терміналі адміністратора виконайте 'powercfg /h off', вимкніть швидкий "
-"запуск, а потім виконайте 'shutdown /s /t 0'. Запустіть встановлювач знову "
-"лише після повного вимкнення Windows."
+#: src/pages.py:4682
+msgid "Windows is hibernated or Fast Startup is active. In an Administrator Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s /t 0'. Start the installer again only after Windows has fully shut down."
+msgstr "Windows перебуває в режимі гібернації або увімкнено швидкий запуск. У терміналі адміністратора виконайте 'powercfg /h off', вимкніть швидкий запуск, а потім виконайте 'shutdown /s /t 0'. Запустіть встановлювач знову лише після повного вимкнення Windows."
 
-msgid ""
-"Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk"
-" C: /f', allow every requested reboot to finish, then fully shut Windows "
-"down before trying again."
-msgstr ""
-"Windows не завершила роботу з цим томом NTFS належним чином. Поверніться до "
-"Windows, виконайте команду 'chkdsk C: /f', дочекайтеся завершення всіх "
-"запропонованих перезавантажень, а потім повністю вимкніть Windows, перш ніж "
-"повторити спробу."
+#: src/pages.py:4694
+msgid "Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk C: /f', allow every requested reboot to finish, then fully shut Windows down before trying again."
+msgstr "Windows не завершила роботу з цим томом NTFS належним чином. Поверніться до Windows, виконайте команду 'chkdsk C: /f', дочекайтеся завершення всіх запропонованих перезавантажень, а потім повністю вимкніть Windows, перш ніж повторити спробу."
 
-msgid ""
-"This target would require moving critical NTFS MFT metadata through a "
-"currently unsafe upstream code path. Choose a larger Windows size or shrink "
-"the volume from Windows."
-msgstr ""
-"Такий розмір потребував би переміщення критично важливих метаданих MFT NTFS "
-"через наразі небезпечний шлях у коді вихідного проєкту. Виберіть більший "
-"розмір розділу Windows або зменште том у Windows."
+#: src/pages.py:4701
+msgid "This target would require moving critical NTFS MFT metadata through a currently unsafe upstream code path. Choose a larger Windows size or shrink the volume from Windows."
+msgstr "Такий розмір потребував би переміщення критично важливих метаданих MFT NTFS через наразі небезпечний шлях у коді вихідного проєкту. Виберіть більший розмір розділу Windows або зменште том у Windows."
 
-msgid ""
-"This NTFS volume is mounted or in use. Unmount it and rescan storage before "
-"continuing."
-msgstr ""
-"Цей том NTFS змонтовано або використовується. Відмонтуйте його та повторно "
-"проскануйте сховище, перш ніж продовжувати."
+#: src/pages.py:4711
+msgid "This NTFS volume is mounted or in use. Unmount it and rescan storage before continuing."
+msgstr "Цей том NTFS змонтовано або використовується. Відмонтуйте його та повторно проскануйте сховище, перш ніж продовжувати."
 
-msgid ""
-"This operation moves NTFS data and changes the GPT partition boundary. A "
-"power loss, failing drive, firmware fault or filesystem bug can cause "
-"permanent data loss. Back up all important Windows files before continuing."
-msgstr ""
-"Ця операція переміщує дані NTFS та змінює межу розділу GPT. Втрата живлення,"
-" несправність диска, збій прошивки або помилка файлової системи можуть "
-"призвести до безповоротної втрати даних. Створіть резервну копію всіх "
-"важливих файлів Windows, перш ніж продовжувати."
+#: src/pages.py:4736
+msgid "This operation moves NTFS data and changes the GPT partition boundary. A power loss, failing drive, firmware fault or filesystem bug can cause permanent data loss. Back up all important Windows files before continuing."
+msgstr "Ця операція переміщує дані NTFS та змінює межу розділу GPT. Втрата живлення, несправність диска, збій прошивки або помилка файлової системи можуть призвести до безповоротної втрати даних. Створіть резервну копію всіх важливих файлів Windows, перш ніж продовжувати."
 
+#: src/pages.py:4749
 msgid "New Windows partition size"
 msgstr "Розмір нового розділу Windows"
 
+#: src/pages.py:4772
 msgid "MiB"
 msgstr "MiB"
 
+#: src/pages.py:4774
 #, python-brace-format
 msgid "Allowed: {minimum}–{maximum}"
-msgstr "Allowed: {minimum}–{maximum}"
+msgstr "Дозволено: {minimum}–{maximum}"
 
+#: src/pages.py:4794
 #, python-brace-format
 msgid "Windows: {windows} · New unallocated space: {free}"
 msgstr "Windows: {windows} · Невиділений простір: {free}"
 
-msgid ""
-"I have backed up my data and understand that shrinking an existing Windows "
-"partition can cause permanent data loss."
-msgstr ""
-"Я створив резервну копію своїх даних і розумію, що зменшення наявного "
-"розділу Windows може призвести до безповоротної втрати даних."
+#: src/pages.py:4826
+msgid "I have backed up my data and understand that shrinking an existing Windows partition can cause permanent data loss."
+msgstr "Я створив резервну копію своїх даних і розумію, що зменшення наявного розділу Windows може призвести до безповоротної втрати даних."
 
+#: src/pages.py:4835
 #, python-brace-format
 msgid "Change the size of {partition}?"
 msgstr "Змінити розмір розділу {partition}?"
 
-msgid ""
-"The partition start will not move. Only its end will move left, creating "
-"unallocated space immediately after it."
-msgstr ""
-"Початок розділу не переміститься. Лише його кінець переміститься ліворуч, "
-"утворивши невиділений простір одразу після розділу."
+#: src/pages.py:4839
+msgid "The partition start will not move. Only its end will move left, creating unallocated space immediately after it."
+msgstr "Початок розділу не переміститься. Лише його кінець переміститься ліворуч, утворивши невиділений простір одразу після розділу."
 
+#: src/pages.py:4847
 msgid "Undo Planned Resize"
 msgstr "Скасувати заплановану зміну розміру"
 
+#: src/pages.py:4848
 msgid "Plan Resize"
 msgstr "Запланувати зміну розміру"
 
+#: src/pages.py:4895
 msgid "Turn off BitLocker before shrinking"
 msgstr "Вимкніть BitLocker перед зменшенням розміру"
 
+#: src/pages.py:4907
 #, python-brace-format
 msgid "Checking whether {partition} can be resized safely…"
 msgstr "Перевірка, чи можна безпечно змінити розмір розділу {partition}…"
 
+#: src/pages.py:4918
 msgid "NTFS safety check failed"
 msgstr "Помилка перевірки безпеки NTFS"
 
+#: src/pages.py:4925
 msgid "This partition cannot be resized safely"
 msgstr "Неможливо безпечно змінити розмір цього розділу."
 
+#: src/pages.py:4951
 msgid "New empty GPT — every existing partition will be deleted"
 msgstr "Новий порожній GPT — усі наявні розділи буде видалено"
 
+#: src/pages.py:4953
 msgid "Keep current GPT — only marked partitions are deleted"
 msgstr "Зберегти поточний GPT — буде видалено лише позначені розділи"
 
+#: src/pages.py:4956
 msgid "Keep Current GPT"
 msgstr "Зберегти поточний GPT"
 
+#: src/pages.py:4969
 msgid "unknown"
 msgstr "невідомо"
 
+#: src/pages.py:4970
 msgid "WILL DELETE"
 msgstr "БУДЕ ВИДАЛЕНО"
 
+#: src/pages.py:4970
 msgid "Preserve"
 msgstr "Зберегти"
 
+#: src/pages.py:5005
 #, python-brace-format
 msgid "Planned size: {size}"
 msgstr "Запланований розмір: {size}"
 
+#: src/pages.py:5020
 msgid "Deleted by new GPT"
 msgstr "Видалено новим GPT"
 
+#: src/pages.py:5022
 msgid "Undo"
 msgstr "Скасувати"
 
+#: src/pages.py:5024
 msgid "Delete"
 msgstr "Видалити"
 
+#: src/pages.py:5029
 msgid "RESIZE"
-msgstr "RESIZE"
+msgstr "ЗМІНА РОЗМІРУ"
 
+#: src/pages.py:5047
 msgid "Change Size"
 msgstr "Змінити розмір"
 
+#: src/pages.py:5062
 msgid "This disk has no existing partitions."
 msgstr "На цьому диску немає наявних розділів."
 
+#: src/pages.py:5079
 msgid "Create a new ESP partition"
 msgstr "Створити новий розділ ESP"
 
+#: src/pages.py:5136
 #, python-brace-format
 msgid "{size} · {start}–{end} MiB"
 msgstr "{size} · {start}–{end} МБ"
 
+#: src/pages.py:5141
 msgid "Remove"
 msgstr "Видалити"
 
+#: src/pages.py:3914 src/pages.py:3925 src/pages.py:5143
 msgid "New"
 msgstr "Новий"
 
-msgid ""
-"No new partitions yet. Add an ESP if needed, one Root partition, and "
-"optionally Swap."
-msgstr ""
-"Нових розділів ще немає. За потреби додайте ESP, один розділ Root і "
-"необов’язковий Swap."
+#: src/pages.py:5156
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
+msgstr "Нових розділів ще немає. За потреби додайте ESP, один розділ Root і необов’язковий Swap."
 
+#: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
 msgstr "{size} на {start} МБ"
 
+#: src/pages.py:5205
 msgid "an ESP of at least 512 MiB"
 msgstr "ESP розміром щонайменше 512 MiB"
 
+#: src/pages.py:5207
 msgid "a Root partition of at least 20 GiB"
 msgstr "розділ Root розміром щонайменше 20 GiB"
 
+#: src/pages.py:5209
 #, python-brace-format
 msgid "Complete the plan: {requirements}."
 msgstr "Завершіть план: {requirements}."
 
-msgid ""
-"Layout is valid. Only the listed resizes, deletes, creates and formats will "
-"be sent to the privileged executor."
-msgstr ""
-"Розкладка є валідною. До привілейованого виконавця буде надіслано лише "
-"зазначені зміни розміру, видалення, створення та форматування."
+#: src/pages.py:5222
+msgid "Layout is valid. Only the listed resizes, deletes, creates and formats will be sent to the privileged executor."
+msgstr "Схема розділів правильна. Лише зазначені операції зміни розміру, видалення, створення та форматування буде передано службовому процесу з підвищеними привілеями."
 
+#: src/pages.py:5262
 msgid "That partition role already exists."
 msgstr "Роль цього розділу вже існує."
 
+#: src/pages.py:5302
 msgid "Initialize a new GPT?"
 msgstr "Ініціалізувати новий GPT?"
 
-msgid ""
-"Every existing partition and all data on this disk will be deleted. You must"
-" then create a new ESP and Root partition."
-msgstr ""
-"Усі наявні розділи та всі дані на цьому диску буде видалено. Потім вам "
-"потрібно буде створити нові розділи ESP та Root."
+#: src/pages.py:5304
+msgid "Every existing partition and all data on this disk will be deleted. You must then create a new ESP and Root partition."
+msgstr "Усі наявні розділи та всі дані на цьому диску буде видалено. Потім вам потрібно буде створити нові розділи ESP та Root."
 
+#: src/pages.py:5310
 msgid "Initialize GPT"
 msgstr "Ініціалізувати GPT"
 
+#: src/pages.py:5346
 msgid "The selected disk changed or disappeared."
 msgstr "Вибраний диск змінився або зник."
 
+#: src/pages.py:5351
 msgid "The selected disk topology changed. Select it again."
 msgstr "Топологія вибраного диска змінилася. Оберіть його знову."
 
+#: src/pages.py:6292 src/pages.py:6293 src/pages.py:6302
 msgid "none"
 msgstr "немає"
 
+#: src/pages.py:6295
 #, python-brace-format
 msgid "{path}: {before} → {after} (free {reclaimed})"
-msgstr "{path}: {before} → {after} (free {reclaimed})"
+msgstr "{path}: {before} → {after} (буде вивільнено {reclaimed})"
 
+#: src/pages.py:6304
 #, python-brace-format
 msgid "{name}: {size} MiB ({start}–{end})"
 msgstr "{name}: {size} МБ ({start}–{end})"
 
+#: src/pages.py:6320
 msgid "Initialize a new empty GPT"
 msgstr "Ініціалізувати новий порожній GPT"
 
+#: src/pages.py:6322
 msgid "Keep the current GPT"
 msgstr "Зберегти поточний GPT"
 
+#: src/pages.py:6326
 #, python-brace-format
 msgid "Reuse {path}; inspect it and never format it."
-msgstr ""
-"Повторно використати {path}; перевірте його та ніколи не форматувайте."
+msgstr "Повторно використати {path}; перевірте його та ніколи не форматувайте."
 
+#: src/pages.py:6330
 msgid "Create and format a new EFI System Partition."
 msgstr "Створіть та відформатуйте новий розділ системи EFI."
 
+#: src/pages.py:6334
 msgid "Advanced manual GPT"
 msgstr "Розширений ручний GPT"
 
+#: src/pages.py:6335
 msgid "Partition table"
 msgstr "Таблиця розділів"
 
+#: src/pages.py:6337
 msgid "Deleted partitions"
 msgstr "Видалені розділи"
 
+#: src/pages.py:6338
 msgid "Resized partitions"
 msgstr "Розділи зі зміненим розміром"
 
-msgid ""
-"Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS "
-"NVRAM entry."
-msgstr ""
-"Записуйте лише EFI/AnduinOS, зберігайте EFI/BOOT та створюйте перевірений "
-"запис AnduinOS у NVRAM."
+#: src/pages.py:6344
+msgid "Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS NVRAM entry."
+msgstr "Записуйте лише EFI/AnduinOS, зберігайте EFI/BOOT та створюйте перевірений запис AnduinOS у NVRAM."
 
+#: src/pages.py:6402
 msgid "Manual storage selection is missing. Return and review it."
 msgstr "Не вистачає ручного вибору сховища. Поверніться та перегляньте його."
 
-msgid ""
-"⚠ Listed NTFS resizes will move filesystem data and partition boundaries. "
-"Listed partitions will be deleted and every listed new partition will be "
-"formatted. Back up important data first; these partitioning operations "
-"cannot be undone."
-msgstr ""
-"⚠ Зміни розміру перелічених розділів NTFS перемістять дані файлової системи "
-"та межі розділів. Перелічені розділи буде видалено, а кожен перелічений "
-"новий розділ буде відформатовано. Спершу створіть резервну копію важливих "
-"даних; ці операції з розділенням дисків не можна скасувати."
+#: src/pages.py:6496
+msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Зміни розміру перелічених розділів NTFS перемістять дані файлової системи та межі розділів. Перелічені розділи буде видалено, а кожен перелічений новий розділ буде відформатовано. Спершу створіть резервну копію важливих даних; ці операції з розділенням дисків не можна скасувати."
 
+#: src/pages.py:6606
 msgid "Apply this manual disk layout?"
 msgstr "Застосувати це ручне розташування дисків?"
 
+#: src/pages.py:6607 src/pages.py:6735
 msgid "Apply Layout and Install"
 msgstr "Застосувати розташування та встановити"
 
+#: src/pages.py:6630
 #, python-brace-format
 msgid ""
 "AnduinOS will apply only the reviewed manual changes to {disk}.\n"
@@ -1972,92 +1755,74 @@ msgstr ""
 "AnduinOS застосує лише перевірені ручні зміни до {disk}.\n"
 "\n"
 
-msgid ""
-"Only the explicitly listed partitions will be deleted or formatted. "
-"Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
-msgstr ""
-"Будуть видалені або відформатовані лише явно перелічені розділи. Непов’язані"
-" розділи залишаться незмінними; EFI/BOOT не буде перезаписано."
+#: src/pages.py:6658
+msgid "Only the explicitly listed partitions will be deleted or formatted. Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
+msgstr "Будуть видалені або відформатовані лише явно перелічені розділи. Непов’язані розділи залишаться незмінними; EFI/BOOT не буде перезаписано."
 
-msgid ""
-"Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
-"shrunk after safety checks."
-msgstr ""
-"Редагування одного диска GPT. Початкові сектори розділів ніколи не "
-"переміщуються; звичайний том NTFS можна зменшити лише після перевірок "
-"безпеки."
+#: src/pages.py:4072
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
+msgstr "Редагування одного диска GPT. Початкові сектори розділів ніколи не переміщуються; звичайний том NTFS можна зменшити лише після перевірок безпеки."
 
+#: src/pages.py:5119
 msgid "XFS (classic, scalable)"
 msgstr "XFS (класична, масштабована)"
 
+#: src/pages.py:5120
 msgid "F2FS (flash-optimized)"
 msgstr "F2FS (оптимізована для флеш-накопичувачів)"
-
-#: src/pages.py:2927
-msgid ""
-"This exceeds the AnduinOS recommendation. It consumes more disk space and "
-"normally does not improve runtime performance."
-msgstr ""
-"Це перевищує рекомендоване значення AnduinOS. Воно споживає більше місця на "
-"диску і зазвичай не покращує продуктивність під час роботи."
-
-#: src/pages.py:6695
-msgid "Review your custom Swap size"
-msgstr "Перевірте вибраний розмір простору підкачки"
-
-#: src/pages.py:2900
-msgid ""
-"Disk Swap will not be created. ZRAM remains enabled, but sustained memory "
-"pressure can terminate applications and hibernation is unavailable. This is "
-"strongly discouraged."
-msgstr ""
-"Дисковий простір підкачки не буде створено. ZRAM залишиться ввімкненим, але "
-"тривале навантаження на пам’ять може призвести до завершення роботи "
-"застосунків, а режим гібернації буде недоступний. Це категорично не "
-"рекомендується."
-
-#: src/pages.py:3028
-msgid ""
-"ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses"
-" priority 10."
-msgstr ""
-"ZRAM завжди залишається увімкненим: 50% ОЗП · LZ4 · пріоритет 100. Простір "
-"підкачки на диску використовує пріоритет 10."
-
-#: src/pages.py:2920
-msgid ""
-"This size protects ordinary memory pressure, but is smaller than the "
-"hibernation target. Hibernation may fail or be unavailable."
-msgstr ""
-"Цього розміру достатньо для звичайного навантаження на пам’ять, але він "
-"менший за розмір, потрібний для гібернації. Гібернація може не спрацювати "
-"або бути недоступною."
-
-#: src/pages.py:3008
-msgid "{size} GiB · Max"
-msgstr "{size} ГіБ · Максимум"
-
-#: src/pages.py:6698
-msgid "ZRAM will remain enabled regardless of this choice."
-msgstr "ZRAM залишиться увімкненим незалежно від цього вибору."
-
-#: src/pages.py:2895
-msgid "✓ Best performance — AnduinOS recommended Swap size."
-msgstr ""
-"✓ Найкраща продуктивність — розмір простору підкачки, рекомендований "
-"AnduinOS."
 
 #: src/pages.py:3004
 msgid "0 GiB · ZRAM only"
 msgstr "0 ГіБ · лише ZRAM"
 
+#: src/pages.py:2900
+msgid "Disk Swap will not be created. ZRAM remains enabled, but sustained memory pressure can terminate applications and hibernation is unavailable. This is strongly discouraged."
+msgstr "Дисковий простір підкачки не буде створено. ZRAM залишиться ввімкненим, але тривале навантаження на пам’ять може призвести до завершення роботи застосунків, а режим гібернації буде недоступний. Це категорично не рекомендується."
+
+#: src/pages.py:6702
+msgid "Review your custom Swap size"
+msgstr "Перевірте вибраний розмір простору підкачки"
+
+#: src/pages.py:2927
+msgid "This exceeds the AnduinOS recommendation. It consumes more disk space and normally does not improve runtime performance."
+msgstr "Це перевищує рекомендоване значення AnduinOS. Воно споживає більше місця на диску і зазвичай не покращує продуктивність під час роботи."
+
 #: src/pages.py:2913
-msgid ""
-"This is below AnduinOS's runtime safety target. ZRAM still works, but heavy "
-"browser or application workloads can run out of backing memory sooner; "
-"hibernation is also unavailable."
-msgstr ""
-"Цей розмір менший за безпечний мінімум, рекомендований AnduinOS для "
-"звичайного використання. ZRAM продовжує працювати, але за інтенсивного "
-"використання браузера або застосунків доступний простір підкачки може "
-"вичерпатися швидше; гібернація також недоступна."
+msgid "This is below AnduinOS's runtime safety target. ZRAM still works, but heavy browser or application workloads can run out of backing memory sooner; hibernation is also unavailable."
+msgstr "Цей розмір менший за безпечний мінімум, рекомендований AnduinOS для звичайного використання. ZRAM продовжує працювати, але за інтенсивного використання браузера або застосунків доступний простір підкачки може вичерпатися швидше; гібернація також недоступна."
+
+#: src/pages.py:2920
+msgid "This size protects ordinary memory pressure, but is smaller than the hibernation target. Hibernation may fail or be unavailable."
+msgstr "Цього розміру достатньо для звичайного навантаження на пам’ять, але він менший за розмір, потрібний для гібернації. Гібернація може не спрацювати або бути недоступною."
+
+#: src/pages.py:3028
+msgid "ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses priority 10."
+msgstr "ZRAM завжди залишається увімкненим: 50% ОЗП · LZ4 · пріоритет 100. Простір підкачки на диску використовує пріоритет 10."
+
+#: src/pages.py:6705
+msgid "ZRAM will remain enabled regardless of this choice."
+msgstr "ZRAM залишиться увімкненим незалежно від цього вибору."
+
+#: src/pages.py:3008
+msgid "{size} GiB · Max"
+msgstr "{size} ГіБ · Максимум"
+
+#: src/pages.py:2895
+msgid "✓ Best performance — AnduinOS recommended Swap size."
+msgstr "✓ Найкраща продуктивність — розмір простору підкачки, рекомендований AnduinOS."
+
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:11
+msgid "Authorization is required to inspect disk partition geometry"
+msgstr "Для перевірки точних розташувань і розмірів розділів диска потрібна автентифікація"
+
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:10
+msgid "Read exact disk partition geometry for the AnduinOS installer"
+msgstr "Зчитувати точні розташування та розміри розділів диска для встановлювача AnduinOS"
+
+#: assets/anduinos-installer-beta-live-shortcut.desktop:3
+msgid "Prepare and start AnduinOS Installer"
+msgstr "Підготувати та запустити встановлювач AnduinOS"
+
+#: assets/anduinos-installer-beta.desktop:59
+msgid "Install AnduinOS to your computer"
+msgstr "Встановіть AnduinOS на ваш комп'ютер"

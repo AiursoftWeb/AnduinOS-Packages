@@ -58,23 +58,23 @@ msgstr "Profils d'application"
 msgid "Audit"
 msgstr "Audit"
 
-#: src/views/network_audit_view.rs:277
+#: src/views/network_audit_view.rs:278
 msgid "Auditor Error"
 msgstr "Erreur de l'auditeur"
 
-#: src/views/network_audit_view.rs:504
+#: src/views/network_audit_view.rs:505
 msgid "Block"
 msgstr "Bloquer"
 
-#: src/views/network_audit_view.rs:500
+#: src/views/network_audit_view.rs:501
 msgid "Block Connection?"
 msgstr "Bloquer la connexion ?"
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid "Block inbound traffic from"
 msgstr "Bloquer le trafic entrant depuis"
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid "Block outbound traffic to"
 msgstr "Bloquer le trafic sortant vers"
 
@@ -82,7 +82,7 @@ msgstr "Bloquer le trafic sortant vers"
 msgid "Blocked Events"
 msgstr "Événements bloqués"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Blocked Successfully"
 msgstr "Blocage réussi"
 
@@ -90,7 +90,7 @@ msgstr "Blocage réussi"
 msgid "Both"
 msgstr "Les deux"
 
-#: src/views/network_audit_view.rs:503 src/views/rules_view.rs:121
+#: src/views/network_audit_view.rs:504 src/views/rules_view.rs:121
 #: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
 msgid "Cancel"
 msgstr "Annuler"
@@ -191,11 +191,12 @@ msgstr "Direction"
 msgid "Error"
 msgstr "Erreur"
 
-#: src/views/network_audit_view.rs:554
+#: src/views/network_audit_view.rs:555
 msgid "Failed to Block"
 msgstr "Échec du blocage"
 
 #: src/views/status_view.rs:95 src/window.rs:64
+#: data/com.anduinos.ufwall.desktop:29 data/com.anduinos.ufwall.desktop:57
 msgid "Firewall"
 msgstr "Pare-feu"
 
@@ -348,7 +349,7 @@ msgstr "Rejeter"
 msgid "Resolve Domains"
 msgstr "Résoudre les domaines"
 
-#: src/views/network_audit_view.rs:551
+#: src/views/network_audit_view.rs:552
 msgid "Rule added to block"
 msgstr "Règle ajoutée à la liste de blocage"
 
@@ -398,12 +399,12 @@ msgstr ""
 "Cela supprimera toutes les règles personnalisées. Cette action est "
 "irréversible."
 
-#: src/views/network_audit_view.rs:493
+#: src/views/network_audit_view.rs:494
 msgid ""
 "This will prevent the remote host from sending any packets to your machine."
 msgstr "Cela empêchera l'hôte distant d'envoyer des paquets à votre machine."
 
-#: src/views/network_audit_view.rs:495
+#: src/views/network_audit_view.rs:496
 msgid ""
 "This will prevent your machine from sending any packets to the remote host."
 msgstr "Cela empêchera votre machine d'envoyer des paquets à l'hôte distant."
@@ -494,7 +495,7 @@ msgstr "Système de fichiers réseau"
 
 #: data/app_profiles/ntp:3
 msgid "Network Time Protocol"
-msgstr "Port / Protocole"
+msgstr "Protocole de temps réseau"
 
 #: data/app_profiles/mongodb:3
 msgid "NoSQL document database"
@@ -518,7 +519,7 @@ msgstr "Serveur de base de données PostgreSQL"
 
 #: data/app_profiles/rdp:3
 msgid "Remote Desktop Protocol"
-msgstr "Port / Protocole"
+msgstr "Protocole de bureau à distance"
 
 #: data/app_profiles/https:3
 msgid "Secure HTTP for web servers"
@@ -540,13 +541,13 @@ msgstr "Bureau à distance Virtual Network Computing"
 msgid "Windows file and printer sharing"
 msgstr "Partage de fichiers et d'imprimantes Windows"
 
-#: src/views/network_audit_view.rs:534
+#: src/views/network_audit_view.rs:535
 msgid "Audit Block"
 msgstr "Bloc d'audit"
 
 #: src/ufw/backend.rs:44 src/ufw/backend.rs:391 src/ufw/backend.rs:643
 msgid "Authentication cancelled"
-msgstr "Authification annulée"
+msgstr "Authentification annulée"
 
 #: src/views/network_audit_view.rs:160
 msgid "Download"
@@ -610,27 +611,27 @@ msgstr ""
 msgid "Network service command failed"
 msgstr "Échec de la commande du service réseau"
 
-#: src/views/network_audit_view.rs:371
+#: src/views/network_audit_view.rs:372
 msgid "No Active Connections"
 msgstr "Aucune connexion active"
 
-#: src/views/network_audit_view.rs:361
+#: src/views/network_audit_view.rs:362
 msgid "No Inbound Connections"
 msgstr "Aucune connexion entrante"
 
-#: src/views/network_audit_view.rs:366
+#: src/views/network_audit_view.rs:367
 msgid "No Outbound Connections"
 msgstr "Aucune connexion sortante"
 
-#: src/views/network_audit_view.rs:367
+#: src/views/network_audit_view.rs:368
 msgid "No applications are sending data to the internet."
 msgstr "Aucune application n’envoie de données sur Internet."
 
-#: src/views/network_audit_view.rs:362
+#: src/views/network_audit_view.rs:363
 msgid "No external devices are connecting to your open ports."
 msgstr "Aucun appareil externe ne se connecte à vos ports ouverts."
 
-#: src/views/network_audit_view.rs:372
+#: src/views/network_audit_view.rs:373
 msgid "No network activity detected."
 msgstr "Aucune activité réseau détectée."
 
@@ -649,3 +650,29 @@ msgstr "Envoi"
 #: src/ufw/backend.rs:48
 msgid "pkexec failed"
 msgstr "Échec de pkexec"
+
+#: data/com.anduinos.ufwall.desktop:124
+msgid "firewall;ufw;security;network;"
+msgstr "pare-feu;ufw;sécurité;réseau;"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:82
+msgid "Authentication is required to change local network discovery"
+msgstr ""
+"L'authentification est requise pour modifier la découverte du réseau local"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:80
+msgid "Manage local network discovery"
+msgstr "Gérer la découverte du réseau local"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:39
+msgid "Authentication is required to modify firewall settings"
+msgstr ""
+"L'authentification est requise pour modifier les paramètres du pare-feu"
+
+#: data/com.anduinos.ufwall.desktop:85
+msgid "Configure your firewall"
+msgstr "Configurez votre pare-feu"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:9
+msgid "Manage UFW firewall settings"
+msgstr "Gérer les paramètres du pare-feu UFW"

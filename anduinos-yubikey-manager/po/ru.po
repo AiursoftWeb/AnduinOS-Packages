@@ -17,19 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: src/window.rs:2020
+#: src/window.rs:2022
 msgid "1 identity is currently available to SSH applications."
 msgstr "В настоящее время для SSH-приложений доступна 1 идентификация."
 
-#: src/window.rs:2304
+#: src/window.rs:2306
 msgid "1 resident SSH key is available from your connected YubiKey."
 msgstr "С подключенного YubiKey доступен 1 резидентный SSH-ключ."
 
-#: src/window.rs:1814
+#: src/window.rs:1816
 msgid "1 resident SSH key · {0}"
 msgstr "1 резидентный SSH-ключ · {0}"
 
-#: src/window.rs:1474 src/window.rs:1652
+#: src/window.rs:1476 src/window.rs:1654
 msgid "A key must be connected before it can be enrolled."
 msgstr "Перед регистрацией необходимо подключить ключ."
 
@@ -37,56 +37,56 @@ msgstr "Перед регистрацией необходимо подключ�
 msgid "About"
 msgstr "О программе"
 
-#: src/home.rs:381 src/home.rs:402
+#: src/home.rs:383 src/home.rs:404
 msgid "Account password"
 msgstr "Пароль учетной записи"
 
-#: src/window.rs:2490
+#: src/window.rs:2492
 msgid "Add another SSH key"
 msgstr "Добавить другой SSH-ключ"
 
-#: src/window.rs:1314
+#: src/window.rs:1316
 msgid "Add this public key to GitHub as a Signing Key."
 msgstr "Добавьте этот публичный ключ в GitHub как Ключ подписи."
 
-#: src/home.rs:336 src/home.rs:389
+#: src/home.rs:338 src/home.rs:391
 msgid "Administrator access"
 msgstr "Доступ администратора"
 
-#: src/window.rs:2667
+#: src/window.rs:2669
 msgid "Advanced options"
 msgstr "Расширенные параметры"
 
-#: src/window.rs:2619
+#: src/window.rs:2621
 msgid "Algorithm"
 msgstr "Алгоритм"
 
-#: src/window.rs:1582
+#: src/window.rs:1584
 msgid "Allow sudo without authentication"
 msgstr "Разрешить использование sudo без аутентификации"
 
-#: src/window.rs:1672
+#: src/window.rs:1674
 msgid "Allowed for sudo · not currently connected"
 msgstr "Разрешено для sudo · в данный момент не подключен"
 
-#: src/window.rs:1674
+#: src/window.rs:1676
 msgid "Allowed to authorize sudo"
 msgstr "Разрешено авторизовать sudo"
 
-#: src/window.rs:1494
+#: src/window.rs:1496
 msgid "Allowed to unlock this user"
 msgstr "Разрешено разблокировать этого пользователя"
 
-#: src/window.rs:1492
+#: src/window.rs:1494
 msgid "Allowed to unlock this user · not currently connected"
 msgstr ""
 "Разрешено разблокировать этого пользователя · в данный момент не подключен"
 
-#: src/window.rs:1902
+#: src/window.rs:1904
 msgid "Already loaded"
 msgstr "Уже загружено"
 
-#: src/window.rs:1639
+#: src/window.rs:1641
 msgid "An enrolled YubiKey or the account password can authorize sudo."
 msgstr ""
 "Зарегистрированный YubiKey или пароль учётной записи могут авторизовать "
@@ -100,11 +100,11 @@ msgstr "Команда AnduinOS"
 msgid "AnduinOS YubiKey Security Center"
 msgstr "Центр безопасности AnduinOS YubiKey"
 
-#: src/home.rs:126
+#: src/home.rs:128
 msgid "AnduinOS works more securely with a YubiKey"
 msgstr "AnduinOS работает более безопасно с YubiKey"
 
-#: src/window.rs:2625
+#: src/window.rs:2627
 msgid "Application"
 msgstr "Приложение"
 
@@ -116,23 +116,23 @@ msgstr ""
 "Имя приложения должно начинаться с ssh:, не содержать пробелов и иметь длину"
 " не более 253 байт."
 
-#: src/home.rs:411 src/window.rs:631
+#: src/home.rs:413 src/window.rs:631
 msgid "Available"
 msgstr "Доступно"
 
-#: src/window.rs:1255
+#: src/window.rs:1257
 msgid "Available through SSH agent"
 msgstr "Доступно через SSH-агент"
 
-#: src/window.rs:1253
+#: src/window.rs:1255
 msgid "Available through local key handle"
 msgstr "Доступно через локальный идентификатор ключа"
 
-#: src/home.rs:172
+#: src/home.rs:174
 msgid "Buy a YubiKey"
 msgstr "Купить YubiKey"
 
-#: src/window.rs:2698 src/window.rs:2755 src/window.rs:3027
+#: src/window.rs:2700 src/window.rs:2757 src/window.rs:3029
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -144,15 +144,15 @@ msgstr "Проверка SSH-ключей…"
 msgid "Checking SSH support…"
 msgstr "Проверка поддержки SSH…"
 
-#: src/home.rs:65 src/window.rs:478
+#: src/home.rs:67 src/window.rs:478
 msgid "Checking connected YubiKeys"
 msgstr "Проверка подключенных YubiKeys"
 
-#: src/home.rs:428
+#: src/home.rs:430
 msgid "Choose a YubiKey-backed SSH key"
 msgstr "Выберите SSH-ключ на базе YubiKey"
 
-#: src/window.rs:2639
+#: src/window.rs:2641
 msgid "Choose a local key-handle file"
 msgstr "Выберите локальный файл дескриптора ключа"
 
@@ -173,11 +173,11 @@ msgstr "Выберите действительную выходную папк�
 msgid "Choose an SSH key for Git signing."
 msgstr "Выберите SSH-ключ для подписи Git."
 
-#: src/window.rs:2650
+#: src/window.rs:2652
 msgid "Choose local SSH key-handle path"
 msgstr "Выберите локальный путь к дескриптору SSH-ключа"
 
-#: src/window.rs:1218
+#: src/window.rs:1220
 msgid ""
 "Choose one SSH key. The selection takes effect immediately for this user's "
 "Git commits."
@@ -185,14 +185,14 @@ msgstr ""
 "Выберите один SSH-ключ. Выбор сразу применится к коммитам Git этого "
 "пользователя."
 
-#: src/window.rs:1465
+#: src/window.rs:1467
 msgid ""
 "Choose which YubiKeys may unlock {0}. Password sign-in remains available."
 msgstr ""
 "Выберите, какие YubiKeys могут разблокировать {0}. Вход по паролю останется "
 "доступным."
 
-#: src/window.rs:3074 src/window.rs:3096
+#: src/window.rs:3076 src/window.rs:3098
 msgid "Close"
 msgstr "Закрыть"
 
@@ -204,51 +204,51 @@ msgstr "Команда завершилась с кодом"
 msgid "Command exited with {0}"
 msgstr "Команда завершилась с кодом {0}"
 
-#: src/window.rs:1217
+#: src/window.rs:1219
 msgid "Commit signing"
 msgstr "Подпись коммитов"
 
-#: src/home.rs:596
+#: src/home.rs:598
 msgid "Configured YubiKeys"
 msgstr "Настроенные YubiKeys"
 
-#: src/home.rs:627
+#: src/home.rs:629
 msgid "Configured for {0} · Not connected"
 msgstr "Настроено для {0} · Не подключено"
 
-#: src/window.rs:2505
+#: src/window.rs:2507
 msgid "Connect a FIDO security key first"
 msgstr "Сначала подключите FIDO-ключ безопасности"
 
-#: src/window.rs:2262
+#: src/window.rs:2264
 msgid "Connect a YubiKey"
 msgstr "Подключите YubiKey"
 
-#: src/home.rs:158
+#: src/home.rs:160
 msgid "Connect a YubiKey to get started"
 msgstr "Подключите YubiKey, чтобы начать"
 
-#: src/home.rs:124
+#: src/home.rs:126
 msgid "Connect your YubiKey"
 msgstr "Подключите свой YubiKey"
 
-#: src/home.rs:243 src/home.rs:315
+#: src/home.rs:245 src/home.rs:317
 msgid "Connected"
 msgstr "Подключено"
 
-#: src/home.rs:300
+#: src/home.rs:302
 msgid "Connected YubiKeys"
 msgstr "Подключенные YubiKeys"
 
-#: src/window.rs:2699
+#: src/window.rs:2701
 msgid "Continue"
 msgstr "Продолжить"
 
-#: src/window.rs:3028
+#: src/window.rs:3030
 msgid "Continue to PIN"
 msgstr "Перейти к вводу PIN-кода"
 
-#: src/window.rs:1326 src/window.rs:2778
+#: src/window.rs:1328 src/window.rs:2780
 msgid "Copy public key"
 msgstr "Копировать открытый ключ"
 
@@ -268,11 +268,11 @@ msgstr "Не удалось создать временные данные дл�
 msgid "Could not create {0}: {1}"
 msgstr "Не удалось создать {0}: {1}"
 
-#: src/window.rs:2839
+#: src/window.rs:2841
 msgid "Could not export the public key: {0}"
 msgstr "Не удалось экспортировать открытый ключ: {0}"
 
-#: src/window.rs:2337
+#: src/window.rs:2339
 msgid "Could not find security keys"
 msgstr "Не удалось найти ключи безопасности"
 
@@ -284,11 +284,11 @@ msgstr "Не удалось очистить временный открытый
 msgid "Could not inspect USB devices: {0}"
 msgstr "Не удалось проверить устройства USB: {0}"
 
-#: src/window.rs:1991
+#: src/window.rs:1993
 msgid "Could not inspect this YubiKey"
 msgstr "Не удалось проверить этот YubiKey"
 
-#: src/window.rs:540 src/window.rs:1554 src/window.rs:1734
+#: src/window.rs:540 src/window.rs:1556 src/window.rs:1736
 msgid "Could not list YubiKeys"
 msgstr "Не удалось получить список YubiKeys"
 
@@ -320,7 +320,7 @@ msgstr "Не удалось выполнить {0}: {1}"
 msgid "Could not start {0}: {1}"
 msgstr "Не удалось запустить {0}: {1}"
 
-#: src/home.rs:101
+#: src/home.rs:103
 msgid "Could not update security keys"
 msgstr "Не удалось обновить ключи безопасности"
 
@@ -328,33 +328,33 @@ msgstr "Не удалось обновить ключи безопасности
 msgid "Could not write the temporary public key: {0}"
 msgstr "Не удалось записать временный открытый ключ: {0}"
 
-#: src/window.rs:2533
+#: src/window.rs:2535
 msgid "Create"
 msgstr "Создать"
 
-#: src/window.rs:2507
+#: src/window.rs:2509
 msgid "Create a resident SSH credential on a selected device"
 msgstr "Создать локальные SSH-учетные данные на выбранном устройстве"
 
-#: src/window.rs:2692
+#: src/window.rs:2694
 msgid "Create a resident SSH key"
 msgstr "Создать локальный SSH-ключ"
 
-#: src/window.rs:2501
+#: src/window.rs:2503
 msgid "Create…"
 msgstr "Создать…"
 
-#: src/window.rs:2962
+#: src/window.rs:2964
 msgid "Deletion result is unknown"
 msgstr "Результат удаления неизвестен"
 
-#: src/window.rs:1586
+#: src/window.rs:1588
 msgid "Disabled · sudo must authenticate with a YubiKey or account password"
 msgstr ""
 "Отключено · для sudo требуется аутентификация с помощью YubiKey или пароля "
 "учетной записи"
 
-#: src/window.rs:2321
+#: src/window.rs:2323
 msgid "Discover SSH keys on your YubiKeys"
 msgstr "Поиск SSH-ключей на ваших YubiKeys"
 
@@ -364,11 +364,11 @@ msgid ""
 msgstr ""
 "Метка должна занимать не более 200 байт и не содержать управляющих символов."
 
-#: src/window.rs:1222
+#: src/window.rs:1224
 msgid "Do not sign new commits by default"
 msgstr "Не подписывать новые коммиты по умолчанию"
 
-#: src/window.rs:1563
+#: src/window.rs:1565
 msgid ""
 "During enrollment, disconnect all other security keys. The selected key will"
 " blink; touch it to continue. Multiple keys can be enrolled one at a time."
@@ -377,48 +377,48 @@ msgstr ""
 "ключ начнет мигать; коснитесь его, чтобы продолжить. Несколько ключей можно "
 "регистрировать по одному."
 
-#: src/window.rs:2610
+#: src/window.rs:2612
 msgid "ECDSA-SK (recommended compatibility)"
 msgstr "ECDSA-SK (рекомендуется для совместимости)"
 
-#: src/window.rs:2620
+#: src/window.rs:2622
 msgid "ECDSA-SK works with the widest range of YubiKeys"
 msgstr "ECDSA-SK работает с широким спектром YubiKeys"
 
-#: src/window.rs:2497
+#: src/window.rs:2499
 msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
 msgstr ""
 "ECDSA-SK · локальный · требуется касание · безопасные параметры "
 "совместимости по умолчанию"
 
-#: src/window.rs:2611
+#: src/window.rs:2613
 msgid "Ed25519-SK (newer YubiKeys)"
 msgstr "Ed25519-SK (новые YubiKeys)"
 
-#: src/home.rs:374 src/home.rs:393 src/home.rs:421
+#: src/home.rs:376 src/home.rs:395 src/home.rs:423
 msgid "Enabled"
 msgstr "Включено"
 
-#: src/window.rs:1584
+#: src/window.rs:1586
 msgid ""
 "Enabled · programs can obtain administrator privileges without confirmation"
 msgstr ""
 "Включено · программы могут получать привилегии администратора без "
 "подтверждения"
 
-#: src/window.rs:1610
+#: src/window.rs:1612
 msgid "Enabling passwordless sudo…"
 msgstr "Включение sudo без пароля…"
 
-#: src/window.rs:1612
+#: src/window.rs:1614
 msgid "Enabling sudo authentication…"
 msgstr "Включение аутентификации sudo…"
 
-#: src/window.rs:1670
+#: src/window.rs:1672
 msgid "Enrolled · inactive while sudo authentication is bypassed"
 msgstr "Зарегистрировано · неактивно, пока обходится аутентификация sudo"
 
-#: src/window.rs:1562
+#: src/window.rs:1564
 msgid "Enrollment safety"
 msgstr "Безопасность регистрации"
 
@@ -429,7 +429,7 @@ msgstr ""
 "Введите FIDO-PIN для {0}. Коснитесь устройства, если оно мигает. PIN не "
 "сохраняется."
 
-#: src/window.rs:1419
+#: src/window.rs:1421
 msgid ""
 "Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No "
 "commit will be created."
@@ -437,7 +437,7 @@ msgstr ""
 "Введите FIDO-PIN, затем коснитесь выбранного YubiKey, когда он замигает. "
 "Коммит не будет создан."
 
-#: src/window.rs:1172
+#: src/window.rs:1174
 msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
 msgstr "Введите PIN-код FIDO. Коснитесь YubiKey, если он мигает."
 
@@ -447,23 +447,23 @@ msgstr ""
 "Введите FIDO-PIN для YubiKey, чтобы протестировать этот локальный дескриптор"
 " ключа."
 
-#: src/window.rs:2531 src/window.rs:2920
+#: src/window.rs:2533 src/window.rs:2922
 msgid "Enter the selected YubiKey FIDO PIN"
 msgstr "Введите выбранный PIN-код FIDO для YubiKey"
 
-#: src/window.rs:2779
+#: src/window.rs:2781
 msgid "Export .pub"
 msgstr "Экспорт .pub"
 
-#: src/window.rs:2821
+#: src/window.rs:2823
 msgid "Export SSH public key"
 msgstr "Экспорт открытого ключа SSH"
 
-#: src/window.rs:2745
+#: src/window.rs:2747
 msgid "FIDO PIN"
 msgstr "PIN-код FIDO"
 
-#: src/window.rs:1200 src/window.rs:2001 src/window.rs:2506
+#: src/window.rs:1202 src/window.rs:2003 src/window.rs:2508
 msgid "FIDO device discovery is unavailable"
 msgstr "Обнаружение устройств FIDO недоступно"
 
@@ -471,11 +471,11 @@ msgstr "Обнаружение устройств FIDO недоступно"
 msgid "FIDO security key"
 msgstr "Ключ безопасности FIDO"
 
-#: src/window.rs:2323
+#: src/window.rs:2325
 msgid "Finish inspecting your YubiKeys"
 msgstr "Завершение проверки ваших YubiKeys"
 
-#: src/home.rs:663
+#: src/home.rs:665
 msgid "Firmware {0}"
 msgstr "Прошивка {0}"
 
@@ -487,11 +487,11 @@ msgstr ""
 "Для безопасной регистрации отключите все остальные ключи безопасности и "
 "оставьте подключенным только выбранный YubiKey."
 
-#: src/home.rs:419 src/window.rs:112 src/window.rs:161 src/window.rs:239
+#: src/home.rs:421 src/window.rs:112 src/window.rs:161 src/window.rs:239
 msgid "Git signing"
 msgstr "Подпись Git"
 
-#: src/window.rs:1311
+#: src/window.rs:1313
 msgid "Git signing is enabled"
 msgstr "Подпись Git включена"
 
@@ -503,19 +503,19 @@ msgstr ""
 "Тест подписи Git не удался:\n"
 "{0}"
 
-#: src/window.rs:1446
+#: src/window.rs:1448
 msgid "Git signing test passed"
 msgstr "Тест подписи Git пройден"
 
-#: src/window.rs:1081
+#: src/window.rs:1083
 msgid "Git is not installed"
 msgstr "Git не установлен"
 
-#: src/window.rs:1103
+#: src/window.rs:1105
 msgid "The Git installation task stopped unexpectedly."
 msgstr "Задача установки Git была неожиданно остановлена."
 
-#: src/window.rs:1082
+#: src/window.rs:1084
 msgid "Git is required for commit signing. Install it to continue."
 msgstr "Для подписи коммитов требуется Git. Установите его, чтобы продолжить."
 
@@ -523,23 +523,23 @@ msgstr "Для подписи коммитов требуется Git. Уста�
 msgid "Home"
 msgstr "Главная"
 
-#: src/window.rs:1473 src/window.rs:1651
+#: src/window.rs:1475 src/window.rs:1653
 msgid "Insert a YubiKey"
 msgstr "Вставьте YubiKey"
 
-#: src/window.rs:1129
+#: src/window.rs:1131
 msgid "Insert a YubiKey, then press Refresh."
 msgstr "Вставьте YubiKey, затем нажмите «Обновить»."
 
-#: src/window.rs:1785
+#: src/window.rs:1787
 msgid "Insert a YubiKey. This page will detect it when you refresh."
 msgstr "Вставьте YubiKey. Эта страница обнаружит его после обновления."
 
-#: src/window.rs:738 src/window.rs:1840
+#: src/window.rs:738 src/window.rs:1842
 msgid "Inspect"
 msgstr "Осмотреть"
 
-#: src/window.rs:2391
+#: src/window.rs:2393
 msgid "Inspect YubiKey"
 msgstr "Проверить YubiKey"
 
@@ -547,11 +547,11 @@ msgstr "Проверить YubiKey"
 msgid "Inspect YubiKey {0} of {1}"
 msgstr "Проверить YubiKey {0} из {1}"
 
-#: src/window.rs:1838
+#: src/window.rs:1840
 msgid "Inspect again"
 msgstr "Проверить снова"
 
-#: src/window.rs:2393
+#: src/window.rs:2395
 msgid "Inspect all keys"
 msgstr "Проверить все ключи"
 
@@ -559,11 +559,11 @@ msgstr "Проверить все ключи"
 msgid "Inspect this YubiKey"
 msgstr "Проверить этот YubiKey"
 
-#: src/window.rs:1831
+#: src/window.rs:1833
 msgid "Inspected"
 msgstr "Проверено"
 
-#: src/window.rs:1821
+#: src/window.rs:1823
 msgid "Inspection needs attention · {0}"
 msgstr "Требует внимания · {0}"
 
@@ -571,51 +571,51 @@ msgstr "Требует внимания · {0}"
 msgid "Invalid FIDO device path."
 msgstr "Неверный путь к устройству FIDO."
 
-#: src/window.rs:1777
+#: src/window.rs:1779
 msgid "Keys stored on your YubiKeys"
 msgstr "Ключи, сохраненные на ваших YubiKeys"
 
-#: src/window.rs:1173 src/window.rs:1880
+#: src/window.rs:1175 src/window.rs:1882
 msgid "Load"
 msgstr "Загрузить"
 
-#: src/window.rs:1171
+#: src/window.rs:1173
 msgid "Load SSH keys"
 msgstr "Загрузить SSH-ключи"
 
-#: src/window.rs:1864
+#: src/window.rs:1866
 msgid "Load all"
 msgstr "Загрузить все"
 
-#: src/window.rs:1157
+#: src/window.rs:1159
 msgid "Load keys"
 msgstr "Загрузить ключи"
 
-#: src/window.rs:1878
+#: src/window.rs:1880
 msgid "Load resident SSH keys"
 msgstr "Загрузить локальные ключи SSH"
 
-#: src/window.rs:1866
+#: src/window.rs:1868
 msgid "Load this YubiKey's resident SSH keys into the agent"
 msgstr "Загрузить резидентные SSH-ключи этого YubiKey в агент"
 
-#: src/window.rs:1257
+#: src/window.rs:1259
 msgid "Load this resident key into the SSH agent before signing"
 msgstr "Загрузите этот резидентный ключ в SSH-агент перед подписью"
 
-#: src/window.rs:1923
+#: src/window.rs:1925
 msgid "Loaded"
 msgstr "Загружено"
 
-#: src/window.rs:1182
+#: src/window.rs:1184
 msgid "Loading SSH keys… Touch the YubiKey if it flashes."
 msgstr "Загрузка SSH-ключей… Коснитесь YubiKey, если он мигает."
 
-#: src/window.rs:2633
+#: src/window.rs:2635
 msgid "Local key handle path"
 msgstr "Путь к дескриптору локального ключа"
 
-#: src/window.rs:2605
+#: src/window.rs:2607
 msgid "Local key label"
 msgstr "Метка локального ключа"
 
@@ -623,71 +623,71 @@ msgstr "Метка локального ключа"
 msgid "Looking for your SSH agent and connected YubiKeys."
 msgstr "Поиск вашего SSH-агента и подключенных YubiKeys."
 
-#: src/window.rs:1832 src/window.rs:2124
+#: src/window.rs:1834 src/window.rs:2126
 msgid "Needs attention"
 msgstr "Требует внимания"
 
-#: src/window.rs:2496
+#: src/window.rs:2498
 msgid "New hardware-backed SSH key"
 msgstr "Новый аппаратный ключ SSH"
 
-#: src/window.rs:1128
+#: src/window.rs:1130
 msgid "No FIDO security key detected"
 msgstr "Ключ безопасности FIDO не обнаружен"
 
-#: src/window.rs:2037
+#: src/window.rs:2039
 msgid "No SSH agent was detected"
 msgstr "Агент SSH не обнаружен"
 
-#: src/window.rs:1784
+#: src/window.rs:1786
 msgid "No YubiKey connected"
 msgstr "YubiKey не подключен"
 
-#: src/home.rs:653
+#: src/home.rs:655
 msgid "No hardware serial"
 msgstr "Отсутствует аппаратный серийный номер"
 
-#: src/window.rs:1930
+#: src/window.rs:1932
 msgid "No resident SSH keys"
 msgstr "Нет резидентных SSH-ключей"
 
-#: src/window.rs:1144
+#: src/window.rs:1146
 msgid "No resident SSH keys found"
 msgstr "Резидентные SSH-ключи не найдены"
 
-#: src/window.rs:1811
+#: src/window.rs:1813
 msgid "No resident SSH keys found · {0}"
 msgstr "Резидентные SSH-ключи не найдены · {0}"
 
-#: src/window.rs:2302
+#: src/window.rs:2304
 msgid "No resident SSH keys were found on the connected YubiKeys."
 msgstr "На подключенных YubiKeys не найдено резидентных SSH-ключей."
 
-#: src/window.rs:1221
+#: src/window.rs:1223
 msgid "No signing"
 msgstr "Без подписи"
 
-#: src/home.rs:376 src/home.rs:395 src/home.rs:423
+#: src/home.rs:378 src/home.rs:397 src/home.rs:425
 msgid "Not configured"
 msgstr "Не настроено"
 
-#: src/window.rs:1833
+#: src/window.rs:1835
 msgid "Not inspected"
 msgstr "Не проверено"
 
-#: src/window.rs:1823
+#: src/window.rs:1825
 msgid "Not inspected yet · {0}"
 msgstr "Еще не проверено · {0}"
 
-#: src/home.rs:174
+#: src/home.rs:176
 msgid "Open the official Yubico Store"
 msgstr "Открыть официальный магазин Yubico"
 
-#: src/window.rs:1089 src/window.rs:1111
+#: src/window.rs:1091 src/window.rs:1113
 msgid "Install Git"
 msgstr "Установить Git"
 
-#: src/window.rs:1096
+#: src/window.rs:1098
 msgid "Installing Git…"
 msgstr "Установка Git…"
 
@@ -731,36 +731,36 @@ msgstr ""
 "OpenSSH сообщил об успешном завершении, но новые встроенные учетные данные "
 "не обнаружены. Не повторяйте попытку, пока не проверите YubiKey."
 
-#: src/window.rs:2668
+#: src/window.rs:2670
 msgid "OpenSSH/FIDO credential metadata and local file location"
 msgstr ""
 "Метаданные учетных данных OpenSSH/FIDO и расположение локального файла"
 
-#: src/home.rs:391
+#: src/home.rs:393
 msgid "Passwordless"
 msgstr "Без пароля"
 
-#: src/window.rs:2922
+#: src/window.rs:2924
 msgid "Permanently delete"
 msgstr "Удалить навсегда"
 
-#: src/window.rs:2782
+#: src/window.rs:2784
 msgid "Permanently delete from YubiKey…"
 msgstr "Удалить с YubiKey навсегда…"
 
-#: src/window.rs:3021
+#: src/window.rs:3023
 msgid "Permanently delete this resident SSH credential?"
 msgstr "Удалить эти резидентные учетные данные SSH навсегда?"
 
-#: src/home.rs:342
+#: src/home.rs:344
 msgid "Protect authentication and commit signing"
 msgstr "Защита аутентификации и подписи коммитов"
 
-#: src/home.rs:193 src/home.rs:288
+#: src/home.rs:195 src/home.rs:290
 msgid "Protection for {0}"
 msgstr "Защита для {0}"
 
-#: src/window.rs:2325
+#: src/window.rs:2327
 msgid ""
 "Read the resident SSH keys already stored on your YubiKeys. You will enter "
 "each key's FIDO PIN and may need to touch it."
@@ -777,15 +777,15 @@ msgstr "Чтение SSH-ключей из {0}… Коснитесь устро�
 msgid "Reading account security settings…"
 msgstr "Чтение настроек безопасности учетной записи…"
 
-#: src/window.rs:2028 src/window.rs:2314
+#: src/window.rs:2030 src/window.rs:2316
 msgid "Ready"
 msgstr "Готово"
 
-#: src/home.rs:366
+#: src/home.rs:368
 msgid "Ready to inspect"
 msgstr "Готово к проверке"
 
-#: src/home.rs:266
+#: src/home.rs:268
 msgid "Ready to protect {0}"
 msgstr "Готово защитить {0}"
 
@@ -793,35 +793,35 @@ msgstr "Готово защитить {0}"
 msgid "Refresh connected YubiKeys"
 msgstr "Обновить подключенные YubiKeys"
 
-#: src/window.rs:2781
+#: src/window.rs:2783
 msgid "Remove from agent"
 msgstr "Удалить из агента"
 
-#: src/window.rs:2882
+#: src/window.rs:2884
 msgid "Removing this key from the SSH agent…"
 msgstr "Удаление этого ключа из агента SSH…"
 
-#: src/window.rs:2662
+#: src/window.rs:2664
 msgid "Require verification for every signature"
 msgstr "Требовать подтверждение для каждой подписи"
 
-#: src/window.rs:2663
+#: src/window.rs:2665
 msgid "Requires the FIDO PIN each time this key signs"
 msgstr "Каждый раз при подписании этим ключом требуется PIN-код FIDO"
 
-#: src/window.rs:2561
+#: src/window.rs:2563
 msgid "Resident SSH key created"
 msgstr "Создан встроенный ключ SSH"
 
-#: src/window.rs:2955
+#: src/window.rs:2957
 msgid "Resident credential permanently deleted"
 msgstr "Резидентные учетные данные удалены навсегда"
 
-#: src/window.rs:1907
+#: src/window.rs:1909
 msgid "Resident keys loaded"
 msgstr "Загружены встроенные ключи"
 
-#: src/window.rs:2629
+#: src/window.rs:2631
 msgid "Resident username"
 msgstr "Имя пользователя для встроенного ключа"
 
@@ -831,35 +831,35 @@ msgstr ""
 "Имя пользователя должно содержать от 1 до 64 байт и не содержать управляющих"
 " символов."
 
-#: src/home.rs:341
+#: src/home.rs:343
 msgid "SSH & Git"
 msgstr "SSH и Git"
 
-#: src/window.rs:2010
+#: src/window.rs:2012
 msgid "SSH agent"
 msgstr "Агент SSH"
 
-#: src/window.rs:2018
+#: src/window.rs:2020
 msgid "SSH agent is ready"
 msgstr "SSH-агент готов"
 
-#: src/window.rs:2033
+#: src/window.rs:2035
 msgid "SSH agent unavailable"
 msgstr "Агент SSH недоступен"
 
-#: src/home.rs:426
+#: src/home.rs:428
 msgid "SSH commit signing"
 msgstr "Подпись коммитов SSH"
 
-#: src/window.rs:2797
+#: src/window.rs:2799
 msgid "SSH key actions"
 msgstr "Действия с ключами SSH"
 
-#: src/window.rs:2461
+#: src/window.rs:2463
 msgid "SSH key for {0}"
 msgstr "SSH-ключ для {0}"
 
-#: src/home.rs:410 src/window.rs:111 src/window.rs:157 src/window.rs:238
+#: src/home.rs:412 src/window.rs:111 src/window.rs:157 src/window.rs:238
 msgid "SSH keys"
 msgstr "SSH-ключи"
 
@@ -867,7 +867,7 @@ msgstr "SSH-ключи"
 msgid "SSH_AUTH_SOCK is not set"
 msgstr "Переменная SSH_AUTH_SOCK не задана"
 
-#: src/window.rs:2693
+#: src/window.rs:2695
 msgid ""
 "Safe defaults use ECDSA-SK, require touch, and store a discoverable "
 "credential on the selected YubiKey."
@@ -875,7 +875,7 @@ msgstr ""
 "Безопасные значения по умолчанию используют ECDSA-SK, требуют подтверждения "
 "касанием и сохраняют обнаруживаемые учетные данные на выбранном YubiKey."
 
-#: src/home.rs:337
+#: src/home.rs:339
 msgid "Secure sudo authorization"
 msgstr "Безопасное авторизование sudo"
 
@@ -883,11 +883,11 @@ msgstr "Безопасное авторизование sudo"
 msgid "Security Center"
 msgstr "Центр безопасности"
 
-#: src/home.rs:655
+#: src/home.rs:657
 msgid "Serial {0}"
 msgstr "Серийный номер {0}"
 
-#: src/home.rs:132
+#: src/home.rs:134
 msgid ""
 "Sign in, authorize sudo, and protect SSH and Git identities with a physical "
 "touch."
@@ -895,11 +895,11 @@ msgstr ""
 "Вход, авторизация sudo и защита идентификаторов SSH и Git с помощью "
 "физического касания."
 
-#: src/home.rs:331 src/home.rs:372 src/home.rs:614
+#: src/home.rs:333 src/home.rs:374 src/home.rs:616
 msgid "Sign-in"
 msgstr "Вход"
 
-#: src/window.rs:2863
+#: src/window.rs:2865
 msgid "Signing test passed"
 msgstr "Тест подписи пройден"
 
@@ -907,15 +907,15 @@ msgstr "Тест подписи пройден"
 msgid "Temporary public-key path is invalid."
 msgstr "Временный путь к публичному ключу недействителен."
 
-#: src/window.rs:1420
+#: src/window.rs:1422
 msgid "Test"
-msgstr "Test"
+msgstr "Проверить"
 
-#: src/window.rs:1418
+#: src/window.rs:1420
 msgid "Test Git signing"
 msgstr "Проверить подпись Git"
 
-#: src/window.rs:1345 src/window.rs:2780
+#: src/window.rs:1347 src/window.rs:2782
 msgid "Test signing"
 msgstr "Тестирование подписи"
 
@@ -927,11 +927,11 @@ msgstr ""
 "Инструмент регистрации FIDO не установлен. Установите пакет libpam-u2f и "
 "повторите попытку."
 
-#: src/window.rs:1879
+#: src/window.rs:1881
 msgid "The PIN is sent directly to ssh-add and is never stored."
 msgstr "PIN-код отправляется напрямую в ssh-add и никогда не сохраняется."
 
-#: src/window.rs:2532
+#: src/window.rs:2534
 msgid ""
 "The PIN is sent through a private pipe to OpenSSH. It is never stored or "
 "placed in command arguments."
@@ -939,7 +939,7 @@ msgstr ""
 "PIN-код передается через закрытый канал в OpenSSH. Он никогда не сохраняется"
 " и не передается в качестве аргументов команды."
 
-#: src/window.rs:2864
+#: src/window.rs:2866
 msgid "The SSH agent successfully signed and verified data with this key."
 msgstr "Агент SSH успешно подписал и проверил данные с помощью этого ключа."
 
@@ -947,7 +947,7 @@ msgstr "Агент SSH успешно подписал и проверил да�
 msgid "The YubiKey operation stopped unexpectedly."
 msgstr "Операция YubiKey была неожиданно прервана."
 
-#: src/window.rs:2598
+#: src/window.rs:2600
 msgid "The credential will be created only on this exact device"
 msgstr "Удостоверение будет создано только на этом конкретном устройстве"
 
@@ -959,11 +959,11 @@ msgstr ""
 "Команда удаления завершена, но после этого не удалось проверить выбранный YubiKey: {0}\n"
 "Учетные данные могли быть удалены или нет. Не повторяйте попытку. Сначала переподключите и проверьте YubiKey."
 
-#: src/window.rs:541 src/window.rs:1536 src/window.rs:1716
+#: src/window.rs:541 src/window.rs:1538 src/window.rs:1718
 msgid "The enrollment task failed."
 msgstr "Задача регистрации не выполнена."
 
-#: src/window.rs:2956
+#: src/window.rs:2958
 msgid ""
 "The exact resident credential is no longer present on the selected YubiKey. "
 "Local .pub or key-handle files and any SSH-agent entry were not removed."
@@ -972,7 +972,7 @@ msgstr ""
 " файлы .pub или файлы с дескриптором ключа, а также запись в SSH-агенте не "
 "были удалены."
 
-#: src/window.rs:1903
+#: src/window.rs:1905
 msgid ""
 "The inspected resident SSH credentials are already available in this agent."
 msgstr ""
@@ -991,7 +991,7 @@ msgstr ""
 msgid "The local key path must be absolute."
 msgstr "Локальный путь к ключу должен быть абсолютным."
 
-#: src/window.rs:2563
+#: src/window.rs:2565
 msgid ""
 "The non-exportable private key remains protected by the selected YubiKey.\n"
 "\n"
@@ -1086,7 +1086,7 @@ msgstr ""
 "Выбранное устройство FIDO больше не подключено. Обновите список и повторите "
 "попытку."
 
-#: src/window.rs:1447
+#: src/window.rs:1449
 msgid ""
 "The selected credential created a valid Git-format SSH signature. No "
 "repository or commit was changed."
@@ -1119,7 +1119,7 @@ msgstr ""
 msgid "The signature was created but could not be verified: {0}"
 msgstr "Подпись была создана, но проверить её не удалось: {0}"
 
-#: src/window.rs:1618
+#: src/window.rs:1620
 msgid "The sudo policy task failed."
 msgstr "Задача политики sudo не выполнена."
 
@@ -1131,13 +1131,13 @@ msgstr "Временный путь к подписи Git недействите
 msgid "The temporary Git signing path is invalid."
 msgstr "Временный путь для подписи Git недействителен."
 
-#: src/home.rs:597
+#: src/home.rs:599
 msgid ""
 "These keys are trusted by this account but are not currently connected."
 msgstr ""
 "Эти ключи доверяются этой учетной записи, но в данный момент не подключены."
 
-#: src/window.rs:2921
+#: src/window.rs:2923
 msgid ""
 "This PIN authorizes permanent deletion of the exact credential shown in the "
 "previous step. It is never stored."
@@ -1145,7 +1145,7 @@ msgstr ""
 "Этот PIN-код разрешает постоянное удаление именно тех учетных данных, "
 "которые показаны на предыдущем шаге. Он никогда не сохраняется."
 
-#: src/window.rs:1931
+#: src/window.rs:1933
 msgid "This YubiKey has no discoverable ssh:* credentials."
 msgstr "На этом YubiKey нет обнаруживаемых учетных данных ssh:*."
 
@@ -1153,7 +1153,7 @@ msgstr "На этом YubiKey нет обнаруживаемых учетных
 msgid "This is not a supported OpenSSH security-key public key."
 msgstr "Это неподдерживаемый публичный ключ OpenSSH security-key."
 
-#: src/window.rs:3022
+#: src/window.rs:3024
 msgid ""
 "This removes the private credential from the selected YubiKey and cannot be "
 "undone. It does not remove local files or an identity already loaded in the "
@@ -1163,32 +1163,32 @@ msgstr ""
 " быть отменено. Оно не удаляет локальные файлы или личность, уже загруженную"
 " в SSH-агент."
 
-#: src/window.rs:1579
+#: src/window.rs:1581
 msgid "This setting applies only to the current user."
 msgstr "Этот параметр применяется только к текущему пользователю."
 
-#: src/home.rs:66
+#: src/home.rs:68
 msgid "This will only take a moment."
 msgstr "Это займет всего мгновение."
 
-#: src/window.rs:1888
+#: src/window.rs:1890
 msgid ""
 "Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
 msgstr ""
 "Коснитесь YubiKey по запросу. Загрузка резидентных ключей в агент SSH…"
 
-#: src/window.rs:1433
+#: src/window.rs:1435
 msgid ""
 "Touch the YubiKey. Creating and verifying a temporary Git-format SSH "
 "signature…"
 msgstr ""
 "Коснитесь YubiKey. Создание и проверка временной SSH-подписи в формате Git…"
 
-#: src/window.rs:2856
+#: src/window.rs:2858
 msgid "Touch the YubiKey. Testing SSH signing and verification…"
 msgstr "Коснитесь YubiKey. Тестирование подписи и проверки SSH…"
 
-#: src/window.rs:2544
+#: src/window.rs:2546
 msgid ""
 "Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not "
 "remove the key."
@@ -1196,27 +1196,27 @@ msgstr ""
 "Коснитесь выбранного YubiKey. Создание резидентного ключа SSH на {0}… Не "
 "извлекайте ключ."
 
-#: src/window.rs:1496
+#: src/window.rs:1498
 msgid "Touch this key when prompted to enroll it"
 msgstr "Коснитесь этого ключа по запросу для его регистрации"
 
-#: src/window.rs:1676
+#: src/window.rs:1678
 msgid "Touch this key when prompted to enroll it for sudo"
 msgstr "Коснитесь этого ключа по запросу для его регистрации в sudo"
 
-#: src/window.rs:1527 src/window.rs:1707
+#: src/window.rs:1529 src/window.rs:1709
 msgid "Touch your security key to continue."
 msgstr "Коснитесь ключа безопасности, чтобы продолжить."
 
-#: src/home.rs:93
+#: src/home.rs:95
 msgid "Try Again"
 msgstr "Попробовать снова"
 
-#: src/window.rs:3008
+#: src/window.rs:3010
 msgid "Type {0} to confirm"
 msgstr "Введите {0} для подтверждения"
 
-#: src/window.rs:688 src/window.rs:2039 src/window.rs:2340
+#: src/window.rs:688 src/window.rs:2041 src/window.rs:2342
 msgid "Unavailable"
 msgstr "Недоступно"
 
@@ -1232,15 +1232,15 @@ msgstr "Разблокировать GDM"
 msgid "Unlock sudo"
 msgstr "Разблокировать sudo"
 
-#: src/window.rs:1463
+#: src/window.rs:1465
 msgid "Unlock the current user"
 msgstr "Разблокировать текущего пользователя"
 
-#: src/home.rs:332
+#: src/home.rs:334
 msgid "Unlock your account with a touch"
 msgstr "Разблокируйте учетную запись касанием"
 
-#: src/ssh.rs:735 src/window.rs:1251 src/window.rs:2467 src/window.rs:2987
+#: src/ssh.rs:735 src/window.rs:1253 src/window.rs:2469 src/window.rs:2989
 msgid "Unnamed SSH credential"
 msgstr "SSH-учётные данные без имени"
 
@@ -1248,23 +1248,23 @@ msgstr "SSH-учётные данные без имени"
 msgid "Unsupported resident SSH public-key algorithm."
 msgstr "Неподдерживаемый алгоритм резидентного SSH-открытого ключа."
 
-#: src/window.rs:1397
+#: src/window.rs:1399
 msgid "Updating Git commit signing…"
 msgstr "Обновление подписи коммитов Git…"
 
-#: src/window.rs:1529
+#: src/window.rs:1531
 msgid "Updating sign-in settings…"
 msgstr "Обновление настроек входа…"
 
-#: src/window.rs:1709
+#: src/window.rs:1711
 msgid "Updating sudo settings…"
 msgstr "Обновление настроек sudo…"
 
-#: src/window.rs:1635
+#: src/window.rs:1637
 msgid "Use YubiKey to unlock sudo"
 msgstr "Использовать YubiKey для разблокировки sudo"
 
-#: src/window.rs:2934
+#: src/window.rs:2936
 msgid ""
 "Verifying and permanently deleting the selected resident credential. Do not "
 "unplug the YubiKey…"
@@ -1276,15 +1276,15 @@ msgstr ""
 msgid "View in App Store"
 msgstr "Открыть в магазине приложений"
 
-#: src/window.rs:2267
+#: src/window.rs:2269
 msgid "Waiting"
 msgstr "Ожидание"
 
-#: src/home.rs:156
+#: src/home.rs:158
 msgid "Waiting for a configured YubiKey"
 msgstr "Ожидание настроенного YubiKey"
 
-#: src/window.rs:1637
+#: src/window.rs:1639
 msgid ""
 "You may enroll keys now, but sudo bypasses PAM while passwordless access is "
 "enabled."
@@ -1292,15 +1292,15 @@ msgstr ""
 "Вы можете зарегистрировать ключи сейчас, но sudo обходит PAM, пока включён "
 "доступ без пароля."
 
-#: src/window.rs:2297
+#: src/window.rs:2299
 msgid "Your YubiKeys are inspected"
 msgstr "Ваши YubiKeys проверены"
 
-#: src/window.rs:2299
+#: src/window.rs:2301
 msgid "Your hardware-backed SSH keys"
 msgstr "Ваши аппаратные SSH-ключи"
 
-#: src/window.rs:2263
+#: src/window.rs:2265
 msgid ""
 "Your resident SSH keys stay on the security key. Insert it to view and use "
 "them."
@@ -1308,7 +1308,7 @@ msgstr ""
 "Ваши резидентные SSH-ключи остаются на ключе безопасности. Вставьте его, "
 "чтобы просмотреть и использовать их."
 
-#: src/home.rs:130
+#: src/home.rs:132
 msgid ""
 "Your security settings are ready. Connect a configured YubiKey when you need"
 " it."
@@ -1316,31 +1316,31 @@ msgstr ""
 "Ваши настройки безопасности готовы. Подключите настроенный YubiKey, когда он"
 " понадобится."
 
-#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1755 src/window.rs:2597
+#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1757 src/window.rs:2599
 msgid "YubiKey"
 msgstr "YubiKey"
 
-#: src/window.rs:3088
+#: src/window.rs:3090
 msgid "YubiKey configuration failed"
 msgstr "Не удалось настроить YubiKey"
 
-#: src/home.rs:251
+#: src/home.rs:253
 msgid "YubiKey connected"
 msgstr "YubiKey подключен"
 
-#: src/home.rs:379 src/home.rs:400
+#: src/home.rs:381 src/home.rs:402
 msgid "YubiKey or account password"
 msgstr "YubiKey или пароль учетной записи"
 
-#: src/home.rs:622
+#: src/home.rs:624
 msgid "YubiKey without hardware serial"
 msgstr "YubiKey без аппаратного серийного номера"
 
-#: src/home.rs:624
+#: src/home.rs:626
 msgid "YubiKey · Serial {0}"
 msgstr "YubiKey · Серийный номер {0}"
 
-#: src/window.rs:2993
+#: src/window.rs:2995
 msgid ""
 "YubiKey: {0}\n"
 "Device: {1}\n"
@@ -1356,11 +1356,11 @@ msgstr ""
 "Алгоритм: {4}\n"
 "Отпечаток: {5}"
 
-#: src/window.rs:1124
+#: src/window.rs:1126
 msgid "YubiKeys"
 msgstr "YubiKeys"
 
-#: src/window.rs:1955
+#: src/window.rs:1957
 msgid "agent"
 msgstr "агент"
 
@@ -1373,11 +1373,11 @@ msgstr ""
 "присутствуют. Не повторяйте попытку, пока не обновите и не проверите "
 "YubiKey."
 
-#: src/home.rs:398
+#: src/home.rs:400
 msgid "sudo authentication is bypassed"
 msgstr "Аутентификация sudo обойдена"
 
-#: src/window.rs:1578
+#: src/window.rs:1580
 msgid "sudo authentication policy"
 msgstr "политика аутентификации sudo"
 
@@ -1385,15 +1385,15 @@ msgstr "политика аутентификации sudo"
 msgid "unknown"
 msgstr "неизвестно"
 
-#: src/window.rs:2519
+#: src/window.rs:2521
 msgid "user"
 msgstr "пользователь"
 
-#: src/window.rs:1146
+#: src/window.rs:1148
 msgid "{0} SSH keys loaded"
 msgstr "Загружено {0} SSH-ключей"
 
-#: src/home.rs:254
+#: src/home.rs:256
 msgid "{0} YubiKeys connected"
 msgstr "Подключено YubiKeys: {0}"
 
@@ -1405,51 +1405,51 @@ msgstr "{0} завершился с кодом {1}"
 msgid "{0} failed: {1}"
 msgstr "Ошибка {0}: {1}"
 
-#: src/window.rs:2023
+#: src/window.rs:2025
 msgid "{0} identities are currently available to SSH applications."
 msgstr "В настоящее время для SSH-приложений доступно {0} идентификаций."
 
-#: src/window.rs:1056
+#: src/window.rs:1058
 msgid "{0} is enabled for this YubiKey"
 msgstr "{0} включён для этого YubiKey"
 
-#: src/window.rs:1061
+#: src/window.rs:1063
 msgid "{0} is not configured for this YubiKey"
 msgstr "{0} не настроен для этого YubiKey"
 
-#: src/window.rs:1911
+#: src/window.rs:1913
 msgid "{0} new SSH identities were added to the agent."
 msgstr "В агент добавлено {0} новых SSH-идентичностей."
 
-#: src/window.rs:1909
+#: src/window.rs:1911
 msgid "{0} new SSH identity was added to the agent."
 msgstr "В агент добавлена {0} новая SSH-идентичность."
 
-#: src/window.rs:2307
+#: src/window.rs:2309
 msgid "{0} resident SSH keys are available from your connected YubiKeys."
 msgstr "С подключенных YubiKeys доступно {0} резидентных SSH-ключей."
 
-#: src/window.rs:1817
+#: src/window.rs:1819
 msgid "{0} resident SSH keys · {1}"
 msgstr "{0} резидентных SSH-ключей · {1}"
 
-#: src/home.rs:362
+#: src/home.rs:364
 msgid "{0} resident credentials inspected"
 msgstr "Проверено резидентных учетных данных: {0}"
 
-#: src/window.rs:2328
+#: src/window.rs:2330
 msgid "{0} to inspect"
 msgstr "{0} для проверки"
 
-#: src/window.rs:1487 src/window.rs:1665
+#: src/window.rs:1489 src/window.rs:1667
 msgid "{0} · no hardware serial"
 msgstr "{0} · нет аппаратного серийного номера"
 
-#: src/window.rs:1489 src/window.rs:1667
+#: src/window.rs:1491 src/window.rs:1669
 msgid "{0} · {1}"
 msgstr "{0} · {1}"
 
-#: src/window.rs:999
+#: src/window.rs:1001
 msgid "Checking Passkeys support…"
 msgstr "Проверка поддержки ключей доступа…"
 
@@ -1486,7 +1486,7 @@ msgid ""
 "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
 msgstr "Вставьте YubiKey, введите FIDO PIN по запросу, затем коснитесь ключа."
 
-#: src/window.rs:1778
+#: src/window.rs:1780
 msgid ""
 "Inspect a connected YubiKey to reveal its resident SSH keys and available "
 "actions."
@@ -1544,7 +1544,7 @@ msgstr "Зарегистрировать ключ доступа"
 msgid "Sign in next time"
 msgstr "Войти в следующий раз"
 
-#: src/window.rs:2011
+#: src/window.rs:2013
 msgid ""
 "The SSH agent makes selected keys available to SSH applications during this "
 "session."
@@ -1574,7 +1574,7 @@ msgstr ""
 msgid "A file already exists at the managed SSH configuration path: {0}"
 msgstr "Файл уже существует по пути управляемой конфигурации SSH: {0}"
 
-#: src/window.rs:2068
+#: src/window.rs:2070
 msgid ""
 "After the first YubiKey authentication, later SSH sessions can reuse the "
 "connection. The last session remains available in the background for 10 "
@@ -1612,7 +1612,7 @@ msgstr "Не удалось заменить {0}: {1}"
 msgid "Could not synchronize {0}: {1}"
 msgstr "Не удалось синхронизировать {0}: {1}"
 
-#: src/window.rs:2173 src/window.rs:2184
+#: src/window.rs:2175 src/window.rs:2186
 msgid "Could not update SSH connection persistence"
 msgstr "Не удалось обновить сохранение SSH-соединений"
 
@@ -1624,11 +1624,11 @@ msgstr "Не удалось проверить конфигурацию SSH: {0}
 msgid "Could not write the temporary SSH configuration in {0}: {1}"
 msgstr "Не удалось записать временную конфигурацию SSH в {0}: {1}"
 
-#: src/window.rs:2086 src/window.rs:2159
+#: src/window.rs:2088 src/window.rs:2161
 msgid "Disabled · each new connection authenticates separately"
 msgstr "Отключено · каждое новое соединение аутентифицируется отдельно"
 
-#: src/window.rs:2078 src/window.rs:2152
+#: src/window.rs:2080 src/window.rs:2154
 msgid "Enabled · idle connections remain available for 10 minutes"
 msgstr ""
 "Включено · неактивные соединения остаются доступными в течение 10 минут"
@@ -1641,31 +1641,31 @@ msgstr "HOME не указывает на действительную папк�
 msgid "HOME is not set. The SSH configuration cannot be located."
 msgstr "Переменная HOME не установлена. Не удалось найти конфигурацию SSH."
 
-#: src/window.rs:2105
+#: src/window.rs:2107
 msgid "Main SSH configuration unavailable"
 msgstr "Основная конфигурация SSH недоступна"
 
-#: src/window.rs:2106
+#: src/window.rs:2108
 msgid "Managed SSH configuration unavailable"
 msgstr "Управляемая конфигурация SSH недоступна"
 
-#: src/window.rs:2222
+#: src/window.rs:2224
 msgid "Managed configuration preview"
 msgstr "Предпросмотр управляемой конфигурации"
 
-#: src/window.rs:2202
+#: src/window.rs:2204
 msgid "Manual review required"
 msgstr "Требуется ручная проверка"
 
-#: src/window.rs:2094 src/window.rs:2167
+#: src/window.rs:2096 src/window.rs:2169
 msgid "Needs attention · review the SSH configuration before continuing"
 msgstr "Требует внимания · проверьте конфигурацию SSH перед продолжением"
 
-#: src/window.rs:2103
+#: src/window.rs:2105
 msgid "Needs attention · the SSH configuration could not be located"
 msgstr "Требует внимания · не удалось найти конфигурацию SSH"
 
-#: src/window.rs:2210
+#: src/window.rs:2212
 msgid ""
 "Only new SSH connections are affected. Turning this off does not stop "
 "existing background connections. Earlier host-specific OpenSSH settings "
@@ -1683,11 +1683,11 @@ msgstr "OpenSSH отклонил сгенерированную конфигур
 msgid "OpenSSH rejected the generated configuration: {0}"
 msgstr "OpenSSH отклонил сгенерированную конфигурацию: {0}"
 
-#: src/window.rs:2111
+#: src/window.rs:2113
 msgid "Reuse SSH connections in the background"
 msgstr "Повторно использовать SSH-соединения в фоновом режиме"
 
-#: src/window.rs:2067
+#: src/window.rs:2069
 msgid "SSH connection persistence"
 msgstr "Сохранение SSH-соединений"
 
@@ -1745,7 +1745,7 @@ msgstr "Путь SSH не является безопасным обычным �
 msgid "The SSH path is not owned by the current user: {0}"
 msgstr "Путь SSH не принадлежит текущему пользователю: {0}"
 
-#: src/window.rs:2144
+#: src/window.rs:2146
 msgid "The SSH persistence update stopped unexpectedly."
 msgstr "Обновление сохранения SSH-соединений неожиданно остановилось."
 
@@ -1804,15 +1804,15 @@ msgstr ""
 "Управляемый файл SSH указан вне блока, управляемого приложением. Удалите эту"
 " строку Include перед использованием этого параметра."
 
-#: src/window.rs:2209
+#: src/window.rs:2211
 msgid "What this setting changes"
 msgstr "Что меняет этот параметр"
 
-#: src/window.rs:2224
+#: src/window.rs:2226
 msgid "{0} includes {1}"
-msgstr "{0} includes {1}"
+msgstr "{0} содержит {1}"
 
-#: src/window.rs:2491
+#: src/window.rs:2493
 msgid ""
 "Optional: create a new resident key only when you need another SSH identity."
 " Its private key never leaves the selected YubiKey."
@@ -1820,15 +1820,31 @@ msgstr ""
 "Необязательно: создайте новый резидентный ключ только если вам нужна другая "
 "SSH-идентичность. Его закрытый ключ никогда не покидает выбранный YubiKey."
 
-#: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:8
-msgid "Manage YubiKey security settings"
-msgstr "Управление настройками безопасности YubiKey"
-
 #: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:10
 msgid "Authentication is required to change security settings or install Git"
 msgstr ""
 "Для изменения настроек безопасности или установки Git требуется "
 "аутентификация"
+
+#: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:8
+msgid "Manage YubiKey security settings"
+msgstr "Управление настройками безопасности YubiKey"
+
+#: data/com.anduinos.yubikeymanager.desktop:114
+msgid "YubiKey;FIDO2;U2F;security;login;GDM;"
+msgstr "YubiKey;FIDO2;U2F;безопасность;вход;GDM;"
+
+#: data/com.anduinos.yubikeymanager.desktop:54
+msgid "Security Key Settings"
+msgstr "Настройки ключа безопасности"
+
+#: data/com.anduinos.yubikeymanager.desktop:28
+msgid "YubiKey Security Center"
+msgstr "Центр безопасности YubiKey"
+
+#: data/com.anduinos.yubikeymanager.desktop:82
+msgid "Protect sign-in, sudo, SSH, and Git with YubiKeys"
+msgstr "Защищайте вход в систему, команды sudo, SSH и Git с помощью YubiKey"
 
 #~ msgid "Yubico Authenticator must be installed before you can use Passkeys."
 #~ msgstr ""

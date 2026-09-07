@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "控制台"
 
@@ -63,7 +64,7 @@ msgstr "設定 NetworkManager 連線設定檔"
 
 #: src/anduinos_control_panel/app.py:238
 msgid "Install Advanced Network Configuration"
-msgstr "安裝進階網路設定"
+msgstr "安裝進階網絡設定"
 
 #: src/anduinos_control_panel/app.py:245
 msgid "System"
@@ -75,7 +76,7 @@ msgstr "安全性"
 
 #: src/anduinos_control_panel/app.py:255
 msgid "Network and Internet"
-msgstr "網路及網際網路"
+msgstr "網絡及互聯網"
 
 #: src/anduinos_control_panel/app.py:260
 msgid "User Accounts"
@@ -414,7 +415,7 @@ msgstr "安裝 Flatseal"
 
 #: src/anduinos_control_panel/app.py:1094
 msgid "Administrator authentication is required when installation starts"
-msgstr "開始安裝時需要管理員驗證。"
+msgstr "開始安裝時需要管理員身分驗證。"
 
 #: src/anduinos_control_panel/app.py:1186
 msgid "Downloading and installing Flatseal…"
@@ -473,7 +474,7 @@ msgstr "開始安裝時需要管理員驗證。"
 
 #: src/anduinos_control_panel/app.py:1376
 msgid "Downloading the local engine and multilingual speech model…"
-msgstr "正在下載本機引擎及多語言語音模型…"
+msgstr "正在下載本機引擎及多語言語音辨識模型…"
 
 #: src/anduinos_control_panel/app.py:1382
 msgid "Preparing Voice Typing installation…"
@@ -558,7 +559,7 @@ msgstr "✗ 套件操作失敗。請檢視進階輸出。"
 #: src/anduinos_control_panel/app.py:1715
 #, python-brace-format
 msgid "{command} exited with status {status}"
-msgstr "{command} 已結束，狀態碼為 {status}"
+msgstr "{command} 的結束狀態碼為 {status}"
 
 #: src/anduinos_control_panel/app.py:1742
 msgid "Open a Control Panel topic"
@@ -583,6 +584,22 @@ msgstr "AnduinOS 團隊"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "搜尋及管理 AnduinOS 系統設定。"
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr "設定;控制;系統;硬件;驅動程式;帳戶;備份;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "更改開機選單設定"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr "更改開機選單設定需要身份驗證"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "尋找及管理 AnduinOS 系統設定"
 
 #: src/anduinos_control_panel/app.py
 msgid "Authentication is required to read the boot menu."

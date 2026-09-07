@@ -18,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: src/anduinos_control_panel/app.py:77 src/anduinos_control_panel/app.py:95
+#: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "控制面板"
 
@@ -123,7 +124,7 @@ msgstr "未安装"
 
 #: src/anduinos_control_panel/app.py:317
 msgid "Configure microphone, language, shortcut, and training"
-msgstr "配置麦克风、语言、快捷键和训练"
+msgstr "配置麦克风、语言、快捷键和校准"
 
 #: src/anduinos_control_panel/app.py:319
 msgid "Install private, offline speech-to-text"
@@ -558,11 +559,11 @@ msgstr "✗ 软件包操作失败。请查看高级输出。"
 #: src/anduinos_control_panel/app.py:1715
 #, python-brace-format
 msgid "{command} exited with status {status}"
-msgstr "{command} 以状态码 {status} 退出"
+msgstr "{command} 以退出状态码 {status} 结束"
 
 #: src/anduinos_control_panel/app.py:1742
 msgid "Open a Control Panel topic"
-msgstr "打开控制面板主题"
+msgstr "打开控制面板中的设置项"
 
 #: src/anduinos_control_panel/app.py:1743
 msgid "TOPIC"
@@ -583,6 +584,22 @@ msgstr "AnduinOS 团队"
 #: src/anduinos_control_panel/app.py:1792
 msgid "Find and manage AnduinOS system settings."
 msgstr "查找并管理 AnduinOS 系统设置。"
+
+#: data/com.anduinos.ControlPanel.desktop:11
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr "设置;控制;系统;硬件;驱动程序;账户;备份;"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:8
+msgid "Change boot menu settings"
+msgstr "更改启动菜单设置"
+
+#: anduinos-control-panel/data/com.anduinos.ControlPanel.policy:10
+msgid "Authentication is required to change boot menu settings"
+msgstr "更改启动菜单设置需要身份验证"
+
+#: data/com.anduinos.ControlPanel.desktop:4
+msgid "Find and manage AnduinOS system settings"
+msgstr "查找并管理 AnduinOS 系统设置"
 
 #: src/anduinos_control_panel/app.py
 msgid "Authentication is required to read the boot menu."
