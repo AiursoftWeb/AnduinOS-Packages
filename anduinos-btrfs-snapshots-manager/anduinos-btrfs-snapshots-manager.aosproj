@@ -24,10 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Repository publication gate: this Dracut-only build must remain
-         uninstallable until the core version carrying the synchronous
-         fallback preinst is visible in the same APT index. -->
-    <Dependency Include="anduinos-core-system (>= 2.0.2-3)" />
+    <Dependency Include="anduinos-core-system" />
     <Dependency Include="libgtk-4-1" />
     <Dependency Include="libadwaita-1-0" />
     <Dependency Include="btrfs-progs" />

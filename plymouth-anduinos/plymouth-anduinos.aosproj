@@ -59,9 +59,7 @@
     <PreRemoveScript  Include="scripts/prerm.sh" />
 
     <!-- ubuntu-text.so module, needed by anduinos-text.plymouth fallback theme -->
-    <!-- Keep this Dracut-only candidate uninstallable until the guarded core
-         candidate is published. CI deliberately publishes this package first. -->
-    <Dependency Include="anduinos-core-system (>= 2.0.2-3)" />
+    <Dependency Include="anduinos-core-system" />
     <Dependency Include="dracut" />
     <Recommend Include="plymouth-theme-ubuntu-text" />
   </ItemGroup>

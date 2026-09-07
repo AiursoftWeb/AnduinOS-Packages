@@ -13,7 +13,7 @@ class LocalPolicyTests(unittest.TestCase):
         dependencies = {item.get("Include") for item in project.iter("Dependency")}
         self.assertIn("anduinos-dracut-migration", dependencies)
         self.assertNotIn("anduinos-no-snapd", dependencies)
-        self.assertIn("anduinos-no-snapd (>= 2.0.2-2)", {item.get("Include") for item in project.iter("Recommend")})
+        self.assertIn("anduinos-no-snapd", {item.get("Include") for item in project.iter("Recommend")})
         self.assertFalse(any("anduinos-whisper" in name for name in dependencies))
 
     def test_desktop_recommends_the_policy_only_on_resolute(self):

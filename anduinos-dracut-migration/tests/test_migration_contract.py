@@ -130,7 +130,7 @@ class MigrationContractTests(unittest.TestCase):
         script = MIGRATOR.read_text()
         self.assertIn("candidate_is_pure_dracut", script)
         self.assertIn("candidate_conflicts_with_legacy_stack", script)
-        self.assertIn("candidate_depends_on_guarded_core", script)
+        self.assertIn("candidate_depends_on_core", script)
         self.assertIn('"$BOOT_DIR"/vmlinuz-*', script)
         self.assertIn("anduinos-btrfs-snapshots-manager", script)
         self.assertIn("unexpected_removals", script)
@@ -174,7 +174,7 @@ class MigrationContractTests(unittest.TestCase):
                 "apt-cache",
                 'case "$1" in\n'
                 '  policy) printf "  Candidate: 2.0.2-test\\n" ;;\n'
-                '  show) printf "Package: test\\nDepends: anduinos-core-system (>= 2.0.2-3), dracut, dracut-core\\nConflicts: casper, initramfs-tools, initramfs-tools-core, initramfs-tools-bin, busybox-initramfs, finalrd\\n" ;;\n'
+                '  show) printf "Package: test\\nDepends: anduinos-core-system, dracut, dracut-core\\nConflicts: casper, initramfs-tools, initramfs-tools-core, initramfs-tools-bin, busybox-initramfs, finalrd\\n" ;;\n'
                 'esac\n',
             )
             apt_get = executable(
@@ -293,7 +293,7 @@ class MigrationContractTests(unittest.TestCase):
                 "apt-cache",
                 'case "$1" in\n'
                 '  policy) printf "  Candidate: 2.0.2-test\\n" ;;\n'
-                '  show) printf "Package: test\\nDepends: anduinos-core-system (>= 2.0.2-3), dracut, dracut-core\\nConflicts: casper, initramfs-tools, initramfs-tools-core, initramfs-tools-bin, busybox-initramfs, finalrd\\n" ;;\n'
+                '  show) printf "Package: test\\nDepends: anduinos-core-system, dracut, dracut-core\\nConflicts: casper, initramfs-tools, initramfs-tools-core, initramfs-tools-bin, busybox-initramfs, finalrd\\n" ;;\n'
                 'esac\n',
             )
 

@@ -105,7 +105,7 @@ class SecureBootToolkitTests(unittest.TestCase):
         project = ET.parse(ROOT / "anduinos-oobe.aosproj").getroot()
         dependencies = {item.get("Include") for item in project.iter("Dependency")}
         self.assertIn("anduinos-secureboot-toolkit", dependencies)
-        self.assertIn("anduinos-driver-center (>= 2.0.0-8)", dependencies)
+        self.assertIn("anduinos-driver-center", dependencies)
         self.assertNotIn("ubuntu-drivers-common", dependencies)
         self.assertNotIn("pciutils", dependencies)
 
