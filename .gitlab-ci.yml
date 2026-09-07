@@ -1,5 +1,33 @@
 stages:
+  - lint
   - packages
+
+verify-ci-package-needs:
+  stage: lint
+  script:
+    - python3 lib/verify-ci-package-needs.py
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
+lint-all:
+  stage: lint
+  before_script:
+    - dotnet tool update -g aiursoft.apkg.client --configfile ./nuget.config || dotnet tool install -g aiursoft.apkg.client --configfile ./nuget.config
+    - export PATH="$PATH:$HOME/.dotnet/tools"
+    - apkg --version
+  script:
+    - |
+      failed=0
+      for dir in */; do
+        if ls "$dir"*.aosproj >/dev/null 2>&1; then
+          (cd "$dir" && apkg lint) || failed=1
+        fi
+      done
+      exit "$failed"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
 
 .publish:
   stage: packages
@@ -43,6 +71,8 @@ base-files:
 
 plymouth-anduinos:
   extends: .publish
+  needs:
+    - anduinos-core-system
   variables:
     PACKAGE_DIR: plymouth-anduinos
 
@@ -333,6 +363,7 @@ anduinos-swap-config:
 anduinos-btrfs-snapshots-manager:
   extends: .publish
   needs:
+    - anduinos-core-system
     - anduinos-secureboot-toolkit
   variables:
     PACKAGE_DIR: anduinos-btrfs-snapshots-manager
@@ -452,14 +483,9 @@ anduinos-grub-style:
 anduinos-core-system:
   extends: .publish
   needs:
-    - anduinos-dracut-migration
     - anduinos-container
     - anduinos-grub-style
     - anduinos-system-tweaks
-    # Publish the Dracut-only consumers first. Their versioned dependency on
-    # this guarded core keeps them uninstallable until this final gate opens.
-    - anduinos-btrfs-snapshots-manager
-    - plymouth-anduinos
   variables:
     PACKAGE_DIR: anduinos-core-system
 
