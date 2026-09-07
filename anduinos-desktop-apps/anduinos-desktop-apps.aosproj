@@ -114,4 +114,7 @@
         Url="https://apkg-dev.aiursoft.com/artifacts/anduinos"
         SuiteMap="noble-addon=noble-addon-addon resolute-addon=resolute-addon" />
   </ItemGroup>
+  <ItemGroup>
+    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_local_policy.py" />
+  </ItemGroup>
 </Project>

@@ -30,4 +30,7 @@
     <SystemdUnit Include="assets/anduinos-dracut-migration.timer" AutoEnable="true" />
     <SystemdUnit Include="assets/anduinos-dracut-confirm-boot.service" AutoEnable="true" />
   </ItemGroup>
+  <ItemGroup>
+    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_local_policy.py" />
+  </ItemGroup>
 </Project>

@@ -12,7 +12,6 @@ import gi
 
 
 ROOT = Path(__file__).resolve().parents[1]
-REPOSITORY = ROOT.parent
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(ROOT / "src"))
 
@@ -78,21 +77,10 @@ class PackageTests(unittest.TestCase):
         ]:
             compile(source.read_text(), str(source), "exec")
 
-    def test_projects_are_parseable_and_remain_optional(self):
-        gtk_project = ET.parse(ROOT / "anduinos-whisper-gtk.aosproj").getroot()
-        framework_project = ET.parse(
-            REPOSITORY
-            / "anduinos-whisper-framework/anduinos-whisper-framework.aosproj"
-        ).getroot()
-        self.assertEqual(gtk_project.findtext(".//PackageName"), "anduinos-whisper-gtk")
-        self.assertEqual(
-            framework_project.findtext(".//PackageName"),
-            "anduinos-whisper-framework",
-        )
-        desktop = (REPOSITORY / "anduinos-desktop/anduinos-desktop.aosproj").read_text()
-        core = (REPOSITORY / "anduinos-desktop-core/anduinos-desktop-core.aosproj").read_text()
-        self.assertNotIn("anduinos-whisper", desktop)
-        self.assertNotIn("anduinos-whisper", core)
+    def test_project_declares_framework_dependency(self):
+        project = ET.parse(ROOT / "anduinos-whisper-gtk.aosproj").getroot()
+        self.assertEqual(project.findtext(".//PackageName"), "anduinos-whisper-gtk")
+        self.assertTrue(any(item.get("Include", "").startswith("anduinos-whisper-framework ") for item in project.iter("Dependency")))
 
     def test_extension_supports_shortcut_overlay_and_desktop_injection(self):
         extension = (ROOT / "data/voice-typing@anduinos.com/extension.js").read_text()
@@ -157,29 +145,12 @@ class PackageTests(unittest.TestCase):
         self.assertIn("min-width: 500px", stylesheet)
         self.assertIn("max-width: 520px", stylesheet)
 
-    def test_extension_metadata_and_settings_schema_are_valid(self):
+    def test_extension_metadata_is_valid(self):
         metadata = json.loads(
             (ROOT / "data/voice-typing@anduinos.com/metadata.json").read_text()
         )
         self.assertEqual(metadata["uuid"], "voice-typing@anduinos.com")
         self.assertIn("50", metadata["shell-version"])
-        schema = ET.parse(
-            REPOSITORY
-            / "anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml"
-        ).getroot()
-        keys = {item.attrib["name"] for item in schema.findall(".//key")}
-        self.assertTrue(
-            {
-                "toggle-shortcut",
-                "microphone",
-                "language",
-                "model",
-                "voice-commands",
-                "audio-cues",
-                "show-preview",
-                "live-transcription",
-            }.issubset(keys)
-        )
 
     def test_settings_offer_microphone_language_models_and_training(self):
         application = (ROOT / "src/anduinos_whisper_gtk/app.py").read_text()
@@ -392,14 +363,9 @@ class PackageTests(unittest.TestCase):
             ROOT
             / "data/voice-typing@anduinos.com/audio-input-microphone.svg"
         )
-        control_icon = (
-            REPOSITORY
-            / "anduinos-control-panel/resources/icons/audio-input-microphone.svg"
-        )
         self.assertTrue(ET.parse(app_icon).getroot().tag.endswith("svg"))
         self.assertEqual(app_icon.read_bytes(), installed_app_icon.read_bytes())
         self.assertEqual(app_icon.read_bytes(), shell_icon.read_bytes())
-        self.assertEqual(app_icon.read_bytes(), control_icon.read_bytes())
         project = (ROOT / "anduinos-whisper-gtk.aosproj").read_text()
         self.assertIn(
             'Icon="resources/com.anduinos.VoiceTyping.Settings.svg"', project

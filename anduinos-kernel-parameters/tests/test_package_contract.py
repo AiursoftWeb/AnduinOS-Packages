@@ -10,7 +10,6 @@ from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parent.parent
 PROJECT_FILE = PROJECT / "anduinos-kernel-parameters.aosproj"
-DESKTOP_PROJECT_FILE = PROJECT.parent / "anduinos-desktop/anduinos-desktop.aosproj"
 CONFIG = PROJECT / "assets/99-anduinos-desktop.cfg"
 LEGACY_CONFIG = PROJECT / "assets/50-anduinos-desktop.cfg"
 POSTINST = PROJECT / "scripts/postinst.sh"
@@ -78,20 +77,6 @@ class KernelParametersPackageContractTests(unittest.TestCase):
         )
         self.assertFalse(LEGACY_CONFIG.exists())
 
-    def test_desktop_recommends_the_policy_only_on_resolute(self):
-        desktop = ET.parse(DESKTOP_PROJECT_FILE).getroot()
-        matching_dependencies = desktop.findall(
-            ".//Dependency[@Include='anduinos-kernel-parameters']"
-        )
-        matching_recommendations = desktop.findall(
-            ".//Recommend[@Include='anduinos-kernel-parameters']"
-        )
-        self.assertEqual(matching_dependencies, [])
-        self.assertEqual(len(matching_recommendations), 1)
-        self.assertEqual(
-            matching_recommendations[0].get("Condition"),
-            "'$(Suite)' == 'resolute-addon'",
-        )
 
     def test_lifecycle_scripts_and_contract_test_are_wired_into_the_package(self):
         postinst = self.project.find(".//PostInstallScript")

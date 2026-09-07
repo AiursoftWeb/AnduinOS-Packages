@@ -4,7 +4,6 @@ import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
-REPOSITORY = ROOT.parent
 
 
 class PackageTests(unittest.TestCase):
@@ -337,16 +336,12 @@ class PackageTests(unittest.TestCase):
         self.assertNotIn("<image", app_icon)
 
         appearance_icon = (
-            REPOSITORY / "anduinos-appearance/data/anduinos-appearance.svg"
-        ).read_text()
-        vendored_appearance_icon = (
             ROOT / "resources/icons/anduinos-appearance.svg"
         ).read_text()
         self.assertIn('fill="#38a0d4"', app_icon)
         self.assertEqual(app_icon.count("<circle"), 3)
         self.assertIn('fill="#2268ab"', appearance_icon)
         self.assertEqual(appearance_icon.count("<path"), 9)
-        self.assertEqual(vendored_appearance_icon, appearance_icon)
 
         symbolic_icon = (
             ROOT / "resources/icons/com.anduinos.ControlPanel-symbolic.svg"
@@ -437,11 +432,6 @@ class PackageTests(unittest.TestCase):
         target_suites = project.findtext(".//TargetSuites")
         self.assertEqual(target_suites, "resolute-addon")
 
-    def test_default_desktop_selection_recommends_the_control_panel(self):
-        desktop_apps = (
-            REPOSITORY / "anduinos-desktop-apps/anduinos-desktop-apps.aosproj"
-        ).read_text()
-        self.assertIn('<Recommend Include="anduinos-control-panel" />', desktop_apps)
 
 
 if __name__ == "__main__":

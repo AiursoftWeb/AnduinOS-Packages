@@ -9,7 +9,6 @@ from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parent.parent
 PROJECT_FILE = PROJECT / "anduinos-live-settings.aosproj"
-INSTALLER_PROJECT = PROJECT.parent / "anduinos-installer-beta/anduinos-installer-beta.aosproj"
 SETUP = PROJECT / "assets/anduinos-live-session-setup"
 SERVICE = PROJECT / "assets/anduinos-live-session.service"
 GRUB_DROP_INS = {
@@ -74,12 +73,6 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
                     "[Unit]\nConditionPathExists=!/run/anduinos-live/environment\n",
                 )
 
-    def test_installer_declares_the_live_bridge_dependency(self):
-        installer = ET.parse(INSTALLER_PROJECT).getroot()
-        dependencies = {
-            item.get("Include") for item in installer.findall(".//Dependency")
-        }
-        self.assertIn("anduinos-live-settings", dependencies)
 
     def test_valid_and_hostile_regional_arguments(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -176,6 +169,10 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
         )
         self.assertNotIn("update-initramfs", setup)
         self.assertNotIn("casper", setup.lower())
+
+    def test_live_environment_includes_remote_access(self):
+        project = ET.parse(Path(__file__).resolve().parents[1] / "anduinos-live-settings.aosproj").getroot()
+        self.assertIn("openssh-server", {item.get("Include") for item in project.iter("Dependency")})
 
 
 if __name__ == "__main__":

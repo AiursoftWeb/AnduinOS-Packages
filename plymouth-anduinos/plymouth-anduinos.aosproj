@@ -65,4 +65,7 @@
     <Dependency Include="dracut" />
     <Recommend Include="plymouth-theme-ubuntu-text" />
   </ItemGroup>
+  <ItemGroup>
+    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_local_policy.py" />
+  </ItemGroup>
 </Project>

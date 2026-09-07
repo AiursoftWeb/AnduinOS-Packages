@@ -11,7 +11,6 @@ import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DESKTOP = ROOT.parent / "anduinos-desktop/anduinos-desktop.aosproj"
 
 
 class SnapPolicyTests(unittest.TestCase):
@@ -22,13 +21,10 @@ class SnapPolicyTests(unittest.TestCase):
         for directory in ("repo", "lists/partial", "archives/partial", "preferences.d", "apt.conf.d", "sources.list.d"):
             (self.path / directory).mkdir(parents=True)
         project = ET.parse(ROOT / "anduinos-no-snapd.aosproj").getroot()
-        self.desktop = ET.parse(DESKTOP).getroot()
-        self.desktop_version = self.desktop.findtext(".//PackageVersion").split("+")[0]
+        # External desktop behavior is a solver fixture, not a sibling source read.
+        # The real recommendation is checked by the desktop package itself.
+        self.desktop_version = "2.0.2-3"
         self.blocker_version = project.findtext(".//PackageVersion").split("+")[0]
-        recommends = [e.get("Include") for e in self.desktop.findall(".//Recommend")]
-        self.assertIn("anduinos-no-snapd (>= 2.0.2-2)", recommends)
-        self.assertFalse(any("anduinos-no-snapd" in e.get("Include", "")
-                             for e in self.desktop.findall(".//Dependency")))
         self.assertEqual(project.findtext(".//Conflicts"), "snapd")
         self.assertFalse(project.findall(".//PostInstallScript"))
         self.assertFalse((ROOT / "scripts/postinst.sh").exists())
