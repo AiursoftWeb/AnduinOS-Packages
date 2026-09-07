@@ -80,7 +80,11 @@ class PackageTests(unittest.TestCase):
     def test_project_declares_framework_dependency(self):
         project = ET.parse(ROOT / "anduinos-whisper-gtk.aosproj").getroot()
         self.assertEqual(project.findtext(".//PackageName"), "anduinos-whisper-gtk")
-        self.assertTrue(any(item.get("Include", "").startswith("anduinos-whisper-framework ") for item in project.iter("Dependency")))
+        self.assertIn(
+            "anduinos-whisper-framework",
+            {item.get("Include", "").split("(", 1)[0].strip()
+             for item in project.iter("Dependency")},
+        )
 
     def test_extension_table_messages_are_extractable_without_early_gettext(self):
         extension_path = ROOT / "data/voice-typing@anduinos.com/extension.js"
