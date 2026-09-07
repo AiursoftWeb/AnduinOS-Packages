@@ -3,7 +3,10 @@
 
 from __future__ import annotations
 
+import json
 import os
+import re
+import shlex
 from pathlib import Path
 import subprocess
 import sys
@@ -12,12 +15,107 @@ import tempfile
 
 CONFIGURATION_PATH = Path("/etc/default/grub.d/99-anduinos-control-panel.cfg")
 UPDATE_GRUB = "/usr/sbin/update-grub"
+GRUB_MENU = Path("/boot/grub/grub.cfg")
 MINIMUM_TIMEOUT = 0
 MAXIMUM_TIMEOUT = 300
 DISPLAY_NATIVE = "native"
 DISPLAY_LARGE_TEXT = "large-text"
 DISPLAY_MODES = {DISPLAY_NATIVE, DISPLAY_LARGE_TEXT}
 LARGE_TEXT_GFXMODE = "1440x900,1280x800,1280x720,1024x768,auto"
+
+
+def boot_systems(content: str) -> dict:
+    """Read the standard grub-mkconfig format, never execute GRUB code.
+
+    Offer ordinary top-level Linux/os-prober IDs and the AnduinOS installer's
+    Windows entries. Older installer entries have no ID, so use their unique,
+    fixed English title as the GRUB selector. Never use an unstable menu index
+    for writes. Custom generators and arbitrary GRUB programs are unsupported.
+    Unknown defaults (including saved defaults) are deliberately left alone.
+    """
+    entries = []
+    section = ""
+    depth = 0
+    position = 0
+    defaults = []
+    titles = []
+    title_selectors = set()
+    for line in content.splitlines():
+        if line.startswith("### BEGIN /etc/grub.d/"):
+            section = line.removeprefix("### BEGIN /etc/grub.d/").split()[0]
+        elif line.startswith("### END "):
+            section = ""
+        words = shlex.split(line, comments=True)
+        if not words:
+            continue
+        if words[:2] == ["set", "default=${next_entry}"] and section == "00_header":
+            continue
+        if (
+            words == ["set", "default=${btrfs_snapshots_manager_next_entry}"]
+            and section == "01_anduinos_btrfs_snapshots_manager_env"
+        ):
+            # The snapshot manager consumes this override for one boot only;
+            # the UI edits the persistent default from 00_header.
+            continue
+        if words[0] == "set" and len(words) >= 2 and words[1].startswith("default="):
+            defaults.append(words[1][8:] if section == "00_header" else None)
+        header = words[0] in {"menuentry", "submenu"}
+        if header and depth == 0:
+            if len(words) < 3:
+                raise ValueError("Incomplete GRUB menu entry")
+            titles.append(words[1])
+            index = position
+            position += 1
+            identifier = None
+            for offset, word in enumerate(words[2:], 2):
+                if word in {"--id", "$menuentry_id_option", "${menuentry_id_option}"} and offset + 1 < len(words):
+                    identifier = words[offset + 1]
+                elif word.startswith("--id="):
+                    identifier = word[5:]
+            if (
+                words[0] == "menuentry"
+                and len(words) > 2
+                and words[-1] == "{"
+                and section in {"10_linux", "30_os-prober"}
+                and identifier
+                and re.fullmatch(r"(?:gnulinux-simple-|osprober-(?:efi-|chain-|gnulinux-simple-))[A-Za-z0-9_.:+/-]+", identifier)
+            ):
+                entries.append({"id": identifier, "title": words[1], "index": index})
+            elif (
+                section == "42_anduinos_windows"
+                and words[0] == "menuentry"
+                and words[-1] == "{"
+                and identifier is None
+                and re.fullmatch(r"Windows Boot Manager(?: \(disk [1-9][0-9]*\))?", words[1])
+                and words[2:-1] == ["--class", "windows", "--class", "os"]
+            ):
+                title_selectors.add(words[1])
+                entries.append({"id": words[1], "title": words[1], "index": index})
+        # Generated commands put structural braces in separate words. Ignore
+        # the title, which may itself contain braces or escaped apostrophes.
+        structural = words[2:] if header else words
+        depth += structural.count("{") - structural.count("}")
+        if depth < 0:
+            raise ValueError("Unrecognized GRUB menu structure")
+    if depth:
+        raise ValueError("Incomplete GRUB menu structure")
+    ids = [entry["id"] for entry in entries]
+    entries = [
+        entry for entry in entries
+        if ids.count(entry["id"]) == 1
+        and (entry["id"] not in title_selectors or titles.count(entry["title"]) == 1)
+    ]
+    current = None
+    if len(defaults) == 1 and defaults[0] is not None:
+        value = defaults[0]
+        matches = [entry for entry in entries if value in {entry["id"], entry["title"], str(entry["index"])}]
+        if len(matches) == 1:
+            current = matches[0]["id"]
+    return {"entries": entries, "current": current}
+
+
+def read_boot_systems() -> dict:
+    return boot_systems(GRUB_MENU.read_text(encoding="utf-8"))
 
 
 def parse_timeout(value: str) -> int:
@@ -89,18 +187,43 @@ def update_grub() -> None:
         raise RuntimeError(f"update-grub exited with status {result.returncode}")
 
 
-def set_settings(timeout: int, display_mode: str) -> None:
+def set_settings(timeout: int, display_mode: str, default_id: str | None = None) -> None:
+    timeout = parse_timeout(str(timeout))
     display_mode = parse_display_mode(display_mode)
     try:
         previous = CONFIGURATION_PATH.read_bytes()
     except FileNotFoundError:
         previous = None
 
-    replace_configuration(configuration_for(timeout, display_mode))
+    # Preserve unrelated lines verbatim. Omitting default_id must preserve even
+    # custom/default=saved expressions, including requests from older clients.
+    managed = re.compile(rb"^\s*(?:export\s+)?GRUB_(?:TIMEOUT|RECORDFAIL_TIMEOUT|GFXMODE|GFXPAYLOAD_LINUX)\s*=")
+    configuration = b"".join(
+        line for line in (previous or b"").splitlines(keepends=True)
+        if not managed.match(line) and line != b"# Managed by AnduinOS Control Panel.\n"
+    )
+    if configuration and not configuration.endswith(b"\n"):
+        configuration += b"\n"
+    configuration += configuration_for(timeout, display_mode)
+    if default_id is not None:
+        if default_id not in {entry["id"] for entry in read_boot_systems()["entries"]}:
+            raise ValueError("The selected operating system is no longer available. Reopen Startup and Boot to reload the operating systems.")
+        # Append the explicit choice last so it overrides previous assignments.
+        configuration += f"GRUB_DEFAULT={shlex.quote(default_id)}\n".encode("ascii")
+    replace_configuration(configuration)
     try:
         update_grub()
-    except (OSError, RuntimeError):
+        if default_id is not None and read_boot_systems()["current"] != default_id:
+            raise RuntimeError("The regenerated boot menu did not retain the selected default operating system.")
+    except (OSError, ValueError, RuntimeError):
         replace_configuration(previous)
+        if default_id is not None:
+            # Regeneration may have removed an entry or exposed a later override.
+            # Restore the generated menu as well as the source configuration.
+            try:
+                update_grub()
+            except (OSError, RuntimeError) as rollback_error:
+                print(f"Could not restore the boot menu: {rollback_error}", file=sys.stderr)
         raise
 
 
@@ -125,6 +248,11 @@ def main(arguments: list[str]) -> int:
         return 77
     try:
         match arguments:
+            case ["list-systems"]:
+                print(json.dumps(read_boot_systems(), ensure_ascii=True))
+                return 0
+            case ["set-settings", timeout, display_mode, default_id]:
+                set_settings(parse_timeout(timeout), parse_display_mode(display_mode), default_id)
             case ["set-settings", timeout, display_mode]:
                 set_settings(
                     parse_timeout(timeout),
@@ -135,7 +263,7 @@ def main(arguments: list[str]) -> int:
             case _:
                 print("Unknown or incomplete action.", file=sys.stderr)
                 return 64
-    except (OSError, ValueError, RuntimeError) as error:
+    except (OSError, UnicodeError, ValueError, RuntimeError) as error:
         print(f"Boot setting change failed: {error}", file=sys.stderr)
         return 1
     print("Boot settings updated successfully.")

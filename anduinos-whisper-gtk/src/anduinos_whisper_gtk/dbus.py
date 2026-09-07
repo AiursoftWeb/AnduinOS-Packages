@@ -31,6 +31,20 @@ class VoiceServiceClient:
             None,
         )
 
+    def diagnostics(self, callback):
+        """Do not auto-start the microphone service just to export history."""
+        from anduinos_whisper_framework.diagnostics import sanitize_report
+        def finished(connection, result, _data):
+            try:
+                report = sanitize_report(connection.call_finish(result).unpack()[0])
+            except (GLib.Error, ValueError, TypeError):
+                callback(None)
+                return
+            callback(report)
+        self.connection.call(APP_ID, OBJECT_PATH, INTERFACE, "GetDiagnostics", None,
+                             GLib.VariantType("(s)"), Gio.DBusCallFlags.NO_AUTO_START,
+                             3000, None, finished, None)
+
     def call_sync(self, method: str) -> GLib.Variant | None:
         return self._ensure_proxy().call_sync(
             method, None, Gio.DBusCallFlags.NONE, -1, None

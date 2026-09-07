@@ -39,7 +39,7 @@ class PackageTests(unittest.TestCase):
         application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
         self.assertIn("Gio.ApplicationFlags.HANDLES_COMMAND_LINE", application)
         self.assertIn('argument == "--page"', application)
-        self.assertIn('{"home", "secure-boot"}', application)
+        self.assertIn('{"home", "secure-boot", "computer"}', application)
         self.assertIn("initial_page=requested_page", application)
         self.assertIn("window._select_page(requested_page)", application)
         self.assertIn("DriverCenterApplication().run(sys.argv)", application)
@@ -122,8 +122,8 @@ class PackageTests(unittest.TestCase):
             "firmware.svg",
             "nvidia.svg",
             "input-gaming.svg",
-            "printer.svg",
-            "secureboot-chip.svg",
+            "printer.svg", "anduinos-logo.svg", "processor-symbolic.svg", "memory-symbolic.svg",
+            "secureboot-chip.svg", "graphics-card-symbolic.svg", "motherboard-symbolic.svg",
         }
         actual = {path.name for path in (ROOT / "resources").glob("*.svg")}
         self.assertEqual(actual, expected)
@@ -138,15 +138,15 @@ class PackageTests(unittest.TestCase):
 
     def test_polkit_only_authorizes_the_fixed_helper(self):
         tree = ET.parse(ROOT / "data/com.anduinos.DriverCenter.policy")
-        annotations = {
-            node.attrib.get("key"): (node.text or "").strip()
-            for node in tree.findall(".//annotate")
+        paths = {
+            node.text.strip() for node in tree.findall(".//annotate")
+            if node.attrib.get("key") == "org.freedesktop.policykit.exec.path"
         }
-        self.assertEqual(
-            annotations["org.freedesktop.policykit.exec.path"],
+        self.assertEqual(paths, {
             "/usr/libexec/anduinos-driver-center/driver-helper",
-        )
-        self.assertNotIn("org.freedesktop.policykit.exec.allow_gui", annotations)
+            "/usr/libexec/anduinos-driver-center/memory-helper",
+        })
+        self.assertFalse(tree.findall(".//annotate[@key='org.freedesktop.policykit.exec.allow_gui']"))
 
     def test_home_page_uses_the_restricted_recommended_install_action(self):
         application = (ROOT / "src/anduinos_driver_center/app.py").read_text()
@@ -240,20 +240,20 @@ class PackageTests(unittest.TestCase):
                     "--keyword=ngettext:1,2", "--from-code=UTF-8",
                     f"--output={extracted}",
                     str(ROOT / "src" / "anduinos_driver_center" / "app.py"),
+                    str(ROOT / "src" / "anduinos_driver_center" / "computer_ui.py"),
                     str(toolkit_ui),
                 ],
                 check=True,
             )
-            template_difference = subprocess.run(
-                [
-                    "msgcomm", "--less-than=2", "--omit-header",
-                    str(ROOT / "po" / "anduinos-driver-center.pot"), str(extracted),
-                ],
+            # The catalog also contains desktop and polkit messages. Every UI
+            # message must be present, but those non-Python entries are valid.
+            subprocess.run(
+                ["msgcmp", "--use-untranslated", "--no-fuzzy-matching",
+                 str(ROOT / "po" / "anduinos-driver-center.pot"), str(extracted)],
                 check=True,
                 capture_output=True,
                 text=True,
             )
-            self.assertEqual(template_difference.stdout.strip(), "")
 
         translated_msgid = re.compile(r'^msgid "[^"].*"$', re.MULTILINE)
         for po_file in po_files:

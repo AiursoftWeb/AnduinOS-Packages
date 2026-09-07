@@ -25,14 +25,17 @@ const TOGGLE_TRANSITION = Object.freeze({
     [UI_STATE.READY]: UI_STATE.LISTENING,
     [UI_STATE.LISTENING]: UI_STATE.READY,
 });
-const ACTIVE_DAEMON_STATES = new Set(['listening', 'recognizing', 'no-speech']);
+const ACTIVE_DAEMON_STATES = new Set(['calibrating', 'preparing', 'listening', 'recognizing', 'no-speech']);
 
 const DBUS_XML = `
 <node>
   <interface name="com.anduinos.VoiceTyping">
     <method name="Start"/>
     <method name="Stop"/>
+    <method name="Finish"/>
     <method name="Quit"/>
+    <method name="ReportDelivery"><arg type="u" direction="in"/></method>
+    <signal name="DeliveryTicket"><arg type="u"/></signal>
     <method name="GetState">
       <arg name="state" type="s" direction="out"/>
       <arg name="detail" type="s" direction="out"/>
@@ -66,8 +69,11 @@ const N_ = text => text;
 
 const STATE_TEXT = {
     idle: N_('Ready'),
+    preparing: N_('Preparing recognition…'),
+    calibrating: N_('Measuring performance — microphone off'),
     listening: N_('Listening…'),
     recognizing: N_('Recognizing…'),
+    finishing: N_('Finishing recognition…'),
     testing: N_('Testing microphone…'),
     'no-speech': N_('No speech detected'),
     error: N_('Microphone unavailable'),
@@ -94,6 +100,9 @@ export default class VoiceTypingExtension extends Extension {
         this._targetWindow = global.display.focus_window;
         this._previewTimer = 0;
         this._pasteTimer = 0;
+        this._finishPending = false;
+        this._finalQueue = [];
+        this._deliveryTicket = 0;
         this._proxy = null;
         this._proxyReady = false;
         this._pendingCall = null;
@@ -154,10 +163,14 @@ export default class VoiceTypingExtension extends Extension {
                         this._setState(state, detail)),
                     proxy.connectSignal('LevelChanged', (_source, _sender, [level]) =>
                         this._setLevel(level)),
+                    proxy.connectSignal('DeliveryTicket', (_source, _sender, [ticket]) => {
+                        this._deliveryTicket = ticket;
+                    }),
                     proxy.connectSignal('Transcript', (_source, _sender, [text, final]) => {
-                        if (final)
-                            this._previewAndInsert(text);
-                        else
+                        if (final) {
+                            this._previewAndInsert(text, this._deliveryTicket);
+                            this._deliveryTicket = 0;
+                        } else
                             this._showPartial(text);
                     }),
                 );
@@ -176,6 +189,8 @@ export default class VoiceTypingExtension extends Extension {
 
     disable() {
         this._enabled = false;
+        this._finalQueue = [];
+        this._finishPending = false;
         if (this._shutdownSignal)
             global.disconnect(this._shutdownSignal);
         this._shutdownSignal = 0;
@@ -228,7 +243,8 @@ export default class VoiceTypingExtension extends Extension {
     _quitForShellShutdown() {
         this._enabled = false;
         this._uiState = UI_STATE.CLOSED;
-        this._root?.hide();
+        // Shell may already have disposed chrome actors before this signal.
+        // Only stop work here; actor cleanup belongs to Shell/disable().
         // Never activate an unused daemon while the session is closing.
         if (this._proxyReady && this._proxy?.get_name_owner())
             this._invoke('Quit');
@@ -350,6 +366,15 @@ export default class VoiceTypingExtension extends Extension {
     }
 
     _startListening() {
+        this._deliveryTicket = 0;
+        this._finishPending = false;
+        this._finalQueue = [];
+        if (this._previewTimer)
+            GLib.Source.remove(this._previewTimer);
+        if (this._pasteTimer)
+            GLib.Source.remove(this._pasteTimer);
+        this._previewTimer = 0;
+        this._pasteTimer = 0;
         this._targetWindow = global.display.focus_window ?? this._targetWindow;
         this._setUiState(UI_STATE.LISTENING, _('Listening…'));
         this._call('Start');
@@ -358,9 +383,10 @@ export default class VoiceTypingExtension extends Extension {
     _stopListening() {
         if (this._uiState === UI_STATE.CLOSED)
             return;
-        this._setUiState(UI_STATE.READY, _('Ready'));
+        this._finishPending = true;
+        this._setUiState(UI_STATE.READY, _('Finishing recognition…'));
         if (this._proxy || this._pendingCall)
-            this._call('Stop');
+            this._call('Finish');
     }
 
     _dismissOverlay() {
@@ -368,6 +394,9 @@ export default class VoiceTypingExtension extends Extension {
     }
 
     _closeUi() {
+        this._deliveryTicket = 0;
+        this._finishPending = false;
+        this._finalQueue = [];
         this._setUiState(UI_STATE.CLOSED, _('Off'));
         this._hidePreview();
         if (this._previewTimer)
@@ -433,7 +462,7 @@ export default class VoiceTypingExtension extends Extension {
         if (this._uiState === UI_STATE.READY)
             return _('Ready');
         return ACTIVE_DAEMON_STATES.has(this._state)
-            ? this._detail || _('Listening…')
+            ? _(STATE_TEXT[this._state] ?? this._detail ?? 'Listening…')
             : _('Listening…');
     }
 
@@ -448,9 +477,11 @@ export default class VoiceTypingExtension extends Extension {
         if (!this._enabled || !this._root)
             return;
         this._state = state;
+        if (state === 'finishing' && this._uiState !== UI_STATE.CLOSED)
+            this._finishPending = true;
         this._detail = detail;
         if (ACTIVE_DAEMON_STATES.has(state) &&
-            this._uiState !== UI_STATE.LISTENING) {
+            this._uiState !== UI_STATE.LISTENING && !this._finishPending) {
             this._invoke(this._uiState === UI_STATE.CLOSED ? 'Quit' : 'Stop');
             return;
         }
@@ -458,7 +489,9 @@ export default class VoiceTypingExtension extends Extension {
             this._uiState === UI_STATE.LISTENING) {
             this._setUiState(UI_STATE.READY, detail || _('Ready'));
         }
-        this._statusLabel.text = _(STATE_TEXT[state] ?? detail ?? state);
+        this._statusLabel.text = state === 'finishing'
+            ? _(detail || STATE_TEXT.finishing)
+            : _(STATE_TEXT[state] ?? detail ?? state);
         this._bar.remove_style_class_name('listening');
         this._bar.remove_style_class_name('error');
         this._micButton.remove_style_class_name('listening');
@@ -474,7 +507,8 @@ export default class VoiceTypingExtension extends Extension {
         if (this._uiState !== UI_STATE.CLOSED) {
             this._root.show();
             this._positionOverlay();
-            this._emitUiState(detail || this._uiDetail());
+            this._emitUiState(ACTIVE_DAEMON_STATES.has(state)
+                ? this._uiDetail() : detail || this._uiDetail());
         } else {
             this._root.hide();
         }
@@ -497,11 +531,16 @@ export default class VoiceTypingExtension extends Extension {
         });
     }
 
-    _previewAndInsert(text) {
-        if (!this._enabled || this._uiState !== UI_STATE.LISTENING || !text)
+    _previewAndInsert(text, ticket = 0) {
+        if (!this._enabled || this._uiState === UI_STATE.CLOSED ||
+            (this._uiState !== UI_STATE.LISTENING && !this._finishPending) || !text)
             return;
-        if (this._previewTimer)
-            GLib.Source.remove(this._previewTimer);
+        // Final results may arrive in a burst after slow inference. Never replace
+        // a pending final/clipboard paste with the next phrase.
+        if (this._previewTimer || this._pasteTimer) {
+            this._finalQueue.push([text, ticket]);
+            return;
+        }
         const delay = this._settings.get_boolean('show-preview')
             ? this._settings.get_uint('preview-delay')
             : 0;
@@ -511,7 +550,7 @@ export default class VoiceTypingExtension extends Extension {
         this._previewTimer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, delay, () => {
             this._previewTimer = 0;
             this._hidePreview();
-            this._insertText(text);
+            this._insertText(text, ticket);
             return GLib.SOURCE_REMOVE;
         });
     }
@@ -537,15 +576,17 @@ export default class VoiceTypingExtension extends Extension {
         this._positionOverlay();
     }
 
-    _insertText(text) {
+    _insertText(text, ticket = 0) {
         const purpose = Main.inputMethod?.content_purpose;
         if (Clutter.InputContentPurpose &&
             [Clutter.InputContentPurpose.PASSWORD, Clutter.InputContentPurpose.PIN].includes(purpose)) {
+            this._finalQueue = [];
             this._setState('error', _('Voice typing is disabled in password fields'));
             return;
         }
         const focused = global.display.focus_window ?? this._targetWindow;
         if (!focused) {
+            this._finalQueue = [];
             this._setState('error', _('Select a text field before dictating'));
             return;
         }
@@ -556,10 +597,24 @@ export default class VoiceTypingExtension extends Extension {
             GLib.Source.remove(this._pasteTimer);
         this._pasteTimer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 35, () => {
             this._pasteTimer = 0;
+            // Focus/purpose may change during the clipboard-to-paste delay.
+            const purposeNow = Main.inputMethod?.content_purpose;
+            if (global.display.focus_window !== focused ||
+                (Clutter.InputContentPurpose &&
+                 [Clutter.InputContentPurpose.PASSWORD, Clutter.InputContentPurpose.PIN].includes(purposeNow))) {
+                this._finalQueue = [];
+                return GLib.SOURCE_REMOVE;
+            }
             const windowClass = (focused.get_wm_class() ?? '').toLowerCase();
             const terminal = ['terminal', 'kgx', 'console', 'alacritty', 'kitty', 'konsole']
                 .some(name => windowClass.includes(name));
             this._pressPaste(terminal);
+            // This acknowledges dispatch of the compositor paste shortcut, not
+            // proof that a target application accepted or rendered the text.
+            if (ticket && this._proxyReady)
+                this._proxy.ReportDeliveryRemote(ticket, () => {});
+            if (this._finalQueue.length)
+                this._previewAndInsert(...this._finalQueue.shift());
             return GLib.SOURCE_REMOVE;
         });
     }

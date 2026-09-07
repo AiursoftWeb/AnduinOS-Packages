@@ -17,6 +17,20 @@
       <default>'base'</default>
       <summary>Speech recognition model</summary>
     </key>
+    <key name="recognition-backend" type="s">
+      <choices><choice value="auto"/><choice value="cpu"/><choice value="gpu"/></choices>
+      <default>'auto'</default>
+      <summary>Measured automatic backend selection or manual override</summary>
+    </key>
+    <key name="recognition-threads" type="u">
+      <default>0</default>
+      <range min="0" max="256"/>
+      <summary>Recognition threads, or zero for automatic selection</summary>
+    </key>
+    <key name="tuning-generation" type="u">
+      <default>0</default>
+      <summary>Increment to request fresh performance measurements on next start</summary>
+    </key>
     <key name="automatic-punctuation" type="b">
       <default>true</default>
       <summary>Keep punctuation recognized by Whisper</summary>
@@ -37,6 +51,10 @@
       <default>true</default>
       <summary>Show periodically refreshed partial transcripts while speaking</summary>
     </key>
+    <key name="noise-reduction" type="b">
+      <default>false</default>
+      <summary>Apply moderate WebRTC noise suppression and bounded microphone gain</summary>
+    </key>
     <key name="preview-delay" type="u">
       <default>350</default>
       <range min="0" max="2000"/>
@@ -45,7 +63,7 @@
     <key name="silence-threshold" type="d">
       <default>-42.0</default>
       <range min="-60.0" max="-20.0"/>
-      <summary>Voice activity threshold in decibels</summary>
+      <summary>Legacy energy threshold (unused by WebRTC voice detection)</summary>
     </key>
     <key name="overlay-x" type="i">
       <default>0</default>

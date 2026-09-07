@@ -21,7 +21,8 @@ from anduinos_whisper_framework.chinese import (  # noqa: E402
     normalize_chinese_script,
     whisper_language,
 )
-from anduinos_whisper_framework.engine import WhisperEngine  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tests" / "benchmarks"))
+from benchmark_engine import WhisperEngine
 from anduinos_whisper_framework.config import MODELS  # noqa: E402
 from anduinos_whisper_framework.audio import AudioCapture  # noqa: E402
 from anduinos_whisper_framework.daemon import VoiceTypingService  # noqa: E402
@@ -50,7 +51,7 @@ class CommandTests(unittest.TestCase):
 
 
 class EngineTests(unittest.TestCase):
-    @patch("anduinos_whisper_framework.engine.subprocess.run")
+    @patch("benchmark_engine.subprocess.run")
     def test_engine_uses_fixed_argument_vector_and_16khz_wav(self, run):
         run.return_value = subprocess.CompletedProcess([], 0, stdout=" hello ", stderr="")
         with patch("pathlib.Path.is_file", return_value=True):
@@ -62,7 +63,7 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(arguments[arguments.index("--language") + 1], "zh")
         self.assertNotIn("shell", run.call_args.kwargs)
 
-    @patch("anduinos_whisper_framework.engine.subprocess.run")
+    @patch("benchmark_engine.subprocess.run")
     def test_engine_forces_simplified_chinese_output(self, run):
         run.return_value = subprocess.CompletedProcess(
             [], 0, stdout="語音輸入與電腦", stderr=""
@@ -110,15 +111,16 @@ class LiveTranscriptionTests(unittest.TestCase):
             on_level=lambda _level: None,
             on_error=lambda _message: None,
             on_no_speech=lambda: None,
+            partial_interval=0.5,
         )
         loud_audio = array("h", [12_000] * 1_600).tobytes()
-        timestamps = [index / 10 for index in range(11)]
+        timestamps = [index / 10 for index in range(13)]
         with patch(
             "anduinos_whisper_framework.audio.time.monotonic",
             side_effect=timestamps,
         ):
             for _timestamp in timestamps:
-                capture._consume(loud_audio)
+                capture._consume(loud_audio, voiced=True)
         self.assertEqual(len(partials), 2)
         self.assertGreaterEqual(
             len(partials[0]), AudioCapture.BYTES_PER_SECOND // 2
@@ -146,6 +148,25 @@ class LiveTranscriptionTests(unittest.TestCase):
 
 
 class PackageTests(unittest.TestCase):
+    def test_vad_model_is_pinned_bundled_and_licensed(self):
+        project = ET.parse(ROOT / 'anduinos-whisper-framework.aosproj')
+        files = {node.attrib['Include']: node.attrib['Target']
+                 for node in project.findall('.//IncludeFile')}
+        self.assertEqual(files['obj/models/ggml-silero-v6.2.0.bin'],
+                         '/usr/share/anduinos-whisper-framework/models/ggml-silero-v6.2.0.bin')
+        for name in ('VAD-NOTICE', 'VAD-LICENSE'):
+            self.assertEqual(files[name], f'/usr/share/doc/anduinos-whisper-framework/{name}')
+            self.assertTrue((ROOT / name).is_file())
+        script = (ROOT / 'scripts/download-vad-model.sh').read_text()
+        self.assertIn('c5c26827b67dfd053856f92e824e14fdcc123daf', script)
+        self.assertIn('2aa269b785eeb53a82983a20501ddf7c1d9c48e33ab63a41391ac6c9f7fb6987', script)
+        self.assertIn('sha256sum --check --status', script)
+
+    def test_gpu_plugin_is_recommended_without_removing_cpu_only_installation(self):
+        project = (ROOT.parent / "anduinos-whisper-worker/anduinos-whisper-worker.aosproj").read_text()
+        self.assertIn('<Recommend Include="libggml0-backend-vulkan (&gt;= 0.9.11)"', project)
+        self.assertNotIn('<Dependency Include="libggml0-backend-vulkan', project)
+
     def test_model_tiers_have_clear_user_facing_names(self):
         self.assertEqual(MODELS["tiny"].title, "Whisper Tiny")
         self.assertIn("Fastest", MODELS["tiny"].description)
@@ -167,7 +188,8 @@ class PackageTests(unittest.TestCase):
         )
         self.assertIn("sha256sum --check --status", script)
         self.assertIn('<TargetArchitectures>all</TargetArchitectures>', project)
-        self.assertIn('<Dependency Include="whisper.cpp (&gt;= 1.8.3)" />', project)
+        self.assertNotIn('<Dependency Include="whisper.cpp', project)
+        self.assertIn('<Dependency Include="anduinos-whisper-worker', project)
         self.assertIn('<Dependency Include="libopencc1.1" />', project)
 
     def test_daemon_exposes_only_explicit_shell_control_methods(self):
@@ -209,9 +231,9 @@ class PackageTests(unittest.TestCase):
 
         audio = (ROOT / "src/anduinos_whisper_framework/audio.py").read_text()
         daemon = (ROOT / "src/anduinos_whisper_framework/daemon.py").read_text()
-        self.assertIn("partial_interval: float = 0.5", audio)
+        self.assertIn("partial_interval: float = 0.8", audio)
         self.assertIn("self.on_partial(partial)", audio)
-        self.assertIn("queue.PriorityQueue", daemon)
+        self.assertIn("RecognitionQueue()", daemon)
         self.assertIn('self._put_work(0, "final"', daemon)
         self.assertIn('self._put_work(1, "partial"', daemon)
         self.assertIn('GLib.Variant("(sb)", (text, False))', daemon)

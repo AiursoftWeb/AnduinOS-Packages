@@ -44,9 +44,49 @@ trust panel are provided by `anduinos-secureboot-toolkit`. This is the same
 implementation and fixed enrollment-code experience used by AnduinOS OOBE;
 Driver Center must not add a second Secure Boot backend or diverging prompts.
 
+The final sidebar item, **About This Computer**, shows a screenshot-friendly
+hardware overview. The compact view contains the CPU, system-usable memory,
+graphics, physical disk(s) backing `/`, displays, and motherboard. Expand it
+for all physical disks and their volumes, device drivers, firmware identity,
+CPU details, and display mode information. The system and desktop section adds
+the running GNOME Shell version, Mutter/Wayland or X11 session information,
+GTK/Shell/icon themes, font and cursor settings, and installed package counts.
+The dpkg count includes only installed packages; Flatpak counts applications
+and runtimes across user and system installations, excluding auxiliary locale
+and debug extensions, as in the default `flatpak list` output.
+
+Current usage is a snapshot taken on each scan: uptime, memory (total minus
+MemAvailable), Swap, and local filesystem usage. The filesystem rows distinguish
+used space from space available to ordinary users and deduplicate Btrfs
+subvolumes and bind mounts. Network mounts, pseudo filesystems, and snap loop
+images are excluded. Refresh with **Scan again**. CPU maximum frequency is
+formatted in GHz; display details distinguish built-in and external connectors
+when the connection type is known. The AnduinOS logo is shown only
+when the distribution identifies itself as AnduinOS in os-release (or, when
+that identity is absent, lsb-release).
+
+Opening, expanding, refreshing, and collapsing the page never require root.
+An optional **Read memory specifications** button in the detailed view makes
+at most one authentication attempt per window. Its separate read-only polkit
+helper accepts no arguments and reads only SMBIOS memory-device records,
+returning an allowlist of specifications without serial numbers or asset tags.
+Cancellation leaves the other details usable. Like swapcontrol-gtk, the basic
+memory capacity comes from `/proc/meminfo`; exact DIMM types and configured
+speeds come from `dmidecode`. Unsupported or inaccessible fields remain
+unavailable instead of being guessed. Disk capacities use decimal units;
+memory uses binary units. Display sizes come from reported physical dimensions,
+and refresh rates describe the current mode, not advertised maximum capabilities.
+
+No fastfetch or inxi dependency is needed. Inventory uses procfs/sysfs,
+`lscpu`, `lsblk`, `lspci`, GDK, and optional NVIDIA tooling. The overview omits
+hostnames, usernames, IP/MAC addresses, and serial numbers.
+
 ## Development
 
 ```bash
 PYTHONPATH=src python3 -m anduinos_driver_center
+PYTHONPATH=src python3 -m anduinos_driver_center --page computer
 python3 -m unittest discover -s tests -v
 ```
+
+GTK behavior tests can also run headlessly with `xvfb-run -a python3 -m unittest discover -s tests -v`.

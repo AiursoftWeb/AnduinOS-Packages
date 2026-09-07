@@ -17,6 +17,8 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
+from .computer_ui import ComputerPage
+
 from .core import (
     AudioState,
     DkmsState,
@@ -123,6 +125,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         super().__init__(application=app, title=_("AnduinOS Driver Center"))
         self.set_default_size(1250, 810)
         self.set_size_request(720, 520)
+        self._computer_page: ComputerPage | None = None
         self._graphics: list[HardwareDevice] = []
         self._secure_boot: SecureBootState | None = None
         self._xbox: XboxState | None = None
@@ -429,6 +432,18 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self._firmware_row = firmware_row
         self.device_list.append(firmware_row)
         self.stack.add_named(self._firmware_page(firmware_snapshot), "firmware")
+
+        computer_row = self._device_row(
+            "computer-symbolic", _("About This Computer"), _("Hardware overview")
+        )
+        computer_row.page_name = "computer"
+        computer_row.page_title = _("About This Computer")
+        self.device_list.append(computer_row)
+        if self._computer_page is None:
+            self._computer_page = ComputerPage()
+        else:
+            self._computer_page.reload()
+        self.stack.add_named(self._computer_page, "computer")
 
         selected = None
         row = self.device_list.get_row_at_index(0)
@@ -2212,7 +2227,15 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         def worker() -> None:
             try:
                 result = subprocess.run(["pkexec", HELPER, *arguments], input=stdin, capture_output=True, text=True, timeout=1800, check=False)
-                message = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else result.stderr.strip()
+                if result.returncode:
+                    # Keep both streams: APT errors usually go to stderr, but
+                    # dependency and maintainer-script details can be on stdout.
+                    message = "\n\n".join(
+                        output.strip() for output in (result.stderr, result.stdout)
+                        if output.strip()
+                    )
+                else:
+                    message = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else result.stderr.strip()
                 resolved_success_message = success_message
                 if result.returncode == 0 and success_output_marker:
                     resolved_success_message = _command_output_summary(
@@ -2246,13 +2269,33 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         success_message: str | None = None,
     ) -> bool:
         button.set_label(original); button.set_sensitive(True)
-        self._toast(
-            (success_message or _("Driver changes completed. Restart may be required."))
-            if code == 0
-            else (_("Driver operation failed: ") + (message or _("unknown error")))
-        )
-        if code == 0: self.refresh()
+        if code == 0:
+            self._toast(success_message or _("Driver changes completed. Restart may be required."))
+            self.refresh()
+        else:
+            self._action_error(message or _("unknown error"))
         return GLib.SOURCE_REMOVE
+
+    def _action_error(self, message: str) -> None:
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Driver operation failed: ").rstrip(": "),
+        )
+        details = Gtk.TextView(
+            editable=False,
+            cursor_visible=False,
+            wrap_mode=Gtk.WrapMode.WORD_CHAR,
+        )
+        details.get_buffer().set_text(message)
+        scroll = _scrolled_window(
+            min_content_height=180,
+            max_content_height=360,
+            propagate_natural_height=True,
+        )
+        scroll.set_child(details)
+        dialog.set_extra_child(scroll)
+        dialog.add_response("ok", _("OK"))
+        dialog.present()
 
     def _toast(self, message: str) -> None:
         # A transient alert works on every supported libadwaita, including Noble.
@@ -2310,7 +2353,7 @@ class DriverCenterApplication(Adw.Application):
                 continue
             command_line.printerr("Unknown option: %s\n" % argument)
             return 2
-        if requested_page not in {"home", "secure-boot"}:
+        if requested_page not in {"home", "secure-boot", "computer"}:
             command_line.printerr("Unknown Driver Center page: %s\n" % requested_page)
             return 2
 
