@@ -8,10 +8,7 @@ import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGES = {
-    "anduinos-apt-config": "packages.anduinos.com",
-    "anduinos-apt-config-dev": "apkg-dev.aiursoft.com",
-}
+PACKAGES = {"anduinos-apt-config-dev": "apkg-dev.aiursoft.com"}
 POLICY_NAME = "52anduinos-unattended-upgrades"
 
 
@@ -19,7 +16,7 @@ class UnattendedUpgradesPolicyTests(unittest.TestCase):
     def test_exact_default_rules(self):
         for package, host in PACKAGES.items():
             with self.subTest(package=package):
-                policy = (ROOT / package / "assets" / POLICY_NAME).read_text()
+                policy = (ROOT / "assets" / POLICY_NAME).read_text()
                 self.assertEqual(re.findall(r'^\s*"([^"]+)";', policy, re.M), [
                     'o=Ubuntu,a=${distro_codename}',
                     'o=Ubuntu,a=${distro_codename}-security',
@@ -30,7 +27,7 @@ class UnattendedUpgradesPolicyTests(unittest.TestCase):
 
     def test_packages_ship_their_own_policy_and_build_gate(self):
         for package, host in PACKAGES.items():
-            project = ET.parse(ROOT / package / (package + '.aosproj'))
+            project = ET.parse(ROOT / (package + '.aosproj'))
             policies = [f for f in project.findall('.//IncludeFile')
                         if f.get('Target') == '/etc/apt/apt.conf.d/' + POLICY_NAME]
             self.assertEqual(len(policies), 1)
@@ -60,7 +57,7 @@ class ActualMatcherTests(unittest.TestCase):
             for codename in ('noble', 'resolute'):
                 with self.subTest(package=package, codename=codename):
                     config.clear('Unattended-Upgrade')
-                    policy = str(ROOT / package / 'assets' / POLICY_NAME)
+                    policy = str(ROOT / 'assets' / POLICY_NAME)
                     self.apt_pkg.read_config_file(config, policy)
                     namespace = self.module['substitute'].__globals__
                     namespace['DISTRO_ID'] = 'AnduinOS'
@@ -79,7 +76,7 @@ class ActualMatcherTests(unittest.TestCase):
                     for suffix in ('-addon', '-webapps'):
                         suite = codename + suffix
                         self.assertTrue(allowed('Aiursoft Apkg', suite))
-                        foreign_hosts = ['third-party.example'] + [h for h in PACKAGES.values() if h != host]
+                        foreign_hosts = ['third-party.example', 'packages.anduinos.com']
                         for foreign in foreign_hosts:
                             self.assertFalse(allowed('Aiursoft Apkg', suite, foreign))
                         self.assertFalse(allowed('Unrelated vendor', suite))

@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 ../tests/test_dracut_policy.py" />
+    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_dracut_policy.py" />
     <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_migration_guard.py" />
     <PreInstallScript Include="scripts/preinst.sh" />
     <PostInstallScript Include="scripts/postinst.sh" />

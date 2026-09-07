@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 ../tests/test_unattended_upgrades_policy.py" />
+    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_unattended_upgrades_policy.py" />
 
     <!-- APT pinning: prefer AnduinOS packages over upstream Ubuntu -->
     <IncludeFile Include="assets/anduinos" Target="/etc/apt/preferences.d/anduinos" />

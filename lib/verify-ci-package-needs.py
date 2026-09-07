@@ -6,9 +6,6 @@ repository are all build-order relationships. This is independent of their
 different runtime installation semantics in APT. A small, explicit set of
 release-only relationships additionally protects atomic repository switches
 without turning those relationships into runtime package dependencies.
-
-Publish jobs may declare one non-package gate with the QUALITY_GATE variable;
-the named job must exist and appear in needs. Projects test their own gate policy.
 """
 
 from __future__ import annotations
@@ -46,7 +43,6 @@ class Job:
     name: str
     package_dir: str | None = None
     needs: tuple[str, ...] = ()
-    quality_gate: str | None = None
 
 
 def projects() -> dict[str, tuple[str, ET.Element]]:
@@ -77,16 +73,12 @@ def jobs() -> dict[str, Job]:
         end = starts[position + 1][0]
         block = lines[start + 1 : end]
         package_dir = None
-        quality_gate = None
         needs: list[str] = []
         in_needs = False
         for line in block:
             directory = re.fullmatch(r"    PACKAGE_DIR:\s*([^\s#]+)\s*", line)
             if directory:
                 package_dir = directory.group(1)
-            gate = re.fullmatch(r"    QUALITY_GATE:\s*([A-Za-z0-9][A-Za-z0-9_.-]*)\s*", line)
-            if gate:
-                quality_gate = gate.group(1)
             if re.fullmatch(r"  needs:\s*", line):
                 in_needs = True
                 continue
@@ -99,7 +91,7 @@ def jobs() -> dict[str, Job]:
                     continue
                 if line.strip() and not line.startswith("    "):
                     in_needs = False
-        parsed[name] = Job(name, package_dir, tuple(needs), quality_gate)
+        parsed[name] = Job(name, package_dir, tuple(needs))
     return parsed
 
 
@@ -186,15 +178,6 @@ def verify() -> tuple[int, int]:
             package, set()
         )
         expected_jobs = {package_to_job[item] for item in ordered_packages}
-        # Packages declare optional non-package gates in their CI variables.
-        # Package-specific requirements belong in that project's tests.
-        gate = job_map[job_name].quality_gate
-        if gate:
-            expected_jobs.add(gate)
-            if gate in job_map and job_map[gate].package_dir is not None:
-                raise RuntimeError(f"Quality gate must not publish a package: {gate}")
-        if not expected_jobs <= job_map.keys():
-            raise RuntimeError(f"Missing required CI jobs for {package}")
         actual_jobs = set(job_map[job_name].needs)
         missing = sorted(expected_jobs - actual_jobs)
         extra = sorted(actual_jobs - expected_jobs)

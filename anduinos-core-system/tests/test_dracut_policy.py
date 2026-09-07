@@ -9,7 +9,7 @@ import unittest
 import xml.etree.ElementTree as ET
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 FORBIDDEN_PACKAGES = {
     "casper",
     "initramfs-tools",
