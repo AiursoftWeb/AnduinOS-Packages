@@ -33,7 +33,7 @@ class MigrationGuardTests(unittest.TestCase):
         project = ET.parse(PROJECT).getroot()
         self.assertEqual(
             project.findtext(".//PackageVersion"),
-            "2.0.2-5+$(SuiteShortName)",
+            "2.0.2-6+$(SuiteShortName)",
         )
         self.assertEqual(
             project.find(".//PreInstallScript").get("Include"),
