@@ -117,11 +117,6 @@ anduinos-archive-keyring:
   variables:
     PACKAGE_DIR: anduinos-archive-keyring
 
-anduinos-bwrap-hack:
-  extends: .publish
-  variables:
-    PACKAGE_DIR: anduinos-bwrap-hack
-
 anduinos-fluent-gtk-theme:
   extends: .publish
   variables:
@@ -243,13 +238,6 @@ gnome-shell-extension-lockkeys:
   variables:
     PACKAGE_DIR: gnome-shell-extension-lockkeys
 
-gnome-shell-extension-mediacontrols:
-  extends: .publish
-  needs:
-    - anduinos-dconf-runtime
-  variables:
-    PACKAGE_DIR: gnome-shell-extension-mediacontrols
-
 gnome-shell-extension-network-stats:
   extends: .publish
   needs:
@@ -315,13 +303,6 @@ anduinos-software-properties-common:
   extends: .publish
   variables:
     PACKAGE_DIR: anduinos-software-properties-common
-
-anduinos-software-properties-gtk:
-  extends: .publish
-  needs:
-    - anduinos-software-properties-common
-  variables:
-    PACKAGE_DIR: anduinos-software-properties-gtk
 
 anduinos-system-tweaks:
   extends: .publish

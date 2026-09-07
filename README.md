@@ -62,7 +62,6 @@ User **cannot** install both.  Dpkg removes the Ubuntu package at install time.
 | 10 | `anduinos-session` | `ubuntu-session` | yes | + postinst purges `10_ubuntu-session.gschema.override` |
 | 11 | `anduinos-gnome-extensions` | `gnome-shell-ubuntu-extensions` | yes | Metapackage — AnduinOS-curated extension set |
 | 13 | `anduinos-software-properties-common` | `software-properties-common` | yes | Patches `add-apt-repository` → `--distro=ubuntu` |
-| 14 | `anduinos-software-properties-gtk` | `software-properties-gtk` | yes | Strips Ubuntu Pro ads; suppresses `ubuntu-pro-client` dep |
 | 15 | `firefox-anduinos` | `firefox` | — | Mozilla Apt `.deb`, not the snap wrapper |
 | 16 | `firmware-sof-anduinos` | `firmware-sof-signed` | yes | Newer Intel SOF from `thesofproject/sof-bin` |
 | 17 | `alsa-ucm-conf-anduinos` | `alsa-ucm-conf` | yes | `1.2.16` vs Ubuntu `1.2.15.3` |
@@ -97,7 +96,6 @@ These replace Ubuntu **files** without removing the Ubuntu **package**.
 | `base-files` | `os-release`, `lsb-release`, `issue`, `issue.net`, `ubuntu-logo-*.png`, `legal` | Epoch `1:` outranks Ubuntu |
 | `anduinos-apt-config` | APT sources (`packages.anduinos.com`) + preferences | Dual pin: `origin` (domain) + `release o=` (Origin field), both at priority 1001; also shipped as `anduinos-apt-config-dev` (→ `apkg-dev.aiursoft.com`) |
 | `anduinos-mimeapps` | `gnome-mimeapps.list` | `dpkg-divert` (original → `.ubuntu-original`) |
-| `anduinos-bwrap-hack` | `bwrap` → `bwrap.real` + shim | Swallows `bwrap` failures on Live squashfs |
 
 `anduinos-rime` is intentionally absent from this override table. Starting
 with `2.0.1-2`, it owns only Rime Ice resources and an additive distribution
@@ -496,7 +494,7 @@ Each extension's `.aosproj` uses a unified `<PackageVersion>` of `2.0.0~rc2-1+$(
 
 ### E. Upstream-Derived Packages
 
-Six packages derive from upstream `.deb` packages at build time via `UpstreamUrl`:
+Five packages derive from upstream `.deb` packages at build time via `UpstreamUrl`:
 
 | Package | Upstream source | Repository |
 |---|---|---|
@@ -504,7 +502,6 @@ Six packages derive from upstream `.deb` packages at build time via `UpstreamUrl
 | `firmware-sof-anduinos` | `firmware-sof-signed` | Ubuntu mirror |
 | `plymouth-anduinos` | `plymouth-theme-spinner` | Ubuntu mirror |
 | `anduinos-software-properties-common` | `software-properties-common` | Ubuntu mirror |
-| `anduinos-software-properties-gtk` | `software-properties-gtk` | Ubuntu mirror |
 | `firefox-anduinos` | `firefox` | Mozilla APT (`packages.mozilla.org`) |
 
 These are rebuilt by CI and pull the latest upstream source at build time, so the **upstream base** stays up-to-date. `firmware-sof-anduinos` still needs the separate Intel release check from section C.

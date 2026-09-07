@@ -207,8 +207,8 @@ defined in [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
 AnduinOS ISO builds now ship this beta as the default installer so the
 destructive VM matrix can run against the real image. The legacy Ubiquity
 integration package has been retired and is no longer built or published.
-`anduinos-bwrap-hack` remains available independently but is not installed
-automatically.
+The obsolete `anduinos-bwrap-hack` compatibility package has also been retired
+and is no longer built or published.
 
 The package owns both its application-menu entry and a GNOME autostart helper.
 The helper creates a trusted desktop launcher only in a non-root Dracut Live

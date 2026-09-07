@@ -44,7 +44,7 @@ patches what we need, and declares P-C-R.
 <Replaces>software-properties-common</Replaces>
 ```
 
-Examples: `anduinos-software-properties-common`, `anduinos-software-properties-gtk`.
+Example: `anduinos-software-properties-common`.
 
 ### Swap (same package name, epoch 1:)
 
@@ -92,7 +92,7 @@ Use MSBuild `Condition` attributes when a dependency only exists for certain
 Ubuntu releases:
 
 ```xml
-<Dependency Include="anduinos-software-properties-gtk" Condition="'$(Suite)' == 'resolute-addon'" />
+<Dependency Include="anduinos-kernel-parameters" Condition="'$(Suite)' == 'resolute-addon'" />
 ```
 
 ## Upstream Derivation Patterns
