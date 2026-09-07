@@ -23,4 +23,4 @@ contain bounded timing metadata, not recordings or recognized text.
 Build with `apkg build --all`. Run the repository's `bash anduinos-whisper-framework/tests/run-cpu.sh`
 for acceptance; see [testing guidance](docs/testing.md) for dependencies, GPU
 checks and limitations. Generated measurements belong in the ignored
-`voice-test-results/` directory or CI artifacts, not in source control.
+`anduinos-whisper-framework/obj/voice-test-results/` directory, not in source control.

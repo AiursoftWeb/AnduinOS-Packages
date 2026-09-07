@@ -13,8 +13,11 @@ This builds the worker for amd64 and arm64, verifies the pinned Base and Silero
 models, and runs Python/GTK tests, Node controller tests, private-D-Bus checks,
 eight bilingual clean/noisy CLI comparisons, 100 repeated CPU requests, 32
 capture cases, 18 non-speech noise cases, and two 30000-frame VAD replays.
-ARM64 is compiled, not executed. Required packages are listed in the
-`voice-cpu-acceptance` job in the repository's `.gitlab-ci.yml`.
+ARM64 is compiled, not executed. This optional manual suite requires an amd64
+host with GCC 15 and its arm64 cross compiler, libc development files, Python 3
+with GI, GTK 4/Libadwaita and GStreamer introspection, GStreamer base/good/bad
+plugins, OpenCC, GGML, whisper-cli, Node.js, gettext, D-Bus, Xvfb, xauth and curl.
+It checks prerequisites but never installs host packages.
 
 To reuse an extracted package, preserving the worker's private library layout:
 
@@ -27,14 +30,12 @@ bash anduinos-whisper-framework/tests/run-cpu.sh
 
 These overrides skip building/downloading those inputs, not runtime tests.
 Source is copied to clean temporary staging without modifying developers'
-ignored caches. Reports go to ignored `voice-test-results/`; CI retains them
-for 14 days, including failed runs.
+ignored caches. Reports go to `anduinos-whisper-framework/obj/voice-test-results/`;
+temporary staging is removed on exit. These reports are not tracked by Git.
 
-CI requires an amd64 Docker executor with Ubuntu 26.04. Its container guard
-prevents dependency installation on a persistent shell runner. Do not remove
-the guard to accommodate a shell executor. Local acceptance does not validate
-remote runner provisioning. Worker publication requires acceptance; framework
-and GTK publication follow the package dependency graph.
+Package tests run through each package's `PrebuildCommand`. This longer suite
+is a manual diagnostic tool, not a separate CI job or publication prerequisite.
+It does not certify remote runner provisioning.
 
 ## Focused benchmarks
 

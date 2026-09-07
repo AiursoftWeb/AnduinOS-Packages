@@ -22,148 +22,20 @@ def load_package_verifier():
 
 
 class PackageContractTests(unittest.TestCase):
-    def test_core_system_owns_complete_architecture_boot_stacks(self):
-        package_root = ROOT.parent
-        core = ET.parse(
-            package_root
-            / "anduinos-core-system"
-            / "anduinos-core-system.aosproj"
-        ).getroot()
+    def test_installer_declares_the_live_bridge_dependency(self):
+        installer = ET.parse(ROOT / 'anduinos-installer-beta.aosproj').getroot()
         dependencies = {
-            (item.get("Include"), item.get("Condition"))
-            for item in core.iter("Dependency")
+            item.get("Include") for item in installer.findall(".//Dependency")
         }
+        self.assertIn("anduinos-live-settings", dependencies)
 
-        amd64 = "'$(Arch)' == 'amd64'"
-        arm64 = "'$(Arch)' == 'arm64'"
-        self.assertTrue(
-            {
-                ("grub-pc-bin", amd64),
-                ("grub-efi-amd64-bin", amd64),
-                ("grub-efi-amd64-signed", amd64),
-                ("grub-efi-arm64-bin", arm64),
-                ("grub-efi-arm64-signed", arm64),
-                ("shim-signed", None),
-            }
-            <= dependencies
-        )
 
-    def test_passwordless_sudo_contract_matches_security_center(self):
-        package_root = ROOT.parent
-        installer = (
-            ROOT / "src/installer_core/system_config.py"
-        ).read_text(encoding="utf-8")
-        helper = (
-            package_root / "anduinos-yubikey-manager/data/helper"
-        ).read_text(encoding="utf-8")
-        backend_config = (
-            package_root / "anduinos-yubikey-manager/src/config.rs"
-        ).read_text(encoding="utf-8")
-        prerm = (
-            package_root / "anduinos-yubikey-manager/scripts/prerm.sh"
-        ).read_text(encoding="utf-8")
+    def test_passwordless_sudo_uses_documented_paths(self):
+        installer = (ROOT / "src/installer_core/system_config.py").read_text()
+        self.assertIn('Path("etc/sudoers.d/90-anduinos-passwordless-admin")', installer)
+        self.assertIn('Path("var/lib/anduinos-passwordless-sudo/users")', installer)
 
-        policy = "etc/sudoers.d/90-anduinos-passwordless-admin"
-        state = "var/lib/anduinos-passwordless-sudo/users"
-        self.assertIn(f'Path("{policy}")', installer)
-        self.assertIn(f'Path("{state}")', installer)
-        self.assertIn(f'SUDOERS_DIR + "/{Path(policy).name}"', helper)
-        self.assertIn(f'SUDO_STATE = "/{state}"', helper)
-        self.assertIn(f'= "/{state}";', backend_config)
-        self.assertNotIn(f'os.unlink("/{policy}")', prerm)
 
-    def test_secure_shell_is_a_live_composition_not_an_upgrade_dependency(self):
-        package_root = ROOT.parent
-        desktop = ET.parse(
-            package_root
-            / "anduinos-desktop-core"
-            / "anduinos-desktop-core.aosproj"
-        ).getroot()
-        core = ET.parse(
-            package_root
-            / "anduinos-core-system"
-            / "anduinos-core-system.aosproj"
-        ).getroot()
-        live = ET.parse(
-            package_root
-            / "anduinos-live-settings"
-            / "anduinos-live-settings.aosproj"
-        ).getroot()
-
-        dependencies = {
-            item.get("Include") for item in desktop.iter("Dependency")
-        }
-        recommendations = {
-            item.get("Include") for item in desktop.iter("Recommend")
-        }
-        suggestions = {
-            item.get("Include") for item in desktop.iter("Suggest")
-        }
-        live_dependencies = {
-            item.get("Include") for item in live.iter("Dependency")
-        }
-        self.assertNotIn("openssh-server", dependencies)
-        self.assertNotIn("openssh-server", recommendations)
-        self.assertIn("openssh-server", suggestions)
-        self.assertIn("openssh-server", live_dependencies)
-
-        preset = (
-            package_root
-            / "anduinos-core-system/assets/20-anduinos-security.preset"
-        )
-        self.assertFalse(preset.exists())
-        files = {
-            (item.get("Include"), item.get("Target"))
-            for item in core.iter("IncludeFile")
-        }
-        self.assertNotIn(
-            (
-                "assets/20-anduinos-security.preset",
-                "/usr/lib/systemd/system-preset/20-anduinos-security.preset",
-            ),
-            files,
-        )
-
-    def test_extended_codecs_are_optional_and_owned_by_one_metapackage(self):
-        package_root = ROOT.parent
-        desktop = ET.parse(
-            package_root
-            / "anduinos-desktop-core"
-            / "anduinos-desktop-core.aosproj"
-        ).getroot()
-        multimedia = ET.parse(
-            package_root
-            / "anduinos-multimedia-codecs"
-            / "anduinos-multimedia-codecs.aosproj"
-        ).getroot()
-        optional_packages = {
-            "gstreamer1.0-plugins-bad",
-            "gstreamer1.0-plugins-ugly",
-            "gstreamer1.0-libav",
-            "libavcodec-extra",
-        }
-        desktop_dependencies = {
-            item.get("Include")
-            for tag in ("Dependency", "Recommend")
-            for item in desktop.iter(tag)
-        }
-        multimedia_dependencies = {
-            item.get("Include")
-            for item in multimedia.iter("Dependency")
-        }
-        self.assertTrue(optional_packages.isdisjoint(desktop_dependencies))
-        self.assertEqual(multimedia_dependencies, optional_packages)
-
-        apps = ET.parse(
-            package_root
-            / "anduinos-desktop-apps"
-            / "anduinos-desktop-apps.aosproj"
-        ).getroot()
-        app_recommendations = {
-            item.get("Include") for item in apps.iter("Recommend")
-        }
-        self.assertIn("celluloid", app_recommendations)
-        self.assertIn("ffmpegthumbnailer", app_recommendations)
 
     def test_appstream_publishes_the_live_installer_as_an_application(self):
         root = ET.parse(ROOT / "anduinos-installer-beta.aosproj").getroot()

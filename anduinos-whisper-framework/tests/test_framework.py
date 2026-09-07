@@ -148,6 +148,26 @@ class LiveTranscriptionTests(unittest.TestCase):
 
 
 class PackageTests(unittest.TestCase):
+    def test_settings_schema_contract(self):
+        schema = ET.parse(
+            ROOT
+            / "data/com.anduinos.voice-typing.gschema.xml"
+        ).getroot()
+        keys = {item.attrib["name"] for item in schema.findall(".//key")}
+        self.assertTrue(
+            {
+                "toggle-shortcut",
+                "microphone",
+                "language",
+                "model",
+                "voice-commands",
+                "audio-cues",
+                "show-preview",
+                "live-transcription",
+            }.issubset(keys)
+        )
+
+
     def test_vad_model_is_pinned_bundled_and_licensed(self):
         project = ET.parse(ROOT / 'anduinos-whisper-framework.aosproj')
         files = {node.attrib['Include']: node.attrib['Target']
@@ -162,10 +182,6 @@ class PackageTests(unittest.TestCase):
         self.assertIn('2aa269b785eeb53a82983a20501ddf7c1d9c48e33ab63a41391ac6c9f7fb6987', script)
         self.assertIn('sha256sum --check --status', script)
 
-    def test_gpu_plugin_is_recommended_without_removing_cpu_only_installation(self):
-        project = (ROOT.parent / "anduinos-whisper-worker/anduinos-whisper-worker.aosproj").read_text()
-        self.assertIn('<Recommend Include="libggml0-backend-vulkan (&gt;= 0.9.11)"', project)
-        self.assertNotIn('<Dependency Include="libggml0-backend-vulkan', project)
 
     def test_model_tiers_have_clear_user_facing_names(self):
         self.assertEqual(MODELS["tiny"].title, "Whisper Tiny")

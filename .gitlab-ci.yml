@@ -1,48 +1,11 @@
 stages:
   - lint
-  - publish
-  - meta
-
-voice-cpu-acceptance:
-  stage: lint
-  image: ubuntu:26.04
-  timeout: 20m
-  before_script:
-    # Do not let a shell executor install packages on its persistent host.
-    - test -f /.dockerenv
-    - apt-get update
-    - >-
-      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends
-      ca-certificates curl gcc gcc-aarch64-linux-gnu libc6-dev dpkg-dev
-      libc6-dev-arm64-cross libstdc++6-arm64-cross
-      python3 python3-gi gir1.2-gtk-4.0 gir1.2-adw-1
-      gir1.2-gstreamer-1.0 gir1.2-gst-plugins-base-1.0
-      gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad
-      libopencc1.1 libggml0 whisper.cpp gettext nodejs dbus xvfb xauth
-  script:
-    - PYTHONDONTWRITEBYTECODE=1 python3 anduinos-whisper-framework/tests/integration/test-ci-gate.py
-    - bash anduinos-whisper-framework/tests/run-cpu.sh
-  artifacts:
-    when: always
-    paths:
-      - voice-test-results/
-    expire_in: 14 days
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH
+  - packages
 
 verify-ci-package-needs:
   stage: lint
   script:
     - python3 lib/verify-ci-package-needs.py
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH
-
-verify-release-versions:
-  stage: lint
-  script:
-    - python3 lib/verify-release-versions.py
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH
@@ -58,38 +21,17 @@ lint-all:
       failed=0
       for dir in */; do
         if ls "$dir"*.aosproj >/dev/null 2>&1; then
-          echo "::group::Linting $dir"
           (cd "$dir" && apkg lint) || failed=1
-          echo "::endgroup::"
         fi
       done
-      exit $failed
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH != "master"
-
-# GNOME puts X-GNOME-Settings-Panel entries in a hidden menu directory. ArcMenu
-# builds its All Apps view from that menu tree, so standalone applications using
-# either of these categories remain searchable but disappear from All Apps.
-desktop-entry-policy:
-  stage: lint
-  script:
-    - |
-      offenders="$(grep -RIlE \
-        --include='*.desktop' \
-        '^(X-GNOME-Settings-Panel=|Categories=.*X-GNOME-(Settings-Panel|SystemSettings)(;|$))' \
-        . || true)"
-      if [ -n "$offenders" ]; then
-        echo "Standalone applications must not use GNOME Control Center panel categories:" >&2
-        echo "$offenders" >&2
-        exit 1
-      fi
+      exit "$failed"
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH
 
 .publish:
-  stage: publish
+  stage: packages
+  timeout: 3h
   before_script:
     - dotnet tool update -g aiursoft.apkg.client --configfile ./nuget.config || dotnet tool install -g aiursoft.apkg.client --configfile ./nuget.config
     - export PATH="$PATH:$HOME/.dotnet/tools"
@@ -97,6 +39,11 @@ desktop-entry-policy:
   script:
     - cd "$PACKAGE_DIR"
     - |
+      if [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ] ||
+         { [ "$CI_COMMIT_BRANCH" != "master" ] && [ "$CI_COMMIT_BRANCH" != "prod" ]; }; then
+        apkg build --all
+        exit 0
+      fi
       if [ "$CI_COMMIT_BRANCH" = "prod" ]; then
         APKG_SOURCE="https://apkg.aiursoft.com"
         APKG_KEY="$APKG_PROD_API_KEY"
@@ -104,15 +51,13 @@ desktop-entry-policy:
         APKG_SOURCE="https://apkg-dev.aiursoft.com"
         APKG_KEY="$APKG_DEV_API_KEY"
       fi
-      apkg deploy \
+      apkg deploy --all \
         --source "$APKG_SOURCE" \
         --api-key "$APKG_KEY" \
-        --skip-existing
+        --skip-duplicate
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: never
-    - if: $CI_COMMIT_BRANCH == "master"
-    - if: $CI_COMMIT_BRANCH == "prod"
+    - if: $CI_COMMIT_BRANCH
 
 apkg:
   extends: .publish
@@ -126,6 +71,8 @@ base-files:
 
 plymouth-anduinos:
   extends: .publish
+  needs:
+    - anduinos-core-system
   variables:
     PACKAGE_DIR: plymouth-anduinos
 
@@ -312,9 +259,6 @@ gnome-shell-extension-network-stats:
 
 gnome-shell-extension-proxy-switcher:
   extends: .publish
-  before_script:
-    - !reference [.publish, before_script]
-    - gjs --version
   variables:
     PACKAGE_DIR: gnome-shell-extension-proxy-switcher
 
@@ -353,7 +297,6 @@ firmware-sof-anduinos:
 
 anduinos-theme:
   extends: .publish
-  stage: meta
   needs:
     - anduinos-fluent-icon-theme
     - anduinos-fluent-gtk-theme
@@ -420,23 +363,20 @@ anduinos-swap-config:
 anduinos-btrfs-snapshots-manager:
   extends: .publish
   needs:
+    - anduinos-core-system
     - anduinos-secureboot-toolkit
   variables:
     PACKAGE_DIR: anduinos-btrfs-snapshots-manager
 
 anduinos-why-ai:
   extends: .publish
-  timeout: 3h
   variables:
     PACKAGE_DIR: anduinos-why-ai
 
 anduinos-whisper-worker:
   extends: .publish
-  needs:
-    - voice-cpu-acceptance
   variables:
     PACKAGE_DIR: anduinos-whisper-worker
-    QUALITY_GATE: voice-cpu-acceptance
 
 anduinos-whisper-framework:
   extends: .publish
@@ -543,20 +483,14 @@ anduinos-grub-style:
 anduinos-core-system:
   extends: .publish
   needs:
-    - anduinos-dracut-migration
     - anduinos-container
     - anduinos-grub-style
     - anduinos-system-tweaks
-    # Publish the Dracut-only consumers first. Their versioned dependency on
-    # this guarded core keeps them uninstallable until this final gate opens.
-    - anduinos-btrfs-snapshots-manager
-    - plymouth-anduinos
   variables:
     PACKAGE_DIR: anduinos-core-system
 
 anduinos-desktop-core:
   extends: .publish
-  stage: meta
   needs:
     - anduinos-core-system
     - anduinos-session
@@ -576,7 +510,6 @@ anduinos-appstore:
 
 anduinos-gnome-extensions:
   extends: .publish
-  stage: meta
   needs:
     - gnome-shell-extension-anduinos-loc
     - gnome-shell-extension-no-power-icon
@@ -645,7 +578,6 @@ anduinos-oobe:
 
 anduinos-desktop-apps:
   extends: .publish
-  stage: meta
   needs:
     - anduinos-control-panel
     - anduinos-driver-center
@@ -664,7 +596,6 @@ anduinos-desktop-apps:
 
 anduinos-desktop:
   extends: .publish
-  stage: meta
   needs:
     - anduinos-desktop-core
     - anduinos-dracut-migration

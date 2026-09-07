@@ -72,10 +72,10 @@ candidate_conflicts_with_legacy_stack() {
     done
 }
 
-candidate_depends_on_guarded_core() {
+candidate_depends_on_core() {
     candidate_dependencies "$1" "$2" \
         | tr '\n' ' ' \
-        | grep -Eq 'anduinos-core-system[[:space:]]*\(>=[[:space:]]*2\.0\.2-3\)'
+        | grep -Eq '(^|[ ,])anduinos-core-system([[:space:]]|,|$)'
 }
 
 load_published_candidates() {
@@ -92,7 +92,7 @@ load_published_candidates() {
             && [ "$snapshots_candidate" != "(none)" ] \
             && candidate_is_pure_dracut \
                 anduinos-btrfs-snapshots-manager "$snapshots_candidate" \
-            && candidate_depends_on_guarded_core \
+            && candidate_depends_on_core \
                 anduinos-btrfs-snapshots-manager "$snapshots_candidate" \
             || return 1
     fi
@@ -104,7 +104,7 @@ load_published_candidates() {
             && [ "$plymouth_candidate" != "(none)" ] \
             && candidate_is_pure_dracut \
                 plymouth-anduinos "$plymouth_candidate" \
-            && candidate_depends_on_guarded_core \
+            && candidate_depends_on_core \
                 plymouth-anduinos "$plymouth_candidate" \
             || return 1
     fi

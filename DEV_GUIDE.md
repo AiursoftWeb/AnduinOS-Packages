@@ -1,5 +1,19 @@
 # .aosproj Package Development Guide
 
+## Repository CI checks
+
+`lint-all` runs `apkg lint` for every package. The generic
+`lib/verify-ci-package-needs.py` checks that every package has one CI job and
+that its `needs` match internal `Dependency`, `Recommend` and `Suggest`
+declarations across all targets. Missing or extra edges, duplicate jobs and
+cycles fail the check. Keep matching `needs` explicit in `.gitlab-ci.yml`.
+
+CI uploads packages; activation of the complete release is a separate, atomic
+server operation. No special per-package publication ordering is needed.
+Internal packages target the current complete release, so internal dependency
+declarations do not need minimum versions. Keep upstream library version
+requirements where required by the software.
+
 ## Core Principle
 
 **资源级改动不 derive，身份级改动 derive。**
@@ -201,10 +215,9 @@ desktop-file-validate path/to/application.desktop
 ```
 
 Changing a Desktop Entry changes installed package content, so bump
-`PackageVersion`. The repository's `desktop-entry-policy` CI job rejects GNOME
-Control Center panel categories before any package is published. If AnduinOS
-ever ships a real embedded Control Center panel, its integration and a narrow
-CI exception must be reviewed explicitly.
+`PackageVersion`. Validate the package’s own desktop entries in its
+`PrebuildCommand`; do not add an application-specific CI job. Embedded Control
+Center panels require explicit review of their integration.
 
 ### Graphical application source layout
 

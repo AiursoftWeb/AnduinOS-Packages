@@ -1,5 +1,5 @@
 #!/bin/bash
-# Same entry point for CI and local regression. Never installs host packages,
+# Optional local CPU acceptance; package builds run their own PrebuildCommand tests. Never installs host packages,
 # opens a microphone, or claims GPU coverage. Output contains public-fixture
 # test results and performance metadata only.
 set -euo pipefail
@@ -27,35 +27,37 @@ fi
 echo "2aa269b785eeb53a82983a20501ddf7c1d9c48e33ab63a41391ac6c9f7fb6987  $ANDUINOS_VAD_MODEL" | sha256sum --check --status
 
 # Copy source into clean staging without touching developers' ignored caches.
-# Keep staging for inspection; CI removes its disposable container afterwards.
-voice_stage=$(mktemp -d -t anduinos-voice-ci.XXXXXXXX)
+# Remove only this invocation's private staging on exit.
+voice_stage=$(mktemp -d -t anduinos-voice-test.XXXXXXXX)
+trap 'rm -rf -- "$voice_stage"' EXIT
+voice_results="$voice_root/anduinos-whisper-framework/obj/voice-test-results"
 tar --exclude=obj --exclude=bin --exclude=__pycache__ --exclude='*.pyc' -cf - \
     anduinos-whisper-framework anduinos-whisper-gtk anduinos-whisper-worker \
     anduinos-control-panel anduinos-core-system anduinos-desktop \
     anduinos-desktop-core anduinos-desktop-apps | tar -xf - -C "$voice_stage"
 export ANDUINOS_VOICE_SAMPLE="$voice_stage/anduinos-whisper-framework/data/benchmark/en-short.wav"
 export PYTHONPATH="$voice_stage/anduinos-whisper-framework/src:$voice_stage/anduinos-whisper-gtk/src"
-mkdir -p voice-test-results
+mkdir -p "$voice_results"
 export GSETTINGS_SCHEMA_DIR="$voice_stage/anduinos-whisper-framework/data"
 glib-compile-schemas --strict "$GSETTINGS_SCHEMA_DIR"
 (cd "$voice_stage/anduinos-whisper-gtk" && bash compile-locales.sh)
-python3 -m unittest discover -s "$voice_stage/anduinos-whisper-framework/tests" -v 2>&1 | tee voice-test-results/framework.log
+python3 -m unittest discover -s "$voice_stage/anduinos-whisper-framework/tests" -v 2>&1 | tee "$voice_results"/framework.log
 dbus-run-session -- env GSETTINGS_BACKEND=memory ANDUINOS_GTK_SMOKE=1 xvfb-run -a \
-    python3 -m unittest discover -s "$voice_stage/anduinos-whisper-gtk/tests" -v 2>&1 | tee voice-test-results/gtk.log
+    python3 -m unittest discover -s "$voice_stage/anduinos-whisper-gtk/tests" -v 2>&1 | tee "$voice_results"/gtk.log
 node "$voice_stage/anduinos-whisper-gtk/tests/test_finishing.mjs"
 dbus-run-session -- env GSETTINGS_BACKEND=memory ANDUINOS_ISOLATED_TEST_BUS=1 \
     python3 "$voice_stage/anduinos-whisper-framework/tests/integration/smoke-diagnostics.py"
 python3 "$voice_stage/anduinos-whisper-framework/tests/benchmarks/benchmark-corpus.py" \
-    --worker "$ANDUINOS_VOICE_WORKER" --model "$ANDUINOS_VOICE_MODEL" > voice-test-results/cpu-corpus.json
+    --worker "$ANDUINOS_VOICE_WORKER" --model "$ANDUINOS_VOICE_MODEL" > "$voice_results"/cpu-corpus.json
 python3 "$voice_stage/anduinos-whisper-framework/tests/benchmarks/stress-resident.py" \
     --worker "$ANDUINOS_VOICE_WORKER" --model "$ANDUINOS_VOICE_MODEL" \
-    --backend cpu --requests 100 > voice-test-results/cpu-stress.json 2> voice-test-results/cpu-stress-progress.log
+    --backend cpu --requests 100 > "$voice_results"/cpu-stress.json 2> "$voice_results"/cpu-stress-progress.log
 python3 "$voice_stage/anduinos-whisper-framework/tests/benchmarks/benchmark-capture.py" \
     --worker "$ANDUINOS_VOICE_WORKER" --model "$ANDUINOS_VOICE_MODEL" \
-    --vad-model "$ANDUINOS_VAD_MODEL" --normalize-dbfs -26 > voice-test-results/capture-corpus-ci.json
+    --vad-model "$ANDUINOS_VAD_MODEL" --normalize-dbfs -26 > "$voice_results"/capture-corpus-ci.json
 python3 "$voice_stage/anduinos-whisper-framework/tests/benchmarks/benchmark-noise.py" \
-    --worker "$ANDUINOS_VOICE_WORKER" --vad-model "$ANDUINOS_VAD_MODEL" > voice-test-results/noise-shapes-ci.json
+    --worker "$ANDUINOS_VOICE_WORKER" --vad-model "$ANDUINOS_VAD_MODEL" > "$voice_results"/noise-shapes-ci.json
 python3 "$voice_stage/anduinos-whisper-framework/tests/benchmarks/stress-vad.py" \
     --worker "$ANDUINOS_VOICE_WORKER" --vad-model "$ANDUINOS_VAD_MODEL" \
-    > voice-test-results/vad-stress-ci.json 2> voice-test-results/vad-stress-ci-progress.log
-echo "CPU acceptance passed; reports: $voice_root/voice-test-results; staging: $voice_stage"
+    > "$voice_results"/vad-stress-ci.json 2> "$voice_results"/vad-stress-ci-progress.log
+echo "CPU acceptance passed; reports: $voice_results"

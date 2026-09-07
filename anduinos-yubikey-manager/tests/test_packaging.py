@@ -3,6 +3,16 @@ import unittest
 
 
 class PackagingTests(unittest.TestCase):
+    def test_passwordless_sudo_paths_and_removal_contract(self):
+        root = Path(__file__).resolve().parents[1]
+        helper = (root / "data/helper").read_text()
+        config = (root / "src/config.rs").read_text()
+        prerm = (root / "scripts/prerm.sh").read_text()
+        self.assertIn('SUDOERS_DIR + "/90-anduinos-passwordless-admin"', helper)
+        self.assertIn('SUDO_STATE = "/var/lib/anduinos-passwordless-sudo/users"', helper)
+        self.assertIn('= "/var/lib/anduinos-passwordless-sudo/users";', config)
+        self.assertNotIn('os.unlink("/etc/sudoers.d/90-anduinos-passwordless-admin")', prerm)
+
     def test_desktop_entry_is_exposed_as_a_control_panel_module(self):
         desktop = Path("data/com.anduinos.yubikeymanager.desktop").read_text(
             encoding="utf-8"

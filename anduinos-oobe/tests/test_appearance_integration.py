@@ -23,7 +23,7 @@ class AppearanceIntegrationTests(unittest.TestCase):
         project = ET.parse(ROOT / "anduinos-oobe.aosproj").getroot()
         dependencies = {item.get("Include") for item in project.iter("Dependency")}
 
-        self.assertIn("anduinos-appearance (>= 2.0.1-5)", dependencies)
+        self.assertIn("anduinos-appearance", dependencies)
 
 
 if __name__ == "__main__":

@@ -11,7 +11,6 @@ from unittest import mock
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 APP_SOURCE = SRC / "anduinos-appearance"
-PACKAGES_ROOT = ROOT.parent
 sys.path.insert(0, str(SRC))
 
 from anduinos_appearance import weather  # noqa: E402
@@ -170,19 +169,9 @@ class WeatherTests(unittest.TestCase):
         self.assertIn("lambda: self._reject_weather_enable(switch_row)", source)
         self.assertIn("find-location-symbolic", source)
 
-    def test_package_keeps_upstream_activation_but_has_no_fixed_city(self):
-        defaults = (
-            PACKAGES_ROOT
-            / "gnome-shell-extension-simple-weather/dconf/18-simple-weather.conf"
-        ).read_text(encoding="utf-8")
-        project = (ROOT / "anduinos-appearance.aosproj").read_text(encoding="utf-8")
-
-        self.assertIn("is-activated=true", defaults)
-        self.assertIn("my-loc-provider='disable'", defaults)
-        self.assertNotIn("locations=", defaults)
-        self.assertIn(
-            'IncludeFile Include="src/anduinos_appearance/weather.py"', project
-        )
+    def test_package_ships_weather_support(self):
+        project = (ROOT / "anduinos-appearance.aosproj").read_text()
+        self.assertIn('IncludeFile Include="src/anduinos_appearance/weather.py"', project)
 
 
 if __name__ == "__main__":

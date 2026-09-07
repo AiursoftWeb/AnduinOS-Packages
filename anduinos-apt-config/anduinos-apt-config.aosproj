@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 ../tests/test_unattended_upgrades_policy.py" />
+    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_unattended_upgrades_policy.py" />
 
     <!-- APT pinning: prefer AnduinOS packages over upstream Ubuntu -->
     <IncludeFile Include="assets/anduinos" Target="/etc/apt/preferences.d/anduinos" />
@@ -33,5 +33,8 @@
     <IncludeFile Include="assets/amd64/resolute/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'amd64'" />
     <IncludeFile Include="assets/arm64/noble/anduinos.sources"      Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'noble-addon' and '$(Arch)' == 'arm64'" />
     <IncludeFile Include="assets/arm64/resolute/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'arm64'" />
+  </ItemGroup>
+  <ItemGroup>
+    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_local_policy.py" />
   </ItemGroup>
 </Project>
