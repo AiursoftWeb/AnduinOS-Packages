@@ -1,4 +1,4 @@
-"""Export and restore the user's GNOME dconf settings."""
+"""Export, restore, and reset the user's GNOME dconf settings."""
 
 from __future__ import annotations
 
@@ -10,6 +10,24 @@ import tempfile
 
 GNOME_DCONF_PATH = "/org/gnome/"
 SAFETY_BACKUP_NAME = "gnome-settings-before-import.ini"
+DESKTOP_RESET_PATHS = (
+    "/org/gnome/shell/",
+    "/org/gnome/desktop/search-providers/",
+    "/org/gnome/desktop/app-folders/",
+    "/org/gnome/desktop/background/",
+    "/org/gnome/desktop/interface/",
+    "/org/gnome/desktop/privacy/",
+)
+
+
+def reset_desktop_settings() -> None:
+    """Remove user overrides in the desktop factory-reset scope."""
+    for path in DESKTOP_RESET_PATHS:
+        subprocess.run(
+            ["dconf", "reset", "-f", path],
+            check=True,
+            capture_output=True,
+        )
 
 
 class InvalidSettingsFile(ValueError):

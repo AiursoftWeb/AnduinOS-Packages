@@ -57,6 +57,7 @@ from anduinos_appearance.settings_transfer import (
     SettingsImportError,
     dump_gnome_settings,
     import_gnome_settings,
+    reset_desktop_settings,
 )
 
 SHELL_BASE = '/org/gnome/shell'
@@ -588,7 +589,7 @@ class AdvancedPage(Adw.PreferencesPage):
 
         row_reset = Adw.ActionRow()
         row_reset.set_title(_('Reset desktop settings'))
-        row_reset.set_subtitle(_('Restore all GNOME Shell settings to factory defaults'))
+        row_reset.set_subtitle(_('Restore desktop appearance, search, app folders, and privacy to factory defaults'))
         btn_reset = Gtk.Button(label=_('Reset'))
         btn_reset.set_valign(Gtk.Align.CENTER)
         btn_reset.add_css_class('destructive-action')
@@ -717,17 +718,16 @@ class AdvancedPage(Adw.PreferencesPage):
     def _on_reset(self, btn):
         def do_reset():
             try:
-                subprocess.run(['dconf', 'reset', '-f', '/org/gnome/shell/'], check=True)
-                subprocess.run(['dconf', 'update'], check=False)
-                self.win._toast(_('✓ Desktop settings reset. Restart Shell to apply.'))
-            except subprocess.CalledProcessError:
+                reset_desktop_settings()
+                self.win._toast(_('✓ Desktop settings reset. Log out and back in to apply all changes.'))
+            except (OSError, subprocess.CalledProcessError):
                 self.win._toast(_('✗ Failed to reset'))
 
         dlg = Adw.MessageDialog.new(
             self.win,
             _('Reset desktop settings?'),
-            _('This will reset all GNOME Shell settings to factory defaults.\n'
-              'Your extensions, panel layout, and preferences will be lost.')
+            _('This will restore extensions, panel layout, search preferences, app folders, '
+              'wallpaper, interface, and privacy preferences to factory defaults.')
         )
         dlg.add_response('cancel', _('Cancel'))
         dlg.add_response('reset', _('Reset'))
