@@ -197,6 +197,12 @@ native installer copies the packaged Live filesystem, retains the kernel
 packages in the target, regenerates the target Dracut initrd and bootloader
 configuration, and verifies that at least one kernel has a matching initrd.
 
+AnduinOS has fully adopted Dracut as its only supported initramfs generator;
+support for `initramfs-tools` has been discontinued. Legacy migration and
+compatibility helpers exist only to transition systems to Dracut, not to
+maintain a second supported boot stack. New packages and boot integrations
+must target Dracut rather than introduce `initramfs-tools` dependencies or hooks.
+
 AnduinOS owns one early-boot stack: `anduinos-core-system` depends directly on
 `dracut`, `dracut-core`, and `dracut-install`, and conflicts with Casper and the
 complete initramfs-tools/finalrd stack. Existing systems receive
@@ -262,10 +268,14 @@ Each package owns its source, tests and build helpers. Run package tests through
 its `PrebuildCommand`; do not place package tests at the repository root or add
 package-specific policy to `lib/`. Shared helpers must be genuinely generic.
 
-CI uses one common package recipe: branches and merge requests build all targets;
-`master` and `prod` build and deploy all targets with duplicate upload skipping.
-Existing versions do not skip the build or its tests. Package `needs` preserve
-publication ordering; they do not introduce separate acceptance jobs.
+CI uses one common package recipe: merge requests and non-release branches build
+all targets; `master` and `prod` deploy with `--all --skip-existing`. When
+preflight confirms that every requested target version is already published,
+the build and its `PrebuildCommand` tests are skipped. `--skip-duplicate` only
+skips duplicate uploads after building and is not a substitute. Bump
+`PackageVersion` when changing package content or dependency metadata.
+Package `needs` preserve dependency ordering; they do not introduce separate
+acceptance jobs. See [DEV_GUIDE.md](DEV_GUIDE.md) for the current workflow.
 
 ### TL;DR: What needs manual effort vs what auto-builds
 
