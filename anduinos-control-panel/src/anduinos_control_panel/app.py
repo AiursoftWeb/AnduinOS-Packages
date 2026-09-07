@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import gettext
+import json
 from pathlib import Path
 import subprocess
 import sys
@@ -627,6 +628,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             "normal": current.normal,
             "after_interrupted_boot": current.after_interrupted_boot,
             "display_mode": current_display_mode,
+            "default_id": None,
         }
         choices = sorted({0, 3, 5, 10, 30, current.normal})
         window = Adw.Window(
@@ -634,7 +636,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             modal=True,
             title=_("Startup and Boot"),
             default_width=560,
-            default_height=460,
+            default_height=560,
         )
         self._boot_settings_window = window
         window.connect("close-request", self._boot_settings_window_closed)
@@ -655,6 +657,21 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                 "Choose how long the boot menu waits before starting the default system."
             ),
         )
+        system_ids: list[str | None] = [None]
+        system_row = Adw.ComboRow(
+            title=_("Default operating system"),
+            subtitle=_("Starts automatically when the boot menu wait time ends."),
+        )
+        system_row.set_model(Gtk.StringList.new([_("Current setting (unchanged)")]))
+        system_row.set_sensitive(False)
+        system_row.add_prefix(Gtk.Image.new_from_icon_name("computer-symbolic"))
+        group.add(system_row)
+        load_systems = Gtk.Button(label=_("Retry"))
+        load_systems.set_visible(False)
+        load_systems.set_halign(Gtk.Align.START)
+        load_systems.set_valign(Gtk.Align.CENTER)
+        load_systems.set_tooltip_text(_("Authentication is required to read the boot menu."))
+        group.set_header_suffix(load_systems)
         timeout_row = Adw.ComboRow(
             title=_("Boot menu wait time"),
             subtitle=_(
@@ -717,14 +734,18 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         apply.add_css_class("suggested-action")
 
         def selection_changed(_row: Adw.ComboRow, _parameter) -> None:
+            item = system_row.get_selected_item()
+            system_row.set_tooltip_text(item.get_string() if item else None)
             selected = choices[timeout_row.get_selected()]
             display_mode = display_modes[display_row.get_selected()]
             apply.set_sensitive(
                 selected != state["normal"]
                 or selected != state["after_interrupted_boot"]
                 or display_mode != state["display_mode"]
+                or system_ids[system_row.get_selected()] != state["default_id"]
             )
 
+        system_row.connect("notify::selected", selection_changed)
         timeout_row.connect("notify::selected", selection_changed)
         display_row.connect("notify::selected", selection_changed)
         selection_changed(timeout_row, None)
@@ -741,12 +762,86 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                 status,
                 spinner,
                 state,
+                system_ids[system_row.get_selected()],
+                system_row,
+                load_systems,
+                system_ids,
             ),
         )
+
+        def load_completed(return_code: int, output: str) -> bool:
+            spinner.stop()
+            spinner.set_visible(False)
+            timeout_row.set_sensitive(True)
+            display_row.set_sensitive(True)
+            close.set_sensitive(True)
+            window.set_deletable(True)
+            load_systems.set_sensitive(True)
+            load_systems.set_visible(True)
+            if return_code == 0:
+                try:
+                    data = json.loads(output)
+                    entries = data["entries"]
+                    current_id = data["current"]
+                    labels = [entry["title"] for entry in entries]
+                    identifiers = [entry["id"] for entry in entries]
+                    if current_id is None:
+                        labels.insert(0, _("Custom setting (unchanged)"))
+                        identifiers.insert(0, None)
+                    if not entries:
+                        labels = [_("Current setting (unchanged)")]
+                        identifiers = [None]
+                    # Block change notifications until the model and IDs agree.
+                    system_row.handler_block_by_func(selection_changed)
+                    system_ids[:] = identifiers
+                    state["default_id"] = current_id
+                    system_row.set_model(Gtk.StringList.new(labels))
+                    system_row.set_selected(identifiers.index(current_id))
+                    system_row.handler_unblock_by_func(selection_changed)
+                    system_row.set_sensitive(bool(entries))
+                    load_systems.set_visible(False)
+                    status.set_label(
+                        _("Only operating systems already in the boot menu are listed.")
+                        if entries else _("No supported operating systems were found in the boot menu.")
+                    )
+                except (ValueError, KeyError, TypeError):
+                    status.set_label(_("The boot menu could not be read."))
+            else:
+                status.set_label(
+                    _("Authentication was cancelled.") if return_code == 126
+                    else _("The boot menu could not be read.")
+                )
+            selection_changed(timeout_row, None)
+            return GLib.SOURCE_REMOVE
+
+        def load_clicked(_button: Gtk.Button) -> None:
+            load_systems.set_visible(False)
+            for widget in (load_systems, timeout_row, display_row, apply, close):
+                widget.set_sensitive(False)
+            window.set_deletable(False)
+            status.set_visible(True)
+            status.set_label(_("Reading the boot menu…"))
+            spinner.set_visible(True)
+            spinner.start()
+
+            def worker() -> None:
+                try:
+                    result = subprocess.run(
+                        ["/usr/bin/pkexec", BOOT_SETTINGS_HELPER, "list-systems"],
+                        capture_output=True, text=True, timeout=120, check=False,
+                    )
+                    GLib.idle_add(load_completed, result.returncode, result.stdout)
+                except (OSError, subprocess.TimeoutExpired):
+                    GLib.idle_add(load_completed, 1, "")
+
+            threading.Thread(target=worker, daemon=True).start()
+
+        load_systems.connect("clicked", load_clicked)
         buttons.append(close)
         buttons.append(apply)
         page.append(buttons)
         window.present()
+        load_clicked(load_systems)
 
     def _boot_settings_window_closed(self, _window: Adw.Window) -> bool:
         self._boot_settings_window = None
@@ -763,8 +858,15 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         close: Gtk.Button,
         status: Gtk.Label,
         spinner: Gtk.Spinner,
-        state: dict[str, int | str],
+        state: dict[str, int | str | None],
+        default_id: str | None,
+        system_row: Adw.ComboRow,
+        load_systems: Gtk.Button,
+        system_ids: list[str | None],
     ) -> None:
+        system_was_sensitive = system_row.get_sensitive()
+        system_row.set_sensitive(False)
+        load_systems.set_sensitive(False)
         timeout_row.set_sensitive(False)
         display_row.set_sensitive(False)
         apply.set_sensitive(False)
@@ -780,12 +882,21 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             spinner.set_visible(False)
             timeout_row.set_sensitive(True)
             display_row.set_sensitive(True)
+            system_row.set_sensitive(system_was_sensitive)
+            load_systems.set_sensitive(True)
             close.set_sensitive(True)
             window.set_deletable(True)
             if return_code == 0:
                 state["normal"] = timeout
                 state["after_interrupted_boot"] = timeout
                 state["display_mode"] = display_mode
+                state["default_id"] = default_id
+                if default_id is not None and None in system_ids:
+                    # The former custom value is no longer a selectable setting.
+                    with system_row.freeze_notify():
+                        system_ids.remove(None)
+                        system_row.get_model().remove(0)
+                        system_row.set_selected(system_ids.index(default_id))
                 status.set_label(
                     _("Boot settings updated. The change applies on the next startup.")
                 )
@@ -811,6 +922,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                         "set-settings",
                         str(timeout),
                         display_mode,
+                        *([default_id] if default_id is not None and default_id != state["default_id"] else []),
                     ],
                     capture_output=True,
                     text=True,

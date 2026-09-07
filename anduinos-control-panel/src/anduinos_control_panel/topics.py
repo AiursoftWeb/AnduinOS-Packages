@@ -79,7 +79,7 @@ def topics() -> tuple[ControlPanelTopic, ...]:
             "system",
             "Startup and Boot",
             "Change the boot menu wait time",
-            ("boot", "startup", "grub", "timeout", "启动", "引导", "延时"),
+            ("boot", "startup", "grub", "timeout", "default operating system", "dual boot", "启动", "引导", "延时", "默认操作系统", "双系统"),
             "system-reboot-symbolic",
             handler="boot-settings",
         ),
