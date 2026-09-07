@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-no-snapd</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>Block snapd via APT pinning and completely purge snap ecosystem</PackageDescription>
+    <PackageDescription>Block snapd by default via APT pinning and package conflicts, without deleting Snap data</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
@@ -22,6 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PostInstallScript Include="scripts/postinst.sh" />
+    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" />
   </ItemGroup>
 </Project>
