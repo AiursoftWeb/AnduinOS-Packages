@@ -2227,7 +2227,15 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         def worker() -> None:
             try:
                 result = subprocess.run(["pkexec", HELPER, *arguments], input=stdin, capture_output=True, text=True, timeout=1800, check=False)
-                message = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else result.stderr.strip()
+                if result.returncode:
+                    # Keep both streams: APT errors usually go to stderr, but
+                    # dependency and maintainer-script details can be on stdout.
+                    message = "\n\n".join(
+                        output.strip() for output in (result.stderr, result.stdout)
+                        if output.strip()
+                    )
+                else:
+                    message = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else result.stderr.strip()
                 resolved_success_message = success_message
                 if result.returncode == 0 and success_output_marker:
                     resolved_success_message = _command_output_summary(
@@ -2261,13 +2269,33 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         success_message: str | None = None,
     ) -> bool:
         button.set_label(original); button.set_sensitive(True)
-        self._toast(
-            (success_message or _("Driver changes completed. Restart may be required."))
-            if code == 0
-            else (_("Driver operation failed: ") + (message or _("unknown error")))
-        )
-        if code == 0: self.refresh()
+        if code == 0:
+            self._toast(success_message or _("Driver changes completed. Restart may be required."))
+            self.refresh()
+        else:
+            self._action_error(message or _("unknown error"))
         return GLib.SOURCE_REMOVE
+
+    def _action_error(self, message: str) -> None:
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Driver operation failed: ").rstrip(": "),
+        )
+        details = Gtk.TextView(
+            editable=False,
+            cursor_visible=False,
+            wrap_mode=Gtk.WrapMode.WORD_CHAR,
+        )
+        details.get_buffer().set_text(message)
+        scroll = _scrolled_window(
+            min_content_height=180,
+            max_content_height=360,
+            propagate_natural_height=True,
+        )
+        scroll.set_child(details)
+        dialog.set_extra_child(scroll)
+        dialog.add_response("ok", _("OK"))
+        dialog.present()
 
     def _toast(self, message: str) -> None:
         # A transient alert works on every supported libadwaita, including Noble.
