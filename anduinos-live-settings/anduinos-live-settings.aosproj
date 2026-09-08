@@ -33,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="python3 tests/test_package_contract.py" />
     <SystemdUnit Include="assets/anduinos-live-session.service" AutoEnable="true" />
     <IncludeScript Include="assets/anduinos-live-session-setup"
                    Target="/usr/libexec/anduinos-live-session-setup" />
@@ -46,5 +45,8 @@
     <IncludeFile Include="assets/grub2-common-live.conf"
                  Target="/usr/lib/systemd/system/grub2-common.service.d/10-anduinos-live.conf"
                  Mode="644" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
   </ItemGroup>
 </Project>

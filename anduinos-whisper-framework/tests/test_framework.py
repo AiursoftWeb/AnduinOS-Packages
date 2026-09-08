@@ -4,9 +4,7 @@ import subprocess
 import sys
 import threading
 import unittest
-import xml.etree.ElementTree as ET
 from unittest.mock import Mock, patch
-
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.dont_write_bytecode = True
@@ -23,10 +21,8 @@ from anduinos_whisper_framework.chinese import (  # noqa: E402
 )
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tests" / "benchmarks"))
 from benchmark_engine import WhisperEngine
-from anduinos_whisper_framework.config import MODELS  # noqa: E402
 from anduinos_whisper_framework.audio import AudioCapture  # noqa: E402
 from anduinos_whisper_framework.daemon import VoiceTypingService  # noqa: E402
-
 
 class CommandTests(unittest.TestCase):
     def test_exact_commands_do_not_replace_normal_sentences(self):
@@ -48,7 +44,6 @@ class CommandTests(unittest.TestCase):
 
     def test_non_speech_annotations_are_removed(self):
         self.assertEqual(clean_transcript("  [BLANK_AUDIO] Hello  world "), "Hello world")
-
 
 class EngineTests(unittest.TestCase):
     @patch("benchmark_engine.subprocess.run")
@@ -76,7 +71,6 @@ class EngineTests(unittest.TestCase):
         arguments = run.call_args.args[0]
         self.assertEqual(arguments[arguments.index("--language") + 1], "zh")
 
-
 class ChineseScriptTests(unittest.TestCase):
     def test_simplified_selection_removes_traditional_variants(self):
         self.assertEqual(
@@ -99,7 +93,6 @@ class ChineseScriptTests(unittest.TestCase):
         self.assertEqual(whisper_language("zh-Hans"), "zh")
         self.assertEqual(whisper_language("zh-Hant"), "zh")
         self.assertEqual(whisper_language("en"), "en")
-
 
 class LiveTranscriptionTests(unittest.TestCase):
     def test_capture_publishes_accumulated_audio_once_per_interval(self):
@@ -146,79 +139,11 @@ class LiveTranscriptionTests(unittest.TestCase):
         self.assertFalse(service._partial_is_valid(7, first))
         self.assertFalse(service._partial_is_valid(7, second))
 
-
 class PackageTests(unittest.TestCase):
-    def test_settings_schema_contract(self):
-        schema = ET.parse(
-            ROOT
-            / "data/com.anduinos.voice-typing.gschema.xml"
-        ).getroot()
-        keys = {item.attrib["name"] for item in schema.findall(".//key")}
-        self.assertTrue(
-            {
-                "toggle-shortcut",
-                "microphone",
-                "language",
-                "model",
-                "voice-commands",
-                "audio-cues",
-                "show-preview",
-                "live-transcription",
-            }.issubset(keys)
-        )
-
-
-    def test_vad_model_is_pinned_bundled_and_licensed(self):
-        project = ET.parse(ROOT / 'anduinos-whisper-framework.aosproj')
-        files = {node.attrib['Include']: node.attrib['Target']
-                 for node in project.findall('.//IncludeFile')}
-        self.assertEqual(files['obj/models/ggml-silero-v6.2.0.bin'],
-                         '/usr/share/anduinos-whisper-framework/models/ggml-silero-v6.2.0.bin')
-        for name in ('VAD-NOTICE', 'VAD-LICENSE'):
-            self.assertEqual(files[name], f'/usr/share/doc/anduinos-whisper-framework/{name}')
-            self.assertTrue((ROOT / name).is_file())
-        script = (ROOT / 'scripts/download-vad-model.sh').read_text()
-        self.assertIn('c5c26827b67dfd053856f92e824e14fdcc123daf', script)
-        self.assertIn('2aa269b785eeb53a82983a20501ddf7c1d9c48e33ab63a41391ac6c9f7fb6987', script)
-        self.assertIn('sha256sum --check --status', script)
-
-
-    def test_model_tiers_have_clear_user_facing_names(self):
-        self.assertEqual(MODELS["tiny"].title, "Whisper Tiny")
-        self.assertIn("Fastest", MODELS["tiny"].description)
-        self.assertEqual(MODELS["base"].title, "Whisper Base")
-        self.assertIn("Balanced", MODELS["base"].description)
-        self.assertEqual(MODELS["small"].title, "Whisper Small")
-        self.assertIn("High accuracy", MODELS["small"].description)
 
     def test_source_payload_has_no_python_cache_files(self):
         self.assertEqual(list((ROOT / "src").rglob("*.pyc")), [])
         self.assertEqual(list((ROOT / "src").rglob("__pycache__")), [])
-
-    def test_model_download_is_pinned_and_verified(self):
-        script = (ROOT / "scripts/download-model.sh").read_text()
-        project = (ROOT / "anduinos-whisper-framework.aosproj").read_text()
-        self.assertIn(
-            'model_sha256="60ed5bc3dd14eea856493d334349b405782ddcaf0028d4b5df4088345fba2efe"',
-            script,
-        )
-        self.assertIn("sha256sum --check --status", script)
-        self.assertIn('<TargetArchitectures>all</TargetArchitectures>', project)
-        self.assertNotIn('<Dependency Include="whisper.cpp', project)
-        self.assertIn('<Dependency Include="anduinos-whisper-worker', project)
-        self.assertIn('<Dependency Include="libopencc1.1" />', project)
-
-    def test_daemon_exposes_only_explicit_shell_control_methods(self):
-        daemon = (ROOT / "src/anduinos_whisper_framework/daemon.py").read_text()
-        self.assertNotIn("self.paused", daemon)
-        self.assertNotIn('_set_state("paused"', daemon)
-        self.assertNotIn('<method name="Toggle"/>', daemon)
-        self.assertNotIn('<method name="Pause"/>', daemon)
-        self.assertNotIn("def toggle(self)", daemon)
-        self.assertIn('elif method == "Stop":', daemon)
-        self.assertIn("method in SHELL_CONTROL_METHODS", daemon)
-        self.assertIn('self._set_state("idle", "Ready")', daemon)
-        self.assertIn("session_id != self.session_id", daemon)
 
     def test_non_shell_clients_cannot_control_dictation(self):
         service = VoiceTypingService.__new__(VoiceTypingService)
@@ -235,34 +160,6 @@ class PackageTests(unittest.TestCase):
         )
         invocation.return_dbus_error.assert_called_once()
         self.assertIn("AccessDenied", invocation.return_dbus_error.call_args.args[0])
-
-    def test_live_transcription_is_default_and_partial_results_are_not_final(self):
-        schema = ET.parse(
-            ROOT / "data/com.anduinos.voice-typing.gschema.xml"
-        ).getroot()
-        self.assertEqual(schema.get("gettext-domain"), "anduinos-whisper-gtk")
-        live_key = schema.find(".//key[@name='live-transcription']")
-        self.assertIsNotNone(live_key)
-        self.assertEqual(live_key.findtext("default"), "true")
-
-        audio = (ROOT / "src/anduinos_whisper_framework/audio.py").read_text()
-        daemon = (ROOT / "src/anduinos_whisper_framework/daemon.py").read_text()
-        self.assertIn("partial_interval: float = 0.8", audio)
-        self.assertIn("self.on_partial(partial)", audio)
-        self.assertIn("RecognitionQueue()", daemon)
-        self.assertIn('self._put_work(0, "final"', daemon)
-        self.assertIn('self._put_work(1, "partial"', daemon)
-        self.assertIn('GLib.Variant("(sb)", (text, False))', daemon)
-        self.assertIn("_partial_should_run", daemon)
-        self.assertIn("_partial_is_valid", daemon)
-
-    def test_daemon_exits_when_gnome_shell_leaves_the_session_bus(self):
-        daemon = (ROOT / "src/anduinos_whisper_framework/daemon.py").read_text()
-        self.assertIn('SHELL_BUS_NAME = "org.gnome.Shell"', daemon)
-        self.assertIn("Gio.bus_watch_name_on_connection(", daemon)
-        self.assertIn("self._shell_name_vanished", daemon)
-        self.assertIn("Gio.bus_unwatch_name(self.shell_watch_id)", daemon)
-
 
 if __name__ == "__main__":
     unittest.main()

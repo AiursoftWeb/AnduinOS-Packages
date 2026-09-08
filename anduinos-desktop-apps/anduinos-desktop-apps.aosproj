@@ -14,9 +14,6 @@
     <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PrebuildCommand Run="python3 tests/test_desktop_actions.py" />
-  </ItemGroup>
 
   <ItemGroup>
     <!-- Core & System -->
@@ -119,6 +116,6 @@
         SuiteMap="noble-addon=noble-addon-addon resolute-addon=resolute-addon" />
   </ItemGroup>
   <ItemGroup>
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_local_policy.py" />
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
   </ItemGroup>
 </Project>

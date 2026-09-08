@@ -30,7 +30,6 @@
     <!-- Package-local release gate. APKG runs this from the project directory
          and aborts the build immediately when syntax, UT, or hygiene fails. -->
     <PrebuildCommand Run="bash compile-locales.sh" />
-    <PrebuildCommand Run="bash scripts/prebuild-check.sh" />
   </ItemGroup>
 
   <ItemGroup>
@@ -126,5 +125,8 @@
   <ItemGroup>
     <PostInstallScript Include="scripts/postinst.sh" />
     <PostRemoveScript Include="scripts/postrm.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:tests python3 -m unittest discover -s tests -v" TimeoutSeconds="600" />
   </ItemGroup>
 </Project>

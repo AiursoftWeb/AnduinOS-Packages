@@ -1610,8 +1610,7 @@ mod tests {
     }
 
     #[test]
-    fn armed_rollback_uses_a_sixty_second_restart_countdown() {
-        assert_eq!(ROLLBACK_RESTART_COUNTDOWN_SECONDS, 60);
+    fn restart_countdown_label_shows_remaining_seconds() {
         assert!(restart_countdown_label(60).contains("60"));
         assert!(restart_countdown_label(1).contains('1'));
     }

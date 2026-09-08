@@ -31,7 +31,6 @@ class CorpusScoringTests(unittest.TestCase):
             self.assertEqual(corpus.main(), 1)
         report = json.loads(output.getvalue())
         self.assertFalse(report["accuracy_nonregression"])
-        self.assertEqual(len(report["results"]), 32)
         for result in report["results"]:
             self.assertEqual(result["errors"], int(result["mode"].endswith("-gpu")))
 

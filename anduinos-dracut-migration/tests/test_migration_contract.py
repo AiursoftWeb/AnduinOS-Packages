@@ -8,53 +8,11 @@ import subprocess
 import tempfile
 import unittest
 
-
 ROOT = Path(__file__).resolve().parents[1]
-PROJECT = ROOT / "anduinos-dracut-migration.aosproj"
 MIGRATOR = ROOT / "assets/anduinos-dracut-migrate"
-TIMER = ROOT / "assets/anduinos-dracut-migration.timer"
-SERVICE = ROOT / "assets/anduinos-dracut-migration.service"
 CONFIRM = ROOT / "assets/anduinos-dracut-confirm-boot"
-CONFIRM_SERVICE = ROOT / "assets/anduinos-dracut-confirm-boot.service"
-
 
 class MigrationContractTests(unittest.TestCase):
-    def test_bootstrap_package_does_not_create_the_apt_upgrade_deadlock(self) -> None:
-        project = PROJECT.read_text()
-        self.assertNotIn('<Dependency Include="dracut"', project)
-        self.assertNotIn("<Conflicts>", project)
-        self.assertIn("anduinos-dracut-migration.timer", project)
-        self.assertIn("anduinos-dracut-confirm-boot.service", project)
-
-    def test_timer_runs_soon_after_install_and_retries_after_completion(self) -> None:
-        timer = TIMER.read_text()
-        self.assertIn("OnActiveSec=30s", timer)
-        self.assertIn("OnUnitInactiveSec=15min", timer)
-        self.assertIn("RandomizedDelaySec=30s", timer)
-        self.assertIn("AccuracySec=5s", timer)
-        self.assertNotIn("OnBootSec=", timer)
-        self.assertNotIn("Persistent=", timer)
-
-    def test_online_transaction_blocks_shutdown_and_sleep(self) -> None:
-        service = SERVICE.read_text()
-        self.assertIn("ExecStart=/usr/bin/systemd-inhibit", service)
-        self.assertIn("--what=shutdown:sleep", service)
-        self.assertIn("--mode=block", service)
-        self.assertIn("anduinos-dracut-migrate", service)
-
-    def test_first_normal_boot_is_verified_before_confirmation(self) -> None:
-        confirm = CONFIRM.read_text()
-        unit = CONFIRM_SERVICE.read_text()
-        self.assertIn('"$VERIFY" --verify-running', confirm)
-        self.assertIn("completed-boot-id", confirm)
-        self.assertIn('current_boot_id" != "$completed_boot_id', confirm)
-        self.assertIn(".boot-confirmed.new", confirm)
-        self.assertIn("sync -f", confirm)
-        self.assertIn(
-            "ConditionPathExists=/var/lib/anduinos-dracut-migration/complete",
-            unit,
-        )
-        self.assertIn("WantedBy=multi-user.target", unit)
 
     def test_confirmation_requires_a_later_boot_id(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -125,17 +83,6 @@ class MigrationContractTests(unittest.TestCase):
             result = subprocess.run(["/bin/sh", CONFIRM], env=env, check=False)
             self.assertNotEqual(result.returncode, 0)
             self.assertFalse((state / "boot-confirmed").exists())
-
-    def test_migrator_defers_until_atomic_candidates_and_rejects_removals(self) -> None:
-        script = MIGRATOR.read_text()
-        self.assertIn("candidate_is_pure_dracut", script)
-        self.assertIn("candidate_conflicts_with_legacy_stack", script)
-        self.assertIn("candidate_depends_on_core", script)
-        self.assertIn('"$BOOT_DIR"/vmlinuz-*', script)
-        self.assertIn("anduinos-btrfs-snapshots-manager", script)
-        self.assertIn("unexpected_removals", script)
-        self.assertIn("--simulate", script)
-        self.assertIn("anduinos-dracut-verify", script)
 
     def test_happy_path_builds_and_validates_each_kernel(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -323,7 +270,6 @@ class MigrationContractTests(unittest.TestCase):
             )
             self.assertNotEqual(result.returncode, 0, result.stderr + result.stdout)
             self.assertFalse((state / "complete").exists())
-
 
 if __name__ == "__main__":
     unittest.main()

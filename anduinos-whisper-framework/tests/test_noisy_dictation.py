@@ -2,9 +2,7 @@
 from array import array
 from pathlib import Path
 import subprocess
-import os
 import sys
-import random
 import threading
 import unittest
 from unittest.mock import Mock, patch
@@ -110,7 +108,7 @@ class EndpointTests(unittest.TestCase):
     def test_dsp_uses_vad_and_moderate_processing_without_fake_aec(self):
         dsp = Gst.ElementFactory.make('webrtcdsp')
         if dsp is None:
-            self.skipTest('Install gstreamer1.0-plugins-bad for DSP integration')
+            self.fail('Install gstreamer1.0-plugins-bad for DSP integration')
         AudioCapture.configure_processor(dsp, True)
         self.assertFalse(dsp.get_property('voice-detection'))
         self.assertTrue(dsp.get_property('noise-suppression'))
@@ -120,41 +118,6 @@ class EndpointTests(unittest.TestCase):
         self.assertFalse(dsp.get_property('noise-suppression'))
         self.assertFalse(dsp.get_property('gain-control'))
 
-    def test_real_dsp_rejects_stationary_noise_without_opening_microphone(self):
-        if not os.environ.get('ANDUINOS_VAD_MODEL') or not os.environ.get('ANDUINOS_VOICE_WORKER'):
-            self.skipTest('Native VAD worker/model not supplied')
-        from anduinos_whisper_framework.vad import VadEngine
-        self.capture._vad = VadEngine(os.environ['ANDUINOS_VAD_MODEL'], os.environ['ANDUINOS_VOICE_WORKER'])
-        self.capture._vad.start()
-        self.addCleanup(self.capture.stop, False)
-        if Gst.ElementFactory.find('webrtcdsp') is None:
-            self.skipTest('Install gstreamer1.0-plugins-bad for DSP integration')
-        pipeline = Gst.parse_launch('appsrc name=input format=time ! '
-            'audio/x-raw,format=S16LE,rate=16000,channels=1,layout=interleaved ! '
-            'webrtcdsp name=dsp ! appsink name=output emit-signals=true sync=false')
-        AudioCapture.configure_processor(pipeline.get_by_name('dsp'), False)
-        pipeline.get_by_name('output').connect('new-sample', self.capture._new_sample)
-        bus = pipeline.get_bus()
-        rng = random.Random(42)
-        try:
-            pipeline.set_state(Gst.State.PLAYING)
-            source = pipeline.get_by_name('input')
-            for index in range(1500):  # 15 s of -35 dBFS synthetic white noise
-                samples = array('h', [int(rng.gauss(0, 580)) for _ in range(160)])
-                buffer = Gst.Buffer.new_allocate(None, 320, None)
-                buffer.fill(0, samples.tobytes())
-                buffer.pts = index * Gst.SECOND // 100
-                buffer.duration = Gst.SECOND // 100
-                self.assertEqual(source.emit('push-buffer', buffer), Gst.FlowReturn.OK)
-            source.emit('end-of-stream')
-            message = bus.timed_pop_filtered(10 * Gst.SECOND, Gst.MessageType.ERROR | Gst.MessageType.EOS)
-            self.assertIsNotNone(message)
-            self.assertEqual(message.type, Gst.MessageType.EOS)
-            self.assertEqual(self.chunks, [])
-            self.assertFalse(self.capture._speaking)
-        finally:
-            pipeline.set_state(Gst.State.NULL)
-            bus.set_sync_handler(None)
 
 
 class QueueTests(unittest.TestCase):

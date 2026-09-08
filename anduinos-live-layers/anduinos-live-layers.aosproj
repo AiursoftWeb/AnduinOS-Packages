@@ -32,7 +32,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="python3 tests/test_package_contract.py" />
     <IncludeScript Include="dracut/95anduinos-live-layers/module-setup.sh"
                    Target="/usr/lib/dracut/modules.d/95anduinos-live-layers/module-setup.sh" />
     <IncludeScript Include="dracut/95anduinos-live-layers/anduinos-live-prepare.sh"

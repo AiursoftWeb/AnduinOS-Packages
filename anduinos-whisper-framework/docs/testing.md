@@ -3,39 +3,42 @@
 Run commands below from the repository root. Tests use licensed public fixtures
 and synthetic noise, never a microphone or private dictation.
 
-## CPU acceptance
+## Profiles
+
+Run from the package directory with the local or published Apkg CLI that supports
+`TestCommand`. CI selects only `anduinos-package-release-test`.
+
+| Package/profile | Coverage and prerequisites |
+| --- | --- |
+| Framework / `anduinos-package-release-test` | Source behavior, synthetic audio/DSP, and real private-D-Bus diagnostics; Python GI, GStreamer base/good/bad, gettext and D-Bus |
+| GTK / `anduinos-package-release-test` | Settings/controller behavior and Shell isolation guards; Python GI, Node and gettext |
+| GTK / `gui` | Real widgets with temporary schemas, memory settings and Xvfb; GTK/Adwaita, Xvfb, xauth and D-Bus |
+| Framework / `voice-native` | Native resident worker and VAD with public audio and explicitly supplied models |
+| Framework / `voice-cpu` | Corpus accuracy comparisons, resident stress, capture/noise and long VAD replay; native fixtures plus whisper-cli |
+| GTK / `desktop-voice` | Real headless GNOME Shell, source extension, native recognition and GTK insertion; usable rendering and native fixtures |
+
+No profile generates, extracts or installs a deb. Required missing tools or
+fixtures fail the selected entry. GUI/model tests excluded by profile are not
+reported as successful coverage by the release lane.
+
+For native profiles, build the worker from source for the test host and prepare
+licensed model fixtures first. Supply absolute paths:
 
 ```sh
-bash anduinos-whisper-framework/tests/run-cpu.sh
+export ANDUINOS_VOICE_WORKER=/absolute/source-build/anduinos-whisper-worker
+export ANDUINOS_VOICE_MODEL=/absolute/fixtures/ggml-base.bin
+export ANDUINOS_VAD_MODEL=/absolute/fixtures/ggml-silero-v6.2.0.bin
+export ANDUINOS_VOICE_SAMPLE=/absolute/source/anduinos-whisper-framework/data/benchmark/en-short.wav
+apkg test --profile voice-native
+apkg test --profile voice-cpu
 ```
 
-This builds the worker for amd64 and arm64, verifies the pinned Base and Silero
-models, and runs Python/GTK tests, Node controller tests, private-D-Bus checks,
-eight bilingual clean/noisy CLI comparisons, 100 repeated CPU requests, 32
-capture cases, 18 non-speech noise cases, and two 30000-frame VAD replays.
-ARM64 is compiled, not executed. This optional manual suite requires an amd64
-host with GCC 15 and its arm64 cross compiler, libc development files, Python 3
-with GI, GTK 4/Libadwaita and GStreamer introspection, GStreamer base/good/bad
-plugins, OpenCC, GGML, whisper-cli, Node.js, gettext, D-Bus, Xvfb, xauth and curl.
-It checks prerequisites but never installs host packages.
-
-To reuse an extracted package, preserving the worker's private library layout:
-
-```sh
-ANDUINOS_VOICE_WORKER=/absolute/payload/usr/libexec/anduinos-whisper-worker \
-ANDUINOS_VOICE_MODEL=/absolute/payload/usr/share/anduinos-whisper-framework/models/ggml-base.bin \
-ANDUINOS_VAD_MODEL=/absolute/payload/usr/share/anduinos-whisper-framework/models/ggml-silero-v6.2.0.bin \
-bash anduinos-whisper-framework/tests/run-cpu.sh
-```
-
-These overrides skip building/downloading those inputs, not runtime tests.
-Source is copied to clean temporary staging without modifying developers'
-ignored caches. Reports go to `anduinos-whisper-framework/obj/voice-test-results/`;
-temporary staging is removed on exit. These reports are not tracked by Git.
-
-Package tests run through each package's `PrebuildCommand`. This longer suite
-is a manual diagnostic tool, not a separate CI job or publication prerequisite.
-It does not certify remote runner provisioning.
+Preserve any private library layout required by the source-built worker.
+Profiles do not silently build another architecture or download models. The CPU
+entry tests this package only; it does not copy other packages or repeat their
+release/GUI suites. CPU reports go to the ignored `obj/voice-test-results/`
+directory. These benchmarks require an idle machine and do not certify GPU
+inference or remote runner provisioning.
 
 ## Focused benchmarks
 
@@ -75,15 +78,17 @@ with builds or other heavy benchmarks.
 ## Desktop integration
 
 ```sh
-python3 anduinos-whisper-gtk/tests/integration/smoke-shell.py --payload /absolute/extracted-packages
+apkg test --path anduinos-whisper-gtk --profile desktop-voice
 ```
 
 Requires GNOME Shell with headless Wayland support and usable rendering.
-The payload must contain worker, framework/models and GTK packages. The test
+Supply the native artifact/model environment variables above. The test loads
+the extension and Python modules directly from source. It
 uses a private bus, virtual monitor, temporary settings/cache/runtime and public
 audio in place of capture. It never replaces the current Shell or opens a mic.
 Recognition, authorization, clipboard/keyboard dispatch and GTK reception are
-real. Finish must retain the final result; Dismiss must prevent late insertion.
+real. Temporary desktop state is cleaned up after execution. Finish must retain
+the final result; Dismiss must prevent late insertion.
 Passing does not validate every desktop application or physical microphone.
 
 ## Laptop timing report

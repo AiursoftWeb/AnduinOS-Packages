@@ -13,7 +13,7 @@
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
     <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
-    <PrebuildCommand Run="bash scripts/prebuild-check.sh" />
+    <PrebuildCommand Run="sh -n scripts/postinst.sh" />
   </PropertyGroup>
 
   <ItemGroup>

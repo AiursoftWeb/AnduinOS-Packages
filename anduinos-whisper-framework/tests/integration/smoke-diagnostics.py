@@ -1,13 +1,17 @@
 #!/usr/bin/python3
-"""Run with dbus-run-session and PYTHONPATH pointing at an extracted package.
+"""Exercise the source service and CLI on a private D-Bus session.
 
 Uses synthetic metadata only. No microphone, recognition, text injection or
 desktop-session service is started. The caller must supply a private bus.
 """
 import json
+import atexit
 import os
+from pathlib import Path
+import shutil
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 from unittest.mock import patch
@@ -15,6 +19,22 @@ from unittest.mock import patch
 sys.dont_write_bytecode = True
 if os.environ.get("ANDUINOS_ISOLATED_TEST_BUS") != "1":
     raise SystemExit("Use dbus-run-session with ANDUINOS_ISOLATED_TEST_BUS=1")
+
+root = Path(__file__).resolve().parents[2]
+temporary = tempfile.TemporaryDirectory(prefix="anduinos-diagnostics-test.")
+atexit.register(temporary.cleanup)
+stage = Path(temporary.name)
+(stage / "runtime").mkdir(mode=0o700)
+shutil.copy2(root / "data/com.anduinos.voice-typing.gschema.xml", stage)
+subprocess.run(["glib-compile-schemas", "--strict", str(stage)], check=True)
+os.environ.update(GSETTINGS_SCHEMA_DIR=str(stage), GSETTINGS_BACKEND="memory",
+                  XDG_CACHE_HOME=str(stage / "cache"), XDG_CONFIG_HOME=str(stage / "config"),
+                  XDG_DATA_HOME=str(stage / "data"), PYTHONPATH=str(root / "src"),
+                  XDG_RUNTIME_DIR=str(stage / "runtime"), GIO_USE_VFS="local",
+                  GTK_A11Y="none", NO_AT_BRIDGE="1", PYTHONDONTWRITEBYTECODE="1")
+for variable in ("DISPLAY", "WAYLAND_DISPLAY", "SESSION_MANAGER", "AT_SPI_BUS_ADDRESS"):
+    os.environ.pop(variable, None)
+sys.path.insert(0, str(root / "src"))
 
 from gi.repository import Gio, GLib
 from anduinos_whisper_framework import APP_ID
@@ -65,4 +85,4 @@ with patch("anduinos_whisper_framework.daemon.AudioCapture", side_effect=Asserti
         assert not thread.is_alive()
         assert not service.worker.is_alive()
 assert export().returncode == 1
-print("Packaged service/CLI D-Bus export passed: no auto-start, no microphone, allow-listed report, clean shutdown")
+print("Source service/CLI D-Bus export passed: no auto-start, no microphone, allow-listed report, clean shutdown")

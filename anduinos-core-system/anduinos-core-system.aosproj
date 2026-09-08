@@ -17,8 +17,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_dracut_policy.py" />
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_migration_guard.py" />
     <PreInstallScript Include="scripts/preinst.sh" />
     <PostInstallScript Include="scripts/postinst.sh" />
     <PreRemoveScript Include="scripts/prerm.sh" />
@@ -225,4 +223,7 @@
     <Recommend Include="cracklib-runtime" />
   </ItemGroup>
 
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+  </ItemGroup>
 </Project>

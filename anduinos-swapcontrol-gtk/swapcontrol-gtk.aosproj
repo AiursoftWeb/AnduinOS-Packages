@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_localization_source.py" />
     <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
     <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
   </ItemGroup>
@@ -44,5 +43,9 @@
     <AppStreamApplication Include="data/com.anduinos.swapcontrol.desktop" Icon="data/com.anduinos.swapcontrol.svg" />
     <AppStreamScreenshot Include="screenshots/dashboard.png" Default="true" Caption="Review memory and swap usage at a glance" Environment="GNOME:dark" />
     <AppStreamScreenshot Include="screenshots/swap-settings.png" Caption="Configure disk swap, zram, and zswap" Environment="GNOME:dark" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+    <TestCommand Name="native" Profile="anduinos-package-release-test" Run="cargo test --locked --bins" TimeoutSeconds="3600" />
   </ItemGroup>
 </Project>

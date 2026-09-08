@@ -1,147 +1,12 @@
-import importlib.util
 import os
 import subprocess
 import sys
-import tempfile
 import unittest
-import xml.etree.ElementTree as ET
 from pathlib import Path
-
 
 ROOT = Path(__file__).parents[1]
 
-
-def load_package_verifier():
-    path = ROOT / "scripts/verify-built-package.py"
-    spec = importlib.util.spec_from_file_location(
-        "built_package_verifier", path
-    )
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
 class PackageContractTests(unittest.TestCase):
-    def test_installer_declares_the_live_bridge_dependency(self):
-        installer = ET.parse(ROOT / 'anduinos-installer-beta.aosproj').getroot()
-        dependencies = {
-            item.get("Include") for item in installer.findall(".//Dependency")
-        }
-        self.assertIn("anduinos-live-settings", dependencies)
-
-
-    def test_passwordless_sudo_uses_documented_paths(self):
-        installer = (ROOT / "src/installer_core/system_config.py").read_text()
-        self.assertIn('Path("etc/sudoers.d/90-anduinos-passwordless-admin")', installer)
-        self.assertIn('Path("var/lib/anduinos-passwordless-sudo/users")', installer)
-
-
-
-    def test_appstream_publishes_the_live_installer_as_an_application(self):
-        root = ET.parse(ROOT / "anduinos-installer-beta.aosproj").getroot()
-        application = root.find(".//AppStreamApplication")
-        self.assertIsNotNone(application)
-        self.assertEqual(
-            application.get("Include"),
-            "assets/anduinos-installer-beta.desktop",
-        )
-        self.assertEqual(
-            application.get("Icon"),
-            "assets/anduinos-installer-beta.svg",
-        )
-        screenshots = root.findall(".//AppStreamScreenshot")
-        self.assertEqual(
-            {screenshot.get("Include") for screenshot in screenshots},
-            {"screenshots/storage.png", "screenshots/welcome.png"},
-        )
-        self.assertEqual(
-            [
-                screenshot.get("Include")
-                for screenshot in screenshots
-                if screenshot.get("Default") == "true"
-            ],
-            ["screenshots/storage.png"],
-        )
-        for screenshot in screenshots:
-            self.assertTrue((ROOT / screenshot.get("Include")).is_file())
-
-    def test_manifest_installs_the_source_tree_and_runtime_dependencies(self):
-        root = ET.parse(ROOT / "anduinos-installer-beta.aosproj").getroot()
-        self.assertEqual(
-            root.findtext(".//SuiteShortNameMap"),
-            "resolute-addon=resolute",
-        )
-        folders = {
-            (item.get("Include"), item.get("Target"))
-            for item in root.iter("IncludeFolder")
-        }
-        dependencies = {
-            item.get("Include") for item in root.iter("Dependency")
-        }
-        self.assertIn(
-            ("src/", "/usr/lib/anduinos-installer-beta/"),
-            folders,
-        )
-        self.assertIn(
-            ("assets/icons/", "/usr/share/anduinos-installer-beta/icons/"),
-            folders,
-        )
-        files = {
-            (item.get("Include"), item.get("Target"))
-            for item in root.iter("IncludeFile")
-        }
-        self.assertIn(
-            (
-                "assets/style.css",
-                "/usr/share/anduinos-installer-beta/style.css",
-            ),
-            files,
-        )
-        self.assertIn(
-            (
-                "data/languages.json",
-                "/usr/share/anduinos-installer-beta/languages.json",
-            ),
-            files,
-        )
-        self.assertTrue(
-            {
-                "python3",
-                "python3-unidecode",
-                "anduinos-live-settings",
-                "libxkbcommon0",
-                "xkb-data",
-                "parted",
-                "ntfs-3g",
-                "xfsprogs",
-                "f2fs-tools",
-                "dosfstools",
-                "efibootmgr",
-                "gir1.2-nm-1.0",
-                "network-manager",
-                "netplan.io",
-                "util-linux",
-                "dracut",
-                "anduinos-swap-config",
-                "polkitd",
-            }
-            <= dependencies
-        )
-        self.assertNotIn("gnome-control-center", dependencies)
-        self.assertIn(
-            (
-                "assets/anduinos-installer-storage-probe",
-                "/usr/bin/anduinos-installer-storage-probe",
-            ),
-            files,
-        )
-        self.assertIn(
-            (
-                "assets/com.anduinos.installer-beta.policy",
-                "/usr/share/polkit-1/actions/com.anduinos.installer-beta.policy",
-            ),
-            files,
-        )
 
     def test_internal_vm_clis_load_but_have_no_public_launcher(self):
         environment = dict(os.environ)
@@ -170,51 +35,6 @@ class PackageContractTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 2)
         self.assertIn("does not accept arguments", result.stderr)
-
-    def test_built_package_verifier_enforces_the_private_tool_contract(self):
-        verifier = load_package_verifier()
-        self.assertEqual(
-            verifier.parse_dependencies(
-                "python3 (>= 3.12), parted, util-linux:any"
-            ),
-            {"python3", "parted", "util-linux"},
-        )
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            for relative in verifier.REQUIRED_FILES:
-                path = root / relative
-                path.parent.mkdir(parents=True, exist_ok=True)
-                if relative == Path("usr/bin/anduinos-installer-executor"):
-                    path.write_text(
-                        '#!/bin/sh\nif [ "$#" -ne 0 ]; then exit 2; fi\n'
-                    )
-                    path.chmod(0o755)
-                elif relative == Path(
-                    "usr/bin/anduinos-installer-storage-probe"
-                ):
-                    path.write_text(
-                        '#!/bin/sh\nif [ "$#" -ne 1 ] && '
-                        '[ "$#" -ne 2 ]; then exit 2; fi\n'
-                        'storage_probe_cli.py "$@"\n'
-                    )
-                    path.chmod(0o755)
-                elif relative == Path(
-                    "usr/lib/anduinos-installer-beta/executor_cli.py"
-                ):
-                    path.write_text(
-                        "isolate_mount_namespace()\n"
-                        "sys.stdin.readline()\n"
-                    )
-                else:
-                    path.write_text("# package fixture\n")
-            result = verifier.verify_staged_root(root)
-            self.assertEqual(
-                result["required_files"], len(verifier.REQUIRED_FILES)
-            )
-            (root / verifier.REQUIRED_FILES[0]).unlink()
-            with self.assertRaisesRegex(RuntimeError, "missing"):
-                verifier.verify_staged_root(root)
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -14,7 +14,6 @@
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
     <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
-    <PrebuildCommand Run="python3 tests/test_package_contract.py" />
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,5 +32,8 @@
                  Target="/etc/default/grub.d/99-anduinos-desktop.cfg" />
     <PostInstallScript Include="scripts/postinst.sh" />
     <PostRemoveScript Include="scripts/postrm.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
   </ItemGroup>
 </Project>

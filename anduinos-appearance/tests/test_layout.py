@@ -5,85 +5,12 @@ import sys
 import unittest
 from unittest import mock
 
-
 SRC = pathlib.Path(__file__).parents[1] / "src"
-APP_SOURCE = SRC / "anduinos-appearance"
-PACKAGE_ROOT = SRC.parent
 sys.path.insert(0, str(SRC))
 
 from anduinos_appearance import layout  # noqa: E402
 
-
 class LayoutTests(unittest.TestCase):
-    def test_desktop_entry_is_exposed_as_a_control_panel_module(self):
-        desktop = (APP_SOURCE.parents[1] / "data/anduinos-appearance.desktop").read_text(
-            encoding="utf-8"
-        )
-        self.assertIn("\nNoDisplay=true\n", desktop)
-        self.assertIn("\nExec=anduinos-appearance\n", desktop)
-        self.assertIn("\nIcon=anduinos-appearance\n", desktop)
-
-    def test_window_opens_at_the_roomier_default_size(self):
-        source = APP_SOURCE.read_text(encoding="utf-8")
-        self.assertIn("self.set_default_size(910, 660)", source)
-        self.assertNotIn("self.set_default_size(780, 560)", source)
-
-    def test_extension_titles_are_literal_gettext_calls(self):
-        source = APP_SOURCE.read_text(encoding="utf-8")
-        for title in (
-            "ArcMenu",
-            "Dash-to-Panel",
-            "Simple Weather",
-            "Network Stats",
-        ):
-            self.assertIn(f"_('{title}')", source)
-        self.assertNotIn("row.set_title(_(title_key))", source)
-
-    def test_extension_status_messages_translate_complete_actions(self):
-        source = APP_SOURCE.read_text(encoding="utf-8")
-        for message in (
-            "✓ Activities button shown",
-            "✓ Activities button hidden",
-            "✓ {label} enabled",
-            "✓ {label} disabled",
-            "✗ Failed to enable {label}",
-            "✗ Failed to disable {label}",
-        ):
-            self.assertIn(f"_('{message}')", source)
-        self.assertNotIn("{action}n", source)
-        self.assertNotIn("{action}d", source)
-        self.assertNotIn("format(action=action", source)
-
-    def test_separated_spelling_is_consistent_in_source_and_catalogs(self):
-        misspelling = "Sepe" + "rated"
-        source_files = [
-            APP_SOURCE,
-            *sorted((SRC / "anduinos_appearance").glob("*.py")),
-        ]
-        catalog_files = [
-            PACKAGE_ROOT / "po/anduinos-appearance.pot",
-            *sorted((PACKAGE_ROOT / "po").glob("*.po")),
-        ]
-
-        for path in source_files + catalog_files:
-            text = path.read_text(encoding="utf-8")
-            self.assertNotIn(misspelling, text, path)
-
-        self.assertIn("_('Separated')", APP_SOURCE.read_text(encoding="utf-8"))
-        for path in catalog_files:
-            self.assertIn('msgid "Separated"', path.read_text(encoding="utf-8"), path)
-
-    def test_backup_description_explains_scope_without_dconf_jargon(self):
-        source = APP_SOURCE.read_text(encoding="utf-8")
-        self.assertIn(
-            "Back up GNOME settings, layouts, and extension preferences.",
-            source,
-        )
-        self.assertIn("Personal files are not included.", source)
-        self.assertNotIn(
-            "Export or import all settings stored under /org/gnome/.",
-            source,
-        )
 
     @staticmethod
     def completed(stdout="", returncode=0):
@@ -201,7 +128,6 @@ class LayoutTests(unittest.TestCase):
             mock.patch.object(layout, "_smallest_monitor_height", return_value=1080),
         ):
             self.assertFalse(layout.apply_style_and_position("eleven", "bottom"))
-
 
 if __name__ == "__main__":
     unittest.main()

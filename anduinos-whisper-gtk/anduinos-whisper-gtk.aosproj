@@ -44,6 +44,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="./compile-locales.sh &amp;&amp; PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:../anduinos-whisper-framework/src python3 -m unittest discover -s tests -v" />
+    <PrebuildCommand Run="bash compile-locales.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:../anduinos-whisper-framework/src python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+    <TestCommand Name="widgets" Profile="gui" Run="bash tests/gui.sh" TimeoutSeconds="300" />
+    <TestCommand Name="dictation" Profile="desktop-voice" Run="python3 tests/integration/smoke-shell.py" TimeoutSeconds="180" />
   </ItemGroup>
 </Project>

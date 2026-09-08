@@ -27,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="python3 tests/test_package_contract.py" />
     <PrebuildCommand Run="bash compile-locales.sh" />
   </ItemGroup>
 

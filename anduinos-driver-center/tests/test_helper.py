@@ -1,4 +1,6 @@
 from importlib.machinery import SourceFileLoader
+import contextlib
+import io
 from pathlib import Path
 import types
 import unittest
@@ -12,6 +14,40 @@ loader.exec_module(driver_helper)
 
 
 class HelperTests(unittest.TestCase):
+    def test_unprivileged_requests_cannot_reach_commands(self):
+        with (
+            patch.object(driver_helper.os, "geteuid", return_value=1000),
+            patch.object(driver_helper.subprocess, "run") as run,
+            contextlib.redirect_stderr(io.StringIO()),
+        ):
+            self.assertNotEqual(driver_helper.main(["install-audio"]), 0)
+            run.assert_not_called()
+
+    def test_dispatch_rejects_unknown_extra_and_shell_arguments(self):
+        for arguments in (
+            [], ["install-audio", "extra"], ["set-printing-enabled", "maybe"],
+            ["install; reboot"], ["$(id)"],
+        ):
+            with (
+                self.subTest(arguments=arguments),
+                patch.object(driver_helper.os, "geteuid", return_value=0),
+                patch.object(driver_helper.subprocess, "run") as run,
+                contextlib.redirect_stderr(io.StringIO()),
+            ):
+                self.assertNotEqual(driver_helper.main(arguments), 0)
+                run.assert_not_called()
+
+    def test_command_boundary_preserves_arguments_and_reports_failure(self):
+        arguments = ["test-program", "literal; $(not-a-command)"]
+        with (
+            patch.object(driver_helper.subprocess, "run", return_value=types.SimpleNamespace(returncode=23)) as run,
+            contextlib.redirect_stdout(io.StringIO()),
+        ):
+            with self.assertRaises(RuntimeError):
+                driver_helper.run(arguments)
+        self.assertEqual(run.call_args.args[0], arguments)
+        self.assertFalse(run.call_args.kwargs.get("shell", False))
+
     def test_recommended_install_updates_sources_and_delegates_to_ubuntu_drivers(self):
         with (
             patch.object(driver_helper, "apt_update") as update,
@@ -27,9 +63,15 @@ class HelperTests(unittest.TestCase):
         update.assert_called_once_with()
 
     def test_rejects_package_not_reported_by_ubuntu_drivers(self):
-        with patch.object(driver_helper, "available_driver_packages", return_value={"nvidia-driver-595-open"}):
-            with self.assertRaises(ValueError):
-                driver_helper.install_driver("definitely-not-a-driver")
+        for package in ("definitely-not-a-driver", "driver; reboot", "$(id)", "--reinstall"):
+            with (
+                self.subTest(package=package),
+                patch.object(driver_helper, "available_driver_packages", return_value={"nvidia-driver-595-open"}),
+                patch.object(driver_helper, "run") as run,
+            ):
+                with self.assertRaises(ValueError):
+                    driver_helper.install_driver(package)
+                run.assert_not_called()
 
     def test_selected_graphics_driver_is_delegated_to_ubuntu_drivers(self):
         with (

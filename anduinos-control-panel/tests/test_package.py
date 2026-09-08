@@ -1,9 +1,15 @@
+import io
 from pathlib import Path
+import sys
 import unittest
+from unittest.mock import Mock, patch
 import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from anduinos_control_panel import app
 
 
 class PackageTests(unittest.TestCase):
@@ -15,423 +21,150 @@ class PackageTests(unittest.TestCase):
         ]:
             compile(source.read_text(), str(source), "exec")
 
-    def test_desktop_entry_uses_the_stable_application_id(self):
-        desktop = (ROOT / "data/com.anduinos.ControlPanel.desktop").read_text()
-        self.assertIn("Exec=anduinos-control-panel", desktop)
-        self.assertIn("Icon=com.anduinos.ControlPanel", desktop)
-        self.assertIn("Categories=Settings;System;", desktop)
-
-    def test_appstream_includes_both_provided_screenshots(self):
-        project = (ROOT / "anduinos-control-panel.aosproj").read_text()
-        self.assertIn(
-            '<AppStreamScreenshot Include="screenshots/control-panel.png" '
-            'Default="true"',
-            project,
-        )
-        self.assertIn(
-            '<AppStreamScreenshot Include="screenshots/about.png"',
-            project,
-        )
-        for name in ("control-panel.png", "about.png"):
-            screenshot = ROOT / "screenshots" / name
-            self.assertTrue(screenshot.is_file())
-            self.assertEqual(screenshot.read_bytes()[:8], b"\x89PNG\r\n\x1a\n")
-
-    def test_window_defaults_to_a_balanced_two_column_size(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        self.assertIn("self.set_default_size(1166, 762)", application)
-        self.assertIn("column_homogeneous=True", application)
-        self.assertIn("self.grid.attach(child, index % 2, index // 2, 1, 1)", application)
-        self.assertIn("maximum_size=800", application)
-
-    def test_header_does_not_show_a_manual_refresh_button(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        self.assertNotIn('icon_name="view-refresh-symbolic"', application)
-        self.assertNotIn('_("Refresh availability")', application)
-
-    def test_in_app_search_indexes_the_shared_topic_keywords(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        self.assertIn("topic.keywords,", application)
-        self.assertIn(
-            "search_parts.extend((action_title, subtitle, *keywords))", application
-        )
-
-    def test_category_icons_share_one_rendered_boundary(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        project = (ROOT / "anduinos-control-panel.aosproj").read_text()
-        self.assertIn("GdkPixbuf.Pixbuf.new_from_file_at_scale(", application)
-        self.assertIn("str(_icon_path(name)), 56, 56, True", application)
-        self.assertIn("icon_frame.set_size_request(60, 60)", application)
-        self.assertIn("root = Gtk.Grid(column_spacing=14)", application)
-        self.assertIn("root.attach(body, 1, 0, 1, 1)", application)
-        self.assertIn('<Dependency Include="gir1.2-gdkpixbuf-2.0" />', project)
-
-    def test_category_layout_uses_compact_windows_control_panel_hierarchy(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        self.assertIn("color: @success_color", application)
-        self.assertIn("color: @accent_color", application)
-        self.assertIn("row_spacing=18", application)
-        self.assertNotIn('Gtk.Image.new_from_icon_name("go-next-symbolic")', application)
-
-    def test_action_links_follow_windows_7_hover_behavior(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        self.assertIn('button.set_cursor_from_name("pointer")', application)
-        self.assertIn("Pango.attr_underline_new(Pango.Underline.SINGLE)", application)
-        self.assertIn("motion = Gtk.EventControllerMotion()", application)
-        self.assertIn('motion.connect("enter", pointer_entered)', application)
-        self.assertIn('motion.connect("leave", pointer_left)', application)
-        self.assertIn('button.connect("notify::has-focus"', application)
-        self.assertNotIn("outline: none", application)
-
-    def test_launcher_reports_asynchronous_process_failures(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        self.assertIn("Gio.SubprocessFlags.STDOUT_PIPE", application)
-        self.assertIn("Gio.SubprocessFlags.STDERR_PIPE", application)
-        self.assertIn("process.communicate_utf8_async(", application)
-        self.assertIn("launched_process.communicate_utf8_finish(", application)
-        self.assertIn("if launched_process.get_successful():", application)
-        self.assertIn("details = (stderr or stdout or \"\").strip()", application)
-
-    def test_all_requested_categories_and_launchers_are_present(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        catalog = (ROOT / "src/anduinos_control_panel/topics.py").read_text()
-        for title in (
-            "System",
-            "Security",
-            "Network and Internet",
-            "AI Stack",
-            "Windows Compatibility",
-            "Hardware and Drivers",
-            "Programs",
-            "User Accounts",
-            "Appearance",
-            "Backup and Recovery",
-        ):
-            self.assertIn(f'_("{title}")', application)
-        self.assertNotIn('_("Accessibility")', application)
-
-        for command in (
-            '("gnome-control-center",)',
-            '("swapcontrol-gtk",)',
-            '("anduinos-driver-center", "--page", "secure-boot")',
-            '("seahorse",)',
-            '("ufwall-gtk",)',
-            '("nm-connection-editor",)',
-            '("simple-scan",)',
-            '("anduinos-driver-center",)',
-            '("gnome-control-center", "printers")',
-            '("gnome-software", "--mode=installed")',
-            '("gnome-control-center", "system", "users")',
-            '("anduinos-yubikey-manager",)',
-            '("anduinos-appearance",)',
-            '("gnome-control-center", "background")',
-            '("anduinos-btrfs-snapshots-manager",)',
-        ):
-            self.assertIn(command, catalog)
-
-        for command in (
-            '["flatpak", "run", BOTTLES_APP_ID]',
-            '["com.github.tchx84.Flatseal"]',
-            '["flatpak", "run", DEJA_DUP_APP_ID]',
-        ):
-            self.assertIn(command, application)
-
-        self.assertIn('"System Snapshots"', catalog)
-        self.assertNotIn('"Btrfs Snapshots"', catalog)
-        self.assertIn('"Wallpaper and Accent Color"', catalog)
-        self.assertIn('"Startup and Boot"', catalog)
-        self.assertIn('"Scanners"', catalog)
-        self.assertIn('_("Boot menu wait time")', application)
-
-    def test_boot_settings_use_a_fixed_polkit_helper(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        project = (ROOT / "anduinos-control-panel.aosproj").read_text()
-        helper = (ROOT / "scripts/boot-settings-helper").read_text()
-        tree = ET.parse(ROOT / "data/com.anduinos.ControlPanel.policy")
-        annotations = {
-            node.attrib.get("key"): (node.text or "").strip()
-            for node in tree.findall(".//annotate")
+    def test_polkit_authorizes_the_helper_used_by_the_client_without_gui_environment(self):
+        policy = ET.parse(ROOT / "data/com.anduinos.ControlPanel.policy")
+        paths = {
+            node.text.strip()
+            for node in policy.findall(".//annotate[@key='org.freedesktop.policykit.exec.path']")
         }
-        helper_path = "/usr/libexec/anduinos-control-panel/boot-settings-helper"
+        self.assertEqual(paths, {app.BOOT_SETTINGS_HELPER})
+        self.assertFalse(policy.findall(".//annotate[@key='org.freedesktop.policykit.exec.allow_gui']"))
 
-        self.assertIn(f'BOOT_SETTINGS_HELPER = "{helper_path}"', application)
-        self.assertIn(
-            '[\n                        "/usr/bin/pkexec",\n'
-            "                        BOOT_SETTINGS_HELPER,",
-            application,
-        )
-        self.assertEqual(
-            annotations["org.freedesktop.policykit.exec.path"], helper_path
-        )
-        self.assertNotIn(
-            "org.freedesktop.policykit.exec.allow_gui", annotations
-        )
-        self.assertIn(
-            'Include="scripts/boot-settings-helper"', project
-        )
-        self.assertIn(
-            'Include="data/com.anduinos.ControlPanel.policy"', project
-        )
-        self.assertIn('<Dependency Include="grub2-common" />', project)
-        self.assertIn(
-            'case ["set-settings", timeout, display_mode]:', helper
-        )
-        self.assertIn(
-            'or selected != state["after_interrupted_boot"]', application
-        )
-        self.assertIn('_("Native resolution")', application)
-        self.assertIn('_("Large text mode")', application)
-        self.assertNotIn('_("Current setting:', application)
-        self.assertIn("status.set_visible(False)", application)
-        self.assertIn("status.set_visible(True)", application)
-        self.assertNotIn("shell=True", helper)
 
-    def test_optional_entries_are_gated_by_runtime_state(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        self.assertNotIn("if secure_boot_enabled():", application)
-        self.assertNotIn("secure_boot_enabled,", application)
-        self.assertIn('command_available("seahorse")', application)
-        self.assertIn('command_available("nm-connection-editor")', application)
-        self.assertIn('"network.advanced",', application)
-        self.assertIn('"hardware.scanners",', application)
-        self.assertIn("self._offer_recommended_install(topic)", application)
-        self.assertIn("if package_installed(SNAPSHOT_PACKAGE):", application)
-        self.assertIn("if flatpak_installed(BOTTLES_APP_ID):", application)
-        self.assertIn("if flatpak_installed(DEJA_DUP_APP_ID):", application)
-        self.assertIn('if package_installed("flatseal"):', application)
+class LaunchTests(unittest.TestCase):
+    def setUp(self):
+        self.window = Mock()
+        self.enterContext(patch.object(app, "_", side_effect=lambda text: text))
 
-    def test_voice_typing_is_discoverable_but_installed_only_on_request(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        project = (ROOT / "anduinos-control-panel.aosproj").read_text()
-        ai_stack = application.index('_("AI Stack")')
-        on_device_ai = application.index('"ai.on-device"', ai_stack)
-        voice_typing = application.index('"accessibility.voice-typing"', ai_stack)
-        windows_compatibility = application.index(
-            '_("Windows Compatibility")', ai_stack
-        )
-        self.assertLess(on_device_ai, voice_typing)
-        self.assertLess(voice_typing, windows_compatibility)
-        self.assertIn("VOICE_TYPING_PACKAGE", application)
-        self.assertIn('self._launch(["anduinos-whisper-gtk"])', application)
-        self.assertIn('title=_("Install Voice Typing")', application)
-        self.assertIn('_("About 140 MB to download")', application)
-        self.assertIn('_("Speech is recognized locally with whisper.cpp")', application)
-        self.assertIn(
-            '["gnome-extensions", "enable", "--quiet", extension_uuid]',
-            application,
-        )
-        self.assertNotIn("org.gnome.Shell.Extensions.ReloadExtension", application)
-        self.assertIn("Sign out and back in once, then press", application)
-        self.assertIn("Super + H to start Voice Typing", application)
-        self.assertNotIn('_("✓ Voice Typing is ready.")', application)
-        self.assertIn('Gio.Settings.new("org.gnome.shell")', application)
-        self.assertNotIn('<Dependency Include="anduinos-whisper', project)
-
-    def test_ai_and_flatseal_changes_use_fixed_apt_arguments(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        self.assertIn('WHY_AI_PACKAGE if enabled else WHY_PLACEHOLDER_PACKAGE', application)
-        self.assertIn(
-            'self._run_streaming_package_change(\n            "flatseal"', application
-        )
-        self.assertIn('"/usr/bin/pkexec"', application)
-        self.assertIn('"/usr/bin/apt-get"', application)
-        self.assertIn('"install",', application)
-        self.assertIn('"--yes",', application)
-        self.assertIn("stdout=subprocess.PIPE", application)
-        self.assertIn("stderr=subprocess.STDOUT", application)
-        self.assertIn("def _run_streaming_commands(", application)
-        self.assertNotIn("shell=True", application)
-        self.assertNotIn("bash -c", application)
-
-    def test_ai_apply_button_starts_disabled_and_tracks_changes(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        self.assertIn("apply.set_sensitive(False)", application)
-        self.assertIn("row.get_active() != installed", application)
-        self.assertIn('apply.add_css_class("suggested-action")', application)
-
-    def test_slow_ai_install_shows_live_advanced_output(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        self.assertIn("default_width=560", application)
-        self.assertIn("default_height=360", application)
-        self.assertIn('Gtk.Expander(label=_("Advanced Output"))', application)
-        self.assertIn('expander.connect("notify::expanded", advanced_output_toggled)', application)
-        self.assertIn("680 if row.get_expanded() else 560", application)
-        self.assertIn("560 if row.get_expanded() else 360", application)
-        self.assertIn("output = Gtk.TextView(", application)
-        self.assertIn("monospace=True", application)
-        self.assertIn("progress.pulse()", application)
-        self.assertIn("This may take about 10 minutes.", application)
-        self.assertIn("process = subprocess.Popen(", application)
-        self.assertIn("stdout=subprocess.PIPE", application)
-        self.assertIn("stderr=subprocess.STDOUT", application)
-        self.assertIn('for line in iter(process.stdout.readline, ""):', application)
-        self.assertIn(
-            "self._append_package_output, buffer, output, line", application
-        )
-        self.assertIn("window.set_deletable(False)", application)
-
-    def test_flatseal_install_has_intro_progress_and_advanced_output(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        self.assertIn('title=_("Permission Settings")', application)
-        self.assertIn('title=_("Flatseal")', application)
-        self.assertIn('start = Gtk.Button(label=_("Start"))', application)
-        self.assertIn('start.set_label(_("Installing…"))', application)
-        self.assertIn('start.set_label(_("Open Flatseal"))', application)
-        self.assertIn('start.set_label(_("Retry"))', application)
-        self.assertGreaterEqual(
-            application.count('Gtk.Expander(label=_("Advanced Output"))'), 2
-        )
-        self.assertIn("self._install_flatseal(", application)
-        self.assertIn("buffer.set_text(\n            _(", application)
-        self.assertIn('"--yes",\n            package,', application)
-        self.assertIn("window.set_deletable(False)", application)
-
-    def test_bottles_install_has_intro_progress_and_advanced_output(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        self.assertIn('title=_("Windows Compatibility")', application)
-        self.assertIn('title=_("Bottles")', application)
-        self.assertIn('title=_("Install Bottles")', application)
-        self.assertIn("self._install_bottles(", application)
-        self.assertIn('start.set_label(_("Open Bottles"))', application)
-        self.assertGreaterEqual(
-            application.count('Gtk.Expander(label=_("Advanced Output"))'), 3
-        )
-        self.assertIn('"remote-add",', application)
-        self.assertIn('"--if-not-exists",', application)
-        self.assertIn('"install",\n                "--system",', application)
-        self.assertIn('"--assumeyes",', application)
-        self.assertNotIn('"--noninteractive",', application)
-        self.assertIn("FLATHUB_REPOSITORY", application)
-        self.assertNotIn(
-            'self._show_store_prompt(_("Bottles")', application
-        )
-
-    def test_project_reuses_parseable_repository_svg_assets(self):
-        project = (ROOT / "anduinos-control-panel.aosproj").read_text()
-        self.assertIn(
-            '<IncludeFolder Include="resources/icons" '
-            'Target="/usr/share/anduinos-control-panel/icons" />',
-            project,
-        )
-        self.assertIn(
-            '<IncludeFile Include="resources/icons/com.anduinos.ControlPanel.svg" '
-            'Target="/usr/share/icons/hicolor/scalable/apps/com.anduinos.ControlPanel.svg" />',
-            project,
-        )
-        icons = sorted((ROOT / "resources/icons").glob("*.svg"))
-        self.assertEqual(len(icons), 13)
-        self.assertIn("com.anduinos.ControlPanel.svg", {icon.name for icon in icons})
-        self.assertIn(
-            "com.anduinos.ControlPanel-symbolic.svg", {icon.name for icon in icons}
-        )
-        self.assertIn("com.anduinos.DriverCenter.svg", {icon.name for icon in icons})
-        self.assertIn("anduinos-appearance.svg", {icon.name for icon in icons})
-        self.assertIn("anduinos-exe-runner.svg", {icon.name for icon in icons})
-        self.assertIn("com.anduinos.yubikeymanager.svg", {icon.name for icon in icons})
-        self.assertIn("audio-input-microphone.svg", {icon.name for icon in icons})
-        for svg in icons:
-            self.assertTrue(ET.parse(svg).getroot().tag.endswith("svg"), svg.name)
-
-        app_icon = (ROOT / "resources/icons/com.anduinos.ControlPanel.svg").read_text()
-        self.assertNotIn("<image", app_icon)
-
-        appearance_icon = (
-            ROOT / "resources/icons/anduinos-appearance.svg"
-        ).read_text()
-        self.assertIn('fill="#38a0d4"', app_icon)
-        self.assertEqual(app_icon.count("<circle"), 3)
-        self.assertIn('fill="#2268ab"', appearance_icon)
-        self.assertEqual(appearance_icon.count("<path"), 9)
-
-        symbolic_icon = (
-            ROOT / "resources/icons/com.anduinos.ControlPanel-symbolic.svg"
-        ).read_text()
-        symbolic_root = ET.fromstring(symbolic_icon)
-        self.assertEqual(symbolic_root.attrib.get("width"), "16")
-        self.assertEqual(symbolic_root.attrib.get("height"), "16")
-        self.assertNotIn("<image", symbolic_icon)
-        self.assertNotIn("#2268ab", symbolic_icon)
-        self.assertIn(
-            'Target="/usr/share/icons/hicolor/symbolic/apps/'
-            'com.anduinos.ControlPanel-symbolic.svg"',
-            project,
-        )
-
-    def test_fixed_anduinos_launchers_are_hard_dependencies(self):
-        project = (ROOT / "anduinos-control-panel.aosproj").read_text()
-        for package in (
-            "anduinos-driver-center",
-            "anduinos-appearance",
-            "anduinos-ufwall-gtk",
-            "anduinos-swapcontrol-gtk",
-            "anduinos-yubikey-manager",
+    def test_launch_reports_failed_process_output_but_not_success(self):
+        for successful, stdout, stderr, detail in (
+            (True, "", "harmless warning", None),
+            (False, "output details", "failure details", "failure details"),
+            (False, "output details", "", "output details"),
+            (False, "", "", "The application exited before it could be opened."),
         ):
-            self.assertIn(f'<Dependency Include="{package}" />', project)
-            self.assertNotIn(f'<Suggest Include="{package}"', project)
+            with self.subTest(successful=successful, stderr=stderr):
+                self.window.reset_mock()
+                process = Mock()
+                process.get_successful.return_value = successful
+                process.communicate_utf8_finish.return_value = (True, stdout, stderr)
+                with patch.object(app.Gio.Subprocess, "new", return_value=process):
+                    app.ControlPanelWindow._launch(self.window, ["test-app", "literal; argument"])
+                callback = process.communicate_utf8_async.call_args.args[2]
+                callback(process, Mock())
+                if detail is None:
+                    self.window._show_error.assert_not_called()
+                else:
+                    self.window._show_error.assert_called_once_with("Could not open this setting", detail)
 
-    def test_btrfs_snapshots_manager_is_an_optional_suggestion(self):
-        project = (ROOT / "anduinos-control-panel.aosproj").read_text()
-        self.assertIn(
-            '<Suggest Include="anduinos-btrfs-snapshots-manager" />',
-            project,
+    def test_launch_reports_spawn_and_async_transport_errors(self):
+        error = app.GLib.Error("permission denied")
+        for spawn_error in (False, True):
+            with self.subTest(spawn_error=spawn_error):
+                self.window.reset_mock()
+                process = Mock()
+                process.communicate_utf8_finish.side_effect = error
+                with patch.object(app.Gio.Subprocess, "new", return_value=process,
+                                  side_effect=error if spawn_error else None):
+                    app.ControlPanelWindow._launch(self.window, ["test-app"])
+                if not spawn_error:
+                    process.communicate_utf8_async.call_args.args[2](process, Mock())
+                self.assertIn("permission denied", self.window._show_error.call_args.args[1])
+
+    def test_missing_optional_application_offers_install_instead_of_launching(self):
+        topic = app.get_topic("hardware.scanners")
+        for installed in (False, True):
+            with self.subTest(installed=installed):
+                self.window.reset_mock()
+                with patch.object(app, "command_available", return_value=installed):
+                    app.ControlPanelWindow._activate_topic(self.window, topic.identifier)
+                if installed:
+                    self.window._launch.assert_called_once_with(list(topic.command))
+                    self.window._offer_recommended_install.assert_not_called()
+                else:
+                    self.window._offer_recommended_install.assert_called_once_with(topic)
+                    self.window._launch.assert_not_called()
+
+    def test_cancelling_recommended_install_never_starts_a_command(self):
+        with patch.object(app.Adw, "MessageDialog") as dialog_type:
+            app.ControlPanelWindow._offer_recommended_install(
+                self.window, app.get_topic("hardware.scanners")
+            )
+        dialog = dialog_type.return_value
+        response = dialog.connect.call_args.args[1]
+        with (
+            patch.object(app.threading, "Thread") as thread,
+            patch.object(app.subprocess, "run", return_value=Mock(
+                returncode=126, stderr="", stdout="",
+            )) as run,
+            patch.object(app.Adw.Toast, "new"),
+            patch.object(app.GLib, "idle_add", side_effect=lambda callback, *args: callback(*args)),
+        ):
+            for name in ("cancel", "close", "unexpected"):
+                response(dialog, name)
+            thread.assert_not_called()
+            run.assert_not_called()
+            response(dialog, "install")
+            thread.return_value.start.assert_called_once()
+            thread.call_args.kwargs["target"]()
+        self.assertEqual(run.call_args.args[0], [
+            "/usr/bin/pkexec", "/usr/bin/apt-get", "install", "--yes", "simple-scan",
+        ])
+        self.assertFalse(run.call_args.kwargs.get("shell", False))
+        self.window._launch.assert_not_called()
+        self.window._show_error.assert_called_once_with("Installation failed", "Authentication was cancelled.")
+
+
+class StreamingCommandTests(unittest.TestCase):
+    def setUp(self):
+        self.window = Mock()
+        self.success, self.failure = Mock(), Mock()
+        self.buffer, self.output = Mock(), Mock()
+        self.enterContext(patch.object(app, "_", side_effect=lambda text: text))
+        self.enterContext(patch.object(app.threading, "Thread",
+                                      side_effect=lambda *, target, **kw: Mock(start=target)))
+        self.enterContext(patch.object(app.GLib, "idle_add",
+                                      side_effect=lambda function, *args: function(*args)))
+
+    def execute(self, commands):
+        app.ControlPanelWindow._run_streaming_commands(
+            self.window, commands, self.buffer, self.output, self.success, self.failure
         )
-        self.assertNotIn(
-            '<Dependency Include="anduinos-btrfs-snapshots-manager"',
-            project,
-        )
 
-    def test_removable_hardware_helpers_are_recommended_and_reinstallable(self):
-        project = (ROOT / "anduinos-control-panel.aosproj").read_text()
-        catalog = (ROOT / "src/anduinos_control_panel/topics.py").read_text()
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        for package in ("network-manager-gnome", "simple-scan"):
-            self.assertIn(f'<Recommend Include="{package}" />', project)
-            self.assertNotIn(f'<Dependency Include="{package}"', project)
-            self.assertIn(f'install_package="{package}"', catalog)
-        self.assertIn('"/usr/bin/pkexec"', application)
-        self.assertIn('"/usr/bin/apt-get"', application)
-        self.assertNotIn("shell=True", application)
+    def test_failed_first_command_streams_details_and_prevents_later_changes(self):
+        process = Mock(stdout=io.StringIO("download started\ndependency unavailable\n"))
+        process.wait.return_value = 100
+        commands = [["test-package-manager", "install"], ["must-not-run"]]
+        with patch.object(app.subprocess, "Popen", return_value=process) as popen:
+            self.execute(commands)
+        popen.assert_called_once()
+        self.assertEqual(popen.call_args.args[0], commands[0])
+        self.assertFalse(popen.call_args.kwargs.get("shell", False))
+        streamed = "".join(call.args[-1] for call in self.window._append_package_output.call_args_list)
+        self.assertIn("dependency unavailable", streamed)
+        self.success.assert_not_called()
+        self.failure.assert_called_once()
+        self.assertIn("100", self.failure.call_args.args[0])
 
-    def test_search_provider_is_installed_and_enabled_by_default(self):
-        project = (ROOT / "anduinos-control-panel.aosproj").read_text()
-        provider = (
-            ROOT / "data/com.anduinos.ControlPanel.search-provider.ini"
-        ).read_text()
-        service = (
-            ROOT / "data/com.anduinos.ControlPanel.SearchProvider.service"
-        ).read_text()
-        self.assertIn("Version=2", provider)
-        self.assertIn("DefaultDisabled=false", provider)
-        self.assertIn("DesktopId=com.anduinos.ControlPanel.desktop", provider)
-        self.assertIn("BusName=com.anduinos.ControlPanel.SearchProvider", provider)
-        self.assertIn("Name=com.anduinos.ControlPanel.SearchProvider", service)
-        self.assertIn(
-            'Target="/usr/share/gnome-shell/search-providers/'
-            'com.anduinos.ControlPanel.search-provider.ini"',
-            project,
-        )
-        self.assertIn(
-            'Target="/usr/share/dbus-1/services/'
-            'com.anduinos.ControlPanel.SearchProvider.service"',
-            project,
-        )
+    def test_success_requires_every_command_to_finish_and_preserves_literal_arguments(self):
+        commands = [["test-app", "$(do-not-expand); x"], ["second-app"]]
+        processes = [Mock(stdout=io.StringIO("done\n")), Mock(stdout=io.StringIO(""))]
+        for process in processes:
+            process.wait.return_value = 0
+        with patch.object(app.subprocess, "Popen", side_effect=processes) as popen:
+            self.execute(commands)
+        self.assertEqual([call.args[0] for call in popen.call_args_list], commands)
+        self.assertTrue(all(not call.kwargs.get("shell", False) for call in popen.call_args_list))
+        for process in processes:
+            process.wait.assert_called_once()
+        self.success.assert_called_once_with()
+        self.failure.assert_not_called()
 
-    def test_application_accepts_search_provider_deep_links(self):
-        application = (ROOT / "src/anduinos_control_panel/app.py").read_text()
-        provider = (
-            ROOT / "src/anduinos_control_panel/search_provider.py"
-        ).read_text()
-        self.assertIn("Gio.ApplicationFlags.HANDLES_COMMAND_LINE", application)
-        self.assertIn('"topic",\n            ord("t")', application)
-        self.assertIn('"search",\n            ord("s")', application)
-        self.assertIn('[CONTROL_PANEL_EXECUTABLE, "--topic", identifier]', provider)
-        self.assertIn('[CONTROL_PANEL_EXECUTABLE, "--search", " ".join(terms)]', provider)
-
-    def test_control_panel_is_published_for_resolute_only(self):
-        project = ET.parse(ROOT / "anduinos-control-panel.aosproj").getroot()
-        target_suites = project.findtext(".//TargetSuites")
-        self.assertEqual(target_suites, "resolute-addon")
-
+    def test_spawn_failure_is_reported_without_claiming_success(self):
+        with patch.object(app.subprocess, "Popen", side_effect=OSError("cannot start")):
+            self.execute([["test-app"], ["must-not-run"]])
+        self.failure.assert_called_once_with("cannot start")
+        self.success.assert_not_called()
 
 
 if __name__ == "__main__":

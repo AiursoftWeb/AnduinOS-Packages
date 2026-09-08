@@ -42,4 +42,9 @@
     <IncludeFile Include="UPSTREAMS.md" Target="/usr/share/doc/anduinos-bash-guess-command/UPSTREAMS.md" />
     <IncludeFile Include="COPYRIGHT" Target="/usr/share/doc/anduinos-bash-guess-command/copyright" />
   </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="native" Profile="anduinos-package-release-test" Run="bash tests/test-package.sh" TimeoutSeconds="1800" />
+    <TestCommand Name="queries" Profile="performance" Run="cargo test --locked --release --manifest-path engine/Cargo.toml --test properties -- --ignored" TimeoutSeconds="600" />
+    <TestCommand Name="protocol" Profile="performance" Run='cargo build --locked --release --manifest-path engine/Cargo.toml --bin anduinos-quietd &amp;&amp; ANDUINOS_QUIETD="$(realpath -m "${CARGO_TARGET_DIR:-engine/target}/release/anduinos-quietd")" bash tests/test-engine-runtime.sh' TimeoutSeconds="600" />
+  </ItemGroup>
 </Project>

@@ -3,6 +3,22 @@
 Fast, offline ghost-text suggestions for interactive Bash without replacing
 Bash's line editor.
 
+## Tests
+
+Run `apkg test --profile anduinos-package-release-test` from this directory.
+The entry compiles only host-native test artifacts, then exercises the Rust
+engine, pipe protocol, privacy behavior and real Bash/Readline interactions in
+temporary homes. It requires GCC, Cargo, Bash and util-linux; it does not build
+a deb, cross-compile a release matrix or write to the package's deploy directory.
+
+Run `apkg test --profile performance` on an idle machine for optimized query
+budgets and pipe round-trip latency. The three ignored timing tests in a normal
+Cargo run belong to this explicit profile, not to missing-dependency skips.
+Release CI verifies behavior without assuming an unloaded runner meets a
+millisecond benchmark. Interactive startup waits for a prompt with a deadline.
+
+## Implementation
+
 The foreground consists of a roughly 22 KiB native loadable builtin and a small
 third-party-crate-free Rust decision engine. The builtin wraps only Readline
 redisplay, Right Arrow and End: paste, multiline input, Enter, history search,

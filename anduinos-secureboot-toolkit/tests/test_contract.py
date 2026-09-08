@@ -1,50 +1,21 @@
-import ast
+import contextlib
+import io
+import json
 from pathlib import Path
+import runpy
+import sys
 import unittest
+from unittest.mock import patch
 import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from anduinos_secureboot.model import DkmsState, SecureBootState, SecureBootStatus
 
 
 class ContractTests(unittest.TestCase):
-    def test_readme_defines_scope_before_directory_layout(self):
-        readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        self.assertLess(readme.index("## Scope contract"), readme.index("## Directory structure"))
-        for forbidden_scope in (
-            "detect NVIDIA hardware",
-            "install NVIDIA, Xbox, audio, printing",
-            "accept arbitrary commands",
-            "own OOBE navigation",
-        ):
-            self.assertIn(forbidden_scope, readme)
-
-    def test_package_owns_the_secure_boot_runtime_dependencies(self):
-        project = ET.parse(ROOT / "anduinos-secureboot-toolkit.aosproj").getroot()
-        dependencies = {item.get("Include") for item in project.iter("Dependency")}
-        suggestions = {item.get("Include") for item in project.iter("Suggest")}
-        self.assertTrue(
-            {"mokutil", "openssl", "shim-signed", "kmod", "pkexec"}
-            <= dependencies
-        )
-        self.assertNotIn("dkms", dependencies)
-        self.assertIn("dkms", suggestions)
-
-    def test_package_version_carries_the_firmware_settings_action(self):
-        project = ET.parse(ROOT / "anduinos-secureboot-toolkit.aosproj").getroot()
-        self.assertEqual(
-            "2.0.2-4+$(SuiteShortName)",
-            project.findtext(".//PackageVersion"),
-        )
-
-    def test_helper_is_fixed_and_does_not_evaluate_shell(self):
-        helper = (ROOT / "scripts/anduinos-secureboot-helper").read_text()
-        operations = (ROOT / "src/anduinos_secureboot/operations.py").read_text()
-        self.assertNotIn("shell=True", helper + operations)
-        self.assertNotIn("bash -c", helper + operations)
-        self.assertNotIn("apt-get", helper + operations)
-        self.assertNotIn("ubuntu-drivers", helper + operations)
-
     def test_polkit_only_authorizes_the_fixed_helper(self):
         policy = ET.parse(ROOT / "data/com.anduinos.SecureBootToolkit.policy")
         annotations = {
@@ -62,46 +33,46 @@ class ContractTests(unittest.TestCase):
                 continue
             compile(source.read_text(encoding="utf-8"), str(source), "exec")
 
-    def test_status_cli_uses_state_aware_schema(self):
-        cli = (ROOT / "scripts/anduinos-securebootctl").read_text()
-        self.assertIn('{"schema": 2, "secure_boot":', cli)
+    def test_status_cli_distinguishes_unknown_disabled_and_enabled(self):
+        # The CLI is executed; only the hardware inspection boundary is replaced.
+        for status in SecureBootStatus:
+            state = SecureBootState(
+                status is SecureBootStatus.ENABLED, True, True, False,
+                "certificate-serial", status=status,
+            )
+            for arguments in ([], ["status"], ["status", "--json"]):
+                with self.subTest(status=status, arguments=arguments):
+                    output = io.StringIO()
+                    with (
+                        patch("sys.argv", ["anduinos-securebootctl", *arguments]),
+                        patch("anduinos_secureboot.inspect_secure_boot", return_value=state),
+                        patch("anduinos_secureboot.inspect_dkms", return_value=DkmsState(
+                            modules=("driver",), untrusted_modules=("driver",),
+                        )) as inspect_dkms,
+                        contextlib.redirect_stdout(output),
+                    ):
+                        runpy.run_path(str(ROOT / "scripts/anduinos-securebootctl"), run_name="__main__")
+                    payload = json.loads(output.getvalue())
+                    self.assertEqual(payload["schema"], 2)  # Public protocol, not package revision.
+                    self.assertEqual(payload["secure_boot"]["status"], status.value)
+                    self.assertEqual(payload["secure_boot"]["enabled"], state.enabled)
+                    self.assertEqual(payload["dkms"]["untrusted_modules"], ["driver"])
+                    inspect_dkms.assert_called_once_with(state)
 
-    def test_ui_translation_function_is_not_shadowed(self):
-        source = (ROOT / "src/anduinos_secureboot/ui.py").read_text(encoding="utf-8")
-        tree = ast.parse(source)
-        function = next(
-            node
-            for node in tree.body
-            if isinstance(node, ast.FunctionDef)
-            and node.name == "create_secure_boot_page"
-        )
-        stores = [
-            node
-            for node in ast.walk(function)
-            if isinstance(node, ast.Name)
-            and node.id == "_"
-            and isinstance(node.ctx, ast.Store)
-        ]
-        self.assertEqual(len(stores), 1)
-
-    def test_ui_never_offers_module_repair_without_dkms(self):
-        source = (ROOT / "src/anduinos_secureboot/ui.py").read_text(encoding="utf-8")
-        self.assertIn("secure_boot.dkms_available and not dkms.ready", source)
-
-    def test_disabled_secure_boot_has_a_confirmed_fixed_firmware_action(self):
-        source = (ROOT / "src/anduinos_secureboot/ui.py").read_text(encoding="utf-8")
-        self.assertIn('["systemctl", "reboot", "--firmware-setup"]', source)
-        self.assertIn('_FIRMWARE_SETUP_BUTTON = N_("Resolve")', source)
-        self.assertIn('_FIRMWARE_SETUP_REBOOT = N_("Restart to UEFI Firmware Settings")', source)
-        self.assertIn('Gtk.Button(label=_(_FIRMWARE_SETUP_BUTTON))', source)
-        self.assertIn('dialog.set_default_response("cancel")', source)
-        self.assertIn('dialog.set_close_response("cancel")', source)
-        self.assertIn('secure_boot.status is SecureBootStatus.DISABLED', source)
-        self.assertGreaterEqual(
-            source.count('"dialog-error-symbolic", "error"'),
-            4,
-        )
-        self.assertNotIn("shell=True", source)
+    def test_status_cli_rejects_invalid_commands_without_probing_hardware(self):
+        for arguments in (["repair"], ["status", "extra"], ["status; reboot"]):
+            with (
+                self.subTest(arguments=arguments),
+                patch("sys.argv", ["anduinos-securebootctl", *arguments]),
+                patch("anduinos_secureboot.inspect_secure_boot") as inspect,
+                patch("anduinos_secureboot.inspect_dkms") as inspect_dkms,
+                contextlib.redirect_stderr(io.StringIO()),
+            ):
+                with self.assertRaises(SystemExit) as result:
+                    runpy.run_path(str(ROOT / "scripts/anduinos-securebootctl"), run_name="__main__")
+                self.assertNotEqual(result.exception.code, 0)
+                inspect.assert_not_called()
+                inspect_dkms.assert_not_called()
 
 
 if __name__ == "__main__":

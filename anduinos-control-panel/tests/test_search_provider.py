@@ -50,6 +50,41 @@ class SearchProviderTests(unittest.TestCase):
         refined = _result_ids(["virtual", "memory"], previous)
         self.assertEqual(refined, ["system.virtual-memory"])
 
+    def test_snapshots_are_hidden_until_the_package_is_installed(self):
+        identifier = "recovery.snapshots"
+        with patch(
+            "anduinos_control_panel.search_provider.package_installed",
+            return_value=False,
+        ) as installed:
+            for query in ("btrfs", "snapshot", "快照"):
+                self.assertNotIn(identifier, _result_ids([query]))
+            self.assertEqual(_result_ids(["btrfs"], [identifier]), [])
+            self.assertEqual(_result_metas([identifier]), [])
+            self.assertIsNone(_activation_arguments(identifier))
+            installed.assert_called_with("anduinos-btrfs-snapshots-manager")
+
+            # Installation must take effect without restarting the provider.
+            installed.return_value = True
+            self.assertEqual(_result_ids(["btrfs"]), [identifier])
+            self.assertEqual(_result_ids(["btrfs"], [identifier]), [identifier])
+            self.assertEqual(_result_metas([identifier])[0]["id"].unpack(), identifier)
+            self.assertEqual(
+                _activation_arguments(identifier), ["anduinos-btrfs-snapshots-manager"]
+            )
+
+    def test_removing_snapshots_invalidates_previous_results(self):
+        with patch(
+            "anduinos_control_panel.search_provider.package_installed",
+            return_value=True,
+        ) as installed:
+            previous = _result_ids(["snapshot"])
+            self.assertIn("recovery.snapshots", previous)
+
+            installed.return_value = False
+            self.assertEqual(_result_ids(["snapshots"], previous), [])
+            self.assertEqual(_result_metas(previous), [])
+            self.assertIsNone(_activation_arguments("recovery.snapshots"))
+
     def test_subsearch_recovers_after_cancelled_initial_query(self):
         # Shell can turn a cancelled cold-start query into an empty result set
         # and pass it back while the user continues typing.

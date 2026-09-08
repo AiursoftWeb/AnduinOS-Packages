@@ -55,4 +55,8 @@
     <AppStreamScreenshot Include="screenshots/security-overview.png" Default="true" Caption="Protect sign-in, sudo, SSH, and Git with a security key" Environment="GNOME:dark" />
     <AppStreamScreenshot Include="screenshots/ssh-key.png" Caption="Create a resident SSH key on your YubiKey" Environment="GNOME:dark" />
   </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+    <TestCommand Name="native" Profile="anduinos-package-release-test" Run="cargo test --locked --bins" TimeoutSeconds="3600" />
+  </ItemGroup>
 </Project>

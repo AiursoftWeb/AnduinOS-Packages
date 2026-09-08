@@ -1,10 +1,8 @@
 import unittest
-import inspect
 from unittest.mock import patch
 
 from test_manual_layout import manual_disk, selection
 from pages import (
-    MANUAL_PARTITION_ROLES,
     _manual_role_choices,
     _manual_segment_annotation,
     _manual_segment_spans,
@@ -29,21 +27,11 @@ from installer_core.storage_ui import (
 
 
 class ManualStorageUiTests(unittest.TestCase):
-    def test_partition_role_choices_translate_and_preserve_selection_order(self):
-        self.assertEqual(MANUAL_PARTITION_ROLES, (
-            ManualPartitionRole.EFI_SYSTEM,
-            ManualPartitionRole.ROOT,
-            ManualPartitionRole.SWAP,
-        ))
+    def test_partition_role_choices_are_translated(self):
         with patch("pages._", side_effect=lambda text, lang: f"{lang}:{text}"):
             self.assertEqual(_manual_role_choices("test-locale"), [
                 "test-locale:ESP", "test-locale:Root", "test-locale:Swap",
             ])
-        import pages
-        source = inspect.getsource(pages)
-        self.assertIn("Gtk.StringList.new(_manual_role_choices(lang))", source)
-        self.assertIn("MANUAL_PARTITION_ROLES[role_dropdown.get_selected()]", source)
-        self.assertNotIn('Gtk.StringList.new(["ESP", "Root", "Swap"])', source)
 
     def setUp(self):
         self.disk = manual_disk()

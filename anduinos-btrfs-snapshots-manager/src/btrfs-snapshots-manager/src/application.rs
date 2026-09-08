@@ -223,26 +223,3 @@ impl SnapshotsManagerApplication {
         });
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn application_identity_is_stable() {
-        assert_eq!(APP_ID, "org.anduinos.BtrfsSnapshotsManager");
-    }
-
-    #[test]
-    fn notifier_is_started_as_a_supervised_user_service() {
-        assert_eq!(
-            NOTIFIER_START_ARGS,
-            [
-                "--user",
-                "start",
-                "--no-block",
-                "anduinos-btrfs-snapshots-manager-notifier.service"
-            ]
-        );
-    }
-}

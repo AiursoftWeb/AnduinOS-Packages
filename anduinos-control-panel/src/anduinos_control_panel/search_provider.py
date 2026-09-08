@@ -10,6 +10,7 @@ import gi
 gi.require_version("Gio", "2.0")
 from gi.repository import Gio, GLib  # noqa: E402
 
+from .model import SNAPSHOT_PACKAGE, package_installed
 from .topics import ControlPanelTopic, get_topic, search_topics
 
 
@@ -49,6 +50,12 @@ SEARCH_PROVIDER_XML = """
 
 
 def _topic_is_searchable(topic: ControlPanelTopic) -> bool:
+    # Match the Control Panel's Backup and Recovery category. Check each time
+    # so installing or removing the package also updates a running provider.
+    if topic.identifier == "recovery.snapshots" and not package_installed(
+        SNAPSHOT_PACKAGE
+    ):
+        return False
     if not topic.availability_command:
         return True
     return shutil.which(topic.availability_command) is not None
@@ -93,7 +100,7 @@ def _spawn(arguments: list[str], timestamp: int) -> None:
 
 def _activation_arguments(identifier: str) -> list[str] | None:
     topic = get_topic(identifier)
-    if topic is None:
+    if topic is None or not _topic_is_searchable(topic):
         return None
     if topic.command and (
         not topic.install_package or shutil.which(topic.command[0]) is not None

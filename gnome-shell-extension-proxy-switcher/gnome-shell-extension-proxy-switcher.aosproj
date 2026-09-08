@@ -34,4 +34,7 @@
   <ItemGroup>
     <PrebuildCommand Run="bash build.sh" />
   </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="bash tests/check-source.sh" TimeoutSeconds="300" />
+  </ItemGroup>
 </Project>

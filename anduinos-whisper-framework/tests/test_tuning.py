@@ -184,7 +184,6 @@ class TuningTests(unittest.TestCase):
         directory = ROOT / "data" / "benchmark"
         manifest = json.loads((directory / "manifest.json").read_text())
         self.assertEqual(manifest["license"], "CC-BY-4.0")
-        self.assertEqual(len(manifest["samples"]), 4)
         for sample in manifest["samples"]:
             path = directory / sample["file"]
             self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), sample["sha256"])

@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 """Isolated real GNOME/GTK/native-worker test with public audio, never a mic.
 
-Pass --payload pointing at the three extracted packages. Does not install or
-alter the user's running desktop. Temporary desktop/logs remain for inspection.
+Uses checked-in source plus explicitly supplied worker/model artifacts.
+Does not install packages or alter the running desktop; temporary state is removed.
 """
 import argparse
+import atexit
 from functools import partial
 import hashlib
 import json
@@ -22,6 +23,8 @@ from unittest.mock import patch
 
 sys.dont_write_bytecode = True
 HERE = Path(__file__).resolve().parent
+PACKAGE = HERE.parents[1]
+FRAMEWORK = PACKAGE.parent / "anduinos-whisper-framework"
 UUID = "voice-typing@anduinos.com"
 VOICE = "com.anduinos.VoiceTyping"
 VOICE_PATH = "/com/anduinos/VoiceTyping"
@@ -44,7 +47,7 @@ def guard(stage):
     assert Path(os.environ["XDG_RUNTIME_DIR"]) == stage / "runtime"
 
 
-def service(payload, stage):
+def service(stage):
     guard(stage)
     from gi.repository import GLib
     from anduinos_whisper_framework import daemon
@@ -52,7 +55,7 @@ def service(payload, stage):
     from anduinos_whisper_framework.session_engine import SessionEngine
     from anduinos_whisper_framework.tuning import AutomaticSelector
     from anduinos_whisper_framework.vad import VadEngine
-    directory = payload / "usr/share/anduinos-whisper-framework/benchmark"
+    directory = FRAMEWORK / "data/benchmark"
     sample = next(s for s in json.loads((directory / "manifest.json").read_text())["samples"]
                   if s["file"] == "en-short.wav")
     audio_path = directory / sample["file"]
@@ -60,8 +63,8 @@ def service(payload, stage):
     with wave.open(str(audio_path), "rb") as audio:
         assert (audio.getframerate(), audio.getnchannels(), audio.getsampwidth()) == (16000, 1, 2)
         pcm = audio.readframes(audio.getnframes())
-    model = payload / "usr/share/anduinos-whisper-framework/models/ggml-base.bin"
-    worker = payload / "usr/libexec/anduinos-whisper-worker"
+    model = Path(os.environ["ANDUINOS_VOICE_MODEL"])
+    worker = Path(os.environ["ANDUINOS_VOICE_WORKER"])
 
     class PublicCapture:
         def __init__(self, **callbacks):
@@ -84,7 +87,7 @@ def service(payload, stage):
 
     factory = partial(ResidentEngine, executable=worker)
     with patch.object(daemon, "AudioCapture", PublicCapture), \
-            patch.object(daemon, "VadEngine", partial(VadEngine, model=payload / "usr/share/anduinos-whisper-framework/models/ggml-silero-v6.2.0.bin", executable=worker)), \
+            patch.object(daemon, "VadEngine", partial(VadEngine, model=Path(os.environ["ANDUINOS_VAD_MODEL"]), executable=worker)), \
             patch.object(daemon, "SessionEngine", partial(SessionEngine, resident_factory=factory)), \
             patch.object(daemon, "AutomaticSelector", partial(AutomaticSelector, directory=directory, worker=worker)), \
             patch.object(daemon, "model_path", lambda _model: model), \
@@ -94,7 +97,7 @@ def service(payload, stage):
         assert not instance.worker.is_alive()
 
 
-def desktop(payload, stage):
+def desktop(stage):
     guard(stage)
     import gi
     gi.require_version("Gtk", "4.0")
@@ -143,7 +146,7 @@ def desktop(payload, stage):
         wait(ui_ready, "extension UI registration")
         assert shell.poll() is None
         print("Isolated Shell extension loaded", flush=True)
-        voice = launch([sys.executable, str(HERE / "smoke-shell.py"), "--payload", str(payload),
+        voice = launch([sys.executable, str(HERE / "smoke-shell.py"),
                         "--stage", str(stage), "--service"], "voice.log")
         wait(lambda: owns(VOICE), "test voice service")
         # The ordinary caller must still be rejected; only real Shell controls it.
@@ -175,7 +178,7 @@ def desktop(payload, stage):
         def received():
             return buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), False)
         wait(lambda: bool(received()), "native transcript pasted into GTK", 20)
-        manifest = json.loads((payload / "usr/share/anduinos-whisper-framework/benchmark/manifest.json").read_text())
+        manifest = json.loads((FRAMEWORK / "data/benchmark/manifest.json").read_text())
         expected = next(s["text"] for s in manifest["samples"] if s["file"] == "en-short.wav")
         words = lambda text: re.findall(r"[^\W_]+", text.casefold())
         assert words(received()) == words(expected), "Inserted public text differs"
@@ -206,23 +209,28 @@ def desktop(payload, stage):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--payload", type=Path, required=True)
     parser.add_argument("--stage", type=Path)
     parser.add_argument("--inside", action="store_true")
     parser.add_argument("--service", action="store_true")
     args = parser.parse_args()
-    payload = args.payload.resolve()
     if args.service:
-        return service(payload, args.stage)
+        return service(args.stage)
     if args.inside:
-        return desktop(payload, args.stage)
-    stage = Path(tempfile.mkdtemp(prefix="anduinos-shell-e2e."))
+        return desktop(args.stage)
+    for variable in ("ANDUINOS_VOICE_WORKER", "ANDUINOS_VOICE_MODEL", "ANDUINOS_VAD_MODEL"):
+        value = Path(os.environ.get(variable, "")).resolve()
+        if not value.is_file():
+            raise SystemExit(f"{variable} must name a source-built artifact or model fixture")
+        os.environ[variable] = str(value)
+    temporary = tempfile.TemporaryDirectory(prefix="anduinos-shell-e2e.")
+    atexit.register(temporary.cleanup)
+    stage = Path(temporary.name)
     for name in ("runtime", "config", "cache", "data"):
         (stage / name).mkdir(mode=0o700)
-    shutil.copytree(payload / "usr/share/gnome-shell/extensions" / UUID,
+    shutil.copytree(PACKAGE / "data" / UUID,
                     stage / "data/gnome-shell/extensions" / UUID)
     shutil.copytree("/usr/share/glib-2.0/schemas", stage / "schemas")
-    shutil.copy2(payload / "usr/share/glib-2.0/schemas/com.anduinos.voice-typing.gschema.xml", stage / "schemas")
+    shutil.copy2(FRAMEWORK / "data/com.anduinos.voice-typing.gschema.xml", stage / "schemas")
     shutil.copy2(HERE / "shell-smoke.gschema.override", stage / "schemas/zz-voice-test.gschema.override")
     subprocess.run(["glib-compile-schemas", "--strict", str(stage / "schemas")], check=True)
     environment = dict(os.environ)
@@ -234,14 +242,18 @@ def main():
         XDG_DATA_HOME=str(stage / "data"), GSETTINGS_SCHEMA_DIR=str(stage / "schemas"),
         GSETTINGS_BACKEND="memory", PYTHONDONTWRITEBYTECODE="1", GDK_BACKEND="wayland",
         WAYLAND_DISPLAY="anduinos-test", GIO_USE_VFS="local", GTK_A11Y="none", NO_AT_BRIDGE="1",
-        PYTHONPATH=str(payload / "usr/lib/python3/dist-packages"))
+        PYTHONPATH=os.pathsep.join((str(FRAMEWORK / "src"), str(PACKAGE / "src"))))
     print(f"Isolated desktop test: {stage}", flush=True)
     # Apply isolation BEFORE launching the bus so activated services inherit it.
     process = subprocess.Popen(["dbus-run-session", "--", sys.executable, str(HERE / "smoke-shell.py"),
-                                "--payload", str(payload), "--stage", str(stage), "--inside"],
+                                "--stage", str(stage), "--inside"],
                                env=environment, start_new_session=True)
     try:
-        return process.wait(timeout=100)
+        code = process.wait(timeout=100)
+        if code:
+            for log in stage.glob("*.log"):
+                print(f"{log.name}:\n{log.read_text(errors='replace')[-12000:]}", file=sys.stderr)
+        return code
     finally:
         # The group was created here and contains only this test's children.
         # Clean it up even when startup or a D-Bus/GTK assertion times out.

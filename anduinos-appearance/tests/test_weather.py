@@ -1,20 +1,16 @@
 from io import BytesIO
 import json
 from pathlib import Path
-import subprocess
 import sys
 import tempfile
 import unittest
 from unittest import mock
 
-
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
-APP_SOURCE = SRC / "anduinos-appearance"
 sys.path.insert(0, str(SRC))
 
 from anduinos_appearance import weather  # noqa: E402
-
 
 ZONE_TAB = """\
 CN\t+3114+12128\tAsia/Shanghai\tBeijing Time
@@ -22,14 +18,12 @@ CN\t+4348+08735\tAsia/Urumqi\tXinjiang Time
 GB\t+513030-0000731\tEurope/London
 """
 
-
 class FakeResponse(BytesIO):
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.close()
-
 
 class WeatherTests(unittest.TestCase):
     def zone_tab(self):
@@ -156,23 +150,6 @@ class WeatherTests(unittest.TestCase):
                 ["dconf", "reset", weather.CONSENT_KEY],
             ],
         )
-
-    def test_ui_requires_combined_consent_before_location_setup(self):
-        source = APP_SOURCE.read_text(encoding="utf-8")
-
-        self.assertIn("Weather Services Privacy Agreement", source)
-        self.assertIn("Approximate location (ipapi.co)", source)
-        self.assertIn("Weather data (Open-Meteo)", source)
-        self.assertIn("Agree to All", source)
-        self.assertIn("Decline", source)
-        self.assertIn("if response_id == 'accept':\n                on_accept()", source)
-        self.assertIn("lambda: self._reject_weather_enable(switch_row)", source)
-        self.assertIn("find-location-symbolic", source)
-
-    def test_package_ships_weather_support(self):
-        project = (ROOT / "anduinos-appearance.aosproj").read_text()
-        self.assertIn('IncludeFile Include="src/anduinos_appearance/weather.py"', project)
-
 
 if __name__ == "__main__":
     unittest.main()

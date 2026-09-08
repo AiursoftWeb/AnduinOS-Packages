@@ -1,5 +1,4 @@
 import unittest
-from pathlib import Path
 
 try:
     import gi
@@ -188,13 +187,6 @@ class WifiDiscoveryTests(unittest.TestCase):
         self.assertEqual(remote.settings, {})
         self.assertEqual(remote.arguments, {})
         self.assertEqual(remote.flags, NM.SettingsUpdate2Flags.TO_DISK)
-
-    def test_frontend_wifi_backend_never_spawns_an_external_process(self):
-        source = (
-            Path(__file__).parents[1] / "src/installer_core/wifi.py"
-        ).read_text()
-        self.assertNotIn("import subprocess", source)
-        self.assertNotIn("subprocess.", source)
 
     def test_split_preserves_escaped_colons_and_backslashes(self):
         self.assertEqual(

@@ -48,7 +48,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="PYTHONPATH=src python3 -m unittest discover -s tests -v" />
     <PrebuildCommand Run="bash compile-locales.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
   </ItemGroup>
 </Project>

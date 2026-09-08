@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_unattended_upgrades_policy.py" />
 
     <!-- APT pinning: prefer AnduinOS packages over upstream Ubuntu -->
     <IncludeFile Include="assets/anduinos" Target="/etc/apt/preferences.d/anduinos" />
@@ -35,6 +34,6 @@
     <IncludeFile Include="assets/arm64/resolute/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'arm64'" />
   </ItemGroup>
   <ItemGroup>
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_local_policy.py" />
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
   </ItemGroup>
 </Project>

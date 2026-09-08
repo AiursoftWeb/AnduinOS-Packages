@@ -187,4 +187,4 @@ fi
 grep -Fq 'requested recovery protocol is incompatible' "$TEST_ROOT/failures"
 test ! -e "$TEST_ROOT/invocations"
 
-echo "Dracut pre-mount recovery integration tests passed"
+echo "Dracut pre-mount source integration tests passed"

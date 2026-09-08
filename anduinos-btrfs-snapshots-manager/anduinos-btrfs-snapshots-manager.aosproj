@@ -45,7 +45,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="bash scripts/prebuild-check.sh" />
     <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
     <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
   </ItemGroup>
@@ -80,7 +79,6 @@
     <IncludeScript Include="data/no-os-prober" Target="/usr/libexec/anduinos-btrfs-snapshots-manager/no-os-prober/os-prober" />
     <IncludeScript Include="data/no-os-prober" Target="/usr/libexec/anduinos-btrfs-snapshots-manager/no-os-prober/linux-boot-prober" />
     <IncludeScript Include="scripts/qualify-recovery-vm.sh" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/qualify-recovery-vm.sh" />
-    <IncludeScript Include="scripts/test-installed-policy.sh" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/test-installed-policy.sh" />
     <IncludeFile Include="assets/apt-snapshots.toml" Target="/usr/share/anduinos-btrfs-snapshots-manager/defaults/apt-snapshots.toml" />
     <IncludeFile Include="assets/automation.toml" Target="/usr/share/anduinos-btrfs-snapshots-manager/defaults/automation.toml" />
     <IncludeFile Include="data/org.anduinos.BtrfsSnapshotsManager.policy" Target="/usr/share/polkit-1/actions/org.anduinos.BtrfsSnapshotsManager.policy" />
@@ -119,6 +117,13 @@
                          Environment="GNOME:dark" />
   </ItemGroup>
   <ItemGroup>
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_local_policy.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="bash tests/check-source.sh" TimeoutSeconds="300" />
+    <TestCommand Name="lifecycle" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_local_policy.py" TimeoutSeconds="300" />
+    <TestCommand Name="native" Profile="anduinos-package-release-test" Run="cargo test --manifest-path src/Cargo.toml --workspace --locked --lib --bins" TimeoutSeconds="3600" />
+    <TestCommand Name="widgets" Profile="gui" Run="bash tests/gui-smoke.sh" TimeoutSeconds="3600" />
+    <TestCommand Name="recovery" Profile="root-loopback" Run="bash tests/loopback.sh" TimeoutSeconds="3600" />
+    <TestCommand Name="engine-protocol" Profile="anduinos-package-release-test" Run='cargo build --manifest-path src/Cargo.toml --locked -p anduinos-recovery-engine --bin anduinos-btrfs-snapshots-manager-initramfs &amp;&amp; bash tests/check-engine.sh "${CARGO_TARGET_DIR:-src/target}/debug/anduinos-btrfs-snapshots-manager-initramfs"' TimeoutSeconds="600" />
   </ItemGroup>
 </Project>

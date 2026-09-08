@@ -41,6 +41,5 @@
                          Default="true"
                          Caption="Browse the web with Firefox in AnduinOS"
                          Environment="GNOME:dark" />
-    <PrebuildCommand Run="python3 tests/test_appstream.py" />
   </ItemGroup>
 </Project>

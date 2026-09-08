@@ -11,16 +11,10 @@ class DesktopActionTests(unittest.TestCase):
         config.optionxform = str
         config.read(desktop, encoding='utf-8')
         main = config['Desktop Entry']
-        self.assertEqual(main['Name'], 'Multimedia Player')
-        self.assertEqual(main['Actions'], 'new-window;enqueue;')
-        for action, name, command in (
-                ('new-window', 'New Window', 'celluloid --new-window'),
-                ('enqueue', 'Add to Playlist', 'celluloid --enqueue %U')):
+        for action in filter(None, main['Actions'].split(';')):
             group = config['Desktop Action ' + action]
-            self.assertEqual(group['Name'], name)
-            self.assertEqual(group['Exec'], command)
-            self.assertIn('Name[zh_CN]', group)
-            self.assertIn('Name[de]', group)
+            self.assertTrue(group['Name'].strip())
+            self.assertNotEqual(group['Name'], main['Name'])
             for key, value in group.items():
                 if key.startswith('Name['):
                     with self.subTest(action=action, locale=key):

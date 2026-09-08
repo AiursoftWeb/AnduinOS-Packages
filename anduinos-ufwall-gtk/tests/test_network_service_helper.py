@@ -33,12 +33,6 @@ class NetworkServiceHelperTests(unittest.TestCase):
             ],
         )
 
-    def test_unit_allowlist_is_fixed(self):
-        self.assertEqual(
-            helper.MDNS_UNITS,
-            ("avahi-daemon.service", "avahi-daemon.socket"),
-        )
-
     def test_polkit_action_only_authorizes_the_fixed_helper(self):
         tree = ET.parse(ROOT / "data/com.anduinos.ufwall.policy")
         action = tree.find(

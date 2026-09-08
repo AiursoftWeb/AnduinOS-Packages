@@ -89,4 +89,7 @@
   <ItemGroup>
     <PostInstallScript Include="scripts/postinst.sh" />
   </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="rendering" Profile="anduinos-package-release-test" Run="sh tests/check-nerd-symbols.sh" TimeoutSeconds="120" />
+  </ItemGroup>
 </Project>

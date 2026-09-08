@@ -17,7 +17,6 @@ from pages import (
     secure_boot_recommendation_needed,
 )
 
-
 class PowerPageRoutingTests(unittest.TestCase):
     def low(self):
         return PowerProbeResult(25, True, 1)
@@ -202,53 +201,6 @@ class PowerPageRoutingTests(unittest.TestCase):
         self.assertFalse(warning_needed)
         self.assertIs(shared["_power_probe_result"], result)
 
-    def test_low_battery_ui_requires_checkbox_before_continue(self):
-        source = Path("src/pages.py").read_text(encoding="utf-8")
-        page_source = source.split("def build_low_battery_page", 1)[1].split(
-            "# ── page 2:", 1
-        )[0]
-        self.assertIn('page.set_tag("low-battery")', page_source)
-        self.assertIn("next_sensitive=False", page_source)
-        self.assertIn("risk_confirmation.get_active()", page_source)
-        self.assertIn("recheck_power_requirement(shared)", page_source)
-        self.assertIn("nav_view.push(", page_source)
-        self.assertIn("safe = not current.requires_warning", page_source)
-        self.assertIn('risk_confirmation.set_visible(not safe)', page_source)
-        self.assertIn('"emblem-ok-symbolic" if safe', page_source)
-        self.assertIn("_start_power_auto_refresh(page, _on_recheck)", page_source)
-
-    def test_power_page_listens_to_upower_and_has_minute_fallback(self):
-        source = Path("src/pages.py").read_text(encoding="utf-8")
-        monitor_source = source.split(
-            "def _start_power_auto_refresh", 1
-        )[1].split("def _build_network_or_keyboard_page", 1)[0]
-        self.assertIn('GLib.timeout_add_seconds(60, _refresh_timer)', monitor_source)
-        self.assertIn("return True", monitor_source)
-        self.assertIn('"org.freedesktop.UPower"', monitor_source)
-        self.assertIn('"EnumerateDevices"', monitor_source)
-        self.assertIn('"g-properties-changed"', monitor_source)
-        self.assertIn('page.connect("map", _start)', monitor_source)
-        self.assertIn('page.connect("unmap", _stop)', monitor_source)
-        self.assertIn("proxy.disconnect(handler)", monitor_source)
-
-    def test_secure_boot_actions_do_not_replace_wizard_navigation(self):
-        source = Path("src/pages.py").read_text(encoding="utf-8")
-        page_source = source.split("def build_secure_boot_page", 1)[1].split(
-            "# ── page 2:", 1
-        )[0]
-        self.assertIn("page_actions.append(restart_button)", page_source)
-        self.assertIn("page_actions.append(skip_button)", page_source)
-        self.assertIn("on_back=lambda: nav_view.pop()", page_source)
-        self.assertIn("on_next=_continue", page_source)
-        self.assertIn("next_label=_SECURE_BOOT_SKIP_LABEL", page_source)
-        self.assertIn(
-            'navigation.next_button.remove_css_class("suggested-action")',
-            page_source,
-        )
-        self.assertNotIn("navigation.set_start_widget", page_source)
-        self.assertNotIn("restart_button.set_sensitive(False)", page_source)
-        self.assertNotIn("development protection mode", page_source)
-
     def test_page_route_has_one_entry_per_real_normal_page(self):
         shared = {
             "_page_route_initialized": True,
@@ -318,7 +270,6 @@ class PowerPageRoutingTests(unittest.TestCase):
         erase_route = set(_planned_page_route(erase_shared))
         self.assertIn("disk-layout", erase_route)
         self.assertNotIn("advanced-storage", erase_route)
-
 
 if __name__ == "__main__":
     unittest.main()

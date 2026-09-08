@@ -24,7 +24,4 @@
     <Dependency Include="gstreamer1.0-libav" />
     <Dependency Include="libavcodec-extra" />
   </ItemGroup>
-  <ItemGroup>
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_package_contract.py" />
-  </ItemGroup>
 </Project>

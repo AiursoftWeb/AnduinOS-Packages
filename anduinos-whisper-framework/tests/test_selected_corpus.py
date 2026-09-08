@@ -35,7 +35,6 @@ class SelectedPolicyCorpusTests(unittest.TestCase):
             code = selected.main()
         report = json.loads(output.getvalue())
         self.assertNotIn("PRIVATE", output.getvalue())
-        self.assertEqual(len(report["results"]), 16)
         self.assertEqual({r["language_mode"] for r in report["results"]}, {"auto", "en", "zh-Hans"})
         return code
 

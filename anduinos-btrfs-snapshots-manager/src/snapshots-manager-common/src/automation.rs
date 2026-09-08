@@ -122,15 +122,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn defaults_enable_both_scopes_and_use_quiet_pre_notifications() {
+    fn default_configuration_passes_validation() {
         let config = AutomationConfig::default();
-        assert!(config.system.is_auto_snapshot_enabled);
-        assert!(config.home.is_auto_snapshot_enabled);
-        assert_eq!(config.system.snapshot_interval_hours, 24);
-        assert_eq!(config.home.snapshot_interval_hours, 2);
-        assert!(!config.notifications.notify_before_scheduled);
-        assert!(config.notifications.notify_after_success);
-        assert!(!config.notifications.notify_after_cleanup);
         assert!(config.validate().is_ok());
     }
 

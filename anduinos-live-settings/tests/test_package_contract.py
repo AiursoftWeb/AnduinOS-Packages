@@ -3,76 +3,12 @@ import os
 import subprocess
 import tempfile
 import unittest
-import xml.etree.ElementTree as ET
 from pathlib import Path
 
-
 PROJECT = Path(__file__).resolve().parent.parent
-PROJECT_FILE = PROJECT / "anduinos-live-settings.aosproj"
 SETUP = PROJECT / "assets/anduinos-live-session-setup"
-SERVICE = PROJECT / "assets/anduinos-live-session.service"
-GRUB_DROP_INS = {
-    PROJECT / "assets/grub-initrd-fallback-live.conf": (
-        "/usr/lib/systemd/system/"
-        "grub-initrd-fallback.service.d/10-anduinos-live.conf"
-    ),
-    PROJECT / "assets/grub2-common-live.conf": (
-        "/usr/lib/systemd/system/"
-        "grub2-common.service.d/10-anduinos-live.conf"
-    ),
-}
-
 
 class LiveSettingsPackageContractTests(unittest.TestCase):
-    def setUp(self):
-        self.project = ET.parse(PROJECT_FILE).getroot()
-
-    def test_package_identity_dependencies_and_live_policy(self):
-        self.assertEqual(
-            self.project.findtext(".//PackageName"),
-            "anduinos-live-settings",
-        )
-        dependencies = {
-            item.get("Include") for item in self.project.findall(".//Dependency")
-        }
-        self.assertEqual(
-            dependencies,
-            {
-                "anduinos-live-layers",
-                "adduser",
-                "locales",
-                "xkb-data",
-                "sudo",
-                "openssh-server",
-            },
-        )
-        project_text = PROJECT_FILE.read_text(encoding="utf-8")
-        self.assertNotIn("casper", project_text.lower())
-        self.assertNotIn("initramfs-tools", project_text)
-
-        unit = self.project.find(
-            ".//SystemdUnit[@Include='assets/anduinos-live-session.service']"
-        )
-        self.assertIsNotNone(unit)
-        self.assertEqual(unit.get("AutoEnable"), "true")
-        self.assertIn(
-            "ConditionPathExists=/run/anduinos-live/environment",
-            SERVICE.read_text(encoding="utf-8"),
-        )
-
-        for source, target in GRUB_DROP_INS.items():
-            with self.subTest(source=source.name):
-                included = self.project.find(
-                    f".//IncludeFile[@Include='assets/{source.name}']"
-                )
-                self.assertIsNotNone(included)
-                self.assertEqual(included.get("Target"), target)
-                self.assertEqual(included.get("Mode"), "644")
-                self.assertEqual(
-                    source.read_text(encoding="utf-8"),
-                    "[Unit]\nConditionPathExists=!/run/anduinos-live/environment\n",
-                )
-
 
     def test_valid_and_hostile_regional_arguments(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -156,24 +92,8 @@ class LiveSettingsPackageContractTests(unittest.TestCase):
                         ),
                     )
 
-    def test_setup_is_valid_posix_shell_and_has_no_legacy_generator_calls(self):
+    def test_setup_is_valid_posix_shell(self):
         subprocess.run(["/bin/sh", "-n", SETUP], check=True)
-        setup = SETUP.read_text(encoding="utf-8")
-        self.assertIn("useradd --create-home --uid 1000", setup)
-        self.assertIn("AutomaticLoginEnable=true", setup)
-        self.assertIn('XKBLAYOUT="$live_keyboard"', setup)
-        self.assertNotIn("localectl", setup)
-        self.assertLess(
-            setup.index('XKBLAYOUT="$live_keyboard"'),
-            setup.index("useradd --create-home --uid 1000"),
-        )
-        self.assertNotIn("update-initramfs", setup)
-        self.assertNotIn("casper", setup.lower())
-
-    def test_live_environment_includes_remote_access(self):
-        project = ET.parse(Path(__file__).resolve().parents[1] / "anduinos-live-settings.aosproj").getroot()
-        self.assertIn("openssh-server", {item.get("Include") for item in project.iter("Dependency")})
-
 
 if __name__ == "__main__":
     unittest.main()

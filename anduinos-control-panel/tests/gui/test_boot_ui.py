@@ -8,13 +8,14 @@ import time
 import unittest
 from unittest.mock import patch
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 
 
-@unittest.skipUnless(os.environ.get('CONTROL_PANEL_UI_TESTS') == '1', 'requires a GTK display')
 class BootUiTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        if os.environ.get('CONTROL_PANEL_UI_TESTS') != '1':
+            raise RuntimeError('Run through the gui test profile with an isolated display.')
         from anduinos_control_panel import app
         cls.module = app
         app.Adw.init()

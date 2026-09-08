@@ -36,7 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v" />
     <PrebuildCommand Run="bash scripts/download-model.sh" />
     <PrebuildCommand Run="bash scripts/download-vad-model.sh" />
   </ItemGroup>
@@ -54,5 +53,11 @@
     <IncludeFile Include="MODEL-NOTICE" Target="/usr/share/doc/anduinos-whisper-framework/MODEL-NOTICE" />
     <IncludeFile Include="MODEL-LICENSE" Target="/usr/share/doc/anduinos-whisper-framework/MODEL-LICENSE" />
     <IncludeFolder Include="data/benchmark" Target="/usr/share/anduinos-whisper-framework/benchmark" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+    <TestCommand Name="diagnostics" Profile="anduinos-package-release-test" Run="dbus-run-session -- env ANDUINOS_ISOLATED_TEST_BUS=1 python3 tests/integration/smoke-diagnostics.py" TimeoutSeconds="60" />
+    <TestCommand Name="models" Profile="voice-native" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests/native -v" TimeoutSeconds="1800" />
+    <TestCommand Name="benchmarks" Profile="voice-cpu" Run="bash tests/run-cpu.sh" TimeoutSeconds="7200" />
   </ItemGroup>
 </Project>

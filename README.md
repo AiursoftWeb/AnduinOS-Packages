@@ -264,18 +264,19 @@ Each package is built via the GitLab CI pipeline (`.gitlab-ci.yml`). Packages us
 apkg build --all
 ```
 
-Each package owns its source, tests and build helpers. Run package tests through
-its `PrebuildCommand`; do not place package tests at the repository root or add
+Each package owns its source, tests and build helpers. Run package tests with
+`apkg test --profile anduinos-package-release-test`; do not place package tests at the repository root or add
 package-specific policy to `lib/`. Shared helpers must be genuinely generic.
 
 CI uses one common package recipe: merge requests and non-release branches build
 all targets; `master` and `prod` deploy with `--all --skip-existing`. When
 preflight confirms that every requested target version is already published,
-the build and its `PrebuildCommand` tests are skipped. `--skip-duplicate` only
+the build is skipped, but the independent `lint-all` and `test-all` gates still
+run before every package job. `--skip-duplicate` only
 skips duplicate uploads after building and is not a substitute. Bump
 `PackageVersion` when changing package content or dependency metadata.
-Package `needs` preserve dependency ordering; they do not introduce separate
-acceptance jobs. See [DEV_GUIDE.md](DEV_GUIDE.md) for the current workflow.
+Package `needs` include both internal dependencies and all mandatory gates.
+See [DEV_GUIDE.md](DEV_GUIDE.md) for profile selection and the current workflow.
 
 ### TL;DR: What needs manual effort vs what auto-builds
 

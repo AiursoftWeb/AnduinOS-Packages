@@ -13,7 +13,7 @@ for command in mkfs.btrfs btrfs mount umount findmnt truncate cargo jq; do
 done
 sudo -n true 2>/dev/null || {
     echo "Passwordless sudo is required for the disposable loopback test" >&2
-    exit 77
+    exit 1
 }
 
 script_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -22,8 +22,8 @@ image="$test_root/filesystem.img"
 mount_point="$test_root/mount"
 
 cleanup() {
-    if findmnt -rn --target "$mount_point" >/dev/null 2>&1; then
-        sudo -n umount "$mount_point"
+    if findmnt -rn --mountpoint "$mount_point" >/dev/null 2>&1; then
+        sudo -n umount -- "$mount_point" || return
     fi
     case "$test_root" in
         /tmp/anduinos-btrfs-snapshots-manager-operations.*)
@@ -63,6 +63,7 @@ test_binary="$({
         --manifest-path "$script_root/src/Cargo.toml" \
         -p anduinos-recovery-engine \
         --test loopback_operations \
+        --locked \
         --no-run \
         --message-format=json
 } | jq -r 'select(.profile.test == true and .executable != null) | .executable' | tail -n 1)"

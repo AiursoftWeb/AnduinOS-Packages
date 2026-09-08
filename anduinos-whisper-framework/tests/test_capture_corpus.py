@@ -39,7 +39,7 @@ class CaptureCorpusTests(unittest.TestCase):
 
     def test_real_dsp_does_not_flush_silence_as_speech_at_eos(self):
         if capture.Gst.ElementFactory.find('webrtcdsp') is None:
-            self.skipTest('WebRTC DSP is unavailable')
+            self.fail('Install gstreamer1.0-plugins-bad for DSP integration')
         for reduction in (False, True):
             detector = Mock()
             detector.classify.return_value = 0.0

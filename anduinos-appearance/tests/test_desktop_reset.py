@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -12,10 +11,6 @@ SRC = Path(__file__).resolve().parents[1] / "src"
 
 
 class DesktopResetTests(unittest.TestCase):
-    @unittest.skipUnless(
-        shutil.which("dbus-run-session") and shutil.which("dconf"),
-        "requires dbus-run-session and dconf",
-    )
     def test_reset_removes_selected_overrides_and_preserves_other_settings(self):
         # Use a private D-Bus session and dconf database, never the real desktop.
         with tempfile.TemporaryDirectory(prefix="appearance-reset-test-") as directory:

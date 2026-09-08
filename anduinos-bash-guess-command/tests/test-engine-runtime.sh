@@ -4,8 +4,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ENGINE="${ANDUINOS_QUIETD:-$ROOT/engine/target/release/anduinos-quietd}"
 [[ -x $ENGINE ]] || {
-    printf 'SKIP: build %s before runtime tests.\n' "$ENGINE"
-    exit 0
+    printf 'Missing engine: %s; run apkg test to compile test artifacts.\n' "$ENGINE" >&2
+    exit 1
 }
 
 fail() {
@@ -161,7 +161,9 @@ apt_calls_after="$(wc -l <"$APT_COUNT_FILE")"
     fail 'foreground queries executed apt-cache or dpkg-query'
 mapfile -t sorted_latencies < <(printf '%s\n' "${latencies[@]}" | sort -n)
 p95=${sorted_latencies[94]}
-[[ $p95 -le 10 ]] || fail "foreground pipe round-trip p95 is ${p95}ms"
+if [[ ${APKG_TEST_PROFILE:-} == performance ]]; then
+    [[ $p95 -le 10 ]] || fail "foreground pipe round-trip p95 is ${p95}ms"
+fi
 
 printf 'X\n' >&"$engine_in"
 IFS= read -r -u "$engine_out" response || fail 'daemon closed before quit acknowledgement'

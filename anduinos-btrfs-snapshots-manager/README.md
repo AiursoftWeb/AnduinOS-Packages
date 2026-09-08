@@ -118,23 +118,23 @@ Disk Snapshots Manager is distributed under [GPL-3.0-or-later](../LICENSE).
 Run the non-destructive engineering gates from this package directory:
 
 ```bash
-cd src
-cargo fmt --all -- --check
-cargo test --workspace --locked
-cargo clippy --workspace --all-targets --locked -- -D warnings
-cd ..
-python3 scripts/check-i18n.py
-scripts/test-initramfs-integration.sh
-scripts/test-recovery-artifacts.sh
-scripts/test-gui-smoke.sh
-scripts/prebuild-check.sh
+cargo fmt --manifest-path src/Cargo.toml --all -- --check
+apkg test --profile anduinos-package-release-test
+apkg test --profile gui
 ```
 
-`scripts/test-gui-smoke.sh` constructs and destroys the real Adw application on
+The `gui` profile constructs and destroys the real Adw application on
 a headless GTK Broadway display with fatal GTK criticals. The loopback recovery
-test uses only a disposable sparse Btrfs image and exits 77 when its prerequisites
-are unavailable. Installed-policy qualification uses invalid mutation payloads
-and verifies that recovery state is unchanged.
+test (`apkg test --profile root-loopback`) uses only a disposable sparse Btrfs
+image and must run on a disposable test machine. Missing prerequisites fail
+the selected profile. Lifecycle tests require bubblewrap with working user namespaces
+and operate on private boot, configuration and snapshot fixtures.
+
+After compiling a native recovery engine, run
+`bash tests/check-engine.sh /path/to/engine` to check protocol
+compatibility. This does not require a deb. The former installed-package
+D-Bus/Polkit qualification was removed;
+the source lifecycle tests do not claim equivalent end-to-end policy coverage.
 
 Actual rebooting rollback, cancellation after reboot, fallback boot, and
 power-loss qualification must be run only in a disposable VM with the exact

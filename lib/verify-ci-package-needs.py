@@ -13,12 +13,15 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 CI_PATH = ROOT / ".gitlab-ci.yml"
 PACKAGE_RE = re.compile(r"^[a-z0-9][a-z0-9+.-]*$")
+REQUIRED_GATES = {"lint-all", "verify-ci-package-needs", "test-all"}
 
 @dataclass
 class Job:
     name: str
     package_dir: str | None = None
     needs: tuple[str, ...] = ()
+    stage: str | None = None
+    extends: str | None = None
 
 
 def projects() -> dict[str, tuple[str, ET.Element]]:
@@ -40,7 +43,7 @@ def jobs() -> dict[str, Job]:
     lines = CI_PATH.read_text(encoding="utf-8").splitlines()
     starts: list[tuple[int, str]] = []
     for index, line in enumerate(lines):
-        match = re.fullmatch(r"([A-Za-z0-9][A-Za-z0-9_.-]*):\s*", line)
+        match = re.fullmatch(r"([.A-Za-z0-9][A-Za-z0-9_.-]*):\s*", line)
         if match:
             starts.append((index, match.group(1)))
     starts.append((len(lines), ""))
@@ -49,9 +52,17 @@ def jobs() -> dict[str, Job]:
         end = starts[position + 1][0]
         block = lines[start + 1 : end]
         package_dir = None
+        stage = None
+        extends = None
         needs: list[str] = []
         in_needs = False
         for line in block:
+            stage_match = re.fullmatch(r"  stage:\s*([A-Za-z0-9_.-]+)\s*", line)
+            if stage_match:
+                stage = stage_match.group(1)
+            extends_match = re.fullmatch(r"  extends:\s*([A-Za-z0-9_.-]+)\s*", line)
+            if extends_match:
+                extends = extends_match.group(1)
             directory = re.fullmatch(r"    PACKAGE_DIR:\s*([^\s#]+)\s*", line)
             if directory:
                 package_dir = directory.group(1)
@@ -69,7 +80,7 @@ def jobs() -> dict[str, Job]:
                     in_needs = False
         if name in parsed or len(needs) != len(set(needs)):
             raise RuntimeError(f"Duplicate CI job or needs entry: {name}")
-        parsed[name] = Job(name, package_dir, tuple(needs))
+        parsed[name] = Job(name, package_dir, tuple(needs), stage, extends)
     return parsed
 
 
@@ -96,10 +107,20 @@ def internal_relationships(
 def verify() -> tuple[int, int]:
     project_map = projects()
     job_map = jobs()
+    for gate in REQUIRED_GATES:
+        expected_stage = "test" if gate == "test-all" else "lint"
+        if gate not in job_map or job_map[gate].stage != expected_stage:
+            raise RuntimeError(f"{gate} must exist in stage {expected_stage}")
+    if set(job_map["test-all"].needs) != REQUIRED_GATES - {"test-all"}:
+        raise RuntimeError("test-all must wait for both lint gates")
+    if ".publish" not in job_map or job_map[".publish"].stage != "packages":
+        raise RuntimeError("The publish template must use the packages stage")
     job_by_directory: dict[str, str] = {}
     for job in job_map.values():
         if job.package_dir is None:
             continue
+        if job.extends != ".publish" or job.stage not in (None, "packages"):
+            raise RuntimeError(f"{job.name} must use the gated .publish template")
         if job.package_dir in job_by_directory:
             raise RuntimeError(
                 f"Multiple jobs publish {job.package_dir}: "
@@ -128,7 +149,7 @@ def verify() -> tuple[int, int]:
     errors: list[str] = []
     for package, expected_packages in sorted(relationships.items()):
         job_name = package_to_job[package]
-        expected_jobs = {package_to_job[item] for item in expected_packages}
+        expected_jobs = {package_to_job[item] for item in expected_packages} | REQUIRED_GATES
         actual_jobs = set(job_map[job_name].needs)
         missing = sorted(expected_jobs - actual_jobs)
         extra = sorted(actual_jobs - expected_jobs)
@@ -142,7 +163,7 @@ def verify() -> tuple[int, int]:
     if errors:
         raise RuntimeError(
             "GitLab needs differ from internal aosproj "
-            "Depends/Recommends/Suggests:\n"
+            "Depends/Recommends/Suggests and mandatory lint/test gates:\n"
             + "\n".join(errors)
         )
     visited, active = set(), set()

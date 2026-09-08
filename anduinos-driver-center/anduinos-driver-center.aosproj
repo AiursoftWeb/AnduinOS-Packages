@@ -58,6 +58,9 @@
 
   <ItemGroup>
     <PrebuildCommand Run="bash compile-locales.sh" />
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+    <TestCommand Name="widgets" Profile="gui" Run="PYTHONDONTWRITEBYTECODE=1 GSETTINGS_BACKEND=memory GDK_BACKEND=x11 dbus-run-session -- xvfb-run -a python3 -m unittest discover -s tests/gui -v" TimeoutSeconds="300" />
   </ItemGroup>
 </Project>

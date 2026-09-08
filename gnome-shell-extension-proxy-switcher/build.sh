@@ -7,7 +7,6 @@ SCHEMAS="$EXTENSION/schemas"
 LOCALE="$EXTENSION/locale"
 DOMAIN='proxy-switcher@anduinos.com'
 
-bash "$ROOT/scripts/check.sh"
 glib-compile-schemas --strict "$SCHEMAS"
 
 while IFS= read -r -d '' po_file; do

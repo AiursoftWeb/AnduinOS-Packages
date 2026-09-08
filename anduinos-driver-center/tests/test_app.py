@@ -8,9 +8,38 @@ from unittest.mock import Mock, patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from anduinos_driver_center.app import DriverCenterWindow, _command_output_summary  # noqa: E402
+from anduinos_driver_center import app
 
 
 class AppTests(unittest.TestCase):
+    def test_command_line_opens_requested_page_in_new_or_existing_window(self):
+        for existing in (False, True):
+            for arguments in (["--page", "secure-boot"], ["--page=secure-boot"]):
+                with self.subTest(existing=existing, arguments=arguments):
+                    application, command_line = Mock(), Mock()
+                    command_line.get_arguments.return_value = ["driver-center", *arguments]
+                    window = Mock()
+                    application.get_active_window.return_value = window if existing else None
+                    with patch.object(app, "DriverCenterWindow", return_value=window) as constructor:
+                        self.assertEqual(app.DriverCenterApplication.do_command_line(application, command_line), 0)
+                    if existing:
+                        constructor.assert_not_called()
+                        window._select_page.assert_called_once_with("secure-boot")
+                    else:
+                        constructor.assert_called_once_with(application, initial_page="secure-boot")
+                    window.present.assert_called_once()
+
+    def test_unknown_page_or_argument_does_not_open_a_window(self):
+        for arguments in (["--page"], ["--page=unknown"], ["--unexpected"]):
+            with self.subTest(arguments=arguments):
+                application, command_line = Mock(), Mock()
+                command_line.get_arguments.return_value = ["driver-center", *arguments]
+                with patch.object(app, "DriverCenterWindow") as constructor:
+                    self.assertNotEqual(app.DriverCenterApplication.do_command_line(application, command_line), 0)
+                constructor.assert_not_called()
+                application.get_active_window.assert_not_called()
+                command_line.printerr.assert_called_once()
+
     def run_action_result(self, result):
         window = Mock()
         button = Mock()

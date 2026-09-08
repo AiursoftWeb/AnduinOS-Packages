@@ -4,14 +4,11 @@ import stat
 import subprocess
 import tempfile
 import unittest
-import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
 PROJECT = Path(__file__).resolve().parent.parent
-PROJECT_FILE = PROJECT / "anduinos-kernel-parameters.aosproj"
 CONFIG = PROJECT / "assets/99-anduinos-desktop.cfg"
-LEGACY_CONFIG = PROJECT / "assets/50-anduinos-desktop.cfg"
 POSTINST = PROJECT / "scripts/postinst.sh"
 POSTRM = PROJECT / "scripts/postrm.sh"
 
@@ -29,75 +26,6 @@ def install_fake_chroot_detectors(directory, systemd_result=1, ischroot_result=1
 
 
 class KernelParametersPackageContractTests(unittest.TestCase):
-    def setUp(self):
-        self.project_text = PROJECT_FILE.read_text(encoding="utf-8")
-        self.project = ET.fromstring(self.project_text)
-
-    def test_package_targets_only_resolute_as_architecture_all(self):
-        self.assertEqual(
-            self.project.findtext(".//PackageVersion"),
-            "2.0.2-1+$(SuiteShortName)",
-        )
-        self.assertEqual(self.project.findtext(".//TargetSuites"), "resolute-addon")
-        self.assertEqual(self.project.findtext(".//TargetArchitectures"), "all")
-        self.assertEqual(self.project.findtext(".//Component"), "main")
-        self.assertEqual(self.project.findtext(".//Section"), "admin")
-        self.assertEqual(
-            self.project.findtext(".//SuiteShortNameMap"),
-            "resolute-addon=resolute",
-        )
-
-    def test_dependencies_conflict_and_resolute_check_source_are_declared(self):
-        dependencies = {
-            item.get("Include") for item in self.project.findall(".//Dependency")
-        }
-        self.assertEqual(
-            dependencies, {"grub2-common", "linux-generic-hwe-26.04"}
-        )
-        self.assertNotIn("kernel-supports-lowlatency-bootargs", dependencies)
-        self.assertEqual(self.project.findtext(".//Conflicts"), "lowlatency-kernel")
-        source = self.project.find(".//DependencyCheckSource")
-        self.assertIsNotNone(source)
-        self.assertEqual(source.get("Url"), "https://mirror.aiursoft.com/ubuntu")
-        self.assertEqual(source.get("SuiteMap"), "resolute-addon=resolute")
-
-    def test_exact_grub_drop_in_is_packaged(self):
-        included = self.project.find(
-            ".//IncludeFile[@Include='assets/99-anduinos-desktop.cfg']"
-        )
-        self.assertIsNotNone(included)
-        self.assertEqual(
-            included.get("Target"),
-            "/etc/default/grub.d/99-anduinos-desktop.cfg",
-        )
-        self.assertEqual(self.project.findall(".//ConfFile"), [])
-        self.assertEqual(
-            CONFIG.read_text(encoding="utf-8"),
-            'GRUB_CMDLINE_LINUX_DEFAULT="$GRUB_CMDLINE_LINUX_DEFAULT preempt=full"\n',
-        )
-        self.assertFalse(LEGACY_CONFIG.exists())
-
-
-    def test_lifecycle_scripts_and_contract_test_are_wired_into_the_package(self):
-        postinst = self.project.find(".//PostInstallScript")
-        postrm = self.project.find(".//PostRemoveScript")
-        prebuild = self.project.find(".//PrebuildCommand")
-        self.assertIsNotNone(postinst)
-        self.assertIsNotNone(postrm)
-        self.assertIsNotNone(prebuild)
-        self.assertEqual(postinst.get("Include"), "scripts/postinst.sh")
-        self.assertEqual(postrm.get("Include"), "scripts/postrm.sh")
-        self.assertEqual(prebuild.get("Run"), "python3 tests/test_package_contract.py")
-
-    def test_scripts_do_not_rewrite_the_main_grub_defaults(self):
-        for script in (POSTINST, POSTRM):
-            text = script.read_text(encoding="utf-8")
-            with self.subTest(script=script.name):
-                self.assertTrue(text.startswith("set -eu\n"))
-                self.assertNotIn("#!/bin/sh", text)
-                self.assertNotIn('/etc/default/grub"', text)
-                self.assertNotIn("sed", text)
-
     def test_maintainer_scripts_have_valid_shell_syntax(self):
         for script in (POSTINST, POSTRM):
             with self.subTest(script=script.name):

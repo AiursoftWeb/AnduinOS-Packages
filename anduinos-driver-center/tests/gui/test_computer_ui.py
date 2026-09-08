@@ -4,7 +4,7 @@ import sys
 import unittest
 from unittest.mock import Mock, patch
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
 try:
     import gi
     gi.require_version('Gtk', '4.0')
@@ -20,8 +20,12 @@ except (ImportError, ValueError):
     HAS_DISPLAY = False
 
 
-@unittest.skipUnless(HAS_DISPLAY, 'GTK4/libadwaita and a display are required')
 class ComputerPageTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        if not HAS_DISPLAY:
+            raise RuntimeError('The gui test profile requires GTK4/libadwaita and an isolated display.')
+
     def setUp(self):
         with patch.object(ui.ComputerPage, 'reload'):
             self.page = ui.ComputerPage()

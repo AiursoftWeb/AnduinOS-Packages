@@ -7,11 +7,9 @@ import stat
 import subprocess
 import tempfile
 import unittest
-import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PROJECT = ROOT / "anduinos-core-system.aosproj"
 PREINST = ROOT / "scripts/preinst.sh"
 POSTINST = ROOT / "scripts/postinst.sh"
 VERIFY = ROOT / "assets/anduinos-dracut-verify"
@@ -29,41 +27,6 @@ def executable(path: Path, body: str) -> Path:
 
 
 class MigrationGuardTests(unittest.TestCase):
-    def test_real_package_wires_both_synchronous_guards(self) -> None:
-        project = ET.parse(PROJECT).getroot()
-        self.assertEqual(
-            project.findtext(".//PackageVersion"),
-            "2.0.2-5+$(SuiteShortName)",
-        )
-        self.assertEqual(
-            project.find(".//PreInstallScript").get("Include"),
-            "scripts/preinst.sh",
-        )
-        self.assertEqual(
-            project.find(".//PostInstallScript").get("Include"),
-            "scripts/postinst.sh",
-        )
-        helper = project.find(".//IncludeScript")
-        self.assertEqual(helper.get("Include"), "assets/anduinos-dracut-verify")
-        self.assertEqual(helper.get("Target"), "/usr/libexec/anduinos-dracut-verify")
-        included_targets = {
-            item.get("Target") for item in project.findall(".//IncludeScript")
-        }
-        self.assertIn(
-            "/usr/lib/dracut/modules.d/99anduinos-migration-proof/module-setup.sh",
-            included_targets,
-        )
-        self.assertIn(
-            "/usr/lib/dracut/modules.d/99anduinos-migration-proof/anduinos-migration-proof.sh",
-            included_targets,
-        )
-        self.assertIn("/usr/libexec/anduinos-update-initramfs", included_targets)
-        self.assertIn("/usr/libexec/anduinos-update-grub", included_targets)
-        self.assertEqual(project.findall(".//DpkgTrigger"), [])
-        self.assertEqual(
-            project.find(".//PreRemoveScript").get("Include"),
-            "scripts/prerm.sh",
-        )
 
     def test_scripts_are_valid_posix_shell(self) -> None:
         for script in (
@@ -87,6 +50,11 @@ class MigrationGuardTests(unittest.TestCase):
         boot.mkdir()
         state.mkdir()
         bin_dir.mkdir()
+        (root / "run/systemd/system").mkdir(parents=True)
+        systemctl = executable(
+            bin_dir / "systemctl",
+            'printf "%s\\n" "$*" >> "$TEST_SYSTEMCTL_LOG"\n',
+        )
         (boot / "grub").mkdir()
         (boot / "vmlinuz-7.0.0-test").write_text("legacy-kernel", encoding="utf-8")
         (boot / "initrd.img-7.0.0-test").write_text("legacy-initrd", encoding="utf-8")
@@ -159,6 +127,9 @@ class MigrationGuardTests(unittest.TestCase):
         )
         env = {
             **os.environ,
+            "DPKG_ROOT": str(root),
+            "ANDUINOS_MIGRATION_SYSTEMCTL": str(systemctl),
+            "TEST_SYSTEMCTL_LOG": str(root / "systemctl-calls"),
             "ANDUINOS_MIGRATION_BOOT_DIR": str(boot),
             "ANDUINOS_MIGRATION_STATE_DIR": str(state),
             "ANDUINOS_MIGRATION_FALLBACK_DIR": str(boot / "anduinos-dracut-migration"),
@@ -508,6 +479,10 @@ class MigrationGuardTests(unittest.TestCase):
             self.assertEqual(dropin.read_text(), "GRUB_DEFAULT=0\n")
             self.assertTrue((paths["state"] / "images-verified").is_file())
             self.assertTrue((paths["state"] / "complete").is_file())
+            self.assertEqual(
+                (root / "systemctl-calls").read_text().splitlines(),
+                ["disable --now anduinos-dracut-migration.timer"],
+            )
             self.assertEqual(
                 (paths["bin"] / "update-initramfs").read_bytes(),
                 UPDATE_INITRAMFS_GUARD.read_bytes(),

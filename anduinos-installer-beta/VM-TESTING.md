@@ -297,17 +297,11 @@ still reports that manual review is required: retain the guest verification
 output, screenshots and explicit observations of independent Windows and
 AnduinOS boots.
 
-Before placing an installer build into an ISO, inspect the actual `.deb`, not
-only the source manifest:
-
-```sh
-python3 scripts/verify-built-package.py /path/to/anduinos-installer-beta.deb
-```
-
-This verifies that the private planner/evidence CLIs and their core modules
-are present, the public executor still rejects arguments, required runtime
-dependencies are declared, no public test-tool launcher exists and no Python
-cache entered the package.
+Validate the installer through source-level execution tests and the isolated
+VM behavior checks above. Public launcher argument rejection and mount
+isolation are tested directly; package file copying and Debian metadata
+generation belong to Apkg's own tests, not a second installer-specific deb
+inspector.
 
 ### Custom-layout campaign
 

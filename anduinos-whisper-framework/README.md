@@ -20,7 +20,7 @@ selection measures CPU thread counts and available GPU acceleration locally,
 preserving model quality. Users can override or repeat selection. Diagnostics
 contain bounded timing metadata, not recordings or recognized text.
 
-Build with `apkg build --all`. Run the repository's `bash anduinos-whisper-framework/tests/run-cpu.sh`
+Build with `apkg build --all`. Run `apkg test --profile anduinos-package-release-test`
 for acceptance; see [testing guidance](docs/testing.md) for dependencies, GPU
 checks and limitations. Generated measurements belong in the ignored
 `anduinos-whisper-framework/obj/voice-test-results/` directory, not in source control.
