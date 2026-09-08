@@ -123,12 +123,15 @@ apkg test --profile anduinos-package-release-test
 apkg test --profile gui
 ```
 
-The `gui` profile constructs and destroys the real Adw application on
-a headless GTK Broadway display with fatal GTK criticals. The loopback recovery
-test (`apkg test --profile root-loopback`) uses only a disposable sparse Btrfs
-image and must run on a disposable test machine. Missing prerequisites fail
-the selected profile. Lifecycle tests require bubblewrap with working user namespaces
-and operate on private boot, configuration and snapshot fixtures.
+The `anduinos-package-release-test` profile is unprivileged. Its lifecycle
+tests execute the package scripts against private boot, configuration, command,
+and snapshot fixtures in a temporary directory; they do not require root,
+mounts, Bubblewrap, or user namespaces. The `gui` profile constructs and
+destroys the real Adw application on a headless GTK Broadway display with fatal
+GTK criticals. The separate loopback recovery qualification
+(`apkg test --profile root-loopback`) uses only a disposable sparse Btrfs image
+and must run on a disposable test machine. Missing prerequisites fail the
+selected profile.
 
 After compiling a native recovery engine, run
 `bash tests/check-engine.sh /path/to/engine` to check protocol
