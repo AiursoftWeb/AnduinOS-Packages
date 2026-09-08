@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exercise source lifecycle scripts; requires bubblewrap and user namespaces."""
+"""Exercise lifecycle scripts with package-owned paths redirected to fixtures."""
 import os
 from pathlib import Path
 import subprocess
@@ -32,54 +32,68 @@ class LifecycleTests(unittest.TestCase):
             (self.root / "defaults" / name).write_bytes((ROOT / "assets" / name).read_bytes())
         self.log = self.root / "run/test-commands"
         self.program(self.root / "libexec/anduinos-dracut-verify", """
-printf 'verify %s\\n' "$*" >> /run/test-commands
+printf 'verify %s\\n' "$*" >> "$TEST_COMMAND_LOG"
 [ "${TEST_FAIL:-}" != "$1" ] || exit 31
 """)
         self.program(self.root / "bin/dracut", """
-printf 'dracut %s\\n' "$*" >> /run/test-commands
+printf 'dracut %s\\n' "$*" >> "$TEST_COMMAND_LOG"
 [ "${TEST_FAIL:-}" != dracut ] || exit 31
 """)
-        self.program(self.root / "sbin/update-grub", "printf 'update-grub\\n' >> /run/test-commands\n")
+        self.program(self.root / "sbin/update-grub", "printf 'update-grub\\n' >> \"$TEST_COMMAND_LOG\"\n")
+        self.program(self.root / "bin/grub-editenv", "printf 'grub-editenv %s\\n' \"$*\" >> \"$TEST_COMMAND_LOG\"\n")
         self.program(self.root / "bin/systemd-detect-virt", 'exit "${TEST_CHROOT_EXIT:-1}"\n')
         self.program(self.root / "bin/mountpoint", "exit 1\n")
         for name in ("systemctl", "systemd-tmpfiles", "dbus-send"):
-            self.program(self.root / "bin" / name, f"printf '{name} %s\\n' \"$*\" >> /run/test-commands\n")
+            self.program(self.root / "bin" / name, f"printf '{name} %s\\n' \"$*\" >> \"$TEST_COMMAND_LOG\"\n")
 
     @staticmethod
     def program(path, body):
         path.write_text("#!/bin/sh\nset -eu\n" + body)
         path.chmod(0o755)
 
+    def script_source(self, name):
+        source = (ROOT / "scripts" / name).read_text()
+        replacements = {
+            "/usr/share/anduinos-btrfs-snapshots-manager/defaults": self.root / "defaults",
+            "/usr/libexec/anduinos-btrfs-snapshots-manager/no-os-prober": self.root / "libexec/no-os-prober",
+            "/usr/libexec/anduinos-dracut-verify": self.root / "libexec/anduinos-dracut-verify",
+            "/usr/lib/tmpfiles.d/anduinos-btrfs-snapshots-manager.conf": self.root / "defaults/tmpfiles.conf",
+            "/usr/bin/systemd-detect-virt": self.root / "bin/systemd-detect-virt",
+            "/usr/bin/grub-editenv": self.root / "bin/grub-editenv",
+            "/usr/sbin/update-grub": self.root / "sbin/update-grub",
+            "/etc/anduinos-btrfs-snapshots-manager": self.root / "etc/anduinos-btrfs-snapshots-manager",
+            "/var/lib/anduinos-btrfs-snapshots-manager": self.root / "var/lib/anduinos-btrfs-snapshots-manager",
+            "/run/systemd/system": self.root / "run/systemd/system",
+            "/run/anduinos-btrfs-snapshots-manager-grub.": self.root / "run/anduinos-btrfs-snapshots-manager-grub.",
+            "/lib/modules": self.root / "modules",
+            "/boot/efi": self.root / "boot/efi",
+            "/.snapshots": self.root / "snapshots",
+        }
+        for original, replacement in sorted(replacements.items(), key=lambda item: len(item[0]), reverse=True):
+            source = source.replace(original, str(replacement))
+        guarded_source = source
+        for replacement in replacements.values():
+            guarded_source = guarded_source.replace(str(replacement), "<test-fixture>")
+        # Refuse to run while any known package-owned host path remains outside
+        # the explicitly redirected fixture names.
+        for original in replacements:
+            self.assertNotIn(original, guarded_source)
+        executable_source = "\n".join(
+            line for line in guarded_source.splitlines()
+            if not line.lstrip().startswith("#")
+        )
+        for host_prefix in ("/etc/", "/var/", "/run/", "/boot/", "/.snapshots", "/lib/modules"):
+            self.assertNotIn(host_prefix, executable_source)
+        return source
+
     def run_script(self, name, action, *, failure="", chroot=False):
         self.log.unlink(missing_ok=True)
-        # Only /usr is borrowed read-only. Boot state, snapshots, configuration,
-        # runtime directories and command substitutes are private test fixtures.
-        command = [
-            "bwrap", "--unshare-all", "--die-with-parent",
-            "--ro-bind", "/usr", "/usr",
-            "--symlink", "usr/bin", "/bin", "--symlink", "usr/sbin", "/sbin",
-            "--symlink", "usr/lib", "/lib", "--symlink", "usr/lib64", "/lib64",
-            "--proc", "/proc", "--dev", "/dev", "--tmpfs", "/tmp",
-        ]
-        for name_on_host, destination in (
-            ("etc", "/etc"), ("var", "/var"), ("run", "/run"),
-            ("boot", "/boot"), ("snapshots", "/.snapshots"),
-        ):
-            command += ["--bind", str(self.root / name_on_host), destination]
-        for name_on_host, destination in (
-            ("libexec", "/usr/libexec"), ("sbin", "/usr/sbin"),
-            ("modules", "/usr/lib/modules"), ("bin", "/test-bin"), ("defaults", "/defaults"),
-        ):
-            command += ["--ro-bind", str(self.root / name_on_host), destination]
-        command += ["--", "/bin/sh", "-s", "--", action]
-        # Redirect external resources/commands, not conditions or control flow.
-        source = (ROOT / "scripts" / name).read_text().replace(
-            "/usr/share/anduinos-btrfs-snapshots-manager/defaults", "/defaults"
-        ).replace("/usr/bin/systemd-detect-virt", "/test-bin/systemd-detect-virt")
         result = subprocess.run(
-            command, input=source, capture_output=True, text=True, timeout=15,
-            env={**os.environ, "PATH": "/test-bin:/usr/bin:/bin",
-                 "TEST_FAIL": failure, "TEST_CHROOT_EXIT": "0" if chroot else "1"},
+            ["/bin/sh", "-s", "--", action],
+            input=self.script_source(name), capture_output=True, text=True, timeout=15,
+            env={**os.environ, "PATH": f"{self.root / 'bin'}:/usr/bin:/bin",
+                 "TEST_COMMAND_LOG": str(self.log), "TEST_FAIL": failure,
+                 "TEST_CHROOT_EXIT": "0" if chroot else "1"},
         )
         calls = self.log.read_text().splitlines() if self.log.exists() else []
         return result, calls

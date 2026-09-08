@@ -1,4 +1,4 @@
-"""Source lifecycle tests; require bubblewrap with working user namespaces."""
+"""Source lifecycle tests with all package-owned paths redirected to fixtures."""
 from pathlib import Path
 import subprocess
 import tempfile
@@ -34,22 +34,33 @@ class LifecycleTests(unittest.TestCase):
         self.state = self.root / "var/lib/anduinos-passwordless-sudo/users"
         self.state.write_text("alice\n")
 
-    def run_script(self, name, action, *, helper=None):
-        # The real script runs with an isolated /etc and /var. The host root is
-        # read-only and there is no host network, session bus or device access.
-        command = [
-            "bwrap", "--unshare-all", "--die-with-parent",
-            "--ro-bind", "/", "/", "--proc", "/proc", "--dev", "/dev",
-            "--tmpfs", "/tmp", "--bind", str(self.root / "etc"), "/etc",
-            "--bind", str(self.root / "var"), "/var",
-        ]
+    def script_source(self, name, *, helper=None):
         source = (ROOT / "scripts" / name).read_text()
+        replacements = {
+            "/etc/pam.d": self.root / "etc/pam.d",
+            "/etc/sudoers.d": self.root / "etc/sudoers.d",
+            "/var/lib/anduinos-passwordless-sudo": self.root / "var/lib/anduinos-passwordless-sudo",
+        }
         if helper is not None:
-            command += ["--ro-bind", str(helper), "/tmp/test-helper"]
-            source = source.replace("/usr/lib/anduinos-yubikey-manager/helper", "/tmp/test-helper")
+            replacements["/usr/lib/anduinos-yubikey-manager/helper"] = helper
+        for original, replacement in sorted(replacements.items(), key=lambda item: len(item[0]), reverse=True):
+            source = source.replace(original, str(replacement))
+        guarded_source = source
+        for replacement in replacements.values():
+            guarded_source = guarded_source.replace(str(replacement), "<test-fixture>")
+        # Every known package-owned absolute path must disappear outside the
+        # explicitly redirected fixture names before the script may execute.
+        for original in replacements:
+            self.assertNotIn(original, guarded_source)
+        for host_prefix in ("/etc/", "/var/", "/run/", "/boot/", "/usr/lib/anduinos-"):
+            self.assertNotIn(host_prefix, guarded_source)
+        return source
+
+    def run_script(self, name, action, *, helper=None):
         return subprocess.run(
-            [*command, "/bin/sh", "-s", "--", action],
-            input=source, capture_output=True, text=True, timeout=15,
+            ["/bin/sh", "-s", "--", action],
+            input=self.script_source(name, helper=helper),
+            capture_output=True, text=True, timeout=15,
         )
 
     def test_upgrade_preserves_authentication_configuration(self):

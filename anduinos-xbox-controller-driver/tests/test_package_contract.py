@@ -1,4 +1,4 @@
-"""Run lifecycle scripts against a fake DKMS in a read-only bubblewrap sandbox."""
+"""Run lifecycle scripts against a fake DKMS without host side effects."""
 import os
 from pathlib import Path
 import subprocess
@@ -39,13 +39,10 @@ fi
         self.log.unlink(missing_ok=True)
         result = subprocess.run(
             [
-                "bwrap", "--unshare-all", "--die-with-parent",
-                "--ro-bind", "/", "/", "--proc", "/proc", "--dev", "/dev",
-                "--tmpfs", "/tmp", "--bind", str(self.root), str(self.root),
-                "--", "/bin/sh", str(ROOT / "scripts" / script), action,
+                "/bin/sh", str(ROOT / "scripts" / script), action,
             ],
             env={
-                **os.environ, "PATH": str(self.root / "bin") + ":/usr/bin:/bin",
+                **os.environ, "PATH": str(self.root / "bin"),
                 "DKMS_TEST_LOG": str(self.log), "DKMS_FAIL_ACTION": failure,
                 "DKMS_ALL_STATUS": all_status, "DKMS_KERNEL_STATUS": kernel_status,
             },
