@@ -3,9 +3,6 @@ stages:
   - test
   - packages
 
-variables:
-  APKG_VERSION: "10.0.57"
-
 verify-ci-package-needs:
   stage: lint
   script:
@@ -17,7 +14,7 @@ verify-ci-package-needs:
 lint-all:
   stage: lint
   before_script:
-    - dotnet tool update -g aiursoft.apkg.client --version "$APKG_VERSION" --configfile ./nuget.config || dotnet tool install -g aiursoft.apkg.client --version "$APKG_VERSION" --configfile ./nuget.config
+    - dotnet tool update -g aiursoft.apkg.client --configfile ./nuget.config || dotnet tool install -g aiursoft.apkg.client --configfile ./nuget.config
     - export PATH="$PATH:$HOME/.dotnet/tools"
     - apkg --version
   script:
@@ -40,20 +37,9 @@ test-all:
     - verify-ci-package-needs
   timeout: 3h
   before_script:
-    - dotnet tool update -g aiursoft.apkg.client --version "$APKG_VERSION" --configfile ./nuget.config || dotnet tool install -g aiursoft.apkg.client --version "$APKG_VERSION" --configfile ./nuget.config
+    - dotnet tool update -g aiursoft.apkg.client --configfile ./nuget.config || dotnet tool install -g aiursoft.apkg.client --configfile ./nuget.config
     - export PATH="$PATH:$HOME/.dotnet/tools"
     - apkg --version
-    - |
-      set -euo pipefail
-      sudo -n apt-get update
-      sudo -n apt-get install -y --no-install-recommends \
-        build-essential pkg-config cargo rustc libgtk-4-dev libadwaita-1-dev \
-        libpcap-dev gettext git jq nodejs gjs bubblewrap dbus-daemon dconf-cli \
-        python3 python3-gi python3-cairo python3-gi-cairo python3-apt python3-unidecode \
-        gir1.2-gtk-4.0 gir1.2-adw-1 gir1.2-nm-1.0 gir1.2-gstreamer-1.0 \
-        gir1.2-gst-plugins-base-1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
-        gstreamer1.0-plugins-bad gsettings-desktop-schemas netplan.io unattended-upgrades \
-        fontconfig pango1.0-tools
   script:
     - apkg test --path . --recursive --profile anduinos-package-release-test --report test-results.xml
   artifacts:
@@ -68,7 +54,7 @@ test-all:
   stage: packages
   timeout: 3h
   before_script:
-    - dotnet tool update -g aiursoft.apkg.client --version "$APKG_VERSION" --configfile ./nuget.config || dotnet tool install -g aiursoft.apkg.client --version "$APKG_VERSION" --configfile ./nuget.config
+    - dotnet tool update -g aiursoft.apkg.client --configfile ./nuget.config || dotnet tool install -g aiursoft.apkg.client --configfile ./nuget.config
     - export PATH="$PATH:$HOME/.dotnet/tools"
     - apkg --version
   script:
