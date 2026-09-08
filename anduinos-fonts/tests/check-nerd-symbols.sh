@@ -28,7 +28,7 @@ for codepoint in f120 f308 f013 f07b f418 f0079 e0b0; do
 done
 
 glyphs='󰁹'
-FONTCONFIG_FILE="$work_dir/fonts.conf" pango-view \
+LC_ALL=C.UTF-8 FONTCONFIG_FILE="$work_dir/fonts.conf" pango-view \
   --no-display \
   --font='monospace 24' \
   --text="$glyphs" \
