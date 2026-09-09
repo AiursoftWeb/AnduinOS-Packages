@@ -7,6 +7,7 @@ verify-ci-package-needs:
   stage: lint
   script:
     - python3 lib/verify-ci-package-needs.py
+    - python3 lib/verify-localizations.py
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH
