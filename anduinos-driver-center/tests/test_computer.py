@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import datetime
 import importlib.machinery
 import importlib.util
 import json
@@ -20,6 +21,17 @@ loader.exec_module(helper)
 
 
 class ComputerTests(unittest.TestCase):
+    def test_install_date_uses_local_root_birth_date(self):
+        timestamp = int(datetime(2026, 8, 14, 17, 37, 22).timestamp())
+        with patch.object(computer, 'command', return_value=f'{timestamp}\n') as probe:
+            self.assertEqual(computer.estimated_install_date(), datetime(2026, 8, 14).date())
+        probe.assert_called_once_with('stat', '--format=%W', '/')
+
+    def test_install_date_unavailable_or_invalid(self):
+        for output in ('', '0\n', '-1', '-', 'invalid', '9' * 100):
+            with self.subTest(output=output), patch.object(computer, 'command', return_value=output):
+                self.assertIsNone(computer.estimated_install_date())
+
     def test_branding_uses_identity_not_ancestry_or_description(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

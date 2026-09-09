@@ -46,7 +46,12 @@ Driver Center must not add a second Secure Boot backend or diverging prompts.
 
 The final sidebar item, **About This Computer**, shows a screenshot-friendly
 hardware overview. The compact view contains the CPU, system-usable memory,
-graphics, physical disk(s) backing `/`, displays, and motherboard. Expand it
+graphics, physical disk(s) backing `/`, displays, motherboard, and an estimated
+system installation date. The date uses the birth time of `/`, displayed in
+the local timezone and date format, without writing a marker or requiring root.
+Cloning, snapshot recovery, or filesystem reuse can make it differ from the
+actual installation date. If birth time is unavailable, the date is unknown;
+modification time is never used as a fallback. Expand it
 for all physical disks and their volumes, device drivers, firmware identity,
 CPU details, and display mode information. The system and desktop section adds
 the running GNOME Shell version, Mutter/Wayland or X11 session information,
