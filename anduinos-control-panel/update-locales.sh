@@ -5,11 +5,16 @@ set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 pot="$root/po/anduinos-control-panel.pot"
 
-xgettext --language=Python --keyword=_ --from-code=UTF-8 \
+cd "$root"
+xgettext --language=Python --keyword=_ --keyword=N_ --from-code=UTF-8 \
+    --no-wrap \
     --package-name=anduinos-control-panel --output="$pot" \
-    "$root"/src/anduinos_control_panel/*.py
+    src/anduinos_control_panel/*.py
+xgettext --join-existing --language=Desktop --from-code=UTF-8 --no-wrap \
+    --package-name=anduinos-control-panel --output="$pot" \
+    data/com.anduinos.ControlPanel.desktop
 
 shopt -s nullglob
-for catalog in "$root"/po/*.po; do
+for catalog in po/*.po; do
     msgmerge --quiet --update --backup=none "$catalog" "$pot"
 done

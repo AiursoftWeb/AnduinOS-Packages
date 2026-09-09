@@ -13,6 +13,12 @@ TEXT_DOMAIN = "anduinos-control-panel"
 gettext.bindtextdomain(TEXT_DOMAIN, LOCALE_DIR)
 
 
+def N_(message: str) -> str:
+    """Mark a deferred topic string for extraction without translating it."""
+
+    return message
+
+
 def _(message: str) -> str:
     return gettext.dgettext(TEXT_DOMAIN, message)
 
@@ -68,8 +74,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "system.settings",
             "system",
-            "System Settings",
-            "Display, sound, power, privacy, and more",
+            N_("System Settings"),
+            N_("Display, sound, power, privacy, and more"),
             ("settings", "display", "sound", "power", "privacy", "系统设置"),
             "preferences-system",
             command=("gnome-control-center",),
@@ -77,8 +83,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "system.startup-boot",
             "system",
-            "Startup and Boot",
-            "Change the boot menu wait time",
+            N_("Startup and Boot"),
+            N_("Change the boot menu wait time"),
             ("boot", "startup", "grub", "timeout", "default operating system", "dual boot", "启动", "引导", "延时", "默认操作系统", "双系统"),
             "system-reboot-symbolic",
             handler="boot-settings",
@@ -86,8 +92,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "system.virtual-memory",
             "system",
-            "Virtual Memory Settings",
-            "Configure Zram, Zswap, swap, and memory pressure",
+            N_("Virtual Memory Settings"),
+            N_("Configure Zram, Zswap, swap, and memory pressure"),
             (
                 "swap",
                 "zram",
@@ -106,8 +112,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "security.secure-boot",
             "security",
-            "Secure Boot Status",
-            "Inspect firmware trust and signed drivers",
+            N_("Secure Boot Status"),
+            N_("Inspect firmware trust and signed drivers"),
             ("secure boot", "uefi", "mok", "firmware", "安全启动", "固件"),
             "security-high-symbolic",
             command=("anduinos-driver-center", "--page", "secure-boot"),
@@ -115,8 +121,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "security.passwords-keys",
             "security",
-            "Passwords and Keys",
-            "Manage passwords, encryption keys, and certificates",
+            N_("Passwords and Keys"),
+            N_("Manage passwords, encryption keys, and certificates"),
             ("seahorse", "password", "key", "certificate", "密码", "密钥", "证书"),
             "org.gnome.seahorse.Application",
             command=("seahorse",),
@@ -125,8 +131,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "network.firewall",
             "network",
-            "Firewall",
-            "Review connections, rules, and network protection",
+            N_("Firewall"),
+            N_("Review connections, rules, and network protection"),
             ("firewall", "ufw", "network", "security", "防火墙", "网络", "安全"),
             "com.anduinos.ufwall",
             command=("ufwall-gtk",),
@@ -134,8 +140,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "network.advanced",
             "network",
-            "Advanced Network Configuration",
-            "Configure NetworkManager connection profiles",
+            N_("Advanced Network Configuration"),
+            N_("Configure NetworkManager connection profiles"),
             (
                 "network",
                 "networkmanager",
@@ -154,8 +160,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "accounts.users",
             "accounts",
-            "User Account Settings",
-            "Manage users, passwords, and account details",
+            N_("User Account Settings"),
+            N_("Manage users, passwords, and account details"),
             ("user", "account", "password", "login", "用户", "账户", "密码"),
             "system-users",
             command=("gnome-control-center", "system", "users"),
@@ -163,8 +169,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "accounts.yubikey",
             "accounts",
-            "YubiKey Settings",
-            "Configure sign-in, sudo, SSH keys, and Git signing",
+            N_("YubiKey Settings"),
+            N_("Configure sign-in, sudo, SSH keys, and Git signing"),
             ("yubikey", "fido2", "u2f", "sudo", "ssh", "git signing", "安全密钥"),
             "com.anduinos.yubikeymanager",
             command=("anduinos-yubikey-manager",),
@@ -172,8 +178,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "accessibility.voice-typing",
             "ai",
-            "Voice Typing",
-            "Configure private, offline speech-to-text",
+            N_("Voice Typing"),
+            N_("Configure private, offline speech-to-text"),
             ("voice", "typing", "speech", "microphone", "whisper", "语音输入", "语音识别"),
             "audio-input-microphone",
             handler="voice-typing",
@@ -181,8 +187,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "hardware.drivers",
             "hardware",
-            "Driver Center",
-            "Graphics, audio, printers, controllers, and firmware",
+            N_("Driver Center"),
+            N_("Graphics, audio, printers, controllers, and firmware"),
             ("driver", "firmware", "nvidia", "graphics", "audio", "驱动", "固件", "显卡"),
             "com.anduinos.DriverCenter",
             command=("anduinos-driver-center",),
@@ -190,8 +196,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "hardware.printers",
             "hardware",
-            "Printers",
-            "Add, remove, and configure printers",
+            N_("Printers"),
+            N_("Add, remove, and configure printers"),
             ("printer", "printing", "cups", "打印机", "打印"),
             "printer-symbolic",
             command=("gnome-control-center", "printers"),
@@ -199,8 +205,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "hardware.scanners",
             "hardware",
-            "Scanners",
-            "Scan documents and add or select a scanner",
+            N_("Scanners"),
+            N_("Scan documents and add or select a scanner"),
             ("scanner", "scan", "sane", "simple-scan", "扫描仪", "扫描"),
             "scanner-symbolic",
             command=("simple-scan",),
@@ -209,8 +215,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "appearance.anduinos",
             "appearance",
-            "AnduinOS Appearance Settings",
-            "Configure the taskbar, panel widgets, and desktop",
+            N_("AnduinOS Appearance Settings"),
+            N_("Configure the taskbar, panel widgets, and desktop"),
             ("appearance", "theme", "taskbar", "panel", "desktop", "外观", "主题", "任务栏"),
             "anduinos-appearance",
             command=("anduinos-appearance",),
@@ -218,8 +224,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "appearance.wallpaper",
             "appearance",
-            "Wallpaper and Accent Color",
-            "Choose the desktop background, style, and accent color",
+            N_("Wallpaper and Accent Color"),
+            N_("Choose the desktop background, style, and accent color"),
             ("wallpaper", "background", "accent", "color", "壁纸", "背景", "强调色"),
             "preferences-desktop-wallpaper",
             command=("gnome-control-center", "background"),
@@ -227,8 +233,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "programs.uninstall",
             "programs",
-            "Uninstall Applications",
-            "Review and remove installed applications",
+            N_("Uninstall Applications"),
+            N_("Review and remove installed applications"),
             ("uninstall", "remove", "application", "software", "卸载", "删除", "应用"),
             "org.gnome.Software",
             command=("gnome-software", "--mode=installed"),
@@ -236,8 +242,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "programs.permissions",
             "programs",
-            "Permission Settings",
-            "Manage application permissions with Flatseal",
+            N_("Permission Settings"),
+            N_("Manage application permissions with Flatseal"),
             ("permission", "flatpak", "flatseal", "sandbox", "权限", "沙盒"),
             "com.github.tchx84.Flatseal",
             handler="flatseal",
@@ -245,8 +251,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "ai.on-device",
             "ai",
-            "On-device AI",
-            "Configure private AI features that run on this device",
+            N_("On-device AI"),
+            N_("Configure private AI features that run on this device"),
             ("ai", "on-device", "local ai", "why", "人工智能", "本地 AI", "设备端 AI"),
             "applications-science",
             handler="on-device-ai",
@@ -254,8 +260,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "compatibility.windows",
             "compatibility",
-            "Configure Bottles",
-            "Run Windows applications in compatibility environments",
+            N_("Configure Bottles"),
+            N_("Run Windows applications in compatibility environments"),
             ("windows", "wine", "bottles", "exe", "compatibility", "兼容层", "Windows 应用"),
             "com.usebottles.bottles",
             handler="bottles",
@@ -263,8 +269,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "recovery.snapshots",
             "recovery",
-            "System Snapshots",
-            "Create, browse, and roll back system snapshots",
+            N_("System Snapshots"),
+            N_("Create, browse, and roll back system snapshots"),
             ("snapshot", "btrfs", "rollback", "restore", "快照", "回滚", "恢复"),
             "org.anduinos.BtrfsSnapshotsManager",
             command=("anduinos-btrfs-snapshots-manager",),
@@ -272,8 +278,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
         _topic(
             "recovery.backup",
             "recovery",
-            "Back Up Home Folder",
-            "Protect personal files with Deja Dup backups",
+            N_("Back Up Home Folder"),
+            N_("Protect personal files with Deja Dup backups"),
             ("backup", "deja dup", "restore", "home", "备份", "恢复", "主目录"),
             "org.gnome.DejaDup",
             handler="backup",
