@@ -69,7 +69,7 @@ const N_ = text => text;
 
 const STATE_TEXT = {
     idle: N_('Ready'),
-    preparing: N_('Preparing recognition…'),
+    preparing: N_('Loading speech model…'),
     calibrating: N_('Measuring performance — microphone off'),
     listening: N_('Listening…'),
     recognizing: N_('Recognizing…'),
@@ -79,6 +79,11 @@ const STATE_TEXT = {
     error: N_('Microphone unavailable'),
 };
 
+const CALIBRATION_TEXT = {
+    quick: N_('Optimizing recognition for first use: %d seconds remaining (microphone off; click the microphone to cancel)'),
+    full: N_('Measuring recognition performance: %d seconds remaining (microphone off; click the microphone to cancel)'),
+};
+
 const LANGUAGE_TEXT = {
     auto: N_('Auto'), zh: N_('Simplified Chinese'),
     'zh-Hans': N_('Simplified Chinese'), 'zh-Hant': N_('Traditional Chinese'),
@@ -86,6 +91,15 @@ const LANGUAGE_TEXT = {
     fr: N_('French'), de: N_('German'), ja: N_('Japanese'), ko: N_('Korean'),
     ru: N_('Russian'), pt: N_('Portuguese'),
 };
+
+function stateText(state, detail) {
+    if (state === 'calibrating') {
+        const match = /^countdown:(quick|full):(\d+)$/.exec(detail ?? '');
+        if (match)
+            return _(CALIBRATION_TEXT[match[1]]).replace('%d', match[2]);
+    }
+    return _(STATE_TEXT[state] ?? detail ?? state);
+}
 
 export default class VoiceTypingExtension extends Extension {
     enable() {
@@ -462,7 +476,7 @@ export default class VoiceTypingExtension extends Extension {
         if (this._uiState === UI_STATE.READY)
             return _('Ready');
         return ACTIVE_DAEMON_STATES.has(this._state)
-            ? _(STATE_TEXT[this._state] ?? this._detail ?? 'Listening…')
+            ? stateText(this._state, this._detail ?? 'Listening…')
             : _('Listening…');
     }
 
@@ -491,7 +505,7 @@ export default class VoiceTypingExtension extends Extension {
         }
         this._statusLabel.text = state === 'finishing'
             ? _(detail || STATE_TEXT.finishing)
-            : _(STATE_TEXT[state] ?? detail ?? state);
+            : stateText(state, detail);
         this._bar.remove_style_class_name('listening');
         this._bar.remove_style_class_name('error');
         this._micButton.remove_style_class_name('listening');

@@ -23,6 +23,7 @@ class PerformanceSettingsTests(unittest.TestCase):
         SettingsWindow._retest_performance(window, None)
         window.settings.set_uint.assert_called_once_with("tuning-generation", 0)
         window.settings.set_string.assert_called_once_with("recognition-backend", "auto")
+        window.settings.set_boolean.assert_called_once_with("full-tuning-pending", True)
         window.settings.reset.assert_not_called()
         window.client.assert_not_called()
 

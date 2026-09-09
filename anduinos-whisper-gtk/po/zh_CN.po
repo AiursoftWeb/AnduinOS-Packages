@@ -540,17 +540,28 @@ msgstr "请检查所选文件夹是否可写，并确认有足够的可用空间
 msgid "Noise reduction"
 msgstr "降噪"
 
-msgid "Preparing recognition…"
-msgstr "正在准备语音识别…"
+msgid "Loading speech model…"
+msgstr "正在加载语音模型…"
 
 msgid "Measuring performance — microphone off"
 msgstr "正在校准性能 — 麦克风关闭"
 
+#, c-format
 msgid ""
-"First use or retesting may take about a minute. Results are cached. Wait for"
-" Listening before speaking; press the microphone button again to cancel "
-"preparation."
-msgstr "首次使用或重新测速可能需要约一分钟，结果会缓存。请等到显示正在聆听后再说话；再次按麦克风按钮可取消准备。"
+"Optimizing recognition for first use: %d seconds remaining (microphone off; "
+"click the microphone to cancel)"
+msgstr "首次优化识别性能：还剩 %d 秒（麦克风未开启；点击麦克风可取消）"
+
+#, c-format
+msgid ""
+"Measuring recognition performance: %d seconds remaining (microphone off; "
+"click the microphone to cancel)"
+msgstr "正在完整测试识别性能：还剩 %d 秒（麦克风未开启；点击麦克风可取消）"
+
+msgid ""
+"First use takes at most 10 seconds and results are cached. Wait for Listening "
+"before speaking; press the microphone button again to cancel preparation."
+msgstr "首次使用最多需要 10 秒，测试结果会缓存。请等到显示正在聆听后再说话；再次点击麦克风可取消准备。"
 
 msgid "Recognition performance"
 msgstr "识别性能"
@@ -580,6 +591,9 @@ msgstr "0 表示自动选择；线程越多不一定越快"
 
 msgid "Measure again on next start"
 msgstr "下次开始时重新测速"
+
+msgid "A complete test may take up to one minute. The microphone remains off."
+msgstr "完整测试最多需要一分钟；测试期间麦克风不会开启。"
 
 msgid "Retest"
 msgstr "重新测速"

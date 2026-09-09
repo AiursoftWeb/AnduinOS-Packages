@@ -31,6 +31,10 @@
       <default>0</default>
       <summary>Increment to request fresh performance measurements on next start</summary>
     </key>
+    <key name="full-tuning-pending" type="b">
+      <default>false</default>
+      <summary>Run the complete performance measurement on the next start</summary>
+    </key>
     <key name="automatic-punctuation" type="b">
       <default>true</default>
       <summary>Keep punctuation recognized by Whisper</summary>

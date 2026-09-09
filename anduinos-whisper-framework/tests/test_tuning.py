@@ -11,7 +11,15 @@ import wave
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from anduinos_whisper_framework.tuning import AutomaticSelector, BackendTuner, SelectionCache, candidates, environment_fingerprint
+from anduinos_whisper_framework.tuning import (
+    AutomaticSelector,
+    BackendTuner,
+    FULL_TUNING_SECONDS,
+    QUICK_TUNING_SECONDS,
+    SelectionCache,
+    candidates,
+    environment_fingerprint,
+)
 from anduinos_whisper_framework.errors import RecognitionCancelled, RecognitionError
 
 
@@ -128,6 +136,34 @@ class TuningTests(unittest.TestCase):
             tuner.run("model", b"\x00\x01" * 8000, cpu_count=2)
         self.assertEqual(calls, [0, 30])
 
+    def test_quick_budget_keeps_a_fully_validated_candidate(self):
+        now = [0.0]
+
+        class Engine:
+            def __init__(self, _model, _language, _threads, backend, **_kwargs):
+                self.backend = backend
+                self.last_metrics = {"backend": backend}
+            def __enter__(self): return self
+            def __exit__(self, *_args): pass
+            def transcribe(self, _pcm, _cancel):
+                now[0] += 0.5 if self.backend == "cpu" else 3
+                return "same"
+
+        tuner = BackendTuner(Engine, lambda: now[0])
+        selected = tuner.run(
+            "model",
+            b"\x00\x01" * 8000,
+            cpu_count=2,
+            budget=QUICK_TUNING_SECONDS,
+        )
+        self.assertEqual(selected, {"backend": "cpu", "threads": 2})
+
+    def test_budget_is_positive_and_bounded(self):
+        tuner = BackendTuner(Mock())
+        for budget in (0, -1, FULL_TUNING_SECONDS + 1, True):
+            with self.subTest(budget=budget), self.assertRaises(ValueError):
+                tuner.run("model", b"\x00\x01" * 8000, budget=budget)
+
     def test_cache_is_private_bounded_validated_and_invalidated(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "performance.json"
@@ -241,6 +277,16 @@ class AutomaticSelectorTests(unittest.TestCase):
         notice.assert_not_called()
         self.selector.select("unused", force=True, on_measure=notice)
         notice.assert_called_once_with()
+
+    def test_first_use_is_quick_and_explicit_retest_is_complete(self):
+        self.selector.select("unused")
+        self.assertEqual(
+            self.tuner.run.call_args.kwargs["budget"], QUICK_TUNING_SECONDS
+        )
+        self.selector.select("unused", force=True)
+        self.assertEqual(
+            self.tuner.run.call_args.kwargs["budget"], FULL_TUNING_SECONDS
+        )
 
     def test_cached_selection_and_explicit_retest(self):
         self.cache.load.return_value = {"backend": "cpu", "threads": 1}

@@ -112,11 +112,17 @@ Object.assign(controller, {
 });
 controller._settings.get_string = () => 'auto';
 context._ = text => `translated:${text}`;
-controller._setState('calibrating', 'Measuring performance — microphone off');
+controller._setState('calibrating', 'countdown:quick:10');
 assert.equal(controller._uiState, 'listening');
-assert.equal(controller._statusLabel.text, 'translated:Measuring performance — microphone off');
+assert.equal(controller._statusLabel.text,
+    'translated:Optimizing recognition for first use: 10 seconds remaining (microphone off; click the microphone to cancel)');
 assert.equal(statuses.at(-1), controller._statusLabel.text);
 assert.deepEqual(invoked, []);
+controller._setState('calibrating', 'countdown:full:60');
+assert.equal(controller._statusLabel.text,
+    'translated:Measuring recognition performance: 60 seconds remaining (microphone off; click the microphone to cancel)');
+controller._setState('preparing', 'Loading speech model…');
+assert.equal(controller._statusLabel.text, 'translated:Loading speech model…');
 controller._stopListening();
 assert.equal(calls.at(-1), 'Finish');
 assert.equal(controller._uiState, 'ready');

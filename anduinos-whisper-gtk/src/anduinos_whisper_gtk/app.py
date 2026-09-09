@@ -210,7 +210,17 @@ class SettingsWindow(Adw.PreferencesWindow):
     def _build_performance_group(self):
         group = Adw.PreferencesGroup(
             title=_("Recognition performance"),
-            description=_("Changes apply next time listening starts. Automatic selection measures bundled audio without using your microphone or changing your model.") + " " + _("First use or retesting may take about a minute. Results are cached. Wait for Listening before speaking; press the microphone button again to cancel preparation."),
+            description=_(
+                "Changes apply next time listening starts. Automatic selection "
+                "measures bundled audio without using your microphone or changing "
+                "your model."
+            )
+            + " "
+            + _(
+                "First use takes at most 10 seconds and results are cached. Wait "
+                "for Listening before speaking; press the microphone button again "
+                "to cancel preparation."
+            ),
         )
         self.backend_row = Adw.ComboRow(
             title=_("Recognition backend"),
@@ -227,11 +237,24 @@ class SettingsWindow(Adw.PreferencesWindow):
         )
         self.settings.bind("recognition-threads", self.threads_row, "value", Gio.SettingsBindFlags.DEFAULT)
         group.add(self.threads_row)
-        for title, label, callback in (
-            (_("Measure again on next start"), _("Retest"), self._retest_performance),
-            (_("Restore automatic backend and thread selection"), _("Restore defaults"), self._reset_performance),
+        for title, subtitle, label, callback in (
+            (
+                _("Measure again on next start"),
+                _(
+                    "A complete test may take up to one minute. "
+                    "The microphone remains off."
+                ),
+                _("Retest"),
+                self._retest_performance,
+            ),
+            (
+                _("Restore automatic backend and thread selection"),
+                "",
+                _("Restore defaults"),
+                self._reset_performance,
+            ),
         ):
-            row = Adw.ActionRow(title=title)
+            row = Adw.ActionRow(title=title, subtitle=subtitle)
             button = Gtk.Button(label=label, valign=Gtk.Align.CENTER)
             button.connect("clicked", callback)
             row.add_suffix(button)
@@ -247,6 +270,7 @@ class SettingsWindow(Adw.PreferencesWindow):
     def _retest_performance(self, _button):
         self.settings.set_string("recognition-backend", "auto")
         self.backend_row.set_selected(0)
+        self.settings.set_boolean("full-tuning-pending", True)
         self.settings.set_uint("tuning-generation",
                                (self.settings.get_uint("tuning-generation") + 1) & 0xffffffff)
         self.add_toast(Adw.Toast(title=_("Performance will be measured next time listening starts")))

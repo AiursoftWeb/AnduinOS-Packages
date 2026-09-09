@@ -38,7 +38,7 @@ class PackageTests(unittest.TestCase):
         extension_path = ROOT / "data/voice-typing@anduinos.com/extension.js"
         extension = extension_path.read_text()
         table_sources = set()
-        for name in ("STATE_TEXT", "LANGUAGE_TEXT"):
+        for name in ("STATE_TEXT", "CALIBRATION_TEXT", "LANGUAGE_TEXT"):
             block = re.search(rf"const {name} = \{{(.*?)\n\}};", extension, re.DOTALL)
             self.assertIsNotNone(block)
             self.assertNotRegex(block.group(1), r""":\s*['\"]""")

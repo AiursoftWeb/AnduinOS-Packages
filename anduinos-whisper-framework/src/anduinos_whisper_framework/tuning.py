@@ -17,6 +17,8 @@ from .resident import ResidentEngine
 from .calibration_audio import noisy
 
 POLICY_VERSION = 5
+QUICK_TUNING_SECONDS = 10
+FULL_TUNING_SECONDS = 60
 
 
 def available_threads():
@@ -124,12 +126,14 @@ class BackendTuner:
         self.measurements = []
 
     def run(self, model, pcm, language="en", cancel=None, cpu_count=None,
-            additional_pcm=(), threads=0):
+            additional_pcm=(), threads=0, budget=FULL_TUNING_SECONDS):
+        if type(budget) not in {int, float} or not 0 < budget <= FULL_TUNING_SECONDS:
+            raise ValueError("Invalid performance measurement budget")
         self.measurements = []
         baseline = None
         scored = []
         fastest_clean = None
-        deadline = self.clock() + 60
+        deadline = self.clock() + budget
         # One cold request, then repeated clean/noisy checks for every language
         # sample, all using the same language mode and model as live recognition.
         conditions = [audio for sample in (pcm, *additional_pcm)
@@ -244,7 +248,7 @@ class AutomaticSelector:
         return pcm, sample
 
     def select(self, model, language="auto", backend="auto", threads=0, cancel=None,
-               force=False, generation=0, on_measure=None):
+               force=False, generation=0, on_measure=None, budget=None):
         # These are only this call's observations, never a replay of disk cache
         # or a previous attempt. Sanitize again before exposing them to callers.
         self.measurements = []
@@ -252,6 +256,10 @@ class AutomaticSelector:
             raise ValueError("Invalid backend override")
         if type(generation) is not int or not 0 <= generation <= 0xffffffff:
             raise ValueError("Invalid tuning generation")
+        if budget is None:
+            budget = FULL_TUNING_SECONDS if force else QUICK_TUNING_SECONDS
+        if type(budget) not in {int, float} or not 0 < budget <= FULL_TUNING_SECONDS:
+            raise ValueError("Invalid performance measurement budget")
         if cancel is not None and cancel.is_set():
             raise RecognitionCancelled()
         fallback = {"backend": "cpu", "threads": min(threads or 4, available_threads())}
@@ -282,7 +290,7 @@ class AutomaticSelector:
             try:
                 selected = self.tuner.run(model, pcm, language, cancel,
                                           additional_pcm=tuple(audio for audio, _ in extra),
-                                          threads=measured_threads)
+                                          threads=measured_threads, budget=budget)
             except RecognitionError:
                 self.failed_fingerprint = fingerprint
                 raise

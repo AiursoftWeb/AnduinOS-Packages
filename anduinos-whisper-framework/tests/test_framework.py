@@ -6,6 +6,8 @@ import threading
 import unittest
 from unittest.mock import Mock, patch
 
+from gi.repository import GLib
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(ROOT / "src"))
@@ -140,6 +142,75 @@ class LiveTranscriptionTests(unittest.TestCase):
         self.assertFalse(service._partial_is_valid(7, second))
 
 class PackageTests(unittest.TestCase):
+
+    @patch("anduinos_whisper_framework.daemon.model_installed", return_value=True)
+    def test_start_preserves_explicit_full_tuning_request(self, _installed):
+        service = VoiceTypingService.__new__(VoiceTypingService)
+        service.active = False
+        service.testing = False
+        service.session_id = 0
+        service.pending = 0
+        service.capture = None
+        service.settings = Mock()
+        service.settings.get_string.side_effect = lambda key: {
+            "model": "base",
+            "language": "auto",
+            "recognition-backend": "auto",
+        }[key]
+        service.settings.get_uint.side_effect = lambda key: {
+            "recognition-threads": 0,
+            "tuning-generation": 7,
+        }[key]
+        service.settings.get_boolean.return_value = True
+        service._cancel_work = Mock()
+        service._invalidate_partials = Mock()
+        service._set_state = Mock()
+        service._put_work = Mock()
+
+        service.start()
+
+        self.assertTrue(service.session_config["full_tuning"])
+        service._set_state.assert_called_once_with("preparing", "Loading speech model…")
+        queued_config = service._put_work.call_args.args[-1]
+        self.assertTrue(queued_config["full_tuning"])
+
+    def test_calibration_countdown_is_cancellable_and_reaches_zero(self):
+        service = VoiceTypingService.__new__(VoiceTypingService)
+        service.session_id = 3
+        service.active = True
+        service.capture = None
+        service.connection = None
+        service.state = "preparing"
+        service.calibration_source = 0
+        service.calibration_remaining = 0
+        with patch.object(GLib, "timeout_add", return_value=42):
+            service._start_calibration_countdown(3, 2)
+        self.assertEqual(service.detail, "countdown:quick:2")
+        self.assertEqual(service.calibration_source, 42)
+        self.assertEqual(service._calibration_tick(3, "quick"), GLib.SOURCE_CONTINUE)
+        self.assertEqual(service.detail, "countdown:quick:1")
+        with patch.object(GLib, "source_remove") as remove:
+            service._set_state("idle", "Ready")
+        remove.assert_called_once_with(42)
+        self.assertEqual(service.calibration_source, 0)
+        with patch.object(GLib, "timeout_add", return_value=43):
+            service._start_calibration_countdown(3, 2)
+        self.assertEqual(service._calibration_tick(3, "quick"), GLib.SOURCE_CONTINUE)
+        self.assertEqual(service._calibration_tick(3, "quick"), GLib.SOURCE_REMOVE)
+        self.assertEqual(service.state, "preparing")
+        self.assertEqual(service.detail, "Loading speech model…")
+        self.assertEqual(service.calibration_source, 0)
+
+    def test_completed_retest_clears_only_the_matching_request(self):
+        service = VoiceTypingService.__new__(VoiceTypingService)
+        service.settings = Mock()
+        service.settings.get_uint.return_value = 8
+        service._complete_full_tuning(7)
+        service.settings.set_boolean.assert_not_called()
+        service._complete_full_tuning(8)
+        service.settings.set_boolean.assert_called_once_with(
+            "full-tuning-pending", False
+        )
 
     def test_source_payload_has_no_python_cache_files(self):
         self.assertEqual(list((ROOT / "src").rglob("*.pyc")), [])

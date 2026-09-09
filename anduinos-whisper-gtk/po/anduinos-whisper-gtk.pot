@@ -531,13 +531,21 @@ msgstr ""
 msgid "Noise reduction"
 msgstr ""
 
-msgid "Preparing recognition…"
+msgid "Loading speech model…"
 msgstr ""
 
 msgid "Measuring performance — microphone off"
 msgstr ""
 
-msgid "First use or retesting may take about a minute. Results are cached. Wait for Listening before speaking; press the microphone button again to cancel preparation."
+#, c-format
+msgid "Optimizing recognition for first use: %d seconds remaining (microphone off; click the microphone to cancel)"
+msgstr ""
+
+#, c-format
+msgid "Measuring recognition performance: %d seconds remaining (microphone off; click the microphone to cancel)"
+msgstr ""
+
+msgid "First use takes at most 10 seconds and results are cached. Wait for Listening before speaking; press the microphone button again to cancel preparation."
 msgstr ""
 
 msgid "Recognition performance"
@@ -565,6 +573,9 @@ msgid "0 selects automatically; more threads are not always faster"
 msgstr ""
 
 msgid "Measure again on next start"
+msgstr ""
+
+msgid "A complete test may take up to one minute. The microphone remains off."
 msgstr ""
 
 msgid "Retest"

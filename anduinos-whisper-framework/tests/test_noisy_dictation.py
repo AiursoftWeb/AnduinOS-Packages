@@ -179,7 +179,7 @@ class ServiceTests(unittest.TestCase):
         self.assertEqual(work[2], 'prepare')
         self.assertEqual(work[7]['model'], 'base')
         service._new_capture.assert_not_called()
-        service._set_state.assert_called_with('preparing', 'Preparing recognition…')
+        service._set_state.assert_called_with('preparing', 'Loading speech model…')
         cancel = service.current_cancel = threading.Event()
         service.finish()
         self.assertTrue(cancel.is_set())
@@ -273,6 +273,8 @@ class ServiceTests(unittest.TestCase):
             vad.return_value.ready_metrics = {'initialization_ms': 12}
             def select(*args, **kwargs):
                 engine.return_value.close.assert_not_called()
+                self.assertFalse(kwargs['force'])
+                self.assertEqual(kwargs['budget'], 10)
                 kwargs['on_measure']()
                 engine.return_value.close.assert_called_once()
                 return {'backend': 'cpu', 'threads': 2}
@@ -294,8 +296,15 @@ class ServiceTests(unittest.TestCase):
             self.assertEqual(idle.call_args.args[2]['backend'], 'cpu')
             self.assertIs(idle.call_args.args[3], vad.return_value)
             vad.return_value.start.assert_called_once()
-            self.assertEqual([call.args[2] for call in idle.call_args_list[:-1]],
-                             ['calibrating', 'preparing'])
+            preparation_calls = idle.call_args_list[:-1]
+            self.assertEqual(
+                preparation_calls[0].args,
+                (service._start_calibration_countdown, 7, 10, False),
+            )
+            self.assertEqual(
+                preparation_calls[1].args,
+                (service._preparation_state, 7, 'preparing'),
+            )
             service._emit.assert_not_called()
             report = service.performance.export_json()
             self.assertIn('"inference_ms": 123', report)
@@ -344,6 +353,38 @@ class ServiceTests(unittest.TestCase):
                     self.assertFalse(thread.is_alive())
                     engine.prepare.assert_called_once()
                     self.assertEqual(engine.invalidate.call_count, int(invalidate))
+
+    @patch('anduinos_whisper_framework.daemon.GLib.idle_add', return_value=1)
+    def test_explicit_retest_uses_complete_budget_and_consumes_request(self, idle):
+        service = service_stub()
+        config = dict(model='base', language='auto', backend='auto', threads=0,
+                      generation=9, full_tuning=True)
+        service._put_work(0, 'prepare', 7, 0, b'', config)
+        with patch('anduinos_whisper_framework.daemon.SessionEngine') as engine, \
+                patch('anduinos_whisper_framework.daemon.AutomaticSelector') as selector, \
+                patch('anduinos_whisper_framework.daemon.VadEngine'):
+            selector.return_value.status = 'measured'
+            selector.return_value.measurements = []
+            selector.return_value.calibration.return_value = (b'fixture', {})
+            engine.return_value.last_metrics = {}
+            selector.return_value.select.side_effect = lambda *args, **kwargs: (
+                kwargs['on_measure']() or {'backend': 'cpu', 'threads': 4}
+            )
+            idle.side_effect = lambda *_args: service._put_work(-1, 'quit', 0, 0, b'')
+
+            thread = threading.Thread(target=service._recognition_worker, daemon=True)
+            thread.start()
+            thread.join(2)
+
+            self.assertFalse(thread.is_alive())
+            selection = selector.return_value.select.call_args
+            self.assertTrue(selection.kwargs['force'])
+            self.assertEqual(selection.kwargs['budget'], 60)
+            callbacks = [call.args for call in idle.call_args_list]
+            self.assertIn(
+                (service._start_calibration_countdown, 7, 60, True), callbacks
+            )
+            self.assertIn((service._complete_full_tuning, 9), callbacks)
 
     def test_overload_stops_capture_without_cancelling_accepted_work(self):
         service = service_stub()

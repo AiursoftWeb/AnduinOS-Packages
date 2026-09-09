@@ -22,7 +22,7 @@ from .errors import RecognitionCancelled, RecognitionTimeout
 from .work_queue import RecognitionQueue
 from .diagnostics import PerformanceHistory
 from .session_engine import SessionEngine
-from .tuning import AutomaticSelector
+from .tuning import AutomaticSelector, FULL_TUNING_SECONDS, QUICK_TUNING_SECONDS
 
 
 INTROSPECTION_XML = f"""
@@ -83,6 +83,8 @@ class VoiceTypingService:
         self.work_lock = threading.Lock()
         self.current_cancel = None
         self.current_kind = None
+        self.calibration_source = 0
+        self.calibration_remaining = 0
         self.finish_message = ""
         self.shutting_down = False
         self.last_activity = time.monotonic()
@@ -195,18 +197,56 @@ class VoiceTypingService:
             "backend": self.settings.get_string("recognition-backend"),
             "threads": self.settings.get_uint("recognition-threads"),
             "generation": self.settings.get_uint("tuning-generation"),
+            "full_tuning": self.settings.get_boolean("full-tuning-pending"),
         }
         self.capture = None
-        self._set_state("preparing", "Preparing recognition…")
+        self._set_state("preparing", "Loading speech model…")
         self._put_work(0, "prepare", session_id, 0, b"", dict(self.session_config))
 
     def _preparation_state(self, session_id, state):
         if session_id == self.session_id and self.active and self.capture is None:
             detail = {
                 "calibrating": "Measuring performance — microphone off",
-                "preparing": "Preparing recognition…",
+                "preparing": "Loading speech model…",
             }[state]
             self._set_state(state, detail)
+        return GLib.SOURCE_REMOVE
+
+    def _start_calibration_countdown(self, session_id, seconds, complete=False):
+        if session_id != self.session_id or not self.active or self.capture is not None:
+            return GLib.SOURCE_REMOVE
+        self._stop_calibration_countdown()
+        self.calibration_remaining = int(seconds)
+        mode = "full" if complete else "quick"
+        self._set_state("calibrating", f"countdown:{mode}:{self.calibration_remaining}")
+        self.calibration_source = GLib.timeout_add(
+            1000, self._calibration_tick, session_id, mode
+        )
+        return GLib.SOURCE_REMOVE
+
+    def _calibration_tick(self, session_id, mode):
+        if session_id != self.session_id or not self.active or self.state != "calibrating":
+            self.calibration_source = 0
+            return GLib.SOURCE_REMOVE
+        self.calibration_remaining = max(0, self.calibration_remaining - 1)
+        if self.calibration_remaining == 0:
+            self.calibration_source = 0
+            self._set_state("preparing", "Loading speech model…")
+            return GLib.SOURCE_REMOVE
+        self._set_state(
+            "calibrating", f"countdown:{mode}:{self.calibration_remaining}"
+        )
+        return GLib.SOURCE_CONTINUE
+
+    def _stop_calibration_countdown(self):
+        source = getattr(self, "calibration_source", 0)
+        if source:
+            GLib.source_remove(source)
+        self.calibration_source = 0
+
+    def _complete_full_tuning(self, generation):
+        if self.settings.get_uint("tuning-generation") == generation:
+            self.settings.set_boolean("full-tuning-pending", False)
         return GLib.SOURCE_REMOVE
 
     def _prepared(self, session_id, config, vad=None):
@@ -440,23 +480,34 @@ class VoiceTypingService:
                         continue
                 if kind == "prepare":
                     config = dict(timing[1])
+                    complete_tuning = config.pop("full_tuning", False)
+                    budget = FULL_TUNING_SECONDS if complete_tuning else QUICK_TUNING_SECONDS
                     def begin_measurement():
                         # Do not benchmark a second model while the previous
                         # session holds RAM/VRAM. This can falsely reject an
                         # otherwise usable GPU on memory-constrained machines.
                         # Cached/manual selections never invoke this callback.
                         session_engine.close()
-                        GLib.idle_add(self._preparation_state, session_id, "calibrating")
+                        GLib.idle_add(
+                            self._start_calibration_countdown,
+                            session_id,
+                            budget,
+                            complete_tuning,
+                        )
                     try:
                         choice = selector.select(
                             model_path(config["model"]), config["language"],
                             config["backend"], config["threads"], cancel=cancel,
                             generation=config["generation"],
                             on_measure=begin_measurement,
+                            force=complete_tuning,
+                            budget=budget,
                         )
                     finally:
                         for measurement in selector.measurements:
                             self.performance.append({**measurement, "model": config["model"]})
+                    if complete_tuning:
+                        GLib.idle_add(self._complete_full_tuning, config["generation"])
                     if selector.status == "measured" or (
                             selector.status == "manual" and choice["backend"] == "gpu"
                             and session_engine.gpu_failed):
@@ -625,6 +676,8 @@ class VoiceTypingService:
         return GLib.SOURCE_REMOVE
 
     def _set_state(self, state: str, detail: str) -> bool:
+        if state != "calibrating":
+            self._stop_calibration_countdown()
         self.state, self.detail = state, detail
         self._emit("StateChanged", GLib.Variant("(ss)", (state, detail)))
         return GLib.SOURCE_REMOVE
