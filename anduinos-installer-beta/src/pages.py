@@ -4274,6 +4274,9 @@ def build_advanced_storage_page(shared, nav_view):
         spacing=6,
     )
     editor.append(planned_box)
+    compression_control = _btrfs_compression_control(shared, lang)
+    compression_control.set_visible(False)
+    editor.append(compression_control)
 
     creator_heading = Gtk.Box(
         orientation=Gtk.Orientation.VERTICAL,
@@ -4982,6 +4985,13 @@ def build_advanced_storage_page(shared, nav_view):
         updating = True
         table_button.set_sensitive(True)
         shared["filesystem"] = draft.filesystem.value
+        compression_control.set_visible(
+            draft.filesystem is Filesystem.BTRFS
+            and any(
+                item.role is ManualPartitionRole.ROOT
+                for item in draft.new_partitions
+            )
+        )
         table_label.set_label(
             _("New empty GPT — every existing partition will be deleted", lang)
             if draft.reinitialize_gpt
@@ -6891,7 +6901,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "install-bootloader": _("Install bootloader", lang),
         "enroll-secure-boot": _("Schedule MOK enrollment", lang),
         "check-other-disk-systems": _(
-            "Check systems on other disks", lang
+            "Check for Windows installations", lang
         ),
         "leave-chroot": _("Finalize target environment", lang),
         "unmount-target": _("Unmount installed system", lang),

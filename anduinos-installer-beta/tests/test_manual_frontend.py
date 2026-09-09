@@ -17,6 +17,7 @@ from installer_core.model import (
     SecureBoot,
 )
 from installer_core.probe import PlatformProbe
+from installer_core.btrfs import BtrfsCompression
 from installer_core.storage_inventory import StorageInventory
 from installer_core.storage_ui import (
     build_manual_storage_preview,
@@ -85,6 +86,20 @@ class ManualFrontendPlanTests(unittest.TestCase):
                     inventory=changed_inventory,
                     platform=self.platform,
                 )
+
+    def test_manual_plan_preserves_each_compression_choice(self):
+        for preset in BtrfsCompression:
+            with self.subTest(preset=preset), patch(
+                "frontend.hash_password", return_value="$6$salt$hash"
+            ):
+                values = {**self.values, "btrfs_compression": preset.value}
+                plan = create_install_plan(
+                    values,
+                    inventory=self.inventory,
+                    platform=self.platform,
+                )
+                self.assertIs(plan.storage.mode, InstallMode.MANUAL)
+                self.assertIs(plan.storage.btrfs_compression, preset)
 
 
 if __name__ == "__main__":

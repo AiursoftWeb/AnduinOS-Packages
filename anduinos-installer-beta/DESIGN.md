@@ -34,8 +34,18 @@ and constructs every command itself.
   (Zstd 6). The selected preset is an allowlisted field in installation plan
   schema 16 and appears in the confirmation summary. All canonical subvolume
   mounts apply it before system files are copied, and fstab persists the same
-  choice. Other filesystem types do not expose or apply Btrfs compression.
+  choice. Advanced manual partitioning exposes the same presets below the
+  planned partitions when a Btrfs Root partition exists, and retains the
+  selection when switching filesystems or revisiting the page.
+  Other filesystem types do not expose or apply Btrfs compression.
   Changing the choice later affects newly written data, not existing extents.
+- Windows boot discovery: after installing the AnduinOS bootloader, inspect
+  EFI System Partitions on both the target disk and other disks. Read the
+  verified target ESP through its existing mount; inspect other unmounted
+  ESPs using temporary read-only mounts. Recognizing a Windows data partition
+  is not required. Only valid Windows EFI loaders for the target architecture
+  with unambiguous FAT UUIDs receive GRUB chainloader entries. Discovery does
+  not modify Microsoft EFI files or remount the shared target ESP.
 - Machine identity: the account page accepts one RFC-style ASCII hostname
   label, including upper-case input, digits and internal hyphens. The planner
   converts it to a lower-case systemd static hostname before constructing the
