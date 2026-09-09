@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-whisper-gtk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-31 15:23+0000\n"
-"PO-Revision-Date: 2026-08-31 15:23+0000\n"
+"POT-Creation-Date: 2026-09-09 11:45+0000\n"
+"PO-Revision-Date: 2026-09-09 11:55+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: fi_FI\n"
@@ -20,79 +20,76 @@ msgid "Automatic detection"
 msgstr "Automaattinen kielentunnistus"
 
 #: src/anduinos_whisper_gtk/app.py:30
-#: data/voice-typing@anduinos.com/extension.js:77
-#: data/voice-typing@anduinos.com/extension.js:78
+#: data/voice-typing@anduinos.com/extension.js:88
+#: data/voice-typing@anduinos.com/extension.js:89
 msgid "Simplified Chinese"
 msgstr "Yksinkertaistettu kiina"
 
 #: src/anduinos_whisper_gtk/app.py:31
-#: data/voice-typing@anduinos.com/extension.js:78
+#: data/voice-typing@anduinos.com/extension.js:89
 msgid "Traditional Chinese"
 msgstr "Perinteinen kiina"
 
 #: src/anduinos_whisper_gtk/app.py:32
-#: data/voice-typing@anduinos.com/extension.js:79
+#: data/voice-typing@anduinos.com/extension.js:90
 msgid "English"
 msgstr "Englanti"
 
 #: src/anduinos_whisper_gtk/app.py:33
-#: data/voice-typing@anduinos.com/extension.js:79
+#: data/voice-typing@anduinos.com/extension.js:90
 msgid "Spanish"
 msgstr "Espanja"
 
 #: src/anduinos_whisper_gtk/app.py:34
-#: data/voice-typing@anduinos.com/extension.js:80
+#: data/voice-typing@anduinos.com/extension.js:91
 msgid "French"
 msgstr "Ranska"
 
 #: src/anduinos_whisper_gtk/app.py:35
-#: data/voice-typing@anduinos.com/extension.js:80
+#: data/voice-typing@anduinos.com/extension.js:91
 msgid "German"
 msgstr "Saksa"
 
 #: src/anduinos_whisper_gtk/app.py:36
-#: data/voice-typing@anduinos.com/extension.js:80
+#: data/voice-typing@anduinos.com/extension.js:91
 msgid "Japanese"
 msgstr "Japani"
 
 #: src/anduinos_whisper_gtk/app.py:37
-#: data/voice-typing@anduinos.com/extension.js:80
+#: data/voice-typing@anduinos.com/extension.js:91
 msgid "Korean"
 msgstr "Korea"
 
 #: src/anduinos_whisper_gtk/app.py:38
-#: data/voice-typing@anduinos.com/extension.js:81
+#: data/voice-typing@anduinos.com/extension.js:92
 msgid "Russian"
 msgstr "venäjä"
 
 #: src/anduinos_whisper_gtk/app.py:39
-#: data/voice-typing@anduinos.com/extension.js:81
+#: data/voice-typing@anduinos.com/extension.js:92
 msgid "Portuguese"
 msgstr "Portugali"
 
 #: src/anduinos_whisper_gtk/app.py:43 src/anduinos_whisper_gtk/app.py:66
-#: src/anduinos_whisper_gtk/app.py:96 src/anduinos_whisper_gtk/app.py:313
-#: data/com.anduinos.VoiceTyping.Settings.desktop:2
+#: src/anduinos_whisper_gtk/app.py:96 src/anduinos_whisper_gtk/app.py:441
 msgid "Voice Typing"
 msgstr "Äänikirjoitus"
 
 #: src/anduinos_whisper_gtk/app.py:44
-#: data/voice-typing@anduinos.com/extension.js:68
-#: data/voice-typing@anduinos.com/extension.js:92
-#: data/voice-typing@anduinos.com/extension.js:147
-#: data/voice-typing@anduinos.com/extension.js:296
-#: data/voice-typing@anduinos.com/extension.js:361
-#: data/voice-typing@anduinos.com/extension.js:399
-#: data/voice-typing@anduinos.com/extension.js:434
-#: data/voice-typing@anduinos.com/extension.js:459
+#: data/voice-typing@anduinos.com/extension.js:71
+#: data/voice-typing@anduinos.com/extension.js:112
+#: data/voice-typing@anduinos.com/extension.js:170
+#: data/voice-typing@anduinos.com/extension.js:326
+#: data/voice-typing@anduinos.com/extension.js:442
+#: data/voice-typing@anduinos.com/extension.js:477
+#: data/voice-typing@anduinos.com/extension.js:504
 msgid "Ready"
 msgstr "Valmis"
 
 #: src/anduinos_whisper_gtk/app.py:45
-#: data/voice-typing@anduinos.com/extension.js:69
-#: data/voice-typing@anduinos.com/extension.js:354
-#: data/voice-typing@anduinos.com/extension.js:436
-#: data/voice-typing@anduinos.com/extension.js:437
+#: data/voice-typing@anduinos.com/extension.js:74
+#: data/voice-typing@anduinos.com/extension.js:393
+#: data/voice-typing@anduinos.com/extension.js:480
 msgid "Listening…"
 msgstr "Kuunnellaan…"
 
@@ -131,7 +128,7 @@ msgstr "Tila"
 msgid "Checking the local service…"
 msgstr "Tarkistetaan paikallista palvelua…"
 
-#: src/anduinos_whisper_gtk/app.py:107 src/anduinos_whisper_gtk/app.py:307
+#: src/anduinos_whisper_gtk/app.py:107 src/anduinos_whisper_gtk/app.py:435
 msgid "Start"
 msgstr "Aloita"
 
@@ -172,54 +169,183 @@ msgid "Change…"
 msgstr "Vaihda…"
 
 #: src/anduinos_whisper_gtk/app.py:164
+msgid "Noise reduction"
+msgstr "Melunvaimennus"
+
+#: src/anduinos_whisper_gtk/app.py:165
+msgid ""
+"Reduce background noise and balance microphone level; restart listening "
+"after changing this"
+msgstr ""
+"Vähennä taustamelua ja tasaa mikrofonin taso; käynnistä kuuntelu uudelleen "
+"muutoksen jälkeen"
+
+#: src/anduinos_whisper_gtk/app.py:169
 msgid "Automatic punctuation"
 msgstr "Automaattinen välimerkintä"
 
-#: src/anduinos_whisper_gtk/app.py:165
+#: src/anduinos_whisper_gtk/app.py:170
 msgid "Keep punctuation recognized from speech"
 msgstr "Säilytä puheesta tunnistetut välimerkit"
 
-#: src/anduinos_whisper_gtk/app.py:169
+#: src/anduinos_whisper_gtk/app.py:174
 msgid "Voice commands"
 msgstr "Äänikomennot"
 
-#: src/anduinos_whisper_gtk/app.py:170
+#: src/anduinos_whisper_gtk/app.py:175
 msgid "Recognize commands such as “new line” and “comma”"
 msgstr "Tunnista komennot, kuten ”uusi rivi” ja ”pilkku”"
 
-#: src/anduinos_whisper_gtk/app.py:174
+#: src/anduinos_whisper_gtk/app.py:179
 msgid "Live transcription"
 msgstr "Reaaliaikainen litterointi"
 
-#: src/anduinos_whisper_gtk/app.py:175
+#: src/anduinos_whisper_gtk/app.py:180
 msgid "Show words in the microphone bar while you speak"
 msgstr "Näytä sanat mikrofonipalkissa puhuessasi"
 
-#: src/anduinos_whisper_gtk/app.py:179
+#: src/anduinos_whisper_gtk/app.py:184
 msgid "Final result preview"
 msgstr "Valmiin tuloksen esikatselu"
 
-#: src/anduinos_whisper_gtk/app.py:180
+#: src/anduinos_whisper_gtk/app.py:185
 msgid "Pause briefly before inserting the completed phrase"
 msgstr "Odota hetki ennen valmiin tekstin lisäämistä"
 
-#: src/anduinos_whisper_gtk/app.py:184
+#: src/anduinos_whisper_gtk/app.py:189
 msgid "Start and stop sounds"
 msgstr "Käynnistys- ja pysäytysäänet"
 
-#: src/anduinos_whisper_gtk/app.py:185
+#: src/anduinos_whisper_gtk/app.py:190
 msgid "Play a subtle microphone cue"
 msgstr "Toista hillitty mikrofonin äänimerkki"
 
-#: src/anduinos_whisper_gtk/app.py:195
+#: src/anduinos_whisper_gtk/app.py:200
+msgid "Performance diagnostics"
+msgstr "Suorituskykydiagnostiikka"
+
+#: src/anduinos_whisper_gtk/app.py:201
+msgid ""
+"Export timings from the current voice session. No recordings or recognized "
+"text are included."
+msgstr ""
+"Vie ajankulut nykyisestä puheistunnosta. Äänitallenteita tai tunnistettua "
+"tekstiä ei sisällytetä."
+
+#: src/anduinos_whisper_gtk/app.py:203 src/anduinos_whisper_gtk/app.py:297
+msgid "Export diagnostic report"
+msgstr "Vie vikadiagnostiikkaraportti"
+
+#: src/anduinos_whisper_gtk/app.py:204
+msgid "Export"
+msgstr "Vie"
+
+#: src/anduinos_whisper_gtk/app.py:212
+msgid "Recognition performance"
+msgstr "Tunnistusnopeus"
+
+#: src/anduinos_whisper_gtk/app.py:214
+msgid ""
+"Changes apply next time listening starts. Automatic selection measures "
+"bundled audio without using your microphone or changing your model."
+msgstr ""
+"Muutokset tulevat voimaan seuraavan kuuntelun aloittaessa. Automaattinen "
+"valinta mittaa mukana toimitettua ääntä ilman mikrofonin käyttöä tai mallin "
+"vaihtamista."
+
+#: src/anduinos_whisper_gtk/app.py:220
+msgid ""
+"First use takes at most 10 seconds and results are cached. Wait for "
+"Listening before speaking; press the microphone button again to cancel "
+"preparation."
+msgstr ""
+"Ensimmäinen käyttö kestää enintään 10 sekuntia ja tulokset tallennetaan "
+"välimuistiin. Odota kuuntelutilaa ennen puhumista; paina mikrofoni-nappia "
+"uudelleen peruuttaaksesi valmistelun."
+
+#: src/anduinos_whisper_gtk/app.py:226
+msgid "Recognition backend"
+msgstr "Tunnistuksen taustajärjestelmä"
+
+#: src/anduinos_whisper_gtk/app.py:227
+msgid "Automatic (measured)"
+msgstr "Automaattinen (mitattava)"
+
+#: src/anduinos_whisper_gtk/app.py:227
+msgid "CPU"
+msgstr "CPU"
+
+#: src/anduinos_whisper_gtk/app.py:227
+msgid "GPU (CPU fallback)"
+msgstr "GPU (CPU-vaihtoehto)"
+
+#: src/anduinos_whisper_gtk/app.py:234
+msgid "Recognition threads"
+msgstr "Tunnistussäikeet"
+
+#: src/anduinos_whisper_gtk/app.py:234
+msgid "0 selects automatically; more threads are not always faster"
+msgstr "0 valitsee automaattisesti; useammat säikeet eivät aina ole nopeampia"
+
+#: src/anduinos_whisper_gtk/app.py:242
+msgid "Measure again on next start"
+msgstr "Mittaa uudelleen seuraavassa käynnistykseessä"
+
+#: src/anduinos_whisper_gtk/app.py:244
+msgid "A complete test may take up to one minute. The microphone remains off."
+msgstr "Täysi testi voi kestää jopa minuutin. Mikrofoni pysyy pois päältä."
+
+#: src/anduinos_whisper_gtk/app.py:247
+msgid "Retest"
+msgstr "Testaa uudelleen"
+
+#: src/anduinos_whisper_gtk/app.py:251
+msgid "Restore automatic backend and thread selection"
+msgstr "Palauta taustajärjestelmän ja säikeiden automaattinen valinta"
+
+#: src/anduinos_whisper_gtk/app.py:253
+msgid "Restore defaults"
+msgstr "Palauta oletukset"
+
+#: src/anduinos_whisper_gtk/app.py:276
+msgid "Performance will be measured next time listening starts"
+msgstr "Suorituskykyä mitataan seuraavan kuuntelun alussa"
+
+#: src/anduinos_whisper_gtk/app.py:291
+msgid "No diagnostic report available"
+msgstr "Diagnostiikkaraporttia ei ole saatavilla"
+
+#: src/anduinos_whisper_gtk/app.py:292
+msgid ""
+"Start a voice session, then export its report before closing the microphone "
+"bar."
+msgstr ""
+"Aloita puheistunto ja vie sen raportti ulos ennen mikrofonipalkin "
+"sulkemista."
+
+#: src/anduinos_whisper_gtk/app.py:294 src/anduinos_whisper_gtk/app.py:318
+#: src/anduinos_whisper_gtk/app.py:627
+msgid "Close"
+msgstr "Sulje"
+
+#: src/anduinos_whisper_gtk/app.py:316
+msgid "Could not save diagnostic report"
+msgstr "Vianmääritysraporttia ei voitu tallentaa"
+
+#: src/anduinos_whisper_gtk/app.py:317
+msgid "Check that the selected folder is writable and has free space."
+msgstr ""
+"Tarkista, että valittu hakemisto on kirjoitettavissa ja siinä on tilaa."
+
+#: src/anduinos_whisper_gtk/app.py:322
 msgid "Models"
 msgstr "Mallit"
 
-#: src/anduinos_whisper_gtk/app.py:198
+#: src/anduinos_whisper_gtk/app.py:325
 msgid "Offline speech models"
 msgstr "Puheentunnistusmallit ilman verkkoyhteyttä"
 
-#: src/anduinos_whisper_gtk/app.py:200
+#: src/anduinos_whisper_gtk/app.py:327
 msgid ""
 "The Base multilingual model is installed with Voice Typing. Optional models "
 "are verified before use."
@@ -227,124 +353,126 @@ msgstr ""
 "Base-malli, joka tukee useita kieliä, on asennettu äänikirjoituksen mukana. "
 "Valinnaiset mallit tarkistetaan ennen käyttöä."
 
-#: src/anduinos_whisper_gtk/app.py:213
+#: src/anduinos_whisper_gtk/app.py:340
 msgid "Remove downloaded model"
 msgstr "Poista ladattu malli"
 
-#: src/anduinos_whisper_gtk/app.py:216
+#: src/anduinos_whisper_gtk/app.py:343
 #, python-format
 msgid "Remove %s"
 msgstr "Poista %s"
 
-#: src/anduinos_whisper_gtk/app.py:230
+#: src/anduinos_whisper_gtk/app.py:357
 msgid "Microphone Training"
 msgstr "Mikrofonin kalibrointi"
 
-#: src/anduinos_whisper_gtk/app.py:234
-msgid "Calibrate your speaking setup"
-msgstr "Kalibroi puheympäristösi"
+#: src/anduinos_whisper_gtk/app.py:361
+msgid "Check your speaking setup"
+msgstr "Tarkista puhesetuppi"
 
-#: src/anduinos_whisper_gtk/app.py:236
+#: src/anduinos_whisper_gtk/app.py:363
 msgid ""
-"Whisper does not need a personal voice profile. Use this page to check "
-"microphone level, distance, and background noise."
+"Whisper does not need a personal voice profile. Use this page to check the "
+"processed microphone level, distance, and background noise. This test does "
+"not train the model or measure recognition accuracy."
 msgstr ""
 "Whisper ei tarvitse henkilökohtaista ääniprofiilia. Käytä tätä sivua "
-"tarkistaaksesi mikrofonin tulotason, etäisyyden mikrofoniin ja taustamelun."
+"tarkistaaksesi käsitellyn mikrofoni-tason, etäisyyden ja taustamelun. Tämä "
+"testi ei kouluta mallia eikä mitaa tunnistustarkkuutta."
 
-#: src/anduinos_whisper_gtk/app.py:242
+#: src/anduinos_whisper_gtk/app.py:370
 msgid "Practice phrase"
 msgstr "Harjoituslause"
 
-#: src/anduinos_whisper_gtk/app.py:243
+#: src/anduinos_whisper_gtk/app.py:371
 msgid "“Voice typing makes writing faster and more accessible.”"
 msgstr "“Äänikirjoitus tekee kirjoittamisesta nopeampaa ja saavutettavampaa.”"
 
-#: src/anduinos_whisper_gtk/app.py:249
+#: src/anduinos_whisper_gtk/app.py:377
 msgid "Input level"
 msgstr "Syöttötaso"
 
-#: src/anduinos_whisper_gtk/app.py:250
+#: src/anduinos_whisper_gtk/app.py:378
 msgid "Speak normally; aim for the middle of the meter"
 msgstr "Puhu normaalisti; pyri pitämään tulotaso mittarin keskikohdan lähellä"
 
-#: src/anduinos_whisper_gtk/app.py:254
+#: src/anduinos_whisper_gtk/app.py:382
 msgid "Microphone input level"
 msgstr "Mikrofonin syöttötaso"
 
-#: src/anduinos_whisper_gtk/app.py:260
+#: src/anduinos_whisper_gtk/app.py:388
 msgid "Microphone test"
 msgstr "Mikrofonitestaus"
 
-#: src/anduinos_whisper_gtk/app.py:261
+#: src/anduinos_whisper_gtk/app.py:389
 msgid "No audio is saved during this test"
 msgstr "Ääntä ei tallenneta tämän testin aikana"
 
-#: src/anduinos_whisper_gtk/app.py:263 src/anduinos_whisper_gtk/app.py:559
+#: src/anduinos_whisper_gtk/app.py:391 src/anduinos_whisper_gtk/app.py:687
 msgid "Start Test"
 msgstr "Aloita testaus"
 
-#: src/anduinos_whisper_gtk/app.py:268
+#: src/anduinos_whisper_gtk/app.py:396
 msgid "Tips for better recognition"
 msgstr "Vinkit parempaan tunnistamiseen"
 
-#: src/anduinos_whisper_gtk/app.py:271
+#: src/anduinos_whisper_gtk/app.py:399
 msgid "Speak naturally"
 msgstr "Puhu luontevasti"
 
-#: src/anduinos_whisper_gtk/app.py:272
+#: src/anduinos_whisper_gtk/app.py:400
 msgid "Use short phrases and pause briefly between sentences"
 msgstr "Käytä lyhyitä ilmauksia ja pidä lyhyt tauko virkkeiden välillä"
 
-#: src/anduinos_whisper_gtk/app.py:276
+#: src/anduinos_whisper_gtk/app.py:404
 msgid "Reduce background noise"
 msgstr "Vähennä taustamelua"
 
-#: src/anduinos_whisper_gtk/app.py:277
+#: src/anduinos_whisper_gtk/app.py:405
 msgid "Keep the microphone close without speaking directly into it"
 msgstr "Pidä mikrofoni lähellä suutasi, mutta älä puhu suoraan siihen"
 
-#: src/anduinos_whisper_gtk/app.py:281
+#: src/anduinos_whisper_gtk/app.py:409
 msgid "Choose the language"
 msgstr "Valitse kieli"
 
-#: src/anduinos_whisper_gtk/app.py:282
+#: src/anduinos_whisper_gtk/app.py:410
 msgid "A fixed language is faster than automatic detection"
 msgstr ""
 "Valitun kielen käyttäminen on automaattista kielentunnistusta nopeampaa"
 
-#: src/anduinos_whisper_gtk/app.py:305
+#: src/anduinos_whisper_gtk/app.py:433
 msgid "Stop"
 msgstr "Pysäytä"
 
-#: src/anduinos_whisper_gtk/app.py:343
+#: src/anduinos_whisper_gtk/app.py:471
 msgid "Set Keyboard Shortcut"
 msgstr "Aseta pikanäppäin"
 
-#: src/anduinos_whisper_gtk/app.py:365
+#: src/anduinos_whisper_gtk/app.py:493
 msgid "Press the new shortcut"
 msgstr "Paina uutta pikanäppäintä"
 
-#: src/anduinos_whisper_gtk/app.py:369
+#: src/anduinos_whisper_gtk/app.py:497
 msgid "The keys you press will be used to start or stop Voice Typing."
 msgstr ""
 "Painamiasi näppäimiä käytetään äänikirjoituksen käynnistämiseen tai "
 "pysäyttämiseen."
 
-#: src/anduinos_whisper_gtk/app.py:377
+#: src/anduinos_whisper_gtk/app.py:505
 msgid "Waiting for input…"
 msgstr "Odotetaan syötettä…"
 
-#: src/anduinos_whisper_gtk/app.py:383
+#: src/anduinos_whisper_gtk/app.py:511
 msgid "Esc cancels · Backspace disables the shortcut"
 msgstr "Esc peruuttaa · Backspace poistaa pikanäppäimen käytöstä"
 
-#: src/anduinos_whisper_gtk/app.py:445
+#: src/anduinos_whisper_gtk/app.py:573
 #, python-format
 msgid "Download %s from Hugging Face?"
 msgstr "Ladataanko %s Hugging Facesta?"
 
-#: src/anduinos_whisper_gtk/app.py:447
+#: src/anduinos_whisper_gtk/app.py:575
 msgid ""
 "This optional model is hosted by Hugging Face, a third-party service. AnduinOS is not affiliated with, sponsored by, or partnered with Hugging Face.\n"
 "\n"
@@ -358,171 +486,184 @@ msgstr ""
 "\n"
 "Tietosuojakäytäntö: https://huggingface.co/privacy"
 
-#: src/anduinos_whisper_gtk/app.py:456 src/anduinos_whisper_gtk/app.py:510
+#: src/anduinos_whisper_gtk/app.py:584 src/anduinos_whisper_gtk/app.py:638
 msgid "Cancel"
 msgstr "Peruuta"
 
-#: src/anduinos_whisper_gtk/app.py:457
+#: src/anduinos_whisper_gtk/app.py:585
 msgid "Continue Download"
 msgstr "Jatka latausta"
 
-#: src/anduinos_whisper_gtk/app.py:479 src/anduinos_whisper_gtk/app.py:538
+#: src/anduinos_whisper_gtk/app.py:607 src/anduinos_whisper_gtk/app.py:666
 msgid "Downloading…"
 msgstr "Ladataan…"
 
-#: src/anduinos_whisper_gtk/app.py:497
+#: src/anduinos_whisper_gtk/app.py:625
 msgid "Retry"
 msgstr "Yritä uudelleen"
 
-#: src/anduinos_whisper_gtk/app.py:498
+#: src/anduinos_whisper_gtk/app.py:626
 msgid "Model download failed"
 msgstr "Mallin lataus epäonnistui"
 
-#: src/anduinos_whisper_gtk/app.py:499
-msgid "Close"
-msgstr "Sulje"
-
-#: src/anduinos_whisper_gtk/app.py:507
+#: src/anduinos_whisper_gtk/app.py:635
 #, python-format
 msgid "Remove %s model?"
 msgstr "Poistetaanko %s -malli?"
 
-#: src/anduinos_whisper_gtk/app.py:508
+#: src/anduinos_whisper_gtk/app.py:636
 msgid "The model can be downloaded again later."
 msgstr "Mallin voi ladata uudelleen myöhemmin."
 
-#: src/anduinos_whisper_gtk/app.py:511
+#: src/anduinos_whisper_gtk/app.py:639
 msgid "Remove"
 msgstr "Poista"
 
-#: src/anduinos_whisper_gtk/app.py:547
+#: src/anduinos_whisper_gtk/app.py:675
 msgid "In Use"
 msgstr "Käytössä"
 
-#: src/anduinos_whisper_gtk/app.py:550
+#: src/anduinos_whisper_gtk/app.py:678
 msgid "Use"
 msgstr "Käytä"
 
-#: src/anduinos_whisper_gtk/app.py:553
+#: src/anduinos_whisper_gtk/app.py:681
 msgid "Download"
 msgstr "Lataa"
 
-#: src/anduinos_whisper_gtk/app.py:559
+#: src/anduinos_whisper_gtk/app.py:687
 msgid "Stop Test"
 msgstr "Pysäytä testaus"
 
-#: src/anduinos_whisper_gtk/app.py:593
+#: src/anduinos_whisper_gtk/app.py:721
 msgid "AnduinOS Voice Typing"
 msgstr "AnduinOS-äänikirjoitus"
 
-#: src/anduinos_whisper_gtk/app.py:595
+#: src/anduinos_whisper_gtk/app.py:723
 msgid "AnduinOS Team"
 msgstr "AnduinOS-tiimi"
 
-#: src/anduinos_whisper_gtk/app.py:597
+#: src/anduinos_whisper_gtk/app.py:725
 msgid "Private, offline speech-to-text for the whole desktop."
 msgstr ""
 "Yksityinen, ilman verkkoyhteyttä toimiva puheentunnistus koko työpöydälle."
 
-#: src/anduinos_whisper_gtk/app.py:605
+#: src/anduinos_whisper_gtk/app.py:733
 #, python-format
 msgid "%.0f MB"
 msgstr "%.0f Mt"
 
-#: data/voice-typing@anduinos.com/extension.js:70
+#: data/voice-typing@anduinos.com/extension.js:72
+msgid "Loading speech model…"
+msgstr "Ladataan puheennustetta…"
+
+#: data/voice-typing@anduinos.com/extension.js:73
+msgid "Measuring performance — microphone off"
+msgstr "Suorituskykyä mitataan — mikrofoni pois päältä"
+
+#: data/voice-typing@anduinos.com/extension.js:75
 msgid "Recognizing…"
 msgstr "Tunnistetaan…"
 
-#: data/voice-typing@anduinos.com/extension.js:71
+#: data/voice-typing@anduinos.com/extension.js:76
+#: data/voice-typing@anduinos.com/extension.js:401
+msgid "Finishing recognition…"
+msgstr "Tunnistaminen käynnissä…"
+
+#: data/voice-typing@anduinos.com/extension.js:77
 msgid "Testing microphone…"
 msgstr "Testataan mikrofonia…"
 
-#: data/voice-typing@anduinos.com/extension.js:72
+#: data/voice-typing@anduinos.com/extension.js:78
 msgid "No speech detected"
 msgstr "Puhetta ei havaittu"
 
-#: data/voice-typing@anduinos.com/extension.js:73
+#: data/voice-typing@anduinos.com/extension.js:79
 msgid "Microphone unavailable"
 msgstr "Mikrofoni ei ole käytettävissä"
 
-#: data/voice-typing@anduinos.com/extension.js:77
-#: data/voice-typing@anduinos.com/extension.js:314
+#: data/voice-typing@anduinos.com/extension.js:83
+#, javascript-format
+msgid ""
+"Optimizing recognition for first use: %d seconds remaining (microphone off; "
+"click the microphone to cancel)"
+msgstr ""
+"Tunnistusta optimoidaan ensimmäistä käyttöä varten: %d sekuntia jäljellä "
+"(mikrofoni pois päältä; peruuta napsauttamalla mikrofonia)"
+
+#: data/voice-typing@anduinos.com/extension.js:84
+#, javascript-format
+msgid ""
+"Measuring recognition performance: %d seconds remaining (microphone off; "
+"click the microphone to cancel)"
+msgstr ""
+"Mittataan tunnistuksen suorituskykyä: %d sekuntia jäljellä (mikrofoni pois "
+"päältä; napsauta mikrofonia keskeyttääksesi)"
+
+#: data/voice-typing@anduinos.com/extension.js:88
+#: data/voice-typing@anduinos.com/extension.js:344
 msgid "Auto"
 msgstr "Automaattinen"
 
-#: data/voice-typing@anduinos.com/extension.js:371
-#: data/voice-typing@anduinos.com/extension.js:432
+#: data/voice-typing@anduinos.com/extension.js:414
+#: data/voice-typing@anduinos.com/extension.js:475
 msgid "Off"
 msgstr "Pois"
 
-#: data/voice-typing@anduinos.com/extension.js:544
+#: data/voice-typing@anduinos.com/extension.js:598
 msgid "Voice typing is disabled in password fields"
 msgstr "Äänikirjoitus on poistettu käytöstä salasanakentissä"
 
-#: data/voice-typing@anduinos.com/extension.js:549
+#: data/voice-typing@anduinos.com/extension.js:604
 msgid "Select a text field before dictating"
 msgstr "Valitse tekstikenttä ennen sanelua"
 
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:34
-msgid "Briefly preview recognized text before inserting it"
-msgstr "Näytä tunnistettu teksti hetken ennen sen lisäämistä"
+#~ msgid "Briefly preview recognized text before inserting it"
+#~ msgstr "Näytä tunnistettu teksti hetken ennen sen lisäämistä"
 
-#: data/com.anduinos.VoiceTyping.Settings.desktop:3
-msgid "Configure offline system-wide dictation"
-msgstr ""
-"Määritä ilman verkkoyhteyttä toimivan järjestelmänlaajuisen äänikirjoituksen"
-" asetukset"
+#~ msgid "Configure offline system-wide dictation"
+#~ msgstr ""
+#~ "Määritä ilman verkkoyhteyttä toimivan järjestelmänlaajuisen äänikirjoituksen"
+#~ " asetukset"
 
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:26
-msgid "Enable exact-match punctuation and layout commands"
-msgstr ""
-"Ota käyttöön tarkkaan vastaavuuteen perustuvat välimerkki- ja "
-"tekstinmuotoilukomennot"
+#~ msgid "Enable exact-match punctuation and layout commands"
+#~ msgstr ""
+#~ "Ota käyttöön tarkkaan vastaavuuteen perustuvat välimerkki- ja "
+#~ "tekstinmuotoilukomennot"
 
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:6
-msgid "Global voice typing shortcut"
-msgstr "Äänikirjoituksen globaali pikanäppäin"
+#~ msgid "Global voice typing shortcut"
+#~ msgstr "Äänikirjoituksen globaali pikanäppäin"
 
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:52
-msgid "Horizontal offset from the centered overlay position"
-msgstr "Vaakasuuntainen siirtymä peittokuvan keskitetystä sijainnista"
+#~ msgid "Horizontal offset from the centered overlay position"
+#~ msgstr "Vaakasuuntainen siirtymä peittokuvan keskitetystä sijainnista"
 
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:22
-msgid "Keep punctuation recognized by Whisper"
-msgstr "Säilytä Whisperin tunnistamat välimerkit"
+#~ msgid "Keep punctuation recognized by Whisper"
+#~ msgstr "Säilytä Whisperin tunnistamat välimerkit"
 
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:10
-msgid "PipeWire node name, or empty for the system default"
-msgstr ""
-"PipeWire-solmun nimi; jätä tyhjäksi käyttääksesi järjestelmän oletussolmua"
+#~ msgid "PipeWire node name, or empty for the system default"
+#~ msgstr ""
+#~ "PipeWire-solmun nimi; jätä tyhjäksi käyttääksesi järjestelmän oletussolmua"
 
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:30
-msgid "Play a subtle sound when listening starts or stops"
-msgstr ""
-"Toista hillitty äänimerkki, kun sovellus alkaa tai lopettaa mikrofonin "
-"kuuntelun"
+#~ msgid "Play a subtle sound when listening starts or stops"
+#~ msgstr ""
+#~ "Toista hillitty äänimerkki, kun sovellus alkaa tai lopettaa mikrofonin "
+#~ "kuuntelun"
 
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:43
-msgid "Preview duration in milliseconds"
-msgstr "Esikatselun kesto millisekunteina"
+#~ msgid "Preview duration in milliseconds"
+#~ msgstr "Esikatselun kesto millisekunteina"
 
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:14
-msgid "Recognition language and Chinese output script"
-msgstr "Tunnistuskieli ja kiinankielisen tekstin kirjoitusjärjestelmä"
+#~ msgid "Recognition language and Chinese output script"
+#~ msgstr "Tunnistuskieli ja kiinankielisen tekstin kirjoitusjärjestelmä"
 
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:38
-msgid "Show periodically refreshed partial transcripts while speaking"
-msgstr ""
-"Näytä osittaiset litteroinnit, jotka päivittyvät säännöllisesti puhuessasi"
+#~ msgid "Show periodically refreshed partial transcripts while speaking"
+#~ msgstr ""
+#~ "Näytä osittaiset litteroinnit, jotka päivittyvät säännöllisesti puhuessasi"
 
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:18
-msgid "Speech recognition model"
-msgstr "Puheentunnistusmalli"
+#~ msgid "Speech recognition model"
+#~ msgstr "Puheentunnistusmalli"
 
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:48
-msgid "Voice activity threshold in decibels"
-msgstr "Puheaktiivisuuden kynnysarvo desibeleinä"
+#~ msgid "Voice activity threshold in decibels"
+#~ msgstr "Puheaktiivisuuden kynnysarvo desibeleinä"
 
-#: data/com.anduinos.VoiceTyping.Settings.desktop:9
-msgid "voice;typing;dictation;speech;microphone;accessibility;"
-msgstr "ääni;kirjoittaminen;sanelu;puhe;mikrofoni;saavutettavuus;"
+#~ msgid "voice;typing;dictation;speech;microphone;accessibility;"
+#~ msgstr "ääni;kirjoittaminen;sanelu;puhe;mikrofoni;saavutettavuus;"

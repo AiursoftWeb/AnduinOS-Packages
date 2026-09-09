@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-whisper-gtk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-31 15:23+0000\n"
-"PO-Revision-Date: 2026-08-31 15:23+0000\n"
+"POT-Creation-Date: 2026-09-09 11:45+0000\n"
+"PO-Revision-Date: 2026-09-09 11:50+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: zh_CN\n"
@@ -20,79 +20,76 @@ msgid "Automatic detection"
 msgstr "自动检测语言"
 
 #: src/anduinos_whisper_gtk/app.py:30
-#: data/voice-typing@anduinos.com/extension.js:77
-#: data/voice-typing@anduinos.com/extension.js:78
+#: data/voice-typing@anduinos.com/extension.js:88
+#: data/voice-typing@anduinos.com/extension.js:89
 msgid "Simplified Chinese"
 msgstr "简体中文"
 
 #: src/anduinos_whisper_gtk/app.py:31
-#: data/voice-typing@anduinos.com/extension.js:78
+#: data/voice-typing@anduinos.com/extension.js:89
 msgid "Traditional Chinese"
 msgstr "繁体中文"
 
 #: src/anduinos_whisper_gtk/app.py:32
-#: data/voice-typing@anduinos.com/extension.js:79
+#: data/voice-typing@anduinos.com/extension.js:90
 msgid "English"
 msgstr "英语"
 
 #: src/anduinos_whisper_gtk/app.py:33
-#: data/voice-typing@anduinos.com/extension.js:79
+#: data/voice-typing@anduinos.com/extension.js:90
 msgid "Spanish"
 msgstr "西班牙语"
 
 #: src/anduinos_whisper_gtk/app.py:34
-#: data/voice-typing@anduinos.com/extension.js:80
+#: data/voice-typing@anduinos.com/extension.js:91
 msgid "French"
 msgstr "法语"
 
 #: src/anduinos_whisper_gtk/app.py:35
-#: data/voice-typing@anduinos.com/extension.js:80
+#: data/voice-typing@anduinos.com/extension.js:91
 msgid "German"
 msgstr "德语"
 
 #: src/anduinos_whisper_gtk/app.py:36
-#: data/voice-typing@anduinos.com/extension.js:80
+#: data/voice-typing@anduinos.com/extension.js:91
 msgid "Japanese"
 msgstr "日语"
 
 #: src/anduinos_whisper_gtk/app.py:37
-#: data/voice-typing@anduinos.com/extension.js:80
+#: data/voice-typing@anduinos.com/extension.js:91
 msgid "Korean"
 msgstr "韩语"
 
 #: src/anduinos_whisper_gtk/app.py:38
-#: data/voice-typing@anduinos.com/extension.js:81
+#: data/voice-typing@anduinos.com/extension.js:92
 msgid "Russian"
 msgstr "俄语"
 
 #: src/anduinos_whisper_gtk/app.py:39
-#: data/voice-typing@anduinos.com/extension.js:81
+#: data/voice-typing@anduinos.com/extension.js:92
 msgid "Portuguese"
 msgstr "葡萄牙语"
 
 #: src/anduinos_whisper_gtk/app.py:43 src/anduinos_whisper_gtk/app.py:66
-#: src/anduinos_whisper_gtk/app.py:96 src/anduinos_whisper_gtk/app.py:313
-#: data/com.anduinos.VoiceTyping.Settings.desktop:2
+#: src/anduinos_whisper_gtk/app.py:96 src/anduinos_whisper_gtk/app.py:441
 msgid "Voice Typing"
 msgstr "语音输入"
 
 #: src/anduinos_whisper_gtk/app.py:44
-#: data/voice-typing@anduinos.com/extension.js:68
-#: data/voice-typing@anduinos.com/extension.js:92
-#: data/voice-typing@anduinos.com/extension.js:147
-#: data/voice-typing@anduinos.com/extension.js:296
-#: data/voice-typing@anduinos.com/extension.js:361
-#: data/voice-typing@anduinos.com/extension.js:399
-#: data/voice-typing@anduinos.com/extension.js:434
-#: data/voice-typing@anduinos.com/extension.js:459
+#: data/voice-typing@anduinos.com/extension.js:71
+#: data/voice-typing@anduinos.com/extension.js:112
+#: data/voice-typing@anduinos.com/extension.js:170
+#: data/voice-typing@anduinos.com/extension.js:326
+#: data/voice-typing@anduinos.com/extension.js:442
+#: data/voice-typing@anduinos.com/extension.js:477
+#: data/voice-typing@anduinos.com/extension.js:504
 msgid "Ready"
 msgstr "就绪"
 
 #: src/anduinos_whisper_gtk/app.py:45
-#: data/voice-typing@anduinos.com/extension.js:69
-#: data/voice-typing@anduinos.com/extension.js:354
-#: data/voice-typing@anduinos.com/extension.js:436
-#: data/voice-typing@anduinos.com/extension.js:437
+#: data/voice-typing@anduinos.com/extension.js:74
+#: data/voice-typing@anduinos.com/extension.js:393
+#: data/voice-typing@anduinos.com/extension.js:480
 msgid "Listening…"
 msgstr "正在聆听…"
 
@@ -126,7 +123,7 @@ msgstr "状态"
 msgid "Checking the local service…"
 msgstr "正在检查本地服务…"
 
-#: src/anduinos_whisper_gtk/app.py:107 src/anduinos_whisper_gtk/app.py:307
+#: src/anduinos_whisper_gtk/app.py:107 src/anduinos_whisper_gtk/app.py:435
 msgid "Start"
 msgstr "开始"
 
@@ -167,172 +164,289 @@ msgid "Change…"
 msgstr "更改…"
 
 #: src/anduinos_whisper_gtk/app.py:164
+msgid "Noise reduction"
+msgstr "降噪"
+
+#: src/anduinos_whisper_gtk/app.py:165
+msgid ""
+"Reduce background noise and balance microphone level; restart listening "
+"after changing this"
+msgstr "抑制背景噪声并平衡麦克风音量；更改后请重新开始听写"
+
+#: src/anduinos_whisper_gtk/app.py:169
 msgid "Automatic punctuation"
 msgstr "自动标点"
 
-#: src/anduinos_whisper_gtk/app.py:165
+#: src/anduinos_whisper_gtk/app.py:170
 msgid "Keep punctuation recognized from speech"
 msgstr "保留从语音中识别出的标点"
 
-#: src/anduinos_whisper_gtk/app.py:169
+#: src/anduinos_whisper_gtk/app.py:174
 msgid "Voice commands"
 msgstr "语音命令"
 
-#: src/anduinos_whisper_gtk/app.py:170
+#: src/anduinos_whisper_gtk/app.py:175
 msgid "Recognize commands such as “new line” and “comma”"
 msgstr "识别“换行”和“逗号”等语音命令"
 
-#: src/anduinos_whisper_gtk/app.py:174
+#: src/anduinos_whisper_gtk/app.py:179
 msgid "Live transcription"
 msgstr "实时转写"
 
-#: src/anduinos_whisper_gtk/app.py:175
+#: src/anduinos_whisper_gtk/app.py:180
 msgid "Show words in the microphone bar while you speak"
 msgstr "说话时，在麦克风栏中显示识别出的词语"
 
-#: src/anduinos_whisper_gtk/app.py:179
+#: src/anduinos_whisper_gtk/app.py:184
 msgid "Final result preview"
 msgstr "最终结果预览"
 
-#: src/anduinos_whisper_gtk/app.py:180
+#: src/anduinos_whisper_gtk/app.py:185
 msgid "Pause briefly before inserting the completed phrase"
 msgstr "短暂暂停后再插入完整短语"
 
-#: src/anduinos_whisper_gtk/app.py:184
+#: src/anduinos_whisper_gtk/app.py:189
 msgid "Start and stop sounds"
 msgstr "开始和停止提示音"
 
-#: src/anduinos_whisper_gtk/app.py:185
+#: src/anduinos_whisper_gtk/app.py:190
 msgid "Play a subtle microphone cue"
 msgstr "播放轻柔且不打扰的麦克风提示音"
 
-#: src/anduinos_whisper_gtk/app.py:195
+#: src/anduinos_whisper_gtk/app.py:200
+msgid "Performance diagnostics"
+msgstr "性能诊断"
+
+#: src/anduinos_whisper_gtk/app.py:201
+msgid ""
+"Export timings from the current voice session. No recordings or recognized "
+"text are included."
+msgstr "导出当前语音会话的耗时数据，不包含录音或识别出的文字。"
+
+#: src/anduinos_whisper_gtk/app.py:203 src/anduinos_whisper_gtk/app.py:297
+msgid "Export diagnostic report"
+msgstr "导出诊断报告"
+
+#: src/anduinos_whisper_gtk/app.py:204
+msgid "Export"
+msgstr "导出"
+
+#: src/anduinos_whisper_gtk/app.py:212
+msgid "Recognition performance"
+msgstr "识别性能"
+
+#: src/anduinos_whisper_gtk/app.py:214
+msgid ""
+"Changes apply next time listening starts. Automatic selection measures "
+"bundled audio without using your microphone or changing your model."
+msgstr "更改将在下次开始听写时生效。自动选择使用内置音频测速，不会使用麦克风或更换模型。"
+
+#: src/anduinos_whisper_gtk/app.py:220
+msgid ""
+"First use takes at most 10 seconds and results are cached. Wait for "
+"Listening before speaking; press the microphone button again to cancel "
+"preparation."
+msgstr "首次使用最多需要 10 秒，测试结果会缓存。请等到显示正在聆听后再说话；再次点击麦克风可取消准备。"
+
+#: src/anduinos_whisper_gtk/app.py:226
+msgid "Recognition backend"
+msgstr "识别后端"
+
+#: src/anduinos_whisper_gtk/app.py:227
+msgid "Automatic (measured)"
+msgstr "自动（本机测速）"
+
+#: src/anduinos_whisper_gtk/app.py:227
+msgid "CPU"
+msgstr "CPU"
+
+#: src/anduinos_whisper_gtk/app.py:227
+msgid "GPU (CPU fallback)"
+msgstr "GPU（失败时回退 CPU）"
+
+#: src/anduinos_whisper_gtk/app.py:234
+msgid "Recognition threads"
+msgstr "识别线程数"
+
+#: src/anduinos_whisper_gtk/app.py:234
+msgid "0 selects automatically; more threads are not always faster"
+msgstr "0 表示自动选择；线程越多不一定越快"
+
+#: src/anduinos_whisper_gtk/app.py:242
+msgid "Measure again on next start"
+msgstr "下次开始时重新测速"
+
+#: src/anduinos_whisper_gtk/app.py:244
+msgid "A complete test may take up to one minute. The microphone remains off."
+msgstr "完整测试最多需要一分钟；测试期间麦克风不会开启。"
+
+#: src/anduinos_whisper_gtk/app.py:247
+msgid "Retest"
+msgstr "重新测速"
+
+#: src/anduinos_whisper_gtk/app.py:251
+msgid "Restore automatic backend and thread selection"
+msgstr "恢复后端和线程数的自动选择"
+
+#: src/anduinos_whisper_gtk/app.py:253
+msgid "Restore defaults"
+msgstr "恢复默认"
+
+#: src/anduinos_whisper_gtk/app.py:276
+msgid "Performance will be measured next time listening starts"
+msgstr "下次开始听写时将进行性能测速"
+
+#: src/anduinos_whisper_gtk/app.py:291
+msgid "No diagnostic report available"
+msgstr "暂无诊断报告"
+
+#: src/anduinos_whisper_gtk/app.py:292
+msgid ""
+"Start a voice session, then export its report before closing the microphone "
+"bar."
+msgstr "请先开始一次语音会话，并在关闭麦克风浮条前导出报告。"
+
+#: src/anduinos_whisper_gtk/app.py:294 src/anduinos_whisper_gtk/app.py:318
+#: src/anduinos_whisper_gtk/app.py:627
+msgid "Close"
+msgstr "关闭"
+
+#: src/anduinos_whisper_gtk/app.py:316
+msgid "Could not save diagnostic report"
+msgstr "无法保存诊断报告"
+
+#: src/anduinos_whisper_gtk/app.py:317
+msgid "Check that the selected folder is writable and has free space."
+msgstr "请检查所选文件夹是否可写，并确认有足够的可用空间。"
+
+#: src/anduinos_whisper_gtk/app.py:322
 msgid "Models"
 msgstr "模型"
 
-#: src/anduinos_whisper_gtk/app.py:198
+#: src/anduinos_whisper_gtk/app.py:325
 msgid "Offline speech models"
 msgstr "离线语音识别模型"
 
-#: src/anduinos_whisper_gtk/app.py:200
+#: src/anduinos_whisper_gtk/app.py:327
 msgid ""
 "The Base multilingual model is installed with Voice Typing. Optional models "
 "are verified before use."
 msgstr "语音输入已安装多语言 Base 模型。可选模型在使用前会经过验证。"
 
-#: src/anduinos_whisper_gtk/app.py:213
+#: src/anduinos_whisper_gtk/app.py:340
 msgid "Remove downloaded model"
 msgstr "删除已下载的模型"
 
-#: src/anduinos_whisper_gtk/app.py:216
+#: src/anduinos_whisper_gtk/app.py:343
 #, python-format
 msgid "Remove %s"
 msgstr "删除 %s"
 
-#: src/anduinos_whisper_gtk/app.py:230
+#: src/anduinos_whisper_gtk/app.py:357
 msgid "Microphone Training"
 msgstr "麦克风校准"
 
-#: src/anduinos_whisper_gtk/app.py:234
-msgid "Calibrate your speaking setup"
-msgstr "校准语音输入环境"
+#: src/anduinos_whisper_gtk/app.py:361
+msgid "Check your speaking setup"
+msgstr "检查说话环境"
 
-#: src/anduinos_whisper_gtk/app.py:236
+#: src/anduinos_whisper_gtk/app.py:363
 msgid ""
-"Whisper does not need a personal voice profile. Use this page to check "
-"microphone level, distance, and background noise."
-msgstr "Whisper 不需要个人语音配置文件。请使用此页面检查麦克风输入电平、距离和背景噪声。"
+"Whisper does not need a personal voice profile. Use this page to check the "
+"processed microphone level, distance, and background noise. This test does "
+"not train the model or measure recognition accuracy."
+msgstr "Whisper 不需要个人声纹。此页用于检查处理后的麦克风音量、距离与背景噪声；这项测试不会训练模型，也不测量识别准确率。"
 
-#: src/anduinos_whisper_gtk/app.py:242
+#: src/anduinos_whisper_gtk/app.py:370
 msgid "Practice phrase"
 msgstr "练习短语"
 
-#: src/anduinos_whisper_gtk/app.py:243
+#: src/anduinos_whisper_gtk/app.py:371
 msgid "“Voice typing makes writing faster and more accessible.”"
 msgstr "“语音输入让写作更快，也让更多人更容易写作。”"
 
-#: src/anduinos_whisper_gtk/app.py:249
+#: src/anduinos_whisper_gtk/app.py:377
 msgid "Input level"
 msgstr "输入电平"
 
-#: src/anduinos_whisper_gtk/app.py:250
+#: src/anduinos_whisper_gtk/app.py:378
 msgid "Speak normally; aim for the middle of the meter"
 msgstr "正常说话；尽量将输入电平保持在电平表中央"
 
-#: src/anduinos_whisper_gtk/app.py:254
+#: src/anduinos_whisper_gtk/app.py:382
 msgid "Microphone input level"
 msgstr "麦克风输入信号电平"
 
-#: src/anduinos_whisper_gtk/app.py:260
+#: src/anduinos_whisper_gtk/app.py:388
 msgid "Microphone test"
 msgstr "麦克风测试"
 
-#: src/anduinos_whisper_gtk/app.py:261
+#: src/anduinos_whisper_gtk/app.py:389
 msgid "No audio is saved during this test"
 msgstr "测试期间不会保存音频"
 
-#: src/anduinos_whisper_gtk/app.py:263 src/anduinos_whisper_gtk/app.py:559
+#: src/anduinos_whisper_gtk/app.py:391 src/anduinos_whisper_gtk/app.py:687
 msgid "Start Test"
 msgstr "开始测试"
 
-#: src/anduinos_whisper_gtk/app.py:268
+#: src/anduinos_whisper_gtk/app.py:396
 msgid "Tips for better recognition"
 msgstr "提高识别准确度的提示"
 
-#: src/anduinos_whisper_gtk/app.py:271
+#: src/anduinos_whisper_gtk/app.py:399
 msgid "Speak naturally"
 msgstr "自然说话"
 
-#: src/anduinos_whisper_gtk/app.py:272
+#: src/anduinos_whisper_gtk/app.py:400
 msgid "Use short phrases and pause briefly between sentences"
 msgstr "使用简短词组，并在句间稍作停顿"
 
-#: src/anduinos_whisper_gtk/app.py:276
+#: src/anduinos_whisper_gtk/app.py:404
 msgid "Reduce background noise"
 msgstr "减少背景噪音"
 
-#: src/anduinos_whisper_gtk/app.py:277
+#: src/anduinos_whisper_gtk/app.py:405
 msgid "Keep the microphone close without speaking directly into it"
 msgstr "将麦克风靠近嘴边，但不要直接对着麦克风说话"
 
-#: src/anduinos_whisper_gtk/app.py:281
+#: src/anduinos_whisper_gtk/app.py:409
 msgid "Choose the language"
 msgstr "选择语言"
 
-#: src/anduinos_whisper_gtk/app.py:282
+#: src/anduinos_whisper_gtk/app.py:410
 msgid "A fixed language is faster than automatic detection"
 msgstr "指定语言比自动检测更快"
 
-#: src/anduinos_whisper_gtk/app.py:305
+#: src/anduinos_whisper_gtk/app.py:433
 msgid "Stop"
 msgstr "停止"
 
-#: src/anduinos_whisper_gtk/app.py:343
+#: src/anduinos_whisper_gtk/app.py:471
 msgid "Set Keyboard Shortcut"
 msgstr "设置快捷键"
 
-#: src/anduinos_whisper_gtk/app.py:365
+#: src/anduinos_whisper_gtk/app.py:493
 msgid "Press the new shortcut"
 msgstr "按下新的快捷键"
 
-#: src/anduinos_whisper_gtk/app.py:369
+#: src/anduinos_whisper_gtk/app.py:497
 msgid "The keys you press will be used to start or stop Voice Typing."
 msgstr "您按下的按键将用于开始或停止语音输入。"
 
-#: src/anduinos_whisper_gtk/app.py:377
+#: src/anduinos_whisper_gtk/app.py:505
 msgid "Waiting for input…"
 msgstr "等待输入…"
 
-#: src/anduinos_whisper_gtk/app.py:383
+#: src/anduinos_whisper_gtk/app.py:511
 msgid "Esc cancels · Backspace disables the shortcut"
 msgstr "按 Esc 取消 · 按 Backspace 禁用快捷键"
 
-#: src/anduinos_whisper_gtk/app.py:445
+#: src/anduinos_whisper_gtk/app.py:573
 #, python-format
 msgid "Download %s from Hugging Face?"
 msgstr "从 Hugging Face 下载 %s？"
 
-#: src/anduinos_whisper_gtk/app.py:447
+#: src/anduinos_whisper_gtk/app.py:575
 msgid ""
 "This optional model is hosted by Hugging Face, a third-party service. AnduinOS is not affiliated with, sponsored by, or partnered with Hugging Face.\n"
 "\n"
@@ -346,277 +460,179 @@ msgstr ""
 "\n"
 "隐私政策：https://huggingface.co/privacy"
 
-#: src/anduinos_whisper_gtk/app.py:456 src/anduinos_whisper_gtk/app.py:510
+#: src/anduinos_whisper_gtk/app.py:584 src/anduinos_whisper_gtk/app.py:638
 msgid "Cancel"
 msgstr "取消"
 
-#: src/anduinos_whisper_gtk/app.py:457
+#: src/anduinos_whisper_gtk/app.py:585
 msgid "Continue Download"
 msgstr "继续下载"
 
-#: src/anduinos_whisper_gtk/app.py:479 src/anduinos_whisper_gtk/app.py:538
+#: src/anduinos_whisper_gtk/app.py:607 src/anduinos_whisper_gtk/app.py:666
 msgid "Downloading…"
 msgstr "正在下载…"
 
-#: src/anduinos_whisper_gtk/app.py:497
+#: src/anduinos_whisper_gtk/app.py:625
 msgid "Retry"
 msgstr "重试"
 
-#: src/anduinos_whisper_gtk/app.py:498
+#: src/anduinos_whisper_gtk/app.py:626
 msgid "Model download failed"
 msgstr "模型下载失败"
 
-#: src/anduinos_whisper_gtk/app.py:499
-msgid "Close"
-msgstr "关闭"
-
-#: src/anduinos_whisper_gtk/app.py:507
+#: src/anduinos_whisper_gtk/app.py:635
 #, python-format
 msgid "Remove %s model?"
 msgstr "删除 %s 模型？"
 
-#: src/anduinos_whisper_gtk/app.py:508
+#: src/anduinos_whisper_gtk/app.py:636
 msgid "The model can be downloaded again later."
 msgstr "该模型可稍后重新下载。"
 
-#: src/anduinos_whisper_gtk/app.py:511
+#: src/anduinos_whisper_gtk/app.py:639
 msgid "Remove"
 msgstr "删除"
 
-#: src/anduinos_whisper_gtk/app.py:547
+#: src/anduinos_whisper_gtk/app.py:675
 msgid "In Use"
 msgstr "使用中"
 
-#: src/anduinos_whisper_gtk/app.py:550
+#: src/anduinos_whisper_gtk/app.py:678
 msgid "Use"
 msgstr "使用"
 
-#: src/anduinos_whisper_gtk/app.py:553
+#: src/anduinos_whisper_gtk/app.py:681
 msgid "Download"
 msgstr "下载"
 
-#: src/anduinos_whisper_gtk/app.py:559
+#: src/anduinos_whisper_gtk/app.py:687
 msgid "Stop Test"
 msgstr "停止测试"
 
-#: src/anduinos_whisper_gtk/app.py:593
+#: src/anduinos_whisper_gtk/app.py:721
 msgid "AnduinOS Voice Typing"
 msgstr "AnduinOS 语音输入"
 
-#: src/anduinos_whisper_gtk/app.py:595
+#: src/anduinos_whisper_gtk/app.py:723
 msgid "AnduinOS Team"
 msgstr "AnduinOS 团队"
 
-#: src/anduinos_whisper_gtk/app.py:597
+#: src/anduinos_whisper_gtk/app.py:725
 msgid "Private, offline speech-to-text for the whole desktop."
 msgstr "保护隐私的离线语音转文字，适用于整个桌面环境。"
 
-#: src/anduinos_whisper_gtk/app.py:605
+#: src/anduinos_whisper_gtk/app.py:733
 #, python-format
 msgid "%.0f MB"
 msgstr "%.0f MB"
 
-#: data/voice-typing@anduinos.com/extension.js:70
-msgid "Recognizing…"
-msgstr "正在识别…"
-
-#: data/voice-typing@anduinos.com/extension.js:71
-msgid "Testing microphone…"
-msgstr "正在测试麦克风…"
-
 #: data/voice-typing@anduinos.com/extension.js:72
-msgid "No speech detected"
-msgstr "未检测到语音"
-
-#: data/voice-typing@anduinos.com/extension.js:73
-msgid "Microphone unavailable"
-msgstr "麦克风不可用"
-
-#: data/voice-typing@anduinos.com/extension.js:77
-#: data/voice-typing@anduinos.com/extension.js:314
-msgid "Auto"
-msgstr "自动"
-
-#: data/voice-typing@anduinos.com/extension.js:371
-#: data/voice-typing@anduinos.com/extension.js:432
-msgid "Off"
-msgstr "已关闭"
-
-#: data/voice-typing@anduinos.com/extension.js:544
-msgid "Voice typing is disabled in password fields"
-msgstr "密码字段中已禁用语音输入"
-
-#: data/voice-typing@anduinos.com/extension.js:549
-msgid "Select a text field before dictating"
-msgstr "请在语音输入前选择文本字段"
-
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:34
-msgid "Briefly preview recognized text before inserting it"
-msgstr "插入前短暂预览识别出的文本"
-
-#: data/com.anduinos.VoiceTyping.Settings.desktop:3
-msgid "Configure offline system-wide dictation"
-msgstr "配置离线的系统级听写"
-
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:26
-msgid "Enable exact-match punctuation and layout commands"
-msgstr "启用精确匹配的标点和布局命令"
-
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:6
-msgid "Global voice typing shortcut"
-msgstr "全局语音输入快捷键"
-
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:52
-msgid "Horizontal offset from the centered overlay position"
-msgstr "相对于居中悬浮层位置的水平偏移"
-
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:22
-msgid "Keep punctuation recognized by Whisper"
-msgstr "保留 Whisper 识别出的标点符号"
-
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:10
-msgid "PipeWire node name, or empty for the system default"
-msgstr "PipeWire 节点名称，留空则使用系统默认值"
-
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:30
-msgid "Play a subtle sound when listening starts or stops"
-msgstr "开始或停止聆听时播放轻微提示音"
-
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:43
-msgid "Preview duration in milliseconds"
-msgstr "预览时长（毫秒）"
-
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:14
-msgid "Recognition language and Chinese output script"
-msgstr "识别语言和中文输出字形"
-
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:38
-msgid "Show periodically refreshed partial transcripts while speaking"
-msgstr "说话时显示定期刷新的部分转写文本"
-
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:18
-msgid "Speech recognition model"
-msgstr "语音识别模型"
-
-#: anduinos-whisper-framework/data/com.anduinos.voice-typing.gschema.xml:48
-msgid "Voice activity threshold in decibels"
-msgstr "语音活动阈值（分贝）"
-
-#: data/com.anduinos.VoiceTyping.Settings.desktop:9
-msgid "voice;typing;dictation;speech;microphone;accessibility;"
-msgstr "语音;输入;听写;语音识别;麦克风;辅助功能;"
-
-msgid "Finishing recognition…"
-msgstr "正在完成识别…"
-
-msgid "Performance diagnostics"
-msgstr "性能诊断"
-
-msgid ""
-"Export timings from the current voice session. No recordings or recognized "
-"text are included."
-msgstr "导出当前语音会话的耗时数据，不包含录音或识别出的文字。"
-
-msgid "Export diagnostic report"
-msgstr "导出诊断报告"
-
-msgid "Export"
-msgstr "导出"
-
-msgid "No diagnostic report available"
-msgstr "暂无诊断报告"
-
-msgid ""
-"Start a voice session, then export its report before closing the microphone "
-"bar."
-msgstr "请先开始一次语音会话，并在关闭麦克风浮条前导出报告。"
-
-msgid "Could not save diagnostic report"
-msgstr "无法保存诊断报告"
-
-msgid "Check that the selected folder is writable and has free space."
-msgstr "请检查所选文件夹是否可写，并确认有足够的可用空间。"
-
-msgid "Noise reduction"
-msgstr "降噪"
-
 msgid "Loading speech model…"
 msgstr "正在加载语音模型…"
 
+#: data/voice-typing@anduinos.com/extension.js:73
 msgid "Measuring performance — microphone off"
 msgstr "正在校准性能 — 麦克风关闭"
 
-#, c-format
+#: data/voice-typing@anduinos.com/extension.js:75
+msgid "Recognizing…"
+msgstr "正在识别…"
+
+#: data/voice-typing@anduinos.com/extension.js:76
+#: data/voice-typing@anduinos.com/extension.js:401
+msgid "Finishing recognition…"
+msgstr "正在完成识别…"
+
+#: data/voice-typing@anduinos.com/extension.js:77
+msgid "Testing microphone…"
+msgstr "正在测试麦克风…"
+
+#: data/voice-typing@anduinos.com/extension.js:78
+msgid "No speech detected"
+msgstr "未检测到语音"
+
+#: data/voice-typing@anduinos.com/extension.js:79
+msgid "Microphone unavailable"
+msgstr "麦克风不可用"
+
+#: data/voice-typing@anduinos.com/extension.js:83
+#, javascript-format
 msgid ""
 "Optimizing recognition for first use: %d seconds remaining (microphone off; "
 "click the microphone to cancel)"
 msgstr "首次优化识别性能：还剩 %d 秒（麦克风未开启；点击麦克风可取消）"
 
-#, c-format
+#: data/voice-typing@anduinos.com/extension.js:84
+#, javascript-format
 msgid ""
 "Measuring recognition performance: %d seconds remaining (microphone off; "
 "click the microphone to cancel)"
 msgstr "正在完整测试识别性能：还剩 %d 秒（麦克风未开启；点击麦克风可取消）"
 
-msgid ""
-"First use takes at most 10 seconds and results are cached. Wait for Listening "
-"before speaking; press the microphone button again to cancel preparation."
-msgstr "首次使用最多需要 10 秒，测试结果会缓存。请等到显示正在聆听后再说话；再次点击麦克风可取消准备。"
+#: data/voice-typing@anduinos.com/extension.js:88
+#: data/voice-typing@anduinos.com/extension.js:344
+msgid "Auto"
+msgstr "自动"
 
-msgid "Recognition performance"
-msgstr "识别性能"
+#: data/voice-typing@anduinos.com/extension.js:414
+#: data/voice-typing@anduinos.com/extension.js:475
+msgid "Off"
+msgstr "已关闭"
 
-msgid ""
-"Changes apply next time listening starts. Automatic selection measures "
-"bundled audio without using your microphone or changing your model."
-msgstr "更改将在下次开始听写时生效。自动选择使用内置音频测速，不会使用麦克风或更换模型。"
+#: data/voice-typing@anduinos.com/extension.js:598
+msgid "Voice typing is disabled in password fields"
+msgstr "密码字段中已禁用语音输入"
 
-msgid "Recognition backend"
-msgstr "识别后端"
+#: data/voice-typing@anduinos.com/extension.js:604
+msgid "Select a text field before dictating"
+msgstr "请在语音输入前选择文本字段"
 
-msgid "Automatic (measured)"
-msgstr "自动（本机测速）"
+#~ msgid "Calibrate your speaking setup"
+#~ msgstr "校准语音输入环境"
 
-msgid "CPU"
-msgstr "CPU"
+#~ msgid ""
+#~ "Whisper does not need a personal voice profile. Use this page to check "
+#~ "microphone level, distance, and background noise."
+#~ msgstr "Whisper 不需要个人语音配置文件。请使用此页面检查麦克风输入电平、距离和背景噪声。"
 
-msgid "GPU (CPU fallback)"
-msgstr "GPU（失败时回退 CPU）"
+#~ msgid "Briefly preview recognized text before inserting it"
+#~ msgstr "插入前短暂预览识别出的文本"
 
-msgid "Recognition threads"
-msgstr "识别线程数"
+#~ msgid "Configure offline system-wide dictation"
+#~ msgstr "配置离线的系统级听写"
 
-msgid "0 selects automatically; more threads are not always faster"
-msgstr "0 表示自动选择；线程越多不一定越快"
+#~ msgid "Enable exact-match punctuation and layout commands"
+#~ msgstr "启用精确匹配的标点和布局命令"
 
-msgid "Measure again on next start"
-msgstr "下次开始时重新测速"
+#~ msgid "Global voice typing shortcut"
+#~ msgstr "全局语音输入快捷键"
 
-msgid "A complete test may take up to one minute. The microphone remains off."
-msgstr "完整测试最多需要一分钟；测试期间麦克风不会开启。"
+#~ msgid "Horizontal offset from the centered overlay position"
+#~ msgstr "相对于居中悬浮层位置的水平偏移"
 
-msgid "Retest"
-msgstr "重新测速"
+#~ msgid "Keep punctuation recognized by Whisper"
+#~ msgstr "保留 Whisper 识别出的标点符号"
 
-msgid "Restore automatic backend and thread selection"
-msgstr "恢复后端和线程数的自动选择"
+#~ msgid "PipeWire node name, or empty for the system default"
+#~ msgstr "PipeWire 节点名称，留空则使用系统默认值"
 
-msgid "Restore defaults"
-msgstr "恢复默认"
+#~ msgid "Play a subtle sound when listening starts or stops"
+#~ msgstr "开始或停止聆听时播放轻微提示音"
 
-msgid "Performance will be measured next time listening starts"
-msgstr "下次开始听写时将进行性能测速"
+#~ msgid "Preview duration in milliseconds"
+#~ msgstr "预览时长（毫秒）"
 
-msgid ""
-"Reduce background noise and balance microphone level; restart listening "
-"after changing this"
-msgstr "抑制背景噪声并平衡麦克风音量；更改后请重新开始听写"
+#~ msgid "Recognition language and Chinese output script"
+#~ msgstr "识别语言和中文输出字形"
 
-msgid "Check your speaking setup"
-msgstr "检查说话环境"
+#~ msgid "Show periodically refreshed partial transcripts while speaking"
+#~ msgstr "说话时显示定期刷新的部分转写文本"
 
-msgid ""
-"Whisper does not need a personal voice profile. Use this page to check the "
-"processed microphone level, distance, and background noise. This test does "
-"not train the model or measure recognition accuracy."
-msgstr "Whisper 不需要个人声纹。此页用于检查处理后的麦克风音量、距离与背景噪声；这项测试不会训练模型，也不测量识别准确率。"
+#~ msgid "Speech recognition model"
+#~ msgstr "语音识别模型"
+
+#~ msgid "Voice activity threshold in decibels"
+#~ msgstr "语音活动阈值（分贝）"
+
+#~ msgid "voice;typing;dictation;speech;microphone;accessibility;"
+#~ msgstr "语音;输入;听写;语音识别;麦克风;辅助功能;"

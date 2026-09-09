@@ -3,6 +3,7 @@ import json
 import re
 import subprocess
 import sys
+import tempfile
 import unittest
 from unittest import mock
 
@@ -19,6 +20,27 @@ from anduinos_whisper_gtk.shortcuts import accelerator_from_key_event  # noqa: E
 from anduinos_whisper_gtk import app as settings_app  # noqa: E402
 
 class PackageTests(unittest.TestCase):
+    def test_translation_template_matches_python_and_shell_sources(self):
+        with tempfile.TemporaryDirectory() as directory:
+            extracted = Path(directory) / "messages.pot"
+            subprocess.run([
+                "xgettext", "--language=Python", "--keyword=_",
+                "--from-code=UTF-8", "--no-wrap", f"--output={extracted}",
+                *map(str, sorted((ROOT / "src/anduinos_whisper_gtk").glob("*.py"))),
+            ], check=True)
+            subprocess.run([
+                "xgettext", "--join-existing", "--language=JavaScript",
+                "--keyword=_", "--keyword=N_", "--from-code=UTF-8",
+                "--no-wrap", f"--output={extracted}",
+                str(ROOT / "data/voice-typing@anduinos.com/extension.js"),
+            ], check=True)
+            template = ROOT / "po/anduinos-whisper-gtk.pot"
+            for definition, reference in ((template, extracted), (extracted, template)):
+                subprocess.run([
+                    "msgcmp", "--use-untranslated", "--no-fuzzy-matching",
+                    str(definition), str(reference),
+                ], check=True, capture_output=True, text=True)
+
     def test_finish_and_cancel_controller_behavior(self):
         subprocess.run(['node', str(ROOT / 'tests/test_finishing.mjs')], check=True)
 
