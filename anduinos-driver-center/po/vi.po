@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: anduinos-driver-center\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-11 16:11+0800\n"
-"PO-Revision-Date: 2026-08-06 07:08+0000\n"
+"PO-Revision-Date: 2026-09-09 12:09+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: vi\n"
 "Language: vi_VN\n"
@@ -1297,6 +1297,206 @@ msgstr "Cấu hình độ tin cậy của Secure Boot và sửa chữa chữ ký
 #: anduinos-secureboot-toolkit/data/com.anduinos.SecureBootToolkit.policy:10
 msgid "Authentication is required to configure Secure Boot trust"
 msgstr "Yêu cầu xác thực để cấu hình độ tin cậy của Secure Boot"
+
+#: src/anduinos_driver_center/app.py:437 src/anduinos_driver_center/app.py:440
+#: src/anduinos_driver_center/computer_ui.py:138
+msgid "About This Computer"
+msgstr "Giới thiệu máy tính này"
+
+#: src/anduinos_driver_center/app.py:437
+#: src/anduinos_driver_center/computer_ui.py:141
+msgid "Hardware overview"
+msgstr "Tổng quan phần cứng"
+
+#: src/anduinos_driver_center/computer_ui.py:105
+#: src/anduinos_driver_center/computer_ui.py:164
+#: src/anduinos_driver_center/computer_ui.py:188
+msgid "Display"
+msgstr "Hiển thị"
+
+#: src/anduinos_driver_center/computer_ui.py:114
+msgid "Current mode"
+msgstr "Chế độ hiện tại"
+
+#: src/anduinos_driver_center/computer_ui.py:148
+#, python-format
+msgid "%s cores"
+msgstr "%s lõi"
+
+#: src/anduinos_driver_center/computer_ui.py:152
+#, python-format
+msgid "%s threads"
+msgstr "%s luồng"
+
+#: src/anduinos_driver_center/computer_ui.py:153
+#: src/anduinos_driver_center/computer_ui.py:178
+msgid "Processor"
+msgstr "Bộ xử lý"
+
+#: src/anduinos_driver_center/computer_ui.py:154
+msgid "Memory"
+msgstr "Bộ nhớ"
+
+#: src/anduinos_driver_center/computer_ui.py:154
+msgid "Usable by the system"
+msgstr "Dùng được bởi hệ thống"
+
+#: src/anduinos_driver_center/computer_ui.py:156
+#: src/anduinos_driver_center/computer_ui.py:182
+msgid "Graphics"
+msgstr "Đồ họa"
+
+#: src/anduinos_driver_center/computer_ui.py:159
+#: src/anduinos_driver_center/computer_ui.py:162
+msgid "System disk"
+msgstr "Ổ đĩa hệ thống"
+
+#: src/anduinos_driver_center/computer_ui.py:165
+msgid "Motherboard"
+msgstr "Bo mạch chủ"
+
+#: src/anduinos_driver_center/computer_ui.py:172
+msgid "Detailed specifications"
+msgstr "Thông số chi tiết"
+
+#: src/anduinos_driver_center/computer_ui.py:173
+msgid "System"
+msgstr "Hệ thống"
+
+#: src/anduinos_driver_center/computer_ui.py:174
+msgid "Desktop"
+msgstr "Màn hình nền"
+
+#: src/anduinos_driver_center/computer_ui.py:175
+msgid "BIOS / UEFI"
+msgstr "BIOS / UEFI"
+
+#: src/anduinos_driver_center/computer_ui.py:180
+msgid "Storage"
+msgstr "Lưu trữ"
+
+#: src/anduinos_driver_center/computer_ui.py:183
+msgid "Network"
+msgstr "Mạng"
+
+#: src/anduinos_driver_center/computer_ui.py:190
+msgid "Memory module"
+msgstr "Mô-đun bộ nhớ"
+
+#: src/anduinos_driver_center/computer_ui.py:196
+msgid "Memory type and speed require optional administrator authentication."
+msgstr "Loại và tốc độ bộ nhớ yêu cầu xác thực quản trị tùy chọn."
+
+#: src/anduinos_driver_center/computer_ui.py:197
+msgid "Read memory specifications"
+msgstr "Đọc thông số bộ nhớ"
+
+#: src/anduinos_driver_center/computer_ui.py:205
+msgid "Hide details"
+msgstr "Ẩn chi tiết"
+
+#: src/anduinos_driver_center/computer_ui.py:205
+msgid "Show detailed specifications"
+msgstr "Hiển thị thông số chi tiết"
+
+#: src/anduinos_driver_center/computer_ui.py:241
+msgid ""
+"Memory specifications are unavailable. Other hardware details remain "
+"available."
+msgstr "Không có thông số bộ nhớ. Các chi tiết phần cứng khác vẫn khả dụng."
+
+#: src/anduinos_driver_center/computer_ui.py:117
+msgid "Built-in display"
+msgstr "Màn hình tích hợp"
+
+#: src/anduinos_driver_center/computer_ui.py:119
+msgid "External display"
+msgstr "Màn hình ngoài"
+
+#: src/anduinos_driver_center/computer_ui.py:186
+#, python-format
+msgid "Maximum frequency: %s"
+msgstr "Tần số tối đa: %s"
+
+#: src/anduinos_driver_center/computer_ui.py:233
+#, python-format
+msgid "%(used)s used / %(total)s"
+msgstr "%(used)s đã dùng / %(total)s"
+
+#: src/anduinos_driver_center/computer_ui.py:244
+msgid "System and desktop"
+msgstr "Hệ thống và desktop"
+
+#: src/anduinos_driver_center/computer_ui.py:247
+msgid "Window manager"
+msgstr "Quản lý cửa sổ"
+
+#: src/anduinos_driver_center/computer_ui.py:250
+msgid "Installed packages"
+msgstr "Gói đã cài đặt"
+
+#: src/anduinos_driver_center/computer_ui.py:253
+msgid ""
+"Applications and runtimes across user and system installations; locale and "
+"debug extensions excluded."
+msgstr ""
+"Ứng dụng và môi trường chạy trên cả cài đặt người dùng lẫn hệ thống; không "
+"bao gồm mở rộng ngôn ngữ và gỡ lỗi."
+
+#: src/anduinos_driver_center/computer_ui.py:255
+msgid "GTK theme"
+msgstr "Chủ đề GTK"
+
+#: src/anduinos_driver_center/computer_ui.py:255
+msgid "Shell theme"
+msgstr "Chủ đề Shell"
+
+#: src/anduinos_driver_center/computer_ui.py:256
+msgid "Icon theme"
+msgstr "Chủ đề biểu tượng"
+
+#: src/anduinos_driver_center/computer_ui.py:256
+msgid "Font"
+msgstr "Phông chữ"
+
+#: src/anduinos_driver_center/computer_ui.py:261
+msgid "Cursor"
+msgstr "Con trỏ"
+
+#: src/anduinos_driver_center/computer_ui.py:264
+msgid "Current usage"
+msgstr "Đang sử dụng"
+
+#: src/anduinos_driver_center/computer_ui.py:265
+msgid "Values from the latest scan. Use Scan again to refresh."
+msgstr "Giá trị từ lần quét gần nhất. Sử dụng Quét lại để làm mới."
+
+#: src/anduinos_driver_center/computer_ui.py:270
+#, python-format
+msgid "%(days)d d %(hours)d h %(minutes)d min"
+msgstr "%(days)d ngày %(hours)d giờ %(minutes)d phút"
+
+#: src/anduinos_driver_center/computer_ui.py:272
+msgid "Uptime"
+msgstr "Thời gian hoạt động"
+
+#: src/anduinos_driver_center/computer_ui.py:275
+msgid "Not configured"
+msgstr "Chưa cấu hình"
+
+#: src/anduinos_driver_center/computer_ui.py:280
+#, python-format
+msgid "Available: %s"
+msgstr "Khả dụng: %s"
+
+#: src/anduinos_driver_center/computer_ui.py:254
+msgid "Applications and runtimes"
+msgstr "Ứng dụng và môi trường chạy"
+
+#: src/anduinos_driver_center/computer_ui.py:273
+#, python-format
+msgid "%(hours)d h %(minutes)d min"
+msgstr "%(hours)d giờ %(minutes)d phút"
 
 #~ msgid "Download the latest metadata from enabled firmware remotes."
 #~ msgstr ""

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: anduinos-driver-center\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-11 16:11+0800\n"
-"PO-Revision-Date: 2026-08-06 07:08+0000\n"
+"PO-Revision-Date: 2026-09-09 12:08+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: uk\n"
 "Language: uk_UA\n"
@@ -1315,6 +1315,210 @@ msgstr "Налаштування довіри Secure Boot та відновле�
 #: anduinos-secureboot-toolkit/data/com.anduinos.SecureBootToolkit.policy:10
 msgid "Authentication is required to configure Secure Boot trust"
 msgstr "Потрібна автентифікація для налаштування довіри Secure Boot"
+
+#: src/anduinos_driver_center/app.py:437 src/anduinos_driver_center/app.py:440
+#: src/anduinos_driver_center/computer_ui.py:138
+msgid "About This Computer"
+msgstr "Про цей комп'ютер"
+
+#: src/anduinos_driver_center/app.py:437
+#: src/anduinos_driver_center/computer_ui.py:141
+msgid "Hardware overview"
+msgstr "Огляд апаратного забезпечення"
+
+#: src/anduinos_driver_center/computer_ui.py:105
+#: src/anduinos_driver_center/computer_ui.py:164
+#: src/anduinos_driver_center/computer_ui.py:188
+msgid "Display"
+msgstr "Дисплей"
+
+#: src/anduinos_driver_center/computer_ui.py:114
+msgid "Current mode"
+msgstr "Поточний режим"
+
+#: src/anduinos_driver_center/computer_ui.py:148
+#, python-format
+msgid "%s cores"
+msgstr "%s ядер"
+
+#: src/anduinos_driver_center/computer_ui.py:152
+#, python-format
+msgid "%s threads"
+msgstr "%s потоків"
+
+#: src/anduinos_driver_center/computer_ui.py:153
+#: src/anduinos_driver_center/computer_ui.py:178
+msgid "Processor"
+msgstr "Процесор"
+
+#: src/anduinos_driver_center/computer_ui.py:154
+msgid "Memory"
+msgstr "Пам'ять"
+
+#: src/anduinos_driver_center/computer_ui.py:154
+msgid "Usable by the system"
+msgstr "Доступне системі"
+
+#: src/anduinos_driver_center/computer_ui.py:156
+#: src/anduinos_driver_center/computer_ui.py:182
+msgid "Graphics"
+msgstr "Графіка"
+
+#: src/anduinos_driver_center/computer_ui.py:159
+#: src/anduinos_driver_center/computer_ui.py:162
+msgid "System disk"
+msgstr "Системний диск"
+
+#: src/anduinos_driver_center/computer_ui.py:165
+msgid "Motherboard"
+msgstr "Системна плата"
+
+#: src/anduinos_driver_center/computer_ui.py:172
+msgid "Detailed specifications"
+msgstr "Детальні характеристики"
+
+#: src/anduinos_driver_center/computer_ui.py:173
+msgid "System"
+msgstr "Система"
+
+#: src/anduinos_driver_center/computer_ui.py:174
+msgid "Desktop"
+msgstr "Стільниця"
+
+#: src/anduinos_driver_center/computer_ui.py:175
+msgid "BIOS / UEFI"
+msgstr "BIOS / UEFI"
+
+#: src/anduinos_driver_center/computer_ui.py:180
+msgid "Storage"
+msgstr "Сховище"
+
+#: src/anduinos_driver_center/computer_ui.py:183
+msgid "Network"
+msgstr "Мережа"
+
+#: src/anduinos_driver_center/computer_ui.py:190
+msgid "Memory module"
+msgstr "Модуль пам'яті"
+
+#: src/anduinos_driver_center/computer_ui.py:196
+msgid "Memory type and speed require optional administrator authentication."
+msgstr ""
+"Тип і швидкість пам'яті потребують додаткового підтвердження адміністратора."
+
+#: src/anduinos_driver_center/computer_ui.py:197
+msgid "Read memory specifications"
+msgstr "Читати специфікації пам’яті"
+
+#: src/anduinos_driver_center/computer_ui.py:205
+msgid "Hide details"
+msgstr "Приховати деталі"
+
+#: src/anduinos_driver_center/computer_ui.py:205
+msgid "Show detailed specifications"
+msgstr "Показати детальні характеристики"
+
+#: src/anduinos_driver_center/computer_ui.py:241
+msgid ""
+"Memory specifications are unavailable. Other hardware details remain "
+"available."
+msgstr ""
+"Специфікації пам'яті недоступні. Інші деталі апаратного забезпечення "
+"залишаються доступними."
+
+#: src/anduinos_driver_center/computer_ui.py:117
+msgid "Built-in display"
+msgstr "Вбудований дисплей"
+
+#: src/anduinos_driver_center/computer_ui.py:119
+msgid "External display"
+msgstr "Зовнішній дисплей"
+
+#: src/anduinos_driver_center/computer_ui.py:186
+#, python-format
+msgid "Maximum frequency: %s"
+msgstr "Максимальна частота: %s"
+
+#: src/anduinos_driver_center/computer_ui.py:233
+#, python-format
+msgid "%(used)s used / %(total)s"
+msgstr "%(used)s використано / %(total)s"
+
+#: src/anduinos_driver_center/computer_ui.py:244
+msgid "System and desktop"
+msgstr "Система та робочий стіл"
+
+#: src/anduinos_driver_center/computer_ui.py:247
+msgid "Window manager"
+msgstr "Менеджер вікон"
+
+#: src/anduinos_driver_center/computer_ui.py:250
+msgid "Installed packages"
+msgstr "Встановлені пакети"
+
+#: src/anduinos_driver_center/computer_ui.py:253
+msgid ""
+"Applications and runtimes across user and system installations; locale and "
+"debug extensions excluded."
+msgstr ""
+"Додатки та середовища виконання для користувача та системи; розширення "
+"локалізації та налагодження виключені."
+
+#: src/anduinos_driver_center/computer_ui.py:255
+msgid "GTK theme"
+msgstr "Тема GTK"
+
+#: src/anduinos_driver_center/computer_ui.py:255
+msgid "Shell theme"
+msgstr "Тема оболонки"
+
+#: src/anduinos_driver_center/computer_ui.py:256
+msgid "Icon theme"
+msgstr "Тема іконок"
+
+#: src/anduinos_driver_center/computer_ui.py:256
+msgid "Font"
+msgstr "Шрифт"
+
+#: src/anduinos_driver_center/computer_ui.py:261
+msgid "Cursor"
+msgstr "Курсор"
+
+#: src/anduinos_driver_center/computer_ui.py:264
+msgid "Current usage"
+msgstr "Поточне використання"
+
+#: src/anduinos_driver_center/computer_ui.py:265
+msgid "Values from the latest scan. Use Scan again to refresh."
+msgstr ""
+"Значення з останнього сканування. Натисніть «Сканувати знову», щоб оновити."
+
+#: src/anduinos_driver_center/computer_ui.py:270
+#, python-format
+msgid "%(days)d d %(hours)d h %(minutes)d min"
+msgstr "%(days)d дн. %(hours)d год. %(minutes)d хв."
+
+#: src/anduinos_driver_center/computer_ui.py:272
+msgid "Uptime"
+msgstr "Час безперервної роботи"
+
+#: src/anduinos_driver_center/computer_ui.py:275
+msgid "Not configured"
+msgstr "Не налаштовано"
+
+#: src/anduinos_driver_center/computer_ui.py:280
+#, python-format
+msgid "Available: %s"
+msgstr "Доступно: %s"
+
+#: src/anduinos_driver_center/computer_ui.py:254
+msgid "Applications and runtimes"
+msgstr "Застосунки та середовища виконання"
+
+#: src/anduinos_driver_center/computer_ui.py:273
+#, python-format
+msgid "%(hours)d h %(minutes)d min"
+msgstr "%(hours)d год. %(minutes)d хв."
 
 #~ msgid "Download the latest metadata from enabled firmware remotes."
 #~ msgstr "Завантажте найновіші метадані з увімкнених мікропрограмних пультів."

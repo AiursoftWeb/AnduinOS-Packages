@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: anduinos-driver-center\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-11 16:11+0800\n"
-"PO-Revision-Date: 2026-08-06 07:08+0000\n"
+"PO-Revision-Date: 2026-09-09 12:07+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: tr\n"
 "Language: tr_TR\n"
@@ -1303,6 +1303,212 @@ msgstr "Güvenli Önyükleme güvenini yapılandırın ve DKMS imzalarını onar
 msgid "Authentication is required to configure Secure Boot trust"
 msgstr ""
 "Güvenli Önyükleme güvenini yapılandırmak için kimlik doğrulaması gereklidir"
+
+#: src/anduinos_driver_center/app.py:437 src/anduinos_driver_center/app.py:440
+#: src/anduinos_driver_center/computer_ui.py:138
+msgid "About This Computer"
+msgstr "Bu Bilgisayar Hakkında"
+
+#: src/anduinos_driver_center/app.py:437
+#: src/anduinos_driver_center/computer_ui.py:141
+msgid "Hardware overview"
+msgstr "Donanım özeti"
+
+#: src/anduinos_driver_center/computer_ui.py:105
+#: src/anduinos_driver_center/computer_ui.py:164
+#: src/anduinos_driver_center/computer_ui.py:188
+msgid "Display"
+msgstr "Ekran"
+
+#: src/anduinos_driver_center/computer_ui.py:114
+msgid "Current mode"
+msgstr "Geçerli mod"
+
+#: src/anduinos_driver_center/computer_ui.py:148
+#, python-format
+msgid "%s cores"
+msgstr "%s çekirdek"
+
+#: src/anduinos_driver_center/computer_ui.py:152
+#, python-format
+msgid "%s threads"
+msgstr "%s iş parçacığı"
+
+#: src/anduinos_driver_center/computer_ui.py:153
+#: src/anduinos_driver_center/computer_ui.py:178
+msgid "Processor"
+msgstr "İşlemci"
+
+#: src/anduinos_driver_center/computer_ui.py:154
+msgid "Memory"
+msgstr "Bellek"
+
+#: src/anduinos_driver_center/computer_ui.py:154
+msgid "Usable by the system"
+msgstr "Sistem tarafından kullanılabilir"
+
+#: src/anduinos_driver_center/computer_ui.py:156
+#: src/anduinos_driver_center/computer_ui.py:182
+msgid "Graphics"
+msgstr "Grafik"
+
+#: src/anduinos_driver_center/computer_ui.py:159
+#: src/anduinos_driver_center/computer_ui.py:162
+msgid "System disk"
+msgstr "Sistem diski"
+
+#: src/anduinos_driver_center/computer_ui.py:165
+msgid "Motherboard"
+msgstr "Anakart"
+
+#: src/anduinos_driver_center/computer_ui.py:172
+msgid "Detailed specifications"
+msgstr "Ayrıntılı özellikler"
+
+#: src/anduinos_driver_center/computer_ui.py:173
+msgid "System"
+msgstr "Sistem"
+
+#: src/anduinos_driver_center/computer_ui.py:174
+msgid "Desktop"
+msgstr "Masaüstü"
+
+#: src/anduinos_driver_center/computer_ui.py:175
+msgid "BIOS / UEFI"
+msgstr "BIOS / UEFI"
+
+#: src/anduinos_driver_center/computer_ui.py:180
+msgid "Storage"
+msgstr "Depolama"
+
+#: src/anduinos_driver_center/computer_ui.py:183
+msgid "Network"
+msgstr "Ağ"
+
+#: src/anduinos_driver_center/computer_ui.py:190
+msgid "Memory module"
+msgstr "Bellek modülü"
+
+#: src/anduinos_driver_center/computer_ui.py:196
+msgid "Memory type and speed require optional administrator authentication."
+msgstr ""
+"Bellek türü ve hızı için isteğe bağlı yönetici kimlik doğrulaması "
+"gereklidir."
+
+#: src/anduinos_driver_center/computer_ui.py:197
+msgid "Read memory specifications"
+msgstr "Bellek özelliklerini oku"
+
+#: src/anduinos_driver_center/computer_ui.py:205
+msgid "Hide details"
+msgstr "Ayrıntıları gizle"
+
+#: src/anduinos_driver_center/computer_ui.py:205
+msgid "Show detailed specifications"
+msgstr "Ayrıntılı özellikleri göster"
+
+#: src/anduinos_driver_center/computer_ui.py:241
+msgid ""
+"Memory specifications are unavailable. Other hardware details remain "
+"available."
+msgstr ""
+"Bellek özellikleri kullanılamıyor. Diğer donanım ayrıntıları hâlâ "
+"kullanılabilir durumda."
+
+#: src/anduinos_driver_center/computer_ui.py:117
+msgid "Built-in display"
+msgstr "Yerleşik ekran"
+
+#: src/anduinos_driver_center/computer_ui.py:119
+msgid "External display"
+msgstr "Harici ekran"
+
+#: src/anduinos_driver_center/computer_ui.py:186
+#, python-format
+msgid "Maximum frequency: %s"
+msgstr "Maksimum frekans: %s"
+
+#: src/anduinos_driver_center/computer_ui.py:233
+#, python-format
+msgid "%(used)s used / %(total)s"
+msgstr "%(used)s kullanıldı / %(total)s"
+
+#: src/anduinos_driver_center/computer_ui.py:244
+msgid "System and desktop"
+msgstr "Sistem ve masaüstü"
+
+#: src/anduinos_driver_center/computer_ui.py:247
+msgid "Window manager"
+msgstr "Pencere yöneticisi"
+
+#: src/anduinos_driver_center/computer_ui.py:250
+msgid "Installed packages"
+msgstr "Yüklü paketler"
+
+#: src/anduinos_driver_center/computer_ui.py:253
+msgid ""
+"Applications and runtimes across user and system installations; locale and "
+"debug extensions excluded."
+msgstr ""
+"Kullanıcı ve sistem kurulumlarındaki uygulamalar ve çalışma zamanları; yerel"
+" ve hata ayıklama eklentileri hariç."
+
+#: src/anduinos_driver_center/computer_ui.py:255
+msgid "GTK theme"
+msgstr "GTK teması"
+
+#: src/anduinos_driver_center/computer_ui.py:255
+msgid "Shell theme"
+msgstr "Kabuk teması"
+
+#: src/anduinos_driver_center/computer_ui.py:256
+msgid "Icon theme"
+msgstr "Sembol teması"
+
+#: src/anduinos_driver_center/computer_ui.py:256
+msgid "Font"
+msgstr "Yazı Tipi"
+
+#: src/anduinos_driver_center/computer_ui.py:261
+msgid "Cursor"
+msgstr "İmleç"
+
+#: src/anduinos_driver_center/computer_ui.py:264
+msgid "Current usage"
+msgstr "Mevcut kullanım"
+
+#: src/anduinos_driver_center/computer_ui.py:265
+msgid "Values from the latest scan. Use Scan again to refresh."
+msgstr ""
+"En son taramadan alınan değerler. Yenilemek için Tekrar Tara seçeneğini "
+"kullanın."
+
+#: src/anduinos_driver_center/computer_ui.py:270
+#, python-format
+msgid "%(days)d d %(hours)d h %(minutes)d min"
+msgstr "%(days)d g %(hours)d s %(minutes)d dk"
+
+#: src/anduinos_driver_center/computer_ui.py:272
+msgid "Uptime"
+msgstr "Çalışma süresi"
+
+#: src/anduinos_driver_center/computer_ui.py:275
+msgid "Not configured"
+msgstr "Yapılandırılmadı"
+
+#: src/anduinos_driver_center/computer_ui.py:280
+#, python-format
+msgid "Available: %s"
+msgstr "Mevcut: %s"
+
+#: src/anduinos_driver_center/computer_ui.py:254
+msgid "Applications and runtimes"
+msgstr "Uygulamalar ve çalışma zamanları"
+
+#: src/anduinos_driver_center/computer_ui.py:273
+#, python-format
+msgid "%(hours)d h %(minutes)d min"
+msgstr "%(hours)d s %(minutes)d dk"
 
 #~ msgid "Download the latest metadata from enabled firmware remotes."
 #~ msgstr ""

@@ -71,9 +71,61 @@
   </action>
   <action id="com.anduinos.DriverCenter.read-memory">
     <description>Read memory specifications</description>
+    <description xml:lang="ar_SA">قراءة مواصفات الذاكرة</description>
     <description xml:lang="zh_CN">读取内存规格</description>
+    <description xml:lang="zh_HK">讀取記憶體規格</description>
+    <description xml:lang="zh_TW">讀取記憶體規格</description>
+    <description xml:lang="da_DK">Læs hukommelsesspecifikationer</description>
+    <description xml:lang="en_GB">Read memory specifications</description>
+    <description xml:lang="fi_FI">Lue muistin tekniset tiedot</description>
+    <description xml:lang="fr_FR">Lire les spécifications de la mémoire</description>
+    <description xml:lang="de_DE">Speicherspezifikationen lesen</description>
+    <description xml:lang="el_GR">Ανάγνωση προδιαγραφών μνήμης</description>
+    <description xml:lang="hi_IN">मेमोरी विशिष्टताएँ पढ़ें</description>
+    <description xml:lang="id_ID">Baca spesifikasi memori</description>
+    <description xml:lang="it_IT">Leggere le specifiche della memoria</description>
+    <description xml:lang="ja_JP">メモリ仕様の読み取り</description>
+    <description xml:lang="ko_KR">메모리 사양 읽기</description>
+    <description xml:lang="nl_NL">Geheugenspecificaties lezen</description>
+    <description xml:lang="pl_PL">Odczyt specyfikacji pamięci</description>
+    <description xml:lang="pt_PT">Ler especificações de memória</description>
+    <description xml:lang="pt_BR">Ler especificações de memória</description>
+    <description xml:lang="ro_RO">Citirea specificațiilor memoriei</description>
+    <description xml:lang="ru_RU">Чтение характеристик памяти</description>
+    <description xml:lang="es_ES">Leer las especificaciones de la memoria</description>
+    <description xml:lang="sv_SE">Läs minnesspecifikationer</description>
+    <description xml:lang="th_TH">อ่านข้อมูลจำเพาะหน่วยความจำ</description>
+    <description xml:lang="tr_TR">Bellek özelliklerini oku</description>
+    <description xml:lang="uk_UA">Читання характеристик пам’яті</description>
+    <description xml:lang="vi_VN">Đọc thông số bộ nhớ</description>
     <message>Authentication is required to read memory module type and speed</message>
+    <message xml:lang="ar_SA">المصادقة مطلوبة لقراءة نوع وسرعة وحدة الذاكرة</message>
     <message xml:lang="zh_CN">读取内存条类型和速度需要身份验证</message>
+    <message xml:lang="zh_HK">讀取記憶體模組類型及速度需要身分驗證</message>
+    <message xml:lang="zh_TW">讀取記憶體模組類型與速度需要身分驗證</message>
+    <message xml:lang="da_DK">Godkendelse kræves for at læse hukommelsesmodulernes type og hastighed</message>
+    <message xml:lang="en_GB">Authentication is required to read memory module type and speed</message>
+    <message xml:lang="fi_FI">Muistimoduulien tyypin ja nopeuden lukeminen vaatii tunnistautumisen</message>
+    <message xml:lang="fr_FR">Une authentification est requise pour lire le type et la vitesse des modules de mémoire</message>
+    <message xml:lang="de_DE">Zum Lesen des Typs und der Geschwindigkeit der Speichermodule ist eine Authentifizierung erforderlich</message>
+    <message xml:lang="el_GR">Απαιτείται έλεγχος ταυτότητας για την ανάγνωση του τύπου και της ταχύτητας των μονάδων μνήμης</message>
+    <message xml:lang="hi_IN">मेमोरी मॉड्यूल का प्रकार और गति पढ़ने के लिए प्रमाणीकरण आवश्यक है</message>
+    <message xml:lang="id_ID">Autentikasi diperlukan untuk membaca tipe dan kecepatan modul memori</message>
+    <message xml:lang="it_IT">È richiesta l'autenticazione per leggere il tipo e la velocità dei moduli di memoria</message>
+    <message xml:lang="ja_JP">メモリモジュールの種類と速度を読み取るには認証が必要です</message>
+    <message xml:lang="ko_KR">메모리 모듈 유형과 속도를 읽으려면 인증이 필요합니다</message>
+    <message xml:lang="nl_NL">Authenticatie is vereist om het type en de snelheid van geheugenmodules te lezen</message>
+    <message xml:lang="pl_PL">Uwierzytelnienie jest wymagane do odczytu typu i prędkości modułów pamięci</message>
+    <message xml:lang="pt_PT">É necessária autenticação para ler o tipo e a velocidade dos módulos de memória</message>
+    <message xml:lang="pt_BR">A autenticação é necessária para ler o tipo e a velocidade dos módulos de memória</message>
+    <message xml:lang="ro_RO">Autentificarea este necesară pentru a citi tipul și viteza modulelor de memorie</message>
+    <message xml:lang="ru_RU">Для чтения типа и скорости модулей памяти требуется аутентификация</message>
+    <message xml:lang="es_ES">Se requiere autenticación para leer el tipo y la velocidad de los módulos de memoria</message>
+    <message xml:lang="sv_SE">Autentisering krävs för att läsa minnesmodulernas typ och hastighet</message>
+    <message xml:lang="th_TH">ต้องมีการยืนยันตัวตนเพื่ออ่านประเภทและความเร็วของโมดูลหน่วยความจำ</message>
+    <message xml:lang="tr_TR">Bellek modüllerinin türünü ve hızını okumak için kimlik doğrulaması gereklidir</message>
+    <message xml:lang="uk_UA">Для читання типу та швидкості модулів пам’яті потрібна автентифікація</message>
+    <message xml:lang="vi_VN">Yêu cầu xác thực để đọc loại và tốc độ của mô-đun bộ nhớ</message>
     <icon_name>com.anduinos.DriverCenter</icon_name>
     <defaults>
       <allow_any>auth_admin</allow_any>

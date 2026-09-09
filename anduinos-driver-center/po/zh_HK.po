@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: anduinos-driver-center\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-11 16:11+0800\n"
-"PO-Revision-Date: 2026-08-06 07:08+0000\n"
+"PO-Revision-Date: 2026-09-09 11:51+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: zh_HK\n"
 "Language: zh_HK\n"
@@ -1251,6 +1251,204 @@ msgstr "設定 Secure Boot 信任並修復 DKMS 簽名"
 #: anduinos-secureboot-toolkit/data/com.anduinos.SecureBootToolkit.policy:10
 msgid "Authentication is required to configure Secure Boot trust"
 msgstr "設定 Secure Boot 信任需要身分驗證"
+
+#: src/anduinos_driver_center/app.py:437 src/anduinos_driver_center/app.py:440
+#: src/anduinos_driver_center/computer_ui.py:138
+msgid "About This Computer"
+msgstr "關於此電腦"
+
+#: src/anduinos_driver_center/app.py:437
+#: src/anduinos_driver_center/computer_ui.py:141
+msgid "Hardware overview"
+msgstr "硬體概況"
+
+#: src/anduinos_driver_center/computer_ui.py:105
+#: src/anduinos_driver_center/computer_ui.py:164
+#: src/anduinos_driver_center/computer_ui.py:188
+msgid "Display"
+msgstr "顯示器"
+
+#: src/anduinos_driver_center/computer_ui.py:114
+msgid "Current mode"
+msgstr "目前模式"
+
+#: src/anduinos_driver_center/computer_ui.py:148
+#, python-format
+msgid "%s cores"
+msgstr "%s 核心"
+
+#: src/anduinos_driver_center/computer_ui.py:152
+#, python-format
+msgid "%s threads"
+msgstr "%s 執行緒"
+
+#: src/anduinos_driver_center/computer_ui.py:153
+#: src/anduinos_driver_center/computer_ui.py:178
+msgid "Processor"
+msgstr "處理器"
+
+#: src/anduinos_driver_center/computer_ui.py:154
+msgid "Memory"
+msgstr "記憶體"
+
+#: src/anduinos_driver_center/computer_ui.py:154
+msgid "Usable by the system"
+msgstr "可被系統使用"
+
+#: src/anduinos_driver_center/computer_ui.py:156
+#: src/anduinos_driver_center/computer_ui.py:182
+msgid "Graphics"
+msgstr "圖形"
+
+#: src/anduinos_driver_center/computer_ui.py:159
+#: src/anduinos_driver_center/computer_ui.py:162
+msgid "System disk"
+msgstr "系統磁碟"
+
+#: src/anduinos_driver_center/computer_ui.py:165
+msgid "Motherboard"
+msgstr "主機板"
+
+#: src/anduinos_driver_center/computer_ui.py:172
+msgid "Detailed specifications"
+msgstr "詳細規格"
+
+#: src/anduinos_driver_center/computer_ui.py:173
+msgid "System"
+msgstr "系統"
+
+#: src/anduinos_driver_center/computer_ui.py:174
+msgid "Desktop"
+msgstr "桌面"
+
+#: src/anduinos_driver_center/computer_ui.py:175
+msgid "BIOS / UEFI"
+msgstr "BIOS / UEFI"
+
+#: src/anduinos_driver_center/computer_ui.py:180
+msgid "Storage"
+msgstr "儲存空間"
+
+#: src/anduinos_driver_center/computer_ui.py:183
+msgid "Network"
+msgstr "網絡"
+
+#: src/anduinos_driver_center/computer_ui.py:190
+msgid "Memory module"
+msgstr "記憶體模組"
+
+#: src/anduinos_driver_center/computer_ui.py:196
+msgid "Memory type and speed require optional administrator authentication."
+msgstr "查詢記憶體類型及速度需要選擇性的管理員驗證。"
+
+#: src/anduinos_driver_center/computer_ui.py:197
+msgid "Read memory specifications"
+msgstr "讀取記憶體規格"
+
+#: src/anduinos_driver_center/computer_ui.py:205
+msgid "Hide details"
+msgstr "隱藏詳細資訊"
+
+#: src/anduinos_driver_center/computer_ui.py:205
+msgid "Show detailed specifications"
+msgstr "顯示詳細規格"
+
+#: src/anduinos_driver_center/computer_ui.py:241
+msgid ""
+"Memory specifications are unavailable. Other hardware details remain "
+"available."
+msgstr "無法取得記憶體規格。其他硬體詳細資訊仍可供使用。"
+
+#: src/anduinos_driver_center/computer_ui.py:117
+msgid "Built-in display"
+msgstr "內建顯示器"
+
+#: src/anduinos_driver_center/computer_ui.py:119
+msgid "External display"
+msgstr "外部顯示器"
+
+#: src/anduinos_driver_center/computer_ui.py:186
+#, python-format
+msgid "Maximum frequency: %s"
+msgstr "最高頻率：%s"
+
+#: src/anduinos_driver_center/computer_ui.py:233
+#, python-format
+msgid "%(used)s used / %(total)s"
+msgstr "已用 %(used)s / 共計 %(total)s"
+
+#: src/anduinos_driver_center/computer_ui.py:244
+msgid "System and desktop"
+msgstr "系統與桌面"
+
+#: src/anduinos_driver_center/computer_ui.py:247
+msgid "Window manager"
+msgstr "視窗管理器"
+
+#: src/anduinos_driver_center/computer_ui.py:250
+msgid "Installed packages"
+msgstr "已安裝套件"
+
+#: src/anduinos_driver_center/computer_ui.py:253
+msgid ""
+"Applications and runtimes across user and system installations; locale and "
+"debug extensions excluded."
+msgstr "跨使用者與系統安裝的應用程式與執行環境；不含地區設定與除錯擴充功能。"
+
+#: src/anduinos_driver_center/computer_ui.py:255
+msgid "GTK theme"
+msgstr "GTK 佈景主題"
+
+#: src/anduinos_driver_center/computer_ui.py:255
+msgid "Shell theme"
+msgstr "Shell 主題"
+
+#: src/anduinos_driver_center/computer_ui.py:256
+msgid "Icon theme"
+msgstr "圖示主題"
+
+#: src/anduinos_driver_center/computer_ui.py:256
+msgid "Font"
+msgstr "字型"
+
+#: src/anduinos_driver_center/computer_ui.py:261
+msgid "Cursor"
+msgstr "指標"
+
+#: src/anduinos_driver_center/computer_ui.py:264
+msgid "Current usage"
+msgstr "目前用量"
+
+#: src/anduinos_driver_center/computer_ui.py:265
+msgid "Values from the latest scan. Use Scan again to refresh."
+msgstr "最新掃描的數值。請再次使用「掃描」以更新。"
+
+#: src/anduinos_driver_center/computer_ui.py:270
+#, python-format
+msgid "%(days)d d %(hours)d h %(minutes)d min"
+msgstr "%(days)d 日 %(hours)d 小時 %(minutes)d 分"
+
+#: src/anduinos_driver_center/computer_ui.py:272
+msgid "Uptime"
+msgstr "運行時間"
+
+#: src/anduinos_driver_center/computer_ui.py:275
+msgid "Not configured"
+msgstr "未設定"
+
+#: src/anduinos_driver_center/computer_ui.py:280
+#, python-format
+msgid "Available: %s"
+msgstr "可用： %s"
+
+#: src/anduinos_driver_center/computer_ui.py:254
+msgid "Applications and runtimes"
+msgstr "應用程式與執行環境"
+
+#: src/anduinos_driver_center/computer_ui.py:273
+#, python-format
+msgid "%(hours)d h %(minutes)d min"
+msgstr "%(hours)d 小時 %(minutes)d 分"
 
 #~ msgid "Download the latest metadata from enabled firmware remotes."
 #~ msgstr "從已啟用的韌體來源下載最新元數據。"

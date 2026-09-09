@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: anduinos-driver-center\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-11 16:11+0800\n"
-"PO-Revision-Date: 2026-08-06 07:08+0000\n"
+"PO-Revision-Date: 2026-09-09 11:58+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: hi\n"
 "Language: hi_IN\n"
@@ -1304,6 +1304,206 @@ msgstr "Secure Boot विश्वास कॉन्फ़िगर करे�
 #: anduinos-secureboot-toolkit/data/com.anduinos.SecureBootToolkit.policy:10
 msgid "Authentication is required to configure Secure Boot trust"
 msgstr "Secure Boot ट्रस्ट कॉन्फ़िगर करने के लिए प्रमाणीकरण आवश्यक है"
+
+#: src/anduinos_driver_center/app.py:437 src/anduinos_driver_center/app.py:440
+#: src/anduinos_driver_center/computer_ui.py:138
+msgid "About This Computer"
+msgstr "इस कंप्यूटर के बारे में"
+
+#: src/anduinos_driver_center/app.py:437
+#: src/anduinos_driver_center/computer_ui.py:141
+msgid "Hardware overview"
+msgstr "हार्डवेयर अवलोकन"
+
+#: src/anduinos_driver_center/computer_ui.py:105
+#: src/anduinos_driver_center/computer_ui.py:164
+#: src/anduinos_driver_center/computer_ui.py:188
+msgid "Display"
+msgstr "डिस्प्ले"
+
+#: src/anduinos_driver_center/computer_ui.py:114
+msgid "Current mode"
+msgstr "वर्तमान मोड"
+
+#: src/anduinos_driver_center/computer_ui.py:148
+#, python-format
+msgid "%s cores"
+msgstr "%s कोर"
+
+#: src/anduinos_driver_center/computer_ui.py:152
+#, python-format
+msgid "%s threads"
+msgstr "%s थ्रेड"
+
+#: src/anduinos_driver_center/computer_ui.py:153
+#: src/anduinos_driver_center/computer_ui.py:178
+msgid "Processor"
+msgstr "प्रोसेसर"
+
+#: src/anduinos_driver_center/computer_ui.py:154
+msgid "Memory"
+msgstr "मेमोरी"
+
+#: src/anduinos_driver_center/computer_ui.py:154
+msgid "Usable by the system"
+msgstr "सिस्टम द्वारा उपयोग योग्य"
+
+#: src/anduinos_driver_center/computer_ui.py:156
+#: src/anduinos_driver_center/computer_ui.py:182
+msgid "Graphics"
+msgstr "ग्राफ़िक्स"
+
+#: src/anduinos_driver_center/computer_ui.py:159
+#: src/anduinos_driver_center/computer_ui.py:162
+msgid "System disk"
+msgstr "सिस्टम डिस्क"
+
+#: src/anduinos_driver_center/computer_ui.py:165
+msgid "Motherboard"
+msgstr "मादरबोर्ड"
+
+#: src/anduinos_driver_center/computer_ui.py:172
+msgid "Detailed specifications"
+msgstr "विस्तृत विशिष्टताएँ"
+
+#: src/anduinos_driver_center/computer_ui.py:173
+msgid "System"
+msgstr "सिस्टम"
+
+#: src/anduinos_driver_center/computer_ui.py:174
+msgid "Desktop"
+msgstr "डेस्कटॉप"
+
+#: src/anduinos_driver_center/computer_ui.py:175
+msgid "BIOS / UEFI"
+msgstr "BIOS / UEFI"
+
+#: src/anduinos_driver_center/computer_ui.py:180
+msgid "Storage"
+msgstr "स्टोरेज"
+
+#: src/anduinos_driver_center/computer_ui.py:183
+msgid "Network"
+msgstr "नेटवर्क"
+
+#: src/anduinos_driver_center/computer_ui.py:190
+msgid "Memory module"
+msgstr "मेमोरी मॉड्यूल"
+
+#: src/anduinos_driver_center/computer_ui.py:196
+msgid "Memory type and speed require optional administrator authentication."
+msgstr "मेमोरी प्रकार और गति के लिए वैकल्पिक प्रशासक प्रामाणिकता आवश्यक है।"
+
+#: src/anduinos_driver_center/computer_ui.py:197
+msgid "Read memory specifications"
+msgstr "मेमोरी विशिष्टताएँ पढ़ें"
+
+#: src/anduinos_driver_center/computer_ui.py:205
+msgid "Hide details"
+msgstr "विवरण छिपाएँ"
+
+#: src/anduinos_driver_center/computer_ui.py:205
+msgid "Show detailed specifications"
+msgstr "विस्तृत विवरण दिखाएँ"
+
+#: src/anduinos_driver_center/computer_ui.py:241
+msgid ""
+"Memory specifications are unavailable. Other hardware details remain "
+"available."
+msgstr "मेमोरी विनिर्देश उपलब्ध नहीं हैं। अन्य हार्डवेयर विवरण उपलब्ध हैं।"
+
+#: src/anduinos_driver_center/computer_ui.py:117
+msgid "Built-in display"
+msgstr "बिल्ट-इन डिस्प्ले"
+
+#: src/anduinos_driver_center/computer_ui.py:119
+msgid "External display"
+msgstr "बाहरी डिस्प्ले"
+
+#: src/anduinos_driver_center/computer_ui.py:186
+#, python-format
+msgid "Maximum frequency: %s"
+msgstr "अधिकतम आवृत्ति: %s"
+
+#: src/anduinos_driver_center/computer_ui.py:233
+#, python-format
+msgid "%(used)s used / %(total)s"
+msgstr "%(used)s उपयोग हुआ / %(total)s"
+
+#: src/anduinos_driver_center/computer_ui.py:244
+msgid "System and desktop"
+msgstr "सिस्टम और डेस्कटॉप"
+
+#: src/anduinos_driver_center/computer_ui.py:247
+msgid "Window manager"
+msgstr "विंडो मैनेजर"
+
+#: src/anduinos_driver_center/computer_ui.py:250
+msgid "Installed packages"
+msgstr "स्थापित पैकेज"
+
+#: src/anduinos_driver_center/computer_ui.py:253
+msgid ""
+"Applications and runtimes across user and system installations; locale and "
+"debug extensions excluded."
+msgstr ""
+"उपयोगकर्ता और सिस्टम इंस्टॉलेशन में एप्लिकेशन और रनटाइम; लोकल और डीबग "
+"एक्सटेंशन का अपवाद।"
+
+#: src/anduinos_driver_center/computer_ui.py:255
+msgid "GTK theme"
+msgstr "GTK थीम"
+
+#: src/anduinos_driver_center/computer_ui.py:255
+msgid "Shell theme"
+msgstr "शेल थीम"
+
+#: src/anduinos_driver_center/computer_ui.py:256
+msgid "Icon theme"
+msgstr "आइकॉन थीम"
+
+#: src/anduinos_driver_center/computer_ui.py:256
+msgid "Font"
+msgstr "फ़ॉन्ट"
+
+#: src/anduinos_driver_center/computer_ui.py:261
+msgid "Cursor"
+msgstr "कर्सर"
+
+#: src/anduinos_driver_center/computer_ui.py:264
+msgid "Current usage"
+msgstr "वर्तमान उपयोग"
+
+#: src/anduinos_driver_center/computer_ui.py:265
+msgid "Values from the latest scan. Use Scan again to refresh."
+msgstr "नवीनतम स्कैन से प्राप्त मान। रीफ्रेश करने के लिए पुनः स्कैन करें।"
+
+#: src/anduinos_driver_center/computer_ui.py:270
+#, python-format
+msgid "%(days)d d %(hours)d h %(minutes)d min"
+msgstr "%(days)d दिन %(hours)d घंटे %(minutes)d मिनट"
+
+#: src/anduinos_driver_center/computer_ui.py:272
+msgid "Uptime"
+msgstr "अपटाइम"
+
+#: src/anduinos_driver_center/computer_ui.py:275
+msgid "Not configured"
+msgstr "कॉन्फ़िगर नहीं किया गया"
+
+#: src/anduinos_driver_center/computer_ui.py:280
+#, python-format
+msgid "Available: %s"
+msgstr "उपलब्ध: %s"
+
+#: src/anduinos_driver_center/computer_ui.py:254
+msgid "Applications and runtimes"
+msgstr "ऐप्लिकेशन और रनटाइम"
+
+#: src/anduinos_driver_center/computer_ui.py:273
+#, python-format
+msgid "%(hours)d h %(minutes)d min"
+msgstr "%(hours)d घंटे %(minutes)d मिनट"
 
 #~ msgid "Download the latest metadata from enabled firmware remotes."
 #~ msgstr "सक्षम फ़र्मवेयर रिमोट से नवीनतम मेटाडेटा डाउनलोड करें।"

@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: anduinos-driver-center\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-11 16:11+0800\n"
-"PO-Revision-Date: 2026-08-06 07:08+0000\n"
+"PO-Revision-Date: 2026-09-09 11:57+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: el\n"
 "Language: el_GR\n"
@@ -1336,6 +1336,210 @@ msgstr "Διαμόρφωση εμπιστοσύνης Secure Boot και επι�
 msgid "Authentication is required to configure Secure Boot trust"
 msgstr ""
 "Απαιτείται έλεγχος ταυτότητας για τη διαμόρφωση της εμπιστοσύνης Secure Boot"
+
+#: src/anduinos_driver_center/app.py:437 src/anduinos_driver_center/app.py:440
+#: src/anduinos_driver_center/computer_ui.py:138
+msgid "About This Computer"
+msgstr "Σχετικά με τον υπολογιστή"
+
+#: src/anduinos_driver_center/app.py:437
+#: src/anduinos_driver_center/computer_ui.py:141
+msgid "Hardware overview"
+msgstr "Σύνοψη υλικού"
+
+#: src/anduinos_driver_center/computer_ui.py:105
+#: src/anduinos_driver_center/computer_ui.py:164
+#: src/anduinos_driver_center/computer_ui.py:188
+msgid "Display"
+msgstr "Οθόνη"
+
+#: src/anduinos_driver_center/computer_ui.py:114
+msgid "Current mode"
+msgstr "Τρέχουσα λειτουργία"
+
+#: src/anduinos_driver_center/computer_ui.py:148
+#, python-format
+msgid "%s cores"
+msgstr "%s πυρήνες"
+
+#: src/anduinos_driver_center/computer_ui.py:152
+#, python-format
+msgid "%s threads"
+msgstr "%s νήματα"
+
+#: src/anduinos_driver_center/computer_ui.py:153
+#: src/anduinos_driver_center/computer_ui.py:178
+msgid "Processor"
+msgstr "Επεξεργαστής"
+
+#: src/anduinos_driver_center/computer_ui.py:154
+msgid "Memory"
+msgstr "Μνήμη"
+
+#: src/anduinos_driver_center/computer_ui.py:154
+msgid "Usable by the system"
+msgstr "Διαθέσιμο για το σύστημα"
+
+#: src/anduinos_driver_center/computer_ui.py:156
+#: src/anduinos_driver_center/computer_ui.py:182
+msgid "Graphics"
+msgstr "Γραφικά"
+
+#: src/anduinos_driver_center/computer_ui.py:159
+#: src/anduinos_driver_center/computer_ui.py:162
+msgid "System disk"
+msgstr "Δίσκος συστήματος"
+
+#: src/anduinos_driver_center/computer_ui.py:165
+msgid "Motherboard"
+msgstr "Κυκλωματική πλακέτα"
+
+#: src/anduinos_driver_center/computer_ui.py:172
+msgid "Detailed specifications"
+msgstr "Λεπτομερείς προδιαγραφές"
+
+#: src/anduinos_driver_center/computer_ui.py:173
+msgid "System"
+msgstr "Σύστημα"
+
+#: src/anduinos_driver_center/computer_ui.py:174
+msgid "Desktop"
+msgstr "Επιφάνεια εργασίας"
+
+#: src/anduinos_driver_center/computer_ui.py:175
+msgid "BIOS / UEFI"
+msgstr "BIOS / UEFI"
+
+#: src/anduinos_driver_center/computer_ui.py:180
+msgid "Storage"
+msgstr "Αποθήκευση"
+
+#: src/anduinos_driver_center/computer_ui.py:183
+msgid "Network"
+msgstr "Δίκτυο"
+
+#: src/anduinos_driver_center/computer_ui.py:190
+msgid "Memory module"
+msgstr "Μονάδα μνήμης"
+
+#: src/anduinos_driver_center/computer_ui.py:196
+msgid "Memory type and speed require optional administrator authentication."
+msgstr ""
+"Ο τύπος και η ταχύτητα μνήμης απαιτούν προαιρετική επαλήθευση διαχειριστή."
+
+#: src/anduinos_driver_center/computer_ui.py:197
+msgid "Read memory specifications"
+msgstr "Ανάγνωση προδιαγραφών μνήμης"
+
+#: src/anduinos_driver_center/computer_ui.py:205
+msgid "Hide details"
+msgstr "Απόκρυψη λεπτομερειών"
+
+#: src/anduinos_driver_center/computer_ui.py:205
+msgid "Show detailed specifications"
+msgstr "Εμφάνιση αναλυτικών προδιαγραφών"
+
+#: src/anduinos_driver_center/computer_ui.py:241
+msgid ""
+"Memory specifications are unavailable. Other hardware details remain "
+"available."
+msgstr ""
+"Οι προδιαγραφές μνήμης δεν είναι διαθέσιμες. Οι υπόλοιπες λεπτομέρειες "
+"υλικού παραμένουν διαθέσιμες."
+
+#: src/anduinos_driver_center/computer_ui.py:117
+msgid "Built-in display"
+msgstr "Ενσωματωμένη οθόνη"
+
+#: src/anduinos_driver_center/computer_ui.py:119
+msgid "External display"
+msgstr "Εξωτερική οθόνη"
+
+#: src/anduinos_driver_center/computer_ui.py:186
+#, python-format
+msgid "Maximum frequency: %s"
+msgstr "Μέγιστη συχνότητα: %s"
+
+#: src/anduinos_driver_center/computer_ui.py:233
+#, python-format
+msgid "%(used)s used / %(total)s"
+msgstr "%(used)s σε χρήση / %(total)s"
+
+#: src/anduinos_driver_center/computer_ui.py:244
+msgid "System and desktop"
+msgstr "Σύστημα και επιφάνεια εργασίας"
+
+#: src/anduinos_driver_center/computer_ui.py:247
+msgid "Window manager"
+msgstr "Διαχειριστής παραθύρων"
+
+#: src/anduinos_driver_center/computer_ui.py:250
+msgid "Installed packages"
+msgstr "Εγκατεστημένα πακέτα"
+
+#: src/anduinos_driver_center/computer_ui.py:253
+msgid ""
+"Applications and runtimes across user and system installations; locale and "
+"debug extensions excluded."
+msgstr ""
+"Εφαρμογές και περιβάλλοντα εκτέλεσης σε εγκαταστάσεις χρήστη και συστήματος."
+" Εξαίρεση: επεκτάσεις τοπικής γλώσσας και αποσφαλμάτωσης."
+
+#: src/anduinos_driver_center/computer_ui.py:255
+msgid "GTK theme"
+msgstr "Θέμα GTK"
+
+#: src/anduinos_driver_center/computer_ui.py:255
+msgid "Shell theme"
+msgstr "Θέμα κελύφους"
+
+#: src/anduinos_driver_center/computer_ui.py:256
+msgid "Icon theme"
+msgstr "Θέμα εικονιδίων"
+
+#: src/anduinos_driver_center/computer_ui.py:256
+msgid "Font"
+msgstr "Γραμματοσειρά"
+
+#: src/anduinos_driver_center/computer_ui.py:261
+msgid "Cursor"
+msgstr "Δείκτης"
+
+#: src/anduinos_driver_center/computer_ui.py:264
+msgid "Current usage"
+msgstr "Τρέχουσα χρήση"
+
+#: src/anduinos_driver_center/computer_ui.py:265
+msgid "Values from the latest scan. Use Scan again to refresh."
+msgstr ""
+"Τιμές από την τελευταία σάρωση. Χρησιμοποιήστε «Σάρωση ξανά» για ανανέωση."
+
+#: src/anduinos_driver_center/computer_ui.py:270
+#, python-format
+msgid "%(days)d d %(hours)d h %(minutes)d min"
+msgstr "%(days)d ημ %(hours)d ω %(minutes)d λεπ"
+
+#: src/anduinos_driver_center/computer_ui.py:272
+msgid "Uptime"
+msgstr "Χρόνος λειτουργίας"
+
+#: src/anduinos_driver_center/computer_ui.py:275
+msgid "Not configured"
+msgstr "Μη ρυθμισμένο"
+
+#: src/anduinos_driver_center/computer_ui.py:280
+#, python-format
+msgid "Available: %s"
+msgstr "Διαθέσιμο: %s"
+
+#: src/anduinos_driver_center/computer_ui.py:254
+msgid "Applications and runtimes"
+msgstr "Εφαρμογές και περιβάλλοντα εκτέλεσης"
+
+#: src/anduinos_driver_center/computer_ui.py:273
+#, python-format
+msgid "%(hours)d h %(minutes)d min"
+msgstr "%(hours)d ω %(minutes)d λεπ"
 
 #~ msgid "Download the latest metadata from enabled firmware remotes."
 #~ msgstr ""

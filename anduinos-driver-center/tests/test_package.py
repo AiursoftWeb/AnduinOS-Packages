@@ -1,5 +1,4 @@
 from pathlib import Path
-import re
 import subprocess
 import tempfile
 import unittest
@@ -71,12 +70,19 @@ class PackageTests(unittest.TestCase):
                 text=True,
             )
 
-        translated_msgid = re.compile(r'^msgid "[^"].*"$', re.MULTILINE)
         for po_file in po_files:
             subprocess.run(
                 ["msgfmt", "--check", "--check-format", "--output-file=/dev/null", str(po_file)],
                 check=True,
             )
+            if po_file.stem != "en_US":
+                subprocess.run(
+                    ["msgcmp", "--use-untranslated", "--no-fuzzy-matching",
+                     str(po_file), str(ROOT / "po" / "anduinos-driver-center.pot")],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
             for selector in ("--untranslated", "--only-fuzzy"):
                 result = subprocess.run(
                     ["msgattrib", selector, "--no-obsolete", str(po_file)],
@@ -84,10 +90,16 @@ class PackageTests(unittest.TestCase):
                     capture_output=True,
                     text=True,
                 )
-                self.assertIsNone(
-                    translated_msgid.search(result.stdout),
-                    f"{po_file.name} contains {selector.removeprefix('--')} messages",
-                )
+                if po_file.stem != "en_US":
+                    message_count = sum(
+                        line.startswith("msgid ")
+                        for line in result.stdout.splitlines()
+                    )
+                    self.assertLessEqual(
+                        message_count,
+                        1,
+                        f"{po_file.name} contains {selector.removeprefix('--')} messages",
+                    )
 
 if __name__ == "__main__":
     unittest.main()
