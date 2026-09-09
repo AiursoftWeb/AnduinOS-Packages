@@ -55,7 +55,7 @@ from frontend import (
     probe_ntfs_resize,
     probe_storage_inventory,
 )
-from installer_core.btrfs import BTRFS_SUBVOLUMES
+from installer_core.btrfs import BTRFS_SUBVOLUMES, BtrfsCompression
 from installer_core.coexistence import CoexistenceNoticeCode
 from installer_core.executor import describe_installation_pipeline
 from installer_core.layout import MIB, build_erase_disk_layout_spec
@@ -3317,6 +3317,35 @@ def build_storage_strategy_page(shared, nav_view):
 
 # ── automatic disk layout ───────────────────────────────────────────────
 
+BTRFS_COMPRESSION_CHOICES = (
+    (BtrfsCompression.NONE, N_("No compression"), N_("Store files without compression.")),
+    (BtrfsCompression.FAST, N_("Fast compression"), N_("Prioritize speed and reduce CPU usage.")),
+    (BtrfsCompression.BALANCED, N_("Balanced (default)"), N_("Balance compression speed and disk space usage.")),
+    (BtrfsCompression.SPACE, N_("Save space"), N_("Compress more to save space, using more CPU when writing.")),
+)
+
+
+def _btrfs_compression_control(shared, lang):
+    group = Adw.PreferencesGroup()
+    presets = [item[0] for item in BTRFS_COMPRESSION_CHOICES]
+    selected = BtrfsCompression(shared.get("btrfs_compression", "balanced"))
+    row = Adw.ComboRow(
+        title=_("Btrfs file compression", lang),
+        model=Gtk.StringList.new([_(item[1], lang) for item in BTRFS_COMPRESSION_CHOICES]),
+        selected=presets.index(selected),
+    )
+
+    def changed(*_args):
+        preset, _title, description = BTRFS_COMPRESSION_CHOICES[row.get_selected()]
+        shared["btrfs_compression"] = preset.value
+        row.set_subtitle(_(description, lang))
+
+    row.connect("notify::selected", changed)
+    changed()
+    group.add(row)
+    return group
+
+
 def build_disk_layout_page(shared, nav_view):
     lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(
@@ -3352,6 +3381,8 @@ def build_disk_layout_page(shared, nav_view):
         vexpand=True,
         valign=Gtk.Align.START,
     )
+    if filesystem == "btrfs":
+        settings.append(_btrfs_compression_control(shared, lang))
     error_message = ""
     try:
         swap_sizing = calculate_swap_sizing(
@@ -3383,7 +3414,11 @@ def build_disk_layout_page(shared, nav_view):
         )
         failure.add_css_class("installer-danger-card")
         settings.append(failure)
-    content.append(settings)
+    scroll = _scrolled_window(
+        hscrollbar_policy=Gtk.PolicyType.NEVER, vexpand=True,
+    )
+    scroll.set_child(settings)
+    content.append(scroll)
 
     nav = _nav_box(
         lang,
@@ -6411,6 +6446,15 @@ def build_summary_page(shared, nav_view):
         storage_lines = _erase_storage_lines(selected_swap_size_mib)
     storage_lines_start = 5
     lines[storage_lines_start:storage_lines_start] = storage_lines
+
+    if filesystem == "btrfs":
+        selected_compression = BtrfsCompression(shared.get("btrfs_compression", "balanced"))
+        compression_title = next(title for preset, title, _description in BTRFS_COMPRESSION_CHOICES
+                                 if preset is selected_compression)
+        lines.insert(
+            storage_lines_start + len(storage_lines) + 1,
+            f"<b>{_('Btrfs file compression', lang)}:</b> {escape(_(compression_title, lang))}",
+        )
 
     summary_label = Gtk.Label(
         margin_start=48,

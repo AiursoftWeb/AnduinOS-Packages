@@ -7,6 +7,7 @@ from dataclasses import replace
 
 from languages import DEFAULT_LOCALE, Language, language_for_locale
 
+from .btrfs import BtrfsCompression
 from .model import (
     AccessSpec,
     BootSpec,
@@ -71,6 +72,7 @@ def build_plan(
             disk=disk,
             filesystem=Filesystem(str(choices.get("filesystem") or "btrfs")),
             swap_size_mib=swap_size_mib,
+            btrfs_compression=BtrfsCompression(choices.get("btrfs_compression", "balanced")),
         ),
         platform=PlatformSpec(
             architecture=platform.architecture,

@@ -229,7 +229,7 @@ class MountTargetStepTests(unittest.TestCase):
                 (
                     "mount",
                     "-o",
-                    f"subvol={name},compress=zstd,noatime",
+                    f"subvol={name},compress=zstd:3,noatime",
                     "/dev/nvme0n1p4",
                     str(mount_path),
                 ),

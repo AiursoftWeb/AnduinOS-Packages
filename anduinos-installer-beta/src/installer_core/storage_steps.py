@@ -477,7 +477,7 @@ class MountTargetStep:
                     (
                         "mount",
                         "-o",
-                        subvolume.mount_options.removeprefix("defaults,"),
+                        subvolume.mount_options(context.plan.storage.btrfs_compression).removeprefix("defaults,"),
                         root,
                         str(mount_path),
                     ),

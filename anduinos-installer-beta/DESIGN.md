@@ -29,6 +29,13 @@ and constructs every command itself.
 - Filesystems: Btrfs by default and ext4 as the classic alternative in
   automatic and guided modes. Advanced manual mode additionally offers XFS
   and F2FS as conventional single-root filesystems.
+- Btrfs compression: the automatic storage configuration page offers no
+  compression, fast (Zstd 1), balanced (Zstd 3, default), and save space
+  (Zstd 6). The selected preset is an allowlisted field in installation plan
+  schema 16 and appears in the confirmation summary. All canonical subvolume
+  mounts apply it before system files are copied, and fstab persists the same
+  choice. Other filesystem types do not expose or apply Btrfs compression.
+  Changing the choice later affects newly written data, not existing extents.
 - Machine identity: the account page accepts one RFC-style ASCII hostname
   label, including upper-case input, digits and internal hyphens. The planner
   converts it to a lower-case systemd static hostname before constructing the

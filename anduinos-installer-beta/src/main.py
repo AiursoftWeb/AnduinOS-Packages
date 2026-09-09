@@ -68,6 +68,7 @@ class InstallerApplication(Adw.Application):
             "guided_esp_partuuid": "",
             "guided_storage_preview_model": None,
             "filesystem": "btrfs",
+            "btrfs_compression": "balanced",
             "username": "",
             "full_name": "",
             "password": "",

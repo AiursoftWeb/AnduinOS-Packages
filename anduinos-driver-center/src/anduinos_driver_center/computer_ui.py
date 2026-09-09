@@ -171,7 +171,7 @@ class ComputerPage(Gtk.Box):
         for name, mode, _connector in self._displays():
             self._row(sheet, 'video-display-symbolic', _('Display'), name, mode)
         self._row(sheet, 'motherboard-symbolic', _('Motherboard'), info.board)
-        self._row(sheet, 'x-office-calendar-symbolic', _('System installation date (estimated)'),
+        self._row(sheet, 'x-office-calendar-symbolic', _('System installation date'),
                   info.install_date.strftime('%x') if info.install_date else _('Unknown'))
         self.body.append(sheet)
 
