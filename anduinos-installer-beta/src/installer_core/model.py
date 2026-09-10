@@ -12,9 +12,10 @@ from enum import Enum
 from typing import Any
 
 from .storage_graph import StorageGraph
+from .btrfs import BtrfsCompression
 
 
-SCHEMA_VERSION = 15
+SCHEMA_VERSION = 16
 
 
 class Architecture(str, Enum):
@@ -79,6 +80,7 @@ class StorageSpec:
     esp_size_mib: int = 1024
     swap_size_mib: int = 2048
     graph: StorageGraph | None = None
+    btrfs_compression: BtrfsCompression = BtrfsCompression.BALANCED
 
 
 @dataclass(frozen=True)
@@ -201,6 +203,7 @@ class InstallPlan:
                 "filesystem",
                 "esp_size_mib",
                 "swap_size_mib",
+                "btrfs_compression",
                 "graph",
             },
             "storage",
@@ -217,6 +220,7 @@ class InstallPlan:
                 **storage_data,
                 "mode": InstallMode(storage_data["mode"]),
                 "filesystem": Filesystem(storage_data["filesystem"]),
+                "btrfs_compression": BtrfsCompression(storage_data["btrfs_compression"]),
                 "disk": disk,
                 "graph": StorageGraph.from_dict(storage_data["graph"]),
             }

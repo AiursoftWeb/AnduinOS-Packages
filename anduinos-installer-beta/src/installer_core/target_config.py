@@ -43,7 +43,7 @@ class ConfigureStorageStep:
         if context.plan.storage.filesystem is Filesystem.BTRFS:
             root_lines = "".join(
                 f"UUID={uuids['root']} {subvolume.mount_point} btrfs "
-                f"{subvolume.mount_options} 0 0\n"
+                f"{subvolume.mount_options(context.plan.storage.btrfs_compression)} 0 0\n"
                 for subvolume in BTRFS_SUBVOLUMES
             )
         else:

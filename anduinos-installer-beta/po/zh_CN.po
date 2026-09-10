@@ -427,8 +427,8 @@ msgid "Install bootloader"
 msgstr "安装引导加载程序"
 
 #: src/pages.py:6850
-msgid "Check systems on other disks"
-msgstr "检查其他硬盘的系统"
+msgid "Check for Windows installations"
+msgstr "检查 Windows 安装"
 
 #: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
@@ -1827,6 +1827,43 @@ msgstr "准备并启动 AnduinOS 安装程序"
 #: assets/anduinos-installer-beta.desktop:59
 msgid "Install AnduinOS to your computer"
 msgstr "将 AnduinOS 安装到您的计算机"
+
 #: src/pages.py
 msgid "System installed, but some features could not be completed"
 msgstr "系统已安装，但部分功能未能完成"
+
+#: src/pages.py
+msgid "Btrfs file compression"
+msgstr "Btrfs 文件压缩"
+
+#: src/pages.py
+msgid "No compression"
+msgstr "不压缩"
+
+#: src/pages.py
+msgid "Fast compression"
+msgstr "快速压缩"
+
+#: src/pages.py
+msgid "Balanced (default)"
+msgstr "均衡（默认）"
+
+#: src/pages.py
+msgid "Save space"
+msgstr "节省空间"
+
+#: src/pages.py
+msgid "Store files without compression."
+msgstr "不压缩文件。"
+
+#: src/pages.py
+msgid "Prioritize speed and reduce CPU usage."
+msgstr "优先速度，减少处理器开销。"
+
+#: src/pages.py
+msgid "Balance compression speed and disk space usage."
+msgstr "平衡压缩速度和磁盘空间占用。"
+
+#: src/pages.py
+msgid "Compress more to save space, using more CPU when writing."
+msgstr "提高压缩率以节省空间，写入时需要更多处理器计算。"

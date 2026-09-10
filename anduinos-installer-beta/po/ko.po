@@ -426,8 +426,8 @@ msgid "Install bootloader"
 msgstr "부트 로더 설치"
 
 #: src/pages.py:6850
-msgid "Check systems on other disks"
-msgstr "다른 디스크의 시스템 확인"
+msgid "Check for Windows installations"
+msgstr "Windows 설치 확인"
 
 #: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
@@ -1826,6 +1826,43 @@ msgstr "AnduinOS 설치 관리자 준비 및 시작"
 #: assets/anduinos-installer-beta.desktop:59
 msgid "Install AnduinOS to your computer"
 msgstr "컴퓨터에 AnduinOS 설치하기"
+
 #: src/pages.py
 msgid "System installed, but some features could not be completed"
 msgstr "시스템이 설치되었지만 일부 기능을 완료하지 못했습니다"
+
+#: src/pages.py
+msgid "Btrfs file compression"
+msgstr "Btrfs 파일 압축"
+
+#: src/pages.py
+msgid "No compression"
+msgstr "압축 안 함"
+
+#: src/pages.py
+msgid "Fast compression"
+msgstr "빠른 압축"
+
+#: src/pages.py
+msgid "Balanced (default)"
+msgstr "균형 (기본값)"
+
+#: src/pages.py
+msgid "Save space"
+msgstr "공간 절약"
+
+#: src/pages.py
+msgid "Store files without compression."
+msgstr "파일을 압축하지 않고 저장합니다."
+
+#: src/pages.py
+msgid "Prioritize speed and reduce CPU usage."
+msgstr "속도를 우선하고 CPU 사용량을 줄입니다."
+
+#: src/pages.py
+msgid "Balance compression speed and disk space usage."
+msgstr "압축 속도와 디스크 공간 사용량의 균형을 맞춥니다."
+
+#: src/pages.py
+msgid "Compress more to save space, using more CPU when writing."
+msgstr "쓰기 시 CPU를 더 사용하여 압축률을 높이고 공간을 절약합니다."

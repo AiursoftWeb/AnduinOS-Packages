@@ -426,8 +426,8 @@ msgid "Install bootloader"
 msgstr "Εγκατάσταση bootloader"
 
 #: src/pages.py:6850
-msgid "Check systems on other disks"
-msgstr "Έλεγχος συστημάτων σε άλλους δίσκους"
+msgid "Check for Windows installations"
+msgstr "Έλεγχος για εγκαταστάσεις Windows"
 
 #: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
@@ -1826,6 +1826,43 @@ msgstr "Προετοιμασία και εκκίνηση του προγράμμ
 #: assets/anduinos-installer-beta.desktop:59
 msgid "Install AnduinOS to your computer"
 msgstr "Εγκαταστήστε το AnduinOS στον υπολογιστή σας"
+
 #: src/pages.py
 msgid "System installed, but some features could not be completed"
 msgstr "Το σύστημα εγκαταστάθηκε, αλλά ορισμένες λειτουργίες δεν μπόρεσαν να ολοκληρωθούν"
+
+#: src/pages.py
+msgid "Btrfs file compression"
+msgstr "Συμπίεση αρχείων Btrfs"
+
+#: src/pages.py
+msgid "No compression"
+msgstr "Χωρίς συμπίεση"
+
+#: src/pages.py
+msgid "Fast compression"
+msgstr "Γρήγορη συμπίεση"
+
+#: src/pages.py
+msgid "Balanced (default)"
+msgstr "Ισορροπημένη (προεπιλογή)"
+
+#: src/pages.py
+msgid "Save space"
+msgstr "Εξοικονόμηση χώρου"
+
+#: src/pages.py
+msgid "Store files without compression."
+msgstr "Αποθήκευση αρχείων χωρίς συμπίεση."
+
+#: src/pages.py
+msgid "Prioritize speed and reduce CPU usage."
+msgstr "Προτεραιότητα στην ταχύτητα και μείωση της χρήσης επεξεργαστή."
+
+#: src/pages.py
+msgid "Balance compression speed and disk space usage."
+msgstr "Ισορροπία μεταξύ ταχύτητας συμπίεσης και χρήσης χώρου δίσκου."
+
+#: src/pages.py
+msgid "Compress more to save space, using more CPU when writing."
+msgstr "Μεγαλύτερη συμπίεση για εξοικονόμηση χώρου, με περισσότερη χρήση επεξεργαστή κατά την εγγραφή."

@@ -9,6 +9,7 @@ from keyboard_layouts import is_valid_xkb_choice
 
 from languages import input_method, language_for_locale
 
+from .btrfs import BtrfsCompression
 from .model import (
     AuthenticationMode,
     Architecture,
@@ -98,6 +99,9 @@ def validate_plan(
         InstallMode.MANUAL,
     }:
         errors.append("Unsupported storage mode")
+
+    if not isinstance(plan.storage.btrfs_compression, BtrfsCompression):
+        errors.append("Unsupported Btrfs compression preset")
 
     disk = plan.storage.disk
     if not WHOLE_DISK_RE.fullmatch(disk.path):

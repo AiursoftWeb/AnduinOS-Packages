@@ -39,7 +39,7 @@ class ConfigureStorageTests(unittest.TestCase):
 
         self.assertIn(
             "UUID=root-uuid / btrfs "
-            "defaults,subvol=@root,compress=zstd,noatime 0 0",
+            "defaults,subvol=@root,compress=zstd:3,noatime 0 0",
             fstab,
         )
         for mount_point, name in (
@@ -51,7 +51,7 @@ class ConfigureStorageTests(unittest.TestCase):
         ):
             self.assertIn(
                 f" {mount_point} btrfs "
-                f"defaults,subvol={name},compress=zstd,noatime 0 0",
+                f"defaults,subvol={name},compress=zstd:3,noatime 0 0",
                 fstab,
             )
         self.assertIn(

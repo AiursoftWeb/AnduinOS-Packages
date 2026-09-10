@@ -426,8 +426,8 @@ msgid "Install bootloader"
 msgstr "Installeer opstartlader"
 
 #: src/pages.py:6850
-msgid "Check systems on other disks"
-msgstr "Systemen op andere schijven controleren"
+msgid "Check for Windows installations"
+msgstr "Zoeken naar Windows-installaties"
 
 #: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
@@ -1826,6 +1826,43 @@ msgstr "AnduinOS-installatieprogramma voorbereiden en starten"
 #: assets/anduinos-installer-beta.desktop:59
 msgid "Install AnduinOS to your computer"
 msgstr "Installeer AnduinOS op uw computer"
+
 #: src/pages.py
 msgid "System installed, but some features could not be completed"
 msgstr "Het systeem is geïnstalleerd, maar sommige functies konden niet worden voltooid"
+
+#: src/pages.py
+msgid "Btrfs file compression"
+msgstr "Btrfs-bestandscompressie"
+
+#: src/pages.py
+msgid "No compression"
+msgstr "Geen compressie"
+
+#: src/pages.py
+msgid "Fast compression"
+msgstr "Snelle compressie"
+
+#: src/pages.py
+msgid "Balanced (default)"
+msgstr "Gebalanceerd (standaard)"
+
+#: src/pages.py
+msgid "Save space"
+msgstr "Ruimte besparen"
+
+#: src/pages.py
+msgid "Store files without compression."
+msgstr "Bestanden zonder compressie opslaan."
+
+#: src/pages.py
+msgid "Prioritize speed and reduce CPU usage."
+msgstr "Geef voorrang aan snelheid en beperk het CPU-gebruik."
+
+#: src/pages.py
+msgid "Balance compression speed and disk space usage."
+msgstr "Breng compressiesnelheid en schijfruimtegebruik in balans."
+
+#: src/pages.py
+msgid "Compress more to save space, using more CPU when writing."
+msgstr "Comprimeer sterker om ruimte te besparen, met meer CPU-gebruik bij het schrijven."

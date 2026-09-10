@@ -426,8 +426,8 @@ msgid "Install bootloader"
 msgstr "Установка загрузчика"
 
 #: src/pages.py:6850
-msgid "Check systems on other disks"
-msgstr "Проверить системы на других дисках"
+msgid "Check for Windows installations"
+msgstr "Поиск установленных систем Windows"
 
 #: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
@@ -1826,6 +1826,43 @@ msgstr "Подготовить и запустить установщик Anduin
 #: assets/anduinos-installer-beta.desktop:59
 msgid "Install AnduinOS to your computer"
 msgstr "Установите AnduinOS на ваш компьютер"
+
 #: src/pages.py
 msgid "System installed, but some features could not be completed"
 msgstr "Система установлена, но настройку некоторых функций завершить не удалось"
+
+#: src/pages.py
+msgid "Btrfs file compression"
+msgstr "Сжатие файлов Btrfs"
+
+#: src/pages.py
+msgid "No compression"
+msgstr "Без сжатия"
+
+#: src/pages.py
+msgid "Fast compression"
+msgstr "Быстрое сжатие"
+
+#: src/pages.py
+msgid "Balanced (default)"
+msgstr "Сбалансированное (по умолчанию)"
+
+#: src/pages.py
+msgid "Save space"
+msgstr "Экономия места"
+
+#: src/pages.py
+msgid "Store files without compression."
+msgstr "Сохранять файлы без сжатия."
+
+#: src/pages.py
+msgid "Prioritize speed and reduce CPU usage."
+msgstr "Приоритет скорости и снижение нагрузки на процессор."
+
+#: src/pages.py
+msgid "Balance compression speed and disk space usage."
+msgstr "Баланс скорости сжатия и использования места на диске."
+
+#: src/pages.py
+msgid "Compress more to save space, using more CPU when writing."
+msgstr "Более сильное сжатие для экономии места с большей нагрузкой на процессор при записи."

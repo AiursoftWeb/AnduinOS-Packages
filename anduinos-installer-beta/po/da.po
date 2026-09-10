@@ -426,8 +426,8 @@ msgid "Install bootloader"
 msgstr "Installer bootloader"
 
 #: src/pages.py:6850
-msgid "Check systems on other disks"
-msgstr "Kontrollér systemer på andre diske"
+msgid "Check for Windows installations"
+msgstr "Søg efter Windows-installationer"
 
 #: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
@@ -1826,6 +1826,43 @@ msgstr "Forbered og start AnduinOS-installationsprogrammet"
 #: assets/anduinos-installer-beta.desktop:59
 msgid "Install AnduinOS to your computer"
 msgstr "Installer AnduinOS på din computer"
+
 #: src/pages.py
 msgid "System installed, but some features could not be completed"
 msgstr "Systemet er installeret, men nogle funktioner kunne ikke fuldføres"
+
+#: src/pages.py
+msgid "Btrfs file compression"
+msgstr "Btrfs-filkomprimering"
+
+#: src/pages.py
+msgid "No compression"
+msgstr "Ingen komprimering"
+
+#: src/pages.py
+msgid "Fast compression"
+msgstr "Hurtig komprimering"
+
+#: src/pages.py
+msgid "Balanced (default)"
+msgstr "Balanceret (standard)"
+
+#: src/pages.py
+msgid "Save space"
+msgstr "Spar plads"
+
+#: src/pages.py
+msgid "Store files without compression."
+msgstr "Gem filer uden komprimering."
+
+#: src/pages.py
+msgid "Prioritize speed and reduce CPU usage."
+msgstr "Prioriter hastighed og reducer CPU-forbruget."
+
+#: src/pages.py
+msgid "Balance compression speed and disk space usage."
+msgstr "Balancer komprimeringshastighed og diskpladsforbrug."
+
+#: src/pages.py
+msgid "Compress more to save space, using more CPU when writing."
+msgstr "Komprimer mere for at spare plads med højere CPU-forbrug ved skrivning."

@@ -426,8 +426,8 @@ msgid "Install bootloader"
 msgstr "ブートローダーをインストール"
 
 #: src/pages.py:6850
-msgid "Check systems on other disks"
-msgstr "他のディスクのシステムを確認"
+msgid "Check for Windows installations"
+msgstr "Windows のインストールを確認"
 
 #: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
@@ -1826,6 +1826,43 @@ msgstr "AnduinOS インストーラーの準備と起動"
 #: assets/anduinos-installer-beta.desktop:59
 msgid "Install AnduinOS to your computer"
 msgstr "AnduinOSをコンピューターにインストールする"
+
 #: src/pages.py
 msgid "System installed, but some features could not be completed"
 msgstr "システムはインストールされましたが、一部の機能の設定を完了できませんでした"
+
+#: src/pages.py
+msgid "Btrfs file compression"
+msgstr "Btrfs ファイル圧縮"
+
+#: src/pages.py
+msgid "No compression"
+msgstr "圧縮なし"
+
+#: src/pages.py
+msgid "Fast compression"
+msgstr "高速圧縮"
+
+#: src/pages.py
+msgid "Balanced (default)"
+msgstr "バランス（既定）"
+
+#: src/pages.py
+msgid "Save space"
+msgstr "容量を節約"
+
+#: src/pages.py
+msgid "Store files without compression."
+msgstr "ファイルを圧縮せずに保存します。"
+
+#: src/pages.py
+msgid "Prioritize speed and reduce CPU usage."
+msgstr "速度を優先し、CPU 使用量を抑えます。"
+
+#: src/pages.py
+msgid "Balance compression speed and disk space usage."
+msgstr "圧縮速度とディスク使用量のバランスを取ります。"
+
+#: src/pages.py
+msgid "Compress more to save space, using more CPU when writing."
+msgstr "書き込み時の CPU 使用量を増やし、より強く圧縮して容量を節約します。"

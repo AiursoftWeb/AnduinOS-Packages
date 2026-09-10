@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import csv
 from dataclasses import dataclass, field
+from datetime import date, datetime
 import json
 import math
 import os
@@ -30,6 +31,17 @@ def command_result(*args: str) -> str | None:
 
 def command(*args: str) -> str:
     return command_result(*args) or ""
+
+
+def estimated_install_date() -> date | None:
+    """Root birth time is only an estimate, especially after cloning or recovery."""
+    try:
+        timestamp = int(command('stat', '--format=%W', '/').strip())
+        if timestamp <= 0:
+            return None
+        return datetime.fromtimestamp(timestamp).date()
+    except (ValueError, OverflowError, OSError):
+        return None
 
 
 def json_object(text: str) -> dict:
@@ -303,11 +315,13 @@ class Computer:
     pci: dict[str, list[dict[str, str]]] = field(default_factory=dict)
     displays: dict[str, dict[str, str]] = field(default_factory=dict)
     details: SystemDetails = field(default_factory=SystemDetails)
+    install_date: date | None = None
 
 
 def scan_computer() -> Computer:
     info = Computer()
     info.system, info.anduinos = distribution()
+    info.install_date = estimated_install_date()
     dmi = Path('/sys/class/dmi/id')
     info.model = ' '.join(filter(None, (clean(read(dmi / 'sys_vendor')), clean(read(dmi / 'product_name')))))
     info.board = ' '.join(filter(None, (clean(read(dmi / 'board_vendor')), clean(read(dmi / 'board_name')))))

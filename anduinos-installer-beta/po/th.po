@@ -426,8 +426,8 @@ msgid "Install bootloader"
 msgstr "ติดตั้ง bootloader"
 
 #: src/pages.py:6850
-msgid "Check systems on other disks"
-msgstr "ตรวจสอบระบบในดิสก์อื่น"
+msgid "Check for Windows installations"
+msgstr "ค้นหาการติดตั้ง Windows"
 
 #: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
@@ -1826,6 +1826,43 @@ msgstr "เตรียมและเริ่มโปรแกรมติด
 #: assets/anduinos-installer-beta.desktop:59
 msgid "Install AnduinOS to your computer"
 msgstr "ติดตั้ง AnduinOS ลงในคอมพิวเตอร์ของคุณ"
+
 #: src/pages.py
 msgid "System installed, but some features could not be completed"
 msgstr "ติดตั้งระบบแล้ว แต่ไม่สามารถตั้งค่าบางคุณสมบัติให้เสร็จสมบูรณ์ได้"
+
+#: src/pages.py
+msgid "Btrfs file compression"
+msgstr "การบีบอัดไฟล์ Btrfs"
+
+#: src/pages.py
+msgid "No compression"
+msgstr "ไม่บีบอัด"
+
+#: src/pages.py
+msgid "Fast compression"
+msgstr "บีบอัดแบบรวดเร็ว"
+
+#: src/pages.py
+msgid "Balanced (default)"
+msgstr "สมดุล (ค่าเริ่มต้น)"
+
+#: src/pages.py
+msgid "Save space"
+msgstr "ประหยัดพื้นที่"
+
+#: src/pages.py
+msgid "Store files without compression."
+msgstr "จัดเก็บไฟล์โดยไม่บีบอัด"
+
+#: src/pages.py
+msgid "Prioritize speed and reduce CPU usage."
+msgstr "เน้นความเร็วและลดการใช้ CPU"
+
+#: src/pages.py
+msgid "Balance compression speed and disk space usage."
+msgstr "สร้างสมดุลระหว่างความเร็วในการบีบอัดและการใช้พื้นที่ดิสก์"
+
+#: src/pages.py
+msgid "Compress more to save space, using more CPU when writing."
+msgstr "บีบอัดมากขึ้นเพื่อประหยัดพื้นที่ โดยใช้ CPU มากขึ้นขณะเขียนข้อมูล"

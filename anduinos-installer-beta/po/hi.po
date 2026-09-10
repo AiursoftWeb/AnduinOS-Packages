@@ -426,8 +426,8 @@ msgid "Install bootloader"
 msgstr "बूटलोडर इंस्टॉल करें"
 
 #: src/pages.py:6850
-msgid "Check systems on other disks"
-msgstr "अन्य डिस्क पर सिस्टम जाँचें"
+msgid "Check for Windows installations"
+msgstr "Windows इंस्टॉलेशन खोजें"
 
 #: src/pages.py:1284 src/pages.py:6842
 msgid "Install hardware drivers"
@@ -1826,6 +1826,43 @@ msgstr "AnduinOS इंस्टॉलर तैयार करें और �
 #: assets/anduinos-installer-beta.desktop:59
 msgid "Install AnduinOS to your computer"
 msgstr "अपने कंप्यूटर पर AnduinOS इंस्टॉल करें"
+
 #: src/pages.py
 msgid "System installed, but some features could not be completed"
 msgstr "सिस्टम इंस्टॉल हो गया है, लेकिन कुछ सुविधाएँ पूरी तरह सेट अप नहीं हो सकीं"
+
+#: src/pages.py
+msgid "Btrfs file compression"
+msgstr "Btrfs फ़ाइल संपीड़न"
+
+#: src/pages.py
+msgid "No compression"
+msgstr "बिना संपीड़न"
+
+#: src/pages.py
+msgid "Fast compression"
+msgstr "तेज़ संपीड़न"
+
+#: src/pages.py
+msgid "Balanced (default)"
+msgstr "संतुलित (डिफ़ॉल्ट)"
+
+#: src/pages.py
+msgid "Save space"
+msgstr "जगह बचाएँ"
+
+#: src/pages.py
+msgid "Store files without compression."
+msgstr "फ़ाइलों को बिना संपीड़न के सहेजें।"
+
+#: src/pages.py
+msgid "Prioritize speed and reduce CPU usage."
+msgstr "गति को प्राथमिकता दें और CPU का उपयोग कम करें।"
+
+#: src/pages.py
+msgid "Balance compression speed and disk space usage."
+msgstr "संपीड़न की गति और डिस्क स्थान के उपयोग में संतुलन रखें।"
+
+#: src/pages.py
+msgid "Compress more to save space, using more CPU when writing."
+msgstr "जगह बचाने के लिए अधिक संपीड़न करें; लिखते समय CPU का अधिक उपयोग होगा।"
