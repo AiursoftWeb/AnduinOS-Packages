@@ -1,13 +1,16 @@
 import tempfile
+import threading
 import unittest
+from unittest.mock import Mock
 from pathlib import Path
 
 from helpers import valid_plan
 from installer_core.network import (
     DetectNetworkConnectivityStep,
+    RecheckNetworkConnectivityStep,
     probe_ubuntu_archive,
 )
-from installer_core.steps import InstallContext
+from installer_core.steps import InstallContext, StepSkipped
 
 
 class FakeResponse:
@@ -24,6 +27,86 @@ class FakeResponse:
 
 
 class NetworkDetectionTests(unittest.TestCase):
+    def test_every_endpoint_is_logged_on_the_calling_thread(self):
+        logs = []
+        caller = threading.get_ident()
+
+        def opener(request, timeout):
+            if "failed.example" in request.full_url:
+                raise TimeoutError("unreachable")
+            return FakeResponse(b"Codename: resolute\n")
+
+        endpoint = probe_ubuntu_archive(
+            "resolute",
+            candidates=("http://good.example/", "http://failed.example/"),
+            opener=opener,
+            log=lambda message: logs.append((threading.get_ident(), message)),
+        )
+        self.assertEqual(endpoint, "http://good.example/")
+        self.assertEqual(len(logs), 2)
+        self.assertTrue(all(thread == caller for thread, _ in logs))
+        self.assertTrue(any("TimeoutError" in message for _, message in logs))
+        self.assertTrue(any("HTTP 206; verified" in message for _, message in logs))
+
+    def test_successful_initial_probe_does_not_retry(self):
+        detector = Mock(side_effect=AssertionError("unexpected retry"))
+        context = InstallContext(
+            valid_plan(), lambda _message: None, {"network_online": True},
+        )
+        with self.assertRaises(StepSkipped):
+            RecheckNetworkConnectivityStep(detector=detector).execute(context)
+        detector.assert_not_called()
+
+    def test_probe_logs_failure_kind_status_content_and_elapsed_time(self):
+        for response, expected in (
+            (TimeoutError("timed out"), "TimeoutError: timed out"),
+            (FakeResponse(b"<html>Login</html>"), "codename mismatch"),
+            (Mock(status=503, read=Mock(return_value=b"")), "HTTP 503"),
+        ):
+            with self.subTest(expected=expected):
+                logs = []
+                opener = (
+                    Mock(side_effect=response)
+                    if isinstance(response, Exception)
+                    else Mock(return_value=response)
+                )
+                self.assertIsNone(probe_ubuntu_archive(
+                    "resolute", candidates=("http://archive.example/ubuntu/",),
+                    opener=opener, log=logs.append,
+                ))
+                self.assertEqual(len(logs), 1)
+                self.assertIn(expected, logs[0])
+                self.assertIn("elapsed=", logs[0])
+                self.assertIn("http://archive.example/ubuntu/dists/resolute/Release", logs[0])
+
+    def test_probe_closes_response_when_read_fails(self):
+        response = Mock(status=200, read=Mock(side_effect=TimeoutError("read")))
+        logs = []
+        self.assertIsNone(probe_ubuntu_archive(
+            "resolute", candidates=("http://archive.example/ubuntu/",),
+            opener=Mock(return_value=response), log=logs.append,
+        ))
+        response.close.assert_called_once()
+        self.assertIn("TimeoutError", logs[0])
+
+    def test_download_boundary_rechecks_only_failed_initial_probe(self):
+        with tempfile.TemporaryDirectory() as directory:
+            release = Path(directory) / "os-release"
+            release.write_text("VERSION_CODENAME=resolute\n")
+            detector = Mock(side_effect=[None, "http://archive.example/ubuntu/"])
+            context = InstallContext(valid_plan(), lambda _message: None)
+            initial = DetectNetworkConnectivityStep(os_release=release, detector=detector)
+            retry = RecheckNetworkConnectivityStep(os_release=release, detector=detector)
+            with self.assertRaises(RuntimeError):
+                initial.execute(context)
+            retry.execute(context)
+            retry.verify(context)
+            self.assertTrue(context.values["network_online"])
+            self.assertEqual(detector.call_count, 2)
+            with self.assertRaises(StepSkipped):
+                retry.execute(context)
+            self.assertEqual(detector.call_count, 2)
+
     def test_probe_requires_a_real_release_file_for_the_codename(self):
         requested = []
 

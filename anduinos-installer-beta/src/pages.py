@@ -6758,6 +6758,20 @@ def build_summary_page(shared, nav_view):
 
 # ── page 10: Progress / Installation ─────────────────────────────────────
 
+def incomplete_feature_steps(outcomes):
+    """Report missing features, not a transient probe that later recovered."""
+    features = {
+        "install-language-packs", "install-input-method",
+        "install-multimedia-codecs", "refresh-package-indexes",
+        "upgrade-system", "ensure-snapshots-manager",
+        "install-third-party-drivers",
+    }
+    return tuple(
+        step for step, status in outcomes.items()
+        if step in features and status in ("warning", "failed")
+    )
+
+
 def ordered_progress_steps(plan: InstallPlan, step_titles):
     """Return localized progress rows in canonical executor order."""
 
@@ -6805,6 +6819,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             "Detect firmware and Secure Boot", lang
         ),
         "detect-network-connectivity": _(
+            "Detect Internet connectivity", lang
+        ),
+        "recheck-network-connectivity": _(
             "Detect Internet connectivity", lang
         ),
         "verify-target-disk": _("Verify target disk isolation", lang),
@@ -7190,6 +7207,19 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                 else:
                     result_label.set_label(_("Installation Complete", lang))
                     result_sub.set_label(_("Remove the installation media and restart your computer", lang))
+                incomplete = incomplete_feature_steps(step_outcomes)
+                if incomplete and not shared.get("development_mode"):
+                    heading = _(
+                        "System installed, but some features could not be completed",
+                        lang,
+                    )
+                    progress_status.set_label(heading)
+                    result_label.set_label(heading)
+                    result_icon.set_from_icon_name("dialog-warning-symbolic")
+                    result_sub.set_label(
+                        "\n".join("• " + step_titles[step] for step in incomplete)
+                        + "\n\n" + result_sub.get_label()
+                    )
                 secure_boot_notice.set_visible(
                     plan.platform.secure_boot is SecureBoot.ENABLED
                 )
@@ -7240,9 +7270,11 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "skipped": "–",
     }
     warning_count = {"value": 0}
+    step_outcomes = {}
 
     def update_step_status(step: str, status: str, message: str):
         def _update():
+            step_outcomes[step] = status
             widgets = step_rows.get(step)
             if widgets is None:
                 return False
