@@ -74,9 +74,13 @@ class StorageDiskChoice:
     erase_available: bool
 
     @property
+    def selectable(self) -> bool:
+        return not self.is_live_media and not self.disk.read_only
+
+    @property
     def guided_available(self) -> bool:
         return (
-            not self.is_live_media
+            self.selectable
             and self.coexistence.status is CoexistenceStatus.AVAILABLE
         )
 
@@ -419,6 +423,8 @@ def build_storage_workflow(
     live_device: str = "",
     physical_memory_probe=probe_physical_memory_bytes,
 ) -> StorageWorkflow:
+    if inventory.live_media_disks is None:
+        raise ValueError("Cannot safely identify the Live installation media")
     physical_memory_bytes = physical_memory_probe()
     choices = tuple(
         StorageDiskChoice(
@@ -426,9 +432,12 @@ def build_storage_workflow(
             coexistence=analyze_guided_coexistence(
                 disk, platform.firmware
             ),
-            is_live_media=disk.identity.path == live_device,
+            is_live_media=(disk.identity.path == live_device
+                           or disk.identity.path in inventory.live_media_disks),
             erase_available=(
                 disk.identity.path != live_device
+                and disk.identity.path not in inventory.live_media_disks
+                and not disk.read_only
                 and disk.identity.expected_size_bytes >= MINIMUM_DISK_BYTES
             ),
         )
@@ -594,6 +603,8 @@ def build_manual_storage_preview(
     disk = choice.disk
     if choice.is_live_media:
         raise ValueError("The Live medium cannot be edited")
+    if disk.read_only:
+        raise ValueError("The installation target is read-only")
     if workflow.platform.firmware.value != "uefi":
         raise ValueError("Manual partitioning currently requires UEFI")
     validate_manual_selection(disk, selection)

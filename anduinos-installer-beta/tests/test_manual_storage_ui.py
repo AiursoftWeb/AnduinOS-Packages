@@ -1,4 +1,5 @@
 import unittest
+from dataclasses import replace
 from unittest.mock import patch
 
 from test_manual_layout import manual_disk, selection
@@ -27,6 +28,31 @@ from installer_core.storage_ui import (
 
 
 class ManualStorageUiTests(unittest.TestCase):
+    def test_external_manual_install_uses_the_same_preview(self):
+        external = replace(self.disk, removable=True, transport="usb")
+        workflow = build_storage_workflow(
+            replace(self.inventory, disks=(external,)), self.platform,
+            physical_memory_probe=lambda: 8 * 1024**3,
+        )
+        self.assertTrue(workflow.disks[0].selectable)
+        external_preview = build_manual_storage_preview(workflow, selection())
+        ordinary_preview = build_manual_storage_preview(self.workflow, selection())
+        # Only inventory metadata differs, not layout or destructive operations.
+        self.assertEqual(replace(external_preview, disk=self.disk), ordinary_preview)
+
+    def test_inventory_live_and_read_only_disks_cannot_be_selected(self):
+        for inventory in (
+            replace(self.inventory, live_media_disks=(self.disk.identity.path,)),
+            replace(self.inventory, disks=(replace(self.disk, read_only=True),)),
+        ):
+            workflow = build_storage_workflow(inventory, self.platform)
+            self.assertFalse(workflow.disks[0].selectable)
+            self.assertFalse(workflow.disks[0].erase_available)
+            with self.assertRaises(ValueError):
+                build_manual_storage_preview(workflow, selection())
+        with self.assertRaisesRegex(ValueError, "identify the Live"):
+            build_storage_workflow(replace(self.inventory, live_media_disks=None), self.platform)
+
     def test_partition_role_choices_are_translated(self):
         with patch("pages._", side_effect=lambda text, lang: f"{lang}:{text}"):
             self.assertEqual(_manual_role_choices("test-locale"), [

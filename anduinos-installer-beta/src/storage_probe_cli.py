@@ -52,7 +52,7 @@ def main(
                 "--nodeps",
                 "--paths",
                 "--output",
-                "PATH,TYPE,RM",
+                "PATH,TYPE",
                 disk,
             ],
             capture_output=True,
@@ -74,9 +74,8 @@ def main(
         len(devices) != 1
         or str(device.get("path") or "") != disk
         or str(device.get("type") or "") != "disk"
-        or bool(device.get("rm"))
     ):
-        return _error("The requested device is not a supported fixed whole disk")
+        return _error("The requested device is not a supported whole disk")
 
     try:
         result = run(

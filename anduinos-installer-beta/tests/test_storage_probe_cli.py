@@ -71,11 +71,13 @@ class StorageProbeCliTests(unittest.TestCase):
             )
         self.assertEqual(run_calls, [])
 
-    def test_rejects_a_removable_device_before_parted(self):
+    def test_reads_removable_disk_geometry_with_the_same_safe_command(self):
         calls = []
 
         def run(command, **_kwargs):
             calls.append(command)
+            if command[0] == "/usr/sbin/parted":
+                return completed("BYT;\n")
             return completed(
                 json.dumps(
                     {
@@ -90,10 +92,13 @@ class StorageProbeCliTests(unittest.TestCase):
                 )
             )
 
-        with contextlib.redirect_stderr(io.StringIO()):
+        with contextlib.redirect_stdout(io.StringIO()):
             returncode = main(["/dev/sda"], run=run, geteuid=lambda: 0)
-        self.assertEqual(returncode, 2)
-        self.assertEqual(len(calls), 1)
+        self.assertEqual(returncode, 0)
+        self.assertEqual(calls[1], [
+            "/usr/sbin/parted", "--machine", "--script", "/dev/sda",
+            "unit", "B", "print", "free",
+        ])
 
     def test_ntfs_mode_validates_partition_and_returns_inspection_json(self):
         calls = []

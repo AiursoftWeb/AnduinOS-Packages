@@ -80,6 +80,31 @@ class ExecutionPreflightTests(unittest.TestCase):
             runner.commands[-1][0][-1], plan.storage.disk.path
         )
 
+    def test_live_unknown_and_read_only_targets_fail_before_usage_commands(self):
+        plan = valid_plan()
+        inventory = valid_inventory(plan)
+        cases = (
+            (replace(inventory, live_media_disks=None), "identify the Live"),
+            (replace(inventory, live_media_disks=(plan.storage.disk.path,)), "Live installation media"),
+            (replace(inventory, disks=(replace(inventory.disks[0], read_only=True),)), "read-only"),
+        )
+        for snapshot, reason in cases:
+            with self.subTest(reason=reason):
+                runner = self.idle_target_runner()
+                with self.assertRaisesRegex(PreflightError, reason):
+                    verify_target_disk_environment(plan, runner, inventory_probe=lambda: snapshot)
+                self.assertEqual(runner.commands, [])
+
+    def test_external_target_uses_the_unchanged_install_plan(self):
+        plan = valid_plan()
+        inventory = valid_inventory(plan)
+        inventory = replace(inventory, disks=(replace(
+            inventory.disks[0], removable=True, transport="usb"),))
+        resolved = verify_target_disk_environment(
+            plan, self.idle_target_runner(), inventory_probe=lambda: inventory,
+        )
+        self.assertEqual(resolved, plan)
+
     def test_rejects_disk_substitution_at_same_path(self):
         plan = valid_plan()
         replacement = replace(plan.storage.disk, stable_id="serial:attacker")
