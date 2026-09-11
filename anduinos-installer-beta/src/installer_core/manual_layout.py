@@ -265,7 +265,10 @@ def manual_layout_block_reason(
 ) -> str:
     """Explain why this disk cannot enter the bounded manual editor."""
 
-    if disk.geometry_probe_error:
+    # A complete existing map is required only when any of it will survive.
+    # Explicit GPT replacement derives its sole writable extent from the
+    # stable whole-disk size, so an unreadable/missing old label is irrelevant.
+    if disk.geometry_probe_error and not reinitialize_gpt:
         return "Complete partition geometry is unavailable"
     if not reinitialize_gpt and disk.partition_table != "gpt":
         return "Manual editing requires GPT or explicit GPT reinitialization"
