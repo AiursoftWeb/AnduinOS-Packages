@@ -2939,6 +2939,8 @@ def build_disk_page(shared, nav_view):
 # ── automatic disk layout helpers ───────────────────────────────────────
 
 def _validated_swap_size(shared, swap_sizing):
+    if swap_sizing is None:
+        return None
     requested_swap = shared.get("swap_size_mib")
     if not isinstance(requested_swap, int):
         requested_swap = swap_sizing.swap_size_mib

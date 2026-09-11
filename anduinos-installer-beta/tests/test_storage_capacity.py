@@ -1,10 +1,21 @@
 import unittest
 from unittest.mock import Mock, patch
 
-from pages import Adw, _confirm_storage_capacity, storage_capacity_warning
+from pages import (
+    Adw,
+    _confirm_storage_capacity,
+    _validated_swap_size,
+    storage_capacity_warning,
+)
 
 
 class StorageCapacityTests(unittest.TestCase):
+    def test_manual_summary_does_not_require_automatic_swap_sizing(self):
+        shared = {}
+
+        self.assertIsNone(_validated_swap_size(shared, None))
+        self.assertNotIn("swap_size_mib", shared)
+
     def test_sufficient_capacity_proceeds_without_a_dialog(self):
         confirmed = Mock()
         with patch("pages.Adw.MessageDialog") as dialog:
