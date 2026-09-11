@@ -3,7 +3,13 @@ from dataclasses import replace
 from unittest.mock import patch
 
 from test_frontend import state
-from test_manual_layout import manual_disk, selection
+from test_manual_layout import (
+    GIB,
+    ManualPartitionRequest,
+    ManualPartitionRole,
+    manual_disk,
+    selection,
+)
 from frontend import (
     FrontendPlanError,
     StorageStrategy,
@@ -75,6 +81,70 @@ class ManualFrontendPlanTests(unittest.TestCase):
             self.values["manual_storage_preview_model"],
             old_preview,
         )
+
+    def test_below_minimum_manual_plan_does_not_use_automatic_swap_policy(self):
+        small_disk = replace(
+            self.disk,
+            identity=replace(
+                self.disk.identity,
+                expected_size_bytes=23 * GIB,
+            ),
+            partition_table="",
+            partition_table_uuid="",
+            partitions=(),
+            free_extents=(),
+            geometry_probe_error="unrecognised disk label",
+        )
+        inventory = StorageInventory((small_disk,), "f" * 64)
+        chosen = replace(
+            selection(
+                reinitialize=True,
+                reused_esp="",
+                new_partitions=(
+                    ManualPartitionRequest(
+                        ManualPartitionRole.EFI_SYSTEM, 1, 1025
+                    ),
+                    ManualPartitionRequest(
+                        ManualPartitionRole.ROOT, 1025, 20 * 1024 + 1
+                    ),
+                    ManualPartitionRequest(
+                        ManualPartitionRole.SWAP,
+                        20 * 1024 + 1,
+                        23 * 1024 - 210,
+                    ),
+                ),
+            ),
+            disk_size_bytes=small_disk.identity.expected_size_bytes,
+        )
+        workflow = build_storage_workflow(
+            inventory,
+            self.platform,
+            physical_memory_probe=lambda: 8 * GIB,
+        )
+        preview = build_manual_storage_preview(workflow, chosen)
+        values = {
+            **self.values,
+            "disk": small_disk.identity.path,
+            "disk_size_bytes": small_disk.identity.expected_size_bytes,
+            "disk_stable_id": small_disk.identity.stable_id,
+            "disk_topology_digest": small_disk.topology_digest,
+            "manual_storage_preview_model": preview,
+        }
+
+        with patch("frontend.hash_password", return_value="$6$salt$hash"):
+            plan = create_install_plan(
+                values,
+                inventory=inventory,
+                platform=self.platform,
+            )
+
+        self.assertIs(plan.storage.mode, InstallMode.MANUAL)
+        self.assertEqual(19 * 1024, next(
+            item.end_mib - item.start_mib
+            for item in plan.storage.graph.partitions
+            if item.name == "root"
+        ))
+        self.assertEqual(2861, plan.storage.swap_size_mib)
 
     def test_changed_manual_topology_is_rejected(self):
         changed_disk = replace(self.disk, topology_digest="f" * 64)

@@ -11,7 +11,13 @@ from dataclasses import replace
 from enum import Enum
 
 from installer_core.executor import describe_installation_pipeline
-from installer_core.model import Filesystem, InstallMode, InstallPlan
+from installer_core.btrfs import BtrfsCompression
+from installer_core.model import (
+    Filesystem,
+    InstallMode,
+    InstallPlan,
+    StorageSpec,
+)
 from installer_core.ntfs_resize import (
     GIB,
     MIB,
@@ -328,21 +334,10 @@ def create_install_plan(
     if platform is None:
         platform = probe_platform()
     base_choices = state
+    storage_override = None
     if storage_mode is InstallMode.MANUAL:
         base_choices = dict(state)
         base_choices.pop("swap_size_mib", None)
-    plan = build_plan(
-        base_choices,
-        selected.identity,
-        platform,
-        password_hash,
-        disk_binding=bind_disk_topology(inventory, selected_id),
-        inventory_digest=inventory.digest,
-    )
-    if storage_mode is InstallMode.ERASE_DISK:
-        return plan
-
-    if storage_mode is InstallMode.MANUAL:
         previous_preview = state.get("manual_storage_preview_model")
         if not isinstance(previous_preview, ManualStoragePreview):
             raise FrontendPlanError(
@@ -372,15 +367,32 @@ def create_install_plan(
             ),
             0,
         )
+        storage_override = StorageSpec(
+            mode=InstallMode.MANUAL,
+            disk=selected.identity,
+            filesystem=filesystem,
+            swap_size_mib=swap_size_mib,
+            graph=current_preview.graph,
+            btrfs_compression=BtrfsCompression(
+                state.get("btrfs_compression", "balanced")
+            ),
+        )
+
+    plan = build_plan(
+        base_choices,
+        selected.identity,
+        platform,
+        password_hash,
+        disk_binding=bind_disk_topology(inventory, selected_id),
+        inventory_digest=inventory.digest,
+        storage_override=storage_override,
+    )
+    if storage_mode is InstallMode.ERASE_DISK:
+        return plan
+
+    if storage_mode is InstallMode.MANUAL:
         plan = replace(
             plan,
-            storage=replace(
-                plan.storage,
-                mode=InstallMode.MANUAL,
-                filesystem=filesystem,
-                swap_size_mib=swap_size_mib,
-                graph=current_preview.graph,
-            ),
             boot=replace(plan.boot, install_fallback_path=False),
         )
         validate_plan(plan)
