@@ -2701,14 +2701,18 @@ def build_disk_page(shared, nav_view):
     loading.set_visible(False)
     content.append(loading)
 
+    disk_actions = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=12,
+        halign=Gtk.Align.CENTER,
+    )
+    content.append(disk_actions)
     rescan = Gtk.Button(label=_("Rescan Storage", lang))
-    rescan.set_halign(Gtk.Align.CENTER)
-    content.append(rescan)
+    disk_actions.append(rescan)
 
     show_external = Gtk.Button(label=_("Show External Drives", lang))
-    show_external.set_halign(Gtk.Align.CENTER)
     show_external.set_visible(not shared.get("show_external_disks", False))
-    content.append(show_external)
+    disk_actions.append(show_external)
 
     def _confirm_external(confirmed, details=""):
         dialog = Adw.MessageDialog(
@@ -2722,6 +2726,11 @@ def build_disk_page(shared, nav_view):
         )
         dialog.add_response("cancel", _("Cancel", lang))
         dialog.add_response("continue", _("Continue", lang))
+        warning_icon = Gtk.Image.new_from_icon_name("dialog-warning-symbolic")
+        warning_icon.set_pixel_size(48)
+        warning_icon.add_css_class("warning")
+        dialog.set_extra_child(warning_icon)
+        dialog.set_response_appearance("continue", Adw.ResponseAppearance.DESTRUCTIVE)
         dialog.set_default_response("cancel")
         dialog.set_close_response("cancel")
         dialog.connect("response", lambda _dialog, response:
