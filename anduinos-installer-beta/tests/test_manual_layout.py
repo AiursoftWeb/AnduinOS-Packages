@@ -231,7 +231,7 @@ class ManualLayoutTests(unittest.TestCase):
             ),
         )
 
-    def test_missing_roles_overlap_and_small_root_fail_closed(self):
+    def test_missing_roles_overlap_and_zero_root_fail_closed(self):
         cases = (
             (
                 selection(new_partitions=()),
@@ -249,10 +249,10 @@ class ManualLayoutTests(unittest.TestCase):
             (
                 selection(
                     new_partitions=(
-                        ManualPartitionRequest(ManualPartitionRole.ROOT, 80 * 1024, 90 * 1024),
+                        ManualPartitionRequest(ManualPartitionRole.ROOT, 80 * 1024, 80 * 1024),
                     )
                 ),
-                "at least 20 GiB",
+                "geometry",
             ),
         )
         for chosen, message in cases:

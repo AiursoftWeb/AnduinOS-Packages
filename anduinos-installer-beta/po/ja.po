@@ -842,9 +842,17 @@ msgstr "この高度なパスは既存のパーティションを保持します
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "このディスクには、ガイド付き共存がサポートしていないアクティブなマップタ、アレイ、またはその他のネストされたブロックデバイスのトポロジーが含まれています。"
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "このディスクは全体インストールには小さすぎます。適切な未割り当て領域が存在する場合のみ、Advancedで続行できます。"
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "最低 25 GiB、推奨 50 GiB。"
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "最低容量を下回っています。インストールや更新に失敗する可能性があります。続行しますか？"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "推奨容量を下回っています。空き容量がすぐに不足する可能性があります。続行しますか？"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1642,9 +1650,6 @@ msgstr "{size} {start} MiB"
 msgid "an ESP of at least 512 MiB"
 msgstr "512 MiB 以上の ESP"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "20 GiB 以上の Root パーティション"
 
 #: src/pages.py:5209
 #, python-brace-format

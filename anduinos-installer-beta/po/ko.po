@@ -842,9 +842,17 @@ msgstr "이 고급 경로는 기존 파티션을 유지하지만 선택한 디�
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "이 디스크에는 가이드된 공존이 지원하지 않는 활성 매퍼, 배열 또는 기타 중첩된 블록 장치 토폴로지가 포함되어 있습니다."
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "이 디스크는 전체 디스크 설치를 위해 너무 작습니다. 적절한 할당되지 않은 공간이 있는 경우에만 고급 모드를 계속할 수 있습니다."
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "최소 25 GiB, 권장 50 GiB."
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "최소 용량 미만입니다. 설치나 업데이트가 실패할 수 있습니다. 계속하시겠습니까?"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "권장 용량 미만입니다. 공간이 빠르게 부족해질 수 있습니다. 계속하시겠습니까?"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1642,9 +1650,6 @@ msgstr "{start} MiB에서 {size}"
 msgid "an ESP of at least 512 MiB"
 msgstr "512 MiB 이상의 ESP"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "20 GiB 이상의 Root 파티션"
 
 #: src/pages.py:5209
 #, python-brace-format

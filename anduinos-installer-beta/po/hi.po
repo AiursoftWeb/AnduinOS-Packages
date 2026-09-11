@@ -842,9 +842,17 @@ msgstr "यह उन्नत पथ मौजूदा पार्टिश�
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "इस डिस्क में एक सक्रिय मैपर, एरे या अन्य नेस्टेड ब्लॉक-डिवाइस टोपोलॉजी है जिसका समर्थन गाइडेड सहअस्तित्व नहीं करता है।"
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "यह डिस्क पूरे-डिस्क इंस्टालेशन के लिए बहुत छोटी है। उन्नत तभी जारी रख सकता है यदि उपयुक्त अनासंजत स्थिति उपलब्ध हो।"
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "न्यूनतम 25 GiB; अनुशंसित 50 GiB।"
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "न्यूनतम से कम। स्थापना या अपडेट विफल हो सकते हैं। जारी रखें?"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "अनुशंसित क्षमता से कम। जगह जल्दी खत्म हो सकती है। जारी रखें?"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1642,9 +1650,6 @@ msgstr "{size} {start} MiB पर"
 msgid "an ESP of at least 512 MiB"
 msgstr "कम से कम 512 MiB का ESP"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "कम से कम 20 GiB का Root पार्टिशन"
 
 #: src/pages.py:5209
 #, python-brace-format

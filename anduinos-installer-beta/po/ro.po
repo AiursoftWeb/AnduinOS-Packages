@@ -842,9 +842,17 @@ msgstr "Această cale avansată păstrează partițiile existente, dar modifică
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "Acest disc conține un mapper activ, o matrice sau altă topologie imbricată de dispozitive bloc pe care coexistența ghidată nu o suportă."
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "Acest disc este prea mic pentru instalarea pe întregul disc. Calea avansată poate continua doar dacă există spațiu nealocat adecvat."
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "Minimum 25 GiB; recomandat 50 GiB."
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "Sub minim. Instalarea sau actualizările pot eșua. Continuați?"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "Sub capacitatea recomandată. Spațiul se poate epuiza rapid. Continuați?"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1642,9 +1650,6 @@ msgstr "{size} la {start} MiB"
 msgid "an ESP of at least 512 MiB"
 msgstr "un ESP de cel puțin 512 MiB"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "o partiție Root de cel puțin 20 GiB"
 
 #: src/pages.py:5209
 #, python-brace-format

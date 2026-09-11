@@ -842,9 +842,17 @@ msgstr "Bu gelişmiş yol, mevcut bölümleri korur ancak seçili diskin bölüm
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "Bu disk, kılavuzlu birlikte yaşamın desteklemediği aktif bir eşleyici, dizi veya diğer iç içe geçmiş blok cihazı topolojisini içeriyor."
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "Bu disk, tüm disk kurulumu için çok küçük. Gelişmiş seçenek yalnızca uygun ayrılmamış alan varsa devam edebilir."
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "En az 25 GiB; önerilen 50 GiB."
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "Minimumun altında. Kurulum veya güncellemeler başarısız olabilir. Devam edilsin mi?"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "Önerilen kapasitenin altında. Alan hızla tükenebilir. Devam edilsin mi?"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1642,9 +1650,6 @@ msgstr "{size} @ {start} MiB"
 msgid "an ESP of at least 512 MiB"
 msgstr "en az 512 MiB büyüklüğünde bir ESP"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "en az 20 GiB büyüklüğünde bir Root bölümü"
 
 #: src/pages.py:5209
 #, python-brace-format

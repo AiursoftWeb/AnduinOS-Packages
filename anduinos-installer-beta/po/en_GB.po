@@ -843,9 +843,17 @@ msgstr "This advanced path preserves existing partitions but changes the selecte
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "25 GiB minimum; 50 GiB recommended."
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "Below the minimum. Installation or updates may fail. Continue?"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "Below the recommended capacity. Space may run out quickly. Continue?"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1643,9 +1651,6 @@ msgstr "{size} at {start} MiB"
 msgid "an ESP of at least 512 MiB"
 msgstr "an ESP of at least 512 MiB"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "a Root partition of at least 20 GiB"
 
 #: src/pages.py:5209
 #, python-brace-format

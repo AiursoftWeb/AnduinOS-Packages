@@ -53,6 +53,17 @@ class ManualStorageUiTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "identify the Live"):
             build_storage_workflow(replace(self.inventory, live_media_disks=None), self.platform)
 
+    def test_23_gib_disk_disables_only_automatic_installation(self):
+        small_disk = replace(self.disk, identity=replace(
+            self.disk.identity, expected_size_bytes=23 * 1024**3))
+        workflow = build_storage_workflow(
+            replace(self.inventory, disks=(small_disk,)), self.platform,
+            physical_memory_probe=lambda: 8 * 1024**3,
+        )
+        choice = workflow.disks[0]
+        self.assertTrue(choice.selectable)
+        self.assertFalse(choice.erase_available)
+
     def test_partition_role_choices_are_translated(self):
         with patch("pages._", side_effect=lambda text, lang: f"{lang}:{text}"):
             self.assertEqual(_manual_role_choices("test-locale"), [

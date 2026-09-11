@@ -842,9 +842,17 @@ msgstr "Цей розширений шлях зберігає існуючі р�
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "Цей диск містить активний мапер, масив або іншу вкладену топологію блокового пристрою, яку підтримка спільного використання не підтримує."
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "Цей диск занадто малий для повного встановлення на диск. Розширений режим може продовжити лише за наявності відповідного невизначеного місця."
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "Мінімум 25 GiB; рекомендовано 50 GiB."
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "Менше мінімуму. Встановлення або оновлення можуть завершитися помилкою. Продовжити?"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "Менше рекомендованого обсягу. Місце може швидко закінчитися. Продовжити?"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1642,9 +1650,6 @@ msgstr "{size} на {start} МБ"
 msgid "an ESP of at least 512 MiB"
 msgstr "ESP розміром щонайменше 512 MiB"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "розділ Root розміром щонайменше 20 GiB"
 
 #: src/pages.py:5209
 #, python-brace-format

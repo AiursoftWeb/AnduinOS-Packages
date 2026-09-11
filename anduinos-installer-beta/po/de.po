@@ -842,9 +842,17 @@ msgstr "Dieser erweiterte Pfad bewahrt bestehende Partitionen, ändert jedoch di
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "Diese Festplatte enthält einen aktiven Mapper, Array oder andere verschachtelte Blockgerätestrukturen, die von der geführten Koexistenz nicht unterstützt werden."
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "Diese Festplatte ist für eine komplette Festplatteninstallation zu klein. Die erweiterte Installation kann nur fortgesetzt werden, wenn geeigneter nicht zugewiesener Speicherplatz vorhanden ist."
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "Mindestens 25 GiB; 50 GiB empfohlen."
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "Unter dem Mindestbedarf. Installation oder Updates können fehlschlagen. Fortfahren?"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "Unter der empfohlenen Kapazität. Der Speicherplatz kann schnell knapp werden. Fortfahren?"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1642,9 +1650,6 @@ msgstr "{size} bei {start} MiB"
 msgid "an ESP of at least 512 MiB"
 msgstr "eine ESP mit mindestens 512 MiB"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "eine Root-Partition mit mindestens 20 GiB"
 
 #: src/pages.py:5209
 #, python-brace-format

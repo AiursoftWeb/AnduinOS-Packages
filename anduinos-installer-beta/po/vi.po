@@ -842,9 +842,17 @@ msgstr "Path nâng cao này bảo toàn các phân vùng hiện có nhưng thay 
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "Oss đĩa này chứa một trình ánh xạ, mảng hoặc cấu trúc thiết bị khối lồng nhau khác mà chế độ cùng tồn tại có hướng dẫn không hỗ trợ."
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "Ổ đĩa này quá nhỏ để cài đặt toàn bộ ổ đĩa. Chế độ nâng cao chỉ có thể tiếp tục nếu có đủ không gian chưa phân bổ phù hợp."
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "Tối thiểu 25 GiB; khuyến nghị 50 GiB."
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "Dưới mức tối thiểu. Cài đặt hoặc cập nhật có thể thất bại. Tiếp tục?"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "Dưới dung lượng khuyến nghị. Có thể nhanh chóng hết chỗ trống. Tiếp tục?"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1642,9 +1650,6 @@ msgstr "{size} tại {start} MiB"
 msgid "an ESP of at least 512 MiB"
 msgstr "một ESP ít nhất 512 MiB"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "một phân vùng Root ít nhất 20 GiB"
 
 #: src/pages.py:5209
 #, python-brace-format

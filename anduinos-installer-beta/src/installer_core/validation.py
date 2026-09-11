@@ -27,7 +27,8 @@ from .swap_policy import MINIMUM_ROOT_MIB
 from .username_policy import RESERVED_USERNAMES, is_valid_username
 
 
-MINIMUM_DISK_BYTES = 24 * 1024**3
+MINIMUM_DISK_BYTES = 25 * 1024**3
+RECOMMENDED_DISK_BYTES = 50 * 1024**3
 MINIMUM_ROOT_BYTES = MINIMUM_ROOT_MIB * 1024**2
 LOCALE_RE = re.compile(r"^[A-Za-z]{2,3}(?:_[A-Z]{2})?\.UTF-8$")
 TIMEZONE_RE = re.compile(
@@ -108,8 +109,11 @@ def validate_plan(
         errors.append("Target must be a supported whole-disk device")
     if not disk.stable_id.strip():
         errors.append("Target disk requires a stable hardware identifier")
-    if disk.expected_size_bytes < MINIMUM_DISK_BYTES:
-        errors.append("Target disk must be at least 24 GiB")
+    if (
+        plan.storage.mode is not InstallMode.MANUAL
+        and disk.expected_size_bytes < MINIMUM_DISK_BYTES
+    ):
+        errors.append("Target disk must be at least 25 GiB")
 
     if plan.storage.mode is InstallMode.ERASE_DISK:
         reserved = (

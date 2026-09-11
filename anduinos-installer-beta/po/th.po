@@ -842,9 +842,17 @@ msgstr "เส้นทางขั้นสูงนี้จะรักษา
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "ดิสก์นี้มีแมปเปอร์ แอเรย์ หรือโทโพโลยีบล็อกอุปกรณ์แบบซ้อนอื่นๆ ที่ใช้งานอยู่ ซึ่งการอยู่ร่วมกันแบบมีคำแนะนำไม่รองรับ"
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "dิสก์นี้มีขนาดเล็กเกินไปสำหรับการติดตั้งทั้งดิสก์ ขั้นสูงอาจดำเนินการต่อได้ก็ต่อเมื่อมีพื้นที่ที่ยังไม่ได้จัดสรรที่เหมาะสมเท่านั้น"
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "ขั้นต่ำ 25 GiB; แนะนำ 50 GiB"
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "ต่ำกว่าขั้นต่ำ การติดตั้งหรืออัปเดตอาจล้มเหลว ต้องการดำเนินการต่อหรือไม่?"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "ต่ำกว่าความจุที่แนะนำ พื้นที่อาจเต็มอย่างรวดเร็ว ต้องการดำเนินการต่อหรือไม่?"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1642,9 +1650,6 @@ msgstr "{size} ที่ {start} MiB"
 msgid "an ESP of at least 512 MiB"
 msgstr "ESP อย่างน้อย 512 MiB"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "พาร์ทิชัน Root อย่างน้อย 20 GiB"
 
 #: src/pages.py:5209
 #, python-brace-format

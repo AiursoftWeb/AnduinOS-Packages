@@ -91,6 +91,10 @@ from installer_core.storage_ui import (
     build_manual_storage_confirmation,
     build_storage_workflow,
 )
+from installer_core.validation import (
+    MINIMUM_DISK_BYTES,
+    RECOMMENDED_DISK_BYTES,
+)
 from installer_core.swap_policy import (
     calculate_swap_sizing,
     disk_swap_choices_mib,
@@ -3331,15 +3335,7 @@ def build_storage_strategy_page(shared, nav_view):
     ):
         strategy_buttons[StorageStrategy.ERASE_BTRFS].set_active(True)
     elif not erase_available:
-        _set_warning(
-            _(
-                "This disk is too small for whole-disk installation. "
-                "Advanced may continue only if suitable unallocated space "
-                "exists.",
-                lang,
-            ),
-            "advanced",
-        )
+        _set_warning(_("Too small", lang), "advanced")
     else:
         _set_warning(
             _(
@@ -3357,7 +3353,12 @@ def build_storage_strategy_page(shared, nav_view):
         if strategy is StorageStrategy.ADVANCED:
             nav_view.push(build_advanced_storage_page(shared, nav_view))
         else:
-            nav_view.push(build_disk_layout_page(shared, nav_view))
+            if not erase_available:
+                return
+            _confirm_storage_capacity(
+                page, nav_view, lang, int(shared.get("disk_size_bytes") or 0),
+                lambda: nav_view.push(build_disk_layout_page(shared, nav_view)),
+            )
 
     nav = _nav_box(
         lang,
@@ -3375,6 +3376,41 @@ def build_storage_strategy_page(shared, nav_view):
 
 
 # ── automatic disk layout ───────────────────────────────────────────────
+
+def storage_capacity_warning(size_bytes):
+    """Classify the applicable disk/root capacity; callers choose the scope."""
+    if size_bytes < MINIMUM_DISK_BYTES:
+        return "error"
+    if size_bytes < RECOMMENDED_DISK_BYTES:
+        return "warning"
+    return None
+
+
+def _confirm_storage_capacity(page, nav_view, lang, size_bytes, confirmed):
+    severity = storage_capacity_warning(size_bytes)
+    if severity is None:
+        confirmed()
+        return
+    dialog = Adw.MessageDialog(
+        transient_for=nav_view.get_root(),
+        heading=_("25 GiB minimum; 50 GiB recommended.", lang),
+        body=_("Below the minimum. Installation or updates may fail. Continue?", lang)
+        if severity == "error" else
+        _("Below the recommended capacity. Space may run out quickly. Continue?", lang),
+    )
+    icon = Gtk.Image.new_from_icon_name("dialog-warning-symbolic")
+    icon.set_pixel_size(48)
+    icon.add_css_class(severity)
+    dialog.set_extra_child(icon)
+    dialog.add_response("cancel", _("Cancel", lang))
+    dialog.add_response("continue", _("Continue", lang))
+    if severity == "error":
+        dialog.set_response_appearance("continue", Adw.ResponseAppearance.DESTRUCTIVE)
+    dialog.set_default_response("cancel")
+    dialog.set_close_response("cancel")
+    dialog.connect("response", lambda _dialog, response:
+                   confirmed() if response == "continue" and page.get_mapped() else None)
+    dialog.present()
 
 BTRFS_COMPRESSION_CHOICES = (
     (BtrfsCompression.NONE, N_("No compression"), N_("Store files without compression.")),
@@ -4368,12 +4404,21 @@ def build_advanced_storage_page(shared, nav_view):
         model=Gtk.StringList.new(_manual_role_choices(lang)),
         sensitive=False,
     )
+    role_dropdown.update_property(
+        [Gtk.AccessibleProperty.LABEL], [_('Role', lang)]
+    )
     role_dropdown.set_selected(1)
     extent_dropdown = Gtk.DropDown(hexpand=True, sensitive=False)
     start_input = Gtk.SpinButton.new_with_range(1, 1, 1)
+    start_input.update_property(
+        [Gtk.AccessibleProperty.LABEL], [_('Start (MiB)', lang)]
+    )
     start_input.set_numeric(True)
     start_input.set_sensitive(False)
     size_input = Gtk.SpinButton.new_with_range(1, 1, 1)
+    size_input.update_property(
+        [Gtk.AccessibleProperty.LABEL], [_('Size (MiB)', lang)]
+    )
     size_input.set_numeric(True)
     size_input.set_sensitive(False)
     fill_button = Gtk.Button(
@@ -4541,7 +4586,7 @@ def build_advanced_storage_page(shared, nav_view):
     def _minimum_partition_size(role):
         return {
             ManualPartitionRole.EFI_SYSTEM: 512,
-            ManualPartitionRole.ROOT: 20 * 1024,
+            ManualPartitionRole.ROOT: 1,
             ManualPartitionRole.SWAP: 1,
         }[role]
 
@@ -5308,7 +5353,7 @@ def build_advanced_storage_page(shared, nav_view):
             ):
                 missing.append(_("an ESP of at least 512 MiB", lang))
             if ManualPartitionRole.ROOT not in planned_roles:
-                missing.append(_("a Root partition of at least 20 GiB", lang))
+                missing.append(_("Root", lang))
             status.set_label(
                 _("Complete the plan: {requirements}.", lang).format(
                     requirements=", ".join(missing)
@@ -5548,8 +5593,16 @@ def build_advanced_storage_page(shared, nav_view):
             ManualStoragePreview,
         ):
             return
-        shared["_manual_storage_workflow_model"] = workflow
-        nav_view.push(build_user_page(shared, nav_view))
+        preview = shared["manual_storage_preview_model"]
+        root = next(item for item in preview.selection.new_partitions
+                    if item.role is ManualPartitionRole.ROOT)
+
+        def proceed():
+            if shared.get("manual_storage_preview_model") is preview:
+                shared["_manual_storage_workflow_model"] = workflow
+                nav_view.push(build_user_page(shared, nav_view))
+
+        _confirm_storage_capacity(page, nav_view, lang, root.size_mib * MIB, proceed)
 
     nav = _nav_box(
         lang,

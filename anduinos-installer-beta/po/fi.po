@@ -842,9 +842,17 @@ msgstr "Tämä edistynyt vaihtoehto säilyttää olemassa olevat osiot, mutta mu
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "Tämä levy sisältää aktiivisen kartoittimen, taulukon tai muun sisäkkäisen lohkolaitetopologian, jota ohjattu rinnakkaisyhteensopivuus ei tue."
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "Tämä levy on liian pieni koko levyn asennusta varten. Asennus voi jatkua vain, jos sopivaa varaamatonta tilaa on saatavilla."
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "Vähintään 25 GiB; suositus 50 GiB."
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "Alle vähimmäisvaatimuksen. Asennus tai päivitykset voivat epäonnistua. Jatketaanko?"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "Alle suositellun kapasiteetin. Tila voi loppua nopeasti. Jatketaanko?"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1642,9 +1650,6 @@ msgstr "{size} kohdassa {start} MiB"
 msgid "an ESP of at least 512 MiB"
 msgstr "vähintään 512 MiB:n ESP"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "vähintään 20 GiB:n Root-osio"
 
 #: src/pages.py:5209
 #, python-brace-format

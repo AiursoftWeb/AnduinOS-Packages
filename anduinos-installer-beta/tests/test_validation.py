@@ -19,6 +19,21 @@ from helpers import valid_plan
 
 
 class ValidationTests(unittest.TestCase):
+    def test_minimum_target_disk_is_25_gib_not_decimal_gb(self):
+        plan = valid_plan()
+        for size, allowed in ((25 * 10**9, False), (25 * 1024**3 - 1, False),
+                              (25 * 1024**3, True), (50 * 1024**3, True)):
+            with self.subTest(size=size):
+                candidate = valid_plan(
+                    disk=dataclasses.replace(plan.storage.disk, expected_size_bytes=size),
+                    swap_size_mib=2048,
+                )
+                if allowed:
+                    validate_plan(candidate)
+                else:
+                    with self.assertRaisesRegex(PlanValidationError, "at least 25 GiB"):
+                        validate_plan(candidate)
+
     def test_xfs_and_f2fs_are_restricted_to_manual_mode(self):
         for filesystem in (Filesystem.XFS, Filesystem.F2FS):
             with self.subTest(filesystem=filesystem.value):

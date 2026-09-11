@@ -843,9 +843,17 @@ msgstr "此進階路徑會保留現有分割區，但會更改選取磁碟的分
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "此磁碟包含主動映射器、陣列或其他引導共存模式不支援的巢狀區塊裝置拓撲結構。"
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "此磁碟太小，無法進行整個磁碟的安裝。只有在存在合適的未配置空間時，進階選項才能繼續。"
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "最低 25 GiB，建議 50 GiB。"
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "低於最低要求，安裝或更新可能失敗。仍要繼續？"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "低於建議容量，空間可能很快用盡。仍要繼續？"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1643,9 +1651,6 @@ msgstr "{size}，位於 {start} MiB"
 msgid "an ESP of at least 512 MiB"
 msgstr "一個至少 512 MiB 的 ESP"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "一個至少 20 GiB 的 Root 分割區"
 
 #: src/pages.py:5209
 #, python-brace-format

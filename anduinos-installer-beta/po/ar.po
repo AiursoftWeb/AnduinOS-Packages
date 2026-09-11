@@ -842,9 +842,17 @@ msgstr "يحافظ هذا المسار المتقدم على التقسيمات 
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "يحتوي هذا القرص على مرساة نشطة، مصفوفة أو طبولوجيا جهاز كتلي متداخل آخر لا يدعمه التعايش الموجه."
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "هذا القرص صغير جداً لتركيب النظام بالكامل. يمكن للمطورين المتقدمين المتابعة فقط إذا كان هناك مساحة غير مخصصة مناسبة."
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "الحد الأدنى 25 GiB؛ الموصى به 50 GiB."
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "أقل من الحد الأدنى. قد يفشل التثبيت أو التحديث. هل تريد المتابعة؟"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "أقل من السعة الموصى بها. قد تنفد المساحة سريعًا. هل تريد المتابعة؟"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1642,9 +1650,6 @@ msgstr "{size} عند {start} ميجابايت"
 msgid "an ESP of at least 512 MiB"
 msgstr "قسم ESP بسعة 512 MiB على الأقل"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "قسم Root بسعة 20 GiB على الأقل"
 
 #: src/pages.py:5209
 #, python-brace-format

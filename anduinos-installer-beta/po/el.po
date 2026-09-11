@@ -842,9 +842,17 @@ msgstr "Αυτή η προηγμένη διαδρομή διατηρεί τις 
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "Αυτός ο δίσκος περιέχει έναν ενεργό mapper, array ή άλλη ενσωματωμένη τοπολογία συσκευών blokk που η καθοδηγούμενη συνύπαρξη δεν υποστηρίζει."
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "Αυτός ο δίσκος είναι πολύ μικρός για εγκατάσταση σε ολόκληρο τον δίσκο. Η προηγμένη μπορεί να συνεχιστεί μόνο αν υπάρχει κατάλληλος μη εκχωρημένος χώρος."
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "Ελάχιστο 25 GiB· συνιστώνται 50 GiB."
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "Κάτω από το ελάχιστο. Η εγκατάσταση ή οι ενημερώσεις μπορεί να αποτύχουν. Συνέχεια;"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "Κάτω από τη συνιστώμενη χωρητικότητα. Ο χώρος μπορεί να εξαντληθεί γρήγορα. Συνέχεια;"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1642,9 +1650,6 @@ msgstr "{size} στο {start} MiB"
 msgid "an ESP of at least 512 MiB"
 msgstr "ένα ESP τουλάχιστον 512 MiB"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "ένα διαμέρισμα Root τουλάχιστον 20 GiB"
 
 #: src/pages.py:5209
 #, python-brace-format
