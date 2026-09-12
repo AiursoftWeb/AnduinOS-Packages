@@ -7,6 +7,7 @@ import os
 import re
 import subprocess
 import sys
+import json
 
 
 XBOX_PACKAGE = "anduinos-xbox-controller-driver"
@@ -243,6 +244,19 @@ def main(arguments: list[str]) -> int:
         return 77
     try:
         match arguments:
+            case ["intel-inspect"]:
+                from anduinos_driver_center.intel_graphics import inspect
+                print(json.dumps(inspect().report()))
+                return 0
+            case ["intel-apply"]:
+                from anduinos_driver_center.intel_graphics_settings import apply
+                payload = sys.stdin.read(16385)
+                if len(payload) > 16384:
+                    raise ValueError("Intel graphics request is too large")
+                apply(json.loads(payload))
+            case ["intel-reset"]:
+                from anduinos_driver_center.intel_graphics_settings import apply
+                apply(None)
             case ["install", package]:
                 install_driver(package)
             case ["install-recommended"]:

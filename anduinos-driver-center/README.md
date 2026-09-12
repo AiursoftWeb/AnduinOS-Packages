@@ -37,7 +37,86 @@ masks and starts the normal printing units.
 
 The unprivileged UI reads hardware state. Mutating operations go through a
 fixed polkit helper which only accepts drivers reported by `ubuntu-drivers`,
-the AnduinOS xpadneo package, and fixed audio and printing operations.
+the AnduinOS xpadneo package, and fixed audio, printing, and Intel graphics operations.
+
+## Intel graphics
+
+Intel display devices are enumerated independently from `ubuntu-drivers` through
+PCI sysfs. The Intel page supports both `i915` and `xe`; it shows PCI identity,
+the bound kernel driver, kernel version, firmware evidence and diagnostic advice.
+PSR, FBC, display C-states and Panel Replay can use the kernel default or be
+disabled when the installed modules expose the corresponding parameter. These
+are module-wide settings, not independent per-GPU switches. PSR controls are
+shown for connected internal panels. A module parameter is policy, not proof
+that the feature is active. Missing status or journal access remains unknown.
+
+Opening the page does not authenticate or write files. The optional detailed
+status action uses the existing restricted helper to read bounded, fixed Intel
+debugfs status files and Intel GPU boot-log lines. It never mounts debugfs or
+loads/unloads a graphics module. Export saves a local JSON report through the
+user's file chooser; no upload is performed. Reports include only Intel-related
+configuration and GPU evidence rather than the full journal or kernel command
+line; custom Intel boot parameters and GPU logs should still be reviewed before
+sharing.
+
+Applying settings creates only this managed boot fragment:
+
+```text
+/etc/default/grub.d/99-anduinos-intel-graphics.cfg
+```
+
+The fragment appends fixed, validated parameters to `GRUB_CMDLINE_LINUX_DEFAULT`
+and makes the boot menu visible for at least five seconds. Existing longer
+timeouts are retained. It does not replace `/etc/default/grub`, introduce
+modprobe configuration, rebuild initramfs, or install third-party modules.
+The existing `preempt=full` setting is retained. Other graphics overrides are
+reported as conflicts instead of being overwritten. Capability validation
+covers every installed boot kernel; a later kernel update may change support,
+so hardware behavior still requires validation after kernel updates.
+
+The privileged helper serializes its own operations, holds the standard dpkg
+locks to exclude concurrent package updates, and keeps private backups in
+`/var/lib/anduinos-driver-center/intel-graphics/`, generates and checks a candidate
+GRUB configuration, and verifies that recovery entries omit the overrides before
+replacing the boot configuration. A generation failure restores the previous
+files. A pending marker identifies an interrupted transaction. Restoring defaults
+removes only the managed fragment and regenerates GRUB; external settings remain.
+Live sessions and unsupported boot configurations are rejected.
+
+While graphics overrides are enabled, the existing recovery entries use
+`systemd.unit=multi-user.target` with GRUB's recovery `nomodeset`. This provides
+normal user console login rather than a `single` root shell: AnduinOS locks root
+and does not ship friendly-recovery. An existing custom recovery command line
+is reported as a conflict. Restoring defaults also removes this temporary
+recovery configuration; no rescue service or authentication policy is changed.
+
+If a changed setting prevents normal graphical startup, choose the recovery
+entry under GRUB's advanced options, log in with your normal account, and run:
+
+```sh
+sudo /usr/libexec/anduinos-driver-center/driver-helper intel-reset
+sudo reboot
+```
+
+Recovery must remain enabled. Selecting an older *normal* kernel entry does not bypass
+`GRUB_CMDLINE_LINUX_DEFAULT`. No automatic desktop-health or reboot-loop daemon
+is installed.
+
+Driver switching uses paired `i915.force_probe` / `xe.force_probe` parameters,
+never a global module blacklist. `VALIDATED_SWITCHES` is intentionally empty:
+no real Intel hardware/kernel combination has been certified by this change.
+Before adding an exact kernel/PCI-ID/target tuple, validate firmware availability
+in the boot environment, Secure Boot, OpenGL/Vulkan, video acceleration,
+internal/external displays, suspend/resume and the recovery path. PCI aliases
+alone are not sufficient. Duplicate device IDs cannot be switched independently.
+Restore display overrides before changing drivers; use the target driver's
+settings after reboot. No additional MOK enrollment is needed merely to change
+parameters of the existing signed distribution modules.
+
+Packages tests use temporary directories and command doubles. Real GRUB
+generation and normal/recovery/default boot coverage live in AnduinOS-2's
+`intel-graphics-boot` acceptance suite. Its QEMU inventory is explicitly a fixture;
+passing it does not certify Intel display behavior or authorize driver switching.
 
 Secure Boot, MOK enrollment, DKMS signing health, repair operations, and the
 trust panel are provided by `anduinos-secureboot-toolkit`. This is the same
@@ -91,6 +170,7 @@ hostnames, usernames, IP/MAC addresses, and serial numbers.
 ```bash
 PYTHONPATH=src python3 -m anduinos_driver_center
 PYTHONPATH=src python3 -m anduinos_driver_center --page computer
+PYTHONPATH=src python3 -m anduinos_driver_center --page intel-graphics
 python3 -m unittest discover -s tests -v
 ```
 

@@ -18,6 +18,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
 from .computer_ui import ComputerPage
+from .intel_graphics_ui import IntelGraphicsPage
 
 from .core import (
     AudioState,
@@ -350,6 +351,10 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         )
 
         for index, device in enumerate(graphics):
+            if graphics_scan.intel and any(
+                intel.address in device.identifier for intel in graphics_scan.intel.devices
+            ):
+                continue
             label = device.title
             subtitle = device.vendor
             row = self._device_row("video-display-symbolic", label, subtitle)
@@ -357,6 +362,13 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             row.page_title = device.title
             self.device_list.append(row)
             self.stack.add_named(self._graphics_page(device, secure_boot), row.page_name)
+
+        if graphics_scan.intel and graphics_scan.intel.devices:
+            row = self._device_row("video-display-symbolic", "Intel Graphics", _("Kernel module"))
+            row.page_name = "intel-graphics"
+            row.page_title = "Intel Graphics"
+            self.device_list.append(row)
+            self.stack.add_named(IntelGraphicsPage(self, graphics_scan.intel), row.page_name)
 
         audio_row = self._device_row(
             "audio-card-symbolic", _("Audio"),
@@ -773,6 +785,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         ]
 
         def graphics_page_name(device: HardwareDevice) -> str:
+            if graphics_scan.intel and any(intel.address in device.identifier for intel in graphics_scan.intel.devices):
+                return "intel-graphics"
             return f"graphics-{graphics_scan.devices.index(device)}"
 
         def version_summary(option) -> str:
@@ -936,7 +950,12 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 else _("No additional drivers are needed.")
             )
             graphics_class = "success-pill"
-            graphics_target = "graphics-0" if graphics_scan.devices else None
+            graphics_target = graphics_page_name(graphics_scan.devices[0]) if graphics_scan.devices else None
+            if graphics_scan.intel and graphics_scan.intel.devices and not graphics_scan.devices:
+                graphics_target = "intel-graphics"
+                graphics_subtitle = "Intel Graphics"
+                graphics_state = _("Kernel module")
+                graphics_class = "installed-pill"
         cards.insert(
             self._overview_card(
                 "video-display-symbolic",
@@ -2353,7 +2372,7 @@ class DriverCenterApplication(Adw.Application):
                 continue
             command_line.printerr("Unknown option: %s\n" % argument)
             return 2
-        if requested_page not in {"home", "secure-boot", "computer"}:
+        if requested_page not in {"home", "secure-boot", "computer", "intel-graphics"}:
             command_line.printerr("Unknown Driver Center page: %s\n" % requested_page)
             return 2
 

@@ -1509,3 +1509,126 @@ msgstr "系統安裝時間"
 #~ msgid "%d package is missing"
 #~ msgid_plural "%d packages are missing"
 #~ msgstr[0] "%d 套件遺失"
+
+msgid "Display compatibility settings take effect after restarting."
+msgstr "顯示相容性設定需重新啟動後方可生效。"
+
+msgid "Kernel version"
+msgstr "核心版本"
+
+msgid "Restart required"
+msgstr "需要重新啟動"
+
+msgid "Saved settings differ from this boot."
+msgstr "已儲存的設定與本次啟動不同。"
+
+msgid "External graphics configuration"
+msgstr "外部圖形配置"
+
+msgid "Panel self refresh (PSR)"
+msgstr "面板自我刷新 (PSR)"
+
+msgid "Frame buffer compression (FBC)"
+msgstr "緩衝區壓縮 (FBC)"
+
+msgid "Display power-saving states"
+msgstr "顯示節能狀態"
+
+msgid "Panel Replay"
+msgstr "面板重播"
+
+msgid ""
+"Settings affect all GPUs using this driver. Disabling power-saving features "
+"may increase power consumption."
+msgstr "設定會影響使用此驅動程式的所有 GPU。停用節能功能可能會增加耗電量。"
+
+msgid "Advanced compatibility settings"
+msgstr "進階相容性設定"
+
+msgid "Automatic"
+msgstr "跟隨系統預設"
+
+#, python-format
+msgid "Loaded parameter: %s"
+msgstr "已載入參數：%s"
+
+msgid "Kernel driver"
+msgstr "核心驅動程式"
+
+msgid "System default"
+msgstr "跟隨系統預設"
+
+msgid "Driver switching"
+msgstr "驅動程式切換"
+
+msgid ""
+"Alternative drivers are available only for hardware and kernels that have "
+"passed acceptance tests."
+msgstr "替代驅動程式僅適用於已通過驗收測試的硬體及核心。"
+
+msgid "Diagnostics"
+msgstr "診斷"
+
+msgid ""
+"The boot log reports a panel refresh error. Try disabling PSR and restart."
+msgstr "開機記錄報告面板刷新錯誤。請嘗試停用 PSR 並重新啟動。"
+
+msgid ""
+"The boot log reports a firmware error. Check system and firmware updates."
+msgstr "開機記錄報告韌體錯誤。請檢查系統及韌體更新。"
+
+msgid ""
+"The boot log reports a GPU hang or reset. Export diagnostics before changing"
+" more settings."
+msgstr "開機記錄報告 GPU 掛起或重置。在更改更多設定之前，請先匯出診斷資訊。"
+
+msgid "Display troubleshooting"
+msgstr "顯示故障排除"
+
+msgid "Diagnostic coverage"
+msgstr "診斷覆蓋範圍"
+
+msgid ""
+"Module parameters describe policy, not whether a feature is currently "
+"active. Missing log evidence does not prove that graphics are healthy."
+msgstr "模組參數描述策略，而非功能目前是否處於啟用狀態。缺少日誌證據不能證明圖形功能正常。"
+
+msgid "Read detailed status"
+msgstr "閱讀詳細狀態"
+
+msgid "Restore default settings"
+msgstr "恢復預設設定"
+
+msgid "Settings saved. Restart to apply them."
+msgstr "設定已儲存。重新啟動以套用。"
+
+msgid "Export diagnostics"
+msgstr "匯出診斷資料"
+
+msgid "Apply graphics settings?"
+msgstr "套用圖形設定？"
+
+msgid ""
+"Changes require a restart and may affect display reliability. The boot menu "
+"will remain visible for recovery. You can restore defaults from recovery "
+"mode."
+msgstr "變更需要重新啟動，並可能影響顯示可靠性。開機選單將保持可見以供恢復。您可以從恢復模式恢復預設值。"
+
+msgid "Diagnostic access was not granted."
+msgstr "未授予診斷存取權限。"
+
+msgid "Save"
+msgstr "儲存"
+
+msgid "A previous change was interrupted. Restore defaults before continuing."
+msgstr "先前變更已中斷。請在繼續之前恢復預設值。"
+
+#, python-format
+msgid "Experimental: %s"
+msgstr "實驗性功能：%s"
+
+msgid "PSR status"
+msgstr "PSR 狀態"
+
+msgid "In recovery mode, sign in with your normal account and run:"
+msgstr "在救援模式下，請使用正常帳戶登入並執行："

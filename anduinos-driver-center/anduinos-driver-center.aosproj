@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-driver-center</PackageName>
-    <PackageVersion>2.0.2-17+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-18+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Driver Center — manage hardware drivers, device firmware, printing, controllers, and Secure Boot support.</PackageDescription>
     <Section>admin</Section>
@@ -32,6 +32,7 @@
     <Dependency Include="anduinos-secureboot-toolkit" />
     <Dependency Include="pkexec" />
     <Dependency Include="pciutils" />
+    <Dependency Include="kmod" />
     <Dependency Include="util-linux" />
     <Dependency Include="dmidecode" />
   </ItemGroup>
@@ -46,6 +47,9 @@
     <IncludeFile Include="src/anduinos_driver_center/computer.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/computer.py" />
     <IncludeFile Include="src/anduinos_driver_center/computer_ui.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/computer_ui.py" />
     <IncludeFile Include="src/anduinos_driver_center/core.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/core.py" />
+    <IncludeFile Include="src/anduinos_driver_center/intel_graphics.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/intel_graphics.py" />
+    <IncludeFile Include="src/anduinos_driver_center/intel_graphics_ui.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/intel_graphics_ui.py" />
+    <IncludeFile Include="src/anduinos_driver_center/intel_graphics_settings.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/intel_graphics_settings.py" />
     <IncludeFile Include="src/anduinos_driver_center/firmware.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/firmware.py" />
     <IncludeFolder Include="resources" Target="/usr/share/anduinos-driver-center/illustrations" />
     <IncludeFile Include="data/com.anduinos.DriverCenter.policy" Target="/usr/share/polkit-1/actions/com.anduinos.DriverCenter.policy" />

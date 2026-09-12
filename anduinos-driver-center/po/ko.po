@@ -1509,3 +1509,130 @@ msgstr "시스템 설치 날짜"
 #~ msgid "%d package is missing"
 #~ msgid_plural "%d packages are missing"
 #~ msgstr[0] "%d 패키지가 없습니다."
+
+msgid "Display compatibility settings take effect after restarting."
+msgstr "디스플레이 호환성 설정은 재시작 후 적용됩니다."
+
+msgid "Kernel version"
+msgstr "커널 버전"
+
+msgid "Restart required"
+msgstr "재시작 필요"
+
+msgid "Saved settings differ from this boot."
+msgstr "저장된 설정이 이번 부팅과 다릅니다."
+
+msgid "External graphics configuration"
+msgstr "외부 그래픽 구성"
+
+msgid "Panel self refresh (PSR)"
+msgstr "패널 셀프 리프레시 (PSR)"
+
+msgid "Frame buffer compression (FBC)"
+msgstr "프레임 버퍼 압축 (FBC)"
+
+msgid "Display power-saving states"
+msgstr "디스플레이 절전 상태"
+
+msgid "Panel Replay"
+msgstr "패널 리플레이"
+
+msgid ""
+"Settings affect all GPUs using this driver. Disabling power-saving features "
+"may increase power consumption."
+msgstr "설정은 이 드라이버를 사용하는 모든 GPU에 영향을 미칩니다. 절전 기능을 비활성화하면 전력 소비가 증가할 수 있습니다."
+
+msgid "Advanced compatibility settings"
+msgstr "고급 호환성 설정"
+
+msgid "Automatic"
+msgstr "시스템 기본값 따름"
+
+#, python-format
+msgid "Loaded parameter: %s"
+msgstr "로드된 매개변수: %s"
+
+msgid "Kernel driver"
+msgstr "커널 드라이버"
+
+msgid "System default"
+msgstr "시스템 기본값"
+
+msgid "Driver switching"
+msgstr "드라이버 전환"
+
+msgid ""
+"Alternative drivers are available only for hardware and kernels that have "
+"passed acceptance tests."
+msgstr "대체 드라이버는 수락 테스트를 통과한 하드웨어 및 커널에 대해서만 사용할 수 있습니다."
+
+msgid "Diagnostics"
+msgstr "진단"
+
+msgid ""
+"The boot log reports a panel refresh error. Try disabling PSR and restart."
+msgstr "부팅 로그에 패널 새로고침 오류가 보고되었습니다. PSR을 비활성화하고 다시 시작해 보세요."
+
+msgid ""
+"The boot log reports a firmware error. Check system and firmware updates."
+msgstr "부팅 로그에 펌웨어 오류가 보고되었습니다. 시스템 및 펌웨어 업데이트를 확인하세요."
+
+msgid ""
+"The boot log reports a GPU hang or reset. Export diagnostics before changing"
+" more settings."
+msgstr "부팅 로그에 GPU 정지 또는 리셋이 보고되었습니다. 추가 설정을 변경하기 전에 진단 정보를 내보내세요."
+
+msgid "Display troubleshooting"
+msgstr "디스플레이 문제 해결"
+
+msgid "Diagnostic coverage"
+msgstr "진단 범위"
+
+msgid ""
+"Module parameters describe policy, not whether a feature is currently "
+"active. Missing log evidence does not prove that graphics are healthy."
+msgstr ""
+"모듈 매개변수는 정책은 설명하지만 해당 기능이 현재 활성화되어 있는지 여부는 증명하지 않습니다. 로그 증거가 없더라도 그래픽이 정상이라는"
+" 것을 증명하지는 않습니다."
+
+msgid "Read detailed status"
+msgstr "상세 상태 읽기"
+
+msgid "Restore default settings"
+msgstr "기본 설정으로 복원"
+
+msgid "Settings saved. Restart to apply them."
+msgstr "설정이 저장되었습니다. 적용하려면 재시작하세요."
+
+msgid "Export diagnostics"
+msgstr "진단 정보 내보내기"
+
+msgid "Apply graphics settings?"
+msgstr "그래픽 설정을 적용할까요?"
+
+msgid ""
+"Changes require a restart and may affect display reliability. The boot menu "
+"will remain visible for recovery. You can restore defaults from recovery "
+"mode."
+msgstr ""
+"변경 사항을 적용하려면 재시작이 필요하며 디스플레이 안정성에 영향을 줄 수 있습니다. 복구를 위해 부팅 메뉴가 계속 표시됩니다. 복구 "
+"모드에서 기본 설정으로 복원할 수 있습니다."
+
+msgid "Diagnostic access was not granted."
+msgstr "진단 액세스가 허용되지 않았습니다."
+
+msgid "Save"
+msgstr "저장"
+
+msgid "A previous change was interrupted. Restore defaults before continuing."
+msgstr "이전 변경이 중단되었습니다. 계속하기 전에 기본값으로 복원하세요."
+
+#, python-format
+msgid "Experimental: %s"
+msgstr "실험적: %s"
+
+msgid "PSR status"
+msgstr "PSR 상태"
+
+msgid "In recovery mode, sign in with your normal account and run:"
+msgstr "복구 모드에서는 일반 계정으로 로그인하고 다음을 실행하세요:"

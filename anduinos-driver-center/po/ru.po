@@ -1589,3 +1589,146 @@ msgstr "Дата установки системы"
 #~ msgstr[0] "Пакет %d отсутствует"
 #~ msgstr[1] "Пакеты %d отсутствуют"
 #~ msgstr[2] "Пакеты %d отсутствуют"
+
+msgid "Display compatibility settings take effect after restarting."
+msgstr "Настройки совместимости дисплея вступают в силу после перезагрузки."
+
+msgid "Kernel version"
+msgstr "Версия ядра"
+
+msgid "Restart required"
+msgstr "Требуется перезагрузка"
+
+msgid "Saved settings differ from this boot."
+msgstr "Сохранённые настройки отличаются от текущей загрузки."
+
+msgid "External graphics configuration"
+msgstr "Внешняя конфигурация графики"
+
+msgid "Panel self refresh (PSR)"
+msgstr "Автообновление панели (PSR)"
+
+msgid "Frame buffer compression (FBC)"
+msgstr "Сжатие буфера кадров (FBC)"
+
+msgid "Display power-saving states"
+msgstr "Состояния энергоэффективности дисплея"
+
+msgid "Panel Replay"
+msgstr "Повторное воспроизведение панели"
+
+msgid ""
+"Settings affect all GPUs using this driver. Disabling power-saving features "
+"may increase power consumption."
+msgstr ""
+"Настройки влияют на все GPU, использующие этот драйвер. Отключение функций "
+"экономии энергии может увеличить потребление энергии."
+
+msgid "Advanced compatibility settings"
+msgstr "Дополнительные настройки совместимости"
+
+msgid "Automatic"
+msgstr "Автоматически"
+
+#, python-format
+msgid "Loaded parameter: %s"
+msgstr "Загруженный параметр: %s"
+
+msgid "Kernel driver"
+msgstr "Драйвер ядра"
+
+msgid "System default"
+msgstr "Системные значения по умолчанию"
+
+msgid "Driver switching"
+msgstr "Переключение драйверов"
+
+msgid ""
+"Alternative drivers are available only for hardware and kernels that have "
+"passed acceptance tests."
+msgstr ""
+"Альтернативные драйверы доступны только для оборудования и ядер, прошедших "
+"тесты приёмки."
+
+msgid "Diagnostics"
+msgstr "Диагностика"
+
+msgid ""
+"The boot log reports a panel refresh error. Try disabling PSR and restart."
+msgstr ""
+"В журнале загрузки зафиксирована ошибка обновления панели. Попробуйте "
+"отключить PSR и перезагрузите систему."
+
+msgid ""
+"The boot log reports a firmware error. Check system and firmware updates."
+msgstr ""
+"В журнале загрузки зафиксирована ошибка прошивки. Проверьте обновления "
+"системы и прошивки."
+
+msgid ""
+"The boot log reports a GPU hang or reset. Export diagnostics before changing"
+" more settings."
+msgstr ""
+"В журнале загрузки зафиксировано зависание или сброс GPU. Экспортируйте "
+"данные диагностики перед изменением дополнительных настроек."
+
+msgid "Display troubleshooting"
+msgstr "Устранение неполадок с отображением"
+
+msgid "Diagnostic coverage"
+msgstr "Покрытие диагностики"
+
+msgid ""
+"Module parameters describe policy, not whether a feature is currently "
+"active. Missing log evidence does not prove that graphics are healthy."
+msgstr ""
+"Параметры модуля описывают политику, а не то, активна ли функция в данный "
+"момент. Отсутствие доказательств в журнале не подтверждает, что графика "
+"работает исправно."
+
+msgid "Read detailed status"
+msgstr "Читать подробный статус"
+
+msgid "Restore default settings"
+msgstr "Восстановить настройки по умолчанию"
+
+msgid "Settings saved. Restart to apply them."
+msgstr "Настройки сохранены. Перезагрузите систему для их применения."
+
+msgid "Export diagnostics"
+msgstr "Экспортировать диагностические данные"
+
+msgid "Apply graphics settings?"
+msgstr "Применить настройки графики?"
+
+msgid ""
+"Changes require a restart and may affect display reliability. The boot menu "
+"will remain visible for recovery. You can restore defaults from recovery "
+"mode."
+msgstr ""
+"Изменения требуют перезагрузки и могут повлиять на надёжность отображения. "
+"Меню загрузки останется доступным для восстановления. Настройки по умолчанию"
+" можно восстановить из режима восстановления."
+
+msgid "Diagnostic access was not granted."
+msgstr "Доступ к диагностике не предоставлен."
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "A previous change was interrupted. Restore defaults before continuing."
+msgstr ""
+"Предыдущее изменение было прервано. Восстановите значения по умолчанию перед"
+" продолжением."
+
+#, python-format
+msgid "Experimental: %s"
+msgstr "Экспериментально: %s"
+
+msgid "PSR status"
+msgstr "Состояние PSR"
+
+msgid "In recovery mode, sign in with your normal account and run:"
+msgstr ""
+"В режиме восстановления войдите в систему с помощью своей обычной учётной "
+"записи и выполните:"

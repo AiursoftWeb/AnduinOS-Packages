@@ -1568,3 +1568,143 @@ msgstr "सिस्टम की स्थापना तिथि"
 #~ msgid_plural "%d packages are missing"
 #~ msgstr[0] "%d पैकेज गुम है"
 #~ msgstr[1] "%d पैकेज गायब हैं"
+
+msgid "Display compatibility settings take effect after restarting."
+msgstr "डिस्प्ले संगतता सेटिंग्स पुनः आरंभ करने के बाद प्रभावी होती हैं।"
+
+msgid "Kernel version"
+msgstr "कर्नेल संस्करण"
+
+msgid "Restart required"
+msgstr "पुनः आरंभ आवश्यक है"
+
+msgid "Saved settings differ from this boot."
+msgstr "सहेजी गई सेटिंग्स इस बूट से भिन्न हैं।"
+
+msgid "External graphics configuration"
+msgstr "बाहरी ग्राफिक्स कॉन्फ़िगरेशन"
+
+msgid "Panel self refresh (PSR)"
+msgstr "पैनल स्वतः रिफ्रेश (PSR)"
+
+msgid "Frame buffer compression (FBC)"
+msgstr "फ्रेम बफ़र संपीडन (FBC)"
+
+msgid "Display power-saving states"
+msgstr "डिस्प्ले पावर-सेविंग अवस्थाएँ"
+
+msgid "Panel Replay"
+msgstr "पैनल रिप्ले"
+
+msgid ""
+"Settings affect all GPUs using this driver. Disabling power-saving features "
+"may increase power consumption."
+msgstr ""
+"सेटिंग्स इस ड्राइवर का उपयोग करने वाले सभी GPU पर प्रभाव डालती हैं। "
+"पावर-सेविंग सुविधाओं को निष्क्रिय करने से बिजली की खपत में वृद्धि हो सकती "
+"है।"
+
+msgid "Advanced compatibility settings"
+msgstr "उन्नत संगतता सेटिंग्स"
+
+msgid "Automatic"
+msgstr "सिस्टम डिफ़ॉल्ट्स का पालन करें"
+
+#, python-format
+msgid "Loaded parameter: %s"
+msgstr "लोड किया गया पैरामीटर: %s"
+
+msgid "Kernel driver"
+msgstr "कर्नेल ड्राइवर"
+
+msgid "System default"
+msgstr "सिस्टम डिफ़ॉल्ट"
+
+msgid "Driver switching"
+msgstr "ड्राइवर स्विचिंग"
+
+msgid ""
+"Alternative drivers are available only for hardware and kernels that have "
+"passed acceptance tests."
+msgstr ""
+"वैकल्पिक ड्राइवर केवल उन हार्डवेयर और कर्नेल के लिए उपलब्ध हैं जो स्वीकृति "
+"परीक्षणों से गुज़रे हैं।"
+
+msgid "Diagnostics"
+msgstr "निदान"
+
+msgid ""
+"The boot log reports a panel refresh error. Try disabling PSR and restart."
+msgstr ""
+"बूट लॉग में पैनल रीफ्रेश त्रुटि की रिपोर्ट है। PSR को अक्षम करने का प्रयास "
+"करें और पुनः आरंभ करें।"
+
+msgid ""
+"The boot log reports a firmware error. Check system and firmware updates."
+msgstr ""
+"बूट लॉग में फर्मवेयर त्रुटि की रिपोर्ट है। सिस्टम और फर्मवेयर अपडेट की जाँच "
+"करें।"
+
+msgid ""
+"The boot log reports a GPU hang or reset. Export diagnostics before changing"
+" more settings."
+msgstr ""
+"बूट लॉग में GPU हँग या रीसेट की रिपोर्ट है। और सेटिंग्स बदलने से पहले निदान "
+"निर्यात करें।"
+
+msgid "Display troubleshooting"
+msgstr "डिस्प्ले समस्या निवारण"
+
+msgid "Diagnostic coverage"
+msgstr "निदान कवरेज"
+
+msgid ""
+"Module parameters describe policy, not whether a feature is currently "
+"active. Missing log evidence does not prove that graphics are healthy."
+msgstr ""
+"मॉड्यूल पैरामीटर नीति का वर्णन करते हैं, यह नहीं कि कोई फ़ीचर वर्तमान में "
+"सक्रिय है। लॉग प्रमाण की अनुपस्थिति यह प्रमाणित नहीं करती कि ग्राफिक्स "
+"स्वस्थ हैं।"
+
+msgid "Read detailed status"
+msgstr "विस्तृत स्थिति पढ़ें"
+
+msgid "Restore default settings"
+msgstr "पूर्वनिर्धारित सेटिंग्स पुनर्स्थापित करें"
+
+msgid "Settings saved. Restart to apply them."
+msgstr "सेटिंग्स सहेजी गईं। लागू करने के लिए पुनः आरंभ करें।"
+
+msgid "Export diagnostics"
+msgstr "निदान निर्यात करें"
+
+msgid "Apply graphics settings?"
+msgstr "ग्राफिक्स सेटिंग्स लागू करें?"
+
+msgid ""
+"Changes require a restart and may affect display reliability. The boot menu "
+"will remain visible for recovery. You can restore defaults from recovery "
+"mode."
+msgstr ""
+"बदलावों के लिए पुनः आरंभ की आवश्यकता है और डिस्प्ले विश्वसनीयता पर असर पड़ "
+"सकता है। पुनर्प्राप्ति के लिए बूट मेन्यू दिखाई देगा। आप पुनर्प्राप्ति मोड से"
+" पूर्वनिर्धारित सेटिंग्स पुनर्स्थापित कर सकते हैं।"
+
+msgid "Diagnostic access was not granted."
+msgstr "निदान पहुंच की अनुमति नहीं दी गई।"
+
+msgid "Save"
+msgstr "सहेजें"
+
+msgid "A previous change was interrupted. Restore defaults before continuing."
+msgstr "पिछला परिवर्तन विफल रहा है। आगे बढ़ने से पहले डिफ़ॉल्ट बहाल करें।"
+
+#, python-format
+msgid "Experimental: %s"
+msgstr "प्रयोगात्मक: %s"
+
+msgid "PSR status"
+msgstr "PSR स्थिति"
+
+msgid "In recovery mode, sign in with your normal account and run:"
+msgstr "रिकवरी मोड में, अपनी सामान्य खाते से साइन इन करें और चलाएँ:"

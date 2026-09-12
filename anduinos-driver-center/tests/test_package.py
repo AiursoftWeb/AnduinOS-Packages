@@ -56,6 +56,7 @@ class PackageTests(unittest.TestCase):
                     f"--output={extracted}",
                     str(ROOT / "src" / "anduinos_driver_center" / "app.py"),
                     str(ROOT / "src" / "anduinos_driver_center" / "computer_ui.py"),
+                    str(ROOT / "src" / "anduinos_driver_center" / "intel_graphics_ui.py"),
                     str(toolkit_ui),
                 ],
                 check=True,

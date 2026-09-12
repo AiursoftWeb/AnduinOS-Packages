@@ -1546,3 +1546,137 @@ msgstr "วันที่ติดตั้งระบบ"
 #~ msgid "%d package is missing"
 #~ msgid_plural "%d packages are missing"
 #~ msgstr[0] "แพ็คเกจ %d หายไป"
+
+msgid "Display compatibility settings take effect after restarting."
+msgstr "การตั้งค่าความเข้ากันได้ของจอแสดงผลจะแสดงผลหลังจากรีสตาร์ทแล้ว"
+
+msgid "Kernel version"
+msgstr "เวอร์ชันเคอร์เนล"
+
+msgid "Restart required"
+msgstr "ต้องรีสตาร์ท"
+
+msgid "Saved settings differ from this boot."
+msgstr "การตั้งค่าที่บันทึกไว้แตกต่างจากการบูตครั้งนี้"
+
+msgid "External graphics configuration"
+msgstr "การกำหนดค่ากราฟิกภายนอก"
+
+msgid "Panel self refresh (PSR)"
+msgstr "การรีเฟรชแผงโดยอัตโนมัติ (PSR)"
+
+msgid "Frame buffer compression (FBC)"
+msgstr "การบีบอัดเฟรมบัฟเฟอร์ (FBC)"
+
+msgid "Display power-saving states"
+msgstr "สถานะการประหยัดพลังงานของจอแสดงผล"
+
+msgid "Panel Replay"
+msgstr "การซ้ำภาพแผง"
+
+msgid ""
+"Settings affect all GPUs using this driver. Disabling power-saving features "
+"may increase power consumption."
+msgstr ""
+"การตั้งค่าส่งผลต่อ GPU ทั้งหมดที่ใช้ไดรเวอร์นี้ "
+"การปิดฟีเจอร์ประหยัดพลังงานอาจทำให้การบริโภคพลังงานเพิ่มขึ้น"
+
+msgid "Advanced compatibility settings"
+msgstr "การตั้งค่าความเข้ากันได้ขั้นสูง"
+
+msgid "Automatic"
+msgstr "ตามค่าเริ่มต้นของระบบ"
+
+#, python-format
+msgid "Loaded parameter: %s"
+msgstr "พารามิเตอร์ที่โหลด: %s"
+
+msgid "Kernel driver"
+msgstr "ไดรเวอร์เคอร์เนล"
+
+msgid "System default"
+msgstr "ค่าเริ่มต้นของระบบ"
+
+msgid "Driver switching"
+msgstr "การสลับไดรเวอร์"
+
+msgid ""
+"Alternative drivers are available only for hardware and kernels that have "
+"passed acceptance tests."
+msgstr ""
+"มีไดรเวอร์ทางเลือกพร้อมใช้งานเฉพาะสำหรับฮาร์ดแวร์และเคอร์เนลที่ผ่านการทดสอบการยอมรับเท่านั้น"
+
+msgid "Diagnostics"
+msgstr "การวินิจฉัย"
+
+msgid ""
+"The boot log reports a panel refresh error. Try disabling PSR and restart."
+msgstr "บันทึกการบูตรายงานข้อผิดพลาดการรีเฟรชแผง จงพยายามปิด PSR และรีสตาร์ท"
+
+msgid ""
+"The boot log reports a firmware error. Check system and firmware updates."
+msgstr ""
+"บันทึกการบูตรายงานข้อผิดพลาดเฟิร์มแวร์ ตรวจสอบการอัปเดตระบบและเฟิร์มแวร์"
+
+msgid ""
+"The boot log reports a GPU hang or reset. Export diagnostics before changing"
+" more settings."
+msgstr ""
+"บันทึกการบูตรายงานการค้างหรือรีเซ็ตของ GPU "
+"ส่งออกข้อมูลวินิจฉัยก่อนเปลี่ยนการตั้งค่าอื่นเพิ่มเติม"
+
+msgid "Display troubleshooting"
+msgstr "การแก้ไขปัญหาการแสดงผล"
+
+msgid "Diagnostic coverage"
+msgstr "ขอบเขตการวินิจฉัย"
+
+msgid ""
+"Module parameters describe policy, not whether a feature is currently "
+"active. Missing log evidence does not prove that graphics are healthy."
+msgstr ""
+"พารามิเตอร์โมดูลอธิบายนโยบาย ไม่ใช่สถานะปัจจุบันว่าฟีเจอร์ใดทำงานอยู่หรือไม่"
+" การขาดหลักฐานในบันทึกไม่ได้พิสูจน์ว่ากราฟิกมีสุขภาพดี"
+
+msgid "Read detailed status"
+msgstr "อ่านสถานะโดยละเอียด"
+
+msgid "Restore default settings"
+msgstr "คืนค่าการตั้งค่าเริ่มต้น"
+
+msgid "Settings saved. Restart to apply them."
+msgstr "บันทึกการตั้งค่าแล้ว รีสตาร์ทเพื่อใช้งาน"
+
+msgid "Export diagnostics"
+msgstr "ส่งออกข้อมูลวินิจฉัย"
+
+msgid "Apply graphics settings?"
+msgstr "ใช้การตั้งค่ากราฟิกหรือไม่?"
+
+msgid ""
+"Changes require a restart and may affect display reliability. The boot menu "
+"will remain visible for recovery. You can restore defaults from recovery "
+"mode."
+msgstr ""
+"การเปลี่ยนแปลงจำเป็นต้องรีสตาร์ทและอาจส่งผลต่อความน่าเชื่อถือของการแสดงผล "
+"เมนูบูตจะยังคงปรากฏอยู่เพื่อการกู้คืน "
+"คุณสามารถคืนค่าเริ่มต้นจากโหมดกู้คืนได้"
+
+msgid "Diagnostic access was not granted."
+msgstr "ไม่ได้รับอนุญาตให้เข้าถึงข้อมูลวินิจฉัย"
+
+msgid "Save"
+msgstr "บันทึก"
+
+msgid "A previous change was interrupted. Restore defaults before continuing."
+msgstr "การเปลี่ยนแปลงก่อนหน้าถูกรบกวน กู้ค่าเริ่มต้นก่อนดำเนินการต่อ"
+
+#, python-format
+msgid "Experimental: %s"
+msgstr "ทดลองใช้: %s"
+
+msgid "PSR status"
+msgstr "สถานะ PSR"
+
+msgid "In recovery mode, sign in with your normal account and run:"
+msgstr "ในโหมดกู้คืน ให้เข้าสู่ระบบด้วยบัญชีปกติของคุณและรัน:"

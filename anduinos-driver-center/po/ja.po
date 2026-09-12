@@ -1514,3 +1514,128 @@ msgstr "システムのインストール日"
 #~ msgid "%d package is missing"
 #~ msgid_plural "%d packages are missing"
 #~ msgstr[0] "%d パッケージがありません"
+
+msgid "Display compatibility settings take effect after restarting."
+msgstr "ディスプレイ互換性設定は、再起動後に有効になります。"
+
+msgid "Kernel version"
+msgstr "カーネルバージョン"
+
+msgid "Restart required"
+msgstr "再起動が必要です"
+
+msgid "Saved settings differ from this boot."
+msgstr "保存された設定はこのブート時と異なります。"
+
+msgid "External graphics configuration"
+msgstr "外部グラフィックス設定"
+
+msgid "Panel self refresh (PSR)"
+msgstr "パネル自己更新 (PSR)"
+
+msgid "Frame buffer compression (FBC)"
+msgstr "フレームバッファ圧縮 (FBC)"
+
+msgid "Display power-saving states"
+msgstr "ディスプレイの省電力状態"
+
+msgid "Panel Replay"
+msgstr "パネルリプレイ"
+
+msgid ""
+"Settings affect all GPUs using this driver. Disabling power-saving features "
+"may increase power consumption."
+msgstr "設定はこのドライバーを使用するすべてのGPUに影響します。省電力機能を無効にすると、電力消費が増える可能性があります。"
+
+msgid "Advanced compatibility settings"
+msgstr "詳細な互換性設定"
+
+msgid "Automatic"
+msgstr "システムデフォルトに従う"
+
+#, python-format
+msgid "Loaded parameter: %s"
+msgstr "読み込まれたパラメータ: %s"
+
+msgid "Kernel driver"
+msgstr "カーネルドライバ"
+
+msgid "System default"
+msgstr "システム既定値"
+
+msgid "Driver switching"
+msgstr "ドライバの切り替え"
+
+msgid ""
+"Alternative drivers are available only for hardware and kernels that have "
+"passed acceptance tests."
+msgstr "代替ドライバは、受け入れ試験を通過したハードウェアとカーネルでのみ利用可能です。"
+
+msgid "Diagnostics"
+msgstr "診断"
+
+msgid ""
+"The boot log reports a panel refresh error. Try disabling PSR and restart."
+msgstr "ブートログでパネルのリフレッシュエラーが報告されています。PSRを無効にして再起動してください。"
+
+msgid ""
+"The boot log reports a firmware error. Check system and firmware updates."
+msgstr "ブートログでファームウェアエラーが報告されています。システムとファームウェアの更新を確認してください。"
+
+msgid ""
+"The boot log reports a GPU hang or reset. Export diagnostics before changing"
+" more settings."
+msgstr "ブートログでGPUのハングまたはリセットが報告されています。さらに設定を変更する前に、診断データをエクスポートしてください。"
+
+msgid "Display troubleshooting"
+msgstr "ディスプレイの問題解決"
+
+msgid "Diagnostic coverage"
+msgstr "診断の網羅性"
+
+msgid ""
+"Module parameters describe policy, not whether a feature is currently "
+"active. Missing log evidence does not prove that graphics are healthy."
+msgstr ""
+"モジュールパラメータはポリシーを説明するものであり、機能が現在アクティブかどうかを示すものではありません。ログの証拠が欠けていることは、グラフィックスが正常であることを証明するものではありません。"
+
+msgid "Read detailed status"
+msgstr "詳細な状態を読み取る"
+
+msgid "Restore default settings"
+msgstr "デフォルト設定を復元"
+
+msgid "Settings saved. Restart to apply them."
+msgstr "設定が保存されました。適用するには再起動してください。"
+
+msgid "Export diagnostics"
+msgstr "診断情報をエクスポート"
+
+msgid "Apply graphics settings?"
+msgstr "グラフィックス設定を適用しますか?"
+
+msgid ""
+"Changes require a restart and may affect display reliability. The boot menu "
+"will remain visible for recovery. You can restore defaults from recovery "
+"mode."
+msgstr ""
+"変更には再起動が必要であり、表示の信頼性に影響を与える可能性があります。復旧のためにブートメニューが表示され続けます。復旧モードからデフォルト設定を復元できます。"
+
+msgid "Diagnostic access was not granted."
+msgstr "診断へのアクセスが許可されませんでした。"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "A previous change was interrupted. Restore defaults before continuing."
+msgstr "前回の変更が中断されました。続行する前にデフォルトを復元してください。"
+
+#, python-format
+msgid "Experimental: %s"
+msgstr "実験的: %s"
+
+msgid "PSR status"
+msgstr "PSRステータス"
+
+msgid "In recovery mode, sign in with your normal account and run:"
+msgstr "リカバリーモードの場合、通常アカウントでサインインして以下を実行してください:"

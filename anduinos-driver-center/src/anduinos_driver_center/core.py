@@ -10,6 +10,7 @@ import re
 import subprocess
 import sys
 from typing import Protocol, Sequence
+from .intel_graphics import IntelSnapshot, inspect as inspect_intel
 
 try:
     from anduinos_secureboot import (
@@ -117,6 +118,7 @@ class HardwareDevice:
 class GraphicsScan:
     devices: tuple[HardwareDevice, ...] = field(default_factory=tuple)
     error: str | None = None
+    intel: IntelSnapshot | None = None
 
     @property
     def successful(self) -> bool:
@@ -671,8 +673,9 @@ def scan_system(
 ]:
     runner = runner or SubprocessRunner()
     secure_boot = secure_boot_state(runner)
+    graphics = replace(graphics_scan(runner), intel=inspect_intel(runner=runner.run))
     return (
-        graphics_scan(runner),
+        graphics,
         secure_boot,
         xbox_state(secure_boot, runner),
         dkms_state(secure_boot, runner),
