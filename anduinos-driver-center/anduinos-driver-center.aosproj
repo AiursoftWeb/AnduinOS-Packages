@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-driver-center</PackageName>
-    <PackageVersion>2.0.2-18+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-21+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Driver Center — manage hardware drivers, device firmware, printing, controllers, and Secure Boot support.</PackageDescription>
     <Section>admin</Section>
@@ -24,6 +24,7 @@
   <ItemGroup>
     <Dependency Include="python3" />
     <Dependency Include="python3-gi" />
+    <Dependency Include="python3-apt" />
     <Dependency Include="gir1.2-gtk-4.0" />
     <Dependency Include="gir1.2-adw-1" />
     <Dependency Include="ubuntu-drivers-common" />
@@ -47,6 +48,8 @@
     <IncludeFile Include="src/anduinos_driver_center/computer.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/computer.py" />
     <IncludeFile Include="src/anduinos_driver_center/computer_ui.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/computer_ui.py" />
     <IncludeFile Include="src/anduinos_driver_center/core.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/core.py" />
+    <IncludeFile Include="src/anduinos_driver_center/driver_update.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/driver_update.py" />
+    <IncludeFile Include="src/anduinos_driver_center/operation_ui.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/operation_ui.py" />
     <IncludeFile Include="src/anduinos_driver_center/intel_graphics.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/intel_graphics.py" />
     <IncludeFile Include="src/anduinos_driver_center/intel_graphics_ui.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/intel_graphics_ui.py" />
     <IncludeFile Include="src/anduinos_driver_center/intel_graphics_settings.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/intel_graphics_settings.py" />
