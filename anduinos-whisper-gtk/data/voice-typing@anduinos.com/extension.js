@@ -80,8 +80,8 @@ const STATE_TEXT = {
 };
 
 const CALIBRATION_TEXT = {
-    quick: N_('Optimizing recognition for first use: %d seconds remaining (microphone off; click the microphone to cancel)'),
-    full: N_('Measuring recognition performance: %d seconds remaining (microphone off; click the microphone to cancel)'),
+    quick: N_('Performance test… %ds'),
+    full: N_('Performance test… %ds'),
 };
 
 const LANGUAGE_TEXT = {
@@ -571,7 +571,6 @@ export default class VoiceTypingExtension extends Extension {
 
     _showPartial(text) {
         if (!this._enabled || this._uiState !== UI_STATE.LISTENING || !text ||
-            !this._settings.get_boolean('live-transcription') ||
             this._previewTimer)
             return;
         this._showPreview(text);

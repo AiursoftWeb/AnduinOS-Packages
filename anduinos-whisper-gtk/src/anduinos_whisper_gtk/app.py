@@ -13,6 +13,7 @@ gi.require_version("Gtk", "4.0")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk  # noqa: E402
 
 from anduinos_whisper_framework.config import MODELS, SETTINGS_SCHEMA, model_installed
+from anduinos_whisper_framework.live_policy import live_mode
 
 from .dbus import VoiceServiceClient, VoiceUiClient
 from .models import ModelDownloader, is_user_model, remove_user_model
@@ -159,6 +160,7 @@ class SettingsWindow(Adw.PreferencesWindow):
         self.shortcut_row.set_activatable_widget(change_shortcut)
         self._refresh_shortcut()
         behavior.add(self.shortcut_row)
+        behavior.add(self._build_live_row())
         for title, subtitle, key in (
             (
                 _("Noise reduction"),
@@ -174,11 +176,6 @@ class SettingsWindow(Adw.PreferencesWindow):
                 _("Voice commands"),
                 _("Recognize commands such as “new line” and “comma”"),
                 "voice-commands",
-            ),
-            (
-                _("Live transcription"),
-                _("Show words in the microphone bar while you speak"),
-                "live-transcription",
             ),
             (
                 _("Final result preview"),
@@ -445,6 +442,29 @@ class SettingsWindow(Adw.PreferencesWindow):
 
     def _level_changed(self, level: float) -> None:
         self.meter.set_fraction(max(0.0, min(1.0, level)))
+
+    def _build_live_row(self):
+        self.live_row = Adw.ComboRow(
+            title=_("Live transcription"),
+            subtitle=_("Automatic enables live transcription only when performance allows"),
+            model=Gtk.StringList.new([_("Automatic"), _("On"), _("Off")]),
+        )
+        self._sync_live_mode()
+        self.live_row.connect("notify::selected", self._live_mode_changed)
+        self.settings.connect("changed::live-transcription-mode", self._sync_live_mode)
+        self.settings.connect("changed::live-transcription", self._sync_live_mode)
+        return self.live_row
+
+    def _sync_live_mode(self, *_args):
+        self._syncing_live_mode = True
+        try:
+            self.live_row.set_selected(("auto", "on", "off").index(live_mode(self.settings)))
+        finally:
+            self._syncing_live_mode = False
+
+    def _live_mode_changed(self, row, _parameter):
+        if not self._syncing_live_mode:
+            self.settings.set_string("live-transcription-mode", ("auto", "on", "off")[row.get_selected()])
 
     def _microphone_changed(self, row: Adw.ComboRow, _parameter) -> None:
         selected = min(row.get_selected(), len(self.microphones) - 1)

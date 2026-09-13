@@ -51,6 +51,11 @@
       <default>true</default>
       <summary>Briefly preview recognized text before inserting it</summary>
     </key>
+    <key name="live-transcription-mode" type="s">
+      <choices><choice value="auto"/><choice value="on"/><choice value="off"/></choices>
+      <default>'auto'</default>
+      <summary>Automatically select live transcription or explicitly enable or disable it</summary>
+    </key>
     <key name="live-transcription" type="b">
       <default>true</default>
       <summary>Show periodically refreshed partial transcripts while speaking</summary>
