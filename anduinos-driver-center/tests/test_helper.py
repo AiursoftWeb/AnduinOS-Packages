@@ -14,6 +14,7 @@ loader.exec_module(driver_helper)
 
 
 class HelperTests(unittest.TestCase):
+
     def test_unprivileged_requests_cannot_reach_commands(self):
         with (
             patch.object(driver_helper.os, "geteuid", return_value=1000),

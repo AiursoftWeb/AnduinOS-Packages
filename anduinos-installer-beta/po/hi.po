@@ -842,9 +842,17 @@ msgstr "यह उन्नत पथ मौजूदा पार्टिश�
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "इस डिस्क में एक सक्रिय मैपर, एरे या अन्य नेस्टेड ब्लॉक-डिवाइस टोपोलॉजी है जिसका समर्थन गाइडेड सहअस्तित्व नहीं करता है।"
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "यह डिस्क पूरे-डिस्क इंस्टालेशन के लिए बहुत छोटी है। उन्नत तभी जारी रख सकता है यदि उपयुक्त अनासंजत स्थिति उपलब्ध हो।"
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "न्यूनतम 25 GiB; अनुशंसित 50 GiB।"
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "न्यूनतम से कम। स्थापना या अपडेट विफल हो सकते हैं। जारी रखें?"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "अनुशंसित क्षमता से कम। जगह जल्दी खत्म हो सकती है। जारी रखें?"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1642,9 +1650,6 @@ msgstr "{size} {start} MiB पर"
 msgid "an ESP of at least 512 MiB"
 msgstr "कम से कम 512 MiB का ESP"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "कम से कम 20 GiB का Root पार्टिशन"
 
 #: src/pages.py:5209
 #, python-brace-format
@@ -1828,6 +1833,10 @@ msgid "Install AnduinOS to your computer"
 msgstr "अपने कंप्यूटर पर AnduinOS इंस्टॉल करें"
 
 #: src/pages.py
+msgid "System installed, but some features could not be completed"
+msgstr "सिस्टम इंस्टॉल हो गया है, लेकिन कुछ सुविधाएँ पूरी तरह सेट अप नहीं हो सकीं"
+
+#: src/pages.py
 msgid "Btrfs file compression"
 msgstr "Btrfs फ़ाइल संपीड़न"
 
@@ -1862,3 +1871,19 @@ msgstr "संपीड़न की गति और डिस्क स्थ�
 #: src/pages.py
 msgid "Compress more to save space, using more CPU when writing."
 msgstr "जगह बचाने के लिए अधिक संपीड़न करें; लिखते समय CPU का अधिक उपयोग होगा।"
+
+#: src/pages.py
+msgid "External drive"
+msgstr "बाहरी ड्राइव"
+
+#: src/pages.py
+msgid "Read-only"
+msgstr "केवल पढ़ने योग्य"
+
+#: src/pages.py
+msgid "Show External Drives"
+msgstr "बाहरी ड्राइव दिखाएँ"
+
+#: src/pages.py
+msgid "Disconnecting an external drive can cause installation failure or data loss. Booting on another computer may require additional setup. For portable use, consider AnduinOS ToGo."
+msgstr "बाहरी ड्राइव को डिस्कनेक्ट करने से स्थापना विफल हो सकती है या डेटा खो सकता है। किसी अन्य कंप्यूटर पर बूट करने के लिए अतिरिक्त सेटअप की आवश्यकता हो सकती है। पोर्टेबल उपयोग के लिए AnduinOS ToGo पर विचार करें।"

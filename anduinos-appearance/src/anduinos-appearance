@@ -72,6 +72,53 @@ def _ext_is_enabled(uuid: str) -> bool:
 POS_LABELS = {'bottom': _('Bottom'), 'top': _('Top'), 'left': _('Left'), 'right': _('Right')}
 
 
+def taskbar_settings():
+    """Load the extension's own schema without requiring a global installation."""
+    source = Gio.SettingsSchemaSource.get_default()
+    schema_id = 'org.gnome.shell.extensions.dash-to-panel'
+    for data_dir in [GLib.get_user_data_dir(), *GLib.get_system_data_dirs()]:
+        directory = Path(data_dir) / 'gnome-shell/extensions' / DTP_UUID / 'schemas'
+        if not (directory / 'gschemas.compiled').is_file():
+            continue
+        try:
+            source = Gio.SettingsSchemaSource.new_from_directory(str(directory), source, False)
+            schema = source.lookup(schema_id, False)
+            if schema:
+                break
+        except GLib.Error:
+            continue
+    else:
+        schema = source.lookup(schema_id, True) if source else None
+    if not schema or not all(schema.has_key(key) for key in (
+        'intellihide', 'intellihide-use-pointer',
+    )):
+        return None
+    return Gio.Settings.new_full(schema, None, None)
+
+
+def taskbar_behavior_group(settings):
+    group = Adw.PreferencesGroup(title=_('Behavior'))
+    hide = Adw.SwitchRow(title=_('Automatically hide the taskbar'))
+    pointer = Adw.SwitchRow(title=_('Show taskbar when pointer reaches screen edge'))
+    group.add(hide)
+    group.add(pointer)
+    if settings is None:
+        group.set_sensitive(False)
+        return group
+    settings.bind('intellihide', hide, 'active', Gio.SettingsBindFlags.DEFAULT)
+    settings.bind('intellihide-use-pointer', pointer, 'active',
+                  Gio.SettingsBindFlags.DEFAULT | Gio.SettingsBindFlags.NO_SENSITIVITY)
+
+    def sync_sensitive(*_args):
+        pointer.set_sensitive(settings.get_boolean('intellihide') and
+                              settings.is_writable('intellihide-use-pointer'))
+
+    settings.connect('changed::intellihide', sync_sensitive)
+    settings.connect('writable-changed::intellihide-use-pointer', sync_sensitive)
+    sync_sensitive()
+    return group
+
+
 # ── style page ───────────────────────────────────────────────────
 
 class StylePage(Adw.PreferencesPage):
@@ -128,6 +175,9 @@ class StylePage(Adw.PreferencesPage):
         self.add(layout_group)
 
         self._highlight_pos()
+
+        self.taskbar_settings = taskbar_settings()
+        self.add(taskbar_behavior_group(self.taskbar_settings))
 
         # ── Group apps (Classic only) ──
         self.group_expander = Adw.ExpanderRow()

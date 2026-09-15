@@ -130,6 +130,7 @@ class LiveTranscriptionTests(unittest.TestCase):
         service.active = True
         service.settings = Mock()
         service.settings.get_boolean.return_value = True
+        service.settings.get_string.return_value = "on"
 
         first = service._next_partial()
         second = service._next_partial()

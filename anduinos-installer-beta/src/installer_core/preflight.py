@@ -109,7 +109,15 @@ def verify_target_disk_environment(
     runner.require_root()
 
     try:
-        resolved_plan = resolve_storage_graph(plan, inventory_probe())
+        inventory = inventory_probe()
+        if inventory.live_media_disks is None:
+            raise ValueError("Cannot safely identify the Live installation media")
+        resolved_plan = resolve_storage_graph(plan, inventory)
+        disk = inventory.disk(resolved_plan.storage.disk.stable_id)
+        if disk.identity.path in inventory.live_media_disks:
+            raise ValueError("The Live installation media cannot be an installation target")
+        if disk.read_only:
+            raise ValueError("The installation target is read-only")
     except ValueError as error:
         raise PreflightError(str(error)) from error
     if resolved_plan.storage.mode is not InstallMode.MANUAL:

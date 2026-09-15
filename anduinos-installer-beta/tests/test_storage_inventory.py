@@ -10,6 +10,7 @@ from installer_core.storage_inventory import (
     EFI_SYSTEM_PARTITION_GUID,
     StaleStorageInventoryError,
     _disk_topology_digest,
+    _live_media_disks,
     _parse_parted_machine,
     bind_disk_topology,
     probe_storage_inventory,
@@ -22,6 +23,38 @@ def completed(stdout="", stderr="", returncode=0):
 
 
 class StorageInventoryTests(unittest.TestCase):
+    def test_live_source_uses_physical_parents_not_partition_name_guessing(self):
+        for disk, partition in (("/dev/sda", "/dev/sda1"),
+                                ("/dev/nvme0n1", "/dev/nvme0n1p1"),
+                                ("/dev/mmcblk0", "/dev/mmcblk0p1")):
+            for mount in ("/cdrom", "/run/live/medium", "/run/initramfs/live"):
+                with self.subTest(disk=disk, mount=mount):
+                    roots = [{"type": "disk", "path": disk, "children": [
+                        {"type": "part", "path": partition, "mountpoints": [mount]}
+                    ]}]
+                    self.assertEqual(_live_media_disks(roots), (disk,))
+
+    def test_optical_live_source_is_known_but_loop_or_missing_source_is_not(self):
+        self.assertEqual(_live_media_disks([
+            {"type": "rom", "path": "/dev/sr0", "mountpoints": ["/cdrom"]}
+        ]), ("/dev/sr0",))
+        self.assertIsNone(_live_media_disks([]))
+        self.assertIsNone(_live_media_disks([
+            {"type": "loop", "path": "/dev/loop0", "mountpoints": ["/cdrom"]}
+        ]))
+
+    def test_removable_and_usb_ssd_are_enumerated_and_labelled(self):
+        for removable in (True, False):
+            payload = self.lsblk_payload()
+            payload["blockdevices"][0].update(rm=removable, tran="usb", ro=True)
+            with patch.object(self, "lsblk_payload", return_value=payload):
+                inventory, _calls = self.probe()
+            self.assertEqual(len(inventory.disks), 1)
+            self.assertEqual(inventory.disks[0].removable, removable)
+            self.assertTrue(inventory.disks[0].external)
+            self.assertTrue(inventory.disks[0].read_only)
+            self.assertIsNone(inventory.live_media_disks)
+
     def lsblk_payload(self):
         return {
             "blockdevices": [

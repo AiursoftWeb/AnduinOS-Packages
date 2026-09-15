@@ -34,17 +34,11 @@ msgstr "Configurer des instantanés automatiques"
 msgid "System Backup"
 msgstr "Sauvegarde système"
 
-#: assets/anduinos-oobe:382
-msgid "Use Deja Dup to protect your"
-msgstr "Utilisez Deja Dup pour protéger vos"
+#. Translate as a complete sentence; the interface wraps the text automatically.
+msgid "Use Deja Dup to protect your important files with automated, secure local or remote backups."
+msgstr "Utilisez Deja Dup pour protéger vos fichiers importants avec des sauvegardes automatiques, des sauvegardes locales ou distantes sécurisées."
 
-#: assets/anduinos-oobe:383
-msgid "important files with automated,"
-msgstr "fichiers importants avec des sauvegardes automatiques,"
 
-#: assets/anduinos-oobe:384
-msgid "secure local or remote backups."
-msgstr "des sauvegardes locales ou distantes sécurisées."
 
 #: assets/anduinos-oobe:386
 msgid "Get Deja Dup"
@@ -534,16 +528,10 @@ msgstr "Ouvrir le Centre de pilotes"
 msgid "Run Windows Apps, with ease"
 msgstr "Exécutez des applications Windows, en toute simplicité"
 
-#: assets/anduinos-oobe:2161
-msgid ""
-"Powered by Wine and Bottles technology, running classic Windows applications"
-msgstr ""
-"S'appuie sur les technologies Wine et Bottles pour exécuter des applications"
-" Windows classiques"
+#. Translate as a complete sentence; the interface wraps the text automatically.
+msgid "Powered by Wine and Bottles technology, running classic Windows applications is now easier than ever."
+msgstr "S'appuie sur les technologies Wine et Bottles pour exécuter des applications Windows classiques est maintenant plus facile que jamais."
 
-#: assets/anduinos-oobe:2161
-msgid "is now easier than ever."
-msgstr "est maintenant plus facile que jamais."
 
 #: assets/anduinos-oobe:2177
 msgid "✓ Windows compatibility sandbox is already installed."
@@ -896,14 +884,10 @@ msgstr "Cliquez pour ouvrir dans l'App Store"
 msgid "Opening…"
 msgstr "Ouverture…"
 
-#: assets/anduinos-oobe:2860
-msgid "Pro tip: You can explore these apps in the App Store,"
-msgstr "Astuce : Vous pouvez explorer ces applications dans le App Store,"
+#. Translate as a complete sentence; the interface wraps the text automatically.
+msgid "Pro tip: You can explore these apps in the App Store, and continue with the system setup while they download."
+msgstr "Astuce : Vous pouvez explorer ces applications dans le App Store, et continuer avec la configuration du système pendant le téléchargement."
 
-#: assets/anduinos-oobe:2860
-msgid "and continue with the system setup while they download."
-msgstr ""
-"et continuer avec la configuration du système pendant le téléchargement."
 
 #: assets/anduinos-oobe:2870
 msgid "  Browse Store  "
@@ -917,17 +901,11 @@ msgstr "Connectez et protégez vos données"
 msgid "Online Accounts"
 msgstr "Comptes en ligne"
 
-#: assets/anduinos-oobe:2932
-msgid "Connect your Google, Microsoft,"
-msgstr "Connectez vos comptes Google, Microsoft,"
+#. Translate as a complete sentence; the interface wraps the text automatically.
+msgid "Connect your Google, Microsoft, or Nextcloud accounts to sync files, contacts, and calendar."
+msgstr "Connectez vos comptes Google, Microsoft, ou Nextcloud pour synchroniser fichiers, contacts et calendrier."
 
-#: assets/anduinos-oobe:2932
-msgid "or Nextcloud accounts to sync"
-msgstr "ou Nextcloud pour synchroniser"
 
-#: assets/anduinos-oobe:2933
-msgid "files, contacts, and calendar."
-msgstr "fichiers, contacts et calendrier."
 
 #: assets/anduinos-oobe:2943
 msgid "Connect Accounts"
@@ -954,13 +932,10 @@ msgstr "Nous ne téléchargeons pas votre historique de recherche."
 msgid "There are no pervasive advertisements."
 msgstr "Il n'y a pas de publicités envahissantes."
 
-#: assets/anduinos-oobe:3034
-msgid "In an era ruled by algorithms and surveillance,"
-msgstr "À une époque dominée par les algorithmes et la surveillance,"
+#. Translate as a complete sentence; the interface wraps the text automatically.
+msgid "In an era ruled by algorithms and surveillance, this is our firmest commitment to you."
+msgstr "À une époque dominée par les algorithmes et la surveillance, c'est notre engagement le plus ferme envers vous."
 
-#: assets/anduinos-oobe:3034
-msgid "this is our firmest commitment to you."
-msgstr "c'est notre engagement le plus ferme envers vous."
 
 #: assets/anduinos-oobe:3052
 msgid "✓ Zero telemetry — your activity is yours alone"
@@ -991,13 +966,10 @@ msgstr "✓ Ouvert-source — le code est à vous pour inspection et modificatio
 msgid "Welcome to the AnduinOS Community"
 msgstr "Bienvenue dans la communauté AnduinOS"
 
-#: assets/anduinos-oobe:3107
-msgid "Whether you're a Windows refugee seeking shelter,"
-msgstr "Que vous soyez un réfugié Windows à la recherche d'un refuge,"
+#. Translate as a complete sentence; the interface wraps the text automatically.
+msgid "Whether you're a Windows refugee seeking shelter, or a hardcore geek developer — you'll find your tribe here."
+msgstr "Que vous soyez un réfugié Windows à la recherche d'un refuge, ou un développeur geek hardcore — vous trouverez votre tribu ici."
 
-#: assets/anduinos-oobe:3108
-msgid "or a hardcore geek developer — you'll find your tribe here."
-msgstr "ou un développeur geek hardcore — vous trouverez votre tribu ici."
 
 #: assets/anduinos-oobe:3109
 msgid "Found a bug? Want a feature? Tell us anytime."
@@ -1832,3 +1804,25 @@ msgstr "Explorez et configurez votre système AnduinOS"
 #~ msgstr ""
 #~ "✓ Pilote installé avec succès !\n"
 #~ "Un redémarrage est recommandé pour appliquer les modifications."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "Mise à l’échelle"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "Aucune recommandation disponible pour cet écran."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Recommandé)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Écran principal : %(display)s · Recommandation : %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "Impossible de modifier la mise à l’échelle."

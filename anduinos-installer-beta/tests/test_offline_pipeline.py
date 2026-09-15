@@ -1,12 +1,13 @@
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import Mock
 
 from fakes import FakeRunner
 from helpers import valid_plan
 from installer_core.language_support import InstallLanguagePacksStep
 from installer_core.mirrors import SelectFastestAptMirrorStep
-from installer_core.network import DetectNetworkConnectivityStep
+from installer_core.network import DetectNetworkConnectivityStep, RecheckNetworkConnectivityStep
 from installer_core.software import (
     InstallMultimediaCodecsStep,
     InstallThirdPartyDriversStep,
@@ -43,6 +44,37 @@ class FinalOfflineStep:
 
 
 class OfflinePipelineTests(unittest.TestCase):
+    def test_recovery_reaches_real_selected_package_steps(self):
+        from test_software import CodecInstallRunner, prepare_apt
+
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_apt(target)
+            release = target / "os-release"
+            release.write_text("VERSION_CODENAME=resolute\n")
+            detector = Mock(side_effect=[None, "http://archive.example/ubuntu/"])
+            runner = CodecInstallRunner()
+            context = InstallContext(
+                valid_plan(install_multimedia_codecs=True),
+                lambda _message: None,
+                {"target": target, "chroot_environment_ready": True},
+            )
+            result = StepRunner([
+                DetectNetworkConnectivityStep(os_release=release, detector=detector),
+                RecheckNetworkConnectivityStep(os_release=release, detector=detector),
+                RefreshPackageIndexesStep(runner),
+                InstallMultimediaCodecsStep(runner),
+                FinalOfflineStep(),
+            ]).run(context)
+        self.assertTrue(result.succeeded)
+        self.assertEqual(detector.call_count, 2)
+        self.assertTrue(context.values["multimedia_codecs_installed"])
+        self.assertEqual([r.status for r in result.results], [
+            StepStatus.WARNING, StepStatus.SUCCEEDED, StepStatus.SUCCEEDED,
+            StepStatus.SUCCEEDED, StepStatus.SUCCEEDED,
+        ])
+        self.assertTrue(any("apt-get" in command for command, _ in runner.commands))
+
     def test_offline_mirror_is_skipped_and_pipeline_continues(self):
         with tempfile.TemporaryDirectory() as directory:
             os_release = Path(directory) / "os-release"
@@ -50,6 +82,7 @@ class OfflinePipelineTests(unittest.TestCase):
                 "VERSION_CODENAME=resolute\n", encoding="utf-8"
             )
             runner = FakeRunner()
+            detector = Mock(return_value=None)
             statuses = []
             context = InstallContext(
                 valid_plan(
@@ -65,7 +98,11 @@ class OfflinePipelineTests(unittest.TestCase):
             steps = [
                 DetectNetworkConnectivityStep(
                     os_release=os_release,
-                    detector=lambda _codename: None,
+                    detector=detector,
+                ),
+                RecheckNetworkConnectivityStep(
+                    os_release=os_release,
+                    detector=detector,
                 ),
                 SelectFastestAptMirrorStep(),
                 InstallLanguagePacksStep(runner),
@@ -84,6 +121,7 @@ class OfflinePipelineTests(unittest.TestCase):
 
         self.assertTrue(result.succeeded)
         self.assertTrue(context.values["offline_pipeline_continued"])
+        self.assertEqual(detector.call_count, 2)
         self.assertTrue(context.values["apt_mirror_preserved"])
         self.assertFalse(
             any(
@@ -95,6 +133,7 @@ class OfflinePipelineTests(unittest.TestCase):
             [item.status for item in result.results],
             [
                 StepStatus.WARNING,
+                StepStatus.WARNING,
                 StepStatus.SKIPPED,
                 StepStatus.WARNING,
                 StepStatus.WARNING,
@@ -104,7 +143,7 @@ class OfflinePipelineTests(unittest.TestCase):
                 StepStatus.SUCCEEDED,
             ],
         )
-        self.assertEqual(len(result.warnings), 6)
+        self.assertEqual(len(result.warnings), 7)
         terminal = [item for item in statuses if item[1] is not StepStatus.RUNNING]
         self.assertTrue(all(item[2] for item in terminal[:-1]))
 

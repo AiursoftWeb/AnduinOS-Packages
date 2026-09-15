@@ -154,7 +154,7 @@ def service_stub():
     service.audio_queue = RecognitionQueue()
     service.performance = PerformanceHistory()
     service.settings = Mock()
-    service.settings.get_string.return_value = 'base'
+    service.settings.get_string.side_effect = lambda key: 'on' if key == 'live-transcription-mode' else 'base'
     service.settings.get_boolean.return_value = True
     service._set_state = Mock()
     service._emit = Mock()
@@ -165,6 +165,46 @@ def service_stub():
 
 
 class ServiceTests(unittest.TestCase):
+    def test_slow_preview_disables_only_automatic_preview_and_final_still_runs(self):
+        for mode in ('auto', 'on'):
+            with self.subTest(mode=mode):
+                service = service_stub()
+                service.settings.get_string.side_effect = lambda key: mode if key == 'live-transcription-mode' else 'base'
+                service.session_config = {'backend': 'cpu', 'threads': 1, 'preview_allowed': True}
+                now = [100.0]
+                preview_done, final_done = threading.Event(), threading.Event()
+
+                def transcribe(*_args, **_kwargs):
+                    now[0] += 0.5
+                    return 'hello'
+
+                def idle(callback, *_args):
+                    if callback == service._partial_finished:
+                        preview_done.set()
+                    elif callback == service._recognition_finished:
+                        final_done.set()
+                    return 1
+
+                with patch('anduinos_whisper_framework.daemon.SessionEngine') as engine, \
+                        patch('anduinos_whisper_framework.daemon.time.monotonic', side_effect=lambda: now[0]), \
+                        patch('anduinos_whisper_framework.daemon.GLib.idle_add', side_effect=idle):
+                    engine.return_value.transcribe.side_effect = transcribe
+                    engine.return_value.last_metrics = {}
+                    service._queue_partial(7, b'partial')
+                    thread = threading.Thread(target=service._recognition_worker, daemon=True)
+                    thread.start()
+                    try:
+                        self.assertTrue(preview_done.wait(2))
+                        self.assertEqual(service._live_preview_enabled(), mode == 'on')
+                        service._queue_audio(7, b'final')
+                        self.assertTrue(final_done.wait(2))
+                        service.settings.set_boolean.assert_not_called()
+                        service.settings.set_string.assert_not_called()
+                    finally:
+                        service._put_work(-1, 'quit', 0, 0, b'')
+                        thread.join(2)
+                    self.assertFalse(thread.is_alive())
+
     @patch('anduinos_whisper_framework.daemon.model_installed', return_value=True)
     def test_start_prepares_without_opening_microphone_and_finish_cancels(self, _installed):
         service = service_stub()

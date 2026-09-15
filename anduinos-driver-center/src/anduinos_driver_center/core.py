@@ -10,6 +10,7 @@ import re
 import subprocess
 import sys
 from typing import Protocol, Sequence
+from .intel_graphics import IntelSnapshot, inspect as inspect_intel
 
 try:
     from anduinos_secureboot import (
@@ -99,6 +100,7 @@ class HardwareDevice:
     active_driver_healthy: bool | None = None
     active_driver_version: str | None = None
     active_driver_error: str | None = None
+    restart_required: bool = False
     options: tuple[DriverOption, ...] = field(default_factory=tuple)
 
     @property
@@ -117,6 +119,7 @@ class HardwareDevice:
 class GraphicsScan:
     devices: tuple[HardwareDevice, ...] = field(default_factory=tuple)
     error: str | None = None
+    intel: IntelSnapshot | None = None
 
     @property
     def successful(self) -> bool:
@@ -216,6 +219,14 @@ class PrintingState:
             for package in self.core_packages + self.driverless_packages
             if not package.installed
         )
+
+
+def nvidia_restart_required(driver, installed_module_version, runner) -> bool:
+    if driver != "nvidia" or not installed_module_version:
+        return False
+    loaded = runner.run(["cat", "/sys/module/nvidia/version"])
+    return bool(loaded.returncode == 0 and loaded.stdout.strip()
+                and loaded.stdout.strip() != installed_module_version)
 
 
 def package_is_installed(package: str, runner: Runner) -> bool:
@@ -555,6 +566,7 @@ def parse_ubuntu_driver_devices(output: str, runner: Runner) -> list[HardwareDev
                     active_driver_healthy=driver_healthy,
                     active_driver_version=driver_version,
                     active_driver_error=driver_error,
+                    restart_required=nvidia_restart_required(active_driver, driver_version, runner),
                     options=_options_with_active_driver(
                         options, active_driver, driver_version
                     ),
@@ -671,8 +683,9 @@ def scan_system(
 ]:
     runner = runner or SubprocessRunner()
     secure_boot = secure_boot_state(runner)
+    graphics = replace(graphics_scan(runner), intel=inspect_intel(runner=runner.run))
     return (
-        graphics_scan(runner),
+        graphics,
         secure_boot,
         xbox_state(secure_boot, runner),
         dkms_state(secure_boot, runner),

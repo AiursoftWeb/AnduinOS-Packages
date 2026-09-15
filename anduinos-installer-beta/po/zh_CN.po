@@ -843,9 +843,17 @@ msgstr "此高级路径会保留现有分区，但会更改所选磁盘的分区
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "此磁盘包含活动映射器、阵列或其他嵌套块设备拓扑，引导共存模式不支持这些拓扑。"
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "此磁盘太小，无法进行整盘安装。仅当存在合适的未分配空间时，高级选项才可继续。"
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "最低 25 GiB，推荐 50 GiB。"
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "低于最低要求，安装或更新可能失败。仍要继续？"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "低于推荐容量，空间可能很快耗尽。仍要继续？"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1643,9 +1651,6 @@ msgstr "{size} 位于 {start} MiB"
 msgid "an ESP of at least 512 MiB"
 msgstr "一个至少 512 MiB 的 ESP"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "一个至少 20 GiB 的 Root 分区"
 
 #: src/pages.py:5209
 #, python-brace-format
@@ -1829,6 +1834,10 @@ msgid "Install AnduinOS to your computer"
 msgstr "将 AnduinOS 安装到您的计算机"
 
 #: src/pages.py
+msgid "System installed, but some features could not be completed"
+msgstr "系统已安装，但部分功能未能完成"
+
+#: src/pages.py
 msgid "Btrfs file compression"
 msgstr "Btrfs 文件压缩"
 
@@ -1863,3 +1872,19 @@ msgstr "平衡压缩速度和磁盘空间占用。"
 #: src/pages.py
 msgid "Compress more to save space, using more CPU when writing."
 msgstr "提高压缩率以节省空间，写入时需要更多处理器计算。"
+
+#: src/pages.py
+msgid "External drive"
+msgstr "外置硬盘"
+
+#: src/pages.py
+msgid "Read-only"
+msgstr "只读"
+
+#: src/pages.py
+msgid "Show External Drives"
+msgstr "显示外置硬盘"
+
+#: src/pages.py
+msgid "Disconnecting an external drive can cause installation failure or data loss. Booting on another computer may require additional setup. For portable use, consider AnduinOS ToGo."
+msgstr "断开外置硬盘可能导致安装失败或数据丢失。在其他电脑上启动可能需要额外设置。如需便携使用，建议使用 AnduinOS ToGo。"

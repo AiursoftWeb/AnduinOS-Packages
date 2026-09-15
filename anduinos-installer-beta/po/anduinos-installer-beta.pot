@@ -890,10 +890,16 @@ msgid ""
 "topology that guided coexistence does not support."
 msgstr ""
 
-#: src/pages.py:3277
-msgid ""
-"This disk is too small for whole-disk installation. Advanced may continue "
-"only if suitable unallocated space exists."
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr ""
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr ""
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr ""
 
 #: src/pages.py:6665
@@ -1761,9 +1767,6 @@ msgstr ""
 msgid "an ESP of at least 512 MiB"
 msgstr ""
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr ""
 
 #: src/pages.py:5209
 #, python-brace-format
@@ -1971,6 +1974,10 @@ msgid "Install AnduinOS to your computer"
 msgstr ""
 
 #: src/pages.py
+msgid "System installed, but some features could not be completed"
+msgstr ""
+
+#: src/pages.py
 msgid "Btrfs file compression"
 msgstr ""
 
@@ -2004,4 +2011,20 @@ msgstr ""
 
 #: src/pages.py
 msgid "Compress more to save space, using more CPU when writing."
+msgstr ""
+
+#: src/pages.py
+msgid "External drive"
+msgstr ""
+
+#: src/pages.py
+msgid "Read-only"
+msgstr ""
+
+#: src/pages.py
+msgid "Show External Drives"
+msgstr ""
+
+#: src/pages.py
+msgid "Disconnecting an external drive can cause installation failure or data loss. Booting on another computer may require additional setup. For portable use, consider AnduinOS ToGo."
 msgstr ""

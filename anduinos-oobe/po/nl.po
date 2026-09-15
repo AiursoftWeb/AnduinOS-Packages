@@ -33,17 +33,11 @@ msgstr "Configureer automatische momentopnamen"
 msgid "System Backup"
 msgstr "Systeemback-up"
 
-#: assets/anduinos-oobe:382
-msgid "Use Deja Dup to protect your"
-msgstr "Gebruik Deja Dup om je te beschermen"
+#. Translate as a complete sentence; the interface wraps the text automatically.
+msgid "Use Deja Dup to protect your important files with automated, secure local or remote backups."
+msgstr "Gebruik Deja Dup om je te beschermen belangrijke bestanden met geautomatiseerde, beveiligde lokale of externe back-ups."
 
-#: assets/anduinos-oobe:383
-msgid "important files with automated,"
-msgstr "belangrijke bestanden met geautomatiseerde,"
 
-#: assets/anduinos-oobe:384
-msgid "secure local or remote backups."
-msgstr "beveiligde lokale of externe back-ups."
 
 #: assets/anduinos-oobe:386
 msgid "Get Deja Dup"
@@ -530,16 +524,10 @@ msgstr "Stuurprogrammacentrum openen"
 msgid "Run Windows Apps, with ease"
 msgstr "Voer Windows-apps eenvoudig uit"
 
-#: assets/anduinos-oobe:2161
-msgid ""
-"Powered by Wine and Bottles technology, running classic Windows applications"
-msgstr ""
-"Aangedreven door Wine- en Bottles-technologie, waarmee klassieke Windows-"
-"toepassingen worden uitgevoerd"
+#. Translate as a complete sentence; the interface wraps the text automatically.
+msgid "Powered by Wine and Bottles technology, running classic Windows applications is now easier than ever."
+msgstr "Aangedreven door Wine- en Bottles-technologie, waarmee klassieke Windows-toepassingen worden uitgevoerd is nu makkelijker dan ooit."
 
-#: assets/anduinos-oobe:2161
-msgid "is now easier than ever."
-msgstr "is nu makkelijker dan ooit."
 
 #: assets/anduinos-oobe:2177
 msgid "✓ Windows compatibility sandbox is already installed."
@@ -886,13 +874,10 @@ msgstr "Klik om te openen in de App Store"
 msgid "Opening…"
 msgstr "Bezig met openen…"
 
-#: assets/anduinos-oobe:2860
-msgid "Pro tip: You can explore these apps in the App Store,"
-msgstr "Pro-tip: Je kunt deze apps verkennen in de App Store,"
+#. Translate as a complete sentence; the interface wraps the text automatically.
+msgid "Pro tip: You can explore these apps in the App Store, and continue with the system setup while they download."
+msgstr "Pro-tip: Je kunt deze apps verkennen in de App Store, en ga door met de systeemsetup terwijl ze downloaden."
 
-#: assets/anduinos-oobe:2860
-msgid "and continue with the system setup while they download."
-msgstr "en ga door met de systeemsetup terwijl ze downloaden."
 
 #: assets/anduinos-oobe:2870
 msgid "  Browse Store  "
@@ -906,17 +891,11 @@ msgstr "Verbind & Bescherm Uw Gegevens"
 msgid "Online Accounts"
 msgstr "Online-accounts"
 
-#: assets/anduinos-oobe:2932
-msgid "Connect your Google, Microsoft,"
-msgstr "Verbind je Google, Microsoft,"
+#. Translate as a complete sentence; the interface wraps the text automatically.
+msgid "Connect your Google, Microsoft, or Nextcloud accounts to sync files, contacts, and calendar."
+msgstr "Verbind je Google, Microsoft, of Nextcloud-accounts om te synchroniseren bestanden, contacten en agenda."
 
-#: assets/anduinos-oobe:2932
-msgid "or Nextcloud accounts to sync"
-msgstr "of Nextcloud-accounts om te synchroniseren"
 
-#: assets/anduinos-oobe:2933
-msgid "files, contacts, and calendar."
-msgstr "bestanden, contacten en agenda."
 
 #: assets/anduinos-oobe:2943
 msgid "Connect Accounts"
@@ -942,13 +921,10 @@ msgstr "Wij uploaden niet je zoekgeschiedenis."
 msgid "There are no pervasive advertisements."
 msgstr "Er zijn geen doordringende advertenties."
 
-#: assets/anduinos-oobe:3034
-msgid "In an era ruled by algorithms and surveillance,"
-msgstr "In een tijdperk dat wordt geregeerd door algoritmes en surveillance,"
+#. Translate as a complete sentence; the interface wraps the text automatically.
+msgid "In an era ruled by algorithms and surveillance, this is our firmest commitment to you."
+msgstr "In een tijdperk dat wordt geregeerd door algoritmes en surveillance, dit is onze sterkste toewijding aan jou."
 
-#: assets/anduinos-oobe:3034
-msgid "this is our firmest commitment to you."
-msgstr "dit is onze sterkste toewijding aan jou."
 
 #: assets/anduinos-oobe:3052
 msgid "✓ Zero telemetry — your activity is yours alone"
@@ -978,13 +954,10 @@ msgstr "✓ Open source — de code is van jou om te inspecteren en aan te passe
 msgid "Welcome to the AnduinOS Community"
 msgstr "Welkom bij de AnduinOS Community"
 
-#: assets/anduinos-oobe:3107
-msgid "Whether you're a Windows refugee seeking shelter,"
-msgstr "Of je nu een Windows-vluchteling bent die schuilplaats zoekt,"
+#. Translate as a complete sentence; the interface wraps the text automatically.
+msgid "Whether you're a Windows refugee seeking shelter, or a hardcore geek developer — you'll find your tribe here."
+msgstr "Of je nu een Windows-vluchteling bent die schuilplaats zoekt, ofwel een hardcore geek-ontwikkelaar — hier vind je jouw tribaal."
 
-#: assets/anduinos-oobe:3108
-msgid "or a hardcore geek developer — you'll find your tribe here."
-msgstr "ofwel een hardcore geek-ontwikkelaar — hier vind je jouw tribaal."
 
 #: assets/anduinos-oobe:3109
 msgid "Found a bug? Want a feature? Tell us anytime."
@@ -1813,3 +1786,25 @@ msgstr "Verken en configureer uw AnduinOS-systeem"
 #~ msgstr ""
 #~ "✓ Stuurprogramma succesvol geïnstalleerd!\n"
 #~ "Een herstart wordt aanbevolen om de wijzigingen toe te passen."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "Beeldschermschaal"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "Geen aanbeveling beschikbaar voor dit scherm."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Aanbevolen)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Hoofdscherm: %(display)s · Aanbevolen: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "De beeldschermschaal kon niet worden gewijzigd."

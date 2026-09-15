@@ -28,7 +28,7 @@ from .execution_steps import (
 from .language_support import InstallLanguagePacksStep
 from .live_cleanup import RemoveLivePackagesStep
 from .mirrors import SelectFastestAptMirrorStep
-from .network import DetectNetworkConnectivityStep
+from .network import DetectNetworkConnectivityStep, RecheckNetworkConnectivityStep
 from .model import Filesystem, Firmware, InstallPlan
 from .other_systems import CheckOtherDiskSystemsStep
 from .regional_config import ConfigureKeyboardStep, InstallInputMethodStep
@@ -93,6 +93,7 @@ class InstallerExecutor:
             EnterChrootStep(self.runner, target=self.target),
             RemoveLivePackagesStep(self.runner),
             ConfigureKeyboardStep(),
+            RecheckNetworkConnectivityStep(),
             SelectFastestAptMirrorStep(),
             # Establish the target-owned DKMS key before any package operation
             # can build kernel modules. Never let an upgrade inherit the

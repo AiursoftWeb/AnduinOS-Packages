@@ -11,6 +11,32 @@ from gi.repository import Adw, Gio, GLib
 
 
 class PerformanceWidgetsTests(unittest.TestCase):
+    def test_live_modes_preserve_independent_preferences_and_legacy_choice(self):
+        Adw.init()
+        window = SettingsWindow.__new__(SettingsWindow)
+        Adw.PreferencesWindow.__init__(window)
+        self.addCleanup(window.destroy)
+        window.settings = Gio.Settings.new("com.anduinos.voice-typing")
+        for key in ("live-transcription-mode", "live-transcription"):
+            window.settings.reset(key)
+            self.addCleanup(window.settings.reset, key)
+        window.settings.set_boolean("show-preview", True)
+        window.settings.set_boolean("noise-reduction", False)
+        row = window._build_live_row()
+        self.assertEqual(row.get_selected(), 0)
+        self.assertIsNone(window.settings.get_user_value("live-transcription-mode"))
+        window.settings.set_boolean("live-transcription", False)
+        self.assertEqual(row.get_selected(), 2)
+        self.assertIsNone(window.settings.get_user_value("live-transcription-mode"))
+        row.set_selected(1)
+        self.assertEqual(window.settings.get_string("live-transcription-mode"), "on")
+        row.set_selected(0)
+        self.assertEqual(window.settings.get_string("live-transcription-mode"), "auto")
+        window.settings.set_string("live-transcription-mode", "off")
+        self.assertEqual(row.get_selected(), 2)
+        self.assertTrue(window.settings.get_boolean("show-preview"))
+        self.assertFalse(window.settings.get_boolean("noise-reduction"))
+
     @classmethod
     def setUpClass(cls):
         if os.environ.get("ANDUINOS_GTK_SMOKE") != "1":
@@ -48,5 +74,4 @@ class PerformanceWidgetsTests(unittest.TestCase):
         self.assertEqual(window.threads_row.get_value(), 0)
         self.assertEqual(window.settings.get_string("model"), "small")
         self.assertEqual(window.settings.get_string("microphone"), "test-microphone")
-
 

@@ -23,6 +23,7 @@ from .work_queue import RecognitionQueue
 from .diagnostics import PerformanceHistory
 from .session_engine import SessionEngine
 from .tuning import AutomaticSelector, FULL_TUNING_SECONDS, QUICK_TUNING_SECONDS
+from .live_policy import live_mode, permits_preview
 
 
 INTROSPECTION_XML = f"""
@@ -386,11 +387,15 @@ class VoiceTypingService:
         self._set_state("finishing" if self.pending else "error", self.finish_message)
         return GLib.SOURCE_REMOVE
 
+    def _live_preview_enabled(self):
+        return permits_preview(live_mode(self.settings),
+                               getattr(self, "session_config", {}).get("preview_allowed", False))
+
     def _queue_partial(self, session_id: int | None, pcm: bytes) -> None:
         if (
             session_id != self.session_id
             or not self.active
-            or not self.settings.get_boolean("live-transcription")
+            or not self._live_preview_enabled()
         ):
             return
         generation = self._next_partial()
@@ -436,7 +441,7 @@ class VoiceTypingService:
             session_id == self.session_id
             and generation == current_generation
             and self.active
-            and self.settings.get_boolean("live-transcription")
+            and self._live_preview_enabled()
         )
 
     def _partial_is_valid(self, session_id: int, generation: int) -> bool:
@@ -446,7 +451,7 @@ class VoiceTypingService:
             session_id == self.session_id
             and generation > partial_floor
             and self.active
-            and self.settings.get_boolean("live-transcription")
+            and self._live_preview_enabled()
         )
 
     def _recognition_worker(self) -> None:
@@ -516,6 +521,7 @@ class VoiceTypingService:
                         # Drop stale libraries and the previous GPU failure memo.
                         session_engine.invalidate()
                     config.update(choice)
+                    config["preview_allowed"] = selector.preview_allowed is True
                     GLib.idle_add(self._preparation_state, session_id, "preparing")
                     fixture, _sample = selector.calibration(config["language"])
                     # Warm the selected persistent engine, not just the temporary
@@ -562,6 +568,9 @@ class VoiceTypingService:
                 if not self.settings.get_boolean("automatic-punctuation"):
                     text = remove_punctuation(text)
                 if kind == "partial":
+                    if completed_at - started > 0.4 and live_mode(self.settings) == "auto":
+                        config["preview_allowed"] = False
+                        logging.info("Automatic live preview paused: inference exceeded 400 ms")
                     GLib.idle_add(
                         self._partial_finished, session_id, generation, text
                     )

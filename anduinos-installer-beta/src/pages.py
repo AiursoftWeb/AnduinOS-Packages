@@ -91,6 +91,10 @@ from installer_core.storage_ui import (
     build_manual_storage_confirmation,
     build_storage_workflow,
 )
+from installer_core.validation import (
+    MINIMUM_DISK_BYTES,
+    RECOMMENDED_DISK_BYTES,
+)
 from installer_core.swap_policy import (
     calculate_swap_sizing,
     disk_swap_choices_mib,
@@ -222,7 +226,6 @@ def _probe_storage_workflow(*, development_mode=False):
     return build_storage_workflow(
         probe_storage_inventory(),
         probe_platform(),
-        live_device=_find_live_device(),
     )
 
 
@@ -2513,7 +2516,7 @@ def _disk_card_button(
 
     disk = choice.disk
     identity = disk.identity
-    available = not choice.is_live_media
+    available = choice.selectable
     button = Gtk.ToggleButton(sensitive=available)
     button.add_css_class("disk-card-button")
 
@@ -2616,13 +2619,17 @@ def _disk_card_button(
     body.append(layout)
 
     notices = []
+    if disk.external:
+        notices.append(_("External drive", lang))
+    if disk.read_only:
+        notices.append(_("Read-only", lang))
     if choice.coexistence.windows_detected:
         notices.append(_("Windows detected", lang))
     if choice.coexistence.bitlocker_detected:
         notices.append(_("BitLocker detected", lang))
     if choice.is_live_media:
         notices.append(_("Live USB — excluded", lang))
-    elif not choice.erase_available:
+    elif not choice.erase_available and not disk.read_only:
         notices.append(_("Too small", lang))
     if notices:
         notice = Gtk.Label(
@@ -2698,9 +2705,48 @@ def build_disk_page(shared, nav_view):
     loading.set_visible(False)
     content.append(loading)
 
+    disk_actions = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=12,
+        halign=Gtk.Align.CENTER,
+    )
+    content.append(disk_actions)
     rescan = Gtk.Button(label=_("Rescan Storage", lang))
-    rescan.set_halign(Gtk.Align.CENTER)
-    content.append(rescan)
+    disk_actions.append(rescan)
+
+    show_external = Gtk.Button(label=_("Show External Drives", lang))
+    show_external.set_visible(not shared.get("show_external_disks", False))
+    disk_actions.append(show_external)
+
+    def _confirm_external(confirmed, details=""):
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_("External drive", lang),
+            body=details + _(
+                "Disconnecting an external drive can cause installation failure or data loss. "
+                "Booting on another computer may require additional setup. "
+                "For portable use, consider AnduinOS ToGo.", lang
+            ),
+        )
+        dialog.add_response("cancel", _("Cancel", lang))
+        dialog.add_response("continue", _("Continue", lang))
+        warning_icon = Gtk.Image.new_from_icon_name("dialog-warning-symbolic")
+        warning_icon.set_pixel_size(48)
+        warning_icon.add_css_class("warning")
+        dialog.set_extra_child(warning_icon)
+        dialog.set_response_appearance("continue", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+        dialog.connect("response", lambda _dialog, response:
+                       confirmed() if response == "continue" and page.get_mapped() else None)
+        dialog.present()
+
+    def _show_external():
+        shared["show_external_disks"] = True
+        show_external.set_visible(False)
+        _rescan()
+
+    show_external.connect("clicked", lambda _button: _confirm_external(_show_external))
 
     next_button = None
     requests = LatestBackgroundRequest(GLib.idle_add)
@@ -2724,7 +2770,7 @@ def build_disk_page(shared, nav_view):
 
     def _on_disk_selected():
         choice = _selected_choice()
-        if choice is None or choice.is_live_media:
+        if choice is None or not choice.selectable:
             _set_next(False)
             return
         bind_storage_target(shared, choice)
@@ -2766,6 +2812,9 @@ def build_disk_page(shared, nav_view):
         assert workflow is not None
         first_button = None
         for choice in workflow.disks:
+            # Preserve the old default list, including USB SSDs reporting RM=0.
+            if choice.disk.removable and not shared.get("show_external_disks", False):
+                continue
             button = _disk_card_button(choice, lang)
             if first_button is None:
                 first_button = button
@@ -2841,9 +2890,23 @@ def build_disk_page(shared, nav_view):
     rescan.connect("clicked", lambda _button: _rescan())
 
     def on_next():
-        if _selected_choice() is None:
+        choice = _selected_choice()
+        if choice is None or not choice.selectable:
             return
-        nav_view.push(build_storage_strategy_page(shared, nav_view))
+
+        def proceed():
+            if _selected_choice() is choice:
+                nav_view.push(build_storage_strategy_page(shared, nav_view))
+
+        if choice.disk.external:
+            identity = choice.disk.identity
+            details = (
+                f"{identity.model}\n{_human_size(identity.expected_size_bytes)}\n"
+                f"{identity.path}\n{identity.serial or identity.stable_id}\n\n"
+            )
+            _confirm_external(proceed, details)
+        else:
+            proceed()
 
     nav = _nav_box(
         lang,
@@ -2876,6 +2939,8 @@ def build_disk_page(shared, nav_view):
 # ── automatic disk layout helpers ───────────────────────────────────────
 
 def _validated_swap_size(shared, swap_sizing):
+    if swap_sizing is None:
+        return None
     requested_swap = shared.get("swap_size_mib")
     if not isinstance(requested_swap, int):
         requested_swap = swap_sizing.swap_size_mib
@@ -3272,15 +3337,7 @@ def build_storage_strategy_page(shared, nav_view):
     ):
         strategy_buttons[StorageStrategy.ERASE_BTRFS].set_active(True)
     elif not erase_available:
-        _set_warning(
-            _(
-                "This disk is too small for whole-disk installation. "
-                "Advanced may continue only if suitable unallocated space "
-                "exists.",
-                lang,
-            ),
-            "advanced",
-        )
+        _set_warning(_("Too small", lang), "advanced")
     else:
         _set_warning(
             _(
@@ -3298,7 +3355,12 @@ def build_storage_strategy_page(shared, nav_view):
         if strategy is StorageStrategy.ADVANCED:
             nav_view.push(build_advanced_storage_page(shared, nav_view))
         else:
-            nav_view.push(build_disk_layout_page(shared, nav_view))
+            if not erase_available:
+                return
+            _confirm_storage_capacity(
+                page, nav_view, lang, int(shared.get("disk_size_bytes") or 0),
+                lambda: nav_view.push(build_disk_layout_page(shared, nav_view)),
+            )
 
     nav = _nav_box(
         lang,
@@ -3316,6 +3378,41 @@ def build_storage_strategy_page(shared, nav_view):
 
 
 # ── automatic disk layout ───────────────────────────────────────────────
+
+def storage_capacity_warning(size_bytes):
+    """Classify the applicable disk/root capacity; callers choose the scope."""
+    if size_bytes < MINIMUM_DISK_BYTES:
+        return "error"
+    if size_bytes < RECOMMENDED_DISK_BYTES:
+        return "warning"
+    return None
+
+
+def _confirm_storage_capacity(page, nav_view, lang, size_bytes, confirmed):
+    severity = storage_capacity_warning(size_bytes)
+    if severity is None:
+        confirmed()
+        return
+    dialog = Adw.MessageDialog(
+        transient_for=nav_view.get_root(),
+        heading=_("25 GiB minimum; 50 GiB recommended.", lang),
+        body=_("Below the minimum. Installation or updates may fail. Continue?", lang)
+        if severity == "error" else
+        _("Below the recommended capacity. Space may run out quickly. Continue?", lang),
+    )
+    icon = Gtk.Image.new_from_icon_name("dialog-warning-symbolic")
+    icon.set_pixel_size(48)
+    icon.add_css_class(severity)
+    dialog.set_extra_child(icon)
+    dialog.add_response("cancel", _("Cancel", lang))
+    dialog.add_response("continue", _("Continue", lang))
+    if severity == "error":
+        dialog.set_response_appearance("continue", Adw.ResponseAppearance.DESTRUCTIVE)
+    dialog.set_default_response("cancel")
+    dialog.set_close_response("cancel")
+    dialog.connect("response", lambda _dialog, response:
+                   confirmed() if response == "continue" and page.get_mapped() else None)
+    dialog.present()
 
 BTRFS_COMPRESSION_CHOICES = (
     (BtrfsCompression.NONE, N_("No compression"), N_("Store files without compression.")),
@@ -4309,12 +4406,21 @@ def build_advanced_storage_page(shared, nav_view):
         model=Gtk.StringList.new(_manual_role_choices(lang)),
         sensitive=False,
     )
+    role_dropdown.update_property(
+        [Gtk.AccessibleProperty.LABEL], [_('Role', lang)]
+    )
     role_dropdown.set_selected(1)
     extent_dropdown = Gtk.DropDown(hexpand=True, sensitive=False)
     start_input = Gtk.SpinButton.new_with_range(1, 1, 1)
+    start_input.update_property(
+        [Gtk.AccessibleProperty.LABEL], [_('Start (MiB)', lang)]
+    )
     start_input.set_numeric(True)
     start_input.set_sensitive(False)
     size_input = Gtk.SpinButton.new_with_range(1, 1, 1)
+    size_input.update_property(
+        [Gtk.AccessibleProperty.LABEL], [_('Size (MiB)', lang)]
+    )
     size_input.set_numeric(True)
     size_input.set_sensitive(False)
     fill_button = Gtk.Button(
@@ -4482,7 +4588,7 @@ def build_advanced_storage_page(shared, nav_view):
     def _minimum_partition_size(role):
         return {
             ManualPartitionRole.EFI_SYSTEM: 512,
-            ManualPartitionRole.ROOT: 20 * 1024,
+            ManualPartitionRole.ROOT: 1,
             ManualPartitionRole.SWAP: 1,
         }[role]
 
@@ -5249,7 +5355,7 @@ def build_advanced_storage_page(shared, nav_view):
             ):
                 missing.append(_("an ESP of at least 512 MiB", lang))
             if ManualPartitionRole.ROOT not in planned_roles:
-                missing.append(_("a Root partition of at least 20 GiB", lang))
+                missing.append(_("Root", lang))
             status.set_label(
                 _("Complete the plan: {requirements}.", lang).format(
                     requirements=", ".join(missing)
@@ -5489,8 +5595,16 @@ def build_advanced_storage_page(shared, nav_view):
             ManualStoragePreview,
         ):
             return
-        shared["_manual_storage_workflow_model"] = workflow
-        nav_view.push(build_user_page(shared, nav_view))
+        preview = shared["manual_storage_preview_model"]
+        root = next(item for item in preview.selection.new_partitions
+                    if item.role is ManualPartitionRole.ROOT)
+
+        def proceed():
+            if shared.get("manual_storage_preview_model") is preview:
+                shared["_manual_storage_workflow_model"] = workflow
+                nav_view.push(build_user_page(shared, nav_view))
+
+        _confirm_storage_capacity(page, nav_view, lang, root.size_mib * MIB, proceed)
 
     nav = _nav_box(
         lang,
@@ -5526,24 +5640,6 @@ def build_advanced_storage_page(shared, nav_view):
     return page
 
 
-def _find_live_device():
-    """Heuristic: find the block device backing /cdrom or /rofs."""
-    try:
-        import subprocess
-        # Check common live media mount points
-        for mp in ["/cdrom", "/run/live/medium"]:
-            out = subprocess.check_output(
-                ["findmnt", "-n", "-o", "SOURCE", mp],
-                text=True, timeout=3,
-            ).strip()
-            if out and out.startswith("/dev/"):
-                # Strip partition number to get the base device
-                return _base_device(out)
-    except Exception:
-        pass
-    return ""
-
-
 def _human_size(size_bytes: int) -> str:
     size = float(size_bytes)
     for unit in ("B", "KiB", "MiB", "GiB", "TiB"):
@@ -5551,16 +5647,6 @@ def _human_size(size_bytes: int) -> str:
             return f"{size:.1f} {unit}"
         size /= 1024
     return f"{size_bytes} B"
-
-
-def _base_device(dev_path: str) -> str:
-    """Strip partition suffix from a device path.  /dev/sda1 → /dev/sda"""
-    import re
-    m = re.match(r"(/dev/(?:nvme\d+n\d+|mmcblk\d+|sd[a-z]+|vd[a-z]+))\d+", dev_path)
-    if m:
-        return m.group(1)
-    # If it's already a base device, return it
-    return dev_path
 
 
 # ── page 7: User account ─────────────────────────────────────────────────
@@ -6812,6 +6898,20 @@ def build_summary_page(shared, nav_view):
 
 # ── page 10: Progress / Installation ─────────────────────────────────────
 
+def incomplete_feature_steps(outcomes):
+    """Report missing features, not a transient probe that later recovered."""
+    features = {
+        "install-language-packs", "install-input-method",
+        "install-multimedia-codecs", "refresh-package-indexes",
+        "upgrade-system", "ensure-snapshots-manager",
+        "install-third-party-drivers",
+    }
+    return tuple(
+        step for step, status in outcomes.items()
+        if step in features and status in ("warning", "failed")
+    )
+
+
 def ordered_progress_steps(plan: InstallPlan, step_titles):
     """Return localized progress rows in canonical executor order."""
 
@@ -6859,6 +6959,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             "Detect firmware and Secure Boot", lang
         ),
         "detect-network-connectivity": _(
+            "Detect Internet connectivity", lang
+        ),
+        "recheck-network-connectivity": _(
             "Detect Internet connectivity", lang
         ),
         "verify-target-disk": _("Verify target disk isolation", lang),
@@ -7244,6 +7347,19 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                 else:
                     result_label.set_label(_("Installation Complete", lang))
                     result_sub.set_label(_("Remove the installation media and restart your computer", lang))
+                incomplete = incomplete_feature_steps(step_outcomes)
+                if incomplete and not shared.get("development_mode"):
+                    heading = _(
+                        "System installed, but some features could not be completed",
+                        lang,
+                    )
+                    progress_status.set_label(heading)
+                    result_label.set_label(heading)
+                    result_icon.set_from_icon_name("dialog-warning-symbolic")
+                    result_sub.set_label(
+                        "\n".join("• " + step_titles[step] for step in incomplete)
+                        + "\n\n" + result_sub.get_label()
+                    )
                 secure_boot_notice.set_visible(
                     plan.platform.secure_boot is SecureBoot.ENABLED
                 )
@@ -7294,9 +7410,11 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "skipped": "–",
     }
     warning_count = {"value": 0}
+    step_outcomes = {}
 
     def update_step_status(step: str, status: str, message: str):
         def _update():
+            step_outcomes[step] = status
             widgets = step_rows.get(step)
             if widgets is None:
                 return False

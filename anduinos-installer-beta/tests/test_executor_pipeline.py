@@ -43,6 +43,7 @@ class ExecutorPipelineTests(unittest.TestCase):
             "copy-system",
             "migrate-wifi-connection",
             "configure-keyboard-layout",
+            "recheck-network-connectivity",
             "select-fastest-apt-mirror",
             "prepare-secure-boot",
             "install-language-packs",

@@ -3,10 +3,26 @@ import unittest
 from helpers import valid_plan
 from installer_core.executor import InstallerExecutor
 from installer_core.model import Filesystem
-from pages import ordered_progress_steps
+from pages import ordered_progress_steps, incomplete_feature_steps
 
 
 class ProgressPipelineTests(unittest.TestCase):
+    def test_completion_lists_missing_features_not_recovered_network(self):
+        self.assertEqual(incomplete_feature_steps({
+            "detect-network-connectivity": "warning",
+            "recheck-network-connectivity": "succeeded",
+            "install-input-method": "succeeded",
+            "install-multimedia-codecs": "warning",
+            "upgrade-system": "warning",
+            "install-third-party-drivers": "skipped",
+        }), ("install-multimedia-codecs", "upgrade-system"))
+        self.assertEqual(incomplete_feature_steps({
+            "detect-network-connectivity": "warning",
+            "recheck-network-connectivity": "succeeded",
+            "install-input-method": "succeeded",
+            "install-multimedia-codecs": "succeeded",
+        }), ())
+
     def test_progress_rows_follow_canonical_executor_order(self):
         plans = (
             valid_plan(

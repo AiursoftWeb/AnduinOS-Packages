@@ -111,16 +111,17 @@ Object.assign(controller, {
     _invoke: method => invoked.push(method),
 });
 controller._settings.get_string = () => 'auto';
-context._ = text => `translated:${text}`;
+context._ = text => text.includes('%d') ? 'localized countdown: %d' : `translated:${text}`;
 controller._setState('calibrating', 'countdown:quick:10');
 assert.equal(controller._uiState, 'listening');
 assert.equal(controller._statusLabel.text,
-    'translated:Optimizing recognition for first use: 10 seconds remaining (microphone off; click the microphone to cancel)');
+    'localized countdown: 10');
 assert.equal(statuses.at(-1), controller._statusLabel.text);
 assert.deepEqual(invoked, []);
 controller._setState('calibrating', 'countdown:full:60');
 assert.equal(controller._statusLabel.text,
-    'translated:Measuring recognition performance: 60 seconds remaining (microphone off; click the microphone to cancel)');
+    'localized countdown: 60');
+context._ = text => `translated:${text}`;
 controller._setState('preparing', 'Loading speech model…');
 assert.equal(controller._statusLabel.text, 'translated:Loading speech model…');
 controller._stopListening();
@@ -131,7 +132,7 @@ controller._finishPending = false;
 controller._setState('calibrating', 'late calibration notice');
 assert.equal(invoked.at(-1), 'Quit');
 assert.equal(controller._uiState, 'closed');
-console.log('Calibration shows a localized microphone-off notice and remains cancellable.');
+console.log('Calibration localizes the countdown and remains cancellable.');
 
 // Shell shutdown can arrive after chrome actors have already been disposed.
 controller._root = {hide() { throw new Error('actor already disposed'); }};

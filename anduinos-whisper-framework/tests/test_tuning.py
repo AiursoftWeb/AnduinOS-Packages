@@ -229,6 +229,25 @@ class TuningTests(unittest.TestCase):
 
 
 class AutomaticSelectorTests(unittest.TestCase):
+    def test_preview_decision_survives_cache_but_not_new_environment_or_manual_backend(self):
+        with tempfile.TemporaryDirectory() as directory:
+            cache = SelectionCache(Path(directory) / "performance.json")
+            selector = AutomaticSelector(ROOT / "data" / "benchmark", cache, self.tuner)
+            metric = {"backend": "gpu", "threads": 1, "phase": "warm", "status": "success",
+                      "audio_ms": 4000, "inference_ms": 50}
+            self.tuner.measurements = [metric, metric]
+            selector.select("unused", generation=0)
+            self.assertTrue(selector.preview_allowed)
+            restarted = AutomaticSelector(ROOT / "data" / "benchmark", cache, self.tuner)
+            restarted.select("unused", generation=0)
+            self.assertTrue(restarted.preview_allowed)
+            self.assertEqual(self.tuner.run.call_count, 1)
+            self.tuner.measurements = []
+            restarted.select("unused", generation=1)
+            self.assertFalse(restarted.preview_allowed)
+            restarted.select("unused", backend="cpu")
+            self.assertFalse(restarted.preview_allowed)
+
     def setUp(self):
         self.cache, self.tuner = Mock(), Mock()
         self.cache.load.return_value = None

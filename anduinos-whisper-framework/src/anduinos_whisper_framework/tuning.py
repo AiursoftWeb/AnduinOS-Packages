@@ -15,8 +15,9 @@ from .diagnostics import sanitize
 from .errors import RecognitionCancelled, RecognitionError
 from .resident import ResidentEngine
 from .calibration_audio import noisy
+from .live_policy import preview_capable
 
-POLICY_VERSION = 5
+POLICY_VERSION = 6
 QUICK_TUNING_SECONDS = 10
 FULL_TUNING_SECONDS = 60
 
@@ -89,6 +90,7 @@ class SelectionCache:
         ) / "anduinos-whisper" / "performance.json"
 
     def load(self, fingerprint):
+        self.measurements = []
         try:
             if self.path.stat().st_size > 65536:
                 return None
@@ -97,6 +99,8 @@ class SelectionCache:
                     record.get("policy") != POLICY_VERSION or
                     not valid_choice(record.get("selected"))):
                 return None
+            if isinstance(record.get("measurements"), list):
+                self.measurements = [sanitize(r) for r in record["measurements"] if isinstance(r, dict)]
             return {k: record["selected"][k] for k in ("backend", "threads")}
         except (OSError, ValueError, AttributeError):
             return None
@@ -161,7 +165,8 @@ class BackendTuner:
                         outputs.append(normalized(text))
                         actual_backends.append(engine.last_metrics.get("backend"))
                         metric = {**engine.last_metrics, "kind": "benchmark", "status": "success",
-                                  "phase": "warm" if iteration else "cold"}
+                                  "phase": "warm" if iteration else "cold",
+                                  "audio_ms": len(audio) / 32, "inference_ms": elapsed}
                         self.measurements.append(metric)
                         if iteration:
                             warm.append(elapsed)
@@ -252,6 +257,7 @@ class AutomaticSelector:
         # These are only this call's observations, never a replay of disk cache
         # or a previous attempt. Sanitize again before exposing them to callers.
         self.measurements = []
+        self.preview_allowed = False
         if backend not in {"auto", "cpu", "gpu"} or type(threads) is not int or not 0 <= threads <= 256:
             raise ValueError("Invalid backend override")
         if type(generation) is not int or not 0 <= generation <= 0xffffffff:
@@ -280,6 +286,7 @@ class AutomaticSelector:
                 selected = self.cache.load(fingerprint)
                 if selected:
                     self.status = "cached"
+                    self.preview_allowed = preview_capable(getattr(self.cache, "measurements", []), selected)
                     return selected
                 if fingerprint == self.failed_fingerprint:
                     self.status = "fallback"
@@ -303,6 +310,7 @@ class AutomaticSelector:
             except OSError:
                 pass
             self.status = "measured"
+            self.preview_allowed = preview_capable(self.measurements, selected)
             self.failed_fingerprint = None
             return selected
         except (OSError, ValueError, KeyError, StopIteration, wave.Error, RecognitionError):

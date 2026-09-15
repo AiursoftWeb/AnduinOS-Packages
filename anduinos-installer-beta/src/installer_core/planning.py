@@ -47,33 +47,42 @@ def build_plan(
     *,
     disk_binding: DiskTopologyBinding,
     inventory_digest: str,
+    storage_override: StorageSpec | None = None,
     physical_memory_probe=probe_physical_memory_bytes,
 ) -> InstallPlan:
     locale = str(choices.get("locale") or DEFAULT_LOCALE)
     language = language_for_locale(locale)
     if language is None:
         raise ValueError(f"Unsupported installer locale: {locale}")
-    swap_sizing = calculate_swap_sizing(
-        physical_memory_probe(),
-        disk.expected_size_bytes,
-    )
-    requested_swap = choices.get("swap_size_mib")
-    swap_size_mib = (
-        swap_sizing.swap_size_mib
-        if requested_swap is None
-        else requested_swap
-    )
-    validate_disk_swap_selection(swap_size_mib, swap_sizing)
-    plan = InstallPlan(
-        schema_version=SCHEMA_VERSION,
-        source=SourceSpec(),
-        storage=StorageSpec(
+    if storage_override is None:
+        swap_sizing = calculate_swap_sizing(
+            physical_memory_probe(),
+            disk.expected_size_bytes,
+        )
+        requested_swap = choices.get("swap_size_mib")
+        swap_size_mib = (
+            swap_sizing.swap_size_mib
+            if requested_swap is None
+            else requested_swap
+        )
+        validate_disk_swap_selection(swap_size_mib, swap_sizing)
+        storage = StorageSpec(
             mode=InstallMode.ERASE_DISK,
             disk=disk,
             filesystem=Filesystem(str(choices.get("filesystem") or "btrfs")),
             swap_size_mib=swap_size_mib,
-            btrfs_compression=BtrfsCompression(choices.get("btrfs_compression", "balanced")),
-        ),
+            btrfs_compression=BtrfsCompression(
+                choices.get("btrfs_compression", "balanced")
+            ),
+        )
+    else:
+        if storage_override.disk != disk:
+            raise ValueError("Storage override does not match the selected disk")
+        storage = storage_override
+    plan = InstallPlan(
+        schema_version=SCHEMA_VERSION,
+        source=SourceSpec(),
+        storage=storage,
         platform=PlatformSpec(
             architecture=platform.architecture,
             firmware=platform.firmware,
@@ -124,12 +133,13 @@ def build_plan(
             )
         ),
     )
-    graph = build_erase_disk_storage_graph(
-        plan,
-        disk_binding,
-        inventory_digest,
-    )
-    plan = replace(plan, storage=replace(plan.storage, graph=graph))
+    if storage_override is None:
+        graph = build_erase_disk_storage_graph(
+            plan,
+            disk_binding,
+            inventory_digest,
+        )
+        plan = replace(plan, storage=replace(plan.storage, graph=graph))
     validate_plan(plan)
     return plan
 

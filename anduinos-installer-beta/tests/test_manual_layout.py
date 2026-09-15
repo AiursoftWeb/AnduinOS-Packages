@@ -124,6 +124,36 @@ def selection(
 
 
 class ManualLayoutTests(unittest.TestCase):
+    def test_explicit_gpt_replacement_accepts_a_blank_unlabelled_disk(self):
+        disk = replace(
+            manual_disk(),
+            partition_table="",
+            partition_table_uuid="",
+            partitions=(),
+            free_extents=(),
+            geometry_probe_error="unrecognised disk label",
+        )
+        chosen = selection(
+            reinitialize=True,
+            reused_esp="",
+            new_partitions=(
+                ManualPartitionRequest(ManualPartitionRole.EFI_SYSTEM, 1, 1025),
+                ManualPartitionRequest(ManualPartitionRole.ROOT, 1025, 20 * 1024),
+                ManualPartitionRequest(ManualPartitionRole.SWAP, 20 * 1024, 23 * 1024),
+            ),
+        )
+
+        validate_manual_selection(disk, chosen)
+
+    def test_incomplete_geometry_remains_blocked_when_preserving_the_table(self):
+        disk = replace(
+            manual_disk(),
+            geometry_probe_error="parted and lsblk disagree",
+        )
+
+        with self.assertRaisesRegex(ManualLayoutError, "geometry"):
+            validate_manual_selection(disk, selection())
+
     def test_reuses_esp_and_accepts_arbitrary_mib_partition_sizes(self):
         chosen = selection()
         validate_manual_selection(manual_disk(), chosen)
@@ -231,7 +261,7 @@ class ManualLayoutTests(unittest.TestCase):
             ),
         )
 
-    def test_missing_roles_overlap_and_small_root_fail_closed(self):
+    def test_missing_roles_overlap_and_zero_root_fail_closed(self):
         cases = (
             (
                 selection(new_partitions=()),
@@ -249,10 +279,10 @@ class ManualLayoutTests(unittest.TestCase):
             (
                 selection(
                     new_partitions=(
-                        ManualPartitionRequest(ManualPartitionRole.ROOT, 80 * 1024, 90 * 1024),
+                        ManualPartitionRequest(ManualPartitionRole.ROOT, 80 * 1024, 80 * 1024),
                     )
                 ),
-                "at least 20 GiB",
+                "geometry",
             ),
         )
         for chosen, message in cases:

@@ -842,9 +842,17 @@ msgstr "Jalur lanjutan ini mempertahankan partisi yang ada tetapi mengubah tabel
 msgid "This disk contains an active mapper, array or other nested block-device topology that guided coexistence does not support."
 msgstr "Disk ini berisi mapper aktif, array, atau topologi perangkat blok bersarang lainnya yang tidak didukung oleh koeksistensi terpandu."
 
-#: src/pages.py:3277
-msgid "This disk is too small for whole-disk installation. Advanced may continue only if suitable unallocated space exists."
-msgstr "Disk ini terlalu kecil untuk instalasi seluruh-disk. Lanjutan hanya dapat dilanjutkan jika ada ruang belum dialokasikan yang sesuai."
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "Minimum 25 GiB; disarankan 50 GiB."
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr "Di bawah minimum. Instalasi atau pembaruan dapat gagal. Lanjutkan?"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr "Di bawah kapasitas yang disarankan. Ruang dapat cepat habis. Lanjutkan?"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1642,9 +1650,6 @@ msgstr "{size} di {start} MiB"
 msgid "an ESP of at least 512 MiB"
 msgstr "ESP minimal 512 MiB"
 
-#: src/pages.py:5207
-msgid "a Root partition of at least 20 GiB"
-msgstr "partisi Root minimal 20 GiB"
 
 #: src/pages.py:5209
 #, python-brace-format
@@ -1828,6 +1833,10 @@ msgid "Install AnduinOS to your computer"
 msgstr "Instal AnduinOS ke komputer Anda"
 
 #: src/pages.py
+msgid "System installed, but some features could not be completed"
+msgstr "Sistem terpasang, tetapi beberapa fitur belum dapat diselesaikan"
+
+#: src/pages.py
 msgid "Btrfs file compression"
 msgstr "Kompresi berkas Btrfs"
 
@@ -1862,3 +1871,19 @@ msgstr "Seimbangkan kecepatan kompresi dan penggunaan ruang disk."
 #: src/pages.py
 msgid "Compress more to save space, using more CPU when writing."
 msgstr "Kompresi lebih tinggi untuk menghemat ruang, dengan penggunaan CPU lebih besar saat menulis."
+
+#: src/pages.py
+msgid "External drive"
+msgstr "Drive eksternal"
+
+#: src/pages.py
+msgid "Read-only"
+msgstr "Hanya baca"
+
+#: src/pages.py
+msgid "Show External Drives"
+msgstr "Tampilkan Drive Eksternal"
+
+#: src/pages.py
+msgid "Disconnecting an external drive can cause installation failure or data loss. Booting on another computer may require additional setup. For portable use, consider AnduinOS ToGo."
+msgstr "Melepas drive eksternal dapat menyebabkan kegagalan instalasi atau kehilangan data. Boot pada komputer lain mungkin memerlukan pengaturan tambahan. Untuk penggunaan portabel, pertimbangkan AnduinOS ToGo."

@@ -66,6 +66,22 @@ def manual_plan(
 
 
 class ManualStorageGraphTests(unittest.TestCase):
+    def test_manual_graph_allows_subminimum_disk_and_positive_root(self):
+        original = manual_disk()
+        disk = replace(original, identity=replace(
+            original.identity, expected_size_bytes=23 * 1024**3),
+            partitions=(), free_extents=())
+        for root_mib in (1, 10 * 1024, 21 * 1024):
+            with self.subTest(root_mib=root_mib):
+                chosen = replace(selection(
+                    reinitialize=True, reused_esp="", new_partitions=(
+                        ManualPartitionRequest(ManualPartitionRole.EFI_SYSTEM, 1, 1025),
+                        ManualPartitionRequest(ManualPartitionRole.ROOT, 1025, 1025 + root_mib),
+                    )), disk_size_bytes=disk.identity.expected_size_bytes)
+                plan, inventory = manual_plan(chosen=chosen, disk=disk)
+                validate_plan(plan)
+                validate_manual_storage_graph(plan, inventory)
+
     def test_xfs_and_f2fs_are_canonical_single_root_graphs(self):
         for filesystem in (Filesystem.XFS, Filesystem.F2FS):
             with self.subTest(filesystem=filesystem.value):
