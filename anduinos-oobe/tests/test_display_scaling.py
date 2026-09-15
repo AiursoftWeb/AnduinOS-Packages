@@ -152,10 +152,8 @@ class ScalingWidgetTests(unittest.TestCase):
         module_spec = importlib.util.spec_from_loader(loader.name, loader)
         oobe = importlib.util.module_from_spec(module_spec)
         loader.exec_module(oobe)
-        oobe.Gtk.init_check()
-        # GTK can report initialized even when no display connection exists.
-        # libadwaita initialization needs a real display and can otherwise crash.
-        if oobe.Gdk.Display.get_default() is None:
+        # GTK 4 can initialize successfully without opening a display.
+        if not oobe.Gtk.init_check() or oobe.Gdk.Display.get_default() is None:
             self.skipTest('GTK display unavailable')
         oobe.Adw.init()
         value = info(state())
