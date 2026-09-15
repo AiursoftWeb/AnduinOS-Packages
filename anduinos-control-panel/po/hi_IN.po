@@ -804,6 +804,110 @@ msgstr "AnduinOS सिस्टम सेटिंग्स खोजें औ
 msgid "settings;control;system;hardware;drivers;accounts;backup;"
 msgstr "सेटिंग्स;कंट्रोल;सिस्टम;हार्डवेयर;ड्राइवर;खाते;बैकअप;"
 
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "At the end of a line, press Right Arrow or End to accept a suggestion. Press Enter to run the command."
+msgstr "पंक्ति के अंत में सुझाव स्वीकार करने के लिए दायाँ तीर या End दबाएँ। कमांड चलाने के लिए Enter दबाएँ।"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Bash Command Predictions"
+msgstr "Bash कमांड पूर्वानुमान"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Changes take effect in newly opened Bash terminals. Saved settings override legacy environment variables."
+msgstr "बदलाव नए खोले गए Bash टर्मिनलों में लागू होते हैं। सहेजी गई सेटिंग पुराने पर्यावरण चरों से ऊपर प्राथमिकता लेती हैं।"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear"
+msgstr "साफ़ करें"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear saved learning"
+msgstr "सहेजा गया सीखने का डेटा साफ़ करें"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear saved learning?"
+msgstr "सहेजा गया सीखने का डेटा साफ़ करें?"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Configure your preferences below, then install to use predictions."
+msgstr "नीचे अपनी पसंद सेट करें, फिर पूर्वानुमान उपयोग करने के लिए इंस्टॉल करें।"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Could not update prediction settings: {error}"
+msgstr "पूर्वानुमान सेटिंग अपडेट नहीं की जा सकीं: {error}"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Default settings restored. Reopen Bash terminals to apply them."
+msgstr "डिफ़ॉल्ट सेटिंग बहाल हुईं। लागू करने के लिए Bash टर्मिनल फिर खोलें।"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Does not delete learned data."
+msgstr "सीखा हुआ डेटा नहीं हटाता।"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Enable command predictions"
+msgstr "कमांड पूर्वानुमान चालू करें"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Installation complete. Open a new Bash terminal to use predictions."
+msgstr "इंस्टॉलेशन पूरा हुआ। पूर्वानुमान उपयोग करने के लिए नया Bash टर्मिनल खोलें।"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Installation failed: {error}"
+msgstr "इंस्टॉलेशन विफल: {error}"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Keeps Bash history and your settings. Reopen existing terminals to discard their in-memory learning."
+msgstr "Bash इतिहास और सेटिंग रखता है। मेमोरी में सीखा डेटा हटाने के लिए मौजूदा टर्मिनल फिर खोलें।"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Learn from command history"
+msgstr "कमांड इतिहास से सीखें"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Only prediction learning is removed. Your Bash command history is kept."
+msgstr "केवल पूर्वानुमान का सीखा डेटा हटेगा। आपका Bash कमांड इतिहास बना रहेगा।"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Package installation could not be confirmed. Please retry."
+msgstr "पैकेज इंस्टॉलेशन की पुष्टि नहीं हुई। फिर कोशिश करें।"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Predict commands locally from history and current context"
+msgstr "इतिहास और वर्तमान संदर्भ से स्थानीय कमांड पूर्वानुमान"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Predict commands locally from your history and current context. No model download or on-device LLM is needed."
+msgstr "आपके इतिहास और वर्तमान संदर्भ से स्थानीय रूप से कमांड का अनुमान लगाता है। मॉडल डाउनलोड या डिवाइस पर LLM की आवश्यकता नहीं है।"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Remember my usage habits"
+msgstr "मेरी उपयोग की आदतें याद रखें"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Restore Defaults"
+msgstr "डिफ़ॉल्ट बहाल करें"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Restore default settings"
+msgstr "डिफ़ॉल्ट सेटिंग बहाल करें"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Save learned usage habits on this computer for predictions after closing the terminal. When off, Bash command history is still used."
+msgstr "टर्मिनल बंद करने के बाद भी अनुमान लगाने के लिए सीखी गई आदतें इस कंप्यूटर पर सहेजें। बंद होने पर भी Bash कमांड इतिहास का उपयोग होगा।"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Saved learning cleared. Older terminals cannot save it again; reopen them to resume learning persistence."
+msgstr "सहेजा गया सीखने का डेटा साफ़ हुआ। पुराने टर्मिनल इसे फिर नहीं सहेज सकते; सहेजना फिर शुरू करने के लिए उन्हें दोबारा खोलें।"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Show suggestions while typing in Bash."
+msgstr "Bash में टाइप करते समय सुझाव दिखाएँ।"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Use Bash history, frequency, directories, and command sequences to personalize suggestions."
+msgstr "Bash इतिहास, आवृत्ति, निर्देशिकाओं और कमांड क्रम से सुझाव व्यक्तिगत बनाएँ।"
+
 #~ msgid "Change boot menu settings"
 #~ msgstr "बूट मेनू सेटिंग्स बदलें"
 

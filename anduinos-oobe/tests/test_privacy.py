@@ -20,6 +20,21 @@ POLICY = pathlib.Path(__file__).parents[1] / "data" / "com.anduinos.oobe.policy"
 
 
 class PrivacyTests(unittest.TestCase):
+    def test_shared_control_panel_settings_roundtrip(self):
+        import importlib.util
+        # Both package manifests ship the same implementation privately.
+        spec = importlib.util.spec_from_file_location('panel_config', SCRIPT.parents[2] / 'lib/bash_prediction_settings.py')
+        panel_config = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(panel_config)
+        with tempfile.TemporaryDirectory() as directory:
+            home = pathlib.Path(directory)
+            bashrc = str(home / '.bashrc')
+            panel_config.save_settings(dict(enabled=False, history=False, persist=False), home)
+            self.assertFalse(oobe.bash_command_predictions_enabled(bashrc))
+            oobe.set_bash_command_predictions_enabled(True, bashrc)
+            self.assertEqual(panel_config.read_settings(home), dict(enabled=True, history=False, persist=False))
+            self.assertFalse((home / '.bashrc').exists())
+
     def completed(self, stdout="", returncode=0):
         return subprocess.CompletedProcess([], returncode, stdout, "")
 
@@ -101,7 +116,7 @@ class PrivacyTests(unittest.TestCase):
             )
             self.assertFalse(bashrc.exists())
 
-    def test_disabling_bash_predictions_appends_one_managed_block(self):
+    def test_disabling_bash_predictions_uses_shared_config(self):
         with tempfile.TemporaryDirectory() as root:
             bashrc = pathlib.Path(root) / ".bashrc"
             bashrc.write_text("export PATH=\"$HOME/bin:$PATH\"\n")
@@ -112,14 +127,14 @@ class PrivacyTests(unittest.TestCase):
             self.assertFalse(oobe.bash_command_predictions_enabled(bashrc))
             first = bashrc.read_text()
             self.assertIn("export PATH=", first)
-            self.assertEqual(first.count(oobe.BASH_GUESS_BEGIN), 1)
-            self.assertIn("export ANDUINOS_GUESS_COMMAND=0", first)
+            self.assertNotIn("ANDUINOS_GUESS_COMMAND", first)
+            self.assertFalse(oobe._prediction_settings.read_settings(root)["enabled"])
             self.assertFalse(
                 oobe.set_bash_command_predictions_enabled(False, bashrc)
             )
             self.assertEqual(bashrc.read_text(), first)
 
-    def test_enabling_removes_only_the_oobe_managed_block(self):
+    def test_enabling_keeps_bashrc_unchanged(self):
         with tempfile.TemporaryDirectory() as root:
             bashrc = pathlib.Path(root) / ".bashrc"
             bashrc.write_text("alias keep-me='printf safe'\n")
@@ -130,7 +145,7 @@ class PrivacyTests(unittest.TestCase):
                 oobe.set_bash_command_predictions_enabled(True, bashrc)
             )
             self.assertTrue(oobe.bash_command_predictions_enabled(bashrc))
-            self.assertEqual(bashrc.read_text(), "alias keep-me='printf safe'\n\n")
+            self.assertEqual(bashrc.read_text(), "alias keep-me='printf safe'\n")
             self.assertEqual(bashrc.stat().st_mode & 0o777, 0o640)
 
     def test_manual_disable_is_respected_and_can_be_explicitly_overridden(self):
@@ -143,7 +158,8 @@ class PrivacyTests(unittest.TestCase):
             self.assertTrue(oobe.bash_command_predictions_enabled(bashrc))
             contents = bashrc.read_text()
             self.assertIn("export ANDUINOS_GUESS_COMMAND='0'", contents)
-            self.assertIn("export ANDUINOS_GUESS_COMMAND=1", contents)
+            self.assertNotIn("export ANDUINOS_GUESS_COMMAND=1", contents)
+            self.assertTrue(oobe._prediction_settings.read_settings(root)["enabled"])
 
     def test_bashrc_symlink_is_preserved(self):
         with tempfile.TemporaryDirectory() as root:
@@ -154,7 +170,8 @@ class PrivacyTests(unittest.TestCase):
 
             oobe.set_bash_command_predictions_enabled(False, bashrc)
             self.assertTrue(bashrc.is_symlink())
-            self.assertIn("ANDUINOS_GUESS_COMMAND=0", target.read_text())
+            self.assertEqual(target.read_text(), "# shared\n")
+            self.assertFalse(oobe._prediction_settings.read_settings(root)["enabled"])
 
     def test_failed_atomic_replace_preserves_the_original_bashrc(self):
         with tempfile.TemporaryDirectory() as root:

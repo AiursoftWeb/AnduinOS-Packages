@@ -42,6 +42,13 @@ except ModuleNotFoundError:
         draw_preview,
     )
 
+# Shared data-only settings backend, independent of the optional Bash package.
+_prediction_lib = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'lib'))
+if not os.path.isfile(os.path.join(_prediction_lib, 'bash_prediction_settings.py')):
+    _prediction_lib = '/usr/lib/anduinos-oobe'
+sys.path.insert(0, _prediction_lib)
+import bash_prediction_settings as _prediction_settings
+
 OOBE_LAYOUT_STYLES = {
     'modern': 'eleven',
     'classic': 'classic',
@@ -79,19 +86,6 @@ MDNS_HELPER = '/usr/libexec/anduinos-oobe/network-service-helper'
 DRIVER_CENTER_EXECUTABLE = '/usr/bin/anduinos-driver-center'
 SNAPSHOTS_MANAGER_PACKAGE = 'anduinos-btrfs-snapshots-manager'
 SNAPSHOTS_MANAGER_EXECUTABLE = '/usr/bin/anduinos-btrfs-snapshots-manager'
-BASH_GUESS_BEGIN = '# >>> AnduinOS Bash command predictions >>>'
-BASH_GUESS_END = '# <<< AnduinOS Bash command predictions <<<'
-BASH_GUESS_ASSIGNMENT = 'export ANDUINOS_GUESS_COMMAND={}'
-BASH_GUESS_BLOCK_RE = re.compile(
-    rf'(?m)^{re.escape(BASH_GUESS_BEGIN)}\n'
-    rf'{re.escape("export ANDUINOS_GUESS_COMMAND=")}[01]\n'
-    rf'^{re.escape(BASH_GUESS_END)}(?:\n|$)'
-)
-BASH_GUESS_ASSIGNMENT_RE = re.compile(
-    r'(?m)^\s*(?:export\s+)?ANDUINOS_GUESS_COMMAND\s*=\s*'
-    r'(["\']?)([01])\1\s*(?:#.*)?$'
-)
-
 # ── Icon helper ────────────────────────────────────────────────────
 _ICON_BASES = [
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -180,96 +174,18 @@ def set_mdns_enabled(enabled):
     )
 
 
-def _read_bashrc(bashrc_path=None):
-    """Return (resolved path, text, mode) without following special files."""
-    path = os.path.expanduser(bashrc_path or '~/.bashrc')
-    target = os.path.realpath(path)
-    try:
-        metadata = os.stat(target)
-    except FileNotFoundError:
-        return target, '', 0o644
-    if not stat.S_ISREG(metadata.st_mode):
-        raise OSError('Bash configuration is not a regular file')
-    if metadata.st_size > 4 * 1024 * 1024:
-        raise OSError('Bash configuration is unexpectedly large')
-    with open(target, 'r', encoding='utf-8', errors='surrogateescape') as stream:
-        return target, stream.read(), stat.S_IMODE(metadata.st_mode)
-
-
 def bash_command_predictions_enabled(bashrc_path=None):
-    """Return the effective value of simple Bash prediction assignments."""
+    home = os.path.dirname(os.path.abspath(bashrc_path)) if bashrc_path else None
     try:
-        _target, contents, _mode = _read_bashrc(bashrc_path)
+        return _prediction_settings.read_settings(home, bashrc_path)['enabled']
     except OSError:
         return True
-    assignments = list(BASH_GUESS_ASSIGNMENT_RE.finditer(contents))
-    return not assignments or assignments[-1].group(2) != '0'
-
-
-def _append_bash_guess_block(contents, enabled):
-    if contents and not contents.endswith('\n'):
-        contents += '\n'
-    if contents and not contents.endswith('\n\n'):
-        contents += '\n'
-    return (
-        contents
-        + BASH_GUESS_BEGIN + '\n'
-        + BASH_GUESS_ASSIGNMENT.format('1' if enabled else '0') + '\n'
-        + BASH_GUESS_END + '\n'
-    )
 
 
 def set_bash_command_predictions_enabled(enabled, bashrc_path=None):
-    """Atomically update only OOBE's marked Bash prediction configuration."""
-    target, contents, mode = _read_bashrc(bashrc_path)
-    updated = BASH_GUESS_BLOCK_RE.sub('', contents)
+    home = os.path.dirname(os.path.abspath(bashrc_path)) if bashrc_path else None
+    return _prediction_settings.set_enabled(enabled, home, bashrc_path)
 
-    # Enabled is the package default, so no managed setting is necessary unless
-    # it must explicitly override a simple manual `...=0` earlier in .bashrc.
-    effective = list(BASH_GUESS_ASSIGNMENT_RE.finditer(updated))
-    manual_disabled = effective and effective[-1].group(2) == '0'
-    if not enabled or manual_disabled:
-        updated = _append_bash_guess_block(updated, enabled)
-    if updated == contents:
-        return False
-
-    parent = os.path.dirname(target)
-    if not os.path.isdir(parent):
-        raise OSError('Bash configuration directory does not exist')
-    descriptor, temporary = tempfile.mkstemp(
-        prefix='.bashrc.anduinos-', dir=parent
-    )
-    try:
-        os.fchmod(descriptor, mode)
-        with os.fdopen(
-            descriptor, 'w', encoding='utf-8', errors='surrogateescape'
-        ) as stream:
-            descriptor = -1
-            stream.write(updated)
-            stream.flush()
-            os.fsync(stream.fileno())
-        os.replace(temporary, target)
-        try:
-            directory = os.open(parent, os.O_RDONLY | os.O_DIRECTORY)
-        except OSError:
-            directory = -1
-        if directory >= 0:
-            try:
-                # Some network filesystems do not support directory fsync.
-                try:
-                    os.fsync(directory)
-                except OSError:
-                    pass
-            finally:
-                os.close(directory)
-    finally:
-        if descriptor >= 0:
-            os.close(descriptor)
-        try:
-            os.unlink(temporary)
-        except FileNotFoundError:
-            pass
-    return True
 
 def _read_os_pretty_name():
     """Read PRETTY_NAME from /etc/os-release, fallback to NAME=."""

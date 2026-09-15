@@ -787,6 +787,110 @@ msgstr "AnduinOS のシステム設定を検索して管理します。"
 msgid "settings;control;system;hardware;drivers;accounts;backup;"
 msgstr "設定;コントロール;システム;ハードウェア;ドライバー;アカウント;バックアップ;"
 
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "At the end of a line, press Right Arrow or End to accept a suggestion. Press Enter to run the command."
+msgstr "行末で右矢印または End を押すと候補を採用します。Enter を押すとコマンドを実行します。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Bash Command Predictions"
+msgstr "Bash コマンド予測"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Changes take effect in newly opened Bash terminals. Saved settings override legacy environment variables."
+msgstr "変更は新しく開いた Bash 端末で有効になります。保存した設定は従来の環境変数より優先されます。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear"
+msgstr "消去"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear saved learning"
+msgstr "保存した学習データを消去"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear saved learning?"
+msgstr "保存した学習データを消去しますか？"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Configure your preferences below, then install to use predictions."
+msgstr "以下で設定してからインストールすると、予測を利用できます。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Could not update prediction settings: {error}"
+msgstr "予測設定を更新できませんでした: {error}"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Default settings restored. Reopen Bash terminals to apply them."
+msgstr "既定の設定に戻しました。Bash 端末を開き直すと適用されます。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Does not delete learned data."
+msgstr "学習データは削除しません。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Enable command predictions"
+msgstr "コマンド予測を有効にする"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Installation complete. Open a new Bash terminal to use predictions."
+msgstr "インストールが完了しました。新しい Bash 端末を開くと予測を利用できます。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Installation failed: {error}"
+msgstr "インストールに失敗しました: {error}"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Keeps Bash history and your settings. Reopen existing terminals to discard their in-memory learning."
+msgstr "Bash の履歴と設定は保持します。既存の端末を開き直すと、メモリ内の学習データが破棄されます。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Learn from command history"
+msgstr "コマンド履歴から学習する"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Only prediction learning is removed. Your Bash command history is kept."
+msgstr "予測の学習データだけを削除します。Bash のコマンド履歴は保持します。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Package installation could not be confirmed. Please retry."
+msgstr "パッケージのインストールを確認できませんでした。再試行してください。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Predict commands locally from history and current context"
+msgstr "履歴と現在の状況からコマンドをローカルで予測"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Predict commands locally from your history and current context. No model download or on-device LLM is needed."
+msgstr "履歴と現在の状況からコマンドをローカルで予測します。モデルのダウンロードやデバイス上の LLM は不要です。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Remember my usage habits"
+msgstr "使用習慣を記憶する"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Restore Defaults"
+msgstr "既定値に戻す"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Restore default settings"
+msgstr "既定の設定に戻す"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Save learned usage habits on this computer for predictions after closing the terminal. When off, Bash command history is still used."
+msgstr "学習した使用習慣をこのコンピューターに保存し、端末を閉じた後も予測に利用します。オフの場合も Bash のコマンド履歴は参照されます。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Saved learning cleared. Older terminals cannot save it again; reopen them to resume learning persistence."
+msgstr "学習データを消去しました。以前の端末から再保存されることはありません。保存を再開するには端末を開き直してください。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Show suggestions while typing in Bash."
+msgstr "Bash で入力中に候補を表示します。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Use Bash history, frequency, directories, and command sequences to personalize suggestions."
+msgstr "Bash の履歴、頻度、ディレクトリ、コマンドの順序から候補を個人向けに調整します。"
+
 #~ msgid "Change boot menu settings"
 #~ msgstr "ブートメニュー設定を変更"
 

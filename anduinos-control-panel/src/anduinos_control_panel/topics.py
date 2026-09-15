@@ -176,6 +176,15 @@ def topics() -> tuple[ControlPanelTopic, ...]:
             command=("anduinos-yubikey-manager",),
         ),
         _topic(
+            "ai.bash-predictions",
+            "ai",
+            N_("Bash Command Predictions"),
+            N_("Predict commands locally from history and current context"),
+            ("bash", "terminal", "prediction", "autocomplete", "shell", "命令预测", "补全"),
+            "utilities-terminal",
+            handler="bash-predictions",
+        ),
+        _topic(
             "accessibility.voice-typing",
             "ai",
             N_("Voice Typing"),

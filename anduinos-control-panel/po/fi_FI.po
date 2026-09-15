@@ -812,6 +812,110 @@ msgid "settings;control;system;hardware;drivers;accounts;backup;"
 msgstr ""
 "asetukset;ohjaus;järjestelmä;laitteisto;ohjaimet;tilit;varmuuskopiointi;"
 
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "At the end of a line, press Right Arrow or End to accept a suggestion. Press Enter to run the command."
+msgstr "Hyväksy ehdotus rivin lopussa oikealla nuolella tai End-näppäimellä. Suorita komento Enterillä."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Bash Command Predictions"
+msgstr "Bash-komentoennusteet"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Changes take effect in newly opened Bash terminals. Saved settings override legacy environment variables."
+msgstr "Muutokset koskevat uusia Bash-päätteitä. Tallennetut asetukset ohittavat aiemmat ympäristömuuttujat."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear"
+msgstr "Tyhjennä"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear saved learning"
+msgstr "Tyhjennä tallennetut oppimistiedot"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear saved learning?"
+msgstr "Tyhjennetäänkö tallennetut oppimistiedot?"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Configure your preferences below, then install to use predictions."
+msgstr "Määritä asetukset alla ja asenna sitten ennusteiden käyttämiseksi."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Could not update prediction settings: {error}"
+msgstr "Ennusteasetuksia ei voitu päivittää: {error}"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Default settings restored. Reopen Bash terminals to apply them."
+msgstr "Oletusasetukset palautettu. Ota ne käyttöön avaamalla Bash-päätteet uudelleen."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Does not delete learned data."
+msgstr "Ei poista opittuja tietoja."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Enable command predictions"
+msgstr "Ota komentoennusteet käyttöön"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Installation complete. Open a new Bash terminal to use predictions."
+msgstr "Asennus valmis. Avaa uusi Bash-pääte käyttääksesi ennusteita."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Installation failed: {error}"
+msgstr "Asennus epäonnistui: {error}"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Keeps Bash history and your settings. Reopen existing terminals to discard their in-memory learning."
+msgstr "Säilyttää Bash-historian ja asetukset. Avaa nykyiset päätteet uudelleen poistaaksesi niiden muistissa olevat oppimistiedot."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Learn from command history"
+msgstr "Opi komentohistoriasta"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Only prediction learning is removed. Your Bash command history is kept."
+msgstr "Vain ennusteiden oppimistiedot poistetaan. Bash-komentohistoriasi säilytetään."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Package installation could not be confirmed. Please retry."
+msgstr "Paketin asennusta ei voitu vahvistaa. Yritä uudelleen."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Predict commands locally from history and current context"
+msgstr "Ennusta komentoja paikallisesti historiasta ja nykyisestä asiayhteydestä"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Predict commands locally from your history and current context. No model download or on-device LLM is needed."
+msgstr "Ennustaa komentoja paikallisesti historiastasi ja nykyisestä asiayhteydestä. Ei vaadi mallin lataamista tai paikallista LLM:ää."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Remember my usage habits"
+msgstr "Muista käyttötapani"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Restore Defaults"
+msgstr "Palauta oletukset"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Restore default settings"
+msgstr "Palauta oletusasetukset"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Save learned usage habits on this computer for predictions after closing the terminal. When off, Bash command history is still used."
+msgstr "Tallenna opitut käyttötavat tälle tietokoneelle ennustuksia varten myös päätteen sulkemisen jälkeen. Bashin komentohistoriaa käytetään edelleen, kun asetus on pois käytöstä."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Saved learning cleared. Older terminals cannot save it again; reopen them to resume learning persistence."
+msgstr "Tallennetut oppimistiedot tyhjennetty. Vanhat päätteet eivät voi tallentaa niitä uudelleen; avaa ne uudelleen jatkaaksesi tallennusta."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Show suggestions while typing in Bash."
+msgstr "Näytä ehdotuksia kirjoittaessasi Bashissa."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Use Bash history, frequency, directories, and command sequences to personalize suggestions."
+msgstr "Mukauta ehdotuksia Bash-historian, käyttötiheyden, hakemistojen ja komentojonojen avulla."
+
 #~ msgid "Change boot menu settings"
 #~ msgstr "Muuta käynnistysvalikon asetuksia"
 

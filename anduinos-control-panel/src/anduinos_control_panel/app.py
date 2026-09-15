@@ -80,6 +80,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         self.set_size_request(760, 560)
         self._category_children: list[Gtk.Widget] = []
         self._ai_window: Adw.Window | None = None
+        self._prediction_window: Adw.Window | None = None
         self._flatseal_window: Adw.Window | None = None
         self._bottles_window: Adw.Window | None = None
         self._voice_install_window: Adw.Window | None = None
@@ -313,6 +314,10 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                         _("Installed") if why_installed else _("Not installed"),
                     ),
                     action(
+                        "ai.bash-predictions",
+                        _("Installed") if package_installed("anduinos-bash-guess-command") else _("Not installed"),
+                    ),
+                    action(
                         "accessibility.voice-typing",
                         (
                             _("Configure microphone, language, shortcut, and training")
@@ -389,6 +394,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             "boot-settings": self._show_boot_settings,
             "voice-typing": self._open_voice_typing,
             "flatseal": self._open_flatseal,
+            "bash-predictions": self._open_bash_predictions,
             "on-device-ai": self._show_ai_settings,
             "bottles": self._open_bottles,
             "backup": self._open_deja_dup,
@@ -1346,6 +1352,16 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         self._run_streaming_package_change(
             "flatseal", buffer, output, completed, failed
         )
+
+    def _open_bash_predictions(self) -> None:
+        from .prediction_settings import PredictionSettingsWindow
+        if self._prediction_window is None:
+            self._prediction_window = PredictionSettingsWindow(self)
+            def closed(_window):
+                self._prediction_window = None
+                return False
+            self._prediction_window.connect("close-request", closed)
+        self._prediction_window.present()
 
     def _open_voice_typing(self) -> None:
         if package_installed(VOICE_TYPING_PACKAGE):

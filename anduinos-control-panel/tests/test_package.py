@@ -13,6 +13,14 @@ from anduinos_control_panel import app
 
 
 class PackageTests(unittest.TestCase):
+    def test_prediction_package_is_optional_and_shared_settings_are_shipped(self):
+        package = ET.parse(ROOT / 'anduinos-control-panel.aosproj')
+        self.assertIsNotNone(package.find(".//Recommend[@Include='anduinos-bash-guess-command']"))
+        self.assertIsNone(package.find(".//Dependency[@Include='anduinos-bash-guess-command']"))
+        self.assertIsNotNone(package.find(".//IncludeFile[@Include='../lib/bash_prediction_settings.py']"))
+        topic = app.get_topic('ai.bash-predictions')
+        self.assertEqual(topic.handler, 'bash-predictions')
+
     def test_python_sources_compile_without_cache_files(self):
         for source in [
             ROOT / "src/anduinos-control-panel",

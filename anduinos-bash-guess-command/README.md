@@ -63,8 +63,8 @@ installed or launched at runtime.
 
 Existing Bash history provides immediate personal ranking across equivalent
 `sudo` wrappers. Successful commands are then learned in the current shell with
-frequency, recency and current-directory weights; users may explicitly opt in
-to carrying that learning across sessions. A bounded adjacent-command graph
+frequency, recency and current-directory weights. Learned habits are saved
+locally by default for use after the terminal closes; users can disable this. A bounded adjacent-command graph
 additionally learns that, in a given directory, one successful command usually
 follows another. Obvious credential-bearing forms are excluded from learning,
 failed commands do not train transitions, and completion never executes text by
@@ -109,28 +109,54 @@ Enter always executes exactly the visible line. Tab completion is never
 registered or modified by this package and remains owned by Bash and the
 system's existing completion scripts.
 
-The feature is enabled by Bash's standard completion loader. These variables
+Control Panel → AI Stack → Bash Command Predictions provides three switches:
+enable predictions, learn from command usage, and remember learning across
+terminal sessions. The optional package can also be installed from that page.
+OOBE uses the same enable setting. Preferences are stored privately in
+`${XDG_CONFIG_HOME:-~/.config}/anduinos-bash-guess-command/settings.conf`:
+
+```ini
+enabled=1
+history=1
+persist=1
+```
+
+Explicit saved values override legacy environment variables. Missing values
+retain legacy behavior. Disabling history learning also disables persistence.
+The loader reads this bounded data file once per new terminal, without executing
+it; changing preferences requires reopening Bash terminals.
+
+Clear saved learning removes the extra prediction logs, leaving Bash history
+and preferences intact. A generation marker prevents older engines from writing
+back cleared data; reopen those terminals to discard in-memory learning and
+resume persistence. Bash history can be imported again when learning is enabled.
+Restore defaults only resets the three switches, retaining learned data.
+Neither operation requires administrator privileges.
+
+The feature is enabled by Bash's standard completion loader. These legacy variables
 may be set anywhere in `~/.bashrc`; setting the master switch to `0` in an
-active shell takes effect at the next prompt or redisplay:
+active shell takes effect at the next prompt or redisplay if no saved enable
+setting overrides it:
 
 ```bash
 export ANDUINOS_GUESS_COMMAND=0       # disable predictions and their helper
 export ANDUINOS_GUESS_ENGINE=0        # disable ghost text
 export ANDUINOS_GUESS_HISTORY=0       # disable history import and learning
-export ANDUINOS_GUESS_PERSIST=1       # opt in to extra cross-session state
+export ANDUINOS_GUESS_PERSIST=0       # do not retain additional learning
 ```
 
 Removing the package removes the loader, native frontend and engine. The next
 Bash session is stock Readline again; no user dotfile is modified.
 
 Learning uses no database and no daemon-wide service. Each interactive Bash owns
-its small engine process. By default the engine imports only the history file
-selected by the current Bash and keeps new learning in memory for that shell;
-it does not create another command log. Setting `ANDUINOS_GUESS_PERSIST=1`
-explicitly enables private mode-0600 `history-v1` and `transitions-v1` logs under
+its small engine process. By default the engine imports the history file
+selected by the current Bash and remembers learned usage locally after the
+terminal closes. Private mode-0600 `history-v1` and `transitions-v1` logs live under
 `${XDG_STATE_HOME:-~/.local/state}/anduinos-bash-guess-command/`. Each log
 compacts at 1 MiB and each in-memory index is capped at 2,000 entries. Setting
 `ANDUINOS_GUESS_HISTORY=0` disables import, session learning and persistence.
+`ANDUINOS_GUESS_PERSIST=0` keeps new learning in memory only. Existing explicit
+settings remain unchanged by upgrades; Restore Defaults enables all three switches.
 
 The optional grammar-update workflow fetches only fixed, checksummed Carapace
 release archives. Package builds, installation and normal shell startup do not

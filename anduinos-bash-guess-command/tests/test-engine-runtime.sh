@@ -170,12 +170,11 @@ IFS= read -r -u "$engine_out" response || fail 'daemon closed before quit acknow
 [[ $response == A ]] || fail 'daemon quit protocol failed'
 wait "$QUIETD_PROCESS_PID"
 
-# Learning is useful in memory, but a stock installation must not create a
-# second command log unless the user explicitly opts in.
+# Explicitly disabling saved learning must prevent additional command logs.
 privacy_state="$TEST_ROOT/privacy-state"
 : >"$TEST_ROOT/bash-history"
 coproc PRIVACY_PROCESS {
-    env -u ANDUINOS_GUESS_PERSIST \
+    env ANDUINOS_GUESS_PERSIST=0 \
         PATH="$TEST_ROOT/path-bin:$PATH" \
         HOME="$TEST_ROOT/home" \
         HISTFILE="$TEST_ROOT/bash-history" \
@@ -193,6 +192,6 @@ IFS= read -r -u "$privacy_out" response || fail 'privacy daemon closed before qu
 [[ $response == A ]] || fail 'privacy daemon quit protocol failed'
 wait "$PRIVACY_PROCESS_PID"
 [[ ! -e $privacy_state/anduinos-bash-guess-command ]] ||
-    fail 'default operation created an extra command-history directory'
+    fail 'disabled persistence created an extra command-history directory'
 
 printf 'Quiet engine runtime checks passed: pipe p95=%sms.\n' "$p95"

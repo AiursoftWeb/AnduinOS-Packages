@@ -820,6 +820,110 @@ msgid "settings;control;system;hardware;drivers;accounts;backup;"
 msgstr ""
 "ρυθμίσεις;έλεγχος;σύστημα;υλικό;οδηγοί;λογαριασμοί;αντίγραφα ασφαλείας;"
 
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "At the end of a line, press Right Arrow or End to accept a suggestion. Press Enter to run the command."
+msgstr "Στο τέλος της γραμμής, πατήστε Δεξί βέλος ή End για αποδοχή πρότασης. Πατήστε Enter για εκτέλεση της εντολής."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Bash Command Predictions"
+msgstr "Προβλέψεις εντολών Bash"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Changes take effect in newly opened Bash terminals. Saved settings override legacy environment variables."
+msgstr "Οι αλλαγές ισχύουν σε νέα τερματικά Bash. Οι αποθηκευμένες ρυθμίσεις υπερισχύουν των προηγούμενων μεταβλητών περιβάλλοντος."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear"
+msgstr "Εκκαθάριση"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear saved learning"
+msgstr "Εκκαθάριση αποθηκευμένης μάθησης"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear saved learning?"
+msgstr "Εκκαθάριση αποθηκευμένης μάθησης;"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Configure your preferences below, then install to use predictions."
+msgstr "Ορίστε προτιμήσεις παρακάτω και εγκαταστήστε για χρήση προβλέψεων."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Could not update prediction settings: {error}"
+msgstr "Αδυναμία ενημέρωσης ρυθμίσεων πρόβλεψης: {error}"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Default settings restored. Reopen Bash terminals to apply them."
+msgstr "Έγινε επαναφορά προεπιλογών. Ανοίξτε ξανά τα τερματικά Bash για εφαρμογή."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Does not delete learned data."
+msgstr "Δεν διαγράφει δεδομένα μάθησης."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Enable command predictions"
+msgstr "Ενεργοποίηση προβλέψεων εντολών"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Installation complete. Open a new Bash terminal to use predictions."
+msgstr "Η εγκατάσταση ολοκληρώθηκε. Ανοίξτε νέο τερματικό Bash για χρήση προβλέψεων."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Installation failed: {error}"
+msgstr "Αποτυχία εγκατάστασης: {error}"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Keeps Bash history and your settings. Reopen existing terminals to discard their in-memory learning."
+msgstr "Διατηρεί ιστορικό Bash και ρυθμίσεις. Ανοίξτε ξανά τα υπάρχοντα τερματικά για απόρριψη της μάθησης στη μνήμη τους."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Learn from command history"
+msgstr "Εκμάθηση από το ιστορικό εντολών"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Only prediction learning is removed. Your Bash command history is kept."
+msgstr "Αφαιρείται μόνο η μάθηση προβλέψεων. Το ιστορικό εντολών Bash διατηρείται."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Package installation could not be confirmed. Please retry."
+msgstr "Δεν επιβεβαιώθηκε η εγκατάσταση του πακέτου. Δοκιμάστε ξανά."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Predict commands locally from history and current context"
+msgstr "Τοπική πρόβλεψη εντολών από ιστορικό και τρέχον πλαίσιο"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Predict commands locally from your history and current context. No model download or on-device LLM is needed."
+msgstr "Προβλέπει εντολές τοπικά από το ιστορικό και το τρέχον πλαίσιο. Δεν απαιτεί λήψη μοντέλου ή τοπικό LLM."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Remember my usage habits"
+msgstr "Απομνημόνευση των συνηθειών χρήσης μου"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Restore Defaults"
+msgstr "Επαναφορά προεπιλογών"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Restore default settings"
+msgstr "Επαναφορά προεπιλεγμένων ρυθμίσεων"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Save learned usage habits on this computer for predictions after closing the terminal. When off, Bash command history is still used."
+msgstr "Αποθήκευση των συνηθειών χρήσης σε αυτόν τον υπολογιστή για προβλέψεις μετά το κλείσιμο του τερματικού. Όταν είναι ανενεργό, το ιστορικό εντολών Bash εξακολουθεί να χρησιμοποιείται."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Saved learning cleared. Older terminals cannot save it again; reopen them to resume learning persistence."
+msgstr "Η αποθηκευμένη μάθηση εκκαθαρίστηκε. Τα παλιά τερματικά δεν μπορούν να την αποθηκεύσουν ξανά· ανοίξτε τα ξανά για συνέχιση αποθήκευσης."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Show suggestions while typing in Bash."
+msgstr "Εμφάνιση προτάσεων κατά την πληκτρολόγηση στο Bash."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Use Bash history, frequency, directories, and command sequences to personalize suggestions."
+msgstr "Εξατομίκευση προτάσεων με ιστορικό Bash, συχνότητα, καταλόγους και ακολουθίες εντολών."
+
 #~ msgid "Change boot menu settings"
 #~ msgstr "Αλλαγή ρυθμίσεων μενού εκκίνησης"
 

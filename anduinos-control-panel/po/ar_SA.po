@@ -794,6 +794,110 @@ msgstr "البحث في إعدادات نظام AnduinOS وإدارتها"
 msgid "settings;control;system;hardware;drivers;accounts;backup;"
 msgstr "إعدادات;تحكم;نظام;أجهزة;برامج تشغيل;حسابات;نسخ احتياطي;"
 
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "At the end of a line, press Right Arrow or End to accept a suggestion. Press Enter to run the command."
+msgstr "في نهاية السطر، اضغط السهم الأيمن أو End لقبول الاقتراح. اضغط Enter لتنفيذ الأمر."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Bash Command Predictions"
+msgstr "توقعات أوامر Bash"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Changes take effect in newly opened Bash terminals. Saved settings override legacy environment variables."
+msgstr "تسري التغييرات في طرفيات Bash الجديدة. تتقدم الإعدادات المحفوظة على متغيرات البيئة القديمة."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear"
+msgstr "مسح"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear saved learning"
+msgstr "مسح بيانات التعلم المحفوظة"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear saved learning?"
+msgstr "مسح بيانات التعلم المحفوظة؟"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Configure your preferences below, then install to use predictions."
+msgstr "اضبط تفضيلاتك أدناه، ثم ثبّت المكوّن لاستخدام التوقعات."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Could not update prediction settings: {error}"
+msgstr "تعذر تحديث إعدادات التوقعات: {error}"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Default settings restored. Reopen Bash terminals to apply them."
+msgstr "تمت استعادة الإعدادات الافتراضية. أعد فتح طرفيات Bash لتطبيقها."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Does not delete learned data."
+msgstr "لا يحذف البيانات المتعلمة."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Enable command predictions"
+msgstr "تفعيل توقعات الأوامر"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Installation complete. Open a new Bash terminal to use predictions."
+msgstr "اكتمل التثبيت. افتح طرفية Bash جديدة لاستخدام التوقعات."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Installation failed: {error}"
+msgstr "فشل التثبيت: {error}"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Keeps Bash history and your settings. Reopen existing terminals to discard their in-memory learning."
+msgstr "يحتفظ بسجل Bash وإعداداتك. أعد فتح الطرفيات الحالية لتجاهل بيانات التعلم في ذاكرتها."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Learn from command history"
+msgstr "التعلم من سجل الأوامر"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Only prediction learning is removed. Your Bash command history is kept."
+msgstr "تُحذف بيانات تعلم التوقعات فقط. يُحتفظ بسجل أوامر Bash."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Package installation could not be confirmed. Please retry."
+msgstr "تعذر تأكيد تثبيت الحزمة. حاول مجددًا."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Predict commands locally from history and current context"
+msgstr "توقع الأوامر محليًا من السجل والسياق الحالي"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Predict commands locally from your history and current context. No model download or on-device LLM is needed."
+msgstr "يتوقع الأوامر محليًا من سجلك والسياق الحالي. لا يحتاج لتنزيل نموذج أو نموذج لغوي كبير على الجهاز."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Remember my usage habits"
+msgstr "تذكر عادات استخدامي"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Restore Defaults"
+msgstr "استعادة الافتراضيات"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Restore default settings"
+msgstr "استعادة الإعدادات الافتراضية"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Save learned usage habits on this computer for predictions after closing the terminal. When off, Bash command history is still used."
+msgstr "احفظ عادات الاستخدام المكتسبة على هذا الجهاز للتنبؤ بعد إغلاق الطرفية. عند التعطيل، يظل سجل أوامر Bash مستخدمًا."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Saved learning cleared. Older terminals cannot save it again; reopen them to resume learning persistence."
+msgstr "مُسحت بيانات التعلم المحفوظة. لا تستطيع الطرفيات القديمة حفظها مجددًا؛ أعد فتحها لاستئناف حفظ التعلم."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Show suggestions while typing in Bash."
+msgstr "عرض الاقتراحات أثناء الكتابة في Bash."
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Use Bash history, frequency, directories, and command sequences to personalize suggestions."
+msgstr "تخصيص الاقتراحات باستخدام سجل Bash والتكرار والمجلدات وتسلسل الأوامر."
+
 #~ msgid "Change boot menu settings"
 #~ msgstr "تغيير إعدادات قائمة الإقلاع"
 

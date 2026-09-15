@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-control-panel</PackageName>
-    <PackageVersion>2.0.2-22+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-25+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Control Panel — a category-based home for system, hardware, application, account, appearance, and recovery settings.</PackageDescription>
     <Section>utils</Section>
@@ -39,15 +39,18 @@
     <Dependency Include="anduinos-yubikey-manager" />
     <Suggest Include="anduinos-btrfs-snapshots-manager" />
     <Recommend Include="network-manager-gnome" />
+    <Recommend Include="anduinos-bash-guess-command" />
     <Recommend Include="simple-scan" />
     <Suggest Include="anduinos-whisper-gtk" />
   </ItemGroup>
 
   <ItemGroup>
+    <IncludeFile Include="../lib/bash_prediction_settings.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/_prediction_config.py" />
     <IncludeScript Include="src/anduinos-control-panel" Target="/usr/bin/anduinos-control-panel" />
     <IncludeFile Include="src/anduinos_control_panel/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/__init__.py" />
     <IncludeFile Include="src/anduinos_control_panel/app.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/app.py" />
     <IncludeFile Include="src/anduinos_control_panel/model.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/model.py" />
+    <IncludeFile Include="src/anduinos_control_panel/prediction_settings.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/prediction_settings.py" />
     <IncludeFile Include="src/anduinos_control_panel/topics.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/topics.py" />
     <IncludeFile Include="src/anduinos_control_panel/search_provider.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/search_provider.py" />
     <IncludeScript Include="src/anduinos-control-panel-search-provider" Target="/usr/libexec/anduinos-control-panel/search-provider" />

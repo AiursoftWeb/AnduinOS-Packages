@@ -47,9 +47,16 @@ extern char **environ;
 static int start_daemon(void);
 static void suspend_predictions(void);
 
+/* GUI configuration is snapshotted by the loader. No per-key file reads. */
+static const char *prediction_setting(const char *configured, const char *legacy)
+{
+  const char *value = get_string_value(configured);
+  return value != NULL ? value : get_string_value(legacy);
+}
+
 static int predictions_enabled(void)
 {
-  const char *setting = get_string_value("ANDUINOS_GUESS_COMMAND");
+  const char *setting = prediction_setting("_ANDUINOS_GUESS_CONFIG_COMMAND", "ANDUINOS_GUESS_COMMAND");
   return setting == NULL || strcmp(setting, "0") != 0;
 }
 
@@ -283,8 +290,8 @@ static int start_daemon(void)
     binary = "/usr/lib/anduinos-bash-guess-command/anduinos-quietd";
   shell_path = get_string_value("PATH");
   shell_histfile = configured_histfile;
-  history_setting = get_string_value("ANDUINOS_GUESS_HISTORY");
-  persist_setting = get_string_value("ANDUINOS_GUESS_PERSIST");
+  history_setting = prediction_setting("_ANDUINOS_GUESS_CONFIG_HISTORY", "ANDUINOS_GUESS_HISTORY");
+  persist_setting = prediction_setting("_ANDUINOS_GUESS_CONFIG_PERSIST", "ANDUINOS_GUESS_PERSIST");
   child_environment = daemon_environment(
       shell_path, shell_histfile, history_setting, persist_setting,
       owned_environment, sizeof(owned_environment) / sizeof(owned_environment[0]));

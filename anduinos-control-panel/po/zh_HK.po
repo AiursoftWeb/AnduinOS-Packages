@@ -785,6 +785,110 @@ msgstr "尋找及管理 AnduinOS 系統設定"
 msgid "settings;control;system;hardware;drivers;accounts;backup;"
 msgstr "設定;控制;系統;硬件;驅動程式;帳戶;備份;"
 
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "At the end of a line, press Right Arrow or End to accept a suggestion. Press Enter to run the command."
+msgstr "在行尾按右方向鍵或 End 接受建議，按 Enter 執行命令。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Bash Command Predictions"
+msgstr "Bash 命令預測"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Changes take effect in newly opened Bash terminals. Saved settings override legacy environment variables."
+msgstr "設定對新開啟的 Bash 終端機生效。已儲存的設定優先於舊環境變數。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear"
+msgstr "清除"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear saved learning"
+msgstr "清除已儲存的學習資料"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Clear saved learning?"
+msgstr "清除已儲存的學習資料？"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Configure your preferences below, then install to use predictions."
+msgstr "先在下方設定偏好，再安裝以使用命令預測。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Could not update prediction settings: {error}"
+msgstr "無法更新預測設定：{error}"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Default settings restored. Reopen Bash terminals to apply them."
+msgstr "已還原預設設定。請重新開啟 Bash 終端機使其生效。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Does not delete learned data."
+msgstr "不會刪除學習資料。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Enable command predictions"
+msgstr "啟用命令預測"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Installation complete. Open a new Bash terminal to use predictions."
+msgstr "安裝完成。開啟新的 Bash 終端機即可使用預測。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Installation failed: {error}"
+msgstr "安裝失敗：{error}"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Keeps Bash history and your settings. Reopen existing terminals to discard their in-memory learning."
+msgstr "保留 Bash 歷史和設定。重新開啟現有終端機以捨棄記憶體中的學習資料。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Learn from command history"
+msgstr "根據命令歷史學習"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Only prediction learning is removed. Your Bash command history is kept."
+msgstr "僅刪除預測器的學習資料，保留 Bash 命令歷史。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Package installation could not be confirmed. Please retry."
+msgstr "無法確認套件是否安裝成功，請重試。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Predict commands locally from history and current context"
+msgstr "根據歷史和目前情境，在本機預測命令"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Predict commands locally from your history and current context. No model download or on-device LLM is needed."
+msgstr "根據命令歷史和目前情境，在本機預測後續輸入。無需下載模型，也不依賴裝置端 LLM。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Remember my usage habits"
+msgstr "記住使用習慣"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Restore Defaults"
+msgstr "還原預設值"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Restore default settings"
+msgstr "還原預設設定"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Save learned usage habits on this computer for predictions after closing the terminal. When off, Bash command history is still used."
+msgstr "將學到的使用習慣儲存在本機，關閉終端機後仍可用於預測。關閉後仍會參考 Bash 命令歷史。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Saved learning cleared. Older terminals cannot save it again; reopen them to resume learning persistence."
+msgstr "已清除學習資料。舊終端機無法將其重新儲存；重新開啟終端機可恢復學習資料儲存。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Show suggestions while typing in Bash."
+msgstr "在 Bash 中輸入時顯示建議。"
+
+#: src/anduinos_control_panel/prediction_settings.py
+msgid "Use Bash history, frequency, directories, and command sequences to personalize suggestions."
+msgstr "結合 Bash 歷史、頻率、目錄和命令順序提供個人化建議。"
+
 #~ msgid "Change boot menu settings"
 #~ msgstr "更改開機選單設定"
 

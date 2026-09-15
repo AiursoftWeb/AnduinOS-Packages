@@ -31,6 +31,7 @@ bash "$ROOT/tests/test-readline-lifecycle.sh"
 cargo test --locked --manifest-path "$ROOT/engine/Cargo.toml"
 cargo build --locked --manifest-path "$ROOT/engine/Cargo.toml" --bin anduinos-quietd
 export ANDUINOS_QUIETD="$CARGO_TARGET_DIR/debug/anduinos-quietd"
+python3 "$ROOT/tests/test-settings.py"
 bash "$ROOT/tests/test-engine-runtime.sh"
 bash "$ROOT/tests/test-interactive.sh"
 

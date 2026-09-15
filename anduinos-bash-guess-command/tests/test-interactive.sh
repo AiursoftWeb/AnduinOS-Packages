@@ -151,7 +151,9 @@ wait_ready() {
             sleep 0.01
         done
         grep -Fq 'query=git stat suggestion=us ' "$probe" && return 0
-        sleep 0.02
+        # A timed-out probe restarts the helper. Allow cold initialization
+        # before probing again, otherwise rapid retries can starve startup.
+        sleep 0.2
     done
     fail "native frontend did not become ready"
 }
