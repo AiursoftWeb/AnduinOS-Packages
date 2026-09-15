@@ -1804,3 +1804,25 @@ msgstr "Explorez et configurez votre système AnduinOS"
 #~ msgstr ""
 #~ "✓ Pilote installé avec succès !\n"
 #~ "Un redémarrage est recommandé pour appliquer les modifications."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "Mise à l’échelle"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "Aucune recommandation disponible pour cet écran."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Recommandé)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Écran principal : %(display)s · Recommandation : %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "Impossible de modifier la mise à l’échelle."

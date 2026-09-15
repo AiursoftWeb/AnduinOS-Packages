@@ -1774,3 +1774,25 @@ msgstr "Досліджуйте та налаштовуйте вашу систе
 #~ msgstr ""
 #~ "✓ Драйвер успішно встановлено!\n"
 #~ "Рекомендується перезавантажити систему для застосування змін."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "Масштаб екрана"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "Для цього екрана немає рекомендацій."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Рекомендовано)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Основний екран: %(display)s · Рекомендовано: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "Не вдалося змінити масштаб екрана."

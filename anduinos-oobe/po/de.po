@@ -1804,3 +1804,25 @@ msgstr "Erkunden und konfigurieren Sie Ihr AnduinOS-System"
 #~ msgstr ""
 #~ "✓ Treiber erfolgreich installiert!\n"
 #~ "Ein Neustart wird empfohlen, um die Änderungen zu übernehmen."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "Anzeigeskalierung"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "Für diesen Bildschirm ist keine Empfehlung verfügbar."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Empfohlen)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Hauptbildschirm: %(display)s · Empfohlen: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "Die Anzeigeskalierung konnte nicht geändert werden."

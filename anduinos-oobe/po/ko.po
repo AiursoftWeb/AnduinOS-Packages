@@ -1702,3 +1702,25 @@ msgstr "AnduinOS 시스템을 탐색하고 구성하세요"
 #~ msgstr ""
 #~ "✓ 드라이버가 성공적으로 설치되었습니다!\n"
 #~ "변경 사항을 적용하려면 재부팅을 권장합니다."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "디스플레이 배율"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "이 디스플레이에 대한 권장 값이 없습니다."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (권장)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "주 디스플레이: %(display)s · 권장: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "디스플레이 배율을 변경할 수 없습니다."

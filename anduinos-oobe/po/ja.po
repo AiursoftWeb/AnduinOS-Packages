@@ -1705,3 +1705,25 @@ msgstr "AnduinOS システムを探索して設定する"
 #~ msgstr ""
 #~ "✓ ドライバーが正常にインストールされました！\n"
 #~ "変更を適用するには再起動を推奨します。"
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "ディスプレイの拡大率"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "このディスプレイの推奨値はありません。"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (推奨)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "メインディスプレイ：%(display)s · 推奨：%(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "ディスプレイの拡大率を変更できませんでした。"

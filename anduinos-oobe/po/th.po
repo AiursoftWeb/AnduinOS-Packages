@@ -1749,3 +1749,25 @@ msgstr "สำรวจและกำหนดค่าระบบ AnduinOS �
 #~ msgstr ""
 #~ "✓ ติดตั้งไดรเวอร์เรียบร้อยแล้ว!\n"
 #~ "แนะนำให้รีสตาร์ทเพื่อใช้การเปลี่ยนแปลง"
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "มาตราส่วนหน้าจอ"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "ไม่มีคำแนะนำสำหรับหน้าจอนี้"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (แนะนำ)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "หน้าจอหลัก: %(display)s · แนะนำ: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "ไม่สามารถเปลี่ยนมาตราส่วนหน้าจอได้"

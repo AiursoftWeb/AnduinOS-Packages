@@ -1781,3 +1781,25 @@ msgstr "Khám phá và định cấu hình hệ thống AnduinOS của bạn"
 #~ msgstr ""
 #~ "✓ Cài đặt trình điều khiển thành công!\n"
 #~ "Khởi động lại hệ thống được khuyến nghị để áp dụng các thay đổi."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "Tỷ lệ hiển thị"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "Không có đề xuất cho màn hình này."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Đề xuất)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Màn hình chính: %(display)s · Đề xuất: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "Không thể thay đổi tỷ lệ hiển thị."

@@ -1776,3 +1776,25 @@ msgstr "Jelajahi dan konfigurasi sistem AnduinOS Anda"
 #~ msgstr ""
 #~ "✓ Driver berhasil dipasang!\n"
 #~ "Disarankan untuk me-reboot sistem agar perubahan diterapkan."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "Skala Tampilan"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "Rekomendasi tidak tersedia untuk layar ini."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Disarankan)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Layar utama: %(display)s · Disarankan: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "Tidak dapat mengubah skala tampilan."

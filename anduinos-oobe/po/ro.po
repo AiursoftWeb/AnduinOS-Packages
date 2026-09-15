@@ -1786,3 +1786,25 @@ msgstr "Exploră și configurează sistemul tău AnduinOS"
 #~ msgstr ""
 #~ "✓ Driver instalat cu succes!\n"
 #~ "Se recomandă repornirea pentru a aplica modificările."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "Scalarea ecranului"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "Nu există o recomandare pentru acest ecran."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Recomandat)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Ecran principal: %(display)s · Recomandat: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "Nu s-a putut modifica scalarea ecranului."

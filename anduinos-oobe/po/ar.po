@@ -1738,3 +1738,25 @@ msgstr "استكشف واعدل نظام AnduinOS الخاص بك"
 #~ msgstr ""
 #~ "✓ تم تثبيت برنامج التشغيل بنجاح!\n"
 #~ "يُنصح بإعادة التشغيل لتطبيق التغييرات."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "تحجيم العرض"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "لا تتوفر توصية لهذه الشاشة."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (موصى به)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "الشاشة الرئيسية: %(display)s · الموصى به: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "تعذّر تغيير تحجيم العرض."

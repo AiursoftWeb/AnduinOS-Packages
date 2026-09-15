@@ -1717,3 +1717,25 @@ msgstr "探索和配置您的 AnduinOS 系统"
 #~ msgstr ""
 #~ "✓ 驱动安装成功！\n"
 #~ "建议重启以应用更改。"
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "显示缩放"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "无法为此显示器推荐缩放比。"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (推荐)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "主显示器：%(display)s · 推荐：%(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "无法更改显示缩放。"

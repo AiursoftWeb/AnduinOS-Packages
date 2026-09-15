@@ -1784,3 +1784,25 @@ msgstr "Esplora e configura il tuo sistema AnduinOS"
 #~ msgstr ""
 #~ "✓ Driver installato con successo!\n"
 #~ "Si consiglia di riavviare il sistema per applicare le modifiche."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "Ridimensionamento schermo"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "Nessun consiglio disponibile per questo schermo."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Consigliato)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Schermo principale: %(display)s · Consigliato: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "Impossibile modificare il ridimensionamento dello schermo."

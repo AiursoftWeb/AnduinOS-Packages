@@ -1760,3 +1760,25 @@ msgstr "Udforsk og konfigurer dit AnduinOS-system"
 #~ msgstr ""
 #~ "✓ Driver installeret korrekt!\n"
 #~ "En genstart anbefales for at anvende ændringerne."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "Skærmskalering"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "Ingen anbefaling til denne skærm."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Anbefalet)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Primær skærm: %(display)s · Anbefalet: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "Kunne ikke ændre skærmskalering."

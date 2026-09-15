@@ -1785,3 +1785,25 @@ msgstr "Tutki ja määritä AnduinOS-järjestelmääsi"
 #~ msgstr ""
 #~ "✓ Ajuri asennettu onnistuneesti!\n"
 #~ "Suosittelemme uudelleenkäynnistystä muutosten ottamiseksi käyttöön."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "Näytön skaalaus"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "Tälle näytölle ei ole suositusta."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Suositus)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Päänäyttö: %(display)s · Suositus: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "Näytön skaalausta ei voitu muuttaa."

@@ -1793,3 +1793,25 @@ msgstr "Przeglądaj i konfiguruj swój system AnduinOS"
 #~ msgstr ""
 #~ "✓ Sterownik zainstalowany pomyślnie!\n"
 #~ "Zalecany jest restart w celu zastosowania zmian."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "Skalowanie ekranu"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "Brak zalecenia dla tego ekranu."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Zalecane)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Ekran główny: %(display)s · Zalecane: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "Nie udało się zmienić skalowania ekranu."

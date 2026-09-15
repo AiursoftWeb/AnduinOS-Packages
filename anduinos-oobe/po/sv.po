@@ -1773,3 +1773,25 @@ msgstr "Utforska och konfigurera ditt AnduinOS-system"
 #~ msgstr ""
 #~ "✓ Drivrutinen installerades framgångsrikt!\n"
 #~ "En omstart rekommenderas för att tillämpa ändringarna."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "Skärmskalning"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "Ingen rekommendation finns för den här skärmen."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Rekommenderat)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Primär skärm: %(display)s · Rekommenderat: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "Det gick inte att ändra skärmskalningen."

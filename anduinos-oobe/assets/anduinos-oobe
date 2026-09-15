@@ -42,6 +42,13 @@ except ModuleNotFoundError:
         draw_preview,
     )
 
+# Scaling backend ships beside the installed helpers, with an assets fallback.
+_scaling_lib = os.path.dirname(os.path.abspath(__file__))
+if not os.path.isfile(os.path.join(_scaling_lib, 'display_scaling.py')):
+    _scaling_lib = '/usr/lib/anduinos-oobe'
+sys.path.insert(0, _scaling_lib)
+import display_scaling as _display_scaling
+
 OOBE_LAYOUT_STYLES = {
     'modern': 'eleven',
     'classic': 'classic',
@@ -65,6 +72,9 @@ warnings.filterwarnings('ignore', category=DeprecationWarning, module='gi')
 
 # ── i18n ───────────────────────────────────────────────────────────
 _LOCALE_DIR = '/usr/share/locale'
+_source_locale_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'locale'))
+if os.path.isdir(_source_locale_dir):
+    _LOCALE_DIR = _source_locale_dir
 try:
     _ = gettext.translation('anduinos-oobe', _LOCALE_DIR, fallback=True).gettext
 except Exception:
@@ -945,6 +955,122 @@ def create_network_page(continue_offline, update_nav=None):
 # PAGE 2: APPEARANCE — 外观与秩序
 # ═══════════════════════════════════════════════════════════════════
 
+def create_display_scaling_group():
+    group = Adw.PreferencesGroup()
+    group.set_margin_start(24)
+    group.set_margin_end(24)
+    group.set_margin_bottom(28)
+    row = Adw.ActionRow(title=_('Display Scaling'))
+    row.set_subtitle(_('Recommendation unavailable for this display.'))
+    row.set_subtitle_lines(2)
+    row.set_use_markup(False)
+    dropdown = Gtk.DropDown(model=Gtk.StringList.new([]))
+    dropdown.set_valign(Gtk.Align.CENTER)
+    dropdown.set_sensitive(False)
+    dropdown.set_tooltip_text(_('Display Scaling'))
+    row.add_suffix(dropdown)
+    row.set_activatable_widget(dropdown)
+    group.add(row)
+
+    status = {'info': None, 'busy': False, 'updating': False, 'timer': 0,
+              'error': False}
+
+    def render(info):
+        status['updating'] = True
+        status['info'] = info
+        supported = list(info['supported'])
+        if not any(_display_scaling.same_scale(info['scale'], s) for s in supported):
+            supported.append(info['scale'])
+            supported.sort()
+        status['choices'] = supported
+        labels = [(_('%(scale)s (Recommended)') % {'scale': _display_scaling.format_scale(s)})
+                  if _display_scaling.same_scale(s, info['recommended'])
+                  else _display_scaling.format_scale(s) for s in supported]
+        dropdown.set_model(Gtk.StringList.new(labels))
+        dropdown.set_selected(next(i for i, s in enumerate(supported)
+                                   if _display_scaling.same_scale(s, info['scale'])))
+        recommended = info['recommended']
+        subtitle = (_('Primary display: %(display)s · Recommended: %(scale)s') % {
+            'display': info['name'], 'scale': _display_scaling.format_scale(recommended)
+        }) if recommended is not None else _('Recommendation unavailable for this display.')
+        row.set_subtitle(_('Could not change display scaling.') if status['error'] else subtitle)
+        dropdown.set_sensitive(len(info['supported']) > 1)
+        status['updating'] = False
+
+    def finished(info, error, applying):
+        status['busy'] = False
+        if applying:
+            status['error'] = error is not None
+        if info is not None:
+            # Do not rebuild an open dropdown every time the monitor is polled.
+            if applying or info != status['info']:
+                render(info)
+        else:
+            status['info'] = None
+            dropdown.set_sensitive(False)
+            row.set_subtitle(_('Could not change display scaling.') if applying
+                             else _('Recommendation unavailable for this display.'))
+        if error is not None:
+            print(f'Display scaling: {error}', file=sys.stderr)
+        return GLib.SOURCE_REMOVE
+
+    def refresh(scale=None):
+        if status['busy']:
+            return
+        status['busy'] = True
+        applying = scale is not None
+        expected_key = status['info']['key'] if applying else None
+        if applying:
+            dropdown.set_sensitive(False)
+
+        def worker():
+            info, error = None, None
+            try:
+                client = _display_scaling.DisplayClient()
+                info = (client.apply(scale, expected_key) if applying
+                        else _display_scaling.primary_info(client.state()))
+            except Exception as exc:
+                error = exc
+                # Reflect the actual scale after rejection or a concurrent change.
+                if applying:
+                    try:
+                        info = _display_scaling.primary_info(client.state())
+                    except Exception:
+                        pass
+            GLib.idle_add(finished, info, error, applying)
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def selected(widget, _param):
+        if status['updating'] or status['busy'] or status['info'] is None:
+            return
+        index = widget.get_selected()
+        if index >= len(status['choices']):
+            return
+        value = status['choices'][index]
+        if not _display_scaling.same_scale(value, status['info']['scale']):
+            refresh(value)
+
+    def poll():
+        refresh()
+        return GLib.SOURCE_CONTINUE
+
+    def mapped(_widget):
+        refresh()
+        if not status['timer']:
+            status['timer'] = GLib.timeout_add_seconds(3, poll)
+
+    def unmapped(_widget):
+        if status['timer']:
+            GLib.source_remove(status['timer'])
+            status['timer'] = 0
+
+    dropdown.connect('notify::selected', selected)
+    group.connect('map', mapped)
+    group.connect('unmap', unmapped)
+    return group
+
+
 def create_appearance_page():
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     page._oobe_page_name = 'appearance'
@@ -1032,6 +1158,8 @@ def create_appearance_page():
     theme_box.append(btn_dark)
     theme_group.add(theme_box)
     center.append(theme_group)
+
+    center.append(create_display_scaling_group())
 
     # ── Layout Section ──
     layout_title_group = Adw.PreferencesGroup()

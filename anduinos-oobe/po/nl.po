@@ -1786,3 +1786,25 @@ msgstr "Verken en configureer uw AnduinOS-systeem"
 #~ msgstr ""
 #~ "✓ Stuurprogramma succesvol geïnstalleerd!\n"
 #~ "Een herstart wordt aanbevolen om de wijzigingen toe te passen."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "Beeldschermschaal"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "Geen aanbeveling beschikbaar voor dit scherm."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Aanbevolen)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Hoofdscherm: %(display)s · Aanbevolen: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "De beeldschermschaal kon niet worden gewijzigd."

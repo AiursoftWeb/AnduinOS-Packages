@@ -1773,3 +1773,25 @@ msgstr "AnduinOS sisteminizi keşfedin ve yapılandırın"
 #~ msgstr ""
 #~ "✓ Sürücü başarıyla yüklendi!\n"
 #~ "Değişikliklerin geçerli olması için yeniden başlatmanız önerilir."
+
+#: assets/anduinos-oobe
+msgid "Display Scaling"
+msgstr "Ekran Ölçeklendirme"
+
+#: assets/anduinos-oobe
+msgid "Recommendation unavailable for this display."
+msgstr "Bu ekran için öneri bulunmuyor."
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Önerilen)"
+
+#: assets/anduinos-oobe
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Birincil ekran: %(display)s · Önerilen: %(scale)s"
+
+#: assets/anduinos-oobe
+msgid "Could not change display scaling."
+msgstr "Ekran ölçeklendirmesi değiştirilemedi."
