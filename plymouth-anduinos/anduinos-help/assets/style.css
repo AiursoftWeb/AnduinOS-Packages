@@ -1,0 +1,278 @@
+/* AnduinOS Help Center — application stylesheet
+ *
+ * Design principles:
+ *  - Honour the user's Libadwaita color scheme (light/dark)
+ *  - Restrained use of accent color
+ *  - Clear typographic hierarchy
+ *  - Cards and code blocks use semantic colors, not custom gradients
+ *  - Accessible contrast in both themes
+ */
+
+/* Disable horizontal overflow on the main window */
+window {
+    background: @window_bg_color;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar list.navigation-sidebar {
+    padding: 6px;
+}
+
+.sidebar row {
+    border-radius: 8px;
+    padding: 0;
+}
+
+.sidebar row:selected {
+    background-color: alpha(@accent_bg_color, 0.92);
+    color: @accent_fg_color;
+}
+
+.sidebar row:selected image,
+.sidebar row:selected label {
+    color: @accent_fg_color;
+}
+
+.sidebar row:not(:selected):hover {
+    background-color: alpha(@window_fg_color, 0.06);
+}
+
+/* ---------- Article typography ---------- */
+.article-title {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 2px;
+}
+
+.article-summary {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-top: 4px;
+}
+
+.article-heading {
+    letter-spacing: -0.01em;
+}
+
+.title-2 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; }
+.title-3 { font-size: 19px; font-weight: 700; }
+.title-4 { font-size: 15px; font-weight: 700; }
+
+.article-paragraph {
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.article-paragraph a {
+    color: @accent_color;
+    text-decoration: underline;
+}
+
+/* ---------- Chips ---------- */
+.chip {
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.version-chip {
+    background: alpha(@accent_bg_color, 0.14);
+    color: @accent_color;
+}
+
+.status-legacy-chip {
+    background: alpha(@warning_bg_color, 0.85);
+    color: @warning_fg_color;
+}
+
+.status-deprecated-chip {
+    background: alpha(@error_bg_color, 0.85);
+    color: @error_fg_color;
+}
+
+.meta-chip {
+    background: alpha(@window_fg_color, 0.08);
+    color: alpha(@window_fg_color, 0.75);
+}
+
+/* ---------- Separators ---------- */
+.article-separator {
+    margin: 18px 0;
+    opacity: 0.4;
+}
+
+/* ---------- Code blocks ---------- */
+.code-block {
+    border-radius: 10px;
+    background: alpha(@window_fg_color, 0.04);
+    border: 1px solid alpha(@borders, 0.55);
+}
+
+.code-block-header {
+    background: alpha(@window_fg_color, 0.06);
+    border-bottom: 1px solid alpha(@borders, 0.45);
+    padding: 6px 10px;
+}
+
+.code-block-lang {
+    font-family: monospace;
+    font-size: 11px;
+    text-transform: lowercase;
+}
+
+.code-block-root-badge {
+    background: @warning_bg_color;
+    color: @warning_fg_color;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.code-block-body {
+    background: transparent;
+}
+
+.code-block-text {
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    letter-spacing: 0;
+}
+
+/* ---------- Blockquotes ---------- */
+.blockquote {
+    border-left: 3px solid @accent_color;
+    padding-left: 14px;
+    color: alpha(@window_fg_color, 0.85);
+    background: alpha(@accent_bg_color, 0.04);
+    border-radius: 0 8px 8px 0;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+/* ---------- Callouts ---------- */
+.callout {
+    border-radius: 10px;
+    border-left: 4px solid;
+    padding: 0;
+}
+
+.callout-note {
+    background: alpha(@theme_selected_bg_color, 0.06);
+    border-color: @theme_selected_bg_color;
+}
+
+.callout-tip {
+    background: alpha(@success_color, 0.08);
+    border-color: @success_color;
+}
+
+.callout-warning {
+    background: alpha(@warning_color, 0.10);
+    border-color: @warning_color;
+}
+
+.callout-danger {
+    background: alpha(@error_color, 0.10);
+    border-color: @error_color;
+}
+
+.callout-title {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.callout-warning .callout-title { color: @warning_color; }
+.callout-danger   .callout-title { color: @error_color; }
+.callout-tip      .callout-title { color: @success_color; }
+
+/* ---------- Tables ---------- */
+.article-table {
+    background: alpha(@window_fg_color, 0.03);
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid alpha(@borders, 0.45);
+}
+
+.table-header {
+    font-weight: 700;
+    color: alpha(@window_fg_color, 0.85);
+    border-bottom: 1px solid alpha(@borders, 0.55);
+    padding-bottom: 6px;
+}
+
+/* ---------- Lists ---------- */
+.list-marker {
+    color: alpha(@window_fg_color, 0.55);
+    font-family: monospace;
+    font-weight: 700;
+}
+
+/* ---------- Breadcrumbs ---------- */
+.breadcrumbs {
+    margin: 4px 0 8px 0;
+}
+
+.breadcrumbs button {
+    padding: 0 4px;
+    min-height: 22px;
+    min-width: 0;
+    font-size: 13px;
+}
+
+.breadcrumbs button.dim {
+    color: alpha(@window_fg_color, 0.6);
+}
+
+.breadcrumbs button:hover {
+    color: @accent_color;
+}
+
+/* ---------- Empty state ---------- */
+.empty-state {
+    margin-top: 80px;
+}
+
+/* ---------- Diagnostics ---------- */
+.diagnostics-text {
+    font-family: monospace;
+    font-size: 12px;
+    padding: 12px;
+    background: alpha(@window_fg_color, 0.04);
+    border-radius: 8px;
+}
+
+/* ---------- Home page ---------- */
+flowboxchild {
+    padding: 0;
+}
+
+flowbox flowboxchild {
+    background: transparent;
+}
+
+/* ---------- Misc ---------- */
+.dim-label {
+    color: alpha(@window_fg_color, 0.6);
+}
+
+.caption {
+    font-size: 12px;
+}
+
+.monospace {
+    font-family: monospace;
+}
+
+.success {
+    color: @success_color;
+}
+
+/* Hide focus outline only when not using keyboard nav */
+window:not(.keyboard-mode) *:focus {
+    outline: none;
+}
