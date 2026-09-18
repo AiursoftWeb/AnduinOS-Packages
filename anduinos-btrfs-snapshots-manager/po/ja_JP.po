@@ -1983,3 +1983,15 @@ msgstr "システムとホームのスナップショットは空き容量が増
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
 msgid "System snapshots are waiting for more free space."
 msgstr "システムのスナップショットは空き容量が増えるのを待っています。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "最初にシステムの安全用スナップショットを作成し、その後 60 秒以内に再起動します。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "すべてのユーザーのホーム内のファイルとスナップショット履歴を消去します。元に戻せません。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "システムを New OS の状態に戻します。個人ファイルは既定で保持されます。"

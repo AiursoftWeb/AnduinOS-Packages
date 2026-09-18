@@ -1983,3 +1983,15 @@ msgstr "Schnappschüsse des Systems und des Home-Verzeichnisses warten auf mehr 
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
 msgid "System snapshots are waiting for more free space."
 msgstr "System-Schnappschüsse warten auf mehr freien Speicherplatz."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "Zuerst wird ein Sicherheitsschnappschuss des Systems erstellt. Danach erfolgt innerhalb von 60 Sekunden ein Neustart."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "Home-Dateien und Schnappschussverlauf aller Benutzer löschen. Dies kann nicht rückgängig gemacht werden."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "Das System auf New OS zurücksetzen. Persönliche Dateien bleiben standardmäßig erhalten."

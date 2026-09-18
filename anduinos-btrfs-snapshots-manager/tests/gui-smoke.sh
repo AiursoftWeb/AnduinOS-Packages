@@ -41,7 +41,7 @@ until [[ -S "$runtime_dir/broadway1.socket" ]]; do
     sleep 0.02
 done
 
-for surface in advanced information; do
+for surface in advanced information factory-reset factory-reset-no-home; do
     GDK_BACKEND=broadway \
     BROADWAY_DISPLAY=":0" \
     G_DEBUG=fatal-criticals \

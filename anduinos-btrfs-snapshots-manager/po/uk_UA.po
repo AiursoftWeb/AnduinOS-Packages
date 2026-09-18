@@ -1983,3 +1983,15 @@ msgstr "Створення знімків системи та домашньог
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
 msgid "System snapshots are waiting for more free space."
 msgstr "Створення знімків системи очікує на звільнення місця."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "Спочатку буде створено страховий знімок системи. Потім протягом 60 секунд почнеться перезавантаження."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "Видалити файли домашніх каталогів усіх користувачів та історію знімків. Цю дію неможливо скасувати."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "Відновити систему до стану New OS. Особисті файли типово зберігаються."

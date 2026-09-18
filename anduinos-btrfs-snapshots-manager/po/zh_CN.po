@@ -1983,3 +1983,15 @@ msgstr "系统和用户目录快照正在等待更多可用空间。"
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
 msgid "System snapshots are waiting for more free space."
 msgstr "系统快照正在等待更多可用空间。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "先创建系统安全快照，准备完成后 60 秒内重启。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "清除所有用户的主目录文件和快照历史，无法撤销。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "将系统恢复到 New OS，默认保留个人文件。"

@@ -1,6 +1,7 @@
 mod advanced_settings;
 mod automation_dialog;
 mod btrfs_settings;
+pub(crate) mod factory_reset;
 mod information;
 mod personal_history;
 mod snapshot_model;

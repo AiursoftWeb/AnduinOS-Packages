@@ -1983,3 +1983,15 @@ msgstr "Le istantanee del sistema e della cartella personale sono in attesa di p
 #: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
 msgid "System snapshots are waiting for more free space."
 msgstr "Le istantanee del sistema sono in attesa di più spazio libero."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "Prima viene creata un’istantanea di sicurezza del sistema. Segue il riavvio entro 60 secondi."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "Elimina i file delle cartelle personali di tutti gli utenti e la cronologia delle istantanee. L’operazione è irreversibile."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "Ripristina il sistema allo stato New OS. I file personali vengono conservati per impostazione predefinita."

@@ -17,6 +17,9 @@ OTHER_CATALOGS = tuple(
 )
 
 NEW_TRANSLATIONS = {
+    "Restore the system to New OS. Personal files are kept by default.": "将系统恢复到 New OS，默认保留个人文件。",
+    "Erase all users’ Home files and snapshot history. This cannot be undone.": "清除所有用户的主目录文件和快照历史，无法撤销。",
+    "A system safety snapshot is created first. Restart follows within 60 seconds.": "先创建系统安全快照，准备完成后 60 秒内重启。",
     "Disk Space Protection": "磁盘空间保护",
     "GiB": "GiB",
     "Minimum free space": "最低可用空间",

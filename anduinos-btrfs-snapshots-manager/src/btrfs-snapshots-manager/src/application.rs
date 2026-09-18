@@ -235,6 +235,36 @@ impl SnapshotsManagerApplication {
         let weak = self.downgrade();
         glib::idle_add_local_once(move || {
             if let Some(app) = weak.upgrade() {
+                if surface == "factory-reset" || surface == "factory-reset-no-home" {
+                    let available = surface == "factory-reset";
+                    let (dialog, erase_home) = crate::ui::factory_reset::confirmation(
+                        app.ensure_main_window().upcast_ref(),
+                        available,
+                    );
+                    assert!(!erase_home.is_active());
+                    assert_eq!(erase_home.is_sensitive(), available);
+                    assert_eq!(dialog.default_response().as_deref(), Some("cancel"));
+                    assert_eq!(dialog.close_response(), "cancel");
+                    dialog.present();
+                    glib::timeout_add_local_once(
+                        std::time::Duration::from_millis(500),
+                        move || {
+                            assert!(dialog.width() >= 520, "dialog width: {}", dialog.width());
+                            assert!(dialog.height() < 540, "dialog height: {}", dialog.height());
+                            log::info!(
+                                "Factory reset confirmation: {} × {}",
+                                dialog.width(),
+                                dialog.height()
+                            );
+                            dialog.close();
+                            for window in app.windows() {
+                                window.close();
+                            }
+                            app.quit();
+                        },
+                    );
+                    return;
+                }
                 if surface == "information" {
                     app.ensure_main_window().show_information();
                 } else {

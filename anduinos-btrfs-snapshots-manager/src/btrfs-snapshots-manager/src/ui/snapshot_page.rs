@@ -1130,53 +1130,8 @@ impl SnapshotPage {
         let Some(parent) = self.parent() else {
             return;
         };
-        let dialog = adw::MessageDialog::new(
-            Some(&parent),
-            Some(&tr("Reset AnduinOS to Its Initial State?")),
-            Some(&tr(
-                "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds.",
-            )),
-        );
-        let list = gtk::ListBox::new();
-        list.add_css_class("boxed-list");
-        list.append(&impact_row(
-            &tr("System files and packages"),
-            &tr("Return to the initial New OS state"),
-            "drive-harddisk-symbolic",
-        ));
-        list.append(&impact_row(
-            &tr("Personal files"),
-            &tr("Preserved unless you choose to erase them below"),
-            "folder-documents-symbolic",
-        ));
-        let erase_home_row = adw::ActionRow::new();
-        erase_home_row.set_title(&tr("Erase user files"));
-        erase_home_row.set_subtitle(&if factory_home_available {
-            tr("Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed.")
-        } else {
-            tr("Unavailable because the factory Home recovery point is missing or damaged.")
-        });
-        let erase_home = gtk::CheckButton::new();
-        erase_home.set_valign(gtk::Align::Center);
-        erase_home.set_sensitive(factory_home_available);
-        erase_home.set_active(false);
-        erase_home_row.set_activatable_widget(Some(&erase_home));
-        erase_home_row.add_suffix(&erase_home);
-        list.append(&erase_home_row);
-        list.append(&impact_row(
-            &tr("Current system"),
-            &tr("Saved as a safety snapshot before reset"),
-            "security-high-symbolic",
-        ));
-        list.append(&impact_row(
-            &tr("Restart"),
-            &tr("Automatic 60-second countdown after preparation"),
-            "system-reboot-symbolic",
-        ));
-        dialog.set_extra_child(Some(&list));
-        dialog.add_response("cancel", &tr("Cancel"));
-        dialog.add_response("reset", &tr("Reset and Restart"));
-        dialog.set_response_appearance("reset", adw::ResponseAppearance::Destructive);
+        let (dialog, erase_home) =
+            super::factory_reset::confirmation(&parent, factory_home_available);
         let weak = self.downgrade();
         let id = item.id.clone();
         dialog.connect_response(None, move |_, response| {
