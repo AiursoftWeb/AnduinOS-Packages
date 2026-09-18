@@ -122,6 +122,23 @@ class LaunchTests(unittest.TestCase):
         self.window._launch.assert_not_called()
         self.window._show_error.assert_called_once_with("Installation failed", "Authentication was cancelled.")
 
+    def test_factory_reset_delegates_to_snapshots_manager_or_explains_support(self):
+        with patch.object(app, "command_available", return_value=True):
+            app.ControlPanelWindow._open_factory_reset(self.window)
+        self.window._launch.assert_called_once_with(
+            ["anduinos-btrfs-snapshots-manager", "--factory-reset"]
+        )
+        self.window._show_error.assert_not_called()
+
+        self.window.reset_mock()
+        with patch.object(app, "command_available", return_value=False):
+            app.ControlPanelWindow._open_factory_reset(self.window)
+        self.window._launch.assert_not_called()
+        self.window._show_error.assert_called_once_with(
+            "Factory Reset Is Not Available",
+            "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it.",
+        )
+
 
 class StreamingCommandTests(unittest.TestCase):
     def setUp(self):

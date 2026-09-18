@@ -29,6 +29,7 @@ pub struct SnapshotCapabilities {
     pub can_verify: bool,
     pub can_restore: bool,
     pub can_delete: bool,
+    pub can_select: bool,
     pub can_pin: bool,
     pub can_rename: bool,
 }
@@ -39,15 +40,17 @@ impl SnapshotCapabilities {
         match scope {
             SnapshotScope::System => {
                 let browsable = item.state == "ready";
+                let factory = item.kind == "factory";
                 let deletable_state =
                     matches!(item.state.as_str(), "ready" | "incomplete" | "broken");
                 Self {
                     can_browse: browsable,
                     can_verify: stable,
                     can_restore: item.state == "ready",
-                    can_delete: deletable_state && !item.keep_forever,
-                    can_pin: item.state == "ready",
-                    can_rename: stable,
+                    can_delete: deletable_state && (!item.keep_forever || factory),
+                    can_select: deletable_state && !item.keep_forever && !factory,
+                    can_pin: item.state == "ready" && !factory,
+                    can_rename: stable && !factory,
                 }
             }
             SnapshotScope::Home => Self {
@@ -55,6 +58,7 @@ impl SnapshotCapabilities {
                 can_verify: stable,
                 can_restore: false,
                 can_delete: matches!(item.state.as_str(), "ready" | "broken") && !item.keep_forever,
+                can_select: matches!(item.state.as_str(), "ready" | "broken") && !item.keep_forever,
                 can_pin: item.state == "ready",
                 can_rename: stable,
             },
@@ -62,7 +66,7 @@ impl SnapshotCapabilities {
     }
 
     pub fn can_select(self) -> bool {
-        self.can_delete
+        self.can_select
     }
 }
 
@@ -196,6 +200,19 @@ mod tests {
         assert!(!capabilities.can_delete);
         assert!(!capabilities.can_select());
         assert!(capabilities.can_pin);
+    }
+
+    #[test]
+    fn factory_snapshot_requires_its_dedicated_delete_flow() {
+        let mut factory = item("ready", true);
+        factory.kind = "factory".into();
+        factory.title = "New OS".into();
+        let capabilities = SnapshotCapabilities::for_item(SnapshotScope::System, &factory);
+        assert!(capabilities.can_restore);
+        assert!(capabilities.can_delete);
+        assert!(!capabilities.can_select());
+        assert!(!capabilities.can_pin);
+        assert!(!capabilities.can_rename);
     }
 
     #[test]

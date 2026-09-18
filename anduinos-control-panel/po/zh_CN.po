@@ -885,6 +885,22 @@ msgstr "已清除学习数据。旧终端无法将其重新保存；重新打开
 msgid "Show suggestions while typing in Bash."
 msgstr "在 Bash 中输入时显示建议。"
 
+#: src/anduinos_control_panel/topics.py
+msgid "Factory Reset"
+msgstr "恢复出厂设置"
+
+#: src/anduinos_control_panel/topics.py
+msgid "Return system files and applications to their initial state"
+msgstr "将系统文件和应用恢复到初始状态"
+
+#: src/anduinos_control_panel/app.py
+msgid "Factory Reset Is Not Available"
+msgstr "无法恢复出厂设置"
+
+#: src/anduinos_control_panel/app.py
+msgid "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
+msgstr "此系统不支持恢复出厂设置。请重新安装 AnduinOS，并选择 Btrfs 文件系统以启用此功能。"
+
 #: src/anduinos_control_panel/prediction_settings.py
 msgid "Use Bash history, frequency, directories, and command sequences to personalize suggestions."
 msgstr "结合 Bash 历史、频率、目录和命令顺序提供个性化建议。"

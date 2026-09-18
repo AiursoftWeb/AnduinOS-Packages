@@ -14,7 +14,9 @@ use crate::browse_lock::acquire_exclusive_deployment_lock_at;
 use crate::coordination::TransactionStartLock;
 use crate::layout::{LayoutReport, LayoutSupport};
 use crate::lineage::{LineageError, LineageErrorCode, LineageStore};
-use crate::model::{DeploymentId, DeploymentKind, DeploymentRecord, DeploymentState};
+use crate::model::{
+    DeploymentId, DeploymentKind, DeploymentRecord, DeploymentState, FACTORY_DEPLOYMENT_TITLE,
+};
 use crate::package_transaction::PackageTransactionStore;
 use crate::space::{MINIMUM_TRANSACTION_RESERVE_BYTES, probe_filesystem_space};
 use crate::store::DeploymentStore;
@@ -41,6 +43,12 @@ pub enum OperationPhase {
 pub enum ScheduledSnapshotOutcome {
     Created(Box<DeploymentRecord>),
     NotDue,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum FactorySnapshotOutcome {
+    Created(Box<DeploymentRecord>),
+    Existing(Box<DeploymentRecord>),
 }
 
 impl OperationPhase {
@@ -215,6 +223,81 @@ impl<R: CommandRunner> OperationEngine<R> {
         )
     }
 
+    /// Create the installer-owned recovery baseline, or return the existing
+    /// healthy baseline when installation finalization is retried.
+    pub fn create_factory_if_missing<F>(
+        &self,
+        layout: &LayoutReport,
+        mut progress: F,
+    ) -> Result<FactorySnapshotOutcome, OperationError>
+    where
+        F: FnMut(OperationPhase, f64, &str),
+    {
+        progress(
+            OperationPhase::Validate,
+            0.02,
+            "Validating factory recovery storage",
+        );
+        ensure_supported_layout(layout)?;
+        self.ensure_store_directories()?;
+        let operation_lock = self.acquire_lock()?;
+        let deployments = DeploymentStore::new(&self.snapshot_root).discover();
+        if !deployments.issues.is_empty() {
+            return Err(OperationError::new(
+                OperationErrorCode::InvalidIdentity,
+                "Factory recovery creation stopped because snapshot metadata has unresolved issues",
+            ));
+        }
+
+        let existing = deployments
+            .deployments
+            .iter()
+            .filter(|record| record.kind == DeploymentKind::Factory)
+            .collect::<Vec<_>>();
+        match existing.as_slice() {
+            [record] if record.can_restore() && record.pinned => {
+                progress(
+                    OperationPhase::Commit,
+                    1.0,
+                    "Factory recovery point already exists",
+                );
+                return Ok(FactorySnapshotOutcome::Existing(Box::new(
+                    (*record).clone(),
+                )));
+            }
+            [] => {}
+            [_] => {
+                return Err(OperationError::new(
+                    OperationErrorCode::InvalidIdentity,
+                    "The existing factory recovery point is not healthy",
+                ));
+            }
+            _ => {
+                return Err(OperationError::new(
+                    OperationErrorCode::InvalidIdentity,
+                    "More than one factory recovery point is registered",
+                ));
+            }
+        }
+
+        let kernel = read_default_installed_kernel_release(&self.system_root)?;
+        self.ensure_transaction_reserve()?;
+        self.create_snapshot_locked(
+            FACTORY_DEPLOYMENT_TITLE,
+            "Initial AnduinOS installation",
+            None,
+            true,
+            DeploymentKind::Factory,
+            DeploymentState::Ready,
+            Some(&kernel),
+            progress,
+            operation_lock,
+            deployments,
+        )
+        .map(Box::new)
+        .map(FactorySnapshotOutcome::Created)
+    }
+
     pub fn create_automatic<F>(
         &self,
         layout: &LayoutReport,
@@ -309,6 +392,7 @@ impl<R: CommandRunner> OperationEngine<R> {
             false,
             DeploymentKind::Automatic,
             DeploymentState::Ready,
+            None,
             progress,
             operation_lock,
             deployments,
@@ -335,6 +419,24 @@ impl<R: CommandRunner> OperationEngine<R> {
             DeploymentState::Ready,
             progress,
         )
+    }
+
+    /// Check the storage and coordination boundary required to create the
+    /// protected current-system snapshot used by a rollback. Scheduling must
+    /// repeat this check because capacity can change while the UI is open.
+    pub fn check_pre_rollback_capacity(&self, layout: &LayoutReport) -> Result<(), OperationError> {
+        ensure_supported_layout(layout)?;
+        self.ensure_store_directories()?;
+        let _operation_lock = self.acquire_lock()?;
+        self.ensure_transaction_reserve()?;
+        let discovery = DeploymentStore::new(&self.snapshot_root).discover();
+        if !discovery.issues.is_empty() {
+            return Err(OperationError::new(
+                OperationErrorCode::InvalidIdentity,
+                "Recovery storage contains unresolved system snapshot metadata",
+            ));
+        }
+        Ok(())
     }
 
     pub fn create_apt_pre<F>(
@@ -413,6 +515,7 @@ impl<R: CommandRunner> OperationEngine<R> {
             pinned,
             kind,
             completed_state,
+            None,
             progress,
             operation_lock,
             deployments,
@@ -428,6 +531,7 @@ impl<R: CommandRunner> OperationEngine<R> {
         pinned: bool,
         kind: DeploymentKind,
         completed_state: DeploymentState,
+        kernel_release: Option<&str>,
         mut progress: F,
         _operation_lock: OperationLock,
         deployments: crate::store::DiscoveryReport,
@@ -499,7 +603,10 @@ impl<R: CommandRunner> OperationEngine<R> {
                 0.55,
                 "Hashing package and boot identities",
             );
-            let kernel = read_kernel_release(&self.system_root)?;
+            let kernel = match kernel_release {
+                Some(release) => validate_kernel_release(release)?.to_string(),
+                None => read_kernel_release(&self.system_root)?,
+            };
             record.kernel_release = Some(kernel.clone());
             record.initramfs_sha256 = Some(hash_regular_file(
                 &snapshot.join("boot").join(format!("initrd.img-{kernel}")),
@@ -609,6 +716,12 @@ impl<R: CommandRunner> OperationEngine<R> {
                 "A deleting system snapshot cannot be pinned",
             ));
         }
+        if record.kind == DeploymentKind::Factory && !pinned {
+            return Err(OperationError::new(
+                OperationErrorCode::Protected,
+                "The factory recovery point cannot be unpinned",
+            ));
+        }
         record.pinned = pinned;
         record.validate().map_err(|error| {
             OperationError::new(OperationErrorCode::InvalidIdentity, error.to_string())
@@ -631,6 +744,12 @@ impl<R: CommandRunner> OperationEngine<R> {
             return Err(OperationError::new(
                 OperationErrorCode::Protected,
                 "A deleting system snapshot cannot be renamed",
+            ));
+        }
+        if record.kind == DeploymentKind::Factory {
+            return Err(OperationError::new(
+                OperationErrorCode::Protected,
+                "The factory recovery point cannot be renamed",
             ));
         }
         record.title = title.trim().to_string();
@@ -766,7 +885,17 @@ impl<R: CommandRunner> OperationEngine<R> {
     }
 
     pub fn delete(&self, layout: &LayoutReport, id: DeploymentId) -> Result<(), OperationError> {
-        self.delete_with_restorable_floor(layout, id, None)
+        self.delete_with_restorable_floor(layout, id, None, false)
+    }
+
+    /// Deliberately delete the installer-owned factory baseline. Ordinary
+    /// deletion and unpinning remain unable to remove this recovery point.
+    pub fn delete_factory(
+        &self,
+        layout: &LayoutReport,
+        id: DeploymentId,
+    ) -> Result<(), OperationError> {
+        self.delete_with_restorable_floor(layout, id, None, true)
     }
 
     pub fn delete_automatic(
@@ -775,7 +904,7 @@ impl<R: CommandRunner> OperationEngine<R> {
         id: DeploymentId,
         minimum_restorable_deployments: usize,
     ) -> Result<(), OperationError> {
-        self.delete_with_restorable_floor(layout, id, Some(minimum_restorable_deployments))
+        self.delete_with_restorable_floor(layout, id, Some(minimum_restorable_deployments), false)
     }
 
     fn delete_with_restorable_floor(
@@ -783,6 +912,7 @@ impl<R: CommandRunner> OperationEngine<R> {
         layout: &LayoutReport,
         id: DeploymentId,
         minimum_restorable_deployments: Option<usize>,
+        allow_factory_deletion: bool,
     ) -> Result<(), OperationError> {
         ensure_supported_layout(layout)?;
         self.ensure_store_directories()?;
@@ -809,6 +939,12 @@ impl<R: CommandRunner> OperationEngine<R> {
             )?;
         let mut record = self.load_record(id)?;
         self.ensure_not_transaction_referenced(id)?;
+        if allow_factory_deletion && record.kind != DeploymentKind::Factory {
+            return Err(OperationError::new(
+                OperationErrorCode::InvalidInput,
+                "The dedicated factory deletion path accepts only the factory recovery point",
+            ));
+        }
         if record.state != DeploymentState::Deleting {
             if let Some(minimum) = minimum_restorable_deployments {
                 if !matches!(
@@ -849,7 +985,13 @@ impl<R: CommandRunner> OperationEngine<R> {
                     ));
                 }
             }
-            if !record.can_delete() {
+            let deliberately_deleting_factory = allow_factory_deletion
+                && record.kind == DeploymentKind::Factory
+                && matches!(
+                    record.state,
+                    DeploymentState::Ready | DeploymentState::Incomplete | DeploymentState::Broken
+                );
+            if !record.can_delete() && !deliberately_deleting_factory {
                 return Err(OperationError::new(
                     OperationErrorCode::Protected,
                     "This system snapshot is pinned or protects a boot transaction",
@@ -1320,10 +1462,48 @@ fn read_kernel_release(system_root: &Path) -> Result<String, OperationError> {
             "Kernel release is not UTF-8",
         )
     })?;
-    let release = release.trim().to_string();
-    if release.is_empty()
-        || release.len() > 128
-        || !release
+    Ok(validate_kernel_release(release.trim())?.to_string())
+}
+
+fn read_default_installed_kernel_release(system_root: &Path) -> Result<String, OperationError> {
+    let link = system_root.join("boot/vmlinuz");
+    let target = fs::read_link(&link)
+        .map_err(|error| io_error("Could not read the default installed kernel link", error))?;
+    if target.components().count() != 1 {
+        return Err(OperationError::new(
+            OperationErrorCode::InvalidIdentity,
+            "The default installed kernel link is unsafe",
+        ));
+    }
+    let file_name = target
+        .file_name()
+        .and_then(|value| value.to_str())
+        .ok_or_else(|| {
+            OperationError::new(
+                OperationErrorCode::InvalidIdentity,
+                "The default installed kernel link is not UTF-8",
+            )
+        })?;
+    let release = file_name.strip_prefix("vmlinuz-").ok_or_else(|| {
+        OperationError::new(
+            OperationErrorCode::InvalidIdentity,
+            "The default installed kernel link does not name a kernel image",
+        )
+    })?;
+    let release = validate_kernel_release(release)?.to_string();
+    open_regular_file(&system_root.join("boot").join(format!("vmlinuz-{release}")))?;
+    open_regular_file(
+        &system_root
+            .join("boot")
+            .join(format!("initrd.img-{release}")),
+    )?;
+    Ok(release)
+}
+
+fn validate_kernel_release(value: &str) -> Result<&str, OperationError> {
+    if value.is_empty()
+        || value.len() > 128
+        || !value
             .bytes()
             .all(|byte| byte.is_ascii_alphanumeric() || b"._+-".contains(&byte))
     {
@@ -1332,7 +1512,7 @@ fn read_kernel_release(system_root: &Path) -> Result<String, OperationError> {
             "Kernel release contains unsafe characters",
         ));
     }
-    Ok(release)
+    Ok(value)
 }
 
 fn hash_optional_regular_file(path: &Path) -> Result<Option<String>, OperationError> {
@@ -1467,6 +1647,7 @@ fn identity_mismatch(identity: &str) -> OperationError {
 
 #[cfg(test)]
 mod tests {
+    use std::os::unix::fs::symlink;
     use std::sync::atomic::{AtomicBool, Ordering};
     use std::sync::{Arc, Mutex};
 
@@ -1591,6 +1772,7 @@ mod tests {
                 "test-kernel\n",
             )
             .unwrap();
+            symlink("vmlinuz-test-kernel", system_root.join("boot/vmlinuz")).unwrap();
             fs::create_dir_all(snapshot_parent).unwrap();
             Self {
                 base,
@@ -1657,6 +1839,100 @@ mod tests {
         engine
             .verify(&environment.layout(), record.id, |_, _, _| {})
             .unwrap();
+    }
+
+    #[test]
+    fn factory_recovery_point_is_unique_pinned_and_explicitly_deletable() {
+        let environment = TestEnvironment::new();
+        let runner = FakeRunner::new(false);
+        let engine = OperationEngine::new(
+            &environment.system_root,
+            &environment.snapshot_root,
+            runner.clone(),
+        );
+
+        let created = engine
+            .create_factory_if_missing(&environment.layout(), |_, _, _| {})
+            .unwrap();
+        let FactorySnapshotOutcome::Created(created) = created else {
+            panic!("the first provisioning call must create the factory baseline");
+        };
+        assert_eq!(created.kind, DeploymentKind::Factory);
+        assert_eq!(created.title, FACTORY_DEPLOYMENT_TITLE);
+        assert!(created.pinned);
+        assert_eq!(created.kernel_release.as_deref(), Some("test-kernel"));
+
+        let existing = engine
+            .create_factory_if_missing(&environment.layout(), |_, _, _| {})
+            .unwrap();
+        let FactorySnapshotOutcome::Existing(existing) = existing else {
+            panic!("provisioning retries must reuse the factory baseline");
+        };
+        assert_eq!(existing.id, created.id);
+        let snapshot_calls = runner
+            .calls
+            .lock()
+            .unwrap()
+            .iter()
+            .filter(|call| call.starts_with(&["subvolume".into(), "snapshot".into()]))
+            .count();
+        assert_eq!(snapshot_calls, 1);
+
+        assert_eq!(
+            engine
+                .set_pinned(&environment.layout(), created.id, false)
+                .unwrap_err()
+                .code,
+            OperationErrorCode::Protected
+        );
+        assert_eq!(
+            engine
+                .rename(&environment.layout(), created.id, "Not the baseline")
+                .unwrap_err()
+                .code,
+            OperationErrorCode::Protected
+        );
+        assert_eq!(
+            engine
+                .delete(&environment.layout(), created.id)
+                .unwrap_err()
+                .code,
+            OperationErrorCode::Protected
+        );
+        assert_eq!(
+            engine
+                .delete_automatic(&environment.layout(), created.id, 1)
+                .unwrap_err()
+                .code,
+            OperationErrorCode::Protected
+        );
+        engine
+            .delete_factory(&environment.layout(), created.id)
+            .unwrap();
+        assert!(
+            DeploymentStore::new(&environment.snapshot_root)
+                .discover()
+                .deployments
+                .is_empty()
+        );
+    }
+
+    #[test]
+    fn rollback_capacity_check_rejects_an_insufficient_recovery_reserve() {
+        let environment = TestEnvironment::new();
+        let engine = OperationEngine::new(
+            &environment.system_root,
+            &environment.snapshot_root,
+            FakeRunner::new(false),
+        )
+        .with_minimum_free_bytes(u64::MAX);
+        assert_eq!(
+            engine
+                .check_pre_rollback_capacity(&environment.layout())
+                .unwrap_err()
+                .code,
+            OperationErrorCode::InsufficientSpace
+        );
     }
 
     #[test]

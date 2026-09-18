@@ -6904,6 +6904,7 @@ def incomplete_feature_steps(outcomes):
         "install-language-packs", "install-input-method",
         "install-multimedia-codecs", "refresh-package-indexes",
         "upgrade-system", "ensure-snapshots-manager",
+        "create-factory-snapshot",
         "install-third-party-drivers",
     }
     return tuple(
@@ -6995,6 +6996,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "upgrade-system": _("Install system updates", lang),
         "ensure-snapshots-manager": _(
             "Ensure Disk Snapshots Manager is available", lang
+        ),
+        "create-factory-snapshot": _(
+            "Create initial system recovery point", lang
         ),
         "install-third-party-drivers": _("Install hardware drivers", lang),
         "provision-remote-access": _("Configure Secure Shell", lang),

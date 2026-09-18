@@ -367,6 +367,16 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                         topic.keywords,
                     )
                 )
+        factory_reset = get_topic("recovery.factory-reset")
+        if factory_reset is not None:
+            actions.append(
+                (
+                    factory_reset.title,
+                    factory_reset.description,
+                    lambda: self._activate_topic("recovery.factory-reset"),
+                    factory_reset.keywords,
+                )
+            )
         backup = get_topic("recovery.backup")
         if backup is None:
             return actions
@@ -398,6 +408,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             "on-device-ai": self._show_ai_settings,
             "bottles": self._open_bottles,
             "backup": self._open_deja_dup,
+            "factory-reset": self._open_factory_reset,
         }
         if topic.handler:
             handler = handlers.get(topic.handler)
@@ -1169,6 +1180,19 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             self._launch(["flatpak", "run", DEJA_DUP_APP_ID])
             return
         self._show_store_prompt(_("Deja Dup Backups"), f"{DEJA_DUP_APP_ID}.desktop")
+
+    def _open_factory_reset(self) -> None:
+        if command_available("anduinos-btrfs-snapshots-manager"):
+            self._launch(
+                ["anduinos-btrfs-snapshots-manager", "--factory-reset"]
+            )
+            return
+        self._show_error(
+            _("Factory Reset Is Not Available"),
+            _(
+                "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
+            ),
+        )
 
     def _open_flatseal(self) -> None:
         if package_installed("flatseal"):

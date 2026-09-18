@@ -20,6 +20,15 @@ A snapshot may be protected permanently or be eligible for automatic cleanup.
 Manual, scheduled, and package-change snapshots participate in cleanup by
 default. A safety snapshot created before a rollback is protected while its
 transaction is pending; afterward it can be deleted manually or by automatic cleanup.
+On a new Btrfs installation, the installer creates exactly one pinned system
+snapshot named **New OS** after target configuration has finished. This factory
+recovery point is excluded from every automatic cleanup policy, cannot be
+renamed or unpinned, and can be restored repeatedly without changing `@home`.
+It may still be deleted deliberately through a dedicated confirmation that
+warns that doing so disables factory recovery for that installation.
+The Control Panel opens this guarded workflow with `--factory-reset`. Disk
+Snapshots Manager owns the preflight, confirmation, safety snapshot, one-shot
+recovery boot, and restart; the Control Panel never performs a rollback itself.
 Automatic cleanup uses explicit time buckets: keep everything in the recent window,
 then one representative per day, week, month, and year. System and Home policies
 are independent and use a configurable one-to-24-hour freshness interval.

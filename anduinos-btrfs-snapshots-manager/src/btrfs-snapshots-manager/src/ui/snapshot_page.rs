@@ -8,7 +8,8 @@ use gtk::{gio, glib};
 use libadwaita as adw;
 
 use crate::dbus_client::{
-    PendingRecovery, RecoveryEngineStatus, SnapshotsManagerHelperClient, VerificationResult,
+    PendingRecovery, RecoveryDeployment, RecoveryEngineStatus, SnapshotsManagerHelperClient,
+    VerificationResult,
 };
 use crate::i18n::{tr, trf};
 
@@ -16,6 +17,12 @@ use super::personal_history;
 use super::snapshot_model::{PagePresentation, SnapshotCapabilities, SnapshotItem, SnapshotScope};
 
 const ROLLBACK_RESTART_COUNTDOWN_SECONDS: u32 = 60;
+
+#[derive(Clone, Debug)]
+enum FactoryResetPreparation {
+    Ready(SnapshotItem),
+    Unsupported,
+}
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub(super) enum PendingBannerAction {
@@ -137,6 +144,45 @@ impl SnapshotPage {
         if let Some(button) = self.imp().create.borrow().as_ref() {
             button.emit_clicked();
         }
+    }
+
+    pub fn begin_factory_reset(&self) {
+        let Some(parent) = self.parent() else {
+            return;
+        };
+        let weak = self.downgrade();
+        run_operation(
+            &parent,
+            &tr("Checking factory reset availability…"),
+            move || {
+                let client = SnapshotsManagerHelperClient::new()?;
+                let status = client.recovery_engine_status()?;
+                let Some(target) = factory_reset_target(&status)? else {
+                    return Ok(FactoryResetPreparation::Unsupported);
+                };
+                client.check_deployment_restore_readiness(target.id.clone())?;
+                Ok(FactoryResetPreparation::Ready(SnapshotItem::from(target)))
+            },
+            move |parent, result| match result {
+                Ok(FactoryResetPreparation::Ready(item)) => {
+                    if let Some(page) = weak.upgrade() {
+                        page.confirm_factory_reset_impact(&item);
+                    }
+                }
+                Ok(FactoryResetPreparation::Unsupported) => show_information(
+                    parent,
+                    &tr("Factory Reset Is Not Available"),
+                    &tr(
+                        "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it.",
+                    ),
+                ),
+                Err(problem) => show_information(
+                    parent,
+                    &tr("Factory Reset Is Not Ready"),
+                    &problem.to_string(),
+                ),
+            },
+        );
     }
 
     pub fn add_compact_setters(&self, breakpoint: &adw::Breakpoint) {
@@ -646,7 +692,11 @@ impl SnapshotPage {
         let item_delete = item.clone();
         add_row_action(&group, "delete", capabilities.can_delete, move || {
             if let Some(page) = weak.upgrade() {
-                page.confirm_delete(vec![item_delete.id.clone()]);
+                if item_delete.kind == "factory" {
+                    page.confirm_factory_delete(item_delete.id.clone());
+                } else {
+                    page.confirm_delete(vec![item_delete.id.clone()]);
+                }
             }
         });
         row.insert_action_group("snapshot", Some(&group));
@@ -658,14 +708,16 @@ impl SnapshotPage {
             Some(&tr("Check Snapshot Availability")),
             Some("snapshot.verify"),
         );
-        menu_model.append(
-            Some(&if item.keep_forever {
-                tr("Allow automatic cleanup")
-            } else {
-                tr("Keep Forever")
-            }),
-            Some("snapshot.pin"),
-        );
+        if item.kind != "factory" {
+            menu_model.append(
+                Some(&if item.keep_forever {
+                    tr("Allow automatic cleanup")
+                } else {
+                    tr("Keep Forever")
+                }),
+                Some("snapshot.pin"),
+            );
+        }
         let destructive = gio::Menu::new();
         destructive.append(Some(&tr("Delete Snapshot")), Some("snapshot.delete"));
         menu_model.append_section(None, &destructive);
@@ -864,6 +916,36 @@ impl SnapshotPage {
         dialog.present();
     }
 
+    fn confirm_factory_delete(&self, id: String) {
+        let Some(parent) = self.parent() else {
+            return;
+        };
+        let dialog = adw::MessageDialog::new(
+            Some(&parent),
+            Some(&tr("Delete Factory Recovery Point?")),
+            Some(&tr(
+                "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action.",
+            )),
+        );
+        dialog.add_response("cancel", &tr("Cancel"));
+        dialog.add_response("delete", &tr("Delete and Disable Factory Recovery"));
+        dialog.set_response_appearance("delete", adw::ResponseAppearance::Destructive);
+        let weak = self.downgrade();
+        dialog.connect_response(None, move |_, response| {
+            if response != "delete" {
+                return;
+            }
+            let Some(page) = weak.upgrade() else {
+                return;
+            };
+            let id = id.clone();
+            page.run_mutation(&tr("Deleting factory recovery point…"), move || {
+                SnapshotsManagerHelperClient::new()?.delete_factory_deployment(id)
+            });
+        });
+        dialog.present();
+    }
+
     fn verify_snapshot(&self, id: &str) {
         let id = id.to_string();
         let scope = self.imp().scope.get();
@@ -1020,6 +1102,55 @@ impl SnapshotPage {
         let id = item.id.clone();
         dialog.connect_response(None, move |_, response| {
             if response == "rollback"
+                && let Some(page) = weak.upgrade()
+            {
+                page.schedule_rollback(id.clone());
+            }
+        });
+        dialog.present();
+    }
+
+    fn confirm_factory_reset_impact(&self, item: &SnapshotItem) {
+        let Some(parent) = self.parent() else {
+            return;
+        };
+        let dialog = adw::MessageDialog::new(
+            Some(&parent),
+            Some(&tr("Reset AnduinOS to Its Initial State?")),
+            Some(&tr(
+                "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds.",
+            )),
+        );
+        let list = gtk::ListBox::new();
+        list.add_css_class("boxed-list");
+        list.append(&impact_row(
+            &tr("System files and packages"),
+            &tr("Return to the initial New OS state"),
+            "drive-harddisk-symbolic",
+        ));
+        list.append(&impact_row(
+            &tr("Personal files"),
+            &tr("Will not change"),
+            "folder-documents-symbolic",
+        ));
+        list.append(&impact_row(
+            &tr("Current system"),
+            &tr("Saved as a safety snapshot before reset"),
+            "security-high-symbolic",
+        ));
+        list.append(&impact_row(
+            &tr("Restart"),
+            &tr("Automatic 60-second countdown after preparation"),
+            "system-reboot-symbolic",
+        ));
+        dialog.set_extra_child(Some(&list));
+        dialog.add_response("cancel", &tr("Cancel"));
+        dialog.add_response("reset", &tr("Reset and Restart"));
+        dialog.set_response_appearance("reset", adw::ResponseAppearance::Destructive);
+        let weak = self.downgrade();
+        let id = item.id.clone();
+        dialog.connect_response(None, move |_, response| {
+            if response == "reset"
                 && let Some(page) = weak.upgrade()
             {
                 page.schedule_rollback(id.clone());
@@ -1294,6 +1425,40 @@ fn pending_banner_presentation(
     PendingBannerPresentation { title, action }
 }
 
+fn factory_reset_target(
+    status: &RecoveryEngineStatus,
+) -> anyhow::Result<Option<RecoveryDeployment>> {
+    if let Some(error) = status.error.as_deref() {
+        anyhow::bail!("Could not inspect factory recovery support: {error}");
+    }
+    if !status.available || status.layout.root_filesystem.as_deref() != Some("btrfs") {
+        return Ok(None);
+    }
+    if !status.issues.is_empty() {
+        anyhow::bail!("System snapshot metadata contains unresolved issues");
+    }
+    if !status.layout.issues.is_empty() {
+        anyhow::bail!("The Btrfs recovery layout contains unresolved issues");
+    }
+    if status.pending.is_some() {
+        anyhow::bail!("Another system restore is already pending");
+    }
+    let factories = status
+        .deployments
+        .iter()
+        .filter(|record| record.kind == "factory")
+        .collect::<Vec<_>>();
+    let factory = match factories.as_slice() {
+        [] => return Ok(None),
+        [factory] => *factory,
+        _ => anyhow::bail!("More than one factory recovery point is registered"),
+    };
+    if factory.title != "New OS" || factory.state != "ready" || !factory.pinned {
+        anyhow::bail!("The factory recovery point is damaged or no longer protected");
+    }
+    Ok(Some(factory.clone()))
+}
+
 fn run_operation<F, T, C>(parent: &adw::ApplicationWindow, title: &str, operation: F, complete: C)
 where
     F: FnOnce() -> anyhow::Result<T> + Send + 'static,
@@ -1535,6 +1700,57 @@ mod tests {
     use std::os::unix::fs::PermissionsExt;
 
     use super::*;
+
+    fn factory_status() -> RecoveryEngineStatus {
+        RecoveryEngineStatus {
+            available: true,
+            deployments: vec![RecoveryDeployment {
+                id: "aaaaaaaa-1111-4222-8333-bbbbbbbbbbbb".into(),
+                kind: "factory".into(),
+                state: "ready".into(),
+                created_at: chrono::Utc::now(),
+                title: "New OS".into(),
+                reason: "Initial AnduinOS installation".into(),
+                kernel_release: Some("test-kernel".into()),
+                pinned: true,
+            }],
+            pending: None,
+            issues: Vec::new(),
+            layout: crate::dbus_client::LayoutSummary {
+                support: "supported".into(),
+                root_filesystem: Some("btrfs".into()),
+                issues: Vec::new(),
+            },
+            error: None,
+            personal_snapshots: Vec::new(),
+            personal_issues: Vec::new(),
+            system_package_counts: std::collections::HashMap::new(),
+            system_sizes: std::collections::HashMap::new(),
+            personal_sizes: std::collections::HashMap::new(),
+        }
+    }
+
+    #[test]
+    fn factory_reset_requires_one_healthy_protected_factory_record() {
+        let status = factory_status();
+        assert_eq!(
+            factory_reset_target(&status).unwrap().unwrap().title,
+            "New OS"
+        );
+
+        let mut missing = factory_status();
+        missing.deployments.clear();
+        assert!(factory_reset_target(&missing).unwrap().is_none());
+
+        let mut unprotected = factory_status();
+        unprotected.deployments[0].pinned = false;
+        assert!(factory_reset_target(&unprotected).is_err());
+
+        let mut ext4 = factory_status();
+        ext4.available = false;
+        ext4.layout.root_filesystem = Some("ext4".into());
+        assert!(factory_reset_target(&ext4).unwrap().is_none());
+    }
 
     fn pending(phase: &str) -> PendingRecovery {
         PendingRecovery {

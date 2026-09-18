@@ -534,6 +534,17 @@ impl SnapshotsManagerHelperClient {
         Ok(())
     }
 
+    pub fn delete_factory_deployment(&self, id: String) -> Result<()> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call("DeleteFactoryDeployment", &(id,))
+            .context("Failed to delete the factory recovery point")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
+    }
+
     pub fn set_deployment_pinned(&self, id: String, pinned: bool) -> Result<(bool, String)> {
         let proxy = zbus::blocking::Proxy::new(
             &self.connection,
@@ -567,6 +578,17 @@ impl SnapshotsManagerHelperClient {
         proxy
             .call("ScheduleDeploymentRestore", &(id,))
             .context("Failed to schedule the system snapshot")
+    }
+
+    pub fn check_deployment_restore_readiness(&self, id: String) -> Result<()> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call("CheckDeploymentRestoreReadiness", &(id,))
+            .context("Failed to check system restore prerequisites")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
     }
 
     pub fn cancel_deployment_restore(&self) -> Result<(bool, String)> {

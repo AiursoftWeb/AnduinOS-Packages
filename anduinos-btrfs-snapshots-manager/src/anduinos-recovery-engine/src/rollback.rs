@@ -102,9 +102,11 @@ pub trait RollbackBackend {
     fn pending(&self) -> Result<Option<RollbackTransaction>, RollbackError>;
     fn package_transaction_pending(&self) -> Result<bool, RollbackError>;
     fn verify_target(&self, id: DeploymentId) -> Result<DeploymentRecord, RollbackError>;
+    fn check_fallback_capacity(&self, report: &LayoutReport) -> Result<(), RollbackError>;
     fn create_fallback(&self) -> Result<DeploymentRecord, RollbackError>;
     fn root_filesystem_uuid(&self, report: &LayoutReport) -> Result<String, RollbackError>;
     fn verify_one_shot_support(&self) -> Result<(), RollbackError>;
+    fn verify_recovery_boot_source(&self) -> Result<(), RollbackError>;
     fn provision_recovery_boot_artifacts(&self) -> Result<RecoveryBootArtifacts, RollbackError>;
     fn create_transaction(&self, transaction: &RollbackTransaction) -> Result<(), RollbackError>;
     fn update_transaction(&self, transaction: &RollbackTransaction) -> Result<(), RollbackError>;
@@ -155,6 +157,12 @@ impl RollbackBackend for SystemRollbackBackend {
         Ok(record)
     }
 
+    fn check_fallback_capacity(&self, report: &LayoutReport) -> Result<(), RollbackError> {
+        OperationEngine::default()
+            .check_pre_rollback_capacity(report)
+            .map_err(|error| RollbackError::new(RollbackErrorCode::StateCommit, error.message))
+    }
+
     fn create_fallback(&self) -> Result<DeploymentRecord, RollbackError> {
         OperationEngine::default()
             .create_pre_rollback(&self.layout(), |_phase, _fraction, _message| {})
@@ -185,6 +193,12 @@ impl RollbackBackend for SystemRollbackBackend {
         BootIntegration::default()
             .ensure_external_environment_block()
             .map(|_| ())
+            .map_err(|error| RollbackError::new(RollbackErrorCode::BootIntegration, error.message))
+    }
+
+    fn verify_recovery_boot_source(&self) -> Result<(), RollbackError> {
+        BootIntegration::default()
+            .verify_recovery_boot_source()
             .map_err(|error| RollbackError::new(RollbackErrorCode::BootIntegration, error.message))
     }
 
@@ -270,19 +284,18 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
         Self { backend }
     }
 
-    pub fn schedule<F>(
+    /// Perform every non-destructive rollback prerequisite check available
+    /// before asking the user for final confirmation. `schedule` deliberately
+    /// repeats the same boundary because system state can change meanwhile.
+    pub fn check_ready(&self, target_id: DeploymentId) -> Result<DeploymentRecord, RollbackError> {
+        let (target, _, _) = self.validate_ready(target_id)?;
+        Ok(target)
+    }
+
+    fn validate_ready(
         &self,
         target_id: DeploymentId,
-        mut progress: F,
-    ) -> Result<RollbackTransaction, RollbackError>
-    where
-        F: FnMut(RollbackProgressPhase, f64, &str),
-    {
-        progress(
-            RollbackProgressPhase::Validate,
-            0.02,
-            "Checking the recovery target",
-        );
+    ) -> Result<(DeploymentRecord, LayoutReport, String), RollbackError> {
         if self.backend.pending()?.is_some() {
             return Err(RollbackError::new(
                 RollbackErrorCode::AlreadyPending,
@@ -310,7 +323,26 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
             ));
         }
         let root_uuid = self.backend.root_filesystem_uuid(&report)?;
+        self.backend.check_fallback_capacity(&report)?;
+        self.backend.verify_recovery_boot_source()?;
         self.backend.verify_one_shot_support()?;
+        Ok((target, report, root_uuid))
+    }
+
+    pub fn schedule<F>(
+        &self,
+        target_id: DeploymentId,
+        mut progress: F,
+    ) -> Result<RollbackTransaction, RollbackError>
+    where
+        F: FnMut(RollbackProgressPhase, f64, &str),
+    {
+        progress(
+            RollbackProgressPhase::Validate,
+            0.02,
+            "Checking the recovery target",
+        );
+        let (target, _report, root_uuid) = self.validate_ready(target_id)?;
         let recovery_boot = self.backend.provision_recovery_boot_artifacts()?;
 
         progress(
@@ -661,6 +693,10 @@ mod tests {
                 .ok_or_else(|| RollbackError::new(RollbackErrorCode::InvalidTarget, "missing"))
         }
 
+        fn check_fallback_capacity(&self, _report: &LayoutReport) -> Result<(), RollbackError> {
+            self.hit("check-fallback-capacity")
+        }
+
         fn create_fallback(&self) -> Result<DeploymentRecord, RollbackError> {
             self.hit("create-fallback")?;
             let fallback = record(DeploymentKind::PreRollback, DeploymentState::Ready);
@@ -679,6 +715,10 @@ mod tests {
 
         fn verify_one_shot_support(&self) -> Result<(), RollbackError> {
             self.hit("verify-one-shot")
+        }
+
+        fn verify_recovery_boot_source(&self) -> Result<(), RollbackError> {
+            self.hit("verify-recovery-boot-source")
         }
 
         fn provision_recovery_boot_artifacts(
@@ -819,6 +859,58 @@ mod tests {
             .position(|call| call == "create-fallback")
             .unwrap();
         assert!(capability < fallback);
+    }
+
+    #[test]
+    fn readiness_checks_capacity_without_creating_or_arming_any_state() {
+        let (backend, target) = FakeBackend::new();
+        let checked = RollbackCoordinator::new(backend.clone())
+            .check_ready(target)
+            .unwrap();
+        assert_eq!(checked.id, target);
+        let inner = backend.inner.lock().unwrap();
+        assert!(
+            inner
+                .calls
+                .iter()
+                .any(|call| call == "check-fallback-capacity")
+        );
+        assert!(
+            inner
+                .calls
+                .iter()
+                .any(|call| call == "verify-recovery-boot-source")
+        );
+        assert!(!inner.calls.iter().any(|call| call == "create-fallback"));
+        assert!(
+            !inner
+                .calls
+                .iter()
+                .any(|call| call == "provision-recovery-boot")
+        );
+        assert!(!inner.calls.iter().any(|call| call == "arm-once"));
+        assert!(inner.pending.is_none());
+    }
+
+    #[test]
+    fn readiness_capacity_failure_never_provisions_or_creates_recovery_state() {
+        let (backend, target) = FakeBackend::new();
+        backend.fail_once("check-fallback-capacity");
+        assert!(
+            RollbackCoordinator::new(backend.clone())
+                .check_ready(target)
+                .is_err()
+        );
+        let inner = backend.inner.lock().unwrap();
+        assert!(!inner.calls.iter().any(|call| call == "create-fallback"));
+        assert!(
+            !inner
+                .calls
+                .iter()
+                .any(|call| call == "provision-recovery-boot")
+        );
+        assert!(!inner.calls.iter().any(|call| call == "arm-once"));
+        assert!(inner.pending.is_none());
     }
 
     #[test]

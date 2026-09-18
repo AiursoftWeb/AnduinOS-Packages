@@ -56,6 +56,21 @@ mod imp {
             app.ensure_main_window().present();
             app.schedule_smoke_exit();
         }
+
+        fn command_line(&self, command_line: &gio::ApplicationCommandLine) -> glib::ExitCode {
+            let factory_reset = command_line
+                .options_dict()
+                .lookup::<bool>("factory-reset")
+                .ok()
+                .flatten()
+                .unwrap_or(false);
+            let app = self.obj();
+            app.activate();
+            if factory_reset {
+                app.ensure_main_window().begin_factory_reset();
+            }
+            glib::ExitCode::SUCCESS
+        }
     }
 
     impl GtkApplicationImpl for SnapshotsManagerApplication {}
@@ -70,9 +85,19 @@ glib::wrapper! {
 
 impl SnapshotsManagerApplication {
     pub fn new() -> Self {
-        glib::Object::builder()
+        let app: Self = glib::Object::builder()
             .property("application-id", APP_ID)
-            .build()
+            .property("flags", gio::ApplicationFlags::HANDLES_COMMAND_LINE)
+            .build();
+        app.add_main_option(
+            "factory-reset",
+            glib::Char::from(0u8),
+            glib::OptionFlags::NONE,
+            glib::OptionArg::None,
+            "Open the guarded factory reset workflow",
+            None,
+        );
+        app
     }
 
     pub fn ensure_main_window(&self) -> MainWindow {

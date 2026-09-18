@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-btrfs-snapshots-manager</PackageName>
-    <PackageVersion>2.0.2-16+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.2-18+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Disk Snapshots Manager — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -68,6 +68,7 @@
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-boot-config" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-boot-config" />
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-confirm" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-confirm" />
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-apt-hook" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-apt-hook" />
+    <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-provision-factory" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-provision-factory" />
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-cli" Target="/usr/bin/anduinos-btrfs-snapshots-manager-cli" />
     <IncludeScript Include="data/dracut/91anduinos-btrfs-snapshots-manager/module-setup.sh"
                    Target="/usr/lib/dracut/modules.d/91anduinos-btrfs-snapshots-manager/module-setup.sh" />

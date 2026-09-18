@@ -104,6 +104,15 @@ impl MainWindow {
         information::show(self.upcast_ref());
     }
 
+    pub fn begin_factory_reset(&self) {
+        if let Some(pages) = self.imp().pages.borrow().as_ref() {
+            pages.set_visible_child_name("system");
+        }
+        if let Some(page) = self.imp().system_page.borrow().as_ref() {
+            page.begin_factory_reset();
+        }
+    }
+
     fn setup_ui(&self, monitor: SnapshotSignalMonitor) {
         let pages = adw::ViewStack::new();
         pages.set_vexpand(true);

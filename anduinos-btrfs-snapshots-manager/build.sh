@@ -32,4 +32,5 @@ install -m755 "$RELEASE_DIR/anduinos-btrfs-snapshots-manager-initramfs" "$SCRIPT
 install -m755 "$RELEASE_DIR/anduinos-btrfs-snapshots-manager-boot-config" "$SCRIPT_DIR/obj/anduinos-btrfs-snapshots-manager-boot-config"
 install -m755 "$RELEASE_DIR/anduinos-btrfs-snapshots-manager-confirm" "$SCRIPT_DIR/obj/anduinos-btrfs-snapshots-manager-confirm"
 install -m755 "$RELEASE_DIR/anduinos-btrfs-snapshots-manager-apt-hook" "$SCRIPT_DIR/obj/anduinos-btrfs-snapshots-manager-apt-hook"
+install -m755 "$RELEASE_DIR/anduinos-btrfs-snapshots-manager-provision-factory" "$SCRIPT_DIR/obj/anduinos-btrfs-snapshots-manager-provision-factory"
 install -m755 "$SCRIPT_DIR/src/btrfs-snapshots-manager-cli" "$SCRIPT_DIR/obj/anduinos-btrfs-snapshots-manager-cli"

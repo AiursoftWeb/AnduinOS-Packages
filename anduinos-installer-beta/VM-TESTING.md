@@ -68,6 +68,11 @@ firmware for arm64.
 9. No live-session-only packages, mounts, DNS files or `policy-rc.d` remain.
 10. Kernel, initramfs and GRUB artifacts agree. The fallback EFI loader exists
     for UEFI rows.
+11. Every Btrfs row contains exactly one healthy, pinned system snapshot named
+    `New OS`; rerunning the factory provisioner reports the same snapshot and
+    creates no duplicate. Classic filesystem rows contain no factory snapshot.
+    Restoring `New OS` returns the system root to its installed state while a
+    marker created in the user's Home directory remains unchanged.
 
 For Secure Boot rows, also require:
 

@@ -14,6 +14,15 @@ POT = ROOT / "po" / "anduinos-btrfs-snapshots-manager.pot"
 ZH_CN = ROOT / "po" / "zh_CN.po"
 
 NEW_TRANSLATIONS = {
+    "Checking factory reset availability…": "正在检查恢复出厂设置可用性…",
+    "Factory Reset Is Not Available": "无法恢复出厂设置",
+    "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it.": "此系统不支持恢复出厂设置。请重新安装 AnduinOS，并选择 Btrfs 文件系统以启用此功能。",
+    "Factory Reset Is Not Ready": "恢复出厂设置尚未就绪",
+    "Reset AnduinOS to Its Initial State?": "将 AnduinOS 重置为初始状态？",
+    "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds.": "恢复出厂设置会将系统文件、已安装的软件包和系统设置还原到最初的 New OS 状态。Home 中的个人文件不会改变。系统会先为当前状态创建一个安全快照，然后准备恢复，并在 60 秒内自动重启。",
+    "Return to the initial New OS state": "返回初始 New OS 状态",
+    "Saved as a safety snapshot before reset": "重置前将当前系统保存为安全快照",
+    "Reset and Restart": "重置并重启",
     "All system drives look healthy": "所有系统盘状态良好",
     "A critical threshold is failing now": "当前有一项关键指标未达到阈值",
     "A threshold was exceeded in the past": "过去曾有一项指标超过阈值",
@@ -296,6 +305,9 @@ NEW_TRANSLATIONS = {
     "Creating snapshot…": "正在创建快照…",
     "Current system": "当前系统",
     "Deleting snapshots…": "正在删除快照…",
+    "Delete Factory Recovery Point?": "删除出厂恢复点？",
+    "Delete and Disable Factory Recovery": "删除并禁用出厂恢复",
+    "Deleting factory recovery point…": "正在删除出厂恢复点…",
     "Details": "详情",
     "Exclusive Data": "独占数据",
     "Files Recovered": "文件已恢复",
@@ -347,6 +359,7 @@ NEW_TRANSLATIONS = {
     "The scheduled Home snapshot was created successfully.": "计划的用户目录快照创建成功。",
     "The scheduled system snapshot was created successfully.": "计划的系统快照创建成功。",
     "The system snapshot was created successfully.": "系统快照创建成功。",
+    "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action.": "“New OS” 是安装时创建的原始系统状态。删除后，将无法再把 AnduinOS 重置到初始状态；除非重新安装操作系统，否则无法撤销。此操作不会删除您的个人文件。",
     "Total": "总量",
     "The selected files were recovered successfully.": "所选文件已成功恢复。",
     "This snapshot is not available for recovery.": "此快照不能用于恢复。",

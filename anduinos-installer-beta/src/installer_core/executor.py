@@ -43,7 +43,10 @@ from .steps import (
 from .storage_steps import MountTargetStep, PrepareStorageStep
 from .system_config import ConfigureSystemStep
 from .target_config import ConfigureStorageStep
-from .snapshots_manager import EnsureSnapshotsManagerStep
+from .snapshots_manager import (
+    CreateFactorySnapshotStep,
+    EnsureSnapshotsManagerStep,
+)
 from .wifi_migration import MigrateWifiConnectionStep
 from .validation import ExecutionPolicy, validate_plan_for_execution
 
@@ -129,6 +132,8 @@ class InstallerExecutor:
         )
         if plan.platform.firmware is Firmware.UEFI:
             steps.append(CheckOtherDiskSystemsStep(self.runner))
+        if plan.storage.filesystem is Filesystem.BTRFS:
+            steps.append(CreateFactorySnapshotStep(self.runner))
         steps.extend(
             (
                 LeaveChrootStep(self.runner),

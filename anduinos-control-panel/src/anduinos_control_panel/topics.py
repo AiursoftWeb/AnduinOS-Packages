@@ -285,6 +285,23 @@ def topics() -> tuple[ControlPanelTopic, ...]:
             command=("anduinos-btrfs-snapshots-manager",),
         ),
         _topic(
+            "recovery.factory-reset",
+            "recovery",
+            N_("Factory Reset"),
+            N_("Return system files and applications to their initial state"),
+            (
+                "factory reset",
+                "reset",
+                "reinstall",
+                "recovery",
+                "btrfs",
+                "恢复出厂设置",
+                "重置系统",
+            ),
+            "preferences-system-backup",
+            handler="factory-reset",
+        ),
+        _topic(
             "recovery.backup",
             "recovery",
             N_("Back Up Home Folder"),

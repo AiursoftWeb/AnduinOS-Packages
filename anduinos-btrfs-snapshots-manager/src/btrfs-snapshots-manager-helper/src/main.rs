@@ -1202,6 +1202,49 @@ impl SnapshotsManagerHelper {
         }
     }
 
+    /// Delete the installer-owned factory recovery point after the desktop UI
+    /// has presented its dedicated loss-of-recovery confirmation.
+    async fn delete_factory_deployment(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        deployment_id: String,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_DELETE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_DELETE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match deployment_id.parse::<DeploymentId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid factory snapshot ID: {error}")),
+        };
+        match OperationEngine::default().delete_factory(&layout::inspect_current(), id) {
+            Ok(()) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "delete_factory_recovery",
+                    &deployment_id,
+                    true,
+                    None,
+                );
+                (true, "Factory recovery point deleted".into())
+            }
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "delete_factory_recovery",
+                    &deployment_id,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
+        }
+    }
+
     /// Delete multiple unprotected system snapshots under one explicit
     /// authorization decision.
     async fn delete_deployments(
@@ -1337,6 +1380,39 @@ impl SnapshotsManagerHelper {
                 .map(|json| (true, json))
                 .unwrap_or_else(|error| (false, error.to_string())),
             Err(error) => (false, error.to_string()),
+        }
+    }
+
+    /// Validate the complete restore boundary before presenting a destructive
+    /// confirmation. The scheduler repeats these checks before changing state.
+    async fn check_deployment_restore_readiness(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        deployment_id: String,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_RESTORE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_RESTORE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match deployment_id.parse::<DeploymentId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid system snapshot ID: {error}")),
+        };
+        match RollbackCoordinator::default().check_ready(id) {
+            Ok(_) => (true, "System restore prerequisites are ready".into()),
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "check_restore_readiness",
+                    &deployment_id,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
         }
     }
 

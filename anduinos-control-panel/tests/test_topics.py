@@ -24,6 +24,7 @@ class TopicCatalogTests(unittest.TestCase):
             "yubikey": "accounts.yubikey",
             "grub": "system.startup-boot",
             "btrfs": "recovery.snapshots",
+            "factory reset": "recovery.factory-reset",
             "scanner": "hardware.scanners",
             "扫描仪": "hardware.scanners",
             "高级网络": "network.advanced",
@@ -32,7 +33,7 @@ class TopicCatalogTests(unittest.TestCase):
             with self.subTest(query=query):
                 results = search_topics([query])
                 self.assertTrue(results)
-                self.assertEqual(results[0].identifier, identifier)
+            self.assertEqual(results[0].identifier, identifier)
 
     def test_multi_term_search_requires_every_term(self):
         results = search_topics(["secure", "boot"])
