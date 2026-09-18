@@ -291,10 +291,14 @@ class PrepareStorageStep:
 
             partition_boundary = f"manual-ntfs-partition-resize-{index}"
             emit_boundary(context, partition_boundary, "before")
+            # Script mode refuses Parted's shrink confirmation, even after
+            # ntfsresize has succeeded. Read exactly one affirmative answer
+            # from our pipe; do not auto-answer arbitrary future prompts.
+            environment = dict(os.environ, LC_ALL="C", LANGUAGE="C")
             self.runner.run(
                 (
                     "parted",
-                    "--script",
+                    "---pretend-input-tty",
                     resize.disk,
                     "unit",
                     "B",
@@ -302,6 +306,8 @@ class PrepareStorageStep:
                     str(resize.partition_number),
                     f"{resize.target_end_bytes}B",
                 ),
+                input_text="Yes\n",
+                environment=environment,
                 timeout=300,
             )
             self.runner.run(("partprobe", resize.disk), timeout=30)
