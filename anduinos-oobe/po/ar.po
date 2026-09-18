@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-oobe\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-09 15:16+0000\n"
+"POT-Creation-Date: 2026-09-18 12:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: ar <LL@li.org>\n"
@@ -13,662 +13,465 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: assets/anduinos-oobe:371
-msgid "Disk Snapshots Manager"
-msgstr "مدير لقطات القرص"
-
-#: assets/anduinos-oobe:373
-msgid "Protect your system with automatic Btrfs snapshots and smart cleanup."
-msgstr "قم بحماية نظامك من خلال لقطات Btrfs التلقائية والتنظيف الذكي."
-
-#: assets/anduinos-oobe:375
-msgid "Configure Automatic Snapshots"
-msgstr "تكوين اللقطات التلقائية"
-
-#: assets/anduinos-oobe:380
-msgid "System Backup"
-msgstr "نسخ النظام الاحتياطي"
-
-#. Translate as a complete sentence; the interface wraps the text automatically.
-msgid "Use Deja Dup to protect your important files with automated, secure local or remote backups."
-msgstr "استخدم Deja Dup لحماية ملفاتك الملفات المهمة مع النسخ الاحتياطي التلقائي، النسخ الاحتياطي المحلي أو البعيد الآمن."
-
-
-
-#: assets/anduinos-oobe:386
-msgid "Get Deja Dup"
-msgstr "احصل على Deja Dup"
-
-#: assets/anduinos-oobe:443
+#: assets/anduinos-oobe:255
 msgid "NetworkManager could not scan Wi-Fi."
 msgstr "تعذر على NetworkManager فحص شبكة Wi-Fi."
 
-#: assets/anduinos-oobe:506
+#: assets/anduinos-oobe:318
 msgid "Could not inspect network adapters."
 msgstr "لا يمكن فحص محولات الشبكة."
 
-#: assets/anduinos-oobe:516
+#: assets/anduinos-oobe:328
 msgid "Could not read the Wi-Fi radio state."
 msgstr "تعذر قراءة حالة راديو Wi-Fi."
 
-#: assets/anduinos-oobe:522
+#: assets/anduinos-oobe:334
 msgid "Unknown Wi-Fi radio state: {}"
 msgstr "حالة راديو Wi-Fi غير معروفة: {}"
 
-#: assets/anduinos-oobe:523
+#: assets/anduinos-oobe:335
 msgid "empty"
 msgstr "فارغ"
 
-#: assets/anduinos-oobe:532
+#: assets/anduinos-oobe:344
 msgid "Could not change the Wi-Fi radio state."
 msgstr "لا يمكن تغيير حالة راديو Wi-Fi."
 
-#: assets/anduinos-oobe:634
+#: assets/anduinos-oobe:446
 msgid "Welcome Home."
 msgstr "مرحبًا بك في المنزل."
 
-#: assets/anduinos-oobe:644
+#: assets/anduinos-oobe:456
 msgid "AnduinOS is ready. Just a few steps to shape it"
 msgstr "AnduinOS جاهز. فقط بضع خطوات لتشكيله"
 
-#: assets/anduinos-oobe:644
+#: assets/anduinos-oobe:456
 msgid "into the perfect system tailored to your habits."
 msgstr "في نظام مثالي مصمم خصيصًا لعاداتك."
 
-#: assets/anduinos-oobe:654
+#: assets/anduinos-oobe:466
 msgid "  Start Setup  "
 msgstr "  ابدأ الإعداد  "
 
-#: assets/anduinos-oobe:701
+#: assets/anduinos-oobe:513
 msgid "Connect to the Internet"
 msgstr "الاتصال بالإنترنت"
 
-#: assets/anduinos-oobe:709
+#: assets/anduinos-oobe:521
 msgid ""
 "Connect now so AnduinOS can safely check for updates, drivers, and apps."
 msgstr ""
 "اتصل الآن حتى يتمكن AnduinOS من التحقق بأمان من التحديثات وبرامج التشغيل "
 "والتطبيقات."
 
-#: assets/anduinos-oobe:717
+#: assets/anduinos-oobe:529
 msgid "Internet Connection"
 msgstr "اتصال بالإنترنت"
 
-#: assets/anduinos-oobe:724
+#: assets/anduinos-oobe:536
 msgid "Network Hardware"
 msgstr "أجهزة الشبكة"
 
-#: assets/anduinos-oobe:732
+#: assets/anduinos-oobe:544
 msgid "Available Wi-Fi Networks"
 msgstr "شبكات الواي فاي المتوفرة"
 
-#: assets/anduinos-oobe:734
+#: assets/anduinos-oobe:546
 msgid "Wi-Fi"
 msgstr "واي فاي"
 
-#: assets/anduinos-oobe:737
+#: assets/anduinos-oobe:549
 msgid "Scan Again"
 msgstr "المسح مرة أخرى"
 
-#: assets/anduinos-oobe:746 assets/anduinos-oobe:818 assets/anduinos-oobe:826
-#: assets/anduinos-oobe:841
+#: assets/anduinos-oobe:558 assets/anduinos-oobe:630 assets/anduinos-oobe:638
+#: assets/anduinos-oobe:653
 msgid "Open Network Settings"
 msgstr "افتح إعدادات الشبكة"
 
-#: assets/anduinos-oobe:755
+#: assets/anduinos-oobe:567
 msgid "Could not open network settings: {}"
 msgstr "لا يمكن فتح إعدادات الشبكة: {}"
 
-#: assets/anduinos-oobe:765
+#: assets/anduinos-oobe:577
 msgid "Continue Offline"
 msgstr "متابعة دون اتصال"
 
-#: assets/anduinos-oobe:769
+#: assets/anduinos-oobe:581
 msgid "Skip updates, online drivers, apps, and account setup."
 msgstr "تخطي التحديثات وبرامج التشغيل عبر الإنترنت والتطبيقات وإعداد الحساب."
 
-#: assets/anduinos-oobe:785
+#: assets/anduinos-oobe:597
 msgid "Internet connection is ready. Choose Next to continue."
 msgstr "الاتصال بالإنترنت جاهز. اختر التالي للمتابعة."
 
-#: assets/anduinos-oobe:792
+#: assets/anduinos-oobe:604
 msgid "Connect to Wi-Fi or a wired network to continue."
 msgstr "اتصل بشبكة Wi-Fi أو شبكة سلكية للمتابعة."
 
-#: assets/anduinos-oobe:815
+#: assets/anduinos-oobe:627
 msgid "No network adapters detected."
 msgstr "لم يتم اكتشاف أي محولات للشبكة."
 
-#: assets/anduinos-oobe:817
+#: assets/anduinos-oobe:629
 msgid "Connect a network adapter or continue offline."
 msgstr "قم بتوصيل محول شبكة أو تابع دون الاتصال بالإنترنت."
 
-#: assets/anduinos-oobe:822
+#: assets/anduinos-oobe:634
 msgid "Wired Network"
 msgstr "الشبكة السلكية"
 
-#: assets/anduinos-oobe:824
+#: assets/anduinos-oobe:636
 msgid "Cable connected."
 msgstr "تم توصيل الكابل."
 
-#: assets/anduinos-oobe:825
+#: assets/anduinos-oobe:637
 msgid "Plug in a network cable to connect."
 msgstr "قم بتوصيل كابل الشبكة للاتصال."
 
-#: assets/anduinos-oobe:830
+#: assets/anduinos-oobe:642
 msgid "Wireless Network"
 msgstr "شبكة لاسلكية"
 
-#: assets/anduinos-oobe:831
+#: assets/anduinos-oobe:643
 msgid "Wi-Fi adapter detected."
 msgstr "تم اكتشاف محول Wi-Fi."
 
-#: assets/anduinos-oobe:832
+#: assets/anduinos-oobe:644
 msgid "Open Wi-Fi Settings"
 msgstr "افتح إعدادات الواي فاي"
 
-#: assets/anduinos-oobe:836
+#: assets/anduinos-oobe:648
 msgid "Wired and Wireless Networks"
 msgstr "الشبكات السلكية واللاسلكية"
 
-#: assets/anduinos-oobe:838
+#: assets/anduinos-oobe:650
 msgid "Cable connected and Wi-Fi available."
 msgstr "متصل بالكابل وتتوفر خدمة الواي فاي."
 
-#: assets/anduinos-oobe:840
+#: assets/anduinos-oobe:652
 msgid "Wi-Fi is available; the network cable is disconnected."
 msgstr "تتوفر خدمة الواي فاي. تم قطع كابل الشبكة."
 
-#: assets/anduinos-oobe:852
+#: assets/anduinos-oobe:664
 msgid "Wi-Fi is turned off."
 msgstr "تم إيقاف تشغيل Wi-Fi."
 
-#: assets/anduinos-oobe:856
+#: assets/anduinos-oobe:668
 msgid "No Wi-Fi networks found."
 msgstr "لم يتم العثور على شبكات Wi-Fi."
 
-#: assets/anduinos-oobe:885
+#: assets/anduinos-oobe:697
 msgid "Wi-Fi unavailable: {}"
 msgstr "شبكة Wi-Fi غير متاحة: {}"
 
-#: assets/anduinos-oobe:967
+#: assets/anduinos-oobe:767 assets/anduinos-oobe:774
+msgid "Display Scaling"
+msgstr "تحجيم العرض"
+
+#: assets/anduinos-oobe:768 assets/anduinos-oobe:799 assets/anduinos-oobe:816
+msgid "Recommendation unavailable for this display."
+msgstr "لا تتوفر توصية لهذه الشاشة."
+
+#: assets/anduinos-oobe:790
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (موصى به)"
+
+#: assets/anduinos-oobe:797
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "الشاشة الرئيسية: %(display)s · الموصى به: %(scale)s"
+
+#: assets/anduinos-oobe:800 assets/anduinos-oobe:815
+msgid "Could not change display scaling."
+msgstr "تعذّر تغيير تحجيم العرض."
+
+#: assets/anduinos-oobe:895
 msgid "Define Your Visual Order"
 msgstr "عرّف ترتيبك البصري"
 
-#: assets/anduinos-oobe:977
+#: assets/anduinos-oobe:905
 msgid "Light and Shadow"
 msgstr "الضوء والظل"
 
-#: assets/anduinos-oobe:978
+#: assets/anduinos-oobe:906
 msgid "Choose a crisp light theme, or an immersive dark experience."
 msgstr "اختر سمة ضوئية واضحة، أو تجربة غامرة في الوضع الداكن."
 
-#: assets/anduinos-oobe:997
+#: assets/anduinos-oobe:925
 msgid "Light"
 msgstr "ضوئي"
 
-#: assets/anduinos-oobe:1009
+#: assets/anduinos-oobe:937
 msgid "Dark"
 msgstr "داكن"
 
-#: assets/anduinos-oobe:1040
+#: assets/anduinos-oobe:970
 msgid "Workflow Layout"
 msgstr "تخطيط سير العمل"
 
-#: assets/anduinos-oobe:1041
+#: assets/anduinos-oobe:971
 msgid "Prefer modern centered alignment, or classic left-docked?"
 msgstr "هل تفضل المحاذاة المركزية الحديثة، أم التثبيت الكلاسيكي على اليسار؟"
 
-#: assets/anduinos-oobe:1075
+#: assets/anduinos-oobe:1005
 msgid "Taskbar Layout"
 msgstr "تخطيط شريط المهام"
 
-#: assets/anduinos-oobe:1076
+#: assets/anduinos-oobe:1006
 msgid "Choose your workflow."
 msgstr "اختر نمط سير العمل الخاص بك."
 
-#: assets/anduinos-oobe:1085
+#: assets/anduinos-oobe:1015
 msgid " Modern "
 msgstr " حديث "
 
-#: assets/anduinos-oobe:1086
+#: assets/anduinos-oobe:1016
 msgid " Classic "
 msgstr " كلاسيكي "
 
-#: assets/anduinos-oobe:1115
+#: assets/anduinos-oobe:1045
 msgid "Show Virtual Desktop Switch Button"
 msgstr "إظهار زر التبديل بين سطح المكتب الافتراضي"
 
-#: assets/anduinos-oobe:1116
+#: assets/anduinos-oobe:1046
 msgid "Display the Activities button on the taskbar"
 msgstr "عرض زر \"الأنشطة\" على شريط المهام"
 
-#: assets/anduinos-oobe:1168
+#: assets/anduinos-oobe:1098
 msgid "Digital Sovereignty, Under Your Control"
 msgstr "السيادة الرقمية، تحت سيطرتك"
 
-#: assets/anduinos-oobe:1176
+#: assets/anduinos-oobe:1106
 msgid "We deeply value privacy. Here, you hold absolute authority."
 msgstr "نحن نقدر الخصوصية بعمق. هنا، أنت تملك السلطة المطلقة."
 
-#: assets/anduinos-oobe:1186
+#: assets/anduinos-oobe:1116
 msgid "Network Security"
 msgstr "أمن الشبكات"
 
-#: assets/anduinos-oobe:1188
-msgid ""
-"Control inbound protection and whether this computer participates in local "
-"network discovery."
-msgstr ""
-"التحكم في الحماية الواردة وما إذا كان هذا الكمبيوتر يشارك في اكتشاف الشبكة "
-"المحلية."
-
-#: assets/anduinos-oobe:1193
+#: assets/anduinos-oobe:1120
 msgid "Network Firewall (UFW)"
 msgstr "جدار حماية الشبكة (UFW)"
 
-#: assets/anduinos-oobe:1246
-msgid "Local Network Discovery (mDNS)"
-msgstr "اكتشاف الشبكة المحلية (mDNS)"
-
-#: assets/anduinos-oobe:1248
-msgid ""
-"Find printers and nearby devices, and make .local names available on trusted"
-" networks."
-msgstr ""
-"ابحث عن الطابعات والأجهزة القريبة، واجعل الأسماء المحلية متاحة على الشبكات "
-"الموثوقة."
-
-#: assets/anduinos-oobe:1260
-msgid "Local network discovery controls are not installed."
-msgstr "لم يتم تثبيت عناصر التحكم في اكتشاف الشبكة المحلية."
-
-#: assets/anduinos-oobe:1295
+#: assets/anduinos-oobe:1176
 msgid "Location Services"
 msgstr "خدمات الموقع"
 
-#: assets/anduinos-oobe:1297
+#: assets/anduinos-oobe:1178
 msgid ""
 "Allow apps like weather and clock to access your approximate geographic "
 "location."
-msgstr ""
-"السماح لتطبيقات مثل الطقس والساعة بالوصول إلى موقعك الجغرافي التقريبي."
+msgstr "السماح لتطبيقات مثل الطقس والساعة بالوصول إلى موقعك الجغرافي التقريبي."
 
-#: assets/anduinos-oobe:1301
+#: assets/anduinos-oobe:1182
 msgid "Location Access"
 msgstr "الوصول إلى الموقع"
 
-#: assets/anduinos-oobe:1319
+#: assets/anduinos-oobe:1200
 msgid "Power Settings"
 msgstr "إعدادات الطاقة"
 
-#: assets/anduinos-oobe:1320
+#: assets/anduinos-oobe:1201
 msgid "Manage idle behavior to balance energy saving and convenience."
 msgstr "إدارة سلوك الخمول لتحقيق التوازن بين توفير الطاقة والراحة."
 
-#: assets/anduinos-oobe:1324
+#: assets/anduinos-oobe:1205
 msgid "Auto Sleep"
 msgstr "النوم التلقائي"
 
-#: assets/anduinos-oobe:1353
-msgid "Command-line Assistance"
-msgstr "مساعدة سطر الأوامر"
-
-#: assets/anduinos-oobe:1354
-msgid "Control local bash predictions."
-msgstr "تحكّم في تنبؤات bash المحلية."
-
-#: assets/anduinos-oobe:1358
-msgid "Bash Command Predictions"
-msgstr "تنبؤات أوامر Bash"
-
-#: assets/anduinos-oobe:1359
-msgid "Show command suggestions in bash"
-msgstr "اعرض اقتراحات الأوامر في bash"
-
-#: assets/anduinos-oobe:1376
-msgid ""
-"Could not update your Bash configuration. Your previous setting was kept."
-msgstr "تعذّر تحديث إعدادات Bash. تم الاحتفاظ بإعدادك السابق."
-
-#: assets/anduinos-oobe:1414
-msgid "Keep Your System Up to Date"
-msgstr "حافظ على نظامك محدثًا"
-
-#: assets/anduinos-oobe:1423
-msgid "Security patches and the latest features are just a click away."
-msgstr "ترقيعات الأمان والميزات الجديدة هي على بعد نقرة واحدة فقط."
-
-#: assets/anduinos-oobe:1433
-msgid "Terminal Output"
-msgstr "مخرجات الطرفية"
-
-#: assets/anduinos-oobe:1470
-msgid "  Do It Later  "
-msgstr "  فعل ذلك لاحقًا  "
-
-#: assets/anduinos-oobe:1473
-msgid "  Find Fastest Mirror  "
-msgstr "  ابحث عن أسرع مرآة  "
-
-#: assets/anduinos-oobe:1476
-msgid "  Check for Updates  "
-msgstr "  تحقق من التحديثات  "
-
-#: assets/anduinos-oobe:1510
-msgid "Checking for updates…"
-msgstr "جارٍ التحقق من التحديثات…"
-
-#: assets/anduinos-oobe:1542
-msgid "Updates are available."
-msgstr "هناك تحديثات متاحة."
-
-#: assets/anduinos-oobe:1543
-msgid "  Install Updates  "
-msgstr "  تثبيت التحديثات  "
-
-#: assets/anduinos-oobe:1550
-msgid "✓ System is up to date."
-msgstr "✓ النظام محدث."
-
-#: assets/anduinos-oobe:1552 assets/anduinos-oobe:1582
-msgid "  Continue  "
-msgstr "  متابعة  "
-
-#: assets/anduinos-oobe:1559
-msgid "✗ Check failed: "
-msgstr "✗ فشل التحقق: "
-
-#: assets/anduinos-oobe:1565
-msgid "Installing updates…"
-msgstr "جارٍ تثبيت التحديثات…"
-
-#: assets/anduinos-oobe:1580
-msgid "✓ Updates installed successfully!"
-msgstr "✓ تم تثبيت التحديثات بنجاح!"
-
-#: assets/anduinos-oobe:1591
-msgid "✗ Installation failed: "
-msgstr "✗ فشل التثبيت: "
-
-#: assets/anduinos-oobe:1630
-msgid "Testing mirrors…"
-msgstr "اختبار المرايا…"
-
-#: assets/anduinos-oobe:1631
-msgid "=== Testing mirror speeds ==="
-msgstr "=== اختبار سرعات المرآية ==="
-
-#: assets/anduinos-oobe:1756 assets/anduinos-oobe:1764
-#, python-brace-format
-msgid "Testing mirrors… ({c}/{t})"
-msgstr "اختبار المرايا... ({c}/{t})"
-
-#: assets/anduinos-oobe:1772
-msgid "No mirrors reachable."
-msgstr "لا يمكن الوصول إلى أي مرآيات."
-
-#: assets/anduinos-oobe:1774
-msgid "✗ No mirrors reachable. Check your connection."
-msgstr "✗ لا يمكن الوصول إلى أي مرآة. تحقق من اتصالك."
-
-#: assets/anduinos-oobe:1782
-msgid "=== Testing bandwidth of top 5 mirrors "
-msgstr "=== اختبار عرض النطاق الترددي لأفضل 5 مرآيات "
-
-#: assets/anduinos-oobe:1783
-msgid "(3 s each) ==="
-msgstr "(3 ثوانٍ لكل منها) ==="
-
-#: assets/anduinos-oobe:1837
-msgid "Best mirror by bandwidth"
-msgstr "أفضل مرآة من حيث عرض النطاق الترددي"
-
-#: assets/anduinos-oobe:1839 assets/anduinos-oobe:1860
-#: assets/anduinos-oobe:1867
-msgid "Latency"
-msgstr "زمن الاستجابة"
-
-#: assets/anduinos-oobe:1840 assets/anduinos-oobe:1861
-#: assets/anduinos-oobe:1868
-msgid "Bandwidth"
-msgstr "عرض النطاق الترددي"
-
-#: assets/anduinos-oobe:1862
-msgid "This is already your current mirror."
-msgstr "هذا هو مرآتك الحالية بالفعل."
-
-#: assets/anduinos-oobe:1872
-msgid "Current mirror"
-msgstr "المرآة الحالية"
-
-#: assets/anduinos-oobe:1876
-msgid "Switch to this mirror and run apt update?"
-msgstr "التبديل إلى هذه المرآة وتشغيل تحديث apt؟"
-
-#: assets/anduinos-oobe:1881
-msgid "Fastest Mirror Found"
-msgstr "تم العثور على أسرع مرآة"
-
-#: assets/anduinos-oobe:1884
-msgid "Keep Current"
-msgstr "إبقاء الحالي"
-
-#: assets/anduinos-oobe:1885
-msgid "Switch"
-msgstr "تبديل"
-
-#: assets/anduinos-oobe:1907
-msgid "✗ Mirror test failed: "
-msgstr "✗ فشل اختبار المرآة: "
-
-#: assets/anduinos-oobe:1913
-msgid "Switching mirror…"
-msgstr "جاري التبديل بين المرايا…"
-
-#: assets/anduinos-oobe:1914
-msgid "=== Applying mirror switch ==="
-msgstr "=== تبديل المرآة جاري التنفيذ ==="
-
-#: assets/anduinos-oobe:1989
-msgid "✓ Mirror switched and system updated."
-msgstr "✓ تم تبديل المرآة وتحديث النظام."
-
-#: assets/anduinos-oobe:1992
-msgid "✓ Switched to "
-msgstr "✓ تم التبديل إلى "
-
-#: assets/anduinos-oobe:2005
-msgid "✗ Switch failed: "
-msgstr "✗ فشل التبديل: "
-
-#: assets/anduinos-oobe:2045
+#: assets/anduinos-oobe:1256
 msgid "Could not open AnduinOS Driver Center: {}"
 msgstr "تعذر فتح مركز برامج تشغيل AnduinOS: {}"
 
-#: assets/anduinos-oobe:2078
+#: assets/anduinos-oobe:1289
 msgid "Configure Hardware Drivers?"
 msgstr "تهيئة برامج تشغيل الأجهزة؟"
 
-#: assets/anduinos-oobe:2088
+#: assets/anduinos-oobe:1299
 msgid ""
 "Open AnduinOS Driver Center now to manage graphics cards, Xbox controllers, "
 "and other hardware."
 msgstr ""
-"افتح مركز برامج تشغيل AnduinOS الآن لإدارة بطاقات الرسوميات ووحدات تحكم Xbox"
-" والأجهزة الأخرى."
+"افتح مركز برامج تشغيل AnduinOS الآن لإدارة بطاقات الرسوميات ووحدات تحكم Xbox "
+"والأجهزة الأخرى."
 
-#: assets/anduinos-oobe:2111
+#: assets/anduinos-oobe:1322
 msgid "Skip"
 msgstr "تخطي"
 
-#: assets/anduinos-oobe:2116
+#: assets/anduinos-oobe:1327
 msgid "Open Driver Center"
 msgstr "فتح مركز برامج التشغيل"
 
-#: assets/anduinos-oobe:2152
+#: assets/anduinos-oobe:1363
 msgid "Run Windows Apps, with ease"
 msgstr "تشغيل تطبيقات Windows بسهولة"
 
-#. Translate as a complete sentence; the interface wraps the text automatically.
-msgid "Powered by Wine and Bottles technology, running classic Windows applications is now easier than ever."
-msgstr "يعمل بتقنية Wine وBottles، لتشغيل تطبيقات ويندوز الكلاسيكية أصبح أسهل من أي وقت مضى."
+#: assets/anduinos-oobe:1372
+msgid ""
+"Powered by Wine and Bottles technology, running classic Windows applications "
+"is now easier than ever."
+msgstr ""
+"يعمل بتقنية Wine وBottles، لتشغيل تطبيقات ويندوز الكلاسيكية أصبح أسهل من أي "
+"وقت مضى."
 
-
-#: assets/anduinos-oobe:2177
+#: assets/anduinos-oobe:1388
 msgid "✓ Windows compatibility sandbox is already installed."
 msgstr "✓ تم تثبيت بيئة العزل المتوافقة مع Windows بالفعل."
 
-#: assets/anduinos-oobe:2193
+#: assets/anduinos-oobe:1404
 msgid "  Skip  "
 msgstr "  تخطّي  "
 
-#: assets/anduinos-oobe:2197
+#: assets/anduinos-oobe:1408
 msgid "  Enable Windows Compatibility Sandbox  "
 msgstr "  تمكين صندوق الرموز التوافقي لنظام ويندوز  "
 
-#: assets/anduinos-oobe:2207
+#: assets/anduinos-oobe:1418
 msgid "Configure Bottles"
 msgstr "إعداد Bottles"
 
-#: assets/anduinos-oobe:2222
+#: assets/anduinos-oobe:1433
 msgid "Advanced Output"
 msgstr "إخراج متقدم"
 
-#: assets/anduinos-oobe:2251
+#: assets/anduinos-oobe:1462
 msgid "Deploying compatibility sandbox via Flatpak…"
 msgstr "نشر صندوق الرموز المتوافق عبر Flatpak…"
 
-#: assets/anduinos-oobe:2251
+#: assets/anduinos-oobe:1462
 msgid "This may take a few minutes."
 msgstr "قد يستغرق هذا بضع دقائق."
 
-#: assets/anduinos-oobe:2286
+#: assets/anduinos-oobe:1497
 msgid "✓ Sandbox deployed successfully!"
 msgstr "✓ تم نشر صندوق الرموز بنجاح!"
 
-#: assets/anduinos-oobe:2286
+#: assets/anduinos-oobe:1497
 msgid "You can now double-click .exe files to run them."
 msgstr "يمكنك الآن النقر نقرًا مزدوجًا على ملفات .exe لتشغيلها."
 
-#: assets/anduinos-oobe:2295
+#: assets/anduinos-oobe:1506
 msgid "✗ Deployment failed."
 msgstr "✗ فشل النشر."
 
-#: assets/anduinos-oobe:2295
+#: assets/anduinos-oobe:1506
 msgid "You can install Bottles later from the App Store."
 msgstr "يمكنك تثبيت Bottles لاحقًا من متجر التطبيقات."
 
-#: assets/anduinos-oobe:2303
+#: assets/anduinos-oobe:1514
 msgid "✗ Error: "
 msgstr "✗ خطأ: "
 
-#: assets/anduinos-oobe:2334
+#: assets/anduinos-oobe:1545
 msgid "The Magic at Your Fingertips"
 msgstr "السحر بين يديك"
 
-#: assets/anduinos-oobe:2342
+#: assets/anduinos-oobe:1553
 msgid "Skip tedious clicking. Capture inspiration with elegance."
 msgstr "تخطّى النقر المتعب. التقط الإلهام بأناقة."
 
-#: assets/anduinos-oobe:2365
+#: assets/anduinos-oobe:1576
 msgid "Screenshot"
 msgstr "لقطة شاشة"
 
-#: assets/anduinos-oobe:2366
+#: assets/anduinos-oobe:1577
 msgid "Select, annotate, copy — all in one motion"
 msgstr "حدد، علّق، انسخ — كل ذلك بحركة واحدة"
 
-#: assets/anduinos-oobe:2384
+#: assets/anduinos-oobe:1595
 msgid "Screen Recording"
 msgstr "تسجيل الشاشة"
 
-#: assets/anduinos-oobe:2385
+#: assets/anduinos-oobe:1596
 msgid "Seamless start, instant capture"
 msgstr "بداية سلسة، التقاط فوري"
 
-#: assets/anduinos-oobe:2405
+#: assets/anduinos-oobe:1616
 msgid "More Essential Shortcuts"
 msgstr "المزيد من الاختصارات الأساسية"
 
-#: assets/anduinos-oobe:2408
+#: assets/anduinos-oobe:1619
 msgid "Open File Manager"
 msgstr "فتح مدير الملفات"
 
-#: assets/anduinos-oobe:2409
+#: assets/anduinos-oobe:1620
 msgid "Open Terminal"
 msgstr "فتح الطرفية"
 
-#: assets/anduinos-oobe:2410
+#: assets/anduinos-oobe:1621
 msgid "Task Manager"
 msgstr "مدير المهام"
 
-#: assets/anduinos-oobe:2411
+#: assets/anduinos-oobe:1622
 msgid "View Clipboard History"
 msgstr "عرض سجل الحافظة"
 
-#: assets/anduinos-oobe:2412
+#: assets/anduinos-oobe:1623
 msgid "Lock Screen"
 msgstr "قفل الشاشة"
 
-#: assets/anduinos-oobe:2413
+#: assets/anduinos-oobe:1624
 msgid "Action Center"
 msgstr "مركز الإجراءات"
 
-#: assets/anduinos-oobe:2414
+#: assets/anduinos-oobe:1625
 msgid "Notification Center"
 msgstr "مركز الإشعارات"
 
-#: assets/anduinos-oobe:2415
+#: assets/anduinos-oobe:1626
 msgid "Toggle Network Stats Display"
 msgstr "تبديل عرض إحصائيات الشبكة"
 
-#: assets/anduinos-oobe:2416
+#: assets/anduinos-oobe:1627
 msgid "Switch Between Windows"
 msgstr "التبديل بين النوافذ"
 
-#: assets/anduinos-oobe:2417
+#: assets/anduinos-oobe:1628
 msgid "Close Current Window"
 msgstr "إغلاق النافذة الحالية"
 
-#: assets/anduinos-oobe:2418
+#: assets/anduinos-oobe:1629
 msgid "Snap Windows"
 msgstr "تقسيم النوافذ"
 
-#: assets/anduinos-oobe:2419
+#: assets/anduinos-oobe:1630
 msgid "Switch Virtual Desktop"
 msgstr "تبديل سطح المكتب الافتراضي"
 
-#: assets/anduinos-oobe:2420
+#: assets/anduinos-oobe:1631
 msgid "Show Desktop"
 msgstr "عرض سطح المكتب"
 
-#: assets/anduinos-oobe:2421
+#: assets/anduinos-oobe:1632
 msgid "System Settings"
 msgstr "إعدادات النظام"
 
-#: assets/anduinos-oobe:2422
+#: assets/anduinos-oobe:1633
 msgid "Emoji and Characters"
 msgstr "الإيموجي والأحرف"
 
-#: assets/anduinos-oobe:2423
+#: assets/anduinos-oobe:1634
 msgid "Minimize Window"
 msgstr "تصغير النافذة"
 
-#: assets/anduinos-oobe:2441
+#: assets/anduinos-oobe:1652
 msgid ""
 "You can view and customize all shortcuts anytime in Settings → Keyboard."
 msgstr ""
 "يمكنك عرض وتخصيص جميع الاختصارات في أي وقت من الإعدادات → لوحة المفاتيح."
 
-#: assets/anduinos-oobe:2478
+#: assets/anduinos-oobe:1689
 msgid "In China? Use USTC mirror for App Store!"
 msgstr "في الصين؟ استخدم مرآة USTC لمتجر التطبيقات!"
 
-#: assets/anduinos-oobe:2484
+#: assets/anduinos-oobe:1695
 msgid ""
 "Flathub access can be slow from China. Switch to the USTC mirror for faster "
 "downloads."
@@ -676,381 +479,370 @@ msgstr ""
 "قد يكون الوصول إلى Flathub بطيئًا من الصين. قم بالتبديل إلى مرآة USTC "
 "لتنزيلات أسرع."
 
-#: assets/anduinos-oobe:2591
+#: assets/anduinos-oobe:1802
 msgid "✓ Already using Chinese mirror — downloads are fast."
 msgstr "✓ بالفعل تستخدم المرآة الصينية — التنزيلات سريعة."
 
-#: assets/anduinos-oobe:2594
+#: assets/anduinos-oobe:1805
 msgid "Switch Back to International"
 msgstr "العودة إلى النسخة الدولية"
 
-#: assets/anduinos-oobe:2597
+#: assets/anduinos-oobe:1808
 msgid "Flathub is using the international server."
 msgstr "يستخدم Flathub الخادم الدولي."
 
-#: assets/anduinos-oobe:2600
+#: assets/anduinos-oobe:1811
 msgid "🚀 Switch to USTC Mirror"
 msgstr "🚀 التبديل إلى مرآة USTC"
 
-#: assets/anduinos-oobe:2613
+#: assets/anduinos-oobe:1824
 msgid "Testing USTC mirror..."
 msgstr "اختبار مرآة USTC..."
 
-#: assets/anduinos-oobe:2657
+#: assets/anduinos-oobe:1868
 msgid "Switching back..."
 msgstr "جارٍ العودة..."
 
-#: assets/anduinos-oobe:2684
+#: assets/anduinos-oobe:1895
 msgid "✗ Failed: "
 msgstr "✗ فشل: "
 
-#: assets/anduinos-oobe:2687
+#: assets/anduinos-oobe:1898
 msgid "Retry"
 msgstr "إعادة المحاولة"
 
-#: assets/anduinos-oobe:2713
+#: assets/anduinos-oobe:1924
 msgid "Productive From Day One"
 msgstr "منتج منذ اليوم الأول"
 
-#: assets/anduinos-oobe:2722
+#: assets/anduinos-oobe:1933
 msgid "Essential productivity and entertainment tools, hand-picked for you."
 msgstr "أدوات الإنتاجية والترفيه الأساسية، مختارة بعناية لك."
 
-#: assets/anduinos-oobe:2722
+#: assets/anduinos-oobe:1933
 msgid "Click any app to open its details in the App Store."
 msgstr "انقر على أي تطبيق لفتح تفاصيله في متجر التطبيقات."
 
-#: assets/anduinos-oobe:2734
+#: assets/anduinos-oobe:1945
 msgid "WeChat"
 msgstr "وي تشات"
 
-#: assets/anduinos-oobe:2735
+#: assets/anduinos-oobe:1946
 msgid "Most popular messaging app in China"
 msgstr "تطبيق المراسلة الأكثر شعبية في الصين"
 
-#: assets/anduinos-oobe:2736
+#: assets/anduinos-oobe:1947
 msgid "QQ"
 msgstr "كيو كيو"
 
-#: assets/anduinos-oobe:2737
+#: assets/anduinos-oobe:1948
 msgid "Tencent QQ instant messenger"
 msgstr "برنامج المراسلة الفورية تينسنت كيوكيو"
 
-#: assets/anduinos-oobe:2738
+#: assets/anduinos-oobe:1949
 msgid "WPS Office"
 msgstr "WPS Office"
 
-#: assets/anduinos-oobe:2739
+#: assets/anduinos-oobe:1950
 msgid "Best office suite for Chinese documents"
 msgstr "أفضل حزمة مكتبية للمستندات الصينية"
 
-#: assets/anduinos-oobe:2744
+#: assets/anduinos-oobe:1955
 msgid "Google Chrome"
 msgstr "جوجل كروم"
 
-#: assets/anduinos-oobe:2745
+#: assets/anduinos-oobe:1956
 msgid "The world's most popular web browser"
 msgstr "المتصفح الأكثر شعبية في العالم"
 
-#: assets/anduinos-oobe:2746
+#: assets/anduinos-oobe:1957
 msgid "Visual Studio Code"
 msgstr "Visual Studio Code"
 
-#: assets/anduinos-oobe:2747
+#: assets/anduinos-oobe:1958
 msgid "Code editing. Redefined."
 msgstr "تحرير الأكواد. أُعيد تعريفه."
 
-#: assets/anduinos-oobe:2748
+#: assets/anduinos-oobe:1959
 msgid "Steam"
 msgstr "Steam"
 
-#: assets/anduinos-oobe:2749
+#: assets/anduinos-oobe:1960
 msgid "Your portal to the gaming universe"
 msgstr "بوابتك إلى عالم الألعاب"
 
-#: assets/anduinos-oobe:2750
+#: assets/anduinos-oobe:1961
 msgid "Discord"
 msgstr "Discord"
 
-#: assets/anduinos-oobe:2751
+#: assets/anduinos-oobe:1962
 msgid "Chat, voice, and video for communities"
 msgstr "دردشة وصوت وفيديو للمجتمعات"
 
-#: assets/anduinos-oobe:2752
+#: assets/anduinos-oobe:1963
 msgid "Spotify"
 msgstr "Spotify"
 
-#: assets/anduinos-oobe:2753
+#: assets/anduinos-oobe:1964
 msgid "Music for everyone"
 msgstr "الموسيقى للجميع"
 
-#: assets/anduinos-oobe:2754
+#: assets/anduinos-oobe:1965
 msgid "OnlyOffice"
 msgstr "OnlyOffice"
 
-#: assets/anduinos-oobe:2755
+#: assets/anduinos-oobe:1966
 msgid "Best Microsoft Office-compatible suite"
 msgstr "أفضل حزمة متوافقة مع Microsoft Office"
 
-#: assets/anduinos-oobe:2756
+#: assets/anduinos-oobe:1967
 msgid "Thunderbird"
 msgstr "Thunderbird"
 
-#: assets/anduinos-oobe:2757
+#: assets/anduinos-oobe:1968
 msgid "Secure, fast, and easy email client"
 msgstr "عميل بريد إلكتروني آمن وسريع وسهل الاستخدام"
 
-#: assets/anduinos-oobe:2758
+#: assets/anduinos-oobe:1969
 msgid "Nextcloud"
 msgstr "Nextcloud"
 
-#: assets/anduinos-oobe:2759
+#: assets/anduinos-oobe:1970
 msgid "Sync and collaborate on your desktop or laptop"
 msgstr "زامن وتعاون على حاسوبك المكتبي أو المحمول"
 
-#: assets/anduinos-oobe:2760
+#: assets/anduinos-oobe:1971
 msgid "Blender"
 msgstr "بلندر"
 
-#: assets/anduinos-oobe:2761
+#: assets/anduinos-oobe:1972
 msgid "Professional 3D creation suite"
 msgstr "حزمة إنشاء احترافية ثلاثية الأبعاد"
 
-#: assets/anduinos-oobe:2762
+#: assets/anduinos-oobe:1973
 msgid "GNOME Boxes"
 msgstr "صناديق غنوم"
 
-#: assets/anduinos-oobe:2763
+#: assets/anduinos-oobe:1974
 msgid "Virtualization made simple"
 msgstr "التخيل الافتراضي أصبح بسيطاً"
 
-#: assets/anduinos-oobe:2764
+#: assets/anduinos-oobe:1975
 msgid "VLC"
 msgstr "في إل سي"
 
-#: assets/anduinos-oobe:2765
+#: assets/anduinos-oobe:1976
 msgid "The versatile media player that plays everything"
 msgstr "مشغل الوسائط المتعدد الاستخدامات الذي يشغل كل شيء"
 
-#: assets/anduinos-oobe:2766
+#: assets/anduinos-oobe:1977
 msgid "Krita"
 msgstr "Krita"
 
-#: assets/anduinos-oobe:2767
+#: assets/anduinos-oobe:1978
 msgid "Professional free and open source painting program"
 msgstr "برنامج رسم احترافي مجاني ومفتوح المصدر"
 
-#: assets/anduinos-oobe:2768
+#: assets/anduinos-oobe:1979
 msgid "OBS Studio"
 msgstr "OBS Studio"
 
-#: assets/anduinos-oobe:2769
+#: assets/anduinos-oobe:1980
 msgid "Free and open source software for video recording and live streaming"
 msgstr "برنامج مجاني ومفتوح المصدر لتسجيل الفيديو والبث المباشر"
 
-#: assets/anduinos-oobe:2831
+#: assets/anduinos-oobe:2042
 msgid "Installed"
 msgstr "مثبت"
 
-#: assets/anduinos-oobe:2833
+#: assets/anduinos-oobe:2044
 msgid "Click to open in App Store"
 msgstr "انقر لفتحه في متجر التطبيقات"
 
-#: assets/anduinos-oobe:2841
+#: assets/anduinos-oobe:2052
 msgid "Opening…"
 msgstr "جاري الفتح…"
 
-#. Translate as a complete sentence; the interface wraps the text automatically.
-msgid "Pro tip: You can explore these apps in the App Store, and continue with the system setup while they download."
-msgstr "نصيحة احترافية: يمكنك استكشاف هذه التطبيقات في متجر التطبيقات، والاستمرار في إعداد النظام أثناء التنزيل."
+#: assets/anduinos-oobe:2071
+msgid ""
+"Pro tip: You can explore these apps in the App Store, and continue with the "
+"system setup while they download."
+msgstr ""
+"نصيحة احترافية: يمكنك استكشاف هذه التطبيقات في متجر التطبيقات، والاستمرار في "
+"إعداد النظام أثناء التنزيل."
 
-
-#: assets/anduinos-oobe:2870
+#: assets/anduinos-oobe:2081
 msgid "  Browse Store  "
 msgstr "  تصفح المتجر  "
 
-#: assets/anduinos-oobe:2902
-msgid "Connect & Protect Your Data"
-msgstr "توصيل وحماية بياناتك"
-
-#: assets/anduinos-oobe:2926
-msgid "Online Accounts"
-msgstr "حسابات الإنترنت"
-
-#. Translate as a complete sentence; the interface wraps the text automatically.
-msgid "Connect your Google, Microsoft, or Nextcloud accounts to sync files, contacts, and calendar."
-msgstr "قم بتوصيل حسابات Google وMicrosoft، أو حسابات Nextcloud لمزامنة الملفات، جهات الاتصال، والتقويم."
-
-
-
-#: assets/anduinos-oobe:2943
-msgid "Connect Accounts"
-msgstr "ربط الحسابات"
-
-#: assets/anduinos-oobe:3013
+#: assets/anduinos-oobe:2120
 msgid "Your Data. Your Rules. Period."
 msgstr "بياناتك. قواعدها. نقطة."
 
-#: assets/anduinos-oobe:3022
+#: assets/anduinos-oobe:2129
 msgid "AnduinOS disables all system-level telemetry by default."
 msgstr "تعطيل AnduinOS جميع قياسات Telemetry على مستوى النظام افتراضيًا."
 
-#: assets/anduinos-oobe:3022
+#: assets/anduinos-oobe:2129
 msgid "We do not collect your usage habits."
 msgstr "نحن لا نجمع عادات استخدامك."
 
-#: assets/anduinos-oobe:3023
+#: assets/anduinos-oobe:2130
 msgid "We do not upload your search history."
 msgstr "نحن لا نرفع سجل بحثك."
 
-#: assets/anduinos-oobe:3023
+#: assets/anduinos-oobe:2130
 msgid "There are no pervasive advertisements."
 msgstr "لا توجد إعلانات سائدة."
 
-#. Translate as a complete sentence; the interface wraps the text automatically.
-msgid "In an era ruled by algorithms and surveillance, this is our firmest commitment to you."
+#: assets/anduinos-oobe:2141
+msgid ""
+"In an era ruled by algorithms and surveillance, this is our firmest "
+"commitment to you."
 msgstr "في عصر تحكمه الخوارزميات والمراقبة، هذا هو التزامنا الأقوى لك."
 
-
-#: assets/anduinos-oobe:3052
+#: assets/anduinos-oobe:2159
 msgid "✓ Zero telemetry — your activity is yours alone"
 msgstr "✓ صفر تلغراف — نشاطك خاص بك وحده"
 
-#: assets/anduinos-oobe:3053
+#: assets/anduinos-oobe:2160
 msgid "✓ No data collection — your files stay on your device"
 msgstr "✓ لا جمع بيانات — ملفاتك تبقى على جهازك"
 
-#: assets/anduinos-oobe:3054
+#: assets/anduinos-oobe:2161
 msgid "✓ No ads in your operating system"
 msgstr "✓ لا إعلانات في نظام التشغيل الخاص بك"
 
-#: assets/anduinos-oobe:3055
+#: assets/anduinos-oobe:2162
 msgid "✓ Full root access — you truly own your machine"
 msgstr "✓ وصول جذري كامل — أنت تملك جهازك حقاً"
 
-#: assets/anduinos-oobe:3056
+#: assets/anduinos-oobe:2163
 msgid "✓ UFW firewall — your digital perimeter, defended"
 msgstr "✓ جدار الحماية UFW — حدودك الرقمية، محمية"
 
-#: assets/anduinos-oobe:3057
+#: assets/anduinos-oobe:2164
 msgid "✓ Open source — the code is yours to inspect and modify"
 msgstr "✓ مفتوح المصدر — الكود مملوك لك لتفحصه وتعدله"
 
-#: assets/anduinos-oobe:3098
+#: assets/anduinos-oobe:2205
 msgid "Welcome to the AnduinOS Community"
 msgstr "مرحبًا بك في مجتمع AnduinOS"
 
-#. Translate as a complete sentence; the interface wraps the text automatically.
-msgid "Whether you're a Windows refugee seeking shelter, or a hardcore geek developer — you'll find your tribe here."
-msgstr "سواء كنت لاجئًا من ويندوز تبحث عن ملاذ، أو مطورًا هاويًا متحمسًا — ستجد قبيلتك هنا."
+#: assets/anduinos-oobe:2214
+msgid ""
+"Whether you're a Windows refugee seeking shelter, or a hardcore geek "
+"developer — you'll find your tribe here."
+msgstr ""
+"سواء كنت لاجئًا من ويندوز تبحث عن ملاذ، أو مطورًا هاويًا متحمسًا — ستجد قبيلتك "
+"هنا."
 
-
-#: assets/anduinos-oobe:3109
+#: assets/anduinos-oobe:2215
 msgid "Found a bug? Want a feature? Tell us anytime."
 msgstr "وجد خطأ؟ تريد ميزة؟ أخبرنا في أي وقت."
 
-#: assets/anduinos-oobe:3121
+#: assets/anduinos-oobe:2227
 msgid "Official Documentation"
 msgstr "التوثيق الرسمي"
 
-#: assets/anduinos-oobe:3122
+#: assets/anduinos-oobe:2228
 msgid "Comprehensive guides and troubleshooting — covers everything you need"
 msgstr "دلائل شاملة وحلول المشكلات — تغطي كل ما تحتاجه"
 
-#: assets/anduinos-oobe:3124
+#: assets/anduinos-oobe:2230
 msgid "Community Forums"
 msgstr "منتديات المجتمع"
 
-#: assets/anduinos-oobe:3125
+#: assets/anduinos-oobe:2231
 msgid "Discuss with other AnduinOS users and developers"
 msgstr "ناقش مع مستخدمين ومطوري AnduinOS الآخرين"
 
-#: assets/anduinos-oobe:3127
+#: assets/anduinos-oobe:2233
 msgid "Discord Server"
 msgstr "خادم Discord"
 
-#: assets/anduinos-oobe:3128
+#: assets/anduinos-oobe:2234
 msgid "Join our official Discord server for real-time chat and support"
 msgstr "انضم إلى خادم Discord الرسمي لدينا للدردشة الفورية والدعم"
 
-#: assets/anduinos-oobe:3130
+#: assets/anduinos-oobe:2236
 msgid "Report an Issue"
 msgstr "الإبلاغ عن مشكلة"
 
-#: assets/anduinos-oobe:3131
+#: assets/anduinos-oobe:2237
 msgid "Found a bug or have a feature request? Let us know!"
 msgstr "وجدت خطأً أو لديك طلب ميزة؟ أخبرنا!"
 
-#: assets/anduinos-oobe:3133
+#: assets/anduinos-oobe:2239
 msgid "Buy AnduinOS Enterprise Edition"
 msgstr "اشترِ AnduinOS Enterprise Edition"
 
-#: assets/anduinos-oobe:3134
+#: assets/anduinos-oobe:2240
 msgid ""
 "Get enterprise-grade support and advanced features for your organization"
 msgstr "احصل على دعم من الدرجة المؤسساتية وميزات متقدمة لمنظمتك"
 
-#: assets/anduinos-oobe:3136
+#: assets/anduinos-oobe:2242
 msgid "Ask Ubuntu"
 msgstr "Ask Ubuntu"
 
-#: assets/anduinos-oobe:3137
+#: assets/anduinos-oobe:2243
 msgid "Almost all Ubuntu solutions apply directly to AnduinOS"
 msgstr "معظم حلول Ubuntu تنطبق مباشرة على AnduinOS"
 
-#: assets/anduinos-oobe:3139
+#: assets/anduinos-oobe:2245
 msgid "Source Code"
 msgstr "الكود المصدري"
 
-#: assets/anduinos-oobe:3140
+#: assets/anduinos-oobe:2246
 msgid "AnduinOS is open-source. Explore the code and contribute!"
 msgstr "AnduinOS مفتوح المصدر. استكشف الكود وساهم!"
 
-#: assets/anduinos-oobe:3152
+#: assets/anduinos-oobe:2258
 msgid "Open"
 msgstr "فتح"
 
-#: assets/anduinos-oobe:3162
+#: assets/anduinos-oobe:2268
 msgid "💡 AnduinOS is compatible with Ubuntu's entire ecosystem."
 msgstr "💡 AnduinOS متوافق مع النظام البيئي بأكمله لأوبونتو."
 
-#: assets/anduinos-oobe:3163
+#: assets/anduinos-oobe:2269
 msgid "You can rely on Ubuntu's vast documentation and expertise."
 msgstr "يمكنك الاعتماد على وثائق وخبرات أوبونتو الواسعة."
 
-#: assets/anduinos-oobe:3196
+#: assets/anduinos-oobe:2302
 msgid "All Set."
 msgstr "الكل جاهز."
 
-#: assets/anduinos-oobe:3205
+#: assets/anduinos-oobe:2311
 msgid "  Start Your AnduinOS Journey  "
 msgstr "  ابدأ رحلتك مع AnduinOS  "
 
-#: assets/anduinos-oobe:3239 assets/anduinos-oobe-autostart.desktop:28
+#: assets/anduinos-oobe:2345 /tmp/tmp.sC9VMgFZZa:1
 msgid "AnduinOS Setup"
 msgstr "إعداد AnduinOS"
 
-#: assets/anduinos-oobe:3242
+#: assets/anduinos-oobe:2348
 msgid "AnduinOS Welcome Center"
 msgstr "مركز الترحيب بـ AnduinOS"
 
-#: assets/anduinos-oobe:3295
+#: assets/anduinos-oobe:2401
 msgid "← Back"
 msgstr "← رجوع"
 
-#: assets/anduinos-oobe:3304 assets/anduinos-oobe:3423
+#: assets/anduinos-oobe:2410 assets/anduinos-oobe:2527
 msgid "Next →"
 msgstr "التالي →"
 
-#: assets/anduinos-oobe:3421
+#: assets/anduinos-oobe:2525
 msgid "Finish"
 msgstr "إنهاء"
 
-#: assets/anduinos-oobe:3488 data/anduinos-oobe.desktop:28
+#: assets/anduinos-oobe:2592 /tmp/tmp.sC9VMgFZZa:2
 msgid "AnduinOS Welcome"
 msgstr "مرحبًا بكم في AnduinOS"
 
-#: assets/anduinos-oobe:3490
+#: assets/anduinos-oobe:2594
 msgid "AnduinOS Team"
 msgstr "فريق AnduinOS"
 
@@ -1073,6 +865,22 @@ msgstr "يحمي نظامك من البرامج الضارة منخفضة الم
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:141
 msgid "System Trust Status"
 msgstr "حالة ثقة النظام"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:155
+msgid "Secure Boot Enabled"
+msgstr "Secure Boot مفعّل"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:156
+msgid "Local MOK Certificate"
+msgstr "شهادة MOK المحلية"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:157
+msgid "UEFI Firmware Trust"
+msgstr "ثقةfirmware UEFI"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:158
+msgid "Third-party Drivers"
+msgstr "برامج تشغيل طرف ثالث"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:183
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
@@ -1187,8 +995,7 @@ msgid "Repair Automatic DKMS Signing"
 msgstr "إصلاح التوقيع التلقائي DKMS"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:356
-msgid ""
-"This firmware does not provide Secure Boot. No certificate is required."
+msgid "This firmware does not provide Secure Boot. No certificate is required."
 msgstr "لا توفر هذه البرامج الثابتة Secure Boot. لا توجد شهادة مطلوبة."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:363
@@ -1213,8 +1020,7 @@ msgstr "تم تسجيل الشهادة وبرامج التشغيل الحالي�
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:381
 msgid "Repair automatic DKMS signing before future driver updates."
-msgstr ""
-"قم بإصلاح التوقيع التلقائي DKMS قبل تحديثات برنامج التشغيل المستقبلية."
+msgstr "قم بإصلاح التوقيع التلقائي DKMS قبل تحديثات برنامج التشغيل المستقبلية."
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:386
 msgid "The certificate is enrolled, but some modules are not signed with it."
@@ -1263,6 +1069,15 @@ msgstr "إلغاء"
 msgid "Reboot"
 msgstr "إعادة التشغيل"
 
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:478
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:526
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:544
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:552
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:560
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:576
+msgid "OK"
+msgstr "موافق"
+
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:483
 msgid "Success! When you reboot, a blue screen will appear."
 msgstr "نجاح! عند إعادة التشغيل، ستظهر شاشة زرقاء."
@@ -1287,19 +1102,10 @@ msgstr "Secure Boot الثقة غير مطلوبة"
 msgid "Firmware signature enforcement is not active."
 msgstr "فرض توقيع البرنامج الثابت غير نشط."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:478
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:526
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:544
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:552
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:560
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:576
-msgid "OK"
-msgstr "موافق"
-
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:534
 msgid ""
-"The certificate is ready, but one or more DKMS modules could not be rebuilt."
-" You can repair them after enrollment."
+"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
+"You can repair them after enrollment."
 msgstr ""
 "الشهادة جاهزة، ولكن لا يمكن إعادة بناء وحدة واحدة أو أكثر من وحدات DKMS. "
 "يمكنك إصلاحها بعد التسجيل."
@@ -1328,435 +1134,18 @@ msgstr "يرجى التحقق من الإخراج المتقدم."
 msgid "Generating & Signing..."
 msgstr "جاري الإنشاء والتوقيع..."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:156
-msgid "Local MOK Certificate"
-msgstr "شهادة MOK المحلية"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:155
-msgid "Secure Boot Enabled"
-msgstr "Secure Boot مفعّل"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:158
-msgid "Third-party Drivers"
-msgstr "برامج تشغيل طرف ثالث"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:157
-msgid "UEFI Firmware Trust"
-msgstr "ثقةfirmware UEFI"
-
-#: data/anduinos-oobe.desktop:112
-msgid "welcome;oobe;setup;tutorial;first-run;"
-msgstr "ترحيب;OOBE;إعداد;دليل تعليمي;تشغيل أول;"
-
-#: anduinos-oobe/data/com.anduinos.oobe.policy:9
-msgid "Manage local network discovery"
-msgstr "إدارة اكتشاف الشبكة المحلية"
-
-#: anduinos-oobe/data/com.anduinos.oobe.policy:11
-msgid "Authentication is required to change local network discovery"
-msgstr "المصادقة مطلوبة لتغيير اكتشاف الشبكة المحلية"
-
-#: data/anduinos-oobe.desktop:55
-msgid "Welcome Center"
-msgstr "مركز الترحيب"
-
-#: assets/anduinos-oobe-autostart.desktop:55
+#: /tmp/tmp.sC9VMgFZZa:3
 msgid "Complete your AnduinOS setup"
 msgstr "أكمل إعداد AnduinOS الخاص بك"
 
-#: data/anduinos-oobe.desktop:82
+#: /tmp/tmp.sC9VMgFZZa:4
 msgid "Explore and configure your AnduinOS system"
 msgstr "استكشف واعدل نظام AnduinOS الخاص بك"
 
-#~ msgid "Unleash Your Graphics Hardware"
-#~ msgstr "أطلق العنان لأجهزة الرسومات لديك"
-
-#, python-brace-format
-#~ msgid "NVIDIA proprietary driver is already installed. (Version: {})"
-#~ msgstr "تم تثبيت برنامج التشغيل المغلق لـ NVIDIA بالفعل. (الإصدار: {})"
-
-#~ msgid "✗ Installation encountered an issue."
-#~ msgstr "✗ واجهت عملية التثبيت مشكلة."
-
-#~ msgid "An NVIDIA dedicated graphics card was detected in your system."
-#~ msgstr "تم اكتشاف بطاقة رسومات مخصصة من NVIDIA في نظامك."
-
-#~ msgid ""
-#~ "For ultimate smoothness in gaming, 3D rendering, and high-framerate desktop"
-#~ msgstr ""
-#~ "\tللحصول على أقصى سلاسة في الألعاب، والتصوير ثلاثي الأبعاد، وسطح المكتب عالي"
-#~ " الإطارات في الثانية"
-
-#~ msgid "experiences, we recommend installing the proprietary driver."
-#~ msgstr "لتجارب، نوصي بتثبيت البرنامج المملوك الخاص."
-
-#~ msgid "  Check for Driver Updates  "
-#~ msgstr "البحث عن تحديثات لبرنامج التشغيل"
-
-#~ msgid "Repair & Reinstall"
-#~ msgstr "الإصلاح وإعادة التثبيت"
-
-#~ msgid "  One-Click NVIDIA Driver Install  "
-#~ msgstr "تثبيت برنامج تشغيل NVIDIA بنقرة واحدة"
-
-#~ msgid "Installing NVIDIA driver…"
-#~ msgstr "جاري تثبيت برنامج تشغيل NVIDIA…"
-
-#~ msgid "This may take several minutes."
-#~ msgstr "قد يستغرق هذا عدة دقائق."
-
-#~ msgid "✓ Driver installed successfully!"
-#~ msgstr "✓ تم تثبيت برنامج التشغيل بنجاح!"
-
-#~ msgid "You can install drivers later from Settings."
-#~ msgstr "يمكنك تثبيت برامج التشغيل لاحقًا من الإعدادات."
-
-#~ msgid "Xbox Controller Support"
-#~ msgstr "دعم جهاز تحكم Xbox"
-
-#~ msgid "Xbox controller driver (xpadneo) is already installed."
-#~ msgstr "برنامج تشغيل جهاز تحكم Xbox (xpadneo) مثبت بالفعل."
-
-#~ msgid ""
-#~ "Enjoy seamless Xbox controller support with rumble and accurate inputs."
-#~ msgstr "استمتع بدعم سلس لأجهزة تحكم Xbox مع الاهتزاز وإدخال دقيق."
-
-#~ msgid "AnduinOS provides native support for Xbox controllers via Bluetooth."
-#~ msgstr "توفر AnduinOS دعمًا أصليًا لأجهزة تحكم Xbox عبر البلوتوث."
-
-#~ msgid "The advanced xpadneo driver is already set up and ready for gaming."
-#~ msgstr "برنامج التشغيل المتقدم xpadneo مُعد بالفعل وجاهز للألعاب."
-
-#~ msgid ""
-#~ "For advanced features like rumble and accurate mapping, we recommend "
-#~ "installing the xpadneo driver."
-#~ msgstr ""
-#~ "للميزات المتقدمة مثل الاهتزاز والتعيين الدقيق، نوصي بتثبيت سائق xpadneo."
-
-#~ msgid "Xbox Controller Driver Installed"
-#~ msgstr "تم تثبيت سائق وحدة تحكم Xbox"
-
-#~ msgid "The xpadneo driver is currently installed"
-#~ msgstr "سائق xpadneo مثبت حالياً"
-
-#~ msgid "The driver is not installed"
-#~ msgstr "السائق غير مثبت"
-
-#~ msgid "Driver not installed, signature missing"
-#~ msgstr "لم يتم تثبيت السائق، التوقيع مفقود"
-
-#~ msgid "Kernel module"
-#~ msgstr "وحدة النواة"
-
-#~ msgid "Not detected"
-#~ msgstr "لم يتم الكشف عنه"
-
-#~ msgid "Driver is NOT signed"
-#~ msgstr "السائق غير موقّع"
-
-#~ msgid "Signed with current trusted certificate"
-#~ msgstr "موقّع بشهادة موثوقة حالية"
-
-#~ msgid "Signed with current certificate, but not enrolled"
-#~ msgstr "موقّع بشهادة حالية، ولكن لم يتم تسجيلها"
-
-#~ msgid "Signed with an unknown or outdated certificate"
-#~ msgstr "موقّع بشهادة غير معروفة أو قديمة"
-
-#~ msgid "Controller Status"
-#~ msgstr "حالة وحدة التحكم"
-
-#~ msgid "Driver loaded and active. Ready to play!"
-#~ msgstr "تم تحميل السائق وهو نشط. جاهز للعب!"
-
-#~ msgid "Driver standing by. Waiting for controller connection..."
-#~ msgstr "السائق في حالة انتظار. بانتظار اتصال وحدة التحكم..."
-
-#~ msgid "Driver cannot load due to missing signature trust"
-#~ msgstr "لا يمكن تحميل السائق بسبب عدم ثقة التوقيع المفقود"
-
-#~ msgid "Pair your controller"
-#~ msgstr "اقترن بجهاز التحكم الخاص بك"
-
-#~ msgid "Test your controller"
-#~ msgstr "اختبر جهاز التحكم الخاص بك"
-
-#~ msgid "  Install Xbox Driver  "
-#~ msgstr "تثبيت برنامج تشغيل Xbox"
-
-#~ msgid ""
-#~ "⚠️ The driver signature does not match your system certificate. Click Fix & "
-#~ "Reinstall to repair the driver."
-#~ msgstr ""
-#~ "⚠️ توقيع السائق لا يتطابق مع شهادة النظام الخاصة بك. انقر على \"إصلاح وإعادة"
-#~ " تثبيت\" لإصلاح السائق."
-
-#~ msgid "Installing Xbox controller driver…"
-#~ msgstr "جاري تثبيت برنامج تشغيل جهاز تحكم Xbox…"
-
-#~ msgid "This may take a minute."
-#~ msgstr "قد يستغرق هذا دقيقة."
-
-#~ msgid "Repairing driver signature…"
-#~ msgstr "جاري إصلاح توقيع السائق…"
-
-#~ msgid "A reboot is recommended to apply changes."
-#~ msgstr "يُوصى بإعادة التشغيل لتطبيق التغييرات."
-
-#~ msgid "  Fix & Reinstall Driver  "
-#~ msgstr "تثبيت برنامج تشغيل Xbox"
-
-#~ msgid "(Reboot recommended)"
-#~ msgstr "(يُوصى بإعادة التشغيل)"
-
-#~ msgid "Cannot sign drivers without a certificate"
-#~ msgstr "لا يمكن توقيع البرامج بدون شهادة"
-
-#~ msgid ""
-#~ "Enable low-level network protection — silently blocks all unauthorized "
-#~ "inbound connections."
-#~ msgstr ""
-#~ "تفعيل حماية الشبكة منخفضة المستوى — يحجب بصمت جميع الاتصالات الواردة غير "
-#~ "المصرح بها."
-
-#~ msgid "Firewall"
-#~ msgstr "جدار الحماية (Firewall)"
-
-#~ msgid ""
-#~ "Please configure Secure Boot in the previous step before installing this "
-#~ "driver."
-#~ msgstr "يرجى إعادة التشغيل لتسجيل الشهادة قبل تثبيت هذا السائق."
-
-#~ msgid "Please reboot to enroll the certificate before installing this driver."
-#~ msgstr "يرجى إعادة التشغيل لتسجيل الشهادة قبل تثبيت هذا السائق."
-
-#~ msgid "Scanning for installed drivers..."
-#~ msgstr "جاري المسح عن برامج التشغيل المثبتة..."
-
-#~ msgid "The local trust certificate is missing or not yet enrolled."
-#~ msgstr "شهادة الثقة المحلية مفقودة أو لم يتم تسجيلها بعد."
-
-#~ msgid ""
-#~ "⚠️ Secure Boot is enabled but the custom certificate is not yet enrolled."
-#~ msgstr "⚠️ تم تمكين الإقلاع الآمن ولكن لم يتم تسجيل الشهادة المخصصة بعد."
-
-#~ msgid "✓ Xbox controller driver installed successfully!"
-#~ msgstr "✓ تم تثبيت برنامج تشغيل جهاز تحكم Xbox بنجاح!"
-
-#~ msgid "✗ Repair failed."
-#~ msgstr "✗ فشل النشر."
-
-#~ msgid "⚡ The following apps are provided by the Spark Store community."
-#~ msgstr "⚡ التطبيقات التالية مقدمة من مجتمع متجر Spark."
-
-#~ msgid "Great for connecting to local services."
-#~ msgstr "مثالي للاتصال بالخدمات المحلية."
-
-#~ msgid "Spark Store"
-#~ msgstr "متجر Spark"
-
-#~ msgid "Community app store for Chinese Linux users"
-#~ msgstr "متجر تطبيقات المجتمع لمستخدمي لينكس الصينيين"
-
-#~ msgid "Note: These apps link to their official or community download pages."
-#~ msgstr ""
-#~ "ملاحظة: ترتبط هذه التطبيقات بصفحات التنزيل الرسمية أو المجتمعية الخاصة بها."
-
-#~ msgid " AnduinOS is not affiliated with these vendors."
-#~ msgstr "لا ترتبط AnduinOS بهذه البائعين."
-
-#~ msgid ""
-#~ "AnduinOS is ready. Just a few steps to shape it\n"
-#~ "into the perfect system tailored to your habits."
-#~ msgstr ""
-#~ "نظام AnduinOS جاهز. تبقى بضع خطوات لتشكيله\n"
-#~ "إلى النظام المثالي المصمم خصيصًا ليعكس عاداتك."
-
-#~ msgid "=== Testing mirror speeds ===\n"
-#~ msgstr "=== اختبار سرعات المرآة ==="
-
-#~ msgid ""
-#~ "\n"
-#~ "No mirrors reachable.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "لا يمكن الوصول إلى أي مرآة.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "=== Applying mirror switch ===\n"
-#~ msgstr ""
-#~ "\n"
-#~ "=== تطبيق تبديل المرآة ===\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "✓ Mirror switched and system updated.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "✓ تم تبديل المرآة وتحديث النظام.\n"
-
-#~ msgid ""
-#~ "For ultimate smoothness in gaming, 3D rendering, and high-framerate desktop\n"
-#~ "experiences, we recommend installing the proprietary driver."
-#~ msgstr ""
-#~ "للحصول على أقصى سلاسة في الألعاب، وتصميم الرسوميات ثلاثية الأبعاد، وتجارب "
-#~ "سطح المكتب عالية معدل الإطارات، نوصي بتثبيت برنامج التشغيل المغلق."
-
-#~ msgid ""
-#~ "Installing NVIDIA driver…\n"
-#~ "This may take several minutes."
-#~ msgstr ""
-#~ "جاري تثبيت برنامج تشغيل NVIDIA…\n"
-#~ "قد يستغرق هذا عدة دقائق."
-
-#~ msgid ""
-#~ "✗ Installation encountered an issue.\n"
-#~ "You can install drivers later from Settings."
-#~ msgstr ""
-#~ "✗ واجهت عملية التثبيت مشكلة.\n"
-#~ "يمكنك تثبيت برامج التشغيل لاحقًا من الإعدادات."
-
-#~ msgid ""
-#~ "Powered by Wine and Bottles technology, running classic Windows applications\n"
-#~ "is now easier than ever."
-#~ msgstr ""
-#~ "بفضل تقنية Wine و Bottles، أصبح تشغيل تطبيقات Windows الكلاسيكية أسهل من أي "
-#~ "وقت مضى."
-
-#~ msgid ""
-#~ "Deploying compatibility sandbox via Flatpak…\n"
-#~ "This may take a few minutes."
-#~ msgstr ""
-#~ "جار نشر صندوق الرموز التوافقي عبر Flatpak…\n"
-#~ "قد يستغرق ذلك بضع دقائق."
-
-#~ msgid ""
-#~ "✓ Sandbox deployed successfully!\n"
-#~ "You can now double-click .exe files to run them."
-#~ msgstr ""
-#~ "✓ تم نشر صندوق الرموز بنجاح!\n"
-#~ "يمكنك الآن النقر المزدوج على ملفات .exe لتشغيلها."
-
-#~ msgid ""
-#~ "✗ Deployment failed.\n"
-#~ "You can install Bottles later from the App Store."
-#~ msgstr ""
-#~ "✗ فشل النشر.\n"
-#~ "يمكنك تثبيت زجاجات لاحقاً من متجر التطبيقات."
-
-#~ msgid ""
-#~ "Essential productivity and entertainment tools, hand-picked for you.\n"
-#~ "Click any app to open its details in the App Store."
-#~ msgstr ""
-#~ "أدوات الإنتاجية والترفيه الأساسية، مختارة بعناية لك.\n"
-#~ "انقر على أي تطبيق لفتح تفاصيله في متجر التطبيقات."
-
-#~ msgid ""
-#~ "⚡ The following apps are provided by the Spark Store community.\n"
-#~ "Great for connecting to local services."
-#~ msgstr ""
-#~ "⚡ التطبيقات التالية مقدمة من مجتمع متجر Spark.\n"
-#~ "مثالية للاتصال بالخدمات المحلية."
-
-#~ msgid ""
-#~ "Pro tip: You can explore these apps in the App Store,\n"
-#~ "and continue with the system setup while they download."
-#~ msgstr ""
-#~ "نصيحة احترافية: يمكنك استكشاف هذه التطبيقات في متجر التطبيقات،\n"
-#~ "والاستمرار في إعداد النظام أثناء تنزيلها."
-
-#~ msgid ""
-#~ "Note: These apps link to their official or community download pages. "
-#~ "AnduinOS is not affiliated with these vendors."
-#~ msgstr ""
-#~ "ملاحظة: تربط هذه التطبيقات بصفحات التنزيل الرسمية أو المجتمعية الخاصة بها. "
-#~ "AnduinOS غير تابعة لهؤلاء البائعين."
-
-#~ msgid ""
-#~ "Connect your Google, Microsoft,\n"
-#~ "or Nextcloud accounts to sync\n"
-#~ "files, contacts, and calendar."
-#~ msgstr ""
-#~ "اربط حسابات Google، Microsoft،\n"
-#~ "أو Nextcloud الخاصة بك لمزامنة\n"
-#~ "الملفات، جهات الاتصال، والتقويم."
-
-#~ msgid ""
-#~ "Use Deja Dup to protect your\n"
-#~ "important files with automated,\n"
-#~ "secure local or remote backups."
-#~ msgstr ""
-#~ "استخدم Deja Dup لحماية ملفاتك\n"
-#~ "المهمة بنسخ احتياطية محلية أو عن بُعد\n"
-#~ "آمنة ومؤتمتة."
-
-#~ msgid ""
-#~ "AnduinOS disables all system-level telemetry by default.\n"
-#~ "We do not collect your usage habits.\n"
-#~ "We do not upload your search history.\n"
-#~ "There are no pervasive advertisements."
-#~ msgstr ""
-#~ "يعطل AnduinOS جميع أنظمة التلغراف على مستوى النظام افتراضياً.\n"
-#~ "نحن لا نجمع عادات استخدامك.\n"
-#~ "لا نقوم برفع سجل بحثك.\n"
-#~ "لا توجد إعلانات منتشرة."
-
-#~ msgid ""
-#~ "In an era ruled by algorithms and surveillance,\n"
-#~ "this is our firmest commitment to you."
-#~ msgstr ""
-#~ "في عصر تحكم فيه الخوارزميات والمراقبة،\n"
-#~ "هذا هو التزامنا الأبلغ لك."
-
-#~ msgid ""
-#~ "Whether you're a Windows refugee seeking shelter,\n"
-#~ "or a hardcore geek developer — you'll find your tribe here.\n"
-#~ "Found a bug? Want a feature? Tell us anytime."
-#~ msgstr ""
-#~ "سواء كنت لاجئًا من Windows تبحث عن ملجأ،\n"
-#~ "أو مطورًا متحمسًا — ستجد قبيلتك هنا.\n"
-#~ "وجدت خطأً؟ تريد ميزة؟ أخبرنا في أي وقت."
-
-#~ msgid ""
-#~ "💡 AnduinOS is compatible with Ubuntu's entire ecosystem.\n"
-#~ "You can rely on Ubuntu's vast documentation and expertise."
-#~ msgstr ""
-#~ "💡 AnduinOS متوافق مع كامل نظام Ubuntu البيئي.\n"
-#~ "يمكنك الاعتماد على وثائق وخبرة Ubuntu الواسعة."
-
-#~ msgid ""
-#~ "\n"
-#~ "=== Testing bandwidth of top 3 mirrors (3 s each) ===\n"
-#~ msgstr ""
-#~ "\n"
-#~ "=== اختبار عرض النطاق الترددي لأفضل 3 مرايا (3 ثوانٍ لكل منها) ===\n"
-
-#~ msgid ""
-#~ "✓ Driver installed successfully!\n"
-#~ "A reboot is recommended to apply changes."
-#~ msgstr ""
-#~ "✓ تم تثبيت برنامج التشغيل بنجاح!\n"
-#~ "يُنصح بإعادة التشغيل لتطبيق التغييرات."
-
-#: assets/anduinos-oobe
-msgid "Display Scaling"
-msgstr "تحجيم العرض"
-
-#: assets/anduinos-oobe
-msgid "Recommendation unavailable for this display."
-msgstr "لا تتوفر توصية لهذه الشاشة."
-
-#: assets/anduinos-oobe
-#, python-format
-msgid "%(scale)s (Recommended)"
-msgstr "%(scale)s (موصى به)"
-
-#: assets/anduinos-oobe
-#, python-format
-msgid "Primary display: %(display)s · Recommended: %(scale)s"
-msgstr "الشاشة الرئيسية: %(display)s · الموصى به: %(scale)s"
-
-#: assets/anduinos-oobe
-msgid "Could not change display scaling."
-msgstr "تعذّر تغيير تحجيم العرض."
+#: /tmp/tmp.sC9VMgFZZa:5
+msgid "Welcome Center"
+msgstr "مركز الترحيب"
+
+#: /tmp/tmp.sC9VMgFZZa:6
+msgid "welcome;oobe;setup;tutorial;first-run;"
+msgstr "ترحيب;OOBE;إعداد;دليل تعليمي;تشغيل أول;"

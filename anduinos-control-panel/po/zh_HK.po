@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-control-panel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 11:41+0000\n"
+"POT-Creation-Date: 2026-09-18 12:59+0000\n"
 "PO-Revision-Date: 2026-09-09 11:51+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,617 +17,876 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/anduinos_control_panel/app.py:78 src/anduinos_control_panel/app.py:96
+#: src/anduinos_control_panel/app.py:79 src/anduinos_control_panel/app.py:99
 #: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "控制台"
 
-#: src/anduinos_control_panel/app.py:96
+#: src/anduinos_control_panel/app.py:99
 msgid "AnduinOS"
 msgstr "AnduinOS"
 
-#: src/anduinos_control_panel/app.py:100
-#: src/anduinos_control_panel/app.py:1862
+#: src/anduinos_control_panel/app.py:103 src/anduinos_control_panel/app.py:1917
 msgid "Search Control Panel"
 msgstr "搜尋控制面板"
 
-#: src/anduinos_control_panel/app.py:101
+#: src/anduinos_control_panel/app.py:104
 msgid "Search settings"
 msgstr "搜尋設定"
 
-#: src/anduinos_control_panel/app.py:108
+#: src/anduinos_control_panel/app.py:111
 msgid "About Control Panel"
 msgstr "關於控制台"
 
-#: src/anduinos_control_panel/app.py:110
+#: src/anduinos_control_panel/app.py:113
 msgid "Main Menu"
 msgstr "主選單"
 
-#: src/anduinos_control_panel/app.py:132
+#: src/anduinos_control_panel/app.py:135
 msgid "Adjust your computer's settings"
 msgstr "調整電腦設定"
 
-#: src/anduinos_control_panel/app.py:135
+#: src/anduinos_control_panel/app.py:138
 msgid "Choose a category below, or search for a setting."
 msgstr "選擇以下類別，或搜尋設定。"
 
-#: src/anduinos_control_panel/app.py:151
+#: src/anduinos_control_panel/app.py:154
 msgid "No settings found"
 msgstr "找不到設定"
 
-#: src/anduinos_control_panel/app.py:152
+#: src/anduinos_control_panel/app.py:155
 msgid "Try a different search."
 msgstr "請嘗試不同的搜尋條件。"
 
-#: src/anduinos_control_panel/app.py:237
+#: src/anduinos_control_panel/app.py:240
 #: src/anduinos_control_panel/topics.py:144
 msgid "Configure NetworkManager connection profiles"
 msgstr "設定 NetworkManager 連線設定檔"
 
-#: src/anduinos_control_panel/app.py:239
+#: src/anduinos_control_panel/app.py:242
 msgid "Install Advanced Network Configuration"
 msgstr "安裝進階網絡設定"
 
-#: src/anduinos_control_panel/app.py:246
+#: src/anduinos_control_panel/app.py:249
 msgid "System"
 msgstr "系統"
 
-#: src/anduinos_control_panel/app.py:251
+#: src/anduinos_control_panel/app.py:254
 msgid "Security"
 msgstr "安全性"
 
-#: src/anduinos_control_panel/app.py:256
+#: src/anduinos_control_panel/app.py:259
 msgid "Network and Internet"
 msgstr "網絡及互聯網"
 
-#: src/anduinos_control_panel/app.py:261
+#: src/anduinos_control_panel/app.py:264
 msgid "User Accounts"
 msgstr "使用者帳戶"
 
-#: src/anduinos_control_panel/app.py:269
+#: src/anduinos_control_panel/app.py:272
 msgid "Hardware and Drivers"
 msgstr "硬體及驅動程式"
 
-#: src/anduinos_control_panel/app.py:277
+#: src/anduinos_control_panel/app.py:280
 msgid "Scan documents and select a scanner"
 msgstr "掃描文件並選擇掃描器"
 
-#: src/anduinos_control_panel/app.py:279
+#: src/anduinos_control_panel/app.py:282
 msgid "Install Document Scanner"
 msgstr "安裝文件掃描器"
 
-#: src/anduinos_control_panel/app.py:285
+#: src/anduinos_control_panel/app.py:288
 msgid "Appearance"
 msgstr "外觀"
 
-#: src/anduinos_control_panel/app.py:293
+#: src/anduinos_control_panel/app.py:296
 msgid "Programs"
 msgstr "應用程式"
 
-#: src/anduinos_control_panel/app.py:300
-#: src/anduinos_control_panel/topics.py:246
+#: src/anduinos_control_panel/app.py:304
+#: src/anduinos_control_panel/topics.py:273
 msgid "Manage application permissions with Flatseal"
 msgstr "使用 Flatseal 管理應用程式權限"
 
-#: src/anduinos_control_panel/app.py:302
+#: src/anduinos_control_panel/app.py:306
 msgid "Install Flatseal to manage application permissions"
 msgstr "安裝 Flatseal 以管理應用程式權限"
 
-#: src/anduinos_control_panel/app.py:308
+#: src/anduinos_control_panel/app.py:312
 msgid "AI Stack"
 msgstr "AI 堆疊"
 
-#: src/anduinos_control_panel/app.py:313
+#: src/anduinos_control_panel/app.py:317 src/anduinos_control_panel/app.py:321
 msgid "Installed"
 msgstr "已安裝"
 
-#: src/anduinos_control_panel/app.py:313
+#: src/anduinos_control_panel/app.py:317 src/anduinos_control_panel/app.py:321
+#: src/anduinos_control_panel/prediction_settings.py:44
 msgid "Not installed"
 msgstr "未安裝"
 
-#: src/anduinos_control_panel/app.py:318
+#: src/anduinos_control_panel/app.py:326
 msgid "Configure microphone, language, shortcut, and training"
 msgstr "設定麥克風、語言及快捷鍵，並進行校準"
 
-#: src/anduinos_control_panel/app.py:320
+#: src/anduinos_control_panel/app.py:328
 msgid "Install private, offline speech-to-text"
 msgstr "安裝保障私隱的離線語音轉文字功能"
 
-#: src/anduinos_control_panel/app.py:326 src/anduinos_control_panel/app.py:972
+#: src/anduinos_control_panel/app.py:334 src/anduinos_control_panel/app.py:1004
 msgid "Windows Compatibility"
 msgstr "Windows 相容性"
 
-#: src/anduinos_control_panel/app.py:332
+#: src/anduinos_control_panel/app.py:340
 msgid "Open your Windows application environments"
 msgstr "開啟您的 Windows 應用程式環境"
 
-#: src/anduinos_control_panel/app.py:334
+#: src/anduinos_control_panel/app.py:342
 msgid "Install Bottles to run Windows applications"
 msgstr "安裝 Bottles 以執行 Windows 應用程式"
 
-#: src/anduinos_control_panel/app.py:340
+#: src/anduinos_control_panel/app.py:348
 msgid "Backup and Recovery"
 msgstr "備份及還原"
 
-#: src/anduinos_control_panel/app.py:372
+#: src/anduinos_control_panel/app.py:390
 msgid "Open Deja Dup backups"
 msgstr "開啟 Deja Dup 備份"
 
-#: src/anduinos_control_panel/app.py:374
+#: src/anduinos_control_panel/app.py:392
 msgid "Install Deja Dup from the app store"
 msgstr "從應用程式商店安裝 Deja Dup"
 
-#: src/anduinos_control_panel/app.py:385 src/anduinos_control_panel/app.py:399
-#: src/anduinos_control_panel/app.py:413
-#: src/anduinos_control_panel/app.py:1893
+#: src/anduinos_control_panel/app.py:403 src/anduinos_control_panel/app.py:420
+#: src/anduinos_control_panel/app.py:434 src/anduinos_control_panel/app.py:1948
 msgid "Setting not found"
 msgstr "找不到設定"
 
-#: src/anduinos_control_panel/app.py:521 src/anduinos_control_panel/app.py:532
-#: src/anduinos_control_panel/app.py:541
+#: src/anduinos_control_panel/app.py:553 src/anduinos_control_panel/app.py:564
+#: src/anduinos_control_panel/app.py:573
 msgid "Could not open this setting"
 msgstr "無法開啟此設定"
 
-#: src/anduinos_control_panel/app.py:540
+#: src/anduinos_control_panel/app.py:572
 msgid "The application exited before it could be opened."
 msgstr "應用程式尚未能開啟便已結束。"
 
-#: src/anduinos_control_panel/app.py:547
+#: src/anduinos_control_panel/app.py:579
 msgid "OK"
 msgstr "確定"
 
-#: src/anduinos_control_panel/app.py:553 src/anduinos_control_panel/app.py:942
+#: src/anduinos_control_panel/app.py:585 src/anduinos_control_panel/app.py:974
 #, python-format
 msgid "Install %s?"
 msgstr "安裝 %s？"
 
-#: src/anduinos_control_panel/app.py:555
+#: src/anduinos_control_panel/app.py:587
 #, python-format
 msgid ""
-"%s is a recommended component, but it is not installed. You can reinstall it"
-" now."
+"%s is a recommended component, but it is not installed. You can reinstall it "
+"now."
 msgstr "%s 是建議安裝的元件，但尚未安裝。您現在可以重新安裝。"
 
-#: src/anduinos_control_panel/app.py:560 src/anduinos_control_panel/app.py:945
-#: src/anduinos_control_panel/app.py:1046
-#: src/anduinos_control_panel/app.py:1253
-#: src/anduinos_control_panel/app.py:1444
-#: src/anduinos_control_panel/app.py:1650
+#: src/anduinos_control_panel/app.py:592 src/anduinos_control_panel/app.py:977
+#: src/anduinos_control_panel/app.py:1078
+#: src/anduinos_control_panel/app.py:1298
+#: src/anduinos_control_panel/app.py:1499
+#: src/anduinos_control_panel/app.py:1705
+#: src/anduinos_control_panel/prediction_settings.py:142
 msgid "Cancel"
 msgstr "取消"
 
-#: src/anduinos_control_panel/app.py:561
-#: src/anduinos_control_panel/app.py:1446
+#: src/anduinos_control_panel/app.py:593 src/anduinos_control_panel/app.py:1501
+#: src/anduinos_control_panel/prediction_settings.py:46
 msgid "Install"
 msgstr "安裝"
 
-#: src/anduinos_control_panel/app.py:570
+#: src/anduinos_control_panel/app.py:602
 #, python-format
 msgid "Installing %s…"
 msgstr "正在安裝 %s…"
 
-#: src/anduinos_control_panel/app.py:579
+#: src/anduinos_control_panel/app.py:611
 #, python-format
 msgid "%s installed"
 msgstr "%s 已安裝"
 
-#: src/anduinos_control_panel/app.py:586 src/anduinos_control_panel/app.py:811
-#: src/anduinos_control_panel/app.py:909
+#: src/anduinos_control_panel/app.py:618 src/anduinos_control_panel/app.py:843
+#: src/anduinos_control_panel/app.py:941
+#: src/anduinos_control_panel/software_sources.py:394
 msgid "Authentication was cancelled."
 msgstr "驗證已取消。"
 
-#: src/anduinos_control_panel/app.py:588
+#: src/anduinos_control_panel/app.py:620
 msgid "The recommended component could not be installed."
 msgstr "無法安裝建議的元件。"
 
-#: src/anduinos_control_panel/app.py:589
+#: src/anduinos_control_panel/app.py:621
 msgid "Installation failed"
 msgstr "安裝失敗"
 
-#: src/anduinos_control_panel/app.py:637
+#: src/anduinos_control_panel/app.py:669
 #: src/anduinos_control_panel/topics.py:86
 msgid "Startup and Boot"
 msgstr "啟動及開機"
 
-#: src/anduinos_control_panel/app.py:655
+#: src/anduinos_control_panel/app.py:687
 msgid "Boot menu"
 msgstr "開機選單"
 
-#: src/anduinos_control_panel/app.py:657
-msgid ""
-"Choose how long the boot menu waits before starting the default system."
+#: src/anduinos_control_panel/app.py:689
+msgid "Choose how long the boot menu waits before starting the default system."
 msgstr "選擇開機選單在啟動預設系統前的等待時間。"
 
-#: src/anduinos_control_panel/app.py:662
+#: src/anduinos_control_panel/app.py:694
 msgid "Default operating system"
 msgstr "預設作業系統"
 
-#: src/anduinos_control_panel/app.py:663
+#: src/anduinos_control_panel/app.py:695
 msgid "Starts automatically when the boot menu wait time ends."
 msgstr "開機選單等待時間結束時自動啟動。"
 
-#: src/anduinos_control_panel/app.py:665 src/anduinos_control_panel/app.py:792
+#: src/anduinos_control_panel/app.py:697 src/anduinos_control_panel/app.py:824
 msgid "Current setting (unchanged)"
 msgstr "目前設定（未變更）"
 
-#: src/anduinos_control_panel/app.py:669
-#: src/anduinos_control_panel/app.py:1135
-#: src/anduinos_control_panel/app.py:1342
-#: src/anduinos_control_panel/app.py:1561
-#: src/anduinos_control_panel/app.py:1756
+#: src/anduinos_control_panel/app.py:701 src/anduinos_control_panel/app.py:1167
+#: src/anduinos_control_panel/app.py:1387
+#: src/anduinos_control_panel/app.py:1616
+#: src/anduinos_control_panel/app.py:1811
 msgid "Retry"
 msgstr "重試"
 
-#: src/anduinos_control_panel/app.py:673
+#: src/anduinos_control_panel/app.py:705
 msgid "Authentication is required to read the boot menu."
 msgstr "需要驗證權限才能讀取開機選單。"
 
-#: src/anduinos_control_panel/app.py:676
+#: src/anduinos_control_panel/app.py:708
 msgid "Boot menu wait time"
 msgstr "開機選單等待時間"
 
-#: src/anduinos_control_panel/app.py:678
+#: src/anduinos_control_panel/app.py:710
 msgid "The same delay is used after an interrupted or unsuccessful startup."
 msgstr "啟動中斷或失敗後，亦會使用相同的延遲時間。"
 
-#: src/anduinos_control_panel/app.py:685
+#: src/anduinos_control_panel/app.py:717
 #, python-format
 msgid "%d seconds"
 msgstr "%d 秒"
 
-#: src/anduinos_control_panel/app.py:693
+#: src/anduinos_control_panel/app.py:725
 msgid "Boot display"
 msgstr "開機顯示"
 
-#: src/anduinos_control_panel/app.py:695
+#: src/anduinos_control_panel/app.py:727
 msgid "Choose the size of the GRUB menu and startup logo."
 msgstr "選擇 GRUB 選單及啟動標誌的大小。"
 
-#: src/anduinos_control_panel/app.py:699
+#: src/anduinos_control_panel/app.py:731
 msgid "Display mode"
 msgstr "顯示模式"
 
-#: src/anduinos_control_panel/app.py:701
+#: src/anduinos_control_panel/app.py:733
 msgid "Native resolution shows more detail; large text is easier to read."
 msgstr "原生解析度可顯示更多細節；大型文字則較易閱讀。"
 
-#: src/anduinos_control_panel/app.py:709
+#: src/anduinos_control_panel/app.py:741
 msgid "Native resolution"
 msgstr "原生解析度"
 
-#: src/anduinos_control_panel/app.py:709
+#: src/anduinos_control_panel/app.py:741
 msgid "Large text mode"
 msgstr "大型文字模式"
 
-#: src/anduinos_control_panel/app.py:731
-#: src/anduinos_control_panel/app.py:1119
-#: src/anduinos_control_panel/app.py:1326
-#: src/anduinos_control_panel/app.py:1543
-#: src/anduinos_control_panel/app.py:1735
+#: src/anduinos_control_panel/app.py:763 src/anduinos_control_panel/app.py:1151
+#: src/anduinos_control_panel/app.py:1371
+#: src/anduinos_control_panel/app.py:1598
+#: src/anduinos_control_panel/app.py:1790
 msgid "Close"
 msgstr "關閉"
 
-#: src/anduinos_control_panel/app.py:733
-#: src/anduinos_control_panel/app.py:1652
-#: src/anduinos_control_panel/app.py:1656
+#: src/anduinos_control_panel/app.py:765 src/anduinos_control_panel/app.py:1707
+#: src/anduinos_control_panel/app.py:1711
 msgid "Apply"
 msgstr "套用"
 
-#: src/anduinos_control_panel/app.py:789
+#: src/anduinos_control_panel/app.py:821
 msgid "Custom setting (unchanged)"
 msgstr "自訂設定（未變更）"
 
-#: src/anduinos_control_panel/app.py:804
+#: src/anduinos_control_panel/app.py:836
 msgid "Only operating systems already in the boot menu are listed."
 msgstr "僅列出開機選單中已存在的作業系統。"
 
-#: src/anduinos_control_panel/app.py:805
+#: src/anduinos_control_panel/app.py:837
 msgid "No supported operating systems were found in the boot menu."
 msgstr "開機選單中未找到任何受支援的作業系統。"
 
-#: src/anduinos_control_panel/app.py:808 src/anduinos_control_panel/app.py:812
+#: src/anduinos_control_panel/app.py:840 src/anduinos_control_panel/app.py:844
 msgid "The boot menu could not be read."
 msgstr "無法讀取開機選單。"
 
-#: src/anduinos_control_panel/app.py:823
+#: src/anduinos_control_panel/app.py:855
 msgid "Reading the boot menu…"
 msgstr "正在讀取開機選單…"
 
-#: src/anduinos_control_panel/app.py:878
+#: src/anduinos_control_panel/app.py:910
 msgid "Updating the boot menu…"
 msgstr "正在更新開機選單…"
 
-#: src/anduinos_control_panel/app.py:901
+#: src/anduinos_control_panel/app.py:933
 msgid "Boot settings updated. The change applies on the next startup."
 msgstr "開機設定已更新。變更將於下次啟動時生效。"
 
-#: src/anduinos_control_panel/app.py:904
+#: src/anduinos_control_panel/app.py:936
 msgid "Boot settings updated"
 msgstr "開機設定已更新"
 
-#: src/anduinos_control_panel/app.py:911
+#: src/anduinos_control_panel/app.py:943
 msgid "The boot setting could not be changed."
 msgstr "無法變更開機設定。"
 
-#: src/anduinos_control_panel/app.py:943
+#: src/anduinos_control_panel/app.py:975
 msgid "This application is available from the app store."
 msgstr "此應用程式可從應用程式商店取得。"
 
-#: src/anduinos_control_panel/app.py:946
+#: src/anduinos_control_panel/app.py:978
 msgid "Open App Store"
 msgstr "開啟應用程式商店"
 
-#: src/anduinos_control_panel/app.py:990
+#: src/anduinos_control_panel/app.py:1022
 msgid "Bottles"
 msgstr "Bottles"
 
-#: src/anduinos_control_panel/app.py:992
+#: src/anduinos_control_panel/app.py:1024
 msgid ""
 "Run Windows applications in isolated compatibility environments powered by "
 "Wine and Bottles."
 msgstr "使用由 Wine 及 Bottles 提供的隔離相容性環境執行 Windows 應用程式。"
 
-#: src/anduinos_control_panel/app.py:997
+#: src/anduinos_control_panel/app.py:1029
 msgid "Install Bottles"
 msgstr "安裝 Bottles"
 
-#: src/anduinos_control_panel/app.py:998
+#: src/anduinos_control_panel/app.py:1030
 msgid "Downloads Bottles and its runtime from Flathub"
 msgstr "從 Flathub 下載 Bottles 及其執行環境"
 
-#: src/anduinos_control_panel/app.py:1014
-#: src/anduinos_control_panel/app.py:1221
-#: src/anduinos_control_panel/app.py:1414
-#: src/anduinos_control_panel/app.py:1618
+#: src/anduinos_control_panel/app.py:1046
+#: src/anduinos_control_panel/app.py:1266
+#: src/anduinos_control_panel/app.py:1469
+#: src/anduinos_control_panel/app.py:1673
+#: src/anduinos_control_panel/prediction_settings.py:84
 msgid "Advanced Output"
 msgstr "進階輸出"
 
-#: src/anduinos_control_panel/app.py:1048
-#: src/anduinos_control_panel/app.py:1255
+#: src/anduinos_control_panel/app.py:1080
+#: src/anduinos_control_panel/app.py:1300
 msgid "Start"
 msgstr "開始"
 
-#: src/anduinos_control_panel/app.py:1090
-#: src/anduinos_control_panel/app.py:1297
-#: src/anduinos_control_panel/app.py:1483
+#: src/anduinos_control_panel/app.py:1122
+#: src/anduinos_control_panel/app.py:1342
+#: src/anduinos_control_panel/app.py:1538
 msgid "Installing…"
 msgstr "正在安裝…"
 
-#: src/anduinos_control_panel/app.py:1092
+#: src/anduinos_control_panel/app.py:1124
 msgid "Downloading and installing Bottles… This may take a few minutes."
 msgstr "正在下載並安裝 Bottles… 這可能需要幾分鐘。"
 
-#: src/anduinos_control_panel/app.py:1097
+#: src/anduinos_control_panel/app.py:1129
 msgid "Preparing Flathub and Bottles installation…"
 msgstr "正在準備 Flathub 及 Bottles 的安裝…"
 
-#: src/anduinos_control_panel/app.py:1111
+#: src/anduinos_control_panel/app.py:1143
 msgid "✓ Bottles is ready."
 msgstr "✓ Bottles 已準備就緒。"
 
-#: src/anduinos_control_panel/app.py:1115
-#: src/anduinos_control_panel/app.py:1322
-#: src/anduinos_control_panel/app.py:1510
-#: src/anduinos_control_panel/app.py:1731
+#: src/anduinos_control_panel/app.py:1147
+#: src/anduinos_control_panel/app.py:1367
+#: src/anduinos_control_panel/app.py:1565
+#: src/anduinos_control_panel/app.py:1786
 msgid "✓ Installation completed successfully."
 msgstr "✓ 安裝已完成。"
 
-#: src/anduinos_control_panel/app.py:1117
+#: src/anduinos_control_panel/app.py:1149
 msgid "Open Bottles"
 msgstr "開啟 Bottles"
 
-#: src/anduinos_control_panel/app.py:1122
+#: src/anduinos_control_panel/app.py:1154
 msgid "Bottles installed"
 msgstr "Bottles 已安裝"
 
-#: src/anduinos_control_panel/app.py:1128
-#: src/anduinos_control_panel/app.py:1335
-#: src/anduinos_control_panel/app.py:1554
+#: src/anduinos_control_panel/app.py:1160
+#: src/anduinos_control_panel/app.py:1380
+#: src/anduinos_control_panel/app.py:1609
 msgid "✗ Installation failed. Review Advanced Output."
 msgstr "✗ 安裝失敗。請檢視進階輸出。"
 
-#: src/anduinos_control_panel/app.py:1133
-#: src/anduinos_control_panel/app.py:1340
-#: src/anduinos_control_panel/app.py:1559
-#: src/anduinos_control_panel/app.py:1754
+#: src/anduinos_control_panel/app.py:1165
+#: src/anduinos_control_panel/app.py:1385
+#: src/anduinos_control_panel/app.py:1614
+#: src/anduinos_control_panel/app.py:1809
 msgid "✗ Operation failed: "
 msgstr "✗ 操作失敗： "
 
-#: src/anduinos_control_panel/app.py:1165
+#: src/anduinos_control_panel/app.py:1197
 msgid "Deja Dup Backups"
 msgstr "Deja Dup 備份"
 
-#: src/anduinos_control_panel/app.py:1179
-#: src/anduinos_control_panel/topics.py:245
+#: src/anduinos_control_panel/app.py:1206
+msgid "Factory Reset Is Not Available"
+msgstr "無法恢復原廠設定"
+
+#: src/anduinos_control_panel/app.py:1208
+msgid ""
+"This system does not support factory reset. Reinstall AnduinOS and choose "
+"the Btrfs filesystem to enable it."
+msgstr ""
+"此系統不支援恢復原廠設定。請重新安裝 AnduinOS，並選擇 Btrfs 檔案系統以啟用此"
+"功能。"
+
+#: src/anduinos_control_panel/app.py:1224
+#: src/anduinos_control_panel/topics.py:272
 msgid "Permission Settings"
 msgstr "權限設定"
 
-#: src/anduinos_control_panel/app.py:1197
+#: src/anduinos_control_panel/app.py:1242
 msgid "Flatseal"
 msgstr "Flatseal"
 
-#: src/anduinos_control_panel/app.py:1199
+#: src/anduinos_control_panel/app.py:1244
 msgid ""
 "Review and control what files, devices, network connections, and services "
 "Flatpak applications can access."
 msgstr "檢視及控制 Flatpak 應用程式可存取的檔案、裝置、網路連線及服務。"
 
-#: src/anduinos_control_panel/app.py:1204
+#: src/anduinos_control_panel/app.py:1249
 msgid "Install Flatseal"
 msgstr "安裝 Flatseal"
 
-#: src/anduinos_control_panel/app.py:1206
+#: src/anduinos_control_panel/app.py:1251
 msgid "Administrator authentication is required when installation starts"
 msgstr "開始安裝時需要管理員身分驗證。"
 
-#: src/anduinos_control_panel/app.py:1298
+#: src/anduinos_control_panel/app.py:1343
 msgid "Downloading and installing Flatseal…"
 msgstr "正在下載並安裝 Flatseal…"
 
-#: src/anduinos_control_panel/app.py:1303
+#: src/anduinos_control_panel/app.py:1348
 msgid "Preparing Flatseal installation…"
 msgstr "正在準備 Flatseal 的安裝…"
 
-#: src/anduinos_control_panel/app.py:1318
+#: src/anduinos_control_panel/app.py:1363
 msgid "✓ Flatseal is ready."
 msgstr "✓ Flatseal 已準備就緒。"
 
-#: src/anduinos_control_panel/app.py:1324
+#: src/anduinos_control_panel/app.py:1369
 msgid "Open Flatseal"
 msgstr "開啟 Flatseal"
 
-#: src/anduinos_control_panel/app.py:1329
+#: src/anduinos_control_panel/app.py:1374
 msgid "Flatseal installed"
 msgstr "Flatseal 已安裝"
 
-#: src/anduinos_control_panel/app.py:1361
+#: src/anduinos_control_panel/app.py:1416
 msgid "Install Voice Typing"
 msgstr "安裝語音輸入"
 
-#: src/anduinos_control_panel/app.py:1379
+#: src/anduinos_control_panel/app.py:1434
 msgid "Offline Voice Typing"
 msgstr "離線語音輸入"
 
-#: src/anduinos_control_panel/app.py:1381
+#: src/anduinos_control_panel/app.py:1436
 msgid ""
 "Press Super + H to dictate into browsers, editors, messages, terminals, and "
 "other applications. Audio stays on this computer."
-msgstr "按 Super + H 即可在瀏覽器、編輯器、訊息、終端機及其他應用程式中進行語音輸入。音訊會保留在此電腦上。"
+msgstr ""
+"按 Super + H 即可在瀏覽器、編輯器、訊息、終端機及其他應用程式中進行語音輸入。"
+"音訊會保留在此電腦上。"
 
-#: src/anduinos_control_panel/app.py:1386
+#: src/anduinos_control_panel/app.py:1441
 msgid "Private by default"
 msgstr "預設保障私隱"
 
-#: src/anduinos_control_panel/app.py:1387
+#: src/anduinos_control_panel/app.py:1442
 msgid "Speech is recognized locally with whisper.cpp"
 msgstr "語音會在此電腦上由 whisper.cpp 識別"
 
-#: src/anduinos_control_panel/app.py:1392
+#: src/anduinos_control_panel/app.py:1447
 msgid "About 140 MB to download"
 msgstr "約需下載 140 MB"
 
-#: src/anduinos_control_panel/app.py:1394
+#: src/anduinos_control_panel/app.py:1449
 msgid ""
 "Includes the multilingual Base model; optional models are available later"
 msgstr "包含多語言 Base 模型；其他選用模型稍後可用"
 
-#: src/anduinos_control_panel/app.py:1403
+#: src/anduinos_control_panel/app.py:1458
+#: src/anduinos_control_panel/prediction_settings.py:177
 msgid "Administrator authentication is required when installation starts."
 msgstr "開始安裝時需要管理員驗證。"
 
-#: src/anduinos_control_panel/app.py:1488
+#: src/anduinos_control_panel/app.py:1543
 msgid "Downloading the local engine and multilingual speech model…"
 msgstr "正在下載本機引擎及多語言語音辨識模型…"
 
-#: src/anduinos_control_panel/app.py:1494
+#: src/anduinos_control_panel/app.py:1549
 msgid "Preparing Voice Typing installation…"
 msgstr "正在準備語音輸入的安裝…"
 
-#: src/anduinos_control_panel/app.py:1537
+#: src/anduinos_control_panel/app.py:1592
 msgid ""
 "✓ Installed. Sign out and back in once, then press Super + H to start Voice "
 "Typing."
 msgstr "✓ 已安裝。請登出並重新登入一次，然後按 Super + H 即可開始語音輸入。"
 
-#: src/anduinos_control_panel/app.py:1541
+#: src/anduinos_control_panel/app.py:1596
 msgid "Open Settings"
 msgstr "開啟設定"
 
-#: src/anduinos_control_panel/app.py:1547
+#: src/anduinos_control_panel/app.py:1602
 msgid "Voice Typing installed — sign out to finish"
 msgstr "語音輸入已安裝 — 請登出以完成設定"
 
-#: src/anduinos_control_panel/app.py:1578
-#: src/anduinos_control_panel/topics.py:254
+#: src/anduinos_control_panel/app.py:1633
+#: src/anduinos_control_panel/topics.py:281
 msgid "On-device AI"
 msgstr "裝置端 AI"
 
-#: src/anduinos_control_panel/app.py:1596
+#: src/anduinos_control_panel/app.py:1651
 msgid "Why AI"
 msgstr "Why AI"
 
-#: src/anduinos_control_panel/app.py:1598
+#: src/anduinos_control_panel/app.py:1653
 msgid ""
 "Run the Why AI assistant locally. The model and runtime are installed only "
 "when this option is enabled."
 msgstr "在這部電腦上執行 Why AI 助理。模型及執行環境僅在啟用此選項時才會安裝。"
 
-#: src/anduinos_control_panel/app.py:1603
+#: src/anduinos_control_panel/app.py:1658
 msgid "Install on-device AI"
 msgstr "安裝裝置端 AI"
 
-#: src/anduinos_control_panel/app.py:1604
+#: src/anduinos_control_panel/app.py:1659
 msgid "Enable the local Why AI stack on this computer"
 msgstr "在此電腦上啟用本機 Why AI 堆疊"
 
-#: src/anduinos_control_panel/app.py:1698
+#: src/anduinos_control_panel/app.py:1753
 msgid "Applying…"
 msgstr "正在套用…"
 
-#: src/anduinos_control_panel/app.py:1700
+#: src/anduinos_control_panel/app.py:1755
 msgid "Downloading and installing Why AI… This may take about 10 minutes."
 msgstr "正在下載並安裝 Why AI… 這可能需要約 10 分鐘。"
 
-#: src/anduinos_control_panel/app.py:1702
+#: src/anduinos_control_panel/app.py:1757
 msgid "Disabling the local Why AI stack…"
 msgstr "正在停用本機 Why AI 堆疊…"
 
-#: src/anduinos_control_panel/app.py:1709
+#: src/anduinos_control_panel/app.py:1764
 msgid "Preparing package operation…"
 msgstr "正在準備套件操作…"
 
-#: src/anduinos_control_panel/app.py:1723
+#: src/anduinos_control_panel/app.py:1778
 msgid "✓ On-device AI is ready."
 msgstr "✓ 裝置端 AI 已準備就緒。"
 
-#: src/anduinos_control_panel/app.py:1725
+#: src/anduinos_control_panel/app.py:1780
 msgid "✓ On-device AI is disabled."
 msgstr "✓ 裝置端 AI 已停用。"
 
-#: src/anduinos_control_panel/app.py:1731
+#: src/anduinos_control_panel/app.py:1786
 msgid "✓ Change completed successfully."
 msgstr "✓ 變更已成功完成。"
 
-#: src/anduinos_control_panel/app.py:1740
+#: src/anduinos_control_panel/app.py:1795
 msgid "On-device AI enabled"
 msgstr "裝置端 AI 已啟用"
 
-#: src/anduinos_control_panel/app.py:1742
+#: src/anduinos_control_panel/app.py:1797
 msgid "On-device AI disabled"
 msgstr "裝置端 AI 已停用"
 
-#: src/anduinos_control_panel/app.py:1750
+#: src/anduinos_control_panel/app.py:1805
 msgid "✗ Package operation failed. Review Advanced Output."
 msgstr "✗ 套件操作失敗。請檢視進階輸出。"
 
-#: src/anduinos_control_panel/app.py:1827
+#: src/anduinos_control_panel/app.py:1882
 #, python-brace-format
 msgid "{command} exited with status {status}"
 msgstr "{command} 的結束狀態碼為 {status}"
 
-#: src/anduinos_control_panel/app.py:1854
+#: src/anduinos_control_panel/app.py:1909
 msgid "Open a Control Panel topic"
 msgstr "開啟控制台項目"
 
-#: src/anduinos_control_panel/app.py:1855
+#: src/anduinos_control_panel/app.py:1910
 msgid "TOPIC"
 msgstr "項目"
 
-#: src/anduinos_control_panel/app.py:1863
+#: src/anduinos_control_panel/app.py:1918
 msgid "TERMS"
 msgstr "詞語"
 
-#: src/anduinos_control_panel/app.py:1900
+#: src/anduinos_control_panel/app.py:1955
 msgid "AnduinOS Control Panel"
 msgstr "AnduinOS 控制台"
 
-#: src/anduinos_control_panel/app.py:1902
+#: src/anduinos_control_panel/app.py:1957
 msgid "AnduinOS Team"
 msgstr "AnduinOS 團隊"
 
-#: src/anduinos_control_panel/app.py:1904
+#: src/anduinos_control_panel/app.py:1959
 msgid "Find and manage AnduinOS system settings."
 msgstr "搜尋及管理 AnduinOS 系統設定。"
+
+#: src/anduinos_control_panel/prediction_settings.py:25
+#: src/anduinos_control_panel/prediction_settings.py:41
+#: src/anduinos_control_panel/topics.py:181
+msgid "Bash Command Predictions"
+msgstr "Bash 命令預測"
+
+#: src/anduinos_control_panel/prediction_settings.py:42
+msgid ""
+"Predict commands locally from your history and current context. No model "
+"download or on-device LLM is needed."
+msgstr ""
+"根據命令歷史和目前情境，在本機預測後續輸入。無需下載模型，也不依賴裝置端 "
+"LLM。"
+
+#: src/anduinos_control_panel/prediction_settings.py:45
+msgid "Configure your preferences below, then install to use predictions."
+msgstr "先在下方設定偏好，再安裝以使用命令預測。"
+
+#: src/anduinos_control_panel/prediction_settings.py:52
+msgid ""
+"Changes take effect in newly opened Bash terminals. Saved settings override "
+"legacy environment variables."
+msgstr "設定對新開啟的 Bash 終端機生效。已儲存的設定優先於舊環境變數。"
+
+#: src/anduinos_control_panel/prediction_settings.py:55
+msgid "Enable command predictions"
+msgstr "啟用命令預測"
+
+#: src/anduinos_control_panel/prediction_settings.py:55
+msgid "Show suggestions while typing in Bash."
+msgstr "在 Bash 中輸入時顯示建議。"
+
+#: src/anduinos_control_panel/prediction_settings.py:56
+msgid "Learn from command history"
+msgstr "根據命令歷史學習"
+
+#: src/anduinos_control_panel/prediction_settings.py:56
+msgid ""
+"Use Bash history, frequency, directories, and command sequences to "
+"personalize suggestions."
+msgstr "結合 Bash 歷史、頻率、目錄和命令順序提供個人化建議。"
+
+#: src/anduinos_control_panel/prediction_settings.py:57
+msgid "Remember my usage habits"
+msgstr "記住使用習慣"
+
+#: src/anduinos_control_panel/prediction_settings.py:57
+msgid ""
+"Save learned usage habits on this computer for predictions after closing the "
+"terminal. When off, Bash command history is still used."
+msgstr ""
+"將學到的使用習慣儲存在本機，關閉終端機後仍可用於預測。關閉後仍會參考 Bash 命"
+"令歷史。"
+
+#: src/anduinos_control_panel/prediction_settings.py:67
+msgid "Clear saved learning"
+msgstr "清除已儲存的學習資料"
+
+#: src/anduinos_control_panel/prediction_settings.py:68
+msgid ""
+"Keeps Bash history and your settings. Reopen existing terminals to discard "
+"their in-memory learning."
+msgstr "保留 Bash 歷史和設定。重新開啟現有終端機以捨棄記憶體中的學習資料。"
+
+#: src/anduinos_control_panel/prediction_settings.py:69
+#: src/anduinos_control_panel/prediction_settings.py:143
+msgid "Clear"
+msgstr "清除"
+
+#: src/anduinos_control_panel/prediction_settings.py:73
+msgid "Restore default settings"
+msgstr "還原預設設定"
+
+#: src/anduinos_control_panel/prediction_settings.py:73
+msgid "Does not delete learned data."
+msgstr "不會刪除學習資料。"
+
+#: src/anduinos_control_panel/prediction_settings.py:74
+msgid "Restore Defaults"
+msgstr "還原預設值"
+
+#: src/anduinos_control_panel/prediction_settings.py:78
+msgid ""
+"At the end of a line, press Right Arrow or End to accept a suggestion. Press "
+"Enter to run the command."
+msgstr "在行尾按右方向鍵或 End 接受建議，按 Enter 執行命令。"
+
+#: src/anduinos_control_panel/prediction_settings.py:119
+#, python-brace-format
+msgid "Could not update prediction settings: {error}"
+msgstr "無法更新預測設定：{error}"
+
+#: src/anduinos_control_panel/prediction_settings.py:134
+msgid "Default settings restored. Reopen Bash terminals to apply them."
+msgstr "已還原預設設定。請重新開啟 Bash 終端機使其生效。"
+
+#: src/anduinos_control_panel/prediction_settings.py:140
+msgid "Clear saved learning?"
+msgstr "清除已儲存的學習資料？"
+
+#: src/anduinos_control_panel/prediction_settings.py:141
+msgid "Only prediction learning is removed. Your Bash command history is kept."
+msgstr "僅刪除預測器的學習資料，保留 Bash 命令歷史。"
+
+#: src/anduinos_control_panel/prediction_settings.py:166
+msgid ""
+"Saved learning cleared. Older terminals cannot save it again; reopen them to "
+"resume learning persistence."
+msgstr ""
+"已清除學習資料。舊終端機無法將其重新儲存；重新開啟終端機可恢復學習資料儲存。"
+
+#: src/anduinos_control_panel/prediction_settings.py:185
+msgid "Installation complete. Open a new Bash terminal to use predictions."
+msgstr "安裝完成。開啟新的 Bash 終端機即可使用預測。"
+
+#: src/anduinos_control_panel/prediction_settings.py:185
+msgid "Package installation could not be confirmed. Please retry."
+msgstr "無法確認套件是否安裝成功，請重試。"
+
+#: src/anduinos_control_panel/prediction_settings.py:190
+#, python-brace-format
+msgid "Installation failed: {error}"
+msgstr "安裝失敗：{error}"
+
+#: src/anduinos_control_panel/software_sources.py:264
+#: src/anduinos_control_panel/topics.py:245
+msgid "Software Source"
+msgstr "軟件來源"
+
+#: src/anduinos_control_panel/software_sources.py:295
+msgid "Keep Your System Up to Date"
+msgstr "保持系統更新"
+
+#: src/anduinos_control_panel/software_sources.py:302
+#: src/anduinos_control_panel/topics.py:246
+msgid "Security patches and the latest features are just a click away."
+msgstr "安全修補程式和最新功能只需一鍵即可取得。"
+
+#: src/anduinos_control_panel/software_sources.py:312
+#: src/anduinos_control_panel/software_sources.py:387
+msgid "Current mirror"
+msgstr "當前鏡像"
+
+#: src/anduinos_control_panel/software_sources.py:322
+msgid "Terminal Output"
+msgstr "終端機輸出"
+
+#: src/anduinos_control_panel/software_sources.py:350
+msgid "  Switch to Fastest Mirror  "
+msgstr "  切換至最快鏡像站  "
+
+#: src/anduinos_control_panel/software_sources.py:353
+#: src/anduinos_control_panel/software_sources.py:536
+#: src/anduinos_control_panel/software_sources.py:550
+msgid "  Check for Updates  "
+msgstr "  檢查更新  "
+
+#: src/anduinos_control_panel/software_sources.py:399
+msgid "The operation failed without an error message."
+msgstr "操作失敗，但沒有錯誤訊息。"
+
+#: src/anduinos_control_panel/software_sources.py:423
+msgid "Testing mirrors…"
+msgstr "正在測試鏡像站…"
+
+#: src/anduinos_control_panel/software_sources.py:424
+msgid "=== Testing mirror speeds ==="
+msgstr "=== 正在測試鏡像源速度 ==="
+
+#: src/anduinos_control_panel/software_sources.py:438
+msgid "✗ Mirror test failed: "
+msgstr "✗ 鏡像測試失敗： "
+
+#: src/anduinos_control_panel/software_sources.py:448
+msgid "Latency"
+msgstr "延遲"
+
+#: src/anduinos_control_panel/software_sources.py:449
+msgid "Bandwidth"
+msgstr "頻寬"
+
+#: src/anduinos_control_panel/software_sources.py:453
+msgid "This is already your current mirror."
+msgstr "這已經是您的當前鏡像。"
+
+#: src/anduinos_control_panel/software_sources.py:458
+msgid "Fastest Mirror Found"
+msgstr "找到最快鏡像"
+
+#: src/anduinos_control_panel/software_sources.py:461
+msgid "Switch to this mirror and run apt update?"
+msgstr "切換至此鏡像並運行 apt update？"
+
+#: src/anduinos_control_panel/software_sources.py:464
+msgid "Keep Current"
+msgstr "保持當前"
+
+#: src/anduinos_control_panel/software_sources.py:465
+msgid "Switch"
+msgstr "切換"
+
+#: src/anduinos_control_panel/software_sources.py:474
+msgid "Switching mirror…"
+msgstr "正在切換鏡像…"
+
+#: src/anduinos_control_panel/software_sources.py:488
+msgid "✓ Mirror switched and system updated."
+msgstr "✓ 鏡像源已切換並更新系統。"
+
+#: src/anduinos_control_panel/software_sources.py:490
+msgid "✗ Switch failed: "
+msgstr "✗ 切換失敗： "
+
+#: src/anduinos_control_panel/software_sources.py:497
+msgid "Installing updates…"
+msgstr "正在安裝更新…"
+
+#: src/anduinos_control_panel/software_sources.py:500
+msgid "Checking for updates…"
+msgstr "正在檢查更新…"
+
+#: src/anduinos_control_panel/software_sources.py:508
+#: src/anduinos_control_panel/software_sources.py:528
+msgid "✗ Check failed: "
+msgstr "✗ 檢查失敗： "
+
+#: src/anduinos_control_panel/software_sources.py:536
+msgid "  Install Updates  "
+msgstr "  安裝更新  "
+
+#: src/anduinos_control_panel/software_sources.py:539
+msgid "Updates are available."
+msgstr "有可用的更新。"
+
+#: src/anduinos_control_panel/software_sources.py:541
+msgid "✓ System is up to date."
+msgstr "✓ 系統已是最新版本。"
+
+#: src/anduinos_control_panel/software_sources.py:552
+msgid "✓ Updates installed successfully!"
+msgstr "✓ 更新已成功安裝！"
+
+#: src/anduinos_control_panel/software_sources.py:554
+msgid "✗ Installation failed: "
+msgstr "✗ 安裝失敗： "
 
 #: src/anduinos_control_panel/topics.py:77
 msgid "System Settings"
@@ -693,87 +952,99 @@ msgstr "YubiKey 設定"
 msgid "Configure sign-in, sudo, SSH keys, and Git signing"
 msgstr "設定登入、sudo、SSH 金鑰及 Git 簽章"
 
-#: src/anduinos_control_panel/topics.py:181
+#: src/anduinos_control_panel/topics.py:182
+msgid "Predict commands locally from history and current context"
+msgstr "根據歷史和目前情境，在本機預測命令"
+
+#: src/anduinos_control_panel/topics.py:190
 msgid "Voice Typing"
 msgstr "語音輸入"
 
-#: src/anduinos_control_panel/topics.py:182
+#: src/anduinos_control_panel/topics.py:191
 msgid "Configure private, offline speech-to-text"
 msgstr "設定私人的離線語音轉文字功能"
 
-#: src/anduinos_control_panel/topics.py:190
+#: src/anduinos_control_panel/topics.py:199
 msgid "Driver Center"
 msgstr "驅動程式中心"
 
-#: src/anduinos_control_panel/topics.py:191
+#: src/anduinos_control_panel/topics.py:200
 msgid "Graphics, audio, printers, controllers, and firmware"
 msgstr "圖形、音訊、印表機、控制器及韌體"
 
-#: src/anduinos_control_panel/topics.py:199
+#: src/anduinos_control_panel/topics.py:208
 msgid "Printers"
 msgstr "印表機"
 
-#: src/anduinos_control_panel/topics.py:200
+#: src/anduinos_control_panel/topics.py:209
 msgid "Add, remove, and configure printers"
 msgstr "新增、移除及設定印表機"
 
-#: src/anduinos_control_panel/topics.py:208
+#: src/anduinos_control_panel/topics.py:217
 msgid "Scanners"
 msgstr "掃描器"
 
-#: src/anduinos_control_panel/topics.py:209
+#: src/anduinos_control_panel/topics.py:218
 msgid "Scan documents and add or select a scanner"
 msgstr "掃描文件並新增或選擇掃描器"
 
-#: src/anduinos_control_panel/topics.py:218
+#: src/anduinos_control_panel/topics.py:227
 msgid "AnduinOS Appearance Settings"
 msgstr "AnduinOS 外觀設定"
 
-#: src/anduinos_control_panel/topics.py:219
+#: src/anduinos_control_panel/topics.py:228
 msgid "Configure the taskbar, panel widgets, and desktop"
 msgstr "設定任務欄、面板小工具及桌面"
 
-#: src/anduinos_control_panel/topics.py:227
+#: src/anduinos_control_panel/topics.py:236
 msgid "Wallpaper and Accent Color"
 msgstr "牆紙與強調色"
 
-#: src/anduinos_control_panel/topics.py:228
+#: src/anduinos_control_panel/topics.py:237
 msgid "Choose the desktop background, style, and accent color"
 msgstr "選擇桌面背景、風格及強調色"
 
-#: src/anduinos_control_panel/topics.py:236
+#: src/anduinos_control_panel/topics.py:263
 msgid "Uninstall Applications"
 msgstr "卸載應用程式"
 
-#: src/anduinos_control_panel/topics.py:237
+#: src/anduinos_control_panel/topics.py:264
 msgid "Review and remove installed applications"
 msgstr "檢視並移除已安裝的應用程式"
 
-#: src/anduinos_control_panel/topics.py:255
+#: src/anduinos_control_panel/topics.py:282
 msgid "Configure private AI features that run on this device"
 msgstr "設定於本裝置運行的私人 AI 功能"
 
-#: src/anduinos_control_panel/topics.py:263
+#: src/anduinos_control_panel/topics.py:290
 msgid "Configure Bottles"
 msgstr "設定 Bottles"
 
-#: src/anduinos_control_panel/topics.py:264
+#: src/anduinos_control_panel/topics.py:291
 msgid "Run Windows applications in compatibility environments"
 msgstr "在相容性環境中執行 Windows 應用程式"
 
-#: src/anduinos_control_panel/topics.py:272
+#: src/anduinos_control_panel/topics.py:299
 msgid "System Snapshots"
 msgstr "系統快照"
 
-#: src/anduinos_control_panel/topics.py:273
+#: src/anduinos_control_panel/topics.py:300
 msgid "Create, browse, and roll back system snapshots"
 msgstr "建立、瀏覽及回滾系統快照"
 
-#: src/anduinos_control_panel/topics.py:281
+#: src/anduinos_control_panel/topics.py:308
+msgid "Factory Reset"
+msgstr "恢復原廠設定"
+
+#: src/anduinos_control_panel/topics.py:309
+msgid "Return system files and applications to their initial state"
+msgstr "將系統檔案和應用程式恢復至初始狀態"
+
+#: src/anduinos_control_panel/topics.py:325
 msgid "Back Up Home Folder"
 msgstr "備份主資料夾"
 
-#: src/anduinos_control_panel/topics.py:282
+#: src/anduinos_control_panel/topics.py:326
 msgid "Protect personal files with Deja Dup backups"
 msgstr "使用 Deja Dup 備份保護個人檔案"
 
@@ -784,129 +1055,3 @@ msgstr "尋找及管理 AnduinOS 系統設定"
 #: data/com.anduinos.ControlPanel.desktop:65
 msgid "settings;control;system;hardware;drivers;accounts;backup;"
 msgstr "設定;控制;系統;硬件;驅動程式;帳戶;備份;"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "At the end of a line, press Right Arrow or End to accept a suggestion. Press Enter to run the command."
-msgstr "在行尾按右方向鍵或 End 接受建議，按 Enter 執行命令。"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Bash Command Predictions"
-msgstr "Bash 命令預測"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Changes take effect in newly opened Bash terminals. Saved settings override legacy environment variables."
-msgstr "設定對新開啟的 Bash 終端機生效。已儲存的設定優先於舊環境變數。"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Clear"
-msgstr "清除"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Clear saved learning"
-msgstr "清除已儲存的學習資料"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Clear saved learning?"
-msgstr "清除已儲存的學習資料？"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Configure your preferences below, then install to use predictions."
-msgstr "先在下方設定偏好，再安裝以使用命令預測。"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Could not update prediction settings: {error}"
-msgstr "無法更新預測設定：{error}"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Default settings restored. Reopen Bash terminals to apply them."
-msgstr "已還原預設設定。請重新開啟 Bash 終端機使其生效。"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Does not delete learned data."
-msgstr "不會刪除學習資料。"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Enable command predictions"
-msgstr "啟用命令預測"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Installation complete. Open a new Bash terminal to use predictions."
-msgstr "安裝完成。開啟新的 Bash 終端機即可使用預測。"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Installation failed: {error}"
-msgstr "安裝失敗：{error}"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Keeps Bash history and your settings. Reopen existing terminals to discard their in-memory learning."
-msgstr "保留 Bash 歷史和設定。重新開啟現有終端機以捨棄記憶體中的學習資料。"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Learn from command history"
-msgstr "根據命令歷史學習"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Only prediction learning is removed. Your Bash command history is kept."
-msgstr "僅刪除預測器的學習資料，保留 Bash 命令歷史。"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Package installation could not be confirmed. Please retry."
-msgstr "無法確認套件是否安裝成功，請重試。"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Predict commands locally from history and current context"
-msgstr "根據歷史和目前情境，在本機預測命令"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Predict commands locally from your history and current context. No model download or on-device LLM is needed."
-msgstr "根據命令歷史和目前情境，在本機預測後續輸入。無需下載模型，也不依賴裝置端 LLM。"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Remember my usage habits"
-msgstr "記住使用習慣"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Restore Defaults"
-msgstr "還原預設值"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Restore default settings"
-msgstr "還原預設設定"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Save learned usage habits on this computer for predictions after closing the terminal. When off, Bash command history is still used."
-msgstr "將學到的使用習慣儲存在本機，關閉終端機後仍可用於預測。關閉後仍會參考 Bash 命令歷史。"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Saved learning cleared. Older terminals cannot save it again; reopen them to resume learning persistence."
-msgstr "已清除學習資料。舊終端機無法將其重新儲存；重新開啟終端機可恢復學習資料儲存。"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Show suggestions while typing in Bash."
-msgstr "在 Bash 中輸入時顯示建議。"
-
-#: src/anduinos_control_panel/topics.py
-msgid "Factory Reset"
-msgstr "恢復原廠設定"
-
-#: src/anduinos_control_panel/topics.py
-msgid "Return system files and applications to their initial state"
-msgstr "將系統檔案和應用程式恢復至初始狀態"
-
-#: src/anduinos_control_panel/app.py
-msgid "Factory Reset Is Not Available"
-msgstr "無法恢復原廠設定"
-
-#: src/anduinos_control_panel/app.py
-msgid "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
-msgstr "此系統不支援恢復原廠設定。請重新安裝 AnduinOS，並選擇 Btrfs 檔案系統以啟用此功能。"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Use Bash history, frequency, directories, and command sequences to personalize suggestions."
-msgstr "結合 Bash 歷史、頻率、目錄和命令順序提供個人化建議。"
-
-#~ msgid "Change boot menu settings"
-#~ msgstr "更改開機選單設定"
-
-#~ msgid "Authentication is required to change boot menu settings"
-#~ msgstr "更改開機選單設定需要身份驗證"

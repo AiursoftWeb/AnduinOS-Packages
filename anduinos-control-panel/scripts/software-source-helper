@@ -1,0 +1,127 @@
+#!/usr/bin/python3
+"""Restricted privileged APT operations for AnduinOS Control Panel."""
+
+from __future__ import annotations
+
+import os
+from pathlib import Path
+import stat
+import subprocess
+import sys
+import tempfile
+
+from anduinos_control_panel.software_sources import (
+    MIRRORS,
+    SOURCE_PATH,
+    replace_ubuntu_uris,
+)
+
+
+APT_GET = "/usr/bin/apt-get"
+BACKUP_PATH = SOURCE_PATH.with_suffix(SOURCE_PATH.suffix + ".bak")
+APT_OPTIONS = ("-o", "DPkg::Lock::Timeout=300")
+
+
+def _atomic_write(path: Path, content: bytes, mode: int) -> None:
+    path.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(
+        dir=path.parent, prefix=f".{path.name}.", text=False
+    )
+    temporary = Path(temporary_name)
+    try:
+        os.fchmod(descriptor, mode)
+        with os.fdopen(descriptor, "wb") as stream:
+            descriptor = -1
+            stream.write(content)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+        directory = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+        temporary.unlink(missing_ok=True)
+
+
+def _source() -> tuple[bytes, int]:
+    metadata = SOURCE_PATH.lstat()
+    if not stat.S_ISREG(metadata.st_mode):
+        raise RuntimeError("Ubuntu source must be a regular file")
+    return SOURCE_PATH.read_bytes(), stat.S_IMODE(metadata.st_mode)
+
+
+def _apt(*arguments: str) -> None:
+    environment = os.environ.copy()
+    environment["DEBIAN_FRONTEND"] = "noninteractive"
+    result = subprocess.run(
+        [APT_GET, *APT_OPTIONS, *arguments],
+        env=environment,
+        check=False,
+    )
+    if result.returncode:
+        raise RuntimeError(
+            f"apt-get {' '.join(arguments)} exited with status {result.returncode}"
+        )
+
+
+def switch_mirror(mirror: str) -> None:
+    if mirror not in MIRRORS:
+        raise ValueError("Mirror is not in the AnduinOS allowlist")
+    original, mode = _source()
+    try:
+        updated = replace_ubuntu_uris(original.decode("utf-8"), mirror).encode(
+            "utf-8"
+        )
+    except UnicodeError as error:
+        raise ValueError("Ubuntu source is not valid UTF-8") from error
+    if updated == original:
+        print("The selected mirror is already active.")
+        _apt("update")
+        return
+
+    _atomic_write(BACKUP_PATH, original, mode)
+    _atomic_write(SOURCE_PATH, updated, mode)
+    try:
+        _apt("update")
+    except RuntimeError as update_error:
+        _atomic_write(SOURCE_PATH, original, mode)
+        try:
+            _apt("update")
+        except RuntimeError as rollback_error:
+            raise RuntimeError(
+                f"Selected mirror failed; the original source was restored, "
+                f"but refreshing it also failed: {rollback_error}"
+            ) from update_error
+        raise RuntimeError(
+            "Selected mirror failed; the original source was restored"
+        ) from update_error
+    print(f"Software source switched to {mirror}")
+
+
+def main(arguments: list[str]) -> int:
+    if os.geteuid() != 0:
+        print("This helper must be run through polkit.", file=sys.stderr)
+        return 77
+    try:
+        match arguments:
+            case ["switch-mirror", mirror]:
+                switch_mirror(mirror)
+            case ["refresh"]:
+                _apt("update")
+            case ["upgrade"]:
+                _apt("dist-upgrade", "--yes")
+            case _:
+                print("Unknown or incomplete action.", file=sys.stderr)
+                return 64
+    except (OSError, UnicodeError, ValueError, RuntimeError) as error:
+        print(f"Software source operation failed: {error}", file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))

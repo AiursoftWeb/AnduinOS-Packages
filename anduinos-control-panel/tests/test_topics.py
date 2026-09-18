@@ -28,6 +28,8 @@ class TopicCatalogTests(unittest.TestCase):
             "scanner": "hardware.scanners",
             "扫描仪": "hardware.scanners",
             "高级网络": "network.advanced",
+            "软件源": "programs.software-source",
+            "mirror": "programs.software-source",
         }
         for query, identifier in expected.items():
             with self.subTest(query=query):

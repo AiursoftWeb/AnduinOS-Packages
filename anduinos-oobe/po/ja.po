@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-oobe\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-09 15:16+0000\n"
+"POT-Creation-Date: 2026-09-18 12:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: ja <LL@li.org>\n"
@@ -16,1030 +16,844 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: assets/anduinos-oobe:371
-msgid "Disk Snapshots Manager"
-msgstr "ディスクスナップショットマネージャー"
-
-#: assets/anduinos-oobe:373
-msgid "Protect your system with automatic Btrfs snapshots and smart cleanup."
-msgstr "自動 Btrfs スナップショットとスマート クリーンアップでシステムを保護します。"
-
-#: assets/anduinos-oobe:375
-msgid "Configure Automatic Snapshots"
-msgstr "自動スナップショットの構成"
-
-#: assets/anduinos-oobe:380
-msgid "System Backup"
-msgstr "システムバックアップ"
-
-#. Translate as a complete sentence; the interface wraps the text automatically.
-msgid "Use Deja Dup to protect your important files with automated, secure local or remote backups."
-msgstr "Deja Dup を使用して保護する 重要なファイルを自動化された 安全なローカルまたはリモートバックアップを行います。"
-
-
-
-#: assets/anduinos-oobe:386
-msgid "Get Deja Dup"
-msgstr "Deja Dupを入手する"
-
-#: assets/anduinos-oobe:443
+#: assets/anduinos-oobe:255
 msgid "NetworkManager could not scan Wi-Fi."
 msgstr "NetworkManager が Wi-Fi をスキャンできませんでした。"
 
-#: assets/anduinos-oobe:506
+#: assets/anduinos-oobe:318
 msgid "Could not inspect network adapters."
 msgstr "ネットワークアダプターを検査できませんでした。"
 
-#: assets/anduinos-oobe:516
+#: assets/anduinos-oobe:328
 msgid "Could not read the Wi-Fi radio state."
 msgstr "Wi-Fi 無線状態を読み取ることができませんでした。"
 
-#: assets/anduinos-oobe:522
+#: assets/anduinos-oobe:334
 msgid "Unknown Wi-Fi radio state: {}"
 msgstr "不明な Wi-Fi 無線状態: {}"
 
-#: assets/anduinos-oobe:523
+#: assets/anduinos-oobe:335
 msgid "empty"
 msgstr "空の"
 
-#: assets/anduinos-oobe:532
+#: assets/anduinos-oobe:344
 msgid "Could not change the Wi-Fi radio state."
 msgstr "Wi-Fi 無線状態を変更できませんでした。"
 
-#: assets/anduinos-oobe:634
+#: assets/anduinos-oobe:446
 msgid "Welcome Home."
 msgstr "おかえりなさい。"
 
-#: assets/anduinos-oobe:644
+#: assets/anduinos-oobe:456
 msgid "AnduinOS is ready. Just a few steps to shape it"
 msgstr "AnduinOS の準備完了。あとは少しの手順でカスタマイズできます。"
 
-#: assets/anduinos-oobe:644
+#: assets/anduinos-oobe:456
 msgid "into the perfect system tailored to your habits."
 msgstr "あなたの習慣に合わせた完璧なシステムへ。"
 
-#: assets/anduinos-oobe:654
+#: assets/anduinos-oobe:466
 msgid "  Start Setup  "
 msgstr "  セットアップを開始  "
 
-#: assets/anduinos-oobe:701
+#: assets/anduinos-oobe:513
 msgid "Connect to the Internet"
 msgstr "インターネットに接続する"
 
-#: assets/anduinos-oobe:709
+#: assets/anduinos-oobe:521
 msgid ""
 "Connect now so AnduinOS can safely check for updates, drivers, and apps."
-msgstr "今すぐ接続して、AnduinOS がアップデート、ドライバー、アプリを安全に確認できるようにします。"
+msgstr ""
+"今すぐ接続して、AnduinOS がアップデート、ドライバー、アプリを安全に確認できる"
+"ようにします。"
 
-#: assets/anduinos-oobe:717
+#: assets/anduinos-oobe:529
 msgid "Internet Connection"
 msgstr "インターネット接続"
 
-#: assets/anduinos-oobe:724
+#: assets/anduinos-oobe:536
 msgid "Network Hardware"
 msgstr "ネットワークハードウェア"
 
-#: assets/anduinos-oobe:732
+#: assets/anduinos-oobe:544
 msgid "Available Wi-Fi Networks"
 msgstr "利用可能なWi-Fiネットワーク"
 
-#: assets/anduinos-oobe:734
+#: assets/anduinos-oobe:546
 msgid "Wi-Fi"
 msgstr "Wi-Fi"
 
-#: assets/anduinos-oobe:737
+#: assets/anduinos-oobe:549
 msgid "Scan Again"
 msgstr "再スキャン"
 
-#: assets/anduinos-oobe:746 assets/anduinos-oobe:818 assets/anduinos-oobe:826
-#: assets/anduinos-oobe:841
+#: assets/anduinos-oobe:558 assets/anduinos-oobe:630 assets/anduinos-oobe:638
+#: assets/anduinos-oobe:653
 msgid "Open Network Settings"
 msgstr "ネットワーク設定を開く"
 
-#: assets/anduinos-oobe:755
+#: assets/anduinos-oobe:567
 msgid "Could not open network settings: {}"
 msgstr "ネットワーク設定を開けませんでした: {}"
 
-#: assets/anduinos-oobe:765
+#: assets/anduinos-oobe:577
 msgid "Continue Offline"
 msgstr "オフラインで続行"
 
-#: assets/anduinos-oobe:769
+#: assets/anduinos-oobe:581
 msgid "Skip updates, online drivers, apps, and account setup."
-msgstr "アップデート、オンラインドライバー、アプリ、アカウント設定をスキップします。"
+msgstr ""
+"アップデート、オンラインドライバー、アプリ、アカウント設定をスキップします。"
 
-#: assets/anduinos-oobe:785
+#: assets/anduinos-oobe:597
 msgid "Internet connection is ready. Choose Next to continue."
 msgstr "インターネット接続の準備ができました。 [次へ] を選択して続行します。"
 
-#: assets/anduinos-oobe:792
+#: assets/anduinos-oobe:604
 msgid "Connect to Wi-Fi or a wired network to continue."
 msgstr "続行するには、Wi-Fi または有線ネットワークに接続してください。"
 
-#: assets/anduinos-oobe:815
+#: assets/anduinos-oobe:627
 msgid "No network adapters detected."
 msgstr "ネットワークアダプターが検出されませんでした。"
 
-#: assets/anduinos-oobe:817
+#: assets/anduinos-oobe:629
 msgid "Connect a network adapter or continue offline."
 msgstr "ネットワーク アダプターを接続するか、オフラインを続行します。"
 
-#: assets/anduinos-oobe:822
+#: assets/anduinos-oobe:634
 msgid "Wired Network"
 msgstr "有線ネットワーク"
 
-#: assets/anduinos-oobe:824
+#: assets/anduinos-oobe:636
 msgid "Cable connected."
 msgstr "ケーブルが接続されています。"
 
-#: assets/anduinos-oobe:825
+#: assets/anduinos-oobe:637
 msgid "Plug in a network cable to connect."
 msgstr "ネットワークケーブルを差し込んで接続します。"
 
-#: assets/anduinos-oobe:830
+#: assets/anduinos-oobe:642
 msgid "Wireless Network"
 msgstr "無線ネットワーク"
 
-#: assets/anduinos-oobe:831
+#: assets/anduinos-oobe:643
 msgid "Wi-Fi adapter detected."
 msgstr "Wi-Fiアダプターが検出されました。"
 
-#: assets/anduinos-oobe:832
+#: assets/anduinos-oobe:644
 msgid "Open Wi-Fi Settings"
 msgstr "Wi-Fi設定を開く"
 
-#: assets/anduinos-oobe:836
+#: assets/anduinos-oobe:648
 msgid "Wired and Wireless Networks"
 msgstr "有線および無線ネットワーク"
 
-#: assets/anduinos-oobe:838
+#: assets/anduinos-oobe:650
 msgid "Cable connected and Wi-Fi available."
 msgstr "ケーブル接続されており、Wi-Fi が利用可能です。"
 
-#: assets/anduinos-oobe:840
+#: assets/anduinos-oobe:652
 msgid "Wi-Fi is available; the network cable is disconnected."
 msgstr "Wi-Fiが利用可能です。ネットワークケーブルが外れています。"
 
-#: assets/anduinos-oobe:852
+#: assets/anduinos-oobe:664
 msgid "Wi-Fi is turned off."
 msgstr "Wi-Fiがオフになっています。"
 
-#: assets/anduinos-oobe:856
+#: assets/anduinos-oobe:668
 msgid "No Wi-Fi networks found."
 msgstr "Wi-Fi ネットワークが見つかりません。"
 
-#: assets/anduinos-oobe:885
+#: assets/anduinos-oobe:697
 msgid "Wi-Fi unavailable: {}"
 msgstr "Wi-Fi が利用できません: {}"
 
-#: assets/anduinos-oobe:967
+#: assets/anduinos-oobe:767 assets/anduinos-oobe:774
+msgid "Display Scaling"
+msgstr "ディスプレイの拡大率"
+
+#: assets/anduinos-oobe:768 assets/anduinos-oobe:799 assets/anduinos-oobe:816
+msgid "Recommendation unavailable for this display."
+msgstr "このディスプレイの推奨値はありません。"
+
+#: assets/anduinos-oobe:790
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (推奨)"
+
+#: assets/anduinos-oobe:797
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "メインディスプレイ：%(display)s · 推奨：%(scale)s"
+
+#: assets/anduinos-oobe:800 assets/anduinos-oobe:815
+msgid "Could not change display scaling."
+msgstr "ディスプレイの拡大率を変更できませんでした。"
+
+#: assets/anduinos-oobe:895
 msgid "Define Your Visual Order"
 msgstr "視覚的な秩序を定義する"
 
-#: assets/anduinos-oobe:977
+#: assets/anduinos-oobe:905
 msgid "Light and Shadow"
 msgstr "光と影"
 
-#: assets/anduinos-oobe:978
+#: assets/anduinos-oobe:906
 msgid "Choose a crisp light theme, or an immersive dark experience."
 msgstr "明るいライトテーマを選ぶか、没入感のあるダークテーマを選びます。"
 
-#: assets/anduinos-oobe:997
+#: assets/anduinos-oobe:925
 msgid "Light"
 msgstr "ライト"
 
-#: assets/anduinos-oobe:1009
+#: assets/anduinos-oobe:937
 msgid "Dark"
 msgstr "ダーク"
 
-#: assets/anduinos-oobe:1040
+#: assets/anduinos-oobe:970
 msgid "Workflow Layout"
 msgstr "ワークフローのレイアウト"
 
-#: assets/anduinos-oobe:1041
+#: assets/anduinos-oobe:971
 msgid "Prefer modern centered alignment, or classic left-docked?"
-msgstr "モダンな中央寄せ配置が好きですか？それともクラシックな左寄せドックが好きですか？"
+msgstr ""
+"モダンな中央寄せ配置が好きですか？それともクラシックな左寄せドックが好きです"
+"か？"
 
-#: assets/anduinos-oobe:1075
+#: assets/anduinos-oobe:1005
 msgid "Taskbar Layout"
 msgstr "タスクバーのレイアウト"
 
-#: assets/anduinos-oobe:1076
+#: assets/anduinos-oobe:1006
 msgid "Choose your workflow."
 msgstr "ワークフローを選んでください。"
 
-#: assets/anduinos-oobe:1085
+#: assets/anduinos-oobe:1015
 msgid " Modern "
 msgstr " モダン "
 
-#: assets/anduinos-oobe:1086
+#: assets/anduinos-oobe:1016
 msgid " Classic "
 msgstr " クラシック "
 
-#: assets/anduinos-oobe:1115
+#: assets/anduinos-oobe:1045
 msgid "Show Virtual Desktop Switch Button"
 msgstr "仮想デスクトップ切り替えボタンを表示する"
 
-#: assets/anduinos-oobe:1116
+#: assets/anduinos-oobe:1046
 msgid "Display the Activities button on the taskbar"
 msgstr "タスクバーにアクティビティボタンを表示する"
 
-#: assets/anduinos-oobe:1168
+#: assets/anduinos-oobe:1098
 msgid "Digital Sovereignty, Under Your Control"
 msgstr "デジタル主権、あなたの管理下で"
 
-#: assets/anduinos-oobe:1176
+#: assets/anduinos-oobe:1106
 msgid "We deeply value privacy. Here, you hold absolute authority."
-msgstr "私たちはプライバシーを深く重視しています。ここでは、あなたが絶対的な権限を持っています。"
+msgstr ""
+"私たちはプライバシーを深く重視しています。ここでは、あなたが絶対的な権限を"
+"持っています。"
 
-#: assets/anduinos-oobe:1186
+#: assets/anduinos-oobe:1116
 msgid "Network Security"
 msgstr "ネットワークセキュリティ"
 
-#: assets/anduinos-oobe:1188
-msgid ""
-"Control inbound protection and whether this computer participates in local "
-"network discovery."
-msgstr "受信保護と、このコンピューターがローカル ネットワーク検出に参加するかどうかを制御します。"
-
-#: assets/anduinos-oobe:1193
+#: assets/anduinos-oobe:1120
 msgid "Network Firewall (UFW)"
 msgstr "ネットワークファイアウォール (UFW)"
 
-#: assets/anduinos-oobe:1246
-msgid "Local Network Discovery (mDNS)"
-msgstr "ローカル ネットワーク ディスカバリ (mDNS)"
-
-#: assets/anduinos-oobe:1248
-msgid ""
-"Find printers and nearby devices, and make .local names available on trusted"
-" networks."
-msgstr "プリンターと近くのデバイスを検索し、信頼されたネットワーク上で .local 名を利用できるようにします。"
-
-#: assets/anduinos-oobe:1260
-msgid "Local network discovery controls are not installed."
-msgstr "ローカル ネットワーク検出コントロールはインストールされていません。"
-
-#: assets/anduinos-oobe:1295
+#: assets/anduinos-oobe:1176
 msgid "Location Services"
 msgstr "位置情報サービス"
 
-#: assets/anduinos-oobe:1297
+#: assets/anduinos-oobe:1178
 msgid ""
 "Allow apps like weather and clock to access your approximate geographic "
 "location."
-msgstr "天気や時計などのアプリが、おおよその地理的位置にアクセスすることを許可します。"
+msgstr ""
+"天気や時計などのアプリが、おおよその地理的位置にアクセスすることを許可しま"
+"す。"
 
-#: assets/anduinos-oobe:1301
+#: assets/anduinos-oobe:1182
 msgid "Location Access"
 msgstr "位置情報のアクセス"
 
-#: assets/anduinos-oobe:1319
+#: assets/anduinos-oobe:1200
 msgid "Power Settings"
 msgstr "電源設定"
 
-#: assets/anduinos-oobe:1320
+#: assets/anduinos-oobe:1201
 msgid "Manage idle behavior to balance energy saving and convenience."
 msgstr "アイドル状態の動作を管理し、省エネと利便性のバランスを取ります。"
 
-#: assets/anduinos-oobe:1324
+#: assets/anduinos-oobe:1205
 msgid "Auto Sleep"
 msgstr "自動スリープ"
 
-#: assets/anduinos-oobe:1353
-msgid "Command-line Assistance"
-msgstr "コマンドライン支援"
-
-#: assets/anduinos-oobe:1354
-msgid "Control local bash predictions."
-msgstr "ローカルの bash 予測を制御します。"
-
-#: assets/anduinos-oobe:1358
-msgid "Bash Command Predictions"
-msgstr "Bash コマンド予測"
-
-#: assets/anduinos-oobe:1359
-msgid "Show command suggestions in bash"
-msgstr "bash でコマンド候補を表示します"
-
-#: assets/anduinos-oobe:1376
-msgid ""
-"Could not update your Bash configuration. Your previous setting was kept."
-msgstr "Bash の設定を更新できませんでした。以前の設定を維持しました。"
-
-#: assets/anduinos-oobe:1414
-msgid "Keep Your System Up to Date"
-msgstr "システムを最新の状態に保つ"
-
-#: assets/anduinos-oobe:1423
-msgid "Security patches and the latest features are just a click away."
-msgstr "セキュリティパッチや最新機能は、クリック一つで入手できます。"
-
-#: assets/anduinos-oobe:1433
-msgid "Terminal Output"
-msgstr "ターミナル出力"
-
-#: assets/anduinos-oobe:1470
-msgid "  Do It Later  "
-msgstr "  後で行う  "
-
-#: assets/anduinos-oobe:1473
-msgid "  Find Fastest Mirror  "
-msgstr "  最速のミラーを探す  "
-
-#: assets/anduinos-oobe:1476
-msgid "  Check for Updates  "
-msgstr "  アップデートを確認  "
-
-#: assets/anduinos-oobe:1510
-msgid "Checking for updates…"
-msgstr "アップデートを確認しています…"
-
-#: assets/anduinos-oobe:1542
-msgid "Updates are available."
-msgstr "アップデートが利用可能です。"
-
-#: assets/anduinos-oobe:1543
-msgid "  Install Updates  "
-msgstr "  アップデートをインストール  "
-
-#: assets/anduinos-oobe:1550
-msgid "✓ System is up to date."
-msgstr "✓ システムは最新の状態です。"
-
-#: assets/anduinos-oobe:1552 assets/anduinos-oobe:1582
-msgid "  Continue  "
-msgstr "  続行  "
-
-#: assets/anduinos-oobe:1559
-msgid "✗ Check failed: "
-msgstr "✗ チェック失敗: "
-
-#: assets/anduinos-oobe:1565
-msgid "Installing updates…"
-msgstr "アップデートをインストール中…"
-
-#: assets/anduinos-oobe:1580
-msgid "✓ Updates installed successfully!"
-msgstr "✓ アップデートのインストールに成功しました！"
-
-#: assets/anduinos-oobe:1591
-msgid "✗ Installation failed: "
-msgstr "✗ インストール失敗: "
-
-#: assets/anduinos-oobe:1630
-msgid "Testing mirrors…"
-msgstr "ミラーをテスト中…"
-
-#: assets/anduinos-oobe:1631
-msgid "=== Testing mirror speeds ==="
-msgstr "=== ミラー速度をテスト中 ==="
-
-#: assets/anduinos-oobe:1756 assets/anduinos-oobe:1764
-#, python-brace-format
-msgid "Testing mirrors… ({c}/{t})"
-msgstr "ミラーをテスト中… ({c}/{t})"
-
-#: assets/anduinos-oobe:1772
-msgid "No mirrors reachable."
-msgstr "到達可能なミラーがありません。"
-
-#: assets/anduinos-oobe:1774
-msgid "✗ No mirrors reachable. Check your connection."
-msgstr "✗ 到達可能なミラーがありません。接続を確認してください。"
-
-#: assets/anduinos-oobe:1782
-msgid "=== Testing bandwidth of top 5 mirrors "
-msgstr "=== トップ 5 のミラーの帯域幅をテスト中 === "
-
-#: assets/anduinos-oobe:1783
-msgid "(3 s each) ==="
-msgstr "（各 3 秒）==="
-
-#: assets/anduinos-oobe:1837
-msgid "Best mirror by bandwidth"
-msgstr "帯域幅による最良のミラー"
-
-#: assets/anduinos-oobe:1839 assets/anduinos-oobe:1860
-#: assets/anduinos-oobe:1867
-msgid "Latency"
-msgstr "レイテンシ"
-
-#: assets/anduinos-oobe:1840 assets/anduinos-oobe:1861
-#: assets/anduinos-oobe:1868
-msgid "Bandwidth"
-msgstr "帯域幅"
-
-#: assets/anduinos-oobe:1862
-msgid "This is already your current mirror."
-msgstr "これは既に現在のミラーです。"
-
-#: assets/anduinos-oobe:1872
-msgid "Current mirror"
-msgstr "現在のミラー"
-
-#: assets/anduinos-oobe:1876
-msgid "Switch to this mirror and run apt update?"
-msgstr "このミラーに切り替えてapt updateを実行しますか？"
-
-#: assets/anduinos-oobe:1881
-msgid "Fastest Mirror Found"
-msgstr "最速のミラーが見つかりました"
-
-#: assets/anduinos-oobe:1884
-msgid "Keep Current"
-msgstr "現在のを維持"
-
-#: assets/anduinos-oobe:1885
-msgid "Switch"
-msgstr "切り替え"
-
-#: assets/anduinos-oobe:1907
-msgid "✗ Mirror test failed: "
-msgstr "✗ ミラーテスト失敗: "
-
-#: assets/anduinos-oobe:1913
-msgid "Switching mirror…"
-msgstr "ミラーを切り替え中…"
-
-#: assets/anduinos-oobe:1914
-msgid "=== Applying mirror switch ==="
-msgstr "=== ミラー切替を適用中 ==="
-
-#: assets/anduinos-oobe:1989
-msgid "✓ Mirror switched and system updated."
-msgstr "✓ ミラーが切替られ、システムが更新されました。"
-
-#: assets/anduinos-oobe:1992
-msgid "✓ Switched to "
-msgstr "✓ 以下のミラーに切り替えました: "
-
-#: assets/anduinos-oobe:2005
-msgid "✗ Switch failed: "
-msgstr "✗ 切り替えに失敗しました: "
-
-#: assets/anduinos-oobe:2045
+#: assets/anduinos-oobe:1256
 msgid "Could not open AnduinOS Driver Center: {}"
 msgstr "AnduinOS ドライバーセンターを開けませんでした: {}"
 
-#: assets/anduinos-oobe:2078
+#: assets/anduinos-oobe:1289
 msgid "Configure Hardware Drivers?"
 msgstr "ハードウェアドライバーを設定しますか？"
 
-#: assets/anduinos-oobe:2088
+#: assets/anduinos-oobe:1299
 msgid ""
 "Open AnduinOS Driver Center now to manage graphics cards, Xbox controllers, "
 "and other hardware."
 msgstr ""
-"グラフィックカード、Xbox コントローラー、その他のハードウェアを管理するには、AnduinOS ドライバーセンターを今すぐ開いてください。"
+"グラフィックカード、Xbox コントローラー、その他のハードウェアを管理するには、"
+"AnduinOS ドライバーセンターを今すぐ開いてください。"
 
-#: assets/anduinos-oobe:2111
+#: assets/anduinos-oobe:1322
 msgid "Skip"
 msgstr "スキップ"
 
-#: assets/anduinos-oobe:2116
+#: assets/anduinos-oobe:1327
 msgid "Open Driver Center"
 msgstr "ドライバーセンターを開く"
 
-#: assets/anduinos-oobe:2152
+#: assets/anduinos-oobe:1363
 msgid "Run Windows Apps, with ease"
 msgstr "Windowsアプリを簡単に実行"
 
-#. Translate as a complete sentence; the interface wraps the text automatically.
-msgid "Powered by Wine and Bottles technology, running classic Windows applications is now easier than ever."
-msgstr "WineとBottles技術により、クラシックなWindowsアプリケーションを実行 がこれまで以上に容易になりました。"
+#: assets/anduinos-oobe:1372
+msgid ""
+"Powered by Wine and Bottles technology, running classic Windows applications "
+"is now easier than ever."
+msgstr ""
+"WineとBottles技術により、クラシックなWindowsアプリケーションを実行 がこれまで"
+"以上に容易になりました。"
 
-
-#: assets/anduinos-oobe:2177
+#: assets/anduinos-oobe:1388
 msgid "✓ Windows compatibility sandbox is already installed."
 msgstr "✓ Windows互換サンドボックスは既にインストールされています。"
 
-#: assets/anduinos-oobe:2193
+#: assets/anduinos-oobe:1404
 msgid "  Skip  "
 msgstr "  スキップ  "
 
-#: assets/anduinos-oobe:2197
+#: assets/anduinos-oobe:1408
 msgid "  Enable Windows Compatibility Sandbox  "
 msgstr "  Windows互換性サンドボックスを有効にする  "
 
-#: assets/anduinos-oobe:2207
+#: assets/anduinos-oobe:1418
 msgid "Configure Bottles"
 msgstr "Bottlesの設定"
 
-#: assets/anduinos-oobe:2222
+#: assets/anduinos-oobe:1433
 msgid "Advanced Output"
 msgstr "詳細出力"
 
-#: assets/anduinos-oobe:2251
+#: assets/anduinos-oobe:1462
 msgid "Deploying compatibility sandbox via Flatpak…"
 msgstr "互換性サンドボックスを Flatpak 経由で展開しています…"
 
-#: assets/anduinos-oobe:2251
+#: assets/anduinos-oobe:1462
 msgid "This may take a few minutes."
 msgstr "これには数分かかる場合があります。"
 
-#: assets/anduinos-oobe:2286
+#: assets/anduinos-oobe:1497
 msgid "✓ Sandbox deployed successfully!"
 msgstr "✓ サンドボックスが正常に展開されました！"
 
-#: assets/anduinos-oobe:2286
+#: assets/anduinos-oobe:1497
 msgid "You can now double-click .exe files to run them."
 msgstr ".exe ファイルをダブルクリックして実行できるようになりました。"
 
-#: assets/anduinos-oobe:2295
+#: assets/anduinos-oobe:1506
 msgid "✗ Deployment failed."
 msgstr "✗ 展開に失敗しました。"
 
-#: assets/anduinos-oobe:2295
+#: assets/anduinos-oobe:1506
 msgid "You can install Bottles later from the App Store."
 msgstr "Bottles は後から App Store からインストールできます。"
 
-#: assets/anduinos-oobe:2303
+#: assets/anduinos-oobe:1514
 msgid "✗ Error: "
 msgstr "✗ エラー： "
 
-#: assets/anduinos-oobe:2334
+#: assets/anduinos-oobe:1545
 msgid "The Magic at Your Fingertips"
 msgstr "あなたの指先にある魔法"
 
-#: assets/anduinos-oobe:2342
+#: assets/anduinos-oobe:1553
 msgid "Skip tedious clicking. Capture inspiration with elegance."
 msgstr "退屈なクリックをスキップ。エレガントにインスピレーションをキャプチャ。"
 
-#: assets/anduinos-oobe:2365
+#: assets/anduinos-oobe:1576
 msgid "Screenshot"
 msgstr "スクリーンショット"
 
-#: assets/anduinos-oobe:2366
+#: assets/anduinos-oobe:1577
 msgid "Select, annotate, copy — all in one motion"
 msgstr "選択、注釈付け、コピー — すべてワンアクションで"
 
-#: assets/anduinos-oobe:2384
+#: assets/anduinos-oobe:1595
 msgid "Screen Recording"
 msgstr "画面録画"
 
-#: assets/anduinos-oobe:2385
+#: assets/anduinos-oobe:1596
 msgid "Seamless start, instant capture"
 msgstr "シームレスな開始、瞬時のキャプチャ"
 
-#: assets/anduinos-oobe:2405
+#: assets/anduinos-oobe:1616
 msgid "More Essential Shortcuts"
 msgstr "より多くの必須ショートカット"
 
-#: assets/anduinos-oobe:2408
+#: assets/anduinos-oobe:1619
 msgid "Open File Manager"
 msgstr "ファイルマネージャーを開く"
 
-#: assets/anduinos-oobe:2409
+#: assets/anduinos-oobe:1620
 msgid "Open Terminal"
 msgstr "ターミナルを開く"
 
-#: assets/anduinos-oobe:2410
+#: assets/anduinos-oobe:1621
 msgid "Task Manager"
 msgstr "タスクマネージャー"
 
-#: assets/anduinos-oobe:2411
+#: assets/anduinos-oobe:1622
 msgid "View Clipboard History"
 msgstr "クリップボード履歴を表示"
 
-#: assets/anduinos-oobe:2412
+#: assets/anduinos-oobe:1623
 msgid "Lock Screen"
 msgstr "ロック画面"
 
-#: assets/anduinos-oobe:2413
+#: assets/anduinos-oobe:1624
 msgid "Action Center"
 msgstr "アクションセンター"
 
-#: assets/anduinos-oobe:2414
+#: assets/anduinos-oobe:1625
 msgid "Notification Center"
 msgstr "通知センター"
 
-#: assets/anduinos-oobe:2415
+#: assets/anduinos-oobe:1626
 msgid "Toggle Network Stats Display"
 msgstr "ネットワーク統計の表示を切り替え"
 
-#: assets/anduinos-oobe:2416
+#: assets/anduinos-oobe:1627
 msgid "Switch Between Windows"
 msgstr "ウィンドウ間で切り替える"
 
-#: assets/anduinos-oobe:2417
+#: assets/anduinos-oobe:1628
 msgid "Close Current Window"
 msgstr "現在のウィンドウを閉じる"
 
-#: assets/anduinos-oobe:2418
+#: assets/anduinos-oobe:1629
 msgid "Snap Windows"
 msgstr "ウィンドウのスナップ"
 
-#: assets/anduinos-oobe:2419
+#: assets/anduinos-oobe:1630
 msgid "Switch Virtual Desktop"
 msgstr "仮想デスクトップを切り替え"
 
-#: assets/anduinos-oobe:2420
+#: assets/anduinos-oobe:1631
 msgid "Show Desktop"
 msgstr "デスクトップを表示"
 
-#: assets/anduinos-oobe:2421
+#: assets/anduinos-oobe:1632
 msgid "System Settings"
 msgstr "システム設定"
 
-#: assets/anduinos-oobe:2422
+#: assets/anduinos-oobe:1633
 msgid "Emoji and Characters"
 msgstr "絵文字と文字"
 
-#: assets/anduinos-oobe:2423
+#: assets/anduinos-oobe:1634
 msgid "Minimize Window"
 msgstr "ウィンドウを最小化"
 
-#: assets/anduinos-oobe:2441
+#: assets/anduinos-oobe:1652
 msgid ""
 "You can view and customize all shortcuts anytime in Settings → Keyboard."
-msgstr "すべてのショートカットは、設定 → キーボードでいつでも表示・カスタマイズできます。"
+msgstr ""
+"すべてのショートカットは、設定 → キーボードでいつでも表示・カスタマイズできま"
+"す。"
 
-#: assets/anduinos-oobe:2478
+#: assets/anduinos-oobe:1689
 msgid "In China? Use USTC mirror for App Store!"
 msgstr "中国にお住まいですか？App Store に USTC ミラーを使用してください！"
 
-#: assets/anduinos-oobe:2484
+#: assets/anduinos-oobe:1695
 msgid ""
 "Flathub access can be slow from China. Switch to the USTC mirror for faster "
 "downloads."
-msgstr "中国からの Flathub へのアクセスが遅い場合があります。USTC ミラーに切り替えて、ダウンロードを高速化してください。"
+msgstr ""
+"中国からの Flathub へのアクセスが遅い場合があります。USTC ミラーに切り替え"
+"て、ダウンロードを高速化してください。"
 
-#: assets/anduinos-oobe:2591
+#: assets/anduinos-oobe:1802
 msgid "✓ Already using Chinese mirror — downloads are fast."
 msgstr "✓ 中国ミラーを使用済み — ダウンロードは高速です。"
 
-#: assets/anduinos-oobe:2594
+#: assets/anduinos-oobe:1805
 msgid "Switch Back to International"
 msgstr "国際版に戻す"
 
-#: assets/anduinos-oobe:2597
+#: assets/anduinos-oobe:1808
 msgid "Flathub is using the international server."
 msgstr "Flathub は国際サーバーを使用しています。"
 
-#: assets/anduinos-oobe:2600
+#: assets/anduinos-oobe:1811
 msgid "🚀 Switch to USTC Mirror"
 msgstr "🚀 USTC ミラーに切り替える"
 
-#: assets/anduinos-oobe:2613
+#: assets/anduinos-oobe:1824
 msgid "Testing USTC mirror..."
 msgstr "USTC ミラーをテストしています..."
 
-#: assets/anduinos-oobe:2657
+#: assets/anduinos-oobe:1868
 msgid "Switching back..."
 msgstr "戻しています..."
 
-#: assets/anduinos-oobe:2684
+#: assets/anduinos-oobe:1895
 msgid "✗ Failed: "
 msgstr "✗ 失敗: "
 
-#: assets/anduinos-oobe:2687
+#: assets/anduinos-oobe:1898
 msgid "Retry"
 msgstr "再試行"
 
-#: assets/anduinos-oobe:2713
+#: assets/anduinos-oobe:1924
 msgid "Productive From Day One"
 msgstr "初日から生産性アップ"
 
-#: assets/anduinos-oobe:2722
+#: assets/anduinos-oobe:1933
 msgid "Essential productivity and entertainment tools, hand-picked for you."
 msgstr "厳選された、基本的な生産性とエンターテインメントのツール。"
 
-#: assets/anduinos-oobe:2722
+#: assets/anduinos-oobe:1933
 msgid "Click any app to open its details in the App Store."
 msgstr "アプリをクリックすると、App Store で詳細を表示できます。"
 
-#: assets/anduinos-oobe:2734
+#: assets/anduinos-oobe:1945
 msgid "WeChat"
 msgstr "WeChat"
 
-#: assets/anduinos-oobe:2735
+#: assets/anduinos-oobe:1946
 msgid "Most popular messaging app in China"
 msgstr "中国で最も人気のあるメッセージングアプリ"
 
-#: assets/anduinos-oobe:2736
+#: assets/anduinos-oobe:1947
 msgid "QQ"
 msgstr "QQ"
 
-#: assets/anduinos-oobe:2737
+#: assets/anduinos-oobe:1948
 msgid "Tencent QQ instant messenger"
 msgstr "Tencent QQ インスタントメッセンジャー"
 
-#: assets/anduinos-oobe:2738
+#: assets/anduinos-oobe:1949
 msgid "WPS Office"
 msgstr "WPS Office"
 
-#: assets/anduinos-oobe:2739
+#: assets/anduinos-oobe:1950
 msgid "Best office suite for Chinese documents"
 msgstr "中国の文書に最適なオフィススイート"
 
-#: assets/anduinos-oobe:2744
+#: assets/anduinos-oobe:1955
 msgid "Google Chrome"
 msgstr "Google Chrome"
 
-#: assets/anduinos-oobe:2745
+#: assets/anduinos-oobe:1956
 msgid "The world's most popular web browser"
 msgstr "世界で最も人気のあるウェブブラウザ"
 
-#: assets/anduinos-oobe:2746
+#: assets/anduinos-oobe:1957
 msgid "Visual Studio Code"
 msgstr "Visual Studio Code"
 
-#: assets/anduinos-oobe:2747
+#: assets/anduinos-oobe:1958
 msgid "Code editing. Redefined."
 msgstr "コード編集。再定義される。"
 
-#: assets/anduinos-oobe:2748
+#: assets/anduinos-oobe:1959
 msgid "Steam"
 msgstr "Steam"
 
-#: assets/anduinos-oobe:2749
+#: assets/anduinos-oobe:1960
 msgid "Your portal to the gaming universe"
 msgstr "ゲームの世界へのポータル"
 
-#: assets/anduinos-oobe:2750
+#: assets/anduinos-oobe:1961
 msgid "Discord"
 msgstr "Discord"
 
-#: assets/anduinos-oobe:2751
+#: assets/anduinos-oobe:1962
 msgid "Chat, voice, and video for communities"
 msgstr "コミュニティ向けのチャット、音声、ビデオ"
 
-#: assets/anduinos-oobe:2752
+#: assets/anduinos-oobe:1963
 msgid "Spotify"
 msgstr "Spotify"
 
-#: assets/anduinos-oobe:2753
+#: assets/anduinos-oobe:1964
 msgid "Music for everyone"
 msgstr "すべての人のための音楽"
 
-#: assets/anduinos-oobe:2754
+#: assets/anduinos-oobe:1965
 msgid "OnlyOffice"
 msgstr "OnlyOffice"
 
-#: assets/anduinos-oobe:2755
+#: assets/anduinos-oobe:1966
 msgid "Best Microsoft Office-compatible suite"
 msgstr "Microsoft Officeに互換性のある最高のスイート"
 
-#: assets/anduinos-oobe:2756
+#: assets/anduinos-oobe:1967
 msgid "Thunderbird"
 msgstr "Thunderbird"
 
-#: assets/anduinos-oobe:2757
+#: assets/anduinos-oobe:1968
 msgid "Secure, fast, and easy email client"
 msgstr "安全で高速、使いやすいメールクライアント"
 
-#: assets/anduinos-oobe:2758
+#: assets/anduinos-oobe:1969
 msgid "Nextcloud"
 msgstr "Nextcloud"
 
-#: assets/anduinos-oobe:2759
+#: assets/anduinos-oobe:1970
 msgid "Sync and collaborate on your desktop or laptop"
 msgstr "デスクトップまたはノートパソコンで同期して共同作業"
 
-#: assets/anduinos-oobe:2760
+#: assets/anduinos-oobe:1971
 msgid "Blender"
 msgstr "Blender"
 
-#: assets/anduinos-oobe:2761
+#: assets/anduinos-oobe:1972
 msgid "Professional 3D creation suite"
 msgstr "プロフェッショナルな3D作成スイート"
 
-#: assets/anduinos-oobe:2762
+#: assets/anduinos-oobe:1973
 msgid "GNOME Boxes"
 msgstr "GNOME Boxes"
 
-#: assets/anduinos-oobe:2763
+#: assets/anduinos-oobe:1974
 msgid "Virtualization made simple"
 msgstr "シンプルになった仮想化"
 
-#: assets/anduinos-oobe:2764
+#: assets/anduinos-oobe:1975
 msgid "VLC"
 msgstr "VLC"
 
-#: assets/anduinos-oobe:2765
+#: assets/anduinos-oobe:1976
 msgid "The versatile media player that plays everything"
 msgstr "どんなメディアでも再生できる多機能プレイヤー"
 
-#: assets/anduinos-oobe:2766
+#: assets/anduinos-oobe:1977
 msgid "Krita"
 msgstr "Krita"
 
-#: assets/anduinos-oobe:2767
+#: assets/anduinos-oobe:1978
 msgid "Professional free and open source painting program"
 msgstr "無料かつオープンソースの専門的なペイントプログラム"
 
-#: assets/anduinos-oobe:2768
+#: assets/anduinos-oobe:1979
 msgid "OBS Studio"
 msgstr "OBS Studio"
 
-#: assets/anduinos-oobe:2769
+#: assets/anduinos-oobe:1980
 msgid "Free and open source software for video recording and live streaming"
 msgstr "動画録画とライブ配信のための無料かつオープンソースのソフトウェア"
 
-#: assets/anduinos-oobe:2831
+#: assets/anduinos-oobe:2042
 msgid "Installed"
 msgstr "インストール済み"
 
-#: assets/anduinos-oobe:2833
+#: assets/anduinos-oobe:2044
 msgid "Click to open in App Store"
 msgstr "クリックしてApp Storeで開く"
 
-#: assets/anduinos-oobe:2841
+#: assets/anduinos-oobe:2052
 msgid "Opening…"
 msgstr "開いています…"
 
-#. Translate as a complete sentence; the interface wraps the text automatically.
-msgid "Pro tip: You can explore these apps in the App Store, and continue with the system setup while they download."
-msgstr "ヒント：これらのアプリは App Store で探索できます。 ダウンロードしながらシステムセットアップを続行してください。"
+#: assets/anduinos-oobe:2071
+msgid ""
+"Pro tip: You can explore these apps in the App Store, and continue with the "
+"system setup while they download."
+msgstr ""
+"ヒント：これらのアプリは App Store で探索できます。 ダウンロードしながらシス"
+"テムセットアップを続行してください。"
 
-
-#: assets/anduinos-oobe:2870
+#: assets/anduinos-oobe:2081
 msgid "  Browse Store  "
 msgstr "  ストアを閲覧する  "
 
-#: assets/anduinos-oobe:2902
-msgid "Connect & Protect Your Data"
-msgstr "データを接続・保護する"
-
-#: assets/anduinos-oobe:2926
-msgid "Online Accounts"
-msgstr "オンラインアカウント"
-
-#. Translate as a complete sentence; the interface wraps the text automatically.
-msgid "Connect your Google, Microsoft, or Nextcloud accounts to sync files, contacts, and calendar."
-msgstr "Google、Microsoft アカウントに接続して、 または Nextcloud アカウントに同期して ファイル、連絡先、およびカレンダー。"
-
-
-
-#: assets/anduinos-oobe:2943
-msgid "Connect Accounts"
-msgstr "アカウントを接続する"
-
-#: assets/anduinos-oobe:3013
+#: assets/anduinos-oobe:2120
 msgid "Your Data. Your Rules. Period."
 msgstr "あなたのデータ。あなたのルール。それだけ。"
 
-#: assets/anduinos-oobe:3022
+#: assets/anduinos-oobe:2129
 msgid "AnduinOS disables all system-level telemetry by default."
 msgstr "AnduinOS はデフォルトでシステムレベルのテレメトリを無効にしています。"
 
-#: assets/anduinos-oobe:3022
+#: assets/anduinos-oobe:2129
 msgid "We do not collect your usage habits."
 msgstr "利用習慣を収集することはありません。"
 
-#: assets/anduinos-oobe:3023
+#: assets/anduinos-oobe:2130
 msgid "We do not upload your search history."
 msgstr "検索履歴をアップロードすることはありません。"
 
-#: assets/anduinos-oobe:3023
+#: assets/anduinos-oobe:2130
 msgid "There are no pervasive advertisements."
 msgstr "広範囲にわたる広告はありません。"
 
-#. Translate as a complete sentence; the interface wraps the text automatically.
-msgid "In an era ruled by algorithms and surveillance, this is our firmest commitment to you."
-msgstr "アルゴリズムと監視が支配する時代において、 これが私たちからの最も確固たる約束です。"
+#: assets/anduinos-oobe:2141
+msgid ""
+"In an era ruled by algorithms and surveillance, this is our firmest "
+"commitment to you."
+msgstr ""
+"アルゴリズムと監視が支配する時代において、 これが私たちからの最も確固たる約束"
+"です。"
 
-
-#: assets/anduinos-oobe:3052
+#: assets/anduinos-oobe:2159
 msgid "✓ Zero telemetry — your activity is yours alone"
 msgstr "✓ テレメトリーゼロ — あなたの活動はあなただけのもの"
 
-#: assets/anduinos-oobe:3053
+#: assets/anduinos-oobe:2160
 msgid "✓ No data collection — your files stay on your device"
 msgstr "✓ データ収集なし — ファイルはあなたのデバイス上に留まる"
 
-#: assets/anduinos-oobe:3054
+#: assets/anduinos-oobe:2161
 msgid "✓ No ads in your operating system"
 msgstr "✓ OSに広告なし"
 
-#: assets/anduinos-oobe:3055
+#: assets/anduinos-oobe:2162
 msgid "✓ Full root access — you truly own your machine"
 msgstr "✓ 完全なrootアクセス — あなたは自分のマシンを本当に所有しています"
 
-#: assets/anduinos-oobe:3056
+#: assets/anduinos-oobe:2163
 msgid "✓ UFW firewall — your digital perimeter, defended"
 msgstr "✓ UFWファイアウォール — あなたのデジタル境界を防御"
 
-#: assets/anduinos-oobe:3057
+#: assets/anduinos-oobe:2164
 msgid "✓ Open source — the code is yours to inspect and modify"
 msgstr "✓ オープンソース — コードはあなたが検査し、修正できるもの"
 
-#: assets/anduinos-oobe:3098
+#: assets/anduinos-oobe:2205
 msgid "Welcome to the AnduinOS Community"
 msgstr "AnduinOSコミュニティへようこそ"
 
-#. Translate as a complete sentence; the interface wraps the text automatically.
-msgid "Whether you're a Windows refugee seeking shelter, or a hardcore geek developer — you'll find your tribe here."
-msgstr "Windowsから避難してきた方でも、 あるいはハードコアなゲーマー開発者であっても、ここであなたの仲間を見つけることができます。"
+#: assets/anduinos-oobe:2214
+msgid ""
+"Whether you're a Windows refugee seeking shelter, or a hardcore geek "
+"developer — you'll find your tribe here."
+msgstr ""
+"Windowsから避難してきた方でも、 あるいはハードコアなゲーマー開発者であって"
+"も、ここであなたの仲間を見つけることができます。"
 
-
-#: assets/anduinos-oobe:3109
+#: assets/anduinos-oobe:2215
 msgid "Found a bug? Want a feature? Tell us anytime."
 msgstr "バグを見つけましたか？新機能をご希望ですか？いつでもお知らせください。"
 
-#: assets/anduinos-oobe:3121
+#: assets/anduinos-oobe:2227
 msgid "Official Documentation"
 msgstr "公式ドキュメント"
 
-#: assets/anduinos-oobe:3122
+#: assets/anduinos-oobe:2228
 msgid "Comprehensive guides and troubleshooting — covers everything you need"
 msgstr "包括的なガイドとトラブルシューティング — 必要なものをすべてカバー"
 
-#: assets/anduinos-oobe:3124
+#: assets/anduinos-oobe:2230
 msgid "Community Forums"
 msgstr "コミュニティフォーラム"
 
-#: assets/anduinos-oobe:3125
+#: assets/anduinos-oobe:2231
 msgid "Discuss with other AnduinOS users and developers"
 msgstr "他のAnduinOSユーザーや開発者と議論する"
 
-#: assets/anduinos-oobe:3127
+#: assets/anduinos-oobe:2233
 msgid "Discord Server"
 msgstr "Discordサーバー"
 
-#: assets/anduinos-oobe:3128
+#: assets/anduinos-oobe:2234
 msgid "Join our official Discord server for real-time chat and support"
-msgstr "リアルタイムのチャットとサポートのために公式Discordサーバーに参加しましょう"
+msgstr ""
+"リアルタイムのチャットとサポートのために公式Discordサーバーに参加しましょう"
 
-#: assets/anduinos-oobe:3130
+#: assets/anduinos-oobe:2236
 msgid "Report an Issue"
 msgstr "問題を報告する"
 
-#: assets/anduinos-oobe:3131
+#: assets/anduinos-oobe:2237
 msgid "Found a bug or have a feature request? Let us know!"
-msgstr "バグを見つけましたか？新機能のリクエストがありますか？お知らせください！"
+msgstr ""
+"バグを見つけましたか？新機能のリクエストがありますか？お知らせください！"
 
-#: assets/anduinos-oobe:3133
+#: assets/anduinos-oobe:2239
 msgid "Buy AnduinOS Enterprise Edition"
 msgstr "AnduinOSエンタープライズエディションを購入"
 
-#: assets/anduinos-oobe:3134
+#: assets/anduinos-oobe:2240
 msgid ""
 "Get enterprise-grade support and advanced features for your organization"
 msgstr "組織向けのエンタープライズグレードのサポートと高度な機能を入手"
 
-#: assets/anduinos-oobe:3136
+#: assets/anduinos-oobe:2242
 msgid "Ask Ubuntu"
 msgstr "Ask Ubuntu"
 
-#: assets/anduinos-oobe:3137
+#: assets/anduinos-oobe:2243
 msgid "Almost all Ubuntu solutions apply directly to AnduinOS"
 msgstr "UbuntuのソリューションのほとんどがAnduinOSに直接適用されます"
 
-#: assets/anduinos-oobe:3139
+#: assets/anduinos-oobe:2245
 msgid "Source Code"
 msgstr "ソースコード"
 
-#: assets/anduinos-oobe:3140
+#: assets/anduinos-oobe:2246
 msgid "AnduinOS is open-source. Explore the code and contribute!"
 msgstr "AnduinOSはオープンソースです。コードを探索し、貢献しましょう！"
 
-#: assets/anduinos-oobe:3152
+#: assets/anduinos-oobe:2258
 msgid "Open"
 msgstr "開く"
 
-#: assets/anduinos-oobe:3162
+#: assets/anduinos-oobe:2268
 msgid "💡 AnduinOS is compatible with Ubuntu's entire ecosystem."
 msgstr "💡 AnduinOSはUbuntuのすべてのエコシステムと互換性があります。"
 
-#: assets/anduinos-oobe:3163
+#: assets/anduinos-oobe:2269
 msgid "You can rely on Ubuntu's vast documentation and expertise."
 msgstr "Ubuntuの豊富なドキュメントと専門知識に頼ることができます。"
 
-#: assets/anduinos-oobe:3196
+#: assets/anduinos-oobe:2302
 msgid "All Set."
 msgstr "すべて準備完了。"
 
-#: assets/anduinos-oobe:3205
+#: assets/anduinos-oobe:2311
 msgid "  Start Your AnduinOS Journey  "
 msgstr "  AnduinOSの旅を開始する  "
 
-#: assets/anduinos-oobe:3239 assets/anduinos-oobe-autostart.desktop:28
+#: assets/anduinos-oobe:2345 /tmp/tmp.sC9VMgFZZa:1
 msgid "AnduinOS Setup"
 msgstr "AnduinOSセットアップ"
 
-#: assets/anduinos-oobe:3242
+#: assets/anduinos-oobe:2348
 msgid "AnduinOS Welcome Center"
 msgstr "AnduinOSウェルカムセンター"
 
-#: assets/anduinos-oobe:3295
+#: assets/anduinos-oobe:2401
 msgid "← Back"
 msgstr "← 戻る"
 
-#: assets/anduinos-oobe:3304 assets/anduinos-oobe:3423
+#: assets/anduinos-oobe:2410 assets/anduinos-oobe:2527
 msgid "Next →"
 msgstr "次へ →"
 
-#: assets/anduinos-oobe:3421
+#: assets/anduinos-oobe:2525
 msgid "Finish"
 msgstr "完了"
 
-#: assets/anduinos-oobe:3488 data/anduinos-oobe.desktop:28
+#: assets/anduinos-oobe:2592 /tmp/tmp.sC9VMgFZZa:2
 msgid "AnduinOS Welcome"
 msgstr "AnduinOS ウェルカム"
 
-#: assets/anduinos-oobe:3490
+#: assets/anduinos-oobe:2594
 msgid "AnduinOS Team"
 msgstr "AnduinOS チーム"
 
@@ -1051,7 +865,9 @@ msgstr "セキュアブート設定"
 msgid ""
 "Secure Boot is a motherboard security standard that ensures only trusted "
 "software loads at startup."
-msgstr "Secure Bootは、起動時に信頼できるソフトウェアのみがロードされることを保証するマザーボードのセキュリティ標準です。"
+msgstr ""
+"Secure Bootは、起動時に信頼できるソフトウェアのみがロードされることを保証する"
+"マザーボードのセキュリティ標準です。"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
 msgid "It protects your system from low-level malware and rootkits."
@@ -1060,6 +876,22 @@ msgstr "低レベルのマルウェアやルートキットからシステムを
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:141
 msgid "System Trust Status"
 msgstr "システム信頼ステータス"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:155
+msgid "Secure Boot Enabled"
+msgstr "セキュアブート有効"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:156
+msgid "Local MOK Certificate"
+msgstr "ローカル MOK 証明書"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:157
+msgid "UEFI Firmware Trust"
+msgstr "UEFI ファームウェアの信頼"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:158
+msgid "Third-party Drivers"
+msgstr "サードパーティ製ドライバー"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:183
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
@@ -1144,7 +976,9 @@ msgstr "ドライバーの信頼性を検証できません"
 msgid ""
 "Secure Boot trust is ready. No third-party kernel modules are currently "
 "installed."
-msgstr "Secure Boot 信頼の準備ができました。現在、サードパーティのカーネル モジュールはインストールされていません。"
+msgstr ""
+"Secure Boot 信頼の準備ができました。現在、サードパーティのカーネル モジュール"
+"はインストールされていません。"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:307
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:550
@@ -1173,15 +1007,17 @@ msgid "Repair Automatic DKMS Signing"
 msgstr "自動 DKMS 署名を修復します"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:356
-msgid ""
-"This firmware does not provide Secure Boot. No certificate is required."
-msgstr "このファームウェアは Secure Boot を提供しません。証明書は必要ありません。"
+msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgstr ""
+"このファームウェアは Secure Boot を提供しません。証明書は必要ありません。"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:363
 msgid ""
 "Secure Boot status could not be read. Driver trust operations are blocked "
 "until detection succeeds."
-msgstr "Secure Boot ステータスを読み取れませんでした。ドライバーの信頼操作は、検出が成功するまでブロックされます。"
+msgstr ""
+"Secure Boot ステータスを読み取れませんでした。ドライバーの信頼操作は、検出が"
+"成功するまでブロックされます。"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
 msgid "No certificate is required while Secure Boot is disabled."
@@ -1189,7 +1025,9 @@ msgstr "Secure Boot が無効になっている間は証明書は必要ありま
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:375
 msgid "System Trust Established. Third-party drivers will load securely."
-msgstr "システムの信頼が確立されました。サードパーティ製ドライバーは安全にロードされます。"
+msgstr ""
+"システムの信頼が確立されました。サードパーティ製ドライバーは安全にロードされ"
+"ます。"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:379
 msgid "The certificate is enrolled and current drivers are trusted."
@@ -1201,7 +1039,8 @@ msgstr "今後のドライバー更新の前に、自動 DKMS 署名を修復し
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:386
 msgid "The certificate is enrolled, but some modules are not signed with it."
-msgstr "証明書は登録されていますが、一部のモジュールは証明書で署名されていません。"
+msgstr ""
+"証明書は登録されていますが、一部のモジュールは証明書で署名されていません。"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
 msgid "A certificate is waiting for enrollment."
@@ -1218,7 +1057,9 @@ msgstr "ローカル信頼証明書はまだ登録されていません。"
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:400
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:407
 msgid "You must configure this to use third-party drivers like NVIDIA."
-msgstr "NVIDIA などのサードパーティ製ドライバーを使用するには、これを設定する必要があります。"
+msgstr ""
+"NVIDIA などのサードパーティ製ドライバーを使用するには、これを設定する必要があ"
+"ります。"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:405
 msgid "The local trust certificate is missing."
@@ -1246,13 +1087,24 @@ msgstr "キャンセル"
 msgid "Reboot"
 msgstr "再起動"
 
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:478
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:526
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:544
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:552
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:560
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:576
+msgid "OK"
+msgstr "OK"
+
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:483
 msgid "Success! When you reboot, a blue screen will appear."
 msgstr "成功！再起動すると、青い画面が表示されます。"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:487
 msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
-msgstr "「MOK の登録」→「続行」→「はい」を選択し、パスワード：123456 を入力してください"
+msgstr ""
+"「MOK の登録」→「続行」→「はい」を選択し、パスワード：123456 を入力してくださ"
+"い"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:491
 msgid "Certificate Created"
@@ -1270,20 +1122,13 @@ msgstr "Secure Boot 信頼は必要ありません"
 msgid "Firmware signature enforcement is not active."
 msgstr "ファームウェア署名の強制はアクティブではありません。"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:478
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:526
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:544
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:552
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:560
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:576
-msgid "OK"
-msgstr "OK"
-
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:534
 msgid ""
-"The certificate is ready, but one or more DKMS modules could not be rebuilt."
-" You can repair them after enrollment."
-msgstr "証明書の準備はできていますが、1 つ以上の DKMS モジュールを再構築できませんでした。登録後に修復することもできます。"
+"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
+"You can repair them after enrollment."
+msgstr ""
+"証明書の準備はできていますが、1 つ以上の DKMS モジュールを再構築できませんで"
+"した。登録後に修復することもできます。"
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:542
 msgid "Configuration needs attention"
@@ -1309,421 +1154,18 @@ msgstr "詳細出力をご確認ください。"
 msgid "Generating & Signing..."
 msgstr "生成および署名中..."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:156
-msgid "Local MOK Certificate"
-msgstr "ローカル MOK 証明書"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:155
-msgid "Secure Boot Enabled"
-msgstr "セキュアブート有効"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:158
-msgid "Third-party Drivers"
-msgstr "サードパーティ製ドライバー"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:157
-msgid "UEFI Firmware Trust"
-msgstr "UEFI ファームウェアの信頼"
-
-#: data/anduinos-oobe.desktop:112
-msgid "welcome;oobe;setup;tutorial;first-run;"
-msgstr "ようこそ;OOBE;セットアップ;チュートリアル;初回起動;"
-
-#: anduinos-oobe/data/com.anduinos.oobe.policy:9
-msgid "Manage local network discovery"
-msgstr "ローカルネットワーク検出を管理する"
-
-#: anduinos-oobe/data/com.anduinos.oobe.policy:11
-msgid "Authentication is required to change local network discovery"
-msgstr "ローカルネットワーク検出を変更するには認証が必要です"
-
-#: data/anduinos-oobe.desktop:55
-msgid "Welcome Center"
-msgstr "ウェルカムセンター"
-
-#: assets/anduinos-oobe-autostart.desktop:55
+#: /tmp/tmp.sC9VMgFZZa:3
 msgid "Complete your AnduinOS setup"
 msgstr "AnduinOSのセットアップを完了してください"
 
-#: data/anduinos-oobe.desktop:82
+#: /tmp/tmp.sC9VMgFZZa:4
 msgid "Explore and configure your AnduinOS system"
 msgstr "AnduinOS システムを探索して設定する"
 
-#~ msgid "Unleash Your Graphics Hardware"
-#~ msgstr "グラフィックスハードウェアの性能を最大限に引き出す"
-
-#, python-brace-format
-#~ msgid "NVIDIA proprietary driver is already installed. (Version: {})"
-#~ msgstr "NVIDIA专有驱动は既にインストールされています。(バージョン: {})"
-
-#~ msgid "✗ Installation encountered an issue."
-#~ msgstr "✗ インストール中に問題が発生しました。"
-
-#~ msgid "An NVIDIA dedicated graphics card was detected in your system."
-#~ msgstr "お使いのシステムにはNVIDIAの専用グラフィックカードが検出されました。"
-
-#~ msgid ""
-#~ "For ultimate smoothness in gaming, 3D rendering, and high-framerate desktop"
-#~ msgstr "\tゲーム、3Dレンダリング、高フレームレートのデスクトップ体験に究極の滑らかさを提供"
-
-#~ msgid "experiences, we recommend installing the proprietary driver."
-#~ msgstr "体験において、プロプライエタリなドライバーのインストールを推奨します。"
-
-#~ msgid "  Check for Driver Updates  "
-#~ msgstr "ドライバーの更新を確認"
-
-#~ msgid "Repair & Reinstall"
-#~ msgstr "修復と再インストール"
-
-#~ msgid "  One-Click NVIDIA Driver Install  "
-#~ msgstr "18  ワンクリックでNVIDIAドライバーをインストール"
-
-#~ msgid "Installing NVIDIA driver…"
-#~ msgstr "NVIDIA ドライバーをインストールしています…"
-
-#~ msgid "This may take several minutes."
-#~ msgstr "これには数分かかる場合があります。"
-
-#~ msgid "✓ Driver installed successfully!"
-#~ msgstr "✓ ドライバーが正常にインストールされました！"
-
-#~ msgid "You can install drivers later from Settings."
-#~ msgstr "ドライバーは後から設定でインストールできます。"
-
-#~ msgid "Xbox Controller Support"
-#~ msgstr "Xbox コントローラーサポート"
-
-#~ msgid "Xbox controller driver (xpadneo) is already installed."
-#~ msgstr "Xbox コントローラードライバー（xpadneo）はすでにインストールされています。"
-
-#~ msgid ""
-#~ "Enjoy seamless Xbox controller support with rumble and accurate inputs."
-#~ msgstr "振動機能と高精度な入力を備えたシームレスな Xbox コントローラーサポートをお楽しみください。"
-
-#~ msgid "AnduinOS provides native support for Xbox controllers via Bluetooth."
-#~ msgstr "AnduinOS は Bluetooth を介して Xbox コントローラーをネイティブでサポートしています。"
-
-#~ msgid "The advanced xpadneo driver is already set up and ready for gaming."
-#~ msgstr "高度な xpadneo ドライバーはすでにセットアップされ、ゲームの準備ができています。"
-
-#~ msgid ""
-#~ "For advanced features like rumble and accurate mapping, we recommend "
-#~ "installing the xpadneo driver."
-#~ msgstr "振動や正確なマッピングなどの高度な機能を使用するには、xpadneo ドライバーのインストールをお勧めします。"
-
-#~ msgid "Xbox Controller Driver Installed"
-#~ msgstr "Xbox コントローラー ドライバーがインストールされました"
-
-#~ msgid "The xpadneo driver is currently installed"
-#~ msgstr "xpadneo ドライバーが現在インストールされています"
-
-#~ msgid "The driver is not installed"
-#~ msgstr "ドライバがインストールされていません"
-
-#~ msgid "Driver not installed, signature missing"
-#~ msgstr "ドライバがインストールされておらず、署名がありません"
-
-#~ msgid "Kernel module"
-#~ msgstr "カーネルモジュール"
-
-#~ msgid "Not detected"
-#~ msgstr "検出されませんでした"
-
-#~ msgid "Driver is NOT signed"
-#~ msgstr "ドライバに署名されていません"
-
-#~ msgid "Signed with current trusted certificate"
-#~ msgstr "現在信頼されている証明書で署名されています"
-
-#~ msgid "Signed with current certificate, but not enrolled"
-#~ msgstr "現在の証明書で署名されていますが、登録されていません"
-
-#~ msgid "Signed with an unknown or outdated certificate"
-#~ msgstr "不明または古すぎる証明書で署名されています"
-
-#~ msgid "Controller Status"
-#~ msgstr "コントローラーのステータス"
-
-#~ msgid "Driver loaded and active. Ready to play!"
-#~ msgstr "ドライバが読み込まれ、アクティブです。再生準備完了！"
-
-#~ msgid "Driver standing by. Waiting for controller connection..."
-#~ msgstr "ドライバは待機中です。コントローラーの接続を待っています..."
-
-#~ msgid "Driver cannot load due to missing signature trust"
-#~ msgstr "署名の信頼関係が不足しているため、ドライバを読み込めません"
-
-#~ msgid "Pair your controller"
-#~ msgstr "コントローラーをペアリングする"
-
-#~ msgid "Test your controller"
-#~ msgstr "コントローラーをテストする"
-
-#~ msgid "  Install Xbox Driver  "
-#~ msgstr "Xbox ドライバーをインストール"
-
-#~ msgid ""
-#~ "⚠️ The driver signature does not match your system certificate. Click Fix & "
-#~ "Reinstall to repair the driver."
-#~ msgstr "⚠️ ドライバー署名がシステムの証明書と一致しません。[修復して再インストール] をクリックしてドライバーを修復してください。"
-
-#~ msgid "Installing Xbox controller driver…"
-#~ msgstr "Xbox コントローラードライバーをインストールしています…"
-
-#~ msgid "This may take a minute."
-#~ msgstr "これには数分かかる場合があります。"
-
-#~ msgid "Repairing driver signature…"
-#~ msgstr "ドライバー署名を修復しています…"
-
-#~ msgid "A reboot is recommended to apply changes."
-#~ msgstr "変更を反映するには再起動を推奨します。"
-
-#~ msgid "  Fix & Reinstall Driver  "
-#~ msgstr "Xbox ドライバーをインストール"
-
-#~ msgid "(Reboot recommended)"
-#~ msgstr "（再起動を推奨）"
-
-#~ msgid "Cannot sign drivers without a certificate"
-#~ msgstr "証明書なしではドライバーに署名できません"
-
-#~ msgid ""
-#~ "Enable low-level network protection — silently blocks all unauthorized "
-#~ "inbound connections."
-#~ msgstr "低レベルのネットワーク保護を有効化します — 不正な着信接続をすべて静かにブロックします。"
-
-#~ msgid "Firewall"
-#~ msgstr "ファイアウォール"
-
-#~ msgid ""
-#~ "Please configure Secure Boot in the previous step before installing this "
-#~ "driver."
-#~ msgstr "このドライバーをインストールする前に、証明書を登録するために再起動してください。"
-
-#~ msgid "Please reboot to enroll the certificate before installing this driver."
-#~ msgstr "このドライバーをインストールする前に、証明書を登録するために再起動してください。"
-
-#~ msgid "Scanning for installed drivers..."
-#~ msgstr "インストール済みドライバーをスキャン中..."
-
-#~ msgid "The local trust certificate is missing or not yet enrolled."
-#~ msgstr "ローカルの信頼証明書が見つからないか、まだ登録されていません。"
-
-#~ msgid ""
-#~ "⚠️ Secure Boot is enabled but the custom certificate is not yet enrolled."
-#~ msgstr "⚠️ セキュアブートが有効になっていますが、カスタム証明書はまだ登録されていません。"
-
-#~ msgid "✓ Xbox controller driver installed successfully!"
-#~ msgstr "✓ Xbox コントローラードライバーが正常にインストールされました！"
-
-#~ msgid "✗ Repair failed."
-#~ msgstr "✗ 展開に失敗しました。"
-
-#~ msgid "⚡ The following apps are provided by the Spark Store community."
-#~ msgstr "⚡ 以下のアプリは Spark Store コミュニティによって提供されています。"
-
-#~ msgid "Great for connecting to local services."
-#~ msgstr "ローカルサービスへの接続に最適です。"
-
-#~ msgid "Spark Store"
-#~ msgstr "Spark Store"
-
-#~ msgid "Community app store for Chinese Linux users"
-#~ msgstr "中国のLinuxユーザー向けのコミュニティアプリストア"
-
-#~ msgid "Note: These apps link to their official or community download pages."
-#~ msgstr "注意：これらのアプリは公式またはコミュニティのダウンロードページにリンクしています。"
-
-#~ msgid " AnduinOS is not affiliated with these vendors."
-#~ msgstr "AnduinOS はこれらのベンダーとは関係ありません。"
-
-#~ msgid ""
-#~ "AnduinOS is ready. Just a few steps to shape it\n"
-#~ "into the perfect system tailored to your habits."
-#~ msgstr "AnduinOS の準備ができました。あなたの習慣に合わせた完璧なシステムにするために、いくつかの手順を進めます。"
-
-#~ msgid "=== Testing mirror speeds ===\n"
-#~ msgstr "=== ミーラー速度のテスト ==="
-
-#~ msgid ""
-#~ "\n"
-#~ "No mirrors reachable.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "到達可能なミラーがありません。\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "=== Applying mirror switch ===\n"
-#~ msgstr ""
-#~ "\n"
-#~ "=== ミラー切替を適用中 ===\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "✓ Mirror switched and system updated.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "✓ ミラーが切り替わり、システムが更新されました。\n"
-
-#~ msgid ""
-#~ "For ultimate smoothness in gaming, 3D rendering, and high-framerate desktop\n"
-#~ "experiences, we recommend installing the proprietary driver."
-#~ msgstr "ゲーム、3Dレンダリング、高フレームレートのデスクトップ環境で究極の滑らかさを実現するには、专有驱动のインストールを推奨します。"
-
-#~ msgid ""
-#~ "Installing NVIDIA driver…\n"
-#~ "This may take several minutes."
-#~ msgstr ""
-#~ "NVIDIAドライバーをインストール中…\n"
-#~ "数分かかる場合があります。"
-
-#~ msgid ""
-#~ "✗ Installation encountered an issue.\n"
-#~ "You can install drivers later from Settings."
-#~ msgstr ""
-#~ "✗ インストール中に問題が発生しました。\n"
-#~ "後から設定からドライバーをインストールできます。"
-
-#~ msgid ""
-#~ "Powered by Wine and Bottles technology, running classic Windows applications\n"
-#~ "is now easier than ever."
-#~ msgstr "WineとBottles技術により、クラシックなWindowsアプリケーションの実行がこれまでになく簡単になりました。"
-
-#~ msgid ""
-#~ "Deploying compatibility sandbox via Flatpak…\n"
-#~ "This may take a few minutes."
-#~ msgstr ""
-#~ "Flatpak経由で互換性サンドボックスを展開しています…\n"
-#~ "これには数分かかる場合があります。"
-
-#~ msgid ""
-#~ "✓ Sandbox deployed successfully!\n"
-#~ "You can now double-click .exe files to run them."
-#~ msgstr ""
-#~ "✓ サンドボックスが正常に展開されました！\n"
-#~ "これで.exeファイルをダブルクリックして実行できるようになります。"
-
-#~ msgid ""
-#~ "✗ Deployment failed.\n"
-#~ "You can install Bottles later from the App Store."
-#~ msgstr ""
-#~ "✗ 展開に失敗しました。\n"
-#~ "後からApp StoreからBottlesをインストールできます。"
-
-#~ msgid ""
-#~ "Essential productivity and entertainment tools, hand-picked for you.\n"
-#~ "Click any app to open its details in the App Store."
-#~ msgstr ""
-#~ "厳選された必須の生産性とエンターテインメントツール。\n"
-#~ "アプリをクリックしてApp Storeで詳細を表示します。"
-
-#~ msgid ""
-#~ "⚡ The following apps are provided by the Spark Store community.\n"
-#~ "Great for connecting to local services."
-#~ msgstr ""
-#~ "⚡ 以下のアプリはSpark Storeコミュニティによって提供されています。\n"
-#~ "ローカルサービスへの接続に最適です。"
-
-#~ msgid ""
-#~ "Pro tip: You can explore these apps in the App Store,\n"
-#~ "and continue with the system setup while they download."
-#~ msgstr ""
-#~ "ヒント: これらのアプリはApp Storeで探索でき、\n"
-#~ "ダウンロード中にシステム設定を続けることができます。"
-
-#~ msgid ""
-#~ "Note: These apps link to their official or community download pages. "
-#~ "AnduinOS is not affiliated with these vendors."
-#~ msgstr ""
-#~ "注意: これらのアプリは公式サイトまたはコミュニティのダウンロードページにリンクしています。AnduinOSはこれらのベンダーとは関係ありません。"
-
-#~ msgid ""
-#~ "Connect your Google, Microsoft,\n"
-#~ "or Nextcloud accounts to sync\n"
-#~ "files, contacts, and calendar."
-#~ msgstr ""
-#~ "Google、Microsoft、\n"
-#~ "またはNextcloudのアカウントを接続して、\n"
-#~ "ファイル、連絡先、カレンダーを同期します。"
-
-#~ msgid ""
-#~ "Use Deja Dup to protect your\n"
-#~ "important files with automated,\n"
-#~ "secure local or remote backups."
-#~ msgstr ""
-#~ "Deja Dupを使用して、自動的かつ安全な\n"
-#~ "ローカルまたはリモートバックアップで\n"
-#~ "重要なファイルを保護しましょう。"
-
-#~ msgid ""
-#~ "AnduinOS disables all system-level telemetry by default.\n"
-#~ "We do not collect your usage habits.\n"
-#~ "We do not upload your search history.\n"
-#~ "There are no pervasive advertisements."
-#~ msgstr ""
-#~ "AnduinOSはデフォルトですべてのシステムレベルのテレメトリーを無効にしています。\n"
-#~ "私たちはあなたの使用習慣を収集しません。\n"
-#~ "検索履歴をアップロードすることはありません。\n"
-#~ "広範な広告はありません。"
-
-#~ msgid ""
-#~ "In an era ruled by algorithms and surveillance,\n"
-#~ "this is our firmest commitment to you."
-#~ msgstr ""
-#~ "アルゴリズムと監視が支配する時代において、\n"
-#~ "これはあなたへの私たちの最も強い約束です。"
-
-#~ msgid ""
-#~ "Whether you're a Windows refugee seeking shelter,\n"
-#~ "or a hardcore geek developer — you'll find your tribe here.\n"
-#~ "Found a bug? Want a feature? Tell us anytime."
-#~ msgstr ""
-#~ "Windowsからの亡命者であれ、\n"
-#~ "ハードコアのゲキー開発者であれ、\n"
-#~ "ここであなたの仲間が見つかります。\n"
-#~ "バグを見つけましたか？新機能が必要ですか？いつでもお知らせください。"
-
-#~ msgid ""
-#~ "💡 AnduinOS is compatible with Ubuntu's entire ecosystem.\n"
-#~ "You can rely on Ubuntu's vast documentation and expertise."
-#~ msgstr ""
-#~ "💡 AnduinOSはUbuntuのエコシステム全体と互換性があります。\n"
-#~ "Ubuntuの膨大なドキュメントと専門知識を信頼できます。"
-
-#~ msgid ""
-#~ "\n"
-#~ "=== Testing bandwidth of top 3 mirrors (3 s each) ===\n"
-#~ msgstr ""
-#~ "\n"
-#~ "=== トップ3のミラーの帯域幅をテスト中 (各3秒) ===\n"
-
-#~ msgid ""
-#~ "✓ Driver installed successfully!\n"
-#~ "A reboot is recommended to apply changes."
-#~ msgstr ""
-#~ "✓ ドライバーが正常にインストールされました！\n"
-#~ "変更を適用するには再起動を推奨します。"
-
-#: assets/anduinos-oobe
-msgid "Display Scaling"
-msgstr "ディスプレイの拡大率"
-
-#: assets/anduinos-oobe
-msgid "Recommendation unavailable for this display."
-msgstr "このディスプレイの推奨値はありません。"
-
-#: assets/anduinos-oobe
-#, python-format
-msgid "%(scale)s (Recommended)"
-msgstr "%(scale)s (推奨)"
-
-#: assets/anduinos-oobe
-#, python-format
-msgid "Primary display: %(display)s · Recommended: %(scale)s"
-msgstr "メインディスプレイ：%(display)s · 推奨：%(scale)s"
-
-#: assets/anduinos-oobe
-msgid "Could not change display scaling."
-msgstr "ディスプレイの拡大率を変更できませんでした。"
+#: /tmp/tmp.sC9VMgFZZa:5
+msgid "Welcome Center"
+msgstr "ウェルカムセンター"
+
+#: /tmp/tmp.sC9VMgFZZa:6
+msgid "welcome;oobe;setup;tutorial;first-run;"
+msgstr "ようこそ;OOBE;セットアップ;チュートリアル;初回起動;"

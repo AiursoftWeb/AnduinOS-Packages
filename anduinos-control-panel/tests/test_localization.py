@@ -102,14 +102,16 @@ class LocalizationTests(unittest.TestCase):
             self.assertEqual(found, expected, key)
 
         policy = ET.parse(ROOT / "data/com.anduinos.ControlPanel.policy")
-        for tag in ("description", "message"):
-            locales = [
-                node.attrib["{http://www.w3.org/XML/1998/namespace}lang"]
-                for node in policy.findall(f".//{tag}")
-                if "{http://www.w3.org/XML/1998/namespace}lang" in node.attrib
-            ]
-            self.assertEqual(len(locales), len(set(locales)), f"duplicate {tag}")
-            self.assertEqual(set(locales), expected, tag)
+        for action in policy.findall("action"):
+            for tag in ("description", "message"):
+                locales = [
+                    node.attrib["{http://www.w3.org/XML/1998/namespace}lang"]
+                    for node in action.findall(tag)
+                    if "{http://www.w3.org/XML/1998/namespace}lang" in node.attrib
+                ]
+                label = f"{action.attrib['id']} {tag}"
+                self.assertEqual(len(locales), len(set(locales)), label)
+                self.assertEqual(set(locales), expected, label)
 
 
 if __name__ == "__main__":

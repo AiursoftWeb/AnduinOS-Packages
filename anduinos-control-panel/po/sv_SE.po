@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-control-panel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-09 11:41+0000\n"
+"POT-Creation-Date: 2026-09-18 12:59+0000\n"
 "PO-Revision-Date: 2026-09-09 12:06+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -17,355 +17,352 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/anduinos_control_panel/app.py:78 src/anduinos_control_panel/app.py:96
+#: src/anduinos_control_panel/app.py:79 src/anduinos_control_panel/app.py:99
 #: data/com.anduinos.ControlPanel.desktop:3
 msgid "Control Panel"
 msgstr "Kontrollpanel"
 
-#: src/anduinos_control_panel/app.py:96
+#: src/anduinos_control_panel/app.py:99
 msgid "AnduinOS"
 msgstr "AnduinOS"
 
-#: src/anduinos_control_panel/app.py:100
-#: src/anduinos_control_panel/app.py:1862
+#: src/anduinos_control_panel/app.py:103 src/anduinos_control_panel/app.py:1917
 msgid "Search Control Panel"
 msgstr "Sök i kontrollpanelen"
 
-#: src/anduinos_control_panel/app.py:101
+#: src/anduinos_control_panel/app.py:104
 msgid "Search settings"
 msgstr "Sök i inställningarna"
 
-#: src/anduinos_control_panel/app.py:108
+#: src/anduinos_control_panel/app.py:111
 msgid "About Control Panel"
 msgstr "Om kontrollpanelen"
 
-#: src/anduinos_control_panel/app.py:110
+#: src/anduinos_control_panel/app.py:113
 msgid "Main Menu"
 msgstr "Huvudmeny"
 
-#: src/anduinos_control_panel/app.py:132
+#: src/anduinos_control_panel/app.py:135
 msgid "Adjust your computer's settings"
 msgstr "Justera dina datorinställningar"
 
-#: src/anduinos_control_panel/app.py:135
+#: src/anduinos_control_panel/app.py:138
 msgid "Choose a category below, or search for a setting."
 msgstr "Välj en kategori nedan eller sök efter en inställning."
 
-#: src/anduinos_control_panel/app.py:151
+#: src/anduinos_control_panel/app.py:154
 msgid "No settings found"
 msgstr "Inga inställningar hittades"
 
-#: src/anduinos_control_panel/app.py:152
+#: src/anduinos_control_panel/app.py:155
 msgid "Try a different search."
 msgstr "Prova en annan sökning."
 
-#: src/anduinos_control_panel/app.py:237
+#: src/anduinos_control_panel/app.py:240
 #: src/anduinos_control_panel/topics.py:144
 msgid "Configure NetworkManager connection profiles"
 msgstr "Konfigurera NetworkManager-anslutningsprofiler"
 
-#: src/anduinos_control_panel/app.py:239
+#: src/anduinos_control_panel/app.py:242
 msgid "Install Advanced Network Configuration"
 msgstr "Installera avancerad nätverkskonfiguration"
 
-#: src/anduinos_control_panel/app.py:246
+#: src/anduinos_control_panel/app.py:249
 msgid "System"
 msgstr "System"
 
-#: src/anduinos_control_panel/app.py:251
+#: src/anduinos_control_panel/app.py:254
 msgid "Security"
 msgstr "Säkerhet"
 
-#: src/anduinos_control_panel/app.py:256
+#: src/anduinos_control_panel/app.py:259
 msgid "Network and Internet"
 msgstr "Nätverk och internet"
 
-#: src/anduinos_control_panel/app.py:261
+#: src/anduinos_control_panel/app.py:264
 msgid "User Accounts"
 msgstr "Användarkonton"
 
-#: src/anduinos_control_panel/app.py:269
+#: src/anduinos_control_panel/app.py:272
 msgid "Hardware and Drivers"
 msgstr "Hårdvara och drivrutiner"
 
-#: src/anduinos_control_panel/app.py:277
+#: src/anduinos_control_panel/app.py:280
 msgid "Scan documents and select a scanner"
 msgstr "Skanna dokument och välj en skanner"
 
-#: src/anduinos_control_panel/app.py:279
+#: src/anduinos_control_panel/app.py:282
 msgid "Install Document Scanner"
 msgstr "Installera Dokumentskanner"
 
-#: src/anduinos_control_panel/app.py:285
+#: src/anduinos_control_panel/app.py:288
 msgid "Appearance"
 msgstr "Utseende"
 
-#: src/anduinos_control_panel/app.py:293
+#: src/anduinos_control_panel/app.py:296
 msgid "Programs"
 msgstr "Program"
 
-#: src/anduinos_control_panel/app.py:300
-#: src/anduinos_control_panel/topics.py:246
+#: src/anduinos_control_panel/app.py:304
+#: src/anduinos_control_panel/topics.py:273
 msgid "Manage application permissions with Flatseal"
 msgstr "Hantera programbehörigheter med Flatseal"
 
-#: src/anduinos_control_panel/app.py:302
+#: src/anduinos_control_panel/app.py:306
 msgid "Install Flatseal to manage application permissions"
 msgstr "Installera Flatseal för att hantera programbehörigheter"
 
-#: src/anduinos_control_panel/app.py:308
+#: src/anduinos_control_panel/app.py:312
 msgid "AI Stack"
 msgstr "AI-stack"
 
-#: src/anduinos_control_panel/app.py:313
+#: src/anduinos_control_panel/app.py:317 src/anduinos_control_panel/app.py:321
 msgid "Installed"
 msgstr "Installerad"
 
-#: src/anduinos_control_panel/app.py:313
+#: src/anduinos_control_panel/app.py:317 src/anduinos_control_panel/app.py:321
+#: src/anduinos_control_panel/prediction_settings.py:44
 msgid "Not installed"
 msgstr "Inte installerad"
 
-#: src/anduinos_control_panel/app.py:318
+#: src/anduinos_control_panel/app.py:326
 msgid "Configure microphone, language, shortcut, and training"
 msgstr "Konfigurera mikrofon, språk, kortkommando och kalibrering"
 
-#: src/anduinos_control_panel/app.py:320
+#: src/anduinos_control_panel/app.py:328
 msgid "Install private, offline speech-to-text"
 msgstr "Installera integritetsvänlig tal-till-text för offlinebruk"
 
-#: src/anduinos_control_panel/app.py:326 src/anduinos_control_panel/app.py:972
+#: src/anduinos_control_panel/app.py:334 src/anduinos_control_panel/app.py:1004
 msgid "Windows Compatibility"
 msgstr "Windows-kompatibilitet"
 
-#: src/anduinos_control_panel/app.py:332
+#: src/anduinos_control_panel/app.py:340
 msgid "Open your Windows application environments"
 msgstr "Öppna dina Windows-programmiljöer"
 
-#: src/anduinos_control_panel/app.py:334
+#: src/anduinos_control_panel/app.py:342
 msgid "Install Bottles to run Windows applications"
 msgstr "Installera Bottles för att köra Windows-applikationer"
 
-#: src/anduinos_control_panel/app.py:340
+#: src/anduinos_control_panel/app.py:348
 msgid "Backup and Recovery"
 msgstr "Säkerhetskopiering och återställning"
 
-#: src/anduinos_control_panel/app.py:372
+#: src/anduinos_control_panel/app.py:390
 msgid "Open Deja Dup backups"
 msgstr "Öppna Deja Dup-säkerhetskopior"
 
-#: src/anduinos_control_panel/app.py:374
+#: src/anduinos_control_panel/app.py:392
 msgid "Install Deja Dup from the app store"
 msgstr "Installera Deja Dup från appbutiken"
 
-#: src/anduinos_control_panel/app.py:385 src/anduinos_control_panel/app.py:399
-#: src/anduinos_control_panel/app.py:413
-#: src/anduinos_control_panel/app.py:1893
+#: src/anduinos_control_panel/app.py:403 src/anduinos_control_panel/app.py:420
+#: src/anduinos_control_panel/app.py:434 src/anduinos_control_panel/app.py:1948
 msgid "Setting not found"
 msgstr "Inställningen hittades inte"
 
-#: src/anduinos_control_panel/app.py:521 src/anduinos_control_panel/app.py:532
-#: src/anduinos_control_panel/app.py:541
+#: src/anduinos_control_panel/app.py:553 src/anduinos_control_panel/app.py:564
+#: src/anduinos_control_panel/app.py:573
 msgid "Could not open this setting"
 msgstr "Kunde inte öppna denna inställning"
 
-#: src/anduinos_control_panel/app.py:540
+#: src/anduinos_control_panel/app.py:572
 msgid "The application exited before it could be opened."
 msgstr "Programmet avslutades innan det kunde öppnas."
 
-#: src/anduinos_control_panel/app.py:547
+#: src/anduinos_control_panel/app.py:579
 msgid "OK"
 msgstr "OK"
 
-#: src/anduinos_control_panel/app.py:553 src/anduinos_control_panel/app.py:942
+#: src/anduinos_control_panel/app.py:585 src/anduinos_control_panel/app.py:974
 #, python-format
 msgid "Install %s?"
 msgstr "Installera %s?"
 
-#: src/anduinos_control_panel/app.py:555
+#: src/anduinos_control_panel/app.py:587
 #, python-format
 msgid ""
-"%s is a recommended component, but it is not installed. You can reinstall it"
-" now."
+"%s is a recommended component, but it is not installed. You can reinstall it "
+"now."
 msgstr ""
 "%s är en rekommenderad komponent, men den är inte installerad. Du kan "
 "installera den igen nu."
 
-#: src/anduinos_control_panel/app.py:560 src/anduinos_control_panel/app.py:945
-#: src/anduinos_control_panel/app.py:1046
-#: src/anduinos_control_panel/app.py:1253
-#: src/anduinos_control_panel/app.py:1444
-#: src/anduinos_control_panel/app.py:1650
+#: src/anduinos_control_panel/app.py:592 src/anduinos_control_panel/app.py:977
+#: src/anduinos_control_panel/app.py:1078
+#: src/anduinos_control_panel/app.py:1298
+#: src/anduinos_control_panel/app.py:1499
+#: src/anduinos_control_panel/app.py:1705
+#: src/anduinos_control_panel/prediction_settings.py:142
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: src/anduinos_control_panel/app.py:561
-#: src/anduinos_control_panel/app.py:1446
+#: src/anduinos_control_panel/app.py:593 src/anduinos_control_panel/app.py:1501
+#: src/anduinos_control_panel/prediction_settings.py:46
 msgid "Install"
 msgstr "Installera"
 
-#: src/anduinos_control_panel/app.py:570
+#: src/anduinos_control_panel/app.py:602
 #, python-format
 msgid "Installing %s…"
 msgstr "Installerar %s…"
 
-#: src/anduinos_control_panel/app.py:579
+#: src/anduinos_control_panel/app.py:611
 #, python-format
 msgid "%s installed"
 msgstr "Installationen av %s är klar"
 
-#: src/anduinos_control_panel/app.py:586 src/anduinos_control_panel/app.py:811
-#: src/anduinos_control_panel/app.py:909
+#: src/anduinos_control_panel/app.py:618 src/anduinos_control_panel/app.py:843
+#: src/anduinos_control_panel/app.py:941
+#: src/anduinos_control_panel/software_sources.py:394
 msgid "Authentication was cancelled."
 msgstr "Autentiseringen avbröts."
 
-#: src/anduinos_control_panel/app.py:588
+#: src/anduinos_control_panel/app.py:620
 msgid "The recommended component could not be installed."
 msgstr "Den rekommenderade komponenten kunde inte installeras."
 
-#: src/anduinos_control_panel/app.py:589
+#: src/anduinos_control_panel/app.py:621
 msgid "Installation failed"
 msgstr "Installationen misslyckades"
 
-#: src/anduinos_control_panel/app.py:637
+#: src/anduinos_control_panel/app.py:669
 #: src/anduinos_control_panel/topics.py:86
 msgid "Startup and Boot"
 msgstr "Startinställningar"
 
-#: src/anduinos_control_panel/app.py:655
+#: src/anduinos_control_panel/app.py:687
 msgid "Boot menu"
 msgstr "Startmeny"
 
-#: src/anduinos_control_panel/app.py:657
-msgid ""
-"Choose how long the boot menu waits before starting the default system."
+#: src/anduinos_control_panel/app.py:689
+msgid "Choose how long the boot menu waits before starting the default system."
 msgstr "Välj hur länge startmenyn väntar innan den startar standardsystemet."
 
-#: src/anduinos_control_panel/app.py:662
+#: src/anduinos_control_panel/app.py:694
 msgid "Default operating system"
 msgstr "Standardoperativsystem"
 
-#: src/anduinos_control_panel/app.py:663
+#: src/anduinos_control_panel/app.py:695
 msgid "Starts automatically when the boot menu wait time ends."
 msgstr "Startas automatiskt när startmenyns väntetid har gått ut."
 
-#: src/anduinos_control_panel/app.py:665 src/anduinos_control_panel/app.py:792
+#: src/anduinos_control_panel/app.py:697 src/anduinos_control_panel/app.py:824
 msgid "Current setting (unchanged)"
 msgstr "Aktuell inställning (oförändrad)"
 
-#: src/anduinos_control_panel/app.py:669
-#: src/anduinos_control_panel/app.py:1135
-#: src/anduinos_control_panel/app.py:1342
-#: src/anduinos_control_panel/app.py:1561
-#: src/anduinos_control_panel/app.py:1756
+#: src/anduinos_control_panel/app.py:701 src/anduinos_control_panel/app.py:1167
+#: src/anduinos_control_panel/app.py:1387
+#: src/anduinos_control_panel/app.py:1616
+#: src/anduinos_control_panel/app.py:1811
 msgid "Retry"
 msgstr "Försök igen"
 
-#: src/anduinos_control_panel/app.py:673
+#: src/anduinos_control_panel/app.py:705
 msgid "Authentication is required to read the boot menu."
 msgstr "Autentisering krävs för att läsa startmenyn."
 
-#: src/anduinos_control_panel/app.py:676
+#: src/anduinos_control_panel/app.py:708
 msgid "Boot menu wait time"
 msgstr "Startmenyns väntetid"
 
-#: src/anduinos_control_panel/app.py:678
+#: src/anduinos_control_panel/app.py:710
 msgid "The same delay is used after an interrupted or unsuccessful startup."
 msgstr "Samma fördröjning används efter en avbruten eller misslyckad start."
 
-#: src/anduinos_control_panel/app.py:685
+#: src/anduinos_control_panel/app.py:717
 #, python-format
 msgid "%d seconds"
 msgstr "%d s"
 
-#: src/anduinos_control_panel/app.py:693
+#: src/anduinos_control_panel/app.py:725
 msgid "Boot display"
 msgstr "Startvisning"
 
-#: src/anduinos_control_panel/app.py:695
+#: src/anduinos_control_panel/app.py:727
 msgid "Choose the size of the GRUB menu and startup logo."
 msgstr "Välj storleken på GRUB-menyn och startlogotypen."
 
-#: src/anduinos_control_panel/app.py:699
+#: src/anduinos_control_panel/app.py:731
 msgid "Display mode"
 msgstr "Visningsläge"
 
-#: src/anduinos_control_panel/app.py:701
+#: src/anduinos_control_panel/app.py:733
 msgid "Native resolution shows more detail; large text is easier to read."
 msgstr ""
 "Naturlig upplösning visar fler detaljer; stor text är lättare att läsa."
 
-#: src/anduinos_control_panel/app.py:709
+#: src/anduinos_control_panel/app.py:741
 msgid "Native resolution"
 msgstr "Inbyggd upplösning"
 
-#: src/anduinos_control_panel/app.py:709
+#: src/anduinos_control_panel/app.py:741
 msgid "Large text mode"
 msgstr "Stort textläge"
 
-#: src/anduinos_control_panel/app.py:731
-#: src/anduinos_control_panel/app.py:1119
-#: src/anduinos_control_panel/app.py:1326
-#: src/anduinos_control_panel/app.py:1543
-#: src/anduinos_control_panel/app.py:1735
+#: src/anduinos_control_panel/app.py:763 src/anduinos_control_panel/app.py:1151
+#: src/anduinos_control_panel/app.py:1371
+#: src/anduinos_control_panel/app.py:1598
+#: src/anduinos_control_panel/app.py:1790
 msgid "Close"
 msgstr "Stäng"
 
-#: src/anduinos_control_panel/app.py:733
-#: src/anduinos_control_panel/app.py:1652
-#: src/anduinos_control_panel/app.py:1656
+#: src/anduinos_control_panel/app.py:765 src/anduinos_control_panel/app.py:1707
+#: src/anduinos_control_panel/app.py:1711
 msgid "Apply"
 msgstr "Tillämpa"
 
-#: src/anduinos_control_panel/app.py:789
+#: src/anduinos_control_panel/app.py:821
 msgid "Custom setting (unchanged)"
 msgstr "Anpassad inställning (oförändrad)"
 
-#: src/anduinos_control_panel/app.py:804
+#: src/anduinos_control_panel/app.py:836
 msgid "Only operating systems already in the boot menu are listed."
 msgstr "Endast operativsystem som redan finns i bootmenyn listas."
 
-#: src/anduinos_control_panel/app.py:805
+#: src/anduinos_control_panel/app.py:837
 msgid "No supported operating systems were found in the boot menu."
 msgstr "Inga stödda operativsystem hittades i bootmenyn."
 
-#: src/anduinos_control_panel/app.py:808 src/anduinos_control_panel/app.py:812
+#: src/anduinos_control_panel/app.py:840 src/anduinos_control_panel/app.py:844
 msgid "The boot menu could not be read."
 msgstr "Startmenyn kunde inte läsas."
 
-#: src/anduinos_control_panel/app.py:823
+#: src/anduinos_control_panel/app.py:855
 msgid "Reading the boot menu…"
 msgstr "Läser bootmenyn…"
 
-#: src/anduinos_control_panel/app.py:878
+#: src/anduinos_control_panel/app.py:910
 msgid "Updating the boot menu…"
 msgstr "Uppdaterar startmenyn…"
 
-#: src/anduinos_control_panel/app.py:901
+#: src/anduinos_control_panel/app.py:933
 msgid "Boot settings updated. The change applies on the next startup."
 msgstr ""
 "Startinställningarna har uppdaterats. Ändringen gäller vid nästa start."
 
-#: src/anduinos_control_panel/app.py:904
+#: src/anduinos_control_panel/app.py:936
 msgid "Boot settings updated"
 msgstr "Startinställningarna har uppdaterats"
 
-#: src/anduinos_control_panel/app.py:911
+#: src/anduinos_control_panel/app.py:943
 msgid "The boot setting could not be changed."
 msgstr "Startinställningen kunde inte ändras."
 
-#: src/anduinos_control_panel/app.py:943
+#: src/anduinos_control_panel/app.py:975
 msgid "This application is available from the app store."
 msgstr "Den här applikationen finns tillgänglig i appbutiken."
 
-#: src/anduinos_control_panel/app.py:946
+#: src/anduinos_control_panel/app.py:978
 msgid "Open App Store"
 msgstr "Öppna appbutiken"
 
-#: src/anduinos_control_panel/app.py:990
+#: src/anduinos_control_panel/app.py:1022
 msgid "Bottles"
 msgstr "Bottles"
 
-#: src/anduinos_control_panel/app.py:992
+#: src/anduinos_control_panel/app.py:1024
 msgid ""
 "Run Windows applications in isolated compatibility environments powered by "
 "Wine and Bottles."
@@ -373,86 +370,99 @@ msgstr ""
 "Kör Windows-program i isolerade kompatibilitetsmiljöer drivna av Wine och "
 "Bottles."
 
-#: src/anduinos_control_panel/app.py:997
+#: src/anduinos_control_panel/app.py:1029
 msgid "Install Bottles"
 msgstr "Installera Bottles"
 
-#: src/anduinos_control_panel/app.py:998
+#: src/anduinos_control_panel/app.py:1030
 msgid "Downloads Bottles and its runtime from Flathub"
 msgstr "Laddar ner Bottles och dess körmiljö från Flathub"
 
-#: src/anduinos_control_panel/app.py:1014
-#: src/anduinos_control_panel/app.py:1221
-#: src/anduinos_control_panel/app.py:1414
-#: src/anduinos_control_panel/app.py:1618
+#: src/anduinos_control_panel/app.py:1046
+#: src/anduinos_control_panel/app.py:1266
+#: src/anduinos_control_panel/app.py:1469
+#: src/anduinos_control_panel/app.py:1673
+#: src/anduinos_control_panel/prediction_settings.py:84
 msgid "Advanced Output"
 msgstr "Avancerad utdata"
 
-#: src/anduinos_control_panel/app.py:1048
-#: src/anduinos_control_panel/app.py:1255
+#: src/anduinos_control_panel/app.py:1080
+#: src/anduinos_control_panel/app.py:1300
 msgid "Start"
 msgstr "Starta"
 
-#: src/anduinos_control_panel/app.py:1090
-#: src/anduinos_control_panel/app.py:1297
-#: src/anduinos_control_panel/app.py:1483
+#: src/anduinos_control_panel/app.py:1122
+#: src/anduinos_control_panel/app.py:1342
+#: src/anduinos_control_panel/app.py:1538
 msgid "Installing…"
 msgstr "Installerar…"
 
-#: src/anduinos_control_panel/app.py:1092
+#: src/anduinos_control_panel/app.py:1124
 msgid "Downloading and installing Bottles… This may take a few minutes."
 msgstr "Laddar ner och installerar Bottles… Detta kan ta några minuter."
 
-#: src/anduinos_control_panel/app.py:1097
+#: src/anduinos_control_panel/app.py:1129
 msgid "Preparing Flathub and Bottles installation…"
 msgstr "Förbereder installation av Flathub och Bottles…"
 
-#: src/anduinos_control_panel/app.py:1111
+#: src/anduinos_control_panel/app.py:1143
 msgid "✓ Bottles is ready."
 msgstr "✓ Bottles är redo."
 
-#: src/anduinos_control_panel/app.py:1115
-#: src/anduinos_control_panel/app.py:1322
-#: src/anduinos_control_panel/app.py:1510
-#: src/anduinos_control_panel/app.py:1731
+#: src/anduinos_control_panel/app.py:1147
+#: src/anduinos_control_panel/app.py:1367
+#: src/anduinos_control_panel/app.py:1565
+#: src/anduinos_control_panel/app.py:1786
 msgid "✓ Installation completed successfully."
 msgstr "✓ Installationen slutfördes utan problem."
 
-#: src/anduinos_control_panel/app.py:1117
+#: src/anduinos_control_panel/app.py:1149
 msgid "Open Bottles"
 msgstr "Öppna Bottles"
 
-#: src/anduinos_control_panel/app.py:1122
+#: src/anduinos_control_panel/app.py:1154
 msgid "Bottles installed"
 msgstr "Bottles installerad"
 
-#: src/anduinos_control_panel/app.py:1128
-#: src/anduinos_control_panel/app.py:1335
-#: src/anduinos_control_panel/app.py:1554
+#: src/anduinos_control_panel/app.py:1160
+#: src/anduinos_control_panel/app.py:1380
+#: src/anduinos_control_panel/app.py:1609
 msgid "✗ Installation failed. Review Advanced Output."
 msgstr "✗ Installationen misslyckades. Granska avancerad utdata."
 
-#: src/anduinos_control_panel/app.py:1133
-#: src/anduinos_control_panel/app.py:1340
-#: src/anduinos_control_panel/app.py:1559
-#: src/anduinos_control_panel/app.py:1754
+#: src/anduinos_control_panel/app.py:1165
+#: src/anduinos_control_panel/app.py:1385
+#: src/anduinos_control_panel/app.py:1614
+#: src/anduinos_control_panel/app.py:1809
 msgid "✗ Operation failed: "
 msgstr "✗ Åtgärden misslyckades: "
 
-#: src/anduinos_control_panel/app.py:1165
+#: src/anduinos_control_panel/app.py:1197
 msgid "Deja Dup Backups"
 msgstr "Deja Dup-säkerhetskopior"
 
-#: src/anduinos_control_panel/app.py:1179
-#: src/anduinos_control_panel/topics.py:245
+#: src/anduinos_control_panel/app.py:1206
+msgid "Factory Reset Is Not Available"
+msgstr "Factory Reset Is Not Available"
+
+#: src/anduinos_control_panel/app.py:1208
+msgid ""
+"This system does not support factory reset. Reinstall AnduinOS and choose "
+"the Btrfs filesystem to enable it."
+msgstr ""
+"This system does not support factory reset. Reinstall AnduinOS and choose "
+"the Btrfs filesystem to enable it."
+
+#: src/anduinos_control_panel/app.py:1224
+#: src/anduinos_control_panel/topics.py:272
 msgid "Permission Settings"
 msgstr "Behörighetsinställningar"
 
-#: src/anduinos_control_panel/app.py:1197
+#: src/anduinos_control_panel/app.py:1242
 msgid "Flatseal"
 msgstr "Flatseal"
 
-#: src/anduinos_control_panel/app.py:1199
+#: src/anduinos_control_panel/app.py:1244
 msgid ""
 "Review and control what files, devices, network connections, and services "
 "Flatpak applications can access."
@@ -460,84 +470,84 @@ msgstr ""
 "Granska och kontrollera vilka filer, enheter, nätverksanslutningar och "
 "tjänster Flatpak-applikationer kan få åtkomst till."
 
-#: src/anduinos_control_panel/app.py:1204
+#: src/anduinos_control_panel/app.py:1249
 msgid "Install Flatseal"
 msgstr "Installera Flatseal"
 
-#: src/anduinos_control_panel/app.py:1206
+#: src/anduinos_control_panel/app.py:1251
 msgid "Administrator authentication is required when installation starts"
 msgstr "Administratörsautentisering krävs när installationen startar"
 
-#: src/anduinos_control_panel/app.py:1298
+#: src/anduinos_control_panel/app.py:1343
 msgid "Downloading and installing Flatseal…"
 msgstr "Laddar ner och installerar Flatseal…"
 
-#: src/anduinos_control_panel/app.py:1303
+#: src/anduinos_control_panel/app.py:1348
 msgid "Preparing Flatseal installation…"
 msgstr "Förbereder installation av Flatseal…"
 
-#: src/anduinos_control_panel/app.py:1318
+#: src/anduinos_control_panel/app.py:1363
 msgid "✓ Flatseal is ready."
 msgstr "✓ Flatseal är redo."
 
-#: src/anduinos_control_panel/app.py:1324
+#: src/anduinos_control_panel/app.py:1369
 msgid "Open Flatseal"
 msgstr "Öppna Flatseal"
 
-#: src/anduinos_control_panel/app.py:1329
+#: src/anduinos_control_panel/app.py:1374
 msgid "Flatseal installed"
 msgstr "Flatseal installerad"
 
-#: src/anduinos_control_panel/app.py:1361
+#: src/anduinos_control_panel/app.py:1416
 msgid "Install Voice Typing"
 msgstr "Installera röstinmatning"
 
-#: src/anduinos_control_panel/app.py:1379
+#: src/anduinos_control_panel/app.py:1434
 msgid "Offline Voice Typing"
 msgstr "Offline röstinmatning"
 
-#: src/anduinos_control_panel/app.py:1381
+#: src/anduinos_control_panel/app.py:1436
 msgid ""
 "Press Super + H to dictate into browsers, editors, messages, terminals, and "
 "other applications. Audio stays on this computer."
 msgstr ""
 "Tryck på Super + H för att diktera i webbläsare, textredigerare, "
-"meddelanden, terminaler och andra program. Ljudet lämnar inte den här "
-"datorn."
+"meddelanden, terminaler och andra program. Ljudet lämnar inte den här datorn."
 
-#: src/anduinos_control_panel/app.py:1386
+#: src/anduinos_control_panel/app.py:1441
 msgid "Private by default"
 msgstr "Privat som standard"
 
-#: src/anduinos_control_panel/app.py:1387
+#: src/anduinos_control_panel/app.py:1442
 msgid "Speech is recognized locally with whisper.cpp"
 msgstr "Taligenkänning sker på den här datorn med whisper.cpp"
 
-#: src/anduinos_control_panel/app.py:1392
+#: src/anduinos_control_panel/app.py:1447
 msgid "About 140 MB to download"
 msgstr "Cirka 140 MB att ladda ner"
 
-#: src/anduinos_control_panel/app.py:1394
+#: src/anduinos_control_panel/app.py:1449
 msgid ""
 "Includes the multilingual Base model; optional models are available later"
 msgstr ""
 "Inkluderar den flerspråkiga Base-modellen; valfria modeller är tillgängliga "
 "senare"
 
-#: src/anduinos_control_panel/app.py:1403
+#: src/anduinos_control_panel/app.py:1458
+#: src/anduinos_control_panel/prediction_settings.py:177
 msgid "Administrator authentication is required when installation starts."
 msgstr "Administratörsautentisering krävs när installationen startar."
 
-#: src/anduinos_control_panel/app.py:1488
+#: src/anduinos_control_panel/app.py:1543
 msgid "Downloading the local engine and multilingual speech model…"
 msgstr ""
 "Laddar ner den lokala motorn och den flerspråkiga taligenkänningsmodellen…"
 
-#: src/anduinos_control_panel/app.py:1494
+#: src/anduinos_control_panel/app.py:1549
 msgid "Preparing Voice Typing installation…"
 msgstr "Förbereder installation av röstinmatning…"
 
-#: src/anduinos_control_panel/app.py:1537
+#: src/anduinos_control_panel/app.py:1592
 msgid ""
 "✓ Installed. Sign out and back in once, then press Super + H to start Voice "
 "Typing."
@@ -545,107 +555,371 @@ msgstr ""
 "✓ Installerad. Logga ut och in en gång, tryck sedan på Super + H för att "
 "starta röstinmatning."
 
-#: src/anduinos_control_panel/app.py:1541
+#: src/anduinos_control_panel/app.py:1596
 msgid "Open Settings"
 msgstr "Öppna inställningar"
 
-#: src/anduinos_control_panel/app.py:1547
+#: src/anduinos_control_panel/app.py:1602
 msgid "Voice Typing installed — sign out to finish"
 msgstr "Röstinmatning installerad — logga ut för att slutföra"
 
-#: src/anduinos_control_panel/app.py:1578
-#: src/anduinos_control_panel/topics.py:254
+#: src/anduinos_control_panel/app.py:1633
+#: src/anduinos_control_panel/topics.py:281
 msgid "On-device AI"
 msgstr "AI på enheten"
 
-#: src/anduinos_control_panel/app.py:1596
+#: src/anduinos_control_panel/app.py:1651
 msgid "Why AI"
 msgstr "Why AI"
 
-#: src/anduinos_control_panel/app.py:1598
+#: src/anduinos_control_panel/app.py:1653
 msgid ""
 "Run the Why AI assistant locally. The model and runtime are installed only "
 "when this option is enabled."
 msgstr ""
-"Kör Why AI-assistenten på den här datorn. Modellen och körmiljön installeras"
-" endast när det här alternativet är aktiverat."
+"Kör Why AI-assistenten på den här datorn. Modellen och körmiljön installeras "
+"endast när det här alternativet är aktiverat."
 
-#: src/anduinos_control_panel/app.py:1603
+#: src/anduinos_control_panel/app.py:1658
 msgid "Install on-device AI"
 msgstr "Installera AI på enheten"
 
-#: src/anduinos_control_panel/app.py:1604
+#: src/anduinos_control_panel/app.py:1659
 msgid "Enable the local Why AI stack on this computer"
 msgstr "Aktivera den lokala Why AI-stacken på den här datorn"
 
-#: src/anduinos_control_panel/app.py:1698
+#: src/anduinos_control_panel/app.py:1753
 msgid "Applying…"
 msgstr "Tillämpar…"
 
-#: src/anduinos_control_panel/app.py:1700
+#: src/anduinos_control_panel/app.py:1755
 msgid "Downloading and installing Why AI… This may take about 10 minutes."
 msgstr "Laddar ner och installerar Why AI… Detta kan ta cirka 10 minuter."
 
-#: src/anduinos_control_panel/app.py:1702
+#: src/anduinos_control_panel/app.py:1757
 msgid "Disabling the local Why AI stack…"
 msgstr "Inaktiverar den lokala Why AI-stacken…"
 
-#: src/anduinos_control_panel/app.py:1709
+#: src/anduinos_control_panel/app.py:1764
 msgid "Preparing package operation…"
 msgstr "Förbereder paketåtgärden…"
 
-#: src/anduinos_control_panel/app.py:1723
+#: src/anduinos_control_panel/app.py:1778
 msgid "✓ On-device AI is ready."
 msgstr "✓ AI på enheten är redo."
 
-#: src/anduinos_control_panel/app.py:1725
+#: src/anduinos_control_panel/app.py:1780
 msgid "✓ On-device AI is disabled."
 msgstr "✓ AI på enheten är inaktiverad."
 
-#: src/anduinos_control_panel/app.py:1731
+#: src/anduinos_control_panel/app.py:1786
 msgid "✓ Change completed successfully."
 msgstr "✓ Ändringen slutfördes utan problem."
 
-#: src/anduinos_control_panel/app.py:1740
+#: src/anduinos_control_panel/app.py:1795
 msgid "On-device AI enabled"
 msgstr "AI på enheten aktiverad"
 
-#: src/anduinos_control_panel/app.py:1742
+#: src/anduinos_control_panel/app.py:1797
 msgid "On-device AI disabled"
 msgstr "AI på enheten inaktiverad"
 
-#: src/anduinos_control_panel/app.py:1750
+#: src/anduinos_control_panel/app.py:1805
 msgid "✗ Package operation failed. Review Advanced Output."
 msgstr "✗ Paketåtgärden misslyckades. Granska avancerad utdata."
 
-#: src/anduinos_control_panel/app.py:1827
+#: src/anduinos_control_panel/app.py:1882
 #, python-brace-format
 msgid "{command} exited with status {status}"
 msgstr "{command} avslutades med statuskoden {status}"
 
-#: src/anduinos_control_panel/app.py:1854
+#: src/anduinos_control_panel/app.py:1909
 msgid "Open a Control Panel topic"
 msgstr "Öppna en inställning i kontrollpanelen"
 
-#: src/anduinos_control_panel/app.py:1855
+#: src/anduinos_control_panel/app.py:1910
 msgid "TOPIC"
 msgstr "INSTÄLLNING"
 
-#: src/anduinos_control_panel/app.py:1863
+#: src/anduinos_control_panel/app.py:1918
 msgid "TERMS"
 msgstr "SÖKORD"
 
-#: src/anduinos_control_panel/app.py:1900
+#: src/anduinos_control_panel/app.py:1955
 msgid "AnduinOS Control Panel"
 msgstr "AnduinOS-kontrollpanel"
 
-#: src/anduinos_control_panel/app.py:1902
+#: src/anduinos_control_panel/app.py:1957
 msgid "AnduinOS Team"
 msgstr "AnduinOS-teamet"
 
-#: src/anduinos_control_panel/app.py:1904
+#: src/anduinos_control_panel/app.py:1959
 msgid "Find and manage AnduinOS system settings."
 msgstr "Hitta och hantera AnduinOS systeminställningar."
+
+#: src/anduinos_control_panel/prediction_settings.py:25
+#: src/anduinos_control_panel/prediction_settings.py:41
+#: src/anduinos_control_panel/topics.py:181
+msgid "Bash Command Predictions"
+msgstr "Bash-kommandoförutsägelser"
+
+#: src/anduinos_control_panel/prediction_settings.py:42
+msgid ""
+"Predict commands locally from your history and current context. No model "
+"download or on-device LLM is needed."
+msgstr ""
+"Förutsäg kommandon lokalt utifrån din historik och aktuellt sammanhang. "
+"Ingen modellnedladdning eller lokal LLM behövs."
+
+#: src/anduinos_control_panel/prediction_settings.py:45
+msgid "Configure your preferences below, then install to use predictions."
+msgstr ""
+"Ange inställningarna nedan och installera sedan för att använda "
+"förutsägelser."
+
+#: src/anduinos_control_panel/prediction_settings.py:52
+msgid ""
+"Changes take effect in newly opened Bash terminals. Saved settings override "
+"legacy environment variables."
+msgstr ""
+"Ändringar gäller för nya Bash-terminaler. Sparade inställningar åsidosätter "
+"tidigare miljövariabler."
+
+#: src/anduinos_control_panel/prediction_settings.py:55
+msgid "Enable command predictions"
+msgstr "Aktivera kommandoförutsägelser"
+
+#: src/anduinos_control_panel/prediction_settings.py:55
+msgid "Show suggestions while typing in Bash."
+msgstr "Visa förslag medan du skriver i Bash."
+
+#: src/anduinos_control_panel/prediction_settings.py:56
+msgid "Learn from command history"
+msgstr "Lär från kommandohistoriken"
+
+#: src/anduinos_control_panel/prediction_settings.py:56
+msgid ""
+"Use Bash history, frequency, directories, and command sequences to "
+"personalize suggestions."
+msgstr ""
+"Anpassa förslag med Bash-historik, frekvens, kataloger och kommandosekvenser."
+
+#: src/anduinos_control_panel/prediction_settings.py:57
+msgid "Remember my usage habits"
+msgstr "Kom ihåg mina användningsvanor"
+
+#: src/anduinos_control_panel/prediction_settings.py:57
+msgid ""
+"Save learned usage habits on this computer for predictions after closing the "
+"terminal. When off, Bash command history is still used."
+msgstr ""
+"Spara inlärda användningsvanor på den här datorn för förutsägelser efter att "
+"terminalen stängts. Bash-kommandohistoriken används fortfarande när detta är "
+"avstängt."
+
+#: src/anduinos_control_panel/prediction_settings.py:67
+msgid "Clear saved learning"
+msgstr "Rensa sparad inlärning"
+
+#: src/anduinos_control_panel/prediction_settings.py:68
+msgid ""
+"Keeps Bash history and your settings. Reopen existing terminals to discard "
+"their in-memory learning."
+msgstr ""
+"Behåller Bash-historik och inställningar. Öppna befintliga terminaler igen "
+"för att kasta deras inlärning i minnet."
+
+#: src/anduinos_control_panel/prediction_settings.py:69
+#: src/anduinos_control_panel/prediction_settings.py:143
+msgid "Clear"
+msgstr "Rensa"
+
+#: src/anduinos_control_panel/prediction_settings.py:73
+msgid "Restore default settings"
+msgstr "Återställ standardinställningar"
+
+#: src/anduinos_control_panel/prediction_settings.py:73
+msgid "Does not delete learned data."
+msgstr "Tar inte bort inlärda data."
+
+#: src/anduinos_control_panel/prediction_settings.py:74
+msgid "Restore Defaults"
+msgstr "Återställ standardvärden"
+
+#: src/anduinos_control_panel/prediction_settings.py:78
+msgid ""
+"At the end of a line, press Right Arrow or End to accept a suggestion. Press "
+"Enter to run the command."
+msgstr ""
+"Tryck på Högerpil eller End i slutet av raden för att acceptera ett förslag. "
+"Tryck på Enter för att köra kommandot."
+
+#: src/anduinos_control_panel/prediction_settings.py:119
+#, python-brace-format
+msgid "Could not update prediction settings: {error}"
+msgstr "Kunde inte uppdatera inställningarna för förutsägelser: {error}"
+
+#: src/anduinos_control_panel/prediction_settings.py:134
+msgid "Default settings restored. Reopen Bash terminals to apply them."
+msgstr ""
+"Standardinställningarna återställda. Öppna Bash-terminalerna igen för att "
+"tillämpa dem."
+
+#: src/anduinos_control_panel/prediction_settings.py:140
+msgid "Clear saved learning?"
+msgstr "Rensa sparad inlärning?"
+
+#: src/anduinos_control_panel/prediction_settings.py:141
+msgid "Only prediction learning is removed. Your Bash command history is kept."
+msgstr ""
+"Endast förutsägelsernas inlärning tas bort. Din Bash-kommandohistorik "
+"behålls."
+
+#: src/anduinos_control_panel/prediction_settings.py:166
+msgid ""
+"Saved learning cleared. Older terminals cannot save it again; reopen them to "
+"resume learning persistence."
+msgstr ""
+"Sparad inlärning rensad. Äldre terminaler kan inte spara den igen; öppna dem "
+"igen för att återuppta sparandet."
+
+#: src/anduinos_control_panel/prediction_settings.py:185
+msgid "Installation complete. Open a new Bash terminal to use predictions."
+msgstr ""
+"Installationen är klar. Öppna en ny Bash-terminal för att använda "
+"förutsägelser."
+
+#: src/anduinos_control_panel/prediction_settings.py:185
+msgid "Package installation could not be confirmed. Please retry."
+msgstr "Paketinstallationen kunde inte bekräftas. Försök igen."
+
+#: src/anduinos_control_panel/prediction_settings.py:190
+#, python-brace-format
+msgid "Installation failed: {error}"
+msgstr "Installationen misslyckades: {error}"
+
+#: src/anduinos_control_panel/software_sources.py:264
+#: src/anduinos_control_panel/topics.py:245
+msgid "Software Source"
+msgstr "Programvarukälla"
+
+#: src/anduinos_control_panel/software_sources.py:295
+msgid "Keep Your System Up to Date"
+msgstr "Håll ditt system uppdaterat"
+
+#: src/anduinos_control_panel/software_sources.py:302
+#: src/anduinos_control_panel/topics.py:246
+msgid "Security patches and the latest features are just a click away."
+msgstr ""
+"Säkerhetspatchar och de senaste funktionerna finns bara ett klick bort."
+
+#: src/anduinos_control_panel/software_sources.py:312
+#: src/anduinos_control_panel/software_sources.py:387
+msgid "Current mirror"
+msgstr "Nuvarande spegel"
+
+#: src/anduinos_control_panel/software_sources.py:322
+msgid "Terminal Output"
+msgstr "Terminalutmatning"
+
+#: src/anduinos_control_panel/software_sources.py:350
+msgid "  Switch to Fastest Mirror  "
+msgstr "  Byt till snabbaste spegeln  "
+
+#: src/anduinos_control_panel/software_sources.py:353
+#: src/anduinos_control_panel/software_sources.py:536
+#: src/anduinos_control_panel/software_sources.py:550
+msgid "  Check for Updates  "
+msgstr "  Kontrollera efter uppdateringar  "
+
+#: src/anduinos_control_panel/software_sources.py:399
+msgid "The operation failed without an error message."
+msgstr "Åtgärden misslyckades utan felmeddelande."
+
+#: src/anduinos_control_panel/software_sources.py:423
+msgid "Testing mirrors…"
+msgstr "Testar speglar…"
+
+#: src/anduinos_control_panel/software_sources.py:424
+msgid "=== Testing mirror speeds ==="
+msgstr "=== Testar spegelhastigheter ==="
+
+#: src/anduinos_control_panel/software_sources.py:438
+msgid "✗ Mirror test failed: "
+msgstr "✗ Spegeltest misslyckades: "
+
+#: src/anduinos_control_panel/software_sources.py:448
+msgid "Latency"
+msgstr "Latens"
+
+#: src/anduinos_control_panel/software_sources.py:449
+msgid "Bandwidth"
+msgstr "Bandbredd"
+
+#: src/anduinos_control_panel/software_sources.py:453
+msgid "This is already your current mirror."
+msgstr "Det här är redan din nuvarande spegel."
+
+#: src/anduinos_control_panel/software_sources.py:458
+msgid "Fastest Mirror Found"
+msgstr "Hittade snabbaste spegel"
+
+#: src/anduinos_control_panel/software_sources.py:461
+msgid "Switch to this mirror and run apt update?"
+msgstr "Vill du växla till denna spegel och köra apt update?"
+
+#: src/anduinos_control_panel/software_sources.py:464
+msgid "Keep Current"
+msgstr "Behåll nuvarande"
+
+#: src/anduinos_control_panel/software_sources.py:465
+msgid "Switch"
+msgstr "Växla"
+
+#: src/anduinos_control_panel/software_sources.py:474
+msgid "Switching mirror…"
+msgstr "Växlar spegel…"
+
+#: src/anduinos_control_panel/software_sources.py:488
+msgid "✓ Mirror switched and system updated."
+msgstr "✓ Spegel växlad och system uppdaterat."
+
+#: src/anduinos_control_panel/software_sources.py:490
+msgid "✗ Switch failed: "
+msgstr "✗ Växling misslyckades: "
+
+#: src/anduinos_control_panel/software_sources.py:497
+msgid "Installing updates…"
+msgstr "Installerar uppdateringar…"
+
+#: src/anduinos_control_panel/software_sources.py:500
+msgid "Checking for updates…"
+msgstr "Kontrollerar efter uppdateringar…"
+
+#: src/anduinos_control_panel/software_sources.py:508
+#: src/anduinos_control_panel/software_sources.py:528
+msgid "✗ Check failed: "
+msgstr "✗ Kontroll misslyckades: "
+
+#: src/anduinos_control_panel/software_sources.py:536
+msgid "  Install Updates  "
+msgstr "  Installera uppdateringar  "
+
+#: src/anduinos_control_panel/software_sources.py:539
+msgid "Updates are available."
+msgstr "Uppdateringar är tillgängliga."
+
+#: src/anduinos_control_panel/software_sources.py:541
+msgid "✓ System is up to date."
+msgstr "✓ Systemet är uppdaterat."
+
+#: src/anduinos_control_panel/software_sources.py:552
+msgid "✓ Updates installed successfully!"
+msgstr "✓ Uppdateringarna installerades framgångsrikt!"
+
+#: src/anduinos_control_panel/software_sources.py:554
+msgid "✗ Installation failed: "
+msgstr "✗ Installationen misslyckades: "
 
 #: src/anduinos_control_panel/topics.py:77
 msgid "System Settings"
@@ -711,87 +985,99 @@ msgstr "Inställningar för YubiKey"
 msgid "Configure sign-in, sudo, SSH keys, and Git signing"
 msgstr "Konfigurera inloggning, sudo, SSH-nycklar och Git-signering"
 
-#: src/anduinos_control_panel/topics.py:181
+#: src/anduinos_control_panel/topics.py:182
+msgid "Predict commands locally from history and current context"
+msgstr "Förutsäg kommandon lokalt utifrån historik och aktuellt sammanhang"
+
+#: src/anduinos_control_panel/topics.py:190
 msgid "Voice Typing"
 msgstr "Röstinmatning"
 
-#: src/anduinos_control_panel/topics.py:182
+#: src/anduinos_control_panel/topics.py:191
 msgid "Configure private, offline speech-to-text"
 msgstr "Konfigurera privat, offline tal-till-text"
 
-#: src/anduinos_control_panel/topics.py:190
+#: src/anduinos_control_panel/topics.py:199
 msgid "Driver Center"
 msgstr "Drivrutinscenter"
 
-#: src/anduinos_control_panel/topics.py:191
+#: src/anduinos_control_panel/topics.py:200
 msgid "Graphics, audio, printers, controllers, and firmware"
 msgstr "Grafik, ljud, skrivare, kontrollerare och fastware"
 
-#: src/anduinos_control_panel/topics.py:199
+#: src/anduinos_control_panel/topics.py:208
 msgid "Printers"
 msgstr "Skrivare"
 
-#: src/anduinos_control_panel/topics.py:200
+#: src/anduinos_control_panel/topics.py:209
 msgid "Add, remove, and configure printers"
 msgstr "Lägg till, ta bort och konfigurera skrivare"
 
-#: src/anduinos_control_panel/topics.py:208
+#: src/anduinos_control_panel/topics.py:217
 msgid "Scanners"
 msgstr "Skannrar"
 
-#: src/anduinos_control_panel/topics.py:209
+#: src/anduinos_control_panel/topics.py:218
 msgid "Scan documents and add or select a scanner"
 msgstr "Skanna dokument och lägg till eller välj en skanner"
 
-#: src/anduinos_control_panel/topics.py:218
+#: src/anduinos_control_panel/topics.py:227
 msgid "AnduinOS Appearance Settings"
 msgstr "AnduinOS utseendeanpassningar"
 
-#: src/anduinos_control_panel/topics.py:219
+#: src/anduinos_control_panel/topics.py:228
 msgid "Configure the taskbar, panel widgets, and desktop"
 msgstr "Konfigurera uppgiftslinjen, panelwidgetar och skrivbordet"
 
-#: src/anduinos_control_panel/topics.py:227
+#: src/anduinos_control_panel/topics.py:236
 msgid "Wallpaper and Accent Color"
 msgstr "Skrivbordsbakgrund och accentfärg"
 
-#: src/anduinos_control_panel/topics.py:228
+#: src/anduinos_control_panel/topics.py:237
 msgid "Choose the desktop background, style, and accent color"
 msgstr "Välj skrivbordsbakgrund, stil och accentfärg"
 
-#: src/anduinos_control_panel/topics.py:236
+#: src/anduinos_control_panel/topics.py:263
 msgid "Uninstall Applications"
 msgstr "Avinstallera appar"
 
-#: src/anduinos_control_panel/topics.py:237
+#: src/anduinos_control_panel/topics.py:264
 msgid "Review and remove installed applications"
 msgstr "Granska och ta bort installerade appar"
 
-#: src/anduinos_control_panel/topics.py:255
+#: src/anduinos_control_panel/topics.py:282
 msgid "Configure private AI features that run on this device"
 msgstr "Konfigurera privata AI-funktioner som körs på denna enhet"
 
-#: src/anduinos_control_panel/topics.py:263
+#: src/anduinos_control_panel/topics.py:290
 msgid "Configure Bottles"
 msgstr "Konfigurera Bottles"
 
-#: src/anduinos_control_panel/topics.py:264
+#: src/anduinos_control_panel/topics.py:291
 msgid "Run Windows applications in compatibility environments"
 msgstr "Kör Windows-applikationer i kompatibilitetsmiljöer"
 
-#: src/anduinos_control_panel/topics.py:272
+#: src/anduinos_control_panel/topics.py:299
 msgid "System Snapshots"
 msgstr "Systemsnapshotter"
 
-#: src/anduinos_control_panel/topics.py:273
+#: src/anduinos_control_panel/topics.py:300
 msgid "Create, browse, and roll back system snapshots"
 msgstr "Skapa, bläddra i och ångra systemsnapshotter"
 
-#: src/anduinos_control_panel/topics.py:281
+#: src/anduinos_control_panel/topics.py:308
+msgid "Factory Reset"
+msgstr "Factory Reset"
+
+#: src/anduinos_control_panel/topics.py:309
+msgid "Return system files and applications to their initial state"
+msgstr "Return system files and applications to their initial state"
+
+#: src/anduinos_control_panel/topics.py:325
 msgid "Back Up Home Folder"
 msgstr "Säkerhetskopiera hemkatalogen"
 
-#: src/anduinos_control_panel/topics.py:282
+#: src/anduinos_control_panel/topics.py:326
 msgid "Protect personal files with Deja Dup backups"
 msgstr "Skydda personliga filer med Deja Dup-säkerhetskopior"
 
@@ -801,131 +1087,4 @@ msgstr "Hitta och hantera AnduinOS systeminställningar"
 
 #: data/com.anduinos.ControlPanel.desktop:65
 msgid "settings;control;system;hardware;drivers;accounts;backup;"
-msgstr ""
-"inställningar;kontroll;system;hårdvara;drivrutiner;konton;säkerhetskopiering;"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "At the end of a line, press Right Arrow or End to accept a suggestion. Press Enter to run the command."
-msgstr "Tryck på Högerpil eller End i slutet av raden för att acceptera ett förslag. Tryck på Enter för att köra kommandot."
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Bash Command Predictions"
-msgstr "Bash-kommandoförutsägelser"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Changes take effect in newly opened Bash terminals. Saved settings override legacy environment variables."
-msgstr "Ändringar gäller för nya Bash-terminaler. Sparade inställningar åsidosätter tidigare miljövariabler."
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Clear"
-msgstr "Rensa"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Clear saved learning"
-msgstr "Rensa sparad inlärning"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Clear saved learning?"
-msgstr "Rensa sparad inlärning?"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Configure your preferences below, then install to use predictions."
-msgstr "Ange inställningarna nedan och installera sedan för att använda förutsägelser."
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Could not update prediction settings: {error}"
-msgstr "Kunde inte uppdatera inställningarna för förutsägelser: {error}"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Default settings restored. Reopen Bash terminals to apply them."
-msgstr "Standardinställningarna återställda. Öppna Bash-terminalerna igen för att tillämpa dem."
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Does not delete learned data."
-msgstr "Tar inte bort inlärda data."
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Enable command predictions"
-msgstr "Aktivera kommandoförutsägelser"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Installation complete. Open a new Bash terminal to use predictions."
-msgstr "Installationen är klar. Öppna en ny Bash-terminal för att använda förutsägelser."
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Installation failed: {error}"
-msgstr "Installationen misslyckades: {error}"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Keeps Bash history and your settings. Reopen existing terminals to discard their in-memory learning."
-msgstr "Behåller Bash-historik och inställningar. Öppna befintliga terminaler igen för att kasta deras inlärning i minnet."
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Learn from command history"
-msgstr "Lär från kommandohistoriken"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Only prediction learning is removed. Your Bash command history is kept."
-msgstr "Endast förutsägelsernas inlärning tas bort. Din Bash-kommandohistorik behålls."
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Package installation could not be confirmed. Please retry."
-msgstr "Paketinstallationen kunde inte bekräftas. Försök igen."
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Predict commands locally from history and current context"
-msgstr "Förutsäg kommandon lokalt utifrån historik och aktuellt sammanhang"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Predict commands locally from your history and current context. No model download or on-device LLM is needed."
-msgstr "Förutsäg kommandon lokalt utifrån din historik och aktuellt sammanhang. Ingen modellnedladdning eller lokal LLM behövs."
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Remember my usage habits"
-msgstr "Kom ihåg mina användningsvanor"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Restore Defaults"
-msgstr "Återställ standardvärden"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Restore default settings"
-msgstr "Återställ standardinställningar"
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Save learned usage habits on this computer for predictions after closing the terminal. When off, Bash command history is still used."
-msgstr "Spara inlärda användningsvanor på den här datorn för förutsägelser efter att terminalen stängts. Bash-kommandohistoriken används fortfarande när detta är avstängt."
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Saved learning cleared. Older terminals cannot save it again; reopen them to resume learning persistence."
-msgstr "Sparad inlärning rensad. Äldre terminaler kan inte spara den igen; öppna dem igen för att återuppta sparandet."
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Show suggestions while typing in Bash."
-msgstr "Visa förslag medan du skriver i Bash."
-
-#: src/anduinos_control_panel/topics.py
-msgid "Factory Reset"
-msgstr "Factory Reset"
-
-#: src/anduinos_control_panel/topics.py
-msgid "Return system files and applications to their initial state"
-msgstr "Return system files and applications to their initial state"
-
-#: src/anduinos_control_panel/app.py
-msgid "Factory Reset Is Not Available"
-msgstr "Factory Reset Is Not Available"
-
-#: src/anduinos_control_panel/app.py
-msgid "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
-msgstr "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
-
-#: src/anduinos_control_panel/prediction_settings.py
-msgid "Use Bash history, frequency, directories, and command sequences to personalize suggestions."
-msgstr "Anpassa förslag med Bash-historik, frekvens, kataloger och kommandosekvenser."
-
-#~ msgid "Change boot menu settings"
-#~ msgstr "Ändra startmenyinställningar"
-
-#~ msgid "Authentication is required to change boot menu settings"
-#~ msgstr "Autentisering krävs för att ändra startmenyinställningar"
+msgstr "inställningar;kontroll;system;hårdvara;drivrutiner;konton;säkerhetskopiering;"

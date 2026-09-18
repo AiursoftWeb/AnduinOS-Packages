@@ -35,8 +35,24 @@ class PackageTests(unittest.TestCase):
             node.text.strip()
             for node in policy.findall(".//annotate[@key='org.freedesktop.policykit.exec.path']")
         }
-        self.assertEqual(paths, {app.BOOT_SETTINGS_HELPER})
+        self.assertEqual(paths, {
+            app.BOOT_SETTINGS_HELPER,
+            "/usr/libexec/anduinos-control-panel/software-source-helper",
+        })
         self.assertFalse(policy.findall(".//annotate[@key='org.freedesktop.policykit.exec.allow_gui']"))
+
+    def test_software_source_module_helper_and_icon_are_packaged(self):
+        package = ET.parse(ROOT / "anduinos-control-panel.aosproj")
+        includes = {
+            node.attrib.get("Include")
+            for node in package.findall(".//*[@Include]")
+        }
+        self.assertIn("src/anduinos_control_panel/software_sources.py", includes)
+        self.assertIn("scripts/software-source-helper", includes)
+        self.assertTrue((ROOT / "resources/icons/yast-upgrade.svg").is_file())
+        topic = app.get_topic("programs.software-source")
+        self.assertEqual(topic.handler, "software-source")
+        self.assertFalse(topic.command)
 
 
 class LaunchTests(unittest.TestCase):

@@ -34,6 +34,7 @@ from .model import (
     read_grub_timeouts,
 )
 from .topics import ControlPanelTopic, get_topic
+from .software_sources import SoftwareSourceWindow
 
 
 APP_ID = "com.anduinos.ControlPanel"
@@ -85,6 +86,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         self._bottles_window: Adw.Window | None = None
         self._voice_install_window: Adw.Window | None = None
         self._boot_settings_window: Adw.Window | None = None
+        self._software_source_window: Adw.Window | None = None
 
         self._install_css()
 
@@ -294,6 +296,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                 _("Programs"),
                 "gnome-software.svg",
                 [
+                    action("programs.software-source"),
                     action("programs.uninstall"),
                     action(
                         "programs.permissions",
@@ -402,6 +405,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
 
         handlers: dict[str, Callable[[], None]] = {
             "boot-settings": self._show_boot_settings,
+            "software-source": self._open_software_source,
             "voice-typing": self._open_voice_typing,
             "flatseal": self._open_flatseal,
             "bash-predictions": self._open_bash_predictions,
@@ -428,6 +432,17 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             return
 
         self._show_error(_("Setting not found"), topic.title)
+
+    def _open_software_source(self) -> None:
+        if self._software_source_window is None:
+            self._software_source_window = SoftwareSourceWindow(self)
+
+            def closed(*_args) -> bool:
+                self._software_source_window = None
+                return False
+
+            self._software_source_window.connect("close-request", closed)
+        self._software_source_window.present()
 
     def _append_category(
         self,
