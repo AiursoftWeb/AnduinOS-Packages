@@ -1919,3 +1919,27 @@ msgstr "Reset and Restart"
 
 msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
 msgstr "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "Διαγραφή αρχείων χρήστη"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Η επαναφορά εργοστασιακών ρυθμίσεων θα επαναφέρει τα αρχεία συστήματος, τα εγκατεστημένα πακέτα και τις ρυθμίσεις συστήματος στην αρχική κατάσταση New OS. Πρώτα θα δημιουργηθεί ένα στιγμιότυπο ασφαλείας του τρέχοντος συστήματος. Στη συνέχεια θα προετοιμαστεί η ανάκτηση και αυτός ο υπολογιστής θα επανεκκινηθεί αυτόματα εντός 60 δευτερολέπτων."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "Προετοιμασία επαναφοράς εργοστασιακών ρυθμίσεων…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "Διατηρούνται, εκτός αν επιλέξετε παρακάτω τη διαγραφή τους"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "Μη διαθέσιμο επειδή το εργοστασιακό σημείο ανάκτησης Home λείπει ή έχει καταστραφεί."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "Επαναφορά του Home στην αρχική κατάσταση μετά την εγκατάσταση και διαγραφή του ιστορικού στιγμιοτύπων Home. Η ενέργεια δεν μπορεί να αναιρεθεί μετά την επιβεβαίωση της ανάκτησης."

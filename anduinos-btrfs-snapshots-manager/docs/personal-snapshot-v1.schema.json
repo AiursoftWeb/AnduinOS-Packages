@@ -11,7 +11,7 @@
   "properties": {
     "schema_version": { "const": 1 },
     "id": { "type": "string", "format": "uuid" },
-    "kind": { "enum": ["manual", "automatic", "imported"] },
+    "kind": { "enum": ["manual", "automatic", "imported", "factory"] },
     "state": { "enum": ["creating", "ready", "broken", "deleting"] },
     "created_at": { "type": "string", "format": "date-time" },
     "title": { "type": "string", "minLength": 1, "maxLength": 120 },
@@ -36,6 +36,15 @@
     {
       "if": { "properties": { "state": { "const": "ready" } }, "required": ["state"] },
       "then": { "properties": { "snapshot_uuid": { "type": "string", "format": "uuid" } } }
+    },
+    {
+      "if": { "properties": { "kind": { "const": "factory" } }, "required": ["kind"] },
+      "then": {
+        "properties": {
+          "title": { "const": "New OS Home" },
+          "pinned": { "const": true }
+        }
+      }
     }
   ]
 }

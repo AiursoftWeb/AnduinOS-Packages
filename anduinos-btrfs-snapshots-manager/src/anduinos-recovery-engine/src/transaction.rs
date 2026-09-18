@@ -10,8 +10,9 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::model::DeploymentId;
+use crate::personal::{PersonalSnapshotId, PersonalSnapshotRecord};
 
-pub const ROLLBACK_SCHEMA_VERSION: u32 = 3;
+pub const ROLLBACK_SCHEMA_VERSION: u32 = 4;
 pub const RECOVERY_PROTOCOL_VERSION: u32 = 2;
 const LEGACY_RECOVERY_PROTOCOL_VERSION: u32 = 1;
 pub const MAX_APPLY_ATTEMPTS: u32 = 3;
@@ -71,11 +72,17 @@ pub enum RecoveryCheckpoint {
     WritableTargetCreated,
     CurrentRootProtected,
     TargetRootActivated,
+    WritableHomeCreated,
+    CurrentHomeProtected,
+    TargetHomeActivated,
     BootedUnconfirmedRecorded,
     RevertStarted,
     RestoredRootMovedAside,
     FallbackRootActivated,
     DiscardedRootDeleted,
+    RestoredHomeMovedAside,
+    FallbackHomeActivated,
+    DiscardedHomeDeleted,
     RevertedRecorded,
 }
 
@@ -88,11 +95,17 @@ impl RecoveryCheckpoint {
             Self::WritableTargetCreated => "writable-target-created",
             Self::CurrentRootProtected => "current-root-protected",
             Self::TargetRootActivated => "target-root-activated",
+            Self::WritableHomeCreated => "writable-home-created",
+            Self::CurrentHomeProtected => "current-home-protected",
+            Self::TargetHomeActivated => "target-home-activated",
             Self::BootedUnconfirmedRecorded => "booted-unconfirmed-recorded",
             Self::RevertStarted => "revert-started",
             Self::RestoredRootMovedAside => "restored-root-moved-aside",
             Self::FallbackRootActivated => "fallback-root-activated",
             Self::DiscardedRootDeleted => "discarded-root-deleted",
+            Self::RestoredHomeMovedAside => "restored-home-moved-aside",
+            Self::FallbackHomeActivated => "fallback-home-activated",
+            Self::DiscardedHomeDeleted => "discarded-home-deleted",
             Self::RevertedRecorded => "reverted-recorded",
         }
     }
@@ -138,7 +151,36 @@ pub struct RollbackTransaction {
     pub recovery_initramfs_sha256: String,
     pub recovery_confirm_sha256: String,
     pub grub_entry_id: String,
+    pub reset_home: bool,
+    pub factory_home_snapshot_id: Option<PersonalSnapshotId>,
+    pub factory_home_snapshot_uuid: Option<String>,
     pub failure: Option<String>,
+}
+
+#[derive(Deserialize)]
+struct LegacyRollbackTransactionV3 {
+    #[serde(rename = "schema_version")]
+    _schema_version: u32,
+    id: RollbackId,
+    target_deployment_id: DeploymentId,
+    fallback_deployment_id: DeploymentId,
+    phase: RollbackPhase,
+    created_at: DateTime<Utc>,
+    updated_at: DateTime<Utc>,
+    recovery_protocol_version: u32,
+    initramfs_attempts: u32,
+    initramfs_boot_id: Option<String>,
+    checkpoint: Option<RecoveryCheckpoint>,
+    checkpoint_at: Option<DateTime<Utc>>,
+    apply_attempts: u32,
+    applying_boot_id: Option<String>,
+    root_filesystem_uuid: String,
+    kernel_release: String,
+    recovery_kernel_sha256: String,
+    recovery_initramfs_sha256: String,
+    recovery_confirm_sha256: String,
+    grub_entry_id: String,
+    failure: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -234,6 +276,9 @@ impl LegacyRollbackTransactionV1 {
             recovery_initramfs_sha256: "0".repeat(64),
             recovery_confirm_sha256: "0".repeat(64),
             grub_entry_id: self.grub_entry_id,
+            reset_home: false,
+            factory_home_snapshot_id: None,
+            factory_home_snapshot_uuid: None,
             failure: if cancel_before_apply {
                 Some(
                     "The pending rollback was safely cancelled while upgrading the recovery protocol"
@@ -280,6 +325,9 @@ impl LegacyRollbackTransactionV2 {
             recovery_initramfs_sha256: self.recovery_initramfs_sha256,
             recovery_confirm_sha256: "0".repeat(64),
             grub_entry_id: self.grub_entry_id,
+            reset_home: false,
+            factory_home_snapshot_id: None,
+            factory_home_snapshot_uuid: None,
             failure: if cancel_before_apply {
                 Some(
                     "The pending rollback was safely cancelled while upgrading the recovery protocol"
@@ -288,6 +336,37 @@ impl LegacyRollbackTransactionV2 {
             } else {
                 self.failure
             },
+        }
+    }
+}
+
+impl LegacyRollbackTransactionV3 {
+    fn migrate(self) -> RollbackTransaction {
+        RollbackTransaction {
+            schema_version: ROLLBACK_SCHEMA_VERSION,
+            id: self.id,
+            target_deployment_id: self.target_deployment_id,
+            fallback_deployment_id: self.fallback_deployment_id,
+            phase: self.phase,
+            created_at: self.created_at,
+            updated_at: self.updated_at,
+            recovery_protocol_version: self.recovery_protocol_version,
+            initramfs_attempts: self.initramfs_attempts,
+            initramfs_boot_id: self.initramfs_boot_id,
+            checkpoint: self.checkpoint,
+            checkpoint_at: self.checkpoint_at,
+            apply_attempts: self.apply_attempts,
+            applying_boot_id: self.applying_boot_id,
+            root_filesystem_uuid: self.root_filesystem_uuid,
+            kernel_release: self.kernel_release,
+            recovery_kernel_sha256: self.recovery_kernel_sha256,
+            recovery_initramfs_sha256: self.recovery_initramfs_sha256,
+            recovery_confirm_sha256: self.recovery_confirm_sha256,
+            grub_entry_id: self.grub_entry_id,
+            reset_home: false,
+            factory_home_snapshot_id: None,
+            factory_home_snapshot_uuid: None,
+            failure: self.failure,
         }
     }
 }
@@ -325,8 +404,27 @@ impl RollbackTransaction {
             recovery_initramfs_sha256: recovery_initramfs_sha256.into(),
             recovery_confirm_sha256: recovery_confirm_sha256.into(),
             grub_entry_id: format!("anduinos-btrfs-snapshots-manager-{id}"),
+            reset_home: false,
+            factory_home_snapshot_id: None,
+            factory_home_snapshot_uuid: None,
             failure: None,
         }
+    }
+
+    pub fn enable_home_reset(
+        &mut self,
+        factory_home: &PersonalSnapshotRecord,
+    ) -> Result<(), TransactionError> {
+        let snapshot_uuid = factory_home.snapshot_uuid.clone().ok_or_else(|| {
+            TransactionError::new(
+                TransactionErrorCode::InvalidRecord,
+                "The factory Home baseline has no snapshot UUID",
+            )
+        })?;
+        self.reset_home = true;
+        self.factory_home_snapshot_id = Some(factory_home.id);
+        self.factory_home_snapshot_uuid = Some(snapshot_uuid);
+        self.validate()
     }
 
     pub fn record_initramfs_entry(
@@ -461,6 +559,14 @@ impl RollbackTransaction {
         format!("@root.snapshots-manager-new-{}", self.id)
     }
 
+    pub fn old_home_name(&self) -> String {
+        format!("@home.snapshots-manager-old-{}", self.id)
+    }
+
+    pub fn new_home_name(&self) -> String {
+        format!("@home.snapshots-manager-new-{}", self.id)
+    }
+
     pub fn validate(&self) -> Result<(), TransactionError> {
         if self.schema_version != ROLLBACK_SCHEMA_VERSION {
             return Err(TransactionError::new(
@@ -476,6 +582,20 @@ impl RollbackTransaction {
                 TransactionErrorCode::InvalidRecord,
                 "Rollback target and fallback must be different deployments",
             ));
+        }
+        match (
+            self.reset_home,
+            self.factory_home_snapshot_id,
+            self.factory_home_snapshot_uuid.as_deref(),
+        ) {
+            (false, None, None) => {}
+            (true, Some(_), Some(uuid)) => validate_uuid(uuid, "factory Home snapshot UUID")?,
+            _ => {
+                return Err(TransactionError::new(
+                    TransactionErrorCode::InvalidRecord,
+                    "Factory Home reset identity is incomplete or unexpectedly present",
+                ));
+            }
         }
         validate_uuid(&self.root_filesystem_uuid, "root filesystem UUID")?;
         validate_kernel_release(&self.kernel_release)?;
@@ -751,7 +871,9 @@ impl TransactionStore {
                 .map(LegacyRollbackTransactionV1::migrate),
             2 => serde_json::from_value::<LegacyRollbackTransactionV2>(value)
                 .map(LegacyRollbackTransactionV2::migrate),
-            3 => serde_json::from_value::<RollbackTransaction>(value),
+            3 => serde_json::from_value::<LegacyRollbackTransactionV3>(value)
+                .map(LegacyRollbackTransactionV3::migrate),
+            4 => serde_json::from_value::<RollbackTransaction>(value),
             other => {
                 return Err(TransactionError::new(
                     TransactionErrorCode::UnsupportedSchema,
@@ -1103,6 +1225,14 @@ mod tests {
             transaction.new_root_name(),
             format!("@root.snapshots-manager-new-{}", transaction.id)
         );
+        assert_eq!(
+            transaction.old_home_name(),
+            format!("@home.snapshots-manager-old-{}", transaction.id)
+        );
+        assert_eq!(
+            transaction.new_home_name(),
+            format!("@home.snapshots-manager-new-{}", transaction.id)
+        );
     }
 
     #[test]
@@ -1253,6 +1383,29 @@ mod tests {
                 .bytes()
                 .all(|byte| byte == b'0')
         );
+    }
+
+    #[test]
+    fn v3_transaction_migrates_without_inventing_home_erasure() {
+        let environment = TestStore::new();
+        let current = transaction();
+        let mut legacy = serde_json::to_value(&current).unwrap();
+        let object = legacy.as_object_mut().unwrap();
+        object.insert("schema_version".into(), 3.into());
+        object.remove("reset_home");
+        object.remove("factory_home_snapshot_id");
+        object.remove("factory_home_snapshot_uuid");
+        fs::write(
+            environment.root.join("transactions/pending-rollback.json"),
+            serde_json::to_vec(&legacy).unwrap(),
+        )
+        .unwrap();
+
+        let migrated = environment.store().load_pending().unwrap().unwrap();
+        assert_eq!(migrated.schema_version, ROLLBACK_SCHEMA_VERSION);
+        assert!(!migrated.reset_home);
+        assert!(migrated.factory_home_snapshot_id.is_none());
+        assert!(migrated.factory_home_snapshot_uuid.is_none());
     }
 
     #[test]

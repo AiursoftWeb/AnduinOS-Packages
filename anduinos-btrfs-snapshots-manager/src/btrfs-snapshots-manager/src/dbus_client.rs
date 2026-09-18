@@ -66,6 +66,8 @@ pub struct RecoveryEngineStatus {
     pub system_sizes: std::collections::HashMap<String, snapshots_manager_common::SnapshotSpace>,
     #[serde(default)]
     pub personal_sizes: std::collections::HashMap<String, snapshots_manager_common::SnapshotSpace>,
+    #[serde(default)]
+    pub factory_home_available: bool,
 }
 
 #[derive(Debug, Clone, serde::Deserialize)]
@@ -589,6 +591,29 @@ impl SnapshotsManagerHelperClient {
             anyhow::bail!(result);
         }
         Ok(())
+    }
+
+    pub fn check_factory_reset_readiness(&self, id: String, reset_home: bool) -> Result<()> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call("CheckFactoryResetReadiness", &(id, reset_home))
+            .context("Failed to check factory reset prerequisites")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
+    }
+
+    pub fn schedule_factory_reset(&self, id: String, reset_home: bool) -> Result<(bool, String)> {
+        let proxy = zbus::blocking::Proxy::new(
+            &self.connection,
+            DBUS_SERVICE_NAME,
+            DBUS_OBJECT_PATH,
+            DBUS_INTERFACE_NAME,
+        )?;
+        proxy
+            .call("ScheduleFactoryReset", &(id, reset_home))
+            .context("Failed to schedule factory reset")
     }
 
     pub fn cancel_deployment_restore(&self) -> Result<(bool, String)> {

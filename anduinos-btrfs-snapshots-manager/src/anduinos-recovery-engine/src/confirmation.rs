@@ -13,6 +13,7 @@ use crate::lineage::{ActivationOutcome, LineageStore};
 #[cfg(test)]
 use crate::model::DeploymentState;
 use crate::model::{DeploymentId, DeploymentRecord};
+use crate::personal::PersonalSnapshotEngine;
 use crate::store::DeploymentStore;
 use crate::transaction::{RollbackId, RollbackPhase, RollbackTransaction, TransactionStore};
 
@@ -78,6 +79,12 @@ pub trait ConfirmationBackend {
     fn kernel_release(&self) -> Result<String, ConfirmationError>;
     fn requested_rollback(&self) -> Result<Option<RollbackId>, ConfirmationError>;
     fn current_snapshot_parent_uuid(&self) -> Result<String, ConfirmationError>;
+    fn current_home_snapshot_parent_uuid(&self) -> Result<String, ConfirmationError> {
+        Err(ConfirmationError::new(
+            ConfirmationErrorCode::IdentityMismatch,
+            "The running Home subvolume identity is unavailable",
+        ))
+    }
     fn update_transaction(
         &self,
         transaction: &RollbackTransaction,
@@ -113,6 +120,9 @@ pub trait ConfirmationBackend {
         transaction: &RollbackTransaction,
         outcome: ActivationOutcome,
     ) -> Result<(), ConfirmationError>;
+    fn purge_personal_history(&self) -> Result<(), ConfirmationError> {
+        Ok(())
+    }
 }
 
 #[derive(Clone, Copy, Debug, Default)]
@@ -181,6 +191,20 @@ impl ConfirmationBackend for SystemConfirmationBackend {
         parse_parent_uuid(&output)
     }
 
+    fn current_home_snapshot_parent_uuid(&self) -> Result<String, ConfirmationError> {
+        let output = run_command(
+            Path::new(BTRFS),
+            &[
+                OsStr::new("subvolume"),
+                OsStr::new("show"),
+                OsStr::new("--raw"),
+                OsStr::new("/home"),
+            ],
+            "inspecting the running Home subvolume",
+        )?;
+        parse_parent_uuid(&output)
+    }
+
     fn update_transaction(
         &self,
         transaction: &RollbackTransaction,
@@ -227,7 +251,16 @@ impl ConfirmationBackend for SystemConfirmationBackend {
             ],
             "mounting the Btrfs top level for old-root cleanup",
         )?;
-        let result = cleanup_old_root_at(top, &record.old_root_name);
+        let result = cleanup_old_root_at(top, &record.old_root_name).and_then(|outcome| {
+            let Some(name) = record.old_home_name.as_deref() else {
+                return Ok(outcome);
+            };
+            let home_outcome = cleanup_old_home_at(top, name)?;
+            match outcome {
+                OldRootCleanupOutcome::Removed => Ok(home_outcome),
+                deferred @ OldRootCleanupOutcome::Deferred { .. } => Ok(deferred),
+            }
+        });
         let unmount = run_command(
             Path::new(UMOUNT),
             &[top.as_os_str()],
@@ -311,6 +344,18 @@ impl ConfirmationBackend for SystemConfirmationBackend {
                 ConfirmationError::new(
                     ConfirmationErrorCode::StateCommit,
                     format!("Could not update system history: {error}"),
+                )
+            })
+    }
+
+    fn purge_personal_history(&self) -> Result<(), ConfirmationError> {
+        PersonalSnapshotEngine::default()
+            .purge_user_history(&layout::inspect_current())
+            .map(|_| ())
+            .map_err(|error| {
+                ConfirmationError::new(
+                    ConfirmationErrorCode::StateCommit,
+                    format!("Could not erase personal snapshot history: {error}"),
                 )
             })
     }
@@ -412,6 +457,23 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
                 "The running root is not a writable snapshot of the rollback target",
             ));
         }
+        if transaction.reset_home {
+            let expected_home_parent = transaction
+                .factory_home_snapshot_uuid
+                .as_deref()
+                .ok_or_else(|| {
+                    ConfirmationError::new(
+                        ConfirmationErrorCode::InvalidTransaction,
+                        "The factory Home reset has no baseline UUID",
+                    )
+                })?;
+            if self.backend.current_home_snapshot_parent_uuid()? != expected_home_parent {
+                return Err(ConfirmationError::new(
+                    ConfirmationErrorCode::IdentityMismatch,
+                    "The running Home is not a writable snapshot of the factory baseline",
+                ));
+            }
+        }
         Ok(())
     }
 
@@ -421,6 +483,9 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
     ) -> Result<bool, ConfirmationError> {
         self.backend
             .record_lineage_activation(transaction, ActivationOutcome::Confirmed)?;
+        if transaction.reset_home {
+            self.backend.purge_personal_history()?;
+        }
         self.backend.schedule_old_root_cleanup(transaction)?;
         self.backend.clear_once()?;
         self.backend.archive_transaction(transaction)?;
@@ -507,7 +572,33 @@ pub fn cleanup_old_root_at(
     top_level: &Path,
     old_root_name: &str,
 ) -> Result<OldRootCleanupOutcome, ConfirmationError> {
-    validate_old_root_name(old_root_name)?;
+    cleanup_old_subvolume_at(
+        top_level,
+        old_root_name,
+        "@root.snapshots-manager-old-",
+        false,
+    )
+}
+
+fn cleanup_old_home_at(
+    top_level: &Path,
+    old_home_name: &str,
+) -> Result<OldRootCleanupOutcome, ConfirmationError> {
+    cleanup_old_subvolume_at(
+        top_level,
+        old_home_name,
+        "@home.snapshots-manager-old-",
+        true,
+    )
+}
+
+fn cleanup_old_subvolume_at(
+    top_level: &Path,
+    old_root_name: &str,
+    expected_prefix: &str,
+    delete_nonempty_descendants: bool,
+) -> Result<OldRootCleanupOutcome, ConfirmationError> {
+    validate_cleanup_name(old_root_name, expected_prefix)?;
     let old_root = top_level.join(old_root_name);
     match fs::symlink_metadata(&old_root) {
         Ok(metadata) if metadata.file_type().is_dir() => {}
@@ -566,7 +657,7 @@ pub fn cleanup_old_root_at(
                 format!("Could not inspect an old-root descendant subvolume: {error}"),
             )
         })?;
-        if entries.next().is_some() {
+        if !delete_nonempty_descendants && entries.next().is_some() {
             blocked.push(path_to_record(&relative)?);
             continue;
         }
@@ -603,8 +694,8 @@ pub fn cleanup_old_root_at(
     Ok(OldRootCleanupOutcome::Removed)
 }
 
-fn validate_old_root_name(value: &str) -> Result<(), ConfirmationError> {
-    let Some(id) = value.strip_prefix("@root.snapshots-manager-old-") else {
+fn validate_cleanup_name(value: &str, expected_prefix: &str) -> Result<(), ConfirmationError> {
+    let Some(id) = value.strip_prefix(expected_prefix) else {
         return Err(ConfirmationError::new(
             ConfirmationErrorCode::InvalidTransaction,
             "The root cleanup target has an invalid name",
@@ -871,6 +962,7 @@ mod tests {
     use super::*;
     use crate::DEPLOYMENT_SCHEMA_VERSION;
     use crate::model::{DeploymentKind, DeploymentRecord};
+    use crate::personal::PersonalSnapshotId;
 
     const BOOT: &str = "aaaaaaaa-1111-4222-8333-bbbbbbbbbbbb";
     const SNAPSHOT: &str = "cccccccc-1111-4222-8333-dddddddddddd";
@@ -885,6 +977,7 @@ mod tests {
         records: HashMap<DeploymentId, DeploymentRecord>,
         boot_id: String,
         parent_uuid: String,
+        home_parent_uuid: String,
         requested: Option<RollbackId>,
         archived: Vec<RollbackTransaction>,
         cleanups: Vec<RootCleanupRecord>,
@@ -925,6 +1018,7 @@ mod tests {
                         records,
                         boot_id: BOOT.into(),
                         parent_uuid: SNAPSHOT.into(),
+                        home_parent_uuid: SNAPSHOT.into(),
                         requested: None,
                         archived: Vec::new(),
                         cleanups: Vec::new(),
@@ -970,6 +1064,11 @@ mod tests {
         fn current_snapshot_parent_uuid(&self) -> Result<String, ConfirmationError> {
             self.call("parent-uuid");
             Ok(self.inner.lock().unwrap().parent_uuid.clone())
+        }
+
+        fn current_home_snapshot_parent_uuid(&self) -> Result<String, ConfirmationError> {
+            self.call("home-parent-uuid");
+            Ok(self.inner.lock().unwrap().home_parent_uuid.clone())
         }
 
         fn update_transaction(
@@ -1082,6 +1181,11 @@ mod tests {
             self.call(&format!("lineage-{outcome:?}"));
             Ok(())
         }
+
+        fn purge_personal_history(&self) -> Result<(), ConfirmationError> {
+            self.call("purge-personal-history");
+            Ok(())
+        }
     }
 
     fn record(kind: DeploymentKind, state: DeploymentState) -> DeploymentRecord {
@@ -1154,6 +1258,67 @@ mod tests {
             .position(|call| call == "regenerate-grub")
             .unwrap();
         assert!(removed < grub && grub < deleted);
+    }
+
+    #[test]
+    fn confirmed_factory_home_reset_verifies_home_then_purges_personal_history() {
+        let (backend, mut transaction) = FakeBackend::booted();
+        transaction.reset_home = true;
+        transaction.factory_home_snapshot_id = Some(PersonalSnapshotId::new());
+        transaction.factory_home_snapshot_uuid = Some(SNAPSHOT.into());
+        transaction.validate().unwrap();
+        backend.inner.lock().unwrap().transaction = Some(transaction);
+
+        assert_eq!(
+            ConfirmationEngine::new(backend.clone())
+                .reconcile()
+                .unwrap(),
+            ConfirmationOutcome::Confirmed
+        );
+        let inner = backend.inner.lock().unwrap();
+        let verified = inner
+            .calls
+            .iter()
+            .position(|call| call == "home-parent-uuid")
+            .unwrap();
+        let purged = inner
+            .calls
+            .iter()
+            .position(|call| call == "purge-personal-history")
+            .unwrap();
+        let cleanup = inner
+            .calls
+            .iter()
+            .position(|call| call == "schedule-old-root-cleanup")
+            .unwrap();
+        assert!(verified < purged && purged < cleanup);
+    }
+
+    #[test]
+    fn factory_home_identity_mismatch_prevents_confirmation_and_erasure() {
+        let (backend, mut transaction) = FakeBackend::booted();
+        transaction.reset_home = true;
+        transaction.factory_home_snapshot_id = Some(PersonalSnapshotId::new());
+        transaction.factory_home_snapshot_uuid = Some(SNAPSHOT.into());
+        backend.inner.lock().unwrap().transaction = Some(transaction);
+        backend.inner.lock().unwrap().home_parent_uuid = BOOT.into();
+
+        assert_eq!(
+            ConfirmationEngine::new(backend.clone())
+                .reconcile()
+                .unwrap_err()
+                .code,
+            ConfirmationErrorCode::IdentityMismatch
+        );
+        assert!(
+            !backend
+                .inner
+                .lock()
+                .unwrap()
+                .calls
+                .iter()
+                .any(|call| call == "purge-personal-history")
+        );
     }
 
     #[test]

@@ -1919,3 +1919,27 @@ msgstr "重置并重启"
 
 msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
 msgstr "“New OS” 是安装时创建的原始系统状态。删除后，将无法再把 AnduinOS 重置到初始状态；除非重新安装操作系统，否则无法撤销。此操作不会删除您的个人文件。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "抹除用户文件"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "恢复出厂设置会将系统文件、已安装的软件包和系统设置还原到最初的 New OS 状态。系统会先为当前状态创建一个安全快照，然后准备恢复，并在 60 秒内自动重启。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "正在准备恢复出厂设置…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "保留，除非您在下方选择抹除"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "不可用，因为出厂 Home 恢复点缺失或已损坏。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "将 Home 恢复到安装完成时的初始状态，并抹除 Home 快照历史。恢复确认后无法撤销。"

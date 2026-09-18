@@ -1919,3 +1919,27 @@ msgstr "Reset and Restart"
 
 msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
 msgstr "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "उपयोगकर्ता फ़ाइलें मिटाएँ"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "फ़ैक्टरी रीसेट सिस्टम फ़ाइलों, इंस्टॉल किए गए पैकेजों और सिस्टम सेटिंग्स को मूल New OS स्थिति में पुनर्स्थापित करेगा। पहले मौजूदा सिस्टम का एक सुरक्षा स्नैपशॉट बनाया जाएगा। इसके बाद पुनर्प्राप्ति तैयार की जाएगी और यह कंप्यूटर 60 सेकंड के भीतर अपने आप पुनः आरंभ होगा।"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "फ़ैक्टरी रीसेट तैयार किया जा रहा है…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "जब तक आप नीचे उन्हें मिटाने का विकल्प नहीं चुनते, तब तक सुरक्षित रहेंगी"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "उपलब्ध नहीं है क्योंकि फ़ैक्टरी Home पुनर्प्राप्ति बिंदु गुम या क्षतिग्रस्त है।"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "Home को इंस्टॉलेशन के बाद की प्रारंभिक स्थिति में पुनर्स्थापित करें और Home स्नैपशॉट इतिहास मिटाएँ। पुनर्प्राप्ति की पुष्टि होने के बाद इसे पूर्ववत नहीं किया जा सकता।"

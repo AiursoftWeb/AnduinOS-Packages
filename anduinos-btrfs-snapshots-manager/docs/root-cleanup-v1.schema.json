@@ -25,6 +25,10 @@
       "type": "string",
       "pattern": "^@root\\.snapshots-manager-old-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
     },
+    "old_home_name": {
+      "type": "string",
+      "pattern": "^@home\\.snapshots-manager-old-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    },
     "created_at": { "type": "string", "format": "date-time" },
     "updated_at": { "type": "string", "format": "date-time" },
     "attempts": { "type": "integer", "minimum": 0 },

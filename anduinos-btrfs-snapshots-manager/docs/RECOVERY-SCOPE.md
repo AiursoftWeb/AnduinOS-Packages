@@ -2,7 +2,11 @@
 
 Disk Snapshots Manager has two independent local snapshot streams and no combined rollback:
 System Recovery owns `@root`; Personal Files Recovery owns `@home`. A system
-rollback never changes `@home`, and a Home snapshot never becomes a boot target.
+normal rollback never changes `@home`, and a user-created Home snapshot never
+becomes a boot target. The sole exception is the installer-owned factory Home
+baseline: factory reset may switch `@home` to that baseline only when the user
+explicitly selects **Erase user files**. That switch runs in initramfs with the
+same protected-old-subvolume and automatic-revert guarantees as `@root`.
 
 ## Personal Files are read by descriptor, never written by root
 

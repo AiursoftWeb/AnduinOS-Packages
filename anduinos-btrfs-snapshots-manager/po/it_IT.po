@@ -1919,3 +1919,27 @@ msgstr "Reset and Restart"
 
 msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
 msgstr "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "Cancella i file dell’utente"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Il ripristino delle impostazioni di fabbrica riporterà i file di sistema, i pacchetti installati e le impostazioni di sistema allo stato New OS originale. Verrà prima creata un’istantanea di sicurezza del sistema corrente. Il ripristino verrà quindi predisposto e il computer si riavvierà automaticamente entro 60 secondi."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "Preparazione del ripristino delle impostazioni di fabbrica…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "Verranno conservati a meno che non si scelga di cancellarli qui sotto"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "Non disponibile perché il punto di ripristino di fabbrica di Home è mancante o danneggiato."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "Ripristina Home allo stato iniziale successivo all’installazione e cancella la cronologia delle istantanee di Home. L’operazione non può essere annullata dopo la conferma del ripristino."

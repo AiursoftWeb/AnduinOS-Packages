@@ -1919,3 +1919,27 @@ msgstr "Reset and Restart"
 
 msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
 msgstr "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "Xóa tệp của người dùng"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Khôi phục cài đặt gốc sẽ đưa các tệp hệ thống, gói đã cài đặt và cài đặt hệ thống về trạng thái New OS ban đầu. Trước tiên, hệ thống sẽ tạo một ảnh chụp nhanh an toàn của trạng thái hiện tại. Sau đó, quá trình khôi phục sẽ được chuẩn bị và máy tính này sẽ tự động khởi động lại trong vòng 60 giây."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "Đang chuẩn bị khôi phục cài đặt gốc…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "Được giữ lại trừ khi bạn chọn xóa chúng bên dưới"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "Không khả dụng vì điểm khôi phục Home gốc bị thiếu hoặc hỏng."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "Khôi phục Home về trạng thái ban đầu sau khi cài đặt và xóa lịch sử ảnh chụp nhanh Home. Không thể hoàn tác sau khi quá trình khôi phục được xác nhận."

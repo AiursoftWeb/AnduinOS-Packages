@@ -1,9 +1,10 @@
 //! Independent personal-file snapshots and descriptor-confined recovery.
 //!
-//! Personal snapshots deliberately have no deployment/boot state. Restoring a
-//! system deployment must never select, replace, or delete `@home`; this module
-//! owns a separate history whose only recovery operation is exporting content
-//! through already-open read-only descriptors.
+//! User-created personal snapshots deliberately have no deployment/boot state.
+//! Their only recovery operation is exporting content through already-open
+//! read-only descriptors. The installer-owned factory Home baseline is hidden
+//! from that history and may be selected only by the dedicated, explicit
+//! factory-reset transaction.
 
 use std::ffi::{CStr, OsString};
 use std::fmt;
@@ -65,7 +66,10 @@ pub enum PersonalSnapshotKind {
     Manual,
     Automatic,
     Imported,
+    Factory,
 }
+
+pub const FACTORY_HOME_TITLE: &str = "New OS Home";
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -109,6 +113,13 @@ impl PersonalSnapshotRecord {
                 return Err(PersonalError::invalid("invalid personal schedule identity"));
             }
             _ => {}
+        }
+        if self.kind == PersonalSnapshotKind::Factory
+            && (!self.pinned || self.title != FACTORY_HOME_TITLE)
+        {
+            return Err(PersonalError::invalid(
+                "factory Home snapshots must keep their protected identity",
+            ));
         }
         for value in [
             self.snapshot_uuid.as_deref(),
@@ -177,6 +188,12 @@ pub struct PersonalDiscoveryIssue {
 pub enum ScheduledPersonalSnapshotOutcome {
     Created(Box<PersonalSnapshotRecord>),
     NotDue,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum FactoryHomeSnapshotOutcome {
+    Created(Box<PersonalSnapshotRecord>),
+    Existing(Box<PersonalSnapshotRecord>),
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -264,6 +281,51 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
             pinned,
             PersonalSnapshotKind::Manual,
         )
+    }
+
+    /// Create the installer-owned pristine Home baseline, or return the
+    /// existing healthy baseline when installation finalization is retried.
+    pub fn create_factory_if_missing(
+        &self,
+        layout: &LayoutReport,
+    ) -> Result<FactoryHomeSnapshotOutcome, PersonalError> {
+        ensure_supported(layout)?;
+        self.ensure_directories()?;
+        let operation_lock = StoreLock::acquire(&self.personal_root().join("operation.lock"))?;
+        let discovery = self.discover();
+        if !discovery.issues.is_empty() {
+            return Err(PersonalError::invalid(
+                "Home recovery storage contains unresolved metadata issues",
+            ));
+        }
+        let existing = discovery
+            .snapshots
+            .iter()
+            .filter(|record| record.kind == PersonalSnapshotKind::Factory)
+            .collect::<Vec<_>>();
+        match existing.as_slice() {
+            [record] => {
+                let record = self.verify(layout, record.id)?;
+                return Ok(FactoryHomeSnapshotOutcome::Existing(Box::new(record)));
+            }
+            [] => {}
+            _ => {
+                return Err(PersonalError::invalid(
+                    "More than one factory Home baseline is registered",
+                ));
+            }
+        }
+        self.ensure_space()?;
+        self.create_locked(
+            FACTORY_HOME_TITLE,
+            "Initial AnduinOS Home",
+            None,
+            true,
+            PersonalSnapshotKind::Factory,
+            operation_lock,
+        )
+        .map(Box::new)
+        .map(FactoryHomeSnapshotOutcome::Created)
     }
 
     pub fn create_scheduled(
@@ -539,6 +601,12 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
                 "Only ready personal snapshots can change protection",
             ));
         }
+        if record.kind == PersonalSnapshotKind::Factory {
+            return Err(PersonalError::new(
+                PersonalErrorCode::Protected,
+                "The factory Home baseline cannot be unpinned",
+            ));
+        }
         record.pinned = pinned;
         self.write_record(&record)?;
         Ok(record)
@@ -558,6 +626,12 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
             return Err(PersonalError::new(
                 PersonalErrorCode::InvalidInput,
                 "Only ready personal snapshots can be renamed",
+            ));
+        }
+        if record.kind == PersonalSnapshotKind::Factory {
+            return Err(PersonalError::new(
+                PersonalErrorCode::Protected,
+                "The factory Home baseline cannot be renamed",
             ));
         }
         record.title = title.trim().to_string();
@@ -666,9 +740,48 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
     ) -> Result<(), PersonalError> {
         ensure_supported(layout)?;
         let _operation_lock = StoreLock::acquire(&self.personal_root().join("operation.lock"))?;
+        self.delete_locked(id, false)
+    }
+
+    /// Permanently remove every user-created Home history point after a
+    /// factory reset has booted successfully. The factory baseline itself is
+    /// never included.
+    pub fn purge_user_history(&self, layout: &LayoutReport) -> Result<usize, PersonalError> {
+        ensure_supported(layout)?;
+        self.ensure_directories()?;
+        let _operation_lock = StoreLock::acquire(&self.personal_root().join("operation.lock"))?;
+        let discovery = self.discover();
+        if !discovery.issues.is_empty() {
+            return Err(PersonalError::invalid(
+                "Home recovery storage contains unresolved metadata issues",
+            ));
+        }
+        let ids = discovery
+            .snapshots
+            .iter()
+            .filter(|record| record.kind != PersonalSnapshotKind::Factory)
+            .map(|record| record.id)
+            .collect::<Vec<_>>();
+        for id in &ids {
+            self.delete_locked(*id, true)?;
+        }
+        Ok(ids.len())
+    }
+
+    fn delete_locked(
+        &self,
+        id: PersonalSnapshotId,
+        allow_protected: bool,
+    ) -> Result<(), PersonalError> {
         let _browse_lock = StoreLock::acquire_nonblocking(&self.browse_lock_path(id))?;
         let mut record = self.load(id)?;
-        if !record.can_delete() {
+        if record.kind == PersonalSnapshotKind::Factory {
+            return Err(PersonalError::new(
+                PersonalErrorCode::Protected,
+                "The factory Home baseline cannot be deleted",
+            ));
+        }
+        if !allow_protected && !record.can_delete() {
             return Err(PersonalError::new(
                 PersonalErrorCode::Protected,
                 "Personal snapshot is protected",
@@ -1498,6 +1611,12 @@ mod tests {
                 fs::create_dir(Path::new(&arguments[4])).unwrap();
                 ""
             } else if is_subvolume
+                && arguments.get(1).and_then(|value| value.to_str()) == Some("delete")
+            {
+                let target = arguments.last().unwrap();
+                fs::remove_dir_all(Path::new(target)).unwrap();
+                ""
+            } else if is_subvolume
                 && arguments.get(1).and_then(|value| value.to_str()) == Some("show")
             {
                 "UUID: aaaaaaaa-1111-4222-8333-aaaaaaaaaaaa\nParent UUID: bbbbbbbb-1111-4222-8333-aaaaaaaaaaaa\n"
@@ -1599,6 +1718,50 @@ mod tests {
                 && call.get(3) == Some(&home.as_os_str().to_owned())
         }));
         drop(calls);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn factory_home_baseline_is_unique_protected_and_excluded_from_history_purge() {
+        let root = temporary_root("factory-home");
+        let home = root.join("home");
+        let store = root.join("store");
+        fs::create_dir(&home).unwrap();
+        fs::create_dir(&store).unwrap();
+        let engine = PersonalSnapshotEngine::new(&home, &store, RecordingRunner::default());
+        let created = engine
+            .create_factory_if_missing(&supported_layout())
+            .unwrap();
+        let FactoryHomeSnapshotOutcome::Created(created) = created else {
+            panic!("the first call must create the factory Home baseline");
+        };
+        assert_eq!(created.kind, PersonalSnapshotKind::Factory);
+        assert_eq!(created.title, FACTORY_HOME_TITLE);
+        assert!(created.pinned);
+
+        let existing = engine
+            .create_factory_if_missing(&supported_layout())
+            .unwrap();
+        let FactoryHomeSnapshotOutcome::Existing(existing) = existing else {
+            panic!("a provisioning retry must reuse the factory Home baseline");
+        };
+        assert_eq!(existing.id, created.id);
+        assert_eq!(
+            engine
+                .delete(&supported_layout(), created.id)
+                .unwrap_err()
+                .code,
+            PersonalErrorCode::Protected
+        );
+
+        let user_snapshot = engine
+            .create_manual(&supported_layout(), "Before cleanup", "User history", true)
+            .unwrap();
+        assert_eq!(engine.purge_user_history(&supported_layout()).unwrap(), 1);
+        let discovery = engine.discover();
+        assert_eq!(discovery.snapshots.len(), 1);
+        assert_eq!(discovery.snapshots[0].id, created.id);
+        assert!(engine.load(user_snapshot.id).is_err());
         fs::remove_dir_all(root).unwrap();
     }
 

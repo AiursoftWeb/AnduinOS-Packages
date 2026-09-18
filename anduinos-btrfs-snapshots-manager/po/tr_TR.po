@@ -1919,3 +1919,27 @@ msgstr "Reset and Restart"
 
 msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
 msgstr "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "Kullanıcı dosyalarını sil"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Fabrika ayarlarına sıfırlama; sistem dosyalarını, yüklü paketleri ve sistem ayarlarını ilk New OS durumuna geri yükler. Önce mevcut sistemin bir güvenlik anlık görüntüsü oluşturulur. Ardından kurtarma hazırlanır ve bu bilgisayar 60 saniye içinde otomatik olarak yeniden başlatılır."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "Fabrika ayarlarına sıfırlama hazırlanıyor…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "Aşağıdan silmeyi seçmediğiniz sürece korunur"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "Fabrika Home kurtarma noktası eksik veya hasarlı olduğundan kullanılamıyor."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "Home'u kurulumdan sonraki ilk durumuna geri yükleyin ve Home anlık görüntü geçmişini silin. Kurtarma onaylandıktan sonra bu işlem geri alınamaz."

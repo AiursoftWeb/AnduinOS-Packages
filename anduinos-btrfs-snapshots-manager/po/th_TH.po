@@ -1919,3 +1919,27 @@ msgstr "Reset and Restart"
 
 msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
 msgstr "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "ลบไฟล์ของผู้ใช้"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "การรีเซ็ตเป็นค่าโรงงานจะคืนค่าไฟล์ระบบ แพ็กเกจที่ติดตั้ง และการตั้งค่าระบบกลับสู่สถานะ New OS เริ่มต้น ระบบจะสร้างสแนปช็อตความปลอดภัยของระบบปัจจุบันก่อน จากนั้นจะเตรียมการกู้คืนและคอมพิวเตอร์เครื่องนี้จะรีสตาร์ตโดยอัตโนมัติภายใน 60 วินาที"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "กำลังเตรียมการรีเซ็ตเป็นค่าโรงงาน…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "จะเก็บไว้ เว้นแต่คุณจะเลือกให้ลบด้านล่าง"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "ไม่พร้อมใช้งานเนื่องจากจุดกู้คืน Home จากโรงงานสูญหายหรือเสียหาย"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "คืนค่า Home เป็นสถานะเริ่มต้นหลังการติดตั้งและลบประวัติสแนปช็อตของ Home การดำเนินการนี้ไม่สามารถย้อนกลับได้หลังจากยืนยันการกู้คืน"

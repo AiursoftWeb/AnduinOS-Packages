@@ -103,10 +103,11 @@ and constructs every command itself.
 - Initial recovery point: after all target-system configuration and optional
   package changes have completed, every Btrfs installation invokes the target
   Disk Snapshots Manager before leaving the chroot. The manager idempotently
-  creates exactly one pinned, read-only `@root` snapshot named `New OS`, using
-  the target's installed default kernel rather than the Live kernel. Automatic
-  cleanup cannot remove, rename, or unpin this factory snapshot. Restoring it
-  replaces only the system root and preserves `@home`. A missing transitional
+  creates exactly one pinned, read-only `@root` snapshot named `New OS` and one
+  hidden, pinned initial `@home` baseline, using the target's installed default
+  kernel rather than the Live kernel. Automatic cleanup cannot remove, rename,
+  or unpin either factory baseline. Factory reset preserves `@home` by default;
+  the user may explicitly restore the initial Home baseline. A missing transitional
   package or a snapshot-creation failure is a visible installation warning,
   not a reason to discard an otherwise bootable installed system.
 - Software: refreshing package indexes and installing available updates is

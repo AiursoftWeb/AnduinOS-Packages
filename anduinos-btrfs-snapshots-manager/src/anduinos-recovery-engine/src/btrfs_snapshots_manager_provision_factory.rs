@@ -4,6 +4,7 @@ use anduinos_recovery_engine::{
     layout,
     model::DeploymentKind,
     operations::{FactorySnapshotOutcome, OperationEngine},
+    personal::{FactoryHomeSnapshotOutcome, PersonalSnapshotEngine, PersonalSnapshotKind},
     store::DeploymentStore,
 };
 
@@ -25,32 +26,54 @@ fn main() -> ExitCode {
 }
 
 fn provision() -> ExitCode {
-    match OperationEngine::default().create_factory_if_missing(
-        &layout::inspect_current(),
-        |_, _, message| {
-            eprintln!("{message}");
-        },
-    ) {
-        Ok(FactorySnapshotOutcome::Created(record)) => {
-            println!("created {}", record.id);
-            ExitCode::SUCCESS
-        }
-        Ok(FactorySnapshotOutcome::Existing(record)) => {
-            println!("existing {}", record.id);
-            ExitCode::SUCCESS
-        }
+    let layout = layout::inspect_current();
+    let root = OperationEngine::default().create_factory_if_missing(&layout, |_, _, message| {
+        eprintln!("{message}");
+    });
+    let root = match root {
+        Ok(FactorySnapshotOutcome::Created(record)) => ("created", record.id),
+        Ok(FactorySnapshotOutcome::Existing(record)) => ("existing", record.id),
         Err(error) => {
             eprintln!("Could not provision factory recovery: {error}");
-            ExitCode::FAILURE
+            return ExitCode::FAILURE;
         }
-    }
+    };
+    let home = match PersonalSnapshotEngine::default().create_factory_if_missing(&layout) {
+        Ok(FactoryHomeSnapshotOutcome::Created(record)) => ("created", record.id),
+        Ok(FactoryHomeSnapshotOutcome::Existing(record)) => ("existing", record.id),
+        Err(error) => {
+            eprintln!("Could not provision factory Home recovery: {error}");
+            return ExitCode::FAILURE;
+        }
+    };
+    println!("root {} {}; home {} {}", root.0, root.1, home.0, home.1);
+    ExitCode::SUCCESS
 }
 
-fn check() -> ExitCode {
+fn check_home(layout: &layout::LayoutReport) -> Result<String, String> {
+    let engine = PersonalSnapshotEngine::default();
+    let report = engine.discover();
+    if !report.issues.is_empty() {
+        return Err("Factory Home recovery metadata has unresolved issues".into());
+    }
+    let factories = report
+        .snapshots
+        .iter()
+        .filter(|record| record.kind == PersonalSnapshotKind::Factory)
+        .collect::<Vec<_>>();
+    let [factory] = factories.as_slice() else {
+        return Err("Exactly one factory Home recovery point is required".into());
+    };
+    engine
+        .verify(layout, factory.id)
+        .map(|record| record.id.to_string())
+        .map_err(|error| format!("Factory Home recovery verification failed: {error}"))
+}
+
+fn check_root(layout: &layout::LayoutReport) -> Result<String, String> {
     let report = DeploymentStore::default().discover();
     if !report.issues.is_empty() {
-        eprintln!("Factory recovery metadata has unresolved issues");
-        return ExitCode::FAILURE;
+        return Err("Factory recovery metadata has unresolved issues".into());
     }
     let factories = report
         .deployments
@@ -58,20 +81,31 @@ fn check() -> ExitCode {
         .filter(|record| record.kind == DeploymentKind::Factory)
         .collect::<Vec<_>>();
     let [factory] = factories.as_slice() else {
-        eprintln!("Exactly one factory recovery point is required");
-        return ExitCode::FAILURE;
+        return Err("Exactly one factory recovery point is required".into());
     };
     if !factory.pinned || !factory.can_restore() {
-        eprintln!("The factory recovery point is not healthy and protected");
-        return ExitCode::FAILURE;
+        return Err("The factory recovery point is not healthy and protected".into());
     }
-    match OperationEngine::default().check_available(&layout::inspect_current(), factory.id) {
-        Ok(_) => {
-            println!("ready {}", factory.id);
+    OperationEngine::default()
+        .check_available(layout, factory.id)
+        .map(|record| record.id.to_string())
+        .map_err(|error| format!("Factory recovery verification failed: {error}"))
+}
+
+fn check() -> ExitCode {
+    let layout = layout::inspect_current();
+    match (check_root(&layout), check_home(&layout)) {
+        (Ok(root), Ok(home)) => {
+            println!("ready root {root}; home {home}");
             ExitCode::SUCCESS
         }
-        Err(error) => {
-            eprintln!("Factory recovery verification failed: {error}");
+        (root, home) => {
+            if let Err(error) = root {
+                eprintln!("{error}");
+            }
+            if let Err(error) = home {
+                eprintln!("{error}");
+            }
             ExitCode::FAILURE
         }
     }

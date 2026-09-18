@@ -191,7 +191,7 @@ class EnsureSnapshotsManagerStep:
 
 @dataclass
 class CreateFactorySnapshotStep:
-    """Create the protected initial Btrfs system recovery point."""
+    """Create the protected initial Btrfs system and Home recovery points."""
 
     runner: CommandRunner
     id: str = "create-factory-snapshot"
@@ -209,14 +209,14 @@ class CreateFactorySnapshotStep:
         if not context.values.get("snapshots_manager_installed"):
             raise StepWarning(
                 "Disk Snapshots Manager is unavailable; the initial system "
-                "recovery point was not created"
+                "and Home recovery points were not created"
             )
         target = _target(context)
         provisioner = target / FACTORY_PROVISIONER.lstrip("/")
         if not provisioner.is_file():
             raise StepWarning(
                 "Disk Snapshots Manager does not provide factory recovery "
-                "provisioning; the initial system recovery point was not created"
+                "provisioning; the initial system and Home recovery points were not created"
             )
         result = self.runner.run(
             ("chroot", str(target), FACTORY_PROVISIONER),
@@ -225,7 +225,7 @@ class CreateFactorySnapshotStep:
         context.values["factory_snapshot_ready"] = True
         detail = result.stdout.strip()
         context.log(
-            "Initial system recovery point: "
+            "Initial system and Home recovery points: "
             + (detail if detail else "New OS is ready")
         )
 
@@ -237,7 +237,7 @@ class CreateFactorySnapshotStep:
             ("chroot", str(target), FACTORY_PROVISIONER, "--check"),
             timeout=300,
         )
-        context.log("Initial system recovery point verification: ready")
+        context.log("Initial system and Home recovery point verification: ready")
 
     def cleanup(self, context: InstallContext) -> None:
         return None

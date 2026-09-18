@@ -14,9 +14,10 @@ use crate::coordination::TransactionStartLock;
 use crate::layout::{self, LayoutReport};
 #[cfg(test)]
 use crate::model::DeploymentState;
-use crate::model::{DeploymentId, DeploymentRecord};
+use crate::model::{DeploymentId, DeploymentKind, DeploymentRecord};
 use crate::operations::OperationEngine;
 use crate::package_transaction::PackageTransactionStore;
+use crate::personal::{PersonalSnapshotEngine, PersonalSnapshotKind, PersonalSnapshotRecord};
 use crate::secure_boot::SecureBootValidator;
 use crate::transaction::{RollbackPhase, RollbackTransaction, TransactionStore};
 
@@ -102,6 +103,15 @@ pub trait RollbackBackend {
     fn pending(&self) -> Result<Option<RollbackTransaction>, RollbackError>;
     fn package_transaction_pending(&self) -> Result<bool, RollbackError>;
     fn verify_target(&self, id: DeploymentId) -> Result<DeploymentRecord, RollbackError>;
+    fn verify_factory_home(
+        &self,
+        _report: &LayoutReport,
+    ) -> Result<PersonalSnapshotRecord, RollbackError> {
+        Err(RollbackError::new(
+            RollbackErrorCode::InvalidTarget,
+            "The factory Home baseline is unavailable",
+        ))
+    }
     fn check_fallback_capacity(&self, report: &LayoutReport) -> Result<(), RollbackError>;
     fn create_fallback(&self) -> Result<DeploymentRecord, RollbackError>;
     fn root_filesystem_uuid(&self, report: &LayoutReport) -> Result<String, RollbackError>;
@@ -155,6 +165,37 @@ impl RollbackBackend for SystemRollbackBackend {
                 )
             })?;
         Ok(record)
+    }
+
+    fn verify_factory_home(
+        &self,
+        report: &LayoutReport,
+    ) -> Result<PersonalSnapshotRecord, RollbackError> {
+        let engine = PersonalSnapshotEngine::default();
+        let discovery = engine.discover();
+        if !discovery.issues.is_empty() {
+            return Err(RollbackError::new(
+                RollbackErrorCode::InvalidTarget,
+                "Factory Home recovery metadata has unresolved issues",
+            ));
+        }
+        let factories = discovery
+            .snapshots
+            .iter()
+            .filter(|record| record.kind == PersonalSnapshotKind::Factory)
+            .collect::<Vec<_>>();
+        let [factory] = factories.as_slice() else {
+            return Err(RollbackError::new(
+                RollbackErrorCode::InvalidTarget,
+                "Exactly one factory Home baseline is required",
+            ));
+        };
+        engine.verify(report, factory.id).map_err(|error| {
+            RollbackError::new(
+                RollbackErrorCode::InvalidTarget,
+                format!("Factory Home baseline verification failed: {error}"),
+            )
+        })
     }
 
     fn check_fallback_capacity(&self, report: &LayoutReport) -> Result<(), RollbackError> {
@@ -288,14 +329,33 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
     /// before asking the user for final confirmation. `schedule` deliberately
     /// repeats the same boundary because system state can change meanwhile.
     pub fn check_ready(&self, target_id: DeploymentId) -> Result<DeploymentRecord, RollbackError> {
-        let (target, _, _) = self.validate_ready(target_id)?;
+        let (target, _, _, _) = self.validate_ready(target_id, false, false)?;
+        Ok(target)
+    }
+
+    pub fn check_factory_reset_ready(
+        &self,
+        target_id: DeploymentId,
+        reset_home: bool,
+    ) -> Result<DeploymentRecord, RollbackError> {
+        let (target, _, _, _) = self.validate_ready(target_id, true, reset_home)?;
         Ok(target)
     }
 
     fn validate_ready(
         &self,
         target_id: DeploymentId,
-    ) -> Result<(DeploymentRecord, LayoutReport, String), RollbackError> {
+        factory_reset: bool,
+        reset_home: bool,
+    ) -> Result<
+        (
+            DeploymentRecord,
+            LayoutReport,
+            String,
+            Option<PersonalSnapshotRecord>,
+        ),
+        RollbackError,
+    > {
         if self.backend.pending()?.is_some() {
             return Err(RollbackError::new(
                 RollbackErrorCode::AlreadyPending,
@@ -322,16 +382,52 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
                 "Only a complete, healthy system snapshot can be scheduled",
             ));
         }
+        if factory_reset && target.kind != DeploymentKind::Factory {
+            return Err(RollbackError::new(
+                RollbackErrorCode::InvalidTarget,
+                "Factory reset requires the installer-owned factory recovery point",
+            ));
+        }
+        let factory_home = if reset_home {
+            Some(self.backend.verify_factory_home(&report)?)
+        } else {
+            None
+        };
         let root_uuid = self.backend.root_filesystem_uuid(&report)?;
         self.backend.check_fallback_capacity(&report)?;
         self.backend.verify_recovery_boot_source()?;
         self.backend.verify_one_shot_support()?;
-        Ok((target, report, root_uuid))
+        Ok((target, report, root_uuid, factory_home))
     }
 
     pub fn schedule<F>(
         &self,
         target_id: DeploymentId,
+        progress: F,
+    ) -> Result<RollbackTransaction, RollbackError>
+    where
+        F: FnMut(RollbackProgressPhase, f64, &str),
+    {
+        self.schedule_internal(target_id, false, false, progress)
+    }
+
+    pub fn schedule_factory_reset<F>(
+        &self,
+        target_id: DeploymentId,
+        reset_home: bool,
+        progress: F,
+    ) -> Result<RollbackTransaction, RollbackError>
+    where
+        F: FnMut(RollbackProgressPhase, f64, &str),
+    {
+        self.schedule_internal(target_id, true, reset_home, progress)
+    }
+
+    fn schedule_internal<F>(
+        &self,
+        target_id: DeploymentId,
+        factory_reset: bool,
+        reset_home: bool,
         mut progress: F,
     ) -> Result<RollbackTransaction, RollbackError>
     where
@@ -342,7 +438,8 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
             0.02,
             "Checking the recovery target",
         );
-        let (target, _report, root_uuid) = self.validate_ready(target_id)?;
+        let (target, _report, root_uuid, factory_home) =
+            self.validate_ready(target_id, factory_reset, reset_home)?;
         let recovery_boot = self.backend.provision_recovery_boot_artifacts()?;
 
         progress(
@@ -360,6 +457,11 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
             recovery_boot.initramfs_sha256,
             recovery_boot.confirm_sha256,
         );
+        if let Some(factory_home) = factory_home.as_ref() {
+            transaction
+                .enable_home_reset(factory_home)
+                .map_err(transaction_error)?;
+        }
         let result = (|| {
             progress(
                 RollbackProgressPhase::RecordTransaction,
@@ -612,9 +714,9 @@ mod tests {
     use chrono::Utc;
 
     use super::*;
-    use crate::DEPLOYMENT_SCHEMA_VERSION;
     use crate::layout::{LayoutSupport, MountReport};
     use crate::model::{DeploymentKind, DeploymentRecord};
+    use crate::{DEPLOYMENT_SCHEMA_VERSION, PERSONAL_SNAPSHOT_SCHEMA_VERSION};
 
     #[derive(Clone)]
     struct FakeBackend {
@@ -627,6 +729,7 @@ mod tests {
         package_pending: bool,
         calls: Vec<String>,
         fail_once: Option<String>,
+        factory_home: Option<PersonalSnapshotRecord>,
     }
 
     impl FakeBackend {
@@ -643,6 +746,7 @@ mod tests {
                         package_pending: false,
                         calls: Vec::new(),
                         fail_once: None,
+                        factory_home: None,
                     })),
                 },
                 target_id,
@@ -691,6 +795,24 @@ mod tests {
                 .get(&id)
                 .cloned()
                 .ok_or_else(|| RollbackError::new(RollbackErrorCode::InvalidTarget, "missing"))
+        }
+
+        fn verify_factory_home(
+            &self,
+            _report: &LayoutReport,
+        ) -> Result<PersonalSnapshotRecord, RollbackError> {
+            self.hit("verify-factory-home")?;
+            self.inner
+                .lock()
+                .unwrap()
+                .factory_home
+                .clone()
+                .ok_or_else(|| {
+                    RollbackError::new(
+                        RollbackErrorCode::InvalidTarget,
+                        "missing factory Home baseline",
+                    )
+                })
         }
 
         fn check_fallback_capacity(&self, _report: &LayoutReport) -> Result<(), RollbackError> {
@@ -824,6 +946,23 @@ mod tests {
         }
     }
 
+    fn factory_home() -> PersonalSnapshotRecord {
+        PersonalSnapshotRecord {
+            schema_version: PERSONAL_SNAPSHOT_SCHEMA_VERSION,
+            id: crate::personal::PersonalSnapshotId::new(),
+            kind: PersonalSnapshotKind::Factory,
+            state: crate::personal::PersonalSnapshotState::Ready,
+            created_at: Utc::now(),
+            title: crate::personal::FACTORY_HOME_TITLE.into(),
+            reason: "Initial AnduinOS Home".into(),
+            schedule_id: None,
+            snapshot_uuid: Some("99999999-1111-4222-8333-aaaaaaaaaaaa".into()),
+            snapshot_parent_uuid: None,
+            pinned: true,
+            failure: None,
+        }
+    }
+
     #[test]
     fn schedule_arms_only_after_fallback_transaction_and_grub_verification() {
         let (backend, target) = FakeBackend::new();
@@ -859,6 +998,55 @@ mod tests {
             .position(|call| call == "create-fallback")
             .unwrap();
         assert!(capability < fallback);
+    }
+
+    #[test]
+    fn factory_reset_binds_home_only_when_erasure_is_explicitly_requested() {
+        let (backend, target) = FakeBackend::new();
+        {
+            let mut inner = backend.inner.lock().unwrap();
+            let target = inner.records.get_mut(&target).unwrap();
+            target.kind = DeploymentKind::Factory;
+            target.title = crate::model::FACTORY_DEPLOYMENT_TITLE.into();
+            target.pinned = true;
+            inner.factory_home = Some(factory_home());
+        }
+        let transaction = RollbackCoordinator::new(backend.clone())
+            .schedule_factory_reset(target, true, |_phase, _fraction, _message| {})
+            .unwrap();
+        let expected = backend.inner.lock().unwrap().factory_home.clone().unwrap();
+        assert!(transaction.reset_home);
+        assert_eq!(transaction.factory_home_snapshot_id, Some(expected.id));
+        assert_eq!(
+            transaction.factory_home_snapshot_uuid,
+            expected.snapshot_uuid
+        );
+    }
+
+    #[test]
+    fn factory_reset_without_home_erasure_does_not_require_a_home_baseline() {
+        let (backend, target) = FakeBackend::new();
+        {
+            let mut inner = backend.inner.lock().unwrap();
+            let target = inner.records.get_mut(&target).unwrap();
+            target.kind = DeploymentKind::Factory;
+            target.title = crate::model::FACTORY_DEPLOYMENT_TITLE.into();
+            target.pinned = true;
+        }
+        let transaction = RollbackCoordinator::new(backend.clone())
+            .schedule_factory_reset(target, false, |_phase, _fraction, _message| {})
+            .unwrap();
+        assert!(!transaction.reset_home);
+        assert!(transaction.factory_home_snapshot_id.is_none());
+        assert!(
+            !backend
+                .inner
+                .lock()
+                .unwrap()
+                .calls
+                .iter()
+                .any(|call| call == "verify-factory-home")
+        );
     }
 
     #[test]

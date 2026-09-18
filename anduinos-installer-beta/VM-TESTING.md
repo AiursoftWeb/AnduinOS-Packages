@@ -69,10 +69,12 @@ firmware for arm64.
 10. Kernel, initramfs and GRUB artifacts agree. The fallback EFI loader exists
     for UEFI rows.
 11. Every Btrfs row contains exactly one healthy, pinned system snapshot named
-    `New OS`; rerunning the factory provisioner reports the same snapshot and
-    creates no duplicate. Classic filesystem rows contain no factory snapshot.
-    Restoring `New OS` returns the system root to its installed state while a
-    marker created in the user's Home directory remains unchanged.
+    `New OS` and one hidden, pinned factory Home baseline; rerunning the factory
+    provisioner reports the same pair and creates no duplicate. Classic
+    filesystem rows contain no factory snapshots. A normal factory reset keeps
+    a marker created in Home. Repeating it with **Erase user files** removes the
+    marker and Home snapshot history, while an interrupted boot restores both
+    the previous root and Home subvolumes.
 
 For Secure Boot rows, also require:
 

@@ -6,9 +6,9 @@ use anduinos_recovery_engine::{
     confirmation::ConfirmationEngine,
     layout,
     model::{DeploymentId, DeploymentKind, DeploymentState},
-    operations::{OperationEngine, ScheduledSnapshotOutcome},
+    operations::{OperationEngine, ScheduledSnapshotOutcome, SystemCommandRunner},
     personal::{
-        PersonalSnapshotEngine, PersonalSnapshotId, PersonalSnapshotState,
+        PersonalSnapshotEngine, PersonalSnapshotId, PersonalSnapshotKind, PersonalSnapshotState,
         ScheduledPersonalSnapshotOutcome,
     },
     rollback::RollbackCoordinator,
@@ -1453,6 +1453,89 @@ impl SnapshotsManagerHelper {
         }
     }
 
+    /// Validate a factory reset, optionally including the installer-owned Home baseline.
+    async fn check_factory_reset_readiness(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        deployment_id: String,
+        reset_home: bool,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_RESTORE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_RESTORE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match deployment_id.parse::<DeploymentId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid factory snapshot ID: {error}")),
+        };
+        match RollbackCoordinator::default().check_factory_reset_ready(id, reset_home) {
+            Ok(_) => (true, "Factory reset prerequisites are ready".into()),
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "check_factory_reset_readiness",
+                    &deployment_id,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
+        }
+    }
+
+    /// Schedule the dedicated factory reset transaction. Ordinary restore never resets Home.
+    async fn schedule_factory_reset(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        deployment_id: String,
+        reset_home: bool,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_RESTORE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_RESTORE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match deployment_id.parse::<DeploymentId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid factory snapshot ID: {error}")),
+        };
+        match RollbackCoordinator::default().schedule_factory_reset(
+            id,
+            reset_home,
+            |_phase, _fraction, _message| {},
+        ) {
+            Ok(transaction) => match serde_json::to_string(&transaction) {
+                Ok(json) => {
+                    audit::log_operation(
+                        uid,
+                        pid,
+                        "schedule_factory_reset",
+                        &deployment_id,
+                        true,
+                        None,
+                    );
+                    (true, json)
+                }
+                Err(error) => (false, format!("Could not serialize factory reset: {error}")),
+            },
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "schedule_factory_reset",
+                    &deployment_id,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
+        }
+    }
+
     /// Cancel a restore only while it is still safe to do so before reboot.
     async fn cancel_deployment_restore(
         &self,
@@ -2032,7 +2115,19 @@ impl SnapshotsManagerHelper {
                 .list()
                 .map_err(|error| anyhow::anyhow!(error.message))?;
         let deployments = DeploymentStore::new(store_root).discover();
-        let personal = PersonalSnapshotEngine::default().discover();
+        let personal_engine = PersonalSnapshotEngine::new("/home", store_root, SystemCommandRunner);
+        let mut personal = personal_engine.discover();
+        let layout = layout::inspect_current();
+        let factory_homes = personal
+            .snapshots
+            .iter()
+            .filter(|record| record.kind == PersonalSnapshotKind::Factory)
+            .collect::<Vec<_>>();
+        let factory_home_available = matches!(factory_homes.as_slice(), [record]
+            if personal_engine.verify(&layout, record.id).is_ok());
+        personal
+            .snapshots
+            .retain(|record| record.kind != PersonalSnapshotKind::Factory);
         let package_counts = deployments
             .deployments
             .iter()
@@ -2048,7 +2143,6 @@ impl SnapshotsManagerHelper {
             .collect::<std::collections::HashMap<_, _>>();
         let system_sizes = btrfs::get_system_spaces(store_root, &deployments.deployments);
         let personal_sizes = btrfs::get_personal_spaces(store_root, &personal.snapshots);
-        let layout = layout::inspect_current();
         let available = layout.is_supported();
         serde_json::to_string(&serde_json::json!({
             "schema_version": 1,
@@ -2063,6 +2157,7 @@ impl SnapshotsManagerHelper {
             "personal_snapshot_count": personal.snapshots.len(),
             "personal_snapshots": personal.snapshots,
             "personal_sizes": personal_sizes,
+            "factory_home_available": factory_home_available,
             "issues": deployments.issues,
             "personal_issues": personal.issues,
             "layout": layout,

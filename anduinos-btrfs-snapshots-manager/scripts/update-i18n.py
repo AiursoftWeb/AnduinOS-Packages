@@ -12,6 +12,9 @@ ROOT = Path(__file__).resolve().parent.parent
 CHECK = ROOT / "scripts" / "check-i18n.py"
 POT = ROOT / "po" / "anduinos-btrfs-snapshots-manager.pot"
 ZH_CN = ROOT / "po" / "zh_CN.po"
+OTHER_CATALOGS = tuple(
+    path for path in sorted((ROOT / "po").glob("*.po")) if path != ZH_CN
+)
 
 NEW_TRANSLATIONS = {
     "Checking factory reset availability…": "正在检查恢复出厂设置可用性…",
@@ -19,7 +22,12 @@ NEW_TRANSLATIONS = {
     "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it.": "此系统不支持恢复出厂设置。请重新安装 AnduinOS，并选择 Btrfs 文件系统以启用此功能。",
     "Factory Reset Is Not Ready": "恢复出厂设置尚未就绪",
     "Reset AnduinOS to Its Initial State?": "将 AnduinOS 重置为初始状态？",
-    "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds.": "恢复出厂设置会将系统文件、已安装的软件包和系统设置还原到最初的 New OS 状态。Home 中的个人文件不会改变。系统会先为当前状态创建一个安全快照，然后准备恢复，并在 60 秒内自动重启。",
+    "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds.": "恢复出厂设置会将系统文件、已安装的软件包和系统设置还原到最初的 New OS 状态。系统会先为当前状态创建一个安全快照，然后准备恢复，并在 60 秒内自动重启。",
+    "Preserved unless you choose to erase them below": "保留，除非您在下方选择抹除",
+    "Erase user files": "抹除用户文件",
+    "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed.": "将 Home 恢复到安装完成时的初始状态，并抹除 Home 快照历史。恢复确认后无法撤销。",
+    "Unavailable because the factory Home recovery point is missing or damaged.": "不可用，因为出厂 Home 恢复点缺失或已损坏。",
+    "Preparing factory reset…": "正在准备恢复出厂设置…",
     "Return to the initial New OS state": "返回初始 New OS 状态",
     "Saved as a safety snapshot before reset": "重置前将当前系统保存为安全快照",
     "Reset and Restart": "重置并重启",
@@ -391,37 +399,29 @@ def quote(value: str) -> str:
     return json.dumps(value, ensure_ascii=False)
 
 
-def header(project: str, language: str | None = None) -> list[str]:
-    lines = [
-        "msgid \"\"",
-        "msgstr \"\"",
-        quote(f"Project-Id-Version: {project}\n"),
-        quote("POT-Creation-Date: 2026-08-06 00:00+0800\n"),
-        quote("PO-Revision-Date: 2026-08-06 00:00+0800\n"),
-        quote("Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"),
-        quote("Language-Team: AnduinOS Team\n"),
-        quote("MIME-Version: 1.0\n"),
-        quote("Content-Type: text/plain; charset=UTF-8\n"),
-        quote("Content-Transfer-Encoding: 8bit\n"),
-    ]
-    if language:
-        lines.extend(
-            [
-                quote(f"Language: {language}\n"),
-                quote("Plural-Forms: nplurals=1; plural=0;\n"),
-            ]
-        )
-    return lines
-
-
-def write_catalog(path: Path, messages: dict[str, set[str]], translations=None) -> None:
-    lines = header("anduinos-btrfs-snapshots-manager 0.1.0", "zh_CN" if translations else None)
-    for message in sorted(messages, key=str.casefold):
-        lines.append("")
+def append_missing_messages(
+    path: Path,
+    messages: dict[str, set[str]],
+    translations: dict[str, str] | None = None,
+    *,
+    english_fallback: bool = False,
+) -> None:
+    existing = load_check_module().po_entries(path)
+    missing = sorted(set(messages) - set(existing), key=str.casefold)
+    if not missing:
+        return
+    lines = [path.read_text(encoding="utf-8").rstrip(), ""]
+    for message in missing:
         lines.append("#: " + " ".join(sorted(messages[message])))
         lines.append("msgid " + quote(message))
-        lines.append("msgstr " + quote(translations[message] if translations else ""))
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        translation = (
+            translations[message]
+            if translations is not None
+            else message if english_fallback else ""
+        )
+        lines.append("msgstr " + quote(translation))
+        lines.append("")
+    path.write_text("\n".join(lines), encoding="utf-8")
 
 
 def main() -> int:
@@ -442,9 +442,11 @@ def main() -> int:
     if missing:
         raise SystemExit("missing zh_CN translations:\n" + "\n".join(sorted(missing)))
 
-    write_catalog(POT, messages)
-    write_catalog(ZH_CN, messages, translations)
-    print(f"Regenerated {len(messages)} current Disk Snapshots Manager 2.0 messages")
+    append_missing_messages(POT, messages)
+    append_missing_messages(ZH_CN, messages, translations)
+    for catalog in OTHER_CATALOGS:
+        append_missing_messages(catalog, messages, english_fallback=True)
+    print(f"Updated catalogs for {len(messages)} current Disk Snapshots Manager 2.0 messages")
     return 0
 
 

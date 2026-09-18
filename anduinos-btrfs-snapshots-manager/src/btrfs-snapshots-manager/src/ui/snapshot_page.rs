@@ -20,7 +20,10 @@ const ROLLBACK_RESTART_COUNTDOWN_SECONDS: u32 = 60;
 
 #[derive(Clone, Debug)]
 enum FactoryResetPreparation {
-    Ready(SnapshotItem),
+    Ready {
+        item: SnapshotItem,
+        factory_home_available: bool,
+    },
     Unsupported,
 }
 
@@ -160,13 +163,19 @@ impl SnapshotPage {
                 let Some(target) = factory_reset_target(&status)? else {
                     return Ok(FactoryResetPreparation::Unsupported);
                 };
-                client.check_deployment_restore_readiness(target.id.clone())?;
-                Ok(FactoryResetPreparation::Ready(SnapshotItem::from(target)))
+                client.check_factory_reset_readiness(target.id.clone(), false)?;
+                Ok(FactoryResetPreparation::Ready {
+                    item: SnapshotItem::from(target),
+                    factory_home_available: status.factory_home_available,
+                })
             },
             move |parent, result| match result {
-                Ok(FactoryResetPreparation::Ready(item)) => {
+                Ok(FactoryResetPreparation::Ready {
+                    item,
+                    factory_home_available,
+                }) => {
                     if let Some(page) = weak.upgrade() {
-                        page.confirm_factory_reset_impact(&item);
+                        page.confirm_factory_reset_impact(&item, factory_home_available);
                     }
                 }
                 Ok(FactoryResetPreparation::Unsupported) => show_information(
@@ -1041,7 +1050,14 @@ impl SnapshotPage {
         run_operation(
             &parent,
             &tr("Checking rollback safety…"),
-            move || SnapshotsManagerHelperClient::new()?.verify_snapshot(id),
+            move || {
+                let client = SnapshotsManagerHelperClient::new()?;
+                let result = client.verify_snapshot(id.clone())?;
+                if result.is_valid {
+                    client.check_deployment_restore_readiness(id)?;
+                }
+                Ok(result)
+            },
             move |parent, result| match result {
                 Ok(result) if result.is_valid => {
                     if let Some(page) = weak.upgrade() {
@@ -1110,7 +1126,7 @@ impl SnapshotPage {
         dialog.present();
     }
 
-    fn confirm_factory_reset_impact(&self, item: &SnapshotItem) {
+    fn confirm_factory_reset_impact(&self, item: &SnapshotItem, factory_home_available: bool) {
         let Some(parent) = self.parent() else {
             return;
         };
@@ -1118,7 +1134,7 @@ impl SnapshotPage {
             Some(&parent),
             Some(&tr("Reset AnduinOS to Its Initial State?")),
             Some(&tr(
-                "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds.",
+                "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds.",
             )),
         );
         let list = gtk::ListBox::new();
@@ -1130,9 +1146,23 @@ impl SnapshotPage {
         ));
         list.append(&impact_row(
             &tr("Personal files"),
-            &tr("Will not change"),
+            &tr("Preserved unless you choose to erase them below"),
             "folder-documents-symbolic",
         ));
+        let erase_home_row = adw::ActionRow::new();
+        erase_home_row.set_title(&tr("Erase user files"));
+        erase_home_row.set_subtitle(&if factory_home_available {
+            tr("Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed.")
+        } else {
+            tr("Unavailable because the factory Home recovery point is missing or damaged.")
+        });
+        let erase_home = gtk::CheckButton::new();
+        erase_home.set_valign(gtk::Align::Center);
+        erase_home.set_sensitive(factory_home_available);
+        erase_home.set_active(false);
+        erase_home_row.set_activatable_widget(Some(&erase_home));
+        erase_home_row.add_suffix(&erase_home);
+        list.append(&erase_home_row);
         list.append(&impact_row(
             &tr("Current system"),
             &tr("Saved as a safety snapshot before reset"),
@@ -1153,10 +1183,39 @@ impl SnapshotPage {
             if response == "reset"
                 && let Some(page) = weak.upgrade()
             {
-                page.schedule_rollback(id.clone());
+                page.schedule_factory_reset(id.clone(), erase_home.is_active());
             }
         });
         dialog.present();
+    }
+
+    fn schedule_factory_reset(&self, id: String, reset_home: bool) {
+        let Some(parent) = self.parent() else {
+            return;
+        };
+        let weak = self.downgrade();
+        run_operation(
+            &parent,
+            &tr("Preparing factory reset…"),
+            move || {
+                let client = SnapshotsManagerHelperClient::new()?;
+                client.check_factory_reset_readiness(id.clone(), reset_home)?;
+                let result = client.schedule_factory_reset(id, reset_home)?;
+                if !result.0 {
+                    anyhow::bail!(result.1);
+                }
+                Ok(())
+            },
+            move |parent, result| match result {
+                Ok(()) => {
+                    if let Some(page) = weak.upgrade() {
+                        page.refresh();
+                    }
+                    show_rollback_ready(parent);
+                }
+                Err(problem) => show_error(parent, &problem.to_string()),
+            },
+        );
     }
 
     fn schedule_rollback(&self, id: String) {
@@ -1703,6 +1762,7 @@ mod tests {
 
     fn factory_status() -> RecoveryEngineStatus {
         RecoveryEngineStatus {
+            factory_home_available: true,
             available: true,
             deployments: vec![RecoveryDeployment {
                 id: "aaaaaaaa-1111-4222-8333-bbbbbbbbbbbb".into(),
