@@ -1943,3 +1943,43 @@ msgstr "Inte tillgängligt eftersom fabriksåterställningspunkten för Home sak
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
 msgstr "Återställ Home till det ursprungliga tillståndet efter installationen och radera historiken över Home-ögonblicksbilder. Detta kan inte ångras efter att återställningen har bekräftats."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Skydd vid lågt diskutrymme"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Minsta lediga utrymme"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Gäller automatiska ögonblicksbilder av både systemet och hemkatalogen. Ange 0 för att inaktivera."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Automatiska ögonblicksbilder är pausade"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Ögonblicksbilder av hemkatalogen väntar på mer ledigt utrymme."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Schemalagda ögonblicksbilder av hemkatalogen har pausats på grund av lågt diskutrymme. De återupptas automatiskt när utrymme finns tillgängligt."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Schemalagda ögonblicksbilder av systemet har pausats på grund av lågt diskutrymme. De återupptas automatiskt när utrymme finns tillgängligt."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Ögonblicksbilder av systemet och hemkatalogen väntar på mer ledigt utrymme."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Ögonblicksbilder av systemet väntar på mer ledigt utrymme."

@@ -1943,3 +1943,43 @@ msgstr "Ei käytettävissä, koska Homen tehdaspalautuspiste puuttuu tai on vaur
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
 msgstr "Palauta Home asennuksen jälkeiseen alkutilaan ja poista Homen tilannevedoshistoria. Tätä ei voi kumota palautuksen vahvistamisen jälkeen."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Levytilan suojaus"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Vapaan tilan vähimmäismäärä"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Koskee sekä järjestelmän että kotikansion automaattisia tilannekuvia. Poista käytöstä asettamalla arvoksi 0."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Automaattiset tilannekuvat on keskeytetty"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Kotikansion tilannekuvat odottavat lisää vapaata tilaa."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Kotikansion ajastetut tilannekuvat on keskeytetty vähäisen levytilan vuoksi. Niiden luonti jatkuu automaattisesti, kun tilaa on saatavilla."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Järjestelmän ajastetut tilannekuvat on keskeytetty vähäisen levytilan vuoksi. Niiden luonti jatkuu automaattisesti, kun tilaa on saatavilla."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Järjestelmän ja kotikansion tilannekuvat odottavat lisää vapaata tilaa."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Järjestelmän tilannekuvat odottavat lisää vapaata tilaa."

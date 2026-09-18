@@ -1943,3 +1943,43 @@ msgstr "Không khả dụng vì điểm khôi phục Home gốc bị thiếu ho�
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
 msgstr "Khôi phục Home về trạng thái ban đầu sau khi cài đặt và xóa lịch sử ảnh chụp nhanh Home. Không thể hoàn tác sau khi quá trình khôi phục được xác nhận."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Bảo vệ dung lượng đĩa"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Dung lượng trống tối thiểu"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Áp dụng cho ảnh chụp tự động của cả hệ thống và thư mục cá nhân. Đặt thành 0 để tắt."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Đã tạm dừng ảnh chụp tự động"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Ảnh chụp thư mục cá nhân đang chờ có thêm dung lượng trống."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Ảnh chụp thư mục cá nhân theo lịch đã tạm dừng do dung lượng đĩa thấp. Chúng sẽ tự động tiếp tục khi có dung lượng trống."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Ảnh chụp hệ thống theo lịch đã tạm dừng do dung lượng đĩa thấp. Chúng sẽ tự động tiếp tục khi có dung lượng trống."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Ảnh chụp hệ thống và thư mục cá nhân đang chờ có thêm dung lượng trống."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Ảnh chụp hệ thống đang chờ có thêm dung lượng trống."

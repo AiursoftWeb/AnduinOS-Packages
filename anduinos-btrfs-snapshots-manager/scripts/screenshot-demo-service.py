@@ -154,6 +154,10 @@ class ScreenshotFixture(dbus.service.Object):
     def GetSchedulerStatus(self) -> str:
         return "running"
 
+    @dbus.service.method(INTERFACE, in_signature="", out_signature="bb")
+    def GetAutomaticSpaceStatus(self):
+        return False, False
+
     @dbus.service.method(INTERFACE, in_signature="", out_signature="s")
     def GetAutomationConfig(self) -> str:
         policy = {
@@ -169,6 +173,7 @@ class ScreenshotFixture(dbus.service.Object):
         return json.dumps(
             {
                 "schema_version": 1,
+                "minimum_free_space_gib": 40,
                 "system": policy,
                 "home": policy,
                 "notifications": {

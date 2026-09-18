@@ -1943,3 +1943,43 @@ msgstr "उपलब्ध नहीं है क्योंकि फ़ै�
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
 msgstr "Home को इंस्टॉलेशन के बाद की प्रारंभिक स्थिति में पुनर्स्थापित करें और Home स्नैपशॉट इतिहास मिटाएँ। पुनर्प्राप्ति की पुष्टि होने के बाद इसे पूर्ववत नहीं किया जा सकता।"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "डिस्क स्थान सुरक्षा"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "न्यूनतम खाली स्थान"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "सिस्टम और होम फ़ोल्डर, दोनों के स्वचालित स्नैपशॉट पर लागू होता है। अक्षम करने के लिए 0 पर सेट करें।"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "स्वचालित स्नैपशॉट रुके हुए हैं"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "होम फ़ोल्डर के स्नैपशॉट अधिक खाली स्थान की प्रतीक्षा कर रहे हैं।"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "डिस्क में कम स्थान के कारण होम फ़ोल्डर के निर्धारित स्नैपशॉट रोक दिए गए हैं। स्थान उपलब्ध होने पर वे अपने आप फिर शुरू हो जाएँगे।"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "डिस्क में कम स्थान के कारण सिस्टम के निर्धारित स्नैपशॉट रोक दिए गए हैं। स्थान उपलब्ध होने पर वे अपने आप फिर शुरू हो जाएँगे।"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "सिस्टम और होम फ़ोल्डर के स्नैपशॉट अधिक खाली स्थान की प्रतीक्षा कर रहे हैं।"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "सिस्टम के स्नैपशॉट अधिक खाली स्थान की प्रतीक्षा कर रहे हैं।"

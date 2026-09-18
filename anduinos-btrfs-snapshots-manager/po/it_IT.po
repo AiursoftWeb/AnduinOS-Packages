@@ -1943,3 +1943,43 @@ msgstr "Non disponibile perché il punto di ripristino di fabbrica di Home è ma
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
 msgstr "Ripristina Home allo stato iniziale successivo all’installazione e cancella la cronologia delle istantanee di Home. L’operazione non può essere annullata dopo la conferma del ripristino."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Protezione dello spazio su disco"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Spazio libero minimo"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Si applica alle istantanee automatiche del sistema e della cartella personale. Impostare su 0 per disattivare."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Istantanee automatiche in pausa"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Le istantanee della cartella personale sono in attesa di più spazio libero."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Le istantanee pianificate della cartella personale sono state messe in pausa per mancanza di spazio su disco. Riprenderanno automaticamente quando sarà disponibile spazio."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Le istantanee pianificate del sistema sono state messe in pausa per mancanza di spazio su disco. Riprenderanno automaticamente quando sarà disponibile spazio."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Le istantanee del sistema e della cartella personale sono in attesa di più spazio libero."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Le istantanee del sistema sono in attesa di più spazio libero."

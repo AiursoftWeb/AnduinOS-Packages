@@ -1943,3 +1943,43 @@ msgstr "غير متاح لأن نقطة استرداد Home الخاصة بال�
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
 msgstr "استعادة مجلد Home إلى حالته الأولية بعد التثبيت ومحو سجل لقطات Home. لا يمكن التراجع عن ذلك بعد تأكيد الاسترداد."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "الحماية من انخفاض مساحة القرص"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "الحد الأدنى للمساحة المتاحة"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "ينطبق على اللقطات التلقائية للنظام ومجلد المنزل. اضبطه على 0 لتعطيله."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "اللقطات التلقائية متوقفة مؤقتًا"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "لقطات مجلد المنزل تنتظر توفر مساحة إضافية."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "توقفت اللقطات المجدولة لمجلد المنزل مؤقتًا بسبب انخفاض مساحة القرص. ستُستأنف تلقائيًا عند توفر المساحة."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "توقفت اللقطات المجدولة للنظام مؤقتًا بسبب انخفاض مساحة القرص. ستُستأنف تلقائيًا عند توفر المساحة."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "لقطات النظام ومجلد المنزل تنتظر توفر مساحة إضافية."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "لقطات النظام تنتظر توفر مساحة إضافية."

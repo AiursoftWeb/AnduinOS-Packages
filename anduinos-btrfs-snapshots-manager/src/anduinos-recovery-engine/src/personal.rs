@@ -1822,6 +1822,30 @@ mod tests {
     }
 
     #[test]
+    fn scheduled_personal_creation_enforces_the_configured_space_floor() {
+        let root = temporary_root("scheduled-space-floor");
+        let home = root.join("home");
+        let store = root.join("store");
+        fs::create_dir(&home).unwrap();
+        fs::create_dir(&store).unwrap();
+        let engine = PersonalSnapshotEngine::new(&home, &store, RecordingRunner::default())
+            .with_minimum_free_bytes(u64::MAX);
+        let error = engine
+            .create_scheduled_if_due(
+                &supported_layout(),
+                "home-every-two-hours",
+                "Automatic Home snapshot",
+                "Scheduled",
+                2,
+                Utc::now(),
+            )
+            .unwrap_err();
+        assert_eq!(error.code, PersonalErrorCode::InsufficientSpace);
+        assert!(engine.discover().snapshots.is_empty());
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
     fn malformed_metadata_is_quarantined_from_discovery() {
         let root = temporary_root("metadata");
         let store = root.join("store");

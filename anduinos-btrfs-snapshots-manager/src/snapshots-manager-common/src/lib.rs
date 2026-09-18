@@ -13,7 +13,10 @@ use serde::{Deserialize, Serialize};
 pub use anduinos_layout::{
     LayoutReport, LayoutSupport, MountReport, inspect_current as inspect_anduinos_layout,
 };
-pub use automation::{AUTOMATION_SCHEMA_VERSION, AutomationConfig, NotificationPolicy};
+pub use automation::{
+    AUTOMATION_SCHEMA_VERSION, AutomationConfig, DEFAULT_MINIMUM_FREE_SPACE_GIB,
+    MAXIMUM_MINIMUM_FREE_SPACE_GIB, NotificationPolicy,
+};
 pub use config::SnapshotsManagerConfig;
 pub use format::{format_bytes, format_elapsed_time};
 pub use quota::SnapshotSpace;

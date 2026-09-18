@@ -1943,3 +1943,43 @@ msgstr "Nicht verfügbar, da der werkseitige Home-Wiederherstellungspunkt fehlt 
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
 msgstr "Home auf den Zustand direkt nach der Installation zurücksetzen und den Home-Schnappschussverlauf löschen. Nach Bestätigung der Wiederherstellung kann dies nicht rückgängig gemacht werden."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Schutz bei knappem Speicherplatz"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Minimaler freier Speicherplatz"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Gilt für automatische Schnappschüsse des Systems und des Home-Verzeichnisses. Zum Deaktivieren auf 0 setzen."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Automatische Schnappschüsse pausiert"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Schnappschüsse des Home-Verzeichnisses warten auf mehr freien Speicherplatz."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Geplante Schnappschüsse des Home-Verzeichnisses wurden wegen geringen Speicherplatzes pausiert. Sie werden automatisch fortgesetzt, sobald wieder Platz verfügbar ist."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Geplante System-Schnappschüsse wurden wegen geringen Speicherplatzes pausiert. Sie werden automatisch fortgesetzt, sobald wieder Platz verfügbar ist."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Schnappschüsse des Systems und des Home-Verzeichnisses warten auf mehr freien Speicherplatz."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "System-Schnappschüsse warten auf mehr freien Speicherplatz."

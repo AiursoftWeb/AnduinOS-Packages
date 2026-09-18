@@ -17,6 +17,16 @@ OTHER_CATALOGS = tuple(
 )
 
 NEW_TRANSLATIONS = {
+    "Disk Space Protection": "磁盘空间保护",
+    "GiB": "GiB",
+    "Minimum free space": "最低可用空间",
+    "Applies to both System and Home automatic snapshots. Set to 0 to disable.": "同时适用于系统和用户目录自动快照。设为 0 可关闭此保护。",
+    "Automatic snapshots paused": "自动快照已暂停",
+    "System and Home snapshots are waiting for more free space.": "系统和用户目录快照正在等待更多可用空间。",
+    "System snapshots are waiting for more free space.": "系统快照正在等待更多可用空间。",
+    "Home snapshots are waiting for more free space.": "用户目录快照正在等待更多可用空间。",
+    "Low disk space paused scheduled system snapshots. They will resume automatically when space is available.": "磁盘可用空间不足，计划的系统快照已暂停；空间恢复后将自动继续。",
+    "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available.": "磁盘可用空间不足，计划的用户目录快照已暂停；空间恢复后将自动继续。",
     "Checking factory reset availability…": "正在检查恢复出厂设置可用性…",
     "Factory Reset Is Not Available": "无法恢复出厂设置",
     "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it.": "此系统不支持恢复出厂设置。请重新安装 AnduinOS，并选择 Btrfs 文件系统以启用此功能。",

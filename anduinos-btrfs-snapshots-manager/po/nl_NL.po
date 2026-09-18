@@ -1943,3 +1943,43 @@ msgstr "Niet beschikbaar omdat het Home-fabrieksherstelpunt ontbreekt of beschad
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
 msgstr "Herstel Home naar de oorspronkelijke toestand na installatie en wis de geschiedenis van Home-momentopnamen. Dit kan niet ongedaan worden gemaakt nadat het herstel is bevestigd."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Bescherming bij weinig schijfruimte"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Minimale vrije ruimte"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Geldt voor automatische momentopnamen van het systeem en de persoonlijke map. Stel in op 0 om uit te schakelen."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Automatische momentopnamen gepauzeerd"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Momentopnamen van de persoonlijke map wachten op meer vrije ruimte."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Geplande momentopnamen van de persoonlijke map zijn gepauzeerd wegens weinig schijfruimte. Ze worden automatisch hervat zodra er ruimte beschikbaar is."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Geplande systeemmomentopnamen zijn gepauzeerd wegens weinig schijfruimte. Ze worden automatisch hervat zodra er ruimte beschikbaar is."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Momentopnamen van het systeem en de persoonlijke map wachten op meer vrije ruimte."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Systeemmomentopnamen wachten op meer vrije ruimte."

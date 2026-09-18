@@ -2011,6 +2011,35 @@ mod tests {
     }
 
     #[test]
+    fn scheduled_system_creation_enforces_the_configured_space_floor() {
+        let environment = TestEnvironment::new();
+        let engine = OperationEngine::new(
+            &environment.system_root,
+            &environment.snapshot_root,
+            FakeRunner::new(false),
+        )
+        .with_minimum_free_bytes(u64::MAX);
+        let error = engine
+            .create_scheduled_if_due(
+                &environment.layout(),
+                "system-daily",
+                "Automatic system snapshot",
+                "Scheduled",
+                24,
+                Utc::now(),
+                |_, _, _| {},
+            )
+            .unwrap_err();
+        assert_eq!(error.code, OperationErrorCode::InsufficientSpace);
+        assert!(
+            DeploymentStore::new(&environment.snapshot_root)
+                .discover()
+                .deployments
+                .is_empty()
+        );
+    }
+
+    #[test]
     fn creates_typed_package_recovery_points() {
         let environment = TestEnvironment::new();
         let engine = OperationEngine::new(

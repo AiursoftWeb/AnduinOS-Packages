@@ -1943,3 +1943,43 @@ msgstr "ไม่พร้อมใช้งานเนื่องจากจ
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
 msgstr "คืนค่า Home เป็นสถานะเริ่มต้นหลังการติดตั้งและลบประวัติสแนปช็อตของ Home การดำเนินการนี้ไม่สามารถย้อนกลับได้หลังจากยืนยันการกู้คืน"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "การป้องกันพื้นที่ดิสก์"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "พื้นที่ว่างขั้นต่ำ"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "ใช้กับสแนปช็อตอัตโนมัติของทั้งระบบและโฟลเดอร์ส่วนตัว ตั้งค่าเป็น 0 เพื่อปิดใช้งาน"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "หยุดสแนปช็อตอัตโนมัติชั่วคราวแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "สแนปช็อตของโฟลเดอร์ส่วนตัวกำลังรอพื้นที่ว่างเพิ่มเติม"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "หยุดสแนปช็อตตามกำหนดเวลาของโฟลเดอร์ส่วนตัวชั่วคราวเนื่องจากพื้นที่ดิสก์เหลือน้อย จะกลับมาทำงานโดยอัตโนมัติเมื่อมีพื้นที่ว่าง"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "หยุดสแนปช็อตตามกำหนดเวลาของระบบชั่วคราวเนื่องจากพื้นที่ดิสก์เหลือน้อย จะกลับมาทำงานโดยอัตโนมัติเมื่อมีพื้นที่ว่าง"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "สแนปช็อตของระบบและโฟลเดอร์ส่วนตัวกำลังรอพื้นที่ว่างเพิ่มเติม"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "สแนปช็อตของระบบกำลังรอพื้นที่ว่างเพิ่มเติม"

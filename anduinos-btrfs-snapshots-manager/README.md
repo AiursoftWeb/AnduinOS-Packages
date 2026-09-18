@@ -35,6 +35,14 @@ recovery boot, and restart; the Control Panel never performs a rollback itself.
 Automatic cleanup uses explicit time buckets: keep everything in the recent window,
 then one representative per day, week, month, and year. System and Home policies
 are independent and use a configurable one-to-24-hour freshness interval.
+Scheduled System and Home creation also shares a configurable free-space floor,
+defaulting to 40 GiB. A timer run below that floor skips new automatic snapshots
+without failing, still applies retention cleanup, and never changes manual,
+package-boundary, or installer-owned factory snapshot behavior. Setting the floor
+to 0 disables this additional guard without disabling the recovery engine's own
+transaction-safety reserve. The automatic-snapshot window shows paused System
+and Home scopes. A continuous low-space episode emits at most one desktop
+notification, and the state clears after space recovers.
 
 The systemd timer remains installed and enabled even when both automatic scopes
 are off. On every run the privileged helper compares the newest snapshot with the

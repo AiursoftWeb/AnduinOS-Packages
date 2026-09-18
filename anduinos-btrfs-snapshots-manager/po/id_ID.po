@@ -1943,3 +1943,43 @@ msgstr "Tidak tersedia karena titik pemulihan pabrik Home tidak ada atau rusak."
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
 msgstr "Pulihkan Home ke keadaan awal setelah pemasangan dan hapus riwayat snapshot Home. Tindakan ini tidak dapat dibatalkan setelah pemulihan dikonfirmasi."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Perlindungan Ruang Disk"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Ruang kosong minimum"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Berlaku untuk snapshot otomatis Sistem dan folder Home. Atur ke 0 untuk menonaktifkan."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Snapshot otomatis dijeda"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Snapshot folder Home menunggu ruang kosong tambahan."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Snapshot terjadwal folder Home dijeda karena ruang disk hampir habis. Snapshot akan dilanjutkan secara otomatis saat ruang tersedia."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Snapshot sistem terjadwal dijeda karena ruang disk hampir habis. Snapshot akan dilanjutkan secara otomatis saat ruang tersedia."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Snapshot Sistem dan folder Home menunggu ruang kosong tambahan."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Snapshot sistem menunggu ruang kosong tambahan."

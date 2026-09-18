@@ -1943,3 +1943,43 @@ msgstr "Home の工場出荷時復元ポイントが見つからないか破損�
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
 msgstr "Home をインストール直後の初期状態に復元し、Home のスナップショット履歴を消去します。復元の確定後は元に戻せません。"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "ディスク空き容量の保護"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "最小空き容量"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "システムとホームの両方の自動スナップショットに適用されます。無効にするには 0 に設定してください。"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "自動スナップショットは一時停止中です"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "ホームのスナップショットは空き容量が増えるのを待っています。"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "ディスクの空き容量が少ないため、ホームの定期スナップショットを一時停止しました。空き容量が確保されると自動的に再開します。"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "ディスクの空き容量が少ないため、システムの定期スナップショットを一時停止しました。空き容量が確保されると自動的に再開します。"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "システムとホームのスナップショットは空き容量が増えるのを待っています。"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "システムのスナップショットは空き容量が増えるのを待っています。"

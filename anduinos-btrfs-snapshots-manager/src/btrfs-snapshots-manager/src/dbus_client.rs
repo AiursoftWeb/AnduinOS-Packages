@@ -785,6 +785,20 @@ impl SnapshotsManagerHelperClient {
         Ok(status)
     }
 
+    /// Return whether scheduled System and Home creation are currently paused
+    /// by the configured free-space floor.
+    pub fn get_automatic_space_status(&self) -> Result<(bool, bool)> {
+        let proxy = zbus::blocking::Proxy::new(
+            &self.connection,
+            DBUS_SERVICE_NAME,
+            DBUS_OBJECT_PATH,
+            DBUS_INTERFACE_NAME,
+        )?;
+        proxy
+            .call("GetAutomaticSpaceStatus", &())
+            .context("Failed to query automatic snapshot disk-space status")
+    }
+
     pub fn get_btrfs_filesystem_status(&self) -> Result<BtrfsFilesystemStatus> {
         let json: String = self
             .proxy()?

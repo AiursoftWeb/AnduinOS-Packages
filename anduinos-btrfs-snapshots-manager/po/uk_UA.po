@@ -1943,3 +1943,43 @@ msgstr "Недоступно: заводська точка відновленн
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
 msgstr "Відновити Home до початкового стану після встановлення та стерти історію знімків Home. Після підтвердження відновлення цю дію неможливо скасувати."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Захист вільного місця на диску"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Мінімум вільного місця"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Застосовується до автоматичних знімків системи та домашнього каталогу. Установіть 0, щоб вимкнути."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Автоматичні знімки призупинено"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Створення знімків домашнього каталогу очікує на звільнення місця."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Створення знімків домашнього каталогу за розкладом призупинено через брак місця на диску. Воно відновиться автоматично, коли з’явиться вільне місце."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Створення знімків системи за розкладом призупинено через брак місця на диску. Воно відновиться автоматично, коли з’явиться вільне місце."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Створення знімків системи та домашнього каталогу очікує на звільнення місця."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Створення знімків системи очікує на звільнення місця."
