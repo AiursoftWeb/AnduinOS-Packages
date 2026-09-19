@@ -23,9 +23,11 @@ class LocalizationTests(unittest.TestCase):
                         and node.name == "_resize_block_message")
         code = compile(ast.Module(body=[function], type_ignores=[]), "pages.py", "exec")
         source = (
-            "This NTFS volume requires a disk integrity check in Windows. "
-            "Restart into Windows and complete the disk check, then fully "
-            "shut down Windows before trying again."
+            "This NTFS volume requires a disk check. In Windows, back up "
+            "important files and run 'chkdsk X: /f' as administrator "
+            "(replace X with this volume's drive letter). If prompted, "
+            "schedule the check, then restart into Windows. Let the check "
+            "finish and fully shut down Windows before trying again."
         )
         inspection = SimpleNamespace(
             block_reason=NtfsResizeBlockReason.CHECK_REQUIRED,
@@ -40,12 +42,16 @@ class LocalizationTests(unittest.TestCase):
                 message = namespace["_resize_block_message"](inspection)
                 self.assertTrue(message)
                 self.assertNotIn("option -f", message)
+                self.assertIn("chkdsk X: /f", message)
+                self.assertNotIn("chkdsk C:", message)
                 self.assertEqual(message, _(source, language.code))
                 if language.code not in {DEFAULT_LANGUAGE, "en_GB"}:
                     self.assertNotEqual(message, source)
         self.assertEqual(_(source, "zh_CN"),
-                         "此 NTFS 分区需要在 Windows 中完成磁盘完整性检查。"
-                         "请重启并进入 Windows，完成磁盘检查后彻底关机，再重试。")
+                         "此 NTFS 分区需要磁盘检查。请进入 Windows，备份重要文件，"
+                         "以管理员身份运行“chkdsk X: /f”（将 X 替换为此分区的盘符）。"
+                         "如提示安排检查，请确认，然后重启进入 Windows。"
+                         "等待检查完成并彻底关闭 Windows 后，再重试。")
 
     def tearDown(self):
         clear_translation_cache()

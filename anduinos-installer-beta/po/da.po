@@ -1893,5 +1893,17 @@ msgid "Create initial system recovery point"
 msgstr "Opret indledende systemgendannelsespunkt"
 
 #: src/pages.py
-msgid "This NTFS volume requires a disk integrity check in Windows. Restart into Windows and complete the disk check, then fully shut down Windows before trying again."
-msgstr "Denne NTFS-diskenhed kræver en integritetskontrol i Windows. Genstart til Windows, og fuldfør diskkontrollen. Luk derefter Windows helt ned, før du prøver igen."
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "Denne NTFS-diskenhed kræver en diskkontrol. Sikkerhedskopiér vigtige filer i Windows, og kør 'chkdsk X: /f' som administrator (erstat X med denne diskenheds drevbogstav). Bekræft planlægning af kontrollen, hvis du bliver spurgt, og genstart derefter til Windows. Lad kontrollen afslutte, og luk Windows helt ned, før du prøver igen."
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "Vis reparationstrin"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "Reparationstrin"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "Denne NTFS-diskenhed kræver en diskkontrol i Windows, før størrelsen kan ændres sikkert."

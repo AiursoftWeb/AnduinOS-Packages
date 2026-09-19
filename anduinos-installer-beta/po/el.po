@@ -1893,5 +1893,17 @@ msgid "Create initial system recovery point"
 msgstr "Δημιουργία αρχικού σημείου επαναφοράς συστήματος"
 
 #: src/pages.py
-msgid "This NTFS volume requires a disk integrity check in Windows. Restart into Windows and complete the disk check, then fully shut down Windows before trying again."
-msgstr "Αυτός ο τόμος NTFS απαιτεί έλεγχο ακεραιότητας δίσκου στα Windows. Επανεκκινήστε στα Windows και ολοκληρώστε τον έλεγχο δίσκου. Έπειτα τερματίστε πλήρως τα Windows πριν δοκιμάσετε ξανά."
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "Αυτός ο τόμος NTFS απαιτεί έλεγχο δίσκου. Στα Windows, δημιουργήστε αντίγραφα ασφαλείας των σημαντικών αρχείων και εκτελέστε 'chkdsk X: /f' ως διαχειριστής (αντικαταστήστε το X με το γράμμα μονάδας αυτού του τόμου). Αν σας ζητηθεί, προγραμματίστε τον έλεγχο και επανεκκινήστε στα Windows. Περιμένετε να ολοκληρωθεί ο έλεγχος και τερματίστε πλήρως τα Windows πριν δοκιμάσετε ξανά."
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "Προβολή βημάτων επιδιόρθωσης"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "Βήματα επιδιόρθωσης"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "Αυτός ο τόμος NTFS απαιτεί έλεγχο δίσκου στα Windows πριν αλλάξει με ασφάλεια το μέγεθός του."

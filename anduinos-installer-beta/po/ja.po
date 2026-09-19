@@ -1893,5 +1893,17 @@ msgid "Create initial system recovery point"
 msgstr "初期システム復元ポイントを作成"
 
 #: src/pages.py
-msgid "This NTFS volume requires a disk integrity check in Windows. Restart into Windows and complete the disk check, then fully shut down Windows before trying again."
-msgstr "この NTFS ボリュームは、Windows でディスクの整合性を確認する必要があります。再起動して Windows を起動し、ディスクチェックを完了してください。その後、Windows を完全にシャットダウンしてから再試行してください。"
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "この NTFS ボリュームはディスクチェックが必要です。Windows で重要なファイルをバックアップし、管理者として「chkdsk X: /f」を実行してください（X はこのボリュームのドライブ文字に置き換えてください）。確認を求められたらチェックを予約し、Windows を再起動してください。チェックの完了を待ち、Windows を完全にシャットダウンしてから再試行してください。"
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "修復手順を表示"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "修復手順"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "この NTFS ボリュームのサイズを安全に変更するには、先に Windows でディスクチェックを行う必要があります。"

@@ -1893,5 +1893,17 @@ msgid "Create initial system recovery point"
 msgstr "Crear punto de recuperación inicial del sistema"
 
 #: src/pages.py
-msgid "This NTFS volume requires a disk integrity check in Windows. Restart into Windows and complete the disk check, then fully shut down Windows before trying again."
-msgstr "Este volumen NTFS requiere una comprobación de integridad del disco en Windows. Reinicie en Windows y complete la comprobación; después, apague Windows por completo antes de volver a intentarlo."
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "Este volumen NTFS requiere una comprobación del disco. En Windows, haga una copia de seguridad de los archivos importantes y ejecute 'chkdsk X: /f' como administrador (sustituya X por la letra de unidad de este volumen). Si se le solicita, programe la comprobación y reinicie en Windows. Espere a que termine y apague Windows por completo antes de volver a intentarlo."
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "Ver pasos de reparación"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "Pasos de reparación"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "Este volumen NTFS requiere una comprobación del disco en Windows antes de poder cambiar su tamaño de forma segura."

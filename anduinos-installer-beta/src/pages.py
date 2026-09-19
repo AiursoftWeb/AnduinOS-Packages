@@ -4793,7 +4793,7 @@ def build_advanced_storage_page(shared, nav_view):
         dialog.connect("response", apply_edit)
         dialog.present()
 
-    def _show_resize_blocked(heading, body):
+    def _show_resize_blocked(heading, body, *, repair_steps=None):
         failure = Gtk.Label(
             label=body,
             xalign=0,
@@ -4808,15 +4808,53 @@ def build_advanced_storage_page(shared, nav_view):
         )
         dialog.add_response("close", _("Close", lang))
         dialog.set_default_response("close")
+        dialog.set_close_response("close")
+        if repair_steps is not None:
+            dialog.add_response("repair-steps", _("View Repair Steps", lang))
+
+            def show_steps(_dialog, response):
+                if response != "repair-steps":
+                    return
+                steps = Adw.MessageDialog(
+                    transient_for=nav_view.get_root(),
+                    heading=_("Repair Steps", lang),
+                    extra_child=Gtk.Label(
+                        label=repair_steps, xalign=0, wrap=True, selectable=True,
+                    ),
+                )
+                steps.add_response("close", _("Close", lang))
+                steps.set_default_response("close")
+                steps.set_close_response("close")
+                steps.present()
+
+            dialog.connect("response", show_steps)
         dialog.present()
+
+    def _show_resize_inspection_blocked(inspection):
+        message = _resize_block_message(inspection)
+        repair_steps = None
+        if inspection.block_reason is NtfsResizeBlockReason.CHECK_REQUIRED:
+            repair_steps = message
+            message = _(
+                "This NTFS volume requires a disk check in Windows before "
+                "it can be resized safely.",
+                lang,
+            )
+        _show_resize_blocked(
+            _("This partition cannot be resized safely", lang),
+            message,
+            repair_steps=repair_steps,
+        )
 
     def _resize_block_message(inspection):
         reason = inspection.block_reason
         if reason is NtfsResizeBlockReason.CHECK_REQUIRED:
             return _(
-                "This NTFS volume requires a disk integrity check in Windows. "
-                "Restart into Windows and complete the disk check, then fully "
-                "shut down Windows before trying again.",
+                "This NTFS volume requires a disk check. In Windows, back up "
+                "important files and run 'chkdsk X: /f' as administrator "
+                "(replace X with this volume's drive letter). If prompted, "
+                "schedule the check, then restart into Windows. Let the check "
+                "finish and fully shut down Windows before trying again.",
                 lang,
             )
         if reason is NtfsResizeBlockReason.BITLOCKER:
@@ -5072,10 +5110,7 @@ def build_advanced_storage_page(shared, nav_view):
                 _queue_refresh()
                 return
             if not inspection.safe:
-                _show_resize_blocked(
-                    _("This partition cannot be resized safely", lang),
-                    _resize_block_message(inspection),
-                )
+                _show_resize_inspection_blocked(inspection)
                 _queue_refresh()
                 return
             _show_resize_dialog(partition, inspection)

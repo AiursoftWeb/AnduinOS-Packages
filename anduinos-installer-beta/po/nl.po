@@ -1893,5 +1893,17 @@ msgid "Create initial system recovery point"
 msgstr "Initieel systeemherstelpunt maken"
 
 #: src/pages.py
-msgid "This NTFS volume requires a disk integrity check in Windows. Restart into Windows and complete the disk check, then fully shut down Windows before trying again."
-msgstr "Dit NTFS-volume vereist een controle van de schijfintegriteit in Windows. Start Windows opnieuw op en voltooi de schijfcontrole. Sluit Windows daarna volledig af voordat u het opnieuw probeert."
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "Dit NTFS-volume vereist een schijfcontrole. Maak in Windows een back-up van belangrijke bestanden en voer 'chkdsk X: /f' uit als administrator (vervang X door de stationsletter van dit volume). Plan de controle als daarom wordt gevraagd en start Windows opnieuw op. Wacht tot de controle is voltooid en sluit Windows volledig af voordat u het opnieuw probeert."
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "Herstelstappen bekijken"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "Herstelstappen"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "Dit NTFS-volume vereist een schijfcontrole in Windows voordat de grootte veilig kan worden gewijzigd."

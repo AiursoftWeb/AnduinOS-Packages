@@ -1893,5 +1893,17 @@ msgid "Create initial system recovery point"
 msgstr "Tạo điểm khôi phục hệ thống ban đầu"
 
 #: src/pages.py
-msgid "This NTFS volume requires a disk integrity check in Windows. Restart into Windows and complete the disk check, then fully shut down Windows before trying again."
-msgstr "Phân vùng NTFS này cần được kiểm tra tính toàn vẹn của ổ đĩa trong Windows. Hãy khởi động lại vào Windows và hoàn tất kiểm tra ổ đĩa, sau đó tắt Windows hoàn toàn trước khi thử lại."
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "Phân vùng NTFS này cần được kiểm tra ổ đĩa. Trong Windows, hãy sao lưu các tệp quan trọng và chạy 'chkdsk X: /f' với quyền quản trị viên (thay X bằng ký tự ổ đĩa của phân vùng này). Nếu được hỏi, hãy lên lịch kiểm tra rồi khởi động lại vào Windows. Đợi kiểm tra hoàn tất và tắt Windows hoàn toàn trước khi thử lại."
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "Xem các bước sửa chữa"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "Các bước sửa chữa"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "Phân vùng NTFS này cần được kiểm tra ổ đĩa trong Windows trước khi có thể thay đổi kích thước an toàn."

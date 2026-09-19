@@ -1893,5 +1893,17 @@ msgid "Create initial system recovery point"
 msgstr "建立初始系統復原點"
 
 #: src/pages.py
-msgid "This NTFS volume requires a disk integrity check in Windows. Restart into Windows and complete the disk check, then fully shut down Windows before trying again."
-msgstr "此 NTFS 分割區需要在 Windows 中完成磁碟完整性檢查。請重新啟動並進入 Windows，完成磁碟檢查後完全關機，再重試。"
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "此 NTFS 分割區需要磁碟檢查。請進入 Windows，備份重要檔案，以系統管理員身分執行「chkdsk X: /f」（將 X 替換為此分割區的磁碟機代號）。如提示排程檢查，請確認，然後重新啟動並進入 Windows。等待檢查完成並完全關閉 Windows 後，再重試。"
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "查看修復步驟"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "修復步驟"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "此 NTFS 分割區需要先在 Windows 中完成磁碟檢查，才能安全調整大小。"

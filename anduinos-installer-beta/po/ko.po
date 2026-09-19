@@ -1893,5 +1893,17 @@ msgid "Create initial system recovery point"
 msgstr "초기 시스템 복구 지점 만들기"
 
 #: src/pages.py
-msgid "This NTFS volume requires a disk integrity check in Windows. Restart into Windows and complete the disk check, then fully shut down Windows before trying again."
-msgstr "이 NTFS 볼륨은 Windows에서 디스크 무결성 검사가 필요합니다. Windows로 다시 시작하여 디스크 검사를 완료한 다음, Windows를 완전히 종료하고 다시 시도하세요."
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "이 NTFS 볼륨은 디스크 검사가 필요합니다. Windows에서 중요한 파일을 백업하고 관리자 권한으로 'chkdsk X: /f'를 실행하세요(X를 이 볼륨의 드라이브 문자로 바꾸세요). 메시지가 표시되면 검사를 예약한 다음 Windows로 다시 시작하세요. 검사가 끝날 때까지 기다린 후 Windows를 완전히 종료하고 다시 시도하세요."
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "복구 단계 보기"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "복구 단계"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "이 NTFS 볼륨의 크기를 안전하게 변경하려면 먼저 Windows에서 디스크 검사를 해야 합니다."

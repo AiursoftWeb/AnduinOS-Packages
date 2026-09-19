@@ -1893,5 +1893,17 @@ msgid "Create initial system recovery point"
 msgstr "İlk sistem kurtarma noktasını oluştur"
 
 #: src/pages.py
-msgid "This NTFS volume requires a disk integrity check in Windows. Restart into Windows and complete the disk check, then fully shut down Windows before trying again."
-msgstr "Bu NTFS birimi için Windows'ta disk bütünlüğü denetimi gereklidir. Windows'a yeniden başlatın ve disk denetimini tamamlayın. Ardından yeniden denemeden önce Windows'u tamamen kapatın."
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "Bu NTFS birimi için disk denetimi gereklidir. Windows'ta önemli dosyaları yedekleyin ve yönetici olarak 'chkdsk X: /f' çalıştırın (X yerine bu birimin sürücü harfini yazın). İstenirse denetimi zamanlayın, ardından Windows'a yeniden başlatın. Denetimin bitmesini bekleyin ve yeniden denemeden önce Windows'u tamamen kapatın."
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "Onarım Adımlarını Görüntüle"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "Onarım Adımları"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "Bu NTFS biriminin boyutunu güvenle değiştirebilmek için önce Windows'ta disk denetimi yapılmalıdır."

@@ -1893,5 +1893,17 @@ msgid "Create initial system recovery point"
 msgstr "إنشاء نقطة استرداد النظام الأولية"
 
 #: src/pages.py
-msgid "This NTFS volume requires a disk integrity check in Windows. Restart into Windows and complete the disk check, then fully shut down Windows before trying again."
-msgstr "يتطلب قسم NTFS هذا فحص سلامة القرص في Windows. أعد التشغيل إلى Windows وأكمل فحص القرص، ثم أوقف تشغيل Windows بالكامل قبل المحاولة مجددًا."
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "يتطلب قسم NTFS هذا فحص القرص. في Windows، انسخ الملفات المهمة احتياطيًا وشغّل 'chkdsk X: /f' بصلاحيات المسؤول (استبدل X بحرف محرك هذا القسم). إذا طُلب منك جدولة الفحص، فوافق ثم أعد التشغيل إلى Windows. انتظر اكتمال الفحص وأوقف تشغيل Windows بالكامل قبل المحاولة مجددًا."
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "عرض خطوات الإصلاح"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "خطوات الإصلاح"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "يتطلب قسم NTFS هذا فحص القرص في Windows قبل تغيير حجمه بأمان."

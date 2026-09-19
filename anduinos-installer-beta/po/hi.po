@@ -1893,5 +1893,17 @@ msgid "Create initial system recovery point"
 msgstr "प्रारंभिक सिस्टम पुनर्प्राप्ति बिंदु बनाएँ"
 
 #: src/pages.py
-msgid "This NTFS volume requires a disk integrity check in Windows. Restart into Windows and complete the disk check, then fully shut down Windows before trying again."
-msgstr "इस NTFS वॉल्यूम की डिस्क अखंडता की जाँच Windows में करना आवश्यक है। पुनः आरंभ करके Windows में जाएँ और डिस्क जाँच पूरी करें। फिर दोबारा प्रयास करने से पहले Windows को पूरी तरह बंद करें।"
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "इस NTFS वॉल्यूम की डिस्क जाँच आवश्यक है। Windows में महत्वपूर्ण फ़ाइलों का बैकअप लें और व्यवस्थापक के रूप में 'chkdsk X: /f' चलाएँ (X की जगह इस वॉल्यूम का ड्राइव अक्षर डालें)। पूछे जाने पर जाँच शेड्यूल करने की पुष्टि करें, फिर Windows में पुनः आरंभ करें। जाँच पूरी होने दें और दोबारा प्रयास करने से पहले Windows को पूरी तरह बंद करें।"
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "सुधार के चरण देखें"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "सुधार के चरण"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "इस NTFS वॉल्यूम का आकार सुरक्षित रूप से बदलने से पहले Windows में डिस्क जाँच करना आवश्यक है।"
