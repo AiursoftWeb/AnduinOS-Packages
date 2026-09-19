@@ -1995,3 +1995,35 @@ msgstr "Poista kaikkien käyttäjien kotikansioiden tiedostot ja tilannekuvahist
 #: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
 msgid "Restore the system to New OS. Personal files are kept by default."
 msgstr "Palauta järjestelmä New OS -tilaan. Henkilökohtaiset tiedostot säilytetään oletuksena."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Palauta käyttäjätiedot"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Palauta kaikkien käyttäjien tiedostot ja asetukset alkutilaan. Tilannekuvahistoria säilytetään."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Ennen palautusta luodaan turvatilannekuvat. Tietokone käynnistyy uudelleen 60 sekunnin kuluessa valmistelun päättymisestä."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "New OS:n poistaminen poistaa tehdaspalautuksen käytöstä tässä tilannekuvaluokassa. Nykyiset tiedostot ja muut tilannekuvat säilytetään."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Kaikkien käyttäjien tiedostot ja asetukset"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Ensin luodaan turvatilannekuva. Tilannekuvahistoria säilytetään."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Palautus on valmis käynnistettäväksi. Tallenna työsi; tietokone käynnistyy uudelleen 60 sekunnin kuluessa."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Palautuksen vahvistus epäonnistui. Palautetaan edellinen tila."

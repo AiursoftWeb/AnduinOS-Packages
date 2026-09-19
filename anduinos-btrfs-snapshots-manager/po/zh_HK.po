@@ -1995,3 +1995,35 @@ msgstr "清除所有使用者的家目錄檔案和快照歷史，無法復原。
 #: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
 msgid "Restore the system to New OS. Personal files are kept by default."
 msgstr "將系統還原至 New OS，預設保留個人檔案。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "回復使用者資料"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "將所有使用者的檔案和設定回復至初始狀態，保留快照記錄。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "回復前會建立安全快照，準備完成後會在 60 秒內重新啟動。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "刪除 New OS 將停用此類快照的原廠回復功能。目前檔案和其他快照會保留。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "所有使用者的檔案和設定"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "先建立安全快照，保留快照記錄。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "回復已準備就緒。請儲存工作，電腦將在 60 秒內重新啟動。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "回復確認失敗，正在還原之前的狀態。"

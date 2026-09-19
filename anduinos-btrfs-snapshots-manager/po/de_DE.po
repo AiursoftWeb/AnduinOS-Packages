@@ -1995,3 +1995,35 @@ msgstr "Home-Dateien und Schnappschussverlauf aller Benutzer löschen. Dies kann
 #: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
 msgid "Restore the system to New OS. Personal files are kept by default."
 msgstr "Das System auf New OS zurücksetzen. Persönliche Dateien bleiben standardmäßig erhalten."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Benutzerdaten zurücksetzen"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Dateien und Einstellungen aller Benutzer auf den Anfangszustand zurücksetzen. Der Schnappschussverlauf bleibt erhalten."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Vor dem Zurücksetzen werden Sicherheitsschnappschüsse erstellt. Nach der Vorbereitung erfolgt der Neustart innerhalb von 60 Sekunden."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "Das Löschen von New OS deaktiviert die Wiederherstellung des Anfangszustands für diese Schnappschusskategorie. Aktuelle Dateien und andere Schnappschüsse bleiben erhalten."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Dateien und Einstellungen aller Benutzer"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Zuerst wird ein Sicherheitsschnappschuss erstellt. Der Schnappschussverlauf bleibt erhalten."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Das Zurücksetzen ist bereit. Speichern Sie Ihre Arbeit; der Computer startet innerhalb von 60 Sekunden neu."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Die Bestätigung des Zurücksetzens ist fehlgeschlagen. Der vorherige Zustand wird wiederhergestellt."

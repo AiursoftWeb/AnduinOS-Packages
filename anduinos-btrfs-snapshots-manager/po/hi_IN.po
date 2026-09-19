@@ -1995,3 +1995,35 @@ msgstr "सभी उपयोगकर्ताओं की होम फ़�
 #: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
 msgid "Restore the system to New OS. Personal files are kept by default."
 msgstr "सिस्टम को New OS की स्थिति में बहाल करें। व्यक्तिगत फ़ाइलें डिफ़ॉल्ट रूप से सुरक्षित रहेंगी।"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "उपयोगकर्ता डेटा वापस लौटाएँ"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "सभी उपयोगकर्ताओं की फ़ाइलों और सेटिंग्स को शुरुआती स्थिति में लौटाएँ। स्नैपशॉट इतिहास सुरक्षित रहेगा।"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "वापस लौटाने से पहले सुरक्षा स्नैपशॉट बनाए जाते हैं। तैयारी के बाद 60 सेकंड के भीतर पुनः आरंभ होगा।"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "New OS हटाने से इस श्रेणी के स्नैपशॉट के लिए फ़ैक्टरी बहाली बंद हो जाती है। वर्तमान फ़ाइलें और अन्य स्नैपशॉट सुरक्षित रहेंगे।"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "सभी उपयोगकर्ताओं की फ़ाइलें और सेटिंग्स"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "पहले एक सुरक्षा स्नैपशॉट बनाया जाता है। स्नैपशॉट इतिहास सुरक्षित रहेगा।"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "वापस लौटाने की तैयारी पूरी है। अपना काम सहेजें; कंप्यूटर 60 सेकंड के भीतर पुनः आरंभ होगा।"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "वापस लौटाने की पुष्टि विफल रही। पिछली स्थिति बहाल की जा रही है।"

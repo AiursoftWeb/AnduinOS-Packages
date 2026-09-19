@@ -1,10 +1,8 @@
 //! Independent personal-file snapshots and descriptor-confined recovery.
 //!
-//! User-created personal snapshots deliberately have no deployment/boot state.
-//! Their only recovery operation is exporting content through already-open
-//! read-only descriptors. The installer-owned factory Home baseline is hidden
-//! from that history and may be selected only by the dedicated, explicit
-//! factory-reset transaction.
+//! Browsing exports content through confined read-only descriptors. Whole-Home
+//! rollback is scheduled by the recovery coordinator and applied at early boot.
+//! Factory and user-created snapshots share the same visible history.
 
 use std::ffi::{CStr, OsString};
 use std::fmt;
@@ -69,7 +67,7 @@ pub enum PersonalSnapshotKind {
     Factory,
 }
 
-pub const FACTORY_HOME_TITLE: &str = "New OS Home";
+pub const FACTORY_HOME_TITLE: &str = "New OS";
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
@@ -115,7 +113,7 @@ impl PersonalSnapshotRecord {
             _ => {}
         }
         if self.kind == PersonalSnapshotKind::Factory
-            && (!self.pinned || self.title != FACTORY_HOME_TITLE)
+            && (!self.pinned || !matches!(self.title.as_str(), FACTORY_HOME_TITLE | "New OS Home"))
         {
             return Err(PersonalError::invalid(
                 "factory Home snapshots must keep their protected identity",
@@ -264,6 +262,24 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
     pub fn with_minimum_free_bytes(mut self, bytes: u64) -> Self {
         self.minimum_free_bytes = bytes;
         self
+    }
+
+    pub fn check_restore_capacity(&self, layout: &LayoutReport) -> Result<(), PersonalError> {
+        ensure_supported(layout)?;
+        self.ensure_space()?;
+        let descendants = self.run_btrfs(&[
+            OsString::from("subvolume"),
+            OsString::from("list"),
+            OsString::from("-o"),
+            self.home_root.as_os_str().to_owned(),
+        ])?;
+        if !descendants.is_empty() {
+            return Err(PersonalError::new(
+                PersonalErrorCode::UnsafePath,
+                "Home rollback cannot safely replace nested Btrfs subvolumes: snapshots do not include their contents",
+            ));
+        }
+        Ok(())
     }
 
     pub fn create_manual(
@@ -743,29 +759,20 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
         self.delete_locked(id, false)
     }
 
-    /// Permanently remove every user-created Home history point after a
-    /// factory reset has booted successfully. The factory baseline itself is
-    /// never included.
-    pub fn purge_user_history(&self, layout: &LayoutReport) -> Result<usize, PersonalError> {
+    /// Explicitly authorized factory deletion, separate from normal/batch cleanup.
+    pub fn delete_factory(
+        &self,
+        layout: &LayoutReport,
+        id: PersonalSnapshotId,
+    ) -> Result<(), PersonalError> {
         ensure_supported(layout)?;
-        self.ensure_directories()?;
         let _operation_lock = StoreLock::acquire(&self.personal_root().join("operation.lock"))?;
-        let discovery = self.discover();
-        if !discovery.issues.is_empty() {
+        if self.load(id)?.kind != PersonalSnapshotKind::Factory {
             return Err(PersonalError::invalid(
-                "Home recovery storage contains unresolved metadata issues",
+                "The selected snapshot is not a factory recovery point",
             ));
         }
-        let ids = discovery
-            .snapshots
-            .iter()
-            .filter(|record| record.kind != PersonalSnapshotKind::Factory)
-            .map(|record| record.id)
-            .collect::<Vec<_>>();
-        for id in &ids {
-            self.delete_locked(*id, true)?;
-        }
-        Ok(ids.len())
+        self.delete_locked(id, true)
     }
 
     fn delete_locked(
@@ -773,9 +780,32 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
         id: PersonalSnapshotId,
         allow_protected: bool,
     ) -> Result<(), PersonalError> {
+        // Match system snapshot deletion: never remove a pending restore target.
+        // Test/import stores may not yet have a transaction directory.
+        let _transaction_lock = if self.store_root.join("transactions").exists() {
+            Some(
+                crate::coordination::TransactionStartLock::acquire(&self.store_root).map_err(
+                    |error| personal_io("Could not coordinate Home snapshot deletion", error),
+                )?,
+            )
+        } else {
+            None
+        };
+        let pending = crate::transaction::TransactionStore::new(&self.store_root)
+            .load_pending()
+            .map_err(|error| PersonalError::invalid(error.message))?;
+        if pending.is_some_and(|transaction| {
+            transaction.factory_home_snapshot_id == Some(id)
+                || transaction.fallback_home_snapshot_id == Some(id)
+        }) {
+            return Err(PersonalError::new(
+                PersonalErrorCode::Protected,
+                "This Home snapshot is referenced by a pending rollback",
+            ));
+        }
         let _browse_lock = StoreLock::acquire_nonblocking(&self.browse_lock_path(id))?;
         let mut record = self.load(id)?;
-        if record.kind == PersonalSnapshotKind::Factory {
+        if record.kind == PersonalSnapshotKind::Factory && !allow_protected {
             return Err(PersonalError::new(
                 PersonalErrorCode::Protected,
                 "The factory Home baseline cannot be deleted",
@@ -1722,7 +1752,7 @@ mod tests {
     }
 
     #[test]
-    fn factory_home_baseline_is_unique_protected_and_excluded_from_history_purge() {
+    fn factory_home_baseline_requires_explicit_deletion_and_preserves_other_history() {
         let root = temporary_root("factory-home");
         let home = root.join("home");
         let store = root.join("store");
@@ -1757,11 +1787,18 @@ mod tests {
         let user_snapshot = engine
             .create_manual(&supported_layout(), "Before cleanup", "User history", true)
             .unwrap();
-        assert_eq!(engine.purge_user_history(&supported_layout()).unwrap(), 1);
+        engine
+            .delete_factory(&supported_layout(), created.id)
+            .unwrap();
         let discovery = engine.discover();
         assert_eq!(discovery.snapshots.len(), 1);
-        assert_eq!(discovery.snapshots[0].id, created.id);
-        assert!(engine.load(user_snapshot.id).is_err());
+        assert_eq!(discovery.snapshots[0].id, user_snapshot.id);
+        assert!(engine.load(created.id).is_err());
+        assert!(
+            engine
+                .delete_factory(&supported_layout(), user_snapshot.id)
+                .is_err()
+        );
         fs::remove_dir_all(root).unwrap();
     }
 

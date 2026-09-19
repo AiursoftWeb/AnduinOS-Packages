@@ -25,9 +25,9 @@ pub(crate) fn confirmation(
     list.set_selection_mode(gtk::SelectionMode::None);
     list.add_css_class("boxed-list");
     let row = adw::ActionRow::new();
-    row.set_title(&tr("Erase user files"));
+    row.set_title(&tr("Roll back user data"));
     row.set_subtitle(&if home_available {
-        tr("Erase all users’ Home files and snapshot history. This cannot be undone.")
+        tr("Restore all users’ files and settings to their initial state. Snapshot history is kept.")
     } else {
         tr("Unavailable because the factory Home recovery point is missing or damaged.")
     });
@@ -41,7 +41,7 @@ pub(crate) fn confirmation(
     content.append(&list);
 
     let note = gtk::Label::new(Some(&tr(
-        "A system safety snapshot is created first. Restart follows within 60 seconds.",
+        "Safety snapshots are created before rollback. Restart follows within 60 seconds.",
     )));
     note.set_wrap(true);
     note.set_max_width_chars(60);

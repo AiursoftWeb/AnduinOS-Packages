@@ -1995,3 +1995,35 @@ msgstr "Apague os ficheiros das pastas pessoais de todos os utilizadores e o his
 #: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
 msgid "Restore the system to New OS. Personal files are kept by default."
 msgstr "Restaure o sistema para o estado New OS. Os ficheiros pessoais são mantidos por predefinição."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Reverter dados dos utilizadores"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Restaura os ficheiros e as definições de todos os utilizadores ao estado inicial. O histórico de instantâneos é mantido."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "São criados instantâneos de segurança antes da reversão. O computador reiniciará até 60 segundos após a preparação."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "Eliminar New OS desativa o restauro de fábrica para esta categoria de instantâneos. Os ficheiros atuais e os outros instantâneos são mantidos."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Ficheiros e definições de todos os utilizadores"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "É criado primeiro um instantâneo de segurança. O histórico de instantâneos é mantido."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "A reversão está pronta. Guarde o seu trabalho; o computador reiniciará dentro de 60 segundos."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "A confirmação da reversão falhou. A restaurar o estado anterior."

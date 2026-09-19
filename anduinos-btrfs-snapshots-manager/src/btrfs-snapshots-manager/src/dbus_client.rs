@@ -27,6 +27,12 @@ pub struct RecoveryDeployment {
 #[derive(Debug, serde::Deserialize)]
 pub struct PendingRecovery {
     pub target_deployment_id: String,
+    #[serde(default)]
+    pub home_only: bool,
+    #[serde(default)]
+    pub reset_home: bool,
+    #[serde(default)]
+    pub factory_home_snapshot_id: Option<String>,
     pub phase: String,
     #[serde(default)]
     pub failure: Option<String>,
@@ -598,6 +604,32 @@ impl SnapshotsManagerHelperClient {
             .proxy()?
             .call("CheckFactoryResetReadiness", &(id, reset_home))
             .context("Failed to check factory reset prerequisites")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
+    }
+
+    pub fn check_personal_restore_readiness(&self, id: String) -> Result<()> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call("CheckPersonalRestoreReadiness", &(id,))?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
+    }
+
+    pub fn schedule_personal_restore(&self, id: String) -> Result<(bool, String)> {
+        self.proxy()?
+            .call("SchedulePersonalRestore", &(id,))
+            .context("Failed to schedule Home rollback")
+    }
+
+    pub fn delete_factory_personal_snapshot(&self, id: String) -> Result<()> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call("DeleteFactoryPersonalSnapshot", &(id,))?;
         if !success {
             anyhow::bail!(result);
         }

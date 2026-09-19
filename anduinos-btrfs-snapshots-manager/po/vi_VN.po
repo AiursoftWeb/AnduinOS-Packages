@@ -1995,3 +1995,35 @@ msgstr "Xóa tệp trong thư mục cá nhân của mọi người dùng và l�
 #: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
 msgid "Restore the system to New OS. Personal files are kept by default."
 msgstr "Khôi phục hệ thống về trạng thái New OS. Mặc định giữ lại tệp cá nhân."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Khôi phục dữ liệu người dùng"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Khôi phục tệp và cài đặt của tất cả người dùng về trạng thái ban đầu. Lịch sử ảnh chụp nhanh được giữ lại."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Ảnh chụp nhanh an toàn được tạo trước khi khôi phục. Máy tính sẽ khởi động lại trong vòng 60 giây sau khi chuẩn bị xong."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "Xóa New OS sẽ vô hiệu hóa khôi phục cài đặt gốc cho loại ảnh chụp nhanh này. Các tệp hiện tại và ảnh chụp nhanh khác được giữ lại."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Tệp và cài đặt của tất cả người dùng"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Một ảnh chụp nhanh an toàn được tạo trước. Lịch sử ảnh chụp nhanh được giữ lại."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Đã sẵn sàng khôi phục. Hãy lưu công việc; máy tính sẽ khởi động lại trong vòng 60 giây."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Xác nhận khôi phục thất bại. Đang khôi phục trạng thái trước đó."

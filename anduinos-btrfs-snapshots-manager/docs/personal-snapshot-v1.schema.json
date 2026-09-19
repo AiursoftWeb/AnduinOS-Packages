@@ -41,7 +41,7 @@
       "if": { "properties": { "kind": { "const": "factory" } }, "required": ["kind"] },
       "then": {
         "properties": {
-          "title": { "const": "New OS Home" },
+          "title": { "enum": ["New OS", "New OS Home"] },
           "pinned": { "const": true }
         }
       }

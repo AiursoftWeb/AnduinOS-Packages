@@ -1995,3 +1995,35 @@ msgstr "Hapus berkas Home semua pengguna dan riwayat snapshot. Tindakan ini tida
 #: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
 msgid "Restore the system to New OS. Personal files are kept by default."
 msgstr "Pulihkan sistem ke New OS. Berkas pribadi dipertahankan secara bawaan."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Kembalikan data pengguna"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Kembalikan berkas dan pengaturan semua pengguna ke keadaan awal. Riwayat snapshot dipertahankan."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Snapshot pengaman dibuat sebelum pemulihan. Komputer akan dimulai ulang dalam 60 detik setelah persiapan."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "Menghapus New OS menonaktifkan pemulihan pabrik untuk kategori snapshot ini. Berkas saat ini dan snapshot lainnya dipertahankan."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Berkas dan pengaturan semua pengguna"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Snapshot pengaman dibuat terlebih dahulu. Riwayat snapshot dipertahankan."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Pemulihan siap. Simpan pekerjaan Anda; komputer akan dimulai ulang dalam 60 detik."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Konfirmasi pemulihan gagal. Memulihkan keadaan sebelumnya."

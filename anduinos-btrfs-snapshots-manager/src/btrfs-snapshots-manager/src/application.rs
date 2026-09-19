@@ -235,6 +235,39 @@ impl SnapshotsManagerApplication {
         let weak = self.downgrade();
         glib::idle_add_local_once(move || {
             if let Some(app) = weak.upgrade() {
+                if surface == "home-rollback" || surface == "system-rollback" {
+                    let scope = if surface == "home-rollback" {
+                        crate::ui::SnapshotScope::Home
+                    } else {
+                        crate::ui::SnapshotScope::System
+                    };
+                    let dialog = crate::ui::rollback_confirmation(
+                        app.ensure_main_window().upcast_ref(),
+                        "New OS",
+                        scope,
+                    );
+                    assert_eq!(dialog.default_response().as_deref(), Some("cancel"));
+                    assert_eq!(dialog.close_response(), "cancel");
+                    dialog.present();
+                    glib::timeout_add_local_once(
+                        std::time::Duration::from_millis(500),
+                        move || {
+                            assert!(dialog.width() >= 520);
+                            assert!(dialog.height() < 540);
+                            log::info!(
+                                "Rollback confirmation: {} × {}",
+                                dialog.width(),
+                                dialog.height()
+                            );
+                            dialog.close();
+                            for window in app.windows() {
+                                window.close();
+                            }
+                            app.quit();
+                        },
+                    );
+                    return;
+                }
                 if surface == "factory-reset" || surface == "factory-reset-no-home" {
                     let available = surface == "factory-reset";
                     let (dialog, erase_home) = crate::ui::factory_reset::confirmation(

@@ -1995,3 +1995,35 @@ msgstr "Elimina i file delle cartelle personali di tutti gli utenti e la cronolo
 #: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
 msgid "Restore the system to New OS. Personal files are kept by default."
 msgstr "Ripristina il sistema allo stato New OS. I file personali vengono conservati per impostazione predefinita."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Ripristina i dati utente"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Ripristina i file e le impostazioni di tutti gli utenti allo stato iniziale. La cronologia delle istantanee viene conservata."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Prima del ripristino vengono create istantanee di sicurezza. Il riavvio avverrà entro 60 secondi dalla preparazione."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "Eliminando New OS si disabilita il ripristino di fabbrica per questa categoria di istantanee. I file attuali e le altre istantanee vengono conservati."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "File e impostazioni di tutti gli utenti"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Prima viene creata un’istantanea di sicurezza. La cronologia delle istantanee viene conservata."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Il ripristino è pronto. Salva il lavoro; il computer verrà riavviato entro 60 secondi."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "La conferma del ripristino non è riuscita. Ripristino dello stato precedente."

@@ -1995,3 +1995,35 @@ msgstr "모든 사용자의 홈 파일과 스냅샷 기록을 삭제합니다. �
 #: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
 msgid "Restore the system to New OS. Personal files are kept by default."
 msgstr "시스템을 New OS 상태로 복원합니다. 개인 파일은 기본적으로 유지됩니다."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "사용자 데이터 되돌리기"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "모든 사용자의 파일과 설정을 초기 상태로 복원합니다. 스냅샷 기록은 유지됩니다."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "되돌리기 전에 안전 스냅샷을 만듭니다. 준비가 완료되면 60초 이내에 다시 시작합니다."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "New OS를 삭제하면 이 스냅샷 유형의 초기 상태 복원 기능이 비활성화됩니다. 현재 파일과 다른 스냅샷은 유지됩니다."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "모든 사용자의 파일 및 설정"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "먼저 안전 스냅샷을 만듭니다. 스냅샷 기록은 유지됩니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "되돌릴 준비가 되었습니다. 작업을 저장하세요. 60초 이내에 다시 시작합니다."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "되돌리기 확인에 실패했습니다. 이전 상태를 복원하는 중입니다."

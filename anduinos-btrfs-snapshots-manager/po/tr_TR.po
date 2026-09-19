@@ -1995,3 +1995,35 @@ msgstr "Tüm kullanıcıların Ev dizini dosyalarını ve anlık görüntü geç
 #: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
 msgid "Restore the system to New OS. Personal files are kept by default."
 msgstr "Sistemi New OS durumuna geri yükleyin. Kişisel dosyalar varsayılan olarak korunur."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Kullanıcı verilerini geri al"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Tüm kullanıcıların dosya ve ayarlarını ilk durumuna döndürür. Anlık görüntü geçmişi korunur."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Geri almadan önce güvenlik anlık görüntüleri oluşturulur. Hazırlıktan sonra 60 saniye içinde yeniden başlatılır."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "New OS silinirse bu anlık görüntü kategorisi için fabrika durumuna dönüş devre dışı kalır. Mevcut dosyalar ve diğer anlık görüntüler korunur."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Tüm kullanıcıların dosya ve ayarları"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Önce bir güvenlik anlık görüntüsü oluşturulur. Anlık görüntü geçmişi korunur."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Geri alma hazır. Çalışmanızı kaydedin; bilgisayar 60 saniye içinde yeniden başlatılacak."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Geri alma onayı başarısız oldu. Önceki durum geri yükleniyor."

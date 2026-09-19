@@ -17,7 +17,9 @@ use crate::model::DeploymentState;
 use crate::model::{DeploymentId, DeploymentKind, DeploymentRecord};
 use crate::operations::OperationEngine;
 use crate::package_transaction::PackageTransactionStore;
-use crate::personal::{PersonalSnapshotEngine, PersonalSnapshotKind, PersonalSnapshotRecord};
+use crate::personal::{
+    PersonalSnapshotEngine, PersonalSnapshotId, PersonalSnapshotKind, PersonalSnapshotRecord,
+};
 use crate::secure_boot::SecureBootValidator;
 use crate::transaction::{RollbackPhase, RollbackTransaction, TransactionStore};
 
@@ -99,6 +101,9 @@ impl fmt::Display for RollbackError {
 impl std::error::Error for RollbackError {}
 
 pub trait RollbackBackend {
+    fn lock_preparation(&self) -> Result<Option<TransactionStartLock>, RollbackError> {
+        Ok(None)
+    }
     fn layout(&self) -> LayoutReport;
     fn pending(&self) -> Result<Option<RollbackTransaction>, RollbackError>;
     fn package_transaction_pending(&self) -> Result<bool, RollbackError>;
@@ -110,6 +115,31 @@ pub trait RollbackBackend {
         Err(RollbackError::new(
             RollbackErrorCode::InvalidTarget,
             "The factory Home baseline is unavailable",
+        ))
+    }
+    fn verify_home(
+        &self,
+        _report: &LayoutReport,
+        _id: PersonalSnapshotId,
+    ) -> Result<PersonalSnapshotRecord, RollbackError> {
+        Err(RollbackError::new(
+            RollbackErrorCode::InvalidTarget,
+            "Home rollback is unavailable",
+        ))
+    }
+    fn check_home_capacity(&self, _report: &LayoutReport) -> Result<(), RollbackError> {
+        Err(RollbackError::new(
+            RollbackErrorCode::StateCommit,
+            "Home safety snapshot capacity is unavailable",
+        ))
+    }
+    fn create_home_fallback(
+        &self,
+        _report: &LayoutReport,
+    ) -> Result<PersonalSnapshotRecord, RollbackError> {
+        Err(RollbackError::new(
+            RollbackErrorCode::StateCommit,
+            "Cannot protect the current Home",
         ))
     }
     fn check_fallback_capacity(&self, report: &LayoutReport) -> Result<(), RollbackError>;
@@ -131,6 +161,16 @@ pub trait RollbackBackend {
 pub struct SystemRollbackBackend;
 
 impl RollbackBackend for SystemRollbackBackend {
+    fn lock_preparation(&self) -> Result<Option<TransactionStartLock>, RollbackError> {
+        TransactionStartLock::acquire_preparation(RECOVERY_STORE_ROOT)
+            .map(Some)
+            .map_err(|error| {
+                RollbackError::new(
+                    RollbackErrorCode::StateCommit,
+                    format!("Could not coordinate recovery preparation: {error}"),
+                )
+            })
+    }
     fn layout(&self) -> LayoutReport {
         layout::inspect_current()
     }
@@ -196,6 +236,41 @@ impl RollbackBackend for SystemRollbackBackend {
                 format!("Factory Home baseline verification failed: {error}"),
             )
         })
+    }
+
+    fn verify_home(
+        &self,
+        report: &LayoutReport,
+        id: PersonalSnapshotId,
+    ) -> Result<PersonalSnapshotRecord, RollbackError> {
+        let engine = PersonalSnapshotEngine::default();
+        let record = engine.verify(report, id).map_err(personal_error)?;
+        crate::home_accounts::verify_home_accounts(
+            Path::new("/etc/passwd"),
+            &engine.snapshot_path(id),
+        )
+        .map_err(|error| RollbackError::new(RollbackErrorCode::InvalidTarget, error))?;
+        Ok(record)
+    }
+
+    fn check_home_capacity(&self, report: &LayoutReport) -> Result<(), RollbackError> {
+        PersonalSnapshotEngine::default()
+            .check_restore_capacity(report)
+            .map_err(personal_error)
+    }
+
+    fn create_home_fallback(
+        &self,
+        report: &LayoutReport,
+    ) -> Result<PersonalSnapshotRecord, RollbackError> {
+        PersonalSnapshotEngine::default()
+            .create_manual(
+                report,
+                "Before rollback",
+                "Safety snapshot before Home rollback",
+                false,
+            )
+            .map_err(personal_error)
     }
 
     fn check_fallback_capacity(&self, report: &LayoutReport) -> Result<(), RollbackError> {
@@ -265,6 +340,20 @@ impl RollbackBackend for SystemRollbackBackend {
                 RollbackErrorCode::AlreadyPending,
                 "A package transaction claimed the recovery boundary",
             ));
+        }
+        // Deletion takes the same start lock. Bind only still-present targets
+        // at the final commit boundary, not just at the earlier UI check.
+        self.verify_target(transaction.target_deployment_id)?;
+        self.verify_target(transaction.fallback_deployment_id)?;
+        if let Some(id) = transaction.factory_home_snapshot_id {
+            PersonalSnapshotEngine::default()
+                .verify(&self.layout(), id)
+                .map_err(personal_error)?;
+        }
+        if let Some(id) = transaction.fallback_home_snapshot_id {
+            PersonalSnapshotEngine::default()
+                .verify(&self.layout(), id)
+                .map_err(personal_error)?;
         }
         TransactionStore::default()
             .create(transaction)
@@ -356,6 +445,35 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
         ),
         RollbackError,
     > {
+        let report = self.validate_environment()?;
+        let target = self.backend.verify_target(target_id)?;
+        if !target.can_restore() {
+            return Err(RollbackError::new(
+                RollbackErrorCode::InvalidTarget,
+                "Only a complete, healthy system snapshot can be scheduled",
+            ));
+        }
+        if factory_reset && target.kind != DeploymentKind::Factory {
+            return Err(RollbackError::new(
+                RollbackErrorCode::InvalidTarget,
+                "Factory reset requires the installer-owned factory recovery point",
+            ));
+        }
+        let factory_home = if reset_home {
+            let home = self.backend.verify_factory_home(&report)?;
+            self.backend.check_home_capacity(&report)?;
+            Some(home)
+        } else {
+            None
+        };
+        let root_uuid = self.backend.root_filesystem_uuid(&report)?;
+        self.backend.check_fallback_capacity(&report)?;
+        self.backend.verify_recovery_boot_source()?;
+        self.backend.verify_one_shot_support()?;
+        Ok((target, report, root_uuid, factory_home))
+    }
+
+    fn validate_environment(&self) -> Result<LayoutReport, RollbackError> {
         if self.backend.pending()?.is_some() {
             return Err(RollbackError::new(
                 RollbackErrorCode::AlreadyPending,
@@ -375,29 +493,71 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
                 "The complete AnduinOS Btrfs layout is required",
             ));
         }
-        let target = self.backend.verify_target(target_id)?;
-        if !target.can_restore() {
-            return Err(RollbackError::new(
-                RollbackErrorCode::InvalidTarget,
-                "Only a complete, healthy system snapshot can be scheduled",
-            ));
-        }
-        if factory_reset && target.kind != DeploymentKind::Factory {
-            return Err(RollbackError::new(
-                RollbackErrorCode::InvalidTarget,
-                "Factory reset requires the installer-owned factory recovery point",
-            ));
-        }
-        let factory_home = if reset_home {
-            Some(self.backend.verify_factory_home(&report)?)
-        } else {
-            None
-        };
-        let root_uuid = self.backend.root_filesystem_uuid(&report)?;
+        Ok(report)
+    }
+
+    pub fn check_home_ready(
+        &self,
+        id: PersonalSnapshotId,
+    ) -> Result<PersonalSnapshotRecord, RollbackError> {
+        let report = self.validate_environment()?;
+        let home = self.backend.verify_home(&report, id)?;
+        self.backend.check_home_capacity(&report)?;
         self.backend.check_fallback_capacity(&report)?;
         self.backend.verify_recovery_boot_source()?;
         self.backend.verify_one_shot_support()?;
-        Ok((target, report, root_uuid, factory_home))
+        self.backend.root_filesystem_uuid(&report)?;
+        Ok(home)
+    }
+
+    pub fn schedule_home<F>(
+        &self,
+        id: PersonalSnapshotId,
+        mut progress: F,
+    ) -> Result<RollbackTransaction, RollbackError>
+    where
+        F: FnMut(RollbackProgressPhase, f64, &str),
+    {
+        let _preparation_lock = self.backend.lock_preparation()?;
+        progress(
+            RollbackProgressPhase::Validate,
+            0.02,
+            "Checking the Home recovery target",
+        );
+        let home = self.check_home_ready(id)?;
+        let report = self.backend.layout();
+        let root_uuid = self.backend.root_filesystem_uuid(&report)?;
+        let boot = self.backend.provision_recovery_boot_artifacts()?;
+        progress(
+            RollbackProgressPhase::ProtectCurrent,
+            0.18,
+            "Protecting the current Home",
+        );
+        let home_fallback = self.backend.create_home_fallback(&report)?;
+        // This snapshot anchors root identity and boot metadata only. Early
+        // boot does not replace @root for a Home-only transaction.
+        let anchor = self.backend.create_fallback()?;
+        if anchor.snapshot_parent_uuid.is_none() {
+            return Err(RollbackError::new(
+                RollbackErrorCode::InvalidTarget,
+                "Root anchor has no parent UUID",
+            ));
+        }
+        let mut transaction = RollbackTransaction::new(
+            anchor.id,
+            anchor.id,
+            root_uuid,
+            boot.kernel_release,
+            boot.kernel_sha256,
+            boot.initramfs_sha256,
+            boot.confirm_sha256,
+        );
+        transaction.home_only = true;
+        transaction
+            .enable_home_reset(&home)
+            .map_err(transaction_error)?;
+        transaction.fallback_home_snapshot_id = Some(home_fallback.id);
+        self.arm_transaction(transaction, progress)
     }
 
     pub fn schedule<F>(
@@ -433,12 +593,13 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
     where
         F: FnMut(RollbackProgressPhase, f64, &str),
     {
+        let _preparation_lock = self.backend.lock_preparation()?;
         progress(
             RollbackProgressPhase::Validate,
             0.02,
             "Checking the recovery target",
         );
-        let (target, _report, root_uuid, factory_home) =
+        let (target, report, root_uuid, factory_home) =
             self.validate_ready(target_id, factory_reset, reset_home)?;
         let recovery_boot = self.backend.provision_recovery_boot_artifacts()?;
 
@@ -448,6 +609,11 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
             "Protecting the current system",
         );
         let fallback = self.backend.create_fallback()?;
+        let home_fallback = if reset_home {
+            Some(self.backend.create_home_fallback(&report)?)
+        } else {
+            None
+        };
         let mut transaction = RollbackTransaction::new(
             target.id,
             fallback.id,
@@ -462,6 +628,19 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
                 .enable_home_reset(factory_home)
                 .map_err(transaction_error)?;
         }
+        transaction.fallback_home_snapshot_id = home_fallback.map(|record| record.id);
+        self.arm_transaction(transaction, progress)
+    }
+
+    fn arm_transaction<F>(
+        &self,
+        mut transaction: RollbackTransaction,
+        mut progress: F,
+    ) -> Result<RollbackTransaction, RollbackError>
+    where
+        F: FnMut(RollbackProgressPhase, f64, &str),
+    {
+        let mut recorded = false;
         let result = (|| {
             progress(
                 RollbackProgressPhase::RecordTransaction,
@@ -469,6 +648,7 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
                 "Recording the restore transaction",
             );
             self.backend.create_transaction(&transaction)?;
+            recorded = true;
 
             progress(
                 RollbackProgressPhase::ConfigureBoot,
@@ -497,6 +677,9 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
         })();
 
         if let Err(error) = result {
+            if !recorded {
+                return Err(error);
+            }
             progress(
                 RollbackProgressPhase::Cleanup,
                 0.95,
@@ -515,6 +698,7 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
     }
 
     pub fn cancel(&self) -> Result<(), RollbackError> {
+        let _preparation_lock = self.backend.lock_preparation()?;
         let transaction = self.backend.pending()?.ok_or_else(|| {
             RollbackError::new(
                 RollbackErrorCode::InvalidTarget,
@@ -556,6 +740,10 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
             ))
         }
     }
+}
+
+fn personal_error(error: crate::personal::PersonalError) -> RollbackError {
+    RollbackError::new(RollbackErrorCode::InvalidTarget, error.message)
 }
 
 fn run_command(program: &Path, arguments: &[&OsStr]) -> Result<String, RollbackError> {
@@ -819,9 +1007,38 @@ mod tests {
             self.hit("check-fallback-capacity")
         }
 
+        fn verify_home(
+            &self,
+            report: &LayoutReport,
+            id: PersonalSnapshotId,
+        ) -> Result<PersonalSnapshotRecord, RollbackError> {
+            self.hit("verify-home")?;
+            let record = self.verify_factory_home(report)?;
+            if record.id != id {
+                return Err(RollbackError::new(
+                    RollbackErrorCode::InvalidTarget,
+                    "Missing Home snapshot",
+                ));
+            }
+            Ok(record)
+        }
+
+        fn check_home_capacity(&self, _report: &LayoutReport) -> Result<(), RollbackError> {
+            self.hit("check-home-capacity")
+        }
+
+        fn create_home_fallback(
+            &self,
+            _report: &LayoutReport,
+        ) -> Result<PersonalSnapshotRecord, RollbackError> {
+            self.hit("create-home-fallback")?;
+            Ok(factory_home())
+        }
+
         fn create_fallback(&self) -> Result<DeploymentRecord, RollbackError> {
             self.hit("create-fallback")?;
-            let fallback = record(DeploymentKind::PreRollback, DeploymentState::Ready);
+            let mut fallback = record(DeploymentKind::PreRollback, DeploymentState::Ready);
+            fallback.snapshot_parent_uuid = Some("aaaaaaaa-1111-4222-8333-bbbbbbbbbbbb".into());
             self.inner
                 .lock()
                 .unwrap()
@@ -1001,6 +1218,54 @@ mod tests {
     }
 
     #[test]
+    fn home_restore_protects_home_and_binds_unchanged_root_before_arming() {
+        let (backend, _) = FakeBackend::new();
+        let mut home = factory_home();
+        home.kind = PersonalSnapshotKind::Manual;
+        backend.inner.lock().unwrap().factory_home = Some(home.clone());
+        let transaction = RollbackCoordinator::new(backend.clone())
+            .schedule_home(home.id, |_, _, _| {})
+            .unwrap();
+        assert!(transaction.home_only && transaction.reset_home);
+        assert_eq!(transaction.factory_home_snapshot_id, Some(home.id));
+        assert_eq!(
+            transaction.target_deployment_id,
+            transaction.fallback_deployment_id
+        );
+        assert_eq!(transaction.phase, RollbackPhase::Armed);
+        let inner = backend.inner.lock().unwrap();
+        let protect = inner
+            .calls
+            .iter()
+            .position(|call| call == "create-home-fallback")
+            .unwrap();
+        let arm = inner
+            .calls
+            .iter()
+            .position(|call| call == "arm-once")
+            .unwrap();
+        assert!(protect < arm);
+    }
+
+    #[test]
+    fn home_capacity_or_safety_snapshot_failure_never_arms_recovery() {
+        for failure in ["verify-home", "check-home-capacity", "create-home-fallback"] {
+            let (backend, _) = FakeBackend::new();
+            let home = factory_home();
+            backend.inner.lock().unwrap().factory_home = Some(home.clone());
+            backend.fail_once(failure);
+            assert!(
+                RollbackCoordinator::new(backend.clone())
+                    .schedule_home(home.id, |_, _, _| {})
+                    .is_err()
+            );
+            let inner = backend.inner.lock().unwrap();
+            assert!(inner.pending.is_none());
+            assert!(!inner.calls.iter().any(|call| call == "arm-once"));
+        }
+    }
+
+    #[test]
     fn factory_reset_binds_home_only_when_erasure_is_explicitly_requested() {
         let (backend, target) = FakeBackend::new();
         {
@@ -1130,7 +1395,10 @@ mod tests {
                     .filter(|record| record.kind == DeploymentKind::PreRollback)
                     .all(|record| record.state == DeploymentState::Ready)
             );
-            assert!(inner.calls.iter().any(|call| call == "clear-once"));
+            assert_eq!(
+                inner.calls.iter().any(|call| call == "clear-once"),
+                failure != "create-transaction"
+            );
         }
     }
 

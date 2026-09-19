@@ -1,12 +1,18 @@
 # Recovery scope and trust boundaries
 
-Disk Snapshots Manager has two independent local snapshot streams and no combined rollback:
-System Recovery owns `@root`; Personal Files Recovery owns `@home`. A system
-normal rollback never changes `@home`, and a user-created Home snapshot never
-becomes a boot target. The sole exception is the installer-owned factory Home
-baseline: factory reset may switch `@home` to that baseline only when the user
-explicitly selects **Erase user files**. That switch runs in initramfs with the
-same protected-old-subvolume and automatic-revert guarantees as `@root`.
+Disk Snapshots Manager has two local snapshot streams: System Recovery owns
+`@root`; Personal Files Recovery owns `@home`. Both expose their protected
+**New OS** baseline, read-only browsing, and administrator-authorized rollback
+on restart. Ordinary rollback changes only the selected scope. Home rollback
+affects every user's Home, verifies account-directory UID/GID compatibility,
+and preserves the current root UUID. A combined factory reset changes both
+scopes only when **Roll back user data** is selected.
+
+Replacement runs in initramfs with protected-old-subvolume and automatic-revert
+guarantees. The affected scopes receive safety snapshots before reboot, and all
+snapshot history is retained. The old active subvolumes are cleaned up only after
+confirmation; this does not delete their safety snapshots. This workflow is not
+secure erasure and must not be advertised for disposing of a device.
 
 ## Personal Files are read by descriptor, never written by root
 

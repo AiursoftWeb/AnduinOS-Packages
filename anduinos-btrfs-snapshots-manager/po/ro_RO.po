@@ -1995,3 +1995,35 @@ msgstr "Ștergeți fișierele din dosarele personale ale tuturor utilizatorilor 
 #: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
 msgid "Restore the system to New OS. Personal files are kept by default."
 msgstr "Restabiliți sistemul la starea New OS. Fișierele personale sunt păstrate implicit."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Restaurează datele utilizatorilor"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Restabilește fișierele și setările tuturor utilizatorilor la starea inițială. Istoricul instantaneelor este păstrat."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Se creează instantanee de siguranță înainte de restaurare. Calculatorul va reporni în 60 de secunde după pregătire."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "Ștergerea New OS dezactivează restaurarea din fabrică pentru această categorie de instantanee. Fișierele actuale și celelalte instantanee sunt păstrate."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Fișierele și setările tuturor utilizatorilor"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Mai întâi se creează un instantaneu de siguranță. Istoricul instantaneelor este păstrat."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Restaurarea este pregătită. Salvați lucrul; calculatorul va reporni în 60 de secunde."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Confirmarea restaurării a eșuat. Se restabilește starea anterioară."

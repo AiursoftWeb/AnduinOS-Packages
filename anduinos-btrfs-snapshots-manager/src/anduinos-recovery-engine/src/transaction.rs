@@ -12,7 +12,7 @@ use uuid::Uuid;
 use crate::model::DeploymentId;
 use crate::personal::{PersonalSnapshotId, PersonalSnapshotRecord};
 
-pub const ROLLBACK_SCHEMA_VERSION: u32 = 4;
+pub const ROLLBACK_SCHEMA_VERSION: u32 = 5;
 pub const RECOVERY_PROTOCOL_VERSION: u32 = 2;
 const LEGACY_RECOVERY_PROTOCOL_VERSION: u32 = 1;
 pub const MAX_APPLY_ATTEMPTS: u32 = 3;
@@ -152,6 +152,10 @@ pub struct RollbackTransaction {
     pub recovery_confirm_sha256: String,
     pub grub_entry_id: String,
     pub reset_home: bool,
+    /// Home-only restores keep the live root in place. The deployment IDs
+    /// both identify the safety snapshot used to bind the unchanged root.
+    pub home_only: bool,
+    pub fallback_home_snapshot_id: Option<PersonalSnapshotId>,
     pub factory_home_snapshot_id: Option<PersonalSnapshotId>,
     pub factory_home_snapshot_uuid: Option<String>,
     pub failure: Option<String>,
@@ -277,6 +281,8 @@ impl LegacyRollbackTransactionV1 {
             recovery_confirm_sha256: "0".repeat(64),
             grub_entry_id: self.grub_entry_id,
             reset_home: false,
+            home_only: false,
+            fallback_home_snapshot_id: None,
             factory_home_snapshot_id: None,
             factory_home_snapshot_uuid: None,
             failure: if cancel_before_apply {
@@ -326,6 +332,8 @@ impl LegacyRollbackTransactionV2 {
             recovery_confirm_sha256: "0".repeat(64),
             grub_entry_id: self.grub_entry_id,
             reset_home: false,
+            home_only: false,
+            fallback_home_snapshot_id: None,
             factory_home_snapshot_id: None,
             factory_home_snapshot_uuid: None,
             failure: if cancel_before_apply {
@@ -364,6 +372,8 @@ impl LegacyRollbackTransactionV3 {
             recovery_confirm_sha256: self.recovery_confirm_sha256,
             grub_entry_id: self.grub_entry_id,
             reset_home: false,
+            home_only: false,
+            fallback_home_snapshot_id: None,
             factory_home_snapshot_id: None,
             factory_home_snapshot_uuid: None,
             failure: self.failure,
@@ -405,6 +415,8 @@ impl RollbackTransaction {
             recovery_confirm_sha256: recovery_confirm_sha256.into(),
             grub_entry_id: format!("anduinos-btrfs-snapshots-manager-{id}"),
             reset_home: false,
+            home_only: false,
+            fallback_home_snapshot_id: None,
             factory_home_snapshot_id: None,
             factory_home_snapshot_uuid: None,
             failure: None,
@@ -577,10 +589,16 @@ impl RollbackTransaction {
                 ),
             ));
         }
-        if self.target_deployment_id == self.fallback_deployment_id {
+        if (self.target_deployment_id == self.fallback_deployment_id) != self.home_only {
             return Err(TransactionError::new(
                 TransactionErrorCode::InvalidRecord,
-                "Rollback target and fallback must be different deployments",
+                "Home-only restores require one root anchor; system restores require distinct deployments",
+            ));
+        }
+        if self.home_only && !self.reset_home {
+            return Err(TransactionError::new(
+                TransactionErrorCode::InvalidRecord,
+                "Home-only restore requires a Home target",
             ));
         }
         match (
@@ -596,6 +614,12 @@ impl RollbackTransaction {
                     "Factory Home reset identity is incomplete or unexpectedly present",
                 ));
             }
+        }
+        if !self.reset_home && self.fallback_home_snapshot_id.is_some() {
+            return Err(TransactionError::new(
+                TransactionErrorCode::InvalidRecord,
+                "A system-only rollback cannot reference a Home safety snapshot",
+            ));
         }
         validate_uuid(&self.root_filesystem_uuid, "root filesystem UUID")?;
         validate_kernel_release(&self.kernel_release)?;
@@ -873,7 +897,14 @@ impl TransactionStore {
                 .map(LegacyRollbackTransactionV2::migrate),
             3 => serde_json::from_value::<LegacyRollbackTransactionV3>(value)
                 .map(LegacyRollbackTransactionV3::migrate),
-            4 => serde_json::from_value::<RollbackTransaction>(value),
+            4 => {
+                let mut value = value;
+                value["schema_version"] = ROLLBACK_SCHEMA_VERSION.into();
+                value["home_only"] = false.into();
+                value["fallback_home_snapshot_id"] = serde_json::Value::Null;
+                serde_json::from_value::<RollbackTransaction>(value)
+            }
+            5 => serde_json::from_value::<RollbackTransaction>(value),
             other => {
                 return Err(TransactionError::new(
                     TransactionErrorCode::UnsupportedSchema,
@@ -1406,6 +1437,42 @@ mod tests {
         assert!(!migrated.reset_home);
         assert!(migrated.factory_home_snapshot_id.is_none());
         assert!(migrated.factory_home_snapshot_uuid.is_none());
+    }
+
+    #[test]
+    fn v4_migration_never_invents_home_only_or_a_safety_snapshot() {
+        let environment = TestStore::new();
+        let mut value = serde_json::to_value(transaction()).unwrap();
+        value["schema_version"] = 4.into();
+        value.as_object_mut().unwrap().remove("home_only");
+        value
+            .as_object_mut()
+            .unwrap()
+            .remove("fallback_home_snapshot_id");
+        fs::write(
+            environment.root.join("transactions/pending-rollback.json"),
+            serde_json::to_vec(&value).unwrap(),
+        )
+        .unwrap();
+        let migrated = environment.store().load_pending().unwrap().unwrap();
+        assert_eq!(migrated.schema_version, 5);
+        assert!(!migrated.home_only && !migrated.reset_home);
+        assert!(migrated.fallback_home_snapshot_id.is_none());
+    }
+
+    #[test]
+    fn home_only_transactions_require_explicit_home_target_and_one_root_anchor() {
+        let mut current = transaction();
+        current.home_only = true;
+        assert!(current.validate().is_err());
+        current.target_deployment_id = current.fallback_deployment_id;
+        assert!(current.validate().is_err());
+        current.reset_home = true;
+        current.factory_home_snapshot_id = Some(PersonalSnapshotId::new());
+        current.factory_home_snapshot_uuid = Some("bbbbbbbb-1111-4222-8333-cccccccccccc".into());
+        current.validate().unwrap();
+        current.home_only = false;
+        assert!(current.validate().is_err());
     }
 
     #[test]

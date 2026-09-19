@@ -13,7 +13,6 @@ use crate::lineage::{ActivationOutcome, LineageStore};
 #[cfg(test)]
 use crate::model::DeploymentState;
 use crate::model::{DeploymentId, DeploymentRecord};
-use crate::personal::PersonalSnapshotEngine;
 use crate::store::DeploymentStore;
 use crate::transaction::{RollbackId, RollbackPhase, RollbackTransaction, TransactionStore};
 
@@ -79,6 +78,12 @@ pub trait ConfirmationBackend {
     fn kernel_release(&self) -> Result<String, ConfirmationError>;
     fn requested_rollback(&self) -> Result<Option<RollbackId>, ConfirmationError>;
     fn current_snapshot_parent_uuid(&self) -> Result<String, ConfirmationError>;
+    fn current_root_uuid(&self) -> Result<String, ConfirmationError> {
+        Err(ConfirmationError::new(
+            ConfirmationErrorCode::IdentityMismatch,
+            "The running root subvolume identity is unavailable",
+        ))
+    }
     fn current_home_snapshot_parent_uuid(&self) -> Result<String, ConfirmationError> {
         Err(ConfirmationError::new(
             ConfirmationErrorCode::IdentityMismatch,
@@ -120,9 +125,6 @@ pub trait ConfirmationBackend {
         transaction: &RollbackTransaction,
         outcome: ActivationOutcome,
     ) -> Result<(), ConfirmationError>;
-    fn purge_personal_history(&self) -> Result<(), ConfirmationError> {
-        Ok(())
-    }
 }
 
 #[derive(Clone, Copy, Debug, Default)]
@@ -203,6 +205,30 @@ impl ConfirmationBackend for SystemConfirmationBackend {
             "inspecting the running Home subvolume",
         )?;
         parse_parent_uuid(&output)
+    }
+
+    fn current_root_uuid(&self) -> Result<String, ConfirmationError> {
+        let output = run_command(
+            Path::new(BTRFS),
+            &[
+                OsStr::new("subvolume"),
+                OsStr::new("show"),
+                OsStr::new("--raw"),
+                OsStr::new("/"),
+            ],
+            "inspecting the unchanged root subvolume",
+        )?;
+        let uuid = output
+            .lines()
+            .find_map(|line| line.trim().strip_prefix("UUID:"))
+            .ok_or_else(|| {
+                ConfirmationError::new(ConfirmationErrorCode::IdentityMismatch, "Missing root UUID")
+            })?;
+        uuid::Uuid::parse_str(uuid.trim())
+            .map(|value| value.to_string())
+            .map_err(|_| {
+                ConfirmationError::new(ConfirmationErrorCode::IdentityMismatch, "Invalid root UUID")
+            })
     }
 
     fn update_transaction(
@@ -347,18 +373,6 @@ impl ConfirmationBackend for SystemConfirmationBackend {
                 )
             })
     }
-
-    fn purge_personal_history(&self) -> Result<(), ConfirmationError> {
-        PersonalSnapshotEngine::default()
-            .purge_user_history(&layout::inspect_current())
-            .map(|_| ())
-            .map_err(|error| {
-                ConfirmationError::new(
-                    ConfirmationErrorCode::StateCommit,
-                    format!("Could not erase personal snapshot history: {error}"),
-                )
-            })
-    }
 }
 
 #[derive(Clone, Debug)]
@@ -445,13 +459,23 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
             ));
         }
         let target = self.backend.deployment(transaction.target_deployment_id)?;
-        let expected_parent = target.snapshot_uuid.ok_or_else(|| {
+        let expected_parent = if transaction.home_only {
+            target.snapshot_parent_uuid
+        } else {
+            target.snapshot_uuid
+        }
+        .ok_or_else(|| {
             ConfirmationError::new(
                 ConfirmationErrorCode::InvalidTransaction,
                 "The rollback target has no snapshot UUID",
             )
         })?;
-        if self.backend.current_snapshot_parent_uuid()? != expected_parent {
+        let running_identity = if transaction.home_only {
+            self.backend.current_root_uuid()?
+        } else {
+            self.backend.current_snapshot_parent_uuid()?
+        };
+        if running_identity != expected_parent {
             return Err(ConfirmationError::new(
                 ConfirmationErrorCode::IdentityMismatch,
                 "The running root is not a writable snapshot of the rollback target",
@@ -481,10 +505,9 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
         &self,
         transaction: &RollbackTransaction,
     ) -> Result<bool, ConfirmationError> {
-        self.backend
-            .record_lineage_activation(transaction, ActivationOutcome::Confirmed)?;
-        if transaction.reset_home {
-            self.backend.purge_personal_history()?;
+        if !transaction.home_only {
+            self.backend
+                .record_lineage_activation(transaction, ActivationOutcome::Confirmed)?;
         }
         self.backend.schedule_old_root_cleanup(transaction)?;
         self.backend.clear_once()?;
@@ -498,8 +521,10 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
     }
 
     fn finish_reverted(&self, transaction: &RollbackTransaction) -> Result<(), ConfirmationError> {
-        self.backend
-            .record_lineage_activation(transaction, ActivationOutcome::Reverted)?;
+        if !transaction.home_only {
+            self.backend
+                .record_lineage_activation(transaction, ActivationOutcome::Reverted)?;
+        }
         self.backend.clear_once()?;
         self.backend.archive_transaction(transaction)?;
         self.backend.remove_transaction()?;
@@ -572,31 +597,20 @@ pub fn cleanup_old_root_at(
     top_level: &Path,
     old_root_name: &str,
 ) -> Result<OldRootCleanupOutcome, ConfirmationError> {
-    cleanup_old_subvolume_at(
-        top_level,
-        old_root_name,
-        "@root.snapshots-manager-old-",
-        false,
-    )
+    cleanup_old_subvolume_at(top_level, old_root_name, "@root.snapshots-manager-old-")
 }
 
 fn cleanup_old_home_at(
     top_level: &Path,
     old_home_name: &str,
 ) -> Result<OldRootCleanupOutcome, ConfirmationError> {
-    cleanup_old_subvolume_at(
-        top_level,
-        old_home_name,
-        "@home.snapshots-manager-old-",
-        true,
-    )
+    cleanup_old_subvolume_at(top_level, old_home_name, "@home.snapshots-manager-old-")
 }
 
 fn cleanup_old_subvolume_at(
     top_level: &Path,
     old_root_name: &str,
     expected_prefix: &str,
-    delete_nonempty_descendants: bool,
 ) -> Result<OldRootCleanupOutcome, ConfirmationError> {
     validate_cleanup_name(old_root_name, expected_prefix)?;
     let old_root = top_level.join(old_root_name);
@@ -657,7 +671,7 @@ fn cleanup_old_subvolume_at(
                 format!("Could not inspect an old-root descendant subvolume: {error}"),
             )
         })?;
-        if !delete_nonempty_descendants && entries.next().is_some() {
+        if entries.next().is_some() {
             blocked.push(path_to_record(&relative)?);
             continue;
         }
@@ -1066,6 +1080,11 @@ mod tests {
             Ok(self.inner.lock().unwrap().parent_uuid.clone())
         }
 
+        fn current_root_uuid(&self) -> Result<String, ConfirmationError> {
+            self.call("root-uuid");
+            Ok(self.inner.lock().unwrap().parent_uuid.clone())
+        }
+
         fn current_home_snapshot_parent_uuid(&self) -> Result<String, ConfirmationError> {
             self.call("home-parent-uuid");
             Ok(self.inner.lock().unwrap().home_parent_uuid.clone())
@@ -1181,11 +1200,6 @@ mod tests {
             self.call(&format!("lineage-{outcome:?}"));
             Ok(())
         }
-
-        fn purge_personal_history(&self) -> Result<(), ConfirmationError> {
-            self.call("purge-personal-history");
-            Ok(())
-        }
     }
 
     fn record(kind: DeploymentKind, state: DeploymentState) -> DeploymentRecord {
@@ -1261,7 +1275,42 @@ mod tests {
     }
 
     #[test]
-    fn confirmed_factory_home_reset_verifies_home_then_purges_personal_history() {
+    fn home_only_confirmation_checks_both_identities_without_changing_system_lineage() {
+        let (backend, mut transaction) = FakeBackend::booted();
+        transaction.home_only = true;
+        transaction.target_deployment_id = transaction.fallback_deployment_id;
+        transaction.reset_home = true;
+        transaction.factory_home_snapshot_id = Some(PersonalSnapshotId::new());
+        transaction.factory_home_snapshot_uuid = Some(SNAPSHOT.into());
+        transaction.validate().unwrap();
+        {
+            let mut inner = backend.inner.lock().unwrap();
+            inner
+                .records
+                .get_mut(&transaction.target_deployment_id)
+                .unwrap()
+                .snapshot_parent_uuid = Some(SNAPSHOT.into());
+            inner.transaction = Some(transaction);
+        }
+        assert_eq!(
+            ConfirmationEngine::new(backend.clone())
+                .reconcile()
+                .unwrap(),
+            ConfirmationOutcome::Confirmed
+        );
+        let inner = backend.inner.lock().unwrap();
+        assert!(inner.calls.iter().any(|call| call == "root-uuid"));
+        assert!(inner.calls.iter().any(|call| call == "home-parent-uuid"));
+        assert!(
+            !inner
+                .calls
+                .iter()
+                .any(|call| call == "lineage-Confirmed" || call == "purge-personal-history")
+        );
+    }
+
+    #[test]
+    fn confirmed_factory_home_reset_verifies_home_and_preserves_personal_history() {
         let (backend, mut transaction) = FakeBackend::booted();
         transaction.reset_home = true;
         transaction.factory_home_snapshot_id = Some(PersonalSnapshotId::new());
@@ -1281,17 +1330,18 @@ mod tests {
             .iter()
             .position(|call| call == "home-parent-uuid")
             .unwrap();
-        let purged = inner
-            .calls
-            .iter()
-            .position(|call| call == "purge-personal-history")
-            .unwrap();
+        assert!(
+            !inner
+                .calls
+                .iter()
+                .any(|call| call == "purge-personal-history")
+        );
         let cleanup = inner
             .calls
             .iter()
             .position(|call| call == "schedule-old-root-cleanup")
             .unwrap();
-        assert!(verified < purged && purged < cleanup);
+        assert!(verified < cleanup);
     }
 
     #[test]

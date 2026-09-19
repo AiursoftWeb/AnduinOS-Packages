@@ -6,6 +6,7 @@ mod information;
 mod personal_history;
 mod snapshot_model;
 mod snapshot_page;
+pub(crate) use snapshot_page::rollback_confirmation;
 
 use std::cell::{Cell, RefCell};
 use std::time::Duration;

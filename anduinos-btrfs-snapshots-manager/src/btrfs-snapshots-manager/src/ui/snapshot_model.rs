@@ -56,11 +56,14 @@ impl SnapshotCapabilities {
             SnapshotScope::Home => Self {
                 can_browse: item.state == "ready",
                 can_verify: stable,
-                can_restore: false,
-                can_delete: matches!(item.state.as_str(), "ready" | "broken") && !item.keep_forever,
-                can_select: matches!(item.state.as_str(), "ready" | "broken") && !item.keep_forever,
-                can_pin: item.state == "ready",
-                can_rename: stable,
+                can_restore: item.state == "ready",
+                can_delete: matches!(item.state.as_str(), "ready" | "broken")
+                    && (!item.keep_forever || item.kind == "factory"),
+                can_select: matches!(item.state.as_str(), "ready" | "broken")
+                    && !item.keep_forever
+                    && item.kind != "factory",
+                can_pin: item.state == "ready" && item.kind != "factory",
+                can_rename: stable && item.kind != "factory",
             },
         }
     }
@@ -113,7 +116,11 @@ impl From<PersonalSnapshot> for SnapshotItem {
     fn from(value: PersonalSnapshot) -> Self {
         Self {
             id: value.id,
-            title: value.title,
+            title: if value.kind == "factory" {
+                "New OS".into()
+            } else {
+                value.title
+            },
             created_at: value.created_at,
             reason: value.reason,
             kind: value.kind,
@@ -186,11 +193,11 @@ mod tests {
     }
 
     #[test]
-    fn home_never_exposes_whole_snapshot_restore() {
+    fn home_exposes_browsing_and_whole_snapshot_restore() {
         let capabilities =
             SnapshotCapabilities::for_item(SnapshotScope::Home, &item("ready", false));
         assert!(capabilities.can_browse);
-        assert!(!capabilities.can_restore);
+        assert!(capabilities.can_restore);
     }
 
     #[test]
@@ -200,6 +207,19 @@ mod tests {
         assert!(!capabilities.can_delete);
         assert!(!capabilities.can_select());
         assert!(capabilities.can_pin);
+    }
+
+    #[test]
+    fn both_factory_scopes_have_identical_visible_protected_capabilities() {
+        let mut factory = item("ready", true);
+        factory.kind = "factory".into();
+        let system = SnapshotCapabilities::for_item(SnapshotScope::System, &factory);
+        let home = SnapshotCapabilities::for_item(SnapshotScope::Home, &factory);
+        assert!(home.can_restore && home.can_browse && home.can_delete);
+        assert!(!home.can_pin && !home.can_rename && !home.can_select);
+        assert_eq!(system.can_restore, home.can_restore);
+        assert_eq!(system.can_browse, home.can_browse);
+        assert_eq!(system.can_delete, home.can_delete);
     }
 
     #[test]

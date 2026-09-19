@@ -12,6 +12,7 @@ pub mod browse_lock;
 pub mod cleanup;
 pub mod confirmation;
 pub mod coordination;
+pub mod home_accounts;
 pub mod layout;
 pub mod lineage;
 pub mod model;

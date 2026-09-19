@@ -918,6 +918,39 @@ impl SnapshotsManagerHelper {
         }
     }
 
+    /// Factory deletion is deliberately separate from normal/batch deletion.
+    async fn delete_factory_personal_snapshot(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        snapshot_id: String,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_DELETE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_DELETE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match snapshot_id.parse::<PersonalSnapshotId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid Home snapshot ID: {error}")),
+        };
+        let result =
+            PersonalSnapshotEngine::default().delete_factory(&layout::inspect_current(), id);
+        let error = result.as_ref().err().map(ToString::to_string);
+        audit::log_operation(
+            uid,
+            pid,
+            "delete_factory_home",
+            &snapshot_id,
+            result.is_ok(),
+            error.as_deref(),
+        );
+        match result {
+            Ok(()) => (true, "Factory Home recovery point deleted".into()),
+            Err(error) => (false, error.to_string()),
+        }
+    }
+
     /// Delete multiple unpinned Home snapshots under one
     /// explicit authorization decision.
     async fn delete_personal_snapshots(
@@ -1535,6 +1568,73 @@ impl SnapshotsManagerHelper {
                 );
                 (false, error.to_string())
             }
+        }
+    }
+
+    /// Check whole-Home rollback; the same administrator policy as system restore applies.
+    async fn check_personal_restore_readiness(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        snapshot_id: String,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_RESTORE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_RESTORE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match snapshot_id.parse::<PersonalSnapshotId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid Home snapshot ID: {error}")),
+        };
+        match RollbackCoordinator::default().check_home_ready(id) {
+            Ok(_) => (true, "Home rollback prerequisites are ready".into()),
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "check_home_restore",
+                    &snapshot_id,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
+        }
+    }
+
+    async fn schedule_personal_restore(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        snapshot_id: String,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_RESTORE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_RESTORE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match snapshot_id.parse::<PersonalSnapshotId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid Home snapshot ID: {error}")),
+        };
+        let result = RollbackCoordinator::default()
+            .schedule_home(id, |_, _, _| {})
+            .map_err(|error| error.to_string())
+            .and_then(|transaction| {
+                serde_json::to_string(&transaction).map_err(|error| error.to_string())
+            });
+        audit::log_operation(
+            uid,
+            pid,
+            "schedule_home_restore",
+            &snapshot_id,
+            result.is_ok(),
+            result.as_ref().err().map(String::as_str),
+        );
+        match result {
+            Ok(json) => (true, json),
+            Err(error) => (false, error),
         }
     }
 
@@ -2221,7 +2321,7 @@ impl SnapshotsManagerHelper {
                 .map_err(|error| anyhow::anyhow!(error.message))?;
         let deployments = DeploymentStore::new(store_root).discover();
         let personal_engine = PersonalSnapshotEngine::new("/home", store_root, SystemCommandRunner);
-        let mut personal = personal_engine.discover();
+        let personal = personal_engine.discover();
         let layout = layout::inspect_current();
         let factory_homes = personal
             .snapshots
@@ -2230,9 +2330,6 @@ impl SnapshotsManagerHelper {
             .collect::<Vec<_>>();
         let factory_home_available = matches!(factory_homes.as_slice(), [record]
             if personal_engine.verify(&layout, record.id).is_ok());
-        personal
-            .snapshots
-            .retain(|record| record.kind != PersonalSnapshotKind::Factory);
         let package_counts = deployments
             .deployments
             .iter()
@@ -2263,6 +2360,7 @@ impl SnapshotsManagerHelper {
             "personal_snapshots": personal.snapshots,
             "personal_sizes": personal_sizes,
             "factory_home_available": factory_home_available,
+            "home_rollback_available": true,
             "issues": deployments.issues,
             "personal_issues": personal.issues,
             "layout": layout,

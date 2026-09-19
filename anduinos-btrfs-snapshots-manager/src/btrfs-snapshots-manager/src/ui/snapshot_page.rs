@@ -512,31 +512,21 @@ impl SnapshotPage {
             banner.set_revealed(issue_count > 0);
         }
         if let Some(banner) = self.imp().pending_banner.borrow().as_ref() {
-            if scope == SnapshotScope::System {
-                if let Some(pending) = &status.pending {
-                    let target = status
-                        .deployments
-                        .iter()
-                        .find(|item| item.id == pending.target_deployment_id)
-                        .map(|item| item.title.as_str())
-                        .unwrap_or(&pending.target_deployment_id);
-                    let presentation = pending_banner_presentation(target, pending);
-                    banner.set_title(&presentation.title);
-                    self.imp().pending_banner_action.set(presentation.action);
-                    let button = match presentation.action {
-                        PendingBannerAction::Cancel => Some(tr("Cancel Rollback")),
-                        PendingBannerAction::Reconcile => Some(tr("Retry Recovery")),
-                        PendingBannerAction::None => None,
-                    };
-                    banner.set_button_label(button.as_deref());
-                    banner.set_revealed(true);
-                } else {
-                    self.imp()
-                        .pending_banner_action
-                        .set(PendingBannerAction::None);
-                    banner.set_button_label(None);
-                    banner.set_revealed(false);
-                }
+            if let Some(pending) = status.pending.as_ref().filter(|pending| match scope {
+                SnapshotScope::System => !pending.home_only,
+                SnapshotScope::Home => pending.reset_home,
+            }) {
+                let target = pending_target_title(status, pending, scope);
+                let presentation = pending_banner_presentation(target, pending);
+                banner.set_title(&presentation.title);
+                self.imp().pending_banner_action.set(presentation.action);
+                let button = match presentation.action {
+                    PendingBannerAction::Cancel => Some(tr("Cancel Rollback")),
+                    PendingBannerAction::Reconcile => Some(tr("Retry Recovery")),
+                    PendingBannerAction::None => None,
+                };
+                banner.set_button_label(button.as_deref());
+                banner.set_revealed(true);
             } else {
                 self.imp()
                     .pending_banner_action
@@ -633,30 +623,15 @@ impl SnapshotPage {
         state_icon.set_tooltip_text(Some(&snapshot_state(item)));
         row.add_prefix(&state_icon);
 
-        let main_action = gtk::Button::with_label(&match scope {
-            SnapshotScope::System => tr("Roll Back"),
-            SnapshotScope::Home => tr("Browse Files"),
-        });
+        let main_action = gtk::Button::with_label(&tr("Roll Back"));
         main_action.set_valign(gtk::Align::Center);
-        main_action.set_sensitive(match scope {
-            SnapshotScope::System => capabilities.can_restore,
-            SnapshotScope::Home => capabilities.can_browse,
-        });
-        main_action.set_tooltip_text(Some(&match scope {
-            SnapshotScope::System => tr("Prepare a safe system rollback"),
-            SnapshotScope::Home => tr("Browse files in this snapshot"),
-        }));
-        if scope == SnapshotScope::System {
-            main_action.add_css_class("suggested-action");
-        }
+        main_action.set_sensitive(capabilities.can_restore);
+        main_action.add_css_class("suggested-action");
         let weak = self.downgrade();
         let item_main = item.clone();
         main_action.connect_clicked(move |_| {
             if let Some(page) = weak.upgrade() {
-                match page.imp().scope.get() {
-                    SnapshotScope::System => page.verify_then_confirm_rollback(item_main.clone()),
-                    SnapshotScope::Home => page.browse(&item_main),
-                }
+                page.verify_then_confirm_rollback(item_main.clone());
             }
         });
         row.add_suffix(&main_action);
@@ -933,12 +908,15 @@ impl SnapshotPage {
             Some(&parent),
             Some(&tr("Delete Factory Recovery Point?")),
             Some(&tr(
-                "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action.",
+                "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept.",
             )),
         );
         dialog.add_response("cancel", &tr("Cancel"));
         dialog.add_response("delete", &tr("Delete and Disable Factory Recovery"));
         dialog.set_response_appearance("delete", adw::ResponseAppearance::Destructive);
+        dialog.set_default_response(Some("cancel"));
+        dialog.set_close_response("cancel");
+        let scope = self.imp().scope.get();
         let weak = self.downgrade();
         dialog.connect_response(None, move |_, response| {
             if response != "delete" {
@@ -949,7 +927,11 @@ impl SnapshotPage {
             };
             let id = id.clone();
             page.run_mutation(&tr("Deleting factory recovery point…"), move || {
-                SnapshotsManagerHelperClient::new()?.delete_factory_deployment(id)
+                let client = SnapshotsManagerHelperClient::new()?;
+                match scope {
+                    SnapshotScope::System => client.delete_factory_deployment(id),
+                    SnapshotScope::Home => client.delete_factory_personal_snapshot(id),
+                }
             });
         });
         dialog.present();
@@ -1046,15 +1028,22 @@ impl SnapshotPage {
             return;
         };
         let id = item.id.clone();
+        let scope = self.imp().scope.get();
         let weak = self.downgrade();
         run_operation(
             &parent,
             &tr("Checking rollback safety…"),
             move || {
                 let client = SnapshotsManagerHelperClient::new()?;
-                let result = client.verify_snapshot(id.clone())?;
+                let result = match scope {
+                    SnapshotScope::System => client.verify_snapshot(id.clone())?,
+                    SnapshotScope::Home => client.verify_personal_snapshot(id.clone())?,
+                };
                 if result.is_valid {
-                    client.check_deployment_restore_readiness(id)?;
+                    match scope {
+                        SnapshotScope::System => client.check_deployment_restore_readiness(id)?,
+                        SnapshotScope::Home => client.check_personal_restore_readiness(id)?,
+                    }
                 }
                 Ok(result)
             },
@@ -1074,46 +1063,7 @@ impl SnapshotPage {
         let Some(parent) = self.parent() else {
             return;
         };
-        let dialog = adw::MessageDialog::new(
-            Some(&parent),
-            Some(&trf("Roll Back to {0}?", &[&item.title])),
-            Some(&tr(
-                "Preparing the rollback will arm recovery immediately and automatically restart this computer within 60 seconds. Save your work before continuing.",
-            )),
-        );
-        let list = gtk::ListBox::new();
-        list.add_css_class("boxed-list");
-        list.append(&impact_row(
-            &tr("System files and packages"),
-            &tr("Return to the selected snapshot"),
-            "drive-harddisk-symbolic",
-        ));
-        list.append(&impact_row(
-            &tr("Kernel"),
-            item.kernel
-                .as_deref()
-                .unwrap_or(&tr("Recorded snapshot kernel")),
-            "computer-symbolic",
-        ));
-        list.append(&impact_row(
-            &tr("Personal files"),
-            &tr("Will not change"),
-            "folder-documents-symbolic",
-        ));
-        list.append(&impact_row(
-            &tr("Current system"),
-            &tr("Protected while the rollback is pending"),
-            "security-high-symbolic",
-        ));
-        list.append(&impact_row(
-            &tr("Restart"),
-            &tr("Automatic 60-second countdown after preparation"),
-            "system-reboot-symbolic",
-        ));
-        dialog.set_extra_child(Some(&list));
-        dialog.add_response("cancel", &tr("Cancel"));
-        dialog.add_response("rollback", &tr("Prepare and Restart"));
-        dialog.set_response_appearance("rollback", adw::ResponseAppearance::Destructive);
+        let dialog = rollback_confirmation(&parent, &item.title, self.imp().scope.get());
         let weak = self.downgrade();
         let id = item.id.clone();
         dialog.connect_response(None, move |_, response| {
@@ -1178,12 +1128,16 @@ impl SnapshotPage {
             return;
         };
         let weak = self.downgrade();
+        let scope = self.imp().scope.get();
         run_operation(
             &parent,
             &tr("Preparing safe rollback…"),
             move || {
-                let result =
-                    SnapshotsManagerHelperClient::new()?.schedule_deployment_restore(id)?;
+                let client = SnapshotsManagerHelperClient::new()?;
+                let result = match scope {
+                    SnapshotScope::System => client.schedule_deployment_restore(id)?,
+                    SnapshotScope::Home => client.schedule_personal_restore(id)?,
+                };
                 if !result.0 {
                     anyhow::bail!(result.1);
                 }
@@ -1368,6 +1322,58 @@ fn snapshot_icon(item: &SnapshotItem) -> &'static str {
     }
 }
 
+pub(crate) fn rollback_confirmation(
+    parent: &adw::ApplicationWindow,
+    title: &str,
+    scope: SnapshotScope,
+) -> adw::MessageDialog {
+    let dialog = adw::MessageDialog::new(
+        Some(parent),
+        Some(&trf("Roll Back to {0}?", &[title])),
+        Some(&tr(
+            "Preparing the rollback will arm recovery immediately and automatically restart this computer within 60 seconds. Save your work before continuing.",
+        )),
+    );
+    let list = gtk::ListBox::new();
+    list.set_selection_mode(gtk::SelectionMode::None);
+    list.add_css_class("boxed-list");
+    let home = scope == SnapshotScope::Home;
+    list.append(&impact_row(
+        &tr("System files and packages"),
+        &if home {
+            tr("Will not change")
+        } else {
+            tr("Return to the selected snapshot")
+        },
+        "drive-harddisk-symbolic",
+    ));
+    list.append(&impact_row(
+        &tr("All users’ files and settings"),
+        &if home {
+            tr("Return to the selected snapshot")
+        } else {
+            tr("Will not change")
+        },
+        "folder-documents-symbolic",
+    ));
+    let content = gtk::Box::new(gtk::Orientation::Vertical, 12);
+    content.append(&list);
+    let note = gtk::Label::new(Some(&tr(
+        "A safety snapshot is created first. Snapshot history is kept.",
+    )));
+    note.set_wrap(true);
+    note.add_css_class("dim-label");
+    content.append(&note);
+    dialog.set_default_size((parent.width() - 48).clamp(300, 580), -1);
+    dialog.set_extra_child(Some(&content));
+    dialog.set_default_response(Some("cancel"));
+    dialog.set_close_response("cancel");
+    dialog.add_response("cancel", &tr("Cancel"));
+    dialog.add_response("rollback", &tr("Prepare and Restart"));
+    dialog.set_response_appearance("rollback", adw::ResponseAppearance::Destructive);
+    dialog
+}
+
 fn impact_row(title: &str, subtitle: &str, icon: &str) -> adw::ActionRow {
     let row = adw::ActionRow::new();
     row.set_title(title);
@@ -1380,6 +1386,36 @@ fn impact_row(title: &str, subtitle: &str, icon: &str) -> adw::ActionRow {
 struct PendingBannerPresentation {
     title: String,
     action: PendingBannerAction,
+}
+
+fn pending_target_title<'a>(
+    status: &'a RecoveryEngineStatus,
+    pending: &'a PendingRecovery,
+    scope: SnapshotScope,
+) -> &'a str {
+    match scope {
+        SnapshotScope::System => status
+            .deployments
+            .iter()
+            .find(|item| item.id == pending.target_deployment_id)
+            .map(|item| item.title.as_str())
+            .unwrap_or(&pending.target_deployment_id),
+        SnapshotScope::Home => {
+            let id = pending.factory_home_snapshot_id.as_deref().unwrap_or("");
+            status
+                .personal_snapshots
+                .iter()
+                .find(|item| item.id == id)
+                .map(|item| {
+                    if item.kind == "factory" {
+                        "New OS"
+                    } else {
+                        item.title.as_str()
+                    }
+                })
+                .unwrap_or(id)
+        }
+    }
 }
 
 fn pending_banner_presentation(
@@ -1410,7 +1446,7 @@ fn pending_banner_presentation(
             PendingBannerAction::Reconcile,
         ),
         "reverting" => (
-            tr("Rollback confirmation failed. The protected previous system is being restored."),
+            tr("Rollback confirmation failed. Restoring the previous state."),
             PendingBannerAction::None,
         ),
         "reverted" => (
@@ -1588,7 +1624,7 @@ fn show_rollback_ready(parent: &adw::ApplicationWindow) {
         Some(parent),
         Some(&tr("Restart Required — Rollback Armed")),
         Some(&tr(
-            "Rollback is armed. To prevent new system changes from being lost, this computer will restart automatically when the 60-second countdown ends. Save any open personal files now.",
+            "Rollback is ready. Save your work; this computer will restart within 60 seconds.",
         )),
     );
     dialog.add_response(
@@ -1770,6 +1806,9 @@ mod tests {
     fn pending(phase: &str) -> PendingRecovery {
         PendingRecovery {
             target_deployment_id: "target".into(),
+            home_only: false,
+            reset_home: false,
+            factory_home_snapshot_id: None,
             phase: phase.into(),
             failure: None,
         }

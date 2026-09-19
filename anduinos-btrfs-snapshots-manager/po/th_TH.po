@@ -1995,3 +1995,35 @@ msgstr "ลบไฟล์ในโฟลเดอร์ส่วนตัวข
 #: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
 msgid "Restore the system to New OS. Personal files are kept by default."
 msgstr "คืนค่าระบบเป็นสถานะ New OS โดยเก็บไฟล์ส่วนตัวไว้ตามค่าเริ่มต้น"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "ย้อนคืนข้อมูลผู้ใช้"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "คืนค่าไฟล์และการตั้งค่าของผู้ใช้ทุกคนเป็นสถานะเริ่มต้น โดยเก็บประวัติสแนปช็อตไว้"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "จะสร้างสแนปช็อตเพื่อความปลอดภัยก่อนย้อนคืน และเริ่มระบบใหม่ภายใน 60 วินาทีหลังเตรียมพร้อม"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "การลบ New OS จะปิดใช้งานการคืนค่าโรงงานสำหรับสแนปช็อตประเภทนี้ โดยเก็บไฟล์ปัจจุบันและสแนปช็อตอื่นไว้"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "ไฟล์และการตั้งค่าของผู้ใช้ทุกคน"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "จะสร้างสแนปช็อตเพื่อความปลอดภัยก่อน โดยเก็บประวัติสแนปช็อตไว้"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "พร้อมย้อนคืนแล้ว โปรดบันทึกงาน คอมพิวเตอร์จะเริ่มระบบใหม่ภายใน 60 วินาที"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "ยืนยันการย้อนคืนไม่สำเร็จ กำลังคืนค่าสถานะก่อนหน้า"

@@ -1995,3 +1995,35 @@ msgstr "Wis de bestanden in de persoonlijke mappen van alle gebruikers en de mom
 #: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
 msgid "Restore the system to New OS. Personal files are kept by default."
 msgstr "Herstel het systeem naar New OS. Persoonlijke bestanden blijven standaard behouden."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Gebruikersgegevens terugzetten"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Zet de bestanden en instellingen van alle gebruikers terug naar de oorspronkelijke staat. De momentopnamegeschiedenis blijft behouden."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Vóór het terugzetten worden veiligheidsmomentopnamen gemaakt. Binnen 60 seconden na de voorbereiding wordt de computer opnieuw opgestart."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "Als u New OS verwijdert, wordt fabrieksherstel voor deze categorie momentopnamen uitgeschakeld. Huidige bestanden en andere momentopnamen blijven behouden."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Bestanden en instellingen van alle gebruikers"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Eerst wordt een veiligheidsmomentopname gemaakt. De momentopnamegeschiedenis blijft behouden."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Het terugzetten is gereed. Sla uw werk op; deze computer start binnen 60 seconden opnieuw op."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Het bevestigen van de herstelactie is mislukt. De vorige staat wordt hersteld."
