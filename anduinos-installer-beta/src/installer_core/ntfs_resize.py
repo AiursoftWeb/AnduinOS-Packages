@@ -31,6 +31,7 @@ class NtfsResizeBlockReason(str, Enum):
     INCONSISTENT = "inconsistent"
     PROBE_FAILED = "probe-failed"
     CHECK_FAILED = "check-failed"
+    CHECK_REQUIRED = "check-required"
     RANGE_UNAVAILABLE = "range-unavailable"
     INSUFFICIENT_SPACE = "insufficient-space"
     TARGET_OUT_OF_RANGE = "target-out-of-range"
@@ -206,7 +207,7 @@ def inspect_ntfs_resize(
             device,
             filesystem,
             current_size_bytes,
-            NtfsResizeBlockReason.CHECK_FAILED,
+            _failure_reason(check, NtfsResizeBlockReason.CHECK_FAILED),
             _diagnostic(check, "NTFS consistency checking failed."),
             probe_exit_code=probe.returncode,
             target_size_bytes=target_size_bytes,
@@ -223,7 +224,7 @@ def inspect_ntfs_resize(
             device,
             filesystem,
             current_size_bytes,
-            NtfsResizeBlockReason.RANGE_UNAVAILABLE,
+            _failure_reason(info, NtfsResizeBlockReason.RANGE_UNAVAILABLE),
             _diagnostic(info, "NTFS could not report a safe shrink range."),
             probe_exit_code=probe.returncode,
             target_size_bytes=target_size_bytes,
@@ -300,7 +301,7 @@ def inspect_ntfs_resize(
                 device,
                 filesystem,
                 current_size_bytes,
-                NtfsResizeBlockReason.TARGET_REJECTED,
+                _failure_reason(dry_run, NtfsResizeBlockReason.TARGET_REJECTED),
                 _diagnostic(dry_run, "NTFS rejected the requested size."),
                 probe_exit_code=probe.returncode,
                 minimum_size_bytes=minimum_size_bytes,
@@ -453,6 +454,18 @@ def _blocked(
         probe_exit_code=probe_exit_code,
         target_size_bytes=target_size_bytes,
     )
+
+
+def _failure_reason(
+    result: subprocess.CompletedProcess[str],
+    fallback: NtfsResizeBlockReason,
+) -> NtfsResizeBlockReason:
+    # Inspect the complete C-locale output, not only its last diagnostic line.
+    # ntfsresize can report this during consistency, range, or target checks.
+    output = (result.stdout + "\n" + result.stderr).lower()
+    if "volume is scheduled for check" in output:
+        return NtfsResizeBlockReason.CHECK_REQUIRED
+    return fallback
 
 
 def _diagnostic(

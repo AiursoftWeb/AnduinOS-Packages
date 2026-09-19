@@ -3,9 +3,11 @@ import gettext
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
+from types import SimpleNamespace
 
 from i18n import DOMAIN, _, clear_translation_cache
 from languages import DEFAULT_LANGUAGE, KEYBOARD_LAYOUTS, LANGUAGES
+from installer_core.ntfs_resize import NtfsResizeBlockReason
 
 
 PACKAGE = Path(__file__).resolve().parents[1]
@@ -14,6 +16,37 @@ LOCALE_DIR = PACKAGE / "locale"
 
 
 class LocalizationTests(unittest.TestCase):
+    def test_disk_check_error_uses_selected_language_instead_of_raw_force_advice(self):
+        tree = ast.parse((PACKAGE / "src/pages.py").read_text(encoding="utf-8"))
+        function = next(node for node in ast.walk(tree)
+                        if isinstance(node, ast.FunctionDef)
+                        and node.name == "_resize_block_message")
+        code = compile(ast.Module(body=[function], type_ignores=[]), "pages.py", "exec")
+        source = (
+            "This NTFS volume requires a disk integrity check in Windows. "
+            "Restart into Windows and complete the disk check, then fully "
+            "shut down Windows before trying again."
+        )
+        inspection = SimpleNamespace(
+            block_reason=NtfsResizeBlockReason.CHECK_REQUIRED,
+            message="Run chkdsk /f and please try again, or see option -f.",
+        )
+        self.assertEqual(len(LANGUAGES), 28)
+        for language in LANGUAGES:
+            with self.subTest(language=language.code):
+                namespace = {"_": _, "lang": language.code,
+                             "NtfsResizeBlockReason": NtfsResizeBlockReason}
+                exec(code, namespace)
+                message = namespace["_resize_block_message"](inspection)
+                self.assertTrue(message)
+                self.assertNotIn("option -f", message)
+                self.assertEqual(message, _(source, language.code))
+                if language.code not in {DEFAULT_LANGUAGE, "en_GB"}:
+                    self.assertNotEqual(message, source)
+        self.assertEqual(_(source, "zh_CN"),
+                         "此 NTFS 分区需要在 Windows 中完成磁盘完整性检查。"
+                         "请重启并进入 Windows，完成磁盘检查后彻底关机，再重试。")
+
     def tearDown(self):
         clear_translation_cache()
 

@@ -4812,6 +4812,13 @@ def build_advanced_storage_page(shared, nav_view):
 
     def _resize_block_message(inspection):
         reason = inspection.block_reason
+        if reason is NtfsResizeBlockReason.CHECK_REQUIRED:
+            return _(
+                "This NTFS volume requires a disk integrity check in Windows. "
+                "Restart into Windows and complete the disk check, then fully "
+                "shut down Windows before trying again.",
+                lang,
+            )
         if reason is NtfsResizeBlockReason.BITLOCKER:
             return _(
                 "BitLocker was detected. Return to Windows, open Manage "
