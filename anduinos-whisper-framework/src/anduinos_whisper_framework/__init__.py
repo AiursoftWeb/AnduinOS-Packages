@@ -3,4 +3,4 @@
 APP_ID = "com.anduinos.VoiceTyping"
 OBJECT_PATH = "/com/anduinos/VoiceTyping"
 INTERFACE = APP_ID
-VERSION = "2.0.2"
+VERSION = "2.0.3"

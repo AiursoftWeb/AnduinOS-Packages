@@ -741,7 +741,7 @@ class VoiceTypingApplication(Adw.Application):
         dialog.set_application_name(_("AnduinOS Voice Typing"))
         dialog.set_application_icon(APP_ID)
         dialog.set_developer_name(_("AnduinOS Team"))
-        dialog.set_version("2.0.2")
+        dialog.set_version("2.0.3")
         dialog.set_comments(_("Private, offline speech-to-text for the whole desktop."))
         dialog.set_website("https://www.anduinos.com")
         dialog.set_issue_url("https://github.com/AiursoftWeb/AnduinOS/issues")

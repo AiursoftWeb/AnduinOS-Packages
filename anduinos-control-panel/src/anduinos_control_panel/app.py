@@ -1955,7 +1955,7 @@ class ControlPanelApplication(Adw.Application):
         dialog.set_application_name(_("AnduinOS Control Panel"))
         dialog.set_application_icon(APP_ID)
         dialog.set_developer_name(_("AnduinOS Team"))
-        dialog.set_version("2.0.2")
+        dialog.set_version("2.0.3")
         dialog.set_comments(_("Find and manage AnduinOS system settings."))
         dialog.set_website("https://www.anduinos.com")
         dialog.set_issue_url(
