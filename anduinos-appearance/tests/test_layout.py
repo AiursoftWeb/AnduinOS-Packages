@@ -5,25 +5,12 @@ import sys
 import unittest
 from unittest import mock
 
-
 SRC = pathlib.Path(__file__).parents[1] / "src"
-APP_SOURCE = SRC / "anduinos-appearance"
 sys.path.insert(0, str(SRC))
 
 from anduinos_appearance import layout  # noqa: E402
 
-
 class LayoutTests(unittest.TestCase):
-    def test_extension_titles_are_literal_gettext_calls(self):
-        source = APP_SOURCE.read_text(encoding="utf-8")
-        for title in (
-            "ArcMenu",
-            "Dash-to-Panel",
-            "Simple Weather",
-            "Network Stats",
-        ):
-            self.assertIn(f"_('{title}')", source)
-        self.assertNotIn("row.set_title(_(title_key))", source)
 
     @staticmethod
     def completed(stdout="", returncode=0):
@@ -77,14 +64,24 @@ class LayoutTests(unittest.TestCase):
             ["dconf", "write", f"{layout.DTP}/group-apps", "true"], commands
         )
 
-    def test_seperated_uses_classic_menu_height(self):
-        result, commands = self.run_with_dconf("seperated")
+    def test_separated_uses_classic_menu_height(self):
+        result, commands = self.run_with_dconf("separated")
 
         self.assertTrue(result)
         self.assert_write(commands, f"{layout.ARC}/menu-height", "785")
         self.assert_write(
             commands, f"{layout.ARC}/menu-arrow-rise", "(true, -8)"
         )
+
+    def test_detect_current_reports_separated_with_correct_spelling(self):
+        values = {
+            f"{layout.ARC}/menu-layout": "'arcmenu'",
+            f"{layout.DTP}/panel-element-positions": '"centerMonitor"',
+            f"{layout.DTP}/panel-positions": '"BOTTOM"',
+        }
+
+        with mock.patch.object(layout, "dconf_read", side_effect=values.get):
+            self.assertEqual(layout.detect_current(), ("separated", "bottom"))
 
     def test_classic_menu_height_scales_with_screen_height(self):
         self.assertEqual(layout.calculate_menu_height("classic", 600), 650)
@@ -131,7 +128,6 @@ class LayoutTests(unittest.TestCase):
             mock.patch.object(layout, "_smallest_monitor_height", return_value=1080),
         ):
             self.assertFalse(layout.apply_style_and_position("eleven", "bottom"))
-
 
 if __name__ == "__main__":
     unittest.main()

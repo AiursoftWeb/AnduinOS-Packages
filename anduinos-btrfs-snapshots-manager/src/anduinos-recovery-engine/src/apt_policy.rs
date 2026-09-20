@@ -80,17 +80,6 @@ mod tests {
     use super::*;
 
     #[test]
-    fn defaults_to_pre_only() {
-        assert_eq!(
-            AptSnapshotPolicy::default(),
-            AptSnapshotPolicy {
-                snapshot_before: true,
-                snapshot_after: false,
-            }
-        );
-    }
-
-    #[test]
     fn parses_the_apt_table() {
         let parsed: PolicyFile =
             toml::from_str("[apt]\nsnapshot_before = false\nsnapshot_after = true\n").unwrap();

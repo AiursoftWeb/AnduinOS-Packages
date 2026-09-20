@@ -11,16 +11,20 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .command import CommandRunner
-from .model import InstallMode, InstallPlan, PlatformSpec
+from .model import Architecture, InstallMode, InstallPlan, PlatformSpec
 from .probe import PlatformProbe, probe_platform
 from .storage_commands import partition_path
-from .storage_graph import BlockReferenceKind
+from .storage_graph import (
+    BlockReferenceKind,
+    StorageGraphAction,
+)
 from .storage_graph_planning import resolve_storage_graph
 from .storage_inventory import StorageInventory, probe_storage_inventory
 from .swap_policy import (
     SwapSizingError,
     calculate_swap_sizing,
     probe_physical_memory_bytes,
+    validate_disk_swap_selection,
 )
 from .validation import (
     ExecutionPolicy,
@@ -105,29 +109,35 @@ def verify_target_disk_environment(
     runner.require_root()
 
     try:
-        resolved_plan = resolve_storage_graph(plan, inventory_probe())
+        inventory = inventory_probe()
+        if inventory.live_media_disks is None:
+            raise ValueError("Cannot safely identify the Live installation media")
+        resolved_plan = resolve_storage_graph(plan, inventory)
+        disk = inventory.disk(resolved_plan.storage.disk.stable_id)
+        if disk.identity.path in inventory.live_media_disks:
+            raise ValueError("The Live installation media cannot be an installation target")
+        if disk.read_only:
+            raise ValueError("The installation target is read-only")
     except ValueError as error:
         raise PreflightError(str(error)) from error
-    try:
-        expected_swap = calculate_swap_sizing(
-            (physical_memory_probe or probe_physical_memory_bytes)(),
-            _installation_space_bytes(resolved_plan),
-            esp_size_mib=_installation_esp_size_mib(resolved_plan),
-        )
-    except (RuntimeError, SwapSizingError, ValueError) as error:
-        raise PreflightError(
-            f"Could not validate disk swap size: {error}"
-        ) from error
-    if resolved_plan.storage.swap_size_mib != expected_swap.swap_size_mib:
-        raise PreflightError(
-            "Planned disk swap size is stale: expected "
-            f"{expected_swap.swap_size_mib} MiB for the current memory and "
-            f"installation space, found "
-            f"{resolved_plan.storage.swap_size_mib} MiB"
-        )
+    if resolved_plan.storage.mode is not InstallMode.MANUAL:
+        try:
+            swap_sizing = calculate_swap_sizing(
+                (physical_memory_probe or probe_physical_memory_bytes)(),
+                _installation_space_bytes(resolved_plan),
+                esp_size_mib=_installation_esp_size_mib(resolved_plan),
+            )
+            validate_disk_swap_selection(
+                resolved_plan.storage.swap_size_mib,
+                swap_sizing,
+            )
+        except (RuntimeError, SwapSizingError, ValueError) as error:
+            raise PreflightError(
+                f"Could not validate disk swap size: {error}"
+            ) from error
     _reject_active_target_disk(
         runner,
-        resolved_plan.storage.disk.path,
+        resolved_plan,
         namespace_mount_probe=namespace_mount_probe,
     )
     return resolved_plan
@@ -166,10 +176,14 @@ def _installation_esp_size_mib(plan: InstallPlan) -> int:
 
 def _reject_active_target_disk(
     runner: CommandRunner,
-    disk: str,
+    plan: InstallPlan,
     *,
     namespace_mount_probe: NamespaceMountProbe | None = None,
 ) -> None:
+    disk = plan.storage.disk.path
+    output_fields = "PATH,TYPE,MOUNTPOINTS"
+    if plan.storage.mode is InstallMode.MANUAL:
+        output_fields += ",PARTUUID"
     runner.require_commands(("lsblk",))
     result = runner.run(
         (
@@ -177,7 +191,7 @@ def _reject_active_target_disk(
             "--json",
             "--paths",
             "--output",
-            "PATH,TYPE,MOUNTPOINTS",
+            output_fields,
             disk,
         ),
         check=False,
@@ -196,6 +210,41 @@ def _reject_active_target_disk(
             "lsblk returned invalid target usage data"
         ) from error
 
+    graph = plan.storage.graph
+    assert graph is not None
+    allowed_retry_swaps = {
+        partition_path(disk, item.number)
+        for item in graph.partitions
+        if item.name == "swap"
+    }
+    if plan.storage.mode is InstallMode.ERASE_DISK:
+        allowed_retry_swaps.add(
+            partition_path(
+                disk,
+                3
+                if plan.platform.architecture is Architecture.AMD64
+                else 2,
+            )
+        )
+
+    manual_deleted_partuuids: set[str] = set()
+    manual_reinitializes_gpt = False
+    if plan.storage.mode is InstallMode.MANUAL:
+        references = {
+            item.reference_id: item.stable_id
+            for item in graph.block_references
+            if item.kind is BlockReferenceKind.PARTITION
+        }
+        manual_deleted_partuuids = {
+            references[item.target_id]
+            for item in graph.operations
+            if item.action is StorageGraphAction.DELETE_PARTITION
+        }
+        manual_reinitializes_gpt = any(
+            item.action is StorageGraphAction.REPLACE_PARTITION_TABLE
+            for item in graph.operations
+        )
+
     devices = tuple(_walk_block_devices(roots))
     for device in devices:
         path = str(device.get("path") or disk)
@@ -204,15 +253,24 @@ def _reject_active_target_disk(
             for item in (device.get("mountpoints") or ())
             if item
         )
-        retry_swap = partition_path(disk, 3)
         if (
             mountpoints == ("[SWAP]",)
-            and path == retry_swap
             and str(device.get("type") or "") == "part"
+            and (
+                path in allowed_retry_swaps
+                or (
+                    plan.storage.mode is InstallMode.MANUAL
+                    and (
+                        manual_reinitializes_gpt
+                        or str(device.get("partuuid") or "")
+                        in manual_deleted_partuuids
+                    )
+                )
+            )
         ):
-            # The whole-disk layout always owns partition 3 as swap.  A failed
-            # earlier attempt may leave it active; PrepareStorageStep safely
-            # disables this exact partition before changing the table.
+            # A failed attempt can leave either the currently planned swap or
+            # the former erase-disk swap active. PrepareStorageStep disables
+            # only that exact device before changing the partition table.
             continue
         if mountpoints:
             raise PreflightError(

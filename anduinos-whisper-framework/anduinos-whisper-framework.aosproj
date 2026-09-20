@@ -1,0 +1,63 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-whisper-framework</PackageName>
+    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Offline voice-typing engine for AnduinOS, using PipeWire and whisper.cpp.</PackageDescription>
+    <Section>utils</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Dependency Include="python3" />
+    <Dependency Include="python3-gi" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+    <Dependency Include="gir1.2-gstreamer-1.0" />
+    <Dependency Include="gir1.2-gst-plugins-base-1.0" />
+    <Dependency Include="gstreamer1.0-pipewire" />
+    <Dependency Include="gstreamer1.0-plugins-base" />
+    <Dependency Include="gstreamer1.0-plugins-good" />
+    <Dependency Include="gstreamer1.0-plugins-bad" />
+    <Dependency Include="anduinos-whisper-worker" />
+    <Dependency Include="pipewire-bin" />
+    <Dependency Include="sound-theme-freedesktop" />
+    <Dependency Include="libopencc1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="bash scripts/download-model.sh" />
+    <PrebuildCommand Run="bash scripts/download-vad-model.sh" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IncludeScript Include="src/anduinos-whisper-framework" Target="/usr/libexec/anduinos-whisper-framework" />
+    <IncludeScript Include="src/anduinos-voice-diagnostics" Target="/usr/bin/anduinos-voice-diagnostics" />
+    <IncludeFolder Include="src/anduinos_whisper_framework" Target="/usr/lib/python3/dist-packages/anduinos_whisper_framework" />
+    <IncludeFile Include="data/com.anduinos.VoiceTyping.service" Target="/usr/share/dbus-1/services/com.anduinos.VoiceTyping.service" />
+    <IncludeFile Include="data/com.anduinos.voice-typing.gschema.xml" Target="/usr/share/glib-2.0/schemas/com.anduinos.voice-typing.gschema.xml" />
+    <IncludeFile Include="obj/models/ggml-base.bin" Target="/usr/share/anduinos-whisper-framework/models/ggml-base.bin" />
+    <IncludeFile Include="obj/models/ggml-silero-v6.2.0.bin" Target="/usr/share/anduinos-whisper-framework/models/ggml-silero-v6.2.0.bin" />
+    <IncludeFile Include="VAD-NOTICE" Target="/usr/share/doc/anduinos-whisper-framework/VAD-NOTICE" />
+    <IncludeFile Include="VAD-LICENSE" Target="/usr/share/doc/anduinos-whisper-framework/VAD-LICENSE" />
+    <IncludeFile Include="MODEL-NOTICE" Target="/usr/share/doc/anduinos-whisper-framework/MODEL-NOTICE" />
+    <IncludeFile Include="MODEL-LICENSE" Target="/usr/share/doc/anduinos-whisper-framework/MODEL-LICENSE" />
+    <IncludeFolder Include="data/benchmark" Target="/usr/share/anduinos-whisper-framework/benchmark" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+    <TestCommand Name="diagnostics" Profile="anduinos-package-release-test" Run="dbus-run-session -- env ANDUINOS_ISOLATED_TEST_BUS=1 python3 tests/integration/smoke-diagnostics.py" TimeoutSeconds="60" />
+    <TestCommand Name="models" Profile="voice-native" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests/native -v" TimeoutSeconds="1800" />
+    <TestCommand Name="benchmarks" Profile="voice-cpu" Run="bash tests/run-cpu.sh" TimeoutSeconds="7200" />
+  </ItemGroup>
+</Project>

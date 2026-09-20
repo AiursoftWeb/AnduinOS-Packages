@@ -283,16 +283,22 @@ driver   : nvidia-driver-595-server-open - distro non-free
             private = Path(directory) / "MOK.priv"
             certificate = Path(directory) / "MOK.der"
             configuration = Path(directory) / "anduinos-sb-sign.conf"
+            efi_firmware = Path(directory) / "efi"
             private.write_text("private")
             certificate.write_text("certificate")
             configuration.write_text("configuration")
+            efi_firmware.mkdir()
             responses = {
                 ("mokutil", "--sb-state"): subprocess.CompletedProcess([], 0, "SecureBoot enabled\n", ""),
                 ("mokutil", "--test-key", str(certificate)): subprocess.CompletedProcess([], 1, "MOK.der is already enrolled\n", ""),
                 ("openssl", "x509", "-in", str(certificate), "-inform", "DER", "-noout", "-serial"): subprocess.CompletedProcess([], 0, "serial=AA12BB34\n", ""),
             }
             state = secure_boot_state(
-                FakeRunner(responses), private, certificate, configuration
+                FakeRunner(responses),
+                private,
+                certificate,
+                configuration,
+                efi_firmware,
             )
             self.assertTrue(state.ready)
             self.assertEqual(state.certificate_serial, "aa12bb34")
@@ -312,10 +318,15 @@ driver   : nvidia-driver-595-server-open - distro non-free
         self.assertTrue(state.enforcement_inactive)
 
     def test_failed_secure_boot_probe_blocks_driver_readiness(self):
-        state = secure_boot_state(FakeRunner())
-        self.assertEqual(state.status, SecureBootStatus.UNKNOWN)
-        self.assertFalse(state.ready)
-        self.assertFalse(state.enforcement_inactive)
+        with tempfile.TemporaryDirectory() as directory:
+            efi_firmware = Path(directory) / "efi"
+            efi_firmware.mkdir()
+            state = secure_boot_state(
+                FakeRunner(), efi_firmware=efi_firmware
+            )
+            self.assertEqual(state.status, SecureBootStatus.UNKNOWN)
+            self.assertFalse(state.ready)
+            self.assertFalse(state.enforcement_inactive)
 
     def test_xbox_distinguishes_signature_mismatch_from_missing_module(self):
         from anduinos_driver_center.core import SecureBootState

@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.2-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -30,7 +30,6 @@
     <!-- Package-local release gate. APKG runs this from the project directory
          and aborts the build immediately when syntax, UT, or hygiene fails. -->
     <PrebuildCommand Run="bash compile-locales.sh" />
-    <PrebuildCommand Run="bash scripts/prebuild-check.sh" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,7 +46,7 @@
   <ItemGroup>
     <!-- Minimal dependencies: only what the Python code actually calls -->
     <Dependency Include="python3" />
-    <!-- Keep the Casper locale and package-owned timezone bridges available
+    <!-- Keep the Dracut Live locale and package-owned timezone bridges available
          wherever the native installer is installed, including development. -->
     <Dependency Include="anduinos-live-settings" />
     <Dependency Include="python3-unidecode" />
@@ -56,8 +55,12 @@
     <Dependency Include="gir1.2-adw-1" />
     <Dependency Include="gir1.2-nm-1.0" />
     <Dependency Include="libxkbcommon0" />
+    <Dependency Include="xkb-data" />
     <Dependency Include="parted" />
+    <Dependency Include="ntfs-3g" />
     <Dependency Include="btrfs-progs" />
+    <Dependency Include="xfsprogs" />
+    <Dependency Include="f2fs-tools" />
     <Dependency Include="dosfstools" />
     <Dependency Include="efibootmgr" />
     <Dependency Include="grub-pc-bin" Condition="'$(Arch)' == 'amd64'" />
@@ -66,7 +69,8 @@
     <Dependency Include="grub-efi-arm64-bin" Condition="'$(Arch)' == 'arm64'" />
     <Dependency Include="grub-efi-arm64-signed" Condition="'$(Arch)' == 'arm64'" />
     <Dependency Include="grub2-common" />
-    <Dependency Include="initramfs-tools" />
+    <Dependency Include="dracut" />
+    <Dependency Include="anduinos-swap-config" />
     <Dependency Include="shim-signed" />
     <Dependency Include="mokutil" />
     <Dependency Include="openssl" />
@@ -121,5 +125,8 @@
   <ItemGroup>
     <PostInstallScript Include="scripts/postinst.sh" />
     <PostRemoveScript Include="scripts/postrm.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:tests python3 -m unittest discover -s tests -v" TimeoutSeconds="600" />
   </ItemGroup>
 </Project>

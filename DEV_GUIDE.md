@@ -1,276 +1,299 @@
-# .aosproj Package Development Guide
+# Package Development Guide
 
-## Core Principle
+This guide covers the conventions for maintaining AnduinOS packages.
+Package-specific implementation details belong beside the package source;
+the [README](README.md) contains the repository overview.
 
-**资源级改动不 derive，身份级改动 derive。**
+## Package layout and ownership
 
-| 改动类型 | 模式 | 示例 |
-|---|---|---|
-| 替换资源文件（图片、图标、音频） | 独立 branding 包 | plymouth logo、壁纸、图标主题 |
-| 替换系统身份文件（os-release、issue） | derive | base-files |
-| 覆盖上游功能（修改配置文件逻辑） | derive | 待定 |
+Keep each package's source, resources, tests, and build helpers in its own
+directory alongside its `.aosproj`.
 
-## Why
+- `src/`: application code and executable entry points.
+- `data/`: desktop entries, icons, service units, and other integration files.
+- `tests/`: tests owned by the package.
+- `po/`: translation sources.
+- `screenshots/`: images referenced by AppStream declarations.
+- `bin/`, `obj/`, and `target/`: ignored build output.
 
-### Derive mode (derives from an upstream .deb)
+Use `assets/` or `resources/` when they describe the package's structure
+better. Do not move existing files solely to standardize directory names.
+Do not put package-specific assertions in shared helpers or make one package's
+tests scan unrelated packages.
 
-- Downloads the upstream .deb, extracts it, overlays local files, repacks
-- The package **replaces** the upstream package entirely
-- Version is `$(UpstreamVersion)-anduinos`
+## Choosing a packaging approach
 
-**Use when:** you are changing system identity files that must not coexist with
-the original package (e.g., `/etc/os-release`, `/etc/lsb-release`). Two packages
-owning the same conffile causes dpkg conflicts.
+Choose based on file ownership and upgrade behavior, not just whether a
+change is branding.
 
-**Do NOT use when:** the upstream package has sibling sub-packages with exact
-version dependencies (e.g., `plymouth` → `plymouth-theme-spinner`). The
-`-anduinos` suffix breaks `Depends: plymouth (= exact-version)`.
+- Use a standalone package for new applications, resources, or configuration
+  that can coexist with upstream packages.
+- Derive from an upstream package when its contents must be inherited and
+  modified. Review inherited dependencies and maintainer scripts.
+- When replacing an upstream package, explicitly review package identity,
+  `Provides`, `Conflicts`, and `Replaces`, as applicable. Do not assume that
+  `Replaces` alone makes two packages safe to co-install.
+- Check exact-version dependencies between upstream packages before changing
+  a replacement package's version or identity.
 
-### Branding overlay mode (standalone, no upstream)
+Use maintained projects as references rather than copying incomplete XML
+templates: [base-files](base-files/base-files.aosproj) derives system identity
+files, while [plymouth-anduinos](plymouth-anduinos/plymouth-anduinos.aosproj)
+derives and relocates an upstream theme.
 
-- Small package that drops replacement files into place
-- Uses `<Replaces>` on the original packages (NOT `<Conflicts>`)
-- Version is managed manually
+## Versions and target selection
 
-**Use when:** you are replacing resource files (images, fonts, sounds). The
-original package stays installed; your files overwrite specific targets.
+Bump `PackageVersion` when changing installed code, resources, translations,
+dependencies, or maintainer scripts. A successful pipeline does not imply
+that changed source was published under an already existing version.
 
-## Decision Checklist
+Keep `TargetSuites`, `TargetArchitectures`, conditional inputs, and upstream
+suite mappings consistent. Declare only targets the package supports.
 
-Before writing an `.aosproj`:
+When output differs between suites, use distinct versions. In particular,
+different `arch=all` payloads must not share the same package name and version
+across suites. Use `$(SuiteShortName)` with `SuiteShortNameMap`, or `$(Suite)`,
+to distinguish suite-specific output. A condition alone does not require a
+version suffix if the resulting packages are identical.
 
-1. What files am I changing?
-2. Do those files belong to a package that has sibling sub-packages with exact
-   version dependencies?
-3. If yes → branding overlay. If no but changing system identity files → derive.
+For upstream-derived packages, `$(UpstreamVersion)` can be part of the version
+expression; retain a revision component that can be bumped for local changes.
+Do not assume every derived package uses the same version formula.
 
-## Common Patterns
+### Preparing a new AnduinOS point release
 
-### Branding overlay (recommended for media assets)
+Start from the tag or commit of the **last published release**, not from the
+previous development build. For example, use
+`git diff --name-status release-2.0.2..HEAD` when preparing 2.0.3 (replace the
+tag for future releases). Review that diff and the package history to identify
+new packages and those whose installed payload, dependencies, maintainer
+scripts, or pinned upstream source changed. Review changes to shared build
+helpers and CI separately: a package can be affected even when its own
+directory has no diff. Exclude removed packages. Record deliberate exceptions
+rather than treating the diff as an automatic version-bump script. For the
+2.0.3 preparation,
+`anduinos-container` was intentionally reissued although its directory had
+not changed. Unchanged packages normally keep their published versions. This
+is safe in a newer OS release: not every installed package needs the OS's
+current version number.
+
+For each selected AnduinOS package, change its `.aosproj` to the new OS version
+and reset the Debian revision to `-1`, for example
+`2.0.2-27+$(SuiteShortName)` → `2.0.3-1+$(SuiteShortName)`. Preserve an epoch
+and upstream-derived formula where present: `1:2.0.2+$(UpstreamVersion)-2`
+becomes `1:2.0.3+$(UpstreamVersion)-1`, not a plain `2.0.3-1`. Check with
+`dpkg --compare-versions` that the new version sorts above the published one.
+Tools with independent upstream versions, notably `apkg`, retain their own
+versioning scheme. Never change a package's contents without a new package
+version: release-branch publishing uses `--skip-existing` and will not replace
+an already published version.
+
+Keep the OS identity and user-visible versions coherent. Update `base-files`'
+`os-release`, `lsb-release`, `issue`, and `issue.net`; the installer and affected
+applications' About/version constants; and first-party Rust `Cargo.toml`
+versions together with their local-package entries in `Cargo.lock`. Review
+extension `version-name` fields where applicable. Search for the old version
+and classify each remaining occurrence: an unchanged package, an upgrade-test
+fixture, a historical document, or an actual missed release string. Do not
+rewrite historical upgrade inputs or third-party Cargo dependency versions
+merely to make the search empty.
+
+Before publishing, review the complete diff and run `git diff --check`, lint
+all `.aosproj` files, `python3 lib/verify-ci-package-needs.py`,
+`python3 lib/verify-localizations.py`, and the recursive release test command
+below. Verify native build prerequisites on the test host; for example,
+`ufwall-gtk` needs `libpcap-dev` for its linked Cargo tests. A missing
+prerequisite is not a passing test, and an unexplained test failure must be
+resolved before release. Qualify selected package builds and the upgrade path
+on the development repository first. `master` publishes development packages;
+only merge its history into `prod` after that qualification and explicit
+release approval. Do not copy commits or rebuild different content under an
+already published version.
+
+## Local validation and CI
+
+Run the package's documented source tests and lint its project before a
+build. To lint and build a selected package:
+
+```bash
+cd path/to/package
+apkg lint
+apkg test --profile anduinos-package-release-test
+apkg build --all
+```
+
+From the repository root, validate CI package coverage and dependency ordering:
+
+```bash
+python3 lib/verify-ci-package-needs.py
+apkg test --path . --recursive --profile anduinos-package-release-test --report test-results.xml
+```
+
+The current [.gitlab-ci.yml](.gitlab-ci.yml) defines:
+
+- `lint-all`: runs `apkg lint` for every package.
+- `verify-ci-package-needs`: checks package job coverage, internal
+  `Dependency`/`Recommend`/`Suggest` edges, dependency cycles, and mandatory gates.
+- `test-all`: waits for lint, then runs only `anduinos-package-release-test`
+  across all packages and publishes a JUnit entry-level report.
+- Package jobs: merge requests and non-release branches run
+  `apkg build --all`; `master` deploys to the development repository and
+  `prod` deploys to the production repository.
+
+Every package job must explicitly need `lint-all`, `verify-ci-package-needs`,
+and `test-all`, in addition to its internal dependencies. This applies to
+merge requests, `master`, `prod`, and other branch builds. Publishing
+uses `apkg deploy --all --skip-existing`: when preflight confirms that all
+requested targets already exist, the build is skipped.
+`--skip-duplicate` is not equivalent; it still builds before skipping
+duplicate uploads.
+
+Tests run before package construction even when publishing will skip an
+existing version. Do not put tests in `PrebuildCommand` or call them from
+`build.sh`. Build hooks remain for constructing production binaries and assets.
+
+### Test entry points and profiles
+
+Keep standalone test code, fixtures, and entry scripts in the package's
+`tests/` directory. Rust unit tests may stay beside the code they exercise.
+Use a direct command for a simple suite; add a package-owned entry script only
+when setup or profile selection requires it. Do not add a wrapper per test.
+Keep GUI and model-dependent Python suites in `tests/gui/` and `tests/native/`,
+outside ordinary source discovery. Select those directories explicitly rather
+than maintaining lists of individual test method names.
 
 ```xml
-<Project Sdk="Aiursoft.Apkg.Sdk">
-  <PropertyGroup>
-    <PackageName>anduinos-<thing>-branding</PackageName>
-    <PackageVersion>1.0.0</PackageVersion>
-    ...
-  </PropertyGroup>
-  <ItemGroup>
-    <Replaces>original-package-name</Replaces>
-    <IncludeFile Include="assets/my-file.png" Target="/usr/share/.../original-file.png" />
-  </ItemGroup>
-</Project>
+<TestCommand Name="source" Profile="anduinos-package-release-test"
+             Run="bash tests/check-source.sh" TimeoutSeconds="600" />
 ```
 
-### Derive (for system identity packages)
+Commands run in the package directory, with `APKG_TEST_PROFILE` set. Profile
+selection is explicit and exact; it is not a build matrix or a request to
+compile every package first. Tests may compile their own minimal artifacts,
+but must not build, unpack, or install the package's deb. Entry names are
+unique within their profile. Use `apkg test --profile PROFILE --list` to inspect
+commands without running them.
 
-```xml
-<Project Sdk="Aiursoft.Apkg.Sdk">
-  <PropertyGroup>
-    <PackageName>base-files</PackageName>
-    <PackageVersion>$(UpstreamVersion)-anduinos</PackageVersion>
-    ...
-    <UpstreamPackage>base-files</UpstreamPackage>
-    <UpstreamSuite>$(Suite)</UpstreamSuite>
-    <UpstreamSuiteMapping>noble-addon=noble, ...</UpstreamSuiteMapping>
-  </PropertyGroup>
-  <ItemGroup>
-    <IncludeFile Include="assets/noble/os-release" Target="/etc/os-release"
-                 Condition="'$(Suite)' == 'noble-addon'" />
-    ...
-  </ItemGroup>
-</Project>
-```
+The release profile contains deterministic source/native tests. `gui`,
+`voice-native`, `voice-cpu`, `desktop-voice`, `performance`,
+and `root-loopback` isolate prerequisites that
+are not part of ordinary CI. Run only profiles suitable for the machine;
+root/loopback and boot qualification require disposable environments.
+Package-specific environment variables and manual qualification instructions
+belong in that package's documentation.
 
-## Suite-specific package versions
+Missing prerequisites must fail an entry, not silently skip its tests.
+Separate timing benchmarks from shared-runner correctness gates. Synchronize
+asynchronous tests on observable readiness with bounded deadlines instead of
+assuming a fixed sleep is long enough. Tests of maintainer scripts must isolate
+both filesystem paths and external commands; a temporary boot directory does
+not make calls to the host's service manager safe.
+Apkg evaluates command exit status, timeout, and cancellation; it does not
+parse unittest, Cargo, or other frameworks' internal results. The JUnit
+report records one case per entry. `NotConfigured` means no matching profile,
+not a pass, and resource-only packages need not invent tests.
 
-When a package's content differs between Ubuntu suites (e.g. a GNOME Shell extension
-that ships a different zip per GNOME Shell version), using a plain `arch=all` label
-with the same version number across all suites is **incorrect** — APT's pool assumes
-identical content for every `arch=all` package with the same name and version.
+CI pins the new Apkg CLI version. During joint Apkg/package development, use
+the locally built CLI; publish that version only after both repositories are
+verified. Do not push a CI migration that requires an unavailable CLI version.
 
-The correct approach is to embed the suite name into the version number so each suite
-produces a genuinely distinct `.deb`. The SDK supports two build-time variables for this:
+## Test quality: behavior, not implementation snapshots
 
-| Variable | Value | Example result |
-|---|---|---|
-| `$(Suite)` | The raw target suite (e.g. `questing-addon`) | `1.0.56+questing-addon1` |
-| `$(SuiteShortName)` | The mapped short name from `SuiteShortNameMap`; falls back to `$(Suite)` if not mapped | `1.0.56+questing1` |
+A test must protect an observable outcome, a supported contract, or a safety
+boundary. Before adding it, answer: **What realistic defect would make this
+test fail, and why would that defect matter to a user?** If the only answer is
+"the implementation changed," do not add the test.
 
-`$(SuiteShortName)` is preferred because it produces cleaner version strings.
-
-### Example
-
-```xml
-<Project Sdk="Aiursoft.Apkg.Sdk">
-  <PropertyGroup>
-    <PackageName>gnome-shell-extension-tiling-assistant</PackageName>
-    <PackageVersion>1.0.56+$(SuiteShortName)1</PackageVersion>
-    <TargetSuites>noble-addon questing-addon resolute-addon</TargetSuites>
-    <SuiteShortNameMap>noble-addon=noble questing-addon=questing resolute-addon=resolute</SuiteShortNameMap>
-    ...
-  </PropertyGroup>
-  <ItemGroup>
-    <IncludeFolder Include="assets/questing/tiling-assistant@leleat-on-github"
-                   Target="/usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github"
-                   Condition="'$(Suite)' == 'questing-addon'" />
-    ...
-  </ItemGroup>
-</Project>
-```
-
-This produces:
-- `gnome-shell-extension-tiling-assistant_1.0.56+noble1_all.deb` for noble-addon
-- `gnome-shell-extension-tiling-assistant_1.0.56+questing1_all.deb` for questing-addon
-- `gnome-shell-extension-tiling-assistant_1.0.56+resolute1_all.deb` for resolute-addon
-
-Each suite's Packages index points to its own pool file, so APT hash verification
-always succeeds.
-
-### Rule of thumb
-
-Use `+$(SuiteShortName)1` whenever the `.aosproj` contains any `IncludeFolder` (or
-`IncludeFile`) with a `Condition="'$(Suite)' == '...'"`. If all suites share the same
-content, a plain version number is fine.
-
-
-
-Users of AnduinOS should add an APT pin to ensure AnduinOS packages take
-precedence:
-
-```text
-# /etc/apt/preferences.d/anduinos
-Package: *
-Pin: origin "Aiursoft Apkg"
-Pin-Priority: 1001
-```
-
-Pin 1001 ensures AnduinOS packages are always preferred even if Ubuntu ships a
-higher version number. This is safe because the AnduinOS addon repository only
-contains packages that are intentionally built and pushed — it is not a full
-mirror.
-
-## Desktop Entry Visibility: Search Is Not the Applications Menu
-
-GNOME Shell search, ArcMenu's **All Apps** view, and GNOME Software do not use
-the same index:
-
-| Surface | Data source |
+| Do not test | Test instead, when useful |
 |---|---|
-| GNOME Shell / ArcMenu search | Installed `Gio.DesktopAppInfo` applications |
-| ArcMenu All Apps and categories | The freedesktop `applications.menu` tree |
-| GNOME Software | AppStream/DEP-11 metadata |
+| A directory currently contains exactly five files | Processing inputs produces the correct results and handles missing or invalid inputs |
+| A version, default size, application ID, or command array equals a copied literal | Version comparison, size validation, routing, or command execution behaves correctly |
+| Source text contains a function name, API call, UI label, or specific coding pattern | Calling the real code produces the expected effect, including failure paths |
+| A `.deb` contains the files, permissions, dependencies, or metadata declared in `.aosproj` | Nothing in this repository: generic packaging behavior belongs to Apkg's own tests |
+| A resource list or dependency list equals another copy of itself | A genuine consistency requirement or resource validity, without duplicating the inventory |
+| A mock returns the value configured by the test | Real application code handles the dependency's success, failure, timeout, or cancellation correctly |
 
-An application can therefore be searchable but absent from All Apps. In
-particular, GNOME places entries with `X-GNOME-Settings-Panel` in the hidden
-`System Settings` menu directory. ArcMenu skips that directory when building
-All Apps. These categories are reserved for components embedded in GNOME
-Control Center, not for standalone settings applications.
+Use these rules when writing or reviewing tests:
 
-Standalone AnduinOS applications **must not** use any of the following:
+- Exercise production code. Mock external boundaries such as hardware, network,
+  privileged commands, or clocks; do not mock the behavior being verified or
+  reimplement it inside the test.
+- Derive expected results from requirements and controlled inputs, not from
+  the same calculation or constant that the implementation uses. Exact values
+  are appropriate for specified protocol responses and calculated outputs;
+  they are not appropriate merely because they occur in today's source.
+- Prefer useful failure cases: rejected hostile input causes no mutation;
+  failed writes preserve the previous configuration; cancellation prevents
+  late results; retries are idempotent; unrelated user data stays untouched.
+- Checking that a file exists **after an operation creates it** can be a valid
+  behavior assertion. Checking that a checked-in file still exists, or counting
+  the current files, is not a substitute for testing behavior. Likewise, valid
+  resource syntax and translation placeholders are contracts, not inventories.
+- Keep tests independent of harmless refactoring, formatting, version bumps,
+  and additions to resource lists. Do not freeze private helper names, source
+  line order, UI dimensions, or implementation-specific data structures.
+- Do not build, unpack, or install a `.deb` for package tests. Compilation of
+  a test program or minimal native component is allowed. Do not recreate Apkg's
+  file expansion, condition evaluation, or packaging logic in source tests.
+- Isolate destructive and privileged operations from the host. Document any
+  hardware, GUI, or VM prerequisites; an unavailable prerequisite or skipped
+  test is not evidence that the behavior passed.
 
-```ini
-Categories=...;X-GNOME-Settings-Panel;...
-Categories=...;X-GNOME-SystemSettings;...
-X-GNOME-Settings-Panel=panel-name
-```
+Delete tests whose only purpose is to repeat the implementation. A replacement
+is not required, and fewer meaningful tests are preferable to more redundant
+ones. Pure resource packages do not need invented tests to satisfy a count.
+When removing a test, remove its unused helpers and execution references too.
+Never update an expected value mechanically just to make a failure green:
+first decide whether the requirement was broken or the assertion had no value.
 
-Use registered freedesktop categories instead, with one main category. For a
-standalone settings application:
+## Desktop and Control Panel integration
 
-```ini
-[Desktop Entry]
-Type=Application
-Name=Swap Control
-Exec=swapcontrol-gtk
-Icon=com.anduinos.swapcontrol
-Categories=Settings;GTK;GNOME;
-```
+Choose visibility according to the intended entry point:
 
-Avoid combining multiple main categories such as `Settings;System;` unless the
-application genuinely belongs in both; `desktop-file-validate` warns that this
-can create duplicate menu entries. Also use `NoDisplay=true`, `Hidden=true`,
-`OnlyShowIn`, and `NotShowIn` only for deliberately hidden handlers, autostart
-entries, or environment-specific launchers. They are not substitutes for
-normal application categorization.
+- Control Panel-only tools may deliberately use `NoDisplay=true`.
+- Standalone applications should provide a visible desktop entry.
+- The Control Panel itself remains a user-facing launcher.
 
-Before publishing a package containing a Desktop Entry:
+Do not apply a blanket rule that every settings tool must appear in the
+applications menu. Check that Control Panel commands and desktop `Exec`
+targets match the application's installed entry points. Being a page in the
+AnduinOS Control Panel does not make an application a GNOME Control Center
+plugin.
+
+Validate desktop entry syntax when modifying a launcher:
 
 ```bash
 desktop-file-validate path/to/application.desktop
 ```
 
-Changing a Desktop Entry changes installed package content, so bump
-`PackageVersion`. The repository's `desktop-entry-policy` CI job rejects GNOME
-Control Center panel categories before any package is published. If AnduinOS
-ever ships a real embedded Control Center panel, its integration and a narrow
-CI exception must be reviewed explicitly.
+Keep desktop IDs, icons, and AppStream declarations consistent. Menu
+visibility and AppStream metadata serve different purposes; one does not
+prove the other is correct.
 
-### Graphical application source layout
+## Boot stack policy
 
-Keep user-facing package inputs in predictable locations:
+AnduinOS uses Dracut exclusively and no longer supports `initramfs-tools`.
+Package dependencies, initramfs generation, and early-boot hooks must target
+Dracut. Do not introduce dependencies on the legacy stack or add hooks for it.
+Existing migration and compatibility code supports the transition to Dracut,
+not ongoing support for two generators.
 
-- `src/` contains application source code and executable entry points.
-- `data/` contains freedesktop integration files such as the primary `.desktop`
-  file, application icon, PolicyKit policies, and systemd units.
-- `screenshots/` contains images referenced by `AppStreamScreenshot` items.
-- `po/` and `locale/` contain translation sources and compiled catalogs.
-- `bin/`, `obj/`, and `target/` are generated build directories and are ignored
-  by the repository-level `.gitignore`.
+See the [Dracut migration design](anduinos-dracut-migration/DESIGN.md) for the
+migration and recovery contracts.
 
-For consistent AppStream declarations, place the primary desktop entry and icon
-under `data/`:
+## Settings databases and maintainer scripts
 
-```xml
-<AppStreamApplication Include="data/com.example.Application.desktop"
-                      Icon="data/com.example.Application.svg" />
-```
+Do not duplicate global settings-cache updates in individual packages'
+maintainer scripts.
 
-Application-specific runtime resources may remain in a dedicated `resources/`
-or `assets/` directory when that distinction is useful; do not move them merely
-to make directory names uniform.
+- Install AnduinOS dconf defaults under `/etc/dconf/db/anduinos.d/`.
+  [anduinos-dconf-runtime](anduinos-dconf-runtime/scripts/postinst.sh) owns
+  the database update: it runs `dconf update` on live systems and
+  `dconf compile` in chroots to avoid host D-Bus notifications.
+- Leave compilation of system-wide schemas under
+  `/usr/share/glib-2.0/schemas/` to the system's package triggers.
+- Compile extension-private schemas during the build and ship
+  `gschemas.compiled`; the global schema trigger does not cover those paths.
 
-## Postinst Best Practices: Never Run `dconf update` or `glib-compile-schemas`
-
-**Do not** put `dconf update` or `glib-compile-schemas` in `postinst.sh` scripts.
-These are handled automatically by Debian's **dpkg triggers**.
-
-### How triggers work
-
-Two core system packages declare interest in file-system changes:
-
-- **`anduinos-dconf-runtime`** declares `interest-noawait /etc/dconf/db/anduinos.d`
-- **`libglib2.0-0`** declares interest for `/usr/share/glib-2.0/schemas/`
-
-When any package drops a file under these monitored directories, dpkg records
-the trigger. At the end of the entire apt transaction, the trigger owner's
-script runs **once** — no matter how many packages were installed or upgraded.
-
-### What this means for packaging
-
-| Instead of putting this in postinst… | …the system does it for you: |
-|---|---|
-| `dconf update` | Triggered once by `anduinos-dconf-runtime` when files land in `/etc/dconf/db/anduinos.d/` |
-| `glib-compile-schemas /usr/share/glib-2.0/schemas/` | Triggered once by `libglib2.0-0` when files land in schemas dir |
-| `glib-compile-schemas <extension>/schemas/` | **Pre-compile at build time** in `download.sh` — ship `gschemas.compiled` in the `.deb` |
-
-### Why this matters
-
-1. **Performance**: A single apt transaction installing 16 extensions runs the
-   trigger once, not 16 times.
-2. **Chroot safety**: `dconf update` broadcasts D-Bus "Settings Changed" signals.
-   During chroot OS builds with bind-mounted `/run`, these leak into the host
-   and can crash the host's GNOME Shell. `anduinos-dconf-runtime` avoids this
-   by using `dconf compile /etc/dconf/db/anduinos /etc/dconf/db/anduinos.d`
-   instead when it detects a chroot.
-3. **Correctness**: The trigger always runs at the right moment (after all
-   packages are unpacked), regardless of install order.
-
-### Exception
-
-The maintainer script exception for dconf is the centralized
-`anduinos-dconf-runtime` trigger owner, which runs `dconf update` on live
-systems and `dconf compile` in chroots. Separately, `anduinos-session` removes
-a Ubuntu gschema override file (`10_ubuntu-session.gschema.override`). This
-`rm -f` operation is idempotent, emits no D-Bus signals, and must happen at
-install time. It does not call `dconf update` or `glib-compile-schemas`.
+Keep maintainer scripts idempotent and safe in installation chroots. Do not
+hide failures of operations required for a usable or bootable system.

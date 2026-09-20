@@ -7,6 +7,8 @@ use uuid::Uuid;
 
 use crate::DEPLOYMENT_SCHEMA_VERSION;
 
+pub const FACTORY_DEPLOYMENT_TITLE: &str = "New OS";
+
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Serialize, Deserialize)]
 #[serde(transparent)]
 pub struct DeploymentId(Uuid);
@@ -129,6 +131,12 @@ impl DeploymentRecord {
                 return Err(ModelError::InvalidField("schedule_id"));
             }
             _ => {}
+        }
+        if self.kind == DeploymentKind::Factory && !self.pinned {
+            return Err(ModelError::InvalidField("pinned"));
+        }
+        if self.kind == DeploymentKind::Factory && self.title != FACTORY_DEPLOYMENT_TITLE {
+            return Err(ModelError::InvalidField("title"));
         }
         for (name, value) in [
             ("snapshot_uuid", self.snapshot_uuid.as_deref()),
@@ -303,6 +311,20 @@ mod tests {
         record.state = DeploymentState::Creating;
         assert!(record.can_delete());
         record.state = DeploymentState::Deleting;
+        assert!(!record.can_delete());
+    }
+
+    #[test]
+    fn factory_deployments_must_remain_pinned() {
+        let mut record = valid_record();
+        record.kind = DeploymentKind::Factory;
+        assert_eq!(record.validate(), Err(ModelError::InvalidField("pinned")));
+
+        record.pinned = true;
+        assert_eq!(record.validate(), Err(ModelError::InvalidField("title")));
+
+        record.title = FACTORY_DEPLOYMENT_TITLE.into();
+        assert_eq!(record.validate(), Ok(()));
         assert!(!record.can_delete());
     }
 

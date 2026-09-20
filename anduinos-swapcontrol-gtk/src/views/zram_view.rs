@@ -125,7 +125,12 @@ impl ZramView {
             .vexpand(true)
             .build();
 
-        let scroll = gtk::ScrolledWindow::builder().vexpand(true).build();
+        let scroll = gtk::ScrolledWindow::builder()
+            .hscrollbar_policy(gtk::PolicyType::Never)
+            .vscrollbar_policy(gtk::PolicyType::Automatic)
+            .overlay_scrolling(false)
+            .vexpand(true)
+            .build();
         let device_list = gtk::ListBox::builder()
             .css_classes(["boxed-list"])
             .selection_mode(gtk::SelectionMode::None)

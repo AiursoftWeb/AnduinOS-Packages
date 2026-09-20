@@ -2,14 +2,18 @@
 
 from __future__ import annotations
 
-import re
 from enum import Enum
+import re
+
+from keyboard_layouts import is_valid_xkb_choice
 
 from languages import input_method, language_for_locale
 
+from .btrfs import BtrfsCompression
 from .model import (
     AuthenticationMode,
     Architecture,
+    Filesystem,
     Firmware,
     InstallMode,
     InstallPlan,
@@ -19,11 +23,12 @@ from .model import (
 )
 from .hostnames import is_canonical_hostname
 from .storage_graph_planning import validate_storage_graph
-from .swap_policy import MINIMUM_DISK_SWAP_MIB, MINIMUM_ROOT_MIB
+from .swap_policy import MINIMUM_ROOT_MIB
 from .username_policy import RESERVED_USERNAMES, is_valid_username
 
 
-MINIMUM_DISK_BYTES = 24 * 1024**3
+MINIMUM_DISK_BYTES = 25 * 1024**3
+RECOMMENDED_DISK_BYTES = 50 * 1024**3
 MINIMUM_ROOT_BYTES = MINIMUM_ROOT_MIB * 1024**2
 LOCALE_RE = re.compile(r"^[A-Za-z]{2,3}(?:_[A-Z]{2})?\.UTF-8$")
 TIMEZONE_RE = re.compile(
@@ -74,7 +79,7 @@ def validate_plan(
     *,
     allow_guided_compilation: bool = True,
 ) -> None:
-    """Validate an erase-disk or beta guided-coexistence plan."""
+    """Validate an erase-disk, guided-coexistence or manual GPT plan."""
 
     errors: list[str] = []
 
@@ -92,31 +97,51 @@ def validate_plan(
     elif plan.storage.mode not in {
         InstallMode.ERASE_DISK,
         InstallMode.GUIDED_COEXISTENCE,
+        InstallMode.MANUAL,
     }:
-        errors.append("Manual partitioning is not implemented")
+        errors.append("Unsupported storage mode")
+
+    if not isinstance(plan.storage.btrfs_compression, BtrfsCompression):
+        errors.append("Unsupported Btrfs compression preset")
 
     disk = plan.storage.disk
     if not WHOLE_DISK_RE.fullmatch(disk.path):
         errors.append("Target must be a supported whole-disk device")
     if not disk.stable_id.strip():
         errors.append("Target disk requires a stable hardware identifier")
-    if disk.expected_size_bytes < MINIMUM_DISK_BYTES:
-        errors.append("Target disk must be at least 24 GiB")
+    if (
+        plan.storage.mode is not InstallMode.MANUAL
+        and disk.expected_size_bytes < MINIMUM_DISK_BYTES
+    ):
+        errors.append("Target disk must be at least 25 GiB")
 
-    reserved = (
-        plan.storage.esp_size_mib + plan.storage.swap_size_mib + 4
-    ) * 1024**2
-    if disk.expected_size_bytes - reserved < MINIMUM_ROOT_BYTES:
-        errors.append("Partition layout leaves less than 20 GiB for root")
+    if plan.storage.mode is InstallMode.ERASE_DISK:
+        reserved = (
+            plan.storage.esp_size_mib + plan.storage.swap_size_mib + 4
+        ) * 1024**2
+        if disk.expected_size_bytes - reserved < MINIMUM_ROOT_BYTES:
+            errors.append("Partition layout leaves less than 20 GiB for root")
+    if (
+        plan.storage.mode is not InstallMode.MANUAL
+        and plan.storage.filesystem
+        not in {Filesystem.BTRFS, Filesystem.EXT4}
+    ):
+        errors.append(
+            "XFS and F2FS root filesystems require Advanced manual mode"
+        )
     if plan.storage.esp_size_mib < 512:
         errors.append("EFI System Partition must be at least 512 MiB")
     if (
         type(plan.storage.swap_size_mib) is not int
-        or plan.storage.swap_size_mib < MINIMUM_DISK_SWAP_MIB
-        or plan.storage.swap_size_mib % 1024
+        or plan.storage.swap_size_mib < 0
+    ):
+        errors.append("Disk swap must use a non-negative MiB size")
+    elif (
+        plan.storage.mode is not InstallMode.MANUAL
+        and plan.storage.swap_size_mib % 1024
     ):
         errors.append(
-            "Disk swap must be at least 2 GiB and use whole-GiB sizing"
+            "Automatic disk swap must use non-negative whole-GiB sizing"
         )
     try:
         validate_storage_graph(plan)
@@ -146,12 +171,35 @@ def validate_plan(
     if type(plan.boot.install_fallback_path) is not bool:
         errors.append("EFI fallback-path policy must be boolean")
     elif (
+        plan.storage.mode is InstallMode.ERASE_DISK
+        and platform.firmware is Firmware.UEFI
+        and plan.boot.install_fallback_path
+    ):
+        errors.append(
+            "UEFI erase-disk installs must create a vendor NVRAM entry "
+            "without the shared fallback path"
+        )
+    elif (
+        plan.storage.mode is InstallMode.ERASE_DISK
+        and platform.firmware is Firmware.BIOS
+        and not plan.boot.install_fallback_path
+    ):
+        errors.append(
+            "Legacy BIOS erase-disk installs must retain the portable UEFI "
+            "fallback path"
+        )
+    elif (
         plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
         and plan.boot.install_fallback_path
     ):
         errors.append(
             "Install alongside must not write the shared EFI fallback path"
         )
+    elif (
+        plan.storage.mode is InstallMode.MANUAL
+        and plan.boot.install_fallback_path
+    ):
+        errors.append("Manual mode must not write the EFI fallback path")
 
     identity = plan.identity
     if identity.username in RESERVED_USERNAMES:
@@ -207,8 +255,20 @@ def validate_plan(
         errors.append("Invalid UTF-8 locale")
     if not TIMEZONE_RE.fullmatch(regional.timezone):
         errors.append("Invalid timezone")
-    if not re.fullmatch(r"[a-z0-9_-]{1,32}", regional.keyboard.layout):
+    keyboard_layout = regional.keyboard.layout
+    keyboard_variant = regional.keyboard.variant
+    if (
+        not isinstance(keyboard_layout, str)
+        or not re.fullmatch(r"[a-z0-9_-]{1,32}", keyboard_layout)
+    ):
         errors.append("Invalid keyboard layout")
+    elif (
+        not isinstance(keyboard_variant, str)
+        or not re.fullmatch(r"[A-Za-z0-9_+.-]{0,64}", keyboard_variant)
+    ):
+        errors.append("Invalid keyboard variant")
+    elif not is_valid_xkb_choice(keyboard_layout, keyboard_variant):
+        errors.append("Unknown keyboard layout and variant combination")
     configured_language = language_for_locale(regional.locale)
     if configured_language is None:
         errors.append("Unsupported installer locale")

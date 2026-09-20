@@ -56,6 +56,7 @@ fn every_byte_cursor_is_handled_without_panicking() {
 }
 
 #[test]
+#[ignore = "timing qualification; run the performance profile on an idle machine"]
 fn foreground_query_stays_inside_a_conservative_cpu_budget() {
     let line = "sudo docker exec -it 59";
     let world = WorldState::default();
@@ -78,6 +79,7 @@ fn foreground_query_stays_inside_a_conservative_cpu_budget() {
 }
 
 #[test]
+#[ignore = "timing qualification; run the performance profile on an idle machine"]
 fn bounded_full_indexes_stay_inside_the_frontend_deadline_budget() {
     let mut world = WorldState {
         current_cwd: "/repo".into(),
@@ -127,6 +129,7 @@ fn bounded_full_indexes_stay_inside_the_frontend_deadline_budget() {
 }
 
 #[test]
+#[ignore = "timing qualification; run the performance profile on an idle machine"]
 fn large_apt_snapshot_queries_are_bounded_in_memory_and_cpu() {
     let mut world = WorldState::default();
     world.apt.generation = 1;

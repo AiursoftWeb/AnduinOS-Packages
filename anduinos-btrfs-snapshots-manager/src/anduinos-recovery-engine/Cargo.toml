@@ -26,6 +26,10 @@ path = "src/btrfs_snapshots_manager_confirm.rs"
 name = "anduinos-btrfs-snapshots-manager-apt-hook"
 path = "src/btrfs_snapshots_manager_apt_hook.rs"
 
+[[bin]]
+name = "anduinos-btrfs-snapshots-manager-provision-factory"
+path = "src/btrfs_snapshots_manager_provision_factory.rs"
+
 [dependencies]
 chrono.workspace = true
 serde.workspace = true

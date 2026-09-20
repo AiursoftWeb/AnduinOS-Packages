@@ -176,10 +176,6 @@ class NetworkTests(unittest.TestCase):
             )
 
         factory_names = [factory.__code__.co_names for factory in factories]
-        update_index = next(
-            index for index, names in enumerate(factory_names)
-            if "create_update_page" in names
-        )
         secure_boot_index = next(
             index for index, names in enumerate(factory_names)
             if "create_secureboot_page" in names
@@ -188,10 +184,14 @@ class NetworkTests(unittest.TestCase):
             index for index, names in enumerate(factory_names)
             if "create_hardware_drivers_page" in names
         )
-        self.assertEqual(secure_boot_index, update_index + 1)
+        security_index = next(
+            index for index, names in enumerate(factory_names)
+            if "create_security_page" in names
+        )
+        self.assertEqual(secure_boot_index, security_index + 1)
         self.assertEqual(hardware_index, secure_boot_index + 1)
 
-    def test_hardware_drivers_page_follows_update_without_secure_boot(self):
+    def test_hardware_drivers_page_follows_security_without_secure_boot(self):
         window = types.SimpleNamespace(
             is_oobe=True,
             _update_nav_buttons=lambda: None,
@@ -217,15 +217,15 @@ class NetworkTests(unittest.TestCase):
         self.assertFalse(any(
             "create_secureboot_page" in names for names in factory_names
         ))
-        update_index = next(
+        security_index = next(
             index for index, names in enumerate(factory_names)
-            if "create_update_page" in names
+            if "create_security_page" in names
         )
         hardware_index = next(
             index for index, names in enumerate(factory_names)
             if "create_hardware_drivers_page" in names
         )
-        self.assertEqual(hardware_index, update_index + 1)
+        self.assertEqual(hardware_index, security_index + 1)
 
     def test_navigation_refresh_waits_until_controls_are_ready(self):
         building_window = types.SimpleNamespace(_nav_ready=False)

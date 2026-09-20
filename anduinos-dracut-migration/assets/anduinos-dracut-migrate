@@ -1,0 +1,262 @@
+#!/bin/sh
+set -eu
+
+export LC_ALL=C
+export DEBIAN_FRONTEND=noninteractive
+
+APT_GET=${ANDUINOS_MIGRATION_APT_GET:-/usr/bin/apt-get}
+APT_CACHE=${ANDUINOS_MIGRATION_APT_CACHE:-/usr/bin/apt-cache}
+DPKG_QUERY=${ANDUINOS_MIGRATION_DPKG_QUERY:-/usr/bin/dpkg-query}
+VERIFY=${ANDUINOS_MIGRATION_VERIFY:-/usr/libexec/anduinos-dracut-verify}
+SYSTEMCTL=${ANDUINOS_MIGRATION_SYSTEMCTL:-/usr/bin/systemctl}
+SYSTEMD_RUNTIME_DIR=${ANDUINOS_MIGRATION_SYSTEMD_RUNTIME_DIR:-/run/systemd/system}
+MODULES_DIR=${ANDUINOS_MIGRATION_MODULES_DIR:-/lib/modules}
+BOOT_DIR=${ANDUINOS_MIGRATION_BOOT_DIR:-/boot}
+STATE_DIR=${ANDUINOS_MIGRATION_STATE_DIR:-/var/lib/anduinos-dracut-migration}
+LOCK_FILE=${ANDUINOS_MIGRATION_LOCK_FILE:-/run/anduinos-dracut-migration.lock}
+BOOT_ID_FILE=${ANDUINOS_MIGRATION_BOOT_ID_FILE:-/proc/sys/kernel/random/boot_id}
+
+log() {
+    printf 'anduinos-dracut-migration: %s\n' "$*"
+}
+
+is_installed() {
+    [ "$($DPKG_QUERY -W -f='${db:Status-Abbrev}' "$1" 2>/dev/null || true)" = "ii " ]
+}
+
+installed_version() {
+    $DPKG_QUERY -W -f='${Version}' "$1" 2>/dev/null || true
+}
+
+candidate_version() {
+    $APT_CACHE policy "$1" 2>/dev/null \
+        | awk '/^[[:space:]]*Candidate:/ { print $2; exit }'
+}
+
+candidate_dependencies() {
+    package=$1
+    version=$2
+    metadata=$($APT_CACHE show --no-all-versions "$package=$version" 2>/dev/null || true)
+    printf '%s\n' "$metadata" | awk '
+        /^Depends:/ { active=1; print; next }
+        active && /^[[:space:]]/ { print; next }
+        active { exit }
+    '
+}
+
+candidate_is_pure_dracut() {
+    depends=$(candidate_dependencies "$1" "$2")
+    printf '%s\n' "$depends" | grep -Eq '(^|[ ,])dracut([ ,(]|$)' \
+        && ! printf '%s\n' "$depends" \
+            | grep -Eq 'initramfs-tools|busybox-initramfs|casper'
+}
+
+candidate_conflicts_with_legacy_stack() {
+    package=$1
+    version=$2
+    metadata=$($APT_CACHE show --no-all-versions "$package=$version" 2>/dev/null || true)
+    conflicts=$(printf '%s\n' "$metadata" | awk '
+        /^Conflicts:/ { active=1; print; next }
+        active && /^[[:space:]]/ { print; next }
+        active { exit }
+    ')
+    for legacy in \
+        casper \
+        initramfs-tools \
+        initramfs-tools-core \
+        initramfs-tools-bin \
+        busybox-initramfs \
+        finalrd; do
+        printf '%s\n' "$conflicts" \
+            | grep -Eq "(^|[ ,])$legacy([ ,(]|$)" || return 1
+    done
+}
+
+candidate_depends_on_core() {
+    candidate_dependencies "$1" "$2" \
+        | tr '\n' ' ' \
+        | grep -Eq '(^|[ ,])anduinos-core-system([[:space:]]|,|$)'
+}
+
+load_published_candidates() {
+    core_candidate=$(candidate_version anduinos-core-system)
+    [ -n "$core_candidate" ] && [ "$core_candidate" != "(none)" ] \
+        && candidate_is_pure_dracut anduinos-core-system "$core_candidate" \
+        && candidate_conflicts_with_legacy_stack \
+            anduinos-core-system "$core_candidate" || return 1
+
+    snapshots_candidate=
+    if is_installed anduinos-btrfs-snapshots-manager; then
+        snapshots_candidate=$(candidate_version anduinos-btrfs-snapshots-manager)
+        [ -n "$snapshots_candidate" ] \
+            && [ "$snapshots_candidate" != "(none)" ] \
+            && candidate_is_pure_dracut \
+                anduinos-btrfs-snapshots-manager "$snapshots_candidate" \
+            && candidate_depends_on_core \
+                anduinos-btrfs-snapshots-manager "$snapshots_candidate" \
+            || return 1
+    fi
+
+    plymouth_candidate=
+    if is_installed plymouth-anduinos; then
+        plymouth_candidate=$(candidate_version plymouth-anduinos)
+        [ -n "$plymouth_candidate" ] \
+            && [ "$plymouth_candidate" != "(none)" ] \
+            && candidate_is_pure_dracut \
+                plymouth-anduinos "$plymouth_candidate" \
+            && candidate_depends_on_core \
+                plymouth-anduinos "$plymouth_candidate" \
+            || return 1
+    fi
+}
+
+installed_stack_matches_candidates() {
+    for package in dracut dracut-core dracut-install anduinos-core-system; do
+        is_installed "$package" || return 1
+    done
+    [ "$(installed_version anduinos-core-system)" = "$core_candidate" ] \
+        || return 1
+    if [ -n "$snapshots_candidate" ]; then
+        [ "$(installed_version anduinos-btrfs-snapshots-manager)" \
+            = "$snapshots_candidate" ] || return 1
+    fi
+    if [ -n "$plymouth_candidate" ]; then
+        [ "$(installed_version plymouth-anduinos)" \
+            = "$plymouth_candidate" ] || return 1
+    fi
+}
+
+rebuild_and_validate_images() {
+    [ -x "$VERIFY" ] || {
+        log "the synchronous Dracut verifier is missing"
+        return 1
+    }
+    "$VERIFY" --rebuild
+    "$VERIFY" --verify
+    "$VERIFY" --verify-default
+}
+
+mark_complete() {
+    if [ ! -s "$STATE_DIR/completed-boot-id" ]; then
+        boot_id=$(cat "$BOOT_ID_FILE")
+        case "$boot_id" in
+            *[!A-Fa-f0-9-]*|'') return 1 ;;
+        esac
+        printf '%s\n' "$boot_id" > "$STATE_DIR/.completed-boot-id.new"
+        chmod 0600 "$STATE_DIR/.completed-boot-id.new"
+        sync -f "$STATE_DIR/.completed-boot-id.new"
+        mv -f "$STATE_DIR/.completed-boot-id.new" "$STATE_DIR/completed-boot-id"
+        sync -f "$STATE_DIR"
+    fi
+    : > "$STATE_DIR/.complete.new"
+    chmod 0600 "$STATE_DIR/.complete.new"
+    sync -f "$STATE_DIR/.complete.new"
+    mv -f "$STATE_DIR/.complete.new" "$STATE_DIR/complete"
+    sync -f "$STATE_DIR"
+    log "migration completed and every installed kernel has a readable Dracut image"
+    if [ -d "$SYSTEMD_RUNTIME_DIR" ] && [ -x "$SYSTEMCTL" ]; then
+        "$SYSTEMCTL" disable --now anduinos-dracut-migration.timer \
+            || log "unable to disable the completed migration timer"
+    fi
+}
+
+mkdir -p "$STATE_DIR"
+exec 9>"$LOCK_FILE"
+if ! flock -n 9; then
+    log "another migration attempt is active"
+    exit 0
+fi
+
+# Never remove the working generator until at least one bootable kernel can be
+# rebuilt. A modules directory alone may be a stale package artifact; require
+# its matching kernel payload as well.
+bootable_kernel=false
+for kernel in "$BOOT_DIR"/vmlinuz-*; do
+    [ -s "$kernel" ] || continue
+    kernel_version=${kernel##*/vmlinuz-}
+    [ -d "$MODULES_DIR/$kernel_version" ] || continue
+    bootable_kernel=true
+    break
+done
+if [ "$bootable_kernel" != true ]; then
+    log "no complete installed kernel is available; deferring without changing the boot stack"
+    exit 0
+fi
+
+# The APT transaction that installed this helper already supplied a coherent
+# package index. Use it first so the migration does not immediately contend
+# with that transaction for APT's list lock. Refresh only when the cached
+# candidates are incomplete (for example, during a staggered repository
+# publication).
+if ! load_published_candidates; then
+    if ! $APT_GET update || ! load_published_candidates; then
+        log "the complete pure-Dracut package set is not published yet; deferring"
+        exit 0
+    fi
+fi
+
+# Absence of initramfs-tools is not proof that an earlier attempt completed.
+# APT may have removed the legacy stack before Dracut image generation failed.
+if ! is_installed initramfs-tools \
+    && installed_stack_matches_candidates; then
+    log "legacy generator is absent; validating the installed Dracut stack"
+    rebuild_and_validate_images
+    mark_complete
+    exit 0
+fi
+
+set -- dracut dracut-core dracut-install "anduinos-core-system=$core_candidate"
+if [ -n "$snapshots_candidate" ]; then
+    set -- "$@" \
+        "anduinos-btrfs-snapshots-manager=$snapshots_candidate"
+fi
+if [ -n "$plymouth_candidate" ]; then
+    set -- "$@" "plymouth-anduinos=$plymouth_candidate"
+fi
+
+simulation=$($APT_GET --simulate install "$@" 2>&1) || {
+    printf '%s\n' "$simulation" >&2
+    log "APT cannot produce a migration plan; deferring"
+    exit 0
+}
+
+# A generator migration may remove only the explicitly forbidden legacy
+# packages. Refuse every other removal, including AnduinOS packages whose
+# names do not start with "anduinos-".
+unexpected_removals=$(printf '%s\n' "$simulation" \
+    | sed -n 's/^Remv \([^ :]*\).*/\1/p' \
+    | while read -r package; do
+        case "$package" in
+            casper|initramfs-tools|initramfs-tools-core|initramfs-tools-bin) ;;
+            busybox-initramfs|cryptsetup-initramfs|finalrd) ;;
+            *) printf '%s\n' "$package" ;;
+        esac
+    done)
+if [ -n "$unexpected_removals" ]; then
+    printf '%s\n' "$unexpected_removals" >&2
+    log "APT proposed unexpected package removals; refusing the unsafe plan"
+    exit 0
+fi
+
+log "installing the published Dracut package set"
+$APT_GET -o DPkg::Lock::Timeout=300 install -y \
+    -o Dpkg::Options::=--force-confold \
+    "$@"
+
+rebuild_and_validate_images
+
+for legacy in \
+    casper \
+    initramfs-tools \
+    initramfs-tools-core \
+    initramfs-tools-bin \
+    busybox-initramfs \
+    cryptsetup-initramfs \
+    finalrd; do
+    if is_installed "$legacy"; then
+        log "legacy package remains installed after APT transaction: $legacy"
+        exit 1
+    fi
+done
+
+mark_complete

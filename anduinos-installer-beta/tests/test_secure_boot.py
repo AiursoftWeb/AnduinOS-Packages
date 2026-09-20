@@ -20,6 +20,7 @@ from installer_core.secure_boot import (
     EnrollSecureBootStep,
     PrepareSecureBootStep,
     VerifyDkmsSignaturesStep,
+    _verify_signed_efi_chain,
 )
 from installer_core.steps import InstallContext
 
@@ -70,7 +71,6 @@ def prepare_secure_boot_target(
 
 def prepare_signed_efi_chain(target: Path) -> None:
     for relative in (
-        "boot/efi/EFI/BOOT/BOOTX64.EFI",
         "boot/efi/EFI/AnduinOS/shimx64.efi",
         "boot/efi/EFI/AnduinOS/grubx64.efi",
     ):
@@ -259,6 +259,28 @@ class EnrollSecureBootTests(unittest.TestCase):
             ("chroot", str(target), "mokutil", "--timeout", "-1"),
             [item[0] for item in runner.commands],
         )
+
+    def test_vendor_only_chain_does_not_require_removable_fallback(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_signed_efi_chain(target)
+            runner = FakeRunner()
+
+            _verify_signed_efi_chain(runner, target, valid_plan())
+
+        verified = tuple(
+            command[-1]
+            for command, _kwargs in runner.commands
+            if command[:2] == ("sbverify", "--list")
+        )
+        self.assertEqual(
+            verified,
+            (
+                str(target / "boot/efi/EFI/AnduinOS/shimx64.efi"),
+                str(target / "boot/efi/EFI/AnduinOS/grubx64.efi"),
+            ),
+        )
+        self.assertFalse(any("EFI/BOOT" in path for path in verified))
 
     def test_pending_matching_key_makes_retry_idempotent(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -497,7 +519,7 @@ class VerifyDkmsSignaturesTests(unittest.TestCase):
             unsigned = (
                 "sbverify",
                 "--list",
-                str(target / "boot/efi/EFI/BOOT/BOOTX64.EFI"),
+                str(target / "boot/efi/EFI/AnduinOS/shimx64.efi"),
             )
             runner.outputs[unsigned] = ("", "No signature", 1)
             context = InstallContext(

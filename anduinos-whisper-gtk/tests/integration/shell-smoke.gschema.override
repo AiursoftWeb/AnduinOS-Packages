@@ -1,0 +1,21 @@
+[org.gnome.shell]
+enabled-extensions=['voice-typing@anduinos.com']
+disable-user-extensions=false
+
+[org.gnome.desktop.session]
+idle-delay=uint32 0
+
+[org.gnome.desktop.screensaver]
+lock-enabled=false
+
+[org.gnome.desktop.interface]
+enable-animations=false
+
+[com.anduinos.voice-typing]
+language='en'
+model='base'
+recognition-backend='cpu'
+recognition-threads=uint32 4
+live-transcription=false
+audio-cues=false
+show-preview=false

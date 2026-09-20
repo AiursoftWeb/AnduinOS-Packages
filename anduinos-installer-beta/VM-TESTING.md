@@ -68,6 +68,13 @@ firmware for arm64.
 9. No live-session-only packages, mounts, DNS files or `policy-rc.d` remain.
 10. Kernel, initramfs and GRUB artifacts agree. The fallback EFI loader exists
     for UEFI rows.
+11. Every Btrfs row contains exactly one healthy, pinned system snapshot named
+    `New OS` and one hidden, pinned factory Home baseline; rerunning the factory
+    provisioner reports the same pair and creates no duplicate. Classic
+    filesystem rows contain no factory snapshots. A normal factory reset keeps
+    a marker created in Home. Repeating it with **Erase user files** removes the
+    marker and Home snapshot history, while an interrupted boot restores both
+    the previous root and Home subvolumes.
 
 For Secure Boot rows, also require:
 
@@ -297,17 +304,11 @@ still reports that manual review is required: retain the guest verification
 output, screenshots and explicit observations of independent Windows and
 AnduinOS boots.
 
-Before placing an installer build into an ISO, inspect the actual `.deb`, not
-only the source manifest:
-
-```sh
-python3 scripts/verify-built-package.py /path/to/anduinos-installer-beta.deb
-```
-
-This verifies that the private planner/evidence CLIs and their core modules
-are present, the public executor still rejects arguments, required runtime
-dependencies are declared, no public test-tool launcher exists and no Python
-cache entered the package.
+Validate the installer through source-level execution tests and the isolated
+VM behavior checks above. Public launcher argument rejection and mount
+isolation are tested directly; package file copying and Debian metadata
+generation belong to Apkg's own tests, not a second installer-specific deb
+inspector.
 
 ### Custom-layout campaign
 

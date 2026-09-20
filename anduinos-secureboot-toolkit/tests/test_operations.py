@@ -1,8 +1,12 @@
 from pathlib import Path
+import contextlib
+import io
+import json
 import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import Mock, patch
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -36,6 +40,77 @@ def with_secure_boot_enabled(run):
 
 
 class OperationsTests(unittest.TestCase):
+    def test_command_runner_preserves_literal_arguments_stdin_and_failure(self):
+        command = ["example-command", "$(id); echo unsafe", "argument with spaces"]
+        failed = subprocess.CompletedProcess(command, 23, "", "operation failed")
+        with patch.object(operations.subprocess, "run", return_value=failed) as run:
+            result = operations.run_command(command, stdin="private input\n")
+        self.assertEqual(result.returncode, 23)
+        self.assertEqual(result.stderr, "operation failed")
+        run.assert_called_once()
+        self.assertEqual(run.call_args.args[0], command)
+        self.assertFalse(run.call_args.kwargs.get("shell", False))
+        self.assertEqual(run.call_args.kwargs["input"], "private input\n")
+        self.assertNotIn("private input", repr(run.call_args.args))
+
+    def test_unprivileged_helper_request_has_no_operation_or_lock_side_effect(self):
+        output = io.StringIO()
+        lock = Mock()
+        with (
+            patch.object(operations.os, "geteuid", return_value=1000),
+            patch.object(operations, "LOCK_FILE", lock),
+            patch.object(operations, "execute") as execute,
+            contextlib.redirect_stdout(output),
+        ):
+            code = operations.helper_main(["prepare"])
+        self.assertNotEqual(code, 0)
+        self.assertEqual(json.loads(output.getvalue())["error"], "root-required")
+        execute.assert_not_called()
+        self.assertEqual(lock.mock_calls, [])
+
+    def test_helper_rejects_unknown_extra_and_shell_arguments_before_any_operation(self):
+        for arguments in (
+            [], ["prepare", "extra"], ["repair-dkms", "--force"],
+            ["prepare; reboot"], ["$(id)"], ["prepare\nrepair-dkms"],
+        ):
+            with self.subTest(arguments=arguments):
+                output = io.StringIO()
+                lock = Mock()
+                with (
+                    patch.object(operations.os, "geteuid", return_value=0),
+                    patch.object(operations, "LOCK_FILE", lock),
+                    patch.object(operations, "execute") as execute,
+                    contextlib.redirect_stdout(output),
+                ):
+                    code = operations.helper_main(arguments)
+                self.assertNotEqual(code, 0)
+                self.assertEqual(json.loads(output.getvalue())["error"], "unsupported-action")
+                execute.assert_not_called()
+                self.assertEqual(lock.mock_calls, [])
+
+    def test_dispatch_rejects_unsupported_actions_without_running_commands(self):
+        run = Mock()
+        for action in ("", "reboot", "prepare; id", "repair-dkms\nprepare"):
+            with self.subTest(action=action), self.assertRaises(ValueError):
+                operations.execute(action, run)
+        run.assert_not_called()
+
+    def test_helper_reports_operation_errors_and_releases_its_lock(self):
+        with tempfile.TemporaryDirectory() as directory:
+            lock_file = Path(directory) / "operation.lock"
+            for _ in range(2):
+                output = io.StringIO()
+                with (
+                    patch.object(operations.os, "geteuid", return_value=0),
+                    patch.object(operations, "LOCK_FILE", lock_file),
+                    patch.object(operations, "execute", side_effect=OSError("device unavailable")) as execute,
+                    contextlib.redirect_stdout(output),
+                ):
+                    code = operations.helper_main(["prepare"])
+                self.assertNotEqual(code, 0)
+                self.assertEqual(json.loads(output.getvalue())["error"], "device unavailable")
+                execute.assert_called_once_with("prepare")
+
     def test_prepare_skips_known_non_enforcing_firmware_states(self):
         for output in (
             "SecureBoot disabled\n",

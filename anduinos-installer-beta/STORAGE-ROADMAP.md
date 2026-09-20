@@ -3,11 +3,14 @@
 ## Status and intent
 
 This document defines the post-release-one development plan for storage. The
-beta now exposes both deterministic whole-disk erase and guided coexistence in
-already-unallocated space, with Btrfs or ext4, without a feature flag. Custom
-layouts, encryption and RAID are not currently implemented. Guided mode does
-not shrink, move or repair Windows filesystems and remains subject to the
-unfinished destructive ISO/VM qualification described below.
+beta now exposes deterministic whole-disk erase, guided coexistence in
+already-unallocated space, and a bounded manual GPT editor without a feature
+flag. Automatic and guided modes offer Btrfs or ext4; the manual editor also
+offers XFS and F2FS as conventional single-root filesystems. It can explicitly
+shrink a plain, healthy NTFS partition after strict read-only checks; guided
+mode never does so automatically. Encryption and RAID are not currently
+implemented, and the storage paths remain subject to the destructive ISO/VM
+qualification below.
 
 The long-term product has three user-facing storage modes:
 
@@ -17,9 +20,13 @@ The long-term product has three user-facing storage modes:
 3. **Custom storage** — assign partitions, filesystems, Btrfs subvolumes,
    mount points, ESPs and already-prepared arrays.
 
-The installer will not become a general-purpose filesystem repair, partition
-move or partition shrink tool. Those operations remain the responsibility of
-specialist tools and the operating system that owns the data.
+The installer will not become a general-purpose filesystem repair or
+partition-move tool. Its one shrink path is deliberately narrow: an explicit
+manual operation on plain NTFS that keeps the partition start fixed and fails
+closed on BitLocker, mounts, hibernation/Fast Startup, an unclean volume,
+failed consistency checks or an unsafe target dry run. Other resize and repair
+operations remain the responsibility of specialist tools and the operating
+system that owns the data.
 
 ## Implementation status
 
@@ -33,7 +40,7 @@ specialist tools and the operating system that owns the data.
 | Storage 2C | complete | free-space compiler, preserved-ESP checks and shared boot policy |
 | Storage 2D | complete | GTK free-extent/ESP selection and typed write-set confirmation |
 | Storage 2E | in progress | beta execution enabled by default; runtime preservation proofs and isolated VM qualification remain |
-| Storage 3 | pending | custom partitions, mounts and Btrfs roles |
+| Storage 3 | in progress | bounded manual GPT editing and guarded plain-NTFS shrink implemented; destructive VM qualification remains |
 | Storage 4 | pending | existing LVM containers and arrays |
 | Storage 5 | pending | curated array creation |
 | Storage 6 | pending | LUKS2 and recovery-led encryption |
@@ -138,8 +145,11 @@ those artifacts.
 
 Btrfs remains the default on solid-state and rotational media because
 Disk Snapshots Manager, system snapshots and the shared-space subvolume model are
-AnduinOS capabilities. ext4 remains an explicit classic alternative without
-Disk Snapshots Manager or transactional system rollback.
+AnduinOS capabilities. ext4 remains the classic alternative in every mode.
+Advanced manual mode additionally offers XFS for a scalable conventional root
+and F2FS for users who explicitly want a flash-oriented conventional root.
+Neither receives Btrfs subvolumes, Disk Snapshots Manager or transactional
+system rollback.
 
 The installer must not infer filesystem policy from a device path such as
 `nvme` or `sd`. NVMe is a transport, SATA devices may be SSDs, and rotational
@@ -414,13 +424,14 @@ minimum size, boot constraints and recovery tooling.
 | Driver | Initial status | Disk Snapshots Manager | Notes |
 |---|---|---:|---|
 | Btrfs | supported | conditional | canonical or role-compatible layout |
-| ext4 | supported | no | simple root and conventional split mounts |
-| XFS | deferred | no | requires separate boot/recovery matrix |
-| F2FS | deferred | no | requires device and boot/recovery policy |
+| ext4 | supported | no | conventional root; available in every mode |
+| XFS | supported in bounded manual mode | no | one conventional root; no subvolumes |
+| F2FS | supported in bounded manual mode | no | one flash-oriented conventional root; no subvolumes |
 | ZFS root | out of scope | no | separate packaging, boot and licensing work |
 
 The UI never accepts an executable name, shell fragment or raw formatter
-options as a custom filesystem.
+Automatic erase and guided coexistence deliberately remain Btrfs/ext4-only;
+adding a manual driver does not silently expand those release matrices.
 
 ### Btrfs layout policies
 
@@ -565,6 +576,11 @@ hibernation, BitLocker/TPM, Secure Boot and EFI warnings, then selects one
 exact free extent, Btrfs or ext4, and a reused or dedicated ESP policy.
 Missing free space directs users to shrink in Windows and rescan; rescanning
 returns to the target-disk page and requires a new explicit selection.
+
+The bounded manual editor in this Advanced branch also accepts XFS and F2FS
+for a newly formatted single root. Selecting Btrfs activates the additional
+AnduinOS subvolume and snapshot workflow; selecting ext4, XFS or F2FS mounts
+one root filesystem and copies the target system directly into it.
 
 Future custom storage extends this conditional advanced branch rather than
 adding raw topology controls to the ordinary target-disk page. Every selected
@@ -712,7 +728,8 @@ stable release can claim coexistence qualification.
 ### Storage 3 — custom partition and mount mapping
 
 - Add format/preserve decisions and supported mount roles.
-- Add filesystem-driver capability validation.
+- Extend the existing Btrfs/ext4/XFS/F2FS root-driver capability validation to
+  arbitrary supported mount roles.
 - Add custom Btrfs subvolume selection/creation and the semantic role
   manifest.
 - Expose clear Disk Snapshots Manager compatibility reasons.

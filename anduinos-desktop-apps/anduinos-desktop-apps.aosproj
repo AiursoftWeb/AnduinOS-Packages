@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-apps</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default applications — pulls in recommended apps for AnduinOS</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -13,6 +13,7 @@
     <Component>main</Component>
     <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
   </PropertyGroup>
+
 
   <ItemGroup>
     <!-- Core & System -->
@@ -54,6 +55,7 @@
     <Recommend Include="libgdk-pixbuf2.0-bin" />
 
     <!-- System & Maintenance -->
+    <Recommend Include="anduinos-control-panel" />
     <Recommend Include="anduinos-driver-center" />
     <Recommend Include="anduinos-oobe" />
     <Recommend Include="anduinos-exe-runner" />
@@ -112,5 +114,8 @@
     <DependencyCheckSource
         Url="https://apkg-dev.aiursoft.com/artifacts/anduinos"
         SuiteMap="noble-addon=noble-addon-addon resolute-addon=resolute-addon" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
   </ItemGroup>
 </Project>

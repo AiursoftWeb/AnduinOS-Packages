@@ -184,6 +184,7 @@ fn finish_background_job(pending: &(Mutex<usize>, Condvar)) {
 pub struct Runtime {
     world: Arc<RwLock<WorldState>>,
     history_path: Option<PathBuf>,
+    learning_generation: String,
     transition_path: Option<PathBuf>,
     history_enabled: bool,
     background: BackgroundQueue,
@@ -201,6 +202,10 @@ impl Runtime {
         let history_enabled = history::enabled();
         let history_path = history::state_path();
         let transition_path = history::transition_state_path();
+        let learning_generation = history_path
+            .as_deref()
+            .map(history::generation)
+            .unwrap_or_default();
         let mut world = WorldState::default();
         if history_enabled {
             if let Some(path) = history_path.as_deref() {
@@ -215,6 +220,7 @@ impl Runtime {
         let runtime = Self {
             world: Arc::new(RwLock::new(world)),
             history_path,
+            learning_generation,
             transition_path,
             history_enabled,
             background: BackgroundQueue::new(),
@@ -228,6 +234,7 @@ impl Runtime {
         Self {
             world: Arc::new(RwLock::new(world)),
             history_path: None,
+            learning_generation: String::new(),
             transition_path: None,
             history_enabled: true,
             background: BackgroundQueue::new(),
@@ -398,16 +405,20 @@ impl Runtime {
                 };
                 if let (Some(path), Some(event)) = (&self.history_path, learned_history) {
                     let path = path.clone();
+                    let generation = self.learning_generation.clone();
                     self.background.submit(move || {
-                        if let Err(error) = history::record(&path, &event) {
+                        if let Err(error) = history::record_guarded(&path, &event, &generation) {
                             debug(&format!("history persistence failed: {error}"));
                         }
                     });
                 }
                 if let (Some(path), Some(event)) = (&self.transition_path, learned_transition) {
                     let path = path.clone();
+                    let generation = self.learning_generation.clone();
                     self.background.submit(move || {
-                        if let Err(error) = history::record_transition(&path, &event) {
+                        if let Err(error) =
+                            history::record_transition_guarded(&path, &event, &generation)
+                        {
                             debug(&format!("transition persistence failed: {error}"));
                         }
                     });

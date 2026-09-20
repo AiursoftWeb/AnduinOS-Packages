@@ -4,6 +4,7 @@ import unittest
 from installer_core.model import (
     AuthenticationMode,
     Architecture,
+    Filesystem,
     Firmware,
     MokPasswordPolicy,
     SecureBoot,
@@ -18,6 +19,30 @@ from helpers import valid_plan
 
 
 class ValidationTests(unittest.TestCase):
+    def test_minimum_target_disk_is_25_gib_not_decimal_gb(self):
+        plan = valid_plan()
+        for size, allowed in ((25 * 10**9, False), (25 * 1024**3 - 1, False),
+                              (25 * 1024**3, True), (50 * 1024**3, True)):
+            with self.subTest(size=size):
+                candidate = valid_plan(
+                    disk=dataclasses.replace(plan.storage.disk, expected_size_bytes=size),
+                    swap_size_mib=2048,
+                )
+                if allowed:
+                    validate_plan(candidate)
+                else:
+                    with self.assertRaisesRegex(PlanValidationError, "at least 25 GiB"):
+                        validate_plan(candidate)
+
+    def test_xfs_and_f2fs_are_restricted_to_manual_mode(self):
+        for filesystem in (Filesystem.XFS, Filesystem.F2FS):
+            with self.subTest(filesystem=filesystem.value):
+                with self.assertRaisesRegex(
+                    PlanValidationError,
+                    "require Advanced manual mode",
+                ):
+                    validate_plan(valid_plan(filesystem=filesystem))
+
     def test_valid_amd64_uefi_secure_boot(self):
         validate_plan(valid_plan())
 
@@ -39,6 +64,75 @@ class ValidationTests(unittest.TestCase):
 
     def test_valid_uefi_without_secure_boot_support(self):
         validate_plan(valid_plan(secure_boot=SecureBoot.UNSUPPORTED))
+
+    def test_uefi_erase_install_rejects_shared_fallback_policy(self):
+        plan = valid_plan()
+        plan = dataclasses.replace(
+            plan,
+            boot=dataclasses.replace(
+                plan.boot,
+                install_fallback_path=True,
+            ),
+        )
+        with self.assertRaisesRegex(
+            PlanValidationError, "must create a vendor NVRAM entry"
+        ):
+            validate_plan(plan)
+
+    def test_bios_erase_install_requires_portable_uefi_fallback(self):
+        plan = valid_plan(
+            firmware=Firmware.BIOS,
+            secure_boot=SecureBoot.NOT_APPLICABLE,
+        )
+        plan = dataclasses.replace(
+            plan,
+            boot=dataclasses.replace(
+                plan.boot,
+                install_fallback_path=False,
+            ),
+        )
+        with self.assertRaisesRegex(
+            PlanValidationError, "must retain the portable UEFI fallback"
+        ):
+            validate_plan(plan)
+
+    def test_zero_disk_swap_is_a_valid_zram_only_plan(self):
+        validate_plan(valid_plan(swap_size_mib=0))
+
+    def test_accepts_a_catalogued_keyboard_variant(self):
+        plan = valid_plan()
+        plan = dataclasses.replace(
+            plan,
+            regional=dataclasses.replace(
+                plan.regional,
+                keyboard=dataclasses.replace(
+                    plan.regional.keyboard,
+                    layout="us",
+                    variant="intl",
+                ),
+            ),
+        )
+        validate_plan(plan)
+
+    def test_rejects_unknown_or_unsafe_keyboard_variants(self):
+        for variant, message in (
+            ("qwerty", "Unknown keyboard layout and variant combination"),
+            ('intl"\nXKBOPTIONS="terminate:ctrl_alt_bksp', "Invalid keyboard variant"),
+        ):
+            with self.subTest(variant=variant):
+                plan = valid_plan()
+                plan = dataclasses.replace(
+                    plan,
+                    regional=dataclasses.replace(
+                        plan.regional,
+                        keyboard=dataclasses.replace(
+                            plan.regional.keyboard,
+                            variant=variant,
+                        ),
+                    ),
+                )
+                with self.assertRaisesRegex(PlanValidationError, message):
+                    validate_plan(plan)
 
     def test_rejects_noncanonical_hostname_from_an_untrusted_plan(self):
         plan = valid_plan()

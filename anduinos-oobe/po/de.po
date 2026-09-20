@@ -1,316 +1,275 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2026 THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
-#
-#, fuzzy
+# anduinos-oobe translations.
+# Copyright (C) 2026 AnduinOS contributors
+# This file is distributed under the same license as anduinos-oobe.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: anduinos-oobe\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-09 15:16+0000\n"
+"POT-Creation-Date: 2026-09-18 12:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: de <LL@li.org>\n"
-"Language: de\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Generated-By: Babel 2.17.0\n"
 
-#: assets/anduinos-oobe:371
-msgid "Disk Snapshots Manager"
-msgstr "Festplatten-Snapshots-Manager"
-
-#: assets/anduinos-oobe:373
-msgid "Protect your system with automatic Btrfs snapshots and smart cleanup."
-msgstr ""
-"Schützen Sie Ihr System mit automatischen Btrfs-Snapshots und intelligenter "
-"Bereinigung."
-
-#: assets/anduinos-oobe:375
-msgid "Configure Automatic Snapshots"
-msgstr "Konfigurieren Sie automatische Snapshots"
-
-#: assets/anduinos-oobe:380
-msgid "System Backup"
-msgstr "System-Sicherung"
-
-#: assets/anduinos-oobe:382
-msgid "Use Deja Dup to protect your"
-msgstr "Nutzen Sie Deja Dup, um Ihre"
-
-#: assets/anduinos-oobe:383
-msgid "important files with automated,"
-msgstr "wichtige Dateien mit automatisierten,"
-
-#: assets/anduinos-oobe:384
-msgid "secure local or remote backups."
-msgstr "sichere lokale oder entfernte Backups."
-
-#: assets/anduinos-oobe:386
-msgid "Get Deja Dup"
-msgstr "Deja Dup erhalten"
-
-#: assets/anduinos-oobe:457
+#: assets/anduinos-oobe:255
 msgid "NetworkManager could not scan Wi-Fi."
 msgstr "NetworkManager konnte WLAN nicht scannen."
 
-#: assets/anduinos-oobe:520
+#: assets/anduinos-oobe:318
 msgid "Could not inspect network adapters."
 msgstr "Netzwerkadapter konnten nicht überprüft werden."
 
-#: assets/anduinos-oobe:530
+#: assets/anduinos-oobe:328
 msgid "Could not read the Wi-Fi radio state."
 msgstr "Der WLAN-Funkstatus konnte nicht gelesen werden."
 
-#: assets/anduinos-oobe:536
+#: assets/anduinos-oobe:334
 msgid "Unknown Wi-Fi radio state: {}"
 msgstr "Unbekannter WLAN-Funkstatus: {}"
 
-#: assets/anduinos-oobe:537
+#: assets/anduinos-oobe:335
 msgid "empty"
 msgstr "leer"
 
-#: assets/anduinos-oobe:546
+#: assets/anduinos-oobe:344
 msgid "Could not change the Wi-Fi radio state."
 msgstr "Der WLAN-Funkstatus konnte nicht geändert werden."
 
-#: assets/anduinos-oobe:648
+#: assets/anduinos-oobe:446
 msgid "Welcome Home."
 msgstr "Willkommen zu Hause."
 
-#: assets/anduinos-oobe:658
+#: assets/anduinos-oobe:456
 msgid "AnduinOS is ready. Just a few steps to shape it"
 msgstr "AnduinOS ist bereit. Nur noch ein paar Schritte, um es anzupassen"
 
-#: assets/anduinos-oobe:658
+#: assets/anduinos-oobe:456
 msgid "into the perfect system tailored to your habits."
 msgstr "in das perfekte System, das auf Ihre Gewohnheiten zugeschnitten ist."
 
-#: assets/anduinos-oobe:668
+#: assets/anduinos-oobe:466
 msgid "  Start Setup  "
 msgstr "  Start der Einrichtung  "
 
-#: assets/anduinos-oobe:715
+#: assets/anduinos-oobe:513
 msgid "Connect to the Internet"
 msgstr "Stellen Sie eine Verbindung zum Internet her"
 
-#: assets/anduinos-oobe:723
+#: assets/anduinos-oobe:521
 msgid ""
 "Connect now so AnduinOS can safely check for updates, drivers, and apps."
 msgstr ""
 "Stellen Sie jetzt eine Verbindung her, damit AnduinOS sicher nach Updates, "
 "Treibern und Apps suchen kann."
 
-#: assets/anduinos-oobe:731
+#: assets/anduinos-oobe:529
 msgid "Internet Connection"
 msgstr "Internetverbindung"
 
-#: assets/anduinos-oobe:738
+#: assets/anduinos-oobe:536
 msgid "Network Hardware"
 msgstr "Netzwerkhardware"
 
-#: assets/anduinos-oobe:746
+#: assets/anduinos-oobe:544
 msgid "Available Wi-Fi Networks"
 msgstr "Verfügbare Wi-Fi-Netzwerke"
 
-#: assets/anduinos-oobe:748
+#: assets/anduinos-oobe:546
 msgid "Wi-Fi"
 msgstr "W-lan"
 
-#: assets/anduinos-oobe:751
+#: assets/anduinos-oobe:549
 msgid "Scan Again"
 msgstr "Erneut scannen"
 
-#: assets/anduinos-oobe:760 assets/anduinos-oobe:832 assets/anduinos-oobe:840
-#: assets/anduinos-oobe:855
+#: assets/anduinos-oobe:558 assets/anduinos-oobe:630 assets/anduinos-oobe:638
+#: assets/anduinos-oobe:653
 msgid "Open Network Settings"
 msgstr "Öffnen Sie die Netzwerkeinstellungen"
 
-#: assets/anduinos-oobe:769
+#: assets/anduinos-oobe:567
 msgid "Could not open network settings: {}"
 msgstr "Die Netzwerkeinstellungen konnten nicht geöffnet werden: {}"
 
-#: assets/anduinos-oobe:779
+#: assets/anduinos-oobe:577
 msgid "Continue Offline"
 msgstr "Offline fortfahren"
 
-#: assets/anduinos-oobe:783
+#: assets/anduinos-oobe:581
 msgid "Skip updates, online drivers, apps, and account setup."
 msgstr ""
 "Überspringen Sie Updates, Online-Treiber, Apps und die Kontoeinrichtung."
 
-#: assets/anduinos-oobe:799
+#: assets/anduinos-oobe:597
 msgid "Internet connection is ready. Choose Next to continue."
-msgstr ""
-"Die Internetverbindung ist bereit. Wählen Sie Weiter, um fortzufahren."
+msgstr "Die Internetverbindung ist bereit. Wählen Sie Weiter, um fortzufahren."
 
-#: assets/anduinos-oobe:806
+#: assets/anduinos-oobe:604
 msgid "Connect to Wi-Fi or a wired network to continue."
 msgstr ""
-"Stellen Sie eine Verbindung zu WLAN oder einem kabelgebundenen Netzwerk her,"
-" um fortzufahren."
+"Stellen Sie eine Verbindung zu WLAN oder einem kabelgebundenen Netzwerk her, "
+"um fortzufahren."
 
-#: assets/anduinos-oobe:829
+#: assets/anduinos-oobe:627
 msgid "No network adapters detected."
 msgstr "Keine Netzwerkadapter erkannt."
 
-#: assets/anduinos-oobe:831
+#: assets/anduinos-oobe:629
 msgid "Connect a network adapter or continue offline."
 msgstr "Schließen Sie einen Netzwerkadapter an oder fahren Sie offline fort."
 
-#: assets/anduinos-oobe:836
+#: assets/anduinos-oobe:634
 msgid "Wired Network"
 msgstr "Kabelgebundenes Netzwerk"
 
-#: assets/anduinos-oobe:838
+#: assets/anduinos-oobe:636
 msgid "Cable connected."
 msgstr "Kabel angeschlossen."
 
-#: assets/anduinos-oobe:839
+#: assets/anduinos-oobe:637
 msgid "Plug in a network cable to connect."
 msgstr "Schließen Sie zum Herstellen der Verbindung ein Netzwerkkabel an."
 
-#: assets/anduinos-oobe:844
+#: assets/anduinos-oobe:642
 msgid "Wireless Network"
 msgstr "Drahtloses Netzwerk"
 
-#: assets/anduinos-oobe:845
+#: assets/anduinos-oobe:643
 msgid "Wi-Fi adapter detected."
 msgstr "WLAN-Adapter erkannt."
 
-#: assets/anduinos-oobe:846
+#: assets/anduinos-oobe:644
 msgid "Open Wi-Fi Settings"
 msgstr "Öffnen Sie die WLAN-Einstellungen"
 
-#: assets/anduinos-oobe:850
+#: assets/anduinos-oobe:648
 msgid "Wired and Wireless Networks"
 msgstr "Kabelgebundene und drahtlose Netzwerke"
 
-#: assets/anduinos-oobe:852
+#: assets/anduinos-oobe:650
 msgid "Cable connected and Wi-Fi available."
 msgstr "Kabelanschluss und WLAN verfügbar."
 
-#: assets/anduinos-oobe:854
+#: assets/anduinos-oobe:652
 msgid "Wi-Fi is available; the network cable is disconnected."
 msgstr "WLAN ist verfügbar; Das Netzwerkkabel ist nicht angeschlossen."
 
-#: assets/anduinos-oobe:866
+#: assets/anduinos-oobe:664
 msgid "Wi-Fi is turned off."
 msgstr "WLAN ist ausgeschaltet."
 
-#: assets/anduinos-oobe:870
+#: assets/anduinos-oobe:668
 msgid "No Wi-Fi networks found."
 msgstr "Keine WLAN-Netzwerke gefunden."
 
-#: assets/anduinos-oobe:899
+#: assets/anduinos-oobe:697
 msgid "Wi-Fi unavailable: {}"
 msgstr "WLAN nicht verfügbar: {}"
 
-#: assets/anduinos-oobe:981
+#: assets/anduinos-oobe:767 assets/anduinos-oobe:774
+msgid "Display Scaling"
+msgstr "Anzeigeskalierung"
+
+#: assets/anduinos-oobe:768 assets/anduinos-oobe:799 assets/anduinos-oobe:816
+msgid "Recommendation unavailable for this display."
+msgstr "Für diesen Bildschirm ist keine Empfehlung verfügbar."
+
+#: assets/anduinos-oobe:790
+#, python-format
+msgid "%(scale)s (Recommended)"
+msgstr "%(scale)s (Empfohlen)"
+
+#: assets/anduinos-oobe:797
+#, python-format
+msgid "Primary display: %(display)s · Recommended: %(scale)s"
+msgstr "Hauptbildschirm: %(display)s · Empfohlen: %(scale)s"
+
+#: assets/anduinos-oobe:800 assets/anduinos-oobe:815
+msgid "Could not change display scaling."
+msgstr "Die Anzeigeskalierung konnte nicht geändert werden."
+
+#: assets/anduinos-oobe:895
 msgid "Define Your Visual Order"
 msgstr "Ihre visuelle Ordnung definieren"
 
-#: assets/anduinos-oobe:991
+#: assets/anduinos-oobe:905
 msgid "Light and Shadow"
 msgstr "Licht und Schatten"
 
-#: assets/anduinos-oobe:992
+#: assets/anduinos-oobe:906
 msgid "Choose a crisp light theme, or an immersive dark experience."
 msgstr ""
 "Wählen Sie ein klares helles Design oder ein immersives dunkles Erlebnis."
 
-#: assets/anduinos-oobe:1011
+#: assets/anduinos-oobe:925
 msgid "Light"
 msgstr "Hell"
 
-#: assets/anduinos-oobe:1023
+#: assets/anduinos-oobe:937
 msgid "Dark"
 msgstr "Dunkel"
 
-#: assets/anduinos-oobe:1054
+#: assets/anduinos-oobe:970
 msgid "Workflow Layout"
 msgstr "Workflow-Layout"
 
-#: assets/anduinos-oobe:1055
+#: assets/anduinos-oobe:971
 msgid "Prefer modern centered alignment, or classic left-docked?"
 msgstr ""
 "Mögen Sie moderne zentrierte Ausrichtung oder klassische linksbündige "
 "Anordnung?"
 
-#: assets/anduinos-oobe:1089
+#: assets/anduinos-oobe:1005
 msgid "Taskbar Layout"
 msgstr "Aufgabenleistenlayout"
 
-#: assets/anduinos-oobe:1090
+#: assets/anduinos-oobe:1006
 msgid "Choose your workflow."
 msgstr "Wählen Sie Ihren Workflow."
 
-#: assets/anduinos-oobe:1099
+#: assets/anduinos-oobe:1015
 msgid " Modern "
 msgstr " Modern "
 
-#: assets/anduinos-oobe:1100
+#: assets/anduinos-oobe:1016
 msgid " Classic "
 msgstr " Klassisch "
 
-#: assets/anduinos-oobe:1129
+#: assets/anduinos-oobe:1045
 msgid "Show Virtual Desktop Switch Button"
 msgstr "Virtual-Desktop-Schaltfläche anzeigen"
 
-#: assets/anduinos-oobe:1130
+#: assets/anduinos-oobe:1046
 msgid "Display the Activities button on the taskbar"
 msgstr "Zeigen Sie die Schaltfläche „Aktivitäten“ in der Aufgabenleiste an"
 
-#: assets/anduinos-oobe:1182
+#: assets/anduinos-oobe:1098
 msgid "Digital Sovereignty, Under Your Control"
 msgstr "Digitale Souveränität unter Ihrer Kontrolle"
 
-#: assets/anduinos-oobe:1190
+#: assets/anduinos-oobe:1106
 msgid "We deeply value privacy. Here, you hold absolute authority."
 msgstr ""
-"Wir schätzen den Datenschutz zutiefst. Hier haben Sie die absolute "
-"Autorität."
+"Wir schätzen den Datenschutz zutiefst. Hier haben Sie die absolute Autorität."
 
-#: assets/anduinos-oobe:1200
+#: assets/anduinos-oobe:1116
 msgid "Network Security"
 msgstr "Netzwerksicherheit"
 
-#: assets/anduinos-oobe:1202
-msgid ""
-"Control inbound protection and whether this computer participates in local "
-"network discovery."
-msgstr ""
-"Steuern Sie den eingehenden Schutz und ob dieser Computer an der lokalen "
-"Netzwerkerkennung teilnimmt."
-
-#: assets/anduinos-oobe:1207
+#: assets/anduinos-oobe:1120
 msgid "Network Firewall (UFW)"
 msgstr "Netzwerk-Firewall (UFW)"
 
-#: assets/anduinos-oobe:1260
-msgid "Local Network Discovery (mDNS)"
-msgstr "Lokale Netzwerkerkennung (mDNS)"
-
-#: assets/anduinos-oobe:1262
-msgid ""
-"Find printers and nearby devices, and make .local names available on trusted"
-" networks."
-msgstr ""
-"Finden Sie Drucker und Geräte in der Nähe und machen Sie .local-Namen in "
-"vertrauenswürdigen Netzwerken verfügbar."
-
-#: assets/anduinos-oobe:1274
-msgid "Local network discovery controls are not installed."
-msgstr "Lokale Netzwerkerkennungskontrollen sind nicht installiert."
-
-#: assets/anduinos-oobe:1309
+#: assets/anduinos-oobe:1176
 msgid "Location Services"
 msgstr "Dienste zum Standortzugriff"
 
-#: assets/anduinos-oobe:1311
+#: assets/anduinos-oobe:1178
 msgid ""
 "Allow apps like weather and clock to access your approximate geographic "
 "location."
@@ -318,209 +277,33 @@ msgstr ""
 "Ermöglichen Sie Apps wie Wetter und Uhr, auf Ihren ungefähren geografischen "
 "Standort zuzugreifen."
 
-#: assets/anduinos-oobe:1315
+#: assets/anduinos-oobe:1182
 msgid "Location Access"
 msgstr "Zugriff auf den Standort"
 
-#: assets/anduinos-oobe:1333
+#: assets/anduinos-oobe:1200
 msgid "Power Settings"
 msgstr "Energieeinstellungen"
 
-#: assets/anduinos-oobe:1334
+#: assets/anduinos-oobe:1201
 msgid "Manage idle behavior to balance energy saving and convenience."
 msgstr ""
 "Außenstehendes Verhalten verwalten, um Energieeinsparung und Komfort "
 "auszubalancieren."
 
-#: assets/anduinos-oobe:1338
+#: assets/anduinos-oobe:1205
 msgid "Auto Sleep"
 msgstr "Auto-Schlafmodus"
 
-#: assets/anduinos-oobe:1367
-msgid "Command-line Assistance"
-msgstr "Befehlszeilenunterstützung"
-
-#: assets/anduinos-oobe:1368
-msgid "Control local bash predictions."
-msgstr "Lokale bash-Vorhersagen steuern."
-
-#: assets/anduinos-oobe:1372
-msgid "Bash Command Predictions"
-msgstr "Bash-Befehlsvorhersagen"
-
-#: assets/anduinos-oobe:1373
-msgid "Show command suggestions in bash"
-msgstr "Befehlsvorschläge in bash anzeigen"
-
-#: assets/anduinos-oobe:1390
-msgid ""
-"Could not update your Bash configuration. Your previous setting was kept."
-msgstr ""
-"Ihre Bash-Konfiguration konnte nicht aktualisiert werden. Die vorherige "
-"Einstellung wurde beibehalten."
-
-#: assets/anduinos-oobe:1428
-msgid "Keep Your System Up to Date"
-msgstr "Ihr System auf dem neuesten Stand halten"
-
-#: assets/anduinos-oobe:1437
-msgid "Security patches and the latest features are just a click away."
-msgstr ""
-"Sicherheitsupdates und die neuesten Funktionen sind nur einen Klick "
-"entfernt."
-
-#: assets/anduinos-oobe:1447
-msgid "Terminal Output"
-msgstr "Terminalausgabe"
-
-#: assets/anduinos-oobe:1483
-msgid "  Do It Later  "
-msgstr "  Das später erledigen  "
-
-#: assets/anduinos-oobe:1486
-msgid "  Find Fastest Mirror  "
-msgstr "  Schnellsten Spiegelserver finden  "
-
-#: assets/anduinos-oobe:1489
-msgid "  Check for Updates  "
-msgstr "  Nach Updates suchen  "
-
-#: assets/anduinos-oobe:1523
-msgid "Checking for updates…"
-msgstr "Updates werden überprüft…"
-
-#: assets/anduinos-oobe:1555
-msgid "Updates are available."
-msgstr "Updates sind verfügbar."
-
-#: assets/anduinos-oobe:1556
-msgid "  Install Updates  "
-msgstr "  Updates installieren  "
-
-#: assets/anduinos-oobe:1563
-msgid "✓ System is up to date."
-msgstr "✓ Das System ist auf dem neuesten Stand."
-
-#: assets/anduinos-oobe:1565 assets/anduinos-oobe:1595
-msgid "  Continue  "
-msgstr "  Fortfahren  "
-
-#: assets/anduinos-oobe:1572
-msgid "✗ Check failed: "
-msgstr "✗ Überprüfung fehlgeschlagen: "
-
-#: assets/anduinos-oobe:1578
-msgid "Installing updates…"
-msgstr "Updates werden installiert…"
-
-#: assets/anduinos-oobe:1593
-msgid "✓ Updates installed successfully!"
-msgstr "✓ Updates erfolgreich installiert!"
-
-#: assets/anduinos-oobe:1604
-msgid "✗ Installation failed: "
-msgstr "✗ Installation fehlgeschlagen: "
-
-#: assets/anduinos-oobe:1643
-msgid "Testing mirrors…"
-msgstr "Spiegelserver werden getestet…"
-
-#: assets/anduinos-oobe:1644
-msgid "=== Testing mirror speeds ==="
-msgstr "=== Mirror-Geschwindigkeiten werden getestet ==="
-
-#: assets/anduinos-oobe:1769 assets/anduinos-oobe:1777
-#, python-brace-format
-msgid "Testing mirrors… ({c}/{t})"
-msgstr "Spiegel werden getestet… ({c}/{t})"
-
-#: assets/anduinos-oobe:1785
-msgid "No mirrors reachable."
-msgstr "Kein Mirror erreichbar."
-
-#: assets/anduinos-oobe:1787
-msgid "✗ No mirrors reachable. Check your connection."
-msgstr "✗ Keine Spiegelserver erreichbar. Überprüfen Sie Ihre Verbindung."
-
-#: assets/anduinos-oobe:1795
-msgid "=== Testing bandwidth of top 5 mirrors "
-msgstr "=== Bandbreite der Top-5-Mirrors wird getestet === "
-
-#: assets/anduinos-oobe:1796
-msgid "(3 s each) ==="
-msgstr "(3 s jeweils) ==="
-
-#: assets/anduinos-oobe:1850
-msgid "Best mirror by bandwidth"
-msgstr "Bester Spiegelserver nach Bandbreite"
-
-#: assets/anduinos-oobe:1852 assets/anduinos-oobe:1873
-#: assets/anduinos-oobe:1880
-msgid "Latency"
-msgstr "Latenz"
-
-#: assets/anduinos-oobe:1853 assets/anduinos-oobe:1874
-#: assets/anduinos-oobe:1881
-msgid "Bandwidth"
-msgstr "Bandbreite"
-
-#: assets/anduinos-oobe:1875
-msgid "This is already your current mirror."
-msgstr "Dies ist bereits Ihr aktueller Spiegel."
-
-#: assets/anduinos-oobe:1885
-msgid "Current mirror"
-msgstr "Aktueller Spiegel"
-
-#: assets/anduinos-oobe:1889
-msgid "Switch to this mirror and run apt update?"
-msgstr "Zu diesem Spiegel wechseln und apt update ausführen?"
-
-#: assets/anduinos-oobe:1894
-msgid "Fastest Mirror Found"
-msgstr "Schnellster Spiegel gefunden"
-
-#: assets/anduinos-oobe:1897
-msgid "Keep Current"
-msgstr "Aktuell behalten"
-
-#: assets/anduinos-oobe:1898
-msgid "Switch"
-msgstr "Umschalten"
-
-#: assets/anduinos-oobe:1920
-msgid "✗ Mirror test failed: "
-msgstr "✗ Spiegertest fehlgeschlagen: "
-
-#: assets/anduinos-oobe:1926
-msgid "Switching mirror…"
-msgstr "Spiegel wird gewechselt…"
-
-#: assets/anduinos-oobe:1927
-msgid "=== Applying mirror switch ==="
-msgstr "=== Mirror-Switch wird angewendet ==="
-
-#: assets/anduinos-oobe:2002
-msgid "✓ Mirror switched and system updated."
-msgstr "✓ Mirror gewechselt und System aktualisiert."
-
-#: assets/anduinos-oobe:2005
-msgid "✓ Switched to "
-msgstr "✓ Gewechselt zu "
-
-#: assets/anduinos-oobe:2018
-msgid "✗ Switch failed: "
-msgstr "✗ Wechsel fehlgeschlagen: "
-
-#: assets/anduinos-oobe:2058
+#: assets/anduinos-oobe:1256
 msgid "Could not open AnduinOS Driver Center: {}"
 msgstr "AnduinOS-Treiberzentrum konnte nicht geöffnet werden: {}"
 
-#: assets/anduinos-oobe:2091
+#: assets/anduinos-oobe:1289
 msgid "Configure Hardware Drivers?"
 msgstr "Hardwaretreiber konfigurieren?"
 
-#: assets/anduinos-oobe:2101
+#: assets/anduinos-oobe:1299
 msgid ""
 "Open AnduinOS Driver Center now to manage graphics cards, Xbox controllers, "
 "and other hardware."
@@ -528,181 +311,180 @@ msgstr ""
 "Öffnen Sie jetzt das AnduinOS-Treiberzentrum, um Grafikkarten, Xbox-"
 "Controller und andere Hardware zu verwalten."
 
-#: assets/anduinos-oobe:2124
+#: assets/anduinos-oobe:1322
 msgid "Skip"
 msgstr "Überspringen"
 
-#: assets/anduinos-oobe:2129
+#: assets/anduinos-oobe:1327
 msgid "Open Driver Center"
 msgstr "Treiberzentrum öffnen"
 
-#: assets/anduinos-oobe:2165
+#: assets/anduinos-oobe:1363
 msgid "Run Windows Apps, with ease"
 msgstr "Windows-Apps mit Leichtigkeit ausführen"
 
-#: assets/anduinos-oobe:2174
+#: assets/anduinos-oobe:1372
 msgid ""
-"Powered by Wine and Bottles technology, running classic Windows applications"
+"Powered by Wine and Bottles technology, running classic Windows applications "
+"is now easier than ever."
 msgstr ""
-"Angetrieben von Wine- und Bottles-Technologie, zur Ausführung klassischer "
-"Windows-Anwendungen"
+"Mit Wine und Bottles ist es einfacher denn je, klassische Windows-"
+"Anwendungen auszuführen."
 
-#: assets/anduinos-oobe:2174
-msgid "is now easier than ever."
-msgstr "ist jetzt einfacher denn je."
-
-#: assets/anduinos-oobe:2190
+#: assets/anduinos-oobe:1388
 msgid "✓ Windows compatibility sandbox is already installed."
 msgstr "✓ Die Windows-Kompatibilitäts-Sandbox ist bereits installiert."
 
-#: assets/anduinos-oobe:2206
+#: assets/anduinos-oobe:1404
 msgid "  Skip  "
 msgstr "  Überspringen  "
 
-#: assets/anduinos-oobe:2210
+#: assets/anduinos-oobe:1408
 msgid "  Enable Windows Compatibility Sandbox  "
 msgstr "  Windows-Kompatibilitäts-Sandbox aktivieren  "
 
-#: assets/anduinos-oobe:2220
+#: assets/anduinos-oobe:1418
 msgid "Configure Bottles"
 msgstr "Bottles konfigurieren"
 
-#: assets/anduinos-oobe:2235
+#: assets/anduinos-oobe:1433
 msgid "Advanced Output"
 msgstr "Erweiterte Ausgabe"
 
-#: assets/anduinos-oobe:2263
+#: assets/anduinos-oobe:1462
 msgid "Deploying compatibility sandbox via Flatpak…"
 msgstr "Kompatibilitäts-Sandbox wird über Flatpak bereitgestellt…"
 
-#: assets/anduinos-oobe:2263
+#: assets/anduinos-oobe:1462
 msgid "This may take a few minutes."
 msgstr "Dies kann einige Minuten dauern."
 
-#: assets/anduinos-oobe:2298
+#: assets/anduinos-oobe:1497
 msgid "✓ Sandbox deployed successfully!"
 msgstr "✓ Sandbox erfolgreich bereitgestellt!"
 
-#: assets/anduinos-oobe:2298
+#: assets/anduinos-oobe:1497
 msgid "You can now double-click .exe files to run them."
 msgstr "Sie können .exe-Dateien jetzt per Doppelklick ausführen."
 
-#: assets/anduinos-oobe:2307
+#: assets/anduinos-oobe:1506
 msgid "✗ Deployment failed."
 msgstr "✗ Bereitstellung fehlgeschlagen."
 
-#: assets/anduinos-oobe:2307
+#: assets/anduinos-oobe:1506
 msgid "You can install Bottles later from the App Store."
 msgstr "Sie können Bottles später aus dem App Store installieren."
 
-#: assets/anduinos-oobe:2315
+#: assets/anduinos-oobe:1514
 msgid "✗ Error: "
 msgstr "✗ Fehler: "
 
-#: assets/anduinos-oobe:2346
+#: assets/anduinos-oobe:1545
 msgid "The Magic at Your Fingertips"
 msgstr "Die Magie an Ihren Fingerspitzen"
 
-#: assets/anduinos-oobe:2354
+#: assets/anduinos-oobe:1553
 msgid "Skip tedious clicking. Capture inspiration with elegance."
-msgstr "Vermeiden Sie müdes Klicken. Erfassen Sie Inspiration mit Eleganz."
+msgstr ""
+"Mit Tastenkürzeln erstellen Sie Bildschirmfotos und starten "
+"Bildschirmaufnahmen – ohne umständliches Klicken."
 
-#: assets/anduinos-oobe:2376
+#: assets/anduinos-oobe:1576
 msgid "Screenshot"
 msgstr "Bildschirmfoto"
 
-#: assets/anduinos-oobe:2377
+#: assets/anduinos-oobe:1577
 msgid "Select, annotate, copy — all in one motion"
 msgstr "Auswählen, annotieren, kopieren – alles in einer Bewegung"
 
-#: assets/anduinos-oobe:2395
+#: assets/anduinos-oobe:1595
 msgid "Screen Recording"
 msgstr "Bildschirmaufnahme"
 
-#: assets/anduinos-oobe:2396
+#: assets/anduinos-oobe:1596
 msgid "Seamless start, instant capture"
 msgstr "Müheloser Start, sofortige Aufnahme"
 
-#: assets/anduinos-oobe:2416
+#: assets/anduinos-oobe:1616
 msgid "More Essential Shortcuts"
 msgstr "Weitere wichtige Tastenkürzel"
 
-#: assets/anduinos-oobe:2419
+#: assets/anduinos-oobe:1619
 msgid "Open File Manager"
 msgstr "Dateimanager öffnen"
 
-#: assets/anduinos-oobe:2420
+#: assets/anduinos-oobe:1620
 msgid "Open Terminal"
 msgstr "Terminal öffnen"
 
-#: assets/anduinos-oobe:2421
+#: assets/anduinos-oobe:1621
 msgid "Task Manager"
 msgstr "Task-Manager"
 
-#: assets/anduinos-oobe:2422
+#: assets/anduinos-oobe:1622
 msgid "View Clipboard History"
 msgstr "Zwischenablageverlauf anzeigen"
 
-#: assets/anduinos-oobe:2423
+#: assets/anduinos-oobe:1623
 msgid "Lock Screen"
 msgstr "Bildschirm sperren"
 
-#: assets/anduinos-oobe:2424
+#: assets/anduinos-oobe:1624
 msgid "Action Center"
 msgstr "Aktioncenter"
 
-#: assets/anduinos-oobe:2425
+#: assets/anduinos-oobe:1625
 msgid "Notification Center"
 msgstr "Benachrichtigungszentrum"
 
-#: assets/anduinos-oobe:2426
+#: assets/anduinos-oobe:1626
 msgid "Toggle Network Stats Display"
 msgstr "Netzwerkstatistiken ein-/ausblenden"
 
-#: assets/anduinos-oobe:2427
+#: assets/anduinos-oobe:1627
 msgid "Switch Between Windows"
 msgstr "Zwischen Fenstern wechseln"
 
-#: assets/anduinos-oobe:2428
+#: assets/anduinos-oobe:1628
 msgid "Close Current Window"
 msgstr "Aktuelles Fenster schließen"
 
-#: assets/anduinos-oobe:2429
+#: assets/anduinos-oobe:1629
 msgid "Snap Windows"
 msgstr "Fenster andocken"
 
-#: assets/anduinos-oobe:2430
+#: assets/anduinos-oobe:1630
 msgid "Switch Virtual Desktop"
 msgstr "Virtuellen Desktop umschalten"
 
-#: assets/anduinos-oobe:2431
+#: assets/anduinos-oobe:1631
 msgid "Show Desktop"
 msgstr "Desktop anzeigen"
 
-#: assets/anduinos-oobe:2432
+#: assets/anduinos-oobe:1632
 msgid "System Settings"
 msgstr "Systemeinstellungen"
 
-#: assets/anduinos-oobe:2433
+#: assets/anduinos-oobe:1633
 msgid "Emoji and Characters"
 msgstr "Emoji & Zeichen"
 
-#: assets/anduinos-oobe:2434
+#: assets/anduinos-oobe:1634
 msgid "Minimize Window"
 msgstr "Fenster minimieren"
 
-#: assets/anduinos-oobe:2452
+#: assets/anduinos-oobe:1652
 msgid ""
 "You can view and customize all shortcuts anytime in Settings → Keyboard."
 msgstr ""
-"Sie können alle Tastenkürzel jederzeit in den Einstellungen → Tastatur "
+"Alle Tastenkürzel finden Sie unter Einstellungen → Tastatur → Tastenkürzel "
 "anzeigen und anpassen."
 
-#: assets/anduinos-oobe:2489
+#: assets/anduinos-oobe:1689
 msgid "In China? Use USTC mirror for App Store!"
 msgstr "In China? Verwenden Sie den USTC-Spiegel für den App Store!"
 
-#: assets/anduinos-oobe:2495
+#: assets/anduinos-oobe:1695
 msgid ""
 "Flathub access can be slow from China. Switch to the USTC mirror for faster "
 "downloads."
@@ -710,421 +492,393 @@ msgstr ""
 "Flathub-Zugriffe können aus China langsam sein. Wechseln Sie zum USTC-"
 "Spiegel für schnellere Downloads."
 
-#: assets/anduinos-oobe:2602
+#: assets/anduinos-oobe:1802
 msgid "✓ Already using Chinese mirror — downloads are fast."
 msgstr ""
 "✓ Chinesischer Spiegel wird bereits verwendet – Downloads sind schnell."
 
-#: assets/anduinos-oobe:2605
+#: assets/anduinos-oobe:1805
 msgid "Switch Back to International"
 msgstr "Zurück zur International-Version wechseln"
 
-#: assets/anduinos-oobe:2608
+#: assets/anduinos-oobe:1808
 msgid "Flathub is using the international server."
 msgstr "Flathub verwendet den internationalen Server."
 
-#: assets/anduinos-oobe:2611
+#: assets/anduinos-oobe:1811
 msgid "🚀 Switch to USTC Mirror"
 msgstr "🚀 Zu USTC-Spiegel wechseln"
 
-#: assets/anduinos-oobe:2624
+#: assets/anduinos-oobe:1824
 msgid "Testing USTC mirror..."
 msgstr "USTC-Spiegel wird getestet..."
 
-#: assets/anduinos-oobe:2668
+#: assets/anduinos-oobe:1868
 msgid "Switching back..."
 msgstr "Wechseln zurück..."
 
-#: assets/anduinos-oobe:2695
+#: assets/anduinos-oobe:1895
 msgid "✗ Failed: "
 msgstr "✗ Fehlgeschlagen: "
 
-#: assets/anduinos-oobe:2698
+#: assets/anduinos-oobe:1898
 msgid "Retry"
 msgstr "Wiederholen"
 
-#: assets/anduinos-oobe:2724
+#: assets/anduinos-oobe:1924
 msgid "Productive From Day One"
 msgstr "Produktiv vom ersten Tag an"
 
-#: assets/anduinos-oobe:2733
+#: assets/anduinos-oobe:1933
 msgid "Essential productivity and entertainment tools, hand-picked for you."
 msgstr ""
 "Essentielle Produktivitäts- und Unterhaltungstools, handverlesen für Sie."
 
-#: assets/anduinos-oobe:2733
+#: assets/anduinos-oobe:1933
 msgid "Click any app to open its details in the App Store."
 msgstr ""
 "Klicken Sie auf eine beliebige App, um ihre Details im App Store zu öffnen."
 
-#: assets/anduinos-oobe:2745
+#: assets/anduinos-oobe:1945
 msgid "WeChat"
 msgstr "WeChat"
 
-#: assets/anduinos-oobe:2746
+#: assets/anduinos-oobe:1946
 msgid "Most popular messaging app in China"
 msgstr "Die beliebteste Messaging-App in China"
 
-#: assets/anduinos-oobe:2747
+#: assets/anduinos-oobe:1947
 msgid "QQ"
 msgstr "QQ"
 
-#: assets/anduinos-oobe:2748
+#: assets/anduinos-oobe:1948
 msgid "Tencent QQ instant messenger"
 msgstr "Tencent QQ Instant Messenger"
 
-#: assets/anduinos-oobe:2749
+#: assets/anduinos-oobe:1949
 msgid "WPS Office"
 msgstr "WPS Office"
 
-#: assets/anduinos-oobe:2750
+#: assets/anduinos-oobe:1950
 msgid "Best office suite for Chinese documents"
 msgstr "Das beste Büroprogramm-Paket für chinesische Dokumente"
 
-#: assets/anduinos-oobe:2755
+#: assets/anduinos-oobe:1955
 msgid "Google Chrome"
 msgstr "Google Chrome"
 
-#: assets/anduinos-oobe:2756
+#: assets/anduinos-oobe:1956
 msgid "The world's most popular web browser"
 msgstr "Der weltweit beliebteste Webbrowser"
 
-#: assets/anduinos-oobe:2757
+#: assets/anduinos-oobe:1957
 msgid "Visual Studio Code"
 msgstr "Visual Studio Code"
 
-#: assets/anduinos-oobe:2758
+#: assets/anduinos-oobe:1958
 msgid "Code editing. Redefined."
 msgstr "Code-Bearbeitung. Neu definiert."
 
-#: assets/anduinos-oobe:2759
+#: assets/anduinos-oobe:1959
 msgid "Steam"
 msgstr "Steam"
 
-#: assets/anduinos-oobe:2760
+#: assets/anduinos-oobe:1960
 msgid "Your portal to the gaming universe"
 msgstr "Ihr Portal zur Gaming-Welt"
 
-#: assets/anduinos-oobe:2761
+#: assets/anduinos-oobe:1961
 msgid "Discord"
 msgstr "Discord"
 
-#: assets/anduinos-oobe:2762
+#: assets/anduinos-oobe:1962
 msgid "Chat, voice, and video for communities"
 msgstr "Chat, Sprache und Video für Communities"
 
-#: assets/anduinos-oobe:2763
+#: assets/anduinos-oobe:1963
 msgid "Spotify"
 msgstr "Spotify"
 
-#: assets/anduinos-oobe:2764
+#: assets/anduinos-oobe:1964
 msgid "Music for everyone"
 msgstr "Musik für alle"
 
-#: assets/anduinos-oobe:2765
+#: assets/anduinos-oobe:1965
 msgid "OnlyOffice"
 msgstr "OnlyOffice"
 
-#: assets/anduinos-oobe:2766
+#: assets/anduinos-oobe:1966
 msgid "Best Microsoft Office-compatible suite"
 msgstr "Das beste mit Microsoft Office kompatible Büroprogramm-Paket"
 
-#: assets/anduinos-oobe:2767
+#: assets/anduinos-oobe:1967
 msgid "Thunderbird"
 msgstr "Thunderbird"
 
-#: assets/anduinos-oobe:2768
+#: assets/anduinos-oobe:1968
 msgid "Secure, fast, and easy email client"
 msgstr "Sicherer, schneller und einfacher E-Mail-Client"
 
-#: assets/anduinos-oobe:2769
+#: assets/anduinos-oobe:1969
 msgid "Nextcloud"
 msgstr "Nextcloud"
 
-#: assets/anduinos-oobe:2770
+#: assets/anduinos-oobe:1970
 msgid "Sync and collaborate on your desktop or laptop"
 msgstr "Auf Ihrem Desktop oder Laptop synchronisieren und zusammenarbeiten"
 
-#: assets/anduinos-oobe:2771
+#: assets/anduinos-oobe:1971
 msgid "Blender"
 msgstr "Blender"
 
-#: assets/anduinos-oobe:2772
+#: assets/anduinos-oobe:1972
 msgid "Professional 3D creation suite"
 msgstr "Professionelle 3D-Erstellungssoftware"
 
-#: assets/anduinos-oobe:2773
+#: assets/anduinos-oobe:1973
 msgid "GNOME Boxes"
 msgstr "GNOME Boxes"
 
-#: assets/anduinos-oobe:2774
+#: assets/anduinos-oobe:1974
 msgid "Virtualization made simple"
 msgstr "Virtualisierung leicht gemacht"
 
-#: assets/anduinos-oobe:2775
+#: assets/anduinos-oobe:1975
 msgid "VLC"
 msgstr "VLC"
 
-#: assets/anduinos-oobe:2776
+#: assets/anduinos-oobe:1976
 msgid "The versatile media player that plays everything"
 msgstr "Der vielseitige Media Player, der alles abspielt"
 
-#: assets/anduinos-oobe:2777
+#: assets/anduinos-oobe:1977
 msgid "Krita"
 msgstr "Krita"
 
-#: assets/anduinos-oobe:2778
+#: assets/anduinos-oobe:1978
 msgid "Professional free and open source painting program"
 msgstr "Professionelles freies und Open-Source-Malprogramm"
 
-#: assets/anduinos-oobe:2779
+#: assets/anduinos-oobe:1979
 msgid "OBS Studio"
 msgstr "OBS Studio"
 
-#: assets/anduinos-oobe:2780
+#: assets/anduinos-oobe:1980
 msgid "Free and open source software for video recording and live streaming"
 msgstr ""
 "Freie und Open-Source-Software für Videoaufzeichnung und Live-Streaming"
 
-#: assets/anduinos-oobe:2842
+#: assets/anduinos-oobe:2042
 msgid "Installed"
 msgstr "Installiert"
 
-#: assets/anduinos-oobe:2844
+#: assets/anduinos-oobe:2044
 msgid "Click to open in App Store"
-msgstr "Klicken Sie hier, um im App Store zu öffnen"
+msgstr "Klicken Sie hier, um die App im App Store zu öffnen"
 
-#: assets/anduinos-oobe:2852
+#: assets/anduinos-oobe:2052
 msgid "Opening…"
 msgstr "Wird geöffnet…"
 
-#: assets/anduinos-oobe:2870
-msgid "Pro tip: You can explore these apps in the App Store,"
-msgstr "Tipp: Sie können diese Apps im App Store erkunden,"
-
-#: assets/anduinos-oobe:2870
-msgid "and continue with the system setup while they download."
+#: assets/anduinos-oobe:2071
+msgid ""
+"Pro tip: You can explore these apps in the App Store, and continue with the "
+"system setup while they download."
 msgstr ""
-"und fahren Sie mit der Systemeinrichtung fort, während sie herunterladen."
+"Tipp: Entdecken Sie diese Apps im App Store und setzen Sie die Einrichtung "
+"Ihres Systems fort, während die Apps heruntergeladen werden."
 
-#: assets/anduinos-oobe:2880
+#: assets/anduinos-oobe:2081
 msgid "  Browse Store  "
-msgstr "  Geschäft durchsuchen  "
+msgstr "  App Store durchsuchen  "
 
-#: assets/anduinos-oobe:2912
-msgid "Connect & Protect Your Data"
-msgstr "Daten verbinden & schützen"
-
-#: assets/anduinos-oobe:2936
-msgid "Online Accounts"
-msgstr "Online-Konten"
-
-#: assets/anduinos-oobe:2942
-msgid "Connect your Google, Microsoft,"
-msgstr "Melden Sie sich bei Ihrem Google-, Microsoft-"
-
-#: assets/anduinos-oobe:2942
-msgid "or Nextcloud accounts to sync"
-msgstr "oder Nextcloud-Konten zum Synchronisieren"
-
-#: assets/anduinos-oobe:2943
-msgid "files, contacts, and calendar."
-msgstr "Dateien, Kontakte und Kalender."
-
-#: assets/anduinos-oobe:2953
-msgid "Connect Accounts"
-msgstr "Konten verbinden"
-
-#: assets/anduinos-oobe:3023
+#: assets/anduinos-oobe:2120
 msgid "Your Data. Your Rules. Period."
-msgstr "Ihre Daten. Ihre Regeln. Punktum."
+msgstr "Ihre Daten. Ihre Regeln. Punkt."
 
-#: assets/anduinos-oobe:3032
+#: assets/anduinos-oobe:2129
 msgid "AnduinOS disables all system-level telemetry by default."
-msgstr ""
-"AnduinOS deaktiviert standardmäßig alle systemweiten Telemetrie-Daten."
+msgstr "AnduinOS deaktiviert standardmäßig alle systemweiten Telemetrie-Daten."
 
-#: assets/anduinos-oobe:3032
+#: assets/anduinos-oobe:2129
 msgid "We do not collect your usage habits."
-msgstr "Wir sammeln keine Ihre Nutzungsgewohnheiten."
+msgstr "Wir erfassen Ihre Nutzungsgewohnheiten nicht."
 
-#: assets/anduinos-oobe:3033
+#: assets/anduinos-oobe:2130
 msgid "We do not upload your search history."
 msgstr "Wir laden Ihren Suchverlauf nicht hoch."
 
-#: assets/anduinos-oobe:3033
+#: assets/anduinos-oobe:2130
 msgid "There are no pervasive advertisements."
-msgstr "Es gibt keine allgegenwärtigen Werbung."
+msgstr "Es gibt keine aufdringliche Werbung."
 
-#: assets/anduinos-oobe:3044
-msgid "In an era ruled by algorithms and surveillance,"
-msgstr "In einer Ära, die von Algorithmen und Überwachung regiert wird,"
+#: assets/anduinos-oobe:2141
+msgid ""
+"In an era ruled by algorithms and surveillance, this is our firmest "
+"commitment to you."
+msgstr ""
+"In einer Zeit, die von Algorithmen und Überwachung geprägt ist, stehen wir "
+"fest zu diesem Versprechen."
 
-#: assets/anduinos-oobe:3044
-msgid "this is our firmest commitment to you."
-msgstr "dies ist unser festes Versprechen an Sie."
-
-#: assets/anduinos-oobe:3062
+#: assets/anduinos-oobe:2159
 msgid "✓ Zero telemetry — your activity is yours alone"
 msgstr "✓ Keine Telemetrie — Ihre Aktivitäten gehören nur Ihnen"
 
-#: assets/anduinos-oobe:3063
+#: assets/anduinos-oobe:2160
 msgid "✓ No data collection — your files stay on your device"
 msgstr "✓ Keine Datensammlung — Ihre Dateien bleiben auf Ihrem Gerät"
 
-#: assets/anduinos-oobe:3064
+#: assets/anduinos-oobe:2161
 msgid "✓ No ads in your operating system"
 msgstr "✓ Keine Werbung in Ihrem Betriebssystem"
 
-#: assets/anduinos-oobe:3065
+#: assets/anduinos-oobe:2162
 msgid "✓ Full root access — you truly own your machine"
 msgstr "✓ Vollständiger Root-Zugang — Sie besitzen Ihre Maschine wirklich"
 
-#: assets/anduinos-oobe:3066
+#: assets/anduinos-oobe:2163
 msgid "✓ UFW firewall — your digital perimeter, defended"
-msgstr "✓ UFW-Firewall — Ihr digitales Perimeter, verteidigt"
+msgstr "✓ UFW-Firewall — Schutz für Ihre Netzwerkverbindungen"
 
-#: assets/anduinos-oobe:3067
+#: assets/anduinos-oobe:2164
 msgid "✓ Open source — the code is yours to inspect and modify"
 msgstr "✓ Open Source — der Code gehört Ihnen zur Inspektion und Modifikation"
 
-#: assets/anduinos-oobe:3108
+#: assets/anduinos-oobe:2205
 msgid "Welcome to the AnduinOS Community"
 msgstr "Willkommen in der AnduinOS-Community"
 
-#: assets/anduinos-oobe:3117
-msgid "Whether you're a Windows refugee seeking shelter,"
-msgstr "Egal, ob Sie ein Windows-Flüchtling sind, der Schutz sucht,"
-
-#: assets/anduinos-oobe:3118
-msgid "or a hardcore geek developer — you'll find your tribe here."
+#: assets/anduinos-oobe:2214
+msgid ""
+"Whether you're a Windows refugee seeking shelter, or a hardcore geek "
+"developer — you'll find your tribe here."
 msgstr ""
-"oDER ein Hardcore-Geek-Entwickler – hier finden Sie Ihr Stammesgebiet."
+"Ob Sie von Windows umsteigen oder als erfahrener Entwickler arbeiten – hier "
+"finden Sie Ihre digitale Heimat."
 
-#: assets/anduinos-oobe:3119
+#: assets/anduinos-oobe:2215
 msgid "Found a bug? Want a feature? Tell us anytime."
 msgstr "Bug gefunden? Möchten Sie ein Feature? Erzählen Sie es uns jederzeit."
 
-#: assets/anduinos-oobe:3131
+#: assets/anduinos-oobe:2227
 msgid "Official Documentation"
 msgstr "Offizielle Dokumentation"
 
-#: assets/anduinos-oobe:3132
+#: assets/anduinos-oobe:2228
 msgid "Comprehensive guides and troubleshooting — covers everything you need"
 msgstr ""
-"Umfassende Anleitungen und Fehlerbehebung — deckt alles ab, was Sie "
-"benötigen"
+"Umfassende Anleitungen und Fehlerbehebung — deckt alles ab, was Sie benötigen"
 
-#: assets/anduinos-oobe:3134
+#: assets/anduinos-oobe:2230
 msgid "Community Forums"
 msgstr "Community-Foren"
 
-#: assets/anduinos-oobe:3135
+#: assets/anduinos-oobe:2231
 msgid "Discuss with other AnduinOS users and developers"
 msgstr "Diskutieren Sie mit anderen AnduinOS-Benutzern und Entwicklern"
 
-#: assets/anduinos-oobe:3137
+#: assets/anduinos-oobe:2233
 msgid "Discord Server"
 msgstr "Discord-Server"
 
-#: assets/anduinos-oobe:3138
+#: assets/anduinos-oobe:2234
 msgid "Join our official Discord server for real-time chat and support"
 msgstr ""
-"Treten Sie unserem offiziellen Discord-Server für Echtzeit-Chats und Support"
-" bei"
+"Treten Sie unserem offiziellen Discord-Server für Echtzeit-Chats und Support "
+"bei"
 
-#: assets/anduinos-oobe:3140
+#: assets/anduinos-oobe:2236
 msgid "Report an Issue"
 msgstr "Ein Problem melden"
 
-#: assets/anduinos-oobe:3141
+#: assets/anduinos-oobe:2237
 msgid "Found a bug or have a feature request? Let us know!"
 msgstr ""
 "Einen Fehler gefunden oder eine Funktionsanforderung? Lassen Sie es uns "
 "wissen!"
 
-#: assets/anduinos-oobe:3143
+#: assets/anduinos-oobe:2239
 msgid "Buy AnduinOS Enterprise Edition"
 msgstr "Kaufen Sie AnduinOS Enterprise Edition"
 
-#: assets/anduinos-oobe:3144
+#: assets/anduinos-oobe:2240
 msgid ""
 "Get enterprise-grade support and advanced features for your organization"
 msgstr ""
 "Erhalten Sie Enterprise-Grad-Support und erweiterte Funktionen für Ihre "
 "Organisation"
 
-#: assets/anduinos-oobe:3146
+#: assets/anduinos-oobe:2242
 msgid "Ask Ubuntu"
 msgstr "Ask Ubuntu"
 
-#: assets/anduinos-oobe:3147
+#: assets/anduinos-oobe:2243
 msgid "Almost all Ubuntu solutions apply directly to AnduinOS"
 msgstr "Fast alle Ubuntu-Lösungen gelten direkt für AnduinOS"
 
-#: assets/anduinos-oobe:3149
+#: assets/anduinos-oobe:2245
 msgid "Source Code"
 msgstr "Quellcode"
 
-#: assets/anduinos-oobe:3150
+#: assets/anduinos-oobe:2246
 msgid "AnduinOS is open-source. Explore the code and contribute!"
 msgstr "AnduinOS ist Open Source. Erkunden Sie den Code und tragen Sie bei!"
 
-#: assets/anduinos-oobe:3162
+#: assets/anduinos-oobe:2258
 msgid "Open"
-msgstr "Offen"
+msgstr "Öffnen"
 
-#: assets/anduinos-oobe:3172
+#: assets/anduinos-oobe:2268
 msgid "💡 AnduinOS is compatible with Ubuntu's entire ecosystem."
 msgstr "💡 AnduinOS ist mit dem gesamten Ökosystem von Ubuntu kompatibel."
 
-#: assets/anduinos-oobe:3173
+#: assets/anduinos-oobe:2269
 msgid "You can rely on Ubuntu's vast documentation and expertise."
 msgstr ""
 "Sie können sich auf die umfangreiche Dokumentation und Expertise von Ubuntu "
 "verlassen."
 
-#: assets/anduinos-oobe:3206
+#: assets/anduinos-oobe:2302
 msgid "All Set."
 msgstr "Alles bereit."
 
-#: assets/anduinos-oobe:3215
+#: assets/anduinos-oobe:2311
 msgid "  Start Your AnduinOS Journey  "
 msgstr "  Starten Sie Ihre AnduinOS-Reise  "
 
-#: assets/anduinos-oobe:3249
+#: assets/anduinos-oobe:2345 /tmp/tmp.sC9VMgFZZa:1
 msgid "AnduinOS Setup"
 msgstr "AnduinOS-Einrichtung"
 
-#: assets/anduinos-oobe:3252
+#: assets/anduinos-oobe:2348
 msgid "AnduinOS Welcome Center"
 msgstr "AnduinOS-Willkommenszentrum"
 
-#: assets/anduinos-oobe:3304
+#: assets/anduinos-oobe:2401
 msgid "← Back"
 msgstr "← Zurück"
 
-#: assets/anduinos-oobe:3313 assets/anduinos-oobe:3432
+#: assets/anduinos-oobe:2410 assets/anduinos-oobe:2527
 msgid "Next →"
 msgstr "Weiter →"
 
-#: assets/anduinos-oobe:3430
+#: assets/anduinos-oobe:2525
 msgid "Finish"
 msgstr "Fertigstellen"
 
-#: assets/anduinos-oobe:3497
+#: assets/anduinos-oobe:2592 /tmp/tmp.sC9VMgFZZa:2
 msgid "AnduinOS Welcome"
 msgstr "AnduinOS-Willkommen"
 
-#: assets/anduinos-oobe:3499
+#: assets/anduinos-oobe:2594
 msgid "AnduinOS Team"
 msgstr "AnduinOS-Team"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:75
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:121
 msgid "Secure Boot Configuration"
 msgstr "Secure Boot-Konfiguration"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:83
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:129
 msgid ""
 "Secure Boot is a motherboard security standard that ensures only trusted "
 "software loads at startup."
@@ -1132,94 +886,110 @@ msgstr ""
 "Secure Boot ist ein Motherboard-Sicherheitsstandard, der sicherstellt, dass "
 "nur vertrauenswürdige Software beim Start geladen wird."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:86
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
 msgid "It protects your system from low-level malware and rootkits."
 msgstr "Es schützt Ihr System vor Low-Level-Malware und Rootkits."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:95
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:141
 msgid "System Trust Status"
 msgstr "Vertrauensstatus des Systems"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:274
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:406
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:155
+msgid "Secure Boot Enabled"
+msgstr "Secure Boot aktiviert"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:156
+msgid "Local MOK Certificate"
+msgstr "Lokales MOK-Zertifikat"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:157
+msgid "UEFI Firmware Trust"
+msgstr "UEFI-Firmware-Vertrauen"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:158
+msgid "Third-party Drivers"
+msgstr "Drittanbieter-Treiber"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:183
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:509
 msgid "Create & Enroll Certificate"
 msgstr "Zertifikat erstellen & einschreiben"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:138
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:284
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:189
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:338
 msgid "Repair Module Signatures"
 msgstr "Signaturen des Reparaturmoduls"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:146
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:197
 msgid "Note: Use password <b>123456</b> after rebooting."
 msgstr "Hinweis: Verwenden Sie nach dem Neustart das Passwort <b>123456</b>."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:151
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:392
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:495
 msgid "Reboot & Configure Secure Boot"
 msgstr "Neustart & Secure Boot konfigurieren"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:159
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:358
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:419
 msgid "  Check Again  "
 msgstr "  Erneut prüfen  "
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:185
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:236
 msgid "Motherboard hardware protection is active"
 msgstr "Hardware-Schutz des Motherboards ist aktiv"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:188
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
 msgid "Firmware does not support Secure Boot"
 msgstr "Firmware unterstützt Secure Boot nicht"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:191
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:242
 msgid "Secure Boot state could not be determined"
 msgstr "Secure Boot-Status konnte nicht ermittelt werden"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:194
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
 msgid "Secure Boot is disabled"
 msgstr "Secure Boot ist deaktiviert"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:200
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:251
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:253
 msgid "Not required without firmware enforcement"
 msgstr "Ohne Firmware-Erzwingung nicht erforderlich"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:206
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:257
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:261
 msgid "Not checked because Secure Boot state is unknown"
 msgstr "Nicht überprüft, da der Secure Boot-Status unbekannt ist"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:215
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:266
 msgid "Certificate generated locally"
 msgstr "Lokal generiertes Zertifikat"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:217
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:268
 msgid "Missing local certificate"
 msgstr "Fehlendes lokales Zertifikat"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:230
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:281
 msgid "Certificate is trusted by motherboard"
 msgstr "Vom Motherboard vertrauenswürdiges Zertifikat"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:234
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:285
 msgid "Pending enrollment in blue screen (MOKManager)"
 msgstr "Ausstehende Einschreibung im blauen Bildschirm (MOKManager)"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:290
 msgid "Certificate is not trusted by motherboard"
 msgstr "Das Motherboard vertraut dem Zertifikat nicht"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:296
 msgid "Kernel signature enforcement is inactive"
 msgstr "Die Durchsetzung der Kernel-Signatur ist inaktiv"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:248
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
 msgid "Driver trust cannot be verified"
 msgstr "Treibervertrauen kann nicht überprüft werden"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:252
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:303
 msgid ""
 "Secure Boot trust is ready. No third-party kernel modules are currently "
 "installed."
@@ -1227,41 +997,40 @@ msgstr ""
 "Secure Boot Trust ist bereit. Derzeit sind keine Kernelmodule von "
 "Drittanbietern installiert."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:256
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:455
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:307
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:550
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:558
 msgid "Drivers are signed and ready to load"
 msgstr "Treiber sind signiert und bereit zum Laden"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:260
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
 msgid "Drivers are trusted, but automatic DKMS signing needs repair"
 msgstr ""
 "Treiber sind vertrauenswürdig, aber die automatische DKMS-Signierung muss "
 "repariert werden"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:264
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:315
 msgid "No signed third-party drivers detected"
 msgstr "Keine signierten Drittanbieter-Treiber erkannt"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:267
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
 msgid "Some DKMS modules need to be re-signed"
 msgstr "Einige DKMS-Module müssen neu signiert werden"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:272
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:323
 msgid "Enroll Existing Certificate"
 msgstr "Vorhandenes Zertifikat registrieren"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:282
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:336
 msgid "Repair Automatic DKMS Signing"
 msgstr "Automatische DKMS-Signierung reparieren"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
-msgid ""
-"This firmware does not provide Secure Boot. No certificate is required."
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:356
+msgid "This firmware does not provide Secure Boot. No certificate is required."
 msgstr ""
 "Diese Firmware bietet kein Secure Boot. Es ist kein Zertifikat erforderlich."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:306
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:363
 msgid ""
 "Secure Boot status could not be read. Driver trust operations are blocked "
 "until detection succeeds."
@@ -1269,543 +1038,158 @@ msgstr ""
 "Secure Boot-Status konnte nicht gelesen werden. Treibervertrauensvorgänge "
 "werden blockiert, bis die Erkennung erfolgreich ist."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
 msgid "No certificate is required while Secure Boot is disabled."
 msgstr ""
 "Es ist kein Zertifikat erforderlich, während Secure Boot deaktiviert ist."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:314
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:375
 msgid "System Trust Established. Third-party drivers will load securely."
 msgstr ""
 "Systemvertrauen hergestellt. Drittanbieter-Treiber werden sicher geladen."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:379
 msgid "The certificate is enrolled and current drivers are trusted."
 msgstr ""
 "Das Zertifikat ist registriert und den aktuellen Treibern wird vertraut."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:320
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:381
 msgid "Repair automatic DKMS signing before future driver updates."
 msgstr ""
 "Reparieren Sie die automatische DKMS-Signierung vor zukünftigen "
 "Treiberaktualisierungen."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:386
 msgid "The certificate is enrolled, but some modules are not signed with it."
 msgstr ""
-"Das Zertifikat ist registriert, aber einige Module sind nicht damit "
-"signiert."
+"Das Zertifikat ist registriert, aber einige Module sind nicht damit signiert."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:330
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
 msgid "A certificate is waiting for enrollment."
 msgstr "Ein Zertifikat wartet auf die Registrierung."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:332
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:393
 msgid "Restart and enter password 123456 in MOKManager."
 msgstr "Starten Sie neu und geben Sie das Passwort 123456 in MOKManager ein."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:337
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:398
 msgid "The local trust certificate is not yet enrolled."
 msgstr "Das lokale Vertrauenszertifikat ist noch nicht registriert."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:339
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:346
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:400
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:407
 msgid "You must configure this to use third-party drivers like NVIDIA."
 msgstr ""
 "Sie müssen dies konfigurieren, um Drittanbieter-Treiber wie NVIDIA zu "
 "verwenden."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:344
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:405
 msgid "The local trust certificate is missing."
 msgstr "Das lokale Vertrauenszertifikat fehlt."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:362
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
 msgid "  Checking...  "
 msgstr "  Wird geprüft...  "
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:368
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:429
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:443
 msgid "Reboot Required"
 msgstr "Neustart erforderlich"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:430
 msgid "Please trust the certificate upon reboot using password 123456."
 msgstr ""
-"Bitte vertrauen Sie das Zertifikat nach dem Neustart mit dem Passwort 123456"
-" an."
+"Bitte vertrauen Sie das Zertifikat nach dem Neustart mit dem Passwort 123456 "
+"an."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:371
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:432
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:372
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
 msgid "Reboot"
 msgstr "Neustart"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:380
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:478
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:526
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:544
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:552
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:560
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:576
+msgid "OK"
+msgstr "OK"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:483
 msgid "Success! When you reboot, a blue screen will appear."
 msgstr "Erfolg! Beim Neustart erscheint ein blauer Bildschirm."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:384
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:487
 msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
 msgstr ""
 "Wählen Sie 'Enroll MOK' → 'Continue' → 'Yes' und geben Sie das Passwort "
 "123456 ein"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:388
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:491
 msgid "Certificate Created"
 msgstr "Zertifikat erstellt"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:494
 msgid "Later"
 msgstr "Später"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:420
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:523
 msgid "Secure Boot Trust Not Required"
 msgstr "Secure Boot Vertrauen nicht erforderlich"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:421
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:524
 msgid "Firmware signature enforcement is not active."
 msgstr "Die Durchsetzung der Firmware-Signatur ist nicht aktiv."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:441
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:449
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:457
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:473
-msgid "OK"
-msgstr "OK"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:431
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:534
 msgid ""
-"The certificate is ready, but one or more DKMS modules could not be rebuilt."
-" You can repair them after enrollment."
+"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
+"You can repair them after enrollment."
 msgstr ""
 "Das Zertifikat ist bereit, aber ein oder mehrere DKMS-Module konnten nicht "
 "neu erstellt werden. Sie können diese nach der Einschreibung reparieren."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:439
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:542
 msgid "Configuration needs attention"
 msgstr "Die Konfiguration erfordert Aufmerksamkeit"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:549
 msgid "System Trust Established"
 msgstr "Systemvertrauen hergestellt"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:454
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:557
 msgid "Driver Signature Trusted"
 msgstr "Treiber-Signatur vertraut"
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:470
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:573
 msgid "Configuration failed. Please try again."
 msgstr "Konfiguration fehlgeschlagen. Bitte versuchen Sie es erneut."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:471
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:574
 msgid "Please check the advanced output."
 msgstr "Bitte überprüfen Sie die erweiterte Ausgabe."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:482
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:585
 msgid "Generating & Signing..."
 msgstr "Wird generiert & signiert..."
 
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:110
-msgid "Local MOK Certificate"
-msgstr "Lokales MOK-Zertifikat"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:109
-msgid "Secure Boot Enabled"
-msgstr "Secure Boot aktiviert"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:112
-msgid "Third-party Drivers"
-msgstr "Drittanbieter-Treiber"
-
-#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:111
-msgid "UEFI Firmware Trust"
-msgstr "UEFI-Firmware-Vertrauen"
-
-#~ msgid "Unleash Your Graphics Hardware"
-#~ msgstr "Entfesseln Sie Ihre Grafik-Hardware"
-
-#, python-brace-format
-#~ msgid "NVIDIA proprietary driver is already installed. (Version: {})"
-#~ msgstr "Der proprietäre NVIDIA-Treiber ist bereits installiert. (Version: {})"
-
-#~ msgid "✗ Installation encountered an issue."
-#~ msgstr "✗ Installation auf ein Problem gestoßen."
-
-#~ msgid "An NVIDIA dedicated graphics card was detected in your system."
-#~ msgstr "In Ihrem System wurde eine dedizierte NVIDIA-Grafikkarte erkannt."
-
-#~ msgid ""
-#~ "For ultimate smoothness in gaming, 3D rendering, and high-framerate desktop"
-#~ msgstr ""
-#~ "\tFür ultimative Geschmeidigkeit beim Gaming, 3D-Rendering und einem Desktop"
-#~ " mit hoher Bildwiederholrate"
-
-#~ msgid "experiences, we recommend installing the proprietary driver."
-#~ msgstr "Erfahrungen empfehlen wir die Installation des proprietären Treibers."
-
-#~ msgid "  Check for Driver Updates  "
-#~ msgstr "Treiber-Updates prüfen"
-
-#~ msgid "Repair & Reinstall"
-#~ msgstr "Reparieren und neu installieren"
-
-#~ msgid "  One-Click NVIDIA Driver Install  "
-#~ msgstr "NVIDIA-Treiber mit einem Klick installieren"
-
-#~ msgid "Installing NVIDIA driver…"
-#~ msgstr "NVIDIA-Treiber wird installiert…"
-
-#~ msgid "This may take several minutes."
-#~ msgstr "Dies kann mehrere Minuten dauern."
-
-#~ msgid "✓ Driver installed successfully!"
-#~ msgstr "✓ Treiber erfolgreich installiert!"
-
-#~ msgid "You can install drivers later from Settings."
-#~ msgstr "Sie können Treiber später über die Einstellungen installieren."
-
-#~ msgid "Xbox Controller Support"
-#~ msgstr "Xbox-Controller-Unterstützung"
-
-#~ msgid "Xbox controller driver (xpadneo) is already installed."
-#~ msgstr "Xbox-Controller-Treiber (xpadneo) ist bereits installiert."
-
-#~ msgid ""
-#~ "Enjoy seamless Xbox controller support with rumble and accurate inputs."
-#~ msgstr ""
-#~ "Genießen Sie nahtlose Xbox-Controller-Unterstützung mit Rumble und präzisen "
-#~ "Eingaben."
-
-#~ msgid "AnduinOS provides native support for Xbox controllers via Bluetooth."
-#~ msgstr ""
-#~ "AnduinOS bietet native Unterstützung für Xbox-Controller über Bluetooth."
-
-#~ msgid "The advanced xpadneo driver is already set up and ready for gaming."
-#~ msgstr ""
-#~ "Der fortschrittliche xpadneo-Treiber ist bereits eingerichtet und bereit für"
-#~ " das Gaming."
-
-#~ msgid ""
-#~ "For advanced features like rumble and accurate mapping, we recommend "
-#~ "installing the xpadneo driver."
-#~ msgstr ""
-#~ "Für erweiterte Funktionen wie Rumble und präzise Mapping empfehlen wir die "
-#~ "Installation des xpadneo-Treibers."
-
-#~ msgid "Xbox Controller Driver Installed"
-#~ msgstr "Xbox-Controller-Treiber installiert"
-
-#~ msgid "The xpadneo driver is currently installed"
-#~ msgstr "Der xpadneo-Treiber ist derzeit installiert"
-
-#~ msgid "The driver is not installed"
-#~ msgstr "Der Treiber ist nicht installiert"
-
-#~ msgid "Driver not installed, signature missing"
-#~ msgstr "Treiber nicht installiert, Signatur fehlt"
-
-#~ msgid "Kernel module"
-#~ msgstr "Kernelmodul"
-
-#~ msgid "Not detected"
-#~ msgstr "Nicht erkannt"
-
-#~ msgid "Driver is NOT signed"
-#~ msgstr "Der Treiber ist NICHT signiert"
-
-#~ msgid "Signed with current trusted certificate"
-#~ msgstr "Signiert mit aktuell vertrautem Zertifikat"
-
-#~ msgid "Signed with current certificate, but not enrolled"
-#~ msgstr "Signiert mit aktuellem Zertifikat, aber nicht installiert"
-
-#~ msgid "Signed with an unknown or outdated certificate"
-#~ msgstr "Signiert mit einem unbekannten oder veralteten Zertifikat"
-
-#~ msgid "Controller Status"
-#~ msgstr "Controller-Status"
-
-#~ msgid "Driver loaded and active. Ready to play!"
-#~ msgstr "Treiber geladen und aktiv. Bereit zum Spielen!"
-
-#~ msgid "Driver standing by. Waiting for controller connection..."
-#~ msgstr "Treiber wartet. Wartet auf Controller-Verbindung..."
-
-#~ msgid "Driver cannot load due to missing signature trust"
-#~ msgstr ""
-#~ "Der Treiber kann aufgrund fehlender Signaturvertrauen nicht geladen werden"
-
-#~ msgid "Pair your controller"
-#~ msgstr "Verbinde deinen Controller"
-
-#~ msgid "Test your controller"
-#~ msgstr "Teste deinen Controller"
-
-#~ msgid "  Install Xbox Driver  "
-#~ msgstr "Xbox-Treiber installieren"
-
-#~ msgid ""
-#~ "⚠️ The driver signature does not match your system certificate. Click Fix & "
-#~ "Reinstall to repair the driver."
-#~ msgstr ""
-#~ "⚠️ Die Treibersignatur stimmt nicht mit Ihrem Systemzertifikat überein. "
-#~ "Klicken Sie auf „Reparieren & Neu installieren“, um den Treiber zu "
-#~ "reparieren."
-
-#~ msgid "Installing Xbox controller driver…"
-#~ msgstr "Xbox-Controller-Treiber wird installiert…"
-
-#~ msgid "This may take a minute."
-#~ msgstr "Dies kann eine Minute dauern."
-
-#~ msgid "Repairing driver signature…"
-#~ msgstr "Treibersignatur wird repariert…"
-
-#~ msgid "A reboot is recommended to apply changes."
-#~ msgstr "Ein Neustart wird empfohlen, um die Änderungen zu übernehmen."
-
-#~ msgid "  Fix & Reinstall Driver  "
-#~ msgstr "Xbox-Treiber installieren"
-
-#~ msgid "(Reboot recommended)"
-#~ msgstr "(Neustart empfohlen)"
-
-#~ msgid "Cannot sign drivers without a certificate"
-#~ msgstr "Treiber können ohne Zertifikat nicht signiert werden"
-
-#~ msgid ""
-#~ "Enable low-level network protection — silently blocks all unauthorized "
-#~ "inbound connections."
-#~ msgstr ""
-#~ "Aktivieren Sie den Netzwerkschutz auf niedriger Ebene – blockiert "
-#~ "stillschweigend alle unbefugten eingehenden Verbindungen."
-
-#~ msgid "Firewall"
-#~ msgstr "Firewall"
-
-#~ msgid ""
-#~ "Please configure Secure Boot in the previous step before installing this "
-#~ "driver."
-#~ msgstr ""
-#~ "Bitte starten Sie neu, um das Zertifikat zu installieren, bevor Sie diesen "
-#~ "Treiber installieren."
-
-#~ msgid "Please reboot to enroll the certificate before installing this driver."
-#~ msgstr ""
-#~ "Bitte starten Sie neu, um das Zertifikat zu installieren, bevor Sie diesen "
-#~ "Treiber installieren."
-
-#~ msgid "Scanning for installed drivers..."
-#~ msgstr "Installierte Treiber werden gescannt..."
-
-#~ msgid "The local trust certificate is missing or not yet enrolled."
-#~ msgstr ""
-#~ "Das lokale Vertrauenszertifikat fehlt oder wurde noch nicht eingeschrieben."
-
-#~ msgid ""
-#~ "⚠️ Secure Boot is enabled but the custom certificate is not yet enrolled."
-#~ msgstr ""
-#~ "⚠️ Secure Boot ist aktiviert, aber das benutzerdefinierte Zertifikat wurde "
-#~ "noch nicht installiert."
-
-#~ msgid "✓ Xbox controller driver installed successfully!"
-#~ msgstr "✓ Xbox-Controller-Treiber erfolgreich installiert!"
-
-#~ msgid "✗ Repair failed."
-#~ msgstr "✗ Bereitstellung fehlgeschlagen."
-
-#~ msgid "⚡ The following apps are provided by the Spark Store community."
-#~ msgstr ""
-#~ "⚡ Die folgenden Apps werden von der Spark Store-Community bereitgestellt."
-
-#~ msgid "Great for connecting to local services."
-#~ msgstr "Gut geeignet, um sich mit lokalen Diensten zu verbinden."
-
-#~ msgid "Spark Store"
-#~ msgstr "Spark Store"
-
-#~ msgid "Community app store for Chinese Linux users"
-#~ msgstr "Gemeinschafts-App-Store für chinesische Linux-Nutzer"
-
-#~ msgid "Note: These apps link to their official or community download pages."
-#~ msgstr ""
-#~ "Hinweis: Diese Apps verlinken zu ihren offiziellen oder Community-Download-"
-#~ "Seiten."
-
-#~ msgid " AnduinOS is not affiliated with these vendors."
-#~ msgstr "AnduinOS steht in keinem Zusammenhang mit diesen Anbietern."
-
-#~ msgid ""
-#~ "AnduinOS is ready. Just a few steps to shape it\n"
-#~ "into the perfect system tailored to your habits."
-#~ msgstr ""
-#~ "AnduinOS ist bereit. Nur noch ein paar Schritte, um es in das perfekte System anzupassen, das auf Ihre Gewohnheiten zugeschnitten ist\n"
-#~ "."
-
-#~ msgid "=== Testing mirror speeds ===\n"
-#~ msgstr "=== Spiegelserver-Geschwindigkeiten werden getestet ==="
-
-#~ msgid ""
-#~ "\n"
-#~ "No mirrors reachable.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Keine Spiegelserver erreichbar.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "=== Applying mirror switch ===\n"
-#~ msgstr ""
-#~ "\n"
-#~ "=== Spiegelwechsel wird angewendet ===\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "✓ Mirror switched and system updated.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "✓ Spiegel wurde gewechselt und das System aktualisiert.\n"
-
-#~ msgid ""
-#~ "For ultimate smoothness in gaming, 3D rendering, and high-framerate desktop\n"
-#~ "experiences, we recommend installing the proprietary driver."
-#~ msgstr ""
-#~ "Für maximale Flüssigkeit beim Gaming, 3D-Rendering und flüssigen Desktop-"
-#~ "Erlebnissen empfehlen wir die Installation des proprietären Treibers."
-
-#~ msgid ""
-#~ "Installing NVIDIA driver…\n"
-#~ "This may take several minutes."
-#~ msgstr ""
-#~ "NVIDIA-Treiber wird installiert…\n"
-#~ "Dies kann einige Minuten dauern."
-
-#~ msgid ""
-#~ "✗ Installation encountered an issue.\n"
-#~ "You can install drivers later from Settings."
-#~ msgstr ""
-#~ "✗ Bei der Installation ist ein Problem aufgetreten.\n"
-#~ "Sie können Treiber später über die Einstellungen installieren."
-
-#~ msgid ""
-#~ "Powered by Wine and Bottles technology, running classic Windows applications\n"
-#~ "is now easier than ever."
-#~ msgstr ""
-#~ "Angetrieben von Wine- und Bottles-Technologie ist das Ausführen klassischer "
-#~ "Windows-Anwendungen einfacher denn je."
-
-#~ msgid ""
-#~ "Deploying compatibility sandbox via Flatpak…\n"
-#~ "This may take a few minutes."
-#~ msgstr ""
-#~ "Kompatibilitätssandbox wird über Flatpak bereitgestellt…\n"
-#~ "Dies kann einige Minuten dauern."
-
-#~ msgid ""
-#~ "✓ Sandbox deployed successfully!\n"
-#~ "You can now double-click .exe files to run them."
-#~ msgstr ""
-#~ "✓ Sandbox erfolgreich bereitgestellt!\n"
-#~ "Sie können .exe-Dateien jetzt durch Doppelklick ausführen."
-
-#~ msgid ""
-#~ "✗ Deployment failed.\n"
-#~ "You can install Bottles later from the App Store."
-#~ msgstr ""
-#~ "✗ Bereitstellung fehlgeschlagen.\n"
-#~ "Sie können Bottles später aus dem App Store installieren."
-
-#~ msgid ""
-#~ "Essential productivity and entertainment tools, hand-picked for you.\n"
-#~ "Click any app to open its details in the App Store."
-#~ msgstr ""
-#~ "Wesentliche Produktivitäts- und Unterhaltungstools, handverlesen für Sie.\n"
-#~ "Klicken Sie auf eine App, um ihre Details im App Store anzuzeigen."
-
-#~ msgid ""
-#~ "⚡ The following apps are provided by the Spark Store community.\n"
-#~ "Great for connecting to local services."
-#~ msgstr ""
-#~ "⚡ Die folgenden Apps werden von der Spark Store-Community bereitgestellt.\n"
-#~ "Ideal für die Verbindung zu lokalen Diensten."
-
-#~ msgid ""
-#~ "Pro tip: You can explore these apps in the App Store,\n"
-#~ "and continue with the system setup while they download."
-#~ msgstr ""
-#~ "Profi-Tipp: Sie können diese Apps im App Store erkunden,\n"
-#~ "und gleichzeitig mit der Systemeinrichtung fortfahren, während sie herunterladen."
-
-#~ msgid ""
-#~ "Note: These apps link to their official or community download pages. "
-#~ "AnduinOS is not affiliated with these vendors."
-#~ msgstr ""
-#~ "Hinweis: Diese Apps verlinken zu ihren offiziellen oder Community-"
-#~ "Downloadseiten. AnduinOS ist nicht mit diesen Anbietern verbunden."
-
-#~ msgid ""
-#~ "Connect your Google, Microsoft,\n"
-#~ "or Nextcloud accounts to sync\n"
-#~ "files, contacts, and calendar."
-#~ msgstr ""
-#~ "Verschmelzen Sie Ihre Google-, Microsoft-\n"
-#~ "oder Nextcloud-Konten, um\n"
-#~ "Dateien, Kontakte und Kalender zu synchronisieren."
-
-#~ msgid ""
-#~ "Use Deja Dup to protect your\n"
-#~ "important files with automated,\n"
-#~ "secure local or remote backups."
-#~ msgstr ""
-#~ "Schützen Sie Ihre wichtigen Dateien mit Deja Dup durch automatisierte,\n"
-#~ "sichere lokale oder remote Backups."
-
-#~ msgid ""
-#~ "AnduinOS disables all system-level telemetry by default.\n"
-#~ "We do not collect your usage habits.\n"
-#~ "We do not upload your search history.\n"
-#~ "There are no pervasive advertisements."
-#~ msgstr ""
-#~ "AnduinOS deaktiviert standardmäßig alle systemweiten Telemetrie.\n"
-#~ "Wir sammeln nicht Ihre Nutzungsgewohnheiten.\n"
-#~ "Wir laden Ihren Suchverlauf nicht hoch.\n"
-#~ "Es gibt keine durchdringenden Werbung."
-
-#~ msgid ""
-#~ "In an era ruled by algorithms and surveillance,\n"
-#~ "this is our firmest commitment to you."
-#~ msgstr ""
-#~ "In einer Ära, die von Algorithmen und Überwachung regiert wird,\n"
-#~ "ist dies unser festes Versprechen an Sie."
-
-#~ msgid ""
-#~ "Whether you're a Windows refugee seeking shelter,\n"
-#~ "or a hardcore geek developer — you'll find your tribe here.\n"
-#~ "Found a bug? Want a feature? Tell us anytime."
-#~ msgstr ""
-#~ "Egal, ob Sie ein Windows-Flüchtling sind, der Schutz sucht,\n"
-#~ "oder ein Hardcore-Geek-Entwickler — hier finden Sie Ihre Gleichgesinnten.\n"
-#~ "Einen Fehler gefunden? Möchten Sie eine Funktion? Teilen Sie es uns jederzeit mit."
-
-#~ msgid ""
-#~ "💡 AnduinOS is compatible with Ubuntu's entire ecosystem.\n"
-#~ "You can rely on Ubuntu's vast documentation and expertise."
-#~ msgstr ""
-#~ "💡 AnduinOS ist mit dem gesamten Ökosystem von Ubuntu kompatibel.\n"
-#~ "Sie können sich auf die umfangreiche Dokumentation und Expertise von Ubuntu verlassen."
-
-#~ msgid ""
-#~ "\n"
-#~ "=== Testing bandwidth of top 3 mirrors (3 s each) ===\n"
-#~ msgstr ""
-#~ "\n"
-#~ "=== Bandbreite der Top 3 Spiegelserver testen (jeweils 3 s) ===\n"
-
-#~ msgid ""
-#~ "✓ Driver installed successfully!\n"
-#~ "A reboot is recommended to apply changes."
-#~ msgstr ""
-#~ "✓ Treiber erfolgreich installiert!\n"
-#~ "Ein Neustart wird empfohlen, um die Änderungen zu übernehmen."
+#: /tmp/tmp.sC9VMgFZZa:3
+msgid "Complete your AnduinOS setup"
+msgstr "Vervollständigen Sie Ihre AnduinOS-Einrichtung"
+
+#: /tmp/tmp.sC9VMgFZZa:4
+msgid "Explore and configure your AnduinOS system"
+msgstr "Erkunden und konfigurieren Sie Ihr AnduinOS-System"
+
+#: /tmp/tmp.sC9VMgFZZa:5
+msgid "Welcome Center"
+msgstr "Willkommenszentrum"
+
+#: /tmp/tmp.sC9VMgFZZa:6
+msgid "welcome;oobe;setup;tutorial;first-run;"
+msgstr "Willkommen;OOBE;Einrichtung;Tutorial;Erststart;"

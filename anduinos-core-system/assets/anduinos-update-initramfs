@@ -1,0 +1,35 @@
+#!/bin/sh
+set -eu
+
+REAL_UPDATE_INITRAMFS=${ANDUINOS_UPDATE_INITRAMFS_REAL:-/usr/sbin/update-initramfs.anduinos-dracut}
+VERIFY=${ANDUINOS_MIGRATION_VERIFY:-/usr/libexec/anduinos-dracut-verify}
+
+[ -x "$REAL_UPDATE_INITRAMFS" ] || {
+    printf '%s\n' 'anduinos-update-initramfs: diverted Dracut implementation is missing' >&2
+    exit 1
+}
+
+# dpkg does not order the shared Dracut trigger after pending kernel postinst
+# scripts. Both its activation call and its later invocation may therefore run
+# before a newly unpacked kernel has an initrd. The packages that add mandatory
+# image content perform their own synchronous final verification instead.
+maintscript_update=false
+if [ "${DPKG_MAINTSCRIPT_PACKAGE+x}" = x ] \
+    && [ "$#" -eq 1 ] && [ "$1" = -u ]; then
+    maintscript_update=true
+fi
+
+delete=false
+for argument in "$@"; do
+    [ "$argument" != -d ] || delete=true
+done
+
+"$REAL_UPDATE_INITRAMFS" "$@"
+
+[ "$maintscript_update" = false ] || exit 0
+[ "$delete" = false ] || exit 0
+[ -x "$VERIFY" ] || {
+    printf '%s\n' 'anduinos-update-initramfs: synchronous verifier is missing' >&2
+    exit 1
+}
+"$VERIFY" --verify

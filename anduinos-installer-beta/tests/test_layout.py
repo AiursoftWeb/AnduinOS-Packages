@@ -56,6 +56,25 @@ class LayoutTests(unittest.TestCase):
             build_erase_disk_layout(plan),
         )
 
+    def test_zero_disk_swap_omits_partition_and_moves_root_forward(self):
+        amd64 = build_erase_disk_layout(valid_plan(swap_size_mib=0))
+        self.assertEqual(
+            [part.name for part in amd64.partitions],
+            ["bios-boot", "efi-system", "root"],
+        )
+        self.assertEqual(amd64.partition("root").number, 3)
+        arm64 = build_erase_disk_layout(
+            valid_plan(
+                architecture=Architecture.ARM64,
+                swap_size_mib=0,
+            )
+        )
+        self.assertEqual(
+            [part.name for part in arm64.partitions],
+            ["efi-system", "root"],
+        )
+        self.assertEqual(arm64.partition("root").number, 2)
+
 
 if __name__ == "__main__":
     unittest.main()

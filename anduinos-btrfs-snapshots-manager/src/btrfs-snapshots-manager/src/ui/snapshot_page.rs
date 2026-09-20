@@ -8,7 +8,8 @@ use gtk::{gio, glib};
 use libadwaita as adw;
 
 use crate::dbus_client::{
-    PendingRecovery, RecoveryEngineStatus, SnapshotsManagerHelperClient, VerificationResult,
+    PendingRecovery, RecoveryDeployment, RecoveryEngineStatus, SnapshotsManagerHelperClient,
+    VerificationResult,
 };
 use crate::i18n::{tr, trf};
 
@@ -16,6 +17,15 @@ use super::personal_history;
 use super::snapshot_model::{PagePresentation, SnapshotCapabilities, SnapshotItem, SnapshotScope};
 
 const ROLLBACK_RESTART_COUNTDOWN_SECONDS: u32 = 60;
+
+#[derive(Clone, Debug)]
+enum FactoryResetPreparation {
+    Ready {
+        item: SnapshotItem,
+        factory_home_available: bool,
+    },
+    Unsupported,
+}
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
 pub(super) enum PendingBannerAction {
@@ -139,6 +149,51 @@ impl SnapshotPage {
         }
     }
 
+    pub fn begin_factory_reset(&self) {
+        let Some(parent) = self.parent() else {
+            return;
+        };
+        let weak = self.downgrade();
+        run_operation(
+            &parent,
+            &tr("Checking factory reset availability…"),
+            move || {
+                let client = SnapshotsManagerHelperClient::new()?;
+                let status = client.recovery_engine_status()?;
+                let Some(target) = factory_reset_target(&status)? else {
+                    return Ok(FactoryResetPreparation::Unsupported);
+                };
+                client.check_factory_reset_readiness(target.id.clone(), false)?;
+                Ok(FactoryResetPreparation::Ready {
+                    item: SnapshotItem::from(target),
+                    factory_home_available: status.factory_home_available,
+                })
+            },
+            move |parent, result| match result {
+                Ok(FactoryResetPreparation::Ready {
+                    item,
+                    factory_home_available,
+                }) => {
+                    if let Some(page) = weak.upgrade() {
+                        page.confirm_factory_reset_impact(&item, factory_home_available);
+                    }
+                }
+                Ok(FactoryResetPreparation::Unsupported) => show_information(
+                    parent,
+                    &tr("Factory Reset Is Not Available"),
+                    &tr(
+                        "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it.",
+                    ),
+                ),
+                Err(problem) => show_information(
+                    parent,
+                    &tr("Factory Reset Is Not Ready"),
+                    &problem.to_string(),
+                ),
+            },
+        );
+    }
+
     pub fn add_compact_setters(&self, breakpoint: &adw::Breakpoint) {
         if let Some(controls) = self.imp().controls.borrow().as_ref() {
             breakpoint.add_setter(
@@ -257,6 +312,9 @@ impl SnapshotPage {
         stack.add_named(&error, Some("error"));
 
         let scrolled = gtk::ScrolledWindow::new();
+        scrolled.set_overlay_scrolling(false);
+        scrolled.set_hscrollbar_policy(gtk::PolicyType::Never);
+        scrolled.set_vscrollbar_policy(gtk::PolicyType::Automatic);
         let clamp = adw::Clamp::new();
         clamp.set_maximum_size(880);
         let list = gtk::ListBox::new();
@@ -454,31 +512,21 @@ impl SnapshotPage {
             banner.set_revealed(issue_count > 0);
         }
         if let Some(banner) = self.imp().pending_banner.borrow().as_ref() {
-            if scope == SnapshotScope::System {
-                if let Some(pending) = &status.pending {
-                    let target = status
-                        .deployments
-                        .iter()
-                        .find(|item| item.id == pending.target_deployment_id)
-                        .map(|item| item.title.as_str())
-                        .unwrap_or(&pending.target_deployment_id);
-                    let presentation = pending_banner_presentation(target, pending);
-                    banner.set_title(&presentation.title);
-                    self.imp().pending_banner_action.set(presentation.action);
-                    let button = match presentation.action {
-                        PendingBannerAction::Cancel => Some(tr("Cancel Rollback")),
-                        PendingBannerAction::Reconcile => Some(tr("Retry Recovery")),
-                        PendingBannerAction::None => None,
-                    };
-                    banner.set_button_label(button.as_deref());
-                    banner.set_revealed(true);
-                } else {
-                    self.imp()
-                        .pending_banner_action
-                        .set(PendingBannerAction::None);
-                    banner.set_button_label(None);
-                    banner.set_revealed(false);
-                }
+            if let Some(pending) = status.pending.as_ref().filter(|pending| match scope {
+                SnapshotScope::System => !pending.home_only,
+                SnapshotScope::Home => pending.reset_home,
+            }) {
+                let target = pending_target_title(status, pending, scope);
+                let presentation = pending_banner_presentation(target, pending);
+                banner.set_title(&presentation.title);
+                self.imp().pending_banner_action.set(presentation.action);
+                let button = match presentation.action {
+                    PendingBannerAction::Cancel => Some(tr("Cancel Rollback")),
+                    PendingBannerAction::Reconcile => Some(tr("Retry Recovery")),
+                    PendingBannerAction::None => None,
+                };
+                banner.set_button_label(button.as_deref());
+                banner.set_revealed(true);
             } else {
                 self.imp()
                     .pending_banner_action
@@ -575,30 +623,15 @@ impl SnapshotPage {
         state_icon.set_tooltip_text(Some(&snapshot_state(item)));
         row.add_prefix(&state_icon);
 
-        let main_action = gtk::Button::with_label(&match scope {
-            SnapshotScope::System => tr("Roll Back"),
-            SnapshotScope::Home => tr("Browse Files"),
-        });
+        let main_action = gtk::Button::with_label(&tr("Roll Back"));
         main_action.set_valign(gtk::Align::Center);
-        main_action.set_sensitive(match scope {
-            SnapshotScope::System => capabilities.can_restore,
-            SnapshotScope::Home => capabilities.can_browse,
-        });
-        main_action.set_tooltip_text(Some(&match scope {
-            SnapshotScope::System => tr("Prepare a safe system rollback"),
-            SnapshotScope::Home => tr("Browse files in this snapshot"),
-        }));
-        if scope == SnapshotScope::System {
-            main_action.add_css_class("suggested-action");
-        }
+        main_action.set_sensitive(capabilities.can_restore);
+        main_action.add_css_class("suggested-action");
         let weak = self.downgrade();
         let item_main = item.clone();
         main_action.connect_clicked(move |_| {
             if let Some(page) = weak.upgrade() {
-                match page.imp().scope.get() {
-                    SnapshotScope::System => page.verify_then_confirm_rollback(item_main.clone()),
-                    SnapshotScope::Home => page.browse(&item_main),
-                }
+                page.verify_then_confirm_rollback(item_main.clone());
             }
         });
         row.add_suffix(&main_action);
@@ -643,7 +676,11 @@ impl SnapshotPage {
         let item_delete = item.clone();
         add_row_action(&group, "delete", capabilities.can_delete, move || {
             if let Some(page) = weak.upgrade() {
-                page.confirm_delete(vec![item_delete.id.clone()]);
+                if item_delete.kind == "factory" {
+                    page.confirm_factory_delete(item_delete.id.clone());
+                } else {
+                    page.confirm_delete(vec![item_delete.id.clone()]);
+                }
             }
         });
         row.insert_action_group("snapshot", Some(&group));
@@ -655,14 +692,16 @@ impl SnapshotPage {
             Some(&tr("Check Snapshot Availability")),
             Some("snapshot.verify"),
         );
-        menu_model.append(
-            Some(&if item.keep_forever {
-                tr("Allow automatic cleanup")
-            } else {
-                tr("Keep Forever")
-            }),
-            Some("snapshot.pin"),
-        );
+        if item.kind != "factory" {
+            menu_model.append(
+                Some(&if item.keep_forever {
+                    tr("Allow automatic cleanup")
+                } else {
+                    tr("Keep Forever")
+                }),
+                Some("snapshot.pin"),
+            );
+        }
         let destructive = gio::Menu::new();
         destructive.append(Some(&tr("Delete Snapshot")), Some("snapshot.delete"));
         menu_model.append_section(None, &destructive);
@@ -861,6 +900,43 @@ impl SnapshotPage {
         dialog.present();
     }
 
+    fn confirm_factory_delete(&self, id: String) {
+        let Some(parent) = self.parent() else {
+            return;
+        };
+        let dialog = adw::MessageDialog::new(
+            Some(&parent),
+            Some(&tr("Delete Factory Recovery Point?")),
+            Some(&tr(
+                "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept.",
+            )),
+        );
+        dialog.add_response("cancel", &tr("Cancel"));
+        dialog.add_response("delete", &tr("Delete and Disable Factory Recovery"));
+        dialog.set_response_appearance("delete", adw::ResponseAppearance::Destructive);
+        dialog.set_default_response(Some("cancel"));
+        dialog.set_close_response("cancel");
+        let scope = self.imp().scope.get();
+        let weak = self.downgrade();
+        dialog.connect_response(None, move |_, response| {
+            if response != "delete" {
+                return;
+            }
+            let Some(page) = weak.upgrade() else {
+                return;
+            };
+            let id = id.clone();
+            page.run_mutation(&tr("Deleting factory recovery point…"), move || {
+                let client = SnapshotsManagerHelperClient::new()?;
+                match scope {
+                    SnapshotScope::System => client.delete_factory_deployment(id),
+                    SnapshotScope::Home => client.delete_factory_personal_snapshot(id),
+                }
+            });
+        });
+        dialog.present();
+    }
+
     fn verify_snapshot(&self, id: &str) {
         let id = id.to_string();
         let scope = self.imp().scope.get();
@@ -952,11 +1028,25 @@ impl SnapshotPage {
             return;
         };
         let id = item.id.clone();
+        let scope = self.imp().scope.get();
         let weak = self.downgrade();
         run_operation(
             &parent,
             &tr("Checking rollback safety…"),
-            move || SnapshotsManagerHelperClient::new()?.verify_snapshot(id),
+            move || {
+                let client = SnapshotsManagerHelperClient::new()?;
+                let result = match scope {
+                    SnapshotScope::System => client.verify_snapshot(id.clone())?,
+                    SnapshotScope::Home => client.verify_personal_snapshot(id.clone())?,
+                };
+                if result.is_valid {
+                    match scope {
+                        SnapshotScope::System => client.check_deployment_restore_readiness(id)?,
+                        SnapshotScope::Home => client.check_personal_restore_readiness(id)?,
+                    }
+                }
+                Ok(result)
+            },
             move |parent, result| match result {
                 Ok(result) if result.is_valid => {
                     if let Some(page) = weak.upgrade() {
@@ -973,46 +1063,7 @@ impl SnapshotPage {
         let Some(parent) = self.parent() else {
             return;
         };
-        let dialog = adw::MessageDialog::new(
-            Some(&parent),
-            Some(&trf("Roll Back to {0}?", &[&item.title])),
-            Some(&tr(
-                "Preparing the rollback will arm recovery immediately and automatically restart this computer within 60 seconds. Save your work before continuing.",
-            )),
-        );
-        let list = gtk::ListBox::new();
-        list.add_css_class("boxed-list");
-        list.append(&impact_row(
-            &tr("System files and packages"),
-            &tr("Return to the selected snapshot"),
-            "drive-harddisk-symbolic",
-        ));
-        list.append(&impact_row(
-            &tr("Kernel"),
-            item.kernel
-                .as_deref()
-                .unwrap_or(&tr("Recorded snapshot kernel")),
-            "computer-symbolic",
-        ));
-        list.append(&impact_row(
-            &tr("Personal files"),
-            &tr("Will not change"),
-            "folder-documents-symbolic",
-        ));
-        list.append(&impact_row(
-            &tr("Current system"),
-            &tr("Protected while the rollback is pending"),
-            "security-high-symbolic",
-        ));
-        list.append(&impact_row(
-            &tr("Restart"),
-            &tr("Automatic 60-second countdown after preparation"),
-            "system-reboot-symbolic",
-        ));
-        dialog.set_extra_child(Some(&list));
-        dialog.add_response("cancel", &tr("Cancel"));
-        dialog.add_response("rollback", &tr("Prepare and Restart"));
-        dialog.set_response_appearance("rollback", adw::ResponseAppearance::Destructive);
+        let dialog = rollback_confirmation(&parent, &item.title, self.imp().scope.get());
         let weak = self.downgrade();
         let id = item.id.clone();
         dialog.connect_response(None, move |_, response| {
@@ -1025,17 +1076,68 @@ impl SnapshotPage {
         dialog.present();
     }
 
-    fn schedule_rollback(&self, id: String) {
+    fn confirm_factory_reset_impact(&self, item: &SnapshotItem, factory_home_available: bool) {
+        let Some(parent) = self.parent() else {
+            return;
+        };
+        let (dialog, erase_home) =
+            super::factory_reset::confirmation(&parent, factory_home_available);
+        let weak = self.downgrade();
+        let id = item.id.clone();
+        dialog.connect_response(None, move |_, response| {
+            if response == "reset"
+                && let Some(page) = weak.upgrade()
+            {
+                page.schedule_factory_reset(id.clone(), erase_home.is_active());
+            }
+        });
+        dialog.present();
+    }
+
+    fn schedule_factory_reset(&self, id: String, reset_home: bool) {
         let Some(parent) = self.parent() else {
             return;
         };
         let weak = self.downgrade();
         run_operation(
             &parent,
+            &tr("Preparing factory reset…"),
+            move || {
+                let client = SnapshotsManagerHelperClient::new()?;
+                client.check_factory_reset_readiness(id.clone(), reset_home)?;
+                let result = client.schedule_factory_reset(id, reset_home)?;
+                if !result.0 {
+                    anyhow::bail!(result.1);
+                }
+                Ok(())
+            },
+            move |parent, result| match result {
+                Ok(()) => {
+                    if let Some(page) = weak.upgrade() {
+                        page.refresh();
+                    }
+                    show_rollback_ready(parent);
+                }
+                Err(problem) => show_error(parent, &problem.to_string()),
+            },
+        );
+    }
+
+    fn schedule_rollback(&self, id: String) {
+        let Some(parent) = self.parent() else {
+            return;
+        };
+        let weak = self.downgrade();
+        let scope = self.imp().scope.get();
+        run_operation(
+            &parent,
             &tr("Preparing safe rollback…"),
             move || {
-                let result =
-                    SnapshotsManagerHelperClient::new()?.schedule_deployment_restore(id)?;
+                let client = SnapshotsManagerHelperClient::new()?;
+                let result = match scope {
+                    SnapshotScope::System => client.schedule_deployment_restore(id)?,
+                    SnapshotScope::Home => client.schedule_personal_restore(id)?,
+                };
                 if !result.0 {
                     anyhow::bail!(result.1);
                 }
@@ -1220,6 +1322,58 @@ fn snapshot_icon(item: &SnapshotItem) -> &'static str {
     }
 }
 
+pub(crate) fn rollback_confirmation(
+    parent: &adw::ApplicationWindow,
+    title: &str,
+    scope: SnapshotScope,
+) -> adw::MessageDialog {
+    let dialog = adw::MessageDialog::new(
+        Some(parent),
+        Some(&trf("Roll Back to {0}?", &[title])),
+        Some(&tr(
+            "Preparing the rollback will arm recovery immediately and automatically restart this computer within 60 seconds. Save your work before continuing.",
+        )),
+    );
+    let list = gtk::ListBox::new();
+    list.set_selection_mode(gtk::SelectionMode::None);
+    list.add_css_class("boxed-list");
+    let home = scope == SnapshotScope::Home;
+    list.append(&impact_row(
+        &tr("System files and packages"),
+        &if home {
+            tr("Will not change")
+        } else {
+            tr("Return to the selected snapshot")
+        },
+        "drive-harddisk-symbolic",
+    ));
+    list.append(&impact_row(
+        &tr("All users’ files and settings"),
+        &if home {
+            tr("Return to the selected snapshot")
+        } else {
+            tr("Will not change")
+        },
+        "folder-documents-symbolic",
+    ));
+    let content = gtk::Box::new(gtk::Orientation::Vertical, 12);
+    content.append(&list);
+    let note = gtk::Label::new(Some(&tr(
+        "A safety snapshot is created first. Snapshot history is kept.",
+    )));
+    note.set_wrap(true);
+    note.add_css_class("dim-label");
+    content.append(&note);
+    dialog.set_default_size((parent.width() - 48).clamp(300, 580), -1);
+    dialog.set_extra_child(Some(&content));
+    dialog.set_default_response(Some("cancel"));
+    dialog.set_close_response("cancel");
+    dialog.add_response("cancel", &tr("Cancel"));
+    dialog.add_response("rollback", &tr("Prepare and Restart"));
+    dialog.set_response_appearance("rollback", adw::ResponseAppearance::Destructive);
+    dialog
+}
+
 fn impact_row(title: &str, subtitle: &str, icon: &str) -> adw::ActionRow {
     let row = adw::ActionRow::new();
     row.set_title(title);
@@ -1232,6 +1386,36 @@ fn impact_row(title: &str, subtitle: &str, icon: &str) -> adw::ActionRow {
 struct PendingBannerPresentation {
     title: String,
     action: PendingBannerAction,
+}
+
+fn pending_target_title<'a>(
+    status: &'a RecoveryEngineStatus,
+    pending: &'a PendingRecovery,
+    scope: SnapshotScope,
+) -> &'a str {
+    match scope {
+        SnapshotScope::System => status
+            .deployments
+            .iter()
+            .find(|item| item.id == pending.target_deployment_id)
+            .map(|item| item.title.as_str())
+            .unwrap_or(&pending.target_deployment_id),
+        SnapshotScope::Home => {
+            let id = pending.factory_home_snapshot_id.as_deref().unwrap_or("");
+            status
+                .personal_snapshots
+                .iter()
+                .find(|item| item.id == id)
+                .map(|item| {
+                    if item.kind == "factory" {
+                        "New OS"
+                    } else {
+                        item.title.as_str()
+                    }
+                })
+                .unwrap_or(id)
+        }
+    }
 }
 
 fn pending_banner_presentation(
@@ -1262,7 +1446,7 @@ fn pending_banner_presentation(
             PendingBannerAction::Reconcile,
         ),
         "reverting" => (
-            tr("Rollback confirmation failed. The protected previous system is being restored."),
+            tr("Rollback confirmation failed. Restoring the previous state."),
             PendingBannerAction::None,
         ),
         "reverted" => (
@@ -1289,6 +1473,40 @@ fn pending_banner_presentation(
         ),
     };
     PendingBannerPresentation { title, action }
+}
+
+fn factory_reset_target(
+    status: &RecoveryEngineStatus,
+) -> anyhow::Result<Option<RecoveryDeployment>> {
+    if let Some(error) = status.error.as_deref() {
+        anyhow::bail!("Could not inspect factory recovery support: {error}");
+    }
+    if !status.available || status.layout.root_filesystem.as_deref() != Some("btrfs") {
+        return Ok(None);
+    }
+    if !status.issues.is_empty() {
+        anyhow::bail!("System snapshot metadata contains unresolved issues");
+    }
+    if !status.layout.issues.is_empty() {
+        anyhow::bail!("The Btrfs recovery layout contains unresolved issues");
+    }
+    if status.pending.is_some() {
+        anyhow::bail!("Another system restore is already pending");
+    }
+    let factories = status
+        .deployments
+        .iter()
+        .filter(|record| record.kind == "factory")
+        .collect::<Vec<_>>();
+    let factory = match factories.as_slice() {
+        [] => return Ok(None),
+        [factory] => *factory,
+        _ => anyhow::bail!("More than one factory recovery point is registered"),
+    };
+    if factory.title != "New OS" || factory.state != "ready" || !factory.pinned {
+        anyhow::bail!("The factory recovery point is damaged or no longer protected");
+    }
+    Ok(Some(factory.clone()))
 }
 
 fn run_operation<F, T, C>(parent: &adw::ApplicationWindow, title: &str, operation: F, complete: C)
@@ -1406,7 +1624,7 @@ fn show_rollback_ready(parent: &adw::ApplicationWindow) {
         Some(parent),
         Some(&tr("Restart Required — Rollback Armed")),
         Some(&tr(
-            "Rollback is armed. To prevent new system changes from being lost, this computer will restart automatically when the 60-second countdown ends. Save any open personal files now.",
+            "Rollback is ready. Save your work; this computer will restart within 60 seconds.",
         )),
     );
     dialog.add_response(
@@ -1533,9 +1751,64 @@ mod tests {
 
     use super::*;
 
+    fn factory_status() -> RecoveryEngineStatus {
+        RecoveryEngineStatus {
+            factory_home_available: true,
+            available: true,
+            deployments: vec![RecoveryDeployment {
+                id: "aaaaaaaa-1111-4222-8333-bbbbbbbbbbbb".into(),
+                kind: "factory".into(),
+                state: "ready".into(),
+                created_at: chrono::Utc::now(),
+                title: "New OS".into(),
+                reason: "Initial AnduinOS installation".into(),
+                kernel_release: Some("test-kernel".into()),
+                pinned: true,
+            }],
+            pending: None,
+            issues: Vec::new(),
+            layout: crate::dbus_client::LayoutSummary {
+                support: "supported".into(),
+                root_filesystem: Some("btrfs".into()),
+                issues: Vec::new(),
+            },
+            error: None,
+            personal_snapshots: Vec::new(),
+            personal_issues: Vec::new(),
+            system_package_counts: std::collections::HashMap::new(),
+            system_sizes: std::collections::HashMap::new(),
+            personal_sizes: std::collections::HashMap::new(),
+        }
+    }
+
+    #[test]
+    fn factory_reset_requires_one_healthy_protected_factory_record() {
+        let status = factory_status();
+        assert_eq!(
+            factory_reset_target(&status).unwrap().unwrap().title,
+            "New OS"
+        );
+
+        let mut missing = factory_status();
+        missing.deployments.clear();
+        assert!(factory_reset_target(&missing).unwrap().is_none());
+
+        let mut unprotected = factory_status();
+        unprotected.deployments[0].pinned = false;
+        assert!(factory_reset_target(&unprotected).is_err());
+
+        let mut ext4 = factory_status();
+        ext4.available = false;
+        ext4.layout.root_filesystem = Some("ext4".into());
+        assert!(factory_reset_target(&ext4).unwrap().is_none());
+    }
+
     fn pending(phase: &str) -> PendingRecovery {
         PendingRecovery {
             target_deployment_id: "target".into(),
+            home_only: false,
+            reset_home: false,
+            factory_home_snapshot_id: None,
             phase: phase.into(),
             failure: None,
         }
@@ -1607,8 +1880,7 @@ mod tests {
     }
 
     #[test]
-    fn armed_rollback_uses_a_sixty_second_restart_countdown() {
-        assert_eq!(ROLLBACK_RESTART_COUNTDOWN_SECONDS, 60);
+    fn restart_countdown_label_shows_remaining_seconds() {
         assert!(restart_countdown_label(60).contains("60"));
         assert!(restart_countdown_label(1).contains('1'));
     }

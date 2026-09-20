@@ -12,11 +12,7 @@ import os
 import sys
 import threading
 import urllib.request
-import time
-import shlex
 import stat
-import tempfile
-from concurrent.futures import ThreadPoolExecutor, as_completed
 import re
 import json
 import gettext
@@ -42,6 +38,13 @@ except ModuleNotFoundError:
         draw_preview,
     )
 
+# Scaling backend ships beside the installed helpers, with an assets fallback.
+_scaling_lib = os.path.dirname(os.path.abspath(__file__))
+if not os.path.isfile(os.path.join(_scaling_lib, 'display_scaling.py')):
+    _scaling_lib = '/usr/lib/anduinos-oobe'
+sys.path.insert(0, _scaling_lib)
+import display_scaling as _display_scaling
+
 OOBE_LAYOUT_STYLES = {
     'modern': 'eleven',
     'classic': 'classic',
@@ -65,6 +68,9 @@ warnings.filterwarnings('ignore', category=DeprecationWarning, module='gi')
 
 # ── i18n ───────────────────────────────────────────────────────────
 _LOCALE_DIR = '/usr/share/locale'
+_source_locale_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'locale'))
+if os.path.isdir(_source_locale_dir):
+    _LOCALE_DIR = _source_locale_dir
 try:
     _ = gettext.translation('anduinos-oobe', _LOCALE_DIR, fallback=True).gettext
 except Exception:
@@ -75,23 +81,7 @@ FLATHUB_REMOTE = 'flathub'
 FLATHUB_OFFICIAL_REPO = 'https://dl.flathub.org/repo/flathub.flatpakrepo'
 FLATHUB_OFFICIAL_URL = 'https://dl.flathub.org/repo'
 FLATHUB_USTC_URL = 'https://mirrors.ustc.edu.cn/flathub'
-MDNS_HELPER = '/usr/libexec/anduinos-oobe/network-service-helper'
 DRIVER_CENTER_EXECUTABLE = '/usr/bin/anduinos-driver-center'
-SNAPSHOTS_MANAGER_PACKAGE = 'anduinos-btrfs-snapshots-manager'
-SNAPSHOTS_MANAGER_EXECUTABLE = '/usr/bin/anduinos-btrfs-snapshots-manager'
-BASH_GUESS_BEGIN = '# >>> AnduinOS Bash command predictions >>>'
-BASH_GUESS_END = '# <<< AnduinOS Bash command predictions <<<'
-BASH_GUESS_ASSIGNMENT = 'export ANDUINOS_GUESS_COMMAND={}'
-BASH_GUESS_BLOCK_RE = re.compile(
-    rf'(?m)^{re.escape(BASH_GUESS_BEGIN)}\n'
-    rf'{re.escape("export ANDUINOS_GUESS_COMMAND=")}[01]\n'
-    rf'^{re.escape(BASH_GUESS_END)}(?:\n|$)'
-)
-BASH_GUESS_ASSIGNMENT_RE = re.compile(
-    r'(?m)^\s*(?:export\s+)?ANDUINOS_GUESS_COMMAND\s*=\s*'
-    r'(["\']?)([01])\1\s*(?:#.*)?$'
-)
-
 # ── Icon helper ────────────────────────────────────────────────────
 _ICON_BASES = [
     os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -144,132 +134,6 @@ def _create_image(name):
 # ═══════════════════════════════════════════════════════════════════
 # HELPERS
 # ═══════════════════════════════════════════════════════════════════
-
-def get_mdns_control_state():
-    """Return (available, enabled) for the Avahi system service."""
-    if not os.path.isfile(MDNS_HELPER):
-        return False, False
-    try:
-        load_state = subprocess.run(
-            ['systemctl', 'show', 'avahi-daemon.service', '--property=LoadState',
-             '--value'], capture_output=True, text=True, timeout=5
-        ).stdout.strip()
-        if load_state in ('', 'not-found'):
-            return False, False
-        enabled_states = ('enabled', 'enabled-runtime', 'static', 'indirect')
-        service_state = subprocess.run(
-            ['systemctl', 'is-enabled', 'avahi-daemon.service'],
-            capture_output=True, text=True, timeout=5
-        ).stdout.strip()
-        socket_state = subprocess.run(
-            ['systemctl', 'is-enabled', 'avahi-daemon.socket'],
-            capture_output=True, text=True, timeout=5
-        ).stdout.strip()
-        return True, (service_state in enabled_states
-                      and socket_state in enabled_states)
-    except Exception:
-        return False, False
-
-
-def set_mdns_enabled(enabled):
-    """Change Avahi state through OOBE's fixed, polkit-authorized helper."""
-    return subprocess.run(
-        ['pkexec', MDNS_HELPER, 'set-mdns-enabled',
-         'true' if enabled else 'false'],
-        capture_output=True, text=True, timeout=30
-    )
-
-
-def _read_bashrc(bashrc_path=None):
-    """Return (resolved path, text, mode) without following special files."""
-    path = os.path.expanduser(bashrc_path or '~/.bashrc')
-    target = os.path.realpath(path)
-    try:
-        metadata = os.stat(target)
-    except FileNotFoundError:
-        return target, '', 0o644
-    if not stat.S_ISREG(metadata.st_mode):
-        raise OSError('Bash configuration is not a regular file')
-    if metadata.st_size > 4 * 1024 * 1024:
-        raise OSError('Bash configuration is unexpectedly large')
-    with open(target, 'r', encoding='utf-8', errors='surrogateescape') as stream:
-        return target, stream.read(), stat.S_IMODE(metadata.st_mode)
-
-
-def bash_command_predictions_enabled(bashrc_path=None):
-    """Return the effective value of simple Bash prediction assignments."""
-    try:
-        _target, contents, _mode = _read_bashrc(bashrc_path)
-    except OSError:
-        return True
-    assignments = list(BASH_GUESS_ASSIGNMENT_RE.finditer(contents))
-    return not assignments or assignments[-1].group(2) != '0'
-
-
-def _append_bash_guess_block(contents, enabled):
-    if contents and not contents.endswith('\n'):
-        contents += '\n'
-    if contents and not contents.endswith('\n\n'):
-        contents += '\n'
-    return (
-        contents
-        + BASH_GUESS_BEGIN + '\n'
-        + BASH_GUESS_ASSIGNMENT.format('1' if enabled else '0') + '\n'
-        + BASH_GUESS_END + '\n'
-    )
-
-
-def set_bash_command_predictions_enabled(enabled, bashrc_path=None):
-    """Atomically update only OOBE's marked Bash prediction configuration."""
-    target, contents, mode = _read_bashrc(bashrc_path)
-    updated = BASH_GUESS_BLOCK_RE.sub('', contents)
-
-    # Enabled is the package default, so no managed setting is necessary unless
-    # it must explicitly override a simple manual `...=0` earlier in .bashrc.
-    effective = list(BASH_GUESS_ASSIGNMENT_RE.finditer(updated))
-    manual_disabled = effective and effective[-1].group(2) == '0'
-    if not enabled or manual_disabled:
-        updated = _append_bash_guess_block(updated, enabled)
-    if updated == contents:
-        return False
-
-    parent = os.path.dirname(target)
-    if not os.path.isdir(parent):
-        raise OSError('Bash configuration directory does not exist')
-    descriptor, temporary = tempfile.mkstemp(
-        prefix='.bashrc.anduinos-', dir=parent
-    )
-    try:
-        os.fchmod(descriptor, mode)
-        with os.fdopen(
-            descriptor, 'w', encoding='utf-8', errors='surrogateescape'
-        ) as stream:
-            descriptor = -1
-            stream.write(updated)
-            stream.flush()
-            os.fsync(stream.fileno())
-        os.replace(temporary, target)
-        try:
-            directory = os.open(parent, os.O_RDONLY | os.O_DIRECTORY)
-        except OSError:
-            directory = -1
-        if directory >= 0:
-            try:
-                # Some network filesystems do not support directory fsync.
-                try:
-                    os.fsync(directory)
-                except OSError:
-                    pass
-            finally:
-                os.close(directory)
-    finally:
-        if descriptor >= 0:
-            os.close(descriptor)
-        try:
-            os.unlink(temporary)
-        except FileNotFoundError:
-            pass
-    return True
 
 def _read_os_pretty_name():
     """Read PRETTY_NAME from /etc/os-release, fallback to NAME=."""
@@ -338,79 +202,13 @@ def _is_flathub_china_mirror():
     return 'ustc.edu.cn' in url or 'tuna.tsinghua.edu.cn' in url
 
 
-def _is_package_installed(pkg):
-    """Return True if the given dpkg package is installed."""
-    try:
-        r = subprocess.run(['dpkg', '-s', pkg], capture_output=True, timeout=5)
-        return r.returncode == 0
-    except Exception:
-        return False
-
-
-def should_recommend_snapshots_manager():
-    """Return True when Disk Snapshots Manager can protect this system."""
-    if not _is_package_installed(SNAPSHOTS_MANAGER_PACKAGE):
-        return False
-    try:
-        result = subprocess.run(
-            ['findmnt', '--noheadings', '--output', 'FSTYPE', '--target', '/'],
-            capture_output=True,
-            text=True,
-            timeout=5,
-        )
-        return result.returncode == 0 and result.stdout.strip().lower() == 'btrfs'
-    except Exception:
-        return False
-
-
-def get_backup_recommendation():
-    """Return the backup card content appropriate for this installation."""
-    if should_recommend_snapshots_manager():
-        return {
-            'icon': 'disk-snapshots-manager.svg',
-            'title': _('Disk Snapshots Manager'),
-            'description': _(
-                'Protect your system with automatic Btrfs snapshots and smart cleanup.'
-            ),
-            'button': _('Configure Automatic Snapshots'),
-            'command': [SNAPSHOTS_MANAGER_EXECUTABLE],
-        }
-    return {
-        'icon': 'deja-dup.svg',
-        'title': _('System Backup'),
-        'description': (
-            _('Use Deja Dup to protect your') + '\n'
-            + _('important files with automated,') + '\n'
-            + _('secure local or remote backups.')
-        ),
-        'button': _('Get Deja Dup'),
-        'command': [
-            'gnome-software', '--details=org.gnome.DejaDup.desktop'
-        ],
-    }
-
-
 def is_live_environment():
-    """Return True only if all three Casper conditions are met:
-    1. casper package is installed
-    2. /cdrom directory exists
-    3. Kernel cmdline contains boot=casper
-
-    Live-session detection must not depend on a particular installer. AnduinOS
-    can switch installers while Casper remains the ISO boot transport.
-    """
-    if not _is_package_installed('casper'):
-        return False
-    if not os.path.isdir('/cdrom'):
-        return False
-    try:
-        with open('/proc/cmdline', 'r') as f:
-            cmdline = f.read()
-        if 'boot=casper' not in cmdline:
-            return False
-    except Exception:
-        return False
-    return True
+    """Return True only for the Dracut-established AnduinOS Live contract."""
+    return (
+        os.path.isfile('/run/anduinos-live/environment')
+        and os.path.isdir('/cdrom')
+        and os.path.isfile('/run/anduinos-live/rootfs.squashfs')
+    )
 
 
 def internet_connection_ready(monitor=None):
@@ -961,6 +759,122 @@ def create_network_page(continue_offline, update_nav=None):
 # PAGE 2: APPEARANCE — 外观与秩序
 # ═══════════════════════════════════════════════════════════════════
 
+def create_display_scaling_group():
+    group = Adw.PreferencesGroup()
+    group.set_margin_start(24)
+    group.set_margin_end(24)
+    group.set_margin_bottom(28)
+    row = Adw.ActionRow(title=_('Display Scaling'))
+    row.set_subtitle(_('Recommendation unavailable for this display.'))
+    row.set_subtitle_lines(2)
+    row.set_use_markup(False)
+    dropdown = Gtk.DropDown(model=Gtk.StringList.new([]))
+    dropdown.set_valign(Gtk.Align.CENTER)
+    dropdown.set_sensitive(False)
+    dropdown.set_tooltip_text(_('Display Scaling'))
+    row.add_suffix(dropdown)
+    row.set_activatable_widget(dropdown)
+    group.add(row)
+
+    status = {'info': None, 'busy': False, 'updating': False, 'timer': 0,
+              'error': False}
+
+    def render(info):
+        status['updating'] = True
+        status['info'] = info
+        supported = list(info['supported'])
+        if not any(_display_scaling.same_scale(info['scale'], s) for s in supported):
+            supported.append(info['scale'])
+            supported.sort()
+        status['choices'] = supported
+        labels = [(_('%(scale)s (Recommended)') % {'scale': _display_scaling.format_scale(s)})
+                  if _display_scaling.same_scale(s, info['recommended'])
+                  else _display_scaling.format_scale(s) for s in supported]
+        dropdown.set_model(Gtk.StringList.new(labels))
+        dropdown.set_selected(next(i for i, s in enumerate(supported)
+                                   if _display_scaling.same_scale(s, info['scale'])))
+        recommended = info['recommended']
+        subtitle = (_('Primary display: %(display)s · Recommended: %(scale)s') % {
+            'display': info['name'], 'scale': _display_scaling.format_scale(recommended)
+        }) if recommended is not None else _('Recommendation unavailable for this display.')
+        row.set_subtitle(_('Could not change display scaling.') if status['error'] else subtitle)
+        dropdown.set_sensitive(len(info['supported']) > 1)
+        status['updating'] = False
+
+    def finished(info, error, applying):
+        status['busy'] = False
+        if applying:
+            status['error'] = error is not None
+        if info is not None:
+            # Do not rebuild an open dropdown every time the monitor is polled.
+            if applying or info != status['info']:
+                render(info)
+        else:
+            status['info'] = None
+            dropdown.set_sensitive(False)
+            row.set_subtitle(_('Could not change display scaling.') if applying
+                             else _('Recommendation unavailable for this display.'))
+        if error is not None:
+            print(f'Display scaling: {error}', file=sys.stderr)
+        return GLib.SOURCE_REMOVE
+
+    def refresh(scale=None):
+        if status['busy']:
+            return
+        status['busy'] = True
+        applying = scale is not None
+        expected_key = status['info']['key'] if applying else None
+        if applying:
+            dropdown.set_sensitive(False)
+
+        def worker():
+            info, error = None, None
+            try:
+                client = _display_scaling.DisplayClient()
+                info = (client.apply(scale, expected_key) if applying
+                        else _display_scaling.primary_info(client.state()))
+            except Exception as exc:
+                error = exc
+                # Reflect the actual scale after rejection or a concurrent change.
+                if applying:
+                    try:
+                        info = _display_scaling.primary_info(client.state())
+                    except Exception:
+                        pass
+            GLib.idle_add(finished, info, error, applying)
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def selected(widget, _param):
+        if status['updating'] or status['busy'] or status['info'] is None:
+            return
+        index = widget.get_selected()
+        if index >= len(status['choices']):
+            return
+        value = status['choices'][index]
+        if not _display_scaling.same_scale(value, status['info']['scale']):
+            refresh(value)
+
+    def poll():
+        refresh()
+        return GLib.SOURCE_CONTINUE
+
+    def mapped(_widget):
+        refresh()
+        if not status['timer']:
+            status['timer'] = GLib.timeout_add_seconds(3, poll)
+
+    def unmapped(_widget):
+        if status['timer']:
+            GLib.source_remove(status['timer'])
+            status['timer'] = 0
+
+    dropdown.connect('notify::selected', selected)
+    group.connect('map', mapped)
+    group.connect('unmap', unmapped)
+    return group
+
+
 def create_appearance_page():
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     page._oobe_page_name = 'appearance'
@@ -1048,6 +962,8 @@ def create_appearance_page():
     theme_box.append(btn_dark)
     theme_group.add(theme_box)
     center.append(theme_group)
+
+    center.append(create_display_scaling_group())
 
     # ── Layout Section ──
     layout_title_group = Adw.PreferencesGroup()
@@ -1198,9 +1114,6 @@ def create_security_page():
     # ── Network Security Card ──
     fw_card = Adw.PreferencesGroup()
     fw_card.set_title(_('Network Security'))
-    fw_card.set_description(
-        _('Control inbound protection and whether this computer participates in local network discovery.')
-    )
     fw_card.set_margin_bottom(24)
 
     fw_row = Adw.SwitchRow()
@@ -1256,52 +1169,6 @@ def create_security_page():
     fw_row.connect('notify::active', _on_fw_toggle)
     fw_card.add(fw_row)
 
-    mdns_row = Adw.SwitchRow()
-    mdns_row.set_title(_('Local Network Discovery (mDNS)'))
-    mdns_row.set_subtitle(
-        _('Find printers and nearby devices, and make .local names available on trusted networks.')
-    )
-
-    mdns_icon = _create_image('preferences-system-network-connection.svg')
-    mdns_icon.set_pixel_size(32)
-    mdns_row.add_prefix(mdns_icon)
-
-    mdns_available, mdns_enabled = get_mdns_control_state()
-    if mdns_available:
-        mdns_row.set_active(mdns_enabled)
-    else:
-        mdns_row.set_sensitive(False)
-        mdns_row.set_subtitle(_('Local network discovery controls are not installed.'))
-
-    mdns_row._update_in_progress = False
-
-    def _on_mdns_toggle(switch, pspec):
-        if switch._update_in_progress:
-            return
-
-        enable = switch.get_active()
-        switch._update_in_progress = True
-        switch.set_sensitive(False)
-
-        def _finish(returncode):
-            if returncode != 0:
-                switch.set_active(not enable)
-            switch.set_sensitive(True)
-            switch._update_in_progress = False
-            return False
-
-        def _run_mdns():
-            try:
-                proc = set_mdns_enabled(enable)
-                GLib.idle_add(_finish, proc.returncode)
-            except Exception:
-                GLib.idle_add(_finish, -1)
-
-        threading.Thread(target=_run_mdns, daemon=True).start()
-
-    if mdns_available:
-        mdns_row.connect('notify::active', _on_mdns_toggle)
-    fw_card.add(mdns_row)
     center.append(fw_card)
 
     # ── Location Card ──
@@ -1362,678 +1229,9 @@ def create_security_page():
     power_card.add(power_row)
     center.append(power_card)
 
-    # ── Local Command Assistance Card ──
-    shell_card = Adw.PreferencesGroup()
-    shell_card.set_title(_('Command-line Assistance'))
-    shell_card.set_description(_('Control local bash predictions.'))
-    shell_card.set_margin_top(24)
-
-    shell_row = Adw.SwitchRow()
-    shell_row.set_title(_('Bash Command Predictions'))
-    shell_row.set_subtitle(_('Show command suggestions in bash'))
-    shell_icon = _create_image('keyboard.svg')
-    shell_icon.set_pixel_size(32)
-    shell_row.add_prefix(shell_icon)
-    shell_row.set_active(bash_command_predictions_enabled())
-    shell_row._update_in_progress = False
-
-    def _on_shell_prediction_toggle(switch, pspec):
-        if switch._update_in_progress:
-            return
-        enabled = switch.get_active()
-        try:
-            set_bash_command_predictions_enabled(enabled)
-        except OSError:
-            switch._update_in_progress = True
-            switch.set_active(not enabled)
-            switch.set_subtitle(
-                _('Could not update your Bash configuration. Your previous setting was kept.')
-            )
-            switch._update_in_progress = False
-
-    shell_row.connect('notify::active', _on_shell_prediction_toggle)
-    shell_card.add(shell_row)
-    center.append(shell_card)
-
     return page
 
 
-# ═══════════════════════════════════════════════════════════════════
-# PAGE 3.5: UPDATE SYSTEM
-# ═══════════════════════════════════════════════════════════════════
-
-def create_update_page(navigate_next, update_nav=None):
-    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    page._requires_internet = True
-    page.set_valign(Gtk.Align.FILL)
-    page.set_halign(Gtk.Align.FILL)
-    page.set_margin_start(48)
-    page.set_margin_end(48)
-    page.set_margin_top(24)
-    page.set_margin_bottom(24)
-    page.set_spacing(0)
-    
-    page._suggest_next = False
-
-    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    center.set_valign(Gtk.Align.CENTER)
-    center.set_vexpand(True)
-    page.append(center)
-
-    icon = _create_image('yast-upgrade.svg')
-    icon.set_pixel_size(72)
-    icon.set_halign(Gtk.Align.CENTER)
-    center.append(icon)
-
-    title = Gtk.Label(label=_('Keep Your System Up to Date'))
-    title.add_css_class('title-1')
-    title.set_halign(Gtk.Align.CENTER)
-    title.set_wrap(True)
-    title.set_justify(Gtk.Justification.CENTER)
-    title.set_margin_top(12)
-    center.append(title)
-
-    sub = Gtk.Label(
-        label=_('Security patches and the latest features are just a click away.')
-    )
-    sub.add_css_class('dim-label')
-    sub.set_halign(Gtk.Align.CENTER)
-    sub.set_wrap(True)
-    sub.set_justify(Gtk.Justification.CENTER)
-    sub.set_margin_top(12)
-    center.append(sub)
-
-    # Advanced Output Expander (Terminal)
-    expander = Gtk.Expander(label=_('Terminal Output'))
-    expander.set_margin_top(24)
-    expander.set_halign(Gtk.Align.FILL)
-    
-    scroll = Gtk.ScrolledWindow()
-    scroll.set_min_content_height(150)
-    scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-    
-    textview = Gtk.TextView()
-    textview.set_editable(False)
-    textview.set_cursor_visible(False)
-    textview.add_css_class('card')
-    textview.set_monospace(True)
-    textview.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
-    buffer = textview.get_buffer()
-
-    scroll.set_child(textview)
-    expander.set_child(scroll)
-    center.append(expander)
-
-    status_label = Gtk.Label()
-    status_label.add_css_class('dim-label')
-    status_label.set_halign(Gtk.Align.CENTER)
-    status_label.set_wrap(True)
-    status_label.set_margin_top(12)
-    status_label.set_margin_bottom(12)
-    center.append(status_label)
-
-    progress_bar = Gtk.ProgressBar()
-    progress_bar.set_visible(False)
-    center.append(progress_bar)
-
-    btn_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-    btn_box.set_halign(Gtk.Align.CENTER)
-    btn_box.set_margin_top(12)
-
-    skip_btn = Gtk.Button(label=_('  Do It Later  '))
-    skip_btn.connect('clicked', lambda b: navigate_next())
-
-    mirror_btn = Gtk.Button(label=_('  Find Fastest Mirror  '))
-    mirror_btn.add_css_class('suggested-action')
-
-    action_btn = Gtk.Button(label=_('  Check for Updates  '))
-
-    page._state = 0 
-
-    def _on_action(btn):
-        btn.set_sensitive(False)
-        skip_btn.set_sensitive(False)
-        mirror_btn.set_sensitive(False)
-        progress_bar.set_visible(True)
-        progress_bar.pulse()
-        expander.set_expanded(True)
-
-        def _pulse():
-            if progress_bar.is_visible():
-                progress_bar.pulse()
-                return True
-            return False
-        GLib.timeout_add(100, _pulse)
-
-        def _do_work():
-            def __append_text(t):
-                end_iter = buffer.get_end_iter()
-                buffer.insert(end_iter, t)
-                mark = buffer.create_mark(None, buffer.get_end_iter(), False)
-                textview.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
-
-            def __cleanup():
-                progress_bar.set_visible(False)
-                action_btn.set_sensitive(True)
-                skip_btn.set_sensitive(True)
-                mirror_btn.set_sensitive(True)
-
-            if page._state == 0:
-                try:
-                    GLib.idle_add(lambda: status_label.set_label(_('Checking for updates…')))
-                    bash_cmd = 'while fuser /var/lib/dpkg/lock >/dev/null 2>&1 || fuser /var/lib/apt/lists/lock >/dev/null 2>&1 || fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do echo "Waiting for other package managers to finish..."; sleep 3; done; rm -f /var/lib/apt/lists/*_InRelease /var/lib/apt/lists/*_Release /var/lib/apt/lists/*_Packages /var/lib/apt/lists/*_Sources /var/lib/apt/lists/*_Translation*; apt-get update'
-                    proc1 = subprocess.Popen(
-                        ['pkexec', 'sh', '-c', bash_cmd],
-                        stdout=subprocess.PIPE,
-                        stderr=subprocess.STDOUT,
-                        text=True,
-                        bufsize=1
-                    )
-                    for line in iter(proc1.stdout.readline, ''):
-                        GLib.idle_add(lambda l=line: __append_text(l))
-                    proc1.wait()
-
-                    if proc1.returncode != 0:
-                        raise Exception("apt-get update failed")
-                    
-                    proc2 = subprocess.run(
-                        ['apt-get', '-s', 'upgrade'],
-                        capture_output=True, text=True
-                    )
-                    
-                    has_updates = False
-                    for line in proc2.stdout.split('\n'):
-                        if 'upgraded, ' in line:
-                            parts = line.split()
-                            if parts[0] != '0':
-                                has_updates = True
-                                GLib.idle_add(lambda l=line: __append_text(l + '\n'))
-                            break
-                    
-                    if has_updates:
-                        GLib.idle_add(lambda: (
-                            status_label.set_label(_('Updates are available.')),
-                            action_btn.set_label(_('  Install Updates  ')),
-                            action_btn.add_css_class('suggested-action'),
-                            page.__setattr__('_state', 1),
-                            __cleanup()
-                        ))
-                    else:
-                        def _set_ready():
-                            status_label.set_label(_('✓ System is up to date.'))
-                            action_btn.set_visible(False)
-                            skip_btn.set_label(_('  Continue  '))
-                            page._suggest_next = True
-                            if update_nav: update_nav()
-                            __cleanup()
-                        GLib.idle_add(_set_ready)
-                except Exception as e:
-                    GLib.idle_add(lambda e=e: (
-                        status_label.set_label(_('✗ Check failed: ') + str(e)),
-                        __cleanup()
-                    ))
-            
-            elif page._state == 1:
-                try:
-                    GLib.idle_add(lambda: status_label.set_label(_('Installing updates…')))
-                    bash_cmd = 'while fuser /var/lib/dpkg/lock >/dev/null 2>&1 || fuser /var/lib/apt/lists/lock >/dev/null 2>&1 || fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do echo "Waiting for other package managers to finish..."; sleep 3; done; DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y'
-                    proc = subprocess.Popen(
-                        ['pkexec', 'sh', '-c', bash_cmd],
-                        stdout=subprocess.PIPE,
-                        stderr=subprocess.STDOUT,
-                        text=True,
-                        bufsize=1
-                    )
-                    for line in iter(proc.stdout.readline, ''):
-                        GLib.idle_add(lambda l=line: __append_text(l))
-                    proc.wait()
-
-                    if proc.returncode == 0:
-                        def _set_done():
-                            status_label.set_label(_('✓ Updates installed successfully!'))
-                            action_btn.set_visible(False)
-                            skip_btn.set_label(_('  Continue  '))
-                            page._suggest_next = True
-                            if update_nav: update_nav()
-                            __cleanup()
-                        GLib.idle_add(_set_done)
-                    else:
-                        raise Exception("apt-get dist-upgrade failed")
-                except Exception as e:
-                    GLib.idle_add(lambda e=e: (
-                        status_label.set_label(_('✗ Installation failed: ') + str(e)),
-                        __cleanup()
-                    ))
-
-        threading.Thread(target=_do_work, daemon=True).start()
-
-    action_btn.connect('clicked', _on_action)
-
-    # ── Mirror speed-test handler ─────────────────────────────────
-    def _on_mirror(btn):
-        btn.set_sensitive(False)
-        skip_btn.set_sensitive(False)
-        action_btn.set_sensitive(False)
-        progress_bar.set_visible(True)
-        progress_bar.pulse()
-        expander.set_expanded(True)
-
-        def _pulse():
-            if progress_bar.is_visible():
-                progress_bar.pulse()
-                return True
-            return False
-        GLib.timeout_add(100, _pulse)
-
-        def _append_text(t):
-            end_iter = buffer.get_end_iter()
-            buffer.insert(end_iter, t)
-            mark = buffer.create_mark(None, buffer.get_end_iter(), False)
-            textview.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
-
-        def _mirror_cleanup():
-            progress_bar.set_visible(False)
-            action_btn.set_sensitive(True)
-            skip_btn.set_sensitive(True)
-            mirror_btn.set_sensitive(True)
-
-        def _mirror_work():
-            try:
-                GLib.idle_add(lambda: (
-                    status_label.set_label(_('Testing mirrors…')),
-                    _append_text(_('=== Testing mirror speeds ===') + '\n')
-                ))
-
-                codename = subprocess.run(
-                    ['lsb_release', '-cs'],
-                    capture_output=True, text=True
-                ).stdout.strip()
-
-                mirrors = [
-                    # ── Default ─────────────────────────────────
-                    "https://archive.ubuntu.com/ubuntu/",
-                    # ── Oceania ──────────────────────────────────
-                    "https://mirror.aarnet.edu.au/pub/ubuntu/archive/",
-                    "https://mirror.fsmg.org.nz/ubuntu/",
-                    "https://mirror.2degrees.nz/ubuntu/",
-                    "https://ubuntu.lagoon.nc/ubuntu/",
-                    # ── East Asia ────────────────────────────────
-                    "https://mirror.xtom.com.hk/ubuntu/",
-                    "https://mirror.01link.hk/ubuntu/",
-                    "https://ftp.udx.icscoe.jp/Linux/ubuntu/",
-                    "https://ftp.kaist.ac.kr/ubuntu/",
-                    "http://jp.archive.ubuntu.com/ubuntu/",
-                    "http://kr.archive.ubuntu.com/ubuntu/",
-                    "http://tw.archive.ubuntu.com/ubuntu/",
-                    "https://mirror.twds.com.tw/ubuntu/",
-                    # ── China ────────────────────────────────────
-                    "http://mirrors.ustc.edu.cn/ubuntu/",
-                    "http://ftp.sjtu.edu.cn/ubuntu/",
-                    "http://mirrors.tuna.tsinghua.edu.cn/ubuntu/",
-                    "http://mirrors.aliyun.com/ubuntu/",
-                    "http://mirrors.cloud.tencent.com/ubuntu/",
-                    "http://mirrors.huaweicloud.com/ubuntu/",
-                    "http://mirrors.zju.edu.cn/ubuntu/",
-                    "http://mirrors.cn99.com/ubuntu/",
-                    "https://mirror.nju.edu.cn/ubuntu/",
-                    "https://mirrors.bfsu.edu.cn/ubuntu/",
-                    # ── Southeast Asia ───────────────────────────
-                    "http://sg.archive.ubuntu.com/ubuntu/",
-                    "http://ossmirror.mycloud.services/os/linux/ubuntu/",
-                    "https://mirror.sg.gs/ubuntu/",
-                    "https://mirror.kku.ac.th/ubuntu/",
-                    "https://mirror.bizflycloud.vn/ubuntu/",
-                    # ── South Asia ───────────────────────────────
-                    "https://mirrors.nxtgen.com/ubuntu-mirror/ubuntu/",
-                    # ── Middle East ──────────────────────────────
-                    "https://ubuntu.mobinhost.com/ubuntu/",
-                    "https://mirror.iranserver.com/ubuntu/",
-                    "https://mirror.maeen.sa/apt-mirror/",
-                    # ── Europe: North ────────────────────────────
-                    "https://mirrors.dotsrc.org/ubuntu/",
-                    "https://mirrors.nic.funet.fi/ubuntu/",
-                    "https://ftp.acc.umu.se/ubuntu/",
-                    "https://mirrors.xtom.ee/ubuntu/",
-                    # ── Europe: West ─────────────────────────────
-                    "https://mirror.ubuntu.ikoula.com/",
-                    "https://ftp.uni-stuttgart.de/ubuntu/",
-                    "https://mirror.i3d.net/pub/ubuntu/",
-                    "https://mirrors.xtom.nl/ubuntu/",
-                    "https://mirror.init7.net/ubuntu/",
-                    "https://mirror.cov.ukservers.com/ubuntu/",
-                    "https://mirrors.ukfast.co.uk/sites/archive.ubuntu.com/",
-                    # ── Europe: South ────────────────────────────
-                    "https://ubuntu.mirror.garr.it/ubuntu/",
-                    "https://mirror.raiolanetworks.com/ubuntu/",
-                    "https://mirrors.up.pt/ubuntu/",
-                    "https://mirror.alastyr.com/ubuntu/ubuntu-archive/",
-                    # ── Europe: East ─────────────────────────────
-                    "https://mirrors.neterra.net/ubuntu/archive/",
-                    "https://ftp.icm.edu.pl/pub/Linux/ubuntu/",
-                    "https://ftp.psnc.pl/linux/ubuntu/",
-                    "https://ubuntu.anexia.at/ubuntu/",
-                    "https://mirror.team-host.ru/ubuntu/",
-                    # ── Americas ─────────────────────────────────
-                    # Canada
-                    "https://mirror.csclub.uwaterloo.ca/ubuntu/",
-                    # USA — high bandwidth
-                    "https://mirrors.iu13.net/ubuntu/",
-                    "https://mirror.tzulo.com/ubuntu/",
-                    "https://mirror.pilotfiber.com/ubuntu/",
-                    "https://mirror.us.mirhosting.net/ubuntu/",
-                    "http://mirror.math.princeton.edu/pub/ubuntu/",
-                    "http://mirror.pit.teraswitch.com/ubuntu/",
-                    # USA — academic
-                    "https://mirror.fcix.net/ubuntu/",
-                    "https://mirror.its.umich.edu/ubuntu/",
-                    "http://mirrors.mit.edu/ubuntu/",
-                    "http://www.gtlib.gatech.edu/pub/ubuntu/",
-                    "http://ubuntu.osuosl.org/ubuntu/",
-                    # USA — official / cloud
-                    "http://us.archive.ubuntu.com/ubuntu/",
-                    "http://azure.archive.ubuntu.com/ubuntu/",
-                    # Brazil
-                    "https://mirror.uepg.br/ubuntu/",
-                ]
-
-                results = []
-
-                def test_mirror(mirror):
-                    url = f"{mirror}dists/{codename}/Release"
-                    try:
-                        start = time.monotonic()
-                        req = urllib.request.Request(url, method='HEAD')
-                        resp = urllib.request.urlopen(req, timeout=3)
-                        elapsed_ms = (time.monotonic() - start) * 1000
-                        if resp.status == 200:
-                            return (mirror, elapsed_ms)
-                    except Exception:
-                        pass
-                    return (mirror, None)
-
-                total_mirrors = len(mirrors)
-                tested_count = 0
-
-                with ThreadPoolExecutor(max_workers=12) as executor:
-                    futures = {executor.submit(test_mirror, m): m for m in mirrors}
-                    for future in as_completed(futures):
-                        mirror, elapsed = future.result()
-                        tested_count += 1
-                        if elapsed is not None:
-                            results.append((mirror, elapsed))
-                            GLib.idle_add(
-                                lambda m=mirror, e=elapsed, c=tested_count: (
-                                _append_text(
-                                    f"  ✓ {m} — {e:.0f} ms\n"),
-                                status_label.set_label(
-                                    _('Testing mirrors… ({c}/{t})').format(
-                                        c=c, t=total_mirrors))
-                            ))
-                        else:
-                            GLib.idle_add(
-                                lambda m=mirror, c=tested_count: (
-                                _append_text(f"  ✗ {m}\n"),
-                                status_label.set_label(
-                                    _('Testing mirrors… ({c}/{t})').format(
-                                        c=c, t=total_mirrors))
-                            ))
-
-                results.sort(key=lambda x: x[1])
-
-                if not results:
-                    GLib.idle_add(lambda: (
-                        _append_text('\n' + _('No mirrors reachable.') + '\n'),
-                        status_label.set_label(
-                            _('✗ No mirrors reachable. Check your connection.')),
-                        _mirror_cleanup()
-                    ))
-                    return
-
-                # ── Phase 2: bandwidth test top 5 by latency ──────────
-                top5 = results[:5]
-                GLib.idle_add(lambda: _append_text(
-                    '\n' + _('=== Testing bandwidth of top 5 mirrors ') + \
-                      _('(3 s each) ===') + '\n'
-                ))
-
-                def _test_bandwidth(mirror):
-                    url = f"{mirror}dists/{codename}/Contents-amd64.gz"
-                    try:
-                        start = time.monotonic()
-                        req = urllib.request.Request(url)
-                        resp = urllib.request.urlopen(req, timeout=5)
-                        if resp.status != 200:
-                            resp.close()
-                            return (mirror, 0.0)
-                        bytes_read = 0
-                        while True:
-                            elapsed = time.monotonic() - start
-                            if elapsed >= 3.0:
-                                break
-                            chunk = resp.read(65536)
-                            if not chunk:
-                                break
-                            bytes_read += len(chunk)
-                        resp.close()
-                        elapsed = time.monotonic() - start
-                        if elapsed > 0 and bytes_read > 0:
-                            speed_mbps = ((bytes_read * 8)
-                                          / (elapsed * 1024 * 1024))
-                            return (mirror, speed_mbps)
-                    except Exception:
-                        pass
-                    return (mirror, 0.0)
-
-                bw_map = {}
-                with ThreadPoolExecutor(max_workers=5) as executor:
-                    futures = {
-                        executor.submit(_test_bandwidth, m): m
-                        for m, _ in top5
-                    }
-                    for future in as_completed(futures):
-                        mirror, speed = future.result()
-                        bw_map[mirror] = speed
-                        GLib.idle_add(lambda m=mirror, s=speed: (
-                            _append_text(
-                                f"  {m} — {s:.1f} Mbps\n"
-                            )
-                        ))
-
-                # Pick best by bandwidth (fall back to latency winner)
-                best_mirror = max(bw_map, key=bw_map.get)
-                best_speed = bw_map[best_mirror]
-                best_latency = next(
-                    t for m, t in top5 if m == best_mirror
-                )
-
-                GLib.idle_add(lambda: _append_text(
-                    f"\n>>> {_('Best mirror by bandwidth')}: "
-                    f"{best_mirror}\n"
-                    f"    {_('Latency')}: {best_latency:.0f} ms | "
-                    f"{_('Bandwidth')}: {best_speed:.1f} Mbps\n"
-                ))
-
-                # Read current mirror for comparison
-                current_mirror = ''
-                try:
-                    with open(
-                        '/etc/apt/sources.list.d/ubuntu.sources'
-                    ) as f:
-                        for line in f:
-                            if line.startswith('URIs:'):
-                                current_mirror = line.split(':', 1)[1].strip()
-                                break
-                except Exception:
-                    pass
-
-                def _show_dialog():
-                    if current_mirror and current_mirror == best_mirror:
-                        body = (
-                            f"{best_mirror}\n"
-                            f"{_('Latency')}: {best_latency:.0f} ms | "
-                            f"{_('Bandwidth')}: {best_speed:.1f} Mbps\n\n"
-                            f"{_('This is already your current mirror.')}"
-                        )
-                    else:
-                        body = (
-                            f"{best_mirror}\n"
-                            f"{_('Latency')}: {best_latency:.0f} ms | "
-                            f"{_('Bandwidth')}: {best_speed:.1f} Mbps"
-                        )
-                        if current_mirror:
-                            body += (
-                                f"\n\n{_('Current mirror')}: {current_mirror}"
-                            )
-                        body += (
-                            "\n\n" +
-                            _('Switch to this mirror and run apt update?')
-                        )
-
-                    dialog = Adw.MessageDialog.new(
-                        page.get_root(),
-                        _('Fastest Mirror Found'),
-                        body
-                    )
-                    dialog.add_response('keep', _('Keep Current'))
-                    dialog.add_response('switch', _('Switch'))
-                    dialog.set_response_appearance(
-                        'switch', Adw.ResponseAppearance.SUGGESTED)
-                    dialog.set_default_response('switch')
-                    dialog.set_close_response('keep')
-
-                    def _on_dialog_response(d, response):
-                        if response == 'switch':
-                            _do_switch(best_mirror, codename)
-                        else:
-                            _mirror_cleanup()
-                        d.destroy()
-
-                    dialog.connect('response', _on_dialog_response)
-                    dialog.present()
-
-                GLib.idle_add(_show_dialog)
-
-            except Exception as e:
-                err_msg = str(e)
-                GLib.idle_add(lambda msg=err_msg: (
-                    status_label.set_label(
-                        _('✗ Mirror test failed: ') + msg),
-                    _mirror_cleanup()
-                ))
-
-        def _do_switch(mirror, codename):
-            GLib.idle_add(lambda: (
-                status_label.set_label(_('Switching mirror…')),
-                _append_text('\n' + _('=== Applying mirror switch ===') + '\n')
-            ))
-
-            sources = (
-                f"Types: deb\n"
-                f"URIs: {mirror}\n"
-                f"Suites: {codename}\n"
-                f"Components: main restricted universe multiverse\n"
-                f"Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg\n"
-                f"\n"
-                f"Types: deb\n"
-                f"URIs: {mirror}\n"
-                f"Suites: {codename}-updates\n"
-                f"Components: main restricted universe multiverse\n"
-                f"Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg\n"
-                f"\n"
-                f"Types: deb\n"
-                f"URIs: {mirror}\n"
-                f"Suites: {codename}-backports\n"
-                f"Components: main restricted universe multiverse\n"
-                f"Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg\n"
-                f"\n"
-                f"Types: deb\n"
-                f"URIs: {mirror}\n"
-                f"Suites: {codename}-security\n"
-                f"Components: main restricted universe multiverse\n"
-                f"Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg\n"
-            )
-
-            with tempfile.NamedTemporaryFile(
-                mode='w', delete=False, suffix='.sources'
-            ) as f:
-                f.write(sources)
-                temp_path = f.name
-
-            def _apply():
-                try:
-                    bash_cmd = (
-                        f"set -e\n"
-                        f"cp /etc/apt/sources.list.d/ubuntu.sources"
-                        f" /etc/apt/sources.list.d/ubuntu.sources.bak"
-                        f" 2>/dev/null || true\n"
-                        f"truncate -s 0 /etc/apt/sources.list "
-                        f"2>/dev/null || true\n"
-                        f"cat {shlex.quote(temp_path)}"
-                        f" > /etc/apt/sources.list.d/ubuntu.sources\n"
-                        f"if [ ! -f /etc/apt/sources.list.d/anduinos.sources ]; then\n"
-                        f"  echo 'Creating /etc/apt/sources.list.d/anduinos.sources'\n"
-                        f"  cat > /etc/apt/sources.list.d/anduinos.sources <<'EOF'\n"
-                        f"Types: deb\n"
-                        f"URIs: https://packages.anduinos.com/artifacts/anduinos/\n"
-                        f"Suites: {codename}-addon {codename}-webapps\n"
-                        f"Components: main\n"
-                        f"Architectures: amd64\n"
-                        f"Signed-By: /usr/share/keyrings/anduinos-archive-keyring.gpg\n"
-                        f"EOF\n"
-                        f"fi\n"
-                        f"rm {shlex.quote(temp_path)}\n"
-                        f"rm -f /var/lib/apt/lists/*_InRelease /var/lib/apt/lists/*_Release /var/lib/apt/lists/*_Packages /var/lib/apt/lists/*_Sources /var/lib/apt/lists/*_Translation*\n"
-                        f"apt-get update"
-                    )
-                    proc = subprocess.Popen(
-                        ['pkexec', 'sh', '-c', bash_cmd],
-                        stdout=subprocess.PIPE,
-                        stderr=subprocess.STDOUT,
-                        text=True,
-                        bufsize=1
-                    )
-                    for line in iter(proc.stdout.readline, ''):
-                        GLib.idle_add(lambda l=line: _append_text(l))
-                    proc.wait()
-
-                    if proc.returncode == 0:
-                        GLib.idle_add(lambda: (
-                            _append_text(
-                                '\n' + _('✓ Mirror switched and system updated.') + '\n'
-                            ),
-                            status_label.set_label(
-                                _('✓ Switched to ') + mirror),
-                            mirror_btn.remove_css_class('suggested-action'),
-                            action_btn.add_css_class('suggested-action'),
-                            _mirror_cleanup()
-                        ))
-                    else:
-                        raise Exception(
-                            f"pkexec exited with code {proc.returncode}"
-                        )
-                except Exception as e:
-                    err_msg = str(e)
-                    GLib.idle_add(lambda msg=err_msg: (
-                        status_label.set_label(
-                            _('✗ Switch failed: ') + msg),
-                        _mirror_cleanup()
-                    ))
-
-            threading.Thread(target=_apply, daemon=True).start()
-
-        threading.Thread(target=_mirror_work, daemon=True).start()
-
-    mirror_btn.connect('clicked', _on_mirror)
-
-    btn_box.append(skip_btn)
-    btn_box.append(mirror_btn)
-    btn_box.append(action_btn)
-    center.append(btn_box)
-
-    return page
-
-
-# ═══════════════════════════════════════════════════════════════════
 # PAGE 3.8: SECURE BOOT — 信任链条 (conditional)
 # ═══════════════════════════════════════════════════════════════════
 
@@ -2171,7 +1369,7 @@ def create_exe_sandbox_page(navigate_next):
     center.append(title)
 
     body = Gtk.Label(
-        label=_('Powered by Wine and Bottles technology, running classic Windows applications') + '\n' + _('is now easier than ever.')
+        label=_('Powered by Wine and Bottles technology, running classic Windows applications is now easier than ever.')
     )
     body.set_halign(Gtk.Align.CENTER)
     body.set_wrap(True)
@@ -2239,8 +1437,9 @@ def create_exe_sandbox_page(navigate_next):
     expander.set_halign(Gtk.Align.FILL)
     
     scroll = Gtk.ScrolledWindow()
+    scroll.set_overlay_scrolling(False)
     scroll.set_min_content_height(150)
-    scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+    scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
     
     textview = Gtk.TextView()
     textview.set_editable(False)
@@ -2361,6 +1560,7 @@ def create_shortcuts_page():
 
     # Scrollable content area — allows window to shrink while content remains accessible
     scroll = Gtk.ScrolledWindow()
+    scroll.set_overlay_scrolling(False)
     scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
     scroll.set_vexpand(True)
     scroll.set_propagate_natural_height(True)
@@ -2858,6 +2058,7 @@ def create_apps_page():
         flow.append(child)
 
     scroll = Gtk.ScrolledWindow()
+    scroll.set_overlay_scrolling(False)
     scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
     scroll.set_min_content_height(440)
     scroll.set_max_content_height(440)
@@ -2867,7 +2068,7 @@ def create_apps_page():
 
     # Queue hint
     queue_hint = Gtk.Label(
-        label=_('Pro tip: You can explore these apps in the App Store,') + '\n' + _('and continue with the system setup while they download.')
+        label=_('Pro tip: You can explore these apps in the App Store, and continue with the system setup while they download.')
     )
     queue_hint.add_css_class('dim-label')
     queue_hint.add_css_class('caption')
@@ -2892,110 +2093,6 @@ def _open_software_center(app_id):
         subprocess.Popen(['gnome-software', f'--details={app_id}'])
     except Exception as e:
         print(f"Failed to open software center: {e}")
-
-
-# ═══════════════════════════════════════════════════════════════════
-# PAGE 7.5: SYNC — Connect & Protect Your Data
-# ═══════════════════════════════════════════════════════════════════
-
-def create_sync_page():
-    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    page._requires_internet = True
-    page.set_valign(Gtk.Align.FILL)
-    page.set_halign(Gtk.Align.FILL)
-    page.set_margin_start(48)
-    page.set_margin_end(48)
-    page.set_margin_top(24)
-    page.set_margin_bottom(24)
-    page.set_spacing(0)
-
-    title = Gtk.Label(label=_('Connect & Protect Your Data'))
-    title.add_css_class('title-1')
-    title.set_halign(Gtk.Align.CENTER)
-    title.set_wrap(True)
-    title.set_justify(Gtk.Justification.CENTER)
-    title.set_margin_bottom(24)
-    page.append(title)
-
-    # Horizontal split
-    hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24)
-    hbox.set_homogeneous(True)
-    hbox.set_vexpand(True)
-    hbox.set_valign(Gtk.Align.CENTER)
-
-    # ── Left: Online Accounts ──
-    cloud_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-    cloud_card.add_css_class('card')
-
-    cloud_icon = _create_image('online-account.svg')
-    cloud_icon.set_pixel_size(48)
-    cloud_icon.set_halign(Gtk.Align.CENTER)
-    cloud_icon.set_margin_top(16)
-    cloud_card.append(cloud_icon)
-
-    cloud_title = Gtk.Label(label=_('Online Accounts'))
-    cloud_title.add_css_class('title-3')
-    cloud_title.set_halign(Gtk.Align.CENTER)
-    cloud_card.append(cloud_title)
-
-    cloud_desc = Gtk.Label(
-        label=_('Connect your Google, Microsoft,') + '\n' + _('or Nextcloud accounts to sync') + '\n' + \
-                _('files, contacts, and calendar.')
-    )
-    cloud_desc.set_halign(Gtk.Align.CENTER)
-    cloud_desc.set_wrap(True)
-    cloud_desc.set_justify(Gtk.Justification.CENTER)
-    cloud_desc.set_margin_start(12)
-    cloud_desc.set_margin_end(12)
-    cloud_desc.set_margin_bottom(12)
-    cloud_card.append(cloud_desc)
-
-    cloud_btn = Gtk.Button(label=_('Connect Accounts'))
-    cloud_btn.set_halign(Gtk.Align.CENTER)
-    cloud_btn.set_margin_bottom(16)
-    cloud_btn.connect('clicked', lambda b: subprocess.Popen(['gnome-control-center', 'online-accounts']))
-    cloud_card.append(cloud_btn)
-
-    hbox.append(cloud_card)
-
-    # ── Right: Snapshots or Local Backups ──
-    recommendation = get_backup_recommendation()
-    backup_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-    backup_card.add_css_class('card')
-
-    backup_icon = _create_image(recommendation['icon'])
-    backup_icon.set_pixel_size(48)
-    backup_icon.set_halign(Gtk.Align.CENTER)
-    backup_icon.set_margin_top(16)
-    backup_card.append(backup_icon)
-
-    backup_title = Gtk.Label(label=recommendation['title'])
-    backup_title.add_css_class('title-3')
-    backup_title.set_halign(Gtk.Align.CENTER)
-    backup_card.append(backup_title)
-
-    backup_desc = Gtk.Label(label=recommendation['description'])
-    backup_desc.set_halign(Gtk.Align.CENTER)
-    backup_desc.set_wrap(True)
-    backup_desc.set_justify(Gtk.Justification.CENTER)
-    backup_desc.set_margin_start(12)
-    backup_desc.set_margin_end(12)
-    backup_desc.set_margin_bottom(12)
-    backup_card.append(backup_desc)
-
-    backup_btn = Gtk.Button(label=recommendation['button'])
-    backup_btn.set_halign(Gtk.Align.CENTER)
-    backup_btn.set_margin_bottom(16)
-    backup_btn.connect(
-        'clicked',
-        lambda _button: subprocess.Popen(recommendation['command']),
-    )
-    backup_card.append(backup_btn)
-
-    hbox.append(backup_card)
-    page.append(hbox)
-
-    return page
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -3041,7 +2138,7 @@ def create_privacy_page():
 
     # Signature
     sig = Gtk.Label(
-        label=_('In an era ruled by algorithms and surveillance,') + '\n' + _('this is our firmest commitment to you.')
+        label=_('In an era ruled by algorithms and surveillance, this is our firmest commitment to you.')
     )
     sig.add_css_class('body')
     sig.set_halign(Gtk.Align.CENTER)
@@ -3114,8 +2211,7 @@ def create_support_page():
     center.append(title)
 
     body = Gtk.Label(
-        label=_("Whether you're a Windows refugee seeking shelter,") + '\n' + \
-                _("or a hardcore geek developer — you'll find your tribe here.") + '\n' + \
+        label=_("Whether you're a Windows refugee seeking shelter, or a hardcore geek developer — you'll find your tribe here.") + '\n' + \
                 _('Found a bug? Want a feature? Tell us anytime.')
     )
     body.set_halign(Gtk.Align.CENTER)
@@ -3247,10 +2343,10 @@ class OobeWindow(Adw.ApplicationWindow):
 
         if is_oobe:
             self.set_title(_('AnduinOS Setup'))
-            self.set_default_size(780, 910)
+            self.set_default_size(745, 992)
         else:
             self.set_title(_('AnduinOS Welcome Center'))
-            self.set_default_size(780, 910)
+            self.set_default_size(745, 992)
 
         self.set_icon_name('anduinos-oobe')
 
@@ -3279,6 +2375,7 @@ class OobeWindow(Adw.ApplicationWindow):
         ):
             p = factory()
             scroll = Gtk.ScrolledWindow()
+            scroll.set_overlay_scrolling(False)
             scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
             scroll.set_child(p)
             clamp = Adw.Clamp()
@@ -3348,7 +2445,6 @@ class OobeWindow(Adw.ApplicationWindow):
         factories.extend([
             lambda: create_appearance_page(),
             lambda: create_security_page(),
-            lambda: create_update_page(_nav, _update_nav),
         ])
 
         try:
@@ -3372,7 +2468,6 @@ class OobeWindow(Adw.ApplicationWindow):
         factories.extend([
             lambda: create_shortcuts_page(),
             lambda: create_apps_page(),
-            lambda: create_sync_page(),
             lambda: create_privacy_page(),
 
             lambda: create_support_page(),
@@ -3500,7 +2595,7 @@ class OobeApp(Adw.Application):
         dialog.set_website('https://www.anduinos.com')
         dialog.set_issue_url('https://github.com/AiursoftWeb/AnduinOS-Packages/issues')
         dialog.set_license_type(Gtk.License.GPL_3_0)
-        dialog.set_version('2.0.2')
+        dialog.set_version('2.0.3')
         dialog.present(self.get_active_window())
 
     def do_activate(self):
@@ -3517,10 +2612,8 @@ def main():
 
     if is_oobe:
         # Do not run on Live CD / Installation Media.
-        # All three Casper conditions must identify the system as live:
-        # - casper package installed
-        # - /cdrom directory exists
-        # - kernel boot parameter includes boot=casper
+        # The Dracut pre-pivot module owns the authoritative Live marker,
+        # media mount and immutable installer source.
         if is_live_environment():
             sys.exit(0)
 

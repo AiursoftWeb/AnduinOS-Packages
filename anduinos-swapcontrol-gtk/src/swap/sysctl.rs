@@ -132,38 +132,3 @@ pub fn set_swappiness(value: u8) -> Result<String, String> {
     }
     Ok(i18n("swappiness updated"))
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_read_sysctl_conf() {
-        let _params = read_sysctl_conf();
-        // May be empty if never written, but should not panic
-        // Our app might not have written it yet
-    }
-
-    #[test]
-    fn test_read_sysctl_live() {
-        let result = read_sysctl_live("vm.swappiness");
-        assert!(result.is_ok());
-    }
-
-    #[test]
-    fn test_read_swappiness() {
-        let result = read_swappiness();
-        assert!(result.is_ok());
-        let val = result.unwrap();
-        // AnduinOS desktop default is 10
-        assert!(val <= 100);
-    }
-
-    #[test]
-    fn test_read_total_ram() {
-        let result = read_total_ram();
-        assert!(result.is_ok());
-        let ram = result.unwrap();
-        assert!(ram > 0);
-    }
-}

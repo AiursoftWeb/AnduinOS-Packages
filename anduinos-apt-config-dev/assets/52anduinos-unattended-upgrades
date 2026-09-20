@@ -1,0 +1,8 @@
+// Testing-source users receive testing updates, not production ones.
+// Add defaults without clearing administrator-defined upgrade rules.
+Unattended-Upgrade::Origins-Pattern {
+    "o=Ubuntu,a=${distro_codename}";
+    "o=Ubuntu,a=${distro_codename}-security";
+    "o=Aiursoft Apkg,a=${distro_codename}-addon,site=apkg-dev.aiursoft.com";
+    "o=Aiursoft Apkg,a=${distro_codename}-webapps,site=apkg-dev.aiursoft.com";
+};

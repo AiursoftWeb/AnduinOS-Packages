@@ -66,6 +66,18 @@ class CommandRunnerTests(unittest.TestCase):
 
         self.assertEqual(result.stdout, "secret\n")
 
+    def test_explicit_environment_controls_parsed_command_output(self):
+        result = CommandRunner(lambda _message: None).run(
+            (
+                sys.executable,
+                "-c",
+                "import os; print(os.environ.get('INSTALLER_TEST_LOCALE'))",
+            ),
+            environment={"INSTALLER_TEST_LOCALE": "C"},
+        )
+
+        self.assertEqual(result.stdout, "C\n")
+
     def test_timeout_raises_command_error(self):
         with self.assertRaisesRegex(CommandError, "timed out"):
             CommandRunner(lambda _message: None).run(

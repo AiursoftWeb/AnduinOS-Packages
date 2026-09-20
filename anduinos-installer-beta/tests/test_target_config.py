@@ -39,7 +39,7 @@ class ConfigureStorageTests(unittest.TestCase):
 
         self.assertIn(
             "UUID=root-uuid / btrfs "
-            "defaults,subvol=@root,compress=zstd,noatime 0 0",
+            "defaults,subvol=@root,compress=zstd:3,noatime 0 0",
             fstab,
         )
         for mount_point, name in (
@@ -51,7 +51,7 @@ class ConfigureStorageTests(unittest.TestCase):
         ):
             self.assertIn(
                 f" {mount_point} btrfs "
-                f"defaults,subvol={name},compress=zstd,noatime 0 0",
+                f"defaults,subvol={name},compress=zstd:3,noatime 0 0",
                 fstab,
             )
         self.assertIn(
@@ -91,6 +91,49 @@ class ConfigureStorageTests(unittest.TestCase):
         )
         self.assertNotIn("subvol=", fstab)
 
+    def test_xfs_and_f2fs_have_single_root_fstab_entries(self):
+        expected_pass_numbers = {
+            Filesystem.XFS: 0,
+            Filesystem.F2FS: 1,
+        }
+        for filesystem, pass_number in expected_pass_numbers.items():
+            with self.subTest(filesystem=filesystem.value):
+                base = valid_plan()
+                plan = replace(
+                    base,
+                    storage=replace(base.storage, filesystem=filesystem),
+                )
+                runner = FakeRunner()
+                devices = {
+                    "root": "/dev/root",
+                    "efi-system": "/dev/efi",
+                    "swap": "/dev/swap",
+                }
+                for name, device in devices.items():
+                    runner.outputs[
+                        ("blkid", "-s", "UUID", "-o", "value", device)
+                    ] = (f"{name}-uuid\n", "", 0)
+                with tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    context = InstallContext(
+                        plan,
+                        lambda _message: None,
+                        values={
+                            "target": target,
+                            "partition_devices": devices,
+                        },
+                    )
+                    step = ConfigureStorageStep(runner)
+                    step.execute(context)
+                    step.verify(context)
+                    fstab = (target / "etc/fstab").read_text()
+                self.assertIn(
+                    f"UUID=root-uuid / {filesystem.value} "
+                    f"defaults,noatime 0 {pass_number}",
+                    fstab,
+                )
+                self.assertNotIn("subvol=", fstab)
+
     def test_missing_uuid_is_fatal(self):
         plan = valid_plan()
         runner = FakeRunner()
@@ -107,3 +150,27 @@ class ConfigureStorageTests(unittest.TestCase):
             )
             with self.assertRaisesRegex(RuntimeError, "Missing filesystem UUID"):
                 ConfigureStorageStep(runner).execute(context)
+
+    def test_zero_disk_swap_keeps_zram_and_omits_fstab_swap(self):
+        plan = valid_plan(swap_size_mib=0)
+        runner = FakeRunner()
+        devices = {"root": "/dev/root", "efi-system": "/dev/efi"}
+        for name, device in devices.items():
+            runner.outputs[
+                ("blkid", "-s", "UUID", "-o", "value", device)
+            ] = (f"{name}-uuid\n", "", 0)
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            context = InstallContext(
+                plan,
+                lambda _message: None,
+                values={"target": target, "partition_devices": devices},
+            )
+            step = ConfigureStorageStep(runner)
+            step.execute(context)
+            step.verify(context)
+            fstab = (target / "etc/fstab").read_text()
+            zram = (target / "etc/default/anduinos-zram").read_text()
+        self.assertNotIn(" none swap ", fstab)
+        self.assertIn("ZRAM_ENABLED=yes", zram)
+        self.assertIn("ZRAM_PRIORITY=100", zram)

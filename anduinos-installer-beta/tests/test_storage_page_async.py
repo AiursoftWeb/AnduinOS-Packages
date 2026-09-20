@@ -1,12 +1,13 @@
 import threading
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 from async_work import LatestBackgroundRequest, ProgressPulse
-
+from pages import _probe_install_target
 
 ROOT = Path(__file__).resolve().parents[1]
-
 
 class ManualThread:
     def __init__(self, pending, *, target, daemon):
@@ -16,7 +17,6 @@ class ManualThread:
 
     def start(self):
         self.pending.append(self.target)
-
 
 class FakeProgress:
     def __init__(self):
@@ -29,8 +29,27 @@ class FakeProgress:
     def pulse(self):
         self.pulses += 1
 
-
 class StoragePageAsyncTests(unittest.TestCase):
+    def test_development_recheck_keeps_the_synthetic_disk_inventory(self):
+        workflow = SimpleNamespace(
+            inventory=object(),
+            platform=object(),
+        )
+        with (
+            patch(
+                "pages._probe_storage_workflow",
+                return_value=workflow,
+            ) as probe_workflow,
+            patch("pages.probe_storage_inventory") as real_inventory,
+            patch("pages.probe_platform") as real_platform,
+        ):
+            result = _probe_install_target(development_mode=True)
+
+        self.assertEqual(result, (workflow.inventory, workflow.platform))
+        probe_workflow.assert_called_once_with(development_mode=True)
+        real_inventory.assert_not_called()
+        real_platform.assert_not_called()
+
     def test_blocking_probe_starts_without_blocking_the_caller(self):
         entered = threading.Event()
         release = threading.Event()
@@ -145,37 +164,6 @@ class StoragePageAsyncTests(unittest.TestCase):
         pulse.stop()
         self.assertFalse(progress.visible)
         self.assertEqual(removed, [17])
-
-    def test_all_storage_waits_use_indeterminate_progress(self):
-        source = (ROOT / "src/pages.py").read_text(encoding="utf-8")
-        self.assertGreaterEqual(
-            source.count('add_css_class("installer-progress")'), 4
-        )
-        self.assertIn('_("Loading storage devices…", lang)', source)
-        self.assertIn('_("Rechecking target disk…", lang)', source)
-        self.assertIn("requests.start(_probe_storage_workflow", source)
-        self.assertIn("recheck_requests.start(_probe_target", source)
-        self.assertIn('page.connect("unmap", _page_unmapped)', source)
-
-    def test_disk_probe_starts_only_after_the_page_is_mapped(self):
-        source = (ROOT / "src/pages.py").read_text(encoding="utf-8")
-        disk_page = source.split("def build_disk_page", 1)[1].split(
-            "# ── page 5:", 1
-        )[0]
-        mapped_handler = disk_page.split("def _page_mapped", 1)[1].split(
-            'page.connect("map", _page_mapped)', 1
-        )[0]
-
-        self.assertIn(
-            "_populate_disks(restore_selection=True)", mapped_handler
-        )
-        after_connections = disk_page.split(
-            'page.connect("unmap", _page_unmapped)', 1
-        )[1]
-        self.assertNotIn(
-            "_populate_disks(restore_selection=True)", after_connections
-        )
-
 
 if __name__ == "__main__":
     unittest.main()

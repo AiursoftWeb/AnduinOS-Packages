@@ -80,6 +80,31 @@ class ExecutionPreflightTests(unittest.TestCase):
             runner.commands[-1][0][-1], plan.storage.disk.path
         )
 
+    def test_live_unknown_and_read_only_targets_fail_before_usage_commands(self):
+        plan = valid_plan()
+        inventory = valid_inventory(plan)
+        cases = (
+            (replace(inventory, live_media_disks=None), "identify the Live"),
+            (replace(inventory, live_media_disks=(plan.storage.disk.path,)), "Live installation media"),
+            (replace(inventory, disks=(replace(inventory.disks[0], read_only=True),)), "read-only"),
+        )
+        for snapshot, reason in cases:
+            with self.subTest(reason=reason):
+                runner = self.idle_target_runner()
+                with self.assertRaisesRegex(PreflightError, reason):
+                    verify_target_disk_environment(plan, runner, inventory_probe=lambda: snapshot)
+                self.assertEqual(runner.commands, [])
+
+    def test_external_target_uses_the_unchanged_install_plan(self):
+        plan = valid_plan()
+        inventory = valid_inventory(plan)
+        inventory = replace(inventory, disks=(replace(
+            inventory.disks[0], removable=True, transport="usb"),))
+        resolved = verify_target_disk_environment(
+            plan, self.idle_target_runner(), inventory_probe=lambda: inventory,
+        )
+        self.assertEqual(resolved, plan)
+
     def test_rejects_disk_substitution_at_same_path(self):
         plan = valid_plan()
         replacement = replace(plan.storage.disk, stable_id="serial:attacker")
@@ -129,15 +154,25 @@ class ExecutionPreflightTests(unittest.TestCase):
                 inventory_probe=lambda: valid_inventory(plan),
             )
 
-    def test_rejects_swap_size_planned_for_different_physical_memory(self):
+    def test_accepts_custom_swap_when_memory_changes_within_safe_range(self):
         plan = valid_plan()
         runner = self.idle_target_runner()
-        with self.assertRaisesRegex(PreflightError, "swap size is stale"):
+        verify_target_disk_environment(
+            plan,
+            runner,
+            inventory_probe=lambda: valid_inventory(plan),
+            physical_memory_probe=lambda: 16 * 1024**3,
+        )
+
+    def test_rejects_custom_swap_beyond_current_safe_memory_limit(self):
+        plan = valid_plan(swap_size_mib=9 * 1024)
+        runner = self.idle_target_runner()
+        with self.assertRaisesRegex(PreflightError, "safe maximum"):
             verify_target_disk_environment(
                 plan,
                 runner,
                 inventory_probe=lambda: valid_inventory(plan),
-                physical_memory_probe=lambda: 16 * 1024**3,
+                physical_memory_probe=lambda: 2 * 1024**3,
             )
 
     def test_rejects_mounted_partition_on_selected_disk(self):

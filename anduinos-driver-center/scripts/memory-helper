@@ -1,0 +1,47 @@
+#!/usr/bin/python3
+"""Read only SMBIOS memory specifications; never emit serial numbers or UUIDs."""
+import json
+import os
+import subprocess
+import sys
+
+FIELDS = {'Size', 'Form Factor', 'Locator', 'Type', 'Type Detail', 'Speed',
+          'Configured Memory Speed', 'Manufacturer', 'Part Number',
+          'Data Width', 'Total Width', 'Rank', 'Configured Voltage'}
+
+
+def parse_memory(text):
+    modules = []
+    current = None
+    for line in text.splitlines():
+        if line and not line[0].isspace():
+            if current and current.get('Size') not in {None, 'No Module Installed', 'Unknown', '0 MB', '0 GB'}:
+                modules.append(current)
+            current = {} if line.strip() == 'Memory Device' else None
+        elif current is not None:
+            key, separator, value = line.strip().partition(':')
+            value = value.strip()
+            if separator and key in FIELDS and value and value not in {'Unknown', 'Not Specified', 'None'}:
+                current[key] = value
+    if current and current.get('Size') not in {None, 'No Module Installed', 'Unknown', '0 MB', '0 GB'}:
+        modules.append(current)
+    return modules
+
+
+def main(args):
+    if args:
+        return 64
+    if os.geteuid() != 0:
+        return 77
+    try:
+        result = subprocess.run(['/usr/sbin/dmidecode', '--type', '17'], capture_output=True,
+                                text=True, timeout=20, check=True,
+                                env={'PATH': '/usr/sbin:/usr/bin:/sbin:/bin', 'LC_ALL': 'C'})
+        print(json.dumps(parse_memory(result.stdout)))
+        return 0
+    except (OSError, subprocess.SubprocessError):
+        return 1
+
+
+if __name__ == '__main__':
+    raise SystemExit(main(sys.argv[1:]))

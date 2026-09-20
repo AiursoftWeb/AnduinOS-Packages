@@ -35,6 +35,9 @@ const MAX_BTRFS_OUTPUT_BYTES: usize = 16 * 1024 * 1024;
 const MAX_CACHE_BYTES: u64 = 64 * 1024;
 static MEASUREMENT_LOCK: Mutex<()> = Mutex::new(());
 static SCRUB_TASK_RUNNING: AtomicBool = AtomicBool::new(false);
+static SCRUB_GENERATION: AtomicU64 = AtomicU64::new(0);
+static SCRUB_TASK: LazyLock<Mutex<ScrubTaskState>> =
+    LazyLock::new(|| Mutex::new(ScrubTaskState::default()));
 static BALANCE_TASK_RUNNING: AtomicBool = AtomicBool::new(false);
 static BALANCE_GENERATION: AtomicU64 = AtomicU64::new(0);
 static BALANCE_CANCEL_GENERATION: AtomicU64 = AtomicU64::new(0);
@@ -68,8 +71,10 @@ pub struct FilesystemStatus {
     pub defrag_details: DefragDetails,
 }
 
-#[derive(Debug, Default, serde::Serialize)]
+#[derive(Clone, Debug, Default, serde::Serialize)]
 pub struct ScrubDetails {
+    pub generation: u64,
+    pub elapsed_seconds: Option<u64>,
     pub started_at: Option<String>,
     pub duration: Option<String>,
     pub time_left: Option<String>,
@@ -83,6 +88,7 @@ pub struct ScrubDetails {
     pub uncorrectable_errors: u64,
     pub unverified_errors: u64,
     pub corrected_errors: u64,
+    pub error: Option<String>,
 }
 
 #[derive(Debug, Default, serde::Serialize)]
@@ -149,6 +155,24 @@ struct ManagedTaskState {
     cancel_requested: bool,
 }
 
+#[derive(Debug, Default)]
+struct ScrubTaskState {
+    generation: u64,
+    phase: TaskPhase,
+    started: Option<Instant>,
+    elapsed_seconds: Option<u64>,
+    details: ScrubDetails,
+    error: Option<String>,
+    cancel_requested: bool,
+}
+
+#[derive(Debug)]
+struct ScrubRunResult {
+    phase: TaskPhase,
+    details: ScrubDetails,
+    error: Option<String>,
+}
+
 pub fn filesystem_status() -> Result<FilesystemStatus> {
     let (source, mount_options) = root_btrfs_mount()?;
     let usage = run_btrfs(&[
@@ -163,20 +187,22 @@ pub fn filesystem_status() -> Result<FilesystemStatus> {
     let scrub_summary = run_btrfs_allow_failure(&["scrub", "status", "--raw", ROOT_MOUNT]);
     let scrub_raw = run_btrfs_allow_failure(&["scrub", "status", "-R", ROOT_MOUNT]);
     let balance = run_btrfs_allow_failure(&["balance", "status", ROOT_MOUNT]);
-    let scrub_details = parse_scrub_details(&scrub_summary.stdout, &scrub_raw.stdout);
-    let scrub = scrub_status(
+    let native_scrub_details = parse_scrub_details(&scrub_summary.stdout, &scrub_raw.stdout);
+    let native_scrub = scrub_status(
         &scrub_summary.stdout,
         &scrub_summary.stderr,
         scrub_summary.success,
-        &scrub_details,
+        scrub_counters_complete(&scrub_raw.stdout),
+        &native_scrub_details,
     );
+    let (scrub, scrub_details) = scrub_task_status(&native_scrub, native_scrub_details);
     let native_balance_status = balance_status(&balance.stdout, &balance.stderr, balance.success);
     let native_balance_progress = parse_balance_progress(&balance.stdout);
     let (balance, balance_details) =
         balance_task_status(&native_balance_status, native_balance_progress);
     let (defrag, defrag_details) = defrag_task_status();
     Ok(FilesystemStatus {
-        schema_version: 3,
+        schema_version: 4,
         available: true,
         source,
         total_bytes: usage_value(&usage, "Device size:"),
@@ -218,21 +244,81 @@ pub fn start_scrub() -> Result<String> {
         bail!("An integrity check is already running");
     }
 
-    if let Err(error) = thread::Builder::new().name("btrfs-scrub".into()).spawn(|| {
-        match run_scrub_foreground() {
-            Ok(()) => log::info!("Btrfs integrity check finished"),
-            Err(error) => log::error!("Btrfs integrity check failed: {error:#}"),
-        }
+    let generation = SCRUB_GENERATION
+        .fetch_add(1, Ordering::AcqRel)
+        .saturating_add(1);
+    {
+        let mut task = SCRUB_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+        *task = ScrubTaskState {
+            generation,
+            phase: TaskPhase::Starting,
+            started: Some(Instant::now()),
+            details: ScrubDetails {
+                generation,
+                ..ScrubDetails::default()
+            },
+            ..ScrubTaskState::default()
+        };
+    }
+
+    if let Err(error) = thread::Builder::new()
+        .name("btrfs-scrub".into())
+        .spawn(move || run_scrub_task(generation))
+    {
         SCRUB_TASK_RUNNING.store(false, Ordering::Release);
-    }) {
-        SCRUB_TASK_RUNNING.store(false, Ordering::Release);
+        let mut task = SCRUB_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+        task.phase = TaskPhase::Failed;
+        task.error = Some(format!("Failed to start the integrity check task: {error}"));
         bail!("Failed to start the integrity check task: {error}");
     }
 
     Ok("The integrity check has started".into())
 }
 
-fn run_scrub_foreground() -> Result<()> {
+fn run_scrub_task(generation: u64) {
+    {
+        let mut task = SCRUB_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+        if task.generation != generation {
+            SCRUB_TASK_RUNNING.store(false, Ordering::Release);
+            return;
+        }
+        task.phase = if task.cancel_requested {
+            TaskPhase::Cancelling
+        } else {
+            TaskPhase::Running
+        };
+    }
+
+    let result = run_scrub_foreground();
+    let mut task = SCRUB_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+    if task.generation != generation {
+        SCRUB_TASK_RUNNING.store(false, Ordering::Release);
+        return;
+    }
+    task.elapsed_seconds = task.started.map(|started| started.elapsed().as_secs());
+    task.details = result.details;
+    task.details.generation = generation;
+    task.details.elapsed_seconds = task.elapsed_seconds;
+    task.phase = if task.cancel_requested {
+        TaskPhase::Cancelled
+    } else {
+        result.phase
+    };
+    task.details.error.clone_from(&result.error);
+    task.error = result.error;
+    match task.phase {
+        TaskPhase::Finished => log::info!("Btrfs integrity check finished"),
+        TaskPhase::Cancelled => log::info!("Btrfs integrity check was cancelled"),
+        TaskPhase::Failed => log::error!(
+            "Btrfs integrity check failed: {}",
+            task.error.as_deref().unwrap_or("unknown error")
+        ),
+        _ => {}
+    }
+    SCRUB_TASK_RUNNING.store(false, Ordering::Release);
+}
+
+fn run_scrub_foreground() -> ScrubRunResult {
     // Keep btrfs-progs attached to the privileged helper for the whole run.
     // A background scrub launched from the hardened systemd service can lose
     // its userspace monitor as soon as the launcher exits and be marked
@@ -241,23 +327,26 @@ fn run_scrub_foreground() -> Result<()> {
     // read-only scrub mode verifies every allocated extent without requiring
     // write access to the system root inside the hardened service namespace.
     let result = run_btrfs_allow_failure(&["scrub", "start", "-B", "-R", "-r", "-f", ROOT_MOUNT]);
-    let combined = format!("{}\n{}", result.stdout, result.stderr).to_ascii_lowercase();
-    if result.success
-        || combined.contains("status: canceled")
-        || combined.contains("status: cancelled")
-        || combined.contains("status: aborted")
-    {
-        Ok(())
-    } else {
-        bail!(
-            "Btrfs integrity check failed: {}",
-            result.stderr.trim().trim_start_matches("ERROR: ")
-        )
-    }
+    scrub_run_result(result)
 }
 
 pub fn cancel_scrub() -> Result<String> {
-    run_btrfs_mutating(&["scrub", "cancel", ROOT_MOUNT])?;
+    let previous_phase = {
+        let mut task = SCRUB_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+        if !task.phase.is_active() {
+            bail!("The integrity check is not running");
+        }
+        let previous_phase = task.phase;
+        task.cancel_requested = true;
+        task.phase = TaskPhase::Cancelling;
+        previous_phase
+    };
+    if let Err(error) = run_btrfs_mutating(&["scrub", "cancel", ROOT_MOUNT]) {
+        let mut task = SCRUB_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+        task.cancel_requested = false;
+        task.phase = previous_phase;
+        return Err(error);
+    }
     Ok("The integrity check was cancelled".into())
 }
 
@@ -611,7 +700,13 @@ fn quota_status(stdout: &str, success: bool) -> String {
     }
 }
 
-fn scrub_status(stdout: &str, stderr: &str, success: bool, details: &ScrubDetails) -> String {
+fn scrub_status(
+    stdout: &str,
+    stderr: &str,
+    success: bool,
+    counters_complete: bool,
+    details: &ScrubDetails,
+) -> String {
     let combined = format!("{stdout}\n{stderr}").to_ascii_lowercase();
     if combined.contains("status: running")
         // btrfs-progs creates the progress pipe before its status file is
@@ -630,20 +725,119 @@ fn scrub_status(stdout: &str, stderr: &str, success: bool, details: &ScrubDetail
         "cancelled".into()
     } else if combined.contains("no stats available") {
         "never-run".into()
-    } else if success {
-        let errors = details.unrepaired_error_count();
-        if errors > 0 {
-            format!("finished-with-errors:{errors}")
-        } else if details.corrected_errors > 0 {
-            format!("finished-repaired:{}", details.corrected_errors)
-        } else if details.detected_error_count() > 0 {
-            format!("finished-with-errors:{}", details.detected_error_count())
-        } else {
-            "finished-clean".into()
+    } else if success && combined.contains("status:") && combined.contains("finished") {
+        if !counters_complete {
+            return "unavailable".into();
         }
+        scrub_completed_status(details)
     } else {
         "unavailable".into()
     }
+}
+
+fn scrub_task_status(native_status: &str, native_details: ScrubDetails) -> (String, ScrubDetails) {
+    let task = SCRUB_TASK.lock().unwrap_or_else(|lock| lock.into_inner());
+    scrub_task_status_from(native_status, native_details, &task)
+}
+
+fn scrub_task_status_from(
+    native_status: &str,
+    mut native_details: ScrubDetails,
+    task: &ScrubTaskState,
+) -> (String, ScrubDetails) {
+    if task.generation == 0 {
+        return (native_status.into(), native_details);
+    }
+
+    let elapsed_seconds = task
+        .elapsed_seconds
+        .or_else(|| task.started.map(|started| started.elapsed().as_secs()));
+    if task.phase.is_active() {
+        native_details.generation = task.generation;
+        native_details.elapsed_seconds = elapsed_seconds;
+        native_details.error.clone_from(&task.error);
+        return ("running".into(), native_details);
+    }
+
+    let mut details = task.details.clone();
+    details.generation = task.generation;
+    details.elapsed_seconds = elapsed_seconds;
+    details.error.clone_from(&task.error);
+    let status = match task.phase {
+        TaskPhase::Finished => scrub_completed_status(&details),
+        TaskPhase::Cancelled => "cancelled".into(),
+        TaskPhase::Failed => "failed".into(),
+        TaskPhase::Idle => native_status.into(),
+        TaskPhase::Starting | TaskPhase::Running | TaskPhase::Cancelling => unreachable!(),
+    };
+    (status, details)
+}
+
+fn scrub_completed_status(details: &ScrubDetails) -> String {
+    let errors = details.unrepaired_error_count();
+    if errors > 0 {
+        format!("finished-with-errors:{errors}")
+    } else if details.corrected_errors > 0 {
+        format!("finished-repaired:{}", details.corrected_errors)
+    } else if details.detected_error_count() > 0 {
+        format!("finished-with-errors:{}", details.detected_error_count())
+    } else {
+        "finished-clean".into()
+    }
+}
+
+fn scrub_run_result(result: CommandResult) -> ScrubRunResult {
+    let combined = format!("{}\n{}", result.stdout, result.stderr);
+    let normalized = combined.to_ascii_lowercase();
+    let mut details = parse_scrub_details(&result.stdout, &result.stdout);
+    let cancelled = normalized.contains("status: canceled")
+        || normalized.contains("status: cancelled")
+        || normalized.contains("status: aborted");
+    if cancelled {
+        return ScrubRunResult {
+            phase: TaskPhase::Cancelled,
+            details,
+            error: None,
+        };
+    }
+
+    let finished = normalized.contains("status:") && normalized.contains("finished");
+    let has_counters = scrub_counters_complete(&result.stdout);
+    if result.success && finished && has_counters {
+        return ScrubRunResult {
+            phase: TaskPhase::Finished,
+            details,
+            error: None,
+        };
+    }
+
+    let error = if result.success {
+        "Btrfs exited without a complete terminal scrub result".into()
+    } else {
+        format_btrfs_error(&result.stderr)
+    };
+    details.error = Some(error.clone());
+    ScrubRunResult {
+        phase: TaskPhase::Failed,
+        details,
+        error: Some(error),
+    }
+}
+
+fn scrub_counters_complete(output: &str) -> bool {
+    [
+        "data_bytes_scrubbed:",
+        "tree_bytes_scrubbed:",
+        "read_errors:",
+        "csum_errors:",
+        "verify_errors:",
+        "super_errors:",
+        "uncorrectable_errors:",
+        "unverified_errors:",
+        "corrected_errors:",
+    ]
+    .into_iter()
+    .all(|label| metric(output, label).is_some())
 }
 
 impl ScrubDetails {
@@ -661,12 +855,18 @@ impl ScrubDetails {
 }
 
 fn parse_scrub_details(summary: &str, raw: &str) -> ScrubDetails {
+    let data_bytes_scrubbed = metric(raw, "data_bytes_scrubbed:");
+    let tree_bytes_scrubbed = metric(raw, "tree_bytes_scrubbed:");
+    let raw_bytes_scrubbed = match (data_bytes_scrubbed, tree_bytes_scrubbed) {
+        (None, None) => None,
+        (data, tree) => data.unwrap_or(0).checked_add(tree.unwrap_or(0)),
+    };
     ScrubDetails {
         started_at: text_metric(summary, "Scrub started:"),
         duration: text_metric(summary, "Duration:"),
         time_left: text_metric(summary, "Time left:"),
-        total_bytes: metric(summary, "Total to scrub:"),
-        bytes_scrubbed: metric(summary, "Bytes scrubbed:"),
+        total_bytes: metric(summary, "Total to scrub:").or(raw_bytes_scrubbed),
+        bytes_scrubbed: metric(summary, "Bytes scrubbed:").or(raw_bytes_scrubbed),
         rate_bytes_per_second: metric(summary, "Rate:"),
         read_errors: metric(raw, "read_errors:").unwrap_or(0),
         checksum_errors: metric(raw, "csum_errors:").unwrap_or(0),
@@ -675,6 +875,7 @@ fn parse_scrub_details(summary: &str, raw: &str) -> ScrubDetails {
         uncorrectable_errors: metric(raw, "uncorrectable_errors:").unwrap_or(0),
         unverified_errors: metric(raw, "unverified_errors:").unwrap_or(0),
         corrected_errors: metric(raw, "corrected_errors:").unwrap_or(0),
+        ..ScrubDetails::default()
     }
 }
 
@@ -1189,7 +1390,7 @@ mod tests {
 
         let clean_details = ScrubDetails::default();
         assert_eq!(
-            scrub_status("Status: finished\n", "", true, &clean_details),
+            scrub_status("Status: finished\n", "", true, true, &clean_details),
             "finished-clean"
         );
         let broken_details = ScrubDetails {
@@ -1197,19 +1398,19 @@ mod tests {
             ..ScrubDetails::default()
         };
         assert_eq!(
-            scrub_status("Status: finished\n", "", true, &broken_details),
+            scrub_status("Status: finished\n", "", true, true, &broken_details),
             "finished-with-errors:2"
         );
         assert_eq!(
-            scrub_status("", "status: running", false, &clean_details),
+            scrub_status("", "status: running", false, false, &clean_details),
             "running"
         );
         assert_eq!(
-            scrub_status("no stats available", "", true, &clean_details),
+            scrub_status("no stats available", "", true, false, &clean_details),
             "never-run"
         );
         assert_eq!(
-            scrub_status("Status: aborted\n", "", true, &clean_details),
+            scrub_status("Status: aborted\n", "", true, false, &clean_details),
             "cancelled"
         );
 
@@ -1252,7 +1453,110 @@ mod tests {
         assert_eq!(details.checksum_errors, 2);
         assert_eq!(details.corrected_errors, 7);
         assert_eq!(details.unrepaired_error_count(), 3);
-        assert_eq!(scrub_status(summary, "", true, &details), "running");
+        assert_eq!(scrub_status(summary, "", true, true, &details), "running");
+    }
+
+    #[test]
+    fn foreground_scrub_result_is_authoritative_without_a_status_file() {
+        let output = concat!(
+            "Starting scrub on devid 1\n",
+            "scrub done for a7c04a1f-7190-4762-a58d-6b902536861e\n",
+            "Scrub started:    Mon Aug 31 15:02:55 2026\n",
+            "Status:           finished\n",
+            "Duration:         0:00:45\n",
+            "\tdata_extents_scrubbed: 512\n",
+            "\ttree_extents_scrubbed: 24\n",
+            "\tdata_bytes_scrubbed: 183000000000\n",
+            "\ttree_bytes_scrubbed: 385608192\n",
+            "\tread_errors: 0\n",
+            "\tcsum_errors: 0\n",
+            "\tverify_errors: 0\n",
+            "\tsuper_errors: 0\n",
+            "\tuncorrectable_errors: 0\n",
+            "\tunverified_errors: 0\n",
+            "\tcorrected_errors: 0\n",
+        );
+        let result = scrub_run_result(CommandResult {
+            success: true,
+            stdout: output.into(),
+            stderr: "cannot create scrub data file, status recording disabled\n".into(),
+        });
+        assert_eq!(result.phase, TaskPhase::Finished);
+        assert_eq!(result.details.total_bytes, Some(183_385_608_192));
+        assert_eq!(result.details.bytes_scrubbed, Some(183_385_608_192));
+        assert_eq!(result.details.duration.as_deref(), Some("0:00:45"));
+        assert_eq!(scrub_completed_status(&result.details), "finished-clean");
+        assert!(result.error.is_none());
+    }
+
+    #[test]
+    fn successful_exit_without_terminal_counters_is_not_reported_as_clean() {
+        let result = scrub_run_result(CommandResult {
+            success: true,
+            stdout: "Starting scrub on devid 1\n".into(),
+            stderr: String::new(),
+        });
+        assert_eq!(result.phase, TaskPhase::Failed);
+        assert_eq!(result.details.total_bytes, None);
+        assert!(
+            result
+                .error
+                .as_deref()
+                .is_some_and(|error| error.contains("complete terminal scrub result"))
+        );
+    }
+
+    #[test]
+    fn persisted_finished_status_requires_every_health_counter() {
+        let details = ScrubDetails::default();
+        assert_eq!(
+            scrub_status("Status: finished\n", "", true, false, &details),
+            "unavailable"
+        );
+        assert!(!scrub_counters_complete(
+            "data_bytes_scrubbed: 1\ntree_bytes_scrubbed: 2\nread_errors: 0\n"
+        ));
+    }
+
+    #[test]
+    fn managed_scrub_state_survives_missing_and_stale_native_status() {
+        let native = parse_scrub_details(
+            "no stats available\nTotal to scrub: 183385608192\nBytes scrubbed: 0\n",
+            "",
+        );
+        let running = ScrubTaskState {
+            generation: 7,
+            phase: TaskPhase::Running,
+            started: Some(Instant::now()),
+            ..ScrubTaskState::default()
+        };
+        let (status, details) = scrub_task_status_from("running", native, &running);
+        assert_eq!(status, "running");
+        assert_eq!(details.generation, 7);
+        assert_eq!(details.bytes_scrubbed, Some(0));
+
+        let final_details = ScrubDetails {
+            generation: 7,
+            total_bytes: Some(183_385_608_192),
+            bytes_scrubbed: Some(183_385_608_192),
+            ..ScrubDetails::default()
+        };
+        let finished = ScrubTaskState {
+            generation: 7,
+            phase: TaskPhase::Finished,
+            elapsed_seconds: Some(45),
+            details: final_details,
+            ..ScrubTaskState::default()
+        };
+        let (status, details) = scrub_task_status_from(
+            "never-run",
+            parse_scrub_details("no stats available\n", ""),
+            &finished,
+        );
+        assert_eq!(status, "finished-clean");
+        assert_eq!(details.generation, 7);
+        assert_eq!(details.elapsed_seconds, Some(45));
+        assert_eq!(details.bytes_scrubbed, Some(183_385_608_192));
     }
 
     #[test]
@@ -1281,7 +1585,7 @@ mod tests {
             "Bytes scrubbed:   0  (0.00%)\n",
         );
         let details = parse_scrub_details(summary, "");
-        assert_eq!(scrub_status(summary, "", true, &details), "running");
+        assert_eq!(scrub_status(summary, "", true, false, &details), "running");
     }
 
     #[test]

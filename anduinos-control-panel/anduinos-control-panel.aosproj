@@ -1,0 +1,84 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-control-panel</PackageName>
+    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS Control Panel — a category-based home for system, hardware, application, account, appearance, and recovery settings.</PackageDescription>
+    <Section>utils</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
+    <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble resolute-addon=resolute" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Dependency Include="python3" />
+    <Dependency Include="python3-gi" />
+    <Dependency Include="gir1.2-gdkpixbuf-2.0" />
+    <Dependency Include="gir1.2-gtk-4.0" />
+    <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="gnome-control-center" />
+    <Dependency Include="gnome-software" />
+    <Dependency Include="flatpak" />
+    <Dependency Include="pkexec" />
+    <Dependency Include="grub2-common" />
+    <Dependency Include="anduinos-driver-center" />
+    <Dependency Include="anduinos-appearance" />
+    <Dependency Include="anduinos-ufwall-gtk" />
+    <Dependency Include="anduinos-swapcontrol-gtk" />
+    <Dependency Include="anduinos-yubikey-manager" />
+    <Suggest Include="anduinos-btrfs-snapshots-manager" />
+    <Recommend Include="network-manager-gnome" />
+    <Recommend Include="anduinos-bash-guess-command" />
+    <Recommend Include="simple-scan" />
+    <Suggest Include="anduinos-whisper-gtk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IncludeFile Include="../lib/bash_prediction_settings.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/_prediction_config.py" />
+    <IncludeScript Include="src/anduinos-control-panel" Target="/usr/bin/anduinos-control-panel" />
+    <IncludeFile Include="src/anduinos_control_panel/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/__init__.py" />
+    <IncludeFile Include="src/anduinos_control_panel/app.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/app.py" />
+    <IncludeFile Include="src/anduinos_control_panel/model.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/model.py" />
+    <IncludeFile Include="src/anduinos_control_panel/prediction_settings.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/prediction_settings.py" />
+    <IncludeFile Include="src/anduinos_control_panel/software_sources.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/software_sources.py" />
+    <IncludeFile Include="src/anduinos_control_panel/topics.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/topics.py" />
+    <IncludeFile Include="src/anduinos_control_panel/search_provider.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/search_provider.py" />
+    <IncludeScript Include="src/anduinos-control-panel-search-provider" Target="/usr/libexec/anduinos-control-panel/search-provider" />
+    <IncludeScript Include="scripts/boot-settings-helper" Target="/usr/libexec/anduinos-control-panel/boot-settings-helper" />
+    <IncludeScript Include="scripts/software-source-helper" Target="/usr/libexec/anduinos-control-panel/software-source-helper" />
+    <IncludeFile Include="data/com.anduinos.ControlPanel.policy" Target="/usr/share/polkit-1/actions/com.anduinos.ControlPanel.policy" />
+    <IncludeFile Include="data/com.anduinos.ControlPanel.SearchProvider.service" Target="/usr/share/dbus-1/services/com.anduinos.ControlPanel.SearchProvider.service" />
+    <IncludeFile Include="data/com.anduinos.ControlPanel.search-provider.ini" Target="/usr/share/gnome-shell/search-providers/com.anduinos.ControlPanel.search-provider.ini" />
+    <IncludeFolder Include="locale/" Target="/usr/share/locale/" />
+
+    <!-- Vendored copies of existing repository SVGs keep this package standalone. -->
+    <IncludeFolder Include="resources/icons" Target="/usr/share/anduinos-control-panel/icons" />
+    <IncludeFile Include="resources/icons/com.anduinos.ControlPanel.svg" Target="/usr/share/icons/hicolor/scalable/apps/com.anduinos.ControlPanel.svg" />
+    <IncludeFile Include="resources/icons/com.anduinos.ControlPanel-symbolic.svg" Target="/usr/share/icons/hicolor/symbolic/apps/com.anduinos.ControlPanel-symbolic.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AppStreamApplication Include="data/com.anduinos.ControlPanel.desktop" Icon="resources/icons/com.anduinos.ControlPanel.svg" />
+    <AppStreamScreenshot Include="screenshots/control-panel.png" Default="true" Caption="Manage AnduinOS system settings from one place" Environment="GNOME:dark" />
+    <AppStreamScreenshot Include="screenshots/about.png" Caption="A native AnduinOS experience built with GTK4 and libadwaita" Environment="GNOME:dark" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="bash compile-locales.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+    <TestCommand Name="widgets" Profile="gui" Run="PYTHONDONTWRITEBYTECODE=1 GSETTINGS_BACKEND=memory GDK_BACKEND=x11 CONTROL_PANEL_UI_TESTS=1 dbus-run-session -- xvfb-run -a python3 -m unittest discover -s tests/gui -v" TimeoutSeconds="300" />
+  </ItemGroup>
+</Project>

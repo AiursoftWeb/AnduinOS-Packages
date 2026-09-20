@@ -12,6 +12,8 @@ import sys
 import warnings
 import gettext
 import os
+import threading
+from pathlib import Path
 warnings.filterwarnings('ignore', category=DeprecationWarning, module='gi')
 # suppress Adwaita deprecation warnings for APIs whose replacements
 # (add_page, toast_overlay) do not yet exist in Ubuntu 24.04's Adwaita version
@@ -44,6 +46,19 @@ from anduinos_appearance.layout import (
     write_group_apps as _write_group_apps,
     write_use_launchers as _write_use_launchers,
 )
+from anduinos_appearance.weather import (
+    prepare_weather_location,
+    record_weather_consent,
+    revoke_weather_consent,
+    write_weather_location,
+)
+from anduinos_appearance.settings_transfer import (
+    InvalidSettingsFile,
+    SettingsImportError,
+    dump_gnome_settings,
+    import_gnome_settings,
+    reset_desktop_settings,
+)
 
 SHELL_BASE = '/org/gnome/shell'
 ARC_UUID = 'arcmenu@arcmenu.com'
@@ -55,6 +70,53 @@ def _ext_is_enabled(uuid: str) -> bool:
     return uuid in val if val else False
 
 POS_LABELS = {'bottom': _('Bottom'), 'top': _('Top'), 'left': _('Left'), 'right': _('Right')}
+
+
+def taskbar_settings():
+    """Load the extension's own schema without requiring a global installation."""
+    source = Gio.SettingsSchemaSource.get_default()
+    schema_id = 'org.gnome.shell.extensions.dash-to-panel'
+    for data_dir in [GLib.get_user_data_dir(), *GLib.get_system_data_dirs()]:
+        directory = Path(data_dir) / 'gnome-shell/extensions' / DTP_UUID / 'schemas'
+        if not (directory / 'gschemas.compiled').is_file():
+            continue
+        try:
+            source = Gio.SettingsSchemaSource.new_from_directory(str(directory), source, False)
+            schema = source.lookup(schema_id, False)
+            if schema:
+                break
+        except GLib.Error:
+            continue
+    else:
+        schema = source.lookup(schema_id, True) if source else None
+    if not schema or not all(schema.has_key(key) for key in (
+        'intellihide', 'intellihide-use-pointer',
+    )):
+        return None
+    return Gio.Settings.new_full(schema, None, None)
+
+
+def taskbar_behavior_group(settings):
+    group = Adw.PreferencesGroup(title=_('Behavior'))
+    hide = Adw.SwitchRow(title=_('Automatically hide the taskbar'))
+    pointer = Adw.SwitchRow(title=_('Show taskbar when pointer reaches screen edge'))
+    group.add(hide)
+    group.add(pointer)
+    if settings is None:
+        group.set_sensitive(False)
+        return group
+    settings.bind('intellihide', hide, 'active', Gio.SettingsBindFlags.DEFAULT)
+    settings.bind('intellihide-use-pointer', pointer, 'active',
+                  Gio.SettingsBindFlags.DEFAULT | Gio.SettingsBindFlags.NO_SENSITIVITY)
+
+    def sync_sensitive(*_args):
+        pointer.set_sensitive(settings.get_boolean('intellihide') and
+                              settings.is_writable('intellihide-use-pointer'))
+
+    settings.connect('changed::intellihide', sync_sensitive)
+    settings.connect('writable-changed::intellihide-use-pointer', sync_sensitive)
+    sync_sensitive()
+    return group
 
 
 # ── style page ───────────────────────────────────────────────────
@@ -85,15 +147,15 @@ class StylePage(Adw.PreferencesPage):
         layout_group.set_title(_('Layout'))
 
         box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-        self.btn11 = Gtk.Button(label='  11  ')
-        self.btn11.connect('clicked', self._on_click, 'eleven')
+        self.btn_centered = Gtk.Button(label='  ' + _('Centered') + '  ')
+        self.btn_centered.connect('clicked', self._on_click, 'eleven')
         self.btn10 = Gtk.Button(label='  ' + _('Classic') + '  ')
         self.btn10.connect('clicked', self._on_click, 'classic')
-        self.btn_sep = Gtk.Button(label='  ' + _('Seperated') + '  ')
-        self.btn_sep.connect('clicked', self._on_click, 'seperated')
+        self.btn_sep = Gtk.Button(label='  ' + _('Separated') + '  ')
+        self.btn_sep.connect('clicked', self._on_click, 'separated')
         box.append(self.btn10)
         box.append(self.btn_sep)
-        box.append(self.btn11)
+        box.append(self.btn_centered)
         layout_group.add(box)
 
         # ── Position buttons ──
@@ -113,6 +175,9 @@ class StylePage(Adw.PreferencesPage):
         self.add(layout_group)
 
         self._highlight_pos()
+
+        self.taskbar_settings = taskbar_settings()
+        self.add(taskbar_behavior_group(self.taskbar_settings))
 
         # ── Group apps (Classic only) ──
         self.group_expander = Adw.ExpanderRow()
@@ -153,19 +218,19 @@ class StylePage(Adw.PreferencesPage):
             self.win._toast(_('✗ Failed to apply style'))
 
     def _on_group_toggled(self, switch_row, pspec):
-        if self.win.current_style in ('classic', 'seperated'):
+        if self.win.current_style in ('classic', 'separated'):
             _write_group_apps(switch_row.get_active())
             self._sync_vista_visibility()
 
     def _on_vista_toggled(self, switch_row, pspec):
-        if self.win.current_style in ('classic', 'seperated'):
+        if self.win.current_style in ('classic', 'separated'):
             _write_use_launchers(switch_row.get_active())
 
     def _highlight_btn(self):
         s = self.win.current_style
         self.btn10.add_css_class('suggested-action') if s == 'classic' else self.btn10.remove_css_class('suggested-action')
-        self.btn_sep.add_css_class('suggested-action') if s == 'seperated' else self.btn_sep.remove_css_class('suggested-action')
-        self.btn11.add_css_class('suggested-action') if s == 'eleven' else self.btn11.remove_css_class('suggested-action')
+        self.btn_sep.add_css_class('suggested-action') if s == 'separated' else self.btn_sep.remove_css_class('suggested-action')
+        self.btn_centered.add_css_class('suggested-action') if s == 'eleven' else self.btn_centered.remove_css_class('suggested-action')
 
     def _on_pos_toggled(self, btn, pos):
         if not btn.get_active():
@@ -199,7 +264,7 @@ class StylePage(Adw.PreferencesPage):
             btn.handler_unblock_by_func(self._on_pos_toggled)
 
     def _sync_group_visibility(self):
-        if self.win.current_style in ('classic', 'seperated'):
+        if self.win.current_style in ('classic', 'separated'):
             self.group_group.set_visible(True)
             self.group_expander.set_enable_expansion(True)
             self.group_row.set_active(_read_group_apps())
@@ -217,9 +282,9 @@ class StylePage(Adw.PreferencesPage):
     @staticmethod
     def _label(s):
         if s == 'eleven':
-            return _('Windows 11')
-        if s == 'seperated':
-            return _('Seperated')
+            return _('Centered')
+        if s == 'separated':
+            return _('Separated')
         return _('Classic')
 
 
@@ -237,6 +302,7 @@ class PanelWidgetsPage(Adw.PreferencesPage):
         super().__init__()
         self.win = win
         self._busy = False
+        self._weather_busy = False
         self.set_title(_('Panel Widgets'))
         self.set_icon_name('application-x-addon-symbolic')
 
@@ -244,12 +310,27 @@ class PanelWidgetsPage(Adw.PreferencesPage):
         group.set_title(_('Panel Indicators'))
         group.set_description(_('Toggle panel indicator widgets on or off.'))
 
+        self.weather_location_button = None
         for key, (label, uuid) in WIDGETS.items():
             row = Adw.SwitchRow()
             row.set_title(label)
             row.set_subtitle(uuid)
             row.set_active(_ext_is_enabled(uuid))
-            row.connect('notify::active', self._on_toggle, uuid, label)
+            row.connect('notify::active', self._on_toggle, key, uuid, label)
+            if key == 'weather':
+                self.weather_row = row
+                self.weather_location_button = Gtk.Button.new_from_icon_name(
+                    'find-location-symbolic'
+                )
+                self.weather_location_button.set_tooltip_text(
+                    _('Update approximate weather location')
+                )
+                self.weather_location_button.set_valign(Gtk.Align.CENTER)
+                self.weather_location_button.set_sensitive(row.get_active())
+                self.weather_location_button.connect(
+                    'clicked', self._on_weather_location_clicked
+                )
+                row.add_suffix(self.weather_location_button)
             group.add(row)
 
         self.add(group)
@@ -277,27 +358,192 @@ class PanelWidgetsPage(Adw.PreferencesPage):
             subprocess.run(['dconf', 'write', f'{ARC}/show-activities-button', v], check=True)
             # Force refresh Dash-to-Panel to override legacy 2.0.0 invisible state
             apply_style_and_position(self.win.current_style, self.win.current_position)
-            self.win._toast(_('✓ Activities button — {action}n').format(action=('shown' if visible else 'hidden')))
+            self.win._toast(
+                _('✓ Activities button shown')
+                if visible else _('✓ Activities button hidden')
+            )
         except subprocess.CalledProcessError:
             self.win._toast(_('✗ Failed to toggle activities button'))
             self._busy = True
             switch_row.set_active(not visible)
             self._busy = False
 
-    def _on_toggle(self, switch_row, pspec, uuid, label):
+    def _on_toggle(self, switch_row, pspec, key, uuid, label):
         if self._busy:
             return
         state = switch_row.get_active()
+        if key == 'weather' and state:
+            self._show_weather_consent(
+                lambda: self._start_weather_location(
+                    switch_row=switch_row,
+                    uuid=uuid,
+                    enable_after=True,
+                ),
+                lambda: self._reject_weather_enable(switch_row),
+            )
+            return
+
         action = 'enable' if state else 'disable'
         try:
             subprocess.run(['gnome-extensions', action, uuid], check=True)
-            self.win._toast(_('✓ {label} — {action}d').format(label=label, action=action))
         except subprocess.CalledProcessError:
-            self.win._toast(_('✗ Failed to {action} {label}').format(action=action, label=label))
+            self.win._toast(
+                (_('✗ Failed to enable {label}') if state
+                 else _('✗ Failed to disable {label}')).format(label=label)
+            )
             # revert switch
             self._busy = True
             switch_row.set_active(not state)
             self._busy = False
+            return
+
+        if key == 'weather':
+            try:
+                revoke_weather_consent()
+            except Exception:
+                self.win._toast(_('Weather was disabled, but its saved permission could not be cleared.'))
+            self.weather_location_button.set_sensitive(False)
+        self.win._toast(
+            (_('✓ {label} enabled') if state
+             else _('✓ {label} disabled')).format(label=label)
+        )
+
+    def _show_weather_consent(self, on_accept, on_reject):
+        body = _(
+            '1. Approximate location (ipapi.co)\n'
+            'AnduinOS will make one HTTPS request to ipapi.co. Its operator, '
+            'Kloudend, Inc., will see your public IP address and may use it to '
+            'estimate your city, country, and approximate coordinates.\n\n'
+            '2. Weather data (Open-Meteo)\n'
+            'The weather extension will send the selected approximate coordinates '
+            'to Open-Meteo, operated by OpenMeteo GmbH. The service will also see '
+            'your public IP address and may retain API logs for up to 90 days.\n\n'
+            'AnduinOS is not affiliated with, sponsored by, or endorsed by either '
+            'third-party service. If location detection fails, AnduinOS will use an '
+            'offline estimate based on your system timezone.\n\n'
+            'Privacy policies:\n'
+            'https://ipapi.co/privacy/\n'
+            'https://open-meteo.com/en/terms'
+        )
+        dialog = Adw.MessageDialog.new(
+            self.win,
+            _('Weather Services Privacy Agreement'),
+            body,
+        )
+        dialog.add_response('reject', _('Decline'))
+        dialog.add_response('accept', _('Agree to All'))
+        dialog.set_default_response('reject')
+        dialog.set_close_response('reject')
+        dialog.set_response_appearance('accept', Adw.ResponseAppearance.SUGGESTED)
+
+        def response(dlg, response_id):
+            dlg.destroy()
+            if response_id == 'accept':
+                on_accept()
+            else:
+                on_reject()
+
+        dialog.connect('response', response)
+        dialog.present()
+
+    def _reject_weather_enable(self, switch_row):
+        self._busy = True
+        switch_row.set_active(False)
+        self._busy = False
+        self.win._toast(_('Weather was not enabled because permission was declined.'))
+
+    def _on_weather_location_clicked(self, button):
+        if self._weather_busy:
+            return
+        self._show_weather_consent(
+            lambda: self._start_weather_location(enable_after=False),
+            lambda: None,
+        )
+
+    def _start_weather_location(
+        self,
+        switch_row=None,
+        uuid='simple-weather@romanlefler.com',
+        enable_after=False,
+    ):
+        if self._weather_busy:
+            return
+        try:
+            record_weather_consent()
+        except Exception:
+            self.win._toast(_('Failed to save weather permission.'))
+            if switch_row is not None:
+                self._reject_weather_enable(switch_row)
+            return
+
+        self._weather_busy = True
+        self.weather_row.set_sensitive(False)
+        if self.weather_location_button is not None:
+            self.weather_location_button.set_sensitive(False)
+        self.win._toast(_('Determining your approximate location…'))
+
+        def worker():
+            try:
+                location, used_network = prepare_weather_location()
+                write_weather_location(location)
+                error = None
+                location_name = location.name
+            except Exception as exc:
+                error = exc
+                location_name = ''
+                used_network = False
+            GLib.idle_add(
+                self._finish_weather_location,
+                switch_row,
+                uuid,
+                enable_after,
+                location_name,
+                used_network,
+                error,
+            )
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _finish_weather_location(
+        self,
+        switch_row,
+        uuid,
+        enable_after,
+        location_name,
+        used_network,
+        error,
+    ):
+        if error is None and enable_after:
+            try:
+                subprocess.run(['gnome-extensions', 'enable', uuid], check=True)
+            except subprocess.CalledProcessError as exc:
+                error = exc
+
+        self._weather_busy = False
+        self.weather_row.set_sensitive(True)
+        if error is not None:
+            if switch_row is not None:
+                self._busy = True
+                switch_row.set_active(False)
+                self._busy = False
+            self.weather_location_button.set_sensitive(
+                _ext_is_enabled('simple-weather@romanlefler.com')
+            )
+            self.win._toast(_('Failed to configure the weather extension.'))
+            return GLib.SOURCE_REMOVE
+
+        self.weather_location_button.set_sensitive(True)
+        if used_network:
+            self.win._toast(
+                _('Weather location set to {location}.').format(location=location_name)
+            )
+        else:
+            self.win._toast(
+                _('Location service unavailable; using {location} from your timezone.').format(
+                    location=location_name
+                )
+            )
+        return GLib.SOURCE_REMOVE
 
 
 # ── advanced page ────────────────────────────────────────────────
@@ -359,13 +605,41 @@ class AdvancedPage(Adw.PreferencesPage):
         self.add(ext)
         self.connect('map', lambda w: self._refresh_ext_rows())
 
+        # ── Backup and Restore group ──
+        transfer = Adw.PreferencesGroup()
+        transfer.set_title(_('Backup and Restore'))
+        transfer.set_description(
+            _('Back up GNOME settings, layouts, and extension preferences. '
+              'Personal files are not included.')
+        )
+
+        row_export = Adw.ActionRow()
+        row_export.set_title(_('Export GNOME settings'))
+        row_export.set_subtitle(_('Save the current settings as a readable INI file'))
+        btn_export = Gtk.Button(label=_('Export…'))
+        btn_export.set_valign(Gtk.Align.CENTER)
+        btn_export.connect('clicked', self._on_export)
+        row_export.add_suffix(btn_export)
+        transfer.add(row_export)
+
+        row_import = Adw.ActionRow()
+        row_import.set_title(_('Import GNOME settings'))
+        row_import.set_subtitle(_('Restore settings from a dconf INI file'))
+        btn_import = Gtk.Button(label=_('Import…'))
+        btn_import.set_valign(Gtk.Align.CENTER)
+        btn_import.connect('clicked', self._on_import)
+        row_import.add_suffix(btn_import)
+        transfer.add(row_import)
+
+        self.add(transfer)
+
         # ── Danger Zone group ──
         danger = Adw.PreferencesGroup()
         danger.set_title(_('Danger Zone'))
 
         row_reset = Adw.ActionRow()
         row_reset.set_title(_('Reset desktop settings'))
-        row_reset.set_subtitle(_('Restore all GNOME Shell settings to factory defaults'))
+        row_reset.set_subtitle(_('Restore desktop appearance, search, app folders, and privacy to factory defaults'))
         btn_reset = Gtk.Button(label=_('Reset'))
         btn_reset.set_valign(Gtk.Align.CENTER)
         btn_reset.add_css_class('destructive-action')
@@ -379,20 +653,131 @@ class AdvancedPage(Adw.PreferencesPage):
         for row, uuid in self._ext_rows:
             row.set_visible(_ext_is_enabled(uuid))
 
+    @staticmethod
+    def _ini_filters():
+        ini_filter = Gtk.FileFilter()
+        ini_filter.set_name(_('INI settings files'))
+        ini_filter.add_pattern('*.ini')
+        filters = Gio.ListStore.new(Gtk.FileFilter)
+        filters.append(ini_filter)
+        return filters
+
+    def _on_export(self, btn):
+        dialog = Gtk.FileDialog.new()
+        dialog.set_title(_('Export GNOME Settings'))
+        dialog.set_initial_name('AnduinOS-GNOME-settings.ini')
+        dialog.set_filters(self._ini_filters())
+        dialog.save(self.win, None, self._on_export_file_chosen)
+
+    def _on_export_file_chosen(self, dialog, result):
+        try:
+            selected = dialog.save_finish(result)
+            path = selected.get_path() if selected else None
+            if not path:
+                raise OSError('The selected destination is not a local file')
+            Path(path).write_bytes(dump_gnome_settings())
+        except GLib.Error as error:
+            if not error.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
+                print(f'File dialog error: {error.message}', file=sys.stderr)
+                self.win._toast(_('✗ Failed to export GNOME settings'))
+            return
+        except (OSError, subprocess.CalledProcessError) as error:
+            print(f'Failed to export GNOME settings: {error}', file=sys.stderr)
+            self.win._toast(_('✗ Failed to export GNOME settings'))
+            return
+
+        self.win._toast(_('✓ GNOME settings exported'))
+
+    def _on_import(self, btn):
+        dialog = Gtk.FileDialog.new()
+        dialog.set_title(_('Import GNOME Settings'))
+        dialog.set_filters(self._ini_filters())
+        dialog.open(self.win, None, self._on_import_file_chosen)
+
+    def _on_import_file_chosen(self, dialog, result):
+        try:
+            selected = dialog.open_finish(result)
+            path = selected.get_path() if selected else None
+            if not path:
+                raise OSError('The selected source is not a local file')
+            contents = Path(path).read_bytes()
+        except GLib.Error as error:
+            if not error.matches(Gio.io_error_quark(), Gio.IOErrorEnum.CANCELLED):
+                print(f'File dialog error: {error.message}', file=sys.stderr)
+                self.win._toast(_('✗ Failed to read the settings file'))
+            return
+        except OSError as error:
+            print(f'Failed to read GNOME settings: {error}', file=sys.stderr)
+            self.win._toast(_('✗ Failed to read the settings file'))
+            return
+
+        choice = Adw.MessageDialog.new(
+            self.win,
+            _('How should these settings be imported?'),
+            _('Merge import keeps current values that are absent from the file.\n\n'
+              'Strict restore resets all /org/gnome/ settings first; values absent '
+              'from the file return to their defaults. A safety backup is saved '
+              'before either operation.')
+        )
+        choice.add_response('cancel', _('Cancel'))
+        choice.add_response('merge', _('Merge Import'))
+        choice.add_response('strict', _('Strict Restore'))
+        choice.set_default_response('merge')
+        choice.set_close_response('cancel')
+        choice.set_response_appearance('merge', Adw.ResponseAppearance.SUGGESTED)
+        choice.set_response_appearance('strict', Adw.ResponseAppearance.DESTRUCTIVE)
+        choice.connect(
+            'response',
+            lambda dlg, response: self._on_import_mode_chosen(
+                dlg,
+                response,
+                contents,
+            ),
+        )
+        choice.present()
+
+    def _on_import_mode_chosen(self, dialog, response, contents):
+        dialog.destroy()
+        if response not in ('merge', 'strict'):
+            return
+
+        try:
+            import_gnome_settings(contents, strict=response == 'strict')
+        except InvalidSettingsFile as error:
+            print(f'Invalid GNOME settings file: {error}', file=sys.stderr)
+            self.win._toast(_('✗ The selected file is not a valid dconf INI file'))
+            return
+        except SettingsImportError as error:
+            print(f'Failed to import GNOME settings: {error}', file=sys.stderr)
+            if error.rollback_succeeded:
+                self.win._toast(_('✗ Import failed; previous settings were restored'))
+            else:
+                self.win._toast(_('✗ Import and automatic rollback both failed'))
+            return
+        except (OSError, subprocess.CalledProcessError) as error:
+            print(f'Failed to prepare GNOME settings import: {error}', file=sys.stderr)
+            self.win._toast(_('✗ Failed to import GNOME settings'))
+            return
+
+        self.win.current_style, self.win.current_position = detect_current()
+        self.win._sync_all_highlights()
+        self.win._refresh_previews()
+        self._refresh_ext_rows()
+        self.win._toast(_('✓ Settings imported. Log out and back in to apply all changes.'))
+
     def _on_reset(self, btn):
         def do_reset():
             try:
-                subprocess.run(['dconf', 'reset', '-f', '/org/gnome/shell/'], check=True)
-                subprocess.run(['dconf', 'update'], check=False)
-                self.win._toast(_('✓ Desktop settings reset. Restart Shell to apply.'))
-            except subprocess.CalledProcessError:
+                reset_desktop_settings()
+                self.win._toast(_('✓ Desktop settings reset. Log out and back in to apply all changes.'))
+            except (OSError, subprocess.CalledProcessError):
                 self.win._toast(_('✗ Failed to reset'))
 
         dlg = Adw.MessageDialog.new(
             self.win,
             _('Reset desktop settings?'),
-            _('This will reset all GNOME Shell settings to factory defaults.\n'
-              'Your extensions, panel layout, and preferences will be lost.')
+            _('This will restore extensions, panel layout, search preferences, app folders, '
+              'wallpaper, interface, and privacy preferences to factory defaults.')
         )
         dlg.add_response('cancel', _('Cancel'))
         dlg.add_response('reset', _('Reset'))
@@ -510,7 +895,7 @@ class AppearanceWindow(Adw.PreferencesWindow):
     def __init__(self, app):
         super().__init__(application=app)
         self.set_title(_('AnduinOS Appearance'))
-        self.set_default_size(780, 560)
+        self.set_default_size(910, 660)
         self.set_icon_name('anduinos-appearance')
 
         self.current_style, self.current_position = detect_current()
@@ -575,7 +960,7 @@ class AppearanceApp(Adw.Application):
         dialog.set_website('https://www.anduinos.com')
         dialog.set_issue_url('https://github.com/AiursoftWeb/AnduinOS-Packages/issues')
         dialog.set_license_type(Gtk.License.GPL_3_0)
-        dialog.set_version('2.0.2')
+        dialog.set_version('2.0.3')
         dialog.present(self.get_active_window())
 
     def _on_win_destroyed(self, win):

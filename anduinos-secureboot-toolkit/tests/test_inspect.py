@@ -20,9 +20,11 @@ from anduinos_secureboot.model import SecureBootStatus  # noqa: E402
 class FakeRunner:
     def __init__(self, responses=None):
         self.responses = responses or {}
+        self.calls = []
 
     def run(self, command, timeout=10):
         command = tuple(command)
+        self.calls.append(command)
         return self.responses.get(
             command, subprocess.CompletedProcess(command, 1, "", "")
         )
@@ -84,12 +86,37 @@ class InspectTests(unittest.TestCase):
                 root / "missing.der",
                 "test-kernel",
                 root / "missing.conf",
+                root,
             )
         self.assertEqual(state.status, SecureBootStatus.UNSUPPORTED)
         self.assertFalse(state.supported)
         self.assertTrue(state.state_known)
         self.assertTrue(state.enforcement_inactive)
         self.assertTrue(state.ready)
+
+    def test_legacy_bios_is_explicitly_unsupported_without_efi(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            runner = FakeRunner(
+                {
+                    ("mokutil", "--sb-state"): subprocess.CompletedProcess(
+                        [], 0, "SecureBoot enabled\n", ""
+                    )
+                }
+            )
+            state = inspect_secure_boot(
+                runner,
+                root / "missing.priv",
+                root / "missing.der",
+                "test-kernel",
+                root / "missing.conf",
+                root / "missing-efi",
+            )
+        self.assertEqual(state.status, SecureBootStatus.UNSUPPORTED)
+        self.assertFalse(state.enabled)
+        self.assertTrue(state.state_known)
+        self.assertTrue(state.enforcement_inactive)
+        self.assertNotIn(("mokutil", "--sb-state"), runner.calls)
 
     def test_indeterminate_probe_fails_closed(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -102,6 +129,7 @@ class InspectTests(unittest.TestCase):
                 root / "missing.der",
                 "test-kernel",
                 root / "missing.conf",
+                root,
             )
             dkms = inspect_dkms(
                 state,
@@ -136,7 +164,12 @@ class InspectTests(unittest.TestCase):
                 ("openssl", "x509", "-in", str(certificate), "-inform", "DER", "-noout", "-fingerprint", "-sha1"): subprocess.CompletedProcess([], 0, "sha1 Fingerprint=AA:12\n", ""),
             }
             state = inspect_secure_boot(
-                FakeRunner(responses), private, certificate, "test-kernel", configuration
+                FakeRunner(responses),
+                private,
+                certificate,
+                "test-kernel",
+                configuration,
+                root,
             )
             self.assertTrue(state.ready)
             self.assertTrue(state.trust_ready)
@@ -215,7 +248,12 @@ class InspectTests(unittest.TestCase):
                 ("openssl", "x509", "-in", str(certificate), "-inform", "DER", "-noout", "-fingerprint", "-sha1"): subprocess.CompletedProcess([], 0, "sha1 Fingerprint=AA:12\n", ""),
             }
             state = inspect_secure_boot(
-                FakeRunner(responses), private, certificate, "test-kernel", configuration
+                FakeRunner(responses),
+                private,
+                certificate,
+                "test-kernel",
+                configuration,
+                root,
             )
             self.assertFalse(state.enrolled)
             self.assertFalse(state.enrollment_pending)

@@ -57,8 +57,8 @@ impl SwapcontrolWindow {
         glib::Object::builder()
             .property("application", app)
             .property("title", i18n("Swap Control"))
-            .property("default-width", 1100)
-            .property("default-height", 650)
+            .property("default-width", 1230)
+            .property("default-height", 750)
             .property("icon-name", "com.anduinos.swapcontrol")
             .build()
     }

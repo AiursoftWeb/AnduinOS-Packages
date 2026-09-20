@@ -1,8 +1,18 @@
 # Recovery scope and trust boundaries
 
-Disk Snapshots Manager has two independent local snapshot streams and no combined rollback:
-System Recovery owns `@root`; Personal Files Recovery owns `@home`. A system
-rollback never changes `@home`, and a Home snapshot never becomes a boot target.
+Disk Snapshots Manager has two local snapshot streams: System Recovery owns
+`@root`; Personal Files Recovery owns `@home`. Both expose their protected
+**New OS** baseline, read-only browsing, and administrator-authorized rollback
+on restart. Ordinary rollback changes only the selected scope. Home rollback
+affects every user's Home, verifies account-directory UID/GID compatibility,
+and preserves the current root UUID. A combined factory reset changes both
+scopes only when **Roll back user data** is selected.
+
+Replacement runs in initramfs with protected-old-subvolume and automatic-revert
+guarantees. The affected scopes receive safety snapshots before reboot, and all
+snapshot history is retained. The old active subvolumes are cleaned up only after
+confirmation; this does not delete their safety snapshots. This workflow is not
+secure erasure and must not be advertised for disposing of a device.
 
 ## Personal Files are read by descriptor, never written by root
 
@@ -84,7 +94,7 @@ older package cannot silently downgrade the code that confirms, reverts, or fail
 the new transaction. Nothing is written into the immutable snapshot itself.
 
 Initramfs detects the root filesystem itself and never depends on a shell variable
-computed—but not exported—by another initramfs-tools process. An explicit recovery
+computed—but not exported—by another early-boot process. An explicit recovery
 request that cannot enter the matching recovery protocol fails visibly. The engine
 persists its boot ID, attempt counter, and last synchronized filesystem checkpoint;
 userspace treats a requested boot that reached userspace without initramfs entry as

@@ -70,14 +70,12 @@ class DetectBootEnvironmentStep:
                 else "not supported on arm64"
             )
         )
-        guided = platform.firmware is Firmware.UEFI and (
-            context.plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
-        )
+        direct_nvram = platform.firmware is Firmware.UEFI
         context.log(
             "UEFI fallback bootloader: "
             + (
                 "preserved; no fallback write"
-                if guided
+                if direct_nvram
                 else "enabled on the selected disk"
             )
         )
@@ -85,7 +83,7 @@ class DetectBootEnvironmentStep:
             "UEFI Boot#### entries: "
             + (
                 "create and verify AnduinOS only"
-                if guided
+                if direct_nvram
                 else "will not be modified"
             )
         )
@@ -130,6 +128,14 @@ class VerifyTargetDiskStep:
             context.log(
                 "Every pre-existing partition on the selected disk is "
                 "preserve-marked"
+            )
+        elif context.plan.storage.mode is InstallMode.MANUAL:
+            context.log(
+                "Only the reviewed manual GPT operations may change the "
+                "selected disk"
+            )
+            context.log(
+                "Every uninvolved existing partition is preserve-marked"
             )
         else:
             context.log(

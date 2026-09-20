@@ -9,7 +9,9 @@ if TYPE_CHECKING:
     from .steps import InstallContext
 
 
-BOUNDARY_ID_RE = re.compile(r"^guided-[a-z0-9]+(?:-[a-z0-9]+)*$")
+BOUNDARY_ID_RE = re.compile(
+    r"^(?:guided|manual)-[a-z0-9]+(?:-[a-z0-9]+)*$"
+)
 BOUNDARY_PHASES = {"before", "after"}
 
 

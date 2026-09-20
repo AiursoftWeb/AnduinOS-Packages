@@ -28,7 +28,7 @@ from .execution_steps import (
 from .language_support import InstallLanguagePacksStep
 from .live_cleanup import RemoveLivePackagesStep
 from .mirrors import SelectFastestAptMirrorStep
-from .network import DetectNetworkConnectivityStep
+from .network import DetectNetworkConnectivityStep, RecheckNetworkConnectivityStep
 from .model import Filesystem, Firmware, InstallPlan
 from .other_systems import CheckOtherDiskSystemsStep
 from .regional_config import ConfigureKeyboardStep, InstallInputMethodStep
@@ -43,7 +43,10 @@ from .steps import (
 from .storage_steps import MountTargetStep, PrepareStorageStep
 from .system_config import ConfigureSystemStep
 from .target_config import ConfigureStorageStep
-from .snapshots_manager import EnsureSnapshotsManagerStep
+from .snapshots_manager import (
+    CreateFactorySnapshotStep,
+    EnsureSnapshotsManagerStep,
+)
 from .wifi_migration import MigrateWifiConnectionStep
 from .validation import ExecutionPolicy, validate_plan_for_execution
 
@@ -93,6 +96,7 @@ class InstallerExecutor:
             EnterChrootStep(self.runner, target=self.target),
             RemoveLivePackagesStep(self.runner),
             ConfigureKeyboardStep(),
+            RecheckNetworkConnectivityStep(),
             SelectFastestAptMirrorStep(),
             # Establish the target-owned DKMS key before any package operation
             # can build kernel modules. Never let an upgrade inherit the
@@ -128,6 +132,8 @@ class InstallerExecutor:
         )
         if plan.platform.firmware is Firmware.UEFI:
             steps.append(CheckOtherDiskSystemsStep(self.runner))
+        if plan.storage.filesystem is Filesystem.BTRFS:
+            steps.append(CreateFactorySnapshotStep(self.runner))
         steps.extend(
             (
                 LeaveChrootStep(self.runner),

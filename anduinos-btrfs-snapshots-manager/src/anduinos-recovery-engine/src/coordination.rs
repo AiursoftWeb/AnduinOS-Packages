@@ -8,7 +8,17 @@ pub struct TransactionStartLock(File);
 
 impl TransactionStartLock {
     pub fn acquire(snapshot_root: impl AsRef<Path>) -> io::Result<Self> {
-        let transactions = snapshot_root.as_ref().join("transactions");
+        Self::acquire_named(snapshot_root.as_ref(), "start.lock")
+    }
+
+    /// Serialize preparation/cancellation without holding start.lock across
+    /// snapshot creation (which has its own storage-lock ordering).
+    pub fn acquire_preparation(snapshot_root: impl AsRef<Path>) -> io::Result<Self> {
+        Self::acquire_named(snapshot_root.as_ref(), "recovery-prepare.lock")
+    }
+
+    fn acquire_named(snapshot_root: &Path, filename: &str) -> io::Result<Self> {
+        let transactions = snapshot_root.join("transactions");
         let metadata = fs::symlink_metadata(&transactions)?;
         if !metadata.file_type().is_dir() {
             return Err(io::Error::new(
@@ -22,7 +32,7 @@ impl TransactionStartLock {
             .create(true)
             .mode(0o600)
             .custom_flags(libc::O_CLOEXEC | libc::O_NOFOLLOW)
-            .open(transactions.join("start.lock"))?;
+            .open(transactions.join(filename))?;
         let result = unsafe { libc::flock(file.as_raw_fd(), libc::LOCK_EX) };
         if result != 0 {
             return Err(io::Error::last_os_error());

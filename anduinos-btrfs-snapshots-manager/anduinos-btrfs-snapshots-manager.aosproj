@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-btrfs-snapshots-manager</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Disk Snapshots Manager — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Dependency Include="anduinos-core-system" />
     <Dependency Include="libgtk-4-1" />
     <Dependency Include="libadwaita-1-0" />
     <Dependency Include="btrfs-progs" />
@@ -34,7 +35,7 @@
     <Dependency Include="systemd" />
     <Dependency Include="apt" />
     <Dependency Include="dpkg" />
-    <Dependency Include="initramfs-tools" />
+    <Dependency Include="dracut" />
     <Dependency Include="grub2-common" />
     <Dependency Include="anduinos-secureboot-toolkit" />
     <Dependency Include="kmod" />
@@ -44,7 +45,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="bash scripts/prebuild-check.sh" />
     <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
     <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
   </ItemGroup>
@@ -68,17 +68,18 @@
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-boot-config" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-boot-config" />
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-confirm" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-confirm" />
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-apt-hook" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-apt-hook" />
+    <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-provision-factory" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-provision-factory" />
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-cli" Target="/usr/bin/anduinos-btrfs-snapshots-manager-cli" />
-    <IncludeScript Include="data/initramfs-hook" Target="/usr/share/initramfs-tools/hooks/anduinos-btrfs-snapshots-manager" />
-    <IncludeScript Include="data/initramfs-local-premount" Target="/usr/share/initramfs-tools/scripts/local-premount/anduinos-btrfs-snapshots-manager" />
+    <IncludeScript Include="data/dracut/91anduinos-btrfs-snapshots-manager/module-setup.sh"
+                   Target="/usr/lib/dracut/modules.d/91anduinos-btrfs-snapshots-manager/module-setup.sh" />
+    <IncludeScript Include="data/dracut/91anduinos-btrfs-snapshots-manager/anduinos-btrfs-snapshots-manager.sh"
+                   Target="/usr/lib/dracut/modules.d/91anduinos-btrfs-snapshots-manager/anduinos-btrfs-snapshots-manager.sh" />
     <IncludeFile Include="data/recovery-protocol-version" Target="/usr/share/anduinos-btrfs-snapshots-manager/recovery-protocol-version" />
     <IncludeScript Include="data/09_anduinos_btrfs_snapshots_manager" Target="/etc/grub.d/09_anduinos_btrfs_snapshots_manager" />
     <IncludeScript Include="data/01_anduinos_btrfs_snapshots_manager_env" Target="/etc/grub.d/01_anduinos_btrfs_snapshots_manager_env" />
     <IncludeScript Include="data/no-os-prober" Target="/usr/libexec/anduinos-btrfs-snapshots-manager/no-os-prober/os-prober" />
     <IncludeScript Include="data/no-os-prober" Target="/usr/libexec/anduinos-btrfs-snapshots-manager/no-os-prober/linux-boot-prober" />
     <IncludeScript Include="scripts/qualify-recovery-vm.sh" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/qualify-recovery-vm.sh" />
-    <IncludeScript Include="scripts/test-installed-policy.sh" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/test-installed-policy.sh" />
-    <DpkgTrigger Include="update-initramfs" Type="activate-await" />
     <IncludeFile Include="assets/apt-snapshots.toml" Target="/usr/share/anduinos-btrfs-snapshots-manager/defaults/apt-snapshots.toml" />
     <IncludeFile Include="assets/automation.toml" Target="/usr/share/anduinos-btrfs-snapshots-manager/defaults/automation.toml" />
     <IncludeFile Include="data/org.anduinos.BtrfsSnapshotsManager.policy" Target="/usr/share/polkit-1/actions/org.anduinos.BtrfsSnapshotsManager.policy" />
@@ -100,6 +101,8 @@
     <IncludeFile Include="docs/ROLLBACK-RELEASE-TEST-PLAN.md" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/ROLLBACK-RELEASE-TEST-PLAN.md" />
     <IncludeFile Include="docs/deployment-v1.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/deployment-v1.schema.json" />
     <IncludeFile Include="docs/rollback-v3.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/rollback-v3.schema.json" />
+    <IncludeFile Include="docs/rollback-v4.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/rollback-v4.schema.json" />
+    <IncludeFile Include="docs/rollback-v5.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/rollback-v5.schema.json" />
     <IncludeFile Include="docs/root-cleanup-v1.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/root-cleanup-v1.schema.json" />
     <IncludeFile Include="docs/personal-snapshot-v1.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/personal-snapshot-v1.schema.json" />
     <IncludeFolder Include="obj/locale" Target="/usr/share/locale" />
@@ -115,5 +118,15 @@
     <AppStreamScreenshot Include="screenshots/scheduled-recovery.png"
                          Caption="Configure automatic snapshots and automatic cleanup"
                          Environment="GNOME:dark" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="bash tests/check-source.sh" TimeoutSeconds="300" />
+    <TestCommand Name="lifecycle" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 python3 tests/test_local_policy.py" TimeoutSeconds="300" />
+    <TestCommand Name="native" Profile="anduinos-package-release-test" Run="cargo test --manifest-path src/Cargo.toml --workspace --locked --lib --bins" TimeoutSeconds="3600" />
+    <TestCommand Name="widgets" Profile="gui" Run="bash tests/gui-smoke.sh" TimeoutSeconds="3600" />
+    <TestCommand Name="recovery" Profile="root-loopback" Run="bash tests/loopback.sh" TimeoutSeconds="3600" />
+    <TestCommand Name="engine-protocol" Profile="anduinos-package-release-test" Run='cargo build --manifest-path src/Cargo.toml --locked -p anduinos-recovery-engine --bin anduinos-btrfs-snapshots-manager-initramfs &amp;&amp; bash tests/check-engine.sh "${CARGO_TARGET_DIR:-src/target}/debug/anduinos-btrfs-snapshots-manager-initramfs"' TimeoutSeconds="600" />
   </ItemGroup>
 </Project>

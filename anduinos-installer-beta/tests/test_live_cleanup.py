@@ -5,6 +5,7 @@ from pathlib import Path
 from fakes import FakeRunner
 from helpers import valid_plan
 from installer_core.live_cleanup import (
+    ADVANCED_FILESYSTEM_TOOL_PACKAGES,
     LIVE_ONLY_PACKAGES,
     PERSISTENT_TARGET_PACKAGES,
     REQUIRED_BOOT_PACKAGES,
@@ -17,10 +18,9 @@ from installer_core.snapshots_manager import SNAPSHOTS_MANAGER_PACKAGE
 
 
 EXPECTED_LIVE_ONLY_PACKAGES = (
-    "casper",
+    "anduinos-live-layers",
     "discover",
     "laptop-detect",
-    "os-prober",
     "gparted",
     "anduinos-installer-beta",
     "anduinos-live-settings",
@@ -58,7 +58,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
         payload = plan.to_dict()
         self.assertEqual(
             payload["source"],
-            {"image_path": "/cdrom/casper/filesystem.squashfs"},
+            {"image_path": "/run/anduinos-live/rootfs.squashfs"},
         )
         payload["source"]["desktop_manifest_path"] = "/legacy"
         with self.assertRaisesRegex(
@@ -71,9 +71,19 @@ class RemoveLivePackagesTests(unittest.TestCase):
         self.assertNotIn(SNAPSHOTS_MANAGER_PACKAGE, LIVE_ONLY_PACKAGES)
         self.assertEqual(PERSISTENT_TARGET_PACKAGES, ("openssh-server",))
         self.assertEqual(
+            ADVANCED_FILESYSTEM_TOOL_PACKAGES,
+            {
+                Filesystem.XFS: "xfsprogs",
+                Filesystem.F2FS: "f2fs-tools",
+            },
+        )
+        self.assertEqual(
             REQUIRED_BOOT_PACKAGES[Architecture.AMD64],
             (
                 "anduinos-core-system",
+                "dracut",
+                "dracut-core",
+                "dracut-install",
                 "grub-common",
                 "grub2-common",
                 "grub-pc-bin",
@@ -86,6 +96,9 @@ class RemoveLivePackagesTests(unittest.TestCase):
             REQUIRED_BOOT_PACKAGES[Architecture.ARM64],
             (
                 "anduinos-core-system",
+                "dracut",
+                "dracut-core",
+                "dracut-install",
                 "grub-common",
                 "grub2-common",
                 "grub-efi-arm64-bin",
@@ -106,8 +119,13 @@ class RemoveLivePackagesTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             runner = FakeRunner()
-            for package in ("casper", "anduinos-installer-beta"):
+            for package in ("anduinos-live-layers", "anduinos-installer-beta"):
                 runner.outputs[_query(target, package)] = ("ii \n", "", 0)
+            runner.outputs[_query(target, SNAPSHOTS_MANAGER_PACKAGE)] = (
+                "ii \n",
+                "",
+                0,
+            )
             context = _context(target)
             step = RemoveLivePackagesStep(runner)
             step.preflight(context)
@@ -117,7 +135,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
             command for command, _kwargs in runner.commands if "purge" in command
         )
         self.assertEqual(
-            purge[-2:], ("casper", "anduinos-installer-beta")
+            purge[-2:], ("anduinos-live-layers", "anduinos-installer-beta")
         )
         queried = {
             command[-1]
@@ -126,9 +144,23 @@ class RemoveLivePackagesTests(unittest.TestCase):
         }
         self.assertEqual(
             queried,
-            set(EXPECTED_LIVE_ONLY_PACKAGES) | {"openssh-server"},
+            set(EXPECTED_LIVE_ONLY_PACKAGES)
+            | {"openssh-server", SNAPSHOTS_MANAGER_PACKAGE},
         )
-        self.assertNotIn(SNAPSHOTS_MANAGER_PACKAGE, queried)
+        self.assertIn(
+            (
+                "chroot",
+                str(target),
+                "apt-mark",
+                "manual",
+                SNAPSHOTS_MANAGER_PACKAGE,
+            ),
+            [command for command, _kwargs in runner.commands],
+        )
+        self.assertIn(
+            SNAPSHOTS_MANAGER_PACKAGE,
+            context.values["persistent_target_packages"],
+        )
 
     def test_marks_live_composed_openssh_as_a_persistent_target_package(self):
         messages = []
@@ -183,7 +215,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
             target = Path(directory)
             runner = FakeRunner()
             runner.outputs[DETECT_VIRTUALIZATION] = ("vmware\n", "", 0)
-            runner.outputs[_query(target, "casper")] = ("ii \n", "", 0)
+            runner.outputs[_query(target, "anduinos-live-layers")] = ("ii \n", "", 0)
             context = _context(target)
             RemoveLivePackagesStep(runner).execute(context)
 
@@ -278,6 +310,58 @@ class RemoveLivePackagesTests(unittest.TestCase):
         self.assertEqual(
             context.values["live_package_candidates"][-1], SNAPSHOTS_MANAGER_PACKAGE
         )
+
+    def test_advanced_filesystem_tools_survive_installer_autoremove(self):
+        for filesystem, package in ADVANCED_FILESYSTEM_TOOL_PACKAGES.items():
+            with self.subTest(filesystem=filesystem.value):
+                with tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    runner = FakeRunner()
+                    runner.outputs[_query(target, package)] = (
+                        "ii \n",
+                        "",
+                        0,
+                    )
+                    runner.outputs[
+                        _query(target, "anduinos-installer-beta")
+                    ] = ("ii \n", "", 0)
+                    context = _context(target, filesystem)
+                    RemoveLivePackagesStep(runner).execute(context)
+
+                commands = [
+                    command for command, _kwargs in runner.commands
+                ]
+                mark = (
+                    "chroot",
+                    str(target),
+                    "apt-mark",
+                    "manual",
+                    package,
+                )
+                autoremove = next(
+                    command
+                    for command in commands
+                    if "autoremove" in command
+                )
+                self.assertIn(mark, commands)
+                self.assertLess(commands.index(mark), commands.index(autoremove))
+                self.assertIn(
+                    package,
+                    context.values["persistent_target_packages"],
+                )
+                self.assertIn(
+                    SNAPSHOTS_MANAGER_PACKAGE,
+                    context.values["live_package_candidates"],
+                )
+
+    def test_missing_selected_filesystem_tools_are_fatal(self):
+        with tempfile.TemporaryDirectory() as directory:
+            context = _context(Path(directory), Filesystem.XFS)
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "Selected root filesystem tools are missing: xfsprogs",
+            ):
+                RemoveLivePackagesStep(FakeRunner()).execute(context)
 
     def test_missing_packages_are_a_successful_noop(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -17,8 +17,12 @@ from .storage_inventory import PartitionInventory
 MIB = 1024 * 1024
 GUIDED_ESP_MINIMUM_FREE_BYTES = 64 * MIB
 EFI_BOOT_ENTRY_RE = re.compile(
-    r"^Boot[0-9A-Fa-f]{4}\*?\s+(?P<label>.*?)\s+"
-    r"HD\(\d+,GPT,(?P<partuuid>[^,]+),[^)]*\)/File\((?P<loader>[^)]+)\)"
+    r"^Boot(?P<number>[0-9A-Fa-f]{4})\*?\s+(?P<label>.*?)\s+"
+    r"HD\(\d+,GPT,(?P<partuuid>[^,]+),[^)]*\)/"
+    r"(?:File\()?(?P<loader>\\[^)\s]+)\)?"
+)
+EFI_BOOT_ORDER_RE = re.compile(
+    r"^BootOrder:\s*(?P<order>[0-9A-Fa-f]{4}(?:,[0-9A-Fa-f]{4})*)\s*$"
 )
 
 
@@ -249,11 +253,13 @@ def verify_nvram_entry(
     label: str,
     partuuid: str,
     loader: str,
-) -> None:
+    require_first: bool = False,
+) -> str:
     """Require an exact GPT partition and loader in efibootmgr output."""
 
     expected_uuid = partuuid.strip("{}").lower()
     expected_loader = loader.replace("/", "\\").lower()
+    matching_number = ""
     for line in output.splitlines():
         match = EFI_BOOT_ENTRY_RE.match(line.strip())
         if match is None or match.group("label") != label:
@@ -261,7 +267,30 @@ def verify_nvram_entry(
         actual_uuid = match.group("partuuid").strip("{}").lower()
         actual_loader = match.group("loader").replace("/", "\\").lower()
         if actual_uuid == expected_uuid and actual_loader == expected_loader:
-            return
+            matching_number = match.group("number").upper()
+            break
+    if not matching_number:
+        raise RuntimeError(
+            "The AnduinOS UEFI boot entry was not created for the selected ESP"
+        )
+    if require_first:
+        order = nvram_boot_order(output)
+        if not order or order[0] != matching_number:
+            raise RuntimeError(
+                "The AnduinOS UEFI boot entry is not first in BootOrder"
+            )
+    return matching_number
+
+
+def nvram_boot_order(output: str) -> tuple[str, ...]:
+    """Parse the firmware boot order reported by efibootmgr."""
+
+    for line in output.splitlines():
+        match = EFI_BOOT_ORDER_RE.match(line.strip())
+        if match:
+            return tuple(
+                item.upper() for item in match.group("order").split(",")
+            )
     raise RuntimeError(
-        "The AnduinOS UEFI boot entry was not created for the selected ESP"
+        "UEFI BootOrder was not reported by efibootmgr"
     )

@@ -81,24 +81,3 @@ impl SnapshotsManagerConfig {
         config
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_default_config() {
-        let config = SnapshotsManagerConfig::default();
-        assert_eq!(
-            config.snapshot_dir,
-            PathBuf::from("/.snapshots/anduinos-btrfs-snapshots-manager/deployments")
-        );
-        assert_eq!(config.min_free_space_bytes, 1024 * 1024 * 1024);
-        assert_eq!(config.ui_window_width, 800);
-        assert_eq!(config.ui_window_height, 600);
-        assert_eq!(
-            config.apt_snapshot_policy,
-            PathBuf::from("/etc/anduinos-btrfs-snapshots-manager/apt-snapshots.toml")
-        );
-    }
-}

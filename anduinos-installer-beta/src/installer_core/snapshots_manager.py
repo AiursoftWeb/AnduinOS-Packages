@@ -11,6 +11,9 @@ from .steps import FailurePolicy, InstallContext, StepWarning
 
 
 SNAPSHOTS_MANAGER_PACKAGE = "anduinos-btrfs-snapshots-manager"
+FACTORY_PROVISIONER = (
+    "/usr/libexec/anduinos-btrfs-snapshots-manager-provision-factory"
+)
 
 
 def _target(context: InstallContext) -> Path:
@@ -181,6 +184,60 @@ class EnsureSnapshotsManagerStep:
             ("chroot", str(target), "dpkg", "--audit"),
             timeout=300,
         )
+
+    def cleanup(self, context: InstallContext) -> None:
+        return None
+
+
+@dataclass
+class CreateFactorySnapshotStep:
+    """Create the protected initial Btrfs system and Home recovery points."""
+
+    runner: CommandRunner
+    id: str = "create-factory-snapshot"
+    title: str = "Create initial system recovery point"
+    failure_policy: FailurePolicy = FailurePolicy.WARNING
+    progress_weight: int = 3
+    destructive: bool = False
+
+    def preflight(self, context: InstallContext) -> None:
+        context.validate_plan()
+        self.runner.require_commands(("chroot",))
+
+    def execute(self, context: InstallContext) -> None:
+        context.values["factory_snapshot_ready"] = False
+        if not context.values.get("snapshots_manager_installed"):
+            raise StepWarning(
+                "Disk Snapshots Manager is unavailable; the initial system "
+                "and Home recovery points were not created"
+            )
+        target = _target(context)
+        provisioner = target / FACTORY_PROVISIONER.lstrip("/")
+        if not provisioner.is_file():
+            raise StepWarning(
+                "Disk Snapshots Manager does not provide factory recovery "
+                "provisioning; the initial system and Home recovery points were not created"
+            )
+        result = self.runner.run(
+            ("chroot", str(target), FACTORY_PROVISIONER),
+            timeout=1800,
+        )
+        context.values["factory_snapshot_ready"] = True
+        detail = result.stdout.strip()
+        context.log(
+            "Initial system and Home recovery points: "
+            + (detail if detail else "New OS is ready")
+        )
+
+    def verify(self, context: InstallContext) -> None:
+        if not context.values.get("factory_snapshot_ready"):
+            return
+        target = _target(context)
+        self.runner.run(
+            ("chroot", str(target), FACTORY_PROVISIONER, "--check"),
+            timeout=300,
+        )
+        context.log("Initial system and Home recovery point verification: ready")
 
     def cleanup(self, context: InstallContext) -> None:
         return None

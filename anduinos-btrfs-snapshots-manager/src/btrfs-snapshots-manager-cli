@@ -186,7 +186,7 @@ cmd_personal_list() {
     local json_mode=false
     [[ "${1:-}" == "--json" ]] && json_mode=true
     local status
-    status=$(recovery_status)
+    status=$(public_recovery_status)
     if [[ "$json_mode" == "true" ]]; then
         jq '.personal_snapshots // []' <<<"$status"
     else
@@ -229,15 +229,19 @@ cmd_personal_delete() {
     echo "Home snapshot deleted"
 }
 
-recovery_status() {
+public_recovery_status() {
     single_string "$(call_raw GetRecoveryEngineStatus)"
+}
+
+privileged_recovery_status() {
+    single_string "$(call_raw GetPrivilegedRecoveryEngineStatus)"
 }
 
 cmd_status() {
     local json_mode=false
     [[ "${1:-}" == "--json" ]] && json_mode=true
     local status
-    status=$(recovery_status)
+    status=$(privileged_recovery_status)
     if [[ "$json_mode" == "true" ]]; then
         jq . <<<"$status"
     else
@@ -268,7 +272,7 @@ cmd_list() {
     local json_mode=false
     [[ "${1:-}" == "--json" ]] && json_mode=true
     local status
-    status=$(recovery_status)
+    status=$(privileged_recovery_status)
     if [[ "$json_mode" == "true" ]]; then
         jq '.deployments' <<<"$status"
     else
@@ -289,7 +293,7 @@ cmd_show() {
     local json_mode=false
     [[ "${2:-}" == "--json" ]] && json_mode=true
     local record
-    record=$(recovery_status | jq -ec --arg id "$id" '.deployments[] | select(.id == $id)') || {
+    record=$(privileged_recovery_status | jq -ec --arg id "$id" '.deployments[] | select(.id == $id)') || {
         echo "Error: system snapshot not found" >&2
         exit 1
     }
@@ -340,7 +344,7 @@ cmd_preview() {
             <<<"$verification" >&2
         exit 1
     }
-    status=$(recovery_status)
+    status=$(privileged_recovery_status)
     preview=$(jq -ec --arg id "$id" '
         .deployments[] | select(.id == $id) |
         {

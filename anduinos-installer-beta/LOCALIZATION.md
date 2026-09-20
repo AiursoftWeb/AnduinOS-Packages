@@ -86,3 +86,12 @@ Raw command output remains unchanged in the Output view so that copied logs
 match command-line diagnostics and can be searched reliably. Installer-owned
 page text, decisions, warnings, progress labels, and completion instructions
 are localized.
+
+An unsuccessful initial repository probe is checked once more after copying
+the system and before selecting a mirror or downloading packages. Each probe
+records endpoint, result/error and elapsed time in the raw log. Persistent
+offline status still allows base installation to finish. The completion page
+lists localized feature titles for incomplete language support, input methods,
+codecs, updates, snapshots manager or drivers; a recovered early network
+warning alone does not produce a missing-feature notice. Reboot and MOK
+enrollment instructions remain visible in either case.

@@ -1,0 +1,54 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-whisper-gtk</PackageName>
+    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS Voice Typing settings, microphone training, GNOME shortcut, and non-focusing floating microphone bar.</PackageDescription>
+    <Section>gnome</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
+    <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Dependency Include="anduinos-whisper-framework (&gt;= 2.0.2-15)" />
+    <Dependency Include="python3" />
+    <Dependency Include="python3-gi" />
+    <Dependency Include="gir1.2-gtk-4.0" />
+    <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="gnome-shell (&gt;= 49)" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IncludeScript Include="src/anduinos-whisper-gtk" Target="/usr/bin/anduinos-whisper-gtk" />
+    <IncludeFolder Include="src/anduinos_whisper_gtk" Target="/usr/lib/python3/dist-packages/anduinos_whisper_gtk" />
+    <IncludeFolder Include="data/voice-typing@anduinos.com" Target="/usr/share/gnome-shell/extensions/voice-typing@anduinos.com" />
+    <IncludeFolder Include="locale/" Target="/usr/share/locale/" />
+    <IncludeFile Include="resources/com.anduinos.VoiceTyping.Settings.svg" Target="/usr/share/icons/hicolor/scalable/apps/com.anduinos.VoiceTyping.Settings.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AppStreamApplication Include="data/com.anduinos.VoiceTyping.Settings.desktop" Icon="resources/com.anduinos.VoiceTyping.Settings.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="bash compile-locales.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:../anduinos-whisper-framework/src python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+    <TestCommand Name="widgets" Profile="gui" Run="bash tests/gui.sh" TimeoutSeconds="300" />
+    <TestCommand Name="dictation" Profile="desktop-voice" Run="python3 tests/integration/smoke-shell.py" TimeoutSeconds="180" />
+  </ItemGroup>
+</Project>

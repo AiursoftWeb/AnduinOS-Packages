@@ -11,7 +11,19 @@ from dataclasses import replace
 from enum import Enum
 
 from installer_core.executor import describe_installation_pipeline
-from installer_core.model import Filesystem, InstallMode, InstallPlan
+from installer_core.btrfs import BtrfsCompression
+from installer_core.model import (
+    Filesystem,
+    InstallMode,
+    InstallPlan,
+    StorageSpec,
+)
+from installer_core.ntfs_resize import (
+    GIB,
+    MIB,
+    NtfsResizeBlockReason,
+    NtfsResizeInspection,
+)
 from installer_core.passwords import hash_password
 from installer_core.planning import build_plan
 from installer_core.probe import PlatformProbe, probe_platform
@@ -22,8 +34,10 @@ from installer_core.storage_inventory import (
 )
 from installer_core.storage_ui import (
     GuidedStoragePreview,
+    ManualStoragePreview,
     StorageDiskChoice,
     build_guided_storage_preview,
+    build_manual_storage_preview,
     build_storage_workflow,
 )
 from installer_core.validation import validate_plan
@@ -67,22 +81,78 @@ def probe_storage_inventory():
     return _probe_storage_inventory(parted_run=_run_privileged_parted)
 
 
+def probe_ntfs_resize(
+    partition: str,
+    *,
+    development_mode: bool = False,
+    current_size_bytes: int = 0,
+) -> NtfsResizeInspection:
+    """Ask the fixed Polkit helper for a read-only NTFS shrink assessment."""
+
+    if development_mode:
+        if current_size_bytes <= 24 * GIB:
+            raise FrontendPlanError(
+                "The simulated NTFS volume is too small to shrink"
+            )
+        return NtfsResizeInspection(
+            device=partition,
+            filesystem="ntfs",
+            current_size_bytes=current_size_bytes,
+            minimum_size_bytes=24 * GIB,
+            maximum_size_bytes=(current_size_bytes - MIB) // MIB * MIB,
+            block_reason=NtfsResizeBlockReason.NONE,
+            message="Simulated NTFS volume passed every read-only check.",
+            probe_exit_code=0,
+        )
+    command = [
+        _STORAGE_PROBE_HELPER,
+        "--ntfs-inspect",
+        partition,
+    ]
+    if os.geteuid() != 0:
+        command.insert(0, "pkexec")
+    try:
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            timeout=600,
+            check=False,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired) as error:
+        raise FrontendPlanError(
+            f"Cannot inspect the NTFS volume: {error}"
+        ) from error
+    if result.returncode != 0:
+        raise FrontendPlanError(
+            result.stderr.strip() or "NTFS inspection failed"
+        )
+    try:
+        inspection = NtfsResizeInspection.from_json(result.stdout)
+    except ValueError as error:
+        raise FrontendPlanError(str(error)) from error
+    if inspection.device != partition:
+        raise FrontendPlanError("NTFS inspection returned another device")
+    return inspection
+
+
 class StorageStrategy(str, Enum):
     ERASE_BTRFS = "erase-btrfs"
     ERASE_EXT4 = "erase-ext4"
-    ADVANCED_COEXISTENCE = "advanced-coexistence"
-
-
-def guided_storage_enabled() -> bool:
-    """Coexistence is an unconditional beta capability."""
-
-    return True
+    ADVANCED = "advanced-manual"
 
 
 def clear_guided_storage_selection(state: dict[str, object]) -> None:
     state["guided_extent_id"] = ""
     state["guided_esp_partuuid"] = ""
     state["guided_storage_preview_model"] = None
+    state["_guided_storage_workflow_model"] = None
+
+
+def clear_manual_storage_selection(state: dict[str, object]) -> None:
+    state["manual_storage_selection_model"] = None
+    state["manual_storage_preview_model"] = None
+    state["_manual_storage_workflow_model"] = None
 
 
 def clear_storage_strategy(state: dict[str, object]) -> None:
@@ -92,6 +162,7 @@ def clear_storage_strategy(state: dict[str, object]) -> None:
     state["storage_mode"] = InstallMode.ERASE_DISK.value
     state["filesystem"] = Filesystem.BTRFS.value
     clear_guided_storage_selection(state)
+    clear_manual_storage_selection(state)
 
 
 def clear_storage_target(state: dict[str, object]) -> None:
@@ -152,6 +223,8 @@ def apply_storage_strategy(
     changed = state.get("storage_strategy") != strategy.value
     if changed:
         clear_guided_storage_selection(state)
+        clear_manual_storage_selection(state)
+        state.pop("swap_size_mib", None)
     state["storage_strategy"] = strategy.value
     if strategy is StorageStrategy.ERASE_BTRFS:
         state["storage_mode"] = InstallMode.ERASE_DISK.value
@@ -160,10 +233,12 @@ def apply_storage_strategy(
         state["storage_mode"] = InstallMode.ERASE_DISK.value
         state["filesystem"] = Filesystem.EXT4.value
     else:
-        state["storage_mode"] = InstallMode.GUIDED_COEXISTENCE.value
+        state["storage_mode"] = InstallMode.MANUAL.value
         if changed or state.get("filesystem") not in {
             Filesystem.BTRFS.value,
             Filesystem.EXT4.value,
+            Filesystem.XFS.value,
+            Filesystem.F2FS.value,
         }:
             state["filesystem"] = Filesystem.BTRFS.value
 
@@ -205,6 +280,7 @@ def create_install_plan(
     if storage_mode not in {
         InstallMode.ERASE_DISK,
         InstallMode.GUIDED_COEXISTENCE,
+        InstallMode.MANUAL,
     }:
         if clear_passwords:
             clear_plaintext_passwords(state)
@@ -257,15 +333,70 @@ def create_install_plan(
         state["disk"] = selected.identity.path
     if platform is None:
         platform = probe_platform()
+    base_choices = state
+    storage_override = None
+    if storage_mode is InstallMode.MANUAL:
+        base_choices = dict(state)
+        base_choices.pop("swap_size_mib", None)
+        previous_preview = state.get("manual_storage_preview_model")
+        if not isinstance(previous_preview, ManualStoragePreview):
+            raise FrontendPlanError(
+                "Manual storage selection is missing; rescan and review it again"
+            )
+        try:
+            filesystem = Filesystem(
+                str(state.get("filesystem") or "btrfs")
+            )
+            selection = replace(
+                previous_preview.selection,
+                filesystem=filesystem,
+            )
+            current_preview = build_manual_storage_preview(
+                build_storage_workflow(inventory, platform),
+                selection,
+            )
+        except (KeyError, ValueError) as error:
+            raise FrontendPlanError(
+                "The manual disk layout changed; rescan and review it again"
+            ) from error
+        swap_size_mib = next(
+            (
+                item.end_mib - item.start_mib
+                for item in current_preview.graph.partitions
+                if item.name == "swap"
+            ),
+            0,
+        )
+        storage_override = StorageSpec(
+            mode=InstallMode.MANUAL,
+            disk=selected.identity,
+            filesystem=filesystem,
+            swap_size_mib=swap_size_mib,
+            graph=current_preview.graph,
+            btrfs_compression=BtrfsCompression(
+                state.get("btrfs_compression", "balanced")
+            ),
+        )
+
     plan = build_plan(
-        state,
+        base_choices,
         selected.identity,
         platform,
         password_hash,
         disk_binding=bind_disk_topology(inventory, selected_id),
         inventory_digest=inventory.digest,
+        storage_override=storage_override,
     )
     if storage_mode is InstallMode.ERASE_DISK:
+        return plan
+
+    if storage_mode is InstallMode.MANUAL:
+        plan = replace(
+            plan,
+            boot=replace(plan.boot, install_fallback_path=False),
+        )
+        validate_plan(plan)
+        state["manual_storage_preview_model"] = current_preview
         return plan
 
     previous_preview = state.get("guided_storage_preview_model")
@@ -282,6 +413,11 @@ def create_install_plan(
         current_preview = build_guided_storage_preview(
             build_storage_workflow(inventory, platform),
             selection,
+            swap_size_mib=(
+                state.get("swap_size_mib")
+                if isinstance(state.get("swap_size_mib"), int)
+                else None
+            ),
         )
     except (KeyError, ValueError) as error:
         raise FrontendPlanError(
@@ -295,7 +431,7 @@ def create_install_plan(
             plan.storage,
             mode=InstallMode.GUIDED_COEXISTENCE,
             filesystem=filesystem,
-            swap_size_mib=current_preview.swap_sizing.swap_size_mib,
+            swap_size_mib=current_preview.swap_size_mib,
             graph=current_preview.graph,
         ),
         boot=replace(plan.boot, install_fallback_path=False),
@@ -434,7 +570,7 @@ class DevelopmentExecutorClient:
         else:
             log(
                 "Disk Snapshots Manager policy: remove the live payload from the "
-                "ext4 target"
+                f"{plan.storage.filesystem.value} target"
             )
         for step, weight in pipeline:
             progress(step, completed, total)

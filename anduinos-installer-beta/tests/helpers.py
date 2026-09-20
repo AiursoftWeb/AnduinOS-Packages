@@ -50,6 +50,7 @@ def valid_plan(
     automatic_login: bool | None = None,
     ssh_password_login: bool = False,
     disk: DiskIdentity | None = None,
+    swap_size_mib: int | None = None,
 ) -> InstallPlan:
     mok_policy = (
         MokPasswordPolicy.ANDUINOS_DEFAULT
@@ -70,10 +71,14 @@ def valid_plan(
             mode=InstallMode.ERASE_DISK,
             disk=selected_disk,
             filesystem=filesystem,
-            swap_size_mib=calculate_swap_sizing(
-                TEST_PHYSICAL_MEMORY_BYTES,
-                selected_disk.expected_size_bytes,
-            ).swap_size_mib,
+            swap_size_mib=(
+                calculate_swap_sizing(
+                    TEST_PHYSICAL_MEMORY_BYTES,
+                    selected_disk.expected_size_bytes,
+                ).swap_size_mib
+                if swap_size_mib is None
+                else swap_size_mib
+            ),
         ),
         platform=PlatformSpec(
             architecture=architecture,
@@ -115,7 +120,10 @@ def valid_plan(
             install_multimedia_codecs=install_multimedia_codecs,
         ),
         swap=SwapSpec(),
-        boot=BootSpec(mok_password_policy=mok_policy),
+        boot=BootSpec(
+            install_fallback_path=firmware is Firmware.BIOS,
+            mok_password_policy=mok_policy,
+        ),
     )
     graph = build_erase_disk_storage_graph(
         plan,

@@ -1,0 +1,14 @@
+--- a/extension.js
++++ b/extension.js
+@@ -82,8 +82,9 @@ export default class AccentColorUserThemeExtension extends Extension {
+         // Clear the userThemes array
+         this.userThemesLight = [];
+         this.userThemesDark = [];
+-        // Optionally reset to default user shell theme - Adwaita
+-        this._setUserTheme("Adwaita");
++        // Do not change user-theme while extensions are being disabled.  The
++        // user-theme extension may already have destroyed its Gio.Settings,
++        // and emitting changed::name here races that teardown.
+         // Null out settings
+         this._settings = null;
+         this._usettings = null;

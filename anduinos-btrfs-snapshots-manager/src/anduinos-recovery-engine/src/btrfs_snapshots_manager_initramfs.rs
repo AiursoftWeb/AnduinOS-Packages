@@ -5,7 +5,6 @@ use anduinos_recovery_engine::recovery::{RecoveryCheckpoint, RecoveryEngine, Rec
 use anduinos_recovery_engine::transaction::{RECOVERY_PROTOCOL_VERSION, RollbackId};
 
 const BOOT_ID: &str = "/proc/sys/kernel/random/boot_id";
-const CONFIRM_BINARY: &str = "/usr/libexec/anduinos-btrfs-snapshots-manager-confirm";
 
 fn main() -> ExitCode {
     let arguments = std::env::args().skip(1).collect::<Vec<_>>();
@@ -13,9 +12,10 @@ fn main() -> ExitCode {
         println!("{RECOVERY_PROTOCOL_VERSION}");
         return ExitCode::SUCCESS;
     }
-    if arguments.as_slice() == ["--stage-confirmation-artifact"] {
+    if arguments.len() == 2 && arguments[0] == "--stage-confirmation-artifact" {
+        let source = &arguments[1];
         return match RecoveryEngine::default()
-            .stage_confirmation_artifact(std::path::Path::new(CONFIRM_BINARY))
+            .stage_confirmation_artifact(std::path::Path::new(source))
         {
             Ok(_) => ExitCode::SUCCESS,
             Err(error) => {
@@ -35,7 +35,7 @@ fn main() -> ExitCode {
         },
         _ => {
             eprintln!(
-                "Usage: anduinos-btrfs-snapshots-manager-initramfs [ROLLBACK_ID|--stage-confirmation-artifact]"
+                "Usage: anduinos-btrfs-snapshots-manager-initramfs [ROLLBACK_ID|--stage-confirmation-artifact PATH]"
             );
             return ExitCode::from(64);
         }

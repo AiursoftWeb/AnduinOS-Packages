@@ -23,6 +23,8 @@ pub struct RootCleanupRecord {
     pub schema_version: u32,
     pub transaction_id: RollbackId,
     pub old_root_name: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub old_home_name: Option<String>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
     pub attempts: u32,
@@ -37,6 +39,7 @@ impl RootCleanupRecord {
             schema_version: ROOT_CLEANUP_SCHEMA_VERSION,
             transaction_id: transaction.id,
             old_root_name: transaction.old_root_name(),
+            old_home_name: transaction.reset_home.then(|| transaction.old_home_name()),
             created_at: now,
             updated_at: now,
             attempts: 0,
@@ -67,6 +70,13 @@ impl RootCleanupRecord {
         if self.old_root_name != format!("@root.snapshots-manager-old-{}", self.transaction_id) {
             return Err(RootCleanupError::new(
                 "Root cleanup record has an invalid old-root name",
+            ));
+        }
+        if self.old_home_name.as_deref().is_some_and(|name| {
+            name != format!("@home.snapshots-manager-old-{}", self.transaction_id)
+        }) {
+            return Err(RootCleanupError::new(
+                "Root cleanup record has an invalid old-Home name",
             ));
         }
         if self.blocked_subvolumes.len() > MAX_BLOCKED_SUBVOLUMES
@@ -131,9 +141,11 @@ impl RootCleanupStore {
     ) -> Result<RootCleanupRecord, RootCleanupError> {
         let record = RootCleanupRecord::new(transaction);
         if let Some(existing) = self.load(transaction.id)? {
-            if existing.old_root_name != record.old_root_name {
+            if existing.old_root_name != record.old_root_name
+                || existing.old_home_name != record.old_home_name
+            {
                 return Err(RootCleanupError::new(
-                    "Existing root cleanup record targets a different old root",
+                    "Existing root cleanup record targets different protected subvolumes",
                 ));
             }
             return Ok(existing);
@@ -434,6 +446,19 @@ mod tests {
         );
         environment.store().remove(transaction.id).unwrap();
         assert!(environment.store().list().unwrap().is_empty());
+    }
+
+    #[test]
+    fn home_reset_cleanup_is_bound_to_the_same_transaction() {
+        let mut transaction = transaction();
+        transaction.reset_home = true;
+        transaction.factory_home_snapshot_id = Some(crate::personal::PersonalSnapshotId::new());
+        transaction.factory_home_snapshot_uuid =
+            Some("dddddddd-1111-4222-8333-eeeeeeeeeeee".into());
+        transaction.validate().unwrap();
+        let record = RootCleanupRecord::new(&transaction);
+        assert_eq!(record.old_home_name, Some(transaction.old_home_name()));
+        record.validate().unwrap();
     }
 
     #[test]

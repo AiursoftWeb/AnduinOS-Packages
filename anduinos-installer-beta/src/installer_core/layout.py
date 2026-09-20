@@ -99,19 +99,20 @@ def build_erase_disk_layout_spec(
     )
     cursor += esp_size_mib
 
-    swap_number = len(parts) + 1
-    parts.append(
-        PartitionSpec(
-            number=swap_number,
-            name="swap",
-            start_mib=cursor,
-            end_mib=cursor + swap_size_mib,
-            filesystem="linux-swap",
-            mount_point=None,
-            flags=("swap",),
+    if swap_size_mib:
+        swap_number = len(parts) + 1
+        parts.append(
+            PartitionSpec(
+                number=swap_number,
+                name="swap",
+                start_mib=cursor,
+                end_mib=cursor + swap_size_mib,
+                filesystem="linux-swap",
+                mount_point=None,
+                flags=("swap",),
+            )
         )
-    )
-    cursor += swap_size_mib
+        cursor += swap_size_mib
 
     root_number = len(parts) + 1
     parts.append(

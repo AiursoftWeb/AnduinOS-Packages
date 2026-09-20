@@ -3,10 +3,33 @@
 # never replaces paste, multiline, Enter, history, or terminal key handling.
 [[ $- == *i* ]] || return 0
 [[ ${BASH_VERSINFO[0]:-0} -ge 4 ]] || return 0
-[[ ${ANDUINOS_GUESS_COMMAND:-1} != 0 ]] || return 0
 [[ -t 0 && -t 1 ]] || return 0
 [[ ${TERM:-dumb} != dumb ]] || return 0
 [[ ${_ANDUINOS_GUESS_COMMAND_LOADED:-0} != 1 ]] || return 0
+
+# Parse a tiny data file once at shell startup. It is never sourced/evaluated.
+# Explicit GUI values override legacy variables; absent keys preserve them.
+_anduinos_guess_read_settings() {
+    local config_root=${XDG_CONFIG_HOME:-${HOME}/.config} key value count=0 contents
+    local LC_ALL=C
+    [[ $config_root == /* ]] || config_root=${HOME}/.config
+    local config_file=$config_root/anduinos-bash-guess-command/settings.conf
+    unset _ANDUINOS_GUESS_CONFIG_COMMAND _ANDUINOS_GUESS_CONFIG_HISTORY _ANDUINOS_GUESS_CONFIG_PERSIST
+    [[ -f $config_file && ! -L $config_file && -r $config_file ]] || return 0
+    IFS= read -r -d '' -n 4097 contents < "$config_file" || :
+    (( ${#contents} <= 4096 )) || return 0
+    while IFS='=' read -r key value || [[ -n $key ]]; do
+        case "$key=$value" in
+            enabled=0|enabled=1) _ANDUINOS_GUESS_CONFIG_COMMAND=$value ;;
+            history=0|history=1) _ANDUINOS_GUESS_CONFIG_HISTORY=$value ;;
+            persist=0|persist=1) _ANDUINOS_GUESS_CONFIG_PERSIST=$value ;;
+        esac
+        (( ++count < 32 )) || break
+    done <<< "$contents"
+}
+_anduinos_guess_read_settings
+unset -f _anduinos_guess_read_settings
+[[ ${_ANDUINOS_GUESS_CONFIG_COMMAND:-${ANDUINOS_GUESS_COMMAND:-1}} != 0 ]] || return 0
 
 _anduinos_guess_lib=/usr/lib/anduinos-bash-guess-command
 

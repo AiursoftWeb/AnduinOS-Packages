@@ -56,6 +56,21 @@ mod imp {
             app.ensure_main_window().present();
             app.schedule_smoke_exit();
         }
+
+        fn command_line(&self, command_line: &gio::ApplicationCommandLine) -> glib::ExitCode {
+            let factory_reset = command_line
+                .options_dict()
+                .lookup::<bool>("factory-reset")
+                .ok()
+                .flatten()
+                .unwrap_or(false);
+            let app = self.obj();
+            app.activate();
+            if factory_reset {
+                app.ensure_main_window().begin_factory_reset();
+            }
+            glib::ExitCode::SUCCESS
+        }
     }
 
     impl GtkApplicationImpl for SnapshotsManagerApplication {}
@@ -70,9 +85,19 @@ glib::wrapper! {
 
 impl SnapshotsManagerApplication {
     pub fn new() -> Self {
-        glib::Object::builder()
+        let app: Self = glib::Object::builder()
             .property("application-id", APP_ID)
-            .build()
+            .property("flags", gio::ApplicationFlags::HANDLES_COMMAND_LINE)
+            .build();
+        app.add_main_option(
+            "factory-reset",
+            glib::Char::from(0u8),
+            glib::OptionFlags::NONE,
+            glib::OptionArg::None,
+            "Open the guarded factory reset workflow",
+            None,
+        );
+        app
     }
 
     pub fn ensure_main_window(&self) -> MainWindow {
@@ -210,6 +235,69 @@ impl SnapshotsManagerApplication {
         let weak = self.downgrade();
         glib::idle_add_local_once(move || {
             if let Some(app) = weak.upgrade() {
+                if surface == "home-rollback" || surface == "system-rollback" {
+                    let scope = if surface == "home-rollback" {
+                        crate::ui::SnapshotScope::Home
+                    } else {
+                        crate::ui::SnapshotScope::System
+                    };
+                    let dialog = crate::ui::rollback_confirmation(
+                        app.ensure_main_window().upcast_ref(),
+                        "New OS",
+                        scope,
+                    );
+                    assert_eq!(dialog.default_response().as_deref(), Some("cancel"));
+                    assert_eq!(dialog.close_response(), "cancel");
+                    dialog.present();
+                    glib::timeout_add_local_once(
+                        std::time::Duration::from_millis(500),
+                        move || {
+                            assert!(dialog.width() >= 520);
+                            assert!(dialog.height() < 540);
+                            log::info!(
+                                "Rollback confirmation: {} × {}",
+                                dialog.width(),
+                                dialog.height()
+                            );
+                            dialog.close();
+                            for window in app.windows() {
+                                window.close();
+                            }
+                            app.quit();
+                        },
+                    );
+                    return;
+                }
+                if surface == "factory-reset" || surface == "factory-reset-no-home" {
+                    let available = surface == "factory-reset";
+                    let (dialog, erase_home) = crate::ui::factory_reset::confirmation(
+                        app.ensure_main_window().upcast_ref(),
+                        available,
+                    );
+                    assert!(!erase_home.is_active());
+                    assert_eq!(erase_home.is_sensitive(), available);
+                    assert_eq!(dialog.default_response().as_deref(), Some("cancel"));
+                    assert_eq!(dialog.close_response(), "cancel");
+                    dialog.present();
+                    glib::timeout_add_local_once(
+                        std::time::Duration::from_millis(500),
+                        move || {
+                            assert!(dialog.width() >= 520, "dialog width: {}", dialog.width());
+                            assert!(dialog.height() < 540, "dialog height: {}", dialog.height());
+                            log::info!(
+                                "Factory reset confirmation: {} × {}",
+                                dialog.width(),
+                                dialog.height()
+                            );
+                            dialog.close();
+                            for window in app.windows() {
+                                window.close();
+                            }
+                            app.quit();
+                        },
+                    );
+                    return;
+                }
                 if surface == "information" {
                     app.ensure_main_window().show_information();
                 } else {
@@ -221,28 +309,5 @@ impl SnapshotsManagerApplication {
                 app.quit();
             }
         });
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn application_identity_is_stable() {
-        assert_eq!(APP_ID, "org.anduinos.BtrfsSnapshotsManager");
-    }
-
-    #[test]
-    fn notifier_is_started_as_a_supervised_user_service() {
-        assert_eq!(
-            NOTIFIER_START_ARGS,
-            [
-                "--user",
-                "start",
-                "--no-block",
-                "anduinos-btrfs-snapshots-manager-notifier.service"
-            ]
-        );
     }
 }

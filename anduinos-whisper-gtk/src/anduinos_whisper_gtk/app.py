@@ -1,0 +1,779 @@
+"""libadwaita settings, model management, and microphone calibration."""
+
+from __future__ import annotations
+
+import gettext
+import sys
+
+import gi
+
+gi.require_version("Adw", "1")
+gi.require_version("Gdk", "4.0")
+gi.require_version("Gtk", "4.0")
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk  # noqa: E402
+
+from anduinos_whisper_framework.config import MODELS, SETTINGS_SCHEMA, model_installed
+from anduinos_whisper_framework.live_policy import live_mode
+
+from .dbus import VoiceServiceClient, VoiceUiClient
+from .models import ModelDownloader, is_user_model, remove_user_model
+from .shortcuts import accelerator_from_key_event
+
+
+APP_ID = "com.anduinos.VoiceTyping.Settings"
+LOCALE_DIR = "/usr/share/locale"
+gettext.bindtextdomain("anduinos-whisper-gtk", LOCALE_DIR)
+gettext.textdomain("anduinos-whisper-gtk")
+_ = gettext.gettext
+
+LANGUAGES = [
+    ("auto", _("Automatic detection")),
+    ("zh-Hans", _("Simplified Chinese")),
+    ("zh-Hant", _("Traditional Chinese")),
+    ("en", _("English")),
+    ("es", _("Spanish")),
+    ("fr", _("French")),
+    ("de", _("German")),
+    ("ja", _("Japanese")),
+    ("ko", _("Korean")),
+    ("ru", _("Russian")),
+    ("pt", _("Portuguese")),
+]
+
+STATE_LABELS = {
+    "closed": _("Voice Typing"),
+    "ready": _("Ready"),
+    "listening": _("Listening…"),
+    "restart-required": _("Sign out required"),
+    "error": _("Needs attention"),
+}
+
+RESTART_REQUIRED_DETAIL = _(
+    "Sign out and back in to finish enabling Voice Typing."
+)
+
+
+def _input_devices():
+    """Load the multimedia backend only when the settings window needs it."""
+    from anduinos_whisper_framework.audio import input_devices
+
+    return input_devices()
+
+
+class SettingsWindow(Adw.PreferencesWindow):
+    def __init__(self, application: Adw.Application):
+        super().__init__(
+            application=application,
+            title=_("Voice Typing"),
+            default_width=770,
+            default_height=900,
+        )
+        self.settings = Gio.Settings.new(SETTINGS_SCHEMA)
+        self.ui_client = VoiceUiClient()
+        self.client = VoiceServiceClient()
+        self.downloader = ModelDownloader()
+        self.downloading_models: set[str] = set()
+        self.model_rows: dict[
+            str, tuple[Adw.ActionRow, Gtk.Button, Gtk.Button, Gtk.ProgressBar]
+        ] = {}
+        self.testing = False
+        self.ui_state = "checking"
+        self._shortcut_dialog: Adw.Dialog | None = None
+        self.connect("close-request", self._closing)
+        self.ui_client.subscribe(self._state_changed)
+        self.client.subscribe("LevelChanged", self._level_changed)
+        self._build_general_page()
+        self._build_models_page()
+        self._build_training_page()
+        GLib.idle_add(self._load_state)
+
+    def _build_general_page(self) -> None:
+        page = Adw.PreferencesPage(
+            title=_("Settings"), icon_name="preferences-system-symbolic"
+        )
+        self.add(page)
+
+        status_group = Adw.PreferencesGroup(
+            title=_("Voice Typing"),
+            description=_(
+                "Use the keyboard shortcut to dictate into the focused application. "
+                "Speech is processed locally and is never uploaded."
+            ),
+        )
+        self.status_row = Adw.ActionRow(
+            title=_("Status"), subtitle=_("Checking the local service…")
+        )
+        self.status_icon = Gtk.Image.new_from_icon_name(APP_ID)
+        self.status_row.add_prefix(self.status_icon)
+        self.start_button = Gtk.Button(label=_("Start"), valign=Gtk.Align.CENTER)
+        self.start_button.add_css_class("suggested-action")
+        self.start_button.connect(
+            "clicked", lambda _button: self.ui_client.call("Toggle")
+        )
+        self.status_row.add_suffix(self.start_button)
+        status_group.add(self.status_row)
+        page.add(status_group)
+
+        input_group = Adw.PreferencesGroup(title=_("Input"))
+        self.microphones = [("", _("System default"), True), *_input_devices()]
+        microphone_names = Gtk.StringList.new([item[1] for item in self.microphones])
+        self.microphone_row = Adw.ComboRow(
+            title=_("Microphone"), model=microphone_names
+        )
+        selected_microphone = self.settings.get_string("microphone")
+        for index, (node, _label, _default) in enumerate(self.microphones):
+            if node == selected_microphone:
+                self.microphone_row.set_selected(index)
+                break
+        self.microphone_row.connect("notify::selected", self._microphone_changed)
+        input_group.add(self.microphone_row)
+
+        language_names = Gtk.StringList.new([item[1] for item in LANGUAGES])
+        self.language_row = Adw.ComboRow(title=_("Language"), model=language_names)
+        language = self.settings.get_string("language") or "auto"
+        if language == "zh":
+            language = "zh-Hans"
+        self.language_row.set_selected(
+            next((index for index, item in enumerate(LANGUAGES) if item[0] == language), 0)
+        )
+        self.language_row.connect("notify::selected", self._language_changed)
+        input_group.add(self.language_row)
+        page.add(input_group)
+
+        behavior = Adw.PreferencesGroup(title=_("Behavior"))
+        self.shortcut_row = Adw.ActionRow(
+            title=_("Keyboard shortcut"),
+            subtitle=_("Activate voice typing from anywhere"),
+        )
+        self.shortcut_label = Gtk.ShortcutLabel(
+            valign=Gtk.Align.CENTER,
+            disabled_text=_("Disabled"),
+        )
+        self.shortcut_row.add_suffix(self.shortcut_label)
+        change_shortcut = Gtk.Button(
+            label=_("Change…"),
+            valign=Gtk.Align.CENTER,
+            margin_start=12,
+        )
+        change_shortcut.connect("clicked", self._begin_shortcut_capture)
+        self.shortcut_row.add_suffix(change_shortcut)
+        self.shortcut_row.set_activatable_widget(change_shortcut)
+        self._refresh_shortcut()
+        behavior.add(self.shortcut_row)
+        behavior.add(self._build_live_row())
+        for title, subtitle, key in (
+            (
+                _("Noise reduction"),
+                _("Reduce background noise and balance microphone level; restart listening after changing this"),
+                "noise-reduction",
+            ),
+            (
+                _("Automatic punctuation"),
+                _("Keep punctuation recognized from speech"),
+                "automatic-punctuation",
+            ),
+            (
+                _("Voice commands"),
+                _("Recognize commands such as “new line” and “comma”"),
+                "voice-commands",
+            ),
+            (
+                _("Final result preview"),
+                _("Pause briefly before inserting the completed phrase"),
+                "show-preview",
+            ),
+            (
+                _("Start and stop sounds"),
+                _("Play a subtle microphone cue"),
+                "audio-cues",
+            ),
+        ):
+            row = Adw.SwitchRow(title=title, subtitle=subtitle)
+            self.settings.bind(key, row, "active", Gio.SettingsBindFlags.DEFAULT)
+            behavior.add(row)
+        page.add(behavior)
+        page.add(self._build_performance_group())
+        diagnostics = Adw.PreferencesGroup(
+            title=_("Performance diagnostics"),
+            description=_("Export timings from the current voice session. No recordings or recognized text are included."),
+        )
+        export_row = Adw.ActionRow(title=_("Export diagnostic report"))
+        self.export_button = Gtk.Button(label=_("Export"), valign=Gtk.Align.CENTER)
+        self.export_button.connect("clicked", self._export_diagnostics)
+        export_row.add_suffix(self.export_button)
+        diagnostics.add(export_row)
+        page.add(diagnostics)
+
+    def _build_performance_group(self):
+        group = Adw.PreferencesGroup(
+            title=_("Recognition performance"),
+            description=_(
+                "Changes apply next time listening starts. Automatic selection "
+                "measures bundled audio without using your microphone or changing "
+                "your model."
+            )
+            + " "
+            + _(
+                "First use takes at most 10 seconds and results are cached. Wait "
+                "for Listening before speaking; press the microphone button again "
+                "to cancel preparation."
+            ),
+        )
+        self.backend_row = Adw.ComboRow(
+            title=_("Recognition backend"),
+            model=Gtk.StringList.new([_("Automatic (measured)"), _("CPU"), _("GPU (CPU fallback)")]),
+        )
+        self.backend_row.set_selected(("auto", "cpu", "gpu").index(
+            self.settings.get_string("recognition-backend")))
+        self.backend_row.connect("notify::selected", self._backend_changed)
+        group.add(self.backend_row)
+        self.threads_row = Adw.SpinRow(
+            title=_("Recognition threads"), subtitle=_("0 selects automatically; more threads are not always faster"),
+            adjustment=Gtk.Adjustment(lower=0, upper=256, step_increment=1, page_increment=4),
+            digits=0,
+        )
+        self.settings.bind("recognition-threads", self.threads_row, "value", Gio.SettingsBindFlags.DEFAULT)
+        group.add(self.threads_row)
+        for title, subtitle, label, callback in (
+            (
+                _("Measure again on next start"),
+                _(
+                    "A complete test may take up to one minute. "
+                    "The microphone remains off."
+                ),
+                _("Retest"),
+                self._retest_performance,
+            ),
+            (
+                _("Restore automatic backend and thread selection"),
+                "",
+                _("Restore defaults"),
+                self._reset_performance,
+            ),
+        ):
+            row = Adw.ActionRow(title=title, subtitle=subtitle)
+            button = Gtk.Button(label=label, valign=Gtk.Align.CENTER)
+            button.connect("clicked", callback)
+            row.add_suffix(button)
+            row.set_activatable_widget(button)
+            group.add(row)
+        return group
+
+    def _backend_changed(self, row, _parameter):
+        selected = row.get_selected()
+        if selected < 3:
+            self.settings.set_string("recognition-backend", ("auto", "cpu", "gpu")[selected])
+
+    def _retest_performance(self, _button):
+        self.settings.set_string("recognition-backend", "auto")
+        self.backend_row.set_selected(0)
+        self.settings.set_boolean("full-tuning-pending", True)
+        self.settings.set_uint("tuning-generation",
+                               (self.settings.get_uint("tuning-generation") + 1) & 0xffffffff)
+        self.add_toast(Adw.Toast(title=_("Performance will be measured next time listening starts")))
+
+    def _reset_performance(self, button):
+        # Deliberately leave model, language, microphone and privacy settings alone.
+        self.settings.reset("recognition-threads")
+        self._retest_performance(button)
+
+    def _export_diagnostics(self, _button):
+        self.export_button.set_sensitive(False)
+        self.client.diagnostics(self._diagnostics_received)
+
+    def _diagnostics_received(self, report):
+        self.export_button.set_sensitive(True)
+        if report is None:
+            dialog = Adw.AlertDialog(
+                heading=_("No diagnostic report available"),
+                body=_("Start a voice session, then export its report before closing the microphone bar."),
+            )
+            dialog.add_response("close", _("Close"))
+            dialog.present(self)
+            return
+        dialog = Gtk.FileDialog(title=_("Export diagnostic report"),
+                                initial_name="voice-performance.json")
+        dialog.save(self, None, self._diagnostics_file_selected, report)
+
+    def _diagnostics_file_selected(self, dialog, result, report):
+        try:
+            destination = dialog.save_finish(result)
+        except GLib.Error:
+            return  # The user may dismiss the save chooser.
+        destination.replace_contents_async(
+            report.encode("utf-8"), None, False,
+            Gio.FileCreateFlags.PRIVATE | Gio.FileCreateFlags.REPLACE_DESTINATION,
+            None, self._diagnostics_saved, None,
+        )
+
+    def _diagnostics_saved(self, destination, result, _data):
+        try:
+            destination.replace_contents_finish(result)
+        except GLib.Error:
+            dialog = Adw.AlertDialog(heading=_("Could not save diagnostic report"),
+                                     body=_("Check that the selected folder is writable and has free space."))
+            dialog.add_response("close", _("Close"))
+            dialog.present(self)
+
+    def _build_models_page(self) -> None:
+        page = Adw.PreferencesPage(title=_("Models"), icon_name="folder-download-symbolic")
+        self.add(page)
+        group = Adw.PreferencesGroup(
+            title=_("Offline speech models"),
+            description=_(
+                "The Base multilingual model is installed with Voice Typing. "
+                "Optional models are verified before use."
+            ),
+        )
+        page.add(group)
+        for key, model in MODELS.items():
+            size = _format_size(model.size)
+            row = Adw.ActionRow(title=_(model.title), subtitle=f"{_(model.description)} · {size}")
+            progress = Gtk.ProgressBar(valign=Gtk.Align.CENTER, width_request=110)
+            progress.set_visible(False)
+            remove_button = Gtk.Button(
+                icon_name="user-trash-symbolic", valign=Gtk.Align.CENTER
+            )
+            remove_button.set_tooltip_text(_("Remove downloaded model"))
+            remove_button.update_property(
+                [Gtk.AccessibleProperty.LABEL],
+                [_("Remove %s") % _(model.title)],
+            )
+            remove_button.connect("clicked", self._model_remove_action, key)
+            button = Gtk.Button(valign=Gtk.Align.CENTER)
+            button.connect("clicked", self._model_action, key)
+            row.add_suffix(progress)
+            row.add_suffix(remove_button)
+            row.add_suffix(button)
+            group.add(row)
+            self.model_rows[key] = (row, button, remove_button, progress)
+            self._refresh_model_row(key)
+
+    def _build_training_page(self) -> None:
+        page = Adw.PreferencesPage(
+            title=_("Microphone Training"), icon_name=APP_ID
+        )
+        self.add(page)
+        group = Adw.PreferencesGroup(
+            title=_("Check your speaking setup"),
+            description=_(
+                "Whisper does not need a personal voice profile. Use this page to "
+                "check the processed microphone level, distance, and background noise. "
+                "This test does not train the model or measure recognition accuracy."
+            ),
+        )
+        page.add(group)
+        phrase = Adw.ActionRow(
+            title=_("Practice phrase"),
+            subtitle=_("“Voice typing makes writing faster and more accessible.”"),
+        )
+        phrase.add_prefix(Gtk.Image.new_from_icon_name("accessories-dictionary-symbolic"))
+        group.add(phrase)
+
+        meter_row = Adw.ActionRow(
+            title=_("Input level"),
+            subtitle=_("Speak normally; aim for the middle of the meter"),
+        )
+        self.meter = Gtk.ProgressBar(valign=Gtk.Align.CENTER, width_request=180)
+        self.meter.update_property(
+            [Gtk.AccessibleProperty.LABEL], [_("Microphone input level")]
+        )
+        meter_row.add_suffix(self.meter)
+        group.add(meter_row)
+
+        self.test_row = Adw.ActionRow(
+            title=_("Microphone test"),
+            subtitle=_("No audio is saved during this test"),
+        )
+        self.test_button = Gtk.Button(label=_("Start Test"), valign=Gtk.Align.CENTER)
+        self.test_button.connect("clicked", self._toggle_test)
+        self.test_row.add_suffix(self.test_button)
+        group.add(self.test_row)
+
+        tips = Adw.PreferencesGroup(title=_("Tips for better recognition"))
+        for title, subtitle, icon in (
+            (
+                _("Speak naturally"),
+                _("Use short phrases and pause briefly between sentences"),
+                "audio-speakers-symbolic",
+            ),
+            (
+                _("Reduce background noise"),
+                _("Keep the microphone close without speaking directly into it"),
+                "weather-clear-night-symbolic",
+            ),
+            (
+                _("Choose the language"),
+                _("A fixed language is faster than automatic detection"),
+                "preferences-desktop-locale-symbolic",
+            ),
+        ):
+            row = Adw.ActionRow(title=title, subtitle=subtitle)
+            row.add_prefix(Gtk.Image.new_from_icon_name(icon))
+            tips.add(row)
+        page.add(tips)
+
+    def _load_state(self) -> bool:
+        try:
+            self._state_changed(*self.ui_client.state())
+        except GLib.Error as error:
+            if _shell_ui_is_unavailable(error):
+                self._state_changed("restart-required", RESTART_REQUIRED_DETAIL)
+            else:
+                self._state_changed("error", error.message)
+        return GLib.SOURCE_REMOVE
+
+    def _state_changed(self, state: str, detail: str) -> None:
+        self.ui_state = state
+        self.status_row.set_subtitle(detail or STATE_LABELS.get(state, state))
+        if state == "listening":
+            button_label = _("Stop")
+        else:
+            button_label = _("Start")
+        self.start_button.set_label(button_label)
+        if state in {"error", "restart-required"}:
+            self.status_icon.set_from_icon_name("dialog-warning-symbolic")
+        else:
+            self.status_icon.set_from_icon_name(APP_ID)
+        self.status_row.set_title(STATE_LABELS.get(state, _("Voice Typing")))
+        self.start_button.set_sensitive(
+            not self.testing and state != "restart-required"
+        )
+
+    def _level_changed(self, level: float) -> None:
+        self.meter.set_fraction(max(0.0, min(1.0, level)))
+
+    def _build_live_row(self):
+        self.live_row = Adw.ComboRow(
+            title=_("Live transcription"),
+            subtitle=_("Automatic enables live transcription only when performance allows"),
+            model=Gtk.StringList.new([_("Automatic"), _("On"), _("Off")]),
+        )
+        self._sync_live_mode()
+        self.live_row.connect("notify::selected", self._live_mode_changed)
+        self.settings.connect("changed::live-transcription-mode", self._sync_live_mode)
+        self.settings.connect("changed::live-transcription", self._sync_live_mode)
+        return self.live_row
+
+    def _sync_live_mode(self, *_args):
+        self._syncing_live_mode = True
+        try:
+            self.live_row.set_selected(("auto", "on", "off").index(live_mode(self.settings)))
+        finally:
+            self._syncing_live_mode = False
+
+    def _live_mode_changed(self, row, _parameter):
+        if not self._syncing_live_mode:
+            self.settings.set_string("live-transcription-mode", ("auto", "on", "off")[row.get_selected()])
+
+    def _microphone_changed(self, row: Adw.ComboRow, _parameter) -> None:
+        selected = min(row.get_selected(), len(self.microphones) - 1)
+        self.settings.set_string("microphone", self.microphones[selected][0])
+
+    def _language_changed(self, row: Adw.ComboRow, _parameter) -> None:
+        selected = min(row.get_selected(), len(LANGUAGES) - 1)
+        self.settings.set_string("language", LANGUAGES[selected][0])
+
+    def _refresh_shortcut(self) -> None:
+        shortcuts = self.settings.get_strv("toggle-shortcut")
+        self.shortcut_label.set_accelerator(shortcuts[0] if shortcuts else "")
+
+    def _begin_shortcut_capture(self, _button: Gtk.Button) -> None:
+        if self._shortcut_dialog is not None:
+            self._shortcut_dialog.present(self)
+            return
+        previous = self.settings.get_strv("toggle-shortcut")
+        committed = {"value": False}
+        self.settings.set_strv("toggle-shortcut", [])
+        Gio.Settings.sync()
+
+        dialog = Adw.Dialog(
+            title=_("Set Keyboard Shortcut"),
+            content_width=460,
+            content_height=300,
+        )
+        self._shortcut_dialog = dialog
+        toolbar = Adw.ToolbarView()
+        toolbar.add_top_bar(Adw.HeaderBar())
+        dialog.set_child(toolbar)
+
+        content = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=16,
+            margin_top=28,
+            margin_bottom=28,
+            margin_start=28,
+            margin_end=28,
+            valign=Gtk.Align.CENTER,
+        )
+        toolbar.set_content(content)
+        keyboard = Gtk.Image.new_from_icon_name("input-keyboard-symbolic")
+        keyboard.set_pixel_size(48)
+        content.append(keyboard)
+        heading = Gtk.Label(label=_("Press the new shortcut"))
+        heading.add_css_class("title-2")
+        content.append(heading)
+        description = Gtk.Label(
+            label=_("The keys you press will be used to start or stop Voice Typing."),
+            wrap=True,
+            justify=Gtk.Justification.CENTER,
+        )
+        description.add_css_class("dim-label")
+        content.append(description)
+        waiting = Gtk.ShortcutLabel(
+            accelerator="",
+            disabled_text=_("Waiting for input…"),
+            halign=Gtk.Align.CENTER,
+        )
+        waiting.add_css_class("card")
+        content.append(waiting)
+        hint = Gtk.Label(
+            label=_("Esc cancels · Backspace disables the shortcut"),
+            wrap=True,
+            justify=Gtk.Justification.CENTER,
+        )
+        hint.add_css_class("caption")
+        hint.add_css_class("dim-label")
+        content.append(hint)
+
+        keys = Gtk.EventControllerKey()
+        keys.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
+
+        def key_pressed(
+            _controller: Gtk.EventControllerKey,
+            keyval: int,
+            _keycode: int,
+            state: Gdk.ModifierType,
+        ) -> bool:
+            modifiers = state & Gtk.accelerator_get_default_mod_mask()
+            if keyval == Gdk.KEY_Escape and not modifiers:
+                dialog.close()
+                return True
+            if keyval == Gdk.KEY_BackSpace and not modifiers:
+                committed["value"] = True
+                self.settings.set_strv("toggle-shortcut", [])
+                self._refresh_shortcut()
+                dialog.close()
+                return True
+            accelerator = accelerator_from_key_event(keyval, state)
+            if accelerator is None:
+                return True
+            committed["value"] = True
+            self.settings.set_strv("toggle-shortcut", [accelerator])
+            self._refresh_shortcut()
+            dialog.close()
+            return True
+
+        keys.connect("key-pressed", key_pressed)
+        dialog.add_controller(keys)
+
+        def closed(_dialog: Adw.Dialog) -> None:
+            if not committed["value"]:
+                self.settings.set_strv("toggle-shortcut", previous)
+            self._refresh_shortcut()
+            self._shortcut_dialog = None
+
+        dialog.connect("closed", closed)
+        dialog.present(self)
+
+    def _model_action(self, _button: Gtk.Button, key: str) -> None:
+        if model_installed(key):
+            if self.settings.get_string("model") != key:
+                self.settings.set_string("model", key)
+                self._refresh_all_models()
+            return
+        self._confirm_model_download(key)
+
+    def _model_remove_action(self, _button: Gtk.Button, key: str) -> None:
+        if is_user_model(key):
+            self._confirm_remove_model(key)
+
+    def _confirm_model_download(self, key: str) -> None:
+        dialog = Adw.AlertDialog(
+            heading=_("Download %s from Hugging Face?") % _(MODELS[key].title),
+            body=_(
+                "This optional model is hosted by Hugging Face, a third-party "
+                "service. AnduinOS is not affiliated with, sponsored by, or "
+                "partnered with Hugging Face.\n\n"
+                "If you continue, your computer will connect directly to "
+                "huggingface.co. Hugging Face will receive your public IP address "
+                "and that address may reveal your approximate location.\n\n"
+                "Privacy policy: https://huggingface.co/privacy"
+            ),
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("download", _("Continue Download"))
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+        dialog.set_response_appearance(
+            "download", Adw.ResponseAppearance.SUGGESTED
+        )
+        dialog.connect("response", self._model_download_response, key)
+        dialog.present(self)
+
+    def _model_download_response(
+        self, _dialog: Adw.AlertDialog, response: str, key: str
+    ) -> None:
+        if response == "download":
+            self._start_model_download(key)
+
+    def _start_model_download(self, key: str) -> None:
+        if key in self.downloading_models:
+            return
+        self.downloading_models.add(key)
+        row, button, remove_button, progress = self.model_rows[key]
+        button.set_sensitive(False)
+        remove_button.set_visible(False)
+        button.set_label(_("Downloading…"))
+        progress.set_visible(True)
+        progress.set_fraction(0.0)
+
+        def updated(fraction: float) -> bool:
+            progress.set_fraction(fraction)
+            return GLib.SOURCE_REMOVE
+
+        def completed() -> bool:
+            self.downloading_models.discard(key)
+            self.settings.set_string("model", key)
+            self._refresh_all_models()
+            return GLib.SOURCE_REMOVE
+
+        def failed(message: str) -> bool:
+            self.downloading_models.discard(key)
+            progress.set_visible(False)
+            button.set_sensitive(True)
+            button.set_label(_("Retry"))
+            dialog = Adw.AlertDialog(heading=_("Model download failed"), body=message)
+            dialog.add_response("close", _("Close"))
+            dialog.present(self)
+            return GLib.SOURCE_REMOVE
+
+        self.downloader.download(key, updated, completed, failed)
+
+    def _confirm_remove_model(self, key: str) -> None:
+        dialog = Adw.AlertDialog(
+            heading=_("Remove %s model?") % _(MODELS[key].title),
+            body=_("The model can be downloaded again later."),
+        )
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("remove", _("Remove"))
+        dialog.set_response_appearance("remove", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+        dialog.connect(
+            "response",
+            lambda _dialog, response: (
+                self._remove_model(key) if response == "remove" else None
+            ),
+        )
+        dialog.present(self)
+
+    def _remove_model(self, key: str) -> None:
+        if remove_user_model(key):
+            if self.settings.get_string("model") == key:
+                self.settings.set_string("model", "base")
+            self._refresh_all_models()
+
+    def _refresh_all_models(self) -> None:
+        for key in MODELS:
+            self._refresh_model_row(key)
+
+    def _refresh_model_row(self, key: str) -> None:
+        _row, button, remove_button, progress = self.model_rows[key]
+        if key in self.downloading_models:
+            progress.set_visible(True)
+            button.set_sensitive(False)
+            button.set_label(_("Downloading…"))
+            button.remove_css_class("suggested-action")
+            remove_button.set_visible(False)
+            return
+        progress.set_visible(False)
+        button.set_sensitive(True)
+        remove_button.set_visible(is_user_model(key))
+        selected = self.settings.get_string("model") == key
+        if selected and model_installed(key):
+            button.set_label(_("In Use"))
+            button.add_css_class("suggested-action")
+        elif model_installed(key):
+            button.set_label(_("Use"))
+            button.remove_css_class("suggested-action")
+        else:
+            button.set_label(_("Download"))
+            button.remove_css_class("suggested-action")
+
+    def _toggle_test(self, _button: Gtk.Button) -> None:
+        self.testing = not self.testing
+        self.client.call("StartTest" if self.testing else "StopTest")
+        self.test_button.set_label(_("Stop Test") if self.testing else _("Start Test"))
+        self.start_button.set_sensitive(
+            not self.testing and self.ui_state != "restart-required"
+        )
+        if not self.testing:
+            self.meter.set_fraction(0.0)
+
+    def _closing(self, _window) -> bool:
+        if self.testing:
+            try:
+                self.client.call_sync("StopTest")
+            except GLib.Error:
+                pass
+        self.client.close()
+        self.ui_client.close()
+        return False
+
+
+class VoiceTypingApplication(Adw.Application):
+    def __init__(self):
+        super().__init__(application_id=APP_ID, flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
+
+    def do_activate(self) -> None:
+        window = self.get_active_window() or SettingsWindow(self)
+        window.present()
+
+    def do_startup(self) -> None:
+        Adw.Application.do_startup(self)
+        about = Gio.SimpleAction.new("about", None)
+        about.connect("activate", self._about)
+        self.add_action(about)
+
+    def _about(self, _action, _parameter) -> None:
+        dialog = Adw.AboutDialog()
+        dialog.set_application_name(_("AnduinOS Voice Typing"))
+        dialog.set_application_icon(APP_ID)
+        dialog.set_developer_name(_("AnduinOS Team"))
+        dialog.set_version("2.0.3")
+        dialog.set_comments(_("Private, offline speech-to-text for the whole desktop."))
+        dialog.set_website("https://www.anduinos.com")
+        dialog.set_issue_url("https://github.com/AiursoftWeb/AnduinOS/issues")
+        dialog.set_license_type(Gtk.License.GPL_3_0)
+        dialog.present(self.get_active_window())
+
+
+def _format_size(size: int) -> str:
+    return _("%.0f MB") % (size / 1_000_000)
+
+
+def _shell_ui_is_unavailable(error: GLib.Error) -> bool:
+    """Return whether GNOME Shell has not loaded the extension UI yet."""
+
+    return any(
+        error.matches(Gio.dbus_error_quark(), code)
+        for code in (
+            Gio.DBusError.UNKNOWN_METHOD,
+            Gio.DBusError.UNKNOWN_OBJECT,
+            Gio.DBusError.UNKNOWN_INTERFACE,
+        )
+    )
+
+
+def main() -> int:
+    if len(sys.argv) > 1 and sys.argv[1] in {"--toggle", "--start", "--stop"}:
+        method = {"--toggle": "Toggle", "--start": "Start", "--stop": "Stop"}[sys.argv[1]]
+        try:
+            VoiceUiClient().call_sync(method)
+            return 0
+        except GLib.Error as error:
+            print(error.message, file=sys.stderr)
+            return 1
+    Adw.init()
+    return VoiceTypingApplication().run(sys.argv)

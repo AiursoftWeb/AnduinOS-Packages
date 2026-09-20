@@ -1,4 +1,4 @@
-"""Read-only discovery of UEFI Windows loaders on non-target disks."""
+"""Read-only discovery of UEFI Windows loaders on target and other disks."""
 
 from __future__ import annotations
 
@@ -38,8 +38,10 @@ def discover_windows_bootloaders(
     runner: CommandRunner,
     log: Callable[[str], None],
     scratch_root: Path = Path("/run/anduinos-installer"),
+    target_esp: Path | None = None,
+    target_esp_device: str = "",
 ) -> tuple[WindowsBootloader, ...]:
-    """Find canonical Windows EFI loaders without writing foreign disks."""
+    """Find Windows loaders without writing or remounting existing ESPs."""
 
     expected_machine = (
         0x8664 if architecture is Architecture.AMD64 else 0xAA64
@@ -47,21 +49,59 @@ def discover_windows_bootloaders(
     discovered: list[WindowsBootloader] = []
     scratch_root.mkdir(mode=0o700, parents=True, exist_ok=True)
 
+    def inspect_loader(disk, partition, mount_path):
+        loader = mount_path / WINDOWS_LOADER_RELATIVE
+        if not loader.is_file():
+            return
+        try:
+            machine = read_pe_machine(loader)
+        except (OSError, RuntimeError) as error:
+            log(
+                "Ignoring invalid Windows EFI loader on "
+                f"{partition.identity.path}: {error}"
+            )
+            return
+        if machine != expected_machine:
+            log(
+                "Ignoring Windows EFI loader for another "
+                f"architecture on {partition.identity.path}"
+            )
+            return
+        discovered.append(
+            WindowsBootloader(
+                disk_stable_id=disk.identity.stable_id,
+                partition_path=partition.identity.path,
+                partuuid=partition.identity.partuuid,
+                filesystem_uuid=partition.filesystem_uuid.strip().upper(),
+            )
+        )
+
     for disk in inventory.disks:
-        if disk.identity.stable_id == target_disk_id:
-            continue
-        if not any(
-            partition.is_windows_partition for partition in disk.partitions
-        ):
-            continue
+        # The loader itself is the evidence: encrypted Windows data volumes
+        # need not be recognizable as NTFS for an ESP to contain Windows.
         for partition in disk.partitions:
             filesystem_uuid = partition.filesystem_uuid.strip()
             if (
                 not partition.is_efi_filesystem_candidate
-                or any(partition.mountpoints)
                 or not partition.identity.partuuid
                 or not FAT_UUID_RE.fullmatch(filesystem_uuid)
             ):
+                continue
+
+            if partition.mountpoints:
+                # Only read an existing mount when it is the installer's
+                # verified target ESP. Never remount/unmount it or inspect an
+                # unrelated user mount through this exception.
+                if (
+                    target_esp is not None
+                    and disk.identity.stable_id == target_disk_id
+                    and partition.identity.path == target_esp_device
+                    and str(target_esp) in partition.mountpoints
+                ):
+                    try:
+                        inspect_loader(disk, partition, target_esp)
+                    except OSError as error:
+                        log(f"Could not inspect target EFI System Partition: {error}")
                 continue
 
             with tempfile.TemporaryDirectory(
@@ -84,31 +124,7 @@ def discover_windows_bootloaders(
                         timeout=30,
                     )
                     mounted = True
-                    loader = Path(directory) / WINDOWS_LOADER_RELATIVE
-                    if not loader.is_file():
-                        continue
-                    try:
-                        machine = read_pe_machine(loader)
-                    except (OSError, RuntimeError) as error:
-                        log(
-                            "Ignoring invalid Windows EFI loader on "
-                            f"{partition.identity.path}: {error}"
-                        )
-                        continue
-                    if machine != expected_machine:
-                        log(
-                            "Ignoring Windows EFI loader for another "
-                            f"architecture on {partition.identity.path}"
-                        )
-                        continue
-                    discovered.append(
-                        WindowsBootloader(
-                            disk_stable_id=disk.identity.stable_id,
-                            partition_path=partition.identity.path,
-                            partuuid=partition.identity.partuuid,
-                            filesystem_uuid=filesystem_uuid.upper(),
-                        )
-                    )
+                    inspect_loader(disk, partition, Path(directory))
                 except Exception as error:
                     log(
                         "Could not inspect EFI System Partition "
@@ -166,13 +182,13 @@ def build_windows_grub_script(
         if not FAT_UUID_RE.fullmatch(bootloader.filesystem_uuid):
             raise ValueError("Invalid Windows EFI filesystem UUID")
         title = (
-            f"Windows Boot Manager (disk {index})"
+            f"Windows Boot Manager ({index})"
             if multiple
             else "Windows Boot Manager"
         )
         lines.extend(
             (
-                f"# AnduinOS external Windows entry: "
+                f"# AnduinOS Windows entry: "
                 f"{bootloader.filesystem_uuid}",
                 f"menuentry '{title}' --class windows --class os {{",
                 "    insmod part_gpt",
@@ -194,7 +210,7 @@ class CheckOtherDiskSystemsStep:
     inventory_probe: object = probe_storage_inventory
     windows_probe: object = discover_windows_bootloaders
     id: str = "check-other-disk-systems"
-    title: str = "Check systems on other disks"
+    title: str = "Check for Windows installations"
     failure_policy: FailurePolicy = FailurePolicy.WARNING
     progress_weight: int = 1
     destructive: bool = False
@@ -202,7 +218,7 @@ class CheckOtherDiskSystemsStep:
     def preflight(self, context: InstallContext) -> None:
         context.validate_plan()
         if context.plan.platform.firmware is not Firmware.UEFI:
-            raise RuntimeError("Other-disk system detection requires UEFI")
+            raise RuntimeError("Windows EFI detection requires UEFI")
         self.runner.require_commands(("mount", "umount", "chroot"))
 
     def execute(self, context: InstallContext) -> None:
@@ -211,6 +227,8 @@ class CheckOtherDiskSystemsStep:
         bootloaders = self.windows_probe(
             inventory,
             target_disk_id=context.plan.storage.disk.stable_id,
+            target_esp=target / "boot/efi",
+            target_esp_device=context.values.get("partition_devices", {}).get("efi-system", ""),
             architecture=context.plan.platform.architecture,
             runner=self.runner,
             log=context.log,
@@ -223,14 +241,14 @@ class CheckOtherDiskSystemsStep:
                 self.runner.run(
                     ("chroot", str(target), "update-grub"), timeout=300
                 )
-            raise StepSkipped("No UEFI Windows system found on other disks")
+            raise StepSkipped("No UEFI Windows bootloader found")
 
         script = build_windows_grub_script(bootloaders)
         _write_atomic(script_path, script, mode=0o755)
         context.values["other_disk_windows_script"] = script
         for bootloader in bootloaders:
             context.log(
-                "Adding Windows Boot Manager from read-only EFI System "
+                "Adding Windows Boot Manager from EFI System "
                 f"Partition {bootloader.partition_path}"
             )
         self.runner.run(
@@ -258,7 +276,7 @@ class CheckOtherDiskSystemsStep:
             item.filesystem_uuid
             for item in bootloaders
             if (
-                f"# AnduinOS external Windows entry: "
+                f"# AnduinOS Windows entry: "
                 f"{item.filesystem_uuid}"
             )
             not in config

@@ -22,10 +22,12 @@ if [ "$1" = "configure" ]; then
         text.plymouth \
         /usr/share/plymouth/themes/anduinos-text/anduinos-text.plymouth || true
 
-    # 3. Rebuild initramfs (dual-track with regenerate-all for dracut)
-    if command -v dracut >/dev/null 2>&1; then
-        dracut --force --regenerate-all 2>/dev/null || true
-    elif command -v update-initramfs >/dev/null 2>&1; then
-        update-initramfs -u 2>/dev/null || true
+    # 3. Rebuild all images through AnduinOS's staged writer. Never report a
+    # successful package transaction after silently losing the boot splash or
+    # producing an unverified initrd.
+    if [ -x /usr/libexec/anduinos-dracut-verify ]; then
+        /usr/libexec/anduinos-dracut-verify --rebuild
+    else
+        dracut --force --regenerate-all
     fi
 fi

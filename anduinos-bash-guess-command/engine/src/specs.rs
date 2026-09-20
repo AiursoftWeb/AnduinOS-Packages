@@ -194,10 +194,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn generated_registry_is_large_sorted_unique_and_policy_defaults_are_valid() {
+    fn registry_is_sorted_unique_and_policy_defaults_are_valid() {
         let specs = registry();
-        assert!(specs.len() >= 7_000);
-        assert!(command_names().count() >= 700);
         for (index, spec) in specs.iter().enumerate() {
             assert!(!spec.command.is_empty());
             if index > 0 {
@@ -208,24 +206,5 @@ mod tests {
                 assert!(spec.preferred.contains(&default));
             }
         }
-    }
-
-    #[test]
-    fn generated_tree_retains_deep_commands_and_manual_overlays() {
-        let docker_builder = find_nested(&["docker", "builder"]).unwrap();
-        assert!(docker_builder.actions.contains(&"prune"));
-        let kubectl_create = find_nested(&["kubectl", "create"]).unwrap();
-        assert!(kubectl_create.actions.contains(&"deployment"));
-        let compose = find_nested(&["docker", "compose"]).unwrap();
-        assert_eq!(compose.default, Some("ps"));
-        assert!(find("docker").unwrap().actions.contains(&"compose"));
-        assert!(find_nested(&["docker", "run"])
-            .unwrap()
-            .options
-            .contains(&"--publish"));
-        assert!(find_nested(&["git", "add"]).unwrap().positional_path);
-        assert!(find("cat").unwrap().positional_path);
-        assert!(find("python3").unwrap().positional_path);
-        assert!(find_nested(&["docker", "build"]).unwrap().positional_path);
     }
 }

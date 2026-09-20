@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-driver-center</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Driver Center — manage hardware drivers, device firmware, printing, controllers, and Secure Boot support.</PackageDescription>
     <Section>admin</Section>
@@ -24,6 +24,7 @@
   <ItemGroup>
     <Dependency Include="python3" />
     <Dependency Include="python3-gi" />
+    <Dependency Include="python3-apt" />
     <Dependency Include="gir1.2-gtk-4.0" />
     <Dependency Include="gir1.2-adw-1" />
     <Dependency Include="ubuntu-drivers-common" />
@@ -32,15 +33,26 @@
     <Dependency Include="anduinos-secureboot-toolkit" />
     <Dependency Include="pkexec" />
     <Dependency Include="pciutils" />
+    <Dependency Include="kmod" />
+    <Dependency Include="util-linux" />
+    <Dependency Include="dmidecode" />
   </ItemGroup>
 
   <ItemGroup>
     <IncludeScript Include="scripts/anduinos-driver-center" Target="/usr/bin/anduinos-driver-center" />
+    <IncludeScript Include="scripts/memory-helper" Target="/usr/libexec/anduinos-driver-center/memory-helper" />
     <IncludeScript Include="scripts/driver-helper" Target="/usr/libexec/anduinos-driver-center/driver-helper" />
     <IncludeFile Include="src/anduinos_driver_center/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/__init__.py" />
     <IncludeFile Include="src/anduinos_driver_center/__main__.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/__main__.py" />
     <IncludeFile Include="src/anduinos_driver_center/app.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/app.py" />
+    <IncludeFile Include="src/anduinos_driver_center/computer.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/computer.py" />
+    <IncludeFile Include="src/anduinos_driver_center/computer_ui.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/computer_ui.py" />
     <IncludeFile Include="src/anduinos_driver_center/core.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/core.py" />
+    <IncludeFile Include="src/anduinos_driver_center/driver_update.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/driver_update.py" />
+    <IncludeFile Include="src/anduinos_driver_center/operation_ui.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/operation_ui.py" />
+    <IncludeFile Include="src/anduinos_driver_center/intel_graphics.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/intel_graphics.py" />
+    <IncludeFile Include="src/anduinos_driver_center/intel_graphics_ui.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/intel_graphics_ui.py" />
+    <IncludeFile Include="src/anduinos_driver_center/intel_graphics_settings.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/intel_graphics_settings.py" />
     <IncludeFile Include="src/anduinos_driver_center/firmware.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/firmware.py" />
     <IncludeFolder Include="resources" Target="/usr/share/anduinos-driver-center/illustrations" />
     <IncludeFile Include="data/com.anduinos.DriverCenter.policy" Target="/usr/share/polkit-1/actions/com.anduinos.DriverCenter.policy" />
@@ -53,6 +65,9 @@
 
   <ItemGroup>
     <PrebuildCommand Run="bash compile-locales.sh" />
-    <PrebuildCommand Run="PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+    <TestCommand Name="widgets" Profile="gui" Run="PYTHONDONTWRITEBYTECODE=1 GSETTINGS_BACKEND=memory GDK_BACKEND=x11 dbus-run-session -- xvfb-run -a python3 -m unittest discover -s tests/gui -v" TimeoutSeconds="300" />
   </ItemGroup>
 </Project>

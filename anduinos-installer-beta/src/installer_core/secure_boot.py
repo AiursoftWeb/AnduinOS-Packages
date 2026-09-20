@@ -321,9 +321,7 @@ def _verify_signed_efi_chain(
     runner: CommandRunner, target: Path, plan: InstallPlan
 ) -> None:
     suffix = "x64" if plan.platform.architecture is Architecture.AMD64 else "aa64"
-    fallback = "BOOTX64.EFI" if suffix == "x64" else "BOOTAA64.EFI"
     paths = (
-        target / "boot/efi/EFI/BOOT" / fallback,
         target / "boot/efi/EFI/AnduinOS" / f"shim{suffix}.efi",
         target / "boot/efi/EFI/AnduinOS" / f"grub{suffix}.efi",
     )

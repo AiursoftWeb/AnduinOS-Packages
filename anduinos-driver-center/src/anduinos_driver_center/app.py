@@ -6,6 +6,7 @@ import gettext
 import os
 from pathlib import Path
 import subprocess
+import sys
 import threading
 import time
 from typing import Callable
@@ -15,6 +16,9 @@ import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
+
+from .computer_ui import ComputerPage
+from .intel_graphics_ui import IntelGraphicsPage
 
 from .core import (
     AudioState,
@@ -37,7 +41,6 @@ from .firmware import (
 try:
     from anduinos_secureboot.ui import create_secure_boot_page
 except ModuleNotFoundError:
-    import sys
     _toolkit_src = Path(__file__).resolve().parents[3] / "anduinos-secureboot-toolkit" / "src"
     sys.path.insert(0, str(_toolkit_src))
     from anduinos_secureboot.ui import create_secure_boot_page
@@ -108,11 +111,22 @@ def _large_app_icon(width: int = 260, height: int = 180) -> Gtk.Image:
     return icon
 
 
+def _scrolled_window(**properties) -> Gtk.ScrolledWindow:
+    """Return a vertical scroller whose scrollbar stays visible when needed."""
+
+    properties.setdefault("hscrollbar_policy", Gtk.PolicyType.NEVER)
+    properties.setdefault("vscrollbar_policy", Gtk.PolicyType.AUTOMATIC)
+    scroll = Gtk.ScrolledWindow(**properties)
+    scroll.set_overlay_scrolling(False)
+    return scroll
+
+
 class DriverCenterWindow(Adw.ApplicationWindow):
-    def __init__(self, app: Adw.Application):
+    def __init__(self, app: Adw.Application, initial_page: str = "home"):
         super().__init__(application=app, title=_("AnduinOS Driver Center"))
-        self.set_default_size(1000, 700)
+        self.set_default_size(1250, 810)
         self.set_size_request(720, 520)
+        self._computer_page: ComputerPage | None = None
         self._graphics: list[HardwareDevice] = []
         self._secure_boot: SecureBootState | None = None
         self._xbox: XboxState | None = None
@@ -121,7 +135,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self._printing: PrintingState | None = None
         self._graphics_scan = GraphicsScan()
         self._selected_package: str | None = None
-        self._selected_page_name: str | None = "home"
+        self._selected_page_name: str | None = initial_page
         self._rebuilding_navigation = False
         self._firmware_row: Gtk.ListBoxRow | None = None
         self._firmware_progress: Gtk.ProgressBar | None = None
@@ -222,7 +236,9 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self.device_list.add_css_class("navigation-list")
         self.device_list.connect("row-selected", self._row_selected)
         self.sidebar.append(self.device_list)
-        sidebar_toolbar.set_content(self.sidebar)
+        sidebar_scroll = _scrolled_window()
+        sidebar_scroll.set_child(self.sidebar)
+        sidebar_toolbar.set_content(sidebar_scroll)
         self.split.set_sidebar(sidebar_toolbar)
 
         content_toolbar = Adw.ToolbarView()
@@ -335,6 +351,10 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         )
 
         for index, device in enumerate(graphics):
+            if graphics_scan.intel and any(
+                intel.address in device.identifier for intel in graphics_scan.intel.devices
+            ):
+                continue
             label = device.title
             subtitle = device.vendor
             row = self._device_row("video-display-symbolic", label, subtitle)
@@ -342,6 +362,13 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             row.page_title = device.title
             self.device_list.append(row)
             self.stack.add_named(self._graphics_page(device, secure_boot), row.page_name)
+
+        if graphics_scan.intel and graphics_scan.intel.devices:
+            row = self._device_row("video-display-symbolic", "Intel Graphics", _("Kernel module"))
+            row.page_name = "intel-graphics"
+            row.page_title = "Intel Graphics"
+            self.device_list.append(row)
+            self.stack.add_named(IntelGraphicsPage(self, graphics_scan.intel), row.page_name)
 
         audio_row = self._device_row(
             "audio-card-symbolic", _("Audio"),
@@ -396,18 +423,15 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self.device_list.append(xbox_row)
         self.stack.add_named(self._xbox_page(xbox, secure_boot), "xbox")
 
-        # Secure Boot management is irrelevant when firmware enforcement is
-        # disabled.  Keep the device workflow uncluttered and, importantly,
-        # do not turn MOK or signing configuration into an install gate.
-        if not secure_boot.enforcement_inactive:
-            secure_row = self._device_row(
-                "security-high-symbolic", _("Secure Boot"),
-                _("Trust established") if secure_boot.ready else _("Action required"),
-            )
-            secure_row.page_name = "secure-boot"
-            secure_row.page_title = _("Secure Boot")
-            self.device_list.append(secure_row)
-            self.stack.add_named(self._secure_boot_page(secure_boot, dkms), "secure-boot")
+        secure_boot_healthy = secure_boot.enabled and secure_boot.ready
+        secure_row = self._device_row(
+            "security-high-symbolic", _("Secure Boot"),
+            _("Trust established") if secure_boot_healthy else _("Action required"),
+        )
+        secure_row.page_name = "secure-boot"
+        secure_row.page_title = _("Secure Boot")
+        self.device_list.append(secure_row)
+        self.stack.add_named(self._secure_boot_page(secure_boot, dkms), "secure-boot")
 
         firmware_snapshot = self._firmware_manager.snapshot
         firmware_row = self._device_row(
@@ -420,6 +444,18 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self._firmware_row = firmware_row
         self.device_list.append(firmware_row)
         self.stack.add_named(self._firmware_page(firmware_snapshot), "firmware")
+
+        computer_row = self._device_row(
+            "computer-symbolic", _("About This Computer"), _("Hardware overview")
+        )
+        computer_row.page_name = "computer"
+        computer_row.page_title = _("About This Computer")
+        self.device_list.append(computer_row)
+        if self._computer_page is None:
+            self._computer_page = ComputerPage()
+        else:
+            self._computer_page.reload()
+        self.stack.add_named(self._computer_page, "computer")
 
         selected = None
         row = self.device_list.get_row_at_index(0)
@@ -679,7 +715,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
     def _page_shell(
         self, title: str, description: str, illustration: str | None = None
     ) -> tuple[Gtk.ScrolledWindow, Gtk.Box]:
-        scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        scroll = _scrolled_window()
         clamp = Adw.Clamp(maximum_size=650, tightening_threshold=500)
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=18)
         content.set_margin_top(32); content.set_margin_bottom(32)
@@ -713,7 +749,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         audio: AudioState,
         printing: PrintingState,
     ) -> Gtk.Widget:
-        scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        scroll = _scrolled_window()
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
         content.set_margin_top(24)
         content.set_margin_bottom(32)
@@ -735,12 +771,12 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             for item in recommendations
             if item[1].installed
             and not item[1].update_available
-            and not item[1].active
+            and (item[0].restart_required or not item[1].active)
             and item[0].driver_state_known
-            and not (
+            and (item[0].restart_required or not (
                 item[0].active_driver
                 and item[0].active_driver.lower().replace("_", "-").startswith("nvidia")
-            )
+            ))
         ]
         unhealthy = [
             device
@@ -749,15 +785,11 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         ]
 
         def graphics_page_name(device: HardwareDevice) -> str:
+            if graphics_scan.intel and any(intel.address in device.identifier for intel in graphics_scan.intel.devices):
+                return "intel-graphics"
             return f"graphics-{graphics_scan.devices.index(device)}"
 
-        def version_summary(option) -> str:
-            details = [option.package]
-            if option.installed_version:
-                details.append(f'{_("Installed")}: {option.installed_version}')
-            if option.candidate_version:
-                details.append(f'{_("Available")}: {option.candidate_version}')
-            return " · ".join(details)
+        version_summary = self._driver_version_summary
 
         hero = Gtk.FlowBox(
             selection_mode=Gtk.SelectionMode.NONE,
@@ -820,12 +852,12 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             badge_class = "recommended-pill"
             title = updates[0][0].title
             description = version_summary(updates[0][1])
-            action = Gtk.Button(label=_("Apply Changes"))
+            action = Gtk.Button(label=_("Update"))
             action.add_css_class("suggested-action")
             action.add_css_class("pill")
             action.connect(
                 "clicked",
-                lambda button: self._confirm_recommended_install(button),
+                lambda button: self._confirm_driver_update(button, updates[0][1]),
             )
         elif waiting_for_restart:
             badge_text = _("Reboot Required")
@@ -912,7 +944,12 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 else _("No additional drivers are needed.")
             )
             graphics_class = "success-pill"
-            graphics_target = "graphics-0" if graphics_scan.devices else None
+            graphics_target = graphics_page_name(graphics_scan.devices[0]) if graphics_scan.devices else None
+            if graphics_scan.intel and graphics_scan.intel.devices and not graphics_scan.devices:
+                graphics_target = "intel-graphics"
+                graphics_subtitle = "Intel Graphics"
+                graphics_state = _("Kernel module")
+                graphics_class = "installed-pill"
         cards.insert(
             self._overview_card(
                 "video-display-symbolic",
@@ -995,18 +1032,18 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             -1,
         )
 
-        if not secure_boot.enforcement_inactive:
-            cards.insert(
-                self._overview_card(
-                    "security-high-symbolic",
-                    _("Secure Boot"),
-                    _("Trusted") if secure_boot.ready else _("Action required"),
-                    _("Trust established") if secure_boot.ready else _("Support needs attention"),
-                    "success-pill" if secure_boot.ready else "warning-pill",
-                    "secure-boot",
-                ),
-                -1,
-            )
+        secure_boot_healthy = secure_boot.enabled and secure_boot.ready
+        cards.insert(
+            self._overview_card(
+                "security-high-symbolic",
+                _("Secure Boot"),
+                _("Trusted") if secure_boot_healthy else _("Action required"),
+                _("Trust established") if secure_boot_healthy else _("Support needs attention"),
+                "success-pill" if secure_boot_healthy else "warning-pill",
+                "secure-boot",
+            ),
+            -1,
+        )
         firmware_state, firmware_subtitle, firmware_class = (
             self._firmware_card_state(self._firmware_manager.snapshot)
         )
@@ -1518,6 +1555,69 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         )
         dialog.present()
 
+    @staticmethod
+    def _driver_version_summary(option) -> str:
+        details = [option.package]
+        if option.installed_version:
+            details.append(f'{_("Installed")}: {option.installed_version}')
+        if option.candidate_version:
+            details.append(f'{_("Available")}: {option.candidate_version}')
+        return " · ".join(details)
+
+    def _confirm_driver_update(self, button, option) -> None:
+        from .driver_update import preview
+        button.set_sensitive(False)
+        def worker():
+            try:
+                transaction = preview(option.package)
+            except Exception as error:
+                GLib.idle_add(self._update_preview_done, button, None, str(error))
+            else:
+                GLib.idle_add(self._update_preview_done, button, transaction, None)
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _update_preview_done(self, button, transaction, error):
+        button.set_sensitive(True)
+        if error:
+            self._action_error(error)
+            return GLib.SOURCE_REMOVE
+        import json
+        removed = [c for c in transaction['changes'] if c['after'] is None]
+        dialog = Adw.MessageDialog(
+            transient_for=self, heading=_("Update"),
+            body=transaction['package'] + '\n' + transaction['before'] + ' → ' + transaction['after'],
+        )
+        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        if removed:
+            warning = Gtk.Label(label=_("Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."), wrap=True, xalign=0)
+            warning.add_css_class('warning')
+            warning.set_max_width_chars(65)
+            content.append(warning)
+        details = Gtk.TextView(editable=False, cursor_visible=False,
+                               monospace=True, wrap_mode=Gtk.WrapMode.WORD_CHAR)
+        lines = []
+        for change in sorted(transaction['changes'], key=lambda c: (c['after'] is not None, c['package'])):
+            symbol = '−' if change['after'] is None else '+' if change['before'] is None else '↑'
+            lines.append(f"{symbol} {change['package']}\n    {change['before'] or '—'} → {change['after'] or '—'}")
+        details.get_buffer().set_text('\n\n'.join(lines))
+        scroll = _scrolled_window(min_content_height=260, max_content_height=360,
+                                  propagate_natural_height=True)
+        scroll.set_size_request(620, -1)
+        scroll.set_child(details)
+        content.append(scroll)
+        dialog.set_extra_child(content)
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("update", _("Update"))
+        dialog.set_close_response("cancel")
+        dialog.set_default_response("cancel")
+        dialog.set_response_appearance("update", Adw.ResponseAppearance.DESTRUCTIVE if removed else Adw.ResponseAppearance.SUGGESTED)
+        dialog.connect("response", lambda _dialog, response: self._run_action(
+            button, ["update", transaction['package']], stdin=json.dumps(transaction),
+            success_message=_("Restart required after installation"),
+        ) if response == "update" else None)
+        dialog.present()
+        return GLib.SOURCE_REMOVE
+
     def _confirm_recommended_install(self, button: Gtk.Button) -> None:
         dialog = Adw.MessageDialog(
             transient_for=self,
@@ -1579,6 +1679,12 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             if option.builtin:
                 traits.append(_("built in"))
             row = Adw.ActionRow(title=option.package, subtitle=" · ".join(traits))
+            if option.installed and option.update_available:
+                row.set_subtitle(self._driver_version_summary(option))
+                update = Gtk.Button(label=_("Update"), valign=Gtk.Align.CENTER)
+                update.set_sensitive(secure_boot.ready)
+                update.connect("clicked", lambda btn: self._confirm_driver_update(btn, option))
+                row.add_suffix(update)
             check = Gtk.CheckButton()
             if first_check:
                 check.set_group(first_check)
@@ -1633,6 +1739,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 self.refresh,
             )
             content.append(warning)
+        elif device.restart_required:
+            content.append(Adw.Banner(title=_("Restart required after installation"), revealed=True))
         elif (
             device.active_driver
             and device.active_driver.lower().replace("_", "-").startswith("nvidia")
@@ -2145,7 +2253,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         )
         secure_boot_page.set_valign(Gtk.Align.START)
         secure_boot_page.set_vexpand(False)
-        scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        scroll = _scrolled_window()
         clamp = Adw.Clamp(maximum_size=650, tightening_threshold=500)
         clamp.set_child(secure_boot_page)
         scroll.set_child(clamp)
@@ -2197,13 +2305,23 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         success_output_marker: str | None = None,
     ) -> None:
         if not arguments: return
+        if arguments[0] == 'update':
+            return self._run_update_action(button, arguments, stdin, success_message, success_output_marker)
         button.set_sensitive(False)
         original = button.get_label() or _("Apply")
         button.set_label(_("Working…"))
         def worker() -> None:
             try:
                 result = subprocess.run(["pkexec", HELPER, *arguments], input=stdin, capture_output=True, text=True, timeout=1800, check=False)
-                message = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else result.stderr.strip()
+                if result.returncode:
+                    # Keep both streams: APT errors usually go to stderr, but
+                    # dependency and maintainer-script details can be on stdout.
+                    message = "\n\n".join(
+                        output.strip() for output in (result.stderr, result.stdout)
+                        if output.strip()
+                    )
+                else:
+                    message = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else result.stderr.strip()
                 resolved_success_message = success_message
                 if result.returncode == 0 and success_output_marker:
                     resolved_success_message = _command_output_summary(
@@ -2228,6 +2346,94 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 )
         threading.Thread(target=worker, daemon=True).start()
 
+    def _run_update_action(
+        self,
+        button: Gtk.Button,
+        arguments: list[str],
+        stdin: str | None = None,
+        success_message: str | None = None,
+        success_output_marker: str | None = None,
+    ) -> None:
+        if not arguments: return
+        if getattr(self, '_operation_running', False):
+            return
+        from .operation_ui import OperationWindow
+        self._operation_running = True
+        operation = OperationWindow(self)
+        operation.present()
+        application = self.get_application()
+        application.hold()
+        button.set_sensitive(False)
+        original = button.get_label() or _("Apply")
+        button.set_label(_("Working…"))
+        def worker() -> None:
+            output = ''
+            try:
+                with subprocess.Popen(
+                    ["pkexec", HELPER, *arguments], stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                    text=True, errors='replace', bufsize=1,
+                ) as process:
+                    # Drain output while supplying the request: neither pipe may
+                    # block the other, including during authentication failures.
+                    def send_input():
+                        try:
+                            if stdin:
+                                process.stdin.write(stdin)
+                            process.stdin.close()
+                        except (BrokenPipeError, OSError):
+                            pass
+                    sender = threading.Thread(target=send_input, daemon=True)
+                    sender.start()
+                    for line in process.stdout:
+                        output = (output + line)[-200000:]
+                        GLib.idle_add(operation.append, line)
+                    sender.join()
+                    code = process.wait()
+                result = subprocess.CompletedProcess([], code, output, '')
+                if result.returncode:
+                    # Keep both streams: APT errors usually go to stderr, but
+                    # dependency and maintainer-script details can be on stdout.
+                    message = "\n\n".join(
+                        output.strip() for output in (result.stderr, result.stdout)
+                        if output.strip()
+                    )
+                else:
+                    message = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else result.stderr.strip()
+                resolved_success_message = success_message
+                if result.returncode == 0 and success_output_marker:
+                    resolved_success_message = _command_output_summary(
+                        result.stdout, success_output_marker
+                    ) or success_message
+                GLib.idle_add(
+                    finish,
+                    button,
+                    original,
+                    result.returncode,
+                    message,
+                    resolved_success_message,
+                )
+            except Exception as error:
+                GLib.idle_add(operation.append, '\n' + str(error))
+                GLib.idle_add(
+                    finish,
+                    button,
+                    original,
+                    1,
+                    str(error),
+                    success_message,
+                )
+        def finish(button, original, code, message, resolved_success):
+            self._operation_running = False
+            button.set_label(original)
+            button.set_sensitive(True)
+            operation.finish(code, (resolved_success or _("Driver changes completed. Restart may be required."))
+                             if code == 0 else _("Driver operation failed: ") + message[-2000:])
+            self.refresh()
+            application.release()
+            return GLib.SOURCE_REMOVE
+        threading.Thread(target=worker, daemon=True).start()
+
     def _action_done(
         self,
         button: Gtk.Button,
@@ -2237,13 +2443,34 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         success_message: str | None = None,
     ) -> bool:
         button.set_label(original); button.set_sensitive(True)
-        self._toast(
-            (success_message or _("Driver changes completed. Restart may be required."))
-            if code == 0
-            else (_("Driver operation failed: ") + (message or _("unknown error")))
-        )
-        if code == 0: self.refresh()
+        if code == 0:
+            self._toast(success_message or _("Driver changes completed. Restart may be required."))
+            self.refresh()
+        else:
+            self._action_error(message or _("unknown error"))
         return GLib.SOURCE_REMOVE
+
+    def _action_error(self, message: str) -> None:
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Driver operation failed: ").rstrip(": "),
+        )
+        details = Gtk.TextView(
+            editable=False,
+            cursor_visible=False,
+            wrap_mode=Gtk.WrapMode.WORD_CHAR,
+        )
+        details.get_buffer().set_text(message)
+        scroll = _scrolled_window(
+            min_content_height=180,
+            max_content_height=360,
+            propagate_natural_height=True,
+        )
+        scroll.set_child(details)
+        dialog.set_extra_child(scroll)
+        scroll.set_size_request(620, -1)
+        dialog.add_response("ok", _("OK"))
+        dialog.present()
 
     def _toast(self, message: str) -> None:
         # A transient alert works on every supported libadwaita, including Noble.
@@ -2253,7 +2480,10 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
 class DriverCenterApplication(Adw.Application):
     def __init__(self):
-        super().__init__(application_id=APP_ID, flags=Gio.ApplicationFlags.DEFAULT_FLAGS)
+        super().__init__(
+            application_id=APP_ID,
+            flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
+        )
 
     def do_startup(self) -> None:
         Adw.Application.do_startup(self)
@@ -2266,7 +2496,7 @@ class DriverCenterApplication(Adw.Application):
         dialog.set_application_name(_("AnduinOS Driver Center"))
         dialog.set_application_icon(APP_ID)
         dialog.set_developer_name(_("AnduinOS Team"))
-        dialog.set_version("2.0.2")
+        dialog.set_version("2.0.3")
         dialog.set_comments(
             _("Install, inspect, and repair hardware drivers on AnduinOS.")
         )
@@ -2282,7 +2512,36 @@ class DriverCenterApplication(Adw.Application):
         window = self.get_active_window() or DriverCenterWindow(self)
         window.present()
 
+    def do_command_line(self, command_line: Gio.ApplicationCommandLine) -> int:
+        arguments = [str(argument) for argument in command_line.get_arguments()]
+        requested_page = "home"
+        index = 1
+        while index < len(arguments):
+            argument = arguments[index]
+            if argument == "--page" and index + 1 < len(arguments):
+                requested_page = arguments[index + 1]
+                index += 2
+                continue
+            if argument.startswith("--page="):
+                requested_page = argument.partition("=")[2]
+                index += 1
+                continue
+            command_line.printerr("Unknown option: %s\n" % argument)
+            return 2
+        if requested_page not in {"home", "secure-boot", "computer", "intel-graphics"}:
+            command_line.printerr("Unknown Driver Center page: %s\n" % requested_page)
+            return 2
+
+        window = self.get_active_window()
+        if window is None:
+            window = DriverCenterWindow(self, initial_page=requested_page)
+        else:
+            window._selected_page_name = requested_page
+            window._select_page(requested_page)
+        window.present()
+        return 0
+
 
 def main() -> int:
     Adw.init()
-    return DriverCenterApplication().run(None)
+    return DriverCenterApplication().run(sys.argv)

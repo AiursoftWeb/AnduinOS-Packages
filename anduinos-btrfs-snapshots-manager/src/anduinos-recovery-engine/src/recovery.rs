@@ -13,6 +13,10 @@ use crate::boot::{
 use crate::model::DeploymentId;
 #[cfg(test)]
 use crate::model::DeploymentState;
+use crate::operations::SystemCommandRunner;
+#[cfg(test)]
+use crate::personal::PersonalSnapshotKind;
+use crate::personal::{PersonalSnapshotEngine, PersonalSnapshotState};
 use crate::store::DeploymentStore;
 pub use crate::transaction::RecoveryCheckpoint;
 use crate::transaction::{
@@ -70,12 +74,22 @@ pub trait RecoveryFilesystem: Clone + Send + Sync + 'static {
     fn rename(&self, source: &Path, destination: &Path) -> Result<(), RecoveryError>;
     fn identity(&self, subvolume: &Path) -> Result<String, RecoveryError>;
     fn is_read_only(&self, subvolume: &Path) -> Result<bool, RecoveryError>;
+    fn has_descendants(&self, subvolume: &Path) -> Result<bool, RecoveryError>;
 }
 
 #[derive(Clone, Copy, Debug, Default)]
 pub struct SystemRecoveryFilesystem;
 
 impl RecoveryFilesystem for SystemRecoveryFilesystem {
+    fn has_descendants(&self, subvolume: &Path) -> Result<bool, RecoveryError> {
+        let output = run_btrfs(&[
+            OsString::from("subvolume"),
+            OsString::from("list"),
+            OsString::from("-o"),
+            subvolume.as_os_str().to_owned(),
+        ])?;
+        Ok(!output.is_empty())
+    }
     fn snapshot(&self, source: &Path, destination: &Path) -> Result<(), RecoveryError> {
         run_btrfs(&[
             OsString::from("subvolume"),
@@ -409,6 +423,19 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
                 "Rollback fallback is not a complete safety snapshot",
             ));
         }
+        if transaction.home_only
+            && fallback.snapshot_parent_uuid.as_deref()
+                != Some(
+                    self.filesystem
+                        .identity(&self.top_level.join("@root"))?
+                        .as_str(),
+                )
+        {
+            return Err(RecoveryError::new(
+                RecoveryErrorCode::InvalidDeployment,
+                "The live root changed after the Home restore was scheduled",
+            ));
+        }
         let target_root = self.deployment_root(transaction.target_deployment_id);
         let fallback_root = self.deployment_root(transaction.fallback_deployment_id);
         ensure_real_directory(&target_root)?;
@@ -431,6 +458,74 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
                 "Rollback target snapshot is not read-only",
             ));
         }
+        if transaction.reset_home {
+            let id = transaction.factory_home_snapshot_id.ok_or_else(|| {
+                RecoveryError::new(
+                    RecoveryErrorCode::InvalidTransaction,
+                    "Factory Home reset has no baseline identity",
+                )
+            })?;
+            let expected_uuid = transaction
+                .factory_home_snapshot_uuid
+                .as_deref()
+                .ok_or_else(|| {
+                    RecoveryError::new(
+                        RecoveryErrorCode::InvalidTransaction,
+                        "Factory Home reset has no baseline UUID",
+                    )
+                })?;
+            let personal = PersonalSnapshotEngine::new(
+                self.top_level.join("@home"),
+                &root,
+                SystemCommandRunner,
+            );
+            let record = personal.load(id).map_err(|error| {
+                RecoveryError::new(RecoveryErrorCode::InvalidDeployment, error.message)
+            })?;
+            if record.state != PersonalSnapshotState::Ready
+                || record.snapshot_uuid.as_deref() != Some(expected_uuid)
+            {
+                return Err(RecoveryError::new(
+                    RecoveryErrorCode::InvalidDeployment,
+                    "Factory Home baseline metadata does not match the reset transaction",
+                ));
+            }
+            let factory_home = self.personal_snapshot_home(id);
+            ensure_real_directory(&factory_home)?;
+            for home in [
+                &factory_home,
+                &self.top_level.join("@home"),
+                &self.top_level.join(transaction.old_home_name()),
+            ] {
+                if real_directory(home)? && self.filesystem.has_descendants(home)? {
+                    return Err(RecoveryError::new(
+                        RecoveryErrorCode::UnsafeLayout,
+                        "Home rollback cannot replace nested Btrfs subvolumes; their contents are not included in ordinary snapshots",
+                    ));
+                }
+            }
+            if self.filesystem.identity(&factory_home)? != expected_uuid {
+                return Err(RecoveryError::new(
+                    RecoveryErrorCode::InvalidDeployment,
+                    "Factory Home baseline UUID does not match metadata",
+                ));
+            }
+            if !self.filesystem.is_read_only(&factory_home)? {
+                return Err(RecoveryError::new(
+                    RecoveryErrorCode::InvalidDeployment,
+                    "Factory Home baseline is not read-only",
+                ));
+            }
+            if transaction.home_only {
+                crate::home_accounts::verify_home_accounts(
+                    &self.top_level.join("@root/etc/passwd"),
+                    &factory_home,
+                )
+                .map_err(|message| {
+                    RecoveryError::new(RecoveryErrorCode::InvalidDeployment, message)
+                })?;
+            }
+        }
         Ok(())
     }
 
@@ -440,6 +535,9 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
         transaction: &mut RollbackTransaction,
         checkpoint: &mut impl FnMut(RecoveryCheckpoint),
     ) -> Result<(), RecoveryError> {
+        if transaction.home_only {
+            return self.apply_home(store, transaction, checkpoint);
+        }
         let root = self.top_level.join("@root");
         let old = self.top_level.join(transaction.old_root_name());
         let new = self.top_level.join(transaction.new_root_name());
@@ -481,13 +579,88 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
                         checkpoint,
                     )?;
                 }
-                (true, true, false) => return Ok(()),
+                (true, true, false) => break,
                 state => return Err(unsafe_state("apply", state)),
+            }
+        }
+        if !matches!(
+            (
+                real_directory(&root)?,
+                real_directory(&old)?,
+                real_directory(&new)?,
+            ),
+            (true, true, false)
+        ) {
+            return Err(RecoveryError::new(
+                RecoveryErrorCode::UnsafeLayout,
+                "Rollback apply did not converge",
+            ));
+        }
+        if transaction.reset_home {
+            self.apply_home(store, transaction, checkpoint)?;
+        }
+        Ok(())
+    }
+
+    fn apply_home(
+        &self,
+        store: &TransactionStore,
+        transaction: &mut RollbackTransaction,
+        checkpoint: &mut impl FnMut(RecoveryCheckpoint),
+    ) -> Result<(), RecoveryError> {
+        let home = self.top_level.join("@home");
+        let old = self.top_level.join(transaction.old_home_name());
+        let new = self.top_level.join(transaction.new_home_name());
+        let target =
+            self.personal_snapshot_home(transaction.factory_home_snapshot_id.ok_or_else(|| {
+                RecoveryError::new(
+                    RecoveryErrorCode::InvalidTransaction,
+                    "Factory Home reset has no baseline identity",
+                )
+            })?);
+        for _ in 0..5 {
+            match (
+                real_directory(&home)?,
+                real_directory(&old)?,
+                real_directory(&new)?,
+            ) {
+                (true, false, false) => {
+                    self.filesystem.snapshot(&target, &new)?;
+                    self.filesystem.sync(&self.top_level)?;
+                    persist_checkpoint(
+                        store,
+                        transaction,
+                        RecoveryCheckpoint::WritableHomeCreated,
+                        checkpoint,
+                    )?;
+                }
+                (true, false, true) => {
+                    self.filesystem.rename(&home, &old)?;
+                    self.filesystem.sync(&self.top_level)?;
+                    persist_checkpoint(
+                        store,
+                        transaction,
+                        RecoveryCheckpoint::CurrentHomeProtected,
+                        checkpoint,
+                    )?;
+                }
+                (false, true, true) => {
+                    self.filesystem.rename(&new, &home)?;
+                    self.filesystem.sync(&self.top_level)?;
+                    persist_checkpoint(
+                        store,
+                        transaction,
+                        RecoveryCheckpoint::TargetHomeActivated,
+                        checkpoint,
+                    )?;
+                }
+                (true, true, false) => return Ok(()),
+                state => return Err(unsafe_state("factory Home apply", state)),
             }
         }
         Err(RecoveryError::new(
             RecoveryErrorCode::UnsafeLayout,
-            "Rollback apply did not converge",
+            "Factory Home apply did not converge",
         ))
     }
 
@@ -534,6 +707,12 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
         transaction: &mut RollbackTransaction,
         checkpoint: &mut impl FnMut(RecoveryCheckpoint),
     ) -> Result<(), RecoveryError> {
+        if transaction.reset_home {
+            self.revert_home(store, transaction, checkpoint)?;
+        }
+        if transaction.home_only {
+            return Ok(());
+        }
         let root = self.top_level.join("@root");
         let old = self.top_level.join(transaction.old_root_name());
         let new = self.top_level.join(transaction.new_root_name());
@@ -594,6 +773,71 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
         ))
     }
 
+    fn revert_home(
+        &self,
+        store: &TransactionStore,
+        transaction: &mut RollbackTransaction,
+        checkpoint: &mut impl FnMut(RecoveryCheckpoint),
+    ) -> Result<(), RecoveryError> {
+        let home = self.top_level.join("@home");
+        let old = self.top_level.join(transaction.old_home_name());
+        let new = self.top_level.join(transaction.new_home_name());
+        for _ in 0..6 {
+            match (
+                real_directory(&home)?,
+                real_directory(&old)?,
+                real_directory(&new)?,
+            ) {
+                (true, false, false) => return Ok(()),
+                (true, false, true) => {
+                    self.filesystem.delete(&new)?;
+                    self.filesystem.sync(&self.top_level)?;
+                    persist_checkpoint(
+                        store,
+                        transaction,
+                        RecoveryCheckpoint::DiscardedHomeDeleted,
+                        checkpoint,
+                    )?;
+                }
+                (false, true, true) => {
+                    self.filesystem.rename(&old, &home)?;
+                    self.filesystem.sync(&self.top_level)?;
+                    persist_checkpoint(
+                        store,
+                        transaction,
+                        RecoveryCheckpoint::FallbackHomeActivated,
+                        checkpoint,
+                    )?;
+                }
+                (true, true, false) => {
+                    self.filesystem.rename(&home, &new)?;
+                    self.filesystem.sync(&self.top_level)?;
+                    persist_checkpoint(
+                        store,
+                        transaction,
+                        RecoveryCheckpoint::RestoredHomeMovedAside,
+                        checkpoint,
+                    )?;
+                }
+                (false, true, false) => {
+                    self.filesystem.rename(&old, &home)?;
+                    self.filesystem.sync(&self.top_level)?;
+                    persist_checkpoint(
+                        store,
+                        transaction,
+                        RecoveryCheckpoint::FallbackHomeActivated,
+                        checkpoint,
+                    )?;
+                }
+                state => return Err(unsafe_state("factory Home revert", state)),
+            }
+        }
+        Err(RecoveryError::new(
+            RecoveryErrorCode::UnsafeLayout,
+            "Factory Home revert did not converge",
+        ))
+    }
+
     fn snapshot_root(&self) -> PathBuf {
         self.top_level
             .join("@snapshots/anduinos-btrfs-snapshots-manager")
@@ -604,6 +848,13 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
             .join("deployments")
             .join(id.to_string())
             .join("root")
+    }
+
+    fn personal_snapshot_home(&self, id: crate::personal::PersonalSnapshotId) -> PathBuf {
+        self.snapshot_root()
+            .join("personal/snapshots")
+            .join(id.to_string())
+            .join("home")
     }
 }
 
@@ -704,7 +955,9 @@ mod tests {
 
     use chrono::Utc;
 
+    use crate::PERSONAL_SNAPSHOT_SCHEMA_VERSION;
     use crate::model::{DeploymentKind, DeploymentRecord};
+    use crate::personal::{FACTORY_HOME_TITLE, PersonalSnapshotId, PersonalSnapshotRecord};
     use crate::{DEPLOYMENT_SCHEMA_VERSION, transaction::RollbackTransaction};
 
     use super::*;
@@ -746,6 +999,9 @@ mod tests {
     }
 
     impl RecoveryFilesystem for FakeFilesystem {
+        fn has_descendants(&self, _subvolume: &Path) -> Result<bool, RecoveryError> {
+            Ok(false)
+        }
         fn snapshot(&self, source: &Path, destination: &Path) -> Result<(), RecoveryError> {
             self.mutation()?;
             copy_tree(source, destination);
@@ -834,6 +1090,46 @@ mod tests {
             .unwrap()
             .phase
         }
+
+        fn enable_home_reset(&mut self) {
+            fs::create_dir_all(self.root.join("@home")).unwrap();
+            fs::write(self.root.join("@home/user-data"), "current Home").unwrap();
+            let snapshot_root = self
+                .root
+                .join("@snapshots/anduinos-btrfs-snapshots-manager");
+            let id = PersonalSnapshotId::new();
+            let record = PersonalSnapshotRecord {
+                schema_version: PERSONAL_SNAPSHOT_SCHEMA_VERSION,
+                id,
+                kind: PersonalSnapshotKind::Factory,
+                state: PersonalSnapshotState::Ready,
+                created_at: Utc::now(),
+                title: FACTORY_HOME_TITLE.into(),
+                reason: "Initial AnduinOS Home".into(),
+                schedule_id: None,
+                snapshot_uuid: Some(TARGET_UUID.into()),
+                snapshot_parent_uuid: Some(FALLBACK_UUID.into()),
+                pinned: true,
+                failure: None,
+            };
+            let metadata = snapshot_root.join("personal/metadata");
+            fs::create_dir_all(&metadata).unwrap();
+            fs::write(
+                metadata.join(format!("{id}.json")),
+                serde_json::to_vec(&record).unwrap(),
+            )
+            .unwrap();
+            let home = snapshot_root
+                .join("personal/snapshots")
+                .join(id.to_string())
+                .join("home");
+            fs::create_dir_all(&home).unwrap();
+            fs::write(home.join("factory-default"), "factory Home").unwrap();
+            self.transaction.enable_home_reset(&record).unwrap();
+            TransactionStore::new(&snapshot_root)
+                .update(&self.transaction)
+                .unwrap();
+        }
     }
 
     impl Drop for Environment {
@@ -902,6 +1198,192 @@ mod tests {
         );
         assert_eq!(environment.phase(), RollbackPhase::Armed);
         assert!(environment.root.join("@root/origin").exists());
+    }
+
+    #[test]
+    fn factory_reset_switches_and_reverts_root_and_home_as_one_transaction() {
+        let mut environment = Environment::new();
+        environment.enable_home_reset();
+        let engine = RecoveryEngine::new(&environment.root, FakeFilesystem::default());
+        assert_eq!(
+            engine
+                .execute(Some(environment.transaction.id), BOOT_ONE)
+                .unwrap(),
+            RecoveryOutcome::Applied
+        );
+        assert!(environment.root.join("@root/target").exists());
+        assert!(environment.root.join("@home/factory-default").exists());
+        assert!(
+            environment
+                .root
+                .join(environment.transaction.old_home_name())
+                .join("user-data")
+                .exists()
+        );
+
+        assert_eq!(
+            engine.execute(None, BOOT_TWO).unwrap(),
+            RecoveryOutcome::Reverted
+        );
+        assert!(environment.root.join("@root/origin").exists());
+        assert!(environment.root.join("@home/user-data").exists());
+        assert!(!environment.root.join("@home/factory-default").exists());
+    }
+
+    fn home_only_environment() -> Environment {
+        use std::os::unix::fs::MetadataExt;
+        let mut environment = Environment::new();
+        environment.enable_home_reset();
+        let store_root = environment
+            .root
+            .join("@snapshots/anduinos-btrfs-snapshots-manager");
+        let mut anchor = DeploymentStore::new(&store_root)
+            .load_record(environment.transaction.fallback_deployment_id)
+            .unwrap();
+        anchor.snapshot_uuid = Some(TARGET_UUID.into());
+        anchor.snapshot_parent_uuid = Some(TARGET_UUID.into());
+        fs::write(
+            store_root
+                .join("metadata")
+                .join(format!("{}.json", anchor.id)),
+            serde_json::to_vec(&anchor).unwrap(),
+        )
+        .unwrap();
+        let home = store_root
+            .join("personal/snapshots")
+            .join(
+                environment
+                    .transaction
+                    .factory_home_snapshot_id
+                    .unwrap()
+                    .to_string(),
+            )
+            .join("home");
+        fs::create_dir(home.join("alice")).unwrap();
+        fs::rename(
+            home.join("factory-default"),
+            home.join("alice/factory-default"),
+        )
+        .unwrap();
+        let meta = fs::metadata(home.join("alice")).unwrap();
+        fs::create_dir(environment.root.join("@root/etc")).unwrap();
+        fs::write(
+            environment.root.join("@root/etc/passwd"),
+            format!(
+                "alice:x:{}:{}::/home/alice:/bin/bash\n",
+                meta.uid(),
+                meta.gid()
+            ),
+        )
+        .unwrap();
+        environment.transaction.home_only = true;
+        environment.transaction.target_deployment_id = anchor.id;
+        TransactionStore::new(&store_root)
+            .update(&environment.transaction)
+            .unwrap();
+        environment
+    }
+
+    #[test]
+    fn home_only_restore_and_failure_revert_never_replace_root() {
+        use std::os::unix::fs::MetadataExt;
+        let environment = home_only_environment();
+        let root_inode = fs::metadata(environment.root.join("@root")).unwrap().ino();
+        fs::write(
+            environment.root.join("@root/origin"),
+            "newest system changes",
+        )
+        .unwrap();
+        let engine = RecoveryEngine::new(&environment.root, FakeFilesystem::default());
+        assert_eq!(
+            engine
+                .execute(Some(environment.transaction.id), BOOT_ONE)
+                .unwrap(),
+            RecoveryOutcome::Applied
+        );
+        assert!(
+            environment
+                .root
+                .join("@home/alice/factory-default")
+                .exists()
+        );
+        assert_eq!(
+            fs::read_to_string(environment.root.join("@root/origin")).unwrap(),
+            "newest system changes"
+        );
+        assert!(
+            !environment
+                .root
+                .join(environment.transaction.old_root_name())
+                .exists()
+        );
+        assert_eq!(
+            engine.execute(None, BOOT_TWO).unwrap(),
+            RecoveryOutcome::Reverted
+        );
+        assert!(environment.root.join("@home/user-data").exists());
+        assert_eq!(
+            fs::metadata(environment.root.join("@root")).unwrap().ino(),
+            root_inode
+        );
+    }
+
+    #[test]
+    fn home_only_restore_rechecks_accounts_before_any_home_mutation() {
+        let environment = home_only_environment();
+        fs::write(
+            environment.root.join("@root/etc/passwd"),
+            "bob:x:1001:1001::/home/bob:/bin/bash\n",
+        )
+        .unwrap();
+        let engine = RecoveryEngine::new(&environment.root, FakeFilesystem::default());
+        assert!(
+            engine
+                .execute(Some(environment.transaction.id), BOOT_ONE)
+                .is_err()
+        );
+        assert!(environment.root.join("@home/user-data").exists());
+        assert!(
+            !environment
+                .root
+                .join(environment.transaction.old_home_name())
+                .exists()
+        );
+    }
+
+    #[test]
+    fn interrupted_home_only_restore_recovers_old_home_at_every_mutation() {
+        use std::os::unix::fs::MetadataExt;
+        for failure in 1..=6 {
+            let environment = home_only_environment();
+            let root_inode = fs::metadata(environment.root.join("@root")).unwrap().ino();
+            let filesystem = FakeFilesystem::default();
+            filesystem.fail_once_at(failure);
+            let engine = RecoveryEngine::new(&environment.root, filesystem);
+            assert!(
+                engine
+                    .execute(Some(environment.transaction.id), BOOT_ONE)
+                    .is_err()
+            );
+            assert_eq!(
+                engine.execute(None, BOOT_TWO).unwrap(),
+                RecoveryOutcome::Reverted
+            );
+            assert!(
+                environment.root.join("@home/user-data").exists(),
+                "mutation {failure}"
+            );
+            assert_eq!(
+                fs::metadata(environment.root.join("@root")).unwrap().ino(),
+                root_inode
+            );
+            assert!(
+                !environment
+                    .root
+                    .join(environment.transaction.old_root_name())
+                    .exists()
+            );
+        }
     }
 
     #[test]
@@ -1136,6 +1618,43 @@ mod tests {
             ));
             assert!(
                 environment.root.join("@root/origin").exists(),
+                "failure {failure}"
+            );
+        }
+    }
+
+    #[test]
+    fn every_home_apply_command_failure_reverts_root_and_home_on_next_boot() {
+        // Root activation performs the first six filesystem mutations. Exercise
+        // every snapshot, sync, and rename boundary in the following Home switch.
+        for failure in 7..=12 {
+            let mut environment = Environment::new();
+            environment.enable_home_reset();
+            let filesystem = FakeFilesystem::default();
+            filesystem.fail_once_at(failure);
+            let engine = RecoveryEngine::new(&environment.root, filesystem);
+
+            assert!(
+                engine
+                    .execute(Some(environment.transaction.id), BOOT_ONE)
+                    .is_err(),
+                "failure {failure}"
+            );
+            assert_eq!(
+                engine.execute(None, BOOT_TWO).unwrap(),
+                RecoveryOutcome::Reverted,
+                "failure {failure}"
+            );
+            assert!(
+                environment.root.join("@root/origin").exists(),
+                "failure {failure}"
+            );
+            assert!(
+                environment.root.join("@home/user-data").exists(),
+                "failure {failure}"
+            );
+            assert!(
+                !environment.root.join("@home/factory-default").exists(),
                 "failure {failure}"
             );
         }

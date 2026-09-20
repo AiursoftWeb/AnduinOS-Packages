@@ -6,10 +6,12 @@ use anduinos_recovery_engine::{
     confirmation::ConfirmationEngine,
     layout,
     model::{DeploymentId, DeploymentKind, DeploymentState},
-    operations::{OperationEngine, ScheduledSnapshotOutcome},
+    operations::{
+        OperationEngine, OperationErrorCode, ScheduledSnapshotOutcome, SystemCommandRunner,
+    },
     personal::{
-        PersonalSnapshotEngine, PersonalSnapshotId, PersonalSnapshotState,
-        ScheduledPersonalSnapshotOutcome,
+        PersonalErrorCode, PersonalSnapshotEngine, PersonalSnapshotId, PersonalSnapshotKind,
+        PersonalSnapshotState, ScheduledPersonalSnapshotOutcome,
     },
     rollback::RollbackCoordinator,
     store::DeploymentStore,
@@ -356,6 +358,12 @@ impl SnapshotsManagerHelper {
     ) -> zbus::Result<()>;
 
     #[zbus(signal)]
+    async fn automatic_snapshot_paused(
+        ctxt: &zbus::SignalContext<'_>,
+        scope: &str,
+    ) -> zbus::Result<()>;
+
+    #[zbus(signal)]
     async fn automatic_cleanup_succeeded(
         ctxt: &zbus::SignalContext<'_>,
         system_deleted: u64,
@@ -544,9 +552,37 @@ impl SnapshotsManagerHelper {
             Err(error) => return (false, format!("Could not load automation policy: {error}")),
         };
         if !config.system.is_auto_snapshot_enabled {
+            clear_automatic_low_space_state("system");
             return (true, serde_json::json!({ "created": false }).to_string());
         }
-        let engine = OperationEngine::default();
+        let minimum_free_bytes = automatic_minimum_free_bytes(&config);
+        let engine = if minimum_free_bytes == 0 {
+            OperationEngine::default()
+        } else {
+            OperationEngine::default().with_minimum_free_bytes(minimum_free_bytes)
+        };
+        match automatic_snapshot_space(std::path::Path::new("/"), minimum_free_bytes) {
+            Ok(Some(available_bytes)) => {
+                log::info!(
+                    "Skipping scheduled system snapshot: {available_bytes} bytes available, {minimum_free_bytes} required"
+                );
+                emit_low_space_transition(&ctxt, "system").await;
+                return (
+                    true,
+                    automatic_snapshot_skipped_payload(
+                        config.minimum_free_space_gib,
+                        Some(available_bytes),
+                    ),
+                );
+            }
+            Ok(None) => clear_automatic_low_space_state("system"),
+            Err(error) => {
+                return (
+                    false,
+                    format!("Could not inspect automatic snapshot storage space: {error}"),
+                );
+            }
+        }
         if config.notifications.notify_before_scheduled
             && engine
                 .scheduled_snapshot_due(config.system.snapshot_interval_hours, chrono::Utc::now())
@@ -589,6 +625,17 @@ impl SnapshotsManagerHelper {
             },
             Ok(ScheduledSnapshotOutcome::NotDue) => {
                 (true, serde_json::json!({ "created": false }).to_string())
+            }
+            Err(error)
+                if minimum_free_bytes > 0
+                    && error.code == OperationErrorCode::InsufficientSpace =>
+            {
+                log::info!("Skipping scheduled system snapshot: {error}");
+                emit_low_space_transition(&ctxt, "system").await;
+                (
+                    true,
+                    automatic_snapshot_skipped_payload(config.minimum_free_space_gib, None),
+                )
             }
             Err(error) => {
                 audit::log_snapshot_create(uid, pid, &title, false, Some(&error.to_string()));
@@ -715,9 +762,37 @@ impl SnapshotsManagerHelper {
             Err(error) => return (false, format!("Could not load automation policy: {error}")),
         };
         if !config.home.is_auto_snapshot_enabled {
+            clear_automatic_low_space_state("personal");
             return (true, serde_json::json!({ "created": false }).to_string());
         }
-        let engine = PersonalSnapshotEngine::default();
+        let minimum_free_bytes = automatic_minimum_free_bytes(&config);
+        let engine = if minimum_free_bytes == 0 {
+            PersonalSnapshotEngine::default()
+        } else {
+            PersonalSnapshotEngine::default().with_minimum_free_bytes(minimum_free_bytes)
+        };
+        match automatic_snapshot_space(std::path::Path::new("/home"), minimum_free_bytes) {
+            Ok(Some(available_bytes)) => {
+                log::info!(
+                    "Skipping scheduled Home snapshot: {available_bytes} bytes available, {minimum_free_bytes} required"
+                );
+                emit_low_space_transition(&ctxt, "personal").await;
+                return (
+                    true,
+                    automatic_snapshot_skipped_payload(
+                        config.minimum_free_space_gib,
+                        Some(available_bytes),
+                    ),
+                );
+            }
+            Ok(None) => clear_automatic_low_space_state("personal"),
+            Err(error) => {
+                return (
+                    false,
+                    format!("Could not inspect automatic snapshot storage space: {error}"),
+                );
+            }
+        }
         if config.notifications.notify_before_scheduled
             && engine
                 .scheduled_snapshot_due(config.home.snapshot_interval_hours, chrono::Utc::now())
@@ -777,6 +852,16 @@ impl SnapshotsManagerHelper {
             Ok(ScheduledPersonalSnapshotOutcome::NotDue) => {
                 (true, serde_json::json!({ "created": false }).to_string())
             }
+            Err(error)
+                if minimum_free_bytes > 0 && error.code == PersonalErrorCode::InsufficientSpace =>
+            {
+                log::info!("Skipping scheduled Home snapshot: {error}");
+                emit_low_space_transition(&ctxt, "personal").await;
+                (
+                    true,
+                    automatic_snapshot_skipped_payload(config.minimum_free_space_gib, None),
+                )
+            }
             Err(error) => {
                 audit::log_operation(
                     uid,
@@ -830,6 +915,39 @@ impl SnapshotsManagerHelper {
                 );
                 (false, error.to_string())
             }
+        }
+    }
+
+    /// Factory deletion is deliberately separate from normal/batch deletion.
+    async fn delete_factory_personal_snapshot(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        snapshot_id: String,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_DELETE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_DELETE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match snapshot_id.parse::<PersonalSnapshotId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid Home snapshot ID: {error}")),
+        };
+        let result =
+            PersonalSnapshotEngine::default().delete_factory(&layout::inspect_current(), id);
+        let error = result.as_ref().err().map(ToString::to_string);
+        audit::log_operation(
+            uid,
+            pid,
+            "delete_factory_home",
+            &snapshot_id,
+            result.is_ok(),
+            error.as_deref(),
+        );
+        match result {
+            Ok(()) => (true, "Factory Home recovery point deleted".into()),
+            Err(error) => (false, error.to_string()),
         }
     }
 
@@ -1202,6 +1320,49 @@ impl SnapshotsManagerHelper {
         }
     }
 
+    /// Delete the installer-owned factory recovery point after the desktop UI
+    /// has presented its dedicated loss-of-recovery confirmation.
+    async fn delete_factory_deployment(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        deployment_id: String,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_DELETE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_DELETE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match deployment_id.parse::<DeploymentId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid factory snapshot ID: {error}")),
+        };
+        match OperationEngine::default().delete_factory(&layout::inspect_current(), id) {
+            Ok(()) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "delete_factory_recovery",
+                    &deployment_id,
+                    true,
+                    None,
+                );
+                (true, "Factory recovery point deleted".into())
+            }
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "delete_factory_recovery",
+                    &deployment_id,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
+        }
+    }
+
     /// Delete multiple unprotected system snapshots under one explicit
     /// authorization decision.
     async fn delete_deployments(
@@ -1340,6 +1501,39 @@ impl SnapshotsManagerHelper {
         }
     }
 
+    /// Validate the complete restore boundary before presenting a destructive
+    /// confirmation. The scheduler repeats these checks before changing state.
+    async fn check_deployment_restore_readiness(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        deployment_id: String,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_RESTORE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_RESTORE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match deployment_id.parse::<DeploymentId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid system snapshot ID: {error}")),
+        };
+        match RollbackCoordinator::default().check_ready(id) {
+            Ok(_) => (true, "System restore prerequisites are ready".into()),
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "check_restore_readiness",
+                    &deployment_id,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
+        }
+    }
+
     /// Verify, protect, and schedule a one-shot recovery boot.
     async fn schedule_deployment_restore(
         &self,
@@ -1368,6 +1562,156 @@ impl SnapshotsManagerHelper {
                 audit::log_snapshot_restore(
                     uid,
                     pid,
+                    &deployment_id,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
+        }
+    }
+
+    /// Check whole-Home rollback; the same administrator policy as system restore applies.
+    async fn check_personal_restore_readiness(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        snapshot_id: String,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_RESTORE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_RESTORE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match snapshot_id.parse::<PersonalSnapshotId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid Home snapshot ID: {error}")),
+        };
+        match RollbackCoordinator::default().check_home_ready(id) {
+            Ok(_) => (true, "Home rollback prerequisites are ready".into()),
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "check_home_restore",
+                    &snapshot_id,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
+        }
+    }
+
+    async fn schedule_personal_restore(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        snapshot_id: String,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_RESTORE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_RESTORE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match snapshot_id.parse::<PersonalSnapshotId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid Home snapshot ID: {error}")),
+        };
+        let result = RollbackCoordinator::default()
+            .schedule_home(id, |_, _, _| {})
+            .map_err(|error| error.to_string())
+            .and_then(|transaction| {
+                serde_json::to_string(&transaction).map_err(|error| error.to_string())
+            });
+        audit::log_operation(
+            uid,
+            pid,
+            "schedule_home_restore",
+            &snapshot_id,
+            result.is_ok(),
+            result.as_ref().err().map(String::as_str),
+        );
+        match result {
+            Ok(json) => (true, json),
+            Err(error) => (false, error),
+        }
+    }
+
+    /// Validate a factory reset, optionally including the installer-owned Home baseline.
+    async fn check_factory_reset_readiness(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        deployment_id: String,
+        reset_home: bool,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_RESTORE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_RESTORE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match deployment_id.parse::<DeploymentId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid factory snapshot ID: {error}")),
+        };
+        match RollbackCoordinator::default().check_factory_reset_ready(id, reset_home) {
+            Ok(_) => (true, "Factory reset prerequisites are ready".into()),
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "check_factory_reset_readiness",
+                    &deployment_id,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
+        }
+    }
+
+    /// Schedule the dedicated factory reset transaction. Ordinary restore never resets Home.
+    async fn schedule_factory_reset(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        deployment_id: String,
+        reset_home: bool,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_RESTORE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_RESTORE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match deployment_id.parse::<DeploymentId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid factory snapshot ID: {error}")),
+        };
+        match RollbackCoordinator::default().schedule_factory_reset(
+            id,
+            reset_home,
+            |_phase, _fraction, _message| {},
+        ) {
+            Ok(transaction) => match serde_json::to_string(&transaction) {
+                Ok(json) => {
+                    audit::log_operation(
+                        uid,
+                        pid,
+                        "schedule_factory_reset",
+                        &deployment_id,
+                        true,
+                        None,
+                    );
+                    (true, json)
+                }
+                Err(error) => (false, format!("Could not serialize factory reset: {error}")),
+            },
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "schedule_factory_reset",
                     &deployment_id,
                     false,
                     Some(&error.to_string()),
@@ -1496,20 +1840,20 @@ impl SnapshotsManagerHelper {
         match tokio::task::spawn_blocking(btrfs::filesystem_status).await {
             Ok(Ok(status)) => serde_json::to_string(&status).unwrap_or_else(|error| {
                 serde_json::json!({
-                    "schema_version": 3,
+                    "schema_version": 4,
                     "available": false,
                     "error": format!("Could not serialize Btrfs status: {error}"),
                 })
                 .to_string()
             }),
             Ok(Err(error)) => serde_json::json!({
-                "schema_version": 3,
+                "schema_version": 4,
                 "available": false,
                 "error": error.to_string(),
             })
             .to_string(),
             Err(error) => serde_json::json!({
-                "schema_version": 3,
+                "schema_version": 4,
                 "available": false,
                 "error": format!("Btrfs status query stopped: {error}"),
             })
@@ -1699,6 +2043,18 @@ impl SnapshotsManagerHelper {
         }
         match config.save_to_file(&SnapshotsManagerConfig::new().automation_config) {
             Ok(()) => {
+                clear_automatic_low_space_if_recovered(
+                    "system",
+                    std::path::Path::new("/"),
+                    automatic_minimum_free_bytes(&config),
+                    config.system.is_auto_snapshot_enabled,
+                );
+                clear_automatic_low_space_if_recovered(
+                    "personal",
+                    std::path::Path::new("/home"),
+                    automatic_minimum_free_bytes(&config),
+                    config.home.is_auto_snapshot_enabled,
+                );
                 audit::log_config_change(uid, pid, "automation", true, None);
                 (true, "Automation configuration saved".into())
             }
@@ -1812,6 +2168,14 @@ impl SnapshotsManagerHelper {
         )
         .map(|(stdout, _)| format!("running · next run {}", stdout.trim()))
         .unwrap_or_else(|_| "running".to_string())
+    }
+
+    /// Report persistent low-space pauses without exposing filesystem details.
+    async fn get_automatic_space_status(&self) -> (bool, bool) {
+        (
+            automatic_low_space_state("system"),
+            automatic_low_space_state("personal"),
+        )
     }
 
     /// Apply only the retention policy owned by configured automatic schedules.
@@ -1956,7 +2320,16 @@ impl SnapshotsManagerHelper {
                 .list()
                 .map_err(|error| anyhow::anyhow!(error.message))?;
         let deployments = DeploymentStore::new(store_root).discover();
-        let personal = PersonalSnapshotEngine::default().discover();
+        let personal_engine = PersonalSnapshotEngine::new("/home", store_root, SystemCommandRunner);
+        let personal = personal_engine.discover();
+        let layout = layout::inspect_current();
+        let factory_homes = personal
+            .snapshots
+            .iter()
+            .filter(|record| record.kind == PersonalSnapshotKind::Factory)
+            .collect::<Vec<_>>();
+        let factory_home_available = matches!(factory_homes.as_slice(), [record]
+            if personal_engine.verify(&layout, record.id).is_ok());
         let package_counts = deployments
             .deployments
             .iter()
@@ -1972,7 +2345,6 @@ impl SnapshotsManagerHelper {
             .collect::<std::collections::HashMap<_, _>>();
         let system_sizes = btrfs::get_system_spaces(store_root, &deployments.deployments);
         let personal_sizes = btrfs::get_personal_spaces(store_root, &personal.snapshots);
-        let layout = layout::inspect_current();
         let available = layout.is_supported();
         serde_json::to_string(&serde_json::json!({
             "schema_version": 1,
@@ -1987,6 +2359,8 @@ impl SnapshotsManagerHelper {
             "personal_snapshot_count": personal.snapshots.len(),
             "personal_snapshots": personal.snapshots,
             "personal_sizes": personal_sizes,
+            "factory_home_available": factory_home_available,
+            "home_rollback_available": true,
             "issues": deployments.issues,
             "personal_issues": personal.issues,
             "layout": layout,
@@ -2220,6 +2594,152 @@ fn result_to_dbus_response(result: Result<String>, error_prefix: &str) -> (bool,
             (false, format!("{error_prefix}: {sanitized}"))
         }
     }
+}
+
+const GIB_BYTES: u64 = 1024 * 1024 * 1024;
+const AUTOMATIC_LOW_SPACE_STATE_ROOT: &str =
+    "/run/anduinos-btrfs-snapshots-manager/automatic-low-space";
+
+fn automatic_minimum_free_bytes(config: &AutomationConfig) -> u64 {
+    u64::from(config.minimum_free_space_gib) * GIB_BYTES
+}
+
+/// Return the available-byte count only when scheduled snapshot creation must
+/// pause. The recovery engine repeats the same threshold check while holding
+/// its operation lock, so this advisory probe suppresses misleading
+/// "starting" notifications without becoming the security boundary.
+fn automatic_snapshot_space(
+    path: &std::path::Path,
+    minimum_free_bytes: u64,
+) -> std::io::Result<Option<u64>> {
+    if minimum_free_bytes == 0 {
+        return Ok(None);
+    }
+    let space = anduinos_recovery_engine::space::probe_filesystem_space(path)?;
+    Ok(insufficient_automatic_space(
+        space.available_bytes,
+        minimum_free_bytes,
+    ))
+}
+
+fn automatic_low_space_marker_at(
+    root: &std::path::Path,
+    scope: &str,
+) -> Option<std::path::PathBuf> {
+    matches!(scope, "system" | "personal").then(|| root.join(scope))
+}
+
+fn automatic_low_space_state(scope: &str) -> bool {
+    automatic_low_space_state_at(std::path::Path::new(AUTOMATIC_LOW_SPACE_STATE_ROOT), scope)
+}
+
+fn automatic_low_space_state_at(root: &std::path::Path, scope: &str) -> bool {
+    automatic_low_space_marker_at(root, scope).is_some_and(|path| path.is_file())
+}
+
+/// Persist one marker per scope and one shared notification marker so D-Bus
+/// service restarts and the second scope do not repeat a low-space warning.
+fn set_automatic_low_space_state(scope: &str) -> std::io::Result<bool> {
+    set_automatic_low_space_state_at(std::path::Path::new(AUTOMATIC_LOW_SPACE_STATE_ROOT), scope)
+}
+
+fn set_automatic_low_space_state_at(root: &std::path::Path, scope: &str) -> std::io::Result<bool> {
+    use std::os::unix::fs::{OpenOptionsExt, PermissionsExt};
+
+    let marker = automatic_low_space_marker_at(root, scope)
+        .ok_or_else(|| std::io::Error::other("invalid automatic snapshot scope"))?;
+    let directory = marker
+        .parent()
+        .ok_or_else(|| std::io::Error::other("invalid low-space state directory"))?;
+    std::fs::create_dir_all(directory)?;
+    std::fs::set_permissions(directory, std::fs::Permissions::from_mode(0o755))?;
+    match std::fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .mode(0o644)
+        .open(&marker)
+    {
+        Ok(_) => {}
+        Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {}
+        Err(error) => return Err(error),
+    }
+    let notification_marker = root.join("notification-sent");
+    match std::fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .mode(0o644)
+        .open(notification_marker)
+    {
+        Ok(_) => Ok(true),
+        Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => Ok(false),
+        Err(error) => Err(error),
+    }
+}
+
+fn clear_automatic_low_space_state(scope: &str) {
+    clear_automatic_low_space_state_at(std::path::Path::new(AUTOMATIC_LOW_SPACE_STATE_ROOT), scope);
+}
+
+fn clear_automatic_low_space_state_at(root: &std::path::Path, scope: &str) {
+    let Some(marker) = automatic_low_space_marker_at(root, scope) else {
+        return;
+    };
+    if let Err(error) = std::fs::remove_file(marker)
+        && error.kind() != std::io::ErrorKind::NotFound
+    {
+        log::warn!("Could not clear the {scope} low-space state: {error}");
+    }
+    if !automatic_low_space_state_at(root, "system")
+        && !automatic_low_space_state_at(root, "personal")
+    {
+        let notification_marker = root.join("notification-sent");
+        if let Err(error) = std::fs::remove_file(notification_marker)
+            && error.kind() != std::io::ErrorKind::NotFound
+        {
+            log::warn!("Could not clear the low-space notification state: {error}");
+        }
+    }
+}
+
+fn clear_automatic_low_space_if_recovered(
+    scope: &str,
+    path: &std::path::Path,
+    minimum_free_bytes: u64,
+    enabled: bool,
+) {
+    if !enabled || matches!(automatic_snapshot_space(path, minimum_free_bytes), Ok(None)) {
+        clear_automatic_low_space_state(scope);
+    }
+}
+
+async fn emit_low_space_transition(ctxt: &zbus::SignalContext<'_>, scope: &str) {
+    match set_automatic_low_space_state(scope) {
+        Ok(false) => {}
+        Ok(true) => {
+            if let Err(error) = SnapshotsManagerHelper::automatic_snapshot_paused(ctxt, scope).await
+            {
+                log::warn!("Could not emit the {scope} low-space notification: {error}");
+            }
+        }
+        Err(error) => log::warn!("Could not record the {scope} low-space state: {error}"),
+    }
+}
+
+fn insufficient_automatic_space(available_bytes: u64, minimum_free_bytes: u64) -> Option<u64> {
+    (available_bytes < minimum_free_bytes).then_some(available_bytes)
+}
+
+fn automatic_snapshot_skipped_payload(
+    minimum_free_space_gib: u32,
+    available_bytes: Option<u64>,
+) -> String {
+    serde_json::json!({
+        "created": false,
+        "reason": "insufficient-free-space",
+        "minimum_free_space_gib": minimum_free_space_gib,
+        "available_bytes": available_bytes,
+    })
+    .to_string()
 }
 
 fn automatic_success_notification_enabled() -> bool {
@@ -2525,6 +3045,64 @@ mod tests {
         config.save_to_file(&path).unwrap();
         assert!(automatic_success_notification_enabled_at(&path));
         std::fs::remove_file(path).unwrap();
+    }
+
+    #[test]
+    fn automatic_space_threshold_uses_binary_gibibytes() {
+        let mut config = AutomationConfig::default();
+        config.minimum_free_space_gib = 40;
+        assert_eq!(automatic_minimum_free_bytes(&config), 40 * GIB_BYTES);
+    }
+
+    #[test]
+    fn low_space_skip_payload_is_structured_and_non_creating() {
+        let payload = automatic_snapshot_skipped_payload(40, Some(12_345));
+        let value: serde_json::Value = serde_json::from_str(&payload).unwrap();
+        assert_eq!(value["created"], false);
+        assert_eq!(value["reason"], "insufficient-free-space");
+        assert_eq!(value["minimum_free_space_gib"], 40);
+        assert_eq!(value["available_bytes"], 12_345);
+    }
+
+    #[test]
+    fn automatic_space_floor_allows_the_exact_boundary() {
+        assert_eq!(insufficient_automatic_space(39, 40), Some(39));
+        assert_eq!(insufficient_automatic_space(40, 40), None);
+        assert_eq!(insufficient_automatic_space(41, 40), None);
+    }
+
+    #[test]
+    fn zero_floor_disables_the_advisory_probe() {
+        assert_eq!(
+            automatic_snapshot_space(
+                std::path::Path::new("/definitely-not-a-real-filesystem-path"),
+                0,
+            )
+            .unwrap(),
+            None
+        );
+    }
+
+    #[test]
+    fn low_space_state_notifies_once_until_space_recovers() {
+        let root = std::env::temp_dir().join(format!(
+            "anduinos-snapshots-manager-low-space-{}",
+            uuid::Uuid::new_v4()
+        ));
+        assert!(!automatic_low_space_state_at(&root, "system"));
+        assert!(set_automatic_low_space_state_at(&root, "system").unwrap());
+        assert!(automatic_low_space_state_at(&root, "system"));
+        assert!(!set_automatic_low_space_state_at(&root, "system").unwrap());
+        assert!(!set_automatic_low_space_state_at(&root, "personal").unwrap());
+        clear_automatic_low_space_state_at(&root, "system");
+        assert!(!automatic_low_space_state_at(&root, "system"));
+        assert!(automatic_low_space_state_at(&root, "personal"));
+        assert!(!set_automatic_low_space_state_at(&root, "system").unwrap());
+        clear_automatic_low_space_state_at(&root, "system");
+        clear_automatic_low_space_state_at(&root, "personal");
+        assert!(set_automatic_low_space_state_at(&root, "system").unwrap());
+        assert!(automatic_low_space_marker_at(&root, "other").is_none());
+        std::fs::remove_dir_all(root).unwrap();
     }
 
     #[test]

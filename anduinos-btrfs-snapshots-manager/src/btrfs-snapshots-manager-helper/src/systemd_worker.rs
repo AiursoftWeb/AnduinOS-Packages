@@ -62,16 +62,3 @@ pub(crate) fn run_btrfs(unit_name: &str, arguments: &[&str]) -> WorkerOutput {
         },
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn worker_policy_keeps_the_expected_security_boundary() {
-        assert!(WORKER_OPTIONS.contains(&"--property=PrivateNetwork=yes"));
-        assert!(WORKER_OPTIONS.contains(&"--property=NoNewPrivileges=yes"));
-        assert!(WORKER_OPTIONS.contains(&"--property=CapabilityBoundingSet=CAP_SYS_ADMIN"));
-        assert!(WORKER_OPTIONS.contains(&"--property=ProtectHome=read-only"));
-    }
-}

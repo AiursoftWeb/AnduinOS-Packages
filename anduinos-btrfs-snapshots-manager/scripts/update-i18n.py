@@ -12,8 +12,38 @@ ROOT = Path(__file__).resolve().parent.parent
 CHECK = ROOT / "scripts" / "check-i18n.py"
 POT = ROOT / "po" / "anduinos-btrfs-snapshots-manager.pot"
 ZH_CN = ROOT / "po" / "zh_CN.po"
+OTHER_CATALOGS = tuple(
+    path for path in sorted((ROOT / "po").glob("*.po")) if path != ZH_CN
+)
 
 NEW_TRANSLATIONS = {
+    "Restore the system to New OS. Personal files are kept by default.": "将系统恢复到 New OS，默认保留个人文件。",
+    "Erase all users’ Home files and snapshot history. This cannot be undone.": "清除所有用户的主目录文件和快照历史，无法撤销。",
+    "A system safety snapshot is created first. Restart follows within 60 seconds.": "先创建系统安全快照，准备完成后 60 秒内重启。",
+    "Disk Space Protection": "磁盘空间保护",
+    "GiB": "GiB",
+    "Minimum free space": "最低可用空间",
+    "Applies to both System and Home automatic snapshots. Set to 0 to disable.": "同时适用于系统和用户目录自动快照。设为 0 可关闭此保护。",
+    "Automatic snapshots paused": "自动快照已暂停",
+    "System and Home snapshots are waiting for more free space.": "系统和用户目录快照正在等待更多可用空间。",
+    "System snapshots are waiting for more free space.": "系统快照正在等待更多可用空间。",
+    "Home snapshots are waiting for more free space.": "用户目录快照正在等待更多可用空间。",
+    "Low disk space paused scheduled system snapshots. They will resume automatically when space is available.": "磁盘可用空间不足，计划的系统快照已暂停；空间恢复后将自动继续。",
+    "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available.": "磁盘可用空间不足，计划的用户目录快照已暂停；空间恢复后将自动继续。",
+    "Checking factory reset availability…": "正在检查恢复出厂设置可用性…",
+    "Factory Reset Is Not Available": "无法恢复出厂设置",
+    "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it.": "此系统不支持恢复出厂设置。请重新安装 AnduinOS，并选择 Btrfs 文件系统以启用此功能。",
+    "Factory Reset Is Not Ready": "恢复出厂设置尚未就绪",
+    "Reset AnduinOS to Its Initial State?": "将 AnduinOS 重置为初始状态？",
+    "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds.": "恢复出厂设置会将系统文件、已安装的软件包和系统设置还原到最初的 New OS 状态。系统会先为当前状态创建一个安全快照，然后准备恢复，并在 60 秒内自动重启。",
+    "Preserved unless you choose to erase them below": "保留，除非您在下方选择抹除",
+    "Erase user files": "抹除用户文件",
+    "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed.": "将 Home 恢复到安装完成时的初始状态，并抹除 Home 快照历史。恢复确认后无法撤销。",
+    "Unavailable because the factory Home recovery point is missing or damaged.": "不可用，因为出厂 Home 恢复点缺失或已损坏。",
+    "Preparing factory reset…": "正在准备恢复出厂设置…",
+    "Return to the initial New OS state": "返回初始 New OS 状态",
+    "Saved as a safety snapshot before reset": "重置前将当前系统保存为安全快照",
+    "Reset and Restart": "重置并重启",
     "All system drives look healthy": "所有系统盘状态良好",
     "A critical threshold is failing now": "当前有一项关键指标未达到阈值",
     "A threshold was exceeded in the past": "过去曾有一项指标超过阈值",
@@ -158,6 +188,7 @@ NEW_TRANSLATIONS = {
     "Btrfs does not provide an on/off real-time deduplication switch. Tools such as duperemove and BEES use different strategies, resource limits, and scan scopes. Disk Snapshots Manager will not silently install or run one without a complete policy.": "Btrfs 不提供可直接开关的实时重复数据删除。duperemove 和 BEES 等工具具有不同的策略、资源限制和扫描范围。Disk Snapshots Manager 不会在缺少完整策略时静默安装或运行这些工具。",
     "Btrfs operation failed": "Btrfs 操作失败",
     "Btrfs did not provide a completed scrub result.": "Btrfs 未提供完整的 Scrub 结果。",
+    "Btrfs could not complete the integrity check.": "Btrfs 无法完成完整性检查。",
     "Btrfs found errors that could not be repaired. Back up important files and investigate the storage device.": "Btrfs 发现了无法修复的错误。请备份重要文件并进一步检查存储设备。",
     "Btrfs repaired {0} damaged copies using valid redundant data.": "Btrfs 使用有效的冗余数据修复了 {0} 个损坏副本。",
     "Btrfs will scan existing subvolumes in the background. Size statistics may remain incomplete until the scan finishes.": "Btrfs 将在后台扫描现有子卷。扫描完成前，空间统计可能不完整。",
@@ -177,6 +208,7 @@ NEW_TRANSLATIONS = {
     "Defragmentation rewrites file extents and can increase disk usage by breaking shared snapshot or reflink data.": "碎片整理会重写文件区段，可能打破快照或 reflink 的数据共享并增加磁盘占用。",
     "Defragment…": "整理碎片…",
     "Diagnostic counters": "诊断计数",
+    "Details: {0}": "详细信息：{0}",
     "Duration: {0}": "用时：{0}",
     "Disable": "禁用",
     "Disable quota accounting?": "禁用配额统计？",
@@ -195,6 +227,7 @@ NEW_TRANSLATIONS = {
     "Integrity Check Cancelled": "完整性检查已取消",
     "Integrity Check Complete": "完整性检查完成",
     "Integrity Check Complete — Repairs Made": "完整性检查完成 — 已修复错误",
+    "Integrity Check Failed": "完整性检查失败",
     "Integrity Check Result Unavailable": "无法获取完整性检查结果",
     "Integrity Problems Found": "发现完整性问题",
     "Last run completed": "上次运行已完成",
@@ -293,6 +326,9 @@ NEW_TRANSLATIONS = {
     "Creating snapshot…": "正在创建快照…",
     "Current system": "当前系统",
     "Deleting snapshots…": "正在删除快照…",
+    "Delete Factory Recovery Point?": "删除出厂恢复点？",
+    "Delete and Disable Factory Recovery": "删除并禁用出厂恢复",
+    "Deleting factory recovery point…": "正在删除出厂恢复点…",
     "Details": "详情",
     "Exclusive Data": "独占数据",
     "Files Recovered": "文件已恢复",
@@ -344,6 +380,7 @@ NEW_TRANSLATIONS = {
     "The scheduled Home snapshot was created successfully.": "计划的用户目录快照创建成功。",
     "The scheduled system snapshot was created successfully.": "计划的系统快照创建成功。",
     "The system snapshot was created successfully.": "系统快照创建成功。",
+    "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action.": "“New OS” 是安装时创建的原始系统状态。删除后，将无法再把 AnduinOS 重置到初始状态；除非重新安装操作系统，否则无法撤销。此操作不会删除您的个人文件。",
     "Total": "总量",
     "The selected files were recovered successfully.": "所选文件已成功恢复。",
     "This snapshot is not available for recovery.": "此快照不能用于恢复。",
@@ -375,37 +412,29 @@ def quote(value: str) -> str:
     return json.dumps(value, ensure_ascii=False)
 
 
-def header(project: str, language: str | None = None) -> list[str]:
-    lines = [
-        "msgid \"\"",
-        "msgstr \"\"",
-        quote(f"Project-Id-Version: {project}\n"),
-        quote("POT-Creation-Date: 2026-08-06 00:00+0800\n"),
-        quote("PO-Revision-Date: 2026-08-06 00:00+0800\n"),
-        quote("Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"),
-        quote("Language-Team: AnduinOS Team\n"),
-        quote("MIME-Version: 1.0\n"),
-        quote("Content-Type: text/plain; charset=UTF-8\n"),
-        quote("Content-Transfer-Encoding: 8bit\n"),
-    ]
-    if language:
-        lines.extend(
-            [
-                quote(f"Language: {language}\n"),
-                quote("Plural-Forms: nplurals=1; plural=0;\n"),
-            ]
-        )
-    return lines
-
-
-def write_catalog(path: Path, messages: dict[str, set[str]], translations=None) -> None:
-    lines = header("anduinos-btrfs-snapshots-manager 0.1.0", "zh_CN" if translations else None)
-    for message in sorted(messages, key=str.casefold):
-        lines.append("")
+def append_missing_messages(
+    path: Path,
+    messages: dict[str, set[str]],
+    translations: dict[str, str] | None = None,
+    *,
+    english_fallback: bool = False,
+) -> None:
+    existing = load_check_module().po_entries(path)
+    missing = sorted(set(messages) - set(existing), key=str.casefold)
+    if not missing:
+        return
+    lines = [path.read_text(encoding="utf-8").rstrip(), ""]
+    for message in missing:
         lines.append("#: " + " ".join(sorted(messages[message])))
         lines.append("msgid " + quote(message))
-        lines.append("msgstr " + quote(translations[message] if translations else ""))
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        translation = (
+            translations[message]
+            if translations is not None
+            else message if english_fallback else ""
+        )
+        lines.append("msgstr " + quote(translation))
+        lines.append("")
+    path.write_text("\n".join(lines), encoding="utf-8")
 
 
 def main() -> int:
@@ -426,9 +455,11 @@ def main() -> int:
     if missing:
         raise SystemExit("missing zh_CN translations:\n" + "\n".join(sorted(missing)))
 
-    write_catalog(POT, messages)
-    write_catalog(ZH_CN, messages, translations)
-    print(f"Regenerated {len(messages)} current Disk Snapshots Manager 2.0 messages")
+    append_missing_messages(POT, messages)
+    append_missing_messages(ZH_CN, messages, translations)
+    for catalog in OTHER_CATALOGS:
+        append_missing_messages(catalog, messages, english_fallback=True)
+    print(f"Updated catalogs for {len(messages)} current Disk Snapshots Manager 2.0 messages")
     return 0
 
 

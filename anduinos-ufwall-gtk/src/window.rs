@@ -62,8 +62,8 @@ impl UfwallWindow {
         glib::Object::builder()
             .property("application", app)
             .property("title", i18n("Firewall"))
-            .property("default-width", 1100)
-            .property("default-height", 650)
+            .property("default-width", 1070)
+            .property("default-height", 770)
             .property("icon-name", "com.anduinos.ufwall")
             .build()
     }

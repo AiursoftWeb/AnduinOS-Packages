@@ -111,19 +111,19 @@ def build_guided_coexistence_storage_graph(
 
     start_mib = _ceil_div(extent.start_bytes, MIB)
     end_mib = (extent.end_bytes + 1) // MIB
+    swap_names = ("swap",) if plan.storage.swap_size_mib else ()
     names = (
-        ("efi-system", "swap", "root")
+        ("efi-system", *swap_names, "root")
         if reused_esp is None
-        else ("swap", "root")
+        else (*swap_names, "root")
     )
     numbers = _next_partition_numbers(
         {item.identity.number for item in disk.partitions},
         len(names),
     )
-    sizes_mib = {
-        "efi-system": plan.storage.esp_size_mib,
-        "swap": plan.storage.swap_size_mib,
-    }
+    sizes_mib = {"efi-system": plan.storage.esp_size_mib}
+    if plan.storage.swap_size_mib:
+        sizes_mib["swap"] = plan.storage.swap_size_mib
     cursor = start_mib
     partitions: list[PartitionDeclaration] = []
     partition_ids: dict[str, str] = {}
@@ -182,20 +182,21 @@ def build_guided_coexistence_storage_graph(
                 label="",
             )
         )
-    filesystems.extend(
-        (
+    if "swap" in partition_ids:
+        filesystems.append(
             FilesystemDeclaration(
                 filesystem_id=partition_ids["swap"],
                 block_id=partition_ids["swap"],
                 filesystem=GraphFilesystem.SWAP,
                 label="AnduinOS-swap",
-            ),
-            FilesystemDeclaration(
-                filesystem_id=partition_ids["root"],
-                block_id=partition_ids["root"],
-                filesystem=GraphFilesystem(plan.storage.filesystem.value),
-                label="AnduinOS",
-            ),
+            )
+        )
+    filesystems.append(
+        FilesystemDeclaration(
+            filesystem_id=partition_ids["root"],
+            block_id=partition_ids["root"],
+            filesystem=GraphFilesystem(plan.storage.filesystem.value),
+            label="AnduinOS",
         )
     )
 
@@ -286,6 +287,7 @@ def build_guided_coexistence_storage_graph(
             extent_reference,
         ),
         partitions=tuple(partitions),
+        partition_resizes=(),
         filesystems=tuple(filesystems),
         subvolumes=subvolumes,
         mounts=mounts,
@@ -336,25 +338,30 @@ def build_erase_disk_storage_graph(
         )
         for item in layout.partitions
     )
-    filesystems = (
+    filesystems = [
         FilesystemDeclaration(
             filesystem_id=partition_ids["efi-system"],
             block_id=partition_ids["efi-system"],
             filesystem=GraphFilesystem.VFAT,
             label="ANDUIN_EFI",
         ),
-        FilesystemDeclaration(
-            filesystem_id=partition_ids["swap"],
-            block_id=partition_ids["swap"],
-            filesystem=GraphFilesystem.SWAP,
-            label="AnduinOS-swap",
-        ),
+    ]
+    if "swap" in partition_ids:
+        filesystems.append(
+            FilesystemDeclaration(
+                filesystem_id=partition_ids["swap"],
+                block_id=partition_ids["swap"],
+                filesystem=GraphFilesystem.SWAP,
+                label="AnduinOS-swap",
+            )
+        )
+    filesystems.append(
         FilesystemDeclaration(
             filesystem_id=partition_ids["root"],
             block_id=partition_ids["root"],
             filesystem=GraphFilesystem(plan.storage.filesystem.value),
             label="AnduinOS",
-        ),
+        )
     )
 
     subvolumes = ()
@@ -401,9 +408,13 @@ def build_erase_disk_storage_graph(
     )
 
     fallback = (
-        "EFI/BOOT/BOOTX64.EFI"
-        if plan.platform.architecture is Architecture.AMD64
-        else "EFI/BOOT/BOOTAA64.EFI"
+        (
+            "EFI/BOOT/BOOTX64.EFI"
+            if plan.platform.architecture is Architecture.AMD64
+            else "EFI/BOOT/BOOTAA64.EFI"
+        )
+        if plan.boot.install_fallback_path
+        else ""
     )
     boot_targets = (
         BootTarget(
@@ -429,9 +440,13 @@ def build_erase_disk_storage_graph(
         )
         for item in partitions
     )
+    format_names = ["efi-system"]
+    if "swap" in partition_ids:
+        format_names.append("swap")
+    format_names.append("root")
     operations.extend(
         StorageGraphOperation(StorageGraphAction.FORMAT, partition_ids[name])
-        for name in ("efi-system", "swap", "root")
+        for name in format_names
     )
     operations.extend(
         StorageGraphOperation(
@@ -450,16 +465,20 @@ def build_erase_disk_storage_graph(
                 StorageGraphAction.WRITE_BIOS_BOOTLOADER, disk_id
             )
         )
-    operations.extend(
-        (
-            StorageGraphOperation(
-                StorageGraphAction.WRITE_BOOT_FILES,
-                partition_ids["efi-system"],
+    operations.append(
+        StorageGraphOperation(
+            StorageGraphAction.WRITE_BOOT_FILES,
+            partition_ids["efi-system"],
+        )
+    )
+    operations.append(
+        StorageGraphOperation(
+            (
+                StorageGraphAction.WRITE_FALLBACK_BOOT_FILES
+                if plan.boot.install_fallback_path
+                else StorageGraphAction.UPDATE_NVRAM
             ),
-            StorageGraphOperation(
-                StorageGraphAction.WRITE_FALLBACK_BOOT_FILES,
-                partition_ids["efi-system"],
-            ),
+            partition_ids["efi-system"],
         )
     )
 
@@ -480,7 +499,8 @@ def build_erase_disk_storage_graph(
             ),
         ),
         partitions=partitions,
-        filesystems=filesystems,
+        partition_resizes=(),
+        filesystems=tuple(filesystems),
         subvolumes=subvolumes,
         mounts=mounts,
         boot_targets=boot_targets,
@@ -506,6 +526,11 @@ def validate_storage_graph(plan: InstallPlan) -> None:
         raise StorageGraphValidationError("Invalid storage inventory digest")
     if graph.mode is StorageGraphMode.GUIDED_COEXISTENCE:
         _validate_guided_graph_structure(plan, graph)
+        return
+    if graph.mode is StorageGraphMode.MANUAL:
+        from .manual_graph_planning import validate_manual_graph_structure
+
+        validate_manual_graph_structure(plan, graph)
         return
     if len(graph.block_references) != 1:
         raise StorageGraphValidationError(

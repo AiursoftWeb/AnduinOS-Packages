@@ -116,7 +116,7 @@ class FreeExtent:
 
 @dataclass(frozen=True)
 class DiskInventory:
-    """One fixed disk and the topology visible directly below it."""
+    """One disk and the topology visible directly below it."""
 
     identity: DiskIdentity
     partition_table: str
@@ -126,14 +126,24 @@ class DiskInventory:
     topology_digest: str
     geometry_probe_error: str = ""
     unsupported_descendant_types: tuple[str, ...] = ()
+    removable: bool = False
+    transport: str = ""
+    read_only: bool = False
+
+    @property
+    def external(self) -> bool:
+        return self.removable or self.transport in {"usb", "ieee1394"}
 
 
 @dataclass(frozen=True)
 class StorageInventory:
-    """A deterministic snapshot of every supported fixed disk."""
+    """A deterministic snapshot of supported disks and the Live source."""
 
     disks: tuple[DiskInventory, ...]
     digest: str
+    # None means the real probe could not establish the Live source safely.
+    # Synthetic/development snapshots can explicitly have no Live device.
+    live_media_disks: tuple[str, ...] | None = ()
 
     def disk(self, stable_id: str) -> DiskInventory:
         for item in self.disks:
@@ -175,7 +185,7 @@ def probe_storage_inventory(
     run: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
     parted_run: Callable[..., subprocess.CompletedProcess[str]] | None = None,
 ) -> StorageInventory:
-    """Probe fixed disks, their direct partitions and unallocated extents.
+    """Probe disks, their direct partitions and unallocated extents.
 
     ``lsblk`` provides the block hierarchy and persistent filesystem fields.
     ``parted print free`` is read-only and provides exact byte geometry for
@@ -194,7 +204,7 @@ def probe_storage_inventory(
         "--tree",
         "--output",
         (
-            "PATH,SIZE,MODEL,SERIAL,WWN,TYPE,RM,MAJ:MIN,LOG-SEC,"
+            "PATH,SIZE,MODEL,SERIAL,WWN,TYPE,RM,RO,TRAN,MAJ:MIN,LOG-SEC,"
             "PTTYPE,PTUUID,PARTUUID,PARTTYPE,PARTN,START,FSTYPE,UUID,"
             "LABEL,MOUNTPOINTS"
         ),
@@ -224,7 +234,7 @@ def probe_storage_inventory(
     for root in roots:
         if not isinstance(root, dict):
             continue
-        if str(root.get("type") or "") != "disk" or _as_bool(root.get("rm")):
+        if str(root.get("type") or "") != "disk":
             continue
         path = str(root.get("path") or "")
         if not SUPPORTED_WHOLE_DISK_RE.fullmatch(path):
@@ -285,6 +295,9 @@ def probe_storage_inventory(
                 topology_digest=topology_digest,
                 geometry_probe_error=geometry_error,
                 unsupported_descendant_types=unsupported_descendants,
+                removable=_as_bool(root.get("rm")),
+                transport=str(root.get("tran") or "").lower(),
+                read_only=_as_bool(root.get("ro")),
             )
         )
 
@@ -299,7 +312,30 @@ def probe_storage_inventory(
             for item in ordered
         ]
     )
-    return StorageInventory(ordered, inventory_digest)
+    return StorageInventory(ordered, inventory_digest, _live_media_disks(roots))
+
+
+def _live_media_disks(roots: list[dict]) -> tuple[str, ...] | None:
+    """Resolve direct Live mounts through lsblk's physical parent tree.
+
+    Optical ISO media is a known safe source too. Loop-backed ISOs, missing
+    mounts and ambiguous mappings fail closed; do not guess from device names.
+    """
+    mounts = {"/cdrom", "/run/live/medium", "/run/initramfs/live",
+              "/run/anduinos-live/rootfs.squashfs"}
+    sources = set()
+    for root in roots:
+        pending = [root]
+        while pending:
+            node = pending.pop()
+            if not isinstance(node, dict):
+                return None
+            if mounts.intersection(node.get("mountpoints") or ()):
+                if root.get("type") not in {"disk", "rom"} or not root.get("path"):
+                    return None
+                sources.add(root["path"])
+            pending.extend(node.get("children") or ())
+    return tuple(sorted(sources)) if sources else None
 
 
 def bind_disk_topology(

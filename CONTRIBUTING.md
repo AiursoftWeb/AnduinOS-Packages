@@ -44,7 +44,7 @@ patches what we need, and declares P-C-R.
 <Replaces>software-properties-common</Replaces>
 ```
 
-Examples: `anduinos-software-properties-common`, `anduinos-software-properties-gtk`.
+Example: `anduinos-software-properties-common`.
 
 ### Swap (same package name, epoch 1:)
 
@@ -92,7 +92,7 @@ Use MSBuild `Condition` attributes when a dependency only exists for certain
 Ubuntu releases:
 
 ```xml
-<Dependency Include="anduinos-software-properties-gtk" Condition="'$(Suite)' == 'resolute-addon'" />
+<Dependency Include="anduinos-kernel-parameters" Condition="'$(Suite)' == 'resolute-addon'" />
 ```
 
 ## Upstream Derivation Patterns
@@ -175,10 +175,11 @@ is automatically recompiled by the dpkg trigger in `anduinos-dconf-runtime`.
 
 ## Before Submitting
 
+- [ ] Tests follow the [test quality guidelines](DEV_GUIDE.md#test-quality-behavior-not-implementation-snapshots): verify outcomes and safety boundaries, not copied constants or file inventories
 - [ ] All three P-C-R relationships declared (for fork packages)
 - [ ] `SuppressUpstreamScripts` is `true` (for derived packages)
 - [ ] No static copies of host system files — use symlinks with explicit Depends
-- [ ] Standalone `.desktop` files follow the [Desktop Entry visibility rules](DEV_GUIDE.md#desktop-entry-visibility-search-is-not-the-applications-menu)
+- [ ] Standalone `.desktop` files follow the [Desktop Entry visibility rules](DEV_GUIDE.md#desktop-and-control-panel-integration)
 - [ ] Metapackages own their critical infrastructure deps explicitly
 - [ ] `Condition` attributes are used where a dep only applies to specific suites
 - [ ] Dconf defaults are co-located with their component

@@ -87,6 +87,7 @@ class EspInspectionTests(unittest.TestCase):
 
     def test_nvram_verification_binds_partition_and_vendor_loader(self):
         output = (
+            "BootOrder: 0007,0001\n"
             "Boot0001* Windows Boot Manager "
             "HD(1,GPT,part-1,0x800,0x100000)/"
             "File(\\EFI\\Microsoft\\Boot\\bootmgfw.efi)\n"
@@ -99,6 +100,7 @@ class EspInspectionTests(unittest.TestCase):
             label="AnduinOS",
             partuuid="part-1",
             loader=r"\EFI\AnduinOS\shimx64.efi",
+            require_first=True,
         )
         with self.assertRaisesRegex(RuntimeError, "was not created"):
             verify_nvram_entry(
@@ -107,6 +109,36 @@ class EspInspectionTests(unittest.TestCase):
                 partuuid="other-partition",
                 loader=r"\EFI\AnduinOS\shimx64.efi",
             )
+
+        wrong_order = output.replace(
+            "BootOrder: 0007,0001", "BootOrder: 0001,0007"
+        )
+        with self.assertRaisesRegex(RuntimeError, "not first"):
+            verify_nvram_entry(
+                wrong_order,
+                label="AnduinOS",
+                partuuid="part-1",
+                loader=r"\EFI\AnduinOS\shimx64.efi",
+                require_first=True,
+            )
+
+    def test_nvram_verification_accepts_raw_efi_device_paths(self):
+        output = (
+            "BootOrder: 0000,0001\n"
+            "Boot0000* AnduinOS "
+            "HD(2,GPT,part-2,0x1800,0x200000)/"
+            "\\EFI\\ANDUINOS\\SHIMX64.EFI\n"
+        )
+        self.assertEqual(
+            verify_nvram_entry(
+                output,
+                label="AnduinOS",
+                partuuid="part-2",
+                loader=r"\EFI\AnduinOS\shimx64.efi",
+                require_first=True,
+            ),
+            "0000",
+        )
 
     def test_vendor_tree_can_change_but_windows_and_fallback_cannot(self):
         with tempfile.TemporaryDirectory() as directory:
