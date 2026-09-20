@@ -285,11 +285,11 @@ For a new OS point release, follow the
 | Category | Packages | Monthly action |
 |---|---|---|
 | 🔧 **Manual — update commit/version** | Apkg client, Fluent GTK theme, Fluent icon theme, ALSA UCM Conf, Firmware SOF, Xbox Driver | Edit `download.sh` + bump `.aosproj` |
-| 🤖 **Auto — CI resolves at build time** | 19 GNOME Shell extensions | Trigger CI; resolver pulls latest from extensions.gnome.org |
-| 🤖 **Auto — pulls latest upstream .deb** | base-files, plymouth, software-properties-common, software-properties-gtk, firefox | Trigger CI; pulls latest from Ubuntu/Mozilla mirrors |
-| 🤖 **Auto — metapackages** | anduinos-desktop, theme, desktop-core, etc. | Trigger CI only if dependency list changed |
+| 🤖 **Auto — CI resolves at build time** | 14 GNOME Shell extensions | Bump their package versions and run CI; the resolver pulls compatible releases from extensions.gnome.org |
+| 🤖 **Auto — pulls latest upstream .deb** | base-files, plymouth, software-properties-common, firefox | Bump their package versions and run CI; the build pulls from Ubuntu/Mozilla mirrors |
+| 🤖 **Auto — metapackages** | anduinos-desktop, theme, desktop-core, etc. | Bump the package version and run CI when the dependency list changes |
 
-**Bottom line:** 6 packages need manual edits each month. Everything else = run CI.
+**Bottom line:** Check the 6 pinned packages monthly. Any changed package needs a new version before CI can publish it; existing published versions are skipped.
 
 ---
 
@@ -457,7 +457,7 @@ apkg publish
 
 ---
 
-### D. GNOME Shell Extensions (19 packages)
+### D. GNOME Shell Extensions (14 dynamically resolved packages)
 
 These are resolved **dynamically at build time**: the resolver (`lib/resolve-gnome-ext.py`) queries `extensions.gnome.org` for the best compatible version for each target GNOME Shell version. This means extension code is always up-to-date on every build — no monthly check needed for the extension code itself.
 
@@ -482,21 +482,21 @@ If a mismatch is found, update `lib/gnome-versions.sh`:
 ```bash
 declare -A GNOME_TARGETS=(
     [noble]=46      # Ubuntu 24.04 LTS
-    [questing]=49   # Ubuntu 25.10
     [resolute]=50   # Ubuntu 26.04 LTS
+    [stonking]=51   # Ubuntu 26.10
     # ^ update or add entries as needed
 )
 ```
 
-Then **CI rebuilds all 19 extension packages automatically** — the new GNOME version will be picked up by the resolver on the next build.
+After bumping the affected package versions, CI will build them with the updated GNOME version map; the resolver selects the appropriate upstream extension during each build.
 
 #### D.2 Extension `.aosproj` version numbers
 
-Each extension's `.aosproj` uses a unified `<PackageVersion>` of `2.0.0~rc2-1+$(SuiteShortName)`. Bump the Debian revision suffix (e.g. `-1` → `-2`) when packaging changes. The resolver fetches the latest extension code at build time, so the extension code itself is always up-to-date regardless of the package version.
+Each extension has its own `<PackageVersion>` in its `.aosproj`. Bump the Debian revision suffix (e.g. `-1` → `-2`) when packaging changes or when a new upstream build must be published. The resolver fetches the latest compatible extension code during that build; CI skips package versions that are already published.
 
 ```diff
--<PackageVersion>2.0.0~rc2-1+$(SuiteShortName)</PackageVersion>
-+<PackageVersion>2.0.0~rc2-2+$(SuiteShortName)</PackageVersion>
+-<PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
++<PackageVersion>2.0.3-2+$(SuiteShortName)</PackageVersion>
 ```
 
 #### D.3 Special-cased extension: desktop-icons-ng-anduinos
@@ -631,7 +631,6 @@ sudo apt install -y \
     ubuntu-release-upgrader-core- \
     ubuntu-release-upgrader-gtk- \
     whoopsie- \
-    anduinos-software-properties-gtk- \
     software-properties-gtk- \
     software-properties-common- \
     firmware-sof-signed- \
