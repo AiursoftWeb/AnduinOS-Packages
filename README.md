@@ -501,7 +501,7 @@ Each extension's `.aosproj` uses a unified `<PackageVersion>` of `2.0.0~rc2-1+$(
 
 #### D.3 Special-cased extension: desktop-icons-ng-anduinos
 
-`gnome-shell-extension-desktop-icons-ng-anduinos` explicitly conflicts with Ubuntu's `gnome-shell-extension-desktop-icons-ng` (same UUID `ding@rastersoft.com`). It also carries a custom `metadata.patch` in its deploy directories. When the upstream DING extension releases a new version, verify the patch still applies cleanly.
+`gnome-shell-extension-desktop-icons-ng-anduinos` explicitly conflicts with Ubuntu's `gnome-shell-extension-desktop-icons-ng` (same UUID `ding@rastersoft.com`). Its pre-build script downloads the upstream extension for each supported GNOME version and makes `app/ding.js` executable. The desktop context menu and its translations are left upstream.
 
 ---
 
