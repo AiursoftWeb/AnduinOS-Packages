@@ -7,11 +7,11 @@ need_cmd curl
 need_cmd sha256sum coreutils
 need_cmd unzip
 
-VERSION="10.0.54"
+VERSION="10.0.60"
 PACKAGE="aiursoft.apkg.client.${VERSION}.nupkg"
 PACKAGE_URL="https://api.nuget.org/v3-flatcontainer/aiursoft.apkg.client/${VERSION}/${PACKAGE}"
-PACKAGE_SHA256="3ddd8b2b87e154f2c28ab6321ace7d5984cd11eb45e8a87447676025b0fa9b24"
-SOURCE_COMMIT="ac82183a21e53d3cd910005606196c6c6a386f5a"
+PACKAGE_SHA256="4abb1a55650d7d33a2d630663384a3f3c30c53f485094d6c84f2c113f141f957"
+SOURCE_COMMIT="0dc6ead75fb56e7891ee1e51d9d8e125112785cf"
 LICENSE_URL="https://gitlab.aiursoft.com/aiursoft/apkg/-/raw/${SOURCE_COMMIT}/LICENSE"
 LICENSE_SHA256="bd4349a7d3733577855e0d61f7cb4bd1675beec1e379da490b3694957501fff2"
 CACHE_DIR="$SCRIPT_DIR/deploy/cache"
