@@ -1,6 +1,7 @@
 """Run lifecycle scripts against a fake DKMS without host side effects."""
 import os
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 import unittest
@@ -10,6 +11,18 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class DkmsLifecycleTests(unittest.TestCase):
+    def test_pinned_source_and_lifecycle_versions_match(self):
+        downloader = (ROOT / "download.sh").read_text(encoding="utf-8")
+        commit = re.search(r'^COMMIT_ID="([0-9a-f]{40})"$', downloader, re.MULTILINE)
+        version = re.search(r'^VERSION="([^"]+)"$', downloader, re.MULTILINE)
+        self.assertIsNotNone(commit)
+        self.assertIsNotNone(version)
+        self.assertTrue(version.group(1).endswith("-g" + commit.group(1)[:7]))
+        for name in ("postinst.sh", "prerm.sh"):
+            with self.subTest(script=name):
+                script = (ROOT / "scripts" / name).read_text(encoding="utf-8")
+                self.assertIn(f'VERSION="{version.group(1)}"', script)
+
     def setUp(self):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
