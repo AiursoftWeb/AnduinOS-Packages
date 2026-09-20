@@ -277,6 +277,8 @@ skips duplicate uploads after building and is not a substitute. Bump
 `PackageVersion` when changing package content or dependency metadata.
 Package `needs` include both internal dependencies and all mandatory gates.
 See [DEV_GUIDE.md](DEV_GUIDE.md) for profile selection and the current workflow.
+For a new OS point release, follow the
+[selective version-bump checklist](DEV_GUIDE.md#preparing-a-new-anduinos-point-release).
 
 ### TL;DR: What needs manual effort vs what auto-builds
 

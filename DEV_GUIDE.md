@@ -60,6 +60,56 @@ For upstream-derived packages, `$(UpstreamVersion)` can be part of the version
 expression; retain a revision component that can be bumped for local changes.
 Do not assume every derived package uses the same version formula.
 
+### Preparing a new AnduinOS point release
+
+Start from the tag or commit of the **last published release**, not from the
+previous development build. For example, use
+`git diff --name-status release-2.0.2..HEAD` when preparing 2.0.3 (replace the
+tag for future releases). Review that diff and the package history to identify
+new packages and those whose installed payload, dependencies, maintainer
+scripts, or pinned upstream source changed. Review changes to shared build
+helpers and CI separately: a package can be affected even when its own
+directory has no diff. Exclude removed packages. Record deliberate exceptions
+rather than treating the diff as an automatic version-bump script. For the
+2.0.3 preparation,
+`anduinos-container` was intentionally reissued although its directory had
+not changed. Unchanged packages normally keep their published versions. This
+is safe in a newer OS release: not every installed package needs the OS's
+current version number.
+
+For each selected AnduinOS package, change its `.aosproj` to the new OS version
+and reset the Debian revision to `-1`, for example
+`2.0.2-27+$(SuiteShortName)` → `2.0.3-1+$(SuiteShortName)`. Preserve an epoch
+and upstream-derived formula where present: `1:2.0.2+$(UpstreamVersion)-2`
+becomes `1:2.0.3+$(UpstreamVersion)-1`, not a plain `2.0.3-1`. Check with
+`dpkg --compare-versions` that the new version sorts above the published one.
+Tools with independent upstream versions, notably `apkg`, retain their own
+versioning scheme. Never change a package's contents without a new package
+version: release-branch publishing uses `--skip-existing` and will not replace
+an already published version.
+
+Keep the OS identity and user-visible versions coherent. Update `base-files`'
+`os-release`, `lsb-release`, `issue`, and `issue.net`; the installer and affected
+applications' About/version constants; and first-party Rust `Cargo.toml`
+versions together with their local-package entries in `Cargo.lock`. Review
+extension `version-name` fields where applicable. Search for the old version
+and classify each remaining occurrence: an unchanged package, an upgrade-test
+fixture, a historical document, or an actual missed release string. Do not
+rewrite historical upgrade inputs or third-party Cargo dependency versions
+merely to make the search empty.
+
+Before publishing, review the complete diff and run `git diff --check`, lint
+all `.aosproj` files, `python3 lib/verify-ci-package-needs.py`,
+`python3 lib/verify-localizations.py`, and the recursive release test command
+below. Verify native build prerequisites on the test host; for example,
+`ufwall-gtk` needs `libpcap-dev` for its linked Cargo tests. A missing
+prerequisite is not a passing test, and an unexplained test failure must be
+resolved before release. Qualify selected package builds and the upgrade path
+on the development repository first. `master` publishes development packages;
+only merge its history into `prod` after that qualification and explicit
+release approval. Do not copy commits or rebuild different content under an
+already published version.
+
 ## Local validation and CI
 
 Run the package's documented source tests and lint its project before a
