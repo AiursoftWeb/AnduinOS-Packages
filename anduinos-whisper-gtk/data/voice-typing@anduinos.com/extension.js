@@ -619,7 +619,7 @@ export default class VoiceTypingExtension extends Extension {
                 return GLib.SOURCE_REMOVE;
             }
             const windowClass = (focused.get_wm_class() ?? '').toLowerCase();
-            const terminal = ['terminal', 'kgx', 'console', 'alacritty', 'kitty', 'konsole']
+            const terminal = ['terminal', 'kgx', 'console', 'ptyxis', 'alacritty', 'kitty', 'konsole']
                 .some(name => windowClass.includes(name));
             this._pressPaste(terminal);
             // This acknowledges dispatch of the compositor paste shortcut, not
