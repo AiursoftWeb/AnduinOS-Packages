@@ -205,7 +205,9 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         why_installed = package_installed(WHY_AI_PACKAGE)
         bottles_installed = flatpak_installed(BOTTLES_APP_ID)
         flatseal_installed = package_installed("flatseal")
-        deja_dup_installed = flatpak_installed(DEJA_DUP_APP_ID)
+        deja_dup_installed = command_available("deja-dup") or flatpak_installed(
+            DEJA_DUP_APP_ID
+        )
         seahorse_installed = command_available("seahorse")
         voice_typing_installed = package_installed(VOICE_TYPING_PACKAGE)
 
@@ -1193,6 +1195,9 @@ class ControlPanelWindow(Adw.ApplicationWindow):
     def _open_deja_dup(self) -> None:
         if flatpak_installed(DEJA_DUP_APP_ID):
             self._launch(["flatpak", "run", DEJA_DUP_APP_ID])
+            return
+        if command_available("deja-dup"):
+            self._launch(["deja-dup"])
             return
         self._show_store_prompt(_("Deja Dup Backups"), f"{DEJA_DUP_APP_ID}.desktop")
 

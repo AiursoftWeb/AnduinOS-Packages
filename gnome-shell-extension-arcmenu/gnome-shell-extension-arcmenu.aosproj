@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-arcmenu</PackageName>
-    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <Section>gnome</Section>
     <PackageDescription>Application Menu Extension for GNOME — packaged for AnduinOS</PackageDescription>
@@ -38,6 +38,9 @@
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />
+    <TestCommand Name="update-notifier" Run="bash download.sh &amp;&amp; PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v"
+                 Profile="anduinos-package-release-test"
+                 TimeoutSeconds="300" />
   </ItemGroup>
   <ItemGroup>
     <IncludeFile Include="dconf/10-arcmenu.conf" Target="/etc/dconf/db/anduinos.d/10-arcmenu.conf" />

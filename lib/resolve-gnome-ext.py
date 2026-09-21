@@ -28,8 +28,10 @@ import argparse
 import json
 import os
 import sys
+import tempfile
 import urllib.request
 import urllib.error
+import zipfile
 from typing import Optional
 
 BASE_URL = "https://extensions.gnome.org"
@@ -143,20 +145,17 @@ def find_best_version(info: dict, target_gnome: int) -> dict:
 def download_extension(uuid: str, shell_version: str, out_dir: str) -> str:
     """Download extension zip and extract to out_dir. Returns the output path."""
     url = f"{BASE_URL}/download-extension/{uuid}.shell-extension.zip?shell_version={shell_version}"
-    zip_path = "/tmp/gnome-ext-poc.zip"
 
     print(f"  GET {url}")
     req = urllib.request.Request(url)
     req.add_header("User-Agent", "AnduinOS-GnomeResolver/1.0")
     with urllib.request.urlopen(req, timeout=30) as resp:
-        with open(zip_path, "wb") as f:
-            f.write(resp.read())
-
-    import zipfile
-    os.makedirs(out_dir, exist_ok=True)
-    with zipfile.ZipFile(zip_path, "r") as zf:
-        zf.extractall(out_dir)
-    os.remove(zip_path)
+        with tempfile.NamedTemporaryFile(prefix="gnome-ext-", suffix=".zip") as archive:
+            archive.write(resp.read())
+            archive.flush()
+            os.makedirs(out_dir, exist_ok=True)
+            with zipfile.ZipFile(archive.name, "r") as zf:
+                zf.extractall(out_dir)
     return out_dir
 
 

@@ -1,4 +1,5 @@
 import ast
+import gettext
 import json
 from pathlib import Path
 import re
@@ -26,6 +27,34 @@ def official_locale_names():
 
 
 class LocalizationTests(unittest.TestCase):
+    def test_factory_reset_is_localized_in_every_non_english_catalog(self):
+        messages = (
+            "Factory Reset",
+            "Return system files and applications to their initial state",
+            "Factory Reset Is Not Available",
+            "This system does not support factory reset. Reinstall AnduinOS "
+            "and choose the Btrfs filesystem to enable it.",
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            for catalog in sorted((ROOT / "po").glob("*.po")):
+                if catalog.stem.startswith("en_"):
+                    continue
+                compiled = Path(directory) / f"{catalog.stem}.mo"
+                subprocess.run(
+                    ["msgfmt", "--check", "-o", str(compiled), str(catalog)],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+                with compiled.open("rb") as stream:
+                    translations = gettext.GNUTranslations(stream)
+                for message in messages:
+                    self.assertNotEqual(
+                        translations.gettext(message),
+                        message,
+                        f"{catalog.name}: {message}",
+                    )
+
     def test_template_is_reproducible_from_python_and_desktop_sources(self):
         with tempfile.TemporaryDirectory() as directory:
             extracted = Path(directory) / "messages.pot"

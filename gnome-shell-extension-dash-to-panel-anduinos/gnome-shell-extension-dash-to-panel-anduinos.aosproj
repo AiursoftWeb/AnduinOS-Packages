@@ -42,6 +42,9 @@
     <PrebuildCommand Run="bash download.sh" />
   </ItemGroup>
   <ItemGroup>
+    <TestCommand Name="extension-version" Profile="anduinos-package-release-test" Run="bash download.sh &amp;&amp; PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+  </ItemGroup>
+  <ItemGroup>
     <IncludeFile Include="dconf/14-dash-to-panel.conf" Target="/etc/dconf/db/anduinos.d/14-dash-to-panel.conf" />
   </ItemGroup>
   <ItemGroup>
