@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .layout import build_erase_disk_layout
-from .model import Architecture, Firmware, InstallMode, InstallPlan, SecureBoot
+from .model import Architecture, Firmware, InstallMode, InstallPlan
 from .validation import validate_plan
 
 
@@ -76,7 +76,7 @@ def build_boot_commands(plan: InstallPlan, target: str) -> BootCommandPlan:
         # producing an endless "Reset System" loop.
         efi_install.append("--no-extra-removable")
         fallback = ""
-    if plan.platform.secure_boot is SecureBoot.ENABLED:
+    if plan.platform.firmware is Firmware.UEFI:
         efi_install.append("--uefi-secure-boot")
     installs.append(tuple(efi_install))
     loader = guided_loader_path(plan) if creates_nvram_entry else ""
@@ -187,8 +187,7 @@ def _build_vendor_only_boot_commands(
         "--no-nvram",
         "--no-extra-removable",
     ]
-    if plan.platform.secure_boot is SecureBoot.ENABLED:
-        install.append("--uefi-secure-boot")
+    install.append("--uefi-secure-boot")
     loader = guided_loader_path(plan)
     return GuidedBootCommandPlan(
         initrd=chroot
@@ -224,9 +223,7 @@ def guided_loader_path(plan: InstallPlan) -> str:
     architecture = (
         "x64" if plan.platform.architecture is Architecture.AMD64 else "aa64"
     )
-    executable = (
-        f"shim{architecture}.efi"
-        if plan.platform.secure_boot is SecureBoot.ENABLED
-        else f"grub{architecture}.efi"
-    )
+    # Firmware enforcement can be enabled after installation. Keep the same
+    # signed entry point in both states; MOK enrollment also requires shim.
+    executable = f"shim{architecture}.efi"
     return rf"\EFI\AnduinOS\{executable}"

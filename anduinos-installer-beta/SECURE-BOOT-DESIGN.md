@@ -39,6 +39,13 @@ key whose target system or boot chain was never completed.
 
 ## State machine
 
+Every UEFI installation (erase, coexistence and manual; amd64 and arm64)
+installs the signed chain with `--uefi-secure-boot` and points the AnduinOS
+NVRAM entry at shim, regardless of the current enforcement state. The MOK
+state machine below is separate: when installed with enforcement off, users
+can later prepare/enroll MOK in Driver Center before enabling Secure Boot.
+OOBE no longer manages Secure Boot. Shared/removable fallback policy is unchanged.
+
 ```text
 Secure Boot disabled, unsupported by UEFI firmware, or Legacy BIOS
         |

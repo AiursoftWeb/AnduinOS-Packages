@@ -1,11 +1,27 @@
 import unittest
+from dataclasses import replace
 
 from helpers import valid_plan
-from installer_core.boot_commands import build_boot_commands, guided_loader_path
-from installer_core.model import Architecture, Firmware, SecureBoot
+from installer_core.boot_commands import (
+    build_boot_commands, guided_loader_path,
+    build_guided_coexistence_boot_commands, build_manual_boot_commands,
+)
+from installer_core.model import Architecture, Firmware, InstallMode, SecureBoot
 
 
 class BootCommandPlanTests(unittest.TestCase):
+    def test_manual_and_coexistence_use_shim_before_secure_boot_is_enabled(self):
+        for architecture, suffix in ((Architecture.AMD64, "x64"), (Architecture.ARM64, "aa64")):
+            for mode, build in ((InstallMode.MANUAL, build_manual_boot_commands),
+                                (InstallMode.GUIDED_COEXISTENCE, build_guided_coexistence_boot_commands)):
+                with self.subTest(architecture=architecture, mode=mode):
+                    base = valid_plan(architecture=architecture, secure_boot=SecureBoot.DISABLED)
+                    plan = replace(base, storage=replace(base.storage, mode=mode))
+                    commands = build(plan, "/target", disk_path="/dev/test", esp_partition_number=1)
+                    self.assertIn("--uefi-secure-boot", commands.install)
+                    self.assertIn("--no-extra-removable", commands.install)
+                    self.assertEqual(commands.loader_path, rf"\EFI\AnduinOS\shim{suffix}.efi")
+
     def test_amd64_uefi_installs_bios_grub_and_vendor_loader(self):
         commands = build_boot_commands(valid_plan(), "/target")
         self.assertEqual(len(commands.installs), 2)
@@ -38,7 +54,7 @@ class BootCommandPlanTests(unittest.TestCase):
         )
         self.assertFalse(commands.bios_required)
 
-    def test_uefi_secure_boot_flag_tracks_firmware_state(self):
+    def test_uefi_always_installs_signed_chain_even_before_enforcement(self):
         cases = (
             (
                 valid_plan(),
@@ -48,7 +64,7 @@ class BootCommandPlanTests(unittest.TestCase):
             (
                 valid_plan(secure_boot=SecureBoot.DISABLED),
                 "--target=x86_64-efi",
-                False,
+                True,
             ),
             (
                 valid_plan(
@@ -56,12 +72,12 @@ class BootCommandPlanTests(unittest.TestCase):
                     secure_boot=SecureBoot.DISABLED,
                 ),
                 "--target=arm64-efi",
-                False,
+                True,
             ),
             (
                 valid_plan(secure_boot=SecureBoot.UNSUPPORTED),
                 "--target=x86_64-efi",
-                False,
+                True,
             ),
         )
         for plan, target_flag, secure_flag_expected in cases:
@@ -105,5 +121,5 @@ class BootCommandPlanTests(unittest.TestCase):
         )
         self.assertEqual(
             guided_loader_path(valid_plan(secure_boot=SecureBoot.DISABLED)),
-            r"\EFI\AnduinOS\grubx64.efi",
+            r"\EFI\AnduinOS\shimx64.efi",
         )
