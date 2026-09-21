@@ -27,6 +27,101 @@ def official_locale_names():
 
 
 class LocalizationTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.catalogs = {}
+        with tempfile.TemporaryDirectory() as directory:
+            for catalog in sorted((ROOT / "po").glob("*.po")):
+                compiled = Path(directory) / f"{catalog.stem}.mo"
+                subprocess.run(
+                    [
+                        "msgfmt", "--check", "--check-format",
+                        "-o", str(compiled), str(catalog),
+                    ],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+                with compiled.open("rb") as stream:
+                    cls.catalogs[catalog.stem] = gettext.GNUTranslations(stream)
+
+    def test_catalogs_cover_all_official_locales_and_messages(self):
+        self.assertEqual(set(self.catalogs), official_locale_names() | {"en_US"})
+        for locale in self.catalogs:
+            with self.subTest(locale=locale):
+                # English source fallback is intentional; all other catalogs
+                # must contain nonempty, non-fuzzy entries for every message.
+                options = ["--use-untranslated"] if locale == "en_US" else []
+                subprocess.run(
+                    [
+                        "msgcmp", "--no-fuzzy-matching", *options,
+                        str(ROOT / "po" / f"{locale}.po"),
+                        str(ROOT / "po/anduinos-control-panel.pot"),
+                    ],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+
+    def test_mirror_terminology_is_consistent_throughout_each_workflow(self):
+        # Match local terminology, allowing grammatical inflections. In Italian
+        # "mirror" is the technical term; literal "specchio" is inappropriate.
+        terms = {
+            "ar_SA": r"خ(?:ادم|وادم) (?:ال)?مرآة",
+            "da_DK": r"spejlserver",
+            "de_DE": r"Spiegelserver",
+            "el_GR": r"διακομιστ\w+ λήψης",
+            "en_GB": r"mirror",
+            "en_US": r"mirror",
+            "es_ES": r"espejo",
+            "fi_FI": r"peilipalveli",
+            "fr_FR": r"miroir",
+            "hi_IN": r"मिरर",
+            "id_ID": r"server cermin",
+            "it_IT": r"mirror",
+            "ja_JP": r"ミラー",
+            "ko_KR": r"미러",
+            "nl_NL": r"spiegelserver",
+            "pl_PL": r"serwer\w* lustrzan",
+            "pt_BR": r"espelho",
+            "pt_PT": r"espelho",
+            "ro_RO": r"server\w* oglindă",
+            "ru_RU": r"зеркал",
+            "sv_SE": r"spegl|spegel",
+            "th_TH": r"มิเรอร์",
+            "tr_TR": r"yansı",
+            "uk_UA": r"дзеркал",
+            "vi_VN": r"máy chủ phản chiếu",
+            "zh_CN": r"镜像源",
+            "zh_HK": r"鏡像站",
+            "zh_TW": r"鏡像站",
+        }
+        self.assertEqual(set(terms), set(self.catalogs))
+        source = ROOT / "src/anduinos_control_panel/software_sources.py"
+        tree = ast.parse(source.read_text(encoding="utf-8"))
+        messages = {
+            node.args[0].value
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "_"
+            and node.args
+            and isinstance(node.args[0], ast.Constant)
+            and isinstance(node.args[0].value, str)
+            and "mirror" in node.args[0].value.lower()
+        }
+        self.assertGreaterEqual(len(messages), 10)
+        for locale, translations in self.catalogs.items():
+            pattern = re.compile(terms[locale], re.IGNORECASE)
+            for message in messages:
+                with self.subTest(locale=locale, message=message):
+                    translated = translations.gettext(message)
+                    self.assertRegex(translated, pattern)
+                    if not locale.startswith("en_"):
+                        self.assertNotEqual(translated, message)
+                    if "apt update" in message:
+                        self.assertIn("apt update", translated)
+
     def test_factory_reset_is_localized_in_every_non_english_catalog(self):
         messages = (
             "Factory Reset",
@@ -35,24 +130,13 @@ class LocalizationTests(unittest.TestCase):
             "This system does not support factory reset. Reinstall AnduinOS "
             "and choose the Btrfs filesystem to enable it.",
         )
-        with tempfile.TemporaryDirectory() as directory:
-            for catalog in sorted((ROOT / "po").glob("*.po")):
-                if catalog.stem.startswith("en_"):
-                    continue
-                compiled = Path(directory) / f"{catalog.stem}.mo"
-                subprocess.run(
-                    ["msgfmt", "--check", "-o", str(compiled), str(catalog)],
-                    check=True,
-                    capture_output=True,
-                    text=True,
-                )
-                with compiled.open("rb") as stream:
-                    translations = gettext.GNUTranslations(stream)
+        for locale, translations in self.catalogs.items():
+            if not locale.startswith("en_"):
                 for message in messages:
                     self.assertNotEqual(
                         translations.gettext(message),
                         message,
-                        f"{catalog.name}: {message}",
+                        f"{locale}: {message}",
                     )
 
     def test_template_is_reproducible_from_python_and_desktop_sources(self):
