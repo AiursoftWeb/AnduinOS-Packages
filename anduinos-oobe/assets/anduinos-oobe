@@ -50,20 +50,6 @@ OOBE_LAYOUT_STYLES = {
     'classic': 'classic',
 }
 
-# The installed package provides this module. Keep a source-tree fallback so
-# OOBE's unit tests and local development use the exact same implementation.
-try:
-    from anduinos_secureboot.ui import create_secure_boot_page as _shared_secure_boot_page
-    from anduinos_secureboot import inspect_secure_boot as _inspect_secure_boot
-except ModuleNotFoundError:
-    _toolkit_src = os.path.abspath(os.path.join(
-        os.path.dirname(__file__), '..', '..',
-        'anduinos-secureboot-toolkit', 'src'))
-    if _toolkit_src not in sys.path:
-        sys.path.insert(0, _toolkit_src)
-    from anduinos_secureboot.ui import create_secure_boot_page as _shared_secure_boot_page
-    from anduinos_secureboot import inspect_secure_boot as _inspect_secure_boot
-
 warnings.filterwarnings('ignore', category=DeprecationWarning, module='gi')
 
 # ── i18n ───────────────────────────────────────────────────────────
@@ -1232,19 +1218,6 @@ def create_security_page():
     return page
 
 
-# PAGE 3.8: SECURE BOOT — 信任链条 (conditional)
-# ═══════════════════════════════════════════════════════════════════
-
-def create_secureboot_page(navigate_next, update_nav=None):
-    """Embed the shared OOBE-compatible Secure Boot trust experience."""
-    return _shared_secure_boot_page(
-        translate=_,
-        icon_factory=_create_image,
-        update_navigation=update_nav,
-    )
-
-
-# ═══════════════════════════════════════════════════════════════════
 # PAGE 4: HARDWARE DRIVERS — Driver Center entry point
 # ═══════════════════════════════════════════════════════════════════
 
@@ -2446,12 +2419,6 @@ class OobeWindow(Adw.ApplicationWindow):
             lambda: create_appearance_page(),
             lambda: create_security_page(),
         ])
-
-        try:
-            if not _inspect_secure_boot().enforcement_inactive:
-                factories.append(lambda: create_secureboot_page(_nav, _update_nav))
-        except Exception:
-            pass
 
         factories.append(
             lambda: create_hardware_drivers_page(_nav, _update_nav)
