@@ -1745,3 +1745,46 @@ msgstr ""
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "Les paquets marqués − seront supprimés. Les anciens noyaux peuvent perdre la prise en charge des graphiques NVIDIA. Redémarrez après la mise à jour."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Activer Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Pour l’activer, ouvrez les paramètres du micrologiciel UEFI et cherchez sous"
+" Boot, Security ou Secure Boot. Sélectionnez Microsoft & 3rd-party CA ou "
+"activez Secure Boot. Les intitulés varient selon le fabricant."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS n’est pas encore prêt pour Secure Boot. L’activer maintenant dans "
+"le micrologiciel pourrait empêcher le système de démarrer."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "Préparer AnduinOS pour Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Préparez d’abord AnduinOS et inscrivez son certificat MOK. N’activez Secure "
+"Boot qu’après cette inscription."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode : les clés de plateforme du micrologiciel sont absentes. Après "
+"l’inscription MOK, restaurez les clés d’usine du fabricant dans les "
+"paramètres du micrologiciel."

@@ -31,13 +31,13 @@ class TrustPageTests(unittest.TestCase):
         self.thread = self.enterContext(patch.object(ui.threading, "Thread"))
         self.firmware = Mock(return_value=(True, ""))
 
-    def page(self, status, *, dkms_available=False):
+    def page(self, status, *, dkms_available=False, enrolled=True, boot_loader="shim", modules_ready=False):
         state = SecureBootState(
-            status is SecureBootStatus.ENABLED, True, True, True, "serial",
-            dkms_available=dkms_available, status=status,
+            status is SecureBootStatus.ENABLED, True, True, enrolled, "serial",
+            dkms_available=dkms_available, status=status, boot_loader=boot_loader,
         )
         ui.create_secure_boot_page(
-            initial_state=(state, DkmsState(modules=("driver",), untrusted_modules=("driver",))),
+            initial_state=(state, DkmsState(modules=("driver",), untrusted_modules=() if modules_ready else ("driver",))),
             translate=lambda text: "translated:" + text,
             firmware_setup=self.firmware,
         )
@@ -52,15 +52,15 @@ class TrustPageTests(unittest.TestCase):
                     self.page(status, dkms_available=available)
                     repair = self.buttons["translated:Repair Module Signatures"]
                     repair.set_visible.assert_called_with(
-                        status is SecureBootStatus.ENABLED and available
+                        status in {SecureBootStatus.ENABLED, SecureBootStatus.DISABLED} and available
                     )
-                    self.buttons["translated:Resolve"].set_visible.assert_called_with(
-                        status is SecureBootStatus.DISABLED
+                    self.buttons["translated:Enable Secure Boot"].set_visible.assert_called_with(
+                        False  # Unsigned modules must be repaired first.
                     )
 
     def test_firmware_restart_requires_explicit_confirmation(self):
-        self.page(SecureBootStatus.DISABLED)
-        button = self.buttons["translated:Resolve"]
+        self.page(SecureBootStatus.DISABLED, modules_ready=True)
+        button = self.buttons["translated:Enable Secure Boot"]
         signal, clicked = button.connect.call_args.args
         self.assertEqual(signal, "clicked")
         clicked(button)
@@ -78,6 +78,15 @@ class TrustPageTests(unittest.TestCase):
         self.thread.return_value.start.assert_called_once()
         self.thread.call_args.kwargs["target"]()
         self.firmware.assert_called_once_with()
+
+    def test_enable_is_blocked_until_enrolled_and_booting_shim(self):
+        for enrolled, loader in ((False, "shim"), (True, "grub"), (True, "unknown")):
+            self.page(SecureBootStatus.DISABLED, enrolled=enrolled, boot_loader=loader, modules_ready=True)
+            button = self.buttons["translated:Enable Secure Boot"]
+            button.set_visible.assert_called_with(False)
+            button.connect.call_args.args[1](button)
+            self.firmware.assert_not_called()
+            self.adw.MessageDialog.new.assert_not_called()
 
 
 class FirmwareSettingsTests(unittest.TestCase):

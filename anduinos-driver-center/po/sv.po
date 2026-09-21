@@ -1716,3 +1716,46 @@ msgstr "I återställningsläge, logga in med ditt vanliga konto och kör:"
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "Paket markerade med − kommer att tas bort. Äldre kärnor kan förlora stöd för NVIDIA-grafik. Starta om efter uppdateringen."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Aktivera Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Öppna UEFI-inställningarna och leta under Boot, Security eller Secure Boot. "
+"Välj Microsoft & 3rd-party CA eller aktivera Secure Boot. Benämningarna "
+"varierar mellan tillverkare."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS är ännu inte redo för Secure Boot. Om du aktiverar det i den fasta "
+"programvaran nu kan systemet hindras från att starta."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "Förbered AnduinOS för Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Förbered först AnduinOS och registrera dess MOK-certifikat. Aktivera Secure "
+"Boot först efter registreringen."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: den fasta programvarans plattformsnycklar saknas. Återställ "
+"tillverkarens fabriksnycklar i UEFI-inställningarna efter MOK-"
+"registreringen."

@@ -1,7 +1,8 @@
 # AnduinOS Secure Boot Toolkit
 
 `anduinos-secureboot-toolkit` is the single shared implementation of the
-Secure Boot trust experience used by AnduinOS OOBE and AnduinOS Driver Center.
+Secure Boot trust experience used by AnduinOS Driver Center. OOBE only links
+to Driver Center and does not inspect or configure Secure Boot.
 It owns Secure Boot inspection, Machine Owner Key (MOK) enrollment, DKMS
 signing configuration, DKMS signature health, repair operations, and the
 shared GTK/libadwaita trust panel.
@@ -11,6 +12,7 @@ shared GTK/libadwaita trust panel.
 The toolkit is deliberately narrow. It may:
 
 - inspect Secure Boot, MOK enrollment, matching kernel headers, and DKMS;
+- prepare the current AnduinOS vendor EFI chain using installed signed payloads;
 - create the standard Ubuntu MOK key pair through
   `update-secureboot-policy`;
 - queue the MOK certificate for enrollment with the product enrollment code
@@ -88,9 +90,11 @@ a disabled boolean:
 - `unknown`: the probe failed, timed out, returned malformed output, or reported
   contradictory states.
 
-Disabled and unsupported are known non-enforcing states. Applications omit the
-Secure Boot management page and keep NVIDIA, Xbox, and other driver workflows
-available. Unknown fails closed: trust readiness is false, driver trust cannot
+Disabled and unsupported are known non-enforcing states. NVIDIA, Xbox, and
+other driver workflows remain available. Driver Center can prepare and enroll
+MOK while Secure Boot is disabled. DKMS inspection still reports unsigned
+modules so enabling enforcement is not offered before signing is ready.
+Unknown fails closed: trust readiness is false, driver trust cannot
 be asserted, and applications surface the detection failure instead of treating
 it as disabled. The read-only status CLI exposes this contract as schema 2 so
 older boolean-only recovery consumers reject it safely.
@@ -108,7 +112,7 @@ already be queued even when a module rebuild fails.
 ## Dependency ownership
 
 The toolkit directly depends on `mokutil`, `openssl`, `shim-signed`, `kmod`,
-and `pkexec`. DKMS is suggested rather than required: MOK enrollment and the
+`efibootmgr`, `util-linux`, `sbsigntool`, and `pkexec`. DKMS is suggested rather than required: MOK enrollment and the
 persistent signing configuration remain useful before any third-party module
 is installed. Applications depend on the toolkit instead of invoking those
 tools themselves. Hardware-facing applications retain their own direct
@@ -118,3 +122,47 @@ When DKMS is present, the toolkit rebuilds and reinstalls each registered
 module for the running kernel so the new build is signed by the configured
 MOK. When DKMS is absent or has no installed module for that kernel, the module
 step is reported as skipped without weakening the firmware trust operation.
+
+## Preparing an existing UEFI installation
+
+The existing `prepare` helper action first checks the boot chain, then prepares
+MOK and DKMS. It works with enforcement enabled or disabled. Its CLI accepts no
+disk, path, package, or command arguments. The sequence is:
+
+1. Identify a single writable FAT ESP mounted at `/boot/efi`, matching the
+   current AnduinOS GPT boot entry and its partition UUID/number. Multiple ESPs,
+   ambiguous entries, BootNext, redirected paths and unknown layouts stop repair.
+2. Hold APT/dpkg locks and verify installed-package integrity, PE architecture,
+   and cryptographic signatures of shim, signed GRUB and MokManager. Signature
+   verification does not claim that a particular firmware db/dbx or shim SBAT
+   policy accepts the payload; that still requires a firmware boot test.
+3. Stage and verify files on the ESP before replacing only `EFI/AnduinOS` files.
+   Preserve its GRUB configuration. No APT installation is performed.
+4. If needed, create a shim entry without changing BootOrder, verify it, then
+   replace the old AnduinOS entry's position in BootOrder. Retain the old entry
+   outside BootOrder as a recovery option. Foreign entries and their order remain
+   unchanged. A failed order update attempts to restore both order and files;
+   if firmware rollback itself fails, retain the verified chain and report the
+   failure instead of deleting files firmware might still reference.
+5. Prepare MOK, queue enrollment and rebuild modules. Reboot normally to enroll
+   MOK first. As in the installer, request an unlimited MokManager timeout so
+   users have time to complete the instructions. Only once enrollment and module signing are ready does Driver
+   Center offer rebooting to firmware to enable Secure Boot. Setup Mode gets an
+   explicit factory-key warning. Firmware keys are never changed by the helper.
+
+`EFI/Microsoft` and `EFI/BOOT` are outside the write boundary. No automatic
+external-drive fallback repair is included. Future portable-media support must
+be a separate installer policy for an owned ESP, with tests on a second machine
+and regression coverage for the historical shim fallback Reset System loop.
+
+Unit tests cover target ambiguity, symlinks, signature/architecture rejection,
+NVRAM failure rollback, foreign-file preservation and enrollment ordering. Before
+release, also exercise an OVMF/physical boot cycle: install with enforcement off,
+prepare/enroll MOK, enable enforcement, boot and load DKMS modules. Repeat with
+Setup Mode and Windows sharing the ESP. Tests with command doubles cannot prove
+firmware acceptance, power-loss atomicity or dbx/SBAT compatibility.
+
+An already deployed chain that matches the verified package payloads is a
+read-only no-op; preparing MOK again does not rewrite healthy EFI files.
+See [UEFI qualification](docs/UEFI-QUALIFICATION.md) for the exercised transition
+from direct GRUB/Setup Mode through MOK enrollment to enforced Secure Boot.

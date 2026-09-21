@@ -1683,3 +1683,45 @@ msgstr "ในโหมดกู้คืน ให้เข้าสู่ร�
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "แพ็กเกจที่ทำเครื่องหมาย − จะถูกลบ เคอร์เนลรุ่นเก่าอาจสูญเสียการรองรับกราฟิก NVIDIA โปรดรีสตาร์ตหลังอัปเดต"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "เปิดใช้ Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"หากต้องการเปิดใช้ ให้เปิดการตั้งค่าเฟิร์มแวร์ UEFI แล้วค้นหาใน Boot, "
+"Security หรือ Secure Boot เลือก Microsoft & 3rd-party CA หรือเปิด Secure "
+"Boot ชื่อเมนูอาจแตกต่างกันตามผู้ผลิต"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS ยังไม่พร้อมสำหรับ Secure Boot "
+"การเปิดใช้ในเฟิร์มแวร์ตอนนี้อาจทำให้ระบบเริ่มทำงานไม่ได้"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "เตรียม AnduinOS สำหรับ Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"เตรียม AnduinOS และลงทะเบียนใบรับรอง MOK ก่อน เปิดใช้ Secure Boot "
+"หลังจากลงทะเบียนเสร็จแล้วเท่านั้น"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: ไม่มีคีย์แพลตฟอร์มในเฟิร์มแวร์ หลังจากลงทะเบียน MOK แล้ว "
+"ให้คืนค่าคีย์จากโรงงานของผู้ผลิตในการตั้งค่าเฟิร์มแวร์"

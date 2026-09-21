@@ -111,9 +111,8 @@ class OperationsTests(unittest.TestCase):
                 self.assertEqual(json.loads(output.getvalue())["error"], "device unavailable")
                 execute.assert_called_once_with("prepare")
 
-    def test_prepare_skips_known_non_enforcing_firmware_states(self):
+    def test_prepare_skips_unsupported_firmware(self):
         for output in (
-            "SecureBoot disabled\n",
             "This system doesn't support Secure Boot\n",
         ):
             with self.subTest(output=output):
@@ -158,7 +157,10 @@ class OperationsTests(unittest.TestCase):
                 return subprocess.CompletedProcess(command, code, "", "")
 
             result = operations.prepare(
-                with_secure_boot_enabled(run),
+                lambda command, **kwargs: (
+                    subprocess.CompletedProcess(command, 0, "SecureBoot disabled\n", "")
+                    if command == ["mokutil", "--sb-state"] else run(command, **kwargs)
+                ),
                 private,
                 certificate,
                 config,
@@ -168,6 +170,7 @@ class OperationsTests(unittest.TestCase):
             self.assertTrue(result.ok)
             import_call = next(item for item in calls if item[0][:2] == ["mokutil", "--import"])
             self.assertEqual(import_call[1]["stdin"], "123456\n123456\n")
+            self.assertIn(["mokutil", "--timeout", "-1"], [command for command, _ in calls])
             self.assertEqual(config.read_text(), operations.CONFIG_CONTENT)
             self.assertFalse(any(command[0] == "dkms" for command, _ in calls))
             self.assertEqual(result.steps["modules_rebuilt"].status, "skipped")

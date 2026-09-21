@@ -187,6 +187,8 @@ def inspect_secure_boot(
     configuration: Path = DKMS_CONFIG,
     efi_firmware: Path = EFI_FIRMWARE,
 ) -> SecureBootState:
+    from .boot_chain import current_loader, setup_mode
+
     runner = runner or SubprocessRunner()
     if efi_firmware.exists():
         state = runner.run(["mokutil", "--sb-state"])
@@ -221,6 +223,8 @@ def inspect_secure_boot(
         headers_available=headers_available,
         configuration_present=configuration.is_file(),
         status=status,
+        setup_mode=setup_mode(efi_firmware) if efi_firmware.exists() else None,
+        boot_loader=current_loader(runner) if efi_firmware.exists() else "unknown",
     )
 
 
@@ -260,14 +264,10 @@ def inspect_dkms(
             continue
         signature = module_signature(str(path), runner)
         trusted = bool(
-            secure_boot.enforcement_inactive
-            or (
-                secure_boot.status is SecureBootStatus.ENABLED
-                and secure_boot.enrolled
-                and signature
-                and secure_boot.certificate_serial
-                and signature == secure_boot.certificate_serial
-            )
+            secure_boot.enrolled
+            and signature
+            and secure_boot.certificate_serial
+            and signature == secure_boot.certificate_serial
         )
         details.append(ModuleState(path.name, str(path), signature, trusted))
 

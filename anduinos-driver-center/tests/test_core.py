@@ -472,7 +472,7 @@ driver   : nvidia-driver-595-server-open - distro non-free
             ),
         )
         self.assertTrue(secure.ready)
-        self.assertFalse(secure.enrollment_required)
+        self.assertTrue(secure.enrollment_required)
         self.assertEqual(state.status, XboxStatus.READY)
 
     def test_dkms_health_reports_modules_signed_by_a_different_key(self):

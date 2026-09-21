@@ -1728,3 +1728,46 @@ msgstr ""
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "Pakketten met − worden verwijderd. Oudere kernels kunnen ondersteuning voor NVIDIA-graphics verliezen. Start opnieuw op na het bijwerken."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Secure Boot inschakelen"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Open de UEFI-firmware-instellingen en zoek onder Boot, Security of Secure "
+"Boot. Selecteer Microsoft & 3rd-party CA of schakel Secure Boot in. De "
+"benamingen verschillen per fabrikant."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS is nog niet klaar voor Secure Boot. Als u dit nu in de firmware "
+"inschakelt, start het systeem mogelijk niet meer op."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "AnduinOS voorbereiden op Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Bereid eerst AnduinOS voor en registreer het MOK-certificaat. Schakel Secure"
+" Boot pas na de registratie in."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: de platformsleutels van de firmware ontbreken. Herstel na de "
+"MOK-registratie de fabriekssleutels van de fabrikant in de firmware-"
+"instellingen."

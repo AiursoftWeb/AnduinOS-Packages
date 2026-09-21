@@ -25,6 +25,8 @@ class SecureBootState:
     headers_available: bool = False
     configuration_present: bool = True
     status: SecureBootStatus | None = None
+    setup_mode: bool | None = None
+    boot_loader: str = "unknown"
 
     def __post_init__(self) -> None:
         status = self.status
@@ -73,7 +75,16 @@ class SecureBootState:
 
     @property
     def enrollment_required(self) -> bool:
-        return self.enabled and not self.trust_ready and not self.enrollment_pending
+        return self.supported and not (
+            self.key_present and self.certificate_present and self.enrolled
+        ) and not self.enrollment_pending
+
+    @property
+    def firmware_enable_ready(self) -> bool:
+        return (self.status is SecureBootStatus.DISABLED
+                and self.boot_loader == "shim" and self.key_present
+                and self.certificate_present and self.enrolled
+                and self.configuration_present and not self.enrollment_pending)
 
 
 @dataclass(frozen=True)

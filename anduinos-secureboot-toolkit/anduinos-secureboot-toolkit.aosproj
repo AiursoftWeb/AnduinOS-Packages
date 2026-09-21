@@ -27,6 +27,9 @@
     <Dependency Include="mokutil" />
     <Dependency Include="openssl" />
     <Dependency Include="shim-signed" />
+    <Dependency Include="efibootmgr" />
+    <Dependency Include="util-linux" />
+    <Dependency Include="sbsigntool" />
     <Dependency Include="kmod" />
     <Suggest Include="dkms" />
     <Dependency Include="pkexec" />
@@ -35,6 +38,7 @@
   <ItemGroup>
     <IncludeFile Include="src/anduinos_secureboot/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/__init__.py" />
     <IncludeFile Include="src/anduinos_secureboot/client.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/client.py" />
+    <IncludeFile Include="src/anduinos_secureboot/boot_chain.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/boot_chain.py" />
     <IncludeFile Include="src/anduinos_secureboot/inspect.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/inspect.py" />
     <IncludeFile Include="src/anduinos_secureboot/model.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/model.py" />
     <IncludeFile Include="src/anduinos_secureboot/operations.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/operations.py" />
@@ -43,6 +47,7 @@
     <IncludeScript Include="scripts/anduinos-securebootctl" Target="/usr/bin/anduinos-securebootctl" />
     <IncludeFile Include="data/com.anduinos.SecureBootToolkit.policy" Target="/usr/share/polkit-1/actions/com.anduinos.SecureBootToolkit.policy" />
     <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-secureboot-toolkit/README.md" />
+    <IncludeFile Include="docs/UEFI-QUALIFICATION.md" Target="/usr/share/doc/anduinos-secureboot-toolkit/docs/UEFI-QUALIFICATION.md" />
   </ItemGroup>
 
   <ItemGroup>

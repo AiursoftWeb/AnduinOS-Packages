@@ -15,7 +15,6 @@ from gi.repository import Adw, GLib, Gtk  # noqa: E402
 from .client import run_action
 from .inspect import inspect_dkms, inspect_secure_boot
 from .model import DkmsState, SecureBootState, SecureBootStatus
-from .operations import ENROLLMENT_PASSWORD
 
 
 Translate = Callable[[str], str]
@@ -28,21 +27,21 @@ def N_(value: str) -> str:
     return value
 
 
-_FIRMWARE_SETUP_BUTTON = N_("Resolve")
-_FIRMWARE_SETUP_REBOOT = N_("Restart to UEFI Firmware Settings")
-_FIRMWARE_SETUP_RECOMMENDATION = N_(
-    "AnduinOS has comprehensive Secure Boot support. Secure Boot is not "
-    "currently enabled on this computer, and we recommend enabling it "
-    "for additional protection."
-)
+_FIRMWARE_SETUP_BUTTON = N_("Enable Secure Boot")
 _FIRMWARE_SETUP_INSTRUCTIONS = N_(
     "To enable it, open the UEFI firmware settings and look under Boot, "
     "Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn "
     "Secure Boot on. Firmware wording varies by manufacturer."
 )
-_FIRMWARE_SETUP_ERROR_TITLE = N_("Could not open UEFI firmware settings")
+_BOOT_WARNING = N_(
+    "AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may prevent the system from starting."
+)
+_PREPARE = N_("Prepare AnduinOS for Secure Boot")
+_PREPARE_FIRST = N_("First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot only after enrollment.")
+_SETUP_MODE = N_("Setup Mode: firmware platform keys are missing. Restore the manufacturer's factory keys in firmware settings after MOK enrollment.")
+_FIRMWARE_SETUP_ERROR_TITLE = N_("Configuration failed. Please try again.")
 _FIRMWARE_SETUP_ERROR_BODY = N_(
-    "The firmware settings could not be opened on this computer."
+    "Please check the advanced output."
 )
 
 
@@ -74,13 +73,12 @@ def create_secure_boot_page(
     *,
     translate: Translate | None = None,
     icon_factory: IconFactory | None = None,
-    update_navigation: Callable[[], None] | None = None,
     reboot: Callable[[], None] | None = None,
     firmware_setup: Callable[[], tuple[bool, str]] | None = None,
     state_changed: Callable[[], None] | None = None,
     initial_state: tuple[SecureBootState, DkmsState] | None = None,
 ) -> Gtk.Widget:
-    """Build the common OOBE-compatible trust page.
+    """Build the Driver Center trust page.
 
     Navigation remains owned by the embedding application. The page owns the
     shared trust rows, action wording, fixed enrollment-code prompt, and repair
@@ -138,6 +136,12 @@ def create_secure_boot_page(
     description.set_margin_bottom(24)
     center.append(description)
 
+    boot_warning = Gtk.Label()
+    boot_warning.set_wrap(True)
+    boot_warning.add_css_class("warning")
+    boot_warning.set_margin_bottom(12)
+    center.append(boot_warning)
+
     group = Adw.PreferencesGroup(title=_("System Trust Status"))
     group.set_margin_bottom(24)
     center.append(group)
@@ -180,7 +184,7 @@ def create_secure_boot_page(
     enroll_spinner = Gtk.Spinner()
     enroll_content = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
     enroll_content.set_halign(Gtk.Align.CENTER)
-    enroll_label = Gtk.Label(label=_("Create & Enroll Certificate"))
+    enroll_label = Gtk.Label(label=_(_PREPARE))
     enroll_content.append(enroll_spinner)
     enroll_content.append(enroll_label)
     enroll_button.set_child(enroll_content)
@@ -199,7 +203,7 @@ def create_secure_boot_page(
     reboot_note.set_use_markup(True)
     reboot_note.set_halign(Gtk.Align.CENTER)
     action_box.append(reboot_note)
-    reboot_button = Gtk.Button(label=_("Reboot & Configure Secure Boot"))
+    reboot_button = Gtk.Button(label=_("Reboot"))
     reboot_button.set_halign(Gtk.Align.CENTER)
     reboot_button.add_css_class("suggested-action")
     reboot_button.add_css_class("pill")
@@ -231,6 +235,10 @@ def create_secure_boot_page(
         cert_row, cert_icon = rows["certificate"]
         enroll_row, enroll_icon = rows["enrollment"]
         drivers_row, drivers_icon = rows["drivers"]
+        boot_warning.set_visible(secure_boot.setup_mode is True or secure_boot.boot_loader == "grub")
+        boot_warning.set_label(_(_BOOT_WARNING) + (
+            "\n" + _(_SETUP_MODE) if secure_boot.setup_mode is True else ""
+        ))
 
         if secure_boot.enabled:
             sb_row.set_subtitle(_("Motherboard hardware protection is active"))
@@ -246,8 +254,8 @@ def create_secure_boot_page(
             set_icon("secure_boot", "dialog-error-symbolic", "error")
 
         has_certificate = secure_boot.key_present and secure_boot.certificate_present
-        trust_ready = secure_boot.trust_ready
-        if secure_boot.enforcement_inactive:
+        trust_ready = has_certificate and secure_boot.enrolled
+        if secure_boot.status is SecureBootStatus.UNSUPPORTED:
             cert_row.set_subtitle(_("Not required without firmware enforcement"))
             set_icon("certificate", "dialog-error-symbolic", "error")
             enroll_row.set_subtitle(_("Not required without firmware enforcement"))
@@ -274,7 +282,7 @@ def create_secure_boot_page(
             )
 
         if (
-            not secure_boot.enforcement_inactive
+            secure_boot.supported
             and secure_boot.status is not SecureBootStatus.UNKNOWN
         ):
             if secure_boot.enrolled:
@@ -292,7 +300,7 @@ def create_secure_boot_page(
                 set_icon("enrollment", "dialog-error-symbolic", "error")
 
         signing_configuration_ready = secure_boot.configuration_present
-        if secure_boot.enforcement_inactive:
+        if secure_boot.status is SecureBootStatus.UNSUPPORTED:
             drivers_row.set_subtitle(_("Kernel signature enforcement is inactive"))
             set_icon("drivers", "dialog-error-symbolic", "error")
         elif secure_boot.status is SecureBootStatus.UNKNOWN:
@@ -318,14 +326,12 @@ def create_secure_boot_page(
             drivers_row.set_subtitle(_("Some DKMS modules need to be re-signed"))
             set_icon("drivers", "dialog-warning-symbolic", "warning")
 
-        enroll_button.set_visible(secure_boot.enrollment_required)
-        enroll_label.set_label(
-            _("Enroll Existing Certificate")
-            if has_certificate
-            else _("Create & Enroll Certificate")
-        )
+        enroll_button.set_visible(secure_boot.supported and (
+            secure_boot.enrollment_required or secure_boot.boot_loader != "shim"
+        ))
+        enroll_label.set_label(_(_PREPARE))
         repair_button.set_visible(
-            secure_boot.enabled
+            secure_boot.supported
             and secure_boot.enrolled
             and (
                 not signing_configuration_ready
@@ -337,15 +343,15 @@ def create_secure_boot_page(
             if dkms.ready and not signing_configuration_ready
             else _("Repair Module Signatures")
         )
-        reboot_note.set_visible(secure_boot.enrollment_pending)
-        reboot_button.set_visible(secure_boot.enrollment_pending)
+        reboot_note.set_visible(secure_boot.enrollment_pending and secure_boot.boot_loader == "shim")
+        reboot_button.set_visible(secure_boot.enrollment_pending and secure_boot.boot_loader == "shim")
         firmware_button.set_visible(
-            secure_boot.status is SecureBootStatus.DISABLED
+            secure_boot.firmware_enable_ready and dkms.ready
         )
         refresh_button.set_visible(
             secure_boot.status is SecureBootStatus.UNKNOWN
             or (
-                secure_boot.enabled
+                secure_boot.supported
                 and (not secure_boot.ready or not dkms.ready)
             )
         )
@@ -364,11 +370,11 @@ def create_secure_boot_page(
                 )
             )
             status.remove_css_class("title-4")
-        elif not secure_boot.enabled:
+        elif not secure_boot.enabled and not secure_boot.enrollment_pending:
             status.set_label(
-                _("No certificate is required while Secure Boot is disabled.")
-                + "\n"
-                + _(_FIRMWARE_SETUP_RECOMMENDATION)
+                _(_FIRMWARE_SETUP_INSTRUCTIONS)
+                if secure_boot.firmware_enable_ready and dkms.ready
+                else _(_PREPARE_FIRST)
             )
             status.remove_css_class("title-4")
         elif secure_boot.ready and dkms.ready:
@@ -430,7 +436,7 @@ def create_secure_boot_page(
             _("Please trust the certificate upon reboot using password 123456."),
         )
         dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("reboot", _(_FIRMWARE_SETUP_REBOOT))
+        dialog.add_response("reboot", _("Reboot"))
         dialog.set_response_appearance("reboot", Adw.ResponseAppearance.DESTRUCTIVE)
         dialog.connect(
             "response", lambda _dialog, name: reboot() if name == "reboot" else None
@@ -438,6 +444,10 @@ def create_secure_boot_page(
         dialog.present()
 
     def confirm_firmware_setup(_button: Gtk.Button | None = None) -> None:
+        state = state_holder["secure_boot"]
+        modules = state_holder["dkms"]
+        if not (state and state.firmware_enable_ready and modules and modules.ready):
+            return
         dialog = Adw.MessageDialog.new(
             page.get_root(),
             _("Reboot Required"),
@@ -480,7 +490,7 @@ def create_secure_boot_page(
         return GLib.SOURCE_REMOVE
 
     def show_reboot_prompt(extra: str = "") -> None:
-        body = _("Success! When you reboot, a blue screen will appear.")
+        body = _("A certificate is waiting for enrollment.")
         if extra:
             body += "\n\n" + extra
         body += "\n" + _(
@@ -492,7 +502,7 @@ def create_secure_boot_page(
             body,
         )
         dialog.add_response("later", _("Later"))
-        dialog.add_response("reboot", _("Reboot & Configure Secure Boot"))
+        dialog.add_response("reboot", _("Reboot"))
         dialog.set_response_appearance("reboot", Adw.ResponseAppearance.SUGGESTED)
 
         def response(_dialog: Adw.MessageDialog, name: str) -> None:
@@ -506,7 +516,7 @@ def create_secure_boot_page(
         button: Gtk.Button, action: str, code: int, payload: dict
     ) -> bool:
         enroll_spinner.stop()
-        enroll_label.set_label(_("Create & Enroll Certificate"))
+        enroll_label.set_label(_(_PREPARE))
         button.set_sensitive(True)
         steps = payload.get("steps", {})
         firmware = steps.get("firmware_state", {})
@@ -526,9 +536,6 @@ def create_secure_boot_page(
             done.add_response("ok", _("OK"))
             done.present()
         elif action == "prepare" and trust_prepared:
-            page._hide_next = bool(payload.get("reboot_required"))
-            if update_navigation:
-                update_navigation()
             modules_failed = steps.get("modules_rebuilt", {}).get("status") == "failed"
             warning = (
                 _("The certificate is ready, but one or more DKMS modules could not be rebuilt. You can repair them after enrollment.")

@@ -52,6 +52,7 @@ class PackageTests(unittest.TestCase):
             subprocess.run(
                 [
                     "xgettext", "--language=Python", "--keyword=_",
+                    "--keyword=N_",
                     "--keyword=ngettext:1,2", "--from-code=UTF-8",
                     f"--output={extracted}",
                     str(ROOT / "src" / "anduinos_driver_center" / "app.py"),

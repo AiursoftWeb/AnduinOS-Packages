@@ -1704,3 +1704,45 @@ msgstr "I genoprettelses tilstand, log ind med din normale konto og køre:"
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "Pakker markeret med − bliver fjernet. Ældre kerner kan miste understøttelse af NVIDIA-grafik. Genstart efter opdateringen."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Aktivér Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Åbn UEFI-firmwareindstillingerne, og se under Boot, Security eller Secure "
+"Boot. Vælg Microsoft & 3rd-party CA, eller aktivér Secure Boot. "
+"Betegnelserne varierer efter producent."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS er endnu ikke klar til Secure Boot. Hvis du aktiverer det i "
+"firmwaren nu, kan det forhindre systemet i at starte."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "Klargør AnduinOS til Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Klargør først AnduinOS, og registrér dets MOK-certifikat. Aktivér først "
+"Secure Boot efter registreringen."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: firmwarens platformsnøgler mangler. Gendan producentens "
+"fabriksnøgler i firmwareindstillingerne efter MOK-registreringen."

@@ -1708,3 +1708,45 @@ msgstr ""
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "Các gói được đánh dấu − sẽ bị gỡ bỏ. Nhân cũ có thể mất hỗ trợ đồ họa NVIDIA. Hãy khởi động lại sau khi cập nhật."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Bật Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Để bật, hãy mở cài đặt firmware UEFI và tìm trong Boot, Security hoặc Secure"
+" Boot. Chọn Microsoft & 3rd-party CA hoặc bật Secure Boot. Tên tùy chọn khác"
+" nhau tùy nhà sản xuất."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS chưa sẵn sàng cho Secure Boot. Bật tính năng này trong firmware "
+"ngay lúc này có thể khiến hệ thống không khởi động được."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "Chuẩn bị AnduinOS cho Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Trước tiên, hãy chuẩn bị AnduinOS và đăng ký chứng chỉ MOK. Chỉ bật Secure "
+"Boot sau khi đăng ký xong."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: thiếu khóa nền tảng của firmware. Sau khi đăng ký MOK, hãy khôi "
+"phục khóa gốc của nhà sản xuất trong cài đặt firmware."

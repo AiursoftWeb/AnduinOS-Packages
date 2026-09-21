@@ -119,9 +119,11 @@ generation and normal/recovery/default boot coverage live in AnduinOS-2's
 passing it does not certify Intel display behavior or authorize driver switching.
 
 Secure Boot, MOK enrollment, DKMS signing health, repair operations, and the
-trust panel are provided by `anduinos-secureboot-toolkit`. This is the same
-implementation and fixed enrollment-code experience used by AnduinOS OOBE;
-Driver Center must not add a second Secure Boot backend or diverging prompts.
+trust panel are provided by `anduinos-secureboot-toolkit`. Driver Center is the
+only Secure Boot configuration frontend; OOBE links to Driver Center. Prepare
+the signed shim boot chain and enroll MOK before offering firmware activation.
+Direct-GRUB boot and Setup Mode show an explicit warning. No APT reinstall is
+performed and foreign EFI directories remain outside the repair boundary.
 
 The final sidebar item, **About This Computer**, shows a screenshot-friendly
 hardware overview. The compact view contains the CPU, system-usable memory,

@@ -1753,3 +1753,46 @@ msgstr ""
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "Τα πακέτα με την ένδειξη − θα αφαιρεθούν. Οι παλαιότεροι πυρήνες ενδέχεται να χάσουν την υποστήριξη γραφικών NVIDIA. Κάντε επανεκκίνηση μετά την ενημέρωση."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Ενεργοποίηση Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Για ενεργοποίηση, ανοίξτε τις ρυθμίσεις υλικολογισμικού UEFI και αναζητήστε "
+"Boot, Security ή Secure Boot. Επιλέξτε Microsoft & 3rd-party CA ή "
+"ενεργοποιήστε το Secure Boot. Οι ονομασίες διαφέρουν ανά κατασκευαστή."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"Το AnduinOS δεν είναι ακόμη έτοιμο για το Secure Boot. Η ενεργοποίησή του "
+"τώρα στο υλικολογισμικό μπορεί να εμποδίσει την εκκίνηση του συστήματος."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "Προετοιμασία του AnduinOS για Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Προετοιμάστε πρώτα το AnduinOS και καταχωρίστε το πιστοποιητικό MOK του. "
+"Ενεργοποιήστε το Secure Boot μόνο μετά την καταχώριση."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: λείπουν τα κλειδιά πλατφόρμας του υλικολογισμικού. Μετά την "
+"καταχώριση MOK, επαναφέρετε τα εργοστασιακά κλειδιά του κατασκευαστή στις "
+"ρυθμίσεις υλικολογισμικού."

@@ -1738,3 +1738,47 @@ msgstr ""
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "Mit − markierte Pakete werden entfernt. Ältere Kernel können die NVIDIA-Grafikunterstützung verlieren. Starten Sie nach der Aktualisierung neu."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Secure Boot aktivieren"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Öffnen Sie zum Aktivieren die UEFI-Firmware-Einstellungen und suchen Sie "
+"unter Boot, Security oder Secure Boot. Wählen Sie Microsoft & 3rd-party CA "
+"oder aktivieren Sie Secure Boot. Die Bezeichnungen unterscheiden sich je "
+"nach Hersteller."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS ist noch nicht für Secure Boot vorbereitet. Wenn Sie es jetzt in "
+"der Firmware aktivieren, startet das System möglicherweise nicht mehr."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "AnduinOS für Secure Boot vorbereiten"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Bereiten Sie zunächst AnduinOS vor und registrieren Sie sein MOK-Zertifikat."
+" Aktivieren Sie Secure Boot erst nach der Registrierung."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: Die Plattformschlüssel der Firmware fehlen. Stellen Sie nach der"
+" MOK-Registrierung in den Firmware-Einstellungen die werkseitigen Schlüssel "
+"des Herstellers wieder her."

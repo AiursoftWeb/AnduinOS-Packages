@@ -1746,3 +1746,45 @@ msgstr "W trybie odzyskiwania zaloguj się na swoje zwykłe konto i uruchom:"
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "Pakiety oznaczone − zostaną usunięte. Starsze jądra mogą utracić obsługę grafiki NVIDIA. Po aktualizacji uruchom komputer ponownie."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Włącz Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Otwórz ustawienia oprogramowania UEFI i znajdź sekcję Boot, Security lub "
+"Secure Boot. Wybierz Microsoft & 3rd-party CA lub włącz Secure Boot. Nazwy "
+"zależą od producenta."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS nie jest jeszcze gotowy do włączenia Secure Boot. Włączenie tej "
+"funkcji teraz w UEFI może uniemożliwić uruchomienie systemu."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "Przygotuj AnduinOS do Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Najpierw przygotuj AnduinOS i zarejestruj jego certyfikat MOK. Włącz Secure "
+"Boot dopiero po rejestracji."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: brak kluczy platformy w UEFI. Po rejestracji MOK przywróć "
+"fabryczne klucze producenta w ustawieniach UEFI."

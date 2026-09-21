@@ -1719,3 +1719,45 @@ msgstr "Dalam mode pemulihan, masuk dengan akun normal Anda dan jalankan:"
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "Paket bertanda − akan dihapus. Kernel lama mungkin kehilangan dukungan grafis NVIDIA. Mulai ulang setelah memperbarui."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Aktifkan Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Untuk mengaktifkannya, buka pengaturan firmware UEFI dan cari di Boot, "
+"Security, atau Secure Boot. Pilih Microsoft & 3rd-party CA atau aktifkan "
+"Secure Boot. Nama opsi berbeda menurut produsen."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS belum siap untuk Secure Boot. Mengaktifkannya dalam firmware "
+"sekarang dapat membuat sistem gagal memulai."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "Siapkan AnduinOS untuk Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Siapkan AnduinOS dan daftarkan sertifikat MOK-nya terlebih dahulu. Aktifkan "
+"Secure Boot hanya setelah pendaftaran selesai."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: kunci platform firmware tidak tersedia. Setelah pendaftaran MOK,"
+" pulihkan kunci bawaan pabrik dari produsen melalui pengaturan firmware."

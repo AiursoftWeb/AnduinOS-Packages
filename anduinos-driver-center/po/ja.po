@@ -1642,3 +1642,41 @@ msgstr "リカバリーモードの場合、通常アカウントでサインイ
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "− が付いたパッケージは削除されます。古いカーネルでは NVIDIA グラフィックスがサポートされなくなる場合があります。更新後に再起動してください。"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Secure Boot を有効にする"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"有効にするには UEFI ファームウェア設定を開き、Boot、Security、または Secure Boot を探してください。Microsoft &"
+" 3rd-party CA を選択するか、Secure Boot を有効にしてください。項目名はメーカーによって異なります。"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS はまだ Secure Boot "
+"を有効にする準備ができていません。今ファームウェアで有効にすると、システムが起動しなくなる可能性があります。"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "AnduinOS を Secure Boot 向けに準備する"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr "まず AnduinOS を準備し、MOK 証明書を登録してください。登録が完了してから Secure Boot を有効にしてください。"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode：ファームウェアのプラットフォーム鍵がありません。MOK 登録後、ファームウェア設定でメーカーの工場出荷時の鍵を復元してください。"

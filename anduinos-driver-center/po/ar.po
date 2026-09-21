@@ -1737,3 +1737,45 @@ msgstr "في وضع الاسترداد، سجّل الدخول بحسابك ال
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "ستُزال الحزم المعلّمة بالرمز −. قد تفقد النوى الأقدم دعم رسوميات NVIDIA. أعد التشغيل بعد التحديث."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "تفعيل Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"للتفعيل، افتح إعدادات البرنامج الثابت UEFI وابحث ضمن Boot أو Security أو "
+"Secure Boot. اختر Microsoft & 3rd-party CA أو فعّل Secure Boot. تختلف "
+"التسميات حسب الشركة المصنّعة."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"نظام AnduinOS غير جاهز بعد لتفعيل Secure Boot. قد يؤدي تفعيله الآن في "
+"البرنامج الثابت إلى منع النظام من بدء التشغيل."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "تجهيز AnduinOS لاستخدام Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"جهّز AnduinOS أولاً وسجّل شهادة MOK الخاصة به. لا تفعّل Secure Boot إلا بعد "
+"التسجيل."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: مفاتيح المنصة مفقودة من البرنامج الثابت. بعد تسجيل MOK، استعد "
+"مفاتيح المصنع الخاصة بالشركة المصنّعة من إعدادات البرنامج الثابت."
