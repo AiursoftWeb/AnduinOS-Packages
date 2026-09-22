@@ -42,14 +42,9 @@ install() {
     for entry in /usr/share/anduinos-live/media-check/*.txt; do
         inst_simple "$entry"
     done
-    # Only the dedicated non-host-only Live image selects this theme.
-    local theme=/usr/share/plymouth/themes/anduinos-media
-    for entry in "$theme"/*; do inst_simple "$entry"; done
-    inst_multiple "$(plymouth --get-splash-plugin-path)/script.so"
-    rm -f "$initdir/usr/share/plymouth/themes/default.plymouth" \
-        "$initdir/etc/alternatives/default.plymouth"
-    ln -s /usr/share/plymouth/themes/anduinos-media/anduinos-media.plymouth \
-        "$initdir/usr/share/plymouth/themes/default.plymouth"
+    # The plymouth dependency populates the normal AnduinOS two-step theme.
+    # Keep its default link and BGRT firmware logo: the helper uses Ubuntu's
+    # native fsck progress/messages, with no Live-specific drawing plugin.
     # Plymouth's normal population installs one locale's default font. Include
     # fallback fonts for all Live languages before the root filesystem exists.
     for entry in /usr/share/fonts/truetype/noto/NotoSans-Regular.ttf \

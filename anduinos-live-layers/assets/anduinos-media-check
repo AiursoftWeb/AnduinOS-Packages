@@ -14,6 +14,8 @@ boot_id=$(cat /proc/sys/kernel/random/boot_id)
 child=
 watcher=
 graphical=0
+details_index=0
+details_pages=()
 percent=-1
 status=unavailable
 reason=
@@ -49,7 +51,10 @@ cleanup() {
     [[ -z $watcher ]] || kill "$watcher" 2>/dev/null || :
     if ((graphical)); then
         plymouth ignore-keystroke --keys=sSrRdDcCpP 2>/dev/null || :
-        plymouth update --status=media:done 2>/dev/null || :
+        # Ubuntu two-step ends its transient fsck UI on 100. This releases
+        # only the display; the authoritative report retains failed/skipped.
+        plymouth display-message --text='' 2>/dev/null || :
+        plymouth update --status=fsck:md5sums:100 2>/dev/null || :
     fi
     # Only the exact private mktemp directory created by this invocation.
     rm -r -- "$work"
@@ -126,8 +131,8 @@ fi
 
 if ((interactive)) && plymouth --ping 2>/dev/null; then
     graphical=1
-    # The theme exists only in the Live initrd; ordinary installed boots keep
-    # the distro theme. We also have a real text-console path below.
+    # Keep the installed two-step theme and its firmware BGRT background.
+    # Its native fsck protocol temporarily owns progress during verification.
     plymouth show-splash 2>/dev/null || graphical=0
 fi
 
@@ -142,19 +147,19 @@ use_console() {
         watcher=
     fi
 }
-plymouth_message() {
-    local text=$1 line word chunk candidate prefix
+prepare_details() {
+    local text=$1 line word chunk candidate
     local -a words parts=()
-    # Plymouth's control protocol has a small per-command payload.  Some of
-    # our UTF-8 translations exceed it in bytes, so send bounded fragments and
-    # let the dedicated Live theme assemble the visible multi-line message.
+    # Standard two-step replaces the main message; it does not assemble our
+    # old private message fragments. Page long UTF-8 advice/logs with D, below
+    # the control protocol's byte limit. Split only at spaces, never in UTF-8.
     while IFS= read -r line || [[ -n $line ]]; do
         words=()
         read -r -a words <<< "$line"
         chunk=
         for word in "${words[@]}"; do
             candidate=${chunk:+$chunk }$word
-            if ((${#candidate} > 180)) && [[ -n $chunk ]]; then
+            if ((${#candidate} > 90)) && [[ -n $chunk ]]; then
                 parts+=("$chunk")
                 chunk=$word
             else
@@ -163,14 +168,13 @@ plymouth_message() {
         done
         parts+=("$chunk")
     done <<< "$text"
-    prefix=anduinos-clear:
-    for line in "${parts[@]}"; do
-        if ! plymouth display-message --text="$prefix$line" 2>/dev/null; then
-            use_console
-            return 1
-        fi
-        prefix=anduinos-append:
-    done
+    details_pages=("${parts[@]}")
+    details_index=0
+}
+footer() {
+    if ((graphical)); then
+        plymouth display-message --text="keys:$1" 2>/dev/null || use_console
+    fi
 }
 show() {
     printf '%s\n' "$1"
@@ -179,7 +183,7 @@ show() {
         # (notably with direct-kernel VM boots).  Stop treating it as graphical
         # after the first failed request so the recovery keys remain usable on
         # /dev/console instead of being sent to a dead Plymouth client.
-        plymouth_message "$1" || :
+        plymouth display-message --text="$1" 2>/dev/null || use_console
     fi
 }
 progress() {
@@ -189,7 +193,7 @@ progress() {
     percent=$value
     printf 'ANDUINOS_MEDIA_PROGRESS=%s\n' "$value"
     if ((graphical)); then
-        if ! plymouth update --status="media:$value" 2>/dev/null; then
+        if ! plymouth update --status="fsck:md5sums:$value" 2>/dev/null; then
             use_console
         fi
     elif ((interactive)); then
@@ -311,8 +315,10 @@ check_files() {
 run_check() {
     : > "$log"
     status=unavailable; reason=; decision=none; percent=-1
-    show "${messages[checking]}"$'\n'"${messages[wait]}"$'\n'"${messages[skip]}"
+    show "${messages[checking]}"
     progress 0
+    footer "${messages[skip]}"
+    printf '%s\n%s\n' "${messages[wait]}" "${messages[skip]}"
     arm_keys
     local rc=3 message
     # Only the exact ISO device/image supplied by the Dracut wrapper. Never
@@ -353,12 +359,16 @@ run_check() {
     fi
     [[ $status != skipped ]] || { show "${messages[skipped]}"; return 2; }
     if [[ $status == failed ]]; then
-        message="${messages[failed]}"$'\n'"${messages[advice]}"
+        message="${messages[failed]}"
+        prepare_details "${messages[advice]}"$'\n'"$(tail -n 8 "$log")"
     else
-        message="${messages[unavailable]}"$'\n'"${messages[unknown]}"
+        message="${messages[unavailable]}"
+        prepare_details "${messages[unknown]}"$'\n'"$(tail -n 8 "$log")"
     fi
-    ((!interactive)) || message+=$'\n'"${messages[actions]}"
     show "$message"
+    footer "${messages[actions]}"
+    printf '%s\n' "${details_pages[@]}"
+    ((!interactive)) || printf '%s\n' "${messages[actions]}"
     return 1
 }
 
@@ -382,7 +392,8 @@ while :; do
                 exit 2 ;;
             p|P) poweroff -f; exit 1 ;;
             d|D)
-                show "$(tail -n 8 "$log")"$'\n'"${messages[actions]}" ;;
+                show "${details_pages[$details_index]}"
+                details_index=$(((details_index + 1) % ${#details_pages[@]})) ;;
         esac
     done
 done

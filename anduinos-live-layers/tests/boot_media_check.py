@@ -46,16 +46,10 @@ def prepare(iso: Path, output: Path):
     copy(ROOT / "dracut/95anduinos-live-layers/anduinos-live-root.sh", "/usr/sbin/dmsquash-live-root")
     copy(ROOT / "assets/anduinos-media-check", "/usr/libexec/anduinos-media-check")
     shutil.copytree(ROOT / "data/media-check", stage / "usr/share/anduinos-live/media-check", dirs_exist_ok=True)
-    theme = PACKAGES / "plymouth-anduinos/assets"
-    for name in ("anduinos-media.script", "anduinos-media.plymouth"):
-        copy(theme / name, "/usr/share/plymouth/themes/anduinos-media/" + name)
-    copy(theme / "logo_96.png", "/usr/share/plymouth/themes/anduinos-media/logo.png")
-    plugin_path = subprocess.check_output(["plymouth", "--get-splash-plugin-path"], text=True).strip()
     run("/usr/lib/dracut/dracut-install", "-D", stage, "-a", "-l",
         "bash", "checkisomd5", "md5sum", "realpath", "flock", "tail", "sleep",
         "sed", "readlink", "cut", "grep", "stat", "mktemp", "mv", "chmod",
-        "mkdir", "rm", "id", "findmnt", "mount", "umount", "poweroff", "awk",
-        plugin_path + "/script.so")
+        "mkdir", "rm", "id", "findmnt", "mount", "umount", "poweroff", "awk")
     for name in (
         "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
         "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
@@ -64,18 +58,11 @@ def prepare(iso: Path, output: Path):
         "/usr/share/fonts/truetype/noto/NotoSansThai-Regular.ttf",
     ):
         copy(Path(name), name)
-    # Match the production Dracut module: ordinary installed boots retain the
-    # distro configuration, while only this Live initrd replaces its default
-    # theme link.
-    shutil.copyfile("/etc/plymouth/plymouthd.conf",
-                    stage / "etc/plymouth/plymouthd.conf")
-    default_theme = stage / "usr/share/plymouth/themes/default.plymouth"
-    alternative_theme = stage / "etc/alternatives/default.plymouth"
-    default_theme.unlink(missing_ok=True)
-    alternative_theme.unlink(missing_ok=True)
-    default_theme.symlink_to(
-        "/usr/share/plymouth/themes/anduinos-media/anduinos-media.plymouth"
-    )
+    # Use the same theme/plugin/font population as Dracut's plymouth module.
+    # Clear only the old fixture's theme selection before upstream rebuilds it.
+    for name in ("usr/share/plymouth/themes/default.plymouth", "etc/alternatives/default.plymouth"):
+        (stage / name).unlink(missing_ok=True)
+    run("/usr/libexec/plymouth/plymouth-populate-initrd", "-t", stage)
     # Capture the real product report through the serial port at the pivot
     # boundary. This instrumentation neither changes nor manufactures results.
     hook = stage / "var/lib/dracut/hooks/pre-pivot/99-media-test-report.sh"

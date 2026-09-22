@@ -1,4 +1,6 @@
 import hashlib
+import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -154,6 +156,51 @@ class MediaCheckTests(unittest.TestCase):
         self.assertEqual(self.run_check("--device", image, "--force").returncode, 1)
         self.assertEqual(self.report()["status"], "failed")
 
+    def test_native_plymouth_progress_and_recovery_preserve_results(self):
+        commands = self.root / "commands"
+        commands.mkdir()
+        client = commands / "plymouth"
+        client.write_text('''#!/usr/bin/python3
+import json, os, pathlib, sys, time
+root = pathlib.Path(os.environ["PLYMOUTH_TEST"])
+args = sys.argv[1:]
+with (root / "calls").open("a") as f:
+    f.write(json.dumps(args) + "\\n")
+if args and args[0] == "display-message":
+    text = args[1].removeprefix("--text=")
+    assert len(text.encode()) < 254, text
+    assert not text.startswith(("anduinos-clear:", "anduinos-append:"))
+    if text.startswith("keys:") and "[D]" in text:
+        (root / "recovery").touch()
+if args and args[0] == "watch-keystroke":
+    while not (root / "recovery").exists():
+        time.sleep(.02)
+    counter = root / "key-count"
+    n = int(counter.read_text()) if counter.exists() else 0
+    counter.write_text(str(n + 1))
+    print("d" if n < 2 else "c")
+''')
+        client.chmod(0o755)
+        env = {**os.environ, "PATH": f"{commands}:{os.environ['PATH']}",
+               "PLYMOUTH_TEST": str(self.root)}
+        invocation = ["bash", str(CHECKER), "--media", str(self.media),
+                      "--state-dir", str(self.state), "--interactive", "--force"]
+        passed = subprocess.run(invocation, env=env, capture_output=True, text=True, timeout=20)
+        self.assertEqual(passed.returncode, 0, passed.stdout + passed.stderr)
+        self.assertEqual(self.report()["status"], "passed")
+        calls = [json.loads(line) for line in (self.root / "calls").read_text().splitlines()]
+        self.assertIn(["update", "--status=fsck:md5sums:0"], calls)
+        self.assertIn(["update", "--status=fsck:md5sums:100"], calls)
+        self.assertIn(["display-message", "--text=keys:[S] Skip check"], calls)
+
+        self.source.write_bytes(b"broken")
+        failed = subprocess.run(invocation, env=env, capture_output=True, text=True, timeout=20)
+        self.assertEqual(failed.returncode, 2, failed.stdout + failed.stderr)
+        self.assertEqual(self.report()["status"], "failed")
+        self.assertEqual(self.report()["decision"], "continue")
+        self.assertGreaterEqual(int((self.root / "key-count").read_text()), 3)
+        self.assertEqual(self.run_check().returncode, 1)
+
 
 class LocaleTests(unittest.TestCase):
     def test_all_28_live_locales_have_complete_messages(self):
@@ -168,7 +215,7 @@ class LocaleTests(unittest.TestCase):
                 self.assertTrue(all(data.values()))
                 self.assertTrue(all(f"[{key}]" in data["actions"] for key in "DRPC"))
 
-    def test_plymouth_messages_fit_the_chunked_protocol(self):
+    def test_plymouth_messages_fit_native_protocol(self):
         # The helper wraps only at spaces and keeps each wire command below
         # Plymouth's small payload limit, so no translated word may exceed a
         # complete fragment by itself.
@@ -177,11 +224,9 @@ class LocaleTests(unittest.TestCase):
                 _, value = line.split("=", 1)
                 self.assertLessEqual(max(map(len, value.encode().split())), 180,
                                      f"unbreakable Plymouth text in {path.name}")
-        checker = CHECKER.read_text()
-        theme = (ROOT.parent / "plymouth-anduinos/assets/anduinos-media.script").read_text()
-        for marker in ("anduinos-clear:", "anduinos-append:"):
-            self.assertIn(marker, checker)
-            self.assertIn(marker, theme)
+                key = line.split("=", 1)[0]
+                if key in {"checking", "passed", "failed", "unavailable", "skipped", "skip", "actions"}:
+                    self.assertLess(len(("keys:" + value).encode()), 254, path.name)
 
 
 class DracutContractTests(unittest.TestCase):
@@ -202,7 +247,9 @@ class DracutContractTests(unittest.TestCase):
         self.assertIn("checkisomd5 md5sum", module)
         self.assertNotIn("sha256sum", module)
         self.assertIn("dmsquash-live-root.upstream", module)
-        self.assertIn("anduinos-media.plymouth", module)
+        self.assertNotIn("anduinos-media.plymouth", module)
+        self.assertNotIn("script.so", module)
+        self.assertNotIn('"$initdir/usr/share/plymouth/themes/default.plymouth"', module)
 
 
 if __name__ == "__main__":
