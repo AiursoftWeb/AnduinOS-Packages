@@ -673,6 +673,7 @@ anduinos-live-layers:
     - lint-all
     - verify-ci-package-needs
     - test-all
+    - plymouth-anduinos
   variables:
     PACKAGE_DIR: anduinos-live-layers
 
@@ -701,6 +702,7 @@ anduinos-installer-beta:
     - lint-all
     - verify-ci-package-needs
     - test-all
+    - anduinos-live-layers
     - anduinos-live-settings
     - anduinos-multimedia-codecs
     - anduinos-swap-config
