@@ -167,7 +167,8 @@ class MountedFilesystemTests(unittest.TestCase):
                     "/dev/test1", "btrfs", run=run, mount_base=mount_base
                 )
         self.assertEqual(found.os_kind, "anduinos")
-        self.assertIn("ro,nologreplay,subvolid=5", calls[0])
+        self.assertIn("ro,rescue=nologreplay,subvolid=5", calls[0])
+        self.assertNotIn("ro,nologreplay,subvolid=5", calls[0])
         self.assertEqual(calls[-1][0], "umount")
 
     def test_unmount_failure_is_reported_without_recursive_cleanup(self):

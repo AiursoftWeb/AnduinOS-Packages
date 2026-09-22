@@ -170,7 +170,10 @@ def mounted_readonly(
     mount_base.mkdir(mode=0o700, parents=True, exist_ok=True)
     mountpoint = Path(tempfile.mkdtemp(prefix="probe-", dir=mount_base))
     options = {
-        "btrfs": "ro,nologreplay,subvolid=5",
+        # New kernels accept the no-log-replay safeguard through Btrfs's
+        # rescue option namespace.  The former standalone nologreplay spelling
+        # is rejected by the kernel shipped in the AnduinOS Live image.
+        "btrfs": "ro,rescue=nologreplay,subvolid=5",
         "ext2": "ro,noload",
         "ext3": "ro,noload",
         "ext4": "ro,noload",
