@@ -8,6 +8,7 @@ from installer_core.live_cleanup import (
     ADVANCED_FILESYSTEM_TOOL_PACKAGES,
     LIVE_ONLY_PACKAGES,
     PERSISTENT_TARGET_PACKAGES,
+    REQUIRED_BOOT_CAPABILITIES,
     REQUIRED_BOOT_PACKAGES,
     RemoveLivePackagesStep,
     VMWARE_GUEST_PACKAGES,
@@ -36,6 +37,16 @@ def _query(target: Path, package: str) -> tuple[str, ...]:
         "--show",
         "--showformat=${db:Status-Abbrev}",
         package,
+    )
+
+
+def _providers_query(target: Path) -> tuple[str, ...]:
+    return (
+        "chroot",
+        str(target),
+        "dpkg-query",
+        "--show",
+        "--showformat=${db:Status-Abbrev}\\t${Provides}\\n",
     )
 
 
@@ -85,7 +96,6 @@ class RemoveLivePackagesTests(unittest.TestCase):
                 "dracut",
                 "dracut-core",
                 "dracut-install",
-                "grub-common",
                 "grub2-common",
                 "grub-pc-bin",
                 "grub-efi-amd64-bin",
@@ -100,7 +110,6 @@ class RemoveLivePackagesTests(unittest.TestCase):
                 "dracut",
                 "dracut-core",
                 "dracut-install",
-                "grub-common",
                 "grub2-common",
                 "grub-efi-arm64-bin",
                 "grub-efi-arm64-signed",
@@ -115,6 +124,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
                 "xserver-xorg-video-vmware",
             ),
         )
+        self.assertEqual(REQUIRED_BOOT_CAPABILITIES, ("grub-common",))
 
     def test_btrfs_purges_installed_live_packages_and_retains_snapshots_manager(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -418,10 +428,44 @@ class RemoveLivePackagesTests(unittest.TestCase):
                         "",
                         0,
                     )
+            runner.outputs[_query(target, "grub-common")] = ("ii \n", "", 0)
 
             with self.assertRaisesRegex(
                 RuntimeError,
                 "boot packages are missing after cleanup: grub-pc-bin",
+            ):
+                RemoveLivePackagesStep(runner).verify(context)
+
+    def test_verify_accepts_installed_provider_for_boot_capability(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            runner = FakeRunner()
+            context = _context(target)
+            context.values["live_package_candidates"] = ()
+            context.values["persistent_target_packages"] = ()
+            for package in REQUIRED_BOOT_PACKAGES[Architecture.AMD64]:
+                runner.outputs[_query(target, package)] = ("ii \n", "", 0)
+            runner.outputs[_providers_query(target)] = (
+                "ii \tgrub-common (= 2.14-2ubuntu2.1)\n",
+                "",
+                0,
+            )
+
+            RemoveLivePackagesStep(runner).verify(context)
+
+    def test_verify_rejects_missing_boot_capability(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            runner = FakeRunner()
+            context = _context(target)
+            context.values["live_package_candidates"] = ()
+            context.values["persistent_target_packages"] = ()
+            for package in REQUIRED_BOOT_PACKAGES[Architecture.AMD64]:
+                runner.outputs[_query(target, package)] = ("ii \n", "", 0)
+
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "boot capabilities are missing after cleanup: grub-common",
             ):
                 RemoveLivePackagesStep(runner).verify(context)
 

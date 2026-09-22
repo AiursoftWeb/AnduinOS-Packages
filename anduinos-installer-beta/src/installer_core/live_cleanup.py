@@ -51,7 +51,6 @@ REQUIRED_BOOT_PACKAGES = {
         "dracut",
         "dracut-core",
         "dracut-install",
-        "grub-common",
         "grub2-common",
         "grub-pc-bin",
         "grub-efi-amd64-bin",
@@ -63,13 +62,17 @@ REQUIRED_BOOT_PACKAGES = {
         "dracut",
         "dracut-core",
         "dracut-install",
-        "grub-common",
         "grub2-common",
         "grub-efi-arm64-bin",
         "grub-efi-arm64-signed",
         "shim-signed",
     ),
 }
+
+# Debian dependencies may be satisfied by a real package or by an installed
+# package's Provides field. Ubuntu 26.04 folds grub-common into grub2-common,
+# while older suites still install grub-common as a concrete package.
+REQUIRED_BOOT_CAPABILITIES = ("grub-common",)
 
 
 @dataclass
@@ -232,6 +235,16 @@ class RemoveLivePackagesStep:
                 "Installed-system boot packages are missing after cleanup: "
                 + ", ".join(missing_boot_packages)
             )
+        missing_boot_capabilities = tuple(
+            capability
+            for capability in REQUIRED_BOOT_CAPABILITIES
+            if not _is_installed_or_provided(self.runner, target, capability)
+        )
+        if missing_boot_capabilities:
+            raise RuntimeError(
+                "Installed-system boot capabilities are missing after cleanup: "
+                + ", ".join(missing_boot_capabilities)
+            )
         self.runner.run(
             ("chroot", str(target), "dpkg", "--audit"), timeout=60
         )
@@ -258,6 +271,40 @@ def _is_installed(
         timeout=10,
     )
     return result.returncode == 0 and result.stdout.startswith("ii ")
+
+
+def _is_installed_or_provided(
+    runner: CommandRunner,
+    target: Path,
+    capability: str,
+) -> bool:
+    if _is_installed(runner, target, capability):
+        return True
+    result = runner.run(
+        (
+            "chroot",
+            str(target),
+            "dpkg-query",
+            "--show",
+            "--showformat=${db:Status-Abbrev}\\t${Provides}\\n",
+        ),
+        check=False,
+        timeout=30,
+    )
+    if result.returncode != 0:
+        return False
+    for line in result.stdout.splitlines():
+        try:
+            status, provided = line.split("\t", maxsplit=1)
+        except ValueError:
+            continue
+        if not status.startswith("ii "):
+            continue
+        for item in provided.split(","):
+            name = item.strip().split(maxsplit=1)[0].split(":", maxsplit=1)[0]
+            if name == capability:
+                return True
+    return False
 
 
 def _detect_virtualization(runner: CommandRunner) -> str | None:
