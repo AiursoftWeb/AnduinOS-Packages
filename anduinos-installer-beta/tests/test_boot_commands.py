@@ -40,6 +40,33 @@ class BootCommandPlanTests(unittest.TestCase):
         self.assertIn("2", commands.nvram_create)
         self.assertTrue(commands.bios_required)
 
+    def test_external_uefi_keeps_nvram_and_adds_direct_portable_fallback(self):
+        commands = build_boot_commands(
+            valid_plan(external_target=True), "/target"
+        )
+        efi = commands.installs[1]
+        self.assertIn("--no-extra-removable", efi)
+        self.assertIn("--uefi-secure-boot", efi)
+        self.assertEqual(commands.efi_fallback, "EFI/BOOT/BOOTX64.EFI")
+        self.assertEqual(
+            commands.loader_path, r"\EFI\AnduinOS\shimx64.efi"
+        )
+        self.assertEqual(commands.nvram_create[:2], ("efibootmgr", "--create"))
+
+    def test_external_arm64_uses_the_standard_portable_loader_name(self):
+        commands = build_boot_commands(
+            valid_plan(
+                architecture=Architecture.ARM64,
+                external_target=True,
+            ),
+            "/target",
+        )
+        self.assertEqual(commands.efi_fallback, "EFI/BOOT/BOOTAA64.EFI")
+        self.assertIn("--no-extra-removable", commands.installs[0])
+        self.assertEqual(
+            commands.loader_path, r"\EFI\AnduinOS\shimaa64.efi"
+        )
+
     def test_arm64_installs_only_arm64_uefi(self):
         commands = build_boot_commands(
             valid_plan(architecture=Architecture.ARM64), "/target"

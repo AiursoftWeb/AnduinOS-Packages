@@ -75,9 +75,24 @@ class ValidationTests(unittest.TestCase):
             ),
         )
         with self.assertRaisesRegex(
-            PlanValidationError, "must create a vendor NVRAM entry"
+            PlanValidationError, "fallback policy must match external-drive status"
         ):
             validate_plan(plan)
+
+    def test_external_uefi_erase_requires_portable_fallback(self):
+        plan = valid_plan(external_target=True)
+        validate_plan(plan)
+        missing = dataclasses.replace(
+            plan,
+            boot=dataclasses.replace(
+                plan.boot,
+                install_fallback_path=False,
+            ),
+        )
+        with self.assertRaisesRegex(
+            PlanValidationError, "fallback policy must match external-drive status"
+        ):
+            validate_plan(missing)
 
     def test_bios_erase_install_requires_portable_uefi_fallback(self):
         plan = valid_plan(

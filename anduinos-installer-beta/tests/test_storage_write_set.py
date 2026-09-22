@@ -15,6 +15,56 @@ from installer_core.storage_write_set import (
 
 
 class StorageWriteSetTests(unittest.TestCase):
+    def test_external_uefi_portable_chain_uses_new_exclusive_esp(self):
+        for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):
+            with self.subTest(filesystem=filesystem.value):
+                write_set = build_erase_disk_write_set(
+                    valid_plan(
+                        filesystem=filesystem,
+                        external_target=True,
+                    )
+                )
+                fallback = next(
+                    item
+                    for item in write_set.operations
+                    if item.action is StorageAction.WRITE_FALLBACK_BOOT_FILES
+                )
+                esp_create = next(
+                    item
+                    for item in write_set.operations
+                    if item.action is StorageAction.CREATE_PARTITION
+                    and item.target_kind
+                    is StorageObjectKind.EFI_SYSTEM_PARTITION
+                )
+                esp_format = next(
+                    item
+                    for item in write_set.operations
+                    if item.action is StorageAction.FORMAT
+                    and item.target_kind
+                    is StorageObjectKind.EFI_SYSTEM_PARTITION
+                )
+                actions = {item.action for item in write_set.operations}
+                self.assertIn(StorageAction.REPLACE_PARTITION_TABLE, actions)
+                self.assertIn(StorageAction.WRITE_BOOT_FILES, actions)
+                self.assertIn(StorageAction.UPDATE_NVRAM, actions)
+                self.assertEqual(fallback.target_id, esp_create.target_id)
+                self.assertEqual(fallback.target_id, esp_format.target_id)
+                self.assertEqual(esp_format.detail("filesystem"), "vfat")
+
+    def test_internal_uefi_never_declares_fallback_write(self):
+        for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):
+            with self.subTest(filesystem=filesystem.value):
+                write_set = build_erase_disk_write_set(
+                    valid_plan(filesystem=filesystem)
+                )
+                self.assertFalse(
+                    any(
+                        item.action
+                        is StorageAction.WRITE_FALLBACK_BOOT_FILES
+                        for item in write_set.operations
+                    )
+                )
+
     def test_btrfs_write_set_covers_current_amd64_layout(self):
         plan = valid_plan()
         layout = build_erase_disk_layout(plan)

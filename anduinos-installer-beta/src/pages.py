@@ -2938,6 +2938,14 @@ def build_disk_page(shared, nav_view):
 
 # ── automatic disk layout helpers ───────────────────────────────────────
 
+def _uses_external_drive_mode(shared):
+    return (
+        shared.get("storage_mode", InstallMode.ERASE_DISK.value)
+        == InstallMode.ERASE_DISK.value
+        and bool(shared.get("disk_external"))
+    )
+
+
 def _validated_swap_size(shared, swap_sizing):
     if swap_sizing is None:
         return None
@@ -6663,6 +6671,32 @@ def build_summary_page(shared, nav_view):
     )
     summary_scroll.set_child(clamp_content(summary_card, 860))
     content.append(summary_scroll)
+
+    if _uses_external_drive_mode(shared):
+        portable_boot = Gtk.Box(
+            orientation=Gtk.Orientation.HORIZONTAL,
+            spacing=14,
+            margin_start=48,
+            margin_end=48,
+            margin_top=12,
+        )
+        portable_boot.add_css_class("installer-success-card")
+        portable_boot.append(icon_picture("flashing-disk", 42))
+        portable_boot.append(
+            Gtk.Label(
+                label=_(
+                    "External drive mode — AnduinOS will add a portable "
+                    "UEFI boot path so this drive can boot on another UEFI "
+                    "computer without an existing AnduinOS firmware boot "
+                    "entry.",
+                    lang,
+                ),
+                wrap=True,
+                xalign=0,
+                hexpand=True,
+            )
+        )
+        content.append(portable_boot)
 
     # Warning
     warning_text = (

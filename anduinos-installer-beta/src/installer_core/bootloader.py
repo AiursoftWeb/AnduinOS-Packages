@@ -3,7 +3,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
 from pathlib import Path
+import re
+import shutil
+import tempfile
 
 from .boot_commands import build_boot_commands
 from .command import CommandRunner
@@ -14,7 +18,7 @@ from .esp import (
     verify_preserved_esp_tree,
 )
 from .execution_boundaries import emit_boundary
-from .model import Architecture, Filesystem, InstallMode
+from .model import Architecture, Filesystem, Firmware, InstallMode, InstallPlan
 from .steps import FailurePolicy, InstallContext
 from .storage_planning import (
     GuidedCoexistenceExecutionPlan,
@@ -52,6 +56,12 @@ class InstallBootloaderStep:
         # Target files do not exist yet: all preflight checks intentionally run
         # before partitioning. Validate only inputs available at that boundary.
         context.validate_plan()
+        if (
+            context.plan.platform.firmware is Firmware.UEFI
+            and context.plan.boot.external_target
+            and context.plan.boot.install_fallback_path
+        ):
+            self.runner.require_commands(("openssl", "sbattach", "sbverify"))
 
     def execute(self, context: InstallContext) -> None:
         target = _target(context)
@@ -138,6 +148,12 @@ class InstallBootloaderStep:
             if vendor_only:
                 emit_boundary(context, f"{prefix}-boot-files", "after")
         self.runner.run(commands.configure, timeout=300)
+        if explicit_nvram and getattr(commands, "efi_fallback", ""):
+            _deploy_portable_fallback(
+                self.runner,
+                target,
+                context.plan,
+            )
         if explicit_nvram:
             if vendor_only:
                 emit_boundary(context, f"{prefix}-nvram", "before")
@@ -245,6 +261,12 @@ class InstallBootloaderStep:
                 commands,
                 require_first=True,
             )
+            if getattr(commands, "efi_fallback", ""):
+                _verify_portable_fallback(
+                    self.runner,
+                    target,
+                    context.plan,
+                )
         else:
             fallback = target / "boot/efi" / commands.efi_fallback
             if not fallback.is_file():
@@ -350,6 +372,161 @@ def _target(context: InstallContext) -> Path:
     if not isinstance(target, Path):
         raise RuntimeError("Target filesystem is not mounted")
     return target
+
+
+def _portable_fallback_paths(
+    target: Path,
+    plan: InstallPlan,
+) -> tuple[tuple[Path, Path], ...]:
+    suffix = (
+        "x64" if plan.platform.architecture is Architecture.AMD64 else "aa64"
+    )
+    boot_name = "BOOTX64.EFI" if suffix == "x64" else "BOOTAA64.EFI"
+    vendor = target / "boot/efi/EFI/AnduinOS"
+    fallback = target / "boot/efi/EFI/BOOT"
+    return (
+        (vendor / f"grub{suffix}.efi", fallback / f"grub{suffix}.efi"),
+        (vendor / f"mm{suffix}.efi", fallback / f"mm{suffix}.efi"),
+        (vendor / "grub.cfg", fallback / "grub.cfg"),
+        (vendor / f"shim{suffix}.efi", fallback / boot_name),
+    )
+
+
+def _verify_signed_image(
+    runner: CommandRunner,
+    path: Path,
+    expected_machine: int,
+) -> None:
+    if read_pe_machine(path) != expected_machine:
+        raise RuntimeError(
+            f"Portable EFI loader has the wrong architecture: {path}"
+        )
+    # Listing an Authenticode record is not signature verification. Extract
+    # the embedded PKCS#7 certificates and require one of them to validate the
+    # PE digest, while firmware testing separately proves db/dbx acceptance.
+    with tempfile.TemporaryDirectory(
+        prefix="anduinos-portable-efi-"
+    ) as directory:
+        signature = Path(directory) / "signature.der"
+        runner.run(
+            ("sbattach", "--detach", str(signature), str(path)),
+            timeout=30,
+        )
+        certificates = runner.run(
+            (
+                "openssl", "pkcs7", "-inform", "DER", "-in",
+                str(signature), "-print_certs",
+            ),
+            timeout=30,
+        ).stdout
+        for index, pem in enumerate(re.findall(
+            r"-----BEGIN CERTIFICATE-----.*?-----END CERTIFICATE-----",
+            certificates,
+            re.DOTALL,
+        )):
+            certificate = Path(directory) / f"certificate-{index}.pem"
+            certificate.write_text(pem + "\n", encoding="ascii")
+            result = runner.run(
+                ("sbverify", "--cert", str(certificate), str(path)),
+                check=False,
+                timeout=30,
+            )
+            if result.returncode == 0:
+                return
+    raise RuntimeError(f"Portable EFI loader signature is invalid: {path}")
+
+
+def _deploy_portable_fallback(
+    runner: CommandRunner,
+    target: Path,
+    plan: InstallPlan,
+) -> None:
+    """Deploy the installer-owned portable chain, never GRUB's fallback set.
+
+    All UEFI ``grub-install`` calls intentionally use
+    ``--no-extra-removable``, even for an external erase-disk plan.  Allowing
+    grub-install to manage EFI/BOOT can install shim's ``fb*.efi`` NVRAM
+    registrar and reproduce the ResetSystem loop tracked by issue #422.
+    Portable mode is instead expressed by ``install_fallback_path`` and lands
+    here after the vendor chain exists.  The copied chain boots shim directly,
+    retains MokManager, excludes the registrar, and is verified below.
+
+    Keep this separation explicit: changing the grub-install flag is not an
+    equivalent implementation of portable mode.
+    """
+
+    if (
+        plan.storage.mode is not InstallMode.ERASE_DISK
+        or not plan.boot.external_target
+        or not plan.boot.install_fallback_path
+    ):
+        raise RuntimeError("Portable fallback is not authorized for this plan")
+    fallback = target / "boot/efi/EFI/BOOT"
+    if fallback.is_symlink():
+        raise RuntimeError("Portable EFI fallback directory is redirected")
+    fallback.mkdir(parents=True, exist_ok=True)
+    if fallback.resolve() != fallback:
+        raise RuntimeError("Portable EFI fallback directory is redirected")
+    expected_machine = (
+        0x8664
+        if plan.platform.architecture is Architecture.AMD64
+        else 0xAA64
+    )
+    pairs = _portable_fallback_paths(target, plan)
+    for source, destination in pairs:
+        if source.is_symlink() or not source.is_file():
+            raise RuntimeError(
+                f"Portable EFI source is missing or redirected: {source}"
+            )
+        temporary = destination.with_name(f".{destination.name}.anduinos-new")
+        if temporary.exists() or temporary.is_symlink():
+            raise RuntimeError(
+                f"Portable EFI staging path already exists: {temporary}"
+            )
+        try:
+            shutil.copyfile(source, temporary)
+            with temporary.open("rb") as stream:
+                os.fsync(stream.fileno())
+            if destination.suffix.lower() == ".efi":
+                _verify_signed_image(runner, temporary, expected_machine)
+            os.replace(temporary, destination)
+        finally:
+            temporary.unlink(missing_ok=True)
+    directory = os.open(fallback, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(directory)
+    finally:
+        os.close(directory)
+    _verify_portable_fallback(runner, target, plan)
+
+
+def _verify_portable_fallback(
+    runner: CommandRunner,
+    target: Path,
+    plan: InstallPlan,
+) -> None:
+    expected_machine = (
+        0x8664
+        if plan.platform.architecture is Architecture.AMD64
+        else 0xAA64
+    )
+    for source, destination in _portable_fallback_paths(target, plan):
+        if destination.is_symlink() or not destination.is_file():
+            raise RuntimeError(
+                f"Portable EFI fallback is missing or redirected: {destination}"
+            )
+        if source.read_bytes() != destination.read_bytes():
+            raise RuntimeError(
+                f"Portable EFI fallback does not match vendor payload: {destination}"
+            )
+        if destination.suffix.lower() == ".efi":
+            _verify_signed_image(runner, destination, expected_machine)
+    suffix = "x64" if plan.platform.architecture is Architecture.AMD64 else "aa64"
+    registrar = target / "boot/efi/EFI/BOOT" / f"fb{suffix}.efi"
+    if registrar.exists() or registrar.is_symlink():
+        raise RuntimeError(
+            "Portable EFI fallback must not contain the NVRAM registration loader"
+        )
 
 
 def _verify_grub_install_options(

@@ -656,11 +656,16 @@ def resolve_storage_graph(
                 stable_id=reference.stable_id,
                 expected_size_bytes=reference.expected_size_bytes,
                 topology_digest=reference.topology_digest,
+                external=plan.boot.external_target,
             ),
             inventory,
         )
     except StaleStorageInventoryError as error:
         raise StorageGraphValidationError(str(error)) from error
+    if current.external != plan.boot.external_target:
+        raise StorageGraphValidationError(
+            "Selected disk external-drive status changed"
+        )
     resolved = DiskIdentity(
         path=current.identity.path,
         stable_id=current.identity.stable_id,

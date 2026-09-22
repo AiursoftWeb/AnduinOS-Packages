@@ -96,6 +96,25 @@ class EnvironmentReportingTests(unittest.TestCase):
         self.assertIn("Firmware mode: UEFI", output)
         self.assertIn("Secure Boot: enabled", output)
 
+    def test_external_uefi_fallback_is_reported_explicitly(self):
+        plan = valid_plan(external_target=True)
+        logs = []
+        step = DetectBootEnvironmentStep(
+            FakeRunner(),
+            platform_probe=lambda: PlatformProbe(
+                plan.platform.architecture,
+                plan.platform.firmware,
+                plan.platform.secure_boot,
+            ),
+        )
+        context = InstallContext(plan, logs.append)
+        step.preflight(context)
+        step.execute(context)
+        self.assertIn(
+            "UEFI fallback bootloader: enabled on the selected external disk",
+            "\n".join(logs),
+        )
+
     def test_uefi_without_secure_boot_support_is_explicit(self):
         plan = valid_plan(secure_boot=SecureBoot.UNSUPPORTED)
         logs = []

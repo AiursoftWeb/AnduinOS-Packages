@@ -125,7 +125,19 @@ def build_plan(
             ),
         ),
         boot=BootSpec(
-            install_fallback_path=platform.firmware is Firmware.BIOS,
+            # This flag authorizes our verified, direct shim -> GRUB portable
+            # chain.  It never authorizes grub-install's removable-media
+            # deployment: every UEFI grub-install still receives
+            # --no-extra-removable to exclude fb*.efi (issue #422).
+            install_fallback_path=(
+                platform.firmware is Firmware.BIOS
+                or (
+                    platform.firmware is Firmware.UEFI
+                    and storage.mode is InstallMode.ERASE_DISK
+                    and disk_binding.external
+                )
+            ),
+            external_target=disk_binding.external,
             mok_password_policy=(
                 MokPasswordPolicy.ANDUINOS_DEFAULT
                 if platform.secure_boot is SecureBoot.ENABLED

@@ -44,7 +44,9 @@ installs the signed chain with `--uefi-secure-boot` and points the AnduinOS
 NVRAM entry at shim, regardless of the current enforcement state. The MOK
 state machine below is separate: when installed with enforcement off, users
 can later prepare/enroll MOK in Driver Center before enabling Secure Boot.
-OOBE no longer manages Secure Boot. Shared/removable fallback policy is unchanged.
+OOBE no longer manages Secure Boot. A whole-disk erase of an externally
+connected target additionally receives the direct portable fallback described
+below; shared ESPs never do.
 
 ```text
 Secure Boot disabled, unsupported by UEFI firmware, or Legacy BIOS
@@ -140,10 +142,30 @@ arm64 requires signed:
 Each file is checked with `sbverify`. The PE machine field is also checked by
 the bootloader verifier to prevent an amd64/arm64 mismatch.
 
-UEFI installations do not require or validate `EFI/BOOT/BOOTX64.EFI` or
-`EFI/BOOT/BOOTAA64.EFI`. They use the vendor path and an explicitly verified
-AnduinOS NVRAM entry, so requiring the shared removable-media path would
-reintroduce the shim fallback registration dependency avoided by #422.
+Ordinary UEFI installations do not require or validate
+`EFI/BOOT/BOOTX64.EFI` or `EFI/BOOT/BOOTAA64.EFI`. They use the vendor path and
+an explicitly verified AnduinOS NVRAM entry. The immutable plan records whether
+the selected disk was external, and privileged preflight rejects any change in
+that property before storage writes.
+
+For an external target in erase-disk mode, the newly formatted, installer-owned
+ESP also receives a direct portable chain:
+
+- `EFI/BOOT/BOOTX64.EFI` or `BOOTAA64.EFI`: the signed shim payload;
+- `EFI/BOOT/grubx64.efi` or `grubaa64.efi`: signed GRUB;
+- `EFI/BOOT/mmx64.efi` or `mmaa64.efi`: signed MokManager;
+- `EFI/BOOT/grub.cfg`: an exact copy of the verified vendor configuration.
+
+GRUB installation still uses `--no-extra-removable`. The installer stages each
+file, checks PE architecture, cryptographically verifies each EFI signature,
+and publishes the shim entry last. It rejects symlinks and confirms every
+portable file is byte-for-byte identical to the corresponding vendor payload.
+It never installs `fbx64.efi` or `fbaa64.efi`, so portable boot does not enter
+shim's NVRAM-registration-and-ResetSystem path that caused #422. The normal
+AnduinOS NVRAM entry is still created and points to the vendor shim.
+
+This portable policy is forbidden for coexistence and manual layouts because
+their ESP may be shared with Windows or another operating system.
 
 When an amd64 erase-disk installation is launched through Legacy BIOS, the
 installer still writes a removable-media EFI path so the resulting disk can
@@ -224,4 +246,15 @@ selection. Release still requires real UEFI tests for:
 - firmware that rejects EFI-variable writes;
 - interrupted installation before and after enrollment scheduling.
 - coexistence without changing pre-existing ESP files or fallback loaders;
+- external erase-disk boot with empty firmware variables, with Secure Boot
+  both disabled and enabled, without a ResetSystem loop;
 - multi-ESP synchronization and member-loss boot after RAID support exists.
+
+On 2026-09-22 the amd64 portable layout was exercised with QEMU q35/KVM,
+OVMF Secure Boot firmware and a fresh OVMF variable store containing no
+AnduinOS entry. The same disk reached the signed kernel and guest userspace
+once with Secure Boot disabled and once with Microsoft UEFI certificates and
+Secure Boot enabled. In both cases `BootCurrent` was OVMF's auto-created
+`UEFI Misc Device`, not an AnduinOS NVRAM entry, and only one kernel boot was
+observed. The ESP contained shim, signed GRUB, MokManager and `grub.cfg` under
+`EFI/BOOT`, with no `fbx64.efi`.

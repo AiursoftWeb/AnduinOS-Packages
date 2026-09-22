@@ -111,6 +111,19 @@ class LocalizationTests(unittest.TestCase):
         self.assertNotEqual(_("Next", "zh_CN"), "Next")
         self.assertNotEqual(_("Next", "de"), "Next")
 
+    def test_external_drive_mode_explanation_is_localized(self):
+        source = (
+            "External drive mode — AnduinOS will add a portable UEFI boot "
+            "path so this drive can boot on another UEFI computer without "
+            "an existing AnduinOS firmware boot entry."
+        )
+        for language in LANGUAGES:
+            with self.subTest(language=language.code):
+                translated = _(source, language.code)
+                self.assertTrue(translated)
+                if language.code not in {DEFAULT_LANGUAGE, "en_GB"}:
+                    self.assertNotEqual(translated, source)
+
     def test_catalog_message_set_matches_source_and_policy(self):
         source_messages = set(KEYBOARD_LAYOUTS.values())
         for desktop in sorted((PACKAGE / "assets").glob("*.desktop")):

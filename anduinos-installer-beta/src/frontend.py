@@ -175,6 +175,7 @@ def clear_storage_target(state: dict[str, object]) -> None:
     ):
         state[key] = ""
     state["disk_size_bytes"] = 0
+    state["disk_external"] = False
     state["disk_windows_detected"] = False
     state["disk_bitlocker_detected"] = False
     state["disk_has_existing_partitions"] = False
@@ -207,6 +208,7 @@ def bind_storage_target(
     state["disk_model"] = disk.model
     state["disk_stable_id"] = disk.stable_id
     state["disk_topology_digest"] = choice.disk.topology_digest
+    state["disk_external"] = choice.disk.external
     state["disk_windows_detected"] = choice.coexistence.windows_detected
     state["disk_bitlocker_detected"] = choice.coexistence.bitlocker_detected
     state["disk_has_existing_partitions"] = bool(choice.disk.partitions)

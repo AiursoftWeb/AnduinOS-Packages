@@ -95,8 +95,8 @@ class ExecutionPreflightTests(unittest.TestCase):
                     verify_target_disk_environment(plan, runner, inventory_probe=lambda: snapshot)
                 self.assertEqual(runner.commands, [])
 
-    def test_external_target_uses_the_unchanged_install_plan(self):
-        plan = valid_plan()
+    def test_external_target_uses_the_immutable_external_install_plan(self):
+        plan = valid_plan(external_target=True)
         inventory = valid_inventory(plan)
         inventory = replace(inventory, disks=(replace(
             inventory.disks[0], removable=True, transport="usb"),))
@@ -104,6 +104,18 @@ class ExecutionPreflightTests(unittest.TestCase):
             plan, self.idle_target_runner(), inventory_probe=lambda: inventory,
         )
         self.assertEqual(resolved, plan)
+
+    def test_external_status_change_is_rejected_before_writes(self):
+        plan = valid_plan(external_target=True)
+        inventory = valid_inventory(plan, external=False)
+        runner = self.idle_target_runner()
+        with self.assertRaisesRegex(
+            PreflightError, "external-drive status changed"
+        ):
+            verify_target_disk_environment(
+                plan, runner, inventory_probe=lambda: inventory,
+            )
+        self.assertEqual(runner.commands, [])
 
     def test_rejects_disk_substitution_at_same_path(self):
         plan = valid_plan()

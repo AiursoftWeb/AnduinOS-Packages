@@ -66,6 +66,48 @@ def manual_plan(
 
 
 class ManualStorageGraphTests(unittest.TestCase):
+    def test_external_manual_plan_with_new_esp_never_authorizes_fallback(self):
+        chosen = selection(
+            reinitialize=True,
+            reused_esp="",
+            new_partitions=(
+                ManualPartitionRequest(
+                    ManualPartitionRole.EFI_SYSTEM, 1, 1025
+                ),
+                ManualPartitionRequest(
+                    ManualPartitionRole.ROOT, 1025, 40 * 1024
+                ),
+            ),
+        )
+        plan, inventory = manual_plan(chosen=chosen)
+        plan = replace(
+            plan,
+            boot=replace(
+                plan.boot,
+                external_target=True,
+                install_fallback_path=False,
+            ),
+        )
+        validate_plan(plan)
+        validate_manual_storage_graph(plan, inventory)
+        self.assertEqual(plan.storage.graph.boot_targets[0].fallback_path, "")
+        self.assertFalse(
+            any(
+                item.action is StorageGraphAction.WRITE_FALLBACK_BOOT_FILES
+                for item in plan.storage.graph.operations
+            )
+        )
+
+        unsafe = replace(
+            plan,
+            boot=replace(plan.boot, install_fallback_path=True),
+        )
+        with self.assertRaisesRegex(
+            ValueError,
+            "Manual mode must not write the EFI fallback path",
+        ):
+            validate_plan(unsafe)
+
     def test_manual_graph_allows_subminimum_disk_and_positive_root(self):
         original = manual_disk()
         disk = replace(original, identity=replace(

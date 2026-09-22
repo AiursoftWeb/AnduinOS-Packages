@@ -8,6 +8,7 @@ from helpers import (
 from installer_core.model import (
     Architecture,
     DiskIdentity,
+    Filesystem,
     Firmware,
     SecureBoot,
 )
@@ -18,6 +19,45 @@ from installer_core.swap_policy import GIB
 
 
 class PlanningTests(unittest.TestCase):
+    def test_only_supported_external_uefi_erase_filesystems_get_portable_policy(self):
+        original = valid_plan()
+        for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):
+            for external, expected_fallback in ((False, False), (True, True)):
+                with self.subTest(
+                    filesystem=filesystem.value,
+                    external=external,
+                ):
+                    plan = build_plan(
+                        {
+                            "locale": "en_US.UTF-8",
+                            "keyboard": "us",
+                            "hostname": original.identity.hostname,
+                            "username": original.identity.username,
+                            "full_name": original.identity.full_name,
+                            "timezone": "UTC",
+                            "filesystem": filesystem.value,
+                        },
+                        original.storage.disk,
+                        PlatformProbe(
+                            Architecture.AMD64,
+                            Firmware.UEFI,
+                            SecureBoot.DISABLED,
+                        ),
+                        original.identity.password_hash,
+                        disk_binding=DiskTopologyBinding(
+                            original.storage.disk.stable_id,
+                            original.storage.disk.expected_size_bytes,
+                            TEST_TOPOLOGY_DIGEST,
+                            external=external,
+                        ),
+                        inventory_digest=TEST_INVENTORY_DIGEST,
+                    )
+                    self.assertEqual(plan.boot.external_target, external)
+                    self.assertEqual(
+                        plan.boot.install_fallback_path,
+                        expected_fallback,
+                    )
+
     def test_chinese_plan_selects_rime_and_mok_policy(self):
         original = valid_plan()
         choices = {

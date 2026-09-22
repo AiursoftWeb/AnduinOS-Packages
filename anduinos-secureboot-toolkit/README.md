@@ -150,10 +150,12 @@ disk, path, package, or command arguments. The sequence is:
    Center offer rebooting to firmware to enable Secure Boot. Setup Mode gets an
    explicit factory-key warning. Firmware keys are never changed by the helper.
 
-`EFI/Microsoft` and `EFI/BOOT` are outside the write boundary. No automatic
-external-drive fallback repair is included. Future portable-media support must
-be a separate installer policy for an owned ESP, with tests on a second machine
-and regression coverage for the historical shim fallback Reset System loop.
+`EFI/Microsoft` and `EFI/BOOT` are outside this repair helper's write boundary.
+Driver Center never adds or repairs an external-drive fallback. The installer
+owns that separate policy only for a newly formatted ESP on an external
+erase-disk target; shared ESPs remain excluded. Its direct shim/GRUB layout is
+tested with empty firmware variables and does not deploy the historical shim
+fallback registrar that caused the Reset System loop.
 
 Unit tests cover target ambiguity, symlinks, signature/architecture rejection,
 NVRAM failure rollback, foreign-file preservation and enrollment ordering. Before
