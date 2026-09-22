@@ -128,8 +128,8 @@
     <message xml:lang="uk_UA">AnduinOS Live запитує доступ до автономної операційної системи</message>
     <message xml:lang="vi_VN">AnduinOS Live đang yêu cầu quyền truy cập vào hệ điều hành ngoại tuyến</message>
     <defaults>
-      <allow_any>no</allow_any>
-      <allow_inactive>no</allow_inactive>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
       <allow_active>yes</allow_active>
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/anduinos-rescue-center-live-helper</annotate>

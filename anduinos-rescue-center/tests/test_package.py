@@ -35,18 +35,22 @@ class PackageContractTests(unittest.TestCase):
                 "/usr/libexec/anduinos-rescue-center-live-helper",
             },
         )
-        active_defaults = {
-            annotations[index]["org.freedesktop.policykit.exec.path"]:
-                (actions[index].findtext("./defaults/allow_active") or "").strip()
+        authorization_defaults = {
+            annotations[index]["org.freedesktop.policykit.exec.path"]: tuple(
+                (actions[index].findtext(f"./defaults/{state}") or "").strip()
+                for state in ("allow_any", "allow_inactive", "allow_active")
+            )
             for index in range(len(actions))
         }
         self.assertEqual(
-            active_defaults["/usr/libexec/anduinos-rescue-center-helper"],
-            "auth_admin_keep",
+            authorization_defaults["/usr/libexec/anduinos-rescue-center-helper"],
+            ("no", "no", "auth_admin_keep"),
         )
         self.assertEqual(
-            active_defaults["/usr/libexec/anduinos-rescue-center-live-helper"],
-            "yes",
+            authorization_defaults[
+                "/usr/libexec/anduinos-rescue-center-live-helper"
+            ],
+            ("yes", "yes", "yes"),
         )
         live_helper = (ROOT / "scripts/anduinos-rescue-center-live-helper").read_text(
             encoding="utf-8"
