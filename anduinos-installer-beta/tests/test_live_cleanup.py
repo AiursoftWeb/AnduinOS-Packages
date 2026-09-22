@@ -19,6 +19,7 @@ from installer_core.snapshots_manager import SNAPSHOTS_MANAGER_PACKAGE
 
 EXPECTED_LIVE_ONLY_PACKAGES = (
     "anduinos-live-layers",
+    "anduinos-rescue-center",
     "discover",
     "laptop-detect",
     "gparted",

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC
+  "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+  "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>AnduinOS</vendor>
+  <vendor_url>https://www.anduinos.com</vendor_url>
+  <action id="com.anduinos.RescueCenter.helper">
+    <description>Inspect and repair offline systems with AnduinOS Rescue Center</description>
+    <message>Authentication is required to inspect or repair an offline operating system</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/anduinos-rescue-center-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
+  </action>
+  <action id="com.anduinos.RescueCenter.live-helper">
+    <description>Inspect and repair offline systems from AnduinOS Live</description>
+    <message>AnduinOS Live is requesting access to an offline operating system</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/anduinos-rescue-center-live-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
+  </action>
+</policyconfig>

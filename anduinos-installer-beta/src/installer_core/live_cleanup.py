@@ -15,6 +15,7 @@ from .snapshots_manager import SNAPSHOTS_MANAGER_PACKAGE
 # a historical Live-boot filesystem.manifest-desktop convention.
 LIVE_ONLY_PACKAGES = (
     "anduinos-live-layers",
+    "anduinos-rescue-center",
     "discover",
     "laptop-detect",
     "gparted",

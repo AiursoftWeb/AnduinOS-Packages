@@ -1,0 +1,63 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-rescue-center</PackageName>
+    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Live-session rescue center for discovering and repairing AnduinOS installations</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu"
+                           SuiteMap="resolute-addon=resolute" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Dependency Include="python3" />
+    <Dependency Include="python3-gi" />
+    <Dependency Include="gir1.2-gtk-4.0" />
+    <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="pkexec" />
+    <Dependency Include="util-linux" />
+    <Dependency Include="btrfs-progs" />
+    <Dependency Include="e2fsprogs" />
+    <Dependency Include="xfsprogs" />
+    <Dependency Include="ntfs-3g" />
+    <Dependency Include="mokutil" />
+    <Dependency Include="passwd" />
+    <Dependency Include="anduinos-btrfs-snapshots-manager (&gt;= 2.0.3-3)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AppStreamApplication Include="data/com.anduinos.RescueCenter.desktop"
+                          Icon="data/com.anduinos.RescueCenter.svg" />
+    <IncludeScript Include="src/anduinos-rescue-center"
+                   Target="/usr/bin/anduinos-rescue-center" />
+    <IncludeScript Include="scripts/anduinos-rescue-center-helper"
+                   Target="/usr/libexec/anduinos-rescue-center-helper" />
+    <IncludeScript Include="scripts/anduinos-rescue-center-live-helper"
+                   Target="/usr/libexec/anduinos-rescue-center-live-helper" />
+    <IncludeFolder Include="src/anduinos_rescue_center/"
+                   Target="/usr/lib/python3/dist-packages/anduinos_rescue_center/" />
+    <IncludeFile Include="data/com.anduinos.RescueCenter.svg"
+                 Target="/usr/share/icons/hicolor/scalable/apps/com.anduinos.RescueCenter.svg" Mode="644" />
+    <IncludeFile Include="data/com.anduinos.RescueCenter.policy"
+                 Target="/usr/share/polkit-1/actions/com.anduinos.RescueCenter.policy" Mode="644" />
+    <IncludeFile Include="README.md"
+                 Target="/usr/share/doc/anduinos-rescue-center/README.md" Mode="644" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test"
+                 Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C python3 -m unittest discover -s tests -v"
+                 TimeoutSeconds="300" />
+  </ItemGroup>
+</Project>

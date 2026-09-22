@@ -162,6 +162,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-whisper-gtk` | Optional app | Voice Typing settings, microphone training, global shortcut, and non-focusing GNOME overlay |
 | `anduinos-driver-center` | App | Focused GTK4 driver manager for graphics, Xbox controllers, and Secure Boot trust |
 | `anduinos-btrfs-snapshots-manager` | App | GTK4/libadwaita manager for symmetric System and Personal Files Btrfs snapshots, automatic retention, file recovery, and guarded system rollback |
+| `anduinos-rescue-center` | Live app | GTK4/libadwaita rescue environment for discovering offline AnduinOS installations and recovering systems, accounts, files, and Btrfs snapshots |
 | `anduinos-dracut-migration` | Migration | Retry-safe bootstrap that moves existing installations from initramfs-tools to the published pure-Dracut package set |
 | `anduinos-live-layers` | Core | Dracut Live root integration, temporary/persistent overlay composition, expanded-USB GPT repair, `/cdrom`, and installer source contracts |
 | `anduinos-secureboot-toolkit` | Library | Shared Secure Boot, MOK enrollment, and DKMS signing health/repair backend and UI |

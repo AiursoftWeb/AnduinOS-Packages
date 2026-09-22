@@ -107,6 +107,66 @@ fn old_root_name() -> String {
 
 #[test]
 #[ignore = "requires root and a disposable Btrfs loopback image"]
+fn real_btrfs_aaa_offline_restore_replaces_root_and_preserves_home() {
+    use anduinos_recovery_engine::offline::{OfflinePhase, OfflineRecoveryEngine};
+    use std::os::unix::fs::symlink;
+
+    assert_eq!(unsafe { libc::geteuid() }, 0);
+    let root = fixture_root();
+    let system_root = root.join("@root");
+    let store = root.join("@snapshots/anduinos-btrfs-snapshots-manager");
+    let kernel = fs::read_to_string(system_root.join("proc/sys/kernel/osrelease"))
+        .unwrap()
+        .trim()
+        .to_string();
+    let default_kernel = system_root.join("boot/vmlinuz");
+    match fs::remove_file(&default_kernel) {
+        Ok(()) => {}
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+        Err(error) => panic!("could not reset kernel link: {error}"),
+    }
+    symlink(format!("vmlinuz-{kernel}"), &default_kernel).unwrap();
+    fs::write(system_root.join("offline-marker"), "before").unwrap();
+    fs::write(root.join("@home/offline-home-marker"), "must survive").unwrap();
+
+    let operations = OperationEngine::new(&system_root, &store, SystemCommandRunner);
+    let target = operations
+        .create_offline_manual(
+            &supported_layout(),
+            "Offline loopback target",
+            "Exercise Live recovery root replacement",
+            false,
+            |_, _, _| {},
+        )
+        .unwrap();
+    fs::write(system_root.join("offline-marker"), "after").unwrap();
+
+    let transaction = OfflineRecoveryEngine::system(&root)
+        .restore(target.id)
+        .unwrap();
+    assert_eq!(transaction.phase, OfflinePhase::Completed);
+    assert_eq!(
+        fs::read_to_string(root.join("@root/offline-marker")).unwrap(),
+        "before"
+    );
+    assert_eq!(
+        fs::read_to_string(root.join("@home/offline-home-marker")).unwrap(),
+        "must survive"
+    );
+    assert!(
+        !fs::read_dir(&root)
+            .unwrap()
+            .filter_map(Result::ok)
+            .any(|entry| entry
+                .file_name()
+                .to_string_lossy()
+                .starts_with("@root.rescue-center-"))
+    );
+    operations.delete(&supported_layout(), target.id).unwrap();
+}
+
+#[test]
+#[ignore = "requires root and a disposable Btrfs loopback image"]
 fn real_btrfs_home_rollback_preserves_root_and_history_and_can_revert() {
     use anduinos_recovery_engine::personal::{FactoryHomeSnapshotOutcome, PersonalSnapshotEngine};
     use anduinos_recovery_engine::recovery::{

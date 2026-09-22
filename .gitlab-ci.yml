@@ -537,6 +537,16 @@ anduinos-btrfs-snapshots-manager:
   variables:
     PACKAGE_DIR: anduinos-btrfs-snapshots-manager
 
+anduinos-rescue-center:
+  extends: .publish
+  needs:
+    - lint-all
+    - verify-ci-package-needs
+    - test-all
+    - anduinos-btrfs-snapshots-manager
+  variables:
+    PACKAGE_DIR: anduinos-rescue-center
+
 anduinos-why-ai:
   extends: .publish
   needs:
@@ -846,7 +856,6 @@ anduinos-oobe:
     - verify-ci-package-needs
     - test-all
     - anduinos-appearance
-    - anduinos-secureboot-toolkit
     - anduinos-driver-center
   variables:
     PACKAGE_DIR: anduinos-oobe

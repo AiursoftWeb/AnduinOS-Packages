@@ -1,0 +1,13 @@
+#!/usr/bin/python3
+
+import sys
+
+from anduinos_rescue_center.live import is_live_environment
+from anduinos_rescue_center.privileged import main
+
+
+if __name__ == "__main__":
+    if not is_live_environment():
+        print("The passwordless rescue helper is restricted to AnduinOS Live", file=sys.stderr)
+        raise SystemExit(77)
+    raise SystemExit(main())
