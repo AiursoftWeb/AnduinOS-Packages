@@ -21,6 +21,42 @@ from installer_core.steps import InstallContext
 
 
 class CopySystemTests(unittest.TestCase):
+    def test_bad_installation_media_stops_before_destructive_steps(self):
+        from installer_core.steps import StepRunner
+
+        class BadMediaRunner(FakeRunner):
+            def run(self, command, **kwargs):
+                result = super().run(command, **kwargs)
+                if command[0] == "/usr/libexec/anduinos-media-check":
+                    result.returncode = 1
+                    result.stderr = "Installation media appears to be corrupted."
+                return result
+
+        class DestructiveSentinel:
+            id = "format"
+            title = "Format"
+            progress_weight = 1
+            destructive = True
+            executed = False
+
+            def preflight(self, context):
+                pass
+
+            def execute(self, context):
+                self.executed = True
+
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "rootfs.squashfs"
+            source.write_bytes(b"broken")
+            context = InstallContext(replace(valid_plan(), source=SourceSpec(str(source))),
+                                     lambda _: None)
+            sentinel = DestructiveSentinel()
+            result = StepRunner([sentinel, CopySystemStep(BadMediaRunner())]).run(context)
+            self.assertFalse(result.succeeded)
+            self.assertFalse(result.destructive_started)
+            self.assertFalse(sentinel.executed)
+            self.assertIn("corrupted", result.results[-1].message)
+
     def test_preflight_requires_existing_source(self):
         plan = replace(
             valid_plan(),

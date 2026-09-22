@@ -176,6 +176,20 @@ class CopySystemStep:
         source = Path(context.plan.source.image_path)
         if not source.is_file():
             raise RuntimeError(f"System image not found: {source}")
+        # StepRunner performs every preflight before partitioning. This must be
+        # enforced by the privileged executor, not just by a dismissible UI.
+        checker = "/usr/libexec/anduinos-media-check"
+        self.runner.require_commands((checker,))
+        checked = self.runner.run(
+            (checker, "--source", str(source), "--locale", context.plan.regional.locale),
+            check=False,
+            # A slow but healthy USB drive must not fail an arbitrary deadline.
+            timeout=None,
+        )
+        if checked.returncode != 0:
+            raise RuntimeError(
+                checked.stdout.strip() + "\n" + checked.stderr.strip()
+            )
 
     def execute(self, context: InstallContext) -> None:
         target = _target(context)

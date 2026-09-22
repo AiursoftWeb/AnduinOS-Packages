@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-live-layers</PackageName>
-    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Dracut-native AnduinOS Live root and layer integration</PackageDescription>
     <Section>admin</Section>
@@ -29,14 +29,26 @@
     <Dependency Include="e2fsprogs" />
     <Dependency Include="util-linux" />
     <Dependency Include="isomd5sum" />
+    <Dependency Include="plymouth-anduinos" />
+    <Dependency Include="fonts-noto-core" />
+    <Dependency Include="fonts-noto-cjk" />
   </ItemGroup>
 
   <ItemGroup>
+    <IncludeScript Include="assets/anduinos-media-check"
+                   Target="/usr/libexec/anduinos-media-check" />
+    <IncludeFolder Include="data/media-check/"
+                   Target="/usr/share/anduinos-live/media-check/" />
+    <IncludeScript Include="dracut/95anduinos-live-layers/anduinos-live-root.sh"
+                   Target="/usr/lib/dracut/modules.d/95anduinos-live-layers/anduinos-live-root.sh" />
     <IncludeScript Include="dracut/95anduinos-live-layers/module-setup.sh"
                    Target="/usr/lib/dracut/modules.d/95anduinos-live-layers/module-setup.sh" />
     <IncludeScript Include="dracut/95anduinos-live-layers/anduinos-live-prepare.sh"
                    Target="/usr/lib/dracut/modules.d/95anduinos-live-layers/anduinos-live-prepare.sh" />
     <IncludeScript Include="dracut/95anduinos-live-layers/anduinos-create-overlay.sh"
                    Target="/usr/lib/dracut/modules.d/95anduinos-live-layers/anduinos-create-overlay.sh" />
+    <TestCommand Name="source" Profile="anduinos-package-release-test"
+                 Run="PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v"
+                 TimeoutSeconds="300" />
   </ItemGroup>
 </Project>
