@@ -8,9 +8,7 @@ media=/cdrom
 source_image=
 device=
 interactive=0
-force=0
 locale=en_US
-boot_id=$(cat /proc/sys/kernel/random/boot_id)
 child=
 watcher=
 graphical=0
@@ -32,7 +30,6 @@ while (($#)); do
         --state-dir) state=$2; shift 2 ;;
         --locale) locale=$2; shift 2 ;;
         --interactive) interactive=1; shift ;;
-        --force) force=1; shift ;;
         *) printf 'Unknown media-check argument: %s\n' "$1" >&2; exit 3 ;;
     esac
 done
@@ -85,14 +82,10 @@ if [[ $locale =~ ^[a-zA-Z_]+$ && -f $catalog/$locale.txt ]]; then
 fi
 
 fingerprint() {
-    # Bind mounts retain the inode/device identity across switch_root.
+    # Detect replacement of the source during this check.
     stat -Lc '%d:%i:%s:%y:%z' -- "$source_image" 2>/dev/null || return 1
 }
 identity=$(fingerprint) || identity=missing
-manifest_id=$(md5sum -- "$manifest" 2>/dev/null | cut -d' ' -f1)
-[[ -n $manifest_id ]] || manifest_id=missing
-
-field() { sed -n "s/^$1=//p" "$report" 2>/dev/null; }
 write_result() {
     local current
     current=$(fingerprint) || current=missing
@@ -101,7 +94,7 @@ write_result() {
         reason=source-changed
     fi
     {
-        printf 'version=1\nboot_id=%s\nsource_id=%s\nmanifest_id=%s\n' "$boot_id" "$identity" "$manifest_id"
+        printf 'version=1\nsource_id=%s\n' "$identity"
         printf 'status=%s\nreason=%s\ndecision=%s\nbackend=%s\n' \
             "$status" "$reason" "$decision" "$backend"
     } > "$work/result"
@@ -109,26 +102,6 @@ write_result() {
     mv -f -- "$work/result" "$report"
     printf 'ANDUINOS_MEDIA_RESULT=%s reason=%s backend=%s\n' "$status" "$reason" "$backend"
 }
-if ((!force)) && [[ -f $report && ! -L $report && $identity != missing ]] \
-    && [[ $(stat -c '%u' "$report") == "$(id -u)" ]] \
-    && [[ $(field version) == 1 && $(field boot_id) == "$boot_id" \
-        && $(field source_id) == "$identity" && $(field manifest_id) == "$manifest_id" ]]; then
-    cached_status=$(field status)
-    if ((interactive)) && [[ $(field decision) == continue ]]; then
-        case $cached_status in
-            failed) printf '%s\n' "${messages[failed]}" ;;
-            skipped) printf '%s\n' "${messages[skipped]}" ;;
-            unavailable) printf '%s\n' "${messages[unavailable]}" ;;
-            *) cached_status= ;;
-        esac
-        [[ -z $cached_status ]] || exit 2
-    fi
-    case $cached_status in
-        passed) printf '%s\n' "${messages[passed]}"; exit 0 ;;
-        failed) printf '%s\n%s\n' "${messages[failed]}" "${messages[blocked]}" >&2; exit 1 ;;
-    esac
-fi
-
 if ((interactive)) && plymouth --ping 2>/dev/null; then
     graphical=1
     # Keep the installed two-step theme and its firmware BGRT background.
@@ -385,8 +358,7 @@ while :; do
         case "$key" in
             r|R) break ;;
             c|C)
-                # Preserve the failure for installer preflight while allowing
-                # this boot (and duplicate Dracut discovery jobs) to continue.
+                # Record the failure even when the user continues to Live.
                 decision=continue
                 write_result
                 exit 2 ;;

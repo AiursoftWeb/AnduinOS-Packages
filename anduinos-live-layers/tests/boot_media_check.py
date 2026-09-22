@@ -104,7 +104,7 @@ def command(output: Path, execute: str, arguments=None):
     return response
 
 
-def start(iso: Path, output: Path, locale: str, mode: str, rate: int, from_iso: bool):
+def start(iso: Path, output: Path, locale: str, rate: int, from_iso: bool):
     pid_file = output / "pid"
     if pid_file.exists():
         try:
@@ -141,7 +141,7 @@ def start(iso: Path, output: Path, locale: str, mode: str, rate: int, from_iso: 
             "-kernel", str(output / "vmlinuz"), "-initrd", str(output / "initrd"),
             "-append", "root=live:CDLABEL=anduinos rd.live.dir=LiveOS "
             "rd.live.squashimg=rootfs.squashfs rd.overlay rd.anduinos.live=1 "
-            f"rd.anduinos.media-check={mode} locale={locale}.UTF-8 "
+            f"locale={locale}.UTF-8 "
             "console=ttyS0 console=tty0 quiet splash plymouth.ignore-serial-consoles",
             "-drive", f"file={iso},media=cdrom,readonly=on,if=ide,throttling.bps-read={rate}",
         ]
@@ -157,7 +157,6 @@ if __name__ == "__main__":
     parser.add_argument("--iso", type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--locale", default="en_US")
-    parser.add_argument("--mode", default="auto")
     parser.add_argument("--rate", type=int, default=40 * 1024 * 1024)
     parser.add_argument("--key", default="s")
     parser.add_argument("--name", default="screen.png")
@@ -166,7 +165,7 @@ if __name__ == "__main__":
     if args.action == "prepare":
         prepare(args.iso.resolve(), args.output.resolve())
     elif args.action == "start":
-        start(args.iso.resolve(), args.output.resolve(), args.locale, args.mode,
+        start(args.iso.resolve(), args.output.resolve(), args.locale,
               args.rate, args.from_iso)
     elif args.action == "shot":
         command(args.output, "screendump", {"filename": str(args.output / args.name), "format": "png"})

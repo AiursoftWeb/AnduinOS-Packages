@@ -41,7 +41,7 @@ class MediaCheckTests(unittest.TestCase):
         return dict(line.split("=", 1) for line in
                     (self.state / "media-check.result").read_text().splitlines())
 
-    def test_good_files_have_real_completed_result_and_are_reused(self):
+    def test_good_files_are_checked_on_every_invocation(self):
         first = self.run_check()
         self.assertEqual(first.returncode, 0, first.stdout + first.stderr)
         self.assertEqual(self.report()["status"], "passed")
@@ -49,9 +49,9 @@ class MediaCheckTests(unittest.TestCase):
         self.assertIn("ANDUINOS_MEDIA_PROGRESS=100", first.stdout)
         second = self.run_check()
         self.assertEqual(second.returncode, 0)
-        self.assertNotIn("ANDUINOS_MEDIA_PROGRESS", second.stdout)
+        self.assertIn("ANDUINOS_MEDIA_PROGRESS=100", second.stdout)
 
-    def test_corrupt_source_invalidates_cached_pass(self):
+    def test_corrupt_source_is_detected_after_previous_pass(self):
         self.assertEqual(self.run_check().returncode, 0)
         data = self.source.read_bytes()
         self.source.write_bytes(b"!" + data[1:])
@@ -86,22 +86,18 @@ class MediaCheckTests(unittest.TestCase):
         self.assertEqual(self.run_check().returncode, 1)
         self.assertEqual(self.report()["status"], "failed")
 
-    def test_explicit_live_continuation_is_reused_only_by_interactive_boot(self):
+    def test_old_failure_and_continuation_do_not_replace_a_fresh_check(self):
         self.assertEqual(self.run_check().returncode, 0)
         report = self.state / "media-check.result"
         data = report.read_text().replace("status=passed", "status=failed")
         data = data.replace("decision=none", "decision=continue")
         report.write_text(data)
         boot = self.run_check("--interactive")
-        self.assertEqual(boot.returncode, 2, boot.stdout + boot.stderr)
+        self.assertEqual(boot.returncode, 0, boot.stdout + boot.stderr)
+        self.assertIn("ANDUINOS_MEDIA_PROGRESS=100", boot.stdout)
         installer = self.run_check()
-        self.assertEqual(installer.returncode, 1)
-
-    def test_different_boot_cannot_reuse_previous_pass(self):
-        self.assertEqual(self.run_check().returncode, 0)
-        report = self.state / "media-check.result"
-        report.write_text(report.read_text().replace("boot_id=", "old_boot_id="))
-        self.assertIn("ANDUINOS_MEDIA_PROGRESS", self.run_check().stdout)
+        self.assertEqual(installer.returncode, 0)
+        self.assertIn("ANDUINOS_MEDIA_PROGRESS=100", installer.stdout)
 
     def test_cancelled_report_is_checked_again_before_install(self):
         self.assertEqual(self.run_check().returncode, 0)
@@ -145,7 +141,7 @@ class MediaCheckTests(unittest.TestCase):
         subprocess.run(["xorriso", "-as", "mkisofs", "-o", str(image), str(self.media)],
                        check=True, capture_output=True)
         subprocess.run(["implantisomd5", "--force", str(image)], check=True, capture_output=True)
-        result = self.run_check("--device", image, "--force")
+        result = self.run_check("--device", image)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr +
                          (self.state / "media-check.log").read_text())
         with image.open("r+b") as stream:
@@ -153,7 +149,7 @@ class MediaCheckTests(unittest.TestCase):
             # does not prevent the primary ISO descriptor from being parsed.
             stream.seek(10000)
             stream.write(b"damage")
-        self.assertEqual(self.run_check("--device", image, "--force").returncode, 1)
+        self.assertEqual(self.run_check("--device", image).returncode, 1)
         self.assertEqual(self.report()["status"], "failed")
 
     def test_native_plymouth_progress_and_recovery_preserve_results(self):
@@ -184,7 +180,7 @@ if args and args[0] == "watch-keystroke":
         env = {**os.environ, "PATH": f"{commands}:{os.environ['PATH']}",
                "PLYMOUTH_TEST": str(self.root)}
         invocation = ["bash", str(CHECKER), "--media", str(self.media),
-                      "--state-dir", str(self.state), "--interactive", "--force"]
+                      "--state-dir", str(self.state), "--interactive"]
         passed = subprocess.run(invocation, env=env, capture_output=True, text=True, timeout=20)
         self.assertEqual(passed.returncode, 0, passed.stdout + passed.stderr)
         self.assertEqual(self.report()["status"], "passed")
@@ -234,10 +230,9 @@ class DracutContractTests(unittest.TestCase):
         wrapper = (ROOT / "dracut/95anduinos-live-layers/anduinos-live-root.sh").read_text()
         self.assertLess(wrapper.index("/usr/libexec/anduinos-media-check"),
                         wrapper.index(". /sbin/dmsquash-live-root.upstream"))
-        self.assertIn("rd.anduinos.media-check", wrapper)
+        self.assertNotIn("rd.anduinos.media-check", wrapper)
         self.assertIn("rd.overlay", wrapper)
         self.assertIn("LABEL=ANDUINOS-PERSIST", wrapper)
-        self.assertIn("[[ $mode != force ]] || args+=(--force)", wrapper)
         self.assertIn("check_rc != 0 && check_rc != 2", wrapper)
         self.assertIn("rd\\.live\\.check", wrapper)
         self.assertIn("getcmdline()", wrapper)
