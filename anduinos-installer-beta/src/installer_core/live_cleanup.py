@@ -301,7 +301,10 @@ def _is_installed_or_provided(
         if not status.startswith("ii "):
             continue
         for item in provided.split(","):
-            name = item.strip().split(maxsplit=1)[0].split(":", maxsplit=1)[0]
+            item = item.strip()
+            if not item:
+                continue
+            name = item.split(maxsplit=1)[0].split(":", maxsplit=1)[0]
             if name == capability:
                 return True
     return False

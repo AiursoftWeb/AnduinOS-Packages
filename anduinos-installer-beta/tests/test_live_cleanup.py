@@ -446,6 +446,8 @@ class RemoveLivePackagesTests(unittest.TestCase):
             for package in REQUIRED_BOOT_PACKAGES[Architecture.AMD64]:
                 runner.outputs[_query(target, package)] = ("ii \n", "", 0)
             runner.outputs[_providers_query(target)] = (
+                "ii \t\n"
+                "ii \txdg-desktop-portal-backend (= 1.7.1)\n"
                 "ii \tgrub-common (= 2.14-2ubuntu2.1)\n",
                 "",
                 0,
@@ -462,6 +464,30 @@ class RemoveLivePackagesTests(unittest.TestCase):
             context.values["persistent_target_packages"] = ()
             for package in REQUIRED_BOOT_PACKAGES[Architecture.AMD64]:
                 runner.outputs[_query(target, package)] = ("ii \n", "", 0)
+
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "boot capabilities are missing after cleanup: grub-common",
+            ):
+                RemoveLivePackagesStep(runner).verify(context)
+
+    def test_verify_ignores_empty_and_noninstalled_provides(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            runner = FakeRunner()
+            context = _context(target)
+            context.values["live_package_candidates"] = ()
+            context.values["persistent_target_packages"] = ()
+            for package in REQUIRED_BOOT_PACKAGES[Architecture.AMD64]:
+                runner.outputs[_query(target, package)] = ("ii \n", "", 0)
+            runner.outputs[_providers_query(target)] = (
+                "ii \t\n"
+                "ii \txdg-desktop-portal-backend (= 1.7.1)\n"
+                "un \tgrub-common (= 2.14-2ubuntu2.1)\n"
+                "rc \tgrub-common (= 2.14-2ubuntu2.1)\n",
+                "",
+                0,
+            )
 
             with self.assertRaisesRegex(
                 RuntimeError,
