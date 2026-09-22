@@ -10,6 +10,7 @@ from helpers import (
     valid_plan,
 )
 from installer_core.execution_steps import (
+    CheckInstallationMediaStep,
     CopySystemStep,
     DetectBootEnvironmentStep,
     UnmountTargetStep,
@@ -17,19 +18,19 @@ from installer_core.execution_steps import (
 )
 from installer_core.model import Firmware, SecureBoot, SourceSpec
 from installer_core.probe import PlatformProbe
-from installer_core.steps import InstallContext
+from installer_core.steps import FailurePolicy, InstallContext, StepRunner, StepStatus
 
 
-class CopySystemTests(unittest.TestCase):
-    def test_bad_installation_media_stops_before_destructive_steps(self):
-        from installer_core.steps import StepRunner
-
-        class BadMediaRunner(FakeRunner):
+class MediaCheckTests(unittest.TestCase):
+    def test_media_status_matches_scan_and_only_success_allows_disk_writes(self):
+        class MediaRunner(FakeRunner):
             def run(self, command, **kwargs):
+                self_test.assertEqual(statuses[-1],
+                                      ("check-installation-media", StepStatus.RUNNING))
+                self_test.assertFalse(sentinel.executed)
                 result = super().run(command, **kwargs)
-                if command[0] == "/usr/libexec/anduinos-media-check":
-                    result.returncode = 1
-                    result.stderr = "Installation media appears to be corrupted."
+                result.returncode = returncode
+                result.stderr = "Media check did not pass." if returncode else ""
                 return result
 
         class DestructiveSentinel:
@@ -38,24 +39,51 @@ class CopySystemTests(unittest.TestCase):
             progress_weight = 1
             destructive = True
             executed = False
+            failure_policy = FailurePolicy.FATAL
 
             def preflight(self, context):
                 pass
 
             def execute(self, context):
+                self_test.assertIn(("check-installation-media", StepStatus.SUCCEEDED), statuses)
                 self.executed = True
 
+            def verify(self, context):
+                pass
+
+            def cleanup(self, context):
+                pass
+
+        self_test = self
         with tempfile.TemporaryDirectory() as directory:
             source = Path(directory) / "rootfs.squashfs"
-            source.write_bytes(b"broken")
-            context = InstallContext(replace(valid_plan(), source=SourceSpec(str(source))),
-                                     lambda _: None)
-            sentinel = DestructiveSentinel()
-            result = StepRunner([sentinel, CopySystemStep(BadMediaRunner())]).run(context)
-            self.assertFalse(result.succeeded)
-            self.assertFalse(result.destructive_started)
-            self.assertFalse(sentinel.executed)
-            self.assertIn("corrupted", result.results[-1].message)
+            source.write_bytes(b"fixture")
+            for returncode in (0, 1, 2, 3):
+                with self.subTest(returncode=returncode):
+                    context = InstallContext(replace(valid_plan(), source=SourceSpec(str(source))),
+                                             lambda _: None)
+                    statuses = []
+                    sentinel = DestructiveSentinel()
+                    runner = MediaRunner()
+                    result = StepRunner(
+                        [CheckInstallationMediaStep(runner), sentinel],
+                        status=lambda step, status, message: statuses.append((step, status)),
+                    ).run(context)
+                    self.assertEqual(result.succeeded, returncode == 0)
+                    self.assertEqual(result.destructive_started, returncode == 0)
+                    self.assertEqual(sentinel.executed, returncode == 0)
+                    self.assertEqual(result.results[0].step_id, "check-installation-media")
+                    self.assertEqual(result.results[0].status,
+                                     StepStatus.FAILED if returncode else StepStatus.SUCCEEDED)
+                    self.assertEqual(len(runner.commands), 1)
+                    self.assertEqual(runner.commands[0][0], (
+                        "/usr/libexec/anduinos-media-check", "--source", str(source),
+                        "--locale", context.plan.regional.locale,
+                    ))
+                    self.assertIsNone(runner.commands[0][1]["timeout"])
+
+
+class CopySystemTests(unittest.TestCase):
 
     def test_preflight_requires_existing_source(self):
         plan = replace(

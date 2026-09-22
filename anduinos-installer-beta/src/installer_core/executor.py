@@ -20,6 +20,7 @@ from .software import (
     UpgradeSystemStep,
 )
 from .execution_steps import (
+    CheckInstallationMediaStep,
     CopySystemStep,
     DetectBootEnvironmentStep,
     UnmountTargetStep,
@@ -88,6 +89,7 @@ class InstallerExecutor:
             DetectBootEnvironmentStep(self.runner),
             DetectNetworkConnectivityStep(),
             VerifyTargetDiskStep(self.runner),
+            CheckInstallationMediaStep(self.runner),
             PrepareStorageStep(self.runner, target=self.target),
             MountTargetStep(self.runner, target=self.target),
             CopySystemStep(self.runner),

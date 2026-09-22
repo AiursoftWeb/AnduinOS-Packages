@@ -7042,6 +7042,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             "Detect Internet connectivity", lang
         ),
         "verify-target-disk": _("Verify target disk isolation", lang),
+        "check-installation-media": _("Check installation media", lang),
         "prepare-storage": _("Prepare installation disk", lang),
         "mount-target": _("Mount target filesystems", lang),
         "copy-system": _("Copy AnduinOS system", lang),

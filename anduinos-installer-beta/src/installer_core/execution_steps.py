@@ -163,6 +163,44 @@ class VerifyTargetDiskStep:
 
 
 @dataclass
+class CheckInstallationMediaStep:
+    runner: CommandRunner
+    id: str = "check-installation-media"
+    title: str = "Check installation media"
+    failure_policy: FailurePolicy = FailurePolicy.FATAL
+    progress_weight: int = 5
+    destructive: bool = False
+
+    def preflight(self, context: InstallContext) -> None:
+        self.runner.require_commands(("/usr/libexec/anduinos-media-check",))
+        source = Path(context.plan.source.image_path)
+        if not source.is_file():
+            raise RuntimeError(f"System image not found: {source}")
+
+    def execute(self, context: InstallContext) -> None:
+        # A real step before storage preparation: StepRunner reports RUNNING
+        # during the scan, and a failure prevents any partition changes.
+        checker = "/usr/libexec/anduinos-media-check"
+        checked = self.runner.run(
+            (checker, "--source", context.plan.source.image_path,
+             "--locale", context.plan.regional.locale),
+            check=False,
+            # A slow but healthy USB drive must not fail an arbitrary deadline.
+            timeout=None,
+        )
+        if checked.returncode != 0:
+            raise RuntimeError(
+                checked.stdout.strip() + "\n" + checked.stderr.strip()
+            )
+
+    def verify(self, context: InstallContext) -> None:
+        return None
+
+    def cleanup(self, context: InstallContext) -> None:
+        return None
+
+
+@dataclass
 class CopySystemStep:
     runner: CommandRunner
     id: str = "copy-system"
@@ -176,20 +214,6 @@ class CopySystemStep:
         source = Path(context.plan.source.image_path)
         if not source.is_file():
             raise RuntimeError(f"System image not found: {source}")
-        # StepRunner performs every preflight before partitioning. This must be
-        # enforced by the privileged executor, not just by a dismissible UI.
-        checker = "/usr/libexec/anduinos-media-check"
-        self.runner.require_commands((checker,))
-        checked = self.runner.run(
-            (checker, "--source", str(source), "--locale", context.plan.regional.locale),
-            check=False,
-            # A slow but healthy USB drive must not fail an arbitrary deadline.
-            timeout=None,
-        )
-        if checked.returncode != 0:
-            raise RuntimeError(
-                checked.stdout.strip() + "\n" + checked.stderr.strip()
-            )
 
     def execute(self, context: InstallContext) -> None:
         target = _target(context)
