@@ -5,8 +5,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 voice_root="$PWD"
 export PYTHONDONTWRITEBYTECODE=1
-export PYTHONPATH="$voice_root/tests/reference:$voice_root/src"
-for tool in cargo python3; do
+for tool in cargo python3 timeout; do
     command -v "$tool" >/dev/null || { echo "Missing test dependency: $tool" >&2; exit 1; }
 done
 export ANDUINOS_WHISPER_CLI="${ANDUINOS_WHISPER_CLI:-/usr/bin/whisper-cli}"
@@ -18,11 +17,7 @@ done
 test -x "$ANDUINOS_VOICE_WORKER"
 voice_results="$voice_root/obj/voice-test-results"
 mkdir -p "$voice_results"
-python3 "$voice_root/tests/benchmarks/benchmark-corpus.py" \
-    --worker "$ANDUINOS_VOICE_WORKER" --model "$ANDUINOS_VOICE_MODEL" > "$voice_results"/cpu-corpus.json
-# The CLI comparison above establishes the historical accuracy baseline. Rust
-# must match that backend's actual outputs and independently pass lifecycle,
-# capture and resource checks. Never count Python-only tests as Rust coverage.
+# Rust compares directly with whisper-cli and checks lifecycle, capture and resources.
 export ANDUINOS_VOICE_STRESS_REQUESTS=100
 export ANDUINOS_VAD_STRESS_FRAMES=30000
 cargo test --locked --test native_runtime -- --ignored --nocapture \

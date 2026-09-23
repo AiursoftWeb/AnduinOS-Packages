@@ -1,0 +1,28 @@
+<node>
+  <interface name="com.anduinos.VoiceTyping">
+    <method name="Start"/>
+    <method name="Stop"/>
+    <method name="Finish"/>
+    <method name="Quit"/>
+    <method name="StartTest"/>
+    <method name="StopTest"/>
+    <method name="ReportDelivery"><arg name="ticket" type="u" direction="in"/></method>
+    <signal name="DeliveryTicket"><arg name="ticket" type="u"/></signal>
+    <method name="GetDiagnostics">
+      <arg name="report" type="s" direction="out"/>
+    </method>
+    <method name="GetState">
+      <arg name="state" type="s" direction="out"/>
+      <arg name="detail" type="s" direction="out"/>
+    </method>
+    <signal name="StateChanged">
+      <arg name="state" type="s"/>
+      <arg name="detail" type="s"/>
+    </signal>
+    <signal name="LevelChanged"><arg name="level" type="d"/></signal>
+    <signal name="Transcript">
+      <arg name="text" type="s"/>
+      <arg name="final" type="b"/>
+    </signal>
+  </interface>
+</node>

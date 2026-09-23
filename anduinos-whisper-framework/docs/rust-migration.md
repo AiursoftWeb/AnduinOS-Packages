@@ -7,7 +7,9 @@ checks below are complete. The amd64 package has also been explicitly installed
 on the development workstation and verified against the installed GTK helpers.
 
 Production Python code consists of six GTK compatibility modules. The old
-backend lives under `tests/reference` solely for comparisons and is not packaged.
+Python backend and migration-only comparison tools have since been removed.
+The results below record the migration-time checks, not the current test count.
+Current commands and gates are maintained in `testing.md`.
 Normal builds do not enable the `test-support` feature or install its fixture
 service. Production process launches are the native worker and optional audio
 cue player, never a Python backend or per-phrase CLI fallback.
@@ -16,7 +18,7 @@ cue player, never a Python backend or per-phrase CLI fallback.
 
 | Requirement | Implementation and verification |
 | --- | --- |
-| Same D-Bus name, object, methods, signals and parameter signatures | `service.rs`; isolated-bus test compares live introspection with the frozen reference definition, including argument directions/types. |
+| Same D-Bus name, object, methods, signals and parameter signatures | `service.rs`; isolated-bus test compares live introspection with the frozen reference definition, including argument directions/types. The contract is now retained as standalone XML. |
 | Only current Shell owner controls dictation; clean ownership lifecycle | Private-bus tests reject all five protected methods from another connection and verify duplicate instance, Quit, Shell loss and absent Shell. Service timer preserves the 300-second idle condition. |
 | Stop cancels; Finish drains accepted finals; stale output cannot cross sessions | Runtime queue tests cover eight retained finals under overload, preview replacement/invalidation and cancellation. Service-state test covers preparation cancellation, countdown expiry, no-speech restoration, test capture, missing model and stale events. Headless desktop test verifies Finish insertion and Dismiss suppression. |
 | Native audio capture, metering, VAD, DSP and watchdog | `audio.rs` retains PipeWire/GStreamer S16LE mono 16 kHz capture. Synthetic tests cover pipeline/meter/stop/watchdog; public English/Chinese replay traverses actual DSP, VAD and segmenter into ASR. Eighteen noise-shape/level/DSP cases produce no false dictation. |
@@ -28,9 +30,11 @@ cue player, never a Python backend or per-phrase CLI fallback.
 | Preserve GTK frontend API | Only compatibility helpers are packaged; all 26 GTK tests pass both from source and against extracted package helpers. Actual Shell-to-GTK insertion passes. Frontend product source and extension are unchanged. |
 | Real amd64/arm64 packages, activation and attribution | Both architecture builds pass; ELF binaries and six helper modules inspected, no Python daemon or fixture service shipped. Extracted amd64 passes service/native-cancellation smoke. ARM ELF/QEMU startup verified. Build dependencies/MSRV are documented and checked; upstream crate license texts are collected from locked sources into the deb. |
 
-## Reproduced results
+## Historical migration results
 
-Commands and artifact environment variables are documented in [testing.md](testing.md).
+The following results were recorded before retiring the Python reference.
+Current tests compare Rust directly against whisper-cli and the independent
+D-Bus XML contract; retired Python suites are no longer release requirements.
 
 - Regular Rust suite: 39 library tests and the private-bus integration test pass.
   Native tests are explicitly opt-in, not counted as passing from ignored output.

@@ -10,12 +10,10 @@ inference lives in `anduinos-whisper-worker`.
 - `src/*.rs`: native service, capture, scheduling, inference and diagnostics.
 - `src/anduinos_whisper_framework/`: six small Python compatibility modules for
   the existing GTK frontend; no Python capture or service implementation.
-- `tests/reference/`: previous Python backend retained for migration comparisons,
-  never packaged or activated by the installed service.
 - `data/`: service/schema definitions and licensed public calibration audio.
 - `scripts/`: build-time model downloads with pinned checksums.
-- `tests/`: unit tests; `benchmarks/` contains reproducible accuracy/performance
-  checks and `integration/` contains isolated service checks.
+- `tests/`: Rust native accuracy/resource checks, GTK helper unit tests and
+  isolated service checks; `support/` contains the independent D-Bus contract.
 - `docs/testing.md`: acceptance commands, report interpretation and laptop checks.
 
 The service reuses the selected model, releases it after inactivity, and cancels

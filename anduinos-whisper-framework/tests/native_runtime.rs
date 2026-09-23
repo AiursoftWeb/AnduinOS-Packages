@@ -296,80 +296,140 @@ fn native_vad_replay_is_deterministic_and_bounded() {
     );
 }
 
+// Independent CLI decoding baseline; no legacy backend implementation required.
+fn cli_transcript(pcm: &[u8], language: &str) -> String {
+    use anduinos_whisper_framework::commands::{clean_transcript, whisper_language};
+    let directory = tempfile::tempdir().unwrap();
+    let audio = directory.path().join("phrase.wav");
+    let mut writer = hound::WavWriter::create(
+        &audio,
+        hound::WavSpec {
+            channels: 1,
+            sample_rate: 16000,
+            bits_per_sample: 16,
+            sample_format: hound::SampleFormat::Int,
+        },
+    )
+    .unwrap();
+    for bytes in pcm.chunks_exact(2) {
+        writer
+            .write_sample(i16::from_le_bytes(bytes.try_into().unwrap()))
+            .unwrap();
+    }
+    writer.finalize().unwrap();
+    let cli =
+        std::env::var_os("ANDUINOS_WHISPER_CLI").unwrap_or_else(|| "/usr/bin/whisper-cli".into());
+    let output = std::process::Command::new("timeout")
+        .arg("120")
+        .arg(cli)
+        .arg("--model")
+        .arg(model())
+        .arg("--file")
+        .arg(audio)
+        .args([
+            "--language",
+            whisper_language(language),
+            "--threads",
+            "4",
+            "--no-timestamps",
+            "--suppress-nst",
+            "--no-gpu",
+        ])
+        .output()
+        .expect("Cannot run whisper-cli baseline via timeout");
+    assert!(
+        output.status.success(),
+        "CLI baseline failed: {}",
+        output.status
+    );
+    let text = clean_transcript(&String::from_utf8(output.stdout).unwrap());
+    match ChineseConverter::new(language).unwrap() {
+        Some(converter) => converter.convert(&text).unwrap(),
+        None => text,
+    }
+}
+
+// WER for English, CER for Chinese, matching the retained corpus specification.
+fn error_count(expected: &str, actual: &str, language: &str) -> usize {
+    use unicode_normalization::UnicodeNormalization;
+    let units = |text: &str| -> Vec<String> {
+        let text = glib::casefold(text.nfkc().collect::<String>());
+        if language.starts_with("zh") {
+            text.chars()
+                .filter(|c| c.is_alphanumeric())
+                .map(|c| c.to_string())
+                .collect()
+        } else {
+            text.split(|c: char| !c.is_alphanumeric())
+                .filter(|s| !s.is_empty())
+                .map(str::to_owned)
+                .collect()
+        }
+    };
+    let expected = units(expected);
+    let actual = units(actual);
+    let mut row: Vec<_> = (0..=actual.len()).collect();
+    for (i, left) in expected.iter().enumerate() {
+        let mut next = vec![i + 1];
+        for (j, right) in actual.iter().enumerate() {
+            next.push(
+                (row[j + 1] + 1)
+                    .min(next[j] + 1)
+                    .min(row[j] + usize::from(left != right)),
+            );
+        }
+        row = next;
+    }
+    row[actual.len()]
+}
+
 #[test]
-#[ignore = "public corpus migration gate; requires native model and Python reference dependencies"]
-fn native_corpus_matches_python_reference() {
+#[ignore = "public corpus accuracy gate; requires native models and whisper-cli"]
+fn native_corpus_accuracy_against_cli() {
     use anduinos_whisper_framework::calibration::{digest, noisy};
     use serde_json::Value;
-    let script = r#"
-import json,sys,wave
-from pathlib import Path
-from anduinos_whisper_framework.resident import ResidentEngine
-from anduinos_whisper_framework.calibration_audio import noisy
-language=sys.argv[1]
-manifest=json.loads(Path('data/benchmark/manifest.json').read_text())
-results=[]
-with ResidentEngine(Path(sys.argv[2]),language,4,backend='cpu',executable=sys.argv[3]) as engine:
- for sample in manifest['samples']:
-  if language!='auto' and sample['language']!=language: continue
-  with wave.open('data/benchmark/'+sample['file'],'rb') as audio: pcm=audio.readframes(audio.getnframes())
-  for condition,data in [('clean',pcm),('noisy',noisy(pcm))]:
-   results.append({'file':sample['file'],'condition':condition,'text':engine.transcribe(data),'backend':engine.last_metrics['backend']})
-print(json.dumps(results))
-"#;
     let manifest: Value =
         serde_json::from_slice(&std::fs::read("data/benchmark/manifest.json").unwrap()).unwrap();
     let cancel = AtomicBool::new(false);
     let mut checked = 0;
     for language in ["auto", "en", "zh-Hans"] {
-        let reference = std::process::Command::new("python3")
-            .args(["-c", script, language])
-            .arg(model())
-            .arg(worker())
-            .env("PYTHONPATH", "tests/reference:src")
-            .env("PYTHONDONTWRITEBYTECODE", "1")
-            .output()
-            .unwrap();
-        assert!(
-            reference.status.success(),
-            "Python reference failed: {}",
-            String::from_utf8_lossy(&reference.stderr)
-        );
-        let records: Vec<Value> = serde_json::from_slice(&reference.stdout).unwrap();
         let mut engine =
             engine(EngineConfig::new(model(), language.into(), 4, "cpu".into())).unwrap();
-        for record in records {
-            let name = record["file"].as_str().unwrap();
+        for sample in manifest["samples"].as_array().unwrap() {
+            if language != "auto" && sample["language"] != language {
+                continue;
+            }
+            let name = sample["file"].as_str().unwrap();
             let path = format!("data/benchmark/{name}");
-            let sample = manifest["samples"]
-                .as_array()
-                .unwrap()
-                .iter()
-                .find(|s| s["file"] == name)
-                .unwrap();
             assert_eq!(
                 digest(&std::fs::read(&path).unwrap()),
                 sample["sha256"].as_str().unwrap()
             );
-            let mut pcm = fixture(&path);
-            if record["condition"] == "noisy" {
-                pcm = noisy(&pcm).unwrap();
+            let clean = fixture(&path);
+            for (condition, pcm) in [("clean", clean.clone()), ("noisy", noisy(&clean).unwrap())] {
+                let baseline = cli_transcript(&pcm, language);
+                let result = engine.transcribe(&pcm, &cancel).unwrap();
+                assert!(
+                    !baseline.is_empty() && !result.is_empty(),
+                    "Empty corpus recognition"
+                );
+                let expected = sample["text"].as_str().unwrap();
+                let scoring_language = sample["language"].as_str().unwrap();
+                let baseline_errors = error_count(expected, &baseline, scoring_language);
+                let errors = error_count(expected, &result, scoring_language);
+                // Public fixture identifiers and counts only; no transcript logging.
+                println!(
+                    "{language}/{name}/{condition}: Rust errors={errors}, CLI errors={baseline_errors}"
+                );
+                assert!(
+                    errors <= baseline_errors,
+                    "Accuracy regression: language={language}, fixture={name}, condition={condition}"
+                );
+                assert_eq!(engine.last_metrics["backend"], "cpu");
+                checked += 1;
             }
-            let result = engine.transcribe(&pcm, &cancel).unwrap();
-            // Do not print transcripts on success or failure, even though these
-            // particular inputs are public. Report the reproducing case only.
-            assert!(
-                result == record["text"].as_str().unwrap(),
-                "Migration output mismatch: language={language}, fixture={name}, condition={}",
-                record["condition"]
-            );
-            assert_eq!(record["backend"], "cpu");
-            assert_eq!(engine.last_metrics["backend"], "cpu");
-            checked += 1;
         }
     }
     assert_eq!(checked, 16);
-    println!(
-        "All {checked} clean/noisy corpus cases match the Python reference exactly (auto/en/zh-Hans)"
-    );
+    println!("All {checked} clean/noisy corpus cases pass CLI accuracy nonregression");
 }

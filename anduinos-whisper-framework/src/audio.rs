@@ -377,18 +377,12 @@ mod tests {
     #[test]
     #[ignore = "native noise replay requires worker/VAD; no microphone"]
     fn native_capture_noise_does_not_trigger_dictation() {
-        // Reuse the established deterministic stimulus generator, not its Python
-        // capture backend. All DSP/VAD/phrase decisions under test run in Rust.
-        let script = r#"
-import importlib.util,sys
-spec=importlib.util.spec_from_file_location('noise','tests/benchmarks/benchmark-noise.py')
-noise=importlib.util.module_from_spec(spec); spec.loader.exec_module(noise)
-sys.stdout.buffer.write(noise.noise(sys.argv[1],int(sys.argv[2])))
-"#;
+        // Retain byte-identical deterministic stimuli without the old backend.
+        // All DSP/VAD/phrase decisions under test run in Rust.
         for shape in ["hum", "fan-like", "tapping"] {
             for level in [-50, -35, -20] {
                 let generated = std::process::Command::new("python3")
-                    .args(["-c", script, shape, &level.to_string()])
+                    .args(["tests/support/noise.py", shape, &level.to_string()])
                     .env("PYTHONDONTWRITEBYTECODE", "1")
                     .output()
                     .unwrap();

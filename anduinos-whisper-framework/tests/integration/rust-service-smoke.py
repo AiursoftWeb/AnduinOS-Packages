@@ -4,7 +4,6 @@
 Run through dbus-run-session. Tests use private schema/cache directories and
 retain Python solely as a test client, not as the backend implementation.
 """
-import ast
 import json
 import os
 from pathlib import Path
@@ -111,23 +110,8 @@ def main():
             methods = {m.attrib['name'] for m in interface.find(f"interface[@name='{APP}']").findall('method')}
             assert methods == {'Start', 'Stop', 'Finish', 'Quit', 'StartTest',
                                'StopTest', 'ReportDelivery', 'GetState', 'GetDiagnostics'}
-            # Compare the complete wire contract, not just method names. Read
-            # the frozen reference constant without importing/running its service.
-            reference_tree = ast.parse((ROOT / 'tests/reference/anduinos_whisper_framework/daemon.py').read_text())
-            reference_value = next(node.value for node in reference_tree.body
-                                   if isinstance(node, ast.Assign) and
-                                   any(isinstance(target, ast.Name) and target.id == 'INTROSPECTION_XML'
-                                       for target in node.targets))
-            assert isinstance(reference_value, ast.JoinedStr)
-            reference_parts = []
-            for part in reference_value.values:
-                if isinstance(part, ast.Constant):
-                    reference_parts.append(part.value)
-                else:
-                    assert isinstance(part, ast.FormattedValue) and isinstance(part.value, ast.Name)
-                    assert part.value.id == 'INTERFACE'
-                    reference_parts.append(APP)
-            reference_xml = ''.join(reference_parts)
+            # Compare the live service with the independently retained wire contract.
+            reference_xml = (ROOT / 'tests/support/voice-typing.xml').read_text()
             def signatures(node):
                 contract = node.find(f"interface[@name='{APP}']")
                 return {(entry.tag, entry.attrib['name']):
