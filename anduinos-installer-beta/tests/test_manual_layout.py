@@ -2,6 +2,7 @@ import unittest
 from dataclasses import replace
 
 from installer_core.manual_layout import (
+    HARD_MINIMUM_ROOT_MIB,
     MIB,
     MICROSOFT_LDM_DATA_GUID,
     ManualLayoutError,
@@ -124,6 +125,30 @@ def selection(
 
 
 class ManualLayoutTests(unittest.TestCase):
+    def test_root_partition_has_a_six_gib_hard_minimum(self):
+        disk = manual_disk()
+        for size_mib, allowed in (
+            (HARD_MINIMUM_ROOT_MIB - 1, False),
+            (HARD_MINIMUM_ROOT_MIB, True),
+        ):
+            chosen = selection(
+                new_partitions=(
+                    ManualPartitionRequest(
+                        ManualPartitionRole.ROOT,
+                        80 * 1024,
+                        80 * 1024 + size_mib,
+                    ),
+                )
+            )
+            with self.subTest(size_mib=size_mib):
+                if allowed:
+                    validate_manual_selection(disk, chosen)
+                else:
+                    with self.assertRaisesRegex(
+                        ManualLayoutError, "at least 6 GiB"
+                    ):
+                        validate_manual_selection(disk, chosen)
+
     def test_explicit_gpt_replacement_accepts_a_blank_unlabelled_disk(self):
         disk = replace(
             manual_disk(),

@@ -6,6 +6,7 @@ import re
 
 from .btrfs import BTRFS_SUBVOLUMES
 from .manual_layout import (
+    HARD_MINIMUM_ROOT_MIB,
     ManualPartitionRequest,
     ManualPartitionResizeRequest,
     ManualPartitionRole,
@@ -493,6 +494,18 @@ def validate_manual_graph_structure(
         or roles.count(ManualPartitionRole.ROOT.value) != 1
     ):
         raise ManualStorageGraphError("Manual partition roles are invalid")
+    root = next(
+        item
+        for item in graph.partitions
+        if item.name == ManualPartitionRole.ROOT.value
+    )
+    if (
+        root.end_mib is None
+        or root.end_mib - root.start_mib < HARD_MINIMUM_ROOT_MIB
+    ):
+        raise ManualStorageGraphError(
+            "Manual Root partition must be at least 6 GiB"
+        )
     previous_end = -1
     for item in graph.partitions:
         if (

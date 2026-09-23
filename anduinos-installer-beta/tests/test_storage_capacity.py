@@ -23,16 +23,57 @@ class StorageCapacityTests(unittest.TestCase):
         dialog.assert_not_called()
         confirmed.assert_called_once_with()
 
+    def test_below_hard_minimum_is_blocked_without_continue(self):
+        page = Mock()
+        nav_view = Mock()
+        confirmed = Mock()
+        with patch("pages.Adw.MessageDialog") as factory, \
+                patch("pages.Gtk.Image.new_from_icon_name") as image:
+            _confirm_storage_capacity(
+                page, nav_view, "en_US", 6 * 1024**3 - 1, confirmed
+            )
+
+        dialog = factory.return_value
+        factory.assert_called_once_with(
+            transient_for=nav_view.get_root.return_value,
+            heading="Too small",
+            body="At least 6 GiB is required to install AnduinOS.",
+        )
+        dialog.add_response.assert_called_once_with("cancel", "Cancel")
+        self.assertFalse(
+            any(
+                call.args[:1] == ("continue",)
+                for call in dialog.add_response.call_args_list
+            )
+        )
+        image.return_value.add_css_class.assert_called_once_with("error")
+        confirmed.assert_not_called()
+
     def test_warning_requires_confirmation_and_defaults_to_cancel(self):
-        for size, severity in ((23, "error"), (25, "warning"), (49, "warning")):
+        for size, severity in ((6, "error"), (23, "error"),
+                               (25, "warning"), (49, "warning")):
             with self.subTest(size=size), patch("pages.Adw.MessageDialog") as factory, \
                     patch("pages.Gtk.Image.new_from_icon_name") as image:
                 page = Mock()
+                nav_view = Mock()
                 page.get_mapped.return_value = True
                 confirmed = Mock()
-                _confirm_storage_capacity(page, Mock(), "en_US", size * 1024**3, confirmed)
+                _confirm_storage_capacity(
+                    page, nav_view, "en_US", size * 1024**3, confirmed
+                )
                 dialog = factory.return_value
+                factory.assert_called_once_with(
+                    transient_for=nav_view.get_root.return_value,
+                    heading="25 GiB minimum; 50 GiB recommended.",
+                    body=(
+                        "Below the minimum. Installation or updates may fail. Continue?"
+                        if severity == "error" else
+                        "Below the recommended capacity. Space may run out quickly. Continue?"
+                    ),
+                )
                 image.return_value.add_css_class.assert_called_once_with(severity)
+                dialog.add_response.assert_any_call("cancel", "Cancel")
+                dialog.add_response.assert_any_call("continue", "Continue")
                 dialog.set_default_response.assert_called_once_with("cancel")
                 dialog.set_close_response.assert_called_once_with("cancel")
                 if severity == "error":
@@ -54,9 +95,39 @@ class StorageCapacityTests(unittest.TestCase):
     def test_exact_gib_boundaries(self):
         gib = 1024**3
         for size, expected in (
-            (1, "error"), (23 * gib, "error"), (25 * gib - 1, "error"),
+            (1, "blocked"), (6 * gib - 1, "blocked"),
+            (6 * gib, "error"), (23 * gib, "error"),
+            (25 * gib - 1, "error"),
             (25 * gib, "warning"), (50 * gib - 1, "warning"),
             (50 * gib, None), (100 * gib, None),
         ):
             with self.subTest(size=size):
                 self.assertEqual(storage_capacity_warning(size), expected)
+
+    def test_dialog_changes_at_exact_capacity_boundaries(self):
+        gib = 1024**3
+        for size, expected_body, destructive in (
+            (6 * gib, "Below the minimum.", True),
+            (25 * gib - 1, "Below the minimum.", True),
+            (25 * gib, "Below the recommended capacity.", False),
+            (50 * gib - 1, "Below the recommended capacity.", False),
+        ):
+            with self.subTest(size=size), patch("pages.Adw.MessageDialog") as factory, \
+                    patch("pages.Gtk.Image.new_from_icon_name"):
+                _confirm_storage_capacity(Mock(), Mock(), "en_US", size, Mock())
+                self.assertTrue(
+                    factory.call_args.kwargs["body"].startswith(expected_body)
+                )
+                appearance = factory.return_value.set_response_appearance
+                if destructive:
+                    appearance.assert_called_once_with(
+                        "continue", Adw.ResponseAppearance.DESTRUCTIVE
+                    )
+                else:
+                    appearance.assert_not_called()
+
+        confirmed = Mock()
+        with patch("pages.Adw.MessageDialog") as factory:
+            _confirm_storage_capacity(Mock(), Mock(), "en_US", 50 * gib, confirmed)
+        factory.assert_not_called()
+        confirmed.assert_called_once_with()

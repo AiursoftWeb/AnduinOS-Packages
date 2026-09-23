@@ -11,6 +11,7 @@ from .storage_inventory import DiskInventory, PartitionInventory
 
 MIB = 1024 * 1024
 MINIMUM_NEW_ESP_MIB = 512
+HARD_MINIMUM_ROOT_MIB = 6 * 1024
 MINIMUM_NTFS_MIB = 4 * 1024
 MICROSOFT_LDM_METADATA_GUID = "5808c8aa-7e8f-42e0-85d2-e1e90434cfb3"
 MICROSOFT_LDM_DATA_GUID = "af9b60a0-1431-4f62-bc68-3311714a69ad"
@@ -240,6 +241,13 @@ def validate_manual_selection(
         ):
             raise ManualLayoutError(
                 "A new EFI System Partition must be at least 512 MiB"
+            )
+        if (
+            request.role is ManualPartitionRole.ROOT
+            and request.size_mib < HARD_MINIMUM_ROOT_MIB
+        ):
+            raise ManualLayoutError(
+                "The Root partition must be at least 6 GiB"
             )
 
 

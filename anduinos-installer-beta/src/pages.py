@@ -66,6 +66,7 @@ from installer_core.model import (
     SecureBoot,
 )
 from installer_core.manual_layout import (
+    HARD_MINIMUM_ROOT_MIB,
     ManualPartitionRequest,
     ManualPartitionResizeRequest,
     ManualPartitionRole,
@@ -3389,6 +3390,8 @@ def build_storage_strategy_page(shared, nav_view):
 
 def storage_capacity_warning(size_bytes):
     """Classify the applicable disk/root capacity; callers choose the scope."""
+    if size_bytes < HARD_MINIMUM_ROOT_MIB * MIB:
+        return "blocked"
     if size_bytes < MINIMUM_DISK_BYTES:
         return "error"
     if size_bytes < RECOMMENDED_DISK_BYTES:
@@ -3400,6 +3403,24 @@ def _confirm_storage_capacity(page, nav_view, lang, size_bytes, confirmed):
     severity = storage_capacity_warning(size_bytes)
     if severity is None:
         confirmed()
+        return
+    if severity == "blocked":
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_("Too small", lang),
+            body=_(
+                "At least 6 GiB is required to install AnduinOS.",
+                lang,
+            ),
+        )
+        icon = Gtk.Image.new_from_icon_name("dialog-error-symbolic")
+        icon.set_pixel_size(48)
+        icon.add_css_class("error")
+        dialog.set_extra_child(icon)
+        dialog.add_response("cancel", _("Cancel", lang))
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+        dialog.present()
         return
     dialog = Adw.MessageDialog(
         transient_for=nav_view.get_root(),
@@ -4596,7 +4617,7 @@ def build_advanced_storage_page(shared, nav_view):
     def _minimum_partition_size(role):
         return {
             ManualPartitionRole.EFI_SYSTEM: 512,
-            ManualPartitionRole.ROOT: 1,
+            ManualPartitionRole.ROOT: HARD_MINIMUM_ROOT_MIB,
             ManualPartitionRole.SWAP: 1,
         }[role]
 

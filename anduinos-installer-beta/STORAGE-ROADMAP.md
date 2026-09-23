@@ -28,6 +28,12 @@ failed consistency checks or an unsafe target dry run. Other resize and repair
 operations remain the responsibility of specialist tools and the operating
 system that owns the data.
 
+The bounded manual editor enforces a 6 GiB hard minimum for Root in both its UI
+model and the privileged storage graph. Root sizes from 6 GiB to 25 GiB are
+allowed only after a strong below-minimum warning; 25 GiB to 50 GiB receives a
+below-recommended warning, and 50 GiB or more proceeds without one. Automatic
+and guided layouts retain their stricter swap and root-space policy.
+
 ## Implementation status
 
 | Milestone | Status | Current boundary |

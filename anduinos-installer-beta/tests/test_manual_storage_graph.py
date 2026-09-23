@@ -10,6 +10,7 @@ from installer_core.manual_graph_planning import (
     validate_manual_storage_graph,
 )
 from installer_core.manual_layout import (
+    HARD_MINIMUM_ROOT_MIB,
     ManualPartitionRequest,
     ManualPartitionResizeRequest,
     ManualPartitionRole,
@@ -108,12 +109,12 @@ class ManualStorageGraphTests(unittest.TestCase):
         ):
             validate_plan(unsafe)
 
-    def test_manual_graph_allows_subminimum_disk_and_positive_root(self):
+    def test_manual_graph_allows_below_minimum_configuration_with_six_gib_root(self):
         original = manual_disk()
         disk = replace(original, identity=replace(
             original.identity, expected_size_bytes=23 * 1024**3),
             partitions=(), free_extents=())
-        for root_mib in (1, 10 * 1024, 21 * 1024):
+        for root_mib in (HARD_MINIMUM_ROOT_MIB, 10 * 1024, 21 * 1024):
             with self.subTest(root_mib=root_mib):
                 chosen = replace(selection(
                     reinitialize=True, reused_esp="", new_partitions=(
@@ -123,6 +124,41 @@ class ManualStorageGraphTests(unittest.TestCase):
                 plan, inventory = manual_plan(chosen=chosen, disk=disk)
                 validate_plan(plan)
                 validate_manual_storage_graph(plan, inventory)
+
+    def test_manual_graph_rejects_root_below_hard_minimum(self):
+        chosen = selection(new_partitions=(
+            ManualPartitionRequest(
+                ManualPartitionRole.ROOT,
+                80 * 1024,
+                80 * 1024 + HARD_MINIMUM_ROOT_MIB - 1,
+            ),
+        ))
+        with self.assertRaisesRegex(ValueError, "at least 6 GiB"):
+            manual_plan(chosen=chosen)
+
+    def test_untrusted_manual_graph_cannot_bypass_root_hard_minimum(self):
+        plan, _inventory = manual_plan()
+        graph = plan.storage.graph
+        assert graph is not None
+        partitions = tuple(
+            replace(
+                item,
+                end_mib=item.start_mib + HARD_MINIMUM_ROOT_MIB - 1,
+            )
+            if item.name == ManualPartitionRole.ROOT.value
+            else item
+            for item in graph.partitions
+        )
+        tampered = replace(
+            plan,
+            storage=replace(
+                plan.storage,
+                graph=replace(graph, partitions=partitions),
+            ),
+        )
+
+        with self.assertRaisesRegex(ValueError, "at least 6 GiB"):
+            validate_plan(tampered)
 
     def test_xfs_and_f2fs_are_canonical_single_root_graphs(self):
         for filesystem in (Filesystem.XFS, Filesystem.F2FS):
