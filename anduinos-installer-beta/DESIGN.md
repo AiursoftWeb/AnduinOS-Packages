@@ -434,8 +434,16 @@ rounded visual boundary and obscure whether the card itself is active.
   The same bounded manual editor offers Btrfs, ext4, XFS and F2FS for a newly
   formatted root. Btrfs alone creates the canonical AnduinOS subvolumes and
   enables Disk Snapshots Manager; ext4, XFS and F2FS use one conventional root
-  mount and direct system copy. XFS and F2FS are intentionally not exposed in
-  automatic or guided layouts until their broader release matrices exist.
+  mount and direct system copy. An existing BitLocker partition can be
+  preserved while AnduinOS uses separate unallocated space; deleting that
+  partition, replacing its disk's GPT and shrinking any partition on that disk
+  remain blocked while it is present. Manual Root has a 6 GiB hard floor
+  enforced by both the editor and privileged plan validation; 6–25 GiB
+  requires an explicit low-capacity confirmation, 25–50 GiB remains below the
+  recommendation, and 50 GiB or more proceeds without a capacity warning.
+  XFS and F2FS are
+  intentionally not exposed in automatic or guided layouts until their broader
+  release matrices exist.
   Unit and GTK development-mode interaction gates pass; real Windows and
   interrupted-resize VM qualification remains mandatory before release.
 - Final release gate: complete the VM matrix before promoting and renaming the

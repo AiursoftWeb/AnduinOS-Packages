@@ -16,7 +16,6 @@ MINIMUM_NTFS_MIB = 4 * 1024
 MICROSOFT_LDM_METADATA_GUID = "5808c8aa-7e8f-42e0-85d2-e1e90434cfb3"
 MICROSOFT_LDM_DATA_GUID = "af9b60a0-1431-4f62-bc68-3311714a69ad"
 UNSUPPORTED_MANUAL_FILESYSTEMS = {
-    "bitlocker",
     "crypto_luks",
     "linux_raid_member",
     "lvm2_member",
@@ -102,6 +101,7 @@ def validate_manual_selection(
     reason = manual_layout_block_reason(
         disk,
         reinitialize_gpt=selection.reinitialize_gpt,
+        deleted_partuuids=selection.deleted_partuuids,
         allowed_active_swap_partuuids=(
             tuple(
                 item.identity.partuuid
@@ -269,6 +269,7 @@ def manual_layout_block_reason(
     disk: DiskInventory,
     *,
     reinitialize_gpt: bool,
+    deleted_partuuids: tuple[str, ...] = (),
     allowed_active_swap_partuuids: tuple[str, ...] = (),
 ) -> str:
     """Explain why this disk cannot enter the bounded manual editor."""
@@ -286,6 +287,7 @@ def manual_layout_block_reason(
             + ", ".join(disk.unsupported_descendant_types)
         )
     allowed_swaps = set(allowed_active_swap_partuuids)
+    deleted = set(deleted_partuuids)
     for partition in disk.partitions:
         active_deleted_swap = (
             partition.mountpoints == ("[SWAP]",)
@@ -296,6 +298,13 @@ def manual_layout_block_reason(
             return f"Partition is mounted: {partition.identity.path}"
         filesystem = partition.filesystem_type.casefold()
         partition_type = partition.partition_type.strip("{}").casefold()
+        if partition.is_bitlocker_partition and (
+            reinitialize_gpt or partition.identity.partuuid in deleted
+        ):
+            return (
+                "Manual editing does not support modifying bitlocker: "
+                f"{partition.identity.path}"
+            )
         if filesystem in UNSUPPORTED_MANUAL_FILESYSTEMS:
             return (
                 "Manual editing does not support "

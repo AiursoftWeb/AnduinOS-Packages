@@ -2,7 +2,7 @@ import unittest
 from dataclasses import replace
 from unittest.mock import patch
 
-from test_manual_layout import manual_disk, selection
+from test_manual_layout import existing_partition, manual_disk, selection
 from pages import (
     _manual_role_choices,
     _manual_segment_annotation,
@@ -16,7 +16,14 @@ from installer_core.manual_layout import (
     ManualPartitionRole,
 )
 from installer_core.probe import PlatformProbe
-from installer_core.storage_inventory import StorageInventory
+from installer_core.storage_inventory import (
+    EFI_SYSTEM_PARTITION_GUID,
+    MICROSOFT_BASIC_DATA_PARTITION_GUID,
+    MICROSOFT_RESERVED_PARTITION_GUID,
+    WINDOWS_RECOVERY_PARTITION_GUID,
+    FreeExtent,
+    StorageInventory,
+)
 from installer_core.storage_ui import (
     ManualDiskSegmentKind,
     build_development_storage_workflow,
@@ -25,9 +32,77 @@ from installer_core.storage_ui import (
     build_manual_storage_preview,
     build_storage_workflow,
 )
+from installer_core.storage_write_set import StorageAction
 
 
 class ManualStorageUiTests(unittest.TestCase):
+    def test_bitlocker_windows_partition_is_preserved_in_free_space_preview(self):
+        mib = 1024**2
+        disk = replace(
+            self.disk,
+            identity=replace(
+                self.disk.identity, expected_size_bytes=976763 * mib
+            ),
+            partitions=(
+                existing_partition(
+                    1, 1, 201, filesystem="vfat",
+                    partition_type=EFI_SYSTEM_PARTITION_GUID,
+                ),
+                existing_partition(
+                    2, 201, 217, filesystem="unknown",
+                    partition_type=MICROSOFT_RESERVED_PARTITION_GUID,
+                ),
+                existing_partition(
+                    3, 217, 713929, filesystem="bitlocker",
+                    partition_type=MICROSOFT_BASIC_DATA_PARTITION_GUID,
+                ),
+                existing_partition(
+                    4, 713929, 714832, filesystem="ntfs",
+                    partition_type=WINDOWS_RECOVERY_PARTITION_GUID,
+                ),
+            ),
+            free_extents=(
+                FreeExtent(
+                    self.disk.identity.stable_id,
+                    714832 * mib,
+                    (976762 - 714832) * mib,
+                ),
+            ),
+        )
+        workflow = build_storage_workflow(
+            replace(self.inventory, disks=(disk,)),
+            self.platform,
+            physical_memory_probe=lambda: 8 * 1024**3,
+        )
+
+        chosen = replace(
+            selection(),
+            disk_size_bytes=disk.identity.expected_size_bytes,
+            new_partitions=(
+                ManualPartitionRequest(
+                    ManualPartitionRole.ROOT, 714832, 976762
+                ),
+            ),
+        )
+        preview = build_manual_storage_preview(workflow, chosen)
+        confirmation = build_manual_storage_confirmation(preview)
+        self.assertEqual(
+            confirmation.preserved_paths,
+            tuple(item.identity.path for item in disk.partitions),
+        )
+        self.assertEqual(confirmation.deleted_paths, ())
+        self.assertEqual(confirmation.resized_partitions, ())
+        self.assertEqual(
+            tuple(item.name for item in confirmation.new_partitions),
+            ("root",),
+        )
+        bitlocker_operations = tuple(
+            item.action
+            for item in preview.write_set.operations
+            if item.display_path == disk.partitions[2].identity.path
+        )
+        self.assertEqual(bitlocker_operations, (StorageAction.PRESERVE,))
+
     def test_external_manual_install_uses_the_same_preview(self):
         external = replace(self.disk, removable=True, transport="usb")
         workflow = build_storage_workflow(

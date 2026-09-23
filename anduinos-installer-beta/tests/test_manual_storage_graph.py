@@ -67,6 +67,33 @@ def manual_plan(
 
 
 class ManualStorageGraphTests(unittest.TestCase):
+    def test_preserved_bitlocker_is_valid_in_privileged_manual_graph(self):
+        original = manual_disk()
+        disk = replace(
+            original,
+            partitions=(
+                original.partitions[0],
+                replace(original.partitions[1], filesystem_type="bitlocker"),
+            ),
+        )
+        plan, inventory = manual_plan(disk=disk)
+
+        validate_plan(plan)
+        self.assertIs(validate_manual_storage_graph(plan, inventory), disk)
+        bitlocker_reference = next(
+            item.reference_id
+            for item in plan.storage.graph.block_references
+            if item.stable_id == disk.partitions[1].identity.partuuid
+        )
+        self.assertEqual(
+            tuple(
+                operation.action
+                for operation in plan.storage.graph.operations
+                if operation.target_id == bitlocker_reference
+            ),
+            (StorageGraphAction.PRESERVE,),
+        )
+
     def test_external_manual_plan_with_new_esp_never_authorizes_fallback(self):
         chosen = selection(
             reinitialize=True,
