@@ -169,8 +169,10 @@ class RescueWindow(Adw.ApplicationWindow):
                 if isinstance(partition, dict) and partition.get("os_kind") == "anduinos":
                     installations.append((disk, partition))
         if installations:
+            installation_group = Adw.PreferencesGroup()
+            quick.append(installation_group)
             for disk, partition in installations:
-                quick.append(self._installation_row(disk, partition))
+                installation_group.add(self._installation_row(disk, partition))
         else:
             empty = Adw.StatusPage(
                 icon_name="system-search-symbolic",
@@ -203,7 +205,10 @@ class RescueWindow(Adw.ApplicationWindow):
         else:
             row.set_activatable(True)
             row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
-            row.connect("activated", lambda *_: self._open_system(partition))
+            row.connect(
+                "activated",
+                lambda _row, item=partition: self._open_system(item),
+            )
         return row
 
     def _append_disk(self, container: Gtk.Box, disk: dict) -> None:

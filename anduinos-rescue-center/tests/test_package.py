@@ -82,3 +82,39 @@ class PackageContractTests(unittest.TestCase):
                 and item.value.id == "self"
             }
             self.assertFalse(methods & fields, f"{node.name}: {methods & fields}")
+
+    def test_quick_installations_use_an_activatable_preferences_group(self):
+        source = (ROOT / "src/anduinos_rescue_center/app.py").read_text(
+            encoding="utf-8"
+        )
+        tree = ast.parse(source)
+        window = next(
+            node for node in tree.body
+            if isinstance(node, ast.ClassDef) and node.name == "RescueWindow"
+        )
+        render = next(
+            node for node in window.body
+            if isinstance(node, ast.FunctionDef) and node.name == "_render"
+        )
+        installation_rows = [
+            call for call in ast.walk(render)
+            if isinstance(call, ast.Call)
+            and isinstance(call.func, ast.Attribute)
+            and call.func.attr == "add"
+            and call.args
+            and isinstance(call.args[0], ast.Call)
+            and isinstance(call.args[0].func, ast.Attribute)
+            and call.args[0].func.attr == "_installation_row"
+        ]
+        self.assertEqual(len(installation_rows), 1)
+
+        row_builder = next(
+            node for node in window.body
+            if isinstance(node, ast.FunctionDef)
+            and node.name == "_installation_row"
+        )
+        activation_handlers = [
+            node for node in ast.walk(row_builder)
+            if isinstance(node, ast.Lambda) and node.args.defaults
+        ]
+        self.assertEqual(len(activation_handlers), 1)
