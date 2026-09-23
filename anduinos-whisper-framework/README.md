@@ -1,13 +1,17 @@
 # AnduinOS voice typing engine
 
-Offline dictation with PipeWire/GStreamer capture, streaming Silero speech
+Rust-backed offline dictation with PipeWire/GStreamer capture, streaming Silero speech
 detection, and an isolated persistent whisper.cpp worker. The desktop UI and
 text insertion live in the sibling `anduinos-whisper-gtk` package; native
 inference lives in `anduinos-whisper-worker`.
 
 ## Layout
 
-- `src/`: installed service, capture, scheduling, inference and diagnostics.
+- `src/*.rs`: native service, capture, scheduling, inference and diagnostics.
+- `src/anduinos_whisper_framework/`: six small Python compatibility modules for
+  the existing GTK frontend; no Python capture or service implementation.
+- `tests/reference/`: previous Python backend retained for migration comparisons,
+  never packaged or activated by the installed service.
 - `data/`: service/schema definitions and licensed public calibration audio.
 - `scripts/`: build-time model downloads with pinned checksums.
 - `tests/`: unit tests; `benchmarks/` contains reproducible accuracy/performance
@@ -48,3 +52,17 @@ Build with `apkg build --all`. Run `apkg test --profile anduinos-package-release
 for acceptance; see [testing guidance](docs/testing.md) for dependencies, GPU
 checks and limitations. Generated measurements belong in the ignored
 `anduinos-whisper-framework/obj/voice-test-results/` directory, not in source control.
+
+Native builds need Rust/Cargo (1.93 or newer), a C linker, pkg-config,
+`libglib2.0-dev`, `libgstreamer1.0-dev` and
+`libgstreamer-plugins-base1.0-dev`. Cross builds also need the matching Rust
+standard library, target linker and target development libraries (for example
+`aarch64-linux-gnu-gcc` and the `:arm64` packages). `build.sh` uses the lockfile
+and writes architecture-specific binaries to `obj/amd64` or `obj/arm64`.
+It does not install build dependencies or modify the running service.
+Builds also collect upstream crate license/copyright texts from the locked Cargo
+sources into `RUST-THIRD-PARTY-NOTICES` in the deb documentation. Missing license
+text fails the build rather than silently omitting attribution.
+The bundle includes the Rust standard-library notices from the toolchain or
+matching distribution package. Custom toolchains can provide their matching
+notice file through `RUST_STDLIB_NOTICES`.

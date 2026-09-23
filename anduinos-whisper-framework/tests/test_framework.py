@@ -10,7 +10,7 @@ from gi.repository import GLib
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.dont_write_bytecode = True
-sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "tests" / "reference"))
 
 from anduinos_whisper_framework.commands import (  # noqa: E402
     apply_voice_command,

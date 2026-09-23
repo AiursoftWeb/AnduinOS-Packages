@@ -41,7 +41,7 @@ class WhisperEngine:
                 output.writeframes(pcm)
 
             command = [
-                "/usr/bin/whisper-cli",
+                os.environ.get("ANDUINOS_WHISPER_CLI", "/usr/bin/whisper-cli"),
                 "--model",
                 str(self.model),
                 "--file",

@@ -29,12 +29,12 @@ shutil.copy2(root / "data/com.anduinos.voice-typing.gschema.xml", stage)
 subprocess.run(["glib-compile-schemas", "--strict", str(stage)], check=True)
 os.environ.update(GSETTINGS_SCHEMA_DIR=str(stage), GSETTINGS_BACKEND="memory",
                   XDG_CACHE_HOME=str(stage / "cache"), XDG_CONFIG_HOME=str(stage / "config"),
-                  XDG_DATA_HOME=str(stage / "data"), PYTHONPATH=str(root / "src"),
+                  XDG_DATA_HOME=str(stage / "data"), PYTHONPATH=str(root / "tests" / "reference"),
                   XDG_RUNTIME_DIR=str(stage / "runtime"), GIO_USE_VFS="local",
                   GTK_A11Y="none", NO_AT_BRIDGE="1", PYTHONDONTWRITEBYTECODE="1")
 for variable in ("DISPLAY", "WAYLAND_DISPLAY", "SESSION_MANAGER", "AT_SPI_BUS_ADDRESS"):
     os.environ.pop(variable, None)
-sys.path.insert(0, str(root / "src"))
+sys.path.insert(0, str(root / "tests" / "reference"))
 
 from gi.repository import Gio, GLib
 from anduinos_whisper_framework import APP_ID

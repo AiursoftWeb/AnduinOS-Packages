@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import Mock
 
 sys.dont_write_bytecode = True
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tests" / "reference"))
 from anduinos_whisper_framework.session_engine import SessionEngine
 from anduinos_whisper_framework.errors import RecognitionCancelled, RecognitionError, ResidentUnavailable
 from anduinos_whisper_framework.work_queue import RecognitionQueue

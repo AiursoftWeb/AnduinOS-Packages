@@ -7,7 +7,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 sys.dont_write_bytecode = True
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tests" / "reference"))
 from anduinos_whisper_framework.diagnostics import PerformanceHistory, parse_cli_backend, parse_cli_timings, sanitize
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tests" / "benchmarks"))
 from benchmark_engine import WhisperEngine

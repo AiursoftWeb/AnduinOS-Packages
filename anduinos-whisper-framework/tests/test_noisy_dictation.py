@@ -8,7 +8,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 sys.dont_write_bytecode = True
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tests' / 'reference'))
 from anduinos_whisper_framework.audio import AudioCapture, Gst
 from anduinos_whisper_framework.daemon import VoiceTypingService
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tests" / "benchmarks"))

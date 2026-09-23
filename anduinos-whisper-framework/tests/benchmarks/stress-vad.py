@@ -16,7 +16,7 @@ import wave
 
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / 'src'))
+sys.path.insert(0, str(ROOT / 'tests' / 'reference'))
 from anduinos_whisper_framework.vad import VadEngine
 
 spec = importlib.util.spec_from_file_location('resident_stress', ROOT / 'tests/benchmarks/stress-resident.py')

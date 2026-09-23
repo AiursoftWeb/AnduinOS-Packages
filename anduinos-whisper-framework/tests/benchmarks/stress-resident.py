@@ -18,7 +18,7 @@ import wave
 
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "tests" / "reference"))
 from anduinos_whisper_framework.resident import ResidentEngine
 from anduinos_whisper_framework.errors import RecognitionCancelled
 from anduinos_whisper_framework.calibration_audio import noisy

@@ -17,7 +17,7 @@ import wave
 
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "tests" / "reference"))
 spec = importlib.util.spec_from_file_location("corpus_reference", ROOT / "tests/benchmarks/benchmark-corpus.py")
 corpus = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(corpus)

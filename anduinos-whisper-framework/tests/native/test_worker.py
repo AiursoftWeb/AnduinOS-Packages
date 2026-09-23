@@ -14,7 +14,7 @@ from unittest.mock import patch
 import wave
 
 sys.dont_write_bytecode = True
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tests" / "reference"))
 from anduinos_whisper_framework.audio import AudioCapture, Gst
 from anduinos_whisper_framework.resident import ResidentEngine
 from anduinos_whisper_framework.vad import VadEngine

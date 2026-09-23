@@ -1,0 +1,35 @@
+[package]
+name = "anduinos-whisper-framework"
+version = "2.0.3"
+edition = "2024"
+rust-version = "1.93"
+publish = false
+
+[features]
+test-support = []
+
+[[bin]]
+name = "voice-fixture-service"
+path = "tests/support/voice-fixture-service.rs"
+required-features = ["test-support"]
+
+[dependencies]
+libc = "0.2"
+libloading = "0.8"
+regex = "1"
+serde_json = "1.0"
+gstreamer = "0.25"
+gstreamer-app = "0.25"
+gio = "0.22"
+glib = "0.22"
+glib-unix = "0.22"
+tempfile = "3"
+sha2 = "0.10"
+glob = "0.3"
+hound = "3.5"
+unicode-normalization = "0.1"
+async-channel = "2"
+
+[profile.release]
+lto = "thin"
+strip = true
