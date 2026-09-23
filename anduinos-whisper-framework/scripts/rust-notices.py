@@ -27,7 +27,11 @@ def main():
     sysroot = Path(subprocess.check_output(["rustc", "--print", "sysroot"], text=True).strip())
     standard_notices = ([Path(os.environ["RUST_STDLIB_NOTICES"])]
                         if os.environ.get("RUST_STDLIB_NOTICES") else [
+                            # rustup ships HTML notices, including a smaller
+                            # standard-library-only document on newer releases.
+                            sysroot / "share/doc/rust/COPYRIGHT-library.html",
                             sysroot / "share/doc/rust/COPYRIGHT",
+                            sysroot / "share/doc/rust/COPYRIGHT.html",
                             Path("/usr/share/doc") / f"libstd-rust-{'.'.join(version.split('.')[:2])}" / "copyright",
                         ])
     standard_notice = next((p for p in standard_notices if p.is_file()), None)
