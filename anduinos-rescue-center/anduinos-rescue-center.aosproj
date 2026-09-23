@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-rescue-center</PackageName>
-    <PackageVersion>2.0.3-4+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3-7+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Live-session rescue center for discovering and repairing AnduinOS installations</PackageDescription>
     <Section>admin</Section>
@@ -45,6 +45,10 @@
                    Target="/usr/libexec/anduinos-rescue-center-helper" />
     <IncludeScript Include="scripts/anduinos-rescue-center-live-helper"
                    Target="/usr/libexec/anduinos-rescue-center-live-helper" />
+    <IncludeScript Include="scripts/anduinos-rescue-center-live-shortcut"
+                   Target="/usr/lib/anduinos-rescue-center/create-live-shortcut" />
+    <IncludeFile Include="data/anduinos-rescue-center-live-shortcut.desktop"
+                 Target="/etc/xdg/autostart/anduinos-rescue-center-live-shortcut.desktop" Mode="644" />
     <IncludeFolder Include="src/anduinos_rescue_center/"
                    Target="/usr/lib/python3/dist-packages/anduinos_rescue_center/" />
     <IncludeFile Include="data/com.anduinos.RescueCenter.svg"

@@ -38,7 +38,7 @@ class RescueWindow(Adw.ApplicationWindow):
     def __init__(self, application: Adw.Application):
         super().__init__(application=application)
         self.set_title("AnduinOS Rescue Center")
-        self.set_default_size(980, 720)
+        self.set_default_size(900, 640)
         self._continued = is_live_environment()
 
         self.toolbar = Adw.ToolbarView()
@@ -63,7 +63,10 @@ class RescueWindow(Adw.ApplicationWindow):
         self.content.set_margin_bottom(24)
         self.content.set_margin_start(32)
         self.content.set_margin_end(32)
-        self.stack.add_named(self.content, "content")
+        content_scroll = Gtk.ScrolledWindow()
+        content_scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        content_scroll.set_child(self.content)
+        self.stack.add_named(content_scroll, "content")
 
         if self._continued:
             self.scan()
@@ -265,11 +268,26 @@ class RescueWindow(Adw.ApplicationWindow):
             try:
                 payload = inspect_rescue_target(path, identity)
             except Exception as error:
-                GLib.idle_add(self._target_failed, str(error))
+                GLib.idle_add(self._open_failed, str(error))
                 return
             GLib.idle_add(self._render_target, payload)
 
         threading.Thread(target=worker, daemon=True).start()
+
+    def _open_failed(self, message: str) -> bool:
+        self.refresh.set_sensitive(True)
+        self.back.set_visible(False)
+        self.stack.set_visible_child_name("content")
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading="Could not open this installation",
+            body=message,
+        )
+        dialog.add_response("close", "Close")
+        dialog.set_default_response("close")
+        dialog.set_close_response("close")
+        dialog.present()
+        return GLib.SOURCE_REMOVE
 
     def _target_failed(self, message: str) -> bool:
         self.refresh.set_sensitive(True)

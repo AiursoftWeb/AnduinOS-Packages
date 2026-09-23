@@ -64,6 +64,44 @@ class PackageContractTests(unittest.TestCase):
         self.assertIn("Exec=anduinos-rescue-center\n", desktop)
         self.assertNotIn("pkexec", desktop)
 
+    def test_live_session_creates_a_trusted_desktop_shortcut(self):
+        creator = (
+            ROOT / "scripts/anduinos-rescue-center-live-shortcut"
+        ).read_text(encoding="utf-8")
+        self.assertIn('[ -d /cdrom ] || exit 0', creator)
+        self.assertIn(
+            "test -f /run/anduinos-live/environment || exit 0", creator
+        )
+        self.assertIn(
+            "source=/usr/share/applications/com.anduinos.RescueCenter.desktop",
+            creator,
+        )
+        self.assertIn('install -m 0755 "$source" "$destination"', creator)
+        self.assertIn("metadata::trusted true", creator)
+        self.assertNotIn("exec /usr/bin/anduinos-rescue-center", creator)
+
+        autostart = (
+            ROOT / "data/anduinos-rescue-center-live-shortcut.desktop"
+        ).read_text(encoding="utf-8")
+        self.assertIn(
+            "Exec=/usr/lib/anduinos-rescue-center/create-live-shortcut\n",
+            autostart,
+        )
+        self.assertIn("OnlyShowIn=GNOME;\n", autostart)
+        self.assertIn("NoDisplay=true\n", autostart)
+
+        project = (ROOT / "anduinos-rescue-center.aosproj").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn(
+            'Target="/usr/lib/anduinos-rescue-center/create-live-shortcut"',
+            project,
+        )
+        self.assertIn(
+            'Target="/etc/xdg/autostart/anduinos-rescue-center-live-shortcut.desktop"',
+            project,
+        )
+
     def test_ui_instance_fields_do_not_shadow_methods(self):
         source = (ROOT / "src/anduinos_rescue_center/app.py").read_text(
             encoding="utf-8"
@@ -118,3 +156,78 @@ class PackageContractTests(unittest.TestCase):
             if isinstance(node, ast.Lambda) and node.args.defaults
         ]
         self.assertEqual(len(activation_handlers), 1)
+
+    def test_invalid_target_returns_to_selection_with_a_dialog(self):
+        source = (ROOT / "src/anduinos_rescue_center/app.py").read_text(
+            encoding="utf-8"
+        )
+        tree = ast.parse(source)
+        window = next(
+            node for node in tree.body
+            if isinstance(node, ast.ClassDef) and node.name == "RescueWindow"
+        )
+        methods = {
+            node.name: node
+            for node in window.body
+            if isinstance(node, ast.FunctionDef)
+        }
+        open_system = methods["_open_system"]
+        self.assertTrue(any(
+            isinstance(node, ast.Attribute) and node.attr == "_open_failed"
+            for node in ast.walk(open_system)
+        ))
+
+        open_failed = methods["_open_failed"]
+        calls = [node for node in ast.walk(open_failed) if isinstance(node, ast.Call)]
+        self.assertTrue(any(
+            isinstance(call.func, ast.Attribute)
+            and call.func.attr == "MessageDialog"
+            for call in calls
+        ))
+        self.assertTrue(any(
+            isinstance(call.func, ast.Attribute)
+            and call.func.attr == "set_visible_child_name"
+            and call.args
+            and isinstance(call.args[0], ast.Constant)
+            and call.args[0].value == "content"
+            for call in calls
+        ))
+        self.assertTrue(any(
+            isinstance(call.func, ast.Attribute) and call.func.attr == "present"
+            for call in calls
+        ))
+
+    def test_main_content_scrolls_instead_of_forcing_window_height(self):
+        source = (ROOT / "src/anduinos_rescue_center/app.py").read_text(
+            encoding="utf-8"
+        )
+        tree = ast.parse(source)
+        window = next(
+            node for node in tree.body
+            if isinstance(node, ast.ClassDef) and node.name == "RescueWindow"
+        )
+        constructor = next(
+            node for node in window.body
+            if isinstance(node, ast.FunctionDef) and node.name == "__init__"
+        )
+        calls = [node for node in ast.walk(constructor) if isinstance(node, ast.Call)]
+        self.assertTrue(any(
+            isinstance(call.func, ast.Attribute)
+            and call.func.attr == "set_default_size"
+            and [arg.value for arg in call.args if isinstance(arg, ast.Constant)]
+            == [900, 640]
+            for call in calls
+        ))
+        self.assertTrue(any(
+            isinstance(call.func, ast.Attribute)
+            and call.func.attr == "ScrolledWindow"
+            for call in calls
+        ))
+        self.assertTrue(any(
+            isinstance(call.func, ast.Attribute)
+            and call.func.attr == "set_child"
+            and call.args
+            and isinstance(call.args[0], ast.Attribute)
+            and call.args[0].attr == "content"
+            for call in calls
+        ))
