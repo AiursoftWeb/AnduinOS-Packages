@@ -4,15 +4,18 @@ command -v getarg >/dev/null 2>&1 || . /lib/dracut-lib.sh
 
 unsupported_togo_media() {
     message='AnduinOS To Go requires a USB drive written in DD mode with unallocated space after the image. This boot medium is not supported.'
-    splash_message='To Go needs a DD-written USB drive with free space. This medium is unsupported.'
     warn "$message"
     printf '%s\n' "$message" >&2
     printf '\n%s\n' "$message" > /dev/console 2>/dev/null || :
     if plymouth --ping >/dev/null 2>&1; then
-        plymouth display-message --text="$splash_message" >/dev/null 2>&1 || :
-        sleep 15
         plymouth quit >/dev/null 2>&1 || :
     fi
+    # Plymouth's graphical theme does not display arbitrary messages here.
+    # Return to the active text VT so users see why this boot was rejected.
+    printf '\033[2J\033[H\n%s\n\nPowering off in 15 seconds.\n' "$message" \
+        > /dev/tty0 2>/dev/null || :
+    sleep 15
+    systemctl --force --force poweroff >/dev/null 2>&1 || :
     die "$message"
     return 1
 }

@@ -35,6 +35,8 @@ class ToGoGuardTests(unittest.TestCase):
                 "warn": "printf '%s\\n' \"$*\" >&2\n",
                 "die": "printf '%s\\n' \"$*\" >&2\n",
                 "plymouth": "exit 1\n",
+                "sleep": "exit 0\n",
+                "systemctl": "printf '%s\\n' \"$*\" > \"$TOGO_TEST_LOG\"\n",
             }
             for name, body in commands.items():
                 command = fake_bin / name
@@ -42,13 +44,16 @@ class ToGoGuardTests(unittest.TestCase):
                 command.chmod(0o755)
             result = subprocess.run(
                 ["sh", str(WRAPPER), "/dev/null"],
-                env={**os.environ, "PATH": f"{fake_bin}:/usr/bin:/bin"},
+                env={**os.environ, "PATH": f"{fake_bin}:/usr/bin:/bin",
+                     "TOGO_TEST_LOG": str(fake_bin / "shutdown.log")},
                 capture_output=True,
                 text=True,
                 check=False,
             )
             self.assertEqual(1, result.returncode)
             self.assertIn(MESSAGE, result.stderr)
+            self.assertIn("--force --force poweroff",
+                          (fake_bin / "shutdown.log").read_text(encoding="utf-8"))
             self.assertNotIn("create-overlay.upstream", result.stderr)
 
     def test_existing_overlay_must_be_on_the_boot_disk(self) -> None:
