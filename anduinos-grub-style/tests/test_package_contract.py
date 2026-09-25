@@ -5,6 +5,7 @@ import stat
 import subprocess
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
@@ -35,6 +36,16 @@ def install_fake_chroot_detectors(
 
 
 class GrubStylePackageContractTests(unittest.TestCase):
+    def test_theme_is_recommended_but_not_required(self) -> None:
+        project = ET.parse(PROJECT / "anduinos-grub-style.aosproj")
+        theme = "anduinos-hyperfluent-grub-theme"
+        self.assertIn(theme, {
+            item.get("Include") for item in project.findall(".//Recommend")
+        })
+        self.assertNotIn(theme, {
+            item.get("Include") for item in project.findall(".//Dependency")
+        })
+
     def test_maintainer_scripts_have_valid_posix_shell_syntax(self) -> None:
         for script in (POSTINST, POSTRM):
             with self.subTest(script=script.name):

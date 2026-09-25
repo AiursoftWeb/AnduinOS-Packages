@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-grub-style</PackageName>
-    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.4-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS display defaults for the GRUB boot menu</PackageDescription>
     <Section>admin</Section>
@@ -23,6 +23,8 @@
 
   <ItemGroup>
     <Dependency Include="grub2-common" />
+    <!-- Optional artwork: removing it must not remove the boot-style package. -->
+    <Recommend Include="anduinos-hyperfluent-grub-theme" />
   </ItemGroup>
 
   <ItemGroup>
