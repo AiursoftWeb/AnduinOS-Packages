@@ -3,6 +3,11 @@
 # trusted Unicode font for all menu text, including regional Live entries.
 title-text: ""
 desktop-image: "background.png"
+# The artwork contains labels and menu framing. Preserve their proportions
+# on 16:10 and 4:3 firmware displays instead of stretching the 16:9 image.
+# Keep the left edge visible: that is where the labels and menu frame live.
+desktop-image-scale-method: "crop"
+desktop-image-h-align: "left"
 desktop-color: "#000000"
 terminal-box: "terminal_box_*.png"
 terminal-left: "6%"

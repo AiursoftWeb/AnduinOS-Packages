@@ -12,3 +12,7 @@ systems; existing users can install or remove it independently.
 The Live ISO copies the package's theme to `/boot/grub/themes/` so GRUB can
 read it before the Live filesystem is mounted. The theme uses signed GRUB's
 trusted Unicode font to remain compatible with Secure Boot.
+
+The background contains pre-rendered text and is 16:9. GRUB proportionally
+crops it from the right on narrower 16:10 or 4:3 firmware modes, keeping the
+left-aligned text and menu frame legible instead of stretching their glyphs.

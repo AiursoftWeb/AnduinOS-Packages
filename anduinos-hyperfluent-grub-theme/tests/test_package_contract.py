@@ -3,6 +3,7 @@
 import os
 import re
 import stat
+import struct
 import subprocess
 import tempfile
 import unittest
@@ -26,6 +27,12 @@ class PackageContractTests(unittest.TestCase):
         config = (THEME / "theme.txt").read_text(encoding="utf-8")
         self.assertIn('desktop-image: "background.png"', config)
         self.assertTrue((THEME / "background.png").is_file())
+        with (THEME / "background.png").open("rb") as background:
+            self.assertEqual(background.read(16)[:8], b"\x89PNG\r\n\x1a\n")
+            width, height = struct.unpack(">II", background.read(8))
+        self.assertEqual(width * 9, height * 16)
+        self.assertIn('desktop-image-scale-method: "crop"', config)
+        self.assertIn('desktop-image-h-align: "left"', config)
         self.assertTrue((THEME / "select_c.png").is_file())
         self.assertFalse(list(THEME.rglob("*.pf2")))
         self.assertNotIn("font:", config)
