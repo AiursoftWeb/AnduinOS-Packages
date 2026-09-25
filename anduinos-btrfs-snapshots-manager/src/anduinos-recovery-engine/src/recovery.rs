@@ -71,6 +71,7 @@ pub trait RecoveryFilesystem: Clone + Send + Sync + 'static {
     fn snapshot(&self, source: &Path, destination: &Path) -> Result<(), RecoveryError>;
     fn delete(&self, subvolume: &Path) -> Result<(), RecoveryError>;
     fn sync(&self, filesystem_path: &Path) -> Result<(), RecoveryError>;
+    fn wait_for_deleted_subvolumes(&self, filesystem_path: &Path) -> Result<(), RecoveryError>;
     fn rename(&self, source: &Path, destination: &Path) -> Result<(), RecoveryError>;
     fn identity(&self, subvolume: &Path) -> Result<String, RecoveryError>;
     fn is_read_only(&self, subvolume: &Path) -> Result<bool, RecoveryError>;
@@ -113,6 +114,15 @@ impl RecoveryFilesystem for SystemRecoveryFilesystem {
     fn sync(&self, filesystem_path: &Path) -> Result<(), RecoveryError> {
         run_btrfs(&[
             OsString::from("filesystem"),
+            OsString::from("sync"),
+            filesystem_path.as_os_str().to_owned(),
+        ])?;
+        Ok(())
+    }
+
+    fn wait_for_deleted_subvolumes(&self, filesystem_path: &Path) -> Result<(), RecoveryError> {
+        run_btrfs(&[
+            OsString::from("subvolume"),
             OsString::from("sync"),
             filesystem_path.as_os_str().to_owned(),
         ])?;
@@ -1016,6 +1026,13 @@ mod tests {
 
         fn sync(&self, _filesystem_path: &Path) -> Result<(), RecoveryError> {
             self.mutation()
+        }
+
+        fn wait_for_deleted_subvolumes(
+            &self,
+            _filesystem_path: &Path,
+        ) -> Result<(), RecoveryError> {
+            Ok(())
         }
 
         fn rename(&self, source: &Path, destination: &Path) -> Result<(), RecoveryError> {

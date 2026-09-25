@@ -145,6 +145,17 @@ fn real_btrfs_aaa_offline_restore_replaces_root_and_preserves_home() {
         .restore(target.id)
         .unwrap();
     assert_eq!(transaction.phase, OfflinePhase::Completed);
+    let deleted = Command::new("/usr/bin/btrfs")
+        .args(["subvolume", "list", "-d"])
+        .arg(&root)
+        .output()
+        .unwrap();
+    assert!(deleted.status.success());
+    assert!(
+        deleted.stdout.is_empty(),
+        "offline restore reported success with deleted subvolumes still pending: {}",
+        String::from_utf8_lossy(&deleted.stdout)
+    );
     assert_eq!(
         fs::read_to_string(root.join("@root/offline-marker")).unwrap(),
         "before"

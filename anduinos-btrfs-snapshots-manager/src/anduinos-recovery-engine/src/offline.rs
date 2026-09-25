@@ -191,6 +191,12 @@ impl<F: RecoveryFilesystem> OfflineRecoveryEngine<F> {
                     }
                     (true, false, false) => {
                         self.record_head(transaction.target_deployment_id)?;
+                        // Deletion commits the directory removal, but Btrfs
+                        // drops the old root in the background. Do not return
+                        // success or boot into concurrent root cleanup.
+                        self.filesystem
+                            .wait_for_deleted_subvolumes(&self.top_level)
+                            .map_err(fs_error)?;
                         transaction.phase = OfflinePhase::Completed;
                         transaction.updated_at = Utc::now();
                         self.write_pending(&transaction)?;
@@ -585,6 +591,7 @@ mod tests {
         target: PathBuf,
         target_uuid: String,
         operations: Arc<Mutex<Vec<String>>>,
+        fail_wait_once: Arc<Mutex<bool>>,
     }
 
     impl RecoveryFilesystem for FakeFilesystem {
@@ -609,6 +616,22 @@ mod tests {
 
         fn sync(&self, _filesystem_path: &Path) -> Result<(), crate::recovery::RecoveryError> {
             self.operations.lock().unwrap().push("sync".into());
+            Ok(())
+        }
+
+        fn wait_for_deleted_subvolumes(
+            &self,
+            _filesystem_path: &Path,
+        ) -> Result<(), crate::recovery::RecoveryError> {
+            self.operations.lock().unwrap().push("wait-deleted".into());
+            let mut fail = self.fail_wait_once.lock().unwrap();
+            if *fail {
+                *fail = false;
+                return Err(crate::recovery::RecoveryError {
+                    code: crate::recovery::RecoveryErrorCode::CommandFailed,
+                    message: "injected deletion wait failure".into(),
+                });
+            }
             Ok(())
         }
 
@@ -701,6 +724,7 @@ mod tests {
                     target,
                     target_uuid,
                     operations: Arc::new(Mutex::new(Vec::new())),
+                    fail_wait_once: Arc::new(Mutex::new(false)),
                 },
             }
         }
@@ -727,6 +751,17 @@ mod tests {
         );
         assert!(fixture.top.join("@home").is_dir());
         assert!(!fixture.engine().pending().unwrap().is_some());
+        assert_eq!(
+            fixture
+                .filesystem
+                .operations
+                .lock()
+                .unwrap()
+                .iter()
+                .filter(|operation| operation.as_str() == "wait-deleted")
+                .count(),
+            1
+        );
         assert!(
             fixture
                 .top
@@ -760,6 +795,31 @@ mod tests {
             "target"
         );
         assert!(!old.exists());
+    }
+
+    #[test]
+    fn interrupted_deletion_wait_is_retried_before_reporting_success() {
+        let fixture = Fixture::new();
+        *fixture.filesystem.fail_wait_once.lock().unwrap() = true;
+        let engine = fixture.engine();
+
+        let error = engine.restore(fixture.target_id).unwrap_err();
+        assert!(error.to_string().contains("injected deletion wait failure"));
+        assert!(engine.pending().unwrap().is_some());
+
+        let completed = engine.resume().unwrap().unwrap();
+        assert_eq!(completed.phase, OfflinePhase::Completed);
+        assert_eq!(
+            fixture
+                .filesystem
+                .operations
+                .lock()
+                .unwrap()
+                .iter()
+                .filter(|operation| operation.as_str() == "wait-deleted")
+                .count(),
+            2
+        );
     }
 
     #[test]
