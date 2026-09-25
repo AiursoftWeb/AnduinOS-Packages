@@ -732,6 +732,15 @@ anduinos-grub-style:
   variables:
     PACKAGE_DIR: anduinos-grub-style
 
+anduinos-hyperfluent-grub-theme:
+  extends: .publish
+  needs:
+    - lint-all
+    - verify-ci-package-needs
+    - test-all
+  variables:
+    PACKAGE_DIR: anduinos-hyperfluent-grub-theme
+
 anduinos-core-system:
   extends: .publish
   needs:
