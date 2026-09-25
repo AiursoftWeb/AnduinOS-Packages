@@ -1,6 +1,7 @@
 """Fast source checks; the release gate also installs the built DEB in a VM."""
 
 import os
+import re
 import stat
 import subprocess
 import tempfile
@@ -34,6 +35,17 @@ class PackageContractTests(unittest.TestCase):
         self.assertIn("insmod gfxmenu", live)
         self.assertIn("insmod png", live)
         self.assertNotIn(".pf2", live)
+
+    def test_editor_has_enough_width_to_remain_left_anchored(self) -> None:
+        config = (THEME / "theme.txt").read_text(encoding="utf-8")
+        left = re.search(r'^terminal-left: "(\d+)%"$', config, re.MULTILINE)
+        width = re.search(r'^terminal-width: "(\d+)%"$', config, re.MULTILINE)
+        self.assertIsNotNone(left)
+        self.assertIsNotNone(width)
+        self.assertLessEqual(int(left.group(1)), 8)
+        # GRUB silently centers a terminal narrower than its 80-column editor.
+        self.assertGreaterEqual(int(width.group(1)), 66)
+        self.assertLessEqual(int(left.group(1)) + int(width.group(1)), 100)
 
     def test_activation_is_guarded_and_does_not_change_other_grub_policy(self) -> None:
         config = (PACKAGE / "assets/30-anduinos-hyperfluent.cfg").read_text(
