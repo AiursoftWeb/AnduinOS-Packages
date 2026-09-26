@@ -13,11 +13,13 @@ The Live ISO copies the package's theme to `/boot/grub/themes/` so GRUB can
 read it before the Live filesystem is mounted. The theme uses signed GRUB's
 trusted Unicode font to remain compatible with Secure Boot.
 
-The background contains pre-rendered text and a menu frame. GRUB stretches the
-whole canvas to the actual firmware graphics mode so the painted frame and
-percentage-positioned selection remain together, even when a monitor's native
-mode is unavailable during boot. Non-16:9 firmware modes may alter the artwork's
-proportions, but do not hide menu content.
+The 16:9 wallpaper contains static branding and keyboard hints, but not the
+menu panel. GRUB proportionally crops only the decorative right-hand side on
+16:10 firmware modes; it draws the translucent menu panel, selection and
+timeout in screen coordinates. Thus text and logo in the artwork retain their
+proportions without detaching the selection from its panel. This also works
+when firmware exposes a lower-resolution mode than the physical display.
+The signed GRUB continues to render menu entries with its trusted Unicode font.
 
 Small, scoped GRUB generator snippets add icon classes to the stock advanced
 submenu and UEFI firmware entry, whose upstream generators omit them. Existing

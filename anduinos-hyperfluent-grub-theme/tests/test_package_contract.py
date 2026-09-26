@@ -31,9 +31,12 @@ class PackageContractTests(unittest.TestCase):
             self.assertEqual(background.read(16)[:8], b"\x89PNG\r\n\x1a\n")
             width, height = struct.unpack(">II", background.read(8))
         self.assertEqual(width * 9, height * 16)
-        # The selection coordinates are percentages of the entire screen;
-        # cropping the pre-painted frame shifts it away from those controls.
-        self.assertIn('desktop-image-scale-method: "stretch"', config)
+        # Preserve branding proportions on both 16:9 and 16:10. The live menu
+        # must own its panel instead of relying on a painted frame in the art.
+        self.assertIn('desktop-image-scale-method: "crop"', config)
+        self.assertIn('desktop-image-h-align: "left"', config)
+        self.assertIn('menu_pixmap_style = "menu_box_*.png"', config)
+        self.assertTrue((THEME / "menu_box_c.png").is_file())
         self.assertTrue((THEME / "select_c.png").is_file())
         self.assertFalse(list(THEME.rglob("*.pf2")))
         self.assertNotIn("font:", config)
