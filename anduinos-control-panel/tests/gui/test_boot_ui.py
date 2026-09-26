@@ -28,7 +28,7 @@ class BootUiTests(unittest.TestCase):
             patch.object(app.ControlPanelWindow, '_rebuild_categories'),
             patch.object(app, '_', side_effect=lambda value: value),
             patch.object(app, 'read_grub_timeouts', return_value=type('Timeout', (), {'normal': 10, 'after_interrupted_boot': 10})()),
-            patch.object(app, 'read_grub_display_mode', return_value='native'),
+            patch.object(app, 'read_grub_display_mode', return_value='automatic'),
         ]
         for item in self.patches:
             item.start()
@@ -79,10 +79,24 @@ class BootUiTests(unittest.TestCase):
         self.load()
         self.assertFalse(self.buttons['Retry'].get_visible())
         self.assertTrue(self.rows['Default operating system'].get_sensitive())
+        display = self.rows['Display mode']
+        self.assertEqual([display.get_model().get_string(i) for i in range(3)],
+                         ['High resolution (if available)', 'Automatic', 'Large text mode'])
+        self.assertEqual(display.get_selected(), 1)
         with patch.object(self.module.subprocess, 'run') as run:
             self.window._show_boot_settings()
             run.assert_not_called()
         self.assertIs(self.dialog, self.window._boot_settings_window)
+
+    def test_high_resolution_selection_reaches_the_privileged_helper(self):
+        self.load()
+        self.rows['Display mode'].set_selected(0)
+        self.assertTrue(self.buttons['Apply'].get_sensitive())
+        with patch.object(self.module.subprocess, 'run', return_value=subprocess.CompletedProcess([], 0, '', '')) as run:
+            self.buttons['Apply'].emit('clicked')
+            self.settle()
+        self.assertEqual(run.call_args.args[0][-1], 'high-resolution')
+        self.assertFalse(self.buttons['Apply'].get_sensitive())
 
     def test_load_select_save_and_later_timeout_edit(self):
         self.load()

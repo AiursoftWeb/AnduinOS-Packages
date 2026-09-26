@@ -22,7 +22,8 @@ from .model import (
     BOTTLES_APP_ID,
     DEJA_DUP_APP_ID,
     GRUB_DISPLAY_LARGE_TEXT,
-    GRUB_DISPLAY_NATIVE,
+    GRUB_DISPLAY_HIGH_RESOLUTION,
+    GRUB_DISPLAY_AUTOMATIC,
     SNAPSHOT_PACKAGE,
     VOICE_TYPING_PACKAGE,
     WHY_AI_PACKAGE,
@@ -722,7 +723,11 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         group.add(timeout_row)
         page.append(group)
 
-        display_modes = [GRUB_DISPLAY_NATIVE, GRUB_DISPLAY_LARGE_TEXT]
+        display_modes = [
+            GRUB_DISPLAY_HIGH_RESOLUTION,
+            GRUB_DISPLAY_AUTOMATIC,
+            GRUB_DISPLAY_LARGE_TEXT,
+        ]
         display_group = Adw.PreferencesGroup(
             title=_("Boot display"),
             description=_(
@@ -731,16 +736,13 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         )
         display_row = Adw.ComboRow(
             title=_("Display mode"),
-            subtitle=_(
-                "Native resolution shows more detail; large text is easier to read."
-            ),
         )
         display_row.add_prefix(
             Gtk.Image.new_from_icon_name("video-display-symbolic")
         )
         display_row.set_model(
             Gtk.StringList.new(
-                [_("Native resolution"), _("Large text mode")]
+                [_("High resolution (if available)"), _("Automatic"), _("Large text mode")]
             )
         )
         display_row.set_selected(display_modes.index(current_display_mode))
