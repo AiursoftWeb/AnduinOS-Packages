@@ -15,11 +15,13 @@ trusted Unicode font to remain compatible with Secure Boot.
 
 The 16:9 wallpaper contains static branding and keyboard hints, but not the
 menu panel. GRUB proportionally crops only the decorative right-hand side on
-16:10 firmware modes; it draws the translucent menu panel, selection and
+16:10 firmware modes; it draws the slim blue translucent menu frame, selection and
 timeout in screen coordinates. Thus text and logo in the artwork retain their
 proportions without detaching the selection from its panel. This also works
 when firmware exposes a lower-resolution mode than the physical display.
 The signed GRUB continues to render menu entries with its trusted Unicode font.
+The nine menu frame slices can be regenerated with
+`python3 tools/render_menu_box.py` (Pillow is needed only for this design step).
 
 Small, scoped GRUB generator snippets add icon classes to the stock advanced
 submenu and UEFI firmware entry, whose upstream generators omit them. Existing
