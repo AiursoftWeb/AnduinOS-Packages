@@ -139,6 +139,19 @@ class LocalizationTests(unittest.TestCase):
                         f"{locale}: {message}",
                     )
 
+    def test_boot_resolution_warning_is_localized_in_all_28_catalogs(self):
+        message = (
+            "High resolution can make menu text small on 4K displays; "
+            "the screen's native resolution is not guaranteed at boot."
+        )
+        self.assertEqual(len(self.catalogs), 28)
+        for locale, translations in self.catalogs.items():
+            with self.subTest(locale=locale):
+                translated = translations.gettext(message)
+                self.assertIn("4K", translated)
+                if not locale.startswith("en_"):
+                    self.assertNotEqual(translated, message)
+
     def test_template_is_reproducible_from_python_and_desktop_sources(self):
         with tempfile.TemporaryDirectory() as directory:
             extracted = Path(directory) / "messages.pot"

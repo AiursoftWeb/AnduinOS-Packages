@@ -732,6 +732,8 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             title=_("Boot display"),
             description=_(
                 "Choose the size of the GRUB menu and startup logo."
+            ) + " " + _(
+                "High resolution can make menu text small on 4K displays; the screen's native resolution is not guaranteed at boot."
             ),
         )
         display_row = Adw.ComboRow(

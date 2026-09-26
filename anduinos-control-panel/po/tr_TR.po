@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-control-panel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 16:59+0000\n"
+"POT-Creation-Date: 2026-09-26 17:29+0000\n"
 "PO-Revision-Date: 2026-09-09 12:07+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -26,7 +26,7 @@ msgstr "Denetim Masası"
 msgid "AnduinOS"
 msgstr "AnduinOS"
 
-#: src/anduinos_control_panel/app.py:104 src/anduinos_control_panel/app.py:1924
+#: src/anduinos_control_panel/app.py:104 src/anduinos_control_panel/app.py:1926
 msgid "Search Control Panel"
 msgstr "Denetim Masasında ara"
 
@@ -133,7 +133,7 @@ msgstr "Mikrofonu, dili, kısayolu ve kalibrasyonu yapılandır"
 msgid "Install private, offline speech-to-text"
 msgstr "Gizliliği koruyan çevrimdışı konuşmayı metne dönüştürme özelliğini kur"
 
-#: src/anduinos_control_panel/app.py:337 src/anduinos_control_panel/app.py:1008
+#: src/anduinos_control_panel/app.py:337 src/anduinos_control_panel/app.py:1010
 msgid "Windows Compatibility"
 msgstr "Windows Uyumluluğu"
 
@@ -158,7 +158,7 @@ msgid "Install Deja Dup from the app store"
 msgstr "Deja Dup'u uygulama mağazasından kur"
 
 #: src/anduinos_control_panel/app.py:406 src/anduinos_control_panel/app.py:423
-#: src/anduinos_control_panel/app.py:437 src/anduinos_control_panel/app.py:1955
+#: src/anduinos_control_panel/app.py:437 src/anduinos_control_panel/app.py:1957
 msgid "Setting not found"
 msgstr "Ayar bulunamadı"
 
@@ -175,7 +175,7 @@ msgstr "Uygulama açılmadan önce sonlandı."
 msgid "OK"
 msgstr "Tamam"
 
-#: src/anduinos_control_panel/app.py:588 src/anduinos_control_panel/app.py:978
+#: src/anduinos_control_panel/app.py:588 src/anduinos_control_panel/app.py:980
 #, python-format
 msgid "Install %s?"
 msgstr "%s kurulsun mu?"
@@ -187,16 +187,16 @@ msgid ""
 "now."
 msgstr "Önerilen bileşen kurulu değil: %s. Şimdi yeniden kurabilirsiniz."
 
-#: src/anduinos_control_panel/app.py:595 src/anduinos_control_panel/app.py:981
-#: src/anduinos_control_panel/app.py:1082
-#: src/anduinos_control_panel/app.py:1305
-#: src/anduinos_control_panel/app.py:1506
-#: src/anduinos_control_panel/app.py:1712
+#: src/anduinos_control_panel/app.py:595 src/anduinos_control_panel/app.py:983
+#: src/anduinos_control_panel/app.py:1084
+#: src/anduinos_control_panel/app.py:1307
+#: src/anduinos_control_panel/app.py:1508
+#: src/anduinos_control_panel/app.py:1714
 #: src/anduinos_control_panel/prediction_settings.py:142
 msgid "Cancel"
 msgstr "İptal"
 
-#: src/anduinos_control_panel/app.py:596 src/anduinos_control_panel/app.py:1508
+#: src/anduinos_control_panel/app.py:596 src/anduinos_control_panel/app.py:1510
 #: src/anduinos_control_panel/prediction_settings.py:46
 msgid "Install"
 msgstr "Kur"
@@ -211,8 +211,8 @@ msgstr "%s kuruluyor…"
 msgid "%s installed"
 msgstr "%s kuruldu"
 
-#: src/anduinos_control_panel/app.py:621 src/anduinos_control_panel/app.py:847
-#: src/anduinos_control_panel/app.py:945
+#: src/anduinos_control_panel/app.py:621 src/anduinos_control_panel/app.py:849
+#: src/anduinos_control_panel/app.py:947
 #: src/anduinos_control_panel/software_sources.py:394
 msgid "Authentication was cancelled."
 msgstr "Kimlik doğrulama iptal edildi."
@@ -248,14 +248,14 @@ msgstr "Varsayılan işletim sistemi"
 msgid "Starts automatically when the boot menu wait time ends."
 msgstr "Açılış menüsü bekleme süresi bittiğinde otomatik olarak başlar."
 
-#: src/anduinos_control_panel/app.py:700 src/anduinos_control_panel/app.py:828
+#: src/anduinos_control_panel/app.py:700 src/anduinos_control_panel/app.py:830
 msgid "Current setting (unchanged)"
 msgstr "Geçerli ayar (değişmedi)"
 
-#: src/anduinos_control_panel/app.py:704 src/anduinos_control_panel/app.py:1171
-#: src/anduinos_control_panel/app.py:1394
-#: src/anduinos_control_panel/app.py:1623
-#: src/anduinos_control_panel/app.py:1818
+#: src/anduinos_control_panel/app.py:704 src/anduinos_control_panel/app.py:1173
+#: src/anduinos_control_panel/app.py:1396
+#: src/anduinos_control_panel/app.py:1625
+#: src/anduinos_control_panel/app.py:1820
 msgid "Retry"
 msgstr "Tekrar dene"
 
@@ -286,84 +286,90 @@ msgstr "Önyükleme görüntüsü"
 msgid "Choose the size of the GRUB menu and startup logo."
 msgstr "GRUB menüsünün ve açılış logosunun boyutunu seçin."
 
-#: src/anduinos_control_panel/app.py:738
+#: src/anduinos_control_panel/app.py:736
+msgid ""
+"High resolution can make menu text small on 4K displays; the screen's native "
+"resolution is not guaranteed at boot."
+msgstr "Yüksek çözünürlük, 4K ekranlarda menü metnini küçük gösterebilir; ekranın doğal çözünürlüğünün önyükleme sırasında kullanılabileceği garanti edilmez."
+
+#: src/anduinos_control_panel/app.py:740
 msgid "Display mode"
 msgstr "Görüntüleme modu"
 
-#: src/anduinos_control_panel/app.py:745
+#: src/anduinos_control_panel/app.py:747
 msgid "High resolution (if available)"
 msgstr "Yüksek çözünürlük (varsa)"
 
-#: src/anduinos_control_panel/app.py:745
+#: src/anduinos_control_panel/app.py:747
 msgid "Automatic"
 msgstr "Otomatik"
 
-#: src/anduinos_control_panel/app.py:745
+#: src/anduinos_control_panel/app.py:747
 msgid "Large text mode"
 msgstr "Büyük Metin Modu"
 
-#: src/anduinos_control_panel/app.py:767 src/anduinos_control_panel/app.py:1155
-#: src/anduinos_control_panel/app.py:1378
-#: src/anduinos_control_panel/app.py:1605
-#: src/anduinos_control_panel/app.py:1797
+#: src/anduinos_control_panel/app.py:769 src/anduinos_control_panel/app.py:1157
+#: src/anduinos_control_panel/app.py:1380
+#: src/anduinos_control_panel/app.py:1607
+#: src/anduinos_control_panel/app.py:1799
 msgid "Close"
 msgstr "Kapat"
 
-#: src/anduinos_control_panel/app.py:769 src/anduinos_control_panel/app.py:1714
-#: src/anduinos_control_panel/app.py:1718
+#: src/anduinos_control_panel/app.py:771 src/anduinos_control_panel/app.py:1716
+#: src/anduinos_control_panel/app.py:1720
 msgid "Apply"
 msgstr "Uygula"
 
-#: src/anduinos_control_panel/app.py:825
+#: src/anduinos_control_panel/app.py:827
 msgid "Custom setting (unchanged)"
 msgstr "Özel ayar (değiştirilmedi)"
 
-#: src/anduinos_control_panel/app.py:840
+#: src/anduinos_control_panel/app.py:842
 msgid "Only operating systems already in the boot menu are listed."
 msgstr "Yalnızca açılış menüsünde zaten bulunan işletim sistemleri listelenir."
 
-#: src/anduinos_control_panel/app.py:841
+#: src/anduinos_control_panel/app.py:843
 msgid "No supported operating systems were found in the boot menu."
 msgstr "Önyükleme menüsünde desteklenen işletim sistemi bulunamadı."
 
-#: src/anduinos_control_panel/app.py:844 src/anduinos_control_panel/app.py:848
+#: src/anduinos_control_panel/app.py:846 src/anduinos_control_panel/app.py:850
 msgid "The boot menu could not be read."
 msgstr "Açılış menüsü okunamadı."
 
-#: src/anduinos_control_panel/app.py:859
+#: src/anduinos_control_panel/app.py:861
 msgid "Reading the boot menu…"
 msgstr "Açılış menüsü okunuyor…"
 
-#: src/anduinos_control_panel/app.py:914
+#: src/anduinos_control_panel/app.py:916
 msgid "Updating the boot menu…"
 msgstr "Önyükleme menüsü güncelleniyor…"
 
-#: src/anduinos_control_panel/app.py:937
+#: src/anduinos_control_panel/app.py:939
 msgid "Boot settings updated. The change applies on the next startup."
 msgstr ""
 "Önyükleme ayarları güncellendi. Değişiklik bir sonraki başlangıçta uygulanır."
 
-#: src/anduinos_control_panel/app.py:940
+#: src/anduinos_control_panel/app.py:942
 msgid "Boot settings updated"
 msgstr "Önyükleme ayarları güncellendi"
 
-#: src/anduinos_control_panel/app.py:947
+#: src/anduinos_control_panel/app.py:949
 msgid "The boot setting could not be changed."
 msgstr "Önyükleme ayarı değiştirilemedi."
 
-#: src/anduinos_control_panel/app.py:979
+#: src/anduinos_control_panel/app.py:981
 msgid "This application is available from the app store."
 msgstr "Bu uygulamayı uygulama mağazasından edinebilirsiniz."
 
-#: src/anduinos_control_panel/app.py:982
+#: src/anduinos_control_panel/app.py:984
 msgid "Open App Store"
 msgstr "Uygulama Mağazasını Aç"
 
-#: src/anduinos_control_panel/app.py:1026
+#: src/anduinos_control_panel/app.py:1028
 msgid "Bottles"
 msgstr "Bottles"
 
-#: src/anduinos_control_panel/app.py:1028
+#: src/anduinos_control_panel/app.py:1030
 msgid ""
 "Run Windows applications in isolated compatibility environments powered by "
 "Wine and Bottles."
@@ -371,82 +377,82 @@ msgstr ""
 "Wine ve Bottles tabanlı yalıtılmış uyumluluk ortamlarında Windows "
 "uygulamalarını çalıştırın."
 
-#: src/anduinos_control_panel/app.py:1033
+#: src/anduinos_control_panel/app.py:1035
 msgid "Install Bottles"
 msgstr "Bottles'ı Kur"
 
-#: src/anduinos_control_panel/app.py:1034
+#: src/anduinos_control_panel/app.py:1036
 msgid "Downloads Bottles and its runtime from Flathub"
 msgstr "Bottles'ı ve çalışma zamanını Flathub'dan indirir"
 
-#: src/anduinos_control_panel/app.py:1050
-#: src/anduinos_control_panel/app.py:1273
-#: src/anduinos_control_panel/app.py:1476
-#: src/anduinos_control_panel/app.py:1680
+#: src/anduinos_control_panel/app.py:1052
+#: src/anduinos_control_panel/app.py:1275
+#: src/anduinos_control_panel/app.py:1478
+#: src/anduinos_control_panel/app.py:1682
 #: src/anduinos_control_panel/prediction_settings.py:84
 msgid "Advanced Output"
 msgstr "Gelişmiş Çıktı"
 
-#: src/anduinos_control_panel/app.py:1084
-#: src/anduinos_control_panel/app.py:1307
+#: src/anduinos_control_panel/app.py:1086
+#: src/anduinos_control_panel/app.py:1309
 msgid "Start"
 msgstr "Başlat"
 
-#: src/anduinos_control_panel/app.py:1126
-#: src/anduinos_control_panel/app.py:1349
-#: src/anduinos_control_panel/app.py:1545
+#: src/anduinos_control_panel/app.py:1128
+#: src/anduinos_control_panel/app.py:1351
+#: src/anduinos_control_panel/app.py:1547
 msgid "Installing…"
 msgstr "Kuruluyor…"
 
-#: src/anduinos_control_panel/app.py:1128
+#: src/anduinos_control_panel/app.py:1130
 msgid "Downloading and installing Bottles… This may take a few minutes."
 msgstr "Bottles indiriliyor ve kuruluyor… Bu işlem birkaç dakika sürebilir."
 
-#: src/anduinos_control_panel/app.py:1133
+#: src/anduinos_control_panel/app.py:1135
 msgid "Preparing Flathub and Bottles installation…"
 msgstr "Flathub ve Bottles kurulumu hazırlanıyor…"
 
-#: src/anduinos_control_panel/app.py:1147
+#: src/anduinos_control_panel/app.py:1149
 msgid "✓ Bottles is ready."
 msgstr "✓ Bottles hazır."
 
-#: src/anduinos_control_panel/app.py:1151
-#: src/anduinos_control_panel/app.py:1374
-#: src/anduinos_control_panel/app.py:1572
-#: src/anduinos_control_panel/app.py:1793
+#: src/anduinos_control_panel/app.py:1153
+#: src/anduinos_control_panel/app.py:1376
+#: src/anduinos_control_panel/app.py:1574
+#: src/anduinos_control_panel/app.py:1795
 msgid "✓ Installation completed successfully."
 msgstr "✓ Kurulum başarıyla tamamlandı."
 
-#: src/anduinos_control_panel/app.py:1153
+#: src/anduinos_control_panel/app.py:1155
 msgid "Open Bottles"
 msgstr "Bottles'ı Aç"
 
-#: src/anduinos_control_panel/app.py:1158
+#: src/anduinos_control_panel/app.py:1160
 msgid "Bottles installed"
 msgstr "Bottles kuruldu"
 
-#: src/anduinos_control_panel/app.py:1164
-#: src/anduinos_control_panel/app.py:1387
-#: src/anduinos_control_panel/app.py:1616
+#: src/anduinos_control_panel/app.py:1166
+#: src/anduinos_control_panel/app.py:1389
+#: src/anduinos_control_panel/app.py:1618
 msgid "✗ Installation failed. Review Advanced Output."
 msgstr "✗ Kurulum başarısız oldu. Gelişmiş Çıktı bölümünü gözden geçirin."
 
-#: src/anduinos_control_panel/app.py:1169
-#: src/anduinos_control_panel/app.py:1392
-#: src/anduinos_control_panel/app.py:1621
-#: src/anduinos_control_panel/app.py:1816
+#: src/anduinos_control_panel/app.py:1171
+#: src/anduinos_control_panel/app.py:1394
+#: src/anduinos_control_panel/app.py:1623
+#: src/anduinos_control_panel/app.py:1818
 msgid "✗ Operation failed: "
 msgstr "✗ İşlem başarısız oldu: "
 
-#: src/anduinos_control_panel/app.py:1204
+#: src/anduinos_control_panel/app.py:1206
 msgid "Deja Dup Backups"
 msgstr "Deja Dup Yedekleri"
 
-#: src/anduinos_control_panel/app.py:1213
+#: src/anduinos_control_panel/app.py:1215
 msgid "Factory Reset Is Not Available"
 msgstr "Fabrika Ayarlarına Sıfırlama Kullanılamıyor"
 
-#: src/anduinos_control_panel/app.py:1215
+#: src/anduinos_control_panel/app.py:1217
 msgid ""
 "This system does not support factory reset. Reinstall AnduinOS and choose "
 "the Btrfs filesystem to enable it."
@@ -454,16 +460,16 @@ msgstr ""
 "Bu sistem fabrika ayarlarına sıfırlamayı desteklemiyor. Etkinleştirmek için "
 "AnduinOS’u yeniden yükleyin ve Btrfs dosya sistemini seçin."
 
-#: src/anduinos_control_panel/app.py:1231
+#: src/anduinos_control_panel/app.py:1233
 #: src/anduinos_control_panel/topics.py:272
 msgid "Permission Settings"
 msgstr "İzin Ayarları"
 
-#: src/anduinos_control_panel/app.py:1249
+#: src/anduinos_control_panel/app.py:1251
 msgid "Flatseal"
 msgstr "Flatseal"
 
-#: src/anduinos_control_panel/app.py:1251
+#: src/anduinos_control_panel/app.py:1253
 msgid ""
 "Review and control what files, devices, network connections, and services "
 "Flatpak applications can access."
@@ -471,43 +477,43 @@ msgstr ""
 "Flatpak uygulamalarının erişebildiği dosyaları, cihazları, ağ bağlantılarını "
 "ve hizmetleri gözden geçirin ve yönetin."
 
-#: src/anduinos_control_panel/app.py:1256
+#: src/anduinos_control_panel/app.py:1258
 msgid "Install Flatseal"
 msgstr "Flatseal'i Kur"
 
-#: src/anduinos_control_panel/app.py:1258
+#: src/anduinos_control_panel/app.py:1260
 msgid "Administrator authentication is required when installation starts"
 msgstr "Kurulum başladığında yönetici kimlik doğrulaması gerekir"
 
-#: src/anduinos_control_panel/app.py:1350
+#: src/anduinos_control_panel/app.py:1352
 msgid "Downloading and installing Flatseal…"
 msgstr "Flatseal indiriliyor ve kuruluyor…"
 
-#: src/anduinos_control_panel/app.py:1355
+#: src/anduinos_control_panel/app.py:1357
 msgid "Preparing Flatseal installation…"
 msgstr "Flatseal kurulumu hazırlanıyor…"
 
-#: src/anduinos_control_panel/app.py:1370
+#: src/anduinos_control_panel/app.py:1372
 msgid "✓ Flatseal is ready."
 msgstr "✓ Flatseal hazır."
 
-#: src/anduinos_control_panel/app.py:1376
+#: src/anduinos_control_panel/app.py:1378
 msgid "Open Flatseal"
 msgstr "Flatseal'i aç"
 
-#: src/anduinos_control_panel/app.py:1381
+#: src/anduinos_control_panel/app.py:1383
 msgid "Flatseal installed"
 msgstr "Flatseal kuruldu"
 
-#: src/anduinos_control_panel/app.py:1423
+#: src/anduinos_control_panel/app.py:1425
 msgid "Install Voice Typing"
 msgstr "Sesle Yazma Özelliğini Kur"
 
-#: src/anduinos_control_panel/app.py:1441
+#: src/anduinos_control_panel/app.py:1443
 msgid "Offline Voice Typing"
 msgstr "Çevrimdışı Sesle Yazma"
 
-#: src/anduinos_control_panel/app.py:1443
+#: src/anduinos_control_panel/app.py:1445
 msgid ""
 "Press Super + H to dictate into browsers, editors, messages, terminals, and "
 "other applications. Audio stays on this computer."
@@ -515,39 +521,39 @@ msgstr ""
 "Tarayıcılara, düzenleyicilere, mesajlara, terminallere ve diğer uygulamalara "
 "dikte etmek için Super + H tuşlarına basın. Ses verisi bu bilgisayarda kalır."
 
-#: src/anduinos_control_panel/app.py:1448
+#: src/anduinos_control_panel/app.py:1450
 msgid "Private by default"
 msgstr "Varsayılan Olarak Özel"
 
-#: src/anduinos_control_panel/app.py:1449
+#: src/anduinos_control_panel/app.py:1451
 msgid "Speech is recognized locally with whisper.cpp"
 msgstr "Konuşma, bu bilgisayarda whisper.cpp ile tanınır"
 
-#: src/anduinos_control_panel/app.py:1454
+#: src/anduinos_control_panel/app.py:1456
 msgid "About 140 MB to download"
 msgstr "Yaklaşık 140 MB indirilecek"
 
-#: src/anduinos_control_panel/app.py:1456
+#: src/anduinos_control_panel/app.py:1458
 msgid ""
 "Includes the multilingual Base model; optional models are available later"
 msgstr ""
 "Çok dilli Base modelini içerir; isteğe bağlı modeller daha sonra "
 "kullanılabilir"
 
-#: src/anduinos_control_panel/app.py:1465
+#: src/anduinos_control_panel/app.py:1467
 #: src/anduinos_control_panel/prediction_settings.py:177
 msgid "Administrator authentication is required when installation starts."
 msgstr "Kurulum başladığında yönetici kimlik doğrulaması gerekir."
 
-#: src/anduinos_control_panel/app.py:1550
+#: src/anduinos_control_panel/app.py:1552
 msgid "Downloading the local engine and multilingual speech model…"
 msgstr "Yerel motor ve çok dilli konuşma tanıma modeli indiriliyor…"
 
-#: src/anduinos_control_panel/app.py:1556
+#: src/anduinos_control_panel/app.py:1558
 msgid "Preparing Voice Typing installation…"
 msgstr "Sesle Yazma kurulumu hazırlanıyor…"
 
-#: src/anduinos_control_panel/app.py:1599
+#: src/anduinos_control_panel/app.py:1601
 msgid ""
 "✓ Installed. Sign out and back in once, then press Super + H to start Voice "
 "Typing."
@@ -555,24 +561,24 @@ msgstr ""
 "✓ Kuruldu. Oturumu bir kez kapatıp yeniden açın, ardından Sesle Yazmayı "
 "başlatmak için Super + H tuşlarına basın."
 
-#: src/anduinos_control_panel/app.py:1603
+#: src/anduinos_control_panel/app.py:1605
 msgid "Open Settings"
 msgstr "Ayarları Aç"
 
-#: src/anduinos_control_panel/app.py:1609
+#: src/anduinos_control_panel/app.py:1611
 msgid "Voice Typing installed — sign out to finish"
 msgstr "Sesle Yazma kuruldu — kurulumu tamamlamak için oturumu kapatın"
 
-#: src/anduinos_control_panel/app.py:1640
+#: src/anduinos_control_panel/app.py:1642
 #: src/anduinos_control_panel/topics.py:281
 msgid "On-device AI"
 msgstr "Cihaz üzerinde çalışan yapay zekâ"
 
-#: src/anduinos_control_panel/app.py:1658
+#: src/anduinos_control_panel/app.py:1660
 msgid "Why AI"
 msgstr "Why AI"
 
-#: src/anduinos_control_panel/app.py:1660
+#: src/anduinos_control_panel/app.py:1662
 msgid ""
 "Run the Why AI assistant locally. The model and runtime are installed only "
 "when this option is enabled."
@@ -580,81 +586,81 @@ msgstr ""
 "Why AI asistanını bu bilgisayarda çalıştırın. Model ve çalışma zamanı "
 "yalnızca bu seçenek etkinleştirildiğinde kurulur."
 
-#: src/anduinos_control_panel/app.py:1665
+#: src/anduinos_control_panel/app.py:1667
 msgid "Install on-device AI"
 msgstr "Cihaz üzerinde çalışan yapay zekâyı kur"
 
-#: src/anduinos_control_panel/app.py:1666
+#: src/anduinos_control_panel/app.py:1668
 msgid "Enable the local Why AI stack on this computer"
 msgstr "Bu bilgisayarda yerel Why AI yığınını etkinleştirin"
 
-#: src/anduinos_control_panel/app.py:1760
+#: src/anduinos_control_panel/app.py:1762
 msgid "Applying…"
 msgstr "Uygulanıyor…"
 
-#: src/anduinos_control_panel/app.py:1762
+#: src/anduinos_control_panel/app.py:1764
 msgid "Downloading and installing Why AI… This may take about 10 minutes."
 msgstr ""
 "Why AI indiriliyor ve kuruluyor… Bu işlem yaklaşık 10 dakika sürebilir."
 
-#: src/anduinos_control_panel/app.py:1764
+#: src/anduinos_control_panel/app.py:1766
 msgid "Disabling the local Why AI stack…"
 msgstr "Yerel Why AI yığını devre dışı bırakılıyor…"
 
-#: src/anduinos_control_panel/app.py:1771
+#: src/anduinos_control_panel/app.py:1773
 msgid "Preparing package operation…"
 msgstr "Paket işlemi hazırlanıyor…"
 
-#: src/anduinos_control_panel/app.py:1785
+#: src/anduinos_control_panel/app.py:1787
 msgid "✓ On-device AI is ready."
 msgstr "✓ Cihaz üzerinde çalışan yapay zekâ hazır."
 
-#: src/anduinos_control_panel/app.py:1787
+#: src/anduinos_control_panel/app.py:1789
 msgid "✓ On-device AI is disabled."
 msgstr "✓ Cihaz üzerinde çalışan yapay zekâ devre dışı bırakıldı."
 
-#: src/anduinos_control_panel/app.py:1793
+#: src/anduinos_control_panel/app.py:1795
 msgid "✓ Change completed successfully."
 msgstr "✓ Değişiklik başarıyla tamamlandı."
 
-#: src/anduinos_control_panel/app.py:1802
+#: src/anduinos_control_panel/app.py:1804
 msgid "On-device AI enabled"
 msgstr "Cihaz üzerinde çalışan yapay zekâ etkinleştirildi"
 
-#: src/anduinos_control_panel/app.py:1804
+#: src/anduinos_control_panel/app.py:1806
 msgid "On-device AI disabled"
 msgstr "Cihaz üzerinde çalışan yapay zekâ devre dışı bırakıldı"
 
-#: src/anduinos_control_panel/app.py:1812
+#: src/anduinos_control_panel/app.py:1814
 msgid "✗ Package operation failed. Review Advanced Output."
 msgstr "✗ Paket işlemi başarısız oldu. Gelişmiş Çıktı bölümünü gözden geçirin."
 
-#: src/anduinos_control_panel/app.py:1889
+#: src/anduinos_control_panel/app.py:1891
 #, python-brace-format
 msgid "{command} exited with status {status}"
 msgstr "{command}, {status} çıkış koduyla sonlandı"
 
-#: src/anduinos_control_panel/app.py:1916
+#: src/anduinos_control_panel/app.py:1918
 msgid "Open a Control Panel topic"
 msgstr "Denetim Masası öğesini aç"
 
-#: src/anduinos_control_panel/app.py:1917
+#: src/anduinos_control_panel/app.py:1919
 msgid "TOPIC"
 msgstr "ÖĞE"
 
-#: src/anduinos_control_panel/app.py:1925
+#: src/anduinos_control_panel/app.py:1927
 msgid "TERMS"
 msgstr "TERMLER"
 
-#: src/anduinos_control_panel/app.py:1962
+#: src/anduinos_control_panel/app.py:1964
 msgid "AnduinOS Control Panel"
 msgstr "AnduinOS Denetim Masası"
 
-#: src/anduinos_control_panel/app.py:1964
+#: src/anduinos_control_panel/app.py:1966
 msgid "AnduinOS Team"
 msgstr "AnduinOS Ekibi"
 
-#: src/anduinos_control_panel/app.py:1966
+#: src/anduinos_control_panel/app.py:1968
 msgid "Find and manage AnduinOS system settings."
 msgstr "AnduinOS sistem ayarlarını bulup yönetin."
 

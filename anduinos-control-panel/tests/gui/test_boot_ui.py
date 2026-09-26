@@ -83,6 +83,13 @@ class BootUiTests(unittest.TestCase):
         self.assertEqual([display.get_model().get_string(i) for i in range(3)],
                          ['High resolution (if available)', 'Automatic', 'Large text mode'])
         self.assertEqual(display.get_selected(), 1)
+        display_group = next(
+            widget for widget in self.walk(self.dialog)
+            if isinstance(widget, self.module.Adw.PreferencesGroup)
+            and widget.get_title() == 'Boot display'
+        )
+        self.assertIn('text small on 4K displays', display_group.get_description())
+        self.assertIn('native resolution is not guaranteed', display_group.get_description())
         with patch.object(self.module.subprocess, 'run') as run:
             self.window._show_boot_settings()
             run.assert_not_called()

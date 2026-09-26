@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-control-panel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 16:59+0000\n"
+"POT-Creation-Date: 2026-09-26 17:29+0000\n"
 "PO-Revision-Date: 2026-09-09 12:01+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -27,7 +27,7 @@ msgstr "Panel sterowania"
 msgid "AnduinOS"
 msgstr "AnduinOS"
 
-#: src/anduinos_control_panel/app.py:104 src/anduinos_control_panel/app.py:1924
+#: src/anduinos_control_panel/app.py:104 src/anduinos_control_panel/app.py:1926
 msgid "Search Control Panel"
 msgstr "Szukaj w panelu sterowania"
 
@@ -134,7 +134,7 @@ msgstr "Konfiguracja mikrofonu, języka, skrótu klawiszowego i kalibracji"
 msgid "Install private, offline speech-to-text"
 msgstr "Zainstaluj prywatne rozpoznawanie mowy działające offline"
 
-#: src/anduinos_control_panel/app.py:337 src/anduinos_control_panel/app.py:1008
+#: src/anduinos_control_panel/app.py:337 src/anduinos_control_panel/app.py:1010
 msgid "Windows Compatibility"
 msgstr "Zgodność z systemem Windows"
 
@@ -159,7 +159,7 @@ msgid "Install Deja Dup from the app store"
 msgstr "Zainstaluj Deja Dup ze sklepu z aplikacjami"
 
 #: src/anduinos_control_panel/app.py:406 src/anduinos_control_panel/app.py:423
-#: src/anduinos_control_panel/app.py:437 src/anduinos_control_panel/app.py:1955
+#: src/anduinos_control_panel/app.py:437 src/anduinos_control_panel/app.py:1957
 msgid "Setting not found"
 msgstr "Nie znaleziono ustawienia"
 
@@ -176,7 +176,7 @@ msgstr "Aplikacja zakończyła działanie, zanim udało się ją otworzyć."
 msgid "OK"
 msgstr "OK"
 
-#: src/anduinos_control_panel/app.py:588 src/anduinos_control_panel/app.py:978
+#: src/anduinos_control_panel/app.py:588 src/anduinos_control_panel/app.py:980
 #, python-format
 msgid "Install %s?"
 msgstr "Zainstalować %s?"
@@ -190,16 +190,16 @@ msgstr ""
 "Zalecany składnik nie jest zainstalowany: %s. Możesz go teraz zainstalować "
 "ponownie."
 
-#: src/anduinos_control_panel/app.py:595 src/anduinos_control_panel/app.py:981
-#: src/anduinos_control_panel/app.py:1082
-#: src/anduinos_control_panel/app.py:1305
-#: src/anduinos_control_panel/app.py:1506
-#: src/anduinos_control_panel/app.py:1712
+#: src/anduinos_control_panel/app.py:595 src/anduinos_control_panel/app.py:983
+#: src/anduinos_control_panel/app.py:1084
+#: src/anduinos_control_panel/app.py:1307
+#: src/anduinos_control_panel/app.py:1508
+#: src/anduinos_control_panel/app.py:1714
 #: src/anduinos_control_panel/prediction_settings.py:142
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: src/anduinos_control_panel/app.py:596 src/anduinos_control_panel/app.py:1508
+#: src/anduinos_control_panel/app.py:596 src/anduinos_control_panel/app.py:1510
 #: src/anduinos_control_panel/prediction_settings.py:46
 msgid "Install"
 msgstr "Zainstaluj"
@@ -214,8 +214,8 @@ msgstr "Instalowanie %s…"
 msgid "%s installed"
 msgstr "Zainstalowano %s"
 
-#: src/anduinos_control_panel/app.py:621 src/anduinos_control_panel/app.py:847
-#: src/anduinos_control_panel/app.py:945
+#: src/anduinos_control_panel/app.py:621 src/anduinos_control_panel/app.py:849
+#: src/anduinos_control_panel/app.py:947
 #: src/anduinos_control_panel/software_sources.py:394
 msgid "Authentication was cancelled."
 msgstr "Uwierzytelnienie zostało anulowane."
@@ -253,14 +253,14 @@ msgstr ""
 "Uruchamia się automatycznie po zakończeniu czasu oczekiwania menu "
 "rozruchowego."
 
-#: src/anduinos_control_panel/app.py:700 src/anduinos_control_panel/app.py:828
+#: src/anduinos_control_panel/app.py:700 src/anduinos_control_panel/app.py:830
 msgid "Current setting (unchanged)"
 msgstr "Aktualne ustawienie (bez zmian)"
 
-#: src/anduinos_control_panel/app.py:704 src/anduinos_control_panel/app.py:1171
-#: src/anduinos_control_panel/app.py:1394
-#: src/anduinos_control_panel/app.py:1623
-#: src/anduinos_control_panel/app.py:1818
+#: src/anduinos_control_panel/app.py:704 src/anduinos_control_panel/app.py:1173
+#: src/anduinos_control_panel/app.py:1396
+#: src/anduinos_control_panel/app.py:1625
+#: src/anduinos_control_panel/app.py:1820
 msgid "Retry"
 msgstr "Spróbuj ponownie"
 
@@ -291,87 +291,93 @@ msgstr "Wyświetlanie podczas rozruchu"
 msgid "Choose the size of the GRUB menu and startup logo."
 msgstr "Wybierz rozmiar menu GRUB i logo startowego."
 
-#: src/anduinos_control_panel/app.py:738
+#: src/anduinos_control_panel/app.py:736
+msgid ""
+"High resolution can make menu text small on 4K displays; the screen's native "
+"resolution is not guaranteed at boot."
+msgstr "Wysoka rozdzielczość może sprawić, że tekst menu będzie mały na ekranach 4K; podczas uruchamiania natywna rozdzielczość ekranu nie jest gwarantowana."
+
+#: src/anduinos_control_panel/app.py:740
 msgid "Display mode"
 msgstr "Tryb wyświetlania"
 
-#: src/anduinos_control_panel/app.py:745
+#: src/anduinos_control_panel/app.py:747
 msgid "High resolution (if available)"
 msgstr "Wysoka rozdzielczość (jeśli dostępna)"
 
-#: src/anduinos_control_panel/app.py:745
+#: src/anduinos_control_panel/app.py:747
 msgid "Automatic"
 msgstr "Automatycznie"
 
-#: src/anduinos_control_panel/app.py:745
+#: src/anduinos_control_panel/app.py:747
 msgid "Large text mode"
 msgstr "Tryb dużego tekstu"
 
-#: src/anduinos_control_panel/app.py:767 src/anduinos_control_panel/app.py:1155
-#: src/anduinos_control_panel/app.py:1378
-#: src/anduinos_control_panel/app.py:1605
-#: src/anduinos_control_panel/app.py:1797
+#: src/anduinos_control_panel/app.py:769 src/anduinos_control_panel/app.py:1157
+#: src/anduinos_control_panel/app.py:1380
+#: src/anduinos_control_panel/app.py:1607
+#: src/anduinos_control_panel/app.py:1799
 msgid "Close"
 msgstr "Zamknij"
 
-#: src/anduinos_control_panel/app.py:769 src/anduinos_control_panel/app.py:1714
-#: src/anduinos_control_panel/app.py:1718
+#: src/anduinos_control_panel/app.py:771 src/anduinos_control_panel/app.py:1716
+#: src/anduinos_control_panel/app.py:1720
 msgid "Apply"
 msgstr "Zastosuj"
 
-#: src/anduinos_control_panel/app.py:825
+#: src/anduinos_control_panel/app.py:827
 msgid "Custom setting (unchanged)"
 msgstr "Własne ustawienie (niezmienione)"
 
-#: src/anduinos_control_panel/app.py:840
+#: src/anduinos_control_panel/app.py:842
 msgid "Only operating systems already in the boot menu are listed."
 msgstr ""
 "Na liście znajdują się tylko systemy operacyjne już obecne w menu "
 "rozruchowym."
 
-#: src/anduinos_control_panel/app.py:841
+#: src/anduinos_control_panel/app.py:843
 msgid "No supported operating systems were found in the boot menu."
 msgstr "Nie znaleziono obsługiwanych systemów operacyjnych w menu rozruchowym."
 
-#: src/anduinos_control_panel/app.py:844 src/anduinos_control_panel/app.py:848
+#: src/anduinos_control_panel/app.py:846 src/anduinos_control_panel/app.py:850
 msgid "The boot menu could not be read."
 msgstr "Nie udało się odczytać menu rozruchowego."
 
-#: src/anduinos_control_panel/app.py:859
+#: src/anduinos_control_panel/app.py:861
 msgid "Reading the boot menu…"
 msgstr "Odczytywanie menu rozruchu…"
 
-#: src/anduinos_control_panel/app.py:914
+#: src/anduinos_control_panel/app.py:916
 msgid "Updating the boot menu…"
 msgstr "Aktualizowanie menu rozruchu…"
 
-#: src/anduinos_control_panel/app.py:937
+#: src/anduinos_control_panel/app.py:939
 msgid "Boot settings updated. The change applies on the next startup."
 msgstr ""
 "Zaktualizowano ustawienia rozruchu. Zmiana zostanie zastosowana przy "
 "następnym uruchomieniu."
 
-#: src/anduinos_control_panel/app.py:940
+#: src/anduinos_control_panel/app.py:942
 msgid "Boot settings updated"
 msgstr "Zaktualizowano ustawienia rozruchu"
 
-#: src/anduinos_control_panel/app.py:947
+#: src/anduinos_control_panel/app.py:949
 msgid "The boot setting could not be changed."
 msgstr "Nie udało się zmienić ustawienia rozruchu."
 
-#: src/anduinos_control_panel/app.py:979
+#: src/anduinos_control_panel/app.py:981
 msgid "This application is available from the app store."
 msgstr "Ta aplikacja jest dostępna w sklepie z aplikacjami."
 
-#: src/anduinos_control_panel/app.py:982
+#: src/anduinos_control_panel/app.py:984
 msgid "Open App Store"
 msgstr "Otwórz sklep z aplikacjami"
 
-#: src/anduinos_control_panel/app.py:1026
+#: src/anduinos_control_panel/app.py:1028
 msgid "Bottles"
 msgstr "Bottles"
 
-#: src/anduinos_control_panel/app.py:1028
+#: src/anduinos_control_panel/app.py:1030
 msgid ""
 "Run Windows applications in isolated compatibility environments powered by "
 "Wine and Bottles."
@@ -379,82 +385,82 @@ msgstr ""
 "Uruchamia aplikacje systemu Windows w izolowanych środowiskach zgodności "
 "opartych na Wine i Bottles."
 
-#: src/anduinos_control_panel/app.py:1033
+#: src/anduinos_control_panel/app.py:1035
 msgid "Install Bottles"
 msgstr "Zainstaluj Bottles"
 
-#: src/anduinos_control_panel/app.py:1034
+#: src/anduinos_control_panel/app.py:1036
 msgid "Downloads Bottles and its runtime from Flathub"
 msgstr "Pobiera Bottles i jego środowisko uruchomieniowe z Flathub"
 
-#: src/anduinos_control_panel/app.py:1050
-#: src/anduinos_control_panel/app.py:1273
-#: src/anduinos_control_panel/app.py:1476
-#: src/anduinos_control_panel/app.py:1680
+#: src/anduinos_control_panel/app.py:1052
+#: src/anduinos_control_panel/app.py:1275
+#: src/anduinos_control_panel/app.py:1478
+#: src/anduinos_control_panel/app.py:1682
 #: src/anduinos_control_panel/prediction_settings.py:84
 msgid "Advanced Output"
 msgstr "Zaawansowane dane wyjściowe"
 
-#: src/anduinos_control_panel/app.py:1084
-#: src/anduinos_control_panel/app.py:1307
+#: src/anduinos_control_panel/app.py:1086
+#: src/anduinos_control_panel/app.py:1309
 msgid "Start"
 msgstr "Rozpocznij"
 
-#: src/anduinos_control_panel/app.py:1126
-#: src/anduinos_control_panel/app.py:1349
-#: src/anduinos_control_panel/app.py:1545
+#: src/anduinos_control_panel/app.py:1128
+#: src/anduinos_control_panel/app.py:1351
+#: src/anduinos_control_panel/app.py:1547
 msgid "Installing…"
 msgstr "Instalowanie…"
 
-#: src/anduinos_control_panel/app.py:1128
+#: src/anduinos_control_panel/app.py:1130
 msgid "Downloading and installing Bottles… This may take a few minutes."
 msgstr "Pobieranie i instalowanie Bottles… Może to potrwać kilka minut."
 
-#: src/anduinos_control_panel/app.py:1133
+#: src/anduinos_control_panel/app.py:1135
 msgid "Preparing Flathub and Bottles installation…"
 msgstr "Przygotowywanie instalacji Flathub i Bottles…"
 
-#: src/anduinos_control_panel/app.py:1147
+#: src/anduinos_control_panel/app.py:1149
 msgid "✓ Bottles is ready."
 msgstr "✓ Bottles jest gotowy."
 
-#: src/anduinos_control_panel/app.py:1151
-#: src/anduinos_control_panel/app.py:1374
-#: src/anduinos_control_panel/app.py:1572
-#: src/anduinos_control_panel/app.py:1793
+#: src/anduinos_control_panel/app.py:1153
+#: src/anduinos_control_panel/app.py:1376
+#: src/anduinos_control_panel/app.py:1574
+#: src/anduinos_control_panel/app.py:1795
 msgid "✓ Installation completed successfully."
 msgstr "✓ Instalacja zakończona pomyślnie."
 
-#: src/anduinos_control_panel/app.py:1153
+#: src/anduinos_control_panel/app.py:1155
 msgid "Open Bottles"
 msgstr "Otwórz Bottles"
 
-#: src/anduinos_control_panel/app.py:1158
+#: src/anduinos_control_panel/app.py:1160
 msgid "Bottles installed"
 msgstr "Zainstalowano Bottles"
 
-#: src/anduinos_control_panel/app.py:1164
-#: src/anduinos_control_panel/app.py:1387
-#: src/anduinos_control_panel/app.py:1616
+#: src/anduinos_control_panel/app.py:1166
+#: src/anduinos_control_panel/app.py:1389
+#: src/anduinos_control_panel/app.py:1618
 msgid "✗ Installation failed. Review Advanced Output."
 msgstr "✗ Instalacja nie powiodła się. Sprawdź zaawansowane dane wyjściowe."
 
-#: src/anduinos_control_panel/app.py:1169
-#: src/anduinos_control_panel/app.py:1392
-#: src/anduinos_control_panel/app.py:1621
-#: src/anduinos_control_panel/app.py:1816
+#: src/anduinos_control_panel/app.py:1171
+#: src/anduinos_control_panel/app.py:1394
+#: src/anduinos_control_panel/app.py:1623
+#: src/anduinos_control_panel/app.py:1818
 msgid "✗ Operation failed: "
 msgstr "✗ Operacja nie powiodła się: "
 
-#: src/anduinos_control_panel/app.py:1204
+#: src/anduinos_control_panel/app.py:1206
 msgid "Deja Dup Backups"
 msgstr "Kopie zapasowe Deja Dup"
 
-#: src/anduinos_control_panel/app.py:1213
+#: src/anduinos_control_panel/app.py:1215
 msgid "Factory Reset Is Not Available"
 msgstr "Przywracanie ustawień fabrycznych jest niedostępne"
 
-#: src/anduinos_control_panel/app.py:1215
+#: src/anduinos_control_panel/app.py:1217
 msgid ""
 "This system does not support factory reset. Reinstall AnduinOS and choose "
 "the Btrfs filesystem to enable it."
@@ -462,16 +468,16 @@ msgstr ""
 "Ten system nie obsługuje przywracania ustawień fabrycznych. Zainstaluj "
 "ponownie AnduinOS i wybierz system plików Btrfs, aby włączyć tę funkcję."
 
-#: src/anduinos_control_panel/app.py:1231
+#: src/anduinos_control_panel/app.py:1233
 #: src/anduinos_control_panel/topics.py:272
 msgid "Permission Settings"
 msgstr "Ustawienia uprawnień"
 
-#: src/anduinos_control_panel/app.py:1249
+#: src/anduinos_control_panel/app.py:1251
 msgid "Flatseal"
 msgstr "Flatseal"
 
-#: src/anduinos_control_panel/app.py:1251
+#: src/anduinos_control_panel/app.py:1253
 msgid ""
 "Review and control what files, devices, network connections, and services "
 "Flatpak applications can access."
@@ -479,44 +485,44 @@ msgstr ""
 "Przeglądaj i kontroluj, do jakich plików, urządzeń, połączeń sieciowych i "
 "usług mają dostęp aplikacje Flatpak."
 
-#: src/anduinos_control_panel/app.py:1256
+#: src/anduinos_control_panel/app.py:1258
 msgid "Install Flatseal"
 msgstr "Zainstaluj Flatseal"
 
-#: src/anduinos_control_panel/app.py:1258
+#: src/anduinos_control_panel/app.py:1260
 msgid "Administrator authentication is required when installation starts"
 msgstr ""
 "Wymagane jest uwierzytelnienie administratora przy rozpoczęciu instalacji"
 
-#: src/anduinos_control_panel/app.py:1350
+#: src/anduinos_control_panel/app.py:1352
 msgid "Downloading and installing Flatseal…"
 msgstr "Pobieranie i instalowanie Flatseal…"
 
-#: src/anduinos_control_panel/app.py:1355
+#: src/anduinos_control_panel/app.py:1357
 msgid "Preparing Flatseal installation…"
 msgstr "Przygotowywanie instalacji Flatseal…"
 
-#: src/anduinos_control_panel/app.py:1370
+#: src/anduinos_control_panel/app.py:1372
 msgid "✓ Flatseal is ready."
 msgstr "✓ Flatseal jest gotowy."
 
-#: src/anduinos_control_panel/app.py:1376
+#: src/anduinos_control_panel/app.py:1378
 msgid "Open Flatseal"
 msgstr "Otwórz Flatseal"
 
-#: src/anduinos_control_panel/app.py:1381
+#: src/anduinos_control_panel/app.py:1383
 msgid "Flatseal installed"
 msgstr "Zainstalowano Flatseal"
 
-#: src/anduinos_control_panel/app.py:1423
+#: src/anduinos_control_panel/app.py:1425
 msgid "Install Voice Typing"
 msgstr "Zainstaluj dyktowanie głosowe"
 
-#: src/anduinos_control_panel/app.py:1441
+#: src/anduinos_control_panel/app.py:1443
 msgid "Offline Voice Typing"
 msgstr "Dyktowanie głosowe offline"
 
-#: src/anduinos_control_panel/app.py:1443
+#: src/anduinos_control_panel/app.py:1445
 msgid ""
 "Press Super + H to dictate into browsers, editors, messages, terminals, and "
 "other applications. Audio stays on this computer."
@@ -525,40 +531,40 @@ msgstr ""
 "komunikatorach, terminalach i innych aplikacjach. Dane audio nie są wysyłane "
 "poza ten komputer."
 
-#: src/anduinos_control_panel/app.py:1448
+#: src/anduinos_control_panel/app.py:1450
 msgid "Private by default"
 msgstr "Domyślnie prywatne"
 
-#: src/anduinos_control_panel/app.py:1449
+#: src/anduinos_control_panel/app.py:1451
 msgid "Speech is recognized locally with whisper.cpp"
 msgstr "Rozpoznawanie mowy odbywa się na tym komputerze za pomocą whisper.cpp"
 
-#: src/anduinos_control_panel/app.py:1454
+#: src/anduinos_control_panel/app.py:1456
 msgid "About 140 MB to download"
 msgstr "Około 140 MB do pobrania"
 
-#: src/anduinos_control_panel/app.py:1456
+#: src/anduinos_control_panel/app.py:1458
 msgid ""
 "Includes the multilingual Base model; optional models are available later"
 msgstr ""
 "Zawiera wielojęzyczny model Base; opcjonalne modele będą dostępne później"
 
-#: src/anduinos_control_panel/app.py:1465
+#: src/anduinos_control_panel/app.py:1467
 #: src/anduinos_control_panel/prediction_settings.py:177
 msgid "Administrator authentication is required when installation starts."
 msgstr ""
 "Wymagane jest uwierzytelnienie administratora przy rozpoczęciu instalacji."
 
-#: src/anduinos_control_panel/app.py:1550
+#: src/anduinos_control_panel/app.py:1552
 msgid "Downloading the local engine and multilingual speech model…"
 msgstr ""
 "Pobieranie lokalnego silnika i wielojęzycznego modelu rozpoznawania mowy…"
 
-#: src/anduinos_control_panel/app.py:1556
+#: src/anduinos_control_panel/app.py:1558
 msgid "Preparing Voice Typing installation…"
 msgstr "Przygotowywanie instalacji dyktowania głosowego…"
 
-#: src/anduinos_control_panel/app.py:1599
+#: src/anduinos_control_panel/app.py:1601
 msgid ""
 "✓ Installed. Sign out and back in once, then press Super + H to start Voice "
 "Typing."
@@ -566,25 +572,25 @@ msgstr ""
 "✓ Zainstalowano. Wyloguj się i zaloguj ponownie, a następnie naciśnij Super "
 "+ H, aby rozpocząć dyktowanie głosowe."
 
-#: src/anduinos_control_panel/app.py:1603
+#: src/anduinos_control_panel/app.py:1605
 msgid "Open Settings"
 msgstr "Otwórz ustawienia"
 
-#: src/anduinos_control_panel/app.py:1609
+#: src/anduinos_control_panel/app.py:1611
 msgid "Voice Typing installed — sign out to finish"
 msgstr ""
 "Zainstalowano dyktowanie głosowe — wyloguj się, aby dokończyć konfigurację"
 
-#: src/anduinos_control_panel/app.py:1640
+#: src/anduinos_control_panel/app.py:1642
 #: src/anduinos_control_panel/topics.py:281
 msgid "On-device AI"
 msgstr "Sztuczna inteligencja działająca na urządzeniu"
 
-#: src/anduinos_control_panel/app.py:1658
+#: src/anduinos_control_panel/app.py:1660
 msgid "Why AI"
 msgstr "Why AI"
 
-#: src/anduinos_control_panel/app.py:1660
+#: src/anduinos_control_panel/app.py:1662
 msgid ""
 "Run the Why AI assistant locally. The model and runtime are installed only "
 "when this option is enabled."
@@ -592,81 +598,81 @@ msgstr ""
 "Uruchamiaj asystenta Why AI na tym komputerze. Model i środowisko "
 "uruchomieniowe są instalowane tylko wtedy, gdy ta opcja jest włączona."
 
-#: src/anduinos_control_panel/app.py:1665
+#: src/anduinos_control_panel/app.py:1667
 msgid "Install on-device AI"
 msgstr "Zainstaluj sztuczną inteligencję działającą na urządzeniu"
 
-#: src/anduinos_control_panel/app.py:1666
+#: src/anduinos_control_panel/app.py:1668
 msgid "Enable the local Why AI stack on this computer"
 msgstr "Włącz lokalny stos Why AI na tym komputerze"
 
-#: src/anduinos_control_panel/app.py:1760
+#: src/anduinos_control_panel/app.py:1762
 msgid "Applying…"
 msgstr "Zastosowywanie…"
 
-#: src/anduinos_control_panel/app.py:1762
+#: src/anduinos_control_panel/app.py:1764
 msgid "Downloading and installing Why AI… This may take about 10 minutes."
 msgstr "Pobieranie i instalowanie Why AI… Może to potrwać około 10 minut."
 
-#: src/anduinos_control_panel/app.py:1764
+#: src/anduinos_control_panel/app.py:1766
 msgid "Disabling the local Why AI stack…"
 msgstr "Wyłączanie lokalnego stosu Why AI…"
 
-#: src/anduinos_control_panel/app.py:1771
+#: src/anduinos_control_panel/app.py:1773
 msgid "Preparing package operation…"
 msgstr "Przygotowywanie operacji pakietowej…"
 
-#: src/anduinos_control_panel/app.py:1785
+#: src/anduinos_control_panel/app.py:1787
 msgid "✓ On-device AI is ready."
 msgstr "✓ Sztuczna inteligencja działająca na urządzeniu jest gotowa."
 
-#: src/anduinos_control_panel/app.py:1787
+#: src/anduinos_control_panel/app.py:1789
 msgid "✓ On-device AI is disabled."
 msgstr "✓ Sztuczna inteligencja działająca na urządzeniu została wyłączona."
 
-#: src/anduinos_control_panel/app.py:1793
+#: src/anduinos_control_panel/app.py:1795
 msgid "✓ Change completed successfully."
 msgstr "✓ Zmiana zakończona pomyślnie."
 
-#: src/anduinos_control_panel/app.py:1802
+#: src/anduinos_control_panel/app.py:1804
 msgid "On-device AI enabled"
 msgstr "Sztuczna inteligencja działająca na urządzeniu została włączona"
 
-#: src/anduinos_control_panel/app.py:1804
+#: src/anduinos_control_panel/app.py:1806
 msgid "On-device AI disabled"
 msgstr "Sztuczna inteligencja działająca na urządzeniu została wyłączona"
 
-#: src/anduinos_control_panel/app.py:1812
+#: src/anduinos_control_panel/app.py:1814
 msgid "✗ Package operation failed. Review Advanced Output."
 msgstr ""
 "✗ Operacja na pakiecie nie powiodła się. Sprawdź zaawansowane dane wyjściowe."
 
-#: src/anduinos_control_panel/app.py:1889
+#: src/anduinos_control_panel/app.py:1891
 #, python-brace-format
 msgid "{command} exited with status {status}"
 msgstr "Polecenie {command} zakończyło się kodem wyjścia {status}"
 
-#: src/anduinos_control_panel/app.py:1916
+#: src/anduinos_control_panel/app.py:1918
 msgid "Open a Control Panel topic"
 msgstr "Otwórz element panelu sterowania"
 
-#: src/anduinos_control_panel/app.py:1917
+#: src/anduinos_control_panel/app.py:1919
 msgid "TOPIC"
 msgstr "ELEMENT"
 
-#: src/anduinos_control_panel/app.py:1925
+#: src/anduinos_control_panel/app.py:1927
 msgid "TERMS"
 msgstr "TERMINY"
 
-#: src/anduinos_control_panel/app.py:1962
+#: src/anduinos_control_panel/app.py:1964
 msgid "AnduinOS Control Panel"
 msgstr "Panel sterowania AnduinOS"
 
-#: src/anduinos_control_panel/app.py:1964
+#: src/anduinos_control_panel/app.py:1966
 msgid "AnduinOS Team"
 msgstr "Zespół AnduinOS"
 
-#: src/anduinos_control_panel/app.py:1966
+#: src/anduinos_control_panel/app.py:1968
 msgid "Find and manage AnduinOS system settings."
 msgstr "Znajdź i zarządzaj ustawieniami systemu AnduinOS."
 
