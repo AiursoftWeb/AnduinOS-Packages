@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+# 00_header initializes menuentry_id_option. This hook runs after AnduinOS's
+# own 09 snapshot entries and before stock Linux. Ordinary Linux/Windows
+# entries have their own class first; the stock advanced submenu has none.
+cat <<'EOF'
+set anduinos_theme_original_id_option="$menuentry_id_option"
+set anduinos_theme_icon_scope=1
+set menuentry_id_option="--class recovery $menuentry_id_option"
+EOF

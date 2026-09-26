@@ -1,4 +1,4 @@
-"""Fast source checks; the release gate also installs the built DEB in a VM."""
+"""Theme assets, GRUB syntax, and package lifecycle regression checks."""
 
 import os
 import re
@@ -31,8 +31,9 @@ class PackageContractTests(unittest.TestCase):
             self.assertEqual(background.read(16)[:8], b"\x89PNG\r\n\x1a\n")
             width, height = struct.unpack(">II", background.read(8))
         self.assertEqual(width * 9, height * 16)
-        self.assertIn('desktop-image-scale-method: "crop"', config)
-        self.assertIn('desktop-image-h-align: "left"', config)
+        # The selection coordinates are percentages of the entire screen;
+        # cropping the pre-painted frame shifts it away from those controls.
+        self.assertIn('desktop-image-scale-method: "stretch"', config)
         self.assertTrue((THEME / "select_c.png").is_file())
         self.assertFalse(list(THEME.rglob("*.pf2")))
         self.assertNotIn("font:", config)
@@ -62,6 +63,39 @@ class PackageContractTests(unittest.TestCase):
         self.assertIn("GRUB_THEME=", config)
         for forbidden in ("GRUB_TIMEOUT", "GRUB_DEFAULT", "GRUB_CMDLINE", "GRUB_TERMINAL"):
             self.assertNotIn(forbidden, config)
+
+    def test_icon_classes_are_scoped_around_stock_grub_generators(self) -> None:
+        assets = PACKAGE / "assets"
+        names = (
+            "09_z_anduinos-hyperfluent-icons",
+            "30_s_anduinos-hyperfluent-efi-icon",
+            "31_anduinos-hyperfluent-icons-reset",
+        )
+        outputs = []
+        for name in names:
+            script = assets / name
+            subprocess.run(["/bin/sh", "-n", str(script)], check=True)
+            outputs.append(subprocess.check_output(["/bin/sh", str(script)], text=True))
+        self.assertTrue((THEME / "icons/recovery.png").is_file())
+        self.assertTrue((THEME / "icons/efi.png").is_file())
+
+        # Check the assembled GRUB language, not only each producer's shell.
+        config = (
+            'set menuentry_id_option="--id"\n'
+            + outputs[0]
+            + "menuentry 'AnduinOS' --class anduinos $menuentry_id_option 'main' {\n true\n}\n"
+            + "submenu 'Advanced options' $menuentry_id_option 'advanced' {\n"
+            + " menuentry 'Recovery' --class recovery $menuentry_id_option 'recovery' {\n true\n }\n}\n"
+            + "menuentry 'Windows' --class windows $menuentry_id_option 'windows' {\n true\n}\n"
+            + outputs[1]
+            + "menuentry 'UEFI Firmware Settings' $menuentry_id_option 'firmware' {\n true\n}\n"
+            + outputs[2]
+            + "menuentry 'Custom' $menuentry_id_option 'custom' {\n true\n}\n"
+        )
+        subprocess.run(["grub-script-check"], input=config, text=True, check=True)
+        self.assertIn('set menuentry_id_option="--class recovery $menuentry_id_option"', outputs[0])
+        self.assertIn('set menuentry_id_option="--class efi $anduinos_theme_original_id_option"', outputs[1])
+        self.assertIn('set menuentry_id_option="$anduinos_theme_original_id_option"', outputs[2])
 
     def test_maintainer_scripts_refresh_only_on_install_and_remove(self) -> None:
         for script in (POSTINST, POSTRM):

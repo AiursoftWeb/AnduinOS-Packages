@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-hyperfluent-grub-theme</PackageName>
-    <PackageVersion>2.0.4-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.4-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Optional HyperFluent GRUB theme for AnduinOS</PackageDescription>
     <Section>admin</Section>
@@ -25,6 +25,12 @@
     <IncludeFolder Include="assets/theme/" Target="/usr/share/grub/themes/anduinos-hyperfluent/" />
     <IncludeFile Include="assets/30-anduinos-hyperfluent.cfg"
                  Target="/etc/default/grub.d/30-anduinos-hyperfluent.cfg" />
+    <IncludeScript Include="assets/09_z_anduinos-hyperfluent-icons"
+                   Target="/etc/grub.d/09_z_anduinos-hyperfluent-icons" />
+    <IncludeScript Include="assets/30_s_anduinos-hyperfluent-efi-icon"
+                   Target="/etc/grub.d/30_s_anduinos-hyperfluent-efi-icon" />
+    <IncludeScript Include="assets/31_anduinos-hyperfluent-icons-reset"
+                   Target="/etc/grub.d/31_anduinos-hyperfluent-icons-reset" />
     <IncludeFile Include="LICENSE"
                  Target="/usr/share/doc/anduinos-hyperfluent-grub-theme/LICENSE" />
     <PostInstallScript Include="scripts/postinst.sh" />
