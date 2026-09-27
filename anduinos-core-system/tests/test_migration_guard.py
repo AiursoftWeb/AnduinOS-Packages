@@ -42,6 +42,32 @@ class MigrationGuardTests(unittest.TestCase):
             with self.subTest(script=script.name):
                 subprocess.run(["/bin/sh", "-n", script], check=True)
 
+    def test_live_upgrade_skips_disk_boot_migration(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            env, paths = self.migration_environment(root)
+            marker = root / "live-environment"
+            marker.write_text("ANDUINOS_LIVE=1\n", encoding="utf-8")
+            env["ANDUINOS_LIVE_MARKER"] = str(marker)
+            env["ANDUINOS_MIGRATION_GRUB_MKCONFIG"] = "/bin/false"
+            subprocess.run(
+                ["/bin/sh", PREINST, "upgrade", "2.0.3-2", "2.0.3-3"],
+                env=env,
+                check=True,
+            )
+            self.assertFalse((paths["boot"] / "anduinos-dracut-migration").exists())
+            self.assertFalse((paths["state"] / "fallback-ready").exists())
+
+            # An unrelated marker must not suppress an installed-system guard.
+            marker.write_text("ANDUINOS_LIVE=0\n", encoding="utf-8")
+            env["ANDUINOS_MIGRATION_FAIL_AT"] = "before_fallback_kernel"
+            result = subprocess.run(
+                ["/bin/sh", PREINST, "upgrade", "2.0.3-2", "2.0.3-3"],
+                env=env,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 75)
+
     def migration_environment(self, root: Path) -> tuple[dict[str, str], dict[str, Path]]:
         boot = root / "boot"
         state = root / "state"
@@ -128,6 +154,7 @@ class MigrationGuardTests(unittest.TestCase):
         env = {
             **os.environ,
             "DPKG_ROOT": str(root),
+            "ANDUINOS_LIVE_MARKER": str(root / "run/anduinos-live/environment"),
             "ANDUINOS_MIGRATION_SYSTEMCTL": str(systemctl),
             "TEST_SYSTEMCTL_LOG": str(root / "systemctl-calls"),
             "ANDUINOS_MIGRATION_BOOT_DIR": str(boot),
