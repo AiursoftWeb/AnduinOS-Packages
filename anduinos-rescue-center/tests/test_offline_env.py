@@ -18,12 +18,60 @@ def partition() -> Partition:
     )
 
 
+def btrfs_partition() -> Partition:
+    return Partition(
+        path="/dev/vda4", parent="/dev/vda", size_bytes=10**10,
+        filesystem="btrfs", filesystem_uuid="root", label="", partuuid="part",
+        mountpoints=(), identity="b" * 64,
+    )
+
+
 @contextmanager
 def fake_writable(_path, _filesystem, *, mount_base, **_kwargs):
     yield mount_base
 
 
 class OfflineEnvironmentTests(unittest.TestCase):
+    def test_btrfs_chroot_mounts_root_subvolume_as_its_own_mountpoint(self):
+        with tempfile.TemporaryDirectory() as directory:
+            top = Path(directory)
+            (top / "@root/usr/lib").mkdir(parents=True)
+            (top / "@root/usr/lib/os-release").write_text("ID=anduinos\n", encoding="utf-8")
+            commands = []
+
+            def run(command, **_kwargs):
+                commands.append(command)
+                return subprocess.CompletedProcess(command, 0, "", "")
+
+            with (patch("anduinos_rescue_center.offline_env.resolve_target", return_value=btrfs_partition()),
+                  patch("anduinos_rescue_center.offline_env.mounted_writable", fake_writable)):
+                with opened_system("/dev/vda4", "b" * 64, run=run, mount_base=top) as (root, _):
+                    self.assertNotEqual(root, top / "@root")
+                    self.assertEqual(commands[0][0:6],
+                                     ["mount", "-t", "btrfs", "-o", "rw,subvol=@root", "--"])
+                    self.assertEqual(commands[0][-2:], ["/dev/vda4", str(root)])
+                    self.assertEqual(commands[1][0:2], ["mount", "--rbind"])
+            self.assertEqual(commands[-1], ["umount", "--", str(root)])
+
+    def test_failed_btrfs_root_mount_never_enters_chroot_or_leaves_mountpoint(self):
+        with tempfile.TemporaryDirectory() as directory:
+            top = Path(directory)
+            (top / "@root/usr/lib").mkdir(parents=True)
+            (top / "@root/usr/lib/os-release").write_text("ID=anduinos\n", encoding="utf-8")
+            commands = []
+
+            def run(command, **_kwargs):
+                commands.append(command)
+                return subprocess.CompletedProcess(command, 1, "", "mount failed")
+
+            with (patch("anduinos_rescue_center.offline_env.resolve_target", return_value=btrfs_partition()),
+                  patch("anduinos_rescue_center.offline_env.mounted_writable", fake_writable)):
+                with self.assertRaisesRegex(RuntimeError, "mount failed"):
+                    with opened_system("/dev/vda4", "b" * 64, run=run, mount_base=top):
+                        pass
+            self.assertEqual(len(commands), 1)
+            self.assertEqual(list(top.glob("system-*")), [])
+
     def test_temporary_chroot_run_gets_real_dns_not_host_stub(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

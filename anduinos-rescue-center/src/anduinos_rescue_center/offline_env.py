@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import stat
 import subprocess
+import tempfile
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from pathlib import Path
@@ -84,9 +85,20 @@ def opened_system(
     if partition.active_system or partition.mountpoints:
         raise RuntimeError("Unmount the offline installation before opening it for repair")
     with mounted_writable(partition.path, partition.filesystem, run=run, mount_base=mount_base) as top:
-        root = system_root(top, partition)
+        inspected_root = system_root(top, partition)
+        root = inspected_root
+        root_mount: Path | None = None
         mounts: list[tuple[Path, bool]] = []
         try:
+            if partition.filesystem == "btrfs":
+                # GRUB probes the device behind /boot/grub from the target's
+                # mount table. Chrooting into top/@root as an ordinary directory
+                # loses that mount boundary; the installer mounts @root directly.
+                root_mount = Path(tempfile.mkdtemp(prefix="system-", dir=mount_base))
+                _checked_mount(run, ["mount", "-t", "btrfs", "-o", "rw,subvol=@root",
+                                     "--", partition.path, str(root_mount)])
+                mounts.append((root_mount, False))
+                root = root_mount
             if esp:
                 destination = _mount_directory(root, "boot/efi")
                 _checked_mount(run, ["mount", "-t", "vfat", "-o", "rw", "--", esp, str(destination)])
@@ -111,6 +123,12 @@ def opened_system(
                 result = run(command, capture_output=True, text=True, timeout=30, check=False)
                 if result.returncode:
                     failures.append(str(destination))
+            if root_mount is not None and str(root_mount) not in failures:
+                try:
+                    root_mount.rmdir()
+                except OSError:
+                    # Never recursively remove a former mountpoint.
+                    pass
             if failures:
                 raise RuntimeError("Could not unmount recovery filesystems: " + ", ".join(failures))
 
