@@ -126,6 +126,7 @@ class PackageContractTests(unittest.TestCase):
                         **os.environ,
                         "PATH": f"{directory}:/usr/bin:/bin",
                         "GRUB_TEST_LOG": str(log),
+                        "ANDUINOS_LIVE_MARKER": str(directory / "missing-live-marker"),
                     }
                     subprocess.run(["/bin/sh", script, action], env=env, check=True)
                     self.assertEqual(log.exists(), refresh)
@@ -138,10 +139,40 @@ class PackageContractTests(unittest.TestCase):
                 for name in ("systemd-detect-virt", "ischroot"):
                     fake_command(directory, name, f"exit {0 if name == detector else 1}")
                 fake_command(directory, "update-grub", f'touch "{log}"')
-                env = {**os.environ, "PATH": f"{directory}:/usr/bin:/bin"}
+                env = {
+                    **os.environ,
+                    "PATH": f"{directory}:/usr/bin:/bin",
+                    "ANDUINOS_LIVE_MARKER": str(directory / "missing-live-marker"),
+                }
                 for script, action in ((POSTINST, "configure"), (POSTRM, "remove")):
                     subprocess.run(["/bin/sh", script, action], env=env, check=True)
                 self.assertFalse(log.exists())
+
+    def test_live_session_does_not_refresh_grub(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            marker = directory / "live-environment"
+            marker.write_text("ANDUINOS_LIVE=1\n", encoding="utf-8")
+            log = directory / "update-grub.log"
+            fake_command(directory, "systemd-detect-virt", "exit 1")
+            fake_command(directory, "ischroot", "exit 1")
+            fake_command(directory, "update-grub", f'touch "{log}"')
+            env = {
+                **os.environ,
+                "PATH": f"{directory}:/usr/bin:/bin",
+                "ANDUINOS_LIVE_MARKER": str(marker),
+            }
+            for script, action in (
+                (POSTINST, "configure"),
+                (POSTRM, "remove"),
+                (POSTRM, "purge"),
+            ):
+                subprocess.run(["/bin/sh", script, action], env=env, check=True)
+            self.assertFalse(log.exists())
+
+            marker.write_text("ANDUINOS_LIVE=0\n", encoding="utf-8")
+            subprocess.run(["/bin/sh", POSTINST, "configure"], env=env, check=True)
+            self.assertTrue(log.exists())
 
 
 if __name__ == "__main__":
