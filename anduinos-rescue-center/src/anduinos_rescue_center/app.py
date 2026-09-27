@@ -456,13 +456,13 @@ class RescueWindow(Adw.ApplicationWindow):
             self.workspace_pages.remove(child)
         self._nav_rows = {}
         navigation_items = [
-            ("home", "Home", "go-home-symbolic"),
+            ("home", "Home", "user-home-symbolic"),
             ("passwords", "Password reset", "dialog-password-symbolic"),
             ("files", "File browser", "folder-open-symbolic"),
         ]
         if system.get("btrfs_layout"):
             navigation_items.append(
-                ("snapshots", "Snapshots & restore", "document-open-recent-symbolic")
+                ("snapshots", "Snapshots & restore", "view-restore-symbolic")
             )
         navigation_items.extend((
             ("boot", "Boot repair", "system-run-symbolic"),
@@ -511,8 +511,16 @@ class RescueWindow(Adw.ApplicationWindow):
         body.set_margin_bottom(10)
         body.set_margin_start(12)
         body.set_margin_end(12)
-        image = _icon(icon, 26 if icon == "go-home-symbolic" else 19)
+        # Normalize visible glyphs rather than SVG viewports: these themed
+        # assets have different amounts of internal padding.
+        image = _icon(icon, {
+            "user-home-symbolic": 21,
+            "view-restore-symbolic": 21,
+            "system-run-symbolic": 25,
+        }.get(icon, 19))
         image.set_size_request(26, 26)
+        image.set_halign(Gtk.Align.CENTER)
+        image.set_valign(Gtk.Align.CENTER)
         body.append(image)
         body.append(_text(title))
         return body
@@ -589,7 +597,7 @@ class RescueWindow(Adw.ApplicationWindow):
             tools.append((
                 "snapshots", "Snapshots & restore",
                 "Create a recovery point or roll back the system.",
-                "document-open-recent-symbolic",
+                "view-restore-symbolic",
             ))
         tools.extend((
             ("boot", "Diagnose and repair boot", "Check the installed kernel, GRUB and EFI boot path.", "system-run-symbolic"),
