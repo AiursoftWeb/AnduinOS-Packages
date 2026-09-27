@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 from collections.abc import Callable
 from typing import Any
 
-from .live import is_live_environment
+from .live import is_live_environment, is_trusted_live_environment
 
 
 HELPER = "/usr/libexec/anduinos-rescue-center-helper"
@@ -161,6 +162,62 @@ def restore_snapshot(
         run=run,
         timeout=3600,
     )
+
+
+def diagnose_boot(
+    path: str,
+    identity: str,
+    *,
+    run: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+) -> dict[str, Any]:
+    return _json_action(["diagnose-boot", path, identity], "Boot diagnosis failed", run=run)
+
+
+def repair_boot(
+    path: str,
+    identity: str,
+    esp_identity: str,
+    *,
+    run: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+) -> dict[str, Any]:
+    if len(esp_identity) != 64:
+        raise ValueError("Invalid EFI partition identity")
+    return _json_action(
+        ["repair-boot", path, identity, esp_identity], "Boot repair failed", run=run,
+        timeout=1800,
+    )
+
+
+def open_emergency_terminal(
+    path: str,
+    identity: str,
+    *,
+    launch: Callable[..., subprocess.Popen] = subprocess.Popen,
+) -> None:
+    if not is_trusted_live_environment():
+        raise RuntimeError("The emergency terminal is available only in AnduinOS Live")
+    if not path.startswith("/dev/") or len(identity) != 64:
+        raise ValueError("Invalid rescue target identity")
+    terminal = shutil.which("ptyxis")
+    if terminal is None:
+        raise RuntimeError("Ptyxis is not installed in this Live session")
+    launch(
+        [terminal, "--new-window", "--title", "Offline AnduinOS recovery",
+         "--", "pkexec", LIVE_HELPER, "shell", path, identity],
+        start_new_session=True,
+    )
+
+
+def open_live_terminal(
+    *, launch: Callable[..., subprocess.Popen] = subprocess.Popen,
+) -> None:
+    if not is_trusted_live_environment():
+        raise RuntimeError("A verified AnduinOS Live session is required")
+    terminal = shutil.which("ptyxis")
+    if terminal is None:
+        raise RuntimeError("Ptyxis is not installed in this Live session")
+    launch([terminal, "--new-window", "--title", "AnduinOS Live terminal"],
+           start_new_session=True)
 
 
 def _json_action(

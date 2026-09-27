@@ -11,6 +11,25 @@ LIVE_MARKERS = (
 )
 
 
+def is_trusted_live_environment(
+    *,
+    environment: Path = Path("/run/anduinos-live/environment"),
+    source: Path = Path("/run/anduinos-live/rootfs.squashfs"),
+    media: Path = Path("/cdrom"),
+) -> bool:
+    """Require the actual Dracut Live runtime before exposing a root shell."""
+    try:
+        return (
+            environment.is_file()
+            and "ANDUINOS_LIVE=1" in environment.read_text(encoding="utf-8").splitlines()
+            and source.is_file()
+            and source.stat().st_size > 0
+            and media.is_dir()
+        )
+    except (OSError, UnicodeError):
+        return False
+
+
 def is_live_environment(
     *,
     markers: tuple[Path, ...] = LIVE_MARKERS,

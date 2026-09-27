@@ -5,8 +5,9 @@ Live environment. It discovers installed AnduinOS systems, presents both a
 simple installation picker and an advanced disk/partition view, and performs
 bounded offline repairs after re-validating the selected block device. The
 picker presents each detected installation as a card. The recovery workspace
-then provides Home, Password reset, File browser, System details, and (for a
-compatible Btrfs layout) Snapshots & restore in one sidebar-driven window.
+then provides Home, Password reset, File browser, Boot repair, Emergency
+terminal, System details, and (for a compatible Btrfs layout) Snapshots &
+restore in one sidebar-driven window.
 
 The package may be installed on a normal system for development or to rescue a
 different offline installation. It must never modify the installation backing
@@ -33,8 +34,20 @@ the currently running root filesystem.
   Offline restore replaces only `@root`, leaves `@home` untouched, and uses a
   small atomic transaction that resumes after interruption. A compatible
   pre-restore safety snapshot is enabled by default in the UI.
-- Encrypted filesystems, package repair, bootloader repair, and emergency
-  chroot shells are outside the first release.
+- Boot diagnosis statically checks the installed kernel/initrd pairs, GRUB
+  configuration, EFI loader and an active matching firmware entry without
+  writing to the disk. Only a real reboot can prove that the system boots.
+  Guided repair is limited to an unmounted UEFI installation whose FAT EFI
+  partition is named in its fstab and found on the selected disk. It uses the
+  installer's vendor-only GRUB policy: no writes to other EFI vendors or
+  EFI/BOOT. Separate /boot, BIOS boot and cross-disk EFI arrangements are
+  deliberately not guessed at.
+- The emergency terminal is an advanced Live-only root shell in the selected
+  offline system. Device identity is checked again, temporary chroot mounts
+  are unmounted on exit (or a cleanup failure is reported), and a target
+  directory symlink cannot redirect a mount onto the Live host. A root chroot
+  shell is **not** a security sandbox.
+- Encrypted filesystems and package repair remain outside this release.
 
 ## Tests
 

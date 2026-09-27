@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-rescue-center</PackageName>
-    <PackageVersion>2.0.3-11+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3-12+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Live-session rescue center for discovering and repairing AnduinOS installations</PackageDescription>
     <Section>admin</Section>
@@ -32,6 +32,8 @@
     <Dependency Include="xfsprogs" />
     <Dependency Include="ntfs-3g" />
     <Dependency Include="mokutil" />
+    <Dependency Include="efibootmgr" />
+    <Dependency Include="ptyxis" />
     <Dependency Include="passwd" />
     <Dependency Include="anduinos-btrfs-snapshots-manager" />
   </ItemGroup>

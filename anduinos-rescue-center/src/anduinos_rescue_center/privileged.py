@@ -10,6 +10,8 @@ from .storage import inspect_target, probe_inventory
 from .operations import reset_password
 from .files import export_file, list_files
 from .snapshots import create_snapshot, list_snapshots, restore_snapshot
+from .boot import diagnose_boot, repair_boot
+from .offline_env import emergency_shell
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -18,6 +20,8 @@ def main(argv: list[str] | None = None) -> int:
         print("The rescue helper must run as root", file=sys.stderr)
         return 77
     try:
+        if len(arguments) == 3 and arguments[0] == "shell":
+            return emergency_shell(arguments[1], arguments[2])
         if arguments == ["probe"]:
             payload = probe_inventory().to_dict()
         elif len(arguments) == 3 and arguments[0] == "inspect":
@@ -49,13 +53,19 @@ def main(argv: list[str] | None = None) -> int:
             payload = restore_snapshot(
                 arguments[1], arguments[2], arguments[3], arguments[4] == "true"
             )
+        elif len(arguments) == 3 and arguments[0] == "diagnose-boot":
+            payload = diagnose_boot(arguments[1], arguments[2])
+        elif len(arguments) == 4 and arguments[0] == "repair-boot":
+            payload = repair_boot(arguments[1], arguments[2], arguments[3])
         else:
             print(
                 "Usage: anduinos-rescue-center-helper "
                 "{probe|inspect DEVICE IDENTITY|reset-password DEVICE IDENTITY USER|"
                 "list-files DEVICE IDENTITY PATH|export DEVICE IDENTITY PATH DESTINATION|"
                 "list-snapshots DEVICE IDENTITY|create-snapshot DEVICE IDENTITY TITLE|"
-                "restore-snapshot DEVICE IDENTITY ID {true|false}}",
+                "restore-snapshot DEVICE IDENTITY ID {true|false}|"
+                "diagnose-boot DEVICE IDENTITY|repair-boot DEVICE IDENTITY EFI_IDENTITY|"
+                "shell DEVICE IDENTITY}",
                 file=sys.stderr,
             )
             return 64

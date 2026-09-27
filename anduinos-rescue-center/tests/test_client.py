@@ -7,11 +7,15 @@ from anduinos_rescue_center.client import (
     HELPER,
     LIVE_HELPER,
     create_snapshot,
+    diagnose_boot,
     export_file,
     inspect_target,
     list_files,
+    open_emergency_terminal,
+    open_live_terminal,
     probe,
     reset_password,
+    repair_boot,
     restore_snapshot,
 )
 
@@ -115,3 +119,39 @@ class ClientTests(unittest.TestCase):
             ["pkexec", HELPER, "create-snapshot", "/dev/sda2", identity, "Before repair"],
         )
         self.assertEqual(calls[1][-1], "true")
+
+    def test_boot_repair_passes_both_disk_identities_to_fixed_helper(self):
+        calls = []
+
+        def run(command, **_kwargs):
+            calls.append(command)
+            return subprocess.CompletedProcess(command, 0, '{"schema": 1}', "")
+
+        diagnose_boot("/dev/sda2", "a" * 64, run=run)
+        repair_boot("/dev/sda2", "a" * 64, "b" * 64, run=run)
+        self.assertEqual(calls[0], ["pkexec", HELPER, "diagnose-boot", "/dev/sda2", "a" * 64])
+        self.assertEqual(calls[1], ["pkexec", HELPER, "repair-boot", "/dev/sda2", "a" * 64, "b" * 64])
+
+    def test_terminal_launches_fixed_live_helper_inside_ptyxis(self):
+        calls = []
+
+        def launch(command, **kwargs):
+            calls.append((command, kwargs))
+
+        with (patch("anduinos_rescue_center.client.is_trusted_live_environment", return_value=True),
+              patch("anduinos_rescue_center.client.shutil.which", return_value="/usr/bin/ptyxis")):
+            open_emergency_terminal("/dev/sda2", "a" * 64, launch=launch)
+        self.assertEqual(calls[0][0][-4:], [LIVE_HELPER, "shell", "/dev/sda2", "a" * 64])
+        self.assertIn("pkexec", calls[0][0])
+        self.assertTrue(calls[0][1]["start_new_session"])
+
+    def test_live_terminal_fallback_does_not_request_root(self):
+        calls = []
+
+        def launch(command, **_kwargs):
+            calls.append(command)
+
+        with (patch("anduinos_rescue_center.client.is_trusted_live_environment", return_value=True),
+              patch("anduinos_rescue_center.client.shutil.which", return_value="/usr/bin/ptyxis")):
+            open_live_terminal(launch=launch)
+        self.assertEqual(calls, [["/usr/bin/ptyxis", "--new-window", "--title", "AnduinOS Live terminal"]])

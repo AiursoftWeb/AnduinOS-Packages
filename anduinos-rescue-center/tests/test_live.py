@@ -2,7 +2,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from anduinos_rescue_center.live import LIVE_MARKERS, is_live_environment
+from anduinos_rescue_center.live import (
+    LIVE_MARKERS, is_live_environment, is_trusted_live_environment,
+)
 
 
 class LiveDetectionTests(unittest.TestCase):
@@ -29,3 +31,23 @@ class LiveDetectionTests(unittest.TestCase):
 
     def test_generic_cdrom_mountpoint_is_not_a_live_contract(self):
         self.assertNotIn(Path("/cdrom"), LIVE_MARKERS)
+
+    def test_root_shell_requires_completed_dracut_runtime_not_just_a_marker(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            environment = root / "environment"
+            source = root / "rootfs.squashfs"
+            media = root / "cdrom"
+            media.mkdir()
+            environment.write_text("ANDUINOS_LIVE=1\n", encoding="utf-8")
+            self.assertFalse(is_trusted_live_environment(
+                environment=environment, source=source, media=media,
+            ))
+            source.write_bytes(b"squashfs")
+            self.assertTrue(is_trusted_live_environment(
+                environment=environment, source=source, media=media,
+            ))
+            environment.write_text("ANDUINOS_LIVE=0\n", encoding="utf-8")
+            self.assertFalse(is_trusted_live_environment(
+                environment=environment, source=source, media=media,
+            ))

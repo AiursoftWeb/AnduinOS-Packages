@@ -15,8 +15,12 @@ from .client import inspect_target as inspect_rescue_target
 from .client import export_file as export_rescue_file
 from .client import list_files as list_rescue_files
 from .client import create_snapshot as create_rescue_snapshot
+from .client import diagnose_boot as diagnose_rescue_boot
 from .client import list_snapshots as list_rescue_snapshots
+from .client import open_emergency_terminal
+from .client import open_live_terminal
 from .client import probe
+from .client import repair_boot as repair_rescue_boot
 from .client import reset_password as reset_rescue_password
 from .client import restore_snapshot as restore_rescue_snapshot
 from .live import is_live_environment
@@ -460,6 +464,10 @@ class RescueWindow(Adw.ApplicationWindow):
             navigation_items.append(
                 ("snapshots", "Snapshots & restore", "document-open-recent-symbolic")
             )
+        navigation_items.extend((
+            ("boot", "Boot repair", "system-run-symbolic"),
+            ("terminal", "Emergency terminal", "utilities-terminal-symbolic"),
+        ))
         navigation_items.append(("details", "System details", "computer-symbolic"))
         for name, title, icon in navigation_items:
             row = Gtk.ListBoxRow()
@@ -478,6 +486,9 @@ class RescueWindow(Adw.ApplicationWindow):
         if system.get("btrfs_layout"):
             self.snapshot_page = SnapshotPage(self, target)
             self.workspace_pages.add_named(self.snapshot_page, "snapshots")
+        self.boot_page = BootRepairPage(self, target)
+        self.workspace_pages.add_named(self.boot_page, "boot")
+        self.workspace_pages.add_named(self._wrap_page(self._terminal_page(target)), "terminal")
         self.workspace_pages.add_named(self._wrap_page(self._details_page(payload)), "details")
         self.navigation.select_row(self._nav_rows["home"])
         self._show_stage("workspace")
@@ -515,12 +526,15 @@ class RescueWindow(Adw.ApplicationWindow):
         self.workspace_pages.set_visible_child_name(name)
         self.page_title.set_title({
             "home": "Home", "passwords": "Password reset", "files": "File browser",
-            "snapshots": "Snapshots & restore", "details": "System details",
+            "snapshots": "Snapshots & restore", "boot": "Boot repair",
+            "terminal": "Emergency terminal", "details": "System details",
         }[name])
         if name == "files" and not self.file_page.loaded:
             self.file_page.load(".")
         if name == "snapshots" and self.snapshot_page and not self.snapshot_page.loaded:
             self.snapshot_page.load()
+        if name == "boot" and not self.boot_page.loaded:
+            self.boot_page.load()
         if self.split.get_collapsed():
             self.split.set_show_sidebar(False)
 
@@ -577,6 +591,10 @@ class RescueWindow(Adw.ApplicationWindow):
                 "Create a recovery point or roll back the system.",
                 "document-open-recent-symbolic",
             ))
+        tools.extend((
+            ("boot", "Diagnose and repair boot", "Check the installed kernel, GRUB and EFI boot path.", "system-run-symbolic"),
+            ("terminal", "Emergency terminal", "Open an expert shell in this offline system.", "utilities-terminal-symbolic"),
+        ))
         tools.append((
             "details", "System details", "Review the installation before making changes.",
             "computer-symbolic",
@@ -603,6 +621,65 @@ class RescueWindow(Adw.ApplicationWindow):
                 "File recovery and password reset remain available here.", "dim-label"
             ))
         return page
+
+    def _terminal_page(self, target: dict) -> Gtk.Widget:
+        page = self._page_intro(
+            "ADVANCED RECOVERY", "Emergency terminal",
+            "Open a root shell inside the selected offline system. Commands can change or delete its files."
+        )
+        page.append(_text(
+            "The terminal will show the target partition before entering it. "
+            "Type exit when finished. Recovery will unmount its temporary filesystems and report any cleanup failure.",
+            "dim-label",
+        ))
+        button = Gtk.Button(label="Open target terminal")
+        button.add_css_class("suggested-action")
+        button.set_halign(Gtk.Align.START)
+        button.connect("clicked", lambda *_: self._terminal_dialog(target))
+        page.append(button)
+        fallback = Gtk.Button(label="Open Live terminal instead")
+        fallback.add_css_class("flat")
+        fallback.set_halign(Gtk.Align.START)
+        fallback.connect("clicked", lambda *_: self._open_live_terminal())
+        page.append(fallback)
+        return page
+
+    def _open_live_terminal(self) -> None:
+        try:
+            open_live_terminal()
+        except Exception as error:
+            failed = Adw.MessageDialog(transient_for=self, heading="Could not open terminal", body=str(error))
+            failed.add_response("close", "Close")
+            failed.set_close_response("close")
+            failed.present()
+
+    def _terminal_dialog(self, target: dict) -> None:
+        path = str(target.get("path") or "")
+        identity = str(target.get("identity") or "")
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading="Open an expert root shell?",
+            body=(f"Target: {path}\n\nThe shell can make unrestricted changes to this offline "
+                  "installation and can also access Live hardware. Use it only if you understand the commands."),
+        )
+        dialog.add_response("cancel", "Cancel")
+        dialog.add_response("open", "Open terminal")
+        dialog.set_response_appearance("open", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_close_response("cancel")
+
+        def responded(_dialog, response: str) -> None:
+            if response != "open":
+                return
+            try:
+                open_emergency_terminal(path, identity)
+            except Exception as error:
+                failed = Adw.MessageDialog(transient_for=self, heading="Could not open terminal", body=str(error))
+                failed.add_response("close", "Close")
+                failed.set_close_response("close")
+                failed.present()
+
+        dialog.connect("response", responded)
+        dialog.present()
 
     def _password_page(self, payload: dict) -> Gtk.Widget:
         page = self._page_intro(
@@ -889,6 +966,162 @@ class FileBrowserPage(Gtk.Box):
         dialog.add_response("close", "Close")
         dialog.present()
         self.load(self.current)
+        return GLib.SOURCE_REMOVE
+
+
+class BootRepairPage(Gtk.Box):
+    def __init__(self, parent: Gtk.Window, target: dict):
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
+        self.parent_window = parent
+        self.target = target
+        self.loaded = False
+        self.report: dict = {}
+
+        toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        toolbar.set_margin_top(14)
+        toolbar.set_margin_start(30)
+        toolbar.set_margin_end(30)
+        title = _text("BOOT RECOVERY", "rescue-kicker")
+        title.set_hexpand(True)
+        toolbar.append(title)
+        refresh = Gtk.Button(icon_name="view-refresh-symbolic", tooltip_text="Check boot again")
+        refresh.connect("clicked", lambda *_: self.load())
+        toolbar.append(refresh)
+        self.append(toolbar)
+
+        self.stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
+        self.stack.set_vexpand(True)
+        self.append(self.stack)
+        self.status = Adw.StatusPage()
+        self.stack.add_named(self.status, "status")
+        page = RescueWindow._page_intro(
+            "BOOT RECOVERY", "Diagnose and repair boot",
+            "Inspect this offline installation before making changes. Repair is offered only when its EFI partition can be identified on the selected disk.",
+        )
+        self.details = Adw.PreferencesGroup(title="Boot path")
+        page.append(self.details)
+        self.findings = Adw.PreferencesGroup(title="Findings")
+        page.append(self.findings)
+        self._detail_rows: list[Adw.ActionRow] = []
+        self._finding_rows: list[Adw.ActionRow] = []
+        self.repair_button = Gtk.Button(label="Rebuild AnduinOS boot")
+        self.repair_button.add_css_class("suggested-action")
+        self.repair_button.set_halign(Gtk.Align.START)
+        self.repair_button.connect("clicked", self._repair_dialog)
+        page.append(self.repair_button)
+        clamp = Adw.Clamp(maximum_size=900)
+        clamp.set_child(page)
+        self.stack.add_named(_scrolled(clamp), "report")
+
+    def _identity(self) -> tuple[str, str]:
+        return str(self.target.get("path") or ""), str(self.target.get("identity") or "")
+
+    def load(self) -> None:
+        self.loaded = True
+        self.status.set_child(None)
+        self.status.set_icon_name("system-run-symbolic")
+        self.status.set_title("Checking the offline boot path")
+        self.status.set_description("Reading the installed kernel, GRUB configuration, EFI files and firmware entry without changing them…")
+        self.stack.set_visible_child_name("status")
+
+        def worker() -> None:
+            try:
+                report = diagnose_rescue_boot(*self._identity())
+            except Exception as error:
+                GLib.idle_add(self._failed, str(error))
+                return
+            GLib.idle_add(self._render, report)
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _render(self, report: dict) -> bool:
+        self.report = report
+        for group, rows in ((self.details, self._detail_rows), (self.findings, self._finding_rows)):
+            for row in rows:
+                group.remove(row)
+            rows.clear()
+        for title, value in (
+            ("Selected installation", report.get("target") or "Unknown"),
+            ("EFI partition", report.get("esp") or "Not identified"),
+            ("Kernel and initrd pairs", f"{report.get('complete_pairs', 0)} of {report.get('kernel_count', 0)}"),
+            ("GRUB kernel entry", "Found" if report.get("grub_config") else "Missing or incomplete"),
+            ("AnduinOS EFI loader", "Present" if report.get("efi_loader") else "Missing"),
+            ("Firmware boot entry", {True: "Found", False: "Missing", None: "Unavailable"}.get(report.get("nvram_entry"), "Unknown")),
+        ):
+            row = Adw.ActionRow(title=title, subtitle=str(value))
+            self.details.add(row)
+            self._detail_rows.append(row)
+        issues = report.get("issues") or []
+        for issue in issues:
+            row = Adw.ActionRow(title=str(issue))
+            self.findings.add(row)
+            self._finding_rows.append(row)
+        if not issues:
+            row = Adw.ActionRow(title="Static boot checks found no missing component. A real reboot is still required.")
+            self.findings.add(row)
+            self._finding_rows.append(row)
+        self.repair_button.set_sensitive(bool(report.get("repairable")))
+        self.stack.set_visible_child_name("report")
+        return GLib.SOURCE_REMOVE
+
+    def _failed(self, message: str) -> bool:
+        self.status.set_icon_name("dialog-error-symbolic")
+        self.status.set_title("Boot check or repair failed")
+        self.status.set_description(message)
+        retry = Gtk.Button(label="Check again")
+        retry.set_halign(Gtk.Align.CENTER)
+        retry.connect("clicked", lambda *_: self.load())
+        self.status.set_child(retry)
+        self.stack.set_visible_child_name("status")
+        return GLib.SOURCE_REMOVE
+
+    def _repair_dialog(self, _button: Gtk.Button) -> None:
+        if not self.report.get("repairable"):
+            return
+        changes = "\n• ".join(str(item) for item in self.report.get("changes") or [])
+        dialog = Adw.MessageDialog(
+            transient_for=self.parent_window,
+            heading="Rebuild boot for this installation?",
+            body=(f"System: {self.report.get('target')}\nEFI partition: {self.report.get('esp')}\n\n"
+                  f"This will:\n• {changes}\n\nOther EFI vendors and the removable EFI/BOOT path will not be changed."),
+        )
+        dialog.add_response("cancel", "Cancel")
+        dialog.add_response("repair", "Repair boot")
+        dialog.set_response_appearance("repair", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_close_response("cancel")
+        dialog.connect("response", lambda _dialog, response: self._repair()
+                       if response == "repair" else None)
+        dialog.present()
+
+    def _repair(self) -> None:
+        esp_identity = str(self.report.get("esp_identity") or "")
+        self.status.set_child(None)
+        self.status.set_icon_name("system-run-symbolic")
+        self.status.set_title("Rebuilding the offline boot path")
+        self.status.set_description("Keep the computer powered on. This may take several minutes.")
+        self.stack.set_visible_child_name("status")
+
+        def worker() -> None:
+            try:
+                report = repair_rescue_boot(*self._identity(), esp_identity)
+            except Exception as error:
+                GLib.idle_add(self._failed, str(error))
+                return
+            GLib.idle_add(self._repaired, report)
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _repaired(self, report: dict) -> bool:
+        self._render(report)
+        dialog = Adw.MessageDialog(
+            transient_for=self.parent_window,
+            heading="Boot repair finished" if not report.get("issues") else "Boot repair needs review",
+            body=("Static boot checks passed. Shut down Live, remove the installation media and test booting."
+                  if not report.get("issues") else "Some checks still report a problem. Review the findings before rebooting."),
+        )
+        dialog.add_response("close", "Close")
+        dialog.set_close_response("close")
+        dialog.present()
         return GLib.SOURCE_REMOVE
 
 
