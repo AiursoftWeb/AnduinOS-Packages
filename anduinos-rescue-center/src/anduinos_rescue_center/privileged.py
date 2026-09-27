@@ -57,6 +57,12 @@ def main(argv: list[str] | None = None) -> int:
             payload = diagnose_boot(arguments[1], arguments[2])
         elif len(arguments) == 4 and arguments[0] == "repair-boot":
             payload = repair_boot(arguments[1], arguments[2], arguments[3])
+        elif len(arguments) == 4 and arguments[0] == "repair-boot-stream":
+            def progress(message: str) -> None:
+                print("RESCUE_PROGRESS\t" + json.dumps({"message": message}),
+                      file=sys.stderr, flush=True)
+
+            payload = repair_boot(arguments[1], arguments[2], arguments[3], progress=progress)
         else:
             print(
                 "Usage: anduinos-rescue-center-helper "
@@ -65,6 +71,7 @@ def main(argv: list[str] | None = None) -> int:
                 "list-snapshots DEVICE IDENTITY|create-snapshot DEVICE IDENTITY TITLE|"
                 "restore-snapshot DEVICE IDENTITY ID {true|false}|"
                 "diagnose-boot DEVICE IDENTITY|repair-boot DEVICE IDENTITY EFI_IDENTITY|"
+                "repair-boot-stream DEVICE IDENTITY EFI_IDENTITY|"
                 "shell DEVICE IDENTITY}",
                 file=sys.stderr,
             )

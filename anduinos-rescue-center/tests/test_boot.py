@@ -1,12 +1,13 @@
 import json
 import subprocess
+import sys
 import tempfile
 import unittest
 from contextlib import contextmanager
 from pathlib import Path
 from unittest.mock import patch
 
-from anduinos_rescue_center.boot import Esp, _boot_files, _efi_spec, _locate_esp, _nvram_entry, diagnose_boot, repair_boot
+from anduinos_rescue_center.boot import Esp, _boot_files, _efi_spec, _locate_esp, _nvram_entry, _run_streaming_command, diagnose_boot, repair_boot
 from anduinos_rescue_center.model import Partition
 
 
@@ -40,6 +41,17 @@ def prepare_root(root: Path) -> None:
 
 
 class BootRepairTests(unittest.TestCase):
+    def test_command_output_is_visible_before_the_command_finishes(self):
+        lines = []
+        output = _run_streaming_command(
+            [sys.executable, "-B", "-u", "-c",
+             "import time; print('working', flush=True); time.sleep(0.1); print('finished')"],
+            3,
+            lambda line: lines.append(line),
+        )
+        self.assertEqual(lines, ["  working", "  finished"])
+        self.assertIn("finished", output)
+
     def test_grub_reference_in_comment_is_not_a_boot_entry(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

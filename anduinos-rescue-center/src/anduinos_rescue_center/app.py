@@ -976,6 +976,8 @@ class BootRepairPage(Gtk.Box):
         self.target = target
         self.loaded = False
         self.report: dict = {}
+        self._repair_active = False
+        self._output_lines: list[str] = []
 
         toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         toolbar.set_margin_top(14)
@@ -987,6 +989,7 @@ class BootRepairPage(Gtk.Box):
         refresh = Gtk.Button(icon_name="view-refresh-symbolic", tooltip_text="Check boot again")
         refresh.connect("clicked", lambda *_: self.load())
         toolbar.append(refresh)
+        self.refresh_button = refresh
         self.append(toolbar)
 
         self.stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
@@ -1009,6 +1012,16 @@ class BootRepairPage(Gtk.Box):
         self.repair_button.set_halign(Gtk.Align.START)
         self.repair_button.connect("clicked", self._repair_dialog)
         page.append(self.repair_button)
+        self.report_output = Gtk.Expander(label="View last repair output")
+        self.report_output.set_visible(False)
+        report_scroll = Gtk.ScrolledWindow(min_content_height=180)
+        self.report_log = Gtk.TextView(
+            editable=False, cursor_visible=False, monospace=True,
+            wrap_mode=Gtk.WrapMode.WORD_CHAR,
+        )
+        report_scroll.set_child(self.report_log)
+        self.report_output.set_child(report_scroll)
+        page.append(self.report_output)
         clamp = Adw.Clamp(maximum_size=900)
         clamp.set_child(page)
         self.stack.add_named(_scrolled(clamp), "report")
@@ -1065,6 +1078,18 @@ class BootRepairPage(Gtk.Box):
         return GLib.SOURCE_REMOVE
 
     def _failed(self, message: str) -> bool:
+        if self._repair_active:
+            self._progress_line("Repair failed: " + message)
+            self._repair_active = False
+            self.refresh_button.set_sensitive(True)
+            self.parent_window.set_deletable(True)
+            self.activity_progress.set_visible(False)
+            self.activity_phase.set_label("Repair stopped. Review the output before trying again.")
+            self.status.set_icon_name("dialog-error-symbolic")
+            self.status.set_title("Boot repair failed")
+            self.status.set_description(message)
+            self.stack.set_visible_child_name("status")
+            return GLib.SOURCE_REMOVE
         self.status.set_icon_name("dialog-error-symbolic")
         self.status.set_title("Boot check or repair failed")
         self.status.set_description(message)
@@ -1095,15 +1120,22 @@ class BootRepairPage(Gtk.Box):
 
     def _repair(self) -> None:
         esp_identity = str(self.report.get("esp_identity") or "")
-        self.status.set_child(None)
+        self._output_lines = []
+        self._repair_active = True
+        self.refresh_button.set_sensitive(False)
+        self.parent_window.set_deletable(False)
+        self._show_repair_activity()
         self.status.set_icon_name("system-run-symbolic")
         self.status.set_title("Rebuilding the offline boot path")
-        self.status.set_description("Keep the computer powered on. This may take several minutes.")
+        self.status.set_description("Keep the computer powered on. The stage and output below update as work proceeds.")
         self.stack.set_visible_child_name("status")
 
         def worker() -> None:
             try:
-                report = repair_rescue_boot(*self._identity(), esp_identity)
+                report = repair_rescue_boot(
+                    *self._identity(), esp_identity,
+                    on_progress=lambda message: GLib.idle_add(self._progress_line, message),
+                )
             except Exception as error:
                 GLib.idle_add(self._failed, str(error))
                 return
@@ -1111,7 +1143,58 @@ class BootRepairPage(Gtk.Box):
 
         threading.Thread(target=worker, daemon=True).start()
 
+    def _show_repair_activity(self) -> None:
+        activity = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        activity.set_size_request(620, -1)
+        self.activity_phase = Gtk.Label(label="Preparing repair…", wrap=True)
+        activity.append(self.activity_phase)
+        self.activity_progress = Gtk.ProgressBar()
+        activity.append(self.activity_progress)
+        view_button = Gtk.ToggleButton(label="View output")
+        view_button.set_halign(Gtk.Align.CENTER)
+        activity.append(view_button)
+        output_revealer = Gtk.Revealer()
+        output_revealer.set_reveal_child(False)
+        view_button.connect("toggled", lambda button: output_revealer.set_reveal_child(button.get_active()))
+        output_scroll = Gtk.ScrolledWindow(min_content_height=190)
+        self.activity_log = Gtk.TextView(
+            editable=False, cursor_visible=False, monospace=True,
+            wrap_mode=Gtk.WrapMode.WORD_CHAR,
+        )
+        output_scroll.set_child(self.activity_log)
+        output_revealer.set_child(output_scroll)
+        activity.append(output_revealer)
+        self.status.set_child(activity)
+
+        def pulse() -> bool:
+            if not self._repair_active:
+                return GLib.SOURCE_REMOVE
+            self.activity_progress.pulse()
+            return GLib.SOURCE_CONTINUE
+
+        GLib.timeout_add(120, pulse)
+
+    def _progress_line(self, message: str) -> bool:
+        self._output_lines.append(message)
+        buffer = self.activity_log.get_buffer()
+        if len(self._output_lines) > 500:
+            self._output_lines = self._output_lines[-500:]
+            buffer.set_text("\n".join(self._output_lines) + "\n")
+        else:
+            buffer.insert(buffer.get_end_iter(), message + "\n")
+        mark = buffer.create_mark(None, buffer.get_end_iter(), False)
+        self.activity_log.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
+        if not message.startswith(("$ ", "  ", "Completed:", "Repair failed:")):
+            self.activity_phase.set_label(message)
+        return GLib.SOURCE_REMOVE
+
     def _repaired(self, report: dict) -> bool:
+        self._repair_active = False
+        self.refresh_button.set_sensitive(True)
+        self.parent_window.set_deletable(True)
+        self.activity_progress.set_visible(False)
+        self.report_log.get_buffer().set_text("\n".join(self._output_lines) + "\n")
+        self.report_output.set_visible(True)
         self._render(report)
         dialog = Adw.MessageDialog(
             transient_for=self.parent_window,

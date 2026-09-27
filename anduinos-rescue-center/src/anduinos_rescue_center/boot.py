@@ -6,7 +6,12 @@ import json
 import os
 import platform
 import re
+import selectors
+import shlex
+import signal
 import subprocess
+import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -200,8 +205,76 @@ def _run_checked(run, command: list[str], timeout: int) -> str:
     return result.stdout
 
 
+def _repair_command(
+    run, command: list[str], timeout: int, progress: Callable[[str], None] | None,
+) -> str:
+    if progress is not None:
+        progress("$ " + shlex.join(command))
+    if progress is not None and run is subprocess.run:
+        output = _run_streaming_command(command, timeout, progress)
+    else:
+        output = _run_checked(run, command, timeout)
+        if progress is not None:
+            for line in output[-8192:].splitlines():
+                progress("  " + line)
+    if progress is not None:
+        progress(f"Completed: {command[2] if command[0] == 'chroot' else command[0]}")
+    return output
+
+
+def _run_streaming_command(
+    command: list[str], timeout: int, progress: Callable[[str], None],
+) -> str:
+    """Stream a command's combined output while retaining it for verification."""
+    output = bytearray()
+    pending = bytearray()
+    deadline = time.monotonic() + timeout
+    with subprocess.Popen(
+        command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        start_new_session=True,
+    ) as process:
+        assert process.stdout is not None
+        with selectors.DefaultSelector() as selector:
+            selector.register(process.stdout, selectors.EVENT_READ)
+            try:
+                while selector.get_map():
+                    remaining = deadline - time.monotonic()
+                    if remaining <= 0:
+                        raise subprocess.TimeoutExpired(command, timeout)
+                    for key, _mask in selector.select(timeout=min(remaining, 0.5)):
+                        chunk = os.read(key.fileobj.fileno(), 65536)
+                        if not chunk:
+                            selector.unregister(key.fileobj)
+                            continue
+                        output.extend(chunk)
+                        if len(output) > 8 * 1024 * 1024:
+                            raise RuntimeError(f"Boot repair output is too large: {command[0]}")
+                        pending.extend(chunk)
+                        while b"\n" in pending:
+                            line, _, rest = pending.partition(b"\n")
+                            pending = bytearray(rest)
+                            progress("  " + line.decode("utf-8", errors="replace")[:8192])
+                if pending:
+                    progress("  " + pending.decode("utf-8", errors="replace")[:8192])
+                code = process.wait(timeout=max(0.1, deadline - time.monotonic()))
+            except BaseException:
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                process.wait()
+                raise
+    decoded = output.decode("utf-8", errors="replace")
+    if code:
+        raise RuntimeError(decoded.strip()[-2000:] or f"Boot repair command failed: {command[0]}")
+    return decoded
+
+
 def repair_boot(path: str, identity: str, esp_identity: str, *, run=subprocess.run,
-                mount_base: Path = Path("/run/anduinos-rescue-center")) -> dict[str, object]:
+                mount_base: Path = Path("/run/anduinos-rescue-center"),
+                progress: Callable[[str], None] | None = None) -> dict[str, object]:
+    if progress is not None:
+        progress("Checking the selected system and EFI partition again")
     report = diagnose_boot(path, identity, run=run, mount_base=mount_base)
     if not report["repairable"] or report["esp_identity"] != esp_identity:
         raise RuntimeError("The selected EFI partition changed or cannot be repaired safely")
@@ -213,30 +286,41 @@ def repair_boot(path: str, identity: str, esp_identity: str, *, run=subprocess.r
         raise RuntimeError("The selected EFI partition changed before repair")
     architecture = "x86_64-efi" if platform.machine() == "x86_64" else "arm64-efi"
     suffix = "x64" if architecture == "x86_64-efi" else "aa64"
+    if progress is not None:
+        progress(f"Opening {partition.path} and its EFI partition {esp.path}")
     with opened_system(path, identity, esp=esp.path, run=run, mount_base=mount_base) as (root, _partition):
         for tool in ("usr/bin/dracut", "usr/bin/lsinitrd", "usr/sbin/grub-install", "usr/sbin/update-grub"):
             if not (root / tool).is_file():
                 raise RuntimeError(f"Installed boot repair tool is missing: /{tool}")
-        _run_checked(run, ["chroot", str(root), "dracut", "--force", "--no-hostonly",
-                           "--no-hostonly-cmdline", "--omit",
-                           "dmsquash-live dmsquash-live-autooverlay livenet anduinos-live-layers",
-                           "--regenerate-all"], 1200)
+        if progress is not None:
+            progress("Rebuilding installed initrds; this may take several minutes")
+        _repair_command(run, ["chroot", str(root), "dracut", "--force", "--no-hostonly",
+                              "--no-hostonly-cmdline", "--omit",
+                              "dmsquash-live dmsquash-live-autooverlay livenet anduinos-live-layers",
+                              "--regenerate-all"], 1200, progress)
         _, complete, _ = _boot_files(root)
         if not complete:
             raise RuntimeError("Dracut produced no matching kernel/initrd pair")
         forbidden = {"dmsquash-live", "dmsquash-live-autooverlay", "livenet", "anduinos-live-layers"}
         for version in complete:
-            modules = set(_run_checked(
+            if progress is not None:
+                progress(f"Checking installed initrd for kernel {version}")
+            modules = set(_repair_command(
                 run, ["chroot", str(root), "lsinitrd", "-m", f"/boot/initrd.img-{version}"], 60,
+                progress,
             ).splitlines())
             if forbidden.intersection(modules):
                 raise RuntimeError("An installed-system initrd still contains Live boot modules")
             if partition.filesystem == "btrfs" and "anduinos-btrfs-snapshots-manager" not in modules:
                 raise RuntimeError("The Btrfs initrd lacks the AnduinOS recovery module")
-        _run_checked(run, ["chroot", str(root), "grub-install", f"--target={architecture}",
-                           "--efi-directory=/boot/efi", "--bootloader-id=AnduinOS", "--recheck",
-                           "--no-nvram", "--no-extra-removable", "--uefi-secure-boot"], 300)
-        _run_checked(run, ["chroot", str(root), "update-grub"], 300)
+        if progress is not None:
+            progress("Installing AnduinOS GRUB on the selected EFI partition")
+        _repair_command(run, ["chroot", str(root), "grub-install", f"--target={architecture}",
+                              "--efi-directory=/boot/efi", "--bootloader-id=AnduinOS", "--recheck",
+                              "--no-nvram", "--no-extra-removable", "--uefi-secure-boot"], 300, progress)
+        if progress is not None:
+            progress("Generating the installed system's GRUB menu")
+        _repair_command(run, ["chroot", str(root), "update-grub"], 300, progress)
         vendor = root / "boot/efi/EFI/AnduinOS"
         _, complete, config = _boot_files(root)
         if (not all((vendor / name).is_file() and (vendor / name).stat().st_size > 0
@@ -246,7 +330,11 @@ def repair_boot(path: str, identity: str, esp_identity: str, *, run=subprocess.r
         if report["nvram_entry"] is False:
             if not _firmware_available():
                 raise RuntimeError("EFI files were repaired, but firmware variables are unavailable")
-            _run_checked(run, ["efibootmgr", "--create", "--disk", esp.disk, "--part",
-                               str(esp.number), "--label", "AnduinOS", "--loader",
-                               rf"\EFI\AnduinOS\shim{suffix}.efi"], 30)
+            if progress is not None:
+                progress("Creating the missing AnduinOS firmware boot entry")
+            _repair_command(run, ["efibootmgr", "--create", "--disk", esp.disk, "--part",
+                                  str(esp.number), "--label", "AnduinOS", "--loader",
+                                  rf"\EFI\AnduinOS\shim{suffix}.efi"], 30, progress)
+    if progress is not None:
+        progress("Re-checking the complete boot path without writing")
     return diagnose_boot(path, identity, run=run, mount_base=mount_base)

@@ -41,7 +41,11 @@ the currently running root filesystem.
   partition is named in its fstab and found on the selected disk. It uses the
   installer's vendor-only GRUB policy: no writes to other EFI vendors or
   EFI/BOOT. Separate /boot, BIOS boot and cross-disk EFI arrangements are
-  deliberately not guessed at.
+  deliberately not guessed at. During repair the interface shows the current
+  stage, an indeterminate activity bar, and expandable live command output;
+  it does not invent a percentage for operations of unpredictable duration.
+  For Btrfs installations, the selected `@root` subvolume is mounted directly
+  as the chroot root, so GRUB can resolve the device containing `/boot/grub`.
 - The emergency terminal is an advanced Live-only root shell in the selected
   offline system. Device identity is checked again, temporary chroot mounts
   are unmounted on exit (or a cleanup failure is reported), and a target

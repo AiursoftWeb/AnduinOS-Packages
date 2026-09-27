@@ -1,11 +1,13 @@
 import json
 import subprocess
+import sys
 import unittest
 from unittest.mock import patch
 
 from anduinos_rescue_center.client import (
     HELPER,
     LIVE_HELPER,
+    _read_streamed_json,
     create_snapshot,
     diagnose_boot,
     export_file,
@@ -21,6 +23,20 @@ from anduinos_rescue_center.client import (
 
 
 class ClientTests(unittest.TestCase):
+    def test_repair_progress_stream_keeps_events_separate_from_final_result(self):
+        events = []
+        program = (
+            "import json,sys,time; "
+            "print('RESCUE_PROGRESS\\t'+json.dumps({'message':'Rebuilding initrds'}), file=sys.stderr, flush=True); "
+            "time.sleep(0.1); print(json.dumps({'schema':1,'issues':[]}))"
+        )
+        result = _read_streamed_json(
+            [sys.executable, "-B", "-u", "-c", program],
+            "Boot repair failed", events.append, 3,
+        )
+        self.assertEqual(events, ["Rebuilding initrds"])
+        self.assertEqual(result["issues"], [])
+
     def test_calls_only_fixed_helper_action(self):
         calls = []
 
