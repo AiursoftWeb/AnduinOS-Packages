@@ -3,7 +3,10 @@
 AnduinOS Rescue Center is a graphical recovery tool intended for the AnduinOS
 Live environment. It discovers installed AnduinOS systems, presents both a
 simple installation picker and an advanced disk/partition view, and performs
-bounded offline repairs after re-validating the selected block device.
+bounded offline repairs after re-validating the selected block device. The
+picker presents each detected installation as a card. The recovery workspace
+then provides Home, Password reset, File browser, System details, and (for a
+compatible Btrfs layout) Snapshots & restore in one sidebar-driven window.
 
 The package may be installed on a normal system for development or to rescue a
 different offline installation. It must never modify the installation backing

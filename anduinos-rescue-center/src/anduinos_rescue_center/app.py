@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import threading
+from pathlib import Path
 
 import gi
 
@@ -19,6 +20,7 @@ from .client import probe
 from .client import reset_password as reset_rescue_password
 from .client import restore_snapshot as restore_rescue_snapshot
 from .live import is_live_environment
+from .selection import can_open_partition
 
 
 def _size(value: object) -> str:
@@ -34,23 +36,80 @@ def _size(value: object) -> str:
     return "Unknown size"
 
 
+def _text(value: str, style: str | None = None) -> Gtk.Label:
+    label = Gtk.Label(label=value, xalign=0)
+    label.set_wrap(True)
+    if style:
+        label.add_css_class(style)
+    return label
+
+
+def _icon(name: str, size: int = 24) -> Gtk.Image:
+    image = Gtk.Image.new_from_icon_name(name)
+    image.set_pixel_size(size)
+    return image
+
+
+def _brand(size: int = 88) -> Gtk.Widget:
+    filename = "com.anduinos.RescueCenter.svg"
+    for path in (
+        Path("/usr/share/icons/hicolor/scalable/apps") / filename,
+        Path(__file__).resolve().parents[2] / "data" / filename,
+    ):
+        if path.is_file():
+            picture = Gtk.Picture.new_for_filename(str(path))
+            picture.set_content_fit(Gtk.ContentFit.CONTAIN)
+            picture.set_size_request(size, size)
+            picture.set_valign(Gtk.Align.CENTER)
+            return picture
+    return _icon("applications-system-symbolic", size)
+
+
+def _scrolled(child: Gtk.Widget) -> Gtk.ScrolledWindow:
+    scroll = Gtk.ScrolledWindow()
+    scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+    scroll.set_child(child)
+    return scroll
+
+
+def _install_style(display) -> None:
+    css = Gtk.CssProvider()
+    css.load_from_data(b"""
+        .rescue-hero { background: alpha(@accent_bg_color, .13); border: 1px solid alpha(@accent_color, .24); border-radius: 22px; padding: 28px; }
+        .rescue-card { background: @card_bg_color; border: 1px solid alpha(@window_fg_color, .10); border-radius: 18px; padding: 20px; }
+        .rescue-card:hover { border-color: alpha(@accent_color, .6); background: alpha(@accent_bg_color, .08); }
+        .rescue-mark { color: @accent_color; }
+        .rescue-kicker { color: @accent_color; font-weight: 700; letter-spacing: 1px; }
+        .rescue-chip { background: alpha(@accent_bg_color, .16); color: @accent_color; border-radius: 999px; padding: 5px 10px; font-weight: 600; }
+        .rescue-soft-chip { background: alpha(@window_fg_color, .08); border-radius: 999px; padding: 5px 10px; }
+        .rescue-sidebar { background: alpha(@window_fg_color, .025); }
+        .rescue-target { background: alpha(@accent_bg_color, .12); border: 1px solid alpha(@accent_color, .2); border-radius: 16px; padding: 14px; }
+    """)
+    Gtk.StyleContext.add_provider_for_display(
+        display, css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+    )
+
+
 class RescueWindow(Adw.ApplicationWindow):
     def __init__(self, application: Adw.Application):
         super().__init__(application=application)
         self.set_title("AnduinOS Rescue Center")
-        self.set_default_size(900, 640)
+        self.set_default_size(1080, 700)
+        _install_style(self.get_display())
         self._continued = is_live_environment()
+        self._target_payload: dict = {}
 
         self.toolbar = Adw.ToolbarView()
-        header = Adw.HeaderBar()
+        self.header = Adw.HeaderBar()
+        self.header.set_title_widget(Adw.WindowTitle.new("Rescue Center", "Offline recovery"))
         self.back = Gtk.Button(icon_name="go-previous-symbolic", tooltip_text="Back")
         self.back.set_visible(False)
         self.back.connect("clicked", lambda *_: self.scan())
-        header.pack_start(self.back)
+        self.header.pack_start(self.back)
         self.refresh = Gtk.Button(icon_name="view-refresh-symbolic", tooltip_text="Scan again")
         self.refresh.connect("clicked", lambda *_: self.scan())
-        header.pack_end(self.refresh)
-        self.toolbar.add_top_bar(header)
+        self.header.pack_end(self.refresh)
+        self.toolbar.add_top_bar(self.header)
         self.set_content(self.toolbar)
 
         self.stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
@@ -58,20 +117,84 @@ class RescueWindow(Adw.ApplicationWindow):
         self.status = Adw.StatusPage()
         self.stack.add_named(self.status, "status")
 
-        self.content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=18)
-        self.content.set_margin_top(24)
-        self.content.set_margin_bottom(24)
-        self.content.set_margin_start(32)
-        self.content.set_margin_end(32)
-        content_scroll = Gtk.ScrolledWindow()
-        content_scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-        content_scroll.set_child(self.content)
-        self.stack.add_named(content_scroll, "content")
+        self.content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
+        self.content.set_margin_top(28)
+        self.content.set_margin_bottom(40)
+        self.content.set_margin_start(36)
+        self.content.set_margin_end(36)
+        selector = Adw.Clamp(maximum_size=1080)
+        selector.set_child(self.content)
+        self.stack.add_named(_scrolled(selector), "content")
+
+        self.split = Adw.OverlaySplitView()
+        self.split.set_min_sidebar_width(238)
+        self.split.set_max_sidebar_width(280)
+        self.split.set_sidebar_width_fraction(0.26)
+        self._build_workspace()
+        self.stack.add_named(self.split, "workspace")
+        compact = Adw.Breakpoint.new(Adw.BreakpointCondition.parse("max-width: 760px"))
+        compact.add_setter(self.split, "collapsed", True)
+        compact.add_setter(self.split, "show-sidebar", False)
+        self.add_breakpoint(compact)
 
         if self._continued:
             self.scan()
         else:
             self._show_installed_warning()
+
+    def _show_stage(self, name: str) -> None:
+        self.header.set_visible(name != "workspace")
+        self.stack.set_visible_child_name(name)
+
+    def _build_workspace(self) -> None:
+        sidebar_toolbar = Adw.ToolbarView()
+        sidebar_header = Adw.HeaderBar()
+        sidebar_header.set_show_end_title_buttons(False)
+        sidebar_header.set_title_widget(Adw.WindowTitle.new("Rescue Center", "ANDUINOS"))
+        sidebar_toolbar.add_top_bar(sidebar_header)
+        sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+        sidebar.add_css_class("rescue-sidebar")
+        sidebar.set_margin_top(18)
+        sidebar.set_margin_bottom(18)
+        sidebar.set_margin_start(14)
+        sidebar.set_margin_end(14)
+        self.target_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
+        self.target_card.add_css_class("rescue-target")
+        sidebar.append(self.target_card)
+        sidebar.append(_text("RECOVERY WORKSPACE", "rescue-kicker"))
+        self.navigation = Gtk.ListBox(selection_mode=Gtk.SelectionMode.SINGLE)
+        self.navigation.add_css_class("navigation-sidebar")
+        self.navigation.connect("row-selected", self._navigation_selected)
+        sidebar.append(self.navigation)
+        sidebar.append(Gtk.Box(vexpand=True))
+        change = Gtk.Button(label="Choose another system")
+        change.add_css_class("flat")
+        change.set_halign(Gtk.Align.START)
+        change.connect("clicked", lambda *_: self.scan())
+        sidebar.append(change)
+        sidebar_toolbar.set_content(_scrolled(sidebar))
+        self.split.set_sidebar(sidebar_toolbar)
+
+        content_toolbar = Adw.ToolbarView()
+        content_header = Adw.HeaderBar()
+        self.page_title = Adw.WindowTitle.new("Home", "Offline AnduinOS")
+        content_header.set_title_widget(self.page_title)
+        self.sidebar_toggle = Gtk.ToggleButton(icon_name="sidebar-show-symbolic")
+        self.sidebar_toggle.set_tooltip_text("Show recovery tools")
+        self.sidebar_toggle.connect("toggled", lambda button: self.split.set_show_sidebar(button.get_active()))
+        content_header.pack_start(self.sidebar_toggle)
+        content_toolbar.add_top_bar(content_header)
+        self.workspace_pages = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
+        content_toolbar.set_content(self.workspace_pages)
+        self.split.set_content(content_toolbar)
+        self.split.connect("notify::collapsed", self._sync_sidebar_toggle)
+        self.split.connect("notify::show-sidebar", self._sync_sidebar_toggle)
+        self._sync_sidebar_toggle()
+
+    def _sync_sidebar_toggle(self, *_args) -> None:
+        self.sidebar_toggle.set_visible(self.split.get_collapsed())
+        if self.sidebar_toggle.get_active() != self.split.get_show_sidebar():
+            self.sidebar_toggle.set_active(self.split.get_show_sidebar())
 
     def _show_installed_warning(self) -> None:
         self.status.set_icon_name("dialog-warning-symbolic")
@@ -87,7 +210,7 @@ class RescueWindow(Adw.ApplicationWindow):
         button.set_halign(Gtk.Align.CENTER)
         button.connect("clicked", self._continue_installed)
         self.status.set_child(button)
-        self.stack.set_visible_child_name("status")
+        self._show_stage("status")
 
     def _continue_installed(self, _button: Gtk.Button) -> None:
         self._continued = True
@@ -102,7 +225,7 @@ class RescueWindow(Adw.ApplicationWindow):
         self.status.set_icon_name("drive-harddisk-symbolic")
         self.status.set_title("Looking for AnduinOS installations")
         self.status.set_description("Inspecting disks without changing their filesystems…")
-        self.stack.set_visible_child_name("status")
+        self._show_stage("status")
 
         def worker() -> None:
             try:
@@ -128,91 +251,109 @@ class RescueWindow(Adw.ApplicationWindow):
     def _render(self, payload: dict) -> bool:
         self.refresh.set_sensitive(True)
         self._clear_content()
-        heading = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-        titles = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
-        title = Gtk.Label(label="Choose an AnduinOS installation", xalign=0)
-        title.add_css_class("title-1")
-        subtitle = Gtk.Label(
-            label="Select a detected system, or inspect every disk in Advanced mode.",
-            xalign=0,
-        )
-        subtitle.add_css_class("dim-label")
-        titles.append(title)
-        titles.append(subtitle)
-        heading.append(titles)
-        secure_boot = Gtk.Label(
-            label=f"Secure Boot: {str(payload.get('secure_boot', 'unknown')).capitalize()}"
-        )
-        secure_boot.add_css_class("caption")
-        secure_boot.set_halign(Gtk.Align.END)
-        secure_boot.set_hexpand(True)
-        heading.append(secure_boot)
-        self.content.append(heading)
+        hero = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=28)
+        hero.add_css_class("rescue-hero")
+        hero_text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        hero_text.set_hexpand(True)
+        hero_text.append(_text("START YOUR RECOVERY", "rescue-kicker"))
+        hero_text.append(_text("Find the system you want to repair", "title-1"))
+        hero_text.append(_text(
+            "Choose a detected AnduinOS installation below. We inspect disks read-only "
+            "and verify the selected device again before opening it.", "dim-label"
+        ))
+        hero.append(hero_text)
+        artwork = _brand(92)
+        artwork.set_valign(Gtk.Align.CENTER)
+        hero.append(artwork)
+        self.content.append(hero)
 
-        switcher = Adw.ViewSwitcher()
+        disks = [disk for disk in payload.get("disks", []) if isinstance(disk, dict)]
+        installations = [
+            (disk, part) for disk in disks
+            for part in disk.get("partitions", [])
+            if isinstance(part, dict) and part.get("os_kind") == "anduinos"
+        ]
+        summary = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        for label in (
+            f"{len(installations)} AnduinOS installation{'s' if len(installations) != 1 else ''}",
+            f"{len(disks)} disk{'s' if len(disks) != 1 else ''} scanned",
+            f"Secure Boot: {str(payload.get('secure_boot', 'unknown')).capitalize()}",
+        ):
+            chip = _text(label, "rescue-soft-chip")
+            summary.append(chip)
+        self.content.append(summary)
+
+        self.content.append(_text("Choose a recovery path", "title-3"))
         pages = Adw.ViewStack()
+        switcher = Adw.ViewSwitcher()
         switcher.set_stack(pages)
         switcher.set_policy(Adw.ViewSwitcherPolicy.WIDE)
         self.content.append(switcher)
         self.content.append(pages)
 
-        quick = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        quick.set_margin_top(12)
+        quick = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
+        quick.set_margin_top(18)
         advanced = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        advanced.set_margin_top(12)
-        pages.add_titled_with_icon(quick, "quick", "Quick", "system-search-symbolic")
-        pages.add_titled_with_icon(advanced, "advanced", "Advanced", "drive-harddisk-symbolic")
+        advanced.set_margin_top(18)
+        pages.add_titled_with_icon(quick, "quick", "Quick detection", "system-search-symbolic")
+        pages.add_titled_with_icon(advanced, "advanced", "Manual selection", "drive-harddisk-symbolic")
 
-        installations = []
-        for disk in payload.get("disks", []):
-            if not isinstance(disk, dict):
-                continue
+        quick.append(_text("Detected AnduinOS systems", "title-3"))
+        quick.append(_text("Select the installation to open its recovery workspace.", "dim-label"))
+        advanced.append(_text("All detected disks and partitions", "title-3"))
+        advanced.append(_text("For systems not found automatically. The selected partition is checked again before repair.", "dim-label"))
+        for disk in disks:
             self._append_disk(advanced, disk)
-            for partition in disk.get("partitions", []):
-                if isinstance(partition, dict) and partition.get("os_kind") == "anduinos":
-                    installations.append((disk, partition))
         if installations:
-            installation_group = Adw.PreferencesGroup()
-            quick.append(installation_group)
             for disk, partition in installations:
-                installation_group.add(self._installation_row(disk, partition))
+                quick.append(self._installation_row(disk, partition))
         else:
             empty = Adw.StatusPage(
                 icon_name="system-search-symbolic",
                 title="No AnduinOS installation found",
-                description="Open Advanced mode to inspect the detected disks and partitions.",
+                description="Use Manual selection to inspect the disks and partitions on this computer.",
             )
             empty.set_vexpand(True)
             quick.append(empty)
-        self.stack.set_visible_child_name("content")
+        self._show_stage("content")
         return GLib.SOURCE_REMOVE
 
     def _installation_row(self, disk: dict, partition: dict) -> Gtk.Widget:
-        row = Adw.ActionRow(
-            title=str(partition.get("os_name") or "AnduinOS"),
-            subtitle=" · ".join(
-                value for value in (
-                    str(partition.get("hostname") or ""),
-                    str(disk.get("model") or disk.get("path") or ""),
-                    str(partition.get("path") or ""),
-                    _size(partition.get("size_bytes")),
-                ) if value
-            ),
+        button = Gtk.Button()
+        button.add_css_class("rescue-card")
+        button.set_sensitive(can_open_partition(disk, partition))
+        button.update_property(
+            [Gtk.AccessibleProperty.LABEL],
+            [f"Open {partition.get('os_name') or 'AnduinOS'} installation on {partition.get('path') or 'unknown partition'}"],
         )
-        row.add_prefix(Gtk.Image.new_from_icon_name("drive-harddisk-system-symbolic"))
-        if partition.get("active_system"):
-            badge = Gtk.Label(label="Running system")
-            badge.add_css_class("warning")
-            row.add_suffix(badge)
-            row.set_sensitive(False)
-        else:
-            row.set_activatable(True)
-            row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
-            row.connect(
-                "activated",
-                lambda _row, item=partition: self._open_system(item),
+        button.connect("clicked", lambda _button, item=partition: self._open_system(item))
+        body = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=18)
+        symbol = _icon("drive-harddisk-system-symbolic", 36)
+        symbol.add_css_class("rescue-mark")
+        body.append(symbol)
+        details = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        details.set_hexpand(True)
+        details.append(_text(str(partition.get("os_name") or "AnduinOS"), "title-3"))
+        details.append(_text(" · ".join(value for value in (
+            str(partition.get("hostname") or ""),
+            str(disk.get("model") or disk.get("path") or ""),
+        ) if value), "dim-label"))
+        metadata = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
+        for value in (str(partition.get("filesystem") or "Unknown").upper(),
+                      str(partition.get("path") or ""), _size(partition.get("size_bytes"))):
+            metadata.append(_text(value, "rescue-soft-chip"))
+        if not button.get_sensitive():
+            reason = (
+                "Running system" if partition.get("active_system") else
+                "Live installation media" if disk.get("live_medium") else
+                "Unavailable for recovery"
             )
-        return row
+            metadata.append(_text(reason, "rescue-soft-chip"))
+        details.append(metadata)
+        body.append(details)
+        body.append(_icon("go-next-symbolic", 20))
+        button.set_child(body)
+        return button
 
     def _append_disk(self, container: Gtk.Box, disk: dict) -> None:
         is_live_medium = bool(disk.get("live_medium"))
@@ -241,18 +382,19 @@ class RescueWindow(Adw.ApplicationWindow):
             row = Adw.ActionRow(title=kind, subtitle=details)
             icon = "drive-harddisk-system-symbolic" if partition.get("os_kind") == "anduinos" else "drive-harddisk-symbolic"
             row.add_prefix(Gtk.Image.new_from_icon_name(icon))
-            selectable = (
-                bool(partition.get("path"))
-                and bool(partition.get("identity"))
-                and not partition.get("active_system")
-                and not is_live_medium
-            )
+            selectable = can_open_partition(disk, partition)
             if selectable:
                 row.set_activatable(True)
                 row.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
                 row.connect("activated", lambda _row, item=partition: self._open_system(item))
             elif partition.get("active_system"):
                 row.set_subtitle(details + " · Running system")
+            elif is_live_medium:
+                row.set_subtitle(details + " · Live installation media")
+            elif partition.get("os_kind") == "windows":
+                row.set_subtitle(details + " · Windows cannot be repaired here")
+            else:
+                row.set_subtitle(details + " · Not available for recovery")
             group.add(row)
 
     def _open_system(self, partition: dict) -> None:
@@ -262,7 +404,7 @@ class RescueWindow(Adw.ApplicationWindow):
         self.status.set_icon_name("drive-harddisk-system-symbolic")
         self.status.set_title("Inspecting the selected system")
         self.status.set_description("Re-checking its disk identity and reading system information…")
-        self.stack.set_visible_child_name("status")
+        self._show_stage("status")
 
         def worker() -> None:
             try:
@@ -277,7 +419,7 @@ class RescueWindow(Adw.ApplicationWindow):
     def _open_failed(self, message: str) -> bool:
         self.refresh.set_sensitive(True)
         self.back.set_visible(False)
-        self.stack.set_visible_child_name("content")
+        self._show_stage("content")
         dialog = Adw.MessageDialog(
             transient_for=self,
             heading="Could not open this installation",
@@ -295,95 +437,224 @@ class RescueWindow(Adw.ApplicationWindow):
         self.status.set_icon_name("dialog-error-symbolic")
         self.status.set_title("Could not open this installation")
         self.status.set_description(message)
+        self._show_stage("status")
         return GLib.SOURCE_REMOVE
 
     def _render_target(self, payload: dict) -> bool:
         self.refresh.set_sensitive(True)
-        self.back.set_visible(True)
-        self._clear_content()
         system = payload.get("system") if isinstance(payload.get("system"), dict) else {}
         target = payload.get("target") if isinstance(payload.get("target"), dict) else {}
         self._target_payload = payload
+        self._clear_box(self.target_card)
+        self.target_card.append(_text("SELECTED INSTALLATION", "rescue-kicker"))
+        self.target_card.append(_text(str(system.get("name") or "AnduinOS"), "title-3"))
+        self.target_card.append(_text(
+            " · ".join(value for value in (
+                str(system.get("hostname") or ""), str(target.get("path") or "")
+            ) if value), "dim-label"
+        ))
+        self._clear_listbox(self.navigation)
+        while child := self.workspace_pages.get_first_child():
+            self.workspace_pages.remove(child)
+        self._nav_rows = {}
+        navigation_items = [
+            ("home", "Home", "go-home-symbolic"),
+            ("passwords", "Password reset", "dialog-password-symbolic"),
+            ("files", "File browser", "folder-open-symbolic"),
+        ]
+        if system.get("btrfs_layout"):
+            navigation_items.append(
+                ("snapshots", "Snapshots & restore", "document-open-recent-symbolic")
+            )
+        navigation_items.append(("details", "System details", "computer-symbolic"))
+        for name, title, icon in navigation_items:
+            row = Gtk.ListBoxRow()
+            row.update_property(
+                [Gtk.AccessibleProperty.LABEL], [f"Open {title} page"]
+            )
+            row.set_child(self._navigation_item(title, icon))
+            self.navigation.append(row)
+            self._nav_rows[name] = row
 
-        title = Gtk.Label(label=str(system.get("name") or "AnduinOS"), xalign=0)
-        title.add_css_class("title-1")
-        self.content.append(title)
-        subtitle = Gtk.Label(
-            label=" · ".join(
-                value for value in (
-                    str(system.get("hostname") or ""),
-                    str(target.get("path") or ""),
-                    str(system.get("filesystem") or "").upper(),
-                ) if value
-            ),
-            xalign=0,
+        self.workspace_pages.add_named(self._wrap_page(self._home_page(payload)), "home")
+        self.workspace_pages.add_named(self._wrap_page(self._password_page(payload)), "passwords")
+        self.file_page = FileBrowserPage(self, target)
+        self.workspace_pages.add_named(self.file_page, "files")
+        self.snapshot_page = None
+        if system.get("btrfs_layout"):
+            self.snapshot_page = SnapshotPage(self, target)
+            self.workspace_pages.add_named(self.snapshot_page, "snapshots")
+        self.workspace_pages.add_named(self._wrap_page(self._details_page(payload)), "details")
+        self.navigation.select_row(self._nav_rows["home"])
+        self._show_stage("workspace")
+        return GLib.SOURCE_REMOVE
+
+    @staticmethod
+    def _clear_box(box: Gtk.Box) -> None:
+        while child := box.get_first_child():
+            box.remove(child)
+
+    @staticmethod
+    def _clear_listbox(box: Gtk.ListBox) -> None:
+        while child := box.get_first_child():
+            box.remove(child)
+
+    @staticmethod
+    def _navigation_item(title: str, icon: str) -> Gtk.Widget:
+        body = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        body.set_margin_top(10)
+        body.set_margin_bottom(10)
+        body.set_margin_start(12)
+        body.set_margin_end(12)
+        body.append(_icon(icon, 19))
+        body.append(_text(title))
+        return body
+
+    def _navigation_selected(self, _listbox: Gtk.ListBox, row: Gtk.ListBoxRow | None) -> None:
+        if row is None or not hasattr(self, "_nav_rows"):
+            return
+        name = next((key for key, value in self._nav_rows.items() if value == row), None)
+        if name is None:
+            return
+        self.workspace_pages.set_visible_child_name(name)
+        self.page_title.set_title({
+            "home": "Home", "passwords": "Password reset", "files": "File browser",
+            "snapshots": "Snapshots & restore", "details": "System details",
+        }[name])
+        if name == "files" and not self.file_page.loaded:
+            self.file_page.load(".")
+        if name == "snapshots" and self.snapshot_page and not self.snapshot_page.loaded:
+            self.snapshot_page.load()
+        if self.split.get_collapsed():
+            self.split.set_show_sidebar(False)
+
+    def _navigate(self, name: str) -> None:
+        self.navigation.select_row(self._nav_rows[name])
+
+    @staticmethod
+    def _wrap_page(page: Gtk.Widget) -> Gtk.Widget:
+        clamp = Adw.Clamp(maximum_size=900)
+        clamp.set_child(page)
+        return _scrolled(clamp)
+
+    @staticmethod
+    def _page_intro(kicker: str, title: str, description: str) -> Gtk.Box:
+        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
+        page.set_margin_top(32)
+        page.set_margin_bottom(40)
+        page.set_margin_start(30)
+        page.set_margin_end(30)
+        page.append(_text(kicker, "rescue-kicker"))
+        page.append(_text(title, "title-1"))
+        page.append(_text(description, "dim-label"))
+        return page
+
+    def _home_page(self, payload: dict) -> Gtk.Widget:
+        system = payload.get("system", {})
+        target = payload.get("target", {})
+        page = self._page_intro(
+            "RECOVERY WORKSPACE", "A calmer way back",
+            "Work on this offline installation. Choose a tool on the left; your running system remains untouched."
         )
-        subtitle.add_css_class("dim-label")
-        self.content.append(subtitle)
+        banner = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=22)
+        banner.add_css_class("rescue-hero")
+        banner_text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        banner_text.set_hexpand(True)
+        banner_text.append(_text(str(system.get("name") or "AnduinOS"), "title-1"))
+        banner_text.append(_text(" · ".join(value for value in (
+            str(system.get("version") or ""), str(system.get("hostname") or ""),
+        ) if value), "dim-label"))
+        target_chip = _text("Offline installation · " + str(target.get("path") or "Unknown partition"), "rescue-chip")
+        target_chip.set_halign(Gtk.Align.START)
+        banner_text.append(target_chip)
+        banner.append(banner_text)
+        banner.append(_brand(88))
+        page.append(banner)
+        page.append(_text("Recovery tools", "title-2"))
+        tools = [
+            ("passwords", "Reset a password", "Restore access to a local account.", "dialog-password-symbolic"),
+            ("files", "Browse and copy files", "Explore the offline system and copy data out.", "folder-open-symbolic"),
+        ]
+        if system.get("btrfs_layout"):
+            tools.append((
+                "snapshots", "Snapshots & restore",
+                "Create a recovery point or roll back the system.",
+                "document-open-recent-symbolic",
+            ))
+        tools.append((
+            "details", "System details", "Review the installation before making changes.",
+            "computer-symbolic",
+        ))
+        for name, title, description, icon in tools:
+            button = Gtk.Button()
+            button.add_css_class("rescue-card")
+            button.connect("clicked", lambda _button, page_name=name: self._navigate(page_name))
+            body = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16)
+            symbol = _icon(icon, 30)
+            symbol.add_css_class("rescue-mark")
+            body.append(symbol)
+            words = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+            words.set_hexpand(True)
+            words.append(_text(title, "title-4"))
+            words.append(_text(description, "dim-label"))
+            body.append(words)
+            body.append(_icon("go-next-symbolic", 18))
+            button.set_child(body)
+            page.append(button)
+        if not system.get("btrfs_layout"):
+            page.append(_text(
+                "Snapshot restore is available only for the standard AnduinOS Btrfs layout. "
+                "File recovery and password reset remain available here.", "dim-label"
+            ))
+        return page
 
-        info = Adw.PreferencesGroup(title="System information")
-        self.content.append(info)
-        for label, value in (
-            ("Version", system.get("version") or "Unknown"),
-            ("Computer name", system.get("hostname") or "Unknown"),
-            ("Filesystem", str(system.get("filesystem") or "Unknown").upper()),
-            ("Installed kernels", ", ".join(system.get("kernels") or ()) or "Unknown"),
-        ):
-            row = Adw.ActionRow(title=label, subtitle=str(value))
-            info.add(row)
-
-        users = Adw.PreferencesGroup(title="Local users")
-        self.content.append(users)
+    def _password_page(self, payload: dict) -> Gtk.Widget:
+        page = self._page_intro(
+            "ACCOUNT ACCESS", "Reset a local password",
+            "Choose an account on the offline installation. Existing encrypted login keyrings are not unlocked by a password reset."
+        )
+        users = Adw.PreferencesGroup(title="Local accounts")
+        page.append(users)
+        found = False
         for user in payload.get("users", []):
             if not isinstance(user, dict):
                 continue
+            found = True
             name = str(user.get("display_name") or user.get("name") or "Unknown")
             subtitle = f"{user.get('name', '')} · {user.get('home', '')}"
             if user.get("locked") is True:
                 subtitle += " · Password locked"
             row = Adw.ActionRow(title=name, subtitle=subtitle)
-            row.add_prefix(Gtk.Image.new_from_icon_name("avatar-default-symbolic"))
+            row.add_prefix(_icon("avatar-default-symbolic"))
             button = Gtk.Button(label="Reset password")
             button.set_valign(Gtk.Align.CENTER)
-            button.connect(
-                "clicked",
-                lambda _button, username=str(user.get("name") or ""): self._password_dialog(username),
-            )
+            button.connect("clicked", lambda _button, username=str(user.get("name") or ""): self._password_dialog(username))
             row.add_suffix(button)
             users.add(row)
+        if not found:
+            users.add(Adw.ActionRow(title="No local accounts found"))
+        return page
 
-        actions = Adw.PreferencesGroup(
-            title="Recovery tools",
-            description="Additional offline operations will appear here as they become available.",
+    def _details_page(self, payload: dict) -> Gtk.Widget:
+        system = payload.get("system", {})
+        target = payload.get("target", {})
+        page = self._page_intro(
+            "INSTALLATION DETAILS", "Know what you are repairing",
+            "Information read from the selected offline installation. Its device identity is rechecked before each operation."
         )
-        self.content.append(actions)
-        browse = Adw.ActionRow(
-            title="Browse and copy files",
-            subtitle="Open the offline system without changing it",
-        )
-        browse.add_prefix(Gtk.Image.new_from_icon_name("folder-open-symbolic"))
-        browse.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
-        browse.set_activatable(True)
-        browse.connect("activated", lambda *_: FileBrowserWindow(self, target).present())
-        actions.add(browse)
-        snapshots = Adw.ActionRow(
-            title="Manage Btrfs snapshots",
-            subtitle="Create recovery points or restore the offline system",
-        )
-        snapshots.add_prefix(Gtk.Image.new_from_icon_name("document-open-recent-symbolic"))
-        if system.get("btrfs_layout"):
-            snapshots.set_activatable(True)
-            snapshots.add_suffix(Gtk.Image.new_from_icon_name("go-next-symbolic"))
-            snapshots.connect(
-                "activated", lambda *_: SnapshotWindow(self, target).present()
-            )
-        else:
-            snapshots.set_subtitle("Requires the standard AnduinOS Btrfs layout")
-            snapshots.set_sensitive(False)
-        actions.add(snapshots)
-
-        self.stack.set_visible_child_name("content")
-        return GLib.SOURCE_REMOVE
+        info = Adw.PreferencesGroup(title="System")
+        page.append(info)
+        for label, value in (
+            ("Operating system", system.get("name") or "AnduinOS"),
+            ("Version", system.get("version") or "Unknown"),
+            ("Computer name", system.get("hostname") or "Unknown"),
+            ("Filesystem", str(system.get("filesystem") or "Unknown").upper()),
+            ("Partition", target.get("path") or "Unknown"),
+            ("Installed kernels", ", ".join(system.get("kernels") or ()) or "Unknown"),
+            ("Snapshots", "Available" if system.get("btrfs_layout") else "Requires the standard AnduinOS Btrfs layout"),
+        ):
+            info.add(Adw.ActionRow(title=label, subtitle=str(value)))
+        return page
 
     def _password_dialog(self, username: str) -> None:
         password = Adw.PasswordEntryRow(title="New password")
@@ -424,7 +695,7 @@ class RescueWindow(Adw.ApplicationWindow):
             self.status.set_icon_name("dialog-password-symbolic")
             self.status.set_title("Resetting the password")
             self.status.set_description("Writing the new local account password safely…")
-            self.stack.set_visible_child_name("status")
+            self._show_stage("status")
             self.refresh.set_sensitive(False)
 
             def worker() -> None:
@@ -461,33 +732,39 @@ class RescueWindow(Adw.ApplicationWindow):
         return GLib.SOURCE_REMOVE
 
 
-class FileBrowserWindow(Adw.Window):
+class FileBrowserPage(Gtk.Box):
     def __init__(self, parent: Gtk.Window, target: dict):
-        super().__init__(transient_for=parent, modal=True)
-        self.set_title("Recover files")
-        self.set_default_size(760, 620)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
+        self.parent_window = parent
         self.target = target
         self.current = "."
         self.parent_path: str | None = None
+        self.loaded = False
 
-        toolbar = Adw.ToolbarView()
-        header = Adw.HeaderBar()
+        toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        toolbar.set_margin_top(14)
+        toolbar.set_margin_start(30)
+        toolbar.set_margin_end(30)
         self.up = Gtk.Button(icon_name="go-up-symbolic", tooltip_text="Parent folder")
         self.up.set_sensitive(False)
         self.up.connect("clicked", self._go_up)
-        header.pack_start(self.up)
-        toolbar.add_top_bar(header)
-        self.set_content(toolbar)
+        toolbar.append(self.up)
+        toolbar.append(_text("Offline filesystem", "dim-label"))
+        self.append(toolbar)
 
         self.stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
-        toolbar.set_content(self.stack)
+        self.stack.set_vexpand(True)
+        self.append(self.stack)
         self.status = Adw.StatusPage()
         self.stack.add_named(self.status, "status")
         self.page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-        self.page.set_margin_top(12)
-        self.page.set_margin_bottom(12)
-        self.page.set_margin_start(16)
-        self.page.set_margin_end(16)
+        self.page.set_margin_top(28)
+        self.page.set_margin_bottom(28)
+        self.page.set_margin_start(30)
+        self.page.set_margin_end(30)
+        self.page.append(_text("FILE RECOVERY", "rescue-kicker"))
+        self.page.append(_text("Browse and copy your files", "title-1"))
+        self.page.append(_text("Explore this offline installation without modifying its files.", "dim-label"))
         self.location = Gtk.Label(xalign=0)
         self.location.add_css_class("heading")
         self.page.append(self.location)
@@ -497,9 +774,10 @@ class FileBrowserWindow(Adw.Window):
         scroll.set_child(self.listbox)
         self.page.append(scroll)
         self.stack.add_named(self.page, "files")
-        self.load(".")
 
     def load(self, relative: str) -> None:
+        self.loaded = True
+        self.status.set_child(None)
         self.status.set_icon_name("folder-open-symbolic")
         self.status.set_title("Opening offline files")
         self.status.set_description("Reading this folder without changing the installed system…")
@@ -563,6 +841,11 @@ class FileBrowserWindow(Adw.Window):
         self.status.set_icon_name("dialog-error-symbolic")
         self.status.set_title("Could not read offline files")
         self.status.set_description(message)
+        retry = Gtk.Button(label="Try again")
+        retry.add_css_class("pill")
+        retry.set_halign(Gtk.Align.CENTER)
+        retry.connect("clicked", lambda *_: self.load(self.current))
+        self.status.set_child(retry)
         self.stack.set_visible_child_name("status")
         return GLib.SOURCE_REMOVE
 
@@ -578,7 +861,7 @@ class FileBrowserWindow(Adw.Window):
             if destination:
                 self._export(entry, destination)
 
-        chooser.select_folder(self, None, selected)
+        chooser.select_folder(self.parent_window, None, selected)
 
     def _export(self, entry: dict, destination: str) -> None:
         self.status.set_icon_name("document-save-symbolic")
@@ -603,7 +886,7 @@ class FileBrowserWindow(Adw.Window):
 
     def _exported(self, path: str) -> bool:
         dialog = Adw.MessageDialog(
-            transient_for=self,
+            transient_for=self.parent_window,
             heading="Copy complete",
             body=f"The rescued item was copied to:\n{path}",
         )
@@ -613,41 +896,52 @@ class FileBrowserWindow(Adw.Window):
         return GLib.SOURCE_REMOVE
 
 
-class SnapshotWindow(Adw.Window):
+class SnapshotPage(Gtk.Box):
     def __init__(self, parent: Gtk.Window, target: dict):
-        super().__init__(transient_for=parent, modal=True)
-        self.set_title("System snapshots")
-        self.set_default_size(760, 620)
+        super().__init__(orientation=Gtk.Orientation.VERTICAL)
+        self.parent_window = parent
         self.target = target
+        self.loaded = False
 
-        toolbar = Adw.ToolbarView()
-        header = Adw.HeaderBar()
+        toolbar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        toolbar.set_margin_top(14)
+        toolbar.set_margin_start(30)
+        toolbar.set_margin_end(30)
+        label = _text("SYSTEM RECOVERY POINTS", "rescue-kicker")
+        label.set_hexpand(True)
+        toolbar.append(label)
         create = Gtk.Button(label="Create snapshot")
         create.add_css_class("suggested-action")
         create.connect("clicked", self._create_dialog)
-        header.pack_end(create)
-        toolbar.add_top_bar(header)
-        self.set_content(toolbar)
+        toolbar.append(create)
+        self.append(toolbar)
 
         self.stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
-        toolbar.set_content(self.stack)
+        self.stack.set_vexpand(True)
+        self.append(self.stack)
         self.status = Adw.StatusPage()
         self.stack.add_named(self.status, "status")
         scroll = Gtk.ScrolledWindow()
+        page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        page.set_margin_top(28)
+        page.set_margin_bottom(28)
+        page.set_margin_start(30)
+        page.set_margin_end(30)
+        page.append(_text("SYSTEM RECOVERY", "rescue-kicker"))
+        page.append(_text("Snapshots & restore", "title-1"))
+        page.append(_text("Create a recovery point or return this offline system to an earlier state. Personal files in Home are not part of system snapshots.", "dim-label"))
         self.listbox = Gtk.ListBox(selection_mode=Gtk.SelectionMode.NONE)
         self.listbox.add_css_class("boxed-list")
-        self.listbox.set_margin_top(18)
-        self.listbox.set_margin_bottom(18)
-        self.listbox.set_margin_start(24)
-        self.listbox.set_margin_end(24)
-        scroll.set_child(self.listbox)
+        page.append(self.listbox)
+        scroll.set_child(page)
         self.stack.add_named(scroll, "snapshots")
-        self.load()
 
     def _target_identity(self) -> tuple[str, str]:
         return str(self.target.get("path") or ""), str(self.target.get("identity") or "")
 
     def load(self) -> None:
+        self.loaded = True
+        self.status.set_child(None)
         self.status.set_icon_name("document-open-recent-symbolic")
         self.status.set_title("Loading system snapshots")
         self.status.set_description(
@@ -707,6 +1001,11 @@ class SnapshotWindow(Adw.Window):
         self.status.set_icon_name("dialog-error-symbolic")
         self.status.set_title("Snapshot operation failed")
         self.status.set_description(message)
+        retry = Gtk.Button(label="Try again")
+        retry.add_css_class("pill")
+        retry.set_halign(Gtk.Align.CENTER)
+        retry.connect("clicked", lambda *_: self.load())
+        self.status.set_child(retry)
         self.stack.set_visible_child_name("status")
         return GLib.SOURCE_REMOVE
 
@@ -715,7 +1014,7 @@ class SnapshotWindow(Adw.Window):
         form = Adw.PreferencesGroup()
         form.add(name)
         dialog = Adw.MessageDialog(
-            transient_for=self,
+            transient_for=self.parent_window,
             heading="Create a snapshot of the offline system?",
             body="Personal files in Home are not included in system snapshots.",
             extra_child=form,
@@ -757,7 +1056,7 @@ class SnapshotWindow(Adw.Window):
         protect = Gtk.CheckButton(label="Create a safety snapshot of the current system first")
         protect.set_active(True)
         dialog = Adw.MessageDialog(
-            transient_for=self,
+            transient_for=self.parent_window,
             heading=f"Restore {deployment.get('title') or 'this snapshot'}?",
             body=(
                 "The offline system root will be replaced immediately. Personal files in Home "
@@ -799,14 +1098,14 @@ class SnapshotWindow(Adw.Window):
 
     def _restored(self) -> bool:
         dialog = Adw.MessageDialog(
-            transient_for=self,
+            transient_for=self.parent_window,
             heading="System restore complete",
             body="Shut down the Live session, remove the installation media, and start AnduinOS.",
         )
         dialog.add_response("close", "Close")
         dialog.set_default_response("close")
         dialog.set_close_response("close")
-        dialog.connect("response", lambda *_: self.close())
+        dialog.connect("response", lambda *_: self.load())
         dialog.present()
         return GLib.SOURCE_REMOVE
 
