@@ -500,7 +500,9 @@ class RescueWindow(Adw.ApplicationWindow):
         body.set_margin_bottom(10)
         body.set_margin_start(12)
         body.set_margin_end(12)
-        body.append(_icon(icon, 19))
+        image = _icon(icon, 26 if icon == "go-home-symbolic" else 19)
+        image.set_size_request(26, 26)
+        body.append(image)
         body.append(_text(title))
         return body
 
