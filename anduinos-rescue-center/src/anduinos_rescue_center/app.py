@@ -82,8 +82,6 @@ def _install_style(display) -> None:
         .rescue-kicker { color: @accent_color; font-weight: 700; letter-spacing: 1px; }
         .rescue-chip { background: alpha(@accent_bg_color, .16); color: @accent_color; border-radius: 999px; padding: 5px 10px; font-weight: 600; }
         .rescue-soft-chip { background: alpha(@window_fg_color, .08); border-radius: 999px; padding: 5px 10px; }
-        .rescue-sidebar { background: alpha(@window_fg_color, .025); }
-        .rescue-target { background: alpha(@accent_bg_color, .12); border: 1px solid alpha(@accent_color, .2); border-radius: 16px; padding: 14px; }
     """)
     Gtk.StyleContext.add_provider_for_display(
         display, css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
@@ -155,15 +153,14 @@ class RescueWindow(Adw.ApplicationWindow):
         sidebar_header.set_title_widget(Adw.WindowTitle.new("Rescue Center", "ANDUINOS"))
         sidebar_toolbar.add_top_bar(sidebar_header)
         sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
-        sidebar.add_css_class("rescue-sidebar")
         sidebar.set_margin_top(18)
         sidebar.set_margin_bottom(18)
         sidebar.set_margin_start(14)
         sidebar.set_margin_end(14)
         self.target_card = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
-        self.target_card.add_css_class("rescue-target")
+        self.target_card.set_margin_start(12)
+        self.target_card.set_margin_end(12)
         sidebar.append(self.target_card)
-        sidebar.append(_text("RECOVERY WORKSPACE", "rescue-kicker"))
         self.navigation = Gtk.ListBox(selection_mode=Gtk.SelectionMode.SINGLE)
         self.navigation.add_css_class("navigation-sidebar")
         self.navigation.connect("row-selected", self._navigation_selected)
