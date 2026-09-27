@@ -19,6 +19,7 @@ from .esp import (
 )
 from .execution_boundaries import emit_boundary
 from .model import Architecture, Filesystem, Firmware, InstallMode, InstallPlan
+from .software import verify_driver_boot_payload
 from .steps import FailurePolicy, InstallContext
 from .storage_planning import (
     GuidedCoexistenceExecutionPlan,
@@ -239,6 +240,7 @@ class InstallBootloaderStep:
         config = grub_cfg.read_text(encoding="utf-8", errors="replace")
         if "menuentry " not in config or "vmlinuz-" not in config:
             raise RuntimeError("GRUB configuration has no Linux boot entry")
+        verify_driver_boot_payload(context, self.runner, config)
 
         guided = context.plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
         manual = context.plan.storage.mode is InstallMode.MANUAL

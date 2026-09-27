@@ -476,6 +476,17 @@ class InstallBootloaderTests(unittest.TestCase):
                 ("chroot", str(target), "lsinitrd", "-m", "/boot/initrd.img-6.14-test")
             ] = ("anduinos-btrfs-snapshots-manager\n", "", 0)
             step.verify(context)
+            # A driver payload failure must abort this real pipeline step,
+            # not remain an unused helper or a warning after installation.
+            with patch(
+                "installer_core.bootloader.verify_driver_boot_payload",
+                side_effect=RuntimeError("target kernel lacks NVIDIA modules"),
+            ) as verify_drivers:
+                with self.assertRaisesRegex(RuntimeError, "lacks NVIDIA modules"):
+                    step.verify(context)
+                verify_drivers.assert_called_once_with(
+                    context, runner, (target / "boot/grub/grub.cfg").read_text()
+                )
 
     def test_rejects_kernel_without_matching_initramfs(self):
         with tempfile.TemporaryDirectory() as directory:
