@@ -86,6 +86,7 @@ def _install_style(display) -> None:
         .rescue-kicker { color: @accent_color; font-weight: 700; letter-spacing: 1px; }
         .rescue-chip { background: alpha(@accent_bg_color, .16); color: @accent_color; border-radius: 999px; padding: 5px 10px; font-weight: 600; }
         .rescue-soft-chip { background: alpha(@window_fg_color, .08); border-radius: 999px; padding: 5px 10px; }
+        .navigation-sidebar > row:selected { font-weight: 400; }
     """)
     Gtk.StyleContext.add_provider_for_display(
         display, css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
