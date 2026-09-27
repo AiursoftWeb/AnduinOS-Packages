@@ -122,8 +122,10 @@ class RescueWindow(Adw.ApplicationWindow):
         self.content.set_margin_bottom(40)
         self.content.set_margin_start(36)
         self.content.set_margin_end(36)
+        self.content.set_vexpand(True)
         selector = Adw.Clamp(maximum_size=1080)
         selector.set_child(self.content)
+        selector.set_vexpand(True)
         self.stack.add_named(_scrolled(selector), "content")
 
         self.split = Adw.OverlaySplitView()
@@ -273,33 +275,22 @@ class RescueWindow(Adw.ApplicationWindow):
             for part in disk.get("partitions", [])
             if isinstance(part, dict) and part.get("os_kind") == "anduinos"
         ]
-        summary = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        for label in (
-            f"{len(installations)} AnduinOS installation{'s' if len(installations) != 1 else ''}",
-            f"{len(disks)} disk{'s' if len(disks) != 1 else ''} scanned",
-            f"Secure Boot: {str(payload.get('secure_boot', 'unknown')).capitalize()}",
-        ):
-            chip = _text(label, "rescue-soft-chip")
-            summary.append(chip)
-        self.content.append(summary)
-
-        self.content.append(_text("Choose a recovery path", "title-3"))
-        pages = Adw.ViewStack()
-        switcher = Adw.ViewSwitcher()
-        switcher.set_stack(pages)
-        switcher.set_policy(Adw.ViewSwitcherPolicy.WIDE)
-        self.content.append(switcher)
+        pages = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
+        pages.set_vhomogeneous(False)
+        pages.set_vexpand(True)
         self.content.append(pages)
 
         quick = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
-        quick.set_margin_top(18)
+        quick.set_vexpand(True)
         advanced = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-        advanced.set_margin_top(18)
-        pages.add_titled_with_icon(quick, "quick", "Quick detection", "system-search-symbolic")
-        pages.add_titled_with_icon(advanced, "advanced", "Manual selection", "drive-harddisk-symbolic")
+        pages.add_named(quick, "quick")
+        pages.add_named(advanced, "advanced")
 
-        quick.append(_text("Detected AnduinOS systems", "title-3"))
-        quick.append(_text("Select the installation to open its recovery workspace.", "dim-label"))
+        back_to_results = Gtk.Button(label="Back to detected systems")
+        back_to_results.add_css_class("flat")
+        back_to_results.set_halign(Gtk.Align.START)
+        back_to_results.connect("clicked", lambda *_: pages.set_visible_child_name("quick"))
+        advanced.append(back_to_results)
         advanced.append(_text("All detected disks and partitions", "title-3"))
         advanced.append(_text("For systems not found automatically. The selected partition is checked again before repair.", "dim-label"))
         for disk in disks:
@@ -311,10 +302,16 @@ class RescueWindow(Adw.ApplicationWindow):
             empty = Adw.StatusPage(
                 icon_name="system-search-symbolic",
                 title="No AnduinOS installation found",
-                description="Use Manual selection to inspect the disks and partitions on this computer.",
+                description="Use Advanced selection to inspect the disks and partitions on this computer.",
             )
             empty.set_vexpand(True)
             quick.append(empty)
+        quick.append(Gtk.Box(vexpand=True))
+        advanced_selection = Gtk.Button(label="Advanced selection")
+        advanced_selection.add_css_class("pill")
+        advanced_selection.set_halign(Gtk.Align.CENTER)
+        advanced_selection.connect("clicked", lambda *_: pages.set_visible_child_name("advanced"))
+        quick.append(advanced_selection)
         self._show_stage("content")
         return GLib.SOURCE_REMOVE
 
