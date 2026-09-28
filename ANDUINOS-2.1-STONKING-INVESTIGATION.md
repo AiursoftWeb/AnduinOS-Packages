@@ -1,6 +1,6 @@
 # AnduinOS 2.1 / Ubuntu 26.10 Stonking：发布前一个月调查与实施清单
 
-> 调查基线：2026-09-19；目标窗口：2026-09-19—2026-10-19；Ubuntu 26.10 计划 2026-10-15 发布。本文是**实施计划和代码草案**，不是已经完成的兼容性声明。实际发布必须以冻结后的 Ubuntu 软件包、真实 ISO、QEMU 和真机结果为准。本文不修改任何运行时实现。
+> 调查基线：2026-09-19；目标窗口：2026-09-19—2026-10-19；Ubuntu 26.10 计划 2026-10-15 发布。本文是**实施计划和代码草案**，不是已经完成的兼容性声明。实际发布必须以冻结后的 Ubuntu 软件包、真实 ISO、QEMU 和真机结果为准。
 
 ## 0. 结论与必须先作出的决定
 
@@ -143,7 +143,7 @@ Ubuntu 明确宣布 26.10 的 system/user bus 默认改用 `dbus-broker`，但�
 
 现有安装器的 [VM-TESTING](anduinos-installer-beta/VM-TESTING.md) 已有 amd64 BIOS、amd64/arm64 UEFI、Secure Boot 开/关、Btrfs/ext4 十行基础矩阵；另有 coexistence/手工分区矩阵。2.1 需要以 **实际 Stonking ISO** 全部重跑，覆盖 ESP 复用/新建、Windows 共存、NTFS 缩容、Btrfs 压缩、不同 Swap 容量、自动/手工分支汇合、28 语言、离线/在线、MOK 入库、异常中断。每行留 ISO SHA-256、磁盘镜像、串口日志、截图、目标系统启动证据，不能只接受模拟模式通过。
 
-代码审计重点是安装器的源套件推导和 package check、写入目标的 `base-files`、内核/Dracut/GRUB 安装顺序、分区几何、Secure Boot 状态探测，以及 `InstallPlan` 前端与特权执行器的 schema 一致。2.1 要避免把 2.0 的 boot 布局假设固化在安装器新目标和升级老目标之间。`TODO_LUKS.md` 的加密仍属后续路线图，不在本次 UI 放一个未实现的选项。若最终将 `installer-beta` 改为稳定命名，需单独审查包替代、Polkit action、desktop entry 和 2.0 用户安装状态，而不是只更名。
+代码审计重点是安装器的源套件推导和 package check、写入目标的 `base-files`、内核/Dracut/GRUB 安装顺序、分区几何、Secure Boot 状态探测，以及 `InstallPlan` 前端与特权执行器的 schema 一致。2.1 要避免把 2.0 的 boot 布局假设固化在安装器新目标和升级老目标之间。`TODO_LUKS.md` 的加密仍属后续路线图，未实现前不应在 UI 暴露该选项。若最终将 `installer-beta` 改为稳定命名，需单独审查包替代、Polkit action、desktop entry 和 2.0 用户安装状态，而不是只更名。
 
 ## 7. 老用户从 2.0 安全到 2.1：明确分阶段承诺
 
