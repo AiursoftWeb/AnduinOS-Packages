@@ -132,6 +132,7 @@
     <PostRemoveScript Include="scripts/postrm.sh" />
   </ItemGroup>
   <ItemGroup>
+    <TestCommand Name="widgets" Profile="gui" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:tests:../anduinos-secureboot-toolkit/src LANGUAGE=C GSETTINGS_BACKEND=memory GDK_BACKEND=x11 dbus-run-session -- xvfb-run -a python3 -m unittest discover -s tests/gui -v" TimeoutSeconds="300" />
     <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:tests:../anduinos-secureboot-toolkit/src python3 -m unittest discover -s tests -v" TimeoutSeconds="600" />
   </ItemGroup>
 </Project>

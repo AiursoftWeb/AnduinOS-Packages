@@ -12,6 +12,8 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from anduinos_secureboot import boot_chain as boot
 from anduinos_secureboot import operations
+from anduinos_secureboot.firmware import FirmwareEvidence
+from anduinos_secureboot.model import SecureBootStatus
 
 
 UUID = "12345678-1234-1234-1234-123456789abc"
@@ -191,7 +193,9 @@ class BootChainTests(unittest.TestCase):
     def test_boot_failure_prevents_mok_mutation(self):
         def run(args, **kwargs):
             return subprocess.CompletedProcess(args, 0, "SecureBoot disabled\n", "")
-        with (patch.object(boot, "prepare_boot_chain", side_effect=ValueError("ambiguous ESP")),
+        with (patch.object(operations, "probe_firmware", return_value=FirmwareEvidence(
+                  True, SecureBootStatus.DISABLED, "mokutil")),
+              patch.object(boot, "prepare_boot_chain", side_effect=ValueError("ambiguous ESP")),
               patch.object(operations, "prepare") as prepare):
             result = operations.execute("prepare", run)
             self.assertFalse(result.ok)
