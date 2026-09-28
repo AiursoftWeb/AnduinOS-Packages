@@ -27,7 +27,13 @@ class Firmware:
         self.loader = "grubx64.efi"
         self.new = False
         self.fail_order = False
+        self.rollback_order = self.order
         self.calls = []
+        self.other_entry = ""
+        self.fstab_source = "/dev/test1"
+        self.boot_uuid = "abcd1234-1234-1234-1234-123456789abc"
+        self.boot_prefix = "/boot/grub"
+        self.hint_uuid = UUID
         self.parts = [{"path": "/dev/test1", "pkname": "/dev/test", "type": "part",
                        "parttype": boot.ESP_TYPE, "partuuid": UUID, "partn": 1}]
 
@@ -37,13 +43,20 @@ class Firmware:
         result += f"Boot0007* AnduinOS HD(1,GPT,{UUID},0x800,0x10000)/File(\\EFI\\AnduinOS\\{self.loader})\n"
         if self.new:
             result += f"Boot0009* AnduinOS HD(1,GPT,{UUID},0x800,0x10000)/File(\\EFI\\AnduinOS\\shimx64.efi)\n"
-        return result
+        return result + self.other_entry
 
     def run(self, args, **kwargs):
         self.calls.append(args)
         output = ""
-        if args[0] == "findmnt":
-            output = json.dumps({"filesystems": [{"source": "/dev/test1", "target": str(self.esp), "fstype": "vfat", "options": "rw,nosuid"}]})
+        if args[0] == "findmnt" and "--noheadings" in args:
+            output = self.hint_uuid
+        elif args[0] == "findmnt":
+            source = self.fstab_source if "--fstab" in args else "/dev/test1"
+            output = json.dumps({"filesystems": [{"source": source, "target": str(self.esp), "fstype": "vfat", "options": "rw,nosuid"}]})
+        elif args[0] == "grub-probe":
+            output = self.boot_uuid
+        elif args[0] == "grub-mkrelpath":
+            output = self.boot_prefix
         elif args[0] == "lsblk":
             output = json.dumps({"blockdevices": self.parts})
         elif args == ["efibootmgr", "--verbose"]:
@@ -51,7 +64,7 @@ class Firmware:
         elif args[:2] == ["efibootmgr", "--create-only"]:
             self.new = True
         elif args[:2] == ["efibootmgr", "--bootorder"]:
-            if self.fail_order and args[2] != "0000,0007,0003":
+            if self.fail_order and args[2] != self.rollback_order:
                 return subprocess.CompletedProcess(args, 1, "", "NVRAM full")
             self.order = args[2]
         elif args[-1] == "--delete-bootnum":
@@ -136,6 +149,88 @@ class BootChainTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "ambiguous"):
                 boot.prepare_boot_chain(firmware, esp)
             self.assertFalse(firmware.new)
+
+    def add_other_installation(self, firmware, vendor, *, chainloaded=True):
+        other_uuid = "aaaaaaaa-1234-1234-1234-123456789abc"
+        firmware.parts.append({**firmware.parts[0], "path": "/dev/test2", "partuuid": other_uuid})
+        firmware.other_entry = f"Boot0008* AnduinOS HD(1,GPT,{other_uuid},0x800,0x10000)/File(\\EFI\\AnduinOS\\grubx64.efi)\n"
+        firmware.order = "0000,0008,0007,0003"
+        firmware.rollback_order = firmware.order
+        if chainloaded:
+            firmware.current = "0008"
+        (vendor / "grub.cfg").write_text(
+            f"search.fs_uuid {firmware.boot_uuid} root hd0,gpt1\n"
+            f"set prefix=($root)'{firmware.boot_prefix}'\n"
+            "configfile $prefix/grub.cfg\n")
+
+    def test_chainloaded_repair_only_replaces_local_entry_and_preserves_other_esp(self):
+        for prefix in ("/boot/grub", "/@/boot/grub"):
+            with self.subTest(prefix=prefix), self.fixture() as (firmware, esp, vendor):
+                firmware.boot_prefix = prefix
+                self.add_other_installation(firmware, vendor)
+                foreign = esp.parent / "foreign-esp/EFI/AnduinOS/shimx64.efi"
+                foreign.parent.mkdir(parents=True)
+                foreign.write_bytes(b"foreign shim")
+                boot.prepare_boot_chain(firmware, esp)
+                self.assertEqual(firmware.order, "0000,0008,0009,0003")
+                self.assertEqual(foreign.read_bytes(), b"foreign shim")
+                self.assertEqual(boot.resolve_target(firmware, esp).entry.number, "0009")
+                boot.prepare_boot_chain(firmware, esp)
+                self.assertEqual(sum(c[:2] == ["efibootmgr", "--create-only"] for c in firmware.calls), 1)
+
+    def test_multi_esp_direct_boot_is_allowed_with_local_binding(self):
+        with self.fixture() as (firmware, esp, vendor):
+            self.add_other_installation(firmware, vendor, chainloaded=False)
+            self.assertEqual(boot.resolve_target(firmware, esp).device, "/dev/test1")
+
+    def test_chainloaded_failed_repair_restores_order_without_changing_other_entry(self):
+        with self.fixture() as (firmware, esp, vendor):
+            self.add_other_installation(firmware, vendor)
+            firmware.fail_order = True
+            foreign_entry = firmware.other_entry
+            with self.assertRaisesRegex(ValueError, "NVRAM full"):
+                boot.prepare_boot_chain(firmware, esp)
+            self.assertEqual(firmware.order, "0000,0008,0007,0003")
+            self.assertEqual(firmware.other_entry, foreign_entry)
+            self.assertFalse(firmware.new)
+            self.assertEqual((vendor / "shimx64.efi").read_bytes(), b"old shimx64.efi")
+
+    def test_chainloaded_repair_rejects_wrong_fstab_root_prefix_and_ambiguous_entries(self):
+        for scenario in ("fstab", "root", "prefix", "configfile", "extra", "inline", "duplicate-entry"):
+            with self.subTest(scenario=scenario), self.fixture() as (firmware, esp, vendor):
+                self.add_other_installation(firmware, vendor)
+                if scenario == "fstab":
+                    firmware.fstab_source = "/dev/test2"
+                elif scenario == "duplicate-entry":
+                    firmware.new = True
+                    firmware.order += ",0009"
+                else:
+                    cfg = vendor / "grub.cfg"
+                    text = cfg.read_text()
+                    if scenario == "root":
+                        text = text.replace(firmware.boot_uuid, "foreign-root")
+                    elif scenario == "prefix":
+                        text = text.replace("'/boot/grub'", "'/@other/boot/grub'")
+                    elif scenario == "configfile":
+                        text = text.replace("$prefix/grub.cfg", "/foreign/grub.cfg")
+                    elif scenario == "inline":
+                        text = text.replace("hd0,gpt1", "hd0,gpt1; search.fs_uuid foreign root")
+                    else:
+                        text += "chainloader /EFI/other.efi\n"
+                    cfg.write_text(text)
+                with self.assertRaises(ValueError):
+                    boot.prepare_boot_chain(firmware, esp)
+                self.assertEqual((vendor / "shimx64.efi").read_bytes(), b"old shimx64.efi")
+                self.assertFalse(any(c[:2] == ["efibootmgr", "--create-only"] for c in firmware.calls))
+
+    def test_multi_installation_loader_hint_never_uses_foreign_bootcurrent(self):
+        with self.fixture() as (firmware, esp, vendor):
+            self.add_other_installation(firmware, vendor)
+            firmware.loader = "shimx64.efi"
+            self.assertEqual(boot.current_loader(firmware), "shim")
+            self.assertFalse(any(c[0] == "grub-probe" for c in firmware.calls))
+            firmware.hint_uuid = "unknown"
+            self.assertEqual(boot.current_loader(firmware), "unknown")
 
     def test_symlink_and_invalid_signature_fail_before_writes(self):
         with self.fixture() as (firmware, esp, vendor):

@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shlex
 import shutil
 import struct
 import tempfile
@@ -70,6 +71,17 @@ def current_loader(runner: Runner) -> str:
             return "unknown"
         current = variable(output, "BootCurrent")
         boot_entries = entries(output)
+        if len({e.uuid for e in boot_entries}) > 1:
+            # BootCurrent may name the first stage of a chainloaded boot.
+            # Never report that other installation's loader as our own.
+            # This unprivileged hint must not invoke grub-probe (raw disks).
+            uuid = command(runner, ["findmnt", "--noheadings", "--output", "PARTUUID",
+                                    "--mountpoint", str(ESP)]).strip().lower()
+            replacements = [e for e in boot_entries if e.uuid == uuid
+                            and e.number in variable(output, "BootOrder").split(",")]
+            if len(replacements) != 1:
+                return "unknown"
+            return "shim" if "\\shim" in replacements[0].loader.lower() else "grub"
         entry = next((e for e in boot_entries if e.number == current), None)
         if entry:
             # A successful repair keeps the old current entry for recovery.
@@ -81,7 +93,7 @@ def current_loader(runner: Runner) -> str:
             return "shim" if "\\shim" in entry.loader.lower() else "grub"
         if re.search(rf"^Boot{re.escape(current)}\*?\s+.*\\grub(?:x64|aa64)\.efi(?:\)|[ \t]*$)", output, re.M | re.I):
             return "grub"
-    except (ValueError, OSError):
+    except (ValueError, OSError, KeyError, TypeError):
         pass
     return "unknown"
 
@@ -98,6 +110,35 @@ class Target:
 def partition_number(device: str) -> int:
     # PARTN is not a lsblk column on every supported Ubuntu release.
     return int((Path("/sys/class/block") / Path(device).name / "partition").read_text())
+
+
+def verify_local_esp_binding(runner: Runner, esp: Path, device: str, cfg: Path) -> None:
+    """Require fstab and the standard Ubuntu EFI stub to identify this OS.
+
+    No foreign GRUB code is executed. Nonstandard stubs require manual review;
+    guessing would risk repairing the first stage of a chainloaded boot.
+    """
+    configured = json.loads(command(runner, [
+        "findmnt", "--json", "--fstab", "--evaluate", "--mountpoint", str(esp),
+        "--output", "SOURCE,TARGET,FSTYPE",
+    ])).get("filesystems", [])
+    if (len(configured) != 1 or configured[0].get("target") != str(esp)
+            or configured[0].get("fstype") != "vfat"
+            or Path(configured[0].get("source", "")).resolve() != Path(device).resolve()):
+        raise ValueError("Mounted ESP does not match this system's fstab")
+    uuid = command(runner, ["grub-probe", "--target=fs_uuid", "/boot/grub"]).strip()
+    prefix = command(runner, ["grub-mkrelpath", "/boot/grub"]).strip()
+    if not uuid or not prefix.startswith("/") or cfg.stat().st_size > 16384:
+        raise ValueError("Cannot identify this system's GRUB directory")
+    lines = [shlex.split(line, comments=True) for line in cfg.read_text().splitlines()]
+    lines = [line for line in lines if line]
+    if (len(lines) != 3 or len(lines[0]) < 3
+            or lines[0][:3] != ["search.fs_uuid", uuid, "root"]
+            or any(not re.fullmatch(r"hd[0-9]+(?:,(?:gpt|msdos)[0-9]+)?", hint)
+                   for hint in lines[0][3:])
+            or lines[1] != ["set", f"prefix=($root){prefix}"]
+            or lines[2] != ["configfile", "$prefix/grub.cfg"]):
+        raise ValueError("EFI GRUB configuration does not uniquely identify this system; manual review required")
 
 
 def resolve_target(runner: Runner, esp: Path = ESP) -> Target:
@@ -123,9 +164,14 @@ def resolve_target(runner: Runner, esp: Path = ESP) -> Target:
             visit(node.get("children", []))
 
     visit(disks)
-    if len(partitions) != 1:
-        raise ValueError("Multiple or missing ESPs; automatic repair requires manual review")
-    part = next(iter(partitions.values()))
+    matching = [p for p in partitions.values()
+                if Path(mount[0]["source"]).resolve() == Path(p["path"]).resolve()]
+    if len(matching) != 1:
+        raise ValueError("Mounted ESP is missing or ambiguous; automatic repair requires manual review")
+    part = matching[0]
+    partuuid = (part.get("partuuid") or "").lower()
+    if not partuuid or sum((p.get("partuuid") or "").lower() == partuuid for p in partitions.values()) != 1:
+        raise ValueError("Multiple or missing ESP identities; automatic repair requires manual review")
     if (part.get("type") != "part"
             or Path(mount[0]["source"]).resolve() != Path(part["path"]).resolve()
             or not (part.get("pkname") or "").startswith("/dev/")):
@@ -134,11 +180,11 @@ def resolve_target(runner: Runner, esp: Path = ESP) -> Target:
     known_entries = entries(output)
     current = next((e for e in known_entries if e.number == variable(output, "BootCurrent")), None)
     candidates = tuple(e for e in known_entries
-                       if e.number in variable(output, "BootOrder").split(","))
+                       if e.number in variable(output, "BootOrder").split(",")
+                       and e.uuid == partuuid
+                       and e.partition == partition_number(part["path"]))
     if (len(candidates) != 1 or current is None
-            or current.uuid != candidates[0].uuid or current.partition != candidates[0].partition
-            or candidates[0].uuid != (part.get("partuuid") or "").lower()
-            or candidates[0].partition != partition_number(part["path"])):
+            or (current.uuid == partuuid and current.partition != candidates[0].partition)):
         raise ValueError("Current AnduinOS boot entry and ESP are missing or ambiguous")
     entry = candidates[0]
     order = variable(output, "BootOrder")
@@ -150,6 +196,8 @@ def resolve_target(runner: Runner, esp: Path = ESP) -> Target:
     cfg = vendor / "grub.cfg"
     if cfg.is_symlink() or not cfg.is_file() or not cfg.read_text().strip():
         raise ValueError("AnduinOS EFI GRUB configuration is missing")
+    if len(partitions) > 1 or current.uuid != partuuid:
+        verify_local_esp_binding(runner, esp, part["path"], cfg)
     return Target(part["pkname"], entry, order, output, part["path"])
 
 

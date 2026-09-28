@@ -144,9 +144,15 @@ The existing `prepare` helper action first checks the boot chain, then prepares
 MOK and DKMS. It works with enforcement enabled or disabled. Its CLI accepts no
 disk, path, package, or command arguments. The sequence is:
 
-1. Identify a single writable FAT ESP mounted at `/boot/efi`, matching the
-   current AnduinOS GPT boot entry and its partition UUID/number. Multiple ESPs,
-   ambiguous entries, BootNext, redirected paths and unknown layouts stop repair.
+1. Identify the writable FAT ESP mounted at `/boot/efi` and its unique AnduinOS
+   GPT entry in BootOrder by partition UUID/number. Multiple ESPs are allowed;
+   duplicate identities, ambiguous entries, BootNext and redirected paths stop
+   repair. With multiple ESPs or an AnduinOS chainloaded boot, additionally
+   require the evaluated fstab ESP to match the mount and the standard Ubuntu
+   EFI `grub.cfg` stub to match `grub-probe --target=fs_uuid /boot/grub` and
+   `grub-mkrelpath /boot/grub`. Nonstandard stubs require manual review. Never
+   select a foreign ESP just because BootCurrent still names that first-stage
+   loader. Existing single-ESP direct-boot behavior is retained.
 2. Hold APT/dpkg locks and verify installed-package integrity, PE architecture,
    and cryptographic signatures of shim, signed GRUB and MokManager. Signature
    verification does not claim that a particular firmware db/dbx or shim SBAT
