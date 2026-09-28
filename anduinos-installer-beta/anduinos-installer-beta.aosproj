@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.4-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.4-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -84,6 +84,9 @@
     <Dependency Include="netplan.io" />
     <Dependency Include="polkitd" />
     <Dependency Include="libglib2.0-bin" />
+    <!-- Keep the offline recovery UI available in the Live session. The
+         installer removes it from the installed target during cleanup. -->
+    <Recommend Include="anduinos-rescue-center" />
     <!-- The installer can download this when the user explicitly selects
          extended formats. Suggests records availability without pulling the
          codec payload into the Live image or ordinary installer installs. -->
