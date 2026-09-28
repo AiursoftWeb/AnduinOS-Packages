@@ -13,6 +13,7 @@ from pathlib import Path
 from .command import CommandRunner
 from .model import Architecture, InstallMode, InstallPlan, PlatformSpec
 from .probe import PlatformProbe, probe_platform
+from anduinos_secureboot.firmware import prepare_live_interface
 from .storage_commands import partition_path
 from .storage_graph import (
     BlockReferenceKind,
@@ -83,6 +84,8 @@ def verify_platform_environment(
     validate_plan_for_execution(plan, execution_policy)
     runner.require_root()
 
+    if platform_probe is probe_platform:
+        prepare_live_interface()
     actual_platform = platform_probe()
     expected_platform = PlatformSpec(
         actual_platform.architecture,

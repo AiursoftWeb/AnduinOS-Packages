@@ -18,10 +18,13 @@ UPDATE_GRUB = "/usr/sbin/update-grub"
 GRUB_MENU = Path("/boot/grub/grub.cfg")
 MINIMUM_TIMEOUT = 0
 MAXIMUM_TIMEOUT = 300
-DISPLAY_NATIVE = "native"
+DISPLAY_HIGH_RESOLUTION = "high-resolution"
+DISPLAY_AUTOMATIC = "automatic"
 DISPLAY_LARGE_TEXT = "large-text"
-DISPLAY_MODES = {DISPLAY_NATIVE, DISPLAY_LARGE_TEXT}
+DISPLAY_MODES = {DISPLAY_HIGH_RESOLUTION, DISPLAY_AUTOMATIC, DISPLAY_LARGE_TEXT}
 LARGE_TEXT_GFXMODE = "1440x900,1280x800,1280x720,1024x768,auto"
+DRM_CONNECTORS = Path("/sys/class/drm")
+RESOLUTION_PATTERN = re.compile(r"([1-9][0-9]{2,3})x([1-9][0-9]{2,3})\Z")
 
 
 def boot_systems(content: str) -> dict:
@@ -130,17 +133,56 @@ def parse_timeout(value: str) -> int:
 
 
 def parse_display_mode(value: str) -> str:
+    # Older Control Panel clients called GRUB's automatic choice "native".
+    if value == "native":
+        return DISPLAY_AUTOMATIC
     if value not in DISPLAY_MODES:
-        raise ValueError("display mode must be native or large-text")
+        raise ValueError("display mode must be high-resolution, automatic, or large-text")
     return value
 
 
-def configuration_for(timeout: int, display_mode: str) -> bytes:
-    gfxmode = (
-        "auto"
-        if display_mode == DISPLAY_NATIVE
-        else LARGE_TEXT_GFXMODE
-    )
+def preferred_graphics_mode(connectors: Path = DRM_CONNECTORS) -> str:
+    """Use the kernel's connected display preference, not desktop logical size.
+
+    GRUB may expose fewer firmware modes, so the generated setting always
+    includes ``auto`` as a fallback. Never accept an arbitrary caller-supplied
+    mode in this privileged configuration writer.
+    """
+
+    candidates = []
+    for connector in sorted(connectors.glob("card*-*")):
+        try:
+            if (connector / "status").read_text(encoding="ascii").strip() != "connected":
+                continue
+            enabled = connector / "enabled"
+            if enabled.exists() and enabled.read_text(encoding="ascii").strip() == "disabled":
+                continue
+            modes = (connector / "modes").read_text(encoding="ascii").splitlines()
+        except (OSError, UnicodeError):
+            continue
+        if not modes:
+            continue
+        match = RESOLUTION_PATTERN.fullmatch(modes[0])
+        if not match:
+            continue
+        width, height = map(int, match.groups())
+        if 640 <= width <= 7680 and 480 <= height <= 4320:
+            candidates.append((width * height, modes[0]))
+    if not candidates:
+        raise ValueError("No connected display reports a usable preferred resolution. Choose Automatic instead.")
+    return max(candidates)[1]
+
+
+def configuration_for(timeout: int, display_mode: str, *, preferred_mode: str | None = None) -> bytes:
+    if display_mode == DISPLAY_HIGH_RESOLUTION:
+        resolution = preferred_mode or preferred_graphics_mode()
+        if not RESOLUTION_PATTERN.fullmatch(resolution):
+            raise ValueError("Invalid preferred display resolution")
+        gfxmode = f"{resolution},auto"
+    elif display_mode == DISPLAY_AUTOMATIC:
+        gfxmode = "auto"
+    else:
+        gfxmode = LARGE_TEXT_GFXMODE
     return (
         "# Managed by AnduinOS Control Panel.\n"
         f"GRUB_TIMEOUT={timeout}\n"
@@ -187,7 +229,13 @@ def update_grub() -> None:
         raise RuntimeError(f"update-grub exited with status {result.returncode}")
 
 
-def set_settings(timeout: int, display_mode: str, default_id: str | None = None) -> None:
+def set_settings(
+    timeout: int,
+    display_mode: str,
+    default_id: str | None = None,
+    *,
+    preferred_mode: str | None = None,
+) -> None:
     timeout = parse_timeout(str(timeout))
     display_mode = parse_display_mode(display_mode)
     try:
@@ -204,7 +252,7 @@ def set_settings(timeout: int, display_mode: str, default_id: str | None = None)
     )
     if configuration and not configuration.endswith(b"\n"):
         configuration += b"\n"
-    configuration += configuration_for(timeout, display_mode)
+    configuration += configuration_for(timeout, display_mode, preferred_mode=preferred_mode)
     if default_id is not None:
         if default_id not in {entry["id"] for entry in read_boot_systems()["entries"]}:
             raise ValueError("The selected operating system is no longer available. Reopen Startup and Boot to reload the operating systems.")
@@ -234,11 +282,16 @@ def set_timeout(timeout: int) -> None:
         current = CONFIGURATION_PATH.read_text(encoding="ascii")
     except (OSError, UnicodeError):
         current = ""
-    display_mode = (
-        DISPLAY_NATIVE
-        if 'GRUB_GFXMODE="auto"' in current
-        else DISPLAY_LARGE_TEXT
-    )
+    if 'GRUB_GFXMODE="auto"' in current:
+        display_mode = DISPLAY_AUTOMATIC
+    elif match := re.search(r'^GRUB_GFXMODE="([0-9]+x[0-9]+),auto"$', current, re.MULTILINE):
+        display_mode = DISPLAY_HIGH_RESOLUTION
+        # Legacy timeout-only callers must not change the selected resolution
+        # just because a monitor was unplugged between boots.
+        set_settings(timeout, display_mode, preferred_mode=match.group(1))
+        return
+    else:
+        display_mode = DISPLAY_LARGE_TEXT
     set_settings(timeout, display_mode)
 
 

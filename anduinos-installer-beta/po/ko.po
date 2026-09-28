@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -234,6 +235,9 @@ msgid "Continue Installation"
 msgstr "설치 계속하기"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "설치 미디어 검사"
+
 msgid "Copy AnduinOS system"
 msgstr "AnduinOS 시스템 복사"
 
@@ -853,6 +857,10 @@ msgstr "최소 용량 미만입니다. 설치나 업데이트가 실패할 수 �
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "권장 용량 미만입니다. 공간이 빠르게 부족해질 수 있습니다. 계속하시겠습니까?"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "AnduinOS를 설치하려면 최소 6 GiB가 필요합니다."
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1887,3 +1895,51 @@ msgstr "외장 드라이브 표시"
 #: src/pages.py
 msgid "Disconnecting an external drive can cause installation failure or data loss. Booting on another computer may require additional setup. For portable use, consider AnduinOS ToGo."
 msgstr "외장 드라이브를 분리하면 설치 실패나 데이터 손실이 발생할 수 있습니다. 다른 컴퓨터에서 부팅하려면 추가 설정이 필요할 수 있습니다. 휴대용으로 사용하려면 AnduinOS ToGo를 고려하세요."
+
+#: src/pages.py
+msgid "Create initial system recovery point"
+msgstr "초기 시스템 복구 지점 만들기"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "이 NTFS 볼륨은 디스크 검사가 필요합니다. Windows에서 중요한 파일을 백업하고 관리자 권한으로 'chkdsk X: /f'를 실행하세요(X를 이 볼륨의 드라이브 문자로 바꾸세요). 메시지가 표시되면 검사를 예약한 다음 Windows로 다시 시작하세요. 검사가 끝날 때까지 기다린 후 Windows를 완전히 종료하고 다시 시도하세요."
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "복구 단계 보기"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "복구 단계"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "이 NTFS 볼륨의 크기를 안전하게 변경하려면 먼저 Windows에서 디스크 검사를 해야 합니다."
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "외장 드라이브 모드 — AnduinOS가 휴대용 UEFI 부팅 경로를 추가하므로, 기존 AnduinOS 펌웨어 부팅 항목이 없는 다른 UEFI 컴퓨터에서도 이 드라이브로 부팅할 수 있습니다."
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "펌웨어 확인 중"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Secure Boot 지원 확인 중…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Secure Boot 지원 여부를 확인할 수 없습니다"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "설치를 계속 구성할 수 있습니다. 디스크를 변경하기 전에 펌웨어 확인이 성공해야 합니다."
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "펌웨어 확인 완료"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "다시 시도"

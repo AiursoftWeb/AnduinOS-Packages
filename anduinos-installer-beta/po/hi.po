@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -234,6 +235,9 @@ msgid "Continue Installation"
 msgstr "इंस्टालेशन जारी रखें"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "इंस्टॉलेशन मीडिया की जाँच करें"
+
 msgid "Copy AnduinOS system"
 msgstr "AnduinOS सिस्टम कॉपी करें"
 
@@ -853,6 +857,10 @@ msgstr "न्यूनतम से कम। स्थापना या अ�
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "अनुशंसित क्षमता से कम। जगह जल्दी खत्म हो सकती है। जारी रखें?"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "AnduinOS इंस्टॉल करने के लिए कम से कम 6 GiB आवश्यक है।"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1887,3 +1895,51 @@ msgstr "बाहरी ड्राइव दिखाएँ"
 #: src/pages.py
 msgid "Disconnecting an external drive can cause installation failure or data loss. Booting on another computer may require additional setup. For portable use, consider AnduinOS ToGo."
 msgstr "बाहरी ड्राइव को डिस्कनेक्ट करने से स्थापना विफल हो सकती है या डेटा खो सकता है। किसी अन्य कंप्यूटर पर बूट करने के लिए अतिरिक्त सेटअप की आवश्यकता हो सकती है। पोर्टेबल उपयोग के लिए AnduinOS ToGo पर विचार करें।"
+
+#: src/pages.py
+msgid "Create initial system recovery point"
+msgstr "प्रारंभिक सिस्टम पुनर्प्राप्ति बिंदु बनाएँ"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "इस NTFS वॉल्यूम की डिस्क जाँच आवश्यक है। Windows में महत्वपूर्ण फ़ाइलों का बैकअप लें और व्यवस्थापक के रूप में 'chkdsk X: /f' चलाएँ (X की जगह इस वॉल्यूम का ड्राइव अक्षर डालें)। पूछे जाने पर जाँच शेड्यूल करने की पुष्टि करें, फिर Windows में पुनः आरंभ करें। जाँच पूरी होने दें और दोबारा प्रयास करने से पहले Windows को पूरी तरह बंद करें।"
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "सुधार के चरण देखें"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "सुधार के चरण"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "इस NTFS वॉल्यूम का आकार सुरक्षित रूप से बदलने से पहले Windows में डिस्क जाँच करना आवश्यक है।"
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "बाहरी ड्राइव मोड — AnduinOS एक पोर्टेबल UEFI बूट पथ जोड़ेगा, ताकि यह ड्राइव किसी दूसरे UEFI कंप्यूटर पर पहले से मौजूद AnduinOS फ़र्मवेयर बूट प्रविष्टि के बिना भी बूट हो सके।"
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "फ़र्मवेयर की जाँच हो रही है"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Secure Boot समर्थन की जाँच हो रही है…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Secure Boot समर्थन निर्धारित नहीं किया जा सका"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "आप इंस्टॉलेशन का कॉन्फ़िगरेशन जारी रख सकते हैं। आपकी डिस्क में कोई बदलाव करने से पहले फ़र्मवेयर की जाँच सफल होनी चाहिए।"
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "फ़र्मवेयर की जाँच पूरी हुई"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "फिर से कोशिश करें"

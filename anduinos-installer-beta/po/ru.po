@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -234,6 +235,9 @@ msgid "Continue Installation"
 msgstr "Продолжить установку"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "Проверка установочного носителя"
+
 msgid "Copy AnduinOS system"
 msgstr "Копирование системы AnduinOS"
 
@@ -853,6 +857,10 @@ msgstr "Меньше минимума. Установка или обновле�
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "Меньше рекомендуемого объёма. Место может быстро закончиться. Продолжить?"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "Для установки AnduinOS требуется не менее 6 ГиБ."
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1887,3 +1895,51 @@ msgstr "Показать внешние диски"
 #: src/pages.py
 msgid "Disconnecting an external drive can cause installation failure or data loss. Booting on another computer may require additional setup. For portable use, consider AnduinOS ToGo."
 msgstr "Отключение внешнего диска может привести к сбою установки или потере данных. Для загрузки на другом компьютере может потребоваться дополнительная настройка. Для переносного использования рекомендуем AnduinOS ToGo."
+
+#: src/pages.py
+msgid "Create initial system recovery point"
+msgstr "Создание исходной точки восстановления системы"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "Для этого тома NTFS требуется проверка диска. В Windows сохраните резервную копию важных файлов и выполните 'chkdsk X: /f' от имени администратора (замените X буквой диска этого тома). При запросе согласитесь запланировать проверку, затем перезагрузитесь в Windows. Дождитесь завершения проверки и полностью выключите Windows перед повторной попыткой."
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "Показать шаги исправления"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "Шаги исправления"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "Для безопасного изменения размера этого тома NTFS сначала требуется проверка диска в Windows."
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "Режим внешнего диска — AnduinOS добавит переносимый путь загрузки UEFI, чтобы этот диск мог загружаться на другом компьютере с UEFI без существующей записи AnduinOS в прошивке."
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "Проверка прошивки"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Проверка поддержки Secure Boot…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Не удалось определить поддержку Secure Boot"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "Вы можете продолжить настройку установки. Проверка прошивки должна завершиться успешно до внесения изменений на диски."
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "Проверка прошивки завершена"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "Повторить"

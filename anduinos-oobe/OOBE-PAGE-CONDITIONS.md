@@ -1,6 +1,6 @@
 # OOBE Pages and Display Conditions
 
-The OOBE currently contains up to 15 pages. Their order and initial display
+The OOBE currently contains up to 13 pages. Their order and initial display
 conditions are defined by `OobeWindow._get_page_factories()` in
 `assets/anduinos-oobe`.
 
@@ -10,17 +10,15 @@ conditions are defined by `OobeWindow._get_page_factories()` in
 | 2 | Connect to the Internet | Shown when startup connectivity is not `FULL`, including no connection, local-only or limited connectivity, a captive portal, or a detection error | Kept as the entry point for choosing whether to connect or continue offline |
 | 3 | Define Your Visual Order | Always shown | Kept |
 | 4 | Digital Sovereignty, Under Your Control | Always shown | Kept |
-| 5 | Keep Your System Up to Date | Always added initially | Removed |
-| 6 | Secure Boot Configuration | Shown when the Secure Boot status is `ENABLED` or `UNKNOWN` | Kept |
-| 7 | Configure Hardware Drivers? | Always shown | Kept |
-| 8 | USTC Flathub Mirror for China | Shown when `LANGUAGE` (preferred) or `LANG` starts with `zh_CN` | Removed |
-| 9 | Run Windows Apps, with Ease (Bottles) | Shown when the CPU architecture is not `aarch64` | Removed |
-| 10 | The Magic at Your Fingertips (Shortcuts) | Always shown | Kept |
-| 11 | Productive From Day One (App Recommendations) | Always added initially | Removed |
-| 12 | Connect & Protect Your Data (Accounts and Backup) | Always added initially | Removed |
-| 13 | Your Data. Your Rules. Period. (Privacy) | Always shown | Kept |
-| 14 | Welcome to the AnduinOS Community | Always shown | Kept |
-| 15 | All Set | Always shown | Kept |
+| 5 | Secure Boot Configuration | Shown when the Secure Boot status is `ENABLED` or `UNKNOWN` | Kept |
+| 6 | Configure Hardware Drivers? | Always shown | Kept |
+| 7 | USTC Flathub Mirror for China | Shown when `LANGUAGE` (preferred) or `LANG` starts with `zh_CN` | Removed |
+| 8 | Run Windows Apps, with Ease (Bottles) | Shown when the CPU architecture is not `aarch64` | Removed |
+| 9 | The Magic at Your Fingertips (Shortcuts) | Always shown | Kept |
+| 10 | Productive From Day One (App Recommendations) | Always added initially | Removed |
+| 11 | Your Data. Your Rules. Period. (Privacy) | Always shown | Kept |
+| 12 | Welcome to the AnduinOS Community | Always shown | Kept |
+| 13 | All Set | Always shown | Kept |
 
 ## Condition Details
 

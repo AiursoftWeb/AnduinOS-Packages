@@ -1711,3 +1711,45 @@ msgstr "रिकवरी मोड में, अपनी सामान्�
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "− से चिह्नित पैकेज हटा दिए जाएँगे। पुराने कर्नेल में NVIDIA ग्राफ़िक्स का समर्थन समाप्त हो सकता है। अपडेट के बाद पुनः आरंभ करें।"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Secure Boot सक्षम करें"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"इसे सक्षम करने के लिए UEFI फ़र्मवेयर सेटिंग खोलें और Boot, Security या "
+"Secure Boot में देखें। Microsoft & 3rd-party CA चुनें या Secure Boot चालू "
+"करें। विकल्पों के नाम निर्माता के अनुसार अलग हो सकते हैं।"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS अभी Secure Boot के लिए तैयार नहीं है। इसे अभी फ़र्मवेयर में सक्षम "
+"करने से सिस्टम शुरू होना बंद हो सकता है।"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "AnduinOS को Secure Boot के लिए तैयार करें"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"पहले AnduinOS तैयार करें और उसका MOK प्रमाणपत्र पंजीकृत करें। पंजीकरण के बाद"
+" ही Secure Boot सक्षम करें।"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: फ़र्मवेयर की प्लेटफ़ॉर्म कुंजियाँ मौजूद नहीं हैं। MOK पंजीकरण के"
+" बाद फ़र्मवेयर सेटिंग में निर्माता की फ़ैक्टरी कुंजियाँ बहाल करें।"

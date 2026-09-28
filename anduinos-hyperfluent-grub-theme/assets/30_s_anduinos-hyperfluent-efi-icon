@@ -1,0 +1,9 @@
+#!/bin/sh
+set -e
+
+# 30_os-prober has already run; 30_uefi-firmware comes next and has no class.
+cat <<'EOF'
+if [ "$anduinos_theme_icon_scope" = 1 ]; then
+    set menuentry_id_option="--class efi $anduinos_theme_original_id_option"
+fi
+EOF

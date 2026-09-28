@@ -10,7 +10,8 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from anduinos_control_panel.model import (  # noqa: E402
     GRUB_DISPLAY_LARGE_TEXT,
-    GRUB_DISPLAY_NATIVE,
+    GRUB_DISPLAY_HIGH_RESOLUTION,
+    GRUB_DISPLAY_AUTOMATIC,
     flatpak_installed,
     package_installed,
     read_grub_display_mode,
@@ -86,18 +87,28 @@ class ProbeTests(unittest.TestCase):
             drop_ins.mkdir()
             defaults.write_text('GRUB_GFXMODE="1024x768,auto"\n')
             (drop_ins / "99-local.cfg").write_text(
-                'export GRUB_GFXMODE="auto" # native\n'
+                'export GRUB_GFXMODE="auto" # automatic\n'
             )
 
             mode = read_grub_display_mode(defaults, drop_ins)
 
-        self.assertEqual(mode, GRUB_DISPLAY_NATIVE)
+        self.assertEqual(mode, GRUB_DISPLAY_AUTOMATIC)
+
+    def test_grub_display_probe_recognizes_high_resolution_fallback(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            defaults = root / "grub"
+            defaults.write_text('GRUB_GFXMODE="2560x1600,auto"\n')
+
+            mode = read_grub_display_mode(defaults, root / "missing")
+
+        self.assertEqual(mode, GRUB_DISPLAY_HIGH_RESOLUTION)
 
     def test_grub_display_probe_defaults_custom_values_to_large_text(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             defaults = root / "grub"
-            defaults.write_text('GRUB_GFXMODE="1920x1080,auto"\n')
+            defaults.write_text('GRUB_GFXMODE="1920x1080,1280x720,auto"\n')
 
             mode = read_grub_display_mode(defaults, root / "missing")
 

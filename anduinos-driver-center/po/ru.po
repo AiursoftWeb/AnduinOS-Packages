@@ -1735,3 +1735,45 @@ msgstr ""
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "Пакеты, отмеченные знаком −, будут удалены. Старые ядра могут потерять поддержку графики NVIDIA. Перезагрузите компьютер после обновления."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Включить Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Для включения откройте настройки прошивки UEFI и найдите раздел Boot, "
+"Security или Secure Boot. Выберите Microsoft & 3rd-party CA или включите "
+"Secure Boot. Названия зависят от производителя."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS ещё не готова к включению Secure Boot. Включение этой функции в "
+"прошивке сейчас может помешать запуску системы."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "Подготовить AnduinOS к Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Сначала подготовьте AnduinOS и зарегистрируйте её сертификат MOK. Включайте "
+"Secure Boot только после регистрации."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: отсутствуют ключи платформы в прошивке. После регистрации MOK "
+"восстановите заводские ключи производителя в настройках прошивки."

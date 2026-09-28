@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -234,6 +235,9 @@ msgid "Continue Installation"
 msgstr "Continuar instalação"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "Verificar o suporte de instalação"
+
 msgid "Copy AnduinOS system"
 msgstr "Copiar sistema AnduinOS"
 
@@ -853,6 +857,10 @@ msgstr "Abaixo do mínimo. A instalação ou as atualizações podem falhar. Con
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "Abaixo da capacidade recomendada. O espaço pode esgotar-se rapidamente. Continuar?"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "São necessários pelo menos 6 GiB para instalar o AnduinOS."
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1887,3 +1895,51 @@ msgstr "Mostrar discos externos"
 #: src/pages.py
 msgid "Disconnecting an external drive can cause installation failure or data loss. Booting on another computer may require additional setup. For portable use, consider AnduinOS ToGo."
 msgstr "Desligar um disco externo pode causar falhas na instalação ou perda de dados. O arranque noutro computador pode exigir configuração adicional. Para utilização portátil, considere o AnduinOS ToGo."
+
+#: src/pages.py
+msgid "Create initial system recovery point"
+msgstr "Criar ponto de recuperação inicial do sistema"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "Este volume NTFS requer uma verificação do disco. No Windows, faça uma cópia de segurança dos ficheiros importantes e execute 'chkdsk X: /f' como administrador (substitua X pela letra da unidade deste volume). Se solicitado, agende a verificação e reinicie no Windows. Aguarde que a verificação termine e encerre completamente o Windows antes de tentar novamente."
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "Ver passos de reparação"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "Passos de reparação"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "Este volume NTFS requer uma verificação do disco no Windows antes de poder ser redimensionado em segurança."
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "Modo de unidade externa — O AnduinOS adicionará um caminho de arranque UEFI portátil, permitindo que esta unidade arranque noutro computador UEFI sem uma entrada AnduinOS existente no firmware."
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "A verificar o firmware"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "A verificar o suporte de Secure Boot…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Não foi possível determinar o suporte de Secure Boot"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "Pode continuar a configurar a instalação. A verificação do firmware tem de ser concluída com êxito antes de efetuar alterações nos discos."
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "Verificação do firmware concluída"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "Tentar novamente"

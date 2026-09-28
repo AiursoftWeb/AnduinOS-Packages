@@ -35,8 +35,24 @@ class PackageTests(unittest.TestCase):
             node.text.strip()
             for node in policy.findall(".//annotate[@key='org.freedesktop.policykit.exec.path']")
         }
-        self.assertEqual(paths, {app.BOOT_SETTINGS_HELPER})
+        self.assertEqual(paths, {
+            app.BOOT_SETTINGS_HELPER,
+            "/usr/libexec/anduinos-control-panel/software-source-helper",
+        })
         self.assertFalse(policy.findall(".//annotate[@key='org.freedesktop.policykit.exec.allow_gui']"))
+
+    def test_software_source_module_helper_and_icon_are_packaged(self):
+        package = ET.parse(ROOT / "anduinos-control-panel.aosproj")
+        includes = {
+            node.attrib.get("Include")
+            for node in package.findall(".//*[@Include]")
+        }
+        self.assertIn("src/anduinos_control_panel/software_sources.py", includes)
+        self.assertIn("scripts/software-source-helper", includes)
+        self.assertTrue((ROOT / "resources/icons/yast-upgrade.svg").is_file())
+        topic = app.get_topic("programs.software-source")
+        self.assertEqual(topic.handler, "software-source")
+        self.assertFalse(topic.command)
 
 
 class LaunchTests(unittest.TestCase):
@@ -121,6 +137,53 @@ class LaunchTests(unittest.TestCase):
         self.assertFalse(run.call_args.kwargs.get("shell", False))
         self.window._launch.assert_not_called()
         self.window._show_error.assert_called_once_with("Installation failed", "Authentication was cancelled.")
+
+    def test_factory_reset_delegates_to_snapshots_manager_or_explains_support(self):
+        with patch.object(app, "command_available", return_value=True):
+            app.ControlPanelWindow._open_factory_reset(self.window)
+        self.window._launch.assert_called_once_with(
+            ["anduinos-btrfs-snapshots-manager", "--factory-reset"]
+        )
+        self.window._show_error.assert_not_called()
+
+        self.window.reset_mock()
+        with patch.object(app, "command_available", return_value=False):
+            app.ControlPanelWindow._open_factory_reset(self.window)
+        self.window._launch.assert_not_called()
+        self.window._show_error.assert_called_once_with(
+            "Factory Reset Is Not Available",
+            "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it.",
+        )
+
+    def test_deja_dup_prefers_flatpak_then_native_then_store(self):
+        with (
+            patch.object(app, "command_available") as native,
+            patch.object(app, "flatpak_installed", return_value=True),
+        ):
+            app.ControlPanelWindow._open_deja_dup(self.window)
+        self.window._launch.assert_called_once_with(
+            ["flatpak", "run", app.DEJA_DUP_APP_ID]
+        )
+        native.assert_not_called()
+
+        self.window.reset_mock()
+        with (
+            patch.object(app, "command_available", return_value=True),
+            patch.object(app, "flatpak_installed", return_value=False),
+        ):
+            app.ControlPanelWindow._open_deja_dup(self.window)
+        self.window._launch.assert_called_once_with(["deja-dup"])
+
+        self.window.reset_mock()
+        with (
+            patch.object(app, "command_available", return_value=False),
+            patch.object(app, "flatpak_installed", return_value=False),
+        ):
+            app.ControlPanelWindow._open_deja_dup(self.window)
+        self.window._launch.assert_not_called()
+        self.window._show_store_prompt.assert_called_once_with(
+            "Deja Dup Backups", f"{app.DEJA_DUP_APP_ID}.desktop"
+        )
 
 
 class StreamingCommandTests(unittest.TestCase):

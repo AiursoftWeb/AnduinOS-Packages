@@ -74,9 +74,13 @@ class DetectBootEnvironmentStep:
         context.log(
             "UEFI fallback bootloader: "
             + (
-                "preserved; no fallback write"
-                if direct_nvram
-                else "enabled on the selected disk"
+                "enabled on the selected external disk"
+                if direct_nvram and context.plan.boot.install_fallback_path
+                else (
+                    "preserved; no fallback write"
+                    if direct_nvram
+                    else "enabled on the selected disk"
+                )
             )
         )
         context.log(
@@ -149,6 +153,44 @@ class VerifyTargetDiskStep:
             context.log(
                 "UEFI Windows systems on other disks will be checked "
                 "read-only and added to the AnduinOS GRUB menu"
+            )
+
+    def verify(self, context: InstallContext) -> None:
+        return None
+
+    def cleanup(self, context: InstallContext) -> None:
+        return None
+
+
+@dataclass
+class CheckInstallationMediaStep:
+    runner: CommandRunner
+    id: str = "check-installation-media"
+    title: str = "Check installation media"
+    failure_policy: FailurePolicy = FailurePolicy.FATAL
+    progress_weight: int = 5
+    destructive: bool = False
+
+    def preflight(self, context: InstallContext) -> None:
+        self.runner.require_commands(("/usr/libexec/anduinos-media-check",))
+        source = Path(context.plan.source.image_path)
+        if not source.is_file():
+            raise RuntimeError(f"System image not found: {source}")
+
+    def execute(self, context: InstallContext) -> None:
+        # A real step before storage preparation: StepRunner reports RUNNING
+        # during the scan, and a failure prevents any partition changes.
+        checker = "/usr/libexec/anduinos-media-check"
+        checked = self.runner.run(
+            (checker, "--source", context.plan.source.image_path,
+             "--locale", context.plan.regional.locale),
+            check=False,
+            # A slow but healthy USB drive must not fail an arbitrary deadline.
+            timeout=None,
+        )
+        if checked.returncode != 0:
+            raise RuntimeError(
+                checked.stdout.strip() + "\n" + checked.stderr.strip()
             )
 
     def verify(self, context: InstallContext) -> None:

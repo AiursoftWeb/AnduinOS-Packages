@@ -1,0 +1,198 @@
+import json
+import subprocess
+import sys
+import unittest
+from unittest.mock import patch
+
+from anduinos_rescue_center.client import (
+    HELPER,
+    LIVE_HELPER,
+    _localize_progress,
+    _localize_helper_error,
+    _read_streamed_json,
+    create_snapshot,
+    diagnose_boot,
+    export_file,
+    inspect_target,
+    list_files,
+    open_emergency_terminal,
+    open_live_terminal,
+    probe,
+    reset_password,
+    repair_boot,
+    restore_snapshot,
+)
+
+
+class ClientTests(unittest.TestCase):
+    def test_helper_errors_keep_the_desktop_locale_and_dynamic_path(self):
+        with patch("anduinos_rescue_center.client.tr", side_effect=lambda source: "FEHLER: /{tool}" if source == "Installed boot repair tool is missing: /{tool}" else source):
+            self.assertEqual(_localize_helper_error(""), "")
+            self.assertEqual(
+                _localize_helper_error("Installed boot repair tool is missing: /usr/bin/dracut"),
+                "FEHLER: /usr/bin/dracut",
+            )
+
+    def test_repair_progress_uses_desktop_locale_without_changing_command_output(self):
+        translations = {
+            "Completed: {command}": "Fertig: {command}",
+            "Opening {system} and its EFI partition {esp}":
+                "Öffne {system} und seine EFI-Partition {esp}",
+        }
+        with patch("anduinos_rescue_center.client.tr", side_effect=lambda text: translations.get(text, text)):
+            self.assertEqual(_localize_progress("Completed: dracut"), "Fertig: dracut")
+            self.assertEqual(
+                _localize_progress("Opening /dev/vda4 and its EFI partition /dev/vda2"),
+                "Öffne /dev/vda4 und seine EFI-Partition /dev/vda2",
+            )
+            self.assertEqual(_localize_progress("  grub-install: diagnostic"),
+                             "  grub-install: diagnostic")
+
+    def test_repair_progress_stream_keeps_events_separate_from_final_result(self):
+        events = []
+        program = (
+            "import json,sys,time; "
+            "print('RESCUE_PROGRESS\\t'+json.dumps({'message':'Rebuilding initrds'}), file=sys.stderr, flush=True); "
+            "time.sleep(0.1); print(json.dumps({'schema':1,'issues':[]}))"
+        )
+        result = _read_streamed_json(
+            [sys.executable, "-B", "-u", "-c", program],
+            "Boot repair failed", events.append, 3,
+        )
+        self.assertEqual(events, ["Rebuilding initrds"])
+        self.assertEqual(result["issues"], [])
+
+    def test_calls_only_fixed_helper_action(self):
+        calls = []
+
+        def run(command, **_kwargs):
+            calls.append(command)
+            return subprocess.CompletedProcess(command, 0, json.dumps({"schema": 1}), "")
+
+        self.assertEqual(probe(run=run)["schema"], 1)
+        self.assertEqual(calls, [["pkexec", HELPER, "probe"]])
+
+    def test_live_session_uses_restricted_passwordless_helper(self):
+        calls = []
+
+        def run(command, **_kwargs):
+            calls.append(command)
+            return subprocess.CompletedProcess(command, 0, '{"schema": 1}', "")
+
+        with patch(
+            "anduinos_rescue_center.client.is_live_environment", return_value=True
+        ):
+            probe(run=run)
+        self.assertEqual(calls, [["pkexec", LIVE_HELPER, "probe"]])
+
+    def test_rejects_incompatible_helper_output(self):
+        def run(command, **_kwargs):
+            return subprocess.CompletedProcess(command, 0, '{"schema": 99}', "")
+
+        with self.assertRaisesRegex(RuntimeError, "incompatible"):
+            probe(run=run)
+
+    def test_target_inspection_passes_bound_identity_to_fixed_helper(self):
+        calls = []
+        identity = "a" * 64
+
+        def run(command, **_kwargs):
+            calls.append(command)
+            return subprocess.CompletedProcess(command, 0, '{"schema": 1}', "")
+
+        inspect_target("/dev/sda2", identity, run=run)
+        self.assertEqual(
+            calls, [["pkexec", HELPER, "inspect", "/dev/sda2", identity]]
+        )
+
+    def test_target_inspection_rejects_unbound_input_before_privilege(self):
+        with self.assertRaises(ValueError):
+            inspect_target("/tmp/not-a-device", "short")
+
+    def test_password_is_sent_over_stdin_not_command_arguments(self):
+        calls = []
+
+        def run(command, **kwargs):
+            calls.append((command, kwargs.get("input")))
+            return subprocess.CompletedProcess(command, 0, "", "")
+
+        reset_password("/dev/sda2", "a" * 64, "alice", "secret words", run=run)
+        command, standard_input = calls[0]
+        self.assertNotIn("secret words", command)
+        self.assertEqual(standard_input, "secret words")
+
+    def test_file_actions_keep_paths_as_separate_arguments(self):
+        calls = []
+
+        def run(command, **_kwargs):
+            calls.append(command)
+            response = {"schema": 1, "entries": []}
+            if "export" in command:
+                response["exported"] = "/home/live/report.txt"
+            return subprocess.CompletedProcess(command, 0, json.dumps(response), "")
+
+        list_files("/dev/sda2", "a" * 64, "home/alice/My Files", run=run)
+        exported = export_file(
+            "/dev/sda2", "a" * 64, "home/alice/report.txt", "/home/live", run=run
+        )
+        self.assertEqual(exported, "/home/live/report.txt")
+        self.assertEqual(calls[0][-1], "home/alice/My Files")
+        self.assertEqual(calls[1][-1], "/home/live")
+
+    def test_snapshot_actions_use_fixed_helper_and_explicit_protection(self):
+        calls = []
+
+        def run(command, **_kwargs):
+            calls.append(command)
+            return subprocess.CompletedProcess(command, 0, '{"schema": 1}', "")
+
+        identity = "a" * 64
+        create_snapshot("/dev/sda2", identity, "Before repair", run=run)
+        restore_snapshot(
+            "/dev/sda2",
+            identity,
+            "11111111-1111-4111-8111-111111111111",
+            True,
+            run=run,
+        )
+        self.assertEqual(
+            calls[0],
+            ["pkexec", HELPER, "create-snapshot", "/dev/sda2", identity, "Before repair"],
+        )
+        self.assertEqual(calls[1][-1], "true")
+
+    def test_boot_repair_passes_both_disk_identities_to_fixed_helper(self):
+        calls = []
+
+        def run(command, **_kwargs):
+            calls.append(command)
+            return subprocess.CompletedProcess(command, 0, '{"schema": 1}', "")
+
+        diagnose_boot("/dev/sda2", "a" * 64, run=run)
+        repair_boot("/dev/sda2", "a" * 64, "b" * 64, run=run)
+        self.assertEqual(calls[0], ["pkexec", HELPER, "diagnose-boot", "/dev/sda2", "a" * 64])
+        self.assertEqual(calls[1], ["pkexec", HELPER, "repair-boot", "/dev/sda2", "a" * 64, "b" * 64])
+
+    def test_terminal_launches_fixed_live_helper_inside_ptyxis(self):
+        calls = []
+
+        def launch(command, **kwargs):
+            calls.append((command, kwargs))
+
+        with (patch("anduinos_rescue_center.client.is_trusted_live_environment", return_value=True),
+              patch("anduinos_rescue_center.client.shutil.which", return_value="/usr/bin/ptyxis")):
+            open_emergency_terminal("/dev/sda2", "a" * 64, launch=launch)
+        self.assertEqual(calls[0][0][-4:], [LIVE_HELPER, "shell", "/dev/sda2", "a" * 64])
+        self.assertIn("pkexec", calls[0][0])
+        self.assertTrue(calls[0][1]["start_new_session"])
+
+    def test_live_terminal_fallback_does_not_request_root(self):
+        calls = []
+
+        def launch(command, **_kwargs):
+            calls.append(command)
+
+        with (patch("anduinos_rescue_center.client.is_trusted_live_environment", return_value=True),
+              patch("anduinos_rescue_center.client.shutil.which", return_value="/usr/bin/ptyxis")):
+            open_live_terminal(launch=launch)
+        self.assertEqual(calls, [["/usr/bin/ptyxis", "--new-window", "--title", "AnduinOS Live terminal"]])

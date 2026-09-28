@@ -190,15 +190,27 @@ impl BootIntegration<SystemBootToolRunner> {
             Path::new(SYSTEM_CONFIRM_BINARY),
         )
     }
+
+    /// Verify that the running kernel, initramfs, userspace confirmation
+    /// engine, and snapshot-external executable storage can support recovery.
+    pub fn verify_recovery_boot_source(&self) -> Result<(), BootError> {
+        self.verify_recovery_boot_source_from(
+            Path::new(KERNEL_RELEASE),
+            Path::new(SYSTEM_BOOT_ROOT),
+            Path::new(SYSTEM_CONFIRM_BINARY),
+        )?;
+        ensure_real_directory(&self.snapshot_root, false)?;
+        ensure_executable_filesystem(&self.snapshot_root)
+    }
 }
 
 impl<R: BootToolRunner> BootIntegration<R> {
-    fn provision_recovery_boot_artifacts_from(
+    fn verify_recovery_boot_source_from(
         &self,
         kernel_release_path: &Path,
         system_boot: &Path,
         confirm_binary: &Path,
-    ) -> Result<RecoveryBootArtifacts, BootError> {
+    ) -> Result<(String, PathBuf, PathBuf), BootError> {
         let kernel_release = read_kernel_release(kernel_release_path)?;
         let kernel = system_boot.join(format!("vmlinuz-{kernel_release}"));
         let initramfs = system_boot.join(format!("initrd.img-{kernel_release}"));
@@ -206,6 +218,20 @@ impl<R: BootToolRunner> BootIntegration<R> {
         ensure_regular_file(&initramfs)?;
         ensure_regular_file(confirm_binary)?;
         self.verify_initramfs_compatibility(&initramfs)?;
+        Ok((kernel_release, kernel, initramfs))
+    }
+
+    fn provision_recovery_boot_artifacts_from(
+        &self,
+        kernel_release_path: &Path,
+        system_boot: &Path,
+        confirm_binary: &Path,
+    ) -> Result<RecoveryBootArtifacts, BootError> {
+        let (kernel_release, kernel, initramfs) = self.verify_recovery_boot_source_from(
+            kernel_release_path,
+            system_boot,
+            confirm_binary,
+        )?;
 
         ensure_real_directory(&self.snapshot_root, false)?;
         let recovery_boot = self.snapshot_root.join(RECOVERY_BOOT_DIRECTORY);

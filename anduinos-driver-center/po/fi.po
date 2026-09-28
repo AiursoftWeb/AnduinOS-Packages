@@ -1730,3 +1730,45 @@ msgstr "Palautustilassa kirjaudu sisään tavallisella tilillä ja suorita:"
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "Merkillä − merkityt paketit poistetaan. Vanhemmat ytimet saattavat menettää NVIDIA-grafiikkatuen. Käynnistä tietokone uudelleen päivityksen jälkeen."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Ota Secure Boot käyttöön"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Avaa UEFI-laiteohjelmiston asetukset ja etsi Boot-, Security- tai Secure "
+"Boot -kohta. Valitse Microsoft & 3rd-party CA tai ota Secure Boot käyttöön. "
+"Nimitykset vaihtelevat valmistajittain."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS ei ole vielä valmis Secure Bootin käyttöön. Sen ottaminen käyttöön "
+"laiteohjelmistossa nyt voi estää järjestelmän käynnistymisen."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "Valmistele AnduinOS Secure Bootia varten"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Valmistele ensin AnduinOS ja rekisteröi sen MOK-varmenne. Ota Secure Boot "
+"käyttöön vasta rekisteröinnin jälkeen."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: laiteohjelmiston alusta-avaimet puuttuvat. Palauta valmistajan "
+"tehdasavaimet laiteohjelmiston asetuksissa MOK-rekisteröinnin jälkeen."

@@ -244,6 +244,19 @@ case "${1:-}" in
         write_verified_manifest
         verify_grub first
         ;;
+    --verify-kernel)
+        # An explicit maintscript update may precede another kernel's pending
+        # trigger. Verify this image without publishing a whole-system manifest
+        # or requiring GRUB to reference kernels still being configured.
+        version=${2:-}
+        case "$version" in
+            ''|*[!A-Za-z0-9._+-]*)
+                log "invalid kernel version for image verification"
+                exit 2
+                ;;
+        esac
+        verify_image "$BOOT_DIR/initrd.img-$version" "$version"
+        ;;
     --update-grub)
         atomic_update_grub
         ;;
@@ -251,7 +264,7 @@ case "${1:-}" in
         verify_running_boot
         ;;
     *)
-        echo "Usage: anduinos-dracut-verify --rebuild|--verify|--verify-default|--update-grub|--verify-running" >&2
+        echo "Usage: anduinos-dracut-verify --rebuild|--verify|--verify-default|--verify-kernel VERSION|--update-grub|--verify-running" >&2
         exit 2
         ;;
 esac

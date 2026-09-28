@@ -58,6 +58,7 @@ class InstallerApplication(Adw.Application):
             "disk_model": "",
             "disk_stable_id": "",
             "disk_topology_digest": "",
+            "disk_external": False,
             "disk_windows_detected": False,
             "disk_bitlocker_detected": False,
             "disk_has_existing_partitions": False,

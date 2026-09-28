@@ -17,6 +17,44 @@ def completed(command, stdout="", stderr="", returncode=0):
 
 
 class NtfsResizeInspectionTests(unittest.TestCase):
+    def test_scheduled_disk_check_is_recognized_at_every_read_only_stage(self):
+        for stage in ("--check", "--info", "--size"):
+            for stream in ("stdout", "stderr"):
+                with self.subTest(stage=stage, stream=stream):
+                    calls = []
+
+                    def run(command, **kwargs):
+                        calls.append(command)
+                        self.assertNotIn("--force", command)
+                        self.assertNotIn("-f", command)
+                        if command[0] == NTFS_RESIZE:
+                            self.assertIn("--no-action", command)
+                        if stage in command:
+                            return completed(command, returncode=1, **{stream:
+                                "ERROR: Volume is scheduled for check.\n"
+                                "Run chkdsk /f and please try again, or see option -f.\n"})
+                        if "--info" in command:
+                            return completed(command, "You might resize at 10737418240 bytes.\n")
+                        return completed(command)
+
+                    result = inspect_ntfs_resize(
+                        "/dev/sda3", 64 * GIB, target_size_bytes=32 * GIB, run=run,
+                    )
+                    self.assertFalse(result.safe)
+                    self.assertIs(result.block_reason, NtfsResizeBlockReason.CHECK_REQUIRED)
+                    self.assertIn(stage, calls[-1])
+                    self.assertEqual(result, NtfsResizeInspection.from_json(result.to_json()))
+
+    def test_unrelated_range_failure_does_not_claim_windows_check_is_required(self):
+        def run(command, **_kwargs):
+            if "--info" in command:
+                return completed(command, stderr="Device read failed", returncode=1)
+            return completed(command)
+
+        result = inspect_ntfs_resize("/dev/sda3", 64 * GIB, run=run)
+        self.assertIs(result.block_reason, NtfsResizeBlockReason.RANGE_UNAVAILABLE)
+        self.assertEqual(result.message, "Device read failed")
+
     def test_healthy_volume_reports_conservative_aligned_range(self):
         calls = []
 

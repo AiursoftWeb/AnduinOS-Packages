@@ -245,7 +245,7 @@ class ManualExecutorTests(unittest.TestCase):
         actual_resize = (NTFS_RESIZE, "--size", str(target), device)
         boundary_resize = (
             "parted",
-            "--script",
+            "---pretend-input-tty",
             "/dev/nvme0n1",
             "unit",
             "B",
@@ -256,6 +256,13 @@ class ManualExecutorTests(unittest.TestCase):
         first_create = next(item for item in commands if "mkpart" in item)
         self.assertLess(commands.index(actual_resize), commands.index(boundary_resize))
         self.assertLess(commands.index(boundary_resize), commands.index(first_create))
+        boundary_options = next(
+            kwargs for command, kwargs in runner.commands
+            if command == boundary_resize
+        )
+        self.assertEqual(boundary_options["input_text"], "Yes\n")
+        self.assertEqual(boundary_options["environment"]["LC_ALL"], "C")
+        self.assertEqual(boundary_options["environment"]["LANGUAGE"], "C")
         self.assertTrue(
             all(
                 "--force" not in item and "-f" not in item

@@ -17,7 +17,9 @@ from installer_core.preflight import (
     verify_execution_environment,
     verify_target_disk_environment,
 )
-from installer_core.probe import PlatformProbe
+from installer_core.probe import PlatformProbe, ProbeError
+from anduinos_secureboot.firmware import FirmwareEvidence
+from anduinos_secureboot.model import SecureBootStatus
 
 
 class ExecutionPreflightTests(unittest.TestCase):
@@ -62,6 +64,20 @@ class ExecutionPreflightTests(unittest.TestCase):
     def memory_probe():
         return TEST_PHYSICAL_MEMORY_BYTES
 
+    def test_unknown_firmware_rejected_before_disk_inventory_or_commands(self):
+        plan = valid_plan()
+        runner = self.idle_target_runner()
+        inventory = mock.Mock()
+        evidence = FirmwareEvidence(True, SecureBootStatus.UNKNOWN, "efi-read-failed", "I/O error")
+        with (mock.patch("installer_core.preflight.prepare_live_interface") as prepare,
+              mock.patch("installer_core.probe.probe_firmware", return_value=evidence),
+              self.assertRaisesRegex(ProbeError, "efi-read-failed")):
+            verify_execution_environment(plan, runner, inventory_probe=inventory)
+        prepare.assert_called_once_with()
+        inventory.assert_not_called()
+        self.assertTrue(runner.root_checked)
+        self.assertEqual(runner.commands, [])
+
     def test_accepts_matching_platform_and_disk(self):
         plan = valid_plan()
         runner = self.idle_target_runner()
@@ -95,8 +111,8 @@ class ExecutionPreflightTests(unittest.TestCase):
                     verify_target_disk_environment(plan, runner, inventory_probe=lambda: snapshot)
                 self.assertEqual(runner.commands, [])
 
-    def test_external_target_uses_the_unchanged_install_plan(self):
-        plan = valid_plan()
+    def test_external_target_uses_the_immutable_external_install_plan(self):
+        plan = valid_plan(external_target=True)
         inventory = valid_inventory(plan)
         inventory = replace(inventory, disks=(replace(
             inventory.disks[0], removable=True, transport="usb"),))
@@ -104,6 +120,18 @@ class ExecutionPreflightTests(unittest.TestCase):
             plan, self.idle_target_runner(), inventory_probe=lambda: inventory,
         )
         self.assertEqual(resolved, plan)
+
+    def test_external_status_change_is_rejected_before_writes(self):
+        plan = valid_plan(external_target=True)
+        inventory = valid_inventory(plan, external=False)
+        runner = self.idle_target_runner()
+        with self.assertRaisesRegex(
+            PreflightError, "external-drive status changed"
+        ):
+            verify_target_disk_environment(
+                plan, runner, inventory_probe=lambda: inventory,
+            )
+        self.assertEqual(runner.commands, [])
 
     def test_rejects_disk_substitution_at_same_path(self):
         plan = valid_plan()

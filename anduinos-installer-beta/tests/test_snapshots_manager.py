@@ -8,7 +8,9 @@ from helpers import valid_plan
 from installer_core.command import CommandError
 from installer_core.steps import InstallContext, StepWarning
 from installer_core.snapshots_manager import (
+    CreateFactorySnapshotStep,
     EnsureSnapshotsManagerStep,
+    FACTORY_PROVISIONER,
     SNAPSHOTS_MANAGER_PACKAGE,
 )
 
@@ -186,6 +188,60 @@ class EnsureSnapshotsManagerTests(unittest.TestCase):
                 "inconsistent package state",
             ):
                 EnsureSnapshotsManagerStep(runner).execute(context)
+
+
+class CreateFactorySnapshotTests(unittest.TestCase):
+    def test_provisions_and_verifies_new_os_inside_target(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            context = context_for(target, online=False)
+            context.values["snapshots_manager_installed"] = True
+            provisioner = target / FACTORY_PROVISIONER.lstrip("/")
+            provisioner.parent.mkdir(parents=True, exist_ok=True)
+            provisioner.touch()
+            runner = FakeRunner()
+            runner.outputs[
+                ("chroot", str(target), FACTORY_PROVISIONER)
+            ] = ("created factory-id\n", "", 0)
+
+            step = CreateFactorySnapshotStep(runner)
+            step.execute(context)
+            step.verify(context)
+
+        commands = [command for command, _ in runner.commands]
+        self.assertIn(
+            ("chroot", str(target), FACTORY_PROVISIONER),
+            commands,
+        )
+        self.assertIn(
+            ("chroot", str(target), FACTORY_PROVISIONER, "--check"),
+            commands,
+        )
+        self.assertTrue(context.values["factory_snapshot_ready"])
+        self.assertIn(
+            "created factory-id",
+            "\n".join(context.values["test_logs"]),
+        )
+
+    def test_missing_manager_is_a_visible_warning(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            context = context_for(target, online=False)
+            context.values["snapshots_manager_installed"] = False
+            with self.assertRaisesRegex(StepWarning, "not created"):
+                CreateFactorySnapshotStep(FakeRunner()).execute(context)
+
+        self.assertFalse(context.values["factory_snapshot_ready"])
+
+    def test_old_manager_without_provisioner_is_a_visible_warning(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            context = context_for(target, online=False)
+            context.values["snapshots_manager_installed"] = True
+            with self.assertRaisesRegex(StepWarning, "does not provide"):
+                CreateFactorySnapshotStep(FakeRunner()).execute(context)
+
+        self.assertFalse(context.values["factory_snapshot_ready"])
 
 
 if __name__ == "__main__":

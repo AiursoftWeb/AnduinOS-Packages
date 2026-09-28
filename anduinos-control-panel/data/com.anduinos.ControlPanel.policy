@@ -69,4 +69,69 @@
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/anduinos-control-panel/boot-settings-helper</annotate>
   </action>
+  <action id="com.anduinos.ControlPanel.manage-software-sources">
+    <description>Change software sources and install system updates</description>
+    <description xml:lang="ar_SA">تغيير مصادر البرامج وتثبيت تحديثات النظام</description>
+    <description xml:lang="zh_CN">更改软件源并安装系统更新</description>
+    <description xml:lang="zh_HK">變更軟件來源並安裝系統更新</description>
+    <description xml:lang="zh_TW">變更軟體來源並安裝系統更新</description>
+    <description xml:lang="da_DK">Skift softwarekilder og installér systemopdateringer</description>
+    <description xml:lang="en_GB">Change software sources and install system updates</description>
+    <description xml:lang="fi_FI">Vaihda ohjelmistolähteitä ja asenna järjestelmäpäivityksiä</description>
+    <description xml:lang="fr_FR">Modifier les sources de logiciels et installer les mises à jour système</description>
+    <description xml:lang="de_DE">Softwarequellen ändern und Systemaktualisierungen installieren</description>
+    <description xml:lang="el_GR">Αλλαγή πηγών λογισμικού και εγκατάσταση ενημερώσεων συστήματος</description>
+    <description xml:lang="hi_IN">सॉफ़्टवेयर स्रोत बदलें और सिस्टम अपडेट इंस्टॉल करें</description>
+    <description xml:lang="id_ID">Ubah sumber perangkat lunak dan pasang pembaruan sistem</description>
+    <description xml:lang="it_IT">Cambia le sorgenti software e installa gli aggiornamenti di sistema</description>
+    <description xml:lang="ja_JP">ソフトウェアソースを変更してシステム更新をインストールします</description>
+    <description xml:lang="ko_KR">소프트웨어 소스를 변경하고 시스템 업데이트 설치</description>
+    <description xml:lang="nl_NL">Softwarebronnen wijzigen en systeemupdates installeren</description>
+    <description xml:lang="pl_PL">Zmień źródła oprogramowania i zainstaluj aktualizacje systemu</description>
+    <description xml:lang="pt_PT">Alterar fontes de software e instalar atualizações do sistema</description>
+    <description xml:lang="pt_BR">Alterar fontes de software e instalar atualizações do sistema</description>
+    <description xml:lang="ro_RO">Schimbă sursele software și instalează actualizările de sistem</description>
+    <description xml:lang="ru_RU">Изменить источники программ и установить обновления системы</description>
+    <description xml:lang="es_ES">Cambiar las fuentes de software e instalar actualizaciones del sistema</description>
+    <description xml:lang="sv_SE">Byt programvarukällor och installera systemuppdateringar</description>
+    <description xml:lang="th_TH">เปลี่ยนแหล่งซอฟต์แวร์และติดตั้งการอัปเดตระบบ</description>
+    <description xml:lang="tr_TR">Yazılım kaynaklarını değiştirin ve sistem güncellemelerini yükleyin</description>
+    <description xml:lang="uk_UA">Змінити джерела програм і встановити оновлення системи</description>
+    <description xml:lang="vi_VN">Thay đổi nguồn phần mềm và cài đặt bản cập nhật hệ thống</description>
+    <message>Authentication is required to change software sources or install system updates</message>
+    <message xml:lang="ar_SA">المصادقة مطلوبة لتغيير مصادر البرامج أو تثبيت تحديثات النظام</message>
+    <message xml:lang="zh_CN">更改软件源或安装系统更新需要身份验证</message>
+    <message xml:lang="zh_HK">變更軟件來源或安裝系統更新需要進行驗證</message>
+    <message xml:lang="zh_TW">變更軟體來源或安裝系統更新需要驗證</message>
+    <message xml:lang="da_DK">Godkendelse er påkrævet for at skifte softwarekilder eller installere systemopdateringer</message>
+    <message xml:lang="en_GB">Authentication is required to change software sources or install system updates</message>
+    <message xml:lang="fi_FI">Ohjelmistolähteiden vaihtaminen tai järjestelmäpäivitysten asentaminen vaatii todennuksen</message>
+    <message xml:lang="fr_FR">Une authentification est requise pour modifier les sources de logiciels ou installer les mises à jour système</message>
+    <message xml:lang="de_DE">Zum Ändern von Softwarequellen oder Installieren von Systemaktualisierungen ist eine Authentifizierung erforderlich</message>
+    <message xml:lang="el_GR">Απαιτείται επαλήθευση για την αλλαγή πηγών λογισμικού ή την εγκατάσταση ενημερώσεων συστήματος</message>
+    <message xml:lang="hi_IN">सॉफ़्टवेयर स्रोत बदलने या सिस्टम अपडेट इंस्टॉल करने के लिए प्रमाणीकरण आवश्यक है</message>
+    <message xml:lang="id_ID">Autentikasi diperlukan untuk mengubah sumber perangkat lunak atau memasang pembaruan sistem</message>
+    <message xml:lang="it_IT">È richiesta l'autenticazione per cambiare le sorgenti software o installare gli aggiornamenti di sistema</message>
+    <message xml:lang="ja_JP">ソフトウェアソースの変更またはシステム更新のインストールには認証が必要です</message>
+    <message xml:lang="ko_KR">소프트웨어 소스를 변경하거나 시스템 업데이트를 설치하려면 인증이 필요합니다</message>
+    <message xml:lang="nl_NL">Authenticatie is vereist om softwarebronnen te wijzigen of systeemupdates te installeren</message>
+    <message xml:lang="pl_PL">Uwierzytelnienie jest wymagane, aby zmienić źródła oprogramowania lub zainstalować aktualizacje systemu</message>
+    <message xml:lang="pt_PT">É necessária autenticação para alterar fontes de software ou instalar atualizações do sistema</message>
+    <message xml:lang="pt_BR">É necessária autenticação para alterar fontes de software ou instalar atualizações do sistema</message>
+    <message xml:lang="ro_RO">Este necesară autentificarea pentru a schimba sursele software sau a instala actualizări de sistem</message>
+    <message xml:lang="ru_RU">Для изменения источников программ или установки обновлений системы требуется аутентификация</message>
+    <message xml:lang="es_ES">Se requiere autenticación para cambiar las fuentes de software o instalar actualizaciones del sistema</message>
+    <message xml:lang="sv_SE">Autentisering krävs för att byta programvarukällor eller installera systemuppdateringar</message>
+    <message xml:lang="th_TH">จำเป็นต้องมีการยืนยันตัวตนเพื่อเปลี่ยนแหล่งซอฟต์แวร์หรือติดตั้งการอัปเดตระบบ</message>
+    <message xml:lang="tr_TR">Yazılım kaynaklarını değiştirmek veya sistem güncellemelerini yüklemek için kimlik doğrulaması gereklidir</message>
+    <message xml:lang="uk_UA">Для зміни джерел програм або встановлення оновлень системи потрібна автентифікація</message>
+    <message xml:lang="vi_VN">Cần xác thực để thay đổi nguồn phần mềm hoặc cài đặt bản cập nhật hệ thống</message>
+    <icon_name>com.anduinos.ControlPanel</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/anduinos-control-panel/software-source-helper</annotate>
+  </action>
 </policyconfig>

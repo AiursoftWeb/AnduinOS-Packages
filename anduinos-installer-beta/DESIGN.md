@@ -32,7 +32,7 @@ and constructs every command itself.
 - Btrfs compression: the automatic storage configuration page offers no
   compression, fast (Zstd 1), balanced (Zstd 3, default), and save space
   (Zstd 6). The selected preset is an allowlisted field in installation plan
-  schema 16 and appears in the confirmation summary. All canonical subvolume
+  schema 17 and appears in the confirmation summary. All canonical subvolume
   mounts apply it before system files are copied, and fstab persists the same
   choice. Advanced manual partitioning exposes the same presets below the
   planned partitions when a Btrfs Root partition exists, and retains the
@@ -100,6 +100,16 @@ and constructs every command itself.
   required, removes VMware guest integration from non-VMware targets, and
   purges orphaned packages. This policy does not use Ubiquity's historical
   dual manifest convention.
+- Initial recovery point: after all target-system configuration and optional
+  package changes have completed, every Btrfs installation invokes the target
+  Disk Snapshots Manager before leaving the chroot. The manager idempotently
+  creates exactly one pinned, read-only `@root` snapshot named `New OS` and one
+  hidden, pinned initial `@home` baseline, using the target's installed default
+  kernel rather than the Live kernel. Automatic cleanup cannot remove, rename,
+  or unpin either factory baseline. Factory reset preserves `@home` by default;
+  the user may explicitly restore the initial Home baseline. A missing transitional
+  package or a snapshot-creation failure is a visible installation warning,
+  not a reason to discard an otherwise bootable installed system.
 - Software: refreshing package indexes and installing available updates is
   enabled by default. An offline index-refresh failure is a warning and skips
   the upgrade; after an upgrade transaction starts, any APT/dpkg failure is
@@ -299,6 +309,12 @@ rounded visual boundary and obscure whether the card itself is active.
   makes the GRUB menu visible while leaving the first AnduinOS entry as the
   default. `os-prober`, foreign Windows volumes, foreign ESP writes and
   firmware changes are not involved.
+  External erase-disk targets additionally receive a signed direct
+  `EFI/BOOT` chain on their newly formatted ESP so they remain bootable after
+  moving to firmware with no AnduinOS NVRAM entry. The immutable plan records
+  and privileged preflight revalidates external-disk status; coexistence and
+  manual shared-ESP modes never receive this fallback. The chain deliberately
+  excludes shim's NVRAM-registration fallback to avoid the #422 reset loop.
   Destructive boot testing remains part of the VM matrix milestone.
 - Milestone 4 — implementation complete: signed shim/GRUB, machine-local MOK
   generation, explicit DKMS signing, idempotent enrollment scheduling and
@@ -418,8 +434,16 @@ rounded visual boundary and obscure whether the card itself is active.
   The same bounded manual editor offers Btrfs, ext4, XFS and F2FS for a newly
   formatted root. Btrfs alone creates the canonical AnduinOS subvolumes and
   enables Disk Snapshots Manager; ext4, XFS and F2FS use one conventional root
-  mount and direct system copy. XFS and F2FS are intentionally not exposed in
-  automatic or guided layouts until their broader release matrices exist.
+  mount and direct system copy. An existing BitLocker partition can be
+  preserved while AnduinOS uses separate unallocated space; deleting that
+  partition, replacing its disk's GPT and shrinking any partition on that disk
+  remain blocked while it is present. Manual Root has a 6 GiB hard floor
+  enforced by both the editor and privileged plan validation; 6–25 GiB
+  requires an explicit low-capacity confirmation, 25–50 GiB remains below the
+  recommendation, and 50 GiB or more proceeds without a capacity warning.
+  XFS and F2FS are
+  intentionally not exposed in automatic or guided layouts until their broader
+  release matrices exist.
   Unit and GTK development-mode interaction gates pass; real Windows and
   interrupted-resize VM qualification remains mandatory before release.
 - Final release gate: complete the VM matrix before promoting and renaming the

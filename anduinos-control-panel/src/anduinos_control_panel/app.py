@@ -22,7 +22,8 @@ from .model import (
     BOTTLES_APP_ID,
     DEJA_DUP_APP_ID,
     GRUB_DISPLAY_LARGE_TEXT,
-    GRUB_DISPLAY_NATIVE,
+    GRUB_DISPLAY_HIGH_RESOLUTION,
+    GRUB_DISPLAY_AUTOMATIC,
     SNAPSHOT_PACKAGE,
     VOICE_TYPING_PACKAGE,
     WHY_AI_PACKAGE,
@@ -34,6 +35,7 @@ from .model import (
     read_grub_timeouts,
 )
 from .topics import ControlPanelTopic, get_topic
+from .software_sources import SoftwareSourceWindow
 
 
 APP_ID = "com.anduinos.ControlPanel"
@@ -85,6 +87,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         self._bottles_window: Adw.Window | None = None
         self._voice_install_window: Adw.Window | None = None
         self._boot_settings_window: Adw.Window | None = None
+        self._software_source_window: Adw.Window | None = None
 
         self._install_css()
 
@@ -203,7 +206,9 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         why_installed = package_installed(WHY_AI_PACKAGE)
         bottles_installed = flatpak_installed(BOTTLES_APP_ID)
         flatseal_installed = package_installed("flatseal")
-        deja_dup_installed = flatpak_installed(DEJA_DUP_APP_ID)
+        deja_dup_installed = command_available("deja-dup") or flatpak_installed(
+            DEJA_DUP_APP_ID
+        )
         seahorse_installed = command_available("seahorse")
         voice_typing_installed = package_installed(VOICE_TYPING_PACKAGE)
 
@@ -294,6 +299,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                 _("Programs"),
                 "gnome-software.svg",
                 [
+                    action("programs.software-source"),
                     action("programs.uninstall"),
                     action(
                         "programs.permissions",
@@ -367,6 +373,16 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                         topic.keywords,
                     )
                 )
+        factory_reset = get_topic("recovery.factory-reset")
+        if factory_reset is not None:
+            actions.append(
+                (
+                    factory_reset.title,
+                    factory_reset.description,
+                    lambda: self._activate_topic("recovery.factory-reset"),
+                    factory_reset.keywords,
+                )
+            )
         backup = get_topic("recovery.backup")
         if backup is None:
             return actions
@@ -392,12 +408,14 @@ class ControlPanelWindow(Adw.ApplicationWindow):
 
         handlers: dict[str, Callable[[], None]] = {
             "boot-settings": self._show_boot_settings,
+            "software-source": self._open_software_source,
             "voice-typing": self._open_voice_typing,
             "flatseal": self._open_flatseal,
             "bash-predictions": self._open_bash_predictions,
             "on-device-ai": self._show_ai_settings,
             "bottles": self._open_bottles,
             "backup": self._open_deja_dup,
+            "factory-reset": self._open_factory_reset,
         }
         if topic.handler:
             handler = handlers.get(topic.handler)
@@ -417,6 +435,17 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             return
 
         self._show_error(_("Setting not found"), topic.title)
+
+    def _open_software_source(self) -> None:
+        if self._software_source_window is None:
+            self._software_source_window = SoftwareSourceWindow(self)
+
+            def closed(*_args) -> bool:
+                self._software_source_window = None
+                return False
+
+            self._software_source_window.connect("close-request", closed)
+        self._software_source_window.present()
 
     def _append_category(
         self,
@@ -694,25 +723,28 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         group.add(timeout_row)
         page.append(group)
 
-        display_modes = [GRUB_DISPLAY_NATIVE, GRUB_DISPLAY_LARGE_TEXT]
+        display_modes = [
+            GRUB_DISPLAY_HIGH_RESOLUTION,
+            GRUB_DISPLAY_AUTOMATIC,
+            GRUB_DISPLAY_LARGE_TEXT,
+        ]
         display_group = Adw.PreferencesGroup(
             title=_("Boot display"),
             description=_(
                 "Choose the size of the GRUB menu and startup logo."
+            ) + " " + _(
+                "High resolution can make menu text small on 4K displays; the screen's native resolution is not guaranteed at boot."
             ),
         )
         display_row = Adw.ComboRow(
             title=_("Display mode"),
-            subtitle=_(
-                "Native resolution shows more detail; large text is easier to read."
-            ),
         )
         display_row.add_prefix(
             Gtk.Image.new_from_icon_name("video-display-symbolic")
         )
         display_row.set_model(
             Gtk.StringList.new(
-                [_("Native resolution"), _("Large text mode")]
+                [_("High resolution (if available)"), _("Automatic"), _("Large text mode")]
             )
         )
         display_row.set_selected(display_modes.index(current_display_mode))
@@ -1168,7 +1200,23 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         if flatpak_installed(DEJA_DUP_APP_ID):
             self._launch(["flatpak", "run", DEJA_DUP_APP_ID])
             return
+        if command_available("deja-dup"):
+            self._launch(["deja-dup"])
+            return
         self._show_store_prompt(_("Deja Dup Backups"), f"{DEJA_DUP_APP_ID}.desktop")
+
+    def _open_factory_reset(self) -> None:
+        if command_available("anduinos-btrfs-snapshots-manager"):
+            self._launch(
+                ["anduinos-btrfs-snapshots-manager", "--factory-reset"]
+            )
+            return
+        self._show_error(
+            _("Factory Reset Is Not Available"),
+            _(
+                "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
+            ),
+        )
 
     def _open_flatseal(self) -> None:
         if package_installed("flatseal"):
@@ -1916,7 +1964,7 @@ class ControlPanelApplication(Adw.Application):
         dialog.set_application_name(_("AnduinOS Control Panel"))
         dialog.set_application_icon(APP_ID)
         dialog.set_developer_name(_("AnduinOS Team"))
-        dialog.set_version("2.0.2")
+        dialog.set_version("2.0.3")
         dialog.set_comments(_("Find and manage AnduinOS system settings."))
         dialog.set_website("https://www.anduinos.com")
         dialog.set_issue_url(

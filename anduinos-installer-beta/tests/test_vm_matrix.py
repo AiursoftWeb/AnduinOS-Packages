@@ -45,19 +45,23 @@ class VmMatrixTests(unittest.TestCase):
             (
                 case["architecture"],
                 case["firmware"],
-                case["secure_boot"],
+                case["expected_secure_boot"],
                 case["filesystem"],
             )
             for case in matrix["cases"]
         }
         expected = {
-            ("amd64", "bios", False, filesystem)
+            ("amd64", "bios", "not-applicable", filesystem)
             for filesystem in ("btrfs", "ext4")
         }
         expected |= {
             (architecture, "uefi", secure_boot, filesystem)
             for architecture in ("amd64", "arm64")
-            for secure_boot in (False, True)
+            for secure_boot in ("disabled", "enabled")
+            for filesystem in ("btrfs", "ext4")
+        }
+        expected |= {
+            ("amd64", "uefi", "unsupported", filesystem)
             for filesystem in ("btrfs", "ext4")
         }
         self.assertEqual(actual, expected)

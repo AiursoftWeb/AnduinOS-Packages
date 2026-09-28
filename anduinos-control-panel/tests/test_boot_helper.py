@@ -46,6 +46,20 @@ class BootSettingsHelperTests(unittest.TestCase):
             )
             update_grub.assert_called_once_with()
 
+    def test_legacy_timeout_change_preserves_high_resolution_when_display_is_gone(self):
+        with tempfile.TemporaryDirectory() as directory:
+            configuration = Path(directory) / "99-test.cfg"
+            configuration.write_text('GRUB_GFXMODE="2560x1440,auto"\n')
+            with (
+                patch.object(boot_settings_helper, "CONFIGURATION_PATH", configuration),
+                patch.object(boot_settings_helper, "preferred_graphics_mode", side_effect=AssertionError("must not probe")),
+                patch.object(boot_settings_helper, "update_grub") as update_grub,
+            ):
+                boot_settings_helper.set_timeout(5)
+
+            self.assertIn('GRUB_GFXMODE="2560x1440,auto"\n', configuration.read_text())
+            update_grub.assert_called_once_with()
+
     def test_failed_grub_refresh_restores_the_previous_configuration(self):
         with tempfile.TemporaryDirectory() as directory:
             configuration = Path(directory) / "99-test.cfg"
@@ -63,14 +77,14 @@ class BootSettingsHelperTests(unittest.TestCase):
 
             self.assertEqual(configuration.read_text(), "previous\n")
 
-    def test_setting_native_resolution_writes_auto_gfxmode(self):
+    def test_setting_automatic_writes_auto_gfxmode(self):
         with tempfile.TemporaryDirectory() as directory:
             configuration = Path(directory) / "grub.d" / "99-test.cfg"
             with (
                 patch.object(boot_settings_helper, "CONFIGURATION_PATH", configuration),
                 patch.object(boot_settings_helper, "update_grub") as update_grub,
             ):
-                boot_settings_helper.set_settings(5, "native")
+                boot_settings_helper.set_settings(5, "automatic")
 
             self.assertIn('GRUB_GFXMODE="auto"\n', configuration.read_text())
             self.assertIn(
@@ -79,11 +93,48 @@ class BootSettingsHelperTests(unittest.TestCase):
             )
             update_grub.assert_called_once_with()
 
+    def test_high_resolution_uses_connected_preferred_mode_with_auto_fallback(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            disconnected = root / "card0-HDMI-A-1"
+            disconnected.mkdir()
+            (disconnected / "status").write_text("connected\n")
+            (disconnected / "enabled").write_text("disabled\n")
+            (disconnected / "modes").write_text("3840x2160\n")
+            connected = root / "card1-eDP-1"
+            connected.mkdir()
+            (connected / "status").write_text("connected\n")
+            (connected / "modes").write_text("2560x1600\n1920x1200\n")
+            self.assertEqual(
+                boot_settings_helper.preferred_graphics_mode(root), "2560x1600"
+            )
+            configuration = root / "grub.d" / "99-test.cfg"
+            with (
+                patch.object(boot_settings_helper, "CONFIGURATION_PATH", configuration),
+                patch.object(boot_settings_helper, "preferred_graphics_mode", return_value="2560x1600"),
+                patch.object(boot_settings_helper, "update_grub") as update_grub,
+            ):
+                boot_settings_helper.set_settings(5, "high-resolution")
+            self.assertIn('GRUB_GFXMODE="2560x1600,auto"\n', configuration.read_text())
+            update_grub.assert_called_once_with()
+
+    def test_high_resolution_rejects_unusable_connector_without_writing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            connector = root / "card0-eDP-1"
+            connector.mkdir()
+            (connector / "status").write_text("connected\n")
+            (connector / "modes").write_text("2560x1600;reboot\n")
+            with self.assertRaises(ValueError):
+                boot_settings_helper.preferred_graphics_mode(root)
+
     def test_display_mode_is_restricted_to_fixed_choices(self):
         self.assertEqual(
             boot_settings_helper.parse_display_mode("large-text"),
             "large-text",
         )
+        self.assertEqual(boot_settings_helper.parse_display_mode("native"), "automatic")
+        self.assertEqual(boot_settings_helper.parse_display_mode("high-resolution"), "high-resolution")
         with self.assertRaises(ValueError):
             boot_settings_helper.parse_display_mode("2560x1440; reboot")
 
@@ -124,7 +175,7 @@ class BootSettingsHelperTests(unittest.TestCase):
                 ),
                 0,
             )
-        set_settings.assert_called_once_with(10, "native")
+        set_settings.assert_called_once_with(10, "automatic")
 
 
 if __name__ == "__main__":

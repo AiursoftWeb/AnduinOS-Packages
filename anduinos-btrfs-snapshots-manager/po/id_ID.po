@@ -1880,3 +1880,150 @@ msgstr "Pulihkan AnduinOS dan kembalikan Berkas Pribadi yang terhapus"
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
 msgid "Create an AnduinOS system snapshot"
 msgstr "Buat snapshot sistem AnduinOS"
+
+msgid "Delete Factory Recovery Point?"
+msgstr "Hapus Titik Pemulihan Pabrik?"
+
+msgid "Delete and Disable Factory Recovery"
+msgstr "Hapus dan Nonaktifkan Pemulihan Pabrik"
+
+msgid "Deleting factory recovery point…"
+msgstr "Menghapus titik pemulihan pabrik…"
+
+msgid "Checking factory reset availability…"
+msgstr "Memeriksa ketersediaan reset pabrik…"
+
+msgid "Factory Reset Is Not Available"
+msgstr "Reset Pabrik Tidak Tersedia"
+
+msgid "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
+msgstr "Sistem ini tidak mendukung reset pabrik. Instal ulang AnduinOS dan pilih sistem berkas Btrfs untuk mengaktifkannya."
+
+msgid "Factory Reset Is Not Ready"
+msgstr "Reset pabrik belum siap"
+
+msgid "Reset AnduinOS to Its Initial State?"
+msgstr "Reset AnduinOS ke keadaan awal?"
+
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Reset pabrik akan mengembalikan berkas sistem, paket yang terpasang, dan pengaturan sistem ke keadaan New OS awal. Berkas pribadi di folder Home tidak akan berubah. Snapshot pengaman dari sistem saat ini akan dibuat terlebih dahulu. Setelah itu pemulihan akan disiapkan dan komputer ini akan dimulai ulang secara otomatis dalam 60 detik."
+
+msgid "Return to the initial New OS state"
+msgstr "Kembali ke keadaan New OS awal"
+
+msgid "Saved as a safety snapshot before reset"
+msgstr "Disimpan sebagai snapshot pengaman sebelum reset"
+
+msgid "Reset and Restart"
+msgstr "Reset dan Mulai Ulang"
+
+msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+msgstr "“New OS” adalah keadaan sistem awal yang dibuat saat pemasangan. Menghapusnya akan menonaktifkan kemampuan untuk mereset AnduinOS ke keadaan awal. Tindakan ini tidak dapat dibatalkan tanpa memasang ulang sistem operasi. Berkas pribadi Anda tidak akan dihapus."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "Hapus file pengguna"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Reset pabrik akan memulihkan file sistem, paket yang terpasang, dan pengaturan sistem ke keadaan New OS semula. Snapshot pengaman dari sistem saat ini akan dibuat terlebih dahulu. Setelah itu, pemulihan akan disiapkan dan komputer ini akan dimulai ulang secara otomatis dalam 60 detik."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "Menyiapkan reset pabrik…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "Tetap disimpan kecuali Anda memilih untuk menghapusnya di bawah"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "Tidak tersedia karena titik pemulihan pabrik Home tidak ada atau rusak."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "Pulihkan Home ke keadaan awal setelah pemasangan dan hapus riwayat snapshot Home. Tindakan ini tidak dapat dibatalkan setelah pemulihan dikonfirmasi."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Perlindungan Ruang Disk"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Ruang kosong minimum"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Berlaku untuk snapshot otomatis Sistem dan folder Home. Atur ke 0 untuk menonaktifkan."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Snapshot otomatis dijeda"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Snapshot folder Home menunggu ruang kosong tambahan."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Snapshot terjadwal folder Home dijeda karena ruang disk hampir habis. Snapshot akan dilanjutkan secara otomatis saat ruang tersedia."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Snapshot sistem terjadwal dijeda karena ruang disk hampir habis. Snapshot akan dilanjutkan secara otomatis saat ruang tersedia."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Snapshot Sistem dan folder Home menunggu ruang kosong tambahan."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Snapshot sistem menunggu ruang kosong tambahan."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "Snapshot pengaman sistem dibuat terlebih dahulu. Kemudian sistem dimulai ulang dalam 60 detik."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "Hapus berkas Home semua pengguna dan riwayat snapshot. Tindakan ini tidak dapat dibatalkan."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "Pulihkan sistem ke New OS. Berkas pribadi dipertahankan secara bawaan."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Kembalikan data pengguna"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Kembalikan berkas dan pengaturan semua pengguna ke keadaan awal. Riwayat snapshot dipertahankan."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Snapshot pengaman dibuat sebelum pemulihan. Komputer akan dimulai ulang dalam 60 detik setelah persiapan."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "Menghapus New OS menonaktifkan pemulihan pabrik untuk kategori snapshot ini. Berkas saat ini dan snapshot lainnya dipertahankan."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Berkas dan pengaturan semua pengguna"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Snapshot pengaman dibuat terlebih dahulu. Riwayat snapshot dipertahankan."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Pemulihan siap. Simpan pekerjaan Anda; komputer akan dimulai ulang dalam 60 detik."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Konfirmasi pemulihan gagal. Memulihkan keadaan sebelumnya."

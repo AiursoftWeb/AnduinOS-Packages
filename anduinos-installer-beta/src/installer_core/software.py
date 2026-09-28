@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+import re
 
 from .command import CommandError, CommandRunner
 from .mirrors import restore_original_mirror
@@ -367,47 +368,134 @@ class InstallThirdPartyDriversStep:
             )
         target = _target(context)
         _require_target_command(target, "usr/bin/ubuntu-drivers")
-        result = self.runner.run(
-            (
-                "chroot",
-                str(target),
-                "ubuntu-drivers",
-                "install",
-                "--no-oem",
-                "--package-list",
-                "/run/anduinos-installer-drivers",
-            ),
-            check=False,
-            timeout=7200,
-        )
-        if result.returncode != 0:
-            audit = self.runner.run(
-                ("chroot", str(target), "dpkg", "--audit"),
+        # Platform metapackages can bring in a different kernel flavour during
+        # the first transaction. Resolve once more against that installed state,
+        # never against uname -r (which is the Live kernel inside a chroot).
+        for attempt in range(2):
+            kernels = _installed_kernel_versions(target)
+            result = self.runner.run(
+                (
+                    "chroot",
+                    str(target),
+                    "ubuntu-drivers",
+                    "install",
+                    "--no-oem",
+                    "--package-list",
+                    "/run/anduinos-installer-drivers",
+                ),
                 check=False,
-                timeout=300,
+                timeout=7200,
             )
-            dependency_check = self.runner.run(
-                ("chroot", str(target), "apt-get", "check"),
-                check=False,
-                timeout=600,
-            )
-            if (
-                audit.returncode != 0
-                or audit.stdout.strip()
-                or dependency_check.returncode != 0
-            ):
-                raise CommandError(
-                    "Third-party driver installation failed and left an "
-                    "inconsistent package state"
+            # Some ubuntu-drivers versions discard apt-get's nonzero return
+            # value. A successful outer command is not a package health check.
+            _verify_driver_package_state(self.runner, target)
+            if result.returncode != 0:
+                if attempt or _installed_kernel_versions(target) != kernels:
+                    raise CommandError(
+                        "Could not complete driver installation for the changed target kernels"
+                    )
+                raise StepWarning(
+                    "Could not download or install the selected third-party "
+                    "drivers; the base system remains usable"
                 )
-            raise StepWarning(
-                "Could not download or install the selected third-party "
-                "drivers; the base system remains usable"
-            )
+            if _installed_kernel_versions(target) == kernels:
+                break
+            if attempt == 1:
+                raise CommandError(
+                    "Driver installation kept changing the target kernels; "
+                    "could not verify a stable driver selection"
+                )
+            context.log("Target kernels changed; resolving hardware drivers again")
         context.values["third_party_drivers_installed"] = True
 
     def verify(self, context: InstallContext) -> None:
-        return None
+        if context.values.get("third_party_drivers_installed"):
+            _verify_driver_package_state(self.runner, _target(context))
 
     def cleanup(self, context: InstallContext) -> None:
         return None
+
+
+def _installed_kernel_versions(target: Path) -> frozenset[str]:
+    return frozenset(
+        path.name.removeprefix("vmlinuz-")
+        for path in (target / "boot").glob("vmlinuz-*")
+        if path.is_file()
+    )
+
+
+def _verify_driver_package_state(runner: CommandRunner, target: Path) -> None:
+    audit = runner.run(
+        ("chroot", str(target), "dpkg", "--audit"),
+        check=False,
+        timeout=300,
+    )
+    dependency_check = runner.run(
+        ("chroot", str(target), "apt-get", "check"),
+        check=False,
+        timeout=600,
+    )
+    if (
+        audit.returncode != 0
+        or audit.stdout.strip()
+        or dependency_check.returncode != 0
+    ):
+        raise CommandError(
+            "Third-party driver installation left an inconsistent package state"
+        )
+
+
+def verify_driver_boot_payload(
+    context: InstallContext, runner: CommandRunner, grub_config: str
+) -> None:
+    """Check the final boot target, after DKMS and bootloader generation."""
+    if not context.values.get("third_party_drivers_installed"):
+        return
+    target = _target(context)
+    _verify_driver_package_state(runner, target)
+    _require_target_command(target, "usr/libexec/anduinos-dracut-verify")
+    runner.run(
+        ("chroot", str(target), "/usr/libexec/anduinos-dracut-verify", "--verify-default"),
+        timeout=300,
+    )
+    packages = runner.run(
+        (
+            "chroot", str(target), "dpkg-query", "-W",
+            "-f=${binary:Package}\t${db:Status-Abbrev}\n",
+        ),
+        timeout=60,
+        log_output=False,
+    )
+    has_nvidia_driver = any(
+        name.startswith("nvidia-driver-") and status == "ii "
+        for line in packages.stdout.splitlines()
+        for name, separator, status in (line.partition("\t"),)
+        if separator
+    )
+    if not has_nvidia_driver:
+        return
+    # The generated first Linux entry is the installer's default. Use its ABI,
+    # not the newest generic kernel or the kernel running the Live installer.
+    match = re.search(
+        r"^\s*linux(?:efi|16)?\s+\S*/vmlinuz-([A-Za-z0-9._+-]+)(?:\s|$)",
+        grub_config,
+        re.MULTILINE,
+    )
+    if not match or match[1] not in _installed_kernel_versions(target):
+        raise CommandError("Could not identify the target kernel for NVIDIA verification")
+    version = match[1]
+    for module in ("nvidia", "nvidia_modeset", "nvidia_drm", "nvidia_uvm"):
+        result = runner.run(
+            (
+                "chroot",
+                str(target),
+                "modinfo", "-k", version, "-F", "vermagic", module,
+            ),
+            check=False,
+            timeout=60,
+        )
+        vermagic = result.stdout.split()
+        if result.returncode != 0 or not vermagic or vermagic[0] != version:
+            raise CommandError(
+                f"NVIDIA module {module} is missing or incompatible with target kernel {version}"
+            )

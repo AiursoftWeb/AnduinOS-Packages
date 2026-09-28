@@ -1,0 +1,1781 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-rescue-center\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-27 20:53+0000\n"
+"PO-Revision-Date: 2026-09-27 00:00+0000\n"
+"Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
+"Language-Team: hi_IN\n"
+"Language: hi_IN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: data/anduinos-rescue-center-live-shortcut.desktop:3
+msgid "Prepare AnduinOS Rescue Center desktop shortcut"
+msgstr "AnduinOS बचाव केंद्र का डेस्कटॉप शॉर्टकट तैयार करें"
+
+#: data/com.anduinos.RescueCenter.desktop:2
+#: data/com.anduinos.RescueCenter.desktop:14
+#: src/anduinos_rescue_center/app.py:100
+#, python-brace-format
+msgid "AnduinOS Rescue Center"
+msgstr "AnduinOS बचाव केंद्र"
+
+#: data/com.anduinos.RescueCenter.desktop:3
+msgid "Find and repair an installed AnduinOS system"
+msgstr "इंस्टॉल किए गए AnduinOS सिस्टम को खोजें और सुधारें"
+
+#: data/com.anduinos.RescueCenter.desktop:9
+msgid "rescue;recovery;snapshot;password;files;"
+msgstr "बचाव;पुनर्प्राप्ति;स्नैपशॉट;पासवर्ड;फ़ाइलें;"
+
+#: data/com.anduinos.RescueCenter.desktop:15
+msgid ""
+"Recover files, accounts, and snapshots from an offline AnduinOS installation"
+msgstr ""
+"ऑफ़लाइन AnduinOS इंस्टॉलेशन से फ़ाइलें, खाते और स्नैपशॉट पुनर्प्राप्त करें"
+
+#: data/com.anduinos.RescueCenter.desktop:19
+msgid ""
+"Find installed AnduinOS systems from a Live session and perform carefully "
+"scoped offline recovery operations."
+msgstr ""
+"Live सत्र से इंस्टॉल किए गए AnduinOS सिस्टम खोजें और सावधानीपूर्वक सीमित "
+"ऑफ़लाइन पुनर्प्राप्ति कार्रवाइयाँ करें।"
+
+#: scripts/anduinos-rescue-center-live-helper:12
+#, python-brace-format
+msgid "The passwordless rescue helper is restricted to AnduinOS Live"
+msgstr "पासवर्ड-रहित रिकवरी सहायक केवल AnduinOS Live तक सीमित है"
+
+#: src/anduinos_rescue_center/app.py:35 src/anduinos_rescue_center/app.py:41
+#, python-brace-format
+msgid "Unknown size"
+msgstr "आकार अज्ञात"
+
+#: src/anduinos_rescue_center/app.py:108
+#, python-brace-format
+msgid "Offline recovery"
+msgstr "ऑफ़लाइन पुनर्प्राप्ति"
+
+#: src/anduinos_rescue_center/app.py:108 src/anduinos_rescue_center/app.py:159
+#, python-brace-format
+msgid "Rescue Center"
+msgstr "बचाव केंद्र"
+
+#: src/anduinos_rescue_center/app.py:109
+#, python-brace-format
+msgid "Back"
+msgstr "पीछे जाएं"
+
+#: src/anduinos_rescue_center/app.py:113
+#, python-brace-format
+msgid "Scan again"
+msgstr "पुनः स्कैन करें"
+
+#: src/anduinos_rescue_center/app.py:175
+#, python-brace-format
+msgid "Choose another system"
+msgstr "दूसरा सिस्टम चुनें"
+
+#: src/anduinos_rescue_center/app.py:185 src/anduinos_rescue_center/app.py:463
+#: src/anduinos_rescue_center/app.py:540
+#, python-brace-format
+msgid "Home"
+msgstr "होम"
+
+#: src/anduinos_rescue_center/app.py:185
+#, python-brace-format
+msgid "Offline AnduinOS"
+msgstr "ऑफ़लाइन AnduinOS"
+
+#: src/anduinos_rescue_center/app.py:188
+#, python-brace-format
+msgid "Show recovery tools"
+msgstr "पुनर्प्राप्ति टूल दिखाएँ"
+
+#: src/anduinos_rescue_center/app.py:206
+#, python-brace-format
+msgid "This is not a Live session"
+msgstr "यह Live सत्र नहीं है"
+
+#: src/anduinos_rescue_center/app.py:208
+#, python-brace-format
+msgid ""
+"Rescue Center is designed for the AnduinOS Live environment. Continuing here"
+" is not recommended. The currently running system will remain unavailable as"
+" a repair target."
+msgstr ""
+"Rescue Center को AnduinOS Live परिवेश के लिए बनाया गया है। यहाँ जारी रखने की"
+" अनुशंसा नहीं की जाती। वर्तमान में चल रहा सिस्टम मरम्मत के लक्ष्य के रूप में"
+" उपलब्ध नहीं रहेगा।"
+
+#: src/anduinos_rescue_center/app.py:212
+#, python-brace-format
+msgid "Continue anyway"
+msgstr "फिर भी जारी रखें"
+
+#: src/anduinos_rescue_center/app.py:231
+#, python-brace-format
+msgid "Looking for AnduinOS installations"
+msgstr "AnduinOS इंस्टॉलेशन खोजे जा रहे हैं"
+
+#: src/anduinos_rescue_center/app.py:232
+#, python-brace-format
+msgid "Inspecting disks without changing their filesystems…"
+msgstr "फ़ाइल सिस्टम में कोई बदलाव किए बिना डिस्क की जाँच की जा रही है…"
+
+#: src/anduinos_rescue_center/app.py:248
+#, python-brace-format
+msgid "Could not scan this computer"
+msgstr "इस कंप्यूटर को स्कैन नहीं किया जा सका"
+
+#: src/anduinos_rescue_center/app.py:263
+#, python-brace-format
+msgid "START YOUR RECOVERY"
+msgstr "अपनी रिकवरी शुरू करें"
+
+#: src/anduinos_rescue_center/app.py:264
+#, python-brace-format
+msgid "Find the system you want to repair"
+msgstr "वह सिस्टम चुनें जिसकी मरम्मत करनी है"
+
+#: src/anduinos_rescue_center/app.py:266
+#, python-brace-format
+msgid ""
+"Choose a detected AnduinOS installation below. We inspect disks read-only "
+"and verify the selected device again before opening it."
+msgstr ""
+"नीचे पहचाने गए AnduinOS इंस्टॉलेशन में से कोई चुनें। हम डिस्क की जाँच केवल "
+"पढ़ने के लिए करते हैं और उसे खोलने से पहले चुने गए डिवाइस की फिर से पुष्टि "
+"करते हैं।"
+
+#: src/anduinos_rescue_center/app.py:292
+#, python-brace-format
+msgid "Back to detected systems"
+msgstr "पहचाने गए सिस्टम पर वापस जाएँ"
+
+#: src/anduinos_rescue_center/app.py:297
+#, python-brace-format
+msgid "All detected disks and partitions"
+msgstr "सभी पहचानी गई डिस्क और पार्टिशन"
+
+#: src/anduinos_rescue_center/app.py:298
+#, python-brace-format
+msgid ""
+"For systems not found automatically. The selected partition is checked again"
+" before repair."
+msgstr ""
+"जो सिस्टम अपने-आप नहीं मिले, उनके लिए। मरम्मत से पहले चुने गए पार्टिशन की "
+"फिर से जाँच की जाएगी।"
+
+#: src/anduinos_rescue_center/app.py:307
+#, python-brace-format
+msgid "No AnduinOS installation found"
+msgstr "AnduinOS का कोई इंस्टॉलेशन नहीं मिला"
+
+#: src/anduinos_rescue_center/app.py:308
+#, python-brace-format
+msgid ""
+"Use Advanced selection to inspect the disks and partitions on this computer."
+msgstr ""
+"इस कंप्यूटर की डिस्क और पार्टिशन देखने के लिए उन्नत चयन का उपयोग करें।"
+
+#: src/anduinos_rescue_center/app.py:313
+#, python-brace-format
+msgid "Advanced selection"
+msgstr "उन्नत चयन"
+
+#: src/anduinos_rescue_center/app.py:327
+#, python-brace-format
+msgid "Open {system} installation on {partition}"
+msgstr "{partition} पर {system} इंस्टॉलेशन खोलें"
+
+#: src/anduinos_rescue_center/app.py:329
+#, python-brace-format
+msgid "unknown partition"
+msgstr "अज्ञात पार्टिशन"
+
+#: src/anduinos_rescue_center/app.py:344 src/anduinos_rescue_center/app.py:709
+#: src/anduinos_rescue_center/app.py:735 src/anduinos_rescue_center/app.py:736
+#: src/anduinos_rescue_center/app.py:737 src/anduinos_rescue_center/app.py:738
+#: src/anduinos_rescue_center/app.py:739
+#: src/anduinos_rescue_center/app.py:1072
+#: src/anduinos_rescue_center/app.py:1080
+#, python-brace-format
+msgid "Unknown"
+msgstr "अज्ञात"
+
+#: src/anduinos_rescue_center/app.py:349 src/anduinos_rescue_center/app.py:393
+#, python-brace-format
+msgid "Running system"
+msgstr "चल रहा सिस्टम"
+
+#: src/anduinos_rescue_center/app.py:350 src/anduinos_rescue_center/app.py:368
+#: src/anduinos_rescue_center/app.py:395
+#, python-brace-format
+msgid "Live installation media"
+msgstr "Live इंस्टॉलेशन मीडिया"
+
+#: src/anduinos_rescue_center/app.py:351
+#, python-brace-format
+msgid "Unavailable for recovery"
+msgstr "रिकवरी के लिए उपलब्ध नहीं"
+
+#: src/anduinos_rescue_center/app.py:363
+#, python-brace-format
+msgid "Disk"
+msgstr "डिस्क"
+
+#: src/anduinos_rescue_center/app.py:380
+#, python-brace-format
+msgid "Unknown filesystem"
+msgstr "अज्ञात फ़ाइल सिस्टम"
+
+#: src/anduinos_rescue_center/app.py:383
+#, python-brace-format
+msgid "Could not inspect"
+msgstr "जाँच नहीं हो सकी"
+
+#: src/anduinos_rescue_center/app.py:397
+#, python-brace-format
+msgid "Windows cannot be repaired here"
+msgstr "यहाँ Windows की मरम्मत नहीं की जा सकती"
+
+#: src/anduinos_rescue_center/app.py:399
+#, python-brace-format
+msgid "Not available for recovery"
+msgstr "रिकवरी के लिए उपलब्ध नहीं"
+
+#: src/anduinos_rescue_center/app.py:407
+#, python-brace-format
+msgid "Inspecting the selected system"
+msgstr "चयनित सिस्टम की जाँच हो रही है"
+
+#: src/anduinos_rescue_center/app.py:408
+#, python-brace-format
+msgid "Re-checking its disk identity and reading system information…"
+msgstr ""
+"डिस्क की पहचान फिर से जाँची जा रही है और सिस्टम की जानकारी पढ़ी जा रही है…"
+
+#: src/anduinos_rescue_center/app.py:427 src/anduinos_rescue_center/app.py:440
+#, python-brace-format
+msgid "Could not open this installation"
+msgstr "इस इंस्टॉलेशन को खोला नहीं जा सका"
+
+#: src/anduinos_rescue_center/app.py:430 src/anduinos_rescue_center/app.py:665
+#: src/anduinos_rescue_center/app.py:690 src/anduinos_rescue_center/app.py:812
+#: src/anduinos_rescue_center/app.py:981
+#: src/anduinos_rescue_center/app.py:1224
+#: src/anduinos_rescue_center/app.py:1449
+#, python-brace-format
+msgid "Close"
+msgstr "बंद करें"
+
+#: src/anduinos_rescue_center/app.py:451
+#, python-brace-format
+msgid "SELECTED INSTALLATION"
+msgstr "चयनित इंस्टॉलेशन"
+
+#: src/anduinos_rescue_center/app.py:464 src/anduinos_rescue_center/app.py:540
+#, python-brace-format
+msgid "Password reset"
+msgstr "पासवर्ड रीसेट"
+
+#: src/anduinos_rescue_center/app.py:465 src/anduinos_rescue_center/app.py:540
+#, python-brace-format
+msgid "File browser"
+msgstr "फ़ाइल ब्राउज़र"
+
+#: src/anduinos_rescue_center/app.py:469 src/anduinos_rescue_center/app.py:541
+#: src/anduinos_rescue_center/app.py:603
+#: src/anduinos_rescue_center/app.py:1262
+#, python-brace-format
+msgid "Snapshots & restore"
+msgstr "स्नैपशॉट और पुनर्स्थापना"
+
+#: src/anduinos_rescue_center/app.py:472 src/anduinos_rescue_center/app.py:541
+#, python-brace-format
+msgid "Boot repair"
+msgstr "बूट की मरम्मत"
+
+#: src/anduinos_rescue_center/app.py:473 src/anduinos_rescue_center/app.py:542
+#: src/anduinos_rescue_center/app.py:609 src/anduinos_rescue_center/app.py:640
+#, python-brace-format
+msgid "Emergency terminal"
+msgstr "आपातकालीन टर्मिनल"
+
+#: src/anduinos_rescue_center/app.py:475 src/anduinos_rescue_center/app.py:542
+#: src/anduinos_rescue_center/app.py:612
+#, python-brace-format
+msgid "System details"
+msgstr "सिस्टम विवरण"
+
+#: src/anduinos_rescue_center/app.py:479
+#, python-brace-format
+msgid "Open {page} page"
+msgstr "{page} पृष्ठ खोलें"
+
+#: src/anduinos_rescue_center/app.py:578
+#, python-brace-format
+msgid "A calmer way back"
+msgstr "वापसी का सहज रास्ता"
+
+#: src/anduinos_rescue_center/app.py:578
+#, python-brace-format
+msgid "RECOVERY WORKSPACE"
+msgstr "रिकवरी कार्यक्षेत्र"
+
+#: src/anduinos_rescue_center/app.py:579
+#, python-brace-format
+msgid ""
+"Work on this offline installation. Choose a tool on the left; your running "
+"system remains untouched."
+msgstr ""
+"इस ऑफ़लाइन इंस्टॉलेशन पर काम करें। बाईं ओर कोई टूल चुनें; आपका चालू सिस्टम "
+"अप्रभावित रहेगा।"
+
+#: src/anduinos_rescue_center/app.py:589
+#, python-brace-format
+msgid "Offline installation · {partition}"
+msgstr "ऑफ़लाइन इंस्टॉलेशन · {partition}"
+
+#: src/anduinos_rescue_center/app.py:590
+#, python-brace-format
+msgid "Unknown partition"
+msgstr "अज्ञात पार्टिशन"
+
+#: src/anduinos_rescue_center/app.py:596
+#, python-brace-format
+msgid "Recovery tools"
+msgstr "रिकवरी टूल"
+
+#: src/anduinos_rescue_center/app.py:598
+#, python-brace-format
+msgid "Reset a password"
+msgstr "पासवर्ड रीसेट करें"
+
+#: src/anduinos_rescue_center/app.py:598
+#, python-brace-format
+msgid "Restore access to a local account."
+msgstr "स्थानीय खाते का ऐक्सेस बहाल करें।"
+
+#: src/anduinos_rescue_center/app.py:599
+#, python-brace-format
+msgid "Browse and copy files"
+msgstr "फ़ाइलें ब्राउज़ करें और कॉपी करें"
+
+#: src/anduinos_rescue_center/app.py:599
+#, python-brace-format
+msgid "Explore the offline system and copy data out."
+msgstr "ऑफ़लाइन सिस्टम देखें और डेटा कॉपी करके बाहर निकालें।"
+
+#: src/anduinos_rescue_center/app.py:604
+#, python-brace-format
+msgid "Create a recovery point or roll back the system."
+msgstr "रिकवरी पॉइंट बनाएँ या सिस्टम को पहले की स्थिति में लौटाएँ।"
+
+#: src/anduinos_rescue_center/app.py:608
+#, python-brace-format
+msgid "Check the installed kernel, GRUB and EFI boot path."
+msgstr "इंस्टॉल किए गए कर्नेल, GRUB और EFI बूट पथ की जाँच करें।"
+
+#: src/anduinos_rescue_center/app.py:608
+#: src/anduinos_rescue_center/app.py:1016
+#, python-brace-format
+msgid "Diagnose and repair boot"
+msgstr "बूट की जाँच करें और मरम्मत करें"
+
+#: src/anduinos_rescue_center/app.py:609
+#, python-brace-format
+msgid "Open an expert shell in this offline system."
+msgstr "इस ऑफ़लाइन सिस्टम में विशेषज्ञ शेल खोलें।"
+
+#: src/anduinos_rescue_center/app.py:612
+#, python-brace-format
+msgid "Review the installation before making changes."
+msgstr "बदलाव करने से पहले इंस्टॉलेशन की समीक्षा करें।"
+
+#: src/anduinos_rescue_center/app.py:633
+#, python-brace-format
+msgid ""
+"Snapshot restore is available only for the standard AnduinOS Btrfs layout. "
+"File recovery and password reset remain available here."
+msgstr ""
+"स्नैपशॉट पुनर्स्थापना केवल मानक AnduinOS Btrfs लेआउट के लिए उपलब्ध है। फ़ाइल"
+" पुनर्प्राप्ति और पासवर्ड रीसेट यहाँ उपलब्ध हैं।"
+
+#: src/anduinos_rescue_center/app.py:640
+#, python-brace-format
+msgid "ADVANCED RECOVERY"
+msgstr "उन्नत पुनर्प्राप्ति"
+
+#: src/anduinos_rescue_center/app.py:641
+#, python-brace-format
+msgid ""
+"Open a root shell inside the selected offline system. Commands can change or"
+" delete its files."
+msgstr ""
+"चुने हुए ऑफ़लाइन सिस्टम के भीतर रूट शेल खोलें। कमांड इसकी फ़ाइलों में बदलाव "
+"कर सकते हैं या उन्हें मिटा सकते हैं।"
+
+#: src/anduinos_rescue_center/app.py:644
+#, python-brace-format
+msgid ""
+"The terminal will show the target partition before entering it. Type exit "
+"when finished. Recovery will unmount its temporary filesystems and report "
+"any cleanup failure."
+msgstr ""
+"इसमें प्रवेश करने से पहले टर्मिनल लक्ष्य पार्टीशन दिखाएगा। काम पूरा होने पर "
+"exit टाइप करें। रिकवरी अपने अस्थायी फ़ाइल सिस्टम को अनमाउंट करेगी और सफ़ाई "
+"में हुई किसी भी विफलता की सूचना देगी।"
+
+#: src/anduinos_rescue_center/app.py:648
+#, python-brace-format
+msgid "Open target terminal"
+msgstr "लक्ष्य टर्मिनल खोलें"
+
+#: src/anduinos_rescue_center/app.py:653
+#, python-brace-format
+msgid "Open Live terminal instead"
+msgstr "इसके बजाय Live टर्मिनल खोलें"
+
+#: src/anduinos_rescue_center/app.py:664 src/anduinos_rescue_center/app.py:689
+#, python-brace-format
+msgid "Could not open terminal"
+msgstr "टर्मिनल नहीं खुल सका"
+
+#: src/anduinos_rescue_center/app.py:674
+#, python-brace-format
+msgid "Open an expert root shell?"
+msgstr "विशेषज्ञ रूट शेल खोलें?"
+
+#: src/anduinos_rescue_center/app.py:675
+#, python-brace-format
+msgid ""
+"Target: {path}\n"
+"\n"
+"The shell can make unrestricted changes to this offline installation and can also access Live hardware. Use it only if you understand the commands."
+msgstr ""
+"लक्ष्य: {path}\n"
+"\n"
+"यह शेल इस ऑफ़लाइन इंस्टॉलेशन में बिना किसी प्रतिबंध के बदलाव कर सकता है और Live हार्डवेयर तक भी पहुँच सकता है। इसका उपयोग केवल तभी करें, जब आप कमांड समझते हों।"
+
+#: src/anduinos_rescue_center/app.py:678 src/anduinos_rescue_center/app.py:760
+#: src/anduinos_rescue_center/app.py:1132
+#: src/anduinos_rescue_center/app.py:1365
+#: src/anduinos_rescue_center/app.py:1411
+#, python-brace-format
+msgid "Cancel"
+msgstr "रद्द करें"
+
+#: src/anduinos_rescue_center/app.py:679
+#, python-brace-format
+msgid "Open terminal"
+msgstr "टर्मिनल खोलें"
+
+#: src/anduinos_rescue_center/app.py:699
+#, python-brace-format
+msgid "ACCOUNT ACCESS"
+msgstr "खाता पहुँच"
+
+#: src/anduinos_rescue_center/app.py:699
+#, python-brace-format
+msgid "Reset a local password"
+msgstr "स्थानीय पासवर्ड रीसेट करें"
+
+#: src/anduinos_rescue_center/app.py:700
+#, python-brace-format
+msgid ""
+"Choose an account on the offline installation. Existing encrypted login "
+"keyrings are not unlocked by a password reset."
+msgstr ""
+"ऑफ़लाइन इंस्टॉलेशन में कोई खाता चुनें। पासवर्ड रीसेट करने से मौजूदा "
+"एन्क्रिप्ट किए गए लॉगिन कीरिंग अनलॉक नहीं होते।"
+
+#: src/anduinos_rescue_center/app.py:702
+#, python-brace-format
+msgid "Local accounts"
+msgstr "स्थानीय खाते"
+
+#: src/anduinos_rescue_center/app.py:712
+#, python-brace-format
+msgid "Password locked"
+msgstr "पासवर्ड लॉक है"
+
+#: src/anduinos_rescue_center/app.py:715 src/anduinos_rescue_center/app.py:761
+#, python-brace-format
+msgid "Reset password"
+msgstr "पासवर्ड रीसेट करें"
+
+#: src/anduinos_rescue_center/app.py:721
+#, python-brace-format
+msgid "No local accounts found"
+msgstr "कोई स्थानीय खाता नहीं मिला"
+
+#: src/anduinos_rescue_center/app.py:728
+#, python-brace-format
+msgid "INSTALLATION DETAILS"
+msgstr "इंस्टॉलेशन का विवरण"
+
+#: src/anduinos_rescue_center/app.py:728
+#, python-brace-format
+msgid "Know what you are repairing"
+msgstr "जानें कि आप किसकी मरम्मत कर रहे हैं"
+
+#: src/anduinos_rescue_center/app.py:729
+#, python-brace-format
+msgid ""
+"Information read from the selected offline installation. Its device identity"
+" is rechecked before each operation."
+msgstr ""
+"चुने गए ऑफ़लाइन इंस्टॉलेशन से पढ़ी गई जानकारी। प्रत्येक कार्रवाई से पहले "
+"उसकी डिवाइस पहचान की फिर से जाँच की जाती है।"
+
+#: src/anduinos_rescue_center/app.py:731
+#, python-brace-format
+msgid "System"
+msgstr "सिस्टम"
+
+#: src/anduinos_rescue_center/app.py:734
+#, python-brace-format
+msgid "Operating system"
+msgstr "ऑपरेटिंग सिस्टम"
+
+#: src/anduinos_rescue_center/app.py:735
+#, python-brace-format
+msgid "Version"
+msgstr "संस्करण"
+
+#: src/anduinos_rescue_center/app.py:736
+#, python-brace-format
+msgid "Computer name"
+msgstr "कंप्यूटर का नाम"
+
+#: src/anduinos_rescue_center/app.py:737
+#, python-brace-format
+msgid "Filesystem"
+msgstr "फ़ाइल सिस्टम"
+
+#: src/anduinos_rescue_center/app.py:738
+#, python-brace-format
+msgid "Partition"
+msgstr "पार्टीशन"
+
+#: src/anduinos_rescue_center/app.py:739
+#, python-brace-format
+msgid "Installed kernels"
+msgstr "इंस्टॉल किए गए कर्नेल"
+
+#: src/anduinos_rescue_center/app.py:740
+#, python-brace-format
+msgid "Available"
+msgstr "उपलब्ध"
+
+#: src/anduinos_rescue_center/app.py:740
+#, python-brace-format
+msgid "Requires the standard AnduinOS Btrfs layout"
+msgstr "इसके लिए मानक AnduinOS Btrfs लेआउट आवश्यक है"
+
+#: src/anduinos_rescue_center/app.py:740
+#, python-brace-format
+msgid "Snapshots"
+msgstr "स्नैपशॉट"
+
+#: src/anduinos_rescue_center/app.py:746
+#, python-brace-format
+msgid "New password"
+msgstr "नया पासवर्ड"
+
+#: src/anduinos_rescue_center/app.py:747
+#, python-brace-format
+msgid "Confirm new password"
+msgstr "नए पासवर्ड की पुष्टि करें"
+
+#: src/anduinos_rescue_center/app.py:753
+#, python-brace-format
+msgid "Reset the password for {username}?"
+msgstr "क्या {username} का पासवर्ड रीसेट करें?"
+
+#: src/anduinos_rescue_center/app.py:755
+#, python-brace-format
+msgid ""
+"This changes the local login password on the selected offline system. It "
+"does not unlock an existing encrypted login keyring."
+msgstr ""
+"इससे चुने गए ऑफ़लाइन सिस्टम का स्थानीय लॉगिन पासवर्ड बदल जाएगा। इससे मौजूदा "
+"एन्क्रिप्टेड लॉगिन कीरिंग अनलॉक नहीं होगी।"
+
+#: src/anduinos_rescue_center/app.py:782
+#, python-brace-format
+msgid "Resetting the password"
+msgstr "पासवर्ड रीसेट हो रहा है"
+
+#: src/anduinos_rescue_center/app.py:783
+#, python-brace-format
+msgid "Writing the new local account password safely…"
+msgstr "नया स्थानीय खाता पासवर्ड सुरक्षित रूप से लिखा जा रहा है…"
+
+#: src/anduinos_rescue_center/app.py:809
+#, python-brace-format
+msgid "Password reset complete"
+msgstr "पासवर्ड रीसेट पूरा हुआ"
+
+#: src/anduinos_rescue_center/app.py:810
+#, python-brace-format
+msgid "The local login password for {username} was changed."
+msgstr "{username} का स्थानीय लॉगिन पासवर्ड बदल दिया गया है।"
+
+#: src/anduinos_rescue_center/app.py:834
+#, python-brace-format
+msgid "Parent folder"
+msgstr "मूल फ़ोल्डर"
+
+#: src/anduinos_rescue_center/app.py:838
+#, python-brace-format
+msgid "Offline filesystem"
+msgstr "ऑफ़लाइन फ़ाइल सिस्टम"
+
+#: src/anduinos_rescue_center/app.py:851
+#, python-brace-format
+msgid "FILE RECOVERY"
+msgstr "फ़ाइल पुनर्प्राप्ति"
+
+#: src/anduinos_rescue_center/app.py:852
+#, python-brace-format
+msgid "Browse and copy your files"
+msgstr "अपनी फ़ाइलें देखें और कॉपी करें"
+
+#: src/anduinos_rescue_center/app.py:853
+#, python-brace-format
+msgid "Explore this offline installation without modifying its files."
+msgstr "इस ऑफ़लाइन इंस्टॉलेशन की फ़ाइलों में बिना कोई बदलाव किए उन्हें देखें।"
+
+#: src/anduinos_rescue_center/app.py:868
+#, python-brace-format
+msgid "Opening offline files"
+msgstr "ऑफ़लाइन फ़ाइलें खोली जा रही हैं"
+
+#: src/anduinos_rescue_center/app.py:869
+#, python-brace-format
+msgid "Reading this folder without changing the installed system…"
+msgstr ""
+"इंस्टॉल किए गए सिस्टम में कोई बदलाव किए बिना यह फ़ोल्डर पढ़ा जा रहा है…"
+
+#: src/anduinos_rescue_center/app.py:898
+#, python-brace-format
+msgid "File"
+msgstr "फ़ाइल"
+
+#: src/anduinos_rescue_center/app.py:898
+#, python-brace-format
+msgid "Folder"
+msgstr "फ़ोल्डर"
+
+#: src/anduinos_rescue_center/app.py:898
+#, python-brace-format
+msgid "Other"
+msgstr "अन्य"
+
+#: src/anduinos_rescue_center/app.py:906
+#, python-brace-format
+msgid "Copy out"
+msgstr "बाहर कॉपी करें"
+
+#: src/anduinos_rescue_center/app.py:917
+#, python-brace-format
+msgid "This folder contains more items"
+msgstr "इस फ़ोल्डर में और भी आइटम हैं"
+
+#: src/anduinos_rescue_center/app.py:918
+#, python-brace-format
+msgid "Only the first 5,000 entries are shown."
+msgstr "केवल पहले 5,000 प्रविष्टियाँ दिखाई गई हैं।"
+
+#: src/anduinos_rescue_center/app.py:930
+#, python-brace-format
+msgid "Could not read offline files"
+msgstr "ऑफ़लाइन फ़ाइलें पढ़ी नहीं जा सकीं"
+
+#: src/anduinos_rescue_center/app.py:932
+#: src/anduinos_rescue_center/app.py:1347
+#, python-brace-format
+msgid "Try again"
+msgstr "फिर से प्रयास करें"
+
+#: src/anduinos_rescue_center/app.py:941
+#, python-brace-format
+msgid "Choose where to copy this item"
+msgstr "इस आइटम को कॉपी करने की जगह चुनें"
+
+#: src/anduinos_rescue_center/app.py:956
+#, python-brace-format
+msgid "Copying rescued data"
+msgstr "बचाया गया डेटा कॉपी हो रहा है"
+
+#: src/anduinos_rescue_center/app.py:957
+#, python-brace-format
+msgid "Keep the computer powered on until copying finishes."
+msgstr "कॉपी पूरी होने तक कंप्यूटर चालू रखें।"
+
+#: src/anduinos_rescue_center/app.py:978
+#, python-brace-format
+msgid "Copy complete"
+msgstr "कॉपी पूरी हुई"
+
+#: src/anduinos_rescue_center/app.py:979
+#, python-brace-format
+msgid ""
+"The rescued item was copied to:\n"
+"{path}"
+msgstr ""
+"बचाया गया आइटम यहाँ कॉपी किया गया:\n"
+"{path}"
+
+#: src/anduinos_rescue_center/app.py:1001
+#: src/anduinos_rescue_center/app.py:1016
+#, python-brace-format
+msgid "BOOT RECOVERY"
+msgstr "बूट रिकवरी"
+
+#: src/anduinos_rescue_center/app.py:1004
+#, python-brace-format
+msgid "Check boot again"
+msgstr "बूट फिर से जाँचें"
+
+#: src/anduinos_rescue_center/app.py:1017
+#, python-brace-format
+msgid ""
+"Inspect this offline installation before making changes. Repair is offered "
+"only when its EFI partition can be identified on the selected disk."
+msgstr ""
+"बदलाव करने से पहले इस ऑफ़लाइन इंस्टॉलेशन की जाँच करें। मरम्मत का विकल्प केवल"
+" तभी उपलब्ध है जब चुनी गई डिस्क पर उसका EFI पार्टीशन पहचाना जा सके।"
+
+#: src/anduinos_rescue_center/app.py:1019
+#, python-brace-format
+msgid "Boot path"
+msgstr "बूट पथ"
+
+#: src/anduinos_rescue_center/app.py:1021
+#, python-brace-format
+msgid "Findings"
+msgstr "जाँच के निष्कर्ष"
+
+#: src/anduinos_rescue_center/app.py:1025
+#, python-brace-format
+msgid "Rebuild AnduinOS boot"
+msgstr "AnduinOS बूट का पुनर्निर्माण करें"
+
+#: src/anduinos_rescue_center/app.py:1030
+#, python-brace-format
+msgid "View last repair output"
+msgstr "पिछली मरम्मत का आउटपुट देखें"
+
+#: src/anduinos_rescue_center/app.py:1051
+#, python-brace-format
+msgid "Checking the offline boot path"
+msgstr "ऑफ़लाइन बूट पथ की जाँच की जा रही है"
+
+#: src/anduinos_rescue_center/app.py:1052
+#, python-brace-format
+msgid ""
+"Reading the installed kernel, GRUB configuration, EFI files and firmware "
+"entry without changing them…"
+msgstr ""
+"इंस्टॉल किए गए कर्नेल, GRUB कॉन्फ़िगरेशन, EFI फ़ाइलों और फ़र्मवेयर प्रविष्टि"
+" को बिना बदले पढ़ा जा रहा है…"
+
+#: src/anduinos_rescue_center/app.py:1072
+#, python-brace-format
+msgid "Selected installation"
+msgstr "चयनित इंस्टॉलेशन"
+
+#: src/anduinos_rescue_center/app.py:1073
+#, python-brace-format
+msgid "EFI partition"
+msgstr "EFI विभाजन"
+
+#: src/anduinos_rescue_center/app.py:1073
+#, python-brace-format
+msgid "Not identified"
+msgstr "पहचान नहीं हुई"
+
+#: src/anduinos_rescue_center/app.py:1074
+#, python-brace-format
+msgid "Kernel and initrd pairs"
+msgstr "कर्नेल और initrd के जोड़े"
+
+#: src/anduinos_rescue_center/app.py:1074
+#, python-brace-format
+msgid "{complete} of {total}"
+msgstr "{complete} में से {total}"
+
+#: src/anduinos_rescue_center/app.py:1076
+#: src/anduinos_rescue_center/app.py:1079
+#, python-brace-format
+msgid "Found"
+msgstr "मिला"
+
+#: src/anduinos_rescue_center/app.py:1076
+#, python-brace-format
+msgid "GRUB kernel entry"
+msgstr "GRUB कर्नेल प्रविष्टि"
+
+#: src/anduinos_rescue_center/app.py:1076
+#, python-brace-format
+msgid "Missing or incomplete"
+msgstr "गायब या अधूरा"
+
+#: src/anduinos_rescue_center/app.py:1077
+#, python-brace-format
+msgid "AnduinOS EFI loader"
+msgstr "AnduinOS EFI लोडर"
+
+#: src/anduinos_rescue_center/app.py:1077
+#: src/anduinos_rescue_center/app.py:1079
+#, python-brace-format
+msgid "Missing"
+msgstr "गुम"
+
+#: src/anduinos_rescue_center/app.py:1077
+#, python-brace-format
+msgid "Present"
+msgstr "मौजूद"
+
+#: src/anduinos_rescue_center/app.py:1078
+#, python-brace-format
+msgid "Firmware boot entry"
+msgstr "फ़र्मवेयर बूट प्रविष्टि"
+
+#: src/anduinos_rescue_center/app.py:1079
+#: src/anduinos_rescue_center/app.py:1336
+#, python-brace-format
+msgid "Unavailable"
+msgstr "अनुपलब्ध"
+
+#: src/anduinos_rescue_center/app.py:1091
+#, python-brace-format
+msgid ""
+"Static boot checks found no missing component. A real reboot is still "
+"required."
+msgstr ""
+"स्थिर बूट जाँच में कोई अनुपस्थित घटक नहीं मिला। फिर भी वास्तविक रीबूट आवश्यक"
+" है।"
+
+#: src/anduinos_rescue_center/app.py:1100
+#, python-brace-format
+msgid "Repair failed: {error}"
+msgstr "मरम्मत विफल: {error}"
+
+#: src/anduinos_rescue_center/app.py:1105
+#, python-brace-format
+msgid "Repair stopped. Review the output before trying again."
+msgstr "मरम्मत रोक दी गई। दोबारा कोशिश करने से पहले आउटपुट की समीक्षा करें।"
+
+#: src/anduinos_rescue_center/app.py:1107
+#: src/anduinos_rescue_center/client.py:229
+#: src/anduinos_rescue_center/client.py:232
+#, python-brace-format
+msgid "Boot repair failed"
+msgstr "बूट मरम्मत विफल"
+
+#: src/anduinos_rescue_center/app.py:1112
+#, python-brace-format
+msgid "Boot check or repair failed"
+msgstr "बूट जाँच या मरम्मत विफल"
+
+#: src/anduinos_rescue_center/app.py:1114
+#, python-brace-format
+msgid "Check again"
+msgstr "फिर से जाँचें"
+
+#: src/anduinos_rescue_center/app.py:1127
+#, python-brace-format
+msgid "Rebuild boot for this installation?"
+msgstr "इस इंस्टॉलेशन के लिए बूट फिर से बनाएँ?"
+
+#: src/anduinos_rescue_center/app.py:1128
+#, python-brace-format
+msgid ""
+"System: {system}\n"
+"EFI partition: {esp}\n"
+"\n"
+"This will:\n"
+"• {changes}\n"
+"\n"
+"Other EFI vendors and the removable EFI/BOOT path will not be changed."
+msgstr ""
+"सिस्टम: {system}\n"
+"EFI पार्टीशन: {esp}\n"
+"\n"
+"इससे:\n"
+"• {changes}\n"
+"\n"
+"अन्य EFI विक्रेताओं और हटाने योग्य EFI/BOOT पथ में कोई बदलाव नहीं होगा।"
+
+#: src/anduinos_rescue_center/app.py:1133
+#, python-brace-format
+msgid "Repair boot"
+msgstr "बूट की मरम्मत करें"
+
+#: src/anduinos_rescue_center/app.py:1148
+#, python-brace-format
+msgid "Rebuilding the offline boot path"
+msgstr "ऑफ़लाइन बूट पथ का पुनर्निर्माण हो रहा है"
+
+#: src/anduinos_rescue_center/app.py:1149
+#, python-brace-format
+msgid ""
+"Keep the computer powered on. The stage and output below update as work "
+"proceeds."
+msgstr ""
+"कंप्यूटर को चालू रखें। काम आगे बढ़ने के साथ चरण और नीचे दिया गया आउटपुट "
+"अपडेट होगा।"
+
+#: src/anduinos_rescue_center/app.py:1168
+#, python-brace-format
+msgid "Preparing repair…"
+msgstr "मरम्मत की तैयारी हो रही है…"
+
+#: src/anduinos_rescue_center/app.py:1172
+#, python-brace-format
+msgid "View output"
+msgstr "आउटपुट देखें"
+
+#: src/anduinos_rescue_center/app.py:1220
+#, python-brace-format
+msgid "Boot repair finished"
+msgstr "बूट मरम्मत पूरी हुई"
+
+#: src/anduinos_rescue_center/app.py:1220
+#, python-brace-format
+msgid "Boot repair needs review"
+msgstr "बूट मरम्मत की समीक्षा आवश्यक है"
+
+#: src/anduinos_rescue_center/app.py:1221
+#, python-brace-format
+msgid ""
+"Static boot checks passed. Shut down Live, remove the installation media and"
+" test booting."
+msgstr ""
+"स्थिर बूट जाँच सफल हुई। Live सिस्टम को शट डाउन करें, इंस्टॉलेशन मीडिया "
+"निकालें और बूट करके जाँचें।"
+
+#: src/anduinos_rescue_center/app.py:1222
+#, python-brace-format
+msgid ""
+"Some checks still report a problem. Review the findings before rebooting."
+msgstr ""
+"कुछ जाँचों में अब भी समस्या दिखाई दे रही है। रीबूट करने से पहले निष्कर्षों "
+"की समीक्षा करें।"
+
+#: src/anduinos_rescue_center/app.py:1241
+#, python-brace-format
+msgid "SYSTEM RECOVERY POINTS"
+msgstr "सिस्टम पुनर्प्राप्ति बिंदु"
+
+#: src/anduinos_rescue_center/app.py:1244
+#, python-brace-format
+msgid "Create snapshot"
+msgstr "स्नैपशॉट बनाएँ"
+
+#: src/anduinos_rescue_center/app.py:1261
+#, python-brace-format
+msgid "SYSTEM RECOVERY"
+msgstr "सिस्टम पुनर्प्राप्ति"
+
+#: src/anduinos_rescue_center/app.py:1263
+#, python-brace-format
+msgid ""
+"Create a recovery point or return this offline system to an earlier state. "
+"Personal files in Home are not part of system snapshots."
+msgstr ""
+"पुनर्प्राप्ति बिंदु बनाएँ या इस ऑफ़लाइन सिस्टम को उसकी पिछली स्थिति में "
+"लौटाएँ। Home में मौजूद निजी फ़ाइलें सिस्टम स्नैपशॉट का हिस्सा नहीं हैं।"
+
+#: src/anduinos_rescue_center/app.py:1277
+#, python-brace-format
+msgid "Loading system snapshots"
+msgstr "सिस्टम स्नैपशॉट लोड हो रहे हैं"
+
+#: src/anduinos_rescue_center/app.py:1279
+#, python-brace-format
+msgid "Checking recovery metadata and completing any interrupted restore…"
+msgstr ""
+"रिकवरी मेटाडेटा जाँचा जा रहा है और बीच में रुकी हुई रीस्टोर प्रक्रिया पूरी "
+"की जा रही है…"
+
+#: src/anduinos_rescue_center/app.py:1299
+#, python-brace-format
+msgid "No system snapshots"
+msgstr "कोई सिस्टम स्नैपशॉट नहीं"
+
+#: src/anduinos_rescue_center/app.py:1300
+#, python-brace-format
+msgid "Create a snapshot before making risky system changes."
+msgstr "सिस्टम में जोखिम भरे बदलाव करने से पहले स्नैपशॉट बनाएँ।"
+
+#: src/anduinos_rescue_center/app.py:1306
+#, python-brace-format
+msgid "System snapshot"
+msgstr "सिस्टम स्नैपशॉट"
+
+#: src/anduinos_rescue_center/app.py:1311
+#, python-brace-format
+msgid "Factory"
+msgstr "फ़ैक्टरी"
+
+#: src/anduinos_rescue_center/app.py:1311
+#, python-brace-format
+msgid "Manual"
+msgstr "मैनुअल"
+
+#: src/anduinos_rescue_center/app.py:1312
+#, python-brace-format
+msgid "Automatic"
+msgstr "स्वचालित"
+
+#: src/anduinos_rescue_center/app.py:1312
+#, python-brace-format
+msgid "Before update"
+msgstr "अपडेट से पहले"
+
+#: src/anduinos_rescue_center/app.py:1313
+#, python-brace-format
+msgid "After update"
+msgstr "अपडेट के बाद"
+
+#: src/anduinos_rescue_center/app.py:1313
+#, python-brace-format
+msgid "Before restore"
+msgstr "रीस्टोर से पहले"
+
+#: src/anduinos_rescue_center/app.py:1314
+#, python-brace-format
+msgid "Imported"
+msgstr "आयातित"
+
+#: src/anduinos_rescue_center/app.py:1317
+#, python-brace-format
+msgid "Creating"
+msgstr "बनाया जा रहा है"
+
+#: src/anduinos_rescue_center/app.py:1317
+#, python-brace-format
+msgid "Ready"
+msgstr "तैयार"
+
+#: src/anduinos_rescue_center/app.py:1318
+#, python-brace-format
+msgid "Broken"
+msgstr "खराब"
+
+#: src/anduinos_rescue_center/app.py:1318
+#, python-brace-format
+msgid "Incomplete"
+msgstr "अपूर्ण"
+
+#: src/anduinos_rescue_center/app.py:1319
+#, python-brace-format
+msgid "Deleting"
+msgstr "हटाया जा रहा है"
+
+#: src/anduinos_rescue_center/app.py:1328
+#, python-brace-format
+msgid "Restore"
+msgstr "रीस्टोर करें"
+
+#: src/anduinos_rescue_center/app.py:1345
+#: src/anduinos_rescue_center/snapshots.py:124
+#, python-brace-format
+msgid "Snapshot operation failed"
+msgstr "स्नैपशॉट कार्रवाई विफल रही"
+
+#: src/anduinos_rescue_center/app.py:1356
+#, python-brace-format
+msgid "Snapshot name"
+msgstr "स्नैपशॉट का नाम"
+
+#: src/anduinos_rescue_center/app.py:1361
+#, python-brace-format
+msgid "Create a snapshot of the offline system?"
+msgstr "ऑफ़लाइन सिस्टम का स्नैपशॉट बनाएँ?"
+
+#: src/anduinos_rescue_center/app.py:1362
+#, python-brace-format
+msgid "Personal files in Home are not included in system snapshots."
+msgstr ""
+"Home में मौजूद व्यक्तिगत फ़ाइलें सिस्टम स्नैपशॉट में शामिल नहीं होतीं।"
+
+#: src/anduinos_rescue_center/app.py:1366
+#, python-brace-format
+msgid "Create"
+msgstr "बनाएं"
+
+#: src/anduinos_rescue_center/app.py:1384
+#, python-brace-format
+msgid "Creating system snapshot"
+msgstr "सिस्टम स्नैपशॉट बनाया जा रहा है"
+
+#: src/anduinos_rescue_center/app.py:1385
+#, python-brace-format
+msgid "Keep the computer powered on until this finishes."
+msgstr "यह प्रक्रिया पूरी होने तक कंप्यूटर चालू रखें।"
+
+#: src/anduinos_rescue_center/app.py:1399
+#, python-brace-format
+msgid "Create a safety snapshot of the current system first"
+msgstr "पहले मौजूदा सिस्टम का सुरक्षा स्नैपशॉट बनाएँ"
+
+#: src/anduinos_rescue_center/app.py:1403
+#, python-brace-format
+msgid "Restore {snapshot}?"
+msgstr "{snapshot} पुनर्स्थापित करें?"
+
+#: src/anduinos_rescue_center/app.py:1404
+#, python-brace-format
+msgid "this snapshot"
+msgstr "यह स्नैपशॉट"
+
+#: src/anduinos_rescue_center/app.py:1406
+#, python-brace-format
+msgid ""
+"The offline system root will be replaced immediately. Personal files in Home"
+" will not be changed. Do not power off the computer during recovery."
+msgstr ""
+"ऑफ़लाइन सिस्टम का रूट तुरंत बदल दिया जाएगा। Home में मौजूद व्यक्तिगत फ़ाइलें"
+" नहीं बदली जाएँगी। रिकवरी के दौरान कंप्यूटर बंद न करें।"
+
+#: src/anduinos_rescue_center/app.py:1412
+#, python-brace-format
+msgid "Restore system"
+msgstr "सिस्टम पुनर्स्थापित करें"
+
+#: src/anduinos_rescue_center/app.py:1427
+#, python-brace-format
+msgid "Restoring the offline system"
+msgstr "ऑफ़लाइन सिस्टम पुनर्स्थापित किया जा रहा है"
+
+#: src/anduinos_rescue_center/app.py:1428
+#, python-brace-format
+msgid "Keep the computer powered on until recovery is complete."
+msgstr "रिकवरी पूरी होने तक कंप्यूटर चालू रखें।"
+
+#: src/anduinos_rescue_center/app.py:1446
+#, python-brace-format
+msgid "System restore complete"
+msgstr "सिस्टम पुनर्स्थापना पूरी हुई"
+
+#: src/anduinos_rescue_center/app.py:1447
+#, python-brace-format
+msgid ""
+"Shut down the Live session, remove the installation media, and start "
+"AnduinOS."
+msgstr "Live सत्र बंद करें, इंस्टॉलेशन मीडिया निकालें और AnduinOS शुरू करें।"
+
+#: src/anduinos_rescue_center/boot.py:37
+#, python-brace-format
+msgid "The installed system has no readable /etc/fstab"
+msgstr "इंस्टॉल किए गए सिस्टम में पढ़ने योग्य /etc/fstab फ़ाइल नहीं है"
+
+#: src/anduinos_rescue_center/boot.py:41
+#, python-brace-format
+msgid "A separate /boot partition needs manual repair"
+msgstr "अलग /boot पार्टिशन की मैन्युअल मरम्मत आवश्यक है"
+
+#: src/anduinos_rescue_center/boot.py:44
+#, python-brace-format
+msgid "Exactly one FAT EFI partition must be declared in /etc/fstab"
+msgstr "/etc/fstab में ठीक एक FAT EFI पार्टिशन घोषित होना चाहिए"
+
+#: src/anduinos_rescue_center/boot.py:47
+#, python-brace-format
+msgid "The EFI partition must use an explicit UUID or PARTUUID"
+msgstr "EFI पार्टिशन के लिए स्पष्ट UUID या PARTUUID का उपयोग होना चाहिए"
+
+#: src/anduinos_rescue_center/boot.py:59
+#, python-brace-format
+msgid "Could not identify the EFI partition"
+msgstr "EFI पार्टिशन की पहचान नहीं हो सकी"
+
+#: src/anduinos_rescue_center/boot.py:63
+#, python-brace-format
+msgid "lsblk returned invalid EFI partition data"
+msgstr "lsblk ने अमान्य EFI विभाजन डेटा लौटाया"
+
+#: src/anduinos_rescue_center/boot.py:72
+#, python-brace-format
+msgid "The declared EFI partition is not FAT"
+msgstr "घोषित EFI पार्टिशन FAT फ़ॉर्मैट में नहीं है"
+
+#: src/anduinos_rescue_center/boot.py:76
+#, python-brace-format
+msgid "The declared FAT partition is not marked as an EFI System Partition"
+msgstr ""
+"घोषित FAT पार्टिशन को EFI सिस्टम पार्टिशन के रूप में चिह्नित नहीं किया गया "
+"है"
+
+#: src/anduinos_rescue_center/boot.py:80
+#, python-brace-format
+msgid "The EFI device or partition number is invalid"
+msgstr "EFI डिवाइस या पार्टिशन नंबर अमान्य है"
+
+#: src/anduinos_rescue_center/boot.py:91
+#, python-brace-format
+msgid "The EFI partition was not uniquely found on the selected disk"
+msgstr "चुनी गई डिस्क पर EFI पार्टिशन की विशिष्ट रूप से पहचान नहीं हो सकी"
+
+#: src/anduinos_rescue_center/boot.py:151
+#, python-brace-format
+msgid "The selected installation must be offline and unmounted"
+msgstr "चुना गया इंस्टॉलेशन ऑफ़लाइन और अनमाउंट होना चाहिए"
+
+#: src/anduinos_rescue_center/boot.py:157
+#, python-brace-format
+msgid "No installed kernel was found in /boot"
+msgstr "/boot में कोई इंस्टॉल किया गया कर्नेल नहीं मिला"
+
+#: src/anduinos_rescue_center/boot.py:159
+#, python-brace-format
+msgid "At least one kernel has no matching initrd"
+msgstr "कम-से-कम एक कर्नेल के लिए मेल खाता initrd मौजूद नहीं है"
+
+#: src/anduinos_rescue_center/boot.py:161
+#, python-brace-format
+msgid ""
+"GRUB configuration is missing or does not reference a complete kernel/initrd"
+" pair"
+msgstr ""
+"GRUB कॉन्फ़िगरेशन मौजूद नहीं है या उसमें कर्नेल/initrd का पूरा मेल शामिल "
+"नहीं है"
+
+#: src/anduinos_rescue_center/boot.py:170
+#, python-brace-format
+msgid "The EFI partition is already mounted; unmount it before repair"
+msgstr "EFI विभाजन पहले से माउंट है; मरम्मत से पहले इसे अनमाउंट करें"
+
+#: src/anduinos_rescue_center/boot.py:178
+#, python-brace-format
+msgid "The AnduinOS EFI loader is missing"
+msgstr "AnduinOS EFI लोडर मौजूद नहीं है"
+
+#: src/anduinos_rescue_center/boot.py:181
+#, python-brace-format
+msgid "No matching AnduinOS firmware boot entry was found"
+msgstr "AnduinOS का कोई मेल खाता फ़र्मवेयर बूट एंट्री नहीं मिला"
+
+#: src/anduinos_rescue_center/boot.py:183
+#, python-brace-format
+msgid ""
+"An active AnduinOS firmware boot entry could not be verified in BootOrder"
+msgstr ""
+"BootOrder में सक्रिय AnduinOS फ़र्मवेयर बूट एंट्री की पुष्टि नहीं हो सकी"
+
+#: src/anduinos_rescue_center/boot.py:186
+#, python-brace-format
+msgid "The Live session was not booted with accessible UEFI variables"
+msgstr "Live सत्र को सुलभ UEFI वेरिएबल के साथ बूट नहीं किया गया था"
+
+#: src/anduinos_rescue_center/boot.py:195
+#, python-brace-format
+msgid "Install GRUB only in EFI/AnduinOS"
+msgstr "GRUB केवल EFI/AnduinOS में इंस्टॉल करें"
+
+#: src/anduinos_rescue_center/boot.py:195
+#, python-brace-format
+msgid "Rebuild installed initrds"
+msgstr "इंस्टॉल किए गए initrd फिर से बनाएँ"
+
+#: src/anduinos_rescue_center/boot.py:196
+#, python-brace-format
+msgid "Regenerate GRUB configuration"
+msgstr "GRUB कॉन्फ़िगरेशन फिर से जनरेट करें"
+
+#: src/anduinos_rescue_center/boot.py:197
+#, python-brace-format
+msgid "Create an AnduinOS firmware entry first in BootOrder only if missing"
+msgstr ""
+"केवल तभी AnduinOS फ़र्मवेयर एंट्री बनाएँ, जब वह मौजूद न हो; इसे BootOrder "
+"में सबसे पहले रखें"
+
+#: src/anduinos_rescue_center/boot.py:205
+#: src/anduinos_rescue_center/boot.py:271
+#, python-brace-format
+msgid "Boot repair command failed: {command}"
+msgstr "बूट मरम्मत कमांड विफल हुआ: {command}"
+
+#: src/anduinos_rescue_center/boot.py:222
+#: src/anduinos_rescue_center/client.py:33
+#, python-brace-format
+msgid "Completed: {command}"
+msgstr "पूरा हुआ: {command}"
+
+#: src/anduinos_rescue_center/boot.py:253
+#, python-brace-format
+msgid "Boot repair output is too large: {command}"
+msgstr "बूट सुधार का आउटपुट बहुत बड़ा है: {command}"
+
+#: src/anduinos_rescue_center/boot.py:279
+#, python-brace-format
+msgid "Checking the selected system and EFI partition again"
+msgstr "चयनित सिस्टम और EFI विभाजन की फिर से जाँच की जा रही है"
+
+#: src/anduinos_rescue_center/boot.py:282
+#, python-brace-format
+msgid "The selected EFI partition changed or cannot be repaired safely"
+msgstr ""
+"चयनित EFI विभाजन बदल गया है या इसकी सुरक्षित रूप से मरम्मत नहीं की जा सकती"
+
+#: src/anduinos_rescue_center/boot.py:288
+#, python-brace-format
+msgid "The selected EFI partition changed before repair"
+msgstr "मरम्मत से पहले चयनित EFI विभाजन बदल गया"
+
+#: src/anduinos_rescue_center/boot.py:292
+#: src/anduinos_rescue_center/client.py:36
+#, python-brace-format
+msgid "Opening {system} and its EFI partition {esp}"
+msgstr "{system} और उसका EFI विभाजन {esp} खोला जा रहा है"
+
+#: src/anduinos_rescue_center/boot.py:297
+#, python-brace-format
+msgid "Installed boot repair tool is missing: /{tool}"
+msgstr "इंस्टॉल किया गया बूट सुधार टूल मौजूद नहीं है: /{tool}"
+
+#: src/anduinos_rescue_center/boot.py:299
+#, python-brace-format
+msgid "Rebuilding installed initrds; this may take several minutes"
+msgstr ""
+"इंस्टॉल किए गए initrd फिर से बनाए जा रहे हैं; इसमें कई मिनट लग सकते हैं"
+
+#: src/anduinos_rescue_center/boot.py:306
+#, python-brace-format
+msgid "Dracut produced no matching kernel/initrd pair"
+msgstr "Dracut को मेल खाने वाली kernel/initrd जोड़ी नहीं मिली"
+
+#: src/anduinos_rescue_center/boot.py:310
+#: src/anduinos_rescue_center/client.py:39
+#, python-brace-format
+msgid "Checking installed initrd for kernel {kernel}"
+msgstr "kernel {kernel} के लिए इंस्टॉल किए गए initrd की जाँच की जा रही है"
+
+#: src/anduinos_rescue_center/boot.py:316
+#, python-brace-format
+msgid "An installed-system initrd still contains Live boot modules"
+msgstr "इंस्टॉल किए गए सिस्टम के initrd में अब भी Live बूट मॉड्यूल मौजूद हैं"
+
+#: src/anduinos_rescue_center/boot.py:318
+#, python-brace-format
+msgid "The Btrfs initrd lacks the AnduinOS recovery module"
+msgstr "Btrfs initrd में AnduinOS रिकवरी मॉड्यूल मौजूद नहीं है"
+
+#: src/anduinos_rescue_center/boot.py:320
+#, python-brace-format
+msgid "Installing AnduinOS GRUB on the selected EFI partition"
+msgstr "चयनित EFI विभाजन पर AnduinOS GRUB इंस्टॉल किया जा रहा है"
+
+#: src/anduinos_rescue_center/boot.py:325
+#, python-brace-format
+msgid "Generating the installed system's GRUB menu"
+msgstr "इंस्टॉल किए गए सिस्टम का GRUB मेनू बनाया जा रहा है"
+
+#: src/anduinos_rescue_center/boot.py:332
+#, python-brace-format
+msgid "Boot repair did not produce a complete kernel, GRUB and EFI chain"
+msgstr "बूट मरम्मत से कर्नेल, GRUB और EFI की पूरी श्रृंखला तैयार नहीं हुई"
+
+#: src/anduinos_rescue_center/boot.py:335
+#, python-brace-format
+msgid "EFI files were repaired, but firmware variables are unavailable"
+msgstr "EFI फ़ाइलों की मरम्मत की गई, लेकिन फ़र्मवेयर वेरिएबल उपलब्ध नहीं हैं"
+
+#: src/anduinos_rescue_center/boot.py:337
+#, python-brace-format
+msgid "Creating the missing AnduinOS firmware boot entry"
+msgstr "AnduinOS की अनुपलब्ध फ़र्मवेयर बूट प्रविष्टि बनाई जा रही है"
+
+#: src/anduinos_rescue_center/boot.py:342
+#, python-brace-format
+msgid "Re-checking the complete boot path without writing"
+msgstr "बिना कुछ लिखे पूरे बूट पथ की फिर से जाँच की जा रही है"
+
+#: src/anduinos_rescue_center/client.py:75
+#, python-brace-format
+msgid "Storage scan failed"
+msgstr "स्टोरेज स्कैन विफल हुआ"
+
+#: src/anduinos_rescue_center/client.py:79
+#: src/anduinos_rescue_center/client.py:105
+#: src/anduinos_rescue_center/client.py:308
+#: src/anduinos_rescue_center/client.py:364
+#, python-brace-format
+msgid "The rescue helper returned invalid data"
+msgstr "रेस्क्यू सहायक ने अमान्य डेटा लौटाया"
+
+#: src/anduinos_rescue_center/client.py:81
+#: src/anduinos_rescue_center/client.py:107
+#: src/anduinos_rescue_center/client.py:310
+#: src/anduinos_rescue_center/client.py:366
+#, python-brace-format
+msgid "The rescue helper protocol is incompatible"
+msgstr "रेस्क्यू सहायक का प्रोटोकॉल संगत नहीं है"
+
+#: src/anduinos_rescue_center/client.py:92
+#: src/anduinos_rescue_center/client.py:120
+#: src/anduinos_rescue_center/client.py:242
+#: src/anduinos_rescue_center/client.py:323
+#: src/anduinos_rescue_center/client.py:354
+#, python-brace-format
+msgid "Invalid rescue target identity"
+msgstr "रेस्क्यू लक्ष्य की पहचान अमान्य है"
+
+#: src/anduinos_rescue_center/client.py:101
+#, python-brace-format
+msgid "Target inspection failed"
+msgstr "लक्ष्य का निरीक्षण विफल हुआ"
+
+#: src/anduinos_rescue_center/client.py:122
+#: src/anduinos_rescue_center/operations.py:57
+#, python-brace-format
+msgid "The new password is empty or unsupported"
+msgstr "नया पासवर्ड खाली है या समर्थित नहीं है"
+
+#: src/anduinos_rescue_center/client.py:132
+#: src/anduinos_rescue_center/operations.py:71
+#, python-brace-format
+msgid "Password reset failed"
+msgstr "पासवर्ड रीसेट विफल"
+
+#: src/anduinos_rescue_center/client.py:143
+#, python-brace-format
+msgid "File listing failed"
+msgstr "फ़ाइल सूची दिखाने में विफल"
+
+#: src/anduinos_rescue_center/client.py:156
+#, python-brace-format
+msgid "Export failed"
+msgstr "निर्यात विफल"
+
+#: src/anduinos_rescue_center/client.py:161
+#, python-brace-format
+msgid "The rescue helper did not report the exported file"
+msgstr "रेस्क्यू सहायक ने निर्यात की गई फ़ाइल की रिपोर्ट नहीं की"
+
+#: src/anduinos_rescue_center/client.py:171
+#, python-brace-format
+msgid "Snapshot listing failed"
+msgstr "स्नैपशॉट सूची दिखाने में विफल"
+
+#: src/anduinos_rescue_center/client.py:182
+#, python-brace-format
+msgid "Invalid snapshot name"
+msgstr "अमान्य स्नैपशॉट नाम"
+
+#: src/anduinos_rescue_center/client.py:184
+#, python-brace-format
+msgid "Snapshot creation failed"
+msgstr "स्नैपशॉट बनाने में विफल"
+
+#: src/anduinos_rescue_center/client.py:198
+#, python-brace-format
+msgid "Invalid recovery point ID"
+msgstr "अमान्य रिकवरी पॉइंट ID"
+
+#: src/anduinos_rescue_center/client.py:201
+#, python-brace-format
+msgid "System restore failed"
+msgstr "सिस्टम पुनर्स्थापना विफल"
+
+#: src/anduinos_rescue_center/client.py:213
+#, python-brace-format
+msgid "Boot diagnosis failed"
+msgstr "बूट निदान विफल"
+
+#: src/anduinos_rescue_center/client.py:225
+#, python-brace-format
+msgid "Invalid EFI partition identity"
+msgstr "EFI विभाजन की पहचान अमान्य है"
+
+#: src/anduinos_rescue_center/client.py:286
+#, python-brace-format
+msgid "The rescue helper returned too much data"
+msgstr "रेस्क्यू सहायक ने बहुत अधिक डेटा लौटाया"
+
+#: src/anduinos_rescue_center/client.py:290
+#, python-brace-format
+msgid "The rescue helper returned an oversized progress line"
+msgstr "रिकवरी सहायक ने प्रगति की बहुत लंबी पंक्ति लौटाई"
+
+#: src/anduinos_rescue_center/client.py:321
+#, python-brace-format
+msgid "The emergency terminal is available only in AnduinOS Live"
+msgstr "आपातकालीन टर्मिनल केवल AnduinOS Live में उपलब्ध है"
+
+#: src/anduinos_rescue_center/client.py:326
+#: src/anduinos_rescue_center/client.py:341
+#, python-brace-format
+msgid "Ptyxis is not installed in this Live session"
+msgstr "इस Live सत्र में Ptyxis इंस्टॉल नहीं है"
+
+#: src/anduinos_rescue_center/client.py:328
+#, python-brace-format
+msgid "Offline AnduinOS recovery"
+msgstr "ऑफ़लाइन AnduinOS रिकवरी"
+
+#: src/anduinos_rescue_center/client.py:338
+#, python-brace-format
+msgid "A verified AnduinOS Live session is required"
+msgstr "सत्यापित AnduinOS Live सत्र आवश्यक है"
+
+#: src/anduinos_rescue_center/client.py:342
+#, python-brace-format
+msgid "AnduinOS Live terminal"
+msgstr "AnduinOS Live टर्मिनल"
+
+#: src/anduinos_rescue_center/files.py:34
+#: src/anduinos_rescue_center/files.py:87
+#: src/anduinos_rescue_center/offline_env.py:27
+#: src/anduinos_rescue_center/operations.py:43
+#: src/anduinos_rescue_center/storage.py:317
+#, python-brace-format
+msgid "The selected partition is not an AnduinOS installation"
+msgstr "चुना गया पार्टिशन AnduinOS इंस्टॉलेशन नहीं है"
+
+#: src/anduinos_rescue_center/files.py:37
+#, python-brace-format
+msgid "The selected location is not a directory"
+msgstr "चुना गया स्थान कोई डायरेक्टरी नहीं है"
+
+#: src/anduinos_rescue_center/files.py:80
+#: src/anduinos_rescue_center/privileged.py:41
+#, python-brace-format
+msgid "Could not identify the desktop user"
+msgstr "डेस्कटॉप उपयोगकर्ता की पहचान नहीं हो सकी"
+
+#: src/anduinos_rescue_center/files.py:90
+#, python-brace-format
+msgid "Export a file or folder instead of the whole system"
+msgstr "पूरे सिस्टम के बजाय कोई फ़ाइल या फ़ोल्डर एक्सपोर्ट करें"
+
+#: src/anduinos_rescue_center/files.py:93
+#, python-brace-format
+msgid "Symbolic links and special files cannot be exported"
+msgstr "सिम्बॉलिक लिंक और विशेष फ़ाइलें एक्सपोर्ट नहीं की जा सकतीं"
+
+#: src/anduinos_rescue_center/files.py:96
+#, python-brace-format
+msgid "A file with this name already exists at the destination"
+msgstr "गंतव्य पर इस नाम की फ़ाइल पहले से मौजूद है"
+
+#: src/anduinos_rescue_center/files.py:105
+#, python-brace-format
+msgid "Could not sync exported data"
+msgstr "निर्यात किया गया डेटा सिंक नहीं हो सका"
+
+#: src/anduinos_rescue_center/files.py:125
+#, python-brace-format
+msgid "The selected path escapes the offline system"
+msgstr "चुना गया पथ ऑफ़लाइन सिस्टम के बाहर जाता है"
+
+#: src/anduinos_rescue_center/files.py:139
+#, python-brace-format
+msgid "Choose a folder in your Home directory or on your removable media"
+msgstr "अपनी होम डायरेक्टरी या हटाए जा सकने वाले मीडिया पर कोई फ़ोल्डर चुनें"
+
+#: src/anduinos_rescue_center/files.py:148
+#, python-brace-format
+msgid "Invalid offline file path"
+msgstr "ऑफ़लाइन फ़ाइल पथ अमान्य है"
+
+#: src/anduinos_rescue_center/files.py:183
+#, python-brace-format
+msgid "Cannot export special file: {name}"
+msgstr "विशेष फ़ाइल निर्यात नहीं कर सकते: {name}"
+
+#: src/anduinos_rescue_center/offline_env.py:25
+#, python-brace-format
+msgid "The selected system root is unavailable or unsafe"
+msgstr "चुना गया सिस्टम रूट अनुपलब्ध या असुरक्षित है"
+
+#: src/anduinos_rescue_center/offline_env.py:41
+#, python-brace-format
+msgid "Unsafe target mount directory: /{path}"
+msgstr "लक्ष्य माउंट डायरेक्टरी असुरक्षित है: /{path}"
+
+#: src/anduinos_rescue_center/offline_env.py:48
+#, python-brace-format
+msgid "Mount failed: {command}"
+msgstr "माउंट विफल: {command}"
+
+#: src/anduinos_rescue_center/offline_env.py:87
+#, python-brace-format
+msgid "Unmount the offline installation before opening it for repair"
+msgstr "मरम्मत के लिए खोलने से पहले ऑफ़लाइन इंस्टॉलेशन को अनमाउंट करें"
+
+#: src/anduinos_rescue_center/offline_env.py:134
+#, python-brace-format
+msgid "Could not unmount recovery filesystems: {details}"
+msgstr "रिकवरी फ़ाइल सिस्टम अनमाउंट नहीं हो सके: {details}"
+
+#: src/anduinos_rescue_center/offline_env.py:142
+#, python-brace-format
+msgid "An interactive AnduinOS Live terminal is required"
+msgstr "AnduinOS Live टर्मिनल में इंटरैक्टिव सत्र आवश्यक है"
+
+#: src/anduinos_rescue_center/offline_env.py:146
+#, python-brace-format
+msgid ""
+"This is a root shell in the selected offline system. Type exit to unmount "
+"it.\n"
+msgstr ""
+"यह चुने गए ऑफ़लाइन सिस्टम का रूट शेल है। इसे अनमाउंट करने के लिए exit टाइप "
+"करें.\n"
+
+#: src/anduinos_rescue_center/operations.py:35
+#: src/anduinos_rescue_center/storage.py:306
+#, python-brace-format
+msgid "The currently running system cannot be a rescue target"
+msgstr "वर्तमान में चल रहे सिस्टम को बचाव लक्ष्य नहीं बनाया जा सकता"
+
+#: src/anduinos_rescue_center/operations.py:37
+#, python-brace-format
+msgid "Unmount the selected partition before changing a password"
+msgstr "पासवर्ड बदलने से पहले चयनित पार्टीशन को अनमाउंट करें"
+
+#: src/anduinos_rescue_center/operations.py:55
+#, python-brace-format
+msgid "Invalid local account name"
+msgstr "स्थानीय खाते का नाम अमान्य है"
+
+#: src/anduinos_rescue_center/operations.py:60
+#, python-brace-format
+msgid "The selected local account no longer exists"
+msgstr "चयनित स्थानीय खाता अब मौजूद नहीं है"
+
+#: src/anduinos_rescue_center/operations.py:77
+#, python-brace-format
+msgid "Could not sync the new password"
+msgstr "नया पासवर्ड सिंक नहीं किया जा सका"
+
+#: src/anduinos_rescue_center/privileged.py:21
+#, python-brace-format
+msgid "The rescue helper must run as root"
+msgstr "बचाव सहायक को रूट के रूप में चलना चाहिए"
+
+#: src/anduinos_rescue_center/privileged.py:33
+#, python-brace-format
+msgid "The new password is too long"
+msgstr "नया पासवर्ड बहुत लंबा है"
+
+#: src/anduinos_rescue_center/privileged.py:53
+#, python-brace-format
+msgid "Invalid protection choice"
+msgstr "सुरक्षा विकल्प अमान्य है"
+
+#: src/anduinos_rescue_center/snapshots.py:39
+#, python-brace-format
+msgid "The snapshot name is invalid"
+msgstr "स्नैपशॉट का नाम अमान्य है"
+
+#: src/anduinos_rescue_center/snapshots.py:44
+#, python-brace-format
+msgid "Created from AnduinOS Rescue Center"
+msgstr "AnduinOS Rescue Center से बनाया गया"
+
+#: src/anduinos_rescue_center/snapshots.py:60
+#, python-brace-format
+msgid "The recovery point ID is invalid"
+msgstr "रिकवरी पॉइंट ID अमान्य है"
+
+#: src/anduinos_rescue_center/snapshots.py:94
+#, python-brace-format
+msgid "The currently running system cannot be a recovery target"
+msgstr "वर्तमान में चल रहे सिस्टम को रिकवरी लक्ष्य नहीं बनाया जा सकता"
+
+#: src/anduinos_rescue_center/snapshots.py:96
+#, python-brace-format
+msgid "Unmount the selected partition before managing snapshots"
+msgstr "स्नैपशॉट प्रबंधित करने से पहले चुने गए पार्टिशन को अनमाउंट करें"
+
+#: src/anduinos_rescue_center/snapshots.py:98
+#, python-brace-format
+msgid "System snapshots require the standard AnduinOS Btrfs layout"
+msgstr "सिस्टम स्नैपशॉट के लिए मानक AnduinOS Btrfs लेआउट आवश्यक है"
+
+#: src/anduinos_rescue_center/snapshots.py:105
+#, python-brace-format
+msgid "The selected partition is not a standard AnduinOS Btrfs installation"
+msgstr "चुना गया पार्टिशन मानक AnduinOS Btrfs इंस्टॉलेशन नहीं है"
+
+#: src/anduinos_rescue_center/snapshots.py:128
+#, python-brace-format
+msgid "The snapshot engine returned invalid data"
+msgstr "स्नैपशॉट इंजन ने अमान्य डेटा लौटाया"
+
+#: src/anduinos_rescue_center/snapshots.py:130
+#, python-brace-format
+msgid "The snapshot engine protocol is incompatible"
+msgstr "स्नैपशॉट इंजन का प्रोटोकॉल संगत नहीं है"
+
+#: src/anduinos_rescue_center/storage.py:58
+#, python-brace-format
+msgid "Could not enumerate storage"
+msgstr "स्टोरेज की सूची नहीं बनाई जा सकी"
+
+#: src/anduinos_rescue_center/storage.py:62
+#: src/anduinos_rescue_center/storage.py:64
+#: src/anduinos_rescue_center/storage.py:349
+#, python-brace-format
+msgid "lsblk returned invalid storage data"
+msgstr "lsblk ने अमान्य स्टोरेज डेटा लौटाया"
+
+#: src/anduinos_rescue_center/storage.py:196
+#: src/anduinos_rescue_center/storage.py:245
+#, python-brace-format
+msgid "Mount failed"
+msgstr "माउंट विफल हुआ"
+
+#: src/anduinos_rescue_center/storage.py:211
+#: src/anduinos_rescue_center/storage.py:257
+#, python-brace-format
+msgid "Could not unmount {mountpoint}"
+msgstr "{mountpoint} को अनमाउंट नहीं किया जा सका"
+
+#: src/anduinos_rescue_center/storage.py:232
+#, python-brace-format
+msgid "This filesystem is not supported for repair operations"
+msgstr "यह फ़ाइल सिस्टम मरम्मत कार्यों के लिए समर्थित नहीं है"
+
+#: src/anduinos_rescue_center/storage.py:345
+#, python-brace-format
+msgid "Could not re-check the selected disk"
+msgstr "चुनी गई डिस्क की दोबारा जाँच नहीं की जा सकी"
+
+#: src/anduinos_rescue_center/storage.py:362
+#, python-brace-format
+msgid "The selected partition changed after it was scanned"
+msgstr "स्कैन किए जाने के बाद चुना गया पार्टिशन बदल गया"
+
+#: src/anduinos_rescue_center/storage.py:379
+#, python-brace-format
+msgid "The selected partition is no longer available"
+msgstr "चुना गया पार्टिशन अब उपलब्ध नहीं है"
+
+#: src/anduinos_rescue_center/storage.py:403
+#, python-brace-format
+msgid "Invalid block-device path"
+msgstr "अमान्य ब्लॉक-डिवाइस पथ"
+
+#: src/anduinos_rescue_center/storage.py:407
+#, python-brace-format
+msgid "Block device is unavailable"
+msgstr "ब्लॉक डिवाइस उपलब्ध नहीं है"
+
+#: src/anduinos_rescue_center/storage.py:409
+#, python-brace-format
+msgid "Target is not a block device"
+msgstr "लक्ष्य ब्लॉक डिवाइस नहीं है"

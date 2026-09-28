@@ -1880,3 +1880,150 @@ msgstr "Przywróć AnduinOS i odzyskaj usunięte pliki osobiste"
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
 msgid "Create an AnduinOS system snapshot"
 msgstr "Utwórz migawkę systemu AnduinOS"
+
+msgid "Delete Factory Recovery Point?"
+msgstr "Usunąć fabryczny punkt odzyskiwania?"
+
+msgid "Delete and Disable Factory Recovery"
+msgstr "Usuń i wyłącz odzyskiwanie fabryczne"
+
+msgid "Deleting factory recovery point…"
+msgstr "Usuwanie fabrycznego punktu odzyskiwania…"
+
+msgid "Checking factory reset availability…"
+msgstr "Sprawdzanie dostępności przywracania ustawień fabrycznych…"
+
+msgid "Factory Reset Is Not Available"
+msgstr "Przywracanie ustawień fabrycznych jest niedostępne"
+
+msgid "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
+msgstr "Ten system nie obsługuje przywracania ustawień fabrycznych. Zainstaluj ponownie AnduinOS i wybierz system plików Btrfs, aby włączyć tę funkcję."
+
+msgid "Factory Reset Is Not Ready"
+msgstr "Przywracanie ustawień fabrycznych nie jest jeszcze gotowe"
+
+msgid "Reset AnduinOS to Its Initial State?"
+msgstr "Przywrócić AnduinOS do stanu początkowego?"
+
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Przywracanie ustawień fabrycznych przywróci pliki systemowe, zainstalowane pakiety i ustawienia systemu do pierwotnego stanu New OS. Pliki osobiste w katalogu domowym pozostaną bez zmian. Najpierw zostanie utworzona migawka bezpieczeństwa bieżącego systemu. Następnie odzyskiwanie zostanie przygotowane, a komputer automatycznie uruchomi się ponownie w ciągu 60 sekund."
+
+msgid "Return to the initial New OS state"
+msgstr "Wróć do początkowego stanu New OS"
+
+msgid "Saved as a safety snapshot before reset"
+msgstr "Zapisano jako migawkę bezpieczeństwa przed przywróceniem"
+
+msgid "Reset and Restart"
+msgstr "Przywróć i uruchom ponownie"
+
+msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+msgstr "„New OS” to pierwotny stan systemu utworzony podczas instalacji. Usunięcie go uniemożliwi przywrócenie AnduinOS do stanu początkowego. Nie można tego cofnąć bez ponownej instalacji systemu operacyjnego. Ta czynność nie usunie plików osobistych."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "Wymaż pliki użytkownika"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Przywrócenie ustawień fabrycznych odtworzy pliki systemowe, zainstalowane pakiety i ustawienia systemu do pierwotnego stanu New OS. Najpierw zostanie utworzona migawka bezpieczeństwa bieżącego systemu. Następnie odzyskiwanie zostanie przygotowane, a komputer automatycznie uruchomi się ponownie w ciągu 60 sekund."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "Przygotowywanie przywracania ustawień fabrycznych…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "Zostaną zachowane, chyba że poniżej wybierzesz ich wymazanie"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "Niedostępne, ponieważ fabryczny punkt odzyskiwania Home nie istnieje lub jest uszkodzony."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "Przywróć Home do początkowego stanu po instalacji i wymaż historię migawek Home. Po potwierdzeniu odzyskiwania nie można tego cofnąć."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Ochrona wolnego miejsca na dysku"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Minimalna ilość wolnego miejsca"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Dotyczy automatycznych migawek systemu i katalogu domowego. Ustaw 0, aby wyłączyć."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Automatyczne migawki wstrzymane"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Migawki katalogu domowego czekają na więcej wolnego miejsca."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Zaplanowane migawki katalogu domowego zostały wstrzymane z powodu małej ilości miejsca na dysku. Zostaną wznowione automatycznie, gdy miejsce będzie dostępne."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Zaplanowane migawki systemu zostały wstrzymane z powodu małej ilości miejsca na dysku. Zostaną wznowione automatycznie, gdy miejsce będzie dostępne."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Migawki systemu i katalogu domowego czekają na więcej wolnego miejsca."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Migawki systemu czekają na więcej wolnego miejsca."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "Najpierw zostanie utworzona migawka zabezpieczająca system. Następnie nastąpi restart w ciągu 60 sekund."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "Usuń pliki z katalogów domowych wszystkich użytkowników i historię migawek. Tej operacji nie można cofnąć."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "Przywróć system do stanu New OS. Pliki osobiste są domyślnie zachowywane."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Przywróć dane użytkowników"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Przywróć pliki i ustawienia wszystkich użytkowników do stanu początkowego. Historia migawek zostanie zachowana."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Przed przywróceniem zostaną utworzone migawki bezpieczeństwa. Ponowne uruchomienie nastąpi w ciągu 60 sekund od zakończenia przygotowań."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "Usunięcie New OS wyłącza przywracanie stanu fabrycznego dla tej kategorii migawek. Bieżące pliki i pozostałe migawki zostaną zachowane."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Pliki i ustawienia wszystkich użytkowników"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Najpierw zostanie utworzona migawka bezpieczeństwa. Historia migawek zostanie zachowana."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Przywracanie jest gotowe. Zapisz swoją pracę; komputer uruchomi się ponownie w ciągu 60 sekund."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Potwierdzenie przywracania nie powiodło się. Przywracanie poprzedniego stanu."

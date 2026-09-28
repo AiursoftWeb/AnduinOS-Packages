@@ -1880,3 +1880,150 @@ msgstr "AnduinOS herstellen en verwijderde persoonlijke bestanden herstellen"
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
 msgid "Create an AnduinOS system snapshot"
 msgstr "Een AnduinOS-systeemmomentopname maken"
+
+msgid "Delete Factory Recovery Point?"
+msgstr "Fabrieksherstelpunt verwijderen?"
+
+msgid "Delete and Disable Factory Recovery"
+msgstr "Fabrieksherstel verwijderen en uitschakelen"
+
+msgid "Deleting factory recovery point…"
+msgstr "Fabrieksherstelpunt wordt verwijderd…"
+
+msgid "Checking factory reset availability…"
+msgstr "Beschikbaarheid van fabrieksherstel controleren…"
+
+msgid "Factory Reset Is Not Available"
+msgstr "Fabrieksinstellingen herstellen is niet beschikbaar"
+
+msgid "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
+msgstr "Dit systeem ondersteunt het herstellen van de fabrieksinstellingen niet. Installeer AnduinOS opnieuw en kies het Btrfs-bestandssysteem om deze functie in te schakelen."
+
+msgid "Factory Reset Is Not Ready"
+msgstr "Fabrieksherstel is nog niet gereed"
+
+msgid "Reset AnduinOS to Its Initial State?"
+msgstr "AnduinOS terugzetten naar de oorspronkelijke staat?"
+
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Fabrieksherstel zet systeembestanden, geïnstalleerde pakketten en systeeminstellingen terug naar de oorspronkelijke New OS-staat. Persoonlijke bestanden in de persoonlijke map blijven ongewijzigd. Eerst wordt een veiligheidsmomentopname van het huidige systeem gemaakt. Daarna wordt het herstel voorbereid en wordt deze computer binnen 60 seconden automatisch opnieuw opgestart."
+
+msgid "Return to the initial New OS state"
+msgstr "Terugkeren naar de oorspronkelijke New OS-staat"
+
+msgid "Saved as a safety snapshot before reset"
+msgstr "Opgeslagen als veiligheidsmomentopname vóór het herstel"
+
+msgid "Reset and Restart"
+msgstr "Herstellen en opnieuw opstarten"
+
+msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+msgstr "‘New OS’ is de oorspronkelijke systeemstaat die tijdens de installatie is gemaakt. Als u deze verwijdert, kan AnduinOS niet meer naar de oorspronkelijke staat worden teruggezet. Dit kan niet ongedaan worden gemaakt zonder het besturingssysteem opnieuw te installeren. Uw persoonlijke bestanden worden door deze handeling niet verwijderd."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "Gebruikersbestanden wissen"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Fabrieksherstel herstelt systeembestanden, geïnstalleerde pakketten en systeeminstellingen naar de oorspronkelijke New OS-status. Eerst wordt een veiligheidsmomentopname van het huidige systeem gemaakt. Daarna wordt het herstel voorbereid en wordt deze computer binnen 60 seconden automatisch opnieuw opgestart."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "Fabrieksherstel voorbereiden…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "Worden bewaard, tenzij u hieronder kiest om ze te wissen"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "Niet beschikbaar omdat het Home-fabrieksherstelpunt ontbreekt of beschadigd is."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "Herstel Home naar de oorspronkelijke toestand na installatie en wis de geschiedenis van Home-momentopnamen. Dit kan niet ongedaan worden gemaakt nadat het herstel is bevestigd."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Bescherming bij weinig schijfruimte"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Minimale vrije ruimte"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Geldt voor automatische momentopnamen van het systeem en de persoonlijke map. Stel in op 0 om uit te schakelen."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Automatische momentopnamen gepauzeerd"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Momentopnamen van de persoonlijke map wachten op meer vrije ruimte."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Geplande momentopnamen van de persoonlijke map zijn gepauzeerd wegens weinig schijfruimte. Ze worden automatisch hervat zodra er ruimte beschikbaar is."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Geplande systeemmomentopnamen zijn gepauzeerd wegens weinig schijfruimte. Ze worden automatisch hervat zodra er ruimte beschikbaar is."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Momentopnamen van het systeem en de persoonlijke map wachten op meer vrije ruimte."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Systeemmomentopnamen wachten op meer vrije ruimte."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "Eerst wordt een veiligheidsmomentopname van het systeem gemaakt. Daarna volgt binnen 60 seconden een herstart."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "Wis de bestanden in de persoonlijke mappen van alle gebruikers en de momentopnamegeschiedenis. Dit kan niet ongedaan worden gemaakt."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "Herstel het systeem naar New OS. Persoonlijke bestanden blijven standaard behouden."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Gebruikersgegevens terugzetten"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Zet de bestanden en instellingen van alle gebruikers terug naar de oorspronkelijke staat. De momentopnamegeschiedenis blijft behouden."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Vóór het terugzetten worden veiligheidsmomentopnamen gemaakt. Binnen 60 seconden na de voorbereiding wordt de computer opnieuw opgestart."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "Als u New OS verwijdert, wordt fabrieksherstel voor deze categorie momentopnamen uitgeschakeld. Huidige bestanden en andere momentopnamen blijven behouden."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Bestanden en instellingen van alle gebruikers"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Eerst wordt een veiligheidsmomentopname gemaakt. De momentopnamegeschiedenis blijft behouden."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Het terugzetten is gereed. Sla uw werk op; deze computer start binnen 60 seconden opnieuw op."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Het bevestigen van de herstelactie is mislukt. De vorige staat wordt hersteld."

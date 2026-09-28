@@ -5,6 +5,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(
     0,
@@ -304,15 +305,18 @@ driver   : nvidia-driver-595-server-open - distro non-free
             self.assertEqual(state.certificate_serial, "aa12bb34")
 
     def test_unsupported_secure_boot_remains_a_known_non_enforcing_state(self):
-        state = secure_boot_state(
-            FakeRunner(
-                {
-                    ("mokutil", "--sb-state"): subprocess.CompletedProcess(
-                        [], 0, "This system doesn't support Secure Boot\n", ""
-                    )
-                }
-            )
-        )
+        with tempfile.TemporaryDirectory() as directory:
+            efi = Path(directory)
+            (efi / "efivars").mkdir()
+            with patch("anduinos_secureboot.firmware._mount_type", return_value="efivarfs"):
+                state = secure_boot_state(
+                    FakeRunner({("mokutil", "--sb-state"): subprocess.CompletedProcess(
+                        [], 255, "", "This system doesn't support Secure Boot\n")}),
+                    private_key=efi / "missing.priv",
+                    certificate=efi / "missing.der",
+                    configuration=efi / "missing.conf",
+                    efi_firmware=efi,
+                )
         self.assertEqual(state.status, SecureBootStatus.UNSUPPORTED)
         self.assertTrue(state.ready)
         self.assertTrue(state.enforcement_inactive)
@@ -472,7 +476,7 @@ driver   : nvidia-driver-595-server-open - distro non-free
             ),
         )
         self.assertTrue(secure.ready)
-        self.assertFalse(secure.enrollment_required)
+        self.assertTrue(secure.enrollment_required)
         self.assertEqual(state.status, XboxStatus.READY)
 
     def test_dkms_health_reports_modules_signed_by_a_different_key(self):

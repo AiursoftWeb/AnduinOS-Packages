@@ -1880,3 +1880,150 @@ msgstr "Восстановление AnduinOS и удалённых личных
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
 msgid "Create an AnduinOS system snapshot"
 msgstr "Создать системный снимок AnduinOS"
+
+msgid "Delete Factory Recovery Point?"
+msgstr "Удалить заводскую точку восстановления?"
+
+msgid "Delete and Disable Factory Recovery"
+msgstr "Удалить и отключить заводское восстановление"
+
+msgid "Deleting factory recovery point…"
+msgstr "Удаление заводской точки восстановления…"
+
+msgid "Checking factory reset availability…"
+msgstr "Проверка доступности сброса к заводским настройкам…"
+
+msgid "Factory Reset Is Not Available"
+msgstr "Сброс к заводским настройкам недоступен"
+
+msgid "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
+msgstr "Эта система не поддерживает сброс к заводским настройкам. Переустановите AnduinOS и выберите файловую систему Btrfs, чтобы включить эту функцию."
+
+msgid "Factory Reset Is Not Ready"
+msgstr "Сброс к заводским настройкам ещё не готов"
+
+msgid "Reset AnduinOS to Its Initial State?"
+msgstr "Сбросить AnduinOS до исходного состояния?"
+
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Сброс к заводским настройкам восстановит системные файлы, установленные пакеты и системные настройки до исходного состояния New OS. Личные файлы в домашней папке не изменятся. Сначала будет создан защитный снимок текущей системы. Затем будет подготовлено восстановление, и компьютер автоматически перезагрузится в течение 60 секунд."
+
+msgid "Return to the initial New OS state"
+msgstr "Вернуться к исходному состоянию New OS"
+
+msgid "Saved as a safety snapshot before reset"
+msgstr "Сохранено как защитный снимок перед сбросом"
+
+msgid "Reset and Restart"
+msgstr "Сбросить и перезагрузить"
+
+msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+msgstr "«New OS» — это исходное состояние системы, созданное во время установки. При его удалении AnduinOS больше нельзя будет сбросить до исходного состояния. Отменить это действие без переустановки операционной системы невозможно. Ваши личные файлы не будут удалены."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "Удалить файлы пользователя"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Сброс к заводским настройкам восстановит системные файлы, установленные пакеты и системные параметры до исходного состояния New OS. Сначала будет создан страховочный снимок текущей системы. Затем будет подготовлено восстановление, и компьютер автоматически перезагрузится в течение 60 секунд."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "Подготовка к сбросу настроек…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "Будут сохранены, если ниже не выбрано их удаление"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "Недоступно: заводская точка восстановления Home отсутствует или повреждена."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "Восстановить Home до исходного состояния после установки и удалить историю снимков Home. После подтверждения восстановления это действие нельзя отменить."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Защита свободного места на диске"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Минимум свободного места"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Применяется к автоматическим снимкам системы и домашнего каталога. Установите 0 для отключения."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Автоматические снимки приостановлены"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Создание снимков домашнего каталога ожидает освобождения места."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Создание снимков домашнего каталога по расписанию приостановлено из-за нехватки места на диске. Оно возобновится автоматически, когда появится свободное место."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Создание снимков системы по расписанию приостановлено из-за нехватки места на диске. Оно возобновится автоматически, когда появится свободное место."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Создание снимков системы и домашнего каталога ожидает освобождения места."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Создание снимков системы ожидает освобождения места."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "Сначала будет создан страховочный снимок системы. Затем в течение 60 секунд начнётся перезагрузка."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "Удалить файлы домашних каталогов всех пользователей и историю снимков. Это действие необратимо."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "Восстановить систему до состояния New OS. Личные файлы по умолчанию сохраняются."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Откатить данные пользователей"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Вернуть файлы и настройки всех пользователей в исходное состояние. История снимков сохраняется."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Перед откатом создаются страховочные снимки. Перезагрузка начнётся в течение 60 секунд после подготовки."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "Удаление New OS отключает восстановление исходного состояния для этой категории снимков. Текущие файлы и остальные снимки сохраняются."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Файлы и настройки всех пользователей"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Сначала создаётся страховочный снимок. История снимков сохраняется."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Откат подготовлен. Сохраните работу: компьютер перезагрузится в течение 60 секунд."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Не удалось подтвердить откат. Восстанавливается предыдущее состояние."

@@ -1880,3 +1880,150 @@ msgstr "กู้ระบบ AnduinOS และคืนค่าไฟล์�
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
 msgid "Create an AnduinOS system snapshot"
 msgstr "สร้างสแนปชอตระบบ AnduinOS"
+
+msgid "Delete Factory Recovery Point?"
+msgstr "ลบจุดกู้คืนจากโรงงานหรือไม่?"
+
+msgid "Delete and Disable Factory Recovery"
+msgstr "ลบและปิดใช้งานการกู้คืนจากโรงงาน"
+
+msgid "Deleting factory recovery point…"
+msgstr "กำลังลบจุดกู้คืนจากโรงงาน…"
+
+msgid "Checking factory reset availability…"
+msgstr "กำลังตรวจสอบความพร้อมของการรีเซ็ตเป็นค่าเริ่มต้นจากโรงงาน…"
+
+msgid "Factory Reset Is Not Available"
+msgstr "ไม่สามารถรีเซ็ตเป็นค่าเริ่มต้นจากโรงงานได้"
+
+msgid "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
+msgstr "ระบบนี้ไม่รองรับการรีเซ็ตเป็นค่าเริ่มต้นจากโรงงาน โปรดติดตั้ง AnduinOS ใหม่และเลือกระบบไฟล์ Btrfs เพื่อเปิดใช้คุณสมบัตินี้"
+
+msgid "Factory Reset Is Not Ready"
+msgstr "การรีเซ็ตเป็นค่าเริ่มต้นจากโรงงานยังไม่พร้อม"
+
+msgid "Reset AnduinOS to Its Initial State?"
+msgstr "รีเซ็ต AnduinOS กลับสู่สถานะเริ่มต้นหรือไม่?"
+
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "การรีเซ็ตเป็นค่าเริ่มต้นจากโรงงานจะคืนไฟล์ระบบ แพ็กเกจที่ติดตั้ง และการตั้งค่าระบบกลับสู่สถานะ New OS เริ่มต้น ไฟล์ส่วนตัวในโฟลเดอร์ Home จะไม่เปลี่ยนแปลง ระบบจะสร้างสแนปช็อตเพื่อความปลอดภัยของระบบปัจจุบันก่อน จากนั้นจะเตรียมการกู้คืนและคอมพิวเตอร์เครื่องนี้จะเริ่มระบบใหม่โดยอัตโนมัติภายใน 60 วินาที"
+
+msgid "Return to the initial New OS state"
+msgstr "กลับสู่สถานะ New OS เริ่มต้น"
+
+msgid "Saved as a safety snapshot before reset"
+msgstr "บันทึกเป็นสแนปช็อตเพื่อความปลอดภัยก่อนรีเซ็ต"
+
+msgid "Reset and Restart"
+msgstr "รีเซ็ตและเริ่มระบบใหม่"
+
+msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+msgstr "“New OS” คือสถานะระบบเริ่มต้นที่สร้างขึ้นระหว่างการติดตั้ง การลบสถานะนี้จะทำให้ไม่สามารถรีเซ็ต AnduinOS กลับสู่สถานะเริ่มต้นได้ และไม่สามารถย้อนกลับได้หากไม่ติดตั้งระบบปฏิบัติการใหม่ ไฟล์ส่วนตัวของคุณจะไม่ถูกลบจากการดำเนินการนี้"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "ลบไฟล์ของผู้ใช้"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "การรีเซ็ตเป็นค่าโรงงานจะคืนค่าไฟล์ระบบ แพ็กเกจที่ติดตั้ง และการตั้งค่าระบบกลับสู่สถานะ New OS เริ่มต้น ระบบจะสร้างสแนปช็อตความปลอดภัยของระบบปัจจุบันก่อน จากนั้นจะเตรียมการกู้คืนและคอมพิวเตอร์เครื่องนี้จะรีสตาร์ตโดยอัตโนมัติภายใน 60 วินาที"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "กำลังเตรียมการรีเซ็ตเป็นค่าโรงงาน…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "จะเก็บไว้ เว้นแต่คุณจะเลือกให้ลบด้านล่าง"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "ไม่พร้อมใช้งานเนื่องจากจุดกู้คืน Home จากโรงงานสูญหายหรือเสียหาย"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "คืนค่า Home เป็นสถานะเริ่มต้นหลังการติดตั้งและลบประวัติสแนปช็อตของ Home การดำเนินการนี้ไม่สามารถย้อนกลับได้หลังจากยืนยันการกู้คืน"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "การป้องกันพื้นที่ดิสก์"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "พื้นที่ว่างขั้นต่ำ"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "ใช้กับสแนปช็อตอัตโนมัติของทั้งระบบและโฟลเดอร์ส่วนตัว ตั้งค่าเป็น 0 เพื่อปิดใช้งาน"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "หยุดสแนปช็อตอัตโนมัติชั่วคราวแล้ว"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "สแนปช็อตของโฟลเดอร์ส่วนตัวกำลังรอพื้นที่ว่างเพิ่มเติม"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "หยุดสแนปช็อตตามกำหนดเวลาของโฟลเดอร์ส่วนตัวชั่วคราวเนื่องจากพื้นที่ดิสก์เหลือน้อย จะกลับมาทำงานโดยอัตโนมัติเมื่อมีพื้นที่ว่าง"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "หยุดสแนปช็อตตามกำหนดเวลาของระบบชั่วคราวเนื่องจากพื้นที่ดิสก์เหลือน้อย จะกลับมาทำงานโดยอัตโนมัติเมื่อมีพื้นที่ว่าง"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "สแนปช็อตของระบบและโฟลเดอร์ส่วนตัวกำลังรอพื้นที่ว่างเพิ่มเติม"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "สแนปช็อตของระบบกำลังรอพื้นที่ว่างเพิ่มเติม"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "ระบบจะสร้างสแนปช็อตเพื่อความปลอดภัยก่อน แล้วเริ่มระบบใหม่ภายใน 60 วินาที"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "ลบไฟล์ในโฟลเดอร์ส่วนตัวของผู้ใช้ทุกคนและประวัติสแนปช็อต การดำเนินการนี้ไม่สามารถย้อนกลับได้"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "คืนค่าระบบเป็นสถานะ New OS โดยเก็บไฟล์ส่วนตัวไว้ตามค่าเริ่มต้น"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "ย้อนคืนข้อมูลผู้ใช้"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "คืนค่าไฟล์และการตั้งค่าของผู้ใช้ทุกคนเป็นสถานะเริ่มต้น โดยเก็บประวัติสแนปช็อตไว้"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "จะสร้างสแนปช็อตเพื่อความปลอดภัยก่อนย้อนคืน และเริ่มระบบใหม่ภายใน 60 วินาทีหลังเตรียมพร้อม"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "การลบ New OS จะปิดใช้งานการคืนค่าโรงงานสำหรับสแนปช็อตประเภทนี้ โดยเก็บไฟล์ปัจจุบันและสแนปช็อตอื่นไว้"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "ไฟล์และการตั้งค่าของผู้ใช้ทุกคน"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "จะสร้างสแนปช็อตเพื่อความปลอดภัยก่อน โดยเก็บประวัติสแนปช็อตไว้"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "พร้อมย้อนคืนแล้ว โปรดบันทึกงาน คอมพิวเตอร์จะเริ่มระบบใหม่ภายใน 60 วินาที"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "ยืนยันการย้อนคืนไม่สำเร็จ กำลังคืนค่าสถานะก่อนหน้า"

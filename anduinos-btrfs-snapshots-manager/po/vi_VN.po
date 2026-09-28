@@ -1880,3 +1880,150 @@ msgstr "Phục hồi AnduinOS và khôi phục các Tệp cá nhân đã bị x�
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
 msgid "Create an AnduinOS system snapshot"
 msgstr "Tạo ảnh chụp nhanh hệ thống AnduinOS"
+
+msgid "Delete Factory Recovery Point?"
+msgstr "Xóa điểm khôi phục ban đầu?"
+
+msgid "Delete and Disable Factory Recovery"
+msgstr "Xóa và vô hiệu hóa khôi phục ban đầu"
+
+msgid "Deleting factory recovery point…"
+msgstr "Đang xóa điểm khôi phục ban đầu…"
+
+msgid "Checking factory reset availability…"
+msgstr "Đang kiểm tra khả năng khôi phục cài đặt gốc…"
+
+msgid "Factory Reset Is Not Available"
+msgstr "Không thể khôi phục cài đặt gốc"
+
+msgid "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
+msgstr "Hệ thống này không hỗ trợ khôi phục cài đặt gốc. Hãy cài đặt lại AnduinOS và chọn hệ thống tệp Btrfs để bật tính năng này."
+
+msgid "Factory Reset Is Not Ready"
+msgstr "Khôi phục cài đặt gốc chưa sẵn sàng"
+
+msgid "Reset AnduinOS to Its Initial State?"
+msgstr "Khôi phục AnduinOS về trạng thái ban đầu?"
+
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Khôi phục cài đặt gốc sẽ đưa các tệp hệ thống, gói đã cài đặt và thiết lập hệ thống về trạng thái New OS ban đầu. Các tệp cá nhân trong thư mục Home sẽ không thay đổi. Trước tiên, hệ thống sẽ tạo một ảnh chụp nhanh an toàn của trạng thái hiện tại. Sau đó, quá trình khôi phục sẽ được chuẩn bị và máy tính sẽ tự động khởi động lại trong vòng 60 giây."
+
+msgid "Return to the initial New OS state"
+msgstr "Trở về trạng thái New OS ban đầu"
+
+msgid "Saved as a safety snapshot before reset"
+msgstr "Đã lưu làm ảnh chụp nhanh an toàn trước khi khôi phục"
+
+msgid "Reset and Restart"
+msgstr "Khôi phục và khởi động lại"
+
+msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+msgstr "“New OS” là trạng thái hệ thống ban đầu được tạo trong khi cài đặt. Xóa trạng thái này sẽ vô hiệu hóa khả năng khôi phục AnduinOS về trạng thái ban đầu. Không thể hoàn tác việc này nếu không cài đặt lại hệ điều hành. Các tệp cá nhân của bạn sẽ không bị xóa."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "Xóa tệp của người dùng"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Khôi phục cài đặt gốc sẽ đưa các tệp hệ thống, gói đã cài đặt và cài đặt hệ thống về trạng thái New OS ban đầu. Trước tiên, hệ thống sẽ tạo một ảnh chụp nhanh an toàn của trạng thái hiện tại. Sau đó, quá trình khôi phục sẽ được chuẩn bị và máy tính này sẽ tự động khởi động lại trong vòng 60 giây."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "Đang chuẩn bị khôi phục cài đặt gốc…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "Được giữ lại trừ khi bạn chọn xóa chúng bên dưới"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "Không khả dụng vì điểm khôi phục Home gốc bị thiếu hoặc hỏng."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "Khôi phục Home về trạng thái ban đầu sau khi cài đặt và xóa lịch sử ảnh chụp nhanh Home. Không thể hoàn tác sau khi quá trình khôi phục được xác nhận."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Bảo vệ dung lượng đĩa"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Dung lượng trống tối thiểu"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Áp dụng cho ảnh chụp tự động của cả hệ thống và thư mục cá nhân. Đặt thành 0 để tắt."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Đã tạm dừng ảnh chụp tự động"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Ảnh chụp thư mục cá nhân đang chờ có thêm dung lượng trống."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Ảnh chụp thư mục cá nhân theo lịch đã tạm dừng do dung lượng đĩa thấp. Chúng sẽ tự động tiếp tục khi có dung lượng trống."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Ảnh chụp hệ thống theo lịch đã tạm dừng do dung lượng đĩa thấp. Chúng sẽ tự động tiếp tục khi có dung lượng trống."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Ảnh chụp hệ thống và thư mục cá nhân đang chờ có thêm dung lượng trống."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Ảnh chụp hệ thống đang chờ có thêm dung lượng trống."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "Ảnh chụp an toàn của hệ thống được tạo trước. Sau đó máy sẽ khởi động lại trong vòng 60 giây."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "Xóa tệp trong thư mục cá nhân của mọi người dùng và lịch sử ảnh chụp. Không thể hoàn tác."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "Khôi phục hệ thống về trạng thái New OS. Mặc định giữ lại tệp cá nhân."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Khôi phục dữ liệu người dùng"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Khôi phục tệp và cài đặt của tất cả người dùng về trạng thái ban đầu. Lịch sử ảnh chụp nhanh được giữ lại."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Ảnh chụp nhanh an toàn được tạo trước khi khôi phục. Máy tính sẽ khởi động lại trong vòng 60 giây sau khi chuẩn bị xong."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "Xóa New OS sẽ vô hiệu hóa khôi phục cài đặt gốc cho loại ảnh chụp nhanh này. Các tệp hiện tại và ảnh chụp nhanh khác được giữ lại."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Tệp và cài đặt của tất cả người dùng"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Một ảnh chụp nhanh an toàn được tạo trước. Lịch sử ảnh chụp nhanh được giữ lại."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Đã sẵn sàng khôi phục. Hãy lưu công việc; máy tính sẽ khởi động lại trong vòng 60 giây."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Xác nhận khôi phục thất bại. Đang khôi phục trạng thái trước đó."

@@ -20,7 +20,8 @@ WHY_AI_PACKAGE = "anduinos-why-ai"
 WHY_PLACEHOLDER_PACKAGE = "anduinos-why-placeholder"
 DEFAULT_GRUB_TIMEOUT = 10
 DEFAULT_GRUB_RECORDFAIL_TIMEOUT = 30
-GRUB_DISPLAY_NATIVE = "native"
+GRUB_DISPLAY_HIGH_RESOLUTION = "high-resolution"
+GRUB_DISPLAY_AUTOMATIC = "automatic"
 GRUB_DISPLAY_LARGE_TEXT = "large-text"
 DEFAULT_GRUB_DISPLAY_MODE = GRUB_DISPLAY_LARGE_TEXT
 GRUB_DEFAULTS = Path("/etc/default/grub")
@@ -133,8 +134,8 @@ def read_grub_display_mode(
             if match:
                 gfxmode = match.group("value")
 
-    return (
-        GRUB_DISPLAY_NATIVE
-        if gfxmode.casefold() == "auto"
-        else DEFAULT_GRUB_DISPLAY_MODE
-    )
+    if gfxmode.casefold() == "auto":
+        return GRUB_DISPLAY_AUTOMATIC
+    if re.fullmatch(r"[0-9]+x[0-9]+,auto", gfxmode):
+        return GRUB_DISPLAY_HIGH_RESOLUTION
+    return DEFAULT_GRUB_DISPLAY_MODE

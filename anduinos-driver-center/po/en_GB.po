@@ -1696,3 +1696,45 @@ msgstr "In recovery mode, sign in with your normal account and run:"
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Enable Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "Prepare AnduinOS for Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."

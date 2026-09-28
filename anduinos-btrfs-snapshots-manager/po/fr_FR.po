@@ -1880,3 +1880,150 @@ msgstr "Récupérer AnduinOS et restaurer les fichiers personnels supprimés"
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
 msgid "Create an AnduinOS system snapshot"
 msgstr "Créer un instantané système AnduinOS"
+
+msgid "Delete Factory Recovery Point?"
+msgstr "Supprimer le point de restauration d’usine ?"
+
+msgid "Delete and Disable Factory Recovery"
+msgstr "Supprimer et désactiver la restauration d’usine"
+
+msgid "Deleting factory recovery point…"
+msgstr "Suppression du point de restauration d’usine…"
+
+msgid "Checking factory reset availability…"
+msgstr "Vérification de la disponibilité de la réinitialisation d’usine…"
+
+msgid "Factory Reset Is Not Available"
+msgstr "La réinitialisation d’usine n’est pas disponible"
+
+msgid "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
+msgstr "Ce système ne prend pas en charge la réinitialisation d’usine. Réinstallez AnduinOS et choisissez le système de fichiers Btrfs pour l’activer."
+
+msgid "Factory Reset Is Not Ready"
+msgstr "La réinitialisation d’usine n’est pas prête"
+
+msgid "Reset AnduinOS to Its Initial State?"
+msgstr "Réinitialiser AnduinOS à son état initial ?"
+
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "La réinitialisation d’usine restaurera les fichiers système, les paquets installés et les paramètres système à l’état New OS d’origine. Les fichiers personnels du dossier personnel ne seront pas modifiés. Un instantané de sécurité du système actuel sera d’abord créé. La récupération sera ensuite préparée et cet ordinateur redémarrera automatiquement dans les 60 secondes."
+
+msgid "Return to the initial New OS state"
+msgstr "Revenir à l’état New OS initial"
+
+msgid "Saved as a safety snapshot before reset"
+msgstr "Enregistré comme instantané de sécurité avant la réinitialisation"
+
+msgid "Reset and Restart"
+msgstr "Réinitialiser et redémarrer"
+
+msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+msgstr "« New OS » est l’état système d’origine créé lors de l’installation. Sa suppression empêchera de réinitialiser AnduinOS à son état initial. Cette action ne peut pas être annulée sans réinstaller le système d’exploitation. Vos fichiers personnels ne seront pas supprimés."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "Effacer les fichiers utilisateur"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "La réinitialisation d’usine restaurera les fichiers système, les paquets installés et les paramètres système à l’état New OS d’origine. Un instantané de sécurité du système actuel sera d’abord créé. La récupération sera ensuite préparée et cet ordinateur redémarrera automatiquement dans les 60 secondes."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "Préparation de la réinitialisation d’usine…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "Conservés, sauf si vous choisissez de les effacer ci-dessous"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "Indisponible, car le point de récupération d’usine de Home est absent ou endommagé."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "Restaurer Home à son état initial après l’installation et effacer l’historique des instantanés Home. Cette opération est irréversible une fois la récupération confirmée."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Protection de l’espace disque"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Espace libre minimal"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "S’applique aux instantanés automatiques du système et du dossier personnel. Réglez sur 0 pour désactiver."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Instantanés automatiques en pause"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Les instantanés du dossier personnel attendent davantage d’espace libre."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Les instantanés planifiés du dossier personnel ont été mis en pause par manque d’espace disque. Ils reprendront automatiquement lorsque de l’espace sera disponible."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Les instantanés planifiés du système ont été mis en pause par manque d’espace disque. Ils reprendront automatiquement lorsque de l’espace sera disponible."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Les instantanés du système et du dossier personnel attendent davantage d’espace libre."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Les instantanés du système attendent davantage d’espace libre."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "Un instantané de sécurité du système est d’abord créé. Le redémarrage suit dans les 60 secondes."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "Effacer les fichiers personnels de tous les utilisateurs et l’historique des instantanés. Cette action est irréversible."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "Restaurer le système à l’état New OS. Les fichiers personnels sont conservés par défaut."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Restaurer les données utilisateur"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Rétablir les fichiers et paramètres de tous les utilisateurs à leur état initial. L’historique des instantanés est conservé."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Des instantanés de sécurité sont créés avant la restauration. Le redémarrage suit dans les 60 secondes après la préparation."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "Supprimer New OS désactive la restauration d’usine pour cette catégorie d’instantanés. Les fichiers actuels et les autres instantanés sont conservés."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Fichiers et paramètres de tous les utilisateurs"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Un instantané de sécurité est d’abord créé. L’historique des instantanés est conservé."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "La restauration est prête. Enregistrez votre travail ; cet ordinateur redémarrera dans les 60 secondes."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "La confirmation de la restauration a échoué. Rétablissement de l’état précédent."

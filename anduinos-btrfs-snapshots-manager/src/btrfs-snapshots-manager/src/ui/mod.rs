@@ -1,10 +1,12 @@
 mod advanced_settings;
 mod automation_dialog;
 mod btrfs_settings;
+pub(crate) mod factory_reset;
 mod information;
 mod personal_history;
 mod snapshot_model;
 mod snapshot_page;
+pub(crate) use snapshot_page::rollback_confirmation;
 
 use std::cell::{Cell, RefCell};
 use std::time::Duration;
@@ -102,6 +104,15 @@ impl MainWindow {
 
     pub fn show_information(&self) {
         information::show(self.upcast_ref());
+    }
+
+    pub fn begin_factory_reset(&self) {
+        if let Some(pages) = self.imp().pages.borrow().as_ref() {
+            pages.set_visible_child_name("system");
+        }
+        if let Some(page) = self.imp().system_page.borrow().as_ref() {
+            page.begin_factory_reset();
+        }
     }
 
     fn setup_ui(&self, monitor: SnapshotSignalMonitor) {

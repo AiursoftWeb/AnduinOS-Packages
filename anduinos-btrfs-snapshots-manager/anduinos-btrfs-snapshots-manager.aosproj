@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-btrfs-snapshots-manager</PackageName>
-    <PackageVersion>2.0.2-16+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Disk Snapshots Manager — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -68,6 +68,8 @@
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-boot-config" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-boot-config" />
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-confirm" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-confirm" />
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-apt-hook" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-apt-hook" />
+    <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-provision-factory" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-provision-factory" />
+    <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-offline" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-offline" />
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-cli" Target="/usr/bin/anduinos-btrfs-snapshots-manager-cli" />
     <IncludeScript Include="data/dracut/91anduinos-btrfs-snapshots-manager/module-setup.sh"
                    Target="/usr/lib/dracut/modules.d/91anduinos-btrfs-snapshots-manager/module-setup.sh" />
@@ -100,6 +102,8 @@
     <IncludeFile Include="docs/ROLLBACK-RELEASE-TEST-PLAN.md" Target="/usr/share/doc/anduinos-btrfs-snapshots-manager/ROLLBACK-RELEASE-TEST-PLAN.md" />
     <IncludeFile Include="docs/deployment-v1.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/deployment-v1.schema.json" />
     <IncludeFile Include="docs/rollback-v3.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/rollback-v3.schema.json" />
+    <IncludeFile Include="docs/rollback-v4.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/rollback-v4.schema.json" />
+    <IncludeFile Include="docs/rollback-v5.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/rollback-v5.schema.json" />
     <IncludeFile Include="docs/root-cleanup-v1.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/root-cleanup-v1.schema.json" />
     <IncludeFile Include="docs/personal-snapshot-v1.schema.json" Target="/usr/share/anduinos-btrfs-snapshots-manager/personal-snapshot-v1.schema.json" />
     <IncludeFolder Include="obj/locale" Target="/usr/share/locale" />

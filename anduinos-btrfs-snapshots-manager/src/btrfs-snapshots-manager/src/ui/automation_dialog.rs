@@ -1,7 +1,9 @@
 use adw::prelude::*;
 use gtk::{gio, glib};
 use libadwaita as adw;
-use snapshots_manager_common::RetentionPolicy;
+use snapshots_manager_common::{
+    DEFAULT_MINIMUM_FREE_SPACE_GIB, MAXIMUM_MINIMUM_FREE_SPACE_GIB, RetentionPolicy,
+};
 
 use crate::dbus_client::SnapshotsManagerHelperClient;
 use crate::i18n::tr;
@@ -58,6 +60,27 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
         .sync_create()
         .build();
 
+    let disk_space = adw::PreferencesGroup::new();
+    disk_space.set_title(&tr("Disk Space Protection"));
+    let minimum_free_space = spin_row(
+        &tr("Minimum free space"),
+        &tr("GiB"),
+        0,
+        MAXIMUM_MINIMUM_FREE_SPACE_GIB,
+    );
+    minimum_free_space.set_value(f64::from(DEFAULT_MINIMUM_FREE_SPACE_GIB));
+    minimum_free_space.set_subtitle(&tr(
+        "Applies to both System and Home automatic snapshots. Set to 0 to disable.",
+    ));
+    minimum_free_space.add_suffix(&gtk::Label::new(Some(&tr("GiB"))));
+    disk_space.add(&minimum_free_space);
+    let low_space_status = adw::ActionRow::new();
+    low_space_status.set_title(&tr("Automatic snapshots paused"));
+    low_space_status.add_prefix(&gtk::Image::from_icon_name("dialog-warning-symbolic"));
+    low_space_status.set_visible(false);
+    disk_space.add(&low_space_status);
+    page.add(&disk_space);
+
     let save_group = adw::PreferencesGroup::new();
     let save = gtk::Button::with_label(&tr("Save"));
     save.add_css_class("suggested-action");
@@ -73,6 +96,7 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
         false,
     );
     interval.set_sensitive(false);
+    minimum_free_space.set_sensitive(false);
     let window_load = window.downgrade();
     let enabled_load = enabled.clone();
     let cleanup_load = cleanup.clone();
@@ -82,10 +106,17 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
     let daily_load = daily.clone();
     let weekly_load = weekly.clone();
     let monthly_load = monthly.clone();
+    let minimum_free_space_load = minimum_free_space.clone();
+    let low_space_status_load = low_space_status.clone();
     let save_load = save.clone();
     glib::spawn_future_local(async move {
         let result = gio::spawn_blocking(|| {
-            SnapshotsManagerHelperClient::new().and_then(|client| client.get_automation_config())
+            SnapshotsManagerHelperClient::new().and_then(|client| {
+                Ok((
+                    client.get_automation_config()?,
+                    client.get_automatic_space_status()?,
+                ))
+            })
         })
         .await
         .map_err(|_| anyhow::anyhow!("The settings query stopped unexpectedly"))
@@ -94,7 +125,7 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
             return;
         };
         match result {
-            Ok(config) => {
+            Ok((config, (system_paused, home_paused))) => {
                 let policy = match scope {
                     SnapshotScope::System => config.system,
                     SnapshotScope::Home => config.home,
@@ -107,6 +138,19 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
                 weekly_load.set_value(f64::from(policy.keep_weekly_days));
                 monthly_load.set_value(f64::from(policy.keep_monthly_days));
                 yearly_load.set_active(policy.keep_yearly);
+                minimum_free_space_load.set_value(f64::from(config.minimum_free_space_gib));
+                let paused_description = match (system_paused, home_paused) {
+                    (true, true) => Some(tr(
+                        "System and Home snapshots are waiting for more free space.",
+                    )),
+                    (true, false) => Some(tr("System snapshots are waiting for more free space.")),
+                    (false, true) => Some(tr("Home snapshots are waiting for more free space.")),
+                    (false, false) => None,
+                };
+                if let Some(description) = paused_description {
+                    low_space_status_load.set_subtitle(&description);
+                    low_space_status_load.set_visible(true);
+                }
                 set_controls_sensitive(
                     &[&enabled_load, &cleanup_load, &yearly_load],
                     &[&all_load, &daily_load, &weekly_load, &monthly_load],
@@ -114,6 +158,7 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
                 );
                 save_load.set_sensitive(true);
                 interval_load.set_sensitive(true);
+                minimum_free_space_load.set_sensitive(true);
             }
             Err(problem) => {
                 show_error(&window_load, &problem.to_string());
@@ -133,6 +178,7 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
             keep_monthly_days: monthly.value().round() as u32,
             keep_yearly: yearly.is_active(),
         };
+        let minimum_free_space_gib = minimum_free_space.value().round() as u32;
         if let Err(problem) = policy.validate() {
             show_error(&window_save, &problem.to_string());
             return;
@@ -149,6 +195,7 @@ pub fn show(parent: &adw::ApplicationWindow, scope: SnapshotScope) {
                     SnapshotScope::System => config.system = policy,
                     SnapshotScope::Home => config.home = policy,
                 }
+                config.minimum_free_space_gib = minimum_free_space_gib;
                 let saved = client.save_automation_config(&config)?;
                 if !saved.0 {
                     anyhow::bail!(saved.1);

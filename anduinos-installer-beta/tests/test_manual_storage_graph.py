@@ -10,6 +10,7 @@ from installer_core.manual_graph_planning import (
     validate_manual_storage_graph,
 )
 from installer_core.manual_layout import (
+    HARD_MINIMUM_ROOT_MIB,
     ManualPartitionRequest,
     ManualPartitionResizeRequest,
     ManualPartitionRole,
@@ -66,12 +67,81 @@ def manual_plan(
 
 
 class ManualStorageGraphTests(unittest.TestCase):
-    def test_manual_graph_allows_subminimum_disk_and_positive_root(self):
+    def test_preserved_bitlocker_is_valid_in_privileged_manual_graph(self):
+        original = manual_disk()
+        disk = replace(
+            original,
+            partitions=(
+                original.partitions[0],
+                replace(original.partitions[1], filesystem_type="bitlocker"),
+            ),
+        )
+        plan, inventory = manual_plan(disk=disk)
+
+        validate_plan(plan)
+        self.assertIs(validate_manual_storage_graph(plan, inventory), disk)
+        bitlocker_reference = next(
+            item.reference_id
+            for item in plan.storage.graph.block_references
+            if item.stable_id == disk.partitions[1].identity.partuuid
+        )
+        self.assertEqual(
+            tuple(
+                operation.action
+                for operation in plan.storage.graph.operations
+                if operation.target_id == bitlocker_reference
+            ),
+            (StorageGraphAction.PRESERVE,),
+        )
+
+    def test_external_manual_plan_with_new_esp_never_authorizes_fallback(self):
+        chosen = selection(
+            reinitialize=True,
+            reused_esp="",
+            new_partitions=(
+                ManualPartitionRequest(
+                    ManualPartitionRole.EFI_SYSTEM, 1, 1025
+                ),
+                ManualPartitionRequest(
+                    ManualPartitionRole.ROOT, 1025, 40 * 1024
+                ),
+            ),
+        )
+        plan, inventory = manual_plan(chosen=chosen)
+        plan = replace(
+            plan,
+            boot=replace(
+                plan.boot,
+                external_target=True,
+                install_fallback_path=False,
+            ),
+        )
+        validate_plan(plan)
+        validate_manual_storage_graph(plan, inventory)
+        self.assertEqual(plan.storage.graph.boot_targets[0].fallback_path, "")
+        self.assertFalse(
+            any(
+                item.action is StorageGraphAction.WRITE_FALLBACK_BOOT_FILES
+                for item in plan.storage.graph.operations
+            )
+        )
+
+        unsafe = replace(
+            plan,
+            boot=replace(plan.boot, install_fallback_path=True),
+        )
+        with self.assertRaisesRegex(
+            ValueError,
+            "Manual mode must not write the EFI fallback path",
+        ):
+            validate_plan(unsafe)
+
+    def test_manual_graph_allows_below_minimum_configuration_with_six_gib_root(self):
         original = manual_disk()
         disk = replace(original, identity=replace(
             original.identity, expected_size_bytes=23 * 1024**3),
             partitions=(), free_extents=())
-        for root_mib in (1, 10 * 1024, 21 * 1024):
+        for root_mib in (HARD_MINIMUM_ROOT_MIB, 10 * 1024, 21 * 1024):
             with self.subTest(root_mib=root_mib):
                 chosen = replace(selection(
                     reinitialize=True, reused_esp="", new_partitions=(
@@ -81,6 +151,41 @@ class ManualStorageGraphTests(unittest.TestCase):
                 plan, inventory = manual_plan(chosen=chosen, disk=disk)
                 validate_plan(plan)
                 validate_manual_storage_graph(plan, inventory)
+
+    def test_manual_graph_rejects_root_below_hard_minimum(self):
+        chosen = selection(new_partitions=(
+            ManualPartitionRequest(
+                ManualPartitionRole.ROOT,
+                80 * 1024,
+                80 * 1024 + HARD_MINIMUM_ROOT_MIB - 1,
+            ),
+        ))
+        with self.assertRaisesRegex(ValueError, "at least 6 GiB"):
+            manual_plan(chosen=chosen)
+
+    def test_untrusted_manual_graph_cannot_bypass_root_hard_minimum(self):
+        plan, _inventory = manual_plan()
+        graph = plan.storage.graph
+        assert graph is not None
+        partitions = tuple(
+            replace(
+                item,
+                end_mib=item.start_mib + HARD_MINIMUM_ROOT_MIB - 1,
+            )
+            if item.name == ManualPartitionRole.ROOT.value
+            else item
+            for item in graph.partitions
+        )
+        tampered = replace(
+            plan,
+            storage=replace(
+                plan.storage,
+                graph=replace(graph, partitions=partitions),
+            ),
+        )
+
+        with self.assertRaisesRegex(ValueError, "at least 6 GiB"):
+            validate_plan(tampered)
 
     def test_xfs_and_f2fs_are_canonical_single_root_graphs(self):
         for filesystem in (Filesystem.XFS, Filesystem.F2FS):

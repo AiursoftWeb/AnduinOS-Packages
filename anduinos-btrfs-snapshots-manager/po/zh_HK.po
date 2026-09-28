@@ -1880,3 +1880,150 @@ msgstr "復原 AnduinOS 並還原已刪除的個人檔案"
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
 msgid "Create an AnduinOS system snapshot"
 msgstr "建立 AnduinOS 系統快照"
+
+msgid "Delete Factory Recovery Point?"
+msgstr "刪除原廠復原點？"
+
+msgid "Delete and Disable Factory Recovery"
+msgstr "刪除並停用原廠復原"
+
+msgid "Deleting factory recovery point…"
+msgstr "正在刪除原廠復原點…"
+
+msgid "Checking factory reset availability…"
+msgstr "正在檢查恢復原廠設定是否可用…"
+
+msgid "Factory Reset Is Not Available"
+msgstr "無法恢復原廠設定"
+
+msgid "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
+msgstr "此系統不支援恢復原廠設定。請重新安裝 AnduinOS，並選擇 Btrfs 檔案系統以啟用此功能。"
+
+msgid "Factory Reset Is Not Ready"
+msgstr "恢復原廠設定尚未準備就緒"
+
+msgid "Reset AnduinOS to Its Initial State?"
+msgstr "將 AnduinOS 恢復至初始狀態？"
+
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "恢復原廠設定會將系統檔案、已安裝的套件及系統設定還原至最初的 New OS 狀態。Home 中的個人檔案不會變更。系統會先為目前狀態建立安全快照，然後準備復原，並在 60 秒內自動重新啟動此電腦。"
+
+msgid "Return to the initial New OS state"
+msgstr "返回最初的 New OS 狀態"
+
+msgid "Saved as a safety snapshot before reset"
+msgstr "已儲存為重設前的安全快照"
+
+msgid "Reset and Restart"
+msgstr "重設並重新啟動"
+
+msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+msgstr "「New OS」是安裝期間建立的原始系統狀態。刪除它將停用把 AnduinOS 恢復至初始狀態的功能。除非重新安裝作業系統，否則無法復原。此操作不會刪除您的個人檔案。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "清除使用者檔案"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "恢復原廠設定會將系統檔案、已安裝的套件及系統設定還原至最初的 New OS 狀態。系統會先為目前狀態建立安全快照，然後準備復原，並在 60 秒內自動重新啟動此電腦。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "正在準備恢復原廠設定…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "將會保留，除非你在下方選擇清除"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "無法使用，因為原廠 Home 復原點遺失或已損壞。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "將 Home 還原至安裝完成時的初始狀態，並清除 Home 快照記錄。確認復原後便無法復原此操作。"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "磁碟空間保護"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "最低可用空間"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "同時適用於系統和家目錄自動快照。設為 0 可停用此保護。"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "自動快照已暫停"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "家目錄快照正在等待更多可用空間。"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "磁碟可用空間不足，排程的家目錄快照已暫停；空間恢復後將自動繼續。"
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "磁碟可用空間不足，排程的系統快照已暫停；空間恢復後將自動繼續。"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "系統和家目錄快照正在等待更多可用空間。"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "系統快照正在等待更多可用空間。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "先建立系統安全快照，準備完成後 60 秒內重新啟動。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "清除所有使用者的家目錄檔案和快照歷史，無法復原。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "將系統還原至 New OS，預設保留個人檔案。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "回復使用者資料"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "將所有使用者的檔案和設定回復至初始狀態，保留快照記錄。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "回復前會建立安全快照，準備完成後會在 60 秒內重新啟動。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "刪除 New OS 將停用此類快照的原廠回復功能。目前檔案和其他快照會保留。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "所有使用者的檔案和設定"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "先建立安全快照，保留快照記錄。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "回復已準備就緒。請儲存工作，電腦將在 60 秒內重新啟動。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "回復確認失敗，正在還原之前的狀態。"

@@ -117,6 +117,18 @@
     },
     {
       "if": {
+        "properties": { "kind": { "const": "factory" } },
+        "required": ["kind"]
+      },
+      "then": {
+        "properties": {
+          "pinned": { "const": true },
+          "title": { "const": "New OS" }
+        }
+      }
+    },
+    {
+      "if": {
         "properties": {
           "state": {
             "const": "ready"

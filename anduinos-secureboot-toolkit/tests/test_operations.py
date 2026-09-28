@@ -12,6 +12,7 @@ from unittest.mock import Mock, patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from anduinos_secureboot import operations  # noqa: E402
+from anduinos_secureboot.firmware import probe_firmware
 
 
 TEST_KERNEL = "test-kernel"
@@ -40,6 +41,19 @@ def with_secure_boot_enabled(run):
 
 
 class OperationsTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.efi = Path(temporary.name)
+        (self.efi / "efivars").mkdir()
+        self.mountinfo = self.efi / "mountinfo"
+        self.mountinfo.write_text(
+            f"30 20 0:30 / {self.efi / 'efivars'} rw - efivarfs efivarfs rw\n")
+        probe = patch.object(operations, "probe_firmware", side_effect=lambda **kwargs:
+            probe_firmware(efi_path=self.efi, mountinfo=self.mountinfo, **kwargs))
+        probe.start()
+        self.addCleanup(probe.stop)
+
     def test_command_runner_preserves_literal_arguments_stdin_and_failure(self):
         command = ["example-command", "$(id); echo unsafe", "argument with spaces"]
         failed = subprocess.CompletedProcess(command, 23, "", "operation failed")
@@ -111,9 +125,8 @@ class OperationsTests(unittest.TestCase):
                 self.assertEqual(json.loads(output.getvalue())["error"], "device unavailable")
                 execute.assert_called_once_with("prepare")
 
-    def test_prepare_skips_known_non_enforcing_firmware_states(self):
+    def test_prepare_skips_unsupported_firmware(self):
         for output in (
-            "SecureBoot disabled\n",
             "This system doesn't support Secure Boot\n",
         ):
             with self.subTest(output=output):
@@ -121,7 +134,7 @@ class OperationsTests(unittest.TestCase):
 
                 def run(command, **kwargs):
                     calls.append(list(command))
-                    return subprocess.CompletedProcess(command, 0, output, "")
+                    return subprocess.CompletedProcess(command, 255, "", output)
 
                 result = operations.prepare(run)
                 self.assertTrue(result.ok)
@@ -131,6 +144,7 @@ class OperationsTests(unittest.TestCase):
                 self.assertEqual(calls, [["mokutil", "--sb-state"]])
 
     def test_prepare_fails_closed_when_firmware_state_is_unknown(self):
+        self.mountinfo.write_text("")
         calls = []
 
         def run(command, **kwargs):
@@ -158,7 +172,10 @@ class OperationsTests(unittest.TestCase):
                 return subprocess.CompletedProcess(command, code, "", "")
 
             result = operations.prepare(
-                with_secure_boot_enabled(run),
+                lambda command, **kwargs: (
+                    subprocess.CompletedProcess(command, 0, "SecureBoot disabled\n", "")
+                    if command == ["mokutil", "--sb-state"] else run(command, **kwargs)
+                ),
                 private,
                 certificate,
                 config,
@@ -168,6 +185,7 @@ class OperationsTests(unittest.TestCase):
             self.assertTrue(result.ok)
             import_call = next(item for item in calls if item[0][:2] == ["mokutil", "--import"])
             self.assertEqual(import_call[1]["stdin"], "123456\n123456\n")
+            self.assertIn(["mokutil", "--timeout", "-1"], [command for command, _ in calls])
             self.assertEqual(config.read_text(), operations.CONFIG_CONTENT)
             self.assertFalse(any(command[0] == "dkms" for command, _ in calls))
             self.assertEqual(result.steps["modules_rebuilt"].status, "skipped")

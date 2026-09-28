@@ -1,3 +1,3 @@
 """AnduinOS GTK4 Native Installer (beta)."""
 
-VERSION = "2.0.2"
+VERSION = "2.0.3"

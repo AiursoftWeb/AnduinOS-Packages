@@ -1880,3 +1880,150 @@ msgstr "Recuperează AnduinOS și restaurează fișierele personale șterse"
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
 msgid "Create an AnduinOS system snapshot"
 msgstr "Creează un instantaneu de sistem AnduinOS"
+
+msgid "Delete Factory Recovery Point?"
+msgstr "Ștergeți punctul de recuperare din fabrică?"
+
+msgid "Delete and Disable Factory Recovery"
+msgstr "Ștergeți și dezactivați recuperarea din fabrică"
+
+msgid "Deleting factory recovery point…"
+msgstr "Se șterge punctul de recuperare din fabrică…"
+
+msgid "Checking factory reset availability…"
+msgstr "Se verifică disponibilitatea resetării la setările din fabrică…"
+
+msgid "Factory Reset Is Not Available"
+msgstr "Resetarea la setările din fabrică nu este disponibilă"
+
+msgid "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
+msgstr "Acest sistem nu acceptă resetarea la setările din fabrică. Reinstalați AnduinOS și alegeți sistemul de fișiere Btrfs pentru a o activa."
+
+msgid "Factory Reset Is Not Ready"
+msgstr "Resetarea la setările din fabrică nu este încă pregătită"
+
+msgid "Reset AnduinOS to Its Initial State?"
+msgstr "Resetați AnduinOS la starea inițială?"
+
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Resetarea la setările din fabrică va readuce fișierele de sistem, pachetele instalate și setările sistemului la starea New OS originală. Fișierele personale din directorul personal nu se vor modifica. Mai întâi va fi creat un instantaneu de siguranță al sistemului curent. Apoi recuperarea va fi pregătită, iar computerul va reporni automat în cel mult 60 de secunde."
+
+msgid "Return to the initial New OS state"
+msgstr "Reveniți la starea New OS inițială"
+
+msgid "Saved as a safety snapshot before reset"
+msgstr "Salvat ca instantaneu de siguranță înainte de resetare"
+
+msgid "Reset and Restart"
+msgstr "Resetați și reporniți"
+
+msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+msgstr "„New OS” este starea originală a sistemului creată în timpul instalării. Ștergerea acesteia va dezactiva posibilitatea de a reseta AnduinOS la starea inițială. Acest lucru nu poate fi anulat fără reinstalarea sistemului de operare. Fișierele personale nu vor fi șterse."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "Șterge fișierele utilizatorului"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Resetarea la valorile din fabrică va restaura fișierele de sistem, pachetele instalate și setările sistemului la starea New OS inițială. Mai întâi va fi creat un instantaneu de siguranță al sistemului curent. Apoi recuperarea va fi pregătită, iar acest computer va reporni automat în cel mult 60 de secunde."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "Se pregătește resetarea la valorile din fabrică…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "Vor fi păstrate dacă nu alegeți să le ștergeți mai jos"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "Indisponibil deoarece punctul de recuperare din fabrică pentru Home lipsește sau este deteriorat."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "Restaurați Home la starea inițială de după instalare și ștergeți istoricul instantaneelor Home. Acțiunea nu poate fi anulată după confirmarea recuperării."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Protecția spațiului pe disc"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Spațiu liber minim"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Se aplică instantaneelor automate ale sistemului și ale dosarului personal. Setați la 0 pentru dezactivare."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Instantaneele automate sunt suspendate"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Instantaneele dosarului personal așteaptă mai mult spațiu liber."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Instantaneele programate ale dosarului personal au fost suspendate din cauza spațiului insuficient pe disc. Vor fi reluate automat când va fi disponibil spațiu."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Instantaneele programate ale sistemului au fost suspendate din cauza spațiului insuficient pe disc. Vor fi reluate automat când va fi disponibil spațiu."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Instantaneele sistemului și ale dosarului personal așteaptă mai mult spațiu liber."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Instantaneele sistemului așteaptă mai mult spațiu liber."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "Mai întâi se creează un instantaneu de siguranță al sistemului. Repornirea urmează în cel mult 60 de secunde."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "Ștergeți fișierele din dosarele personale ale tuturor utilizatorilor și istoricul instantaneelor. Acțiunea este ireversibilă."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "Restabiliți sistemul la starea New OS. Fișierele personale sunt păstrate implicit."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Restaurează datele utilizatorilor"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Restabilește fișierele și setările tuturor utilizatorilor la starea inițială. Istoricul instantaneelor este păstrat."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Se creează instantanee de siguranță înainte de restaurare. Calculatorul va reporni în 60 de secunde după pregătire."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "Ștergerea New OS dezactivează restaurarea din fabrică pentru această categorie de instantanee. Fișierele actuale și celelalte instantanee sunt păstrate."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Fișierele și setările tuturor utilizatorilor"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Mai întâi se creează un instantaneu de siguranță. Istoricul instantaneelor este păstrat."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Restaurarea este pregătită. Salvați lucrul; calculatorul va reporni în 60 de secunde."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Confirmarea restaurării a eșuat. Se restabilește starea anterioară."

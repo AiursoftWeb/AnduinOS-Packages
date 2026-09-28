@@ -5,6 +5,7 @@ import stat
 import subprocess
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
@@ -13,8 +14,8 @@ CONFIG = PROJECT / "assets/20-anduinos-style.cfg"
 POSTINST = PROJECT / "scripts/postinst.sh"
 POSTRM = PROJECT / "scripts/postrm.sh"
 
-CONFIG_TEXT = """# Prefer a lower graphics mode while keeping GRUB's trusted default Unicode font.
-GRUB_GFXMODE="1440x900,1280x800,1280x720,1024x768,auto"
+CONFIG_TEXT = """# Let GRUB and the firmware choose a readable menu mode by default.
+GRUB_GFXMODE="auto"
 # Let Linux and Plymouth select their own platform-appropriate video mode.
 GRUB_GFXPAYLOAD_LINUX="auto"
 """
@@ -35,6 +36,19 @@ def install_fake_chroot_detectors(
 
 
 class GrubStylePackageContractTests(unittest.TestCase):
+    def test_default_display_mode_is_grub_auto(self) -> None:
+        self.assertEqual(CONFIG.read_text(encoding="utf-8"), CONFIG_TEXT)
+
+    def test_theme_is_recommended_but_not_required(self) -> None:
+        project = ET.parse(PROJECT / "anduinos-grub-style.aosproj")
+        theme = "anduinos-hyperfluent-grub-theme"
+        self.assertIn(theme, {
+            item.get("Include") for item in project.findall(".//Recommend")
+        })
+        self.assertNotIn(theme, {
+            item.get("Include") for item in project.findall(".//Dependency")
+        })
+
     def test_maintainer_scripts_have_valid_posix_shell_syntax(self) -> None:
         for script in (POSTINST, POSTRM):
             with self.subTest(script=script.name):

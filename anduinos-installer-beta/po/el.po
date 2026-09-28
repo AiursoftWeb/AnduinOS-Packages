@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -234,6 +235,9 @@ msgid "Continue Installation"
 msgstr "Συνέχεια εγκατάστασης"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "Έλεγχος μέσου εγκατάστασης"
+
 msgid "Copy AnduinOS system"
 msgstr "Αντιγραφή συστήματος AnduinOS"
 
@@ -853,6 +857,10 @@ msgstr "Κάτω από το ελάχιστο. Η εγκατάσταση ή οι
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "Κάτω από τη συνιστώμενη χωρητικότητα. Ο χώρος μπορεί να εξαντληθεί γρήγορα. Συνέχεια;"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "Απαιτούνται τουλάχιστον 6 GiB για την εγκατάσταση του AnduinOS."
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1887,3 +1895,51 @@ msgstr "Εμφάνιση εξωτερικών δίσκων"
 #: src/pages.py
 msgid "Disconnecting an external drive can cause installation failure or data loss. Booting on another computer may require additional setup. For portable use, consider AnduinOS ToGo."
 msgstr "Η αποσύνδεση εξωτερικού δίσκου μπορεί να προκαλέσει αποτυχία εγκατάστασης ή απώλεια δεδομένων. Η εκκίνηση σε άλλον υπολογιστή μπορεί να απαιτεί πρόσθετες ρυθμίσεις. Για φορητή χρήση, εξετάστε το AnduinOS ToGo."
+
+#: src/pages.py
+msgid "Create initial system recovery point"
+msgstr "Δημιουργία αρχικού σημείου επαναφοράς συστήματος"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "Αυτός ο τόμος NTFS απαιτεί έλεγχο δίσκου. Στα Windows, δημιουργήστε αντίγραφα ασφαλείας των σημαντικών αρχείων και εκτελέστε 'chkdsk X: /f' ως διαχειριστής (αντικαταστήστε το X με το γράμμα μονάδας αυτού του τόμου). Αν σας ζητηθεί, προγραμματίστε τον έλεγχο και επανεκκινήστε στα Windows. Περιμένετε να ολοκληρωθεί ο έλεγχος και τερματίστε πλήρως τα Windows πριν δοκιμάσετε ξανά."
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "Προβολή βημάτων επιδιόρθωσης"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "Βήματα επιδιόρθωσης"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "Αυτός ο τόμος NTFS απαιτεί έλεγχο δίσκου στα Windows πριν αλλάξει με ασφάλεια το μέγεθός του."
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "Λειτουργία εξωτερικού δίσκου — Το AnduinOS θα προσθέσει μια φορητή διαδρομή εκκίνησης UEFI, ώστε αυτός ο δίσκος να μπορεί να εκκινήσει σε άλλον υπολογιστή UEFI χωρίς υπάρχουσα καταχώρηση εκκίνησης AnduinOS στο υλικολογισμικό."
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "Έλεγχος υλικολογισμικού"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Έλεγχος υποστήριξης Secure Boot…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Δεν ήταν δυνατός ο προσδιορισμός της υποστήριξης Secure Boot"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "Μπορείτε να συνεχίσετε τη διαμόρφωση της εγκατάστασης. Ο έλεγχος υλικολογισμικού πρέπει να ολοκληρωθεί επιτυχώς πριν γίνουν αλλαγές στους δίσκους σας."
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "Ο έλεγχος υλικολογισμικού ολοκληρώθηκε"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "Επανάληψη"

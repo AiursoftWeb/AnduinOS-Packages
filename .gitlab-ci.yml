@@ -7,6 +7,7 @@ verify-ci-package-needs:
   stage: lint
   script:
     - python3 lib/verify-ci-package-needs.py
+    - python3 -m unittest discover -s lib/tests -v
     - python3 lib/verify-localizations.py
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -352,7 +353,6 @@ gnome-shell-extension-desktop-icons-ng-anduinos:
     - lint-all
     - verify-ci-package-needs
     - test-all
-    - anduinos-appearance
     - anduinos-dconf-runtime
   variables:
     PACKAGE_DIR: gnome-shell-extension-desktop-icons-ng-anduinos
@@ -538,6 +538,16 @@ anduinos-btrfs-snapshots-manager:
   variables:
     PACKAGE_DIR: anduinos-btrfs-snapshots-manager
 
+anduinos-rescue-center:
+  extends: .publish
+  needs:
+    - lint-all
+    - verify-ci-package-needs
+    - test-all
+    - anduinos-btrfs-snapshots-manager
+  variables:
+    PACKAGE_DIR: anduinos-rescue-center
+
 anduinos-why-ai:
   extends: .publish
   needs:
@@ -664,6 +674,7 @@ anduinos-live-layers:
     - lint-all
     - verify-ci-package-needs
     - test-all
+    - plymouth-anduinos
   variables:
     PACKAGE_DIR: anduinos-live-layers
 
@@ -674,6 +685,7 @@ anduinos-live-settings:
     - verify-ci-package-needs
     - test-all
     - anduinos-live-layers
+    - anduinos-secureboot-toolkit
   variables:
     PACKAGE_DIR: anduinos-live-settings
 
@@ -692,9 +704,12 @@ anduinos-installer-beta:
     - lint-all
     - verify-ci-package-needs
     - test-all
+    - anduinos-rescue-center
+    - anduinos-live-layers
     - anduinos-live-settings
     - anduinos-multimedia-codecs
     - anduinos-swap-config
+    - anduinos-secureboot-toolkit
   variables:
     PACKAGE_DIR: anduinos-installer-beta
 
@@ -718,8 +733,18 @@ anduinos-grub-style:
     - lint-all
     - verify-ci-package-needs
     - test-all
+    - anduinos-hyperfluent-grub-theme
   variables:
     PACKAGE_DIR: anduinos-grub-style
+
+anduinos-hyperfluent-grub-theme:
+  extends: .publish
+  needs:
+    - lint-all
+    - verify-ci-package-needs
+    - test-all
+  variables:
+    PACKAGE_DIR: anduinos-hyperfluent-grub-theme
 
 anduinos-core-system:
   extends: .publish
@@ -847,7 +872,6 @@ anduinos-oobe:
     - verify-ci-package-needs
     - test-all
     - anduinos-appearance
-    - anduinos-secureboot-toolkit
     - anduinos-driver-center
   variables:
     PACKAGE_DIR: anduinos-oobe

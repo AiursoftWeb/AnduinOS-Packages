@@ -17,6 +17,7 @@ UNAME=${ANDUINOS_MIGRATION_UNAME:-uname}
 DF=${ANDUINOS_MIGRATION_DF:-df}
 INITRD_INSPECTOR=${ANDUINOS_MIGRATION_INITRD_INSPECTOR:-}
 FAIL_AT=${ANDUINOS_MIGRATION_FAIL_AT:-}
+LIVE_MARKER=${ANDUINOS_LIVE_MARKER:-/run/anduinos-live/environment}
 
 log() {
     printf '%s\n' "anduinos-dracut-migration: $*" >&2
@@ -264,6 +265,13 @@ case "${1:-}" in
     install|upgrade) ;;
     *) exit 0 ;;
 esac
+
+# The Live root has no installed-system GRUB device to migrate. The installer
+# gives the target chroot its own /run, so this marker is absent there.
+if [ -f "$LIVE_MARKER" ] && grep -Fxq 'ANDUINOS_LIVE=1' "$LIVE_MARKER"; then
+    log "skipping boot migration in Live session"
+    exit 0
+fi
 
 # A fresh installation is already created with Dracut by the installer. Future
 # core upgrades also skip once this migration has durably completed.

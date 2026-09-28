@@ -9,7 +9,7 @@ check() {
 }
 
 depends() {
-    echo "dmsquash-live dmsquash-live-autooverlay overlayfs"
+    echo "dmsquash-live dmsquash-live-autooverlay overlayfs plymouth"
     return 0
 }
 
@@ -26,4 +26,32 @@ install() {
     rm -f "$initdir/sbin/create-overlay"
     inst_script "$moddir/anduinos-create-overlay.sh" "/sbin/create-overlay"
     inst_hook pre-pivot 90 "$moddir/anduinos-live-prepare.sh"
+
+    # Add a small boundary around root discovery rather than forking upstream's
+    # overlay implementation. This check must precede SquashFS mounting.
+    upstream="$dracutbasedir/modules.d/70dmsquash-live/dmsquash-live-root.sh"
+    inst_script "$upstream" "/sbin/dmsquash-live-root.upstream"
+    rm -f "$initdir/sbin/dmsquash-live-root"
+    inst_script "$moddir/anduinos-live-root.sh" "/sbin/dmsquash-live-root"
+    inst_script /usr/libexec/anduinos-media-check
+    inst_multiple bash checkisomd5 md5sum realpath flock tail sleep sed \
+        readlink cut grep stat mktemp mv chmod mkdir rm id findmnt mount umount \
+        poweroff awk
+    inst_dir /usr/share/anduinos-live/media-check
+    local entry
+    for entry in /usr/share/anduinos-live/media-check/*.txt; do
+        inst_simple "$entry"
+    done
+    # The plymouth dependency populates the normal AnduinOS two-step theme.
+    # Keep its default link and BGRT firmware logo: the helper uses Ubuntu's
+    # native fsck progress/messages, with no Live-specific drawing plugin.
+    # Plymouth's normal population installs one locale's default font. Include
+    # fallback fonts for all Live languages before the root filesystem exists.
+    for entry in /usr/share/fonts/truetype/noto/NotoSans-Regular.ttf \
+        /usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc \
+        /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf \
+        /usr/share/fonts/truetype/noto/NotoSansDevanagari-Regular.ttf \
+        /usr/share/fonts/truetype/noto/NotoSansThai-Regular.ttf; do
+        [[ ! -f $entry ]] || inst_simple "$entry"
+    done
 }

@@ -27,6 +27,12 @@ pub struct RecoveryDeployment {
 #[derive(Debug, serde::Deserialize)]
 pub struct PendingRecovery {
     pub target_deployment_id: String,
+    #[serde(default)]
+    pub home_only: bool,
+    #[serde(default)]
+    pub reset_home: bool,
+    #[serde(default)]
+    pub factory_home_snapshot_id: Option<String>,
     pub phase: String,
     #[serde(default)]
     pub failure: Option<String>,
@@ -66,6 +72,8 @@ pub struct RecoveryEngineStatus {
     pub system_sizes: std::collections::HashMap<String, snapshots_manager_common::SnapshotSpace>,
     #[serde(default)]
     pub personal_sizes: std::collections::HashMap<String, snapshots_manager_common::SnapshotSpace>,
+    #[serde(default)]
+    pub factory_home_available: bool,
 }
 
 #[derive(Debug, Clone, serde::Deserialize)]
@@ -534,6 +542,17 @@ impl SnapshotsManagerHelperClient {
         Ok(())
     }
 
+    pub fn delete_factory_deployment(&self, id: String) -> Result<()> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call("DeleteFactoryDeployment", &(id,))
+            .context("Failed to delete the factory recovery point")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
+    }
+
     pub fn set_deployment_pinned(&self, id: String, pinned: bool) -> Result<(bool, String)> {
         let proxy = zbus::blocking::Proxy::new(
             &self.connection,
@@ -567,6 +586,66 @@ impl SnapshotsManagerHelperClient {
         proxy
             .call("ScheduleDeploymentRestore", &(id,))
             .context("Failed to schedule the system snapshot")
+    }
+
+    pub fn check_deployment_restore_readiness(&self, id: String) -> Result<()> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call("CheckDeploymentRestoreReadiness", &(id,))
+            .context("Failed to check system restore prerequisites")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
+    }
+
+    pub fn check_factory_reset_readiness(&self, id: String, reset_home: bool) -> Result<()> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call("CheckFactoryResetReadiness", &(id, reset_home))
+            .context("Failed to check factory reset prerequisites")?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
+    }
+
+    pub fn check_personal_restore_readiness(&self, id: String) -> Result<()> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call("CheckPersonalRestoreReadiness", &(id,))?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
+    }
+
+    pub fn schedule_personal_restore(&self, id: String) -> Result<(bool, String)> {
+        self.proxy()?
+            .call("SchedulePersonalRestore", &(id,))
+            .context("Failed to schedule Home rollback")
+    }
+
+    pub fn delete_factory_personal_snapshot(&self, id: String) -> Result<()> {
+        let (success, result): (bool, String) = self
+            .proxy()?
+            .call("DeleteFactoryPersonalSnapshot", &(id,))?;
+        if !success {
+            anyhow::bail!(result);
+        }
+        Ok(())
+    }
+
+    pub fn schedule_factory_reset(&self, id: String, reset_home: bool) -> Result<(bool, String)> {
+        let proxy = zbus::blocking::Proxy::new(
+            &self.connection,
+            DBUS_SERVICE_NAME,
+            DBUS_OBJECT_PATH,
+            DBUS_INTERFACE_NAME,
+        )?;
+        proxy
+            .call("ScheduleFactoryReset", &(id, reset_home))
+            .context("Failed to schedule factory reset")
     }
 
     pub fn cancel_deployment_restore(&self) -> Result<(bool, String)> {
@@ -736,6 +815,20 @@ impl SnapshotsManagerHelperClient {
             .context("Failed to call GetSchedulerStatus")?;
 
         Ok(status)
+    }
+
+    /// Return whether scheduled System and Home creation are currently paused
+    /// by the configured free-space floor.
+    pub fn get_automatic_space_status(&self) -> Result<(bool, bool)> {
+        let proxy = zbus::blocking::Proxy::new(
+            &self.connection,
+            DBUS_SERVICE_NAME,
+            DBUS_OBJECT_PATH,
+            DBUS_INTERFACE_NAME,
+        )?;
+        proxy
+            .call("GetAutomaticSpaceStatus", &())
+            .context("Failed to query automatic snapshot disk-space status")
     }
 
     pub fn get_btrfs_filesystem_status(&self) -> Result<BtrfsFilesystemStatus> {

@@ -15,7 +15,7 @@ from .storage_graph import StorageGraph
 from .btrfs import BtrfsCompression
 
 
-SCHEMA_VERSION = 16
+SCHEMA_VERSION = 17
 
 
 class Architecture(str, Enum):
@@ -133,6 +133,7 @@ class SwapSpec:
 @dataclass(frozen=True)
 class BootSpec:
     install_fallback_path: bool = False
+    external_target: bool = False
     mok_password_policy: MokPasswordPolicy = MokPasswordPolicy.NOT_APPLICABLE
 
 
@@ -318,7 +319,7 @@ class InstallPlan:
         boot_data = _object(root["boot"], "boot")
         _exact_fields(
             boot_data,
-            {"install_fallback_path", "mok_password_policy"},
+            {"install_fallback_path", "external_target", "mok_password_policy"},
             "boot",
         )
         boot = BootSpec(

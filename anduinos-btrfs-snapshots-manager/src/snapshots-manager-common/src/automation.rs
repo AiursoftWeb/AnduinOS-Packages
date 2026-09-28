@@ -8,6 +8,8 @@ use serde::{Deserialize, Serialize};
 use crate::RetentionPolicy;
 
 pub const AUTOMATION_SCHEMA_VERSION: u32 = 1;
+pub const DEFAULT_MINIMUM_FREE_SPACE_GIB: u32 = 40;
+pub const MAXIMUM_MINIMUM_FREE_SPACE_GIB: u32 = 16_384;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -34,6 +36,8 @@ impl Default for NotificationPolicy {
 #[serde(deny_unknown_fields)]
 pub struct AutomationConfig {
     pub schema_version: u32,
+    #[serde(default = "default_minimum_free_space_gib")]
+    pub minimum_free_space_gib: u32,
     pub system: RetentionPolicy,
     pub home: RetentionPolicy,
     #[serde(default)]
@@ -44,6 +48,7 @@ impl Default for AutomationConfig {
     fn default() -> Self {
         Self {
             schema_version: AUTOMATION_SCHEMA_VERSION,
+            minimum_free_space_gib: DEFAULT_MINIMUM_FREE_SPACE_GIB,
             system: RetentionPolicy::system_default(),
             home: RetentionPolicy::home_default(),
             notifications: NotificationPolicy::default(),
@@ -55,6 +60,11 @@ impl AutomationConfig {
     pub fn validate(&self) -> anyhow::Result<()> {
         if self.schema_version != AUTOMATION_SCHEMA_VERSION {
             anyhow::bail!("unsupported automation configuration version");
+        }
+        if self.minimum_free_space_gib > MAXIMUM_MINIMUM_FREE_SPACE_GIB {
+            anyhow::bail!(
+                "minimum free space must be between 0 and {MAXIMUM_MINIMUM_FREE_SPACE_GIB} GiB"
+            );
         }
         self.system.validate()?;
         self.home.validate()?;
@@ -117,6 +127,10 @@ const fn default_true() -> bool {
     true
 }
 
+const fn default_minimum_free_space_gib() -> u32 {
+    DEFAULT_MINIMUM_FREE_SPACE_GIB
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -142,5 +156,29 @@ mod tests {
             .replace("notify_after_cleanup = false\n", "");
         let decoded: AutomationConfig = toml::from_str(&encoded).unwrap();
         assert!(!decoded.notifications.notify_after_cleanup);
+    }
+
+    #[test]
+    fn older_config_defaults_minimum_free_space_to_forty_gib() {
+        let encoded = toml::to_string(&AutomationConfig::default())
+            .unwrap()
+            .replace("minimum_free_space_gib = 40\n", "");
+        let decoded: AutomationConfig = toml::from_str(&encoded).unwrap();
+        assert_eq!(
+            decoded.minimum_free_space_gib,
+            DEFAULT_MINIMUM_FREE_SPACE_GIB
+        );
+        assert!(decoded.validate().is_ok());
+    }
+
+    #[test]
+    fn minimum_free_space_allows_disabled_and_is_bounded() {
+        let mut config = AutomationConfig::default();
+        config.minimum_free_space_gib = 0;
+        assert!(config.validate().is_ok());
+        config.minimum_free_space_gib = MAXIMUM_MINIMUM_FREE_SPACE_GIB + 1;
+        assert!(config.validate().is_err());
+        config.minimum_free_space_gib = MAXIMUM_MINIMUM_FREE_SPACE_GIB;
+        assert!(config.validate().is_ok());
     }
 }

@@ -10,7 +10,10 @@ class PackageContractTests(unittest.TestCase):
 
     def test_internal_vm_clis_load_but_have_no_public_launcher(self):
         environment = dict(os.environ)
-        environment["PYTHONPATH"] = str(ROOT / "src")
+        environment["PYTHONPATH"] = os.pathsep.join((
+            str(ROOT / "src"),
+            str(ROOT.parent / "anduinos-secureboot-toolkit" / "src"),
+        ))
         for name in (
             "guided_test_plan_cli.py",
             "guided_test_evidence_cli.py",

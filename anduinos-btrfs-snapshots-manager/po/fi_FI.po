@@ -1880,3 +1880,150 @@ msgstr "Palauta AnduinOS ja poistetut Omat tiedostot"
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
 msgid "Create an AnduinOS system snapshot"
 msgstr "Luo AnduinOS-järjestelmätilannekuva"
+
+msgid "Delete Factory Recovery Point?"
+msgstr "Poistetaanko tehdaspalautuspiste?"
+
+msgid "Delete and Disable Factory Recovery"
+msgstr "Poista tehdaspalautus käytöstä ja poista palautuspiste"
+
+msgid "Deleting factory recovery point…"
+msgstr "Poistetaan tehdaspalautuspistettä…"
+
+msgid "Checking factory reset availability…"
+msgstr "Tarkistetaan tehdasasetusten palautuksen saatavuutta…"
+
+msgid "Factory Reset Is Not Available"
+msgstr "Tehdasasetusten palautus ei ole käytettävissä"
+
+msgid "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
+msgstr "Tämä järjestelmä ei tue tehdasasetusten palautusta. Asenna AnduinOS uudelleen ja ota toiminto käyttöön valitsemalla Btrfs-tiedostojärjestelmä."
+
+msgid "Factory Reset Is Not Ready"
+msgstr "Tehdasasetusten palautus ei ole vielä valmis"
+
+msgid "Reset AnduinOS to Its Initial State?"
+msgstr "Palautetaanko AnduinOS alkutilaan?"
+
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Tehdasasetusten palautus palauttaa järjestelmätiedostot, asennetut paketit ja järjestelmäasetukset alkuperäiseen New OS -tilaan. Kotikansion henkilökohtaiset tiedostot eivät muutu. Nykyisestä järjestelmästä luodaan ensin turvatilannevedos. Sen jälkeen palautus valmistellaan ja tietokone käynnistyy automaattisesti uudelleen 60 sekunnin kuluessa."
+
+msgid "Return to the initial New OS state"
+msgstr "Palaa alkuperäiseen New OS -tilaan"
+
+msgid "Saved as a safety snapshot before reset"
+msgstr "Tallennettu turvatilannevedoksena ennen palautusta"
+
+msgid "Reset and Restart"
+msgstr "Palauta ja käynnistä uudelleen"
+
+msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+msgstr "”New OS” on asennuksen aikana luotu järjestelmän alkuperäinen tila. Sen poistaminen estää AnduinOSin palauttamisen alkutilaan. Tätä ei voi kumota asentamatta käyttöjärjestelmää uudelleen. Henkilökohtaisia tiedostojasi ei poisteta."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "Poista käyttäjän tiedostot"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Tehdasasetusten palautus palauttaa järjestelmätiedostot, asennetut paketit ja järjestelmäasetukset alkuperäiseen New OS -tilaan. Nykyisestä järjestelmästä luodaan ensin turvatilannevedos. Sen jälkeen palautus valmistellaan ja tietokone käynnistyy automaattisesti uudelleen 60 sekunnin kuluessa."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "Valmistellaan tehdasasetusten palautusta…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "Säilytetään, ellet valitse niiden poistamista alta"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "Ei käytettävissä, koska Homen tehdaspalautuspiste puuttuu tai on vaurioitunut."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "Palauta Home asennuksen jälkeiseen alkutilaan ja poista Homen tilannevedoshistoria. Tätä ei voi kumota palautuksen vahvistamisen jälkeen."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Levytilan suojaus"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Vapaan tilan vähimmäismäärä"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Koskee sekä järjestelmän että kotikansion automaattisia tilannekuvia. Poista käytöstä asettamalla arvoksi 0."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Automaattiset tilannekuvat on keskeytetty"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Kotikansion tilannekuvat odottavat lisää vapaata tilaa."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Kotikansion ajastetut tilannekuvat on keskeytetty vähäisen levytilan vuoksi. Niiden luonti jatkuu automaattisesti, kun tilaa on saatavilla."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Järjestelmän ajastetut tilannekuvat on keskeytetty vähäisen levytilan vuoksi. Niiden luonti jatkuu automaattisesti, kun tilaa on saatavilla."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Järjestelmän ja kotikansion tilannekuvat odottavat lisää vapaata tilaa."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Järjestelmän tilannekuvat odottavat lisää vapaata tilaa."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "Ensin luodaan järjestelmän turvatilannekuva. Sen jälkeen käynnistetään uudelleen 60 sekunnin kuluessa."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "Poista kaikkien käyttäjien kotikansioiden tiedostot ja tilannekuvahistoria. Tätä ei voi perua."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "Palauta järjestelmä New OS -tilaan. Henkilökohtaiset tiedostot säilytetään oletuksena."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Palauta käyttäjätiedot"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Palauta kaikkien käyttäjien tiedostot ja asetukset alkutilaan. Tilannekuvahistoria säilytetään."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Ennen palautusta luodaan turvatilannekuvat. Tietokone käynnistyy uudelleen 60 sekunnin kuluessa valmistelun päättymisestä."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "New OS:n poistaminen poistaa tehdaspalautuksen käytöstä tässä tilannekuvaluokassa. Nykyiset tiedostot ja muut tilannekuvat säilytetään."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Kaikkien käyttäjien tiedostot ja asetukset"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Ensin luodaan turvatilannekuva. Tilannekuvahistoria säilytetään."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Palautus on valmis käynnistettäväksi. Tallenna työsi; tietokone käynnistyy uudelleen 60 sekunnin kuluessa."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Palautuksen vahvistus epäonnistui. Palautetaan edellinen tila."

@@ -3,6 +3,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -71,14 +72,16 @@ class InspectTests(unittest.TestCase):
                     SecureBootStatus.UNKNOWN,
                 )
 
-    def test_unsupported_firmware_is_not_treated_as_probe_failure(self):
+    @patch("anduinos_secureboot.firmware._mount_type", return_value="efivarfs")
+    def test_unsupported_firmware_is_not_treated_as_probe_failure(self, _mount):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            (root / "efivars").mkdir()
             state = inspect_secure_boot(
                 FakeRunner(
                     {
                         ("mokutil", "--sb-state"): subprocess.CompletedProcess(
-                            [], 0, "This system doesn't support Secure Boot\n", ""
+                            [], 255, "", "This system doesn't support Secure Boot\n"
                         )
                     }
                 ),
@@ -200,7 +203,7 @@ class InspectTests(unittest.TestCase):
         self.assertFalse(state.ready)
         self.assertFalse(state.enrollment_required)
 
-    def test_disabled_secure_boot_needs_no_key_config_or_module_signature(self):
+    def test_disabled_boot_allows_drivers_but_still_reports_preparation_needed(self):
         from anduinos_secureboot.model import SecureBootState
 
         secure_boot = SecureBootState(
@@ -213,7 +216,7 @@ class InspectTests(unittest.TestCase):
         )
         self.assertTrue(secure_boot.trust_ready)
         self.assertTrue(secure_boot.ready)
-        self.assertFalse(secure_boot.enrollment_required)
+        self.assertTrue(secure_boot.enrollment_required)
 
         with tempfile.TemporaryDirectory() as directory:
             module = Path(directory) / "unsigned.ko"
@@ -228,8 +231,8 @@ class InspectTests(unittest.TestCase):
                 ),
                 Path(directory),
             )
-        self.assertEqual(state.trusted_modules, ("unsigned.ko",))
-        self.assertTrue(state.ready)
+        self.assertEqual(state.untrusted_modules, ("unsigned.ko",))
+        self.assertFalse(state.ready)
 
     def test_empty_pending_mok_list_is_not_an_error(self):
         with tempfile.TemporaryDirectory() as directory:

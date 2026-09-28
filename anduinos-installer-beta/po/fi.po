@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -234,6 +235,9 @@ msgid "Continue Installation"
 msgstr "Jatka asennusta"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "Tarkista asennusmedia"
+
 msgid "Copy AnduinOS system"
 msgstr "Kopioi AnduinOS-järjestelmä"
 
@@ -853,6 +857,10 @@ msgstr "Alle vähimmäisvaatimuksen. Asennus tai päivitykset voivat epäonnistu
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "Alle suositellun kapasiteetin. Tila voi loppua nopeasti. Jatketaanko?"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "AnduinOSin asentamiseen tarvitaan vähintään 6 GiB."
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1887,3 +1895,51 @@ msgstr "Näytä ulkoiset asemat"
 #: src/pages.py
 msgid "Disconnecting an external drive can cause installation failure or data loss. Booting on another computer may require additional setup. For portable use, consider AnduinOS ToGo."
 msgstr "Ulkoisen aseman irrottaminen voi aiheuttaa asennuksen epäonnistumisen tai tietojen menetyksen. Käynnistäminen toisella tietokoneella voi vaatia lisäasetuksia. Harkitse AnduinOS ToGo -toimintoa siirrettävään käyttöön."
+
+#: src/pages.py
+msgid "Create initial system recovery point"
+msgstr "Luo järjestelmän alkuperäinen palautuspiste"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "Tämä NTFS-taltio vaatii levyn tarkistuksen. Varmuuskopioi tärkeät tiedostot Windowsissa ja suorita 'chkdsk X: /f' järjestelmänvalvojana (korvaa X tämän taltion asemakirjaimella). Hyväksy tarkistuksen ajoittaminen, jos sitä pyydetään, ja käynnistä Windows uudelleen. Odota tarkistuksen valmistumista ja sammuta Windows kokonaan ennen kuin yrität uudelleen."
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "Näytä korjausohjeet"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "Korjausohjeet"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "Tämä NTFS-taltio vaatii levyn tarkistuksen Windowsissa, ennen kuin sen kokoa voidaan muuttaa turvallisesti."
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "Ulkoisen aseman tila — AnduinOS lisää siirrettävän UEFI-käynnistyspolun, jotta asema voidaan käynnistää toisessa UEFI-tietokoneessa ilman valmista AnduinOS-laiteohjelmiston käynnistysmerkintää."
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "Tarkistetaan laiteohjelmistoa"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Tarkistetaan Secure Boot -tukea…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Secure Boot -tukea ei voitu määrittää"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "Voit jatkaa asennuksen määrittämistä. Laiteohjelmiston tarkistuksen on onnistuttava ennen kuin levyihin tehdään muutoksia."
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "Laiteohjelmiston tarkistus valmis"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "Yritä uudelleen"

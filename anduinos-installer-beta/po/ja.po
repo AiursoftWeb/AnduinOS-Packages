@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -234,6 +235,9 @@ msgid "Continue Installation"
 msgstr "インストールを続行"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "インストールメディアを確認"
+
 msgid "Copy AnduinOS system"
 msgstr "AnduinOS システムのコピー"
 
@@ -853,6 +857,10 @@ msgstr "最低容量を下回っています。インストールや更新に失
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "推奨容量を下回っています。空き容量がすぐに不足する可能性があります。続行しますか？"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "AnduinOS のインストールには 6 GiB 以上必要です。"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1887,3 +1895,51 @@ msgstr "外付けドライブを表示"
 #: src/pages.py
 msgid "Disconnecting an external drive can cause installation failure or data loss. Booting on another computer may require additional setup. For portable use, consider AnduinOS ToGo."
 msgstr "外付けドライブを取り外すと、インストールの失敗やデータの損失につながる可能性があります。別のコンピューターで起動するには追加の設定が必要になる場合があります。持ち運んで使用する場合は AnduinOS ToGo をご検討ください。"
+
+#: src/pages.py
+msgid "Create initial system recovery point"
+msgstr "初期システム復元ポイントを作成"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "この NTFS ボリュームはディスクチェックが必要です。Windows で重要なファイルをバックアップし、管理者として「chkdsk X: /f」を実行してください（X はこのボリュームのドライブ文字に置き換えてください）。確認を求められたらチェックを予約し、Windows を再起動してください。チェックの完了を待ち、Windows を完全にシャットダウンしてから再試行してください。"
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "修復手順を表示"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "修復手順"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "この NTFS ボリュームのサイズを安全に変更するには、先に Windows でディスクチェックを行う必要があります。"
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "外付けドライブモード — AnduinOS はポータブル UEFI ブートパスを追加します。このドライブは、AnduinOS のファームウェアブートエントリが登録されていない別の UEFI コンピューターでも起動できます。"
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "ファームウェアを確認中"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Secure Boot の対応状況を確認中…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Secure Boot の対応状況を確認できません"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "インストールの設定を続けられます。ディスクに変更を加える前に、ファームウェアの確認が成功する必要があります。"
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "ファームウェアの確認が完了しました"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "再試行"

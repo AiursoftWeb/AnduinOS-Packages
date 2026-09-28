@@ -65,7 +65,7 @@ class SearchProviderTests(unittest.TestCase):
 
             # Installation must take effect without restarting the provider.
             installed.return_value = True
-            self.assertEqual(_result_ids(["btrfs"]), [identifier])
+            self.assertIn(identifier, _result_ids(["btrfs"]))
             self.assertEqual(_result_ids(["btrfs"], [identifier]), [identifier])
             self.assertEqual(_result_metas([identifier])[0]["id"].unpack(), identifier)
             self.assertEqual(

@@ -159,6 +159,7 @@ class DiskTopologyBinding:
     stable_id: str
     expected_size_bytes: int
     topology_digest: str
+    external: bool = False
 
 
 class StaleStorageInventoryError(RuntimeError):
@@ -346,6 +347,7 @@ def bind_disk_topology(
         stable_id=disk.identity.stable_id,
         expected_size_bytes=disk.identity.expected_size_bytes,
         topology_digest=disk.topology_digest,
+        external=disk.external,
     )
 
 

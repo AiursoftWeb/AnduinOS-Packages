@@ -10,9 +10,10 @@ for AnduinOS. It has two equal, explicit destinations:
 
 Both pages use the same snapshot-list model: create now, configure automatic
 snapshots, search, enter selection mode for one authenticated batch deletion,
-and open the actions available for one snapshot. System snapshots can prepare a safe
-rollback; Personal Files are recovered item by item and are never changed by a
-system rollback.
+and browse snapshots read-only or schedule a safe rollback followed by a restart.
+System rollback changes only the system; Home rollback changes all users' Home
+files and settings without replacing the system. Both preserve snapshot history
+and create a safety snapshot before rollback. Browsing does not require a restart.
 
 ## Product behavior
 
@@ -20,9 +21,29 @@ A snapshot may be protected permanently or be eligible for automatic cleanup.
 Manual, scheduled, and package-change snapshots participate in cleanup by
 default. A safety snapshot created before a rollback is protected while its
 transaction is pending; afterward it can be deleted manually or by automatic cleanup.
+On a new Btrfs installation, the installer creates exactly one pinned system
+snapshot named **New OS** and a visible, pinned **New OS** `@home` snapshot after
+target configuration has finished. These factory recovery points are excluded
+from every automatic cleanup policy and cannot be renamed or unpinned. Factory
+reset preserves `@home` by default; an explicit **Roll back user data** switch
+restores all users' Home files and settings to their initial state while retaining
+snapshot history. This is recovery, not secure data erasure for device disposal.
+Either factory snapshot may be deleted deliberately through a dedicated warning
+that this disables factory recovery for that category.
+The Control Panel opens this guarded workflow with `--factory-reset`. Disk
+Snapshots Manager owns the preflight, confirmation, safety snapshot, one-shot
+recovery boot, and restart; the Control Panel never performs a rollback itself.
 Automatic cleanup uses explicit time buckets: keep everything in the recent window,
 then one representative per day, week, month, and year. System and Home policies
 are independent and use a configurable one-to-24-hour freshness interval.
+Scheduled System and Home creation also shares a configurable free-space floor,
+defaulting to 40 GiB. A timer run below that floor skips new automatic snapshots
+without failing, still applies retention cleanup, and never changes manual,
+package-boundary, or installer-owned factory snapshot behavior. Setting the floor
+to 0 disables this additional guard without disabling the recovery engine's own
+transaction-safety reserve. The automatic-snapshot window shows paused System
+and Home scopes. A continuous low-space episode emits at most one desktop
+notification, and the state clears after space recovers.
 
 The systemd timer remains installed and enabled even when both automatic scopes
 are off. On every run the privileged helper compares the newest snapshot with the
@@ -71,13 +92,22 @@ currently running kernel, a protocol-verified initramfs, and the matching usersp
 confirmation engine into the snapshot-external recovery store, and binds all three
 hashes to the transaction. GRUB keeps selecting this
 trusted recovery image until initramfs or userspace durably completes or fails the
-transaction. Every synchronized root switch is recorded as a persistent checkpoint;
-completed and failed transactions are retained in `rollback-history` for diagnosis.
+transaction. Every synchronized root switch is recorded as a persistent checkpoint.
+Home rollback uses the same early-boot, power-loss-resumable switch for `@home`.
+A Home-only transaction leaves the root subvolume unchanged and verifies its UUID.
+Account home paths and UID/GID ownership must match the running system; this check
+is repeated before early-boot replacement. A combined factory reset switches root
+and Home together. Nested Btrfs subvolumes in Home block whole-Home rollback,
+because ordinary snapshots do not recursively capture their data.
+If the boot is not confirmed, the affected subvolumes revert.
+History and factory baselines remain available. The implementation never
+recursively deletes a mounted `/home`.
+Completed and failed transactions are retained in `rollback-history` for diagnosis.
 Old-root deletion is a separate, durable cleanup operation. Empty descendant
 subvolumes are removed deepest-first; non-empty descendants are preserved in
 `cleanup-pending` records and never keep a confirmed rollback in the global
 pending transaction slot.
-The confirmation UI always states that Personal Files remain unchanged and that
+The rollback confirmation UI identifies which data changes and which stays unchanged, and states that
 preparing a rollback arms an automatic 60-second restart countdown. Once armed,
 the application offers only an immediate restart; it never presents a defer option
 that could invite new writes to the soon-to-be-replaced system root. The GUI does

@@ -11,23 +11,40 @@ VERIFY=${ANDUINOS_MIGRATION_VERIFY:-/usr/libexec/anduinos-dracut-verify}
 
 # dpkg does not order the shared Dracut trigger after pending kernel postinst
 # scripts. Both its activation call and its later invocation may therefore run
-# before a newly unpacked kernel has an initrd. The packages that add mandatory
-# image content perform their own synchronous final verification instead.
+# before a newly unpacked kernel has an initrd. NVIDIA's postinst also calls
+# -u -k <running-kernel> (the Live kernel when installing in a chroot). That
+# update must not validate a different kernel whose trigger is still pending.
+# Keep the real generator's errors and verify an explicitly updated image;
+# only defer the whole-system guard. Packages adding mandatory content and the
+# installer perform final verification after configuration. Explicit updates
+# outside maintscripts still run the whole-system guard.
 maintscript_update=false
-if [ "${DPKG_MAINTSCRIPT_PACKAGE+x}" = x ] \
-    && [ "$#" -eq 1 ] && [ "$1" = -u ]; then
-    maintscript_update=true
-fi
-
 delete=false
-for argument in "$@"; do
-    [ "$argument" != -d ] || delete=true
-done
-
 "$REAL_UPDATE_INITRAMFS" "$@"
 
-[ "$maintscript_update" = false ] || exit 0
+# Parse only after the actual implementation has validated/executed the call.
+# getopts also handles reordered/combined short options without mistaking a
+# version or directory argument for an operation.
+version=
+boot_dir=${ANDUINOS_MIGRATION_BOOT_DIR:-${DPKG_ROOT:-}/boot}
+while getopts 'k:cudvb:s:h?' option; do
+    case "$option" in
+        u) [ "${DPKG_MAINTSCRIPT_PACKAGE+x}" != x ] || maintscript_update=true ;;
+        d) delete=true ;;
+        k) version=$OPTARG ;;
+        b) boot_dir=$OPTARG ;;
+    esac
+done
 [ "$delete" = false ] || exit 0
+if [ "$maintscript_update" = true ]; then
+    case "$version" in
+        ''|all) exit 0 ;;
+        *)
+            ANDUINOS_MIGRATION_BOOT_DIR="$boot_dir" "$VERIFY" --verify-kernel "$version"
+            exit $?
+            ;;
+    esac
+fi
 [ -x "$VERIFY" ] || {
     printf '%s\n' 'anduinos-update-initramfs: synchronous verifier is missing' >&2
     exit 1

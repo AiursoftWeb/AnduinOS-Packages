@@ -8,8 +8,8 @@ need_cmd git
 # Fallback to github if the internal gitlab mirror is unreachable during local testing
 REPO_URL="https://gitlab.aiursoft.com/mirror/xpadneo.git"
 FALLBACK_URL="https://github.com/atar-axis/xpadneo.git"
-COMMIT_ID="3acca9f"
-VERSION="v0.11-pre-63-g3acca9f"
+COMMIT_ID="3879ba0f44e9bcfd500a5b92d02f83885f6b23c7"
+VERSION="v0.11-pre-69-g3879ba0"
 
 rm -rf "$SCRIPT_DIR/deploy" /tmp/xpadneo
 echo "Cloning xpadneo..."

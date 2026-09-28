@@ -6,6 +6,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -235,6 +236,9 @@ msgid "Continue Installation"
 msgstr "繼續安裝"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "檢查安裝媒體"
+
 msgid "Copy AnduinOS system"
 msgstr "複製 AnduinOS 系統"
 
@@ -854,6 +858,10 @@ msgstr "低於最低要求，安裝或更新可能失敗。仍要繼續？"
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "低於建議容量，空間可能很快用盡。仍要繼續？"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "安裝 AnduinOS 至少需要 6 GiB 空間。"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1888,3 +1896,51 @@ msgstr "顯示外接硬碟"
 #: src/pages.py
 msgid "Disconnecting an external drive can cause installation failure or data loss. Booting on another computer may require additional setup. For portable use, consider AnduinOS ToGo."
 msgstr "拔除外接硬碟可能導致安裝失敗或資料遺失。在其他電腦上啟動可能需要額外設定。如需隨身使用，建議使用 AnduinOS ToGo。"
+
+#: src/pages.py
+msgid "Create initial system recovery point"
+msgstr "建立初始系統還原點"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check. In Windows, back up important files and run 'chkdsk X: /f' as administrator (replace X with this volume's drive letter). If prompted, schedule the check, then restart into Windows. Let the check finish and fully shut down Windows before trying again."
+msgstr "此 NTFS 分割區需要磁碟檢查。請進入 Windows，備份重要檔案，以系統管理員身分執行「chkdsk X: /f」（將 X 替換為此分割區的磁碟機代號）。如提示排程檢查，請確認，然後重新啟動並進入 Windows。等待檢查完成並完全關閉 Windows 後，再重試。"
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "查看修復步驟"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "修復步驟"
+
+#: src/pages.py
+msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
+msgstr "此 NTFS 分割區需要先在 Windows 中完成磁碟檢查，才能安全調整大小。"
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "外接硬碟模式 — AnduinOS 將加入可攜式 UEFI 開機路徑，讓此外接硬碟無需既有的 AnduinOS 韌體開機項目，也能在另一台 UEFI 電腦上開機。"
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "正在檢查韌體"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "正在檢查安全開機支援狀態…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "無法確定安全開機支援狀態"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "你可以繼續設定安裝選項。在對磁碟進行任何變更之前，必須成功完成韌體檢查。"
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "韌體檢查完成"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "重試"

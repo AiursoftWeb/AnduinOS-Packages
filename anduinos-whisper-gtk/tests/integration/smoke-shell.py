@@ -6,8 +6,6 @@ Does not install packages or alter the running desktop; temporary state is remov
 """
 import argparse
 import atexit
-from functools import partial
-import hashlib
 import json
 import os
 from pathlib import Path
@@ -18,8 +16,6 @@ import subprocess
 import sys
 import tempfile
 import time
-import wave
-from unittest.mock import patch
 
 sys.dont_write_bytecode = True
 HERE = Path(__file__).resolve().parent
@@ -49,52 +45,11 @@ def guard(stage):
 
 def service(stage):
     guard(stage)
-    from gi.repository import GLib
-    from anduinos_whisper_framework import daemon
-    from anduinos_whisper_framework.resident import ResidentEngine
-    from anduinos_whisper_framework.session_engine import SessionEngine
-    from anduinos_whisper_framework.tuning import AutomaticSelector
-    from anduinos_whisper_framework.vad import VadEngine
-    directory = FRAMEWORK / "data/benchmark"
-    sample = next(s for s in json.loads((directory / "manifest.json").read_text())["samples"]
-                  if s["file"] == "en-short.wav")
-    audio_path = directory / sample["file"]
-    assert hashlib.sha256(audio_path.read_bytes()).hexdigest() == sample["sha256"]
-    with wave.open(str(audio_path), "rb") as audio:
-        assert (audio.getframerate(), audio.getnchannels(), audio.getsampwidth()) == (16000, 1, 2)
-        pcm = audio.readframes(audio.getnframes())
-    model = Path(os.environ["ANDUINOS_VOICE_MODEL"])
-    worker = Path(os.environ["ANDUINOS_VOICE_WORKER"])
-
-    class PublicCapture:
-        def __init__(self, **callbacks):
-            self.callback = callbacks["on_chunk_metrics"]
-            self.vad = callbacks.get("vad")
-            self.timer = 0
-        def start(self):
-            def deliver():
-                self.timer = 0
-                self.callback(pcm, {"endpoint_ms": 800, "endpoint_reason": "silence"})
-                return GLib.SOURCE_REMOVE
-            self.timer = GLib.timeout_add(500, deliver)
-        def stop(self, flush=True):
-            if self.timer:
-                GLib.source_remove(self.timer)
-                self.timer = 0
-            if self.vad is not None:
-                self.vad.close()
-                self.vad = None
-
-    factory = partial(ResidentEngine, executable=worker)
-    with patch.object(daemon, "AudioCapture", PublicCapture), \
-            patch.object(daemon, "VadEngine", partial(VadEngine, model=Path(os.environ["ANDUINOS_VAD_MODEL"]), executable=worker)), \
-            patch.object(daemon, "SessionEngine", partial(SessionEngine, resident_factory=factory)), \
-            patch.object(daemon, "AutomaticSelector", partial(AutomaticSelector, directory=directory, worker=worker)), \
-            patch.object(daemon, "model_path", lambda _model: model), \
-            patch.object(daemon, "model_installed", lambda selected: selected == "base" and model.is_file()):
-        instance = daemon.VoiceTypingService()
-        instance.run()
-        assert not instance.worker.is_alive()
+    binary = Path(os.environ["ANDUINOS_VOICE_SERVICE"])
+    assert binary.is_file() and os.access(binary, os.X_OK)
+    # Test-only Rust executable: same service/state machine and native worker,
+    # but a pinned public phrase replaces microphone capture. Not installed.
+    os.execv(str(binary), [str(binary)])
 
 
 def desktop(stage):
@@ -217,7 +172,7 @@ def main():
         return service(args.stage)
     if args.inside:
         return desktop(args.stage)
-    for variable in ("ANDUINOS_VOICE_WORKER", "ANDUINOS_VOICE_MODEL", "ANDUINOS_VAD_MODEL"):
+    for variable in ("ANDUINOS_VOICE_WORKER", "ANDUINOS_VOICE_MODEL", "ANDUINOS_VAD_MODEL", "ANDUINOS_VOICE_SERVICE"):
         value = Path(os.environ.get(variable, "")).resolve()
         if not value.is_file():
             raise SystemExit(f"{variable} must name a source-built artifact or model fixture")
@@ -238,6 +193,7 @@ def main():
                 "SESSION_MANAGER", "XDG_SESSION_ID", "AT_SPI_BUS_ADDRESS"):
         environment.pop(key, None)
     environment.update(ANDUINOS_DESKTOP_SMOKE="1", XDG_RUNTIME_DIR=str(stage / "runtime"),
+        ANDUINOS_VOICE_FIXTURES=str(FRAMEWORK / "data/benchmark"),
         XDG_CONFIG_HOME=str(stage / "config"), XDG_CACHE_HOME=str(stage / "cache"),
         XDG_DATA_HOME=str(stage / "data"), GSETTINGS_SCHEMA_DIR=str(stage / "schemas"),
         GSETTINGS_BACKEND="memory", PYTHONDONTWRITEBYTECODE="1", GDK_BACKEND="wayland",

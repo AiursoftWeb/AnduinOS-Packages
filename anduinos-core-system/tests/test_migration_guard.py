@@ -42,6 +42,32 @@ class MigrationGuardTests(unittest.TestCase):
             with self.subTest(script=script.name):
                 subprocess.run(["/bin/sh", "-n", script], check=True)
 
+    def test_live_upgrade_skips_disk_boot_migration(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            env, paths = self.migration_environment(root)
+            marker = root / "live-environment"
+            marker.write_text("ANDUINOS_LIVE=1\n", encoding="utf-8")
+            env["ANDUINOS_LIVE_MARKER"] = str(marker)
+            env["ANDUINOS_MIGRATION_GRUB_MKCONFIG"] = "/bin/false"
+            subprocess.run(
+                ["/bin/sh", PREINST, "upgrade", "2.0.3-2", "2.0.3-3"],
+                env=env,
+                check=True,
+            )
+            self.assertFalse((paths["boot"] / "anduinos-dracut-migration").exists())
+            self.assertFalse((paths["state"] / "fallback-ready").exists())
+
+            # An unrelated marker must not suppress an installed-system guard.
+            marker.write_text("ANDUINOS_LIVE=0\n", encoding="utf-8")
+            env["ANDUINOS_MIGRATION_FAIL_AT"] = "before_fallback_kernel"
+            result = subprocess.run(
+                ["/bin/sh", PREINST, "upgrade", "2.0.3-2", "2.0.3-3"],
+                env=env,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 75)
+
     def migration_environment(self, root: Path) -> tuple[dict[str, str], dict[str, Path]]:
         boot = root / "boot"
         state = root / "state"
@@ -128,6 +154,7 @@ class MigrationGuardTests(unittest.TestCase):
         env = {
             **os.environ,
             "DPKG_ROOT": str(root),
+            "ANDUINOS_LIVE_MARKER": str(root / "run/anduinos-live/environment"),
             "ANDUINOS_MIGRATION_SYSTEMCTL": str(systemctl),
             "TEST_SYSTEMCTL_LOG": str(root / "systemctl-calls"),
             "ANDUINOS_MIGRATION_BOOT_DIR": str(boot),
@@ -645,6 +672,127 @@ class MigrationGuardTests(unittest.TestCase):
                 check=True,
             )
             self.assertEqual(verify_calls.read_text().splitlines(), ["--verify"])
+
+    def test_maintscript_explicit_update_waits_for_pending_kernel_trigger(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            env, paths = self.migration_environment(root)
+            for version in ("7.0.0-test", "7.0.0-platform"):
+                (root / "modules" / version).mkdir(parents=True)
+            (paths["boot"] / "vmlinuz-7.0.0-platform").write_text("new kernel")
+            (paths["boot"] / "grub/grub.cfg").write_text(
+                "menuentry AnduinOS {\n"
+                " linux /boot/vmlinuz-7.0.0-platform\n"
+                " initrd /boot/initrd.img-7.0.0-platform\n}\n"
+            )
+            lsinitrd = executable(
+                paths["bin"] / "lsinitrd",
+                'printf "%s\\n" base anduinos-migration-proof\n',
+            )
+            guard_env = {
+                **env,
+                "ANDUINOS_MIGRATION_MODULES_DIR": str(root / "modules"),
+                "ANDUINOS_MIGRATION_LSINITRD": str(lsinitrd),
+                "ANDUINOS_MIGRATION_ROOT_FSTYPE": "ext4",
+                "ANDUINOS_UPDATE_INITRAMFS_REAL": "/bin/true",
+                "ANDUINOS_MIGRATION_VERIFY": str(executable(
+                    paths["bin"] / "verify", VERIFY.read_text().removeprefix("#!/bin/sh\n")
+                )),
+            }
+            # NVIDIA postinst updates the Live ABI while the platform kernel
+            # has been unpacked but its initrd trigger has not run yet.
+            for args in (("-u",), ("-u", "-k", "7.0.0-test"),
+                         ("-k", "7.0.0-test", "-u", "-v"),
+                         ("-uv", "-k", "7.0.0-test"), ("-u", "-k", "all")):
+                with self.subTest(args=args):
+                    subprocess.run(
+                        ["/bin/sh", UPDATE_INITRAMFS_GUARD, *args],
+                        env={**guard_env, "DPKG_MAINTSCRIPT_PACKAGE": "nvidia-kernel-common"},
+                        check=True,
+                    )
+            self.assertFalse((paths["state"] / "verified-images.manifest").exists())
+            # Scoped verification still rejects a broken generated image.
+            current_image = paths["boot"] / "initrd.img-7.0.0-test"
+            current_image.write_text("")
+            result = subprocess.run(
+                ["/bin/sh", UPDATE_INITRAMFS_GUARD, "-u", "-k", "7.0.0-test"],
+                env={**guard_env, "DPKG_MAINTSCRIPT_PACKAGE": "nvidia-kernel-common"},
+                capture_output=True, text=True, check=False,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("missing or empty initrd", result.stderr)
+            current_image.write_text("generated image")
+            # A final, non-maintscript verification must still catch it.
+            result = subprocess.run(
+                ["/bin/sh", VERIFY, "--verify-default"], env=guard_env,
+                capture_output=True, text=True, check=False,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("missing or empty initrd", result.stderr)
+            result = subprocess.run(
+                ["/bin/sh", UPDATE_INITRAMFS_GUARD, "-u", "-k", "7.0.0-test"],
+                env=guard_env, capture_output=True, text=True, check=False,
+            )
+            self.assertNotEqual(result.returncode, 0)
+            # Simulate completion of the pending kernel trigger.
+            image = paths["boot"] / "initrd.img-7.0.0-platform"
+            image.write_text("completed initrd")
+            subprocess.run(
+                ["/bin/sh", VERIFY, "--verify-default"], env=guard_env, check=True,
+            )
+            image.write_text("")
+            result = subprocess.run(
+                ["/bin/sh", VERIFY, "--verify-default"], env=guard_env,
+                capture_output=True, text=True, check=False,
+            )
+            self.assertNotEqual(result.returncode, 0)
+
+    def test_maintscript_explicit_update_preserves_generator_failure(self) -> None:
+        result = subprocess.run(
+            ["/bin/sh", UPDATE_INITRAMFS_GUARD, "-u", "-k", "7.0.0-test"],
+            env={**os.environ,
+                 "DPKG_MAINTSCRIPT_PACKAGE": "nvidia-kernel-common",
+                 "ANDUINOS_UPDATE_INITRAMFS_REAL": "/bin/false",
+                 "ANDUINOS_MIGRATION_VERIFY": "/bin/true"},
+            check=False,
+        )
+        self.assertEqual(result.returncode, 1)
+
+    def test_scoped_verifier_rejects_unsafe_or_missing_version(self) -> None:
+        for version in ("", "../../etc/passwd", "/boot/example", "bad version"):
+            with self.subTest(version=version):
+                result = subprocess.run(
+                    ["/bin/sh", VERIFY, "--verify-kernel", version],
+                    capture_output=True, text=True, check=False,
+                )
+                self.assertEqual(result.returncode, 2)
+                self.assertIn("invalid kernel version", result.stderr)
+
+    def test_scoped_update_checks_content_in_the_requested_boot_directory(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            boot = root / "alternate boot"
+            boot.mkdir()
+            (root / "modules/test-kernel").mkdir(parents=True)
+            (boot / "initrd.img-test-kernel").write_text("generated image")
+            lsinitrd = executable(root / "lsinitrd", 'printf "%s\\n" base\n')
+            env = {
+                **os.environ,
+                "DPKG_MAINTSCRIPT_PACKAGE": "nvidia-kernel-common",
+                "ANDUINOS_UPDATE_INITRAMFS_REAL": "/bin/true",
+                "ANDUINOS_MIGRATION_VERIFY": str(executable(
+                    root / "verify", VERIFY.read_text().removeprefix("#!/bin/sh\n")
+                )),
+                "ANDUINOS_MIGRATION_MODULES_DIR": str(root / "modules"),
+                "ANDUINOS_MIGRATION_LSINITRD": str(lsinitrd),
+                "ANDUINOS_MIGRATION_ROOT_FSTYPE": "ext4",
+            }
+            command = ["/bin/sh", UPDATE_INITRAMFS_GUARD, "-u", "-k", "test-kernel", "-b", str(boot)]
+            result = subprocess.run(command, env=env, capture_output=True, text=True, check=False)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("lacks the AnduinOS Dracut boot-proof module", result.stderr)
+            executable(lsinitrd, 'printf "%s\\n" base anduinos-migration-proof\n')
+            subprocess.run(command, env=env, check=True)
 
 
 if __name__ == "__main__":

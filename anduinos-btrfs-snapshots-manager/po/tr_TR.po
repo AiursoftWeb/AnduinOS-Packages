@@ -1880,3 +1880,150 @@ msgstr "AnduinOS'u kurtarın ve silinmiş Kişisel Dosyaları geri yükleyin"
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
 msgid "Create an AnduinOS system snapshot"
 msgstr "AnduinOS sistem anlık görüntüsü oluştur"
+
+msgid "Delete Factory Recovery Point?"
+msgstr "Fabrika Kurtarma Noktası Silinsin mi?"
+
+msgid "Delete and Disable Factory Recovery"
+msgstr "Fabrika Kurtarmayı Sil ve Devre Dışı Bırak"
+
+msgid "Deleting factory recovery point…"
+msgstr "Fabrika kurtarma noktası siliniyor…"
+
+msgid "Checking factory reset availability…"
+msgstr "Fabrika ayarlarına sıfırlamanın kullanılabilirliği denetleniyor…"
+
+msgid "Factory Reset Is Not Available"
+msgstr "Fabrika Ayarlarına Sıfırlama Kullanılamıyor"
+
+msgid "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
+msgstr "Bu sistem fabrika ayarlarına sıfırlamayı desteklemiyor. Etkinleştirmek için AnduinOS’u yeniden yükleyin ve Btrfs dosya sistemini seçin."
+
+msgid "Factory Reset Is Not Ready"
+msgstr "Fabrika ayarlarına sıfırlama henüz hazır değil"
+
+msgid "Reset AnduinOS to Its Initial State?"
+msgstr "AnduinOS ilk durumuna sıfırlansın mı?"
+
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Fabrika ayarlarına sıfırlama; sistem dosyalarını, yüklü paketleri ve sistem ayarlarını özgün New OS durumuna döndürür. Ev klasöründeki kişisel dosyalar değişmez. Önce mevcut sistemin bir güvenlik anlık görüntüsü oluşturulur. Ardından kurtarma hazırlanır ve bu bilgisayar 60 saniye içinde otomatik olarak yeniden başlatılır."
+
+msgid "Return to the initial New OS state"
+msgstr "İlk New OS durumuna dön"
+
+msgid "Saved as a safety snapshot before reset"
+msgstr "Sıfırlamadan önce güvenlik anlık görüntüsü olarak kaydedildi"
+
+msgid "Reset and Restart"
+msgstr "Sıfırla ve Yeniden Başlat"
+
+msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+msgstr "“New OS”, kurulum sırasında oluşturulan özgün sistem durumudur. Bunu silmek, AnduinOS’u ilk durumuna sıfırlama olanağını devre dışı bırakır. İşletim sistemi yeniden yüklenmeden bu işlem geri alınamaz. Kişisel dosyalarınız silinmez."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "Kullanıcı dosyalarını sil"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Fabrika ayarlarına sıfırlama; sistem dosyalarını, yüklü paketleri ve sistem ayarlarını ilk New OS durumuna geri yükler. Önce mevcut sistemin bir güvenlik anlık görüntüsü oluşturulur. Ardından kurtarma hazırlanır ve bu bilgisayar 60 saniye içinde otomatik olarak yeniden başlatılır."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "Fabrika ayarlarına sıfırlama hazırlanıyor…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "Aşağıdan silmeyi seçmediğiniz sürece korunur"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "Fabrika Home kurtarma noktası eksik veya hasarlı olduğundan kullanılamıyor."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "Home'u kurulumdan sonraki ilk durumuna geri yükleyin ve Home anlık görüntü geçmişini silin. Kurtarma onaylandıktan sonra bu işlem geri alınamaz."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Disk Alanı Koruması"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "En az boş alan"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Hem Sistem hem de Ev dizininin otomatik anlık görüntüleri için geçerlidir. Devre dışı bırakmak için 0 olarak ayarlayın."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Otomatik anlık görüntüler duraklatıldı"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Ev dizininin anlık görüntüleri daha fazla boş alan bekliyor."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Disk alanı azaldığı için Ev dizininin zamanlanmış anlık görüntüleri duraklatıldı. Alan açıldığında otomatik olarak devam edecekler."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Disk alanı azaldığı için zamanlanmış sistem anlık görüntüleri duraklatıldı. Alan açıldığında otomatik olarak devam edecekler."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Sistem ve Ev dizininin anlık görüntüleri daha fazla boş alan bekliyor."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Sistem anlık görüntüleri daha fazla boş alan bekliyor."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "Önce sistemin güvenlik anlık görüntüsü oluşturulur. Ardından 60 saniye içinde yeniden başlatılır."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "Tüm kullanıcıların Ev dizini dosyalarını ve anlık görüntü geçmişini silin. Bu işlem geri alınamaz."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "Sistemi New OS durumuna geri yükleyin. Kişisel dosyalar varsayılan olarak korunur."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Kullanıcı verilerini geri al"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Tüm kullanıcıların dosya ve ayarlarını ilk durumuna döndürür. Anlık görüntü geçmişi korunur."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Geri almadan önce güvenlik anlık görüntüleri oluşturulur. Hazırlıktan sonra 60 saniye içinde yeniden başlatılır."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "New OS silinirse bu anlık görüntü kategorisi için fabrika durumuna dönüş devre dışı kalır. Mevcut dosyalar ve diğer anlık görüntüler korunur."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Tüm kullanıcıların dosya ve ayarları"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Önce bir güvenlik anlık görüntüsü oluşturulur. Anlık görüntü geçmişi korunur."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Geri alma hazır. Çalışmanızı kaydedin; bilgisayar 60 saniye içinde yeniden başlatılacak."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Geri alma onayı başarısız oldu. Önceki durum geri yükleniyor."

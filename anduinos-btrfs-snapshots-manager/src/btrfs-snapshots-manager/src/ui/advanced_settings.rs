@@ -1,9 +1,8 @@
+use crate::dbus_client::SnapshotsManagerHelperClient;
+use crate::i18n::tr;
 use adw::prelude::*;
 use gtk::{gio, glib};
 use libadwaita as adw;
-
-use crate::dbus_client::SnapshotsManagerHelperClient;
-use crate::i18n::tr;
 
 pub fn show(parent: &adw::ApplicationWindow) {
     let window = adw::PreferencesWindow::new();

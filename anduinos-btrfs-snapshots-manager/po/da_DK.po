@@ -1880,3 +1880,150 @@ msgstr "Gendan AnduinOS og slettede personlige filer"
 #: anduinos-btrfs-snapshots-manager/data/org.anduinos.BtrfsSnapshotsManager.policy:10
 msgid "Create an AnduinOS system snapshot"
 msgstr "Opret et AnduinOS-systemøjebliksbillede"
+
+msgid "Delete Factory Recovery Point?"
+msgstr "Slet fabriksgendannelsespunkt?"
+
+msgid "Delete and Disable Factory Recovery"
+msgstr "Slet og deaktiver fabriksgendannelse"
+
+msgid "Deleting factory recovery point…"
+msgstr "Sletter fabriksgendannelsespunkt…"
+
+msgid "Checking factory reset availability…"
+msgstr "Kontrollerer om fabriksnulstilling er tilgængelig…"
+
+msgid "Factory Reset Is Not Available"
+msgstr "Fabriksnulstilling er ikke tilgængelig"
+
+msgid "This system does not support factory reset. Reinstall AnduinOS and choose the Btrfs filesystem to enable it."
+msgstr "Dette system understøtter ikke fabriksnulstilling. Geninstaller AnduinOS, og vælg Btrfs-filsystemet for at aktivere funktionen."
+
+msgid "Factory Reset Is Not Ready"
+msgstr "Fabriksnulstilling er endnu ikke klar"
+
+msgid "Reset AnduinOS to Its Initial State?"
+msgstr "Nulstil AnduinOS til den oprindelige tilstand?"
+
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. Personal files in Home will not change. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "Fabriksnulstilling gendanner systemfiler, installerede pakker og systemindstillinger til den oprindelige New OS-tilstand. Personlige filer i hjemmemappen ændres ikke. Der oprettes først et sikkerhedssnapshot af det aktuelle system. Derefter klargøres gendannelsen, og computeren genstarter automatisk inden for 60 sekunder."
+
+msgid "Return to the initial New OS state"
+msgstr "Vend tilbage til den oprindelige New OS-tilstand"
+
+msgid "Saved as a safety snapshot before reset"
+msgstr "Gemt som sikkerhedssnapshot før nulstilling"
+
+msgid "Reset and Restart"
+msgstr "Nulstil og genstart"
+
+msgid "“New OS” is the original system state created during installation. Deleting it will disable the ability to reset AnduinOS to its initial state. This cannot be undone without reinstalling the operating system. Your personal files will not be deleted by this action."
+msgstr "“New OS” er den oprindelige systemtilstand, der blev oprettet under installationen. Hvis den slettes, kan AnduinOS ikke længere nulstilles til sin oprindelige tilstand. Dette kan ikke fortrydes uden at geninstallere operativsystemet. Dine personlige filer slettes ikke."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Erase user files"
+msgstr "Slet brugerfiler"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Factory reset will restore system files, installed packages, and system settings to the original New OS state. A safety snapshot of the current system will be created first. Recovery will then be armed and this computer will restart automatically within 60 seconds."
+msgstr "En fabriksnulstilling gendanner systemfiler, installerede pakker og systemindstillinger til den oprindelige New OS-tilstand. Der oprettes først et sikkerhedssnapshot af det aktuelle system. Derefter klargøres gendannelsen, og computeren genstarter automatisk inden for 60 sekunder."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preparing factory reset…"
+msgstr "Forbereder fabriksnulstilling…"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Preserved unless you choose to erase them below"
+msgstr "Bevares, medmindre du vælger at slette dem nedenfor"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Unavailable because the factory Home recovery point is missing or damaged."
+msgstr "Ikke tilgængelig, fordi fabriksgendannelsespunktet for Home mangler eller er beskadiget."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore Home to its initial installed state and erase Home snapshot history. This cannot be undone after recovery is confirmed."
+msgstr "Gendan Home til tilstanden umiddelbart efter installationen, og slet historikken over Home-snapshots. Dette kan ikke fortrydes, når gendannelsen er bekræftet."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Disk Space Protection"
+msgstr "Beskyttelse mod lav diskplads"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "GiB"
+msgstr "GiB"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Minimum free space"
+msgstr "Mindste ledige plads"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Applies to both System and Home automatic snapshots. Set to 0 to disable."
+msgstr "Gælder for automatiske øjebliksbilleder af både systemet og hjemmemappen. Sæt til 0 for at deaktivere."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Automatic snapshots paused"
+msgstr "Automatiske øjebliksbilleder er sat på pause"
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "Home snapshots are waiting for more free space."
+msgstr "Øjebliksbilleder af hjemmemappen venter på mere ledig plads."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available."
+msgstr "Planlagte øjebliksbilleder af hjemmemappen er sat på pause på grund af lav diskplads. De genoptages automatisk, når der er plads."
+
+#: src/btrfs-snapshots-manager-notifier/src/main.rs
+msgid "Low disk space paused scheduled system snapshots. They will resume automatically when space is available."
+msgstr "Planlagte øjebliksbilleder af systemet er sat på pause på grund af lav diskplads. De genoptages automatisk, når der er plads."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System and Home snapshots are waiting for more free space."
+msgstr "Øjebliksbilleder af systemet og hjemmemappen venter på mere ledig plads."
+
+#: src/btrfs-snapshots-manager/src/ui/automation_dialog.rs
+msgid "System snapshots are waiting for more free space."
+msgstr "Øjebliksbilleder af systemet venter på mere ledig plads."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "A system safety snapshot is created first. Restart follows within 60 seconds."
+msgstr "Der oprettes først et sikkerhedsøjebliksbillede af systemet. Derefter genstartes der inden for 60 sekunder."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Erase all users’ Home files and snapshot history. This cannot be undone."
+msgstr "Slet alle brugeres filer i hjemmemapperne og historikken over øjebliksbilleder. Dette kan ikke fortrydes."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore the system to New OS. Personal files are kept by default."
+msgstr "Gendan systemet til New OS. Personlige filer bevares som standard."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Roll back user data"
+msgstr "Gendan brugerdata"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore all users’ files and settings to their initial state. Snapshot history is kept."
+msgstr "Gendan alle brugeres filer og indstillinger til den oprindelige tilstand. Øjebliksbilledhistorikken bevares."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Safety snapshots are created before rollback. Restart follows within 60 seconds."
+msgstr "Der oprettes sikkerhedsøjebliksbilleder før gendannelsen. Computeren genstarter inden for 60 sekunder efter klargøringen."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Deleting New OS disables factory recovery for this snapshot category. Current files and other snapshots are kept."
+msgstr "Sletning af New OS deaktiverer fabriksgendannelse for denne kategori af øjebliksbilleder. Nuværende filer og andre øjebliksbilleder bevares."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "All users’ files and settings"
+msgstr "Alle brugeres filer og indstillinger"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "A safety snapshot is created first. Snapshot history is kept."
+msgstr "Der oprettes først et sikkerhedsøjebliksbillede. Øjebliksbilledhistorikken bevares."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback is ready. Save your work; this computer will restart within 60 seconds."
+msgstr "Gendannelsen er klar. Gem dit arbejde; computeren genstarter inden for 60 sekunder."
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Rollback confirmation failed. Restoring the previous state."
+msgstr "Bekræftelse af gendannelsen mislykkedes. Den tidligere tilstand gendannes."

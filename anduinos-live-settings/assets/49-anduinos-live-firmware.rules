@@ -1,0 +1,14 @@
+// The Live administrator already has passwordless sudo. Permit only this
+// fixed inspection helper; no key enrollment or arbitrary command execution.
+polkit.addRule(function(action, subject) {
+    if (action.id !== "com.anduinos.firmware-probe.inspect" ||
+        !subject.local || !subject.active || !subject.isInGroup("sudo")) {
+        return polkit.Result.NOT_HANDLED;
+    }
+    try {
+        polkit.spawn(["/usr/bin/test", "-f", "/run/anduinos-live/environment"]);
+        return polkit.Result.YES;
+    } catch (error) {
+        return polkit.Result.NOT_HANDLED;
+    }
+});
