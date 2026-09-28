@@ -1941,5 +1941,21 @@ msgid "Firmware check complete"
 msgstr "ตรวจสอบเฟิร์มแวร์เสร็จแล้ว"
 
 #: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "ต้องใช้พาร์ทิชันระบบ EFI แยกต่างหาก"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "ESP นี้มี EFI/AnduinOS อยู่แล้ว สร้าง ESP ใหม่ในพื้นที่ที่ยังไม่ได้จัดสรร (อย่างน้อย 512 MiB) หรือเลือก ESP อื่น การติดตั้งเดิมจะไม่ถูกเขียนทับ เมนู GRUB ของระบบใหม่สามารถเริ่มระบบเดิมได้"
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "กำลังตรวจสอบพาร์ทิชันระบบ EFI…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "ตรวจหาการติดตั้ง Linux อื่น"
+
+#: src/pages.py
 msgid "Retry"
 msgstr "ลองอีกครั้ง"

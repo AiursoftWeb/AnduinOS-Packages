@@ -1941,5 +1941,21 @@ msgid "Firmware check complete"
 msgstr "Đã kiểm tra firmware xong"
 
 #: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "Cần một phân vùng hệ thống EFI riêng"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "ESP này đã chứa EFI/AnduinOS. Hãy tạo ESP mới trong vùng chưa phân bổ (ít nhất 512 MiB), hoặc chọn ESP khác. Bản cài đặt hiện có sẽ không bị ghi đè. Menu GRUB của hệ thống mới có thể khởi động hệ thống hiện có."
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "Đang kiểm tra phân vùng hệ thống EFI…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "Kiểm tra các bản cài đặt Linux khác"
+
+#: src/pages.py
 msgid "Retry"
 msgstr "Thử lại"

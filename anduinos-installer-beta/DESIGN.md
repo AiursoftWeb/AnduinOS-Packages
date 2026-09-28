@@ -181,8 +181,13 @@ and constructs every command itself.
 
 The GTK process always runs as the desktop user. Ordinary `lsblk` discovery
 stays unprivileged. Exact free-space geometry crosses Polkit through
-`anduinos-installer-storage-probe`, a read-only helper that accepts exactly one
-validated fixed whole-disk path and can execute only `parted ... print free`.
+`anduinos-installer-storage-probe`, a read-only helper that accepts one
+validated whole-disk path for `parted ... print free`, or an explicit
+`--ntfs-inspect` / `--esp-inspect` partition request. The ESP request resolves
+the current inventory, enters a private mount namespace, and runs the same
+read-only FAT/vendor inspection used by executor preflight. Its UI result is
+advisory, checked against the selected PARTUUID and filesystem UUID; it never
+replaces executor authorization or allows forced reuse.
 The shared inventory probe forces the C locale for both `lsblk` and `parted`,
 so translated machine-output flags cannot change the topology authorization
 digest between the desktop process and the root executor.

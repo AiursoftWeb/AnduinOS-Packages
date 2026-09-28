@@ -61,6 +61,7 @@ class ExecutorPipelineTests(unittest.TestCase):
             "install-bootloader",
             "enroll-secure-boot",
             "check-other-disk-systems",
+            "check-linux-systems",
             "create-factory-snapshot",
         )
         positions = tuple(pipeline.index(step) for step in expected)

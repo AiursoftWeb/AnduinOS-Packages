@@ -1941,5 +1941,21 @@ msgid "Firmware check complete"
 msgstr "Vérification du micrologiciel terminée"
 
 #: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "Une partition système EFI distincte est nécessaire"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "Cette ESP contient déjà EFI/AnduinOS. Créez une nouvelle ESP dans l’espace non alloué (au moins 512 MiB), ou sélectionnez une autre ESP. L’installation existante ne sera pas écrasée. Le menu GRUB du nouveau système peut démarrer le système existant."
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "Vérification de la partition système EFI…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "Rechercher d’autres installations Linux"
+
+#: src/pages.py
 msgid "Retry"
 msgstr "Réessayer"

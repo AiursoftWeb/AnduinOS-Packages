@@ -53,6 +53,7 @@ from frontend import (
     clear_plaintext_passwords,
     create_install_plan,
     probe_ntfs_resize,
+    probe_esp_occupied,
     probe_storage_inventory,
 )
 from installer_core.btrfs import BTRFS_SUBVOLUMES, BtrfsCompression
@@ -217,6 +218,23 @@ _SHRINK_WITH_PARTITION_TOOL_MESSAGE = N_(
 # real partitions. Keep their exact geometry in the safety snapshot, but do
 # not render sub-4-MiB padding as if it were another layout item.
 _LAYOUT_FREE_SPACE_MINIMUM_BYTES = 4 * 1024**2
+
+
+def _esp_conflict_dialog(nav_view, lang):
+    dialog = Adw.MessageDialog(
+        transient_for=nav_view.get_root(),
+        heading=_("A separate EFI System Partition is required", lang),
+        body=_(
+            "This ESP already contains EFI/AnduinOS. Create a new ESP in "
+            "unallocated space (at least 512 MiB), or select another ESP. "
+            "The existing installation will not be overwritten. The new "
+            "system's GRUB menu can start the existing system.", lang,
+        ),
+    )
+    dialog.add_response("ok", _("OK", lang))
+    dialog.set_default_response("ok")
+    dialog.set_close_response("ok")
+    dialog.present()
 
 
 def _probe_storage_workflow(*, development_mode=False):
@@ -4021,11 +4039,39 @@ def build_guided_storage_page(shared, nav_view):
             guidance.set_label(str(error))
             _set_next(False)
             return
-        shared["guided_extent_id"] = selected.free_extent_id
-        shared["guided_esp_partuuid"] = selected.reused_esp_partuuid
-        shared["guided_storage_preview_model"] = preview
-        shared["_guided_storage_workflow_model"] = workflow
-        nav_view.push(build_user_page(shared, nav_view))
+        def finish(occupied=False, error=None):
+            _finish_loading()
+            _set_storage_controls(True)
+            _set_next(True)
+            if _guided_selection() != selected:
+                return
+            if error is not None:
+                guidance.set_label(str(error))
+                return
+            if occupied:
+                if None in esp_options:
+                    esp_dropdown.set_selected(esp_options.index(None))
+                _esp_conflict_dialog(nav_view, lang)
+                return
+            shared["guided_extent_id"] = selected.free_extent_id
+            shared["guided_esp_partuuid"] = selected.reused_esp_partuuid
+            shared["guided_storage_preview_model"] = preview
+            shared["_guided_storage_workflow_model"] = workflow
+            nav_view.push(build_user_page(shared, nav_view))
+
+        if preview.reused_esp is None:
+            finish()
+        else:
+            _set_next(False)
+            _set_storage_controls(False)
+            loading_label.set_label(_("Checking EFI System Partition…", lang))
+            loading.set_visible(True)
+            pulse.start()
+            requests.start(
+                lambda: probe_esp_occupied(preview.reused_esp,
+                    development_mode=bool(shared.get("development_mode"))),
+                finish,
+            )
 
     nav = _nav_box(
         lang,
@@ -5735,9 +5781,40 @@ def build_advanced_storage_page(shared, nav_view):
                     if item.role is ManualPartitionRole.ROOT)
 
         def proceed():
-            if shared.get("manual_storage_preview_model") is preview:
+            if shared.get("manual_storage_preview_model") is not preview:
+                return
+
+            def finish(occupied=False, error=None):
+                pulse.stop()
+                loading.set_visible(False)
+                if shared.get("manual_storage_preview_model") is not preview:
+                    return
+                _set_next(True)
+                if error is not None:
+                    status.set_label(str(error))
+                    return
+                if occupied:
+                    _replace_draft(reused_esp_partuuid="")
+                    _queue_refresh()
+                    _esp_conflict_dialog(nav_view, lang)
+                    return
                 shared["_manual_storage_workflow_model"] = workflow
                 nav_view.push(build_user_page(shared, nav_view))
+
+            esp = next((item for item in disk.partitions
+                        if item.identity.partuuid == preview.selection.reused_esp_partuuid), None)
+            if esp is None:
+                finish()
+            else:
+                _set_next(False)
+                status.set_label(_("Checking EFI System Partition…", lang))
+                loading.set_visible(True)
+                pulse.start()
+                requests.start(
+                    lambda: probe_esp_occupied(esp,
+                        development_mode=bool(shared.get("development_mode"))),
+                    finish,
+                )
 
         _confirm_storage_capacity(page, nav_view, lang, root.size_mib * MIB, proceed)
 
@@ -7177,6 +7254,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "check-other-disk-systems": _(
             "Check for Windows installations", lang
         ),
+        "check-linux-systems": _("Check for other Linux installations", lang),
         "leave-chroot": _("Finalize target environment", lang),
         "unmount-target": _("Unmount installed system", lang),
     }

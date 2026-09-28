@@ -1941,5 +1941,21 @@ msgid "Firmware check complete"
 msgstr "Verificarea firmware-ului s-a încheiat"
 
 #: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "Este necesară o partiție de sistem EFI separată"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "Această ESP conține deja EFI/AnduinOS. Creați o nouă ESP în spațiul nealocat (cel puțin 512 MiB) sau selectați altă ESP. Instalarea existentă nu va fi suprascrisă. Meniul GRUB al noului sistem poate porni sistemul existent."
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "Se verifică partiția de sistem EFI…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "Caută alte instalări Linux"
+
+#: src/pages.py
 msgid "Retry"
 msgstr "Reîncercați"
