@@ -86,9 +86,24 @@ a disabled boolean:
 
 - `enabled`: firmware enforces Secure Boot and the complete MOK chain applies;
 - `disabled`: firmware supports Secure Boot but enforcement is off;
-- `unsupported`: firmware explicitly reports that Secure Boot is unavailable;
+- `unsupported`: BIOS, or an accessible mounted efivarfs with no SecureBoot variable;
 - `unknown`: the probe failed, timed out, returned malformed output, or reported
   contradictory states.
+
+`mokutil` exit 255 and “doesn't support Secure Boot” are not sufficient
+proof of unsupported firmware: failed reads can mean absent variables,
+permissions, or firmware I/O errors. The shared `firmware.py` probe records
+stdout, stderr, exit status, and its evidence reason. EFI fallback validates
+the four-byte attribute prefix plus one-byte boolean and distinguishes an
+unmounted interface from an absent variable.
+
+The fixed `/usr/libexec/anduinos-firmware-probe` helper accepts no arguments,
+returns schema-1 JSON, and never creates keys or requests MOK enrollment.
+It can prepare the fixed efivarfs mount only in an AnduinOS Live environment.
+Interactive clients may request this helper for access failures; the status
+CLI remains non-interactive. Live settings prepare the interface at startup
+and permit this inspection action for the active local Live administrator.
+Other firmware errors remain unknown and retain their diagnostic details.
 
 Disabled and unsupported are known non-enforcing states. NVIDIA, Xbox, and
 other driver workflows remain available. Driver Center can prepare and enroll

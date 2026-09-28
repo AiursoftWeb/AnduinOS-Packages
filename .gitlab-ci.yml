@@ -7,6 +7,7 @@ verify-ci-package-needs:
   stage: lint
   script:
     - python3 lib/verify-ci-package-needs.py
+    - python3 -m unittest discover -s lib/tests -v
     - python3 lib/verify-localizations.py
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -684,6 +685,7 @@ anduinos-live-settings:
     - verify-ci-package-needs
     - test-all
     - anduinos-live-layers
+    - anduinos-secureboot-toolkit
   variables:
     PACKAGE_DIR: anduinos-live-settings
 
@@ -706,6 +708,7 @@ anduinos-installer-beta:
     - anduinos-live-settings
     - anduinos-multimedia-codecs
     - anduinos-swap-config
+    - anduinos-secureboot-toolkit
   variables:
     PACKAGE_DIR: anduinos-installer-beta
 

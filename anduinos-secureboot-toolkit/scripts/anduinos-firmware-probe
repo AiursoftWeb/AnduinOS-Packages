@@ -1,0 +1,13 @@
+#!/usr/bin/python3
+"""Fixed, evidence-only firmware operation. No arguments are accepted."""
+import sys
+from anduinos_secureboot.firmware import privileged_probe
+
+if len(sys.argv) != 1:
+    print("Firmware inspection accepts no arguments", file=sys.stderr)
+    raise SystemExit(64)
+try:
+    print(privileged_probe().to_json())
+except PermissionError as error:
+    print(str(error), file=sys.stderr)
+    raise SystemExit(77)

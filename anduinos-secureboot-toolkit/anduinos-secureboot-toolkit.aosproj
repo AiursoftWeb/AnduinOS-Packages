@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-secureboot-toolkit</PackageName>
-    <PackageVersion>2.0.3-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.4-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Shared Secure Boot, MOK, and DKMS signing toolkit for AnduinOS applications</PackageDescription>
     <Section>admin</Section>
@@ -37,6 +37,9 @@
 
   <ItemGroup>
     <IncludeFile Include="src/anduinos_secureboot/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/__init__.py" />
+    <IncludeFile Include="src/anduinos_secureboot/firmware.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/firmware.py" />
+    <IncludeScript Include="scripts/anduinos-firmware-probe" Target="/usr/libexec/anduinos-firmware-probe" />
+    <IncludeFile Include="data/com.anduinos.FirmwareProbe.policy" Target="/usr/share/polkit-1/actions/com.anduinos.FirmwareProbe.policy" />
     <IncludeFile Include="src/anduinos_secureboot/client.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/client.py" />
     <IncludeFile Include="src/anduinos_secureboot/boot_chain.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/boot_chain.py" />
     <IncludeFile Include="src/anduinos_secureboot/inspect.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/inspect.py" />

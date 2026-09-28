@@ -226,7 +226,7 @@ def _probe_storage_workflow(*, development_mode=False):
         return build_development_storage_workflow(probe_platform())
     return build_storage_workflow(
         probe_storage_inventory(),
-        probe_platform(),
+        probe_platform(recover=True),
     )
 
 
@@ -236,7 +236,7 @@ def _probe_install_target(*, development_mode=False):
     if development_mode:
         workflow = _probe_storage_workflow(development_mode=True)
         return workflow.inventory, workflow.platform
-    return probe_storage_inventory(), probe_platform()
+    return probe_storage_inventory(), probe_platform(recover=True)
 
 
 def _coexistence_notice_text(notice, lang, windows_detected):
@@ -488,12 +488,7 @@ def _ensure_initial_page_route(shared):
         return
     power = probe_power_supply()
     shared[_POWER_PROBE_RESULT_KEY] = power
-    try:
-        shared["_platform_probe_result"] = probe_platform()
-    except ProbeError:
-        # Keep the recommendation in the route; normal validation will still
-        # surface the failed platform probe before any installation action.
-        shared["_platform_probe_result"] = None
+    shared.setdefault("_platform_probe_result", None)
     shared["_network_page_planned"] = should_show_network_page(shared)
     shared["_page_route_initialized"] = True
 
@@ -507,9 +502,10 @@ def _planned_page_route(shared):
     ):
         route.append("low-battery")
     platform = shared.get("_platform_probe_result")
-    if bool(shared.get("development_mode")) or not (
-        platform is not None
-        and platform.secure_boot is SecureBoot.ENABLED
+    if not bool(shared.get("development_mode")):
+        route.append("firmware-check")
+    if bool(shared.get("development_mode")) or (
+        platform is not None and platform.secure_boot is SecureBoot.DISABLED
     ):
         route.append("secure-boot-recommendation")
     if bool(shared.get("_network_page_planned")):
@@ -630,22 +626,87 @@ def _build_network_or_keyboard_page(shared, nav_view):
 
 
 def secure_boot_recommendation_needed(shared, platform=None) -> bool:
-    """Show the recommendation unless Secure Boot is known to be enabled."""
+    """Recommend enabling only when Secure Boot is known to be disabled."""
 
     if bool(shared.get("development_mode")):
         return True
     if platform is None:
         _ensure_initial_page_route(shared)
         platform = shared.get("_platform_probe_result")
-    if platform is None:
-        platform = probe_platform()
-    return platform.secure_boot is not SecureBoot.ENABLED
+    return platform is not None and platform.secure_boot is SecureBoot.DISABLED
 
 
 def _build_secure_boot_or_network_page(shared, nav_view, *, platform=None):
+    if (platform is None and shared.get("_platform_probe_result") is None
+            and not shared.get("development_mode")):
+        return build_firmware_check_page(shared, nav_view)
     if secure_boot_recommendation_needed(shared, platform):
         return build_secure_boot_page(shared, nav_view)
     return _build_network_or_keyboard_page(shared, nav_view)
+
+
+def build_firmware_check_page(shared, nav_view):
+    """Recover firmware access off-thread before optional recommendations."""
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
+    page = Adw.NavigationPage(title=_("Checking firmware", lang))
+    page.set_tag("firmware-check")
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16,
+                      margin_start=32, margin_end=32, margin_top=28,
+                      margin_bottom=20)
+    spinner = Gtk.Spinner(spinning=True)
+    content.append(spinner)
+    status = Gtk.Label(label=_("Checking Secure Boot support…", lang), wrap=True)
+    content.append(status)
+    details = Gtk.Label(wrap=True, selectable=True, xalign=0, vexpand=True)
+    content.append(details)
+    request = LatestBackgroundRequest(GLib.idle_add)
+
+    def advance():
+        platform = shared.get("_platform_probe_result")
+        if platform is None:
+            # Unknown is allowed for configuration, never for execution.
+            next_page = _build_network_or_keyboard_page(shared, nav_view)
+        else:
+            next_page = _build_secure_boot_or_network_page(
+                shared, nav_view, platform=platform)
+        nav_view.push(next_page)
+
+    navigation = _nav_box(lang, on_back=lambda: nav_view.pop(),
+                          on_next=advance, next_label="Continue",
+                          next_sensitive=False, stage=0, shared=shared,
+                          page_tag="firmware-check")
+
+    def complete(platform, error):
+        spinner.stop()
+        retry.set_sensitive(True)
+        shared["_platform_probe_result"] = platform
+        shared["_platform_probe_error"] = str(error) if error else ""
+        if error:
+            status.set_label(_("Unable to determine Secure Boot support", lang))
+            details.set_label(_(
+                "You can continue configuring the installation. Firmware detection "
+                "must succeed before any changes are made to your disks.", lang
+            ) + "\n\n" + str(error))
+        else:
+            status.set_label(_("Firmware check complete", lang))
+            details.set_label("")
+        navigation.next_button.set_sensitive(True)
+
+    def start():
+        spinner.start()
+        status.set_label(_("Checking Secure Boot support…", lang))
+        details.set_label("")
+        retry.set_sensitive(False)
+        navigation.next_button.set_sensitive(False)
+        request.start(lambda: probe_platform(recover=True), complete)
+
+    retry = _nav_btn("Retry", lang, start)
+    content.append(retry)
+    content.append(navigation)
+    page.set_child(content)
+    page.connect("shown", lambda *_args: start())
+    page.connect("hidden", lambda *_args: request.invalidate())
+    return page
 
 
 def build_post_welcome_page(
@@ -2811,6 +2872,7 @@ def build_disk_page(shared, nav_view):
             return
 
         assert workflow is not None
+        shared["_platform_probe_result"] = workflow.platform
         first_button = None
         for choice in workflow.disks:
             # Preserve the old default list, including USB SSDs reporting RM=0.
@@ -3803,6 +3865,7 @@ def build_guided_storage_page(shared, nav_view):
             return
         workflow = result
         assert workflow is not None
+        shared["_platform_probe_result"] = workflow.platform
         try:
             candidate = workflow.disk(
                 str(shared.get("disk_stable_id") or "")
@@ -5561,6 +5624,7 @@ def build_advanced_storage_page(shared, nav_view):
             )
             return
         workflow = result
+        shared["_platform_probe_result"] = workflow.platform
         try:
             choice = workflow.disk(str(shared.get("disk_stable_id") or ""))
         except KeyError:
@@ -6293,7 +6357,12 @@ def build_summary_page(shared, nav_view):
     secure_boot_enabled = False
     platform = None
     try:
-        platform = probe_platform()
+        # Storage scanning already acquired this snapshot off-thread. The
+        # executor independently rechecks it as root immediately before work.
+        platform = shared.get("_platform_probe_result")
+        if platform is None:
+            raise ProbeError(shared.get("_platform_probe_error") or
+                             "Firmware detection has not completed")
         secure_boot_enabled = platform.secure_boot is SecureBoot.ENABLED
         platform_text = _(
             "{architecture} / {firmware} / Secure Boot: {secure_boot}",
