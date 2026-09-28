@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-control-panel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:29+0000\n"
+"POT-Creation-Date: 2026-09-28 14:56+0000\n"
 "PO-Revision-Date: 2026-09-09 12:05+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -215,7 +215,7 @@ msgstr "Instalación completada: %s"
 
 #: src/anduinos_control_panel/app.py:621 src/anduinos_control_panel/app.py:849
 #: src/anduinos_control_panel/app.py:947
-#: src/anduinos_control_panel/software_sources.py:394
+#: src/anduinos_control_panel/software_sources.py:552
 msgid "Authentication was cancelled."
 msgstr "La autenticación se canceló."
 
@@ -292,7 +292,10 @@ msgstr "Elija el tamaño del menú de GRUB y el logotipo de arranque."
 msgid ""
 "High resolution can make menu text small on 4K displays; the screen's native "
 "resolution is not guaranteed at boot."
-msgstr "Una resolución alta puede hacer que el texto del menú se vea pequeño en pantallas 4K; no se garantiza que la resolución nativa de la pantalla esté disponible al arrancar."
+msgstr ""
+"Una resolución alta puede hacer que el texto del menú se vea pequeño en "
+"pantallas 4K; no se garantiza que la resolución nativa de la pantalla esté "
+"disponible al arrancar."
 
 #: src/anduinos_control_panel/app.py:740
 msgid "Display mode"
@@ -303,6 +306,7 @@ msgid "High resolution (if available)"
 msgstr "Alta resolución (si está disponible)"
 
 #: src/anduinos_control_panel/app.py:747
+#: src/anduinos_control_panel/software_sources.py:394
 msgid "Automatic"
 msgstr "Automático"
 
@@ -810,127 +814,178 @@ msgstr "No se pudo confirmar la instalación del paquete. Inténtalo de nuevo."
 msgid "Installation failed: {error}"
 msgstr "Error de instalación: {error}"
 
-#: src/anduinos_control_panel/software_sources.py:264
+#: src/anduinos_control_panel/software_sources.py:334
+#: src/anduinos_control_panel/software_sources.py:396
 #: src/anduinos_control_panel/topics.py:245
 msgid "Software Source"
 msgstr "Fuente de software"
 
-#: src/anduinos_control_panel/software_sources.py:295
+#: src/anduinos_control_panel/software_sources.py:371
+msgid "Current mirror"
+msgstr "Espejo actual"
+
+#: src/anduinos_control_panel/software_sources.py:397
+msgid "  Switch to Fastest Mirror  "
+msgstr "  Cambiar al espejo más rápido  "
+
+#: src/anduinos_control_panel/software_sources.py:406
 msgid "Keep Your System Up to Date"
 msgstr "Mantener su sistema actualizado"
 
-#: src/anduinos_control_panel/software_sources.py:302
+#: src/anduinos_control_panel/software_sources.py:407
 #: src/anduinos_control_panel/topics.py:246
 msgid "Security patches and the latest features are just a click away."
 msgstr ""
 "Los parches de seguridad y las últimas funciones están a solo un clic de "
 "distancia."
 
-#: src/anduinos_control_panel/software_sources.py:312
-#: src/anduinos_control_panel/software_sources.py:387
-msgid "Current mirror"
-msgstr "Espejo actual"
-
-#: src/anduinos_control_panel/software_sources.py:322
-msgid "Terminal Output"
-msgstr "Salida del terminal"
-
-#: src/anduinos_control_panel/software_sources.py:350
-msgid "  Switch to Fastest Mirror  "
-msgstr "  Cambiar al espejo más rápido  "
-
-#: src/anduinos_control_panel/software_sources.py:353
-#: src/anduinos_control_panel/software_sources.py:536
-#: src/anduinos_control_panel/software_sources.py:550
+#: src/anduinos_control_panel/software_sources.py:409
+#: src/anduinos_control_panel/software_sources.py:701
+#: src/anduinos_control_panel/software_sources.py:752
+#: src/anduinos_control_panel/software_sources.py:766
 msgid "  Check for Updates  "
 msgstr "  Comprobar si hay actualizaciones  "
 
-#: src/anduinos_control_panel/software_sources.py:399
-msgid "The operation failed without an error message."
-msgstr "La operación falló sin un mensaje de error."
+#: src/anduinos_control_panel/software_sources.py:417
+msgid "Advanced"
+msgstr "Avanzado"
 
-#: src/anduinos_control_panel/software_sources.py:423
+#: src/anduinos_control_panel/software_sources.py:424
+#: src/anduinos_control_panel/software_sources.py:495
+msgid "Custom address…"
+msgstr "Dirección personalizada…"
+
+#: src/anduinos_control_panel/software_sources.py:437
+msgid "Test mirror speeds"
+msgstr "Probar la velocidad de los servidores espejo"
+
+#: src/anduinos_control_panel/software_sources.py:440
+#: src/anduinos_control_panel/software_sources.py:668
+msgid "Apply selected mirror"
+msgstr "Aplicar el servidor espejo seleccionado"
+
+#: src/anduinos_control_panel/software_sources.py:445
+msgid "Terminal Output"
+msgstr "Salida del terminal"
+
+#: src/anduinos_control_panel/software_sources.py:498
+msgid "Mirror speed test complete."
+msgstr "Prueba de velocidad de los servidores espejo completada."
+
+#: src/anduinos_control_panel/software_sources.py:554
+msgid "The original source was restored, but refreshing it failed."
+msgstr "Se restauró la fuente de software original, pero no se pudo actualizar."
+
+
+#: src/anduinos_control_panel/software_sources.py:556
+msgid "The original source was restored."
+msgstr "Se restauró la fuente de software original."
+
+
+#: src/anduinos_control_panel/software_sources.py:557
+#: src/anduinos_control_panel/software_sources.py:615
+#: src/anduinos_control_panel/software_sources.py:744
+msgid "Review Terminal Output for details."
+msgstr "Consulte la salida del terminal para obtener detalles."
+
+
+#: src/anduinos_control_panel/software_sources.py:585
+#: src/anduinos_control_panel/software_sources.py:632
+msgid "Enter a valid HTTP or HTTPS mirror address."
+msgstr "Introduce una dirección HTTP o HTTPS válida para el servidor espejo."
+
+#: src/anduinos_control_panel/software_sources.py:593
+#: src/anduinos_control_panel/software_sources.py:638
 msgid "Testing mirrors…"
 msgstr "Probando espejos…"
 
-#: src/anduinos_control_panel/software_sources.py:424
+#: src/anduinos_control_panel/software_sources.py:595
 msgid "=== Testing mirror speeds ==="
 msgstr "=== Probando las velocidades de los espejos ==="
 
-#: src/anduinos_control_panel/software_sources.py:438
+#: src/anduinos_control_panel/software_sources.py:613
+msgid "No Ubuntu archive mirror is reachable."
+msgstr "No se puede acceder a ningún servidor espejo del archivo de Ubuntu."
+
+
+#: src/anduinos_control_panel/software_sources.py:619
 msgid "✗ Mirror test failed: "
 msgstr "✗ Prueba del espejo fallida: "
 
-#: src/anduinos_control_panel/software_sources.py:448
+#: src/anduinos_control_panel/software_sources.py:646
+msgid "Could not validate this mirror for the current system."
+msgstr "No se pudo validar este servidor espejo para el sistema actual."
+
+#: src/anduinos_control_panel/software_sources.py:657
 msgid "Latency"
 msgstr "Latencia"
 
-#: src/anduinos_control_panel/software_sources.py:449
+#: src/anduinos_control_panel/software_sources.py:658
 msgid "Bandwidth"
 msgstr "Ancho de banda"
 
-#: src/anduinos_control_panel/software_sources.py:453
+#: src/anduinos_control_panel/software_sources.py:663
 msgid "This is already your current mirror."
 msgstr "Este ya es tu espejo actual."
 
-#: src/anduinos_control_panel/software_sources.py:458
+#: src/anduinos_control_panel/software_sources.py:668
 msgid "Fastest Mirror Found"
 msgstr "Espejo más rápido encontrado"
 
-#: src/anduinos_control_panel/software_sources.py:461
+#: src/anduinos_control_panel/software_sources.py:671
 msgid "Switch to this mirror and run apt update?"
 msgstr "¿Cambiar a este espejo y ejecutar apt update?"
 
-#: src/anduinos_control_panel/software_sources.py:464
+#: src/anduinos_control_panel/software_sources.py:674
 msgid "Keep Current"
 msgstr "Mantener el actual"
 
-#: src/anduinos_control_panel/software_sources.py:465
+#: src/anduinos_control_panel/software_sources.py:675
 msgid "Switch"
 msgstr "Cambiar"
 
-#: src/anduinos_control_panel/software_sources.py:474
+#: src/anduinos_control_panel/software_sources.py:684
 msgid "Switching mirror…"
 msgstr "Cambiando el espejo…"
 
-#: src/anduinos_control_panel/software_sources.py:488
+#: src/anduinos_control_panel/software_sources.py:702
 msgid "✓ Mirror switched and system updated."
 msgstr "✓ Espejo cambiado y sistema actualizado."
 
-#: src/anduinos_control_panel/software_sources.py:490
+#: src/anduinos_control_panel/software_sources.py:704
 msgid "✗ Switch failed: "
 msgstr "✗ El cambio falló: "
 
-#: src/anduinos_control_panel/software_sources.py:497
+#: src/anduinos_control_panel/software_sources.py:712
 msgid "Installing updates…"
 msgstr "Instalando actualizaciones…"
 
-#: src/anduinos_control_panel/software_sources.py:500
+#: src/anduinos_control_panel/software_sources.py:715
 msgid "Checking for updates…"
 msgstr "Comprobando actualizaciones…"
 
-#: src/anduinos_control_panel/software_sources.py:508
-#: src/anduinos_control_panel/software_sources.py:528
+#: src/anduinos_control_panel/software_sources.py:723
+#: src/anduinos_control_panel/software_sources.py:744
 msgid "✗ Check failed: "
 msgstr "✗ Comprobación fallida: "
 
-#: src/anduinos_control_panel/software_sources.py:536
+#: src/anduinos_control_panel/software_sources.py:752
 msgid "  Install Updates  "
 msgstr "  Instalar actualizaciones  "
 
-#: src/anduinos_control_panel/software_sources.py:539
+#: src/anduinos_control_panel/software_sources.py:755
 msgid "Updates are available."
 msgstr "Actualizaciones disponibles."
 
-#: src/anduinos_control_panel/software_sources.py:541
+#: src/anduinos_control_panel/software_sources.py:757
 msgid "✓ System is up to date."
 msgstr "✓ El sistema está actualizado."
 
-#: src/anduinos_control_panel/software_sources.py:552
+#: src/anduinos_control_panel/software_sources.py:768
 msgid "✓ Updates installed successfully!"
 msgstr "✓ ¡Actualizaciones instaladas con éxito!"
 
-#: src/anduinos_control_panel/software_sources.py:554
+#: src/anduinos_control_panel/software_sources.py:770
 msgid "✗ Installation failed: "
 msgstr "✗ Instalación fallida: "
 
@@ -1107,6 +1162,9 @@ msgid "settings;control;system;hardware;drivers;accounts;backup;"
 msgstr ""
 "configuración;control;sistema;hardware;controladores;cuentas;copia de "
 "seguridad;"
+
+#~ msgid "The operation failed without an error message."
+#~ msgstr "La operación falló sin un mensaje de error."
 
 #~ msgid "Native resolution shows more detail; large text is easier to read."
 #~ msgstr ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-control-panel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:29+0000\n"
+"POT-Creation-Date: 2026-09-28 14:56+0000\n"
 "PO-Revision-Date: 2026-09-09 12:06+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -215,7 +215,7 @@ msgstr "Installationen av %s är klar"
 
 #: src/anduinos_control_panel/app.py:621 src/anduinos_control_panel/app.py:849
 #: src/anduinos_control_panel/app.py:947
-#: src/anduinos_control_panel/software_sources.py:394
+#: src/anduinos_control_panel/software_sources.py:552
 msgid "Authentication was cancelled."
 msgstr "Autentiseringen avbröts."
 
@@ -288,7 +288,9 @@ msgstr "Välj storleken på GRUB-menyn och startlogotypen."
 msgid ""
 "High resolution can make menu text small on 4K displays; the screen's native "
 "resolution is not guaranteed at boot."
-msgstr "Hög upplösning kan göra menytexten liten på 4K-skärmar; skärmens ursprungliga upplösning är inte garanterad vid uppstart."
+msgstr ""
+"Hög upplösning kan göra menytexten liten på 4K-skärmar; skärmens "
+"ursprungliga upplösning är inte garanterad vid uppstart."
 
 #: src/anduinos_control_panel/app.py:740
 msgid "Display mode"
@@ -299,6 +301,7 @@ msgid "High resolution (if available)"
 msgstr "Hög upplösning (om tillgänglig)"
 
 #: src/anduinos_control_panel/app.py:747
+#: src/anduinos_control_panel/software_sources.py:394
 msgid "Automatic"
 msgstr "Automatiskt"
 
@@ -803,126 +806,177 @@ msgstr "Paketinstallationen kunde inte bekräftas. Försök igen."
 msgid "Installation failed: {error}"
 msgstr "Installationen misslyckades: {error}"
 
-#: src/anduinos_control_panel/software_sources.py:264
+#: src/anduinos_control_panel/software_sources.py:334
+#: src/anduinos_control_panel/software_sources.py:396
 #: src/anduinos_control_panel/topics.py:245
 msgid "Software Source"
 msgstr "Programvarukälla"
 
-#: src/anduinos_control_panel/software_sources.py:295
+#: src/anduinos_control_panel/software_sources.py:371
+msgid "Current mirror"
+msgstr "Nuvarande spegel"
+
+#: src/anduinos_control_panel/software_sources.py:397
+msgid "  Switch to Fastest Mirror  "
+msgstr "  Byt till snabbaste spegeln  "
+
+#: src/anduinos_control_panel/software_sources.py:406
 msgid "Keep Your System Up to Date"
 msgstr "Håll ditt system uppdaterat"
 
-#: src/anduinos_control_panel/software_sources.py:302
+#: src/anduinos_control_panel/software_sources.py:407
 #: src/anduinos_control_panel/topics.py:246
 msgid "Security patches and the latest features are just a click away."
 msgstr ""
 "Säkerhetspatchar och de senaste funktionerna finns bara ett klick bort."
 
-#: src/anduinos_control_panel/software_sources.py:312
-#: src/anduinos_control_panel/software_sources.py:387
-msgid "Current mirror"
-msgstr "Nuvarande spegel"
-
-#: src/anduinos_control_panel/software_sources.py:322
-msgid "Terminal Output"
-msgstr "Terminalutmatning"
-
-#: src/anduinos_control_panel/software_sources.py:350
-msgid "  Switch to Fastest Mirror  "
-msgstr "  Byt till snabbaste spegeln  "
-
-#: src/anduinos_control_panel/software_sources.py:353
-#: src/anduinos_control_panel/software_sources.py:536
-#: src/anduinos_control_panel/software_sources.py:550
+#: src/anduinos_control_panel/software_sources.py:409
+#: src/anduinos_control_panel/software_sources.py:701
+#: src/anduinos_control_panel/software_sources.py:752
+#: src/anduinos_control_panel/software_sources.py:766
 msgid "  Check for Updates  "
 msgstr "  Kontrollera efter uppdateringar  "
 
-#: src/anduinos_control_panel/software_sources.py:399
-msgid "The operation failed without an error message."
-msgstr "Åtgärden misslyckades utan felmeddelande."
+#: src/anduinos_control_panel/software_sources.py:417
+msgid "Advanced"
+msgstr "Avancerat"
 
-#: src/anduinos_control_panel/software_sources.py:423
+#: src/anduinos_control_panel/software_sources.py:424
+#: src/anduinos_control_panel/software_sources.py:495
+msgid "Custom address…"
+msgstr "Anpassad adress…"
+
+#: src/anduinos_control_panel/software_sources.py:437
+msgid "Test mirror speeds"
+msgstr "Testa speglarnas hastighet"
+
+#: src/anduinos_control_panel/software_sources.py:440
+#: src/anduinos_control_panel/software_sources.py:668
+msgid "Apply selected mirror"
+msgstr "Använd vald spegel"
+
+#: src/anduinos_control_panel/software_sources.py:445
+msgid "Terminal Output"
+msgstr "Terminalutmatning"
+
+#: src/anduinos_control_panel/software_sources.py:498
+msgid "Mirror speed test complete."
+msgstr "Hastighetstestet för speglarna är klart."
+
+#: src/anduinos_control_panel/software_sources.py:554
+msgid "The original source was restored, but refreshing it failed."
+msgstr "Den ursprungliga programvarukällan återställdes, men uppdateringen av den misslyckades."
+
+
+#: src/anduinos_control_panel/software_sources.py:556
+msgid "The original source was restored."
+msgstr "Den ursprungliga programvarukällan återställdes."
+
+
+#: src/anduinos_control_panel/software_sources.py:557
+#: src/anduinos_control_panel/software_sources.py:615
+#: src/anduinos_control_panel/software_sources.py:744
+msgid "Review Terminal Output for details."
+msgstr "Se terminalutdata för mer information."
+
+
+#: src/anduinos_control_panel/software_sources.py:585
+#: src/anduinos_control_panel/software_sources.py:632
+msgid "Enter a valid HTTP or HTTPS mirror address."
+msgstr "Ange en giltig HTTP- eller HTTPS-adress för en spegel."
+
+#: src/anduinos_control_panel/software_sources.py:593
+#: src/anduinos_control_panel/software_sources.py:638
 msgid "Testing mirrors…"
 msgstr "Testar speglar…"
 
-#: src/anduinos_control_panel/software_sources.py:424
+#: src/anduinos_control_panel/software_sources.py:595
 msgid "=== Testing mirror speeds ==="
 msgstr "=== Testar spegelhastigheter ==="
 
-#: src/anduinos_control_panel/software_sources.py:438
+#: src/anduinos_control_panel/software_sources.py:613
+msgid "No Ubuntu archive mirror is reachable."
+msgstr "Ingen Ubuntu-arkivspegel kan nås."
+
+
+#: src/anduinos_control_panel/software_sources.py:619
 msgid "✗ Mirror test failed: "
 msgstr "✗ Spegeltest misslyckades: "
 
-#: src/anduinos_control_panel/software_sources.py:448
+#: src/anduinos_control_panel/software_sources.py:646
+msgid "Could not validate this mirror for the current system."
+msgstr "Det gick inte att verifiera spegeln för det aktuella systemet."
+
+#: src/anduinos_control_panel/software_sources.py:657
 msgid "Latency"
 msgstr "Latens"
 
-#: src/anduinos_control_panel/software_sources.py:449
+#: src/anduinos_control_panel/software_sources.py:658
 msgid "Bandwidth"
 msgstr "Bandbredd"
 
-#: src/anduinos_control_panel/software_sources.py:453
+#: src/anduinos_control_panel/software_sources.py:663
 msgid "This is already your current mirror."
 msgstr "Det här är redan din nuvarande spegel."
 
-#: src/anduinos_control_panel/software_sources.py:458
+#: src/anduinos_control_panel/software_sources.py:668
 msgid "Fastest Mirror Found"
 msgstr "Den snabbaste spegeln hittades"
 
-#: src/anduinos_control_panel/software_sources.py:461
+#: src/anduinos_control_panel/software_sources.py:671
 msgid "Switch to this mirror and run apt update?"
 msgstr "Vill du växla till denna spegel och köra apt update?"
 
-#: src/anduinos_control_panel/software_sources.py:464
+#: src/anduinos_control_panel/software_sources.py:674
 msgid "Keep Current"
 msgstr "Behåll nuvarande"
 
-#: src/anduinos_control_panel/software_sources.py:465
+#: src/anduinos_control_panel/software_sources.py:675
 msgid "Switch"
 msgstr "Växla"
 
-#: src/anduinos_control_panel/software_sources.py:474
+#: src/anduinos_control_panel/software_sources.py:684
 msgid "Switching mirror…"
 msgstr "Växlar spegel…"
 
-#: src/anduinos_control_panel/software_sources.py:488
+#: src/anduinos_control_panel/software_sources.py:702
 msgid "✓ Mirror switched and system updated."
 msgstr "✓ Spegel växlad och system uppdaterat."
 
-#: src/anduinos_control_panel/software_sources.py:490
+#: src/anduinos_control_panel/software_sources.py:704
 msgid "✗ Switch failed: "
 msgstr "✗ Växling misslyckades: "
 
-#: src/anduinos_control_panel/software_sources.py:497
+#: src/anduinos_control_panel/software_sources.py:712
 msgid "Installing updates…"
 msgstr "Installerar uppdateringar…"
 
-#: src/anduinos_control_panel/software_sources.py:500
+#: src/anduinos_control_panel/software_sources.py:715
 msgid "Checking for updates…"
 msgstr "Kontrollerar efter uppdateringar…"
 
-#: src/anduinos_control_panel/software_sources.py:508
-#: src/anduinos_control_panel/software_sources.py:528
+#: src/anduinos_control_panel/software_sources.py:723
+#: src/anduinos_control_panel/software_sources.py:744
 msgid "✗ Check failed: "
 msgstr "✗ Kontroll misslyckades: "
 
-#: src/anduinos_control_panel/software_sources.py:536
+#: src/anduinos_control_panel/software_sources.py:752
 msgid "  Install Updates  "
 msgstr "  Installera uppdateringar  "
 
-#: src/anduinos_control_panel/software_sources.py:539
+#: src/anduinos_control_panel/software_sources.py:755
 msgid "Updates are available."
 msgstr "Uppdateringar är tillgängliga."
 
-#: src/anduinos_control_panel/software_sources.py:541
+#: src/anduinos_control_panel/software_sources.py:757
 msgid "✓ System is up to date."
 msgstr "✓ Systemet är uppdaterat."
 
-#: src/anduinos_control_panel/software_sources.py:552
+#: src/anduinos_control_panel/software_sources.py:768
 msgid "✓ Updates installed successfully!"
 msgstr "✓ Uppdateringarna installerades framgångsrikt!"
 
-#: src/anduinos_control_panel/software_sources.py:554
+#: src/anduinos_control_panel/software_sources.py:770
 msgid "✗ Installation failed: "
 msgstr "✗ Installationen misslyckades: "
 
@@ -1093,6 +1147,9 @@ msgstr "Hitta och hantera AnduinOS systeminställningar"
 #: data/com.anduinos.ControlPanel.desktop:65
 msgid "settings;control;system;hardware;drivers;accounts;backup;"
 msgstr "inställningar;kontroll;system;hårdvara;drivrutiner;konton;säkerhetskopiering;"
+
+#~ msgid "The operation failed without an error message."
+#~ msgstr "Åtgärden misslyckades utan felmeddelande."
 
 #~ msgid "Native resolution shows more detail; large text is easier to read."
 #~ msgstr ""

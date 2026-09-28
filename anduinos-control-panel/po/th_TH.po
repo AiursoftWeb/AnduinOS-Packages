@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-control-panel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:29+0000\n"
+"POT-Creation-Date: 2026-09-28 14:56+0000\n"
 "PO-Revision-Date: 2026-09-09 12:06+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -213,7 +213,7 @@ msgstr "ติดตั้ง %s แล้ว"
 
 #: src/anduinos_control_panel/app.py:621 src/anduinos_control_panel/app.py:849
 #: src/anduinos_control_panel/app.py:947
-#: src/anduinos_control_panel/software_sources.py:394
+#: src/anduinos_control_panel/software_sources.py:552
 msgid "Authentication was cancelled."
 msgstr "การตรวจสอบสิทธิ์ถูกยกเลิกแล้ว"
 
@@ -286,7 +286,9 @@ msgstr "เลือกขนาดของเมนู GRUB และโลโ
 msgid ""
 "High resolution can make menu text small on 4K displays; the screen's native "
 "resolution is not guaranteed at boot."
-msgstr "ความละเอียดสูงอาจทำให้ข้อความในเมนูเล็กบนจอ 4K และไม่รับประกันว่าจะใช้ความละเอียดดั้งเดิมของจอได้ขณะเริ่มระบบ"
+msgstr ""
+"ความละเอียดสูงอาจทำให้ข้อความในเมนูเล็กบนจอ 4K "
+"และไม่รับประกันว่าจะใช้ความละเอียดดั้งเดิมของจอได้ขณะเริ่มระบบ"
 
 #: src/anduinos_control_panel/app.py:740
 msgid "Display mode"
@@ -297,6 +299,7 @@ msgid "High resolution (if available)"
 msgstr "ความละเอียดสูง (หากรองรับ)"
 
 #: src/anduinos_control_panel/app.py:747
+#: src/anduinos_control_panel/software_sources.py:394
 msgid "Automatic"
 msgstr "อัตโนมัติ"
 
@@ -783,125 +786,176 @@ msgstr "ไม่สามารถยืนยันการติดตั้
 msgid "Installation failed: {error}"
 msgstr "การติดตั้งล้มเหลว: {error}"
 
-#: src/anduinos_control_panel/software_sources.py:264
+#: src/anduinos_control_panel/software_sources.py:334
+#: src/anduinos_control_panel/software_sources.py:396
 #: src/anduinos_control_panel/topics.py:245
 msgid "Software Source"
 msgstr "แหล่งซอฟต์แวร์"
 
-#: src/anduinos_control_panel/software_sources.py:295
+#: src/anduinos_control_panel/software_sources.py:371
+msgid "Current mirror"
+msgstr "มิเรอร์ปัจจุบัน"
+
+#: src/anduinos_control_panel/software_sources.py:397
+msgid "  Switch to Fastest Mirror  "
+msgstr "  เปลี่ยนไปใช้มิเรอร์ที่เร็วที่สุด  "
+
+#: src/anduinos_control_panel/software_sources.py:406
 msgid "Keep Your System Up to Date"
 msgstr "รักษาให้ระบบของคุณทันสมัยอยู่เสมอ"
 
-#: src/anduinos_control_panel/software_sources.py:302
+#: src/anduinos_control_panel/software_sources.py:407
 #: src/anduinos_control_panel/topics.py:246
 msgid "Security patches and the latest features are just a click away."
 msgstr "แพตช์ความปลอดภัยและฟีเจอร์ล่าสุดอยู่เพียงคลิกเดียว"
 
-#: src/anduinos_control_panel/software_sources.py:312
-#: src/anduinos_control_panel/software_sources.py:387
-msgid "Current mirror"
-msgstr "มิเรอร์ปัจจุบัน"
-
-#: src/anduinos_control_panel/software_sources.py:322
-msgid "Terminal Output"
-msgstr "ผลลัพธ์จากเทอร์มินัล"
-
-#: src/anduinos_control_panel/software_sources.py:350
-msgid "  Switch to Fastest Mirror  "
-msgstr "  เปลี่ยนไปใช้มิเรอร์ที่เร็วที่สุด  "
-
-#: src/anduinos_control_panel/software_sources.py:353
-#: src/anduinos_control_panel/software_sources.py:536
-#: src/anduinos_control_panel/software_sources.py:550
+#: src/anduinos_control_panel/software_sources.py:409
+#: src/anduinos_control_panel/software_sources.py:701
+#: src/anduinos_control_panel/software_sources.py:752
+#: src/anduinos_control_panel/software_sources.py:766
 msgid "  Check for Updates  "
 msgstr "  ตรวจสอบอัปเดต  "
 
-#: src/anduinos_control_panel/software_sources.py:399
-msgid "The operation failed without an error message."
-msgstr "การดำเนินการล้มเหลวโดยไม่มีข้อความแสดงข้อผิดพลาด"
+#: src/anduinos_control_panel/software_sources.py:417
+msgid "Advanced"
+msgstr "ขั้นสูง"
 
-#: src/anduinos_control_panel/software_sources.py:423
+#: src/anduinos_control_panel/software_sources.py:424
+#: src/anduinos_control_panel/software_sources.py:495
+msgid "Custom address…"
+msgstr "ที่อยู่กำหนดเอง…"
+
+#: src/anduinos_control_panel/software_sources.py:437
+msgid "Test mirror speeds"
+msgstr "ทดสอบความเร็วมิเรอร์"
+
+#: src/anduinos_control_panel/software_sources.py:440
+#: src/anduinos_control_panel/software_sources.py:668
+msgid "Apply selected mirror"
+msgstr "ใช้มิเรอร์ที่เลือก"
+
+#: src/anduinos_control_panel/software_sources.py:445
+msgid "Terminal Output"
+msgstr "ผลลัพธ์จากเทอร์มินัล"
+
+#: src/anduinos_control_panel/software_sources.py:498
+msgid "Mirror speed test complete."
+msgstr "ทดสอบความเร็วมิเรอร์เสร็จแล้ว"
+
+#: src/anduinos_control_panel/software_sources.py:554
+msgid "The original source was restored, but refreshing it failed."
+msgstr "กู้คืนแหล่งซอฟต์แวร์เดิมแล้ว แต่การรีเฟรชล้มเหลว"
+
+
+#: src/anduinos_control_panel/software_sources.py:556
+msgid "The original source was restored."
+msgstr "กู้คืนแหล่งซอฟต์แวร์เดิมแล้ว"
+
+
+#: src/anduinos_control_panel/software_sources.py:557
+#: src/anduinos_control_panel/software_sources.py:615
+#: src/anduinos_control_panel/software_sources.py:744
+msgid "Review Terminal Output for details."
+msgstr "ดูรายละเอียดในผลลัพธ์ของเทอร์มินัล"
+
+
+#: src/anduinos_control_panel/software_sources.py:585
+#: src/anduinos_control_panel/software_sources.py:632
+msgid "Enter a valid HTTP or HTTPS mirror address."
+msgstr "ป้อนที่อยู่มิเรอร์ HTTP หรือ HTTPS ที่ถูกต้อง"
+
+#: src/anduinos_control_panel/software_sources.py:593
+#: src/anduinos_control_panel/software_sources.py:638
 msgid "Testing mirrors…"
 msgstr "กำลังทดสอบมิเรอร์…"
 
-#: src/anduinos_control_panel/software_sources.py:424
+#: src/anduinos_control_panel/software_sources.py:595
 msgid "=== Testing mirror speeds ==="
 msgstr "=== กำลังทดสอบความเร็วของมิเรอร์ ==="
 
-#: src/anduinos_control_panel/software_sources.py:438
+#: src/anduinos_control_panel/software_sources.py:613
+msgid "No Ubuntu archive mirror is reachable."
+msgstr "ไม่สามารถเข้าถึงมิเรอร์คลังแพ็กเกจ Ubuntu ได้"
+
+
+#: src/anduinos_control_panel/software_sources.py:619
 msgid "✗ Mirror test failed: "
 msgstr "✗ การทดสอบมิเรอร์ล้มเหลว: "
 
-#: src/anduinos_control_panel/software_sources.py:448
+#: src/anduinos_control_panel/software_sources.py:646
+msgid "Could not validate this mirror for the current system."
+msgstr "ไม่สามารถตรวจสอบมิเรอร์นี้สำหรับระบบปัจจุบันได้"
+
+#: src/anduinos_control_panel/software_sources.py:657
 msgid "Latency"
 msgstr "ความล่าช้า"
 
-#: src/anduinos_control_panel/software_sources.py:449
+#: src/anduinos_control_panel/software_sources.py:658
 msgid "Bandwidth"
 msgstr "แบนด์วิดท์"
 
-#: src/anduinos_control_panel/software_sources.py:453
+#: src/anduinos_control_panel/software_sources.py:663
 msgid "This is already your current mirror."
 msgstr "คุณกำลังใช้มิเรอร์นี้อยู่แล้ว"
 
-#: src/anduinos_control_panel/software_sources.py:458
+#: src/anduinos_control_panel/software_sources.py:668
 msgid "Fastest Mirror Found"
 msgstr "พบมิเรอร์ที่เร็วที่สุด"
 
-#: src/anduinos_control_panel/software_sources.py:461
+#: src/anduinos_control_panel/software_sources.py:671
 msgid "Switch to this mirror and run apt update?"
 msgstr "เปลี่ยนไปใช้มิเรอร์นี้และเรียกใช้ apt update หรือไม่?"
 
-#: src/anduinos_control_panel/software_sources.py:464
+#: src/anduinos_control_panel/software_sources.py:674
 msgid "Keep Current"
 msgstr "คงค่าปัจจุบันไว้"
 
-#: src/anduinos_control_panel/software_sources.py:465
+#: src/anduinos_control_panel/software_sources.py:675
 msgid "Switch"
 msgstr "สลับ"
 
-#: src/anduinos_control_panel/software_sources.py:474
+#: src/anduinos_control_panel/software_sources.py:684
 msgid "Switching mirror…"
 msgstr "กำลังเปลี่ยนมิเรอร์…"
 
-#: src/anduinos_control_panel/software_sources.py:488
+#: src/anduinos_control_panel/software_sources.py:702
 msgid "✓ Mirror switched and system updated."
 msgstr "✓ เปลี่ยนมิเรอร์และอัปเดตระบบเรียบร้อยแล้ว"
 
-#: src/anduinos_control_panel/software_sources.py:490
+#: src/anduinos_control_panel/software_sources.py:704
 msgid "✗ Switch failed: "
 msgstr "✗ การสลับล้มเหลว: "
 
-#: src/anduinos_control_panel/software_sources.py:497
+#: src/anduinos_control_panel/software_sources.py:712
 msgid "Installing updates…"
 msgstr "กำลังติดตั้งอัปเดต…"
 
-#: src/anduinos_control_panel/software_sources.py:500
+#: src/anduinos_control_panel/software_sources.py:715
 msgid "Checking for updates…"
 msgstr "กำลังตรวจสอบอัปเดต…"
 
-#: src/anduinos_control_panel/software_sources.py:508
-#: src/anduinos_control_panel/software_sources.py:528
+#: src/anduinos_control_panel/software_sources.py:723
+#: src/anduinos_control_panel/software_sources.py:744
 msgid "✗ Check failed: "
 msgstr "✗ การตรวจสอบล้มเหลว: "
 
-#: src/anduinos_control_panel/software_sources.py:536
+#: src/anduinos_control_panel/software_sources.py:752
 msgid "  Install Updates  "
 msgstr "  ติดตั้งอัปเดต  "
 
-#: src/anduinos_control_panel/software_sources.py:539
+#: src/anduinos_control_panel/software_sources.py:755
 msgid "Updates are available."
 msgstr "มีอัปเดตพร้อมติดตั้ง"
 
-#: src/anduinos_control_panel/software_sources.py:541
+#: src/anduinos_control_panel/software_sources.py:757
 msgid "✓ System is up to date."
 msgstr "✓ ระบบของคุณทันสมัยอยู่แล้ว"
 
-#: src/anduinos_control_panel/software_sources.py:552
+#: src/anduinos_control_panel/software_sources.py:768
 msgid "✓ Updates installed successfully!"
 msgstr "✓ ติดตั้งอัปเดตสำเร็จ!"
 
-#: src/anduinos_control_panel/software_sources.py:554
+#: src/anduinos_control_panel/software_sources.py:770
 msgid "✗ Installation failed: "
 msgstr "✗ การติดตั้งล้มเหลว: "
 
@@ -1072,6 +1126,9 @@ msgstr "ค้นหาและจัดการการตั้งค่า
 #: data/com.anduinos.ControlPanel.desktop:65
 msgid "settings;control;system;hardware;drivers;accounts;backup;"
 msgstr "การตั้งค่า;ควบคุม;ระบบ;ฮาร์ดแวร์;ไดรเวอร์;บัญชี;การสำรองข้อมูล;"
+
+#~ msgid "The operation failed without an error message."
+#~ msgstr "การดำเนินการล้มเหลวโดยไม่มีข้อความแสดงข้อผิดพลาด"
 
 #~ msgid "Native resolution shows more detail; large text is easier to read."
 #~ msgstr "ความละเอียดเนทีฟแสดงรายละเอียดได้มากกว่า ส่วนข้อความขนาดใหญ่จะอ่านง่ายกว่า"

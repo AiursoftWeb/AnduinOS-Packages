@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-control-panel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:29+0000\n"
+"POT-Creation-Date: 2026-09-28 14:56+0000\n"
 "PO-Revision-Date: 2026-09-09 12:09+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -218,7 +218,7 @@ msgstr "%s đã được cài đặt"
 
 #: src/anduinos_control_panel/app.py:621 src/anduinos_control_panel/app.py:849
 #: src/anduinos_control_panel/app.py:947
-#: src/anduinos_control_panel/software_sources.py:394
+#: src/anduinos_control_panel/software_sources.py:552
 msgid "Authentication was cancelled."
 msgstr "Xác thực đã bị hủy."
 
@@ -294,7 +294,9 @@ msgstr "Chọn kích thước của menu GRUB và logo khởi động."
 msgid ""
 "High resolution can make menu text small on 4K displays; the screen's native "
 "resolution is not guaranteed at boot."
-msgstr "Độ phân giải cao có thể khiến chữ trong menu nhỏ trên màn hình 4K; không đảm bảo dùng được độ phân giải gốc của màn hình khi khởi động."
+msgstr ""
+"Độ phân giải cao có thể khiến chữ trong menu nhỏ trên màn hình 4K; không đảm "
+"bảo dùng được độ phân giải gốc của màn hình khi khởi động."
 
 #: src/anduinos_control_panel/app.py:740
 msgid "Display mode"
@@ -305,6 +307,7 @@ msgid "High resolution (if available)"
 msgstr "Độ phân giải cao (nếu khả dụng)"
 
 #: src/anduinos_control_panel/app.py:747
+#: src/anduinos_control_panel/software_sources.py:394
 msgid "Automatic"
 msgstr "Tự động"
 
@@ -802,126 +805,177 @@ msgstr "Không thể xác nhận việc cài đặt gói. Vui lòng thử lại.
 msgid "Installation failed: {error}"
 msgstr "Cài đặt thất bại: {error}"
 
-#: src/anduinos_control_panel/software_sources.py:264
+#: src/anduinos_control_panel/software_sources.py:334
+#: src/anduinos_control_panel/software_sources.py:396
 #: src/anduinos_control_panel/topics.py:245
 msgid "Software Source"
 msgstr "Nguồn phần mềm"
 
-#: src/anduinos_control_panel/software_sources.py:295
+#: src/anduinos_control_panel/software_sources.py:371
+msgid "Current mirror"
+msgstr "Máy chủ phản chiếu hiện tại"
+
+#: src/anduinos_control_panel/software_sources.py:397
+msgid "  Switch to Fastest Mirror  "
+msgstr "  Chuyển sang máy chủ phản chiếu nhanh nhất  "
+
+#: src/anduinos_control_panel/software_sources.py:406
 msgid "Keep Your System Up to Date"
 msgstr "Giữ cho Hệ thống của Bạn luôn Cập nhật"
 
-#: src/anduinos_control_panel/software_sources.py:302
+#: src/anduinos_control_panel/software_sources.py:407
 #: src/anduinos_control_panel/topics.py:246
 msgid "Security patches and the latest features are just a click away."
 msgstr ""
 "Bản vá bảo mật và các tính năng mới nhất chỉ cách bạn một cú nhấp chuột."
 
-#: src/anduinos_control_panel/software_sources.py:312
-#: src/anduinos_control_panel/software_sources.py:387
-msgid "Current mirror"
-msgstr "Máy chủ phản chiếu hiện tại"
-
-#: src/anduinos_control_panel/software_sources.py:322
-msgid "Terminal Output"
-msgstr "Kết quả Terminal"
-
-#: src/anduinos_control_panel/software_sources.py:350
-msgid "  Switch to Fastest Mirror  "
-msgstr "  Chuyển sang máy chủ phản chiếu nhanh nhất  "
-
-#: src/anduinos_control_panel/software_sources.py:353
-#: src/anduinos_control_panel/software_sources.py:536
-#: src/anduinos_control_panel/software_sources.py:550
+#: src/anduinos_control_panel/software_sources.py:409
+#: src/anduinos_control_panel/software_sources.py:701
+#: src/anduinos_control_panel/software_sources.py:752
+#: src/anduinos_control_panel/software_sources.py:766
 msgid "  Check for Updates  "
 msgstr "  Kiểm tra cập nhật  "
 
-#: src/anduinos_control_panel/software_sources.py:399
-msgid "The operation failed without an error message."
-msgstr "Thao tác thất bại mà không có thông báo lỗi."
+#: src/anduinos_control_panel/software_sources.py:417
+msgid "Advanced"
+msgstr "Nâng cao"
 
-#: src/anduinos_control_panel/software_sources.py:423
+#: src/anduinos_control_panel/software_sources.py:424
+#: src/anduinos_control_panel/software_sources.py:495
+msgid "Custom address…"
+msgstr "Địa chỉ tùy chỉnh…"
+
+#: src/anduinos_control_panel/software_sources.py:437
+msgid "Test mirror speeds"
+msgstr "Kiểm tra tốc độ máy chủ phản chiếu"
+
+#: src/anduinos_control_panel/software_sources.py:440
+#: src/anduinos_control_panel/software_sources.py:668
+msgid "Apply selected mirror"
+msgstr "Áp dụng máy chủ phản chiếu đã chọn"
+
+#: src/anduinos_control_panel/software_sources.py:445
+msgid "Terminal Output"
+msgstr "Kết quả Terminal"
+
+#: src/anduinos_control_panel/software_sources.py:498
+msgid "Mirror speed test complete."
+msgstr "Đã hoàn tất kiểm tra tốc độ máy chủ phản chiếu."
+
+#: src/anduinos_control_panel/software_sources.py:554
+msgid "The original source was restored, but refreshing it failed."
+msgstr "Đã khôi phục nguồn phần mềm ban đầu nhưng không thể làm mới nguồn đó."
+
+
+#: src/anduinos_control_panel/software_sources.py:556
+msgid "The original source was restored."
+msgstr "Đã khôi phục nguồn phần mềm ban đầu."
+
+
+#: src/anduinos_control_panel/software_sources.py:557
+#: src/anduinos_control_panel/software_sources.py:615
+#: src/anduinos_control_panel/software_sources.py:744
+msgid "Review Terminal Output for details."
+msgstr "Xem Đầu ra Terminal để biết chi tiết."
+
+
+#: src/anduinos_control_panel/software_sources.py:585
+#: src/anduinos_control_panel/software_sources.py:632
+msgid "Enter a valid HTTP or HTTPS mirror address."
+msgstr "Nhập địa chỉ HTTP hoặc HTTPS hợp lệ của máy chủ phản chiếu."
+
+#: src/anduinos_control_panel/software_sources.py:593
+#: src/anduinos_control_panel/software_sources.py:638
 msgid "Testing mirrors…"
 msgstr "Đang kiểm tra các máy chủ phản chiếu…"
 
-#: src/anduinos_control_panel/software_sources.py:424
+#: src/anduinos_control_panel/software_sources.py:595
 msgid "=== Testing mirror speeds ==="
 msgstr "=== Đang kiểm tra tốc độ các máy chủ phản chiếu ==="
 
-#: src/anduinos_control_panel/software_sources.py:438
+#: src/anduinos_control_panel/software_sources.py:613
+msgid "No Ubuntu archive mirror is reachable."
+msgstr "Không thể kết nối đến máy chủ phản chiếu kho lưu trữ Ubuntu nào."
+
+
+#: src/anduinos_control_panel/software_sources.py:619
 msgid "✗ Mirror test failed: "
 msgstr "✗ Kiểm tra máy chủ phản chiếu thất bại: "
 
-#: src/anduinos_control_panel/software_sources.py:448
+#: src/anduinos_control_panel/software_sources.py:646
+msgid "Could not validate this mirror for the current system."
+msgstr "Không thể xác thực máy chủ phản chiếu này cho hệ thống hiện tại."
+
+#: src/anduinos_control_panel/software_sources.py:657
 msgid "Latency"
 msgstr "Độ trễ"
 
-#: src/anduinos_control_panel/software_sources.py:449
+#: src/anduinos_control_panel/software_sources.py:658
 msgid "Bandwidth"
 msgstr "Băng thông"
 
-#: src/anduinos_control_panel/software_sources.py:453
+#: src/anduinos_control_panel/software_sources.py:663
 msgid "This is already your current mirror."
 msgstr "Bạn đang sử dụng máy chủ phản chiếu này."
 
-#: src/anduinos_control_panel/software_sources.py:458
+#: src/anduinos_control_panel/software_sources.py:668
 msgid "Fastest Mirror Found"
 msgstr "Đã tìm thấy máy chủ phản chiếu nhanh nhất"
 
-#: src/anduinos_control_panel/software_sources.py:461
+#: src/anduinos_control_panel/software_sources.py:671
 msgid "Switch to this mirror and run apt update?"
 msgstr "Chuyển sang máy chủ phản chiếu này và chạy apt update?"
 
-#: src/anduinos_control_panel/software_sources.py:464
+#: src/anduinos_control_panel/software_sources.py:674
 msgid "Keep Current"
 msgstr "Giữ nguyên"
 
-#: src/anduinos_control_panel/software_sources.py:465
+#: src/anduinos_control_panel/software_sources.py:675
 msgid "Switch"
 msgstr "Chuyển đổi"
 
-#: src/anduinos_control_panel/software_sources.py:474
+#: src/anduinos_control_panel/software_sources.py:684
 msgid "Switching mirror…"
 msgstr "Đang chuyển máy chủ phản chiếu…"
 
-#: src/anduinos_control_panel/software_sources.py:488
+#: src/anduinos_control_panel/software_sources.py:702
 msgid "✓ Mirror switched and system updated."
 msgstr "✓ Đã chuyển máy chủ phản chiếu và cập nhật hệ thống."
 
-#: src/anduinos_control_panel/software_sources.py:490
+#: src/anduinos_control_panel/software_sources.py:704
 msgid "✗ Switch failed: "
 msgstr "✗ Chuyển đổi thất bại: "
 
-#: src/anduinos_control_panel/software_sources.py:497
+#: src/anduinos_control_panel/software_sources.py:712
 msgid "Installing updates…"
 msgstr "Đang cài đặt cập nhật…"
 
-#: src/anduinos_control_panel/software_sources.py:500
+#: src/anduinos_control_panel/software_sources.py:715
 msgid "Checking for updates…"
 msgstr "Đang kiểm tra cập nhật…"
 
-#: src/anduinos_control_panel/software_sources.py:508
-#: src/anduinos_control_panel/software_sources.py:528
+#: src/anduinos_control_panel/software_sources.py:723
+#: src/anduinos_control_panel/software_sources.py:744
 msgid "✗ Check failed: "
 msgstr "✗ Kiểm tra thất bại: "
 
-#: src/anduinos_control_panel/software_sources.py:536
+#: src/anduinos_control_panel/software_sources.py:752
 msgid "  Install Updates  "
 msgstr "  Cài đặt cập nhật  "
 
-#: src/anduinos_control_panel/software_sources.py:539
+#: src/anduinos_control_panel/software_sources.py:755
 msgid "Updates are available."
 msgstr "Có bản cập nhật sẵn sàng."
 
-#: src/anduinos_control_panel/software_sources.py:541
+#: src/anduinos_control_panel/software_sources.py:757
 msgid "✓ System is up to date."
 msgstr "✓ Hệ thống đã được cập nhật."
 
-#: src/anduinos_control_panel/software_sources.py:552
+#: src/anduinos_control_panel/software_sources.py:768
 msgid "✓ Updates installed successfully!"
 msgstr "✓ Đã cài đặt cập nhật thành công!"
 
-#: src/anduinos_control_panel/software_sources.py:554
+#: src/anduinos_control_panel/software_sources.py:770
 msgid "✗ Installation failed: "
 msgstr "✗ Cài đặt thất bại: "
 
@@ -1093,6 +1147,9 @@ msgstr "Tìm và quản lý các cài đặt hệ thống của AnduinOS"
 msgid "settings;control;system;hardware;drivers;accounts;backup;"
 msgstr ""
 "cài đặt;điều khiển;hệ thống;phần cứng;trình điều khiển;tài khoản;sao lưu;"
+
+#~ msgid "The operation failed without an error message."
+#~ msgstr "Thao tác thất bại mà không có thông báo lỗi."
 
 #~ msgid "Native resolution shows more detail; large text is easier to read."
 #~ msgstr "Độ phân giải gốc hiển thị nhiều chi tiết hơn; chữ lớn dễ đọc hơn."

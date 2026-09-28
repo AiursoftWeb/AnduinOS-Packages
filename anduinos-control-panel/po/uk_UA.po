@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-control-panel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:29+0000\n"
+"POT-Creation-Date: 2026-09-28 14:56+0000\n"
 "PO-Revision-Date: 2026-09-09 12:08+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -216,7 +216,7 @@ msgstr "%s встановлено"
 
 #: src/anduinos_control_panel/app.py:621 src/anduinos_control_panel/app.py:849
 #: src/anduinos_control_panel/app.py:947
-#: src/anduinos_control_panel/software_sources.py:394
+#: src/anduinos_control_panel/software_sources.py:552
 msgid "Authentication was cancelled."
 msgstr "Автентифікацію скасовано."
 
@@ -295,7 +295,9 @@ msgstr "Оберіть розмір меню GRUB та логотипу зава
 msgid ""
 "High resolution can make menu text small on 4K displays; the screen's native "
 "resolution is not guaranteed at boot."
-msgstr "Висока роздільна здатність може зробити текст меню дрібним на екранах 4K; під час завантаження рідна роздільна здатність екрана не гарантується."
+msgstr ""
+"Висока роздільна здатність може зробити текст меню дрібним на екранах 4K; "
+"під час завантаження рідна роздільна здатність екрана не гарантується."
 
 #: src/anduinos_control_panel/app.py:740
 msgid "Display mode"
@@ -306,6 +308,7 @@ msgid "High resolution (if available)"
 msgstr "Висока роздільна здатність (за наявності)"
 
 #: src/anduinos_control_panel/app.py:747
+#: src/anduinos_control_panel/software_sources.py:394
 msgid "Automatic"
 msgstr "Автоматично"
 
@@ -821,125 +824,176 @@ msgstr "Не вдалося підтвердити встановлення па
 msgid "Installation failed: {error}"
 msgstr "Помилка встановлення: {error}"
 
-#: src/anduinos_control_panel/software_sources.py:264
+#: src/anduinos_control_panel/software_sources.py:334
+#: src/anduinos_control_panel/software_sources.py:396
 #: src/anduinos_control_panel/topics.py:245
 msgid "Software Source"
 msgstr "Джерело програмного забезпечення"
 
-#: src/anduinos_control_panel/software_sources.py:295
+#: src/anduinos_control_panel/software_sources.py:371
+msgid "Current mirror"
+msgstr "Поточне дзеркало"
+
+#: src/anduinos_control_panel/software_sources.py:397
+msgid "  Switch to Fastest Mirror  "
+msgstr "  Перемкнутися на найшвидше дзеркало  "
+
+#: src/anduinos_control_panel/software_sources.py:406
 msgid "Keep Your System Up to Date"
 msgstr "Оновлюйте свою систему в актуальному стані"
 
-#: src/anduinos_control_panel/software_sources.py:302
+#: src/anduinos_control_panel/software_sources.py:407
 #: src/anduinos_control_panel/topics.py:246
 msgid "Security patches and the latest features are just a click away."
 msgstr "Виправлення безпеки та останні функції доступні одним натисканням."
 
-#: src/anduinos_control_panel/software_sources.py:312
-#: src/anduinos_control_panel/software_sources.py:387
-msgid "Current mirror"
-msgstr "Поточне дзеркало"
-
-#: src/anduinos_control_panel/software_sources.py:322
-msgid "Terminal Output"
-msgstr "Вивід терміналу"
-
-#: src/anduinos_control_panel/software_sources.py:350
-msgid "  Switch to Fastest Mirror  "
-msgstr "  Перемкнутися на найшвидше дзеркало  "
-
-#: src/anduinos_control_panel/software_sources.py:353
-#: src/anduinos_control_panel/software_sources.py:536
-#: src/anduinos_control_panel/software_sources.py:550
+#: src/anduinos_control_panel/software_sources.py:409
+#: src/anduinos_control_panel/software_sources.py:701
+#: src/anduinos_control_panel/software_sources.py:752
+#: src/anduinos_control_panel/software_sources.py:766
 msgid "  Check for Updates  "
 msgstr "  Перевірити наявність оновлень  "
 
-#: src/anduinos_control_panel/software_sources.py:399
-msgid "The operation failed without an error message."
-msgstr "Операція завершилася помилкою без повідомлення."
+#: src/anduinos_control_panel/software_sources.py:417
+msgid "Advanced"
+msgstr "Додатково"
 
-#: src/anduinos_control_panel/software_sources.py:423
+#: src/anduinos_control_panel/software_sources.py:424
+#: src/anduinos_control_panel/software_sources.py:495
+msgid "Custom address…"
+msgstr "Власна адреса…"
+
+#: src/anduinos_control_panel/software_sources.py:437
+msgid "Test mirror speeds"
+msgstr "Перевірити швидкість дзеркал"
+
+#: src/anduinos_control_panel/software_sources.py:440
+#: src/anduinos_control_panel/software_sources.py:668
+msgid "Apply selected mirror"
+msgstr "Застосувати вибране дзеркало"
+
+#: src/anduinos_control_panel/software_sources.py:445
+msgid "Terminal Output"
+msgstr "Вивід терміналу"
+
+#: src/anduinos_control_panel/software_sources.py:498
+msgid "Mirror speed test complete."
+msgstr "Перевірку швидкості дзеркал завершено."
+
+#: src/anduinos_control_panel/software_sources.py:554
+msgid "The original source was restored, but refreshing it failed."
+msgstr "Початкове джерело програмного забезпечення відновлено, але оновити його не вдалося."
+
+
+#: src/anduinos_control_panel/software_sources.py:556
+msgid "The original source was restored."
+msgstr "Початкове джерело програмного забезпечення відновлено."
+
+
+#: src/anduinos_control_panel/software_sources.py:557
+#: src/anduinos_control_panel/software_sources.py:615
+#: src/anduinos_control_panel/software_sources.py:744
+msgid "Review Terminal Output for details."
+msgstr "Докладні відомості див. у виводі термінала."
+
+
+#: src/anduinos_control_panel/software_sources.py:585
+#: src/anduinos_control_panel/software_sources.py:632
+msgid "Enter a valid HTTP or HTTPS mirror address."
+msgstr "Введіть коректну HTTP- або HTTPS-адресу дзеркала."
+
+#: src/anduinos_control_panel/software_sources.py:593
+#: src/anduinos_control_panel/software_sources.py:638
 msgid "Testing mirrors…"
 msgstr "Тестування дзеркал…"
 
-#: src/anduinos_control_panel/software_sources.py:424
+#: src/anduinos_control_panel/software_sources.py:595
 msgid "=== Testing mirror speeds ==="
 msgstr "=== Тестування швидкості дзеркал ==="
 
-#: src/anduinos_control_panel/software_sources.py:438
+#: src/anduinos_control_panel/software_sources.py:613
+msgid "No Ubuntu archive mirror is reachable."
+msgstr "Немає доступних дзеркал архіву Ubuntu."
+
+
+#: src/anduinos_control_panel/software_sources.py:619
 msgid "✗ Mirror test failed: "
 msgstr "✗ Перевірка дзеркала не вдалася: "
 
-#: src/anduinos_control_panel/software_sources.py:448
+#: src/anduinos_control_panel/software_sources.py:646
+msgid "Could not validate this mirror for the current system."
+msgstr "Не вдалося перевірити це дзеркало для поточної системи."
+
+#: src/anduinos_control_panel/software_sources.py:657
 msgid "Latency"
 msgstr "Затримка"
 
-#: src/anduinos_control_panel/software_sources.py:449
+#: src/anduinos_control_panel/software_sources.py:658
 msgid "Bandwidth"
 msgstr "Пропускна здатність"
 
-#: src/anduinos_control_panel/software_sources.py:453
+#: src/anduinos_control_panel/software_sources.py:663
 msgid "This is already your current mirror."
 msgstr "Це вже поточне дзеркало."
 
-#: src/anduinos_control_panel/software_sources.py:458
+#: src/anduinos_control_panel/software_sources.py:668
 msgid "Fastest Mirror Found"
 msgstr "Знайдено найшвидше дзеркало"
 
-#: src/anduinos_control_panel/software_sources.py:461
+#: src/anduinos_control_panel/software_sources.py:671
 msgid "Switch to this mirror and run apt update?"
 msgstr "Перемкнутися на це дзеркало та запустити apt update?"
 
-#: src/anduinos_control_panel/software_sources.py:464
+#: src/anduinos_control_panel/software_sources.py:674
 msgid "Keep Current"
 msgstr "Зберегти поточне"
 
-#: src/anduinos_control_panel/software_sources.py:465
+#: src/anduinos_control_panel/software_sources.py:675
 msgid "Switch"
 msgstr "Перемкнути"
 
-#: src/anduinos_control_panel/software_sources.py:474
+#: src/anduinos_control_panel/software_sources.py:684
 msgid "Switching mirror…"
 msgstr "Перемикання дзеркала…"
 
-#: src/anduinos_control_panel/software_sources.py:488
+#: src/anduinos_control_panel/software_sources.py:702
 msgid "✓ Mirror switched and system updated."
 msgstr "✓ Дзеркало перемкнено, систему оновлено."
 
-#: src/anduinos_control_panel/software_sources.py:490
+#: src/anduinos_control_panel/software_sources.py:704
 msgid "✗ Switch failed: "
 msgstr "✗ Помилка перемикання: "
 
-#: src/anduinos_control_panel/software_sources.py:497
+#: src/anduinos_control_panel/software_sources.py:712
 msgid "Installing updates…"
 msgstr "Встановлення оновлень…"
 
-#: src/anduinos_control_panel/software_sources.py:500
+#: src/anduinos_control_panel/software_sources.py:715
 msgid "Checking for updates…"
 msgstr "Перевірка наявності оновлень…"
 
-#: src/anduinos_control_panel/software_sources.py:508
-#: src/anduinos_control_panel/software_sources.py:528
+#: src/anduinos_control_panel/software_sources.py:723
+#: src/anduinos_control_panel/software_sources.py:744
 msgid "✗ Check failed: "
 msgstr "✗ Перевірка не вдалася: "
 
-#: src/anduinos_control_panel/software_sources.py:536
+#: src/anduinos_control_panel/software_sources.py:752
 msgid "  Install Updates  "
 msgstr "  Встановити оновлення  "
 
-#: src/anduinos_control_panel/software_sources.py:539
+#: src/anduinos_control_panel/software_sources.py:755
 msgid "Updates are available."
 msgstr "Доступні оновлення."
 
-#: src/anduinos_control_panel/software_sources.py:541
+#: src/anduinos_control_panel/software_sources.py:757
 msgid "✓ System is up to date."
 msgstr "✓ Система в актуальному стані."
 
-#: src/anduinos_control_panel/software_sources.py:552
+#: src/anduinos_control_panel/software_sources.py:768
 msgid "✓ Updates installed successfully!"
 msgstr "✓ Оновлення успішно встановлено!"
 
-#: src/anduinos_control_panel/software_sources.py:554
+#: src/anduinos_control_panel/software_sources.py:770
 msgid "✗ Installation failed: "
 msgstr "✗ Помилка встановлення: "
 
@@ -1110,6 +1164,9 @@ msgstr "Знаходьте та керуйте системними налашт
 #: data/com.anduinos.ControlPanel.desktop:65
 msgid "settings;control;system;hardware;drivers;accounts;backup;"
 msgstr "налаштування;керування;система;обладнання;драйвери;облікові_записи;резервне_копіювання;"
+
+#~ msgid "The operation failed without an error message."
+#~ msgstr "Операція завершилася помилкою без повідомлення."
 
 #~ msgid "Native resolution shows more detail; large text is easier to read."
 #~ msgstr ""

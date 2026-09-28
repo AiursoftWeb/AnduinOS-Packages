@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-control-panel\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 17:29+0000\n"
+"POT-Creation-Date: 2026-09-28 14:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -211,7 +211,7 @@ msgstr ""
 
 #: src/anduinos_control_panel/app.py:621 src/anduinos_control_panel/app.py:849
 #: src/anduinos_control_panel/app.py:947
-#: src/anduinos_control_panel/software_sources.py:394
+#: src/anduinos_control_panel/software_sources.py:552
 msgid "Authentication was cancelled."
 msgstr ""
 
@@ -293,6 +293,7 @@ msgid "High resolution (if available)"
 msgstr ""
 
 #: src/anduinos_control_panel/app.py:747
+#: src/anduinos_control_panel/software_sources.py:394
 msgid "Automatic"
 msgstr ""
 
@@ -732,125 +733,172 @@ msgstr ""
 msgid "Installation failed: {error}"
 msgstr ""
 
-#: src/anduinos_control_panel/software_sources.py:264
+#: src/anduinos_control_panel/software_sources.py:334
+#: src/anduinos_control_panel/software_sources.py:396
 #: src/anduinos_control_panel/topics.py:245
 msgid "Software Source"
 msgstr ""
 
-#: src/anduinos_control_panel/software_sources.py:295
+#: src/anduinos_control_panel/software_sources.py:371
+msgid "Current mirror"
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:397
+msgid "  Switch to Fastest Mirror  "
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:406
 msgid "Keep Your System Up to Date"
 msgstr ""
 
-#: src/anduinos_control_panel/software_sources.py:302
+#: src/anduinos_control_panel/software_sources.py:407
 #: src/anduinos_control_panel/topics.py:246
 msgid "Security patches and the latest features are just a click away."
 msgstr ""
 
-#: src/anduinos_control_panel/software_sources.py:312
-#: src/anduinos_control_panel/software_sources.py:387
-msgid "Current mirror"
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:322
-msgid "Terminal Output"
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:350
-msgid "  Switch to Fastest Mirror  "
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:353
-#: src/anduinos_control_panel/software_sources.py:536
-#: src/anduinos_control_panel/software_sources.py:550
+#: src/anduinos_control_panel/software_sources.py:409
+#: src/anduinos_control_panel/software_sources.py:701
+#: src/anduinos_control_panel/software_sources.py:752
+#: src/anduinos_control_panel/software_sources.py:766
 msgid "  Check for Updates  "
 msgstr ""
 
-#: src/anduinos_control_panel/software_sources.py:399
-msgid "The operation failed without an error message."
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:423
-msgid "Testing mirrors…"
+#: src/anduinos_control_panel/software_sources.py:417
+msgid "Advanced"
 msgstr ""
 
 #: src/anduinos_control_panel/software_sources.py:424
-msgid "=== Testing mirror speeds ==="
+#: src/anduinos_control_panel/software_sources.py:495
+msgid "Custom address…"
 msgstr ""
 
-#: src/anduinos_control_panel/software_sources.py:438
-msgid "✗ Mirror test failed: "
+#: src/anduinos_control_panel/software_sources.py:437
+msgid "Test mirror speeds"
 msgstr ""
 
-#: src/anduinos_control_panel/software_sources.py:448
-msgid "Latency"
+#: src/anduinos_control_panel/software_sources.py:440
+#: src/anduinos_control_panel/software_sources.py:668
+msgid "Apply selected mirror"
 msgstr ""
 
-#: src/anduinos_control_panel/software_sources.py:449
-msgid "Bandwidth"
+#: src/anduinos_control_panel/software_sources.py:445
+msgid "Terminal Output"
 msgstr ""
 
-#: src/anduinos_control_panel/software_sources.py:453
-msgid "This is already your current mirror."
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:458
-msgid "Fastest Mirror Found"
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:461
-msgid "Switch to this mirror and run apt update?"
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:464
-msgid "Keep Current"
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:465
-msgid "Switch"
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:474
-msgid "Switching mirror…"
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:488
-msgid "✓ Mirror switched and system updated."
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:490
-msgid "✗ Switch failed: "
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:497
-msgid "Installing updates…"
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:500
-msgid "Checking for updates…"
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:508
-#: src/anduinos_control_panel/software_sources.py:528
-msgid "✗ Check failed: "
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:536
-msgid "  Install Updates  "
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:539
-msgid "Updates are available."
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:541
-msgid "✓ System is up to date."
-msgstr ""
-
-#: src/anduinos_control_panel/software_sources.py:552
-msgid "✓ Updates installed successfully!"
+#: src/anduinos_control_panel/software_sources.py:498
+msgid "Mirror speed test complete."
 msgstr ""
 
 #: src/anduinos_control_panel/software_sources.py:554
+msgid "The original source was restored, but refreshing it failed."
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:556
+msgid "The original source was restored."
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:557
+#: src/anduinos_control_panel/software_sources.py:615
+#: src/anduinos_control_panel/software_sources.py:744
+msgid "Review Terminal Output for details."
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:585
+#: src/anduinos_control_panel/software_sources.py:632
+msgid "Enter a valid HTTP or HTTPS mirror address."
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:593
+#: src/anduinos_control_panel/software_sources.py:638
+msgid "Testing mirrors…"
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:595
+msgid "=== Testing mirror speeds ==="
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:613
+msgid "No Ubuntu archive mirror is reachable."
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:619
+msgid "✗ Mirror test failed: "
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:646
+msgid "Could not validate this mirror for the current system."
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:657
+msgid "Latency"
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:658
+msgid "Bandwidth"
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:663
+msgid "This is already your current mirror."
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:668
+msgid "Fastest Mirror Found"
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:671
+msgid "Switch to this mirror and run apt update?"
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:674
+msgid "Keep Current"
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:675
+msgid "Switch"
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:684
+msgid "Switching mirror…"
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:702
+msgid "✓ Mirror switched and system updated."
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:704
+msgid "✗ Switch failed: "
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:712
+msgid "Installing updates…"
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:715
+msgid "Checking for updates…"
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:723
+#: src/anduinos_control_panel/software_sources.py:744
+msgid "✗ Check failed: "
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:752
+msgid "  Install Updates  "
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:755
+msgid "Updates are available."
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:757
+msgid "✓ System is up to date."
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:768
+msgid "✓ Updates installed successfully!"
+msgstr ""
+
+#: src/anduinos_control_panel/software_sources.py:770
 msgid "✗ Installation failed: "
 msgstr ""
 

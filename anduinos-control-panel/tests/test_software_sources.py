@@ -3,6 +3,7 @@ from pathlib import Path
 import tempfile
 import threading
 import unittest
+import urllib.error
 from unittest.mock import patch
 
 
@@ -11,11 +12,14 @@ ROOT = Path(__file__).resolve().parents[1]
 from anduinos_control_panel.software_sources import (  # noqa: E402
     MIRRORS,
     current_mirror,
+    measure_mirrors,
+    probe_mirror,
     replace_ubuntu_uris,
     select_fastest_mirror,
     simulated_upgrade_count,
     system_architecture,
     system_codename,
+    validate_mirror_uri,
 )
 
 helper = importlib.machinery.SourceFileLoader(
@@ -79,8 +83,56 @@ class SoftwareSourceTests(unittest.TestCase):
         self.assertIn(f"URIs: {MIRRORS[1]}", updated)
         self.assertIn("Suites: resolute resolute-updates", updated)
         self.assertIn("Signed-By:", updated)
-        with self.assertRaises(ValueError):
-            replace_ubuntu_uris(original, "https://attacker.example/ubuntu/")
+        custom = "https://example.org/ubuntu/"
+        self.assertIn(f"URIs: {custom}", replace_ubuntu_uris(original, custom))
+        for invalid in (
+            "file:///tmp/repository", "https://user:pass@example.org/ubuntu/",
+            "https://example.org/ubuntu/?x=1", "https://example.org/../other/",
+            "https://example.org/ubuntu/?", "https://example.org/ubuntu/#",
+            "https://example.org/ubuntu/\nURIs: https://other.example/",
+            "https://example.org:bad/ubuntu/", "https://[broken/ubuntu/",
+        ):
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                validate_mirror_uri(invalid)
+
+    def test_custom_mirror_requires_release_and_architecture_before_switch(self):
+        requested = []
+
+        def opener(request, timeout):
+            requested.append(request.full_url)
+            return FakeResponse(b"valid")
+
+        probe_mirror("https://example.org/ubuntu", "resolute", "arm64", opener)
+        self.assertEqual(
+            requested,
+            [
+                "https://example.org/ubuntu/dists/resolute/Release",
+                "https://example.org/ubuntu/dists/resolute/main/binary-arm64/Packages.gz",
+            ],
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "ubuntu.sources"
+            original = f"Types: deb\nURIs: {MIRRORS[0]}\nSuites: resolute\n"
+            source.write_text(original)
+            with (
+                patch.object(helper, "SOURCE_PATH", source),
+                patch.object(helper, "probe_mirror", side_effect=RuntimeError("bad")),
+                patch.object(helper, "_apt") as apt,
+            ):
+                with self.assertRaises(RuntimeError):
+                    helper.switch_mirror("https://example.org/ubuntu/")
+            self.assertEqual(source.read_text(), original)
+            apt.assert_not_called()
+            with (
+                patch.object(helper, "SOURCE_PATH", source),
+                patch.object(helper, "BACKUP_PATH", Path(directory) / "ubuntu.sources.bak"),
+                patch.object(helper, "probe_mirror") as probe,
+                patch.object(helper, "_apt") as apt,
+            ):
+                helper.switch_mirror("https://example.org/ubuntu")
+            self.assertIn("URIs: https://example.org/ubuntu/", source.read_text())
+            probe.assert_called_once()
+            apt.assert_called_once_with("update")
 
     def test_probe_uses_architecture_index_and_bandwidth_result(self):
         requested = []
@@ -100,6 +152,29 @@ class SoftwareSourceTests(unittest.TestCase):
         )
         self.assertIn(result.uri, {MIRRORS[0], MIRRORS[1]})
         self.assertTrue(any("binary-arm64/Packages.gz" in url for url in requested))
+        measurements = measure_mirrors(
+            "resolute", "arm64", candidates=(MIRRORS[0], MIRRORS[1]),
+            opener=opener, clock=AdvancingClock(),
+        )
+        self.assertEqual({item.uri for item in measurements}, {MIRRORS[0], MIRRORS[1]})
+
+    def test_head_rejection_falls_back_to_a_small_get(self):
+        requests = []
+
+        def opener(request, timeout):
+            requests.append(request)
+            if request.get_method() == "HEAD":
+                raise urllib.error.HTTPError(request.full_url, 404, "", {}, None)
+            return FakeResponse()
+
+        result = select_fastest_mirror(
+            "resolute", "amd64", candidates=("https://mirror.example/ubuntu/",),
+            opener=opener, clock=AdvancingClock(),
+        )
+        self.assertEqual(result.uri, "https://mirror.example/ubuntu/")
+        self.assertEqual(requests[0].get_method(), "HEAD")
+        self.assertEqual(requests[1].get_method(), "GET")
+        self.assertEqual(requests[1].get_header("Range"), "bytes=0-0")
 
     def test_simulated_update_summary_must_be_parseable(self):
         self.assertEqual(

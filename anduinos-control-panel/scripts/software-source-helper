@@ -13,7 +13,11 @@ import tempfile
 from anduinos_control_panel.software_sources import (
     MIRRORS,
     SOURCE_PATH,
+    probe_mirror,
     replace_ubuntu_uris,
+    system_architecture,
+    system_codename,
+    validate_mirror_uri,
 )
 
 
@@ -69,8 +73,9 @@ def _apt(*arguments: str) -> None:
 
 
 def switch_mirror(mirror: str) -> None:
+    mirror = validate_mirror_uri(mirror)
     if mirror not in MIRRORS:
-        raise ValueError("Mirror is not in the AnduinOS allowlist")
+        probe_mirror(mirror, system_codename(), system_architecture())
     original, mode = _source()
     try:
         updated = replace_ubuntu_uris(original.decode("utf-8"), mirror).encode(
