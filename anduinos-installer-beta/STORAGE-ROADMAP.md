@@ -375,6 +375,16 @@ health and free-space reserve pass validation. Reuse means:
 - fail with recovery instructions if firmware variables cannot be updated,
   rather than silently taking over the shared fallback path.
 
+Preservation-mode preflight refuses to reuse an ESP that already contains an
+`EFI/AnduinOS` directory, including case variants, an empty directory or
+partial-install leftovers. Both guided and manual plans stop before destructive
+storage operations. The error directs users to select another ESP or create a
+new one in unallocated space; the installer never deletes these leftovers
+automatically. Invalid or unreadable EFI paths also fail closed. Ordinary
+Microsoft/Ubuntu ESP reuse and the existing boot commands are unchanged.
+This guard prevents boot-file replacement; it does not add Linux discovery,
+per-installation EFI names or full qualification of multiple AnduinOS installs.
+
 If the existing ESP is unsuitable, guided mode refuses it. Custom mode may
 allocate a dedicated AnduinOS ESP inside explicitly selected free space.
 
