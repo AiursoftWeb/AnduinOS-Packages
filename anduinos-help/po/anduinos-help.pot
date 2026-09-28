@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-help 1.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/AiursoftWeb/AnduinOS-Packages/issues\n"
-"POT-Creation-Date: 2026-09-17 00:00+0000\n"
+"POT-Creation-Date: 2026-09-28 00:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,7 +45,7 @@ msgid "Home"
 msgstr ""
 
 #: src/anduinos_help/ui/window.py
-msgid "Check for documentation updates"
+msgid "Refresh Docs"
 msgstr ""
 
 #: src/anduinos_help/ui/window.py
@@ -77,7 +77,7 @@ msgid "Home"
 msgstr ""
 
 #: src/anduinos_help/ui/sidebar.py
-msgid "Check for Updates"
+msgid "Refresh Docs"
 msgstr ""
 
 #: src/anduinos_help/ui/sidebar.py
@@ -113,7 +113,7 @@ msgid "Your AnduinOS"
 msgstr ""
 
 #: src/anduinos_help/ui/home.py
-msgid "Documentation is bundled for offline use."
+msgid "Docs are cloned from AnduinOS-Docs and indexed locally — search works offline."
 msgstr ""
 
 #: src/anduinos_help/ui/home.py
@@ -121,15 +121,11 @@ msgid "Popular topics"
 msgstr ""
 
 #: src/anduinos_help/ui/home.py
-msgid "Getting Started"
-msgstr ""
-
-#: src/anduinos_help/ui/home.py
 msgid "Installation"
 msgstr ""
 
 #: src/anduinos_help/ui/home.py
-msgid "Desktop"
+msgid "Skills"
 msgstr ""
 
 #: src/anduinos_help/ui/home.py
@@ -137,11 +133,15 @@ msgid "Applications"
 msgstr ""
 
 #: src/anduinos_help/ui/home.py
-msgid "Troubleshooting"
+msgid "Apkg Packaging"
 msgstr ""
 
 #: src/anduinos_help/ui/home.py
-msgid "Developers"
+msgid "Server Services"
+msgstr ""
+
+#: src/anduinos_help/ui/home.py
+msgid "Virtualization"
 msgstr ""
 
 #: src/anduinos_help/ui/home.py
@@ -189,27 +189,43 @@ msgid "Copy to clipboard"
 msgstr ""
 
 #: src/anduinos_help/ui/dialogs.py
-msgid "Check for Documentation Updates"
+msgid "Refresh Documentation"
 msgstr ""
 
 #: src/anduinos_help/ui/dialogs.py
-msgid "Check now"
+msgid "Refresh now"
 msgstr ""
 
 #: src/anduinos_help/ui/dialogs.py
-msgid "Documentation Updates"
+msgid "Documentation Sync"
 msgstr ""
 
 #: src/anduinos_help/ui/dialogs.py
-msgid "Click “Check now” to compare your local documentation to the official source."
+msgid "AnduinOS Help clones the official AnduinOS-Docs git repository and indexes its Markdown into a local SQLite database. Search and article rendering work fully offline after sync.\n\nSource: https://github.com/AiursoftWeb/AnduinOS-Docs"
 msgstr ""
 
 #: src/anduinos_help/ui/dialogs.py
-msgid "Download update"
+msgid "Syncing…"
 msgstr ""
 
 #: src/anduinos_help/ui/dialogs.py
-msgid "Apply update"
+msgid "Last synced: {time}\nDocuments indexed: {count}"
+msgstr ""
+
+#: src/anduinos_help/ui/dialogs.py
+msgid "Never synced — click Refresh now to download the documentation."
+msgstr ""
+
+#: src/anduinos_help/ui/dialogs.py
+msgid "Syncing… cloning docs repo and indexing Markdown."
+msgstr ""
+
+#: src/anduinos_help/ui/dialogs.py
+msgid "Synced {n} documents."
+msgstr ""
+
+#: src/anduinos_help/ui/dialogs.py
+msgid "Sync failed: {err}"
 msgstr ""
 
 #: src/anduinos_help/ui/dialogs.py
@@ -218,6 +234,10 @@ msgstr ""
 
 #: src/anduinos_help/ui/dialogs.py
 msgid "Filter terms…"
+msgstr ""
+
+#: src/anduinos_help/ui/dialogs.py
+msgid "Refresh docs from upstream"
 msgstr ""
 
 #: src/anduinos_help/ui/search.py
@@ -229,11 +249,19 @@ msgid "Search across all AnduinOS documentation — articles, headings, code, ta
 msgstr ""
 
 #: src/anduinos_help/ui/search.py
+msgid "Search results for “{query}”"
+msgstr ""
+
+#: src/anduinos_help/ui/search.py
 msgid "No results found"
 msgstr ""
 
 #: src/anduinos_help/ui/search.py
 msgid "Try different keywords, or browse by category from the sidebar."
+msgstr ""
+
+#: src/anduinos_help/ui/search.py
+msgid "{n} articles matched"
 msgstr ""
 
 #: src/anduinos_help/ui/search.py

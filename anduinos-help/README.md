@@ -1,29 +1,61 @@
 # anduinos-help
 
-AnduinOS Help — official offline-readable documentation browser for AnduinOS,
-built with Python + GTK 4 + Libadwaita.
+AnduinOS Help — a **native** GTK 4 + Libadwaita documentation browser
+for AnduinOS. It periodically clones the official AnduinOS-Docs git
+repository and indexes its Markdown into a local SQLite database, so
+search, navigation, and article rendering all work fully offline
+after the initial sync.
 
 ## What it does
 
-* Bundles **217 official AnduinOS documentation articles** sourced from
-  [docs.anduinos.com](https://docs.anduinos.com/) and the
-  [AnduinOS-Docs](https://github.com/AiursoftWeb/AnduinOS-Docs) repository
-  (GPL-3.0). Articles retain their original source attribution.
-* **Full-text search** with fuzzy matching across titles, headings, body
-  text, tags, and code blocks. Hyphens are normalised so `wifi` matches
-  `Wi-Fi`.
-* **Command search** — type `apt` or `free` to find the article that
-  documents that command.
-* **Version-aware** — articles are tagged for AnduinOS 2.x; legacy
-  articles are visually marked.
-* **System diagnostics** with a "Copy diagnostic information" workflow
-  for bug reports. No passwords, tokens, or private files are exposed.
-* **Report a Problem** action that pre-fills a bug-report template with
-  system information and links to the official issue tracker.
-* **Offline-first** — all documentation is bundled; the update mechanism
-  is opt-in via the menu and uses atomic staging with rollback.
-* **Native GTK 4 + Libadwaita** UI that respects the desktop's light/dark
-  theme and accent colour.
+Inspired by [Aiursoft.DocsViewer](https://github.com/aiursoftweb/docsviewer),
+the Help Center runs a background job on startup that:
+
+1. **Clones** (or pulls) the
+   [AnduinOS-Docs](https://github.com/AiursoftWeb/AnduinOS-Docs) git
+   repository into `XDG_DATA_HOME/anduinos-help/docs-repo/`.
+2. **Parses** `properdocs.yml` at the repo root to get the canonical
+   sidebar navigation tree (the same file DocsViewer uses).
+3. **Walks** the `Docs/` directory and indexes each `.md` file into a
+   SQLite database (`XDG_DATA_HOME/anduinos-help/docs.db`) — one row
+   per document with title, category, content, last-modified, source
+   URLs.
+4. **Persists** the nav tree in the same database so the sidebar can
+   render the proper order/grouping without re-parsing YAML.
+
+After the sync, everything works offline:
+
+* **Native GTK article renderer** — Markdown is parsed into an IR and
+  rendered with real GTK widgets (headings, paragraphs, code blocks
+  with copy buttons, callouts, tables, lists, blockquotes). No
+  webview.
+* **FTS5 full-text search** — SQLite's built-in FTS5 virtual table
+  powers search across title + content, with BM25 ranking and
+  snippets.
+* **Native sidebar** — built from the `properdocs.yml` nav tree, with
+  the same hierarchy (Home → Release Notes → Install → Skills →
+  Applications → Apkg → Servicing → Virtualization) you see on
+  https://docs.anduinos.com/.
+* **Native category + search pages** — Adwaita `ListBox` rows with
+  article counts, subcategory grouping, and instant search-as-you-type.
+* **Back / Forward / Home / Refresh** — full navigation history with
+  keyboard shortcuts.
+
+## Why this design
+
+* **Native feel.** Real GTK widgets, not a webview wrapper. The
+  article view uses the same Libadwaita typography, code-block styling,
+  and callout colors as the rest of the desktop.
+* **Always up to date.** The background sync runs on startup (if it's
+  been > 6 hours since the last sync) and on demand via
+  `Ctrl+R` / `Refresh Docs`. There's no bundled snapshot to drift out
+  of date.
+* **Offline-capable.** Once synced, the app needs no network
+  connection — search and article rendering read from the local
+  SQLite database.
+* **Single source of truth.** The official AnduinOS-Docs git
+  repository is the only copy of the documentation. The app caches it
+  locally; it doesn't fork or republish.
 
 ## Install layout
 
@@ -31,10 +63,17 @@ The `.aosproj` installs:
 
 * Python package:        `/usr/lib/python3/dist-packages/anduinos_help/`
 * Launcher:               `/usr/bin/anduinos-help`
-* Bundled documentation:  `/usr/share/anduinos-help/`
+* Stylesheet:             `/usr/share/anduinos-help/style.css`
 * Desktop entry:          `/usr/share/applications/com.anduinos.Help.desktop`
 * App icon:               `/usr/share/icons/hicolor/scalable/apps/com.anduinos.Help.svg`
 * Translations:           `/usr/share/locale/<lang>/LC_MESSAGES/anduinos-help.mo`
+
+Runtime data (created on first launch):
+
+* SQLite database:        `~/.local/share/anduinos-help/docs.db`
+* Cloned docs repo:       `~/.local/share/anduinos-help/docs-repo/repo/`
+* Last-sync metadata:     `~/.local/state/anduinos-help/last-sync.json`
+* Rotating log:           `~/.local/state/anduinos-help/help.log`
 
 ## Build
 
@@ -59,35 +98,72 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C \
     python3 -m unittest discover -s tests -v
 ```
 
-## Adding a translation
+The test suite covers:
 
-1. Copy `po/anduinos-help.pot` to `po/<locale>.po` (e.g. `po/fr_FR.po`).
-2. Translate the `msgstr ""` lines.
-3. Run `bash compile-locales.sh` to compile `.mo` files for local testing.
-4. The CI pipeline will compile locales via the `<PrebuildCommand>` in
-   `.aosproj` before packaging.
+* `test_store` — SQLite document store (upsert, lookup, FTS5 search,
+  soft-delete, nav tree).
+* `test_parser` — Markdown → IR block parser (headings, code,
+  callouts, tables).
+* `test_links` — URL allow-list security boundary.
+* `test_version` — AnduinOS / base-distro detection.
+* `test_diagnostics` — sensitive-data boundary for bug reports.
 
-## Documentation ingestion
+## Keyboard shortcuts
 
-The `scripts/sync_docs.py` tool is for **maintainer use only** — it is
-not installed by the package. It re-syncs the bundled documentation from
-the official AnduinOS docs website and GitHub repository:
+| Action                       | Shortcut          |
+|------------------------------|-------------------|
+| Go to home page              | `Ctrl+H`          |
+| Refresh docs from upstream   | `Ctrl+R` or `F5`  |
+| Focus search                 | `Ctrl+F` or `Ctrl+K` |
+| System diagnostics           | `Ctrl+Shift+D`    |
+| Report a problem             | `Ctrl+Shift+B`    |
+| Open glossary                | `Ctrl+G`          |
+| Toggle fullscreen            | `F11`             |
+| Show keyboard shortcuts      | `Ctrl+?`          |
+| Quit                         | `Ctrl+Q`          |
 
-```bash
-python3 scripts/sync_docs.py
+## Architecture
+
 ```
-
-This fetches the current state of `https://docs.anduinos.com/`, downloads
-the corresponding raw Markdown from
-`raw.githubusercontent.com/AiursoftWeb/AnduinOS-Docs/master/`, normalises
-the content, and regenerates `assets/articles/`, `assets/index.json`,
-`assets/meta.json`, and `assets/sync-report.json`. Commit the result.
+src/anduinos_help/
+├── __init__.py
+├── i18n.py                 # gettext initialisation
+├── main.py                 # Adw.Application — kicks off background sync on startup
+├── utils/
+│   ├── __init__.py
+│   ├── logging.py          # rotating file + stderr logging
+│   ├── paths.py            # XDG dirs + SQLite + repo-clone paths
+│   └── links.py            # URL allow-list + open_external()
+├── system/
+│   ├── __init__.py
+│   ├── version.py          # AnduinOS / base-distro detection
+│   └── diagnostics.py      # safe system-info collection for bug reports
+├── docs/
+│   ├── __init__.py
+│   ├── store.py            # ★ SQLite store (documents + nav_entries + FTS5)
+│   ├── sync.py             # ★ Background job: git clone/pull + Markdown index
+│   ├── nav.py              # ★ properdocs.yml parser → ordered nav tree
+│   ├── parser.py           # Markdown → IR blocks (markdown-it-py)
+│   ├── loader.py           # Article/Catalog dataclasses (SQLite-backed)
+│   └── search.py           # FTS5 search + command-extraction search
+└── ui/
+    ├── __init__.py
+    ├── window.py           # Adw.ApplicationWindow + sidebar + content stack
+    ├── sidebar.py          # category list (rebuilt from SQLite after sync)
+    ├── home.py             # hero + search + popular topics + resources
+    ├── article_view.py     # native GTK Markdown renderer
+    ├── category.py         # native category listing page
+    ├── search.py           # native search results page
+    ├── code_block.py       # code block widget with copy button + language badge
+    ├── dialogs.py          # about / diagnostics / refresh / report / glossary / shortcuts
+    └── widgets.py          # small reusable GTK4 widgets
+```
 
 ## License
 
 * Application code: **GPL-3.0**
-* Bundled documentation: **GPL-3.0** (from AnduinOS-Docs)
 * AppStream metadata: **CC0-1.0**
 
-Each bundled article retains its source URL and GitHub blob URL in
-`assets/index.json` so the documentation remains auditable.
+The documentation itself is cloned at runtime from
+<https://github.com/AiursoftWeb/AnduinOS-Docs> and licensed under
+GPL-3.0 by that repository.

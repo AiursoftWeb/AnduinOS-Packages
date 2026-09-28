@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-help 1.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/AiursoftWeb/AnduinOS-Packages/issues\n"
-"POT-Creation-Date: 2026-09-17 00:00+0000\n"
-"PO-Revision-Date: 2026-09-17 00:00+0000\n"
+"POT-Creation-Date: 2026-09-28 00:00+0000\n"
+"PO-Revision-Date: 2026-09-28 00:00+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: English (US) <anduin@aiursoft.com>\n"
 "Language: en_US\n"
@@ -34,8 +34,8 @@ msgstr "Back"
 msgid "Home"
 msgstr "Home"
 
-msgid "Check for documentation updates"
-msgstr "Check for documentation updates"
+msgid "Refresh Docs"
+msgstr "Refresh Docs"
 
 msgid "System Diagnostics"
 msgstr "System Diagnostics"
@@ -55,9 +55,6 @@ msgstr "Keyboard Shortcuts"
 msgid "About AnduinOS Help"
 msgstr "About AnduinOS Help"
 
-msgid "Check for Updates"
-msgstr "Check for Updates"
-
 msgid "About"
 msgstr "About"
 
@@ -73,29 +70,29 @@ msgstr "Search documentation, commands, troubleshooting…"
 msgid "Your AnduinOS"
 msgstr "Your AnduinOS"
 
-msgid "Documentation is bundled for offline use."
-msgstr "Documentation is bundled for offline use."
+msgid "Docs are cloned from AnduinOS-Docs and indexed locally — search works offline."
+msgstr "Docs are cloned from AnduinOS-Docs and indexed locally — search works offline."
 
 msgid "Popular topics"
 msgstr "Popular topics"
 
-msgid "Getting Started"
-msgstr "Getting Started"
-
 msgid "Installation"
 msgstr "Installation"
 
-msgid "Desktop"
-msgstr "Desktop"
+msgid "Skills"
+msgstr "Skills"
 
 msgid "Applications"
 msgstr "Applications"
 
-msgid "Troubleshooting"
-msgstr "Troubleshooting"
+msgid "Apkg Packaging"
+msgstr "Apkg Packaging"
 
-msgid "Developers"
-msgstr "Developers"
+msgid "Server Services"
+msgstr "Server Services"
+
+msgid "Virtualization"
+msgstr "Virtualization"
 
 msgid "Recommended guides"
 msgstr "Recommended guides"
@@ -124,26 +121,41 @@ msgstr "Open Issue Tracker"
 msgid "Copy to clipboard"
 msgstr "Copy to clipboard"
 
-msgid "Check for Documentation Updates"
-msgstr "Check for Documentation Updates"
+msgid "Refresh Documentation"
+msgstr "Refresh Documentation"
 
-msgid "Check now"
-msgstr "Check now"
+msgid "Refresh now"
+msgstr "Refresh now"
 
-msgid "Documentation Updates"
-msgstr "Documentation Updates"
+msgid "Documentation Sync"
+msgstr "Documentation Sync"
 
-msgid "Click “Check now” to compare your local documentation to the official source."
-msgstr "Click “Check now” to compare your local documentation to the official source."
+msgid "AnduinOS Help clones the official AnduinOS-Docs git repository and indexes its Markdown into a local SQLite database. Search and article rendering work fully offline after sync.\n\nSource: https://github.com/AiursoftWeb/AnduinOS-Docs"
+msgstr "AnduinOS Help clones the official AnduinOS-Docs git repository and indexes its Markdown into a local SQLite database. Search and article rendering work fully offline after sync.\n\nSource: https://github.com/AiursoftWeb/AnduinOS-Docs"
 
-msgid "Download update"
-msgstr "Download update"
+msgid "Syncing…"
+msgstr "Syncing…"
 
-msgid "Apply update"
-msgstr "Apply update"
+msgid "Last synced: {time}\nDocuments indexed: {count}"
+msgstr "Last synced: {time}\nDocuments indexed: {count}"
+
+msgid "Never synced — click Refresh now to download the documentation."
+msgstr "Never synced — click Refresh now to download the documentation."
+
+msgid "Syncing… cloning docs repo and indexing Markdown."
+msgstr "Syncing… cloning docs repo and indexing Markdown."
+
+msgid "Synced {n} documents."
+msgstr "Synced {n} documents."
+
+msgid "Sync failed: {err}"
+msgstr "Sync failed: {err}"
 
 msgid "Filter terms…"
 msgstr "Filter terms…"
+
+msgid "Refresh docs from upstream"
+msgstr "Refresh docs from upstream"
 
 msgid "Type to search"
 msgstr "Type to search"
@@ -151,11 +163,17 @@ msgstr "Type to search"
 msgid "Search across all AnduinOS documentation — articles, headings, code, tags, and commands."
 msgstr "Search across all AnduinOS documentation — articles, headings, code, tags, and commands."
 
+msgid "Search results for “{query}”"
+msgstr "Search results for “{query}”"
+
 msgid "No results found"
 msgstr "No results found"
 
 msgid "Try different keywords, or browse by category from the sidebar."
 msgstr "Try different keywords, or browse by category from the sidebar."
+
+msgid "{n} articles matched"
+msgstr "{n} articles matched"
 
 msgid "Matching terminal commands"
 msgstr "Matching terminal commands"

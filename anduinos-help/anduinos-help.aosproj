@@ -3,7 +3,7 @@
     <PackageName>anduinos-help</PackageName>
     <PackageVersion>1.0.0-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>AnduinOS Help — official offline-readable documentation browser for AnduinOS, with full-text search, version-aware articles, system diagnostics, and a report-a-problem workflow.</PackageDescription>
+    <PackageDescription>AnduinOS Help — native documentation browser for AnduinOS. Periodically clones the official AnduinOS-Docs git repository and indexes its Markdown into a local SQLite database, so search, navigation, and article rendering work fully offline after the initial sync. Source: https://github.com/AiursoftWeb/AnduinOS-Docs</PackageDescription>
     <Section>doc</Section>
     <PackageHomepage>https://docs.anduinos.com/</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
@@ -22,14 +22,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- The app is a *native* GTK4 + Libadwaita documentation browser.
+         It clones the AnduinOS-Docs git repository at runtime and
+         indexes Markdown into a local SQLite database, so it needs:
+           - git: to clone/pull the docs repo
+           - python3-markdown-it: to parse Markdown into IR blocks
+           - python3-yaml: to parse properdocs.yml nav tree
+         It does NOT bundle any Markdown at build time. -->
     <Dependency Include="python3" />
     <Dependency Include="python3-gi" />
     <Dependency Include="gir1.2-gtk-4.0" />
     <Dependency Include="gir1.2-adw-1" />
     <Dependency Include="python3-markdown-it" />
-    <Dependency Include="python3-rapidfuzz" />
-    <Dependency Include="python3-requests" />
     <Dependency Include="python3-yaml" />
+    <Dependency Include="git" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,11 +48,12 @@
     <IncludeFile Include="src/anduinos_help/utils/paths.py" Target="/usr/lib/python3/dist-packages/anduinos_help/utils/paths.py" />
     <IncludeFile Include="src/anduinos_help/utils/links.py" Target="/usr/lib/python3/dist-packages/anduinos_help/utils/links.py" />
     <IncludeFile Include="src/anduinos_help/docs/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_help/docs/__init__.py" />
-    <IncludeFile Include="src/anduinos_help/docs/loader.py" Target="/usr/lib/python3/dist-packages/anduinos_help/docs/loader.py" />
+    <IncludeFile Include="src/anduinos_help/docs/store.py" Target="/usr/lib/python3/dist-packages/anduinos_help/docs/store.py" />
+    <IncludeFile Include="src/anduinos_help/docs/sync.py" Target="/usr/lib/python3/dist-packages/anduinos_help/docs/sync.py" />
+    <IncludeFile Include="src/anduinos_help/docs/nav.py" Target="/usr/lib/python3/dist-packages/anduinos_help/docs/nav.py" />
     <IncludeFile Include="src/anduinos_help/docs/parser.py" Target="/usr/lib/python3/dist-packages/anduinos_help/docs/parser.py" />
+    <IncludeFile Include="src/anduinos_help/docs/loader.py" Target="/usr/lib/python3/dist-packages/anduinos_help/docs/loader.py" />
     <IncludeFile Include="src/anduinos_help/docs/search.py" Target="/usr/lib/python3/dist-packages/anduinos_help/docs/search.py" />
-    <IncludeFile Include="src/anduinos_help/docs/cache.py" Target="/usr/lib/python3/dist-packages/anduinos_help/docs/cache.py" />
-    <IncludeFile Include="src/anduinos_help/docs/updater.py" Target="/usr/lib/python3/dist-packages/anduinos_help/docs/updater.py" />
     <IncludeFile Include="src/anduinos_help/system/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_help/system/__init__.py" />
     <IncludeFile Include="src/anduinos_help/system/version.py" Target="/usr/lib/python3/dist-packages/anduinos_help/system/version.py" />
     <IncludeFile Include="src/anduinos_help/system/diagnostics.py" Target="/usr/lib/python3/dist-packages/anduinos_help/system/diagnostics.py" />
@@ -60,9 +67,6 @@
     <IncludeFile Include="src/anduinos_help/ui/dialogs.py" Target="/usr/lib/python3/dist-packages/anduinos_help/ui/dialogs.py" />
     <IncludeFile Include="src/anduinos_help/ui/widgets.py" Target="/usr/lib/python3/dist-packages/anduinos_help/ui/widgets.py" />
     <IncludeFile Include="src/anduinos_help/ui/code_block.py" Target="/usr/lib/python3/dist-packages/anduinos_help/ui/code_block.py" />
-    <IncludeFolder Include="assets/articles" Target="/usr/share/anduinos-help/articles" />
-    <IncludeFile Include="assets/index.json" Target="/usr/share/anduinos-help/index.json" />
-    <IncludeFile Include="assets/meta.json" Target="/usr/share/anduinos-help/meta.json" />
     <IncludeFile Include="assets/style.css" Target="/usr/share/anduinos-help/style.css" />
   </ItemGroup>
 
