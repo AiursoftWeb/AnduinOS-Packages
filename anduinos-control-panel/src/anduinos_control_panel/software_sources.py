@@ -395,6 +395,7 @@ class SoftwareSourceWindow(Adw.Window):
         source_group = Adw.PreferencesGroup()
         source_row = Adw.ActionRow(title=_("Software Source"))
         self.mirror_button = Gtk.Button(label=_("  Switch to Fastest Mirror  ").strip())
+        self.mirror_button.add_css_class("suggested-action")
         self.mirror_button.set_valign(Gtk.Align.CENTER)
         self.mirror_button.connect("clicked", self._find_mirror)
         source_row.add_suffix(self.mirror_button)

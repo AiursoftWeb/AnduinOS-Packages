@@ -51,7 +51,7 @@ class SoftwareSourceUiTests(unittest.TestCase):
             "https://archive.ubuntu.com/ubuntu/",
             self.window.current_source.get_label(),
         )
-        self.assertFalse(
+        self.assertTrue(
             self.window.mirror_button.has_css_class("suggested-action")
         )
         self.assertFalse(
