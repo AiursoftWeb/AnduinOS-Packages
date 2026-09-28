@@ -6,6 +6,7 @@ import json
 import os
 import sys
 
+from .i18n import _ as tr
 from .storage import inspect_target, probe_inventory
 from .operations import reset_password
 from .files import export_file, list_files
@@ -17,7 +18,7 @@ from .offline_env import emergency_shell
 def main(argv: list[str] | None = None) -> int:
     arguments = list(sys.argv[1:] if argv is None else argv)
     if os.geteuid() != 0:
-        print("The rescue helper must run as root", file=sys.stderr)
+        print(tr("The rescue helper must run as root"), file=sys.stderr)
         return 77
     try:
         if len(arguments) == 3 and arguments[0] == "shell":
@@ -29,7 +30,7 @@ def main(argv: list[str] | None = None) -> int:
         elif len(arguments) == 4 and arguments[0] == "reset-password":
             password = sys.stdin.read(4097)
             if len(password) > 4096:
-                raise ValueError("The new password is too long")
+                raise ValueError(tr("The new password is too long"))
             reset_password(arguments[1], arguments[2], arguments[3], password)
             payload = {"schema": 1, "changed": True}
         elif len(arguments) == 4 and arguments[0] == "list-files":
@@ -37,7 +38,7 @@ def main(argv: list[str] | None = None) -> int:
         elif len(arguments) == 5 and arguments[0] == "export":
             uid_text = os.environ.get("PKEXEC_UID", "")
             if not uid_text.isdigit():
-                raise RuntimeError("Could not identify the desktop user")
+                raise RuntimeError(tr("Could not identify the desktop user"))
             exported = export_file(
                 arguments[1], arguments[2], arguments[3], arguments[4],
                 caller_uid=int(uid_text),
@@ -49,7 +50,7 @@ def main(argv: list[str] | None = None) -> int:
             payload = create_snapshot(arguments[1], arguments[2], arguments[3])
         elif len(arguments) == 5 and arguments[0] == "restore-snapshot":
             if arguments[4] not in {"true", "false"}:
-                raise ValueError("Invalid protection choice")
+                raise ValueError(tr("Invalid protection choice"))
             payload = restore_snapshot(
                 arguments[1], arguments[2], arguments[3], arguments[4] == "true"
             )

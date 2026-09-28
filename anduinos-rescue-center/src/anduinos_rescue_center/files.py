@@ -10,6 +10,7 @@ import subprocess
 from collections.abc import Callable
 from pathlib import Path, PurePosixPath
 
+from .i18n import _ as tr
 from .storage import inspect_mounted_filesystem, mounted_readonly, resolve_target
 
 
@@ -30,10 +31,10 @@ def list_files(
         partition.path, partition.filesystem, run=run, mount_base=mount_base
     ) as top:
         if inspect_mounted_filesystem(top, partition.filesystem).os_kind != "anduinos":
-            raise RuntimeError("The selected partition is not an AnduinOS installation")
+            raise RuntimeError(tr("The selected partition is not an AnduinOS installation"))
         base, logical = logical_path(top, partition.filesystem, relative)
         if not base.is_dir():
-            raise RuntimeError("The selected location is not a directory")
+            raise RuntimeError(tr("The selected location is not a directory"))
         entries: list[dict[str, object]] = []
         with os.scandir(base) as iterator:
             for entry in iterator:
@@ -76,23 +77,23 @@ def export_file(
     mount_base: Path = Path("/run/anduinos-rescue-center"),
 ) -> str:
     if caller_uid <= 0:
-        raise RuntimeError("Could not identify the desktop user")
+        raise RuntimeError(tr("Could not identify the desktop user"))
     partition = resolve_target(device, identity, run=run)
     destination = allowed_destination(Path(destination_directory), caller_uid)
     with mounted_readonly(
         partition.path, partition.filesystem, run=run, mount_base=mount_base
     ) as top:
         if inspect_mounted_filesystem(top, partition.filesystem).os_kind != "anduinos":
-            raise RuntimeError("The selected partition is not an AnduinOS installation")
+            raise RuntimeError(tr("The selected partition is not an AnduinOS installation"))
         source, logical = logical_path(top, partition.filesystem, relative)
         if logical == ".":
-            raise RuntimeError("Export a file or folder instead of the whole system")
+            raise RuntimeError(tr("Export a file or folder instead of the whole system"))
         metadata = source.lstat()
         if not (stat.S_ISREG(metadata.st_mode) or stat.S_ISDIR(metadata.st_mode)):
-            raise RuntimeError("Symbolic links and special files cannot be exported")
+            raise RuntimeError(tr("Symbolic links and special files cannot be exported"))
         target = destination / source.name
         if target.exists() or target.is_symlink():
-            raise RuntimeError("A file with this name already exists at the destination")
+            raise RuntimeError(tr("A file with this name already exists at the destination"))
         account = pwd.getpwuid(caller_uid)
         try:
             _copy_safe(source, target, account.pw_uid, account.pw_gid)
@@ -101,7 +102,7 @@ def export_file(
                 timeout=120, check=False,
             )
             if sync.returncode != 0:
-                raise RuntimeError((sync.stderr or sync.stdout).strip() or "Could not sync exported data")
+                raise RuntimeError((sync.stderr or sync.stdout).strip() or tr("Could not sync exported data"))
         except Exception:
             _remove_created(target)
             raise
@@ -121,7 +122,7 @@ def logical_path(top: Path, filesystem: str, relative: str) -> tuple[Path, str]:
     canonical_base = base.resolve(strict=True)
     candidate = canonical_base.joinpath(*remainder).resolve(strict=True)
     if not candidate.is_relative_to(canonical_base):
-        raise RuntimeError("The selected path escapes the offline system")
+        raise RuntimeError(tr("The selected path escapes the offline system"))
     return candidate, logical
 
 
@@ -135,7 +136,7 @@ def allowed_destination(path: Path, caller_uid: int) -> Path:
         except OSError:
             pass
     if not candidate.is_dir() or not any(candidate.is_relative_to(root) for root in roots):
-        raise RuntimeError("Choose a folder in your Home directory or on your removable media")
+        raise RuntimeError(tr("Choose a folder in your Home directory or on your removable media"))
     return candidate
 
 
@@ -144,7 +145,7 @@ def _normalize_relative(value: str) -> str:
         return "."
     path = PurePosixPath(value)
     if path.is_absolute() or ".." in path.parts or len(value) > 4096:
-        raise ValueError("Invalid offline file path")
+        raise ValueError(tr("Invalid offline file path"))
     return str(path)
 
 
@@ -179,7 +180,7 @@ def _copy_safe(source: Path, target: Path, uid: int, gid: int) -> None:
             os.close(source_fd)
         return
     if not stat.S_ISDIR(metadata.st_mode):
-        raise RuntimeError(f"Cannot export special file: {source.name}")
+        raise RuntimeError(tr("Cannot export special file: {name}").format(name=source.name))
     target.mkdir(mode=metadata.st_mode & 0o777)
     os.chown(target, uid, gid, follow_symlinks=False)
     with os.scandir(source) as iterator:

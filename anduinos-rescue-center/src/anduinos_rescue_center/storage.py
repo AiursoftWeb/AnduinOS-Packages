@@ -14,6 +14,7 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Iterator
 
+from .i18n import _ as tr
 from .live import is_live_environment
 from .model import Disk, Inventory, Partition
 from .os_release import read_os_release
@@ -54,13 +55,13 @@ def probe_inventory(
         env=dict(os.environ, LC_ALL="C", LANGUAGE="C"),
     )
     if result.returncode != 0:
-        raise RuntimeError(result.stderr.strip() or "Could not enumerate storage")
+        raise RuntimeError(result.stderr.strip() or tr("Could not enumerate storage"))
     try:
         roots = json.loads(result.stdout)["blockdevices"]
     except (KeyError, TypeError, json.JSONDecodeError) as error:
-        raise RuntimeError("lsblk returned invalid storage data") from error
+        raise RuntimeError(tr("lsblk returned invalid storage data")) from error
     if not isinstance(roots, list):
-        raise RuntimeError("lsblk returned invalid storage data")
+        raise RuntimeError(tr("lsblk returned invalid storage data"))
 
     inspector = inspect or (lambda path, fstype: inspect_partition(path, fstype, run=run))
     live_sources = _live_sources(roots)
@@ -192,7 +193,7 @@ def mounted_readonly(
             env=dict(os.environ, LC_ALL="C", LANGUAGE="C"),
         )
         if result.returncode != 0:
-            raise RuntimeError((result.stderr or result.stdout).strip() or "Mount failed")
+            raise RuntimeError((result.stderr or result.stdout).strip() or tr("Mount failed"))
         mounted = True
         yield mountpoint
     finally:
@@ -207,7 +208,7 @@ def mounted_readonly(
             if unmount.returncode != 0:
                 raise RuntimeError(
                     (unmount.stderr or unmount.stdout).strip()
-                    or f"Could not unmount {mountpoint}"
+                    or tr("Could not unmount {mountpoint}").format(mountpoint=mountpoint)
                 )
         try:
             mountpoint.rmdir()
@@ -228,7 +229,7 @@ def mounted_writable(
     """Mount an explicitly selected offline target for a bounded mutation."""
 
     if filesystem not in {"btrfs", "ext2", "ext3", "ext4", "xfs"}:
-        raise RuntimeError("This filesystem is not supported for repair operations")
+        raise RuntimeError(tr("This filesystem is not supported for repair operations"))
     _require_block_device(path)
     mount_base.mkdir(mode=0o700, parents=True, exist_ok=True)
     mountpoint = Path(tempfile.mkdtemp(prefix="repair-", dir=mount_base))
@@ -241,7 +242,7 @@ def mounted_writable(
             env=dict(os.environ, LC_ALL="C", LANGUAGE="C"),
         )
         if result.returncode != 0:
-            raise RuntimeError((result.stderr or result.stdout).strip() or "Mount failed")
+            raise RuntimeError((result.stderr or result.stdout).strip() or tr("Mount failed"))
         mounted = True
         yield mountpoint
     finally:
@@ -253,7 +254,7 @@ def mounted_writable(
             if unmount.returncode != 0:
                 raise RuntimeError(
                     (unmount.stderr or unmount.stdout).strip()
-                    or f"Could not unmount {mountpoint}"
+                    or tr("Could not unmount {mountpoint}").format(mountpoint=mountpoint)
                 )
         try:
             mountpoint.rmdir()
@@ -302,7 +303,7 @@ def inspect_target(
 
     partition = resolve_target(path, identity, run=run)
     if partition.active_system:
-        raise RuntimeError("The currently running system cannot be a rescue target")
+        raise RuntimeError(tr("The currently running system cannot be a rescue target"))
     with mounted_readonly(
         partition.path, partition.filesystem, run=run, mount_base=mount_base
     ) as top:
@@ -313,7 +314,7 @@ def inspect_offline_root(top: Path, partition: Partition) -> dict[str, object]:
     root = top / "@root" if partition.filesystem == "btrfs" and (top / "@root").is_dir() else top
     detected = inspect_mounted_filesystem(top, partition.filesystem)
     if detected.os_kind != "anduinos":
-        raise RuntimeError("The selected partition is not an AnduinOS installation")
+        raise RuntimeError(tr("The selected partition is not an AnduinOS installation"))
     return {
         "schema": 1,
         "target": partition.to_dict(),
@@ -341,11 +342,11 @@ def resolve_target(path: str, identity: str, *, run: Run = subprocess.run) -> Pa
         env=dict(os.environ, LC_ALL="C", LANGUAGE="C"),
     )
     if result.returncode != 0:
-        raise RuntimeError(result.stderr.strip() or "Could not re-check the selected disk")
+        raise RuntimeError(result.stderr.strip() or tr("Could not re-check the selected disk"))
     try:
         roots = json.loads(result.stdout)["blockdevices"]
     except (KeyError, TypeError, json.JSONDecodeError) as error:
-        raise RuntimeError("lsblk returned invalid storage data") from error
+        raise RuntimeError(tr("lsblk returned invalid storage data")) from error
     for root in roots if isinstance(roots, list) else ():
         if not isinstance(root, dict):
             continue
@@ -358,7 +359,7 @@ def resolve_target(path: str, identity: str, *, run: Run = subprocess.run) -> Pa
                 _string(node.get("partuuid")), _integer(node.get("size")),
             )
             if current != identity:
-                raise RuntimeError("The selected partition changed after it was scanned")
+                raise RuntimeError(tr("The selected partition changed after it was scanned"))
             mounts = tuple(
                 item for item in (node.get("mountpoints") or ())
                 if isinstance(item, str) and item
@@ -375,7 +376,7 @@ def resolve_target(path: str, identity: str, *, run: Run = subprocess.run) -> Pa
                 identity=current,
                 active_system="/" in mounts,
             )
-    raise RuntimeError("The selected partition is no longer available")
+    raise RuntimeError(tr("The selected partition is no longer available"))
 
 
 def probe_secure_boot(*, run: Run = subprocess.run) -> str:
@@ -399,13 +400,13 @@ def probe_secure_boot(*, run: Run = subprocess.run) -> str:
 
 def _require_block_device(path: str) -> None:
     if not path.startswith("/dev/") or ".." in Path(path).parts:
-        raise ValueError("Invalid block-device path")
+        raise ValueError(tr("Invalid block-device path"))
     try:
         metadata = os.stat(path, follow_symlinks=True)
     except OSError as error:
-        raise ValueError("Block device is unavailable") from error
+        raise ValueError(tr("Block device is unavailable")) from error
     if not stat.S_ISBLK(metadata.st_mode):
-        raise ValueError("Target is not a block device")
+        raise ValueError(tr("Target is not a block device"))
 
 
 def _descendants(node: dict) -> list[dict]:

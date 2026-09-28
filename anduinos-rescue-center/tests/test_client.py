@@ -7,6 +7,8 @@ from unittest.mock import patch
 from anduinos_rescue_center.client import (
     HELPER,
     LIVE_HELPER,
+    _localize_progress,
+    _localize_helper_error,
     _read_streamed_json,
     create_snapshot,
     diagnose_boot,
@@ -23,6 +25,29 @@ from anduinos_rescue_center.client import (
 
 
 class ClientTests(unittest.TestCase):
+    def test_helper_errors_keep_the_desktop_locale_and_dynamic_path(self):
+        with patch("anduinos_rescue_center.client.tr", side_effect=lambda source: "FEHLER: /{tool}" if source == "Installed boot repair tool is missing: /{tool}" else source):
+            self.assertEqual(_localize_helper_error(""), "")
+            self.assertEqual(
+                _localize_helper_error("Installed boot repair tool is missing: /usr/bin/dracut"),
+                "FEHLER: /usr/bin/dracut",
+            )
+
+    def test_repair_progress_uses_desktop_locale_without_changing_command_output(self):
+        translations = {
+            "Completed: {command}": "Fertig: {command}",
+            "Opening {system} and its EFI partition {esp}":
+                "Öffne {system} und seine EFI-Partition {esp}",
+        }
+        with patch("anduinos_rescue_center.client.tr", side_effect=lambda text: translations.get(text, text)):
+            self.assertEqual(_localize_progress("Completed: dracut"), "Fertig: dracut")
+            self.assertEqual(
+                _localize_progress("Opening /dev/vda4 and its EFI partition /dev/vda2"),
+                "Öffne /dev/vda4 und seine EFI-Partition /dev/vda2",
+            )
+            self.assertEqual(_localize_progress("  grub-install: diagnostic"),
+                             "  grub-install: diagnostic")
+
     def test_repair_progress_stream_keeps_events_separate_from_final_result(self):
         events = []
         program = (

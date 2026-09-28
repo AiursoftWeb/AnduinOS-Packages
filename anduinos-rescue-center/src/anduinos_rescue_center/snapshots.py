@@ -8,6 +8,7 @@ import subprocess
 from collections.abc import Callable
 from pathlib import Path
 
+from .i18n import _ as tr
 from .storage import inspect_mounted_filesystem, mounted_writable, resolve_target
 
 
@@ -35,12 +36,12 @@ def create_snapshot(
 ) -> dict[str, object]:
     title = title.strip()
     if not title or len(title) > 120 or any(ord(character) < 32 or ord(character) == 127 for character in title):
-        raise ValueError("The snapshot name is invalid")
+        raise ValueError(tr("The snapshot name is invalid"))
     return _with_target(
         path,
         identity,
         "create",
-        (title, "Created from AnduinOS Rescue Center"),
+        (title, tr("Created from AnduinOS Rescue Center")),
         run=run,
         mount_base=mount_base,
     )
@@ -56,7 +57,7 @@ def restore_snapshot(
     mount_base: Path = Path("/run/anduinos-rescue-center"),
 ) -> dict[str, object]:
     if len(deployment_id) != 36:
-        raise ValueError("The recovery point ID is invalid")
+        raise ValueError(tr("The recovery point ID is invalid"))
     partition = _resolve_offline_btrfs(path, identity, run=run)
     with mounted_writable(
         partition.path, partition.filesystem, run=run, mount_base=mount_base
@@ -90,18 +91,18 @@ def _with_target(
 def _resolve_offline_btrfs(path: str, identity: str, *, run: Run):
     partition = resolve_target(path, identity, run=run)
     if partition.active_system:
-        raise RuntimeError("The currently running system cannot be a recovery target")
+        raise RuntimeError(tr("The currently running system cannot be a recovery target"))
     if partition.mountpoints:
-        raise RuntimeError("Unmount the selected partition before managing snapshots")
+        raise RuntimeError(tr("Unmount the selected partition before managing snapshots"))
     if partition.filesystem != "btrfs":
-        raise RuntimeError("System snapshots require the standard AnduinOS Btrfs layout")
+        raise RuntimeError(tr("System snapshots require the standard AnduinOS Btrfs layout"))
     return partition
 
 
 def _validate_mounted_target(top: Path, filesystem: str) -> None:
     identity = inspect_mounted_filesystem(top, filesystem)
     if identity.os_kind != "anduinos" or not identity.btrfs_layout:
-        raise RuntimeError("The selected partition is not a standard AnduinOS Btrfs installation")
+        raise RuntimeError(tr("The selected partition is not a standard AnduinOS Btrfs installation"))
 
 
 def _engine(
@@ -120,11 +121,11 @@ def _engine(
         env={"PATH": "/usr/sbin:/usr/bin:/sbin:/bin", "LC_ALL": "C", "LANGUAGE": "C"},
     )
     if result.returncode != 0:
-        raise RuntimeError((result.stderr or result.stdout).strip() or "Snapshot operation failed")
+        raise RuntimeError((result.stderr or result.stdout).strip() or tr("Snapshot operation failed"))
     try:
         payload = json.loads(result.stdout)
     except json.JSONDecodeError as error:
-        raise RuntimeError("The snapshot engine returned invalid data") from error
+        raise RuntimeError(tr("The snapshot engine returned invalid data")) from error
     if not isinstance(payload, dict) or payload.get("schema") != 1:
-        raise RuntimeError("The snapshot engine protocol is incompatible")
+        raise RuntimeError(tr("The snapshot engine protocol is incompatible"))
     return payload

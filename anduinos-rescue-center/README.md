@@ -63,3 +63,23 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C \
 The shared recovery engine also has a disposable real-Btrfs loopback test that
 creates a recovery point, changes the system, restores it offline, and verifies
 that Home data remains unchanged.
+
+## Localization
+
+The English source and 27 translated locales provide 28 language choices. The
+GTK interface, helper diagnostics, desktop launcher, Live shortcut, and Polkit
+prompts are localized. When changing user-visible text, mark it with `_()` in
+the interface or `tr()` in the helper, then regenerate and merge the catalog:
+
+```bash
+sh update-pot.sh
+for po_file in po/*.po; do
+  msgmerge --update --backup=none "$po_file" po/anduinos-rescue-center.pot
+done
+```
+
+Review every new translation before release, especially instructions concerning
+power, mounted filesystems, the selected disk, and changes to the offline
+system. `compile-locales.sh` rejects untranslated/fuzzy entries and validates
+format placeholders before compiling the catalogs. After translation, run
+`render-desktop-locales.sh` to refresh the localized desktop-entry fields.

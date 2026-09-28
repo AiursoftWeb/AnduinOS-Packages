@@ -10,6 +10,7 @@ from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from pathlib import Path
 
+from .i18n import _ as tr
 from .model import Partition
 from .storage import inspect_mounted_filesystem, mounted_writable, resolve_target
 
@@ -21,9 +22,9 @@ def system_root(top: Path, partition: Partition) -> Path:
     """Resolve the installed root without following a subvolume symlink out."""
     root = top / "@root" if partition.filesystem == "btrfs" else top
     if not root.is_dir() or not root.resolve(strict=True).is_relative_to(top.resolve(strict=True)):
-        raise RuntimeError("The selected system root is unavailable or unsafe")
+        raise RuntimeError(tr("The selected system root is unavailable or unsafe"))
     if inspect_mounted_filesystem(top, partition.filesystem).os_kind != "anduinos":
-        raise RuntimeError("The selected partition is not an AnduinOS installation")
+        raise RuntimeError(tr("The selected partition is not an AnduinOS installation"))
     return root
 
 
@@ -37,14 +38,14 @@ def _mount_directory(root: Path, relative: str) -> Path:
             current.mkdir(mode=0o755)
             metadata = current.lstat()
         if not stat.S_ISDIR(metadata.st_mode):
-            raise RuntimeError(f"Unsafe target mount directory: /{relative}")
+            raise RuntimeError(tr("Unsafe target mount directory: /{path}").format(path=relative))
     return current
 
 
 def _checked_mount(run: Run, command: list[str]) -> None:
     result = run(command, capture_output=True, text=True, timeout=30, check=False)
     if result.returncode:
-        raise RuntimeError((result.stderr or result.stdout).strip() or f"Mount failed: {command[0]}")
+        raise RuntimeError((result.stderr or result.stdout).strip() or tr("Mount failed: {command}").format(command=command[0]))
 
 
 def _provide_dns(
@@ -83,7 +84,7 @@ def opened_system(
     """Open one offline root for chroot work; never reuse a stale UI device path."""
     partition = resolve_target(path, identity, run=run)
     if partition.active_system or partition.mountpoints:
-        raise RuntimeError("Unmount the offline installation before opening it for repair")
+        raise RuntimeError(tr("Unmount the offline installation before opening it for repair"))
     with mounted_writable(partition.path, partition.filesystem, run=run, mount_base=mount_base) as top:
         inspected_root = system_root(top, partition)
         root = inspected_root
@@ -130,7 +131,7 @@ def opened_system(
                     # Never recursively remove a former mountpoint.
                     pass
             if failures:
-                raise RuntimeError("Could not unmount recovery filesystems: " + ", ".join(failures))
+                raise RuntimeError(tr("Could not unmount recovery filesystems: {details}").format(details=", ".join(failures)))
 
 
 def emergency_shell(path: str, identity: str, *, run: Run = subprocess.run) -> int:
@@ -138,11 +139,11 @@ def emergency_shell(path: str, identity: str, *, run: Run = subprocess.run) -> i
     from .live import is_trusted_live_environment
 
     if not is_trusted_live_environment() or not os.isatty(0) or not os.isatty(1):
-        raise RuntimeError("An interactive AnduinOS Live terminal is required")
+        raise RuntimeError(tr("An interactive AnduinOS Live terminal is required"))
     with opened_system(path, identity, run=run) as (root, partition):
         shell = "/bin/bash" if (root / "bin/bash").is_file() else "/bin/sh"
         print(f"\nOffline AnduinOS: {partition.path} ({partition.filesystem})")
-        print("This is a root shell in the selected offline system. Type exit to unmount it.\n")
+        print(tr("This is a root shell in the selected offline system. Type exit to unmount it.\n"))
         result = run(
             ["chroot", str(root), shell], check=False,
             env={"HOME": "/root", "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin", "TERM": os.environ.get("TERM", "xterm-256color")},
