@@ -12,6 +12,7 @@ from unittest.mock import Mock, patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from anduinos_secureboot import operations  # noqa: E402
+from anduinos_secureboot.firmware import probe_firmware
 
 
 TEST_KERNEL = "test-kernel"
@@ -40,6 +41,19 @@ def with_secure_boot_enabled(run):
 
 
 class OperationsTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.efi = Path(temporary.name)
+        (self.efi / "efivars").mkdir()
+        self.mountinfo = self.efi / "mountinfo"
+        self.mountinfo.write_text(
+            f"30 20 0:30 / {self.efi / 'efivars'} rw - efivarfs efivarfs rw\n")
+        probe = patch.object(operations, "probe_firmware", side_effect=lambda **kwargs:
+            probe_firmware(efi_path=self.efi, mountinfo=self.mountinfo, **kwargs))
+        probe.start()
+        self.addCleanup(probe.stop)
+
     def test_command_runner_preserves_literal_arguments_stdin_and_failure(self):
         command = ["example-command", "$(id); echo unsafe", "argument with spaces"]
         failed = subprocess.CompletedProcess(command, 23, "", "operation failed")
@@ -120,7 +134,7 @@ class OperationsTests(unittest.TestCase):
 
                 def run(command, **kwargs):
                     calls.append(list(command))
-                    return subprocess.CompletedProcess(command, 0, output, "")
+                    return subprocess.CompletedProcess(command, 255, "", output)
 
                 result = operations.prepare(run)
                 self.assertTrue(result.ok)
@@ -130,6 +144,7 @@ class OperationsTests(unittest.TestCase):
                 self.assertEqual(calls, [["mokutil", "--sb-state"]])
 
     def test_prepare_fails_closed_when_firmware_state_is_unknown(self):
+        self.mountinfo.write_text("")
         calls = []
 
         def run(command, **kwargs):

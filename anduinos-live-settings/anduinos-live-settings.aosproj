@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-live-settings</PackageName>
-    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.4-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Dracut Live session policy and regional settings (removed after installation)</PackageDescription>
     <Section>admin</Section>
@@ -26,6 +26,7 @@
     <Dependency Include="locales" />
     <Dependency Include="xkb-data" />
     <Dependency Include="sudo" />
+    <Dependency Include="anduinos-secureboot-toolkit (&gt;= 2.0.4-1)" />
     <!-- Secure Shell is payload for newly installed desktops, not an upgrade
          dependency of every existing desktop. The native installer removes
          this Live-only package while deliberately retaining openssh-server. -->
@@ -33,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <IncludeFile Include="assets/49-anduinos-live-firmware.rules" Target="/usr/share/polkit-1/rules.d/49-anduinos-live-firmware.rules" Mode="644" />
     <SystemdUnit Include="assets/anduinos-live-session.service" AutoEnable="true" />
     <IncludeScript Include="assets/anduinos-live-session-setup"
                    Target="/usr/libexec/anduinos-live-session-setup" />

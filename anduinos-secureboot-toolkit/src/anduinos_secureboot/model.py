@@ -27,6 +27,8 @@ class SecureBootState:
     status: SecureBootStatus | None = None
     setup_mode: bool | None = None
     boot_loader: str = "unknown"
+    firmware_reason: str = ""
+    firmware_detail: str = ""
 
     def __post_init__(self) -> None:
         status = self.status

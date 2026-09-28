@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN" "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>AnduinOS</vendor>
+  <action id="com.anduinos.firmware-probe.inspect">
+    <description>Inspect firmware boot capabilities</description>
+    <description xml:lang="zh_CN">检测固件启动能力</description>
+    <message>Authentication is required to read firmware boot information</message>
+    <message xml:lang="zh_CN">读取固件启动信息需要身份验证</message>
+    <description xml:lang="ar">فحص إمكانات إقلاع البرنامج الثابت</description>
+    <message xml:lang="ar">المصادقة مطلوبة لقراءة معلومات إقلاع البرنامج الثابت</message>
+    <description xml:lang="da">Undersøg firmwarens opstartsfunktioner</description>
+    <message xml:lang="da">Godkendelse kræves for at læse firmwarens opstartsoplysninger</message>
+    <description xml:lang="de">Startfähigkeiten der Firmware prüfen</description>
+    <message xml:lang="de">Zum Lesen der Firmware-Startinformationen ist eine Authentifizierung erforderlich</message>
+    <description xml:lang="el">Έλεγχος δυνατοτήτων εκκίνησης υλικολογισμικού</description>
+    <message xml:lang="el">Απαιτείται πιστοποίηση για την ανάγνωση πληροφοριών εκκίνησης υλικολογισμικού</message>
+    <description xml:lang="en_GB">Inspect firmware boot capabilities</description>
+    <message xml:lang="en_GB">Authentication is required to read firmware boot information</message>
+    <description xml:lang="es">Examinar las capacidades de arranque del firmware</description>
+    <message xml:lang="es">Se requiere autenticación para leer la información de arranque del firmware</message>
+    <description xml:lang="fi">Tarkista laiteohjelmiston käynnistysominaisuudet</description>
+    <message xml:lang="fi">Laiteohjelmiston käynnistystietojen lukeminen vaatii tunnistautumisen</message>
+    <description xml:lang="fr">Examiner les capacités de démarrage du micrologiciel</description>
+    <message xml:lang="fr">Une authentification est nécessaire pour lire les informations de démarrage du micrologiciel</message>
+    <description xml:lang="hi">फ़र्मवेयर की बूट क्षमताओं की जाँच करें</description>
+    <message xml:lang="hi">फ़र्मवेयर की बूट जानकारी पढ़ने के लिए प्रमाणीकरण आवश्यक है</message>
+    <description xml:lang="id">Periksa kemampuan boot firmware</description>
+    <message xml:lang="id">Autentikasi diperlukan untuk membaca informasi boot firmware</message>
+    <description xml:lang="it">Esamina le capacità di avvio del firmware</description>
+    <message xml:lang="it">È richiesta l’autenticazione per leggere le informazioni di avvio del firmware</message>
+    <description xml:lang="ja">ファームウェアの起動機能を確認</description>
+    <message xml:lang="ja">ファームウェアの起動情報を読み取るには認証が必要です</message>
+    <description xml:lang="ko">펌웨어 부팅 기능 확인</description>
+    <message xml:lang="ko">펌웨어 부팅 정보를 읽으려면 인증이 필요합니다</message>
+    <description xml:lang="nl">Opstartmogelijkheden van de firmware onderzoeken</description>
+    <message xml:lang="nl">Authenticatie is vereist om opstartinformatie van de firmware te lezen</message>
+    <description xml:lang="pl">Sprawdź możliwości rozruchu oprogramowania układowego</description>
+    <message xml:lang="pl">Odczyt informacji o rozruchu oprogramowania układowego wymaga uwierzytelnienia</message>
+    <description xml:lang="pt">Verificar as capacidades de arranque do firmware</description>
+    <message xml:lang="pt">É necessária autenticação para ler as informações de arranque do firmware</message>
+    <description xml:lang="pt_BR">Verificar os recursos de inicialização do firmware</description>
+    <message xml:lang="pt_BR">É necessária autenticação para ler as informações de inicialização do firmware</message>
+    <description xml:lang="ro">Verifică funcțiile de pornire ale firmware-ului</description>
+    <message xml:lang="ro">Este necesară autentificarea pentru a citi informațiile de pornire ale firmware-ului</message>
+    <description xml:lang="ru">Проверить возможности загрузки прошивки</description>
+    <message xml:lang="ru">Для чтения сведений о загрузке прошивки требуется аутентификация</message>
+    <description xml:lang="sv">Undersök den fasta programvarans startfunktioner</description>
+    <message xml:lang="sv">Autentisering krävs för att läsa startinformation från den fasta programvaran</message>
+    <description xml:lang="th">ตรวจสอบความสามารถในการบูตของเฟิร์มแวร์</description>
+    <message xml:lang="th">ต้องยืนยันตัวตนเพื่ออ่านข้อมูลการบูตของเฟิร์มแวร์</message>
+    <description xml:lang="tr">Ürün yazılımının önyükleme özelliklerini incele</description>
+    <message xml:lang="tr">Ürün yazılımı önyükleme bilgilerini okumak için kimlik doğrulaması gerekiyor</message>
+    <description xml:lang="uk">Перевірити можливості завантаження мікропрограми</description>
+    <message xml:lang="uk">Для читання відомостей про завантаження мікропрограми потрібна автентифікація</message>
+    <description xml:lang="vi">Kiểm tra khả năng khởi động của firmware</description>
+    <message xml:lang="vi">Cần xác thực để đọc thông tin khởi động của firmware</message>
+    <description xml:lang="zh_HK">檢查韌體啟動能力</description>
+    <message xml:lang="zh_HK">讀取韌體啟動資訊需要驗證身分</message>
+    <description xml:lang="zh_TW">檢查韌體開機能力</description>
+    <message xml:lang="zh_TW">讀取韌體開機資訊需要驗證身分</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/anduinos-firmware-probe</annotate>
+  </action>
+</policyconfig>

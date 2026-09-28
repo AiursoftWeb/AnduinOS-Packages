@@ -17,9 +17,9 @@ from .inspect import (
     Runner,
     certificate_enrolled,
     certificate_pending,
-    parse_secure_boot_status,
 )
 from .model import SecureBootStatus
+from .firmware import probe_firmware
 
 
 ENROLLMENT_PASSWORD = "123456"
@@ -234,8 +234,8 @@ def _write_signing_config(path: Path = DKMS_CONFIG) -> None:
 
 
 def _firmware_supports_secure_boot(result: OperationResult, run: Run) -> bool:
-    probe = run(["mokutil", "--sb-state"], timeout=10)
-    status = parse_secure_boot_status(probe)
+    evidence = probe_firmware(run=lambda command, **kwargs: run(command, timeout=10))
+    status = evidence.status
     if status in {SecureBootStatus.ENABLED, SecureBootStatus.DISABLED}:
         result.steps["firmware_state"] = StepResult("success", status.value)
         return True
@@ -243,7 +243,7 @@ def _firmware_supports_secure_boot(result: OperationResult, run: Run) -> bool:
         result.steps["firmware_state"] = StepResult("skipped", status.value)
         return False
     result.steps["firmware_state"] = StepResult(
-        "failed", "Secure Boot state could not be determined"
+        "failed", f"Secure Boot state could not be determined: {evidence.reason}: {evidence.detail}"
     )
     return False
 

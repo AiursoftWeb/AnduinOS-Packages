@@ -17,7 +17,9 @@ from installer_core.preflight import (
     verify_execution_environment,
     verify_target_disk_environment,
 )
-from installer_core.probe import PlatformProbe
+from installer_core.probe import PlatformProbe, ProbeError
+from anduinos_secureboot.firmware import FirmwareEvidence
+from anduinos_secureboot.model import SecureBootStatus
 
 
 class ExecutionPreflightTests(unittest.TestCase):
@@ -61,6 +63,20 @@ class ExecutionPreflightTests(unittest.TestCase):
     @staticmethod
     def memory_probe():
         return TEST_PHYSICAL_MEMORY_BYTES
+
+    def test_unknown_firmware_rejected_before_disk_inventory_or_commands(self):
+        plan = valid_plan()
+        runner = self.idle_target_runner()
+        inventory = mock.Mock()
+        evidence = FirmwareEvidence(True, SecureBootStatus.UNKNOWN, "efi-read-failed", "I/O error")
+        with (mock.patch("installer_core.preflight.prepare_live_interface") as prepare,
+              mock.patch("installer_core.probe.probe_firmware", return_value=evidence),
+              self.assertRaisesRegex(ProbeError, "efi-read-failed")):
+            verify_execution_environment(plan, runner, inventory_probe=inventory)
+        prepare.assert_called_once_with()
+        inventory.assert_not_called()
+        self.assertTrue(runner.root_checked)
+        self.assertEqual(runner.commands, [])
 
     def test_accepts_matching_platform_and_disk(self):
         plan = valid_plan()

@@ -52,7 +52,7 @@ class PowerPageRoutingTests(unittest.TestCase):
             PowerProbeResult(None, False, 0),
         ):
             with self.subTest(power=power):
-                shared = {"development_mode": False}
+                shared = {"development_mode": False, "_platform_probe_result": self.platform(SecureBoot.DISABLED)}
                 nav = object()
                 network_page = object()
                 with (
@@ -92,7 +92,7 @@ class PowerPageRoutingTests(unittest.TestCase):
         secure_boot.assert_not_called()
 
     def test_full_connectivity_still_skips_network_after_power_check(self):
-        shared = {"development_mode": False}
+        shared = {"development_mode": False, "_platform_probe_result": self.platform(SecureBoot.ENABLED)}
         nav = object()
         keyboard_page = object()
         with (
@@ -115,6 +115,27 @@ class PowerPageRoutingTests(unittest.TestCase):
         network.assert_not_called()
         keyboard.assert_called_once_with(shared, nav)
 
+    def test_unknown_platform_routes_to_detection_without_synchronous_probe(self):
+        shared = {}
+        nav = object()
+        expected = object()
+        with (patch("pages.build_firmware_check_page", return_value=expected) as page,
+              patch("pages.probe_platform") as probe):
+            result = build_post_welcome_page(shared, nav, result=self.safe())
+        self.assertIs(result, expected)
+        page.assert_called_once_with(shared, nav)
+        probe.assert_not_called()
+
+    def test_unsupported_firmware_skips_recommendation(self):
+        shared = {"_platform_probe_result": self.platform(SecureBoot.UNSUPPORTED)}
+        with (patch("pages._build_network_or_keyboard_page", return_value="next"),
+              patch("pages.build_secure_boot_page") as recommendation,
+              patch("pages.probe_platform") as probe):
+            result = build_post_welcome_page(shared, object(), result=self.safe())
+        self.assertEqual(result, "next")
+        recommendation.assert_not_called()
+        probe.assert_not_called()
+
     def test_secure_boot_recommendation_routing(self):
         with patch("pages.probe_platform") as probe:
             self.assertFalse(
@@ -127,7 +148,7 @@ class PowerPageRoutingTests(unittest.TestCase):
                     {}, self.platform(SecureBoot.DISABLED)
                 )
             )
-            self.assertTrue(
+            self.assertFalse(
                 secure_boot_recommendation_needed(
                     {}, self.platform(SecureBoot.UNSUPPORTED)
                 )
@@ -213,6 +234,7 @@ class PowerPageRoutingTests(unittest.TestCase):
             _planned_page_route(shared),
             (
                 "welcome",
+                "firmware-check",
                 "keyboard",
                 "software",
                 "disk",
@@ -259,7 +281,7 @@ class PowerPageRoutingTests(unittest.TestCase):
         manual_route = set(_planned_page_route(shared))
 
         self.assertEqual(
-            registered_tags - {"guided-storage", "disk-layout"},
+            registered_tags - {"guided-storage", "disk-layout", "firmware-check"},
             manual_route,
         )
 

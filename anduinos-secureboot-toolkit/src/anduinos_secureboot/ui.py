@@ -418,7 +418,7 @@ def create_secure_boot_page(
         return GLib.SOURCE_REMOVE
 
     def inspect_worker() -> None:
-        secure_boot = inspect_secure_boot()
+        secure_boot = inspect_secure_boot(recover=True)
         dkms = inspect_dkms(secure_boot)
         GLib.idle_add(apply_state, secure_boot, dkms)
         GLib.idle_add(refresh_button.set_sensitive, True)

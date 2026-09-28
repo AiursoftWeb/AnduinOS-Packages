@@ -3,6 +3,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -71,14 +72,16 @@ class InspectTests(unittest.TestCase):
                     SecureBootStatus.UNKNOWN,
                 )
 
-    def test_unsupported_firmware_is_not_treated_as_probe_failure(self):
+    @patch("anduinos_secureboot.firmware._mount_type", return_value="efivarfs")
+    def test_unsupported_firmware_is_not_treated_as_probe_failure(self, _mount):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            (root / "efivars").mkdir()
             state = inspect_secure_boot(
                 FakeRunner(
                     {
                         ("mokutil", "--sb-state"): subprocess.CompletedProcess(
-                            [], 0, "This system doesn't support Secure Boot\n", ""
+                            [], 255, "", "This system doesn't support Secure Boot\n"
                         )
                     }
                 ),

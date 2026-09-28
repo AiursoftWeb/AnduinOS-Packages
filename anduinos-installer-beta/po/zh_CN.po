@@ -1920,3 +1920,27 @@ msgstr "此 NTFS 分区需要先在 Windows 中完成磁盘检查，才能安全
 #: src/pages.py
 msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
 msgstr "外置硬盘模式 — AnduinOS 将添加便携式 UEFI 启动路径，使此外置硬盘无需已有的 AnduinOS 固件启动项，也能在另一台 UEFI 电脑上启动。"
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "正在检测固件"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "正在检测安全启动支持情况…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "无法确定安全启动支持情况"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "你可以继续配置安装选项。在对磁盘进行任何更改之前，必须成功完成固件检测。"
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "固件检测完成"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "重试"
