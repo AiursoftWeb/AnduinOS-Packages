@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-gnome-extensions</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.4-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Meta-package that installs all AnduinOS GNOME Shell extensions. Installing this package pulls in the complete set of extensions used by AnduinOS desktop. Individual extensions can be removed separately.</PackageDescription>
     <Section>metapackages</Section>
@@ -35,7 +35,8 @@
     <Recommend Include="gnome-shell-extension-clipboard-indicator" />
     <Recommend Include="gnome-shell-extension-customize-ibus" />
     <Recommend Include="gnome-shell-extension-dash-to-panel-anduinos" />
-    <Recommend Include="gnome-shell-extension-desktop-icons-ng-anduinos" />
+    <!-- Prefer GTK 3 on new installs; an installed GTK 4 package also satisfies this recommendation. -->
+    <Recommend Include="gnome-shell-extension-desktop-icons-ng-gtk-3-anduinos | gnome-shell-extension-desktop-icons-ng-anduinos" />
     <Recommend Include="gnome-shell-extension-lockkeys" />
     <Recommend Include="gnome-shell-extension-network-stats" />
     <Recommend Include="gnome-shell-extension-proxy-switcher" />
