@@ -694,8 +694,6 @@ anduinos-mimeapps:
 firefox-anduinos:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: firefox-anduinos

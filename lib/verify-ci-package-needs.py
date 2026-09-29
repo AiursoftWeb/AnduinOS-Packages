@@ -149,10 +149,12 @@ def verify() -> tuple[int, int]:
     errors: list[str] = []
     for package, expected_packages in sorted(relationships.items()):
         job_name = package_to_job[package]
-        expected_jobs = {package_to_job[item] for item in expected_packages} | REQUIRED_GATES
+        # test-all already waits for both lint gates. Direct lint edges are
+        # optional; package dependencies and the test gate remain mandatory.
+        expected_jobs = {package_to_job[item] for item in expected_packages} | {"test-all"}
         actual_jobs = set(job_map[job_name].needs)
         missing = sorted(expected_jobs - actual_jobs)
-        extra = sorted(actual_jobs - expected_jobs)
+        extra = sorted(actual_jobs - expected_jobs - REQUIRED_GATES)
         if missing or extra:
             parts = [f"{job_name}:"]
             if missing:
