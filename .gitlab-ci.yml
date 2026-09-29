@@ -357,6 +357,16 @@ gnome-shell-extension-desktop-icons-ng-anduinos:
   variables:
     PACKAGE_DIR: gnome-shell-extension-desktop-icons-ng-anduinos
 
+gnome-shell-extension-desktop-icons-ng-gtk-3-anduinos:
+  extends: .publish
+  needs:
+    - lint-all
+    - verify-ci-package-needs
+    - test-all
+    - anduinos-dconf-runtime
+  variables:
+    PACKAGE_DIR: gnome-shell-extension-desktop-icons-ng-gtk-3-anduinos
+
 gnome-shell-extension-lockkeys:
   extends: .publish
   needs:
