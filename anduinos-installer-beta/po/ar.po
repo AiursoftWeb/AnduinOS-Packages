@@ -1957,5 +1957,29 @@ msgid "Check for other Linux installations"
 msgstr "البحث عن تثبيتات Linux أخرى"
 
 #: src/pages.py
+msgid "Compare ESP options"
+msgstr "مقارنة خيارات ESP"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "قسم ESP مستقل"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "قسم ESP مشترك"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "إنشاء قسم ESP جديد وتهيئته بنظام FAT32 في مساحة غير مخصصة (512 MiB على الأقل). تبقى أقسام ESP الحالية دون تغيير."
+
+#: src/pages.py
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
+msgstr "إعادة استخدام قسم ESP سليم ذي مساحة فارغة كافية، دون تهيئته. تُحفظ ملفات إقلاع الأنظمة الأخرى. إذا كان EFI/AnduinOS موجودًا بالفعل، فاختر قسم ESP آخر أو أنشئ قسمًا جديدًا."
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "يثبّت كلا الخيارين ملفات الإقلاع في EFI/AnduinOS ويضع إدخال إقلاع AnduinOS UEFI الجديد أولًا. تُضاف الأنظمة المدعومة المكتشفة إلى قائمة GRUB الجديدة؛ ولا تتغير ملفاتها أو قوائمها."
+
+#: src/pages.py
 msgid "Retry"
 msgstr "إعادة المحاولة"

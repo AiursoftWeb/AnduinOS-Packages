@@ -220,6 +220,97 @@ _SHRINK_WITH_PARTITION_TOOL_MESSAGE = N_(
 _LAYOUT_FREE_SPACE_MINIMUM_BYTES = 4 * 1024**2
 
 
+_ESP_HELP_SEPARATE = N_(
+    "Create and format a new FAT32 ESP in unallocated space (at least "
+    "512 MiB). Existing ESPs stay unchanged."
+)
+_ESP_HELP_SHARED = N_(
+    "Reuse a healthy ESP with enough free space, without formatting it. "
+    "Other systems' boot files are preserved. If EFI/AnduinOS already "
+    "exists, choose another ESP or create a new one."
+)
+_ESP_HELP_COMMON = N_(
+    "Both options install boot files in EFI/AnduinOS and put the new "
+    "AnduinOS UEFI boot entry first. Detected supported systems get "
+    "entries in the new GRUB menu; their files and menus are not changed."
+)
+
+
+def _esp_help_dialog(parent, lang):
+    """Read-only explanation; opening help never changes a storage plan."""
+    window = Adw.Window(
+        transient_for=parent, modal=True, destroy_with_parent=True,
+        title=_("EFI System Partition", lang),
+        default_width=800, default_height=440,
+    )
+    direction = Gtk.TextDirection.RTL if lang in RTL_LANGUAGES else Gtk.TextDirection.LTR
+    window.set_direction(direction)
+    outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    outer.append(Adw.HeaderBar())
+    body = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL, spacing=18,
+        margin_start=24, margin_end=24, margin_top=12, margin_bottom=12,
+    )
+
+    def label(text, *, heading=False):
+        result = Gtk.Label(
+            label=_(text, lang), wrap=True, wrap_mode=Pango.WrapMode.WORD_CHAR,
+            xalign=1 if direction == Gtk.TextDirection.RTL else 0,
+            selectable=not heading,
+        )
+        result.set_direction(direction)
+        if heading:
+            result.add_css_class("heading")
+        return result
+
+    # Keep the promised physical left/right comparison even in Arabic.
+    columns = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=18, homogeneous=True)
+    columns.set_direction(Gtk.TextDirection.LTR)
+    for title, text in (
+        (N_("Separate ESP"), _ESP_HELP_SEPARATE),
+        (N_("Shared ESP"), _ESP_HELP_SHARED),
+    ):
+        column = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12, hexpand=True)
+        column.set_direction(direction)
+        column.append(label(title, heading=True))
+        column.append(label(text))
+        columns.append(column)
+    body.append(columns)
+    body.append(Gtk.Separator())
+    body.append(label(_ESP_HELP_COMMON))
+    scroll = Gtk.ScrolledWindow(vexpand=True, hscrollbar_policy=Gtk.PolicyType.NEVER)
+    scroll.set_child(body)
+    outer.append(scroll)
+    close = Gtk.Button(label=_("OK", lang), halign=Gtk.Align.END,
+                       margin_end=24, margin_start=24, margin_top=6, margin_bottom=18)
+    close.connect("clicked", lambda _button: window.close())
+    outer.append(close)
+    window.set_content(outer)
+    window.set_focus(close)
+    keys = Gtk.EventControllerKey()
+
+    def key_pressed(_controller, keyval, _keycode, _state):
+        if keyval == Gdk.KEY_Escape:
+            window.close()
+            return True
+        return False
+
+    keys.connect("key-pressed", key_pressed)
+    window.add_controller(keys)
+    window.present()
+    return window
+
+
+def _esp_help_button(lang):
+    button = Gtk.Button(icon_name="dialog-question-symbolic", valign=Gtk.Align.CENTER)
+    button.add_css_class("flat")
+    text = _("Compare ESP options", lang)
+    button.set_tooltip_text(text)
+    button.update_property([Gtk.AccessibleProperty.LABEL], [text])
+    button.connect("clicked", lambda widget: _esp_help_dialog(widget.get_root(), lang))
+    return button
+
+
 def _esp_conflict_dialog(nav_view, lang):
     dialog = Adw.MessageDialog(
         transient_for=nav_view.get_root(),
@@ -3741,7 +3832,11 @@ def build_guided_storage_page(shared, nav_view):
         )
     )
     esp_dropdown = Gtk.DropDown()
-    controls.append(esp_dropdown)
+    esp_selector = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+    esp_dropdown.set_hexpand(True)
+    esp_selector.append(esp_dropdown)
+    esp_selector.append(_esp_help_button(lang))
+    controls.append(esp_selector)
     guidance = Gtk.Label(
         halign=Gtk.Align.START,
         wrap=True,
@@ -4494,6 +4589,7 @@ def build_advanced_storage_page(shared, nav_view):
     esp_row.append(esp_copy)
     esp_dropdown = Gtk.DropDown(sensitive=False)
     esp_row.append(esp_dropdown)
+    esp_row.append(_esp_help_button(lang))
     editor.append(esp_row)
 
     editor.append(Gtk.Separator())

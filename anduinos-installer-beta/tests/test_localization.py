@@ -16,6 +16,27 @@ LOCALE_DIR = PACKAGE / "locale"
 
 
 class LocalizationTests(unittest.TestCase):
+    def test_esp_help_is_translated_in_all_supported_languages(self):
+        tree = ast.parse((PACKAGE / "src/pages.py").read_text(encoding="utf-8"))
+        messages = ["Compare ESP options", "Separate ESP", "Shared ESP"]
+        for node in tree.body:
+            if isinstance(node, ast.Assign) and any(
+                isinstance(target, ast.Name) and target.id.startswith("_ESP_HELP_")
+                for target in node.targets
+            ):
+                messages.append(ast.literal_eval(node.value.args[0]))
+        self.assertEqual(6, len(messages))
+        for language in LANGUAGES:
+            with self.subTest(language=language.code):
+                for source in messages:
+                    translated = _(source, language.code)
+                    self.assertTrue(translated)
+                    if language.code not in {DEFAULT_LANGUAGE, "en_GB"}:
+                        self.assertNotEqual(source, translated)
+                    for token in ("512 MiB", "FAT32", "EFI/AnduinOS", "UEFI", "GRUB"):
+                        if token in source:
+                            self.assertIn(token, translated)
+
     def test_disk_check_error_uses_selected_language_instead_of_raw_force_advice(self):
         tree = ast.parse((PACKAGE / "src/pages.py").read_text(encoding="utf-8"))
         function = next(node for node in ast.walk(tree)

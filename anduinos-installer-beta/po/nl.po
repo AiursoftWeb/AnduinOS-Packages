@@ -1957,5 +1957,29 @@ msgid "Check for other Linux installations"
 msgstr "Andere Linux-installaties zoeken"
 
 #: src/pages.py
+msgid "Compare ESP options"
+msgstr "ESP-opties vergelijken"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "Afzonderlijke ESP"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "Gedeelde ESP"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "Een nieuwe FAT32-ESP maken en formatteren in niet-toegewezen ruimte (minstens 512 MiB). Bestaande ESP’s blijven ongewijzigd."
+
+#: src/pages.py
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
+msgstr "Een gezonde ESP met voldoende vrije ruimte hergebruiken zonder te formatteren. Opstartbestanden van andere systemen blijven behouden. Als EFI/AnduinOS al bestaat, kies dan een andere ESP of maak een nieuwe."
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "Beide opties installeren opstartbestanden in EFI/AnduinOS en zetten de nieuwe AnduinOS-UEFI-opstartvermelding vooraan. Gedetecteerde ondersteunde systemen krijgen vermeldingen in het nieuwe GRUB-menu; hun bestanden en menu’s blijven ongewijzigd."
+
+#: src/pages.py
 msgid "Retry"
 msgstr "Opnieuw proberen"
