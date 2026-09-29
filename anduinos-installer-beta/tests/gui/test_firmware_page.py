@@ -40,6 +40,11 @@ class FirmwarePageTests(unittest.TestCase):
         result = PlatformProbe(Architecture.AMD64, Firmware.UEFI, SecureBoot.UNSUPPORTED)
         self.complete(result, None)
         self.assertTrue(self.next.get_sensitive())
+        self.assertFalse(self.retry.get_visible())
+        labels = [w.get_label() for w in descendants(self.page)
+                  if isinstance(w, Gtk.Label)]
+        self.assertTrue(any('amd64 / uefi / Secure Boot: unsupported' in label
+                            for label in labels))
         with (patch('pages._build_network_or_keyboard_page', return_value='network'),
               patch('pages.build_secure_boot_page') as recommendation):
             self.next.emit('clicked')
@@ -52,12 +57,23 @@ class FirmwarePageTests(unittest.TestCase):
         self.complete(None, ProbeError('firmware I/O error'))
         self.assertIsNone(self.shared['_platform_probe_result'])
         self.assertIn('firmware I/O error', self.shared['_platform_probe_error'])
+        self.assertTrue(self.retry.get_visible())
         with patch('pages._build_network_or_keyboard_page', return_value='configuration'):
             self.next.emit('clicked')
         self.nav.push.assert_called_once_with('configuration')
         self.retry.emit('clicked')
         self.assertFalse(self.next.get_sensitive())
         self.assertEqual(self.request.start.call_count, 2)
+
+    def test_bios_result_is_shown_without_secure_boot_recommendation(self):
+        self.build()
+        result = PlatformProbe(Architecture.AMD64, Firmware.BIOS,
+                               SecureBoot.NOT_APPLICABLE)
+        self.complete(result, None)
+        labels = [w.get_label() for w in descendants(self.page)
+                  if isinstance(w, Gtk.Label)]
+        self.assertTrue(any('amd64 / bios / Secure Boot: not-applicable' in label
+                            for label in labels))
 
     def test_hidden_page_invalidates_pending_delivery(self):
         self.build()

@@ -798,7 +798,14 @@ def build_firmware_check_page(shared, nav_view):
             ) + "\n\n" + str(error))
         else:
             status.set_label(_("Firmware check complete", lang))
-            details.set_label("")
+            details.set_label(_(
+                "{architecture} / {firmware} / Secure Boot: {secure_boot}", lang
+            ).format(
+                architecture=platform.architecture.value,
+                firmware=platform.firmware.value,
+                secure_boot=platform.secure_boot.value,
+            ))
+        retry.set_visible(bool(error))
         navigation.next_button.set_sensitive(True)
 
     def start():
@@ -810,6 +817,7 @@ def build_firmware_check_page(shared, nav_view):
         request.start(lambda: probe_platform(recover=True), complete)
 
     retry = _nav_btn("Retry", lang, start)
+    retry.set_visible(False)
     content.append(retry)
     content.append(navigation)
     page.set_child(content)
