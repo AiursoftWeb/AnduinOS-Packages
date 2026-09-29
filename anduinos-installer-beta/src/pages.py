@@ -2271,10 +2271,16 @@ def build_keyboard_page(shared, nav_view):
             translate_xkb_description(layout.description, str(lang))
         )
     layout_dropdown = Gtk.DropDown(model=layout_store)
+    layout_dropdown.set_expression(
+        Gtk.PropertyExpression.new(Gtk.StringObject, None, "string")
+    )
     layout_dropdown.set_enable_search(True)
     layout_dropdown.set_selected(layout_idx)
 
     variant_dropdown = Gtk.DropDown()
+    variant_dropdown.set_expression(
+        Gtk.PropertyExpression.new(Gtk.StringObject, None, "string")
+    )
     variant_dropdown.set_enable_search(True)
     active_variants = ()
 

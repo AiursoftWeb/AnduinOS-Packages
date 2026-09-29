@@ -27,6 +27,31 @@ def _descendants(widget):
 
 
 class SoftwarePageLayoutTests(unittest.TestCase):
+    def test_keyboard_dropdown_search_filters_layouts_and_variants(self):
+        page = pages.build_keyboard_page({"lang": "en_US"}, Adw.NavigationView())
+        dropdowns = [w for w in _descendants(page)
+                     if isinstance(w, Gtk.DropDown)]
+        self.assertEqual(len(dropdowns), 2)
+        layout, variant = dropdowns
+
+        for dropdown, query in (
+            (layout, "Chines"),
+            (variant, "Macintosh"),
+        ):
+            self.assertTrue(dropdown.get_enable_search())
+            expression = dropdown.get_expression()
+            self.assertIsNotNone(expression)
+            search_filter = Gtk.StringFilter.new(expression)
+            search_filter.set_search(query)
+            model = dropdown.get_model()
+            matches = [model.get_item(i).get_string()
+                       for i in range(model.get_n_items())
+                       if search_filter.match(model.get_item(i))]
+            self.assertTrue(matches)
+            self.assertLess(len(matches), model.get_n_items())
+            self.assertTrue(all(query.casefold() in item.casefold()
+                                for item in matches))
+
     def test_keyboard_page_uses_the_same_compact_layout(self):
         window = Adw.Window(default_width=800, default_height=600)
         self.addCleanup(window.destroy)
