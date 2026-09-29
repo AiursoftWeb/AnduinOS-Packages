@@ -469,6 +469,58 @@ def _page_header(title, subtitle, icon, lang):
     return page_hero(_(title, lang), _(subtitle, lang), icon)
 
 
+def _set_page_content(page, content, *, scroll_body=False):
+    """Keep the page title and navigation reachable on short displays."""
+
+    children = []
+    child = content.get_first_child()
+    while child is not None:
+        children.append(child)
+        child = child.get_next_sibling()
+    hero = next((child for child in children
+                 if child.has_css_class("installer-hero")), None)
+    if hero is None:
+        page.set_child(content)
+        return
+
+    compact_title = Gtk.Label(
+        visible=False, wrap=True, margin_top=8,
+        margin_start=24, margin_end=24,
+    )
+    compact_title.add_css_class("title-3")
+    hero._title_label.bind_property(
+        "label", compact_title, "label", GObject.BindingFlags.SYNC_CREATE
+    )
+    content.insert_child_after(compact_title, hero)
+
+    if scroll_body:
+        body = Gtk.Box(orientation=Gtk.Orientation.VERTICAL,
+                       spacing=content.get_spacing())
+        for child in children[children.index(hero) + 1:-1]:
+            content.remove(child)
+            body.append(child)
+        scroll = _scrolled_window(
+            vexpand=True, hscrollbar_policy=Gtk.PolicyType.NEVER
+        )
+        scroll.set_child(body)
+        content.insert_child_after(scroll, compact_title)
+
+    responsive = Adw.BreakpointBin(width_request=720, height_request=360)
+    responsive.set_child(content)
+    compact = Adw.Breakpoint.new(
+        Adw.BreakpointCondition.parse("max-height: 620px")
+    )
+    compact.add_setter(hero, "visible", False)
+    compact.add_setter(compact_title, "visible", True)
+    child = content.get_first_child()
+    while child is not None:
+        if isinstance(child, Gtk.ScrolledWindow):
+            compact.add_setter(child, "vscrollbar-policy", Gtk.PolicyType.ALWAYS)
+        child = child.get_next_sibling()
+    responsive.add_breakpoint(compact)
+    page.set_child(responsive)
+
+
 def internet_connection_ready(monitor=None) -> bool:
     """Return true only for a complete, non-portal Internet connection."""
 
@@ -1302,7 +1354,7 @@ def build_low_battery_page(shared, nav_view, result: PowerProbeResult):
     content.append(navigation)
     _render_status(result)
     _start_power_auto_refresh(page, _on_recheck)
-    page.set_child(content)
+    _set_page_content(page, content, scroll_body=True)
     return page
 
 
@@ -1407,7 +1459,7 @@ def build_secure_boot_page(shared, nav_view):
     )
     navigation.next_button.remove_css_class("suggested-action")
     content.append(navigation)
-    page.set_child(content)
+    _set_page_content(page, content, scroll_body=True)
     return page
 
 
@@ -2163,7 +2215,7 @@ def build_network_page(shared, nav_view):
             page_tag="network",
         )
     )
-    page.set_child(content)
+    _set_page_content(page, content)
     _render_connectivity()
     return page
 
@@ -2515,7 +2567,7 @@ def build_keyboard_page(shared, nav_view):
             shared=shared, page_tag="keyboard"
         )
     )
-    page.set_child(content)
+    _set_page_content(page, content, scroll_body=True)
     return page
 
 
@@ -2527,14 +2579,13 @@ def build_software_page(shared, nav_view):
     page.set_tag("software")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(
-        _page_header(
-            "Updates and Drivers",
-            "Choose optional software to install",
-            "updates",
-            lang,
-        )
+    hero = _page_header(
+        "Updates and Drivers",
+        "Choose optional software to install",
+        "updates",
+        lang,
     )
+    content.append(hero)
 
     options = Gtk.Box(
         orientation=Gtk.Orientation.VERTICAL,
@@ -2542,7 +2593,6 @@ def build_software_page(shared, nav_view):
         margin_start=48,
         margin_end=48,
         margin_top=32,
-        vexpand=True,
     )
     options.add_css_class("installer-card")
 
@@ -2599,7 +2649,11 @@ def build_software_page(shared, nav_view):
     multimedia_detail.add_css_class("dim-label")
     options.append(multimedia)
     options.append(multimedia_detail)
-    content.append(options)
+    scroll = _scrolled_window(
+        vexpand=True, hscrollbar_policy=Gtk.PolicyType.NEVER
+    )
+    scroll.set_child(options)
+    content.append(scroll)
 
     update_preference_key = "_preferred_install_updates"
     driver_preference_key = "_preferred_install_third_party_drivers"
@@ -2682,7 +2736,7 @@ def build_software_page(shared, nav_view):
             shared=shared, page_tag="software"
         )
     )
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -3099,7 +3153,7 @@ def build_disk_page(shared, nav_view):
     )
     next_button = nav.next_button
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
 
     def _page_unmapped(_widget):
         requests.invalidate()
@@ -3561,7 +3615,7 @@ def build_storage_strategy_page(shared, nav_view):
     )
     next_button = nav.next_button
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content, scroll_body=True)
     return page
 
 
@@ -3734,7 +3788,7 @@ def build_disk_layout_page(shared, nav_view):
         page_tag="disk-layout",
     )
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -4188,7 +4242,7 @@ def build_guided_storage_page(shared, nav_view):
     next_button = nav.next_button
     _filesystem_changed()
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
 
     def _page_mapped(_widget):
         requests.activate()
@@ -5933,7 +5987,7 @@ def build_advanced_storage_page(shared, nav_view):
     )
     next_button = nav.next_button
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
 
     def _page_mapped(_widget):
         requests.activate()
@@ -6187,7 +6241,7 @@ def build_user_page(shared, nav_view):
     )
     nxt_btn = nav.next_button
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -6335,7 +6389,7 @@ def build_advanced_options_page(shared, nav_view):
             page_tag="advanced-options",
         )
     )
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -6460,7 +6514,7 @@ def build_timezone_page(shared, nav_view):
             shared=shared, page_tag="timezone"
         )
     )
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -7231,7 +7285,7 @@ def build_summary_page(shared, nav_view):
     install_button = nav.next_button
     install_button.set_sensitive(not bool(platform_error))
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
 
     def _page_unmapped(_widget):
         recheck_requests.invalidate()
@@ -7818,7 +7872,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     thread = threading.Thread(target=execute, daemon=True)
     thread.start()
 
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
