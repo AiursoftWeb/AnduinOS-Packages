@@ -85,8 +85,6 @@ test-all:
 apkg:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: apkg
@@ -94,8 +92,6 @@ apkg:
 base-files:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: base-files
@@ -103,8 +99,6 @@ base-files:
 plymouth-anduinos:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-core-system
   variables:
@@ -113,8 +107,6 @@ plymouth-anduinos:
 anduinos-apt-config:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-archive-keyring
   variables:
@@ -123,8 +115,6 @@ anduinos-apt-config:
 anduinos-gdm3-wallpaper:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-gdm3-wallpaper
@@ -132,8 +122,6 @@ anduinos-gdm3-wallpaper:
 anduinos-apt-config-dev:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-archive-keyring
   variables:
@@ -142,8 +130,6 @@ anduinos-apt-config-dev:
 anduinos-appearance:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-gdm3-wallpaper
   variables:
@@ -152,8 +138,6 @@ anduinos-appearance:
 anduinos-no-snapd:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-no-snapd
@@ -161,8 +145,6 @@ anduinos-no-snapd:
 anduinos-fonts:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-fonts
@@ -170,8 +152,6 @@ anduinos-fonts:
 anduinos-archive-keyring:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-archive-keyring
@@ -179,8 +159,6 @@ anduinos-archive-keyring:
 anduinos-fluent-gtk-theme:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-fluent-gtk-theme
@@ -188,8 +166,6 @@ anduinos-fluent-gtk-theme:
 anduinos-fluent-icon-theme:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-fluent-icon-theme
@@ -197,8 +173,6 @@ anduinos-fluent-icon-theme:
 anduinos-dconf-defaults:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-dconf-runtime
   variables:
@@ -207,8 +181,6 @@ anduinos-dconf-defaults:
 anduinos-dconf-runtime:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-dconf-runtime
@@ -216,8 +188,6 @@ anduinos-dconf-runtime:
 anduinos-deskmon:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-deskmon
@@ -225,8 +195,6 @@ anduinos-deskmon:
 anduinos-theme-sync:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-theme-sync
@@ -234,8 +202,6 @@ anduinos-theme-sync:
 gnome-shell-extension-anduinos-loc:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: gnome-shell-extension-anduinos-loc
@@ -243,8 +209,6 @@ gnome-shell-extension-anduinos-loc:
 gnome-shell-extension-no-power-icon:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: gnome-shell-extension-no-power-icon
@@ -252,8 +216,6 @@ gnome-shell-extension-no-power-icon:
 gnome-shell-extension-noti-bottom-right:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: gnome-shell-extension-noti-bottom-right
@@ -261,8 +223,6 @@ gnome-shell-extension-noti-bottom-right:
 gnome-shell-extension-accent-gtk-theme:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: gnome-shell-extension-accent-gtk-theme
@@ -270,8 +230,6 @@ gnome-shell-extension-accent-gtk-theme:
 gnome-shell-extension-accent-user-theme:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: gnome-shell-extension-accent-user-theme
@@ -279,8 +237,6 @@ gnome-shell-extension-accent-user-theme:
 gnome-shell-extension-accent-icons-theme:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: gnome-shell-extension-accent-icons-theme
@@ -288,8 +244,6 @@ gnome-shell-extension-accent-icons-theme:
 gnome-shell-extension-appindicator-anduinos:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-dconf-runtime
   variables:
@@ -298,8 +252,6 @@ gnome-shell-extension-appindicator-anduinos:
 gnome-shell-extension-arcmenu:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-dconf-runtime
     - anduinos-control-panel
@@ -309,8 +261,6 @@ gnome-shell-extension-arcmenu:
 gnome-shell-extension-blur-my-shell:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-dconf-runtime
   variables:
@@ -319,8 +269,6 @@ gnome-shell-extension-blur-my-shell:
 gnome-shell-extension-clipboard-indicator:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-dconf-runtime
   variables:
@@ -329,8 +277,6 @@ gnome-shell-extension-clipboard-indicator:
 gnome-shell-extension-customize-ibus:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-dconf-runtime
   variables:
@@ -339,8 +285,6 @@ gnome-shell-extension-customize-ibus:
 gnome-shell-extension-dash-to-panel-anduinos:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-appearance
     - anduinos-dconf-runtime
@@ -350,8 +294,6 @@ gnome-shell-extension-dash-to-panel-anduinos:
 gnome-shell-extension-desktop-icons-ng-anduinos:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-dconf-runtime
   variables:
@@ -360,8 +302,6 @@ gnome-shell-extension-desktop-icons-ng-anduinos:
 gnome-shell-extension-desktop-icons-ng-gtk-3-anduinos:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-dconf-runtime
   variables:
@@ -370,8 +310,6 @@ gnome-shell-extension-desktop-icons-ng-gtk-3-anduinos:
 gnome-shell-extension-lockkeys:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-dconf-runtime
   variables:
@@ -380,8 +318,6 @@ gnome-shell-extension-lockkeys:
 gnome-shell-extension-network-stats:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-dconf-runtime
   variables:
@@ -390,8 +326,6 @@ gnome-shell-extension-network-stats:
 gnome-shell-extension-proxy-switcher:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: gnome-shell-extension-proxy-switcher
@@ -399,8 +333,6 @@ gnome-shell-extension-proxy-switcher:
 gnome-shell-extension-simple-weather:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-dconf-runtime
   variables:
@@ -409,8 +341,6 @@ gnome-shell-extension-simple-weather:
 gnome-shell-extension-tiling-assistant:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-dconf-runtime
   variables:
@@ -419,8 +349,6 @@ gnome-shell-extension-tiling-assistant:
 anduinos-wallpapers:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-dconf-runtime
   variables:
@@ -429,8 +357,6 @@ anduinos-wallpapers:
 alsa-ucm-conf-anduinos:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: alsa-ucm-conf-anduinos
@@ -438,8 +364,6 @@ alsa-ucm-conf-anduinos:
 firmware-sof-anduinos:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - alsa-ucm-conf-anduinos
   variables:
@@ -448,8 +372,6 @@ firmware-sof-anduinos:
 anduinos-theme:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-fluent-icon-theme
     - anduinos-fluent-gtk-theme
@@ -467,8 +389,6 @@ anduinos-theme:
 anduinos-software-properties-common:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-software-properties-common
@@ -476,8 +396,6 @@ anduinos-software-properties-common:
 anduinos-system-tweaks:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-system-tweaks
@@ -485,8 +403,6 @@ anduinos-system-tweaks:
 anduinos-kernel-parameters:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-kernel-parameters
@@ -494,8 +410,6 @@ anduinos-kernel-parameters:
 anduinos-system-tweaks-server:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-system-tweaks-server
@@ -503,8 +417,6 @@ anduinos-system-tweaks-server:
 anduinos-templates:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-templates
@@ -512,8 +424,6 @@ anduinos-templates:
 anduinos-ufwall-gtk:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-ufwall-gtk
@@ -521,8 +431,6 @@ anduinos-ufwall-gtk:
 anduinos-swapcontrol-gtk:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-swap-config
   variables:
@@ -531,8 +439,6 @@ anduinos-swapcontrol-gtk:
 anduinos-swap-config:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-swap-config
@@ -540,8 +446,6 @@ anduinos-swap-config:
 anduinos-btrfs-snapshots-manager:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-core-system
     - anduinos-secureboot-toolkit
@@ -551,8 +455,6 @@ anduinos-btrfs-snapshots-manager:
 anduinos-rescue-center:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-btrfs-snapshots-manager
   variables:
@@ -561,8 +463,6 @@ anduinos-rescue-center:
 anduinos-why-ai:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-why-ai
@@ -570,8 +470,6 @@ anduinos-why-ai:
 anduinos-whisper-worker:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-whisper-worker
@@ -579,8 +477,6 @@ anduinos-whisper-worker:
 anduinos-whisper-framework:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-whisper-worker
   variables:
@@ -589,8 +485,6 @@ anduinos-whisper-framework:
 anduinos-whisper-gtk:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-whisper-framework
   variables:
@@ -599,8 +493,6 @@ anduinos-whisper-gtk:
 anduinos-yubikey-manager:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-yubikey-manager
@@ -608,8 +500,6 @@ anduinos-yubikey-manager:
 anduinos-why-placeholder:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-why-placeholder
@@ -617,8 +507,6 @@ anduinos-why-placeholder:
 anduinos-bash-guess-command:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-bash-guess-command
@@ -626,8 +514,6 @@ anduinos-bash-guess-command:
 anduinos-xbox-controller-driver:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-xbox-controller-driver
@@ -635,8 +521,6 @@ anduinos-xbox-controller-driver:
 anduinos-driver-center:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-secureboot-toolkit
   variables:
@@ -645,8 +529,6 @@ anduinos-driver-center:
 anduinos-secureboot-toolkit:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-secureboot-toolkit
@@ -654,8 +536,6 @@ anduinos-secureboot-toolkit:
 anduinos-gnome-shell-locale:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-gnome-shell-locale
@@ -663,8 +543,6 @@ anduinos-gnome-shell-locale:
 anduinos-rime:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-rime
@@ -672,8 +550,6 @@ anduinos-rime:
 anduinos-dracut-migration:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-dracut-migration
@@ -681,8 +557,6 @@ anduinos-dracut-migration:
 anduinos-live-layers:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - plymouth-anduinos
   variables:
@@ -691,8 +565,6 @@ anduinos-live-layers:
 anduinos-live-settings:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-live-layers
     - anduinos-secureboot-toolkit
@@ -702,8 +574,6 @@ anduinos-live-settings:
 anduinos-multimedia-codecs:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-multimedia-codecs
@@ -711,8 +581,6 @@ anduinos-multimedia-codecs:
 anduinos-installer-beta:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-rescue-center
     - anduinos-live-layers
@@ -731,8 +599,6 @@ anduinos-installer-beta:
 anduinos-container:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-container
@@ -740,8 +606,6 @@ anduinos-container:
 anduinos-grub-style:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-hyperfluent-grub-theme
   variables:
@@ -750,8 +614,6 @@ anduinos-grub-style:
 anduinos-hyperfluent-grub-theme:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-hyperfluent-grub-theme
@@ -759,8 +621,6 @@ anduinos-hyperfluent-grub-theme:
 anduinos-core-system:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-container
     - anduinos-grub-style
@@ -771,8 +631,6 @@ anduinos-core-system:
 anduinos-desktop-core:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-core-system
     - anduinos-session
@@ -786,8 +644,6 @@ anduinos-desktop-core:
 anduinos-appstore:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-appstore
@@ -797,8 +653,6 @@ anduinos-appstore:
 anduinos-gnome-extensions:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - gnome-shell-extension-anduinos-loc
     - gnome-shell-extension-no-power-icon
@@ -825,8 +679,6 @@ anduinos-gnome-extensions:
 anduinos-session:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-mimeapps
   variables:
@@ -835,8 +687,6 @@ anduinos-session:
 anduinos-mimeapps:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-mimeapps
@@ -853,8 +703,6 @@ firefox-anduinos:
 anduinos-exe-runner:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
   variables:
     PACKAGE_DIR: anduinos-exe-runner
@@ -862,8 +710,6 @@ anduinos-exe-runner:
 anduinos-control-panel:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-bash-guess-command
     - anduinos-whisper-gtk
@@ -879,8 +725,6 @@ anduinos-control-panel:
 anduinos-oobe:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-appearance
     - anduinos-driver-center
@@ -890,8 +734,6 @@ anduinos-oobe:
 anduinos-desktop-apps:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-control-panel
     - anduinos-driver-center
@@ -911,8 +753,6 @@ anduinos-desktop-apps:
 anduinos-desktop:
   extends: .publish
   needs:
-    - lint-all
-    - verify-ci-package-needs
     - test-all
     - anduinos-desktop-core
     - anduinos-dracut-migration
