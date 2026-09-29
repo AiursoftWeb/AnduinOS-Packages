@@ -7578,8 +7578,13 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     slide_controls.append(previous)
     slide_controls.append(dots)
     slide_controls.append(following)
+    slide_scroll = _scrolled_window(
+        vexpand=True,
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+    )
+    slide_scroll.set_child(slide_stack)
     slideshow_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    slideshow_box.append(slide_stack)
+    slideshow_box.append(slide_scroll)
     slideshow_box.append(slide_controls)
     _show_slide(0)
 
@@ -7627,12 +7632,23 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         lambda: _do_reboot(),
         css_classes=["suggested-action"],
     )
+    reboot_btn.set_child(Gtk.Label(
+        label=_(reboot_label, lang),
+        wrap=True,
+        wrap_mode=Pango.WrapMode.WORD_CHAR,
+        justify=Gtk.Justification.CENTER,
+    ))
     reboot_btn.set_visible(False)
     result_box.append(result_icon)
     result_box.append(result_label)
     result_box.append(result_sub)
     result_box.append(secure_boot_notice)
     result_box.append(reboot_btn)
+    result_scroll = _scrolled_window(
+        vexpand=True,
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+    )
+    result_scroll.set_child(result_box)
 
     mode_stack = Gtk.Stack(
         transition_type=Gtk.StackTransitionType.CROSSFADE,
@@ -7640,13 +7656,13 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         vexpand=True,
     )
     mode_stack.add_titled(
-        slideshow_box, "discover", _("Discover AnduinOS", lang)
+        slideshow_box, "discover", _("Discover", lang)
     )
     output_page = mode_stack.add_titled(
         output_box, "output", _("Output", lang)
     )
     complete_page = mode_stack.add_titled(
-        result_box, "complete", _("Complete", lang)
+        result_scroll, "complete", _("Complete", lang)
     )
     complete_page.set_visible(False)
     mode_stack.set_visible_child_name("discover")
@@ -7656,6 +7672,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         margin_top=8,
         margin_bottom=4,
     )
+    mode_switcher.add_css_class("progress-mode-switcher")
     right_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
     right_box.append(mode_switcher)
     right_box.append(mode_stack)
