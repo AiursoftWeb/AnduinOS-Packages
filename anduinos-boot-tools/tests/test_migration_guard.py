@@ -13,9 +13,6 @@ ROOT = Path(__file__).resolve().parents[1]
 PREINST = ROOT / "scripts/preinst.sh"
 POSTINST = ROOT / "scripts/postinst.sh"
 VERIFY = ROOT / "assets/anduinos-dracut-verify"
-UPDATE_INITRAMFS_GUARD = ROOT / "assets/anduinos-update-initramfs"
-UPDATE_GRUB_GUARD = ROOT / "assets/anduinos-update-grub"
-PRERM = ROOT / "scripts/prerm.sh"
 PROOF_MODULE = ROOT / "dracut/99anduinos-migration-proof/module-setup.sh"
 PROOF_HOOK = ROOT / "dracut/99anduinos-migration-proof/anduinos-migration-proof.sh"
 
@@ -32,10 +29,7 @@ class MigrationGuardTests(unittest.TestCase):
         for script in (
             PREINST,
             POSTINST,
-            PRERM,
             VERIFY,
-            UPDATE_INITRAMFS_GUARD,
-            UPDATE_GRUB_GUARD,
             PROOF_MODULE,
             PROOF_HOOK,
         ):
@@ -118,39 +112,7 @@ class MigrationGuardTests(unittest.TestCase):
             '"  initrd /anduinos-dracut-migration/fallback-initrd.img" "}" > "$output"\n'
             'fi\n'
         )
-        update_initramfs = executable(
-            bin_dir / "update-initramfs",
-            'printf "%s\\n" real-dracut-wrapper\n',
-        )
-        update_initramfs_divert = bin_dir / "update-initramfs.anduinos-dracut"
-        update_grub = executable(
-            bin_dir / "update-grub",
-            'printf "%s\\n" real-update-grub\n',
-        )
-        update_grub_divert = bin_dir / "update-grub.anduinos-grub"
-        dpkg_divert = executable(
-            bin_dir / "dpkg-divert",
-            'action=\ndivert=\noriginal=\n'
-            'while [ "$#" -gt 0 ]; do\n'
-            '  case "$1" in\n'
-            '    --add|--remove) action=$1; shift ;;\n'
-            '    --listpackage) action=$1; original=$2; shift 2 ;;\n'
-            '    --divert) divert=$2; shift 2 ;;\n'
-            '    --package) shift 2 ;;\n'
-            '    --rename) shift ;;\n'
-            '    *) original=$1; shift ;;\n'
-            '  esac\n'
-            'done\n'
-            'case "$action" in\n'
-            '  --add) [ -e "$divert" ] || mv "$original" "$divert" ;;\n'
-            '  --remove) [ ! -e "$divert" ] || mv "$divert" "$original" ;;\n'
-            '  --listpackage)\n'
-            '    for candidate in "$original".anduinos-*; do\n'
-            '      [ ! -e "$candidate" ] || { printf "%s\\n" anduinos-core-system; break; }\n'
-            '    done\n'
-            '    ;;\n'
-            'esac\n',
-        )
+        (root / "var/lib/dpkg").mkdir(parents=True)
         env = {
             **os.environ,
             "DPKG_ROOT": str(root),
@@ -169,22 +131,75 @@ class MigrationGuardTests(unittest.TestCase):
             "ANDUINOS_MIGRATION_UNAME": str(uname),
             "ANDUINOS_MIGRATION_INITRD_INSPECTOR": "/bin/true",
             "ANDUINOS_MIGRATION_BOOT_ID_FILE": str(boot_id),
-            "ANDUINOS_MIGRATION_UPDATE_INITRAMFS": str(update_initramfs),
-            "ANDUINOS_MIGRATION_UPDATE_INITRAMFS_DIVERT": str(
-                update_initramfs_divert
-            ),
-            "ANDUINOS_MIGRATION_UPDATE_INITRAMFS_WRAPPER": str(
-                UPDATE_INITRAMFS_GUARD
-            ),
-            "ANDUINOS_MIGRATION_UPDATE_GRUB": str(update_grub),
-            "ANDUINOS_MIGRATION_UPDATE_GRUB_DIVERT": str(update_grub_divert),
-            "ANDUINOS_MIGRATION_UPDATE_GRUB_WRAPPER": str(UPDATE_GRUB_GUARD),
-            "ANDUINOS_MIGRATION_DPKG_DIVERT": str(dpkg_divert),
             "TEST_GRUB_CFG": str(boot / "grub/grub.cfg"),
             "TEST_EARLY_GENERATOR": str(etc / "grub.d/06_fallback"),
         }
         paths = {"boot": boot, "state": state, "etc": etc, "bin": bin_dir}
         return env, paths
+
+    def test_first_install_restores_ubuntu_commands_and_is_retryable(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            env, paths = self.migration_environment(root)
+            sbin = root / "usr/sbin"
+            sbin.mkdir(parents=True)
+            originals = {}
+            for command, suffix, wrapper in (
+                ("update-initramfs", "anduinos-dracut", "anduinos-update-initramfs"),
+                ("update-grub", "anduinos-grub", "anduinos-update-grub"),
+            ):
+                original = executable(sbin / command, "exit 0\n")
+                originals[command] = original.read_bytes()
+                subprocess.run([
+                    "dpkg-divert", "--root", str(root), "--package", "anduinos-core-system",
+                    "--add", "--rename", "--divert", f"/usr/sbin/{command}.{suffix}",
+                    f"/usr/sbin/{command}",
+                ], check=True, capture_output=True)
+                original.symlink_to(f"/usr/libexec/{wrapper}")
+            # A missing upstream file must leave the original symlink intact.
+            diverted = sbin / "update-initramfs.anduinos-dracut"
+            saved = diverted.with_suffix(".saved")
+            diverted.rename(saved)
+            failed = subprocess.run(["/bin/sh", PREINST, "install"], env=env,
+                                    capture_output=True, text=True, check=False)
+            self.assertNotEqual(failed.returncode, 0)
+            self.assertTrue((sbin / "update-initramfs").is_symlink())
+            saved.rename(diverted)
+            # Refuse an administrator's replacement, then resume partial cleanup.
+            grub = sbin / "update-grub"
+            grub.unlink()
+            grub.symlink_to("/administrator/update-grub")
+            failed = subprocess.run(["/bin/sh", PREINST, "install"], env=env,
+                                    capture_output=True, text=True, check=False)
+            self.assertNotEqual(failed.returncode, 0)
+            self.assertEqual(os.readlink(grub), "/administrator/update-grub")
+            grub.unlink()
+            grub.symlink_to("/usr/libexec/anduinos-update-grub")
+            for attempt in range(2):
+                subprocess.run(["/bin/sh", PREINST, "install"], env=env, check=True)
+                for command, content in originals.items():
+                    self.assertFalse((sbin / command).is_symlink())
+                    self.assertEqual((sbin / command).read_bytes(), content)
+                    owner = subprocess.run([
+                        "dpkg-divert", "--root", str(root), "--listpackage", f"/usr/sbin/{command}"
+                    ], check=True, capture_output=True, text=True).stdout
+                    self.assertEqual(owner, "")
+            self.assertFalse((paths["state"] / "complete").exists())
+
+    def test_first_tools_install_protects_existing_boot_but_skips_fresh_target(self) -> None:
+        for existing_boot in (False, True):
+            with self.subTest(existing_boot=existing_boot), tempfile.TemporaryDirectory() as directory:
+                env, paths = self.migration_environment(Path(directory))
+                if existing_boot:
+                    (paths["boot"] / "grub/grub.cfg").write_text("legacy GRUB configuration\n")
+                subprocess.run(["/bin/sh", PREINST, "install"], env=env, check=True)
+                fallback = paths["boot"] / "anduinos-dracut-migration/fallback-initrd.img"
+                self.assertEqual(fallback.exists(), existing_boot)
+                if existing_boot:
+                    self.assertEqual(fallback.read_text(), "legacy-initrd")
+                    self.assertIn(
+                        "fallback-initrd.img", (paths["boot"] / "grub/grub.cfg").read_text()
+                    )
 
     def test_preinst_makes_fallback_default_before_returning(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -266,13 +281,6 @@ class MigrationGuardTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertEqual(grub_cfg.read_text(), "known-good-grub\n")
 
-            wrapper_result = subprocess.run(
-                ["/bin/sh", UPDATE_GRUB_GUARD],
-                env=failed_env,
-                check=False,
-            )
-            self.assertNotEqual(wrapper_result.returncode, 0)
-            self.assertEqual(grub_cfg.read_text(), "known-good-grub\n")
 
     def test_insufficient_boot_space_aborts_before_package_switch(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -521,62 +529,9 @@ class MigrationGuardTests(unittest.TestCase):
                 (root / "systemctl-calls").read_text().splitlines(),
                 ["disable --now anduinos-dracut-migration.timer"],
             )
-            self.assertEqual(
-                (paths["bin"] / "update-initramfs").read_bytes(),
-                UPDATE_INITRAMFS_GUARD.read_bytes(),
-            )
-            self.assertTrue((paths["bin"] / "update-initramfs").is_symlink())
-            self.assertTrue(
-                (paths["bin"] / "update-initramfs.anduinos-dracut").is_file()
-            )
-            self.assertEqual(
-                (paths["bin"] / "update-grub").read_bytes(),
-                UPDATE_GRUB_GUARD.read_bytes(),
-            )
-            self.assertTrue((paths["bin"] / "update-grub").is_symlink())
-            self.assertTrue(
-                (paths["bin"] / "update-grub.anduinos-grub").is_file()
-            )
-
-            subprocess.run(["/bin/sh", PRERM, "remove"], env=post_env, check=True)
-            subprocess.run(["/bin/sh", PRERM, "remove"], env=post_env, check=True)
-            self.assertIn(
-                "real-dracut-wrapper",
-                (paths["bin"] / "update-initramfs").read_text(),
-            )
-            self.assertFalse(
-                (paths["bin"] / "update-initramfs.anduinos-dracut").exists()
-            )
-            self.assertIn(
-                "real-update-grub",
-                (paths["bin"] / "update-grub").read_text(),
-            )
-            self.assertFalse(
-                (paths["bin"] / "update-grub.anduinos-grub").exists()
-            )
-
-    def test_fresh_configure_installs_the_dracut_guard_without_migration(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            env, paths = self.migration_environment(Path(directory))
-            subprocess.run(["/bin/sh", POSTINST, "configure"], env=env, check=True)
-            self.assertEqual(
-                (paths["bin"] / "update-initramfs").read_bytes(),
-                UPDATE_INITRAMFS_GUARD.read_bytes(),
-            )
-            self.assertEqual(
-                (paths["bin"] / "update-grub").read_bytes(),
-                UPDATE_GRUB_GUARD.read_bytes(),
-            )
-            self.assertFalse((paths["state"] / "complete").exists())
 
     def test_interrupted_postinst_always_leaves_a_boot_path_and_retries(self) -> None:
         checkpoints = (
-            "before_update_initramfs_divert",
-            "after_update_initramfs_divert",
-            "after_update_initramfs_guard",
-            "before_update_grub_divert",
-            "after_update_grub_divert",
-            "after_update_grub_guard",
             "before_rebuild",
             "after_rebuild",
             "after_images_verified",
@@ -633,58 +588,7 @@ class MigrationGuardTests(unittest.TestCase):
                 )
                 self.assertTrue((paths["state"] / "complete").is_file())
 
-    def test_diverted_update_initramfs_runs_the_final_guard(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            bin_dir = root / "bin"
-            bin_dir.mkdir()
-            real_calls = root / "real-calls"
-            verify_calls = root / "verify-calls"
-            real = executable(
-                bin_dir / "real-update-initramfs",
-                'printf "%s\\n" "$*" >> "$REAL_CALLS"\n',
-            )
-            verifier = executable(
-                bin_dir / "verify",
-                'printf "%s\\n" "$1" >> "$VERIFY_CALLS"\n',
-            )
-            guard_env = {
-                **os.environ,
-                "ANDUINOS_UPDATE_INITRAMFS_REAL": str(real),
-                "ANDUINOS_MIGRATION_VERIFY": str(verifier),
-                "REAL_CALLS": str(real_calls),
-                "VERIFY_CALLS": str(verify_calls),
-            }
-            subprocess.run(
-                ["/bin/sh", UPDATE_INITRAMFS_GUARD, "-u", "-k", "all"],
-                env=guard_env,
-                check=True,
-            )
-            self.assertEqual(real_calls.read_text().splitlines(), ["-u -k all"])
-            self.assertEqual(verify_calls.read_text().splitlines(), ["--verify"])
-
-            subprocess.run(
-                ["/bin/sh", UPDATE_INITRAMFS_GUARD, "-u"],
-                env={**guard_env, "DPKG_MAINTSCRIPT_PACKAGE": "test-package"},
-                check=True,
-            )
-            self.assertEqual(verify_calls.read_text().splitlines(), ["--verify"])
-
-            subprocess.run(
-                ["/bin/sh", UPDATE_INITRAMFS_GUARD, "-u"],
-                env={**guard_env, "DPKG_MAINTSCRIPT_PACKAGE": ""},
-                check=True,
-            )
-            self.assertEqual(verify_calls.read_text().splitlines(), ["--verify"])
-
-            subprocess.run(
-                ["/bin/sh", UPDATE_INITRAMFS_GUARD, "-d", "-k", "old"],
-                env=guard_env,
-                check=True,
-            )
-            self.assertEqual(verify_calls.read_text().splitlines(), ["--verify"])
-
-    def test_maintscript_explicit_update_waits_for_pending_kernel_trigger(self) -> None:
+    def test_scoped_verification_allows_a_pending_unrelated_kernel(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             env, paths = self.migration_environment(root)
@@ -705,28 +609,17 @@ class MigrationGuardTests(unittest.TestCase):
                 "ANDUINOS_MIGRATION_MODULES_DIR": str(root / "modules"),
                 "ANDUINOS_MIGRATION_LSINITRD": str(lsinitrd),
                 "ANDUINOS_MIGRATION_ROOT_FSTYPE": "ext4",
-                "ANDUINOS_UPDATE_INITRAMFS_REAL": "/bin/true",
-                "ANDUINOS_MIGRATION_VERIFY": str(executable(
-                    paths["bin"] / "verify", VERIFY.read_text().removeprefix("#!/bin/sh\n")
-                )),
             }
-            # NVIDIA postinst updates the Live ABI while the platform kernel
-            # has been unpacked but its initrd trigger has not run yet.
-            for args in (("-u",), ("-u", "-k", "7.0.0-test"),
-                         ("-k", "7.0.0-test", "-u", "-v"),
-                         ("-uv", "-k", "7.0.0-test"), ("-u", "-k", "all")):
-                with self.subTest(args=args):
-                    subprocess.run(
-                        ["/bin/sh", UPDATE_INITRAMFS_GUARD, *args],
-                        env={**guard_env, "DPKG_MAINTSCRIPT_PACKAGE": "nvidia-kernel-common"},
-                        check=True,
-                    )
+            subprocess.run(
+                ["/bin/sh", VERIFY, "--verify-kernel", "7.0.0-test"],
+                env=guard_env, check=True,
+            )
             self.assertFalse((paths["state"] / "verified-images.manifest").exists())
             # Scoped verification still rejects a broken generated image.
             current_image = paths["boot"] / "initrd.img-7.0.0-test"
             current_image.write_text("")
             result = subprocess.run(
-                ["/bin/sh", UPDATE_INITRAMFS_GUARD, "-u", "-k", "7.0.0-test"],
+                ["/bin/sh", VERIFY, "--verify-kernel", "7.0.0-test"],
                 env={**guard_env, "DPKG_MAINTSCRIPT_PACKAGE": "nvidia-kernel-common"},
                 capture_output=True, text=True, check=False,
             )
@@ -740,11 +633,6 @@ class MigrationGuardTests(unittest.TestCase):
             )
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("missing or empty initrd", result.stderr)
-            result = subprocess.run(
-                ["/bin/sh", UPDATE_INITRAMFS_GUARD, "-u", "-k", "7.0.0-test"],
-                env=guard_env, capture_output=True, text=True, check=False,
-            )
-            self.assertNotEqual(result.returncode, 0)
             # Simulate completion of the pending kernel trigger.
             image = paths["boot"] / "initrd.img-7.0.0-platform"
             image.write_text("completed initrd")
@@ -758,17 +646,6 @@ class MigrationGuardTests(unittest.TestCase):
             )
             self.assertNotEqual(result.returncode, 0)
 
-    def test_maintscript_explicit_update_preserves_generator_failure(self) -> None:
-        result = subprocess.run(
-            ["/bin/sh", UPDATE_INITRAMFS_GUARD, "-u", "-k", "7.0.0-test"],
-            env={**os.environ,
-                 "DPKG_MAINTSCRIPT_PACKAGE": "nvidia-kernel-common",
-                 "ANDUINOS_UPDATE_INITRAMFS_REAL": "/bin/false",
-                 "ANDUINOS_MIGRATION_VERIFY": "/bin/true"},
-            check=False,
-        )
-        self.assertEqual(result.returncode, 1)
-
     def test_scoped_verifier_rejects_unsafe_or_missing_version(self) -> None:
         for version in ("", "../../etc/passwd", "/boot/example", "bad version"):
             with self.subTest(version=version):
@@ -779,7 +656,7 @@ class MigrationGuardTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 2)
                 self.assertIn("invalid kernel version", result.stderr)
 
-    def test_scoped_update_checks_content_in_the_requested_boot_directory(self) -> None:
+    def test_scoped_verification_checks_content_in_the_requested_boot_directory(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             boot = root / "alternate boot"
@@ -790,15 +667,12 @@ class MigrationGuardTests(unittest.TestCase):
             env = {
                 **os.environ,
                 "DPKG_MAINTSCRIPT_PACKAGE": "nvidia-kernel-common",
-                "ANDUINOS_UPDATE_INITRAMFS_REAL": "/bin/true",
-                "ANDUINOS_MIGRATION_VERIFY": str(executable(
-                    root / "verify", VERIFY.read_text().removeprefix("#!/bin/sh\n")
-                )),
                 "ANDUINOS_MIGRATION_MODULES_DIR": str(root / "modules"),
                 "ANDUINOS_MIGRATION_LSINITRD": str(lsinitrd),
                 "ANDUINOS_MIGRATION_ROOT_FSTYPE": "ext4",
             }
-            command = ["/bin/sh", UPDATE_INITRAMFS_GUARD, "-u", "-k", "test-kernel", "-b", str(boot)]
+            env["ANDUINOS_MIGRATION_BOOT_DIR"] = str(boot)
+            command = ["/bin/sh", VERIFY, "--verify-kernel", "test-kernel"]
             result = subprocess.run(command, env=env, capture_output=True, text=True, check=False)
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("lacks the AnduinOS Dracut boot-proof module", result.stderr)

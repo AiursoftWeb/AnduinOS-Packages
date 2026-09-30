@@ -115,7 +115,7 @@ printf 'dracut %s\\n' "$*" >> "$TEST_COMMAND_LOG"
         self.assertEqual(calls, [])
         self.assertTrue(self.transient.exists())
 
-    def test_removal_without_core_preserves_images_and_snapshot_data(self):
+    def test_removal_without_tools_preserves_images_and_snapshot_data(self):
         (self.root / "libexec/anduinos-dracut-verify").unlink()
         image = self.root / "boot/initrd.img-current"
         image.write_bytes(b"working initrd")

@@ -1,0 +1,38 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-boot-tools</PackageName>
+    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS initrd verification and boot update tools</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <Breaks>anduinos-core-system (&lt;&lt; 2.0.3-4)</Breaks>
+    <Replaces>anduinos-core-system (&lt;&lt; 2.0.3-4)</Replaces>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PreInstallScript Include="scripts/preinst.sh" />
+    <PostInstallScript Include="scripts/postinst.sh" />
+    <IncludeScript Include="assets/anduinos-dracut-verify" Target="/usr/libexec/anduinos-dracut-verify" />
+    <IncludeScript Include="dracut/99anduinos-migration-proof/module-setup.sh"
+                   Target="/usr/lib/dracut/modules.d/99anduinos-migration-proof/module-setup.sh" />
+    <IncludeScript Include="dracut/99anduinos-migration-proof/anduinos-migration-proof.sh"
+                   Target="/usr/lib/dracut/modules.d/99anduinos-migration-proof/anduinos-migration-proof.sh" />
+    <Dependency Include="dracut" />
+    <Dependency Include="dracut-core" />
+    <Dependency Include="dracut-install" />
+    <Dependency Include="grub2-common" />
+    <Dependency Include="kmod" />
+    <Dependency Include="util-linux" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 LANGUAGE=C python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+  </ItemGroup>
+</Project>

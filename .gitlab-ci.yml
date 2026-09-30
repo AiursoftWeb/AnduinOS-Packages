@@ -99,6 +99,7 @@ plymouth-anduinos:
   extends: .publish
   needs:
     - test-all
+    - anduinos-boot-tools
     - anduinos-core-system
   variables:
     PACKAGE_DIR: plymouth-anduinos
@@ -446,6 +447,7 @@ anduinos-btrfs-snapshots-manager:
   extends: .publish
   needs:
     - test-all
+    - anduinos-boot-tools
     - anduinos-core-system
     - anduinos-secureboot-toolkit
   variables:
@@ -617,10 +619,18 @@ anduinos-hyperfluent-grub-theme:
   variables:
     PACKAGE_DIR: anduinos-hyperfluent-grub-theme
 
+anduinos-boot-tools:
+  extends: .publish
+  needs:
+    - test-all
+  variables:
+    PACKAGE_DIR: anduinos-boot-tools
+
 anduinos-core-system:
   extends: .publish
   needs:
     - test-all
+    - anduinos-boot-tools
     - anduinos-container
     - anduinos-grub-style
     - anduinos-system-tweaks

@@ -152,6 +152,10 @@ def verify() -> tuple[int, int]:
         # test-all already waits for both lint gates. Direct lint edges are
         # optional; package dependencies and the test gate remain mandatory.
         expected_jobs = {package_to_job[item] for item in expected_packages} | {"test-all"}
+        # Publish the core split before consumers of the extracted boot tools;
+        # otherwise their upgrade can resolve Breaks by removing the old core.
+        if package in {"plymouth-anduinos", "anduinos-btrfs-snapshots-manager"}:
+            expected_jobs.add(package_to_job["anduinos-core-system"])
         actual_jobs = set(job_map[job_name].needs)
         missing = sorted(expected_jobs - actual_jobs)
         extra = sorted(actual_jobs - expected_jobs - REQUIRED_GATES)

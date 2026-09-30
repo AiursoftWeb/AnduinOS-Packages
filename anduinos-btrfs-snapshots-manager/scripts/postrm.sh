@@ -11,7 +11,7 @@ if { [ "${1:-}" = remove ] || [ "${1:-}" = purge ]; } && \
         /usr/libexec/anduinos-dracut-verify --rebuild
     else
         # Dependencies need not survive postrm. Leave existing boot images
-        # intact when the owning core package has already been removed.
+        # intact when the owning tools package has already been removed.
         echo 'anduinos-btrfs-snapshots-manager: initrd writer unavailable during removal; existing boot images retained' >&2
     fi
 fi

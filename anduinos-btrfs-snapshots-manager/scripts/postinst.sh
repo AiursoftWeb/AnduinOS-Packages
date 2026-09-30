@@ -8,7 +8,7 @@ in_chroot() {
 }
 
 if [ ! -x /usr/libexec/anduinos-dracut-verify ]; then
-    echo 'anduinos-btrfs-snapshots-manager: required initrd writer is missing; reinstall anduinos-core-system' >&2
+    echo 'anduinos-btrfs-snapshots-manager: required initrd writer is missing; reinstall anduinos-boot-tools' >&2
     exit 1
 fi
 /usr/libexec/anduinos-dracut-verify --rebuild

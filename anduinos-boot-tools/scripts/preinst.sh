@@ -261,10 +261,40 @@ check_staging_space() {
     fi
 }
 
+# One-time removal of the old core diversions. Leave both command implementations
+# to their Ubuntu packages; do not install another wrapper or diversion.
+restore_upstream_command() {
+    command=$1
+    suffix=$2
+    wrapper=$3
+    original="${DPKG_ROOT:-}/usr/sbin/$command"
+    dpkg_path="/usr/sbin/$command"
+    owner=$("${ANDUINOS_MIGRATION_DPKG_DIVERT:-dpkg-divert}" \
+        --root "${DPKG_ROOT:-/}" --listpackage "$dpkg_path")
+    [ "$owner" = anduinos-core-system ] || return 0
+    [ -x "$original.$suffix" ] || {
+        log "cannot restore $command: diverted Ubuntu implementation is missing"
+        return 1
+    }
+    if [ -e "$original" ] || [ -L "$original" ]; then
+        [ -L "$original" ] && [ "$(readlink "$original")" = "/usr/libexec/$wrapper" ] || {
+            log "refusing to replace an unknown $command entry point"
+            return 1
+        }
+        rm -- "$original"
+    fi
+    "${ANDUINOS_MIGRATION_DPKG_DIVERT:-dpkg-divert}" --root "${DPKG_ROOT:-/}" \
+        --package anduinos-core-system --remove --rename \
+        --divert "$dpkg_path.$suffix" "$dpkg_path"
+}
+
 case "${1:-}" in
     install|upgrade) ;;
     *) exit 0 ;;
 esac
+
+restore_upstream_command update-initramfs anduinos-dracut anduinos-update-initramfs
+restore_upstream_command update-grub anduinos-grub anduinos-update-grub
 
 # The Live root has no installed-system GRUB device to migrate. The installer
 # gives the target chroot its own /run, so this marker is absent there.
@@ -274,9 +304,11 @@ if [ -f "$LIVE_MARKER" ] && grep -Fxq 'ANDUINOS_LIVE=1' "$LIVE_MARKER"; then
 fi
 
 # A fresh installation is already created with Dracut by the installer. Future
-# core upgrades also skip once this migration has durably completed.
+# tool upgrades also skip once this migration has durably completed.
 old_version=${2:-}
-[ -n "$old_version" ] || exit 0
+# On the first installation after the split, dpkg supplies no old tool version.
+# An existing GRUB configuration distinguishes a bootable host from a new target.
+[ -n "$old_version" ] || [ -s "$GRUB_CFG" ] || exit 0
 [ ! -e "$STATE_DIR/complete" ] || exit 0
 
 safe_directory "$STATE_DIR"

@@ -146,6 +146,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | Package | Type | Description |
 |---|---|---|
 | `anduinos-container` | Metapackage | Minimal container base (shell, networking, sudo, editor) |
+| `anduinos-boot-tools` | Boot tools | Existing initrd verifier, Dracut proof module, and migration safety hooks |
 | `anduinos-core-system` | Metapackage | Core system foundation (kernel, networking, boot, firmware, APT, security) |
 | `anduinos-kernel-parameters` | Config | AnduinOS 2.0 desktop GRUB drop-in enabling `preempt=full` on Ubuntu's generic kernel |
 | `anduinos-desktop-apps` | Metapackage | Default application selection (browser, office, media, utilities) |
@@ -213,9 +214,17 @@ layers. Its timer waits until every required pure-Dracut candidate is
 published, rejects any APT plan that removes an `anduinos-*` package, replaces
 the generator stack in one transaction, and validates every generated image
 with `lsinitrd` before recording completion. The PackageKit bootstrap,
-synchronous core guard, power-loss, atomic-GRUB, and fallback implementation
+synchronous boot-tools guard, power-loss, atomic-GRUB, and fallback implementation
 and its release qualification contract are documented in
 [`anduinos-dracut-migration/DESIGN.md`](anduinos-dracut-migration/DESIGN.md).
+
+`anduinos-core-system` is a dependency-only metapackage. `anduinos-boot-tools`
+owns the existing boot scripts and Dracut proof module formerly shipped by core;
+Plymouth and Disk Snapshots Manager depend on it directly. This split preserves
+the verifier path, migration state, and module names. During upgrade it removes
+the old core diversions and restores the Ubuntu-provided `update-initramfs` and
+`update-grub` entry points. It installs no replacement for either command.
+Kernel updates and trigger ordering remain the responsibility of Ubuntu packages.
 
 `anduinos-kernel-parameters` has a separate responsibility: it owns the desktop
 boot policy, not the kernel binary. It installs

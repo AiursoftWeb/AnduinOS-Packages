@@ -63,7 +63,7 @@ class LifecycleTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
                 self.assertEqual(calls[-1], "writer --rebuild")
 
-    def test_removal_still_works_after_core_is_lost(self):
+    def test_removal_still_works_after_tools_are_lost(self):
         self.writer.unlink()
         for action in ("remove", "deconfigure"):
             with self.subTest(action=action):

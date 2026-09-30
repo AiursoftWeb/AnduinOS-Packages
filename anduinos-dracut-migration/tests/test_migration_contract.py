@@ -85,14 +85,17 @@ class MigrationContractTests(unittest.TestCase):
             self.assertFalse((state / "boot-confirmed").exists())
 
     def test_happy_path_builds_and_validates_each_kernel(self) -> None:
-        self.exercise_migration("ii ", legacy_present=True)
+        for writer_dependency in ("anduinos-core-system", "anduinos-boot-tools"):
+            with self.subTest(writer_dependency=writer_dependency):
+                self.exercise_migration("ii ", legacy_present=True, writer_dependency=writer_dependency)
 
     def test_interrupted_consumers_are_repaired_even_after_legacy_stack_is_gone(self) -> None:
         for status in ("iF ", "iU ", "iH "):
             with self.subTest(status=status):
                 self.exercise_migration(status, legacy_present=False)
 
-    def exercise_migration(self, status: str, *, legacy_present: bool) -> None:
+    def exercise_migration(self, status: str, *, legacy_present: bool,
+                           writer_dependency: str = "anduinos-core-system") -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             bin_dir = root / "bin"
@@ -132,7 +135,7 @@ class MigrationContractTests(unittest.TestCase):
                 "apt-cache",
                 'case "$1" in\n'
                 '  policy) printf "  Candidate: 2.0.3-5\\n" ;;\n'
-                '  show) printf "Package: test\\nDepends: anduinos-core-system (>= 2.0.3-3), dracut, dracut-core\\nConflicts: casper, initramfs-tools, initramfs-tools-core, initramfs-tools-bin, busybox-initramfs, finalrd\\n" ;;\n'
+                f'  show) printf "Package: test\\nDepends: {writer_dependency}, dracut, dracut-core\\nConflicts: casper, initramfs-tools, initramfs-tools-core, initramfs-tools-bin, busybox-initramfs, finalrd\\n" ;;\n'
                 'esac\n',
             )
             apt_get = executable(

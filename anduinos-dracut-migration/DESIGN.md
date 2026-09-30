@@ -3,7 +3,7 @@
 ## Status and scope
 
 Status: implementation and qualification contract. The synchronous
-core-package guard, durable GRUB fallback, and hermetic fault injection are
+boot-tools migration guard, durable GRUB fallback, and hermetic fault injection are
 implemented in this tree. One Resolute/ext4/legacy-BIOS PackageKit smoke test
 has exercised the real offline service, the subsequent timer migration, and a
 verified Dracut reboot. The complete rebooting VM matrix remains a production
@@ -18,7 +18,7 @@ desktop from `initramfs-tools` to Dracut. It covers both supported entry paths:
    the conflicting core update as blocked, but can update `anduinos-desktop`
    and install the non-conflicting migration bootstrap in
    `system-update.target`. A backend which does resolve the core transition
-   directly is still covered by the synchronous core-package guard.
+   directly is still covered by the synchronous boot-tools migration guard.
 
 The migration must remain safe if package configuration fails, the PackageKit
 offline service reboots after a failure, or power is lost at any instruction.
@@ -73,11 +73,14 @@ publish the complete Dracut-compatible core, snapshots-manager, and Plymouth
 set before publishing the desktop version that introduces this dependency.
 
 The Dracut-only snapshots-manager and Plymouth candidates require
-`anduinos-core-system (>= 2.0.3-3)`, which supplies the staged writer and scoped
-kernel-transaction verification. This is a minimum API requirement, not a
-lockstep release version. CI's package dependencies publish core before its
-consumers; APT must also enforce the bound on machines with an older core or
-an incomplete repository index.
+`anduinos-boot-tools (>= 2.0.3-1)`, which supplies the staged writer and scoped
+kernel-scoped verification. This is a minimum API requirement, not a
+lockstep release version. CI publishes boot-tools, then the dependency-only
+core, then its consumers. Waiting for the new core also prevents an intermediate
+repository index from making consumer upgrades remove the older core. APT
+must enforce the writer dependency on machines with an older core or
+an incomplete repository index. Older published consumers that depend on the
+guarded core remain supported by the migration timer.
 
 ### `anduinos-dracut-migration`
 
@@ -109,10 +112,19 @@ still need the migration path. That date is a review point, not an automatic
 removal deadline. Preserve migration retries, fallback protection, first-boot
 confirmation, its state, and any unverified fallback.
 
-### `anduinos-core-system`
+### `anduinos-core-system` and `anduinos-boot-tools`
 
-The new core package owns the synchronous safety boundary because both APT and
-PackageKit must run its maintainer scripts.
+Core is a dependency-only metapackage. Boot-tools owns the existing synchronous
+safety boundary because both APT and PackageKit must run its maintainer scripts.
+The split keeps the verifier path, state, and proof module names unchanged.
+Boot-tools removes the old core diversions during its preinst, restoring the
+Ubuntu-provided `update-initramfs` and `update-grub` commands. It does not ship
+replacement commands or register new diversions. Versioned
+`Breaks`/`Replaces` transfer the payload from older core packages.
+
+On boot-tools' first installation, an existing nonempty GRUB configuration
+activates the same migration protection even though dpkg passes no previous
+boot-tools version. A fresh target without GRUB configuration still skips it.
 
 Its `preinst` must be self-contained: the new package payload has not been
 unpacked yet and ordinary `Depends` cannot be assumed available. On an upgrade
@@ -180,19 +192,18 @@ a different migration policy.
   configuration if the required Btrfs recovery module is absent.
 - No package deletes the migration fallback during this release series.
 
-dpkg explicitly does not define trigger execution order, and a package must
-not construct a trigger cycle by waiting for itself. The guarded core therefore
-does not attempt to become the last interested package. Instead, it uses
-`dpkg-divert` to preserve and wrap Ubuntu Dracut's historical
-`/usr/sbin/update-initramfs` compatibility entry point. Activation-only calls
-still defer normally. Because dpkg does not order the shared Dracut trigger
-after pending kernel postinst scripts, maintainer-script `-u` calls preserve
-the real handler's status without prematurely validating kernels whose initrd
-does not exist yet. Packages that add mandatory image content call the shared
-verifier synchronously in their own postinst. The same lifecycle wraps
-`/usr/sbin/update-grub`, replacing its direct write with staged generation,
-fsync, and atomic rename. Removal of the core restores both diverted upstream
-implementations through an idempotent `prerm`.
+Ubuntu's packages own kernel updates, `update-initramfs`, `update-grub`, and
+Dracut trigger ordering. AnduinOS no longer intercepts these entry points.
+The staged writer is called explicitly by AnduinOS initrd consumers and migration
+code; the installer retains its own final image verification. This does not
+promise synchronous AnduinOS validation of every third-party kernel transaction.
+
+Old core diversions are removed only when their owner and symlink target match
+the known AnduinOS records and the diverted upstream executable is present.
+An unknown entry point or missing upstream executable fails the upgrade instead
+of replacing administrator files. The cleanup is retryable after removing the
+symlink and before removing the diversion record; subsequent installs without
+those old records do nothing.
 
 ### Recovering a failed Plymouth upgrade (#459)
 
@@ -208,8 +219,9 @@ Recovery must use a coherent set of published core, Plymouth, migration, and
 (when previously installed) snapshots-manager packages. Simulate the install
 first. The transaction may remove the conflicting legacy generator packages;
 it must not remove desktop/core metapackages or kernels. For a missing writer
-whose owning core is already at the candidate version, explicitly reinstall
-core rather than assuming a normal upgrade will restore its payload.
+whose owning package is already at the candidate version, explicitly reinstall
+the writer-owning package (`anduinos-boot-tools` after the split), rather than
+assuming a normal upgrade will restore its payload.
 
 Installing `busybox-initramfs` as a workaround can remove the core and desktop
 metapackages and their consumers. In that state explicitly reinstall
@@ -246,7 +258,7 @@ the artifacts win: the helper repairs or fails safely instead of skipping work.
 
 ## Shared boot verifier
 
-One packaged helper must be used by the core `postinst`, the migration timer,
+One packaged helper must be used by the boot-tools `postinst`, the migration timer,
 Disk Snapshots Manager, and VM qualification. It succeeds only
 when all applicable checks pass:
 
@@ -294,7 +306,7 @@ ordinary reboot enters the verified Dracut image.
 
 This two-stage behavior is an availability optimization, not the sole safety
 boundary. If another PackageKit/backend version resolves the conflicting core
-transition directly, the synchronous core `preinst` seals and publishes the
+transition directly, the synchronous boot-tools `preinst` seals and publishes the
 fallback before dpkg can remove the legacy stack. If that offline transaction
 fails and PackageKit reboots, GRUB selects the migration fallback first.
 
@@ -331,7 +343,8 @@ weakens existing installations:
 
 1. Add the shared fallback/state/verifier helper and unit tests without making
    it active.
-2. Add `anduinos-core-system` `preinst` and `postinst`, package the helper where
+2. Keep `anduinos-core-system` dependency-only; package the existing `preinst`
+   and `postinst` in `anduinos-boot-tools`, where
    `preinst` can use only its own embedded code, and add generated `.deb`
    contract tests using `apkg build` plus `dpkg-deb -I/-e`.
 3. Convert Plymouth and Disk Snapshots Manager regeneration to the common
@@ -368,12 +381,13 @@ whose named kernel and initrd both exist and match the recorded digest.
 Build the real packages with `apkg build`, extract them with `dpkg-deb`, and
 assert:
 
-- core contains executable `preinst` and `postinst` scripts;
+- core contains dependencies only, with no executable payload or maintainer scripts;
+- boot-tools contains the migration hooks and existing verifier;
 - migration has no Dracut dependency or legacy conflict;
 - desktop, but not APT-config or container packages, depends on migration;
 - no relevant maintainer script hides a Dracut failure;
-- the core package contains and lifecycle-tests the diverted Dracut
-  compatibility guard; and
+- upgrading removes the old core diversions and restores both upstream commands;
+- boot-tools installs no wrapper for either upstream command; and
 - CI publication order includes every runtime and release-only edge.
 
 ### Rebooting VM matrix

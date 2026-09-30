@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>plymouth-anduinos</PackageName>
-    <PackageVersion>2.0.3+$(UpstreamVersion)-5+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3+$(UpstreamVersion)-6+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS boot splash theme</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -62,8 +62,8 @@
 
     <!-- ubuntu-text.so module, needed by anduinos-text.plymouth fallback theme -->
     <!-- The lifecycle requires the staged initrd writer and scoped kernel
-         verification. An older core must not satisfy this dependency. -->
-    <Dependency Include="anduinos-core-system (>= 2.0.3-3)" />
+         verification. The tools must be configured before this consumer. -->
+    <Dependency Include="anduinos-boot-tools (>= 2.0.3-1)" />
     <Dependency Include="dracut" />
     <Recommend Include="plymouth-theme-ubuntu-text" />
   </ItemGroup>
