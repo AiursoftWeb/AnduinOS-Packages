@@ -103,10 +103,11 @@ by the timer.
 The timer is an optimization and retry mechanism. PackageKit correctness must
 be unchanged if the timer has never started.
 
-The package and its state may remain installed for the full AnduinOS 2 support
-window. Removing it after roughly two years is a separate cleanup release and
-must not remove a still-present fallback unless the current images pass the
-same verifier.
+Retain this package and the desktop bootstrap dependency for at least three
+years from 2026-09-30, through 2029-09-30, and longer if legacy installations
+still need the migration path. That date is a review point, not an automatic
+removal deadline. Preserve migration retries, fallback protection, first-boot
+confirmation, its state, and any unverified fallback.
 
 ### `anduinos-core-system`
 
@@ -421,9 +422,12 @@ Production publication is blocked unless all of these are true:
 
 ## Retirement
 
-Keeping the one-shot package installed is harmless and makes repair tooling
-available. A future cleanup release, no earlier than the end of the AnduinOS 2
-support window, may remove its timer, state, and fallback only when:
+Keep the migration package published and its desktop dependency intact through
+at least 2029-09-30 and the AnduinOS 2 support window, whichever ends later.
+There is no scheduled or automatic retirement. Removing the migration path
+requires an explicit later decision establishing that no legacy users still
+need it. A future cleanup release may remove a machine's timer, state, and
+fallback only when:
 
 1. `boot-confirmed` exists;
 2. the shared verifier succeeds against the then-current kernel and GRUB;
