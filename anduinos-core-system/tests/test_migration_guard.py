@@ -362,8 +362,16 @@ class MigrationGuardTests(unittest.TestCase):
             env, paths = self.migration_environment(root)
             modules = root / "modules/7.0.0-test"
             modules.mkdir(parents=True)
+            # Removed kernels can leave modules.dep behind. Rebuilding must
+            # select bootable kernels, not every residual modules directory.
+            for version in ("7.0.0-27-generic", "7.0.0-28-generic", "7.0.0-29-generic"):
+                stale = root / "modules" / version
+                stale.mkdir()
+                (stale / "modules.dep").write_text("kernel/missing.ko.zst:\n")
+            calls = root / "dracut-calls"
             dracut = executable(
                 paths["bin"] / "dracut",
+                f'printf "%s\\n" "$*" >> "{calls}"\n'
                 'printf "%s\\n" new-dracut-image > "$2"\n',
             )
             lsinitrd = executable(
@@ -382,6 +390,9 @@ class MigrationGuardTests(unittest.TestCase):
                 "ANDUINOS_MIGRATION_ROOT_FSTYPE": "btrfs",
             }
             subprocess.run(["/bin/sh", VERIFY, "--rebuild"], env=verify_env, check=True)
+            self.assertEqual(calls.read_text().splitlines(), [
+                f'--force {paths["boot"]}/.initrd.img-7.0.0-test.anduinos-new 7.0.0-test',
+            ])
             self.assertEqual(
                 (paths["boot"] / "initrd.img-7.0.0-test").read_text(),
                 "new-dracut-image\n",

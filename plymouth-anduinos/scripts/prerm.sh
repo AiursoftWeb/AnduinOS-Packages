@@ -13,6 +13,8 @@ if [ "$1" = "remove" ] || [ "$1" = "deconfigure" ]; then
     if [ -x /usr/libexec/anduinos-dracut-verify ]; then
         /usr/libexec/anduinos-dracut-verify --rebuild
     else
-        dracut --force --regenerate-all
+        # Allow recovery/removal when the dependency has already been lost.
+        # Never guess another generator or overwrite images without validation.
+        echo 'plymouth-anduinos: initrd writer unavailable during removal; existing boot images retained' >&2
     fi
 fi

@@ -107,13 +107,32 @@ printf 'dracut %s\\n' "$*" >> "$TEST_COMMAND_LOG"
                 self.assertEqual(self.transient.read_text(), "old recovery unit\n")
                 self.assertEqual(self.snapshot.read_bytes(), b"irreplaceable snapshot")
 
-    def test_standalone_dracut_failure_is_not_hidden(self):
+    def test_missing_writer_blocks_configuration_without_changing_images(self):
         (self.root / "libexec/anduinos-dracut-verify").unlink()
-        for name, action in (("postinst.sh", "configure"), ("postrm.sh", "remove")):
-            with self.subTest(script=name):
-                result, calls = self.run_script(name, action, failure="dracut")
-                self.assertEqual(result.returncode, 31, result.stderr)
-                self.assertEqual(calls, ["dracut --force --regenerate-all"])
+        result, calls = self.run_script("postinst.sh", "configure")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("required initrd writer is missing", result.stderr)
+        self.assertEqual(calls, [])
+        self.assertTrue(self.transient.exists())
+
+    def test_removal_without_core_preserves_images_and_snapshot_data(self):
+        (self.root / "libexec/anduinos-dracut-verify").unlink()
+        image = self.root / "boot/initrd.img-current"
+        image.write_bytes(b"working initrd")
+        for action in ("remove", "purge"):
+            with self.subTest(action=action):
+                result, calls = self.run_script("postrm.sh", action)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertIn("existing boot images retained", result.stderr)
+                self.assertFalse(any(call.startswith("dracut ") for call in calls))
+                self.assertEqual(image.read_bytes(), b"working initrd")
+                self.assertEqual(self.snapshot.read_bytes(), b"irreplaceable snapshot")
+
+    def test_abort_upgrade_does_not_rebuild_or_change_configuration(self):
+        result, calls = self.run_script("postinst.sh", "abort-upgrade")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(calls, [])
+        self.assertTrue(self.transient.exists())
 
     def test_configuration_preserves_custom_policy_and_removes_only_transient_override(self):
         policy = self.config / "apt-snapshots.toml"

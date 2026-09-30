@@ -72,10 +72,12 @@ The release pipeline must publish the migration helper before the core, then
 publish the complete Dracut-compatible core, snapshots-manager, and Plymouth
 set before publishing the desktop version that introduces this dependency.
 
-The Dracut-only snapshots-manager and Plymouth candidates carry a versioned
-dependency on the guarded core. CI deliberately publishes those temporarily
-uninstallable candidates first and the guarded core last. Consequently no
-intermediate repository index exposes an installable unguarded transition.
+The Dracut-only snapshots-manager and Plymouth candidates require
+`anduinos-core-system (>= 2.0.3-3)`, which supplies the staged writer and scoped
+kernel-transaction verification. This is a minimum API requirement, not a
+lockstep release version. CI's package dependencies publish core before its
+consumers; APT must also enforce the bound on machines with an older core or
+an incomplete repository index.
 
 ### `anduinos-dracut-migration`
 
@@ -90,6 +92,13 @@ Its timer handles only the conservative APT case:
 4. require a complete installed kernel before attempting the package set;
 5. execute the package transaction under a shutdown/sleep inhibitor; and
 6. call the shared verifier after APT returns.
+
+The candidate set includes packages selected for installation even when their
+last configuration failed (`iF`) or unpacking/configuration was interrupted
+(`iH`/`iU`). Matching version strings alone do not establish completion: every
+selected consumer must be fully configured before taking the validation-only
+path. Packages deliberately removed by the administrator are not reinstalled
+by the timer.
 
 The timer is an optimization and retry mechanism. PackageKit correctness must
 be unchanged if the timer has never started.
@@ -157,6 +166,12 @@ a different migration policy.
 
 - Their package changes use the shared staged writer instead of silently
   running independent best-effort rebuilds.
+- Configuration requires the writer; a missing executable fails before changing
+  the theme or recovery configuration. Do not fall back to `dracut --regenerate-all`:
+  residual module trees from removed kernels are not installed boot targets.
+- Removal uses the writer while available and propagates its failures. If the
+  dependency has already disappeared, removal preserves existing boot images
+  and reports the skipped refresh, without guessing another generator.
 - An image-regeneration failure must leave dpkg failed; it must not be hidden with
   `|| true`.
 - Disk Snapshots Manager can retain an explicit synchronous rebuild where its
@@ -177,6 +192,38 @@ verifier synchronously in their own postinst. The same lifecycle wraps
 `/usr/sbin/update-grub`, replacing its direct write with staged generation,
 fsync, and atomic rename. Removal of the core restores both diverted upstream
 implementations through an idempotent `prerm`.
+
+### Recovering a failed Plymouth upgrade (#459)
+
+A partial or damaged installation can leave Plymouth half-configured with
+the staged writer unavailable. The reporter's exact preceding package state
+still needs confirmation. The former `dracut --regenerate-all` fallback then
+visits residual `/lib/modules/<version>` directories even when the matching
+kernel has been removed. On a machine with a mounted ESP this can select a
+nonexistent `/boot/efi/<machine-id>/<version>/initrd` output path. The new
+versioned dependencies and mandatory writer prevent this combination.
+
+Recovery must use a coherent set of published core, Plymouth, migration, and
+(when previously installed) snapshots-manager packages. Simulate the install
+first. The transaction may remove the conflicting legacy generator packages;
+it must not remove desktop/core metapackages or kernels. For a missing writer
+whose owning core is already at the candidate version, explicitly reinstall
+core rather than assuming a normal upgrade will restore its payload.
+
+Installing `busybox-initramfs` as a workaround can remove the core and desktop
+metapackages and their consumers. In that state explicitly reinstall
+`anduinos-desktop`, `anduinos-desktop-core`, `anduinos-core-system`, and the
+previously installed consumers in the same repair transaction. A normal
+upgrade does not restore removed packages. `--no-install-recommends` can keep
+this recovery limited to the removed packages and their required dependencies.
+The migration timer must not guess whether a removed desktop was intentional.
+
+Do not delete old module directories or create the accidental EFI output
+directories to make the old fallback succeed. Keep these artifacts during
+regression testing. Before recommending a reboot, require an empty
+`dpkg --audit`, successful `anduinos-dracut-verify --verify` and
+`--verify-default`, and the expected installed metapackages. Complete VM
+qualification with a real reboot and `--verify-running`.
 
 ## Durable state machine
 

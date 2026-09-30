@@ -85,6 +85,14 @@ class MigrationContractTests(unittest.TestCase):
             self.assertFalse((state / "boot-confirmed").exists())
 
     def test_happy_path_builds_and_validates_each_kernel(self) -> None:
+        self.exercise_migration("ii ", legacy_present=True)
+
+    def test_interrupted_consumers_are_repaired_even_after_legacy_stack_is_gone(self) -> None:
+        for status in ("iF ", "iU ", "iH "):
+            with self.subTest(status=status):
+                self.exercise_migration(status, legacy_present=False)
+
+    def exercise_migration(self, status: str, *, legacy_present: bool) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             bin_dir = root / "bin"
@@ -112,20 +120,26 @@ class MigrationContractTests(unittest.TestCase):
             dpkg_query = executable(
                 "dpkg-query",
                 'for package do :; done\n'
-                f'if [ "$package" = initramfs-tools ] && [ ! -e "{migrated}" ]; then printf "ii "; exit 0; fi\n'
-                'if [ "$package" = anduinos-btrfs-snapshots-manager ]; then printf "ii "; exit 0; fi\n'
-                'if [ "$package" = plymouth-anduinos ]; then printf "ii "; exit 0; fi\n'
+                'case "$*" in *Version*) printf "2.0.3-5"; exit 0 ;; esac\n'
+                f'if [ "$package" = initramfs-tools ] && [ "$TEST_LEGACY" = yes ] && [ ! -e "{migrated}" ]; then printf "ii "; exit 0; fi\n'
+                'case "$package" in\n'
+                '  anduinos-btrfs-snapshots-manager|plymouth-anduinos) printf "%s" "$TEST_PACKAGE_STATUS"; exit 0 ;;\n'
+                '  anduinos-core-system|dracut|dracut-core|dracut-install) printf "ii "; exit 0 ;;\n'
+                'esac\n'
                 'exit 1\n',
             )
             apt_cache = executable(
                 "apt-cache",
                 'case "$1" in\n'
-                '  policy) printf "  Candidate: 2.0.2-test\\n" ;;\n'
-                '  show) printf "Package: test\\nDepends: anduinos-core-system, dracut, dracut-core\\nConflicts: casper, initramfs-tools, initramfs-tools-core, initramfs-tools-bin, busybox-initramfs, finalrd\\n" ;;\n'
+                '  policy) printf "  Candidate: 2.0.3-5\\n" ;;\n'
+                '  show) printf "Package: test\\nDepends: anduinos-core-system (>= 2.0.3-3), dracut, dracut-core\\nConflicts: casper, initramfs-tools, initramfs-tools-core, initramfs-tools-bin, busybox-initramfs, finalrd\\n" ;;\n'
                 'esac\n',
             )
             apt_get = executable(
                 "apt-get",
+                'for package in anduinos-core-system anduinos-btrfs-snapshots-manager plymouth-anduinos; do\n'
+                '  case " $* " in *" $package=2.0.3-5 "*) ;; *) exit 72 ;; esac\n'
+                'done\n'
                 f'case " $* " in\n'
                 f'  *" update "*) : > "{unexpected_update}"; exit 1 ;;\n'
                 '  *" --simulate "*)\n'
@@ -156,6 +170,8 @@ class MigrationContractTests(unittest.TestCase):
             env = os.environ.copy()
             env.update(
                 {
+                    "TEST_PACKAGE_STATUS": status,
+                    "TEST_LEGACY": "yes" if legacy_present else "no",
                     "ANDUINOS_MIGRATION_APT_GET": str(apt_get),
                     "ANDUINOS_MIGRATION_APT_CACHE": str(apt_cache),
                     "ANDUINOS_MIGRATION_DPKG_QUERY": str(dpkg_query),
@@ -191,6 +207,7 @@ class MigrationContractTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
             diagnostics = result.stderr + result.stdout
+            self.assertTrue(migrated.is_file(), diagnostics)
             self.assertTrue(
                 (boot / "initrd.img-6.14.0-test").is_file(), diagnostics
             )
