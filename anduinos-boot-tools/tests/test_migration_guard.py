@@ -384,7 +384,7 @@ class MigrationGuardTests(unittest.TestCase):
             )
             lsinitrd = executable(
                 paths["bin"] / "lsinitrd",
-                'printf "%s\\n" base rootfs-block anduinos-migration-proof anduinos-btrfs-snapshots-manager\n',
+                'printf "%s\\n" base rootfs-block anduinos-btrfs-snapshots-manager\n',
             )
             dpkg_query = executable(
                 paths["bin"] / "dpkg-query", 'printf "%s" "ii "\n',
@@ -588,7 +588,7 @@ class MigrationGuardTests(unittest.TestCase):
                 )
                 self.assertTrue((paths["state"] / "complete").is_file())
 
-    def test_scoped_verification_allows_a_pending_unrelated_kernel(self) -> None:
+    def test_verification_rejects_empty_images_until_kernel_update_completes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             env, paths = self.migration_environment(root)
@@ -610,23 +610,18 @@ class MigrationGuardTests(unittest.TestCase):
                 "ANDUINOS_MIGRATION_LSINITRD": str(lsinitrd),
                 "ANDUINOS_MIGRATION_ROOT_FSTYPE": "ext4",
             }
-            subprocess.run(
-                ["/bin/sh", VERIFY, "--verify-kernel", "7.0.0-test"],
-                env=guard_env, check=True,
-            )
-            self.assertFalse((paths["state"] / "verified-images.manifest").exists())
-            # Scoped verification still rejects a broken generated image.
+            # Every selected kernel needs a complete image, including when
+            # verification runs from another package's maintainer script.
+            guard_env["DPKG_MAINTSCRIPT_PACKAGE"] = "nvidia-kernel-common"
             current_image = paths["boot"] / "initrd.img-7.0.0-test"
             current_image.write_text("")
             result = subprocess.run(
-                ["/bin/sh", VERIFY, "--verify-kernel", "7.0.0-test"],
-                env={**guard_env, "DPKG_MAINTSCRIPT_PACKAGE": "nvidia-kernel-common"},
+                ["/bin/sh", VERIFY, "--verify-default"], env=guard_env,
                 capture_output=True, text=True, check=False,
             )
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("missing or empty initrd", result.stderr)
             current_image.write_text("generated image")
-            # A final, non-maintscript verification must still catch it.
             result = subprocess.run(
                 ["/bin/sh", VERIFY, "--verify-default"], env=guard_env,
                 capture_output=True, text=True, check=False,
@@ -646,38 +641,36 @@ class MigrationGuardTests(unittest.TestCase):
             )
             self.assertNotEqual(result.returncode, 0)
 
-    def test_scoped_verifier_rejects_unsafe_or_missing_version(self) -> None:
-        for version in ("", "../../etc/passwd", "/boot/example", "bad version"):
-            with self.subTest(version=version):
-                result = subprocess.run(
-                    ["/bin/sh", VERIFY, "--verify-kernel", version],
-                    capture_output=True, text=True, check=False,
-                )
-                self.assertEqual(result.returncode, 2)
-                self.assertIn("invalid kernel version", result.stderr)
-
-    def test_scoped_verification_checks_content_in_the_requested_boot_directory(self) -> None:
+    def test_verification_without_migration_proof_still_rejects_live_modules(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            boot = root / "alternate boot"
-            boot.mkdir()
-            (root / "modules/test-kernel").mkdir(parents=True)
-            (boot / "initrd.img-test-kernel").write_text("generated image")
-            lsinitrd = executable(root / "lsinitrd", 'printf "%s\\n" base\n')
-            env = {
-                **os.environ,
-                "DPKG_MAINTSCRIPT_PACKAGE": "nvidia-kernel-common",
+            env, paths = self.migration_environment(root)
+            (root / "modules/7.0.0-test").mkdir(parents=True)
+            (paths["boot"] / "grub/grub.cfg").write_text(
+                "menuentry AnduinOS {\n"
+                " linux /boot/vmlinuz-7.0.0-test\n"
+                " initrd /boot/initrd.img-7.0.0-test\n}\n"
+            )
+            lsinitrd = executable(paths["bin"] / "lsinitrd", 'printf "%s\\n" base\n')
+            verify_env = {
+                **env,
                 "ANDUINOS_MIGRATION_MODULES_DIR": str(root / "modules"),
                 "ANDUINOS_MIGRATION_LSINITRD": str(lsinitrd),
                 "ANDUINOS_MIGRATION_ROOT_FSTYPE": "ext4",
             }
-            env["ANDUINOS_MIGRATION_BOOT_DIR"] = str(boot)
-            command = ["/bin/sh", VERIFY, "--verify-kernel", "test-kernel"]
-            result = subprocess.run(command, env=env, capture_output=True, text=True, check=False)
-            self.assertNotEqual(result.returncode, 0)
-            self.assertIn("lacks the AnduinOS Dracut boot-proof module", result.stderr)
-            executable(lsinitrd, 'printf "%s\\n" base anduinos-migration-proof\n')
-            subprocess.run(command, env=env, check=True)
+            command = ["/bin/sh", VERIFY, "--verify-default"]
+            subprocess.run(command, env=verify_env, check=True)
+            for forbidden in (
+                "dmsquash-live", "dmsquash-live-autooverlay",
+                "livenet", "anduinos-live-layers",
+            ):
+                with self.subTest(module=forbidden):
+                    executable(lsinitrd, f'printf "%s\\n" base {forbidden}\n')
+                    result = subprocess.run(
+                        command, env=verify_env, capture_output=True, text=True, check=False,
+                    )
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn(f"contains forbidden Live module {forbidden}", result.stderr)
 
 
 if __name__ == "__main__":

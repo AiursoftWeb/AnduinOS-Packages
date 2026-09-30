@@ -80,9 +80,15 @@ class MigrationContractTests(unittest.TestCase):
                 "ANDUINOS_MIGRATION_BOOT_PROOF": str(root / "missing-proof"),
                 "ANDUINOS_MIGRATION_VERIFY": "/bin/true",
             }
-            result = subprocess.run(["/bin/sh", CONFIRM], env=env, check=False)
-            self.assertNotEqual(result.returncode, 0)
-            self.assertFalse((state / "boot-confirmed").exists())
+            proof = root / "missing-proof"
+            for content in (None, "generator=initramfs-tools\nkernel=test\n",
+                            "generator=dracut\nkernel=wrong-kernel\n"):
+                with self.subTest(proof=content):
+                    if content is not None:
+                        proof.write_text(content)
+                    result = subprocess.run(["/bin/sh", CONFIRM], env=env, check=False)
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertFalse((state / "boot-confirmed").exists())
 
     def test_happy_path_builds_and_validates_each_kernel(self) -> None:
         for writer_dependency in ("anduinos-core-system", "anduinos-boot-tools"):

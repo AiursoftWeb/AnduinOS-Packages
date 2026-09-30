@@ -264,8 +264,6 @@ when all applicable checks pass:
 
 - at least one installed kernel has a matching non-empty initrd;
 - `lsinitrd` can fully list every image selected for normal boot;
-- every selected image contains the `anduinos-migration-proof` module whose
-  pre-pivot hook proves that a later boot actually traversed Dracut;
 - installed-system images do not contain `dmsquash-live`,
   `dmsquash-live-autooverlay`, `livenet`, or `anduinos-live-layers`;
 - a Btrfs root with Disk Snapshots Manager installed contains the
@@ -279,6 +277,11 @@ when all applicable checks pass:
   fallback pair; and
 - the separately generated GRUB configuration is non-empty before it is
   atomically renamed over the active configuration.
+
+The `anduinos-migration-proof` module remains installed for migration support.
+Only migration boot confirmation requires its ephemeral `/run` proof to identify
+a later Dracut boot with the matching running kernel. Ordinary image rebuilds
+and verification do not require this migration marker.
 
 `lsinitrd` proves image structure, not that firmware, GRUB, storage discovery,
 and root mounting work together. Therefore only a VM reboot can qualify a

@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-boot-tools</PackageName>
-    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS initrd verification and boot update tools</PackageDescription>
     <Section>admin</Section>
@@ -26,10 +26,7 @@
     <IncludeScript Include="dracut/99anduinos-migration-proof/anduinos-migration-proof.sh"
                    Target="/usr/lib/dracut/modules.d/99anduinos-migration-proof/anduinos-migration-proof.sh" />
     <Dependency Include="dracut" />
-    <Dependency Include="dracut-core" />
-    <Dependency Include="dracut-install" />
     <Dependency Include="grub2-common" />
-    <Dependency Include="kmod" />
     <Dependency Include="util-linux" />
   </ItemGroup>
   <ItemGroup>
