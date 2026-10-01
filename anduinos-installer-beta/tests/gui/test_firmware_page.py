@@ -82,7 +82,115 @@ class FirmwarePageTests(unittest.TestCase):
         self.page.emit('hidden')
         self.request.invalidate.assert_called_once_with()
 
-    def test_result_card_and_navigation_fit_normal_and_small_windows(self):
+    def test_success_automatically_routes_and_back_skips_detection(self):
+        for firmware, secure_boot in (
+            (Firmware.UEFI, SecureBoot.ENABLED),
+            (Firmware.UEFI, SecureBoot.DISABLED),
+            (Firmware.UEFI, SecureBoot.UNSUPPORTED),
+            (Firmware.BIOS, SecureBoot.NOT_APPLICABLE),
+        ):
+            for needs_network in (True, False):
+                with self.subTest(firmware=firmware, secure_boot=secure_boot,
+                                  needs_network=needs_network):
+                    shared = {'_page_route_initialized': True,
+                              '_network_page_planned': needs_network}
+                    nav = Adw.NavigationView()
+                    welcome = Adw.NavigationPage(title='Welcome', tag='welcome')
+                    nav.add(welcome)
+                    request = Mock()
+                    with patch('pages.LatestBackgroundRequest', return_value=request):
+                        page = pages.build_firmware_check_page(shared, nav)
+                    nav.push(page)
+                    tag = ('secure-boot-recommendation'
+                           if secure_boot is SecureBoot.DISABLED
+                           else 'network' if needs_network else 'keyboard')
+                    destination = Adw.NavigationPage(title='Next', tag=tag)
+                    with (patch('pages.build_secure_boot_page', return_value=destination) as recommendation,
+                          patch('pages.build_network_page', return_value=destination) as network,
+                          patch('pages.build_keyboard_page', return_value=destination) as keyboard):
+                        result = PlatformProbe(Architecture.AMD64, firmware, secure_boot)
+                        request.start.call_args.args[1](result, None)
+                    self.assertIs(nav.get_visible_page(), destination)
+                    self.assertEqual(shared['_platform_probe_result'], result)
+                    self.assertEqual(recommendation.call_count,
+                                     int(secure_boot is SecureBoot.DISABLED))
+                    self.assertEqual(network.call_count,
+                                     int(tag == 'network'))
+                    self.assertEqual(keyboard.call_count,
+                                     int(tag == 'keyboard'))
+                    self.assertNotIn('firmware-check', shared['_planned_page_route'])
+                    self.assertEqual('secure-boot-recommendation' in shared['_planned_page_route'],
+                                     secure_boot is SecureBoot.DISABLED)
+                    stack = nav.get_navigation_stack()
+                    self.assertEqual(stack.get_n_items(), 2)
+                    self.assertIs(stack.get_item(0), welcome)
+                    nav.pop()
+                    self.assertIs(nav.get_visible_page(), welcome)
+
+    def test_enabled_secure_boot_skips_detection_in_a_mapped_window(self):
+        window = Adw.Window(default_width=800, default_height=600)
+        self.addCleanup(window.destroy)
+        nav = Adw.NavigationView()
+        welcome = Adw.NavigationPage(title='Welcome', tag='welcome')
+        nav.add(welcome)
+        window.set_content(nav)
+        window.present()
+        shared = {'_page_route_initialized': True, '_network_page_planned': False}
+        destination = Adw.NavigationPage(title='Keyboard', tag='keyboard')
+        result = PlatformProbe(Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED)
+        request = Mock()
+        loop = GLib.MainLoop()
+
+        def start(_work, complete):
+            def deliver():
+                complete(result, None)
+                loop.quit()
+                return False
+            GLib.idle_add(deliver)
+
+        request.start.side_effect = start
+        with (patch('pages.LatestBackgroundRequest', return_value=request),
+              patch('pages.build_keyboard_page', return_value=destination) as keyboard):
+            page = pages.build_firmware_check_page(shared, nav)
+            nav.push(page)
+            timeout = GLib.timeout_add_seconds(5, loop.quit)
+            loop.run()
+            if GLib.MainContext.default().find_source_by_id(timeout):
+                GLib.source_remove(timeout)
+        self.assertIs(nav.get_visible_page(), destination,
+                      f'probe starts: {request.start.call_count}; '
+                      f'keyboard builds: {keyboard.call_count}; '
+                      f'visible: {nav.get_visible_page().get_tag()}; '
+                      f'platform: {shared.get("_platform_probe_result")}')
+        request.start.assert_called_once()
+        self.assertEqual(nav.get_navigation_stack().get_n_items(), 2)
+        nav.pop()
+        self.assertIs(nav.get_visible_page(), welcome)
+
+    def test_error_stays_on_detection_page_until_retry_succeeds(self):
+        shared = {'_page_route_initialized': True, '_network_page_planned': False}
+        nav = Adw.NavigationView()
+        nav.add(Adw.NavigationPage(title='Welcome', tag='welcome'))
+        request = Mock()
+        with patch('pages.LatestBackgroundRequest', return_value=request):
+            page = pages.build_firmware_check_page(shared, nav)
+        nav.push(page)
+        request.start.call_args.args[1](None, ProbeError('firmware I/O error'))
+        self.assertIs(nav.get_visible_page(), page)
+        self.assertIn('firmware-check', pages._planned_page_route(shared))
+        retry = next(w for w in descendants(page)
+                     if isinstance(w, Gtk.Button) and w.get_label() == 'Retry')
+        self.assertTrue(retry.get_visible())
+        retry.emit('clicked')
+        self.assertEqual(request.start.call_count, 2)
+        destination = Adw.NavigationPage(title='Keyboard', tag='keyboard')
+        with patch('pages.build_keyboard_page', return_value=destination):
+            request.start.call_args.args[1](
+                PlatformProbe(Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED), None)
+        self.assertIs(nav.get_visible_page(), destination)
+        self.assertEqual(nav.get_navigation_stack().get_n_items(), 2)
+
+    def test_error_card_and_navigation_fit_normal_and_small_windows(self):
         for width, height in ((960, 740), (800, 600)):
             with self.subTest(size=(width, height)):
                 self.build()
@@ -96,27 +204,26 @@ class FirmwarePageTests(unittest.TestCase):
                     toolbar.set_content(navigation)
                     window.set_content(toolbar)
                     window.present()
-                    self.complete(PlatformProbe(Architecture.AMD64, Firmware.UEFI,
-                                                SecureBoot.ENABLED), None)
+                    self.complete(None, ProbeError('firmware I/O error'))
                     self.settle()
 
                     widgets = list(descendants(self.page))
                     hero = next(w for w in widgets
                                 if w.has_css_class('installer-hero'))
                     result = next(w for w in widgets if isinstance(w, Gtk.Label)
-                                  and 'Secure Boot: enabled' in w.get_label())
+                                  and 'firmware I/O error' in w.get_label())
                     heading = next(w for w in widgets if isinstance(w, Gtk.Label)
                                    and w.has_css_class('heading'))
                     scroll = next(w for w in widgets
                                   if isinstance(w, Gtk.ScrolledWindow))
                     self.assertEqual(hero.get_visible(), height > 620)
                     self.assertEqual(hero._title_label.get_label(),
-                                     'Firmware check complete')
+                                     'Unable to determine Secure Boot support')
                     self.assertTrue(any(w.has_css_class('installer-card')
                                         and w.get_mapped() for w in widgets))
                     self.assertFalse(next(w for w in widgets
                                           if isinstance(w, Gtk.Spinner)).get_visible())
-                    self.assertLess(result.get_height(), 80)
+                    self.assertLess(result.get_height(), 160)
                     _, heading_bounds = heading.compute_bounds(window)
                     _, result_bounds = result.compute_bounds(window)
                     self.assertLess(result_bounds.get_y() - heading_bounds.get_y(), 80)

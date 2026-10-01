@@ -234,7 +234,6 @@ class PowerPageRoutingTests(unittest.TestCase):
             _planned_page_route(shared),
             (
                 "welcome",
-                "firmware-check",
                 "keyboard",
                 "software",
                 "disk",

@@ -663,7 +663,7 @@ def _planned_page_route(shared):
     ):
         route.append("low-battery")
     platform = shared.get("_platform_probe_result")
-    if not bool(shared.get("development_mode")):
+    if platform is None and not bool(shared.get("development_mode")):
         route.append("firmware-check")
     if bool(shared.get("development_mode")) or (
         platform is not None and platform.secure_boot is SecureBoot.DISABLED
@@ -873,6 +873,15 @@ def build_firmware_check_page(shared, nav_view):
         hero._subtitle_label.set_visible(False)
         retry.set_visible(bool(error))
         navigation.next_button.set_sensitive(True)
+        if not error and nav_view.get_visible_page() is page:
+            # Detection is transient: neither Continue nor Back should stop here.
+            next_page = _build_secure_boot_or_network_page(
+                shared, nav_view, platform=platform)
+            stack = nav_view.get_navigation_stack()
+            nav_view.replace([
+                stack.get_item(index) for index in range(stack.get_n_items() - 1)
+            ] + [next_page])
+            _wizard_progress_controller(shared).refresh()
 
     def start():
         spinner.set_visible(True)
