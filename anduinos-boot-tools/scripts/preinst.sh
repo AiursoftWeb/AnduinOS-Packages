@@ -311,6 +311,18 @@ old_version=${2:-}
 [ -n "$old_version" ] || [ -s "$GRUB_CFG" ] || exit 0
 [ ! -e "$STATE_DIR/complete" ] || exit 0
 
+# An ISO bootstrap may upgrade tools before installing its first kernel.
+# There is no boot stack to migrate, even though an old tool version exists.
+if [ ! -e "$GRUB_CFG" ] && [ ! -e "$STATE_DIR/fallback-ready" ] \
+    && command -v systemd-detect-virt >/dev/null 2>&1 \
+    && systemd-detect-virt --chroot --quiet; then
+    set -- "$BOOT_DIR"/vmlinuz-*
+    if [ "$#" -eq 1 ] && [ ! -e "$1" ] && [ ! -L "$1" ]; then
+        log "skipping boot migration in kernel-less bootstrap chroot"
+        exit 0
+    fi
+fi
+
 safe_directory "$STATE_DIR"
 safe_directory "$FALLBACK_DIR"
 

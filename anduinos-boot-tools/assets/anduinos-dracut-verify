@@ -229,6 +229,16 @@ verify_running_boot() {
 
 case "${1:-}" in
     --rebuild)
+        # ISO bootstrap installs themes before the kernel. There is nothing
+        # to rebuild yet; the kernel's own install hooks generate its image.
+        if command -v systemd-detect-virt >/dev/null 2>&1 \
+            && systemd-detect-virt --chroot --quiet; then
+            set -- "$BOOT_DIR"/vmlinuz-*
+            if [ "$#" -eq 1 ] && [ ! -e "$1" ] && [ ! -L "$1" ]; then
+                log "deferring initrd rebuild in kernel-less chroot"
+                exit 0
+            fi
+        fi
         rebuild_images
         write_verified_manifest
         ;;

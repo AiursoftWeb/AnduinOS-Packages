@@ -364,6 +364,58 @@ class MigrationGuardTests(unittest.TestCase):
             )
             self.assertEqual(sealed.read_text(), "legacy-initrd")
 
+    def test_rebuild_defers_only_in_a_kernel_less_chroot(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            env, paths = self.migration_environment(root)
+            kernel = paths["boot"] / "vmlinuz-7.0.0-test"
+            kernel.unlink()
+            executable(paths["bin"] / "systemd-detect-virt",
+                       'exit "$TEST_CHROOT_EXIT"\n')
+            env.update({
+                "PATH": f'{paths["bin"]}:/usr/bin:/bin',
+                "ANDUINOS_MIGRATION_MODULES_DIR": str(root / "modules"),
+                "ANDUINOS_MIGRATION_DRACUT": "/bin/false",
+                "TEST_CHROOT_EXIT": "0",
+            })
+            command = ["/bin/sh", VERIFY, "--rebuild"]
+            result = subprocess.run(command, env=env, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("deferring initrd rebuild", result.stderr)
+            self.assertFalse((paths["state"] / "verified-images.manifest").exists())
+            self.assertEqual((paths["boot"] / "initrd.img-7.0.0-test").read_text(),
+                             "legacy-initrd")
+            upgrade = ["/bin/sh", PREINST, "upgrade", "2.0.3-2", "2.0.3-3"]
+            result = subprocess.run(upgrade, env=env, capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertFalse((paths["state"] / "fallback-ready").exists())
+            # Missing kernels on an ordinary host remain an error.
+            result = subprocess.run(command, env={**env, "TEST_CHROOT_EXIT": "1"},
+                                    capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            result = subprocess.run(upgrade, env={**env, "TEST_CHROOT_EXIT": "1"},
+                                    capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            # A chroot with an empty, dangling, or unmatched kernel payload
+            # must not hide damage by treating it as a fresh bootstrap.
+            for payload in ("empty", "dangling", "unmatched"):
+                with self.subTest(payload=payload):
+                    kernel.unlink(missing_ok=True)
+                    if payload == "dangling":
+                        kernel.symlink_to("missing-kernel")
+                    else:
+                        kernel.write_text("" if payload == "empty" else "kernel")
+                    result = subprocess.run(command, env=env, capture_output=True, text=True)
+                    self.assertNotEqual(result.returncode, 0)
+                    if payload != "unmatched":
+                        result = subprocess.run(upgrade, env=env, capture_output=True, text=True)
+                        self.assertNotEqual(result.returncode, 0)
+            (root / "modules/7.0.0-test").mkdir(parents=True)
+            result = subprocess.run(command, env=env, capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)  # Dracut still fails.
+            self.assertEqual((paths["boot"] / "initrd.img-7.0.0-test").read_text(),
+                             "legacy-initrd")
+
     def test_verifier_stages_before_replacing_the_old_image(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
