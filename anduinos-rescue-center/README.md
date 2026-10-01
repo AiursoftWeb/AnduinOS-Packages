@@ -47,8 +47,11 @@ the currently running root filesystem.
   For Btrfs installations, the selected `@root` subvolume is mounted directly
   as the chroot root, so GRUB can resolve the device containing `/boot/grub`.
 - The emergency terminal is an advanced Live-only root shell in the selected
-  offline system. Device identity is checked again, temporary chroot mounts
-  are unmounted on exit (or a cleanup failure is reported), and a target
+  offline system. On the standard Btrfs layout, `@home` is mounted at `/home`
+  for the terminal and unmounted on exit. On the standard ext4 layout, Home
+  remains part of the mounted root filesystem. Custom separate Home partitions
+  are not automatically mounted. Device identity is checked again, temporary
+  chroot mounts are unmounted on exit (or a cleanup failure is reported), and a target
   directory symlink cannot redirect a mount onto the Live host. A root chroot
   shell is **not** a security sandbox.
 - Encrypted filesystems and package repair remain outside this release.
