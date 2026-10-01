@@ -113,8 +113,6 @@ load_published_candidates() {
             && [ "$plymouth_candidate" != "(none)" ] \
             && candidate_is_pure_dracut \
                 plymouth-anduinos "$plymouth_candidate" \
-            && candidate_depends_on_writer \
-                plymouth-anduinos "$plymouth_candidate" \
             || return 1
     fi
 }

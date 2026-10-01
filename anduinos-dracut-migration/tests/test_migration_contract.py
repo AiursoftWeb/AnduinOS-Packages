@@ -141,7 +141,11 @@ class MigrationContractTests(unittest.TestCase):
                 "apt-cache",
                 'case "$1" in\n'
                 '  policy) printf "  Candidate: 2.0.3-5\\n" ;;\n'
-                f'  show) printf "Package: test\\nDepends: {writer_dependency}, dracut, dracut-core\\nConflicts: casper, initramfs-tools, initramfs-tools-core, initramfs-tools-bin, busybox-initramfs, finalrd\\n" ;;\n'
+                '  show)\n'
+                '    case "$3" in\n'
+                '      plymouth-anduinos=*) printf "Package: plymouth-anduinos\\nDepends: dracut\\n" ;;\n'
+                f'      *) printf "Package: test\\nDepends: {writer_dependency}, dracut, dracut-core\\nConflicts: casper, initramfs-tools, initramfs-tools-core, initramfs-tools-bin, busybox-initramfs, finalrd\\n" ;;\n'
+                '    esac ;;\n'
                 'esac\n',
             )
             apt_get = executable(
