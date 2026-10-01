@@ -99,7 +99,6 @@ plymouth-anduinos:
   extends: .publish
   needs:
     - test-all
-    - anduinos-boot-tools
     - anduinos-core-system
   variables:
     PACKAGE_DIR: plymouth-anduinos

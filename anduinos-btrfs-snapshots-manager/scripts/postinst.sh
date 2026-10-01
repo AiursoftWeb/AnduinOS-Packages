@@ -11,7 +11,8 @@ if [ ! -x /usr/libexec/anduinos-dracut-verify ]; then
     echo 'anduinos-btrfs-snapshots-manager: required initrd writer is missing; reinstall anduinos-boot-tools' >&2
     exit 1
 fi
-/usr/libexec/anduinos-dracut-verify --rebuild
+# Let dpkg finish configuring newly unpacked kernels before generating images.
+update-initramfs -u
 
 systemd-tmpfiles --create /usr/lib/tmpfiles.d/anduinos-btrfs-snapshots-manager.conf || true
 

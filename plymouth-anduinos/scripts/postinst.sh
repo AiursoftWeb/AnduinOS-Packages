@@ -2,12 +2,6 @@
 set -e
 
 if [ "$1" = "configure" ]; then
-    # Depends guarantees this entry point on a normal upgrade. A damaged
-    # installation must fail before changing the theme or any boot image.
-    if [ ! -x /usr/libexec/anduinos-dracut-verify ]; then
-        echo 'plymouth-anduinos: required initrd writer is missing; reinstall anduinos-boot-tools' >&2
-        exit 1
-    fi
     # 1. Register and set graphical splash theme
     update-alternatives --install \
         /usr/share/plymouth/themes/default.plymouth \
@@ -28,8 +22,7 @@ if [ "$1" = "configure" ]; then
         text.plymouth \
         /usr/share/plymouth/themes/anduinos-text/anduinos-text.plymouth || true
 
-    # 3. Rebuild all images through AnduinOS's staged writer. Never report a
-    # successful package transaction after silently losing the boot splash or
-    # producing an unverified initrd.
-    /usr/libexec/anduinos-dracut-verify --rebuild
+    # During dpkg configuration the official command defers via its trigger;
+    # a newly unpacked kernel may not have completed depmod yet.
+    update-initramfs -u
 fi

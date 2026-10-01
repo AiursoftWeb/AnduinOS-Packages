@@ -15,8 +15,8 @@ class LifecycleTests(unittest.TestCase):
         self.addCleanup(directory.cleanup)
         self.root = Path(directory.name)
         self.log = self.root / "calls"
-        self.writer = self.root / "writer"
-        self.program("writer", 'printf "writer %s\\n" "$*" >> "$CALLS"\n'
+        self.writer = self.root / "update-initramfs"
+        self.program("update-initramfs", 'printf "initramfs %s\\n" "$*" >> "$CALLS"\n'
                      'exit "${WRITER_EXIT:-0}"\n')
         self.program("update-alternatives", 'printf "alternatives %s\\n" "$*" >> "$CALLS"\n')
         self.program("dracut", 'printf "UNSAFE dracut %s\\n" "$*" >> "$CALLS"\nexit 99\n')
@@ -28,8 +28,7 @@ class LifecycleTests(unittest.TestCase):
 
     def run_script(self, name, action, writer_exit=0):
         self.log.unlink(missing_ok=True)
-        source = (ROOT / "scripts" / name).read_text().replace(
-            "/usr/libexec/anduinos-dracut-verify", str(self.writer))
+        source = (ROOT / "scripts" / name).read_text()
         result = subprocess.run(
             ["/bin/sh", "-s", "--", action], input=source,
             env={**os.environ, "PATH": f"{self.root}:/usr/bin:/bin",
@@ -43,14 +42,14 @@ class LifecycleTests(unittest.TestCase):
         result, calls = self.run_script("postinst.sh", "configure")
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(len([call for call in calls if call.startswith("alternatives ")]), 4)
-        self.assertEqual(calls[-1], "writer --rebuild")
+        self.assertEqual(calls[-1], "initramfs -u")
 
-    def test_missing_writer_fails_before_modifying_themes(self):
+    def test_missing_generator_reports_failure(self):
         self.writer.unlink()
         result, calls = self.run_script("postinst.sh", "configure")
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("required initrd writer is missing", result.stderr)
-        self.assertEqual(calls, [])
+        self.assertIn("update-initramfs", result.stderr)
+        self.assertEqual(len(calls), 4)
 
     def test_rebuild_failure_propagates_and_configuration_can_be_retried(self):
         for name, action in (("postinst.sh", "configure"), ("prerm.sh", "remove"),
@@ -58,10 +57,10 @@ class LifecycleTests(unittest.TestCase):
             with self.subTest(script=name, action=action):
                 result, calls = self.run_script(name, action, writer_exit=31)
                 self.assertEqual(result.returncode, 31, result.stderr)
-                self.assertEqual(calls[-1], "writer --rebuild")
+                self.assertEqual(calls[-1], "initramfs -u")
                 result, calls = self.run_script(name, action)
                 self.assertEqual(result.returncode, 0, result.stderr)
-                self.assertEqual(calls[-1], "writer --rebuild")
+                self.assertEqual(calls[-1], "initramfs -u")
 
     def test_removal_still_works_after_tools_are_lost(self):
         self.writer.unlink()

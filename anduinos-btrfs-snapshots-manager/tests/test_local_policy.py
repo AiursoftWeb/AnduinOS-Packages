@@ -35,9 +35,9 @@ class LifecycleTests(unittest.TestCase):
 printf 'verify %s\\n' "$*" >> "$TEST_COMMAND_LOG"
 [ "${TEST_FAIL:-}" != "$1" ] || exit 31
 """)
-        self.program(self.root / "bin/dracut", """
-printf 'dracut %s\\n' "$*" >> "$TEST_COMMAND_LOG"
-[ "${TEST_FAIL:-}" != dracut ] || exit 31
+        self.program(self.root / "bin/update-initramfs", """
+printf 'initramfs %s\\n' "$*" >> "$TEST_COMMAND_LOG"
+[ "${TEST_FAIL:-}" != initramfs ] || exit 31
 """)
         self.program(self.root / "sbin/update-grub", "printf 'update-grub\\n' >> \"$TEST_COMMAND_LOG\"\n")
         self.program(self.root / "bin/grub-editenv", "printf 'grub-editenv %s\\n' \"$*\" >> \"$TEST_COMMAND_LOG\"\n")
@@ -101,9 +101,9 @@ printf 'dracut %s\\n' "$*" >> "$TEST_COMMAND_LOG"
     def test_rebuild_failure_stops_configuration_and_removal(self):
         for name, action in (("postinst.sh", "configure"), ("postrm.sh", "purge")):
             with self.subTest(script=name):
-                result, calls = self.run_script(name, action, failure="--rebuild")
+                result, calls = self.run_script(name, action, failure="initramfs")
                 self.assertEqual(result.returncode, 31, result.stderr)
-                self.assertEqual(calls, ["verify --rebuild"])
+                self.assertEqual(calls, ["initramfs -u"])
                 self.assertEqual(self.transient.read_text(), "old recovery unit\n")
                 self.assertEqual(self.snapshot.read_bytes(), b"irreplaceable snapshot")
 
@@ -115,8 +115,8 @@ printf 'dracut %s\\n' "$*" >> "$TEST_COMMAND_LOG"
         self.assertEqual(calls, [])
         self.assertTrue(self.transient.exists())
 
-    def test_removal_without_tools_preserves_images_and_snapshot_data(self):
-        (self.root / "libexec/anduinos-dracut-verify").unlink()
+    def test_removal_without_generator_preserves_images_and_snapshot_data(self):
+        (self.root / "bin/update-initramfs").unlink()
         image = self.root / "boot/initrd.img-current"
         image.write_bytes(b"working initrd")
         for action in ("remove", "purge"):

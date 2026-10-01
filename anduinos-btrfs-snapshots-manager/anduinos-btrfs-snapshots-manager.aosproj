@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-btrfs-snapshots-manager</PackageName>
-    <PackageVersion>2.0.3-6+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3-7+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Disk Snapshots Manager — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Require the staged initrd writer and scoped kernel verification. -->
+    <!-- Boot tools provide GRUB refresh and recovery verification. -->
     <Dependency Include="anduinos-boot-tools (>= 2.0.3-1)" />
     <Dependency Include="libgtk-4-1" />
     <Dependency Include="libadwaita-1-0" />

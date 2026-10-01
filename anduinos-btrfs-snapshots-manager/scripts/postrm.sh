@@ -7,12 +7,12 @@ in_chroot() {
 
 if { [ "${1:-}" = remove ] || [ "${1:-}" = purge ]; } && \
     [ -d /lib/modules ]; then
-    if [ -x /usr/libexec/anduinos-dracut-verify ]; then
-        /usr/libexec/anduinos-dracut-verify --rebuild
+    if command -v update-initramfs >/dev/null 2>&1; then
+        update-initramfs -u
     else
         # Dependencies need not survive postrm. Leave existing boot images
-        # intact when the owning tools package has already been removed.
-        echo 'anduinos-btrfs-snapshots-manager: initrd writer unavailable during removal; existing boot images retained' >&2
+        # intact when the generator has already been removed.
+        echo 'anduinos-btrfs-snapshots-manager: update-initramfs unavailable during removal; existing boot images retained' >&2
     fi
 fi
 
