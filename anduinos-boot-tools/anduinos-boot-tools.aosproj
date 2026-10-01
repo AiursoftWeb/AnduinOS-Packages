@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-boot-tools</PackageName>
-    <PackageVersion>2.0.3-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS initrd verification and boot update tools</PackageDescription>
     <Section>admin</Section>
@@ -20,6 +20,7 @@
   <ItemGroup>
     <PreInstallScript Include="scripts/preinst.sh" />
     <PostInstallScript Include="scripts/postinst.sh" />
+    <DpkgTrigger Include="anduinos-dracut-migration" Type="interest-noawait" />
     <IncludeScript Include="assets/anduinos-dracut-verify" Target="/usr/libexec/anduinos-dracut-verify" />
     <IncludeScript Include="dracut/99anduinos-migration-proof/module-setup.sh"
                    Target="/usr/lib/dracut/modules.d/99anduinos-migration-proof/module-setup.sh" />

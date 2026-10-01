@@ -72,15 +72,14 @@ The release pipeline must publish the migration helper before the core, then
 publish the complete Dracut-compatible core, snapshots-manager, and Plymouth
 set before publishing the desktop version that introduces this dependency.
 
-The Dracut-only snapshots-manager and Plymouth candidates require
-`anduinos-boot-tools (>= 2.0.3-1)`, which supplies the staged writer and scoped
-kernel-scoped verification. This is a minimum API requirement, not a
-lockstep release version. CI publishes boot-tools, then the dependency-only
-core, then its consumers. Waiting for the new core also prevents an intermediate
-repository index from making consumer upgrades remove the older core. APT
-must enforce the writer dependency on machines with an older core or
-an incomplete repository index. Older published consumers that depend on the
-guarded core remain supported by the migration timer.
+The snapshots-manager candidate still requires the guarded core or boot-tools
+for its recovery operations. Plymouth uses the official `update-initramfs -u`
+entry point supplied by `dracut`, so its candidate needs a Dracut dependency
+without a dependency on the AnduinOS writer. Both candidates must exclude the
+legacy generator dependencies. Older Plymouth candidates that also depend on
+the guarded core or boot-tools remain accepted. Waiting for the new core and
+checking APT's removal plan prevent consumer upgrades from removing the older
+core during an incomplete repository publication.
 
 ### `anduinos-dracut-migration`
 
@@ -148,7 +147,11 @@ from the legacy stack it must:
 If any step fails, `preinst` returns nonzero. The normal legacy boot artifacts
 have not been modified, so an offline-update failure reboot remains safe.
 
-Its `postinst configure` must:
+Its `postinst configure` queues the `anduinos-dracut-migration` dpkg trigger
+and leaves the sealed fallback active. This avoids rebuilding a newly unpacked
+kernel before its configuration has generated the module dependency indexes.
+Core requires boot-tools >= 2.0.3-4 so a migration cannot reuse the older
+synchronous completion script. The `postinst triggered` invocation must:
 
 1. require Dracut and all declared boot dependencies to be present;
 2. write `packages-switched` idempotently;

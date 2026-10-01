@@ -562,12 +562,25 @@ class MigrationGuardTests(unittest.TestCase):
                 paths["bin"] / "verify",
                 'printf "%s\\n" "$1" >> "$VERIFY_CALLS"\n',
             )
+            trigger_calls = root / "trigger-calls"
+            executable(
+                paths["bin"] / "dpkg-trigger",
+                'printf "%s\\n" "$*" >> "$TRIGGER_CALLS"\n',
+            )
             post_env = {
                 **env,
                 "ANDUINOS_MIGRATION_VERIFY": str(verifier),
                 "VERIFY_CALLS": str(calls),
+                "TRIGGER_CALLS": str(trigger_calls),
+                "PATH": f"{paths['bin']}:{os.environ['PATH']}",
             }
             subprocess.run(["/bin/sh", POSTINST, "configure", "2.0.2-1"], env=post_env, check=True)
+            self.assertEqual(trigger_calls.read_text().strip(),
+                             "--no-await anduinos-dracut-migration")
+            self.assertFalse(calls.exists())
+            self.assertFalse((paths["state"] / "complete").exists())
+            subprocess.run(["/bin/sh", POSTINST, "triggered", "anduinos-dracut-migration"],
+                           env=post_env, check=True)
             self.assertEqual(
                 calls.read_text().splitlines(),
                 ["--rebuild", "--verify", "--verify-default"],
@@ -611,7 +624,7 @@ class MigrationGuardTests(unittest.TestCase):
                     "ANDUINOS_MIGRATION_FAIL_AT": checkpoint,
                 }
                 result = subprocess.run(
-                    ["/bin/sh", POSTINST, "configure", "2.0.2-1"],
+                    ["/bin/sh", POSTINST, "triggered", "anduinos-dracut-migration"],
                     env=post_env,
                     check=False,
                 )
@@ -634,7 +647,7 @@ class MigrationGuardTests(unittest.TestCase):
 
                 retry_env = {**post_env, "ANDUINOS_MIGRATION_FAIL_AT": ""}
                 subprocess.run(
-                    ["/bin/sh", POSTINST, "configure", "2.0.2-1"],
+                    ["/bin/sh", POSTINST, "triggered", "anduinos-dracut-migration"],
                     env=retry_env,
                     check=True,
                 )

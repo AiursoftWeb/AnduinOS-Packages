@@ -46,9 +46,19 @@ atomic_update_grub() {
     sync -f "$(dirname "$GRUB_CFG")"
 }
 
-[ "${1:-}" = configure ] || exit 0
+case "${1:-}" in
+    configure|triggered) ;;
+    *) exit 0 ;;
+esac
 [ -e "$STATE_DIR/fallback-ready" ] || exit 0
 [ ! -e "$STATE_DIR/complete" ] || exit 0
+
+# Let dpkg configure newly unpacked kernels before completing the migration.
+if [ "$1" = configure ]; then
+    dpkg-trigger --no-await anduinos-dracut-migration
+    log "deferring migration completion to the dpkg trigger"
+    exit 0
+fi
 
 atomic_marker packages-switched
 checkpoint before_rebuild
