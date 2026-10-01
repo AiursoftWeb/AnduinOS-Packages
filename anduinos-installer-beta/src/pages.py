@@ -811,15 +811,26 @@ def build_firmware_check_page(shared, nav_view):
     lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(title=_("Checking firmware", lang))
     page.set_tag("firmware-check")
-    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16,
-                      margin_start=32, margin_end=32, margin_top=28,
-                      margin_bottom=20)
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    hero = _page_header("Checking firmware", "Checking Secure Boot support…",
+                        "secure-boot", lang)
+    content.append(hero)
+    body = card(spacing=16)
+    body.set_valign(Gtk.Align.START)
+    body.set_margin_start(32)
+    body.set_margin_end(32)
+    body.set_margin_top(28)
+    body.set_margin_bottom(20)
+    status_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
     spinner = Gtk.Spinner(spinning=True)
-    content.append(spinner)
-    status = Gtk.Label(label=_("Checking Secure Boot support…", lang), wrap=True)
-    content.append(status)
-    details = Gtk.Label(wrap=True, selectable=True, xalign=0, vexpand=True)
-    content.append(details)
+    status_row.append(spinner)
+    status = Gtk.Label(label=_("Checking Secure Boot support…", lang),
+                       wrap=True, xalign=0, hexpand=True)
+    status.add_css_class("heading")
+    status_row.append(status)
+    body.append(status_row)
+    details = Gtk.Label(wrap=True, selectable=True, xalign=0)
+    body.append(details)
     request = LatestBackgroundRequest(GLib.idle_add)
 
     def advance():
@@ -839,6 +850,7 @@ def build_firmware_check_page(shared, nav_view):
 
     def complete(platform, error):
         spinner.stop()
+        spinner.set_visible(False)
         retry.set_sensitive(True)
         shared["_platform_probe_result"] = platform
         shared["_platform_probe_error"] = str(error) if error else ""
@@ -857,22 +869,29 @@ def build_firmware_check_page(shared, nav_view):
                 firmware=platform.firmware.value,
                 secure_boot=platform.secure_boot.value,
             ))
+        hero._title_label.set_label(status.get_label())
+        hero._subtitle_label.set_visible(False)
         retry.set_visible(bool(error))
         navigation.next_button.set_sensitive(True)
 
     def start():
+        spinner.set_visible(True)
         spinner.start()
         status.set_label(_("Checking Secure Boot support…", lang))
+        hero._title_label.set_label(_("Checking firmware", lang))
+        hero._subtitle_label.set_visible(True)
         details.set_label("")
+        retry.set_visible(False)
         retry.set_sensitive(False)
         navigation.next_button.set_sensitive(False)
         request.start(lambda: probe_platform(recover=True), complete)
 
     retry = _nav_btn("Retry", lang, start)
     retry.set_visible(False)
-    content.append(retry)
+    body.append(retry)
+    content.append(clamp_content(body, maximum_size=720))
     content.append(navigation)
-    page.set_child(content)
+    _set_page_content(page, content, scroll_body=True)
     page.connect("shown", lambda *_args: start())
     page.connect("hidden", lambda *_args: request.invalidate())
     return page
