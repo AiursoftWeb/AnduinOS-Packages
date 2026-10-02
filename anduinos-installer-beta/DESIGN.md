@@ -371,13 +371,25 @@ rounded visual boundary and obscure whether the card itself is active.
   installer-owned data and rendered by native GTK4. No WebKit, JavaScript,
   Ubiquity or installer-config dependency is introduced. The dashboard opens
   on an automatically advancing presentation with manual navigation and can
-  switch instantly to the live Output view.
+  switch instantly to the live Output view. The default presentation fills the
+  page with the historical title strip, wallpaper, text/screenshot layout and
+  side arrows. A bottom-right Output toggle reveals the task list and live log;
+  the current task name and overall progress bar stay below both modes.
+  The wallpaper is the updated asset from `AnduinOS-Packages` at `b1975b31`,
+  under `anduinos-installer-config/assets/slides/link/background.png`;
+  `link/base.css` in that historical tree is the layout reference. The older
+  `AnduinOS-2` copy predates this wallpaper update. HTML remains installer-owned
+  data under `assets/slideshow`, including its localized variants.
 - Milestone 7C — complete: warning events accumulate on the Output switcher
   without interrupting the presentation; fatal errors reveal and focus the
   live log with an error banner; successful completion stops the carousel and
   opens a dedicated completion/MOK/reboot card. Output can be copied or saved
-  to the live user's home directory, while the presentation and log remain
-  available after completion.
+  through a Save As chooser, including while installation is running. Saving
+  writes a snapshot from the moment the destination is confirmed, without
+  blocking installation; success and write failures are reported visibly.
+  Completion replaces the presentation
+  inside the default mode; the Output toggle still opens the retained log,
+  without introducing a third mode or hiding the completion instructions.
 - Milestone 8A — complete: read-only storage inventory records stable disk and
   partition identities, exact allocated/free geometry, filesystems, ESPs and
   topology digests. The existing erase-disk executor freezes a typed write set

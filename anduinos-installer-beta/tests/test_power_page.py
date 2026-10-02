@@ -281,7 +281,9 @@ class PowerPageRoutingTests(unittest.TestCase):
 
         self.assertEqual(
             registered_tags - {"guided-storage", "disk-layout", "firmware-check"},
-            manual_route,
+            # Installation retains its route position but has a task progress
+            # bar instead of the configuration pages' navigation footer.
+            manual_route - {"progress"},
         )
 
         erase_shared = {

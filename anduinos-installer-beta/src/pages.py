@@ -130,7 +130,7 @@ from installer_core.wifi import (
     set_wifi_radio,
     wifi_radio_enabled,
 )
-from slideshow import load_slides
+from slideshow import load_slides, slideshow_root
 from ui import card, clamp_content, icon_picture, page_hero
 from async_work import LatestBackgroundRequest, ProgressPulse
 
@@ -7370,14 +7370,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     page = Adw.NavigationPage(title=_("Installing AnduinOS", lang))
     page.set_tag("progress")
 
-    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(
-        _page_header(
-            "Installing AnduinOS",
-            "Please do not turn off your computer",
-            "disk-snapshots-manager",
-            lang,
-        )
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+    output_toggle = Gtk.ToggleButton(
+        label=_("Output", lang), valign=Gtk.Align.CENTER,
     )
 
     selected_methods = tuple(
@@ -7495,14 +7490,16 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     # Log view
     log_buf = Gtk.TextBuffer()
     log_view = Gtk.TextView(buffer=log_buf, editable=False, monospace=True,
-                            margin_start=48, margin_end=48, margin_top=12,
-                            vexpand=True)
+                            left_margin=12, right_margin=12,
+                            top_margin=12, bottom_margin=12,
+                            hexpand=True, vexpand=True)
     log_view.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
     log_scroll = _scrolled_window(
         hscrollbar_policy=Gtk.PolicyType.NEVER,
         vexpand=True,
     )
     log_scroll.set_child(log_view)
+    log_scroll.add_css_class("installer-log-scroll")
     output_notice = Gtk.Label(
         visible=False,
         wrap=True,
@@ -7517,7 +7514,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     )
     save_log_button = Gtk.Button(label=_("Save Log", lang))
     save_log_button.connect(
-        "clicked", lambda _button: _save_log(log_buf)
+        "clicked", lambda button: _save_log(log_buf, button, lang)
     )
     output_actions = Gtk.Box(
         orientation=Gtk.Orientation.HORIZONTAL,
@@ -7540,50 +7537,57 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         vexpand=True,
     )
     for slide in slides:
-        slide_box = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=10,
-            margin_top=16,
-            margin_bottom=8,
-            margin_start=18,
-            margin_end=18,
-        )
+        slide_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        slide_box.add_css_class("legacy-slide")
+        wide = slide.key in {"welcome", "support"}
+        if wide:
+            slide_box.add_css_class("legacy-slide-wide")
         title = Gtk.Label(
             label=slide.title,
             wrap=True,
-            justify=Gtk.Justification.CENTER,
+            xalign=0,
         )
-        title.add_css_class("title-2")
+        title.add_css_class("legacy-slide-title")
+        stage = Gtk.Overlay(vexpand=True)
+        background = Gtk.Picture.new_for_filename(str(
+            slide.image if wide else slideshow_root() / "background.png"))
+        background.set_content_fit(Gtk.ContentFit.COVER)
+        background.set_can_shrink(True)
+        stage.set_child(background)
+        columns = Gtk.Box(spacing=20, margin_start=36, margin_end=30,
+                          margin_top=25, margin_bottom=35)
+        text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        for paragraph in slide.paragraphs_markup:
+            body = Gtk.Label(label=paragraph, use_markup=True, wrap=True, xalign=0,
+                             wrap_mode=Pango.WrapMode.WORD_CHAR)
+            body.add_css_class("legacy-slide-paragraph")
+            text.append(body)
+        text_scroll = _scrolled_window(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        text_scroll.set_size_request(350 if wide else 248, -1)
+        text_scroll.set_child(text)
+        columns.append(text_scroll)
         picture = Gtk.Picture.new_for_filename(str(slide.image))
         picture.set_content_fit(Gtk.ContentFit.CONTAIN)
         picture.set_can_shrink(True)
-        picture.set_vexpand(True)
-        picture.set_size_request(-1, 190)
-        body = Gtk.Label(
-            label=slide.body,
-            wrap=True,
-            justify=Gtk.Justification.CENTER,
-            max_width_chars=72,
-        )
-        body.add_css_class("dim-label")
+        picture.set_hexpand(True)
+        picture.set_valign(Gtk.Align.START)
+        picture.add_css_class("legacy-slide-picture")
+        if not wide:
+            columns.append(picture)
+        else:
+            columns.append(Gtk.Box(hexpand=True))
+        stage.add_overlay(columns)
+        stage.set_measure_overlay(columns, False)
         slide_box.append(title)
-        slide_box.append(picture)
-        slide_box.append(body)
+        slide_box.append(stage)
         slide_stack.add_named(slide_box, slide.key)
 
     slide_position = {"value": 0}
-    dots = Gtk.Label()
 
     def _show_slide(position):
         position %= len(slides)
         slide_position["value"] = position
         slide_stack.set_visible_child_name(slides[position].key)
-        dots.set_label(
-            "  ".join(
-                "●" if index == position else "○"
-                for index in range(len(slides))
-            )
-        )
 
     previous = Gtk.Button.new_from_icon_name("go-previous-symbolic")
     previous.set_tooltip_text(_("Previous slide", lang))
@@ -7597,27 +7601,18 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "clicked",
         lambda _button: _show_slide(slide_position["value"] + 1),
     )
-    slide_controls = Gtk.Box(
-        orientation=Gtk.Orientation.HORIZONTAL,
-        spacing=12,
-        halign=Gtk.Align.CENTER,
-        margin_bottom=10,
-    )
-    slide_controls.append(previous)
-    slide_controls.append(dots)
-    slide_controls.append(following)
-    slide_scroll = _scrolled_window(
-        vexpand=True,
-        hscrollbar_policy=Gtk.PolicyType.NEVER,
-    )
-    slide_scroll.set_child(slide_stack)
-    slideshow_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    slideshow_box.append(slide_scroll)
-    slideshow_box.append(slide_controls)
+    slideshow_box = Gtk.Overlay(vexpand=True)
+    slideshow_box.set_child(slide_stack)
+    for button, alignment in ((previous, Gtk.Align.START), (following, Gtk.Align.END)):
+        button.set_halign(alignment)
+        button.set_valign(Gtk.Align.CENTER)
+        button.add_css_class("legacy-slide-arrow")
+        slideshow_box.add_overlay(button)
     _show_slide(0)
 
     def _advance_slide():
-        _show_slide(slide_position["value"] + 1)
+        if not output_toggle.get_active():
+            _show_slide(slide_position["value"] + 1)
         return True
 
     slide_timer = {"id": GLib.timeout_add_seconds(9, _advance_slide)}
@@ -7683,29 +7678,13 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         transition_duration=250,
         vexpand=True,
     )
-    mode_stack.add_titled(
-        slideshow_box, "discover", _("Discover", lang)
-    )
-    output_page = mode_stack.add_titled(
-        output_box, "output", _("Output", lang)
-    )
-    complete_page = mode_stack.add_titled(
-        result_scroll, "complete", _("Complete", lang)
-    )
-    complete_page.set_visible(False)
-    mode_stack.set_visible_child_name("discover")
-    mode_switcher = Gtk.StackSwitcher(
-        stack=mode_stack,
-        halign=Gtk.Align.CENTER,
-        margin_top=8,
-        margin_bottom=4,
-    )
-    mode_switcher.add_css_class("progress-mode-switcher")
-    right_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    right_box.append(mode_switcher)
-    right_box.append(mode_stack)
+    presentation_stack = Gtk.Stack(vexpand=True)
+    presentation_stack.add_named(slideshow_box, "slides")
+    presentation_stack.add_named(result_scroll, "result")
+    presentation_stack.set_visible_child_name("slides")
+    mode_stack.add_named(presentation_stack, "discover")
     output_frame = Gtk.Frame()
-    output_frame.set_child(right_box)
+    output_frame.set_child(output_box)
     output_frame.add_css_class("progress-card")
 
     workspace = Gtk.Paned(
@@ -7713,23 +7692,33 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         position=330,
         wide_handle=True,
         vexpand=True,
-        margin_start=24,
-        margin_end=24,
-        margin_top=12,
+        margin_start=12,
+        margin_end=12,
+        margin_top=6,
     )
     workspace.set_start_child(left_frame)
     workspace.set_end_child(output_frame)
     workspace.set_resize_start_child(False)
     workspace.set_shrink_start_child(False)
-    content.append(workspace)
+    mode_stack.add_named(workspace, "output")
+    mode_stack.set_visible_child_name("discover")
+    output_toggle.connect("toggled", lambda button: mode_stack.set_visible_child_name(
+        "output" if button.get_active() else "discover"))
+    content.append(mode_stack)
 
     progress_status = Gtk.Label(
         label=_("Preparing installation…", lang),
-        halign=Gtk.Align.START,
-        margin_start=48,
-        margin_end=48,
-        margin_top=12,
+        xalign=0,
+        hexpand=True,
+        wrap=True,
+        wrap_mode=Pango.WrapMode.WORD_CHAR,
     )
+    progress_status.set_tooltip_text(_("Please do not turn off your computer", lang))
+    status_row = Gtk.Box(
+        spacing=16, margin_start=48, margin_end=48, margin_top=8,
+    )
+    status_row.append(progress_status)
+    status_row.append(output_toggle)
     progress = Gtk.ProgressBar(
         margin_start=48,
         margin_end=48,
@@ -7738,19 +7727,8 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     )
     progress.set_show_text(True)
     progress.add_css_class("installer-progress")
-    content.append(progress_status)
+    content.append(status_row)
     content.append(progress)
-    progress_footer = _nav_box(
-        lang,
-        on_back=lambda: None,
-        on_next=lambda: None,
-        stage=4,
-        show_back=False,
-        shared=shared,
-        page_tag="progress",
-    )
-    progress_footer.next_button.set_visible(False)
-    content.append(progress_footer)
 
     # Log callback (thread-safe via GLib.idle_add)
     def log(msg: str):
@@ -7831,16 +7809,16 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                             lang,
                         )
                     )
-                complete_page.set_visible(True)
-                mode_stack.set_visible_child_name("complete")
+                presentation_stack.set_visible_child_name("result")
+                output_toggle.set_active(False)
             else:
                 progress_status.set_label(_("Installation failed", lang))
                 output_notice.set_label(
                     f"{_('Installation Failed', lang)}\n{error}"
                 )
                 output_notice.set_visible(True)
-                output_page.set_title(_("Output • Error", lang))
-                mode_stack.set_visible_child_name("output")
+                output_toggle.set_label(_("Output • Error", lang))
+                output_toggle.set_active(True)
                 log(f"ERROR: {error}")
             return False
         GLib.idle_add(_done)
@@ -7885,18 +7863,19 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             light.set_label(status_symbols.get(status, "○"))
             if status == "running":
                 label.add_css_class("step-active")
+                progress_status.set_label(step_titles.get(step, step))
             else:
                 label.remove_css_class("step-active")
             row.set_tooltip_text(message or step_titles.get(step, step))
             if status == "warning":
                 warning_count["value"] += 1
-                output_page.set_title(
+                output_toggle.set_label(
                     _("Output • {count} warning(s)", lang).format(
                         count=warning_count["value"]
                     )
                 )
             elif status == "failed":
-                output_page.set_title(_("Output • Error", lang))
+                output_toggle.set_label(_("Output • Error", lang))
                 output_notice.set_label(
                     message
                     or _("{step} failed", lang).format(
@@ -7904,7 +7883,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                     )
                 )
                 output_notice.set_visible(True)
-                mode_stack.set_visible_child_name("output")
+                output_toggle.set_active(True)
             return False
         GLib.idle_add(_update)
 
@@ -7936,16 +7915,53 @@ def _do_reboot():
         pass
 
 
-def _save_log(log_buf):
-    """Save the install log to the current live user's home directory."""
-    try:
+def _save_log(log_buf, widget, lang):
+    """Save a snapshot through the desktop chooser without pausing installation."""
+    parent = widget.get_root()
+    chooser = Gtk.FileDialog(
+        title=_("Save Log", lang), modal=True,
+        initial_name="anduinos-install.log",
+    )
+
+    def notify(heading, body):
+        dialog = Adw.MessageDialog(
+            transient_for=parent, heading=heading, body=body,
+        )
+        dialog.add_response("ok", _("OK", lang))
+        dialog.present()
+
+    def written(file, result):
+        try:
+            file.replace_contents_finish(result)
+        except GLib.Error as error:
+            notify(_("Save Log", lang), error.message)
+        else:
+            notify(_("Saved", lang), file.get_parse_name())
+
+    def selected(dialog, result):
+        try:
+            file = dialog.save_finish(result)
+        except GLib.Error as error:
+            if not any(error.matches(Gtk.DialogError.quark(), code) for code in (
+                Gtk.DialogError.DISMISSED, Gtk.DialogError.CANCELLED,
+            )):
+                notify(_("Save Log", lang), error.message)
+            return
+        if file is None:
+            return
+        # Read on the GTK thread only after the user confirms the destination.
+        # Later log events continue in the UI while this immutable snapshot saves.
         text = log_buf.get_text(
-            log_buf.get_start_iter(), log_buf.get_end_iter(), False)
-        dest = os.path.join(os.path.expanduser("~"), "anduinos-install.log")
-        with open(dest, "w", encoding="utf-8") as f:
-            f.write(text)
-    except Exception:
-        pass
+            log_buf.get_start_iter(), log_buf.get_end_iter(), False,
+        )
+        # GBytes owns the data until the asynchronous write completes.
+        file.replace_contents_bytes_async(
+            GLib.Bytes.new(text.encode("utf-8")), None, False,
+            Gio.FileCreateFlags.PRIVATE | Gio.FileCreateFlags.REPLACE_DESTINATION,
+            None, written,
+        )
+
+    chooser.save(parent, None, selected)
 
 
 def _copy_log(log_buf, widget):
