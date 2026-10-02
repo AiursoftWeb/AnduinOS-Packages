@@ -600,8 +600,10 @@ class DevelopmentExecutorClient:
             progress(step, completed, total)
             step_status(step, "running", "")
             log(f"[{step}] simulated; no command was executed")
+            for second in range(4):
+                log(f"sleep {second}")
+                time.sleep(1)
             completed += weight
-            time.sleep(0.03)
             step_status(step, "succeeded", "")
         progress("complete", total, total)
         log("Simulation complete. No disk, mount, firmware, or target changed.")
