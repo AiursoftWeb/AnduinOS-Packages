@@ -202,9 +202,6 @@ msgstr "选择您的语言以开始安装"
 msgid "Choose your location to set the system clock"
 msgstr "选择您的位置以设置系统时钟"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "完成"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -290,9 +287,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "开发模拟已完成"
 
-#: src/pages.py:7073
-msgid "Discover"
-msgstr "探索"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -1980,6 +1974,26 @@ msgstr "复用健康且空间充足的 ESP，不格式化，保留其他系统�
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
 msgstr "两种方案都会将引导文件安装到 EFI/AnduinOS，并把新的 AnduinOS UEFI 启动项排在首位。检测到的受支持系统会加入新 GRUB 菜单；不会改动它们的文件和菜单。"
+
+#: src/app_menu.py
+msgid "About"
+msgstr "关于"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "查看源码"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "官方网站"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "报告问题"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "主菜单"
 
 #: src/pages.py
 msgid "Retry"

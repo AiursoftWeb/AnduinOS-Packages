@@ -201,9 +201,6 @@ msgstr "インストールを開始するには言語を選択してください
 msgid "Choose your location to set the system clock"
 msgstr "システムのクロックを設定するために場所を選択してください"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "完了"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -289,9 +286,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "開発シミュレーションが完了しました"
 
-#: src/pages.py:7073
-msgid "Discover"
-msgstr "探索"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -1979,6 +1973,26 @@ msgstr "十分な空き容量のある正常な ESP を、フォーマットせ�
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
 msgstr "どちらも EFI/AnduinOS に起動ファイルをインストールし、新しい AnduinOS UEFI 起動エントリを最優先にします。検出された対応システムは新しい GRUB メニューに追加しますが、それらのファイルやメニューは変更しません。"
+
+#: src/app_menu.py
+msgid "About"
+msgstr "このアプリについて"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "ソースコードを見る"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "公式ウェブサイト"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "問題を報告"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "メインメニュー"
 
 #: src/pages.py
 msgid "Retry"
