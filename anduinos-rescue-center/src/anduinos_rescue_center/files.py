@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+import ctypes
+import errno
 import os
 import pwd
 import shutil
 import stat
 import subprocess
+import tempfile
+from contextlib import contextmanager
 from collections.abc import Callable
 from pathlib import Path, PurePosixPath
 
@@ -91,22 +95,24 @@ def export_file(
         metadata = source.lstat()
         if not (stat.S_ISREG(metadata.st_mode) or stat.S_ISDIR(metadata.st_mode)):
             raise RuntimeError(tr("Symbolic links and special files cannot be exported"))
-        target = destination / source.name
-        if target.exists() or target.is_symlink():
-            raise RuntimeError(tr("A file with this name already exists at the destination"))
         account = pwd.getpwuid(caller_uid)
-        try:
-            _copy_safe(source, target, account.pw_uid, account.pw_gid)
-            sync = run(
-                ["sync", "-f", str(target)], capture_output=True, text=True,
-                timeout=120, check=False,
-            )
-            if sync.returncode != 0:
-                raise RuntimeError((sync.stderr or sync.stdout).strip() or tr("Could not sync exported data"))
-        except Exception:
-            _remove_created(target)
-            raise
-        return str(target)
+        with _export_directory(destination) as destination_fd:
+            # Keep the copy inaccessible to the caller until publication. Pin the
+            # staging directory too: its user-owned parent can be renamed.
+            stage = Path(tempfile.mkdtemp(prefix=".anduinos-export-", dir=f"/proc/self/fd/{destination_fd}"))
+            try:
+                with _staging_directory(destination_fd, stage.name) as stage_fd:
+                    payload = Path(f"/proc/self/fd/{stage_fd}") / source.name
+                    try:
+                        _copy_safe(source, payload, account.pw_uid, account.pw_gid)
+                        os.fsync(stage_fd)
+                        _publish_export(stage_fd, source.name, destination_fd)
+                        os.fsync(destination_fd)
+                    finally:
+                        _remove_created(payload)
+            finally:
+                os.rmdir(stage.name, dir_fd=destination_fd)
+        return str(destination / source.name)
 
 
 def logical_path(top: Path, filesystem: str, relative: str) -> tuple[Path, str]:
@@ -182,10 +188,15 @@ def _copy_safe(source: Path, target: Path, uid: int, gid: int) -> None:
     if not stat.S_ISDIR(metadata.st_mode):
         raise RuntimeError(tr("Cannot export special file: {name}").format(name=source.name))
     target.mkdir(mode=metadata.st_mode & 0o777)
-    os.chown(target, uid, gid, follow_symlinks=False)
     with os.scandir(source) as iterator:
         for entry in iterator:
             _copy_safe(Path(entry.path), target / entry.name, uid, gid)
+    os.chown(target, uid, gid, follow_symlinks=False)
+    directory_fd = os.open(target, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC)
+    try:
+        os.fsync(directory_fd)
+    finally:
+        os.close(directory_fd)
 
 
 def _remove_created(path: Path) -> None:
@@ -196,3 +207,41 @@ def _remove_created(path: Path) -> None:
             path.unlink(missing_ok=True)
     except OSError:
         pass
+
+
+@contextmanager
+def _export_directory(path: Path):
+    """Pin a directory without following any path component's symlink."""
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
+    fd = os.open("/", flags)
+    try:
+        for component in path.parts[1:]:
+            next_fd = os.open(component, flags, dir_fd=fd)
+            os.close(fd)
+            fd = next_fd
+        yield fd
+    finally:
+        os.close(fd)
+
+
+def _publish_export(source_fd: int, name: str, destination_fd: int) -> None:
+    """Linux renameat2 publishes atomically and never replaces existing data."""
+    rename = ctypes.CDLL(None, use_errno=True).renameat2
+    rename.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p, ctypes.c_uint]
+    rename.restype = ctypes.c_int
+    encoded = os.fsencode(name)
+    if rename(source_fd, encoded, destination_fd, encoded, 1) != 0:  # RENAME_NOREPLACE
+        error = ctypes.get_errno()
+        raise OSError(error, os.strerror(error), name)
+
+
+@contextmanager
+def _staging_directory(parent_fd: int, name: str):
+    fd = os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC, dir_fd=parent_fd)
+    try:
+        metadata = os.fstat(fd)
+        if metadata.st_uid != os.geteuid() or stat.S_IMODE(metadata.st_mode) != 0o700 or os.listdir(fd):
+            raise OSError(errno.EACCES, "Export requires a private, owned staging directory")
+        yield fd
+    finally:
+        os.close(fd)

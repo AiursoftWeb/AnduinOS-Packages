@@ -86,3 +86,5 @@ power, mounted filesystems, the selected disk, and changes to the offline
 system. `compile-locales.sh` rejects untranslated/fuzzy entries and validates
 format placeholders before compiling the catalogs. After translation, run
 `render-desktop-locales.sh` to refresh the localized desktop-entry fields.
+
+File export uses a private staging directory and never overwrites an existing destination. The destination filesystem must support Unix ownership and private directory permissions. For FAT/exFAT media, export to your Home directory first, then copy the rescued files to the media using Files.
