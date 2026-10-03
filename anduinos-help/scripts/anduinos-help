@@ -1,0 +1,5 @@
+#!/usr/bin/python3
+"""AnduinOS Help launcher — installed as /usr/bin/anduinos-help."""
+from anduinos_help.main import main
+
+raise SystemExit(main())

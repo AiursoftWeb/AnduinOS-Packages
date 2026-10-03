@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<component type="desktop-application">
+  <id>com.anduinos.Help</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0</project_license>
+  <name>AnduinOS Help</name>
+  <summary>Browse the official AnduinOS documentation</summary>
+  <summary xml:lang="zh-CN">浏览 AnduinOS 官方文档（本地索引）</summary>
+  <description>
+    <p>AnduinOS Help — native documentation browser for AnduinOS. Periodically clones the official AnduinOS-Docs git repository and indexes its Markdown into a local SQLite database, so search, navigation, and article rendering work fully offline after the initial sync. Source: https://github.com/AiursoftWeb/AnduinOS-Docs</p>
+  </description>
+  <developer_name>AnduinOS Team</developer_name>
+  <categories>
+    <category>Documentation</category>
+    <category>GNOME</category>
+    <category>GTK</category>
+    <category>Utility</category>
+  </categories>
+  <url type="homepage">https://docs.anduinos.com/</url>
+  <url type="vcs-browser">https://github.com/AiursoftWeb/AnduinOS-Packages</url>
+  <launchable type="desktop-id">com.anduinos.Help.desktop</launchable>
+  <icon type="stock">com.anduinos.Help</icon>
+</component>
