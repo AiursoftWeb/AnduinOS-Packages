@@ -135,6 +135,11 @@ if [ -z "$test_mode" ]; then
     fi
 
     install -d -m 0775 -o root -g adm /var/log/installer
+    # Prepare a missing efivarfs before starting the graphical session. Keep
+    # diagnostics even when firmware is faulty; the installer offers a retry.
+    /usr/libexec/anduinos-firmware-probe \
+        > /var/log/installer/firmware-initial.json || \
+        echo "Initial firmware inspection failed; installer will retry" >&2
     for unit in apt-daily.service apt-daily.timer apt-daily-upgrade.service \
         apt-daily-upgrade.timer unattended-upgrades.service; do
         ln -sfn /dev/null "/run/systemd/system/$unit"

@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -200,9 +201,6 @@ msgstr "Επιλέξτε τη γλώσσα σας για να ξεκινήσει
 msgid "Choose your location to set the system clock"
 msgstr "Επιλέξτε την τοποθεσία σας για να ορίσετε το ρολόι του συστήματος"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "Ολοκληρώθηκε"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -234,6 +232,9 @@ msgid "Continue Installation"
 msgstr "Συνέχεια εγκατάστασης"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "Έλεγχος μέσου εγκατάστασης"
+
 msgid "Copy AnduinOS system"
 msgstr "Αντιγραφή συστήματος AnduinOS"
 
@@ -285,9 +286,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "Ολοκληρώθηκε η προσομοίωση ανάπτυξης"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "Ανακαλύψτε το AnduinOS"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -853,6 +851,10 @@ msgstr "Κάτω από το ελάχιστο. Η εγκατάσταση ή οι
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "Κάτω από τη συνιστώμενη χωρητικότητα. Ο χώρος μπορεί να εξαντληθεί γρήγορα. Συνέχεια;"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "Απαιτούνται τουλάχιστον 6 GiB για την εγκατάσταση του AnduinOS."
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1907,3 +1909,91 @@ msgstr "Βήματα επιδιόρθωσης"
 #: src/pages.py
 msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
 msgstr "Αυτός ο τόμος NTFS απαιτεί έλεγχο δίσκου στα Windows πριν αλλάξει με ασφάλεια το μέγεθός του."
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "Λειτουργία εξωτερικού δίσκου — Το AnduinOS θα προσθέσει μια φορητή διαδρομή εκκίνησης UEFI, ώστε αυτός ο δίσκος να μπορεί να εκκινήσει σε άλλον υπολογιστή UEFI χωρίς υπάρχουσα καταχώρηση εκκίνησης AnduinOS στο υλικολογισμικό."
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "Έλεγχος υλικολογισμικού"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Έλεγχος υποστήριξης Secure Boot…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Δεν ήταν δυνατός ο προσδιορισμός της υποστήριξης Secure Boot"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "Μπορείτε να συνεχίσετε τη διαμόρφωση της εγκατάστασης. Ο έλεγχος υλικολογισμικού πρέπει να ολοκληρωθεί επιτυχώς πριν γίνουν αλλαγές στους δίσκους σας."
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "Ο έλεγχος υλικολογισμικού ολοκληρώθηκε"
+
+#: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "Απαιτείται ξεχωριστό διαμέρισμα συστήματος EFI"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "Αυτό το ESP περιέχει ήδη το EFI/AnduinOS. Δημιουργήστε νέο ESP στον μη εκχωρημένο χώρο (τουλάχιστον 512 MiB) ή επιλέξτε άλλο ESP. Η υπάρχουσα εγκατάσταση δεν θα αντικατασταθεί. Το μενού GRUB του νέου συστήματος μπορεί να εκκινήσει το υπάρχον σύστημα."
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "Έλεγχος διαμερίσματος συστήματος EFI…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "Αναζήτηση άλλων εγκαταστάσεων Linux"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "Σύγκριση επιλογών ESP"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "Ξεχωριστό ESP"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "Κοινόχρηστο ESP"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "Δημιουργία και διαμόρφωση νέου ESP FAT32 σε μη εκχωρημένο χώρο (τουλάχιστον 512 MiB). Τα υπάρχοντα ESP παραμένουν αμετάβλητα."
+
+#: src/pages.py
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
+msgstr "Επαναχρησιμοποίηση υγιούς ESP με αρκετό ελεύθερο χώρο, χωρίς διαμόρφωση. Τα αρχεία εκκίνησης άλλων συστημάτων διατηρούνται. Αν υπάρχει ήδη το EFI/AnduinOS, επιλέξτε άλλο ESP ή δημιουργήστε νέο."
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "Και οι δύο επιλογές εγκαθιστούν αρχεία εκκίνησης στο EFI/AnduinOS και τοποθετούν πρώτη τη νέα καταχώριση εκκίνησης UEFI του AnduinOS. Τα υποστηριζόμενα συστήματα που εντοπίζονται προστίθενται στο νέο μενού GRUB· τα αρχεία και τα μενού τους δεν αλλάζουν."
+
+#: src/app_menu.py
+msgid "About"
+msgstr "Σχετικά"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "Προβολή πηγαίου κώδικα"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "Επίσημος ιστότοπος"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "Αναφορά προβλήματος"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "Κύριο μενού"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "Επανάληψη"

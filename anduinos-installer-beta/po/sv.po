@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -200,9 +201,6 @@ msgstr "Välj ditt språk för att börja installationen"
 msgid "Choose your location to set the system clock"
 msgstr "Välj din plats för att ställa in systemklockan"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "Klar"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -234,6 +232,9 @@ msgid "Continue Installation"
 msgstr "Fortsätt installationen"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "Kontrollera installationsmediet"
+
 msgid "Copy AnduinOS system"
 msgstr "Kopiera AnduinOS-systemet"
 
@@ -285,9 +286,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "Utvecklingssimulering slutförd"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "Utmana AnduinOS"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -853,6 +851,10 @@ msgstr "Under minimikravet. Installation eller uppdateringar kan misslyckas. For
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "Under rekommenderad kapacitet. Utrymmet kan snabbt ta slut. Fortsätt?"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "Minst 6 GiB krävs för att installera AnduinOS."
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1907,3 +1909,91 @@ msgstr "Reparationssteg"
 #: src/pages.py
 msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
 msgstr "Den här NTFS-volymen kräver en diskkontroll i Windows innan dess storlek kan ändras säkert."
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "Läge för extern enhet — AnduinOS lägger till en portabel UEFI-startsökväg så att enheten kan starta på en annan UEFI-dator utan en befintlig AnduinOS-post i den fasta programvaran."
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "Kontrollerar fast programvara"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Kontrollerar stöd för Secure Boot…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Det gick inte att avgöra om Secure Boot stöds"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "Du kan fortsätta konfigurera installationen. Kontrollen av den fasta programvaran måste lyckas innan några ändringar görs på dina diskar."
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "Kontrollen av den fasta programvaran är klar"
+
+#: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "En separat EFI-systempartition krävs"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "Denna ESP innehåller redan EFI/AnduinOS. Skapa en ny ESP i oallokerat utrymme (minst 512 MiB), eller välj en annan ESP. Den befintliga installationen skrivs inte över. Det nya systemets GRUB-meny kan starta det befintliga systemet."
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "Kontrollerar EFI-systempartition…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "Sök efter andra Linux-installationer"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "Jämför ESP-alternativ"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "Separat ESP"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "Delad ESP"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "Skapa och formatera en ny FAT32-ESP i oallokerat utrymme (minst 512 MiB). Befintliga ESP:er lämnas oförändrade."
+
+#: src/pages.py
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
+msgstr "Återanvänd en felfri ESP med tillräckligt ledigt utrymme utan att formatera den. Andra systems startfiler bevaras. Om EFI/AnduinOS redan finns, välj en annan ESP eller skapa en ny."
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "Båda alternativen installerar startfiler i EFI/AnduinOS och placerar den nya AnduinOS-UEFI-startposten först. Upptäckta system som stöds får poster i den nya GRUB-menyn; deras filer och menyer ändras inte."
+
+#: src/app_menu.py
+msgid "About"
+msgstr "Om"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "Visa källkod"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "Officiell webbplats"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "Rapportera ett problem"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "Huvudmeny"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "Försök igen"

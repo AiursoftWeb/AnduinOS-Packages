@@ -1732,3 +1732,46 @@ msgstr ""
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "Se eliminarán los paquetes marcados con −. Los núcleos antiguos podrían perder la compatibilidad con gráficos NVIDIA. Reinicie después de actualizar."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Activar Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Para activarlo, abra los ajustes del firmware UEFI y busque en Boot, "
+"Security o Secure Boot. Seleccione Microsoft & 3rd-party CA o active Secure "
+"Boot. Los nombres varían según el fabricante."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS aún no está preparado para Secure Boot. Activarlo ahora en el "
+"firmware podría impedir que el sistema arranque."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "Preparar AnduinOS para Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Primero prepare AnduinOS e inscriba su certificado MOK. Active Secure Boot "
+"solo después de la inscripción."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: faltan las claves de plataforma del firmware. Después de "
+"inscribir MOK, restaure las claves de fábrica del fabricante en los ajustes "
+"del firmware."

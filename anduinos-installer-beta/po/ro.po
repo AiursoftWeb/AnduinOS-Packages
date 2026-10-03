@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -200,9 +201,6 @@ msgstr "Alegeți limba pentru a începe instalarea"
 msgid "Choose your location to set the system clock"
 msgstr "Alegeți locația dvs. pentru a seta ceasul sistemului"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "Completat"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -234,6 +232,9 @@ msgid "Continue Installation"
 msgstr "Continuă instalarea"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "Verifică mediul de instalare"
+
 msgid "Copy AnduinOS system"
 msgstr "Copiază sistemul AnduinOS"
 
@@ -285,9 +286,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "Simularea de dezvoltare s-a încheiat"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "Explorează AnduinOS"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -853,6 +851,10 @@ msgstr "Sub minim. Instalarea sau actualizările pot eșua. Continuați?"
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "Sub capacitatea recomandată. Spațiul se poate epuiza rapid. Continuați?"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "Sunt necesari cel puțin 6 GiB pentru instalarea AnduinOS."
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1907,3 +1909,91 @@ msgstr "Pași de reparare"
 #: src/pages.py
 msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
 msgstr "Acest volum NTFS necesită o verificare a discului în Windows înainte de a putea fi redimensionat în siguranță."
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "Mod pentru unitate externă — AnduinOS va adăuga o cale de pornire UEFI portabilă, astfel încât această unitate să poată porni pe un alt computer UEFI fără o intrare AnduinOS existentă în firmware."
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "Se verifică firmware-ul"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Se verifică suportul pentru Secure Boot…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Nu s-a putut determina suportul pentru Secure Boot"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "Puteți continua configurarea instalării. Verificarea firmware-ului trebuie să reușească înainte de a modifica discurile."
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "Verificarea firmware-ului s-a încheiat"
+
+#: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "Este necesară o partiție de sistem EFI separată"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "Această ESP conține deja EFI/AnduinOS. Creați o nouă ESP în spațiul nealocat (cel puțin 512 MiB) sau selectați altă ESP. Instalarea existentă nu va fi suprascrisă. Meniul GRUB al noului sistem poate porni sistemul existent."
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "Se verifică partiția de sistem EFI…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "Caută alte instalări Linux"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "Compară opțiunile ESP"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "ESP separată"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "ESP partajată"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "Creează și formatează o nouă ESP FAT32 în spațiul nealocat (cel puțin 512 MiB). Partițiile ESP existente rămân neschimbate."
+
+#: src/pages.py
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
+msgstr "Reutilizează o ESP sănătoasă cu suficient spațiu liber, fără formatare. Fișierele de pornire ale altor sisteme sunt păstrate. Dacă EFI/AnduinOS există deja, alege altă ESP sau creează una nouă."
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "Ambele opțiuni instalează fișiere de pornire în EFI/AnduinOS și pun noua intrare UEFI AnduinOS pe primul loc. Sistemele compatibile detectate sunt adăugate în noul meniu GRUB; fișierele și meniurile lor nu sunt modificate."
+
+#: src/app_menu.py
+msgid "About"
+msgstr "Despre"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "Vezi codul sursă"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "Site oficial"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "Raportează o problemă"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "Meniu principal"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "Reîncercați"

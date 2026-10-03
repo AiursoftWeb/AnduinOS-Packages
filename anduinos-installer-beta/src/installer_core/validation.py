@@ -170,14 +170,15 @@ def validate_plan(
         errors.append("MOK password policy does not match Secure Boot state")
     if type(plan.boot.install_fallback_path) is not bool:
         errors.append("EFI fallback-path policy must be boolean")
+    if type(plan.boot.external_target) is not bool:
+        errors.append("External-target policy must be boolean")
     elif (
         plan.storage.mode is InstallMode.ERASE_DISK
         and platform.firmware is Firmware.UEFI
-        and plan.boot.install_fallback_path
+        and plan.boot.install_fallback_path != plan.boot.external_target
     ):
         errors.append(
-            "UEFI erase-disk installs must create a vendor NVRAM entry "
-            "without the shared fallback path"
+            "UEFI erase-disk fallback policy must match external-drive status"
         )
     elif (
         plan.storage.mode is InstallMode.ERASE_DISK

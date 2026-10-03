@@ -10,6 +10,7 @@ from helpers import (
     valid_plan,
 )
 from installer_core.execution_steps import (
+    CheckInstallationMediaStep,
     CopySystemStep,
     DetectBootEnvironmentStep,
     UnmountTargetStep,
@@ -17,10 +18,73 @@ from installer_core.execution_steps import (
 )
 from installer_core.model import Firmware, SecureBoot, SourceSpec
 from installer_core.probe import PlatformProbe
-from installer_core.steps import InstallContext
+from installer_core.steps import FailurePolicy, InstallContext, StepRunner, StepStatus
+
+
+class MediaCheckTests(unittest.TestCase):
+    def test_media_status_matches_scan_and_only_success_allows_disk_writes(self):
+        class MediaRunner(FakeRunner):
+            def run(self, command, **kwargs):
+                self_test.assertEqual(statuses[-1],
+                                      ("check-installation-media", StepStatus.RUNNING))
+                self_test.assertFalse(sentinel.executed)
+                result = super().run(command, **kwargs)
+                result.returncode = returncode
+                result.stderr = "Media check did not pass." if returncode else ""
+                return result
+
+        class DestructiveSentinel:
+            id = "format"
+            title = "Format"
+            progress_weight = 1
+            destructive = True
+            executed = False
+            failure_policy = FailurePolicy.FATAL
+
+            def preflight(self, context):
+                pass
+
+            def execute(self, context):
+                self_test.assertIn(("check-installation-media", StepStatus.SUCCEEDED), statuses)
+                self.executed = True
+
+            def verify(self, context):
+                pass
+
+            def cleanup(self, context):
+                pass
+
+        self_test = self
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "rootfs.squashfs"
+            source.write_bytes(b"fixture")
+            for returncode in (0, 1, 2, 3):
+                with self.subTest(returncode=returncode):
+                    context = InstallContext(replace(valid_plan(), source=SourceSpec(str(source))),
+                                             lambda _: None)
+                    statuses = []
+                    sentinel = DestructiveSentinel()
+                    runner = MediaRunner()
+                    result = StepRunner(
+                        [CheckInstallationMediaStep(runner), sentinel],
+                        status=lambda step, status, message: statuses.append((step, status)),
+                    ).run(context)
+                    self.assertEqual(result.succeeded, returncode == 0)
+                    self.assertEqual(result.destructive_started, returncode == 0)
+                    self.assertEqual(sentinel.executed, returncode == 0)
+                    self.assertEqual(result.results[0].step_id, "check-installation-media")
+                    self.assertEqual(result.results[0].status,
+                                     StepStatus.FAILED if returncode else StepStatus.SUCCEEDED)
+                    self.assertEqual(len(runner.commands), 1)
+                    self.assertEqual(runner.commands[0][0], (
+                        "/usr/libexec/anduinos-media-check", "--source", str(source),
+                        "--locale", context.plan.regional.locale,
+                    ))
+                    self.assertIsNone(runner.commands[0][1]["timeout"])
 
 
 class CopySystemTests(unittest.TestCase):
+
     def test_preflight_requires_existing_source(self):
         plan = replace(
             valid_plan(),
@@ -95,6 +159,25 @@ class EnvironmentReportingTests(unittest.TestCase):
         output = "\n".join(logs)
         self.assertIn("Firmware mode: UEFI", output)
         self.assertIn("Secure Boot: enabled", output)
+
+    def test_external_uefi_fallback_is_reported_explicitly(self):
+        plan = valid_plan(external_target=True)
+        logs = []
+        step = DetectBootEnvironmentStep(
+            FakeRunner(),
+            platform_probe=lambda: PlatformProbe(
+                plan.platform.architecture,
+                plan.platform.firmware,
+                plan.platform.secure_boot,
+            ),
+        )
+        context = InstallContext(plan, logs.append)
+        step.preflight(context)
+        step.execute(context)
+        self.assertIn(
+            "UEFI fallback bootloader: enabled on the selected external disk",
+            "\n".join(logs),
+        )
 
     def test_uefi_without_secure_boot_support_is_explicit(self):
         plan = valid_plan(secure_boot=SecureBoot.UNSUPPORTED)

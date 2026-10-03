@@ -21,3 +21,10 @@ class SlideshowAssetsTests(unittest.TestCase):
         root = Path(__file__).resolve().parent.parent / "assets/slideshow"
         slides = load_slides("unknown", root)
         self.assertEqual(slides[0].title, "Welcome to AnduinOS")
+
+    def test_historical_emphasis_is_preserved_as_safe_pango_markup(self):
+        slides = load_slides("en_US")
+        privacy = next(slide for slide in slides if slide.key == "privacy")
+        self.assertIn("<b>your device serves your intent", privacy.paragraphs_markup[1])
+        self.assertNotIn("<a", slides[0].paragraphs_markup[0])
+        self.assertTrue((privacy.image.parent.parent / "background.png").is_file())

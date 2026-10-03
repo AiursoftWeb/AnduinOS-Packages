@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -200,9 +201,6 @@ msgstr "เลือกภาษาของคุณเพื่อเริ่
 msgid "Choose your location to set the system clock"
 msgstr "เลือกตำแหน่งที่ตั้งของคุณเพื่อตั้งนาฬิกาของระบบ"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "เสร็จสิ้น"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -234,6 +232,9 @@ msgid "Continue Installation"
 msgstr "ดำเนินการติดตั้งต่อ"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "ตรวจสอบสื่อการติดตั้ง"
+
 msgid "Copy AnduinOS system"
 msgstr "คัดลอกระบบ AnduinOS"
 
@@ -285,9 +286,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "การจำลองการพัฒนาเสร็จสิ้น"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "สำรวจ AnduinOS"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -853,6 +851,10 @@ msgstr "ต่ำกว่าขั้นต่ำ การติดตั้�
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "ต่ำกว่าความจุที่แนะนำ พื้นที่อาจเต็มอย่างรวดเร็ว ต้องการดำเนินการต่อหรือไม่?"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "ต้องมีพื้นที่อย่างน้อย 6 GiB เพื่อติดตั้ง AnduinOS"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1907,3 +1909,91 @@ msgstr "ขั้นตอนการซ่อมแซม"
 #: src/pages.py
 msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
 msgstr "โวลุม NTFS นี้ต้องได้รับการตรวจสอบดิสก์ใน Windows ก่อนจึงจะปรับขนาดได้อย่างปลอดภัย"
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "โหมดไดรฟ์ภายนอก — AnduinOS จะเพิ่มเส้นทางบูต UEFI แบบพกพา เพื่อให้ไดรฟ์นี้บูตบนคอมพิวเตอร์ UEFI เครื่องอื่นได้โดยไม่ต้องมีรายการบูต AnduinOS อยู่ในเฟิร์มแวร์เดิม"
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "กำลังตรวจสอบเฟิร์มแวร์"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "กำลังตรวจสอบการรองรับ Secure Boot…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "ไม่สามารถระบุการรองรับ Secure Boot ได้"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "คุณสามารถตั้งค่าการติดตั้งต่อได้ การตรวจสอบเฟิร์มแวร์ต้องสำเร็จก่อนที่จะมีการเปลี่ยนแปลงใด ๆ กับดิสก์ของคุณ"
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "ตรวจสอบเฟิร์มแวร์เสร็จแล้ว"
+
+#: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "ต้องใช้พาร์ทิชันระบบ EFI แยกต่างหาก"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "ESP นี้มี EFI/AnduinOS อยู่แล้ว สร้าง ESP ใหม่ในพื้นที่ที่ยังไม่ได้จัดสรร (อย่างน้อย 512 MiB) หรือเลือก ESP อื่น การติดตั้งเดิมจะไม่ถูกเขียนทับ เมนู GRUB ของระบบใหม่สามารถเริ่มระบบเดิมได้"
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "กำลังตรวจสอบพาร์ทิชันระบบ EFI…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "ตรวจหาการติดตั้ง Linux อื่น"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "เปรียบเทียบตัวเลือก ESP"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "ESP แยก"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "ESP ใช้ร่วมกัน"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "สร้างและฟอร์แมต ESP แบบ FAT32 ใหม่ในพื้นที่ที่ยังไม่ได้จัดสรร (อย่างน้อย 512 MiB) โดยไม่เปลี่ยนแปลง ESP ที่มีอยู่"
+
+#: src/pages.py
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
+msgstr "ใช้ ESP ที่สมบูรณ์และมีพื้นที่ว่างเพียงพอซ้ำโดยไม่ฟอร์แมต ไฟล์บูตของระบบอื่นจะยังคงอยู่ หากมี EFI/AnduinOS อยู่แล้ว ให้เลือก ESP อื่นหรือสร้างใหม่"
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "ทั้งสองตัวเลือกจะติดตั้งไฟล์บูตใน EFI/AnduinOS และจัดรายการบูต AnduinOS UEFI ใหม่ไว้ลำดับแรก ระบบที่รองรับและตรวจพบจะถูกเพิ่มในเมนู GRUB ใหม่ โดยไม่เปลี่ยนแปลงไฟล์และเมนูของระบบเหล่านั้น"
+
+#: src/app_menu.py
+msgid "About"
+msgstr "เกี่ยวกับ"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "ดูซอร์สโค้ด"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "เว็บไซต์อย่างเป็นทางการ"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "รายงานปัญหา"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "เมนูหลัก"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "ลองอีกครั้ง"

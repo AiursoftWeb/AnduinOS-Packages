@@ -16,6 +16,7 @@ pub mod home_accounts;
 pub mod layout;
 pub mod lineage;
 pub mod model;
+pub mod offline;
 pub mod operations;
 pub mod package_hook;
 pub mod package_transaction;

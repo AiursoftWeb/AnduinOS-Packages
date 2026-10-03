@@ -32,14 +32,18 @@ class ExecutorPipelineTests(unittest.TestCase):
             InstallerExecutor(lambda _message: None).run(valid_plan())
         pipeline = CapturingStepRunner.captured
         self.assertEqual(
-            pipeline[:3],
+            pipeline[:4],
             (
                 "detect-boot-environment",
                 "detect-network-connectivity",
                 "verify-target-disk",
+                "check-installation-media",
             ),
         )
         expected = (
+            "check-installation-media",
+            "prepare-storage",
+            "mount-target",
             "copy-system",
             "migrate-wifi-connection",
             "configure-keyboard-layout",
@@ -57,6 +61,7 @@ class ExecutorPipelineTests(unittest.TestCase):
             "install-bootloader",
             "enroll-secure-boot",
             "check-other-disk-systems",
+            "check-linux-systems",
             "create-factory-snapshot",
         )
         positions = tuple(pipeline.index(step) for step in expected)

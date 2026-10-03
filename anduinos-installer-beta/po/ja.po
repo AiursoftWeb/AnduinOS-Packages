@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -200,9 +201,6 @@ msgstr "インストールを開始するには言語を選択してください
 msgid "Choose your location to set the system clock"
 msgstr "システムのクロックを設定するために場所を選択してください"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "完了"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -234,6 +232,9 @@ msgid "Continue Installation"
 msgstr "インストールを続行"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "インストールメディアを確認"
+
 msgid "Copy AnduinOS system"
 msgstr "AnduinOS システムのコピー"
 
@@ -285,9 +286,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "開発シミュレーションが完了しました"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "AnduinOS を発見する"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -853,6 +851,10 @@ msgstr "最低容量を下回っています。インストールや更新に失
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "推奨容量を下回っています。空き容量がすぐに不足する可能性があります。続行しますか？"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "AnduinOS のインストールには 6 GiB 以上必要です。"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1907,3 +1909,91 @@ msgstr "修復手順"
 #: src/pages.py
 msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
 msgstr "この NTFS ボリュームのサイズを安全に変更するには、先に Windows でディスクチェックを行う必要があります。"
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "外付けドライブモード — AnduinOS はポータブル UEFI ブートパスを追加します。このドライブは、AnduinOS のファームウェアブートエントリが登録されていない別の UEFI コンピューターでも起動できます。"
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "ファームウェアを確認中"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Secure Boot の対応状況を確認中…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Secure Boot の対応状況を確認できません"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "インストールの設定を続けられます。ディスクに変更を加える前に、ファームウェアの確認が成功する必要があります。"
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "ファームウェアの確認が完了しました"
+
+#: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "個別の EFI システムパーティションが必要です"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "この ESP には既に EFI/AnduinOS が存在します。未割り当て領域に新しい ESP（512 MiB 以上）を作成するか、別の ESP を選択してください。既存のインストールは上書きされません。新しいシステムの GRUB メニューから既存のシステムを起動できます。"
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "EFI システムパーティションを確認中…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "他の Linux インストールを確認"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "ESP の選択肢を比較"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "独立した ESP"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "共有 ESP"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "未割り当て領域に新しい FAT32 ESP を作成してフォーマットします（512 MiB 以上）。既存の ESP は変更しません。"
+
+#: src/pages.py
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
+msgstr "十分な空き容量のある正常な ESP を、フォーマットせずに再利用します。他のシステムの起動ファイルは保持します。EFI/AnduinOS が既に存在する場合は、別の ESP を選択するか新しく作成してください。"
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "どちらも EFI/AnduinOS に起動ファイルをインストールし、新しい AnduinOS UEFI 起動エントリを最優先にします。検出された対応システムは新しい GRUB メニューに追加しますが、それらのファイルやメニューは変更しません。"
+
+#: src/app_menu.py
+msgid "About"
+msgstr "このアプリについて"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "ソースコードを見る"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "公式ウェブサイト"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "問題を報告"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "メインメニュー"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "再試行"

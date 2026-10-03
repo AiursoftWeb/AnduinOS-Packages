@@ -14,6 +14,8 @@ import subprocess
 import threading
 import time
 import urllib.request
+import urllib.error
+import urllib.parse
 
 import gi
 
@@ -134,9 +136,59 @@ def current_mirror(path: Path = SOURCE_PATH) -> str:
     return match.group(1) if match else ""
 
 
+def validate_mirror_uri(uri: str) -> str:
+    """Accept a single HTTP(S) Ubuntu archive base URL, without URL tricks."""
+    uri = uri.strip()
+    if not uri or any(ord(char) < 33 or ord(char) == 127 for char in uri):
+        raise ValueError("Enter one HTTP or HTTPS mirror address")
+    if any(char in uri for char in "\\%?#"):
+        raise ValueError("Mirror address contains an unsupported character")
+    try:
+        parsed = urllib.parse.urlsplit(uri)
+        port = parsed.port
+    except ValueError as error:
+        raise ValueError("Mirror address has an invalid port") from error
+    if (
+        parsed.scheme not in {"http", "https"}
+        or not parsed.hostname
+        or parsed.username is not None
+        or parsed.password is not None
+        or parsed.query
+        or parsed.fragment
+        or parsed.netloc.endswith(":")
+        or (port is not None and port == 0)
+        or any(part in {".", ".."} for part in parsed.path.split("/"))
+    ):
+        raise ValueError("Enter an HTTP or HTTPS Ubuntu mirror address")
+    return uri.rstrip("/") + "/"
+
+
+def probe_mirror(
+    uri: str,
+    codename: str,
+    architecture: str,
+    opener: Callable[..., object] = urllib.request.urlopen,
+) -> None:
+    """Check that a custom mirror contains this release and architecture."""
+    uri = validate_mirror_uri(uri)
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", codename):
+        raise ValueError("Invalid Ubuntu release")
+    if architecture not in {"amd64", "arm64"}:
+        raise ValueError("Unsupported architecture")
+    for path in (
+        f"dists/{codename}/Release",
+        f"dists/{codename}/main/binary-{architecture}/Packages.gz",
+    ):
+        response = opener(urllib.request.Request(uri + path), timeout=8)
+        try:
+            if getattr(response, "status", 200) != 200 or not response.read(1):
+                raise RuntimeError("Mirror lacks the current Ubuntu release or architecture")
+        finally:
+            response.close()
+
+
 def replace_ubuntu_uris(content: str, mirror: str) -> str:
-    if mirror not in MIRRORS:
-        raise ValueError("Mirror is not in the AnduinOS allowlist")
+    mirror = validate_mirror_uri(mirror)
     updated, count = re.subn(
         r"(?m)^(\s*URIs:\s*).+$",
         lambda match: match.group(1) + mirror,
@@ -147,7 +199,7 @@ def replace_ubuntu_uris(content: str, mirror: str) -> str:
     return updated
 
 
-def select_fastest_mirror(
+def measure_mirrors(
     codename: str,
     architecture: str,
     *,
@@ -155,25 +207,34 @@ def select_fastest_mirror(
     opener: Callable[..., object] = urllib.request.urlopen,
     clock: Callable[[], float] = time.monotonic,
     progress: Callable[[str, str, float], None] | None = None,
-) -> MirrorMeasurement:
+) -> tuple[MirrorMeasurement, ...]:
     """Probe latency concurrently, then bandwidth-test the best five."""
 
     if architecture not in {"amd64", "arm64"}:
         raise ValueError("architecture must be amd64 or arm64")
 
     def latency(uri: str) -> tuple[str, float | None]:
-        request = urllib.request.Request(
-            f"{uri}dists/{codename}/Release", method="HEAD"
-        )
-        started = clock()
-        try:
-            response = opener(request, timeout=3)
-            status = getattr(response, "status", 200)
-            response.close()
-            if status == 200:
-                return uri, (clock() - started) * 1000
-        except Exception:
-            pass
+        url = f"{uri}dists/{codename}/Release"
+        # Some valid mirrors serve Release with GET but reject HEAD. Read only
+        # one byte in the fallback so a mirror's metadata is not downloaded.
+        for method, timeout in (("HEAD", 3), ("GET", 5)):
+            headers = {"Range": "bytes=0-0"} if method == "GET" else {}
+            request = urllib.request.Request(url, headers=headers, method=method)
+            started = clock()
+            try:
+                response = opener(request, timeout=timeout)
+                try:
+                    status = getattr(response, "status", 200)
+                    if status in ({200} if method == "HEAD" else {200, 206}):
+                        if method == "HEAD" or response.read(1):
+                            return uri, (clock() - started) * 1000
+                finally:
+                    response.close()
+            except urllib.error.HTTPError as error:
+                error.close()
+                continue
+            except Exception:
+                continue
         return uri, None
 
     reachable: list[tuple[str, float]] = []
@@ -227,17 +288,26 @@ def select_fastest_mirror(
                 progress("bandwidth", uri, speed)
 
     latency_by_uri = dict(finalists)
-    best = min(
-        (uri for uri, _elapsed in finalists),
-        key=lambda uri: (
-            -speeds.get(uri, 0.0),
-            latency_by_uri[uri],
-            not uri.startswith("https://"),
+    ranked = sorted(
+        finalists,
+        key=lambda item: (
+            -speeds.get(item[0], 0.0),
+            latency_by_uri[item[0]],
+            not item[0].startswith("https://"),
         ),
     )
-    return MirrorMeasurement(
-        best, latency_by_uri[best], speeds.get(best, 0.0)
+    ranked += sorted(
+        (item for item in reachable if item[0] not in latency_by_uri),
+        key=lambda item: item[1],
     )
+    return tuple(
+        MirrorMeasurement(uri, elapsed, speeds.get(uri, 0.0))
+        for uri, elapsed in ranked
+    )
+
+
+def select_fastest_mirror(*args, **kwargs) -> MirrorMeasurement:
+    return measure_mirrors(*args, **kwargs)[0]
 
 
 def simulated_upgrade_count(output: str) -> int:
@@ -263,10 +333,11 @@ class SoftwareSourceWindow(Adw.Window):
             modal=True,
             title=_("Software Source"),
             default_width=680,
-            default_height=680,
+            default_height=460,
         )
         self._busy = False
         self._updates_available = False
+        self._measurements: dict[str, MirrorMeasurement] = {}
 
         toolbar = Adw.ToolbarView()
         toolbar.add_top_bar(Adw.HeaderBar())
@@ -278,49 +349,101 @@ class SoftwareSourceWindow(Adw.Window):
         scroll.set_overlay_scrolling(False)
         toolbar.set_content(scroll)
 
-        body = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        clamp = Adw.Clamp(maximum_size=720)
+        scroll.set_child(clamp)
+        body = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
         body.set_margin_top(28)
         body.set_margin_bottom(28)
-        body.set_margin_start(36)
-        body.set_margin_end(36)
-        body.set_valign(Gtk.Align.CENTER)
-        body.set_vexpand(True)
-        scroll.set_child(body)
-
-        icon = Gtk.Image.new_from_file(str(_icon_path()))
-        icon.set_pixel_size(72)
-        icon.set_halign(Gtk.Align.CENTER)
-        body.append(icon)
-
-        title = Gtk.Label(label=_("Keep Your System Up to Date"))
-        title.add_css_class("title-1")
-        title.set_wrap(True)
-        title.set_justify(Gtk.Justification.CENTER)
-        body.append(title)
-
-        subtitle = Gtk.Label(
-            label=_("Security patches and the latest features are just a click away.")
-        )
-        subtitle.add_css_class("dim-label")
-        subtitle.set_wrap(True)
-        subtitle.set_justify(Gtk.Justification.CENTER)
-        body.append(subtitle)
+        body.set_margin_start(24)
+        body.set_margin_end(24)
+        body.set_valign(Gtk.Align.START)
+        clamp.set_child(body)
 
         current = current_mirror()
+        overview = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16)
+        icon = Gtk.Image.new_from_file(str(_icon_path()))
+        icon.set_pixel_size(64)
+        icon.set_valign(Gtk.Align.CENTER)
+        overview.append(icon)
+        source_info = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+        source_info.set_valign(Gtk.Align.CENTER)
+        source_info.set_hexpand(True)
+        self.current_source_title = Gtk.Label(label=_("Current mirror"), xalign=0)
+        self.current_source_title.add_css_class("heading")
+        source_info.append(self.current_source_title)
         self.current_source = Gtk.Label(
-            label=(
-                _("Current mirror") + f": {current}"
-                if current
-                else ""
-            )
+            label=current,
         )
         self.current_source.add_css_class("dim-label")
         self.current_source.set_wrap(True)
-        self.current_source.set_selectable(True)
-        body.append(self.current_source)
+        self.current_source.set_halign(Gtk.Align.START)
+        self.current_source.set_xalign(0)
+        source_info.append(self.current_source)
+        overview.append(source_info)
+        body.append(overview)
 
-        self.output_expander = Gtk.Expander(label=_("Terminal Output"))
-        self.output_expander.set_margin_top(12)
+        self.pages = Gtk.Stack()
+        self.pages.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
+        switcher = Gtk.StackSwitcher(stack=self.pages)
+        switcher.set_halign(Gtk.Align.FILL)
+        switcher.set_hexpand(True)
+        body.append(switcher)
+        body.append(self.pages)
+
+        automatic = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+        self.pages.add_titled(automatic, "automatic", _("Automatic"))
+        source_group = Adw.PreferencesGroup()
+        source_row = Adw.ActionRow(title=_("Software Source"))
+        self.mirror_button = Gtk.Button(label=_("  Switch to Fastest Mirror  ").strip())
+        self.mirror_button.add_css_class("suggested-action")
+        self.mirror_button.set_valign(Gtk.Align.CENTER)
+        self.mirror_button.connect("clicked", self._find_mirror)
+        source_row.add_suffix(self.mirror_button)
+        source_group.add(source_row)
+        automatic.append(source_group)
+
+        update_group = Adw.PreferencesGroup()
+        update_row = Adw.ActionRow(
+            title=_("Keep Your System Up to Date"),
+            subtitle=_("Security patches and the latest features are just a click away."),
+        )
+        self.update_button = Gtk.Button(label=_("  Check for Updates  ").strip())
+        self.update_button.set_valign(Gtk.Align.CENTER)
+        self.update_button.connect("clicked", self._update_action)
+        update_row.add_suffix(self.update_button)
+        update_group.add(update_row)
+        automatic.append(update_group)
+
+        advanced = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.pages.add_titled(advanced, "advanced", _("Advanced"))
+        custom_current = bool(current and current not in MIRRORS)
+        self._mirror_options = (
+            MIRRORS if custom_current
+            else tuple(dict.fromkeys((current, *MIRRORS))) if current else MIRRORS
+        )
+        self.mirror_dropdown = Gtk.DropDown.new_from_strings(
+            [_("Custom address…"), *self._mirror_options]
+        )
+        self.mirror_dropdown.connect("notify::selected", self._mirror_selection_changed)
+        advanced.append(self.mirror_dropdown)
+        self.custom_entry = Gtk.Entry(
+            placeholder_text="https://mirror.example/ubuntu/",
+            visible=custom_current,
+        )
+        self.custom_entry.set_text(current if custom_current else "")
+        advanced.append(self.custom_entry)
+        self.mirror_dropdown.set_selected(0 if custom_current else 1)
+        advanced_buttons = Gtk.Box(spacing=12)
+        advanced_buttons.set_halign(Gtk.Align.END)
+        self.test_button = Gtk.Button(label=_("Test mirror speeds"))
+        self.test_button.connect("clicked", self._test_mirrors)
+        advanced_buttons.append(self.test_button)
+        self.apply_button = Gtk.Button(label=_("Apply selected mirror"))
+        self.apply_button.connect("clicked", self._apply_selected_mirror)
+        advanced_buttons.append(self.apply_button)
+        advanced.append(advanced_buttons)
+
+        self.output_expander = Gtk.Expander(label=_("Terminal Output"), visible=False)
         output_scroll = Gtk.ScrolledWindow(
             min_content_height=170,
             hscrollbar_policy=Gtk.PolicyType.NEVER,
@@ -335,25 +458,50 @@ class SoftwareSourceWindow(Adw.Window):
         self.output.add_css_class("card")
         output_scroll.set_child(self.output)
         self.output_expander.set_child(output_scroll)
-        body.append(self.output_expander)
 
-        self.status = Gtk.Label(wrap=True, justify=Gtk.Justification.CENTER)
+        self.status = Gtk.Label(wrap=True, xalign=0, visible=False)
         self.status.add_css_class("dim-label")
         body.append(self.status)
 
         self.progress = Gtk.ProgressBar(visible=False)
         body.append(self.progress)
+        body.append(self.output_expander)
 
-        buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
-        buttons.set_halign(Gtk.Align.CENTER)
-        buttons.set_margin_top(8)
-        self.mirror_button = Gtk.Button(label=_("  Switch to Fastest Mirror  "))
-        self.mirror_button.connect("clicked", self._find_mirror)
-        buttons.append(self.mirror_button)
-        self.update_button = Gtk.Button(label=_("  Check for Updates  "))
-        self.update_button.connect("clicked", self._update_action)
-        buttons.append(self.update_button)
-        body.append(buttons)
+
+    def _mirror_selection_changed(self, _dropdown, _property) -> None:
+        self.custom_entry.set_visible(
+            self.mirror_dropdown.get_selected() == 0
+        )
+
+    def _selected_mirror(self) -> str:
+        selected = self.mirror_dropdown.get_selected()
+        if selected == 0:
+            return validate_mirror_uri(self.custom_entry.get_text())
+        if selected > len(self._mirror_options):
+            raise ValueError("No mirror selected")
+        return self._mirror_options[selected - 1]
+
+    def _set_mirror_measurements(self, measurements: tuple[MirrorMeasurement, ...]) -> bool:
+        self._measurements.update({item.uri: item for item in measurements})
+        selected = self.mirror_dropdown.get_selected()
+        labels = []
+        for uri in self._mirror_options:
+            item = self._measurements.get(uri)
+            if item is None:
+                labels.append(uri)
+            elif item.bandwidth_mbps:
+                labels.append(f"{uri} — {item.latency_ms:.0f} ms · {item.bandwidth_mbps:.1f} Mbps")
+            else:
+                labels.append(f"{uri} — {item.latency_ms:.0f} ms")
+        self.mirror_dropdown.set_model(Gtk.StringList.new([_("Custom address…"), *labels]))
+        self.mirror_dropdown.set_selected(selected)
+        self._mirror_selection_changed(None, None)
+        message = _("Mirror speed test complete.")
+        if len(measurements) == 1:
+            item = measurements[0]
+            message += f" {item.uri} — {item.latency_ms:.0f} ms · {item.bandwidth_mbps:.1f} Mbps"
+        self._finish(message)
+        return GLib.SOURCE_REMOVE
 
     def _append_output(self, text: str) -> bool:
         buffer = self.output.get_buffer()
@@ -364,8 +512,14 @@ class SoftwareSourceWindow(Adw.Window):
 
     def _set_busy(self, busy: bool) -> None:
         self._busy = busy
+        if busy:
+            self.status.set_visible(True)
         self.mirror_button.set_sensitive(not busy)
         self.update_button.set_sensitive(not busy)
+        self.mirror_dropdown.set_sensitive(not busy)
+        self.custom_entry.set_sensitive(not busy)
+        self.test_button.set_sensitive(not busy)
+        self.apply_button.set_sensitive(not busy)
         self.set_deletable(not busy)
         self.progress.set_visible(busy)
         if busy:
@@ -378,26 +532,30 @@ class SoftwareSourceWindow(Adw.Window):
         self.progress.pulse()
         return GLib.SOURCE_CONTINUE
 
-    def _finish(self, message: str) -> bool:
+    def _finish(self, message: str, select_current: bool = False) -> bool:
         self.status.set_label(message)
         self._set_busy(False)
+        self.status.set_visible(bool(message))
         current = current_mirror()
         if current:
-            self.current_source.set_label(
-                _("Current mirror") + f": {current}"
-            )
+            self.current_source.set_label(current)
+            if select_current:
+                if current in self._mirror_options:
+                    self.mirror_dropdown.set_selected(self._mirror_options.index(current) + 1)
+                else:
+                    self.custom_entry.set_text(current)
+                    self.mirror_dropdown.set_selected(0)
         return GLib.SOURCE_REMOVE
 
     @staticmethod
     def _failure_message(return_code: int, output: str) -> str:
         if return_code in {126, 127}:
             return _("Authentication was cancelled.")
-        lines = [line.strip() for line in output.splitlines() if line.strip()]
-        return (
-            lines[-1]
-            if lines
-            else _("The operation failed without an error message.")
-        )
+        if "original source was restored, but refreshing it also failed" in output:
+            return _("The original source was restored, but refreshing it failed.")
+        if "original source was restored" in output:
+            return _("The original source was restored.")
+        return _("Review Terminal Output for details.")
 
     def _run_helper(self, action: str, *arguments: str) -> tuple[int, str]:
         lines: list[str] = []
@@ -415,12 +573,26 @@ class SoftwareSourceWindow(Adw.Window):
                     GLib.idle_add(self._append_output, line)
             return process.wait(), "".join(lines)
         except OSError as error:
+            GLib.idle_add(self._append_output, f"{error}\n")
             return 1, str(error)
 
     def _find_mirror(self, _button) -> None:
+        self._measure_mirrors(automatic=True)
+
+    def _test_mirrors(self, _button) -> None:
+        try:
+            selected = self._selected_mirror()
+        except ValueError:
+            self._finish(_("Enter a valid HTTP or HTTPS mirror address."))
+            return
+        self._measure_mirrors(automatic=False, selected=selected)
+
+    def _measure_mirrors(self, *, automatic: bool, selected: str | None = None) -> None:
         self._set_busy(True)
+        self.output_expander.set_visible(True)
         self.output_expander.set_expanded(True)
         self.status.set_label(_("Testing mirrors…"))
+        self.output.get_buffer().set_text("")
         self._append_output(_("=== Testing mirror speeds ===") + "\n")
 
         def progress(kind: str, uri: str, value: float) -> None:
@@ -429,35 +601,74 @@ class SoftwareSourceWindow(Adw.Window):
 
         def worker() -> None:
             try:
-                measurement = select_fastest_mirror(
-                    system_codename(), system_architecture(), progress=progress
+                if selected and selected not in MIRRORS:
+                    probe_mirror(selected, system_codename(), system_architecture())
+                measurements = measure_mirrors(
+                    system_codename(), system_architecture(),
+                    candidates=(selected,) if selected else MIRRORS,
+                    progress=progress,
                 )
             except (OSError, UnicodeError, ValueError, RuntimeError) as error:
+                GLib.idle_add(self._append_output, f"{error}\n")
+                detail = (
+                    _("No Ubuntu archive mirror is reachable.")
+                    if str(error) == "No Ubuntu archive mirror is reachable"
+                    else _("Review Terminal Output for details.")
+                )
                 GLib.idle_add(
                     self._finish,
-                    _("✗ Mirror test failed: ") + str(error),
+                    _("✗ Mirror test failed: ") + detail,
                 )
                 return
-            GLib.idle_add(self._confirm_mirror, measurement)
+            GLib.idle_add(self._set_mirror_measurements, measurements)
+            if automatic:
+                GLib.idle_add(self._confirm_mirror, measurements[0])
 
         threading.Thread(target=worker, daemon=True).start()
 
-    def _confirm_mirror(self, measurement: MirrorMeasurement) -> bool:
+    def _apply_selected_mirror(self, _button) -> None:
+        try:
+            mirror = self._selected_mirror()
+        except ValueError:
+            self._finish(_("Enter a valid HTTP or HTTPS mirror address."))
+            return
+        if self.mirror_dropdown.get_selected() != 0:
+            self._confirm_mirror(self._measurements.get(mirror, mirror))
+            return
+        self._set_busy(True)
+        self.status.set_label(_("Testing mirrors…"))
+
+        def worker() -> None:
+            try:
+                probe_mirror(mirror, system_codename(), system_architecture())
+            except (OSError, ValueError, RuntimeError):
+                GLib.idle_add(
+                    self._finish,
+                    _("Could not validate this mirror for the current system."),
+                )
+                return
+            GLib.idle_add(self._confirm_mirror, mirror)
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _confirm_mirror(self, measurement: MirrorMeasurement | str) -> bool:
+        mirror = measurement.uri if isinstance(measurement, MirrorMeasurement) else measurement
         current = current_mirror()
         details = (
             f"{_('Latency')}: {measurement.latency_ms:.0f} ms · "
             f"{_('Bandwidth')}: {measurement.bandwidth_mbps:.1f} Mbps"
+            if isinstance(measurement, MirrorMeasurement) else ""
         )
-        if current == measurement.uri:
-            self._append_output(f"\n{measurement.uri}\n{details}\n")
+        if current == mirror:
+            self._append_output(f"\n{mirror}\n{details}\n")
             self._finish(_("This is already your current mirror."))
             return GLib.SOURCE_REMOVE
 
         dialog = Adw.MessageDialog(
             transient_for=self,
-            heading=_("Fastest Mirror Found"),
+            heading=_("Fastest Mirror Found") if details else _("Apply selected mirror"),
             body=(
-                f"{measurement.uri}\n{details}\n\n"
+                f"{mirror}\n{details}\n\n"
                 + _("Switch to this mirror and run apt update?")
             ),
         )
@@ -472,9 +683,11 @@ class SoftwareSourceWindow(Adw.Window):
                 self._finish("")
                 return
             self.status.set_label(_("Switching mirror…"))
+            self.output_expander.set_visible(True)
+            self.output_expander.set_expanded(True)
             threading.Thread(
                 target=self._switch_worker,
-                args=(measurement.uri,),
+                args=(mirror,),
                 daemon=True,
             ).start()
 
@@ -485,13 +698,16 @@ class SoftwareSourceWindow(Adw.Window):
     def _switch_worker(self, mirror: str) -> None:
         code, output = self._run_helper("switch-mirror", mirror)
         if code == 0:
+            self._updates_available = False
+            GLib.idle_add(self.update_button.set_label, _("  Check for Updates  ").strip())
             message = _("✓ Mirror switched and system updated.")
         else:
             message = _("✗ Switch failed: ") + self._failure_message(code, output)
-        GLib.idle_add(self._finish, message)
+        GLib.idle_add(self._finish, message, code == 0)
 
     def _update_action(self, _button) -> None:
         self._set_busy(True)
+        self.output_expander.set_visible(True)
         self.output_expander.set_expanded(True)
         if self._updates_available:
             self.status.set_label(_("Installing updates…"))
@@ -523,9 +739,10 @@ class SoftwareSourceWindow(Adw.Window):
                 raise RuntimeError(result.stderr or result.stdout)
             count = simulated_upgrade_count(result.stdout)
         except (OSError, subprocess.TimeoutExpired, ValueError, RuntimeError) as error:
+            GLib.idle_add(self._append_output, f"{error}\n")
             GLib.idle_add(
                 self._finish,
-                _("✗ Check failed: ") + str(error),
+                _("✗ Check failed: ") + _("Review Terminal Output for details."),
             )
             return
         GLib.idle_add(self._checked, count)
@@ -533,7 +750,7 @@ class SoftwareSourceWindow(Adw.Window):
     def _checked(self, count: int) -> bool:
         self._updates_available = count > 0
         self.update_button.set_label(
-            _("  Install Updates  ") if count else _("  Check for Updates  ")
+            (_("  Install Updates  ") if count else _("  Check for Updates  ")).strip()
         )
         message = (
             _("Updates are available.")
@@ -547,7 +764,7 @@ class SoftwareSourceWindow(Adw.Window):
         if code == 0:
             self._updates_available = False
             GLib.idle_add(
-                self.update_button.set_label, _("  Check for Updates  ")
+                self.update_button.set_label, _("  Check for Updates  ").strip()
             )
             message = _("✓ Updates installed successfully!")
         else:

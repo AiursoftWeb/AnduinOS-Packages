@@ -3,7 +3,7 @@ import json
 import subprocess
 import unittest
 from dataclasses import replace
-from unittest.mock import patch
+from unittest.mock import call, patch
 
 from helpers import TEST_INVENTORY_DIGEST, TEST_TOPOLOGY_DIGEST
 from frontend import (
@@ -33,6 +33,7 @@ from installer_core.storage_ui import (
     build_storage_workflow,
     recommended_guided_selection,
 )
+from pages import _uses_external_drive_mode
 from test_coexistence import windows_disk
 
 
@@ -103,6 +104,59 @@ def guided_state():
 
 
 class FrontendPlanTests(unittest.TestCase):
+    def test_external_erase_disk_policy_crosses_the_frontend_boundary(self):
+        values = state()
+        disk = DiskIdentity(
+            "/dev/sda", "serial:external", 64 * 1024**3, "USB Test", "usb"
+        )
+        inventory = inventory_for(disk)
+        inventory = replace(
+            inventory,
+            disks=(replace(
+                inventory.disks[0], removable=True, transport="usb"
+            ),),
+        )
+        values["disk_stable_id"] = disk.stable_id
+        values["disk_model"] = disk.model
+        platform = PlatformProbe(
+            Architecture.AMD64, Firmware.UEFI, SecureBoot.DISABLED
+        )
+        with patch("frontend.hash_password", return_value="$6$salt$hash"):
+            plan = create_install_plan(
+                values,
+                inventory=inventory,
+                platform=platform,
+            )
+        self.assertTrue(plan.boot.external_target)
+        self.assertTrue(plan.boot.install_fallback_path)
+
+    def test_external_target_state_is_visible_and_cleared_with_the_target(self):
+        disk = DiskIdentity(
+            "/dev/sda", "serial:external", 64 * 1024**3, "USB Test", "usb"
+        )
+        inventory = inventory_for(disk)
+        inventory = replace(
+            inventory,
+            disks=(replace(
+                inventory.disks[0], removable=True, transport="usb"
+            ),),
+        )
+        platform = PlatformProbe(
+            Architecture.AMD64, Firmware.UEFI, SecureBoot.DISABLED
+        )
+        choice = build_storage_workflow(inventory, platform).disks[0]
+        values = state()
+
+        bind_storage_target(values, choice)
+        self.assertTrue(values["disk_external"])
+        self.assertTrue(_uses_external_drive_mode(values))
+
+        values["storage_mode"] = InstallMode.MANUAL.value
+        self.assertFalse(_uses_external_drive_mode(values))
+
+        clear_storage_target(values)
+        self.assertFalse(values["disk_external"])
+
     def test_ntfs_inspection_uses_only_the_polkit_read_only_mode(self):
         from frontend import probe_ntfs_resize
         from installer_core.ntfs_resize import (
@@ -464,7 +518,7 @@ class FrontendPlanTests(unittest.TestCase):
                 "frontend.subprocess.Popen",
                 side_effect=AssertionError("must not start a process"),
             ),
-            patch("frontend.time.sleep"),
+            patch("frontend.time.sleep") as sleep,
         ):
             succeeded, error = DevelopmentExecutorClient().run(
                 self.make_plan(),
@@ -481,6 +535,12 @@ class FrontendPlanTests(unittest.TestCase):
         self.assertTrue(any("privileged executor is disabled" in item for item in logs))
         self.assertTrue(any("No disk" in item for item in logs))
         self.assertTrue(statuses)
+        step_count = len(statuses) // 2
+        self.assertEqual(sleep.call_args_list, [call(1)] * (4 * step_count))
+        for index, message in enumerate(logs):
+            if message.endswith("simulated; no command was executed"):
+                self.assertEqual(logs[index + 1:index + 5],
+                                 [f"sleep {second}" for second in range(4)])
         for index in range(0, len(statuses), 2):
             self.assertEqual(statuses[index][1], "running")
             self.assertEqual(statuses[index + 1][1], "succeeded")

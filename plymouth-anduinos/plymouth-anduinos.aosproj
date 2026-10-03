@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>plymouth-anduinos</PackageName>
-    <PackageVersion>2.0.3+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.4+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS boot splash theme</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -49,18 +49,22 @@
     <!-- resolute: watermark.png is a dangling symlink after copy; remove it so IncludeFile can write a real file -->
     <PrebuildCommand Run="find obj/*/usr/share/plymouth/themes/anduinos -name 'watermark.png' -type l -delete" />
 
-    <!-- Override the two brand images with AnduinOS artwork; all other files come from upstream -->
+    <!-- Keep the AnduinOS wordmark below the progress display; use the transparent
+         AIURSOFT mark as the BIOS fallback in the center. The SVG is the source
+         for the 96px PNG consumed by Plymouth. -->
     <IncludeFile Include="assets/anduinos_text.png" Target="/usr/share/plymouth/themes/anduinos/watermark.png" />
-    <IncludeFile Include="assets/logo_96.png"       Target="/usr/share/plymouth/themes/anduinos/bgrt-fallback.png" />
+    <IncludeFile Include="assets/aiursoft-mark-96.png" Target="/usr/share/plymouth/themes/anduinos/bgrt-fallback.png" />
     <IncludeFile Include="assets/anduinos-text.plymouth" Target="/usr/share/plymouth/themes/anduinos-text/anduinos-text.plymouth" />
 
-    <!-- Register the theme and rebuild every Dracut image on install/remove. -->
+    <!-- Register the theme and request the official initramfs update trigger. -->
     <PostInstallScript Include="scripts/postinst.sh" />
     <PreRemoveScript  Include="scripts/prerm.sh" />
 
     <!-- ubuntu-text.so module, needed by anduinos-text.plymouth fallback theme -->
-    <Dependency Include="anduinos-core-system" />
     <Dependency Include="dracut" />
     <Recommend Include="plymouth-theme-ubuntu-text" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="lifecycle" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
   </ItemGroup>
 </Project>

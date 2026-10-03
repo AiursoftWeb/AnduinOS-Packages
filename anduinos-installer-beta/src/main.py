@@ -30,6 +30,7 @@ from installer_core.hostnames import (
     suggest_hostname,
 )
 from ui import load_visual_style
+from app_menu import InstallerMenu
 
 
 APP_ID = "com.anduinos.InstallerBeta"
@@ -58,6 +59,7 @@ class InstallerApplication(Adw.Application):
             "disk_model": "",
             "disk_stable_id": "",
             "disk_topology_digest": "",
+            "disk_external": False,
             "disk_windows_detected": False,
             "disk_bitlocker_detected": False,
             "disk_has_existing_partitions": False,
@@ -129,12 +131,19 @@ class InstallerApplication(Adw.Application):
             header = Adw.HeaderBar()
             win_title = Adw.WindowTitle(title=title)
             header.set_title_widget(win_title)
+            menu = InstallerMenu(win, self.shared_state)
+            header.pack_end(menu)
+            # Permit source-tree previews to use the same icon as installed builds.
+            Gtk.IconTheme.get_for_display(win.get_display()).add_search_path(
+                os.path.join(_install_dir, "..", "assets")
+            )
             toolbar.add_top_bar(header)
 
             def _set_window_language(language: str):
                 localized_title = _(title_message, language)
                 win.set_title(localized_title)
                 win_title.set_title(localized_title)
+                menu.refresh_language(language)
 
             self.shared_state["_set_window_language"] = _set_window_language
 

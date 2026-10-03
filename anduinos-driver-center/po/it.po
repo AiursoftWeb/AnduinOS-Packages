@@ -1724,3 +1724,46 @@ msgstr ""
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "I pacchetti contrassegnati con − verranno rimossi. I kernel precedenti potrebbero perdere il supporto grafico NVIDIA. Riavviare dopo l'aggiornamento."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Abilita Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Per abilitarlo, apri le impostazioni del firmware UEFI e cerca in Boot, "
+"Security o Secure Boot. Seleziona Microsoft & 3rd-party CA oppure abilita "
+"Secure Boot. I nomi variano in base al produttore."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS non è ancora pronto per Secure Boot. Abilitarlo ora nel firmware "
+"potrebbe impedire l’avvio del sistema."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "Prepara AnduinOS per Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Prima prepara AnduinOS e registra il suo certificato MOK. Abilita Secure "
+"Boot solo dopo la registrazione."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: mancano le chiavi di piattaforma del firmware. Dopo la "
+"registrazione MOK, ripristina le chiavi di fabbrica del produttore nelle "
+"impostazioni del firmware."

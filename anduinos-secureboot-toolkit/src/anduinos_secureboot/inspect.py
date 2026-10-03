@@ -9,6 +9,8 @@ import shutil
 import subprocess
 from typing import Protocol, Sequence
 
+from .firmware import parse_secure_boot_status, probe_firmware, recover_firmware
+
 from .model import (
     DkmsState,
     ModuleState,
@@ -146,39 +148,6 @@ def certificate_pending(certificate: Path, runner: Runner) -> bool:
     )
 
 
-def parse_secure_boot_status(
-    result: subprocess.CompletedProcess[str],
-) -> SecureBootStatus:
-    """Parse every explicit mokutil state without guessing on failures."""
-    if result.returncode != 0:
-        return SecureBootStatus.UNKNOWN
-    output = f"{result.stdout}\n{result.stderr}".lower()
-    reported_states = {
-        status
-        for status, reported in (
-            (
-                SecureBootStatus.ENABLED,
-                "secureboot enabled" in output
-                or "secure boot enabled" in output,
-            ),
-            (
-                SecureBootStatus.DISABLED,
-                "secureboot disabled" in output
-                or "secure boot disabled" in output,
-            ),
-            (
-                SecureBootStatus.UNSUPPORTED,
-                "doesn't support secure boot" in output
-                or "does not support secure boot" in output,
-            ),
-        )
-        if reported
-    }
-    if len(reported_states) == 1:
-        return reported_states.pop()
-    return SecureBootStatus.UNKNOWN
-
-
 def inspect_secure_boot(
     runner: Runner | None = None,
     private_key: Path = MOK_PRIVATE_KEY,
@@ -186,13 +155,18 @@ def inspect_secure_boot(
     kernel_release: str | None = None,
     configuration: Path = DKMS_CONFIG,
     efi_firmware: Path = EFI_FIRMWARE,
+    *,
+    recover: bool = False,
 ) -> SecureBootState:
+    from .boot_chain import current_loader, setup_mode
+
     runner = runner or SubprocessRunner()
-    if efi_firmware.exists():
-        state = runner.run(["mokutil", "--sb-state"])
-        status = parse_secure_boot_status(state)
-    else:
-        status = SecureBootStatus.UNSUPPORTED
+    evidence = probe_firmware(
+        run=lambda command, **kwargs: runner.run(command), efi_path=efi_firmware
+    )
+    if recover:
+        evidence = recover_firmware(evidence)
+    status = evidence.status
     enabled = status is SecureBootStatus.ENABLED
     key_present = private_key.is_file()
     certificate_present = certificate.is_file()
@@ -221,6 +195,10 @@ def inspect_secure_boot(
         headers_available=headers_available,
         configuration_present=configuration.is_file(),
         status=status,
+        firmware_reason=evidence.reason,
+        firmware_detail=evidence.detail,
+        setup_mode=setup_mode(efi_firmware) if efi_firmware.exists() else None,
+        boot_loader=current_loader(runner) if efi_firmware.exists() else "unknown",
     )
 
 
@@ -260,14 +238,10 @@ def inspect_dkms(
             continue
         signature = module_signature(str(path), runner)
         trusted = bool(
-            secure_boot.enforcement_inactive
-            or (
-                secure_boot.status is SecureBootStatus.ENABLED
-                and secure_boot.enrolled
-                and signature
-                and secure_boot.certificate_serial
-                and signature == secure_boot.certificate_serial
-            )
+            secure_boot.enrolled
+            and signature
+            and secure_boot.certificate_serial
+            and signature == secure_boot.certificate_serial
         )
         details.append(ModuleState(path.name, str(path), signature, trusted))
 

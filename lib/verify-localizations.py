@@ -48,6 +48,18 @@ def missing_languages(
     ]
 
 
+def desktop_sections(content: str):
+    """Group localized keys without discarding duplicate entries in a group."""
+    groups: dict[str, list[str]] = {}
+    section = ""
+    for line in content.splitlines():
+        if line.startswith("[") and line.endswith("]"):
+            section = line[1:-1]
+        else:
+            groups.setdefault(section, []).append(line)
+    return [(name, "\n".join(lines)) for name, lines in groups.items()]
+
+
 def verify_inline_assets(
     languages: dict[str, tuple[str, ...]], errors: list[str]
 ) -> tuple[int, int]:
@@ -62,27 +74,30 @@ def verify_inline_assets(
                 continue
             desktop_count += 1
             content = desktop.read_text(encoding="utf-8")
-            localized_keys = {
-                match.group(1)
-                for match in re.finditer(r"^([^=\[\n]+)\[[^]]+\]=", content, re.MULTILINE)
-            }
-            for key in sorted(localized_keys):
-                names = [
+            # Desktop Entry keys are scoped to groups. The same translated
+            # Name in Desktop Entry and X-AppStream-Metadata is not a duplicate.
+            for section, content in desktop_sections(content):
+                localized_keys = {
                     match.group(1)
-                    for match in re.finditer(
-                        rf"^{re.escape(key)}\[([^]]+)\]=", content, re.MULTILINE
-                    )
-                ]
-                if len(names) != len(set(names)):
-                    errors.append(
-                        f"{desktop.relative_to(ROOT)}: duplicate localized {key}"
-                    )
-                missing = missing_languages(set(names), languages)
-                if missing:
-                    errors.append(
-                        f"{desktop.relative_to(ROOT)}: {key} missing "
-                        f"{', '.join(missing)}"
-                    )
+                    for match in re.finditer(r"^([^=\[\n]+)\[[^]]+\]=", content, re.MULTILINE)
+                }
+                for key in sorted(localized_keys):
+                    names = [
+                        match.group(1)
+                        for match in re.finditer(
+                            rf"^{re.escape(key)}\[([^]]+)\]=", content, re.MULTILINE
+                        )
+                    ]
+                    if len(names) != len(set(names)):
+                        errors.append(
+                            f"{desktop.relative_to(ROOT)} [{section}]: duplicate localized {key}"
+                        )
+                    missing = missing_languages(set(names), languages)
+                    if missing:
+                        errors.append(
+                            f"{desktop.relative_to(ROOT)} [{section}]: {key} missing "
+                            f"{', '.join(missing)}"
+                        )
 
     language_attribute = "{http://www.w3.org/XML/1998/namespace}lang"
     for policy in sorted(ROOT.glob("*/**/*.policy")):

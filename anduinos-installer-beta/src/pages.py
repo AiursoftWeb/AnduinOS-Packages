@@ -53,6 +53,7 @@ from frontend import (
     clear_plaintext_passwords,
     create_install_plan,
     probe_ntfs_resize,
+    probe_esp_occupied,
     probe_storage_inventory,
 )
 from installer_core.btrfs import BTRFS_SUBVOLUMES, BtrfsCompression
@@ -66,6 +67,7 @@ from installer_core.model import (
     SecureBoot,
 )
 from installer_core.manual_layout import (
+    HARD_MINIMUM_ROOT_MIB,
     ManualPartitionRequest,
     ManualPartitionResizeRequest,
     ManualPartitionRole,
@@ -128,7 +130,7 @@ from installer_core.wifi import (
     set_wifi_radio,
     wifi_radio_enabled,
 )
-from slideshow import load_slides
+from slideshow import load_slides, slideshow_root
 from ui import card, clamp_content, icon_picture, page_hero
 from async_work import LatestBackgroundRequest, ProgressPulse
 
@@ -218,6 +220,114 @@ _SHRINK_WITH_PARTITION_TOOL_MESSAGE = N_(
 _LAYOUT_FREE_SPACE_MINIMUM_BYTES = 4 * 1024**2
 
 
+_ESP_HELP_SEPARATE = N_(
+    "Create and format a new FAT32 ESP in unallocated space (at least "
+    "512 MiB). Existing ESPs stay unchanged."
+)
+_ESP_HELP_SHARED = N_(
+    "Reuse a healthy ESP with enough free space, without formatting it. "
+    "Other systems' boot files are preserved. If EFI/AnduinOS already "
+    "exists, choose another ESP or create a new one."
+)
+_ESP_HELP_COMMON = N_(
+    "Both options install boot files in EFI/AnduinOS and put the new "
+    "AnduinOS UEFI boot entry first. Detected supported systems get "
+    "entries in the new GRUB menu; their files and menus are not changed."
+)
+
+
+def _esp_help_dialog(parent, lang):
+    """Read-only explanation; opening help never changes a storage plan."""
+    window = Adw.Window(
+        transient_for=parent, modal=True, destroy_with_parent=True,
+        title=_("EFI System Partition", lang),
+        default_width=800, default_height=440,
+    )
+    direction = Gtk.TextDirection.RTL if lang in RTL_LANGUAGES else Gtk.TextDirection.LTR
+    window.set_direction(direction)
+    outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    outer.append(Adw.HeaderBar())
+    body = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL, spacing=18,
+        margin_start=24, margin_end=24, margin_top=12, margin_bottom=12,
+    )
+
+    def label(text, *, heading=False):
+        result = Gtk.Label(
+            label=_(text, lang), wrap=True, wrap_mode=Pango.WrapMode.WORD_CHAR,
+            xalign=1 if direction == Gtk.TextDirection.RTL else 0,
+            selectable=not heading,
+        )
+        result.set_direction(direction)
+        if heading:
+            result.add_css_class("heading")
+        return result
+
+    # Keep the promised physical left/right comparison even in Arabic.
+    columns = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=18, homogeneous=True)
+    columns.set_direction(Gtk.TextDirection.LTR)
+    for title, text in (
+        (N_("Separate ESP"), _ESP_HELP_SEPARATE),
+        (N_("Shared ESP"), _ESP_HELP_SHARED),
+    ):
+        column = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12, hexpand=True)
+        column.set_direction(direction)
+        column.append(label(title, heading=True))
+        column.append(label(text))
+        columns.append(column)
+    body.append(columns)
+    body.append(Gtk.Separator())
+    body.append(label(_ESP_HELP_COMMON))
+    scroll = Gtk.ScrolledWindow(vexpand=True, hscrollbar_policy=Gtk.PolicyType.NEVER)
+    scroll.set_child(body)
+    outer.append(scroll)
+    close = Gtk.Button(label=_("OK", lang), halign=Gtk.Align.END,
+                       margin_end=24, margin_start=24, margin_top=6, margin_bottom=18)
+    close.connect("clicked", lambda _button: window.close())
+    outer.append(close)
+    window.set_content(outer)
+    window.set_focus(close)
+    keys = Gtk.EventControllerKey()
+
+    def key_pressed(_controller, keyval, _keycode, _state):
+        if keyval == Gdk.KEY_Escape:
+            window.close()
+            return True
+        return False
+
+    keys.connect("key-pressed", key_pressed)
+    window.add_controller(keys)
+    window.present()
+    return window
+
+
+def _esp_help_button(lang):
+    button = Gtk.Button(icon_name="dialog-question-symbolic", valign=Gtk.Align.CENTER)
+    button.add_css_class("flat")
+    text = _("Compare ESP options", lang)
+    button.set_tooltip_text(text)
+    button.update_property([Gtk.AccessibleProperty.LABEL], [text])
+    button.connect("clicked", lambda widget: _esp_help_dialog(widget.get_root(), lang))
+    return button
+
+
+def _esp_conflict_dialog(nav_view, lang):
+    dialog = Adw.MessageDialog(
+        transient_for=nav_view.get_root(),
+        heading=_("A separate EFI System Partition is required", lang),
+        body=_(
+            "This ESP already contains EFI/AnduinOS. Create a new ESP in "
+            "unallocated space (at least 512 MiB), or select another ESP. "
+            "The existing installation will not be overwritten. The new "
+            "system's GRUB menu can start the existing system.", lang,
+        ),
+    )
+    dialog.add_response("ok", _("OK", lang))
+    dialog.set_default_response("ok")
+    dialog.set_close_response("ok")
+    dialog.present()
+
+
 def _probe_storage_workflow(*, development_mode=False):
     """Collect the complete storage snapshot without touching GTK state."""
 
@@ -225,7 +335,7 @@ def _probe_storage_workflow(*, development_mode=False):
         return build_development_storage_workflow(probe_platform())
     return build_storage_workflow(
         probe_storage_inventory(),
-        probe_platform(),
+        probe_platform(recover=True),
     )
 
 
@@ -235,7 +345,7 @@ def _probe_install_target(*, development_mode=False):
     if development_mode:
         workflow = _probe_storage_workflow(development_mode=True)
         return workflow.inventory, workflow.platform
-    return probe_storage_inventory(), probe_platform()
+    return probe_storage_inventory(), probe_platform(recover=True)
 
 
 def _coexistence_notice_text(notice, lang, windows_detected):
@@ -357,6 +467,58 @@ def _nav_box(lang, on_back, on_next, next_label=N_("Next"),
 
 def _page_header(title, subtitle, icon, lang):
     return page_hero(_(title, lang), _(subtitle, lang), icon)
+
+
+def _set_page_content(page, content, *, scroll_body=False):
+    """Keep the page title and navigation reachable on short displays."""
+
+    children = []
+    child = content.get_first_child()
+    while child is not None:
+        children.append(child)
+        child = child.get_next_sibling()
+    hero = next((child for child in children
+                 if child.has_css_class("installer-hero")), None)
+    if hero is None:
+        page.set_child(content)
+        return
+
+    compact_title = Gtk.Label(
+        visible=False, wrap=True, margin_top=8,
+        margin_start=24, margin_end=24,
+    )
+    compact_title.add_css_class("title-3")
+    hero._title_label.bind_property(
+        "label", compact_title, "label", GObject.BindingFlags.SYNC_CREATE
+    )
+    content.insert_child_after(compact_title, hero)
+
+    if scroll_body:
+        body = Gtk.Box(orientation=Gtk.Orientation.VERTICAL,
+                       spacing=content.get_spacing())
+        for child in children[children.index(hero) + 1:-1]:
+            content.remove(child)
+            body.append(child)
+        scroll = _scrolled_window(
+            vexpand=True, hscrollbar_policy=Gtk.PolicyType.NEVER
+        )
+        scroll.set_child(body)
+        content.insert_child_after(scroll, compact_title)
+
+    responsive = Adw.BreakpointBin(width_request=720, height_request=360)
+    responsive.set_child(content)
+    compact = Adw.Breakpoint.new(
+        Adw.BreakpointCondition.parse("max-height: 620px")
+    )
+    compact.add_setter(hero, "visible", False)
+    compact.add_setter(compact_title, "visible", True)
+    child = content.get_first_child()
+    while child is not None:
+        if isinstance(child, Gtk.ScrolledWindow):
+            compact.add_setter(child, "vscrollbar-policy", Gtk.PolicyType.ALWAYS)
+        child = child.get_next_sibling()
+    responsive.add_breakpoint(compact)
+    page.set_child(responsive)
 
 
 def internet_connection_ready(monitor=None) -> bool:
@@ -487,12 +649,7 @@ def _ensure_initial_page_route(shared):
         return
     power = probe_power_supply()
     shared[_POWER_PROBE_RESULT_KEY] = power
-    try:
-        shared["_platform_probe_result"] = probe_platform()
-    except ProbeError:
-        # Keep the recommendation in the route; normal validation will still
-        # surface the failed platform probe before any installation action.
-        shared["_platform_probe_result"] = None
+    shared.setdefault("_platform_probe_result", None)
     shared["_network_page_planned"] = should_show_network_page(shared)
     shared["_page_route_initialized"] = True
 
@@ -506,9 +663,10 @@ def _planned_page_route(shared):
     ):
         route.append("low-battery")
     platform = shared.get("_platform_probe_result")
-    if bool(shared.get("development_mode")) or not (
-        platform is not None
-        and platform.secure_boot is SecureBoot.ENABLED
+    if platform is None and not bool(shared.get("development_mode")):
+        route.append("firmware-check")
+    if bool(shared.get("development_mode")) or (
+        platform is not None and platform.secure_boot is SecureBoot.DISABLED
     ):
         route.append("secure-boot-recommendation")
     if bool(shared.get("_network_page_planned")):
@@ -629,22 +787,123 @@ def _build_network_or_keyboard_page(shared, nav_view):
 
 
 def secure_boot_recommendation_needed(shared, platform=None) -> bool:
-    """Show the recommendation unless Secure Boot is known to be enabled."""
+    """Recommend enabling only when Secure Boot is known to be disabled."""
 
     if bool(shared.get("development_mode")):
         return True
     if platform is None:
         _ensure_initial_page_route(shared)
         platform = shared.get("_platform_probe_result")
-    if platform is None:
-        platform = probe_platform()
-    return platform.secure_boot is not SecureBoot.ENABLED
+    return platform is not None and platform.secure_boot is SecureBoot.DISABLED
 
 
 def _build_secure_boot_or_network_page(shared, nav_view, *, platform=None):
+    if (platform is None and shared.get("_platform_probe_result") is None
+            and not shared.get("development_mode")):
+        return build_firmware_check_page(shared, nav_view)
     if secure_boot_recommendation_needed(shared, platform):
         return build_secure_boot_page(shared, nav_view)
     return _build_network_or_keyboard_page(shared, nav_view)
+
+
+def build_firmware_check_page(shared, nav_view):
+    """Recover firmware access off-thread before optional recommendations."""
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
+    page = Adw.NavigationPage(title=_("Checking firmware", lang))
+    page.set_tag("firmware-check")
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    hero = _page_header("Checking firmware", "Checking Secure Boot support…",
+                        "secure-boot", lang)
+    content.append(hero)
+    body = card(spacing=16)
+    body.set_valign(Gtk.Align.START)
+    body.set_margin_start(32)
+    body.set_margin_end(32)
+    body.set_margin_top(28)
+    body.set_margin_bottom(20)
+    status_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+    spinner = Gtk.Spinner(spinning=True)
+    status_row.append(spinner)
+    status = Gtk.Label(label=_("Checking Secure Boot support…", lang),
+                       wrap=True, xalign=0, hexpand=True)
+    status.add_css_class("heading")
+    status_row.append(status)
+    body.append(status_row)
+    details = Gtk.Label(wrap=True, selectable=True, xalign=0)
+    body.append(details)
+    request = LatestBackgroundRequest(GLib.idle_add)
+
+    def advance():
+        platform = shared.get("_platform_probe_result")
+        if platform is None:
+            # Unknown is allowed for configuration, never for execution.
+            next_page = _build_network_or_keyboard_page(shared, nav_view)
+        else:
+            next_page = _build_secure_boot_or_network_page(
+                shared, nav_view, platform=platform)
+        nav_view.push(next_page)
+
+    navigation = _nav_box(lang, on_back=lambda: nav_view.pop(),
+                          on_next=advance, next_label="Continue",
+                          next_sensitive=False, stage=0, shared=shared,
+                          page_tag="firmware-check")
+
+    def complete(platform, error):
+        spinner.stop()
+        spinner.set_visible(False)
+        retry.set_sensitive(True)
+        shared["_platform_probe_result"] = platform
+        shared["_platform_probe_error"] = str(error) if error else ""
+        if error:
+            status.set_label(_("Unable to determine Secure Boot support", lang))
+            details.set_label(_(
+                "You can continue configuring the installation. Firmware detection "
+                "must succeed before any changes are made to your disks.", lang
+            ) + "\n\n" + str(error))
+        else:
+            status.set_label(_("Firmware check complete", lang))
+            details.set_label(_(
+                "{architecture} / {firmware} / Secure Boot: {secure_boot}", lang
+            ).format(
+                architecture=platform.architecture.value,
+                firmware=platform.firmware.value,
+                secure_boot=platform.secure_boot.value,
+            ))
+        hero._title_label.set_label(status.get_label())
+        hero._subtitle_label.set_visible(False)
+        retry.set_visible(bool(error))
+        navigation.next_button.set_sensitive(True)
+        if not error and nav_view.get_visible_page() is page:
+            # Detection is transient: neither Continue nor Back should stop here.
+            next_page = _build_secure_boot_or_network_page(
+                shared, nav_view, platform=platform)
+            stack = nav_view.get_navigation_stack()
+            nav_view.replace([
+                stack.get_item(index) for index in range(stack.get_n_items() - 1)
+            ] + [next_page])
+            _wizard_progress_controller(shared).refresh()
+
+    def start():
+        spinner.set_visible(True)
+        spinner.start()
+        status.set_label(_("Checking Secure Boot support…", lang))
+        hero._title_label.set_label(_("Checking firmware", lang))
+        hero._subtitle_label.set_visible(True)
+        details.set_label("")
+        retry.set_visible(False)
+        retry.set_sensitive(False)
+        navigation.next_button.set_sensitive(False)
+        request.start(lambda: probe_platform(recover=True), complete)
+
+    retry = _nav_btn("Retry", lang, start)
+    retry.set_visible(False)
+    body.append(retry)
+    content.append(clamp_content(body, maximum_size=720))
+    content.append(navigation)
+    _set_page_content(page, content, scroll_body=True)
+    page.connect("shown", lambda *_args: start())
+    page.connect("hidden", lambda *_args: request.invalidate())
+    return page
 
 
 def build_post_welcome_page(
@@ -1123,7 +1382,7 @@ def build_low_battery_page(shared, nav_view, result: PowerProbeResult):
     content.append(navigation)
     _render_status(result)
     _start_power_auto_refresh(page, _on_recheck)
-    page.set_child(content)
+    _set_page_content(page, content, scroll_body=True)
     return page
 
 
@@ -1228,7 +1487,7 @@ def build_secure_boot_page(shared, nav_view):
     )
     navigation.next_button.remove_css_class("suggested-action")
     content.append(navigation)
-    page.set_child(content)
+    _set_page_content(page, content, scroll_body=True)
     return page
 
 
@@ -1984,7 +2243,7 @@ def build_network_page(shared, nav_view):
             page_tag="network",
         )
     )
-    page.set_child(content)
+    _set_page_content(page, content)
     _render_connectivity()
     return page
 
@@ -2040,10 +2299,16 @@ def build_keyboard_page(shared, nav_view):
             translate_xkb_description(layout.description, str(lang))
         )
     layout_dropdown = Gtk.DropDown(model=layout_store)
+    layout_dropdown.set_expression(
+        Gtk.PropertyExpression.new(Gtk.StringObject, None, "string")
+    )
     layout_dropdown.set_enable_search(True)
     layout_dropdown.set_selected(layout_idx)
 
     variant_dropdown = Gtk.DropDown()
+    variant_dropdown.set_expression(
+        Gtk.PropertyExpression.new(Gtk.StringObject, None, "string")
+    )
     variant_dropdown.set_enable_search(True)
     active_variants = ()
 
@@ -2336,7 +2601,7 @@ def build_keyboard_page(shared, nav_view):
             shared=shared, page_tag="keyboard"
         )
     )
-    page.set_child(content)
+    _set_page_content(page, content, scroll_body=True)
     return page
 
 
@@ -2348,14 +2613,13 @@ def build_software_page(shared, nav_view):
     page.set_tag("software")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(
-        _page_header(
-            "Updates and Drivers",
-            "Choose optional software to install",
-            "updates",
-            lang,
-        )
+    hero = _page_header(
+        "Updates and Drivers",
+        "Choose optional software to install",
+        "updates",
+        lang,
     )
+    content.append(hero)
 
     options = Gtk.Box(
         orientation=Gtk.Orientation.VERTICAL,
@@ -2363,7 +2627,6 @@ def build_software_page(shared, nav_view):
         margin_start=48,
         margin_end=48,
         margin_top=32,
-        vexpand=True,
     )
     options.add_css_class("installer-card")
 
@@ -2420,7 +2683,11 @@ def build_software_page(shared, nav_view):
     multimedia_detail.add_css_class("dim-label")
     options.append(multimedia)
     options.append(multimedia_detail)
-    content.append(options)
+    scroll = _scrolled_window(
+        vexpand=True, hscrollbar_policy=Gtk.PolicyType.NEVER
+    )
+    scroll.set_child(options)
+    content.append(scroll)
 
     update_preference_key = "_preferred_install_updates"
     driver_preference_key = "_preferred_install_third_party_drivers"
@@ -2503,7 +2770,7 @@ def build_software_page(shared, nav_view):
             shared=shared, page_tag="software"
         )
     )
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -2810,6 +3077,7 @@ def build_disk_page(shared, nav_view):
             return
 
         assert workflow is not None
+        shared["_platform_probe_result"] = workflow.platform
         first_button = None
         for choice in workflow.disks:
             # Preserve the old default list, including USB SSDs reporting RM=0.
@@ -2919,7 +3187,7 @@ def build_disk_page(shared, nav_view):
     )
     next_button = nav.next_button
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
 
     def _page_unmapped(_widget):
         requests.invalidate()
@@ -2937,6 +3205,14 @@ def build_disk_page(shared, nav_view):
 
 
 # ── automatic disk layout helpers ───────────────────────────────────────
+
+def _uses_external_drive_mode(shared):
+    return (
+        shared.get("storage_mode", InstallMode.ERASE_DISK.value)
+        == InstallMode.ERASE_DISK.value
+        and bool(shared.get("disk_external"))
+    )
+
 
 def _validated_swap_size(shared, swap_sizing):
     if swap_sizing is None:
@@ -3373,7 +3649,7 @@ def build_storage_strategy_page(shared, nav_view):
     )
     next_button = nav.next_button
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content, scroll_body=True)
     return page
 
 
@@ -3381,6 +3657,8 @@ def build_storage_strategy_page(shared, nav_view):
 
 def storage_capacity_warning(size_bytes):
     """Classify the applicable disk/root capacity; callers choose the scope."""
+    if size_bytes < HARD_MINIMUM_ROOT_MIB * MIB:
+        return "blocked"
     if size_bytes < MINIMUM_DISK_BYTES:
         return "error"
     if size_bytes < RECOMMENDED_DISK_BYTES:
@@ -3392,6 +3670,24 @@ def _confirm_storage_capacity(page, nav_view, lang, size_bytes, confirmed):
     severity = storage_capacity_warning(size_bytes)
     if severity is None:
         confirmed()
+        return
+    if severity == "blocked":
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_("Too small", lang),
+            body=_(
+                "At least 6 GiB is required to install AnduinOS.",
+                lang,
+            ),
+        )
+        icon = Gtk.Image.new_from_icon_name("dialog-error-symbolic")
+        icon.set_pixel_size(48)
+        icon.add_css_class("error")
+        dialog.set_extra_child(icon)
+        dialog.add_response("cancel", _("Cancel", lang))
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+        dialog.present()
         return
     dialog = Adw.MessageDialog(
         transient_for=nav_view.get_root(),
@@ -3526,7 +3822,7 @@ def build_disk_layout_page(shared, nav_view):
         page_tag="disk-layout",
     )
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -3632,7 +3928,11 @@ def build_guided_storage_page(shared, nav_view):
         )
     )
     esp_dropdown = Gtk.DropDown()
-    controls.append(esp_dropdown)
+    esp_selector = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+    esp_dropdown.set_hexpand(True)
+    esp_selector.append(esp_dropdown)
+    esp_selector.append(_esp_help_button(lang))
+    controls.append(esp_selector)
     guidance = Gtk.Label(
         halign=Gtk.Align.START,
         wrap=True,
@@ -3774,6 +4074,7 @@ def build_guided_storage_page(shared, nav_view):
             return
         workflow = result
         assert workflow is not None
+        shared["_platform_probe_result"] = workflow.platform
         try:
             candidate = workflow.disk(
                 str(shared.get("disk_stable_id") or "")
@@ -3929,11 +4230,39 @@ def build_guided_storage_page(shared, nav_view):
             guidance.set_label(str(error))
             _set_next(False)
             return
-        shared["guided_extent_id"] = selected.free_extent_id
-        shared["guided_esp_partuuid"] = selected.reused_esp_partuuid
-        shared["guided_storage_preview_model"] = preview
-        shared["_guided_storage_workflow_model"] = workflow
-        nav_view.push(build_user_page(shared, nav_view))
+        def finish(occupied=False, error=None):
+            _finish_loading()
+            _set_storage_controls(True)
+            _set_next(True)
+            if _guided_selection() != selected:
+                return
+            if error is not None:
+                guidance.set_label(str(error))
+                return
+            if occupied:
+                if None in esp_options:
+                    esp_dropdown.set_selected(esp_options.index(None))
+                _esp_conflict_dialog(nav_view, lang)
+                return
+            shared["guided_extent_id"] = selected.free_extent_id
+            shared["guided_esp_partuuid"] = selected.reused_esp_partuuid
+            shared["guided_storage_preview_model"] = preview
+            shared["_guided_storage_workflow_model"] = workflow
+            nav_view.push(build_user_page(shared, nav_view))
+
+        if preview.reused_esp is None:
+            finish()
+        else:
+            _set_next(False)
+            _set_storage_controls(False)
+            loading_label.set_label(_("Checking EFI System Partition…", lang))
+            loading.set_visible(True)
+            pulse.start()
+            requests.start(
+                lambda: probe_esp_occupied(preview.reused_esp,
+                    development_mode=bool(shared.get("development_mode"))),
+                finish,
+            )
 
     nav = _nav_box(
         lang,
@@ -3947,7 +4276,7 @@ def build_guided_storage_page(shared, nav_view):
     next_button = nav.next_button
     _filesystem_changed()
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
 
     def _page_mapped(_widget):
         requests.activate()
@@ -4356,6 +4685,7 @@ def build_advanced_storage_page(shared, nav_view):
     esp_row.append(esp_copy)
     esp_dropdown = Gtk.DropDown(sensitive=False)
     esp_row.append(esp_dropdown)
+    esp_row.append(_esp_help_button(lang))
     editor.append(esp_row)
 
     editor.append(Gtk.Separator())
@@ -4588,7 +4918,7 @@ def build_advanced_storage_page(shared, nav_view):
     def _minimum_partition_size(role):
         return {
             ManualPartitionRole.EFI_SYSTEM: 512,
-            ManualPartitionRole.ROOT: 1,
+            ManualPartitionRole.ROOT: HARD_MINIMUM_ROOT_MIB,
             ManualPartitionRole.SWAP: 1,
         }[role]
 
@@ -5532,6 +5862,7 @@ def build_advanced_storage_page(shared, nav_view):
             )
             return
         workflow = result
+        shared["_platform_probe_result"] = workflow.platform
         try:
             choice = workflow.disk(str(shared.get("disk_stable_id") or ""))
         except KeyError:
@@ -5642,9 +5973,40 @@ def build_advanced_storage_page(shared, nav_view):
                     if item.role is ManualPartitionRole.ROOT)
 
         def proceed():
-            if shared.get("manual_storage_preview_model") is preview:
+            if shared.get("manual_storage_preview_model") is not preview:
+                return
+
+            def finish(occupied=False, error=None):
+                pulse.stop()
+                loading.set_visible(False)
+                if shared.get("manual_storage_preview_model") is not preview:
+                    return
+                _set_next(True)
+                if error is not None:
+                    status.set_label(str(error))
+                    return
+                if occupied:
+                    _replace_draft(reused_esp_partuuid="")
+                    _queue_refresh()
+                    _esp_conflict_dialog(nav_view, lang)
+                    return
                 shared["_manual_storage_workflow_model"] = workflow
                 nav_view.push(build_user_page(shared, nav_view))
+
+            esp = next((item for item in disk.partitions
+                        if item.identity.partuuid == preview.selection.reused_esp_partuuid), None)
+            if esp is None:
+                finish()
+            else:
+                _set_next(False)
+                status.set_label(_("Checking EFI System Partition…", lang))
+                loading.set_visible(True)
+                pulse.start()
+                requests.start(
+                    lambda: probe_esp_occupied(esp,
+                        development_mode=bool(shared.get("development_mode"))),
+                    finish,
+                )
 
         _confirm_storage_capacity(page, nav_view, lang, root.size_mib * MIB, proceed)
 
@@ -5659,7 +6021,7 @@ def build_advanced_storage_page(shared, nav_view):
     )
     next_button = nav.next_button
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
 
     def _page_mapped(_widget):
         requests.activate()
@@ -5913,7 +6275,7 @@ def build_user_page(shared, nav_view):
     )
     nxt_btn = nav.next_button
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -6061,7 +6423,7 @@ def build_advanced_options_page(shared, nav_view):
             page_tag="advanced-options",
         )
     )
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -6186,7 +6548,7 @@ def build_timezone_page(shared, nav_view):
             shared=shared, page_tag="timezone"
         )
     )
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -6264,7 +6626,12 @@ def build_summary_page(shared, nav_view):
     secure_boot_enabled = False
     platform = None
     try:
-        platform = probe_platform()
+        # Storage scanning already acquired this snapshot off-thread. The
+        # executor independently rechecks it as root immediately before work.
+        platform = shared.get("_platform_probe_result")
+        if platform is None:
+            raise ProbeError(shared.get("_platform_probe_error") or
+                             "Firmware detection has not completed")
         secure_boot_enabled = platform.secure_boot is SecureBoot.ENABLED
         platform_text = _(
             "{architecture} / {firmware} / Secure Boot: {secure_boot}",
@@ -6664,6 +7031,32 @@ def build_summary_page(shared, nav_view):
     summary_scroll.set_child(clamp_content(summary_card, 860))
     content.append(summary_scroll)
 
+    if _uses_external_drive_mode(shared):
+        portable_boot = Gtk.Box(
+            orientation=Gtk.Orientation.HORIZONTAL,
+            spacing=14,
+            margin_start=48,
+            margin_end=48,
+            margin_top=12,
+        )
+        portable_boot.add_css_class("installer-success-card")
+        portable_boot.append(icon_picture("flashing-disk", 42))
+        portable_boot.append(
+            Gtk.Label(
+                label=_(
+                    "External drive mode — AnduinOS will add a portable "
+                    "UEFI boot path so this drive can boot on another UEFI "
+                    "computer without an existing AnduinOS firmware boot "
+                    "entry.",
+                    lang,
+                ),
+                wrap=True,
+                xalign=0,
+                hexpand=True,
+            )
+        )
+        content.append(portable_boot)
+
     # Warning
     warning_text = (
         _(
@@ -6926,7 +7319,7 @@ def build_summary_page(shared, nav_view):
     install_button = nav.next_button
     install_button.set_sensitive(not bool(platform_error))
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
 
     def _page_unmapped(_widget):
         recheck_requests.invalidate()
@@ -6977,14 +7370,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     page = Adw.NavigationPage(title=_("Installing AnduinOS", lang))
     page.set_tag("progress")
 
-    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(
-        _page_header(
-            "Installing AnduinOS",
-            "Please do not turn off your computer",
-            "disk-snapshots-manager",
-            lang,
-        )
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+    output_toggle = Gtk.ToggleButton(
+        label=_("Output", lang), valign=Gtk.Align.CENTER,
     )
 
     selected_methods = tuple(
@@ -7008,6 +7396,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             "Detect Internet connectivity", lang
         ),
         "verify-target-disk": _("Verify target disk isolation", lang),
+        "check-installation-media": _("Check installation media", lang),
         "prepare-storage": _("Prepare installation disk", lang),
         "mount-target": _("Mount target filesystems", lang),
         "copy-system": _("Copy AnduinOS system", lang),
@@ -7052,6 +7441,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "check-other-disk-systems": _(
             "Check for Windows installations", lang
         ),
+        "check-linux-systems": _("Check for other Linux installations", lang),
         "leave-chroot": _("Finalize target environment", lang),
         "unmount-target": _("Unmount installed system", lang),
     }
@@ -7100,14 +7490,16 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     # Log view
     log_buf = Gtk.TextBuffer()
     log_view = Gtk.TextView(buffer=log_buf, editable=False, monospace=True,
-                            margin_start=48, margin_end=48, margin_top=12,
-                            vexpand=True)
+                            left_margin=12, right_margin=12,
+                            top_margin=12, bottom_margin=12,
+                            hexpand=True, vexpand=True)
     log_view.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
     log_scroll = _scrolled_window(
         hscrollbar_policy=Gtk.PolicyType.NEVER,
         vexpand=True,
     )
     log_scroll.set_child(log_view)
+    log_scroll.add_css_class("installer-log-scroll")
     output_notice = Gtk.Label(
         visible=False,
         wrap=True,
@@ -7122,7 +7514,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     )
     save_log_button = Gtk.Button(label=_("Save Log", lang))
     save_log_button.connect(
-        "clicked", lambda _button: _save_log(log_buf)
+        "clicked", lambda button: _save_log(log_buf, button, lang)
     )
     output_actions = Gtk.Box(
         orientation=Gtk.Orientation.HORIZONTAL,
@@ -7145,50 +7537,57 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         vexpand=True,
     )
     for slide in slides:
-        slide_box = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=10,
-            margin_top=16,
-            margin_bottom=8,
-            margin_start=18,
-            margin_end=18,
-        )
+        slide_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        slide_box.add_css_class("legacy-slide")
+        wide = slide.key in {"welcome", "support"}
+        if wide:
+            slide_box.add_css_class("legacy-slide-wide")
         title = Gtk.Label(
             label=slide.title,
             wrap=True,
-            justify=Gtk.Justification.CENTER,
+            xalign=0,
         )
-        title.add_css_class("title-2")
+        title.add_css_class("legacy-slide-title")
+        stage = Gtk.Overlay(vexpand=True)
+        background = Gtk.Picture.new_for_filename(str(
+            slide.image if wide else slideshow_root() / "background.png"))
+        background.set_content_fit(Gtk.ContentFit.COVER)
+        background.set_can_shrink(True)
+        stage.set_child(background)
+        columns = Gtk.Box(spacing=20, margin_start=36, margin_end=30,
+                          margin_top=25, margin_bottom=35)
+        text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        for paragraph in slide.paragraphs_markup:
+            body = Gtk.Label(label=paragraph, use_markup=True, wrap=True, xalign=0,
+                             wrap_mode=Pango.WrapMode.WORD_CHAR)
+            body.add_css_class("legacy-slide-paragraph")
+            text.append(body)
+        text_scroll = _scrolled_window(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        text_scroll.set_size_request(350 if wide else 248, -1)
+        text_scroll.set_child(text)
+        columns.append(text_scroll)
         picture = Gtk.Picture.new_for_filename(str(slide.image))
         picture.set_content_fit(Gtk.ContentFit.CONTAIN)
         picture.set_can_shrink(True)
-        picture.set_vexpand(True)
-        picture.set_size_request(-1, 190)
-        body = Gtk.Label(
-            label=slide.body,
-            wrap=True,
-            justify=Gtk.Justification.CENTER,
-            max_width_chars=72,
-        )
-        body.add_css_class("dim-label")
+        picture.set_hexpand(True)
+        picture.set_valign(Gtk.Align.START)
+        picture.add_css_class("legacy-slide-picture")
+        if not wide:
+            columns.append(picture)
+        else:
+            columns.append(Gtk.Box(hexpand=True))
+        stage.add_overlay(columns)
+        stage.set_measure_overlay(columns, False)
         slide_box.append(title)
-        slide_box.append(picture)
-        slide_box.append(body)
+        slide_box.append(stage)
         slide_stack.add_named(slide_box, slide.key)
 
     slide_position = {"value": 0}
-    dots = Gtk.Label()
 
     def _show_slide(position):
         position %= len(slides)
         slide_position["value"] = position
         slide_stack.set_visible_child_name(slides[position].key)
-        dots.set_label(
-            "  ".join(
-                "●" if index == position else "○"
-                for index in range(len(slides))
-            )
-        )
 
     previous = Gtk.Button.new_from_icon_name("go-previous-symbolic")
     previous.set_tooltip_text(_("Previous slide", lang))
@@ -7202,22 +7601,18 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "clicked",
         lambda _button: _show_slide(slide_position["value"] + 1),
     )
-    slide_controls = Gtk.Box(
-        orientation=Gtk.Orientation.HORIZONTAL,
-        spacing=12,
-        halign=Gtk.Align.CENTER,
-        margin_bottom=10,
-    )
-    slide_controls.append(previous)
-    slide_controls.append(dots)
-    slide_controls.append(following)
-    slideshow_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    slideshow_box.append(slide_stack)
-    slideshow_box.append(slide_controls)
+    slideshow_box = Gtk.Overlay(vexpand=True)
+    slideshow_box.set_child(slide_stack)
+    for button, alignment in ((previous, Gtk.Align.START), (following, Gtk.Align.END)):
+        button.set_halign(alignment)
+        button.set_valign(Gtk.Align.CENTER)
+        button.add_css_class("legacy-slide-arrow")
+        slideshow_box.add_overlay(button)
     _show_slide(0)
 
     def _advance_slide():
-        _show_slide(slide_position["value"] + 1)
+        if not output_toggle.get_active():
+            _show_slide(slide_position["value"] + 1)
         return True
 
     slide_timer = {"id": GLib.timeout_add_seconds(9, _advance_slide)}
@@ -7260,40 +7655,36 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         lambda: _do_reboot(),
         css_classes=["suggested-action"],
     )
+    reboot_btn.set_child(Gtk.Label(
+        label=_(reboot_label, lang),
+        wrap=True,
+        wrap_mode=Pango.WrapMode.WORD_CHAR,
+        justify=Gtk.Justification.CENTER,
+    ))
     reboot_btn.set_visible(False)
     result_box.append(result_icon)
     result_box.append(result_label)
     result_box.append(result_sub)
     result_box.append(secure_boot_notice)
     result_box.append(reboot_btn)
+    result_scroll = _scrolled_window(
+        vexpand=True,
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+    )
+    result_scroll.set_child(result_box)
 
     mode_stack = Gtk.Stack(
         transition_type=Gtk.StackTransitionType.CROSSFADE,
         transition_duration=250,
         vexpand=True,
     )
-    mode_stack.add_titled(
-        slideshow_box, "discover", _("Discover AnduinOS", lang)
-    )
-    output_page = mode_stack.add_titled(
-        output_box, "output", _("Output", lang)
-    )
-    complete_page = mode_stack.add_titled(
-        result_box, "complete", _("Complete", lang)
-    )
-    complete_page.set_visible(False)
-    mode_stack.set_visible_child_name("discover")
-    mode_switcher = Gtk.StackSwitcher(
-        stack=mode_stack,
-        halign=Gtk.Align.CENTER,
-        margin_top=8,
-        margin_bottom=4,
-    )
-    right_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    right_box.append(mode_switcher)
-    right_box.append(mode_stack)
+    presentation_stack = Gtk.Stack(vexpand=True)
+    presentation_stack.add_named(slideshow_box, "slides")
+    presentation_stack.add_named(result_scroll, "result")
+    presentation_stack.set_visible_child_name("slides")
+    mode_stack.add_named(presentation_stack, "discover")
     output_frame = Gtk.Frame()
-    output_frame.set_child(right_box)
+    output_frame.set_child(output_box)
     output_frame.add_css_class("progress-card")
 
     workspace = Gtk.Paned(
@@ -7301,23 +7692,33 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         position=330,
         wide_handle=True,
         vexpand=True,
-        margin_start=24,
-        margin_end=24,
-        margin_top=12,
+        margin_start=12,
+        margin_end=12,
+        margin_top=6,
     )
     workspace.set_start_child(left_frame)
     workspace.set_end_child(output_frame)
     workspace.set_resize_start_child(False)
     workspace.set_shrink_start_child(False)
-    content.append(workspace)
+    mode_stack.add_named(workspace, "output")
+    mode_stack.set_visible_child_name("discover")
+    output_toggle.connect("toggled", lambda button: mode_stack.set_visible_child_name(
+        "output" if button.get_active() else "discover"))
+    content.append(mode_stack)
 
     progress_status = Gtk.Label(
         label=_("Preparing installation…", lang),
-        halign=Gtk.Align.START,
-        margin_start=48,
-        margin_end=48,
-        margin_top=12,
+        xalign=0,
+        hexpand=True,
+        wrap=True,
+        wrap_mode=Pango.WrapMode.WORD_CHAR,
     )
+    progress_status.set_tooltip_text(_("Please do not turn off your computer", lang))
+    status_row = Gtk.Box(
+        spacing=16, margin_start=48, margin_end=48, margin_top=8,
+    )
+    status_row.append(progress_status)
+    status_row.append(output_toggle)
     progress = Gtk.ProgressBar(
         margin_start=48,
         margin_end=48,
@@ -7326,19 +7727,8 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     )
     progress.set_show_text(True)
     progress.add_css_class("installer-progress")
-    content.append(progress_status)
+    content.append(status_row)
     content.append(progress)
-    progress_footer = _nav_box(
-        lang,
-        on_back=lambda: None,
-        on_next=lambda: None,
-        stage=4,
-        show_back=False,
-        shared=shared,
-        page_tag="progress",
-    )
-    progress_footer.next_button.set_visible(False)
-    content.append(progress_footer)
 
     # Log callback (thread-safe via GLib.idle_add)
     def log(msg: str):
@@ -7419,16 +7809,16 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                             lang,
                         )
                     )
-                complete_page.set_visible(True)
-                mode_stack.set_visible_child_name("complete")
+                presentation_stack.set_visible_child_name("result")
+                output_toggle.set_active(False)
             else:
                 progress_status.set_label(_("Installation failed", lang))
                 output_notice.set_label(
                     f"{_('Installation Failed', lang)}\n{error}"
                 )
                 output_notice.set_visible(True)
-                output_page.set_title(_("Output • Error", lang))
-                mode_stack.set_visible_child_name("output")
+                output_toggle.set_label(_("Output • Error", lang))
+                output_toggle.set_active(True)
                 log(f"ERROR: {error}")
             return False
         GLib.idle_add(_done)
@@ -7473,18 +7863,19 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             light.set_label(status_symbols.get(status, "○"))
             if status == "running":
                 label.add_css_class("step-active")
+                progress_status.set_label(step_titles.get(step, step))
             else:
                 label.remove_css_class("step-active")
             row.set_tooltip_text(message or step_titles.get(step, step))
             if status == "warning":
                 warning_count["value"] += 1
-                output_page.set_title(
+                output_toggle.set_label(
                     _("Output • {count} warning(s)", lang).format(
                         count=warning_count["value"]
                     )
                 )
             elif status == "failed":
-                output_page.set_title(_("Output • Error", lang))
+                output_toggle.set_label(_("Output • Error", lang))
                 output_notice.set_label(
                     message
                     or _("{step} failed", lang).format(
@@ -7492,7 +7883,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                     )
                 )
                 output_notice.set_visible(True)
-                mode_stack.set_visible_child_name("output")
+                output_toggle.set_active(True)
             return False
         GLib.idle_add(_update)
 
@@ -7511,7 +7902,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     thread = threading.Thread(target=execute, daemon=True)
     thread.start()
 
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -7524,16 +7915,53 @@ def _do_reboot():
         pass
 
 
-def _save_log(log_buf):
-    """Save the install log to the current live user's home directory."""
-    try:
+def _save_log(log_buf, widget, lang):
+    """Save a snapshot through the desktop chooser without pausing installation."""
+    parent = widget.get_root()
+    chooser = Gtk.FileDialog(
+        title=_("Save Log", lang), modal=True,
+        initial_name="anduinos-install.log",
+    )
+
+    def notify(heading, body):
+        dialog = Adw.MessageDialog(
+            transient_for=parent, heading=heading, body=body,
+        )
+        dialog.add_response("ok", _("OK", lang))
+        dialog.present()
+
+    def written(file, result):
+        try:
+            file.replace_contents_finish(result)
+        except GLib.Error as error:
+            notify(_("Save Log", lang), error.message)
+        else:
+            notify(_("Saved", lang), file.get_parse_name())
+
+    def selected(dialog, result):
+        try:
+            file = dialog.save_finish(result)
+        except GLib.Error as error:
+            if not any(error.matches(Gtk.DialogError.quark(), code) for code in (
+                Gtk.DialogError.DISMISSED, Gtk.DialogError.CANCELLED,
+            )):
+                notify(_("Save Log", lang), error.message)
+            return
+        if file is None:
+            return
+        # Read on the GTK thread only after the user confirms the destination.
+        # Later log events continue in the UI while this immutable snapshot saves.
         text = log_buf.get_text(
-            log_buf.get_start_iter(), log_buf.get_end_iter(), False)
-        dest = os.path.join(os.path.expanduser("~"), "anduinos-install.log")
-        with open(dest, "w", encoding="utf-8") as f:
-            f.write(text)
-    except Exception:
-        pass
+            log_buf.get_start_iter(), log_buf.get_end_iter(), False,
+        )
+        # GBytes owns the data until the asynchronous write completes.
+        file.replace_contents_bytes_async(
+            GLib.Bytes.new(text.encode("utf-8")), None, False,
+            Gio.FileCreateFlags.PRIVATE | Gio.FileCreateFlags.REPLACE_DESTINATION,
+            None, written,
+        )
+
+    chooser.save(parent, None, selected)
 
 
 def _copy_log(log_buf, widget):

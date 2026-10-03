@@ -17,9 +17,9 @@ from .inspect import (
     Runner,
     certificate_enrolled,
     certificate_pending,
-    parse_secure_boot_status,
 )
 from .model import SecureBootStatus
+from .firmware import probe_firmware
 
 
 ENROLLMENT_PASSWORD = "123456"
@@ -233,17 +233,17 @@ def _write_signing_config(path: Path = DKMS_CONFIG) -> None:
         temporary.unlink(missing_ok=True)
 
 
-def _firmware_enforces_secure_boot(result: OperationResult, run: Run) -> bool:
-    probe = run(["mokutil", "--sb-state"], timeout=10)
-    status = parse_secure_boot_status(probe)
-    if status is SecureBootStatus.ENABLED:
+def _firmware_supports_secure_boot(result: OperationResult, run: Run) -> bool:
+    evidence = probe_firmware(run=lambda command, **kwargs: run(command, timeout=10))
+    status = evidence.status
+    if status in {SecureBootStatus.ENABLED, SecureBootStatus.DISABLED}:
         result.steps["firmware_state"] = StepResult("success", status.value)
         return True
-    if status in {SecureBootStatus.DISABLED, SecureBootStatus.UNSUPPORTED}:
+    if status is SecureBootStatus.UNSUPPORTED:
         result.steps["firmware_state"] = StepResult("skipped", status.value)
         return False
     result.steps["firmware_state"] = StepResult(
-        "failed", "Secure Boot state could not be determined"
+        "failed", f"Secure Boot state could not be determined: {evidence.reason}: {evidence.detail}"
     )
     return False
 
@@ -258,7 +258,7 @@ def prepare(
     available: CommandAvailable = command_available,
 ) -> OperationResult:
     result = OperationResult("prepare")
-    if not _firmware_enforces_secure_boot(result, run):
+    if not _firmware_supports_secure_boot(result, run):
         return result
 
     if private_key.is_file() and certificate.is_file():
@@ -298,6 +298,13 @@ def prepare(
                 return result
             result.steps["enrollment_queued"] = StepResult("success")
         result.reboot_required = True
+        # Match the installer: do not let the enrollment screen disappear
+        # before the user has time to follow Driver Center's instructions.
+        timeout = run(["mokutil", "--timeout", "-1"], timeout=30)
+        result.steps["enrollment_timeout"] = StepResult(
+            "success" if timeout.returncode == 0 else "skipped",
+            "" if timeout.returncode == 0 else _detail(timeout),
+        )
 
     _rebuild_installed_dkms_modules(
         result,
@@ -318,7 +325,7 @@ def repair_dkms(
     available: CommandAvailable = command_available,
 ) -> OperationResult:
     result = OperationResult("repair-dkms")
-    if not _firmware_enforces_secure_boot(result, run):
+    if not _firmware_supports_secure_boot(result, run):
         return result
     if private_key.is_file() and certificate.is_file():
         try:
@@ -343,7 +350,19 @@ def repair_dkms(
 
 def execute(action: str, run: Run = run_command) -> OperationResult:
     if action == "prepare":
-        return prepare(run)
+        from .boot_chain import prepare_boot_chain
+
+        result = OperationResult("prepare")
+        if not _firmware_supports_secure_boot(result, run):
+            return result
+        try:
+            prepare_boot_chain(CallableRunner(run))
+        except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+            result.steps["boot_chain"] = StepResult("failed", str(error))
+            return result
+        result = prepare(run)
+        result.steps["boot_chain"] = StepResult("success")
+        return result
     if action == "repair-dkms":
         return repair_dkms(run)
     raise ValueError(f"unsupported action: {action}")

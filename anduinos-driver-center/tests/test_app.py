@@ -72,7 +72,7 @@ class AppTests(unittest.TestCase):
         window = Mock()
         button = Mock()
         DriverCenterWindow._action_done(window, button, "Apply", 1, message)
-        window._action_error.assert_called_once_with("unknown error")
+        window._action_error.assert_called_once_with(app._("unknown error"))
         window.refresh.assert_not_called()
         button.set_sensitive.assert_called_once_with(True)
 

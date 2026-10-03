@@ -6,6 +6,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -201,9 +202,6 @@ msgstr "Choose your language to begin installation"
 msgid "Choose your location to set the system clock"
 msgstr "Choose your location to set the system clock"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "Complete"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -235,6 +233,9 @@ msgid "Continue Installation"
 msgstr "Continue Installation"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "Check installation media"
+
 msgid "Copy AnduinOS system"
 msgstr "Copy AnduinOS system"
 
@@ -286,9 +287,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "Development simulation completed"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "Discover AnduinOS"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -854,6 +852,10 @@ msgstr "Below the minimum. Installation or updates may fail. Continue?"
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "Below the recommended capacity. Space may run out quickly. Continue?"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "At least 6 GiB is required to install AnduinOS."
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1908,3 +1910,91 @@ msgstr "Repair Steps"
 #: src/pages.py
 msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
 msgstr "This NTFS volume requires a disk check in Windows before it can be resized safely."
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "Checking firmware"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Checking Secure Boot support…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Unable to determine Secure Boot support"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "Firmware check complete"
+
+#: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "A separate EFI System Partition is required"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "Checking EFI System Partition…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "Check for other Linux installations"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "Compare ESP options"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "Separate ESP"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "Shared ESP"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+
+#: src/pages.py
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
+msgstr "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+
+#: src/app_menu.py
+msgid "About"
+msgstr "About"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "View Source"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "Official Website"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "Report an Issue"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "Main Menu"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "Retry"

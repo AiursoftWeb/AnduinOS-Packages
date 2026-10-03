@@ -223,6 +223,93 @@ impl<R: CommandRunner> OperationEngine<R> {
         )
     }
 
+    /// Create a normal system snapshot while the installation is mounted from
+    /// an external rescue environment. Unlike `create_manual`, this resolves
+    /// the kernel identity from the installed system rather than `/proc`.
+    pub fn create_offline_manual<F>(
+        &self,
+        layout: &LayoutReport,
+        title: &str,
+        reason: &str,
+        pinned: bool,
+        progress: F,
+    ) -> Result<DeploymentRecord, OperationError>
+    where
+        F: FnMut(OperationPhase, f64, &str),
+    {
+        let kernel = read_default_installed_kernel_release(&self.system_root)?;
+        self.create_snapshot_with_kernel(
+            layout,
+            title,
+            reason,
+            pinned,
+            DeploymentKind::Manual,
+            &kernel,
+            progress,
+        )
+    }
+
+    /// Create the safety recovery point used immediately before an offline
+    /// root replacement. The resulting deployment is intentionally identical
+    /// to a safety point created by the installed snapshot manager.
+    pub fn create_offline_pre_rollback<F>(
+        &self,
+        layout: &LayoutReport,
+        progress: F,
+    ) -> Result<DeploymentRecord, OperationError>
+    where
+        F: FnMut(OperationPhase, f64, &str),
+    {
+        let kernel = read_default_installed_kernel_release(&self.system_root)?;
+        self.create_snapshot_with_kernel(
+            layout,
+            "Before offline system restore",
+            "Safety snapshot created by AnduinOS Rescue Center",
+            false,
+            DeploymentKind::PreRollback,
+            &kernel,
+            progress,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn create_snapshot_with_kernel<F>(
+        &self,
+        layout: &LayoutReport,
+        title: &str,
+        reason: &str,
+        pinned: bool,
+        kind: DeploymentKind,
+        kernel_release: &str,
+        mut progress: F,
+    ) -> Result<DeploymentRecord, OperationError>
+    where
+        F: FnMut(OperationPhase, f64, &str),
+    {
+        progress(
+            OperationPhase::Validate,
+            0.02,
+            "Validating offline recovery storage",
+        );
+        ensure_supported_layout(layout)?;
+        self.ensure_transaction_reserve()?;
+        self.ensure_store_directories()?;
+        let operation_lock = self.acquire_lock()?;
+        let deployments = DeploymentStore::new(&self.snapshot_root).discover();
+        self.create_snapshot_locked(
+            title,
+            reason,
+            None,
+            pinned,
+            kind,
+            DeploymentState::Ready,
+            Some(kernel_release),
+            progress,
+            operation_lock,
+            deployments,
+        )
+    }
+
     /// Create the installer-owned recovery baseline, or return the existing
     /// healthy baseline when installation finalization is retried.
     pub fn create_factory_if_missing<F>(

@@ -81,6 +81,28 @@ def probe_storage_inventory():
     return _probe_storage_inventory(parted_run=_run_privileged_parted)
 
 
+def probe_esp_occupied(partition, *, development_mode=False) -> bool:
+    """Check the vendor namespace, without granting storage write authority."""
+    if development_mode:
+        return False
+    command = [_STORAGE_PROBE_HELPER, "--esp-inspect", partition.identity.path]
+    if os.geteuid() != 0:
+        command.insert(0, "pkexec")
+    try:
+        result = subprocess.run(command, capture_output=True, text=True,
+                                timeout=600, check=False)
+        if result.returncode:
+            raise FrontendPlanError(result.stderr.strip() or "ESP inspection failed")
+        payload = json.loads(result.stdout)
+        if (payload["partuuid"].lower() != partition.identity.partuuid.lower()
+                or payload["filesystem_uuid"].upper() != partition.filesystem_uuid.upper()
+                or type(payload["occupied"]) is not bool):
+            raise ValueError("ESP identity changed; rescan storage")
+        return payload["occupied"]
+    except (OSError, subprocess.TimeoutExpired, ValueError, KeyError, TypeError, AttributeError) as error:
+        raise FrontendPlanError(f"Cannot inspect the selected ESP: {error}") from error
+
+
 def probe_ntfs_resize(
     partition: str,
     *,
@@ -175,6 +197,7 @@ def clear_storage_target(state: dict[str, object]) -> None:
     ):
         state[key] = ""
     state["disk_size_bytes"] = 0
+    state["disk_external"] = False
     state["disk_windows_detected"] = False
     state["disk_bitlocker_detected"] = False
     state["disk_has_existing_partitions"] = False
@@ -207,6 +230,7 @@ def bind_storage_target(
     state["disk_model"] = disk.model
     state["disk_stable_id"] = disk.stable_id
     state["disk_topology_digest"] = choice.disk.topology_digest
+    state["disk_external"] = choice.disk.external
     state["disk_windows_detected"] = choice.coexistence.windows_detected
     state["disk_bitlocker_detected"] = choice.coexistence.bitlocker_detected
     state["disk_has_existing_partitions"] = bool(choice.disk.partitions)
@@ -576,8 +600,10 @@ class DevelopmentExecutorClient:
             progress(step, completed, total)
             step_status(step, "running", "")
             log(f"[{step}] simulated; no command was executed")
+            for second in range(4):
+                log(f"sleep {second}")
+                time.sleep(1)
             completed += weight
-            time.sleep(0.03)
             step_status(step, "succeeded", "")
         progress("complete", total, total)
         log("Simulation complete. No disk, mount, firmware, or target changed.")

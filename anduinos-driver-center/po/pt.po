@@ -1729,3 +1729,45 @@ msgstr ""
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "Os pacotes assinalados com − serão removidos. Os kernels mais antigos poderão perder o suporte gráfico NVIDIA. Reinicie após a atualização."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Ativar Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Para o ativar, abra as definições do firmware UEFI e procure em Boot, "
+"Security ou Secure Boot. Selecione Microsoft & 3rd-party CA ou ative Secure "
+"Boot. Os nomes variam consoante o fabricante."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"O AnduinOS ainda não está preparado para Secure Boot. Ativá-lo agora no "
+"firmware pode impedir o arranque do sistema."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "Preparar o AnduinOS para Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Primeiro, prepare o AnduinOS e registe o certificado MOK. Ative Secure Boot "
+"apenas após o registo."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: faltam as chaves de plataforma do firmware. Após o registo MOK, "
+"restaure as chaves de fábrica do fabricante nas definições do firmware."

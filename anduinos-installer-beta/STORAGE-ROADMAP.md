@@ -28,6 +28,12 @@ failed consistency checks or an unsafe target dry run. Other resize and repair
 operations remain the responsibility of specialist tools and the operating
 system that owns the data.
 
+The bounded manual editor enforces a 6 GiB hard minimum for Root in both its UI
+model and the privileged storage graph. Root sizes from 6 GiB to 25 GiB are
+allowed only after a strong below-minimum warning; 25 GiB to 50 GiB receives a
+below-recommended warning, and 50 GiB or more proceeds without one. Automatic
+and guided layouts retain their stricter swap and root-space policy.
+
 ## Implementation status
 
 | Milestone | Status | Current boundary |
@@ -369,8 +375,56 @@ health and free-space reserve pass validation. Reuse means:
 - fail with recovery instructions if firmware variables cannot be updated,
   rather than silently taking over the shared fallback path.
 
-If the existing ESP is unsuitable, guided mode refuses it. Custom mode may
-allocate a dedicated AnduinOS ESP inside explicitly selected free space.
+Preservation-mode preflight refuses to reuse an ESP that already contains an
+`EFI/AnduinOS` directory, including case variants, an empty directory or
+partial-install leftovers. Both guided and manual plans stop before destructive
+storage operations. The error directs users to select another ESP or create a
+new one in unallocated space; the installer never deletes these leftovers
+automatically. Invalid or unreadable EFI paths also fail closed. Ordinary
+Microsoft/Ubuntu ESP reuse and the existing boot commands are unchanged.
+This guard prevents boot-file replacement; per-installation EFI directory
+names and shared-ESP multi-AnduinOS ownership remain out of scope.
+
+Before advancing from the storage page, the UI checks a selected reused ESP
+through the read-only Polkit helper in a private mount namespace. On an
+AnduinOS namespace conflict, it selects the new-ESP option and explains the
+required separate partition. Guided mode does this only if the chosen extent
+has room; manual mode asks the user to allocate an ESP explicitly. It never
+silently moves or shrinks the root request. Probe failures do not authorize
+continuation, and the executor independently repeats its full preflight.
+
+### Independent Linux boot chains
+
+After installing the new bootloader, a separate warning-policy step discovers
+complete AnduinOS and Ubuntu shim/GRUB chains on same-disk and other-disk ESPs.
+It mounts unmounted candidates read-only and only reads an already mounted ESP
+when it is the verified installer target. The target's own AnduinOS loader is
+excluded; Ubuntu on that shared target ESP may still be added. Duplicate FAT
+UUIDs, incomplete chains and wrong PE architectures are excluded.
+
+Only the new root gets `/etc/grub.d/43_anduinos_linux`, followed by its own
+`update-grub`. Entries identify the ESP by filesystem UUID and chainload its
+architecture-specific shim. Runtime guards hide missing loaders and prevent
+falling through to the wrong root on a failed UUID search. No foreign kernel,
+initramfs, root configuration, NVRAM entry or ESP is written. Windows discovery,
+`EFI/AnduinOS`, the AnduinOS NVRAM label, `--no-extra-removable`, and the portable
+erase-disk boot policy remain unchanged.
+
+The new GRUB menu is the entry point for selecting the old installation; the
+old installation's menu is not modified. A second GRUB menu is expected.
+Kernel/initramfs updates stay within their own installation. Existing systems
+need the updated Secure Boot Toolkit before multi-ESP automatic repair is
+available: it checks the mounted ESP against fstab and the standard Ubuntu EFI
+stub against this system's GRUB filesystem UUID and relative directory. It
+does not assume BootCurrent identifies the final chainloaded OS. Ambiguous or
+nonstandard layouts still stop automatic repair.
+
+Unit tests and GRUB syntax checks are not release qualification. Before a
+release, test two installed AnduinOS systems (ext4 and Btrfs), AnduinOS beside
+Ubuntu, Secure Boot on/off, kernel/shim/GRUB upgrades in each system, repair
+after chainloading, removal of the other installation, preservation hashes,
+and the existing #422/portable boot regressions in disposable UEFI VMs. No
+ext4/Btrfs shrinking is introduced by this change.
 
 Windows discovery and an optional GRUB chainloader entry are usability
 features. Firmware boot entries remain independently usable; detection must

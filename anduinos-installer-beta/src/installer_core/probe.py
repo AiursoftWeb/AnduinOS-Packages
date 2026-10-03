@@ -12,6 +12,8 @@ from pathlib import Path
 from typing import Callable
 
 from .model import Architecture, DiskIdentity, Firmware, SecureBoot
+from anduinos_secureboot.firmware import probe_firmware, recover_firmware
+
 
 
 class ProbeError(RuntimeError):
@@ -35,6 +37,7 @@ def probe_platform(
     machine: str | None = None,
     efi_path: Path = Path("/sys/firmware/efi"),
     run: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+    recover: bool = False,
 ) -> PlatformProbe:
     raw_arch = machine or platform.machine()
     architecture = {
@@ -46,60 +49,20 @@ def probe_platform(
     if architecture is None:
         raise ProbeError(f"Unsupported architecture: {raw_arch}")
 
-    if not efi_path.is_dir():
+    evidence = probe_firmware(run=run, efi_path=efi_path)
+    if recover:
+        evidence = recover_firmware(evidence)
+    if not evidence.known:
+        raise ProbeError(
+            f"Cannot determine Secure Boot state ({evidence.reason}); "
+            f"mokutil exit={evidence.returncode}: "
+            f"{evidence.detail}\n{evidence.stdout}{evidence.stderr}".strip()
+        )
+    if not evidence.uefi:
         if architecture is Architecture.ARM64:
             raise ProbeError("arm64 installation requires standards-based UEFI")
-        return PlatformProbe(
-            architecture, Firmware.BIOS, SecureBoot.NOT_APPLICABLE
-        )
-
-    try:
-        environment = os.environ.copy()
-        environment["LC_ALL"] = "C"
-        environment["LANG"] = "C"
-        result = run(
-            ["mokutil", "--sb-state"],
-            capture_output=True,
-            text=True,
-            timeout=10,
-            check=False,
-            env=environment,
-        )
-    except (FileNotFoundError, subprocess.TimeoutExpired) as error:
-        raise ProbeError(f"Cannot determine Secure Boot state: {error}") from error
-
-    if result.returncode != 0:
-        raise ProbeError(
-            "mokutil failed while determining the Secure Boot state"
-        )
-    output = f"{result.stdout}\n{result.stderr}".lower()
-    reported_states = {
-        state
-        for state, reported in (
-            (
-                SecureBoot.ENABLED,
-                "secureboot enabled" in output
-                or "secure boot enabled" in output,
-            ),
-            (
-                SecureBoot.DISABLED,
-                "secureboot disabled" in output
-                or "secure boot disabled" in output,
-            ),
-            (
-                SecureBoot.UNSUPPORTED,
-                "doesn't support secure boot" in output
-                or "does not support secure boot" in output,
-            ),
-        )
-        if reported
-    }
-    if len(reported_states) != 1:
-        raise ProbeError(
-            "mokutil did not report an unambiguous Secure Boot state"
-        )
-    secure_boot = reported_states.pop()
-    return PlatformProbe(architecture, Firmware.UEFI, secure_boot)
+        return PlatformProbe(architecture, Firmware.BIOS, SecureBoot.NOT_APPLICABLE)
+    return PlatformProbe(architecture, Firmware.UEFI, SecureBoot(evidence.status.value))
 
 
 def probe_disks(

@@ -10,9 +10,10 @@ if [ "$1" = "remove" ] || [ "$1" = "deconfigure" ]; then
         text.plymouth \
         /usr/share/plymouth/themes/anduinos-text/anduinos-text.plymouth || true
 
-    if [ -x /usr/libexec/anduinos-dracut-verify ]; then
-        /usr/libexec/anduinos-dracut-verify --rebuild
+    if command -v update-initramfs >/dev/null 2>&1; then
+        update-initramfs -u
     else
-        dracut --force --regenerate-all
+        # Allow recovery/removal when the dependency has already been lost.
+        echo 'plymouth-anduinos: update-initramfs unavailable during removal; existing boot images retained' >&2
     fi
 fi

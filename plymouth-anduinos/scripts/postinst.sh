@@ -22,12 +22,7 @@ if [ "$1" = "configure" ]; then
         text.plymouth \
         /usr/share/plymouth/themes/anduinos-text/anduinos-text.plymouth || true
 
-    # 3. Rebuild all images through AnduinOS's staged writer. Never report a
-    # successful package transaction after silently losing the boot splash or
-    # producing an unverified initrd.
-    if [ -x /usr/libexec/anduinos-dracut-verify ]; then
-        /usr/libexec/anduinos-dracut-verify --rebuild
-    else
-        dracut --force --regenerate-all
-    fi
+    # During dpkg configuration the official command defers via its trigger;
+    # a newly unpacked kernel may not have completed depmod yet.
+    update-initramfs -u
 fi

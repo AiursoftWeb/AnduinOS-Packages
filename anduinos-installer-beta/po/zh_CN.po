@@ -6,6 +6,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -201,9 +202,6 @@ msgstr "选择您的语言以开始安装"
 msgid "Choose your location to set the system clock"
 msgstr "选择您的位置以设置系统时钟"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "完成"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -235,6 +233,9 @@ msgid "Continue Installation"
 msgstr "继续安装"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "检查安装介质"
+
 msgid "Copy AnduinOS system"
 msgstr "复制 AnduinOS 系统"
 
@@ -286,9 +287,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "开发模拟已完成"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "探索 AnduinOS"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -854,6 +852,10 @@ msgstr "低于最低要求，安装或更新可能失败。仍要继续？"
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "低于推荐容量，空间可能很快耗尽。仍要继续？"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "安装 AnduinOS 至少需要 6 GiB 空间。"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1908,3 +1910,91 @@ msgstr "修复步骤"
 #: src/pages.py
 msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
 msgstr "此 NTFS 分区需要先在 Windows 中完成磁盘检查，才能安全调整大小。"
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "外置硬盘模式 — AnduinOS 将添加便携式 UEFI 启动路径，使此外置硬盘无需已有的 AnduinOS 固件启动项，也能在另一台 UEFI 电脑上启动。"
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "正在检测固件"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "正在检测安全启动支持情况…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "无法确定安全启动支持情况"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "你可以继续配置安装选项。在对磁盘进行任何更改之前，必须成功完成固件检测。"
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "固件检测完成"
+
+#: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "需要独立的 EFI 系统分区"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "此 ESP 已包含 EFI/AnduinOS。请在未分配空间中创建新的 ESP（至少 512 MiB），或选择其他 ESP。已有安装不会被覆盖。新系统的 GRUB 菜单可以启动已有系统。"
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "正在检查 EFI 系统分区…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "检查其他 Linux 安装"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "比较 ESP 方案"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "独立 ESP"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "共享 ESP"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "在未分配空间中创建并格式化新的 FAT32 ESP（至少 512 MiB）。现有 ESP 保持不变。"
+
+#: src/pages.py
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
+msgstr "复用健康且空间充足的 ESP，不格式化，保留其他系统的引导文件。若已存在 EFI/AnduinOS，请另选 ESP 或新建一个。"
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "两种方案都会将引导文件安装到 EFI/AnduinOS，并把新的 AnduinOS UEFI 启动项排在首位。检测到的受支持系统会加入新 GRUB 菜单；不会改动它们的文件和菜单。"
+
+#: src/app_menu.py
+msgid "About"
+msgstr "关于"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "查看源码"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "官方网站"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "报告问题"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "主菜单"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "重试"

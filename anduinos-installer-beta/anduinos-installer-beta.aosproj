@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.4-11+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -49,6 +49,7 @@
     <!-- Keep the Dracut Live locale and package-owned timezone bridges available
          wherever the native installer is installed, including development. -->
     <Dependency Include="anduinos-live-settings" />
+    <Dependency Include="anduinos-live-layers" />
     <Dependency Include="python3-unidecode" />
     <Dependency Include="python3-gi" />
     <Dependency Include="gir1.2-gtk-4.0" />
@@ -73,6 +74,7 @@
     <Dependency Include="anduinos-swap-config" />
     <Dependency Include="shim-signed" />
     <Dependency Include="mokutil" />
+    <Dependency Include="anduinos-secureboot-toolkit (&gt;= 2.0.4-2)" />
     <Dependency Include="openssl" />
     <Dependency Include="sbsigntool" />
     <Dependency Include="squashfs-tools" />
@@ -82,6 +84,9 @@
     <Dependency Include="netplan.io" />
     <Dependency Include="polkitd" />
     <Dependency Include="libglib2.0-bin" />
+    <!-- Keep the offline recovery UI available in the Live session. The
+         installer removes it from the installed target during cleanup. -->
+    <Recommend Include="anduinos-rescue-center" />
     <!-- The installer can download this when the user explicitly selects
          extended formats. Suggests records availability without pulling the
          codec payload into the Live image or ordinary installer installs. -->
@@ -127,6 +132,7 @@
     <PostRemoveScript Include="scripts/postrm.sh" />
   </ItemGroup>
   <ItemGroup>
-    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:tests python3 -m unittest discover -s tests -v" TimeoutSeconds="600" />
+    <TestCommand Name="widgets" Profile="gui" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:tests:../anduinos-secureboot-toolkit/src LANGUAGE=C GSETTINGS_BACKEND=memory GDK_BACKEND=x11 dbus-run-session -- xvfb-run -a python3 -m unittest discover -s tests/gui -v" TimeoutSeconds="300" />
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:tests:../anduinos-secureboot-toolkit/src python3 -m unittest discover -s tests -v" TimeoutSeconds="600" />
   </ItemGroup>
 </Project>

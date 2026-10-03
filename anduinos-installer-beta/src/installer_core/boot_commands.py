@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .layout import build_erase_disk_layout
-from .model import Architecture, Firmware, InstallMode, InstallPlan, SecureBoot
+from .model import Architecture, Firmware, InstallMode, InstallPlan
 from .validation import validate_plan
 
 
@@ -65,9 +65,24 @@ def build_boot_commands(plan: InstallPlan, target: str) -> BootCommandPlan:
         "--recheck",
         "--no-nvram",
     ]
-    # Ubuntu GRUB 2.14 installs the EFI/BOOT fallback path by default and
-    # exposes only --no-extra-removable to opt out.  The older
-    # --force-extra-removable option no longer exists in Resolute.
+    # KEEP --no-extra-removable ON EVERY UEFI INSTALL, including an external
+    # erase-disk install that deliberately receives a portable EFI/BOOT path.
+    #
+    # Ubuntu GRUB 2.14 installs its removable-media chain by default and only
+    # exposes --no-extra-removable to opt out; the old
+    # --force-extra-removable option no longer exists in Resolute.  We must
+    # still opt out because grub-install's chain may contain shim's fallback
+    # NVRAM registrar (fb*.efi).  On firmware affected by AnduinOS issue #422,
+    # booting that registrar can create/select an entry, call ResetSystem, and
+    # then be selected again indefinitely.
+    #
+    # install_fallback_path is therefore NOT permission to omit this option.
+    # It authorizes InstallBootloaderStep to copy a narrowly defined direct
+    # chain (shim -> GRUB, MokManager and grub.cfg, explicitly excluding
+    # fb*.efi) from EFI/AnduinOS to EFI/BOOT after grub-install has completed
+    # and the signed files have been verified.  Internal, coexistence and
+    # manual installs never receive that post-install copy.  Do not turn the
+    # presence of this option into the portable-mode switch.
     creates_nvram_entry = plan.platform.firmware is Firmware.UEFI
     if creates_nvram_entry:
         # An installed system must not rely on shim's removable-media
@@ -75,8 +90,9 @@ def build_boot_commands(plan: InstallPlan, target: str) -> BootCommandPlan:
         # Some firmware keeps selecting that fallback entry after ResetSystem,
         # producing an endless "Reset System" loop.
         efi_install.append("--no-extra-removable")
-        fallback = ""
-    if plan.platform.secure_boot is SecureBoot.ENABLED:
+        if not plan.boot.install_fallback_path:
+            fallback = ""
+    if plan.platform.firmware is Firmware.UEFI:
         efi_install.append("--uefi-secure-boot")
     installs.append(tuple(efi_install))
     loader = guided_loader_path(plan) if creates_nvram_entry else ""
@@ -185,10 +201,11 @@ def _build_vendor_only_boot_commands(
         "--bootloader-id=AnduinOS",
         "--recheck",
         "--no-nvram",
+        # Shared/reused ESPs must never let grub-install populate EFI/BOOT.
+        # See the issue-#422 invariant in build_boot_commands above.
         "--no-extra-removable",
     ]
-    if plan.platform.secure_boot is SecureBoot.ENABLED:
-        install.append("--uefi-secure-boot")
+    install.append("--uefi-secure-boot")
     loader = guided_loader_path(plan)
     return GuidedBootCommandPlan(
         initrd=chroot
@@ -224,9 +241,7 @@ def guided_loader_path(plan: InstallPlan) -> str:
     architecture = (
         "x64" if plan.platform.architecture is Architecture.AMD64 else "aa64"
     )
-    executable = (
-        f"shim{architecture}.efi"
-        if plan.platform.secure_boot is SecureBoot.ENABLED
-        else f"grub{architecture}.efi"
-    )
+    # Firmware enforcement can be enabled after installation. Keep the same
+    # signed entry point in both states; MOK enrollment also requires shim.
+    executable = f"shim{architecture}.efi"
     return rf"\EFI\AnduinOS\{executable}"

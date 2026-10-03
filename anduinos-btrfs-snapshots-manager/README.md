@@ -174,7 +174,7 @@ power-loss qualification must be run only in a disposable VM with the exact
 AnduinOS Btrfs layout, following [docs/VM-QUALIFICATION.md](docs/VM-QUALIFICATION.md).
 They are deliberately not host-side package acceptance tests.
 
-The numbered release ledger, current pass/pending state, host acceptance lane,
-evidence template, incident roots, and remaining TODO are maintained in
+Release qualification procedures, the historical baseline, evidence template,
+and incident roots are documented in
 [docs/ROLLBACK-RELEASE-TEST-PLAN.md](docs/ROLLBACK-RELEASE-TEST-PLAN.md). Stop
 after every rebooting lane and collect its evidence before arming another rollback.

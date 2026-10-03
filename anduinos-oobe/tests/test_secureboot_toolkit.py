@@ -44,14 +44,7 @@ class SecureBootToolkitTests(unittest.TestCase):
         popen.assert_not_called()
         navigate_next.assert_called_once_with()
 
-    def test_oobe_catalog_matches_oobe_and_secure_boot_ui(self):
-        toolkit_ui = (
-            ROOT.parent
-            / "anduinos-secureboot-toolkit"
-            / "src"
-            / "anduinos_secureboot"
-            / "ui.py"
-        )
+    def test_oobe_catalog_matches_oobe_without_secure_boot_ui(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             extracted = Path(temporary_directory) / "messages.pot"
             metadata_messages = set()
@@ -83,7 +76,6 @@ class SecureBootToolkitTests(unittest.TestCase):
                     "--from-code=UTF-8",
                     f"--output={extracted}",
                     str(ROOT / "assets" / "anduinos-oobe"),
-                    str(toolkit_ui),
                     str(metadata_source),
                 ],
                 check=True,

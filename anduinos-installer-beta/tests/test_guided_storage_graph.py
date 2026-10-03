@@ -118,6 +118,33 @@ class GuidedStorageGraphTests(unittest.TestCase):
             (StorageGraphAction.FORMAT, esp_id),
             tuple((item.action, item.target_id) for item in graph.operations),
         )
+        self.assertFalse(plan.boot.install_fallback_path)
+        self.assertEqual(graph.boot_targets[0].fallback_path, "")
+        self.assertFalse(
+            any(
+                item.action is StorageGraphAction.WRITE_FALLBACK_BOOT_FILES
+                for item in graph.operations
+            )
+        )
+
+    def test_external_coexistence_never_authorizes_shared_fallback_write(self):
+        plan, _inventory = guided_plan(reuse_esp=False)
+        plan = replace(
+            plan,
+            boot=replace(
+                plan.boot,
+                external_target=True,
+                install_fallback_path=False,
+            ),
+        )
+        validate_plan(plan)
+        self.assertEqual(plan.storage.graph.boot_targets[0].fallback_path, "")
+        self.assertFalse(
+            any(
+                item.action is StorageGraphAction.WRITE_FALLBACK_BOOT_FILES
+                for item in plan.storage.graph.operations
+            )
+        )
 
     def test_graph_round_trip_contains_no_device_paths_or_commands(self):
         plan, _inventory = guided_plan()

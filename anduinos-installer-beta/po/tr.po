@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -200,9 +201,6 @@ msgstr "Kurulumu başlatmak için dilinizi seçin"
 msgid "Choose your location to set the system clock"
 msgstr "Sistem saatini ayarlamak için konumunuzu seçin"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "Tamamlandı"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -234,6 +232,9 @@ msgid "Continue Installation"
 msgstr "Kurulumu Devam Ettir"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "Kurulum ortamını denetle"
+
 msgid "Copy AnduinOS system"
 msgstr "AnduinOS sistemini kopyala"
 
@@ -285,9 +286,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "Geliştirme simülasyonu tamamlandı"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "AnduinOS'u Keşfet"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -853,6 +851,10 @@ msgstr "Minimumun altında. Kurulum veya güncellemeler başarısız olabilir. D
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "Önerilen kapasitenin altında. Alan hızla tükenebilir. Devam edilsin mi?"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "AnduinOS'u kurmak için en az 6 GiB gereklidir."
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1907,3 +1909,91 @@ msgstr "Onarım Adımları"
 #: src/pages.py
 msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
 msgstr "Bu NTFS biriminin boyutunu güvenle değiştirebilmek için önce Windows'ta disk denetimi yapılmalıdır."
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "Harici sürücü modu — AnduinOS taşınabilir bir UEFI önyükleme yolu ekleyecek; böylece bu sürücü, ürün yazılımında mevcut bir AnduinOS önyükleme girdisi bulunmayan başka bir UEFI bilgisayarda başlatılabilir."
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "Ürün yazılımı denetleniyor"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Secure Boot desteği denetleniyor…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Secure Boot desteği belirlenemedi"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "Kurulumu yapılandırmaya devam edebilirsiniz. Disklerinizde herhangi bir değişiklik yapılmadan önce ürün yazılımı denetimi başarılı olmalıdır."
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "Ürün yazılımı denetimi tamamlandı"
+
+#: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "Ayrı bir EFI sistem bölümü gerekiyor"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "Bu ESP zaten EFI/AnduinOS içeriyor. Ayrılmamış alanda yeni bir ESP oluşturun (en az 512 MiB) veya başka bir ESP seçin. Mevcut kurulumun üzerine yazılmayacak. Yeni sistemin GRUB menüsü mevcut sistemi başlatabilir."
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "EFI sistem bölümü denetleniyor…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "Diğer Linux kurulumlarını denetle"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "ESP seçeneklerini karşılaştır"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "Ayrı ESP"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "Paylaşılan ESP"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "Ayrılmamış alanda yeni bir FAT32 ESP oluşturup biçimlendirin (en az 512 MiB). Mevcut ESP’ler değişmeden kalır."
+
+#: src/pages.py
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
+msgstr "Yeterli boş alanı olan sağlıklı bir ESP’yi biçimlendirmeden yeniden kullanın. Diğer sistemlerin önyükleme dosyaları korunur. EFI/AnduinOS zaten varsa başka bir ESP seçin veya yeni bir tane oluşturun."
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "Her iki seçenek de önyükleme dosyalarını EFI/AnduinOS içine kurar ve yeni AnduinOS UEFI önyükleme girdisini ilk sıraya yerleştirir. Algılanan desteklenen sistemler yeni GRUB menüsüne eklenir; dosyaları ve menüleri değiştirilmez."
+
+#: src/app_menu.py
+msgid "About"
+msgstr "Hakkında"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "Kaynak Kodunu Görüntüle"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "Resmî Web Sitesi"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "Sorun Bildir"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "Ana Menü"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "Yeniden dene"

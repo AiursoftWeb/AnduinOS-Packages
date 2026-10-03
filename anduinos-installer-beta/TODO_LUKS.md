@@ -16,8 +16,7 @@ stacks, or LVM.
 
 ## Archived staged conclusion — 2026-08-09
 
-This is the hand-off state at the end of the design and proof-of-concept
-session. **No final production boot architecture has been approved.** The
+**No final production boot architecture has been approved.** The
 storage mechanism is substantially understood, but the product must still
 choose and qualify one of two honest Secure Boot threat models. Do not expose
 encryption in the release installer merely because the mechanism tests pass.
@@ -82,12 +81,9 @@ eliminate the detached LUKS1 compatibility-header lifecycle. It is not yet
 proven: enrollment, cancellation, recovery, negative substitution tests, and
 update safety remain open.
 
-The last G9 builder did boot with Microsoft-key OVMF Secure Boot enabled and
-generated the machine MOK and UKI, but stopped before queueing enrollment
-because the reproducer asked `grub-mkstandalone` for module `chainloader`;
-Ubuntu provides the command in `chain.mod`. The source has been corrected to
-`chain` for the next engineer, but the corrected VM path was deliberately not
-rerun during this archival pass. **G9 remains failed/incomplete, not passed.**
+G9 has not qualified the machine-MOK boot path. Enrollment, constrained-GRUB
+boot, unsigned-substitute rejection, and cancellation/recovery behavior still
+require VM validation.
 
 ### Remaining qualification work
 
@@ -95,35 +91,23 @@ rerun during this archival pass. **G9 remains failed/incomplete, not passed.**
   cancellation, forgotten enrollment password, key loss, unsigned GRUB/UKI
   rejection, updates, rollback, and interrupted writes.
 - Qualify ext4 independently; all completed storage proofs used Btrfs.
-- Qualify arm64 under AAVMF or supported real hardware; this host lacked both
-  `qemu-system-aarch64` and AAVMF.
+- Qualify arm64 under AAVMF or supported real hardware.
 - Perform torn-write and power-loss injection inside cryptsetup updates and
   FAT/ESP publication; the completed lifecycle tests covered durable logical
   transaction boundaries, not every possible torn sector/write.
-- Integrate the selected architecture into the real installer. The work in
-  `tests/vm/luks-grub-btrfs/` is proof code, not product implementation.
+- Integrate the selected architecture into the real installer and provide
+  maintained qualification fixtures; historical mechanism proofs are not
+  product implementation.
 - Keep TPM auto-unlock, persistent encrypted hibernation, and hybrid sleep as
   later qualification projects. Random-key encrypted swap cannot resume.
 
-### Reproducer and disposable evidence index
+### Reproducers
 
-The maintained reproducer sources are under
-`tests/vm/luks-grub-btrfs/`. The corresponding `/tmp` directories below are
-useful on the original workstation but are disposable evidence, not durable
-project artifacts:
-
-| Gate | Result | Evidence directory |
-|---|---|---|
-| G1 | direct LUKS2/Btrfs mechanism passed | `/tmp/anduinos-luks-g1.lKuajN` |
-| G2 | stock signed dual-header path passed | `/tmp/anduinos-luks-g2-dual-header.yXvvoa` |
-| G3/G4 | signed kernel and silent reopen passed | `/tmp/anduinos-luks-g3-linux-initrd.6mLeM5` |
-| G5 | kernel-update rollback passed | `/tmp/anduinos-luks-g5-rollback.l5ZSuK` |
-| G6 | sanitized header lifecycle passed | `/tmp/anduinos-luks-g6-header-lifecycle.YMsSo9` |
-| G6 | recovery rotation boundaries passed | `/tmp/anduinos-luks-g6-recovery-rotation.4ywfbq` |
-| G6 | destroyed main-header recovery passed | `/tmp/anduinos-luks-g6-main-header-recovery.npHrYb` |
-| G7 | malicious ESP negative test succeeded | `/tmp/anduinos-luks-g7-esp-tamper.1i5dEk` |
-| G8 | signed UKI mechanism passed | `/tmp/anduinos-luks-g8-signed-uki.T6yyRq` |
-| G9 | builder failed before MOK enrollment | `/tmp/anduinos-luks-g9-machine-mok.OeozCK` |
+The historical experiments referenced `tests/vm/luks-grub-btrfs/`, which is
+not present in the current source tree. The results below do not provide a
+current reproduction procedure or qualify a release. Candidate builds require
+maintained fixtures and new results with the source revision, environment,
+and durable evidence location recorded.
 
 There is no hidden third route established by these experiments: if the
 project will not enroll a machine-local MOK or otherwise authenticate its
@@ -926,16 +910,10 @@ ANDUINOS_G1_LUKS_BTRFS_OK
 
 The official Ubuntu 26.04 builder image had SHA-256
 `9dc7c5363c0146a08ba0c9aa834d82c2c6dfbb1c471ad9a2f0aba1189e21be05`.
-The successful run retained a serial log and synthetic-disk evidence beneath
-`/tmp/anduinos-luks-g1.lKuajN`; `/tmp` is disposable, so the reproducible source
-of truth is [`tests/vm/luks-grub-btrfs`](tests/vm/luks-grub-btrfs/).
 
 This result establishes only the amd64/Btrfs half of G1. It does **not** yet
 establish ext4, Secure Boot, signed-UKI loading, Linux's silent reopen, rollback,
-TPM behavior, update safety, or arm64 parity. Two earlier harness runs failed
-before boot testing because an overlong FAT label was rejected and because an
-ESP directory was created before the mount hid it. Those were corrected
-fixture-construction defects, not negative boot-chain results.
+TPM behavior, update safety, or arm64 parity.
 
 #### 2026-08-09 — G2 mechanism passed; Ubuntu's stock signed GRUB is blocked
 
@@ -991,9 +969,6 @@ GRUB has started. Using it to authenticate GRUB itself changes first-boot and
 recovery ordering and must not be assumed to work without a dedicated VM and
 real-hardware experiment.
 
-Reproducers are in
-[`tests/vm/luks-grub-btrfs`](tests/vm/luks-grub-btrfs/). The successful custom
-run retained disposable evidence at `/tmp/anduinos-luks-g2-custom.w5nZ7Z`.
 Production G2 remains unchecked until one of the real distribution trust paths,
 not the OVMF snake-oil certificate, passes.
 
@@ -1021,8 +996,7 @@ ANDUINOS_G1_LUKS_BTRFS_OK
 ```
 
 This path requires no AnduinOS certificate, custom shim, custom trusted GRUB,
-MOK, firmware key enrollment, or disabled Secure Boot. Evidence is retained at
-`/tmp/anduinos-luks-g2-dual-header.yXvvoa`, and the reproducer is
+MOK, firmware key enrollment, or disabled Secure Boot. The reproducer is
 `run-g2-dual-header.sh` in the experiment directory.
 
 This is now the leading no-MOK candidate, but a successful boot alone does not
@@ -1048,8 +1022,7 @@ Kernel is locked down from EFI Secure Boot mode
 ANDUINOS_G4_SILENT_LUKS2_REOPEN_OK
 ```
 
-Evidence is retained at `/tmp/anduinos-luks-g3-linux-initrd.6mLeM5`. This proves
-the certificate-free one-prompt mechanism. It does not give the initramfs a
+This proves the certificate-free one-prompt mechanism. It does not give the initramfs a
 separate signature: the kernel is verified by Secure Boot, while the initramfs
 is protected by being stored inside the encrypted root. This matches Ubuntu's
 traditional signed-kernel/unsigned-initramfs boundary, with the important
@@ -1075,8 +1048,7 @@ state A after rollback: Linux version 7.0.0-28-generic
 ESP SHA-256: ad42832455f7c424624be7ecac40d5278429613b3d25ef53acf5f4861b41d36c
 ```
 
-Evidence is retained at `/tmp/anduinos-luks-g5-rollback.l5ZSuK`. This directly
-disproves the external-`/boot` mismatch for the candidate: the kernel,
+This directly disproves the external-`/boot` mismatch for the candidate: the kernel,
 initramfs, GRUB configuration, modules, and userspace can share the same
 snapshot transaction while the ESP remains stable.
 
@@ -1101,15 +1073,11 @@ and cold-booted it using the recovery key. GRUB reported `Slot 1 opened`, the
 kernel reported Secure Boot enabled, and the same silent LUKS2 reopen marker
 was reached.
 
-The initial evidence at `/tmp/anduinos-luks-g6-header-lifecycle.KdcHHF`
-retained a literal old active generation. The credential-revocation audit
-rejected that detail, and the reproducer was changed to construct a sanitized
-rescue header that explicitly rejects the user password. The corrected run at
-`/tmp/anduinos-luks-g6-header-lifecycle.YMsSo9` proved that the new password
-boots normally and, after active-header corruption, the rescue header boots
-with only the recovery credential. The encrypted-root SHA-256 remained
-unchanged. G6 therefore proves the final password-change and active-header
-damage policy, not merely the superseded previous-generation policy.
+A retained old active header would preserve the previous user password.
+The reproducer therefore constructs a sanitized rescue header that rejects
+that password and accepts only the recovery credential. The corrected fixture
+booted normally with the new password and recovered after active-header
+corruption without changing the encrypted-root SHA-256.
 
 #### 2026-08-09 — G6 recovery-key transaction boundaries passed
 
@@ -1126,8 +1094,7 @@ boundary 5: new opens both; old is retired from active LUKS1 and main LUKS2
 ```
 
 The final new recovery key then cold-booted under enforcing Secure Boot and the
-initramfs reopened root without a second prompt. Evidence is retained at
-`/tmp/anduinos-luks-g6-recovery-rotation.4ywfbq`.
+initramfs reopened root without a second prompt.
 
 This proves logical interruption safety after each fsynced phase. It does not
 yet simulate a torn cryptsetup metadata write or torn FAT directory update in
@@ -1157,16 +1124,11 @@ ANDUINOS_G6_EMBEDDED_HEADER_FALLBACK_OPENED
 ANDUINOS_G6_MAIN_HEADER_RECOVERY_ROOT_MOUNTED
 ```
 
-The first successful evidence at
-`/tmp/anduinos-luks-g6-main-header-recovery.KAokag` used an unsanitized embedded
-copy. The corrected builder removed the human-password slot and verified that
-the embedded header accepts only its random machine credential before
-destroying LUKS2 metadata. Its cold-boot recheck passed at
-`/tmp/anduinos-luks-g6-main-header-recovery.npHrYb`. Earlier builder attempts
-also exposed and fixed missing `initramfs.conf.d` and insufficient builder
-temporary-space defects. Production must enter an explicit degraded/recovery
-state and must never reconstruct or overwrite main LUKS2 metadata
-automatically.
+The embedded header must exclude the human-password slot and accept only its
+random machine credential. The corrected fixture verified this restriction
+before destroying LUKS2 metadata and successfully cold-booted afterward.
+Production must enter an explicit degraded/recovery state and must never
+reconstruct or overwrite main LUKS2 metadata automatically.
 
 #### 2026-08-09 — G7 untrusted-ESP integrity attack succeeded
 
@@ -1184,10 +1146,6 @@ the ESP after the legitimate encrypted initramfs. It replaced a known
 ```text
 ANDUINOS_G7_UNSIGNED_ESP_INITRAMFS_CODE_EXECUTED
 ```
-
-The first raw-newc attempt did not execute because the test archive format did
-not match the multi-initrd path; the corrected compressed archive did. Final
-evidence is retained at `/tmp/anduinos-luks-g7-esp-tamper.1i5dEk`.
 
 This is not a LUKS confidentiality failure before unlock. It is a decisive
 verified-boot failure after a user follows the malicious prompt: stock signed
@@ -1212,31 +1170,19 @@ anduinos.g8-embedded-cmdline=1
 ANDUINOS_G4_SILENT_LUKS2_REOPEN_OK
 ```
 
-Evidence is retained at `/tmp/anduinos-luks-g8-signed-uki.T6yyRq`. This proves
-the UKI mechanism and matches upstream systemd-stub semantics. The OVMF
+This proves the UKI mechanism and matches upstream systemd-stub semantics. The OVMF
 snake-oil key is not a production trust path. More importantly, G8 protects a
 selected UKI but does not authenticate the external GRUB policy that selects
 it. Closing G7 requires a trusted constrained loader/configuration, most
 practically a self-contained GRUB signed by the machine-local MOK that this
 installer already creates for Secure Boot and DKMS.
 
-#### 2026-08-09 — G9 machine-MOK builder started but did not reach enrollment
+#### G9 — machine-MOK qualification incomplete
 
-The final experiment began testing the only identified certificate-free route
-to authenticate loader policy rather than merely keeping Secure Boot enabled.
-It booted the builder under Microsoft-key OVMF, observed `SecureBoot enabled`,
-generated a machine-local MOK, and generated a MOK-signed UKI. It then failed
-while building the constrained GRUB image because the module list named
-`chainloader`; on this Ubuntu image the `chainloader` command is implemented by
-`/usr/lib/grub/x86_64-efi/chain.mod`.
-
-Evidence from the incomplete run is retained at
-`/tmp/anduinos-luks-g9-machine-mok.OeozCK`. The reproducer now names `chain`,
-but no post-correction VM run was performed. There is therefore no evidence yet
-that MokManager enrollment was queued or completed, that shim accepted the
-MOK-signed GRUB, that the constrained GRUB unlocked LUKS2 and booted the UKI,
-or that unsigned substitutes and cancellation/recovery cases behave safely.
-G9 must remain unchecked.
+The machine-MOK path requires proof that MokManager enrollment completes,
+shim accepts the MOK-signed constrained GRUB, and GRUB unlocks LUKS2 and boots
+the signed UKI. Unsigned substitutes and cancellation/recovery cases also
+require validation. G9 remains incomplete.
 
 ### Leading candidate key model and maintenance audit
 

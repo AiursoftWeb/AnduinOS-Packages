@@ -14,3 +14,5 @@ normal running system. In a chroot it defers the refresh; the AnduinOS installer
 runs `update-grub` after deploying the target system.
 
 The package does not install fonts and does not modify initrd or EFI files.
+It recommends the separately removable `anduinos-hyperfluent-grub-theme` package
+for the menu artwork; the boot-style package itself does not depend on the theme.

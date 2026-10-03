@@ -20,6 +20,7 @@ from .software import (
     UpgradeSystemStep,
 )
 from .execution_steps import (
+    CheckInstallationMediaStep,
     CopySystemStep,
     DetectBootEnvironmentStep,
     UnmountTargetStep,
@@ -31,6 +32,7 @@ from .mirrors import SelectFastestAptMirrorStep
 from .network import DetectNetworkConnectivityStep, RecheckNetworkConnectivityStep
 from .model import Filesystem, Firmware, InstallPlan
 from .other_systems import CheckOtherDiskSystemsStep
+from .linux_systems import CheckLinuxSystemsStep
 from .regional_config import ConfigureKeyboardStep, InstallInputMethodStep
 from .remote_access import ProvisionRemoteAccessStep
 from .steps import (
@@ -88,6 +90,7 @@ class InstallerExecutor:
             DetectBootEnvironmentStep(self.runner),
             DetectNetworkConnectivityStep(),
             VerifyTargetDiskStep(self.runner),
+            CheckInstallationMediaStep(self.runner),
             PrepareStorageStep(self.runner, target=self.target),
             MountTargetStep(self.runner, target=self.target),
             CopySystemStep(self.runner),
@@ -132,6 +135,7 @@ class InstallerExecutor:
         )
         if plan.platform.firmware is Firmware.UEFI:
             steps.append(CheckOtherDiskSystemsStep(self.runner))
+            steps.append(CheckLinuxSystemsStep(self.runner))
         if plan.storage.filesystem is Filesystem.BTRFS:
             steps.append(CreateFactorySnapshotStep(self.runner))
         steps.extend(

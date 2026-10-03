@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -200,9 +201,6 @@ msgstr "اختر لغتك لبدء التثبيت"
 msgid "Choose your location to set the system clock"
 msgstr "اختر موقعك لضبط ساعة النظام"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "مكتمل"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -234,6 +232,9 @@ msgid "Continue Installation"
 msgstr "متابعة التثبيت"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "التحقق من وسيط التثبيت"
+
 msgid "Copy AnduinOS system"
 msgstr "نسخ نظام AnduinOS"
 
@@ -285,9 +286,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "اكتملت محاكاة التطوير"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "اكتشف AnduinOS"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -853,6 +851,10 @@ msgstr "أقل من الحد الأدنى. قد يفشل التثبيت أو ا�
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "أقل من السعة الموصى بها. قد تنفد المساحة سريعًا. هل تريد المتابعة؟"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "يلزم توفر 6 GiB على الأقل لتثبيت AnduinOS."
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1907,3 +1909,91 @@ msgstr "خطوات الإصلاح"
 #: src/pages.py
 msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
 msgstr "يتطلب قسم NTFS هذا فحص القرص في Windows قبل تغيير حجمه بأمان."
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "وضع محرك الأقراص الخارجي — سيضيف AnduinOS مسار إقلاع UEFI محمولًا، بحيث يمكن لهذا المحرك الإقلاع على كمبيوتر UEFI آخر دون وجود إدخال إقلاع AnduinOS مسبق في البرنامج الثابت."
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "جارٍ فحص البرنامج الثابت"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "جارٍ التحقق من دعم الإقلاع الآمن…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "تعذر تحديد دعم الإقلاع الآمن"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "يمكنك متابعة إعداد التثبيت. يجب أن ينجح فحص البرنامج الثابت قبل إجراء أي تغييرات على الأقراص."
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "اكتمل فحص البرنامج الثابت"
+
+#: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "يلزم قسم نظام EFI منفصل"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "يحتوي قسم ESP هذا بالفعل على EFI/AnduinOS. أنشئ قسم ESP جديدًا في المساحة غير المخصصة (512 MiB على الأقل)، أو اختر قسم ESP آخر. لن تتم الكتابة فوق التثبيت الحالي. يمكن لقائمة GRUB في النظام الجديد تشغيل النظام الحالي."
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "جارٍ فحص قسم نظام EFI…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "البحث عن تثبيتات Linux أخرى"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "مقارنة خيارات ESP"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "قسم ESP مستقل"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "قسم ESP مشترك"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "إنشاء قسم ESP جديد وتهيئته بنظام FAT32 في مساحة غير مخصصة (512 MiB على الأقل). تبقى أقسام ESP الحالية دون تغيير."
+
+#: src/pages.py
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
+msgstr "إعادة استخدام قسم ESP سليم ذي مساحة فارغة كافية، دون تهيئته. تُحفظ ملفات إقلاع الأنظمة الأخرى. إذا كان EFI/AnduinOS موجودًا بالفعل، فاختر قسم ESP آخر أو أنشئ قسمًا جديدًا."
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "يثبّت كلا الخيارين ملفات الإقلاع في EFI/AnduinOS ويضع إدخال إقلاع AnduinOS UEFI الجديد أولًا. تُضاف الأنظمة المدعومة المكتشفة إلى قائمة GRUB الجديدة؛ ولا تتغير ملفاتها أو قوائمها."
+
+#: src/app_menu.py
+msgid "About"
+msgstr "حول"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "عرض المصدر"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "الموقع الرسمي"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "الإبلاغ عن مشكلة"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "القائمة الرئيسية"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "إعادة المحاولة"

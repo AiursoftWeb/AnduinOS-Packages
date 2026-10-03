@@ -175,15 +175,38 @@ def verify_preserved_esp_tree(
 
 
 def capture_esp_vendor_tree(root: Path) -> tuple[EspTreeEntry, ...]:
-    """Capture only the installer-owned EFI/AnduinOS subtree."""
+    """Capture the occupied AnduinOS namespace, including an empty directory.
 
-    vendor = root / "EFI/AnduinOS"
-    if not vendor.exists():
-        return ()
-    if not vendor.is_dir() or vendor.is_symlink():
-        raise RuntimeError(f"Invalid AnduinOS vendor directory: {vendor}")
-    entries: list[EspTreeEntry] = []
-    for directory, directories, files in os.walk(vendor, followlinks=False):
+    Match FAT names case-insensitively even on case-sensitive test mounts.
+    Missing entries are allowed; unreadable or ambiguous entries are not.
+    """
+
+    vendor = root
+    for component in ("EFI", "AnduinOS"):
+        matches = [
+            path for path in vendor.iterdir()
+            if path.name.casefold() == component.casefold()
+        ]
+        if not matches:
+            return ()
+        if len(matches) != 1:
+            raise RuntimeError(f"Ambiguous EFI directory: {vendor / component}")
+        vendor = matches[0]
+        if vendor.is_symlink() or not vendor.is_dir():
+            raise RuntimeError(f"Invalid EFI directory: {vendor}")
+
+    entries = [EspTreeEntry(
+        relative_path=vendor.relative_to(root).as_posix(),
+        kind="directory",
+        size_bytes=0,
+    )]
+
+    def scan_failed(error):
+        raise error
+
+    for directory, directories, files in os.walk(
+        vendor, followlinks=False, onerror=scan_failed
+    ):
         parent = Path(directory)
         directories[:] = sorted(directories)
         for name in directories:

@@ -397,6 +397,16 @@ def _validate_guided_prerequisites(
     if not esp_inspection.healthy:
         reason = esp_inspection.reason or "FAT consistency check failed"
         raise RuntimeError("Shared ESP is not healthy: " + reason)
+    # Reusing an ESP does not authorize overwriting another installation's
+    # AnduinOS loader. This gate runs before any destructive storage step.
+    if esp_inspection.vendor_entries:
+        raise RuntimeError(
+            "The selected EFI System Partition already contains an "
+            "EFI/AnduinOS directory. Reusing it could overwrite an existing "
+            "AnduinOS bootloader. Select another EFI System Partition or "
+            "create a new one in unallocated space. Files left by an earlier "
+            "installation are not removed automatically."
+        )
     if esp_inspection.free_bytes < GUIDED_ESP_MINIMUM_FREE_BYTES:
         required_mib = GUIDED_ESP_MINIMUM_FREE_BYTES // (1024 * 1024)
         raise RuntimeError(

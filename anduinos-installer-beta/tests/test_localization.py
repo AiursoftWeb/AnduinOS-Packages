@@ -16,6 +16,27 @@ LOCALE_DIR = PACKAGE / "locale"
 
 
 class LocalizationTests(unittest.TestCase):
+    def test_esp_help_is_translated_in_all_supported_languages(self):
+        tree = ast.parse((PACKAGE / "src/pages.py").read_text(encoding="utf-8"))
+        messages = ["Compare ESP options", "Separate ESP", "Shared ESP"]
+        for node in tree.body:
+            if isinstance(node, ast.Assign) and any(
+                isinstance(target, ast.Name) and target.id.startswith("_ESP_HELP_")
+                for target in node.targets
+            ):
+                messages.append(ast.literal_eval(node.value.args[0]))
+        self.assertEqual(6, len(messages))
+        for language in LANGUAGES:
+            with self.subTest(language=language.code):
+                for source in messages:
+                    translated = _(source, language.code)
+                    self.assertTrue(translated)
+                    if language.code not in {DEFAULT_LANGUAGE, "en_GB"}:
+                        self.assertNotEqual(source, translated)
+                    for token in ("512 MiB", "FAT32", "EFI/AnduinOS", "UEFI", "GRUB"):
+                        if token in source:
+                            self.assertIn(token, translated)
+
     def test_disk_check_error_uses_selected_language_instead_of_raw_force_advice(self):
         tree = ast.parse((PACKAGE / "src/pages.py").read_text(encoding="utf-8"))
         function = next(node for node in ast.walk(tree)
@@ -110,6 +131,19 @@ class LocalizationTests(unittest.TestCase):
         self.assertEqual(_("Next", DEFAULT_LANGUAGE), "Next")
         self.assertNotEqual(_("Next", "zh_CN"), "Next")
         self.assertNotEqual(_("Next", "de"), "Next")
+
+    def test_external_drive_mode_explanation_is_localized(self):
+        source = (
+            "External drive mode — AnduinOS will add a portable UEFI boot "
+            "path so this drive can boot on another UEFI computer without "
+            "an existing AnduinOS firmware boot entry."
+        )
+        for language in LANGUAGES:
+            with self.subTest(language=language.code):
+                translated = _(source, language.code)
+                self.assertTrue(translated)
+                if language.code not in {DEFAULT_LANGUAGE, "en_GB"}:
+                    self.assertNotEqual(translated, source)
 
     def test_catalog_message_set_matches_source_and_policy(self):
         source_messages = set(KEYBOARD_LAYOUTS.values())

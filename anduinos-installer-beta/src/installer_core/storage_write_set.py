@@ -15,6 +15,7 @@ from .layout import PartitionLayout, PartitionSpec, build_erase_disk_layout
 from .model import (
     Architecture,
     Filesystem,
+    Firmware,
     InstallMode,
     InstallPlan,
 )
@@ -226,7 +227,7 @@ def build_erase_disk_write_set(plan: InstallPlan) -> StorageWriteSet:
                 details=(("path", fallback),),
             )
         )
-    else:
+    if plan.platform.firmware is Firmware.UEFI:
         operations.append(
             StorageWriteOperation(
                 action=StorageAction.UPDATE_NVRAM,

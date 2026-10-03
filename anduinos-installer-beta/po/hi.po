@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -200,9 +201,6 @@ msgstr "इंस्टालेशन शुरू करने के लि�
 msgid "Choose your location to set the system clock"
 msgstr "सिस्टम क्लॉक सेट करने के लिए अपनी स्थिति चुनें"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "पूर्ण"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -234,6 +232,9 @@ msgid "Continue Installation"
 msgstr "इंस्टालेशन जारी रखें"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "इंस्टॉलेशन मीडिया की जाँच करें"
+
 msgid "Copy AnduinOS system"
 msgstr "AnduinOS सिस्टम कॉपी करें"
 
@@ -285,9 +286,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "विकास अनुकरण पूर्ण हुआ"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "AnduinOS खोजें"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -853,6 +851,10 @@ msgstr "न्यूनतम से कम। स्थापना या अ�
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "अनुशंसित क्षमता से कम। जगह जल्दी खत्म हो सकती है। जारी रखें?"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "AnduinOS इंस्टॉल करने के लिए कम से कम 6 GiB आवश्यक है।"
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1907,3 +1909,91 @@ msgstr "सुधार के चरण"
 #: src/pages.py
 msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
 msgstr "इस NTFS वॉल्यूम का आकार सुरक्षित रूप से बदलने से पहले Windows में डिस्क जाँच करना आवश्यक है।"
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "बाहरी ड्राइव मोड — AnduinOS एक पोर्टेबल UEFI बूट पथ जोड़ेगा, ताकि यह ड्राइव किसी दूसरे UEFI कंप्यूटर पर पहले से मौजूद AnduinOS फ़र्मवेयर बूट प्रविष्टि के बिना भी बूट हो सके।"
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "फ़र्मवेयर की जाँच हो रही है"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Secure Boot समर्थन की जाँच हो रही है…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Secure Boot समर्थन निर्धारित नहीं किया जा सका"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "आप इंस्टॉलेशन का कॉन्फ़िगरेशन जारी रख सकते हैं। आपकी डिस्क में कोई बदलाव करने से पहले फ़र्मवेयर की जाँच सफल होनी चाहिए।"
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "फ़र्मवेयर की जाँच पूरी हुई"
+
+#: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "एक अलग EFI सिस्टम विभाजन आवश्यक है"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "इस ESP में पहले से EFI/AnduinOS मौजूद है। खाली आवंटित न किए गए स्थान में नया ESP बनाएँ (कम से कम 512 MiB), या दूसरा ESP चुनें। मौजूदा स्थापना अधिलेखित नहीं होगी। नए सिस्टम का GRUB मेन्यू मौजूदा सिस्टम को शुरू कर सकता है।"
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "EFI सिस्टम विभाजन की जाँच हो रही है…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "अन्य Linux स्थापनाओं की जाँच करें"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "ESP विकल्पों की तुलना करें"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "अलग ESP"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "साझा ESP"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "अनाबंटित स्थान में नया FAT32 ESP बनाएँ और फ़ॉर्मैट करें (कम से कम 512 MiB)। मौजूदा ESP अपरिवर्तित रहते हैं।"
+
+#: src/pages.py
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
+msgstr "पर्याप्त खाली स्थान वाले स्वस्थ ESP को बिना फ़ॉर्मैट किए दोबारा उपयोग करें। अन्य सिस्टम की बूट फ़ाइलें सुरक्षित रहती हैं। यदि EFI/AnduinOS पहले से मौजूद है, तो दूसरा ESP चुनें या नया बनाएँ।"
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "दोनों विकल्प EFI/AnduinOS में बूट फ़ाइलें स्थापित करते हैं और नई AnduinOS UEFI बूट प्रविष्टि को पहले स्थान पर रखते हैं। पहचाने गए समर्थित सिस्टम नए GRUB मेनू में जोड़े जाते हैं; उनकी फ़ाइलें और मेनू नहीं बदले जाते।"
+
+#: src/app_menu.py
+msgid "About"
+msgstr "परिचय"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "स्रोत कोड देखें"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "आधिकारिक वेबसाइट"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "समस्या की रिपोर्ट करें"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "मुख्य मेनू"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "फिर से कोशिश करें"

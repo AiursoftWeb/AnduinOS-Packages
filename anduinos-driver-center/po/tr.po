@@ -1717,3 +1717,45 @@ msgstr "Kurtarma modunda, normal hesabınızla oturum açın ve şunu çalışt�
 
 msgid "Packages marked − will be removed. Older kernels may lose NVIDIA graphics support. Restart after updating."
 msgstr "− ile işaretlenen paketler kaldırılacak. Eski çekirdekler NVIDIA grafik desteğini kaybedebilir. Güncellemeden sonra yeniden başlatın."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Secure Boot'u etkinleştir"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security,"
+" or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Etkinleştirmek için UEFI ürün yazılımı ayarlarını açıp Boot, Security veya "
+"Secure Boot bölümüne bakın. Microsoft & 3rd-party CA seçeneğini seçin veya "
+"Secure Boot'u açın. Adlandırmalar üreticiye göre değişir."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS henüz Secure Boot için hazır değil. Şimdi ürün yazılımında "
+"etkinleştirmek sistemin açılmasını engelleyebilir."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "AnduinOS'u Secure Boot için hazırla"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Önce AnduinOS'u hazırlayın ve MOK sertifikasını kaydedin. Secure Boot'u "
+"yalnızca kayıt tamamlandıktan sonra etkinleştirin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: ürün yazılımının platform anahtarları eksik. MOK kaydından sonra"
+" ürün yazılımı ayarlarında üreticinin fabrika anahtarlarını geri yükleyin."

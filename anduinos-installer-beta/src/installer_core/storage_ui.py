@@ -772,6 +772,7 @@ def _preview_plan(
         ),
         boot=BootSpec(
             install_fallback_path=False,
+            external_target=disk.external,
             mok_password_policy=(
                 MokPasswordPolicy.ANDUINOS_DEFAULT
                 if platform.secure_boot is SecureBoot.ENABLED

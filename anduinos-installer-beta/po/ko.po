@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -200,9 +201,6 @@ msgstr "설치를 시작하려면 언어를 선택하세요"
 msgid "Choose your location to set the system clock"
 msgstr "시스템 시계를 설정하려면 위치를 선택하세요"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "완료"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -234,6 +232,9 @@ msgid "Continue Installation"
 msgstr "설치 계속하기"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "설치 미디어 검사"
+
 msgid "Copy AnduinOS system"
 msgstr "AnduinOS 시스템 복사"
 
@@ -285,9 +286,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "개발 시뮬레이션 완료"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "AnduinOS 알아보기"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -853,6 +851,10 @@ msgstr "최소 용량 미만입니다. 설치나 업데이트가 실패할 수 �
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "권장 용량 미만입니다. 공간이 빠르게 부족해질 수 있습니다. 계속하시겠습니까?"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "AnduinOS를 설치하려면 최소 6 GiB가 필요합니다."
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1907,3 +1909,91 @@ msgstr "복구 단계"
 #: src/pages.py
 msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
 msgstr "이 NTFS 볼륨의 크기를 안전하게 변경하려면 먼저 Windows에서 디스크 검사를 해야 합니다."
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "외장 드라이브 모드 — AnduinOS가 휴대용 UEFI 부팅 경로를 추가하므로, 기존 AnduinOS 펌웨어 부팅 항목이 없는 다른 UEFI 컴퓨터에서도 이 드라이브로 부팅할 수 있습니다."
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "펌웨어 확인 중"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Secure Boot 지원 확인 중…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Secure Boot 지원 여부를 확인할 수 없습니다"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "설치를 계속 구성할 수 있습니다. 디스크를 변경하기 전에 펌웨어 확인이 성공해야 합니다."
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "펌웨어 확인 완료"
+
+#: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "별도의 EFI 시스템 파티션이 필요합니다"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "이 ESP에는 이미 EFI/AnduinOS가 있습니다. 할당되지 않은 공간에 새 ESP를 만들거나(최소 512 MiB) 다른 ESP를 선택하세요. 기존 설치는 덮어쓰지 않습니다. 새 시스템의 GRUB 메뉴에서 기존 시스템을 시작할 수 있습니다."
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "EFI 시스템 파티션 확인 중…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "다른 Linux 설치 확인"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "ESP 옵션 비교"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "독립 ESP"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "공유 ESP"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "할당되지 않은 공간에 새 FAT32 ESP를 만들고 포맷합니다(최소 512 MiB). 기존 ESP는 변경하지 않습니다."
+
+#: src/pages.py
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
+msgstr "충분한 여유 공간이 있는 정상 ESP를 포맷하지 않고 재사용합니다. 다른 시스템의 부팅 파일은 보존합니다. EFI/AnduinOS가 이미 있으면 다른 ESP를 선택하거나 새로 만드세요."
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "두 옵션 모두 EFI/AnduinOS에 부팅 파일을 설치하고 새 AnduinOS UEFI 부팅 항목을 첫 번째로 설정합니다. 감지된 지원 시스템은 새 GRUB 메뉴에 추가하며, 해당 시스템의 파일과 메뉴는 변경하지 않습니다."
+
+#: src/app_menu.py
+msgid "About"
+msgstr "정보"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "소스 코드 보기"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "공식 웹사이트"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "문제 보고"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "주 메뉴"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "다시 시도"

@@ -5,6 +5,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: anduinos-installer-beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-01 11:01+0000\n"
@@ -200,9 +201,6 @@ msgstr "Chọn ngôn ngữ của bạn để bắt đầu cài đặt"
 msgid "Choose your location to set the system clock"
 msgstr "Chọn vị trí của bạn để thiết lập đồng hồ hệ thống"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "Hoàn tất"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -234,6 +232,9 @@ msgid "Continue Installation"
 msgstr "Tiếp tục cài đặt"
 
 #: src/pages.py:6813
+msgid "Check installation media"
+msgstr "Kiểm tra phương tiện cài đặt"
+
 msgid "Copy AnduinOS system"
 msgstr "Sao chép hệ thống AnduinOS"
 
@@ -285,9 +286,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "Mô phỏng phát triển đã hoàn tất"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "Khám phá AnduinOS"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -853,6 +851,10 @@ msgstr "Dưới mức tối thiểu. Cài đặt hoặc cập nhật có thể t
 #: src/pages.py
 msgid "Below the recommended capacity. Space may run out quickly. Continue?"
 msgstr "Dưới dung lượng khuyến nghị. Có thể nhanh chóng hết chỗ trống. Tiếp tục?"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "Cần ít nhất 6 GiB để cài đặt AnduinOS."
 
 #: src/pages.py:6665
 msgid "This installer does not shrink or preserve other systems."
@@ -1907,3 +1909,91 @@ msgstr "Các bước sửa chữa"
 #: src/pages.py
 msgid "This NTFS volume requires a disk check in Windows before it can be resized safely."
 msgstr "Phân vùng NTFS này cần được kiểm tra ổ đĩa trong Windows trước khi có thể thay đổi kích thước an toàn."
+
+#: src/pages.py
+msgid "External drive mode — AnduinOS will add a portable UEFI boot path so this drive can boot on another UEFI computer without an existing AnduinOS firmware boot entry."
+msgstr "Chế độ ổ đĩa ngoài — AnduinOS sẽ thêm đường dẫn khởi động UEFI di động để ổ đĩa này có thể khởi động trên một máy tính UEFI khác mà không cần mục khởi động AnduinOS có sẵn trong firmware."
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "Đang kiểm tra firmware"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Đang kiểm tra hỗ trợ Secure Boot…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Không thể xác định hỗ trợ Secure Boot"
+
+#: src/pages.py
+msgid "You can continue configuring the installation. Firmware detection must succeed before any changes are made to your disks."
+msgstr "Bạn có thể tiếp tục cấu hình cài đặt. Việc kiểm tra firmware phải thành công trước khi thực hiện bất kỳ thay đổi nào trên ổ đĩa."
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "Đã kiểm tra firmware xong"
+
+#: src/pages.py
+msgid "A separate EFI System Partition is required"
+msgstr "Cần một phân vùng hệ thống EFI riêng"
+
+#: src/pages.py
+msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
+msgstr "ESP này đã chứa EFI/AnduinOS. Hãy tạo ESP mới trong vùng chưa phân bổ (ít nhất 512 MiB), hoặc chọn ESP khác. Bản cài đặt hiện có sẽ không bị ghi đè. Menu GRUB của hệ thống mới có thể khởi động hệ thống hiện có."
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "Đang kiểm tra phân vùng hệ thống EFI…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "Kiểm tra các bản cài đặt Linux khác"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "So sánh các tùy chọn ESP"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "ESP riêng"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "ESP dùng chung"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "Tạo và định dạng ESP FAT32 mới trong vùng chưa phân bổ (ít nhất 512 MiB). Các ESP hiện có không thay đổi."
+
+#: src/pages.py
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
+msgstr "Dùng lại ESP hoạt động tốt và có đủ dung lượng trống, không định dạng. Các tệp khởi động của hệ thống khác được giữ nguyên. Nếu EFI/AnduinOS đã tồn tại, hãy chọn ESP khác hoặc tạo ESP mới."
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "Cả hai tùy chọn đều cài tệp khởi động vào EFI/AnduinOS và đặt mục khởi động UEFI AnduinOS mới lên đầu. Các hệ thống được hỗ trợ và phát hiện sẽ được thêm vào menu GRUB mới; tệp và menu của chúng không bị thay đổi."
+
+#: src/app_menu.py
+msgid "About"
+msgstr "Giới thiệu"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "Xem mã nguồn"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "Trang web chính thức"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "Báo cáo sự cố"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "Trình đơn chính"
+
+#: src/pages.py
+msgid "Retry"
+msgstr "Thử lại"

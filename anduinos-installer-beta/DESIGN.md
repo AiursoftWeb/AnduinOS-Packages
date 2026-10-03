@@ -32,7 +32,7 @@ and constructs every command itself.
 - Btrfs compression: the automatic storage configuration page offers no
   compression, fast (Zstd 1), balanced (Zstd 3, default), and save space
   (Zstd 6). The selected preset is an allowlisted field in installation plan
-  schema 16 and appears in the confirmation summary. All canonical subvolume
+  schema 17 and appears in the confirmation summary. All canonical subvolume
   mounts apply it before system files are copied, and fstab persists the same
   choice. Advanced manual partitioning exposes the same presets below the
   planned partitions when a Btrfs Root partition exists, and retains the
@@ -181,8 +181,13 @@ and constructs every command itself.
 
 The GTK process always runs as the desktop user. Ordinary `lsblk` discovery
 stays unprivileged. Exact free-space geometry crosses Polkit through
-`anduinos-installer-storage-probe`, a read-only helper that accepts exactly one
-validated fixed whole-disk path and can execute only `parted ... print free`.
+`anduinos-installer-storage-probe`, a read-only helper that accepts one
+validated whole-disk path for `parted ... print free`, or an explicit
+`--ntfs-inspect` / `--esp-inspect` partition request. The ESP request resolves
+the current inventory, enters a private mount namespace, and runs the same
+read-only FAT/vendor inspection used by executor preflight. Its UI result is
+advisory, checked against the selected PARTUUID and filesystem UUID; it never
+replaces executor authorization or allows forced reuse.
 The shared inventory probe forces the C locale for both `lsblk` and `parted`,
 so translated machine-output flags cannot change the topology authorization
 digest between the desktop process and the root executor.
@@ -309,6 +314,12 @@ rounded visual boundary and obscure whether the card itself is active.
   makes the GRUB menu visible while leaving the first AnduinOS entry as the
   default. `os-prober`, foreign Windows volumes, foreign ESP writes and
   firmware changes are not involved.
+  External erase-disk targets additionally receive a signed direct
+  `EFI/BOOT` chain on their newly formatted ESP so they remain bootable after
+  moving to firmware with no AnduinOS NVRAM entry. The immutable plan records
+  and privileged preflight revalidates external-disk status; coexistence and
+  manual shared-ESP modes never receive this fallback. The chain deliberately
+  excludes shim's NVRAM-registration fallback to avoid the #422 reset loop.
   Destructive boot testing remains part of the VM matrix milestone.
 - Milestone 4 — implementation complete: signed shim/GRUB, machine-local MOK
   generation, explicit DKMS signing, idempotent enrollment scheduling and
@@ -360,13 +371,25 @@ rounded visual boundary and obscure whether the card itself is active.
   installer-owned data and rendered by native GTK4. No WebKit, JavaScript,
   Ubiquity or installer-config dependency is introduced. The dashboard opens
   on an automatically advancing presentation with manual navigation and can
-  switch instantly to the live Output view.
+  switch instantly to the live Output view. The default presentation fills the
+  page with the historical title strip, wallpaper, text/screenshot layout and
+  side arrows. A bottom-right Output toggle reveals the task list and live log;
+  the current task name and overall progress bar stay below both modes.
+  The wallpaper is the updated asset from `AnduinOS-Packages` at `b1975b31`,
+  under `anduinos-installer-config/assets/slides/link/background.png`;
+  `link/base.css` in that historical tree is the layout reference. The older
+  `AnduinOS-2` copy predates this wallpaper update. HTML remains installer-owned
+  data under `assets/slideshow`, including its localized variants.
 - Milestone 7C — complete: warning events accumulate on the Output switcher
   without interrupting the presentation; fatal errors reveal and focus the
   live log with an error banner; successful completion stops the carousel and
   opens a dedicated completion/MOK/reboot card. Output can be copied or saved
-  to the live user's home directory, while the presentation and log remain
-  available after completion.
+  through a Save As chooser, including while installation is running. Saving
+  writes a snapshot from the moment the destination is confirmed, without
+  blocking installation; success and write failures are reported visibly.
+  Completion replaces the presentation
+  inside the default mode; the Output toggle still opens the retained log,
+  without introducing a third mode or hiding the completion instructions.
 - Milestone 8A — complete: read-only storage inventory records stable disk and
   partition identities, exact allocated/free geometry, filesystems, ESPs and
   topology digests. The existing erase-disk executor freezes a typed write set
@@ -428,8 +451,16 @@ rounded visual boundary and obscure whether the card itself is active.
   The same bounded manual editor offers Btrfs, ext4, XFS and F2FS for a newly
   formatted root. Btrfs alone creates the canonical AnduinOS subvolumes and
   enables Disk Snapshots Manager; ext4, XFS and F2FS use one conventional root
-  mount and direct system copy. XFS and F2FS are intentionally not exposed in
-  automatic or guided layouts until their broader release matrices exist.
+  mount and direct system copy. An existing BitLocker partition can be
+  preserved while AnduinOS uses separate unallocated space; deleting that
+  partition, replacing its disk's GPT and shrinking any partition on that disk
+  remain blocked while it is present. Manual Root has a 6 GiB hard floor
+  enforced by both the editor and privileged plan validation; 6–25 GiB
+  requires an explicit low-capacity confirmation, 25–50 GiB remains below the
+  recommendation, and 50 GiB or more proceeds without a capacity warning.
+  XFS and F2FS are
+  intentionally not exposed in automatic or guided layouts until their broader
+  release matrices exist.
   Unit and GTK development-mode interaction gates pass; real Windows and
   interrupted-resize VM qualification remains mandatory before release.
 - Final release gate: complete the VM matrix before promoting and renaming the

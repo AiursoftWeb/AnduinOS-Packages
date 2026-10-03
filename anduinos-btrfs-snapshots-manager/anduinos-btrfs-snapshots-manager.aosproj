@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-btrfs-snapshots-manager</PackageName>
-    <PackageVersion>2.0.3-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.4-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Disk Snapshots Manager — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -24,7 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Dependency Include="anduinos-core-system" />
+    <!-- Boot tools provide GRUB refresh and recovery verification. -->
+    <Dependency Include="anduinos-boot-tools (>= 2.0.3-1)" />
     <Dependency Include="libgtk-4-1" />
     <Dependency Include="libadwaita-1-0" />
     <Dependency Include="btrfs-progs" />
@@ -69,6 +70,7 @@
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-confirm" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-confirm" />
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-apt-hook" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-apt-hook" />
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-provision-factory" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-provision-factory" />
+    <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-offline" Target="/usr/libexec/anduinos-btrfs-snapshots-manager-offline" />
     <IncludeScript Include="obj/anduinos-btrfs-snapshots-manager-cli" Target="/usr/bin/anduinos-btrfs-snapshots-manager-cli" />
     <IncludeScript Include="data/dracut/91anduinos-btrfs-snapshots-manager/module-setup.sh"
                    Target="/usr/lib/dracut/modules.d/91anduinos-btrfs-snapshots-manager/module-setup.sh" />

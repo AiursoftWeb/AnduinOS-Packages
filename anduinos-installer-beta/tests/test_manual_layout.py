@@ -2,6 +2,7 @@ import unittest
 from dataclasses import replace
 
 from installer_core.manual_layout import (
+    HARD_MINIMUM_ROOT_MIB,
     MIB,
     MICROSOFT_LDM_DATA_GUID,
     ManualLayoutError,
@@ -124,6 +125,30 @@ def selection(
 
 
 class ManualLayoutTests(unittest.TestCase):
+    def test_root_partition_has_a_six_gib_hard_minimum(self):
+        disk = manual_disk()
+        for size_mib, allowed in (
+            (HARD_MINIMUM_ROOT_MIB - 1, False),
+            (HARD_MINIMUM_ROOT_MIB, True),
+        ):
+            chosen = selection(
+                new_partitions=(
+                    ManualPartitionRequest(
+                        ManualPartitionRole.ROOT,
+                        80 * 1024,
+                        80 * 1024 + size_mib,
+                    ),
+                )
+            )
+            with self.subTest(size_mib=size_mib):
+                if allowed:
+                    validate_manual_selection(disk, chosen)
+                else:
+                    with self.assertRaisesRegex(
+                        ManualLayoutError, "at least 6 GiB"
+                    ):
+                        validate_manual_selection(disk, chosen)
+
     def test_explicit_gpt_replacement_accepts_a_blank_unlabelled_disk(self):
         disk = replace(
             manual_disk(),
@@ -237,8 +262,40 @@ class ManualLayoutTests(unittest.TestCase):
                 replace(ntfs, filesystem_type="bitlocker"),
             ),
         )
-        with self.assertRaises(ManualLayoutError):
+        with self.assertRaisesRegex(
+            ManualLayoutError, "BitLocker must be fully disabled"
+        ):
             validate_manual_selection(bitlocker_disk, selection(resized=(valid,)))
+
+    def test_bitlocker_can_only_be_preserved_in_manual_layout(self):
+        disk = manual_disk()
+        disk = replace(
+            disk,
+            partitions=(
+                disk.partitions[0],
+                replace(disk.partitions[1], filesystem_type="bitlocker"),
+            ),
+        )
+
+        # Root and Swap use the existing free extent; Windows stays untouched.
+        validate_manual_selection(disk, selection())
+
+        for chosen in (
+            selection(deleted=("part-2",)),
+            selection(
+                reinitialize=True,
+                reused_esp="",
+                new_partitions=(
+                    ManualPartitionRequest(ManualPartitionRole.EFI_SYSTEM, 1, 1025),
+                    ManualPartitionRequest(ManualPartitionRole.ROOT, 1025, 30 * 1024),
+                ),
+            ),
+        ):
+            with self.subTest(selection=chosen):
+                with self.assertRaisesRegex(
+                    ManualLayoutError, "modifying bitlocker"
+                ):
+                    validate_manual_selection(disk, chosen)
 
     def test_reinitialized_gpt_requires_new_esp_and_root(self):
         chosen = selection(
@@ -306,13 +363,6 @@ class ManualLayoutTests(unittest.TestCase):
     def test_unsupported_or_active_storage_is_rejected(self):
         disk = manual_disk()
         cases = (
-            replace(
-                disk,
-                partitions=(
-                    disk.partitions[0],
-                    replace(disk.partitions[1], filesystem_type="bitlocker"),
-                ),
-            ),
             replace(
                 disk,
                 partitions=(
