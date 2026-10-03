@@ -126,6 +126,8 @@ def logical_path(top: Path, filesystem: str, relative: str) -> tuple[Path, str]:
         base = root
         remainder = parts
     canonical_base = base.resolve(strict=True)
+    if not canonical_base.is_relative_to(top.resolve(strict=True)):
+        raise RuntimeError(tr("The selected path escapes the offline system"))
     candidate = canonical_base.joinpath(*remainder).resolve(strict=True)
     if not candidate.is_relative_to(canonical_base):
         raise RuntimeError(tr("The selected path escapes the offline system"))

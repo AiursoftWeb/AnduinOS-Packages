@@ -120,3 +120,17 @@ class ExportTests(unittest.TestCase):
                     self.assertEqual(list(outside.iterdir()), [])
                     actual = moved if replace_parent else destination
                     self.assertFalse(any(p.name.startswith('.anduinos-export-') for p in actual.iterdir()))
+
+class OfflineSubvolumeBoundaryTests(unittest.TestCase):
+    def test_root_and_home_symlinks_cannot_read_outside_offline_filesystem(self):
+        for subvolume, relative in (('@root', 'secret.txt'), ('@home', 'home/secret.txt')):
+            with self.subTest(subvolume=subvolume), tempfile.TemporaryDirectory() as directory:
+                base = Path(directory)
+                top = base / 'offline'
+                top.mkdir()
+                outside = base / 'outside'
+                outside.mkdir()
+                (outside / 'secret.txt').write_text('fixture')
+                (top / subvolume).symlink_to(outside, target_is_directory=True)
+                with self.assertRaises(RuntimeError):
+                    logical_path(top, 'btrfs', relative)
