@@ -297,10 +297,14 @@ def repair_boot(path: str, identity: str, esp_identity: str, *, run=subprocess.r
                 raise RuntimeError(tr("Installed boot repair tool is missing: /{tool}").format(tool=tool))
         if progress is not None:
             progress(tr("Rebuilding installed initrds; this may take several minutes"))
-        _repair_command(run, ["chroot", str(root), "dracut", "--force", "--no-hostonly",
-                              "--no-hostonly-cmdline", "--omit",
-                              "dmsquash-live dmsquash-live-autooverlay livenet anduinos-live-layers",
-                              "--regenerate-all"], 1200, progress)
+        # Stale /lib/modules directories are not installed kernels. Explicit
+        # output paths also keep Dracut from guessing an ESP/BLS layout (#459).
+        kernels, _, _ = _boot_files(root)
+        for version in kernels:
+            _repair_command(run, ["chroot", str(root), "dracut", "--force", "--no-hostonly",
+                                  "--no-hostonly-cmdline", "--omit",
+                                  "dmsquash-live dmsquash-live-autooverlay livenet anduinos-live-layers",
+                                  f"/boot/initrd.img-{version}", version], 1200, progress)
         _, complete, _ = _boot_files(root)
         if not complete:
             raise RuntimeError(tr("Dracut produced no matching kernel/initrd pair"))

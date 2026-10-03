@@ -156,6 +156,8 @@ class BootRepairTests(unittest.TestCase):
             top = Path(directory) / "root"
             top.mkdir()
             prepare_root(top)
+            (top / "usr/lib/modules/stale-kernel").mkdir(parents=True)
+            (top / "usr/lib/modules/stale-kernel/modules.dep").write_text("stale")
             for tool in ("usr/bin/dracut", "usr/bin/lsinitrd", "usr/sbin/grub-install", "usr/sbin/update-grub"):
                 path = top / tool
                 path.parent.mkdir(parents=True, exist_ok=True)
@@ -189,6 +191,9 @@ class BootRepairTests(unittest.TestCase):
                   patch("anduinos_rescue_center.boot.opened_system", opened)):
                 repair_boot("/dev/sda2", IDENTITY, EFI_IDENTITY, run=run)
             self.assertEqual(len(commands), 4)
+            self.assertNotIn("--regenerate-all", commands[0])
+            version = next((top / "boot").glob("vmlinuz-*")).name.removeprefix("vmlinuz-")
+            self.assertEqual(commands[0][-2:], [f"/boot/initrd.img-{version}", version])
             self.assertEqual(commands[1][2:4], ["lsinitrd", "-m"])
             self.assertIn("--no-extra-removable", commands[2])
             self.assertIn("--no-nvram", commands[2])
