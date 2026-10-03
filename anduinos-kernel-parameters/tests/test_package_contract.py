@@ -26,6 +26,36 @@ def install_fake_chroot_detectors(directory, systemd_result=1, ischroot_result=1
 
 
 class KernelParametersPackageContractTests(unittest.TestCase):
+    def test_live_sessions_skip_grub_but_installed_system_errors_propagate(self):
+        cmdlines = (
+            ("BOOT_IMAGE=/casper/vmlinuz boot=casper nopersistent quiet splash ---", True),
+            ("boot=casper persistent", True),
+            ("quiet rd.anduinos.live=1 splash", True),
+            ("boot=live quiet", True),
+            ("root=UUID=installed quiet splash", False),
+            ("rd.anduinos.live=0 other=boot=casper boot=casper-extra", False),
+        )
+        for cmdline, live in cmdlines:
+            for script, action in ((POSTINST, "configure"), (POSTRM, "remove"), (POSTRM, "purge")):
+                with self.subTest(cmdline=cmdline, action=action), tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp) / "root"
+                    (root / "proc").mkdir(parents=True)
+                    (root / "proc/cmdline").write_text(cmdline + "\n")
+                    fake_bin = Path(tmp) / "bin"
+                    fake_bin.mkdir()
+                    install_fake_chroot_detectors(fake_bin)
+                    log = Path(tmp) / "grub-called"
+                    write_fake_command(fake_bin, "update-grub",
+                                       'touch "$UPDATE_GRUB_LOG"; echo "grub-probe: cannot resolve /cow" >&2; exit 1')
+                    result = subprocess.run(
+                        ["/bin/sh", script, action], capture_output=True, text=True,
+                        env={**os.environ, "DPKG_ROOT": str(root),
+                             "PATH": f"{fake_bin}:/usr/bin:/bin", "UPDATE_GRUB_LOG": str(log)},
+                    )
+                    self.assertEqual(result.returncode, 0 if live else 1, result.stderr)
+                    self.assertEqual(log.exists(), not live)
+                    self.assertFalse((root / "run/reboot-required").exists())
+
     def test_maintainer_scripts_have_valid_shell_syntax(self):
         for script in (POSTINST, POSTRM):
             with self.subTest(script=script.name):
