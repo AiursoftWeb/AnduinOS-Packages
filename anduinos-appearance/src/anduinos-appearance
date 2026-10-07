@@ -60,14 +60,9 @@ from anduinos_appearance.settings_transfer import (
     reset_desktop_settings,
 )
 
-SHELL_BASE = '/org/gnome/shell'
 ARC_UUID = 'arcmenu@arcmenu.com'
 DTP_UUID = 'dash-to-panel@jderose9.github.com'
 
-
-def _ext_is_enabled(uuid: str) -> bool:
-    val = _dconf_read(f'{SHELL_BASE}/enabled-extensions')
-    return uuid in val if val else False
 
 POS_LABELS = {'bottom': _('Bottom'), 'top': _('Top'), 'left': _('Left'), 'right': _('Right')}
 
@@ -303,6 +298,11 @@ class PanelWidgetsPage(Adw.PreferencesPage):
         self.win = win
         self._busy = False
         self._weather_busy = False
+        # Read the effective GSettings value, including the system schema
+        # default. A fresh Live user has no dconf override even though DING
+        # and other extensions are enabled by AnduinOS's schema override.
+        self._shell_settings = Gio.Settings.new('org.gnome.shell')
+        self._widget_rows = {}
         self.set_title(_('Panel Widgets'))
         self.set_icon_name('application-x-addon-symbolic')
 
@@ -315,8 +315,9 @@ class PanelWidgetsPage(Adw.PreferencesPage):
             row = Adw.SwitchRow()
             row.set_title(label)
             row.set_subtitle(uuid)
-            row.set_active(_ext_is_enabled(uuid))
+            row.set_active(uuid in self._shell_settings.get_strv('enabled-extensions'))
             row.connect('notify::active', self._on_toggle, key, uuid, label)
+            self._widget_rows[uuid] = row
             if key == 'weather':
                 self.weather_row = row
                 self.weather_location_button = Gtk.Button.new_from_icon_name(
@@ -334,6 +335,7 @@ class PanelWidgetsPage(Adw.PreferencesPage):
             group.add(row)
 
         self.add(group)
+        self._shell_settings.connect('changed::enabled-extensions', self._sync_extension_rows)
 
         # ── Activities button toggle ──
         tb_group = Adw.PreferencesGroup()
@@ -348,6 +350,17 @@ class PanelWidgetsPage(Adw.PreferencesPage):
         tb_group.add(self.activities_row)
 
         self.add(tb_group)
+
+    def _sync_extension_rows(self, settings, key):
+        enabled = set(settings.get_strv(key))
+        self._busy = True
+        try:
+            for uuid, row in self._widget_rows.items():
+                row.set_active(uuid in enabled)
+            if self.weather_location_button is not None:
+                self.weather_location_button.set_sensitive(self.weather_row.get_active())
+        finally:
+            self._busy = False
 
     def _on_activities_toggle(self, switch_row, pspec):
         if self._busy:
