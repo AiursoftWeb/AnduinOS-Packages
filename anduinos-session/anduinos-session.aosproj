@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-session</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.4-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS session configuration and login entry</PackageDescription>
     <Section>gnome</Section>
@@ -31,7 +31,8 @@
 
     <!-- Run the regular GNOME session with an AnduinOS session mode.  This
          gives the lock screen a distro-owned fallback stylesheet without
-         relying on extensions, which GNOME disables while locked. -->
+         relying on extensions. User Themes normally stops while locked;
+         the session-owned unlock theme below provides optional Fluent styling. -->
     <IncludeFile Include="assets/anduinos.json"
                  Target="/usr/share/gnome-shell/modes/anduinos.json" />
     <IncludeFile Include="assets/50-anduinos-session-mode.conf"
@@ -48,5 +49,14 @@
                  Target="/usr/share/gnome-shell/theme/anduinos-shell-high-contrast.css" />
     <IncludeFile Include="assets/anduinos-lock-screen.css"
                  Target="/usr/share/gnome-shell/theme/anduinos-lock-screen.css" />
+    <IncludeFolder Include="assets/unlock-theme@anduinos.com"
+                   Target="/usr/share/gnome-shell/extensions/unlock-theme@anduinos.com" />
+    <!-- Share the bounded readability fixes with the native fallback. -->
+    <IncludeFile Include="assets/anduinos-lock-screen.css"
+                 Target="/usr/share/gnome-shell/extensions/unlock-theme@anduinos.com/readability.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="unlock-theme" Profile="anduinos-package-release-test"
+                 Run="bash tests/check-unlock-theme.sh" TimeoutSeconds="60" />
   </ItemGroup>
 </Project>
