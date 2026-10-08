@@ -6484,6 +6484,9 @@ def build_timezone_page(shared, nav_view):
     )
     tz_scroll.set_child(tz_list)
     tz_scroll.add_css_class("installer-list-card")
+    # Clip selected rows and the scrollbar to the card's CSS rounded corners.
+    # ScrolledWindow defaults to visible overflow, unlike the welcome Frame.
+    tz_scroll.set_overflow(Gtk.Overflow.HIDDEN)
 
     search.connect("search-changed", lambda _s: timezone_filter.changed(
         Gtk.FilterChange.DIFFERENT))

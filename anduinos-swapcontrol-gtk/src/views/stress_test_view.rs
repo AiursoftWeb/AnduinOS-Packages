@@ -122,6 +122,8 @@ impl StressTestView {
         let banner = gtk::Box::builder()
             .orientation(gtk::Orientation::Horizontal)
             .css_classes(["card"])
+            // Clip the edge-to-edge warning accent to the rounded card.
+            .overflow(gtk::Overflow::Hidden)
             .spacing(0)
             .valign(gtk::Align::Start)
             .build();

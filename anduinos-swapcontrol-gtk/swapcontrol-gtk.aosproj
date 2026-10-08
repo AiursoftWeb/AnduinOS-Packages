@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-swapcontrol-gtk</PackageName>
-    <PackageVersion>2.0.4-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.4-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Virtual Memory Configuration — modern GTK4/Libadwaita frontend for swap, zswap, and zram management</PackageDescription>
     <Section>admin</Section>
@@ -47,5 +47,6 @@
   <ItemGroup>
     <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
     <TestCommand Name="native" Profile="anduinos-package-release-test" Run="cargo test --locked --bins" TimeoutSeconds="3600" />
+    <TestCommand Name="rounded-cards" Profile="gui" Run="LANGUAGE=C GSETTINGS_BACKEND=memory GDK_BACKEND=x11 dbus-run-session -- xvfb-run -a cargo test --locked --bins accent_cards_clip_rounded_corners_in_both_themes -- --ignored --test-threads=1" TimeoutSeconds="3600" />
   </ItemGroup>
 </Project>
