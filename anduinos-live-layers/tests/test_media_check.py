@@ -12,6 +12,50 @@ ROOT = Path(__file__).resolve().parents[1]
 CHECKER = ROOT / "assets/anduinos-media-check"
 
 
+def run_live_wrapper(root, state, flag=None, checker_rc=0):
+    """Execute the actual wrapper with private paths and no host mounts."""
+    harness = root / "wrapper-harness"
+    harness.mkdir(exist_ok=True)
+    calls = harness / "calls"
+    calls.write_text("")
+    library = harness / "dracut-lib.sh"
+    library.write_text("""getargbool() { [[ $CMDLINE == *rd.anduinos.live=1* ]]; }
+getarg() {
+    local token
+    for token in $CMDLINE; do
+        if [[ $token == \"$1=\"* ]]; then printf '%s' \"${token#*=}\"; return 0; fi
+        if [[ $token == \"$1\" ]]; then return 0; fi
+    done
+    return 1
+}
+getcmdline() { printf '%s' \"$CMDLINE\"; }
+mount() { echo mount >> \"$WRAPPER_CALLS\"; return 1; }
+warn() { echo \"$*\" >&2; }
+""")
+    checker = harness / "checker"
+    checker.write_text("#!/bin/bash\necho checker >> \"$WRAPPER_CALLS\"\nexit \"$CHECKER_RC\"\n")
+    checker.chmod(0o755)
+    upstream = harness / "upstream"
+    upstream.write_text("echo upstream >> \"$WRAPPER_CALLS\"\nprintf '%s\\n' \"$(getcmdline)\" >> \"$WRAPPER_CALLS\"\n")
+    console = harness / "console"
+    console.touch()
+    wrapper = (ROOT / "dracut/95anduinos-live-layers/anduinos-live-root.sh").read_text()
+    for original, replacement in (
+        ("/lib/dracut-lib.sh", library), ("/run/anduinos-live", state),
+        ("/usr/libexec/anduinos-media-check", checker),
+        ("/sbin/dmsquash-live-root.upstream", upstream), ("/dev/console", console),
+    ):
+        wrapper = wrapper.replace(original, str(replacement))
+    cmdline = "rd.anduinos.live=1 rd.live.check=1"
+    if flag is not None:
+        cmdline += " rd.anduinos.media-check" + ("=" + flag if flag else "")
+    result = subprocess.run(["bash", "-c", wrapper, "live-root", "/not-a-device"],
+                            env={**os.environ, "CMDLINE": cmdline,
+                                 "WRAPPER_CALLS": str(calls), "CHECKER_RC": str(checker_rc)},
+                            capture_output=True, text=True, timeout=10)
+    return result, calls.read_text()
+
+
 class MediaCheckTests(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
@@ -105,6 +149,16 @@ class MediaCheckTests(unittest.TestCase):
         report.write_text(report.read_text().replace("status=passed", "status=skipped"))
         self.assertIn("ANDUINOS_MEDIA_PROGRESS", self.run_check().stdout)
         self.assertEqual(self.report()["status"], "passed")
+
+    def test_boot_skip_does_not_allow_corrupt_media_to_be_installed(self):
+        self.source.write_bytes(b"broken")
+        boot, calls = run_live_wrapper(self.root, self.state)
+        self.assertEqual(boot.returncode, 0, boot.stderr)
+        self.assertNotIn("checker", calls)
+        self.assertEqual(self.report()["status"], "skipped")
+        installer = self.run_check()
+        self.assertEqual(installer.returncode, 1, installer.stdout + installer.stderr)
+        self.assertEqual(self.report()["status"], "failed")
 
     def test_symlink_outside_media_is_rejected(self):
         target = self.root / "outside"
@@ -230,16 +284,44 @@ class DracutContractTests(unittest.TestCase):
         wrapper = (ROOT / "dracut/95anduinos-live-layers/anduinos-live-root.sh").read_text()
         self.assertLess(wrapper.index("/usr/libexec/anduinos-media-check"),
                         wrapper.index(". /sbin/dmsquash-live-root.upstream"))
-        self.assertNotIn("rd.anduinos.media-check", wrapper)
+        self.assertIn("getarg rd.anduinos.media-check", wrapper)
         self.assertIn("rd.overlay", wrapper)
         self.assertIn("LABEL=ANDUINOS-PERSIST", wrapper)
         self.assertIn("check_rc != 0 && check_rc != 2", wrapper)
         self.assertIn("rd\\.live\\.check", wrapper)
         self.assertIn("getcmdline()", wrapper)
 
+    def test_only_explicit_one_checks_media_before_pivot(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            state = root / "state"
+            for flag in (None, "", "0", "yes", "01", "1"):
+                with self.subTest(flag=flag):
+                    result, calls = run_live_wrapper(root, state, flag)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertIn("upstream", calls)
+                    self.assertNotIn("rd.live.check", calls)
+                    if flag == "1":
+                        self.assertLess(calls.index("checker"), calls.index("upstream"))
+                    else:
+                        self.assertNotIn("checker", calls)
+                        self.assertNotIn("mount", calls)
+                        report = dict(line.split("=", 1) for line in
+                                      (state / "media-check.result").read_text().splitlines())
+                        self.assertEqual(report["status"], "skipped")
+                        self.assertEqual(report["reason"], "boot-check-not-requested")
+
+    def test_requested_check_failure_stops_before_pivot(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            result, calls = run_live_wrapper(root, root / "state", "1", checker_rc=1)
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("checker", calls)
+            self.assertNotIn("upstream", calls)
+
     def test_initrd_uses_existing_md5_manifest_backend(self):
         module = (ROOT / "dracut/95anduinos-live-layers/module-setup.sh").read_text()
-        self.assertIn("checkisomd5 md5sum", module)
+        self.assertIn("cat checkisomd5 md5sum", module)
         self.assertNotIn("sha256sum", module)
         self.assertIn("dmsquash-live-root.upstream", module)
         self.assertNotIn("anduinos-media.plymouth", module)

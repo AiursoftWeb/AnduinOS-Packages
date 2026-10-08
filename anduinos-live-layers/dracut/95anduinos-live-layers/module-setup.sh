@@ -34,7 +34,7 @@ install() {
     rm -f "$initdir/sbin/dmsquash-live-root"
     inst_script "$moddir/anduinos-live-root.sh" "/sbin/dmsquash-live-root"
     inst_script /usr/libexec/anduinos-media-check
-    inst_multiple bash checkisomd5 md5sum realpath flock tail sleep sed \
+    inst_multiple bash cat checkisomd5 md5sum realpath flock tail sleep sed \
         readlink cut grep stat mktemp mv chmod mkdir rm id findmnt mount umount \
         poweroff awk
     inst_dir /usr/share/anduinos-live/media-check
