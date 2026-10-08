@@ -1,9 +1,9 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-appearance</PackageName>
-    <PackageVersion>2.0.4-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.4-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
-    <PackageDescription>AnduinOS Appearance — toggle between Centered and Classic taskbar layouts</PackageDescription>
+    <PackageDescription>AnduinOS Appearance — choose Classic, Separated, Centered or GNOME layouts</PackageDescription>
     <Section>utils</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
@@ -36,6 +36,8 @@
     <IncludeFile Include="src/anduinos_appearance/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_appearance/__init__.py" />
     <IncludeFile Include="src/anduinos_appearance/layout.py" Target="/usr/lib/python3/dist-packages/anduinos_appearance/layout.py" />
     <IncludeFile Include="src/anduinos_appearance/preview.py" Target="/usr/lib/python3/dist-packages/anduinos_appearance/preview.py" />
+    <IncludeFile Include="src/anduinos_appearance/profiles.py" Target="/usr/lib/python3/dist-packages/anduinos_appearance/profiles.py" />
+    <IncludeFile Include="src/anduinos_appearance/progress.py" Target="/usr/lib/python3/dist-packages/anduinos_appearance/progress.py" />
     <IncludeFile Include="src/anduinos_appearance/settings_transfer.py" Target="/usr/lib/python3/dist-packages/anduinos_appearance/settings_transfer.py" />
     <IncludeFile Include="src/anduinos_appearance/weather.py" Target="/usr/lib/python3/dist-packages/anduinos_appearance/weather.py" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />

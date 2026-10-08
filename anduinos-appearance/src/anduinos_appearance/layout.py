@@ -221,7 +221,7 @@ def calculate_menu_height(style: str, screen_height: int | None = None) -> int:
     return min(MENU_MAX_HEIGHT[style], adaptive_height)
 
 
-def apply_style_and_position(style: str, position: str) -> bool:
+def apply_style_and_position(style: str, position: str, *, screen_height=None) -> bool:
     """Apply one complete taskbar style and position through dconf."""
     menu_layout, force_menu = MENU_CONFIG[(style, position)]
     panel_position = POSITIONS[position]
@@ -231,7 +231,7 @@ def apply_style_and_position(style: str, position: str) -> bool:
         {monitor: panel_position for monitor in monitors}
     )
     panel_sizes = _panel_sizes(monitors)
-    menu_height = calculate_menu_height(style)
+    menu_height = calculate_menu_height(style, screen_height)
 
     try:
         subprocess.run(

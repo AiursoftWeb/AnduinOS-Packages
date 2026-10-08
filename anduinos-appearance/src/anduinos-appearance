@@ -36,7 +36,6 @@ from anduinos_appearance import (
     ARC,
     DTP,
     apply_style_and_position,
-    detect_current,
     draw_preview,
 )
 from anduinos_appearance.layout import (
@@ -45,7 +44,18 @@ from anduinos_appearance.layout import (
     read_use_launchers as _read_use_launchers,
     write_group_apps as _write_group_apps,
     write_use_launchers as _write_use_launchers,
+    _smallest_monitor_height,
+    MAX_SCREEN_HEIGHT,
 )
+from anduinos_appearance.profiles import (
+    PANEL_EXTENSIONS,
+    ProfileSwitchError,
+    apply_profile,
+    detect_profile,
+    enabled_panel_extensions,
+    requires_extension_changes,
+)
+from anduinos_appearance.progress import run_with_progress
 from anduinos_appearance.weather import (
     prepare_weather_location,
     record_weather_consent,
@@ -65,6 +75,12 @@ DTP_UUID = 'dash-to-panel@jderose9.github.com'
 
 
 POS_LABELS = {'bottom': _('Bottom'), 'top': _('Top'), 'left': _('Left'), 'right': _('Right')}
+
+
+def _ext_is_enabled(uuid):
+    settings = Gio.Settings.new('org.gnome.shell')
+    return (uuid in settings.get_strv('enabled-extensions') and
+            uuid not in settings.get_strv('disabled-extensions'))
 
 
 def taskbar_settings():
@@ -141,21 +157,29 @@ class StylePage(Adw.PreferencesPage):
         layout_group = Adw.PreferencesGroup()
         layout_group.set_title(_('Layout'))
 
-        box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        box = Gtk.FlowBox()
+        box.set_selection_mode(Gtk.SelectionMode.NONE)
+        box.set_column_spacing(12)
+        box.set_row_spacing(6)
+        box.set_max_children_per_line(4)
         self.btn_centered = Gtk.Button(label='  ' + _('Centered') + '  ')
         self.btn_centered.connect('clicked', self._on_click, 'eleven')
         self.btn10 = Gtk.Button(label='  ' + _('Classic') + '  ')
         self.btn10.connect('clicked', self._on_click, 'classic')
         self.btn_sep = Gtk.Button(label='  ' + _('Separated') + '  ')
         self.btn_sep.connect('clicked', self._on_click, 'separated')
+        self.btn_gnome = Gtk.Button(label='  ' + _('GNOME') + '  ')
+        self.btn_gnome.connect('clicked', self._on_click, 'gnome')
         box.append(self.btn10)
         box.append(self.btn_sep)
         box.append(self.btn_centered)
+        box.append(self.btn_gnome)
         layout_group.add(box)
 
         # ── Position buttons ──
         self.pos_btns = {}
         pos_box = Gtk.FlowBox()
+        self.pos_box = pos_box
         pos_box.set_homogeneous(False)
         pos_box.set_selection_mode(Gtk.SelectionMode.NONE)
         pos_box.set_row_spacing(6)
@@ -172,7 +196,8 @@ class StylePage(Adw.PreferencesPage):
         self._highlight_pos()
 
         self.taskbar_settings = taskbar_settings()
-        self.add(taskbar_behavior_group(self.taskbar_settings))
+        self.behavior_group = taskbar_behavior_group(self.taskbar_settings)
+        self.add(self.behavior_group)
 
         # ── Group apps (Classic only) ──
         self.group_expander = Adw.ExpanderRow()
@@ -203,6 +228,15 @@ class StylePage(Adw.PreferencesPage):
         draw_preview(area, cr, w, h, style, position)
 
     def _on_click(self, btn, style):
+        if self.win._profile_busy:
+            return
+        enabled = enabled_panel_extensions(self.win._shell_settings)
+        if self.win._profile_failed or requires_extension_changes(style, enabled):
+            self.win._switch_profile(style)
+            return
+        # GNOME has no configurable Dash to Panel position.
+        if style == 'gnome':
+            return
         if apply_style_and_position(style, self.win.current_position):
             self.win.current_style = style
             self.win._sync_all_highlights()
@@ -222,12 +256,18 @@ class StylePage(Adw.PreferencesPage):
             _write_use_launchers(switch_row.get_active())
 
     def _highlight_btn(self):
-        s = self.win.current_style
+        s = None if self.win._profile_failed else self.win.current_style
         self.btn10.add_css_class('suggested-action') if s == 'classic' else self.btn10.remove_css_class('suggested-action')
         self.btn_sep.add_css_class('suggested-action') if s == 'separated' else self.btn_sep.remove_css_class('suggested-action')
         self.btn_centered.add_css_class('suggested-action') if s == 'eleven' else self.btn_centered.remove_css_class('suggested-action')
+        self.btn_gnome.add_css_class('suggested-action') if s == 'gnome' else self.btn_gnome.remove_css_class('suggested-action')
+        taskbar_active = s in ('classic', 'separated', 'eleven')
+        self.pos_box.set_sensitive(taskbar_active)
+        self.behavior_group.set_sensitive(taskbar_active and self.taskbar_settings is not None)
 
     def _on_pos_toggled(self, btn, pos):
+        if self.win.current_style == 'gnome' or self.win._profile_busy or self.win._profile_failed:
+            return
         if not btn.get_active():
             if pos == self.win.current_position:
                 btn.handler_block_by_func(self._on_pos_toggled)
@@ -250,7 +290,7 @@ class StylePage(Adw.PreferencesPage):
     def _highlight_pos(self):
         for p, btn in self.pos_btns.items():
             btn.handler_block_by_func(self._on_pos_toggled)
-            if p == self.win.current_position:
+            if self.win.current_style != 'gnome' and p == self.win.current_position:
                 btn.set_active(True)
                 btn.add_css_class('suggested-action')
             else:
@@ -259,6 +299,7 @@ class StylePage(Adw.PreferencesPage):
             btn.handler_unblock_by_func(self._on_pos_toggled)
 
     def _sync_group_visibility(self):
+        self.group_group.set_sensitive(not self.win._profile_failed)
         if self.win.current_style in ('classic', 'separated'):
             self.group_group.set_visible(True)
             self.group_expander.set_enable_expansion(True)
@@ -276,6 +317,8 @@ class StylePage(Adw.PreferencesPage):
 
     @staticmethod
     def _label(s):
+        if s == 'gnome':
+            return _('GNOME')
         if s == 'eleven':
             return _('Centered')
         if s == 'separated':
@@ -363,7 +406,7 @@ class PanelWidgetsPage(Adw.PreferencesPage):
             self._busy = False
 
     def _on_activities_toggle(self, switch_row, pspec):
-        if self._busy:
+        if self._busy or self.win.current_style == 'gnome':
             return
         visible = switch_row.get_active()
         v = 'true' if visible else 'false'
@@ -772,7 +815,7 @@ class AdvancedPage(Adw.PreferencesPage):
             self.win._toast(_('✗ Failed to import GNOME settings'))
             return
 
-        self.win.current_style, self.win.current_position = detect_current()
+        self.win.current_style, self.win.current_position = detect_profile(self.win._shell_settings)
         self.win._sync_all_highlights()
         self.win._refresh_previews()
         self._refresh_ext_rows()
@@ -911,7 +954,10 @@ class AppearanceWindow(Adw.PreferencesWindow):
         self.set_default_size(910, 660)
         self.set_icon_name('anduinos-appearance')
 
-        self.current_style, self.current_position = detect_current()
+        self._profile_busy = False
+        self._shell_settings = Gio.Settings.new('org.gnome.shell')
+        self._profile_failed = False
+        self.current_style, self.current_position = detect_profile(self._shell_settings)
 
         # Pages — added in sidebar order
         self.style_page = StylePage(self)
@@ -923,6 +969,10 @@ class AppearanceWindow(Adw.PreferencesWindow):
         self.add(self.widgets_page)
         self.add(self.gdm_page)
         self.add(self.advanced_page)
+        self.widgets_page.activities_row.set_sensitive(self.current_style != 'gnome' and not self._profile_failed)
+        self._shell_settings.connect('changed::enabled-extensions', self._on_profile_extensions_changed)
+        self._shell_settings.connect('changed::disabled-extensions', self._on_profile_extensions_changed)
+        self.connect('close-request', lambda *_: self._profile_busy)
 
         # Inject hamburger menu into internal headerbar on realize
         self.connect('realize', self._inject_menu)
@@ -946,6 +996,55 @@ class AppearanceWindow(Adw.PreferencesWindow):
     def _sync_all_highlights(self):
         self.style_page._highlight_btn()
         self.style_page._highlight_pos()
+        self.style_page._sync_group_visibility()
+        self.widgets_page.activities_row.set_sensitive(self.current_style != 'gnome' and not self._profile_failed)
+
+    def _on_profile_extensions_changed(self, *_args):
+        if self._profile_busy:
+            return
+        self.current_style, self.current_position = detect_profile(self._shell_settings)
+        self._sync_all_highlights()
+        self._refresh_previews()
+
+    def _switch_profile(self, style):
+        self._profile_busy = True
+        position = self.current_position
+        # GDK access stays on the GTK thread, never in the blocking worker.
+        screen_height = _smallest_monitor_height() or MAX_SCREEN_HEIGHT
+        self._progress_window = run_with_progress(
+            self,
+            _('Switching desktop layout… Please wait.'),
+            lambda: apply_profile(style, position, screen_height),
+            lambda error: self._finish_profile_switch(style, error),
+        )
+
+    def _finish_profile_switch(self, style, error):
+        self._profile_busy = False
+        self._progress_window = None
+        self.current_style, self.current_position = detect_profile(self._shell_settings)
+        enabled = enabled_panel_extensions(self._shell_settings)
+        if error is None and requires_extension_changes(style, enabled):
+            error = RuntimeError('Extension state did not match the requested profile')
+        self._profile_failed = error is not None
+        self._sync_all_highlights()
+        self._refresh_previews()
+        self.advanced_page._refresh_ext_rows()
+        if error is None:
+            self._toast(_('✓ Applied — {style}').format(style=StylePage._label(style)))
+            return
+        print(f'Failed to switch desktop profile: {error}', file=sys.stderr)
+        if isinstance(error, ProfileSwitchError) and error.restart_required:
+            text = _('An extension is in an error state. Log out and back in before trying again.')
+        elif isinstance(error, ProfileSwitchError) and error.extension and error.action in ('enable', 'disable'):
+            names = dict(zip(PANEL_EXTENSIONS, ('Dash to Panel', 'ArcMenu', 'Blur my Shell')))
+            text = (_('Failed to enable {extension}.') if error.action == 'enable'
+                    else _('Failed to disable {extension}.')).format(extension=names[error.extension])
+        else:
+            text = _('Failed to switch desktop layout. Check the extension settings and try again.')
+        dialog = Adw.MessageDialog.new(self, _('Desktop layout could not be applied'), text)
+        dialog.add_response('close', _('Close'))
+        dialog.set_close_response('close')
+        dialog.present()
 
     def _refresh_previews(self):
         for page in [self.style_page]:
