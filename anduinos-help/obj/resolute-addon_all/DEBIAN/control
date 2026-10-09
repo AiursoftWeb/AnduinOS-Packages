@@ -1,0 +1,10 @@
+Package: anduinos-help
+Version: 1.0.0-1+resolute
+Architecture: all
+Maintainer: AnduinOS Team <anduin@aiursoft.com>
+Installed-Size: 225
+Depends: python3, python3-gi, gir1.2-gtk-4.0, gir1.2-adw-1, python3-markdown-it, python3-yaml, git
+Homepage: https://docs.anduinos.com/
+Section: doc
+Priority: optional
+Description: AnduinOS Help — native documentation browser for AnduinOS. Periodically clones the official AnduinOS-Docs git repository and indexes its Markdown into a local SQLite database, so search, navigation, and article rendering work fully offline after the initial sync. Source: https://github.com/AiursoftWeb/AnduinOS-Docs
