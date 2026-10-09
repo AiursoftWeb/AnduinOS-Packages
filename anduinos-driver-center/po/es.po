@@ -1775,3 +1775,23 @@ msgstr ""
 "Setup Mode: faltan las claves de plataforma del firmware. Después de "
 "inscribir MOK, restaure las claves de fábrica del fabricante en los ajustes "
 "del firmware."
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Open UEFI Settings"
+msgstr "Abrir la configuración UEFI"
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "AnduinOS is ready. Secure Boot is not enabled."
+msgstr "AnduinOS está listo. Secure Boot no está activado."
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware platform keys are not configured. This is separate from MOK certificate enrollment."
+msgstr "Las claves de plataforma del firmware no están configuradas. Esto es independiente del registro del certificado MOK."
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Configure the Secure Boot platform keys in UEFI settings before enabling Secure Boot. Use the manufacturer's factory keys for a standard setup; if you use custom keys, follow your administrator's policy."
+msgstr "Configure las claves de plataforma en UEFI antes de activar Secure Boot. Para una configuración estándar, utilice las claves de fábrica del fabricante; si utiliza claves personalizadas, siga la política de su administrador."

@@ -1788,3 +1788,23 @@ msgstr ""
 "Setup Mode : les clés de plateforme du micrologiciel sont absentes. Après "
 "l’inscription MOK, restaurez les clés d’usine du fabricant dans les "
 "paramètres du micrologiciel."
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Open UEFI Settings"
+msgstr "Ouvrir les paramètres UEFI"
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "AnduinOS is ready. Secure Boot is not enabled."
+msgstr "AnduinOS est prêt. Secure Boot n’est pas activé."
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware platform keys are not configured. This is separate from MOK certificate enrollment."
+msgstr "Les clés de plateforme du micrologiciel ne sont pas configurées. Cela est indépendant de l’inscription du certificat MOK."
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Configure the Secure Boot platform keys in UEFI settings before enabling Secure Boot. Use the manufacturer's factory keys for a standard setup; if you use custom keys, follow your administrator's policy."
+msgstr "Configurez les clés de plateforme dans les paramètres UEFI avant d’activer Secure Boot. Pour une configuration standard, utilisez les clés d’usine du fabricant ; pour des clés personnalisées, suivez la politique de votre administrateur."

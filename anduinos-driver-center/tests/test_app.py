@@ -9,9 +9,34 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from anduinos_driver_center.app import DriverCenterWindow, _command_output_summary  # noqa: E402
 from anduinos_driver_center import app
+from anduinos_secureboot.model import DkmsState, SecureBootState, SecureBootStatus
 
 
 class AppTests(unittest.TestCase):
+    def test_secure_boot_summary_distinguishes_disabled_from_unprepared(self):
+        from dataclasses import replace
+        ready = SecureBootState(False, True, True, True, "serial", boot_loader="shim", setup_mode=False)
+        modules = DkmsState()
+        with patch.object(app, "_", side_effect=lambda text: text):
+            self.assertEqual(app._secure_boot_summary(ready, modules), (
+                "Disabled", "AnduinOS is ready. Secure Boot is not enabled.", "installed-pill"))
+            for state, dkms in (
+                (replace(ready, setup_mode=True), modules),
+                (replace(ready, enrolled=False), modules),
+                (replace(ready, boot_loader="grub"), modules),
+                (replace(ready, configuration_present=False), modules),
+                (ready, DkmsState(untrusted_modules=("driver",))),
+            ):
+                with self.subTest(state=state, dkms=dkms):
+                    self.assertEqual(app._secure_boot_summary(state, dkms)[0], "Action required")
+            enabled = replace(ready, enabled=True, status=SecureBootStatus.ENABLED)
+            self.assertEqual(app._secure_boot_summary(enabled, modules)[0], "Trusted")
+            self.assertEqual(app._secure_boot_summary(enabled, DkmsState(untrusted_modules=("driver",)))[0],
+                             "Action required")
+            for status, label in ((SecureBootStatus.UNKNOWN, "Unknown"),
+                                  (SecureBootStatus.UNSUPPORTED, "Not available")):
+                self.assertEqual(app._secure_boot_summary(replace(ready, status=status), modules)[0], label)
+
     def test_command_line_opens_requested_page_in_new_or_existing_window(self):
         for existing in (False, True):
             for arguments in (["--page", "secure-boot"], ["--page=secure-boot"]):

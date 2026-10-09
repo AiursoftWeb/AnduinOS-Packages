@@ -1725,3 +1725,23 @@ msgid ""
 msgstr ""
 "Setup Mode: ไม่มีคีย์แพลตฟอร์มในเฟิร์มแวร์ หลังจากลงทะเบียน MOK แล้ว "
 "ให้คืนค่าคีย์จากโรงงานของผู้ผลิตในการตั้งค่าเฟิร์มแวร์"
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Open UEFI Settings"
+msgstr "เปิดการตั้งค่า UEFI"
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "AnduinOS is ready. Secure Boot is not enabled."
+msgstr "AnduinOS พร้อมแล้ว แต่ยังไม่ได้เปิดใช้ Secure Boot"
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware platform keys are not configured. This is separate from MOK certificate enrollment."
+msgstr "ยังไม่ได้กำหนดค่าคีย์แพลตฟอร์มของเฟิร์มแวร์ ซึ่งเป็นคนละส่วนกับการลงทะเบียนใบรับรอง MOK"
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Configure the Secure Boot platform keys in UEFI settings before enabling Secure Boot. Use the manufacturer's factory keys for a standard setup; if you use custom keys, follow your administrator's policy."
+msgstr "กำหนดค่าคีย์แพลตฟอร์มในการตั้งค่า UEFI ก่อนเปิดใช้ Secure Boot สำหรับการตั้งค่ามาตรฐาน ให้ใช้คีย์จากโรงงานของผู้ผลิต หากใช้คีย์ที่กำหนดเอง ให้ปฏิบัติตามนโยบายของผู้ดูแลระบบ"

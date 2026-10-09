@@ -1670,3 +1670,23 @@ msgid ""
 "Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
 "factory keys in firmware settings after MOK enrollment."
 msgstr "Setup Mode：固件缺少平台密钥。请在完成 MOK 注册后，进入固件设置恢复厂商出厂密钥。"
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Open UEFI Settings"
+msgstr "打开 UEFI 设置"
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "AnduinOS is ready. Secure Boot is not enabled."
+msgstr "AnduinOS 已准备就绪。Secure Boot 尚未启用。"
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware platform keys are not configured. This is separate from MOK certificate enrollment."
+msgstr "固件平台密钥尚未配置。这与 MOK 证书注册是两回事。"
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Configure the Secure Boot platform keys in UEFI settings before enabling Secure Boot. Use the manufacturer's factory keys for a standard setup; if you use custom keys, follow your administrator's policy."
+msgstr "启用 Secure Boot 前，请在 UEFI 设置中配置平台密钥。常规配置请使用厂商出厂密钥；如果使用自定义密钥，请遵循管理员的策略。"

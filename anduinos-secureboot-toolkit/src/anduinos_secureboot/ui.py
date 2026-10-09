@@ -28,6 +28,8 @@ def N_(value: str) -> str:
 
 
 _FIRMWARE_SETUP_BUTTON = N_("Enable Secure Boot")
+_FIRMWARE_SETTINGS_BUTTON = N_("Open UEFI Settings")
+_READY_TO_ENABLE = N_("AnduinOS is ready. Secure Boot is not enabled.")
 _FIRMWARE_SETUP_INSTRUCTIONS = N_(
     "To enable it, open the UEFI firmware settings and look under Boot, "
     "Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn "
@@ -38,7 +40,12 @@ _BOOT_WARNING = N_(
 )
 _PREPARE = N_("Prepare AnduinOS for Secure Boot")
 _PREPARE_FIRST = N_("First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot only after enrollment.")
-_SETUP_MODE = N_("Setup Mode: firmware platform keys are missing. Restore the manufacturer's factory keys in firmware settings after MOK enrollment.")
+_SETUP_MODE = N_("Firmware platform keys are not configured. This is separate from MOK certificate enrollment.")
+_SETUP_MODE_INSTRUCTIONS = N_(
+    "Configure the Secure Boot platform keys in UEFI settings before enabling Secure Boot. "
+    "Use the manufacturer's factory keys for a standard setup; if you use custom keys, "
+    "follow your administrator's policy."
+)
 _FIRMWARE_SETUP_ERROR_TITLE = N_("Configuration failed. Please try again.")
 _FIRMWARE_SETUP_ERROR_BODY = N_(
     "Please check the advanced output."
@@ -156,7 +163,7 @@ def create_secure_boot_page(
         group.add(row)
         rows[key] = row, icon
 
-    add_row("secure_boot", _("Secure Boot Enabled"))
+    add_row("secure_boot", _("Secure Boot"))
     add_row("certificate", _("Local MOK Certificate"))
     add_row("enrollment", _("UEFI Firmware Trust"))
     add_row("drivers", _("Third-party Drivers"))
@@ -228,6 +235,9 @@ def create_secure_boot_page(
             icon.remove_css_class(candidate)
         icon.add_css_class(css_class)
 
+    def firmware_instructions(state: SecureBootState) -> str:
+        return _(_SETUP_MODE_INSTRUCTIONS if state.setup_mode is True else _FIRMWARE_SETUP_INSTRUCTIONS)
+
     def apply_state(secure_boot: SecureBootState, dkms: DkmsState) -> bool:
         state_holder["secure_boot"] = secure_boot
         state_holder["dkms"] = dkms
@@ -235,10 +245,14 @@ def create_secure_boot_page(
         cert_row, cert_icon = rows["certificate"]
         enroll_row, enroll_icon = rows["enrollment"]
         drivers_row, drivers_icon = rows["drivers"]
-        boot_warning.set_visible(secure_boot.setup_mode is True or secure_boot.boot_loader == "grub")
-        boot_warning.set_label(_(_BOOT_WARNING) + (
-            "\n" + _(_SETUP_MODE) if secure_boot.setup_mode is True else ""
-        ))
+        warnings = []
+        if secure_boot.supported:
+            if secure_boot.boot_loader == "grub":
+                warnings.append(_(_BOOT_WARNING))
+            if secure_boot.setup_mode is True:
+                warnings.append(_(_SETUP_MODE))
+        boot_warning.set_visible(bool(warnings))
+        boot_warning.set_label("\n".join(warnings))
 
         if secure_boot.enabled:
             sb_row.set_subtitle(_("Motherboard hardware protection is active"))
@@ -251,7 +265,7 @@ def create_secure_boot_page(
             set_icon("secure_boot", "dialog-error-symbolic", "error")
         else:
             sb_row.set_subtitle(_("Secure Boot is disabled"))
-            set_icon("secure_boot", "dialog-error-symbolic", "error")
+            set_icon("secure_boot", "dialog-information-symbolic", "dim-label")
 
         has_certificate = secure_boot.key_present and secure_boot.certificate_present
         trust_ready = has_certificate and secure_boot.enrolled
@@ -348,6 +362,9 @@ def create_secure_boot_page(
         firmware_button.set_visible(
             secure_boot.firmware_enable_ready and dkms.ready
         )
+        firmware_button.set_label(_(
+            _FIRMWARE_SETTINGS_BUTTON if secure_boot.setup_mode is True else _FIRMWARE_SETUP_BUTTON
+        ))
         refresh_button.set_visible(
             secure_boot.status is SecureBootStatus.UNKNOWN
             or (
@@ -371,13 +388,17 @@ def create_secure_boot_page(
             )
             status.remove_css_class("title-4")
         elif not secure_boot.enabled and not secure_boot.enrollment_pending:
-            status.set_label(
-                _(_FIRMWARE_SETUP_INSTRUCTIONS)
-                if secure_boot.firmware_enable_ready and dkms.ready
-                else _(_PREPARE_FIRST)
-            )
+            if secure_boot.firmware_enable_ready and dkms.ready:
+                status.set_label(_(_READY_TO_ENABLE) + "\n" + firmware_instructions(secure_boot))
+            elif trust_ready and not dkms.ready:
+                status.set_label(_("The certificate is enrolled, but some modules are not signed with it."))
+            elif trust_ready and not signing_configuration_ready:
+                status.set_label(_("The certificate is enrolled and current drivers are trusted.")
+                                 + "\n" + _("Repair automatic DKMS signing before future driver updates."))
+            else:
+                status.set_label(_(_PREPARE_FIRST))
             status.remove_css_class("title-4")
-        elif secure_boot.ready and dkms.ready:
+        elif secure_boot.enabled and secure_boot.ready and dkms.ready:
             status.set_label(_("System Trust Established. Third-party drivers will load securely."))
             status.add_css_class("title-4")
         elif trust_ready and dkms.ready and not signing_configuration_ready:
@@ -451,7 +472,7 @@ def create_secure_boot_page(
         dialog = Adw.MessageDialog.new(
             page.get_root(),
             _("Reboot Required"),
-            _(_FIRMWARE_SETUP_INSTRUCTIONS),
+            firmware_instructions(state),
         )
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("reboot", _("Reboot"))

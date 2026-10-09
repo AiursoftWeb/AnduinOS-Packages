@@ -1777,3 +1777,23 @@ msgid ""
 msgstr ""
 "Setup Mode: отсутствуют ключи платформы в прошивке. После регистрации MOK "
 "восстановите заводские ключи производителя в настройках прошивки."
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Open UEFI Settings"
+msgstr "Открыть настройки UEFI"
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "AnduinOS is ready. Secure Boot is not enabled."
+msgstr "AnduinOS готова. Secure Boot не включён."
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware platform keys are not configured. This is separate from MOK certificate enrollment."
+msgstr "Ключи платформы в прошивке не настроены. Это не связано с регистрацией сертификата MOK."
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Configure the Secure Boot platform keys in UEFI settings before enabling Secure Boot. Use the manufacturer's factory keys for a standard setup; if you use custom keys, follow your administrator's policy."
+msgstr "Перед включением Secure Boot настройте ключи платформы в UEFI. Для стандартной настройки используйте заводские ключи производителя; при использовании собственных ключей следуйте политике администратора."

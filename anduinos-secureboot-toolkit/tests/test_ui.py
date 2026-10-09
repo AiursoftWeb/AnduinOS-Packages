@@ -19,6 +19,18 @@ class TrustPageTests(unittest.TestCase):
         self.gtk = self.enterContext(patch.object(ui, "Gtk"))
         self.adw = self.enterContext(patch.object(ui, "Adw"))
         self.buttons = {}
+        self.labels = []
+        self.rows = {}
+
+        def label(**kwargs):
+            widget = Mock()
+            self.labels.append(widget)
+            return widget
+
+        def row(**kwargs):
+            widget = Mock()
+            self.rows[kwargs.get("title")] = widget
+            return widget
 
         def button(**kwargs):
             widget = Mock()
@@ -26,15 +38,20 @@ class TrustPageTests(unittest.TestCase):
             return widget
 
         self.gtk.Button.side_effect = button
+        self.gtk.Label.side_effect = label
+        self.adw.ActionRow.side_effect = row
         self.action = self.enterContext(patch.object(ui, "run_action"))
         self.inspect = self.enterContext(patch.object(ui, "inspect_secure_boot"))
         self.thread = self.enterContext(patch.object(ui.threading, "Thread"))
         self.firmware = Mock(return_value=(True, ""))
 
-    def page(self, status, *, dkms_available=False, enrolled=True, boot_loader="shim", modules_ready=False):
+    def page(self, status, *, dkms_available=False, enrolled=True, boot_loader="shim", modules_ready=False,
+             setup_mode=False, configuration_present=True, enrollment_pending=False):
         state = SecureBootState(
             status is SecureBootStatus.ENABLED, True, True, enrolled, "serial",
             dkms_available=dkms_available, status=status, boot_loader=boot_loader,
+            setup_mode=setup_mode, configuration_present=configuration_present,
+            enrollment_pending=enrollment_pending,
         )
         ui.create_secure_boot_page(
             initial_state=(state, DkmsState(modules=("driver",), untrusted_modules=() if modules_ready else ("driver",))),
@@ -44,6 +61,67 @@ class TrustPageTests(unittest.TestCase):
         self.action.assert_not_called()
         self.inspect.assert_not_called()
         self.thread.assert_not_called()
+
+    @property
+    def warning(self):
+        return self.labels[2]
+
+    @property
+    def status(self):
+        return self.labels[3]
+
+    def test_enrolled_disabled_system_is_ready_without_boot_failure_warning(self):
+        self.page(SecureBootStatus.DISABLED, modules_ready=True)
+        self.warning.set_visible.assert_called_with(False)
+        self.status.set_label.assert_called_with(
+            "translated:" + ui._READY_TO_ENABLE + "\ntranslated:" + ui._FIRMWARE_SETUP_INSTRUCTIONS)
+        button = self.buttons["translated:Enable Secure Boot"]
+        button.set_visible.assert_called_with(True)
+        button.set_label.assert_called_with("translated:Enable Secure Boot")
+        self.rows["translated:Secure Boot"].set_subtitle.assert_called_with("translated:Secure Boot is disabled")
+
+    def test_setup_mode_reports_firmware_keys_not_missing_mok(self):
+        self.page(SecureBootStatus.DISABLED, modules_ready=True, setup_mode=True)
+        self.warning.set_visible.assert_called_with(True)
+        self.warning.set_label.assert_called_with("translated:" + ui._SETUP_MODE)
+        self.status.set_label.assert_called_with(
+            "translated:" + ui._READY_TO_ENABLE + "\ntranslated:" + ui._SETUP_MODE_INSTRUCTIONS)
+        button = self.buttons["translated:Enable Secure Boot"]
+        button.set_visible.assert_called_with(True)
+        button.set_label.assert_called_with("translated:Open UEFI Settings")
+        self.buttons[None].set_visible.assert_called_with(False)  # No MOK re-enrollment.
+        button.connect.call_args.args[1](button)
+        self.adw.MessageDialog.new.assert_called_once_with(
+            unittest.mock.ANY, "translated:Reboot Required", "translated:" + ui._SETUP_MODE_INSTRUCTIONS)
+        self.firmware.assert_not_called()
+
+    def test_direct_grub_boot_still_warns_and_requires_preparation(self):
+        self.page(SecureBootStatus.DISABLED, modules_ready=True, boot_loader="grub", setup_mode=True)
+        self.warning.set_label.assert_called_with(
+            "translated:" + ui._BOOT_WARNING + "\ntranslated:" + ui._SETUP_MODE)
+        self.buttons["translated:Enable Secure Boot"].set_visible.assert_called_with(False)
+        self.buttons[None].set_visible.assert_called_with(True)
+
+    def test_unsigned_modules_or_missing_signing_config_do_not_request_reenrollment(self):
+        for modules_ready, config in ((False, True), (True, False)):
+            with self.subTest(modules_ready=modules_ready, configuration=config):
+                self.page(SecureBootStatus.DISABLED, modules_ready=modules_ready,
+                          configuration_present=config, dkms_available=True)
+                self.buttons["translated:Enable Secure Boot"].set_visible.assert_called_with(False)
+                self.buttons["translated:Repair Module Signatures"].set_visible.assert_called_with(True)
+                self.assertNotIn(ui._PREPARE_FIRST, self.status.set_label.call_args.args[0])
+
+    def test_pending_mok_does_not_claim_ready_to_enable(self):
+        self.page(SecureBootStatus.DISABLED, enrolled=False, enrollment_pending=True, modules_ready=True)
+        self.buttons["translated:Enable Secure Boot"].set_visible.assert_called_with(False)
+        self.assertIn("waiting for enrollment", self.status.set_label.call_args.args[0])
+
+    def test_enabled_trusted_system_keeps_success_status(self):
+        self.page(SecureBootStatus.ENABLED, modules_ready=True)
+        self.warning.set_visible.assert_called_with(False)
+        self.buttons["translated:Enable Secure Boot"].set_visible.assert_called_with(False)
+        self.status.set_label.assert_called_with(
+            "translated:System Trust Established. Third-party drivers will load securely.")
 
     def test_only_supported_enabled_state_with_dkms_offers_module_repair(self):
         for status in SecureBootStatus:
