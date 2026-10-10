@@ -2352,13 +2352,16 @@ class OobeWindow(Adw.ApplicationWindow):
             scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
             scroll.set_child(p)
             clamp = Adw.Clamp()
+            # Each carousel page must fill the viewport, even when its
+            # content is narrow. Otherwise neighboring pages remain visible.
+            clamp.set_hexpand(True)
             clamp.set_maximum_size(650)
             clamp.set_child(scroll)
             nav._pages.append(clamp)
             self.carousel.append(clamp)
 
-        # Wrap carousel in a clamp so adjacent pages don't peek
-        # through on ultrawide screens
+        # Limit reading width on ultrawide screens; page wrappers still fill
+        # the entire carousel viewport.
         carousel_clamp = Adw.Clamp()
         carousel_clamp.set_maximum_size(680)
         carousel_clamp.set_child(self.carousel)

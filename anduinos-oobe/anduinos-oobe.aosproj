@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-oobe</PackageName>
-    <PackageVersion>2.0.4-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.4-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS OOBE — First-run setup wizard and Welcome Center</PackageDescription>
     <Section>utils</Section>
@@ -54,5 +54,6 @@
   </ItemGroup>
   <ItemGroup>
     <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+    <TestCommand Name="widgets" Profile="gui" Run="PYTHONDONTWRITEBYTECODE=1 LANGUAGE=C GSETTINGS_BACKEND=memory GDK_BACKEND=x11 GSK_RENDERER=cairo xvfb-run -a python3 -m unittest discover -s tests/gui -v" TimeoutSeconds="300" />
   </ItemGroup>
 </Project>
