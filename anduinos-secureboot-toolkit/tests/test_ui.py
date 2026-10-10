@@ -47,6 +47,9 @@ class TrustPageTests(unittest.TestCase):
 
     def page(self, status, *, dkms_available=False, enrolled=True, boot_loader="shim", modules_ready=False,
              setup_mode=False, configuration_present=True, enrollment_pending=False):
+        self.buttons.clear()
+        self.labels.clear()
+        self.rows.clear()
         state = SecureBootState(
             status is SecureBootStatus.ENABLED, True, True, enrolled, "serial",
             dkms_available=dkms_available, status=status, boot_loader=boot_loader,
@@ -117,11 +120,31 @@ class TrustPageTests(unittest.TestCase):
         self.assertIn("waiting for enrollment", self.status.set_label.call_args.args[0])
 
     def test_enabled_trusted_system_keeps_success_status(self):
-        self.page(SecureBootStatus.ENABLED, modules_ready=True)
-        self.warning.set_visible.assert_called_with(False)
+        for loader in ("shim", "unknown", "grub"):
+            with self.subTest(boot_loader=loader):
+                self.page(SecureBootStatus.ENABLED, modules_ready=True, boot_loader=loader)
+                self.warning.set_visible.assert_called_with(False)
+                for label in (None, "translated:Enable Secure Boot",
+                              "translated:Repair Module Signatures", "translated:Reboot",
+                              "translated:  Check Again  "):
+                    self.buttons[label].set_visible.assert_called_with(False)
+                self.status.set_label.assert_called_with(
+                    "translated:System Trust Established. Third-party drivers will load securely.")
+
+    def test_enabled_system_with_unknown_loader_still_offers_required_trust_actions(self):
+        self.page(SecureBootStatus.ENABLED, enrolled=False, boot_loader="unknown", modules_ready=True)
+        self.buttons[None].set_visible.assert_called_with(True)
+        for modules_ready, config in ((False, True), (True, False)):
+            with self.subTest(modules_ready=modules_ready, configuration=config):
+                self.page(SecureBootStatus.ENABLED, boot_loader="unknown", modules_ready=modules_ready,
+                          configuration_present=config, dkms_available=True)
+                self.buttons[None].set_visible.assert_called_with(False)
+                self.buttons["translated:Repair Module Signatures"].set_visible.assert_called_with(True)
+
+    def test_disabled_system_with_unknown_loader_still_requires_boot_preparation(self):
+        self.page(SecureBootStatus.DISABLED, boot_loader="unknown", modules_ready=True)
+        self.buttons[None].set_visible.assert_called_with(True)
         self.buttons["translated:Enable Secure Boot"].set_visible.assert_called_with(False)
-        self.status.set_label.assert_called_with(
-            "translated:System Trust Established. Third-party drivers will load securely.")
 
     def test_only_supported_enabled_state_with_dkms_offers_module_repair(self):
         for status in SecureBootStatus:

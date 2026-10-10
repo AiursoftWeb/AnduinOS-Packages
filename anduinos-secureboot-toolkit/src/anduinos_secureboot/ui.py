@@ -247,7 +247,7 @@ def create_secure_boot_page(
         drivers_row, drivers_icon = rows["drivers"]
         warnings = []
         if secure_boot.supported:
-            if secure_boot.boot_loader == "grub":
+            if not secure_boot.enabled and secure_boot.boot_loader == "grub":
                 warnings.append(_(_BOOT_WARNING))
             if secure_boot.setup_mode is True:
                 warnings.append(_(_SETUP_MODE))
@@ -341,7 +341,11 @@ def create_secure_boot_page(
             set_icon("drivers", "dialog-warning-symbolic", "warning")
 
         enroll_button.set_visible(secure_boot.supported and (
-            secure_boot.enrollment_required or secure_boot.boot_loader != "shim"
+            secure_boot.enrollment_required
+            # The loader is a conservative hint, not a trust failure when
+            # firmware enforcement is already active. Keep the boot-chain
+            # preparation requirement before enabling Secure Boot only.
+            or (not secure_boot.enabled and secure_boot.boot_loader != "shim")
         ))
         enroll_label.set_label(_(_PREPARE))
         repair_button.set_visible(

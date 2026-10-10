@@ -29,6 +29,35 @@ class SecureBootPageTests(unittest.TestCase):
         Gtk.init()
         Adw.init()
 
+    def test_enabled_trusted_system_has_no_preparation_action_for_any_loader_hint(self):
+        locales = Path(__file__).resolve().parents[2] / "locale"
+        for language in ("en_US", "zh_CN"):
+            translate = gettext.translation(
+                "anduinos-driver-center", localedir=locales, languages=[language]
+            ).gettext
+            for loader in ("shim", "unknown", "grub"):
+                with self.subTest(language=language, boot_loader=loader):
+                    state = SecureBootState(True, True, True, True, "serial", boot_loader=loader)
+                    with patch.object(ui, "inspect_secure_boot") as inspect, \
+                         patch.object(ui, "run_action") as action:
+                        page = ui.create_secure_boot_page(
+                            translate=translate, initial_state=(state, DkmsState()),
+                        )
+                        visible_text = "\n".join(
+                            w.get_label() for w in widgets(page)
+                            if isinstance(w, Gtk.Label) and w.is_visible()
+                        )
+                        self.assertIn(translate(
+                            "System Trust Established. Third-party drivers will load securely."
+                        ), visible_text)
+                        self.assertNotIn(translate(ui._PREPARE), visible_text)
+                        self.assertNotIn(translate(ui._BOOT_WARNING), visible_text)
+                        self.assertFalse(any(
+                            w.is_visible() for w in widgets(page) if isinstance(w, Gtk.Button)
+                        ))
+                        inspect.assert_not_called()
+                        action.assert_not_called()
+
     def test_disabled_and_setup_mode_preserve_enrollment_and_explain_firmware(self):
         locales = Path(__file__).resolve().parents[2] / "locale"
         for language in ("en_US", "zh_CN"):
