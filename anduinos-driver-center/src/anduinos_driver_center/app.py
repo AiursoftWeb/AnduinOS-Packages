@@ -440,7 +440,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self.device_list.append(xbox_row)
         self.stack.add_named(self._xbox_page(xbox, secure_boot), "xbox")
 
-        secure_boot_label, _, _ = _secure_boot_summary(secure_boot, dkms)
+        secure_boot_label = _secure_boot_summary(secure_boot, dkms)[0]
         secure_row = self._device_row(
             "security-high-symbolic", _("Secure Boot"),
             secure_boot_label,

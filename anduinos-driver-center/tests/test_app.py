@@ -13,6 +13,39 @@ from anduinos_secureboot.model import DkmsState, SecureBootState, SecureBootStat
 
 
 class AppTests(unittest.TestCase):
+    def test_scan_builds_navigation_and_restores_selection_without_a_display(self):
+        window = Mock()
+        window._computer_page = None
+        window._selected_page_name = "home"
+        rows = []
+        window.device_list.append.side_effect = rows.append
+        window.device_list.get_row_at_index.side_effect = lambda index: (
+            rows[index] if index < len(rows) else None
+        )
+        window._device_row.side_effect = lambda *args: Mock()
+        graphics = Mock(devices=(), intel=None)
+        secure_boot = SecureBootState(
+            False, True, True, True, "serial", boot_loader="shim", setup_mode=False
+        )
+        printing = Mock(printers=(), service_running=True, missing_required_packages=(),
+                        disabled_printers=())
+        xbox = Mock(status=app.XboxStatus.NOT_INSTALLED)
+
+        with patch.object(app, "ComputerPage"), patch.object(app, "_", side_effect=lambda text: text):
+            result = DriverCenterWindow._apply_scan(
+                window, graphics, secure_boot, xbox, DkmsState(), Mock(ready=True), printing
+            )
+
+        self.assertEqual(result, app.GLib.SOURCE_REMOVE)
+        self.assertEqual([row.page_name for row in rows], [
+            "home", "audio", "printing", "xbox", "secure-boot", "firmware", "computer",
+        ])
+        window._device_row.assert_any_call("security-high-symbolic", "Secure Boot", "Disabled")
+        self.assertEqual(window.stack.add_named.call_count, 7)
+        window.device_list.select_row.assert_called_once_with(rows[0])
+        window.refresh_button.set_sensitive.assert_called_once_with(True)
+        self.assertFalse(window._rebuilding_navigation)
+
     def test_secure_boot_summary_distinguishes_disabled_from_unprepared(self):
         from dataclasses import replace
         ready = SecureBootState(False, True, True, True, "serial", boot_loader="shim", setup_mode=False)
