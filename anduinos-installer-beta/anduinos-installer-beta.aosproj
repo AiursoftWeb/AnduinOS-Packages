@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.0.4-12+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.4-13+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -132,7 +132,9 @@
     <PostRemoveScript Include="scripts/postrm.sh" />
   </ItemGroup>
   <ItemGroup>
-    <TestCommand Name="widgets" Profile="gui" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:tests:../anduinos-secureboot-toolkit/src LANGUAGE=C GSETTINGS_BACKEND=memory GDK_BACKEND=x11 dbus-run-session -- xvfb-run -a python3 -m unittest discover -s tests/gui -v" TimeoutSeconds="300" />
+    <!-- Optional real-compositor acceptance, isolated from the user's desktop. -->
+    <TestCommand Name="keyboard" Profile="wayland" Run="python3 tests/integration/keyboard_wayland.py" TimeoutSeconds="120" />
+    <TestCommand Name="widgets" Profile="gui" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:tests:../anduinos-secureboot-toolkit/src LANGUAGE=C GSETTINGS_BACKEND=memory GDK_BACKEND=x11 ANDUINOS_KEYBOARD_X11_TEST=1 dbus-run-session -- xvfb-run -a python3 -m unittest discover -s tests/gui -v" TimeoutSeconds="300" />
     <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:tests:../anduinos-secureboot-toolkit/src python3 -m unittest discover -s tests -v" TimeoutSeconds="600" />
   </ItemGroup>
 </Project>

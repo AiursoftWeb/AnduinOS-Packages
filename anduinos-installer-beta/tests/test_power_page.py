@@ -128,7 +128,7 @@ class PowerPageRoutingTests(unittest.TestCase):
 
     def test_unsupported_firmware_skips_recommendation(self):
         shared = {"_platform_probe_result": self.platform(SecureBoot.UNSUPPORTED)}
-        with (patch("pages._build_network_or_keyboard_page", return_value="next"),
+        with (patch("pages._build_keyboard_first_page", return_value="next"),
               patch("pages.build_secure_boot_page") as recommendation,
               patch("pages.probe_platform") as probe):
             result = build_post_welcome_page(shared, object(), result=self.safe())
@@ -258,10 +258,11 @@ class PowerPageRoutingTests(unittest.TestCase):
         }
         route = _planned_page_route(shared)
         self.assertEqual(len(route), 14)
-        self.assertEqual(route[:4], (
+        self.assertEqual(route[:5], (
             "welcome",
             "low-battery",
             "secure-boot-recommendation",
+            "keyboard",
             "network",
         ))
         self.assertEqual(route[8], "advanced-storage")

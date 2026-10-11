@@ -47,7 +47,7 @@ class FirmwarePageTests(unittest.TestCase):
                   if isinstance(w, Gtk.Label)]
         self.assertTrue(any('amd64 / uefi / Secure Boot: unsupported' in label
                             for label in labels))
-        with (patch('pages._build_network_or_keyboard_page', return_value='network'),
+        with (patch('pages._build_keyboard_first_page', return_value='network'),
               patch('pages.build_secure_boot_page') as recommendation):
             self.next.emit('clicked')
         recommendation.assert_not_called()
@@ -60,7 +60,7 @@ class FirmwarePageTests(unittest.TestCase):
         self.assertIsNone(self.shared['_platform_probe_result'])
         self.assertIn('firmware I/O error', self.shared['_platform_probe_error'])
         self.assertTrue(self.retry.get_visible())
-        with patch('pages._build_network_or_keyboard_page', return_value='configuration'):
+        with patch('pages._build_keyboard_first_page', return_value='configuration'):
             self.next.emit('clicked')
         self.nav.push.assert_called_once_with('configuration')
         self.retry.emit('clicked')
@@ -103,7 +103,7 @@ class FirmwarePageTests(unittest.TestCase):
                     nav.push(page)
                     tag = ('secure-boot-recommendation'
                            if secure_boot is SecureBoot.DISABLED
-                           else 'network' if needs_network else 'keyboard')
+                           else 'keyboard')
                     destination = Adw.NavigationPage(title='Next', tag=tag)
                     with (patch('pages.build_secure_boot_page', return_value=destination) as recommendation,
                           patch('pages.build_network_page', return_value=destination) as network,
