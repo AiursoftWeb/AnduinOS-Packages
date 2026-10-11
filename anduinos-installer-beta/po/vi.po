@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Giữ Windows hoặc các phân vùng khác, dùng lại hoặc tạo ESP và thiết kế phân vùng Root cùng Swap với kích thước chính xác."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Các thay đổi thủ công mang tính phá hủy. Vị trí bắt đầu của các phân vùng hiện có không bao giờ bị di chuyển. Chỉ có thể thu nhỏ phân vùng NTFS không mã hóa sau khi vượt qua các bước kiểm tra an toàn nghiêm ngặt; các phân vùng được mã hóa, đang được gắn kết hoặc có hệ thống tệp ở trạng thái không sạch sẽ không bao giờ bị thay đổi kích thước."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Các thay đổi thủ công mang tính phá hủy. Vị trí bắt đầu của các phân vùng hiện có không bao giờ bị di chuyển. Chỉ có thể thu nhỏ phân vùng NTFS/ext4 không mã hóa sau khi vượt qua các bước kiểm tra an toàn nghiêm ngặt; các phân vùng được mã hóa, đang được gắn kết hoặc có hệ thống tệp ở trạng thái không sạch sẽ không bao giờ bị thay đổi kích thước."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "Thiếu lựa chọn lưu trữ thủ công. Quay lại và xem xét lại."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ Việc thay đổi kích thước các phân vùng NTFS được liệt kê sẽ di chuyển dữ liệu hệ thống tệp và ranh giới phân vùng. Các phân vùng được liệt kê sẽ bị xóa và mọi phân vùng mới được liệt kê sẽ được định dạng. Hãy sao lưu dữ liệu quan trọng trước; các thao tác phân vùng này không thể hoàn tác."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Việc thay đổi kích thước các phân vùng NTFS/ext4 được liệt kê sẽ di chuyển dữ liệu hệ thống tệp và ranh giới phân vùng. Các phân vùng được liệt kê sẽ bị xóa và mọi phân vùng mới được liệt kê sẽ được định dạng. Hãy sao lưu dữ liệu quan trọng trước; các thao tác phân vùng này không thể hoàn tác."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Chỉ các phân vùng được liệt kê rõ ràng sẽ bị xóa hoặc định dạng. Các phân vùng không liên quan vẫn giữ nguyên; EFI/BOOT không bị ghi đè."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Chỉnh sửa một đĩa GPT. Vị trí bắt đầu của phân vùng sẽ không bao giờ bị dịch chuyển; phân vùng NTFS không mã hóa có thể được thu nhỏ sau khi kiểm tra an toàn."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Chỉnh sửa một đĩa GPT. Vị trí bắt đầu của phân vùng sẽ không bao giờ bị dịch chuyển; phân vùng NTFS/ext4 không mã hóa có thể được thu nhỏ sau khi kiểm tra an toàn."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "Thu nhỏ ext4 có thể gây mất dữ liệu vĩnh viễn. Hãy sao lưu các tệp quan trọng. Kích thước tối thiểu là ước tính; hệ thống tệp được kiểm tra trước và sau khi đổi kích thước."
+
+msgid "I have backed up my data."
+msgstr "Tôi đã sao lưu dữ liệu."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Chưa hỗ trợ thu nhỏ Btrfs."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"

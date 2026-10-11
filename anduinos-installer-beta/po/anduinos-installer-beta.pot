@@ -1480,7 +1480,7 @@ msgstr ""
 #: src/pages.py:3230
 msgid ""
 "Manual changes are destructive. Existing partition starts are never moved. "
-"Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
+"Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted"
 " or unclean volumes are never resized."
 msgstr ""
 
@@ -1886,7 +1886,7 @@ msgstr ""
 
 #: src/pages.py:6496
 msgid ""
-"⚠ Listed NTFS resizes will move filesystem data and partition boundaries. "
+"⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. "
 "Listed partitions will be deleted and every listed new partition will be "
 "formatted. Back up important data first; these partitioning operations "
 "cannot be undone."
@@ -1915,8 +1915,17 @@ msgstr ""
 
 #: src/pages.py:4072
 msgid ""
-"Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
+"Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be "
 "shrunk after safety checks."
+msgstr ""
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr ""
+
+msgid "I have backed up my data."
+msgstr ""
+
+msgid "Btrfs shrinking is not supported."
 msgstr ""
 
 #: src/pages.py:5119

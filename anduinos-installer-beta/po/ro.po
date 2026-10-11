@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Păstrează Windows sau alte partiții, reutilizează ori creează un ESP și proiectează partiții Root și Swap cu dimensiuni exacte."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Modificările manuale sunt distructive. Pozițiile de început ale partițiilor existente nu sunt mutate niciodată. Volumele NTFS necriptate pot fi micșorate numai după verificări stricte de siguranță; volumele criptate, montate sau ale căror sisteme de fișiere nu se află într-o stare curată nu sunt niciodată redimensionate."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Modificările manuale sunt distructive. Pozițiile de început ale partițiilor existente nu sunt mutate niciodată. Volumele NTFS/ext4 necriptate pot fi micșorate numai după verificări stricte de siguranță; volumele criptate, montate sau ale căror sisteme de fișiere nu se află într-o stare curată nu sunt niciodată redimensionate."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "Selecția manuală a stocării lipsește. Întoarceți-vă și examinați-o."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ Redimensionările NTFS enumerate vor deplasa datele sistemului de fișiere și limitele partițiilor. Partițiile enumerate vor fi șterse, iar fiecare partiție nouă enumerată va fi formatată. Faceți mai întâi o copie de rezervă a datelor importante; aceste operațiuni de partiționare nu pot fi inversate."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Redimensionările NTFS/ext4 enumerate vor deplasa datele sistemului de fișiere și limitele partițiilor. Partițiile enumerate vor fi șterse, iar fiecare partiție nouă enumerată va fi formatată. Faceți mai întâi o copie de rezervă a datelor importante; aceste operațiuni de partiționare nu pot fi inversate."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Doar partițiile explicit enumerate vor fi șterse sau formate. Partițiile neimplicate rămân neschimbate; EFI/BOOT nu este suprascris."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Editați un singur disc GPT. Pozițiile de început ale partițiilor nu sunt mutate niciodată; volumele NTFS necriptate pot fi micșorate după verificările de siguranță."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Editați un singur disc GPT. Pozițiile de început ale partițiilor nu sunt mutate niciodată; volumele NTFS/ext4 necriptate pot fi micșorate după verificările de siguranță."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "Micșorarea ext4 poate cauza pierderea permanentă a datelor. Salvați fișierele importante. Dimensiunea minimă este o estimare; sistemul de fișiere este verificat înainte și după redimensionare."
+
+msgid "I have backed up my data."
+msgstr "Am făcut o copie de siguranță a datelor mele."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Micșorarea Btrfs nu este acceptată."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"

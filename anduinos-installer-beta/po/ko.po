@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Windows 또는 다른 파티션을 유지하고 ESP를 재사용하거나 만든 다음 Root 및 Swap 파티션의 정확한 크기를 설계합니다."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "수동 변경은 데이터를 손상시킬 수 있습니다. 기존 파티션의 시작 위치는 절대 이동하지 않습니다. 암호화되지 않은 NTFS는 엄격한 안전 검사를 통과한 경우에만 축소할 수 있으며, 암호화되었거나 마운트되어 있거나 정상적으로 종료되지 않은 볼륨의 크기는 절대 조정하지 않습니다."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "수동 변경은 데이터를 손상시킬 수 있습니다. 기존 파티션의 시작 위치는 절대 이동하지 않습니다. 암호화되지 않은 NTFS/ext4는 엄격한 안전 검사를 통과한 경우에만 축소할 수 있으며, 암호화되었거나 마운트되어 있거나 정상적으로 종료되지 않은 볼륨의 크기는 절대 조정하지 않습니다."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "수동 저장소 선택이 누락되었습니다. 돌아가서 검토하십시오."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ 나열된 NTFS 크기 조정은 파일 시스템 데이터와 파티션 경계를 이동합니다. 나열된 파티션은 삭제되며, 나열된 모든 새 파티션은 포맷됩니다. 중요한 데이터를 먼저 백업하십시오. 이러한 파티션 작업은 되돌릴 수 없습니다."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ 나열된 NTFS/ext4 크기 조정은 파일 시스템 데이터와 파티션 경계를 이동합니다. 나열된 파티션은 삭제되며, 나열된 모든 새 파티션은 포맷됩니다. 중요한 데이터를 먼저 백업하십시오. 이러한 파티션 작업은 되돌릴 수 없습니다."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "명시적으로 나열된 파티션만 삭제 또는 포맷됩니다. 관련 없는 파티션은 변경되지 않으며, EFI/BOOT는 덮어쓰지 않습니다."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "GPT 디스크 하나를 편집합니다. 파티션의 시작 위치는 절대 이동하지 않으며, 암호화되지 않은 NTFS는 안전성 검사를 통과한 후에만 축소할 수 있습니다."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "GPT 디스크 하나를 편집합니다. 파티션의 시작 위치는 절대 이동하지 않으며, 암호화되지 않은 NTFS/ext4는 안전성 검사를 통과한 후에만 축소할 수 있습니다."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "ext4를 축소하면 데이터가 영구적으로 손실될 수 있습니다. 중요한 파일을 백업하세요. 최소 크기는 추정값이며 크기 변경 전후에 파일 시스템을 검사합니다."
+
+msgid "I have backed up my data."
+msgstr "데이터를 백업했습니다."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Btrfs 축소는 지원하지 않습니다."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"

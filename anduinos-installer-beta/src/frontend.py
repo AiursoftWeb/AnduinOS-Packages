@@ -114,32 +114,36 @@ def probe_esp_replacement(partition, *, development_mode=False):
         raise FrontendPlanError(f"Cannot inspect the selected ESP: {error}") from error
 
 
-def probe_ntfs_resize(
+def probe_partition_resize(
     partition: str,
     *,
     development_mode: bool = False,
     current_size_bytes: int = 0,
+    filesystem: str = "ntfs",
 ) -> NtfsResizeInspection:
-    """Ask the fixed Polkit helper for a read-only NTFS shrink assessment."""
+    """Ask the fixed Polkit helper for a read-only NTFS/ext4 assessment."""
+
+    if filesystem not in {"ntfs", "ext4"}:
+        raise FrontendPlanError("Only plain NTFS and ext4 shrinking is supported")
 
     if development_mode:
         if current_size_bytes <= 24 * GIB:
             raise FrontendPlanError(
-                "The simulated NTFS volume is too small to shrink"
+                "The simulated volume is too small to shrink"
             )
         return NtfsResizeInspection(
             device=partition,
-            filesystem="ntfs",
+            filesystem=filesystem,
             current_size_bytes=current_size_bytes,
             minimum_size_bytes=24 * GIB,
             maximum_size_bytes=(current_size_bytes - MIB) // MIB * MIB,
             block_reason=NtfsResizeBlockReason.NONE,
-            message="Simulated NTFS volume passed every read-only check.",
+            message="Simulated volume passed every read-only check.",
             probe_exit_code=0,
         )
     command = [
         _STORAGE_PROBE_HELPER,
-        "--ntfs-inspect",
+        "--ext4-inspect" if filesystem == "ext4" else "--ntfs-inspect",
         partition,
     ]
     if os.geteuid() != 0:
@@ -149,24 +153,28 @@ def probe_ntfs_resize(
             command,
             capture_output=True,
             text=True,
-            timeout=600,
+            timeout=5500 if filesystem == "ext4" else 600,
             check=False,
         )
     except (FileNotFoundError, subprocess.TimeoutExpired) as error:
         raise FrontendPlanError(
-            f"Cannot inspect the NTFS volume: {error}"
+            f"Cannot inspect the {filesystem} volume: {error}"
         ) from error
     if result.returncode != 0:
         raise FrontendPlanError(
-            result.stderr.strip() or "NTFS inspection failed"
+            result.stderr.strip() or f"{filesystem} inspection failed"
         )
     try:
         inspection = NtfsResizeInspection.from_json(result.stdout)
     except ValueError as error:
         raise FrontendPlanError(str(error)) from error
-    if inspection.device != partition:
-        raise FrontendPlanError("NTFS inspection returned another device")
+    if inspection.device != partition or inspection.filesystem != filesystem:
+        raise FrontendPlanError("Resize inspection returned another device or filesystem")
     return inspection
+
+
+# Keep the existing NTFS entry point for callers; the page uses the neutral name.
+probe_ntfs_resize = probe_partition_resize
 
 
 class StorageStrategy(str, Enum):

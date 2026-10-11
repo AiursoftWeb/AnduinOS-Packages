@@ -454,7 +454,16 @@ rounded visual boundary and obscure whether the card itself is active.
   dry run immediately before writing, never passes a force option, shrinks the
   filesystem before its GPT tail, then re-probes and verifies the unchanged
   PARTUUID, number and start plus the exact declared size before creating any
-  new partition. ext4, Btrfs and every other filesystem remain non-resizable.
+  new partition. The same declarative pipeline now supports ordinary offline
+  ext4 with 4 KiB blocks and an internal journal. Its read-only probe uses
+  `dumpe2fs -h`, `e2fsck -f -n`, and `resize2fs -P`; the minimum is an estimate
+  with conservative headroom, not a dry-run guarantee. Before writes, fresh
+  inventory and the superblock must match the preserved identity. Within the
+  confirmed destructive boundary, `e2fsck -f -p` must return 0 or 1, followed
+  by `resize2fs` without force, a read-only fsck, and actual UUID/size checks.
+  A failed filesystem operation never authorizes shrinking the GPT boundary.
+  Btrfs and every other filesystem remain non-resizable; encryption, LVM,
+  RAID, mounted filesystems and unsupported ext4 features are refused.
   The same bounded manual editor offers Btrfs, ext4, XFS and F2FS for a newly
   formatted root. Btrfs alone creates the canonical AnduinOS subvolumes and
   enables Disk Snapshots Manager; ext4, XFS and F2FS use one conventional root
@@ -470,6 +479,11 @@ rounded visual boundary and obscure whether the card itself is active.
   release matrices exist.
   Unit and GTK development-mode interaction gates pass; real Windows and
   interrupted-resize VM qualification remains mandatory before release.
+  The rootless ext4/GPT sparse-image regression checks file hashes, symlinks,
+  UUIDs, unchanged starts and neighbouring partitions, then creates a new
+  partition in the released tail. The ISO matrix additionally declares a
+  96 GiB ext4 A → shrink to 40 GiB → install/boot B → chainload/boot A case;
+  it must pass on a rebuilt ISO before claiming end-to-end qualification.
 - Final release gate: complete the VM matrix before promoting and renaming the
   native installer package.
 

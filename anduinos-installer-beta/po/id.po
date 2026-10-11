@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Pertahankan Windows atau partisi lain, gunakan kembali atau buat ESP, dan rancang partisi Root serta Swap dengan ukuran yang tepat."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Perubahan manual bersifat merusak. Posisi awal partisi yang ada tidak pernah dipindahkan. NTFS tanpa enkripsi hanya dapat diperkecil setelah pemeriksaan keamanan yang ketat; volume terenkripsi, terpasang, atau yang sistem berkasnya tidak ditutup dengan benar tidak pernah diubah ukurannya."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Perubahan manual bersifat merusak. Posisi awal partisi yang ada tidak pernah dipindahkan. NTFS/ext4 tanpa enkripsi hanya dapat diperkecil setelah pemeriksaan keamanan yang ketat; volume terenkripsi, terpasang, atau yang sistem berkasnya tidak ditutup dengan benar tidak pernah diubah ukurannya."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "Pemilihan penyimpanan manual tidak ada. Kembali dan tinjau."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ Perubahan ukuran NTFS yang terdaftar akan memindahkan data sistem berkas dan batas partisi. Partisi yang terdaftar akan dihapus dan setiap partisi baru yang terdaftar akan diformat. Cadangkan data penting terlebih dahulu; operasi partisi ini tidak dapat diurungkan."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Perubahan ukuran NTFS/ext4 yang terdaftar akan memindahkan data sistem berkas dan batas partisi. Partisi yang terdaftar akan dihapus dan setiap partisi baru yang terdaftar akan diformat. Cadangkan data penting terlebih dahulu; operasi partisi ini tidak dapat diurungkan."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Hanya partisi yang secara eksplisit terdaftar yang akan dihapus atau diformat. Partisi yang tidak terlibat tetap tidak berubah; EFI/BOOT tidak ditimpa."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Sunting satu disk GPT. Titik awal partisi tidak pernah dipindahkan; partisi NTFS biasa dapat diperkecil setelah pemeriksaan keamanan."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Sunting satu disk GPT. Titik awal partisi tidak pernah dipindahkan; partisi NTFS/ext4 biasa dapat diperkecil setelah pemeriksaan keamanan."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "Memperkecil ext4 dapat menyebabkan kehilangan data permanen. Cadangkan berkas penting. Ukuran minimum adalah perkiraan; sistem berkas diperiksa sebelum dan setelah perubahan ukuran."
+
+msgid "I have backed up my data."
+msgstr "Saya telah mencadangkan data saya."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Memperkecil Btrfs tidak didukung."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"

@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "เก็บ Windows หรือพาร์ทิชันอื่นไว้ ใช้ ESP เดิมหรือสร้างใหม่ และกำหนดขนาดพาร์ทิชัน Root และ Swap อย่างแม่นยำ"
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "การเปลี่ยนแปลงด้วยตนเองอาจทำให้ข้อมูลเสียหาย จุดเริ่มต้นของพาร์ทิชันที่มีอยู่เดิมจะไม่ถูกเคลื่อนย้าย NTFS ที่ไม่ได้เข้ารหัสจะย่อขนาดได้ต่อเมื่อผ่านการตรวจสอบความปลอดภัยอย่างเข้มงวดเท่านั้น ส่วนโวลุ่มที่เข้ารหัส เมานต์อยู่ หรือไม่ได้ปิดอย่างถูกต้องจะไม่ถูกปรับขนาดโดยเด็ดขาด"
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "การเปลี่ยนแปลงด้วยตนเองอาจทำให้ข้อมูลเสียหาย จุดเริ่มต้นของพาร์ทิชันที่มีอยู่เดิมจะไม่ถูกเคลื่อนย้าย NTFS/ext4 ที่ไม่ได้เข้ารหัสจะย่อขนาดได้ต่อเมื่อผ่านการตรวจสอบความปลอดภัยอย่างเข้มงวดเท่านั้น ส่วนโวลุ่มที่เข้ารหัส เมานต์อยู่ หรือไม่ได้ปิดอย่างถูกต้องจะไม่ถูกปรับขนาดโดยเด็ดขาด"
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "ขาดการเลือกพื้นที่จัดเก็บข้อมูลด้วยตนเอง กรุณากลับไปตรวจสอบ"
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ การปรับขนาด NTFS ที่ระบุไว้จะย้ายข้อมูลระบบไฟล์และขอบเขตพาร์ทิชัน พาร์ทิชันที่ระบุไว้จะถูกลบ และพาร์ทิชันใหม่ทั้งหมดที่ระบุไว้จะถูกจัดรูปแบบ โปรดสำรองข้อมูลสำคัญก่อน เนื่องจากการดำเนินการแบ่งพาร์ทิชันเหล่านี้ไม่สามารถเลิกทำได้"
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ การปรับขนาด NTFS/ext4 ที่ระบุไว้จะย้ายข้อมูลระบบไฟล์และขอบเขตพาร์ทิชัน พาร์ทิชันที่ระบุไว้จะถูกลบ และพาร์ทิชันใหม่ทั้งหมดที่ระบุไว้จะถูกจัดรูปแบบ โปรดสำรองข้อมูลสำคัญก่อน เนื่องจากการดำเนินการแบ่งพาร์ทิชันเหล่านี้ไม่สามารถเลิกทำได้"
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "เฉพาะพาร์ติชันที่ระบุไว้เท่านั้นที่จะถูกลบหรือจัดรูปแบบ พาร์ติชันที่ไม่เกี่ยวข้องจะยังคงเดิม ไม่เขียนทับ EFI/BOOT"
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "แก้ไขดิสก์ GPT หนึ่งตัว จุดเริ่มต้นของพาร์ทิชันจะไม่ถูกเคลื่อนย้าย และสามารถย่อขนาด NTFS ที่ไม่ได้เข้ารหัสได้หลังผ่านการตรวจสอบความปลอดภัยเท่านั้น"
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "แก้ไขดิสก์ GPT หนึ่งตัว จุดเริ่มต้นของพาร์ทิชันจะไม่ถูกเคลื่อนย้าย และสามารถย่อขนาด NTFS/ext4 ที่ไม่ได้เข้ารหัสได้หลังผ่านการตรวจสอบความปลอดภัยเท่านั้น"
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "การย่อ ext4 อาจทำให้ข้อมูลสูญหายถาวร โปรดสำรองไฟล์สำคัญ ขนาดต่ำสุดเป็นค่าประมาณ และจะตรวจสอบระบบไฟล์ก่อนและหลังปรับขนาด"
+
+msgid "I have backed up my data."
+msgstr "ฉันสำรองข้อมูลแล้ว"
+
+msgid "Btrfs shrinking is not supported."
+msgstr "ยังไม่รองรับการย่อ Btrfs"
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"

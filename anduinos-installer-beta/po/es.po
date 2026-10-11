@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Conserve Windows u otras particiones, reutilice o cree una ESP y diseñe particiones Root y Swap con tamaños exactos."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Los cambios manuales son destructivos. Nunca se desplaza el inicio de las particiones existentes. Un volumen NTFS sin cifrar solo puede reducirse tras comprobaciones de seguridad estrictas; nunca se redimensionan volúmenes cifrados, montados o que no estén en un estado limpio."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Los cambios manuales son destructivos. Nunca se desplaza el inicio de las particiones existentes. Un volumen NTFS/ext4 sin cifrar solo puede reducirse tras comprobaciones de seguridad estrictas; nunca se redimensionan volúmenes cifrados, montados o que no estén en un estado limpio."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "Falta la selección manual de almacenamiento. Vuelve y revísala."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ Los redimensionados de NTFS listados moverán datos del sistema de archivos y los límites de las particiones. Se eliminarán las particiones listadas y se formatearán todas las nuevas particiones listadas. Realice una copia de seguridad de los datos importantes primero; estas operaciones de particionado no se pueden deshacer."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Los redimensionados de NTFS/ext4 listados moverán datos del sistema de archivos y los límites de las particiones. Se eliminarán las particiones listadas y se formatearán todas las nuevas particiones listadas. Realice una copia de seguridad de los datos importantes primero; estas operaciones de particionado no se pueden deshacer."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Solo se eliminarán o formatearán las particiones listadas explícitamente. Las particiones no involucradas permanecen sin cambios; EFI/BOOT no se sobrescribe."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Editar un disco GPT. El inicio de las particiones nunca se desplaza; un NTFS sin cifrar puede reducirse tras comprobaciones de seguridad."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Editar un disco GPT. El inicio de las particiones nunca se desplaza; un NTFS/ext4 sin cifrar puede reducirse tras comprobaciones de seguridad."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "Reducir ext4 puede causar una pérdida permanente de datos. Haga una copia de los archivos importantes. El tamaño mínimo es una estimación; el sistema de archivos se comprueba antes y después del cambio."
+
+msgid "I have backed up my data."
+msgstr "He realizado una copia de seguridad de mis datos."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "No se admite reducir Btrfs."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"

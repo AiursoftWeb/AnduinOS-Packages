@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Збережіть Windows або інші розділи, повторно використайте чи створіть ESP і задайте точні розміри розділів Root і Swap."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Ручні зміни є руйнівними. Початкові сектори наявних розділів ніколи не переміщуються. Звичайний том NTFS можна зменшити лише після суворих перевірок безпеки; зашифровані, змонтовані або некоректно відключені томи ніколи не змінюються в розмірі."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Ручні зміни є руйнівними. Початкові сектори наявних розділів ніколи не переміщуються. Звичайний том NTFS/ext4 можна зменшити лише після суворих перевірок безпеки; зашифровані, змонтовані або некоректно відключені томи ніколи не змінюються в розмірі."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "Не вистачає ручного вибору сховища. Поверніться та перегляньте його."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ Зміни розміру перелічених розділів NTFS перемістять дані файлової системи та межі розділів. Перелічені розділи буде видалено, а кожен перелічений новий розділ буде відформатовано. Спершу створіть резервну копію важливих даних; ці операції з розділенням дисків не можна скасувати."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Зміни розміру перелічених розділів NTFS/ext4 перемістять дані файлової системи та межі розділів. Перелічені розділи буде видалено, а кожен перелічений новий розділ буде відформатовано. Спершу створіть резервну копію важливих даних; ці операції з розділенням дисків не можна скасувати."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Будуть видалені або відформатовані лише явно перелічені розділи. Непов’язані розділи залишаться незмінними; EFI/BOOT не буде перезаписано."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Редагування одного диска GPT. Початкові сектори розділів ніколи не переміщуються; звичайний том NTFS можна зменшити лише після перевірок безпеки."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Редагування одного диска GPT. Початкові сектори розділів ніколи не переміщуються; звичайний том NTFS/ext4 можна зменшити лише після перевірок безпеки."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "Зменшення ext4 може призвести до безповоротної втрати даних. Збережіть важливі файли. Мінімальний розмір є оцінкою; файлова система перевіряється до та після зміни розміру."
+
+msgid "I have backed up my data."
+msgstr "Я створив резервну копію своїх даних."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Зменшення Btrfs не підтримується."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"

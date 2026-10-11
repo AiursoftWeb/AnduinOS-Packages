@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Behold Windows eller andre partitioner, genbrug eller opret en ESP, og planlæg Root- og Swap-partitioner med præcise størrelser."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Manuelle ændringer er destruktive. Eksisterende partitioners startpositioner flyttes aldrig. Almindelige NTFS-diskenheder kan kun formindskes efter strenge sikkerhedskontroller; krypterede, monterede eller ikke korrekt afmonterede diskenheder ændres aldrig i størrelse."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Manuelle ændringer er destruktive. Eksisterende partitioners startpositioner flyttes aldrig. Almindelige NTFS/ext4-diskenheder kan kun formindskes efter strenge sikkerhedskontroller; krypterede, monterede eller ikke korrekt afmonterede diskenheder ændres aldrig i størrelse."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "Valg af manuel lagerplacering mangler. Gå tilbage og gennemgå det"
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ De angivne NTFS-størrelsesændringer vil flytte filsystemdata og partitionsgrænser. De angivne partitioner vil blive slettet, og alle angivne nye partitioner vil blive formateret. Sikkerhedskopiér vigtige data først; disse partitioneringsoperationer kan ikke fortrydes."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ De angivne NTFS/ext4-størrelsesændringer vil flytte filsystemdata og partitionsgrænser. De angivne partitioner vil blive slettet, og alle angivne nye partitioner vil blive formateret. Sikkerhedskopiér vigtige data først; disse partitioneringsoperationer kan ikke fortrydes."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Kun de eksplicit listede partitioner slettes eller formateres. Ikke-involverede partitioner forbliver uændrede; EFI/BOOT overskrives ikke"
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Rediger én GPT-disk. Partitionernes startpositioner flyttes aldrig; almindelige NTFS-partitioner kan formindskes efter sikkerhedstjek."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Rediger én GPT-disk. Partitionernes startpositioner flyttes aldrig; almindelige NTFS/ext4-partitioner kan formindskes efter sikkerhedstjek."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "Formindskelse af ext4 kan medføre permanent datatab. Sikkerhedskopiér vigtige filer. Minimumsstørrelsen er et skøn; filsystemet kontrolleres før og efter størrelsesændringen."
+
+msgid "I have backed up my data."
+msgstr "Jeg har sikkerhedskopieret mine data."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Formindskelse af Btrfs understøttes ikke."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"

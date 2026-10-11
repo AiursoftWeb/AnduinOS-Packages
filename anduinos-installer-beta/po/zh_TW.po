@@ -1377,8 +1377,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "保留 Windows 或其他分割區，重複使用或建立 ESP，並精確規劃 Root 與 Swap 分割區的大小。"
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "手動變更具破壞性。現有分割區的起始位置絕不移動。未加密的 NTFS 磁碟區僅可在通過嚴格的安全性檢查後縮小；已加密、已掛載或未正確關閉的磁碟區絕不進行大小調整。"
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "手動變更具破壞性。現有分割區的起始位置絕不移動。未加密的 NTFS/ext4 磁碟區僅可在通過嚴格的安全性檢查後縮小；已加密、已掛載或未正確關閉的磁碟區絕不進行大小調整。"
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1743,8 +1743,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "缺少手動儲存空間選擇。請返回並檢查。"
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ 列出的 NTFS 大小調整將移動檔案系統資料與分割區邊界。列出的分割區將被刪除，且每個列出的新分割區都將被格式化。請先備份重要資料；這些分割區操作無法復原。"
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ 列出的 NTFS/ext4 大小調整將移動檔案系統資料與分割區邊界。列出的分割區將被刪除，且每個列出的新分割區都將被格式化。請先備份重要資料；這些分割區操作無法復原。"
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1768,8 +1768,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "僅會刪除或格式化明確列出的分割區。未涉及的分割區將保持不變；EFI/BOOT 不會被覆寫。"
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "編輯單一 GPT 磁碟。分割區的起始位置絕不移動；未加密的 NTFS 分割區可在通過安全性檢查後縮小。"
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "編輯單一 GPT 磁碟。分割區的起始位置絕不移動；未加密的 NTFS/ext4 分割區可在通過安全性檢查後縮小。"
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "縮小 ext4 可能導致永久資料遺失。請備份重要檔案。最小容量為估算值；縮容前後都會檢查檔案系統。"
+
+msgid "I have backed up my data."
+msgstr "我已備份資料。"
+
+msgid "Btrfs shrinking is not supported."
+msgstr "暫不支援 Btrfs 縮容。"
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"

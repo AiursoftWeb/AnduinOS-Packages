@@ -7,7 +7,7 @@ beta now exposes deterministic whole-disk erase, guided coexistence in
 already-unallocated space, and a bounded manual GPT editor without a feature
 flag. Automatic and guided modes offer Btrfs or ext4; the manual editor also
 offers XFS and F2FS as conventional single-root filesystems. It can explicitly
-shrink a plain, healthy NTFS partition after strict read-only checks; guided
+shrink a plain, healthy NTFS or ordinary offline ext4 partition after strict read-only checks; guided
 mode never does so automatically. Encryption and RAID are not currently
 implemented, and the storage paths remain subject to the destructive ISO/VM
 qualification below.
@@ -21,10 +21,12 @@ The long-term product has three user-facing storage modes:
    mount points, ESPs and already-prepared arrays.
 
 The installer will not become a general-purpose filesystem repair or
-partition-move tool. Its one shrink path is deliberately narrow: an explicit
-manual operation on plain NTFS that keeps the partition start fixed and fails
+partition-move tool. Its shrink paths are deliberately narrow: explicit
+manual operations on plain NTFS or ordinary offline ext4 that keep the partition start fixed and fail
 closed on BitLocker, mounts, hibernation/Fast Startup, an unclean volume,
-failed consistency checks or an unsafe target dry run. Other resize and repair
+failed consistency checks or an unsafe target assessment. NTFS has a target
+dry run; ext4 has only a conservative minimum estimate and actual post-shrink
+geometry verification. Other resize and repair
 operations remain the responsibility of specialist tools and the operating
 system that owns the data.
 
@@ -46,7 +48,7 @@ and guided layouts retain their stricter swap and root-space policy.
 | Storage 2C | complete | free-space compiler, preserved-ESP checks and shared boot policy |
 | Storage 2D | complete | GTK free-extent/ESP selection and typed write-set confirmation |
 | Storage 2E | in progress | beta execution enabled by default; runtime preservation proofs and isolated VM qualification remain |
-| Storage 3 | in progress | bounded manual GPT editing and guarded plain-NTFS shrink implemented; destructive VM qualification remains |
+| Storage 3 | in progress | bounded manual GPT editing and guarded NTFS/offline-ext4 shrink implemented; destructive VM qualification remains |
 | Storage 4 | pending | existing LVM containers and arrays |
 | Storage 5 | pending | curated array creation |
 | Storage 6 | pending | LUKS2 and recovery-led encryption |
@@ -432,7 +434,39 @@ release, test two installed AnduinOS systems (ext4 and Btrfs), AnduinOS beside
 Ubuntu, Secure Boot on/off, kernel/shim/GRUB upgrades in each system, repair
 after chainloading, removal of the other installation, preservation hashes,
 and the existing #422/portable boot regressions in disposable UEFI VMs. No
-ext4/Btrfs shrinking is introduced by this change.
+shrinking is introduced by the ESP coexistence change itself. The later
+offline-ext4 shrink path has its own destructive qualification below; Btrfs
+shrinking remains unsupported.
+
+### Offline ext4 shrinking
+
+Advanced/manual mode uses the existing resize declaration and shared typed
+assessment, not an imperative command stored in the UI. Only plain, unmounted
+4 KiB ext4 with a supported feature set and internal journal is accepted.
+LUKS, LVM, RAID, unusual ext4 features and Btrfs are not shrink targets.
+The UI requires a backup acknowledgement; saving a size only changes the
+plan, and the operation can be removed before installation starts.
+
+The privileged probe is read-only: superblock geometry, forced no-write fsck,
+then `resize2fs -P`. The minimum reserves at least 2 GiB and 25% headroom over
+the larger of allocated blocks and the tool's estimate, with a 4 GiB floor.
+That is deliberately conservative, not a guarantee that every target succeeds.
+After final confirmation, the executor repeats identity/activity/range checks,
+runs `e2fsck -f -p` (only exit 0/1 accepted), shrinks without force, syncs,
+checks read-only again and verifies UUID and actual filesystem size. Only then
+may it shorten the GPT tail and verify the exact planned boundary before
+creating any new partition. The partition start never moves; failure is not
+advertised as rollback or proof that the filesystem was untouched.
+
+Unit and GTK tests cover refusal and command ordering. A real rootless
+sparse-image test preserves file hashes, links, UUID/PARTUUID, the start and a
+neighbouring partition while freeing space for a new partition. The AMD64 ISO
+case `uefi-nosb-coexistence-ext4-shrink` installs a 96 GiB ext4 A, shrinks it to
+40 GiB through the real UI, installs a separate 50 GiB ext4 B, verifies A's
+file manifest and untouched ESP/swap, boots B, then boots A through B's GRUB.
+The case requires installer >= 2.0.4-15 and a rebuilt ISO. It is a release gate,
+not evidence that a VM run has already passed. Interruption/power-loss testing
+remains part of destructive resize qualification.
 
 Windows discovery and an optional GRUB chainloader entry are usability
 features. Firmware boot entries remain independently usable; detection must

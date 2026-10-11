@@ -1603,11 +1603,11 @@ msgstr ""
 #: src/pages.py:3230
 msgid ""
 "Manual changes are destructive. Existing partition starts are never moved. "
-"Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted"
+"Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted"
 " or unclean volumes are never resized."
 msgstr ""
 "Le modifiche manuali sono distruttive. La posizione iniziale delle "
-"partizioni esistenti non viene mai spostata. I volumi NTFS non crittografati"
+"partizioni esistenti non viene mai spostata. I volumi NTFS/ext4 non crittografati"
 " possono essere ridotti solo dopo rigorosi controlli di sicurezza; i volumi "
 "crittografati, montati o con un file system che non risulta chiuso "
 "correttamente non vengono mai ridimensionati."
@@ -2062,12 +2062,12 @@ msgstr "Manca la selezione manuale dello storage. Torna indietro e rivedila."
 
 #: src/pages.py:6496
 msgid ""
-"⚠ Listed NTFS resizes will move filesystem data and partition boundaries. "
+"⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. "
 "Listed partitions will be deleted and every listed new partition will be "
 "formatted. Back up important data first; these partitioning operations "
 "cannot be undone."
 msgstr ""
-"⚠ I ridimensionamenti NTFS elencati sposteranno i dati del file system e i "
+"⚠ I ridimensionamenti NTFS/ext4 elencati sposteranno i dati del file system e i "
 "confini delle partizioni. Le partizioni elencate verranno eliminate e tutte "
 "le nuove partizioni elencate verranno formattate. Esegui prima il backup dei"
 " dati importanti; queste operazioni di partizionamento non possono essere "
@@ -2101,12 +2101,21 @@ msgstr ""
 
 #: src/pages.py:4072
 msgid ""
-"Edit one GPT disk. Partition starts are never moved; plain NTFS may be "
+"Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be "
 "shrunk after safety checks."
 msgstr ""
 "Modifica un solo disco GPT. Le posizioni iniziali delle partizioni non "
-"vengono mai spostate; i volumi NTFS non crittografati possono essere ridotti"
+"vengono mai spostate; i volumi NTFS/ext4 non crittografati possono essere ridotti"
 " dopo i controlli di sicurezza."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "Ridurre ext4 può causare una perdita permanente di dati. Eseguire il backup dei file importanti. La dimensione minima è una stima; il file system viene controllato prima e dopo il ridimensionamento."
+
+msgid "I have backed up my data."
+msgstr "Ho eseguito il backup dei miei dati."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "La riduzione di Btrfs non è supportata."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"

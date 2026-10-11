@@ -129,10 +129,10 @@ class ManualStorageExecutionPlanTests(unittest.TestCase):
             inventory,
             esp_inspection=healthy_esp(inventory),
             nvram_inspection=NvramInspection(available=True),
-            ntfs_resize_inspections=(resize_inspection,),
+            resize_inspections=(resize_inspection,),
         )
-        self.assertEqual(len(execution.commands.ntfs_resizes), 1)
-        resize = execution.commands.ntfs_resizes[0]
+        self.assertEqual(len(execution.commands.partition_resizes), 1)
+        resize = execution.commands.partition_resizes[0]
         self.assertEqual(resize.device, "/dev/nvme0n1p2")
         self.assertEqual(resize.target_size_bytes, 40 * 1024**3)
         self.assertEqual(

@@ -12,7 +12,7 @@ from .storage_inventory import DiskInventory, PartitionInventory
 MIB = 1024 * 1024
 MINIMUM_NEW_ESP_MIB = 512
 HARD_MINIMUM_ROOT_MIB = 6 * 1024
-MINIMUM_NTFS_MIB = 4 * 1024
+MINIMUM_SHRINK_MIB = 4 * 1024
 MICROSOFT_LDM_METADATA_GUID = "5808c8aa-7e8f-42e0-85d2-e1e90434cfb3"
 MICROSOFT_LDM_DATA_GUID = "af9b60a0-1431-4f62-bc68-3311714a69ad"
 UNSUPPORTED_MANUAL_FILESYSTEMS = {
@@ -43,7 +43,7 @@ class ManualPartitionRequest:
 
 @dataclass(frozen=True)
 class ManualPartitionResizeRequest:
-    """Shrink one existing plain NTFS partition without moving its start."""
+    """Shrink one existing plain NTFS/ext4 partition without moving its start."""
 
     partuuid: str
     original_size_bytes: int
@@ -157,19 +157,19 @@ def validate_manual_selection(
         partition = existing.get(request.partuuid)
         if partition is None:
             raise ManualLayoutError("A resized partition identity changed")
-        if partition.filesystem_type.casefold() != "ntfs":
-            raise ManualLayoutError("Only plain NTFS partitions can be resized")
+        if partition.filesystem_type.casefold() not in {"ntfs", "ext4"}:
+            raise ManualLayoutError("Only plain NTFS and ext4 partitions can be resized")
         if partition.mountpoints:
-            raise ManualLayoutError("A resized NTFS partition is mounted")
+            raise ManualLayoutError("A resized partition is mounted")
         if request.original_size_bytes != partition.identity.size_bytes:
             raise ManualLayoutError("A resized partition size changed")
         current_size_mib = partition.identity.size_bytes // MIB
         if (
             type(request.target_size_mib) is not int
-            or request.target_size_mib < MINIMUM_NTFS_MIB
+            or request.target_size_mib < MINIMUM_SHRINK_MIB
             or request.target_size_mib >= current_size_mib
         ):
-            raise ManualLayoutError("The requested NTFS size is invalid")
+            raise ManualLayoutError("The requested partition size is invalid")
 
     reused_esp = selection.reused_esp_partuuid
     if selection.reinitialize_gpt and reused_esp:

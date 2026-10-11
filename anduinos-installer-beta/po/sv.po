@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Behåll Windows eller andra partitioner, återanvänd eller skapa en ESP och utforma Root- och Swap-partitioner med exakta storlekar."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Manuella ändringar är destruktiva. De befintliga partitionernas startpositioner flyttas aldrig. En okrypterad NTFS-volym kan endast krympas efter strikta säkerhetskontroller; krypterade, monterade eller inte korrekt avmonterade volymer ändras aldrig i storlek."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Manuella ändringar är destruktiva. De befintliga partitionernas startpositioner flyttas aldrig. En okrypterad NTFS/ext4-volym kan endast krympas efter strikta säkerhetskontroller; krypterade, monterade eller inte korrekt avmonterade volymer ändras aldrig i storlek."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "Manuell lagringsval saknas. Gå tillbaka och granska det."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ De angivna storleksändringarna av NTFS flyttar filsystemdata och partitionsgränser. De angivna partitionerna raderas och alla angivna nya partitioner formateras. Säkerhetskopiera viktiga data först; dessa partitioneringsåtgärder kan inte ångras."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ De angivna storleksändringarna av NTFS/ext4 flyttar filsystemdata och partitionsgränser. De angivna partitionerna raderas och alla angivna nya partitioner formateras. Säkerhetskopiera viktiga data först; dessa partitioneringsåtgärder kan inte ångras."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Endast uttryckligen listade partitioner kommer att tas bort eller formateras. Oinblandade partitioner förblir oförändrade; EFI/BOOT skrivs inte över."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Redigera en GPT-disk. Partitionernas startpositioner flyttas aldrig; okrypterad NTFS kan krympas efter säkerhetskontroller."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Redigera en GPT-disk. Partitionernas startpositioner flyttas aldrig; okrypterad NTFS/ext4 kan krympas efter säkerhetskontroller."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "Att krympa ext4 kan orsaka permanent dataförlust. Säkerhetskopiera viktiga filer. Minsta storleken är en uppskattning; filsystemet kontrolleras före och efter storleksändringen."
+
+msgid "I have backed up my data."
+msgstr "Jag har säkerhetskopierat mina data."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Krympning av Btrfs stöds inte."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"

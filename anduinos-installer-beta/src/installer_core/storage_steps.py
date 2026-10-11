@@ -11,6 +11,8 @@ from .command import CommandRunner
 from .esp import inspect_esp_for_reuse, inspect_nvram
 from .esp_replacement import backup_esp_replacement
 from .execution_boundaries import emit_boundary
+from .ext4_resize import inspect_ext4_resize_with_runner, shrink_ext4_filesystem
+from .storage_graph import GraphFilesystem
 from .model import Architecture, Filesystem, Firmware, InstallMode
 from .ntfs_resize import (
     NTFS_RESIZE,
@@ -101,24 +103,30 @@ class PrepareStorageStep:
                 context.plan,
                 inventory,
             )
-            ntfs_resize_inspections = ()
-            if preliminary_commands.ntfs_resizes:
-                self.runner.require_commands(("ntfsresize", "ntfs-3g.probe"))
-                ntfs_resize_inspections = tuple(
-                    inspect_ntfs_resize_with_runner(
+            resize_inspections = ()
+            if preliminary_commands.partition_resizes:
+                filesystems = {item.filesystem for item in preliminary_commands.partition_resizes}
+                if GraphFilesystem.NTFS in filesystems:
+                    self.runner.require_commands(("ntfsresize", "ntfs-3g.probe"))
+                if GraphFilesystem.EXT4 in filesystems:
+                    self.runner.require_commands(("e2fsck", "resize2fs", "dumpe2fs"))
+                resize_inspections = tuple(
+                    (inspect_ext4_resize_with_runner
+                     if resize.filesystem is GraphFilesystem.EXT4
+                     else inspect_ntfs_resize_with_runner)(
                         resize.device,
                         resize.original_size_bytes,
                         self.runner,
                         target_size_bytes=resize.target_size_bytes,
                     )
-                    for resize in preliminary_commands.ntfs_resizes
+                    for resize in preliminary_commands.partition_resizes
                 )
             execution_plan = build_manual_storage_execution_plan(
                 context.plan,
                 inventory,
                 esp_inspection=esp_inspection,
                 nvram_inspection=self.nvram_inspector(self.runner),
-                ntfs_resize_inspections=ntfs_resize_inspections,
+                resize_inspections=resize_inspections,
                 target=str(self.target),
             )
             preservation = capture_manual_preservation_snapshot(
@@ -226,8 +234,8 @@ class PrepareStorageStep:
         guided = isinstance(execution_plan, GuidedCoexistenceExecutionPlan)
         manual = isinstance(execution_plan, ManualStorageExecutionPlan)
         boundary_prefix = "guided" if guided else "manual"
-        if manual and execution_plan.commands.ntfs_resizes:
-            self._execute_ntfs_resizes(context, execution_plan)
+        if manual and execution_plan.commands.partition_resizes:
+            self._execute_partition_resizes(context, execution_plan)
         for index, command in enumerate(commands.partition):
             boundary = f"{boundary_prefix}-partition-command-{index + 1}"
             if guided or manual:
@@ -270,16 +278,20 @@ class PrepareStorageStep:
                 emit_boundary(context, boundary, "after")
         self.runner.run(("udevadm", "settle", "--timeout=30"), timeout=35)
 
-    def _execute_ntfs_resizes(
+    def _execute_partition_resizes(
         self,
         context: InstallContext,
         execution_plan: ManualStorageExecutionPlan,
     ) -> None:
         for index, resize in enumerate(
-            execution_plan.commands.ntfs_resizes,
+            execution_plan.commands.partition_resizes,
             start=1,
         ):
-            inspection = inspect_ntfs_resize_with_runner(
+            if resize.filesystem is GraphFilesystem.EXT4:
+                expected_uuid = self._verify_ext4_resize_target(context, resize)
+            inspection = (inspect_ext4_resize_with_runner
+                          if resize.filesystem is GraphFilesystem.EXT4
+                          else inspect_ntfs_resize_with_runner)(
                 resize.device,
                 resize.original_size_bytes,
                 self.runner,
@@ -287,29 +299,27 @@ class PrepareStorageStep:
             )
             if not inspection.safe:
                 raise RuntimeError(
-                    "NTFS changed after preflight; shrinking is refused: "
+                    "Filesystem changed after preflight; shrinking is refused: "
                     + inspection.message
                 )
 
-            filesystem_boundary = f"manual-ntfs-filesystem-resize-{index}"
+            filesystem_boundary = f"manual-{resize.filesystem.value}-filesystem-resize-{index}"
             emit_boundary(context, filesystem_boundary, "before")
-            self.runner.run(
-                (
-                    NTFS_RESIZE,
-                    "--size",
-                    str(resize.target_size_bytes),
-                    resize.device,
-                ),
-                input_text="y\n",
-                timeout=7200,
-            )
+            if resize.filesystem is GraphFilesystem.EXT4:
+                shrink_ext4_filesystem(resize.device, resize.target_size_bytes, self.runner,
+                                       expected_uuid=expected_uuid)
+            else:
+                self.runner.run(
+                    (NTFS_RESIZE, "--size", str(resize.target_size_bytes), resize.device),
+                    input_text="y\n", timeout=7200,
+                )
             self.runner.run(("sync",), timeout=300)
             emit_boundary(context, filesystem_boundary, "after")
 
-            partition_boundary = f"manual-ntfs-partition-resize-{index}"
+            partition_boundary = f"manual-{resize.filesystem.value}-partition-resize-{index}"
             emit_boundary(context, partition_boundary, "before")
             # Script mode refuses Parted's shrink confirmation, even after
-            # ntfsresize has succeeded. Read exactly one affirmative answer
+            # filesystem shrinking has succeeded. Read exactly one affirmative answer
             # from our pipe; do not auto-answer arbitrary future prompts.
             environment = dict(os.environ, LC_ALL="C", LANGUAGE="C")
             self.runner.run(
@@ -337,6 +347,30 @@ class PrepareStorageStep:
             )
             emit_boundary(context, partition_boundary, "after")
 
+    def _verify_ext4_resize_target(self, context, resize):
+        """Recheck identity, geometry and activity immediately before ext4 writes."""
+        inventory = self.inventory_probe()
+        disk = inventory.disk(context.plan.storage.disk.stable_id)
+        reference = next(item for item in context.plan.storage.graph.block_references
+                         if item.reference_id == resize.target_reference_id)
+        partition = next((item for item in disk.partitions
+                          if item.identity.partuuid == reference.stable_id), None)
+        snapshot = context.values["manual_preservation_snapshot"]
+        before = next(item for item, _size in snapshot.resized_partitions
+                      if item.partuuid == reference.stable_id)
+        if (disk.read_only or disk.unsupported_descendant_types or disk.geometry_probe_error
+                or inventory.live_media_disks is None
+                or disk.identity.path in inventory.live_media_disks
+                or partition is None or partition.mountpoints
+                or partition.identity.path != resize.device
+                or partition.identity.number != resize.partition_number
+                or partition.identity.start_bytes != reference.start_bytes
+                or partition.identity.size_bytes != resize.original_size_bytes
+                or partition.filesystem_type.casefold() != "ext4"
+                or partition.filesystem_uuid != before.filesystem_uuid):
+            raise RuntimeError("ext4 resize target changed or became active; shrinking refused")
+        return partition.filesystem_uuid
+
     def _verify_resized_partition_geometry(
         self,
         context: InstallContext,
@@ -347,7 +381,7 @@ class PrepareStorageStep:
             disk = inventory.disk(context.plan.storage.disk.stable_id)
         except KeyError as error:
             raise RuntimeError(
-                "The selected disk disappeared after shrinking NTFS"
+                "The selected disk disappeared after shrinking a partition"
             ) from error
         graph = context.plan.storage.graph
         assert graph is not None
@@ -370,10 +404,10 @@ class PrepareStorageStep:
             or partition.identity.number != resize.partition_number
             or partition.identity.start_bytes != expected_start
             or partition.identity.size_bytes != resize.target_size_bytes
-            or partition.filesystem_type.casefold() != "ntfs"
+            or partition.filesystem_type.casefold() != resize.filesystem.value
         ):
             raise RuntimeError(
-                "The NTFS partition boundary did not match the declared "
+                "The partition boundary did not match the declared "
                 "resize; no new partition will be created"
             )
     def verify(self, context: InstallContext) -> None:

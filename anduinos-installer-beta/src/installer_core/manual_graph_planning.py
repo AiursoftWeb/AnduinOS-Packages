@@ -127,7 +127,10 @@ def build_manual_storage_graph(
     partition_resizes = tuple(
         PartitionResizeDeclaration(
             target_reference_id=item.reference_id,
-            filesystem=GraphFilesystem.NTFS,
+            filesystem=GraphFilesystem(next(
+                part.filesystem_type.casefold() for part in disk.partitions
+                if part.identity.partuuid == item.stable_id
+            )),
             original_size_bytes=item.expected_size_bytes,
             target_size_bytes=(
                 resized_requests[item.stable_id].target_size_mib * 1024 * 1024
@@ -476,14 +479,14 @@ def validate_manual_graph_structure(
     for target_id, declaration in resize_declarations.items():
         reference = references_by_id[target_id]
         if (
-            declaration.filesystem is not GraphFilesystem.NTFS
+            declaration.filesystem not in {GraphFilesystem.NTFS, GraphFilesystem.EXT4}
             or declaration.original_size_bytes != reference.expected_size_bytes
             or declaration.target_size_bytes % mib
             or declaration.target_size_bytes < 4 * 1024 * mib
             or declaration.target_size_bytes >= declaration.original_size_bytes
         ):
             raise ManualStorageGraphError(
-                "Manual NTFS resize declaration is invalid"
+                "Manual partition resize declaration is invalid"
             )
 
     roles = tuple(item.name for item in graph.partitions)

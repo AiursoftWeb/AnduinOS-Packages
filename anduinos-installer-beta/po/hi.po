@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Windows या अन्य पार्टिशन बनाए रखें, ESP का पुनः उपयोग करें या नया बनाएँ, और Root व Swap पार्टिशन के सटीक आकार तय करें।"
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "मैनुअल परिवर्तन विनाशकारी होते हैं। मौजूदा विभाजनों के आरंभिक स्थान कभी नहीं बदले जाते। साधारण NTFS को केवल कड़ी सुरक्षा जाँचों के बाद ही छोटा किया जा सकता है; एन्क्रिप्टेड, माउंट किए गए या ठीक से बंद न किए गए वॉल्यूम का आकार कभी नहीं बदला जाता।"
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "मैनुअल परिवर्तन विनाशकारी होते हैं। मौजूदा विभाजनों के आरंभिक स्थान कभी नहीं बदले जाते। साधारण NTFS/ext4 को केवल कड़ी सुरक्षा जाँचों के बाद ही छोटा किया जा सकता है; एन्क्रिप्टेड, माउंट किए गए या ठीक से बंद न किए गए वॉल्यूम का आकार कभी नहीं बदला जाता।"
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "मैनुअल स्टोरेज चयन अनुपस्थित है। वापस जाकर इसकी समीक्षा करें।"
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ सूचीबद्ध NTFS आकार परिवर्तनों से फ़ाइल सिस्टम डेटा और विभाजन सीमाएँ स्थानांतरित होंगी। सूचीबद्ध विभाजन हटा दिए जाएंगे और सभी सूचीबद्ध नए विभाजन प्रारूपित किए जाएंगे। पहले महत्वपूर्ण डेटा का बैकअप लें; ये विभाजन कार्रवाइयाँ पूर्ववत नहीं की जा सकतीं।"
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ सूचीबद्ध NTFS/ext4 आकार परिवर्तनों से फ़ाइल सिस्टम डेटा और विभाजन सीमाएँ स्थानांतरित होंगी। सूचीबद्ध विभाजन हटा दिए जाएंगे और सभी सूचीबद्ध नए विभाजन प्रारूपित किए जाएंगे। पहले महत्वपूर्ण डेटा का बैकअप लें; ये विभाजन कार्रवाइयाँ पूर्ववत नहीं की जा सकतीं।"
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "केवल स्पष्ट रूप से सूचीबद्ध विभाजन हटाए या फॉर्मेट किए जाएंगे। शामिल न किए गए विभाजन अपरिवर्तित रहेंगे; EFI/BOOT ओवरराइट नहीं किया जाएगा।"
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "एक GPT डिस्क संपादित करें। विभाजनों की शुरुआत कभी नहीं बदली जाती है; साधारण NTFS को सुरक्षा जाँचों के बाद छोटा किया जा सकता है।"
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "एक GPT डिस्क संपादित करें। विभाजनों की शुरुआत कभी नहीं बदली जाती है; साधारण NTFS/ext4 को सुरक्षा जाँचों के बाद छोटा किया जा सकता है।"
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "ext4 को छोटा करने से डेटा स्थायी रूप से खो सकता है। महत्वपूर्ण फ़ाइलों का बैकअप लें। न्यूनतम आकार एक अनुमान है; आकार बदलने से पहले और बाद में फ़ाइल सिस्टम की जाँच होती है।"
+
+msgid "I have backed up my data."
+msgstr "मैंने अपने डेटा का बैकअप ले लिया है।"
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Btrfs को छोटा करना समर्थित नहीं है।"
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"

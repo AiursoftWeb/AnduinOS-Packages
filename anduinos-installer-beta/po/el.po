@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Διατηρήστε τα Windows ή άλλα διαμερίσματα, επαναχρησιμοποιήστε ή δημιουργήστε ESP και σχεδιάστε διαμερίσματα Root και Swap με ακριβή μεγέθη."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Οι μη αυτόματες αλλαγές είναι καταστροφικές. Οι αρχικές θέσεις των υπαρχόντων διαμερισμάτων δεν μετακινούνται ποτέ. Ένας απλός τόμος NTFS μπορεί να συρρικνωθεί μόνο μετά από αυστηρούς ελέγχους ασφαλείας· οι κρυπτογραφημένοι, προσαρτημένοι ή μη καθαροί τόμοι δεν αλλάζουν ποτέ μέγεθος."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Οι μη αυτόματες αλλαγές είναι καταστροφικές. Οι αρχικές θέσεις των υπαρχόντων διαμερισμάτων δεν μετακινούνται ποτέ. Ένας απλός τόμος NTFS/ext4 μπορεί να συρρικνωθεί μόνο μετά από αυστηρούς ελέγχους ασφαλείας· οι κρυπτογραφημένοι, προσαρτημένοι ή μη καθαροί τόμοι δεν αλλάζουν ποτέ μέγεθος."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "Λείπει η χειροκίνητη επιλογή αποθήκευσης. Επιστρέψτε και αναθεωρήστε την."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ Οι αναφερόμενες αλλαγές μεγέθους NTFS θα μετακινήσουν δεδομένα του συστήματος αρχείων και τα όρια των διαμερισμάτων. Τα αναφερόμενα διαμερίσματα θα διαγραφούν και κάθε αναφερόμενο νέο διαμέρισμα θα μορφοποιηθεί. Δημιουργήστε πρώτα αντίγραφα ασφαλείας των σημαντικών δεδομένων· αυτές οι εργασίες διαμέρισης δεν μπορούν να αναιρεθούν."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Οι αναφερόμενες αλλαγές μεγέθους NTFS/ext4 θα μετακινήσουν δεδομένα του συστήματος αρχείων και τα όρια των διαμερισμάτων. Τα αναφερόμενα διαμερίσματα θα διαγραφούν και κάθε αναφερόμενο νέο διαμέρισμα θα μορφοποιηθεί. Δημιουργήστε πρώτα αντίγραφα ασφαλείας των σημαντικών δεδομένων· αυτές οι εργασίες διαμέρισης δεν μπορούν να αναιρεθούν."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Μόνο τα ρητά καταγεγραμμένα διαμερίσματα θα διαγραφούν ή θα μορφοποιηθούν. Τα διαμερίσματα που δεν εμπλέκονται παραμένουν αμετάβλητα· το EFI/BOOT δεν επαναγράφεται."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Επεξεργασία ενός δίσκου GPT. Οι αρχές των διαμερισμάτων δεν μετακινούνται ποτέ· ένας απλός τόμος NTFS μπορεί να συρρικνωθεί μετά από ελέγχους ασφαλείας."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Επεξεργασία ενός δίσκου GPT. Οι αρχές των διαμερισμάτων δεν μετακινούνται ποτέ· ένας απλός τόμος NTFS/ext4 μπορεί να συρρικνωθεί μετά από ελέγχους ασφαλείας."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "Η συρρίκνωση ext4 μπορεί να προκαλέσει μόνιμη απώλεια δεδομένων. Αντιγράψτε τα σημαντικά αρχεία. Το ελάχιστο μέγεθος είναι εκτίμηση· το σύστημα αρχείων ελέγχεται πριν και μετά την αλλαγή μεγέθους."
+
+msgid "I have backed up my data."
+msgstr "Έχω δημιουργήσει αντίγραφο ασφαλείας των δεδομένων μου."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Η συρρίκνωση Btrfs δεν υποστηρίζεται."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"

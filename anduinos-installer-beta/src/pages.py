@@ -57,7 +57,7 @@ from frontend import (
     clear_storage_target,
     clear_plaintext_passwords,
     create_install_plan,
-    probe_ntfs_resize,
+    probe_partition_resize,
     probe_esp_replacement,
     probe_storage_inventory,
 )
@@ -3581,7 +3581,7 @@ def build_storage_strategy_page(shared, nav_view):
             _set_warning(
                 _(
                     "Manual changes are destructive. Existing partition "
-                    "starts are never moved. Plain NTFS can be shrunk only "
+                    "starts are never moved. Plain NTFS/ext4 can be shrunk only "
                     "after strict safety checks; encrypted, mounted or "
                     "unclean volumes are never resized.",
                     lang,
@@ -4552,12 +4552,16 @@ def build_advanced_storage_page(shared, nav_view):
     content.append(
         _page_header(
             "Advanced: Manual Partitioning",
-            "Edit one GPT disk. Partition starts are never moved; plain NTFS "
+            "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 "
             "may be shrunk after safety checks.",
             "advanced",
             lang,
         )
     )
+
+    shrink_hint = Gtk.Label(label=_("Btrfs shrinking is not supported.", lang), wrap=True)
+    shrink_hint.add_css_class("dim-label")
+    content.append(shrink_hint)
 
     disk_notice = Gtk.Box(
         orientation=Gtk.Orientation.HORIZONTAL,
@@ -5200,6 +5204,8 @@ def build_advanced_storage_page(shared, nav_view):
         )
 
     def _resize_block_message(inspection):
+        if inspection.filesystem == "ext4":
+            return inspection.message
         reason = inspection.block_reason
         if reason is NtfsResizeBlockReason.CHECK_REQUIRED:
             return _(
@@ -5275,6 +5281,9 @@ def build_advanced_storage_page(shared, nav_view):
         )
         warning = Gtk.Label(
             label=_(
+                "Shrinking ext4 can cause permanent data loss. Back up important files. "
+                "The minimum size is an estimate; filesystem checks run before and after resizing."
+                if inspection.filesystem == "ext4" else
                 "This operation moves NTFS data and changes the GPT partition "
                 "boundary. A power loss, failing drive, firmware fault or "
                 "filesystem bug can cause permanent data loss. Back up all "
@@ -5288,7 +5297,7 @@ def build_advanced_storage_page(shared, nav_view):
         form.append(warning)
 
         size_heading = Gtk.Label(
-            label=_("New Windows partition size", lang),
+            label=_("Size (MiB)" if inspection.filesystem == "ext4" else "New Windows partition size", lang),
             xalign=0,
         )
         size_heading.add_css_class("heading")
@@ -5309,6 +5318,7 @@ def build_advanced_storage_page(shared, nav_view):
             1,
         )
         size_spin.set_numeric(True)
+        size_spin.update_property([Gtk.AccessibleProperty.LABEL], [_("Size (MiB)", lang)])
         size_spin.set_value(initial_mib)
         size_row.append(size_spin)
         size_row.append(Gtk.Label(label=_("MiB", lang)))
@@ -5331,6 +5341,11 @@ def build_advanced_storage_page(shared, nav_view):
 
         def update_result(value_mib):
             reclaimed = max(0, current_mib - value_mib)
+            if inspection.filesystem == "ext4":
+                result_label.set_label(
+                    _("Planned size: {size}", lang).format(size=_human_size(value_mib * MIB))
+                    + " · " + _("Unallocated · {size}", lang).format(size=_human_size(reclaimed * MIB)))
+                return
             result_label.set_label(
                 _(
                     "Windows: {windows} · New unallocated space: {free}",
@@ -5365,6 +5380,7 @@ def build_advanced_storage_page(shared, nav_view):
 
         acknowledge = Gtk.CheckButton(
             label=_(
+                "I have backed up my data." if inspection.filesystem == "ext4" else
                 "I have backed up my data and understand that shrinking an "
                 "existing Windows partition can cause permanent data loss.",
                 lang,
@@ -5387,6 +5403,8 @@ def build_advanced_storage_page(shared, nav_view):
         dialog.add_response("cancel", _("Cancel", lang))
         if existing is not None:
             dialog.add_response("remove", _("Undo Planned Resize", lang))
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
         dialog.add_response("apply", _("Plan Resize", lang))
         dialog.set_response_appearance(
             "apply", Adw.ResponseAppearance.DESTRUCTIVE
@@ -5431,7 +5449,7 @@ def build_advanced_storage_page(shared, nav_view):
         dialog.connect("response", response)
         dialog.present()
 
-    def _begin_ntfs_resize(partition):
+    def _begin_partition_resize(partition):
         if any(item.is_bitlocker_partition for item in disk.partitions):
             _show_resize_blocked(
                 _("Turn off BitLocker before shrinking", lang),
@@ -5457,7 +5475,8 @@ def build_advanced_storage_page(shared, nav_view):
         def completed(inspection, error):
             if error is not None:
                 _show_resize_blocked(
-                    _("NTFS safety check failed", lang),
+                    _("NTFS safety check failed" if partition.filesystem_type.casefold() == "ntfs"
+                      else "This partition cannot be resized safely", lang),
                     str(error),
                 )
                 _queue_refresh()
@@ -5470,8 +5489,9 @@ def build_advanced_storage_page(shared, nav_view):
             _queue_refresh()
 
         resize_requests.start(
-            lambda: probe_ntfs_resize(
+            lambda: probe_partition_resize(
                 partition.identity.path,
+                filesystem=partition.filesystem_type.casefold(),
                 development_mode=bool(shared.get("development_mode")),
                 current_size_bytes=partition.identity.size_bytes,
             ),
@@ -5592,14 +5612,14 @@ def build_advanced_storage_page(shared, nav_view):
                     secondary_action_label=(
                         _("Change Size", lang)
                         if (
-                            partition.filesystem_type.casefold() == "ntfs"
+                            partition.filesystem_type.casefold() in {"ntfs", "ext4"}
                             and not draft.reinitialize_gpt
                             and not will_delete
                         )
                         else ""
                     ),
                     secondary_callback=(
-                        lambda selected=partition: _begin_ntfs_resize(selected)
+                        lambda selected=partition: _begin_partition_resize(selected)
                     ),
                 )
             )
@@ -7116,7 +7136,7 @@ def build_summary_page(shared, nav_view):
         )
         if guided_mode
         else _(
-            "⚠ Listed NTFS resizes will move filesystem data and partition "
+            "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition "
             "boundaries. Listed partitions will be deleted and every listed "
             "new partition will be formatted. Back up important data first; "
             "these partitioning operations cannot be undone.",

@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Windows veya diğer bölümleri koruyun, bir ESP’yi yeniden kullanın ya da oluşturun ve Root ile Swap bölümlerini tam boyutlarıyla tasarlayın."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Manuel değişiklikler yıkıcıdır. Mevcut bölümlerin başlangıç konumları asla taşınmaz. Şifrelenmemiş NTFS birimleri yalnızca sıkı güvenlik denetimlerinden sonra küçültülebilir; şifrelenmiş, bağlı veya düzgün kapatılmamış birimler asla yeniden boyutlandırılmaz."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Manuel değişiklikler yıkıcıdır. Mevcut bölümlerin başlangıç konumları asla taşınmaz. Şifrelenmemiş NTFS/ext4 birimleri yalnızca sıkı güvenlik denetimlerinden sonra küçültülebilir; şifrelenmiş, bağlı veya düzgün kapatılmamış birimler asla yeniden boyutlandırılmaz."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "Manuel depolama seçimi eksik. Geri dönüp inceleyin."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ Listelenen NTFS yeniden boyutlandırmaları dosya sistemi verilerini ve bölüm sınırlarını taşıyacaktır. Listelenen bölümler silinecek ve listelenen her yeni bölüm biçimlendirilecektir. Önce önemli verileri yedekleyin; bu bölümleme işlemleri geri alınamaz."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Listelenen NTFS/ext4 yeniden boyutlandırmaları dosya sistemi verilerini ve bölüm sınırlarını taşıyacaktır. Listelenen bölümler silinecek ve listelenen her yeni bölüm biçimlendirilecektir. Önce önemli verileri yedekleyin; bu bölümleme işlemleri geri alınamaz."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Sadece açıkça listelenen bölümler silinecek veya biçimlendirilecektir. İlişkisiz bölümler değişmeden kalır; EFI/BOOT üzerine yazılmaz."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Tek bir GPT diskini düzenleyin. Bölüm başlangıçları asla taşınmaz; şifrelenmemiş NTFS, güvenlik kontrollerinden sonra küçültülebilir."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Tek bir GPT diskini düzenleyin. Bölüm başlangıçları asla taşınmaz; şifrelenmemiş NTFS/ext4, güvenlik kontrollerinden sonra küçültülebilir."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "ext4 küçültme kalıcı veri kaybına yol açabilir. Önemli dosyaları yedekleyin. En küçük boyut bir tahmindir; dosya sistemi boyut değişiminden önce ve sonra denetlenir."
+
+msgid "I have backed up my data."
+msgstr "Verilerimi yedekledim."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Btrfs küçültme desteklenmiyor."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"
