@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "سيؤدي التثبيت الحقيقي إلى إنشاء MOK محلي للآلة. بعد إعادة التشغيل، اختر Enroll MOK → Continue → Yes في MOKManager وأدخل كلمة المرور 123456."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"في شاشة MOKManager الزرقاء، اختر Enroll MOK → Continue → Yes، كلمة المرور: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -1940,13 +1934,9 @@ msgstr "يمكنك متابعة إعداد التثبيت. يجب أن ينجح 
 msgid "Firmware check complete"
 msgstr "اكتمل فحص البرنامج الثابت"
 
-#: src/pages.py
-msgid "A separate EFI System Partition is required"
-msgstr "يلزم قسم نظام EFI منفصل"
 
-#: src/pages.py
-msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
-msgstr "يحتوي قسم ESP هذا بالفعل على EFI/AnduinOS. أنشئ قسم ESP جديدًا في المساحة غير المخصصة (512 MiB على الأقل)، أو اختر قسم ESP آخر. لن تتم الكتابة فوق التثبيت الحالي. يمكن لقائمة GRUB في النظام الجديد تشغيل النظام الحالي."
+
+
 
 #: src/pages.py
 msgid "Checking EFI System Partition…"
@@ -1972,9 +1962,7 @@ msgstr "قسم ESP مشترك"
 msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
 msgstr "إنشاء قسم ESP جديد وتهيئته بنظام FAT32 في مساحة غير مخصصة (512 MiB على الأقل). تبقى أقسام ESP الحالية دون تغيير."
 
-#: src/pages.py
-msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
-msgstr "إعادة استخدام قسم ESP سليم ذي مساحة فارغة كافية، دون تهيئته. تُحفظ ملفات إقلاع الأنظمة الأخرى. إذا كان EFI/AnduinOS موجودًا بالفعل، فاختر قسم ESP آخر أو أنشئ قسمًا جديدًا."
+
 
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
@@ -2003,3 +1991,18 @@ msgstr "القائمة الرئيسية"
 #: src/pages.py
 msgid "Retry"
 msgstr "إعادة المحاولة"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "استبدال ملفات إقلاع AnduinOS الحالية؟"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "أعِد استخدام قسم ESP سليم تتوفر فيه مساحة خالية كافية، دون تهيئته. ستُحفظ ملفات الإقلاع الخاصة بالأنظمة الأخرى. إذا كان EFI/AnduinOS موجودًا بالفعل، فيتطلب استبداله تأكيدًا صريحًا. لإبقاء كلا التثبيتين قابلين للإقلاع بشكل مستقل، اختر قسم ESP آخر أو أنشئ قسمًا جديدًا."
+
+msgid "Use this ESP and replace"
+msgstr "استخدم قسم ESP هذا واستبدل الملفات"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "سيُستبدل EFI/AnduinOS على {path}. ستُنسخ ملفات الإقلاع القديمة احتياطيًا؛ وقد لا يعود إدخال إقلاع AnduinOS السابق قادرًا على بدء تشغيل النظام القديم."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "يحتوي {path} بالفعل على ملفات إقلاع AnduinOS. سيؤدي المتابعة إلى استبدال EFI/AnduinOS لبدء التثبيت الجديد. ستُحفظ ملفات إقلاع Windows والأنظمة الأخرى؛ ولن تتم تهيئة قسم ESP هذا.\n\nلا يؤدي هذا الاستبدال إلى حذف قسم النظام القديم، لكن قد يتعذر بدء تشغيل AnduinOS القديم عبر إدخال الإقلاع الحالي. لإبقاء كلا التثبيتين، ارجع وأنشئ قسم ESP منفصلًا (بحجم لا يقل عن 512 MiB). ستُنسخ ملفات الإقلاع القديمة احتياطيًا قبل استبدالها."

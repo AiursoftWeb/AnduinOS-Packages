@@ -375,21 +375,29 @@ health and free-space reserve pass validation. Reuse means:
 - fail with recovery instructions if firmware variables cannot be updated,
   rather than silently taking over the shared fallback path.
 
-Preservation-mode preflight refuses to reuse an ESP that already contains an
+By default, preservation-mode preflight refuses to reuse an ESP that contains an
 `EFI/AnduinOS` directory, including case variants, an empty directory or
 partial-install leftovers. Both guided and manual plans stop before destructive
-storage operations. The error directs users to select another ESP or create a
-new one in unallocated space; the installer never deletes these leftovers
-automatically. Invalid or unreadable EFI paths also fail closed. Ordinary
+storage operations unless the user explicitly authorizes replacement. Consent
+is bound to the ESP's PARTUUID, FAT UUID and a fingerprint of every existing
+AnduinOS file and directory. The executor verifies a vendor-only backup in the
+Live session before storage writes, then persists it under
+`/var/backups/anduinos-installer/esp-*` in the new system before replacement.
+The recovery archive does not restore root partitions or firmware boot order.
+Changed identities/files or failed backups stop installation; no unconfirmed
+cleanup is performed. Invalid or unreadable EFI paths also fail closed. Ordinary
 Microsoft/Ubuntu ESP reuse and the existing boot commands are unchanged.
-This guard prevents boot-file replacement; per-installation EFI directory
+This guard prevents unconfirmed boot-file replacement; per-installation EFI directory
 names and shared-ESP multi-AnduinOS ownership remain out of scope.
 
 Before advancing from the storage page, the UI checks a selected reused ESP
 through the read-only Polkit helper in a private mount namespace. On an
-AnduinOS namespace conflict, it selects the new-ESP option and explains the
-required separate partition. Guided mode does this only if the chosen extent
-has room; manual mode asks the user to allocate an ESP explicitly. It never
+AnduinOS namespace conflict, a warning offers explicit vendor-file replacement
+or Back (also the close/default response). Back selects the new-ESP option;
+guided mode does this only if the chosen extent has room, and manual mode asks
+the user to allocate an ESP explicitly. Accepting keeps the selected ESP and
+adds the replacement warning to the final summary. To retain both AnduinOS
+installations, use separate ESPs. The UI never
 silently moves or shrinks the root request. Probe failures do not authorize
 continuation, and the executor independently repeats its full preflight.
 

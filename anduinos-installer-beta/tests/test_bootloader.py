@@ -32,6 +32,8 @@ from test_guided_storage_graph import guided_plan
 from test_guided_storage_planning import healthy_esp
 from test_manual_storage_graph import manual_plan
 from test_manual_storage_planning import healthy_esp as healthy_manual_esp
+from test_esp_replacement import replacement_plan, PARTUUID, FSUUID
+from installer_core.esp import EspReuseInspection, EspTreeEntry
 
 
 def prepare_target(target: Path) -> None:
@@ -80,6 +82,34 @@ def erase_context_values(target: Path) -> dict[str, object]:
 
 
 class InstallBootloaderTests(unittest.TestCase):
+    def test_replacement_failure_stops_before_grub_or_nvram_writes_in_both_modes(self):
+        for manual in (False, True):
+            with self.subTest(manual=manual), tempfile.TemporaryDirectory() as directory:
+                target = Path(directory)
+                prepare_target(target)
+                (target / 'usr/lib/grub/x86_64-efi/btrfs.mod').touch()
+                plan, inventory = replacement_plan(manual)
+                inspection = EspReuseInspection(PARTUUID, FSUUID, True, 128 * 1024**2,
+                    vendor_entries=(EspTreeEntry('EFI/AnduinOS', 'directory', 0),))
+                builder = (build_manual_storage_execution_plan if manual
+                           else build_guided_coexistence_execution_plan)
+                execution = builder(plan, inventory, esp_inspection=inspection,
+                    nvram_inspection=NvramInspection(True), target=str(target))
+                runner = self.compatible_runner(target)
+                context = InstallContext(plan, lambda _: None, values={
+                    'target': target, 'target_efi_mounted': True,
+                    'partition_devices': execution.commands.devices,
+                    ('manual' if manual else 'guided') + '_storage_execution_plan': execution})
+                with patch('installer_core.bootloader.replace_esp_vendor',
+                           side_effect=OSError('backup verification failed')) as replace_vendor:
+                    with self.assertRaisesRegex(OSError, 'backup verification failed'):
+                        InstallBootloaderStep(runner).execute(context)
+                replace_vendor.assert_called_once_with(context, target, runner)
+                commands = [command for command, _ in runner.commands]
+                self.assertIn(execution.boot_commands.initrd, commands)
+                self.assertNotIn(execution.boot_commands.install, commands)
+                self.assertNotIn(execution.boot_commands.nvram_create, commands)
+
     def test_portable_signature_check_rejects_a_bad_authenticode_digest(self):
         class SignatureRunner(FakeRunner):
             def run(self, command, **kwargs):

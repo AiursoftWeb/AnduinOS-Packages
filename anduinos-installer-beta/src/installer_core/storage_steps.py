@@ -9,6 +9,7 @@ from pathlib import Path
 from .btrfs import BTRFS_SUBVOLUMES
 from .command import CommandRunner
 from .esp import inspect_esp_for_reuse, inspect_nvram
+from .esp_replacement import backup_esp_replacement
 from .execution_boundaries import emit_boundary
 from .model import Architecture, Filesystem, Firmware, InstallMode
 from .ntfs_resize import (
@@ -45,6 +46,7 @@ class PrepareStorageStep:
     inventory_probe: object = probe_storage_inventory
     esp_inspector: object = inspect_esp_for_reuse
     nvram_inspector: object = inspect_nvram
+    esp_backup_root: Path = Path("/var/backups/anduinos-installer")
     id: str = "prepare-storage"
     title: str = "Partition and format target disk"
     failure_policy: FailurePolicy = FailurePolicy.FATAL
@@ -151,6 +153,8 @@ class PrepareStorageStep:
             "swapoff",
             "sync",
         ]
+        if context.plan.boot.esp_replacement is not None:
+            commands.append("blkid")
         if context.plan.storage.swap_size_mib:
             commands.append("mkswap")
         commands.append(
@@ -196,6 +200,19 @@ class PrepareStorageStep:
             context.values["storage_execution_plan"] = execution_plan
             context.values["storage_write_set"] = execution_plan.write_set
         commands = execution_plan.commands
+        if context.plan.boot.esp_replacement is not None:
+            inventory = self.inventory_probe()
+            resolve = (resolve_manual_esp_partition
+                       if context.plan.storage.mode is InstallMode.MANUAL
+                       else resolve_guided_esp_partition)
+            esp, reused = resolve(context.plan, inventory)
+            if not reused:
+                raise RuntimeError("Replacement requires the confirmed reused ESP")
+            backup = backup_esp_replacement(
+                esp, context.plan.boot.esp_replacement, self.runner,
+                backup_root=self.esp_backup_root)
+            context.values["esp_replacement_backup"] = backup
+            context.log(f"Old AnduinOS EFI backup in the Live session: {backup}")
         if isinstance(execution_plan, EraseDiskExecutionPlan):
             context.values["layout"] = execution_plan.layout
         context.values["partition_devices"] = commands.devices

@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "Een echte installatie zal een machine-lokale MOK maken. Na herstart, kies in MOKManager Enroll MOK → Doorgaan → Ja en voer het wachtwoord 123456 in."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"Kies op het blauwe MOKManager-scherm Enroll MOK → Doorgaan → Ja, wachtwoord: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -1940,13 +1934,9 @@ msgstr "U kunt de installatie verder configureren. De firmwarecontrole moet slag
 msgid "Firmware check complete"
 msgstr "Firmwarecontrole voltooid"
 
-#: src/pages.py
-msgid "A separate EFI System Partition is required"
-msgstr "Een aparte EFI-systeempartitie is vereist"
 
-#: src/pages.py
-msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
-msgstr "Deze ESP bevat al EFI/AnduinOS. Maak een nieuwe ESP in niet-toegewezen ruimte (minimaal 512 MiB) of kies een andere ESP. De bestaande installatie wordt niet overschreven. Het GRUB-menu van het nieuwe systeem kan het bestaande systeem starten."
+
+
 
 #: src/pages.py
 msgid "Checking EFI System Partition…"
@@ -1972,9 +1962,7 @@ msgstr "Gedeelde ESP"
 msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
 msgstr "Een nieuwe FAT32-ESP maken en formatteren in niet-toegewezen ruimte (minstens 512 MiB). Bestaande ESP’s blijven ongewijzigd."
 
-#: src/pages.py
-msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
-msgstr "Een gezonde ESP met voldoende vrije ruimte hergebruiken zonder te formatteren. Opstartbestanden van andere systemen blijven behouden. Als EFI/AnduinOS al bestaat, kies dan een andere ESP of maak een nieuwe."
+
 
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
@@ -2003,3 +1991,18 @@ msgstr "Hoofdmenu"
 #: src/pages.py
 msgid "Retry"
 msgstr "Opnieuw proberen"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "Bestaande AnduinOS-opstartbestanden vervangen?"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "Een gezonde ESP met voldoende vrije ruimte hergebruiken, zonder deze te formatteren. Opstartbestanden van andere systemen blijven behouden. Als EFI/AnduinOS al bestaat, is expliciete bevestiging nodig om deze te vervangen. Als u beide installaties onafhankelijk opstartbaar wilt houden, kiest u een andere ESP of maakt u een nieuwe."
+
+msgid "Use this ESP and replace"
+msgstr "Deze ESP gebruiken en vervangen"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "EFI/AnduinOS op {path} wordt vervangen. Van de oude opstartbestanden wordt een back-up gemaakt; mogelijk kunt u het oude systeem daarna niet meer starten via de bestaande AnduinOS-opstartvermelding."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} bevat al AnduinOS-opstartbestanden. Als u doorgaat, wordt EFI/AnduinOS vervangen om de nieuwe installatie te starten. De opstartbestanden van Windows en andere systemen blijven behouden; deze ESP wordt niet geformatteerd.\n\nDoor deze vervanging wordt de oude systeempartitie niet verwijderd, maar mogelijk kunt u het oude AnduinOS daarna niet meer starten via de bestaande opstartvermelding. Als u beide installaties wilt behouden, gaat u terug en maakt u een afzonderlijke ESP (van minstens 512 MiB). Van de oude opstartbestanden wordt een back-up gemaakt voordat ze worden vervangen."

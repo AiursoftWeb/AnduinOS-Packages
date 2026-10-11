@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
 import time
 from collections.abc import Callable
@@ -17,6 +18,7 @@ from installer_core.model import (
     InstallMode,
     InstallPlan,
     StorageSpec,
+    EspReplacement,
 )
 from installer_core.ntfs_resize import (
     GIB,
@@ -82,9 +84,13 @@ def probe_storage_inventory():
 
 
 def probe_esp_occupied(partition, *, development_mode=False) -> bool:
+    return probe_esp_replacement(partition, development_mode=development_mode) is not None
+
+
+def probe_esp_replacement(partition, *, development_mode=False):
     """Check the vendor namespace, without granting storage write authority."""
     if development_mode:
-        return False
+        return None
     command = [_STORAGE_PROBE_HELPER, "--esp-inspect", partition.identity.path]
     if os.geteuid() != 0:
         command.insert(0, "pkexec")
@@ -98,7 +104,12 @@ def probe_esp_occupied(partition, *, development_mode=False) -> bool:
                 or payload["filesystem_uuid"].upper() != partition.filesystem_uuid.upper()
                 or type(payload["occupied"]) is not bool):
             raise ValueError("ESP identity changed; rescan storage")
-        return payload["occupied"]
+        if not payload["occupied"]:
+            return None
+        digest = payload["vendor_digest"]
+        if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
+            raise ValueError("Invalid EFI boot-file fingerprint")
+        return EspReplacement(partition.identity.partuuid, partition.filesystem_uuid, digest)
     except (OSError, subprocess.TimeoutExpired, ValueError, KeyError, TypeError, AttributeError) as error:
         raise FrontendPlanError(f"Cannot inspect the selected ESP: {error}") from error
 
@@ -165,6 +176,7 @@ class StorageStrategy(str, Enum):
 
 
 def clear_guided_storage_selection(state: dict[str, object]) -> None:
+    state.pop("esp_replacement", None)
     state["guided_extent_id"] = ""
     state["guided_esp_partuuid"] = ""
     state["guided_storage_preview_model"] = None
@@ -172,6 +184,7 @@ def clear_guided_storage_selection(state: dict[str, object]) -> None:
 
 
 def clear_manual_storage_selection(state: dict[str, object]) -> None:
+    state.pop("esp_replacement", None)
     state["manual_storage_selection_model"] = None
     state["manual_storage_preview_model"] = None
     state["_manual_storage_workflow_model"] = None
@@ -417,7 +430,8 @@ def create_install_plan(
     if storage_mode is InstallMode.MANUAL:
         plan = replace(
             plan,
-            boot=replace(plan.boot, install_fallback_path=False),
+            boot=replace(plan.boot, install_fallback_path=False,
+                         esp_replacement=_confirmed_esp_replacement(state, current_preview)),
         )
         validate_plan(plan)
         state["manual_storage_preview_model"] = current_preview
@@ -458,11 +472,26 @@ def create_install_plan(
             swap_size_mib=current_preview.swap_size_mib,
             graph=current_preview.graph,
         ),
-        boot=replace(plan.boot, install_fallback_path=False),
+        boot=replace(plan.boot, install_fallback_path=False,
+                     esp_replacement=_confirmed_esp_replacement(state, current_preview)),
     )
     validate_plan(plan)
     state["guided_storage_preview_model"] = current_preview
     return plan
+
+
+def _confirmed_esp_replacement(state, preview):
+    authorization = state.get("esp_replacement")
+    if authorization is None:
+        return None
+    esp = next((p for p in preview.disk.partitions
+                if p.identity.partuuid == preview.selection.reused_esp_partuuid), None)
+    if (not isinstance(authorization, EspReplacement)
+            or esp is None
+            or authorization.partuuid != esp.identity.partuuid
+            or authorization.filesystem_uuid.upper() != esp.filesystem_uuid.upper()):
+        raise FrontendPlanError("The selected ESP changed; review replacement again")
+    return authorization
 
 
 class ExecutorClient:

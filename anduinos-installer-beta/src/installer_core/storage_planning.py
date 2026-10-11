@@ -14,6 +14,7 @@ from .esp import (
     GUIDED_ESP_MINIMUM_FREE_BYTES,
     EspReuseInspection,
     NvramInspection,
+    validate_esp_replacement,
 )
 from .layout import PartitionLayout, build_erase_disk_layout
 from .model import Filesystem, InstallMode, InstallPlan
@@ -108,6 +109,7 @@ def build_guided_coexistence_execution_plan(
         reused=reused,
         esp_inspection=esp_inspection,
         nvram_inspection=nvram_inspection,
+        replacement=plan.boot.esp_replacement,
     )
     commands = build_guided_coexistence_storage_commands(plan, inventory)
     write_set = build_guided_coexistence_write_set(plan, inventory)
@@ -162,6 +164,7 @@ def build_manual_storage_execution_plan(
         reused=reused,
         esp_inspection=esp_inspection,
         nvram_inspection=nvram_inspection,
+        replacement=plan.boot.esp_replacement,
     )
     commands = build_manual_storage_commands(plan, inventory)
     if len(ntfs_resize_inspections) != len(commands.ntfs_resizes):
@@ -377,6 +380,7 @@ def _validate_guided_prerequisites(
     reused: bool,
     esp_inspection: EspReuseInspection | None,
     nvram_inspection: NvramInspection,
+    replacement=None,
 ) -> None:
     if not nvram_inspection.available:
         reason = nvram_inspection.reason or "UEFI variables are unavailable"
@@ -384,6 +388,8 @@ def _validate_guided_prerequisites(
             "Cannot safely create the AnduinOS firmware boot entry: " + reason
         )
     if not reused:
+        if replacement is not None:
+            raise RuntimeError("ESP replacement authorization does not refer to a reused ESP")
         if esp_inspection is not None:
             raise RuntimeError("An ESP inspection was supplied for a new ESP")
         return
@@ -397,16 +403,7 @@ def _validate_guided_prerequisites(
     if not esp_inspection.healthy:
         reason = esp_inspection.reason or "FAT consistency check failed"
         raise RuntimeError("Shared ESP is not healthy: " + reason)
-    # Reusing an ESP does not authorize overwriting another installation's
-    # AnduinOS loader. This gate runs before any destructive storage step.
-    if esp_inspection.vendor_entries:
-        raise RuntimeError(
-            "The selected EFI System Partition already contains an "
-            "EFI/AnduinOS directory. Reusing it could overwrite an existing "
-            "AnduinOS bootloader. Select another EFI System Partition or "
-            "create a new one in unallocated space. Files left by an earlier "
-            "installation are not removed automatically."
-        )
+    validate_esp_replacement(esp_inspection, replacement)
     if esp_inspection.free_bytes < GUIDED_ESP_MINIMUM_FREE_BYTES:
         required_mib = GUIDED_ESP_MINIMUM_FREE_BYTES // (1024 * 1024)
         raise RuntimeError(

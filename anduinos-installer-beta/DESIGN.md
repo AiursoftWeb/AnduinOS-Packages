@@ -32,13 +32,20 @@ and constructs every command itself.
 - Btrfs compression: the automatic storage configuration page offers no
   compression, fast (Zstd 1), balanced (Zstd 3, default), and save space
   (Zstd 6). The selected preset is an allowlisted field in installation plan
-  schema 17 and appears in the confirmation summary. All canonical subvolume
+  schema 18 and appears in the confirmation summary. All canonical subvolume
   mounts apply it before system files are copied, and fstab persists the same
   choice. Advanced manual partitioning exposes the same presets below the
   planned partitions when a Btrfs Root partition exists, and retains the
   selection when switching filesystems or revisiting the page.
   Other filesystem types do not expose or apply Btrfs compression.
   Changing the choice later affects newly written data, not existing extents.
+- Existing AnduinOS EFI files: reusing an occupied ESP requires explicit
+  confirmation, bound to its PARTUUID, FAT UUID and old vendor-tree SHA-256.
+  Schema 18 carries this optional authorization, not arbitrary paths or commands.
+  The executor verifies and backs up the old vendor tree before storage writes,
+  saves recovery files in the installed system, and revalidates immediately
+  before replacing only `EFI/AnduinOS`. The ESP is never formatted. Use separate
+  ESPs to keep two AnduinOS installations independently bootable.
 - Windows boot discovery: after installing the AnduinOS bootloader, inspect
   EFI System Partitions on both the target disk and other disks. Read the
   verified target ESP through its existing mount; inspect other unmounted

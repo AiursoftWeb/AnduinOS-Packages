@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "Pemasangan asli akan membuat MOK lokal mesin. Setelah reboot, pilih Enroll MOK → Lanjutkan → Ya di MOKManager dan masukkan kata sandi 123456."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"Pada layar biru MOKManager, pilih Enroll MOK → Lanjutkan → Ya, kata sandi: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -1940,13 +1934,9 @@ msgstr "Anda dapat melanjutkan konfigurasi instalasi. Pemeriksaan firmware harus
 msgid "Firmware check complete"
 msgstr "Pemeriksaan firmware selesai"
 
-#: src/pages.py
-msgid "A separate EFI System Partition is required"
-msgstr "Diperlukan partisi sistem EFI terpisah"
 
-#: src/pages.py
-msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
-msgstr "ESP ini sudah berisi EFI/AnduinOS. Buat ESP baru di ruang yang belum dialokasikan (minimal 512 MiB), atau pilih ESP lain. Instalasi yang ada tidak akan ditimpa. Menu GRUB sistem baru dapat memulai sistem yang ada."
+
+
 
 #: src/pages.py
 msgid "Checking EFI System Partition…"
@@ -1972,9 +1962,7 @@ msgstr "ESP bersama"
 msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
 msgstr "Buat dan format ESP FAT32 baru di ruang yang belum dialokasikan (minimal 512 MiB). ESP yang ada tidak diubah."
 
-#: src/pages.py
-msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
-msgstr "Gunakan kembali ESP yang sehat dengan ruang kosong yang cukup, tanpa memformatnya. Berkas boot sistem lain dipertahankan. Jika EFI/AnduinOS sudah ada, pilih ESP lain atau buat yang baru."
+
 
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
@@ -2003,3 +1991,18 @@ msgstr "Menu Utama"
 #: src/pages.py
 msgid "Retry"
 msgstr "Coba lagi"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "Ganti berkas boot AnduinOS yang sudah ada?"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "Gunakan kembali ESP yang masih sehat dan memiliki ruang kosong yang cukup, tanpa memformatnya. Berkas boot sistem lain akan dipertahankan. Jika EFI/AnduinOS sudah ada, penggantiannya memerlukan konfirmasi eksplisit. Agar kedua instalasi dapat di-boot secara terpisah, pilih ESP lain atau buat yang baru."
+
+msgid "Use this ESP and replace"
+msgstr "Gunakan ESP ini dan ganti"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "EFI/AnduinOS di {path} akan diganti. Berkas boot lama akan dicadangkan; entri boot AnduinOS sebelumnya mungkin tidak lagi dapat memulai sistem lama."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} sudah berisi berkas boot AnduinOS. Jika dilanjutkan, EFI/AnduinOS akan diganti untuk memulai instalasi baru. Berkas boot Windows dan sistem lain akan dipertahankan; ESP ini tidak akan diformat.\n\nPenggantian ini tidak menghapus partisi sistem lama, tetapi AnduinOS lama mungkin tidak lagi dapat dimulai melalui entri boot yang ada. Agar kedua instalasi tetap dapat digunakan, kembali dan buat ESP terpisah (minimal 512 MiB). Berkas boot lama akan dicadangkan sebelum penggantian."

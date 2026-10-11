@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "Реальна установка створить локальний для машини MOK. Після перезавантаження виберіть Enroll MOK → Continue → Yes у MOKManager і введіть пароль 123456."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"На синьому екрані MOKManager виберіть Enroll MOK → Continue → Yes, пароль: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -1940,13 +1934,9 @@ msgstr "Ви можете продовжити налаштування вста
 msgid "Firmware check complete"
 msgstr "Перевірку мікропрограми завершено"
 
-#: src/pages.py
-msgid "A separate EFI System Partition is required"
-msgstr "Потрібен окремий системний розділ EFI"
 
-#: src/pages.py
-msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
-msgstr "Цей ESP уже містить EFI/AnduinOS. Створіть новий ESP у нерозподіленому просторі (щонайменше 512 MiB) або виберіть інший ESP. Наявну інсталяцію не буде перезаписано. Меню GRUB нової системи може запускати наявну систему."
+
+
 
 #: src/pages.py
 msgid "Checking EFI System Partition…"
@@ -1972,9 +1962,7 @@ msgstr "Спільний ESP"
 msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
 msgstr "Створити й відформатувати новий ESP у FAT32 у нерозподіленому просторі (щонайменше 512 MiB). Наявні ESP залишаються незмінними."
 
-#: src/pages.py
-msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
-msgstr "Повторно використати справний ESP із достатнім вільним місцем без форматування. Файли завантаження інших систем зберігаються. Якщо EFI/AnduinOS уже існує, виберіть інший ESP або створіть новий."
+
 
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
@@ -2003,3 +1991,18 @@ msgstr "Головне меню"
 #: src/pages.py
 msgid "Retry"
 msgstr "Спробувати знову"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "Замінити наявні файли завантаження AnduinOS?"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "Повторно використати справний ESP із достатньою кількістю вільного місця, не форматуючи його. Файли завантаження інших систем буде збережено. Якщо EFI/AnduinOS уже існує, для заміни потрібне явне підтвердження. Щоб обидві інсталяції могли завантажуватися незалежно одна від одної, виберіть інший ESP або створіть новий."
+
+msgid "Use this ESP and replace"
+msgstr "Використати цей ESP і замінити файли"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "Буде замінено EFI/AnduinOS на {path}. Старі файли завантаження буде збережено в резервній копії; попередній запис завантаження AnduinOS може більше не запускати стару систему."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} уже містить файли завантаження AnduinOS. Якщо продовжити, EFI/AnduinOS буде замінено для запуску нової інсталяції. Файли завантаження Windows та інших систем буде збережено; цей ESP не форматуватиметься.\n\nЦя заміна не видаляє старий системний розділ, але стара AnduinOS може більше не запускатися через наявний запис завантаження. Щоб зберегти обидві інсталяції, поверніться назад і створіть окремий ESP (щонайменше 512 MiB). Перед заміною старі файли завантаження буде збережено в резервній копії."

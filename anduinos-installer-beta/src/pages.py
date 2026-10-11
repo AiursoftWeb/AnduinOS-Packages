@@ -58,7 +58,7 @@ from frontend import (
     clear_plaintext_passwords,
     create_install_plan,
     probe_ntfs_resize,
-    probe_esp_occupied,
+    probe_esp_replacement,
     probe_storage_inventory,
 )
 from installer_core.btrfs import BTRFS_SUBVOLUMES, BtrfsCompression
@@ -232,7 +232,8 @@ _ESP_HELP_SEPARATE = N_(
 _ESP_HELP_SHARED = N_(
     "Reuse a healthy ESP with enough free space, without formatting it. "
     "Other systems' boot files are preserved. If EFI/AnduinOS already "
-    "exists, choose another ESP or create a new one."
+    "exists, replacement requires explicit confirmation. To keep both "
+    "installations independently bootable, choose another ESP or create a new one."
 )
 _ESP_HELP_COMMON = N_(
     "Both options install boot files in EFI/AnduinOS and put the new "
@@ -316,21 +317,29 @@ def _esp_help_button(lang):
     return button
 
 
-def _esp_conflict_dialog(nav_view, lang):
+def _esp_conflict_dialog(nav_view, lang, path, on_replace, on_back):
     dialog = Adw.MessageDialog(
         transient_for=nav_view.get_root(),
-        heading=_("A separate EFI System Partition is required", lang),
+        heading=_("Replace existing AnduinOS boot files?", lang),
         body=_(
-            "This ESP already contains EFI/AnduinOS. Create a new ESP in "
-            "unallocated space (at least 512 MiB), or select another ESP. "
-            "The existing installation will not be overwritten. The new "
-            "system's GRUB menu can start the existing system.", lang,
-        ),
+            "{path} already contains AnduinOS boot files. Continuing will replace "
+            "EFI/AnduinOS to start the new installation. Windows and other systems' "
+            "boot files will be preserved; this ESP will not be formatted.\n\n"
+            "This replacement does not delete the old system partition, but the "
+            "old AnduinOS may no longer start through its existing boot entry. "
+            "To keep both installations, go back and create a separate ESP "
+            "(at least 512 MiB). Old boot files will be backed up before replacement.", lang,
+        ).format(path=path),
     )
-    dialog.add_response("ok", _("OK", lang))
-    dialog.set_default_response("ok")
-    dialog.set_close_response("ok")
+    dialog.add_response("back", _("Back", lang))
+    dialog.add_response("replace", _("Use this ESP and replace", lang))
+    dialog.set_response_appearance("replace", Adw.ResponseAppearance.DESTRUCTIVE)
+    dialog.set_default_response("back")
+    dialog.set_close_response("back")
+    dialog.connect("response", lambda _dialog, response:
+                   on_replace() if response == "replace" else on_back())
     dialog.present()
+    return dialog
 
 
 def _probe_storage_workflow(*, development_mode=False):
@@ -4211,6 +4220,7 @@ def build_guided_storage_page(shared, nav_view):
             else _set_next(_guided_selection() is not None)
         ),
     )
+    esp_dropdown.connect("notify::selected", lambda *_args: shared.pop("esp_replacement", None))
 
     def _rescan_and_reselect():
         clear_storage_target(shared)
@@ -4233,7 +4243,7 @@ def build_guided_storage_page(shared, nav_view):
             guidance.set_label(str(error))
             _set_next(False)
             return
-        def finish(occupied=False, error=None):
+        def finish(authorization=None, error=None):
             _finish_loading()
             _set_storage_controls(True)
             _set_next(True)
@@ -4242,16 +4252,25 @@ def build_guided_storage_page(shared, nav_view):
             if error is not None:
                 guidance.set_label(str(error))
                 return
-            if occupied:
-                if None in esp_options:
+            def advance():
+                if _guided_selection() != selected:
+                    return
+                shared["esp_replacement"] = authorization
+                shared["guided_extent_id"] = selected.free_extent_id
+                shared["guided_esp_partuuid"] = selected.reused_esp_partuuid
+                shared["guided_storage_preview_model"] = preview
+                shared["_guided_storage_workflow_model"] = workflow
+                nav_view.push(build_user_page(shared, nav_view))
+
+            def back():
+                shared.pop("esp_replacement", None)
+                if _guided_selection() == selected and None in esp_options:
                     esp_dropdown.set_selected(esp_options.index(None))
-                _esp_conflict_dialog(nav_view, lang)
-                return
-            shared["guided_extent_id"] = selected.free_extent_id
-            shared["guided_esp_partuuid"] = selected.reused_esp_partuuid
-            shared["guided_storage_preview_model"] = preview
-            shared["_guided_storage_workflow_model"] = workflow
-            nav_view.push(build_user_page(shared, nav_view))
+
+            if authorization is not None and shared.get("esp_replacement") != authorization:
+                _esp_conflict_dialog(nav_view, lang, preview.reused_esp.identity.path, advance, back)
+            else:
+                advance()
 
         if preview.reused_esp is None:
             finish()
@@ -4262,7 +4281,7 @@ def build_guided_storage_page(shared, nav_view):
             loading.set_visible(True)
             pulse.start()
             requests.start(
-                lambda: probe_esp_occupied(preview.reused_esp,
+                lambda: probe_esp_replacement(preview.reused_esp,
                     development_mode=bool(shared.get("development_mode"))),
                 finish,
             )
@@ -4836,6 +4855,7 @@ def build_advanced_storage_page(shared, nav_view):
 
     def _replace_draft(**changes):
         nonlocal draft
+        shared.pop("esp_replacement", None)
         resize_requests.invalidate()
         draft = replace(draft, **changes)
         shared["manual_storage_selection_model"] = draft
@@ -5979,7 +5999,7 @@ def build_advanced_storage_page(shared, nav_view):
             if shared.get("manual_storage_preview_model") is not preview:
                 return
 
-            def finish(occupied=False, error=None):
+            def finish(authorization=None, error=None):
                 pulse.stop()
                 loading.set_visible(False)
                 if shared.get("manual_storage_preview_model") is not preview:
@@ -5988,13 +6008,23 @@ def build_advanced_storage_page(shared, nav_view):
                 if error is not None:
                     status.set_label(str(error))
                     return
-                if occupied:
+                def advance():
+                    if shared.get("manual_storage_preview_model") is not preview:
+                        return
+                    shared["esp_replacement"] = authorization
+                    shared["_manual_storage_workflow_model"] = workflow
+                    nav_view.push(build_user_page(shared, nav_view))
+
+                def back():
+                    if shared.get("manual_storage_preview_model") is not preview:
+                        return
                     _replace_draft(reused_esp_partuuid="")
                     _queue_refresh()
-                    _esp_conflict_dialog(nav_view, lang)
-                    return
-                shared["_manual_storage_workflow_model"] = workflow
-                nav_view.push(build_user_page(shared, nav_view))
+
+                if authorization is not None and shared.get("esp_replacement") != authorization:
+                    _esp_conflict_dialog(nav_view, lang, esp.identity.path, advance, back)
+                else:
+                    advance()
 
             esp = next((item for item in disk.partitions
                         if item.identity.partuuid == preview.selection.reused_esp_partuuid), None)
@@ -6006,7 +6036,7 @@ def build_advanced_storage_page(shared, nav_view):
                 loading.set_visible(True)
                 pulse.start()
                 requests.start(
-                    lambda: probe_esp_occupied(esp,
+                    lambda: probe_esp_replacement(esp,
                         development_mode=bool(shared.get("development_mode"))),
                     finish,
                 )
@@ -6957,6 +6987,18 @@ def build_summary_page(shared, nav_view):
         storage_lines = _erase_storage_lines(selected_swap_size_mib)
     storage_lines_start = 5
     lines[storage_lines_start:storage_lines_start] = storage_lines
+    authorization = shared.get("esp_replacement")
+    if authorization is not None and (guided_mode or manual_mode):
+        preview = guided_preview if guided_mode else manual_preview
+        esp = None
+        if isinstance(preview, (GuidedStoragePreview, ManualStoragePreview)):
+            esp = next((p for p in preview.disk.partitions
+                        if p.identity.partuuid == authorization.partuuid), None)
+        if esp is not None:
+            lines.append(escape(_(
+                "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; "
+                "the previous AnduinOS boot entry may no longer start the old system.",
+                lang).format(path=esp.identity.path)))
 
     if filesystem == "btrfs":
         selected_compression = BtrfsCompression(shared.get("btrfs_compression", "balanced"))
@@ -7776,16 +7818,6 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                             lang,
                         )
                     result_sub.set_label(detail)
-                elif plan.platform.secure_boot is SecureBoot.ENABLED:
-                    result_label.set_label(_("Installation Complete", lang))
-                    result_sub.set_label(
-                        _("Remove the installation media and restart your computer", lang)
-                        + _(
-                            "\nOn the blue MOKManager screen choose Enroll "
-                            "MOK → Continue → Yes, password: 123456",
-                            lang,
-                        )
-                    )
                 else:
                     result_label.set_label(_("Installation Complete", lang))
                     result_sub.set_label(_("Remove the installation media and restart your computer", lang))
@@ -7804,6 +7836,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                     )
                 secure_boot_notice.set_visible(
                     plan.platform.secure_boot is SecureBoot.ENABLED
+                    and not shared.get("development_mode")
                 )
                 reboot_btn.set_visible(True)
                 reboot_btn.set_sensitive(not shared.get("development_mode"))

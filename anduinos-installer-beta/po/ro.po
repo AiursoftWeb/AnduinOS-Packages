@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "Instalarea reală va crea un MOK local pe mașină. După repornire, alegeți Enroll MOK → Continue → Yes în MOKManager și introduceți parola 123456."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"Pe ecranul albastru MOKManager alegeți Enroll MOK → Continue → Yes, parolă: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -1940,13 +1934,9 @@ msgstr "Puteți continua configurarea instalării. Verificarea firmware-ului tre
 msgid "Firmware check complete"
 msgstr "Verificarea firmware-ului s-a încheiat"
 
-#: src/pages.py
-msgid "A separate EFI System Partition is required"
-msgstr "Este necesară o partiție de sistem EFI separată"
 
-#: src/pages.py
-msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
-msgstr "Această ESP conține deja EFI/AnduinOS. Creați o nouă ESP în spațiul nealocat (cel puțin 512 MiB) sau selectați altă ESP. Instalarea existentă nu va fi suprascrisă. Meniul GRUB al noului sistem poate porni sistemul existent."
+
+
 
 #: src/pages.py
 msgid "Checking EFI System Partition…"
@@ -1972,9 +1962,7 @@ msgstr "ESP partajată"
 msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
 msgstr "Creează și formatează o nouă ESP FAT32 în spațiul nealocat (cel puțin 512 MiB). Partițiile ESP existente rămân neschimbate."
 
-#: src/pages.py
-msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
-msgstr "Reutilizează o ESP sănătoasă cu suficient spațiu liber, fără formatare. Fișierele de pornire ale altor sisteme sunt păstrate. Dacă EFI/AnduinOS există deja, alege altă ESP sau creează una nouă."
+
 
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
@@ -2003,3 +1991,18 @@ msgstr "Meniu principal"
 #: src/pages.py
 msgid "Retry"
 msgstr "Reîncercați"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "Înlocuiți fișierele de pornire AnduinOS existente?"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "Reutilizați un ESP funcțional, cu suficient spațiu liber, fără a-l formata. Fișierele de pornire ale celorlalte sisteme vor fi păstrate. Dacă EFI/AnduinOS există deja, înlocuirea necesită confirmare explicită. Pentru ca ambele instalări să poată porni independent, alegeți un alt ESP sau creați unul nou."
+
+msgid "Use this ESP and replace"
+msgstr "Folosește acest ESP și înlocuiește"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "EFI/AnduinOS de pe {path} va fi înlocuit. Fișierele de pornire vechi vor fi salvate; este posibil ca intrarea de pornire AnduinOS anterioară să nu mai poată porni vechiul sistem."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} conține deja fișiere de pornire AnduinOS. Dacă continuați, EFI/AnduinOS va fi înlocuit pentru a porni noua instalare. Fișierele de pornire Windows și ale celorlalte sisteme vor fi păstrate; acest ESP nu va fi formatat.\n\nAceastă înlocuire nu șterge vechea partiție de sistem, dar este posibil ca vechiul AnduinOS să nu mai pornească prin intrarea de pornire existentă. Pentru a păstra ambele instalări, reveniți și creați un ESP separat (de cel puțin 512 MiB). Fișierele de pornire vechi vor fi salvate înainte de înlocuire."

@@ -15,7 +15,7 @@ from .storage_graph import StorageGraph
 from .btrfs import BtrfsCompression
 
 
-SCHEMA_VERSION = 17
+SCHEMA_VERSION = 18
 
 
 class Architecture(str, Enum):
@@ -131,10 +131,20 @@ class SwapSpec:
 
 
 @dataclass(frozen=True)
+class EspReplacement:
+    """Explicit authorization for one inspected AnduinOS EFI namespace."""
+
+    partuuid: str
+    filesystem_uuid: str
+    vendor_digest: str
+
+
+@dataclass(frozen=True)
 class BootSpec:
     install_fallback_path: bool = False
     external_target: bool = False
     mok_password_policy: MokPasswordPolicy = MokPasswordPolicy.NOT_APPLICABLE
+    esp_replacement: EspReplacement | None = None
 
 
 @dataclass(frozen=True)
@@ -319,15 +329,22 @@ class InstallPlan:
         boot_data = _object(root["boot"], "boot")
         _exact_fields(
             boot_data,
-            {"install_fallback_path", "external_target", "mok_password_policy"},
+            {"install_fallback_path", "external_target", "mok_password_policy", "esp_replacement"},
             "boot",
         )
+        replacement = boot_data["esp_replacement"]
+        if replacement is not None:
+            replacement = _object(replacement, "boot.esp_replacement")
+            _exact_fields(replacement, {"partuuid", "filesystem_uuid", "vendor_digest"},
+                          "boot.esp_replacement")
+            replacement = EspReplacement(**replacement)
         boot = BootSpec(
             **{
                 **boot_data,
                 "mok_password_policy": MokPasswordPolicy(
                     boot_data["mok_password_policy"]
                 ),
+                "esp_replacement": replacement,
             }
         )
         return cls(

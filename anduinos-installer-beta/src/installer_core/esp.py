@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import re
 import tempfile
@@ -12,6 +13,7 @@ from pathlib import Path
 
 from .command import CommandRunner
 from .storage_inventory import PartitionInventory
+from .model import EspReplacement
 
 
 MIB = 1024 * 1024
@@ -49,6 +51,33 @@ class EspTreeEntry:
 class NvramInspection:
     available: bool
     reason: str = ""
+
+
+def esp_vendor_digest(entries: tuple[EspTreeEntry, ...]) -> str:
+    """Bind consent to every old file, name and directory (including empties)."""
+    payload = [(e.relative_path, e.kind, e.size_bytes, e.sha256)
+               for e in sorted(entries, key=lambda e: e.relative_path)]
+    return hashlib.sha256(json.dumps(payload, ensure_ascii=True,
+                                    separators=(",", ":")).encode()).hexdigest()
+
+
+def validate_esp_replacement(inspection, authorization):
+    """A directory's existence is never implicit permission to overwrite it."""
+    if authorization is None:
+        if inspection.vendor_entries:
+            raise RuntimeError(
+                "The selected EFI System Partition already contains an "
+                "EFI/AnduinOS directory. Select another EFI System Partition, "
+                "create a new one in unallocated space, or explicitly confirm "
+                "replacement of the existing AnduinOS boot files."
+            )
+        return
+    if (not isinstance(authorization, EspReplacement)
+            or authorization.partuuid.lower() != inspection.partuuid.lower()
+            or authorization.filesystem_uuid.upper() != inspection.filesystem_uuid.upper()
+            or not inspection.vendor_entries
+            or authorization.vendor_digest != esp_vendor_digest(inspection.vendor_entries)):
+        raise RuntimeError("AnduinOS EFI files or ESP identity changed; review replacement again")
 
 
 def inspect_esp_for_reuse(

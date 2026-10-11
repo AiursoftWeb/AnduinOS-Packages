@@ -28,6 +28,35 @@ def _settle():
 
 
 class ProgressPageLayoutTests(unittest.TestCase):
+    def test_mok_instructions_appear_once_after_success(self):
+        for development in (False, True):
+            for secure_boot in (SecureBoot.ENABLED, SecureBoot.DISABLED):
+                with self.subTest(development=development, secure_boot=secure_boot):
+                    window = Adw.Window()
+                    self.addCleanup(window.destroy)
+                    navigation = Adw.NavigationView()
+                    window.set_content(navigation)
+                    plan = SimpleNamespace(
+                        regional=SimpleNamespace(input_methods=()),
+                        platform=SimpleNamespace(secure_boot=secure_boot))
+                    with (patch('pages.ordered_progress_steps', return_value=[]),
+                          patch('pages.threading.Thread') as thread,
+                          patch('pages.GLib.timeout_add_seconds', return_value=0)):
+                        page = pages.build_progress_page(
+                            plan, {'lang': 'en_US', 'development_mode': development}, navigation)
+                    navigation.add(page)
+                    window.present()
+                    client = 'DevelopmentExecutorClient' if development else 'ExecutorClient'
+                    with patch('pages.' + client) as executor:
+                        executor.return_value.run.return_value = (True, '')
+                        thread.call_args.kwargs['target']()
+                    _settle()
+                    text = '\n'.join(w.get_text() for w in _descendants(page)
+                                     if isinstance(w, Gtk.Label) and w.get_mapped())
+                    self.assertEqual(text.count('Enroll MOK'),
+                                     1 if secure_boot is SecureBoot.ENABLED else 0)
+                    window.destroy()
+
     def test_toggle_preserves_live_progress_and_logs_and_failure_opens_output(self):
         window = Adw.Window(default_width=720, default_height=520)
         self.addCleanup(window.destroy)

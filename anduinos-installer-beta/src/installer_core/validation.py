@@ -17,6 +17,7 @@ from .model import (
     Firmware,
     InstallMode,
     InstallPlan,
+    EspReplacement,
     MokPasswordPolicy,
     SCHEMA_VERSION,
     SecureBoot,
@@ -170,6 +171,22 @@ def validate_plan(
         errors.append("MOK password policy does not match Secure Boot state")
     if type(plan.boot.install_fallback_path) is not bool:
         errors.append("EFI fallback-path policy must be boolean")
+    replacement = plan.boot.esp_replacement
+    if replacement is not None:
+        if not isinstance(replacement, EspReplacement):
+            errors.append("Invalid ESP replacement authorization")
+        elif (
+            not isinstance(replacement.partuuid, str)
+            or not re.fullmatch(r"[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}", replacement.partuuid)
+            or not isinstance(replacement.filesystem_uuid, str)
+            or not re.fullmatch(r"[0-9a-fA-F]{4}-[0-9a-fA-F]{4}", replacement.filesystem_uuid)
+            or not isinstance(replacement.vendor_digest, str)
+            or not re.fullmatch(r"[0-9a-f]{64}", replacement.vendor_digest)
+        ):
+            errors.append("Invalid ESP replacement identity or fingerprint")
+        if (plan.storage.mode is InstallMode.ERASE_DISK
+                or platform.firmware is not Firmware.UEFI):
+            errors.append("ESP replacement requires a reused UEFI ESP")
     if type(plan.boot.external_target) is not bool:
         errors.append("External-target policy must be boolean")
     elif (

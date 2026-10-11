@@ -37,13 +37,7 @@ msgstr ""
 "\n"
 "实际安装将创建本地 MOK。重启后，在 MOKManager 中选择“注册 MOK”→“继续”→“是”，并输入密码 123456。"
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"在蓝色的 MOKManager 屏幕上选择“注册 MOK”→“继续”→“是”，密码：123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -1941,13 +1935,9 @@ msgstr "你可以继续配置安装选项。在对磁盘进行任何更改之前
 msgid "Firmware check complete"
 msgstr "固件检测完成"
 
-#: src/pages.py
-msgid "A separate EFI System Partition is required"
-msgstr "需要独立的 EFI 系统分区"
 
-#: src/pages.py
-msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
-msgstr "此 ESP 已包含 EFI/AnduinOS。请在未分配空间中创建新的 ESP（至少 512 MiB），或选择其他 ESP。已有安装不会被覆盖。新系统的 GRUB 菜单可以启动已有系统。"
+
+
 
 #: src/pages.py
 msgid "Checking EFI System Partition…"
@@ -1973,9 +1963,7 @@ msgstr "共享 ESP"
 msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
 msgstr "在未分配空间中创建并格式化新的 FAT32 ESP（至少 512 MiB）。现有 ESP 保持不变。"
 
-#: src/pages.py
-msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
-msgstr "复用健康且空间充足的 ESP，不格式化，保留其他系统的引导文件。若已存在 EFI/AnduinOS，请另选 ESP 或新建一个。"
+
 
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
@@ -2004,3 +1992,18 @@ msgstr "主菜单"
 #: src/pages.py
 msgid "Retry"
 msgstr "重试"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "替换现有的 AnduinOS 启动文件？"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "复用一个健康且有足够可用空间的 ESP，不对其进行格式化。其他系统的启动文件会保留。如果 EFI/AnduinOS 已存在，替换前必须明确确认。若要让两个安装都能独立启动，请选择另一个 ESP 或新建一个。"
+
+msgid "Use this ESP and replace"
+msgstr "使用此 ESP 并替换"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "将替换 {path} 上的 EFI/AnduinOS。旧启动文件将会备份；之前的 AnduinOS 启动项可能无法再启动旧系统。"
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} 已包含 AnduinOS 启动文件。继续操作将替换 EFI/AnduinOS，以启动新安装。Windows 和其他系统的启动文件将予以保留；此 ESP 不会被格式化。\n\n此次替换不会删除旧系统分区，但旧版 AnduinOS 可能无法再通过现有启动项启动。若要保留两个安装，请返回并创建一个独立的 ESP（至少 512 MiB）。替换前将备份旧启动文件。"

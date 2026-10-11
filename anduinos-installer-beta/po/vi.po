@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "Cài đặt thực tế sẽ tạo MOK cục bộ cho máy. Sau khi khởi động lại, hãy chọn Enroll MOK → Continue → Yes trong MOKManager và nhập mật khẩu 123456."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"Trên màn hình MOKManager màu xanh lam, hãy chọn Enroll MOK → Continue → Yes, mật khẩu: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -1940,13 +1934,9 @@ msgstr "Bạn có thể tiếp tục cấu hình cài đặt. Việc kiểm tra 
 msgid "Firmware check complete"
 msgstr "Đã kiểm tra firmware xong"
 
-#: src/pages.py
-msgid "A separate EFI System Partition is required"
-msgstr "Cần một phân vùng hệ thống EFI riêng"
 
-#: src/pages.py
-msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
-msgstr "ESP này đã chứa EFI/AnduinOS. Hãy tạo ESP mới trong vùng chưa phân bổ (ít nhất 512 MiB), hoặc chọn ESP khác. Bản cài đặt hiện có sẽ không bị ghi đè. Menu GRUB của hệ thống mới có thể khởi động hệ thống hiện có."
+
+
 
 #: src/pages.py
 msgid "Checking EFI System Partition…"
@@ -1972,9 +1962,7 @@ msgstr "ESP dùng chung"
 msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
 msgstr "Tạo và định dạng ESP FAT32 mới trong vùng chưa phân bổ (ít nhất 512 MiB). Các ESP hiện có không thay đổi."
 
-#: src/pages.py
-msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
-msgstr "Dùng lại ESP hoạt động tốt và có đủ dung lượng trống, không định dạng. Các tệp khởi động của hệ thống khác được giữ nguyên. Nếu EFI/AnduinOS đã tồn tại, hãy chọn ESP khác hoặc tạo ESP mới."
+
 
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
@@ -2003,3 +1991,18 @@ msgstr "Trình đơn chính"
 #: src/pages.py
 msgid "Retry"
 msgstr "Thử lại"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "Thay thế các tệp khởi động AnduinOS hiện có?"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "Dùng lại ESP còn tốt và có đủ dung lượng trống mà không định dạng. Các tệp khởi động của hệ thống khác sẽ được giữ nguyên. Nếu EFI/AnduinOS đã tồn tại, cần xác nhận rõ ràng để thay thế. Để cả hai bản cài đặt có thể khởi động độc lập, hãy chọn ESP khác hoặc tạo ESP mới."
+
+msgid "Use this ESP and replace"
+msgstr "Dùng ESP này và thay thế"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "Sẽ thay thế EFI/AnduinOS trên {path}. Các tệp khởi động cũ sẽ được sao lưu; mục khởi động AnduinOS trước đó có thể không còn khởi động được hệ thống cũ."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} đã chứa các tệp khởi động AnduinOS. Nếu tiếp tục, EFI/AnduinOS sẽ được thay thế để khởi động bản cài đặt mới. Các tệp khởi động của Windows và hệ thống khác sẽ được giữ nguyên; ESP này sẽ không được định dạng.\n\nViệc thay thế này không xóa phân vùng hệ thống cũ, nhưng AnduinOS cũ có thể không còn khởi động được qua mục khởi động hiện có. Để giữ cả hai bản cài đặt, hãy quay lại và tạo ESP riêng (ít nhất 512 MiB). Các tệp khởi động cũ sẽ được sao lưu trước khi thay thế."

@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "실제 설치를 수행하면 머신 로컬 MOK가 생성됩니다. 재부팅 후 MOKManager에서 MOK 등록 → 계속 → 예(Y)를 선택하고 비밀번호 123456을 입력하세요."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"파란색 MOKManager 화면에서 MOK 등록 → 계속 → 예(Y)를 선택하세요. 비밀번호: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -1940,13 +1934,9 @@ msgstr "설치를 계속 구성할 수 있습니다. 디스크를 변경하기 �
 msgid "Firmware check complete"
 msgstr "펌웨어 확인 완료"
 
-#: src/pages.py
-msgid "A separate EFI System Partition is required"
-msgstr "별도의 EFI 시스템 파티션이 필요합니다"
 
-#: src/pages.py
-msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
-msgstr "이 ESP에는 이미 EFI/AnduinOS가 있습니다. 할당되지 않은 공간에 새 ESP를 만들거나(최소 512 MiB) 다른 ESP를 선택하세요. 기존 설치는 덮어쓰지 않습니다. 새 시스템의 GRUB 메뉴에서 기존 시스템을 시작할 수 있습니다."
+
+
 
 #: src/pages.py
 msgid "Checking EFI System Partition…"
@@ -1972,9 +1962,7 @@ msgstr "공유 ESP"
 msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
 msgstr "할당되지 않은 공간에 새 FAT32 ESP를 만들고 포맷합니다(최소 512 MiB). 기존 ESP는 변경하지 않습니다."
 
-#: src/pages.py
-msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
-msgstr "충분한 여유 공간이 있는 정상 ESP를 포맷하지 않고 재사용합니다. 다른 시스템의 부팅 파일은 보존합니다. EFI/AnduinOS가 이미 있으면 다른 ESP를 선택하거나 새로 만드세요."
+
 
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
@@ -2003,3 +1991,18 @@ msgstr "주 메뉴"
 #: src/pages.py
 msgid "Retry"
 msgstr "다시 시도"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "기존 AnduinOS 부팅 파일을 교체할까요?"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "충분한 여유 공간이 있는 정상 ESP를 포맷하지 않고 재사용합니다. 다른 시스템의 부팅 파일은 보존됩니다. EFI/AnduinOS가 이미 있으면 교체하기 전에 명시적인 확인이 필요합니다. 두 설치를 모두 독립적으로 부팅할 수 있도록 하려면 다른 ESP를 선택하거나 새 ESP를 만드세요."
+
+msgid "Use this ESP and replace"
+msgstr "이 ESP를 사용하고 교체"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "{path}의 EFI/AnduinOS를 교체합니다. 기존 부팅 파일은 백업됩니다. 이전 AnduinOS 부팅 항목으로는 이전 시스템이 더 이상 시작되지 않을 수 있습니다."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path}에 이미 AnduinOS 부팅 파일이 있습니다. 계속하면 새 설치를 시작할 수 있도록 EFI/AnduinOS를 교체합니다. Windows 및 다른 시스템의 부팅 파일은 보존되며, 이 ESP는 포맷되지 않습니다.\n\n이 교체로 기존 시스템 파티션이 삭제되지는 않지만, 기존 AnduinOS가 현재 부팅 항목으로 더 이상 시작되지 않을 수 있습니다. 두 설치를 모두 유지하려면 뒤로 가서 별도의 ESP(최소 512 MiB)를 만드세요. 교체하기 전에 기존 부팅 파일이 백업됩니다."

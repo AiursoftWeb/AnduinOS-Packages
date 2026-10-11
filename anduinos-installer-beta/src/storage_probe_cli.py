@@ -13,7 +13,7 @@ from collections.abc import Callable, Sequence
 from installer_core.ntfs_resize import inspect_ntfs_resize
 from installer_core.probe import SUPPORTED_WHOLE_DISK_RE
 from installer_core.command import CommandRunner
-from installer_core.esp import inspect_esp_for_reuse
+from installer_core.esp import inspect_esp_for_reuse, esp_vendor_digest
 from installer_core.mount_namespace import isolate_mount_namespace
 from installer_core.storage_inventory import probe_storage_inventory
 
@@ -126,7 +126,9 @@ def _inspect_esp(partition: str) -> int:
             raise ValueError(result.reason)
         print(json.dumps({"partuuid": result.partuuid,
                           "filesystem_uuid": result.filesystem_uuid,
-                          "occupied": bool(result.vendor_entries)}))
+                          "occupied": bool(result.vendor_entries),
+                          "vendor_digest": esp_vendor_digest(result.vendor_entries)
+                          if result.vendor_entries else ""}))
         return 0
     except (OSError, RuntimeError, ValueError) as error:
         return _error(f"Cannot inspect the selected ESP: {error}")

@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "Une installation réelle créera un MOK local à la machine. Après redémarrage, choisissez Enroll MOK → Continuer → Oui dans MOKManager et saisissez le mot de passe 123456."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"Sur l'écran bleu de MOKManager, choisissez Enroll MOK → Continuer → Oui, mot de passe : 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -1940,13 +1934,9 @@ msgstr "Vous pouvez continuer à configurer l’installation. La vérification d
 msgid "Firmware check complete"
 msgstr "Vérification du micrologiciel terminée"
 
-#: src/pages.py
-msgid "A separate EFI System Partition is required"
-msgstr "Une partition système EFI distincte est nécessaire"
 
-#: src/pages.py
-msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
-msgstr "Cette ESP contient déjà EFI/AnduinOS. Créez une nouvelle ESP dans l’espace non alloué (au moins 512 MiB), ou sélectionnez une autre ESP. L’installation existante ne sera pas écrasée. Le menu GRUB du nouveau système peut démarrer le système existant."
+
+
 
 #: src/pages.py
 msgid "Checking EFI System Partition…"
@@ -1972,9 +1962,7 @@ msgstr "ESP partagée"
 msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
 msgstr "Créer et formater une nouvelle ESP FAT32 dans l’espace non alloué (au moins 512 MiB). Les ESP existantes restent inchangées."
 
-#: src/pages.py
-msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
-msgstr "Réutiliser une ESP saine disposant d’assez d’espace libre, sans la formater. Les fichiers de démarrage des autres systèmes sont conservés. Si EFI/AnduinOS existe déjà, choisir une autre ESP ou en créer une."
+
 
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
@@ -2003,3 +1991,18 @@ msgstr "Menu principal"
 #: src/pages.py
 msgid "Retry"
 msgstr "Réessayer"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "Remplacer les fichiers de démarrage AnduinOS existants ?"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "Réutilisez une ESP en bon état disposant de suffisamment d’espace libre, sans la formater. Les fichiers de démarrage des autres systèmes seront préservés. Si EFI/AnduinOS existe déjà, son remplacement nécessite une confirmation explicite. Pour que les deux installations puissent démarrer indépendamment, choisissez une autre ESP ou créez-en une nouvelle."
+
+msgid "Use this ESP and replace"
+msgstr "Utiliser cette ESP et remplacer les fichiers"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "EFI/AnduinOS sur {path} sera remplacé. Les anciens fichiers de démarrage seront sauvegardés ; l’entrée de démarrage AnduinOS précédente risque de ne plus démarrer l’ancien système."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} contient déjà des fichiers de démarrage AnduinOS. Si vous continuez, EFI/AnduinOS sera remplacé pour démarrer la nouvelle installation. Les fichiers de démarrage de Windows et des autres systèmes seront préservés ; cette ESP ne sera pas formatée.\n\nCe remplacement ne supprime pas l’ancienne partition système, mais l’ancien AnduinOS risque de ne plus démarrer via son entrée de démarrage existante. Pour conserver les deux installations, revenez en arrière et créez une ESP distincte (d’au moins 512 MiB). Les anciens fichiers de démarrage seront sauvegardés avant le remplacement."

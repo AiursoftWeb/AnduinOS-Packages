@@ -18,6 +18,7 @@ from .esp import (
     verify_preserved_esp_tree,
 )
 from .execution_boundaries import emit_boundary
+from .esp_replacement import replace_esp_vendor
 from .model import Architecture, Filesystem, Firmware, InstallMode, InstallPlan
 from .software import verify_driver_boot_payload
 from .steps import FailurePolicy, InstallContext
@@ -145,6 +146,7 @@ class InstallBootloaderStep:
         for command in installs:
             if vendor_only:
                 emit_boundary(context, f"{prefix}-boot-files", "before")
+                replace_esp_vendor(context, target, self.runner)
             self.runner.run(command, timeout=300)
             if vendor_only:
                 emit_boundary(context, f"{prefix}-boot-files", "after")

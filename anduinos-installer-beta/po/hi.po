@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "एक वास्तविक इंस्टालेशन मशीन-लोकल MOK बनाएगा। रीबूट के बाद, MOKManager में Enroll MOK → Continue → Yes चुनें और पासवर्ड 123456 दर्ज करें।"
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"नीले MOKManager स्क्रीन पर Enroll MOK → Continue → Yes चुनें, पासवर्ड: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -1940,13 +1934,9 @@ msgstr "आप इंस्टॉलेशन का कॉन्फ़िगर
 msgid "Firmware check complete"
 msgstr "फ़र्मवेयर की जाँच पूरी हुई"
 
-#: src/pages.py
-msgid "A separate EFI System Partition is required"
-msgstr "एक अलग EFI सिस्टम विभाजन आवश्यक है"
 
-#: src/pages.py
-msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
-msgstr "इस ESP में पहले से EFI/AnduinOS मौजूद है। खाली आवंटित न किए गए स्थान में नया ESP बनाएँ (कम से कम 512 MiB), या दूसरा ESP चुनें। मौजूदा स्थापना अधिलेखित नहीं होगी। नए सिस्टम का GRUB मेन्यू मौजूदा सिस्टम को शुरू कर सकता है।"
+
+
 
 #: src/pages.py
 msgid "Checking EFI System Partition…"
@@ -1972,9 +1962,7 @@ msgstr "साझा ESP"
 msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
 msgstr "अनाबंटित स्थान में नया FAT32 ESP बनाएँ और फ़ॉर्मैट करें (कम से कम 512 MiB)। मौजूदा ESP अपरिवर्तित रहते हैं।"
 
-#: src/pages.py
-msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
-msgstr "पर्याप्त खाली स्थान वाले स्वस्थ ESP को बिना फ़ॉर्मैट किए दोबारा उपयोग करें। अन्य सिस्टम की बूट फ़ाइलें सुरक्षित रहती हैं। यदि EFI/AnduinOS पहले से मौजूद है, तो दूसरा ESP चुनें या नया बनाएँ।"
+
 
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
@@ -2003,3 +1991,18 @@ msgstr "मुख्य मेनू"
 #: src/pages.py
 msgid "Retry"
 msgstr "फिर से कोशिश करें"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "मौजूदा AnduinOS बूट फ़ाइलें बदलें?"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "पर्याप्त खाली जगह वाले स्वस्थ ESP का पुनः उपयोग करें, बिना उसे फ़ॉर्मैट किए। अन्य सिस्टम की बूट फ़ाइलें सुरक्षित रखी जाएँगी। यदि EFI/AnduinOS पहले से मौजूद है, तो उसे बदलने के लिए स्पष्ट पुष्टि आवश्यक है। दोनों इंस्टॉलेशन को स्वतंत्र रूप से बूट करने योग्य रखने के लिए, कोई दूसरा ESP चुनें या नया बनाएँ।"
+
+msgid "Use this ESP and replace"
+msgstr "इस ESP का उपयोग करें और फ़ाइलें बदलें"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "{path} पर EFI/AnduinOS बदल दिया जाएगा। पुरानी बूट फ़ाइलों का बैकअप लिया जाएगा; हो सकता है कि पिछली AnduinOS बूट प्रविष्टि अब पुराने सिस्टम को शुरू न करे।"
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} में पहले से AnduinOS बूट फ़ाइलें मौजूद हैं। जारी रखने पर नए इंस्टॉलेशन को शुरू करने के लिए EFI/AnduinOS बदल दिया जाएगा। Windows और अन्य सिस्टम की बूट फ़ाइलें सुरक्षित रखी जाएँगी; इस ESP को फ़ॉर्मैट नहीं किया जाएगा।\n\nइस बदलाव से पुराना सिस्टम पार्टीशन हटेगा नहीं, लेकिन हो सकता है कि पुरानी AnduinOS अपनी मौजूदा बूट प्रविष्टि से शुरू न हो। दोनों इंस्टॉलेशन रखने के लिए, पीछे जाएँ और एक अलग ESP बनाएँ (कम से कम 512 MiB)। बदलने से पहले पुरानी बूट फ़ाइलों का बैकअप लिया जाएगा।"
