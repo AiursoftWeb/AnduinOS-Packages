@@ -2027,3 +2027,15 @@ msgstr "되돌릴 준비가 되었습니다. 작업을 저장하세요. 60초 �
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback confirmation failed. Restoring the previous state."
 msgstr "되돌리기 확인에 실패했습니다. 이전 상태를 복원하는 중입니다."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points."
+msgstr "사용자 데이터도 복원합니다. 복구 성공 후 초기 스냅샷을 제외한 모든 스냅샷을 삭제하고 두 New OS 복구 지점은 유지합니다."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Delete all snapshot history"
+msgstr "모든 스냅샷 기록 삭제"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore all users’ files and settings to their initial state."
+msgstr "모든 사용자의 파일과 설정을 초기 상태로 복원합니다."

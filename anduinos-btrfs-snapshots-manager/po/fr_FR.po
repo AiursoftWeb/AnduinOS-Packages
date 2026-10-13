@@ -2027,3 +2027,15 @@ msgstr "La restauration est prête. Enregistrez votre travail ; cet ordinateur r
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback confirmation failed. Restoring the previous state."
 msgstr "La confirmation de la restauration a échoué. Rétablissement de l’état précédent."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points."
+msgstr "Restaurer aussi les données utilisateur. Après une restauration réussie, supprimer les instantanés non initiaux ; conserver les deux points New OS."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Delete all snapshot history"
+msgstr "Supprimer tout l’historique des instantanés"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore all users’ files and settings to their initial state."
+msgstr "Restaurer les fichiers et paramètres de tous les utilisateurs à leur état initial."

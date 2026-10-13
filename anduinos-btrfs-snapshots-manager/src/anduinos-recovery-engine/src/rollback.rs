@@ -568,7 +568,7 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
     where
         F: FnMut(RollbackProgressPhase, f64, &str),
     {
-        self.schedule_internal(target_id, false, false, progress)
+        self.schedule_internal(target_id, false, false, false, progress)
     }
 
     pub fn schedule_factory_reset<F>(
@@ -580,7 +580,18 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
     where
         F: FnMut(RollbackProgressPhase, f64, &str),
     {
-        self.schedule_internal(target_id, true, reset_home, progress)
+        self.schedule_internal(target_id, true, reset_home, false, progress)
+    }
+
+    pub fn schedule_factory_reset_with_history_cleanup<F>(
+        &self,
+        target_id: DeploymentId,
+        progress: F,
+    ) -> Result<RollbackTransaction, RollbackError>
+    where
+        F: FnMut(RollbackProgressPhase, f64, &str),
+    {
+        self.schedule_internal(target_id, true, true, true, progress)
     }
 
     fn schedule_internal<F>(
@@ -588,6 +599,7 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
         target_id: DeploymentId,
         factory_reset: bool,
         reset_home: bool,
+        purge_history: bool,
         mut progress: F,
     ) -> Result<RollbackTransaction, RollbackError>
     where
@@ -628,6 +640,7 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
                 .enable_home_reset(factory_home)
                 .map_err(transaction_error)?;
         }
+        transaction.purge_history = purge_history;
         transaction.fallback_home_snapshot_id = home_fallback.map(|record| record.id);
         self.arm_transaction(transaction, progress)
     }
@@ -1286,6 +1299,35 @@ mod tests {
             transaction.factory_home_snapshot_uuid,
             expected.snapshot_uuid
         );
+    }
+
+    #[test]
+    fn history_cleanup_requires_factory_target_and_always_restores_home() {
+        let (backend, target) = FakeBackend::new();
+        assert!(
+            RollbackCoordinator::new(backend.clone())
+                .schedule_factory_reset_with_history_cleanup(target, |_, _, _| {})
+                .is_err()
+        );
+        {
+            let mut state = backend.inner.lock().unwrap();
+            let record = state.records.get_mut(&target).unwrap();
+            record.kind = DeploymentKind::Factory;
+            record.pinned = true;
+            record.title = crate::model::FACTORY_DEPLOYMENT_TITLE.into();
+        }
+        assert!(
+            RollbackCoordinator::new(backend.clone())
+                .schedule_factory_reset_with_history_cleanup(target, |_, _, _| {})
+                .is_err()
+        );
+        backend.inner.lock().unwrap().factory_home = Some(factory_home());
+        let transaction = RollbackCoordinator::new(backend.clone())
+            .schedule_factory_reset_with_history_cleanup(target, |_, _, _| {})
+            .unwrap();
+        assert!(transaction.purge_history && transaction.reset_home && !transaction.home_only);
+        assert!(transaction.fallback_home_snapshot_id.is_some());
+        assert!(transaction.factory_home_snapshot_id.is_some());
     }
 
     #[test]

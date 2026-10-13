@@ -12,7 +12,7 @@ use uuid::Uuid;
 use crate::model::DeploymentId;
 use crate::personal::{PersonalSnapshotId, PersonalSnapshotRecord};
 
-pub const ROLLBACK_SCHEMA_VERSION: u32 = 5;
+pub const ROLLBACK_SCHEMA_VERSION: u32 = 6;
 pub const RECOVERY_PROTOCOL_VERSION: u32 = 2;
 const LEGACY_RECOVERY_PROTOCOL_VERSION: u32 = 1;
 pub const MAX_APPLY_ATTEMPTS: u32 = 3;
@@ -152,6 +152,8 @@ pub struct RollbackTransaction {
     pub recovery_confirm_sha256: String,
     pub grub_entry_id: String,
     pub reset_home: bool,
+    /// Explicit factory-only consent to remove non-factory history after confirmation.
+    pub purge_history: bool,
     /// Home-only restores keep the live root in place. The deployment IDs
     /// both identify the safety snapshot used to bind the unchanged root.
     pub home_only: bool,
@@ -281,6 +283,7 @@ impl LegacyRollbackTransactionV1 {
             recovery_confirm_sha256: "0".repeat(64),
             grub_entry_id: self.grub_entry_id,
             reset_home: false,
+            purge_history: false,
             home_only: false,
             fallback_home_snapshot_id: None,
             factory_home_snapshot_id: None,
@@ -332,6 +335,7 @@ impl LegacyRollbackTransactionV2 {
             recovery_confirm_sha256: "0".repeat(64),
             grub_entry_id: self.grub_entry_id,
             reset_home: false,
+            purge_history: false,
             home_only: false,
             fallback_home_snapshot_id: None,
             factory_home_snapshot_id: None,
@@ -372,6 +376,7 @@ impl LegacyRollbackTransactionV3 {
             recovery_confirm_sha256: self.recovery_confirm_sha256,
             grub_entry_id: self.grub_entry_id,
             reset_home: false,
+            purge_history: false,
             home_only: false,
             fallback_home_snapshot_id: None,
             factory_home_snapshot_id: None,
@@ -415,6 +420,7 @@ impl RollbackTransaction {
             recovery_confirm_sha256: recovery_confirm_sha256.into(),
             grub_entry_id: format!("anduinos-btrfs-snapshots-manager-{id}"),
             reset_home: false,
+            purge_history: false,
             home_only: false,
             fallback_home_snapshot_id: None,
             factory_home_snapshot_id: None,
@@ -593,6 +599,12 @@ impl RollbackTransaction {
             return Err(TransactionError::new(
                 TransactionErrorCode::InvalidRecord,
                 "Home-only restores require one root anchor; system restores require distinct deployments",
+            ));
+        }
+        if self.purge_history && (!self.reset_home || self.home_only) {
+            return Err(TransactionError::new(
+                TransactionErrorCode::InvalidRecord,
+                "History cleanup requires a combined factory System and Home reset",
             ));
         }
         if self.home_only && !self.reset_home {
@@ -900,11 +912,18 @@ impl TransactionStore {
             4 => {
                 let mut value = value;
                 value["schema_version"] = ROLLBACK_SCHEMA_VERSION.into();
+                value["purge_history"] = false.into();
                 value["home_only"] = false.into();
                 value["fallback_home_snapshot_id"] = serde_json::Value::Null;
                 serde_json::from_value::<RollbackTransaction>(value)
             }
-            5 => serde_json::from_value::<RollbackTransaction>(value),
+            5 => {
+                let mut value = value;
+                value["schema_version"] = ROLLBACK_SCHEMA_VERSION.into();
+                value["purge_history"] = false.into();
+                serde_json::from_value::<RollbackTransaction>(value)
+            }
+            6 => serde_json::from_value::<RollbackTransaction>(value),
             other => {
                 return Err(TransactionError::new(
                     TransactionErrorCode::UnsupportedSchema,
@@ -1455,9 +1474,39 @@ mod tests {
         )
         .unwrap();
         let migrated = environment.store().load_pending().unwrap().unwrap();
-        assert_eq!(migrated.schema_version, 5);
+        assert_eq!(migrated.schema_version, ROLLBACK_SCHEMA_VERSION);
         assert!(!migrated.home_only && !migrated.reset_home);
         assert!(migrated.fallback_home_snapshot_id.is_none());
+    }
+
+    #[test]
+    fn v5_migration_never_invents_history_deletion_consent() {
+        let environment = TestStore::new();
+        let mut value = serde_json::to_value(transaction()).unwrap();
+        value["schema_version"] = 5.into();
+        value.as_object_mut().unwrap().remove("purge_history");
+        fs::write(
+            environment.store().pending_path(),
+            serde_json::to_vec(&value).unwrap(),
+        )
+        .unwrap();
+        let migrated = environment.store().load_pending().unwrap().unwrap();
+        assert_eq!(migrated.schema_version, ROLLBACK_SCHEMA_VERSION);
+        assert!(!migrated.purge_history);
+    }
+
+    #[test]
+    fn history_deletion_cannot_be_attached_to_system_only_or_home_only_restore() {
+        let mut current = transaction();
+        current.purge_history = true;
+        assert!(current.validate().is_err());
+        current.reset_home = true;
+        current.factory_home_snapshot_id = Some(PersonalSnapshotId::new());
+        current.factory_home_snapshot_uuid = Some("bbbbbbbb-1111-4222-8333-cccccccccccc".into());
+        current.validate().unwrap();
+        current.home_only = true;
+        current.target_deployment_id = current.fallback_deployment_id;
+        assert!(current.validate().is_err());
     }
 
     #[test]

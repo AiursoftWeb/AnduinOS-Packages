@@ -2027,3 +2027,15 @@ msgstr "回滚已准备就绪。请保存工作，计算机将在 60 秒内重�
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback confirmation failed. Restoring the previous state."
 msgstr "回滚确认失败，正在恢复之前的状态。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points."
+msgstr "同时恢复用户数据。恢复成功后删除所有非出厂快照；保留两个 New OS 出厂恢复点。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Delete all snapshot history"
+msgstr "清除所有历史快照"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore all users’ files and settings to their initial state."
+msgstr "将所有用户的文件和设置恢复到初始状态。"

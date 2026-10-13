@@ -2027,3 +2027,15 @@ msgstr "A reversão está pronta. Salve seu trabalho; o computador reiniciará e
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback confirmation failed. Restoring the previous state."
 msgstr "A confirmação da reversão falhou. Restaurando o estado anterior."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points."
+msgstr "Também restaura os dados dos usuários. Após a recuperação bem-sucedida, exclui os snapshots que não são de fábrica; mantém os dois pontos New OS."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Delete all snapshot history"
+msgstr "Excluir todo o histórico de snapshots"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore all users’ files and settings to their initial state."
+msgstr "Restaura os arquivos e configurações de todos os usuários ao estado inicial."

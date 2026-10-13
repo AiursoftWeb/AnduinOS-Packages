@@ -270,10 +270,21 @@ impl SnapshotsManagerApplication {
                 }
                 if surface == "factory-reset" || surface == "factory-reset-no-home" {
                     let available = surface == "factory-reset";
-                    let (dialog, erase_home) = crate::ui::factory_reset::confirmation(
-                        app.ensure_main_window().upcast_ref(),
-                        available,
-                    );
+                    let (dialog, erase_home, purge_history) =
+                        crate::ui::factory_reset::confirmation(
+                            app.ensure_main_window().upcast_ref(),
+                            available,
+                        );
+                    assert!(!purge_history.is_active());
+                    assert_eq!(purge_history.is_sensitive(), available);
+                    if available {
+                        purge_history.set_active(true);
+                        assert!(erase_home.is_active());
+                        assert!(!erase_home.is_sensitive());
+                        purge_history.set_active(false);
+                        assert!(erase_home.is_sensitive());
+                        erase_home.set_active(false);
+                    }
                     assert!(!erase_home.is_active());
                     assert_eq!(erase_home.is_sensitive(), available);
                     assert_eq!(dialog.default_response().as_deref(), Some("cancel"));

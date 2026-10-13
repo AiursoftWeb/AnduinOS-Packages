@@ -2027,3 +2027,15 @@ msgstr "回復已準備就緒。請儲存工作，電腦將在 60 秒內重新�
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback confirmation failed. Restoring the previous state."
 msgstr "回復確認失敗，正在還原之前的狀態。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points."
+msgstr "同時還原使用者資料。還原成功後刪除所有非出廠快照；保留兩個 New OS 出廠還原點。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Delete all snapshot history"
+msgstr "清除所有歷史快照"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore all users’ files and settings to their initial state."
+msgstr "將所有使用者的檔案和設定還原至初始狀態。"

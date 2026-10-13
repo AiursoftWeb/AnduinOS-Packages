@@ -118,6 +118,9 @@ ConditionDirectoryNotEmpty=|/.snapshots/anduinos-btrfs-snapshots-manager/cleanup
 
 [Service]
 Type=oneshot
+Restart=on-failure
+RestartSec=30s
+TimeoutStartSec=0
 ExecStart=$reconciler_exec
 User=root
 Group=root
