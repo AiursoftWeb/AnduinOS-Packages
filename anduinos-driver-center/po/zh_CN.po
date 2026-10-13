@@ -1774,9 +1774,9 @@ msgstr "重新创建证书…"
 
 #. Unified certificate migration.
 msgid ""
-"Restart to enroll the new certificate, then return here to select it. "
-"Current GRUB and driver signatures are unchanged."
-msgstr "请重启以登记新证书，再返回此处选用它。当前 GRUB 和驱动签名均未更改。"
+"Restart to enroll the new certificate. It will be used automatically once "
+"enrolled. Current GRUB and driver signatures are unchanged."
+msgstr "请重启以登记新证书，登记后将自动使用。当前 GRUB 和驱动签名均未更改。"
 
 #. Unified certificate migration.
 msgid ""
@@ -1804,11 +1804,6 @@ msgstr "该证书不允许代码签名。请重新创建。"
 msgid "The certificate has expired. Recreate and enroll a new certificate."
 msgstr "证书已过期。请重新创建并登记新证书。"
 
-#. Unified certificate migration.
-msgid ""
-"The new certificate is trusted. Select it to complete the certificate "
-"migration."
-msgstr "新证书已受信任。选用它即可完成证书迁移。"
 
 #. Unified certificate migration.
 msgid "This certificate is enrolled in MOK"
@@ -1818,13 +1813,26 @@ msgstr "该证书已在 MOK 中登记"
 msgid "This certificate is not enrolled. Submit an enrollment request."
 msgstr "该证书尚未登记。请提交登记请求。"
 
-#. Unified certificate migration.
 msgid ""
-"This only prepares or selects a signing certificate. It does not replace "
-"GRUB, re-sign drivers, change DKMS settings or delete old enrolled "
-"certificates. Enrollment requires a restart and confirmation in MOKManager."
+"Once enrolled, this certificate automatically becomes the default for future"
+" signing, including DKMS. Old signing files are backed up. GRUB, existing "
+"driver signatures and old enrolled certificates are preserved. Enrollment "
+"requires a restart and confirmation in MOKManager."
 msgstr ""
-"此操作仅准备或选用签名证书，不会替换 GRUB、重签驱动、更改 DKMS 设置或删除已登记的旧证书。登记需要重启并在 MOKManager 中确认。"
+"登记成功后，此证书将自动成为后续签名（包括 DKMS）的默认证书。旧签名文件会备份，GRUB、现有驱动签名和已登记的旧证书均保留。登记需要重启并在 "
+"MOKManager 中确认。"
+
+msgid "Repair Signing Defaults"
+msgstr "修复默认签名配置"
+
+msgid ""
+"Certificate enrolled, but automatic signing configuration needs repair."
+msgstr "证书已登记，但自动签名配置需要修复。"
+
+msgid ""
+"Automatic signing configuration failed. Repair the defaults; another "
+"enrollment is not needed."
+msgstr "自动签名配置失败。请修复默认配置，无需再次登记证书。"
 
 #. Unified certificate migration.
 msgid ""
@@ -1835,7 +1843,3 @@ msgstr "统一签名证书已受信任。现有 GRUB、旧证书登记和驱动�
 #. Unified certificate migration.
 msgid "Update Signing Certificate?"
 msgstr "更新签名证书？"
-
-#. Unified certificate migration.
-msgid "Use Enrolled Certificate"
-msgstr "选用已登记的证书"

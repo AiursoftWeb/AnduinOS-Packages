@@ -111,31 +111,30 @@ class IdentityTests(unittest.TestCase):
         self.assertTrue(all(c[0] in {'mokutil', 'openssl'} for c in self.firmware.calls))
         self.assertFalse((self.root / 'active.json').exists())
 
-    def test_pending_is_not_trusted_and_activation_is_blocked(self):
+    def test_pending_is_not_trusted_or_selected(self):
         self.candidate()
         identity.manage_identity('prepare-identity', self.firmware.run, self.root)
         self.assertEqual(identity.inspect_identity(self.runner, self.root).enrollment, 'pending')
-        with self.assertRaisesRegex(ValueError, 'Enroll'):
-            identity.manage_identity('activate-identity', self.firmware.run, self.root)
+        self.assertFalse(identity.inspect_identity(self.runner, self.root).usable)
+        self.assertEqual(identity.selected_paths(self.root, self.runner), (identity.LEGACY_KEY, identity.LEGACY_CERTIFICATE))
         self.assertFalse((self.root / 'active.json').exists())
 
-    def test_activation_preserves_old_enrollments_and_selects_only_after_confirmation(self):
-        _key, cert = self.candidate()
+    def test_enrollment_immediately_selects_identity_without_writes_or_privileged_action(self):
+        key, cert = self.candidate()
+        before = {str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()}
         old = 'b' * 40
         self.firmware.enrolled = {old, hashlib.sha1(cert.read_bytes()).hexdigest()}
-        result = identity.manage_identity('activate-identity', self.firmware.run, self.root)
-        self.assertTrue(result.ok)
+        self.assertTrue(identity.inspect_identity(self.runner, self.root).usable)
+        self.assertEqual(identity.selected_paths(self.root, self.runner), (key, cert))
         self.assertIn(old, self.firmware.enrolled)
-        self.assertEqual(identity.pointer(self.root, 'active'), 'a' * 32)
-        self.assertFalse((self.root / 'candidate.json').exists())
-        self.assertEqual(identity.inspect_identity(self.runner, self.root).purpose, 'unified')
-        self.assertTrue(all(c[0] in {'mokutil', 'openssl'} for c in self.firmware.calls))
+        self.assertEqual(before, {str(p): p.read_bytes() for p in self.root.rglob('*') if p.is_file()})
+        self.assertTrue(all(c[0] == 'openssl' or c[:2] in {('mokutil', '--list-enrolled'), ('mokutil', '--list-new')} for c in self.firmware.calls))
 
     def test_cleared_mok_reenrolls_active_identity_without_generating_another_key(self):
         _key, cert = self.candidate()
         fingerprint = hashlib.sha1(cert.read_bytes()).hexdigest()
         self.firmware.enrolled = {fingerprint}
-        identity.manage_identity('activate-identity', self.firmware.run, self.root)
+        self.assertEqual(identity.selected_paths(self.root, self.runner)[1], cert)
         self.firmware.enrolled.clear()
         result = identity.manage_identity('prepare-identity', self.firmware.run, self.root)
         self.assertTrue(result.reboot_required)
@@ -170,7 +169,7 @@ class IdentityTests(unittest.TestCase):
         with patch.object(identity, 'LEGACY_KEY', self.key), patch.object(identity, 'LEGACY_CERTIFICATE', self.cert):
             result = identity.manage_identity('prepare-identity', self.firmware.run, self.root)
         self.assertTrue(result.reboot_required)
-        key, cert = identity.identity_paths(self.root, identity.pointer(self.root, 'candidate'))
+        key, cert = identity.identity_paths(self.root, identity.current_identity(self.root))
         self.assertEqual(key.read_bytes(), self.key.read_bytes())
         self.assertEqual(cert.read_bytes(), self.cert.read_bytes())
 
@@ -183,7 +182,30 @@ class IdentityTests(unittest.TestCase):
         self.assertTrue(result.reboot_required)
         self.assertEqual((key.read_bytes(), cert.read_bytes()), old)
         self.assertEqual(self.firmware.enrolled, {'b' * 40})
-        self.assertNotEqual(identity.pointer(self.root, 'candidate'), 'a' * 32)
+        self.assertNotEqual(identity.current_identity(self.root), 'a' * 32)
+
+    def test_regeneration_keeps_enrolled_identity_in_use_until_replacement_is_enrolled(self):
+        key, cert = self.candidate()
+        self.firmware.enrolled = {hashlib.sha1(cert.read_bytes()).hexdigest()}
+        identity.manage_identity('regenerate-identity', self.firmware.run, self.root)
+        self.assertEqual(identity.selected_paths(self.root, self.runner), (key, cert))
+        self.firmware.enrolled.update(self.firmware.pending)
+        self.firmware.pending.clear()
+        self.assertEqual(identity.selected_paths(self.root, self.runner), identity.identity_paths(self.root, identity.current_identity(self.root)))
+
+    def test_unreadable_enrollment_or_missing_key_never_automatically_selects_identity(self):
+        key, cert = self.candidate()
+        self.firmware.enrolled = {hashlib.sha1(cert.read_bytes()).hexdigest()}
+        self.firmware.unknown = True
+        self.assertEqual(identity.selected_paths(self.root, self.runner), (identity.LEGACY_KEY, identity.LEGACY_CERTIFICATE))
+        self.firmware.unknown = False
+        key.unlink()
+        self.assertEqual(identity.selected_paths(self.root, self.runner), (identity.LEGACY_KEY, identity.LEGACY_CERTIFICATE))
+
+    def test_manual_activation_action_no_longer_exists(self):
+        with self.assertRaisesRegex(ValueError, 'Unsupported'):
+            identity.manage_identity('activate-identity', self.firmware.run, self.root)
+        self.assertEqual(self.firmware.calls, [])
 
     def test_untrusted_store_is_rejected_before_any_key_or_enrollment_changes(self):
         self.root.chmod(0o777)
@@ -194,7 +216,7 @@ class IdentityTests(unittest.TestCase):
     def test_unknown_firmware_blocks_all_identity_actions(self):
         self.candidate()
         with patch('anduinos_secureboot.operations._firmware_supports_secure_boot', return_value=False):
-            for action in ('prepare-identity', 'regenerate-identity', 'activate-identity'):
+            for action in ('prepare-identity', 'regenerate-identity'):
                 identity.manage_identity(action, self.firmware.run, self.root)
         self.assertEqual(self.firmware.calls, [])
         self.assertFalse((self.root / 'active.json').exists())

@@ -72,8 +72,9 @@ def _secure_boot_summary(state: SecureBootState, dkms: DkmsState) -> tuple[str, 
     if state.status is SecureBootStatus.UNKNOWN:
         return _("Unknown"), _("Secure Boot state could not be determined"), "warning-pill"
     identity = state.signing_identity
-    if identity is not None and (identity.purpose != "unified" or identity.candidate
-                                 or identity.enrollment != "enrolled" or not identity.key_present):
+    if identity is not None and (identity.purpose != "unified"
+                                 or identity.enrollment != "enrolled" or not identity.key_present
+                                 or getattr(identity, "defaults_ready", None) is False):
         return _("Action required"), _("Signing certificate needs attention"), "warning-pill"
     if state.enabled and state.ready and dkms.ready:
         return _("Trusted"), _("Trust established"), "success-pill"

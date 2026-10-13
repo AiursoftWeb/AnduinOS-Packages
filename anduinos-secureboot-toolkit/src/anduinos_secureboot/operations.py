@@ -349,7 +349,10 @@ def repair_dkms(
 
 
 def execute(action: str, run: Run = run_command) -> OperationResult:
-    if action in {"prepare-identity", "regenerate-identity", "activate-identity"}:
+    if action == "sync-defaults":
+        from .defaults import sync_defaults
+        return sync_defaults(run)
+    if action in {"prepare-identity", "regenerate-identity"}:
         from .identity import manage_identity
         return manage_identity(action, run)
     if action == "prepare":
@@ -376,7 +379,7 @@ def helper_main(arguments: list[str]) -> int:
         print(json.dumps({"schema": 1, "error": "root-required"}))
         return 77
     if len(arguments) != 1 or arguments[0] not in {
-        "prepare", "repair-dkms", "prepare-identity", "regenerate-identity", "activate-identity"
+        "prepare", "repair-dkms", "prepare-identity", "regenerate-identity", "sync-defaults"
     }:
         print(json.dumps({"schema": 1, "error": "unsupported-action"}))
         return 64

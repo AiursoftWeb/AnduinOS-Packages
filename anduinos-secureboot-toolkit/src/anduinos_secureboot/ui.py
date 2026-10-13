@@ -475,9 +475,8 @@ def create_secure_boot_page(
         row.set_tooltip_text(f"SHA-256: {identity.fingerprint}" if identity.fingerprint else identity.detail)
         set_icon("certificate_purpose", "emblem-ok-symbolic" if identity.purpose == "unified" else "dialog-warning-symbolic",
                  "success" if identity.purpose == "unified" else "warning")
-        # This page describes the candidate explicitly, while other hardware
-        # pages continue inspecting the still-active identity until activation.
-        if identity.candidate or identity.active:
+        # Enrollment itself makes a suitable managed certificate usable.
+        if identity.managed:
             rows["certificate"][0].set_subtitle(_("New unified certificate prepared") if identity.key_present else _("Signing private key is missing. Recreate the certificate."))
             set_icon("certificate", "emblem-ok-symbolic" if identity.key_present else "dialog-warning-symbolic",
                      "success" if identity.key_present else "warning")
@@ -493,26 +492,26 @@ def create_secure_boot_page(
         # The legacy prepare button would generate a second module-only key.
         # Keep it out of the new identity flow; old keys are never deleted.
         enroll_button.set_visible(False)
-        if identity.candidate:
+        if identity.managed and not identity.usable:
             firmware_button.set_visible(False)
         pending = identity.enrollment == "pending"
         reboot_button.set_visible(pending and secure_boot.supported)
         reboot_note.set_visible(pending and secure_boot.supported)
-        needs_action = (identity.purpose != "unified" or not identity.key_present
-                        or identity.candidate or identity.enrollment != "enrolled")
+        sync_failed = identity.usable and identity.managed and identity.defaults_ready is False
+        needs_action = not identity.usable or sync_failed
         refresh_button.set_visible(needs_action or not secure_boot.supported or not dkms.ready)
-        can_manage = secure_boot.supported and (not identity.candidate or identity.enrollment != "unknown")
+        can_manage = secure_boot.supported and (not identity.managed or identity.enrollment != "unknown")
         if identity.purpose == "missing":
             can_manage = secure_boot.supported
-        if identity.candidate and identity.enrollment == "enrolled" and identity.key_present and identity.purpose == "unified":
-            identity_button.set_label(_("Use Enrolled Certificate"))
-            state_holder["identity_action"] = "activate-identity"
-        else:
-            identity_button.set_label(_("Submit Enrollment Request") if identity.candidate or identity.purpose == "unified" else _("Create Unified Certificate"))
-            state_holder["identity_action"] = "prepare-identity"
+        identity_button.set_label(_("Submit Enrollment Request") if identity.managed or identity.purpose == "unified" else _("Create Unified Certificate"))
         identity_button.set_visible(needs_action and not pending and can_manage and
-                                    (not (identity.candidate or identity.active) or (identity.key_present and identity.purpose == "unified")))
-        regenerate_button.set_visible(secure_boot.supported and needs_action and (identity.candidate or identity.active))
+                                    (not identity.managed or (identity.key_present and identity.purpose == "unified")))
+        regenerate_button.set_visible(secure_boot.supported and needs_action and identity.managed)
+        if sync_failed:
+            identity_button.set_label(_("Repair Signing Defaults"))
+            regenerate_button.set_visible(False)
+            rows["certificate"][0].set_subtitle(_("Certificate enrolled, but automatic signing configuration needs repair."))
+            set_icon("certificate", "dialog-warning-symbolic", "warning")
         if dkms.modules and dkms.ready:
             previous = any(not item.signed_by_current_certificate for item in dkms.details)
             if previous:
@@ -521,15 +520,15 @@ def create_secure_boot_page(
         if not secure_boot.supported:
             return
         if pending:
-            status.set_label(_("Restart to enroll the new certificate, then return here to select it. Current GRUB and driver signatures are unchanged."))
-            status.remove_css_class("title-4")
-        elif identity.candidate and identity.enrollment == "enrolled":
-            status.set_label(_("The new certificate is trusted. Select it to complete the certificate migration."))
+            status.set_label(_("Restart to enroll the new certificate. It will be used automatically once enrolled. Current GRUB and driver signatures are unchanged."))
             status.remove_css_class("title-4")
         elif identity.purpose == "module-only":
             status.set_label(_("Current boot and driver trust are unchanged. A unified certificate prepares support for signing GRUB as well."))
             status.remove_css_class("title-4")
-        elif identity.active and identity.enrollment == "enrolled" and identity.key_present and identity.purpose == "unified" and dkms.ready:
+        elif sync_failed:
+            status.set_label(_("Automatic signing configuration failed. Repair the defaults; another enrollment is not needed."))
+            status.remove_css_class("title-4")
+        elif identity.managed and identity.usable and dkms.ready:
             status.set_label(_("Unified certificate is trusted. Existing GRUB, old enrollments and driver signatures are preserved."))
             status.remove_css_class("title-4")
         elif identity.detail:
@@ -560,7 +559,7 @@ def create_secure_boot_page(
 
     def confirm_identity(action: str) -> None:
         dialog = Adw.MessageDialog.new(page.get_root(), _("Update Signing Certificate?"),
-            _("This only prepares or selects a signing certificate. It does not replace GRUB, re-sign drivers, change DKMS settings or delete old enrolled certificates. Enrollment requires a restart and confirmation in MOKManager."))
+            _("Once enrolled, this certificate automatically becomes the default for future signing, including DKMS. Old signing files are backed up. GRUB, existing driver signatures and old enrolled certificates are preserved. Enrollment requires a restart and confirmation in MOKManager."))
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("continue", _("Continue"))
         dialog.set_default_response("cancel")
@@ -782,7 +781,8 @@ def create_secure_boot_page(
     reboot_button.connect("clicked", confirm_reboot)
     firmware_button.connect("clicked", confirm_firmware_setup)
     refresh_button.connect("clicked", refresh)
-    identity_button.connect("clicked", lambda _button: confirm_identity(state_holder["identity_action"]))
+    identity_button.connect("clicked", lambda button: confirm_identity(
+        "sync-defaults" if button.get_label() == _("Repair Signing Defaults") else "prepare-identity"))
     regenerate_button.connect("clicked", lambda _button: confirm_identity("regenerate-identity"))
     if initial_state is None:
         refresh()

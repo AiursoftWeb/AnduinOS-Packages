@@ -21,9 +21,11 @@ The explicit, authenticated migration actions are:
 1. `prepare-identity`: generate a candidate (or reuse an existing suitable
    identity), check its key pair, then submit a MOK enrollment request.
 2. Restart and confirm enrollment in MOKManager with code `123456`.
-3. `activate-identity`: verify that the candidate is actually enrolled, then
-   select it as the toolkit's signing identity. Pending requests never count
-   as trust. Activation does not rebuild or re-sign anything.
+3. Once enrolled, the suitable certificate is used automatically. There is no
+   activation action, second authorization dialog or "Use" button. Inspection
+   remains read-only; pending or unreadable enrollment never counts as trust.
+   A root oneshot service runs at boot before the display manager and APT
+   services; package configuration also synchronizes already-enrolled identities.
 4. `regenerate-identity`: explicitly create a replacement if recovery is
    necessary. Old identities and enrolled MOKs remain intact. An unrelated
    pending enrollment request blocks replacement rather than being discarded.
@@ -33,13 +35,28 @@ are root-owned mode 0600. A private key is never placed in the ESP. Local
 root access can use these unencrypted signing keys: this design does not
 provide protection against a compromised root account.
 
-**All three identity actions preserve the current GRUB, shim, ESP, boot order,
-DKMS settings and existing module signatures.** Old enrolled certificates
+`current.json` records the configured identity; `previous.json` preserves a
+working predecessor while a replacement awaits enrollment. Earlier local-preview
+`candidate.json` / `active.json` files are recognized without requiring a
+privileged migration or another enrollment. Signing operations must still
+validate the private key pair immediately before use.
+
+**Both identity actions preserve the current GRUB, shim, ESP, boot order,
+and existing module signatures.** Old enrolled certificates
 continue to authorize existing modules, including Xbox drivers. Canonical's
-pre-signed NVIDIA modules are not touched. The legacy module-signing identity
-remains in use by DKMS until a separate, explicitly implemented migration.
-The UI therefore reports certificate selection, not completion of bootloader
-or driver migration. Do not delete the old MOK after this stage.
+pre-signed NVIDIA modules are not touched. Once enrollment is verified, the
+standard `/var/lib/shim-signed/mok/MOK.{priv,der}` files are replaced with the
+new pair. DKMS is first pointed directly at the validated immutable identity
+pair, so compatibility file replacement does not give DKMS a half-written pair.
+Original files/configuration are retained under root-only
+`/var/lib/anduinos-secureboot/backups/signing-*`. Writes are atomic per file,
+fsynced, retryable after interruption, and rolled back on ordinary failures.
+This is not an atomic filesystem-wide transaction: do not run another signing
+tool concurrently with migration. Existing or interrupted backups are never
+overwritten. Unknown enrollment, unsafe paths, mismatched keys and competing
+DKMS configuration are rejected. No MOK is deleted; no module is rebuilt.
+The UI detects unsynchronized defaults and offers repair only if needed;
+there is no normal manual activation step. Do not delete the old MOK.
 
 The roadmap is certificate migration on Resolute first, custom GRUB/shim
 packages second, encrypted installation third, and Stonking integration last.
@@ -105,7 +122,8 @@ installation and hardware selection do not belong under `src/` or `scripts/`.
 `inspect.py` is read-only and independent from GTK. It returns immutable
 objects from `model.py`. `operations.py` contains the fixed privileged action
 implementation. The installed helper exposes `prepare`, `repair-dkms`, and
-the three fixed identity actions above; it never evaluates a shell command.
+the two fixed identity actions above, and `sync-defaults` for automatic
+convergence or failure recovery; it never evaluates a shell command.
 
 Enrollment is determined by matching the local DER certificate's complete
 SHA-1 fingerprint against `mokutil --list-enrolled`. Pending enrollment uses

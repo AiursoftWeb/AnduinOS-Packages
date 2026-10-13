@@ -34,19 +34,26 @@ class SecureBootPageTests(unittest.TestCase):
         cases = [
             (IdentityStatus(purpose='module-only', enrollment='enrolled', key_present=True), 'Create Unified Certificate', False),
             (IdentityStatus(purpose='missing'), 'Create Unified Certificate', False),
-            (IdentityStatus(purpose='unified', enrollment='pending', candidate=True, key_present=True), None, True),
-            (IdentityStatus(purpose='unified', enrollment='enrolled', candidate=True, key_present=True), 'Use Enrolled Certificate', False),
-            (IdentityStatus(purpose='unified', enrollment='absent', active=True, key_present=True), 'Submit Enrollment Request', False),
-            (IdentityStatus(purpose='unified', enrollment='enrolled', active=True, key_present=True), None, False),
+            (IdentityStatus(purpose='unified', enrollment='pending', managed=True, key_present=True), None, True),
+            (IdentityStatus(purpose='unified', enrollment='enrolled', managed=True, key_present=True), None, False),
+            (IdentityStatus(purpose='unified', enrollment='enrolled', managed=True, key_present=True, defaults_ready=False), 'Repair Signing Defaults', False),
+            (IdentityStatus(purpose='unified', enrollment='absent', managed=True, key_present=True), 'Submit Enrollment Request', False),
         ]
         for identity, expected, reboot in cases:
             with self.subTest(identity=identity), patch.object(ui, 'run_action') as action:
                 state = SecureBootState(True, True, True, True, 'old', signing_identity=identity)
                 page = ui.create_secure_boot_page(translate=lambda text: text, initial_state=(state, DkmsState()))
                 buttons = {w.get_label(): w for w in widgets(page) if isinstance(w, Gtk.Button) and w.get_visible()}
-                primary = {'Create Unified Certificate', 'Submit Enrollment Request', 'Use Enrolled Certificate'} & buttons.keys()
+                primary = {'Create Unified Certificate', 'Submit Enrollment Request', 'Use Enrolled Certificate', 'Repair Signing Defaults'} & buttons.keys()
                 self.assertEqual(primary, {expected} if expected else set())
-                if identity.active and identity.enrollment == 'enrolled':
+                if identity.usable and identity.defaults_ready is not False:
+                    self.assertNotIn('Recreate Certificate…', buttons)
+                    self.assertEqual(buttons, {})
+                    from anduinos_driver_center.app import _secure_boot_summary
+                    self.assertEqual(_secure_boot_summary(state, DkmsState())[2], 'success-pill')
+                if identity.defaults_ready is False:
+                    from anduinos_driver_center.app import _secure_boot_summary
+                    self.assertEqual(_secure_boot_summary(state, DkmsState())[2], 'warning-pill')
                     self.assertNotIn('Recreate Certificate…', buttons)
                 self.assertEqual(any('Reboot' in (label or '') for label in buttons), reboot)
                 rows = {w.get_title(): w for w in widgets(page) if isinstance(w, Adw.ActionRow)}

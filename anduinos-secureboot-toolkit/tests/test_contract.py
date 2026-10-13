@@ -31,6 +31,10 @@ class ContractTests(unittest.TestCase):
         for source in [*ROOT.glob("scripts/*"), *ROOT.glob("src/**/*.py")]:
             if not source.is_file():
                 continue
+            if source.suffix == ".sh":
+                import subprocess
+                subprocess.run(["sh", "-n", str(source)], check=True)
+                continue
             compile(source.read_text(encoding="utf-8"), str(source), "exec")
 
     def test_status_cli_distinguishes_unknown_disabled_and_enabled(self):

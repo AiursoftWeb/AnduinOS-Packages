@@ -1851,11 +1851,11 @@ msgstr "Recreate Certificate…"
 
 #. Unified certificate migration.
 msgid ""
-"Restart to enroll the new certificate, then return here to select it. "
-"Current GRUB and driver signatures are unchanged."
+"Restart to enroll the new certificate. It will be used automatically once "
+"enrolled. Current GRUB and driver signatures are unchanged."
 msgstr ""
-"Restart to enroll the new certificate, then return here to select it. "
-"Current GRUB and driver signatures are unchanged."
+"Restart to enroll the new certificate. It will be used automatically once "
+"enrolled. Current GRUB and driver signatures are unchanged."
 
 #. Unified certificate migration.
 msgid ""
@@ -1885,13 +1885,6 @@ msgstr "The certificate does not allow code signing. Recreate it."
 msgid "The certificate has expired. Recreate and enroll a new certificate."
 msgstr "The certificate has expired. Recreate and enroll a new certificate."
 
-#. Unified certificate migration.
-msgid ""
-"The new certificate is trusted. Select it to complete the certificate "
-"migration."
-msgstr ""
-"The new certificate is trusted. Select it to complete the certificate "
-"migration."
 
 #. Unified certificate migration.
 msgid "This certificate is enrolled in MOK"
@@ -1901,15 +1894,31 @@ msgstr "This certificate is enrolled in MOK"
 msgid "This certificate is not enrolled. Submit an enrollment request."
 msgstr "This certificate is not enrolled. Submit an enrollment request."
 
-#. Unified certificate migration.
 msgid ""
-"This only prepares or selects a signing certificate. It does not replace "
-"GRUB, re-sign drivers, change DKMS settings or delete old enrolled "
-"certificates. Enrollment requires a restart and confirmation in MOKManager."
+"Once enrolled, this certificate automatically becomes the default for future"
+" signing, including DKMS. Old signing files are backed up. GRUB, existing "
+"driver signatures and old enrolled certificates are preserved. Enrollment "
+"requires a restart and confirmation in MOKManager."
 msgstr ""
-"This only prepares or selects a signing certificate. It does not replace "
-"GRUB, re-sign drivers, change DKMS settings or delete old enrolled "
-"certificates. Enrollment requires a restart and confirmation in MOKManager."
+"Once enrolled, this certificate automatically becomes the default for future"
+" signing, including DKMS. Old signing files are backed up. GRUB, existing "
+"driver signatures and old enrolled certificates are preserved. Enrollment "
+"requires a restart and confirmation in MOKManager."
+
+msgid "Repair Signing Defaults"
+msgstr "Repair Signing Defaults"
+
+msgid ""
+"Certificate enrolled, but automatic signing configuration needs repair."
+msgstr ""
+"Certificate enrolled, but automatic signing configuration needs repair."
+
+msgid ""
+"Automatic signing configuration failed. Repair the defaults; another "
+"enrollment is not needed."
+msgstr ""
+"Automatic signing configuration failed. Repair the defaults; another "
+"enrollment is not needed."
 
 #. Unified certificate migration.
 msgid ""
@@ -1922,7 +1931,3 @@ msgstr ""
 #. Unified certificate migration.
 msgid "Update Signing Certificate?"
 msgstr "Update Signing Certificate?"
-
-#. Unified certificate migration.
-msgid "Use Enrolled Certificate"
-msgstr "Use Enrolled Certificate"

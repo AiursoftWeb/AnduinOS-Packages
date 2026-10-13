@@ -187,7 +187,7 @@ def inspect_secure_boot(
         from .identity import inspect_identity, selected_paths
         identity = inspect_identity(runner)
         try:
-            private_key, certificate = selected_paths()
+            private_key, certificate = selected_paths(runner=runner, state=identity)
         except (OSError, ValueError, KeyError, TypeError):
             # Keep the existing working identity visible if migration metadata
             # is damaged; the separate identity diagnostic explains the fault.

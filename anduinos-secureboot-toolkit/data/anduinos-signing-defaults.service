@@ -1,0 +1,14 @@
+[Unit]
+Description=Use the enrolled AnduinOS certificate for future signing
+After=local-fs.target
+Before=display-manager.service dkms.service apt-daily.service apt-daily-upgrade.service
+ConditionPathIsDirectory=/var/lib/anduinos-secureboot/identities
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/anduinos-secureboot-helper sync-defaults
+UMask=0077
+TimeoutStartSec=90
+
+[Install]
+WantedBy=multi-user.target

@@ -1,7 +1,7 @@
 """Staged, additive certificate enrollment. Never modifies an ESP or a module.
 
-Old enrolled identities and the existing DKMS configuration intentionally remain
-in place. Selecting a new identity is not authorization to rewrite drivers.
+Old enrolled identities and installed module signatures remain in place.
+Signing defaults converge automatically only after successful enrollment.
 """
 from __future__ import annotations
 
@@ -27,10 +27,24 @@ class IdentityStatus:
     purpose: str = 'unknown'
     enrollment: str = 'unknown'
     fingerprint: str = ''
-    candidate: bool = False
-    active: bool = False
+    managed: bool = False
     detail: str = ''
     key_present: bool = False
+    defaults_ready: bool | None = None
+
+    @property
+    def usable(self) -> bool:
+        return self.purpose == 'unified' and self.enrollment == 'enrolled' and self.key_present
+
+    # Read-only compatibility for an older Driver Center during package updates.
+    # These are derived from enrollment, never a separate activation state.
+    @property
+    def candidate(self) -> bool:
+        return self.managed and not self.usable
+
+    @property
+    def active(self) -> bool:
+        return self.managed and self.usable
 
 
 def identity_paths(root: Path, name: str) -> tuple[Path, Path]:
@@ -49,9 +63,25 @@ def pointer(root: Path, name: str) -> str | None:
     return value
 
 
-def selected_paths(root: Path = ROOT) -> tuple[Path, Path]:
-    name = pointer(root, 'active')
-    return identity_paths(root, name) if name else (LEGACY_KEY, LEGACY_CERTIFICATE)
+def current_identity(root: Path) -> str | None:
+    # Read earlier local-preview metadata too; no activation or migration write
+    # is needed merely to discover that its certificate is now enrolled.
+    return pointer(root, 'current') or pointer(root, 'candidate') or pointer(root, 'active')
+
+
+def selected_paths(root: Path = ROOT, runner=None, state: IdentityStatus | None = None) -> tuple[Path, Path]:
+    from .inspect import SubprocessRunner
+    runner = runner or SubprocessRunner()
+    state = state or inspect_identity(runner, root)
+    name = current_identity(root)
+    if name and state.usable:
+        return identity_paths(root, name)
+    previous = pointer(root, 'previous') or pointer(root, 'active')
+    if previous and previous != name:
+        key, cert = identity_paths(root, previous)
+        if key.is_file() and enrollment_state(cert, runner) == 'enrolled':
+            return key, cert
+    return LEGACY_KEY, LEGACY_CERTIFICATE
 
 
 def enrollment_state(certificate: Path, runner) -> str:
@@ -71,13 +101,11 @@ def enrollment_state(certificate: Path, runner) -> str:
 
 def inspect_identity(runner, root: Path = ROOT) -> IdentityStatus:
     try:
-        candidate = pointer(root, 'candidate')
-        active = pointer(root, 'active')
-        name = candidate or active
+        name = current_identity(root)
         key, certificate = identity_paths(root, name) if name else (LEGACY_KEY, LEGACY_CERTIFICATE)
         if not certificate.is_file():
             return IdentityStatus(certificate=str(certificate), purpose='missing',
-                                  candidate=bool(candidate), active=bool(active))
+                                  managed=bool(name))
         result = runner.run(['openssl', 'x509', '-inform', 'DER', '-in', str(certificate), '-noout', '-text'])
         if result.returncode:
             raise ValueError('The certificate cannot be parsed')
@@ -92,12 +120,14 @@ def inspect_identity(runner, root: Path = ROOT) -> IdentityStatus:
                 purpose = 'unsupported'
         if runner.run(['openssl', 'x509', '-inform', 'DER', '-in', str(certificate), '-noout', '-checkend', '0']).returncode:
             purpose = 'expired'
+        from .defaults import defaults_ready
         return IdentityStatus(
             certificate=str(certificate), purpose=purpose,
             enrollment=enrollment_state(certificate, runner),
             fingerprint=hashlib.sha256(certificate.read_bytes()).hexdigest(),
-            candidate=bool(candidate), active=bool(active and name == active),
+            managed=bool(name),
             key_present=key.is_file(),
+            defaults_ready=defaults_ready(key, certificate) if name else None,
         )
     except (OSError, ValueError, KeyError, TypeError) as error:
         return IdentityStatus(detail=str(error))
@@ -168,6 +198,8 @@ def write_pointer(root: Path, name: str, identity: str) -> None:
 def manage_identity(action: str, run, root: Path = ROOT):
     from .operations import CallableRunner, OperationResult, StepResult, _firmware_supports_secure_boot
     result = OperationResult(action)
+    if action not in {'prepare-identity', 'regenerate-identity'}:
+        raise ValueError('Unsupported identity operation')
     if not _firmware_supports_secure_boot(result, run):
         return result
     # This is a privileged store, not a user-selected output directory.
@@ -179,32 +211,7 @@ def manage_identity(action: str, run, root: Path = ROOT):
             raise ValueError('Signing identity storage must be owned and writable only by its administrator')
     runner = CallableRunner(run)
     # Never delete enrolled MOKs. A candidate can coexist with the working key.
-    candidate = pointer(root, 'candidate')
-    if action == 'activate-identity':
-        if not candidate:
-            raise ValueError('No candidate certificate is awaiting activation')
-        key, cert = identity_paths(root, candidate)
-        check_pair(key, cert, run)
-        state = inspect_identity(runner, root)
-        if state.purpose != 'unified' or state.enrollment != 'enrolled':
-            raise ValueError('Enroll the unified certificate in MOKManager and restart before selecting it.')
-        old = pointer(root, 'active')
-        if old:
-            write_pointer(root, 'previous', old)
-        write_pointer(root, 'active', candidate)
-        (root / 'candidate.json').unlink()
-        result.steps['identity_selected'] = StepResult('success',
-            'The new certificate is enrolled and selected. Existing GRUB, drivers, DKMS configuration and old MOK enrollments are unchanged.')
-        return result
-    if action not in {'prepare-identity', 'regenerate-identity'}:
-        raise ValueError('Unsupported identity operation')
-    if action == 'prepare-identity' and not candidate:
-        active = pointer(root, 'active')
-        if active:
-            key, cert = identity_paths(root, active)
-            check_pair(key, cert, run)
-            write_pointer(root, 'candidate', active)
-            candidate = active
+    candidate = current_identity(root)
     if action == 'regenerate-identity' or not candidate:
         # A foreign pending request must not be silently replaced by our import.
         pending = runner.run(['mokutil', '--list-new'])
@@ -218,10 +225,11 @@ def manage_identity(action: str, run, root: Path = ROOT):
                 pending = runner.run(['mokutil', '--list-new'])
         if pending.returncode or pending.stdout.strip():
             raise ValueError('A MOK request is already pending or unreadable. Complete it before creating another identity.')
+        old = candidate
         candidate = secrets.token_hex(16)
         key, cert = identity_paths(root, candidate)
         legacy = inspect_identity(runner, root)
-        if (action == 'prepare-identity' and not pointer(root, 'active')
+        if (action == 'prepare-identity' and not old
                 and legacy.purpose == 'unified' and legacy.key_present):
             # Re-enroll a suitable existing identity without rotating its key.
             check_pair(LEGACY_KEY, LEGACY_CERTIFICATE, run)
@@ -237,7 +245,11 @@ def manage_identity(action: str, run, root: Path = ROOT):
                 staged_cert.replace(cert)
         else:
             generate_identity(key, cert, run)
-        write_pointer(root, 'candidate', candidate)
+        if old and legacy.usable:
+            # Keep a working identity available while its replacement awaits
+            # enrollment. Old files and MOK entries are never removed.
+            write_pointer(root, 'previous', old)
+        write_pointer(root, 'current', candidate)
         result.steps['key_created'] = StepResult('success')
     else:
         key, cert = identity_paths(root, candidate)
@@ -265,6 +277,9 @@ def manage_identity(action: str, run, root: Path = ROOT):
         timeout = run(['mokutil', '--timeout', '-1'], timeout=30)
         result.steps['enrollment_timeout'] = StepResult('success' if timeout.returncode == 0 else 'skipped',
             '' if timeout.returncode == 0 else 'Press a key promptly when MOKManager appears at startup.')
+    else:
+        from .defaults import sync_defaults
+        result.steps.update(sync_defaults(run, root).steps)
     result.steps['enrollment_queued'] = StepResult('success',
         'Old certificates, current bootloader and module signatures are preserved.')
     return result
