@@ -92,7 +92,39 @@ pub fn agent_status() -> AgentStatus {
             error: Some(i18n("SSH_AUTH_SOCK is not set")),
         };
     }
-    match run("ssh-add", &["-L"], None) {
+    agent_status_from_output(socket, run_output("ssh-add", &["-L"], None))
+}
+
+fn agent_status_from_output(
+    socket: String,
+    result: Result<std::process::Output, String>,
+) -> AgentStatus {
+    // An empty agent returns 1 and reports "no identities" on stdout.
+    // Keep both streams and the exit status instead of losing stdout in run().
+    let result = result.and_then(|output| {
+        let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
+        let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+        if output.status.success() {
+            Ok(stdout)
+        } else if output.status.code() == Some(1)
+            && (stdout == "The agent has no identities."
+                || stderr == "The agent has no identities.")
+        {
+            Ok(String::new())
+        } else {
+            Err(if !stderr.is_empty() {
+                stderr
+            } else if !stdout.is_empty() {
+                stdout
+            } else {
+                i18n_fmt(
+                    &i18n("{0} exited with {1}"),
+                    &["ssh-add", &output.status.to_string()],
+                )
+            })
+        }
+    });
+    match result {
         Ok(output) => AgentStatus {
             available: true,
             socket,
@@ -102,17 +134,6 @@ pub fn agent_status() -> AgentStatus {
                 .count(),
             error: None,
         },
-        Err(error)
-            if error.to_ascii_lowercase().contains("no identities")
-                || error.contains("The agent has no identities") =>
-        {
-            AgentStatus {
-                available: true,
-                socket,
-                identity_count: 0,
-                error: None,
-            }
-        }
         Err(error) => AgentStatus {
             available: false,
             socket,
@@ -936,6 +957,87 @@ fn run_output(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::os::unix::process::ExitStatusExt;
+
+    fn agent_output(code: i32, stdout: &str, stderr: &str) -> std::process::Output {
+        std::process::Output {
+            status: std::process::ExitStatus::from_raw(code << 8),
+            stdout: stdout.as_bytes().to_vec(),
+            stderr: stderr.as_bytes().to_vec(),
+        }
+    }
+
+    #[test]
+    fn empty_agent_is_available_when_message_is_on_stdout_or_stderr() {
+        for (stdout, stderr) in [
+            ("The agent has no identities.\n", ""),
+            ("", "The agent has no identities.\n"),
+        ] {
+            let status =
+                agent_status_from_output("/test/agent".into(), Ok(agent_output(1, stdout, stderr)));
+            assert!(status.available);
+            assert_eq!(status.identity_count, 0);
+            assert_eq!(status.socket, "/test/agent");
+            assert!(status.error.is_none());
+        }
+    }
+
+    #[test]
+    fn reachable_agent_counts_loaded_identities() {
+        let status = agent_status_from_output(
+            "/test/agent".into(),
+            Ok(agent_output(
+                0,
+                "ssh-ed25519 AAAA first\n\nsk-ecdsa AAAA second\n",
+                "",
+            )),
+        );
+        assert!(status.available);
+        assert_eq!(status.identity_count, 2);
+        assert!(status.error.is_none());
+    }
+
+    #[test]
+    fn unavailable_agent_preserves_connection_error() {
+        let status = agent_status_from_output(
+            "/test/agent".into(),
+            Ok(agent_output(
+                2,
+                "",
+                "Error connecting to agent: Connection refused\n",
+            )),
+        );
+        assert!(!status.available);
+        assert_eq!(
+            status.error.as_deref(),
+            Some("Error connecting to agent: Connection refused")
+        );
+    }
+
+    #[test]
+    fn other_exit_one_errors_are_not_treated_as_empty_agent() {
+        let status = agent_status_from_output(
+            "/test/agent".into(),
+            Ok(agent_output(
+                1,
+                "",
+                "error fetching identities: communication with agent failed\n",
+            )),
+        );
+        assert!(!status.available);
+        assert!(status
+            .error
+            .unwrap()
+            .contains("communication with agent failed"));
+    }
+
+    #[test]
+    fn agent_probe_spawn_failure_is_reported() {
+        let status =
+            agent_status_from_output("/test/agent".into(), Err("could not start ssh-add".into()));
+        assert!(!status.available);
+        assert_eq!(status.error.as_deref(), Some("could not start ssh-add"));
+    }
 
     fn resident(credential_id: &str) -> ResidentSshCredential {
         ResidentSshCredential {
