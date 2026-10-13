@@ -1,6 +1,7 @@
 import importlib.machinery
 from pathlib import Path
 import tempfile
+import subprocess
 import threading
 import unittest
 import urllib.error
@@ -231,3 +232,58 @@ class SoftwareSourceTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FlathubSourceTests(unittest.TestCase):
+    def test_read_is_system_only_includes_disabled_and_preserves_custom_url(self):
+        from unittest.mock import Mock
+        from anduinos_control_panel.software_sources import current_flathub
+        runner = Mock(return_value=subprocess.CompletedProcess([], 0,
+            'other\thttps://other.example\nflathub\thttps://custom.example/repo/\n', ''))
+        self.assertEqual(current_flathub(runner), 'https://custom.example/repo/')
+        command = runner.call_args.args[0]
+        self.assertIn('--system', command)
+        self.assertIn('--show-disabled', command)
+        runner.return_value = subprocess.CompletedProcess([], 1, '', 'read failed')
+        with self.assertRaisesRegex(RuntimeError, 'read failed'):
+            current_flathub(runner)
+        runner.return_value = subprocess.CompletedProcess([], 0, 'other\thttps://other.example\n', '')
+        self.assertEqual(current_flathub(runner), '')
+
+    def test_invalid_target_is_rejected_before_any_command(self):
+        with patch.object(helper, '_flatpak') as run, patch.object(helper, 'current_flathub') as read:
+            for value in ['https://custom.example', '--no-gpg-verify', 'user', '']:
+                with self.assertRaises(ValueError):
+                    helper.switch_flathub(value)
+            run.assert_not_called()
+            read.assert_not_called()
+
+    def test_new_remote_imports_official_descriptor_before_switch(self):
+        from anduinos_control_panel.software_sources import FLATHUB_SOURCES, FLATHUB_OFFICIAL_REPO
+        with patch.object(helper, 'current_flathub', side_effect=['', FLATHUB_SOURCES['official']]), patch.object(helper, '_flatpak') as run:
+            helper.switch_flathub('official')
+        self.assertEqual(run.call_args_list[0].args,
+            ('remote-add', '--if-not-exists', 'flathub', FLATHUB_OFFICIAL_REPO))
+        self.assertEqual(run.call_args_list[1].args,
+            ('remote-modify', 'flathub', '--enable', '--url=' + FLATHUB_SOURCES['official']))
+        self.assertNotIn('remote-delete', str(run.call_args_list))
+        self.assertNotIn('no-gpg-verify', str(run.call_args_list))
+
+    def test_unreachable_ustc_does_not_modify_remote(self):
+        with patch.object(helper.urllib.request, 'urlopen', side_effect=OSError('offline')), patch.object(helper, '_flatpak') as run:
+            with self.assertRaises(OSError):
+                helper.switch_flathub('ustc')
+            run.assert_not_called()
+
+    def test_catalog_failure_does_not_report_completed_switch_as_failure(self):
+        from anduinos_control_panel.software_sources import FLATHUB_SOURCES
+        with patch.object(helper, 'current_flathub', return_value=FLATHUB_SOURCES['ustc']), patch.object(helper.urllib.request, 'urlopen') as probe, patch.object(helper, '_flatpak', side_effect=[None, RuntimeError('catalog offline')]) as run:
+            helper.switch_flathub('ustc')
+        self.assertEqual(probe.call_count, 2)
+        self.assertEqual(run.call_args_list[0].args,
+            ('remote-modify', 'flathub', '--enable', '--url=' + FLATHUB_SOURCES['ustc']))
+
+    def test_flatpak_command_cannot_touch_user_installation_or_apt(self):
+        with patch.object(helper.subprocess, 'run', return_value=subprocess.CompletedProcess([], 0)) as run:
+            helper._flatpak('remote-modify', 'flathub', '--enable', '--url=https://dl.flathub.org/repo')
+        self.assertEqual(run.call_args.args[0][:2], ['/usr/bin/flatpak', '--system'])

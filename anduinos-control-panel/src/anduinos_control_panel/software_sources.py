@@ -32,6 +32,29 @@ OS_RELEASE = Path("/etc/os-release")
 gettext.bindtextdomain(TEXT_DOMAIN, LOCALE_DIR)
 _ = lambda message: gettext.dgettext(TEXT_DOMAIN, message)
 
+FLATHUB_REMOTE = "flathub"
+FLATHUB_OFFICIAL_REPO = "https://dl.flathub.org/repo/flathub.flatpakrepo"
+FLATHUB_SOURCES = {
+    "official": "https://dl.flathub.org/repo",
+    "ustc": "https://mirrors.ustc.edu.cn/flathub",
+}
+
+
+def current_flathub(runner=None) -> str:
+    """Read only the default system installation, including disabled remotes."""
+    result = (runner or subprocess.run)(
+        ["/usr/bin/flatpak", "remotes", "--system", "--show-disabled", "--columns=name,url"],
+        capture_output=True, text=True, timeout=10, check=False,
+    )
+    if result.returncode:
+        raise RuntimeError(result.stderr.strip() or "Could not read system Flathub")
+    for line in result.stdout.splitlines():
+        fields = line.split("\t")
+        if fields[0] == FLATHUB_REMOTE:
+            return fields[1].strip() if len(fields) > 1 else ""
+    return ""
+
+
 MIRRORS = (
     "https://archive.ubuntu.com/ubuntu/",
     "http://us.archive.ubuntu.com/ubuntu/",
@@ -337,6 +360,7 @@ class SoftwareSourceWindow(Adw.Window):
         )
         self._busy = False
         self._updates_available = False
+        self._flathub_loaded = False
         self._measurements: dict[str, MirrorMeasurement] = {}
 
         toolbar = Adw.ToolbarView()
@@ -380,6 +404,7 @@ class SoftwareSourceWindow(Adw.Window):
         self.current_source.set_xalign(0)
         source_info.append(self.current_source)
         overview.append(source_info)
+        self.source_overview = overview
         body.append(overview)
 
         self.pages = Gtk.Stack()
@@ -387,6 +412,7 @@ class SoftwareSourceWindow(Adw.Window):
         switcher = Gtk.StackSwitcher(stack=self.pages)
         switcher.set_halign(Gtk.Align.FILL)
         switcher.set_hexpand(True)
+        self.source_switcher = switcher
         body.append(switcher)
         body.append(self.pages)
 
@@ -443,6 +469,25 @@ class SoftwareSourceWindow(Adw.Window):
         advanced_buttons.append(self.apply_button)
         advanced.append(advanced_buttons)
 
+        flatpak_page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+        self.pages.add_titled(flatpak_page, "flatpak", "Flatpak")
+        flathub_group = Adw.PreferencesGroup()
+        self.flathub_current = Adw.ActionRow(title=_("Flathub software source"))
+        self.flathub_current.set_subtitle("…")
+        flathub_group.add(self.flathub_current)
+        flatpak_page.append(flathub_group)
+        self._flathub_options = tuple(FLATHUB_SOURCES)
+        self.flathub_dropdown = Gtk.DropDown.new_from_strings(
+            [_("Official Flathub"), _("USTC (China)")]
+        )
+        self.flathub_dropdown.connect("notify::selected", self._flathub_selection_changed)
+        flatpak_page.append(self.flathub_dropdown)
+        self.flathub_apply = Gtk.Button(label=_("Apply"))
+        self.flathub_apply.set_halign(Gtk.Align.END)
+        self.flathub_apply.add_css_class("suggested-action")
+        self.flathub_apply.connect("clicked", self._apply_flathub)
+        flatpak_page.append(self.flathub_apply)
+
         self.output_expander = Gtk.Expander(label=_("Terminal Output"), visible=False)
         output_scroll = Gtk.ScrolledWindow(
             min_content_height=170,
@@ -466,6 +511,82 @@ class SoftwareSourceWindow(Adw.Window):
         self.progress = Gtk.ProgressBar(visible=False)
         body.append(self.progress)
         body.append(self.output_expander)
+
+        self.pages.connect("notify::visible-child-name", self._source_page_changed)
+
+    def _source_page_changed(self, _stack, _property) -> None:
+        flatpak_page = self.pages.get_visible_child_name() == "flatpak"
+        self.source_overview.set_visible(not flatpak_page)
+        if not self._busy:
+            self.status.set_label("")
+            self.status.set_visible(False)
+            self.output_expander.set_visible(False)
+        if flatpak_page and not self._flathub_loaded and not self._busy:
+            self._set_busy(True)
+            threading.Thread(target=self._read_flathub_worker, daemon=True).start()
+
+    def _read_flathub_worker(self) -> None:
+        try:
+            uri = current_flathub()
+        except (OSError, subprocess.TimeoutExpired, RuntimeError) as error:
+            GLib.idle_add(self._append_output, f"{error}\n")
+            GLib.idle_add(self._flathub_read_failed)
+        else:
+            GLib.idle_add(self._flathub_read_complete, uri)
+
+    def _flathub_read_failed(self) -> bool:
+        self.flathub_current.set_subtitle(_("Could not read the Flathub source."))
+        self.output_expander.set_visible(True)
+        return self._finish(_("✗ Operation failed: ") + _("Review Terminal Output for details."))
+
+    def _flathub_read_complete(self, uri: str, message: str = "") -> bool:
+        self._flathub_loaded = True
+        self.flathub_current.set_subtitle(uri or _("Flathub is not configured."))
+        known = next((key for key, value in FLATHUB_SOURCES.items()
+                      if value.rstrip("/") == uri.rstrip("/")), None)
+        labels = [_("Official Flathub"), _("USTC (China)")]
+        self._flathub_options = tuple(FLATHUB_SOURCES)
+        if uri and known is None:
+            # GTK DropDown may auto-select item zero instead of allowing an
+            # empty selection. Keep a non-applicable current-address item.
+            labels.insert(0, uri)
+            self._flathub_options = (None, *self._flathub_options)
+        self.flathub_dropdown.set_model(Gtk.StringList.new(labels))
+        self.flathub_dropdown.set_selected(self._flathub_options.index(known) if known else 0)
+        return self._finish(message)
+
+    def _flathub_selection_changed(self, _dropdown, _property) -> None:
+        if hasattr(self, "flathub_apply"):
+            self.flathub_apply.set_sensitive(not self._busy and self._selected_flathub_source() is not None)
+
+    def _selected_flathub_source(self) -> str | None:
+        index = self.flathub_dropdown.get_selected()
+        return self._flathub_options[index] if index < len(self._flathub_options) else None
+
+    def _apply_flathub(self, _button) -> None:
+        source = self._selected_flathub_source()
+        if self._busy or source is None:
+            return
+        self._set_busy(True)
+        self.status.set_label(_("Switching mirror…"))
+        self.output.get_buffer().set_text("")
+        self.output_expander.set_visible(True)
+        self.output_expander.set_expanded(False)
+        threading.Thread(target=self._flathub_worker, args=(source,), daemon=True).start()
+
+    def _flathub_worker(self, source: str) -> None:
+        code, output = self._run_helper("switch-flathub", source)
+        if code:
+            message = _("✗ Switch failed: ") + self._failure_message(code, output)
+        else:
+            message = _("Flathub source switched.")
+        try:
+            uri = current_flathub()
+        except (OSError, subprocess.TimeoutExpired, RuntimeError) as error:
+            GLib.idle_add(self._append_output, f"{error}\n")
+            GLib.idle_add(self._flathub_read_failed)
+        else:
+            GLib.idle_add(self._flathub_read_complete, uri, message)
 
 
     def _mirror_selection_changed(self, _dropdown, _property) -> None:
@@ -520,6 +641,9 @@ class SoftwareSourceWindow(Adw.Window):
         self.custom_entry.set_sensitive(not busy)
         self.test_button.set_sensitive(not busy)
         self.apply_button.set_sensitive(not busy)
+        self.source_switcher.set_sensitive(not busy)
+        self.flathub_dropdown.set_sensitive(not busy)
+        self._flathub_selection_changed(None, None)
         self.set_deletable(not busy)
         self.progress.set_visible(busy)
         if busy:

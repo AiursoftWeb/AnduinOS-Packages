@@ -58,6 +58,36 @@ class SoftwareSourceUiTests(unittest.TestCase):
             self.window.update_button.has_css_class("suggested-action")
         )
 
+    def test_flatpak_page_shows_actual_remote_and_requires_explicit_custom_replacement(self):
+        self.window._flathub_read_complete("https://custom.example/flathub")
+        self.window.pages.set_visible_child_name("flatpak")
+        self.assertEqual(self.window.pages.get_visible_child_name(), "flatpak")
+        self.assertFalse(self.window.source_overview.get_visible())
+        self.assertEqual(self.window.flathub_current.get_subtitle(), "https://custom.example/flathub")
+        self.assertEqual(self.window.flathub_dropdown.get_selected(), 0)
+        self.assertFalse(self.window.flathub_apply.get_sensitive())
+        self.window.flathub_dropdown.set_selected(2)
+        self.assertTrue(self.window.flathub_apply.get_sensitive())
+        self.window.pages.set_visible_child_name("advanced")
+        self.assertTrue(self.window.source_overview.get_visible())
+
+    def test_missing_flathub_can_be_added_and_busy_controls_are_disabled(self):
+        self.window._flathub_read_complete("")
+        self.assertEqual(self.window.flathub_current.get_subtitle(), self.ui._("Flathub is not configured."))
+        self.assertEqual(self.window.flathub_dropdown.get_selected(), 0)
+        self.window._set_busy(True)
+        self.assertFalse(self.window.flathub_apply.get_sensitive())
+        self.assertFalse(self.window.flathub_dropdown.get_sensitive())
+        self.window._set_busy(False)
+        self.assertTrue(self.window.flathub_apply.get_sensitive())
+
+    def test_cancelled_flathub_authentication_reads_unchanged_remote(self):
+        with patch.object(self.window, "_run_helper", return_value=(126, "cancelled")) as helper, patch.object(self.ui, "current_flathub", return_value=self.ui.FLATHUB_SOURCES["official"]), patch.object(self.ui.GLib, "idle_add", side_effect=lambda callback, *args: callback(*args)):
+            self.window._flathub_worker("ustc")
+        helper.assert_called_once_with("switch-flathub", "ustc")
+        self.assertEqual(self.window.flathub_current.get_subtitle(), self.ui.FLATHUB_SOURCES["official"])
+        self.assertIn(self.ui._("Authentication was cancelled."), self.window.status.get_label())
+
     def test_update_state_is_visible_and_busy_window_cannot_be_closed(self):
         self.window._set_busy(True)
         self.assertFalse(self.window.get_deletable())
