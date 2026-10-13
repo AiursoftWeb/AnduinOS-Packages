@@ -1,8 +1,10 @@
 import hashlib
+import subprocess
 import tempfile
 import unittest
 from dataclasses import replace
 from pathlib import Path
+from unittest.mock import patch
 
 from fakes import FakeRunner
 from helpers import valid_plan
@@ -25,22 +27,21 @@ from installer_core.secure_boot import (
 from installer_core.steps import InstallContext
 
 
-PUBLIC_KEY = "-----BEGIN PUBLIC KEY-----\ntest\n-----END PUBLIC KEY-----"
-
-
 class KeyGeneratingRunner(FakeRunner):
+    """Real OpenSSL only; all firmware/chroot commands remain simulated."""
     def __init__(self, target: Path):
         super().__init__()
         self.target = target
 
     def run(self, command, **kwargs):
+        if command[0] == "openssl":
+            self.commands.append((tuple(command), kwargs))
+            for flag in ('-in', '-keyout', '-out'):
+                if flag in command:
+                    assert Path(command[command.index(flag) + 1]).resolve().is_relative_to(self.target.resolve())
+            return subprocess.run(command, capture_output=True, text=True,
+                                  timeout=kwargs.get('timeout', 30), check=kwargs.get('check', False))
         result = super().run(command, **kwargs)
-        if tuple(command)[-2:] == ("update-secureboot-policy", "--new-key"):
-            private = self.target / MOK_PRIVATE_KEY
-            certificate = self.target / MOK_CERTIFICATE
-            private.parent.mkdir(parents=True, exist_ok=True)
-            private.write_bytes(b"new-private")
-            certificate.write_bytes(b"new-certificate")
         return result
 
 
@@ -59,7 +60,6 @@ def prepare_secure_boot_target(
         )
     )
     for relative in (
-        "usr/sbin/update-secureboot-policy",
         "usr/bin/mokutil",
         "usr/bin/openssl",
         *signed,
@@ -79,34 +79,6 @@ def prepare_signed_efi_chain(target: Path) -> None:
         path.touch()
 
 
-def configure_key_outputs(runner: FakeRunner, target: Path) -> None:
-    runner.outputs[
-        (
-            "chroot",
-            str(target),
-            "openssl",
-            "x509",
-            "-inform",
-            "DER",
-            "-in",
-            f"/{MOK_CERTIFICATE}",
-            "-pubkey",
-            "-noout",
-        )
-    ] = (PUBLIC_KEY, "", 0)
-    runner.outputs[
-        (
-            "chroot",
-            str(target),
-            "openssl",
-            "pkey",
-            "-in",
-            f"/{MOK_PRIVATE_KEY}",
-            "-pubout",
-        )
-    ] = (PUBLIC_KEY, "", 0)
-
-
 class PrepareSecureBootTests(unittest.TestCase):
     def test_replaces_unmarked_live_key_and_configures_dkms(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -118,7 +90,6 @@ class PrepareSecureBootTests(unittest.TestCase):
             private.write_bytes(b"live-private")
             certificate.write_bytes(b"live-certificate")
             runner = KeyGeneratingRunner(target)
-            configure_key_outputs(runner, target)
             context = InstallContext(
                 valid_plan(), lambda _message: None, {"target": target}
             )
@@ -126,12 +97,12 @@ class PrepareSecureBootTests(unittest.TestCase):
             step.execute(context)
             step.verify(context)
 
-            self.assertEqual(private.read_bytes(), b"new-private")
-            self.assertEqual(certificate.read_bytes(), b"new-certificate")
+            self.assertNotEqual(private.read_bytes(), b"live-private")
+            self.assertNotEqual(certificate.read_bytes(), b"live-certificate")
             self.assertEqual(private.stat().st_mode & 0o777, 0o600)
             marker = (target / MOK_MARKER).read_text().strip()
             self.assertEqual(
-                marker, hashlib.sha256(b"new-certificate").hexdigest()
+                marker, hashlib.sha256(certificate.read_bytes()).hexdigest()
             )
             dkms = (
                 target
@@ -140,17 +111,12 @@ class PrepareSecureBootTests(unittest.TestCase):
             self.assertIn("MOK.priv", dkms)
             self.assertIn("MOK.der", dkms)
 
-        self.assertIn(
-            (
-                "chroot",
-                str(target),
-                "update-secureboot-policy",
-                "--new-key",
-            ),
-            [item[0] for item in runner.commands],
-        )
+        generate, = [command for command, _ in runner.commands if command[:2] == ('openssl', 'req')]
+        self.assertIn('rsa:3072', generate)
+        self.assertIn('extendedKeyUsage=codeSigning', generate)
+        self.assertFalse(any('update-secureboot-policy' in command for command, _ in runner.commands))
 
-    def test_secure_boot_disabled_does_nothing(self):
+    def test_secure_boot_disabled_prepares_unified_identity_without_enrollment(self):
         base = valid_plan()
         plan = replace(
             base,
@@ -159,11 +125,20 @@ class PrepareSecureBootTests(unittest.TestCase):
                 mok_password_policy=MokPasswordPolicy.NOT_APPLICABLE
             ),
         )
-        runner = FakeRunner()
-        context = InstallContext(plan, lambda _message: None)
-        PrepareSecureBootStep(runner).execute(context)
-        self.assertFalse(context.values["secure_boot_prepared"])
-        self.assertEqual(runner.commands, [])
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_secure_boot_target(target)
+            # Disabled Secure Boot must not demand signed bootloader payloads.
+            (target / 'usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed').unlink()
+            runner = KeyGeneratingRunner(target)
+            context = InstallContext(plan, lambda _message: None, {'target': target})
+            step = PrepareSecureBootStep(runner)
+            step.execute(context)
+            step.verify(context)
+            EnrollSecureBootStep(runner).execute(context)
+            self.assertTrue(context.values['secure_boot_prepared'])
+            self.assertFalse(context.values['mok_enrollment_pending'])
+            self.assertTrue(all(command[0] == 'openssl' for command, _ in runner.commands))
 
     def test_unsupported_secure_boot_does_nothing(self):
         base = valid_plan()
@@ -187,7 +162,6 @@ class PrepareSecureBootTests(unittest.TestCase):
             target = Path(directory)
             prepare_secure_boot_target(target, Architecture.ARM64)
             runner = KeyGeneratingRunner(target)
-            configure_key_outputs(runner, target)
             context = InstallContext(
                 valid_plan(architecture=Architecture.ARM64),
                 lambda _message: None,
@@ -214,13 +188,170 @@ class PrepareSecureBootTests(unittest.TestCase):
                 PrepareSecureBootStep(runner).execute(context)
         self.assertFalse(
             any(
-                command[-2:] == ("update-secureboot-policy", "--new-key")
+                command[:2] == ("openssl", "req")
                 for command, _kwargs in runner.commands
             )
         )
 
+    def test_retry_preserves_the_same_certificate_and_checks_its_purpose(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_secure_boot_target(target)
+            runner = KeyGeneratingRunner(target)
+            context = InstallContext(valid_plan(), lambda _: None, {'target': target})
+            step = PrepareSecureBootStep(runner)
+            step.execute(context)
+            before = ((target / MOK_PRIVATE_KEY).read_bytes(), (target / MOK_CERTIFICATE).read_bytes())
+            step.execute(context)
+            step.verify(context)
+            self.assertEqual(before, ((target / MOK_PRIVATE_KEY).read_bytes(), (target / MOK_CERTIFICATE).read_bytes()))
+            self.assertEqual(sum(cmd[:2] == ('openssl', 'req') for cmd, _ in runner.commands), 1)
+
+    def test_independent_installations_generate_different_unified_keys(self):
+        fingerprints = []
+        private_fingerprints = []
+        for _ in range(2):
+            with tempfile.TemporaryDirectory() as directory:
+                target = Path(directory)
+                prepare_secure_boot_target(target)
+                runner = KeyGeneratingRunner(target)
+                step = PrepareSecureBootStep(runner)
+                context = InstallContext(valid_plan(), lambda _: None, {'target': target})
+                step.execute(context)
+                step.verify(context)
+                fingerprints.append(hashlib.sha256((target / MOK_CERTIFICATE).read_bytes()).hexdigest())
+                private_fingerprints.append(hashlib.sha256((target / MOK_PRIVATE_KEY).read_bytes()).hexdigest())
+                text = runner.run(['openssl', 'x509', '-inform', 'DER', '-in', str(target / MOK_CERTIFICATE), '-noout', '-text']).stdout
+                self.assertIn('Code Signing', text)
+                self.assertIn('Digital Signature', text)
+                self.assertNotIn('1.3.6.1.4.1.2312.16.1.2', text)
+        self.assertNotEqual(*fingerprints)
+        self.assertNotEqual(*private_fingerprints)
+
+    def test_driver_center_inspector_recognizes_fresh_identity_without_migration_metadata(self):
+        from anduinos_secureboot import identity
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_secure_boot_target(target)
+            runner = KeyGeneratingRunner(target)
+            context = InstallContext(valid_plan(), lambda _: None, {'target': target})
+            PrepareSecureBootStep(runner).execute(context)
+            cert, key = target / MOK_CERTIFICATE, target / MOK_PRIVATE_KEY
+            root = target / 'var/lib/anduinos-secureboot'
+            with patch.object(identity, 'LEGACY_CERTIFICATE', cert), patch.object(identity, 'LEGACY_KEY', key):
+                state = identity.inspect_identity(runner, root)
+                self.assertEqual(state.purpose, 'unified')
+                self.assertFalse(state.usable)
+                runner.outputs[('mokutil', '--list-enrolled')] = (
+                    'SHA1 Fingerprint: ' + hashlib.sha1(cert.read_bytes()).hexdigest() + '\n', '', 0)
+                state = identity.inspect_identity(runner, root)
+                self.assertTrue(state.usable)
+                self.assertFalse(state.managed)
+            self.assertFalse(root.exists())
+
+    def test_marked_module_only_identity_is_rejected_not_silently_reused(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_secure_boot_target(target)
+            key, cert = target / MOK_PRIVATE_KEY, target / MOK_CERTIFICATE
+            key.parent.mkdir(parents=True)
+            runner = KeyGeneratingRunner(target)
+            runner.run(['openssl', 'req', '-new', '-x509', '-nodes', '-newkey', 'rsa:2048', '-days', '1',
+                        '-subj', '/CN=Old module only', '-addext', 'extendedKeyUsage=codeSigning,1.3.6.1.4.1.2312.16.1.2',
+                        '-outform', 'DER', '-keyout', str(key), '-out', str(cert)])
+            marker = target / MOK_MARKER
+            marker.parent.mkdir(parents=True)
+            marker.write_text(hashlib.sha256(cert.read_bytes()).hexdigest())
+            context = InstallContext(valid_plan(), lambda _: None, {'target': target})
+            with self.assertRaisesRegex(ValueError, 'both GRUB'):
+                PrepareSecureBootStep(runner).execute(context)
+            self.assertNotIn('secure_boot_prepared', context.values)
+
+    def test_missing_half_of_pair_is_regenerated_for_fresh_target(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_secure_boot_target(target)
+            runner = KeyGeneratingRunner(target)
+            context = InstallContext(valid_plan(), lambda _: None, {'target': target})
+            step = PrepareSecureBootStep(runner)
+            step.execute(context)
+            old = (target / MOK_CERTIFICATE).read_bytes()
+            (target / MOK_PRIVATE_KEY).unlink()
+            step.execute(context)
+            step.verify(context)
+            self.assertNotEqual(old, (target / MOK_CERTIFICATE).read_bytes())
+
+    def test_redirected_paths_or_copied_identity_store_fail_before_generation(self):
+        with tempfile.TemporaryDirectory() as directory, tempfile.TemporaryDirectory() as outside:
+            target = Path(directory)
+            prepare_secure_boot_target(target)
+            runner = KeyGeneratingRunner(target)
+            context = InstallContext(valid_plan(), lambda _: None, {'target': target})
+            parent = target / MOK_PRIVATE_KEY.parent
+            parent.parent.mkdir(parents=True)
+            parent.symlink_to(outside, target_is_directory=True)
+            with self.assertRaisesRegex(RuntimeError, 'Redirected'):
+                PrepareSecureBootStep(runner).execute(context)
+            parent.unlink()
+            (target / 'var/lib/anduinos-secureboot').mkdir()
+            with self.assertRaisesRegex(RuntimeError, 'identity store'):
+                PrepareSecureBootStep(runner).execute(context)
+            self.assertEqual(runner.commands, [])
+
 
 class EnrollSecureBootTests(unittest.TestCase):
+    def test_foreign_pending_or_unknown_state_never_imports_a_key(self):
+        cases = [
+            ('--list-new', ('SHA1 Fingerprint: ' + 'b' * 40 + '\n', '', 0)),
+            ('--list-new', ('', 'unreadable', 1)),
+            ('--list-new', ('malformed', '', 0)),
+            ('--list-enrolled', ('', 'unreadable', 1)),
+        ]
+        for operation, output in cases:
+            with self.subTest(operation=operation, output=output), tempfile.TemporaryDirectory() as directory:
+                target = Path(directory)
+                cert = target / MOK_CERTIFICATE
+                cert.parent.mkdir(parents=True)
+                cert.write_bytes(b'certificate')
+                prepare_signed_efi_chain(target)
+                runner = FakeRunner()
+                runner.outputs[('chroot', str(target), 'mokutil', operation)] = output
+                context = InstallContext(valid_plan(), lambda _: None,
+                                         {'target': target, 'secure_boot_prepared': True})
+                with self.assertRaises(RuntimeError):
+                    EnrollSecureBootStep(runner).execute(context)
+                self.assertFalse(any('--import' in cmd or '--revoke-import' in cmd for cmd, _ in runner.commands))
+
+    def test_cancelled_request_can_be_retried_with_the_same_generated_certificate(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_secure_boot_target(target)
+            prepare_signed_efi_chain(target)
+            runner = KeyGeneratingRunner(target)
+            context = InstallContext(valid_plan(), lambda _: None, {'target': target})
+            prepare = PrepareSecureBootStep(runner)
+            prepare.execute(context)
+            before = (target / MOK_CERTIFICATE).read_bytes()
+            enrollment = EnrollSecureBootStep(runner)
+            enrollment.execute(context)
+            fingerprint = hashlib.sha1(before).hexdigest()
+            pending_command = ('chroot', str(target), 'mokutil', '--list-new')
+            runner.outputs[pending_command] = ('SHA1 Fingerprint: ' + fingerprint + '\n', '', 0)
+            enrollment.verify(context)
+            enrollment.execute(context)
+            self.assertEqual(sum('--import' in cmd for cmd, _ in runner.commands), 1)
+            # User cancels MOKManager. Retry neither rotates the key nor
+            # requires any "Use" action after physical enrollment succeeds.
+            runner.outputs[pending_command] = ('', '', 0)
+            prepare.execute(context)
+            enrollment.execute(context)
+            self.assertEqual(sum('--import' in cmd for cmd, _ in runner.commands), 2)
+            runner.outputs[('chroot', str(target), 'mokutil', '--list-enrolled')] = ('SHA1 Fingerprint: ' + fingerprint + '\n', '', 0)
+            enrollment.execute(context)
+            enrollment.verify(context)
+            self.assertFalse(context.values['mok_enrollment_pending'])
+            self.assertEqual(before, (target / MOK_CERTIFICATE).read_bytes())
+
     def test_password_is_only_sent_on_stdin(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)

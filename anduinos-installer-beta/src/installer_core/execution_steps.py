@@ -209,6 +209,17 @@ class CopySystemStep:
     progress_weight: int = 60
     destructive: bool = False
 
+    # Signing identities belong to the installed machine, never to an ISO.
+    # Exclude metadata/backups too: they could otherwise override a fresh MOK.
+    signing_excludes = (
+        "var/lib/shim-signed/mok",
+        "var/lib/anduinos-secureboot",
+        "var/lib/anduinos-installer/mok-certificate.sha256",
+        "var/lib/dkms/mok.key",
+        "var/lib/dkms/mok.pub",
+        "etc/dkms/framework.conf.d/anduinos-sb-sign.conf",
+    )
+
     def preflight(self, context: InstallContext) -> None:
         self.runner.require_commands(("unsquashfs",))
         source = Path(context.plan.source.image_path)
@@ -221,9 +232,11 @@ class CopySystemStep:
             (
                 "unsquashfs",
                 "-force",
+                "-excludes",
                 "-dest",
                 str(target),
                 context.plan.source.image_path,
+                *self.signing_excludes,
             ),
             timeout=3600,
         )

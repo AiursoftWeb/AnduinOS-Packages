@@ -63,6 +63,15 @@ packages second, encrypted installation third, and Stonking integration last.
 
 ## Scope contract
 
+### Fresh installation API
+
+The installer uses `identity.generate_identity` and `identity.check_unified_pair`
+with explicit target paths. These functions do not read firmware or enroll a
+certificate. They share the purpose policy used by Driver Center, but do not
+invoke existing-machine migration or wait for enrollment before signing the
+new target's modules. A fresh installation can use the standard MOK paths
+directly; it does not need a managed migration identity or a second "Use" step.
+
 The toolkit is deliberately narrow. It may:
 
 - inspect Secure Boot, MOK enrollment, matching kernel headers, and DKMS;

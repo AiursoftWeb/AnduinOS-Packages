@@ -99,6 +99,29 @@ def enrollment_state(certificate: Path, runner) -> str:
     return 'absent'
 
 
+def certificate_purpose(text: str) -> str:
+    """Shared purpose policy for installed identities and fresh installations."""
+    if MODULE_ONLY_OID in text:
+        return 'module-only'
+    eku = re.search(r'X509v3 Extended Key Usage[^\n]*\n\s*([^\n]+)', text)
+    purpose = 'unified' if (eku is None or 'Code Signing' in eku[1]
+                            or '1.3.6.1.5.5.7.3.3' in eku[1]) else 'unsupported'
+    usage = re.search(r'X509v3 Key Usage[^\n]*\n\s*([^\n]+)', text)
+    if usage and 'Digital Signature' not in usage[1]:
+        purpose = 'unsupported'
+    return purpose
+
+
+def check_unified_pair(private_key: Path, certificate: Path, run) -> None:
+    """Validate signing material without requiring firmware access/enrollment."""
+    check_pair(private_key, certificate, run)
+    text = run(['openssl', 'x509', '-inform', 'DER', '-in', str(certificate), '-noout', '-text'], timeout=30)
+    if text.returncode or not text.stdout.strip() or certificate_purpose(text.stdout) != 'unified':
+        raise ValueError('Certificate must allow both GRUB and kernel module signing')
+    if run(['openssl', 'x509', '-inform', 'DER', '-in', str(certificate), '-noout', '-checkend', '0'], timeout=30).returncode:
+        raise ValueError('Signing certificate has expired')
+
+
 def inspect_identity(runner, root: Path = ROOT) -> IdentityStatus:
     try:
         name = current_identity(root)
@@ -109,15 +132,7 @@ def inspect_identity(runner, root: Path = ROOT) -> IdentityStatus:
         result = runner.run(['openssl', 'x509', '-inform', 'DER', '-in', str(certificate), '-noout', '-text'])
         if result.returncode:
             raise ValueError('The certificate cannot be parsed')
-        if MODULE_ONLY_OID in result.stdout:
-            purpose = 'module-only'
-        else:
-            eku = re.search(r'X509v3 Extended Key Usage[^\n]*\n\s*([^\n]+)', result.stdout)
-            purpose = 'unified' if (eku is None or 'Code Signing' in eku[1]
-                                    or '1.3.6.1.5.5.7.3.3' in eku[1]) else 'unsupported'
-            usage = re.search(r'X509v3 Key Usage[^\n]*\n\s*([^\n]+)', result.stdout)
-            if usage and 'Digital Signature' not in usage[1]:
-                purpose = 'unsupported'
+        purpose = certificate_purpose(result.stdout)
         if runner.run(['openssl', 'x509', '-inform', 'DER', '-in', str(certificate), '-noout', '-checkend', '0']).returncode:
             purpose = 'expired'
         from .defaults import defaults_ready

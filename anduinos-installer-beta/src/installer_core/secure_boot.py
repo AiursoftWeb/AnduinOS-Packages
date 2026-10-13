@@ -7,6 +7,9 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+from anduinos_secureboot.identity import check_unified_pair, generate_identity
+from anduinos_secureboot.defaults import atomic_write
+
 from .command import CommandRunner
 from .model import Architecture, InstallPlan, SecureBoot
 from .steps import FailurePolicy, InstallContext
@@ -32,16 +35,17 @@ class PrepareSecureBootStep:
 
     def preflight(self, context: InstallContext) -> None:
         context.validate_plan()
+        if _needs_identity(context.plan):
+            self.runner.require_commands(("chroot", "openssl"))
         if _enabled(context.plan):
-            self.runner.require_commands(("chroot", "sbverify"))
+            self.runner.require_commands(("sbverify",))
 
     def execute(self, context: InstallContext) -> None:
-        if not _enabled(context.plan):
+        if not _needs_identity(context.plan):
             context.values["secure_boot_prepared"] = False
             return
         target = _target(context)
         required = (
-            target / "usr/sbin/update-secureboot-policy",
             target / "usr/bin/mokutil",
             target / "usr/bin/openssl",
         )
@@ -51,11 +55,13 @@ class PrepareSecureBootStep:
                 "Secure Boot tools are missing from target: "
                 + ", ".join(missing)
             )
-        _require_signed_payloads(target, context.plan)
+        if _enabled(context.plan):
+            _require_signed_payloads(target, context.plan)
 
         private_key = target / MOK_PRIVATE_KEY
         certificate = target / MOK_CERTIFICATE
         marker = target / MOK_MARKER
+        _validate_signing_paths(target)
         if not _is_installer_key(certificate, private_key, marker):
             # Never clone a build-time or live-session private key.
             for path in (private_key, certificate, target / MOK_DIRECTORY / ".rnd"):
@@ -64,31 +70,25 @@ class PrepareSecureBootStep:
             if marker.exists() or marker.is_symlink():
                 marker.unlink()
             (target / MOK_DIRECTORY).mkdir(parents=True, exist_ok=True)
-            self.runner.run(
-                (
-                    "chroot",
-                    str(target),
-                    "update-secureboot-policy",
-                    "--new-key",
-                ),
-                timeout=120,
-            )
-            if not private_key.is_file() or not certificate.is_file():
-                raise RuntimeError("Secure Boot key generation produced no key pair")
-            marker.parent.mkdir(parents=True, exist_ok=True)
-            marker.write_text(_sha256(certificate) + "\n", encoding="ascii")
+            # No migration/enrollment helper here: a fresh target has no old
+            # working identity. Use the shared generator with target paths,
+            # before any target DKMS builds, even when Secure Boot is disabled.
+            generate_identity(private_key, certificate, self.runner.run)
 
         private_key.chmod(0o600)
         certificate.chmod(0o644)
         _verify_key_pair(self.runner, target)
         _write_dkms_configuration(target)
+        marker.parent.mkdir(parents=True, exist_ok=True)
+        atomic_write(marker, (_sha256(certificate) + "\n").encode("ascii"), 0o644)
         context.values["secure_boot_certificate_sha1"] = _sha1(certificate)
         context.values["secure_boot_prepared"] = True
 
     def verify(self, context: InstallContext) -> None:
-        if not _enabled(context.plan):
+        if not _needs_identity(context.plan):
             return
         target = _target(context)
+        _validate_signing_paths(target)
         private_key = target / MOK_PRIVATE_KEY
         certificate = target / MOK_CERTIFICATE
         if not private_key.is_file() or not certificate.is_file():
@@ -125,7 +125,7 @@ class VerifyDkmsSignaturesStep:
             )
 
     def verify(self, context: InstallContext) -> None:
-        if not _enabled(context.plan):
+        if not _needs_identity(context.plan):
             return
         target = _target(context)
         certificate = target / MOK_CERTIFICATE
@@ -208,7 +208,10 @@ class EnrollSecureBootStep:
         if _is_enrolled(self.runner, target):
             context.values["mok_enrollment_pending"] = False
             return
-        if fingerprint not in _pending_fingerprints(self.runner, target):
+        pending = _pending_fingerprints(self.runner, target)
+        if pending and fingerprint not in pending:
+            raise RuntimeError('Another MOK enrollment request is pending. Complete it before retrying this installation.')
+        if fingerprint not in pending:
             password_input = (
                 f"{MOK_ENROLLMENT_PASSWORD}\n"
                 f"{MOK_ENROLLMENT_PASSWORD}\n"
@@ -250,6 +253,26 @@ def _enabled(plan: InstallPlan) -> bool:
     return plan.platform.secure_boot is SecureBoot.ENABLED
 
 
+def _needs_identity(plan: InstallPlan) -> bool:
+    # Prepare correct signing material now; only ENABLED schedules enrollment.
+    return plan.platform.secure_boot in {SecureBoot.ENABLED, SecureBoot.DISABLED}
+
+
+def _validate_signing_paths(target: Path) -> None:
+    root = target.resolve()
+    if root == Path('/'):
+        raise RuntimeError('Signing initialization requires an installation target, not the live root')
+    for relative in (MOK_PRIVATE_KEY, MOK_CERTIFICATE, MOK_MARKER,
+                     Path('etc/dkms/framework.conf.d/anduinos-sb-sign.conf')):
+        path = target / relative
+        if path.is_symlink() or not path.resolve().is_relative_to(root):
+            raise RuntimeError(f'Redirected installation signing path: {path}')
+    # CopySystemStep excludes this entire store. Refuse an unexpected store
+    # instead of letting Driver Center select a copied Live signing identity.
+    if (target / 'var/lib/anduinos-secureboot').exists():
+        raise RuntimeError('Installation target contains an unexpected managed signing identity store')
+
+
 def _is_installer_key(certificate: Path, private_key: Path, marker: Path) -> bool:
     if not certificate.is_file() or not private_key.is_file() or not marker.is_file():
         return False
@@ -257,46 +280,15 @@ def _is_installer_key(certificate: Path, private_key: Path, marker: Path) -> boo
 
 
 def _verify_key_pair(runner: CommandRunner, target: Path) -> None:
-    certificate_public = runner.run(
-        (
-            "chroot",
-            str(target),
-            "openssl",
-            "x509",
-            "-inform",
-            "DER",
-            "-in",
-            f"/{MOK_CERTIFICATE}",
-            "-pubkey",
-            "-noout",
-        ),
-        timeout=30,
-    ).stdout.strip()
-    private_public = runner.run(
-        (
-            "chroot",
-            str(target),
-            "openssl",
-            "pkey",
-            "-in",
-            f"/{MOK_PRIVATE_KEY}",
-            "-pubout",
-        ),
-        timeout=30,
-    ).stdout.strip()
-    if not certificate_public or certificate_public != private_public:
-        raise RuntimeError("MOK certificate does not match its private key")
+    check_unified_pair(target / MOK_PRIVATE_KEY, target / MOK_CERTIFICATE, runner.run)
 
 
 def _write_dkms_configuration(target: Path) -> None:
     config = target / "etc/dkms/framework.conf.d/anduinos-sb-sign.conf"
     config.parent.mkdir(parents=True, exist_ok=True)
-    config.write_text(
-        'mok_signing_key="/var/lib/shim-signed/mok/MOK.priv"\n'
-        'mok_certificate="/var/lib/shim-signed/mok/MOK.der"\n',
-        encoding="utf-8",
-    )
-    config.chmod(0o644)
+    atomic_write(config,
+        b'mok_signing_key="/var/lib/shim-signed/mok/MOK.priv"\n'
+        b'mok_certificate="/var/lib/shim-signed/mok/MOK.der"\n', 0o644)
 
 
 def _require_signed_payloads(target: Path, plan: InstallPlan) -> None:
@@ -357,7 +349,11 @@ def _is_enrolled(runner: CommandRunner, target: Path) -> bool:
         timeout=30,
     )
     message = f"{result.stdout}\n{result.stderr}".lower()
-    return "is already enrolled" in message or "is already in db" in message
+    if "is already enrolled" in message or "is already in db" in message:
+        return True
+    if "is not enrolled" in message or "is not in db" in message:
+        return False
+    raise RuntimeError('MOK enrollment state could not be verified')
 
 
 def _mok_fingerprints(
@@ -370,7 +366,7 @@ def _mok_fingerprints(
     )
     if result.returncode != 0:
         return None
-    return frozenset(
+    fingerprints = frozenset(
         normalized
         for value in re.findall(
             r"^SHA1 Fingerprint:\s*([0-9a-f:]+)\s*$",
@@ -379,12 +375,16 @@ def _mok_fingerprints(
         )
         if (normalized := _sha1_fingerprint(value))
     )
+    return fingerprints if fingerprints or not result.stdout.strip() else None
 
 
 def _pending_fingerprints(
     runner: CommandRunner, target: Path
 ) -> frozenset[str]:
-    return _mok_fingerprints(runner, target, "--list-new") or frozenset()
+    fingerprints = _mok_fingerprints(runner, target, "--list-new")
+    if fingerprints is None:
+        raise RuntimeError('Pending MOK enrollment requests could not be verified')
+    return fingerprints
 
 
 def _sha1(path: Path) -> str:

@@ -80,6 +80,30 @@ class IdentityTests(unittest.TestCase):
         self.assertEqual(self.key.stat().st_mode & 0o777, 0o600)
         identity.check_pair(self.key, self.cert, run_command)
 
+    def test_fresh_install_validation_needs_no_firmware_or_enrollment(self):
+        key, cert = self.candidate()
+        identity.check_unified_pair(key, cert, self.firmware.run)
+        self.assertTrue(all(command[0] == 'openssl' for command in self.firmware.calls))
+        self.assertEqual(self.firmware.enrolled, set())
+        self.assertEqual(self.firmware.pending, set())
+
+    def test_shared_purpose_policy_rejects_module_only_and_non_signing_usage(self):
+        self.assertEqual(identity.certificate_purpose('X509v3 Extended Key Usage:\n    Code Signing'), 'unified')
+        self.assertEqual(identity.certificate_purpose('X509v3 Extended Key Usage:\n    Code Signing, ' + identity.MODULE_ONLY_OID), 'module-only')
+        self.assertEqual(identity.certificate_purpose('X509v3 Extended Key Usage:\n    TLS Web Server Authentication'), 'unsupported')
+        self.assertEqual(identity.certificate_purpose('X509v3 Key Usage:\n    Key Encipherment'), 'unsupported')
+
+    def test_fresh_install_validation_rejects_expired_certificate(self):
+        key, cert = self.candidate()
+
+        def run(command, **kwargs):
+            if '-checkend' in command:
+                return subprocess.CompletedProcess(command, 1, 'Certificate will expire', '')
+            return self.firmware.run(command, **kwargs)
+
+        with self.assertRaisesRegex(ValueError, 'expired'):
+            identity.check_unified_pair(key, cert, run)
+
     def test_partial_pair_is_never_overwritten(self):
         key, cert = self.candidate()
         before = cert.read_bytes()
