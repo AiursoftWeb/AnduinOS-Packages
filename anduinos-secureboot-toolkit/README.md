@@ -58,6 +58,14 @@ DKMS configuration are rejected. No MOK is deleted; no module is rebuilt.
 The UI detects unsynchronized defaults and offers repair only if needed;
 there is no normal manual activation step. Do not delete the old MOK.
 
+Synchronization also retires the exact `framework.conf.d/mok.conf` template
+written by the July 2026 OOBE Xbox installation flow, provided its obsolete
+`sign_helper.sh` is absent. The file joins the same private backup/rollback
+transaction before removal. This works through the existing repair button,
+boot service and package upgrade; no additional user decision or enrollment
+is needed. Modified configurations, redirected files and real custom helpers
+are not silently removed.
+
 The roadmap is certificate migration on Resolute first, custom GRUB/shim
 packages second, encrypted installation third, and Stonking integration last.
 

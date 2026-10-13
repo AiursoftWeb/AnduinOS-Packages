@@ -9,25 +9,53 @@ from __future__ import annotations
 
 import os
 import re
+import stat
 from pathlib import Path
 import tempfile
 
 from . import identity
 
 CONFIG = Path('/etc/dkms/framework.conf.d/anduinos-sb-sign.conf')
+# OOBE c63bc130 wrote this before installing Xbox drivers. 4ae49bc5 stopped
+# writing it, but existing installations retained the runtime-generated file.
+OOBE_CONFIG = (
+    'sign_tool="/etc/dkms/sign_helper.sh"\n'
+    'mok_signing_key="/var/lib/shim-signed/mok/MOK.priv"\n'
+    'mok_certificate="/var/lib/shim-signed/mok/MOK.der"\n'
+)
 
 
 def configuration(key: Path, cert: Path) -> str:
     return f'mok_signing_key="{key}"\nmok_certificate="{cert}"\n'
 
 
-def configuration_conflict(config: Path) -> Path | None:
+def configuration_conflict(config: Path, ignored: Path | None = None) -> Path | None:
     for other in [config.parent.parent / 'framework.conf', *sorted(config.parent.glob('*.conf'))]:
-        if other != config and other.exists() and re.search(
-                r'^\s*(?:export\s+)?(?:mok_signing_key|mok_certificate|sign_file)\s*=',
+        if other not in {config, ignored} and other.exists() and re.search(
+                r'^\s*(?:export\s+)?(?:mok_signing_key|mok_certificate|sign_file|sign_tool)\s*=',
                 other.read_text(), re.MULTILINE):
             return other
     return None
+
+
+def obsolete_oobe_config(config: Path) -> Path | None:
+    path = config.parent / 'mok.conf'
+    if not path.exists() and not path.is_symlink():
+        return None
+    info = path.lstat()
+    if not stat.S_ISREG(info.st_mode) or path.read_bytes() != OOBE_CONFIG.encode():
+        return None
+    # A real helper may be a user's customization. Never remove its hook.
+    helper = config.parent.parent / 'sign_helper.sh'
+    if helper.exists() or helper.is_symlink():
+        return None
+    safe_path(path.parent)
+    # The original OOBE created root:root 0664 files; permit that specific
+    # group-writable case, not files writable by other users/groups.
+    if (info.st_uid != os.geteuid() or info.st_gid not in {0, os.getegid()}
+            or info.st_mode & 0o002):
+        raise ValueError(f'Unsafe legacy signing configuration: {path}')
+    return path
 
 
 def defaults_ready(key: Path, cert: Path, legacy: Path | None = None,
@@ -108,12 +136,17 @@ def sync_defaults(run, root: Path = identity.ROOT, legacy: Path | None = None,
         raise ValueError(f'Custom DKMS signing configuration requires review: {config}')
     # DKMS sources other files too. Do not silently claim success if they
     # supply a competing key/certificate or an alternate signing command.
-    conflict = configuration_conflict(config)
+    obsolete = obsolete_oobe_config(config)
+    conflict = configuration_conflict(config, ignored=obsolete)
     if conflict:
         raise ValueError(f'Additional DKMS signing override requires review: {conflict}')
     new = [(config, configuration(key, cert).encode(), 0o644),
            (legacy / 'MOK.priv', key.read_bytes(), 0o600),
            (legacy / 'MOK.der', cert.read_bytes(), 0o644)]
+    if obsolete:
+        # Back up and remove this later-loaded override before changing the
+        # default pair. Rollback restores it last, after the original pair.
+        new.insert(0, (obsolete, None, 0o600))
     if all(path.is_file() and path.read_bytes() == data and path.stat().st_mode & 0o777 == mode
            for path, data, mode in new):
         result.steps['defaults'] = StepResult('skipped', 'Enrolled certificate is already the signing default')
@@ -143,7 +176,15 @@ def sync_defaults(run, root: Path = identity.ROOT, legacy: Path | None = None,
     try:
         for path, data, mode in new:
             path.parent.mkdir(parents=True, exist_ok=True, mode=0o755)
-            atomic_write(path, data, mode)
+            if data is None:
+                path.unlink()
+                descriptor = os.open(path.parent, os.O_DIRECTORY)
+                try:
+                    os.fsync(descriptor)
+                finally:
+                    os.close(descriptor)
+            else:
+                atomic_write(path, data, mode)
         identity.check_pair(legacy / 'MOK.priv', legacy / 'MOK.der', run)
     except Exception:
         # Restore compatibility copies before pointing DKMS back at them.

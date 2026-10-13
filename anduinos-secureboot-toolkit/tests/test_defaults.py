@@ -150,6 +150,147 @@ class DefaultsTests(unittest.TestCase):
             self.sync()
         self.assertFalse(self.ready())
 
+    def old_oobe_config(self):
+        path = self.config.parent / 'mok.conf'
+        path.write_text(defaults.OOBE_CONFIG)
+        path.chmod(0o664)  # Matches the original root:root file on ms.
+        return path
+
+    def test_old_oobe_config_is_backed_up_retired_and_repeat_is_noop(self):
+        override = self.old_oobe_config()
+        self.assertFalse(self.ready())
+        self.assertTrue(self.sync().ok)
+        self.assertFalse(override.exists())
+        self.assertTrue(self.ready())
+        backup, = (self.root / 'backups').iterdir()
+        saved = backup / '0-mok.conf'
+        self.assertEqual(saved.read_text(), defaults.OOBE_CONFIG)
+        self.assertEqual(saved.stat().st_mode & 0o777, 0o600)
+        self.assertEqual(backup.stat().st_mode & 0o777, 0o700)
+        self.assertIn(str(override), (backup / 'README').read_text())
+        self.assertEqual(self.sync().steps['defaults'].status, 'skipped')
+        self.assertEqual(list((self.root / 'backups').iterdir()), [backup])
+        self.assertEqual(self.firmware.enrolled, {'b' * 40, self.fingerprint})
+        self.assertFalse(any(c[0] in {'dkms', 'modprobe', 'grub-install'}
+                             or c[:2] == ('mokutil', '--import') for c in self.firmware.calls))
+
+    def test_old_oobe_config_is_preserved_until_enrollment_is_complete(self):
+        override = self.old_oobe_config()
+        self.firmware.enrolled = {'b' * 40}
+        before = self.before()
+        for pending in (set(), {self.fingerprint}):
+            self.firmware.pending = pending
+            self.assertEqual(self.sync().steps['defaults'].status, 'skipped')
+            self.assertEqual(override.read_text(), defaults.OOBE_CONFIG)
+            self.assertEqual(before, self.before())
+        self.assertFalse((self.root / 'backups').exists())
+
+    def test_customized_old_oobe_config_is_not_removed(self):
+        override = self.old_oobe_config()
+        before = self.before()
+        for content in (defaults.OOBE_CONFIG + '# user customization\n',
+                        defaults.OOBE_CONFIG.replace('MOK.priv', 'other.priv'),
+                        defaults.OOBE_CONFIG + 'sign_file="/custom"\n'):
+            with self.subTest(content=content):
+                override.write_text(content)
+                with self.assertRaisesRegex(ValueError, 'requires review'):
+                    self.sync()
+                self.assertEqual(override.read_text(), content)
+                self.assertEqual(before, self.before())
+                self.assertFalse((self.root / 'backups').exists())
+
+    def test_real_or_redirected_helper_prevents_automatic_retirement(self):
+        override = self.old_oobe_config()
+        helper = self.config.parent.parent / 'sign_helper.sh'
+        for redirected in (False, True):
+            with self.subTest(redirected=redirected):
+                if redirected:
+                    helper.symlink_to(self.base / 'missing-helper')
+                else:
+                    helper.write_text('#!/bin/sh\nexit 0\n')
+                with self.assertRaisesRegex(ValueError, 'requires review'):
+                    self.sync()
+                self.assertEqual(override.read_text(), defaults.OOBE_CONFIG)
+                helper.unlink()
+
+    def test_redirected_or_world_writable_old_config_is_preserved(self):
+        override = self.old_oobe_config()
+        original = self.base / 'original.conf'
+        override.rename(original)
+        override.symlink_to(original)
+        with self.assertRaisesRegex(ValueError, 'requires review'):
+            self.sync()
+        self.assertTrue(override.is_symlink())
+        self.assertEqual(original.read_text(), defaults.OOBE_CONFIG)
+        override.unlink()
+        original.rename(override)
+        override.chmod(0o666)
+        with self.assertRaisesRegex(ValueError, 'Unsafe legacy'):
+            self.sync()
+        self.assertEqual(override.read_text(), defaults.OOBE_CONFIG)
+        self.assertFalse((self.root / 'backups').exists())
+
+    def test_other_override_blocks_migration_before_retiring_old_config(self):
+        override = self.old_oobe_config()
+        before = self.before()
+        (self.config.parent / 'z-custom.conf').write_text('sign_tool="/custom"\n')
+        with self.assertRaisesRegex(ValueError, 'z-custom.conf'):
+            self.sync()
+        self.assertEqual(override.read_text(), defaults.OOBE_CONFIG)
+        self.assertEqual(before, self.before())
+        self.assertFalse((self.root / 'backups').exists())
+
+    def test_failed_migration_restores_old_config_and_key_pair(self):
+        override = self.old_oobe_config()
+        before = self.before()
+        original = defaults.atomic_write
+        failed = False
+
+        def write(path, data, mode):
+            nonlocal failed
+            if path == self.legacy / 'MOK.der' and not failed:
+                failed = True
+                self.assertFalse(override.exists())
+                raise OSError('simulated full disk')
+            return original(path, data, mode)
+
+        with patch.object(defaults, 'atomic_write', side_effect=write):
+            with self.assertRaisesRegex(OSError, 'full disk'):
+                self.sync()
+        self.assertEqual(before, self.before())
+        self.assertEqual(override.read_text(), defaults.OOBE_CONFIG)
+        self.assertEqual(override.stat().st_mode & 0o777, 0o664)
+        self.assertTrue(self.sync().ok)
+        self.assertTrue(self.ready())
+
+    def test_interruption_after_retirement_is_retryable_with_original_backup(self):
+        override = self.old_oobe_config()
+        original = defaults.atomic_write
+
+        def write(path, data, mode):
+            if path == self.config:
+                self.assertFalse(override.exists())
+                raise KeyboardInterrupt('simulated power loss')
+            return original(path, data, mode)
+
+        with patch.object(defaults, 'atomic_write', side_effect=write):
+            with self.assertRaises(KeyboardInterrupt):
+                self.sync()
+        backup, = (self.root / 'backups').iterdir()
+        saved = {p: p.read_bytes() for p in backup.iterdir()}
+        self.assertTrue(self.sync().ok)
+        self.assertTrue(self.ready())
+        self.assertTrue(all(p.read_bytes() == data for p, data in saved.items()))
+
+    def test_backup_failure_leaves_old_config_and_defaults_untouched(self):
+        override = self.old_oobe_config()
+        before = self.before()
+        with patch.object(defaults, 'atomic_write', side_effect=OSError('backup failed')):
+            with self.assertRaisesRegex(OSError, 'backup failed'):
+                self.sync()
+        self.assertEqual(override.read_text(), defaults.OOBE_CONFIG)
+        self.assertEqual(before, self.before())
+
     def test_failed_write_rolls_back_and_retry_succeeds(self):
         before = self.before()
         original = defaults.atomic_write
