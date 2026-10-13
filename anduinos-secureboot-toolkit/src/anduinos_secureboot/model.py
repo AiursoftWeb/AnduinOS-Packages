@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 
+from .identity import IdentityStatus
+
 
 class SecureBootStatus(str, Enum):
     ENABLED = "enabled"
@@ -29,6 +31,10 @@ class SecureBootState:
     boot_loader: str = "unknown"
     firmware_reason: str = ""
     firmware_detail: str = ""
+    # During certificate rotation, previously enrolled identities remain valid.
+    # This is deliberately independent of the active local signing identity.
+    enrolled_certificate_serials: tuple[str, ...] = field(default_factory=tuple)
+    signing_identity: IdentityStatus | None = None
 
     def __post_init__(self) -> None:
         status = self.status
@@ -95,6 +101,7 @@ class ModuleState:
     path: str
     signature_key: str | None
     trusted: bool
+    signed_by_current_certificate: bool = False
 
 
 @dataclass(frozen=True)

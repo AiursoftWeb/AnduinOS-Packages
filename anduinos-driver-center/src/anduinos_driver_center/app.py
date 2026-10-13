@@ -71,6 +71,10 @@ def _secure_boot_summary(state: SecureBootState, dkms: DkmsState) -> tuple[str, 
         return _("Not available"), _("Firmware does not support Secure Boot"), "installed-pill"
     if state.status is SecureBootStatus.UNKNOWN:
         return _("Unknown"), _("Secure Boot state could not be determined"), "warning-pill"
+    identity = state.signing_identity
+    if identity is not None and (identity.purpose != "unified" or identity.candidate
+                                 or identity.enrollment != "enrolled" or not identity.key_present):
+        return _("Action required"), _("Signing certificate needs attention"), "warning-pill"
     if state.enabled and state.ready and dkms.ready:
         return _("Trusted"), _("Trust established"), "success-pill"
     if state.firmware_enable_ready and dkms.ready and state.setup_mode is not True:

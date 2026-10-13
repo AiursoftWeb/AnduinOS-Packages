@@ -1690,3 +1690,152 @@ msgstr "固件平台密钥尚未配置。这与 MOK 证书注册是两回事。"
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Configure the Secure Boot platform keys in UEFI settings before enabling Secure Boot. Use the manufacturer's factory keys for a standard setup; if you use custom keys, follow your administrator's policy."
 msgstr "启用 Secure Boot 前，请在 UEFI 设置中配置平台密钥。常规配置请使用厂商出厂密钥；如果使用自定义密钥，请遵循管理员的策略。"
+
+#. Unified certificate migration.
+msgid "Can sign both GRUB and kernel modules"
+msgstr "可同时签名 GRUB 和内核模组"
+
+#. Unified certificate migration.
+msgid "Certificate Signing Permissions"
+msgstr "证书签名用途"
+
+#. Unified certificate migration.
+msgid "Certificate Update Failed"
+msgstr "证书更新失败"
+
+#. Unified certificate migration.
+msgid "Certificate Updated"
+msgstr "证书已更新"
+
+#. Unified certificate migration.
+msgid ""
+"Certificate permissions could not be read. Check the certificate before "
+"continuing."
+msgstr "无法读取证书用途。请检查证书后再继续。"
+
+#. Unified certificate migration.
+msgid "Continue"
+msgstr "继续"
+
+#. Unified certificate migration.
+msgid "Create Unified Certificate"
+msgstr "创建统一签名证书"
+
+#. Unified certificate migration.
+msgid ""
+"Current GRUB and existing driver signatures are unchanged. Keep the old "
+"enrolled certificate."
+msgstr "当前 GRUB 和现有驱动签名均未更改。请保留已登记的旧证书。"
+
+#. Unified certificate migration.
+msgid ""
+"Current boot and driver trust are unchanged. A unified certificate prepares "
+"support for signing GRUB as well."
+msgstr "当前启动和驱动信任均未更改。统一签名证书也将为 GRUB 签名做好准备。"
+
+#. Unified certificate migration.
+msgid ""
+"Drivers remain trusted by an enrolled previous certificate; no re-signing is"
+" needed."
+msgstr "驱动仍由已登记的旧证书信任，无需重新签名。"
+
+#. Unified certificate migration.
+msgid "Enrollment requested. Restart and confirm in MOKManager."
+msgstr "已提交登记请求。请重启并在 MOKManager 中确认。"
+
+#. Unified certificate migration.
+msgid "Kernel modules only; cannot sign GRUB. Create a unified certificate."
+msgstr "仅支持内核模组，不能用于 GRUB 签名。请创建统一签名证书。"
+
+#. Unified certificate migration.
+msgid "MOK enrollment could not be verified. Check again before continuing."
+msgstr "无法验证 MOK 登记状态。请重新检查后再继续。"
+
+#. Unified certificate migration.
+msgid "New unified certificate prepared"
+msgstr "已准备好统一签名证书"
+
+#. Unified certificate migration.
+msgid "No signing certificate. Create one to prepare Secure Boot trust."
+msgstr "尚无签名证书。请创建证书以准备安全启动信任。"
+
+#. Unified certificate migration.
+msgid ""
+"Please wait. Do not restart while the enrollment request is being prepared."
+msgstr "请稍候。准备登记请求期间请勿重启。"
+
+#. Unified certificate migration.
+msgid "Preparing Signing Certificate…"
+msgstr "正在准备签名证书…"
+
+#. Unified certificate migration.
+msgid "Recreate Certificate…"
+msgstr "重新创建证书…"
+
+#. Unified certificate migration.
+msgid ""
+"Restart to enroll the new certificate, then return here to select it. "
+"Current GRUB and driver signatures are unchanged."
+msgstr "请重启以登记新证书，再返回此处选用它。当前 GRUB 和驱动签名均未更改。"
+
+#. Unified certificate migration.
+msgid ""
+"Secure Boot is disabled. Verify the boot chain and driver trust before "
+"enabling it in firmware settings."
+msgstr "安全启动已禁用。请先确认启动链和驱动受信任，再进入固件设置启用。"
+
+#. Unified certificate migration.
+msgid "Signing certificate needs attention"
+msgstr "签名证书需要处理"
+
+#. Unified certificate migration.
+msgid "Signing private key is missing. Recreate the certificate."
+msgstr "签名私钥缺失。请重新创建证书。"
+
+#. Unified certificate migration.
+msgid "Submit Enrollment Request"
+msgstr "提交登记请求"
+
+#. Unified certificate migration.
+msgid "The certificate does not allow code signing. Recreate it."
+msgstr "该证书不允许代码签名。请重新创建。"
+
+#. Unified certificate migration.
+msgid "The certificate has expired. Recreate and enroll a new certificate."
+msgstr "证书已过期。请重新创建并登记新证书。"
+
+#. Unified certificate migration.
+msgid ""
+"The new certificate is trusted. Select it to complete the certificate "
+"migration."
+msgstr "新证书已受信任。选用它即可完成证书迁移。"
+
+#. Unified certificate migration.
+msgid "This certificate is enrolled in MOK"
+msgstr "该证书已在 MOK 中登记"
+
+#. Unified certificate migration.
+msgid "This certificate is not enrolled. Submit an enrollment request."
+msgstr "该证书尚未登记。请提交登记请求。"
+
+#. Unified certificate migration.
+msgid ""
+"This only prepares or selects a signing certificate. It does not replace "
+"GRUB, re-sign drivers, change DKMS settings or delete old enrolled "
+"certificates. Enrollment requires a restart and confirmation in MOKManager."
+msgstr ""
+"此操作仅准备或选用签名证书，不会替换 GRUB、重签驱动、更改 DKMS 设置或删除已登记的旧证书。登记需要重启并在 MOKManager 中确认。"
+
+#. Unified certificate migration.
+msgid ""
+"Unified certificate is trusted. Existing GRUB, old enrollments and driver "
+"signatures are preserved."
+msgstr "统一签名证书已受信任。现有 GRUB、旧证书登记和驱动签名均已保留。"
+
+#. Unified certificate migration.
+msgid "Update Signing Certificate?"
+msgstr "更新签名证书？"
+
+#. Unified certificate migration.
+msgid "Use Enrolled Certificate"
+msgstr "选用已登记的证书"

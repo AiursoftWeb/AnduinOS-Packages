@@ -7,6 +7,43 @@ It owns Secure Boot inspection, Machine Owner Key (MOK) enrollment, DKMS
 signing configuration, DKMS signature health, repair operations, and the
 shared GTK/libadwaita trust panel.
 
+## Unified certificate migration (stage 1)
+
+Driver Center now distinguishes firmware enforcement, certificate existence,
+certificate signing permissions, and actual MOK enrollment. Module-only MOKs
+(EKU `1.3.6.1.4.1.2312.16.1.2`) remain valid for existing drivers but cannot
+authorize a GRUB EFI image. New identities use RSA-3072, digitalSignature and
+codeSigning, without the module-only restriction. This is a prerequisite for
+future GRUB signing, not a claim that a GRUB package is installed or validated.
+
+The explicit, authenticated migration actions are:
+
+1. `prepare-identity`: generate a candidate (or reuse an existing suitable
+   identity), check its key pair, then submit a MOK enrollment request.
+2. Restart and confirm enrollment in MOKManager with code `123456`.
+3. `activate-identity`: verify that the candidate is actually enrolled, then
+   select it as the toolkit's signing identity. Pending requests never count
+   as trust. Activation does not rebuild or re-sign anything.
+4. `regenerate-identity`: explicitly create a replacement if recovery is
+   necessary. Old identities and enrolled MOKs remain intact. An unrelated
+   pending enrollment request blocks replacement rather than being discarded.
+
+Public identity metadata lives in `/var/lib/anduinos-secureboot`; private keys
+are root-owned mode 0600. A private key is never placed in the ESP. Local
+root access can use these unencrypted signing keys: this design does not
+provide protection against a compromised root account.
+
+**All three identity actions preserve the current GRUB, shim, ESP, boot order,
+DKMS settings and existing module signatures.** Old enrolled certificates
+continue to authorize existing modules, including Xbox drivers. Canonical's
+pre-signed NVIDIA modules are not touched. The legacy module-signing identity
+remains in use by DKMS until a separate, explicitly implemented migration.
+The UI therefore reports certificate selection, not completion of bootloader
+or driver migration. Do not delete the old MOK after this stage.
+
+The roadmap is certificate migration on Resolute first, custom GRUB/shim
+packages second, encrypted installation third, and Stonking integration last.
+
 ## Scope contract
 
 The toolkit is deliberately narrow. It may:
@@ -67,8 +104,8 @@ installation and hardware selection do not belong under `src/` or `scripts/`.
 
 `inspect.py` is read-only and independent from GTK. It returns immutable
 objects from `model.py`. `operations.py` contains the fixed privileged action
-implementation. The installed helper exposes only `prepare` and
-`repair-dkms`; it never evaluates a shell command.
+implementation. The installed helper exposes `prepare`, `repair-dkms`, and
+the three fixed identity actions above; it never evaluates a shell command.
 
 Enrollment is determined by matching the local DER certificate's complete
 SHA-1 fingerprint against `mokutil --list-enrolled`. Pending enrollment uses

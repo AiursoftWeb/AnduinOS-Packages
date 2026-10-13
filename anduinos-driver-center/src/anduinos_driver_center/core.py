@@ -635,17 +635,21 @@ def xbox_state(
         signature and secure_boot.certificate_serial
         and signature == secure_boot.certificate_serial
     )
+    trusted = bool(signature and (
+        (matches and secure_boot.enrolled)
+        or signature in secure_boot.enrolled_certificate_serials
+    ))
     if not installed:
         status = XboxStatus.NOT_INSTALLED
     elif not module_available:
         status = XboxStatus.MODULE_MISSING
     elif not secure_boot.state_known:
         status = XboxStatus.SECURE_BOOT_UNKNOWN
-    elif secure_boot.enabled and secure_boot.enrollment_pending:
+    elif secure_boot.enabled and not trusted and secure_boot.enrollment_pending:
         status = XboxStatus.ENROLLMENT_PENDING
-    elif secure_boot.enabled and not secure_boot.enrolled:
+    elif secure_boot.enabled and not trusted and not secure_boot.enrolled:
         status = XboxStatus.TRUST_SETUP_REQUIRED
-    elif secure_boot.enabled and not matches:
+    elif secure_boot.enabled and not trusted:
         status = XboxStatus.SIGNATURE_MISMATCH
     elif not load_state_known:
         status = XboxStatus.LOAD_STATE_UNKNOWN

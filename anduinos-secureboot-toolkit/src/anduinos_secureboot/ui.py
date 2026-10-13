@@ -165,6 +165,7 @@ def create_secure_boot_page(
 
     add_row("secure_boot", _("Secure Boot"))
     add_row("certificate", _("Local MOK Certificate"))
+    add_row("certificate_purpose", _("Certificate Signing Permissions"))
     add_row("enrollment", _("UEFI Firmware Trust"))
     add_row("drivers", _("Third-party Drivers"))
 
@@ -204,6 +205,17 @@ def create_secure_boot_page(
     repair_button.set_size_request(240, 48)
     action_box.append(repair_button)
 
+    identity_button = Gtk.Button(label=_("Create Unified Certificate"))
+    identity_button.add_css_class("suggested-action")
+    identity_button.add_css_class("pill")
+    identity_button.set_size_request(240, 48)
+    identity_button.set_visible(False)
+    action_box.append(identity_button)
+
+    regenerate_button = Gtk.Button(label=_("Recreate Certificate…"))
+    regenerate_button.set_visible(False)
+    action_box.append(regenerate_button)
+
     reboot_note = Gtk.Label(
         label=_("Note: Use password <b>123456</b> after rebooting.")
     )
@@ -223,7 +235,7 @@ def create_secure_boot_page(
     refresh_button.set_margin_top(8)
     center.append(refresh_button)
 
-    state_holder: dict[str, SecureBootState | DkmsState | None] = {
+    state_holder: dict[str, SecureBootState | DkmsState | str | None] = {
         "secure_boot": None,
         "dkms": None,
     }
@@ -438,9 +450,147 @@ def create_secure_boot_page(
                 + _("You must configure this to use third-party drivers like NVIDIA.")
             )
             status.remove_css_class("title-4")
+        apply_identity_state(secure_boot, dkms)
         if state_changed:
             state_changed()
         return GLib.SOURCE_REMOVE
+
+    def apply_identity_state(secure_boot: SecureBootState, dkms: DkmsState) -> None:
+        identity = secure_boot.signing_identity
+        rows["certificate_purpose"][0].set_visible(identity is not None)
+        identity_button.set_visible(False)
+        regenerate_button.set_visible(False)
+        if identity is None:
+            return
+        row = rows["certificate_purpose"][0]
+        descriptions = {
+            "unified": _("Can sign both GRUB and kernel modules"),
+            "module-only": _("Kernel modules only; cannot sign GRUB. Create a unified certificate."),
+            "missing": _("No signing certificate. Create one to prepare Secure Boot trust."),
+            "expired": _("The certificate has expired. Recreate and enroll a new certificate."),
+            "unsupported": _("The certificate does not allow code signing. Recreate it."),
+            "unknown": _("Certificate permissions could not be read. Check the certificate before continuing."),
+        }
+        row.set_subtitle(descriptions[identity.purpose])
+        row.set_tooltip_text(f"SHA-256: {identity.fingerprint}" if identity.fingerprint else identity.detail)
+        set_icon("certificate_purpose", "emblem-ok-symbolic" if identity.purpose == "unified" else "dialog-warning-symbolic",
+                 "success" if identity.purpose == "unified" else "warning")
+        # This page describes the candidate explicitly, while other hardware
+        # pages continue inspecting the still-active identity until activation.
+        if identity.candidate or identity.active:
+            rows["certificate"][0].set_subtitle(_("New unified certificate prepared") if identity.key_present else _("Signing private key is missing. Recreate the certificate."))
+            set_icon("certificate", "emblem-ok-symbolic" if identity.key_present else "dialog-warning-symbolic",
+                     "success" if identity.key_present else "warning")
+        if secure_boot.supported:
+            rows["enrollment"][0].set_subtitle({
+                "enrolled": _("This certificate is enrolled in MOK"),
+                "pending": _("Enrollment requested. Restart and confirm in MOKManager."),
+                "absent": _("This certificate is not enrolled. Submit an enrollment request."),
+                "unknown": _("MOK enrollment could not be verified. Check again before continuing."),
+            }[identity.enrollment])
+            set_icon("enrollment", "emblem-ok-symbolic" if identity.enrollment == "enrolled" else "dialog-warning-symbolic",
+                     "success" if identity.enrollment == "enrolled" else "warning")
+        # The legacy prepare button would generate a second module-only key.
+        # Keep it out of the new identity flow; old keys are never deleted.
+        enroll_button.set_visible(False)
+        if identity.candidate:
+            firmware_button.set_visible(False)
+        pending = identity.enrollment == "pending"
+        reboot_button.set_visible(pending and secure_boot.supported)
+        reboot_note.set_visible(pending and secure_boot.supported)
+        needs_action = (identity.purpose != "unified" or not identity.key_present
+                        or identity.candidate or identity.enrollment != "enrolled")
+        refresh_button.set_visible(needs_action or not secure_boot.supported or not dkms.ready)
+        can_manage = secure_boot.supported and (not identity.candidate or identity.enrollment != "unknown")
+        if identity.purpose == "missing":
+            can_manage = secure_boot.supported
+        if identity.candidate and identity.enrollment == "enrolled" and identity.key_present and identity.purpose == "unified":
+            identity_button.set_label(_("Use Enrolled Certificate"))
+            state_holder["identity_action"] = "activate-identity"
+        else:
+            identity_button.set_label(_("Submit Enrollment Request") if identity.candidate or identity.purpose == "unified" else _("Create Unified Certificate"))
+            state_holder["identity_action"] = "prepare-identity"
+        identity_button.set_visible(needs_action and not pending and can_manage and
+                                    (not (identity.candidate or identity.active) or (identity.key_present and identity.purpose == "unified")))
+        regenerate_button.set_visible(secure_boot.supported and needs_action and (identity.candidate or identity.active))
+        if dkms.modules and dkms.ready:
+            previous = any(not item.signed_by_current_certificate for item in dkms.details)
+            if previous:
+                rows["drivers"][0].set_subtitle(_("Drivers remain trusted by an enrolled previous certificate; no re-signing is needed."))
+                set_icon("drivers", "emblem-ok-symbolic", "success")
+        if not secure_boot.supported:
+            return
+        if pending:
+            status.set_label(_("Restart to enroll the new certificate, then return here to select it. Current GRUB and driver signatures are unchanged."))
+            status.remove_css_class("title-4")
+        elif identity.candidate and identity.enrollment == "enrolled":
+            status.set_label(_("The new certificate is trusted. Select it to complete the certificate migration."))
+            status.remove_css_class("title-4")
+        elif identity.purpose == "module-only":
+            status.set_label(_("Current boot and driver trust are unchanged. A unified certificate prepares support for signing GRUB as well."))
+            status.remove_css_class("title-4")
+        elif identity.active and identity.enrollment == "enrolled" and identity.key_present and identity.purpose == "unified" and dkms.ready:
+            status.set_label(_("Unified certificate is trusted. Existing GRUB, old enrollments and driver signatures are preserved."))
+            status.remove_css_class("title-4")
+        elif identity.detail:
+            status.set_label(identity.detail)
+            status.remove_css_class("title-4")
+        if not secure_boot.enabled:
+            status.set_label(status.get_label() + "\n" + (
+                firmware_instructions(secure_boot) if secure_boot.firmware_enable_ready and dkms.ready
+                else _("Secure Boot is disabled. Verify the boot chain and driver trust before enabling it in firmware settings.")))
+
+    def identity_finished(progress, code, payload) -> bool:
+        progress.close()
+        identity_button.set_sensitive(True)
+        regenerate_button.set_sensitive(True)
+        if code == 0 and payload.get("reboot_required"):
+            show_reboot_prompt(_("Current GRUB and existing driver signatures are unchanged. Keep the old enrolled certificate."))
+        else:
+            detail = payload.get("error") or "\n".join(
+                step.get("detail", "") for step in payload.get("steps", {}).values()
+                if step.get("detail")
+            )
+            done = Adw.MessageDialog.new(page.get_root(),
+                _("Certificate Updated") if code == 0 else _("Certificate Update Failed"), detail)
+            done.add_response("ok", _("OK"))
+            done.present()
+        refresh()
+        return GLib.SOURCE_REMOVE
+
+    def confirm_identity(action: str) -> None:
+        dialog = Adw.MessageDialog.new(page.get_root(), _("Update Signing Certificate?"),
+            _("This only prepares or selects a signing certificate. It does not replace GRUB, re-sign drivers, change DKMS settings or delete old enrolled certificates. Enrollment requires a restart and confirmation in MOKManager."))
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("continue", _("Continue"))
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+
+        def response(_dialog, choice):
+            if choice != "continue":
+                return
+            identity_button.set_sensitive(False)
+            regenerate_button.set_sensitive(False)
+            progress = Adw.MessageDialog.new(page.get_root(), _("Preparing Signing Certificate…"),
+                _("Please wait. Do not restart while the enrollment request is being prepared."))
+            spinner = Gtk.Spinner(spinning=True)
+            progress.set_extra_child(spinner)
+            progress.set_deletable(False)
+            progress.present()
+
+            def launch():
+                def worker():
+                    try:
+                        code, payload = run_action(action)
+                    except Exception as error:
+                        code, payload = 1, {"error": str(error)}
+                    GLib.idle_add(identity_finished, progress, code, payload)
+                threading.Thread(target=worker, daemon=True).start()
+                return GLib.SOURCE_REMOVE
+            GLib.timeout_add(200, launch)
+
+        dialog.connect("response", response)
+        dialog.present()
 
     def inspect_worker() -> None:
         secure_boot = inspect_secure_boot(recover=True)
@@ -632,6 +782,8 @@ def create_secure_boot_page(
     reboot_button.connect("clicked", confirm_reboot)
     firmware_button.connect("clicked", confirm_firmware_setup)
     refresh_button.connect("clicked", refresh)
+    identity_button.connect("clicked", lambda _button: confirm_identity(state_holder["identity_action"]))
+    regenerate_button.connect("clicked", lambda _button: confirm_identity("regenerate-identity"))
     if initial_state is None:
         refresh()
     else:

@@ -11,7 +11,7 @@ HELPER = "/usr/libexec/anduinos-secureboot-helper"
 
 
 def run_action(action: str, timeout: int = 1800) -> tuple[int, dict[str, Any]]:
-    if action not in {"prepare", "repair-dkms"}:
+    if action not in {"prepare", "repair-dkms", "prepare-identity", "regenerate-identity", "activate-identity"}:
         raise ValueError(f"unsupported action: {action}")
     completed = subprocess.run(
         ["pkexec", HELPER, action],

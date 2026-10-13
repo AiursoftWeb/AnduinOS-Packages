@@ -9,10 +9,11 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gtk
+from gi.repository import Adw, Gtk, GLib
 
 from anduinos_secureboot import ui
 from anduinos_secureboot.model import DkmsState, SecureBootState
+from anduinos_secureboot.identity import IdentityStatus
 
 
 def widgets(widget):
@@ -28,6 +29,63 @@ class SecureBootPageTests(unittest.TestCase):
     def setUpClass(cls):
         Gtk.init()
         Adw.init()
+
+    def test_certificate_migration_actions_match_actual_enrollment(self):
+        cases = [
+            (IdentityStatus(purpose='module-only', enrollment='enrolled', key_present=True), 'Create Unified Certificate', False),
+            (IdentityStatus(purpose='missing'), 'Create Unified Certificate', False),
+            (IdentityStatus(purpose='unified', enrollment='pending', candidate=True, key_present=True), None, True),
+            (IdentityStatus(purpose='unified', enrollment='enrolled', candidate=True, key_present=True), 'Use Enrolled Certificate', False),
+            (IdentityStatus(purpose='unified', enrollment='absent', active=True, key_present=True), 'Submit Enrollment Request', False),
+            (IdentityStatus(purpose='unified', enrollment='enrolled', active=True, key_present=True), None, False),
+        ]
+        for identity, expected, reboot in cases:
+            with self.subTest(identity=identity), patch.object(ui, 'run_action') as action:
+                state = SecureBootState(True, True, True, True, 'old', signing_identity=identity)
+                page = ui.create_secure_boot_page(translate=lambda text: text, initial_state=(state, DkmsState()))
+                buttons = {w.get_label(): w for w in widgets(page) if isinstance(w, Gtk.Button) and w.get_visible()}
+                primary = {'Create Unified Certificate', 'Submit Enrollment Request', 'Use Enrolled Certificate'} & buttons.keys()
+                self.assertEqual(primary, {expected} if expected else set())
+                if identity.active and identity.enrollment == 'enrolled':
+                    self.assertNotIn('Recreate Certificate…', buttons)
+                self.assertEqual(any('Reboot' in (label or '') for label in buttons), reboot)
+                rows = {w.get_title(): w for w in widgets(page) if isinstance(w, Adw.ActionRow)}
+                self.assertIn('Certificate Signing Permissions', rows)
+                if identity.enrollment == 'pending':
+                    self.assertIn('Restart', rows['UEFI Firmware Trust'].get_subtitle())
+                action.assert_not_called()
+
+    def test_disabled_secure_boot_still_explained_during_migration(self):
+        state = SecureBootState(False, True, True, True, 'old', boot_loader='shim',
+                                signing_identity=IdentityStatus(purpose='module-only', enrollment='enrolled', key_present=True))
+        page = ui.create_secure_boot_page(translate=lambda text: text, initial_state=(state, DkmsState()))
+        text = '\n'.join(w.get_label() for w in widgets(page) if isinstance(w, Gtk.Label))
+        self.assertIn(ui._FIRMWARE_SETUP_INSTRUCTIONS, text)
+
+    def test_certificate_action_requires_confirmation_and_delays_work_until_after_progress(self):
+        state = SecureBootState(True, True, True, True, 'old',
+                                signing_identity=IdentityStatus(purpose='module-only', enrollment='enrolled', key_present=True))
+        with patch.object(ui, 'run_action') as action, patch.object(GLib, 'timeout_add') as delay:
+            page = ui.create_secure_boot_page(translate=lambda text: text, initial_state=(state, DkmsState()))
+            parent = Adw.Window()
+            parent.set_content(page)
+            try:
+                button = next(w for w in widgets(page) if isinstance(w, Gtk.Button) and w.get_label() == 'Create Unified Certificate')
+                button.emit('clicked')
+                dialog = next(w for w in Gtk.Window.list_toplevels() if isinstance(w, Adw.MessageDialog) and w.get_transient_for() is parent)
+                self.assertEqual(dialog.get_default_response(), 'cancel')
+                action.assert_not_called()
+                delay.assert_not_called()
+                dialog.response('continue')
+                delay.assert_called_once()
+                self.assertEqual(delay.call_args.args[0], 200)
+                self.assertTrue(any(isinstance(w, Adw.MessageDialog) and w.get_heading() == 'Preparing Signing Certificate…' for w in Gtk.Window.list_toplevels()))
+                action.assert_not_called()
+            finally:
+                for window in list(Gtk.Window.list_toplevels()):
+                    if window.get_transient_for() is parent:
+                        window.destroy()
+                parent.destroy()
 
     def test_enabled_trusted_system_has_no_preparation_action_for_any_loader_hint(self):
         locales = Path(__file__).resolve().parents[2] / "locale"

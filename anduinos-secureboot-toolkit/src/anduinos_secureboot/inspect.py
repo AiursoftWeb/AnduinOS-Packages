@@ -148,6 +148,27 @@ def certificate_pending(certificate: Path, runner: Runner) -> bool:
     )
 
 
+def enrolled_certificate_serials(runner: Runner) -> tuple[str, ...]:
+    """Signer identifiers from the enrolled MOK certificates, not pending keys.
+
+    Keep the old enrollment usable while the local signing identity is rotated.
+    This is signature-identifier inspection, not a substitute for the kernel's
+    cryptographic verification when a module is actually loaded.
+    """
+    result = runner.run(["mokutil", "--list-enrolled"])
+    if result.returncode:
+        return ()
+    serials = set()
+    for decimal_hex, multiline in re.findall(
+        r"Serial Number:[ \t]*(?:[0-9]+[ \t]+\(0x([0-9a-fA-F]+)\)|\n[ \t]*([0-9a-fA-F:]+))",
+        result.stdout,
+    ):
+        key = normalize_key(decimal_hex or multiline)
+        if key:
+            serials.add(key)
+    return tuple(sorted(serials))
+
+
 def inspect_secure_boot(
     runner: Runner | None = None,
     private_key: Path = MOK_PRIVATE_KEY,
@@ -161,6 +182,16 @@ def inspect_secure_boot(
     from .boot_chain import current_loader, setup_mode
 
     runner = runner or SubprocessRunner()
+    identity = None
+    if private_key == MOK_PRIVATE_KEY and certificate == MOK_CERTIFICATE:
+        from .identity import inspect_identity, selected_paths
+        identity = inspect_identity(runner)
+        try:
+            private_key, certificate = selected_paths()
+        except (OSError, ValueError, KeyError, TypeError):
+            # Keep the existing working identity visible if migration metadata
+            # is damaged; the separate identity diagnostic explains the fault.
+            pass
     evidence = probe_firmware(
         run=lambda command, **kwargs: runner.run(command), efi_path=efi_firmware
     )
@@ -199,6 +230,8 @@ def inspect_secure_boot(
         firmware_detail=evidence.detail,
         setup_mode=setup_mode(efi_firmware) if efi_firmware.exists() else None,
         boot_loader=current_loader(runner) if efi_firmware.exists() else "unknown",
+        enrolled_certificate_serials=enrolled_certificate_serials(runner),
+        signing_identity=identity,
     )
 
 
@@ -237,13 +270,12 @@ def inspect_dkms(
         if not path.name.endswith((".ko", ".ko.xz", ".ko.zst")):
             continue
         signature = module_signature(str(path), runner)
-        trusted = bool(
-            secure_boot.enrolled
-            and signature
-            and secure_boot.certificate_serial
-            and signature == secure_boot.certificate_serial
-        )
-        details.append(ModuleState(path.name, str(path), signature, trusted))
+        current = bool(signature and signature == secure_boot.certificate_serial)
+        trusted = bool(signature and (
+            (current and secure_boot.enrolled)
+            or signature in secure_boot.enrolled_certificate_serials
+        ))
+        details.append(ModuleState(path.name, str(path), signature, trusted, current))
 
     return DkmsState(
         modules=tuple(item.name for item in details),

@@ -349,6 +349,9 @@ def repair_dkms(
 
 
 def execute(action: str, run: Run = run_command) -> OperationResult:
+    if action in {"prepare-identity", "regenerate-identity", "activate-identity"}:
+        from .identity import manage_identity
+        return manage_identity(action, run)
     if action == "prepare":
         from .boot_chain import prepare_boot_chain
 
@@ -372,7 +375,9 @@ def helper_main(arguments: list[str]) -> int:
     if os.geteuid() != 0:
         print(json.dumps({"schema": 1, "error": "root-required"}))
         return 77
-    if len(arguments) != 1 or arguments[0] not in {"prepare", "repair-dkms"}:
+    if len(arguments) != 1 or arguments[0] not in {
+        "prepare", "repair-dkms", "prepare-identity", "regenerate-identity", "activate-identity"
+    }:
         print(json.dumps({"schema": 1, "error": "unsupported-action"}))
         return 64
 
@@ -385,7 +390,7 @@ def helper_main(arguments: list[str]) -> int:
             return 75
         try:
             result = execute(arguments[0])
-        except (OSError, subprocess.TimeoutExpired, ValueError) as error:
+        except (OSError, subprocess.TimeoutExpired, ValueError, KeyError, TypeError) as error:
             print(json.dumps({"schema": 1, "error": str(error)}))
             return 1
         print(result.to_json())
