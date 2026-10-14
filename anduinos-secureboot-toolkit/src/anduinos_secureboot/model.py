@@ -16,6 +16,21 @@ class SecureBootStatus(str, Enum):
 
 
 @dataclass(frozen=True)
+class GrubState:
+    supported: bool = True
+    installed: bool = False
+    signature: str = "missing"
+    enrollment: str = "unknown"
+    deployment: str = "unknown"
+    detail: str = ""
+
+    @property
+    def ready(self) -> bool:
+        return (self.installed and self.signature == "valid"
+                and self.enrollment == "enrolled" and self.deployment == "ready")
+
+
+@dataclass(frozen=True)
 class SecureBootState:
     enabled: bool
     key_present: bool
@@ -35,6 +50,7 @@ class SecureBootState:
     # This is deliberately independent of the active local signing identity.
     enrolled_certificate_serials: tuple[str, ...] = field(default_factory=tuple)
     signing_identity: IdentityStatus | None = None
+    grub: GrubState | None = None
 
     def __post_init__(self) -> None:
         status = self.status

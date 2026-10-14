@@ -213,6 +213,7 @@ class CopySystemStep:
     # Exclude metadata/backups too: they could otherwise override a fresh MOK.
     signing_excludes = (
         "var/lib/shim-signed/mok",
+        "var/lib/anduinos-grub",
         "var/lib/anduinos-secureboot",
         "var/lib/anduinos-installer/mok-certificate.sha256",
         "var/lib/dkms/mok.key",

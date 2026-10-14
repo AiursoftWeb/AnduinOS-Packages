@@ -80,6 +80,41 @@ def prepare_signed_efi_chain(target: Path) -> None:
 
 
 class PrepareSecureBootTests(unittest.TestCase):
+    def test_own_grub_is_signed_after_creating_target_certificate_without_enrollment(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_secure_boot_target(target)
+            source = target / 'usr/lib/anduinos-grub/grubx64.efi'
+            source.parent.mkdir(parents=True)
+            source.touch()
+            runner = KeyGeneratingRunner(target)
+            context = InstallContext(valid_plan(), lambda _message: None, {'target': target})
+            PrepareSecureBootStep(runner).execute(context)
+            commands = [call[0] for call in runner.commands]
+            signing = commands.index(('chroot', str(target), '/usr/libexec/anduinos-grub-update', 'first-install'))
+            generation = next(index for index, command in enumerate(commands) if command[:2] == ('openssl', 'req'))
+            self.assertGreater(signing, generation)
+            self.assertTrue((target / MOK_PRIVATE_KEY).is_file())
+            self.assertFalse(any('--import' in command for command in commands))
+
+    def test_own_grub_signing_failure_preserves_target_identity_for_retry(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_secure_boot_target(target)
+            source = target / 'usr/lib/anduinos-grub/grubx64.efi'
+            source.parent.mkdir(parents=True)
+            source.touch()
+            runner = KeyGeneratingRunner(target)
+            command = ('chroot', str(target), '/usr/libexec/anduinos-grub-update', 'first-install')
+            runner.outputs[command] = ('', 'Injected signing failure', 1)
+            context = InstallContext(valid_plan(), lambda _message: None, {'target': target})
+            with self.assertRaisesRegex(RuntimeError, 'GRUB signing failed'):
+                PrepareSecureBootStep(runner).execute(context)
+            first = (target / MOK_CERTIFICATE).read_bytes()
+            runner.outputs[command] = ('', '', 0)
+            PrepareSecureBootStep(runner).execute(context)
+            self.assertEqual(first, (target / MOK_CERTIFICATE).read_bytes())
+
     def test_replaces_unmarked_live_key_and_configures_dkms(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
@@ -156,6 +191,27 @@ class PrepareSecureBootTests(unittest.TestCase):
         PrepareSecureBootStep(runner).execute(context)
         self.assertFalse(context.values["secure_boot_prepared"])
         self.assertEqual(runner.commands, [])
+
+    def test_own_stack_prepares_portable_signed_image_without_secure_boot_support(self):
+        base = valid_plan()
+        plan = replace(base, platform=replace(base.platform, secure_boot=SecureBoot.UNSUPPORTED),
+                       boot=BootSpec(mok_password_policy=MokPasswordPolicy.NOT_APPLICABLE))
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_secure_boot_target(target)
+            source = target / 'usr/lib/anduinos-grub/grubx64.efi'
+            source.parent.mkdir(parents=True)
+            source.touch()
+            runner = KeyGeneratingRunner(target)
+            context = InstallContext(plan, lambda _: None, {'target': target})
+            step = PrepareSecureBootStep(runner)
+            step.execute(context)
+            step.verify(context)
+            EnrollSecureBootStep(runner).execute(context)
+            self.assertTrue((target / MOK_CERTIFICATE).is_file())
+            self.assertIn(('chroot', str(target), '/usr/libexec/anduinos-grub-update', 'first-install'),
+                          [command for command, _ in runner.commands])
+            self.assertFalse(context.values['mok_enrollment_pending'])
 
     def test_arm64_requires_and_accepts_arm64_signed_payloads(self):
         with tempfile.TemporaryDirectory() as directory:

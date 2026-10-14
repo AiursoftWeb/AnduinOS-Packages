@@ -168,6 +168,11 @@ def create_secure_boot_page(
     add_row("certificate_purpose", _("Certificate Signing Permissions"))
     add_row("enrollment", _("UEFI Firmware Trust"))
     add_row("drivers", _("Third-party Drivers"))
+    add_row("bootloader", _("AnduinOS Bootloader"))
+    bootloader_button = Gtk.Button(label=_("Install AnduinOS Bootloader"))
+    bootloader_button.add_css_class("suggested-action")
+    bootloader_button.set_valign(Gtk.Align.CENTER)
+    rows["bootloader"][0].add_suffix(bootloader_button)
 
     firmware_button = Gtk.Button(label=_(_FIRMWARE_SETUP_BUTTON))
     firmware_button.set_valign(Gtk.Align.CENTER)
@@ -451,6 +456,7 @@ def create_secure_boot_page(
             )
             status.remove_css_class("title-4")
         apply_identity_state(secure_boot, dkms)
+        apply_bootloader_state(secure_boot)
         if state_changed:
             state_changed()
         return GLib.SOURCE_REMOVE
@@ -538,6 +544,79 @@ def create_secure_boot_page(
             status.set_label(status.get_label() + "\n" + (
                 firmware_instructions(secure_boot) if secure_boot.firmware_enable_ready and dkms.ready
                 else _("Secure Boot is disabled. Verify the boot chain and driver trust before enabling it in firmware settings.")))
+
+    def apply_bootloader_state(secure_boot: SecureBootState) -> None:
+        boot = secure_boot.grub
+        rows["bootloader"][0].set_visible(bool(boot and boot.supported and secure_boot.supported))
+        bootloader_button.set_visible(False)
+        if not boot or not boot.supported or not secure_boot.supported:
+            return
+        row = rows["bootloader"][0]
+        descriptions = (
+            _("AnduinOS GRUB and shim are not installed") if not boot.installed else
+            _("GRUB needs signing with the unified certificate") if boot.signature != "valid" else
+            _("GRUB is signed, but its certificate is not enrolled") if boot.enrollment != "enrolled" else
+            _("Signed GRUB needs deployment to this system's EFI partition") if boot.deployment != "ready" else
+            _("AnduinOS GRUB is signed, trusted and deployed")
+        )
+        row.set_subtitle(descriptions)
+        row.set_tooltip_text(boot.detail)
+        set_icon("bootloader", "emblem-ok-symbolic" if boot.ready else "dialog-warning-symbolic",
+                 "success" if boot.ready else "warning")
+        bootloader_button.set_label(_("Repair AnduinOS Bootloader") if boot.installed else _("Install AnduinOS Bootloader"))
+        bootloader_button.set_visible(not boot.ready)
+        signing_identity = secure_boot.signing_identity
+        bootloader_button.set_sensitive(bool(signing_identity and signing_identity.usable
+                                             and signing_identity.defaults_ready is not False))
+        if not boot.ready:
+            refresh_button.set_visible(True)
+            if signing_identity and signing_identity.usable:
+                status.set_label(_("Complete the bootloader setup using the button above."))
+                status.remove_css_class("title-4")
+
+    def confirm_bootloader(_button=None) -> None:
+        boot = state_holder["secure_boot"].grub
+        action = "repair-bootloader" if boot and boot.installed else "install-bootloader"
+        dialog = Adw.MessageDialog.new(page.get_root(), _("Update AnduinOS Bootloader?"),
+            _("GRUB will be signed with your enrolled certificate. The current EFI files are backed up. Keep the computer running until the update finishes."))
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("continue", _("Continue"))
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+
+        def response(_dialog, choice):
+            if choice != "continue":
+                return
+            bootloader_button.set_sensitive(False)
+            progress = Adw.MessageDialog.new(page.get_root(), _("Updating Bootloader…"),
+                _("Please wait while the bootloader is signed and deployed."))
+            progress.set_extra_child(Gtk.Spinner(spinning=True))
+            progress.set_deletable(False)
+            progress.present()
+
+            def finished(code, payload):
+                progress.close()
+                detail = payload.get("error") or "\n".join(
+                    step.get("detail", "") for step in payload.get("steps", {}).values() if step.get("detail"))
+                done = Adw.MessageDialog.new(page.get_root(),
+                    _("Bootloader Updated") if code == 0 else _("Bootloader Update Failed"), detail)
+                done.add_response("ok", _("OK"))
+                done.present()
+                refresh()
+                return GLib.SOURCE_REMOVE
+
+            def launch():
+                def worker():
+                    try:
+                        code, payload = run_action(action)
+                    except Exception as error:
+                        code, payload = 1, {"error": str(error)}
+                    GLib.idle_add(finished, code, payload)
+                threading.Thread(target=worker, daemon=True).start()
+                return GLib.SOURCE_REMOVE
+            GLib.timeout_add(200, launch)
+        dialog.connect("response", response)
+        dialog.present()
 
     def identity_finished(progress, code, payload) -> bool:
         progress.close()
@@ -779,6 +858,7 @@ def create_secure_boot_page(
         "clicked", lambda button: run_in_thread(button, "repair-dkms")
     )
     reboot_button.connect("clicked", confirm_reboot)
+    bootloader_button.connect("clicked", confirm_bootloader)
     firmware_button.connect("clicked", confirm_firmware_setup)
     refresh_button.connect("clicked", refresh)
     identity_button.connect("clicked", lambda button: confirm_identity(

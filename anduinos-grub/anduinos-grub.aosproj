@@ -1,0 +1,48 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-grub</PackageName>
+    <PackageVersion>2.0.5+2.14-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>AnduinOS GRUB with Btrfs, LUKS2, Argon2id and local unified-MOK signing</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetArchitectures>amd64</TargetArchitectures>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+    <Component>main</Component>
+    <Provides>grub-common (= 2.14-2ubuntu3), grub2-common (= 2.14-2ubuntu3), grub-pc, grub-pc-bin (= 2.14-2ubuntu3), grub-efi-amd64, grub-efi-amd64-bin (= 2.14-2ubuntu3), grub-efi-amd64-unsigned (= 2.14-2ubuntu3), grub-efi-amd64-signed (= 1.215+2.14-2ubuntu3)</Provides>
+    <Conflicts>grub-common, grub2-common, grub-pc, grub-pc-bin, grub-efi-amd64, grub-efi-amd64-bin, grub-efi-amd64-unsigned, grub-efi-amd64-signed</Conflicts>
+    <Replaces>grub-common, grub2-common, grub-pc, grub-pc-bin, grub-efi-amd64, grub-efi-amd64-bin, grub-efi-amd64-unsigned, grub-efi-amd64-signed</Replaces>
+  </PropertyGroup>
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute" />
+    <Dependency Include="anduinos-secureboot-toolkit (&gt;= 2.0.5-6)" />
+    <Dependency Include="libc6 (&gt;= 2.43)" />
+    <Dependency Include="libdevmapper1.02.1" />
+    <Dependency Include="libefiboot1t64" />
+    <Dependency Include="libefivar1t64" />
+    <Dependency Include="libfreetype6" />
+    <Dependency Include="libfuse3-4" />
+    <Dependency Include="liblzma5" />
+    <Dependency Include="libpng16-16t64" />
+    <Dependency Include="libuuid1" />
+    <Dependency Include="gettext-base" />
+    <Dependency Include="lsb-release" />
+    <Dependency Include="ucf" />
+    <Dependency Include="debconf" />
+    <Suggest Include="os-prober" />
+    <PrebuildCommand Run="bash build.sh amd64" />
+    <IncludeFolder Include="deploy/usr" Target="/usr" />
+    <IncludeFolder Include="deploy/etc" Target="/etc" />
+    <!-- Apkg auto-detects these service files and generates lifecycle scripts.
+         SystemdUnit also copies to /lib, duplicating the /usr/lib payload on
+         merged-/usr systems and breaking dpkg unpack/reinstall. -->
+    <IncludeFile Include="deploy/usr/lib/systemd/system/grub2-common.service" Target="/usr/lib/systemd/system/grub2-common.service" />
+    <IncludeFile Include="deploy/usr/lib/systemd/system/grub-initrd-fallback.service" Target="/usr/lib/systemd/system/grub-initrd-fallback.service" />
+    <PostInstallScript Include="scripts/postinst.sh" />
+    <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-grub/README.md" />
+  </ItemGroup>
+</Project>

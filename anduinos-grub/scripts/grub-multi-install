@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+case "${*:-}" in
+  ''|--target=x86_64-efi) exec /usr/libexec/anduinos-grub-update deploy ;;
+  *) echo 'AnduinOS boot deployment only supports the configured local amd64 ESP' >&2; exit 64 ;;
+esac

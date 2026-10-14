@@ -1,5 +1,18 @@
 #!/bin/sh
 set -eu
+if [ -f /usr/libexec/anduinos-dkms-original ]; then
+    if [ -e /usr/sbin/dkms ] && [ "$(readlink /usr/sbin/dkms 2>/dev/null || true)" != /usr/libexec/anduinos-dkms-wrapper ]; then
+        echo 'Unexpected DKMS frontend; refusing to replace it' >&2
+        exit 1
+    fi
+    ln -sf /usr/libexec/anduinos-dkms-wrapper /usr/sbin/dkms
+fi
+if [ "${1:-}" = triggered ]; then
+    case " ${2:-} " in
+      *' anduinos-boot-chain-update '*) /usr/libexec/anduinos-grub-update package-deploy ;;
+    esac
+    exit 0
+fi
 if [ "${1:-}" = configure ]; then
     # APKG only auto-enables units on a fresh package install. This unit is
     # new in -3, so enable it for upgrades too, without undoing later user

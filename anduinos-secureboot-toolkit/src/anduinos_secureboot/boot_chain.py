@@ -52,7 +52,7 @@ def entries(output: str) -> tuple[BootEntry, ...]:
     pattern = (
         r"^Boot([0-9A-Fa-f]{4})\*?\s+AnduinOS\s+.*?"
         r"HD\((\d+),GPT,([0-9a-fA-F-]{36}),[^)]*\)/"
-        r"(?:File\()? (\\EFI\\AnduinOS\\(?:shim|grub)(?:x64|aa64)\.efi)\)?[ \t]*$"
+        r"(?:File\()? (\\EFI\\AnduinOS(?:-P[0-9]+)?\\(?:shim|grub)(?:x64|aa64)\.efi)\)?[ \t]*$"
     )
     return tuple(BootEntry(n.upper(), int(p), u.lower(), f)
                  for n, p, u, f in re.findall(pattern, output, re.MULTILINE | re.I | re.X))
@@ -105,6 +105,13 @@ class Target:
     order: str
     nvram: str
     device: str
+
+
+def vendor_path(esp: Path, entry: BootEntry) -> Path:
+    vendor = entry.loader.split("\\")[2]
+    if not re.fullmatch(r"AnduinOS(?:-P[0-9]+)?", vendor, re.I):
+        raise ValueError("Unexpected AnduinOS EFI vendor directory")
+    return esp / "EFI" / vendor
 
 
 def partition_number(device: str) -> int:
@@ -190,13 +197,13 @@ def resolve_target(runner: Runner, esp: Path = ESP) -> Target:
     order = variable(output, "BootOrder")
     if order.split(",").count(entry.number) != 1 or variable(output, "BootNext"):
         raise ValueError("BootOrder or BootNext requires manual review")
-    vendor = esp / "EFI/AnduinOS"
+    vendor = vendor_path(esp, entry)
     if vendor.resolve() != vendor or not vendor.is_dir():
         raise ValueError("AnduinOS EFI directory is missing or redirected")
     cfg = vendor / "grub.cfg"
     if cfg.is_symlink() or not cfg.is_file() or not cfg.read_text().strip():
         raise ValueError("AnduinOS EFI GRUB configuration is missing")
-    if len(partitions) > 1 or current.uuid != partuuid:
+    if len(partitions) > 1 or current.uuid != partuuid or "-P" in vendor.name:
         verify_local_esp_binding(runner, esp, part["path"], cfg)
     return Target(part["pkname"], entry, order, output, part["path"])
 
@@ -227,6 +234,9 @@ def verify_image(path: Path, machine: int, runner: Runner) -> None:
 
 
 def payloads(runner: Runner) -> tuple[dict[str, Path], int]:
+    from .grub import SOURCE, payloads as own_payloads
+    if SOURCE.is_file():
+        return own_payloads(runner)
     architecture = command(runner, ["dpkg", "--print-architecture"]).strip()
     if architecture not in {"amd64", "arm64"}:
         raise ValueError("Unsupported EFI architecture")
@@ -257,20 +267,21 @@ def payloads(runner: Runner) -> tuple[dict[str, Path], int]:
     return sources, machine
 
 
-def prepare_boot_chain(runner: Runner, esp: Path = ESP) -> None:
+def prepare_boot_chain(runner: Runner, esp: Path = ESP, *, payload_loader=None,
+                       package_transaction=False) -> None:
     """Called only by the locked privileged helper; no paths come from its CLI."""
     with ExitStack() as stack:
         # Coordinate with APT/dpkg, which use POSIX record locks, not flock.
-        for name in ("lock-frontend", "lock"):
+        for name in (() if package_transaction else ("lock-frontend", "lock")):
             lock = stack.enter_context(open(f"/var/lib/dpkg/{name}", "r+"))
             fcntl.lockf(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         target = resolve_target(runner, esp)
-        sources, machine = payloads(runner)
+        sources, machine = (payload_loader or payloads)(runner)
         suffix = "x64" if machine == 0x8664 else "aa64"
-        loader = rf"\EFI\AnduinOS\shim{suffix}.efi"
+        vendor = vendor_path(esp, target.entry)
+        loader = rf"\EFI\{vendor.name}\shim{suffix}.efi"
         if target.entry.loader.lower() not in {loader.lower(), loader.lower().replace("shim", "grub")}:
             raise ValueError("Boot entry architecture does not match the installed system")
-        vendor = esp / "EFI/AnduinOS"
         if target.entry.loader.lower() == loader.lower() and all(
             (vendor / name).is_file() and not (vendor / name).is_symlink()
             and (vendor / name).read_bytes() == source.read_bytes()
@@ -307,6 +318,10 @@ def prepare_boot_chain(runner: Runner, esp: Path = ESP) -> None:
                     os.fsync(descriptor)
                 finally:
                     os.close(descriptor)
+                # An ESP is FAT, not a journaling filesystem. Flush the whole
+                # filesystem (including allocation tables) before selecting
+                # the new loader or reporting successful deployment.
+                command(runner, ["sync", "-f", str(esp)])
                 if target.entry.loader.lower() != loader.lower():
                     command(runner, ["efibootmgr", "--create-only", "--disk", target.disk,
                                      "--part", str(target.entry.partition), "--label", "AnduinOS", "--loader", loader])
@@ -341,4 +356,7 @@ def prepare_boot_chain(runner: Runner, esp: Path = ESP) -> None:
                         backup = staging / name
                         backup.write_bytes(previous[name])
                         backup.replace(vendor / name)
+                command(runner, ["sync", "-f", str(esp)])
                 raise
+        # Temporary-directory removal also changes FAT metadata.
+        command(runner, ["sync", "-f", str(esp)])

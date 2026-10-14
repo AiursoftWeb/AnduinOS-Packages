@@ -12,7 +12,7 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, Gtk, GLib
 
 from anduinos_secureboot import ui
-from anduinos_secureboot.model import DkmsState, SecureBootState
+from anduinos_secureboot.model import DkmsState, GrubState, SecureBootState
 from anduinos_secureboot.identity import IdentityStatus
 
 
@@ -29,6 +29,57 @@ class SecureBootPageTests(unittest.TestCase):
     def setUpClass(cls):
         Gtk.init()
         Adw.init()
+
+    def test_bootloader_row_reports_signature_trust_and_deployment_separately(self):
+        identity = IdentityStatus(purpose='unified', enrollment='enrolled', key_present=True)
+        cases = (
+            (GrubState(), 'Install AnduinOS Bootloader', 'not installed'),
+            (GrubState(installed=True), 'Repair AnduinOS Bootloader', 'needs signing'),
+            (GrubState(installed=True, signature='valid', enrollment='pending'), 'Repair AnduinOS Bootloader', 'not enrolled'),
+            (GrubState(installed=True, signature='valid', enrollment='enrolled', deployment='pending'), 'Repair AnduinOS Bootloader', 'needs deployment'),
+            (GrubState(installed=True, signature='valid', enrollment='enrolled', deployment='ready'), None, 'signed, trusted and deployed'),
+        )
+        for boot, expected, text in cases:
+            with self.subTest(boot=boot), patch.object(ui, 'run_action') as action:
+                state = SecureBootState(True, True, True, True, 'serial', signing_identity=identity, grub=boot)
+                page = ui.create_secure_boot_page(initial_state=(state, DkmsState()))
+                row = next(w for w in widgets(page) if isinstance(w, Adw.ActionRow) and w.get_title() == 'AnduinOS Bootloader')
+                self.assertTrue(row.get_visible())
+                self.assertIn(text, row.get_subtitle())
+                icons = [w for w in widgets(row) if isinstance(w, Gtk.Image)]
+                self.assertTrue(any(w.has_css_class('success' if boot.ready else 'warning') for w in icons))
+                buttons = {w.get_label(): w for w in widgets(row) if isinstance(w, Gtk.Button) and w.get_visible()}
+                self.assertEqual(set(buttons), {expected} if expected else set())
+                if expected:
+                    self.assertTrue(buttons[expected].get_sensitive())
+                from anduinos_driver_center.app import _secure_boot_summary
+                self.assertEqual(_secure_boot_summary(state, DkmsState())[2], 'success-pill' if boot.ready else 'warning-pill')
+                action.assert_not_called()
+
+    def test_bootloader_install_is_disabled_until_the_certificate_is_enrolled(self):
+        state = SecureBootState(True, True, True, False, 'serial',
+            signing_identity=IdentityStatus(purpose='unified', enrollment='pending', key_present=True), grub=GrubState())
+        page = ui.create_secure_boot_page(initial_state=(state, DkmsState()))
+        button = next(w for w in widgets(page) if isinstance(w, Gtk.Button) and w.get_label() == 'Install AnduinOS Bootloader')
+        self.assertFalse(button.get_sensitive())
+
+    def test_bootloader_action_shows_progress_before_starting_privileged_work(self):
+        state = SecureBootState(True, True, True, True, 'serial',
+            signing_identity=IdentityStatus(purpose='unified', enrollment='enrolled', key_present=True), grub=GrubState())
+        with patch.object(ui, 'run_action') as action, patch.object(GLib, 'timeout_add') as delay:
+            page = ui.create_secure_boot_page(initial_state=(state, DkmsState()))
+            window = Adw.Window(content=page)
+            button = next(w for w in widgets(page) if isinstance(w, Gtk.Button) and w.get_label() == 'Install AnduinOS Bootloader')
+            button.emit('clicked')
+            dialog = next(w for w in Gtk.Window.list_toplevels() if isinstance(w, Adw.MessageDialog) and w.get_heading() == 'Update AnduinOS Bootloader?')
+            dialog.response('continue')
+            self.assertTrue(any(isinstance(w, Adw.MessageDialog) and w.get_heading() == 'Updating Bootloader…' for w in Gtk.Window.list_toplevels()))
+            self.assertEqual(delay.call_args.args[0], 200)
+            action.assert_not_called()
+            for top in Gtk.Window.list_toplevels():
+                if isinstance(top, Adw.MessageDialog):
+                    top.close()
+            window.close()
 
     def test_certificate_migration_actions_match_actual_enrollment(self):
         cases = [

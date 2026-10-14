@@ -55,6 +55,7 @@ test-all:
   stage: packages
   timeout: 3h
   before_script:
+    - umask 022
     - dotnet tool update -g aiursoft.apkg.client --configfile ./nuget.config || dotnet tool install -g aiursoft.apkg.client --configfile ./nuget.config
     - export PATH="$PATH:$HOME/.dotnet/tools"
     - apkg --version
@@ -533,6 +534,26 @@ anduinos-secureboot-toolkit:
   variables:
     PACKAGE_DIR: anduinos-secureboot-toolkit
 
+anduinos-grub:
+  extends: .publish
+  needs:
+    - lint-all
+    - verify-ci-package-needs
+    - test-all
+    - anduinos-secureboot-toolkit
+  variables:
+    PACKAGE_DIR: anduinos-grub
+
+anduinos-shim-signed:
+  extends: .publish
+  needs:
+    - lint-all
+    - verify-ci-package-needs
+    - test-all
+    - anduinos-grub
+  variables:
+    PACKAGE_DIR: anduinos-shim-signed
+
 anduinos-gnome-shell-locale:
   extends: .publish
   needs:
@@ -632,6 +653,7 @@ anduinos-core-system:
     - anduinos-boot-tools
     - anduinos-container
     - anduinos-grub-style
+    - anduinos-shim-signed
     - anduinos-system-tweaks
   variables:
     PACKAGE_DIR: anduinos-core-system

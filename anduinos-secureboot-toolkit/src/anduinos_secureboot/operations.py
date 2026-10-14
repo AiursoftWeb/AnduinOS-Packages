@@ -349,6 +349,17 @@ def repair_dkms(
 
 
 def execute(action: str, run: Run = run_command) -> OperationResult:
+    if action in {"install-bootloader", "repair-bootloader"}:
+        from .grub import deploy, install_packages
+        if action == "install-bootloader":
+            return install_packages(run)
+        result = OperationResult(action)
+        try:
+            deploy(CallableRunner(run))
+            result.steps["bootloader"] = StepResult("success", "Signed AnduinOS GRUB deployed")
+        except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+            result.steps["bootloader"] = StepResult("failed", str(error))
+        return result
     if action == "sync-defaults":
         from .defaults import sync_defaults
         return sync_defaults(run)
@@ -379,10 +390,22 @@ def helper_main(arguments: list[str]) -> int:
         print(json.dumps({"schema": 1, "error": "root-required"}))
         return 77
     if len(arguments) != 1 or arguments[0] not in {
-        "prepare", "repair-dkms", "prepare-identity", "regenerate-identity", "sync-defaults"
+        "prepare", "repair-dkms", "prepare-identity", "regenerate-identity", "sync-defaults",
+        "install-bootloader", "repair-bootloader"
     }:
         print(json.dumps({"schema": 1, "error": "unsupported-action"}))
         return 64
+
+    # APT owns package locks while its hooks take the signing lock. Holding
+    # that lock across APT here would deadlock against our own child hooks.
+    if arguments == ["install-bootloader"]:
+        try:
+            result = execute(arguments[0])
+            print(result.to_json())
+            return 0 if result.ok else 1
+        except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+            print(json.dumps({"schema": 1, "error": str(error)}))
+            return 1
 
     LOCK_FILE.parent.mkdir(parents=True, exist_ok=True)
     with LOCK_FILE.open("a+", encoding="utf-8") as lock:

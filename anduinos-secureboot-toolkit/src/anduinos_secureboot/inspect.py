@@ -180,6 +180,7 @@ def inspect_secure_boot(
     recover: bool = False,
 ) -> SecureBootState:
     from .boot_chain import current_loader, setup_mode
+    from .grub import inspect_grub
 
     runner = runner or SubprocessRunner()
     identity = None
@@ -232,6 +233,7 @@ def inspect_secure_boot(
         boot_loader=current_loader(runner) if efi_firmware.exists() else "unknown",
         enrolled_certificate_serials=enrolled_certificate_serials(runner),
         signing_identity=identity,
+        grub=inspect_grub(runner) if identity is not None else None,
     )
 
 

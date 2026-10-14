@@ -1,0 +1,11 @@
+#!/usr/bin/python3
+"""Read-only fixed probe; never accepts paths or signing operations."""
+from dataclasses import asdict
+import json
+import os
+import sys
+from anduinos_secureboot.grub import inspect_grub
+
+if os.geteuid() != 0 or len(sys.argv) != 1:
+    raise SystemExit(64)
+print(json.dumps(asdict(inspect_grub(privileged=True))))

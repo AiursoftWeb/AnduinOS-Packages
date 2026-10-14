@@ -228,7 +228,7 @@ class RemoveLivePackagesStep:
         missing_boot_packages = tuple(
             package
             for package in required_boot_packages
-            if not _is_installed(self.runner, target, package)
+            if not _is_installed_or_provided(self.runner, target, package)
         )
         if missing_boot_packages:
             raise RuntimeError(

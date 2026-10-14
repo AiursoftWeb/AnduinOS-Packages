@@ -35,13 +35,13 @@ class PrepareSecureBootStep:
 
     def preflight(self, context: InstallContext) -> None:
         context.validate_plan()
-        if _needs_identity(context.plan):
+        if _needs_identity(context.plan) or context.plan.platform.architecture is Architecture.AMD64:
             self.runner.require_commands(("chroot", "openssl"))
         if _enabled(context.plan):
             self.runner.require_commands(("sbverify",))
 
     def execute(self, context: InstallContext) -> None:
-        if not _needs_identity(context.plan):
+        if not _needs_identity(context.plan, context.values.get("target")):
             context.values["secure_boot_prepared"] = False
             return
         target = _target(context)
@@ -55,7 +55,8 @@ class PrepareSecureBootStep:
                 "Secure Boot tools are missing from target: "
                 + ", ".join(missing)
             )
-        if _enabled(context.plan):
+        own_grub = (target / "usr/lib/anduinos-grub/grubx64.efi").is_file()
+        if _enabled(context.plan) and not own_grub:
             _require_signed_payloads(target, context.plan)
 
         private_key = target / MOK_PRIVATE_KEY
@@ -81,11 +82,19 @@ class PrepareSecureBootStep:
         _write_dkms_configuration(target)
         marker.parent.mkdir(parents=True, exist_ok=True)
         atomic_write(marker, (_sha256(certificate) + "\n").encode("ascii"), 0o644)
+        if own_grub:
+            # First installation must sign before enrollment: MokManager will
+            # establish trust on the next boot. Existing-system replacement
+            # uses the toolkit's stricter enrolled-certificate precondition.
+            signed = self.runner.run(("chroot", str(target), "/usr/libexec/anduinos-grub-update", "first-install"), timeout=120, check=False)
+            if signed.returncode:
+                raise RuntimeError("AnduinOS GRUB signing failed: " + (signed.stderr or signed.stdout).strip())
+            _require_signed_payloads(target, context.plan)
         context.values["secure_boot_certificate_sha1"] = _sha1(certificate)
         context.values["secure_boot_prepared"] = True
 
     def verify(self, context: InstallContext) -> None:
-        if not _needs_identity(context.plan):
+        if not _needs_identity(context.plan, context.values.get("target")):
             return
         target = _target(context)
         _validate_signing_paths(target)
@@ -253,9 +262,13 @@ def _enabled(plan: InstallPlan) -> bool:
     return plan.platform.secure_boot is SecureBoot.ENABLED
 
 
-def _needs_identity(plan: InstallPlan) -> bool:
+def _needs_identity(plan: InstallPlan, target: Path | None = None) -> bool:
     # Prepare correct signing material now; only ENABLED schedules enrollment.
-    return plan.platform.secure_boot in {SecureBoot.ENABLED, SecureBoot.DISABLED}
+    # Our portable amd64 boot stack also needs its EFI image prepared when
+    # installation runs in BIOS or UEFI firmware without Secure Boot support.
+    return (plan.platform.secure_boot in {SecureBoot.ENABLED, SecureBoot.DISABLED}
+            or (plan.platform.secure_boot is SecureBoot.UNSUPPORTED and target is not None
+                and (Path(target) / "usr/lib/anduinos-grub/grubx64.efi").is_file()))
 
 
 def _validate_signing_paths(target: Path) -> None:

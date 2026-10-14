@@ -69,6 +69,8 @@ class Firmware:
             self.order = args[2]
         elif args[-1] == "--delete-bootnum":
             self.new = False
+        elif args == ["sync", "-f", str(self.esp)]:
+            pass
         else:
             raise AssertionError(args)
         return subprocess.CompletedProcess(args, 0, output, "")
@@ -109,11 +111,35 @@ class BootChainTests(unittest.TestCase):
         self.assertEqual(boot.entries(legacy), boot.entries(modern))
         self.assertEqual(len(boot.entries(modern)), 1)
 
+    def test_legacy_vendor_path_requires_local_uuid_binding_before_repair(self):
+        with self.fixture() as (firmware, esp, vendor):
+            legacy = esp / 'EFI/AnduinOS-P44'
+            vendor.rename(legacy)
+            legacy.joinpath('grub.cfg').write_text(
+                f'search.fs_uuid {firmware.boot_uuid} root\n'
+                f'set prefix=($root){firmware.boot_prefix}\n'
+                'configfile $prefix/grub.cfg\n')
+            original = firmware.output
+            firmware.output = lambda: original().replace('\\EFI\\AnduinOS\\', '\\EFI\\AnduinOS-P44\\')
+            boot.prepare_boot_chain(firmware, esp)
+            self.assertEqual((legacy / 'grubx64.efi').read_bytes(), b'new grubx64.efi')
+            self.assertFalse(vendor.exists())
+            self.assertEqual((esp / 'EFI/Microsoft/Boot/bootmgfw.efi').read_bytes(), b'foreign loader')
+
+    def test_unknown_vendor_suffix_does_not_become_an_owned_boot_entry(self):
+        output = Firmware(Path('/boot/efi')).output().replace('\\EFI\\AnduinOS\\', '\\EFI\\AnduinOS-other\\')
+        self.assertEqual(boot.entries(output), ())
+
     def test_repair_preserves_foreign_files_and_boot_order_positions(self):
         with self.fixture() as (firmware, esp, vendor):
             boot.prepare_boot_chain(firmware, esp)
             self.assertEqual(firmware.order, "0000,0009,0003")
             self.assertEqual(boot.current_loader(firmware), "shim")
+            sync_call = ["sync", "-f", str(esp)]
+            create_index = next(i for i, call in enumerate(firmware.calls)
+                                if call[:2] == ["efibootmgr", "--create-only"])
+            self.assertIn(sync_call, firmware.calls[:create_index])
+            self.assertEqual(firmware.calls[-2], sync_call)
             for name in ("shimx64.efi", "grubx64.efi", "mmx64.efi"):
                 self.assertEqual((vendor / name).read_bytes(), b"new " + name.encode())
             for name in ("Microsoft/Boot/bootmgfw.efi", "BOOT/BOOTX64.EFI"):
@@ -134,6 +160,26 @@ class BootChainTests(unittest.TestCase):
             self.assertEqual(firmware.order, "0000,0007,0003")
             self.assertFalse(firmware.new)
             self.assertEqual((vendor / "shimx64.efi").read_bytes(), b"old shimx64.efi")
+
+    def test_failed_esp_sync_restores_files_before_selecting_loader(self):
+        with self.fixture() as (firmware, esp, vendor):
+            original = firmware.run
+            failures = []
+
+            def run(args, **kwargs):
+                if args == ["sync", "-f", str(esp)] and not failures:
+                    failures.append(True)
+                    return subprocess.CompletedProcess(args, 1, "", "I/O error")
+                return original(args, **kwargs)
+
+            firmware.run = run
+            with self.assertRaisesRegex(ValueError, "I/O error"):
+                boot.prepare_boot_chain(firmware, esp)
+            self.assertFalse(firmware.new)
+            self.assertEqual(firmware.order, "0000,0007,0003")
+            for name in ("grubx64.efi", "shimx64.efi", "mmx64.efi"):
+                self.assertEqual((vendor / name).read_bytes(), b"old " + name.encode())
+            self.assertIn(["sync", "-f", str(esp)], firmware.calls)
 
     def test_multiple_esps_fail_before_writes(self):
         with self.fixture() as (firmware, esp, vendor):

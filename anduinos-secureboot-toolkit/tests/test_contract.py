@@ -16,6 +16,14 @@ from anduinos_secureboot.model import DkmsState, SecureBootState, SecureBootStat
 
 
 class ContractTests(unittest.TestCase):
+    def test_dkms_frontend_trigger_blocks_dependent_configuration(self):
+        project = ET.parse(ROOT / "anduinos-secureboot-toolkit.aosproj")
+        triggers = {item.attrib["Include"]: item.attrib["Type"]
+                    for item in project.findall(".//DpkgTrigger")}
+        for path in ("/usr/sbin/dkms", "/usr/libexec/anduinos-dkms-original"):
+            self.assertEqual(triggers[path], "interest")
+        self.assertEqual(triggers["anduinos-boot-chain-update"], "interest-noawait")
+
     def test_polkit_only_authorizes_the_fixed_helper(self):
         policy = ET.parse(ROOT / "data/com.anduinos.SecureBootToolkit.policy")
         annotations = {
