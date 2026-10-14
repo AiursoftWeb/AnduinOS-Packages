@@ -174,6 +174,17 @@ class GrubSigningTests(unittest.TestCase):
         self.assertTrue(result.ok)
         self.assertTrue(any(command[:2] == ["apt-get", "-y"] for command in self.runner.calls))
 
+    def test_package_logs_keep_both_streams_and_failure_status(self):
+        for code in (0, 1):
+            with self.subTest(code=code), patch.object(grub.boot_chain, "resolve_target"):
+                def run(command, **kwargs):
+                    if command[:2] == ["apt-get", "-y"]:
+                        return subprocess.CompletedProcess(command, code, "package output\n", "hook diagnostic\n")
+                    return self.runner.run(command, **kwargs)
+                result = grub.install_packages(run)
+                self.assertEqual(result.ok, code == 0)
+                self.assertEqual(result.steps["packages"].detail, "package output\nhook diagnostic")
+
     def test_dkms_missing_pair_is_rejected_before_upstream_can_generate_keys(self):
         config = self.root / "etc/dkms/framework.conf.d/anduinos.conf"
         config.parent.mkdir(parents=True)

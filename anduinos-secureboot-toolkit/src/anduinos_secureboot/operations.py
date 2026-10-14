@@ -94,6 +94,9 @@ def run_command(
     environment = os.environ.copy()
     environment["LC_ALL"] = "C"
     environment["LANG"] = "C"
+    if command and command[0] == "apt-get":
+        # The privileged GUI helper has no terminal for debconf questions.
+        environment["DEBIAN_FRONTEND"] = "noninteractive"
     return subprocess.run(
         command,
         input=stdin,

@@ -76,6 +76,32 @@ def _default_icon(name: str) -> Gtk.Image:
     return Gtk.Image.new_from_icon_name(name)
 
 
+def _bootloader_result_dialog(parent, code, payload, translate):
+    """Keep operation logs accessible without turning them into dialog prose."""
+    _ = translate
+    success = code == 0
+    dialog = Adw.MessageDialog.new(parent,
+        _("Bootloader Updated") if success else _("Bootloader Update Failed"),
+        _("The AnduinOS bootloader has been signed and deployed. It will be used on the next restart.")
+        if success else _("The bootloader update could not be completed. Review the details below before restarting."))
+    details = [payload.get("error", "")]
+    details.extend(step.get("detail", "") for step in payload.get("steps", {}).values())
+    detail = "\n".join(text for text in details if text)
+    if detail:
+        log = Gtk.TextView(editable=False, cursor_visible=False, monospace=True,
+                           wrap_mode=Gtk.WrapMode.WORD_CHAR)
+        log.get_buffer().set_text(detail)
+        scroll = Gtk.ScrolledWindow(height_request=180,
+            hscrollbar_policy=Gtk.PolicyType.NEVER,
+            vscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
+        scroll.set_child(log)
+        expander = Gtk.Expander(label=_("Details"), expanded=not success)
+        expander.set_child(scroll)
+        dialog.set_extra_child(expander)
+    dialog.add_response("ok", _("OK"))
+    return dialog
+
+
 def create_secure_boot_page(
     *,
     translate: Translate | None = None,
@@ -596,11 +622,7 @@ def create_secure_boot_page(
 
             def finished(code, payload):
                 progress.close()
-                detail = payload.get("error") or "\n".join(
-                    step.get("detail", "") for step in payload.get("steps", {}).values() if step.get("detail"))
-                done = Adw.MessageDialog.new(page.get_root(),
-                    _("Bootloader Updated") if code == 0 else _("Bootloader Update Failed"), detail)
-                done.add_response("ok", _("OK"))
+                done = _bootloader_result_dialog(page.get_root(), code, payload, _)
                 done.present()
                 refresh()
                 return GLib.SOURCE_REMOVE

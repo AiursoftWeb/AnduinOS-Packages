@@ -63,6 +63,40 @@ class SecureBootPageTests(unittest.TestCase):
         button = next(w for w in widgets(page) if isinstance(w, Gtk.Button) and w.get_label() == 'Install AnduinOS Bootloader')
         self.assertFalse(button.get_sensitive())
 
+    def test_bootloader_result_keeps_logs_in_bounded_details(self):
+        log = "debconf: diagnostic <not markup>\n" * 1000
+        for code in (0, 1):
+            with self.subTest(code=code):
+                dialog = ui._bootloader_result_dialog(None, code,
+                    {"error": "failure reason" if code else "",
+                     "steps": {"packages": {"detail": log}}}, lambda text: text)
+                try:
+                    self.assertEqual(dialog.get_heading(),
+                        "Bootloader Updated" if code == 0 else "Bootloader Update Failed")
+                    self.assertNotIn("debconf", dialog.get_body())
+                    expander = dialog.get_extra_child()
+                    self.assertIsInstance(expander, Gtk.Expander)
+                    self.assertEqual(expander.get_expanded(), code != 0)
+                    scroll = expander.get_child()
+                    self.assertEqual(scroll.get_property("height-request"), 180)
+                    view = scroll.get_child()
+                    buffer = view.get_buffer()
+                    detail = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
+                    self.assertIn(log, detail)
+                    self.assertFalse(view.get_editable())
+                    if code:
+                        self.assertIn("failure reason", detail)
+                finally:
+                    dialog.destroy()
+
+    def test_bootloader_result_without_logs_has_no_empty_expander(self):
+        dialog = ui._bootloader_result_dialog(None, 0, {}, lambda text: text)
+        try:
+            self.assertIsNone(dialog.get_extra_child())
+            self.assertIn("next restart", dialog.get_body())
+        finally:
+            dialog.destroy()
+
     def test_bootloader_action_shows_progress_before_starting_privileged_work(self):
         state = SecureBootState(True, True, True, True, 'serial',
             signing_identity=IdentityStatus(purpose='unified', enrollment='enrolled', key_present=True), grub=GrubState())

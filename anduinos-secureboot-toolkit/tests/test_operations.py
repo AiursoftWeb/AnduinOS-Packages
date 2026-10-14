@@ -54,6 +54,15 @@ class OperationsTests(unittest.TestCase):
         probe.start()
         self.addCleanup(probe.stop)
 
+    def test_apt_is_noninteractive_without_changing_parent_environment(self):
+        with patch.dict(operations.os.environ, {"DEBIAN_FRONTEND": "dialog"}), \
+             patch.object(operations.subprocess, "run") as run:
+            operations.run_command(["apt-get", "-y", "install", "anduinos-grub"])
+            self.assertEqual(run.call_args.kwargs["env"]["DEBIAN_FRONTEND"], "noninteractive")
+            self.assertEqual(operations.os.environ["DEBIAN_FRONTEND"], "dialog")
+            operations.run_command(["mokutil", "--sb-state"])
+            self.assertEqual(run.call_args.kwargs["env"]["DEBIAN_FRONTEND"], "dialog")
+
     def test_command_runner_preserves_literal_arguments_stdin_and_failure(self):
         command = ["example-command", "$(id); echo unsafe", "argument with spaces"]
         failed = subprocess.CompletedProcess(command, 23, "", "operation failed")

@@ -226,7 +226,8 @@ def install_packages(run):
     completed = run(["apt-get", "-y", "--allow-remove-essential", "--no-install-recommends", "install", *selection], timeout=1800)
     result = OperationResult("install-bootloader")
     result.steps["packages"] = StepResult("success" if completed.returncode == 0 else "failed",
-                                        (completed.stderr or completed.stdout)[-4000:])
+                                        "\n".join(output.strip() for output in
+                                                  (completed.stdout, completed.stderr) if output.strip()))
     return result
 
 
