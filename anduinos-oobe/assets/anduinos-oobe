@@ -164,7 +164,7 @@ def is_bottles_installed():
 
 def is_chinese_locale():
     lang = os.environ.get('LANGUAGE', os.environ.get('LANG', ''))
-    return lang.startswith('zh_CN')
+    return lang.replace('-', '_').startswith('zh_CN')
 
 
 def _get_flathub_url():
@@ -1581,6 +1581,16 @@ def create_shortcuts_page():
     if last: kbd2.remove(last)
     row2.add_suffix(kbd2)
     featured_group.add(row2)
+
+    if is_chinese_locale():
+        rime_row = Adw.ActionRow()
+        rime_row.set_title(_('Open Chinese Input Method Settings'))
+        rime_row.set_subtitle(_('Switch to Chinese (Rime) first to choose Pinyin or Shuangpin.'))
+        rime_key = Gtk.Label()
+        rime_key.set_markup('<b><span foreground="#9141ac"> F4 </span></b>')
+        rime_key.add_css_class('heading')
+        rime_row.add_suffix(rime_key)
+        featured_group.add(rime_row)
 
     scroll_content.append(featured_group)
 
