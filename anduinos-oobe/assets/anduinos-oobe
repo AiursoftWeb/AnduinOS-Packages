@@ -1188,7 +1188,7 @@ def create_security_page():
     power_card.set_margin_top(24)
 
     power_row = Adw.SwitchRow()
-    power_row.set_title(_('Auto Sleep'))
+    power_row.set_title(_('Auto Sleep When Idle'))
 
     power_icon = _create_image('gnome-power-manager.svg')
     power_icon.set_pixel_size(32)
