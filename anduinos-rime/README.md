@@ -7,6 +7,13 @@ used for Chinese input on AnduinOS. It depends on `ibus-rime` and
 generates pinyin comments for its correction filter, which removes them from
 ordinary candidates and retains only useful pronunciation or spelling hints.
 
+Natural Code, Microsoft and Xiaohe Shuangpin are also available. Full Pinyin
+remains the default. Select Chinese (Rime), press `F4` or `Ctrl+grave` to open
+the Rime schema menu, and choose a Shuangpin layout. If the new schemas do not
+appear after upgrading, select Deploy from the Rime input-source menu. A user
+with a personal `default.custom.yaml` must add the desired schemas to its
+`schema_list` manually.
+
 This directory is the canonical source of AnduinOS Rime. Upstream Rime Ice
 updates are reviewed and imported directly into `assets/`; the package must not
 download input method content from a second AnduinOS-Rime repository at build
