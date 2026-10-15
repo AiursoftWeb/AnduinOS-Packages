@@ -7034,6 +7034,8 @@ def build_summary_page(shared, nav_view):
         margin_end=48,
         margin_top=24,
         wrap=True,
+        # Disk identities can contain long tokens without word boundaries.
+        wrap_mode=Pango.WrapMode.WORD_CHAR,
         xalign=0,
     )
     summary_label.set_markup("\n\n".join(lines))
