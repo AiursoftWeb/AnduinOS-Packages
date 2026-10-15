@@ -4,8 +4,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from anduinos_secureboot.architecture import architecture
+
 from .layout import build_erase_disk_layout
-from .model import Architecture, Firmware, InstallMode, InstallPlan
+from .model import Firmware, InstallMode, InstallPlan
 from .validation import validate_plan
 
 
@@ -39,22 +41,20 @@ def build_boot_commands(plan: InstallPlan, target: str) -> BootCommandPlan:
     installs: list[tuple[str, ...]] = []
     disk = plan.storage.disk.path
 
-    if plan.platform.architecture is Architecture.AMD64:
+    boot = architecture(plan.platform.architecture.value)
+    if boot.bios_platform:
         # The amd64 disk is deliberately portable between old BIOS and UEFI.
         installs.append(
             chroot
             + (
                 "grub-install",
-                "--target=i386-pc",
+                f"--target={boot.bios_platform}",
                 "--recheck",
                 disk,
             )
         )
-        efi_target = "x86_64-efi"
-        fallback = "EFI/BOOT/BOOTX64.EFI"
-    else:
-        efi_target = "arm64-efi"
-        fallback = "EFI/BOOT/BOOTAA64.EFI"
+    efi_target = boot.grub_platform
+    fallback = f"EFI/BOOT/{boot.fallback_name}"
 
     efi_install = [
         *chroot,
@@ -113,7 +113,7 @@ def build_boot_commands(plan: InstallPlan, target: str) -> BootCommandPlan:
         installs=tuple(installs),
         configure=chroot + ("update-grub",),
         efi_fallback=fallback,
-        bios_required=plan.platform.architecture is Architecture.AMD64,
+        bios_required=bool(boot.bios_platform),
         nvram_create=(
             (
                 "efibootmgr",
@@ -188,11 +188,7 @@ def _build_vendor_only_boot_commands(
         raise ValueError("EFI System Partition number must be positive")
 
     chroot = ("chroot", target)
-    efi_target = (
-        "x86_64-efi"
-        if plan.platform.architecture is Architecture.AMD64
-        else "arm64-efi"
-    )
+    efi_target = architecture(plan.platform.architecture.value).grub_platform
     install = [
         *chroot,
         "grub-install",
@@ -238,10 +234,8 @@ def _build_vendor_only_boot_commands(
 
 
 def guided_loader_path(plan: InstallPlan) -> str:
-    architecture = (
-        "x64" if plan.platform.architecture is Architecture.AMD64 else "aa64"
-    )
+    boot = architecture(plan.platform.architecture.value)
     # Firmware enforcement can be enabled after installation. Keep the same
     # signed entry point in both states; MOK enrollment also requires shim.
-    executable = f"shim{architecture}.efi"
+    executable = boot.shim_name
     return rf"\EFI\AnduinOS\{executable}"

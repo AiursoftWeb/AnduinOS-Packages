@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-secureboot-toolkit</PackageName>
-    <PackageVersion>2.0.5-7+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.5-8+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Shared Secure Boot, MOK, and DKMS signing toolkit for AnduinOS applications</PackageDescription>
     <Section>admin</Section>
@@ -47,6 +47,7 @@
     <IncludeScript Include="scripts/anduinos-dkms-wrapper" Target="/usr/libexec/anduinos-dkms-wrapper" />
     <IncludeFile Include="src/anduinos_secureboot/dkms_guard.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/dkms_guard.py" />
     <DpkgTrigger Include="anduinos-boot-chain-update" Type="interest-noawait" />
+    <IncludeFile Include="src/anduinos_secureboot/architecture.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/architecture.py" />
     <IncludeFile Include="src/anduinos_secureboot/grub.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/grub.py" />
     <IncludeScript Include="scripts/anduinos-grub-update" Target="/usr/libexec/anduinos-grub-update" />
     <IncludeScript Include="scripts/anduinos-grub-probe" Target="/usr/libexec/anduinos-grub-probe" />

@@ -7,11 +7,12 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+from anduinos_secureboot.architecture import architecture
 from anduinos_secureboot.identity import check_unified_pair, generate_identity
 from anduinos_secureboot.defaults import atomic_write
 
 from .command import CommandRunner
-from .model import Architecture, InstallPlan, SecureBoot
+from .model import InstallPlan, SecureBoot
 from .steps import FailurePolicy, InstallContext
 
 
@@ -35,7 +36,7 @@ class PrepareSecureBootStep:
 
     def preflight(self, context: InstallContext) -> None:
         context.validate_plan()
-        if _needs_identity(context.plan) or context.plan.platform.architecture is Architecture.AMD64:
+        if _needs_identity(context.plan) or context.plan.platform.secure_boot is SecureBoot.UNSUPPORTED:
             self.runner.require_commands(("chroot", "openssl"))
         if _enabled(context.plan):
             self.runner.require_commands(("sbverify",))
@@ -55,7 +56,7 @@ class PrepareSecureBootStep:
                 "Secure Boot tools are missing from target: "
                 + ", ".join(missing)
             )
-        own_grub = (target / "usr/lib/anduinos-grub/grubx64.efi").is_file()
+        own_grub = (target / architecture(context.plan.platform.architecture.value).source.relative_to("/")).is_file()
         if _enabled(context.plan) and not own_grub:
             _require_signed_payloads(target, context.plan)
 
@@ -264,11 +265,11 @@ def _enabled(plan: InstallPlan) -> bool:
 
 def _needs_identity(plan: InstallPlan, target: Path | None = None) -> bool:
     # Prepare correct signing material now; only ENABLED schedules enrollment.
-    # Our portable amd64 boot stack also needs its EFI image prepared when
+    # Our boot stack also needs its EFI image prepared when
     # installation runs in BIOS or UEFI firmware without Secure Boot support.
     return (plan.platform.secure_boot in {SecureBoot.ENABLED, SecureBoot.DISABLED}
             or (plan.platform.secure_boot is SecureBoot.UNSUPPORTED and target is not None
-                and (Path(target) / "usr/lib/anduinos-grub/grubx64.efi").is_file()))
+                and (Path(target) / architecture(plan.platform.architecture.value).source.relative_to("/")).is_file()))
 
 
 def _validate_signing_paths(target: Path) -> None:
@@ -305,16 +306,8 @@ def _write_dkms_configuration(target: Path) -> None:
 
 
 def _require_signed_payloads(target: Path, plan: InstallPlan) -> None:
-    if plan.platform.architecture is Architecture.AMD64:
-        paths = (
-            target / "usr/lib/shim/shimx64.efi.signed.latest",
-            target / "usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed",
-        )
-    else:
-        paths = (
-            target / "usr/lib/shim/shimaa64.efi.signed.latest",
-            target / "usr/lib/grub/arm64-efi-signed/grubaa64.efi.signed",
-        )
+    boot = architecture(plan.platform.architecture.value)
+    paths = tuple(target / path.relative_to("/") for path in (boot.shim, boot.signed_grub))
     missing = [str(path) for path in paths if not path.is_file()]
     if missing:
         raise RuntimeError(
@@ -325,7 +318,7 @@ def _require_signed_payloads(target: Path, plan: InstallPlan) -> None:
 def _verify_signed_efi_chain(
     runner: CommandRunner, target: Path, plan: InstallPlan
 ) -> None:
-    suffix = "x64" if plan.platform.architecture is Architecture.AMD64 else "aa64"
+    suffix = architecture(plan.platform.architecture.value).efi_suffix
     paths = (
         target / "boot/efi/EFI/AnduinOS" / f"shim{suffix}.efi",
         target / "boot/efi/EFI/AnduinOS" / f"grub{suffix}.efi",

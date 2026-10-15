@@ -3,18 +3,21 @@ from dataclasses import replace
 import hashlib
 from pathlib import Path
 import subprocess
+import struct
 from types import SimpleNamespace
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
 
 from anduinos_secureboot import grub, identity
+from anduinos_secureboot.architecture import architecture
 from anduinos_secureboot.dkms_guard import validate_signing_defaults
 from anduinos_secureboot.model import GrubState, SecureBootStatus
 
 
 class Runner:
-    def __init__(self):
+    def __init__(self, arch="amd64"):
+        self.arch = arch
         self.calls = []
         self.fail_signing = False
         self.modified = False
@@ -23,7 +26,9 @@ class Runner:
 
     def run(self, command, timeout=30):
         self.calls.append(command)
-        if command[0] == "dpkg-query":
+        if command == ["dpkg", "--print-architecture"]:
+            value = self.arch
+        elif command[0] == "dpkg-query":
             value = f"{self.owner}: {command[-1]}" if "--search" in command else "installed"
         elif command[:2] == ["dpkg", "--verify"]:
             value = f"??5?????? {self.calls[-2][-1]}" if self.modified else ""
@@ -47,26 +52,27 @@ class GrubArchitectureTests(unittest.TestCase):
                 with (patch.object(grub, "packages_installed", return_value=False) as packages,
                       patch.object(Path, "read_text", side_effect=AssertionError("No release gate"))):
                     state = grub.inspect_grub(runner)
-                self.assertEqual(state.supported, arch == "amd64")
-                self.assertEqual(packages.called, arch == "amd64")
+                self.assertEqual(state.supported, arch in {"amd64", "arm64"})
+                self.assertEqual(packages.called, arch in {"amd64", "arm64"})
 
 
-class GrubSigningTests(unittest.TestCase):
+class GrubSigningTests:
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)
         self.root = Path(self.directory.name)
         self.key, self.cert = self.root / "key", self.root / "cert.der"
-        self.runner = Runner()
+        self.runner = Runner(self.arch)
         identity.generate_identity(self.key, self.cert, self.runner.run)
         code = self.root / "efi.c"
         code.write_text("int efi_main(void *image, void *table) { return 0; }\n")
         obj = self.root / "efi.o"
         self.source = self.root / "grub.efi"
-        subprocess.run(["gcc", "-ffreestanding", "-fno-stack-protector", "-fno-asynchronous-unwind-tables",
-                        "-mno-red-zone", "-c", str(code), "-o", str(obj)], check=True, capture_output=True)
-        subprocess.run(["ld", "-mi386pep", "--subsystem", "10", "--entry", "efi_main",
-                        "--image-base", "0", "-o", str(self.source), str(obj)], check=True, capture_output=True)
+        target = {"amd64": "x86_64", "arm64": "aarch64"}[self.arch]
+        subprocess.run(["clang", f"--target={target}-pc-windows-msvc", "-ffreestanding",
+                        "-fno-stack-protector", "-c", str(code), "-o", str(obj)], check=True, capture_output=True)
+        subprocess.run(["lld-link", "/subsystem:efi_application", "/entry:efi_main", "/nodefaultlib",
+                        f"/out:{self.source}", str(obj)], check=True, capture_output=True)
         self.source.chmod(0o644)
         self.store = self.root / "store"
         self.firmware = SimpleNamespace(status=SecureBootStatus.ENABLED)
@@ -94,12 +100,22 @@ class GrubSigningTests(unittest.TestCase):
         self.assertEqual(self.prepare().read_bytes(), before)
         self.assertEqual(signing_calls, sum(command[0] == "sbsign" for command in self.runner.calls))
 
+    def test_wrong_architecture_signature_is_rejected(self):
+        image = self.prepare()
+        self.runner.arch = "arm64" if self.arch == "amd64" else "amd64"
+        with self.assertRaises(ValueError):
+            grub.verify_signature(image, self.cert, self.runner)
+
     def test_tampered_signature_is_rejected(self):
         image = self.prepare()
         data = bytearray(image.read_bytes())
-        # Alter executable contents rather than the PE checksum (not covered
-        # by Authenticode). The fixture's .text section starts at offset 0x400.
-        data[0x400] ^= 1
+        # Locate .text; compiler-dependent file alignment is not a contract.
+        pe = struct.unpack_from("<I", data, 0x3c)[0]
+        optional_size = struct.unpack_from("<H", data, pe + 20)[0]
+        section = pe + 24 + optional_size
+        self.assertEqual(data[section:section + 5], b".text")
+        text_offset = struct.unpack_from("<I", data, section + 20)[0]
+        data[text_offset] ^= 1
         image.write_bytes(data)
         with self.assertRaises(ValueError):
             grub.verify_signature(image, self.cert, self.runner)
@@ -172,7 +188,11 @@ class GrubSigningTests(unittest.TestCase):
         with patch.object(grub.boot_chain, "resolve_target"):
             result = grub.install_packages(self.runner.run)
         self.assertTrue(result.ok)
-        self.assertTrue(any(command[:2] == ["apt-get", "-y"] for command in self.runner.calls))
+        transaction = next(command for command in self.runner.calls if command[:2] == ["apt-get", "-y"])
+        self.assertIn(f"grub-efi-{self.arch}-", transaction)
+        self.assertEqual("grub-pc-" in transaction, bool(architecture(self.arch).bios_platform))
+        other = "arm64" if self.arch == "amd64" else "amd64"
+        self.assertNotIn(f"grub-efi-{other}-", transaction)
 
     def test_package_logs_keep_both_streams_and_failure_status(self):
         for code in (0, 1):
@@ -221,3 +241,11 @@ class GrubSigningTests(unittest.TestCase):
         for field, value in (("installed", False), ("signature", "invalid"),
                              ("enrollment", "pending"), ("deployment", "pending"), ("deployment", "unknown")):
             self.assertFalse(replace(ready, **{field: value}).ready)
+
+
+class Amd64GrubSigningTests(GrubSigningTests, unittest.TestCase):
+    arch = "amd64"
+
+
+class Arm64GrubSigningTests(GrubSigningTests, unittest.TestCase):
+    arch = "arm64"

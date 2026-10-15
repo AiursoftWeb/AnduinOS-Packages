@@ -1,5 +1,7 @@
 #!/bin/sh
 set -eu
+parameters=$(python3 -m anduinos_secureboot.architecture shell "$(dpkg --print-architecture)")
+eval "$parameters"
 case "$1" in
   configure|triggered)
     # Retain Ubuntu's revocation compatibility check. Never downgrade to the
@@ -8,8 +10,8 @@ case "$1" in
         [ -f "$kernel" ] || continue
         /usr/lib/shim/is-not-revoked "$kernel"
     done
-    update-alternatives --install /usr/lib/shim/shimx64.efi.signed \
-        shimx64.efi.signed /usr/lib/shim/shimx64.efi.signed.latest 100
+    update-alternatives --install /usr/lib/shim/shim${BOOT_EFI_SUFFIX}.efi.signed \
+        shim${BOOT_EFI_SUFFIX}.efi.signed /usr/lib/shim/shim${BOOT_EFI_SUFFIX}.efi.signed.latest 100
     dpkg-trigger --no-await anduinos-boot-chain-update
     ;;
 esac

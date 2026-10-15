@@ -17,6 +17,7 @@ import struct
 import tempfile
 
 from .inspect import Runner
+from .architecture import native_architecture, machine_architecture
 
 
 ESP = Path("/boot/efi")
@@ -234,20 +235,14 @@ def verify_image(path: Path, machine: int, runner: Runner) -> None:
 
 
 def payloads(runner: Runner) -> tuple[dict[str, Path], int]:
-    from .grub import SOURCE, payloads as own_payloads
-    if SOURCE.is_file():
+    from .grub import payloads as own_payloads
+    boot = native_architecture(runner)
+    if boot.source.is_file():
         return own_payloads(runner)
-    architecture = command(runner, ["dpkg", "--print-architecture"]).strip()
-    if architecture not in {"amd64", "arm64"}:
-        raise ValueError("Unsupported EFI architecture")
-    suffix, grub_arch, machine = (
-        ("x64", "x86_64", 0x8664) if architecture == "amd64"
-        else ("aa64", "arm64", 0xAA64)
-    )
     sources = {
-        f"shim{suffix}.efi": Path(f"/usr/lib/shim/shim{suffix}.efi.signed.latest").resolve(strict=True),
-        f"grub{suffix}.efi": Path(f"/usr/lib/grub/{grub_arch}-efi-signed/grub{suffix}.efi.signed"),
-        f"mm{suffix}.efi": Path(f"/usr/lib/shim/mm{suffix}.efi"),
+        boot.shim_name: boot.shim.resolve(strict=True),
+        boot.grub_name: boot.signed_grub,
+        boot.mm_name: boot.mokmanager,
     }
     packages = set()
     for path in sources.values():
@@ -255,7 +250,7 @@ def payloads(runner: Runner) -> tuple[dict[str, Path], int]:
         if "\n" in owner or ": /" not in owner:
             raise ValueError(f"Ambiguous package ownership: {path}")
         package = owner.split(": /", 1)[0]
-        if package.split(":")[0] not in {"shim", "shim-signed", f"grub-efi-{architecture}-signed"}:
+        if package.split(":")[0] not in {"shim", "shim-signed", f"grub-efi-{boot.deb_arch}-signed"}:
             raise ValueError(f"Unexpected EFI payload owner: {path}")
         packages.add(package)
     for package in sorted(packages):
@@ -263,8 +258,8 @@ def payloads(runner: Runner) -> tuple[dict[str, Path], int]:
         if state != "installed" or command(runner, ["dpkg", "--verify", package]).strip():
             raise ValueError(f"EFI package is incomplete or modified: {package}")
     for source in sources.values():
-        verify_image(source, machine, runner)
-    return sources, machine
+        verify_image(source, boot.pe_machine, runner)
+    return sources, boot.pe_machine
 
 
 def prepare_boot_chain(runner: Runner, esp: Path = ESP, *, payload_loader=None,
@@ -277,7 +272,7 @@ def prepare_boot_chain(runner: Runner, esp: Path = ESP, *, payload_loader=None,
             fcntl.lockf(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         target = resolve_target(runner, esp)
         sources, machine = (payload_loader or payloads)(runner)
-        suffix = "x64" if machine == 0x8664 else "aa64"
+        suffix = machine_architecture(machine).efi_suffix
         vendor = vendor_path(esp, target.entry)
         loader = rf"\EFI\{vendor.name}\shim{suffix}.efi"
         if target.entry.loader.lower() not in {loader.lower(), loader.lower().replace("shim", "grub")}:

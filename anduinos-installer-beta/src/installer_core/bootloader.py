@@ -9,6 +9,8 @@ import re
 import shutil
 import tempfile
 
+from anduinos_secureboot.architecture import architecture
+
 from .boot_commands import build_boot_commands
 from .command import CommandRunner
 from .esp import (
@@ -19,7 +21,7 @@ from .esp import (
 )
 from .execution_boundaries import emit_boundary
 from .esp_replacement import replace_esp_vendor
-from .model import Architecture, Filesystem, Firmware, InstallMode, InstallPlan
+from .model import Filesystem, Firmware, InstallMode, InstallPlan
 from .software import verify_driver_boot_payload
 from .steps import FailurePolicy, InstallContext
 from .storage_planning import (
@@ -288,11 +290,7 @@ class InstallBootloaderStep:
                     inspection.preserved_entries,
                     target / "boot/efi",
                 )
-        expected_machine = (
-            0x8664
-            if context.plan.platform.architecture is Architecture.AMD64
-            else 0xAA64
-        )
+        expected_machine = architecture(context.plan.platform.architecture.value).pe_machine
         actual_machine = read_pe_machine(efi_loader)
         if actual_machine != expected_machine:
             raise RuntimeError(
@@ -382,10 +380,9 @@ def _portable_fallback_paths(
     target: Path,
     plan: InstallPlan,
 ) -> tuple[tuple[Path, Path], ...]:
-    suffix = (
-        "x64" if plan.platform.architecture is Architecture.AMD64 else "aa64"
-    )
-    boot_name = "BOOTX64.EFI" if suffix == "x64" else "BOOTAA64.EFI"
+    boot = architecture(plan.platform.architecture.value)
+    suffix = boot.efi_suffix
+    boot_name = boot.fallback_name
     vendor = target / "boot/efi/EFI/AnduinOS"
     fallback = target / "boot/efi/EFI/BOOT"
     return (
@@ -471,11 +468,7 @@ def _deploy_portable_fallback(
     fallback.mkdir(parents=True, exist_ok=True)
     if fallback.resolve() != fallback:
         raise RuntimeError("Portable EFI fallback directory is redirected")
-    expected_machine = (
-        0x8664
-        if plan.platform.architecture is Architecture.AMD64
-        else 0xAA64
-    )
+    expected_machine = architecture(plan.platform.architecture.value).pe_machine
     pairs = _portable_fallback_paths(target, plan)
     for source, destination in pairs:
         if source.is_symlink() or not source.is_file():
@@ -509,11 +502,7 @@ def _verify_portable_fallback(
     target: Path,
     plan: InstallPlan,
 ) -> None:
-    expected_machine = (
-        0x8664
-        if plan.platform.architecture is Architecture.AMD64
-        else 0xAA64
-    )
+    expected_machine = architecture(plan.platform.architecture.value).pe_machine
     for source, destination in _portable_fallback_paths(target, plan):
         if destination.is_symlink() or not destination.is_file():
             raise RuntimeError(
@@ -525,7 +514,7 @@ def _verify_portable_fallback(
             )
         if destination.suffix.lower() == ".efi":
             _verify_signed_image(runner, destination, expected_machine)
-    suffix = "x64" if plan.platform.architecture is Architecture.AMD64 else "aa64"
+    suffix = architecture(plan.platform.architecture.value).efi_suffix
     registrar = target / "boot/efi/EFI/BOOT" / f"fb{suffix}.efi"
     if registrar.exists() or registrar.is_symlink():
         raise RuntimeError(

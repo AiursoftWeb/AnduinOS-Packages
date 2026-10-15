@@ -1,13 +1,20 @@
 # AnduinOS shim
 
-This package preserves Ubuntu shim-signed 1.59+15.8-0ubuntu2's EFI bytes,
-including MokManager, signatures and SBAT. The exact upstream .deb SHA-256 is
-pinned in `build.sh`; EFI hashes and provenance ship with the package.
+This package uses Apkg's upstream derivation, just like the other Ubuntu-derived
+packages in this repository. Each target selects the newest `shim-signed` in
+its configured Ubuntu suite and architecture. `$(UpstreamVersion)` supplies the
+package version; there are no fixed artifact URLs, versions or SHA256 inputs.
+The Ubuntu archive keyring verifies the upstream repository.
 
-It depends on `anduinos-grub`. The upstream DKMS/key-generation/deployment
-maintainer scripts are not inherited. It retains the kernel revocation check
-and delegates boot deployment to the Secure Boot toolkit. EFI/BOOT fallback
-files are not automatically deployed. Purging it never deletes certificates.
+`apkg build --all` builds the declared target matrix. To add another suite,
+update `TargetSuites`, `UpstreamSuiteMapping` and `SuiteShortNameMap`. No download
+script or Docker image needs updating. ARM64 uses Ubuntu Ports; AMD64 uses the
+Ubuntu archive.
 
-The initial target is Resolute/amd64. Shim itself is not recompiled or re-signed.
-Future security updates require changing the pinned input and requalifying it.
+The preparation script retains the signed shim, MokManager, revocation check
+and upstream documentation. Their bytes are unchanged. Ubuntu's key-generation
+and deployment hooks are excluded; our maintainer scripts delegate deployment
+to the shared Secure Boot toolkit. The package depends on `anduinos-grub` and
+never creates or deletes signing certificates.
+
+Updated inputs still need boot-chain acceptance testing before release.
