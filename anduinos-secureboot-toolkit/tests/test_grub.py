@@ -3,6 +3,7 @@ from dataclasses import replace
 import hashlib
 from pathlib import Path
 import subprocess
+import struct
 from types import SimpleNamespace
 import tempfile
 import unittest
@@ -14,7 +15,8 @@ from anduinos_secureboot.model import GrubState, SecureBootStatus
 
 
 class Runner:
-    def __init__(self):
+    def __init__(self, architecture="amd64"):
+        self.architecture = architecture
         self.calls = []
         self.fail_signing = False
         self.modified = False
@@ -23,7 +25,9 @@ class Runner:
 
     def run(self, command, timeout=30):
         self.calls.append(command)
-        if command[0] == "dpkg-query":
+        if command == ["dpkg", "--print-architecture"]:
+            value = self.architecture
+        elif command[0] == "dpkg-query":
             value = f"{self.owner}: {command[-1]}" if "--search" in command else "installed"
         elif command[:2] == ["dpkg", "--verify"]:
             value = f"??5?????? {self.calls[-2][-1]}" if self.modified else ""
@@ -47,26 +51,56 @@ class GrubArchitectureTests(unittest.TestCase):
                 with (patch.object(grub, "packages_installed", return_value=False) as packages,
                       patch.object(Path, "read_text", side_effect=AssertionError("No release gate"))):
                     state = grub.inspect_grub(runner)
-                self.assertEqual(state.supported, arch == "amd64")
-                self.assertEqual(packages.called, arch == "amd64")
+                self.assertEqual(state.supported, arch in ("amd64", "arm64"))
+                self.assertEqual(packages.called, arch in ("amd64", "arm64"))
+
+    def test_payload_names_and_replacement_packages_match_native_architecture(self):
+        for arch, suffix, platform, machine in (("amd64", "x64", "x86_64", 0x8664),
+                                                ("arm64", "aa64", "arm64", 0xAA64)):
+            with self.subTest(architecture=arch):
+                runner = Runner(arch)
+                self.assertEqual(grub.boot_chain.efi_architecture(runner), (suffix, platform, machine))
+                self.assertEqual(grub.source_image(runner).name, f"grub{suffix}.efi")
+                self.assertEqual(set(grub.shim_companions(runner)), {f"shim{suffix}.efi", f"mm{suffix}.efi"})
+                packages = grub.old_packages(runner)
+                self.assertIn(f"grub-efi-{arch}-signed", packages)
+                other = "arm64" if arch == "amd64" else "amd64"
+                self.assertFalse(any(f"grub-efi-{other}" in name for name in packages))
+                self.assertEqual("grub-pc-bin" in packages, arch == "amd64")
 
 
 class GrubSigningTests(unittest.TestCase):
+    architecture = "amd64"
+
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)
         self.root = Path(self.directory.name)
         self.key, self.cert = self.root / "key", self.root / "cert.der"
-        self.runner = Runner()
+        self.runner = Runner(self.architecture)
         identity.generate_identity(self.key, self.cert, self.runner.run)
-        code = self.root / "efi.c"
-        code.write_text("int efi_main(void *image, void *table) { return 0; }\n")
-        obj = self.root / "efi.o"
-        self.source = self.root / "grub.efi"
-        subprocess.run(["gcc", "-ffreestanding", "-fno-stack-protector", "-fno-asynchronous-unwind-tables",
-                        "-mno-red-zone", "-c", str(code), "-o", str(obj)], check=True, capture_output=True)
-        subprocess.run(["ld", "-mi386pep", "--subsystem", "10", "--entry", "efi_main",
-                        "--image-base", "0", "-o", str(self.source), str(obj)], check=True, capture_output=True)
+        suffix, _, machine = grub.boot_chain.efi_architecture(self.runner)
+        self.source = self.root / f"grub{suffix}.efi"
+        # A minimal PE32+ signing fixture, never executed. Build its metadata
+        # directly so BOTH ISA tests run on either host without cross compilers.
+        image = bytearray(1024)
+        image[:2] = b"MZ"
+        struct.pack_into("<I", image, 60, 128)
+        image[128:132] = b"PE\0\0"
+        struct.pack_into("<HHIIIHH", image, 132, machine, 1, 0, 0, 0, 240, 0x22)
+        optional = 152
+        struct.pack_into("<H", image, optional, 0x20B)
+        struct.pack_into("<I", image, optional + 4, 512)  # SizeOfCode
+        struct.pack_into("<II", image, optional + 16, 4096, 4096)
+        struct.pack_into("<II", image, optional + 32, 4096, 512)
+        struct.pack_into("<II", image, optional + 56, 8192, 512)
+        struct.pack_into("<H", image, optional + 68, 10)  # EFI application
+        struct.pack_into("<I", image, optional + 108, 16)
+        section = optional + 240
+        image[section:section + 8] = b".text\0\0\0"
+        struct.pack_into("<IIII", image, section + 8, 8, 4096, 512, 512)
+        struct.pack_into("<I", image, section + 36, 0x60000020)
+        self.source.write_bytes(image)
         self.source.chmod(0o644)
         self.store = self.root / "store"
         self.firmware = SimpleNamespace(status=SecureBootStatus.ENABLED)
@@ -79,9 +113,9 @@ class GrubSigningTests(unittest.TestCase):
         self.addCleanup(selected.stop)
         self.enrollment = patch.object(identity, "enrollment_state", return_value="enrolled").start()
         self.addCleanup(patch.stopall)
-        compatibility = patch.object(grub, "_compatibility_image")
-        compatibility.start()
-        self.addCleanup(compatibility.stop)
+        self.compatibility = patch.object(grub, "_compatibility_image")
+        self.compatibility.start()
+        self.addCleanup(self.compatibility.stop)
 
     def prepare(self, **kwargs):
         return grub.prepare_image(self.runner, source=self.source, store=self.store, **kwargs)
@@ -98,8 +132,8 @@ class GrubSigningTests(unittest.TestCase):
         image = self.prepare()
         data = bytearray(image.read_bytes())
         # Alter executable contents rather than the PE checksum (not covered
-        # by Authenticode). The fixture's .text section starts at offset 0x400.
-        data[0x400] ^= 1
+        # by Authenticode). The fixture's .text section starts at offset 0x200.
+        data[0x200] ^= 1
         image.write_bytes(data)
         with self.assertRaises(ValueError):
             grub.verify_signature(image, self.cert, self.runner)
@@ -150,6 +184,83 @@ class GrubSigningTests(unittest.TestCase):
         image = self.prepare(first_install=True)
         grub.verify_signature(image, self.cert, self.runner)
 
+    def test_compatibility_copy_uses_the_native_grub_directory(self):
+        image = self.prepare()
+        self.compatibility.stop()
+        suffix, platform, _ = grub.boot_chain.efi_architecture(self.runner)
+        destination = self.root / "compatibility"
+        with patch.object(grub, "Path", return_value=destination) as path:
+            grub._compatibility_image(image, self.runner)
+        path.assert_called_once_with(f"/usr/lib/grub/{platform}-efi-signed")
+        self.assertEqual((destination / f"grub{suffix}.efi.signed").read_bytes(), image.read_bytes())
+
+    def test_wrong_architecture_and_wrong_certificate_are_rejected(self):
+        image = self.prepare()
+        self.runner.architecture = "arm64" if self.architecture == "amd64" else "amd64"
+        with self.assertRaisesRegex(ValueError, "architecture"):
+            grub.verify_signature(image, self.cert, self.runner)
+        self.runner.architecture = self.architecture
+        other_key, other_cert = self.root / "other.key", self.root / "other.der"
+        identity.generate_identity(other_key, other_cert, self.runner.run)
+        with self.assertRaises(ValueError):
+            grub.verify_signature(image, other_cert, self.runner)
+
+    def test_updated_template_and_certificate_are_resigned(self):
+        image = self.prepare()
+        before = image.read_bytes()
+        data = bytearray(self.source.read_bytes())
+        data[0x200] ^= 1
+        self.source.write_bytes(data)
+        self.assertNotEqual(self.prepare().read_bytes(), before)
+        grub.verify_signature(image, self.cert, self.runner)
+        other_key, other_cert = self.root / "other.key", self.root / "other.der"
+        identity.generate_identity(other_key, other_cert, self.runner.run)
+        self.key.write_bytes(other_key.read_bytes())
+        self.cert.write_bytes(other_cert.read_bytes())
+        self.prepare()
+        grub.verify_signature(image, self.cert, self.runner)
+
+    def test_inspection_distinguishes_prepared_update_from_deployed_image(self):
+        image = self.prepare()
+        suffix, _, machine = grub.boot_chain.efi_architecture(self.runner)
+        esp = self.root / "esp"
+        vendor = esp / "EFI/AnduinOS"
+        vendor.mkdir(parents=True)
+        deployed = vendor / image.name
+        deployed.write_bytes(image.read_bytes())
+        companions = {}
+        for name in (f"shim{suffix}.efi", f"mm{suffix}.efi"):
+            source = self.root / name
+            source.write_bytes(image.read_bytes())
+            (vendor / name).write_bytes(source.read_bytes())
+            companions[name] = source
+        target = SimpleNamespace(entry=SimpleNamespace(loader=rf"\EFI\AnduinOS\shim{suffix}.efi"))
+        # Keep package/firmware boundaries isolated; signatures, state manifests
+        # and file comparisons use the real fixture files and signing tools.
+        with (patch.object(grub, "STORE", self.store),
+              patch.object(grub, "source_image", return_value=self.source),
+              patch.object(grub, "shim_companions", return_value=companions),
+              patch.object(grub, "package_payload"),
+              patch.object(grub.boot_chain, "resolve_target", return_value=target)):
+            self.assertTrue(grub.inspect_grub(self.runner, privileged=True, esp=esp).ready)
+            with patch.object(grub, "prepare_image", return_value=image):
+                sources, actual_machine = grub.payloads(self.runner)
+            self.assertEqual(actual_machine, machine)
+            self.assertEqual(set(sources), {image.name, *companions})
+            data = bytearray(self.source.read_bytes())
+            data[0x200] ^= 1
+            self.source.write_bytes(data)
+            self.assertEqual(grub.inspect_grub(self.runner, privileged=True, esp=esp).deployment, "pending")
+            self.prepare()
+            self.assertFalse(grub.inspect_grub(self.runner, privileged=True, esp=esp).ready)
+            deployed.write_bytes(image.read_bytes())
+            self.assertTrue(grub.inspect_grub(self.runner, privileged=True, esp=esp).ready)
+            other = "aa64" if suffix == "x64" else "x64"
+            target.entry.loader = rf"\EFI\AnduinOS\shim{other}.efi"
+            state = grub.inspect_grub(self.runner, privileged=True, esp=esp)
+            self.assertFalse(state.ready)
+            self.assertIn("architecture", state.detail)
+
     def test_modified_or_wrong_package_payload_is_not_signed(self):
         for field, value in (("modified", True), ("owner", "other-package")):
             with self.subTest(field=field):
@@ -167,6 +278,14 @@ class GrubSigningTests(unittest.TestCase):
                     with self.assertRaises(ValueError):
                         grub.install_packages(self.runner.run)
             self.assertFalse(any(command[:2] == ["apt-get", "-y"] for command in self.runner.calls))
+
+    def test_replacement_cannot_remove_other_architecture_boot_packages(self):
+        other = "arm64" if self.architecture == "amd64" else "amd64"
+        self.runner.removals = f"Remv grub-efi-{other}-signed [1.0]\n"
+        with patch.object(grub.boot_chain, "resolve_target"):
+            with self.assertRaisesRegex(ValueError, "unrelated"):
+                grub.install_packages(self.runner.run)
+        self.assertFalse(any(command[:2] == ["apt-get", "-y"] for command in self.runner.calls))
 
     def test_allowed_replacement_runs_after_trust_check(self):
         with patch.object(grub.boot_chain, "resolve_target"):
@@ -221,3 +340,7 @@ class GrubSigningTests(unittest.TestCase):
         for field, value in (("installed", False), ("signature", "invalid"),
                              ("enrollment", "pending"), ("deployment", "pending"), ("deployment", "unknown")):
             self.assertFalse(replace(ready, **{field: value}).ready)
+
+
+class Arm64GrubSigningTests(GrubSigningTests):
+    architecture = "arm64"

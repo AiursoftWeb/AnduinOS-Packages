@@ -69,6 +69,41 @@ are not silently removed.
 The roadmap is certificate migration on Resolute first, custom GRUB/shim
 packages second, encrypted installation third, and Stonking integration last.
 
+## AMD64 and ARM64 bootloader deployment
+
+Both architectures use the same signing, status inspection and ESP transaction.
+The native architecture selects `grubx64.efi` or `grubaa64.efi`, its official
+shim/MokManager companions, and the matching GRUB compatibility directory.
+Package replacement considers only the native EFI packages; BIOS packages
+belong to AMD64 only. No release codename selects a separate implementation.
+
+The unsigned package image is signed with the unified MOK and verified against
+that certificate and the native PE architecture. Updated templates or signing
+certificates invalidate the prepared-image cache. Package hooks and the
+interactive repair use the same path, preserving prepared artifacts on signing
+failure and the existing ESP rollback/backup protections on deployment failure.
+The local `grub-multi-install` hook accepts only its native EFI target.
+
+Source regression tests exercise real signing and verification for both PE
+architectures on either host. ESP/NVRAM tests cover both filenames, updates,
+foreign-loader preservation and rollback. These tests isolate package and
+firmware commands; ARM64 guest boot, enrollment, package reinstall and power
+loss qualification remain release gates. Installer and ISO selection of the
+new ARM64 stack are the next integration phase.
+
+Phase-two checks on 2026-10-16, on the AMD64 development host:
+
+- All 166 toolkit tests passed, including rejection of a boot entry pointing
+  to the other architecture even when the native signed files are present.
+- Toolkit packages for both declared suites and GRUB packages for both
+  architectures built successfully; both GRUB/shim artifact checks passed.
+- The real packaged AMD64 and ARM64 GRUB images passed signing, verification,
+  stable retry, wrong-certificate/architecture rejection and signing-failure
+  preservation checks using the existing test fixtures with temporary keys.
+- Both official shim/MokManager pairs passed signature and PE architecture
+  verification. Firmware enrollment and package ownership were isolated in
+  these tests; no host package, certificate or ESP was changed.
+
 ## Scope contract
 
 ### Fresh installation API
@@ -90,13 +125,15 @@ The toolkit is deliberately narrow. It may:
   `123456`;
 - write `/etc/dkms/framework.conf.d/anduinos-sb-sign.conf` atomically;
 - rebuild installed DKMS modules and report partial success accurately;
+- install the fixed AnduinOS GRUB/shim package pair after trust and APT
+  replacement checks, and sign/deploy its native boot chain;
 - expose a versioned state model, a restricted privileged helper, and a
   shared GTK/libadwaita trust panel.
 
 It must not:
 
 - detect NVIDIA hardware or choose a package through `ubuntu-drivers`;
-- install NVIDIA, Xbox, audio, printing, or any other APT package;
+- install NVIDIA, Xbox, audio, printing, or arbitrary APT packages;
 - accept arbitrary commands, shell fragments, paths, or package names;
 - own OOBE navigation or the Driver Center device list;
 - grow into a second driver manager.
@@ -131,8 +168,9 @@ anduinos-secureboot-toolkit/
     └── test_operations.py
 ```
 
-Keep implementation files in the documented layer. In particular, package
-installation and hardware selection do not belong under `src/` or `scripts/`.
+Keep implementation files in the documented layer. Hardware selection and
+general package installation remain outside this toolkit; `grub.py` owns only
+the fixed bootloader-pair replacement described above.
 
 ## Architecture
 

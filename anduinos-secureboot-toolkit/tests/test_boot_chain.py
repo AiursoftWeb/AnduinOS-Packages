@@ -20,11 +20,12 @@ UUID = "12345678-1234-1234-1234-123456789abc"
 
 
 class Firmware:
-    def __init__(self, esp):
+    def __init__(self, esp, suffix="x64"):
         self.esp = esp
         self.order = "0000,0007,0003"
         self.current = "0007"
-        self.loader = "grubx64.efi"
+        self.suffix = suffix
+        self.loader = f"grub{suffix}.efi"
         self.new = False
         self.fail_order = False
         self.rollback_order = self.order
@@ -42,7 +43,7 @@ class Firmware:
         result += "Boot0000* Windows Boot Manager HD(1,GPT," + UUID + ",0x800,0x10000)/File(\\EFI\\Microsoft\\Boot\\bootmgfw.efi)\n"
         result += f"Boot0007* AnduinOS HD(1,GPT,{UUID},0x800,0x10000)/File(\\EFI\\AnduinOS\\{self.loader})\n"
         if self.new:
-            result += f"Boot0009* AnduinOS HD(1,GPT,{UUID},0x800,0x10000)/File(\\EFI\\AnduinOS\\shimx64.efi)\n"
+            result += f"Boot0009* AnduinOS HD(1,GPT,{UUID},0x800,0x10000)/File(\\EFI\\AnduinOS\\shim{self.suffix}.efi)\n"
         return result + self.other_entry
 
     def run(self, args, **kwargs):
@@ -78,7 +79,7 @@ class Firmware:
 
 class BootChainTests(unittest.TestCase):
     @contextmanager
-    def fixture(self):
+    def fixture(self, suffix="x64"):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             esp = root / "esp"
@@ -86,23 +87,61 @@ class BootChainTests(unittest.TestCase):
             vendor.mkdir(parents=True)
             (vendor / "grub.cfg").write_text("search --fs-uuid root; configfile /boot/grub/grub.cfg")
             sources = {}
-            for name in ("shimx64.efi", "grubx64.efi", "mmx64.efi"):
+            for name in (f"shim{suffix}.efi", f"grub{suffix}.efi", f"mm{suffix}.efi"):
                 (vendor / name).write_bytes(b"old " + name.encode())
                 source = root / name
                 source.write_bytes(b"new " + name.encode())
                 sources[name] = source
-            for name in ("Microsoft/Boot/bootmgfw.efi", "BOOT/BOOTX64.EFI"):
+            for name in ("Microsoft/Boot/bootmgfw.efi", f"BOOT/BOOT{suffix.upper()}.EFI"):
                 path = esp / "EFI" / name
                 path.parent.mkdir(parents=True)
                 path.write_bytes(b"foreign loader")
-            firmware = Firmware(esp)
+            firmware = Firmware(esp, suffix)
             # Fake only package/signature and dpkg lock boundaries. All disk
             # selection, staging, file replacement and NVRAM logic executes.
-            with (patch.object(boot, "payloads", return_value=(sources, 0x8664)),
+            with (patch.object(boot, "payloads", return_value=(sources, 0x8664 if suffix == "x64" else 0xAA64)),
                   patch.object(boot, "partition_number", return_value=1),
                   patch.object(boot, "verify_image"),
                   patch.object(boot, "open", side_effect=lambda *a: (root / "lock").open("a+"))):
                 yield firmware, esp, vendor
+
+    def test_both_architectures_deploy_update_and_preserve_other_loaders(self):
+        for suffix in ("x64", "aa64"):
+            with self.subTest(suffix=suffix), self.fixture(suffix) as (firmware, esp, vendor):
+                boot.prepare_boot_chain(firmware, esp)
+                self.assertEqual(firmware.order, "0000,0009,0003")
+                create = next(call for call in firmware.calls if call[:2] == ["efibootmgr", "--create-only"])
+                self.assertEqual(create[-1], rf"\EFI\AnduinOS\shim{suffix}.efi")
+                sources = {name: esp.parent / name for name in
+                           (f"grub{suffix}.efi", f"shim{suffix}.efi", f"mm{suffix}.efi")}
+                for source in sources.values():
+                    source.write_bytes(b"updated " + source.name.encode())
+                boot.prepare_boot_chain(firmware, esp)
+                for name, source in sources.items():
+                    self.assertEqual((vendor / name).read_bytes(), source.read_bytes())
+                self.assertEqual(sum(call[:2] == ["efibootmgr", "--create-only"] for call in firmware.calls), 1)
+                for name in ("Microsoft/Boot/bootmgfw.efi", f"BOOT/BOOT{suffix.upper()}.EFI"):
+                    self.assertEqual((esp / "EFI" / name).read_bytes(), b"foreign loader")
+
+    def test_both_architectures_restore_files_when_firmware_update_fails(self):
+        for suffix in ("x64", "aa64"):
+            with self.subTest(suffix=suffix), self.fixture(suffix) as (firmware, esp, vendor):
+                before = {path.name: path.read_bytes() for path in vendor.iterdir()}
+                firmware.fail_order = True
+                with self.assertRaisesRegex(ValueError, "NVRAM full"):
+                    boot.prepare_boot_chain(firmware, esp)
+                self.assertEqual(before, {path.name: path.read_bytes() for path in vendor.iterdir()})
+                self.assertEqual(firmware.order, "0000,0007,0003")
+                self.assertFalse(firmware.new)
+
+    def test_architecture_mismatch_fails_before_esp_or_nvram_writes(self):
+        with self.fixture("aa64") as (firmware, esp, vendor):
+            firmware.loader = "shimx64.efi"
+            before = {path.name: path.read_bytes() for path in vendor.iterdir()}
+            with self.assertRaisesRegex(ValueError, "architecture"):
+                boot.prepare_boot_chain(firmware, esp)
+            self.assertEqual(before, {path.name: path.read_bytes() for path in vendor.iterdir()})
+            self.assertFalse(firmware.new)
 
     def test_nvram_parser_accepts_both_efibootmgr_path_formats(self):
         firmware = Firmware(Path("/boot/efi"))

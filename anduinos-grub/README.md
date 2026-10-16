@@ -34,11 +34,11 @@ private key and never generates a shared signing identity. The Secure Boot
 toolkit signs the pristine package image with the machine's unified certificate
 and deploys it together with the official shim from `anduinos-shim-signed`.
 
-This milestone covers package construction, not ARM64 installation/deployment
-qualification. The existing toolkit and grub-multi-install deployment gate are
-still amd64-only. Do not install the arm64 packages until that next phase is
-complete. Newly assembled EFI images also require Secure Boot positive/negative
-boot tests; static module checks do not establish boot or security correctness.
+The toolkit now shares signing/deployment between amd64 and arm64, and the
+grub-multi-install hook accepts only the native EFI target. This package requires
+the toolkit revision carrying that support. ARM64 installer/ISO integration
+and Secure Boot positive/negative boot qualification are subsequent milestones;
+static module and deployment tests do not establish firmware boot correctness.
 
 ## Phase-one acceptance
 
@@ -64,8 +64,12 @@ Verified on 2026-10-16 with apkg 10.0.65:
   user emulation with isolated ARM runtime libraries. It produced BOTH target
   EFI images byte-identical to those built by the AMD64 tool. This is not a
   claim of a full native ARM64-host apkg run or a Secure Boot guest boot test.
+- Subsequently built all four packages natively on the Resolute ARM64 GX10.
+  Both source/artifact test groups passed. Its two GRUB EFI images are
+  byte-identical to the AMD64 host's outputs. See the GX10 validation snapshot's
+  `packages.log` and `README.md` under
+  `/home/anduin/Source/Builds/anduinos-arm-validation-20261016` on that machine.
 - No packages were installed, no ESP/MOK state changed, and nothing published.
 
-Acceptance stops at package construction. ARM64 toolkit/deployment, installer
-and ISO integration, Secure Boot/enrollment and update boot tests are subsequent
-milestones. The existing amd64-only deployment guard is intentionally unchanged.
+That acceptance record covers phase one, before native deployment support was
+added. The toolkit README documents phase two and its remaining guest boot gates.

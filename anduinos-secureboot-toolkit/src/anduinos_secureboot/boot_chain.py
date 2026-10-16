@@ -233,17 +233,21 @@ def verify_image(path: Path, machine: int, runner: Runner) -> None:
     raise ValueError(f"EFI signature verification failed: {path}")
 
 
-def payloads(runner: Runner) -> tuple[dict[str, Path], int]:
-    from .grub import SOURCE, payloads as own_payloads
-    if SOURCE.is_file():
-        return own_payloads(runner)
+def efi_architecture(runner: Runner) -> tuple[str, str, int]:
+    """Return the native EFI suffix, GRUB platform and PE machine together."""
     architecture = command(runner, ["dpkg", "--print-architecture"]).strip()
-    if architecture not in {"amd64", "arm64"}:
-        raise ValueError("Unsupported EFI architecture")
-    suffix, grub_arch, machine = (
-        ("x64", "x86_64", 0x8664) if architecture == "amd64"
-        else ("aa64", "arm64", 0xAA64)
-    )
+    try:
+        return {"amd64": ("x64", "x86_64", 0x8664),
+                "arm64": ("aa64", "arm64", 0xAA64)}[architecture]
+    except KeyError:
+        raise ValueError("Unsupported EFI architecture: " + architecture) from None
+
+
+def payloads(runner: Runner) -> tuple[dict[str, Path], int]:
+    from .grub import source_image, payloads as own_payloads
+    suffix, grub_arch, machine = efi_architecture(runner)
+    if source_image(runner).is_file():
+        return own_payloads(runner)
     sources = {
         f"shim{suffix}.efi": Path(f"/usr/lib/shim/shim{suffix}.efi.signed.latest").resolve(strict=True),
         f"grub{suffix}.efi": Path(f"/usr/lib/grub/{grub_arch}-efi-signed/grub{suffix}.efi.signed"),
@@ -255,7 +259,8 @@ def payloads(runner: Runner) -> tuple[dict[str, Path], int]:
         if "\n" in owner or ": /" not in owner:
             raise ValueError(f"Ambiguous package ownership: {path}")
         package = owner.split(": /", 1)[0]
-        if package.split(":")[0] not in {"shim", "shim-signed", f"grub-efi-{architecture}-signed"}:
+        signed_package = "grub-efi-amd64-signed" if suffix == "x64" else "grub-efi-arm64-signed"
+        if package.split(":")[0] not in {"shim", "shim-signed", signed_package}:
             raise ValueError(f"Unexpected EFI payload owner: {path}")
         packages.add(package)
     for package in sorted(packages):
@@ -277,7 +282,10 @@ def prepare_boot_chain(runner: Runner, esp: Path = ESP, *, payload_loader=None,
             fcntl.lockf(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         target = resolve_target(runner, esp)
         sources, machine = (payload_loader or payloads)(runner)
-        suffix = "x64" if machine == 0x8664 else "aa64"
+        try:
+            suffix = {0x8664: "x64", 0xAA64: "aa64"}[machine]
+        except KeyError:
+            raise ValueError("Unsupported EFI payload architecture") from None
         vendor = vendor_path(esp, target.entry)
         loader = rf"\EFI\{vendor.name}\shim{suffix}.efi"
         if target.entry.loader.lower() not in {loader.lower(), loader.lower().replace("shim", "grub")}:

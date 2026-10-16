@@ -1,6 +1,9 @@
 import importlib.util
+import os
 from pathlib import Path
 import struct
+import subprocess
+import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 
@@ -42,6 +45,38 @@ def module_fixture(name):
 
 
 class AssemblyTests(unittest.TestCase):
+    def test_update_hook_accepts_only_the_native_efi_target(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            dpkg = root / "dpkg"
+            dpkg.write_text('#!/bin/sh\nprintf "%s\\n" "$TEST_ARCH"\n')
+            dpkg.chmod(0o755)
+            update = root / "update"
+            update.write_text('#!/bin/sh\nprintf "%s\\n" "$*"\n')
+            update.chmod(0o755)
+            hook = root / "hook"
+            # Redirect only the privileged update executable into the fixture.
+            hook.write_text((ROOT / "scripts/grub-multi-install").read_text().replace(
+                "/usr/libexec/anduinos-grub-update", str(update)))
+            for arch, target, other in (("amd64", "x86_64-efi", "arm64-efi"),
+                                         ("arm64", "arm64-efi", "x86_64-efi")):
+                environment = dict(os.environ, PATH=f"{root}:{os.environ['PATH']}", TEST_ARCH=arch)
+                for arguments in ([], [f"--target={target}"]):
+                    with self.subTest(arch=arch, arguments=arguments):
+                        result = subprocess.run(["sh", str(hook), *arguments], env=environment,
+                                                text=True, capture_output=True)
+                        self.assertEqual(result.returncode, 0, result.stderr)
+                        self.assertEqual(result.stdout.strip(), "deploy")
+                for arguments in ([f"--target={other}"], ["--target=i386-pc"],
+                                  [f"--target={target}", "--force"]):
+                    result = subprocess.run(["sh", str(hook), *arguments], env=environment,
+                                            text=True, capture_output=True)
+                    self.assertEqual(result.returncode, 64)
+                    self.assertEqual(result.stdout, "")
+            environment["TEST_ARCH"] = "riscv64"
+            self.assertEqual(subprocess.run(["sh", str(hook)], env=environment,
+                                            capture_output=True).returncode, 64)
+
     def test_reads_both_pe_architectures(self):
         for machine in (0x8664, 0xAA64):
             self.assertEqual(assembly.pe_sections(pe_fixture(machine)),

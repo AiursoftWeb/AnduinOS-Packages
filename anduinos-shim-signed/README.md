@@ -16,6 +16,6 @@ files are not automatically deployed. Purging it never deletes certificates.
 
 Shim is not recompiled or re-signed. A new suite is configured in the project,
 not build-script branches. New inputs require qualification and an AnduinOS
-package revision bump before publication. ARM64 packaging is the first
-milestone only: ARM64 toolkit/deployment support and Secure Boot qualification
-remain separate work. Do not install that target before those are complete.
+package revision bump before publication. The toolkit now selects the matching
+ARM64 or AMD64 companions for deployment. ARM64 installer/ISO integration and
+Secure Boot qualification remain subsequent milestones.
