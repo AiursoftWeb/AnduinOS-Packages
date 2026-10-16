@@ -11,6 +11,7 @@ from helpers import valid_plan
 from installer_core.model import (
     Architecture,
     BootSpec,
+    Firmware,
     MokPasswordPolicy,
     SecureBoot,
 )
@@ -42,6 +43,13 @@ class KeyGeneratingRunner(FakeRunner):
             return subprocess.run(command, capture_output=True, text=True,
                                   timeout=kwargs.get('timeout', 30), check=kwargs.get('check', False))
         result = super().run(command, **kwargs)
+        if command[-2:] == ('/usr/libexec/anduinos-grub-update', 'first-install') and result.returncode == 0:
+            # Model the signing output without executing chroot or touching EFI.
+            for suffix, platform in (('x64', 'x86_64'), ('aa64', 'arm64')):
+                if (self.target / f'usr/lib/anduinos-grub/grub{suffix}.efi').is_file():
+                    signed = self.target / f'usr/lib/grub/{platform}-efi-signed/grub{suffix}.efi.signed'
+                    signed.parent.mkdir(parents=True, exist_ok=True)
+                    signed.touch()
         return result
 
 
@@ -69,10 +77,10 @@ def prepare_secure_boot_target(
         path.touch()
 
 
-def prepare_signed_efi_chain(target: Path) -> None:
+def prepare_signed_efi_chain(target: Path, suffix: str = "x64") -> None:
     for relative in (
-        "boot/efi/EFI/AnduinOS/shimx64.efi",
-        "boot/efi/EFI/AnduinOS/grubx64.efi",
+        f"boot/efi/EFI/AnduinOS/shim{suffix}.efi",
+        f"boot/efi/EFI/AnduinOS/grub{suffix}.efi",
     ):
         path = target / relative
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -80,15 +88,20 @@ def prepare_signed_efi_chain(target: Path) -> None:
 
 
 class PrepareSecureBootTests(unittest.TestCase):
+    architecture = Architecture.AMD64
+    suffix = 'x64'
+    platform = 'x86_64'
+
     def test_own_grub_is_signed_after_creating_target_certificate_without_enrollment(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            prepare_secure_boot_target(target)
-            source = target / 'usr/lib/anduinos-grub/grubx64.efi'
+            prepare_secure_boot_target(target, self.architecture)
+            source = target / f'usr/lib/anduinos-grub/grub{self.suffix}.efi'
             source.parent.mkdir(parents=True)
             source.touch()
+            (target / f'usr/lib/grub/{self.platform}-efi-signed/grub{self.suffix}.efi.signed').unlink()
             runner = KeyGeneratingRunner(target)
-            context = InstallContext(valid_plan(), lambda _message: None, {'target': target})
+            context = InstallContext(valid_plan(architecture=self.architecture), lambda _message: None, {'target': target})
             PrepareSecureBootStep(runner).execute(context)
             commands = [call[0] for call in runner.commands]
             signing = commands.index(('chroot', str(target), '/usr/libexec/anduinos-grub-update', 'first-install'))
@@ -100,14 +113,15 @@ class PrepareSecureBootTests(unittest.TestCase):
     def test_own_grub_signing_failure_preserves_target_identity_for_retry(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            prepare_secure_boot_target(target)
-            source = target / 'usr/lib/anduinos-grub/grubx64.efi'
+            prepare_secure_boot_target(target, self.architecture)
+            source = target / f'usr/lib/anduinos-grub/grub{self.suffix}.efi'
             source.parent.mkdir(parents=True)
             source.touch()
+            (target / f'usr/lib/grub/{self.platform}-efi-signed/grub{self.suffix}.efi.signed').unlink()
             runner = KeyGeneratingRunner(target)
             command = ('chroot', str(target), '/usr/libexec/anduinos-grub-update', 'first-install')
             runner.outputs[command] = ('', 'Injected signing failure', 1)
-            context = InstallContext(valid_plan(), lambda _message: None, {'target': target})
+            context = InstallContext(valid_plan(architecture=self.architecture), lambda _message: None, {'target': target})
             with self.assertRaisesRegex(RuntimeError, 'GRUB signing failed'):
                 PrepareSecureBootStep(runner).execute(context)
             first = (target / MOK_CERTIFICATE).read_bytes()
@@ -118,7 +132,7 @@ class PrepareSecureBootTests(unittest.TestCase):
     def test_replaces_unmarked_live_key_and_configures_dkms(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            prepare_secure_boot_target(target)
+            prepare_secure_boot_target(target, self.architecture)
             private = target / MOK_PRIVATE_KEY
             certificate = target / MOK_CERTIFICATE
             private.parent.mkdir(parents=True, exist_ok=True)
@@ -126,7 +140,7 @@ class PrepareSecureBootTests(unittest.TestCase):
             certificate.write_bytes(b"live-certificate")
             runner = KeyGeneratingRunner(target)
             context = InstallContext(
-                valid_plan(), lambda _message: None, {"target": target}
+                valid_plan(architecture=self.architecture), lambda _message: None, {"target": target}
             )
             step = PrepareSecureBootStep(runner)
             step.execute(context)
@@ -152,7 +166,7 @@ class PrepareSecureBootTests(unittest.TestCase):
         self.assertFalse(any('update-secureboot-policy' in command for command, _ in runner.commands))
 
     def test_secure_boot_disabled_prepares_unified_identity_without_enrollment(self):
-        base = valid_plan()
+        base = valid_plan(architecture=self.architecture)
         plan = replace(
             base,
             platform=replace(base.platform, secure_boot=SecureBoot.DISABLED),
@@ -162,9 +176,9 @@ class PrepareSecureBootTests(unittest.TestCase):
         )
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            prepare_secure_boot_target(target)
+            prepare_secure_boot_target(target, self.architecture)
             # Disabled Secure Boot must not demand signed bootloader payloads.
-            (target / 'usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed').unlink()
+            (target / f'usr/lib/grub/{self.platform}-efi-signed/grub{self.suffix}.efi.signed').unlink()
             runner = KeyGeneratingRunner(target)
             context = InstallContext(plan, lambda _message: None, {'target': target})
             step = PrepareSecureBootStep(runner)
@@ -176,7 +190,7 @@ class PrepareSecureBootTests(unittest.TestCase):
             self.assertTrue(all(command[0] == 'openssl' for command, _ in runner.commands))
 
     def test_unsupported_secure_boot_does_nothing(self):
-        base = valid_plan()
+        base = valid_plan(architecture=self.architecture)
         plan = replace(
             base,
             platform=replace(
@@ -193,15 +207,16 @@ class PrepareSecureBootTests(unittest.TestCase):
         self.assertEqual(runner.commands, [])
 
     def test_own_stack_prepares_portable_signed_image_without_secure_boot_support(self):
-        base = valid_plan()
+        base = valid_plan(architecture=self.architecture)
         plan = replace(base, platform=replace(base.platform, secure_boot=SecureBoot.UNSUPPORTED),
                        boot=BootSpec(mok_password_policy=MokPasswordPolicy.NOT_APPLICABLE))
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            prepare_secure_boot_target(target)
-            source = target / 'usr/lib/anduinos-grub/grubx64.efi'
+            prepare_secure_boot_target(target, self.architecture)
+            source = target / f'usr/lib/anduinos-grub/grub{self.suffix}.efi'
             source.parent.mkdir(parents=True)
             source.touch()
+            (target / f'usr/lib/grub/{self.platform}-efi-signed/grub{self.suffix}.efi.signed').unlink()
             runner = KeyGeneratingRunner(target)
             context = InstallContext(plan, lambda _: None, {'target': target})
             step = PrepareSecureBootStep(runner)
@@ -231,14 +246,14 @@ class PrepareSecureBootTests(unittest.TestCase):
     def test_missing_signed_payload_fails_before_key_generation(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            prepare_secure_boot_target(target)
+            prepare_secure_boot_target(target, self.architecture)
             (
                 target
-                / "usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed"
+                / f'usr/lib/grub/{self.platform}-efi-signed/grub{self.suffix}.efi.signed'
             ).unlink()
             runner = KeyGeneratingRunner(target)
             context = InstallContext(
-                valid_plan(), lambda _message: None, {"target": target}
+                valid_plan(architecture=self.architecture), lambda _message: None, {"target": target}
             )
             with self.assertRaisesRegex(RuntimeError, "Signed.*missing"):
                 PrepareSecureBootStep(runner).execute(context)
@@ -252,9 +267,9 @@ class PrepareSecureBootTests(unittest.TestCase):
     def test_retry_preserves_the_same_certificate_and_checks_its_purpose(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            prepare_secure_boot_target(target)
+            prepare_secure_boot_target(target, self.architecture)
             runner = KeyGeneratingRunner(target)
-            context = InstallContext(valid_plan(), lambda _: None, {'target': target})
+            context = InstallContext(valid_plan(architecture=self.architecture), lambda _: None, {'target': target})
             step = PrepareSecureBootStep(runner)
             step.execute(context)
             before = ((target / MOK_PRIVATE_KEY).read_bytes(), (target / MOK_CERTIFICATE).read_bytes())
@@ -269,10 +284,10 @@ class PrepareSecureBootTests(unittest.TestCase):
         for _ in range(2):
             with tempfile.TemporaryDirectory() as directory:
                 target = Path(directory)
-                prepare_secure_boot_target(target)
+                prepare_secure_boot_target(target, self.architecture)
                 runner = KeyGeneratingRunner(target)
                 step = PrepareSecureBootStep(runner)
-                context = InstallContext(valid_plan(), lambda _: None, {'target': target})
+                context = InstallContext(valid_plan(architecture=self.architecture), lambda _: None, {'target': target})
                 step.execute(context)
                 step.verify(context)
                 fingerprints.append(hashlib.sha256((target / MOK_CERTIFICATE).read_bytes()).hexdigest())
@@ -288,9 +303,9 @@ class PrepareSecureBootTests(unittest.TestCase):
         from anduinos_secureboot import identity
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            prepare_secure_boot_target(target)
+            prepare_secure_boot_target(target, self.architecture)
             runner = KeyGeneratingRunner(target)
-            context = InstallContext(valid_plan(), lambda _: None, {'target': target})
+            context = InstallContext(valid_plan(architecture=self.architecture), lambda _: None, {'target': target})
             PrepareSecureBootStep(runner).execute(context)
             cert, key = target / MOK_CERTIFICATE, target / MOK_PRIVATE_KEY
             root = target / 'var/lib/anduinos-secureboot'
@@ -308,7 +323,7 @@ class PrepareSecureBootTests(unittest.TestCase):
     def test_marked_module_only_identity_is_rejected_not_silently_reused(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            prepare_secure_boot_target(target)
+            prepare_secure_boot_target(target, self.architecture)
             key, cert = target / MOK_PRIVATE_KEY, target / MOK_CERTIFICATE
             key.parent.mkdir(parents=True)
             runner = KeyGeneratingRunner(target)
@@ -318,7 +333,7 @@ class PrepareSecureBootTests(unittest.TestCase):
             marker = target / MOK_MARKER
             marker.parent.mkdir(parents=True)
             marker.write_text(hashlib.sha256(cert.read_bytes()).hexdigest())
-            context = InstallContext(valid_plan(), lambda _: None, {'target': target})
+            context = InstallContext(valid_plan(architecture=self.architecture), lambda _: None, {'target': target})
             with self.assertRaisesRegex(ValueError, 'both GRUB'):
                 PrepareSecureBootStep(runner).execute(context)
             self.assertNotIn('secure_boot_prepared', context.values)
@@ -326,9 +341,9 @@ class PrepareSecureBootTests(unittest.TestCase):
     def test_missing_half_of_pair_is_regenerated_for_fresh_target(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            prepare_secure_boot_target(target)
+            prepare_secure_boot_target(target, self.architecture)
             runner = KeyGeneratingRunner(target)
-            context = InstallContext(valid_plan(), lambda _: None, {'target': target})
+            context = InstallContext(valid_plan(architecture=self.architecture), lambda _: None, {'target': target})
             step = PrepareSecureBootStep(runner)
             step.execute(context)
             old = (target / MOK_CERTIFICATE).read_bytes()
@@ -340,9 +355,9 @@ class PrepareSecureBootTests(unittest.TestCase):
     def test_redirected_paths_or_copied_identity_store_fail_before_generation(self):
         with tempfile.TemporaryDirectory() as directory, tempfile.TemporaryDirectory() as outside:
             target = Path(directory)
-            prepare_secure_boot_target(target)
+            prepare_secure_boot_target(target, self.architecture)
             runner = KeyGeneratingRunner(target)
-            context = InstallContext(valid_plan(), lambda _: None, {'target': target})
+            context = InstallContext(valid_plan(architecture=self.architecture), lambda _: None, {'target': target})
             parent = target / MOK_PRIVATE_KEY.parent
             parent.parent.mkdir(parents=True)
             parent.symlink_to(outside, target_is_directory=True)
@@ -354,8 +369,80 @@ class PrepareSecureBootTests(unittest.TestCase):
                 PrepareSecureBootStep(runner).execute(context)
             self.assertEqual(runner.commands, [])
 
+    def test_missing_native_template_never_falls_back_to_ubuntu(self):
+        for wrong_template in (False, True):
+            for state in (SecureBoot.ENABLED, SecureBoot.DISABLED, SecureBoot.UNSUPPORTED):
+                with self.subTest(wrong_template=wrong_template, state=state), tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    prepare_secure_boot_target(target, self.architecture)
+                    source = target / 'usr/lib/anduinos-grub'
+                    source.mkdir(parents=True)
+                    if wrong_template:
+                        other = 'aa64' if self.suffix == 'x64' else 'x64'
+                        (source / f'grub{other}.efi').touch()
+                    runner = KeyGeneratingRunner(target)
+                    context = InstallContext(valid_plan(architecture=self.architecture, secure_boot=state),
+                                             lambda _: None, {'target': target})
+                    with self.assertRaisesRegex(RuntimeError, 'native GRUB template'):
+                        PrepareSecureBootStep(runner).execute(context)
+                    self.assertEqual(runner.commands, [])
+
+    def test_preflight_requires_signing_tools_without_secure_boot_support(self):
+        runner = FakeRunner()
+        context = InstallContext(valid_plan(architecture=self.architecture, secure_boot=SecureBoot.UNSUPPORTED),
+                                 lambda _: None)
+        PrepareSecureBootStep(runner).preflight(context)
+        self.assertIn('openssl', runner.required)
+        self.assertIn('chroot', runner.required)
+
+    def test_own_stack_signs_when_secure_boot_is_disabled(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_secure_boot_target(target, self.architecture)
+            source = target / f'usr/lib/anduinos-grub/grub{self.suffix}.efi'
+            source.parent.mkdir(parents=True)
+            source.touch()
+            runner = KeyGeneratingRunner(target)
+            context = InstallContext(valid_plan(architecture=self.architecture, secure_boot=SecureBoot.DISABLED),
+                                     lambda _: None, {'target': target})
+            PrepareSecureBootStep(runner).execute(context)
+            EnrollSecureBootStep(runner).execute(context)
+            self.assertIn(('chroot', str(target), '/usr/libexec/anduinos-grub-update', 'first-install'),
+                          [command for command, _ in runner.commands])
+            self.assertFalse(context.values['mok_enrollment_pending'])
+
+
+class BiosSecureBootTests(unittest.TestCase):
+    def test_own_stack_prepares_portable_efi_without_enrollment(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_secure_boot_target(target)
+            source = target / 'usr/lib/anduinos-grub/grubx64.efi'
+            source.parent.mkdir(parents=True)
+            source.touch()
+            runner = KeyGeneratingRunner(target)
+            context = InstallContext(valid_plan(firmware=Firmware.BIOS, secure_boot=SecureBoot.NOT_APPLICABLE),
+                                     lambda _: None, {'target': target})
+            step = PrepareSecureBootStep(runner)
+            step.preflight(context)
+            step.execute(context)
+            step.verify(context)
+            EnrollSecureBootStep(runner).execute(context)
+            self.assertIn(('chroot', str(target), '/usr/libexec/anduinos-grub-update', 'first-install'),
+                          [command for command, _ in runner.commands])
+            self.assertFalse(context.values['mok_enrollment_pending'])
+
+
+class Arm64PrepareSecureBootTests(PrepareSecureBootTests):
+    architecture = Architecture.ARM64
+    suffix = 'aa64'
+    platform = 'arm64'
+
 
 class EnrollSecureBootTests(unittest.TestCase):
+    architecture = Architecture.AMD64
+    suffix = 'x64'
+
     def test_foreign_pending_or_unknown_state_never_imports_a_key(self):
         cases = [
             ('--list-new', ('SHA1 Fingerprint: ' + 'b' * 40 + '\n', '', 0)),
@@ -369,10 +456,10 @@ class EnrollSecureBootTests(unittest.TestCase):
                 cert = target / MOK_CERTIFICATE
                 cert.parent.mkdir(parents=True)
                 cert.write_bytes(b'certificate')
-                prepare_signed_efi_chain(target)
+                prepare_signed_efi_chain(target, self.suffix)
                 runner = FakeRunner()
                 runner.outputs[('chroot', str(target), 'mokutil', operation)] = output
-                context = InstallContext(valid_plan(), lambda _: None,
+                context = InstallContext(valid_plan(architecture=self.architecture), lambda _: None,
                                          {'target': target, 'secure_boot_prepared': True})
                 with self.assertRaises(RuntimeError):
                     EnrollSecureBootStep(runner).execute(context)
@@ -381,10 +468,10 @@ class EnrollSecureBootTests(unittest.TestCase):
     def test_cancelled_request_can_be_retried_with_the_same_generated_certificate(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            prepare_secure_boot_target(target)
-            prepare_signed_efi_chain(target)
+            prepare_secure_boot_target(target, self.architecture)
+            prepare_signed_efi_chain(target, self.suffix)
             runner = KeyGeneratingRunner(target)
-            context = InstallContext(valid_plan(), lambda _: None, {'target': target})
+            context = InstallContext(valid_plan(architecture=self.architecture), lambda _: None, {'target': target})
             prepare = PrepareSecureBootStep(runner)
             prepare.execute(context)
             before = (target / MOK_CERTIFICATE).read_bytes()
@@ -414,7 +501,7 @@ class EnrollSecureBootTests(unittest.TestCase):
             certificate = target / MOK_CERTIFICATE
             certificate.parent.mkdir(parents=True)
             certificate.write_bytes(b"certificate")
-            prepare_signed_efi_chain(target)
+            prepare_signed_efi_chain(target, self.suffix)
             runner = FakeRunner()
             runner.outputs[
                 (
@@ -425,7 +512,7 @@ class EnrollSecureBootTests(unittest.TestCase):
                 )
             ] = ("", "", 0)
             context = InstallContext(
-                valid_plan(),
+                valid_plan(architecture=self.architecture),
                 lambda _message: None,
                 {
                     "target": target,
@@ -450,10 +537,10 @@ class EnrollSecureBootTests(unittest.TestCase):
     def test_vendor_only_chain_does_not_require_removable_fallback(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
-            prepare_signed_efi_chain(target)
+            prepare_signed_efi_chain(target, self.suffix)
             runner = FakeRunner()
 
-            _verify_signed_efi_chain(runner, target, valid_plan())
+            _verify_signed_efi_chain(runner, target, valid_plan(architecture=self.architecture))
 
         verified = tuple(
             command[-1]
@@ -463,8 +550,8 @@ class EnrollSecureBootTests(unittest.TestCase):
         self.assertEqual(
             verified,
             (
-                str(target / "boot/efi/EFI/AnduinOS/shimx64.efi"),
-                str(target / "boot/efi/EFI/AnduinOS/grubx64.efi"),
+                str(target / f"boot/efi/EFI/AnduinOS/shim{self.suffix}.efi"),
+                str(target / f"boot/efi/EFI/AnduinOS/grub{self.suffix}.efi"),
             ),
         )
         self.assertFalse(any("EFI/BOOT" in path for path in verified))
@@ -477,7 +564,7 @@ class EnrollSecureBootTests(unittest.TestCase):
             # Its SHA-1 begins with 01. Leading zeroes are part of a
             # fingerprint and must not be stripped like certificate serials.
             certificate.write_bytes(b"certificate-17")
-            prepare_signed_efi_chain(target)
+            prepare_signed_efi_chain(target, self.suffix)
             fingerprint = hashlib.sha1(
                 b"certificate-17", usedforsecurity=False
             ).hexdigest()
@@ -496,7 +583,7 @@ class EnrollSecureBootTests(unittest.TestCase):
                 )
             ] = (f"SHA1 Fingerprint: {formatted}\n", "", 0)
             context = InstallContext(
-                valid_plan(),
+                valid_plan(architecture=self.architecture),
                 lambda _message: None,
                 {"target": target, "secure_boot_prepared": True},
             )
@@ -513,7 +600,7 @@ class EnrollSecureBootTests(unittest.TestCase):
             # Exercise the real-machine failure mode: the enrolled MOK SHA-1
             # begins with 0F and was previously compared after losing that 0.
             certificate.write_bytes(b"certificate-17")
-            prepare_signed_efi_chain(target)
+            prepare_signed_efi_chain(target, self.suffix)
             fingerprint = hashlib.sha1(
                 b"certificate-17", usedforsecurity=False
             ).hexdigest()
@@ -532,7 +619,7 @@ class EnrollSecureBootTests(unittest.TestCase):
                 )
             ] = (f"SHA1 Fingerprint: {formatted}\n", "", 0)
             context = InstallContext(
-                valid_plan(),
+                valid_plan(architecture=self.architecture),
                 lambda _message: None,
                 {"target": target, "secure_boot_prepared": True},
             )
@@ -551,7 +638,7 @@ class EnrollSecureBootTests(unittest.TestCase):
             certificate = target / MOK_CERTIFICATE
             certificate.parent.mkdir(parents=True)
             certificate.write_bytes(b"certificate")
-            prepare_signed_efi_chain(target)
+            prepare_signed_efi_chain(target, self.suffix)
             runner = FakeRunner()
             runner.outputs[
                 ("chroot", str(target), "mokutil", "--list-enrolled")
@@ -566,7 +653,7 @@ class EnrollSecureBootTests(unittest.TestCase):
                 )
             ] = (f"/{MOK_CERTIFICATE} is already enrolled\n", "", 1)
             context = InstallContext(
-                valid_plan(),
+                valid_plan(architecture=self.architecture),
                 lambda _message: None,
                 {"target": target, "secure_boot_prepared": True},
             )
@@ -577,7 +664,7 @@ class EnrollSecureBootTests(unittest.TestCase):
         )
 
     def test_disabled_secure_boot_never_touches_efi_variables(self):
-        base = valid_plan()
+        base = valid_plan(architecture=self.architecture)
         plan = replace(
             base,
             platform=replace(base.platform, secure_boot=SecureBoot.DISABLED),
@@ -592,7 +679,7 @@ class EnrollSecureBootTests(unittest.TestCase):
         self.assertEqual(runner.commands, [])
 
     def test_unsupported_secure_boot_never_touches_efi_variables(self):
-        base = valid_plan()
+        base = valid_plan(architecture=self.architecture)
         plan = replace(
             base,
             platform=replace(
@@ -607,6 +694,11 @@ class EnrollSecureBootTests(unittest.TestCase):
         EnrollSecureBootStep(runner).execute(context)
         self.assertFalse(context.values["mok_enrollment_pending"])
         self.assertEqual(runner.commands, [])
+
+
+class Arm64EnrollSecureBootTests(EnrollSecureBootTests):
+    architecture = Architecture.ARM64
+    suffix = 'aa64'
 
 
 class VerifyDkmsSignaturesTests(unittest.TestCase):
