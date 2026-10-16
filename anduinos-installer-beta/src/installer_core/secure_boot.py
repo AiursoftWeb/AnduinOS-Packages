@@ -35,8 +35,9 @@ class PrepareSecureBootStep:
 
     def preflight(self, context: InstallContext) -> None:
         context.validate_plan()
-        if _needs_identity(context.plan) or context.plan.platform.architecture is Architecture.AMD64:
-            self.runner.require_commands(("chroot", "openssl"))
+        # Both native boot stacks may need signing even without Secure Boot.
+        # Preflight runs before the target rootfs has been copied.
+        self.runner.require_commands(("chroot", "openssl"))
         if _enabled(context.plan):
             self.runner.require_commands(("sbverify",))
 
@@ -55,7 +56,7 @@ class PrepareSecureBootStep:
                 "Secure Boot tools are missing from target: "
                 + ", ".join(missing)
             )
-        own_grub = (target / "usr/lib/anduinos-grub/grubx64.efi").is_file()
+        own_grub = _has_own_grub(context.plan, target)
         if _enabled(context.plan) and not own_grub:
             _require_signed_payloads(target, context.plan)
 
@@ -134,7 +135,7 @@ class VerifyDkmsSignaturesStep:
             )
 
     def verify(self, context: InstallContext) -> None:
-        if not _needs_identity(context.plan):
+        if not _needs_identity(context.plan, context.values.get("target")):
             return
         target = _target(context)
         certificate = target / MOK_CERTIFICATE
@@ -264,11 +265,21 @@ def _enabled(plan: InstallPlan) -> bool:
 
 def _needs_identity(plan: InstallPlan, target: Path | None = None) -> bool:
     # Prepare correct signing material now; only ENABLED schedules enrollment.
-    # Our portable amd64 boot stack also needs its EFI image prepared when
-    # installation runs in BIOS or UEFI firmware without Secure Boot support.
+    # The native EFI image also needs signing in BIOS or unsupported UEFI.
+    own_grub = target is not None and _has_own_grub(plan, Path(target))
     return (plan.platform.secure_boot in {SecureBoot.ENABLED, SecureBoot.DISABLED}
-            or (plan.platform.secure_boot is SecureBoot.UNSUPPORTED and target is not None
-                and (Path(target) / "usr/lib/anduinos-grub/grubx64.efi").is_file()))
+            or own_grub)
+
+
+def _has_own_grub(plan: InstallPlan, target: Path) -> bool:
+    directory = target / "usr/lib/anduinos-grub"
+    if not directory.exists():
+        return False
+    suffix = "x64" if plan.platform.architecture is Architecture.AMD64 else "aa64"
+    template = directory / f"grub{suffix}.efi"
+    if not template.is_file():
+        raise RuntimeError(f"AnduinOS native GRUB template is missing: {template}")
+    return True
 
 
 def _validate_signing_paths(target: Path) -> None:
