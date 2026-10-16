@@ -1,21 +1,25 @@
 #!/bin/bash
 set -euo pipefail
 cd "$(dirname "$0")"
-test "${1:-amd64}" = amd64
-mkdir -p obj/upstream deploy
-deb=obj/upstream/shim-signed.deb
-expected=f8ed71ce2d91a304b6d5eb84997f846f331b554578bc02dbfe78e13ad8ac81a9
-if [ ! -s "$deb" ]; then
-    curl --fail --location --retry 3 --connect-timeout 30 \
-      https://archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb \
-      -o "$deb"
-fi
-printf '%s  %s\n' "$expected" "$deb" | sha256sum --check
-dpkg-deb --extract "$deb" deploy
-# No upstream maintainer scripts are inherited. All boot writes have one owner.
-find deploy/usr/lib/shim -maxdepth 1 -type f -name '*.efi*' -print0 \
-    | sort -z | xargs -0 sha256sum > obj/efi-sha256.txt
-mkdir -p deploy/usr/share/doc/anduinos-shim-signed
-cp obj/efi-sha256.txt deploy/usr/share/doc/anduinos-shim-signed/efi-sha256.txt
-printf '%s\n' "shim-signed 1.59+15.8-0ubuntu2 amd64 sha256:$expected" \
-    > deploy/usr/share/doc/anduinos-shim-signed/upstream.txt
+: "${APKG_INPUTS_DIR:?Build with apkg and BuildInput support}"
+: "${APKG_STAGE_DIR:?Build with apkg}"
+payload=$APKG_INPUTS_DIR/extracted/shim-signed
+debs=("$APKG_INPUTS_DIR"/debs/shim-signed/*.deb)
+case "$(dpkg-deb -f "${debs[0]}" Architecture)" in
+    amd64) suffix=x64 ;;
+    arm64) suffix=aa64 ;;
+    *) echo 'Unsupported shim architecture' >&2; exit 1 ;;
+esac
+dest=$APKG_STAGE_DIR/usr/lib/shim
+doc=$APKG_STAGE_DIR/usr/share/doc/anduinos-shim-signed
+mkdir -p "$dest" "$doc/upstream"
+# Select the same files on either architecture. Copy bytes, never sign or run
+# them. The toolkit remains the only owner of ESP deployment.
+for file in "shim$suffix.efi.signed.latest" "mm$suffix.efi" is-not-revoked; do
+    cp -L --preserve=mode "$payload/usr/lib/shim/$file" "$dest/$file"
+    cmp "$payload/usr/lib/shim/$file" "$dest/$file"
+done
+cp -a "$payload/usr/share/doc/shim-signed/." "$doc/upstream/"
+cp "$payload/usr/share/doc/shim-signed/copyright" "$doc/copyright"
+cp "$APKG_INPUTS_DIR/manifest.json" "$doc/"
+(cd "$APKG_STAGE_DIR" && sha256sum "usr/lib/shim/shim$suffix.efi.signed.latest" "usr/lib/shim/mm$suffix.efi") > "$doc/efi-sha256.txt"

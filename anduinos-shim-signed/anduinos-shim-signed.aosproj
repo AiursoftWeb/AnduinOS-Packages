@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-shim-signed</PackageName>
-    <PackageVersion>2.0.5+15.8-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.5+repack1-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Official Microsoft-signed Ubuntu shim for the locally signed AnduinOS GRUB</PackageDescription>
     <Section>admin</Section>
@@ -10,26 +10,24 @@
     <LicenseType>BSD-2-Clause</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>resolute-addon</TargetSuites>
-    <TargetArchitectures>amd64</TargetArchitectures>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
     <Component>main</Component>
-    <Provides>shim-signed (= 1.59+15.8-0ubuntu2)</Provides>
+    <Provides>shim-signed</Provides>
     <Conflicts>shim-signed, shim</Conflicts>
     <Replaces>shim-signed, shim</Replaces>
   </PropertyGroup>
   <ItemGroup>
+    <BuildSource Name="ubuntu" Url="https://archive.ubuntu.com/ubuntu" Suites="$(SuiteShortName) $(SuiteShortName)-updates $(SuiteShortName)-security" Components="main" SignedBy="/usr/share/keyrings/ubuntu-archive-keyring.gpg" Condition="'$(Arch)' == 'amd64'" />
+    <BuildSource Name="ubuntu" Url="https://ports.ubuntu.com/ubuntu-ports" Suites="$(SuiteShortName) $(SuiteShortName)-updates $(SuiteShortName)-security" Components="main" SignedBy="/usr/share/keyrings/ubuntu-archive-keyring.gpg" Condition="'$(Arch)' == 'arm64'" />
+    <BuildInput Include="shim-signed" Sources="ubuntu" Arch="$(Arch)" />
     <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute" />
-    <Dependency Include="anduinos-grub (&gt;= 2.0.5+2.14-1)" />
+    <Dependency Include="anduinos-grub" />
     <Dependency Include="mokutil" />
     <Dependency Include="sbsigntool" />
     <Dependency Include="bash" />
     <Recommend Include="secureboot-db" />
-    <PrebuildCommand Run="bash build.sh amd64" />
-    <IncludeFile Include="deploy/usr/lib/shim/shimx64.efi.signed.latest" Target="/usr/lib/shim/shimx64.efi.signed.latest" />
-    <IncludeFile Include="deploy/usr/lib/shim/mmx64.efi" Target="/usr/lib/shim/mmx64.efi" />
-    <IncludeScript Include="deploy/usr/lib/shim/is-not-revoked" Target="/usr/lib/shim/is-not-revoked" />
-    <IncludeFolder Include="deploy/usr/share/doc/shim-signed" Target="/usr/share/doc/anduinos-shim-signed/upstream" />
-    <IncludeFolder Include="deploy/usr/share/doc/anduinos-shim-signed" Target="/usr/share/doc/anduinos-shim-signed" />
+    <PrebuildCommand Run="bash build.sh" />
     <PostInstallScript Include="scripts/postinst.sh" />
     <PostRemoveScript Include="scripts/postrm.sh" />
     <DpkgTrigger Include="shim-kernel-check" Type="interest-noawait" />

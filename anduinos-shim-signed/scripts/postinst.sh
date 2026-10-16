@@ -8,8 +8,13 @@ case "$1" in
         [ -f "$kernel" ] || continue
         /usr/lib/shim/is-not-revoked "$kernel"
     done
-    update-alternatives --install /usr/lib/shim/shimx64.efi.signed \
-        shimx64.efi.signed /usr/lib/shim/shimx64.efi.signed.latest 100
+    case "$(dpkg --print-architecture)" in
+        amd64) suffix=x64 ;;
+        arm64) suffix=aa64 ;;
+        *) echo 'Unsupported shim architecture' >&2; exit 1 ;;
+    esac
+    update-alternatives --install "/usr/lib/shim/shim$suffix.efi.signed" \
+        "shim$suffix.efi.signed" "/usr/lib/shim/shim$suffix.efi.signed.latest" 100
     dpkg-trigger --no-await anduinos-boot-chain-update
     ;;
 esac

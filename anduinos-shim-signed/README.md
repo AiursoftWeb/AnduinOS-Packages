@@ -1,13 +1,21 @@
 # AnduinOS shim
 
-This package preserves Ubuntu shim-signed 1.59+15.8-0ubuntu2's EFI bytes,
-including MokManager, signatures and SBAT. The exact upstream .deb SHA-256 is
-pinned in `build.sh`; EFI hashes and provenance ship with the package.
+This package preserves the selected Ubuntu shim-signed EFI bytes, including
+MokManager, signatures and SBAT. `apkg build --all` builds amd64 and arm64
+packages from the latest version in the mapped suite and its updates/security
+pockets. BuildInput/SuiteShortName support requires apkg 10.0.65 or newer.
+The builder needs `ubuntu-keyring` and `dpkg`, but no container or root access.
+No Ubuntu version, download filename or SHA-256 is pinned. The signed archive
+metadata supplies package hashes; EFI hashes and the fetch manifest ship with
+the package. Copies are byte-compared against the verified input.
 
 It depends on `anduinos-grub`. The upstream DKMS/key-generation/deployment
 maintainer scripts are not inherited. It retains the kernel revocation check
 and delegates boot deployment to the Secure Boot toolkit. EFI/BOOT fallback
 files are not automatically deployed. Purging it never deletes certificates.
 
-The initial target is Resolute/amd64. Shim itself is not recompiled or re-signed.
-Future security updates require changing the pinned input and requalifying it.
+Shim is not recompiled or re-signed. A new suite is configured in the project,
+not build-script branches. New inputs require qualification and an AnduinOS
+package revision bump before publication. ARM64 packaging is the first
+milestone only: ARM64 toolkit/deployment support and Secure Boot qualification
+remain separate work. Do not install that target before those are complete.

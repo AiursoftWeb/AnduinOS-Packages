@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-grub</PackageName>
-    <PackageVersion>2.0.5+2.14-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.5+repack1-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GRUB with Btrfs, LUKS2, Argon2id and local unified-MOK signing</PackageDescription>
     <Section>admin</Section>
@@ -10,17 +10,31 @@
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>resolute-addon</TargetSuites>
-    <TargetArchitectures>amd64</TargetArchitectures>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
     <Component>main</Component>
-    <Provides>grub-common (= 2.14-2ubuntu3), grub2-common (= 2.14-2ubuntu3), grub-pc, grub-pc-bin (= 2.14-2ubuntu3), grub-efi-amd64, grub-efi-amd64-bin (= 2.14-2ubuntu3), grub-efi-amd64-unsigned (= 2.14-2ubuntu3), grub-efi-amd64-signed (= 1.215+2.14-2ubuntu3)</Provides>
-    <Conflicts>grub-common, grub2-common, grub-pc, grub-pc-bin, grub-efi-amd64, grub-efi-amd64-bin, grub-efi-amd64-unsigned, grub-efi-amd64-signed</Conflicts>
-    <Replaces>grub-common, grub2-common, grub-pc, grub-pc-bin, grub-efi-amd64, grub-efi-amd64-bin, grub-efi-amd64-unsigned, grub-efi-amd64-signed</Replaces>
+    <Provides Condition="'$(Arch)' == 'amd64'">grub-common, grub2-common, grub-pc, grub-pc-bin, grub-efi-amd64, grub-efi-amd64-bin, grub-efi-amd64-unsigned, grub-efi-amd64-signed</Provides>
+    <Conflicts Condition="'$(Arch)' == 'amd64'">grub-common, grub2-common, grub-pc, grub-pc-bin, grub-efi-amd64, grub-efi-amd64-bin, grub-efi-amd64-unsigned, grub-efi-amd64-signed</Conflicts>
+    <Replaces Condition="'$(Arch)' == 'amd64'">grub-common, grub2-common, grub-pc, grub-pc-bin, grub-efi-amd64, grub-efi-amd64-bin, grub-efi-amd64-unsigned, grub-efi-amd64-signed</Replaces>
+    <Provides Condition="'$(Arch)' == 'arm64'">grub-common, grub2-common, grub-efi-arm64, grub-efi-arm64-bin, grub-efi-arm64-unsigned, grub-efi-arm64-signed</Provides>
+    <Conflicts Condition="'$(Arch)' == 'arm64'">grub-common, grub2-common, grub-efi-arm64, grub-efi-arm64-bin, grub-efi-arm64-unsigned, grub-efi-arm64-signed</Conflicts>
+    <Replaces Condition="'$(Arch)' == 'arm64'">grub-common, grub2-common, grub-efi-arm64, grub-efi-arm64-bin, grub-efi-arm64-unsigned, grub-efi-arm64-signed</Replaces>
   </PropertyGroup>
   <ItemGroup>
+    <BuildSource Name="ubuntu-amd64" Url="https://archive.ubuntu.com/ubuntu" Suites="$(SuiteShortName) $(SuiteShortName)-updates $(SuiteShortName)-security" Components="main" SignedBy="/usr/share/keyrings/ubuntu-archive-keyring.gpg" />
+    <BuildSource Name="ubuntu-arm64" Url="https://ports.ubuntu.com/ubuntu-ports" Suites="$(SuiteShortName) $(SuiteShortName)-updates $(SuiteShortName)-security" Components="main" SignedBy="/usr/share/keyrings/ubuntu-archive-keyring.gpg" />
+    <!-- Both tool payloads are inputs: execute the host's, package only the target's.
+         This works on either Linux build host without foreign-architecture execution. -->
+    <BuildInput Include="grub2-common" Id="tools-amd64" Sources="ubuntu-amd64" Arch="amd64" />
+    <BuildInput Include="grub2-common" Id="tools-arm64" Sources="ubuntu-arm64" Arch="arm64" />
+    <BuildInput Include="grub-efi-$(Arch)-bin" Id="modules" Sources="ubuntu-amd64" Arch="$(Arch)" Condition="'$(Arch)' == 'amd64'" />
+    <BuildInput Include="grub-efi-$(Arch)-bin" Id="modules" Sources="ubuntu-arm64" Arch="$(Arch)" Condition="'$(Arch)' == 'arm64'" />
+    <BuildInput Include="grub-efi-$(Arch)-unsigned" Id="baseline" Sources="ubuntu-amd64" Arch="$(Arch)" Condition="'$(Arch)' == 'amd64'" />
+    <BuildInput Include="grub-efi-$(Arch)-unsigned" Id="baseline" Sources="ubuntu-arm64" Arch="$(Arch)" Condition="'$(Arch)' == 'arm64'" />
+    <BuildInput Include="grub-pc-bin" Id="bios" Sources="ubuntu-amd64" Arch="amd64" Condition="'$(Arch)' == 'amd64'" />
     <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute" />
     <Dependency Include="anduinos-secureboot-toolkit (&gt;= 2.0.5-6)" />
-    <Dependency Include="libc6 (&gt;= 2.43)" />
+    <Dependency Include="libc6" />
     <Dependency Include="libdevmapper1.02.1" />
     <Dependency Include="libefiboot1t64" />
     <Dependency Include="libefivar1t64" />
@@ -33,15 +47,16 @@
     <Dependency Include="lsb-release" />
     <Dependency Include="ucf" />
     <Dependency Include="debconf" />
+    <Dependency Include="python3" />
+    <Dependency Include="python3-apt" />
     <Suggest Include="os-prober" />
-    <PrebuildCommand Run="bash build.sh amd64" />
-    <IncludeFolder Include="deploy/usr" Target="/usr" />
-    <IncludeFolder Include="deploy/etc" Target="/etc" />
+    <PrebuildCommand Run="bash build.sh" />
     <!-- Apkg auto-detects these service files and generates lifecycle scripts.
          SystemdUnit also copies to /lib, duplicating the /usr/lib payload on
          merged-/usr systems and breaking dpkg unpack/reinstall. -->
-    <IncludeFile Include="deploy/usr/lib/systemd/system/grub2-common.service" Target="/usr/lib/systemd/system/grub2-common.service" />
-    <IncludeFile Include="deploy/usr/lib/systemd/system/grub-initrd-fallback.service" Target="/usr/lib/systemd/system/grub-initrd-fallback.service" />
+    <IncludeFile Include="deploy/grub2-common.service" Target="/usr/lib/systemd/system/grub2-common.service" />
+    <IncludeFile Include="deploy/grub-initrd-fallback.service" Target="/usr/lib/systemd/system/grub-initrd-fallback.service" />
+    <TestCommand Name="efi-assembly" Profile="anduinos-package-release-test" Run="python3 -m unittest discover -s tests -v" TimeoutSeconds="60" />
     <PostInstallScript Include="scripts/postinst.sh" />
     <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-grub/README.md" />
   </ItemGroup>
