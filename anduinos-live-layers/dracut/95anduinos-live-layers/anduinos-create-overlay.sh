@@ -52,10 +52,8 @@ prepare_togo_media() {
         die "AnduinOS could not expand the persistent-media GPT on $block_device"
         return 1
     fi
-    blockdev --rereadpt "$block_device" || {
-        die "AnduinOS could not reload the persistent-media GPT on $block_device"
-        return 1
-    }
+    # Expanding the backup GPT does not change existing partition boundaries.
+    # Let upstream notify the kernel when it creates the overlay partition.
     udevsettle
 }
 
