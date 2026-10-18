@@ -241,7 +241,7 @@ class KernelParametersPackageContractTests(unittest.TestCase):
                 with self.subTest(script=script.name):
                     subprocess.run(["/bin/sh", script, action], env=env, check=True)
 
-    def test_repeated_generation_starts_with_one_parameter(self):
+    def test_repeated_generation_preserves_desktop_parameters(self):
         command = (
             'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"; '
             '. "$1"; printf "%s\\n" "$GRUB_CMDLINE_LINUX_DEFAULT"'
@@ -252,7 +252,7 @@ class KernelParametersPackageContractTests(unittest.TestCase):
             ).strip()
             for _ in range(2)
         ]
-        self.assertEqual(generated, ["quiet splash preempt=full"] * 2)
+        self.assertEqual(generated, ["quiet splash preempt=full plymouth.ignore-serial-consoles"] * 2)
         self.assertTrue(all(value.count("preempt=full") == 1 for value in generated))
 
 
