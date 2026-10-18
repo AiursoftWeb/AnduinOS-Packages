@@ -3,7 +3,7 @@
 @@ -65,6 +65,18 @@
      this._optionalNumberOverlay()
      this._optionalClickToExit()
- 
+
 +    // Hidden Dash icons may not have received style-changed yet. Initialize
 +    // their textures before GNOME measures them; clear() restores this on disable.
 +    this._injectionManager.overrideMethod(
@@ -18,4 +18,3 @@
 +
      this.toggleDash()
      this._adaptAlloc()
- 
