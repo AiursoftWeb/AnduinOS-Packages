@@ -924,11 +924,11 @@ msgstr "Otwieranie {}…"
 msgid "Could not open {}."
 msgstr "Nie można otworzyć {}."
 
-msgid "Install {}?"
-msgstr "Zainstalować {}?"
-
 msgid "Installation downloads and runs third-party software with your account permissions. It may change your user environment. Coding agents can read and modify files, run commands, and send project data to their provider. Only use them in projects you trust. Continue?"
 msgstr "Instalacja pobiera i uruchamia oprogramowanie innych firm z uprawnieniami Twojego konta. Może ono zmienić środowisko użytkownika. Agenci programistyczni mogą odczytywać i modyfikować pliki, uruchamiać polecenia oraz wysyłać dane projektu do swoich dostawców. Używaj ich wyłącznie w projektach, którym ufasz. Kontynuować?"
+
+msgid "Install {}?"
+msgstr "Zainstalować {}?"
 
 msgid "Cancel"
 msgstr "Anuluj"
@@ -939,8 +939,8 @@ msgstr "Zainstaluj"
 msgid "A terminal coding assistant from Kimi."
 msgstr "Asystent kodujący w terminalu od Kimi."
 
-msgid "A coding agent with a local web interface. Requires Node.js 24 or newer."
-msgstr "Agent kodujący z lokalnym interfejsem webowym. Wymaga Node.js 24 lub nowszego."
+msgid "A coding agent with a local web interface."
+msgstr "Agent do kodowania z lokalnym interfejsem internetowym."
 
 msgid "Use GLM in OpenCode. Select Z.AI when configuring your model."
 msgstr "Użyj GLM w OpenCode. Wybierz Z.AI podczas konfigurowania modelu."
@@ -950,6 +950,9 @@ msgstr "Asystent kodujący w terminalu od MiniMax."
 
 msgid "A terminal coding assistant from Qwen."
 msgstr "Asystent kodujący w terminalu od Qwen."
+
+msgid "If a compatible Node.js and npm are missing, this also installs nvm and the latest Node.js release for your user account."
+msgstr "Jeśli brakuje zgodnych wersji Node.js i npm, instalator zainstaluje również nvm oraz najnowsze wydanie Node.js na koncie użytkownika."
 
 msgid "A terminal coding assistant from Anthropic."
 msgstr "Asystent kodujący w terminalu od Anthropic."

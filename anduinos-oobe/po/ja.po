@@ -909,11 +909,11 @@ msgstr "{} を開いています…"
 msgid "Could not open {}."
 msgstr "{} を開けませんでした。"
 
-msgid "Install {}?"
-msgstr "{} をインストールしますか？"
-
 msgid "Installation downloads and runs third-party software with your account permissions. It may change your user environment. Coding agents can read and modify files, run commands, and send project data to their provider. Only use them in projects you trust. Continue?"
 msgstr "インストールでは、お使いのアカウントの権限を使ってサードパーティ製ソフトウェアをダウンロードし、実行します。ユーザー環境が変更される場合があります。コーディングエージェントは、ファイルの読み取りや変更、コマンドの実行、プロジェクトデータの提供元への送信を行うことができます。信頼できるプロジェクトでのみ使用してください。続行しますか？"
+
+msgid "Install {}?"
+msgstr "{} をインストールしますか？"
 
 msgid "Cancel"
 msgstr "キャンセル"
@@ -924,8 +924,8 @@ msgstr "インストール"
 msgid "A terminal coding assistant from Kimi."
 msgstr "Kimi のターミナル向けコーディングアシスタントです。"
 
-msgid "A coding agent with a local web interface. Requires Node.js 24 or newer."
-msgstr "ローカルのウェブインターフェースを備えたコーディングエージェントです。Node.js 24 以降が必要です。"
+msgid "A coding agent with a local web interface."
+msgstr "ローカル Web インターフェースを備えたコーディングエージェント。"
 
 msgid "Use GLM in OpenCode. Select Z.AI when configuring your model."
 msgstr "OpenCode で GLM を使用できます。モデルの設定時に Z.AI を選択してください。"
@@ -935,6 +935,9 @@ msgstr "MiniMax のターミナル向けコーディングアシスタントで�
 
 msgid "A terminal coding assistant from Qwen."
 msgstr "Qwen のターミナル向けコーディングアシスタントです。"
+
+msgid "If a compatible Node.js and npm are missing, this also installs nvm and the latest Node.js release for your user account."
+msgstr "互換性のある Node.js と npm が見つからない場合は、nvm と最新の Node.js をユーザーアカウントにインストールします。"
 
 msgid "A terminal coding assistant from Anthropic."
 msgstr "Anthropic のターミナル向けコーディングアシスタントです。"

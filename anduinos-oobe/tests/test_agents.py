@@ -72,6 +72,26 @@ class AgentOperationsTests(unittest.TestCase):
             self.assertTrue(agents.recommendations(lambda text: text, True)[0]['is_installed']())
             self.assertIn('installed\n', output)
 
+    def test_deepseek_reuses_a_compatible_runtime_without_downloading_nvm(self):
+        with tempfile.TemporaryDirectory() as home, patch.dict(os.environ, HOME=home):
+            directory = Path(home) / '.local/bin'
+            directory.mkdir(parents=True)
+            scripts = {
+                'node': 'exit 0',
+                'npm': 'printf "npm-installed-harness\\n"',
+                'curl': 'printf "unexpected-runtime-download\\n"; exit 9',
+            }
+            for name, body in scripts.items():
+                path = directory / name
+                path.write_text('#!/bin/sh\n' + body + '\n')
+                path.chmod(0o755)
+            agent = next(item for item in agents.recommendations(lambda text: text, True)
+                         if item['id'] == 'deepseek')
+            output = []
+            self.assertEqual(agent['install'](output.append), 0)
+            self.assertIn('npm-installed-harness\n', output)
+            self.assertNotIn('unexpected-runtime-download\n', output)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -893,11 +893,11 @@ msgstr "กำลังเปิด {}…"
 msgid "Could not open {}."
 msgstr "ไม่สามารถเปิด {} ได้"
 
-msgid "Install {}?"
-msgstr "ติดตั้ง {} หรือไม่?"
-
 msgid "Installation downloads and runs third-party software with your account permissions. It may change your user environment. Coding agents can read and modify files, run commands, and send project data to their provider. Only use them in projects you trust. Continue?"
 msgstr "การติดตั้งจะดาวน์โหลดและเรียกใช้ซอฟต์แวร์จากบุคคลที่สามโดยใช้สิทธิ์ของบัญชีของคุณ ซึ่งอาจเปลี่ยนแปลงสภาพแวดล้อมผู้ใช้ของคุณได้ เอเจนต์เขียนโค้ดสามารถอ่านและแก้ไขไฟล์ เรียกใช้คำสั่ง และส่งข้อมูลโปรเจกต์ไปยังผู้ให้บริการได้ โปรดใช้เอเจนต์เหล่านี้เฉพาะกับโปรเจกต์ที่คุณไว้วางใจเท่านั้น ดำเนินการต่อหรือไม่?"
+
+msgid "Install {}?"
+msgstr "ติดตั้ง {} หรือไม่?"
 
 msgid "Cancel"
 msgstr "ยกเลิก"
@@ -908,8 +908,8 @@ msgstr "ติดตั้ง"
 msgid "A terminal coding assistant from Kimi."
 msgstr "ผู้ช่วยเขียนโค้ดบนเทอร์มินัลจาก Kimi"
 
-msgid "A coding agent with a local web interface. Requires Node.js 24 or newer."
-msgstr "เอเจนต์เขียนโค้ดที่มีเว็บอินเทอร์เฟซในเครื่อง ต้องใช้ Node.js 24 ขึ้นไป"
+msgid "A coding agent with a local web interface."
+msgstr "เอเจนต์สำหรับเขียนโค้ดที่มีอินเทอร์เฟซเว็บในเครื่อง"
 
 msgid "Use GLM in OpenCode. Select Z.AI when configuring your model."
 msgstr "ใช้ GLM ใน OpenCode เลือก Z.AI เมื่อตั้งค่าโมเดล"
@@ -919,6 +919,9 @@ msgstr "ผู้ช่วยเขียนโค้ดบนเทอร์ม
 
 msgid "A terminal coding assistant from Qwen."
 msgstr "ผู้ช่วยเขียนโค้ดบนเทอร์มินัลจาก Qwen"
+
+msgid "If a compatible Node.js and npm are missing, this also installs nvm and the latest Node.js release for your user account."
+msgstr "หากไม่มี Node.js และ npm เวอร์ชันที่เข้ากันได้ ระบบจะติดตั้ง nvm และ Node.js รุ่นล่าสุดสำหรับบัญชีผู้ใช้ของคุณด้วย"
 
 msgid "A terminal coding assistant from Anthropic."
 msgstr "ผู้ช่วยเขียนโค้ดบนเทอร์มินัลจาก Anthropic"

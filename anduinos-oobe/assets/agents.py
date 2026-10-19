@@ -14,9 +14,10 @@ def environment():
     paths = [os.path.expanduser(path) for path in (
         '~/.local/bin', '~/.opencode/bin', '~/.minimax-code/bin', '~/.kimi-code/bin',
     )]
-    paths += sorted(glob.glob(os.path.expanduser('~/.nvm/versions/node/*/bin')),
+    nvm_dir = env.get('NVM_DIR', os.path.expanduser('~/.nvm'))
+    paths = sorted(glob.glob(os.path.join(nvm_dir, 'versions/node/*/bin')),
                     key=lambda path: tuple(map(int, re.findall(r'\d+', path.split('/')[-2]))),
-                    reverse=True)
+                    reverse=True) + paths
     env['PATH'] = os.pathsep.join(paths + [env.get('PATH', os.defpath)])
     return env
 
@@ -69,15 +70,21 @@ def recommendations(_, chinese):
 
     opencode = 'curl -fsSL https://opencode.ai/install | bash'
     if chinese:
-        return [
+        agents = [
             agent('kimi', 'Kimi Code', _('A terminal coding assistant from Kimi.'),
                   'kimi', 'curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash'),
             agent('deepseek', 'DeepSeek Harness',
-                  _('A coding agent with a local web interface. Requires Node.js 24 or newer.'),
+                  _('A coding agent with a local web interface.'),
                   'dsh',
-                  'if ! node -e "if (Number(process.versions.node.split(\'.\')[0]) < 24) '
-                  'process.exit(1)"; then '
-                  'echo "DeepSeek Harness requires Node.js 24 or newer and npm." >&2; exit 1; fi; '
+                  'set -e\n'
+                  'if ! { node -e "if (Number(process.versions.node.split(\'.\')[0]) < 24) '
+                  'process.exit(1)" && command -v npm; }; then\n'
+                  '  export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"\n'
+                  '  mkdir -p "$NVM_DIR"\n'
+                  '  curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/HEAD/install.sh | bash\n'
+                  '  . "$NVM_DIR/nvm.sh"\n'
+                  '  nvm install node\n'
+                  'fi\n'
                   'npm install --global --prefix "$HOME/.local" '
                   '@deepseek-ai/dsh@latest', ('web',)),
             agent('glm', 'GLM · OpenCode',
@@ -89,6 +96,9 @@ def recommendations(_, chinese):
                   'qwen', 'curl -fsSL https://qwen-code-assets.oss-cn-hangzhou.aliyuncs.com/'
                   'installation/install-qwen-standalone.sh | bash'),
         ]
+        agents[1]['notice'] = _(
+            'If a compatible Node.js and npm are missing, this also installs nvm and the latest Node.js release for your user account.')
+        return agents
     return [
         agent('claude', 'Claude Code', _('A terminal coding assistant from Anthropic.'),
               'claude', 'curl -fsSL https://claude.ai/install.sh | bash'),

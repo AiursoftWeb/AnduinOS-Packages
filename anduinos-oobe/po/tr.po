@@ -916,11 +916,11 @@ msgstr "{} açılıyor…"
 msgid "Could not open {}."
 msgstr "{} açılamadı."
 
-msgid "Install {}?"
-msgstr "{} yüklensin mi?"
-
 msgid "Installation downloads and runs third-party software with your account permissions. It may change your user environment. Coding agents can read and modify files, run commands, and send project data to their provider. Only use them in projects you trust. Continue?"
 msgstr "Kurulum, hesap yetkilerinizle üçüncü taraf yazılımları indirir ve çalıştırır. Kullanıcı ortamınızı değiştirebilir. Kodlama ajanları dosyaları okuyup değiştirebilir, komutlar çalıştırabilir ve proje verilerini sağlayıcılarına gönderebilir. Yalnızca güvendiğiniz projelerde kullanın. Devam edilsin mi?"
+
+msgid "Install {}?"
+msgstr "{} yüklensin mi?"
 
 msgid "Cancel"
 msgstr "İptal"
@@ -931,8 +931,8 @@ msgstr "Yükle"
 msgid "A terminal coding assistant from Kimi."
 msgstr "Kimi tarafından sunulan bir terminal kodlama asistanı."
 
-msgid "A coding agent with a local web interface. Requires Node.js 24 or newer."
-msgstr "Yerel web arayüzüne sahip bir kodlama ajanı. Node.js 24 veya daha yeni bir sürüm gerekir."
+msgid "A coding agent with a local web interface."
+msgstr "Yerel bir web arayüzüne sahip bir kodlama ajanı."
 
 msgid "Use GLM in OpenCode. Select Z.AI when configuring your model."
 msgstr "OpenCode'da GLM kullanın. Modelinizi yapılandırırken Z.AI'yi seçin."
@@ -942,6 +942,9 @@ msgstr "MiniMax tarafından sunulan bir terminal kodlama asistanı."
 
 msgid "A terminal coding assistant from Qwen."
 msgstr "Qwen tarafından sunulan bir terminal kodlama asistanı."
+
+msgid "If a compatible Node.js and npm are missing, this also installs nvm and the latest Node.js release for your user account."
+msgstr "Uygun bir Node.js ve npm eksikse, bu işlem nvm'yi ve kullanıcı hesabınız için en son Node.js sürümünü de yükler."
 
 msgid "A terminal coding assistant from Anthropic."
 msgstr "Anthropic tarafından sunulan bir terminal kodlama asistanı."

@@ -897,11 +897,11 @@ msgstr "{} खुल रहा है…"
 msgid "Could not open {}."
 msgstr "{} नहीं खोला जा सका।"
 
-msgid "Install {}?"
-msgstr "{} इंस्टॉल करें?"
-
 msgid "Installation downloads and runs third-party software with your account permissions. It may change your user environment. Coding agents can read and modify files, run commands, and send project data to their provider. Only use them in projects you trust. Continue?"
 msgstr "इंस्टॉलेशन आपके खाते की अनुमतियों के साथ थर्ड-पार्टी सॉफ्टवेयर डाउनलोड और चलाता है। यह आपके यूज़र एनवायरनमेंट में बदलाव कर सकता है। कोडिंग एजेंट फ़ाइलें पढ़ और बदल सकते हैं, कमांड चला सकते हैं, और प्रोजेक्ट डेटा को अपने प्रोवाइडर को भेज सकते हैं। उन्हें केवल उन प्रोजेक्ट्स में ही उपयोग करें जिन पर आप भरोसा करते हैं। जारी रखें?"
+
+msgid "Install {}?"
+msgstr "{} इंस्टॉल करें?"
 
 msgid "Cancel"
 msgstr "रद्द करें"
@@ -912,8 +912,8 @@ msgstr "इंस्टॉल करें"
 msgid "A terminal coding assistant from Kimi."
 msgstr "Kimi से एक टर्मिनल कोडिंग सहायक।"
 
-msgid "A coding agent with a local web interface. Requires Node.js 24 or newer."
-msgstr "स्थानीय वेब इंटरफ़ेस के साथ एक कोडिंग एजेंट। Node.js 24 या नवीनतम आवश्यक है।"
+msgid "A coding agent with a local web interface."
+msgstr "स्थानीय वेब इंटरफ़ेस वाला एक कोडिंग एजेंट।"
 
 msgid "Use GLM in OpenCode. Select Z.AI when configuring your model."
 msgstr "OpenCode में GLM का उपयोग करें। अपने मॉडल को कॉन्फ़िगर करते समय Z.AI चुनें।"
@@ -923,6 +923,9 @@ msgstr "MiniMax से एक टर्मिनल कोडिंग सहा
 
 msgid "A terminal coding assistant from Qwen."
 msgstr "Qwen से एक टर्मिनल कोडिंग सहायक।"
+
+msgid "If a compatible Node.js and npm are missing, this also installs nvm and the latest Node.js release for your user account."
+msgstr "यदि संगत Node.js और npm मौजूद नहीं हैं, तो यह आपके उपयोगकर्ता खाते के लिए nvm और Node.js का नवीनतम संस्करण भी इंस्टॉल करता है।"
 
 msgid "A terminal coding assistant from Anthropic."
 msgstr "Anthropic से एक टर्मिनल कोडिंग सहायक।"

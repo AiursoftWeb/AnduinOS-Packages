@@ -917,11 +917,11 @@ msgstr "Відкриття {}…"
 msgid "Could not open {}."
 msgstr "Не вдалося відкрити {}."
 
-msgid "Install {}?"
-msgstr "Встановити {}?"
-
 msgid "Installation downloads and runs third-party software with your account permissions. It may change your user environment. Coding agents can read and modify files, run commands, and send project data to their provider. Only use them in projects you trust. Continue?"
 msgstr "Під час встановлення буде завантажено та запущено стороннє програмне забезпечення з правами вашого облікового запису. Це може змінити ваше середовище користувача. Кодування-агенти можуть читати та змінювати файли, виконувати команди та надсилати дані проєктів до свого провайдера. Використовуйте їх лише в проєктах, яким ви довіряєте. Продовжити?"
+
+msgid "Install {}?"
+msgstr "Встановити {}?"
 
 msgid "Cancel"
 msgstr "Скасувати"
@@ -932,8 +932,8 @@ msgstr "Встановити"
 msgid "A terminal coding assistant from Kimi."
 msgstr "Термінальний помічник для написання коду від Kimi."
 
-msgid "A coding agent with a local web interface. Requires Node.js 24 or newer."
-msgstr "Агент для написання коду з локальним веб-інтерфейсом. Потребує Node.js 24 або новішу версію."
+msgid "A coding agent with a local web interface."
+msgstr "Кодувальний агент із локальним веб-інтерфейсом."
 
 msgid "Use GLM in OpenCode. Select Z.AI when configuring your model."
 msgstr "Використовуйте GLM у OpenCode. Оберіть Z.AI під час налаштування вашої моделі."
@@ -943,6 +943,9 @@ msgstr "Термінальний помічник для написання ко
 
 msgid "A terminal coding assistant from Qwen."
 msgstr "Термінальний помічник для написання коду від Qwen."
+
+msgid "If a compatible Node.js and npm are missing, this also installs nvm and the latest Node.js release for your user account."
+msgstr "Якщо сумісні Node.js та npm відсутні, це також встановить nvm та найновішу версію Node.js для вашого облікового запису."
 
 msgid "A terminal coding assistant from Anthropic."
 msgstr "Термінальний помічник для написання коду від Anthropic."

@@ -914,11 +914,11 @@ msgstr "Avataan {}…"
 msgid "Could not open {}."
 msgstr "Tiedostoa {} ei voitu avata."
 
-msgid "Install {}?"
-msgstr "Asennetaanko {}?"
-
 msgid "Installation downloads and runs third-party software with your account permissions. It may change your user environment. Coding agents can read and modify files, run commands, and send project data to their provider. Only use them in projects you trust. Continue?"
 msgstr "Asennus lataa ja suorittaa kolmannen osapuolen ohjelmistoja käyttäjätilisi oikeuksilla. Se voi muuttaa käyttäjäympäristöäsi. Koodausagentit voivat lukea ja muokata tiedostoja, suorittaa komentoja ja lähettää projektitietoja palveluntarjoajalleen. Käytä niitä vain projekteissa, joihin luotat. Jatketaanko?"
+
+msgid "Install {}?"
+msgstr "Asennetaanko {}?"
 
 msgid "Cancel"
 msgstr "Peruuta"
@@ -929,8 +929,8 @@ msgstr "Asenna"
 msgid "A terminal coding assistant from Kimi."
 msgstr "Kimin terminaalin koodausavustaja."
 
-msgid "A coding agent with a local web interface. Requires Node.js 24 or newer."
-msgstr "Koodausagentti, jolla on paikallinen verkkokäyttöliittymä. Vaatii Node.js 24:n tai uudemman."
+msgid "A coding agent with a local web interface."
+msgstr "Koodausagentti, jolla on paikallinen verkkokäyttöliittymä."
 
 msgid "Use GLM in OpenCode. Select Z.AI when configuring your model."
 msgstr "Käytä GLM:ää OpenCodessa. Valitse Z.AI, kun määrität mallin."
@@ -940,6 +940,9 @@ msgstr "MiniMaxin terminaalin koodausavustaja."
 
 msgid "A terminal coding assistant from Qwen."
 msgstr "Qwenin terminaalin koodausavustaja."
+
+msgid "If a compatible Node.js and npm are missing, this also installs nvm and the latest Node.js release for your user account."
+msgstr "Jos yhteensopiva Node.js ja npm puuttuvat, tämä asentaa myös nvm:n ja uusimman Node.js-julkaisun käyttäjätilillesi."
 
 msgid "A terminal coding assistant from Anthropic."
 msgstr "Anthropicin terminaalin koodausavustaja."

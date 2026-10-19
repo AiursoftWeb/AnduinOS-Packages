@@ -38,9 +38,10 @@ class AgentsPageTests(unittest.TestCase):
             time.sleep(.01)
         self.fail('Timed out waiting for the page state')
 
-    def dialog(self):
+    def dialog(self, parent=None):
         return next(window for window in oobe.Gtk.Window.get_toplevels()
-                    if isinstance(window, oobe.Adw.MessageDialog))
+                    if isinstance(window, oobe.Adw.MessageDialog) and window.get_visible()
+                    and (parent is None or window.get_transient_for() == parent))
 
     def test_consent_progress_output_retry_and_open(self):
         installed = False
@@ -147,6 +148,21 @@ class AgentsPageTests(unittest.TestCase):
         window._continue_offline()
         self.assertNotIn(agent_page, window._pages)
         self.assertEqual(window.carousel.get_n_pages(), 2)
+
+    def test_deepseek_confirmation_discloses_optional_node_installation(self):
+        with patch.dict(oobe.os.environ, LANGUAGE='zh_CN'):
+            page = oobe.create_agents_page()
+        window = oobe.Adw.Window()
+        self.addCleanup(window.destroy)
+        window.set_content(page)
+        window.present()
+        buttons = [item for item in descendants(page) if isinstance(item, oobe.Gtk.Button)]
+        with patch.object(oobe._agents, 'executable', return_value=None):
+            buttons[1].emit('clicked')
+        dialog = self.dialog(window)
+        self.assertIn('latest Node.js release', dialog.get_body())
+        self.assertIn('nvm', dialog.get_body())
+        dialog.response('cancel')
 
 
 if __name__ == '__main__':

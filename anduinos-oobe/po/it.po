@@ -916,11 +916,11 @@ msgstr "Apertura di {}…"
 msgid "Could not open {}."
 msgstr "Impossibile aprire {}."
 
-msgid "Install {}?"
-msgstr "Installare {}?"
-
 msgid "Installation downloads and runs third-party software with your account permissions. It may change your user environment. Coding agents can read and modify files, run commands, and send project data to their provider. Only use them in projects you trust. Continue?"
 msgstr "L'installazione scarica ed esegue software di terze parti con le autorizzazioni del tuo account. Potrebbe modificare il tuo ambiente utente. Gli agenti di programmazione possono leggere e modificare file, eseguire comandi e inviare dati del progetto al proprio fornitore. Usali solo nei progetti di cui ti fidi. Continuare?"
+
+msgid "Install {}?"
+msgstr "Installare {}?"
 
 msgid "Cancel"
 msgstr "Annulla"
@@ -931,8 +931,8 @@ msgstr "Installa"
 msgid "A terminal coding assistant from Kimi."
 msgstr "Un assistente di programmazione per terminale di Kimi."
 
-msgid "A coding agent with a local web interface. Requires Node.js 24 or newer."
-msgstr "Un agente di programmazione con un'interfaccia web locale. Richiede Node.js 24 o versioni successive."
+msgid "A coding agent with a local web interface."
+msgstr "Un agente di programmazione con un'interfaccia web locale."
 
 msgid "Use GLM in OpenCode. Select Z.AI when configuring your model."
 msgstr "Usa GLM in OpenCode. Seleziona Z.AI durante la configurazione del modello."
@@ -942,6 +942,9 @@ msgstr "Un assistente di programmazione per terminale di MiniMax."
 
 msgid "A terminal coding assistant from Qwen."
 msgstr "Un assistente di programmazione per terminale di Qwen."
+
+msgid "If a compatible Node.js and npm are missing, this also installs nvm and the latest Node.js release for your user account."
+msgstr "Se mancano Node.js e npm compatibili, installa anche nvm e l'ultima versione di Node.js per il tuo account utente."
 
 msgid "A terminal coding assistant from Anthropic."
 msgstr "Un assistente di programmazione per terminale di Anthropic."
