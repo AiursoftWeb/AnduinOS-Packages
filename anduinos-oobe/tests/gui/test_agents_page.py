@@ -59,12 +59,19 @@ class AgentsPageTests(unittest.TestCase):
         agent = {'id': 'example', 'name': 'Example', 'description': 'Coding assistant',
                  'is_installed': lambda: installed,
                  'open': lambda: opened.append(True), 'install': install}
-        with patch.object(oobe._agents, 'recommendations', return_value=[agent]):
-            page = oobe.create_agents_page()
-        window = oobe.Adw.Window()
+        window = None
+        factories = [
+            lambda: oobe.Gtk.Label(label='Applications'),
+            lambda: oobe.create_agents_page(lambda: window._update_nav_buttons()),
+            lambda: oobe.Gtk.Label(label='Privacy'),
+        ]
+        with (patch.object(oobe._agents, 'recommendations', return_value=[agent]),
+              patch.object(oobe.OobeWindow, '_get_page_factories', return_value=factories)):
+            window = oobe.OobeWindow(None, True)
+        page = window._content_page(window._pages[1])
         self.addCleanup(window.destroy)
-        window.set_content(page)
         window.present()
+        window.carousel.scroll_to(window._pages[1], False)
         button = next(item for item in descendants(page) if isinstance(item, oobe.Gtk.Button))
         labels = lambda: [item.get_label() for item in descendants(page)
                           if isinstance(item, oobe.Gtk.Label)]
@@ -81,11 +88,17 @@ class AgentsPageTests(unittest.TestCase):
         self.assertTrue(page._install_running)
         self.assertTrue(progress.get_visible())
         self.assertFalse(button.get_sensitive())
+        self.assertFalse(window.next_btn.get_sensitive())
+        self.assertFalse(window.back_btn.get_sensitive())
+        self.assertFalse(window.carousel.get_interactive())
         button.emit('clicked')
         self.assertEqual(len(attempts), 1)
         release.set()
         self.wait_for(lambda: not page._install_running)
         self.assertFalse(progress.get_visible())
+        self.assertTrue(window.next_btn.get_sensitive())
+        self.assertTrue(window.back_btn.get_sensitive())
+        self.assertTrue(window.carousel.get_interactive())
         self.assertIn('Installation failed. Click the agent to retry.', labels())
         expander = next(item for item in descendants(page) if isinstance(item, oobe.Gtk.Expander))
         self.assertTrue(expander.get_expanded())
@@ -120,6 +133,20 @@ class AgentsPageTests(unittest.TestCase):
                 names = [item.get_label() for item in descendants(page)
                          if isinstance(item, oobe.Gtk.Label) and item.has_css_class('heading')]
                 self.assertEqual(names, expected)
+
+    def test_continue_offline_removes_the_agent_page_from_the_real_wizard(self):
+        factories = [
+            lambda: oobe.Gtk.Label(label='Welcome'),
+            lambda: oobe.create_agents_page(),
+            lambda: oobe.Gtk.Label(label='Privacy'),
+        ]
+        with patch.object(oobe.OobeWindow, '_get_page_factories', return_value=factories):
+            window = oobe.OobeWindow(None, True)
+        self.addCleanup(window.destroy)
+        agent_page = window._pages[1]
+        window._continue_offline()
+        self.assertNotIn(agent_page, window._pages)
+        self.assertEqual(window.carousel.get_n_pages(), 2)
 
 
 if __name__ == '__main__':

@@ -2634,13 +2634,14 @@ class OobeWindow(Adw.ApplicationWindow):
 
     @staticmethod
     def _content_page(clamp):
-        """Return the actual page inside Clamp → ScrolledWindow."""
+        """Unwrap the scroller and GTK's automatic viewport around box pages."""
         wrapper = clamp.get_child() if clamp else None
-        return (
+        content = (
             wrapper.get_child()
             if isinstance(wrapper, Gtk.ScrolledWindow)
             else wrapper
         )
+        return content.get_child() if isinstance(content, Gtk.Viewport) else content
 
     def _update_nav_buttons(self):
         if not getattr(self, '_nav_ready', False):
