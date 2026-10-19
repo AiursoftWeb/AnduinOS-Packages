@@ -33,7 +33,8 @@ def open_agent(command, arguments=()):
     if executable('ptyxis'):
         terminal = ['ptyxis', '--new-window']
     elif executable('gnome-terminal'):
-        terminal = ['gnome-terminal', '--window']
+        # The default also works with AnduinOS' GNOME Console compatibility link.
+        terminal = ['gnome-terminal']
     else:
         raise FileNotFoundError('ptyxis / gnome-terminal')
     subprocess.Popen(

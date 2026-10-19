@@ -47,7 +47,8 @@ class AgentOperationsTests(unittest.TestCase):
                                str(directory / command) if command in ('kimi', 'gnome-terminal') else None),
                   patch.object(agents.subprocess, 'Popen') as launch):
                 agents.open_agent('kimi')
-            self.assertEqual(launch.call_args.args[0][:2], ['gnome-terminal', '--window'])
+            self.assertEqual(launch.call_args.args[0][:2],
+                             ['gnome-terminal', '--working-directory'])
             self.assertEqual(launch.call_args.args[0][-1], str(directory / 'kimi'))
 
     def test_installer_streams_command_stdout_stderr_and_reports_pipeline_failure(self):
