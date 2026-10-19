@@ -2089,7 +2089,7 @@ def create_agents_page(update_navigation=lambda: None):
     page.set_margin_bottom(24)
     page.set_valign(Gtk.Align.CENTER)
 
-    title = Gtk.Label(label=_('Meet Your Coding Agents'))
+    title = Gtk.Label(label=_('Control Your Computer with Natural Language'))
     title.add_css_class('title-1')
     title.set_wrap(True)
     page.append(title)
