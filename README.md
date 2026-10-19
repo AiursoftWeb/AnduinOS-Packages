@@ -307,6 +307,10 @@ For a new OS point release, follow the
 
 All external sources must be checked **at least once per month** to keep packages from falling behind upstream. This section is the step-by-step checklist.
 
+Fluent may follow the latest pinned upstream commit; Apkg follows published NuGet versions, and SOF follows stable releases.
+ALSA UCM and xpadneo temporarily use pinned development snapshots. Switch each to the first suitable stable release without losing the currently shipped functionality; after that, update only to stable releases.
+Never roll upstream source back to an older release or lower `PackageVersion` relative to `master`; bump affected package revisions when their contents change.
+
 ---
 
 ### A. Quick Checklist (5 min triage)
@@ -353,7 +357,7 @@ git ls-remote https://github.com/alsa-project/alsa-ucm-conf.git HEAD
 git ls-remote https://github.com/atar-axis/xpadneo.git HEAD
 ```
 
-Compare the returned HEAD hash against the pinned commit in each `download.sh`. If different, an update is available.
+Compare upstream HEAD with the pinned commit in each `download.sh`, then select a reference according to the policy above. A different HEAD does not automatically authorize a development snapshot after a package has switched to stable releases.
 
 For **ALSA UCM Conf**, check the upstream `configure.ac` for the version. For **Fluent** packages, check [GitHub releases](https://github.com/vinceliuice/Fluent-gtk-theme/releases) for the current upstream version (informational — not encoded in PackageVersion).
 
@@ -361,7 +365,7 @@ For **ALSA UCM Conf**, check the upstream `configure.ac` for the version. For **
 
 For each outdated package, update **two files**:
 
-1. **`download.sh`** — update the `*_COMMIT` variable to the new HEAD hash
+1. **`download.sh`** — update the commit variable to the selected full commit hash
 2. **`*.aosproj`** — bump the Debian revision suffix in `<PackageVersion>` (e.g. `-1` → `-2`)
 
 Example diff for Fluent GTK theme:
