@@ -13,7 +13,7 @@ agents = importlib.machinery.SourceFileLoader(
 
 class AgentOperationsTests(unittest.TestCase):
     def test_user_install_is_detected_without_restarting_the_desktop(self):
-        with tempfile.TemporaryDirectory() as home, patch.dict(os.environ, HOME=home):
+        with tempfile.TemporaryDirectory() as home, patch.dict(os.environ, HOME=home, NVM_DIR=str(Path(home) / '.nvm')):
             binary = Path(home) / '.local/bin/kimi'
             binary.parent.mkdir(parents=True)
             binary.write_text('#!/bin/sh\nexit 0\n')
@@ -35,7 +35,7 @@ class AgentOperationsTests(unittest.TestCase):
             self.assertEqual(launch.call_args.kwargs['cwd'], home)
 
     def test_open_uses_gnome_terminal_when_ptyxis_is_unavailable(self):
-        with tempfile.TemporaryDirectory() as home, patch.dict(os.environ, HOME=home):
+        with tempfile.TemporaryDirectory() as home, patch.dict(os.environ, HOME=home, NVM_DIR=str(Path(home) / '.nvm')):
             directory = Path(home) / '.local/bin'
             directory.mkdir(parents=True)
             for name in ('kimi', 'gnome-terminal'):
@@ -60,7 +60,7 @@ class AgentOperationsTests(unittest.TestCase):
         self.assertIn('download failed\n', output)
 
     def test_installation_uses_current_user_home_and_noninteractive_stdin(self):
-        with tempfile.TemporaryDirectory() as home, patch.dict(os.environ, HOME=home):
+        with tempfile.TemporaryDirectory() as home, patch.dict(os.environ, HOME=home, NVM_DIR=str(Path(home) / '.nvm')):
             output = []
             code = agents.install_agent(
                 'mkdir -p "$HOME/.local/bin"; '
@@ -73,7 +73,7 @@ class AgentOperationsTests(unittest.TestCase):
             self.assertIn('installed\n', output)
 
     def test_deepseek_reuses_a_compatible_runtime_without_downloading_nvm(self):
-        with tempfile.TemporaryDirectory() as home, patch.dict(os.environ, HOME=home):
+        with tempfile.TemporaryDirectory() as home, patch.dict(os.environ, HOME=home, NVM_DIR=str(Path(home) / '.nvm')):
             directory = Path(home) / '.local/bin'
             directory.mkdir(parents=True)
             scripts = {
