@@ -21,6 +21,9 @@ class AgentOperationsTests(unittest.TestCase):
             self.assertFalse(recommendation['is_installed']())
             binary.chmod(0o755)
             self.assertTrue(recommendation['is_installed']())
+            terminal = binary.parent / 'ptyxis'
+            terminal.write_text('#!/bin/sh\nexit 0\n')
+            terminal.chmod(0o755)
             with patch.object(agents.subprocess, 'Popen') as launch:
                 recommendation['open']()
             command = launch.call_args.args[0]
@@ -30,6 +33,22 @@ class AgentOperationsTests(unittest.TestCase):
             self.assertTrue(command[6].startswith('PATH='))
             self.assertEqual(command[-1], str(binary))
             self.assertEqual(launch.call_args.kwargs['cwd'], home)
+
+    def test_open_uses_gnome_terminal_when_ptyxis_is_unavailable(self):
+        with tempfile.TemporaryDirectory() as home, patch.dict(os.environ, HOME=home):
+            directory = Path(home) / '.local/bin'
+            directory.mkdir(parents=True)
+            for name in ('kimi', 'gnome-terminal'):
+                path = directory / name
+                path.write_text('#!/bin/sh\nexit 0\n')
+                path.chmod(0o755)
+            with (patch.object(agents.shutil, 'which',
+                               side_effect=lambda command, **kwargs:
+                               str(directory / command) if command in ('kimi', 'gnome-terminal') else None),
+                  patch.object(agents.subprocess, 'Popen') as launch):
+                agents.open_agent('kimi')
+            self.assertEqual(launch.call_args.args[0][:2], ['gnome-terminal', '--window'])
+            self.assertEqual(launch.call_args.args[0][-1], str(directory / 'kimi'))
 
     def test_installer_streams_command_stdout_stderr_and_reports_pipeline_failure(self):
         output = []

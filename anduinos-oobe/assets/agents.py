@@ -30,8 +30,14 @@ def open_agent(command, arguments=()):
     if not binary:
         raise FileNotFoundError(command)
     env = environment()
+    if executable('ptyxis'):
+        terminal = ['ptyxis', '--new-window']
+    elif executable('gnome-terminal'):
+        terminal = ['gnome-terminal', '--window']
+    else:
+        raise FileNotFoundError('ptyxis / gnome-terminal')
     subprocess.Popen(
-        ['ptyxis', '--new-window', '--working-directory', os.path.expanduser('~'),
+        [*terminal, '--working-directory', os.path.expanduser('~'),
          '--', '/usr/bin/env', 'PATH=' + env['PATH'], binary, *arguments],
         env=env, cwd=os.path.expanduser('~'), start_new_session=True,
     )
