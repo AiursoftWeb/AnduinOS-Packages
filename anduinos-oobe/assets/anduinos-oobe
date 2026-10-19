@@ -44,6 +44,7 @@ if not os.path.isfile(os.path.join(_scaling_lib, 'display_scaling.py')):
     _scaling_lib = '/usr/lib/anduinos-oobe'
 sys.path.insert(0, _scaling_lib)
 import display_scaling as _display_scaling
+import agents as _agents
 
 OOBE_LAYOUT_STYLES = {
     'modern': 'eleven',
@@ -2078,6 +2079,177 @@ def _open_software_center(app_id):
         print(f"Failed to open software center: {e}")
 
 
+def create_agents_page(update_navigation=lambda: None):
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+    page._requires_internet = True
+    page._install_running = False
+    page.set_margin_start(48)
+    page.set_margin_end(48)
+    page.set_margin_top(24)
+    page.set_margin_bottom(24)
+    page.set_valign(Gtk.Align.CENTER)
+
+    title = Gtk.Label(label=_('Meet Your Coding Agents'))
+    title.add_css_class('title-1')
+    title.set_wrap(True)
+    page.append(title)
+    subtitle = Gtk.Label(label=_(
+        'Optional AI tools for your projects. Sign-in or an API key may be required; provider charges may apply.'))
+    subtitle.set_wrap(True)
+    subtitle.set_justify(Gtk.Justification.CENTER)
+    subtitle.add_css_class('dim-label')
+    page.append(subtitle)
+
+    cards = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+    page.append(cards)
+    status = Gtk.Label(wrap=True)
+    page.append(status)
+    progress = Gtk.ProgressBar(visible=False)
+    page.append(progress)
+    expander = Gtk.Expander(label=_('Advanced Output'))
+    output = Gtk.TextView(editable=False, monospace=True, wrap_mode=Gtk.WrapMode.WORD_CHAR)
+    output.add_css_class('card')
+    log_scroll = Gtk.ScrolledWindow()
+    log_scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+    log_scroll.set_min_content_height(150)
+    log_scroll.set_max_content_height(200)
+    log_scroll.set_child(output)
+    expander.set_child(log_scroll)
+    page.append(expander)
+    entries = []
+    failed = set()
+    confirming = False
+
+    def append_output(text):
+        buffer = output.get_buffer()
+        buffer.insert(buffer.get_end_iter(), text)
+        mark = buffer.create_mark(None, buffer.get_end_iter(), False)
+        output.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
+        buffer.delete_mark(mark)
+
+    def refresh():
+        for agent, button, label in entries:
+            installed = agent['is_installed']()
+            label.set_label(_('Installation failed. Click the agent to retry.')
+                            if agent['id'] in failed else
+                            (_('Installed') if installed else _('Not installed')))
+            button.set_sensitive(not page._install_running and not confirming)
+
+    def set_running(running):
+        page._install_running = running
+        page._block_carousel = running
+        progress.set_visible(running)
+        root = page.get_root()
+        if isinstance(root, Gtk.Window):
+            root.set_deletable(not running)
+        refresh()
+        update_navigation()
+
+    def pulse():
+        if not page._install_running:
+            return False
+        progress.pulse()
+        return True
+
+    def finished(agent, returncode):
+        installed = agent['is_installed']()
+        if returncode == 0 and installed:
+            failed.discard(agent['id'])
+        else:
+            failed.add(agent['id'])
+        set_running(False)
+        if returncode == 0 and installed:
+            status.set_label(_('Installed. Click the agent to open it in a new window.'))
+        else:
+            status.set_label(_('Installation failed. Click the agent to retry.'))
+            append_output(_('Installer exit status: {}').format(returncode) + '\n')
+            if returncode == 0:
+                append_output(_('The installer finished, but the executable could not be found.') + '\n')
+            expander.set_expanded(True)
+
+    def start_install(agent):
+        output.get_buffer().set_text('')
+        status.set_label(_('Installing {}…').format(agent['name']))
+        set_running(True)
+        GLib.timeout_add(100, pulse)
+
+        def work():
+            try:
+                result = agent['install'](lambda text: GLib.idle_add(append_output, text))
+            except Exception as error:
+                GLib.idle_add(append_output, str(error) + '\n')
+                result = -1
+            GLib.idle_add(finished, agent, result)
+
+        threading.Thread(target=work, daemon=True).start()
+
+    def clicked(_button, agent):
+        nonlocal confirming
+        if page._install_running or confirming:
+            return
+        if agent['is_installed']() and agent['id'] not in failed:
+            try:
+                agent['open']()
+                status.set_label(_('Opening {}…').format(agent['name']))
+            except Exception as error:
+                status.set_label(_('Could not open {}.').format(agent['name']))
+                append_output(str(error) + '\n')
+                expander.set_expanded(True)
+            return
+        dialog = Adw.MessageDialog(
+            transient_for=page.get_root(), modal=True,
+            heading=_('Install {}?').format(agent['name']),
+            body=_(
+                'Installation downloads and runs third-party software with your account permissions. It may change your user environment. '
+                'Coding agents can read and modify files, run commands, and send project data to their provider. '
+                'Only use them in projects you trust. Continue?'),
+        )
+        dialog.add_response('cancel', _('Cancel'))
+        dialog.add_response('install', _('Install'))
+        dialog.set_response_appearance('install', Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_default_response('cancel')
+        dialog.set_close_response('cancel')
+        confirming = True
+        refresh()
+
+        def responded(_dialog, response):
+            nonlocal confirming
+            confirming = False
+            refresh()
+            if response == 'install':
+                start_install(agent)
+
+        dialog.connect('response', responded)
+        dialog.present()
+
+    for agent in _agents.recommendations(_, is_chinese_locale()):
+        button = Gtk.Button()
+        button.add_css_class('card')
+        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=3)
+        content.set_margin_start(12)
+        content.set_margin_end(12)
+        content.set_margin_top(8)
+        content.set_margin_bottom(8)
+        name = Gtk.Label(label=agent['name'], xalign=0)
+        name.add_css_class('heading')
+        content.append(name)
+        description = Gtk.Label(label=agent['description'], wrap=True, xalign=0)
+        description.add_css_class('caption')
+        description.add_css_class('dim-label')
+        content.append(description)
+        installed_label = Gtk.Label(xalign=0)
+        installed_label.add_css_class('caption-heading')
+        content.append(installed_label)
+        button.set_child(content)
+        button.connect('clicked', clicked, agent)
+        cards.append(button)
+        entries.append((agent, button, installed_label))
+
+    page.connect('map', lambda _page: refresh())
+    refresh()
+    return page
+
+
 # ═══════════════════════════════════════════════════════════════════
 # PAGE 8: PRIVACY — 绝不妥协的承诺
 # ═══════════════════════════════════════════════════════════════════
@@ -2448,6 +2620,7 @@ class OobeWindow(Adw.ApplicationWindow):
         factories.extend([
             lambda: create_shortcuts_page(),
             lambda: create_apps_page(),
+            lambda: create_agents_page(_update_nav),
             lambda: create_privacy_page(),
 
             lambda: create_support_page(),
@@ -2486,6 +2659,9 @@ class OobeWindow(Adw.ApplicationWindow):
         self.carousel.set_interactive(not block_carousel)
 
         self.back_btn.set_visible(idx > 0)
+        installing = getattr(page, '_install_running', False) if page else False
+        self.back_btn.set_sensitive(not installing)
+        self.next_btn.set_sensitive(not installing)
         if idx == 0 and self.is_oobe:
             self.next_btn.set_visible(False)
         else:
@@ -2513,11 +2689,15 @@ class OobeWindow(Adw.ApplicationWindow):
                 self.next_btn.remove_css_class('suggested-action')
 
     def _nav_back(self):
+        if not self.back_btn.get_sensitive():
+            return
         idx = int(self.carousel.get_position())
         if idx > 0:
             self.carousel.scroll_to(self.carousel.get_nth_page(idx - 1), True)
 
     def _nav_next(self):
+        if not self.next_btn.get_sensitive():
+            return
         idx = int(self.carousel.get_position())
         if idx < self.carousel.get_n_pages() - 1:
             self.carousel.scroll_to(

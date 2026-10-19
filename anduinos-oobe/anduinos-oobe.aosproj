@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-oobe</PackageName>
-    <PackageVersion>2.0.4-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.4-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS OOBE — First-run setup wizard and Welcome Center</PackageDescription>
     <Section>utils</Section>
@@ -24,6 +24,8 @@
   <ItemGroup>
     <Dependency Include="python3" />
     <Dependency Include="python3-gi" />
+    <Dependency Include="curl" />
+    <Dependency Include="ptyxis" />
     <Dependency Include="gir1.2-gtk-4.0" />
     <Dependency Include="gir1.2-adw-1" />
     <Dependency Include="dconf-cli" />
@@ -37,6 +39,7 @@
 
   <ItemGroup>
     <IncludeFile Include="assets/display_scaling.py" Target="/usr/lib/anduinos-oobe/display_scaling.py" />
+    <IncludeFile Include="assets/agents.py" Target="/usr/lib/anduinos-oobe/agents.py" />
     <IncludeScript Include="assets/anduinos-oobe" Target="/usr/bin/anduinos-oobe" />
     <IncludeFile Include="assets/anduinos-oobe-autostart.desktop" Target="/etc/xdg/autostart/anduinos-oobe.desktop" />
     <IncludeFolder Include="resources/icons" Target="/usr/share/anduinos-oobe/icons" />
