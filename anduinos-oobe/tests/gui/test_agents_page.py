@@ -134,6 +134,15 @@ class AgentsPageTests(unittest.TestCase):
                 names = [item.get_label() for item in descendants(page)
                          if isinstance(item, oobe.Gtk.Label) and item.has_css_class('heading')]
                 self.assertEqual(names, expected)
+                logos = [item for item in descendants(page)
+                         if isinstance(item, oobe.Gtk.Image) and item.has_css_class('agent-logo')]
+                self.assertEqual(len(logos), 5)
+                for logo in logos:
+                    # Missing files or one-pixel intrinsic SVGs lose the brand artwork.
+                    paintable = logo.get_paintable()
+                    self.assertIsNotNone(paintable)
+                    self.assertGreater(paintable.get_intrinsic_width(), 1)
+                    self.assertGreater(paintable.get_intrinsic_height(), 1)
 
     def test_continue_offline_removes_the_agent_page_from_the_real_wizard(self):
         factories = [
