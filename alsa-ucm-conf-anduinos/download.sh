@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../lib/build-guards.sh"
 need_cmd git
 
-ALSA_COMMIT="d2306b01aa595ae9d393f6852ffdbe2b226f4872"   # pinned for supply-chain safety
+ALSA_COMMIT="d260eedd1900dbf3b477047e048d5382a5f50e24"   # pinned for supply-chain safety
 
 rm -rf "$SCRIPT_DIR/deploy" /tmp/alsa-ucm-conf
 mkdir -p "$SCRIPT_DIR/deploy"

@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-VERSION="v0.11-pre-69-g3879ba0"
+VERSION="v0.11-pre-86-g547eb90"
 PKG_NAME="hid-xpadneo"
 
 case "$1" in

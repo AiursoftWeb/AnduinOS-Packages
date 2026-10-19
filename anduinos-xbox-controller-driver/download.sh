@@ -6,8 +6,8 @@ source "$SCRIPT_DIR/../lib/build-guards.sh"
 need_cmd git
 
 REPO_URL="https://github.com/atar-axis/xpadneo.git"
-COMMIT_ID="3879ba0f44e9bcfd500a5b92d02f83885f6b23c7"
-VERSION="v0.11-pre-69-g3879ba0"
+COMMIT_ID="547eb90cd9f01de64db888b558f7e1a606c71965"
+VERSION="v0.11-pre-86-g547eb90"
 
 rm -rf "$SCRIPT_DIR/deploy" /tmp/xpadneo
 echo "Cloning xpadneo..."
