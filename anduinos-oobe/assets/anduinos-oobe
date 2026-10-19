@@ -2092,6 +2092,7 @@ def create_agents_page(update_navigation=lambda: None):
     title = Gtk.Label(label=_('Control Your Computer with Natural Language'))
     title.add_css_class('title-1')
     title.set_wrap(True)
+    title.set_justify(Gtk.Justification.CENTER)
     page.append(title)
     subtitle = Gtk.Label(label=_(
         'Optional AI tools for your projects. Sign-in or an API key may be required; provider charges may apply.'))
