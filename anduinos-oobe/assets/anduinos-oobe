@@ -2118,6 +2118,12 @@ def create_agents_page(update_navigation=lambda: None):
     card_scroll.set_propagate_natural_height(True)
     card_scroll.set_child(cards)
     page.append(card_scroll)
+    disclaimer = Gtk.Label(label=_(
+        'Independently provided third-party tools. Trademarks belong to their owners; no affiliation or endorsement.'),
+        wrap=True, justify=Gtk.Justification.CENTER)
+    disclaimer.add_css_class('dim-label')
+    disclaimer.add_css_class('caption')
+    page.append(disclaimer)
     # Keep the original brand colors readable in both desktop themes.
     page._logo_css = Gtk.CssProvider()
     page._logo_css.load_from_data(b'''
@@ -2223,16 +2229,32 @@ def create_agents_page(update_navigation=lambda: None):
             'Installation downloads and runs third-party software with your account permissions. It may change your user environment. '
             'Coding agents can read and modify files, run commands, and send project data to their provider. '
             'Only use them in projects you trust. Continue?')
-        if agent.get('notice'):
-            body += '\n\n' + agent['notice']
+        notice = agent['get_notice']()
+        if notice['text']:
+            body += '\n\n' + notice['text']
         dialog = Adw.MessageDialog(
             transient_for=page.get_root(), modal=True,
             heading=_('Install {}?').format(agent['name']),
             body=body,
         )
+        details = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        reminder = Gtk.Label(label=_(
+            "Read the terms of service and privacy policy before use. Fees are determined by the provider."),
+            wrap=True, max_width_chars=48, xalign=0)
+        details.append(reminder)
+        for name, website, terms, privacy in notice['providers']:
+            links = Gtk.Label(wrap=True, max_width_chars=48, xalign=0)
+            # Escape both translated labels and URLs before passing them to Pango.
+            links.set_markup(' · '.join(
+                '<a href="{}">{}</a>'.format(GLib.markup_escape_text(url),
+                                            GLib.markup_escape_text(label))
+                for label, url in ((name, website), (_('Terms of Service'), terms),
+                                   (_('Privacy Policy'), privacy))))
+            details.append(links)
+        dialog.set_extra_child(details)
         dialog.add_response('cancel', _('Cancel'))
         dialog.add_response('install', _('Install'))
-        dialog.set_response_appearance('install', Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_response_appearance('install', Adw.ResponseAppearance.SUGGESTED)
         dialog.set_default_response('cancel')
         dialog.set_close_response('cancel')
         confirming = True

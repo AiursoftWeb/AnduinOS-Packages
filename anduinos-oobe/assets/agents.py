@@ -61,12 +61,64 @@ def install_agent(script, output):
 
 
 def recommendations(_, chinese):
+    # Keep legal links with the provider, including clients that use another model service.
+    providers = {
+        'deepseek': ('DeepSeek Harness', 'https://www.deepseek.com/harness/',
+                     'https://www.deepseek.com/harness/terms-of-use/',
+                     'https://www.deepseek.com/harness/privacy/'),
+        'qwen': ('Qwen Code', 'https://qwenlm.github.io/qwen-code-docs/',
+                 'https://qwenlm.github.io/qwen-code-docs/en/users/support/tos-privacy/',
+                 'https://qwenlm.github.io/qwen-code-docs/en/users/support/tos-privacy/'),
+        'opencode': ('OpenCode', 'https://opencode.ai/',
+                     'https://opencode.ai/legal/terms-of-service',
+                     'https://opencode.ai/legal/privacy-policy'),
+        'glm': ('Z.AI / GLM', 'https://z.ai/',
+                'https://docs.z.ai/legal-agreement/terms-of-use',
+                'https://docs.z.ai/legal-agreement/privacy-policy'),
+        'kimi': ('Kimi Code', 'https://code.kimi.com/',
+                 'https://www.kimi.com/user/agreement/modelUse?version=v2',
+                 'https://www.kimi.com/user/agreement/userPrivacy?version=v2'),
+        'minimax': ('MiniMax Code', 'https://agent.minimaxi.com/',
+                    'https://agent.minimaxi.com/doc/zh/terms-of-service.html',
+                    'https://agent.minimaxi.com/doc/zh/privacy-policy.html'),
+        'codebuddy': ('CodeBuddy Code', 'https://www.codebuddy.cn/docs/cli/overview',
+                      'https://cloud.tencent.com/document/product/301/106125',
+                      'https://privacy.qq.com/document/preview/284d799a07164d09bfc7cedd0ec3e089'),
+        'claude': ('Claude Code', 'https://code.claude.com/docs/en/overview',
+                   'https://code.claude.com/docs/en/legal-and-compliance',
+                   'https://www.anthropic.com/legal/privacy'),
+        'codex': ('Codex', 'https://developers.openai.com/codex/',
+                  'https://openai.com/policies/',
+                  'https://openai.com/policies/privacy-policy/'),
+        'copilot': ('GitHub Copilot', 'https://github.com/features/copilot/cli',
+                    'https://docs.github.com/en/site-policy/github-terms/github-terms-for-additional-products-and-features',
+                    'https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement'),
+        'antigravity': ('Antigravity', 'https://antigravity.google/',
+                        'https://antigravity.google/terms', 'https://policies.google.com/privacy'),
+        'grok': ('Grok Build', 'https://x.ai/build',
+                 'https://x.ai/legal/terms-of-service', 'https://x.ai/legal/privacy-policy'),
+    }
+
+    def notice(identifier):
+        text = ''
+        if identifier == 'deepseek':
+            text = _(
+                'If a compatible Node.js and npm are missing, this also installs nvm and the latest Node.js release for your user account.')
+        elif identifier == 'glm':
+            text = _('This installs the OpenCode client. GLM is a separate model service from Z.AI.')
+        elif identifier == 'opencode':
+            text = _('Your chosen model provider also has its own terms and privacy policy.')
+        return {'text': text,
+                'providers': [providers[key] for key in
+                              (('opencode', 'glm') if identifier == 'glm' else (identifier,))]}
+
     def agent(identifier, name, description, command, script, arguments=()):
         return {
             'id': identifier, 'name': name, 'description': description,
             'is_installed': lambda: executable(command) is not None,
             'open': lambda: open_agent(command, arguments),
             'install': lambda output: install_agent(script, output),
+            'get_notice': lambda: notice(identifier),
         }
 
     opencode = 'curl -fsSL https://opencode.ai/install | bash'
@@ -100,8 +152,6 @@ def recommendations(_, chinese):
                   _('A terminal coding assistant from Tencent.'),
                   'codebuddy', 'curl -fsSL https://copilot.tencent.com/cli/install.sh | bash'),
         ]
-        agents[0]['notice'] = _(
-            'If a compatible Node.js and npm are missing, this also installs nvm and the latest Node.js release for your user account.')
         return agents
     return [
         agent('opencode', 'OpenCode', _('An open source coding agent for your terminal.'),
