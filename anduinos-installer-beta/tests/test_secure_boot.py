@@ -542,19 +542,10 @@ class EnrollSecureBootTests(unittest.TestCase):
 
             _verify_signed_efi_chain(runner, target, valid_plan(architecture=self.architecture))
 
-        verified = tuple(
-            command[-1]
-            for command, _kwargs in runner.commands
-            if command[:2] == ("sbverify", "--list")
-        )
         self.assertEqual(
-            verified,
-            (
-                str(target / f"boot/efi/EFI/AnduinOS/shim{self.suffix}.efi"),
-                str(target / f"boot/efi/EFI/AnduinOS/grub{self.suffix}.efi"),
-            ),
+            [command for command, _kwargs in runner.commands],
+            [("chroot", str(target), "/usr/libexec/anduinos-grub-update", "first-install-check")],
         )
-        self.assertFalse(any("EFI/BOOT" in path for path in verified))
 
     def test_pending_matching_key_makes_retry_idempotent(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -796,9 +787,8 @@ class VerifyDkmsSignaturesTests(unittest.TestCase):
             prepare_signed_efi_chain(target)
             runner = FakeRunner()
             unsigned = (
-                "sbverify",
-                "--list",
-                str(target / "boot/efi/EFI/AnduinOS/shimx64.efi"),
+                "chroot", str(target),
+                "/usr/libexec/anduinos-grub-update", "first-install-check",
             )
             runner.outputs[unsigned] = ("", "No signature", 1)
             context = InstallContext(
@@ -806,7 +796,7 @@ class VerifyDkmsSignaturesTests(unittest.TestCase):
                 lambda _message: None,
                 {"target": target, "secure_boot_prepared": True},
             )
-            with self.assertRaisesRegex(RuntimeError, "not signed"):
+            with self.assertRaisesRegex(RuntimeError, "verification failed"):
                 EnrollSecureBootStep(runner).execute(context)
         self.assertFalse(
             any("--import" in command for command, _kwargs in runner.commands)
