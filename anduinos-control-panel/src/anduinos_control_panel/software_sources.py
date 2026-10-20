@@ -26,7 +26,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, GLib, Gtk
+from gi.repository import Adw, GLib, GObject, Gtk
 
 
 LOCALE_DIR = "/usr/share/locale"
@@ -523,7 +523,7 @@ class SoftwareSourceWindow(Adw.Window):
             transient_for=owner,
             modal=True,
             title=_("Software Source"),
-            default_width=680,
+            default_width=910,
             default_height=460,
         )
         self._busy = False
@@ -533,7 +533,8 @@ class SoftwareSourceWindow(Adw.Window):
         self._flathub_measurements: dict[str, MirrorMeasurement] = {}
 
         toolbar = Adw.ToolbarView()
-        toolbar.add_top_bar(Adw.HeaderBar())
+        header = Adw.HeaderBar()
+        toolbar.add_top_bar(header)
         self.set_content(toolbar)
         scroll = Gtk.ScrolledWindow(
             hscrollbar_policy=Gtk.PolicyType.NEVER,
@@ -576,17 +577,22 @@ class SoftwareSourceWindow(Adw.Window):
         self.source_overview = overview
         body.append(overview)
 
-        self.pages = Gtk.Stack()
-        self.pages.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
-        switcher = Gtk.StackSwitcher(stack=self.pages)
-        switcher.set_halign(Gtk.Align.FILL)
-        switcher.set_hexpand(True)
+        self.pages = Adw.ViewStack()
+        switcher = Adw.ViewSwitcherTitle(stack=self.pages, title=_("Software Source"))
+        header.set_title_widget(switcher)
         self.source_switcher = switcher
-        body.append(switcher)
+        switcher_bar = Adw.ViewSwitcherBar(stack=self.pages)
+        switcher.bind_property(
+            "title-visible", switcher_bar, "reveal", GObject.BindingFlags.SYNC_CREATE,
+        )
+        toolbar.add_bottom_bar(switcher_bar)
+        self.source_switcher_bar = switcher_bar
         body.append(self.pages)
 
         automatic = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
-        self.pages.add_titled(automatic, "automatic", "APT\n" + _("Automatic"))
+        self.pages.add_titled_with_icon(
+            automatic, "automatic", "APT · " + _("Automatic"), "network-transmit-receive-symbolic",
+        )
         source_group = Adw.PreferencesGroup()
         source_row = Adw.ActionRow(title=_("Software Source"))
         self.mirror_button = Gtk.Button(label=_("  Switch to Fastest Mirror  ").strip())
@@ -610,7 +616,9 @@ class SoftwareSourceWindow(Adw.Window):
         automatic.append(update_group)
 
         advanced = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        self.pages.add_titled(advanced, "advanced", "APT\n" + _("Advanced"))
+        self.pages.add_titled_with_icon(
+            advanced, "advanced", "APT · " + _("Advanced"), "preferences-system-symbolic",
+        )
         custom_current = bool(current and current not in MIRRORS)
         self._mirror_options = (
             MIRRORS if custom_current
@@ -639,7 +647,9 @@ class SoftwareSourceWindow(Adw.Window):
         advanced.append(advanced_buttons)
 
         flatpak_page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
-        self.pages.add_titled(flatpak_page, "flatpak", "Flathub\n" + _("Automatic"))
+        self.pages.add_titled_with_icon(
+            flatpak_page, "flatpak", "Flathub · " + _("Automatic"), "network-transmit-receive-symbolic",
+        )
         flathub_group = Adw.PreferencesGroup()
         self.flathub_current = Adw.ActionRow(title=_("Flathub software source"))
         self.flathub_current.set_subtitle("…")
@@ -652,7 +662,9 @@ class SoftwareSourceWindow(Adw.Window):
         self.flathub_current.add_suffix(self.flathub_fastest)
 
         flatpak_advanced = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        self.pages.add_titled(flatpak_advanced, "flatpak-advanced", "Flathub\n" + _("Advanced"))
+        self.pages.add_titled_with_icon(
+            flatpak_advanced, "flatpak-advanced", "Flathub · " + _("Advanced"), "preferences-system-symbolic",
+        )
         advanced_flathub_group = Adw.PreferencesGroup()
         self.flathub_advanced_current = Adw.ActionRow(title=_("Flathub software source"))
         self.flathub_advanced_current.set_subtitle("…")
@@ -913,6 +925,7 @@ class SoftwareSourceWindow(Adw.Window):
         self.test_button.set_sensitive(not busy)
         self.apply_button.set_sensitive(not busy)
         self.source_switcher.set_sensitive(not busy)
+        self.source_switcher_bar.set_sensitive(not busy)
         self.flathub_dropdown.set_sensitive(not busy)
         self.flathub_custom.set_sensitive(not busy)
         self.flathub_fastest.set_sensitive(not busy)
