@@ -3,9 +3,13 @@
 
 from __future__ import annotations
 
+import argparse
 from dataclasses import dataclass
+import os
 from pathlib import Path
+import posixpath
 import re
+import subprocess
 import sys
 import xml.etree.ElementTree as ET
 
@@ -188,9 +192,100 @@ def verify() -> tuple[int, int]:
     return len(project_map), sum(len(items) for items in relationships.values())
 
 
+def git(*arguments: str) -> str:
+    return subprocess.check_output(
+        ["git", *arguments], cwd=ROOT, text=True, stderr=subprocess.PIPE
+    )
+
+
+def merge_request_changes() -> tuple[str, set[str]] | None:
+    if os.environ.get("CI_PIPELINE_SOURCE") != "merge_request_event":
+        return None
+    base = os.environ.get("CI_MERGE_REQUEST_DIFF_BASE_SHA", "")
+    if not re.fullmatch(r"[0-9a-f]{40,64}", base) or not base.strip("0"):
+        raise RuntimeError("The merge request diff base is missing or invalid")
+    if subprocess.run(
+        ["git", "cat-file", "-e", f"{base}^{{commit}}"],
+        cwd=ROOT, capture_output=True,
+    ).returncode:
+        # Runner checkouts may be shallow; fetch only the required base.
+        git("fetch", "--no-tags", "--depth=1", "origin", base)
+    paths = set(git("diff", "--no-renames", "--name-only", "-z", base, "HEAD").split("\0"))
+    return base, paths - {""}
+
+
+def affected_directories(changes: set[str]) -> set[str]:
+    job_map = jobs()
+    packages = {name: job for name, job in job_map.items() if job.package_dir}
+    directories = {job.package_dir for job in packages.values()}
+    if any(
+        path.split("/", 1)[0] not in directories
+        and not ("/" not in path and path.endswith(".md"))
+        for path in changes
+    ):
+        return directories
+    selected = {
+        name for name, job in packages.items()
+        if any(path.startswith(f"{job.package_dir}/") for path in changes)
+    }
+    # Follow existing needs backwards to include every affected consumer.
+    while True:
+        consumers = {
+            name for name, job in packages.items() if set(job.needs) & selected
+        }
+        if consumers <= selected:
+            return {packages[name].package_dir for name in selected}
+        selected |= consumers
+
+
+def verify_versions(base: str, changes: set[str]) -> None:
+    old_projects = {}
+    for path in git("ls-tree", "-r", "--name-only", base).splitlines():
+        if path.count("/") == 1 and path.endswith(".aosproj"):
+            root = ET.fromstring(git("show", f"{base}:{path}"))
+            old_projects[root.findtext(".//PackageName")] = root
+    for package, (directory, root) in projects().items():
+        touched = any(
+            path.startswith(f"{directory}/")
+            and not path.startswith(f"{directory}/tests/")
+            for path in changes
+        )
+        # Shared files installed directly into a package also change its payload.
+        touched |= any(
+            posixpath.normpath(f"{directory}/{item.get('Include')}") in changes
+            for item in root.iter() if item.get("Include", "").startswith("../")
+        )
+        if not touched or package not in old_projects:
+            continue
+        before = old_projects[package].findtext(".//PackageVersion", "")
+        after = root.findtext(".//PackageVersion", "")
+        # Compare the local revision with the same symbolic upstream/suite inputs.
+        versions = [re.sub(r"\$\([^)]+\)", "0", value) for value in (after, before)]
+        if not before or not after or subprocess.run(
+            ["dpkg", "--compare-versions", versions[0], "gt", versions[1]],
+            capture_output=True,
+        ).returncode:
+            raise RuntimeError(
+                f"{directory}: package contents changed; increase PackageVersion "
+                f"above {before} (currently {after})"
+            )
+
+
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--affected", metavar="PACKAGE_DIR")
+    arguments = parser.parse_args()
     try:
+        changes = merge_request_changes()
+        if arguments.affected:
+            if arguments.affected not in {directory for directory, _ in projects().values()}:
+                raise RuntimeError(f"Unknown package directory: {arguments.affected}")
+            selected = changes is None or arguments.affected in affected_directories(changes[1])
+            print("yes" if selected else "no")
+            return 0
         package_count, relationship_count = verify()
+        if changes:
+            verify_versions(*changes)
     except Exception as error:
         print(f"CI package-needs policy failed: {error}", file=sys.stderr)
         return 1
