@@ -354,6 +354,14 @@ def repair_dkms(
 def execute(action: str, run: Run = run_command) -> OperationResult:
     if action in {"install-bootloader", "repair-bootloader"}:
         from .grub import deploy, install_packages
+        from .decision import assess_action
+        from .inspect import collect_facts
+        preflight = assess_action(action, collect_facts())
+        if not preflight.allowed:
+            result = OperationResult(action)
+            result.steps["prerequisites"] = StepResult("failed", "\n".join(
+                blocker.reason for blocker in preflight.blockers))
+            return result
         if action == "install-bootloader":
             return install_packages(run)
         result = OperationResult(action)
@@ -363,9 +371,9 @@ def execute(action: str, run: Run = run_command) -> OperationResult:
         except (OSError, ValueError, subprocess.TimeoutExpired) as error:
             result.steps["bootloader"] = StepResult("failed", str(error))
         return result
-    if action == "sync-defaults":
+    if action in {"sync-defaults", "repair-defaults"}:
         from .defaults import sync_defaults
-        return sync_defaults(run)
+        return sync_defaults(run, allow_legacy=action == "repair-defaults")
     if action in {"prepare-identity", "regenerate-identity"}:
         from .identity import manage_identity
         return manage_identity(action, run)
@@ -393,7 +401,7 @@ def helper_main(arguments: list[str]) -> int:
         print(json.dumps({"schema": 1, "error": "root-required"}))
         return 77
     if len(arguments) != 1 or arguments[0] not in {
-        "prepare", "repair-dkms", "prepare-identity", "regenerate-identity", "sync-defaults",
+        "prepare", "repair-dkms", "prepare-identity", "regenerate-identity", "sync-defaults", "repair-defaults",
         "install-bootloader", "repair-bootloader"
     }:
         print(json.dumps({"schema": 1, "error": "unsupported-action"}))

@@ -2035,3 +2035,299 @@ msgstr "Önyükleyici güncellemesi tamamlanamadı. Yeniden başlatmadan önce a
 
 msgid "Details"
 msgstr "Ayrıntılar"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "A certificate is waiting for enrollment. Restart and select Enroll MOK, Continue, Yes, then enter password 123456."
+msgstr "Bir sertifika kaydedilmeyi bekliyor. Yeniden başlatın; Enroll MOK, Continue, Yes seçeneklerini seçip 123456 parolasını girin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "AnduinOS GRUB is signed, trusted and deployed."
+msgstr "AnduinOS GRUB imzalı, güvenilir ve sisteme yerleştirilmiş."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Boot Recovery Help"
+msgstr "Önyükleme Kurtarma Yardımı"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Certificate Enrollment"
+msgstr "Sertifika Kaydı"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Certificate Signing Purpose"
+msgstr "Sertifikanın İmzalama Amacı"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Check Before Enabling Secure Boot"
+msgstr "Güvenli Önyüklemeyi Etkinleştirmeden Önce Denetleyin"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Check the firmware and boot mode before continuing."
+msgstr "Devam etmeden önce donanım yazılımını ve önyükleme modunu denetleyin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Close"
+msgstr "Kapat"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Complete This Step First"
+msgstr "Önce Bu Adımı Tamamlayın"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Create Signing Certificate"
+msgstr "İmzalama Sertifikası Oluştur"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Create a certificate that can sign both the bootloader and drivers first."
+msgstr "Önce hem önyükleyiciyi hem de sürücüleri imzalayabilen bir sertifika oluşturun."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Create a local signing certificate before preparing trust."
+msgstr "Güven yapılandırmasını hazırlamadan önce yerel bir imzalama sertifikası oluşturun."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "DKMS and the matching kernel headers are required. Check the driver build requirements."
+msgstr "DKMS ve eşleşen çekirdek başlıkları gereklidir. Sürücü derleme gereksinimlerini denetleyin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Do not restart with an invalid bootloader. Use trusted installation media to inspect and restore the EFI boot files. Keep existing enrolled certificates."
+msgstr "Geçersiz bir önyükleyiciyle yeniden başlatmayın. EFI önyükleme dosyalarını incelemek ve geri yüklemek için güvenilir kurulum medyası kullanın. Kayıtlı sertifikaları koruyun."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enrollment requested. Restart and select Enroll MOK to finish trusting this certificate."
+msgstr "Kayıt istendi. Bu sertifikaya güvenme işlemini tamamlamak için yeniden başlatıp Enroll MOK seçeneğini seçin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Existing bootloader, driver signatures and old enrolled certificates are preserved."
+msgstr "Mevcut önyükleyici, sürücü imzaları ve önceden kaydedilmiş sertifikalar korunur."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware Configuration"
+msgstr "Donanım Yazılımı Yapılandırması"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware Help"
+msgstr "Donanım Yazılımı Yardımı"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware Settings Failed"
+msgstr "Donanım Yazılımı Ayarları Başarısız"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware platform keys are not configured. This is separate from MOK enrollment."
+msgstr "Donanım yazılımı platform anahtarları yapılandırılmamış. Bu, MOK kaydından ayrı bir işlemdir."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware trust for the next bootloader has not been verified."
+msgstr "Sonraki önyükleyiciye donanım yazılımının güvendiği doğrulanmadı."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Go to This Step"
+msgstr "Bu Adıma Git"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Inspection Failed"
+msgstr "İnceleme Başarısız"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Installed drivers are trusted, including signatures from previously enrolled certificates."
+msgstr "Önceden kaydedilmiş sertifikaların imzaları da dahil olmak üzere kurulu sürücüler güvenilir."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Motherboard Secure Boot is enabled."
+msgstr "Anakartta Güvenli Önyükleme etkin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Next step:"
+msgstr "Sonraki adım:"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "No repairs are required by the checks shown above."
+msgstr "Yukarıdaki denetimlere göre onarım gerekmiyor."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "No third-party kernel modules need attention."
+msgstr "İşlem gerektiren üçüncü taraf çekirdek modülü yok."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "One or more third-party drivers need a trusted signature."
+msgstr "Bir veya daha fazla üçüncü taraf sürücü için güvenilir imza gerekiyor."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Operation Failed"
+msgstr "İşlem Başarısız"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Operation Finished"
+msgstr "İşlem Tamamlandı"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Please wait. Do not restart while this operation is running."
+msgstr "Lütfen bekleyin. Bu işlem sürerken yeniden başlatmayın."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare a valid signing certificate first."
+msgstr "Önce geçerli bir imzalama sertifikası hazırlayın."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Repair Automatic Signing"
+msgstr "Otomatik İmzalamayı Onar"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Repair Driver Signatures"
+msgstr "Sürücü İmzalarını Onar"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Replace Signing Certificate…"
+msgstr "İmzalama Sertifikasını Değiştir…"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restart"
+msgstr "Yeniden Başlat"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restart to Enroll Certificate"
+msgstr "Sertifikayı Kaydetmek İçin Yeniden Başlat"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restore a Trusted Boot Path"
+msgstr "Güvenilir Bir Önyükleme Yolu Geri Yükle"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot is configured in UEFI settings. Platform keys and the Microsoft third-party CA are separate from your MOK certificate. Verify the actual bootloader, next kernel and required drivers before enabling Secure Boot. Firmware wording varies by manufacturer."
+msgstr "Güvenli Önyükleme, UEFI ayarlarında yapılandırılır. Platform anahtarları ve Microsoft üçüncü taraf CA'sı, MOK sertifikanızdan ayrıdır. Güvenli Önyüklemeyi etkinleştirmeden önce kullanılacak önyükleyiciyi, sonraki çekirdeği ve gerekli sürücüleri doğrulayın. Donanım yazılımındaki ifadeler üreticiye göre değişir."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot is disabled. You can still prepare certificates, drivers and the bootloader."
+msgstr "Güvenli Önyükleme devre dışı. Yine de sertifikaları, sürücüleri ve önyükleyiciyi hazırlayabilirsiniz."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot is not available in the current firmware or boot mode."
+msgstr "Güvenli Önyükleme, geçerli donanım yazılımında veya önyükleme modunda kullanılamıyor."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot state could not be determined. Check again before changing trust."
+msgstr "Güvenli Önyükleme durumu belirlenemedi. Güven yapılandırmasını değiştirmeden önce yeniden denetleyin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Select Enroll MOK, Continue, Yes, and enter password 123456 on restart."
+msgstr "Yeniden başlatıldığında Enroll MOK, Continue, Yes seçeneklerini seçip 123456 parolasını girin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The AnduinOS bootloader is not installed. Replacing an existing working bootloader is optional."
+msgstr "AnduinOS önyükleyicisi kurulu değil. Çalışan mevcut önyükleyiciyi değiştirmek isteğe bağlıdır."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The AnduinOS bootloader needs signing or its signature could not be verified."
+msgstr "AnduinOS önyükleyicisinin imzalanması gerekiyor veya imzası doğrulanamadı."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The UEFI bootloader operation is not available in the current boot mode."
+msgstr "UEFI önyükleyici işlemi geçerli önyükleme modunda kullanılamıyor."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The automatic signing configuration has not been verified. Check again before installing the bootloader."
+msgstr "Otomatik imzalama yapılandırması doğrulanmadı. Önyükleyiciyi kurmadan önce yeniden denetleyin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The automatic signing configuration needs attention. Another certificate enrollment is not needed."
+msgstr "Otomatik imzalama yapılandırması işlem gerektiriyor. Yeniden sertifika kaydı gerekmiyor."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader is signed, but its certificate is not enrolled."
+msgstr "Önyükleyici imzalı, ancak sertifikası kayıtlı değil."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader operation finished. The installed files will now be checked again."
+msgstr "Önyükleyici işlemi tamamlandı. Kurulan dosyalar şimdi yeniden denetlenecek."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader update could not be completed. Review the details before restarting."
+msgstr "Önyükleyici güncellemesi tamamlanamadı. Yeniden başlatmadan önce ayrıntıları inceleyin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader will be signed with your enrolled certificate and deployed. Existing EFI files are backed up. Keep the computer running until the operation finishes."
+msgstr "Önyükleyici, kayıtlı sertifikanızla imzalanıp sisteme yerleştirilecek. Mevcut EFI dosyaları yedeklenir. İşlem bitene kadar bilgisayarı açık tutun."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The certificate does not permit the required signing. Create and enroll a replacement."
+msgstr "Sertifika, gerekli imzalama amacını desteklemiyor. Yeni bir sertifika oluşturup kaydedin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The certificate has expired. Create and enroll a replacement for future signing."
+msgstr "Sertifikanın süresi dolmuş. Gelecekteki imzalamalar için yeni bir sertifika oluşturup kaydedin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The drivers needed by the next kernel have not been verified."
+msgstr "Sonraki çekirdeğin gerektirdiği sürücüler doğrulanmadı."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The installed bootloader could not be checked."
+msgstr "Kurulu önyükleyici denetlenemedi."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The installed bootloader signature is invalid. Restore a trusted boot path before restarting."
+msgstr "Kurulu önyükleyicinin imzası geçersiz. Yeniden başlatmadan önce güvenilir bir önyükleme yolu geri yükleyin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The kernel selected for the next boot has not been verified."
+msgstr "Sonraki önyükleme için seçilen çekirdek doğrulanmadı."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The next boot entry and kernel have not been verified. Do not enable Secure Boot until the actual boot chain is checked."
+msgstr "Sonraki önyükleme girdisi ve çekirdek doğrulanmadı. Kullanılacak önyükleme zinciri denetlenene kadar Güvenli Önyüklemeyi etkinleştirmeyin."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The next bootloader is not verified as signed, trusted and deployed."
+msgstr "Sonraki önyükleyicinin imzalı, güvenilir ve sisteme yerleştirilmiş olduğu doğrulanmadı."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signed bootloader needs deployment to this system's EFI partition."
+msgstr "İmzalı önyükleyicinin bu sistemin EFI bölümüne yerleştirilmesi gerekiyor."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing certificate and private key are valid and match."
+msgstr "İmzalama sertifikası ve özel anahtar geçerli ve birbiriyle eşleşiyor."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing certificate must be enrolled first. Complete the certificate enrollment step above."
+msgstr "Önce imzalama sertifikası kaydedilmelidir. Yukarıdaki sertifika kaydı adımını tamamlayın."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing identity could not be checked. Existing certificates have not been replaced."
+msgstr "İmzalama kimliği denetlenemedi. Mevcut sertifikalar değiştirilmedi."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing key is missing, unreadable or does not match its certificate. Existing signatures are unchanged."
+msgstr "İmzalama anahtarı eksik, okunamıyor veya sertifikasıyla eşleşmiyor. Mevcut imzalar değiştirilmedi."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The system will now be checked again."
+msgstr "Sistem şimdi yeniden denetlenecek."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Third-party drivers could not be checked. This does not mean no drivers are installed."
+msgstr "Üçüncü taraf sürücüler denetlenemedi. Bu, hiç sürücü kurulu olmadığı anlamına gelmez."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This certificate can sign both the bootloader and kernel modules."
+msgstr "Bu sertifika hem önyükleyiciyi hem de çekirdek modüllerini imzalayabilir."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This certificate can sign drivers only. A new certificate is needed for the AnduinOS bootloader."
+msgstr "Bu sertifika yalnızca sürücüleri imzalayabilir. AnduinOS önyükleyicisi için yeni bir sertifika gerekiyor."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This certificate is enrolled in MOK."
+msgstr "Bu sertifika MOK'ta kayıtlı."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This updates the selected signing configuration. Creating or replacing a certificate preserves existing boot and driver trust. A new certificate requires confirmation in MOKManager after restart."
+msgstr "Bu işlem, seçili imzalama yapılandırmasını günceller. Sertifika oluşturmak veya değiştirmek, mevcut önyükleme ve sürücü güvenini korur. Yeni bir sertifika, yeniden başlatmanın ardından MOKManager'da onay gerektirir."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Do not restart until the installed EFI boot files are trusted. Restore a known-good EFI backup or use trusted installation media to repair them. Keep existing enrolled certificates."
+msgstr "Yüklü EFI önyükleme dosyaları güvenilir duruma gelene kadar yeniden başlatmayın. Sağlam olduğu bilinen bir EFI yedeğini geri yükleyin veya dosyaları onarmak için güvenilir kurulum medyası kullanın. Kayıtlı mevcut sertifikaları koruyun."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The installed EFI boot chain could not be verified as trusted. Restore a trusted boot path before restarting."
+msgstr "Yüklü EFI önyükleme zincirinin güvenilir olduğu doğrulanamadı. Yeniden başlatmadan önce güvenilir bir önyükleme yolunu geri yükleyin."

@@ -260,13 +260,10 @@ def inspect_dkms(
     module_directory = module_directory or Path(
         "/lib/modules", os.uname().release, "updates/dkms"
     )
-    if not module_directory.is_dir():
-        return DkmsState()
-
     details: list[ModuleState] = []
     try:
         paths = sorted(module_directory.iterdir())
-    except OSError:
+    except FileNotFoundError:
         return DkmsState()
     for path in paths:
         if not path.name.endswith((".ko", ".ko.xz", ".ko.zst")):
@@ -285,3 +282,14 @@ def inspect_dkms(
         untrusted_modules=tuple(item.name for item in details if not item.trusted),
         details=tuple(details),
     )
+
+
+def collect_facts(*, recover=False):
+    """Collect a page snapshot without claiming unobserved next-boot trust."""
+    from .decision import Facts
+    secure_boot = inspect_secure_boot(recover=recover)
+    try:
+        dkms, checked = inspect_dkms(secure_boot), True
+    except OSError:
+        dkms, checked = DkmsState(), False
+    return Facts(secure_boot, dkms, drivers_checked=checked)

@@ -23,11 +23,15 @@ class GrubState:
     enrollment: str = "unknown"
     deployment: str = "unknown"
     detail: str = ""
+    # Installed EFI trust is independent of a newly prepared signing cache.
+    active_chain: str = "unknown"
+    active_detail: str = ""
 
     @property
     def ready(self) -> bool:
         return (self.installed and self.signature == "valid"
-                and self.enrollment == "enrolled" and self.deployment == "ready")
+                and self.enrollment == "enrolled" and self.deployment == "ready"
+                and self.active_chain == "trusted")
 
 
 @dataclass(frozen=True)

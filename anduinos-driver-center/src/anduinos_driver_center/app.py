@@ -46,6 +46,7 @@ except ModuleNotFoundError:
     from anduinos_secureboot.ui import create_secure_boot_page
 
 from anduinos_secureboot.model import SecureBootStatus
+from anduinos_secureboot.decision import Facts, decide
 
 
 APP_ID = "com.anduinos.DriverCenter"
@@ -71,17 +72,12 @@ def _secure_boot_summary(state: SecureBootState, dkms: DkmsState) -> tuple[str, 
         return _("Not available"), _("Firmware does not support Secure Boot"), "installed-pill"
     if state.status is SecureBootStatus.UNKNOWN:
         return _("Unknown"), _("Secure Boot state could not be determined"), "warning-pill"
-    if state.supported and state.grub is not None and state.grub.supported and not state.grub.ready:
+    decision = decide(Facts(state, dkms, drivers_checked=True))
+    if any(row.tone in {"warning", "error"} for row in decision.rows):
         return _("Action required"), _("Support needs attention"), "warning-pill"
-    identity = state.signing_identity
-    if identity is not None and (not identity.usable
-                                 or getattr(identity, "defaults_ready", None) is False):
-        return _("Action required"), _("Signing certificate needs attention"), "warning-pill"
-    if state.enabled and state.ready and dkms.ready:
+    if state.enabled:
         return _("Trusted"), _("Trust established"), "success-pill"
-    if state.firmware_enable_ready and dkms.ready and state.setup_mode is not True:
-        return _("Disabled"), _("AnduinOS is ready. Secure Boot is not enabled."), "installed-pill"
-    return _("Action required"), _("Support needs attention"), "warning-pill"
+    return _("Disabled"), _("Secure Boot is disabled"), "installed-pill"
 
 
 LOCALE_DIR = "/usr/share/locale"

@@ -118,6 +118,33 @@ class OperationsTests(unittest.TestCase):
                 operations.execute(action, run)
         run.assert_not_called()
 
+    def test_desktop_bootloader_actions_recheck_certificate_enrollment(self):
+        from anduinos_secureboot.decision import Facts
+        from anduinos_secureboot.identity import IdentityStatus
+        from anduinos_secureboot.model import DkmsState, GrubState, SecureBootState
+        identity = IdentityStatus(purpose="unified", enrollment="pending", key_present=True,
+                                  key_valid=True, managed=True, defaults_ready=True)
+        state = SecureBootState(False, True, True, True, "old", signing_identity=identity,
+                                grub=GrubState(), setup_mode=False, boot_loader="shim")
+        for action in ("install-bootloader", "repair-bootloader"):
+            with self.subTest(action=action), \
+                 patch("anduinos_secureboot.inspect.collect_facts", return_value=Facts(state, DkmsState())), \
+                 patch("anduinos_secureboot.grub.install_packages") as install, \
+                 patch("anduinos_secureboot.grub.deploy") as deploy:
+                result = operations.execute(action, Mock())
+                self.assertFalse(result.ok)
+                self.assertIn("certificate-enrollment-required", result.to_json())
+                install.assert_not_called()
+                deploy.assert_not_called()
+
+    def test_legacy_default_repair_requires_the_explicit_manual_action(self):
+        for action, manual in (("sync-defaults", False), ("repair-defaults", True)):
+            with self.subTest(action=action), \
+                 patch("anduinos_secureboot.defaults.sync_defaults") as sync:
+                run = Mock()
+                operations.execute(action, run)
+                sync.assert_called_once_with(run, allow_legacy=manual)
+
     def test_helper_reports_operation_errors_and_releases_its_lock(self):
         with tempfile.TemporaryDirectory() as directory:
             lock_file = Path(directory) / "operation.lock"

@@ -24,8 +24,13 @@ class AppTests(unittest.TestCase):
         )
         window._device_row.side_effect = lambda *args: Mock()
         graphics = Mock(devices=(), intel=None)
+        from anduinos_secureboot.identity import IdentityStatus
+        from anduinos_secureboot.model import GrubState
         secure_boot = SecureBootState(
-            False, True, True, True, "serial", boot_loader="shim", setup_mode=False
+            False, True, True, True, "serial", boot_loader="shim", setup_mode=False,
+            signing_identity=IdentityStatus(purpose="unified", enrollment="enrolled", key_present=True,
+                                            key_valid=True, defaults_ready=True),
+            grub=GrubState(installed=True, signature="valid", enrollment="enrolled", deployment="ready", active_chain="trusted"),
         )
         printing = Mock(printers=(), service_running=True, missing_required_packages=(),
                         disabled_printers=())
@@ -48,23 +53,28 @@ class AppTests(unittest.TestCase):
 
     def test_secure_boot_summary_distinguishes_disabled_from_unprepared(self):
         from dataclasses import replace
-        ready = SecureBootState(False, True, True, True, "serial", boot_loader="shim", setup_mode=False)
+        from anduinos_secureboot.identity import IdentityStatus
+        from anduinos_secureboot.model import GrubState
+        identity = IdentityStatus(purpose="unified", enrollment="enrolled", key_present=True,
+                                  key_valid=True, defaults_ready=True)
+        ready = SecureBootState(False, True, True, True, "serial", boot_loader="shim", setup_mode=False,
+            signing_identity=identity, grub=GrubState(installed=True, signature="valid", enrollment="enrolled", deployment="ready", active_chain="trusted"))
         modules = DkmsState()
         with patch.object(app, "_", side_effect=lambda text: text):
             self.assertEqual(app._secure_boot_summary(ready, modules), (
-                "Disabled", "AnduinOS is ready. Secure Boot is not enabled.", "installed-pill"))
+                "Disabled", "Secure Boot is disabled", "installed-pill"))
             for state, dkms in (
                 (replace(ready, setup_mode=True), modules),
-                (replace(ready, enrolled=False), modules),
-                (replace(ready, boot_loader="grub"), modules),
-                (replace(ready, configuration_present=False), modules),
-                (ready, DkmsState(untrusted_modules=("driver",))),
+                (replace(ready, enrolled=False, signing_identity=replace(identity, enrollment="absent")), modules),
+                (replace(ready, boot_loader="grub", grub=replace(ready.grub, deployment="pending")), modules),
+                (replace(ready, configuration_present=False, signing_identity=replace(identity, defaults_ready=False)), modules),
+                (ready, DkmsState(modules=("driver",), untrusted_modules=("driver",))),
             ):
                 with self.subTest(state=state, dkms=dkms):
                     self.assertEqual(app._secure_boot_summary(state, dkms)[0], "Action required")
             enabled = replace(ready, enabled=True, status=SecureBootStatus.ENABLED)
             self.assertEqual(app._secure_boot_summary(enabled, modules)[0], "Trusted")
-            self.assertEqual(app._secure_boot_summary(enabled, DkmsState(untrusted_modules=("driver",)))[0],
+            self.assertEqual(app._secure_boot_summary(enabled, DkmsState(modules=("driver",), untrusted_modules=("driver",)))[0],
                              "Action required")
             for status, label in ((SecureBootStatus.UNKNOWN, "Unknown"),
                                   (SecureBootStatus.UNSUPPORTED, "Not available")):

@@ -46,11 +46,26 @@ class DefaultsTests(unittest.TestCase):
         self.fingerprint = hashlib.sha1(self.cert.read_bytes()).hexdigest()
         self.firmware.enrolled = {'b' * 40, self.fingerprint}
 
-    def sync(self):
-        return defaults.sync_defaults(self.firmware.run, self.root, self.legacy, self.config)
+    def sync(self, **kwargs):
+        return defaults.sync_defaults(self.firmware.run, self.root, self.legacy, self.config, **kwargs)
 
     def ready(self):
         return defaults.defaults_ready(self.key, self.cert, self.legacy, self.config)
+
+    def test_fresh_installer_identity_can_repair_defaults_without_replacing_its_key(self):
+        (self.root / 'current.json').unlink()
+        for name, source in [('MOK.priv', self.key), ('MOK.der', self.cert)]:
+            (self.legacy / name).write_bytes(source.read_bytes())
+        before = [(self.legacy / name).read_bytes() for name in ['MOK.priv', 'MOK.der']]
+        self.config.unlink()
+        with patch.object(identity, 'LEGACY_KEY', self.legacy / 'MOK.priv'), \
+             patch.object(identity, 'LEGACY_CERTIFICATE', self.legacy / 'MOK.der'):
+            self.assertTrue(self.sync(allow_legacy=True).ok)
+            self.assertTrue(defaults.defaults_ready(self.legacy / 'MOK.priv', self.legacy / 'MOK.der',
+                                                   self.legacy, self.config))
+            self.assertEqual(self.sync(allow_legacy=True).steps['defaults'].status, 'skipped')
+        self.assertEqual(before, [(self.legacy / name).read_bytes() for name in ['MOK.priv', 'MOK.der']])
+        self.assertFalse((self.root / 'current.json').exists())
 
     def before(self):
         return [(p, p.read_bytes()) for p in (self.config, self.legacy / 'MOK.priv', self.legacy / 'MOK.der')]

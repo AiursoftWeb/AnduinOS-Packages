@@ -106,24 +106,28 @@ def atomic_write(path: Path, data: bytes, mode: int) -> None:
 
 
 def sync_defaults(run, root: Path = identity.ROOT, legacy: Path | None = None,
-                  config: Path = CONFIG):
+                  config: Path = CONFIG, *, allow_legacy=False):
     from .operations import CallableRunner, OperationResult, StepResult, _firmware_supports_secure_boot
     result = OperationResult('sync-defaults')
     legacy = legacy or identity.LEGACY_KEY.parent
     name = identity.current_identity(root)
-    if not name:
+    if not name and not allow_legacy:
         result.steps['defaults'] = StepResult('skipped', 'No managed signing identity')
         return result
     if not _firmware_supports_secure_boot(result, run):
         return result
     state = identity.inspect_identity(CallableRunner(run), root)
+    if not name and not state.usable:
+        result.steps['defaults'] = StepResult('skipped', 'No enrolled unified signing identity')
+        return result
     if state.enrollment in {'pending', 'absent'}:
         result.steps['defaults'] = StepResult('skipped', 'Enrollment is not complete; previous signing defaults retained')
         return result
     if not state.usable:
         raise ValueError('Cannot verify an enrolled unified identity; previous signing defaults retained'
                          + (': ' + state.detail if state.detail else ''))
-    key, cert = identity.identity_paths(root, name)
+    key, cert = (identity.identity_paths(root, name) if name else
+                 (identity.LEGACY_KEY, identity.LEGACY_CERTIFICATE))
     for path in (root, key, cert, legacy / 'MOK.priv', legacy / 'MOK.der', config):
         safe_path(path)
     identity.check_pair(key, cert, run)
@@ -133,7 +137,7 @@ def sync_defaults(run, root: Path = identity.ROOT, legacy: Path | None = None,
     managed_config = re.fullmatch(
         rf'mok_signing_key="{re.escape(str(root))}/identities/([0-9a-f]{{32}})/MOK.priv"\n'
         rf'mok_certificate="{re.escape(str(root))}/identities/\1/MOK.der"\n', previous_config)
-    if previous_config and previous_config != CONFIG_CONTENT and not managed_config:
+    if previous_config and previous_config not in {CONFIG_CONTENT, configuration(key, cert)} and not managed_config:
         raise ValueError(f'Custom DKMS signing configuration requires review: {config}')
     # DKMS sources other files too. Do not silently claim success if they
     # supply a competing key/certificate or an alternate signing command.
@@ -154,6 +158,7 @@ def sync_defaults(run, root: Path = identity.ROOT, legacy: Path | None = None,
         return result
     backup_root = root / 'backups'
     safe_path(backup_root)
+    root.mkdir(mode=0o755, exist_ok=True)
     backup_root.mkdir(mode=0o700, exist_ok=True)
     backup_root.chmod(0o700)
     backup = Path(tempfile.mkdtemp(prefix='signing-', dir=backup_root))

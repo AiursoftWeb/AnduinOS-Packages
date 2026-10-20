@@ -1,5 +1,6 @@
 """Native signing and failure preservation; firmware/package boundaries mocked."""
 from dataclasses import replace
+from contextlib import contextmanager
 import hashlib
 import json
 import os
@@ -13,7 +14,7 @@ from unittest.mock import Mock, patch
 
 from anduinos_secureboot import grub, identity
 from anduinos_secureboot.dkms_guard import validate_signing_defaults
-from anduinos_secureboot.model import GrubState, SecureBootStatus
+from anduinos_secureboot.model import DkmsState, GrubState, SecureBootState, SecureBootStatus
 
 
 class Runner:
@@ -80,6 +81,7 @@ class GrubSigningTests(unittest.TestCase):
         self.addCleanup(self.directory.cleanup)
         self.root = Path(self.directory.name)
         self.key, self.cert = self.root / "key", self.root / "cert.der"
+        self.enterContext(patch.object(identity, "LEGACY_CERTIFICATE", self.cert))
         self.runner = Runner(self.architecture)
         identity.generate_identity(self.key, self.cert, self.runner.run)
         suffix, _, machine = grub.boot_chain.efi_architecture(self.runner)
@@ -122,6 +124,94 @@ class GrubSigningTests(unittest.TestCase):
 
     def prepare(self, **kwargs):
         return grub.prepare_image(self.runner, source=self.source, store=self.store, **kwargs)
+
+    @contextmanager
+    def installed_chain(self):
+        image = self.prepare()
+        suffix, _, _ = grub.boot_chain.efi_architecture(self.runner)
+        esp = self.root / "esp"
+        vendor = esp / "EFI/AnduinOS"
+        vendor.mkdir(parents=True)
+        (vendor / image.name).write_bytes(image.read_bytes())
+        companions = {}
+        for name in (f"shim{suffix}.efi", f"mm{suffix}.efi"):
+            source = self.root / name
+            source.write_bytes(image.read_bytes())
+            (vendor / name).write_bytes(source.read_bytes())
+            companions[name] = source
+        target = SimpleNamespace(entry=SimpleNamespace(loader=rf"\EFI\AnduinOS\shim{suffix}.efi"))
+        with (patch.object(grub, "STORE", self.store),
+              patch.object(grub, "source_image", return_value=self.source),
+              patch.object(grub, "shim_companions", return_value=companions),
+              patch.object(grub, "package_payload"),
+              patch.object(grub.boot_chain, "resolve_target", return_value=target),
+              patch.object(identity, "LEGACY_CERTIFICATE", self.cert)):
+            yield image, esp, vendor, companions
+
+    def enrollment_action(self, state):
+        from anduinos_secureboot.decision import Facts, assess_action
+        from anduinos_secureboot.identity import IdentityStatus
+        pending = IdentityStatus(purpose="unified", enrollment="pending", key_present=True,
+                                 key_valid=True, defaults_ready=False)
+        facts = Facts(SecureBootState(True, True, True, True, "old-signer",
+                                      signing_identity=pending, grub=state), DkmsState())
+        return assess_action("reboot-enroll", facts)
+
+    def test_bad_actual_esp_blocks_enrollment_even_with_a_valid_cache(self):
+        with self.installed_chain() as (image, esp, vendor, companions):
+            for name in (image.name, *companions):
+                with self.subTest(file=name):
+                    path = vendor / name
+                    original = path.read_bytes()
+                    data = bytearray(original); data[0x200] ^= 1
+                    path.write_bytes(data)
+                    state = grub.inspect_grub(self.runner, privileged=True, esp=esp)
+                    self.assertEqual(getattr(state, "active_chain", "missing"), "untrusted")
+                    self.assertFalse(self.enrollment_action(state).allowed)
+                    path.write_bytes(original)
+
+    def test_old_active_chain_survives_bad_cache_metadata_and_new_pending_identity(self):
+        with self.installed_chain() as (image, esp, vendor, companions):
+            (self.store / "image.json").write_text("{broken")
+            self.runner.calls.clear()
+            state = grub.inspect_grub(self.runner, privileged=True, esp=esp)
+            self.assertEqual(getattr(state, "active_chain", "missing"), "trusted")
+            self.assertTrue(self.enrollment_action(state).allowed)
+            self.assertFalse(any(c[0] == "sbsign" for c in self.runner.calls))
+
+    def test_new_unsigned_or_unenrolled_cache_does_not_discredit_old_active_chain(self):
+        with self.installed_chain() as (image, esp, vendor, companions):
+            other_key, other_cert = self.root / "candidate.key", self.root / "candidate.der"
+            identity.generate_identity(other_key, other_cert, self.runner.run)
+            self.enrollment.side_effect = lambda cert, runner: "pending" if cert == other_cert or cert == self.store / "certificate.der" else "enrolled"
+            with patch.object(identity, "selected_paths", return_value=(other_key, other_cert)):
+                self.prepare(first_install=True)
+                state = grub.inspect_grub(self.runner, privileged=True, esp=esp)
+            self.assertEqual(getattr(state, "active_chain", "missing"), "trusted")
+            self.assertTrue(self.enrollment_action(state).allowed)
+
+    def test_unresolved_esp_is_unknown_and_does_not_offer_enrollment_reboot(self):
+        with self.installed_chain() as (image, esp, vendor, companions), \
+             patch.object(grub.boot_chain, "resolve_target", side_effect=ValueError("Ambiguous ESP")):
+            state = grub.inspect_grub(self.runner, privileged=True, esp=esp)
+            self.assertEqual(getattr(state, "active_chain", "missing"), "unknown")
+            self.assertFalse(self.enrollment_action(state).allowed)
+
+    def test_enrolled_module_only_certificate_cannot_authenticate_active_efi(self):
+        with self.installed_chain() as (image, esp, vendor, companions):
+            key, certificate, pem = self.root / "module.key", self.root / "module.der", self.root / "module.pem"
+            self.runner.run(["openssl", "req", "-new", "-x509", "-newkey", "rsa:2048", "-nodes",
+                             "-keyout", str(key), "-out", str(pem), "-days", "1", "-subj", "/CN=ModuleOnly",
+                             "-addext", f"extendedKeyUsage=codeSigning,{identity.MODULE_ONLY_OID}"])
+            self.runner.run(["openssl", "x509", "-in", str(pem), "-outform", "DER", "-out", str(certificate)])
+            self.runner.run(["sbsign", "--key", str(key), "--cert", str(pem),
+                             "--output", str(vendor / image.name), str(self.source)])
+            grub.verify_signature(vendor / image.name, certificate, self.runner)
+            (self.store / "certificate.der").write_bytes(certificate.read_bytes())
+            with patch.object(identity, "LEGACY_CERTIFICATE", certificate):
+                state = grub.inspect_grub(self.runner, privileged=True, esp=esp)
+            self.assertNotEqual(state.active_chain, "trusted")
+            self.assertFalse(self.enrollment_action(state).allowed)
 
     def test_real_efi_signature_uses_the_unified_certificate_and_retry_is_stable(self):
         image = self.prepare()
@@ -463,10 +553,11 @@ class GrubSigningTests(unittest.TestCase):
             validate_signing_defaults(["generate_mok"], self.runner, config)
 
     def test_signature_enrollment_and_deployment_are_independent(self):
-        ready = GrubState(installed=True, signature="valid", enrollment="enrolled", deployment="ready")
+        ready = GrubState(installed=True, signature="valid", enrollment="enrolled", deployment="ready", active_chain="trusted")
         self.assertTrue(ready.ready)
         for field, value in (("installed", False), ("signature", "invalid"),
-                             ("enrollment", "pending"), ("deployment", "pending"), ("deployment", "unknown")):
+                             ("enrollment", "pending"), ("deployment", "pending"), ("deployment", "unknown"),
+                             ("active_chain", "untrusted"), ("active_chain", "unknown")):
             self.assertFalse(replace(ready, **{field: value}).ready)
 
 
