@@ -1,7 +1,15 @@
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH && $CI_COMMIT_REF_PROTECTED == "true"
+    - if: $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "prod"
+
+include:
+  - local: .gitlab/ci/validation.yml
+    rules:
+      - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  - local: .gitlab/ci/release.yml
+    rules:
+      - if: $CI_COMMIT_BRANCH
 
 stages:
   - lint
@@ -64,25 +72,6 @@ test-all:
     - dotnet tool update -g aiursoft.apkg.client --configfile ./nuget.config || dotnet tool install -g aiursoft.apkg.client --configfile ./nuget.config
     - export PATH="$PATH:$HOME/.dotnet/tools"
     - apkg --version
-  script:
-    - cd "$PACKAGE_DIR"
-    - |
-      if [ "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME:-$CI_COMMIT_BRANCH}" = "prod" ]; then
-        APKG_SOURCE="https://apkg.aiursoft.com"
-        APKG_KEY="$APKG_PROD_API_KEY"
-      else
-        APKG_SOURCE="https://apkg-dev.aiursoft.com"
-        APKG_KEY="$APKG_DEV_API_KEY"
-      fi
-      if [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ] ||
-         { [ "$CI_COMMIT_BRANCH" != "master" ] && [ "$CI_COMMIT_BRANCH" != "prod" ]; }; then
-        apkg build --all --skip-existing --source "$APKG_SOURCE"
-        exit 0
-      fi
-      apkg deploy --all \
-        --source "$APKG_SOURCE" \
-        --api-key "$APKG_KEY" \
-        --skip-existing
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH
