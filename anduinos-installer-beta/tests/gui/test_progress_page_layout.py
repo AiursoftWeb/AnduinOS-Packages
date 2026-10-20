@@ -203,6 +203,16 @@ class ProgressPageLayoutTests(unittest.TestCase):
         self.assertLessEqual(button_bounds.get_y() + button_bounds.get_height(),
                              visible_bounds.get_y() + visible_bounds.get_height())
         self.assertTrue(reboot.get_sensitive())
+        window.set_default_size(1280, 800)
+        _settle()
+        adjustment.set_value(0)
+        _settle()
+        _, visible_bounds = result_scroll.compute_bounds(window)
+        for widget in (tutorial, reboot):
+            _, bounds = widget.compute_bounds(window)
+            self.assertGreaterEqual(bounds.get_y(), visible_bounds.get_y())
+            self.assertLessEqual(bounds.get_y() + bounds.get_height(),
+                                 visible_bounds.get_y() + visible_bounds.get_height())
         for widget in (result_scroll, progress):
             ok, bounds = widget.compute_bounds(window)
             self.assertTrue(ok)

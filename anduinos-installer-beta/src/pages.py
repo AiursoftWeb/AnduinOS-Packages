@@ -7717,6 +7717,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     secure_boot_notice.add_css_class("warning")
     enrollment_tutorial = EnrollmentTutorial(secure_boot_notice.get_label(), scrollable=True)
     enrollment_tutorial.set_visible(False)
+    enrollment_frame = Adw.Clamp(maximum_size=560, tightening_threshold=420)
+    enrollment_frame.set_child(enrollment_tutorial)
+    enrollment_frame.set_visible(False)
     reboot_label = (
         N_("Restart and Enroll Secure Boot Key")
         if plan.platform.secure_boot is SecureBoot.ENABLED
@@ -7739,7 +7742,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     result_box.append(result_label)
     result_box.append(result_sub)
     result_box.append(secure_boot_notice)
-    result_box.append(enrollment_tutorial)
+    result_box.append(enrollment_frame)
     result_box.append(reboot_btn)
     result_scroll = _scrolled_window(
         vexpand=True,
@@ -7865,6 +7868,11 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                     and not shared.get("development_mode")
                 )
                 enrollment_tutorial.set_visible(secure_boot_notice.get_visible())
+                enrollment_frame.set_visible(secure_boot_notice.get_visible())
+                if secure_boot_notice.get_visible():
+                    result_box.set_valign(Gtk.Align.START)
+                    result_box.set_spacing(8)
+                    result_icon.set_pixel_size(32)
                 reboot_btn.set_visible(True)
                 reboot_btn.set_sensitive(not shared.get("development_mode"))
                 if shared.get("development_mode"):
