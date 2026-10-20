@@ -2,6 +2,7 @@
 import gettext
 from pathlib import Path
 import unittest
+import time
 from unittest.mock import Mock, patch
 import gi
 
@@ -9,6 +10,7 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Adw, Gtk, GLib
 from anduinos_secureboot import ui
+from anduinos_secureboot import enrollment
 from anduinos_secureboot.decision import Facts, NextBootEvidence
 from anduinos_secureboot.identity import IdentityStatus
 from anduinos_secureboot.model import DkmsState, GrubState, SecureBootState
@@ -20,6 +22,15 @@ def widgets(widget):
     while child:
         yield from widgets(child)
         child = child.get_next_sibling()
+
+
+def settle(seconds=0.15):
+    deadline = time.monotonic() + seconds
+    context = GLib.MainContext.default()
+    while time.monotonic() < deadline:
+        while context.pending() and time.monotonic() < deadline:
+            context.iteration(False)
+        time.sleep(0.005)
 
 
 class SecureBootPageTests(unittest.TestCase):
@@ -108,6 +119,84 @@ class SecureBootPageTests(unittest.TestCase):
             self.assertIn('before restarting', dialog.get_body())
             self.assertEqual(self.button(self.row(page, 'AnduinOS Bootloader')).get_label(), 'Boot Recovery Help')
             action.assert_not_called()
+
+    def test_pending_enrollment_tutorial_plays_in_a_small_restart_dialog(self):
+        identity = IdentityStatus(purpose='unified', enrollment='pending',
+            key_present=True, key_valid=True, managed=True, defaults_ready=False)
+        page = self.page(self.state(signing_identity=identity))
+        parent = Adw.Window(content=page, default_width=640, default_height=480)
+        parent.present()
+        with patch.object(ui, 'run_action') as action:
+            self.button(self.row(page, 'Certificate Enrollment')).emit('clicked')
+            dialog = self.dialog(parent)
+            settle()
+            tutorial = dialog.get_extra_child()
+            self.assertIsInstance(tutorial, enrollment.EnrollmentTutorial)
+            self.assertTrue(tutorial.get_mapped())
+            self.assertEqual(dialog.get_default_response(), 'cancel')
+            self.assertLessEqual(dialog.get_width(), parent.get_width())
+            self.assertLessEqual(dialog.get_height(), parent.get_height())
+            for name in ('cancel', 'reboot'):
+                button = dialog.get_response_label(name)
+                self.assertTrue(any(isinstance(w, Gtk.Button) and w.get_label() == button
+                                    and w.get_mapped() for w in widgets(dialog)))
+            first = tutorial.get_child().get_paintable().save_to_png_bytes().get_data()
+            settle(0.25)
+            later = tutorial.get_child().get_paintable().save_to_png_bytes().get_data()
+            self.assertNotEqual(first, later)  # A real animation, not its first still.
+            tutorial.set_visible(False)
+            self.assertEqual(tutorial._timeout, 0)
+            self.assertIsNone(tutorial._animation)
+            tutorial.set_visible(True)
+            self.assertIsNotNone(tutorial._animation)
+            next(w for w in widgets(dialog) if isinstance(w, Gtk.Button)
+                 and w.get_label() == dialog.get_response_label('cancel')).emit('clicked')
+            settle(0.3)
+            self.assertEqual(tutorial._timeout, 0)
+            action.assert_not_called()
+
+    def test_missing_tutorial_keeps_enrollment_instructions_and_restart_controls(self):
+        identity = IdentityStatus(purpose='unified', enrollment='pending',
+            key_present=True, key_valid=True, managed=True, defaults_ready=False)
+        page = self.page(self.state(signing_identity=identity))
+        parent = Adw.Window(content=page)
+        parent.present()
+        with (patch.object(enrollment.GdkPixbuf.PixbufAnimation, 'new_from_file',
+                           side_effect=GLib.Error('Missing tutorial')),
+              self.assertLogs(enrollment.__name__, level='WARNING')):
+            self.button(self.row(page, 'Certificate Enrollment')).emit('clicked')
+            settle()
+        dialog = self.dialog(parent)
+        self.assertIn('123456', dialog.get_body())
+        self.assertTrue(dialog.has_response('reboot'))
+        self.assertFalse(dialog.get_extra_child().get_visible())
+
+    def test_queued_enrollment_result_keeps_ok_visible_with_long_instructions(self):
+        identity = IdentityStatus(purpose='unified', enrollment='absent',
+            key_present=True, key_valid=True, managed=True, defaults_ready=False)
+        state = self.state(signing_identity=identity)
+        page = self.page(state)
+        parent = Adw.Window(content=page, default_width=640, default_height=480)
+        parent.present()
+        settle()
+        with (patch.object(ui, 'run_action', return_value=(0, {'reboot_required': True})),
+              patch.object(ui, 'collect_facts', return_value=Facts(state, DkmsState(), drivers_checked=True))):
+            self.button(self.row(page, 'Certificate Enrollment')).emit('clicked')
+            confirmation = self.dialog(parent)
+            next(w for w in widgets(confirmation) if isinstance(w, Gtk.Button)
+                 and w.get_label() == confirmation.get_response_label('continue')).emit('clicked')
+            settle(0.8)
+        dialog = next(w for w in Gtk.Window.list_toplevels()
+                      if isinstance(w, Adw.MessageDialog) and w.get_heading() == 'Operation Finished')
+        self.assertTrue(dialog.get_extra_child().get_mapped())
+        self.assertIn('123456', dialog.get_body())
+        self.assertLessEqual(dialog.get_width(), parent.get_width())
+        self.assertLessEqual(dialog.get_height(), parent.get_height())
+        button = next(w for w in widgets(dialog) if isinstance(w, Gtk.Button)
+                      and w.get_label() == dialog.get_response_label('ok'))
+        ok, bounds = button.compute_bounds(dialog)
+        self.assertTrue(ok)
+        self.assertLessEqual(bounds.get_y() + bounds.get_height(), dialog.get_height())
 
     def test_invalid_or_unchecked_private_key_never_shows_healthy_or_allows_signing(self):
         for valid in (False, None):

@@ -16,7 +16,9 @@ from anduinos_secureboot.model import DkmsState, GrubState, ModuleState, SecureB
 class TrustPageTests(unittest.TestCase):
     def setUp(self):
         self.gtk = self.enterContext(patch.object(ui, "Gtk"))
+        self.gtk.Box.return_value.get_root.return_value.get_width.return_value = 900
         self.adw = self.enterContext(patch.object(ui, "Adw"))
+        self.tutorial = self.enterContext(patch.object(ui, "EnrollmentTutorial", create=True))
         self.rows, self.labels, self.all_buttons = {}, [], []
         def row(**kwargs):
             widget = Mock()
@@ -200,6 +202,37 @@ class TrustPageTests(unittest.TestCase):
         self.button('Certificate Enrollment').set_label.assert_called_with('translated:Restart to Enroll Certificate')
         self.button('Certificate Enrollment').set_visible.assert_called_with(True)
 
+    def test_pending_enrollment_confirmation_contains_the_offline_tutorial(self):
+        self.page(signing_identity=replace(self.identity, enrollment='pending'))
+        self.click('Certificate Enrollment')
+        self.tutorial.assert_called_once()
+        dialog = self.adw.MessageDialog.new.return_value
+        dialog.set_extra_child.assert_called_once_with(self.tutorial.return_value)
+        dialog.set_default_response.assert_called_with('cancel')
+        self.reboot.assert_not_called()
+
+    def test_successfully_queued_enrollment_shows_tutorial_without_restarting(self):
+        self.page(signing_identity=replace(self.identity, enrollment='absent'))
+        self.action.return_value = (0, {'reboot_required': True})
+        self.click('Certificate Enrollment')
+        self.respond('continue')
+        self.tutorial.assert_not_called()  # Request has not succeeded yet.
+        self.worker()
+        self.tutorial.assert_called_once()
+        self.adw.MessageDialog.new.return_value.set_extra_child.assert_called_with(
+            self.tutorial.return_value)
+        self.reboot.assert_not_called()
+
+    def test_failed_or_unnecessary_enrollment_does_not_play_the_tutorial(self):
+        self.page(signing_identity=replace(self.identity, enrollment='absent'))
+        for result in ((1, {'reboot_required': True}), (0, {})):
+            with self.subTest(result=result):
+                self.action.return_value = result
+                self.click('Certificate Enrollment')
+                self.respond('continue')
+                self.worker()
+                self.tutorial.assert_not_called()
+
     def test_pending_identity_with_bad_esp_offers_recovery_instead_of_reboot_confirmation(self):
         self.page(signing_identity=replace(self.identity, enrollment='pending', defaults_ready=False),
                   grub=replace(self.boot, active_chain='untrusted', deployment='unknown'))
@@ -207,6 +240,7 @@ class TrustPageTests(unittest.TestCase):
         dialog = self.adw.MessageDialog.new.return_value
         self.assertFalse(any(c.args[0] == 'reboot' for c in dialog.add_response.call_args_list))
         self.assertIn('before restarting', self.adw.MessageDialog.new.call_args.args[2])
+        self.tutorial.assert_not_called()
         self.thread.assert_not_called()
         self.reboot.assert_not_called()
 
