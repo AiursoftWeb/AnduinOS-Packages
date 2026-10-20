@@ -372,6 +372,17 @@ class GrubSigningTests(unittest.TestCase):
             self.assertFalse(grub.inspect_grub(self.runner, privileged=True, esp=esp).ready)
             deployed.write_bytes(image.read_bytes())
             self.assertTrue(grub.inspect_grub(self.runner, privileged=True, esp=esp).ready)
+            fallback = esp / "EFI/BOOT"
+            fallback.mkdir()
+            for name, source in {image.name: image, **companions}.items():
+                destination = f"BOOT{suffix.upper()}.EFI" if name.startswith("shim") else name
+                (fallback / destination).write_bytes(source.read_bytes())
+            with patch.object(grub.boot_chain, "owned_fallback", return_value=fallback):
+                self.assertTrue(grub.inspect_grub(self.runner, privileged=True, esp=esp).ready)
+                (fallback / image.name).write_bytes(b"stale portable copy")
+                state = grub.inspect_grub(self.runner, privileged=True, esp=esp)
+                self.assertEqual(state.deployment, "pending")
+                self.assertIn("portable", state.detail)
             other = "aa64" if suffix == "x64" else "x64"
             target.entry.loader = rf"\EFI\AnduinOS\shim{other}.efi"
             state = grub.inspect_grub(self.runner, privileged=True, esp=esp)

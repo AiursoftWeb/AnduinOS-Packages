@@ -206,6 +206,14 @@ def deploy(runner, *, package_transaction=False, esp=boot_chain.ESP):
     for path in vendor.iterdir():
         if path.is_file() and not path.is_symlink():
             atomic_write(backup / path.name, path.read_bytes(), 0o600)
+    suffix, _, _ = boot_chain.efi_architecture(runner)
+    fallback = boot_chain.owned_fallback(runner, esp, target, shim_companions(runner)[f"shim{suffix}.efi"])
+    if fallback is not None:
+        (backup / "fallback").mkdir(mode=0o700)
+        for name in (f"BOOT{suffix.upper()}.EFI", f"grub{suffix}.efi", f"mm{suffix}.efi", "grub.cfg"):
+            path = fallback / name
+            if path.is_file() and not path.is_symlink():
+                atomic_write(backup / "fallback" / name, path.read_bytes(), 0o600)
     atomic_write(backup / "nvram.txt", target.nvram.encode(), 0o600)
     boot_chain.prepare_boot_chain(runner, esp, payload_loader=payloads,
                                   package_transaction=package_transaction)
@@ -265,6 +273,13 @@ def inspect_grub(runner=None, *, privileged=False, esp=boot_chain.ESP):
             boot_chain.verify_image(source, machine, runner)
             if (vendor / name).read_bytes() != source.read_bytes():
                 return replace(state, deployment="pending", detail="The official shim companions need deployment")
+        sources = {signed.name: signed, **shim_companions(runner)}
+        fallback = boot_chain.owned_fallback(runner, esp, target, sources[f"shim{suffix}.efi"])
+        if fallback is not None:
+            for name, source in sources.items():
+                path = fallback / (f"BOOT{suffix.upper()}.EFI" if name.startswith("shim") else name)
+                if path.is_symlink() or path.read_bytes() != source.read_bytes():
+                    return replace(state, deployment="pending", detail="The portable bootloader needs deployment")
         return replace(state, deployment="ready")
     except (OSError, ValueError, KeyError, TypeError) as error:
         return replace(state, detail=str(error))
