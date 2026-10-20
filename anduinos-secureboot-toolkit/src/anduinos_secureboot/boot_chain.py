@@ -1,7 +1,6 @@
-"""Conservative local repair of the current AnduinOS UEFI vendor chain.
+"""Conservative local repair of the installed AnduinOS EFI chain.
 
-No package installation, fallback loader, firmware keys or foreign boot entry
-is modified. Portable/removable-media boot policy belongs to the installer.
+Firmware keys and foreign boot entries/loaders are never modified.
 """
 
 from contextlib import ExitStack
@@ -20,6 +19,7 @@ from .inspect import Runner
 
 
 ESP = Path("/boot/efi")
+EFI = Path("/sys/firmware/efi")
 ESP_TYPE = "c12a7328-f81f-11d2-ba4b-00a0c93ec93b"
 EFI_GLOBAL = "8be4df61-93ca-11d2-aa0d-00e098032b8c"
 
@@ -183,19 +183,28 @@ def resolve_target(runner: Runner, esp: Path = ESP) -> Target:
             or Path(mount[0]["source"]).resolve() != Path(part["path"]).resolve()
             or not (part.get("pkname") or "").startswith("/dev/")):
         raise ValueError("The ESP does not match a physical disk partition")
-    output = command(runner, ["efibootmgr", "--verbose"])
+    output = command(runner, ["efibootmgr", "--verbose"]) if EFI.is_dir() else ""
     known_entries = entries(output)
     current = next((e for e in known_entries if e.number == variable(output, "BootCurrent")), None)
     candidates = tuple(e for e in known_entries
                        if e.number in variable(output, "BootOrder").split(",")
                        and e.uuid == partuuid
                        and e.partition == partition_number(part["path"]))
-    if (len(candidates) != 1 or current is None
-            or (current.uuid == partuuid and current.partition != candidates[0].partition)):
+    if (len(candidates) > 1
+            or (current is not None and current.uuid == partuuid
+                and current.partition != partition_number(part["path"]))):
         raise ValueError("Current AnduinOS boot entry and ESP are missing or ambiguous")
-    entry = candidates[0]
+    if candidates:
+        entry = candidates[0]
+    else:
+        # BIOS and removable-media boots need no vendor NVRAM entry. This is
+        # a file destination only; it must pass the local fstab/root binding
+        # below and must never cause an invented firmware entry to be written.
+        suffix, _, _ = efi_architecture(runner)
+        entry = BootEntry("", partition_number(part["path"]), partuuid,
+                          rf"\EFI\AnduinOS\shim{suffix}.efi")
     order = variable(output, "BootOrder")
-    if order.split(",").count(entry.number) != 1 or variable(output, "BootNext"):
+    if (entry.number and order.split(",").count(entry.number) != 1) or variable(output, "BootNext"):
         raise ValueError("BootOrder or BootNext requires manual review")
     vendor = vendor_path(esp, entry)
     if vendor.resolve() != vendor or not vendor.is_dir():
@@ -203,9 +212,31 @@ def resolve_target(runner: Runner, esp: Path = ESP) -> Target:
     cfg = vendor / "grub.cfg"
     if cfg.is_symlink() or not cfg.is_file() or not cfg.read_text().strip():
         raise ValueError("AnduinOS EFI GRUB configuration is missing")
-    if len(partitions) > 1 or current.uuid != partuuid or "-P" in vendor.name:
+    if current is None or len(partitions) > 1 or current.uuid != partuuid or "-P" in vendor.name:
         verify_local_esp_binding(runner, esp, part["path"], cfg)
     return Target(part["pkname"], entry, order, output, part["path"])
+
+
+def owned_fallback(runner, esp, target, shim_source):
+    """Recognize the installer's direct-copy fallback without claiming foreign EFI/BOOT."""
+    fallback = esp / "EFI/BOOT"
+    cfg = fallback / "grub.cfg"
+    if fallback.resolve() != fallback or cfg.is_symlink() or not cfg.is_file():
+        return None
+    try:
+        verify_local_esp_binding(runner, esp, target.device, cfg)
+    except (OSError, ValueError):
+        return None
+    suffix, _, _ = efi_architecture(runner)
+    loader = fallback / f"BOOT{suffix.upper()}.EFI"
+    vendor_shim = vendor_path(esp, target.entry) / f"shim{suffix}.efi"
+    # A matching GRUB stub alone cannot authorize replacing an unrelated
+    # fallback loader. Require the existing vendor copy or the incoming shim.
+    if (loader.is_symlink() or not loader.is_file() or not any(
+            path.is_file() and not path.is_symlink() and loader.read_bytes() == path.read_bytes()
+            for path in (vendor_shim, shim_source))):
+        raise ValueError("Fallback configuration belongs to this system, but its loader requires manual review")
+    return fallback
 
 
 def verify_image(path: Path, machine: int, runner: Runner) -> None:
@@ -287,13 +318,20 @@ def prepare_boot_chain(runner: Runner, esp: Path = ESP, *, payload_loader=None,
         except KeyError:
             raise ValueError("Unsupported EFI payload architecture") from None
         vendor = vendor_path(esp, target.entry)
+        fallback = owned_fallback(runner, esp, target, sources[f"shim{suffix}.efi"])
+        destinations = {vendor / name: source for name, source in sources.items()}
+        if fallback is not None:
+            destinations.update({
+                fallback / (f"BOOT{suffix.upper()}.EFI" if name.startswith("shim") else name): source
+                for name, source in sources.items()
+            })
         loader = rf"\EFI\{vendor.name}\shim{suffix}.efi"
         if target.entry.loader.lower() not in {loader.lower(), loader.lower().replace("shim", "grub")}:
             raise ValueError("Boot entry architecture does not match the installed system")
         if target.entry.loader.lower() == loader.lower() and all(
-            (vendor / name).is_file() and not (vendor / name).is_symlink()
-            and (vendor / name).read_bytes() == source.read_bytes()
-            for name, source in sources.items()
+            path.is_file() and not path.is_symlink()
+            and path.read_bytes() == source.read_bytes()
+            for path, source in destinations.items()
         ):
             # A matching deployed chain has just been verified through the
             # package payloads. MOK preparation needs no EFI writes in this case.
@@ -301,12 +339,13 @@ def prepare_boot_chain(runner: Runner, esp: Path = ESP, *, payload_loader=None,
         with tempfile.TemporaryDirectory(prefix=".secureboot-", dir=vendor) as directory:
             staging = Path(directory)
             previous = {}
-            for name, source in sources.items():
-                destination = vendor / name
+            staged_files = {}
+            for index, (destination, source) in enumerate(destinations.items()):
                 if destination.is_symlink() or (destination.exists() and not destination.is_file()):
                     raise ValueError(f"Unsafe EFI destination: {destination}")
-                previous[name] = destination.read_bytes() if destination.exists() else None
-                staged = staging / name
+                previous[destination] = destination.read_bytes() if destination.exists() else None
+                staged = staging / str(index)
+                staged_files[destination] = staged
                 shutil.copyfile(source, staged)
                 verify_image(staged, machine, runner)
                 with staged.open("rb") as stream:
@@ -314,18 +353,21 @@ def prepare_boot_chain(runner: Runner, esp: Path = ESP, *, payload_loader=None,
             # Recheck identity after verification and before any boot mutation.
             if resolve_target(runner, esp) != target:
                 raise ValueError("ESP or firmware boot entries changed during preparation")
+            if owned_fallback(runner, esp, target, sources[f"shim{suffix}.efi"]) != fallback:
+                raise ValueError("Fallback ownership changed during preparation")
             new_number = None
             written = []
             try:
                 # Install shim last so its companion files are available first.
-                for name in sorted(sources, key=lambda n: n.startswith("shim")):
-                    (staging / name).replace(vendor / name)
-                    written.append(name)
-                descriptor = os.open(vendor, os.O_RDONLY | os.O_DIRECTORY)
-                try:
-                    os.fsync(descriptor)
-                finally:
-                    os.close(descriptor)
+                for path in sorted(destinations, key=lambda p: p.name.lower().startswith(("shim", "boot"))):
+                    staged_files[path].replace(path)
+                    written.append(path)
+                for parent in {path.parent for path in destinations}:
+                    descriptor = os.open(parent, os.O_RDONLY | os.O_DIRECTORY)
+                    try:
+                        os.fsync(descriptor)
+                    finally:
+                        os.close(descriptor)
                 # An ESP is FAT, not a journaling filesystem. Flush the whole
                 # filesystem (including allocation tables) before selecting
                 # the new loader or reporting successful deployment.
@@ -357,13 +399,13 @@ def prepare_boot_chain(runner: Runner, esp: Path = ESP, *, payload_loader=None,
                         # The new entry may still be selected: retain its verified
                         # files rather than leaving firmware pointing at nothing.
                         raise ValueError(f"{error}; firmware rollback failed: {rollback_error}. Signed files retained; manual review required") from error
-                for name in written:
-                    if previous[name] is None:
-                        (vendor / name).unlink(missing_ok=True)
+                for path in written:
+                    if previous[path] is None:
+                        path.unlink(missing_ok=True)
                     else:
-                        backup = staging / name
-                        backup.write_bytes(previous[name])
-                        backup.replace(vendor / name)
+                        backup = staged_files[path]
+                        backup.write_bytes(previous[path])
+                        backup.replace(path)
                 command(runner, ["sync", "-f", str(esp)])
                 raise
         # Temporary-directory removal also changes FAT metadata.

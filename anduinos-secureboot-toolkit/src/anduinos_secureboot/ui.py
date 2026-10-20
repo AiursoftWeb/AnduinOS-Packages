@@ -507,11 +507,13 @@ def create_secure_boot_page(
         row.set_tooltip_text(f"SHA-256: {identity.fingerprint}" if identity.fingerprint else identity.detail)
         set_icon("certificate_purpose", "emblem-ok-symbolic" if identity.purpose == "unified" else "dialog-warning-symbolic",
                  "success" if identity.purpose == "unified" else "warning")
-        # Enrollment itself makes a suitable managed certificate usable.
-        if identity.managed:
-            rows["certificate"][0].set_subtitle(_("New unified certificate prepared") if identity.key_present else _("Signing private key is missing. Recreate the certificate."))
-            set_icon("certificate", "emblem-ok-symbolic" if identity.key_present else "dialog-warning-symbolic",
-                     "success" if identity.key_present else "warning")
+        if identity.managed or identity.key_valid is not True:
+            rows["certificate"][0].set_subtitle(
+                _("New unified certificate prepared") if identity.key_valid is True
+                else _("Signing certificate needs attention"))
+            rows["certificate"][0].set_tooltip_text(identity.detail or None)
+            set_icon("certificate", "emblem-ok-symbolic" if identity.key_valid is True else "dialog-warning-symbolic",
+                     "success" if identity.key_valid is True else "warning")
         if secure_boot.supported:
             rows["enrollment"][0].set_subtitle({
                 "enrolled": _("This certificate is enrolled in MOK"),
@@ -538,7 +540,9 @@ def create_secure_boot_page(
         identity_button.set_label(_("Submit Enrollment Request") if identity.managed or identity.purpose == "unified" else _("Create Unified Certificate"))
         identity_button.set_visible(needs_action and not pending and can_manage and
                                     (not identity.managed or (identity.key_present and identity.purpose == "unified")))
-        regenerate_button.set_visible(secure_boot.supported and needs_action and identity.managed)
+        identity_button.set_sensitive(identity.key_valid is True or identity.purpose in {"missing", "module-only", "unsupported", "expired"})
+        regenerate_button.set_visible(secure_boot.supported and needs_action and
+                                      (identity.managed or identity.key_valid is False))
         if sync_failed:
             identity_button.set_label(_("Repair Signing Defaults"))
             regenerate_button.set_visible(False)

@@ -30,11 +30,13 @@ class IdentityStatus:
     managed: bool = False
     detail: str = ''
     key_present: bool = False
+    key_valid: bool | None = None
     defaults_ready: bool | None = None
 
     @property
     def usable(self) -> bool:
-        return self.purpose == 'unified' and self.enrollment == 'enrolled' and self.key_present
+        return (self.purpose == 'unified' and self.enrollment == 'enrolled'
+                and self.key_present and self.key_valid is True)
 
     # Read-only compatibility for an older Driver Center during package updates.
     # These are derived from enrollment, never a separate activation state.
@@ -122,7 +124,17 @@ def check_unified_pair(private_key: Path, certificate: Path, run) -> None:
         raise ValueError('Signing certificate has expired')
 
 
-def inspect_identity(runner, root: Path = ROOT) -> IdentityStatus:
+def inspect_identity(runner, root: Path = ROOT, *, privileged=False) -> IdentityStatus:
+    # Root-owned private keys stay private. The existing fixed read-only probe
+    # returns status only; it accepts no caller-selected paths.
+    if root == ROOT and os.geteuid() != 0 and not privileged:
+        result = runner.run(['pkexec', '/usr/libexec/anduinos-grub-probe', 'identity'], timeout=60)
+        try:
+            if result.returncode:
+                raise ValueError(result.stderr.strip() or 'Signing identity inspection was not authorized')
+            return IdentityStatus(**json.loads(result.stdout))
+        except (ValueError, TypeError) as error:
+            return IdentityStatus(detail=str(error))
     try:
         name = current_identity(root)
         key, certificate = identity_paths(root, name) if name else (LEGACY_KEY, LEGACY_CERTIFICATE)
@@ -135,6 +147,11 @@ def inspect_identity(runner, root: Path = ROOT) -> IdentityStatus:
         purpose = certificate_purpose(result.stdout)
         if runner.run(['openssl', 'x509', '-inform', 'DER', '-in', str(certificate), '-noout', '-checkend', '0']).returncode:
             purpose = 'expired'
+        key_valid, detail = True, ''
+        try:
+            check_pair(key, certificate, runner.run)
+        except (OSError, ValueError) as error:
+            key_valid, detail = False, str(error)
         from .defaults import defaults_ready
         return IdentityStatus(
             certificate=str(certificate), purpose=purpose,
@@ -142,6 +159,7 @@ def inspect_identity(runner, root: Path = ROOT) -> IdentityStatus:
             fingerprint=hashlib.sha256(certificate.read_bytes()).hexdigest(),
             managed=bool(name),
             key_present=key.is_file(),
+            key_valid=key_valid, detail=detail,
             defaults_ready=defaults_ready(key, certificate) if name else None,
         )
     except (OSError, ValueError, KeyError, TypeError) as error:

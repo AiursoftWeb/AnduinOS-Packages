@@ -254,10 +254,11 @@ The existing `prepare` helper action first checks the boot chain, then prepares
 MOK and DKMS. It works with enforcement enabled or disabled. Its CLI accepts no
 disk, path, package, or command arguments. The sequence is:
 
-1. Identify the writable FAT ESP mounted at `/boot/efi` and its unique AnduinOS
+1. Identify the writable FAT ESP mounted at `/boot/efi` and any unique AnduinOS
    GPT entry in BootOrder by partition UUID/number. Multiple ESPs are allowed;
    duplicate identities, ambiguous entries, BootNext and redirected paths stop
-   repair. With multiple ESPs or an AnduinOS chainloaded boot, additionally
+   repair. Without a recognized current entry (including BIOS or generic USB
+   boot), with multiple ESPs, or with an AnduinOS chainloaded boot, additionally
    require the evaluated fstab ESP to match the mount and the standard Ubuntu
    EFI `grub.cfg` stub to match `grub-probe --target=fs_uuid /boot/grub` and
    `grub-mkrelpath /boot/grub`. Nonstandard stubs require manual review. Never
@@ -267,8 +268,9 @@ disk, path, package, or command arguments. The sequence is:
    and cryptographic signatures of shim, signed GRUB and MokManager. Signature
    verification does not claim that a particular firmware db/dbx or shim SBAT
    policy accepts the payload; that still requires a firmware boot test.
-3. Stage and verify files on the ESP before replacing only `EFI/AnduinOS` files.
-   Preserve its GRUB configuration. No APT installation is performed.
+3. Stage and verify files before replacing the vendor chain and any recognized
+   installer-owned fallback. Preserve GRUB configuration. No APT installation
+   is performed.
 4. If needed, create a shim entry without changing BootOrder, verify it, then
    replace the old AnduinOS entry's position in BootOrder. Retain the old entry
    outside BootOrder as a recovery option. Foreign entries and their order remain
@@ -281,12 +283,12 @@ disk, path, package, or command arguments. The sequence is:
    Center offer rebooting to firmware to enable Secure Boot. Setup Mode gets an
    explicit factory-key warning. Firmware keys are never changed by the helper.
 
-`EFI/Microsoft` and `EFI/BOOT` are outside this repair helper's write boundary.
-Driver Center never adds or repairs an external-drive fallback. The installer
-owns that separate policy only for a newly formatted ESP on an external
-erase-disk target; shared ESPs remain excluded. Its direct shim/GRUB layout is
-tested with empty firmware variables and does not deploy the historical shim
-fallback registrar that caused the Reset System loop.
+`EFI/Microsoft` and foreign fallback loaders remain untouched. Updates recognize
+an existing installer-owned `EFI/BOOT` only when its configuration binds to this
+installation and its loader matches the vendor or incoming official shim.
+Unknown loaders require manual review. Only the installer creates a fallback,
+on a newly formatted external erase-disk ESP; updates maintain that direct-copy
+layout without adding a fallback registrar or inventing firmware entries.
 
 Unit tests cover target ambiguity, symlinks, signature/architecture rejection,
 NVRAM failure rollback, foreign-file preservation and enrollment ordering. Before

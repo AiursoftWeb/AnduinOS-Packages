@@ -1,6 +1,7 @@
 """Native signing and failure preservation; firmware/package boundaries mocked."""
 from dataclasses import replace
 import hashlib
+import json
 import os
 from pathlib import Path
 import subprocess
@@ -196,6 +197,54 @@ class GrubSigningTests(unittest.TestCase):
                 grub.verify_first_install(self.runner, vendor.parent.parent)
         self.assertEqual(before_identity, (self.key.read_bytes(), self.cert.read_bytes()))
 
+    def test_derived_cache_corruption_is_rebuilt_from_the_same_identity(self):
+        image = self.prepare()
+        original = {p.name: p.read_bytes() for p in self.store.iterdir()}
+        authority = self.key.read_bytes(), self.cert.read_bytes(), self.source.read_bytes()
+        for fault in ("json", "array", "certificate", "image", "invalid-signature"):
+            with self.subTest(fault=fault):
+                for name, data in original.items():
+                    (self.store / name).write_bytes(data)
+                manifest = self.store / "image.json"
+                if fault == "json":
+                    manifest.write_text("{broken")
+                elif fault == "array":
+                    manifest.write_text("[]")
+                elif fault == "certificate":
+                    (self.store / "certificate.der").write_bytes(b"broken certificate")
+                else:
+                    image.write_bytes(self.source.read_bytes())
+                    if fault == "invalid-signature":
+                        # Matching hashes alone cannot make an unsigned PE valid.
+                        recorded = json.loads(manifest.read_text())
+                        recorded["image_sha256"] = grub.digest(image)
+                        manifest.write_text(json.dumps(recorded))
+                calls = sum(c[0] == "sbsign" for c in self.runner.calls)
+                self.assertEqual(self.prepare(), image)
+                self.assertEqual(sum(c[0] == "sbsign" for c in self.runner.calls), calls + 1)
+                grub.verify_signature(image, self.cert, self.runner)
+                self.assertEqual((self.store / "certificate.der").read_bytes(), self.cert.read_bytes())
+                self.assertEqual(json.loads(manifest.read_text())["image_sha256"], grub.digest(image))
+                self.assertEqual(authority, (self.key.read_bytes(), self.cert.read_bytes(), self.source.read_bytes()))
+
+    def test_non_object_cache_metadata_reports_pending_without_crashing(self):
+        self.prepare()
+        (self.store / "image.json").write_text("[]")
+        with (patch.object(grub, "STORE", self.store),
+              patch.object(grub, "source_image", return_value=self.source)):
+            state = grub.inspect_grub(self.runner, privileged=True)
+        self.assertEqual(state.deployment, "pending")
+        self.assertFalse(state.ready)
+
+    def test_cache_rebuild_signing_failure_preserves_existing_files(self):
+        self.prepare()
+        (self.store / "image.json").write_text("{broken")
+        before = {p.name: p.read_bytes() for p in self.store.iterdir()}
+        self.runner.fail_signing = True
+        with self.assertRaises(ValueError):
+            self.prepare()
+        self.assertEqual(before, {p.name: p.read_bytes() for p in self.store.iterdir()})
+
     def test_tampered_signature_is_rejected(self):
         image = self.prepare()
         data = bytearray(image.read_bytes())
@@ -323,6 +372,17 @@ class GrubSigningTests(unittest.TestCase):
             self.assertFalse(grub.inspect_grub(self.runner, privileged=True, esp=esp).ready)
             deployed.write_bytes(image.read_bytes())
             self.assertTrue(grub.inspect_grub(self.runner, privileged=True, esp=esp).ready)
+            fallback = esp / "EFI/BOOT"
+            fallback.mkdir()
+            for name, source in {image.name: image, **companions}.items():
+                destination = f"BOOT{suffix.upper()}.EFI" if name.startswith("shim") else name
+                (fallback / destination).write_bytes(source.read_bytes())
+            with patch.object(grub.boot_chain, "owned_fallback", return_value=fallback):
+                self.assertTrue(grub.inspect_grub(self.runner, privileged=True, esp=esp).ready)
+                (fallback / image.name).write_bytes(b"stale portable copy")
+                state = grub.inspect_grub(self.runner, privileged=True, esp=esp)
+                self.assertEqual(state.deployment, "pending")
+                self.assertIn("portable", state.detail)
             other = "aa64" if suffix == "x64" else "x64"
             target.entry.loader = rf"\EFI\AnduinOS\shim{other}.efi"
             state = grub.inspect_grub(self.runner, privileged=True, esp=esp)
