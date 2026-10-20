@@ -1,6 +1,7 @@
 """Native signing and failure preservation; firmware/package boundaries mocked."""
 from dataclasses import replace
 import hashlib
+import os
 from pathlib import Path
 import subprocess
 import struct
@@ -21,6 +22,7 @@ class Runner:
         self.fail_signing = False
         self.modified = False
         self.owner = "anduinos-grub"
+        self.owners = {}
         self.removals = "Remv shim-signed [1.59]\nRemv grub2-common [2.14]\n"
 
     def run(self, command, timeout=30):
@@ -28,7 +30,7 @@ class Runner:
         if command == ["dpkg", "--print-architecture"]:
             value = self.architecture
         elif command[0] == "dpkg-query":
-            value = f"{self.owner}: {command[-1]}" if "--search" in command else "installed"
+            value = f"{self.owners.get(command[-1], self.owner)}: {command[-1]}" if "--search" in command else "installed"
         elif command[:2] == ["dpkg", "--verify"]:
             value = f"??5?????? {self.calls[-2][-1]}" if self.modified else ""
         elif command[:2] == ["apt-get", "--simulate"]:
@@ -127,6 +129,72 @@ class GrubSigningTests(unittest.TestCase):
         signing_calls = sum(command[0] == "sbsign" for command in self.runner.calls)
         self.assertEqual(self.prepare().read_bytes(), before)
         self.assertEqual(signing_calls, sum(command[0] == "sbsign" for command in self.runner.calls))
+
+    def test_first_install_checks_final_files_without_signing_or_enrollment(self):
+        # Model the installer's protected ESP, independent of the CI umask.
+        previous_umask = os.umask(0o022)
+        self.addCleanup(os.umask, previous_umask)
+        image = self.prepare()
+        suffix, _, machine = grub.boot_chain.efi_architecture(self.runner)
+        vendor = self.root / "esp/EFI/AnduinOS"
+        vendor.mkdir(parents=True)
+        companions = {}
+        for name in (f"shim{suffix}.efi", f"mm{suffix}.efi"):
+            source = self.root / name
+            source.write_bytes(image.read_bytes())
+            companions[name] = source
+            self.runner.owners[str(source)] = "anduinos-shim-signed"
+        original = {image.name: image.read_bytes(),
+                    **{name: source.read_bytes() for name, source in companions.items()}}
+        for name, data in original.items():
+            (vendor / name).write_bytes(data)
+        before_identity = self.key.read_bytes(), self.cert.read_bytes()
+        other_key, other_cert = self.root / "other.key", self.root / "other.der"
+        identity.generate_identity(other_key, other_cert, self.runner.run)
+        pem = self.root / "other.pem"
+        self.runner.run(["openssl", "x509", "-inform", "DER", "-in", str(other_cert), "-out", str(pem)])
+        wrong_signer = self.root / "wrong-signer.efi"
+        self.runner.run(["sbsign", "--key", str(other_key), "--cert", str(pem),
+                         "--output", str(wrong_signer), str(self.source)])
+        damaged = bytearray(image.read_bytes())
+        damaged[0x200] ^= 1
+        other_arch = bytearray(image.read_bytes())
+        struct.pack_into("<H", other_arch, 132, 0xAA64 if machine == 0x8664 else 0x8664)
+        cases = (
+            (image.name, bytes(damaged)),
+            (image.name, wrong_signer.read_bytes()),
+            (image.name, self.source.read_bytes()),
+            (image.name, bytes(other_arch)),
+            (f"shim{suffix}.efi", wrong_signer.read_bytes()),
+            (f"mm{suffix}.efi", bytes(damaged)),
+            (f"mm{suffix}.efi", None),
+        )
+        with (patch.object(grub, "source_image", return_value=self.source),
+              patch.object(grub, "shim_companions", return_value=companions),
+              patch.object(identity, "LEGACY_CERTIFICATE", self.cert),
+              patch.object(grub, "prepare_image", side_effect=AssertionError("Read-only verification")),
+              patch.object(grub.boot_chain, "resolve_target", side_effect=AssertionError("No Live BootCurrent"))):
+            self.enrollment.return_value = "absent"
+            grub.verify_first_install(self.runner, vendor.parent.parent)
+            self.assertEqual(original, {p.name: p.read_bytes() for p in vendor.iterdir()})
+            for name, data in cases:
+                with self.subTest(name=name, data=None if data is None else len(data)):
+                    destination = vendor / name
+                    if data is None:
+                        destination.unlink()
+                    else:
+                        destination.write_bytes(data)
+                    with self.assertRaises((ValueError, OSError)):
+                        grub.verify_first_install(self.runner, vendor.parent.parent)
+                    destination.write_bytes(original[name])
+            self.runner.modified = True
+            with self.assertRaisesRegex(ValueError, "modified"):
+                grub.verify_first_install(self.runner, vendor.parent.parent)
+            self.runner.modified = False
+            self.source.unlink()
+            with self.assertRaisesRegex(ValueError, "missing"):
+                grub.verify_first_install(self.runner, vendor.parent.parent)
+        self.assertEqual(before_identity, (self.key.read_bytes(), self.cert.read_bytes()))
 
     def test_tampered_signature_is_rejected(self):
         image = self.prepare()

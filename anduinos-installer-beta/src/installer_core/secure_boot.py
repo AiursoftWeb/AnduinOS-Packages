@@ -336,20 +336,18 @@ def _require_signed_payloads(target: Path, plan: InstallPlan) -> None:
 def _verify_signed_efi_chain(
     runner: CommandRunner, target: Path, plan: InstallPlan
 ) -> None:
-    suffix = "x64" if plan.platform.architecture is Architecture.AMD64 else "aa64"
-    paths = (
-        target / "boot/efi/EFI/AnduinOS" / f"shim{suffix}.efi",
-        target / "boot/efi/EFI/AnduinOS" / f"grub{suffix}.efi",
+    # Use the target's package database, native architecture and signing
+    # identity. The shared verifier reads the final ESP without signing or
+    # requiring an already-enrolled MOK or the Live system's BootCurrent.
+    result = runner.run(
+        ("chroot", str(target), "/usr/libexec/anduinos-grub-update", "first-install-check"),
+        check=False, timeout=120,
     )
-    missing = [str(path) for path in paths if not path.is_file()]
-    if missing:
-        raise RuntimeError("Signed EFI chain is incomplete: " + ", ".join(missing))
-    for path in paths:
-        self_check = runner.run(
-            ("sbverify", "--list", str(path)), check=False, timeout=30
+    if result.returncode:
+        raise RuntimeError(
+            "Installed EFI chain verification failed: "
+            + (result.stderr or result.stdout).strip()
         )
-        if self_check.returncode != 0:
-            raise RuntimeError(f"EFI executable is not signed: {path}")
 
 
 def _is_enrolled(runner: CommandRunner, target: Path) -> bool:

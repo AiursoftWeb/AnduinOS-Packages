@@ -152,6 +152,36 @@ def payloads(runner):
     return {image.name: image, **companions}, machine
 
 
+def verify_first_install(runner, esp=boot_chain.ESP):
+    """Read back the installed vendor chain before requesting MOK enrollment.
+
+    The installer creates its identity at the legacy paths in the fresh target.
+    Verification must not sign again, require enrollment or resolve BootCurrent:
+    the running firmware still belongs to the Live system.
+    """
+    suffix, _, machine = boot_chain.efi_architecture(runner)
+    vendor = esp / "EFI/AnduinOS"
+    safe_path(vendor)
+    source = source_image(runner)
+    if source.parent.exists():
+        package_payload(source, runner, {"anduinos-grub"})
+        deployed = vendor / f"grub{suffix}.efi"
+        safe_path(deployed)
+        verify_signature(deployed, identity.LEGACY_CERTIFICATE, runner)
+        sources = shim_companions(runner)
+        for path in sources.values():
+            package_payload(path, runner, {"anduinos-shim-signed"})
+    else:
+        # Preserve installations using the official Ubuntu signed GRUB.
+        sources, machine = boot_chain.payloads(runner)
+    for name, source in sources.items():
+        deployed = vendor / name
+        safe_path(deployed)
+        if deployed.read_bytes() != source.read_bytes():
+            raise ValueError(f"Installed EFI image differs from its package payload: {deployed}")
+        boot_chain.verify_image(deployed, machine, runner)
+
+
 def deploy(runner, *, package_transaction=False, esp=boot_chain.ESP):
     signing_material(runner)
     if not packages_installed(runner):
@@ -256,7 +286,7 @@ def install_packages(run):
 
 def update_main(arguments):
     from .operations import LOCK_FILE
-    if os.geteuid() != 0 or arguments not in (["check"], ["prepare"], ["deploy"], ["package-deploy"], ["first-install"]):
+    if os.geteuid() != 0 or arguments not in (["check"], ["prepare"], ["deploy"], ["package-deploy"], ["first-install"], ["first-install-check"]):
         return 64
     runner = SubprocessRunner()
     LOCK_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -267,6 +297,8 @@ def update_main(arguments):
             boot_chain.resolve_target(runner)
         elif arguments in (["prepare"], ["first-install"]):
             prepare_image(runner, first_install=arguments == ["first-install"])
+        elif arguments == ["first-install-check"]:
+            verify_first_install(runner)
         else:
             # Rootfs assembly installs payloads only; the installer signs after
             # generating its per-target certificate, before grub-install.
