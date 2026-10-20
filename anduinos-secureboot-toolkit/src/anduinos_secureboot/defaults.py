@@ -121,7 +121,8 @@ def sync_defaults(run, root: Path = identity.ROOT, legacy: Path | None = None,
         result.steps['defaults'] = StepResult('skipped', 'Enrollment is not complete; previous signing defaults retained')
         return result
     if not state.usable:
-        raise ValueError('Cannot verify an enrolled unified identity; previous signing defaults retained')
+        raise ValueError('Cannot verify an enrolled unified identity; previous signing defaults retained'
+                         + (': ' + state.detail if state.detail else ''))
     key, cert = identity.identity_paths(root, name)
     for path in (root, key, cert, legacy / 'MOK.priv', legacy / 'MOK.der', config):
         safe_path(path)

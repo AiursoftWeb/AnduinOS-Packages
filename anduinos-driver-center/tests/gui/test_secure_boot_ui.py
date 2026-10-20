@@ -31,7 +31,7 @@ class SecureBootPageTests(unittest.TestCase):
         Adw.init()
 
     def test_bootloader_row_reports_signature_trust_and_deployment_separately(self):
-        identity = IdentityStatus(purpose='unified', enrollment='enrolled', key_present=True)
+        identity = IdentityStatus(purpose='unified', enrollment='enrolled', key_present=True, key_valid=True)
         cases = (
             (GrubState(), 'Install AnduinOS Bootloader', 'not installed'),
             (GrubState(installed=True), 'Repair AnduinOS Bootloader', 'needs signing'),
@@ -58,10 +58,30 @@ class SecureBootPageTests(unittest.TestCase):
 
     def test_bootloader_install_is_disabled_until_the_certificate_is_enrolled(self):
         state = SecureBootState(True, True, True, False, 'serial',
-            signing_identity=IdentityStatus(purpose='unified', enrollment='pending', key_present=True), grub=GrubState())
+            signing_identity=IdentityStatus(purpose='unified', enrollment='pending', key_present=True, key_valid=True), grub=GrubState())
         page = ui.create_secure_boot_page(initial_state=(state, DkmsState()))
         button = next(w for w in widgets(page) if isinstance(w, Gtk.Button) and w.get_label() == 'Install AnduinOS Bootloader')
         self.assertFalse(button.get_sensitive())
+
+    def test_invalid_or_unchecked_private_key_never_shows_healthy_or_enables_signing(self):
+        from anduinos_driver_center.app import _secure_boot_summary
+        for managed in (False, True):
+            for valid in (False, None):
+                with self.subTest(managed=managed, valid=valid):
+                    identity = IdentityStatus(purpose='unified', enrollment='enrolled',
+                                              key_present=True, key_valid=valid,
+                                              managed=managed, detail='Pair verification failed')
+                    state = SecureBootState(True, True, True, True, 'serial',
+                                            signing_identity=identity, grub=GrubState(installed=True))
+                    page = ui.create_secure_boot_page(initial_state=(state, DkmsState()))
+                    self.assertEqual(_secure_boot_summary(state, DkmsState())[2], 'warning-pill')
+                    rows = [w for w in widgets(page) if isinstance(w, Adw.ActionRow)]
+                    certificate = next(w for w in rows if w.get_subtitle() == 'Signing certificate needs attention')
+                    self.assertEqual(certificate.get_tooltip_text(), identity.detail)
+                    self.assertFalse(any(w.has_css_class('success') for w in widgets(certificate) if isinstance(w, Gtk.Image)))
+                    repair = next(w for w in widgets(page) if isinstance(w, Gtk.Button)
+                                  and w.get_label() == 'Repair AnduinOS Bootloader')
+                    self.assertFalse(repair.get_sensitive())
 
     def test_bootloader_result_keeps_logs_in_bounded_details(self):
         log = "debconf: diagnostic <not markup>\n" * 1000
@@ -99,7 +119,7 @@ class SecureBootPageTests(unittest.TestCase):
 
     def test_bootloader_action_shows_progress_before_starting_privileged_work(self):
         state = SecureBootState(True, True, True, True, 'serial',
-            signing_identity=IdentityStatus(purpose='unified', enrollment='enrolled', key_present=True), grub=GrubState())
+            signing_identity=IdentityStatus(purpose='unified', enrollment='enrolled', key_present=True, key_valid=True), grub=GrubState())
         with patch.object(ui, 'run_action') as action, patch.object(GLib, 'timeout_add') as delay:
             page = ui.create_secure_boot_page(initial_state=(state, DkmsState()))
             window = Adw.Window(content=page)
@@ -117,12 +137,12 @@ class SecureBootPageTests(unittest.TestCase):
 
     def test_certificate_migration_actions_match_actual_enrollment(self):
         cases = [
-            (IdentityStatus(purpose='module-only', enrollment='enrolled', key_present=True), 'Create Unified Certificate', False),
+            (IdentityStatus(purpose='module-only', enrollment='enrolled', key_present=True, key_valid=True), 'Create Unified Certificate', False),
             (IdentityStatus(purpose='missing'), 'Create Unified Certificate', False),
-            (IdentityStatus(purpose='unified', enrollment='pending', managed=True, key_present=True), None, True),
-            (IdentityStatus(purpose='unified', enrollment='enrolled', managed=True, key_present=True), None, False),
-            (IdentityStatus(purpose='unified', enrollment='enrolled', managed=True, key_present=True, defaults_ready=False), 'Repair Signing Defaults', False),
-            (IdentityStatus(purpose='unified', enrollment='absent', managed=True, key_present=True), 'Submit Enrollment Request', False),
+            (IdentityStatus(purpose='unified', enrollment='pending', managed=True, key_present=True, key_valid=True), None, True),
+            (IdentityStatus(purpose='unified', enrollment='enrolled', managed=True, key_present=True, key_valid=True), None, False),
+            (IdentityStatus(purpose='unified', enrollment='enrolled', managed=True, key_present=True, key_valid=True, defaults_ready=False), 'Repair Signing Defaults', False),
+            (IdentityStatus(purpose='unified', enrollment='absent', managed=True, key_present=True, key_valid=True), 'Submit Enrollment Request', False),
         ]
         for identity, expected, reboot in cases:
             with self.subTest(identity=identity), patch.object(ui, 'run_action') as action:
@@ -149,14 +169,14 @@ class SecureBootPageTests(unittest.TestCase):
 
     def test_disabled_secure_boot_still_explained_during_migration(self):
         state = SecureBootState(False, True, True, True, 'old', boot_loader='shim',
-                                signing_identity=IdentityStatus(purpose='module-only', enrollment='enrolled', key_present=True))
+                                signing_identity=IdentityStatus(purpose='module-only', enrollment='enrolled', key_present=True, key_valid=True))
         page = ui.create_secure_boot_page(translate=lambda text: text, initial_state=(state, DkmsState()))
         text = '\n'.join(w.get_label() for w in widgets(page) if isinstance(w, Gtk.Label))
         self.assertIn(ui._FIRMWARE_SETUP_INSTRUCTIONS, text)
 
     def test_certificate_action_requires_confirmation_and_delays_work_until_after_progress(self):
         state = SecureBootState(True, True, True, True, 'old',
-                                signing_identity=IdentityStatus(purpose='module-only', enrollment='enrolled', key_present=True))
+                                signing_identity=IdentityStatus(purpose='module-only', enrollment='enrolled', key_present=True, key_valid=True))
         with patch.object(ui, 'run_action') as action, patch.object(GLib, 'timeout_add') as delay:
             page = ui.create_secure_boot_page(translate=lambda text: text, initial_state=(state, DkmsState()))
             parent = Adw.Window()

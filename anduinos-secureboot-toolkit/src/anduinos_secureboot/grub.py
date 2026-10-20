@@ -107,12 +107,23 @@ def prepare_image(runner, *, first_install=False, source=None, store=STORE):
     expected = {"source_sha256": digest(source), "certificate_sha256": digest(certificate)}
     for path in (image, public, manifest):
         safe_path(path)
+    cached = False
     if image.is_file() and public.is_file() and manifest.is_file():
-        recorded = json.loads(manifest.read_text())
-        if all(recorded.get(k) == v for k, v in expected.items()) and recorded.get("image_sha256") == digest(image):
-            verify_signature(image, certificate, runner)
-            _compatibility_image(image, runner)
-            return image
+        try:
+            recorded = json.loads(manifest.read_text())
+            cached = (isinstance(recorded, dict)
+                      and all(recorded.get(k) == v for k, v in expected.items())
+                      and recorded.get("image_sha256") == digest(image)
+                      and digest(public) == expected["certificate_sha256"])
+            if cached:
+                verify_signature(image, certificate, runner)
+        except (OSError, ValueError):
+            # Only derived cache validation is recoverable. Authority and
+            # pristine package checks above must still fail before signing.
+            cached = False
+    if cached:
+        _compatibility_image(image, runner)
+        return image
     # Sign only a package-owned pristine template. Never bless an ESP file.
     with tempfile.TemporaryDirectory(prefix=".candidate-", dir=store) as directory:
         candidate = Path(directory) / image.name
@@ -234,7 +245,8 @@ def inspect_grub(runner=None, *, privileged=False, esp=boot_chain.ESP):
         if not selected_certificate.is_file() or digest(selected_certificate) != digest(certificate):
             return replace(state, deployment="pending", detail="GRUB needs signing with the current unified certificate")
         recorded = json.loads((STORE / "image.json").read_text())
-        if (recorded.get("source_sha256") != digest(source)
+        if (not isinstance(recorded, dict)
+                or recorded.get("source_sha256") != digest(source)
                 or recorded.get("image_sha256") != digest(signed)
                 or recorded.get("certificate_sha256") != digest(certificate)):
             return replace(state, deployment="pending", detail="A bootloader update needs signing and deployment")

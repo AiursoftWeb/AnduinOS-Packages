@@ -1,6 +1,7 @@
 """Real OpenSSL, simulated firmware; never enroll a key on the test host."""
-from dataclasses import replace
+from dataclasses import asdict, replace
 import hashlib
+import json
 from pathlib import Path
 import subprocess
 import tempfile
@@ -122,6 +123,49 @@ class IdentityTests(unittest.TestCase):
         key.write_text('not a private key')
         with self.assertRaisesRegex(ValueError, 'match'):
             identity.check_pair(key, cert, run_command)
+
+    def test_health_checks_the_actual_pair_without_replacing_identity(self):
+        key, cert = self.candidate()
+        self.firmware.enrolled = {hashlib.sha1(cert.read_bytes()).hexdigest()}
+        original = key.read_bytes(), cert.read_bytes()
+        other_key, other_cert = self.root / 'other.key', self.root / 'other.der'
+        identity.generate_identity(other_key, other_cert, run_command)
+        for data, mode in ((original[0], 0o600), (other_key.read_bytes(), 0o600),
+                           (b'broken private key', 0o600), (original[0], 0o644),
+                           (None, 0o600)):
+            with self.subTest(mode=mode, missing=data is None):
+                if data is None:
+                    key.unlink()
+                else:
+                    key.write_bytes(data)
+                    key.chmod(mode)
+                state = identity.inspect_identity(self.runner, self.root)
+                valid = data == original[0] and mode == 0o600
+                self.assertEqual(state.key_valid, valid)
+                self.assertEqual(state.usable, valid)
+                self.assertEqual(state.key_present, data is not None)
+                self.assertEqual(state.enrollment, 'enrolled')
+                self.assertEqual(cert.read_bytes(), original[1])
+                self.assertEqual(key.read_bytes() if key.exists() else None, data)
+                if not valid:
+                    self.assertTrue(state.detail)
+        self.assertTrue(all(c[0] == 'openssl' or c[1].startswith('--list-')
+                            for c in self.firmware.calls))
+
+    def test_unprivileged_health_uses_fixed_probe_and_unknown_is_not_usable(self):
+        healthy = identity.IdentityStatus(purpose='unified', enrollment='enrolled',
+                                          key_present=True, key_valid=True)
+        calls = []
+        for output, code, expected in ((json.dumps(asdict(healthy)), 0, True),
+                                       ('{}', 0, False), ('[]', 0, False),
+                                       ('broken', 0, False), ('', 1, False)):
+            def run(command, **kwargs):
+                calls.append(command)
+                return subprocess.CompletedProcess(command, code, output, '')
+            with patch.object(identity.os, 'geteuid', return_value=1000):
+                state = identity.inspect_identity(CallableRunner(run))
+            self.assertEqual(state.usable, expected)
+        self.assertEqual(calls, [['pkexec', '/usr/libexec/anduinos-grub-probe', 'identity']] * 5)
 
     def test_prepare_retries_same_identity_and_never_runs_driver_or_boot_commands(self):
         key, cert = self.candidate()
