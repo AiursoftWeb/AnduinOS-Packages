@@ -160,7 +160,7 @@ def inspect_identity(runner, root: Path = ROOT, *, privileged=False) -> Identity
             managed=bool(name),
             key_present=key.is_file(),
             key_valid=key_valid, detail=detail,
-            defaults_ready=defaults_ready(key, certificate) if name else None,
+            defaults_ready=defaults_ready(key, certificate),
         )
     except (OSError, ValueError, KeyError, TypeError) as error:
         return IdentityStatus(detail=str(error))

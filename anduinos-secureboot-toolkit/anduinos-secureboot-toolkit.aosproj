@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-secureboot-toolkit</PackageName>
-    <PackageVersion>2.0.5-11+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.5-13+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Shared Secure Boot, MOK, and DKMS signing toolkit for AnduinOS applications</PackageDescription>
     <Section>admin</Section>
@@ -61,6 +61,7 @@
     <IncludeFile Include="src/anduinos_secureboot/boot_chain.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/boot_chain.py" />
     <IncludeFile Include="src/anduinos_secureboot/inspect.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/inspect.py" />
     <IncludeFile Include="src/anduinos_secureboot/model.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/model.py" />
+    <IncludeFile Include="src/anduinos_secureboot/decision.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/decision.py" />
     <IncludeFile Include="src/anduinos_secureboot/identity.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/identity.py" />
     <IncludeFile Include="src/anduinos_secureboot/operations.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/operations.py" />
     <IncludeFile Include="src/anduinos_secureboot/ui.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/ui.py" />

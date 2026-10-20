@@ -1,220 +1,325 @@
+"""Exercise the real page callbacks; replace GTK and hardware at their boundaries."""
+from dataclasses import replace
 from pathlib import Path
 import subprocess
 import sys
 import unittest
 from unittest.mock import Mock, patch
 
-
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-from anduinos_secureboot.ui import restart_to_firmware_settings  # noqa: E402
 from anduinos_secureboot import ui
-from anduinos_secureboot.model import DkmsState, SecureBootState, SecureBootStatus
+from anduinos_secureboot.decision import Facts, NextBootEvidence
+from anduinos_secureboot.identity import IdentityStatus
+from anduinos_secureboot.model import DkmsState, GrubState, ModuleState, SecureBootState, SecureBootStatus
 
 
 class TrustPageTests(unittest.TestCase):
     def setUp(self):
-        # Mock the rendering boundary, not the page logic or signal callbacks.
-        # No display, host inspection, privileged action or reboot is needed.
         self.gtk = self.enterContext(patch.object(ui, "Gtk"))
         self.adw = self.enterContext(patch.object(ui, "Adw"))
-        self.buttons = {}
-        self.labels = []
-        self.rows = {}
-
+        self.rows, self.labels, self.all_buttons = {}, [], []
+        def row(**kwargs):
+            widget = Mock()
+            self.rows[kwargs['title']] = widget
+            return widget
         def label(**kwargs):
             widget = Mock()
             self.labels.append(widget)
             return widget
-
-        def row(**kwargs):
-            widget = Mock()
-            self.rows[kwargs.get("title")] = widget
-            return widget
-
         def button(**kwargs):
             widget = Mock()
-            self.buttons[kwargs.get("label")] = widget
+            self.all_buttons.append(widget)
             return widget
-
-        self.gtk.Button.side_effect = button
-        self.gtk.Label.side_effect = label
         self.adw.ActionRow.side_effect = row
+        self.gtk.Label.side_effect = label
+        self.gtk.Button.side_effect = button
         self.action = self.enterContext(patch.object(ui, "run_action"))
-        self.inspect = self.enterContext(patch.object(ui, "inspect_secure_boot"))
+        self.action.return_value = (0, {"steps": {}})
+        self.collect = self.enterContext(patch.object(ui, "collect_facts"))
         self.thread = self.enterContext(patch.object(ui.threading, "Thread"))
         self.firmware = Mock(return_value=(True, ""))
+        self.reboot = Mock()
+        self.idle = self.enterContext(patch.object(ui.GLib, "idle_add", side_effect=lambda f, *a: f(*a)))
+        self.enterContext(patch.object(ui.GLib, "timeout_add", side_effect=lambda _ms, f: f()))
+        self.identity = IdentityStatus(purpose="unified", enrollment="enrolled", key_present=True,
+                                       key_valid=True, managed=True, defaults_ready=True)
+        self.boot = GrubState(installed=True, signature="valid", enrollment="enrolled", deployment="ready", active_chain="trusted")
 
-    def page(self, status, *, dkms_available=False, enrolled=True, boot_loader="shim", modules_ready=False,
-             setup_mode=False, configuration_present=True, enrollment_pending=False):
-        self.buttons.clear()
-        self.labels.clear()
-        self.rows.clear()
-        state = SecureBootState(
-            status is SecureBootStatus.ENABLED, True, True, enrolled, "serial",
-            dkms_available=dkms_available, status=status, boot_loader=boot_loader,
-            setup_mode=setup_mode, configuration_present=configuration_present,
-            enrollment_pending=enrollment_pending,
-        )
-        ui.create_secure_boot_page(
-            initial_state=(state, DkmsState(modules=("driver",), untrusted_modules=() if modules_ready else ("driver",))),
-            translate=lambda text: "translated:" + text,
-            firmware_setup=self.firmware,
-        )
+    def evidence(self, **changes):
+        values = dict(loader_source="anduinos", loader_path=r"\EFI\AnduinOS\shimx64.efi",
+                      kernel_release="fixture-next-kernel", firmware_trusted=True,
+                      loader_trusted=True, kernel_trusted=True, modules_trusted=True)
+        values.update(changes)
+        return NextBootEvidence(**values)
+
+    def page(self, status=SecureBootStatus.ENABLED, *, signing_identity=None, grub=None,
+             modules_ready=True, next_boot=None, setup_mode=False, **changes):
+        state = SecureBootState(enabled=status is SecureBootStatus.ENABLED, status=status,
+            key_present=True, certificate_present=True, enrolled=True, certificate_serial="old-signer",
+            boot_loader="shim", setup_mode=setup_mode, dkms_available=True, headers_available=True,
+            signing_identity=signing_identity or self.identity, grub=self.boot if grub is None else grub)
+        state = replace(state, **changes)
+        drivers = DkmsState(modules=("driver.ko",),
+            trusted_modules=("driver.ko",) if modules_ready else (),
+            untrusted_modules=() if modules_ready else ("driver.ko",),
+            details=(ModuleState("driver.ko", "/fixture/driver.ko", "old-signer" if modules_ready else None,
+                                 modules_ready, False),))
+        self.facts = Facts(state, drivers, drivers_checked=True, next_boot=next_boot)
+        self.collect.return_value = self.facts
+        ui.create_secure_boot_page(initial_facts=self.facts, translate=lambda t: "translated:" + t,
+                                   firmware_setup=self.firmware, reboot=self.reboot)
+        self.collect.assert_not_called()
         self.action.assert_not_called()
-        self.inspect.assert_not_called()
         self.thread.assert_not_called()
 
-    @property
-    def warning(self):
-        return self.labels[2]
+    def row(self, name):
+        return self.rows['translated:' + name]
 
-    @property
-    def status(self):
-        return self.labels[3]
+    def button(self, name):
+        return self.row(name).add_suffix.call_args_list[0].args[0]
 
-    def test_enrolled_disabled_system_is_ready_without_boot_failure_warning(self):
-        self.page(SecureBootStatus.DISABLED, modules_ready=True)
-        self.warning.set_visible.assert_called_with(False)
-        self.status.set_label.assert_called_with(
-            "translated:" + ui._READY_TO_ENABLE + "\ntranslated:" + ui._FIRMWARE_SETUP_INSTRUCTIONS)
-        button = self.buttons["translated:Enable Secure Boot"]
-        button.set_visible.assert_called_with(True)
-        button.set_label.assert_called_with("translated:Enable Secure Boot")
-        self.rows["translated:Secure Boot"].set_subtitle.assert_called_with("translated:Secure Boot is disabled")
+    def click(self, name):
+        button = self.button(name)
+        args = button.connect.call_args.args
+        args[1](button)
 
-    def test_setup_mode_reports_firmware_keys_not_missing_mok(self):
-        self.page(SecureBootStatus.DISABLED, modules_ready=True, setup_mode=True)
-        self.warning.set_visible.assert_called_with(True)
-        self.warning.set_label.assert_called_with("translated:" + ui._SETUP_MODE)
-        self.status.set_label.assert_called_with(
-            "translated:" + ui._READY_TO_ENABLE + "\ntranslated:" + ui._SETUP_MODE_INSTRUCTIONS)
-        button = self.buttons["translated:Enable Secure Boot"]
-        button.set_visible.assert_called_with(True)
-        button.set_label.assert_called_with("translated:Open UEFI Settings")
-        self.buttons[None].set_visible.assert_called_with(False)  # No MOK re-enrollment.
-        button.connect.call_args.args[1](button)
-        self.adw.MessageDialog.new.assert_called_once_with(
-            unittest.mock.ANY, "translated:Reboot Required", "translated:" + ui._SETUP_MODE_INSTRUCTIONS)
+    def respond(self, response):
+        dialog = self.adw.MessageDialog.new.return_value
+        dialog.connect.call_args.args[1](dialog, response)
+
+    def worker(self):
+        self.thread.call_args.kwargs['target']()
+
+    def test_complete_next_boot_evidence_allows_confirming_firmware_restart(self):
+        self.page(SecureBootStatus.DISABLED, next_boot=self.evidence())
+        self.click('Secure Boot')
+        self.firmware.assert_not_called()
+        self.respond('reboot')
+        self.worker()
+        self.firmware.assert_called_once_with()
+        self.action.assert_not_called()
+
+    def test_current_kernel_health_alone_does_not_offer_verified_enable(self):
+        self.page(SecureBootStatus.DISABLED)
+        self.click('Secure Boot')
+        body = self.adw.MessageDialog.new.call_args.args[2]
+        self.assertIn('next boot', body.lower())
+        self.thread.assert_not_called()
         self.firmware.assert_not_called()
 
-    def test_direct_grub_boot_still_warns_and_requires_preparation(self):
-        self.page(SecureBootStatus.DISABLED, modules_ready=True, boot_loader="grub", setup_mode=True)
-        self.warning.set_label.assert_called_with(
-            "translated:" + ui._BOOT_WARNING + "\ntranslated:" + ui._SETUP_MODE)
-        self.buttons["translated:Enable Secure Boot"].set_visible.assert_called_with(False)
-        self.buttons[None].set_visible.assert_called_with(True)
+    def test_setup_mode_reports_platform_keys_not_missing_mok(self):
+        self.page(SecureBootStatus.DISABLED, setup_mode=True)
+        self.click('Secure Boot')
+        self.assertIn('Platform keys', self.adw.MessageDialog.new.call_args.args[2])
+        self.action.assert_not_called()
+        self.thread.assert_not_called()
 
-    def test_unsigned_modules_or_missing_signing_config_do_not_request_reenrollment(self):
-        for modules_ready, config in ((False, True), (True, False)):
-            with self.subTest(modules_ready=modules_ready, configuration=config):
-                self.page(SecureBootStatus.DISABLED, modules_ready=modules_ready,
-                          configuration_present=config, dkms_available=True)
-                self.buttons["translated:Enable Secure Boot"].set_visible.assert_called_with(False)
-                self.buttons["translated:Repair Module Signatures"].set_visible.assert_called_with(True)
-                self.assertNotIn(ui._PREPARE_FIRST, self.status.set_label.call_args.args[0])
+    def test_unknown_firmware_is_a_check_action_not_a_reboot(self):
+        self.page(SecureBootStatus.UNKNOWN)
+        self.click('Secure Boot')
+        self.thread.assert_called_once()
+        self.action.assert_not_called()
+        self.firmware.assert_not_called()
 
-    def test_pending_mok_does_not_claim_ready_to_enable(self):
-        self.page(SecureBootStatus.DISABLED, enrolled=False, enrollment_pending=True, modules_ready=True)
-        self.buttons["translated:Enable Secure Boot"].set_visible.assert_called_with(False)
-        self.assertIn("waiting for enrollment", self.status.set_label.call_args.args[0])
+    def test_bios_keeps_all_rows_visible_and_offers_explanation(self):
+        self.page(SecureBootStatus.UNSUPPORTED)
+        self.assertEqual(len(self.rows), 6)
+        for row in self.rows.values():
+            row.set_visible.assert_called_with(True)
+        self.click('AnduinOS Bootloader')
+        self.action.assert_not_called()
+        self.adw.MessageDialog.new.assert_called_once()
 
-    def test_enabled_trusted_system_keeps_success_status(self):
-        for loader in ("shim", "unknown", "grub"):
-            with self.subTest(boot_loader=loader):
-                self.page(SecureBootStatus.ENABLED, modules_ready=True, boot_loader=loader)
-                self.warning.set_visible.assert_called_with(False)
-                for label in (None, "translated:Enable Secure Boot",
-                              "translated:Repair Module Signatures", "translated:Reboot",
-                              "translated:  Check Again  "):
-                    self.buttons[label].set_visible.assert_called_with(False)
-                self.status.set_label.assert_called_with(
-                    "translated:System Trust Established. Third-party drivers will load securely.")
+    def test_healthy_page_offers_no_repairs(self):
+        self.page(next_boot=self.evidence())
+        for name in ['Secure Boot', 'Local MOK Certificate', 'Certificate Signing Purpose',
+                     'Certificate Enrollment', 'Third-party Drivers', 'AnduinOS Bootloader']:
+            self.button(name).set_visible.assert_called_with(False)
+        self.assertIn('No repairs', self.labels[-1].set_label.call_args.args[0])
 
-    def test_enabled_system_with_unknown_loader_still_offers_required_trust_actions(self):
-        self.page(SecureBootStatus.ENABLED, enrolled=False, boot_loader="unknown", modules_ready=True)
-        self.buttons[None].set_visible.assert_called_with(True)
-        for modules_ready, config in ((False, True), (True, False)):
-            with self.subTest(modules_ready=modules_ready, configuration=config):
-                self.page(SecureBootStatus.ENABLED, boot_loader="unknown", modules_ready=modules_ready,
-                          configuration_present=config, dkms_available=True)
-                self.buttons[None].set_visible.assert_called_with(False)
-                self.buttons["translated:Repair Module Signatures"].set_visible.assert_called_with(True)
+    def test_unsigned_own_grub_does_not_offer_enable_secure_boot(self):
+        self.page(SecureBootStatus.DISABLED, grub=replace(self.boot, signature='missing'),
+                  next_boot=self.evidence(loader_trusted=False))
+        self.click('Secure Boot')
+        self.thread.assert_not_called()
+        self.firmware.assert_not_called()
+        self.assertIn('not verified', self.adw.MessageDialog.new.call_args.args[2])
 
-    def test_disabled_system_with_unknown_loader_still_requires_boot_preparation(self):
-        self.page(SecureBootStatus.DISABLED, boot_loader="unknown", modules_ready=True)
-        self.buttons[None].set_visible.assert_called_with(True)
-        self.buttons["translated:Enable Secure Boot"].set_visible.assert_called_with(False)
+    def test_undeployed_own_grub_does_not_offer_enable_secure_boot(self):
+        self.page(SecureBootStatus.DISABLED, grub=replace(self.boot, deployment='pending'),
+                  next_boot=self.evidence(loader_trusted=None))
+        self.click('Secure Boot')
+        self.thread.assert_not_called()
+        self.firmware.assert_not_called()
 
-    def test_only_supported_enabled_state_with_dkms_offers_module_repair(self):
-        for status in SecureBootStatus:
-            for available in (False, True):
-                with self.subTest(status=status, dkms_available=available):
-                    self.page(status, dkms_available=available)
-                    repair = self.buttons["translated:Repair Module Signatures"]
-                    repair.set_visible.assert_called_with(
-                        status in {SecureBootStatus.ENABLED, SecureBootStatus.DISABLED} and available
-                    )
-                    self.buttons["translated:Enable Secure Boot"].set_visible.assert_called_with(
-                        False  # Unsigned modules must be repaired first.
-                    )
+    def test_blocked_bootloader_button_still_allows_asking_what_to_do(self):
+        self.page(signing_identity=replace(self.identity, purpose='module-only'), grub=GrubState())
+        self.button('AnduinOS Bootloader').set_visible.assert_called_with(True)
+        self.button('AnduinOS Bootloader').set_sensitive.assert_called_with(True)
+        self.click('AnduinOS Bootloader')
+        self.assertIn('both the bootloader and drivers', self.adw.MessageDialog.new.call_args.args[2])
+        self.action.assert_not_called()
+
+    def test_blocked_bootloader_click_explains_instead_of_confirming_installation(self):
+        self.page(signing_identity=replace(self.identity, enrollment='pending', defaults_ready=False),
+                  grub=GrubState())
+        self.click('AnduinOS Bootloader')
+        dialog = self.adw.MessageDialog.new.return_value
+        responses = [call.args[0] for call in dialog.add_response.call_args_list]
+        self.assertNotIn('continue', responses)
+        self.assertIn('enroll', self.adw.MessageDialog.new.call_args.args[2].lower())
+        self.action.assert_not_called()
+        self.thread.assert_not_called()
+
+    def test_blocked_action_navigation_focuses_its_actual_prerequisite(self):
+        self.page(signing_identity=replace(self.identity, enrollment='pending'), grub=GrubState())
+        self.click('AnduinOS Bootloader')
+        self.respond('prerequisite')
+        self.button('Certificate Enrollment').grab_focus.assert_called_once()
+        self.action.assert_not_called()
+
+    def test_enrollment_action_is_beside_the_enrollment_warning(self):
+        self.page(signing_identity=replace(self.identity, enrollment='absent'))
+        self.button('Certificate Enrollment').set_label.assert_called_with('translated:Submit Enrollment Request')
+        self.button('Certificate Enrollment').set_visible.assert_called_with(True)
+
+    def test_pending_enrollment_reboot_is_beside_the_enrollment_warning(self):
+        self.page(signing_identity=replace(self.identity, enrollment='pending'))
+        self.button('Certificate Enrollment').set_label.assert_called_with('translated:Restart to Enroll Certificate')
+        self.button('Certificate Enrollment').set_visible.assert_called_with(True)
+
+    def test_pending_identity_with_bad_esp_offers_recovery_instead_of_reboot_confirmation(self):
+        self.page(signing_identity=replace(self.identity, enrollment='pending', defaults_ready=False),
+                  grub=replace(self.boot, active_chain='untrusted', deployment='unknown'))
+        self.click('Certificate Enrollment')
+        dialog = self.adw.MessageDialog.new.return_value
+        self.assertFalse(any(c.args[0] == 'reboot' for c in dialog.add_response.call_args_list))
+        self.assertIn('before restarting', self.adw.MessageDialog.new.call_args.args[2])
+        self.thread.assert_not_called()
+        self.reboot.assert_not_called()
+
+    def test_restart_rechecks_actual_esp_after_confirmation(self):
+        self.page(signing_identity=replace(self.identity, enrollment='pending'))
+        self.click('Certificate Enrollment')
+        self.collect.return_value = replace(self.facts, secure_boot=replace(self.facts.secure_boot,
+            grub=replace(self.boot, active_chain='untrusted')))
+        self.respond('reboot')
+        self.worker()
+        self.reboot.assert_not_called()
+        self.assertIn('before restarting', self.adw.MessageDialog.new.call_args.args[2])
+
+    def test_pending_enrollment_dialog_does_not_claim_enrollment_is_unnecessary(self):
+        self.page(signing_identity=replace(self.identity, enrollment='pending', defaults_ready=False),
+                  grub=GrubState())
+        self.click('AnduinOS Bootloader')
+        self.assertNotIn('not needed', self.adw.MessageDialog.new.call_args.args[2])
+        self.assertIn('enrolled first', self.adw.MessageDialog.new.call_args.args[2])
+
+    def test_status_icon_remains_to_the_right_of_the_row_action(self):
+        self.page(signing_identity=replace(self.identity, purpose='module-only'), grub=GrubState())
+        for row in self.rows.values():
+            suffixes = [call.args[0] for call in row.add_suffix.call_args_list]
+            self.assertEqual(len(suffixes), 2)
+            self.assertIsNot(suffixes[0], suffixes[1])
+
+    def test_old_trust_does_not_claim_new_unenrolled_identity_is_established(self):
+        self.page(signing_identity=replace(self.identity, enrollment='absent', defaults_ready=False),
+                  grub=GrubState())
+        subtitle = self.row('Certificate Enrollment').set_subtitle.call_args.args[0]
+        self.assertIn('not enrolled', subtitle)
+        self.assertNotIn('No repairs', self.labels[-1].set_label.call_args.args[0])
 
     def test_firmware_restart_requires_explicit_confirmation(self):
-        self.page(SecureBootStatus.DISABLED, modules_ready=True)
-        button = self.buttons["translated:Enable Secure Boot"]
-        signal, clicked = button.connect.call_args.args
-        self.assertEqual(signal, "clicked")
-        clicked(button)
+        self.page(SecureBootStatus.DISABLED, next_boot=self.evidence())
+        self.click('Secure Boot')
         dialog = self.adw.MessageDialog.new.return_value
-        dialog.set_default_response.assert_called_once_with("cancel")
-        dialog.set_close_response.assert_called_once_with("cancel")
-        signal, response = dialog.connect.call_args.args
-        self.assertEqual(signal, "response")
-        for name in ("cancel", "close", "unexpected"):
-            response(dialog, name)
-            self.firmware.assert_not_called()
-            self.thread.assert_not_called()
-        response(dialog, "reboot")
-        self.thread.assert_called_once()
-        self.thread.return_value.start.assert_called_once()
-        self.thread.call_args.kwargs["target"]()
-        self.firmware.assert_called_once_with()
+        dialog.set_default_response.assert_called_with('cancel')
+        for response in ['cancel', 'close', 'unexpected']:
+            self.respond(response)
+        self.thread.assert_not_called()
+        self.firmware.assert_not_called()
 
-    def test_enable_is_blocked_until_enrolled_and_booting_shim(self):
-        for enrolled, loader in ((False, "shim"), (True, "grub"), (True, "unknown")):
-            self.page(SecureBootStatus.DISABLED, enrolled=enrolled, boot_loader=loader, modules_ready=True)
-            button = self.buttons["translated:Enable Secure Boot"]
-            button.set_visible.assert_called_with(False)
-            button.connect.call_args.args[1](button)
-            self.firmware.assert_not_called()
-            self.adw.MessageDialog.new.assert_not_called()
+    def test_certificate_change_requires_confirmation_and_cancellation_does_not_write(self):
+        self.page(signing_identity=replace(self.identity, purpose='module-only'), grub=GrubState())
+        self.click('Certificate Signing Purpose')
+        self.respond('cancel')
+        self.action.assert_not_called()
+        self.thread.assert_not_called()
+
+    def test_explicit_default_repair_uses_the_manual_helper_action(self):
+        self.page(signing_identity=replace(self.identity, defaults_ready=False))
+        self.click('Local MOK Certificate')
+        self.respond('continue')
+        self.worker()
+        self.action.assert_called_once_with('repair-defaults')
+
+    def test_installation_rechecks_before_running_the_fixed_action(self):
+        self.page(grub=GrubState())
+        self.click('AnduinOS Bootloader')
+        self.respond('continue')
+        self.worker()
+        self.action.assert_called_once_with('install-bootloader')
+        self.collect.assert_called()
+        self.assertIn('Bootloader Updated', self.adw.MessageDialog.new.call_args.args[1])
+
+    def test_certificate_change_after_confirmation_blocks_installation(self):
+        self.page(grub=GrubState())
+        self.click('AnduinOS Bootloader')
+        self.collect.return_value = replace(self.facts, secure_boot=replace(self.facts.secure_boot,
+            signing_identity=replace(self.identity, key_valid=False)))
+        self.respond('continue')
+        self.worker()
+        self.action.assert_not_called()
+        self.assertIn('Bootloader Update Failed', self.adw.MessageDialog.new.call_args.args[1])
+
+    def test_successful_request_is_followed_by_inspection_not_optimistic_trust(self):
+        self.page(signing_identity=replace(self.identity, enrollment='absent'))
+        self.action.return_value = (0, {'reboot_required': True})
+        self.click('Certificate Enrollment')
+        self.respond('continue')
+        self.worker()
+        self.assertGreaterEqual(self.thread.call_count, 2)
+        self.worker()  # Complete the post-operation inspection.
+        self.assertIn('not enrolled', self.row('Certificate Enrollment').set_subtitle.call_args.args[0])
+
+    def test_busy_operation_cannot_be_started_twice(self):
+        self.page(grub=GrubState())
+        self.click('AnduinOS Bootloader')
+        self.respond('continue')
+        self.click('AnduinOS Bootloader')
+        self.thread.assert_called_once()
+
+    def test_old_inspection_cannot_overwrite_a_newer_result(self):
+        self.page()
+        refresh = self.all_buttons[-1]
+        refresh.connect.call_args.args[1](refresh)
+        old_worker = self.thread.call_args.kwargs['target']
+        refresh.connect.call_args.args[1](refresh)
+        new_worker = self.thread.call_args.kwargs['target']
+        self.idle.side_effect = None
+        old_worker()
+        old_draw = self.idle.call_args
+        self.collect.return_value = replace(self.facts, secure_boot=replace(self.facts.secure_boot,
+            signing_identity=replace(self.identity, enrollment='pending')))
+        new_worker()
+        new_draw = self.idle.call_args
+        new_draw.args[0](*new_draw.args[1:])
+        old_draw.args[0](*old_draw.args[1:])
+        self.assertIn('Enrollment requested', self.row('Certificate Enrollment').set_subtitle.call_args.args[0])
 
 
 class FirmwareSettingsTests(unittest.TestCase):
     def test_restart_uses_the_fixed_systemd_firmware_command(self):
-        calls = []
-
-        def runner(command, **kwargs):
-            calls.append((command, kwargs))
-            return subprocess.CompletedProcess(command, 0, "", "")
-
-        self.assertEqual(restart_to_firmware_settings(runner), (True, ""))
-        self.assertEqual(
-            calls[0][0],
-            ["systemctl", "reboot", "--firmware-setup"],
-        )
-        self.assertFalse(calls[0][1]["check"])
-        self.assertEqual(calls[0][1]["timeout"], 10)
+        runner = Mock(return_value=subprocess.CompletedProcess([], 0, '', ''))
+        self.assertEqual(ui.restart_to_firmware_settings(runner), (True, ''))
+        self.assertEqual(runner.call_args.args[0], ['systemctl', 'reboot', '--firmware-setup'])
+        self.assertFalse(runner.call_args.kwargs['check'])
+        self.assertEqual(runner.call_args.kwargs['timeout'], 10)
 
     def test_restart_returns_firmware_errors_to_the_ui(self):
-        def runner(command, **_kwargs):
-            return subprocess.CompletedProcess(command, 1, "", "not supported")
-
-        self.assertEqual(
-            restart_to_firmware_settings(runner),
-            (False, "not supported"),
-        )
+        runner = Mock(return_value=subprocess.CompletedProcess([], 1, '', 'not supported'))
+        self.assertEqual(ui.restart_to_firmware_settings(runner), (False, 'not supported'))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

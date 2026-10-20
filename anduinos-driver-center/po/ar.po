@@ -2055,3 +2055,299 @@ msgstr "تعذر إكمال تحديث محمّل الإقلاع. راجع ال�
 
 msgid "Details"
 msgstr "التفاصيل"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "A certificate is waiting for enrollment. Restart and select Enroll MOK, Continue, Yes, then enter password 123456."
+msgstr "هناك شهادة بانتظار التسجيل. أعد التشغيل واختر Enroll MOK ثم Continue ثم Yes، وأدخل كلمة المرور 123456."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "AnduinOS GRUB is signed, trusted and deployed."
+msgstr "محمّل الإقلاع GRUB الخاص بـ AnduinOS موقّع وموثوق ومنشور."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Boot Recovery Help"
+msgstr "مساعدة استعادة الإقلاع"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Certificate Enrollment"
+msgstr "تسجيل الشهادة"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Certificate Signing Purpose"
+msgstr "غرض التوقيع بالشهادة"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Check Before Enabling Secure Boot"
+msgstr "التحقق قبل تفعيل الإقلاع الآمن"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Check the firmware and boot mode before continuing."
+msgstr "تحقق من البرنامج الثابت ووضع الإقلاع قبل المتابعة."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Close"
+msgstr "إغلاق"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Complete This Step First"
+msgstr "أكمل هذه الخطوة أولًا"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Create Signing Certificate"
+msgstr "إنشاء شهادة توقيع"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Create a certificate that can sign both the bootloader and drivers first."
+msgstr "أنشئ أولًا شهادة يمكنها توقيع محمّل الإقلاع وبرامج التشغيل معًا."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Create a local signing certificate before preparing trust."
+msgstr "أنشئ شهادة توقيع محلية قبل إعداد الثقة."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "DKMS and the matching kernel headers are required. Check the driver build requirements."
+msgstr "يلزم توفر DKMS وترويسات النواة المطابقة. تحقق من متطلبات بناء برامج التشغيل."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Do not restart with an invalid bootloader. Use trusted installation media to inspect and restore the EFI boot files. Keep existing enrolled certificates."
+msgstr "لا تُعد التشغيل بمحمّل إقلاع غير صالح. استخدم وسيط تثبيت موثوقًا لفحص ملفات إقلاع EFI واستعادتها. احتفظ بالشهادات المسجّلة الحالية."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enrollment requested. Restart and select Enroll MOK to finish trusting this certificate."
+msgstr "طُلب التسجيل. أعد التشغيل واختر Enroll MOK لإتمام الوثوق بهذه الشهادة."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Existing bootloader, driver signatures and old enrolled certificates are preserved."
+msgstr "يُحافَظ على محمّل الإقلاع الحالي وتوقيعات برامج التشغيل والشهادات المسجّلة سابقًا."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware Configuration"
+msgstr "تهيئة البرنامج الثابت"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware Help"
+msgstr "مساعدة البرنامج الثابت"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware Settings Failed"
+msgstr "تعذّر فتح إعدادات البرنامج الثابت"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware platform keys are not configured. This is separate from MOK enrollment."
+msgstr "مفاتيح المنصة في البرنامج الثابت غير مهيّأة. وهذا منفصل عن تسجيل MOK."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware trust for the next bootloader has not been verified."
+msgstr "لم يُتحقق من ثقة البرنامج الثابت بمحمّل الإقلاع التالي."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Go to This Step"
+msgstr "الانتقال إلى هذه الخطوة"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Inspection Failed"
+msgstr "فشل الفحص"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Installed drivers are trusted, including signatures from previously enrolled certificates."
+msgstr "برامج التشغيل المثبّتة موثوقة، بما فيها التوقيعات الصادرة عن شهادات مسجّلة سابقًا."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Motherboard Secure Boot is enabled."
+msgstr "الإقلاع الآمن مفعّل على اللوحة الأم."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Next step:"
+msgstr "الخطوة التالية:"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "No repairs are required by the checks shown above."
+msgstr "لا تتطلب نتائج الفحوص أعلاه أي إصلاحات."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "No third-party kernel modules need attention."
+msgstr "لا توجد وحدات نواة من جهات خارجية تحتاج إلى معالجة."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "One or more third-party drivers need a trusted signature."
+msgstr "يحتاج برنامج تشغيل واحد أو أكثر من جهات خارجية إلى توقيع موثوق."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Operation Failed"
+msgstr "فشلت العملية"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Operation Finished"
+msgstr "اكتملت العملية"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Please wait. Do not restart while this operation is running."
+msgstr "يُرجى الانتظار. لا تُعد التشغيل أثناء تنفيذ هذه العملية."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare a valid signing certificate first."
+msgstr "جهّز شهادة توقيع صالحة أولًا."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Repair Automatic Signing"
+msgstr "إصلاح التوقيع التلقائي"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Repair Driver Signatures"
+msgstr "إصلاح توقيعات برامج التشغيل"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Replace Signing Certificate…"
+msgstr "استبدال شهادة التوقيع…"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restart"
+msgstr "إعادة التشغيل"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restart to Enroll Certificate"
+msgstr "إعادة التشغيل لتسجيل الشهادة"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restore a Trusted Boot Path"
+msgstr "استعادة مسار إقلاع موثوق"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot is configured in UEFI settings. Platform keys and the Microsoft third-party CA are separate from your MOK certificate. Verify the actual bootloader, next kernel and required drivers before enabling Secure Boot. Firmware wording varies by manufacturer."
+msgstr "يُضبط الإقلاع الآمن في إعدادات UEFI. مفاتيح المنصة والمرجع المصدّق لجهات خارجية من Microsoft منفصلان عن شهادة MOK الخاصة بك. تحقق من محمّل الإقلاع الفعلي والنواة التالية وبرامج التشغيل المطلوبة قبل تفعيل الإقلاع الآمن. تختلف تسميات البرنامج الثابت حسب الشركة المصنّعة."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot is disabled. You can still prepare certificates, drivers and the bootloader."
+msgstr "الإقلاع الآمن معطّل. لا يزال بإمكانك تجهيز الشهادات وبرامج التشغيل ومحمّل الإقلاع."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot is not available in the current firmware or boot mode."
+msgstr "الإقلاع الآمن غير متاح في البرنامج الثابت أو وضع الإقلاع الحالي."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot state could not be determined. Check again before changing trust."
+msgstr "تعذّر تحديد حالة الإقلاع الآمن. تحقق مجددًا قبل تغيير الثقة."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Select Enroll MOK, Continue, Yes, and enter password 123456 on restart."
+msgstr "عند إعادة التشغيل، اختر Enroll MOK ثم Continue ثم Yes، وأدخل كلمة المرور 123456."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The AnduinOS bootloader is not installed. Replacing an existing working bootloader is optional."
+msgstr "محمّل إقلاع AnduinOS غير مثبّت. استبدال محمّل إقلاع حالي يعمل أمر اختياري."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The AnduinOS bootloader needs signing or its signature could not be verified."
+msgstr "يحتاج محمّل إقلاع AnduinOS إلى توقيع، أو تعذّر التحقق من توقيعه."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The UEFI bootloader operation is not available in the current boot mode."
+msgstr "عملية محمّل إقلاع UEFI غير متاحة في وضع الإقلاع الحالي."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The automatic signing configuration has not been verified. Check again before installing the bootloader."
+msgstr "لم يُتحقق من إعدادات التوقيع التلقائي. تحقق مجددًا قبل تثبيت محمّل الإقلاع."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The automatic signing configuration needs attention. Another certificate enrollment is not needed."
+msgstr "تحتاج إعدادات التوقيع التلقائي إلى معالجة. لا حاجة إلى تسجيل شهادة أخرى."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader is signed, but its certificate is not enrolled."
+msgstr "محمّل الإقلاع موقّع، لكن شهادته غير مسجّلة."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader operation finished. The installed files will now be checked again."
+msgstr "اكتملت عملية محمّل الإقلاع. سيُعاد الآن فحص الملفات المثبّتة."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader update could not be completed. Review the details before restarting."
+msgstr "تعذّر إكمال تحديث محمّل الإقلاع. راجع التفاصيل قبل إعادة التشغيل."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader will be signed with your enrolled certificate and deployed. Existing EFI files are backed up. Keep the computer running until the operation finishes."
+msgstr "سيُوقَّع محمّل الإقلاع بشهادتك المسجّلة ويُنشر. ستُنسخ ملفات EFI الحالية احتياطيًا. أبقِ الحاسوب قيد التشغيل حتى تنتهي العملية."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The certificate does not permit the required signing. Create and enroll a replacement."
+msgstr "الشهادة لا تتيح التوقيع المطلوب. أنشئ شهادة بديلة وسجّلها."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The certificate has expired. Create and enroll a replacement for future signing."
+msgstr "انتهت صلاحية الشهادة. أنشئ شهادة بديلة وسجّلها للتوقيعات المستقبلية."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The drivers needed by the next kernel have not been verified."
+msgstr "لم يُتحقق من برامج التشغيل اللازمة للنواة التالية."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The installed bootloader could not be checked."
+msgstr "تعذّر فحص محمّل الإقلاع المثبّت."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The installed bootloader signature is invalid. Restore a trusted boot path before restarting."
+msgstr "توقيع محمّل الإقلاع المثبّت غير صالح. استعد مسار إقلاع موثوقًا قبل إعادة التشغيل."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The kernel selected for the next boot has not been verified."
+msgstr "لم يُتحقق من النواة المحددة للإقلاع التالي."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The next boot entry and kernel have not been verified. Do not enable Secure Boot until the actual boot chain is checked."
+msgstr "لم يُتحقق من مُدخل الإقلاع التالي والنواة. لا تفعّل الإقلاع الآمن حتى تُفحص سلسلة الإقلاع الفعلية."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The next bootloader is not verified as signed, trusted and deployed."
+msgstr "لم يُتحقق من أن محمّل الإقلاع التالي موقّع وموثوق ومنشور."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signed bootloader needs deployment to this system's EFI partition."
+msgstr "يجب نشر محمّل الإقلاع الموقّع على قسم EFI لهذا النظام."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing certificate and private key are valid and match."
+msgstr "شهادة التوقيع والمفتاح الخاص صالحان ومتطابقان."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing certificate must be enrolled first. Complete the certificate enrollment step above."
+msgstr "يجب تسجيل شهادة التوقيع أولًا. أكمل خطوة تسجيل الشهادة أعلاه."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing identity could not be checked. Existing certificates have not been replaced."
+msgstr "تعذّر فحص هوية التوقيع. لم تُستبدل الشهادات الحالية."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing key is missing, unreadable or does not match its certificate. Existing signatures are unchanged."
+msgstr "مفتاح التوقيع مفقود أو غير قابل للقراءة أو لا يطابق شهادته. لم تتغير التوقيعات الحالية."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The system will now be checked again."
+msgstr "سيُعاد الآن فحص النظام."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Third-party drivers could not be checked. This does not mean no drivers are installed."
+msgstr "تعذّر فحص برامج التشغيل من جهات خارجية. هذا لا يعني عدم وجود برامج تشغيل مثبّتة."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This certificate can sign both the bootloader and kernel modules."
+msgstr "يمكن لهذه الشهادة توقيع محمّل الإقلاع ووحدات النواة معًا."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This certificate can sign drivers only. A new certificate is needed for the AnduinOS bootloader."
+msgstr "يمكن لهذه الشهادة توقيع برامج التشغيل فقط. يلزم إنشاء شهادة جديدة لمحمّل إقلاع AnduinOS."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This certificate is enrolled in MOK."
+msgstr "هذه الشهادة مسجّلة في MOK."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This updates the selected signing configuration. Creating or replacing a certificate preserves existing boot and driver trust. A new certificate requires confirmation in MOKManager after restart."
+msgstr "يحدّث هذا إعدادات التوقيع المحددة. يُحافَظ على الثقة الحالية بالإقلاع وبرامج التشغيل عند إنشاء شهادة أو استبدالها. تتطلب الشهادة الجديدة تأكيدًا في MOKManager بعد إعادة التشغيل."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Do not restart until the installed EFI boot files are trusted. Restore a known-good EFI backup or use trusted installation media to repair them. Keep existing enrolled certificates."
+msgstr "لا تُعد التشغيل حتى تصبح ملفات إقلاع EFI المثبّتة موثوقة. استعد نسخة احتياطية سليمة من ملفات EFI أو استخدم وسيط تثبيت موثوقًا لإصلاحها. احتفظ بالشهادات المسجّلة حاليًا."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The installed EFI boot chain could not be verified as trusted. Restore a trusted boot path before restarting."
+msgstr "تعذّر التحقق من موثوقية سلسلة إقلاع EFI المثبّتة. استعد مسار إقلاع موثوقًا قبل إعادة التشغيل."

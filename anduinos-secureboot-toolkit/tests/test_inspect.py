@@ -32,6 +32,14 @@ class FakeRunner:
 
 
 class InspectTests(unittest.TestCase):
+    def test_unreadable_module_directory_is_not_reported_as_no_drivers(self):
+        from anduinos_secureboot.model import SecureBootState
+        state = SecureBootState(True, True, True, True, "fixture")
+        with tempfile.TemporaryDirectory() as directory, patch.object(
+                Path, "iterdir", side_effect=PermissionError("Cannot inspect modules")):
+            with self.assertRaises(PermissionError):
+                inspect_dkms(state, FakeRunner(), Path(directory))
+
     def test_normalizes_certificate_keys(self):
         self.assertEqual(normalize_key("AA:12 bb"), "aa12bb")
         self.assertIsNone(normalize_key("---"))

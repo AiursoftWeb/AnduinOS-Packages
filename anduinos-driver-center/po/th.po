@@ -2001,3 +2001,299 @@ msgstr "ไม่สามารถอัปเดตบูตโหลดเด
 
 msgid "Details"
 msgstr "รายละเอียด"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "A certificate is waiting for enrollment. Restart and select Enroll MOK, Continue, Yes, then enter password 123456."
+msgstr "มีใบรับรองรอลงทะเบียน เริ่มระบบใหม่แล้วเลือก Enroll MOK, Continue, Yes จากนั้นป้อนรหัสผ่าน 123456"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "AnduinOS GRUB is signed, trusted and deployed."
+msgstr "GRUB ของ AnduinOS ลงลายเซ็น ได้รับความเชื่อถือ และติดตั้งแล้ว"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Boot Recovery Help"
+msgstr "วิธีกู้คืนการบูต"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Certificate Enrollment"
+msgstr "การลงทะเบียนใบรับรอง"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Certificate Signing Purpose"
+msgstr "วัตถุประสงค์การลงลายเซ็นของใบรับรอง"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Check Before Enabling Secure Boot"
+msgstr "ตรวจสอบก่อนเปิดใช้ Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Check the firmware and boot mode before continuing."
+msgstr "ตรวจสอบเฟิร์มแวร์และโหมดการบูตก่อนดำเนินการต่อ"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Close"
+msgstr "ปิด"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Complete This Step First"
+msgstr "ทำขั้นตอนนี้ให้เสร็จก่อน"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Create Signing Certificate"
+msgstr "สร้างใบรับรองสำหรับลงลายเซ็น"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Create a certificate that can sign both the bootloader and drivers first."
+msgstr "สร้างใบรับรองที่ใช้ลงลายเซ็นได้ทั้งตัวโหลดบูตและไดรเวอร์ก่อน"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Create a local signing certificate before preparing trust."
+msgstr "สร้างใบรับรองสำหรับลงลายเซ็นในเครื่องก่อนเตรียมความเชื่อถือ"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "DKMS and the matching kernel headers are required. Check the driver build requirements."
+msgstr "ต้องมี DKMS และส่วนหัวเคอร์เนลที่ตรงกัน ตรวจสอบข้อกำหนดในการสร้างไดรเวอร์"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Do not restart with an invalid bootloader. Use trusted installation media to inspect and restore the EFI boot files. Keep existing enrolled certificates."
+msgstr "อย่าเริ่มระบบใหม่หากตัวโหลดบูตไม่ถูกต้อง ใช้สื่อติดตั้งที่เชื่อถือได้เพื่อตรวจสอบและกู้คืนไฟล์บูต EFI โดยเก็บใบรับรองที่ลงทะเบียนไว้แล้ว"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enrollment requested. Restart and select Enroll MOK to finish trusting this certificate."
+msgstr "ส่งคำขอลงทะเบียนแล้ว เริ่มระบบใหม่แล้วเลือก Enroll MOK เพื่อให้ใบรับรองนี้ได้รับความเชื่อถืออย่างสมบูรณ์"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Existing bootloader, driver signatures and old enrolled certificates are preserved."
+msgstr "ตัวโหลดบูต ลายเซ็นไดรเวอร์ และใบรับรองเดิมที่ลงทะเบียนไว้จะยังคงอยู่"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware Configuration"
+msgstr "การกำหนดค่าเฟิร์มแวร์"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware Help"
+msgstr "วิธีใช้เฟิร์มแวร์"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware Settings Failed"
+msgstr "เปิดการตั้งค่าเฟิร์มแวร์ไม่สำเร็จ"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware platform keys are not configured. This is separate from MOK enrollment."
+msgstr "ยังไม่ได้กำหนดค่าคีย์แพลตฟอร์มของเฟิร์มแวร์ ซึ่งแยกจากการลงทะเบียน MOK"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware trust for the next bootloader has not been verified."
+msgstr "ยังไม่ได้ตรวจสอบว่าเฟิร์มแวร์เชื่อถือตัวโหลดบูตที่จะใช้ครั้งถัดไปหรือไม่"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Go to This Step"
+msgstr "ไปยังขั้นตอนนี้"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Inspection Failed"
+msgstr "ตรวจสอบไม่สำเร็จ"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Installed drivers are trusted, including signatures from previously enrolled certificates."
+msgstr "ไดรเวอร์ที่ติดตั้งได้รับความเชื่อถือ รวมถึงลายเซ็นจากใบรับรองที่ลงทะเบียนไว้ก่อนหน้านี้"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Motherboard Secure Boot is enabled."
+msgstr "Secure Boot ของเมนบอร์ดเปิดใช้งานอยู่"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Next step:"
+msgstr "ขั้นตอนถัดไป:"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "No repairs are required by the checks shown above."
+msgstr "จากผลการตรวจสอบข้างต้น ไม่จำเป็นต้องซ่อมแซม"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "No third-party kernel modules need attention."
+msgstr "ไม่มีโมดูลเคอร์เนลของบุคคลที่สามที่ต้องจัดการ"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "One or more third-party drivers need a trusted signature."
+msgstr "ไดรเวอร์ของบุคคลที่สามอย่างน้อยหนึ่งตัวต้องมีลายเซ็นที่เชื่อถือได้"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Operation Failed"
+msgstr "ดำเนินการไม่สำเร็จ"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Operation Finished"
+msgstr "ดำเนินการเสร็จแล้ว"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Please wait. Do not restart while this operation is running."
+msgstr "โปรดรอ อย่าเริ่มระบบใหม่ระหว่างดำเนินการ"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare a valid signing certificate first."
+msgstr "เตรียมใบรับรองสำหรับลงลายเซ็นที่ถูกต้องก่อน"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Repair Automatic Signing"
+msgstr "ซ่อมแซมการลงลายเซ็นอัตโนมัติ"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Repair Driver Signatures"
+msgstr "ซ่อมแซมลายเซ็นไดรเวอร์"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Replace Signing Certificate…"
+msgstr "เปลี่ยนใบรับรองสำหรับลงลายเซ็น…"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restart"
+msgstr "เริ่มระบบใหม่"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restart to Enroll Certificate"
+msgstr "เริ่มระบบใหม่เพื่อลงทะเบียนใบรับรอง"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restore a Trusted Boot Path"
+msgstr "กู้คืนเส้นทางการบูตที่เชื่อถือได้"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot is configured in UEFI settings. Platform keys and the Microsoft third-party CA are separate from your MOK certificate. Verify the actual bootloader, next kernel and required drivers before enabling Secure Boot. Firmware wording varies by manufacturer."
+msgstr "กำหนดค่า Secure Boot ได้ในการตั้งค่า UEFI คีย์แพลตฟอร์มและ CA บุคคลที่สามของ Microsoft แยกจากใบรับรอง MOK ของคุณ ตรวจสอบตัวโหลดบูตที่จะใช้จริง เคอร์เนลที่จะใช้ครั้งถัดไป และไดรเวอร์ที่จำเป็นก่อนเปิดใช้ Secure Boot ข้อความในเฟิร์มแวร์อาจแตกต่างกันตามผู้ผลิต"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot is disabled. You can still prepare certificates, drivers and the bootloader."
+msgstr "Secure Boot ปิดใช้งานอยู่ คุณยังเตรียมใบรับรอง ไดรเวอร์ และตัวโหลดบูตได้"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot is not available in the current firmware or boot mode."
+msgstr "Secure Boot ใช้ไม่ได้กับเฟิร์มแวร์หรือโหมดการบูตปัจจุบัน"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot state could not be determined. Check again before changing trust."
+msgstr "ระบุสถานะ Secure Boot ไม่ได้ ตรวจสอบอีกครั้งก่อนเปลี่ยนการตั้งค่าความเชื่อถือ"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Select Enroll MOK, Continue, Yes, and enter password 123456 on restart."
+msgstr "เมื่อเริ่มระบบใหม่ ให้เลือก Enroll MOK, Continue, Yes แล้วป้อนรหัสผ่าน 123456"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The AnduinOS bootloader is not installed. Replacing an existing working bootloader is optional."
+msgstr "ยังไม่ได้ติดตั้งตัวโหลดบูต AnduinOS คุณเลือกได้ว่าจะเปลี่ยนตัวโหลดบูตเดิมที่ยังทำงานได้หรือไม่"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The AnduinOS bootloader needs signing or its signature could not be verified."
+msgstr "ตัวโหลดบูต AnduinOS ต้องลงลายเซ็น หรือไม่สามารถยืนยันลายเซ็นได้"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The UEFI bootloader operation is not available in the current boot mode."
+msgstr "การดำเนินการกับตัวโหลดบูต UEFI ใช้ไม่ได้ในโหมดการบูตปัจจุบัน"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The automatic signing configuration has not been verified. Check again before installing the bootloader."
+msgstr "ยังไม่ได้ตรวจสอบการกำหนดค่าการลงลายเซ็นอัตโนมัติ ตรวจสอบอีกครั้งก่อนติดตั้งตัวโหลดบูต"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The automatic signing configuration needs attention. Another certificate enrollment is not needed."
+msgstr "ต้องจัดการการกำหนดค่าการลงลายเซ็นอัตโนมัติ ไม่จำเป็นต้องลงทะเบียนใบรับรองอีก"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader is signed, but its certificate is not enrolled."
+msgstr "ตัวโหลดบูตลงลายเซ็นแล้ว แต่ยังไม่ได้ลงทะเบียนใบรับรอง"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader operation finished. The installed files will now be checked again."
+msgstr "ดำเนินการกับตัวโหลดบูตเสร็จแล้ว จะตรวจสอบไฟล์ที่ติดตั้งอีกครั้ง"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader update could not be completed. Review the details before restarting."
+msgstr "อัปเดตตัวโหลดบูตไม่สำเร็จ ตรวจสอบรายละเอียดก่อนเริ่มระบบใหม่"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader will be signed with your enrolled certificate and deployed. Existing EFI files are backed up. Keep the computer running until the operation finishes."
+msgstr "ตัวโหลดบูตจะถูกลงลายเซ็นด้วยใบรับรองที่คุณลงทะเบียนไว้ แล้วติดตั้งลงในระบบ ไฟล์ EFI เดิมจะถูกสำรองไว้ อย่าปิดเครื่องจนกว่าจะดำเนินการเสร็จ"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The certificate does not permit the required signing. Create and enroll a replacement."
+msgstr "ใบรับรองนี้ไม่รองรับการลงลายเซ็นที่จำเป็น ให้สร้างและลงทะเบียนใบรับรองใหม่แทน"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The certificate has expired. Create and enroll a replacement for future signing."
+msgstr "ใบรับรองหมดอายุแล้ว ให้สร้างและลงทะเบียนใบรับรองใหม่แทนเพื่อใช้ลงลายเซ็นในอนาคต"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The drivers needed by the next kernel have not been verified."
+msgstr "ยังไม่ได้ตรวจสอบไดรเวอร์ที่จำเป็นสำหรับเคอร์เนลที่จะใช้ครั้งถัดไป"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The installed bootloader could not be checked."
+msgstr "ตรวจสอบตัวโหลดบูตที่ติดตั้งไม่ได้"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The installed bootloader signature is invalid. Restore a trusted boot path before restarting."
+msgstr "ลายเซ็นของตัวโหลดบูตที่ติดตั้งไม่ถูกต้อง กู้คืนเส้นทางการบูตที่เชื่อถือได้ก่อนเริ่มระบบใหม่"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The kernel selected for the next boot has not been verified."
+msgstr "ยังไม่ได้ตรวจสอบเคอร์เนลที่เลือกไว้สำหรับการบูตครั้งถัดไป"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The next boot entry and kernel have not been verified. Do not enable Secure Boot until the actual boot chain is checked."
+msgstr "ยังไม่ได้ตรวจสอบรายการบูตและเคอร์เนลที่จะใช้ครั้งถัดไป อย่าเปิดใช้ Secure Boot จนกว่าจะตรวจสอบลำดับการบูตที่ใช้จริงแล้ว"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The next bootloader is not verified as signed, trusted and deployed."
+msgstr "ยังยืนยันไม่ได้ว่าตัวโหลดบูตที่จะใช้ครั้งถัดไปลงลายเซ็น ได้รับความเชื่อถือ และติดตั้งแล้ว"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signed bootloader needs deployment to this system's EFI partition."
+msgstr "ต้องติดตั้งตัวโหลดบูตที่ลงลายเซ็นแล้วลงในพาร์ทิชัน EFI ของระบบนี้"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing certificate and private key are valid and match."
+msgstr "ใบรับรองสำหรับลงลายเซ็นและคีย์ส่วนตัวถูกต้องและตรงกัน"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing certificate must be enrolled first. Complete the certificate enrollment step above."
+msgstr "ต้องลงทะเบียนใบรับรองสำหรับลงลายเซ็นก่อน ทำขั้นตอนลงทะเบียนใบรับรองข้างต้นให้เสร็จ"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing identity could not be checked. Existing certificates have not been replaced."
+msgstr "ตรวจสอบข้อมูลประจำตัวสำหรับลงลายเซ็นไม่ได้ ใบรับรองเดิมยังไม่ถูกแทนที่"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing key is missing, unreadable or does not match its certificate. Existing signatures are unchanged."
+msgstr "คีย์สำหรับลงลายเซ็นหายไป อ่านไม่ได้ หรือไม่ตรงกับใบรับรอง ลายเซ็นเดิมไม่เปลี่ยนแปลง"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The system will now be checked again."
+msgstr "จะตรวจสอบระบบอีกครั้ง"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Third-party drivers could not be checked. This does not mean no drivers are installed."
+msgstr "ตรวจสอบไดรเวอร์ของบุคคลที่สามไม่ได้ ซึ่งไม่ได้หมายความว่าไม่มีไดรเวอร์ติดตั้งอยู่"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This certificate can sign both the bootloader and kernel modules."
+msgstr "ใบรับรองนี้ใช้ลงลายเซ็นได้ทั้งตัวโหลดบูตและโมดูลเคอร์เนล"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This certificate can sign drivers only. A new certificate is needed for the AnduinOS bootloader."
+msgstr "ใบรับรองนี้ใช้ลงลายเซ็นได้เฉพาะไดรเวอร์ ต้องใช้ใบรับรองใหม่สำหรับตัวโหลดบูต AnduinOS"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This certificate is enrolled in MOK."
+msgstr "ใบรับรองนี้ลงทะเบียนใน MOK แล้ว"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This updates the selected signing configuration. Creating or replacing a certificate preserves existing boot and driver trust. A new certificate requires confirmation in MOKManager after restart."
+msgstr "การดำเนินการนี้จะอัปเดตการกำหนดค่าการลงลายเซ็นที่เลือก การสร้างหรือเปลี่ยนใบรับรองจะคงความเชื่อถือของการบูตและไดรเวอร์เดิมไว้ ใบรับรองใหม่ต้องได้รับการยืนยันใน MOKManager หลังเริ่มระบบใหม่"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Do not restart until the installed EFI boot files are trusted. Restore a known-good EFI backup or use trusted installation media to repair them. Keep existing enrolled certificates."
+msgstr "อย่ารีสตาร์ทจนกว่าไฟล์บูต EFI ที่ติดตั้งไว้จะเชื่อถือได้ ให้กู้คืนจากข้อมูลสำรอง EFI ที่เชื่อถือได้ หรือใช้สื่อการติดตั้งที่เชื่อถือได้เพื่อซ่อมแซมไฟล์เหล่านี้ เก็บใบรับรองที่ลงทะเบียนไว้แล้วไว้ตามเดิม"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The installed EFI boot chain could not be verified as trusted. Restore a trusted boot path before restarting."
+msgstr "ไม่สามารถยืนยันได้ว่าลำดับการบูต EFI ที่ติดตั้งไว้เชื่อถือได้ ให้กู้คืนเส้นทางการบูตที่เชื่อถือได้ก่อนรีสตาร์ท"

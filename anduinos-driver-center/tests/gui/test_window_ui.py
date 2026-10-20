@@ -13,7 +13,8 @@ from anduinos_driver_center import app
 from anduinos_driver_center.core import (
     AudioState, GraphicsScan, PackageState, PrintingState, XboxState, XboxStatus,
 )
-from anduinos_secureboot.model import DkmsState, SecureBootState
+from anduinos_secureboot.model import DkmsState, GrubState, SecureBootState
+from anduinos_secureboot.identity import IdentityStatus
 
 
 class WindowScanTests(unittest.TestCase):
@@ -31,7 +32,10 @@ class WindowScanTests(unittest.TestCase):
         scan = (
             GraphicsScan(),
             SecureBootState(False, True, True, True, "serial", boot_loader="shim",
-                            setup_mode=False),
+                            setup_mode=False,
+                            signing_identity=IdentityStatus(purpose="unified", enrollment="enrolled",
+                                key_present=True, key_valid=True, defaults_ready=True),
+                            grub=GrubState(installed=True, signature="valid", enrollment="enrolled", deployment="ready", active_chain="trusted")),
             XboxState(XboxStatus.NOT_INSTALLED, False, False, False, None, False),
             DkmsState(),
             AudioState(PackageState("firmware-sof-anduinos", True, "1"),

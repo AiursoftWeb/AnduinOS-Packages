@@ -222,6 +222,60 @@ def deploy(runner, *, package_transaction=False, esp=boot_chain.ESP):
         raise ValueError("Bootloader deployment could not be verified: " + inspected.detail)
 
 
+def inspect_active_chain(runner, esp):
+    """Verify installed EFI files without depending on cache JSON or a new key.
+
+    Only certificates confirmed enrolled in MOK can authenticate GRUB. The
+    compatibility certificate preserves old trust during enrollment; the cache
+    certificate can preserve it after signing defaults have moved to a new key.
+    This does not certify the next kernel or firmware CA configuration.
+    """
+    try:
+        suffix, _, machine = boot_chain.efi_architecture(runner)
+        target = boot_chain.resolve_target(runner, esp)
+        vendor = boot_chain.vendor_path(esp, target.entry)
+        if target.entry.loader.lower() != rf"\EFI\{vendor.name}\shim{suffix}.efi".lower():
+            return "untrusted", "The boot entry does not use the native AnduinOS shim"
+        companions = shim_companions(runner)
+        for source in companions.values():
+            package_payload(source, runner, {"anduinos-shim-signed"})
+            boot_chain.verify_image(source, machine, runner)
+        certificates = []
+        for certificate in (identity.LEGACY_CERTIFICATE, STORE / "certificate.der"):
+            if certificate.is_file() and not certificate.is_symlink():
+                safe_path(certificate)
+                if identity.enrollment_state(certificate, runner) == "enrolled":
+                    text = boot_chain.command(runner, ["openssl", "x509", "-inform", "DER",
+                                                       "-in", str(certificate), "-noout", "-text"])
+                    if identity.certificate_purpose(text) == "unified":
+                        certificates.append(certificate)
+        if not certificates:
+            return "unknown", "No enrolled certificate is available to verify the installed GRUB"
+        directories = [vendor]
+        fallback = boot_chain.owned_fallback(runner, esp, target, companions[f"shim{suffix}.efi"])
+        if fallback is not None:
+            directories.append(fallback)
+        for directory in directories:
+            for name, source in companions.items():
+                path = directory / (f"BOOT{suffix.upper()}.EFI" if directory == fallback and name.startswith("shim") else name)
+                if path.is_symlink() or not path.is_file() or path.read_bytes() != source.read_bytes():
+                    return "untrusted", f"Installed shim companion differs from its trusted package: {path}"
+            image = directory / f"grub{suffix}.efi"
+            if image.is_symlink() or not image.is_file():
+                return "untrusted", f"Installed GRUB is missing or redirected: {image}"
+            for certificate in certificates:
+                try:
+                    verify_signature(image, certificate, runner)
+                    break
+                except ValueError:
+                    continue
+            else:
+                return "untrusted", f"Installed GRUB cannot be verified with an enrolled certificate: {image}"
+        return "trusted", ""
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        return "unknown", str(error)
+
+
 def inspect_grub(runner=None, *, privileged=False, esp=boot_chain.ESP):
     """Prepared-file verification and actual ESP verification stay distinct."""
     runner = runner or SubprocessRunner()
@@ -240,7 +294,8 @@ def inspect_grub(runner=None, *, privileged=False, esp=boot_chain.ESP):
             return GrubState(**data)
         except (ValueError, TypeError):
             return GrubState(installed=True, detail="Bootloader inspection could not be completed")
-    state = GrubState(installed=True)
+    active_chain, active_detail = inspect_active_chain(runner, esp)
+    state = GrubState(installed=True, active_chain=active_chain, active_detail=active_detail)
     try:
         source = source_image(runner)
         signed, certificate = STORE / f"grub{suffix}.efi", STORE / "certificate.der"
