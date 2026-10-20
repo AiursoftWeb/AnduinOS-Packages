@@ -7737,6 +7737,8 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         wrap_mode=Pango.WrapMode.WORD_CHAR,
         justify=Gtk.Justification.CENTER,
     ))
+    reboot_btn.set_halign(Gtk.Align.CENTER)
+    reboot_btn.set_margin_top(8)
     reboot_btn.set_visible(False)
     result_box.append(result_icon)
     result_box.append(result_label)
