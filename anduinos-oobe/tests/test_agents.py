@@ -20,8 +20,16 @@ class AgentOperationsTests(unittest.TestCase):
         self.assertEqual([item['id'] for item in international],
                          ['opencode', 'claude', 'codex', 'copilot', 'antigravity', 'grok'])
         self.assertEqual(chinese[2]['name'], 'OpenCode + GLM')
-        self.assertIn('Node.js', chinese[0]['notice'])
-        self.assertFalse(any('notice' in item for item in chinese[1:]))
+        self.assertIn('Node.js', chinese[0]['get_notice']()['text'])
+        self.assertFalse(any('Node.js' in item['get_notice']()['text'] for item in chinese[1:]))
+        self.assertEqual([provider[0] for provider in chinese[2]['get_notice']()['providers']],
+                         ['OpenCode', 'Z.AI / GLM'])
+        for item in chinese + international:
+            notice = item['get_notice']()
+            self.assertTrue(notice['providers'])
+            for name, website, terms, privacy in notice['providers']:
+                self.assertTrue(name)
+                self.assertTrue(all(url.startswith('https://') for url in (website, terms, privacy)))
 
     def test_grok_install_is_found_without_restarting_the_desktop(self):
         with tempfile.TemporaryDirectory() as home, patch.dict(os.environ, HOME=home):

@@ -59,7 +59,11 @@ class AgentsPageTests(unittest.TestCase):
 
         agent = {'id': 'example', 'name': 'Example', 'description': 'Coding assistant',
                  'is_installed': lambda: installed,
-                 'open': lambda: opened.append(True), 'install': install}
+                 'open': lambda: opened.append(True), 'install': install,
+                 'get_notice': lambda: {'text': 'Extra information <not markup>',
+                                        'providers': [('Example & Co', 'https://example.com/',
+                                                       'https://example.com/terms?a=1&b=2',
+                                                       'https://example.com/privacy')]}}
         window = None
         factories = [
             lambda: oobe.Gtk.Label(label='Applications'),
@@ -81,6 +85,17 @@ class AgentsPageTests(unittest.TestCase):
         button.emit('clicked')
         consent = self.dialog()
         self.assertIn('third-party software', consent.get_body())
+        self.assertIn('Extra information <not markup>', consent.get_body())
+        links = next(item for item in descendants(consent.get_extra_child())
+                     if isinstance(item, oobe.Gtk.Label) and item.get_use_markup())
+        self.assertEqual(links.get_text(), 'Example & Co · Terms of Service · Privacy Policy')
+        self.assertIn('https://example.com/terms?a=1&amp;b=2', links.get_label())
+        visited = []
+        links.connect('activate-link', lambda _label, uri: visited.append(uri) or True)
+        self.assertTrue(links.emit('activate-link', 'https://example.com/terms?a=1&b=2'))
+        self.assertEqual(visited, ['https://example.com/terms?a=1&b=2'])
+        self.assertEqual(attempts, [])
+        self.assertTrue(consent.get_visible())
         consent.response('cancel')
         self.assertEqual(attempts, [])
         button.emit('clicked')
@@ -155,6 +170,13 @@ class AgentsPageTests(unittest.TestCase):
                             self.assertGreater(visible, .35)
                             self.assertLess(visible, .75)
                         self.assertTrue(window.next_btn.get_visible())
+                        disclaimer = next(item for item in descendants(page)
+                                          if isinstance(item, oobe.Gtk.Label)
+                                          and item.has_css_class('caption'))
+                        footer = disclaimer.compute_bounds(window)[1]
+                        navigation = window.next_btn.compute_bounds(window)[1]
+                        self.assertLessEqual(footer.get_y() + footer.get_height(),
+                                             navigation.get_y())
                     finally:
                         window.destroy()
 
@@ -207,6 +229,17 @@ class AgentsPageTests(unittest.TestCase):
         dialog = self.dialog(window)
         self.assertIn('latest Node.js release', dialog.get_body())
         self.assertIn('nvm', dialog.get_body())
+        self.assertIn('DeepSeek Harness', dialog.get_extra_child().get_last_child().get_text())
+        dialog.response('cancel')
+        dialog.destroy()
+        with patch.object(oobe._agents, 'executable', return_value=None):
+            buttons[2].emit('clicked')
+        dialog = self.dialog(window)
+        self.assertIn('GLM is a separate model service', dialog.get_body())
+        links = [item.get_text() for item in descendants(dialog.get_extra_child())
+                 if isinstance(item, oobe.Gtk.Label) and item.get_use_markup()]
+        self.assertEqual(links, ['OpenCode · Terms of Service · Privacy Policy',
+                                 'Z.AI / GLM · Terms of Service · Privacy Policy'])
         dialog.response('cancel')
 
 
