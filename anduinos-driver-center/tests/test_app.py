@@ -68,12 +68,15 @@ class AppTests(unittest.TestCase):
                 (replace(ready, enrolled=False, signing_identity=replace(identity, enrollment="absent")), modules),
                 (replace(ready, boot_loader="grub", grub=replace(ready.grub, deployment="pending")), modules),
                 (replace(ready, configuration_present=False, signing_identity=replace(identity, defaults_ready=False)), modules),
+                (replace(ready, grub=GrubState()), modules),
                 (ready, DkmsState(modules=("driver",), untrusted_modules=("driver",))),
             ):
                 with self.subTest(state=state, dkms=dkms):
                     self.assertEqual(app._secure_boot_summary(state, dkms)[0], "Action required")
             enabled = replace(ready, enabled=True, status=SecureBootStatus.ENABLED)
             self.assertEqual(app._secure_boot_summary(enabled, modules)[0], "Trusted")
+            self.assertEqual(app._secure_boot_summary(replace(enabled, grub=GrubState()), modules)[0],
+                             "Action required")
             self.assertEqual(app._secure_boot_summary(enabled, DkmsState(modules=("driver",), untrusted_modules=("driver",)))[0],
                              "Action required")
             for status, label in ((SecureBootStatus.UNKNOWN, "Unknown"),

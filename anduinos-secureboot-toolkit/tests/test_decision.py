@@ -277,6 +277,19 @@ class DecisionTests(unittest.TestCase):
         action = self.assert_action(self.row(facts, "drivers"), "repair-dkms", allowed=False)
         self.assert_blocker(action, "certificate-enrollment-required", "enrollment")
 
+    def test_uninstalled_own_grub_is_recommended_as_the_next_step_in_both_sb_modes(self):
+        for status in (SecureBootStatus.ENABLED, SecureBootStatus.DISABLED):
+            with self.subTest(status=status):
+                state = replace(self.state, status=status,
+                                enabled=status is SecureBootStatus.ENABLED, grub=GrubState())
+                facts = self.facts(state=state)
+                page = self.core.decide(facts)
+                row = self.row(facts, "bootloader")
+                self.assertEqual(row.tone, "warning")
+                self.assert_action(row, "install-bootloader", allowed=True)
+                self.assertEqual(page.next_row, "bootloader")
+                self.assertFalse(any(row.tone == "error" for row in page.rows))
+
     def test_prepared_identity_allows_installing_own_grub_with_secure_boot_off(self):
         state = replace(self.state, enabled=False, status=SecureBootStatus.DISABLED, grub=GrubState())
         facts = self.facts(state=state, next_boot=self.evidence(loader_source="ubuntu"))
@@ -320,7 +333,7 @@ class DecisionTests(unittest.TestCase):
         state = replace(self.state, enabled=False, status=SecureBootStatus.DISABLED, grub=GrubState(),
                         signing_identity=replace(self.identity, purpose="module-only", managed=False))
         facts = self.facts(state=state, next_boot=self.evidence(loader_source="ubuntu"))
-        self.assertEqual(self.row(facts, "bootloader").tone, "neutral")
+        self.assertEqual(self.row(facts, "bootloader").tone, "warning")
         self.assert_action(self.row(facts, "secure_boot"), "firmware-setup", allowed=True)
 
     def test_current_kernel_health_cannot_substitute_for_next_boot_evidence(self):

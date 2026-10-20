@@ -48,7 +48,7 @@ _MESSAGES = {
     "drivers-trusted": N_("Installed drivers are trusted, including signatures from previously enrolled certificates."),
     "drivers-untrusted": N_("One or more third-party drivers need a trusted signature."),
     "bootloader-unsupported": N_("The UEFI bootloader operation is not available in the current boot mode."),
-    "bootloader-optional": N_("The AnduinOS bootloader is not installed. Replacing an existing working bootloader is optional."),
+    "bootloader-optional": N_("The AnduinOS bootloader is not installed. Installing it is recommended."),
     "bootloader-unknown": N_("The installed bootloader could not be checked."),
     "bootloader-ready": N_("AnduinOS GRUB is signed, trusted and deployed."),
     "bootloader-unsigned": N_("The AnduinOS bootloader needs signing or its signature could not be verified."),
