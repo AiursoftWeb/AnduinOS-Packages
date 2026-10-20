@@ -58,14 +58,17 @@ class SoftwareSourceUiTests(unittest.TestCase):
             self.window.update_button.has_css_class("suggested-action")
         )
 
-    def test_flatpak_page_shows_actual_remote_and_requires_explicit_custom_replacement(self):
+    def test_flatpak_page_preserves_and_edits_actual_custom_remote(self):
         self.window._flathub_read_complete("https://custom.example/flathub")
         self.window.pages.set_visible_child_name("flatpak")
         self.assertEqual(self.window.pages.get_visible_child_name(), "flatpak")
         self.assertFalse(self.window.source_overview.get_visible())
         self.assertEqual(self.window.flathub_current.get_subtitle(), "https://custom.example/flathub")
         self.assertEqual(self.window.flathub_dropdown.get_selected(), 0)
-        self.assertFalse(self.window.flathub_apply.get_sensitive())
+        self.assertTrue(self.window.flathub_custom.get_visible())
+        self.assertEqual(self.window.flathub_custom.get_text(), "https://custom.example/flathub")
+        self.assertEqual(self.window._selected_flathub_source(), "https://custom.example/flathub")
+        self.assertTrue(self.window.flathub_apply.get_sensitive())
         self.window.flathub_dropdown.set_selected(2)
         self.assertTrue(self.window.flathub_apply.get_sensitive())
         self.window.pages.set_visible_child_name("advanced")
@@ -74,7 +77,7 @@ class SoftwareSourceUiTests(unittest.TestCase):
     def test_missing_flathub_can_be_added_and_busy_controls_are_disabled(self):
         self.window._flathub_read_complete("")
         self.assertEqual(self.window.flathub_current.get_subtitle(), self.ui._("Flathub is not configured."))
-        self.assertEqual(self.window.flathub_dropdown.get_selected(), 0)
+        self.assertEqual(self.window.flathub_dropdown.get_selected(), 1)
         self.window._set_busy(True)
         self.assertFalse(self.window.flathub_apply.get_sensitive())
         self.assertFalse(self.window.flathub_dropdown.get_sensitive())
@@ -103,6 +106,73 @@ class SoftwareSourceUiTests(unittest.TestCase):
             self.ui._("  Install Updates  ").strip(),
         )
         self.assertEqual(self.window.status.get_label(), self.ui._("Updates are available."))
+
+    def test_four_tabs_keep_apt_and_flathub_current_sources_separate(self):
+        self.assertEqual(self.window.pages.get_pages().get_n_items(), 4)
+        with patch.object(self.ui, "current_mirror", return_value="https://archive.ubuntu.com/ubuntu/"):
+            self.window._flathub_read_complete(self.ui.FLATHUB_SOURCES["sjtu"])
+        self.window.pages.set_visible_child_name("flatpak-advanced")
+        self.assertFalse(self.window.source_overview.get_visible())
+        self.assertEqual(self.window.flathub_advanced_current.get_subtitle(), self.ui.FLATHUB_SOURCES["sjtu"])
+        self.assertEqual(self.window._selected_flathub_source(), self.ui.FLATHUB_SOURCES["sjtu"])
+        self.assertEqual(self.window.flathub_dropdown.get_model().get_n_items(), 4)
+        self.assertFalse(self.window.flathub_custom.get_visible())
+        self.window.pages.set_visible_child_name("automatic")
+        self.assertTrue(self.window.source_overview.get_visible())
+        self.assertEqual(self.window.current_source.get_label(), "https://archive.ubuntu.com/ubuntu/")
+
+    def test_flathub_custom_speed_test_uses_entered_address_without_switching(self):
+        uri = "https://custom.example/flathub"
+        self.window.flathub_dropdown.set_selected(0)
+        self.window.flathub_custom.set_text(uri + "/")
+        measurement = self.ui.MirrorMeasurement(uri, 12.0, 80.0)
+        with patch.object(self.ui, "measure_flathub_mirrors", return_value=(measurement,)) as measure, patch.object(self.ui.threading, "Thread") as thread, patch.object(self.ui.GLib, "idle_add", side_effect=lambda callback, *args: callback(*args)), patch.object(self.window, "_run_helper") as helper:
+            self.window._measure_flathub(automatic=False)
+            thread.call_args.kwargs["target"]()
+        self.assertEqual(measure.call_args.kwargs["candidates"], (uri,))
+        helper.assert_not_called()
+        self.assertIn("80.0 Mbps", self.window.status.get_label())
+        self.assertTrue(self.window.flathub_custom.get_visible())
+
+    def test_flathub_fastest_requires_confirmation_before_privileged_switch(self):
+        uri = self.ui.FLATHUB_SOURCES["sjtu"]
+        self.window._flathub_read_complete(self.ui.FLATHUB_SOURCES["official"])
+        measurement = self.ui.MirrorMeasurement(uri, 12.0, 80.0)
+        with patch.object(self.ui.Adw, "MessageDialog") as dialog, patch.object(self.ui.threading, "Thread") as thread, patch.object(self.window, "_run_helper") as helper:
+            self.window._flathub_measured((measurement,), True)
+            helper.assert_not_called()
+            self.assertIn(uri, dialog.call_args.kwargs["body"])
+            response = dialog.return_value.connect.call_args.args[1]
+            response(dialog.return_value, "switch")
+            self.assertEqual(thread.call_args.kwargs["args"], (uri,))
+            self.assertTrue(self.window._busy)
+
+    def test_current_flathub_address_can_be_reapplied_to_enable_a_disabled_remote(self):
+        uri = self.ui.FLATHUB_SOURCES["official"]
+        self.window._flathub_read_complete(uri)
+        with patch.object(self.ui.Adw, "MessageDialog") as dialog, patch.object(self.ui.threading, "Thread") as thread:
+            self.window._confirm_flathub(uri)
+            dialog.assert_called_once()
+            response = dialog.return_value.connect.call_args.args[1]
+            response(dialog.return_value, "switch")
+            self.assertEqual(thread.call_args.kwargs["args"], (uri,))
+
+    def test_flathub_invalid_custom_address_and_failed_test_keep_current_source(self):
+        original = self.ui.FLATHUB_SOURCES["official"]
+        self.window._flathub_read_complete(original)
+        self.window.flathub_dropdown.set_selected(0)
+        self.window.flathub_custom.set_text("file:///tmp/repo")
+        with patch.object(self.window, "_run_helper") as helper, patch.object(self.ui.Adw, "MessageDialog") as dialog:
+            self.window._apply_flathub(None)
+            helper.assert_not_called()
+            dialog.assert_not_called()
+        self.window.flathub_custom.set_text("https://offline.example/repo")
+        with patch.object(self.ui, "measure_flathub_mirrors", side_effect=RuntimeError("offline")), patch.object(self.ui.threading, "Thread") as thread, patch.object(self.ui.GLib, "idle_add", side_effect=lambda callback, *args: callback(*args)), patch.object(self.window, "_run_helper") as helper:
+            self.window._measure_flathub(automatic=False)
+            thread.call_args.kwargs["target"]()
+            helper.assert_not_called()
+        self.assertEqual(self.window.flathub_current.get_subtitle(), original)
+        self.assertFalse(self.window._busy)
 
     def test_advanced_selection_and_custom_url_share_confirmed_switch(self):
         self.assertIsNotNone(self.window.pages.get_child_by_name("advanced"))

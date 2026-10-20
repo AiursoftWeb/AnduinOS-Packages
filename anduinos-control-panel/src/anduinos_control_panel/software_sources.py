@@ -6,6 +6,10 @@ from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 import gettext
+import configparser
+import gzip
+import hashlib
+import io
 import os
 from pathlib import Path
 import platform
@@ -16,12 +20,13 @@ import time
 import urllib.request
 import urllib.error
 import urllib.parse
+import zlib
 
 import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, GLib, Gtk
+from gi.repository import Adw, GLib, GObject, Gtk
 
 
 LOCALE_DIR = "/usr/share/locale"
@@ -36,6 +41,7 @@ FLATHUB_REMOTE = "flathub"
 FLATHUB_OFFICIAL_REPO = "https://dl.flathub.org/repo/flathub.flatpakrepo"
 FLATHUB_SOURCES = {
     "official": "https://dl.flathub.org/repo",
+    "sjtu": "https://mirror.sjtu.edu.cn/flathub",
     "ustc": "https://mirrors.ustc.edu.cn/flathub",
 }
 
@@ -333,6 +339,168 @@ def select_fastest_mirror(*args, **kwargs) -> MirrorMeasurement:
     return measure_mirrors(*args, **kwargs)[0]
 
 
+def validate_flathub_uri(uri: str) -> str:
+    """Use the same HTTP(S) address rules as APT, without its trailing slash."""
+    return validate_mirror_uri(uri).rstrip("/")
+
+
+def _flathub_bytes(uri, path, *, opener, limit=1024 * 1024, checksum=None):
+    response = opener(urllib.request.Request(f"{uri}/{path}"), timeout=8)
+    try:
+        if getattr(response, "status", 200) != 200:
+            raise RuntimeError("Flathub metadata is unavailable")
+        data = response.read(limit + 1)
+    finally:
+        response.close()
+    if not data or len(data) > limit:
+        raise RuntimeError("Flathub metadata has an invalid size")
+    if checksum and hashlib.sha256(data).hexdigest() != checksum:
+        raise RuntimeError("Flathub metadata checksum does not match")
+    return data
+
+
+def _flathub_variant(data, signature):
+    try:
+        variant = GLib.Variant.new_from_bytes(
+            GLib.VariantType.new(signature), GLib.Bytes.new(data), False,
+        )
+    except GLib.Error as error:
+        raise ValueError("Invalid Flathub metadata") from error
+    if not variant.is_normal_form():
+        raise ValueError("Invalid Flathub metadata")
+    return variant.unpack()
+
+
+def probe_flathub(uri, architecture=None, opener=urllib.request.urlopen):
+    """Validate an actual Flathub repository and its current-architecture index."""
+    uri = validate_flathub_uri(uri)
+    architecture = architecture or system_architecture()
+    if architecture not in {"amd64", "arm64"}:
+        raise ValueError("Unsupported Flatpak architecture")
+    arch = {"amd64": "x86_64", "arm64": "aarch64"}[architecture]
+    config = configparser.ConfigParser(interpolation=None)
+    config.read_string(_flathub_bytes(uri, "config", opener=opener, limit=65536).decode("utf-8"))
+    if config.get("core", "collection-id", fallback="") != "org.flathub.Stable":
+        raise ValueError("This address is not a Flathub mirror")
+    index, _metadata = _flathub_variant(
+        _flathub_bytes(uri, "summary.idx", opener=opener),
+        "(a{s(ayaaya{sv})}a{sv})",
+    )
+    if arch not in index or len(index[arch][0]) != 32:
+        raise ValueError("Flathub mirror lacks the current architecture")
+    return bytes(index[arch][0]).hex()
+
+
+def _flathub_sample(uri, summary_checksum, architecture, opener):
+    """Resolve current AppStream data, rather than pinning a version or object."""
+    compressed = _flathub_bytes(
+        uri, f"summaries/{summary_checksum}.gz", opener=opener, limit=8 * 1024 * 1024,
+    )
+    limit = 16 * 1024 * 1024
+    with gzip.GzipFile(fileobj=io.BytesIO(compressed)) as stream:
+        data = stream.read(limit + 1)
+    if len(data) > limit or hashlib.sha256(data).hexdigest() != summary_checksum:
+        raise ValueError("Invalid Flathub summary checksum or size")
+    refs, _metadata = _flathub_variant(data, "(a(s(taya{sv}))a{sv})")
+    arch = {"amd64": "x86_64", "arm64": "aarch64"}[architecture]
+    checksum = next((bytes(value[1]).hex() for ref, value in refs
+                     if ref == f"appstream2/{arch}"), None)
+    if not checksum or len(checksum) != 64:
+        raise ValueError("Flathub AppStream reference is missing")
+
+    def object_data(checksum, kind, signature):
+        data = _flathub_bytes(
+            uri, f"objects/{checksum[:2]}/{checksum[2:]}.{kind}",
+            opener=opener, checksum=checksum,
+        )
+        return _flathub_variant(data, signature)
+
+    commit = object_data(checksum, "commit", "(a{sv}aya(say)sstayay)")
+    checksum = bytes(commit[6]).hex()
+    if len(checksum) != 64:
+        raise ValueError("Invalid Flathub root tree")
+    files, _directories = object_data(checksum, "dirtree", "(a(say)a(sayay))")
+    checksum = next((bytes(value).hex() for name, value in files
+                     if name in {"appstream.xml", "appstream.xml.gz"}), None)
+    if not checksum or len(checksum) != 64:
+        raise ValueError("Flathub AppStream data is missing")
+    return f"objects/{checksum[:2]}/{checksum[2:]}.filez"
+
+
+def measure_flathub_mirrors(
+    architecture, *, candidates=None, opener=urllib.request.urlopen,
+    clock=time.monotonic, progress=None,
+):
+    """Measure reachable repositories against one dynamically resolved object.
+
+    Metadata selects a download sample only; Flatpak still verifies official
+    signatures when installing. No remote configuration or trusted keys change.
+    """
+    candidates = tuple(dict.fromkeys(validate_flathub_uri(uri) for uri in (
+        FLATHUB_SOURCES.values() if candidates is None else candidates
+    )))
+
+    def latency(uri):
+        started = clock()
+        try:
+            checksum = probe_flathub(uri, architecture, opener)
+            elapsed = (clock() - started) * 1000
+            if progress:
+                progress("latency", uri, elapsed)
+            return uri, elapsed, checksum
+        except (OSError, ValueError, RuntimeError, GLib.Error, configparser.Error):
+            return None
+
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        reachable = [item for item in executor.map(latency, candidates) if item]
+    reachable.sort(key=lambda item: item[1])
+    sample = None
+    for uri, _elapsed, checksum in reachable:
+        try:
+            sample = _flathub_sample(uri, checksum, architecture, opener)
+            break
+        except (OSError, EOFError, ValueError, RuntimeError, GLib.Error, zlib.error):
+            continue
+    if sample is None:
+        raise RuntimeError("No usable Flathub download sample is reachable")
+
+    def bandwidth(item):
+        uri, elapsed, _checksum = item
+        started = clock()
+        response = None
+        try:
+            response = opener(urllib.request.Request(f"{uri}/{sample}"), timeout=5)
+            if getattr(response, "status", 200) != 200:
+                return None
+            headers = getattr(response, "headers", {})
+            if "text/html" in headers.get("Content-Type", ""):
+                return None
+            size = 0
+            while clock() - started < 3.0 and size < 32 * 1024 * 1024:
+                chunk = response.read(65536)
+                if not chunk:
+                    break
+                size += len(chunk)
+            duration = clock() - started
+            if not size or duration <= 0:
+                return None
+            speed = size * 8 / duration / 1024 / 1024
+            if progress:
+                progress("bandwidth", uri, speed)
+            return MirrorMeasurement(uri, elapsed, speed)
+        except (OSError, ValueError):
+            return None
+        finally:
+            if response is not None:
+                response.close()
+
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        measured = [item for item in executor.map(bandwidth, reachable) if item]
+    if not measured:
+        raise RuntimeError("No Flathub mirror could download the sample")
+    return tuple(sorted(measured, key=lambda item: (-item.bandwidth_mbps, item.latency_ms)))
+
+
 def simulated_upgrade_count(output: str) -> int:
     match = re.search(r"(?m)^(\d+) upgraded,", output)
     if not match:
@@ -355,16 +523,18 @@ class SoftwareSourceWindow(Adw.Window):
             transient_for=owner,
             modal=True,
             title=_("Software Source"),
-            default_width=680,
+            default_width=910,
             default_height=460,
         )
         self._busy = False
         self._updates_available = False
         self._flathub_loaded = False
         self._measurements: dict[str, MirrorMeasurement] = {}
+        self._flathub_measurements: dict[str, MirrorMeasurement] = {}
 
         toolbar = Adw.ToolbarView()
-        toolbar.add_top_bar(Adw.HeaderBar())
+        header = Adw.HeaderBar()
+        toolbar.add_top_bar(header)
         self.set_content(toolbar)
         scroll = Gtk.ScrolledWindow(
             hscrollbar_policy=Gtk.PolicyType.NEVER,
@@ -407,17 +577,22 @@ class SoftwareSourceWindow(Adw.Window):
         self.source_overview = overview
         body.append(overview)
 
-        self.pages = Gtk.Stack()
-        self.pages.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
-        switcher = Gtk.StackSwitcher(stack=self.pages)
-        switcher.set_halign(Gtk.Align.FILL)
-        switcher.set_hexpand(True)
+        self.pages = Adw.ViewStack()
+        switcher = Adw.ViewSwitcherTitle(stack=self.pages, title=_("Software Source"))
+        header.set_title_widget(switcher)
         self.source_switcher = switcher
-        body.append(switcher)
+        switcher_bar = Adw.ViewSwitcherBar(stack=self.pages)
+        switcher.bind_property(
+            "title-visible", switcher_bar, "reveal", GObject.BindingFlags.SYNC_CREATE,
+        )
+        toolbar.add_bottom_bar(switcher_bar)
+        self.source_switcher_bar = switcher_bar
         body.append(self.pages)
 
         automatic = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
-        self.pages.add_titled(automatic, "automatic", _("Automatic"))
+        self.pages.add_titled_with_icon(
+            automatic, "automatic", "APT · " + _("Automatic"), "network-transmit-receive-symbolic",
+        )
         source_group = Adw.PreferencesGroup()
         source_row = Adw.ActionRow(title=_("Software Source"))
         self.mirror_button = Gtk.Button(label=_("  Switch to Fastest Mirror  ").strip())
@@ -441,7 +616,9 @@ class SoftwareSourceWindow(Adw.Window):
         automatic.append(update_group)
 
         advanced = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        self.pages.add_titled(advanced, "advanced", _("Advanced"))
+        self.pages.add_titled_with_icon(
+            advanced, "advanced", "APT · " + _("Advanced"), "preferences-system-symbolic",
+        )
         custom_current = bool(current and current not in MIRRORS)
         self._mirror_options = (
             MIRRORS if custom_current
@@ -470,23 +647,47 @@ class SoftwareSourceWindow(Adw.Window):
         advanced.append(advanced_buttons)
 
         flatpak_page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
-        self.pages.add_titled(flatpak_page, "flatpak", "Flatpak")
+        self.pages.add_titled_with_icon(
+            flatpak_page, "flatpak", "Flathub · " + _("Automatic"), "network-transmit-receive-symbolic",
+        )
         flathub_group = Adw.PreferencesGroup()
         self.flathub_current = Adw.ActionRow(title=_("Flathub software source"))
         self.flathub_current.set_subtitle("…")
         flathub_group.add(self.flathub_current)
         flatpak_page.append(flathub_group)
-        self._flathub_options = tuple(FLATHUB_SOURCES)
+        self.flathub_fastest = Gtk.Button(label=_("  Switch to Fastest Mirror  ").strip())
+        self.flathub_fastest.add_css_class("suggested-action")
+        self.flathub_fastest.set_valign(Gtk.Align.CENTER)
+        self.flathub_fastest.connect("clicked", lambda _button: self._measure_flathub(automatic=True))
+        self.flathub_current.add_suffix(self.flathub_fastest)
+
+        flatpak_advanced = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.pages.add_titled_with_icon(
+            flatpak_advanced, "flatpak-advanced", "Flathub · " + _("Advanced"), "preferences-system-symbolic",
+        )
+        advanced_flathub_group = Adw.PreferencesGroup()
+        self.flathub_advanced_current = Adw.ActionRow(title=_("Flathub software source"))
+        self.flathub_advanced_current.set_subtitle("…")
+        advanced_flathub_group.add(self.flathub_advanced_current)
+        flatpak_advanced.append(advanced_flathub_group)
+        self._flathub_options = tuple(FLATHUB_SOURCES.values())
         self.flathub_dropdown = Gtk.DropDown.new_from_strings(
-            [_("Official Flathub"), _("USTC (China)")]
+            [_("Custom address…"), *self._flathub_labels()]
         )
         self.flathub_dropdown.connect("notify::selected", self._flathub_selection_changed)
-        flatpak_page.append(self.flathub_dropdown)
-        self.flathub_apply = Gtk.Button(label=_("Apply"))
-        self.flathub_apply.set_halign(Gtk.Align.END)
+        flatpak_advanced.append(self.flathub_dropdown)
+        self.flathub_custom = Gtk.Entry(placeholder_text="https://mirror.example/flathub", visible=False)
+        flatpak_advanced.append(self.flathub_custom)
+        self.flathub_dropdown.set_selected(1)
+        flathub_buttons = Gtk.Box(spacing=12, halign=Gtk.Align.END)
+        self.flathub_test = Gtk.Button(label=_("Test mirror speeds"))
+        self.flathub_test.connect("clicked", lambda _button: self._measure_flathub(automatic=False))
+        flathub_buttons.append(self.flathub_test)
+        self.flathub_apply = Gtk.Button(label=_("Apply selected mirror"))
         self.flathub_apply.add_css_class("suggested-action")
         self.flathub_apply.connect("clicked", self._apply_flathub)
-        flatpak_page.append(self.flathub_apply)
+        flathub_buttons.append(self.flathub_apply)
+        flatpak_advanced.append(flathub_buttons)
 
         self.output_expander = Gtk.Expander(label=_("Terminal Output"), visible=False)
         output_scroll = Gtk.ScrolledWindow(
@@ -515,7 +716,7 @@ class SoftwareSourceWindow(Adw.Window):
         self.pages.connect("notify::visible-child-name", self._source_page_changed)
 
     def _source_page_changed(self, _stack, _property) -> None:
-        flatpak_page = self.pages.get_visible_child_name() == "flatpak"
+        flatpak_page = self.pages.get_visible_child_name().startswith("flatpak")
         self.source_overview.set_visible(not flatpak_page)
         if not self._busy:
             self.status.set_label("")
@@ -536,43 +737,125 @@ class SoftwareSourceWindow(Adw.Window):
 
     def _flathub_read_failed(self) -> bool:
         self.flathub_current.set_subtitle(_("Could not read the Flathub source."))
+        self.flathub_advanced_current.set_subtitle(_("Could not read the Flathub source."))
         self.output_expander.set_visible(True)
         return self._finish(_("✗ Operation failed: ") + _("Review Terminal Output for details."))
 
     def _flathub_read_complete(self, uri: str, message: str = "") -> bool:
         self._flathub_loaded = True
         self.flathub_current.set_subtitle(uri or _("Flathub is not configured."))
-        known = next((key for key, value in FLATHUB_SOURCES.items()
-                      if value.rstrip("/") == uri.rstrip("/")), None)
-        labels = [_("Official Flathub"), _("USTC (China)")]
-        self._flathub_options = tuple(FLATHUB_SOURCES)
-        if uri and known is None:
-            # GTK DropDown may auto-select item zero instead of allowing an
-            # empty selection. Keep a non-applicable current-address item.
-            labels.insert(0, uri)
-            self._flathub_options = (None, *self._flathub_options)
-        self.flathub_dropdown.set_model(Gtk.StringList.new(labels))
-        self.flathub_dropdown.set_selected(self._flathub_options.index(known) if known else 0)
+        self.flathub_advanced_current.set_subtitle(uri or _("Flathub is not configured."))
+        known = uri.rstrip("/") in self._flathub_options
+        self.flathub_custom.set_text(uri if uri and not known else "")
+        self.flathub_dropdown.set_selected(
+            self._flathub_options.index(uri.rstrip("/")) + 1 if known else 0 if uri else 1
+        )
         return self._finish(message)
 
-    def _flathub_selection_changed(self, _dropdown, _property) -> None:
-        if hasattr(self, "flathub_apply"):
-            self.flathub_apply.set_sensitive(not self._busy and self._selected_flathub_source() is not None)
+    def _flathub_labels(self):
+        names = [_("Official Flathub"), "SJTU", _("USTC (China)")]
+        for index, uri in enumerate(FLATHUB_SOURCES.values()):
+            item = self._flathub_measurements.get(uri)
+            if item:
+                names[index] += f" — {item.latency_ms:.0f} ms · {item.bandwidth_mbps:.1f} Mbps"
+        return names
 
-    def _selected_flathub_source(self) -> str | None:
+    def _flathub_selection_changed(self, _dropdown, _property) -> None:
+        if hasattr(self, "flathub_custom"):
+            self.flathub_custom.set_visible(self.flathub_dropdown.get_selected() == 0)
+        if hasattr(self, "flathub_apply"):
+            self.flathub_apply.set_sensitive(not self._busy)
+
+    def _selected_flathub_source(self) -> str:
         index = self.flathub_dropdown.get_selected()
-        return self._flathub_options[index] if index < len(self._flathub_options) else None
+        if index == 0:
+            return validate_flathub_uri(self.flathub_custom.get_text())
+        if index > len(self._flathub_options):
+            raise ValueError("No Flathub source selected")
+        return self._flathub_options[index - 1]
 
     def _apply_flathub(self, _button) -> None:
-        source = self._selected_flathub_source()
-        if self._busy or source is None:
+        if self._busy:
+            return
+        try:
+            source = self._selected_flathub_source()
+        except ValueError:
+            self._finish(_("Enter a valid HTTP or HTTPS mirror address."))
+            return
+        self._confirm_flathub(self._flathub_measurements.get(source, source))
+
+    def _measure_flathub(self, *, automatic):
+        if self._busy:
+            return
+        try:
+            selected = None if automatic else self._selected_flathub_source()
+        except ValueError:
+            self._finish(_("Enter a valid HTTP or HTTPS mirror address."))
             return
         self._set_busy(True)
-        self.status.set_label(_("Switching mirror…"))
+        self.status.set_label(_("Testing mirrors…"))
         self.output.get_buffer().set_text("")
         self.output_expander.set_visible(True)
-        self.output_expander.set_expanded(False)
-        threading.Thread(target=self._flathub_worker, args=(source,), daemon=True).start()
+        self.output_expander.set_expanded(True)
+
+        def progress(kind, uri, value):
+            unit = "ms" if kind == "latency" else "Mbps"
+            GLib.idle_add(self._append_output, f"  {uri} — {value:.1f} {unit}\n")
+
+        def worker():
+            try:
+                measurements = measure_flathub_mirrors(
+                    system_architecture(), candidates=(selected,) if selected else None,
+                    progress=progress,
+                )
+            except (OSError, ValueError, RuntimeError) as error:
+                GLib.idle_add(self._append_output, f"{error}\n")
+                GLib.idle_add(self._finish, _("✗ Mirror test failed: ") + _("Review Terminal Output for details."))
+                return
+            GLib.idle_add(self._flathub_measured, measurements, automatic)
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def _flathub_measured(self, measurements, automatic):
+        self._flathub_measurements.update({item.uri: item for item in measurements})
+        selected = self.flathub_dropdown.get_selected()
+        self.flathub_dropdown.set_model(Gtk.StringList.new([_("Custom address…"), *self._flathub_labels()]))
+        self.flathub_dropdown.set_selected(selected)
+        item = measurements[0]
+        self._finish(_("Mirror speed test complete.") + f" {item.uri} — {item.latency_ms:.0f} ms · {item.bandwidth_mbps:.1f} Mbps")
+        if automatic:
+            self._confirm_flathub(item)
+        return GLib.SOURCE_REMOVE
+
+    def _confirm_flathub(self, measurement):
+        uri = measurement.uri if isinstance(measurement, MirrorMeasurement) else measurement
+        details = (
+            f"{_('Latency')}: {measurement.latency_ms:.0f} ms · {_('Bandwidth')}: {measurement.bandwidth_mbps:.1f} Mbps"
+            if isinstance(measurement, MirrorMeasurement) else ""
+        )
+        # A configured URL may belong to a disabled remote. Reapplying it must
+        # still reach the helper, which enables the selected system remote.
+        dialog = Adw.MessageDialog(
+            transient_for=self, heading=_("Apply selected mirror"),
+            body=f"Flathub\n{uri}\n{details}",
+        )
+        dialog.add_response("keep", _("Keep Current"))
+        dialog.add_response("switch", _("Switch"))
+        dialog.set_close_response("keep")
+        dialog.set_default_response("switch")
+        dialog.set_response_appearance("switch", Adw.ResponseAppearance.SUGGESTED)
+
+        def response(_dialog, answer):
+            if answer != "switch":
+                self._finish("")
+                return
+            self._set_busy(True)
+            self.status.set_label(_("Switching mirror…"))
+            self.output_expander.set_visible(True)
+            threading.Thread(target=self._flathub_worker, args=(uri,), daemon=True).start()
+
+        dialog.connect("response", response)
+        dialog.present()
 
     def _flathub_worker(self, source: str) -> None:
         code, output = self._run_helper("switch-flathub", source)
@@ -642,7 +925,11 @@ class SoftwareSourceWindow(Adw.Window):
         self.test_button.set_sensitive(not busy)
         self.apply_button.set_sensitive(not busy)
         self.source_switcher.set_sensitive(not busy)
+        self.source_switcher_bar.set_sensitive(not busy)
         self.flathub_dropdown.set_sensitive(not busy)
+        self.flathub_custom.set_sensitive(not busy)
+        self.flathub_fastest.set_sensitive(not busy)
+        self.flathub_test.set_sensitive(not busy)
         self._flathub_selection_changed(None, None)
         self.set_deletable(not busy)
         self.progress.set_visible(busy)
