@@ -277,7 +277,7 @@ def main() -> int:
     arguments = parser.parse_args()
     try:
         changes = merge_request_changes()
-        if arguments.affected:
+        if arguments.affected is not None:
             if arguments.affected not in {directory for directory, _ in projects().values()}:
                 raise RuntimeError(f"Unknown package directory: {arguments.affected}")
             selected = changes is None or arguments.affected in affected_directories(changes[1])
