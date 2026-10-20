@@ -331,13 +331,20 @@ class FlathubSourceTests(unittest.TestCase):
 
     def test_corrupt_metadata_and_failed_payload_never_produce_a_fastest_mirror(self):
         from anduinos_control_panel.software_sources import measure_flathub_mirrors
-        for corrupt_summary in [True, False]:
-            with self.subTest(corrupt_summary=corrupt_summary):
+        for failure in ["checksum", "truncated", "compression", "payload"]:
+            with self.subTest(failure=failure):
                 files, sample = self.mirror_files()
-                if corrupt_summary:
+                if failure != "payload":
                     key = next(key for key in files if key.startswith("summaries/"))
                     import gzip
-                    files[key] = gzip.compress(b"wrong summary")
+                    if failure == "checksum":
+                        files[key] = gzip.compress(b"wrong summary")
+                    elif failure == "truncated":
+                        files[key] = files[key][:6]
+                    else:
+                        damaged = bytearray(files[key])
+                        damaged[10] ^= 0xFF
+                        files[key] = bytes(damaged)
 
                 def opener(request, timeout):
                     path = request.full_url.split("/repo/", 1)[1]

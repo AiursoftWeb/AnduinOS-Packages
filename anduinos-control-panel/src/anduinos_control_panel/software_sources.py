@@ -20,6 +20,7 @@ import time
 import urllib.request
 import urllib.error
 import urllib.parse
+import zlib
 
 import gi
 
@@ -458,7 +459,7 @@ def measure_flathub_mirrors(
         try:
             sample = _flathub_sample(uri, checksum, architecture, opener)
             break
-        except (OSError, ValueError, RuntimeError, GLib.Error):
+        except (OSError, EOFError, ValueError, RuntimeError, GLib.Error, zlib.error):
             continue
     if sample is None:
         raise RuntimeError("No usable Flathub download sample is reachable")
