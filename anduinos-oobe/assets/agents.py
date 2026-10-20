@@ -13,6 +13,7 @@ def environment():
     env = os.environ.copy()
     paths = [os.path.expanduser(path) for path in (
         '~/.local/bin', '~/.opencode/bin', '~/.minimax-code/bin', '~/.kimi-code/bin',
+        '~/.grok/bin',
     )]
     nvm_dir = env.get('NVM_DIR', os.path.expanduser('~/.nvm'))
     paths = sorted(glob.glob(os.path.join(nvm_dir, 'versions/node/*/bin')),
@@ -71,8 +72,6 @@ def recommendations(_, chinese):
     opencode = 'curl -fsSL https://opencode.ai/install | bash'
     if chinese:
         agents = [
-            agent('kimi', 'Kimi Code', _('A terminal coding assistant from Kimi.'),
-                  'kimi', 'curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash'),
             agent('deepseek', 'DeepSeek Harness',
                   _('A coding agent with a local web interface.'),
                   'dsh',
@@ -87,19 +86,26 @@ def recommendations(_, chinese):
                   'fi\n'
                   'npm install --global --prefix "$HOME/.local" '
                   '@deepseek-ai/dsh@latest', ('web',)),
-            agent('glm', 'GLM · OpenCode',
-                  _('Use GLM in OpenCode. Select Z.AI when configuring your model.'),
-                  'opencode', opencode),
-            agent('minimax', 'MiniMax Code', _('A terminal coding assistant from MiniMax.'),
-                  'mcode', 'curl -fsSL https://filecdn.minimax.chat/public/install.sh | bash'),
             agent('qwen', 'Qwen Code', _('A terminal coding assistant from Qwen.'),
                   'qwen', 'curl -fsSL https://qwen-code-assets.oss-cn-hangzhou.aliyuncs.com/'
                   'installation/install-qwen-standalone.sh | bash'),
+            agent('glm', 'OpenCode + GLM',
+                  _('Use GLM in OpenCode. Select Z.AI when configuring your model.'),
+                  'opencode', opencode),
+            agent('kimi', 'Kimi Code', _('A terminal coding assistant from Kimi.'),
+                  'kimi', 'curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash'),
+            agent('minimax', 'MiniMax Code', _('A terminal coding assistant from MiniMax.'),
+                  'mcode', 'curl -fsSL https://filecdn.minimax.chat/public/install.sh | bash'),
+            agent('codebuddy', 'CodeBuddy Code',
+                  _('A terminal coding assistant from Tencent.'),
+                  'codebuddy', 'curl -fsSL https://copilot.tencent.com/cli/install.sh | bash'),
         ]
-        agents[1]['notice'] = _(
+        agents[0]['notice'] = _(
             'If a compatible Node.js and npm are missing, this also installs nvm and the latest Node.js release for your user account.')
         return agents
     return [
+        agent('opencode', 'OpenCode', _('An open source coding agent for your terminal.'),
+              'opencode', opencode),
         agent('claude', 'Claude Code', _('A terminal coding assistant from Anthropic.'),
               'claude', 'curl -fsSL https://claude.ai/install.sh | bash'),
         agent('codex', 'Codex', _('A terminal coding assistant from OpenAI.'),
@@ -108,6 +114,6 @@ def recommendations(_, chinese):
               'copilot', 'curl -fsSL https://gh.io/copilot-install | bash'),
         agent('antigravity', 'Antigravity', _('A terminal coding assistant from Google.'),
               'agy', 'curl -fsSL https://antigravity.google/cli/install.sh | bash'),
-        agent('opencode', 'OpenCode', _('An open source coding agent for your terminal.'),
-              'opencode', opencode),
+        agent('grok', 'Grok Build', _('A terminal coding assistant from xAI.'),
+              'grok', 'curl -fsSL https://x.ai/cli/install.sh | bash'),
     ]

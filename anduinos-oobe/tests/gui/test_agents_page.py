@@ -122,12 +122,48 @@ class AgentsPageTests(unittest.TestCase):
         button.emit('clicked')
         self.assertEqual(opened, [True])
 
-    def test_locale_selects_only_the_expected_five_recommendations(self):
+    def test_default_window_shows_two_full_rows_and_half_the_last_row(self):
+        for locale in ('zh_CN.UTF-8', 'en_US.UTF-8'):
+            for is_oobe in (False, True):
+                with self.subTest(locale=locale, is_oobe=is_oobe):
+                    factories = [
+                        lambda: oobe.Gtk.Label(label='Applications'),
+                        lambda: oobe.create_agents_page(),
+                        lambda: oobe.Gtk.Label(label='Privacy'),
+                    ]
+                    with (patch.dict(oobe.os.environ, LANGUAGE=locale),
+                          patch.object(oobe.OobeWindow, '_get_page_factories',
+                                       return_value=factories)):
+                        window = oobe.OobeWindow(None, is_oobe)
+                    try:
+                        window.present()
+                        window.carousel.scroll_to(window._pages[1], False)
+                        page = window._content_page(window._pages[1])
+                        scroller = next(item for item in descendants(page)
+                                        if isinstance(item, oobe.Gtk.ScrolledWindow))
+                        buttons = [item for item in descendants(scroller)
+                                   if isinstance(item, oobe.Gtk.Button)]
+                        self.wait_for(lambda: buttons[-1].get_height() > 0)
+                        self.assertEqual(len(buttons), 6)
+                        bounds = [button.compute_bounds(scroller)[1] for button in buttons]
+                        for card in bounds[:4]:
+                            self.assertGreaterEqual(card.get_y(), 0)
+                            self.assertLessEqual(card.get_y() + card.get_height(),
+                                                 scroller.get_height())
+                        for card in bounds[4:]:
+                            visible = (scroller.get_height() - card.get_y()) / card.get_height()
+                            self.assertGreater(visible, .35)
+                            self.assertLess(visible, .75)
+                        self.assertTrue(window.next_btn.get_visible())
+                    finally:
+                        window.destroy()
+
+    def test_locale_selects_only_the_expected_six_recommendations(self):
         for locale, expected in (
-            ('zh_CN.UTF-8', ['Kimi Code', 'DeepSeek Harness', 'GLM · OpenCode', 'MiniMax Code', 'Qwen Code']),
-            ('zh-CN', ['Kimi Code', 'DeepSeek Harness', 'GLM · OpenCode', 'MiniMax Code', 'Qwen Code']),
-            ('en_US.UTF-8', ['Claude Code', 'Codex', 'GitHub Copilot', 'Antigravity', 'OpenCode']),
-            ('zh_TW.UTF-8', ['Claude Code', 'Codex', 'GitHub Copilot', 'Antigravity', 'OpenCode']),
+            ('zh_CN.UTF-8', ['DeepSeek Harness', 'Qwen Code', 'OpenCode + GLM', 'Kimi Code', 'MiniMax Code', 'CodeBuddy Code']),
+            ('zh-CN', ['DeepSeek Harness', 'Qwen Code', 'OpenCode + GLM', 'Kimi Code', 'MiniMax Code', 'CodeBuddy Code']),
+            ('en_US.UTF-8', ['OpenCode', 'Claude Code', 'Codex', 'GitHub Copilot', 'Antigravity', 'Grok Build']),
+            ('zh_TW.UTF-8', ['OpenCode', 'Claude Code', 'Codex', 'GitHub Copilot', 'Antigravity', 'Grok Build']),
         ):
             with self.subTest(locale=locale), patch.dict(oobe.os.environ, LANGUAGE=locale):
                 page = oobe.create_agents_page()
@@ -136,7 +172,7 @@ class AgentsPageTests(unittest.TestCase):
                 self.assertEqual(names, expected)
                 logos = [item for item in descendants(page)
                          if isinstance(item, oobe.Gtk.Image) and item.has_css_class('agent-logo')]
-                self.assertEqual(len(logos), 5)
+                self.assertEqual(len(logos), 6)
                 for logo in logos:
                     # Missing files or one-pixel intrinsic SVGs lose the brand artwork.
                     paintable = logo.get_paintable()
@@ -167,7 +203,7 @@ class AgentsPageTests(unittest.TestCase):
         window.present()
         buttons = [item for item in descendants(page) if isinstance(item, oobe.Gtk.Button)]
         with patch.object(oobe._agents, 'executable', return_value=None):
-            buttons[1].emit('clicked')
+            buttons[0].emit('clicked')
         dialog = self.dialog(window)
         self.assertIn('latest Node.js release', dialog.get_body())
         self.assertIn('nvm', dialog.get_body())
