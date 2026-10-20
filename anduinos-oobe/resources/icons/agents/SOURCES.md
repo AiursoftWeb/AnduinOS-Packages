@@ -16,6 +16,8 @@ SVGs retain the upstream artwork and proportions. Root viewport dimensions are s
 | deepseek.svg | https://github.com/lobehub/lobe-icons/blob/master/packages/static-svg/icons/deepseek-color.svg |
 | minimax.svg | https://github.com/lobehub/lobe-icons/blob/master/packages/static-svg/icons/minimax-color.svg |
 | qwen.svg | https://github.com/lobehub/lobe-icons/blob/master/packages/static-svg/icons/qwen-color.svg |
+| codebuddy.svg | https://github.com/lobehub/lobe-icons/blob/master/packages/static-svg/icons/codebuddy-color.svg |
+| grok.svg | https://github.com/lobehub/lobe-icons/blob/master/packages/static-svg/icons/grok.svg |
 
 ## LobeHub artwork license
 

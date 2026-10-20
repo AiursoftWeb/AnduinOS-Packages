@@ -12,12 +12,39 @@ agents = importlib.machinery.SourceFileLoader(
 
 
 class AgentOperationsTests(unittest.TestCase):
+    def test_recommendation_order_and_deepseek_runtime_notice(self):
+        chinese = agents.recommendations(lambda text: text, True)
+        international = agents.recommendations(lambda text: text, False)
+        self.assertEqual([item['id'] for item in chinese],
+                         ['deepseek', 'qwen', 'glm', 'kimi', 'minimax', 'codebuddy'])
+        self.assertEqual([item['id'] for item in international],
+                         ['opencode', 'claude', 'codex', 'copilot', 'antigravity', 'grok'])
+        self.assertEqual(chinese[2]['name'], 'OpenCode + GLM')
+        self.assertIn('Node.js', chinese[0]['notice'])
+        self.assertFalse(any('notice' in item for item in chinese[1:]))
+
+    def test_grok_install_is_found_without_restarting_the_desktop(self):
+        with tempfile.TemporaryDirectory() as home, patch.dict(os.environ, HOME=home):
+            binary = Path(home) / '.grok/bin/grok'
+            binary.parent.mkdir(parents=True)
+            binary.write_text('#!/bin/sh\nexit 0\n')
+            binary.chmod(0o755)
+            terminal = binary.parent / 'ptyxis'
+            terminal.write_text('#!/bin/sh\nexit 0\n')
+            terminal.chmod(0o755)
+            item = agents.recommendations(lambda text: text, False)[-1]
+            self.assertTrue(item['is_installed']())
+            with patch.object(agents.subprocess, 'Popen') as launch:
+                item['open']()
+            self.assertEqual(launch.call_args.args[0][-1], str(binary))
+
     def test_user_install_is_detected_without_restarting_the_desktop(self):
         with tempfile.TemporaryDirectory() as home, patch.dict(os.environ, HOME=home, NVM_DIR=str(Path(home) / '.nvm')):
             binary = Path(home) / '.local/bin/kimi'
             binary.parent.mkdir(parents=True)
             binary.write_text('#!/bin/sh\nexit 0\n')
-            recommendation = agents.recommendations(lambda text: text, True)[0]
+            recommendation = next(item for item in agents.recommendations(lambda text: text, True)
+                                  if item['id'] == 'kimi')
             self.assertFalse(recommendation['is_installed']())
             binary.chmod(0o755)
             self.assertTrue(recommendation['is_installed']())
@@ -69,7 +96,8 @@ class AgentOperationsTests(unittest.TestCase):
                 'if read -r input; then exit 9; fi; printf "installed\\n"',
                 output.append)
             self.assertEqual(code, 0)
-            self.assertTrue(agents.recommendations(lambda text: text, True)[0]['is_installed']())
+            self.assertTrue(next(item for item in agents.recommendations(lambda text: text, True)
+                                  if item['id'] == 'kimi')['is_installed']())
             self.assertIn('installed\n', output)
 
     def test_deepseek_reuses_a_compatible_runtime_without_downloading_nvm(self):
