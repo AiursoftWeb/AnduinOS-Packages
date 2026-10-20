@@ -60,6 +60,8 @@ class Firmware:
             output = self.boot_prefix
         elif args[0] == "lsblk":
             output = json.dumps({"blockdevices": self.parts})
+        elif args == ["dpkg", "--print-architecture"]:
+            output = "amd64" if self.suffix == "x64" else "arm64"
         elif args == ["efibootmgr", "--verbose"]:
             output = self.output()
         elif args[:2] == ["efibootmgr", "--create-only"]:
@@ -100,6 +102,7 @@ class BootChainTests(unittest.TestCase):
             # Fake only package/signature and dpkg lock boundaries. All disk
             # selection, staging, file replacement and NVRAM logic executes.
             with (patch.object(boot, "payloads", return_value=(sources, 0x8664 if suffix == "x64" else 0xAA64)),
+                  patch.object(boot, "EFI", esp),
                   patch.object(boot, "partition_number", return_value=1),
                   patch.object(boot, "verify_image"),
                   patch.object(boot, "open", side_effect=lambda *a: (root / "lock").open("a+"))):
@@ -231,9 +234,66 @@ class BootChainTests(unittest.TestCase):
     def test_other_current_boot_entry_is_not_repaired(self):
         with self.fixture() as (firmware, esp, _):
             firmware.current = "0000"
-            with self.assertRaisesRegex(ValueError, "ambiguous"):
+            with self.assertRaisesRegex(ValueError, "identify"):
                 boot.prepare_boot_chain(firmware, esp)
             self.assertFalse(firmware.new)
+
+    def bind_local_root(self, firmware, vendor):
+        (vendor / "grub.cfg").write_text(
+            f"search.fs_uuid {firmware.boot_uuid} root\n"
+            f"set prefix=($root)'{firmware.boot_prefix}'\n"
+            "configfile $prefix/grub.cfg\n")
+
+    def test_bios_and_generic_efi_boots_update_the_bound_installation(self):
+        for suffix, mode in (("x64", "bios"), ("x64", "usb"), ("aa64", "usb"),
+                             ("x64", "no-entry"), ("aa64", "no-entry")):
+            with self.subTest(suffix=suffix, mode=mode), self.fixture(suffix) as (firmware, esp, vendor):
+                self.bind_local_root(firmware, vendor)
+                firmware.loader = f"shim{suffix}.efi"
+                firmware.current = "0003"
+                if mode == "no-entry":
+                    firmware.output = lambda: "BootCurrent: 0003\nBootOrder: 0003\n"
+                before_order = firmware.order
+                with patch.object(boot, "EFI", esp / "not-efi" if mode == "bios" else esp):
+                    boot.prepare_boot_chain(firmware, esp)
+                self.assertEqual((vendor / f"grub{suffix}.efi").read_bytes(), b"new " + f"grub{suffix}.efi".encode())
+                self.assertEqual(firmware.order, before_order)
+                self.assertFalse(any(c[:2] in (["efibootmgr", "--create-only"], ["efibootmgr", "--bootorder"])
+                                     for c in firmware.calls))
+                if mode == "bios":
+                    self.assertFalse(any(c[0] == "efibootmgr" for c in firmware.calls))
+
+    def test_owned_portable_chain_updates_and_rolls_back_with_vendor_chain(self):
+        for suffix in ("x64", "aa64"):
+            for fail in (False, True):
+                with self.subTest(suffix=suffix, fail=fail), self.fixture(suffix) as (firmware, esp, vendor):
+                    self.bind_local_root(firmware, vendor)
+                    fallback = esp / "EFI/BOOT"
+                    for name in ("grub.cfg", f"grub{suffix}.efi", f"mm{suffix}.efi"):
+                        shutil.copyfile(vendor / name, fallback / name)
+                    shutil.copyfile(vendor / f"shim{suffix}.efi", fallback / f"BOOT{suffix.upper()}.EFI")
+                    before = {p: p.read_bytes() for d in (vendor, fallback) for p in d.iterdir()}
+                    firmware.fail_order = fail
+                    if fail:
+                        with self.assertRaisesRegex(ValueError, "NVRAM full"):
+                            boot.prepare_boot_chain(firmware, esp)
+                        self.assertEqual(before, {p: p.read_bytes() for p in before})
+                    else:
+                        boot.prepare_boot_chain(firmware, esp)
+                        for name in (f"grub{suffix}.efi", f"mm{suffix}.efi"):
+                            self.assertEqual((fallback / name).read_bytes(), (vendor / name).read_bytes())
+                        self.assertEqual((fallback / f"BOOT{suffix.upper()}.EFI").read_bytes(),
+                                         (vendor / f"shim{suffix}.efi").read_bytes())
+                        boot.prepare_boot_chain(firmware, esp)
+
+    def test_local_grub_stub_cannot_claim_a_foreign_fallback_loader(self):
+        with self.fixture() as (firmware, esp, vendor):
+            self.bind_local_root(firmware, vendor)
+            shutil.copyfile(vendor / "grub.cfg", esp / "EFI/BOOT/grub.cfg")
+            with self.assertRaisesRegex(ValueError, "loader requires manual review"):
+                boot.prepare_boot_chain(firmware, esp)
+            self.assertEqual((esp / "EFI/BOOT/BOOTX64.EFI").read_bytes(), b"foreign loader")
+            self.assertEqual((vendor / "shimx64.efi").read_bytes(), b"old shimx64.efi")
 
     def add_other_installation(self, firmware, vendor, *, chainloaded=True):
         other_uuid = "aaaaaaaa-1234-1234-1234-123456789abc"

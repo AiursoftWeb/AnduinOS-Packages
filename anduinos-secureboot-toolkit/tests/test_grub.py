@@ -2,6 +2,7 @@
 from dataclasses import replace
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import struct
@@ -131,6 +132,9 @@ class GrubSigningTests(unittest.TestCase):
         self.assertEqual(signing_calls, sum(command[0] == "sbsign" for command in self.runner.calls))
 
     def test_first_install_checks_final_files_without_signing_or_enrollment(self):
+        # Model the installer's protected ESP, independent of the CI umask.
+        previous_umask = os.umask(0o022)
+        self.addCleanup(os.umask, previous_umask)
         image = self.prepare()
         suffix, _, machine = grub.boot_chain.efi_architecture(self.runner)
         vendor = self.root / "esp/EFI/AnduinOS"
@@ -368,6 +372,17 @@ class GrubSigningTests(unittest.TestCase):
             self.assertFalse(grub.inspect_grub(self.runner, privileged=True, esp=esp).ready)
             deployed.write_bytes(image.read_bytes())
             self.assertTrue(grub.inspect_grub(self.runner, privileged=True, esp=esp).ready)
+            fallback = esp / "EFI/BOOT"
+            fallback.mkdir()
+            for name, source in {image.name: image, **companions}.items():
+                destination = f"BOOT{suffix.upper()}.EFI" if name.startswith("shim") else name
+                (fallback / destination).write_bytes(source.read_bytes())
+            with patch.object(grub.boot_chain, "owned_fallback", return_value=fallback):
+                self.assertTrue(grub.inspect_grub(self.runner, privileged=True, esp=esp).ready)
+                (fallback / image.name).write_bytes(b"stale portable copy")
+                state = grub.inspect_grub(self.runner, privileged=True, esp=esp)
+                self.assertEqual(state.deployment, "pending")
+                self.assertIn("portable", state.detail)
             other = "aa64" if suffix == "x64" else "x64"
             target.entry.loader = rf"\EFI\AnduinOS\shim{other}.efi"
             state = grub.inspect_grub(self.runner, privileged=True, esp=esp)
