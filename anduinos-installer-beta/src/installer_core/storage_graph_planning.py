@@ -13,7 +13,7 @@ from .coexistence import (
     analyze_guided_coexistence,
 )
 from .layout import build_erase_disk_layout
-from .model import Architecture, DiskIdentity, Filesystem, InstallMode, InstallPlan
+from .model import Architecture, DiskIdentity, Filesystem, Firmware, InstallMode, InstallPlan
 from .storage_graph import (
     STORAGE_GRAPH_SCHEMA_VERSION,
     BlockReference,
@@ -471,16 +471,20 @@ def build_erase_disk_storage_graph(
             partition_ids["efi-system"],
         )
     )
-    operations.append(
-        StorageGraphOperation(
-            (
-                StorageGraphAction.WRITE_FALLBACK_BOOT_FILES
-                if plan.boot.install_fallback_path
-                else StorageGraphAction.UPDATE_NVRAM
-            ),
-            partition_ids["efi-system"],
+    if plan.boot.install_fallback_path:
+        operations.append(
+            StorageGraphOperation(
+                StorageGraphAction.WRITE_FALLBACK_BOOT_FILES,
+                partition_ids["efi-system"],
+            )
         )
-    )
+    if plan.platform.firmware is Firmware.UEFI:
+        operations.append(
+            StorageGraphOperation(
+                StorageGraphAction.UPDATE_NVRAM,
+                partition_ids["efi-system"],
+            )
+        )
 
     return StorageGraph(
         schema_version=STORAGE_GRAPH_SCHEMA_VERSION,
