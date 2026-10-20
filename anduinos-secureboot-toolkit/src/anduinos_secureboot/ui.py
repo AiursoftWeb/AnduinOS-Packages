@@ -168,7 +168,10 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
     status.set_wrap(True)
     status.set_xalign(0)
     page.append(status)
-    refresh_button = Gtk.Button(label=_("Check Again"))
+    refresh_button = Gtk.Button(halign=Gtk.Align.END)
+    refresh_button.add_css_class("flat")
+    refresh_button.set_child(Adw.ButtonContent(
+        icon_name="view-refresh-symbolic", label=_("Check Again")))
     refresh_button.connect("clicked", lambda _button: refresh())
     page.append(refresh_button)
     holder = {"facts": None, "decision": None, "busy": False, "generation": 0}
