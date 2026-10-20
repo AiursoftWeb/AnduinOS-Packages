@@ -1,7 +1,9 @@
 workflow:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "prod"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS && $CI_PIPELINE_SOURCE == "push"
+      when: never
+    - if: $CI_COMMIT_BRANCH
 
 stages:
   - lint
@@ -60,9 +62,6 @@ test-all:
   stage: packages
   timeout: 3h
   before_script:
-    - |
-      selected=$(python3 lib/verify-ci-package-needs.py --affected "$PACKAGE_DIR") || exit $?
-      [ "$selected" = "yes" ] || exit 0
     - umask 022
     - dotnet tool update -g aiursoft.apkg.client --configfile ./nuget.config || dotnet tool install -g aiursoft.apkg.client --configfile ./nuget.config
     - export PATH="$PATH:$HOME/.dotnet/tools"
