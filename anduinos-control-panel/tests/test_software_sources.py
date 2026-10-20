@@ -259,6 +259,15 @@ class FlathubSourceTests(unittest.TestCase):
                 helper.switch_flathub("sjtu")
         self.assertEqual(run.call_args_list[-1].args, ("remote-modify", "flathub", "--url=" + original))
 
+    def test_failed_first_switch_retains_official_bootstrap_without_claiming_an_old_source(self):
+        official = "https://dl.flathub.org/repo"
+        with patch.object(helper, "probe_flathub"), patch.object(helper, "current_flathub", side_effect=["", "https://wrong.example/repo", official]), patch.object(helper, "_flatpak") as run:
+            with self.assertRaisesRegex(RuntimeError, "official Flathub remains configured"):
+                helper.switch_flathub("sjtu")
+        self.assertEqual(run.call_args_list[0].args[0], "remote-add")
+        self.assertEqual(run.call_args_list[-1].args, ("remote-modify", "flathub", "--url=" + official))
+        self.assertNotIn("remote-delete", str(run.call_args_list))
+
     @staticmethod
     def mirror_files(architecture="amd64", payload=b"x" * 131072):
         """A current, content-addressed AppStream object for a mirror scenario."""

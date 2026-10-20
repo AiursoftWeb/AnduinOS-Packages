@@ -821,9 +821,8 @@ class SoftwareSourceWindow(Adw.Window):
             f"{_('Latency')}: {measurement.latency_ms:.0f} ms · {_('Bandwidth')}: {measurement.bandwidth_mbps:.1f} Mbps"
             if isinstance(measurement, MirrorMeasurement) else ""
         )
-        if self.flathub_current.get_subtitle().rstrip("/") == uri:
-            self._finish(_("This is already your current mirror."))
-            return
+        # A configured URL may belong to a disabled remote. Reapplying it must
+        # still reach the helper, which enables the selected system remote.
         dialog = Adw.MessageDialog(
             transient_for=self, heading=_("Apply selected mirror"),
             body=f"Flathub\n{uri}\n{details}",

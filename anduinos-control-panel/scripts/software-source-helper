@@ -142,6 +142,8 @@ def switch_flathub(source: str) -> None:
         _flatpak("remote-modify", FLATHUB_REMOTE, f"--url={fallback}")
         if current_flathub().rstrip("/") != fallback.rstrip("/"):
             raise RuntimeError("Could not restore the original Flathub source") from error
+        if not original:
+            raise RuntimeError("The selected source failed; official Flathub remains configured") from error
         raise RuntimeError("The original source was restored") from error
     print(f"System Flathub switched to {uri}", flush=True)
     try:

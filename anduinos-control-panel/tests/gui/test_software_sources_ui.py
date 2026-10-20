@@ -147,6 +147,16 @@ class SoftwareSourceUiTests(unittest.TestCase):
             self.assertEqual(thread.call_args.kwargs["args"], (uri,))
             self.assertTrue(self.window._busy)
 
+    def test_current_flathub_address_can_be_reapplied_to_enable_a_disabled_remote(self):
+        uri = self.ui.FLATHUB_SOURCES["official"]
+        self.window._flathub_read_complete(uri)
+        with patch.object(self.ui.Adw, "MessageDialog") as dialog, patch.object(self.ui.threading, "Thread") as thread:
+            self.window._confirm_flathub(uri)
+            dialog.assert_called_once()
+            response = dialog.return_value.connect.call_args.args[1]
+            response(dialog.return_value, "switch")
+            self.assertEqual(thread.call_args.kwargs["args"], (uri,))
+
     def test_flathub_invalid_custom_address_and_failed_test_keep_current_source(self):
         original = self.ui.FLATHUB_SOURCES["official"]
         self.window._flathub_read_complete(original)
