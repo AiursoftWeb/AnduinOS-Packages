@@ -67,17 +67,17 @@ test-all:
   script:
     - cd "$PACKAGE_DIR"
     - |
-      if [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ] ||
-         { [ "$CI_COMMIT_BRANCH" != "master" ] && [ "$CI_COMMIT_BRANCH" != "prod" ]; }; then
-        apkg build --all
-        exit 0
-      fi
-      if [ "$CI_COMMIT_BRANCH" = "prod" ]; then
+      if [ "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME:-$CI_COMMIT_BRANCH}" = "prod" ]; then
         APKG_SOURCE="https://apkg.aiursoft.com"
         APKG_KEY="$APKG_PROD_API_KEY"
       else
         APKG_SOURCE="https://apkg-dev.aiursoft.com"
         APKG_KEY="$APKG_DEV_API_KEY"
+      fi
+      if [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ] ||
+         { [ "$CI_COMMIT_BRANCH" != "master" ] && [ "$CI_COMMIT_BRANCH" != "prod" ]; }; then
+        apkg build --all --skip-existing --source "$APKG_SOURCE"
+        exit 0
       fi
       apkg deploy --all \
         --source "$APKG_SOURCE" \
