@@ -1237,7 +1237,6 @@ def _skip_hardware_drivers(navigate_next):
 
 def create_hardware_drivers_page(navigate_next, update_nav=None):
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    page._hide_next = True
     page._suggest_next = False
     page.set_valign(Gtk.Align.FILL)
     page.set_halign(Gtk.Align.FILL)

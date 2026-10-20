@@ -26,6 +26,63 @@ class CarouselLayoutTests(unittest.TestCase):
         oobe.GLib.timeout_add(100, lambda: (loop.quit(), False)[1])
         loop.run()
 
+    def test_driver_page_can_continue_before_and_after_opening_driver_center(self):
+        settings = oobe.Gtk.Settings.get_default()
+        animations = settings.get_property("gtk-enable-animations")
+        settings.set_property("gtk-enable-animations", False)
+        self.addCleanup(settings.set_property, "gtk-enable-animations", animations)
+
+        def descendants(widget):
+            yield widget
+            child = widget.get_first_child()
+            while child:
+                yield from descendants(child)
+                child = child.get_next_sibling()
+
+        for is_oobe in (False, True):
+            with self.subTest(is_oobe=is_oobe):
+                window = None
+                factories = [
+                    lambda: oobe.Gtk.Label(label="Security"),
+                    lambda: oobe.create_hardware_drivers_page(lambda: window._nav_next()),
+                    lambda: oobe.Gtk.Label(label="Applications"),
+                ]
+                with patch.object(oobe.OobeWindow, "_get_page_factories", return_value=factories):
+                    window = oobe.OobeWindow(None, is_oobe)
+                try:
+                    window.present()
+                    window.carousel.scroll_to(window._pages[1], False)
+                    self.settle()
+                    self.assertTrue(window.next_btn.get_visible())
+                    self.assertTrue(window.next_btn.get_sensitive())
+                    window.next_btn.emit("clicked")
+                    self.settle()
+                    self.assertAlmostEqual(window.carousel.get_position(), 2)
+
+                    window.back_btn.emit("clicked")
+                    self.settle()
+                    page = window._content_page(window._pages[1])
+                    buttons = {item.get_label(): item for item in descendants(page)
+                               if isinstance(item, oobe.Gtk.Button)}
+                    with patch.object(oobe.subprocess, "Popen") as launch:
+                        buttons["Open Driver Center"].emit("clicked")
+                        self.settle()
+                        launch.assert_called_once_with([oobe.DRIVER_CENTER_EXECUTABLE])
+                        self.assertAlmostEqual(window.carousel.get_position(), 1)
+                        self.assertTrue(window.next_btn.get_visible())
+                        window.next_btn.emit("clicked")
+                        self.settle()
+                        self.assertAlmostEqual(window.carousel.get_position(), 2)
+                        launch.assert_called_once()
+
+                    window.back_btn.emit("clicked")
+                    self.settle()
+                    buttons["Skip"].emit("clicked")
+                    self.settle()
+                    self.assertAlmostEqual(window.carousel.get_position(), 2)
+                finally:
+                    window.destroy()
+
     def test_settled_pages_fill_viewport_and_hide_both_neighbors(self):
         settings = oobe.Gtk.Settings.get_default()
         animations = settings.get_property("gtk-enable-animations")
