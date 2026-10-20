@@ -90,6 +90,18 @@ class TrustPageTests(unittest.TestCase):
     def worker(self):
         self.thread.call_args.kwargs['target']()
 
+    def test_uninstalled_bootloader_recommends_installation_in_the_row_and_next_step(self):
+        self.page(grub=GrubState())
+        row = self.row('AnduinOS Bootloader')
+        self.assertIn('recommended', row.set_subtitle.call_args.args[0])
+        row.add_suffix.call_args_list[1].args[0].set_from_icon_name.assert_called_with(
+            'dialog-warning-symbolic')
+        self.assertIn('Next step:', self.labels[-1].set_label.call_args.args[0])
+        self.assertIn('recommended', self.labels[-1].set_label.call_args.args[0])
+        self.click('AnduinOS Bootloader')
+        self.action.assert_not_called()
+        self.assertIn('Install AnduinOS Bootloader', self.adw.MessageDialog.new.call_args.args[1])
+
     def test_complete_next_boot_evidence_allows_confirming_firmware_restart(self):
         self.page(SecureBootStatus.DISABLED, next_boot=self.evidence())
         self.click('Secure Boot')

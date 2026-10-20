@@ -61,7 +61,7 @@ class SecureBootPageTests(unittest.TestCase):
 
     def test_bootloader_row_reports_signature_trust_and_deployment_separately(self):
         cases = (
-            (GrubState(), 'Install AnduinOS Bootloader', 'not installed', 'dim-label'),
+            (GrubState(), 'Install AnduinOS Bootloader', 'recommended', 'warning'),
             (GrubState(installed=True, active_chain="trusted"), 'Repair AnduinOS Bootloader', 'needs signing', 'warning'),
             (GrubState(installed=True, signature='valid', enrollment='pending', active_chain='trusted'), 'Repair AnduinOS Bootloader', 'not enrolled', 'warning'),
             (GrubState(installed=True, signature='valid', enrollment='enrolled', deployment='pending', active_chain='trusted'), 'Repair AnduinOS Bootloader', 'needs deployment', 'warning'),

@@ -194,7 +194,7 @@ def decide(facts: Facts) -> PageDecision:
     elif boot is None:
         loader = row("bootloader", "warning", "bootloader-unknown", "refresh")
     elif not boot.installed:
-        loader = row("bootloader", "neutral", "bootloader-optional", "install-bootloader")
+        loader = row("bootloader", "warning", "bootloader-optional", "install-bootloader")
     elif boot.active_chain == "unknown":
         loader = row("bootloader", "warning", "bootloader-unknown", "refresh")
     elif boot.ready:
