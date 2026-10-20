@@ -190,6 +190,12 @@ class ProgressPageLayoutTests(unittest.TestCase):
         self.assertTrue(tutorial.get_mapped())
         self.assertAlmostEqual(tutorial.get_height(), tutorial.get_width() / 1.6, delta=1)
         adjustment = result_scroll.get_vadjustment()
+        # Mapping can precede allocation during the completion transition.
+        for _ in range(5):
+            if adjustment.get_page_size() > 0:
+                break
+            _settle()
+        self.assertGreater(adjustment.get_page_size(), 0)
         adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size())
         _settle()
         reboot = next(w for w in widgets if isinstance(w, Gtk.Button)
