@@ -235,6 +235,119 @@ if __name__ == "__main__":
 
 
 class FlathubSourceTests(unittest.TestCase):
+    def test_builtins_are_official_sjtu_ustc_and_custom_addresses_are_validated(self):
+        from anduinos_control_panel.software_sources import FLATHUB_SOURCES, validate_flathub_uri
+        self.assertEqual(tuple(FLATHUB_SOURCES), ("official", "sjtu", "ustc"))
+        self.assertEqual(validate_flathub_uri("https://custom.example/repo/"), "https://custom.example/repo")
+        for uri in ["file:///tmp/repo", "https://user:pass@example/repo", "https://example/repo?key=x", "--no-gpg-verify"]:
+            with self.subTest(uri=uri), self.assertRaises(ValueError):
+                validate_flathub_uri(uri)
+
+    def test_custom_switch_retains_signatures_and_only_changes_the_existing_remote(self):
+        uri = "https://custom.example/repo"
+        with patch.object(helper, "probe_flathub") as probe, patch.object(helper, "current_flathub", side_effect=["https://dl.flathub.org/repo", uri]), patch.object(helper, "_flatpak") as run:
+            helper.switch_flathub(uri + "/")
+        probe.assert_called_once_with(uri)
+        self.assertEqual(run.call_args_list[0].args, ("remote-modify", "flathub", "--enable", "--gpg-verify", "--url=" + uri))
+        self.assertNotIn("remote-add", str(run.call_args_list))
+        self.assertNotIn("gpg-import", str(run.call_args_list))
+
+    def test_failed_switch_readback_restores_original_custom_url(self):
+        original = "https://old.example/repo"
+        with patch.object(helper, "probe_flathub"), patch.object(helper, "current_flathub", side_effect=[original, "https://wrong.example/repo", original]), patch.object(helper, "_flatpak") as run:
+            with self.assertRaisesRegex(RuntimeError, "original source was restored"):
+                helper.switch_flathub("sjtu")
+        self.assertEqual(run.call_args_list[-1].args, ("remote-modify", "flathub", "--url=" + original))
+
+    @staticmethod
+    def mirror_files(architecture="amd64", payload=b"x" * 131072):
+        """A current, content-addressed AppStream object for a mirror scenario."""
+        import gzip
+        import hashlib
+        from gi.repository import GLib
+        arch = {"amd64": "x86_64", "arm64": "aarch64"}[architecture]
+        files = {"config": b"[core]\ncollection-id=org.flathub.Stable\n"}
+
+        def store(value, signature, suffix):
+            data = GLib.Variant(signature, value).get_data_as_bytes().get_data()
+            checksum = hashlib.sha256(data).hexdigest()
+            files[f"objects/{checksum[:2]}/{checksum[2:]}.{suffix}"] = data
+            return list(bytes.fromhex(checksum))
+
+        digest = list(hashlib.sha256(payload).digest())
+        sample = f"objects/{bytes(digest).hex()[:2]}/{bytes(digest).hex()[2:]}.filez"
+        files[sample] = payload
+        tree = store(([("appstream.xml", digest)], []), "(a(say)a(sayay))", "dirtree")
+        commit = store(({}, [], [], "AppStream", "", 0, tree, [0] * 32), "(a{sv}aya(say)sstayay)", "commit")
+        data = GLib.Variant("(a(s(taya{sv}))a{sv})", ([(f"appstream2/{arch}", (0, commit, {}))], {})).get_data_as_bytes().get_data()
+        summary = hashlib.sha256(data).digest()
+        files[f"summaries/{summary.hex()}.gz"] = gzip.compress(data)
+        files["summary.idx"] = GLib.Variant("(a{s(ayaaya{sv})}a{sv})", ({arch: (list(summary), [], {})}, {})).get_data_as_bytes().get_data()
+        return files, sample
+
+    def test_speed_measurement_resolves_live_architecture_objects_and_tests_same_file(self):
+        from anduinos_control_panel.software_sources import measure_flathub_mirrors
+        for architecture in ["amd64", "arm64"]:
+            with self.subTest(architecture=architecture):
+                files, sample = self.mirror_files(architecture)
+                requested = []
+
+                def opener(request, timeout):
+                    requested.append(request.full_url)
+                    path = request.full_url.split("/repo/", 1)[1]
+                    return FakeResponse(files[path])
+
+                measurements = measure_flathub_mirrors(architecture, candidates=("https://one.example/repo", "https://two.example/repo"), opener=opener, clock=AdvancingClock())
+                self.assertEqual(len(measurements), 2)
+                self.assertTrue(all(item.bandwidth_mbps > 0 for item in measurements))
+                self.assertIn("https://one.example/repo/" + sample, requested)
+                self.assertIn("https://two.example/repo/" + sample, requested)
+
+    def test_custom_speed_test_only_queries_the_selected_repository(self):
+        from anduinos_control_panel.software_sources import measure_flathub_mirrors
+        files, _sample = self.mirror_files()
+        requested = []
+
+        def opener(request, timeout):
+            requested.append(request.full_url)
+            return FakeResponse(files[request.full_url.split("/repo/", 1)[1]])
+
+        result = measure_flathub_mirrors("amd64", candidates=("https://custom.example/repo/",), opener=opener, clock=AdvancingClock())
+        self.assertEqual(result[0].uri, "https://custom.example/repo")
+        self.assertTrue(all(uri.startswith("https://custom.example/repo/") for uri in requested))
+
+    def test_wrong_repository_or_architecture_is_rejected_before_sample_download(self):
+        from anduinos_control_panel.software_sources import probe_flathub
+        files, _sample = self.mirror_files("arm64")
+
+        def opener(request, timeout):
+            return FakeResponse(files[request.full_url.split("/repo/", 1)[1]])
+
+        with self.assertRaisesRegex(ValueError, "current architecture"):
+            probe_flathub("https://custom.example/repo", "amd64", opener)
+        files["config"] = b"[core]\ncollection-id=another.repository\n"
+        with self.assertRaisesRegex(ValueError, "not a Flathub"):
+            probe_flathub("https://custom.example/repo", "arm64", opener)
+
+    def test_corrupt_metadata_and_failed_payload_never_produce_a_fastest_mirror(self):
+        from anduinos_control_panel.software_sources import measure_flathub_mirrors
+        for corrupt_summary in [True, False]:
+            with self.subTest(corrupt_summary=corrupt_summary):
+                files, sample = self.mirror_files()
+                if corrupt_summary:
+                    key = next(key for key in files if key.startswith("summaries/"))
+                    import gzip
+                    files[key] = gzip.compress(b"wrong summary")
+
+                def opener(request, timeout):
+                    path = request.full_url.split("/repo/", 1)[1]
+                    if path == sample:
+                        raise OSError("download offline")
+                    return FakeResponse(files[path])
+
+                with self.assertRaises(RuntimeError):
+                    measure_flathub_mirrors("amd64", candidates=("https://custom.example/repo",), opener=opener, clock=AdvancingClock())
+
     def test_read_is_system_only_includes_disabled_and_preserves_custom_url(self):
         from unittest.mock import Mock
         from anduinos_control_panel.software_sources import current_flathub
@@ -252,7 +365,7 @@ class FlathubSourceTests(unittest.TestCase):
 
     def test_invalid_target_is_rejected_before_any_command(self):
         with patch.object(helper, '_flatpak') as run, patch.object(helper, 'current_flathub') as read:
-            for value in ['https://custom.example', '--no-gpg-verify', 'user', '']:
+            for value in ['file:///tmp/repo', '--no-gpg-verify', 'user', '', 'https://user:password@example/repo']:
                 with self.assertRaises(ValueError):
                     helper.switch_flathub(value)
             run.assert_not_called()
@@ -260,28 +373,28 @@ class FlathubSourceTests(unittest.TestCase):
 
     def test_new_remote_imports_official_descriptor_before_switch(self):
         from anduinos_control_panel.software_sources import FLATHUB_SOURCES, FLATHUB_OFFICIAL_REPO
-        with patch.object(helper, 'current_flathub', side_effect=['', FLATHUB_SOURCES['official']]), patch.object(helper, '_flatpak') as run:
+        with patch.object(helper, 'probe_flathub'), patch.object(helper, 'current_flathub', side_effect=['', FLATHUB_SOURCES['official']]), patch.object(helper, '_flatpak') as run:
             helper.switch_flathub('official')
         self.assertEqual(run.call_args_list[0].args,
             ('remote-add', '--if-not-exists', 'flathub', FLATHUB_OFFICIAL_REPO))
         self.assertEqual(run.call_args_list[1].args,
-            ('remote-modify', 'flathub', '--enable', '--url=' + FLATHUB_SOURCES['official']))
+            ('remote-modify', 'flathub', '--enable', '--gpg-verify', '--url=' + FLATHUB_SOURCES['official']))
         self.assertNotIn('remote-delete', str(run.call_args_list))
         self.assertNotIn('no-gpg-verify', str(run.call_args_list))
 
     def test_unreachable_ustc_does_not_modify_remote(self):
-        with patch.object(helper.urllib.request, 'urlopen', side_effect=OSError('offline')), patch.object(helper, '_flatpak') as run:
+        with patch.object(helper, 'probe_flathub', side_effect=OSError('offline')), patch.object(helper, '_flatpak') as run:
             with self.assertRaises(OSError):
                 helper.switch_flathub('ustc')
             run.assert_not_called()
 
     def test_catalog_failure_does_not_report_completed_switch_as_failure(self):
         from anduinos_control_panel.software_sources import FLATHUB_SOURCES
-        with patch.object(helper, 'current_flathub', return_value=FLATHUB_SOURCES['ustc']), patch.object(helper.urllib.request, 'urlopen') as probe, patch.object(helper, '_flatpak', side_effect=[None, RuntimeError('catalog offline')]) as run:
+        with patch.object(helper, 'current_flathub', return_value=FLATHUB_SOURCES['ustc']), patch.object(helper, 'probe_flathub') as probe, patch.object(helper, '_flatpak', side_effect=[None, RuntimeError('catalog offline')]) as run:
             helper.switch_flathub('ustc')
-        self.assertEqual(probe.call_count, 2)
+        probe.assert_called_once_with(FLATHUB_SOURCES['ustc'])
         self.assertEqual(run.call_args_list[0].args,
-            ('remote-modify', 'flathub', '--enable', '--url=' + FLATHUB_SOURCES['ustc']))
+            ('remote-modify', 'flathub', '--enable', '--gpg-verify', '--url=' + FLATHUB_SOURCES['ustc']))
 
     def test_flatpak_command_cannot_touch_user_installation_or_apt(self):
         with patch.object(helper.subprocess, 'run', return_value=subprocess.CompletedProcess([], 0)) as run:
