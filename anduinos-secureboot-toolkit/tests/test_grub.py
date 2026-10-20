@@ -2,6 +2,7 @@
 from dataclasses import replace
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import struct
@@ -131,6 +132,9 @@ class GrubSigningTests(unittest.TestCase):
         self.assertEqual(signing_calls, sum(command[0] == "sbsign" for command in self.runner.calls))
 
     def test_first_install_checks_final_files_without_signing_or_enrollment(self):
+        # Model the installer's protected ESP, independent of the CI umask.
+        previous_umask = os.umask(0o022)
+        self.addCleanup(os.umask, previous_umask)
         image = self.prepare()
         suffix, _, machine = grub.boot_chain.efi_architecture(self.runner)
         vendor = self.root / "esp/EFI/AnduinOS"
