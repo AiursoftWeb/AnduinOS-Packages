@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-secureboot-toolkit</PackageName>
-    <PackageVersion>2.0.5-15+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.5-16+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Shared Secure Boot, MOK, and DKMS signing toolkit for AnduinOS applications</PackageDescription>
     <Section>admin</Section>
@@ -65,6 +65,8 @@
     <IncludeFile Include="src/anduinos_secureboot/identity.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/identity.py" />
     <IncludeFile Include="src/anduinos_secureboot/operations.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/operations.py" />
     <IncludeFile Include="src/anduinos_secureboot/ui.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/ui.py" />
+    <IncludeFile Include="src/anduinos_secureboot/enrollment.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/enrollment.py" />
+    <IncludeFile Include="src/anduinos_secureboot/mok-enrollment.gif" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/mok-enrollment.gif" />
     <IncludeScript Include="scripts/anduinos-secureboot-helper" Target="/usr/libexec/anduinos-secureboot-helper" />
     <IncludeScript Include="scripts/anduinos-securebootctl" Target="/usr/bin/anduinos-securebootctl" />
     <IncludeFile Include="data/com.anduinos.SecureBootToolkit.policy" Target="/usr/share/polkit-1/actions/com.anduinos.SecureBootToolkit.policy" />

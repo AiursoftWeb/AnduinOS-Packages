@@ -13,6 +13,7 @@ from gi.repository import Adw, GLib, Gtk  # noqa: E402
 
 from .client import run_action
 from .decision import Facts, assess_action, decide
+from .enrollment import EnrollmentTutorial
 from .inspect import collect_facts
 
 Translate = Callable[[str], str]
@@ -179,8 +180,15 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
     def text(reason):
         return _(_MESSAGES[reason])
 
-    def show_message(title, body):
+    def add_enrollment_tutorial(dialog, body):
+        dialog.set_extra_child(EnrollmentTutorial(body))
+        width = page.get_root().get_width()
+        dialog.set_default_size(min(720, max(320, width - 48)), -1)
+
+    def show_message(title, body, enrollment=False):
         dialog = Adw.MessageDialog.new(page.get_root(), title, body)
+        if enrollment:
+            add_enrollment_tutorial(dialog, body)
         dialog.add_response("ok", _("OK"))
         dialog.present()
         return GLib.SOURCE_REMOVE
@@ -254,8 +262,10 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
                            if choice == "prerequisite" else None)
         dialog.present()
 
-    def confirm(title, body, response_id, response_label, callback):
+    def confirm(title, body, response_id, response_label, callback, enrollment=False):
         dialog = Adw.MessageDialog.new(page.get_root(), title, body)
+        if enrollment:
+            add_enrollment_tutorial(dialog, body)
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response(response_id, response_label)
         dialog.set_default_response("cancel")
@@ -276,7 +286,8 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
                 detail = (_("A certificate is waiting for enrollment. Restart and select Enroll MOK, Continue, Yes, then enter password 123456.")
                           + "\n\n" + _("Existing bootloader, driver signatures and old enrolled certificates are preserved."))
             show_message(_("Operation Finished") if code == 0 else _("Operation Failed"),
-                         detail or _("The system will now be checked again."))
+                         detail or _("The system will now be checked again."),
+                         enrollment=code == 0 and bool(payload.get("reboot_required")))
         refresh()
         return GLib.SOURCE_REMOVE
 
@@ -355,7 +366,8 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
         elif action.id in {"reboot-enroll", "firmware-setup"}:
             body = (_("Select Enroll MOK, Continue, Yes, and enter password 123456 on restart.")
                     if action.id == "reboot-enroll" else _(_FIRMWARE_INSTRUCTIONS))
-            confirm(_("Restart Required"), body, "reboot", _("Restart"), lambda: restart_action(action.id))
+            confirm(_("Restart Required"), body, "reboot", _("Restart"), lambda: restart_action(action.id),
+                    enrollment=action.id == "reboot-enroll")
         else:
             body = (_("The bootloader will be signed with your enrolled certificate and deployed. Existing EFI files are backed up. Keep the computer running until the operation finishes.")
                     if action.id in {"install-bootloader", "repair-bootloader"} else

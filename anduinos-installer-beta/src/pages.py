@@ -25,6 +25,7 @@ gi.require_version("Gdk", "4.0")
 gi.require_version("Adw", "1")
 
 from gi.repository import Gtk, Gdk, Adw, GLib, Gio, Pango, GObject
+from anduinos_secureboot.enrollment import EnrollmentTutorial
 
 from languages import (
     DEFAULT_LANGUAGE,
@@ -7714,6 +7715,8 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         max_width_chars=64,
     )
     secure_boot_notice.add_css_class("warning")
+    enrollment_tutorial = EnrollmentTutorial(secure_boot_notice.get_label(), scrollable=True)
+    enrollment_tutorial.set_visible(False)
     reboot_label = (
         N_("Restart and Enroll Secure Boot Key")
         if plan.platform.secure_boot is SecureBoot.ENABLED
@@ -7736,6 +7739,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     result_box.append(result_label)
     result_box.append(result_sub)
     result_box.append(secure_boot_notice)
+    result_box.append(enrollment_tutorial)
     result_box.append(reboot_btn)
     result_scroll = _scrolled_window(
         vexpand=True,
@@ -7860,6 +7864,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                     plan.platform.secure_boot is SecureBoot.ENABLED
                     and not shared.get("development_mode")
                 )
+                enrollment_tutorial.set_visible(secure_boot_notice.get_visible())
                 reboot_btn.set_visible(True)
                 reboot_btn.set_sensitive(not shared.get("development_mode"))
                 if shared.get("development_mode"):

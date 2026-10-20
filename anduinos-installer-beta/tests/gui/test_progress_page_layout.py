@@ -8,6 +8,7 @@ from unittest.mock import patch
 import pages
 from gi.repository import Adw, GLib, Gtk
 from installer_core.model import SecureBoot
+from anduinos_secureboot.enrollment import EnrollmentTutorial
 from ui import load_visual_style
 
 
@@ -55,6 +56,11 @@ class ProgressPageLayoutTests(unittest.TestCase):
                                      if isinstance(w, Gtk.Label) and w.get_mapped())
                     self.assertEqual(text.count('Enroll MOK'),
                                      1 if secure_boot is SecureBoot.ENABLED else 0)
+                    tutorial = next(w for w in _descendants(page)
+                                    if isinstance(w, EnrollmentTutorial))
+                    self.assertEqual(tutorial.get_visible(),
+                                     secure_boot is SecureBoot.ENABLED and not development)
+                    self.assertEqual(tutorial.get_mapped(), tutorial.get_visible())
                     window.destroy()
 
     def test_toggle_preserves_live_progress_and_logs_and_failure_opens_output(self):
@@ -150,12 +156,12 @@ class ProgressPageLayoutTests(unittest.TestCase):
         steps = [(str(index), f"Step {index}") for index in range(35)]
         fake_thread = lambda target, daemon: SimpleNamespace(start=target)
         with (patch("pages.ordered_progress_steps", return_value=steps),
-              patch("pages.DevelopmentExecutorClient") as client,
+              patch("pages.ExecutorClient") as client,
               patch("pages.threading.Thread", side_effect=fake_thread),
               patch("pages.GLib.timeout_add_seconds", return_value=0)):
             client.return_value.run.return_value = (True, "")
             page = pages.build_progress_page(
-                plan, {"lang": "en_US", "development_mode": True}, navigation
+                plan, {"lang": "en_US", "development_mode": False}, navigation
             )
         navigation.add(page)
         window.present()
@@ -183,6 +189,20 @@ class ProgressPageLayoutTests(unittest.TestCase):
                       if isinstance(widget, Gtk.ToggleButton)
                       and widget.get_label() == "Output")
         self.assertFalse(toggle.get_active())
+        tutorial = next(w for w in widgets if isinstance(w, EnrollmentTutorial))
+        self.assertTrue(tutorial.get_mapped())
+        self.assertAlmostEqual(tutorial.get_height(), tutorial.get_width() / 1.6, delta=1)
+        adjustment = result_scroll.get_vadjustment()
+        adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size())
+        _settle()
+        reboot = next(w for w in widgets if isinstance(w, Gtk.Button)
+                      and any(isinstance(child, Gtk.Label) and 'Restart and Enroll' in child.get_text()
+                              for child in _descendants(w)))
+        _, button_bounds = reboot.compute_bounds(window)
+        _, visible_bounds = result_scroll.compute_bounds(window)
+        self.assertLessEqual(button_bounds.get_y() + button_bounds.get_height(),
+                             visible_bounds.get_y() + visible_bounds.get_height())
+        self.assertTrue(reboot.get_sensitive())
         for widget in (result_scroll, progress):
             ok, bounds = widget.compute_bounds(window)
             self.assertTrue(ok)
