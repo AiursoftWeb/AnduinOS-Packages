@@ -1,6 +1,5 @@
 """The progress steps must remain scrollable inside a short window."""
 
-import time
 import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -21,11 +20,9 @@ def _descendants(widget):
 
 
 def _settle():
-    deadline = time.monotonic() + 0.35
-    context = GLib.MainContext.default()
-    while time.monotonic() < deadline:
-        context.iteration(False)
-        time.sleep(0.005)
+    loop = GLib.MainLoop()
+    GLib.timeout_add(350, lambda: (loop.quit(), GLib.SOURCE_REMOVE)[1])
+    loop.run()
 
 
 class ProgressPageLayoutTests(unittest.TestCase):
