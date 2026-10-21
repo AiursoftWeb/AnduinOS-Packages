@@ -130,13 +130,17 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
     page.set_margin_end(24)
     page.set_margin_top(24)
     page.set_margin_bottom(24)
+    header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16)
+    header.set_margin_top(8)
+    header.set_margin_bottom(16)
     chip = make_icon("secureboot-chip.svg")
     if hasattr(chip, "set_pixel_size"):
-        chip.set_pixel_size(64)
-    page.append(chip)
-    title = Gtk.Label(label=_("Secure Boot Configuration"))
+        chip.set_pixel_size(48)
+    header.append(chip)
+    title = Gtk.Label(label=_("Secure Boot Configuration"), xalign=0, wrap=True)
     title.add_css_class("title-1")
-    page.append(title)
+    header.append(title)
+    page.append(header)
     group = Adw.PreferencesGroup(title=_("System Trust Status"))
     page.append(group)
     rows, buttons = {}, {}
@@ -147,35 +151,82 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
         ("bootloader", _("AnduinOS Bootloader")),
     ):
         row = Adw.ActionRow(title=text)
-        button = Gtk.Button(label=_("Check Again"))
-        button.set_valign(Gtk.Align.CENTER)
-        label = button.get_child()
-        if label is not None:
-            label.set_wrap(True)
-            label.set_width_chars(18)
-            label.set_max_width_chars(24)
+        button = Gtk.Button(valign=Gtk.Align.CENTER)
+        button.add_css_class("flat")
+        button.add_css_class("circular")
         icon = _default_icon("dialog-information-symbolic")
         icon.set_pixel_size(16)
+        button.set_child(icon)
         row.add_suffix(button)
-        row.add_suffix(icon)
         group.add(row)
         rows[key] = (row, icon)
         buttons[key] = button
-        button.connect("clicked", lambda _button, row_id=key: activate(row_id))
-    status = Gtk.Label()
-    status.set_wrap(True)
-    status.set_xalign(0)
-    page.append(status)
-    refresh_button = Gtk.Button(halign=Gtk.Align.END)
+        button.connect("clicked", lambda _button, row_id=key: show_details(row_id))
+    next_step = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+    next_step.add_css_class("card")
+    next_step.set_margin_top(12)
+    next_content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+    next_content.set_margin_start(24)
+    next_content.set_margin_end(24)
+    next_content.set_margin_top(20)
+    next_content.set_margin_bottom(20)
+    next_step.append(next_content)
+    next_title = Gtk.Label(label=_("Next step:"), xalign=0)
+    next_title.add_css_class("heading")
+    next_content.append(next_title)
+    status = Gtk.Label(wrap=True, xalign=0)
+    status.add_css_class("dim-label")
+    next_content.append(status)
+    primary_button = Gtk.Button(halign=Gtk.Align.START)
+    primary_button.add_css_class("suggested-action")
+    primary_button.set_margin_top(8)
+    primary_button.set_margin_bottom(4)
+    primary_button.connect("clicked", lambda _button: activate(holder["decision"].next_row)
+                           if holder["decision"] and holder["decision"].next_row else None)
+    next_content.append(primary_button)
+    page.append(next_step)
+    refresh_button = Gtk.Button(halign=Gtk.Align.END, valign=Gtk.Align.CENTER)
     refresh_button.add_css_class("flat")
     refresh_button.set_child(Adw.ButtonContent(
         icon_name="view-refresh-symbolic", label=_("Check Again")))
     refresh_button.connect("clicked", lambda _button: refresh())
-    page.append(refresh_button)
+    group.set_header_suffix(refresh_button)
     holder = {"facts": None, "decision": None, "busy": False, "generation": 0}
 
     def text(reason):
         return _(_MESSAGES[reason])
+
+    def action_label(result):
+        if (result.action.id == "prepare-identity" and result.id == "enrollment"
+                and result.reason == "certificate-absent"):
+            return _("Submit Enrollment Request")
+        return _(_ACTION_LABELS[result.action.id])
+
+    def show_details(row_id):
+        if holder["busy"] or holder["decision"] is None:
+            return
+        result = next(r for r in holder["decision"].rows if r.id == row_id)
+        if result.tone not in {"warning", "error"} and result.action is None:
+            return
+        body = text(result.reason)
+        target = result if result.action else None
+        if result.action and result.action.blockers:
+            body += "\n\n" + "\n".join(dict.fromkeys(text(b.reason) for b in result.action.blockers))
+            prerequisite = result.action.blockers[0].row_id
+            target = next((r for r in holder["decision"].rows
+                           if r.id == prerequisite and r.id != row_id and r.action), None)
+        if target:
+            body += "\n\n" + _("Next step:") + " " + action_label(target)
+        dialog = Adw.MessageDialog.new(page.get_root(), rows[row_id][0].get_title(), body)
+        dialog.add_response("close", _("Close"))
+        dialog.set_default_response("close")
+        dialog.set_close_response("close")
+        if target:
+            dialog.add_response("action", action_label(target))
+            dialog.set_response_appearance("action", Adw.ResponseAppearance.SUGGESTED)
+            dialog.connect("response", lambda _dialog, choice: activate(target.id)
+                           if choice == "action" else None)
+        dialog.present()
 
     def add_enrollment_tutorial(dialog, body):
         dialog.set_extra_child(EnrollmentTutorial(body))
@@ -195,6 +246,8 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
             return GLib.SOURCE_REMOVE
         holder["facts"] = facts
         decision = holder["decision"] = decide(facts)
+        current = next((r for r in decision.rows if r.id == decision.next_row), None)
+        primary_action = current.action.id if current and current.action else None
         for result in decision.rows:
             row, icon = rows[result.id]
             row.set_subtitle(text(result.reason))
@@ -205,14 +258,20 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
                 icon.remove_css_class(css)
             icon.add_css_class("dim-label" if result.tone == "neutral" else result.tone)
             button = buttons[result.id]
-            button.set_visible(result.action is not None)
+            interactive = result.tone in {"warning", "error"} or result.action is not None
+            button.set_can_target(interactive)
+            button.set_focusable(interactive)
             button.set_sensitive(not holder["busy"])
-            if result.action:
-                label = _(_ACTION_LABELS[result.action.id])
-                if (result.action.id == "prepare-identity" and result.id == "enrollment"
-                        and result.reason == "certificate-absent"):
-                    label = _("Submit Enrollment Request")
-                button.set_label(label)
+            explanation = text(result.reason)
+            if result.action and result.action.blockers:
+                explanation += "\n\n" + "\n".join(text(b.reason) for b in result.action.blockers)
+            button.set_tooltip_text(explanation)
+            button.update_property([Gtk.AccessibleProperty.LABEL], [row.get_title() + ": " + explanation])
+            if current and result.id == current.id and result.action:
+                primary_button.set_label(action_label(result))
+                primary_label = primary_button.get_child()
+                primary_label.set_wrap(True)
+                primary_label.set_max_width_chars(30)
             identity = facts.secure_boot.signing_identity
             detail = (identity.detail if identity and result.id in {"certificate", "certificate_purpose"}
                       else (facts.secure_boot.grub.active_detail or facts.secure_boot.grub.detail)
@@ -220,11 +279,14 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
             row.set_tooltip_text(detail or None)
         if decision.next_row:
             result = next(r for r in decision.rows if r.id == decision.next_row)
-            status.set_label(_("Next step:") + " " + text(result.reason))
+            status.set_label(text(result.reason))
         elif decision.rows[0].reason == "secure-boot-prepared":
             status.set_label(text("secure-boot-prepared"))
         else:
             status.set_label(_("No repairs are required by the checks shown above."))
+        next_title.set_visible(current is not None)
+        primary_button.set_visible(primary_action is not None and primary_action != "refresh")
+        primary_button.set_sensitive(not holder["busy"])
         refresh_button.set_sensitive(not holder["busy"])
         if state_changed:
             state_changed()
@@ -257,8 +319,19 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
         # A local inspection/manual issue has no earlier row to navigate to.
         if target != "secure_boot" or action.id != "firmware-setup":
             dialog.add_response("prerequisite", _("Go to This Step"))
-            dialog.connect("response", lambda _dialog, choice: buttons[target].grab_focus()
-                           if choice == "prerequisite" else None)
+            def focus_prerequisite(_dialog, choice):
+                if choice != "prerequisite":
+                    return
+                target_action = next(r.action for r in holder["decision"].rows if r.id == target)
+                current = next((r for r in holder["decision"].rows
+                                if r.id == holder["decision"].next_row), None)
+                if current and current.action and target_action and current.action.id == target_action.id:
+                    primary_button.grab_focus()
+                elif target_action and target_action.id == "refresh":
+                    refresh_button.grab_focus()
+                else:
+                    buttons[target].grab_focus()
+            dialog.connect("response", focus_prerequisite)
         dialog.present()
 
     def confirm(title, body, response_id, response_label, callback, enrollment=False):
@@ -297,6 +370,7 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
         holder["generation"] += 1  # Discard probes started before this operation.
         for button in buttons.values():
             button.set_sensitive(False)
+        primary_button.set_sensitive(False)
         refresh_button.set_sensitive(False)
         progress = Adw.MessageDialog.new(page.get_root(), _("Working…"),
                                         _("Please wait. Do not restart while this operation is running."))

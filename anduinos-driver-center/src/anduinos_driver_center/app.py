@@ -2276,7 +2276,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         secure_boot_page.set_valign(Gtk.Align.START)
         secure_boot_page.set_vexpand(False)
         scroll = _scrolled_window()
-        clamp = Adw.Clamp(maximum_size=650, tightening_threshold=500)
+        clamp = Adw.Clamp(maximum_size=980, tightening_threshold=760)
         clamp.set_child(secure_boot_page)
         scroll.set_child(clamp)
         return scroll
