@@ -56,9 +56,9 @@ state machine below is separate: when installed with enforcement off on
 supported UEFI firmware, a unified MOK is still generated and used for DKMS.
 No enrollment is requested in that case; users can later enroll the same MOK
 in Driver Center before enabling Secure Boot.
-OOBE no longer manages Secure Boot. A whole-disk erase of an externally
-connected target additionally receives the direct portable fallback described
-below; shared ESPs never do.
+OOBE no longer manages Secure Boot. An ESP newly created by this installation
+also receives the direct fallback chain before enrollment, regardless of disk
+transport or partitioning mode. Reused ESPs never receive this extra write.
 
 ```text
 Secure Boot unsupported by UEFI firmware, or Legacy BIOS

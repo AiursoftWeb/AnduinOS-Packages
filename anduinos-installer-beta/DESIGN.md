@@ -321,12 +321,13 @@ rounded visual boundary and obscure whether the card itself is active.
   makes the GRUB menu visible while leaving the first AnduinOS entry as the
   default. `os-prober`, foreign Windows volumes, foreign ESP writes and
   firmware changes are not involved.
-  External erase-disk targets additionally receive a signed direct
-  `EFI/BOOT` chain on their newly formatted ESP so they remain bootable after
-  moving to firmware with no AnduinOS NVRAM entry. The immutable plan records
-  and privileged preflight revalidates external-disk status; coexistence and
-  manual shared-ESP modes never receive this fallback. The chain deliberately
-  excludes shim's NVRAM-registration fallback to avoid the #422 reset loop.
+  Any newly created ESP receives a signed direct `EFI/BOOT` chain, including
+  erase-disk, guided and manual layouts on internal or external disks.
+  Reused ESPs preserve their fallback files. The plan, write set and privileged
+  validation all use the new-partition declaration, never directory contents,
+  to authorize this write. A separate progress step copies and verifies the
+  chain before MOK enrollment. It excludes shim's NVRAM-registration fallback
+  to avoid the #422 reset loop.
   Destructive boot testing remains part of the VM matrix milestone.
 - Milestone 4 — implementation complete: signed shim/GRUB, machine-local MOK
   generation, explicit DKMS signing, idempotent enrollment scheduling and

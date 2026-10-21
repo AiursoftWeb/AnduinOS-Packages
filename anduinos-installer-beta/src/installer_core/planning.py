@@ -130,11 +130,7 @@ def build_plan(
             # deployment: every UEFI grub-install still receives
             # --no-extra-removable to exclude fb*.efi (issue #422).
             install_fallback_path=(
-                platform.firmware is Firmware.BIOS
-                or (
-                    platform.firmware is Firmware.UEFI
-                    and storage.mode is InstallMode.ERASE_DISK
-                )
+                storage.graph.creates_esp if storage.graph is not None else True
             ),
             external_target=disk_binding.external,
             mok_password_policy=(

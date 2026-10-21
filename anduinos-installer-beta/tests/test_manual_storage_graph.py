@@ -15,7 +15,7 @@ from installer_core.manual_layout import (
     ManualPartitionResizeRequest,
     ManualPartitionRole,
 )
-from installer_core.model import Filesystem, InstallMode, InstallPlan
+from installer_core.model import Architecture, Filesystem, InstallMode, InstallPlan
 from installer_core.storage_graph import (
     BlockReferenceKind,
     StorageGraphAction,
@@ -31,6 +31,7 @@ def manual_plan(
     chosen=None,
     filesystem=Filesystem.BTRFS,
     disk=None,
+    architecture=Architecture.AMD64,
 ):
     disk = disk or manual_disk()
     chosen = chosen or selection(filesystem=filesystem)
@@ -42,7 +43,7 @@ def manual_plan(
         ),
         0,
     )
-    base = valid_plan(filesystem=filesystem, swap_size_mib=0)
+    base = valid_plan(filesystem=filesystem, swap_size_mib=0, architecture=architecture)
     draft = replace(
         base,
         storage=replace(
@@ -61,7 +62,8 @@ def manual_plan(
         chosen,
         inventory_digest=TEST_INVENTORY_DIGEST,
     )
-    plan = replace(draft, storage=replace(draft.storage, graph=graph))
+    plan = replace(draft, storage=replace(draft.storage, graph=graph),
+                   boot=replace(draft.boot, install_fallback_path=graph.creates_esp))
     inventory = StorageInventory((disk,), TEST_INVENTORY_DIGEST)
     return plan, inventory
 
@@ -94,7 +96,7 @@ class ManualStorageGraphTests(unittest.TestCase):
             (StorageGraphAction.PRESERVE,),
         )
 
-    def test_external_manual_plan_with_new_esp_never_authorizes_fallback(self):
+    def test_external_manual_plan_with_new_esp_authorizes_fallback(self):
         chosen = selection(
             reinitialize=True,
             reused_esp="",
@@ -113,13 +115,13 @@ class ManualStorageGraphTests(unittest.TestCase):
             boot=replace(
                 plan.boot,
                 external_target=True,
-                install_fallback_path=False,
+                install_fallback_path=True,
             ),
         )
         validate_plan(plan)
         validate_manual_storage_graph(plan, inventory)
-        self.assertEqual(plan.storage.graph.boot_targets[0].fallback_path, "")
-        self.assertFalse(
+        self.assertEqual(plan.storage.graph.boot_targets[0].fallback_path, "EFI/BOOT/BOOTX64.EFI")
+        self.assertTrue(
             any(
                 item.action is StorageGraphAction.WRITE_FALLBACK_BOOT_FILES
                 for item in plan.storage.graph.operations
@@ -128,11 +130,11 @@ class ManualStorageGraphTests(unittest.TestCase):
 
         unsafe = replace(
             plan,
-            boot=replace(plan.boot, install_fallback_path=True),
+            boot=replace(plan.boot, install_fallback_path=False),
         )
         with self.assertRaisesRegex(
             ValueError,
-            "Manual mode must not write the EFI fallback path",
+            "EFI fallback is required only for a newly created ESP",
         ):
             validate_plan(unsafe)
 

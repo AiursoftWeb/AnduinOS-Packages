@@ -9,6 +9,7 @@ from fakes import FakeRunner
 from helpers import valid_plan
 from installer_core.bootloader import (
     InstallBootloaderStep,
+    CreateFallbackBootChainStep,
     _deploy_portable_fallback,
     _ensure_vendor_nvram_first,
     _portable_fallback_paths,
@@ -31,6 +32,8 @@ from installer_core.validation import ExecutionPolicy
 from test_guided_storage_graph import guided_plan
 from test_guided_storage_planning import healthy_esp
 from test_manual_storage_graph import manual_plan
+from test_manual_layout import selection
+from installer_core.manual_layout import ManualPartitionRequest, ManualPartitionRole
 from test_manual_storage_planning import healthy_esp as healthy_manual_esp
 from test_esp_replacement import replacement_plan, PARTUUID, FSUUID
 from installer_core.esp import EspReuseInspection, EspTreeEntry
@@ -170,6 +173,47 @@ class InstallBootloaderTests(unittest.TestCase):
                     with self.assertRaisesRegex(RuntimeError, "does not match vendor payload"):
                         _verify_portable_fallback(runner, target, plan)
 
+    def test_new_guided_and_manual_esp_deploy_and_verify_the_same_chain(self):
+        chosen = selection(
+            reinitialize=True, reused_esp="", new_partitions=(
+                ManualPartitionRequest(ManualPartitionRole.EFI_SYSTEM, 1, 1025),
+                ManualPartitionRequest(ManualPartitionRole.ROOT, 1025, 40 * 1024),
+            ),
+        )
+        for arch, suffix, machine in ((Architecture.AMD64, "x64", 0x8664),
+                                     (Architecture.ARM64, "aa64", 0xAA64)):
+            for plan, _inventory in (
+                guided_plan(reuse_esp=False, architecture=arch),
+                manual_plan(chosen=chosen, architecture=arch),
+            ):
+                with self.subTest(mode=plan.storage.mode, architecture=arch), tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    prepare_vendor(target, suffix, machine)
+                    context = InstallContext(plan, lambda _message: None,
+                                             {"target": target, "target_efi_mounted": True})
+                    step = CreateFallbackBootChainStep(FakeRunner())
+                    with patch("installer_core.bootloader._verify_signed_image"):
+                        step.execute(context)
+                        step.verify(context)
+                    for source, destination in _portable_fallback_paths(target, plan):
+                        self.assertEqual(source.read_bytes(), destination.read_bytes())
+
+    def test_reused_esp_rejects_fallback_even_with_a_forged_flag(self):
+        for arch in Architecture:
+            for plan, _inventory in (guided_plan(architecture=arch), manual_plan(architecture=arch)):
+                with self.subTest(mode=plan.storage.mode, architecture=arch), tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    sentinel = target / "boot/efi/EFI/BOOT/old-loader.efi"
+                    sentinel.parent.mkdir(parents=True)
+                    sentinel.write_bytes(b"another system")
+                    forged = replace(plan, boot=replace(plan.boot, install_fallback_path=True))
+                    runner = FakeRunner()
+                    with self.assertRaisesRegex(RuntimeError, "not authorized"):
+                        _deploy_portable_fallback(runner, target, forged)
+                    self.assertEqual(sentinel.read_bytes(), b"another system")
+                    self.assertEqual(list(sentinel.parent.iterdir()), [sentinel])
+                    self.assertEqual(runner.commands, [])
+
     def test_fallback_rejects_wrong_architecture_before_signature_commands(self):
         with tempfile.TemporaryDirectory() as directory:
             image = Path(directory) / "loader.efi"
@@ -209,7 +253,7 @@ class InstallBootloaderTests(unittest.TestCase):
         )
 
     def test_portable_fallback_tools_are_required_only_when_written(self):
-        external = InstallBootloaderStep(FakeRunner())
+        external = CreateFallbackBootChainStep(FakeRunner())
         external_context = InstallContext(
             valid_plan(external_target=True), lambda _message: None
         )
@@ -218,7 +262,7 @@ class InstallBootloaderTests(unittest.TestCase):
             external.runner.required, ["openssl", "sbattach", "sbverify"]
         )
 
-        internal = InstallBootloaderStep(FakeRunner())
+        internal = CreateFallbackBootChainStep(FakeRunner())
         internal.preflight(InstallContext(valid_plan(), lambda _message: None))
         self.assertEqual(
             internal.runner.required, ["openssl", "sbattach", "sbverify"]
@@ -269,6 +313,8 @@ class InstallBootloaderTests(unittest.TestCase):
 
             with patch("installer_core.bootloader._verify_signed_image"):
                 InstallBootloaderStep(runner).execute(context)
+                CreateFallbackBootChainStep(runner).execute(context)
+                CreateFallbackBootChainStep(runner).verify(context)
 
             fallback = target / "boot/efi/EFI/BOOT"
             self.assertTrue((fallback / "BOOTX64.EFI").is_file())

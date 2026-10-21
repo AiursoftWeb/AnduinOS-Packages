@@ -75,7 +75,7 @@ class ValidationTests(unittest.TestCase):
                         plan, boot=dataclasses.replace(plan.boot, install_fallback_path=False),
                     )
                     with self.assertRaisesRegex(
-                        PlanValidationError, "must retain the direct EFI fallback",
+                        PlanValidationError, "EFI fallback is required only for a newly created ESP",
                     ):
                         validate_plan(missing)
 
@@ -92,7 +92,7 @@ class ValidationTests(unittest.TestCase):
             ),
         )
         with self.assertRaisesRegex(
-            PlanValidationError, "must retain the portable UEFI fallback"
+            PlanValidationError, "EFI fallback is required only for a newly created ESP"
         ):
             validate_plan(plan)
 

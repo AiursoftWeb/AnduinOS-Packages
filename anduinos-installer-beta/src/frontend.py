@@ -438,7 +438,7 @@ def create_install_plan(
     if storage_mode is InstallMode.MANUAL:
         plan = replace(
             plan,
-            boot=replace(plan.boot, install_fallback_path=False,
+            boot=replace(plan.boot,
                          esp_replacement=_confirmed_esp_replacement(state, current_preview)),
         )
         validate_plan(plan)
@@ -480,7 +480,7 @@ def create_install_plan(
             swap_size_mib=current_preview.swap_size_mib,
             graph=current_preview.graph,
         ),
-        boot=replace(plan.boot, install_fallback_path=False,
+        boot=replace(plan.boot, install_fallback_path=current_preview.graph.creates_esp,
                      esp_replacement=_confirmed_esp_replacement(state, current_preview)),
     )
     validate_plan(plan)

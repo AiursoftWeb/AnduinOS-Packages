@@ -79,7 +79,7 @@ def build_guided_vm_test_plan(
             install_multimedia_codecs=False,
         ),
         boot=BootSpec(
-            install_fallback_path=False,
+            install_fallback_path=preview.graph.creates_esp,
             mok_password_policy=(
                 MokPasswordPolicy.ANDUINOS_DEFAULT
                 if platform.secure_boot is SecureBoot.ENABLED
