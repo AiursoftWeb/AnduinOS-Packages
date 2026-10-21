@@ -156,6 +156,49 @@ class SecureBootPageTests(unittest.TestCase):
             self.assertTrue(confirmation.has_response('continue'))
             action.assert_not_called()
 
+    def test_prepared_disabled_system_opens_translated_firmware_confirmation(self):
+        locale_dir = Path(__file__).resolve().parents[2] / 'locale'
+        for language in ('en_GB', 'zh_CN'):
+            with self.subTest(language=language):
+                translate = gettext.translation('anduinos-driver-center', localedir=locale_dir,
+                                                languages=[language]).gettext
+                state = self.state(enabled=False)
+                with patch.object(ui, 'restart_to_firmware_settings') as restart:
+                    page = self.page(state, translate)
+                    parent = Adw.Window(content=page)
+                    button = self.button(self.row(page, translate('Secure Boot')))
+                    self.assertIsNone(button.get_label())
+                    prepared = translate(ui._MESSAGES['secure-boot-prepared'])
+                    if language == 'zh_CN':
+                        self.assertNotEqual(prepared, ui._MESSAGES['secure-boot-prepared'])
+                    self.assertTrue(any(isinstance(w, Gtk.Label) and w.get_label() == prepared
+                                        for w in widgets(page)))
+                    button.emit('clicked')
+                    details = self.dialog(parent)
+                    self.assertEqual(details.get_response_label('action'), translate('Open Firmware Settings'))
+                    details.response('action')
+                    dialog = self.dialog(parent)
+                    self.assertTrue(dialog.has_response('reboot'))
+                    self.assertEqual(dialog.get_default_response(), 'cancel')
+                    self.assertEqual(dialog.get_body(), translate(ui._FIRMWARE_INSTRUCTIONS))
+                    dialog.response('cancel')
+                    restart.assert_not_called()
+                    parent.destroy()
+
+    def test_firmware_button_reports_real_unsigned_bootloader_without_restart(self):
+        from dataclasses import replace
+        state = self.state(enabled=False)
+        state = replace(state, grub=replace(state.grub, signature='missing'))
+        with patch.object(ui, 'restart_to_firmware_settings') as restart:
+            page = self.page(state)
+            parent = Adw.Window(content=page)
+            self.button(self.row(page, 'Secure Boot')).emit('clicked')
+            dialog = self.dialog(parent)
+            self.assertIn('needs signing', dialog.get_body())
+            self.assertFalse(dialog.has_response('reboot'))
+            self.assertEqual(dialog.get_response_label('action'), 'Repair AnduinOS Bootloader')
+            restart.assert_not_called()
+
     def test_bootloader_row_reports_signature_trust_and_deployment_separately(self):
         cases = (
             (GrubState(), 'Install AnduinOS Bootloader', 'recommended', 'warning'),
@@ -359,7 +402,7 @@ class SecureBootPageTests(unittest.TestCase):
 
     def test_disabled_secure_boot_still_explained_during_migration(self):
         page = self.page(self.state(enabled=False, signing_identity=IdentityStatus(
-            purpose='module-only', enrollment='enrolled', key_present=True, key_valid=True)))
+            purpose='module-only', enrollment='pending', key_present=True, key_valid=True)))
         subtitle = self.row(page, 'Secure Boot').get_subtitle()
         self.assertIn('disabled', subtitle)
         self.assertIn('still prepare', subtitle)

@@ -2335,3 +2335,15 @@ msgstr "Det gick inte att verifiera att den installerade EFI-startkedjan är bet
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "The AnduinOS bootloader is not installed. Installing it is recommended."
 msgstr "AnduinOS starthanterare är inte installerad. Vi rekommenderar att du installerar den."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Open Firmware Settings"
+msgstr "Öppna inställningar för inbyggd programvara"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Preparation checks passed. Secure Boot is still disabled."
+msgstr "Förberedelsekontrollerna godkändes. Secure Boot är fortfarande inaktiverat."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restart to UEFI settings, enable Secure Boot, then save your changes and start AnduinOS. Firmware wording varies by manufacturer. Platform keys and the Microsoft third-party CA are separate from your MOK certificate. The preparation checks shown here do not replace a successful boot with Secure Boot enabled."
+msgstr "Starta om till UEFI-inställningarna, aktivera Secure Boot, spara ändringarna och starta AnduinOS. Benämningarna i den inbyggda programvaran varierar mellan tillverkare. Plattformsnycklarna och Microsofts tredjeparts-CA är separata från ditt MOK-certifikat. Förberedelsekontrollerna som visas här ersätter inte en lyckad start med Secure Boot aktiverat."

@@ -108,8 +108,8 @@ class TrustPageTests(unittest.TestCase):
         self.action.assert_not_called()
         self.assertIn('Install AnduinOS Bootloader', self.adw.MessageDialog.new.call_args.args[1])
 
-    def test_complete_next_boot_evidence_allows_confirming_firmware_restart(self):
-        self.page(SecureBootStatus.DISABLED, next_boot=self.evidence())
+    def test_prepared_system_allows_confirming_firmware_restart_without_next_boot_data(self):
+        self.page(SecureBootStatus.DISABLED)
         self.click('Secure Boot')
         self.firmware.assert_not_called()
         self.respond('reboot')
@@ -117,13 +117,31 @@ class TrustPageTests(unittest.TestCase):
         self.firmware.assert_called_once_with()
         self.action.assert_not_called()
 
-    def test_current_kernel_health_alone_does_not_offer_verified_enable(self):
+    def test_prepared_disabled_page_agrees_with_firmware_button_and_confirmation(self):
         self.page(SecureBootStatus.DISABLED)
+        self.button('Secure Boot').set_can_target.assert_called_with(True)
+        self.assertIn('Preparation checks passed', self.labels[-1].set_label.call_args.args[0])
+        self.assertIn('still disabled', self.row('Secure Boot').set_subtitle.call_args.args[0])
         self.click('Secure Boot')
+        dialog = self.adw.MessageDialog.new.return_value
+        self.assertIn(unittest.mock.call('action', 'translated:Open Firmware Settings'),
+                      dialog.add_response.call_args_list)
+        dialog.set_default_response.assert_called_with('cancel')
         body = self.adw.MessageDialog.new.call_args.args[2]
-        self.assertIn('next boot', body.lower())
+        self.assertIn('enable Secure Boot', body)
+        self.assertNotIn('Do not enable', body)
         self.thread.assert_not_called()
         self.firmware.assert_not_called()
+
+    def test_firmware_restart_rechecks_preparation_after_confirmation(self):
+        self.page(SecureBootStatus.DISABLED)
+        self.click('Secure Boot')
+        self.collect.return_value = replace(self.facts,
+            dkms=DkmsState(modules=('driver.ko',), untrusted_modules=('driver.ko',)))
+        self.respond('reboot')
+        self.worker()
+        self.firmware.assert_not_called()
+        self.assertIn('trusted signature', self.adw.MessageDialog.new.call_args.args[2])
 
     def test_setup_mode_reports_platform_keys_not_missing_mok(self):
         self.page(SecureBootStatus.DISABLED, setup_mode=True)
@@ -161,7 +179,7 @@ class TrustPageTests(unittest.TestCase):
         self.click('Secure Boot')
         self.thread.assert_not_called()
         self.firmware.assert_not_called()
-        self.assertIn('not verified', self.adw.MessageDialog.new.call_args.args[2])
+        self.assertIn('needs signing', self.adw.MessageDialog.new.call_args.args[2])
 
     def test_undeployed_own_grub_does_not_offer_enable_secure_boot(self):
         self.page(SecureBootStatus.DISABLED, grub=replace(self.boot, deployment='pending'),
@@ -287,6 +305,8 @@ class TrustPageTests(unittest.TestCase):
         self.page(SecureBootStatus.DISABLED, next_boot=self.evidence())
         self.click('Secure Boot')
         dialog = self.adw.MessageDialog.new.return_value
+        self.assertIn(unittest.mock.call('action', 'translated:Open Firmware Settings'),
+                      dialog.add_response.call_args_list)
         dialog.set_default_response.assert_called_with('cancel')
         for response in ['cancel', 'close', 'unexpected']:
             self.respond(response)

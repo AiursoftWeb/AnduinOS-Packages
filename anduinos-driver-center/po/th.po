@@ -2301,3 +2301,15 @@ msgstr "ไม่สามารถยืนยันได้ว่าลำด
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "The AnduinOS bootloader is not installed. Installing it is recommended."
 msgstr "ยังไม่ได้ติดตั้งบูตโหลดเดอร์ของ AnduinOS แนะนำให้ติดตั้ง"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Open Firmware Settings"
+msgstr "เปิดการตั้งค่าเฟิร์มแวร์"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Preparation checks passed. Secure Boot is still disabled."
+msgstr "ผ่านการตรวจสอบความพร้อมแล้ว แต่ Secure Boot ยังปิดอยู่"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restart to UEFI settings, enable Secure Boot, then save your changes and start AnduinOS. Firmware wording varies by manufacturer. Platform keys and the Microsoft third-party CA are separate from your MOK certificate. The preparation checks shown here do not replace a successful boot with Secure Boot enabled."
+msgstr "รีสตาร์ทเข้าสู่การตั้งค่า UEFI เปิด Secure Boot แล้วบันทึกการเปลี่ยนแปลงและเริ่ม AnduinOS ชื่อเมนูในเฟิร์มแวร์อาจต่างกันตามผู้ผลิต คีย์แพลตฟอร์มและ CA บุคคลที่สามของ Microsoft แยกต่างหากจากใบรับรอง MOK ของคุณ การตรวจสอบความพร้อมที่แสดงที่นี่ไม่ได้ทดแทนการบูตสำเร็จขณะเปิด Secure Boot"
