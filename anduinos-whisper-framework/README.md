@@ -19,7 +19,8 @@ inference lives in `anduinos-whisper-worker`.
 The service reuses the selected model, releases it after inactivity, and cancels
 or restarts failed worker processes without taking down the desktop. Automatic
 selection measures CPU thread counts and available GPU acceleration locally,
-preserving model quality. Users can override or repeat selection. Diagnostics
+preserving model quality. The selected backend is reused across starts, setting
+changes and system updates; users can override it or explicitly repeat selection. Diagnostics
 contain bounded timing metadata, not recordings or recognized text.
 
 ## Live transcription policy
@@ -39,7 +40,9 @@ rest of that session; final recognition continues. Explicit On is not overridden
 The decision is recalculated from validated cached measurements. Missing,
 incomplete or stale measurements, failed tuning, and manual backend selection
 without measurements leave automatic previews off. The calibration microphone
-remains off. Changing model or environment invalidates the measurement cache.
+remains off. Changing model or environment invalidates preview evidence, but
+keeps the backend choice. A failed measurement saves a CPU fallback so later
+starts do not repeatedly benchmark; use Retest to try again.
 
 Final-result preview remains an independent display preference. Noise reduction
 remains off by default; performance calibration cannot evaluate the user's room
