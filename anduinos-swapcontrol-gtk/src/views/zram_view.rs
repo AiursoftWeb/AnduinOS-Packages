@@ -415,22 +415,35 @@ impl ZramView {
         let algo_owned = algo.to_string();
 
         glib::spawn_future_local(async move {
-            // Build config list including the new device
-            let current = zram::read_zram_devices();
-            let mut configs: Vec<(u64, String, i32)> = current
-                .iter()
-                .map(|d| {
-                    (
-                        d.size_bytes / (1024 * 1024),
-                        d.comp_algorithm.clone(),
-                        d.swap_priority,
-                    )
-                })
-                .collect();
-            configs.push((size_mb, algo_owned, priority));
+            let Some(parent) = weak_self.upgrade().and_then(|view| {
+                view.root()
+                    .and_then(|root| root.downcast::<gtk::Window>().ok())
+            }) else {
+                return;
+            };
+            let result = crate::progress_dialog::run_with_progress(
+                &parent,
+                &i18n("Create Zram Device"),
+                move || {
+                    // Build config list including the new device
+                    let current = zram::read_zram_devices();
+                    let mut configs: Vec<(u64, String, i32)> = current
+                        .iter()
+                        .map(|d| {
+                            (
+                                d.size_bytes / (1024 * 1024),
+                                d.comp_algorithm.clone(),
+                                d.swap_priority,
+                            )
+                        })
+                        .collect();
+                    configs.push((size_mb, algo_owned, priority));
 
-            // Write config + restart vendor service
-            let result = persist::persist_zram(&configs);
+                    // Write config + restart vendor service
+                    persist::persist_zram(&configs)
+                },
+            )
+            .await;
 
             if let Some(view) = weak_self.upgrade() {
                 view.set_busy(false);
@@ -459,21 +472,31 @@ impl ZramView {
         self.set_busy(true);
 
         glib::spawn_future_local(async move {
-            // Build config list excluding the destroyed device
-            let current = zram::read_zram_devices();
-            let configs: Vec<(u64, String, i32)> = current
-                .iter()
-                .filter(|d| format!("/dev/{}", d.name) != dev_path)
-                .map(|d| {
-                    (
-                        d.size_bytes / (1024 * 1024),
-                        d.comp_algorithm.clone(),
-                        d.swap_priority,
-                    )
-                })
-                .collect();
+            let Some(parent) = weak_self.upgrade().and_then(|view| {
+                view.root()
+                    .and_then(|root| root.downcast::<gtk::Window>().ok())
+            }) else {
+                return;
+            };
+            let result =
+                crate::progress_dialog::run_with_progress(&parent, &i18n("Remove"), move || {
+                    // Build config list excluding the destroyed device
+                    let current = zram::read_zram_devices();
+                    let configs: Vec<(u64, String, i32)> = current
+                        .iter()
+                        .filter(|d| format!("/dev/{}", d.name) != dev_path)
+                        .map(|d| {
+                            (
+                                d.size_bytes / (1024 * 1024),
+                                d.comp_algorithm.clone(),
+                                d.swap_priority,
+                            )
+                        })
+                        .collect();
 
-            let result = persist::persist_zram(&configs);
+                    persist::persist_zram(&configs)
+                })
+                .await;
 
             if let Some(view) = weak_self.upgrade() {
                 view.set_busy(false);

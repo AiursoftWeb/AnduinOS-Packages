@@ -2326,47 +2326,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         success_message: str | None = None,
         success_output_marker: str | None = None,
     ) -> None:
-        if not arguments: return
-        if arguments[0] == 'update':
-            return self._run_update_action(button, arguments, stdin, success_message, success_output_marker)
-        button.set_sensitive(False)
-        original = button.get_label() or _("Apply")
-        button.set_label(_("Working…"))
-        def worker() -> None:
-            try:
-                result = subprocess.run(["pkexec", HELPER, *arguments], input=stdin, capture_output=True, text=True, timeout=1800, check=False)
-                if result.returncode:
-                    # Keep both streams: APT errors usually go to stderr, but
-                    # dependency and maintainer-script details can be on stdout.
-                    message = "\n\n".join(
-                        output.strip() for output in (result.stderr, result.stdout)
-                        if output.strip()
-                    )
-                else:
-                    message = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else result.stderr.strip()
-                resolved_success_message = success_message
-                if result.returncode == 0 and success_output_marker:
-                    resolved_success_message = _command_output_summary(
-                        result.stdout, success_output_marker
-                    ) or success_message
-                GLib.idle_add(
-                    self._action_done,
-                    button,
-                    original,
-                    result.returncode,
-                    message,
-                    resolved_success_message,
-                )
-            except Exception as error:
-                GLib.idle_add(
-                    self._action_done,
-                    button,
-                    original,
-                    1,
-                    str(error),
-                    success_message,
-                )
-        threading.Thread(target=worker, daemon=True).start()
+        self._run_update_action(button, arguments, stdin, success_message, success_output_marker)
 
     def _run_update_action(
         self,
@@ -2381,6 +2341,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             return
         from .operation_ui import OperationWindow
         self._operation_running = True
+        parent_guard = self.connect('close-request', lambda *_: self._operation_running)
         operation = OperationWindow(self)
         operation.present()
         application = self.get_application()
@@ -2447,12 +2408,15 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 )
         def finish(button, original, code, message, resolved_success):
             self._operation_running = False
+            self.disconnect(parent_guard)
             button.set_label(original)
             button.set_sensitive(True)
             operation.finish(code, (resolved_success or _("Driver changes completed. Restart may be required."))
                              if code == 0 else _("Driver operation failed: ") + message[-2000:])
-            self.refresh()
-            application.release()
+            try:
+                self.refresh()
+            finally:
+                application.release()
             return GLib.SOURCE_REMOVE
         threading.Thread(target=worker, daemon=True).start()
 

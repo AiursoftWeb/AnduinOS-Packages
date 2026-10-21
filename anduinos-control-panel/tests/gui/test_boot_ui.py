@@ -157,3 +157,68 @@ class BootUiTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class RecommendedInstallTests(unittest.TestCase):
+    def test_missing_network_editor_and_scanning_app_have_guarded_streaming_installs(self):
+        from anduinos_control_panel import app
+        from anduinos_control_panel.topics import get_topic
+        app.Adw.init()
+        application = app.Adw.Application(application_id='com.anduinos.ControlPanel.InstallTest')
+        application.register(None)
+        start = subprocess.Popen
+        for topic_id, package in (("network.advanced", "network-manager-gnome"),
+                                  ("hardware.scanners", "simple-scan")):
+            for code in (0, 100, 126):
+                with self.subTest(topic=topic_id, code=code):
+                    commands = []
+                    def child(command, **kwargs):
+                        commands.append(command)
+                        return start([sys.executable, '-u', '-c',
+                            "import sys,time; print('Downloading support'); time.sleep(.15); "
+                            f"print('Finished', file=sys.stderr); sys.exit({code})"], **kwargs)
+                    with patch.object(app.ControlPanelWindow, '_rebuild_categories'), \
+                         patch.object(app, '_', side_effect=lambda value: value), \
+                         patch.object(app, 'command_available', return_value=False), \
+                         patch.object(app.subprocess, 'Popen', side_effect=child):
+                        parent = app.ControlPanelWindow(application)
+                        operation = None
+                        try:
+                            with patch.object(parent, '_launch') as launch:
+                                topic = get_topic(topic_id)
+                                parent._offer_recommended_install(topic)
+                                confirmation = next(w for w in app.Gtk.Window.list_toplevels()
+                                    if isinstance(w, app.Adw.MessageDialog) and w.get_transient_for() == parent)
+                                confirmation.response('install')
+                                operation = next(w for w in app.Gtk.Window.list_toplevels()
+                                    if isinstance(w, app.Adw.Window) and not isinstance(w, app.Adw.MessageDialog)
+                                    and w.get_transient_for() == parent)
+                                widgets = list(BootUiTests.walk(operation))
+                                close = next(w for w in widgets if isinstance(w, app.Gtk.Button) and w.get_label() == 'Close')
+                                self.assertFalse(close.get_sensitive())
+                                self.assertTrue(operation.emit('close-request'))
+                                self.assertTrue(parent.emit('close-request'))
+                                with patch.object(app, 'command_available', return_value=True):
+                                    deadline = time.monotonic() + 5
+                                    while not close.get_sensitive() and time.monotonic() < deadline:
+                                        app.GLib.MainContext.default().iteration(False)
+                                        time.sleep(.005)
+                                self.assertTrue(close.get_sensitive())
+                                self.assertTrue(operation.get_deletable())
+                                self.assertFalse(parent.emit('close-request'))
+                                self.assertEqual(commands, [['/usr/bin/pkexec', '/usr/bin/apt-get', 'install', '--yes', package]])
+                                output = next(w for w in widgets if isinstance(w, app.Gtk.Expander)).get_child().get_child().get_buffer()
+                                log = output.get_text(*output.get_bounds(), False)
+                                self.assertIn('Downloading support', log)
+                                self.assertIn('Finished', log)
+                                if code == 126:
+                                    self.assertIn('Authentication was cancelled.', log)
+                                if code == 0:
+                                    launch.assert_called_once_with(list(topic.command))
+                                else:
+                                    launch.assert_not_called()
+                                    self.assertTrue(next(w for w in widgets if isinstance(w, app.Gtk.Expander)).get_expanded())
+                        finally:
+                            if operation is not None:
+                                operation.destroy()
+                            parent.destroy()

@@ -601,53 +601,71 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         def response_received(_dialog: Adw.MessageDialog, response: str) -> None:
             if response != "install":
                 return
-            self.toast_overlay.add_toast(
-                Adw.Toast.new(_("Installing %s…") % topic.title)
-            )
+            window = Adw.Window(transient_for=self, modal=True,
+                                title=_("Install %s?") % topic.title,
+                                default_width=640, default_height=360)
+            window.set_deletable(False)
+            running = True
+            window.connect("close-request", lambda *_: running)
+            parent_guard = self.connect("close-request", lambda *_: running)
+            application = self.get_application()
+            application.hold()
+            page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+            page.append(Adw.HeaderBar())
+            status = Gtk.Label(label=_("Installing %s…") % topic.title, wrap=True)
+            page.append(status)
+            progress = Gtk.ProgressBar()
+            page.append(progress)
+            output = Gtk.TextView(editable=False, cursor_visible=False, monospace=True,
+                                  wrap_mode=Gtk.WrapMode.WORD_CHAR)
+            scroll = Gtk.ScrolledWindow(vexpand=True, min_content_height=180)
+            scroll.set_child(output)
+            advanced = Gtk.Expander(label=_("Advanced Output"), vexpand=True)
+            advanced.set_child(scroll)
+            page.append(advanced)
+            close = Gtk.Button(label=_("Close"), sensitive=False)
+            close.connect("clicked", lambda *_: window.close())
+            page.append(close)
+            for widget in (status, progress, advanced, close):
+                widget.set_margin_start(20)
+                widget.set_margin_end(20)
+            close.set_margin_bottom(20)
+            window.set_content(page)
+            window.present()
 
-            def completed(return_code: int, output: str) -> bool:
-                if return_code == 0 and topic.command and command_available(
-                    topic.command[0]
-                ):
-                    self._rebuild_categories()
-                    self.toast_overlay.add_toast(
-                        Adw.Toast.new(_("%s installed") % topic.title)
-                    )
-                    self._launch(list(topic.command))
-                    return GLib.SOURCE_REMOVE
+            def pulse() -> bool:
+                progress.pulse()
+                return GLib.SOURCE_CONTINUE
 
-                message = output.strip()
-                if return_code == 126:
-                    message = _("Authentication was cancelled.")
-                elif not message:
-                    message = _("The recommended component could not be installed.")
-                self._show_error(_("Installation failed"), message)
-                return GLib.SOURCE_REMOVE
+            timer = GLib.timeout_add(100, pulse)
 
-            def worker() -> None:
+            def completed(error: str | None = None) -> None:
+                nonlocal running
+                running = False
+                GLib.source_remove(timer)
+                self.disconnect(parent_guard)
+                window.set_deletable(True)
+                close.set_sensitive(True)
+                progress.set_fraction(0.0 if error else 1.0)
                 try:
-                    result = subprocess.run(
-                        [
-                            "/usr/bin/pkexec",
-                            "/usr/bin/apt-get",
-                            "install",
-                            "--yes",
-                            topic.install_package,
-                        ],
-                        capture_output=True,
-                        text=True,
-                        timeout=1800,
-                        check=False,
-                    )
-                    GLib.idle_add(
-                        completed,
-                        result.returncode,
-                        result.stderr or result.stdout,
-                    )
-                except (OSError, subprocess.TimeoutExpired) as error:
-                    GLib.idle_add(completed, 1, str(error))
+                    if error:
+                        status.set_label(_("Installation failed"))
+                        self._append_package_output(output.get_buffer(), output, error + "\n")
+                        advanced.set_expanded(True)
+                    elif topic.command and command_available(topic.command[0]):
+                        status.set_label(_("%s installed") % topic.title)
+                        self._rebuild_categories()
+                        self._launch(list(topic.command))
+                    else:
+                        status.set_label(_("The recommended component could not be installed."))
+                        progress.set_fraction(0.0)
+                finally:
+                    application.release()
 
-            threading.Thread(target=worker, daemon=True).start()
+            self._run_streaming_package_change(
+                topic.install_package, output.get_buffer(), output,
+                completed, completed,
+            )
 
         dialog.connect("response", response_received)
         dialog.present()
@@ -1830,6 +1848,8 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         buffer: Gtk.TextBuffer, output: Gtk.TextView, text: str
     ) -> bool:
         buffer.insert(buffer.get_end_iter(), text)
+        if buffer.get_char_count() > 200000:
+            buffer.delete(buffer.get_start_iter(), buffer.get_iter_at_offset(buffer.get_char_count() - 150000))
         mark = buffer.create_mark(None, buffer.get_end_iter(), False)
         output.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
         return GLib.SOURCE_REMOVE
@@ -1888,7 +1908,9 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                     if return_code != 0:
                         GLib.idle_add(
                             failure,
-                            _("{command} exited with status {status}").format(
+                            _("Authentication was cancelled.")
+                            if return_code == 126 and Path(arguments[0]).name == "pkexec"
+                            else _("{command} exited with status {status}").format(
                                 command=Path(arguments[0]).name,
                                 status=return_code,
                             ),
