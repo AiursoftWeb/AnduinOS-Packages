@@ -315,7 +315,7 @@ class DecisionTests(unittest.TestCase):
         facts = self.facts(state=state, next_boot=self.evidence(loader_trusted=False))
         self.assert_action(self.row(facts, "bootloader"), "repair-bootloader", allowed=True)
         action = self.assert_action(self.row(facts, "secure_boot"), "firmware-setup", allowed=False)
-        self.assert_blocker(action, "boot-chain-untrusted", "bootloader")
+        self.assert_blocker(action, "bootloader-unsigned", "bootloader")
 
     def test_signed_candidate_does_not_make_unverified_esp_ready_to_enable(self):
         state = replace(self.state, enabled=False, status=SecureBootStatus.DISABLED,
@@ -332,26 +332,46 @@ class DecisionTests(unittest.TestCase):
     def test_trusted_ubuntu_chain_does_not_require_own_grub_or_unified_identity(self):
         state = replace(self.state, enabled=False, status=SecureBootStatus.DISABLED, grub=GrubState(),
                         signing_identity=replace(self.identity, purpose="module-only", managed=False))
-        facts = self.facts(state=state, next_boot=self.evidence(loader_source="ubuntu"))
+        facts = self.facts(state=state)
         self.assertEqual(self.row(facts, "bootloader").tone, "warning")
         self.assert_action(self.row(facts, "secure_boot"), "firmware-setup", allowed=True)
 
-    def test_current_kernel_health_cannot_substitute_for_next_boot_evidence(self):
+    def test_prepared_disabled_system_needs_no_uncollected_next_boot_evidence(self):
         state = replace(self.state, enabled=False, status=SecureBootStatus.DISABLED)
-        self.assertTrue(self.drivers.ready)
-        self.assert_action(self.row(self.facts(state=state), "secure_boot"), "firmware-setup", allowed=False)
-        for field in ("firmware_trusted", "loader_trusted", "kernel_trusted", "modules_trusted"):
-            for value in (False, None):
-                with self.subTest(field=field, value=value):
-                    facts = self.facts(state=state, next_boot=self.evidence(**{field: value}))
-                    self.assert_action(self.row(facts, "secure_boot"), "firmware-setup", allowed=False)
+        facts = self.facts(state=state)
+        self.assert_action(self.row(facts, "secure_boot"), "firmware-setup", allowed=True)
+        self.assertEqual(self.row(facts, "secure_boot").reason, "secure-boot-prepared")
+        self.assertIsNone(self.core.decide(facts).next_row)
 
-    def test_missing_boot_target_cannot_be_promoted_to_verified_next_boot(self):
-        state = replace(self.state, enabled=False, status=SecureBootStatus.DISABLED)
-        for field in ("loader_path", "kernel_release"):
-            with self.subTest(field=field):
-                facts = self.facts(state=state, next_boot=self.evidence(**{field: ""}))
-                self.assert_action(self.row(facts, "secure_boot"), "firmware-setup", allowed=False)
+    def test_verified_owned_fallback_does_not_require_a_named_bootcurrent_entry(self):
+        state = replace(self.state, enabled=False, status=SecureBootStatus.DISABLED,
+                        boot_loader="unknown")
+        facts = self.facts(state=state)
+        self.assertEqual(self.row(facts, "bootloader").tone, "success")
+        self.assert_action(self.row(facts, "secure_boot"), "firmware-setup", allowed=True)
+
+    def test_firmware_guidance_preserves_real_preparation_blockers(self):
+        disabled = replace(self.state, enabled=False, status=SecureBootStatus.DISABLED)
+        cases = (
+            (replace(disabled, signing_identity=replace(self.identity, enrollment="pending")),
+             self.drivers, True, "certificate-pending", "enrollment"),
+            (replace(disabled, signing_identity=replace(self.identity, key_valid=False)),
+             self.drivers, True, "signing-key-unavailable", "certificate"),
+            (replace(disabled, signing_identity=replace(self.identity, defaults_ready=False)),
+             self.drivers, True, "signing-defaults-required", "certificate"),
+            (disabled, DkmsState(modules=("example.ko",), untrusted_modules=("example.ko",)),
+             True, "drivers-untrusted", "drivers"),
+            (disabled, DkmsState(), False, "drivers-unknown", "drivers"),
+            (replace(disabled, grub=replace(self.boot, active_chain="unknown")),
+             self.drivers, True, "bootloader-unknown", "bootloader"),
+        )
+        for state, drivers, checked, reason, row_id in cases:
+            with self.subTest(reason=reason):
+                facts = self.facts(state=state, drivers=drivers, drivers_checked=checked)
+                action = self.assert_action(self.row(facts, "secure_boot"), "firmware-setup", allowed=False)
+                self.assert_blocker(action, reason, row_id)
+                self.assertEqual(self.row(facts, row_id).reason, reason)
+                self.assertIsNotNone(self.core.decide(facts).next_row)
 
     def test_bios_mode_retains_six_rows_with_an_explanation(self):
         state = replace(self.state, enabled=False, status=SecureBootStatus.UNSUPPORTED,
@@ -368,6 +388,15 @@ class DecisionTests(unittest.TestCase):
         row = self.row(self.facts(state=state), "secure_boot")
         self.assertEqual(row.tone, "warning")
         self.assert_action(row, "refresh", allowed=True)
+
+    def test_unknown_setup_mode_is_visible_as_a_recheck_instead_of_no_repairs(self):
+        state = replace(self.state, enabled=False, status=SecureBootStatus.DISABLED, setup_mode=None)
+        facts = self.facts(state=state)
+        firmware = self.row(facts, "secure_boot")
+        self.assertEqual(firmware.reason, "firmware-unknown")
+        self.assert_action(firmware, "refresh", allowed=True)
+        self.assertEqual(self.core.decide(facts).next_row, "secure_boot")
+        self.assertFalse(self.core.assess_action("firmware-setup", facts).allowed)
 
     def test_setup_mode_needs_platform_key_guidance_not_mok_recreation(self):
         state = replace(self.state, enabled=False, status=SecureBootStatus.DISABLED, setup_mode=True)

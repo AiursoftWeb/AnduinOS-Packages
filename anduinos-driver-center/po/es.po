@@ -2351,3 +2351,15 @@ msgstr "No se pudo verificar que la cadena de arranque EFI instalada sea de conf
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "The AnduinOS bootloader is not installed. Installing it is recommended."
 msgstr "El gestor de arranque de AnduinOS no está instalado. Se recomienda instalarlo."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Open Firmware Settings"
+msgstr "Abrir ajustes del firmware"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Preparation checks passed. Secure Boot is still disabled."
+msgstr "Comprobaciones de preparación superadas. Secure Boot sigue desactivado."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restart to UEFI settings, enable Secure Boot, then save your changes and start AnduinOS. Firmware wording varies by manufacturer. Platform keys and the Microsoft third-party CA are separate from your MOK certificate. The preparation checks shown here do not replace a successful boot with Secure Boot enabled."
+msgstr "Reinicia para acceder a los ajustes de UEFI, activa Secure Boot, guarda los cambios e inicia AnduinOS. Los términos del firmware varían según el fabricante. Las claves de plataforma y la CA de terceros de Microsoft son independientes de tu certificado MOK. Las comprobaciones de preparación que se muestran aquí no sustituyen un arranque correcto con Secure Boot activado."
