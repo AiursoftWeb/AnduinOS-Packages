@@ -78,6 +78,7 @@ def opened_system(
     identity: str,
     *,
     esp: str = "",
+    mount_home: bool = False,
     run: Run = subprocess.run,
     mount_base: Path = Path("/run/anduinos-rescue-center"),
 ) -> Iterator[tuple[Path, Partition]]:
@@ -100,6 +101,12 @@ def opened_system(
                                      "--", partition.path, str(root_mount)])
                 mounts.append((root_mount, False))
                 root = root_mount
+                if mount_home and ((top / "@home").exists() or (top / "@home").is_symlink()):
+                    _mount_directory(top, "@home")
+                    destination = _mount_directory(root, "home")
+                    _checked_mount(run, ["mount", "-t", "btrfs", "-o", "rw,subvol=@home",
+                                         "--", partition.path, str(destination)])
+                    mounts.append((destination, False))
             if esp:
                 destination = _mount_directory(root, "boot/efi")
                 _checked_mount(run, ["mount", "-t", "vfat", "-o", "rw", "--", esp, str(destination)])
@@ -140,7 +147,7 @@ def emergency_shell(path: str, identity: str, *, run: Run = subprocess.run) -> i
 
     if not is_trusted_live_environment() or not os.isatty(0) or not os.isatty(1):
         raise RuntimeError(tr("An interactive AnduinOS Live terminal is required"))
-    with opened_system(path, identity, run=run) as (root, partition):
+    with opened_system(path, identity, mount_home=True, run=run) as (root, partition):
         shell = "/bin/bash" if (root / "bin/bash").is_file() else "/bin/sh"
         print(f"\nOffline AnduinOS: {partition.path} ({partition.filesystem})")
         print(tr("This is a root shell in the selected offline system. Type exit to unmount it.\n"))

@@ -37,7 +37,7 @@ class ModelDownloader:
         received = 0
         try:
             request = urllib.request.Request(
-                model.url, headers={"User-Agent": "AnduinOS-Voice-Typing/2.0.3"}
+                model.url, headers={"User-Agent": "AnduinOS-Voice-Typing/2.0.4"}
             )
             with (
                 urllib.request.urlopen(request, timeout=30) as response,

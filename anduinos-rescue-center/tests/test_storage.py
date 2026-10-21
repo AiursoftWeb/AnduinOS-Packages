@@ -191,3 +191,34 @@ class MountedFilesystemTests(unittest.TestCase):
             self.assertIsNotNone(mountpoint)
             self.assertTrue(mountpoint.exists())
             mountpoint.rmdir()
+
+class InterruptedRecoveryTests(unittest.TestCase):
+    def test_missing_root_is_identified_from_its_recorded_original_root(self):
+        from anduinos_rescue_center.snapshots import _validate_mounted_target
+        identifier = '11111111-1111-4111-8111-111111111111'
+        with tempfile.TemporaryDirectory() as directory:
+            top = Path(directory)
+            old = top / f'@root.rescue-center-old-{identifier}'
+            (old / 'usr/lib').mkdir(parents=True)
+            (old / 'usr/lib/os-release').write_text('ID=anduinos\nVERSION_ID=2.0.4\n')
+            pending = top / '@snapshots/anduinos-btrfs-snapshots-manager/offline-transactions/pending.json'
+            pending.parent.mkdir(parents=True)
+            # An old directory alone must never authorize automatic recovery.
+            self.assertEqual(inspect_mounted_filesystem(top, 'btrfs').os_kind, 'unknown')
+            pending.write_text(json.dumps({'schema_version': 1, 'id': identifier, 'phase': 'current-root-protected'}))
+            self.assertEqual(inspect_mounted_filesystem(top, 'btrfs').os_kind, 'anduinos')
+            _validate_mounted_target(top, 'btrfs')
+            pending.write_text(json.dumps({'schema_version': 1, 'id': '../escape', 'phase': 'current-root-protected'}))
+            self.assertEqual(inspect_mounted_filesystem(top, 'btrfs').os_kind, 'unknown')
+
+    def test_root_symlink_cannot_identify_a_system_outside_the_selected_mount(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            top = base / 'offline'
+            top.mkdir()
+            outside = base / 'outside'
+            (outside / 'usr/lib').mkdir(parents=True)
+            (outside / 'usr/lib/os-release').write_text('ID=anduinos\n')
+            (top / '@root').symlink_to(outside, target_is_directory=True)
+            with self.assertRaises(RuntimeError):
+                inspect_mounted_filesystem(top, 'btrfs')

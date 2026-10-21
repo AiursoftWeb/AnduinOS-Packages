@@ -1,5 +1,4 @@
-"""Shared GTK/libadwaita Secure Boot trust panel."""
-
+"""GTK presentation and explicit effects for the pure Secure Boot decisions."""
 from __future__ import annotations
 
 import subprocess
@@ -13,602 +12,373 @@ gi.require_version("Adw", "1")
 from gi.repository import Adw, GLib, Gtk  # noqa: E402
 
 from .client import run_action
-from .inspect import inspect_dkms, inspect_secure_boot
-from .model import DkmsState, SecureBootState, SecureBootStatus
-
+from .decision import Facts, assess_action, decide
+from .enrollment import EnrollmentTutorial
+from .inspect import collect_facts
 
 Translate = Callable[[str], str]
 IconFactory = Callable[[str], Gtk.Widget]
 
 
 def N_(value: str) -> str:
-    """Mark text for the later unified localization catalog generation."""
-
     return value
 
 
-_FIRMWARE_SETUP_BUTTON = N_("Enable Secure Boot")
-_FIRMWARE_SETUP_INSTRUCTIONS = N_(
-    "To enable it, open the UEFI firmware settings and look under Boot, "
-    "Security, or Secure Boot. Select Microsoft & 3rd-party CA or turn "
-    "Secure Boot on. Firmware wording varies by manufacturer."
-)
-_BOOT_WARNING = N_(
-    "AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may prevent the system from starting."
-)
-_PREPARE = N_("Prepare AnduinOS for Secure Boot")
-_PREPARE_FIRST = N_("First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot only after enrollment.")
-_SETUP_MODE = N_("Setup Mode: firmware platform keys are missing. Restore the manufacturer's factory keys in firmware settings after MOK enrollment.")
-_FIRMWARE_SETUP_ERROR_TITLE = N_("Configuration failed. Please try again.")
-_FIRMWARE_SETUP_ERROR_BODY = N_(
-    "Please check the advanced output."
-)
+_MESSAGES = {
+    "secure-boot-enabled": N_("Motherboard Secure Boot is enabled."),
+    "secure-boot-disabled": N_("Secure Boot is disabled. You can still prepare certificates, drivers and the bootloader."),
+    "firmware-unknown": N_("Secure Boot state could not be determined. Check again before changing trust."),
+    "firmware-unsupported": N_("Secure Boot is not available in the current firmware or boot mode."),
+    "platform-keys-missing": N_("Firmware platform keys are not configured. This is separate from MOK enrollment."),
+    "identity-unknown": N_("The signing identity could not be checked. Existing certificates have not been replaced."),
+    "identity-missing": N_("Create a local signing certificate before preparing trust."),
+    "identity-valid": N_("The signing certificate and private key are valid and match."),
+    "signing-key-unavailable": N_("The signing key is missing, unreadable or does not match its certificate. Existing signatures are unchanged."),
+    "certificate-unified": N_("This certificate can sign both the bootloader and kernel modules."),
+    "certificate-module-only": N_("This certificate can sign drivers only. A new certificate is needed for the AnduinOS bootloader."),
+    "certificate-expired": N_("The certificate has expired. Create and enroll a replacement for future signing."),
+    "certificate-unsupported": N_("The certificate does not permit the required signing. Create and enroll a replacement."),
+    "certificate-enrolled": N_("This certificate is enrolled in MOK."),
+    "certificate-pending": N_("Enrollment requested. Restart and select Enroll MOK to finish trusting this certificate."),
+    "certificate-absent": N_("This certificate is not enrolled. Submit an enrollment request."),
+    "enrollment-unknown": N_("MOK enrollment could not be verified. Check again before continuing."),
+    "signing-defaults-required": N_("The automatic signing configuration needs attention. Another certificate enrollment is not needed."),
+    "signing-defaults-unknown": N_("The automatic signing configuration has not been verified. Check again before installing the bootloader."),
+    "drivers-unknown": N_("Third-party drivers could not be checked. This does not mean no drivers are installed."),
+    "drivers-none": N_("No third-party kernel modules need attention."),
+    "drivers-trusted": N_("Installed drivers are trusted, including signatures from previously enrolled certificates."),
+    "drivers-untrusted": N_("One or more third-party drivers need a trusted signature."),
+    "bootloader-unsupported": N_("The UEFI bootloader operation is not available in the current boot mode."),
+    "bootloader-optional": N_("The AnduinOS bootloader is not installed. Installing it is recommended."),
+    "bootloader-unknown": N_("The installed bootloader could not be checked."),
+    "bootloader-ready": N_("AnduinOS GRUB is signed, trusted and deployed."),
+    "bootloader-unsigned": N_("The AnduinOS bootloader needs signing or its signature could not be verified."),
+    "bootloader-unenrolled": N_("The bootloader is signed, but its certificate is not enrolled."),
+    "bootloader-undeployed": N_("The signed bootloader needs deployment to this system's EFI partition."),
+    "boot-recovery-required": N_("The installed EFI boot chain could not be verified as trusted. Restore a trusted boot path before restarting."),
+    "firmware-unavailable": N_("Check the firmware and boot mode before continuing."),
+    "signing-certificate-unavailable": N_("Prepare a valid signing certificate first."),
+    "unified-certificate-required": N_("Create a certificate that can sign both the bootloader and drivers first."),
+    "certificate-enrollment-required": N_("The signing certificate must be enrolled first. Complete the certificate enrollment step above."),
+    "driver-build-unavailable": N_("DKMS and the matching kernel headers are required. Check the driver build requirements."),
+    "next-boot-unverified": N_("The next boot entry and kernel have not been verified. Do not enable Secure Boot until the actual boot chain is checked."),
+    "firmware-trust-unverified": N_("Firmware trust for the next bootloader has not been verified."),
+    "boot-chain-untrusted": N_("The next bootloader is not verified as signed, trusted and deployed."),
+    "next-kernel-unverified": N_("The kernel selected for the next boot has not been verified."),
+    "next-drivers-unverified": N_("The drivers needed by the next kernel have not been verified."),
+}
+_ACTION_LABELS = {
+    "prepare-identity": N_("Create Signing Certificate"),
+    "regenerate-identity": N_("Replace Signing Certificate…"),
+    "sync-defaults": N_("Repair Automatic Signing"),
+    "repair-dkms": N_("Repair Driver Signatures"),
+    "install-bootloader": N_("Install AnduinOS Bootloader"),
+    "repair-bootloader": N_("Repair AnduinOS Bootloader"),
+    "reboot-enroll": N_("Restart to Enroll Certificate"),
+    "firmware-setup": N_("Check Before Enabling Secure Boot"),
+    "refresh": N_("Check Again"),
+    "show-firmware-help": N_("Firmware Help"),
+    "show-boot-recovery": N_("Boot Recovery Help"),
+}
+_FIRMWARE_INSTRUCTIONS = N_(
+    "Secure Boot is configured in UEFI settings. Platform keys and the Microsoft third-party CA "
+    "are separate from your MOK certificate. Verify the actual bootloader, next kernel and required "
+    "drivers before enabling Secure Boot. Firmware wording varies by manufacturer.")
 
 
-def restart_to_firmware_settings(
-    run: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
-) -> tuple[bool, str]:
-    """Ask systemd to restart directly into the UEFI firmware interface."""
-
+def restart_to_firmware_settings(run=subprocess.run) -> tuple[bool, str]:
     try:
-        result = run(
-            ["systemctl", "reboot", "--firmware-setup"],
-            capture_output=True,
-            text=True,
-            timeout=10,
-            check=False,
-        )
+        result = run(["systemctl", "reboot", "--firmware-setup"], capture_output=True,
+                     text=True, timeout=10, check=False)
     except (OSError, subprocess.TimeoutExpired) as error:
         return False, str(error)
-    if result.returncode == 0:
-        return True, ""
-    return False, (result.stderr or result.stdout).strip()
+    return (True, "") if result.returncode == 0 else (False, (result.stderr or result.stdout).strip())
 
 
-def _default_icon(name: str) -> Gtk.Image:
+def _default_icon(name: str):
     return Gtk.Image.new_from_icon_name(name)
 
 
-def create_secure_boot_page(
-    *,
-    translate: Translate | None = None,
-    icon_factory: IconFactory | None = None,
-    reboot: Callable[[], None] | None = None,
-    firmware_setup: Callable[[], tuple[bool, str]] | None = None,
-    state_changed: Callable[[], None] | None = None,
-    initial_state: tuple[SecureBootState, DkmsState] | None = None,
-) -> Gtk.Widget:
-    """Build the Driver Center trust page.
+def _bootloader_result_dialog(parent, code, payload, translate):
+    _ = translate
+    dialog = Adw.MessageDialog.new(parent,
+        _("Bootloader Updated") if code == 0 else _("Bootloader Update Failed"),
+        _("The bootloader operation finished. The installed files will now be checked again.")
+        if code == 0 else _("The bootloader update could not be completed. Review the details before restarting."))
+    detail = "\n".join(filter(None, [payload.get("error", ""), *[
+        step.get("detail", "") for step in payload.get("steps", {}).values()]]))
+    if detail:
+        log = Gtk.TextView(editable=False, cursor_visible=False, monospace=True,
+                           wrap_mode=Gtk.WrapMode.WORD_CHAR)
+        log.get_buffer().set_text(detail)
+        scroll = Gtk.ScrolledWindow(height_request=180,
+            hscrollbar_policy=Gtk.PolicyType.NEVER, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
+        scroll.set_child(log)
+        expander = Gtk.Expander(label=_("Details"), expanded=code != 0)
+        expander.set_child(scroll)
+        dialog.set_extra_child(expander)
+    dialog.add_response("ok", _("OK"))
+    return dialog
 
-    Navigation remains owned by the embedding application. The page owns the
-    shared trust rows, action wording, fixed enrollment-code prompt, and repair
-    behavior.
-    """
 
+def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
+                            firmware_setup=None, state_changed=None, initial_state=None,
+                            initial_facts: Facts | None = None):
     _ = translate or (lambda value: value)
     make_icon = icon_factory or _default_icon
-    reboot = reboot or (
-        lambda: subprocess.run(
-            ["gnome-session-quit", "--reboot", "--no-prompt"], check=False
-        )
-    )
+    reboot = reboot or (lambda: subprocess.run(["gnome-session-quit", "--reboot", "--no-prompt"], check=False))
     firmware_setup = firmware_setup or restart_to_firmware_settings
-
-    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    page.set_valign(Gtk.Align.FILL)
-    page.set_halign(Gtk.Align.FILL)
-    page.set_margin_start(48)
-    page.set_margin_end(48)
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+    page.set_margin_start(24)
+    page.set_margin_end(24)
     page.set_margin_top(24)
     page.set_margin_bottom(24)
-
-    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    center.set_valign(Gtk.Align.CENTER)
-    center.set_vexpand(True)
-    page.append(center)
-
-    chip_icon = make_icon("secureboot-chip.svg")
-    if hasattr(chip_icon, "set_pixel_size"):
-        chip_icon.set_pixel_size(72)
-    else:
-        chip_icon.set_size_request(72, 72)
-    chip_icon.set_halign(Gtk.Align.CENTER)
-    chip_icon.set_margin_bottom(12)
-    center.append(chip_icon)
-
+    chip = make_icon("secureboot-chip.svg")
+    if hasattr(chip, "set_pixel_size"):
+        chip.set_pixel_size(64)
+    page.append(chip)
     title = Gtk.Label(label=_("Secure Boot Configuration"))
     title.add_css_class("title-1")
-    title.set_halign(Gtk.Align.CENTER)
-    title.set_margin_bottom(8)
-    center.append(title)
-
-    description = Gtk.Label(
-        label=_(
-            "Secure Boot is a motherboard security standard that ensures only trusted software loads at startup."
-        )
-        + "\n"
-        + _("It protects your system from low-level malware and rootkits.")
-    )
-    description.add_css_class("dim-label")
-    description.set_halign(Gtk.Align.CENTER)
-    description.set_justify(Gtk.Justification.CENTER)
-    description.set_wrap(True)
-    description.set_margin_bottom(24)
-    center.append(description)
-
-    boot_warning = Gtk.Label()
-    boot_warning.set_wrap(True)
-    boot_warning.add_css_class("warning")
-    boot_warning.set_margin_bottom(12)
-    center.append(boot_warning)
-
+    page.append(title)
     group = Adw.PreferencesGroup(title=_("System Trust Status"))
-    group.set_margin_bottom(24)
-    center.append(group)
-
-    rows: dict[str, tuple[Adw.ActionRow, Gtk.Widget]] = {}
-
-    def add_row(key: str, title_text: str) -> None:
-        row = Adw.ActionRow(title=title_text)
+    page.append(group)
+    rows, buttons = {}, {}
+    for key, text in (
+        ("secure_boot", _("Secure Boot")), ("certificate", _("Local MOK Certificate")),
+        ("certificate_purpose", _("Certificate Signing Purpose")),
+        ("enrollment", _("Certificate Enrollment")), ("drivers", _("Third-party Drivers")),
+        ("bootloader", _("AnduinOS Bootloader")),
+    ):
+        row = Adw.ActionRow(title=text)
+        button = Gtk.Button(label=_("Check Again"))
+        button.set_valign(Gtk.Align.CENTER)
+        label = button.get_child()
+        if label is not None:
+            label.set_wrap(True)
+            label.set_width_chars(18)
+            label.set_max_width_chars(24)
         icon = _default_icon("dialog-information-symbolic")
         icon.set_pixel_size(16)
+        row.add_suffix(button)
         row.add_suffix(icon)
         group.add(row)
-        rows[key] = row, icon
-
-    add_row("secure_boot", _("Secure Boot Enabled"))
-    add_row("certificate", _("Local MOK Certificate"))
-    add_row("enrollment", _("UEFI Firmware Trust"))
-    add_row("drivers", _("Third-party Drivers"))
-
-    firmware_button = Gtk.Button(label=_(_FIRMWARE_SETUP_BUTTON))
-    firmware_button.set_valign(Gtk.Align.CENTER)
-    firmware_button.add_css_class("suggested-action")
-    rows["secure_boot"][0].add_suffix(firmware_button)
-
+        rows[key] = (row, icon)
+        buttons[key] = button
+        button.connect("clicked", lambda _button, row_id=key: activate(row_id))
     status = Gtk.Label()
-    status.set_justify(Gtk.Justification.CENTER)
-    status.set_halign(Gtk.Align.CENTER)
     status.set_wrap(True)
-    center.append(status)
+    status.set_xalign(0)
+    page.append(status)
+    refresh_button = Gtk.Button(halign=Gtk.Align.END)
+    refresh_button.add_css_class("flat")
+    refresh_button.set_child(Adw.ButtonContent(
+        icon_name="view-refresh-symbolic", label=_("Check Again")))
+    refresh_button.connect("clicked", lambda _button: refresh())
+    page.append(refresh_button)
+    holder = {"facts": None, "decision": None, "busy": False, "generation": 0}
 
-    action_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
-    action_box.set_halign(Gtk.Align.CENTER)
+    def text(reason):
+        return _(_MESSAGES[reason])
 
-    enroll_button = Gtk.Button()
-    enroll_button.set_halign(Gtk.Align.CENTER)
-    enroll_button.add_css_class("suggested-action")
-    enroll_button.add_css_class("pill")
-    enroll_button.set_size_request(240, 48)
-    enroll_button.set_margin_top(16)
-    enroll_spinner = Gtk.Spinner()
-    enroll_content = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
-    enroll_content.set_halign(Gtk.Align.CENTER)
-    enroll_label = Gtk.Label(label=_(_PREPARE))
-    enroll_content.append(enroll_spinner)
-    enroll_content.append(enroll_label)
-    enroll_button.set_child(enroll_content)
-    action_box.append(enroll_button)
+    def add_enrollment_tutorial(dialog, body):
+        dialog.set_extra_child(EnrollmentTutorial(body))
+        width = page.get_root().get_width()
+        dialog.set_default_size(min(720, max(320, width - 48)), -1)
 
-    repair_button = Gtk.Button(label=_("Repair Module Signatures"))
-    repair_button.set_halign(Gtk.Align.CENTER)
-    repair_button.add_css_class("suggested-action")
-    repair_button.add_css_class("pill")
-    repair_button.set_size_request(240, 48)
-    action_box.append(repair_button)
-
-    reboot_note = Gtk.Label(
-        label=_("Note: Use password <b>123456</b> after rebooting.")
-    )
-    reboot_note.set_use_markup(True)
-    reboot_note.set_halign(Gtk.Align.CENTER)
-    action_box.append(reboot_note)
-    reboot_button = Gtk.Button(label=_("Reboot"))
-    reboot_button.set_halign(Gtk.Align.CENTER)
-    reboot_button.add_css_class("suggested-action")
-    reboot_button.add_css_class("pill")
-    reboot_button.set_size_request(280, 48)
-    action_box.append(reboot_button)
-    center.append(action_box)
-
-    refresh_button = Gtk.Button(label=_("  Check Again  "))
-    refresh_button.set_halign(Gtk.Align.CENTER)
-    refresh_button.set_margin_top(8)
-    center.append(refresh_button)
-
-    state_holder: dict[str, SecureBootState | DkmsState | None] = {
-        "secure_boot": None,
-        "dkms": None,
-    }
-
-    def set_icon(key: str, name: str, css_class: str) -> None:
-        row, icon = rows[key]
-        icon.set_from_icon_name(name)
-        for candidate in ("success", "warning", "error", "dim-label"):
-            icon.remove_css_class(candidate)
-        icon.add_css_class(css_class)
-
-    def apply_state(secure_boot: SecureBootState, dkms: DkmsState) -> bool:
-        state_holder["secure_boot"] = secure_boot
-        state_holder["dkms"] = dkms
-        sb_row, sb_icon = rows["secure_boot"]
-        cert_row, cert_icon = rows["certificate"]
-        enroll_row, enroll_icon = rows["enrollment"]
-        drivers_row, drivers_icon = rows["drivers"]
-        boot_warning.set_visible(secure_boot.setup_mode is True or secure_boot.boot_loader == "grub")
-        boot_warning.set_label(_(_BOOT_WARNING) + (
-            "\n" + _(_SETUP_MODE) if secure_boot.setup_mode is True else ""
-        ))
-
-        if secure_boot.enabled:
-            sb_row.set_subtitle(_("Motherboard hardware protection is active"))
-            set_icon("secure_boot", "emblem-ok-symbolic", "success")
-        elif secure_boot.status is SecureBootStatus.UNSUPPORTED:
-            sb_row.set_subtitle(_("Firmware does not support Secure Boot"))
-            set_icon("secure_boot", "dialog-information-symbolic", "dim-label")
-        elif secure_boot.status is SecureBootStatus.UNKNOWN:
-            sb_row.set_subtitle(_("Secure Boot state could not be determined"))
-            set_icon("secure_boot", "dialog-error-symbolic", "error")
-        else:
-            sb_row.set_subtitle(_("Secure Boot is disabled"))
-            set_icon("secure_boot", "dialog-error-symbolic", "error")
-
-        has_certificate = secure_boot.key_present and secure_boot.certificate_present
-        trust_ready = has_certificate and secure_boot.enrolled
-        if secure_boot.status is SecureBootStatus.UNSUPPORTED:
-            cert_row.set_subtitle(_("Not required without firmware enforcement"))
-            set_icon("certificate", "dialog-error-symbolic", "error")
-            enroll_row.set_subtitle(_("Not required without firmware enforcement"))
-            set_icon("enrollment", "dialog-error-symbolic", "error")
-        elif secure_boot.status is SecureBootStatus.UNKNOWN:
-            cert_row.set_subtitle(
-                _("Not checked because Secure Boot state is unknown")
-            )
-            set_icon("certificate", "dialog-warning-symbolic", "warning")
-            enroll_row.set_subtitle(
-                _("Not checked because Secure Boot state is unknown")
-            )
-            set_icon("enrollment", "dialog-warning-symbolic", "warning")
-        else:
-            cert_row.set_subtitle(
-                _("Certificate generated locally")
-                if has_certificate
-                else _("Missing local certificate")
-            )
-            set_icon(
-                "certificate",
-                "emblem-ok-symbolic" if has_certificate else "dialog-warning-symbolic",
-                "success" if has_certificate else "warning",
-            )
-
-        if (
-            secure_boot.supported
-            and secure_boot.status is not SecureBootStatus.UNKNOWN
-        ):
-            if secure_boot.enrolled:
-                enroll_row.set_subtitle(_("Certificate is trusted by motherboard"))
-                set_icon("enrollment", "emblem-ok-symbolic", "success")
-            elif secure_boot.enrollment_pending:
-                enroll_row.set_subtitle(
-                    _("Pending enrollment in blue screen (MOKManager)")
-                )
-                set_icon("enrollment", "dialog-warning-symbolic", "warning")
-            else:
-                enroll_row.set_subtitle(
-                    _("Certificate is not trusted by motherboard")
-                )
-                set_icon("enrollment", "dialog-error-symbolic", "error")
-
-        signing_configuration_ready = secure_boot.configuration_present
-        if secure_boot.status is SecureBootStatus.UNSUPPORTED:
-            drivers_row.set_subtitle(_("Kernel signature enforcement is inactive"))
-            set_icon("drivers", "dialog-error-symbolic", "error")
-        elif secure_boot.status is SecureBootStatus.UNKNOWN:
-            drivers_row.set_subtitle(_("Driver trust cannot be verified"))
-            set_icon("drivers", "dialog-warning-symbolic", "warning")
-        elif not dkms.modules and trust_ready and signing_configuration_ready:
-            drivers_row.set_subtitle(
-                _("Secure Boot trust is ready. No third-party kernel modules are currently installed.")
-            )
-            set_icon("drivers", "emblem-ok-symbolic", "success")
-        elif dkms.ready and trust_ready and signing_configuration_ready:
-            drivers_row.set_subtitle(_("Drivers are signed and ready to load"))
-            set_icon("drivers", "emblem-ok-symbolic", "success")
-        elif dkms.ready and trust_ready and not signing_configuration_ready:
-            drivers_row.set_subtitle(
-                _("Drivers are trusted, but automatic DKMS signing needs repair")
-            )
-            set_icon("drivers", "dialog-warning-symbolic", "warning")
-        elif not dkms.modules:
-            drivers_row.set_subtitle(_("No signed third-party drivers detected"))
-            set_icon("drivers", "dialog-information-symbolic", "dim-label")
-        else:
-            drivers_row.set_subtitle(_("Some DKMS modules need to be re-signed"))
-            set_icon("drivers", "dialog-warning-symbolic", "warning")
-
-        enroll_button.set_visible(secure_boot.supported and (
-            secure_boot.enrollment_required or secure_boot.boot_loader != "shim"
-        ))
-        enroll_label.set_label(_(_PREPARE))
-        repair_button.set_visible(
-            secure_boot.supported
-            and secure_boot.enrolled
-            and (
-                not signing_configuration_ready
-                or (secure_boot.dkms_available and not dkms.ready)
-            )
-        )
-        repair_button.set_label(
-            _("Repair Automatic DKMS Signing")
-            if dkms.ready and not signing_configuration_ready
-            else _("Repair Module Signatures")
-        )
-        reboot_note.set_visible(secure_boot.enrollment_pending and secure_boot.boot_loader == "shim")
-        reboot_button.set_visible(secure_boot.enrollment_pending and secure_boot.boot_loader == "shim")
-        firmware_button.set_visible(
-            secure_boot.firmware_enable_ready and dkms.ready
-        )
-        refresh_button.set_visible(
-            secure_boot.status is SecureBootStatus.UNKNOWN
-            or (
-                secure_boot.supported
-                and (not secure_boot.ready or not dkms.ready)
-            )
-        )
-
-        if secure_boot.status is SecureBootStatus.UNSUPPORTED:
-            status.set_label(
-                _(
-                    "This firmware does not provide Secure Boot. No certificate is required."
-                )
-            )
-            status.remove_css_class("title-4")
-        elif secure_boot.status is SecureBootStatus.UNKNOWN:
-            status.set_label(
-                _(
-                    "Secure Boot status could not be read. Driver trust operations are blocked until detection succeeds."
-                )
-            )
-            status.remove_css_class("title-4")
-        elif not secure_boot.enabled and not secure_boot.enrollment_pending:
-            status.set_label(
-                _(_FIRMWARE_SETUP_INSTRUCTIONS)
-                if secure_boot.firmware_enable_ready and dkms.ready
-                else _(_PREPARE_FIRST)
-            )
-            status.remove_css_class("title-4")
-        elif secure_boot.ready and dkms.ready:
-            status.set_label(_("System Trust Established. Third-party drivers will load securely."))
-            status.add_css_class("title-4")
-        elif trust_ready and dkms.ready and not signing_configuration_ready:
-            status.set_label(
-                _("The certificate is enrolled and current drivers are trusted.")
-                + "\n"
-                + _("Repair automatic DKMS signing before future driver updates.")
-            )
-            status.remove_css_class("title-4")
-        elif trust_ready:
-            status.set_label(
-                _("The certificate is enrolled, but some modules are not signed with it.")
-            )
-            status.remove_css_class("title-4")
-        elif secure_boot.enrollment_pending:
-            status.set_label(
-                _("A certificate is waiting for enrollment.")
-                + "\n"
-                + _("Restart and enter password 123456 in MOKManager.")
-            )
-            status.remove_css_class("title-4")
-        elif has_certificate:
-            status.set_label(
-                _("The local trust certificate is not yet enrolled.")
-                + "\n"
-                + _("You must configure this to use third-party drivers like NVIDIA.")
-            )
-            status.remove_css_class("title-4")
-        else:
-            status.set_label(
-                _("The local trust certificate is missing.")
-                + "\n"
-                + _("You must configure this to use third-party drivers like NVIDIA.")
-            )
-            status.remove_css_class("title-4")
-        if state_changed:
-            state_changed()
-        return GLib.SOURCE_REMOVE
-
-    def inspect_worker() -> None:
-        secure_boot = inspect_secure_boot(recover=True)
-        dkms = inspect_dkms(secure_boot)
-        GLib.idle_add(apply_state, secure_boot, dkms)
-        GLib.idle_add(refresh_button.set_sensitive, True)
-        GLib.idle_add(refresh_button.set_label, _("  Check Again  "))
-
-    def refresh(_button: Gtk.Button | None = None) -> None:
-        refresh_button.set_sensitive(False)
-        refresh_button.set_label(_("  Checking...  "))
-        threading.Thread(target=inspect_worker, daemon=True).start()
-
-    def confirm_reboot(_button: Gtk.Button | None = None) -> None:
-        dialog = Adw.MessageDialog.new(
-            page.get_root(),
-            _("Reboot Required"),
-            _("Please trust the certificate upon reboot using password 123456."),
-        )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("reboot", _("Reboot"))
-        dialog.set_response_appearance("reboot", Adw.ResponseAppearance.DESTRUCTIVE)
-        dialog.connect(
-            "response", lambda _dialog, name: reboot() if name == "reboot" else None
-        )
-        dialog.present()
-
-    def confirm_firmware_setup(_button: Gtk.Button | None = None) -> None:
-        state = state_holder["secure_boot"]
-        modules = state_holder["dkms"]
-        if not (state and state.firmware_enable_ready and modules and modules.ready):
-            return
-        dialog = Adw.MessageDialog.new(
-            page.get_root(),
-            _("Reboot Required"),
-            _(_FIRMWARE_SETUP_INSTRUCTIONS),
-        )
-        dialog.add_response("cancel", _("Cancel"))
-        dialog.add_response("reboot", _("Reboot"))
-        dialog.set_default_response("cancel")
-        dialog.set_close_response("cancel")
-        dialog.set_response_appearance("reboot", Adw.ResponseAppearance.DESTRUCTIVE)
-
-        def response(_dialog: Adw.MessageDialog, name: str) -> None:
-            if name != "reboot":
-                return
-            firmware_button.set_sensitive(False)
-
-            def worker() -> None:
-                succeeded, error = firmware_setup()
-                if succeeded:
-                    return
-                GLib.idle_add(firmware_button.set_sensitive, True)
-                GLib.idle_add(show_firmware_setup_error, error)
-
-            threading.Thread(target=worker, daemon=True).start()
-
-        dialog.connect("response", response)
-        dialog.present()
-
-    def show_firmware_setup_error(error: str) -> bool:
-        body = _(_FIRMWARE_SETUP_ERROR_BODY)
-        if error:
-            body += "\n\n" + error
-        dialog = Adw.MessageDialog.new(
-            page.get_root(),
-            _(_FIRMWARE_SETUP_ERROR_TITLE),
-            body,
-        )
+    def show_message(title, body, enrollment=False):
+        dialog = Adw.MessageDialog.new(page.get_root(), title, body)
+        if enrollment:
+            add_enrollment_tutorial(dialog, body)
         dialog.add_response("ok", _("OK"))
         dialog.present()
         return GLib.SOURCE_REMOVE
 
-    def show_reboot_prompt(extra: str = "") -> None:
-        body = _("A certificate is waiting for enrollment.")
-        if extra:
-            body += "\n\n" + extra
-        body += "\n" + _(
-            "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
-        )
-        dialog = Adw.MessageDialog.new(
-            page.get_root(),
-            _("Certificate Created"),
-            body,
-        )
-        dialog.add_response("later", _("Later"))
-        dialog.add_response("reboot", _("Reboot"))
-        dialog.set_response_appearance("reboot", Adw.ResponseAppearance.SUGGESTED)
+    def draw(facts, generation=None):
+        if generation is not None and generation != holder["generation"]:
+            return GLib.SOURCE_REMOVE
+        holder["facts"] = facts
+        decision = holder["decision"] = decide(facts)
+        for result in decision.rows:
+            row, icon = rows[result.id]
+            row.set_subtitle(text(result.reason))
+            row.set_visible(True)
+            icon.set_from_icon_name({"success": "emblem-ok-symbolic", "warning": "dialog-warning-symbolic",
+                                     "error": "dialog-error-symbolic", "neutral": "dialog-information-symbolic"}[result.tone])
+            for css in ("success", "warning", "error", "dim-label"):
+                icon.remove_css_class(css)
+            icon.add_css_class("dim-label" if result.tone == "neutral" else result.tone)
+            button = buttons[result.id]
+            button.set_visible(result.action is not None)
+            button.set_sensitive(not holder["busy"])
+            if result.action:
+                label = _(_ACTION_LABELS[result.action.id])
+                if (result.action.id == "prepare-identity" and result.id == "enrollment"
+                        and result.reason == "certificate-absent"):
+                    label = _("Submit Enrollment Request")
+                button.set_label(label)
+            identity = facts.secure_boot.signing_identity
+            detail = (identity.detail if identity and result.id in {"certificate", "certificate_purpose"}
+                      else (facts.secure_boot.grub.active_detail or facts.secure_boot.grub.detail)
+                      if facts.secure_boot.grub and result.id == "bootloader" else "")
+            row.set_tooltip_text(detail or None)
+        if decision.next_row:
+            result = next(r for r in decision.rows if r.id == decision.next_row)
+            status.set_label(_("Next step:") + " " + text(result.reason))
+        else:
+            status.set_label(_("No repairs are required by the checks shown above."))
+        refresh_button.set_sensitive(not holder["busy"])
+        if state_changed:
+            state_changed()
+        return GLib.SOURCE_REMOVE
 
-        def response(_dialog: Adw.MessageDialog, name: str) -> None:
-            if name == "reboot":
-                reboot()
+    def collect():
+        return collect_facts(recover=True)
 
-        dialog.connect("response", response)
+    def refresh():
+        if holder["busy"]:
+            return
+        holder["generation"] += 1
+        generation = holder["generation"]
+        refresh_button.set_sensitive(False)
+        def worker():
+            try:
+                facts = collect()
+            except Exception as error:
+                GLib.idle_add(show_message, _("Inspection Failed"), str(error))
+                GLib.idle_add(refresh_button.set_sensitive, True)
+                return
+            GLib.idle_add(draw, facts, generation)
+        threading.Thread(target=worker, daemon=True).start()
+
+    def blocked(action):
+        dialog = Adw.MessageDialog.new(page.get_root(), _("Complete This Step First"),
+                                      "\n\n".join(text(b.reason) for b in action.blockers))
+        dialog.add_response("cancel", _("Close"))
+        target = action.blockers[0].row_id
+        # A local inspection/manual issue has no earlier row to navigate to.
+        if target != "secure_boot" or action.id != "firmware-setup":
+            dialog.add_response("prerequisite", _("Go to This Step"))
+            dialog.connect("response", lambda _dialog, choice: buttons[target].grab_focus()
+                           if choice == "prerequisite" else None)
         dialog.present()
 
-    def action_finished(
-        button: Gtk.Button, action: str, code: int, payload: dict
-    ) -> bool:
-        enroll_spinner.stop()
-        enroll_label.set_label(_(_PREPARE))
-        button.set_sensitive(True)
-        steps = payload.get("steps", {})
-        firmware = steps.get("firmware_state", {})
-        enrollment = steps.get("enrollment_queued", {}).get("status")
-        key_created = steps.get("key_created", {}).get("status")
-        trust_prepared = enrollment in {"success", "skipped"} and key_created in {
-            "success",
-            "skipped",
-        }
+    def confirm(title, body, response_id, response_label, callback, enrollment=False):
+        dialog = Adw.MessageDialog.new(page.get_root(), title, body)
+        if enrollment:
+            add_enrollment_tutorial(dialog, body)
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response(response_id, response_label)
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+        dialog.set_response_appearance(response_id, Adw.ResponseAppearance.SUGGESTED)
+        dialog.connect("response", lambda _dialog, choice: callback() if choice == response_id else None)
+        dialog.present()
 
-        if firmware.get("status") == "skipped":
-            done = Adw.MessageDialog.new(
-                page.get_root(),
-                _("Secure Boot Trust Not Required"),
-                _("Firmware signature enforcement is not active."),
-            )
-            done.add_response("ok", _("OK"))
-            done.present()
-        elif action == "prepare" and trust_prepared:
-            modules_failed = steps.get("modules_rebuilt", {}).get("status") == "failed"
-            warning = (
-                _("The certificate is ready, but one or more DKMS modules could not be rebuilt. You can repair them after enrollment.")
-                if modules_failed
-                else ""
-            )
-            if payload.get("reboot_required"):
-                show_reboot_prompt(warning)
-            elif warning:
-                failed_dialog = Adw.MessageDialog.new(
-                    page.get_root(), _("Configuration needs attention"), warning
-                )
-                failed_dialog.add_response("ok", _("OK"))
-                failed_dialog.present()
-            else:
-                done = Adw.MessageDialog.new(
-                    page.get_root(),
-                    _("System Trust Established"),
-                    _("Drivers are signed and ready to load"),
-                )
-                done.add_response("ok", _("OK"))
-                done.present()
-        elif code == 0:
-            done = Adw.MessageDialog.new(
-                page.get_root(),
-                _("Driver Signature Trusted"),
-                _("Drivers are signed and ready to load"),
-            )
-            done.add_response("ok", _("OK"))
-            done.present()
+    def finish(progress, action, code, payload):
+        holder["busy"] = False
+        progress.close()
+        if action in {"install-bootloader", "repair-bootloader"}:
+            _bootloader_result_dialog(page.get_root(), code, payload, _).present()
         else:
-            detail = payload.get("error")
-            if not detail:
-                failed = [
-                    value.get("detail", "")
-                    for value in steps.values()
-                    if value.get("status") == "failed"
-                ]
-                detail = next((item for item in failed if item), "")
-            failed_dialog = Adw.MessageDialog.new(
-                page.get_root(),
-                _("Configuration failed. Please try again."),
-                detail or _("Please check the advanced output."),
-            )
-            failed_dialog.add_response("ok", _("OK"))
-            failed_dialog.present()
+            detail = "\n".join(filter(None, [payload.get("error", ""), *[
+                step.get("detail", "") for step in payload.get("steps", {}).values()]]))
+            if code == 0 and payload.get("reboot_required"):
+                detail = (_("A certificate is waiting for enrollment. Restart and select Enroll MOK, Continue, Yes, then enter password 123456.")
+                          + "\n\n" + _("Existing bootloader, driver signatures and old enrolled certificates are preserved."))
+            show_message(_("Operation Finished") if code == 0 else _("Operation Failed"),
+                         detail or _("The system will now be checked again."),
+                         enrollment=code == 0 and bool(payload.get("reboot_required")))
         refresh()
         return GLib.SOURCE_REMOVE
 
-    def run_in_thread(button: Gtk.Button, action: str) -> None:
-        button.set_sensitive(False)
-        if action == "prepare":
-            enroll_spinner.start()
-            enroll_label.set_label(_("Generating & Signing..."))
-
-        def worker() -> None:
+    def start_operation(action):
+        if holder["busy"]:
+            return
+        holder["busy"] = True
+        holder["generation"] += 1  # Discard probes started before this operation.
+        for button in buttons.values():
+            button.set_sensitive(False)
+        refresh_button.set_sensitive(False)
+        progress = Adw.MessageDialog.new(page.get_root(), _("Working…"),
+                                        _("Please wait. Do not restart while this operation is running."))
+        progress.set_extra_child(Gtk.Spinner(spinning=True))
+        progress.set_deletable(False)
+        progress.present()
+        def worker():
             try:
-                code, payload = run_action(action)
-            except Exception as error:  # UI boundary: present a useful failure.
+                latest = collect()
+                preflight = assess_action(action, latest)
+                if not preflight.allowed:
+                    code, payload = 1, {"error": "\n".join(text(b.reason) for b in preflight.blockers)}
+                else:
+                    code, payload = run_action("repair-defaults" if action == "sync-defaults" else action)
+            except Exception as error:
                 code, payload = 1, {"error": str(error)}
-            GLib.idle_add(action_finished, button, action, code, payload)
+            GLib.idle_add(finish, progress, action, code, payload)
+        def launch():
+            threading.Thread(target=worker, daemon=True).start()
+            return GLib.SOURCE_REMOVE
+        GLib.timeout_add(200, launch)
 
+    def restart_action(action):
+        if holder["busy"]:
+            return
+        holder["busy"] = True
+        def worker():
+            try:
+                latest = collect()
+                decision = assess_action(action, latest)
+                if not decision.allowed:
+                    GLib.idle_add(blocked, decision)
+                elif action == "firmware-setup":
+                    ok, error = firmware_setup()
+                    if not ok:
+                        GLib.idle_add(show_message, _("Firmware Settings Failed"), error)
+                else:
+                    GLib.idle_add(reboot)
+            except Exception as error:
+                GLib.idle_add(show_message, _("Inspection Failed"), str(error))
+            finally:
+                GLib.idle_add(reset_busy)
         threading.Thread(target=worker, daemon=True).start()
 
-    enroll_button.connect("clicked", lambda button: run_in_thread(button, "prepare"))
-    repair_button.connect(
-        "clicked", lambda button: run_in_thread(button, "repair-dkms")
-    )
-    reboot_button.connect("clicked", confirm_reboot)
-    firmware_button.connect("clicked", confirm_firmware_setup)
-    refresh_button.connect("clicked", refresh)
-    if initial_state is None:
+    def reset_busy():
+        holder["busy"] = False
         refresh()
+        return GLib.SOURCE_REMOVE
+
+    def activate(row_id):
+        if holder["busy"] or holder["decision"] is None:
+            return
+        result = next(r for r in holder["decision"].rows if r.id == row_id)
+        action = result.action
+        if action is None:
+            return
+        if not action.allowed:
+            blocked(action)
+        elif action.id == "refresh":
+            refresh()
+        elif action.id == "show-firmware-help":
+            show_message(_("Firmware Configuration"), _(_FIRMWARE_INSTRUCTIONS))
+        elif action.id == "show-boot-recovery":
+            show_message(_("Restore a Trusted Boot Path"),
+                         _("Do not restart until the installed EFI boot files are trusted. Restore a known-good EFI backup or use trusted installation media to repair them. Keep existing enrolled certificates."))
+        elif action.id in {"reboot-enroll", "firmware-setup"}:
+            body = (_("Select Enroll MOK, Continue, Yes, and enter password 123456 on restart.")
+                    if action.id == "reboot-enroll" else _(_FIRMWARE_INSTRUCTIONS))
+            confirm(_("Restart Required"), body, "reboot", _("Restart"), lambda: restart_action(action.id),
+                    enrollment=action.id == "reboot-enroll")
+        else:
+            body = (_("The bootloader will be signed with your enrolled certificate and deployed. Existing EFI files are backed up. Keep the computer running until the operation finishes.")
+                    if action.id in {"install-bootloader", "repair-bootloader"} else
+                    _("This updates the selected signing configuration. Creating or replacing a certificate preserves existing boot and driver trust. A new certificate requires confirmation in MOKManager after restart."))
+            confirm(_(_ACTION_LABELS[action.id]), body, "continue", _("Continue"),
+                    lambda: start_operation(action.id))
+
+    if initial_facts is not None:
+        draw(initial_facts)
+    elif initial_state is not None:
+        draw(Facts(*initial_state, drivers_checked=True))
     else:
-        apply_state(*initial_state)
+        refresh()
     return page

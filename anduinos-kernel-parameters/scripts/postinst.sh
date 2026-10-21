@@ -13,6 +13,12 @@ is_chroot() {
     return 1
 }
 
+is_live() {
+    # Live overlays have no installed root device for grub-probe (e.g. /cow).
+    grep -Eq '(^|[[:space:]])(boot=casper|boot=live|rd\.anduinos\.live=1)([[:space:]]|$)' \
+        "${DPKG_ROOT:-}/proc/cmdline" 2>/dev/null
+}
+
 mark_reboot_required() {
     reboot_required_dir="${DPKG_ROOT:-}/run"
     package_name="anduinos-kernel-parameters"
@@ -29,6 +35,8 @@ if [ "$1" = "configure" ]; then
     rm -f "${DPKG_ROOT:-}/etc/default/grub.d/50-anduinos-desktop.cfg"
     if is_chroot; then
         echo "anduinos-kernel-parameters: chroot detected; deferring GRUB configuration refresh."
+    elif is_live; then
+        echo "anduinos-kernel-parameters: Live session detected; skipping GRUB configuration refresh."
     elif command -v update-grub >/dev/null 2>&1; then
         update-grub
         mark_reboot_required

@@ -2027,3 +2027,15 @@ msgstr "Palautus on valmis käynnistettäväksi. Tallenna työsi; tietokone käy
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback confirmation failed. Restoring the previous state."
 msgstr "Palautuksen vahvistus epäonnistui. Palautetaan edellinen tila."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points."
+msgstr "Palauta myös käyttäjätiedot. Poista onnistuneen palautuksen jälkeen muut kuin tehdastilannekuvat; säilytä molemmat New OS -palautuspisteet."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Delete all snapshot history"
+msgstr "Poista koko tilannekuvahistoria"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore all users’ files and settings to their initial state."
+msgstr "Palauta kaikkien käyttäjien tiedostot ja asetukset alkuperäiseen tilaan."

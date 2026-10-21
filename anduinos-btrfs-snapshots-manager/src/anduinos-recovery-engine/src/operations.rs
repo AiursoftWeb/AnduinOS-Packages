@@ -626,6 +626,8 @@ impl<R: CommandRunner> OperationEngine<R> {
     where
         F: FnMut(OperationPhase, f64, &str),
     {
+        crate::history_cleanup::ensure_creation_allowed(&self.snapshot_root)
+            .map_err(|message| OperationError::new(OperationErrorCode::Busy, message))?;
         let lineage_store = LineageStore::new(&self.snapshot_root);
         let lineage = lineage_store
             .ensure_initialized(&deployments.deployments)
@@ -972,7 +974,7 @@ impl<R: CommandRunner> OperationEngine<R> {
     }
 
     pub fn delete(&self, layout: &LayoutReport, id: DeploymentId) -> Result<(), OperationError> {
-        self.delete_with_restorable_floor(layout, id, None, false)
+        self.delete_with_restorable_floor(layout, id, None, false, false)
     }
 
     /// Deliberately delete the installer-owned factory baseline. Ordinary
@@ -982,7 +984,7 @@ impl<R: CommandRunner> OperationEngine<R> {
         layout: &LayoutReport,
         id: DeploymentId,
     ) -> Result<(), OperationError> {
-        self.delete_with_restorable_floor(layout, id, None, true)
+        self.delete_with_restorable_floor(layout, id, None, true, false)
     }
 
     pub fn delete_automatic(
@@ -991,7 +993,21 @@ impl<R: CommandRunner> OperationEngine<R> {
         id: DeploymentId,
         minimum_restorable_deployments: usize,
     ) -> Result<(), OperationError> {
-        self.delete_with_restorable_floor(layout, id, Some(minimum_restorable_deployments), false)
+        self.delete_with_restorable_floor(
+            layout,
+            id,
+            Some(minimum_restorable_deployments),
+            false,
+            false,
+        )
+    }
+
+    pub(crate) fn delete_factory_reset_history(
+        &self,
+        layout: &LayoutReport,
+        id: DeploymentId,
+    ) -> Result<(), OperationError> {
+        self.delete_with_restorable_floor(layout, id, None, false, true)
     }
 
     fn delete_with_restorable_floor(
@@ -1000,6 +1016,7 @@ impl<R: CommandRunner> OperationEngine<R> {
         id: DeploymentId,
         minimum_restorable_deployments: Option<usize>,
         allow_factory_deletion: bool,
+        purge_history: bool,
     ) -> Result<(), OperationError> {
         ensure_supported_layout(layout)?;
         self.ensure_store_directories()?;
@@ -1025,7 +1042,17 @@ impl<R: CommandRunner> OperationEngine<R> {
                 },
             )?;
         let mut record = self.load_record(id)?;
-        self.ensure_not_transaction_referenced(id)?;
+        if purge_history {
+            crate::history_cleanup::validate_consent(&self.snapshot_root)
+                .map_err(|message| OperationError::new(OperationErrorCode::Protected, message))?;
+            if record.kind == DeploymentKind::Factory {
+                return Err(OperationError::new(
+                    OperationErrorCode::Protected,
+                    "History cleanup must preserve the factory system snapshot",
+                ));
+            }
+        }
+        self.ensure_not_transaction_referenced(id, purge_history)?;
         if allow_factory_deletion && record.kind != DeploymentKind::Factory {
             return Err(OperationError::new(
                 OperationErrorCode::InvalidInput,
@@ -1078,7 +1105,7 @@ impl<R: CommandRunner> OperationEngine<R> {
                     record.state,
                     DeploymentState::Ready | DeploymentState::Incomplete | DeploymentState::Broken
                 );
-            if !record.can_delete() && !deliberately_deleting_factory {
+            if !record.can_delete() && !deliberately_deleting_factory && !purge_history {
                 return Err(OperationError::new(
                     OperationErrorCode::Protected,
                     "This system snapshot is pinned or protects a boot transaction",
@@ -1130,7 +1157,11 @@ impl<R: CommandRunner> OperationEngine<R> {
         Ok(())
     }
 
-    fn ensure_not_transaction_referenced(&self, id: DeploymentId) -> Result<(), OperationError> {
+    fn ensure_not_transaction_referenced(
+        &self,
+        id: DeploymentId,
+        purge_history: bool,
+    ) -> Result<(), OperationError> {
         let rollback = TransactionStore::new(&self.snapshot_root)
             .load_pending()
             .map_err(|error| {
@@ -1140,7 +1171,8 @@ impl<R: CommandRunner> OperationEngine<R> {
                 )
             })?;
         if rollback.as_ref().is_some_and(|transaction| {
-            transaction.target_deployment_id == id || transaction.fallback_deployment_id == id
+            transaction.target_deployment_id == id
+                || (transaction.fallback_deployment_id == id && !purge_history)
         }) {
             return Err(OperationError::new(
                 OperationErrorCode::Protected,

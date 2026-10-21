@@ -5,12 +5,33 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 
+from .identity import IdentityStatus
+
 
 class SecureBootStatus(str, Enum):
     ENABLED = "enabled"
     DISABLED = "disabled"
     UNSUPPORTED = "unsupported"
     UNKNOWN = "unknown"
+
+
+@dataclass(frozen=True)
+class GrubState:
+    supported: bool = True
+    installed: bool = False
+    signature: str = "missing"
+    enrollment: str = "unknown"
+    deployment: str = "unknown"
+    detail: str = ""
+    # Installed EFI trust is independent of a newly prepared signing cache.
+    active_chain: str = "unknown"
+    active_detail: str = ""
+
+    @property
+    def ready(self) -> bool:
+        return (self.installed and self.signature == "valid"
+                and self.enrollment == "enrolled" and self.deployment == "ready"
+                and self.active_chain == "trusted")
 
 
 @dataclass(frozen=True)
@@ -29,6 +50,11 @@ class SecureBootState:
     boot_loader: str = "unknown"
     firmware_reason: str = ""
     firmware_detail: str = ""
+    # During certificate rotation, previously enrolled identities remain valid.
+    # This is deliberately independent of the active local signing identity.
+    enrolled_certificate_serials: tuple[str, ...] = field(default_factory=tuple)
+    signing_identity: IdentityStatus | None = None
+    grub: GrubState | None = None
 
     def __post_init__(self) -> None:
         status = self.status
@@ -95,6 +121,7 @@ class ModuleState:
     path: str
     signature_key: str | None
     trusted: bool
+    signed_by_current_certificate: bool = False
 
 
 @dataclass(frozen=True)

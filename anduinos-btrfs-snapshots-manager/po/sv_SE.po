@@ -2027,3 +2027,15 @@ msgstr "Återställningen är klar att genomföras. Spara ditt arbete; datorn st
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback confirmation failed. Restoring the previous state."
 msgstr "Bekräftelsen av återställningen misslyckades. Återställer föregående tillstånd."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points."
+msgstr "Återställ även användardata. Radera alla andra ögonblicksbilder än fabriksbilder efter lyckad återställning; behåll båda New OS-återställningspunkterna."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Delete all snapshot history"
+msgstr "Radera all ögonblicksbildshistorik"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore all users’ files and settings to their initial state."
+msgstr "Återställ alla användares filer och inställningar till ursprungligt skick."

@@ -28,8 +28,9 @@ conditions are defined by `OobeWindow._get_page_factories()` in
 - The hardware drivers page is always shown immediately after the optional
   Secure Boot page. It does not inspect hardware, virtualization, connectivity,
   or driver state. It only opens AnduinOS Driver Center or lets the user skip.
-- The China mirror page currently recognizes only `zh_CN`, not `zh_TW` or
-  `zh_HK`.
+- The China mirror page recognizes `zh_CN` (also written `zh-CN`), not `zh_TW`
+  or `zh_HK`. The shortcuts page uses the same locale check to show an extra
+  F4 hint for opening Chinese input method settings while using Rime.
 - The Bottles page does not use the Bottles installation state as a display
   condition. When Bottles is already installed, the page remains visible but
   offers a "Configure Bottles" action instead of installation.

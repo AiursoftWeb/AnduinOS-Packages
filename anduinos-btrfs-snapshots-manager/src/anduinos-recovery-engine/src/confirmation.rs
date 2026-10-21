@@ -72,6 +72,11 @@ impl fmt::Display for ConfirmationError {
 impl std::error::Error for ConfirmationError {}
 
 pub trait ConfirmationBackend {
+    fn lock_confirmation(
+        &self,
+    ) -> Result<Option<crate::coordination::TransactionStartLock>, ConfirmationError> {
+        Ok(None)
+    }
     fn pending(&self) -> Result<Option<RollbackTransaction>, ConfirmationError>;
     fn deployment(&self, id: DeploymentId) -> Result<DeploymentRecord, ConfirmationError>;
     fn boot_id(&self) -> Result<String, ConfirmationError>;
@@ -118,6 +123,10 @@ pub trait ConfirmationBackend {
         &self,
         transaction: &RollbackTransaction,
     ) -> Result<(), ConfirmationError>;
+    fn purge_factory_reset_history(
+        &self,
+        transaction: &RollbackTransaction,
+    ) -> Result<(), ConfirmationError>;
     fn clear_once(&self) -> Result<(), ConfirmationError>;
     fn regenerate_grub(&self) -> Result<(), ConfirmationError>;
     fn record_lineage_activation(
@@ -131,6 +140,18 @@ pub trait ConfirmationBackend {
 pub struct SystemConfirmationBackend;
 
 impl ConfirmationBackend for SystemConfirmationBackend {
+    fn lock_confirmation(
+        &self,
+    ) -> Result<Option<crate::coordination::TransactionStartLock>, ConfirmationError> {
+        crate::coordination::TransactionStartLock::acquire_preparation(crate::RECOVERY_STORE_ROOT)
+            .map(Some)
+            .map_err(|error| {
+                ConfirmationError::new(
+                    ConfirmationErrorCode::StateCommit,
+                    format!("Could not coordinate recovery confirmation: {error}"),
+                )
+            })
+    }
     fn pending(&self) -> Result<Option<RollbackTransaction>, ConfirmationError> {
         TransactionStore::default()
             .load_pending()
@@ -338,6 +359,15 @@ impl ConfirmationBackend for SystemConfirmationBackend {
             .map_err(transaction_error)
     }
 
+    fn purge_factory_reset_history(
+        &self,
+        transaction: &RollbackTransaction,
+    ) -> Result<(), ConfirmationError> {
+        crate::history_cleanup::purge(transaction).map_err(|message| {
+            ConfirmationError::new(ConfirmationErrorCode::CommandFailed, message)
+        })
+    }
+
     fn clear_once(&self) -> Result<(), ConfirmationError> {
         BootIntegration::default()
             .clear_pending_once()
@@ -392,6 +422,7 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
     }
 
     pub fn reconcile(&self) -> Result<ConfirmationOutcome, ConfirmationError> {
+        let _confirmation_lock = self.backend.lock_confirmation()?;
         let Some(mut transaction) = self.backend.pending()? else {
             return match self.retry_pending_root_cleanups()? {
                 CleanupPass::NoRecords => Ok(ConfirmationOutcome::NoAction),
@@ -458,6 +489,13 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
                 "The running kernel does not match the rollback transaction",
             ));
         }
+        self.verify_target_identity(transaction)
+    }
+
+    fn verify_target_identity(
+        &self,
+        transaction: &RollbackTransaction,
+    ) -> Result<(), ConfirmationError> {
         let target = self.backend.deployment(transaction.target_deployment_id)?;
         let expected_parent = if transaction.home_only {
             target.snapshot_parent_uuid
@@ -510,6 +548,16 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
                 .record_lineage_activation(transaction, ActivationOutcome::Confirmed)?;
         }
         self.backend.schedule_old_root_cleanup(transaction)?;
+        if transaction.purge_history {
+            self.verify_target_identity(transaction)?;
+            if matches!(self.retry_pending_root_cleanups()?, CleanupPass::Pending) {
+                return Err(ConfirmationError::new(
+                    ConfirmationErrorCode::CommandFailed,
+                    "Factory reset history cleanup is incomplete; old subvolumes remain",
+                ));
+            }
+            self.backend.purge_factory_reset_history(transaction)?;
+        }
         self.backend.clear_once()?;
         self.backend.archive_transaction(transaction)?;
         self.backend.remove_transaction()?;
@@ -996,6 +1044,7 @@ mod tests {
         archived: Vec<RollbackTransaction>,
         cleanups: Vec<RootCleanupRecord>,
         cleanup_outcome: OldRootCleanupOutcome,
+        purge_fails: bool,
         calls: Vec<String>,
     }
 
@@ -1037,6 +1086,7 @@ mod tests {
                         archived: Vec::new(),
                         cleanups: Vec::new(),
                         cleanup_outcome: OldRootCleanupOutcome::Removed,
+                        purge_fails: false,
                         calls: Vec::new(),
                     })),
                 },
@@ -1182,6 +1232,30 @@ mod tests {
             Ok(())
         }
 
+        fn purge_factory_reset_history(
+            &self,
+            _transaction: &RollbackTransaction,
+        ) -> Result<(), ConfirmationError> {
+            self.call("purge-history");
+            assert_eq!(
+                self.inner
+                    .lock()
+                    .unwrap()
+                    .transaction
+                    .as_ref()
+                    .unwrap()
+                    .phase,
+                RollbackPhase::Confirmed
+            );
+            if self.inner.lock().unwrap().purge_fails {
+                return Err(ConfirmationError::new(
+                    ConfirmationErrorCode::CommandFailed,
+                    "Injected deletion failure",
+                ));
+            }
+            Ok(())
+        }
+
         fn clear_once(&self) -> Result<(), ConfirmationError> {
             self.call("clear-once");
             Ok(())
@@ -1309,6 +1383,118 @@ mod tests {
         );
     }
 
+    fn history_reset(backend: &FakeBackend, mut transaction: RollbackTransaction) {
+        transaction.reset_home = true;
+        transaction.purge_history = true;
+        transaction.factory_home_snapshot_id = Some(PersonalSnapshotId::new());
+        transaction.factory_home_snapshot_uuid = Some(SNAPSHOT.into());
+        transaction.validate().unwrap();
+        backend.inner.lock().unwrap().transaction = Some(transaction);
+    }
+
+    #[test]
+    fn factory_history_cleanup_runs_only_after_confirmation_and_before_release() {
+        let (backend, transaction) = FakeBackend::booted();
+        history_reset(&backend, transaction);
+        assert_eq!(
+            ConfirmationEngine::new(backend.clone())
+                .reconcile()
+                .unwrap(),
+            ConfirmationOutcome::Confirmed
+        );
+        let state = backend.inner.lock().unwrap();
+        let purge = state
+            .calls
+            .iter()
+            .position(|c| c == "purge-history")
+            .unwrap();
+        let old = state
+            .calls
+            .iter()
+            .position(|c| c == "cleanup-old-root")
+            .unwrap();
+        let release = state
+            .calls
+            .iter()
+            .position(|c| c == "remove-transaction")
+            .unwrap();
+        assert!(old < purge && purge < release);
+        assert!(state.transaction.is_none());
+    }
+
+    #[test]
+    fn failed_history_cleanup_remains_confirmed_and_resumes_in_another_boot() {
+        let (backend, transaction) = FakeBackend::booted();
+        history_reset(&backend, transaction);
+        backend.inner.lock().unwrap().purge_fails = true;
+        assert!(
+            ConfirmationEngine::new(backend.clone())
+                .reconcile()
+                .is_err()
+        );
+        {
+            let mut state = backend.inner.lock().unwrap();
+            assert_eq!(
+                state.transaction.as_ref().unwrap().phase,
+                RollbackPhase::Confirmed
+            );
+            assert!(!state.calls.iter().any(|c| c == "remove-transaction"));
+            state.purge_fails = false;
+            state.boot_id = "eeeeeeee-1111-4222-8333-ffffffffffff".into();
+        }
+        assert_eq!(
+            ConfirmationEngine::new(backend.clone())
+                .reconcile()
+                .unwrap(),
+            ConfirmationOutcome::Confirmed
+        );
+    }
+
+    #[test]
+    fn identity_mismatch_never_purges_history() {
+        let (backend, transaction) = FakeBackend::booted();
+        history_reset(&backend, transaction);
+        backend.inner.lock().unwrap().home_parent_uuid =
+            "eeeeeeee-1111-4222-8333-ffffffffffff".into();
+        assert!(
+            ConfirmationEngine::new(backend.clone())
+                .reconcile()
+                .is_err()
+        );
+        let state = backend.inner.lock().unwrap();
+        assert_eq!(
+            state.transaction.as_ref().unwrap().phase,
+            RollbackPhase::BootedUnconfirmed
+        );
+        assert!(!state.calls.iter().any(|c| c == "purge-history"));
+    }
+
+    #[test]
+    fn deferred_old_subvolumes_prevent_history_cleanup_success() {
+        let (backend, transaction) = FakeBackend::booted();
+        history_reset(&backend, transaction);
+        backend.inner.lock().unwrap().cleanup_outcome = OldRootCleanupOutcome::Deferred {
+            blocked_subvolumes: vec!["private-data".into()],
+            diagnostic: "nested subvolume".into(),
+        };
+        assert!(
+            ConfirmationEngine::new(backend.clone())
+                .reconcile()
+                .is_err()
+        );
+        let state = backend.inner.lock().unwrap();
+        assert_eq!(
+            state.transaction.as_ref().unwrap().phase,
+            RollbackPhase::Confirmed
+        );
+        assert!(
+            !state
+                .calls
+                .iter()
+                .any(|c| c == "purge-history" || c == "remove-transaction")
+        );
+    }
+
     #[test]
     fn confirmed_factory_home_reset_verifies_home_and_preserves_personal_history() {
         let (backend, mut transaction) = FakeBackend::booted();
@@ -1334,7 +1520,7 @@ mod tests {
             !inner
                 .calls
                 .iter()
-                .any(|call| call == "purge-personal-history")
+                .any(|call| call == "purge-personal-history" || call == "purge-history")
         );
         let cleanup = inner
             .calls

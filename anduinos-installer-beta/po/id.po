@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "Pemasangan asli akan membuat MOK lokal mesin. Setelah reboot, pilih Enroll MOK → Lanjutkan → Ya di MOKManager dan masukkan kata sandi 123456."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"Pada layar biru MOKManager, pilih Enroll MOK → Lanjutkan → Ya, kata sandi: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -201,9 +195,6 @@ msgstr "Pilih bahasa Anda untuk memulai instalasi"
 msgid "Choose your location to set the system clock"
 msgstr "Pilih lokasi Anda untuk mengatur jam sistem"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "Selesai"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -289,9 +280,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "Simulasi pengembangan selesai"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "Jelajahi AnduinOS"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -498,6 +486,12 @@ msgid "Keyboard"
 msgstr "Papan ketik"
 
 #: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
+msgid "Applying keyboard layout…"
+msgstr "Menerapkan tata letak papan ketik…"
+
+msgid "The keyboard layout could not be applied. Try again."
+msgstr "Tata letak papan ketik tidak dapat diterapkan. Coba lagi."
+
 msgid "Keyboard Layout"
 msgstr "Tata Letak Keyboard"
 
@@ -1382,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Pertahankan Windows atau partisi lain, gunakan kembali atau buat ESP, dan rancang partisi Root serta Swap dengan ukuran yang tepat."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Perubahan manual bersifat merusak. Posisi awal partisi yang ada tidak pernah dipindahkan. NTFS tanpa enkripsi hanya dapat diperkecil setelah pemeriksaan keamanan yang ketat; volume terenkripsi, terpasang, atau yang sistem berkasnya tidak ditutup dengan benar tidak pernah diubah ukurannya."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Perubahan manual bersifat merusak. Posisi awal partisi yang ada tidak pernah dipindahkan. NTFS/ext4 tanpa enkripsi hanya dapat diperkecil setelah pemeriksaan keamanan yang ketat; volume terenkripsi, terpasang, atau yang sistem berkasnya tidak ditutup dengan benar tidak pernah diubah ukurannya."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1748,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "Pemilihan penyimpanan manual tidak ada. Kembali dan tinjau."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ Perubahan ukuran NTFS yang terdaftar akan memindahkan data sistem berkas dan batas partisi. Partisi yang terdaftar akan dihapus dan setiap partisi baru yang terdaftar akan diformat. Cadangkan data penting terlebih dahulu; operasi partisi ini tidak dapat diurungkan."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Perubahan ukuran NTFS/ext4 yang terdaftar akan memindahkan data sistem berkas dan batas partisi. Partisi yang terdaftar akan dihapus dan setiap partisi baru yang terdaftar akan diformat. Cadangkan data penting terlebih dahulu; operasi partisi ini tidak dapat diurungkan."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1773,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Hanya partisi yang secara eksplisit terdaftar yang akan dihapus atau diformat. Partisi yang tidak terlibat tetap tidak berubah; EFI/BOOT tidak ditimpa."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Sunting satu disk GPT. Titik awal partisi tidak pernah dipindahkan; partisi NTFS biasa dapat diperkecil setelah pemeriksaan keamanan."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Sunting satu disk GPT. Titik awal partisi tidak pernah dipindahkan; partisi NTFS/ext4 biasa dapat diperkecil setelah pemeriksaan keamanan."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "Memperkecil ext4 dapat menyebabkan kehilangan data permanen. Cadangkan berkas penting. Ukuran minimum adalah perkiraan; sistem berkas diperiksa sebelum dan setelah perubahan ukuran."
+
+msgid "I have backed up my data."
+msgstr "Saya telah mencadangkan data saya."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Memperkecil Btrfs tidak didukung."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"
@@ -1940,6 +1943,75 @@ msgstr "Anda dapat melanjutkan konfigurasi instalasi. Pemeriksaan firmware harus
 msgid "Firmware check complete"
 msgstr "Pemeriksaan firmware selesai"
 
+
+
+
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "Memeriksa partisi sistem EFI…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "Periksa instalasi Linux lainnya"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "Bandingkan opsi ESP"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "ESP terpisah"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "ESP bersama"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "Buat dan format ESP FAT32 baru di ruang yang belum dialokasikan (minimal 512 MiB). ESP yang ada tidak diubah."
+
+
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "Kedua opsi memasang berkas boot di EFI/AnduinOS dan menempatkan entri boot UEFI AnduinOS yang baru di urutan pertama. Sistem yang didukung dan terdeteksi ditambahkan ke menu GRUB baru; berkas dan menunya tidak diubah."
+
+#: src/app_menu.py
+msgid "About"
+msgstr "Tentang"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "Lihat Kode Sumber"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "Situs Web Resmi"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "Laporkan Masalah"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "Menu Utama"
+
 #: src/pages.py
 msgid "Retry"
 msgstr "Coba lagi"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "Ganti berkas boot AnduinOS yang sudah ada?"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "Gunakan kembali ESP yang masih sehat dan memiliki ruang kosong yang cukup, tanpa memformatnya. Berkas boot sistem lain akan dipertahankan. Jika EFI/AnduinOS sudah ada, penggantiannya memerlukan konfirmasi eksplisit. Agar kedua instalasi dapat di-boot secara terpisah, pilih ESP lain atau buat yang baru."
+
+msgid "Use this ESP and replace"
+msgstr "Gunakan ESP ini dan ganti"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "EFI/AnduinOS di {path} akan diganti. Berkas boot lama akan dicadangkan; entri boot AnduinOS sebelumnya mungkin tidak lagi dapat memulai sistem lama."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} sudah berisi berkas boot AnduinOS. Jika dilanjutkan, EFI/AnduinOS akan diganti untuk memulai instalasi baru. Berkas boot Windows dan sistem lain akan dipertahankan; ESP ini tidak akan diformat.\n\nPenggantian ini tidak menghapus partisi sistem lama, tetapi AnduinOS lama mungkin tidak lagi dapat dimulai melalui entri boot yang ada. Agar kedua instalasi tetap dapat digunakan, kembali dan buat ESP terpisah (minimal 512 MiB). Berkas boot lama akan dicadangkan sebelum penggantian."

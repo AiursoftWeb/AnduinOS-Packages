@@ -17,6 +17,10 @@ OTHER_CATALOGS = tuple(
 )
 
 NEW_TRANSLATIONS = {
+    "Delete all snapshot history": "清除所有历史快照",
+    "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points.": "同时恢复用户数据。恢复成功后删除所有非出厂快照；保留两个 New OS 出厂恢复点。",
+    "Restore all users’ files and settings to their initial state.": "将所有用户的文件和设置恢复到初始状态。",
+
     "Restore the system to New OS. Personal files are kept by default.": "将系统恢复到 New OS，默认保留个人文件。",
     "Erase all users’ Home files and snapshot history. This cannot be undone.": "清除所有用户的主目录文件和快照历史，无法撤销。",
     "A system safety snapshot is created first. Restart follows within 60 seconds.": "先创建系统安全快照，准备完成后 60 秒内重启。",

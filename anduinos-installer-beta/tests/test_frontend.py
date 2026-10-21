@@ -3,7 +3,7 @@ import json
 import subprocess
 import unittest
 from dataclasses import replace
-from unittest.mock import patch
+from unittest.mock import call, patch
 
 from helpers import TEST_INVENTORY_DIGEST, TEST_TOPOLOGY_DIGEST
 from frontend import (
@@ -518,7 +518,7 @@ class FrontendPlanTests(unittest.TestCase):
                 "frontend.subprocess.Popen",
                 side_effect=AssertionError("must not start a process"),
             ),
-            patch("frontend.time.sleep"),
+            patch("frontend.time.sleep") as sleep,
         ):
             succeeded, error = DevelopmentExecutorClient().run(
                 self.make_plan(),
@@ -535,6 +535,12 @@ class FrontendPlanTests(unittest.TestCase):
         self.assertTrue(any("privileged executor is disabled" in item for item in logs))
         self.assertTrue(any("No disk" in item for item in logs))
         self.assertTrue(statuses)
+        step_count = len(statuses) // 2
+        self.assertEqual(sleep.call_args_list, [call(1)] * (4 * step_count))
+        for index, message in enumerate(logs):
+            if message.endswith("simulated; no command was executed"):
+                self.assertEqual(logs[index + 1:index + 5],
+                                 [f"sleep {second}" for second in range(4)])
         for index in range(0, len(statuses), 2):
             self.assertEqual(statuses[index][1], "running")
             self.assertEqual(statuses[index + 1][1], "succeeded")

@@ -146,6 +146,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | Package | Type | Description |
 |---|---|---|
 | `anduinos-container` | Metapackage | Minimal container base (shell, networking, sudo, editor) |
+| `anduinos-boot-tools` | Boot tools | Existing initrd verifier, Dracut proof module, and migration safety hooks |
 | `anduinos-core-system` | Metapackage | Core system foundation (kernel, networking, boot, firmware, APT, security) |
 | `anduinos-kernel-parameters` | Config | AnduinOS 2.0 desktop GRUB drop-in enabling `preempt=full` on Ubuntu's generic kernel |
 | `anduinos-desktop-apps` | Metapackage | Default application selection (browser, office, media, utilities) |
@@ -213,9 +214,17 @@ layers. Its timer waits until every required pure-Dracut candidate is
 published, rejects any APT plan that removes an `anduinos-*` package, replaces
 the generator stack in one transaction, and validates every generated image
 with `lsinitrd` before recording completion. The PackageKit bootstrap,
-synchronous core guard, power-loss, atomic-GRUB, and fallback implementation
+synchronous boot-tools guard, power-loss, atomic-GRUB, and fallback implementation
 and its release qualification contract are documented in
 [`anduinos-dracut-migration/DESIGN.md`](anduinos-dracut-migration/DESIGN.md).
+
+`anduinos-core-system` is a dependency-only metapackage. `anduinos-boot-tools`
+owns the existing boot scripts and Dracut proof module formerly shipped by core;
+Plymouth and Disk Snapshots Manager depend on it directly. This split preserves
+the verifier path, migration state, and module names. During upgrade it removes
+the old core diversions and restores the Ubuntu-provided `update-initramfs` and
+`update-grub` entry points. It installs no replacement for either command.
+Kernel updates and trigger ordering remain the responsibility of Ubuntu packages.
 
 `anduinos-kernel-parameters` has a separate responsibility: it owns the desktop
 boot policy, not the kernel binary. It installs
@@ -298,6 +307,10 @@ For a new OS point release, follow the
 
 All external sources must be checked **at least once per month** to keep packages from falling behind upstream. This section is the step-by-step checklist.
 
+Fluent may follow the latest pinned upstream commit; Apkg follows published NuGet versions, and SOF follows stable releases.
+ALSA UCM and xpadneo temporarily use pinned development snapshots. Switch each to the first suitable stable release without losing the currently shipped functionality; after that, update only to stable releases.
+Never roll upstream source back to an older release or lower `PackageVersion` relative to `master`; bump affected package revisions when their contents change.
+
 ---
 
 ### A. Quick Checklist (5 min triage)
@@ -307,19 +320,19 @@ Run through this table each month. If anything has changed upstream, follow the 
 | # | What | Where to check | Update action |
 |---|---|---|---|
 | 1 | **Apkg client** | `apkg/download.sh` (`VERSION`) + [apkg-nuget] | Update version and checksums → section B.4 |
-| 2 | **Fluent GTK theme** | `anduinos-fluent-gtk-theme/download.sh:5` (commit) + [gtk-mirror] | Update commit → section B |
-| 3 | **Fluent icon theme** | `anduinos-fluent-icon-theme/download.sh:5` (commit) + [icon-mirror] | Update commit → section B |
+| 2 | **Fluent GTK theme** | `anduinos-fluent-gtk-theme/download.sh:5` (commit) + [gtk-repo] | Update commit → section B |
+| 3 | **Fluent icon theme** | `anduinos-fluent-icon-theme/download.sh:5` (commit) + [icon-repo] | Update commit → section B |
 | 4 | **ALSA UCM Conf** | `alsa-ucm-conf-anduinos/download.sh:5` (commit) + upstream [alsa-repo] | Update commit → section B |
 | 5 | **SOF firmware** | `firmware-sof-anduinos/download.sh:5` (`SOF_VERSION`) + upstream [sof-releases] | Update version → section C |
-| 6 | **Xbox Controller Driver** | `anduinos-xbox-controller-driver/download.sh` (`COMMIT_ID`) + [xpadneo-mirror] | Update commit → section B |
+| 6 | **Xbox Controller Driver** | `anduinos-xbox-controller-driver/download.sh` (`COMMIT_ID`) + [xpadneo-repo] | Update commit → section B |
 | 7 | **GNOME Shell version map** | `lib/gnome-versions.sh:3-7` — compare with Ubuntu's `gnome-shell` package for each supported suite | Update map → section D |
 | 8 | **GNOME Shell extensions** | Run a CI build — the resolver fetches the latest compatible version dynamically | Update version → section D |
 
 [sof-releases]: https://github.com/thesofproject/sof-bin/releases
 [alsa-repo]: https://github.com/alsa-project/alsa-ucm-conf
-[gtk-mirror]: https://gitlab.aiursoft.com/mirror/fluent-gtk-theme/
-[icon-mirror]: https://gitlab.aiursoft.com/mirror/fluent-icon-theme/
-[xpadneo-mirror]: https://gitlab.aiursoft.com/mirror/xpadneo/
+[gtk-repo]: https://github.com/vinceliuice/Fluent-gtk-theme/
+[icon-repo]: https://github.com/vinceliuice/Fluent-icon-theme/
+[xpadneo-repo]: https://github.com/atar-axis/xpadneo/
 [apkg-nuget]: https://www.nuget.org/packages/Aiursoft.Apkg.Client
 
 ---
@@ -331,20 +344,20 @@ Four packages clone a git repo and pin to a specific commit hash. Both the **com
 #### B.1 Check for updates
 
 ```bash
-# Fluent GTK theme (mirrored on gitlab.aiursoft.com)
-git ls-remote https://gitlab.aiursoft.com/mirror/fluent-gtk-theme.git HEAD
+# Fluent GTK theme (upstream on GitHub)
+git ls-remote https://github.com/vinceliuice/Fluent-gtk-theme.git HEAD
 
-# Fluent icon theme (mirrored on gitlab.aiursoft.com)
-git ls-remote https://gitlab.aiursoft.com/mirror/fluent-icon-theme.git HEAD
+# Fluent icon theme (upstream on GitHub)
+git ls-remote https://github.com/vinceliuice/Fluent-icon-theme.git HEAD
 
 # ALSA UCM Conf (upstream: alsa-project/alsa-ucm-conf)
 git ls-remote https://github.com/alsa-project/alsa-ucm-conf.git HEAD
 
-# Xbox Controller Driver (mirrored on gitlab.aiursoft.com)
-git ls-remote https://gitlab.aiursoft.com/mirror/xpadneo.git HEAD
+# Xbox Controller Driver (upstream on GitHub)
+git ls-remote https://github.com/atar-axis/xpadneo.git HEAD
 ```
 
-Compare the returned HEAD hash against the pinned commit in each `download.sh`. If different, an update is available.
+Compare upstream HEAD with the pinned commit in each `download.sh`, then select a reference according to the policy above. A different HEAD does not automatically authorize a development snapshot after a package has switched to stable releases.
 
 For **ALSA UCM Conf**, check the upstream `configure.ac` for the version. For **Fluent** packages, check [GitHub releases](https://github.com/vinceliuice/Fluent-gtk-theme/releases) for the current upstream version (informational — not encoded in PackageVersion).
 
@@ -352,7 +365,7 @@ For **ALSA UCM Conf**, check the upstream `configure.ac` for the version. For **
 
 For each outdated package, update **two files**:
 
-1. **`download.sh`** — update the `*_COMMIT` variable to the new HEAD hash
+1. **`download.sh`** — update the commit variable to the selected full commit hash
 2. **`*.aosproj`** — bump the Debian revision suffix in `<PackageVersion>` (e.g. `-1` → `-2`)
 
 Example diff for Fluent GTK theme:
@@ -366,6 +379,8 @@ Example diff for Fluent GTK theme:
 -<PackageVersion>2.0.0~rc2-1+$(SuiteShortName)</PackageVersion>
 +<PackageVersion>2.0.0~rc2-2+$(SuiteShortName)</PackageVersion>
 ```
+
+For xpadneo, also update `VERSION` to the result of `git describe --tags <pinned-commit>`; it determines the DKMS source directory and configuration. Keep the same `VERSION` in `scripts/postinst.sh` and `scripts/prerm.sh`. Fluent GTK is used by both `anduinos-fluent-gtk-theme` and `anduinos-gdm3-wallpaper`: update and bump both packages together.
 
 #### B.3 Rebuild and verify
 
@@ -427,7 +442,7 @@ Do not commit `apkg/deploy/`; it is regenerated by `download.sh` during the buil
 
 `firmware-sof-anduinos` replaces Ubuntu's SOF firmware with a newer Intel `sof-bin` release tarball.
 
-> **⚠️ Version sync trap:** The SOF version now appears in **two places** — `download.sh` (`SOF_VERSION`) **and** `.aosproj` (`PackageVersion`). When upgrading SOF, update **both** together or the package version won't reflect reality.
+> **⚠️ Version sync trap:** When upgrading `SOF_VERSION` in `download.sh`, also increment the Debian revision in `.aosproj` (`PackageVersion`) so CI publishes a new package. Keep the existing AnduinOS version and suite suffix conventions.
 
 #### C.1 Check for updates
 
@@ -440,11 +455,11 @@ Update **both files**:
 ```diff
 # download.sh
 -SOF_VERSION="2025.12.2"
-+SOF_VERSION="2026.03"   # update to new release tag
++SOF_VERSION="2026.09.2"   # update to new release tag
 
 # firmware-sof-anduinos.aosproj
--<PackageVersion>2.0.0~rc2-2025.12.2+$(SuiteShortName)</PackageVersion>
-+<PackageVersion>2.0.0~rc2-2026.03+$(SuiteShortName)</PackageVersion>   # sync SOF version
+-<PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
++<PackageVersion>2.0.2-2+$(SuiteShortName)</PackageVersion>   # bump packaging revision
 ```
 
 The downloaded Intel tarball and extracted cache under `deploy/` are **not** committed — the CI regenerates them at build time via `download.sh`.

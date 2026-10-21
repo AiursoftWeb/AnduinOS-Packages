@@ -11,7 +11,12 @@ import sys
 from collections.abc import Callable, Sequence
 
 from installer_core.ntfs_resize import inspect_ntfs_resize
+from installer_core.ext4_resize import inspect_ext4_resize
 from installer_core.probe import SUPPORTED_WHOLE_DISK_RE
+from installer_core.command import CommandRunner
+from installer_core.esp import inspect_esp_for_reuse, esp_vendor_digest
+from installer_core.mount_namespace import isolate_mount_namespace
+from installer_core.storage_inventory import probe_storage_inventory
 
 
 SUPPORTED_PARTITION_RE = re.compile(
@@ -35,11 +40,15 @@ def main(
     if geteuid() != 0:
         return _error("The storage probe must be authorized by Polkit.")
     if len(args) == 2 and args[0] == "--ntfs-inspect":
-        return _inspect_ntfs(args[1], run=run)
+        return _inspect_resize(args[1], run=run)
+    if len(args) == 2 and args[0] == "--ext4-inspect":
+        return _inspect_resize(args[1], run=run, filesystem="ext4")
+    if len(args) == 2 and args[0] == "--esp-inspect":
+        return _inspect_esp(args[1])
     if len(args) != 1 or not SUPPORTED_WHOLE_DISK_RE.fullmatch(args[0]):
         return _error(
             "The storage probe accepts one supported whole disk or one "
-            "explicit NTFS inspection."
+            "explicit NTFS/ext4 inspection."
         )
     disk = args[0]
     environment = dict(os.environ, LC_ALL="C", LANGUAGE="C")
@@ -102,13 +111,40 @@ def main(
     return result.returncode
 
 
-def _inspect_ntfs(
+def _inspect_esp(partition: str) -> int:
+    """Advisory UI check only; executor repeats its authoritative preflight."""
+    if not SUPPORTED_PARTITION_RE.fullmatch(partition):
+        return _error("The ESP probe requires one supported partition path.")
+    try:
+        inventory = probe_storage_inventory()
+        matches = [p for d in inventory.disks for p in d.partitions
+                   if p.identity.path == partition]
+        if len(matches) != 1:
+            raise ValueError("The selected ESP could not be uniquely identified")
+        isolate_mount_namespace()
+        result = inspect_esp_for_reuse(
+            matches[0], CommandRunner(lambda message: print(message, file=sys.stderr)),
+        )
+        if not result.healthy:
+            raise ValueError(result.reason)
+        print(json.dumps({"partuuid": result.partuuid,
+                          "filesystem_uuid": result.filesystem_uuid,
+                          "occupied": bool(result.vendor_entries),
+                          "vendor_digest": esp_vendor_digest(result.vendor_entries)
+                          if result.vendor_entries else ""}))
+        return 0
+    except (OSError, RuntimeError, ValueError) as error:
+        return _error(f"Cannot inspect the selected ESP: {error}")
+
+
+def _inspect_resize(
     partition: str,
     *,
     run: Callable[..., subprocess.CompletedProcess[str]],
+    filesystem: str = "ntfs",
 ) -> int:
     if not SUPPORTED_PARTITION_RE.fullmatch(partition):
-        return _error("The NTFS probe requires one supported partition path.")
+        return _error("The resize probe requires one supported partition path.")
     environment = dict(os.environ, LC_ALL="C", LANGUAGE="C")
     try:
         identity = run(
@@ -152,7 +188,8 @@ def _inspect_ntfs(
         size_bytes = int(device.get("size") or 0)
     except (TypeError, ValueError):
         return _error("lsblk returned an invalid partition size")
-    inspection = inspect_ntfs_resize(
+    inspector = inspect_ext4_resize if filesystem == "ext4" else inspect_ntfs_resize
+    inspection = inspector(
         partition,
         size_bytes,
         filesystem=str(device.get("fstype") or ""),

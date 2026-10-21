@@ -1,9 +1,10 @@
-# Rollback release test plan and evidence register
+# Rollback release qualification
 
-This document is the release ledger for recovery protocol 2. It identifies every
-manual or automated qualification lane, records what has already passed, and
-keeps unresolved work visible. Passing unit tests or restoring one package on a
-developer workstation does not by itself qualify a global recovery release.
+This document defines recovery protocol 2 qualification procedures and evidence
+requirements. Results belong to the tested commit and package version and must
+be recorded in the release issue or artifact store using the template below.
+Passing unit tests or restoring one package does not qualify a global recovery
+release.
 
 ## Release rule
 
@@ -16,14 +17,18 @@ captured without being overwritten or confused with another run.
 The disposable-VM procedure in [VM-QUALIFICATION.md](VM-QUALIFICATION.md) is
 authoritative for destructive, fallback, Secure Boot, and power-loss lanes.
 
-## Qualification register
+## Qualification lanes and historical baseline
 
-| Test ID | Priority | Lane | Current status | Required evidence |
+The status column records the 2026-08-07 baseline, not the current release.
+Pending lanes have no completed qualification recorded here; each candidate
+release needs its own reviewed evidence for all required lanes.
+
+| Test ID | Priority | Lane | Status at baseline | Required evidence |
 | --- | --- | --- | --- | --- |
 | `RRP2-BUILD-001` | P0 | amd64 and arm64 APKG release build | Passed 2026-08-07 | Both Debs produced; prebuild and recovery artifact checks passed |
 | `RRP2-UNIT-001` | P0 | Workspace, shell, initramfs, i18n, and zero-warning checks | Passed 2026-08-07 | Test output and `-D warnings` check |
 | `RRP2-BTRFS-001` | P0 | Real operations on a disposable Btrfs loopback image | Passed 2026-08-07 | Both privileged loopback cases passed |
-| `RRP2-UPGRADE-001` | P0 | Applied schema-2/protocol-1 transaction upgraded and reconciled by protocol 2 | Passed 2026-08-07 | Transaction `35fb6a1c-897b-4e27-b29c-9e5f9ad49952` archived `confirmed`; target and fallback normalize to `ready` |
+| `RRP2-UPGRADE-001` | P0 | Applied schema-2/protocol-1 transaction upgraded and reconciled by protocol 2 | Passed 2026-08-07 | Upgraded transaction archived `confirmed`; target and fallback normalize to `ready` |
 | `RRP2-HOST-001` | P0 acceptance | Fresh protocol-2 LKG, remove `docker.io`, App rollback, reboot, confirm | Pending | Checklist and evidence bundle below |
 | `RRP2-VM-001` | P0 | Normal rollback and confirmation with `/run` mounted `noexec` | Pending | VM state, transaction JSON, service journal, GRUB state |
 | `RRP2-VM-002` | P0 | Docker autoremove regression | Pending | Exact package version and executable restored; terminal transaction confirmed |
@@ -40,7 +45,8 @@ does not replace the disposable VM lanes.
 
 Preconditions:
 
-- installed package is the APKG-built `0.1.0-16+resolute` or its reviewed successor;
+- installed package is the APKG-built release candidate, with its version and
+  source commit recorded;
 - installed and initramfs recovery protocol both report `2`;
 - CLI status reports no pending rollback and no recovery issue;
 - the EFI one-shot GRUB environment is empty;
@@ -151,26 +157,24 @@ Reviewer and sign-off time:
 | `RR-INC-006` | amd64/arm64 APKG release builds crashed in LLVM | Fat LTO with one codegen unit exhausted LLVM worker stacks | Reliable non-LTO release profile with bounded compiler stack (`456506c2`) |
 | `RR-INC-007` | Entire graphical Linux session reportedly froze during investigation | Undetermined; retained logs do not establish a kernel, GPU, I/O, OOM, or recovery-engine cause | Open; collect previous/current kernel journals and console evidence on any recurrence |
 
-## Remaining TODO
+## Release acceptance requirements
 
-Release-blocking:
-
-- [ ] Run and review `RRP2-HOST-001` once; stop and collect evidence before any second rollback.
-- [ ] Run `RRP2-VM-001` and `RRP2-VM-002` from the clean disposable VM snapshot.
-- [ ] Run the automatic fallback lane `RRP2-VM-003` without manual root repair.
-- [ ] Complete Secure Boot lanes `RRP2-VM-004`.
-- [ ] Complete and review every apply/revert interruption in `RRP2-VM-005`.
-- [ ] Restore one unchanged golden-image deployment twice for `RRP2-VM-006`.
-- [ ] Attach all records to the release and obtain an explicit recovery sign-off.
+- Run and review `RRP2-HOST-001`, preserving evidence for each rollback.
+- Run `RRP2-VM-001` and `RRP2-VM-002` from the clean disposable VM snapshot.
+- Run the automatic fallback lane `RRP2-VM-003` without manual root repair.
+- Complete Secure Boot lanes `RRP2-VM-004`.
+- Complete and review every apply/revert interruption in `RRP2-VM-005`.
+- Restore one unchanged golden-image deployment twice for `RRP2-VM-006`.
+- Attach all records to the release and obtain an explicit recovery sign-off.
 
 Follow-up hardening after the release gate is satisfied:
 
-- [ ] Automate disposable-VM reboot and fallback lanes in the release pipeline.
-- [ ] Add a one-command, privacy-reviewed recovery evidence bundle exporter.
-- [ ] Make manual LKG and automatic APT snapshots more visually distinct in the selector.
-- [ ] If `RR-INC-007` recurs, capture persistent kernel logs, hypervisor/serial console,
+- Automate disposable-VM reboot and fallback lanes in the release pipeline.
+- Add a one-command, privacy-reviewed recovery evidence bundle exporter.
+- Make manual LKG and automatic APT snapshots more visually distinct in the selector.
+- If `RR-INC-007` recurs, capture persistent kernel logs, hypervisor/serial console,
   GPU reset messages, I/O stalls, OOM records, and watchdog output before assigning a cause.
 
-Do not delete or disable a recovery test merely because it is difficult. Move
-destructive work to a disposable VM and record a genuine environmental blocker
-when a lane cannot run.
+Destructive qualification requires a disposable VM. An unavailable environment
+is a blocked result, not a passing test; record the missing prerequisites with
+the release evidence.

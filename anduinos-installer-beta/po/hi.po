@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "एक वास्तविक इंस्टालेशन मशीन-लोकल MOK बनाएगा। रीबूट के बाद, MOKManager में Enroll MOK → Continue → Yes चुनें और पासवर्ड 123456 दर्ज करें।"
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"नीले MOKManager स्क्रीन पर Enroll MOK → Continue → Yes चुनें, पासवर्ड: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -201,9 +195,6 @@ msgstr "इंस्टालेशन शुरू करने के लि�
 msgid "Choose your location to set the system clock"
 msgstr "सिस्टम क्लॉक सेट करने के लिए अपनी स्थिति चुनें"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "पूर्ण"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -289,9 +280,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "विकास अनुकरण पूर्ण हुआ"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "AnduinOS खोजें"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -498,6 +486,12 @@ msgid "Keyboard"
 msgstr "कीबोर्ड"
 
 #: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
+msgid "Applying keyboard layout…"
+msgstr "कीबोर्ड लेआउट लागू किया जा रहा है…"
+
+msgid "The keyboard layout could not be applied. Try again."
+msgstr "कीबोर्ड लेआउट लागू नहीं किया जा सका। फिर से कोशिश करें।"
+
 msgid "Keyboard Layout"
 msgstr "कीबोर्ड लेआउट"
 
@@ -1382,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Windows या अन्य पार्टिशन बनाए रखें, ESP का पुनः उपयोग करें या नया बनाएँ, और Root व Swap पार्टिशन के सटीक आकार तय करें।"
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "मैनुअल परिवर्तन विनाशकारी होते हैं। मौजूदा विभाजनों के आरंभिक स्थान कभी नहीं बदले जाते। साधारण NTFS को केवल कड़ी सुरक्षा जाँचों के बाद ही छोटा किया जा सकता है; एन्क्रिप्टेड, माउंट किए गए या ठीक से बंद न किए गए वॉल्यूम का आकार कभी नहीं बदला जाता।"
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "मैनुअल परिवर्तन विनाशकारी होते हैं। मौजूदा विभाजनों के आरंभिक स्थान कभी नहीं बदले जाते। साधारण NTFS/ext4 को केवल कड़ी सुरक्षा जाँचों के बाद ही छोटा किया जा सकता है; एन्क्रिप्टेड, माउंट किए गए या ठीक से बंद न किए गए वॉल्यूम का आकार कभी नहीं बदला जाता।"
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1748,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "मैनुअल स्टोरेज चयन अनुपस्थित है। वापस जाकर इसकी समीक्षा करें।"
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ सूचीबद्ध NTFS आकार परिवर्तनों से फ़ाइल सिस्टम डेटा और विभाजन सीमाएँ स्थानांतरित होंगी। सूचीबद्ध विभाजन हटा दिए जाएंगे और सभी सूचीबद्ध नए विभाजन प्रारूपित किए जाएंगे। पहले महत्वपूर्ण डेटा का बैकअप लें; ये विभाजन कार्रवाइयाँ पूर्ववत नहीं की जा सकतीं।"
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ सूचीबद्ध NTFS/ext4 आकार परिवर्तनों से फ़ाइल सिस्टम डेटा और विभाजन सीमाएँ स्थानांतरित होंगी। सूचीबद्ध विभाजन हटा दिए जाएंगे और सभी सूचीबद्ध नए विभाजन प्रारूपित किए जाएंगे। पहले महत्वपूर्ण डेटा का बैकअप लें; ये विभाजन कार्रवाइयाँ पूर्ववत नहीं की जा सकतीं।"
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1773,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "केवल स्पष्ट रूप से सूचीबद्ध विभाजन हटाए या फॉर्मेट किए जाएंगे। शामिल न किए गए विभाजन अपरिवर्तित रहेंगे; EFI/BOOT ओवरराइट नहीं किया जाएगा।"
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "एक GPT डिस्क संपादित करें। विभाजनों की शुरुआत कभी नहीं बदली जाती है; साधारण NTFS को सुरक्षा जाँचों के बाद छोटा किया जा सकता है।"
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "एक GPT डिस्क संपादित करें। विभाजनों की शुरुआत कभी नहीं बदली जाती है; साधारण NTFS/ext4 को सुरक्षा जाँचों के बाद छोटा किया जा सकता है।"
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "ext4 को छोटा करने से डेटा स्थायी रूप से खो सकता है। महत्वपूर्ण फ़ाइलों का बैकअप लें। न्यूनतम आकार एक अनुमान है; आकार बदलने से पहले और बाद में फ़ाइल सिस्टम की जाँच होती है।"
+
+msgid "I have backed up my data."
+msgstr "मैंने अपने डेटा का बैकअप ले लिया है।"
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Btrfs को छोटा करना समर्थित नहीं है।"
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"
@@ -1940,6 +1943,75 @@ msgstr "आप इंस्टॉलेशन का कॉन्फ़िगर
 msgid "Firmware check complete"
 msgstr "फ़र्मवेयर की जाँच पूरी हुई"
 
+
+
+
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "EFI सिस्टम विभाजन की जाँच हो रही है…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "अन्य Linux स्थापनाओं की जाँच करें"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "ESP विकल्पों की तुलना करें"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "अलग ESP"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "साझा ESP"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "अनाबंटित स्थान में नया FAT32 ESP बनाएँ और फ़ॉर्मैट करें (कम से कम 512 MiB)। मौजूदा ESP अपरिवर्तित रहते हैं।"
+
+
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "दोनों विकल्प EFI/AnduinOS में बूट फ़ाइलें स्थापित करते हैं और नई AnduinOS UEFI बूट प्रविष्टि को पहले स्थान पर रखते हैं। पहचाने गए समर्थित सिस्टम नए GRUB मेनू में जोड़े जाते हैं; उनकी फ़ाइलें और मेनू नहीं बदले जाते।"
+
+#: src/app_menu.py
+msgid "About"
+msgstr "परिचय"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "स्रोत कोड देखें"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "आधिकारिक वेबसाइट"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "समस्या की रिपोर्ट करें"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "मुख्य मेनू"
+
 #: src/pages.py
 msgid "Retry"
 msgstr "फिर से कोशिश करें"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "मौजूदा AnduinOS बूट फ़ाइलें बदलें?"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "पर्याप्त खाली जगह वाले स्वस्थ ESP का पुनः उपयोग करें, बिना उसे फ़ॉर्मैट किए। अन्य सिस्टम की बूट फ़ाइलें सुरक्षित रखी जाएँगी। यदि EFI/AnduinOS पहले से मौजूद है, तो उसे बदलने के लिए स्पष्ट पुष्टि आवश्यक है। दोनों इंस्टॉलेशन को स्वतंत्र रूप से बूट करने योग्य रखने के लिए, कोई दूसरा ESP चुनें या नया बनाएँ।"
+
+msgid "Use this ESP and replace"
+msgstr "इस ESP का उपयोग करें और फ़ाइलें बदलें"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "{path} पर EFI/AnduinOS बदल दिया जाएगा। पुरानी बूट फ़ाइलों का बैकअप लिया जाएगा; हो सकता है कि पिछली AnduinOS बूट प्रविष्टि अब पुराने सिस्टम को शुरू न करे।"
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} में पहले से AnduinOS बूट फ़ाइलें मौजूद हैं। जारी रखने पर नए इंस्टॉलेशन को शुरू करने के लिए EFI/AnduinOS बदल दिया जाएगा। Windows और अन्य सिस्टम की बूट फ़ाइलें सुरक्षित रखी जाएँगी; इस ESP को फ़ॉर्मैट नहीं किया जाएगा।\n\nइस बदलाव से पुराना सिस्टम पार्टीशन हटेगा नहीं, लेकिन हो सकता है कि पुरानी AnduinOS अपनी मौजूदा बूट प्रविष्टि से शुरू न हो। दोनों इंस्टॉलेशन रखने के लिए, पीछे जाएँ और एक अलग ESP बनाएँ (कम से कम 512 MiB)। बदलने से पहले पुरानी बूट फ़ाइलों का बैकअप लिया जाएगा।"

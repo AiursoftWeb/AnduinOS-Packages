@@ -1,0 +1,213 @@
+"""Read-only discovery of independent AnduinOS/Ubuntu EFI boot chains.
+
+Only the new installation's grub.d is written. Foreign roots, ESPs and
+NVRAM entries remain owned by their respective installations.
+"""
+
+from collections import Counter
+from collections.abc import Callable
+from dataclasses import dataclass
+from pathlib import Path
+import tempfile
+
+from .bootloader import read_pe_machine
+from .command import CommandRunner
+from .model import Architecture, Firmware
+from .other_systems import FAT_UUID_RE, _target, _write_atomic
+from .steps import FailurePolicy, InstallContext, StepSkipped
+from .storage_inventory import StorageInventory, probe_storage_inventory
+
+
+LINUX_GRUB_SCRIPT = Path("etc/grub.d/43_anduinos_linux")
+VENDORS = ("AnduinOS", "ubuntu")
+
+
+@dataclass(frozen=True)
+class LinuxBootloader:
+    vendor: str
+    partition_path: str
+    filesystem_uuid: str
+    suffix: str
+
+
+def discover_linux_bootloaders(
+    inventory: StorageInventory,
+    *,
+    architecture: Architecture,
+    runner: CommandRunner,
+    log: Callable[[str], None],
+    target_esp_device: str,
+    target_disk_id: str,
+    target_esp: Path | None = None,
+    scratch_root: Path = Path("/run/anduinos-installer"),
+) -> tuple[LinuxBootloader, ...]:
+    suffix, machine = (
+        ("x64", 0x8664) if architecture is Architecture.AMD64
+        else ("aa64", 0xAA64)
+    )
+    # Count every filesystem, even a clone without a bootloader. GRUB's UUID
+    # search must not accidentally select it instead of the discovered ESP.
+    counts = Counter(
+        p.filesystem_uuid.upper()
+        for d in inventory.disks for p in d.partitions
+    )
+    found: list[LinuxBootloader] = []
+
+    def inspect(partition, mountpoint, *, own=False):
+        for vendor in VENDORS:
+            if own and vendor == "AnduinOS":
+                continue  # Never generate a loop back into our own GRUB.
+            directory = mountpoint / "EFI" / vendor
+            if not directory.is_dir():
+                continue
+            try:
+                for name in (f"shim{suffix}.efi", f"grub{suffix}.efi"):
+                    if read_pe_machine(directory / name) != machine:
+                        raise ValueError("EFI architecture mismatch")
+                cfg = directory / "grub.cfg"
+                if not cfg.is_file() or not cfg.stat().st_size:
+                    raise ValueError("EFI GRUB configuration is missing")
+            except (OSError, RuntimeError, ValueError) as error:
+                log(f"Ignoring incomplete {vendor} chain on {partition.identity.path}: {error}")
+                continue
+            found.append(LinuxBootloader(
+                vendor, partition.identity.path,
+                partition.filesystem_uuid.upper(), suffix,
+            ))
+
+    for disk in inventory.disks:
+        if disk.identity.path in (inventory.live_media_disks or ()):
+            continue
+        for part in disk.partitions:
+            uuid = part.filesystem_uuid.upper()
+            if (
+                not part.is_efi_filesystem_candidate
+                or not part.identity.partuuid
+                or not FAT_UUID_RE.fullmatch(uuid)
+            ):
+                continue
+            if counts[uuid] != 1:
+                log(f"Ignoring Linux EFI loader with duplicate filesystem UUID: {uuid}")
+                continue
+            own = (
+                disk.identity.stable_id == target_disk_id
+                and part.identity.path == target_esp_device
+            )
+            if part.mountpoints:
+                if own and target_esp is not None and str(target_esp) in part.mountpoints:
+                    inspect(part, target_esp, own=True)
+                continue
+            if own:
+                continue  # A target that unexpectedly lost its mount is not foreign.
+            scratch_root.mkdir(mode=0o700, parents=True, exist_ok=True)
+            with tempfile.TemporaryDirectory(
+                prefix="linux-esp-check-", dir=scratch_root,
+            ) as directory:
+                mounted = False
+                try:
+                    runner.run(
+                        ("mount", "--read-only", "--types", "vfat", "--options",
+                         "nosuid,nodev,noexec", part.identity.path, directory),
+                        timeout=30,
+                    )
+                    mounted = True
+                    inspect(part, Path(directory))
+                except Exception as error:
+                    log(f"Could not inspect Linux EFI chain on {part.identity.path}: {error}")
+                finally:
+                    if mounted:
+                        runner.run(("umount", directory), timeout=30)
+    return tuple(sorted(found, key=lambda item: (item.vendor, item.filesystem_uuid)))
+
+
+def build_linux_grub_script(bootloaders: tuple[LinuxBootloader, ...]) -> str:
+    if not bootloaders:
+        raise ValueError("No Linux bootloaders were supplied")
+    lines = [
+        "#!/bin/sh",
+        "# Generated by AnduinOS Installer; foreign systems are never written.",
+        "cat <<'ANDUINOS_LINUX_EOF'",
+    ]
+    for item in bootloaders:
+        if (
+            item.vendor not in VENDORS
+            or item.suffix not in ("x64", "aa64")
+            or not FAT_UUID_RE.fullmatch(item.filesystem_uuid)
+        ):
+            raise ValueError("Invalid Linux EFI bootloader identity")
+        path = f"/EFI/{item.vendor}/shim{item.suffix}.efi"
+        title = "AnduinOS (other installation)" if item.vendor == "AnduinOS" else "Ubuntu"
+        lines.extend((
+            f"# AnduinOS Linux entry: {item.vendor} {item.filesystem_uuid}",
+            "insmod part_gpt", "insmod fat", "insmod chain",
+            f"if search --no-floppy --fs-uuid --set=anduinos_linux_esp {item.filesystem_uuid}; then",
+            f"  if [ -f ($anduinos_linux_esp){path} ]; then",
+            "    set timeout_style=menu",
+            '    if [ "${timeout}" = 0 ]; then set timeout=10; fi',
+            f"    menuentry '{title} — ESP {item.filesystem_uuid}' --class gnu-linux --class os {{",
+            f"      if search --no-floppy --fs-uuid --set=root {item.filesystem_uuid}; then",
+            f"        chainloader {path}",
+            "      fi", "    }", "  fi", "fi",
+        ))
+    return "\n".join((*lines, "ANDUINOS_LINUX_EOF", ""))
+
+
+@dataclass
+class CheckLinuxSystemsStep:
+    runner: CommandRunner
+    inventory_probe: object = probe_storage_inventory
+    linux_probe: object = discover_linux_bootloaders
+    id: str = "check-linux-systems"
+    title: str = "Check for other Linux installations"
+    failure_policy: FailurePolicy = FailurePolicy.WARNING
+    progress_weight: int = 1
+    destructive: bool = False
+
+    def preflight(self, context: InstallContext) -> None:
+        context.validate_plan()
+        if context.plan.platform.firmware is not Firmware.UEFI:
+            raise RuntimeError("Linux EFI detection requires UEFI")
+        self.runner.require_commands(("mount", "umount", "chroot"))
+
+    def execute(self, context: InstallContext) -> None:
+        target = _target(context)
+        bootloaders = self.linux_probe(
+            self.inventory_probe(), architecture=context.plan.platform.architecture,
+            runner=self.runner, log=context.log,
+            target_disk_id=context.plan.storage.disk.stable_id,
+            target_esp_device=context.values.get("partition_devices", {}).get(
+                "efi-system", "",
+            ),
+            target_esp=target / "boot/efi",
+        )
+        context.values["linux_bootloaders"] = bootloaders
+        path = target / LINUX_GRUB_SCRIPT
+        if not bootloaders:
+            if path.exists() or path.is_symlink():
+                path.unlink()
+                self.runner.run(("chroot", str(target), "update-grub"), timeout=300)
+            raise StepSkipped("No other supported Linux EFI bootloader found")
+        script = build_linux_grub_script(bootloaders)
+        _write_atomic(path, script, mode=0o755)
+        context.values["linux_grub_script"] = script
+        for item in bootloaders:
+            context.log(f"Adding {item.vendor} from EFI System Partition {item.partition_path}")
+        self.runner.run(("chroot", str(target), "update-grub"), timeout=300)
+
+    def verify(self, context: InstallContext) -> None:
+        target = _target(context)
+        script = target / LINUX_GRUB_SCRIPT
+        expected = context.values.get("linux_grub_script")
+        if (
+            not expected or not script.is_file()
+            or script.stat().st_mode & 0o777 != 0o755
+            or script.read_text() != expected
+        ):
+            raise RuntimeError("Linux GRUB source configuration is invalid")
+        config = (target / "boot/grub/grub.cfg").read_text()
+        for item in context.values["linux_bootloaders"]:
+            if f"# AnduinOS Linux entry: {item.vendor} {item.filesystem_uuid}" not in config:
+                raise RuntimeError("Linux entry is missing from GRUB configuration")
+
+    def cleanup(self, context: InstallContext) -> None:
+        return None

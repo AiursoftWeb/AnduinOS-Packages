@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import re
 import tempfile
@@ -12,6 +13,7 @@ from pathlib import Path
 
 from .command import CommandRunner
 from .storage_inventory import PartitionInventory
+from .model import EspReplacement
 
 
 MIB = 1024 * 1024
@@ -49,6 +51,33 @@ class EspTreeEntry:
 class NvramInspection:
     available: bool
     reason: str = ""
+
+
+def esp_vendor_digest(entries: tuple[EspTreeEntry, ...]) -> str:
+    """Bind consent to every old file, name and directory (including empties)."""
+    payload = [(e.relative_path, e.kind, e.size_bytes, e.sha256)
+               for e in sorted(entries, key=lambda e: e.relative_path)]
+    return hashlib.sha256(json.dumps(payload, ensure_ascii=True,
+                                    separators=(",", ":")).encode()).hexdigest()
+
+
+def validate_esp_replacement(inspection, authorization):
+    """A directory's existence is never implicit permission to overwrite it."""
+    if authorization is None:
+        if inspection.vendor_entries:
+            raise RuntimeError(
+                "The selected EFI System Partition already contains an "
+                "EFI/AnduinOS directory. Select another EFI System Partition, "
+                "create a new one in unallocated space, or explicitly confirm "
+                "replacement of the existing AnduinOS boot files."
+            )
+        return
+    if (not isinstance(authorization, EspReplacement)
+            or authorization.partuuid.lower() != inspection.partuuid.lower()
+            or authorization.filesystem_uuid.upper() != inspection.filesystem_uuid.upper()
+            or not inspection.vendor_entries
+            or authorization.vendor_digest != esp_vendor_digest(inspection.vendor_entries)):
+        raise RuntimeError("AnduinOS EFI files or ESP identity changed; review replacement again")
 
 
 def inspect_esp_for_reuse(
@@ -175,15 +204,38 @@ def verify_preserved_esp_tree(
 
 
 def capture_esp_vendor_tree(root: Path) -> tuple[EspTreeEntry, ...]:
-    """Capture only the installer-owned EFI/AnduinOS subtree."""
+    """Capture the occupied AnduinOS namespace, including an empty directory.
 
-    vendor = root / "EFI/AnduinOS"
-    if not vendor.exists():
-        return ()
-    if not vendor.is_dir() or vendor.is_symlink():
-        raise RuntimeError(f"Invalid AnduinOS vendor directory: {vendor}")
-    entries: list[EspTreeEntry] = []
-    for directory, directories, files in os.walk(vendor, followlinks=False):
+    Match FAT names case-insensitively even on case-sensitive test mounts.
+    Missing entries are allowed; unreadable or ambiguous entries are not.
+    """
+
+    vendor = root
+    for component in ("EFI", "AnduinOS"):
+        matches = [
+            path for path in vendor.iterdir()
+            if path.name.casefold() == component.casefold()
+        ]
+        if not matches:
+            return ()
+        if len(matches) != 1:
+            raise RuntimeError(f"Ambiguous EFI directory: {vendor / component}")
+        vendor = matches[0]
+        if vendor.is_symlink() or not vendor.is_dir():
+            raise RuntimeError(f"Invalid EFI directory: {vendor}")
+
+    entries = [EspTreeEntry(
+        relative_path=vendor.relative_to(root).as_posix(),
+        kind="directory",
+        size_bytes=0,
+    )]
+
+    def scan_failed(error):
+        raise error
+
+    for directory, directories, files in os.walk(
+        vendor, followlinks=False, onerror=scan_failed
+    ):
         parent = Path(directory)
         directories[:] = sorted(directories)
         for name in directories:

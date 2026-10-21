@@ -71,6 +71,21 @@ def draw_preview(area, cr, w, h, style: str, position: str):
     cr.rectangle(0, 0, w, h)
     cr.fill()
 
+    if style == 'gnome':
+        # GNOME's top bar: overview at left, clock in the middle, system at right.
+        cr.set_source_rgb(0.05, 0.05, 0.06)
+        cr.rectangle(0, 0, w, bar_thick)
+        cr.fill()
+        cr.set_source_rgba(1, 1, 1, 0.8)
+        rounded_rect(cr, 8, 7, 12, 4, 2)
+        cr.fill()
+        cr.select_font_face('sans-serif')
+        cr.set_font_size(7)
+        cr.move_to(w / 2 - 10, 12)
+        cr.show_text('12:34')
+        _draw_sys_tray(cr, w - 52, 5)
+        return
+
     if position == "bottom":
         bar_x, bar_y, bar_w, bar_h = 0, h - bar_thick, w, bar_thick
     elif position == "top":

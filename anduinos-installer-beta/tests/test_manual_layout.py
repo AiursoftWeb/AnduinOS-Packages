@@ -247,7 +247,7 @@ class ManualLayoutTests(unittest.TestCase):
                         ),
                     )
                 ),
-                "requested NTFS size",
+                "requested partition size",
             ),
         )
         for chosen, message in cases:

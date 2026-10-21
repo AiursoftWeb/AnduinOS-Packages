@@ -51,17 +51,51 @@ class SoftwareSourceUiTests(unittest.TestCase):
             "https://archive.ubuntu.com/ubuntu/",
             self.window.current_source.get_label(),
         )
-        self.assertFalse(
+        self.assertTrue(
             self.window.mirror_button.has_css_class("suggested-action")
         )
         self.assertFalse(
             self.window.update_button.has_css_class("suggested-action")
         )
 
+    def test_flatpak_page_preserves_and_edits_actual_custom_remote(self):
+        self.window._flathub_read_complete("https://custom.example/flathub")
+        self.window.pages.set_visible_child_name("flatpak")
+        self.assertEqual(self.window.pages.get_visible_child_name(), "flatpak")
+        self.assertFalse(self.window.source_overview.get_visible())
+        self.assertEqual(self.window.flathub_current.get_label(), "https://custom.example/flathub")
+        self.assertEqual(self.window.flathub_dropdown.get_selected(), 0)
+        self.assertTrue(self.window.flathub_custom.get_visible())
+        self.assertEqual(self.window.flathub_custom.get_text(), "https://custom.example/flathub")
+        self.assertEqual(self.window._selected_flathub_source(), "https://custom.example/flathub")
+        self.assertTrue(self.window.flathub_apply.get_sensitive())
+        self.window.flathub_dropdown.set_selected(2)
+        self.assertTrue(self.window.flathub_apply.get_sensitive())
+        self.window.pages.set_visible_child_name("advanced")
+        self.assertTrue(self.window.source_overview.get_visible())
+
+    def test_missing_flathub_can_be_added_and_busy_controls_are_disabled(self):
+        self.window._flathub_read_complete("")
+        self.assertEqual(self.window.flathub_current.get_label(), self.ui._("Flathub is not configured."))
+        self.assertEqual(self.window.flathub_dropdown.get_selected(), 1)
+        self.window._set_busy(True)
+        self.assertFalse(self.window.flathub_apply.get_sensitive())
+        self.assertFalse(self.window.flathub_dropdown.get_sensitive())
+        self.window._set_busy(False)
+        self.assertTrue(self.window.flathub_apply.get_sensitive())
+
+    def test_cancelled_flathub_authentication_reads_unchanged_remote(self):
+        with patch.object(self.window, "_run_helper", return_value=(126, "cancelled")) as helper, patch.object(self.ui, "current_flathub", return_value=self.ui.FLATHUB_SOURCES["official"]), patch.object(self.ui.GLib, "idle_add", side_effect=lambda callback, *args: callback(*args)):
+            self.window._flathub_worker("ustc")
+        helper.assert_called_once_with("switch-flathub", "ustc")
+        self.assertEqual(self.window.flathub_current.get_label(), self.ui.FLATHUB_SOURCES["official"])
+        self.assertIn(self.ui._("Authentication was cancelled."), self.window.status.get_label())
+
     def test_update_state_is_visible_and_busy_window_cannot_be_closed(self):
         self.window._set_busy(True)
         self.assertFalse(self.window.get_deletable())
         self.assertFalse(self.window.mirror_button.get_sensitive())
+        self.assertFalse(self.window.apply_button.get_sensitive())
         self.window._set_busy(False)
         self.assertTrue(self.window.get_deletable())
 
@@ -72,6 +106,146 @@ class SoftwareSourceUiTests(unittest.TestCase):
             self.ui._("  Install Updates  ").strip(),
         )
         self.assertEqual(self.window.status.get_label(), self.ui._("Updates are available."))
+
+    def test_four_tabs_keep_apt_and_flathub_current_sources_separate(self):
+        self.assertEqual(self.window.pages.get_pages().get_n_items(), 4)
+        with patch.object(self.ui, "current_mirror", return_value="https://archive.ubuntu.com/ubuntu/"):
+            self.window._flathub_read_complete(self.ui.FLATHUB_SOURCES["sjtu"])
+        self.window.pages.set_visible_child_name("flatpak-advanced")
+        self.assertFalse(self.window.source_overview.get_visible())
+        self.assertEqual(self.window.flathub_current.get_label(), self.ui.FLATHUB_SOURCES["sjtu"])
+        self.assertEqual(self.window._selected_flathub_source(), self.ui.FLATHUB_SOURCES["sjtu"])
+        self.assertEqual(self.window.flathub_dropdown.get_model().get_n_items(), 4)
+        self.assertFalse(self.window.flathub_custom.get_visible())
+        self.window.pages.set_visible_child_name("automatic")
+        self.assertTrue(self.window.source_overview.get_visible())
+        self.assertEqual(self.window.current_source.get_label(), "https://archive.ubuntu.com/ubuntu/")
+
+    def test_flathub_custom_speed_test_uses_entered_address_without_switching(self):
+        uri = "https://custom.example/flathub"
+        self.window.flathub_dropdown.set_selected(0)
+        self.window.flathub_custom.set_text(uri + "/")
+        measurement = self.ui.MirrorMeasurement(uri, 12.0, 80.0)
+        with patch.object(self.ui, "measure_flathub_mirrors", return_value=(measurement,)) as measure, patch.object(self.ui.threading, "Thread") as thread, patch.object(self.ui.GLib, "idle_add", side_effect=lambda callback, *args: callback(*args)), patch.object(self.window, "_run_helper") as helper:
+            self.window._measure_flathub(automatic=False)
+            thread.call_args.kwargs["target"]()
+        self.assertEqual(measure.call_args.kwargs["candidates"], (uri,))
+        helper.assert_not_called()
+        self.assertIn("80.0 Mbps", self.window.status.get_label())
+        self.assertTrue(self.window.flathub_custom.get_visible())
+
+    def test_flathub_fastest_requires_confirmation_before_privileged_switch(self):
+        uri = self.ui.FLATHUB_SOURCES["sjtu"]
+        self.window._flathub_read_complete(self.ui.FLATHUB_SOURCES["official"])
+        measurement = self.ui.MirrorMeasurement(uri, 12.0, 80.0)
+        with patch.object(self.ui.Adw, "MessageDialog") as dialog, patch.object(self.ui.threading, "Thread") as thread, patch.object(self.window, "_run_helper") as helper:
+            self.window._flathub_measured((measurement,), True)
+            helper.assert_not_called()
+            self.assertIn(uri, dialog.call_args.kwargs["body"])
+            response = dialog.return_value.connect.call_args.args[1]
+            response(dialog.return_value, "switch")
+            self.assertEqual(thread.call_args.kwargs["args"], (uri,))
+            self.assertTrue(self.window._busy)
+
+    def test_current_flathub_address_can_be_reapplied_to_enable_a_disabled_remote(self):
+        uri = self.ui.FLATHUB_SOURCES["official"]
+        self.window._flathub_read_complete(uri)
+        with patch.object(self.ui.Adw, "MessageDialog") as dialog, patch.object(self.ui.threading, "Thread") as thread:
+            self.window._confirm_flathub(uri)
+            dialog.assert_called_once()
+            response = dialog.return_value.connect.call_args.args[1]
+            response(dialog.return_value, "switch")
+            self.assertEqual(thread.call_args.kwargs["args"], (uri,))
+
+    def test_flathub_invalid_custom_address_and_failed_test_keep_current_source(self):
+        original = self.ui.FLATHUB_SOURCES["official"]
+        self.window._flathub_read_complete(original)
+        self.window.flathub_dropdown.set_selected(0)
+        self.window.flathub_custom.set_text("file:///tmp/repo")
+        with patch.object(self.window, "_run_helper") as helper, patch.object(self.ui.Adw, "MessageDialog") as dialog:
+            self.window._apply_flathub(None)
+            helper.assert_not_called()
+            dialog.assert_not_called()
+        self.window.flathub_custom.set_text("https://offline.example/repo")
+        with patch.object(self.ui, "measure_flathub_mirrors", side_effect=RuntimeError("offline")), patch.object(self.ui.threading, "Thread") as thread, patch.object(self.ui.GLib, "idle_add", side_effect=lambda callback, *args: callback(*args)), patch.object(self.window, "_run_helper") as helper:
+            self.window._measure_flathub(automatic=False)
+            thread.call_args.kwargs["target"]()
+            helper.assert_not_called()
+        self.assertEqual(self.window.flathub_current.get_label(), original)
+        self.assertFalse(self.window._busy)
+
+    def test_advanced_selection_and_custom_url_share_confirmed_switch(self):
+        self.assertIsNotNone(self.window.pages.get_child_by_name("advanced"))
+        self.assertEqual(
+            self.window.mirror_dropdown.get_model().get_string(0),
+            self.ui._("Custom address…"),
+        )
+        self.assertEqual(self.window.mirror_dropdown.get_selected(), 1)
+        self.assertEqual(self.window._selected_mirror(), self.ui.MIRRORS[0])
+        selected = self.ui.MIRRORS[1]
+        self.window.mirror_dropdown.set_selected(2)
+        self.assertEqual(self.window._selected_mirror(), selected)
+        with (
+            patch.object(self.ui.Adw, "MessageDialog") as dialog_type,
+            patch.object(self.ui.threading, "Thread") as thread_type,
+        ):
+            self.window._apply_selected_mirror(None)
+            self.assertIn(selected, dialog_type.call_args.kwargs["body"])
+            response = dialog_type.return_value.connect.call_args.args[1]
+            response(dialog_type.return_value, "switch")
+            thread_type.return_value.start.assert_called_once()
+        self.window._set_busy(False)
+        self.window.mirror_dropdown.set_selected(0)
+        self.assertTrue(self.window.custom_entry.get_visible())
+        self.window.custom_entry.set_text("file:///tmp/apt")
+        self.window._apply_selected_mirror(None)
+        self.assertEqual(
+            self.window.status.get_label(),
+            self.ui._("Enter a valid HTTP or HTTPS mirror address."),
+        )
+
+    def test_custom_mirror_speed_button_tests_entered_address(self):
+        uri = "https://example.org/ubuntu/"
+        self.window.mirror_dropdown.set_selected(0)
+        self.window.custom_entry.set_text(uri)
+        measurement = self.ui.MirrorMeasurement(uri, 14.0, 90.0)
+        with (
+            patch.object(self.ui, "probe_mirror") as probe,
+            patch.object(self.ui, "measure_mirrors", return_value=(measurement,)) as measure,
+            patch.object(self.ui.threading, "Thread") as thread_type,
+            patch.object(self.ui.GLib, "idle_add", side_effect=lambda callback, *args: callback(*args)),
+        ):
+            self.window._test_mirrors(None)
+            thread_type.call_args.kwargs["target"]()
+        probe.assert_called_once()
+        self.assertEqual(measure.call_args.kwargs["candidates"], (uri,))
+        self.assertIn(uri, self.window.status.get_label())
+
+    def test_speed_button_tests_only_selected_current_custom_mirror(self):
+        uri = "https://mirror.aiursoft.com/ubuntu/"
+        measurement = self.ui.MirrorMeasurement(uri, 12.0, 80.0)
+        with patch.object(self.ui, "current_mirror", return_value=uri):
+            window = self.ui.SoftwareSourceWindow(self.owner)
+            try:
+                self.assertEqual(window.mirror_dropdown.get_selected(), 0)
+                self.assertEqual(window.custom_entry.get_text(), uri)
+                self.assertTrue(window.custom_entry.get_visible())
+                with (
+                    patch.object(self.ui, "probe_mirror") as probe,
+                    patch.object(self.ui, "measure_mirrors", return_value=(measurement,)) as measure,
+                    patch.object(self.ui.threading, "Thread") as thread_type,
+                    patch.object(self.ui.GLib, "idle_add", side_effect=lambda callback, *args: callback(*args)),
+                ):
+                    window._test_mirrors(None)
+                    thread_type.call_args.kwargs["target"]()
+                probe.assert_called_once()
+                self.assertEqual(measure.call_args.kwargs["candidates"], (uri,))
+                output = window.output.get_buffer()
+                text = output.get_text(output.get_start_iter(), output.get_end_iter(), False)
+                self.assertNotIn(self.ui.MIRRORS[1], text)
+                self.assertIn(uri, window.status.get_label())
+            finally:
+                window.destroy()
 
     def test_control_panel_reuses_one_internal_window(self):
         owner = type("Owner", (), {})()
@@ -113,7 +287,19 @@ class SoftwareSourceUiTests(unittest.TestCase):
                     try:
                         self.assertEqual(
                             window.current_source.get_label(),
-                            translate("Current mirror") + f": {original}",
+                            original,
+                        )
+                        self.assertEqual(
+                            window.current_source_title.get_label(),
+                            translate("Current mirror"),
+                        )
+                        self.assertEqual(
+                            window._failure_message(1, "apt-get update exited with status 100"),
+                            translate("Review Terminal Output for details."),
+                        )
+                        self.assertEqual(
+                            window._failure_message(1, "the original source was restored"),
+                            translate("The original source was restored."),
                         )
                         window._set_busy(True)
                         window._confirm_mirror(measurement)
@@ -138,11 +324,67 @@ class SoftwareSourceUiTests(unittest.TestCase):
                         )
                         self.assertEqual(
                             window.current_source.get_label(),
-                            translate("Current mirror") + f": {selected}",
+                            selected,
+                        )
+                        self.assertEqual(window._selected_mirror(), selected)
+                        self.assertEqual(
+                            window.mirror_dropdown.get_selected(),
+                            window._mirror_options.index(selected) + 1,
                         )
                         self.assertTrue(window.mirror_button.get_sensitive())
                     finally:
                         window.destroy()
+
+    def test_custom_mirror_switch_updates_advanced_selection(self):
+        selected = "https://example.org/ubuntu/"
+        with (
+            patch.object(self.ui, "current_mirror", return_value=selected),
+            patch.object(self.window, "_run_helper", return_value=(0, "")),
+            patch.object(
+                self.ui.GLib, "idle_add",
+                side_effect=lambda callback, *args: callback(*args),
+            ),
+        ):
+            self.window._switch_worker(selected)
+        self.assertEqual(self.window.mirror_dropdown.get_selected(), 0)
+        self.assertEqual(self.window.custom_entry.get_text(), selected)
+        self.assertEqual(self.window._selected_mirror(), selected)
+
+    def test_mirror_failure_status_is_translated_and_raw_details_stay_in_output(self):
+        with (
+            patch.object(self.ui, "measure_mirrors", side_effect=RuntimeError("No Ubuntu archive mirror is reachable")),
+            patch.object(self.ui.threading, "Thread") as thread_type,
+            patch.object(
+                self.ui.GLib, "idle_add",
+                side_effect=lambda callback, *args: callback(*args),
+            ),
+        ):
+            self.window._find_mirror(None)
+            thread_type.call_args.kwargs["target"]()
+        self.assertEqual(
+            self.window.status.get_label(),
+            self.ui._("✗ Mirror test failed: ")
+            + self.ui._("No Ubuntu archive mirror is reachable."),
+        )
+        output = self.window.output.get_buffer()
+        self.assertIn(
+            "No Ubuntu archive mirror is reachable",
+            output.get_text(output.get_start_iter(), output.get_end_iter(), False),
+        )
+
+    def test_helper_errors_have_localized_status_and_keep_rollback_result(self):
+        self.assertEqual(
+            self.window._failure_message(1, "Software source operation failed: Selected mirror failed; the original source was restored"),
+            self.ui._("The original source was restored."),
+        )
+        self.assertEqual(
+            self.window._failure_message(1, "Software source operation failed: Selected mirror failed; the original source was restored, but refreshing it also failed"),
+            self.ui._("The original source was restored, but refreshing it failed."),
+        )
+        self.assertEqual(
+            self.window._failure_message(1, "apt-get update exited with status 100"),
+            self.ui._("Review Terminal Output for details."),
+        )
 
 
 if __name__ == "__main__":

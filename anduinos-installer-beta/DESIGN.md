@@ -32,13 +32,20 @@ and constructs every command itself.
 - Btrfs compression: the automatic storage configuration page offers no
   compression, fast (Zstd 1), balanced (Zstd 3, default), and save space
   (Zstd 6). The selected preset is an allowlisted field in installation plan
-  schema 17 and appears in the confirmation summary. All canonical subvolume
+  schema 18 and appears in the confirmation summary. All canonical subvolume
   mounts apply it before system files are copied, and fstab persists the same
   choice. Advanced manual partitioning exposes the same presets below the
   planned partitions when a Btrfs Root partition exists, and retains the
   selection when switching filesystems or revisiting the page.
   Other filesystem types do not expose or apply Btrfs compression.
   Changing the choice later affects newly written data, not existing extents.
+- Existing AnduinOS EFI files: reusing an occupied ESP requires explicit
+  confirmation, bound to its PARTUUID, FAT UUID and old vendor-tree SHA-256.
+  Schema 18 carries this optional authorization, not arbitrary paths or commands.
+  The executor verifies and backs up the old vendor tree before storage writes,
+  saves recovery files in the installed system, and revalidates immediately
+  before replacing only `EFI/AnduinOS`. The ESP is never formatted. Use separate
+  ESPs to keep two AnduinOS installations independently bootable.
 - Windows boot discovery: after installing the AnduinOS bootloader, inspect
   EFI System Partitions on both the target disk and other disks. Read the
   verified target ESP through its existing mount; inspect other unmounted
@@ -181,8 +188,13 @@ and constructs every command itself.
 
 The GTK process always runs as the desktop user. Ordinary `lsblk` discovery
 stays unprivileged. Exact free-space geometry crosses Polkit through
-`anduinos-installer-storage-probe`, a read-only helper that accepts exactly one
-validated fixed whole-disk path and can execute only `parted ... print free`.
+`anduinos-installer-storage-probe`, a read-only helper that accepts one
+validated whole-disk path for `parted ... print free`, or an explicit
+`--ntfs-inspect` / `--esp-inspect` partition request. The ESP request resolves
+the current inventory, enters a private mount namespace, and runs the same
+read-only FAT/vendor inspection used by executor preflight. Its UI result is
+advisory, checked against the selected PARTUUID and filesystem UUID; it never
+replaces executor authorization or allows forced reuse.
 The shared inventory probe forces the C locale for both `lsblk` and `parted`,
 so translated machine-output flags cannot change the topology authorization
 digest between the desktop process and the root executor.
@@ -366,13 +378,25 @@ rounded visual boundary and obscure whether the card itself is active.
   installer-owned data and rendered by native GTK4. No WebKit, JavaScript,
   Ubiquity or installer-config dependency is introduced. The dashboard opens
   on an automatically advancing presentation with manual navigation and can
-  switch instantly to the live Output view.
+  switch instantly to the live Output view. The default presentation fills the
+  page with the historical title strip, wallpaper, text/screenshot layout and
+  side arrows. A bottom-right Output toggle reveals the task list and live log;
+  the current task name and overall progress bar stay below both modes.
+  The wallpaper is the updated asset from `AnduinOS-Packages` at `b1975b31`,
+  under `anduinos-installer-config/assets/slides/link/background.png`;
+  `link/base.css` in that historical tree is the layout reference. The older
+  `AnduinOS-2` copy predates this wallpaper update. HTML remains installer-owned
+  data under `assets/slideshow`, including its localized variants.
 - Milestone 7C — complete: warning events accumulate on the Output switcher
   without interrupting the presentation; fatal errors reveal and focus the
   live log with an error banner; successful completion stops the carousel and
   opens a dedicated completion/MOK/reboot card. Output can be copied or saved
-  to the live user's home directory, while the presentation and log remain
-  available after completion.
+  through a Save As chooser, including while installation is running. Saving
+  writes a snapshot from the moment the destination is confirmed, without
+  blocking installation; success and write failures are reported visibly.
+  Completion replaces the presentation
+  inside the default mode; the Output toggle still opens the retained log,
+  without introducing a third mode or hiding the completion instructions.
 - Milestone 8A — complete: read-only storage inventory records stable disk and
   partition identities, exact allocated/free geometry, filesystems, ESPs and
   topology digests. The existing erase-disk executor freezes a typed write set
@@ -430,7 +454,16 @@ rounded visual boundary and obscure whether the card itself is active.
   dry run immediately before writing, never passes a force option, shrinks the
   filesystem before its GPT tail, then re-probes and verifies the unchanged
   PARTUUID, number and start plus the exact declared size before creating any
-  new partition. ext4, Btrfs and every other filesystem remain non-resizable.
+  new partition. The same declarative pipeline now supports ordinary offline
+  ext4 with 4 KiB blocks and an internal journal. Its read-only probe uses
+  `dumpe2fs -h`, `e2fsck -f -n`, and `resize2fs -P`; the minimum is an estimate
+  with conservative headroom, not a dry-run guarantee. Before writes, fresh
+  inventory and the superblock must match the preserved identity. Within the
+  confirmed destructive boundary, `e2fsck -f -p` must return 0 or 1, followed
+  by `resize2fs` without force, a read-only fsck, and actual UUID/size checks.
+  A failed filesystem operation never authorizes shrinking the GPT boundary.
+  Btrfs and every other filesystem remain non-resizable; encryption, LVM,
+  RAID, mounted filesystems and unsupported ext4 features are refused.
   The same bounded manual editor offers Btrfs, ext4, XFS and F2FS for a newly
   formatted root. Btrfs alone creates the canonical AnduinOS subvolumes and
   enables Disk Snapshots Manager; ext4, XFS and F2FS use one conventional root
@@ -446,6 +479,11 @@ rounded visual boundary and obscure whether the card itself is active.
   release matrices exist.
   Unit and GTK development-mode interaction gates pass; real Windows and
   interrupted-resize VM qualification remains mandatory before release.
+  The rootless ext4/GPT sparse-image regression checks file hashes, symlinks,
+  UUIDs, unchanged starts and neighbouring partitions, then creates a new
+  partition in the released tail. The ISO matrix additionally declares a
+  96 GiB ext4 A → shrink to 40 GiB → install/boot B → chainload/boot A case;
+  it must pass on a rebuilt ISO before claiming end-to-end qualification.
 - Final release gate: complete the VM matrix before promoting and renaming the
   native installer package.
 

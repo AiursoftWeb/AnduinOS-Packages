@@ -27,6 +27,7 @@ class Slide:
     title: str
     body: str
     image: Path
+    paragraphs_markup: tuple[str, ...] = ()
 
 
 class _SlideParser(HTMLParser):
@@ -36,13 +37,20 @@ class _SlideParser(HTMLParser):
         self.buffer: list[str] = []
         self.title = ""
         self.paragraphs: list[str] = []
+        self.markup: list[str] = []
+        self.paragraphs_markup: list[str] = []
 
     def handle_starttag(self, tag, _attrs):
         if tag in {"h1", "p"}:
             self.capture = tag
             self.buffer = []
+            self.markup = []
+        elif self.capture and tag in {"strong", "em"}:
+            self.markup.append("<b>" if tag == "strong" else "<i>")
 
     def handle_endtag(self, tag):
+        if self.capture and tag in {"strong", "em"}:
+            self.markup.append("</b>" if tag == "strong" else "</i>")
         if tag != self.capture:
             return
         text = re.sub(r"\s+", " ", "".join(self.buffer)).strip()
@@ -50,19 +58,24 @@ class _SlideParser(HTMLParser):
             self.title = text
         elif text:
             self.paragraphs.append(text)
+            self.paragraphs_markup.append(
+                re.sub(r"\s+", " ", "".join(self.markup)).strip()
+            )
         self.capture = None
         self.buffer = []
 
     def handle_data(self, data):
         if self.capture:
             self.buffer.append(data)
+            self.markup.append(html.escape(data, quote=False))
 
 
 def slideshow_root() -> Path:
+    source = Path(__file__).resolve().parent.parent / "assets/slideshow"
+    if source.is_dir():
+        return source
     installed = Path("/usr/share/anduinos-installer-beta/slideshow")
-    if installed.is_dir():
-        return installed
-    return Path(__file__).resolve().parent.parent / "assets/slideshow"
+    return installed
 
 
 def load_slides(language: str, root: Path | None = None) -> tuple[Slide, ...]:
@@ -89,6 +102,7 @@ def load_slides(language: str, root: Path | None = None) -> tuple[Slide, ...]:
                 title=title,
                 body=body,
                 image=root / "screenshots" / SLIDE_IMAGES[key],
+                paragraphs_markup=tuple(parser.paragraphs_markup),
             )
         )
     return tuple(slides)

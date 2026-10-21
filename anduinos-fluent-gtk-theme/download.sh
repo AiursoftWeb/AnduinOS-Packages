@@ -7,11 +7,11 @@ source "$SCRIPT_DIR/../lib/build-guards.sh"
 need_cmd git
 need_cmd sassc
 
-FLUENT_GTK_COMMIT="7a49a46"
+FLUENT_GTK_COMMIT="7a49a464b0188c340101c52965c18190b1c694cf"
 
 rm -rf "$SCRIPT_DIR/deploy" /tmp/Fluent-gtk-theme
-git clone https://gitlab.aiursoft.com/mirror/fluent-gtk-theme/ /tmp/Fluent-gtk-theme
-git -C /tmp/Fluent-gtk-theme checkout "$FLUENT_GTK_COMMIT"
+git clone https://github.com/vinceliuice/Fluent-gtk-theme.git /tmp/Fluent-gtk-theme
+git -C /tmp/Fluent-gtk-theme checkout --detach "$FLUENT_GTK_COMMIT"
 
 echo "Building Fluent GTK theme (all colors, noborder + round)..."
 mkdir -p "$SCRIPT_DIR/deploy/themes"

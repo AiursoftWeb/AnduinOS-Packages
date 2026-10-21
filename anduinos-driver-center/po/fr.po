@@ -1788,3 +1788,579 @@ msgstr ""
 "Setup Mode : les clés de plateforme du micrologiciel sont absentes. Après "
 "l’inscription MOK, restaurez les clés d’usine du fabricant dans les "
 "paramètres du micrologiciel."
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Open UEFI Settings"
+msgstr "Ouvrir les paramètres UEFI"
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "AnduinOS is ready. Secure Boot is not enabled."
+msgstr "AnduinOS est prêt. Secure Boot n’est pas activé."
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware platform keys are not configured. This is separate from MOK certificate enrollment."
+msgstr "Les clés de plateforme du micrologiciel ne sont pas configurées. Cela est indépendant de l’inscription du certificat MOK."
+
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Configure the Secure Boot platform keys in UEFI settings before enabling Secure Boot. Use the manufacturer's factory keys for a standard setup; if you use custom keys, follow your administrator's policy."
+msgstr "Configurez les clés de plateforme dans les paramètres UEFI avant d’activer Secure Boot. Pour une configuration standard, utilisez les clés d’usine du fabricant ; pour des clés personnalisées, suivez la politique de votre administrateur."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "Can sign both GRUB and kernel modules"
+msgstr "Can sign both GRUB and kernel modules"
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "Certificate Signing Permissions"
+msgstr "Certificate Signing Permissions"
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "Certificate Update Failed"
+msgstr "Certificate Update Failed"
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "Certificate Updated"
+msgstr "Certificate Updated"
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid ""
+"Certificate permissions could not be read. Check the certificate before "
+"continuing."
+msgstr ""
+"Certificate permissions could not be read. Check the certificate before "
+"continuing."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "Continue"
+msgstr "Continue"
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "Create Unified Certificate"
+msgstr "Create Unified Certificate"
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid ""
+"Current GRUB and existing driver signatures are unchanged. Keep the old "
+"enrolled certificate."
+msgstr ""
+"Current GRUB and existing driver signatures are unchanged. Keep the old "
+"enrolled certificate."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid ""
+"Current boot and driver trust are unchanged. A unified certificate prepares "
+"support for signing GRUB as well."
+msgstr ""
+"Current boot and driver trust are unchanged. A unified certificate prepares "
+"support for signing GRUB as well."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid ""
+"Drivers remain trusted by an enrolled previous certificate; no re-signing is"
+" needed."
+msgstr ""
+"Drivers remain trusted by an enrolled previous certificate; no re-signing is"
+" needed."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "Enrollment requested. Restart and confirm in MOKManager."
+msgstr "Enrollment requested. Restart and confirm in MOKManager."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "Kernel modules only; cannot sign GRUB. Create a unified certificate."
+msgstr "Kernel modules only; cannot sign GRUB. Create a unified certificate."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "MOK enrollment could not be verified. Check again before continuing."
+msgstr "MOK enrollment could not be verified. Check again before continuing."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "New unified certificate prepared"
+msgstr "New unified certificate prepared"
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "No signing certificate. Create one to prepare Secure Boot trust."
+msgstr "No signing certificate. Create one to prepare Secure Boot trust."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid ""
+"Please wait. Do not restart while the enrollment request is being prepared."
+msgstr ""
+"Please wait. Do not restart while the enrollment request is being prepared."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "Preparing Signing Certificate…"
+msgstr "Preparing Signing Certificate…"
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "Recreate Certificate…"
+msgstr "Recreate Certificate…"
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid ""
+"Restart to enroll the new certificate. It will be used automatically once "
+"enrolled. Current GRUB and driver signatures are unchanged."
+msgstr ""
+"Restart to enroll the new certificate. It will be used automatically once "
+"enrolled. Current GRUB and driver signatures are unchanged."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid ""
+"Secure Boot is disabled. Verify the boot chain and driver trust before "
+"enabling it in firmware settings."
+msgstr ""
+"Secure Boot is disabled. Verify the boot chain and driver trust before "
+"enabling it in firmware settings."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "Signing certificate needs attention"
+msgstr "Signing certificate needs attention"
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "Signing private key is missing. Recreate the certificate."
+msgstr "Signing private key is missing. Recreate the certificate."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "Submit Enrollment Request"
+msgstr "Submit Enrollment Request"
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "The certificate does not allow code signing. Recreate it."
+msgstr "The certificate does not allow code signing. Recreate it."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "The certificate has expired. Recreate and enroll a new certificate."
+msgstr "The certificate has expired. Recreate and enroll a new certificate."
+
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "This certificate is enrolled in MOK"
+msgstr "This certificate is enrolled in MOK"
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "This certificate is not enrolled. Submit an enrollment request."
+msgstr "This certificate is not enrolled. Submit an enrollment request."
+
+msgid ""
+"Once enrolled, this certificate automatically becomes the default for future"
+" signing, including DKMS. Old signing files are backed up. GRUB, existing "
+"driver signatures and old enrolled certificates are preserved. Enrollment "
+"requires a restart and confirmation in MOKManager."
+msgstr ""
+"Once enrolled, this certificate automatically becomes the default for future"
+" signing, including DKMS. Old signing files are backed up. GRUB, existing "
+"driver signatures and old enrolled certificates are preserved. Enrollment "
+"requires a restart and confirmation in MOKManager."
+
+msgid "Repair Signing Defaults"
+msgstr "Repair Signing Defaults"
+
+msgid ""
+"Certificate enrolled, but automatic signing configuration needs repair."
+msgstr ""
+"Certificate enrolled, but automatic signing configuration needs repair."
+
+msgid ""
+"Automatic signing configuration failed. Repair the defaults; another "
+"enrollment is not needed."
+msgstr ""
+"Automatic signing configuration failed. Repair the defaults; another "
+"enrollment is not needed."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid ""
+"Unified certificate is trusted. Existing GRUB, old enrollments and driver "
+"signatures are preserved."
+msgstr ""
+"Unified certificate is trusted. Existing GRUB, old enrollments and driver "
+"signatures are preserved."
+
+#. Unified certificate migration. Explicit English fallback for this new flow;
+#. translation pending.
+msgid "Update Signing Certificate?"
+msgstr "Update Signing Certificate?"
+
+msgid "AnduinOS Bootloader"
+msgstr "AnduinOS Bootloader"
+
+msgid "Install AnduinOS Bootloader"
+msgstr "Install AnduinOS Bootloader"
+
+msgid "AnduinOS GRUB and shim are not installed"
+msgstr "AnduinOS GRUB and shim are not installed"
+
+msgid "GRUB needs signing with the unified certificate"
+msgstr "GRUB needs signing with the unified certificate"
+
+msgid "GRUB is signed, but its certificate is not enrolled"
+msgstr "GRUB is signed, but its certificate is not enrolled"
+
+msgid "Signed GRUB needs deployment to this system's EFI partition"
+msgstr "Signed GRUB needs deployment to this system's EFI partition"
+
+msgid "AnduinOS GRUB is signed, trusted and deployed"
+msgstr "AnduinOS GRUB is signed, trusted and deployed"
+
+msgid "Repair AnduinOS Bootloader"
+msgstr "Repair AnduinOS Bootloader"
+
+msgid "Complete the bootloader setup using the button above."
+msgstr "Complete the bootloader setup using the button above."
+
+msgid "Update AnduinOS Bootloader?"
+msgstr "Update AnduinOS Bootloader?"
+
+msgid "GRUB will be signed with your enrolled certificate. The current EFI files are backed up. Keep the computer running until the update finishes."
+msgstr "GRUB will be signed with your enrolled certificate. The current EFI files are backed up. Keep the computer running until the update finishes."
+
+msgid "Updating Bootloader…"
+msgstr "Updating Bootloader…"
+
+msgid "Please wait while the bootloader is signed and deployed."
+msgstr "Please wait while the bootloader is signed and deployed."
+
+msgid "Bootloader Updated"
+msgstr "Bootloader Updated"
+
+msgid "Bootloader Update Failed"
+msgstr "Bootloader Update Failed"
+
+msgid "The AnduinOS bootloader has been signed and deployed. It will be used on the next restart."
+msgstr "Le chargeur de démarrage d’AnduinOS a été signé et déployé. Il sera utilisé au prochain redémarrage."
+
+msgid "The bootloader update could not be completed. Review the details below before restarting."
+msgstr "La mise à jour du chargeur de démarrage n’a pas pu être terminée. Consultez les détails ci-dessous avant de redémarrer."
+
+msgid "Details"
+msgstr "Détails"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "A certificate is waiting for enrollment. Restart and select Enroll MOK, Continue, Yes, then enter password 123456."
+msgstr "Un certificat attend son inscription. Redémarrez et sélectionnez Enroll MOK, Continue, Yes, puis saisissez le mot de passe 123456."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "AnduinOS GRUB is signed, trusted and deployed."
+msgstr "Le GRUB d’AnduinOS est signé, approuvé et déployé."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Boot Recovery Help"
+msgstr "Aide à la récupération du démarrage"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Certificate Enrollment"
+msgstr "Inscription du certificat"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Certificate Signing Purpose"
+msgstr "Usage de signature du certificat"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Check Before Enabling Secure Boot"
+msgstr "Vérifier avant d’activer le démarrage sécurisé"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Check the firmware and boot mode before continuing."
+msgstr "Vérifiez le micrologiciel et le mode de démarrage avant de continuer."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Close"
+msgstr "Fermer"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Complete This Step First"
+msgstr "Terminer d’abord cette étape"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Create Signing Certificate"
+msgstr "Créer un certificat de signature"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Create a certificate that can sign both the bootloader and drivers first."
+msgstr "Créez d’abord un certificat capable de signer le chargeur d’amorçage et les pilotes."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Create a local signing certificate before preparing trust."
+msgstr "Créez un certificat de signature local avant de préparer son approbation."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "DKMS and the matching kernel headers are required. Check the driver build requirements."
+msgstr "DKMS et les en-têtes du noyau correspondants sont requis. Vérifiez les prérequis de compilation des pilotes."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Do not restart with an invalid bootloader. Use trusted installation media to inspect and restore the EFI boot files. Keep existing enrolled certificates."
+msgstr "Ne redémarrez pas avec un chargeur d’amorçage non valide. Utilisez un support d’installation de confiance pour examiner et restaurer les fichiers de démarrage EFI. Conservez les certificats déjà inscrits."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enrollment requested. Restart and select Enroll MOK to finish trusting this certificate."
+msgstr "Inscription demandée. Redémarrez et sélectionnez Enroll MOK pour terminer l’approbation de ce certificat."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Existing bootloader, driver signatures and old enrolled certificates are preserved."
+msgstr "Le chargeur d’amorçage existant, les signatures des pilotes et les anciens certificats inscrits sont conservés."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware Configuration"
+msgstr "Configuration du micrologiciel"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware Help"
+msgstr "Aide sur le micrologiciel"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware Settings Failed"
+msgstr "Échec de l’accès aux paramètres du micrologiciel"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware platform keys are not configured. This is separate from MOK enrollment."
+msgstr "Les clés de plateforme du micrologiciel ne sont pas configurées. Ceci est distinct de l’inscription MOK."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware trust for the next bootloader has not been verified."
+msgstr "L’approbation du prochain chargeur d’amorçage par le micrologiciel n’a pas été vérifiée."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Go to This Step"
+msgstr "Aller à cette étape"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Inspection Failed"
+msgstr "Échec de l’inspection"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Installed drivers are trusted, including signatures from previously enrolled certificates."
+msgstr "Les pilotes installés sont approuvés, y compris les signatures issues de certificats précédemment inscrits."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Motherboard Secure Boot is enabled."
+msgstr "Le démarrage sécurisé de la carte mère est activé."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Next step:"
+msgstr "Étape suivante :"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "No repairs are required by the checks shown above."
+msgstr "Les vérifications ci-dessus n’indiquent aucune réparation nécessaire."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "No third-party kernel modules need attention."
+msgstr "Aucun module tiers du noyau ne nécessite d’intervention."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "One or more third-party drivers need a trusted signature."
+msgstr "Un ou plusieurs pilotes tiers nécessitent une signature de confiance."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Operation Failed"
+msgstr "Échec de l’opération"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Operation Finished"
+msgstr "Opération terminée"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Please wait. Do not restart while this operation is running."
+msgstr "Veuillez patienter. Ne redémarrez pas pendant cette opération."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare a valid signing certificate first."
+msgstr "Préparez d’abord un certificat de signature valide."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Repair Automatic Signing"
+msgstr "Réparer la signature automatique"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Repair Driver Signatures"
+msgstr "Réparer les signatures des pilotes"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Replace Signing Certificate…"
+msgstr "Remplacer le certificat de signature…"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restart"
+msgstr "Redémarrer"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restart to Enroll Certificate"
+msgstr "Redémarrer pour inscrire le certificat"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restore a Trusted Boot Path"
+msgstr "Restaurer une chaîne de démarrage de confiance"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot is configured in UEFI settings. Platform keys and the Microsoft third-party CA are separate from your MOK certificate. Verify the actual bootloader, next kernel and required drivers before enabling Secure Boot. Firmware wording varies by manufacturer."
+msgstr "Le démarrage sécurisé se configure dans les paramètres UEFI. Les clés de plateforme et l’autorité de certification tierce de Microsoft sont distinctes de votre certificat MOK. Vérifiez le chargeur d’amorçage réellement utilisé, le prochain noyau et les pilotes requis avant d’activer le démarrage sécurisé. Les libellés du micrologiciel varient selon le fabricant."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot is disabled. You can still prepare certificates, drivers and the bootloader."
+msgstr "Le démarrage sécurisé est désactivé. Vous pouvez tout de même préparer les certificats, les pilotes et le chargeur d’amorçage."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot is not available in the current firmware or boot mode."
+msgstr "Le démarrage sécurisé n’est pas disponible avec le micrologiciel ou le mode de démarrage actuel."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot state could not be determined. Check again before changing trust."
+msgstr "Impossible de déterminer l’état du démarrage sécurisé. Vérifiez à nouveau avant de modifier les paramètres de confiance."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Select Enroll MOK, Continue, Yes, and enter password 123456 on restart."
+msgstr "Au redémarrage, sélectionnez Enroll MOK, Continue, Yes, puis saisissez le mot de passe 123456."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The AnduinOS bootloader is not installed. Replacing an existing working bootloader is optional."
+msgstr "Le chargeur d’amorçage d’AnduinOS n’est pas installé. Le remplacement d’un chargeur d’amorçage fonctionnel existant est facultatif."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The AnduinOS bootloader needs signing or its signature could not be verified."
+msgstr "Le chargeur d’amorçage d’AnduinOS doit être signé ou sa signature n’a pas pu être vérifiée."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The UEFI bootloader operation is not available in the current boot mode."
+msgstr "L’opération sur le chargeur d’amorçage UEFI n’est pas disponible dans le mode de démarrage actuel."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The automatic signing configuration has not been verified. Check again before installing the bootloader."
+msgstr "La configuration de signature automatique n’a pas été vérifiée. Vérifiez à nouveau avant d’installer le chargeur d’amorçage."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The automatic signing configuration needs attention. Another certificate enrollment is not needed."
+msgstr "La configuration de signature automatique nécessite une intervention. Aucune nouvelle inscription de certificat n’est nécessaire."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader is signed, but its certificate is not enrolled."
+msgstr "Le chargeur d’amorçage est signé, mais son certificat n’est pas inscrit."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader operation finished. The installed files will now be checked again."
+msgstr "L’opération sur le chargeur d’amorçage est terminée. Les fichiers installés vont être vérifiés à nouveau."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader update could not be completed. Review the details before restarting."
+msgstr "La mise à jour du chargeur d’amorçage n’a pas pu être terminée. Consultez les détails avant de redémarrer."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader will be signed with your enrolled certificate and deployed. Existing EFI files are backed up. Keep the computer running until the operation finishes."
+msgstr "Le chargeur d’amorçage sera signé avec votre certificat inscrit, puis déployé. Les fichiers EFI existants seront sauvegardés. Laissez l’ordinateur allumé jusqu’à la fin de l’opération."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The certificate does not permit the required signing. Create and enroll a replacement."
+msgstr "Le certificat n’autorise pas l’usage de signature requis. Créez et inscrivez un certificat de remplacement."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The certificate has expired. Create and enroll a replacement for future signing."
+msgstr "Le certificat a expiré. Créez et inscrivez un certificat de remplacement pour les signatures futures."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The drivers needed by the next kernel have not been verified."
+msgstr "Les pilotes nécessaires au prochain noyau n’ont pas été vérifiés."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The installed bootloader could not be checked."
+msgstr "Le chargeur d’amorçage installé n’a pas pu être vérifié."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The installed bootloader signature is invalid. Restore a trusted boot path before restarting."
+msgstr "La signature du chargeur d’amorçage installé n’est pas valide. Restaurez une chaîne de démarrage de confiance avant de redémarrer."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The kernel selected for the next boot has not been verified."
+msgstr "Le noyau sélectionné pour le prochain démarrage n’a pas été vérifié."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The next boot entry and kernel have not been verified. Do not enable Secure Boot until the actual boot chain is checked."
+msgstr "L’entrée de démarrage et le noyau prévus pour le prochain démarrage n’ont pas été vérifiés. N’activez pas le démarrage sécurisé avant d’avoir vérifié la chaîne de démarrage réelle."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The next bootloader is not verified as signed, trusted and deployed."
+msgstr "Il n’a pas été confirmé que le prochain chargeur d’amorçage est signé, approuvé et déployé."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signed bootloader needs deployment to this system's EFI partition."
+msgstr "Le chargeur d’amorçage signé doit être déployé sur la partition EFI de ce système."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing certificate and private key are valid and match."
+msgstr "Le certificat de signature et la clé privée sont valides et correspondent."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing certificate must be enrolled first. Complete the certificate enrollment step above."
+msgstr "Le certificat de signature doit d’abord être inscrit. Terminez l’étape d’inscription du certificat ci-dessus."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing identity could not be checked. Existing certificates have not been replaced."
+msgstr "L’identité de signature n’a pas pu être vérifiée. Les certificats existants n’ont pas été remplacés."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing key is missing, unreadable or does not match its certificate. Existing signatures are unchanged."
+msgstr "La clé de signature est absente, illisible ou ne correspond pas à son certificat. Les signatures existantes restent inchangées."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The system will now be checked again."
+msgstr "Le système va être vérifié à nouveau."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Third-party drivers could not be checked. This does not mean no drivers are installed."
+msgstr "Les pilotes tiers n’ont pas pu être vérifiés. Cela ne signifie pas qu’aucun pilote n’est installé."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This certificate can sign both the bootloader and kernel modules."
+msgstr "Ce certificat peut signer le chargeur d’amorçage et les modules du noyau."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This certificate can sign drivers only. A new certificate is needed for the AnduinOS bootloader."
+msgstr "Ce certificat ne peut signer que des pilotes. Un nouveau certificat est nécessaire pour le chargeur d’amorçage d’AnduinOS."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This certificate is enrolled in MOK."
+msgstr "Ce certificat est inscrit dans MOK."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This updates the selected signing configuration. Creating or replacing a certificate preserves existing boot and driver trust. A new certificate requires confirmation in MOKManager after restart."
+msgstr "Cette opération met à jour la configuration de signature sélectionnée. La création ou le remplacement d’un certificat préserve la confiance existante pour le démarrage et les pilotes. Un nouveau certificat nécessite une confirmation dans MOKManager après le redémarrage."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Do not restart until the installed EFI boot files are trusted. Restore a known-good EFI backup or use trusted installation media to repair them. Keep existing enrolled certificates."
+msgstr "Ne redémarrez pas tant que les fichiers de démarrage EFI installés ne sont pas approuvés. Restaurez une sauvegarde EFI fiable ou réparez-les à l’aide d’un support d’installation approuvé. Conservez les certificats déjà inscrits."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The installed EFI boot chain could not be verified as trusted. Restore a trusted boot path before restarting."
+msgstr "La chaîne de démarrage EFI installée n’a pas pu être vérifiée comme étant approuvée. Rétablissez une chaîne de démarrage approuvée avant de redémarrer."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The AnduinOS bootloader is not installed. Installing it is recommended."
+msgstr "Le chargeur d’amorçage d’AnduinOS n’est pas installé. Il est recommandé de l’installer."

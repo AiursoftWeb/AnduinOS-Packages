@@ -263,7 +263,7 @@ def build_manual_disk_map(
                         else ""
                     )
                     + (
-                        "NTFS · Resized"
+                        item.filesystem_type + " · Resized"
                         if resize_for_partuuid(
                             selection, item.identity.partuuid
                         )

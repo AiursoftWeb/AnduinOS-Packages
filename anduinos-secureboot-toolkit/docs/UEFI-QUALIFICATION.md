@@ -36,21 +36,18 @@ separately by the GTK checks.
    kernel and guest userspace. Inspection reported `enabled=true`,
    `setup_mode=false`, `enrolled=true`, `boot_loader=shim`; the guest powered off.
 
-Result: the requested disabled → prepare → enroll → enabled transition passed.
+Result: the disabled → prepare → enroll → enabled transition passed.
 An initial run also established that the default 10-second MokManager timeout
 can discard an unattended request. Preparation now requests the installer's
 unlimited timeout; the successful run used that behavior.
 
 ## Evidence and limits
 
-Local artifacts are under
-`/home/anduin/.cache/anduinos-secureboot-vm.73R1Kt/`:
-
-- `guest.py`, `build.py`, `control.py`: fixture construction and guest/QMP logic;
-- `serial3.log`: direct-GRUB baseline, real preparation and disabled-state MOK enrollment;
-- `serial4.log`: enforced Secure Boot, successful signed-kernel boot and retained MOK;
-- `screen.png`: MokManager interaction capture;
-- `disk3.raw`, `vars.fd`: resulting disposable guest, not release artifacts.
+This historical result does not qualify subsequent source revisions. A release
+qualification record must identify the tested commit and package version and
+include durable copies of the fixture scripts, serial logs, firmware setup,
+and observed enrollment/boot states. The original local artifacts are not
+included in this repository.
 
 The Windows path contains a preservation sentinel, not a Windows installation.
 Windows Boot Manager entry/order preservation, ambiguity rejection and failure

@@ -37,13 +37,7 @@ msgstr ""
 "\n"
 "Uma instalação real criará um MOK local à máquina. Após a reinicialização, escolha Enroll MOK → Continuar → Sim no MOKManager e digite a senha 123456."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"Na tela azul do MOKManager, escolha Enroll MOK → Continuar → Sim, senha: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -202,9 +196,6 @@ msgstr "Escolha seu idioma para iniciar a instalação"
 msgid "Choose your location to set the system clock"
 msgstr "Escolha sua localização para definir o relógio do sistema"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "Concluído"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -290,9 +281,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "Simulação de desenvolvimento concluída"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "Explore o AnduinOS"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -499,6 +487,12 @@ msgid "Keyboard"
 msgstr "Teclado"
 
 #: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
+msgid "Applying keyboard layout…"
+msgstr "Aplicando o layout do teclado…"
+
+msgid "The keyboard layout could not be applied. Try again."
+msgstr "Não foi possível aplicar o layout do teclado. Tente novamente."
+
 msgid "Keyboard Layout"
 msgstr "Layout do Teclado"
 
@@ -1383,8 +1377,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Mantenha o Windows ou outras partições, reutilize ou crie uma ESP e defina partições Root e Swap com tamanhos exatos."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Alterações manuais são destrutivas. As posições iniciais das partições existentes nunca são movidas. NTFS não criptografado só pode ser reduzido após verificações rigorosas de segurança; volumes criptografados, montados ou que não foram desmontados corretamente nunca são redimensionados."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Alterações manuais são destrutivas. As posições iniciais das partições existentes nunca são movidas. NTFS/ext4 não criptografado só pode ser reduzido após verificações rigorosas de segurança; volumes criptografados, montados ou que não foram desmontados corretamente nunca são redimensionados."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1749,8 +1743,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "A seleção manual de armazenamento está ausente. Volte e revise-a."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ Os redimensionamentos de NTFS listados moverão dados do sistema de arquivos e limites de partições. As partições listadas serão excluídas e todas as novas partições listadas serão formatadas. Faça backup dos dados importantes primeiro; essas operações de particionamento não podem ser desfeitas."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Os redimensionamentos de NTFS/ext4 listados moverão dados do sistema de arquivos e limites de partições. As partições listadas serão excluídas e todas as novas partições listadas serão formatadas. Faça backup dos dados importantes primeiro; essas operações de particionamento não podem ser desfeitas."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1774,8 +1768,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Apenas as particionamentos explicitamente listados serão excluídos ou formatados. Partições não envolvidas permanecem inalteradas; EFI/BOOT não será sobrescrito."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Edite um disco GPT. As posições iniciais das partições nunca são movidas; NTFS não criptografado pode ser reduzido após verificações de segurança."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Edite um disco GPT. As posições iniciais das partições nunca são movidas; NTFS/ext4 não criptografado pode ser reduzido após verificações de segurança."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "Reduzir ext4 pode causar perda permanente de dados. Faça backup dos arquivos importantes. O tamanho mínimo é uma estimativa; o sistema de arquivos é verificado antes e depois do redimensionamento."
+
+msgid "I have backed up my data."
+msgstr "Fiz backup dos meus dados."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "A redução de Btrfs não é suportada."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"
@@ -1941,6 +1944,75 @@ msgstr "Você pode continuar configurando a instalação. A verificação do fir
 msgid "Firmware check complete"
 msgstr "Verificação do firmware concluída"
 
+
+
+
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "Verificando a partição de sistema EFI…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "Procurar outras instalações Linux"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "Comparar opções de ESP"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "ESP separada"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "ESP compartilhada"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "Criar e formatar uma nova ESP FAT32 no espaço não alocado (pelo menos 512 MiB). As ESPs existentes permanecem inalteradas."
+
+
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "Ambas as opções instalam arquivos de inicialização em EFI/AnduinOS e colocam a nova entrada UEFI do AnduinOS em primeiro lugar. Os sistemas compatíveis detectados são adicionados ao novo menu GRUB; seus arquivos e menus não são alterados."
+
+#: src/app_menu.py
+msgid "About"
+msgstr "Sobre"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "Ver código-fonte"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "Site oficial"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "Relatar um problema"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "Menu principal"
+
 #: src/pages.py
 msgid "Retry"
 msgstr "Tentar novamente"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "Substituir os arquivos de inicialização existentes do AnduinOS?"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "Reutilize uma ESP íntegra com espaço livre suficiente, sem formatá-la. Os arquivos de inicialização de outros sistemas serão preservados. Se EFI/AnduinOS já existir, a substituição exigirá confirmação explícita. Para manter as duas instalações inicializáveis de forma independente, escolha outra ESP ou crie uma nova."
+
+msgid "Use this ESP and replace"
+msgstr "Usar esta ESP e substituir"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "EFI/AnduinOS em {path} será substituído. Os arquivos de inicialização antigos serão salvos em backup; talvez a entrada de inicialização anterior do AnduinOS não consiga mais iniciar o sistema antigo."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} já contém arquivos de inicialização do AnduinOS. Se você continuar, EFI/AnduinOS será substituído para iniciar a nova instalação. Os arquivos de inicialização do Windows e de outros sistemas serão preservados; esta ESP não será formatada.\n\nEssa substituição não exclui a partição do sistema antigo, mas talvez não seja mais possível iniciar o AnduinOS antigo pela entrada de inicialização existente. Para manter as duas instalações, volte e crie uma ESP separada (com pelo menos 512 MiB). Os arquivos de inicialização antigos serão salvos em backup antes da substituição."

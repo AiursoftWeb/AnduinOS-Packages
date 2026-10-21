@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "При реальной установке будет создан локальный для машины MOK. После перезагрузки выберите в MOKManager Enroll MOK → Continue → Yes и введите пароль 123456."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"На синем экране MOKManager выберите Enroll MOK → Continue → Yes, пароль: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -201,9 +195,6 @@ msgstr "Выберите язык для начала установки"
 msgid "Choose your location to set the system clock"
 msgstr "Выберите ваше местоположение для настройки системных часов"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "Завершено"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -289,9 +280,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "Моделирование разработки завершено"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "Познакомьтесь с AnduinOS"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -498,6 +486,12 @@ msgid "Keyboard"
 msgstr "Клавиатура"
 
 #: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
+msgid "Applying keyboard layout…"
+msgstr "Применение раскладки клавиатуры…"
+
+msgid "The keyboard layout could not be applied. Try again."
+msgstr "Не удалось применить раскладку клавиатуры. Попробуйте ещё раз."
+
 msgid "Keyboard Layout"
 msgstr "Раскладка клавиатуры"
 
@@ -1382,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Сохраните Windows или другие разделы, повторно используйте либо создайте ESP и задайте точные размеры разделов Root и Swap."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Ручные изменения могут уничтожить данные. Начальные секторы существующих разделов никогда не перемещаются. Обычный том NTFS можно уменьшить только после строгих проверок безопасности; зашифрованные, смонтированные или некорректно отключённые тома никогда не изменяются в размере."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Ручные изменения могут уничтожить данные. Начальные секторы существующих разделов никогда не перемещаются. Обычный том NTFS/ext4 можно уменьшить только после строгих проверок безопасности; зашифрованные, смонтированные или некорректно отключённые тома никогда не изменяются в размере."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1748,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "Не хватает ручного выбора хранилища. Вернитесь и проверьте его."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ Изменение размера перечисленных разделов NTFS приведёт к перемещению данных файловой системы и границ разделов. Перечисленные разделы будут удалены, а все перечисленные новые разделы будут отформатированы. Сначала создайте резервную копию важных данных; эти операции разметки нельзя отменить."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Изменение размера перечисленных разделов NTFS/ext4 приведёт к перемещению данных файловой системы и границ разделов. Перечисленные разделы будут удалены, а все перечисленные новые разделы будут отформатированы. Сначала создайте резервную копию важных данных; эти операции разметки нельзя отменить."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1773,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Будут удалены или отформатированы только явно перечисленные разделы. Невключённые разделы останутся без изменений; EFI/BOOT не будет перезаписан."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Изменить один диск GPT. Начальные секторы разделов никогда не перемещаются; обычный том NTFS может быть уменьшен после проверок безопасности."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Изменить один диск GPT. Начальные секторы разделов никогда не перемещаются; обычный том NTFS/ext4 может быть уменьшен после проверок безопасности."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "Уменьшение ext4 может привести к безвозвратной потере данных. Сохраните важные файлы. Минимальный размер является оценкой; файловая система проверяется до и после изменения размера."
+
+msgid "I have backed up my data."
+msgstr "Я создал резервную копию своих данных."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Уменьшение Btrfs не поддерживается."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"
@@ -1940,6 +1943,75 @@ msgstr "Вы можете продолжить настройку установ
 msgid "Firmware check complete"
 msgstr "Проверка прошивки завершена"
 
+
+
+
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "Проверка системного раздела EFI…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "Поиск других установок Linux"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "Сравнить варианты ESP"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "Отдельный ESP"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "Общий ESP"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "Создать и отформатировать новый ESP в FAT32 в нераспределённом пространстве (не менее 512 MiB). Существующие ESP не изменяются."
+
+
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "Оба варианта устанавливают загрузочные файлы в EFI/AnduinOS и ставят новую запись загрузки AnduinOS UEFI первой. Обнаруженные поддерживаемые системы добавляются в новое меню GRUB; их файлы и меню не изменяются."
+
+#: src/app_menu.py
+msgid "About"
+msgstr "О приложении"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "Посмотреть исходный код"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "Официальный сайт"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "Сообщить о проблеме"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "Главное меню"
+
 #: src/pages.py
 msgid "Retry"
 msgstr "Повторить"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "Заменить существующие загрузочные файлы AnduinOS?"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "Повторно использовать исправный ESP с достаточным свободным местом, не форматируя его. Загрузочные файлы других систем будут сохранены. Если EFI/AnduinOS уже существует, для замены требуется явное подтверждение. Чтобы обе установки могли загружаться независимо, выберите другой ESP или создайте новый."
+
+msgid "Use this ESP and replace"
+msgstr "Использовать этот ESP и заменить файлы"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "EFI/AnduinOS на {path} будет заменён. Старые загрузочные файлы будут сохранены в резервной копии; прежняя загрузочная запись AnduinOS может перестать запускать старую систему."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "В {path} уже есть загрузочные файлы AnduinOS. Если продолжить, EFI/AnduinOS будет заменён для запуска новой установки. Загрузочные файлы Windows и других систем будут сохранены; этот ESP не будет отформатирован.\n\nЭта замена не удалит старый системный раздел, однако старая AnduinOS может перестать запускаться через существующую загрузочную запись. Чтобы сохранить обе установки, вернитесь и создайте отдельный ESP (не менее 512 MiB). Перед заменой старые загрузочные файлы будут сохранены в резервной копии."

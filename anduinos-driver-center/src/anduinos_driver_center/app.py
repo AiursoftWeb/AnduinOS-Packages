@@ -45,6 +45,9 @@ except ModuleNotFoundError:
     sys.path.insert(0, str(_toolkit_src))
     from anduinos_secureboot.ui import create_secure_boot_page
 
+from anduinos_secureboot.model import SecureBootStatus
+from anduinos_secureboot.decision import Facts, decide
+
 
 APP_ID = "com.anduinos.DriverCenter"
 HELPER = "/usr/libexec/anduinos-driver-center/driver-helper"
@@ -61,6 +64,22 @@ def _command_output_summary(output: str, marker: str) -> str | None:
     if command_output and command_output[-1] == HELPER_SUCCESS_MESSAGE:
         command_output.pop()
     return command_output[-1] if command_output else None
+
+
+def _secure_boot_summary(state: SecureBootState, dkms: DkmsState) -> tuple[str, str, str]:
+    """One presentation policy for the sidebar and overview card."""
+    if state.status is SecureBootStatus.UNSUPPORTED:
+        return _("Not available"), _("Firmware does not support Secure Boot"), "installed-pill"
+    if state.status is SecureBootStatus.UNKNOWN:
+        return _("Unknown"), _("Secure Boot state could not be determined"), "warning-pill"
+    decision = decide(Facts(state, dkms, drivers_checked=True))
+    if any(row.tone in {"warning", "error"} for row in decision.rows):
+        return _("Action required"), _("Support needs attention"), "warning-pill"
+    if state.enabled:
+        return _("Trusted"), _("Trust established"), "success-pill"
+    return _("Disabled"), _("Secure Boot is disabled"), "installed-pill"
+
+
 LOCALE_DIR = "/usr/share/locale"
 gettext.bindtextdomain("anduinos-driver-center", LOCALE_DIR)
 gettext.textdomain("anduinos-driver-center")
@@ -346,7 +365,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         home_row.page_title = _("Home")
         self.device_list.append(home_row)
         self.stack.add_named(
-            self._home_page(graphics_scan, secure_boot, xbox, audio, printing),
+            self._home_page(graphics_scan, secure_boot, xbox, audio, printing, dkms),
             "home",
         )
 
@@ -423,10 +442,10 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self.device_list.append(xbox_row)
         self.stack.add_named(self._xbox_page(xbox, secure_boot), "xbox")
 
-        secure_boot_healthy = secure_boot.enabled and secure_boot.ready
+        secure_boot_label = _secure_boot_summary(secure_boot, dkms)[0]
         secure_row = self._device_row(
             "security-high-symbolic", _("Secure Boot"),
-            _("Trust established") if secure_boot_healthy else _("Action required"),
+            secure_boot_label,
         )
         secure_row.page_name = "secure-boot"
         secure_row.page_title = _("Secure Boot")
@@ -578,6 +597,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             and self._xbox is not None
             and self._audio is not None
             and self._printing is not None
+            and self._dkms is not None
         ):
             self._replace_stack_page(
                 "home",
@@ -587,6 +607,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                     self._xbox,
                     self._audio,
                     self._printing,
+                    self._dkms,
                 ),
             )
 
@@ -748,6 +769,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         xbox: XboxState,
         audio: AudioState,
         printing: PrintingState,
+        dkms: DkmsState,
     ) -> Gtk.Widget:
         scroll = _scrolled_window()
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
@@ -1032,14 +1054,14 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             -1,
         )
 
-        secure_boot_healthy = secure_boot.enabled and secure_boot.ready
+        secure_boot_label, secure_boot_subtitle, secure_boot_class = _secure_boot_summary(secure_boot, dkms)
         cards.insert(
             self._overview_card(
                 "security-high-symbolic",
                 _("Secure Boot"),
-                _("Trusted") if secure_boot_healthy else _("Action required"),
-                _("Trust established") if secure_boot_healthy else _("Support needs attention"),
-                "success-pill" if secure_boot_healthy else "warning-pill",
+                secure_boot_label,
+                secure_boot_subtitle,
+                secure_boot_class,
                 "secure-boot",
             ),
             -1,
@@ -2496,7 +2518,7 @@ class DriverCenterApplication(Adw.Application):
         dialog.set_application_name(_("AnduinOS Driver Center"))
         dialog.set_application_icon(APP_ID)
         dialog.set_developer_name(_("AnduinOS Team"))
-        dialog.set_version("2.0.3")
+        dialog.set_version("2.0.4")
         dialog.set_comments(
             _("Install, inspect, and repair hardware drivers on AnduinOS.")
         )

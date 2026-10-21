@@ -2027,3 +2027,15 @@ msgstr "Откат подготовлен. Сохраните работу: ко
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback confirmation failed. Restoring the previous state."
 msgstr "Не удалось подтвердить откат. Восстанавливается предыдущее состояние."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points."
+msgstr "Также восстановить данные пользователей. После успешного восстановления удалить все незаводские снимки; сохранить обе точки New OS."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Delete all snapshot history"
+msgstr "Удалить всю историю снимков"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore all users’ files and settings to their initial state."
+msgstr "Восстановить файлы и настройки всех пользователей до исходного состояния."

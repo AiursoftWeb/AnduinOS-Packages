@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "Cài đặt thực tế sẽ tạo MOK cục bộ cho máy. Sau khi khởi động lại, hãy chọn Enroll MOK → Continue → Yes trong MOKManager và nhập mật khẩu 123456."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"Trên màn hình MOKManager màu xanh lam, hãy chọn Enroll MOK → Continue → Yes, mật khẩu: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -201,9 +195,6 @@ msgstr "Chọn ngôn ngữ của bạn để bắt đầu cài đặt"
 msgid "Choose your location to set the system clock"
 msgstr "Chọn vị trí của bạn để thiết lập đồng hồ hệ thống"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "Hoàn tất"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -289,9 +280,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "Mô phỏng phát triển đã hoàn tất"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "Khám phá AnduinOS"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -498,6 +486,12 @@ msgid "Keyboard"
 msgstr "Bàn phím"
 
 #: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
+msgid "Applying keyboard layout…"
+msgstr "Đang áp dụng bố cục bàn phím…"
+
+msgid "The keyboard layout could not be applied. Try again."
+msgstr "Không thể áp dụng bố cục bàn phím. Vui lòng thử lại."
+
 msgid "Keyboard Layout"
 msgstr "Bố cục bàn phím"
 
@@ -1382,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Giữ Windows hoặc các phân vùng khác, dùng lại hoặc tạo ESP và thiết kế phân vùng Root cùng Swap với kích thước chính xác."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Các thay đổi thủ công mang tính phá hủy. Vị trí bắt đầu của các phân vùng hiện có không bao giờ bị di chuyển. Chỉ có thể thu nhỏ phân vùng NTFS không mã hóa sau khi vượt qua các bước kiểm tra an toàn nghiêm ngặt; các phân vùng được mã hóa, đang được gắn kết hoặc có hệ thống tệp ở trạng thái không sạch sẽ không bao giờ bị thay đổi kích thước."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Các thay đổi thủ công mang tính phá hủy. Vị trí bắt đầu của các phân vùng hiện có không bao giờ bị di chuyển. Chỉ có thể thu nhỏ phân vùng NTFS/ext4 không mã hóa sau khi vượt qua các bước kiểm tra an toàn nghiêm ngặt; các phân vùng được mã hóa, đang được gắn kết hoặc có hệ thống tệp ở trạng thái không sạch sẽ không bao giờ bị thay đổi kích thước."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1748,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "Thiếu lựa chọn lưu trữ thủ công. Quay lại và xem xét lại."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ Việc thay đổi kích thước các phân vùng NTFS được liệt kê sẽ di chuyển dữ liệu hệ thống tệp và ranh giới phân vùng. Các phân vùng được liệt kê sẽ bị xóa và mọi phân vùng mới được liệt kê sẽ được định dạng. Hãy sao lưu dữ liệu quan trọng trước; các thao tác phân vùng này không thể hoàn tác."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Việc thay đổi kích thước các phân vùng NTFS/ext4 được liệt kê sẽ di chuyển dữ liệu hệ thống tệp và ranh giới phân vùng. Các phân vùng được liệt kê sẽ bị xóa và mọi phân vùng mới được liệt kê sẽ được định dạng. Hãy sao lưu dữ liệu quan trọng trước; các thao tác phân vùng này không thể hoàn tác."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1773,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Chỉ các phân vùng được liệt kê rõ ràng sẽ bị xóa hoặc định dạng. Các phân vùng không liên quan vẫn giữ nguyên; EFI/BOOT không bị ghi đè."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Chỉnh sửa một đĩa GPT. Vị trí bắt đầu của phân vùng sẽ không bao giờ bị dịch chuyển; phân vùng NTFS không mã hóa có thể được thu nhỏ sau khi kiểm tra an toàn."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Chỉnh sửa một đĩa GPT. Vị trí bắt đầu của phân vùng sẽ không bao giờ bị dịch chuyển; phân vùng NTFS/ext4 không mã hóa có thể được thu nhỏ sau khi kiểm tra an toàn."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "Thu nhỏ ext4 có thể gây mất dữ liệu vĩnh viễn. Hãy sao lưu các tệp quan trọng. Kích thước tối thiểu là ước tính; hệ thống tệp được kiểm tra trước và sau khi đổi kích thước."
+
+msgid "I have backed up my data."
+msgstr "Tôi đã sao lưu dữ liệu."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Chưa hỗ trợ thu nhỏ Btrfs."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"
@@ -1940,6 +1943,75 @@ msgstr "Bạn có thể tiếp tục cấu hình cài đặt. Việc kiểm tra 
 msgid "Firmware check complete"
 msgstr "Đã kiểm tra firmware xong"
 
+
+
+
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "Đang kiểm tra phân vùng hệ thống EFI…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "Kiểm tra các bản cài đặt Linux khác"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "So sánh các tùy chọn ESP"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "ESP riêng"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "ESP dùng chung"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "Tạo và định dạng ESP FAT32 mới trong vùng chưa phân bổ (ít nhất 512 MiB). Các ESP hiện có không thay đổi."
+
+
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "Cả hai tùy chọn đều cài tệp khởi động vào EFI/AnduinOS và đặt mục khởi động UEFI AnduinOS mới lên đầu. Các hệ thống được hỗ trợ và phát hiện sẽ được thêm vào menu GRUB mới; tệp và menu của chúng không bị thay đổi."
+
+#: src/app_menu.py
+msgid "About"
+msgstr "Giới thiệu"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "Xem mã nguồn"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "Trang web chính thức"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "Báo cáo sự cố"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "Trình đơn chính"
+
 #: src/pages.py
 msgid "Retry"
 msgstr "Thử lại"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "Thay thế các tệp khởi động AnduinOS hiện có?"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "Dùng lại ESP còn tốt và có đủ dung lượng trống mà không định dạng. Các tệp khởi động của hệ thống khác sẽ được giữ nguyên. Nếu EFI/AnduinOS đã tồn tại, cần xác nhận rõ ràng để thay thế. Để cả hai bản cài đặt có thể khởi động độc lập, hãy chọn ESP khác hoặc tạo ESP mới."
+
+msgid "Use this ESP and replace"
+msgstr "Dùng ESP này và thay thế"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "Sẽ thay thế EFI/AnduinOS trên {path}. Các tệp khởi động cũ sẽ được sao lưu; mục khởi động AnduinOS trước đó có thể không còn khởi động được hệ thống cũ."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} đã chứa các tệp khởi động AnduinOS. Nếu tiếp tục, EFI/AnduinOS sẽ được thay thế để khởi động bản cài đặt mới. Các tệp khởi động của Windows và hệ thống khác sẽ được giữ nguyên; ESP này sẽ không được định dạng.\n\nViệc thay thế này không xóa phân vùng hệ thống cũ, nhưng AnduinOS cũ có thể không còn khởi động được qua mục khởi động hiện có. Để giữ cả hai bản cài đặt, hãy quay lại và tạo ESP riêng (ít nhất 512 MiB). Các tệp khởi động cũ sẽ được sao lưu trước khi thay thế."

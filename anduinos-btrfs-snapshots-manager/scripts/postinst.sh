@@ -1,17 +1,18 @@
 set -eu
 
+[ "${1:-}" = configure ] || exit 0
+
 in_chroot() {
     [ -x /usr/bin/systemd-detect-virt ] \
         && /usr/bin/systemd-detect-virt --chroot --quiet
 }
 
-if [ -x /usr/libexec/anduinos-dracut-verify ] && [ -d /lib/modules ]; then
-    /usr/libexec/anduinos-dracut-verify --rebuild
-elif command -v dracut >/dev/null 2>&1 && [ -d /lib/modules ]; then
-    # Standalone installations outside anduinos-core-system retain a strict
-    # fallback; unlike the old lifecycle, generation failures are never hidden.
-    dracut --force --regenerate-all
+if [ ! -x /usr/libexec/anduinos-dracut-verify ]; then
+    echo 'anduinos-btrfs-snapshots-manager: required initrd writer is missing; reinstall anduinos-boot-tools' >&2
+    exit 1
 fi
+# Let dpkg finish configuring newly unpacked kernels before generating images.
+update-initramfs -u
 
 systemd-tmpfiles --create /usr/lib/tmpfiles.d/anduinos-btrfs-snapshots-manager.conf || true
 

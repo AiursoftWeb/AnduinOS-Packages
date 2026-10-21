@@ -24,6 +24,15 @@ is_installed() {
     [ "$($DPKG_QUERY -W -f='${db:Status-Abbrev}' "$1" 2>/dev/null || true)" = "ii " ]
 }
 
+is_selected_for_install() {
+    # An interrupted postinst leaves iF/iU, not ii. Include these packages in
+    # the repair transaction so APT upgrades them before retrying configuration.
+    case "$($DPKG_QUERY -W -f='${db:Status-Abbrev}' "$1" 2>/dev/null || true)" in
+        i??) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
 installed_version() {
     $DPKG_QUERY -W -f='${Version}' "$1" 2>/dev/null || true
 }
@@ -72,10 +81,10 @@ candidate_conflicts_with_legacy_stack() {
     done
 }
 
-candidate_depends_on_core() {
+candidate_depends_on_writer() {
     candidate_dependencies "$1" "$2" \
         | tr '\n' ' ' \
-        | grep -Eq '(^|[ ,])anduinos-core-system([[:space:]]|,|$)'
+        | grep -Eq '(^|[ ,])anduinos-(core-system|boot-tools)([[:space:]]|,|$)'
 }
 
 load_published_candidates() {
@@ -86,25 +95,23 @@ load_published_candidates() {
             anduinos-core-system "$core_candidate" || return 1
 
     snapshots_candidate=
-    if is_installed anduinos-btrfs-snapshots-manager; then
+    if is_selected_for_install anduinos-btrfs-snapshots-manager; then
         snapshots_candidate=$(candidate_version anduinos-btrfs-snapshots-manager)
         [ -n "$snapshots_candidate" ] \
             && [ "$snapshots_candidate" != "(none)" ] \
             && candidate_is_pure_dracut \
                 anduinos-btrfs-snapshots-manager "$snapshots_candidate" \
-            && candidate_depends_on_core \
+            && candidate_depends_on_writer \
                 anduinos-btrfs-snapshots-manager "$snapshots_candidate" \
             || return 1
     fi
 
     plymouth_candidate=
-    if is_installed plymouth-anduinos; then
+    if is_selected_for_install plymouth-anduinos; then
         plymouth_candidate=$(candidate_version plymouth-anduinos)
         [ -n "$plymouth_candidate" ] \
             && [ "$plymouth_candidate" != "(none)" ] \
             && candidate_is_pure_dracut \
-                plymouth-anduinos "$plymouth_candidate" \
-            && candidate_depends_on_core \
                 plymouth-anduinos "$plymouth_candidate" \
             || return 1
     fi
@@ -117,10 +124,12 @@ installed_stack_matches_candidates() {
     [ "$(installed_version anduinos-core-system)" = "$core_candidate" ] \
         || return 1
     if [ -n "$snapshots_candidate" ]; then
+        is_installed anduinos-btrfs-snapshots-manager || return 1
         [ "$(installed_version anduinos-btrfs-snapshots-manager)" \
             = "$snapshots_candidate" ] || return 1
     fi
     if [ -n "$plymouth_candidate" ]; then
+        is_installed plymouth-anduinos || return 1
         [ "$(installed_version plymouth-anduinos)" \
             = "$plymouth_candidate" ] || return 1
     fi

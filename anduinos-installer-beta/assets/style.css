@@ -428,6 +428,56 @@
   border-radius: 16px;
 }
 
+/* Keep the log toolbar edge clean while preserving normal scrolling. */
+.installer-log-scroll > undershoot.top {
+  background: none;
+  box-shadow: none;
+}
+
+.legacy-slide {
+  background-color: #101925;
+  color: white;
+}
+
+.legacy-slide-title {
+  background-color: #3c3b37;
+  color: white;
+  font-size: 24px;
+  font-weight: 400;
+  padding: 18px 25px;
+}
+
+.legacy-slide-paragraph {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  padding: 6px 12px;
+  color: white;
+  font-size: 13px;
+}
+
+.legacy-slide-wide .legacy-slide-paragraph {
+  background-color: transparent;
+  font-size: 16px;
+  text-shadow: 0 1px 3px black;
+}
+
+.legacy-slide-picture {
+  border-radius: 10px;
+}
+
+.legacy-slide-arrow {
+  background: rgba(255, 255, 255, 0.85);
+  color: #3c3b37;
+  border-radius: 0 32px 32px 0;
+  min-width: 24px;
+  min-height: 64px;
+  padding: 0 4px;
+}
+
+.legacy-slide-arrow:last-child {
+  border-radius: 32px 0 0 32px;
+}
+
 .installer-progress trough,
 .installer-progress progress {
   min-height: 10px;

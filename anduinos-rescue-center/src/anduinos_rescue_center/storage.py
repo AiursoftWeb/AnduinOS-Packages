@@ -13,6 +13,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Iterator
+from uuid import UUID
 
 from .i18n import _ as tr
 from .live import is_live_environment
@@ -262,9 +263,36 @@ def mounted_writable(
             pass
 
 
+def _inspection_root(top: Path, filesystem: str) -> Path:
+    root = top / "@root" if filesystem == "btrfs" and (top / "@root").is_dir() else top
+    if not root.resolve(strict=True).is_relative_to(top.resolve(strict=True)):
+        raise RuntimeError(tr("The selected path escapes the offline system"))
+    if filesystem != "btrfs" or (top / "@root").exists() or (top / "@root").is_symlink():
+        return root
+    # A committed recovery may be interrupted between the two root renames.
+    # Identify its original root from the journal; the Rust engine remains the
+    # authority for validating and resuming the transaction, including UUIDs.
+    pending = _safe_regular_file(
+        top, "@snapshots/anduinos-btrfs-snapshots-manager/offline-transactions/pending.json"
+    )
+    if pending is not None:
+        try:
+            data = json.loads(_read_bounded_text(pending, 1024 * 1024))
+            if data["schema_version"] != 1 or data["phase"] not in {
+                "prepared", "writable-target-created", "current-root-protected", "target-root-activated",
+            }:
+                return root
+            old = top / f"@root.rescue-center-old-{UUID(data['id'])}"
+            if old.is_dir() and not old.is_symlink():
+                return old
+        except (KeyError, TypeError, ValueError):
+            pass
+    return root
+
+
 def inspect_mounted_filesystem(mountpoint: Path, filesystem: str) -> SystemIdentity:
     top = mountpoint
-    root = top / "@root" if filesystem == "btrfs" and (top / "@root").is_dir() else top
+    root = _inspection_root(top, filesystem)
     release_path = _safe_regular_file(root, "usr/lib/os-release")
     if release_path is None:
         release_path = _safe_regular_file(root, "etc/os-release")
@@ -311,7 +339,7 @@ def inspect_target(
 
 
 def inspect_offline_root(top: Path, partition: Partition) -> dict[str, object]:
-    root = top / "@root" if partition.filesystem == "btrfs" and (top / "@root").is_dir() else top
+    root = _inspection_root(top, partition.filesystem)
     detected = inspect_mounted_filesystem(top, partition.filesystem)
     if detected.os_kind != "anduinos":
         raise RuntimeError(tr("The selected partition is not an AnduinOS installation"))

@@ -1,7 +1,6 @@
-"""Conservative local repair of the current AnduinOS UEFI vendor chain.
+"""Conservative local repair of the installed AnduinOS EFI chain.
 
-No package installation, fallback loader, firmware keys or foreign boot entry
-is modified. Portable/removable-media boot policy belongs to the installer.
+Firmware keys and foreign boot entries/loaders are never modified.
 """
 
 from contextlib import ExitStack
@@ -11,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shlex
 import shutil
 import struct
 import tempfile
@@ -19,6 +19,7 @@ from .inspect import Runner
 
 
 ESP = Path("/boot/efi")
+EFI = Path("/sys/firmware/efi")
 ESP_TYPE = "c12a7328-f81f-11d2-ba4b-00a0c93ec93b"
 EFI_GLOBAL = "8be4df61-93ca-11d2-aa0d-00e098032b8c"
 
@@ -51,7 +52,7 @@ def entries(output: str) -> tuple[BootEntry, ...]:
     pattern = (
         r"^Boot([0-9A-Fa-f]{4})\*?\s+AnduinOS\s+.*?"
         r"HD\((\d+),GPT,([0-9a-fA-F-]{36}),[^)]*\)/"
-        r"(?:File\()? (\\EFI\\AnduinOS\\(?:shim|grub)(?:x64|aa64)\.efi)\)?[ \t]*$"
+        r"(?:File\()? (\\EFI\\AnduinOS(?:-P[0-9]+)?\\(?:shim|grub)(?:x64|aa64)\.efi)\)?[ \t]*$"
     )
     return tuple(BootEntry(n.upper(), int(p), u.lower(), f)
                  for n, p, u, f in re.findall(pattern, output, re.MULTILINE | re.I | re.X))
@@ -70,6 +71,17 @@ def current_loader(runner: Runner) -> str:
             return "unknown"
         current = variable(output, "BootCurrent")
         boot_entries = entries(output)
+        if len({e.uuid for e in boot_entries}) > 1:
+            # BootCurrent may name the first stage of a chainloaded boot.
+            # Never report that other installation's loader as our own.
+            # This unprivileged hint must not invoke grub-probe (raw disks).
+            uuid = command(runner, ["findmnt", "--noheadings", "--output", "PARTUUID",
+                                    "--mountpoint", str(ESP)]).strip().lower()
+            replacements = [e for e in boot_entries if e.uuid == uuid
+                            and e.number in variable(output, "BootOrder").split(",")]
+            if len(replacements) != 1:
+                return "unknown"
+            return "shim" if "\\shim" in replacements[0].loader.lower() else "grub"
         entry = next((e for e in boot_entries if e.number == current), None)
         if entry:
             # A successful repair keeps the old current entry for recovery.
@@ -81,7 +93,7 @@ def current_loader(runner: Runner) -> str:
             return "shim" if "\\shim" in entry.loader.lower() else "grub"
         if re.search(rf"^Boot{re.escape(current)}\*?\s+.*\\grub(?:x64|aa64)\.efi(?:\)|[ \t]*$)", output, re.M | re.I):
             return "grub"
-    except (ValueError, OSError):
+    except (ValueError, OSError, KeyError, TypeError):
         pass
     return "unknown"
 
@@ -95,9 +107,45 @@ class Target:
     device: str
 
 
+def vendor_path(esp: Path, entry: BootEntry) -> Path:
+    vendor = entry.loader.split("\\")[2]
+    if not re.fullmatch(r"AnduinOS(?:-P[0-9]+)?", vendor, re.I):
+        raise ValueError("Unexpected AnduinOS EFI vendor directory")
+    return esp / "EFI" / vendor
+
+
 def partition_number(device: str) -> int:
     # PARTN is not a lsblk column on every supported Ubuntu release.
     return int((Path("/sys/class/block") / Path(device).name / "partition").read_text())
+
+
+def verify_local_esp_binding(runner: Runner, esp: Path, device: str, cfg: Path) -> None:
+    """Require fstab and the standard Ubuntu EFI stub to identify this OS.
+
+    No foreign GRUB code is executed. Nonstandard stubs require manual review;
+    guessing would risk repairing the first stage of a chainloaded boot.
+    """
+    configured = json.loads(command(runner, [
+        "findmnt", "--json", "--fstab", "--evaluate", "--mountpoint", str(esp),
+        "--output", "SOURCE,TARGET,FSTYPE",
+    ])).get("filesystems", [])
+    if (len(configured) != 1 or configured[0].get("target") != str(esp)
+            or configured[0].get("fstype") != "vfat"
+            or Path(configured[0].get("source", "")).resolve() != Path(device).resolve()):
+        raise ValueError("Mounted ESP does not match this system's fstab")
+    uuid = command(runner, ["grub-probe", "--target=fs_uuid", "/boot/grub"]).strip()
+    prefix = command(runner, ["grub-mkrelpath", "/boot/grub"]).strip()
+    if not uuid or not prefix.startswith("/") or cfg.stat().st_size > 16384:
+        raise ValueError("Cannot identify this system's GRUB directory")
+    lines = [shlex.split(line, comments=True) for line in cfg.read_text().splitlines()]
+    lines = [line for line in lines if line]
+    if (len(lines) != 3 or len(lines[0]) < 3
+            or lines[0][:3] != ["search.fs_uuid", uuid, "root"]
+            or any(not re.fullmatch(r"hd[0-9]+(?:,(?:gpt|msdos)[0-9]+)?", hint)
+                   for hint in lines[0][3:])
+            or lines[1] != ["set", f"prefix=($root){prefix}"]
+            or lines[2] != ["configfile", "$prefix/grub.cfg"]):
+        raise ValueError("EFI GRUB configuration does not uniquely identify this system; manual review required")
 
 
 def resolve_target(runner: Runner, esp: Path = ESP) -> Target:
@@ -123,34 +171,72 @@ def resolve_target(runner: Runner, esp: Path = ESP) -> Target:
             visit(node.get("children", []))
 
     visit(disks)
-    if len(partitions) != 1:
-        raise ValueError("Multiple or missing ESPs; automatic repair requires manual review")
-    part = next(iter(partitions.values()))
+    matching = [p for p in partitions.values()
+                if Path(mount[0]["source"]).resolve() == Path(p["path"]).resolve()]
+    if len(matching) != 1:
+        raise ValueError("Mounted ESP is missing or ambiguous; automatic repair requires manual review")
+    part = matching[0]
+    partuuid = (part.get("partuuid") or "").lower()
+    if not partuuid or sum((p.get("partuuid") or "").lower() == partuuid for p in partitions.values()) != 1:
+        raise ValueError("Multiple or missing ESP identities; automatic repair requires manual review")
     if (part.get("type") != "part"
             or Path(mount[0]["source"]).resolve() != Path(part["path"]).resolve()
             or not (part.get("pkname") or "").startswith("/dev/")):
         raise ValueError("The ESP does not match a physical disk partition")
-    output = command(runner, ["efibootmgr", "--verbose"])
+    output = command(runner, ["efibootmgr", "--verbose"]) if EFI.is_dir() else ""
     known_entries = entries(output)
     current = next((e for e in known_entries if e.number == variable(output, "BootCurrent")), None)
     candidates = tuple(e for e in known_entries
-                       if e.number in variable(output, "BootOrder").split(","))
-    if (len(candidates) != 1 or current is None
-            or current.uuid != candidates[0].uuid or current.partition != candidates[0].partition
-            or candidates[0].uuid != (part.get("partuuid") or "").lower()
-            or candidates[0].partition != partition_number(part["path"])):
+                       if e.number in variable(output, "BootOrder").split(",")
+                       and e.uuid == partuuid
+                       and e.partition == partition_number(part["path"]))
+    if (len(candidates) > 1
+            or (current is not None and current.uuid == partuuid
+                and current.partition != partition_number(part["path"]))):
         raise ValueError("Current AnduinOS boot entry and ESP are missing or ambiguous")
-    entry = candidates[0]
+    if candidates:
+        entry = candidates[0]
+    else:
+        # BIOS and removable-media boots need no vendor NVRAM entry. This is
+        # a file destination only; it must pass the local fstab/root binding
+        # below and must never cause an invented firmware entry to be written.
+        suffix, _, _ = efi_architecture(runner)
+        entry = BootEntry("", partition_number(part["path"]), partuuid,
+                          rf"\EFI\AnduinOS\shim{suffix}.efi")
     order = variable(output, "BootOrder")
-    if order.split(",").count(entry.number) != 1 or variable(output, "BootNext"):
+    if (entry.number and order.split(",").count(entry.number) != 1) or variable(output, "BootNext"):
         raise ValueError("BootOrder or BootNext requires manual review")
-    vendor = esp / "EFI/AnduinOS"
+    vendor = vendor_path(esp, entry)
     if vendor.resolve() != vendor or not vendor.is_dir():
         raise ValueError("AnduinOS EFI directory is missing or redirected")
     cfg = vendor / "grub.cfg"
     if cfg.is_symlink() or not cfg.is_file() or not cfg.read_text().strip():
         raise ValueError("AnduinOS EFI GRUB configuration is missing")
+    if current is None or len(partitions) > 1 or current.uuid != partuuid or "-P" in vendor.name:
+        verify_local_esp_binding(runner, esp, part["path"], cfg)
     return Target(part["pkname"], entry, order, output, part["path"])
+
+
+def owned_fallback(runner, esp, target, shim_source):
+    """Recognize the installer's direct-copy fallback without claiming foreign EFI/BOOT."""
+    fallback = esp / "EFI/BOOT"
+    cfg = fallback / "grub.cfg"
+    if fallback.resolve() != fallback or cfg.is_symlink() or not cfg.is_file():
+        return None
+    try:
+        verify_local_esp_binding(runner, esp, target.device, cfg)
+    except (OSError, ValueError):
+        return None
+    suffix, _, _ = efi_architecture(runner)
+    loader = fallback / f"BOOT{suffix.upper()}.EFI"
+    vendor_shim = vendor_path(esp, target.entry) / f"shim{suffix}.efi"
+    # A matching GRUB stub alone cannot authorize replacing an unrelated
+    # fallback loader. Require the existing vendor copy or the incoming shim.
+    if (loader.is_symlink() or not loader.is_file() or not any(
+            path.is_file() and not path.is_symlink() and loader.read_bytes() == path.read_bytes()
+            for path in (vendor_shim, shim_source))):
+        raise ValueError("Fallback configuration belongs to this system, but its loader requires manual review")
+    return fallback
 
 
 def verify_image(path: Path, machine: int, runner: Runner) -> None:
@@ -178,14 +264,21 @@ def verify_image(path: Path, machine: int, runner: Runner) -> None:
     raise ValueError(f"EFI signature verification failed: {path}")
 
 
-def payloads(runner: Runner) -> tuple[dict[str, Path], int]:
+def efi_architecture(runner: Runner) -> tuple[str, str, int]:
+    """Return the native EFI suffix, GRUB platform and PE machine together."""
     architecture = command(runner, ["dpkg", "--print-architecture"]).strip()
-    if architecture not in {"amd64", "arm64"}:
-        raise ValueError("Unsupported EFI architecture")
-    suffix, grub_arch, machine = (
-        ("x64", "x86_64", 0x8664) if architecture == "amd64"
-        else ("aa64", "arm64", 0xAA64)
-    )
+    try:
+        return {"amd64": ("x64", "x86_64", 0x8664),
+                "arm64": ("aa64", "arm64", 0xAA64)}[architecture]
+    except KeyError:
+        raise ValueError("Unsupported EFI architecture: " + architecture) from None
+
+
+def payloads(runner: Runner) -> tuple[dict[str, Path], int]:
+    from .grub import source_image, payloads as own_payloads
+    suffix, grub_arch, machine = efi_architecture(runner)
+    if source_image(runner).is_file():
+        return own_payloads(runner)
     sources = {
         f"shim{suffix}.efi": Path(f"/usr/lib/shim/shim{suffix}.efi.signed.latest").resolve(strict=True),
         f"grub{suffix}.efi": Path(f"/usr/lib/grub/{grub_arch}-efi-signed/grub{suffix}.efi.signed"),
@@ -197,7 +290,8 @@ def payloads(runner: Runner) -> tuple[dict[str, Path], int]:
         if "\n" in owner or ": /" not in owner:
             raise ValueError(f"Ambiguous package ownership: {path}")
         package = owner.split(": /", 1)[0]
-        if package.split(":")[0] not in {"shim", "shim-signed", f"grub-efi-{architecture}-signed"}:
+        signed_package = "grub-efi-amd64-signed" if suffix == "x64" else "grub-efi-arm64-signed"
+        if package.split(":")[0] not in {"shim", "shim-signed", signed_package}:
             raise ValueError(f"Unexpected EFI payload owner: {path}")
         packages.add(package)
     for package in sorted(packages):
@@ -209,24 +303,35 @@ def payloads(runner: Runner) -> tuple[dict[str, Path], int]:
     return sources, machine
 
 
-def prepare_boot_chain(runner: Runner, esp: Path = ESP) -> None:
+def prepare_boot_chain(runner: Runner, esp: Path = ESP, *, payload_loader=None,
+                       package_transaction=False) -> None:
     """Called only by the locked privileged helper; no paths come from its CLI."""
     with ExitStack() as stack:
         # Coordinate with APT/dpkg, which use POSIX record locks, not flock.
-        for name in ("lock-frontend", "lock"):
+        for name in (() if package_transaction else ("lock-frontend", "lock")):
             lock = stack.enter_context(open(f"/var/lib/dpkg/{name}", "r+"))
             fcntl.lockf(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         target = resolve_target(runner, esp)
-        sources, machine = payloads(runner)
-        suffix = "x64" if machine == 0x8664 else "aa64"
-        loader = rf"\EFI\AnduinOS\shim{suffix}.efi"
+        sources, machine = (payload_loader or payloads)(runner)
+        try:
+            suffix = {0x8664: "x64", 0xAA64: "aa64"}[machine]
+        except KeyError:
+            raise ValueError("Unsupported EFI payload architecture") from None
+        vendor = vendor_path(esp, target.entry)
+        fallback = owned_fallback(runner, esp, target, sources[f"shim{suffix}.efi"])
+        destinations = {vendor / name: source for name, source in sources.items()}
+        if fallback is not None:
+            destinations.update({
+                fallback / (f"BOOT{suffix.upper()}.EFI" if name.startswith("shim") else name): source
+                for name, source in sources.items()
+            })
+        loader = rf"\EFI\{vendor.name}\shim{suffix}.efi"
         if target.entry.loader.lower() not in {loader.lower(), loader.lower().replace("shim", "grub")}:
             raise ValueError("Boot entry architecture does not match the installed system")
-        vendor = esp / "EFI/AnduinOS"
         if target.entry.loader.lower() == loader.lower() and all(
-            (vendor / name).is_file() and not (vendor / name).is_symlink()
-            and (vendor / name).read_bytes() == source.read_bytes()
-            for name, source in sources.items()
+            path.is_file() and not path.is_symlink()
+            and path.read_bytes() == source.read_bytes()
+            for path, source in destinations.items()
         ):
             # A matching deployed chain has just been verified through the
             # package payloads. MOK preparation needs no EFI writes in this case.
@@ -234,12 +339,13 @@ def prepare_boot_chain(runner: Runner, esp: Path = ESP) -> None:
         with tempfile.TemporaryDirectory(prefix=".secureboot-", dir=vendor) as directory:
             staging = Path(directory)
             previous = {}
-            for name, source in sources.items():
-                destination = vendor / name
+            staged_files = {}
+            for index, (destination, source) in enumerate(destinations.items()):
                 if destination.is_symlink() or (destination.exists() and not destination.is_file()):
                     raise ValueError(f"Unsafe EFI destination: {destination}")
-                previous[name] = destination.read_bytes() if destination.exists() else None
-                staged = staging / name
+                previous[destination] = destination.read_bytes() if destination.exists() else None
+                staged = staging / str(index)
+                staged_files[destination] = staged
                 shutil.copyfile(source, staged)
                 verify_image(staged, machine, runner)
                 with staged.open("rb") as stream:
@@ -247,18 +353,25 @@ def prepare_boot_chain(runner: Runner, esp: Path = ESP) -> None:
             # Recheck identity after verification and before any boot mutation.
             if resolve_target(runner, esp) != target:
                 raise ValueError("ESP or firmware boot entries changed during preparation")
+            if owned_fallback(runner, esp, target, sources[f"shim{suffix}.efi"]) != fallback:
+                raise ValueError("Fallback ownership changed during preparation")
             new_number = None
             written = []
             try:
                 # Install shim last so its companion files are available first.
-                for name in sorted(sources, key=lambda n: n.startswith("shim")):
-                    (staging / name).replace(vendor / name)
-                    written.append(name)
-                descriptor = os.open(vendor, os.O_RDONLY | os.O_DIRECTORY)
-                try:
-                    os.fsync(descriptor)
-                finally:
-                    os.close(descriptor)
+                for path in sorted(destinations, key=lambda p: p.name.lower().startswith(("shim", "boot"))):
+                    staged_files[path].replace(path)
+                    written.append(path)
+                for parent in {path.parent for path in destinations}:
+                    descriptor = os.open(parent, os.O_RDONLY | os.O_DIRECTORY)
+                    try:
+                        os.fsync(descriptor)
+                    finally:
+                        os.close(descriptor)
+                # An ESP is FAT, not a journaling filesystem. Flush the whole
+                # filesystem (including allocation tables) before selecting
+                # the new loader or reporting successful deployment.
+                command(runner, ["sync", "-f", str(esp)])
                 if target.entry.loader.lower() != loader.lower():
                     command(runner, ["efibootmgr", "--create-only", "--disk", target.disk,
                                      "--part", str(target.entry.partition), "--label", "AnduinOS", "--loader", loader])
@@ -286,11 +399,14 @@ def prepare_boot_chain(runner: Runner, esp: Path = ESP) -> None:
                         # The new entry may still be selected: retain its verified
                         # files rather than leaving firmware pointing at nothing.
                         raise ValueError(f"{error}; firmware rollback failed: {rollback_error}. Signed files retained; manual review required") from error
-                for name in written:
-                    if previous[name] is None:
-                        (vendor / name).unlink(missing_ok=True)
+                for path in written:
+                    if previous[path] is None:
+                        path.unlink(missing_ok=True)
                     else:
-                        backup = staging / name
-                        backup.write_bytes(previous[name])
-                        backup.replace(vendor / name)
+                        backup = staged_files[path]
+                        backup.write_bytes(previous[path])
+                        backup.replace(path)
+                command(runner, ["sync", "-f", str(esp)])
                 raise
+        # Temporary-directory removal also changes FAT metadata.
+        command(runner, ["sync", "-f", str(esp)])

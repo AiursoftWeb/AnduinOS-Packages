@@ -9,12 +9,12 @@ source "$SCRIPT_DIR/../lib/build-guards.sh"
 need_cmd git
 need_cmd sassc
 
-FLUENT_GTK_COMMIT="7a49a46"
+FLUENT_GTK_COMMIT="7a49a464b0188c340101c52965c18190b1c694cf"
 OUT_DIR="$SCRIPT_DIR/deploy/fluent-gnome-shell"
 
 rm -rf "$OUT_DIR" /tmp/Fluent-gtk-theme-gdm
-git clone https://gitlab.aiursoft.com/mirror/fluent-gtk-theme/ /tmp/Fluent-gtk-theme-gdm
-git -C /tmp/Fluent-gtk-theme-gdm checkout "$FLUENT_GTK_COMMIT"
+git clone https://github.com/vinceliuice/Fluent-gtk-theme.git /tmp/Fluent-gtk-theme-gdm
+git -C /tmp/Fluent-gtk-theme-gdm checkout --detach "$FLUENT_GTK_COMMIT"
 
 echo "Building Fluent gnome-shell CSS (dark, noborder, round)..."
 # Build to a temp directory, then extract just the gnome-shell portion.

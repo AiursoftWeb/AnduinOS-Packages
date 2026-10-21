@@ -78,4 +78,11 @@ sudo -n env \
     --nocapture \
     --test-threads=1
 
+history_test_binary="$({
+    cargo test --manifest-path "$script_root/src/Cargo.toml" \
+        -p anduinos-recovery-engine --lib --locked --no-run --message-format=json
+} | jq -r 'select(.profile.test == true and .executable != null) | .executable' | tail -n 1)"
+sudo -n env ANDUINOS_BTRFS_SNAPSHOTS_MANAGER_LOOPBACK_ROOT="$mount_point" \
+    "$history_test_binary" --ignored real_btrfs_factory_history_cleanup --nocapture --test-threads=1
+
 echo "Recovery operation loopback qualification passed"

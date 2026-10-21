@@ -648,6 +648,15 @@ impl SnapshotsManagerHelperClient {
             .context("Failed to schedule factory reset")
     }
 
+    pub fn schedule_factory_reset_with_history_cleanup(
+        &self,
+        id: String,
+    ) -> Result<(bool, String)> {
+        self.proxy()?
+            .call("ScheduleFactoryResetWithHistoryCleanup", &(id,))
+            .context("Failed to schedule factory reset with history cleanup")
+    }
+
     pub fn cancel_deployment_restore(&self) -> Result<(bool, String)> {
         let proxy = zbus::blocking::Proxy::new(
             &self.connection,

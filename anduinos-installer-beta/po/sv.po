@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "En verklig installation kommer att skapa en maskinlokal MOK. Efter omstart väljer du Registrera MOK → Fortsätt → Ja i MOKManager och anger lösenordet 123456."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"På den blå MOKManager-skärmen väljer du Registrera MOK → Fortsätt → Ja, lösenord: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -201,9 +195,6 @@ msgstr "Välj ditt språk för att börja installationen"
 msgid "Choose your location to set the system clock"
 msgstr "Välj din plats för att ställa in systemklockan"
 
-#: src/pages.py:7079
-msgid "Complete"
-msgstr "Klar"
 
 #: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
 #: src/pages.py:6644
@@ -289,9 +280,6 @@ msgstr ""
 msgid "Development simulation completed"
 msgstr "Utvecklingssimulering slutförd"
 
-#: src/pages.py:7073
-msgid "Discover AnduinOS"
-msgstr "Utmana AnduinOS"
 
 #: src/pages.py:1283 src/pages.py:2370
 msgid "Download and install system updates during installation"
@@ -498,6 +486,12 @@ msgid "Keyboard"
 msgstr "Tangentbord"
 
 #: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
+msgid "Applying keyboard layout…"
+msgstr "Tillämpar tangentbordslayout…"
+
+msgid "The keyboard layout could not be applied. Try again."
+msgstr "Det gick inte att tillämpa tangentbordslayouten. Försök igen."
+
 msgid "Keyboard Layout"
 msgstr "Tangentbordslayout"
 
@@ -1382,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Behåll Windows eller andra partitioner, återanvänd eller skapa en ESP och utforma Root- och Swap-partitioner med exakta storlekar."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Manuella ändringar är destruktiva. De befintliga partitionernas startpositioner flyttas aldrig. En okrypterad NTFS-volym kan endast krympas efter strikta säkerhetskontroller; krypterade, monterade eller inte korrekt avmonterade volymer ändras aldrig i storlek."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Manuella ändringar är destruktiva. De befintliga partitionernas startpositioner flyttas aldrig. En okrypterad NTFS/ext4-volym kan endast krympas efter strikta säkerhetskontroller; krypterade, monterade eller inte korrekt avmonterade volymer ändras aldrig i storlek."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1748,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "Manuell lagringsval saknas. Gå tillbaka och granska det."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ De angivna storleksändringarna av NTFS flyttar filsystemdata och partitionsgränser. De angivna partitionerna raderas och alla angivna nya partitioner formateras. Säkerhetskopiera viktiga data först; dessa partitioneringsåtgärder kan inte ångras."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ De angivna storleksändringarna av NTFS/ext4 flyttar filsystemdata och partitionsgränser. De angivna partitionerna raderas och alla angivna nya partitioner formateras. Säkerhetskopiera viktiga data först; dessa partitioneringsåtgärder kan inte ångras."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1773,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Endast uttryckligen listade partitioner kommer att tas bort eller formateras. Oinblandade partitioner förblir oförändrade; EFI/BOOT skrivs inte över."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Redigera en GPT-disk. Partitionernas startpositioner flyttas aldrig; okrypterad NTFS kan krympas efter säkerhetskontroller."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Redigera en GPT-disk. Partitionernas startpositioner flyttas aldrig; okrypterad NTFS/ext4 kan krympas efter säkerhetskontroller."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "Att krympa ext4 kan orsaka permanent dataförlust. Säkerhetskopiera viktiga filer. Minsta storleken är en uppskattning; filsystemet kontrolleras före och efter storleksändringen."
+
+msgid "I have backed up my data."
+msgstr "Jag har säkerhetskopierat mina data."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Krympning av Btrfs stöds inte."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"
@@ -1940,6 +1943,75 @@ msgstr "Du kan fortsätta konfigurera installationen. Kontrollen av den fasta pr
 msgid "Firmware check complete"
 msgstr "Kontrollen av den fasta programvaran är klar"
 
+
+
+
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "Kontrollerar EFI-systempartition…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "Sök efter andra Linux-installationer"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "Jämför ESP-alternativ"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "Separat ESP"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "Delad ESP"
+
+#: src/pages.py
+msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
+msgstr "Skapa och formatera en ny FAT32-ESP i oallokerat utrymme (minst 512 MiB). Befintliga ESP:er lämnas oförändrade."
+
+
+
+#: src/pages.py
+msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
+msgstr "Båda alternativen installerar startfiler i EFI/AnduinOS och placerar den nya AnduinOS-UEFI-startposten först. Upptäckta system som stöds får poster i den nya GRUB-menyn; deras filer och menyer ändras inte."
+
+#: src/app_menu.py
+msgid "About"
+msgstr "Om"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "Visa källkod"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "Officiell webbplats"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "Rapportera ett problem"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "Huvudmeny"
+
 #: src/pages.py
 msgid "Retry"
 msgstr "Försök igen"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "Ersätt befintliga AnduinOS-startfiler?"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "Återanvänd en fungerande ESP med tillräckligt med ledigt utrymme utan att formatera den. Andra systems startfiler bevaras. Om EFI/AnduinOS redan finns krävs en uttrycklig bekräftelse för att ersätta den. Välj en annan ESP eller skapa en ny om du vill att båda installationerna ska kunna startas oberoende av varandra."
+
+msgid "Use this ESP and replace"
+msgstr "Använd den här ESP:n och ersätt"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "EFI/AnduinOS på {path} kommer att ersättas. De gamla startfilerna säkerhetskopieras. Den tidigare AnduinOS-startposten kanske inte längre startar det gamla systemet."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} innehåller redan AnduinOS-startfiler. Om du fortsätter ersätts EFI/AnduinOS för att starta den nya installationen. Windows och andra systems startfiler bevaras. Den här ESP:n formateras inte.\n\nErsättningen tar inte bort den gamla systempartitionen, men det gamla AnduinOS kanske inte längre startar via sin befintliga startpost. Gå tillbaka och skapa en separat ESP (minst 512 MiB) om du vill behålla båda installationerna. De gamla startfilerna säkerhetskopieras innan de ersätts."

@@ -53,6 +53,80 @@ class OfflineEnvironmentTests(unittest.TestCase):
                     self.assertEqual(commands[1][0:2], ["mount", "--rbind"])
             self.assertEqual(commands[-1], ["umount", "--", str(root)])
 
+    def test_btrfs_terminal_mounts_home_and_unmounts_it_when_shell_fails(self):
+        with tempfile.TemporaryDirectory() as directory:
+            top = Path(directory)
+            (top / "@root/usr/lib").mkdir(parents=True)
+            (top / "@root/usr/lib/os-release").write_text("ID=anduinos\n")
+            (top / "@home").mkdir()
+            commands = []
+
+            def run(command, **_kwargs):
+                commands.append(command)
+                return subprocess.CompletedProcess(command, 0, "", "")
+
+            with (patch("anduinos_rescue_center.offline_env.resolve_target", return_value=btrfs_partition()),
+                  patch("anduinos_rescue_center.offline_env.mounted_writable", fake_writable)):
+                with self.assertRaisesRegex(RuntimeError, "shell failed"):
+                    with opened_system("/dev/vda4", "b" * 64, mount_home=True,
+                                       run=run, mount_base=top) as (root, _):
+                        self.assertIn(["mount", "-t", "btrfs", "-o", "rw,subvol=@home",
+                                       "--", "/dev/vda4", str(root / "home")], commands)
+                        raise RuntimeError("shell failed")
+            unmounts = [command[-1] for command in commands if command[0] == "umount"]
+            self.assertEqual(unmounts, [str(root / item) for item in
+                                       ("run", "proc", "sys", "dev", "home")] + [str(root)])
+
+    def test_ext4_terminal_keeps_home_files_in_root_without_an_extra_mount(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "usr/lib").mkdir(parents=True)
+            (root / "usr/lib/os-release").write_text("ID=anduinos\n")
+            (root / "home/anduin").mkdir(parents=True)
+            (root / "home/anduin/document.txt").write_text("user data")
+            commands = []
+
+            def run(command, **_kwargs):
+                commands.append(command)
+                return subprocess.CompletedProcess(command, 0, "", "")
+
+            with (patch("anduinos_rescue_center.offline_env.resolve_target", return_value=partition()),
+                  patch("anduinos_rescue_center.offline_env.mounted_writable", fake_writable)):
+                with opened_system("/dev/sda2", "a" * 64, mount_home=True,
+                                   run=run, mount_base=root) as (target, _):
+                    self.assertEqual((target / "home/anduin/document.txt").read_text(), "user data")
+            self.assertFalse(any(command[-1] == str(root / "home") for command in commands))
+            self.assertEqual((root / "home/anduin/document.txt").read_text(), "user data")
+
+    def test_btrfs_home_mount_failure_or_unsafe_path_prevents_shell_and_cleans_root(self):
+        for mode in ("mount-failure", "source-symlink", "target-symlink"):
+            with self.subTest(mode=mode), tempfile.TemporaryDirectory() as directory:
+                top = Path(directory)
+                (top / "@root/usr/lib").mkdir(parents=True)
+                (top / "@root/usr/lib/os-release").write_text("ID=anduinos\n")
+                if mode == "source-symlink":
+                    (top / "@home").symlink_to(top / "@root", target_is_directory=True)
+                else:
+                    (top / "@home").mkdir()
+                commands = []
+
+                def run(command, **_kwargs):
+                    commands.append(command)
+                    if "rw,subvol=@root" in command and mode == "target-symlink":
+                        (Path(command[-1]) / "home").symlink_to(top / "@home", target_is_directory=True)
+                    if "rw,subvol=@home" in command:
+                        return subprocess.CompletedProcess(command, 1, "", "home mount failed")
+                    return subprocess.CompletedProcess(command, 0, "", "")
+
+                with (patch("anduinos_rescue_center.offline_env.resolve_target", return_value=btrfs_partition()),
+                      patch("anduinos_rescue_center.offline_env.mounted_writable", fake_writable)):
+                    with self.assertRaisesRegex(RuntimeError, "home mount failed|Unsafe target mount directory"):
+                        with opened_system("/dev/vda4", "b" * 64, mount_home=True,
+                                           run=run, mount_base=top):
+                            self.fail("An unavailable Home must not yield a terminal environment")
+                self.assertEqual(commands[-1], ["umount", "--", commands[0][-1]])
+                self.assertFalse(any("--rbind" in command for command in commands))
+
     def test_failed_btrfs_root_mount_never_enters_chroot_or_leaves_mountpoint(self):
         with tempfile.TemporaryDirectory() as directory:
             top = Path(directory)
@@ -162,9 +236,10 @@ class OfflineEnvironmentTests(unittest.TestCase):
 
             with (patch("anduinos_rescue_center.live.is_trusted_live_environment", return_value=True),
                   patch("anduinos_rescue_center.offline_env.os.isatty", return_value=True),
-                  patch("anduinos_rescue_center.offline_env.opened_system", opened),
+                  patch("anduinos_rescue_center.offline_env.opened_system", wraps=opened) as system,
                   patch("sys.stdout", new_callable=StringIO)):
                 self.assertEqual(emergency_shell("/dev/sda2", "a" * 64, run=run), 0)
+                self.assertTrue(system.call_args.kwargs["mount_home"])
             self.assertEqual(calls[0][0], ["chroot", str(root), "/bin/bash"])
             self.assertEqual(calls[0][1]["env"]["HOME"], "/root")
 

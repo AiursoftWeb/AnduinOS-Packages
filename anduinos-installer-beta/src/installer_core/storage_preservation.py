@@ -339,7 +339,7 @@ def verify_manual_storage_result(
             or after.start_bytes != before.start_bytes
             or after.size_bytes != target_size_bytes
             or after.partition_type != before.partition_type
-            or after.filesystem_type.casefold() != "ntfs"
+            or after.filesystem_type.casefold() != before.filesystem_type.casefold()
             or after.filesystem_uuid != before.filesystem_uuid
             or after.flags != before.flags
         ):

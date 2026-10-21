@@ -2027,3 +2027,15 @@ msgstr "ロールバックの準備ができました。作業を保存してく
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback confirmation failed. Restoring the previous state."
 msgstr "ロールバックの確認に失敗しました。以前の状態に戻しています。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points."
+msgstr "ユーザーデータも復元します。復元成功後に出荷時以外のスナップショットを削除し、2つの New OS 復元ポイントを保持します。"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Delete all snapshot history"
+msgstr "すべてのスナップショット履歴を削除"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore all users’ files and settings to their initial state."
+msgstr "すべてのユーザーのファイルと設定を初期状態に戻します。"

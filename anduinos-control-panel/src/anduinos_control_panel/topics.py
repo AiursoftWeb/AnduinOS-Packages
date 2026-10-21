@@ -249,6 +249,8 @@ def topics() -> tuple[ControlPanelTopic, ...]:
                 "mirror",
                 "repository",
                 "apt",
+                "flatpak",
+                "flathub",
                 "update",
                 "软件源",
                 "镜像源",
