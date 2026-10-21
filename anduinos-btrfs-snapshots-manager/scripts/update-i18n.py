@@ -17,6 +17,7 @@ OTHER_CATALOGS = tuple(
 )
 
 NEW_TRANSLATIONS = {
+    "Safety snapshots are created before rollback so recovery can be reversed if it fails. After recovery succeeds, they are deleted along with all non-factory snapshots. Restart follows within 60 seconds.": "回滚前会创建安全快照，以便恢复失败时回退。恢复成功后，这些安全快照会与所有非出厂快照一并删除。准备完成后将在 60 秒内重启。",
     "Delete all snapshot history": "清除所有历史快照",
     "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points.": "同时恢复用户数据。恢复成功后删除所有非出厂快照；保留两个 New OS 出厂恢复点。",
     "Restore all users’ files and settings to their initial state.": "将所有用户的文件和设置恢复到初始状态。",
