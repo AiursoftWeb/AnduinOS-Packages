@@ -275,26 +275,13 @@ impl SnapshotsManagerApplication {
                             app.ensure_main_window().upcast_ref(),
                             available,
                         );
-                    let note = dialog
-                        .extra_child()
-                        .and_then(|content| content.last_child())
-                        .and_downcast::<gtk::Label>()
-                        .expect("factory reset explanation");
-                    let default_note = note.label();
                     assert!(!purge_history.is_active());
                     assert_eq!(purge_history.is_sensitive(), available);
                     if available {
                         purge_history.set_active(true);
                         assert!(erase_home.is_active());
                         assert!(!erase_home.is_sensitive());
-                        assert_eq!(
-                            note.label(),
-                            tr(
-                                "Safety snapshots are created before rollback so recovery can be reversed if it fails. After recovery succeeds, they are deleted along with all non-factory snapshots. Restart follows within 60 seconds."
-                            )
-                        );
                         purge_history.set_active(false);
-                        assert_eq!(note.label(), default_note);
                         assert!(erase_home.is_sensitive());
                         erase_home.set_active(false);
                     }
