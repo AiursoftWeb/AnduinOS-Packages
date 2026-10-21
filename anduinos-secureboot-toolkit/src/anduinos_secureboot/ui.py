@@ -26,6 +26,7 @@ def N_(value: str) -> str:
 
 _MESSAGES = {
     "secure-boot-enabled": N_("Motherboard Secure Boot is enabled."),
+    "secure-boot-prepared": N_("Preparation checks passed. Secure Boot is still disabled."),
     "secure-boot-disabled": N_("Secure Boot is disabled. You can still prepare certificates, drivers and the bootloader."),
     "firmware-unknown": N_("Secure Boot state could not be determined. Check again before changing trust."),
     "firmware-unsupported": N_("Secure Boot is not available in the current firmware or boot mode."),
@@ -61,11 +62,6 @@ _MESSAGES = {
     "unified-certificate-required": N_("Create a certificate that can sign both the bootloader and drivers first."),
     "certificate-enrollment-required": N_("The signing certificate must be enrolled first. Complete the certificate enrollment step above."),
     "driver-build-unavailable": N_("DKMS and the matching kernel headers are required. Check the driver build requirements."),
-    "next-boot-unverified": N_("The next boot entry and kernel have not been verified. Do not enable Secure Boot until the actual boot chain is checked."),
-    "firmware-trust-unverified": N_("Firmware trust for the next bootloader has not been verified."),
-    "boot-chain-untrusted": N_("The next bootloader is not verified as signed, trusted and deployed."),
-    "next-kernel-unverified": N_("The kernel selected for the next boot has not been verified."),
-    "next-drivers-unverified": N_("The drivers needed by the next kernel have not been verified."),
 }
 _ACTION_LABELS = {
     "prepare-identity": N_("Create Signing Certificate"),
@@ -75,15 +71,16 @@ _ACTION_LABELS = {
     "install-bootloader": N_("Install AnduinOS Bootloader"),
     "repair-bootloader": N_("Repair AnduinOS Bootloader"),
     "reboot-enroll": N_("Restart to Enroll Certificate"),
-    "firmware-setup": N_("Check Before Enabling Secure Boot"),
+    "firmware-setup": N_("Open Firmware Settings"),
     "refresh": N_("Check Again"),
     "show-firmware-help": N_("Firmware Help"),
     "show-boot-recovery": N_("Boot Recovery Help"),
 }
 _FIRMWARE_INSTRUCTIONS = N_(
-    "Secure Boot is configured in UEFI settings. Platform keys and the Microsoft third-party CA "
-    "are separate from your MOK certificate. Verify the actual bootloader, next kernel and required "
-    "drivers before enabling Secure Boot. Firmware wording varies by manufacturer.")
+    "Restart to UEFI settings, enable Secure Boot, then save your changes and start AnduinOS. "
+    "Firmware wording varies by manufacturer. Platform keys and the Microsoft third-party CA "
+    "are separate from your MOK certificate. The preparation checks shown here do not replace "
+    "a successful boot with Secure Boot enabled.")
 
 
 def restart_to_firmware_settings(run=subprocess.run) -> tuple[bool, str]:
@@ -224,6 +221,8 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
         if decision.next_row:
             result = next(r for r in decision.rows if r.id == decision.next_row)
             status.set_label(_("Next step:") + " " + text(result.reason))
+        elif decision.rows[0].reason == "secure-boot-prepared":
+            status.set_label(text("secure-boot-prepared"))
         else:
             status.set_label(_("No repairs are required by the checks shown above."))
         refresh_button.set_sensitive(not holder["busy"])

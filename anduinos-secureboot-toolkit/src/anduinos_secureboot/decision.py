@@ -100,42 +100,22 @@ def assess_action(action_id: str, facts: Facts) -> ActionDecision:
             blockers.append(Blocker("boot-recovery-required" if _broken_boot(facts)
                                     else "bootloader-unknown", "bootloader"))
     if action_id == "firmware-setup":
-        evidence = facts.next_boot
         if state.status is not SecureBootStatus.DISABLED or state.setup_mode is not False:
             blockers.append(Blocker("firmware-unavailable", "secure_boot"))
-        if not evidence or not evidence.loader_path or not evidence.kernel_release:
-            blockers.append(Blocker("next-boot-unverified", "secure_boot"))
-        else:
-            if evidence.firmware_trusted is not True:
-                blockers.append(Blocker("firmware-trust-unverified", "secure_boot"))
-            boot = state.grub
-            if (evidence.loader_trusted is not True or evidence.loader_source not in {"anduinos", "ubuntu"}
-                    or (evidence.loader_source == "anduinos" and (not boot or not boot.ready))):
-                blockers.append(Blocker("boot-chain-untrusted", "bootloader"))
-            if evidence.kernel_trusted is not True:
-                blockers.append(Blocker("next-kernel-unverified", "bootloader"))
-            if evidence.modules_trusted is not True:
-                blockers.append(Blocker("next-drivers-unverified", "drivers"))
+        # Use the same inspected preparation results as the visible rows.
+        # Optional migration from Ubuntu's bootloader is not a trust failure.
+        for result in _preparation_rows(facts):
+            if (result.tone in {"warning", "error"}
+                    and result.reason not in {"certificate-module-only", "bootloader-optional"}):
+                blockers.append(Blocker(result.reason, result.id))
     return ActionDecision(action_id, tuple(blockers))
 
 
-def decide(facts: Facts) -> PageDecision:
-    """Calculate all six rows together; old trust and a new identity are distinct."""
+def _preparation_rows(facts: Facts) -> tuple[RowDecision, ...]:
     state, identity, drivers, boot = (facts.secure_boot, facts.secure_boot.signing_identity,
                                      facts.dkms, facts.secure_boot.grub)
     def row(key, tone, reason, action=None):
         return RowDecision(key, tone, reason, assess_action(action, facts) if action else None)
-
-    if state.status is SecureBootStatus.UNKNOWN:
-        firmware = row("secure_boot", "warning", "firmware-unknown", "refresh")
-    elif not state.supported:
-        firmware = row("secure_boot", "neutral", "firmware-unsupported", "show-firmware-help")
-    elif state.setup_mode is True:
-        firmware = row("secure_boot", "warning", "platform-keys-missing", "show-firmware-help")
-    elif state.enabled:
-        firmware = row("secure_boot", "success", "secure-boot-enabled")
-    else:
-        firmware = row("secure_boot", "neutral", "secure-boot-disabled", "firmware-setup")
 
     if identity is None or identity.purpose == "unknown":
         certificate = row("certificate", "warning", "identity-unknown", "refresh")
@@ -203,6 +183,32 @@ def decide(facts: Facts) -> PageDecision:
         reason = ("bootloader-unsigned" if boot.signature != "valid" else
                   "bootloader-unenrolled" if boot.enrollment != "enrolled" else "bootloader-undeployed")
         loader = row("bootloader", "warning", reason, "repair-bootloader")
+
+    return certificate, permissions, trust, modules, loader
+
+
+def decide(facts: Facts) -> PageDecision:
+    """Calculate all six rows together; old trust and a new identity are distinct."""
+    state = facts.secure_boot
+    certificate, permissions, trust, modules, loader = _preparation_rows(facts)
+
+    def row(key, tone, reason, action=None):
+        return RowDecision(key, tone, reason, assess_action(action, facts) if action else None)
+
+    if state.status is SecureBootStatus.UNKNOWN:
+        firmware = row("secure_boot", "warning", "firmware-unknown", "refresh")
+    elif not state.supported:
+        firmware = row("secure_boot", "neutral", "firmware-unsupported", "show-firmware-help")
+    elif state.setup_mode is True:
+        firmware = row("secure_boot", "warning", "platform-keys-missing", "show-firmware-help")
+    elif not state.enabled and state.setup_mode is None:
+        firmware = row("secure_boot", "warning", "firmware-unknown", "refresh")
+    elif state.enabled:
+        firmware = row("secure_boot", "success", "secure-boot-enabled")
+    else:
+        action = assess_action("firmware-setup", facts)
+        firmware = RowDecision("secure_boot", "neutral",
+                               "secure-boot-prepared" if action.allowed else "secure-boot-disabled", action)
 
     rows = (firmware, certificate, permissions, trust, modules, loader)
     # Prefer a real fault over optional migration. Follow prerequisites rather

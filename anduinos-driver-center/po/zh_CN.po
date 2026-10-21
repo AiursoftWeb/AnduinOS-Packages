@@ -2197,3 +2197,15 @@ msgstr "无法确认已安装的 EFI 启动链是否受信任。请在重启前�
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "The AnduinOS bootloader is not installed. Installing it is recommended."
 msgstr "尚未安装 AnduinOS 引导加载程序。建议安装。"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Open Firmware Settings"
+msgstr "打开固件设置"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Preparation checks passed. Secure Boot is still disabled."
+msgstr "准备检查已通过。安全启动仍处于禁用状态。"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restart to UEFI settings, enable Secure Boot, then save your changes and start AnduinOS. Firmware wording varies by manufacturer. Platform keys and the Microsoft third-party CA are separate from your MOK certificate. The preparation checks shown here do not replace a successful boot with Secure Boot enabled."
+msgstr "重启进入 UEFI 设置，启用安全启动，然后保存更改并启动 AnduinOS。不同厂商的固件界面用语可能有所不同。平台密钥和 Microsoft 第三方 CA 与你的 MOK 证书相互独立。此处的准备检查不能替代启用安全启动后的成功启动验证。"
