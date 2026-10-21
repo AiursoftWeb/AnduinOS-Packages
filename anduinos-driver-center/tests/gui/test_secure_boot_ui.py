@@ -11,9 +11,9 @@ gi.require_version('Adw', '1')
 from gi.repository import Adw, Gtk, GLib
 from anduinos_secureboot import ui
 from anduinos_secureboot import enrollment
-from anduinos_secureboot.decision import Facts, NextBootEvidence
+from anduinos_secureboot.decision import Facts, NextBootEvidence, decide
 from anduinos_secureboot.identity import IdentityStatus
-from anduinos_secureboot.model import DkmsState, GrubState, SecureBootState
+from anduinos_secureboot.model import DkmsState, GrubState, SecureBootState, SecureBootStatus
 
 
 def widgets(widget):
@@ -57,18 +57,104 @@ class SecureBootPageTests(unittest.TestCase):
         return SecureBootState(**values)
 
     def page(self, state, translate=lambda value: value, next_boot=None):
-        return ui.create_secure_boot_page(initial_facts=Facts(state, DkmsState(),
-            drivers_checked=True, next_boot=next_boot), translate=translate)
+        facts = Facts(state, DkmsState(), drivers_checked=True, next_boot=next_boot)
+        page = ui.create_secure_boot_page(initial_facts=facts, translate=translate)
+        decision = decide(facts)
+        self.row_context = {row: (page, result, decision.next_row)
+                            for row, result in zip((w for w in widgets(page)
+                                if isinstance(w, Adw.ActionRow)), decision.rows)}
+        return page
 
     def row(self, page, title):
         return next(w for w in widgets(page) if isinstance(w, Adw.ActionRow) and w.get_title() == title)
 
     def button(self, row):
-        return next(w for w in widgets(row) if isinstance(w, Gtk.Button) and w.get_visible())
+        return next(w for w in widgets(row) if isinstance(w, Gtk.Button))
+
+    def primary(self, page):
+        return next(w for w in widgets(page) if isinstance(w, Gtk.Button)
+                    and w.has_css_class('suggested-action'))
+
+    def activate(self, row):
+        page, result, next_row = self.row_context[row]
+        if result.id == next_row and result.action and result.action.id != 'refresh':
+            self.primary(page).emit('clicked')
+        else:
+            self.button(row).emit('clicked')
+            if result.action and result.action.allowed:
+                dialog = next(w for w in Gtk.Window.list_toplevels()
+                              if isinstance(w, Adw.MessageDialog) and w.get_heading() == row.get_title())
+                dialog.response('action')
 
     def dialog(self, parent):
         return next(w for w in Gtk.Window.list_toplevels() if isinstance(w, Adw.MessageDialog)
                     and w.get_transient_for() is parent)
+
+    def test_missing_certificate_has_one_primary_action_and_no_duplicate_row_buttons(self):
+        identity = IdentityStatus(purpose='missing', enrollment='absent', key_present=False,
+                                  key_valid=False)
+        page = self.page(self.state(signing_identity=identity, grub=None))
+        buttons = [w for w in widgets(page) if isinstance(w, Gtk.Button) and w.get_visible()]
+        self.assertEqual(sum(w.get_label() == 'Create Signing Certificate' for w in buttons), 1)
+        self.assertEqual(sum(w.has_css_class('suggested-action') for w in buttons), 1)
+        self.assertTrue(all(w.get_label() is None
+                            for row in widgets(page) if isinstance(row, Adw.ActionRow)
+                            for w in widgets(row) if isinstance(w, Gtk.Button)))
+        parent = Adw.Window(content=page)
+        with patch.object(ui, 'run_action') as action:
+            self.activate(self.row(page, 'Local MOK Certificate'))
+            self.assertEqual(self.dialog(parent).get_default_response(), 'cancel')
+            action.assert_not_called()
+
+    def test_main_page_never_offers_two_recommended_operations(self):
+        from dataclasses import replace
+        healthy = self.state()
+        cases = (
+            (healthy, 0),
+            (replace(healthy, enabled=False, status=SecureBootStatus.DISABLED), 0),
+            (replace(healthy, enabled=False, status=SecureBootStatus.UNKNOWN), 0),
+            (replace(healthy, enabled=False, status=SecureBootStatus.UNSUPPORTED), 0),
+            (replace(healthy, grub=GrubState()), 1),
+            (replace(healthy, signing_identity=IdentityStatus(purpose='missing', enrollment='absent'),
+                     grub=GrubState()), 1),
+            (replace(healthy, signing_identity=replace(healthy.signing_identity, purpose='module-only'),
+                     grub=GrubState()), 1),
+            (replace(healthy, signing_identity=replace(healthy.signing_identity, enrollment='pending'),
+                     grub=GrubState()), 1),
+            (replace(healthy, signing_identity=replace(healthy.signing_identity, key_valid=False),
+                     grub=replace(healthy.grub, active_chain='untrusted')), 1),
+        )
+        for state, expected in cases:
+            with self.subTest(state=state):
+                page = self.page(state)
+                recommendations = [w for w in widgets(page) if isinstance(w, Gtk.Button)
+                                   and w.get_visible() and w.has_css_class('suggested-action')]
+                self.assertEqual(len(recommendations), expected)
+                # Inspection, failure, and independent fixes never become a second row action.
+                self.assertTrue(all(w.get_label() is None
+                                    for row in widgets(page) if isinstance(row, Adw.ActionRow)
+                                    for w in widgets(row) if isinstance(w, Gtk.Button)))
+
+    def test_warning_icon_explains_prerequisites_before_offering_a_repair(self):
+        state = self.state(signing_identity=IdentityStatus(purpose='module-only', enrollment='enrolled',
+            key_present=True, key_valid=True, defaults_ready=True), grub=GrubState())
+        page = self.page(state)
+        parent = Adw.Window(content=page)
+        icon = self.button(self.row(page, 'AnduinOS Bootloader'))
+        self.assertIn('both the bootloader and drivers', icon.get_tooltip_text())
+        with patch.object(ui, 'run_action') as action, patch.object(GLib, 'timeout_add') as delay:
+            icon.emit('clicked')
+            dialog = self.dialog(parent)
+            self.assertIn('both the bootloader and drivers', dialog.get_body())
+            self.assertEqual(dialog.get_response_label('action'), 'Create Signing Certificate')
+            self.assertEqual(dialog.get_default_response(), 'close')
+            action.assert_not_called()
+            delay.assert_not_called()
+            dialog.response('action')
+            confirmation = self.dialog(parent)
+            self.assertEqual(confirmation.get_default_response(), 'cancel')
+            self.assertTrue(confirmation.has_response('continue'))
+            action.assert_not_called()
 
     def test_bootloader_row_reports_signature_trust_and_deployment_separately(self):
         cases = (
@@ -85,8 +171,9 @@ class SecureBootPageTests(unittest.TestCase):
                 self.assertTrue(row.get_visible())
                 self.assertIn(text, row.get_subtitle())
                 self.assertTrue(any(isinstance(w, Gtk.Image) and w.has_css_class(css) for w in widgets(row)))
-                visible = [w for w in widgets(row) if isinstance(w, Gtk.Button) and w.get_visible()]
-                self.assertEqual([w.get_label() for w in visible], [expected] if expected else [])
+                self.assertEqual(self.primary(page).get_visible(), expected is not None)
+                if expected:
+                    self.assertEqual(self.primary(page).get_label(), expected)
                 action.assert_not_called()
 
     def test_bootloader_install_stays_clickable_but_explains_pending_enrollment(self):
@@ -97,12 +184,12 @@ class SecureBootPageTests(unittest.TestCase):
         button = self.button(self.row(page, 'AnduinOS Bootloader'))
         self.assertTrue(button.get_sensitive())
         with patch.object(ui, 'run_action') as action:
-            button.emit('clicked')
+            self.activate(self.row(page, 'AnduinOS Bootloader'))
             dialog = self.dialog(parent)
             self.assertIn('enrolled first', dialog.get_body())
             self.assertNotIn('not needed', dialog.get_body())
             self.assertFalse(dialog.has_response('continue'))
-            self.assertTrue(dialog.has_response('prerequisite'))
+            self.assertTrue(dialog.has_response('action'))
             action.assert_not_called()
 
     def test_pending_certificate_with_untrusted_esp_never_offers_restart_confirmation(self):
@@ -113,11 +200,11 @@ class SecureBootPageTests(unittest.TestCase):
         page = self.page(state)
         parent = Adw.Window(content=page)
         with patch.object(ui, 'run_action') as action:
-            self.button(self.row(page, 'Certificate Enrollment')).emit('clicked')
+            self.activate(self.row(page, 'Certificate Enrollment'))
             dialog = self.dialog(parent)
             self.assertFalse(dialog.has_response('reboot'))
             self.assertIn('before restarting', dialog.get_body())
-            self.assertEqual(self.button(self.row(page, 'AnduinOS Bootloader')).get_label(), 'Boot Recovery Help')
+            self.assertEqual(self.primary(page).get_label(), 'Boot Recovery Help')
             action.assert_not_called()
 
     def test_pending_enrollment_tutorial_plays_in_a_small_restart_dialog(self):
@@ -127,7 +214,7 @@ class SecureBootPageTests(unittest.TestCase):
         parent = Adw.Window(content=page, default_width=640, default_height=480)
         parent.present()
         with patch.object(ui, 'run_action') as action:
-            self.button(self.row(page, 'Certificate Enrollment')).emit('clicked')
+            self.activate(self.row(page, 'Certificate Enrollment'))
             dialog = self.dialog(parent)
             settle()
             tutorial = dialog.get_extra_child()
@@ -164,7 +251,7 @@ class SecureBootPageTests(unittest.TestCase):
         with (patch.object(enrollment.GdkPixbuf.PixbufAnimation, 'new_from_file',
                            side_effect=GLib.Error('Missing tutorial')),
               self.assertLogs(enrollment.__name__, level='WARNING')):
-            self.button(self.row(page, 'Certificate Enrollment')).emit('clicked')
+            self.activate(self.row(page, 'Certificate Enrollment'))
             settle()
         dialog = self.dialog(parent)
         self.assertIn('123456', dialog.get_body())
@@ -181,7 +268,7 @@ class SecureBootPageTests(unittest.TestCase):
         settle()
         with (patch.object(ui, 'run_action', return_value=(0, {'reboot_required': True})),
               patch.object(ui, 'collect_facts', return_value=Facts(state, DkmsState(), drivers_checked=True))):
-            self.button(self.row(page, 'Certificate Enrollment')).emit('clicked')
+            self.activate(self.row(page, 'Certificate Enrollment'))
             confirmation = self.dialog(parent)
             next(w for w in widgets(confirmation) if isinstance(w, Gtk.Button)
                  and w.get_label() == confirmation.get_response_label('continue')).emit('clicked')
@@ -210,7 +297,7 @@ class SecureBootPageTests(unittest.TestCase):
                                      for w in widgets(certificate)))
                 parent = Adw.Window(content=page)
                 with patch.object(ui, 'run_action') as action:
-                    self.button(self.row(page, 'AnduinOS Bootloader')).emit('clicked')
+                    self.activate(self.row(page, 'AnduinOS Bootloader'))
                     self.assertIn('signing key', self.dialog(parent).get_body())
                     action.assert_not_called()
                 parent.destroy()
@@ -247,7 +334,7 @@ class SecureBootPageTests(unittest.TestCase):
         page = self.page(self.state(grub=GrubState()))
         parent = Adw.Window(content=page)
         with patch.object(ui, 'run_action') as action, patch.object(GLib, 'timeout_add') as delay:
-            self.button(self.row(page, 'AnduinOS Bootloader')).emit('clicked')
+            self.activate(self.row(page, 'AnduinOS Bootloader'))
             self.dialog(parent).response('continue')
             self.assertTrue(any(isinstance(w, Adw.MessageDialog) and w.get_heading() == 'Working…'
                                 for w in Gtk.Window.list_toplevels()))
@@ -267,7 +354,7 @@ class SecureBootPageTests(unittest.TestCase):
                 identity = IdentityStatus(purpose=purpose, enrollment=enrollment, key_present=purpose != 'missing',
                     key_valid=True, managed=True, defaults_ready=defaults)
                 page = self.page(self.state(signing_identity=identity))
-                self.assertEqual(self.button(self.row(page, title)).get_label(), label)
+                self.assertEqual(self.primary(page).get_label(), label)
                 action.assert_not_called()
 
     def test_disabled_secure_boot_still_explained_during_migration(self):
@@ -282,7 +369,7 @@ class SecureBootPageTests(unittest.TestCase):
             purpose='module-only', enrollment='enrolled', key_present=True, key_valid=True)))
         parent = Adw.Window(content=page)
         with patch.object(ui, 'run_action') as action, patch.object(GLib, 'timeout_add') as delay:
-            self.button(self.row(page, 'Certificate Signing Purpose')).emit('clicked')
+            self.activate(self.row(page, 'Certificate Signing Purpose'))
             dialog = self.dialog(parent)
             self.assertEqual(dialog.get_default_response(), 'cancel')
             action.assert_not_called()
@@ -305,8 +392,8 @@ class SecureBootPageTests(unittest.TestCase):
                 parent = Adw.Window(content=page)
                 row = self.row(page, translate('Certificate Enrollment'))
                 self.assertIn(translate(ui._MESSAGES['certificate-pending']), row.get_subtitle())
-                self.assertEqual(self.button(row).get_label(), translate('Restart to Enroll Certificate'))
-                self.button(self.row(page, translate('AnduinOS Bootloader'))).emit('clicked')
+                self.assertEqual(self.primary(page).get_label(), translate('Restart to Enroll Certificate'))
+                self.activate(self.row(page, translate('AnduinOS Bootloader')))
                 self.assertIn(translate(ui._MESSAGES['certificate-enrollment-required']), self.dialog(parent).get_body())
                 parent.destroy()
 

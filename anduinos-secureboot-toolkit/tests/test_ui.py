@@ -22,6 +22,7 @@ class TrustPageTests(unittest.TestCase):
         self.rows, self.labels, self.all_buttons = {}, [], []
         def row(**kwargs):
             widget = Mock()
+            widget.get_title.return_value = kwargs['title']
             self.rows[kwargs['title']] = widget
             return widget
         def label(**kwargs):
@@ -81,9 +82,13 @@ class TrustPageTests(unittest.TestCase):
         return self.row(name).add_suffix.call_args_list[0].args[0]
 
     def click(self, name):
-        button = self.button(name)
-        args = button.connect.call_args.args
-        args[1](button)
+        decision = ui.decide(self.facts)
+        result = decision.rows[list(self.rows).index('translated:' + name)]
+        button = (self.all_buttons[-2] if result.id == decision.next_row
+                  and result.action and result.action.id != 'refresh' else self.button(name))
+        button.connect.call_args.args[1](button)
+        if button is not self.all_buttons[-2] and result.action and result.action.allowed:
+            self.respond('action')
 
     def respond(self, response):
         dialog = self.adw.MessageDialog.new.return_value
@@ -96,9 +101,8 @@ class TrustPageTests(unittest.TestCase):
         self.page(grub=GrubState())
         row = self.row('AnduinOS Bootloader')
         self.assertIn('recommended', row.set_subtitle.call_args.args[0])
-        row.add_suffix.call_args_list[1].args[0].set_from_icon_name.assert_called_with(
+        row.add_suffix.call_args_list[0].args[0].set_child.call_args.args[0].set_from_icon_name.assert_called_with(
             'dialog-warning-symbolic')
-        self.assertIn('Next step:', self.labels[-1].set_label.call_args.args[0])
         self.assertIn('recommended', self.labels[-1].set_label.call_args.args[0])
         self.click('AnduinOS Bootloader')
         self.action.assert_not_called()
@@ -142,13 +146,13 @@ class TrustPageTests(unittest.TestCase):
             row.set_visible.assert_called_with(True)
         self.click('AnduinOS Bootloader')
         self.action.assert_not_called()
-        self.adw.MessageDialog.new.assert_called_once()
+        self.assertTrue(self.adw.MessageDialog.new.called)
 
     def test_healthy_page_offers_no_repairs(self):
         self.page(next_boot=self.evidence())
         for name in ['Secure Boot', 'Local MOK Certificate', 'Certificate Signing Purpose',
                      'Certificate Enrollment', 'Third-party Drivers', 'AnduinOS Bootloader']:
-            self.button(name).set_visible.assert_called_with(False)
+            self.button(name).set_can_target.assert_called_with(False)
         self.assertIn('No repairs', self.labels[-1].set_label.call_args.args[0])
 
     def test_unsigned_own_grub_does_not_offer_enable_secure_boot(self):
@@ -168,7 +172,7 @@ class TrustPageTests(unittest.TestCase):
 
     def test_blocked_bootloader_button_still_allows_asking_what_to_do(self):
         self.page(signing_identity=replace(self.identity, purpose='module-only'), grub=GrubState())
-        self.button('AnduinOS Bootloader').set_visible.assert_called_with(True)
+        self.button('AnduinOS Bootloader').set_can_target.assert_called_with(True)
         self.button('AnduinOS Bootloader').set_sensitive.assert_called_with(True)
         self.click('AnduinOS Bootloader')
         self.assertIn('both the bootloader and drivers', self.adw.MessageDialog.new.call_args.args[2])
@@ -185,22 +189,25 @@ class TrustPageTests(unittest.TestCase):
         self.action.assert_not_called()
         self.thread.assert_not_called()
 
-    def test_blocked_action_navigation_focuses_its_actual_prerequisite(self):
+    def test_warning_details_offer_the_actual_prerequisite(self):
         self.page(signing_identity=replace(self.identity, enrollment='pending'), grub=GrubState())
         self.click('AnduinOS Bootloader')
-        self.respond('prerequisite')
-        self.button('Certificate Enrollment').grab_focus.assert_called_once()
+        self.respond('action')
+        self.assertIn('Restart Required', self.adw.MessageDialog.new.call_args.args[1])
+        self.reboot.assert_not_called()
         self.action.assert_not_called()
 
-    def test_enrollment_action_is_beside_the_enrollment_warning(self):
+    def test_enrollment_action_is_the_single_next_step(self):
         self.page(signing_identity=replace(self.identity, enrollment='absent'))
-        self.button('Certificate Enrollment').set_label.assert_called_with('translated:Submit Enrollment Request')
-        self.button('Certificate Enrollment').set_visible.assert_called_with(True)
+        self.all_buttons[-2].set_label.assert_called_with('translated:Submit Enrollment Request')
+        self.button('Certificate Enrollment').set_can_target.assert_called_with(True)
+        self.all_buttons[-2].set_visible.assert_called_with(True)
 
-    def test_pending_enrollment_reboot_is_beside_the_enrollment_warning(self):
+    def test_pending_enrollment_reboot_is_the_single_next_step(self):
         self.page(signing_identity=replace(self.identity, enrollment='pending'))
-        self.button('Certificate Enrollment').set_label.assert_called_with('translated:Restart to Enroll Certificate')
-        self.button('Certificate Enrollment').set_visible.assert_called_with(True)
+        self.all_buttons[-2].set_label.assert_called_with('translated:Restart to Enroll Certificate')
+        self.button('Certificate Enrollment').set_can_target.assert_called_with(True)
+        self.all_buttons[-2].set_visible.assert_called_with(True)
 
     def test_pending_enrollment_confirmation_contains_the_offline_tutorial(self):
         self.page(signing_identity=replace(self.identity, enrollment='pending'))
@@ -261,12 +268,13 @@ class TrustPageTests(unittest.TestCase):
         self.assertNotIn('not needed', self.adw.MessageDialog.new.call_args.args[2])
         self.assertIn('enrolled first', self.adw.MessageDialog.new.call_args.args[2])
 
-    def test_status_icon_remains_to_the_right_of_the_row_action(self):
+    def test_each_row_exposes_a_status_icon_with_explanation(self):
         self.page(signing_identity=replace(self.identity, purpose='module-only'), grub=GrubState())
         for row in self.rows.values():
             suffixes = [call.args[0] for call in row.add_suffix.call_args_list]
-            self.assertEqual(len(suffixes), 2)
-            self.assertIsNot(suffixes[0], suffixes[1])
+            self.assertEqual(len(suffixes), 1)
+            suffixes[0].set_child.assert_called_once()
+            self.assertTrue(suffixes[0].set_tooltip_text.call_args.args[0])
 
     def test_old_trust_does_not_claim_new_unenrolled_identity_is_established(self):
         self.page(signing_identity=replace(self.identity, enrollment='absent', defaults_ready=False),
