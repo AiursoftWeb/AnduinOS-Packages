@@ -43,11 +43,10 @@ class EraseDiskExecutionPlanTests(unittest.TestCase):
                             external_target=external,
                         )
                         execution = build_erase_disk_execution_plan(plan)
-                        expected_actions = [StorageAction.WRITE_BOOT_FILES]
-                        if external or firmware is Firmware.BIOS:
-                            expected_actions.append(
-                                StorageAction.WRITE_FALLBACK_BOOT_FILES
-                            )
+                        expected_actions = [
+                            StorageAction.WRITE_BOOT_FILES,
+                            StorageAction.WRITE_FALLBACK_BOOT_FILES,
+                        ]
                         if firmware is Firmware.UEFI:
                             expected_actions.append(StorageAction.UPDATE_NVRAM)
                         boot_writes = execution.write_set.operations[

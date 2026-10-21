@@ -1,4 +1,5 @@
 import unittest
+from itertools import product
 
 from helpers import (
     TEST_INVENTORY_DIGEST,
@@ -19,44 +20,35 @@ from installer_core.swap_policy import GIB
 
 
 class PlanningTests(unittest.TestCase):
-    def test_only_supported_external_uefi_erase_filesystems_get_portable_policy(self):
+    def test_uefi_erase_always_prepares_a_direct_fallback_on_its_new_esp(self):
         original = valid_plan()
-        for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):
-            for external, expected_fallback in ((False, False), (True, True)):
-                with self.subTest(
-                    filesystem=filesystem.value,
-                    external=external,
-                ):
-                    plan = build_plan(
-                        {
-                            "locale": "en_US.UTF-8",
-                            "keyboard": "us",
-                            "hostname": original.identity.hostname,
-                            "username": original.identity.username,
-                            "full_name": original.identity.full_name,
-                            "timezone": "UTC",
-                            "filesystem": filesystem.value,
-                        },
-                        original.storage.disk,
-                        PlatformProbe(
-                            Architecture.AMD64,
-                            Firmware.UEFI,
-                            SecureBoot.DISABLED,
-                        ),
-                        original.identity.password_hash,
-                        disk_binding=DiskTopologyBinding(
-                            original.storage.disk.stable_id,
-                            original.storage.disk.expected_size_bytes,
-                            TEST_TOPOLOGY_DIGEST,
-                            external=external,
-                        ),
-                        inventory_digest=TEST_INVENTORY_DIGEST,
-                    )
-                    self.assertEqual(plan.boot.external_target, external)
-                    self.assertEqual(
-                        plan.boot.install_fallback_path,
-                        expected_fallback,
-                    )
+        for architecture, filesystem, external, secure_boot in product(
+            Architecture, (Filesystem.BTRFS, Filesystem.EXT4), (False, True),
+            (SecureBoot.ENABLED, SecureBoot.DISABLED),
+        ):
+            with self.subTest(architecture=architecture, filesystem=filesystem,
+                              external=external, secure_boot=secure_boot):
+                plan = build_plan(
+                    {
+                        "locale": "en_US.UTF-8", "keyboard": "us",
+                        "hostname": original.identity.hostname,
+                        "username": original.identity.username,
+                        "full_name": original.identity.full_name,
+                        "timezone": "UTC", "filesystem": filesystem.value,
+                    },
+                    original.storage.disk,
+                    PlatformProbe(architecture, Firmware.UEFI, secure_boot),
+                    original.identity.password_hash,
+                    disk_binding=DiskTopologyBinding(
+                        original.storage.disk.stable_id,
+                        original.storage.disk.expected_size_bytes,
+                        TEST_TOPOLOGY_DIGEST, external=external,
+                    ),
+                    inventory_digest=TEST_INVENTORY_DIGEST,
+                    physical_memory_probe=lambda: 8 * GIB,
+                )
+                self.assertEqual(plan.boot.external_target, external)
+                self.assertTrue(plan.boot.install_fallback_path)
 
     def test_chinese_plan_selects_rime_and_mok_policy(self):
         original = valid_plan()

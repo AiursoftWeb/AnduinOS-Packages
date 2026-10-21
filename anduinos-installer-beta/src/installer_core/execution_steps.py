@@ -74,7 +74,7 @@ class DetectBootEnvironmentStep:
         context.log(
             "UEFI fallback bootloader: "
             + (
-                "enabled on the selected external disk"
+                "enabled on the selected disk"
                 if direct_nvram and context.plan.boot.install_fallback_path
                 else (
                     "preserved; no fallback write"

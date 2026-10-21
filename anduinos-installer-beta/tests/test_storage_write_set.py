@@ -1,4 +1,5 @@
 import unittest
+from itertools import product
 from dataclasses import replace
 
 from helpers import valid_plan
@@ -15,13 +16,16 @@ from installer_core.storage_write_set import (
 
 
 class StorageWriteSetTests(unittest.TestCase):
-    def test_external_uefi_portable_chain_uses_new_exclusive_esp(self):
-        for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):
-            with self.subTest(filesystem=filesystem.value):
+    def test_uefi_fallback_uses_only_the_new_exclusive_esp(self):
+        for architecture, filesystem, external in product(
+            Architecture, (Filesystem.BTRFS, Filesystem.EXT4), (False, True),
+        ):
+            with self.subTest(architecture=architecture, filesystem=filesystem, external=external):
                 write_set = build_erase_disk_write_set(
                     valid_plan(
                         filesystem=filesystem,
-                        external_target=True,
+                        architecture=architecture,
+                        external_target=external,
                     )
                 )
                 fallback = next(
@@ -50,20 +54,6 @@ class StorageWriteSetTests(unittest.TestCase):
                 self.assertEqual(fallback.target_id, esp_create.target_id)
                 self.assertEqual(fallback.target_id, esp_format.target_id)
                 self.assertEqual(esp_format.detail("filesystem"), "vfat")
-
-    def test_internal_uefi_never_declares_fallback_write(self):
-        for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):
-            with self.subTest(filesystem=filesystem.value):
-                write_set = build_erase_disk_write_set(
-                    valid_plan(filesystem=filesystem)
-                )
-                self.assertFalse(
-                    any(
-                        item.action
-                        is StorageAction.WRITE_FALLBACK_BOOT_FILES
-                        for item in write_set.operations
-                    )
-                )
 
     def test_btrfs_write_set_covers_current_amd64_layout(self):
         plan = valid_plan()
@@ -128,7 +118,7 @@ class StorageWriteSetTests(unittest.TestCase):
             if item.action is StorageAction.UPDATE_NVRAM
         )
         self.assertEqual(nvram.detail("loader"), boot.loader_path)
-        self.assertFalse(
+        self.assertTrue(
             any(
                 item.action is StorageAction.WRITE_FALLBACK_BOOT_FILES
                 for item in write_set.operations

@@ -80,9 +80,9 @@ def build_boot_commands(plan: InstallPlan, target: str) -> BootCommandPlan:
     # It authorizes InstallBootloaderStep to copy a narrowly defined direct
     # chain (shim -> GRUB, MokManager and grub.cfg, explicitly excluding
     # fb*.efi) from EFI/AnduinOS to EFI/BOOT after grub-install has completed
-    # and the signed files have been verified.  Internal, coexistence and
-    # manual installs never receive that post-install copy.  Do not turn the
-    # presence of this option into the portable-mode switch.
+    # and the signed files have been verified. Erase-disk installs own their
+    # new ESP; coexistence and manual installs preserve shared fallback files.
+    # Do not turn this option into the portable-mode switch.
     creates_nvram_entry = plan.platform.firmware is Firmware.UEFI
     if creates_nvram_entry:
         # An installed system must not rely on shim's removable-media
