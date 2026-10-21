@@ -508,11 +508,30 @@ def simulated_upgrade_count(output: str) -> int:
     return int(match.group(1))
 
 
-def _icon_path() -> Path:
-    installed = Path("/usr/share/anduinos-control-panel/icons/yast-upgrade.svg")
+def _icon_path(name="yast-upgrade.svg") -> Path:
+    installed = Path("/usr/share/anduinos-control-panel/icons") / name
     if installed.is_file():
         return installed
-    return Path(__file__).resolve().parents[2] / "resources/icons/yast-upgrade.svg"
+    return Path(__file__).resolve().parents[2] / "resources/icons" / name
+
+
+def _source_overview(icon_name, current):
+    overview = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16)
+    icon = Gtk.Image.new_from_file(str(_icon_path(icon_name)))
+    icon.set_pixel_size(64)
+    icon.set_valign(Gtk.Align.CENTER)
+    overview.append(icon)
+    source_info = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
+    source_info.set_valign(Gtk.Align.CENTER)
+    source_info.set_hexpand(True)
+    title = Gtk.Label(label=_("Current mirror"), xalign=0)
+    title.add_css_class("heading")
+    source_info.append(title)
+    address = Gtk.Label(label=current, wrap=True, halign=Gtk.Align.START, xalign=0)
+    address.add_css_class("dim-label")
+    source_info.append(address)
+    overview.append(source_info)
+    return overview, title, address
 
 
 class SoftwareSourceWindow(Adw.Window):
@@ -554,28 +573,15 @@ class SoftwareSourceWindow(Adw.Window):
         clamp.set_child(body)
 
         current = current_mirror()
-        overview = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=16)
-        icon = Gtk.Image.new_from_file(str(_icon_path()))
-        icon.set_pixel_size(64)
-        icon.set_valign(Gtk.Align.CENTER)
-        overview.append(icon)
-        source_info = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        source_info.set_valign(Gtk.Align.CENTER)
-        source_info.set_hexpand(True)
-        self.current_source_title = Gtk.Label(label=_("Current mirror"), xalign=0)
-        self.current_source_title.add_css_class("heading")
-        source_info.append(self.current_source_title)
-        self.current_source = Gtk.Label(
-            label=current,
+        self.source_overview, self.current_source_title, self.current_source = _source_overview(
+            "yast-upgrade.svg", current,
         )
-        self.current_source.add_css_class("dim-label")
-        self.current_source.set_wrap(True)
-        self.current_source.set_halign(Gtk.Align.START)
-        self.current_source.set_xalign(0)
-        source_info.append(self.current_source)
-        overview.append(source_info)
-        self.source_overview = overview
-        body.append(overview)
+        body.append(self.source_overview)
+        self.flathub_overview, self.flathub_source_title, self.flathub_current = _source_overview(
+            "gnome-software.svg", "…",
+        )
+        self.flathub_overview.set_visible(False)
+        body.append(self.flathub_overview)
 
         self.pages = Adw.ViewStack()
         switcher = Adw.ViewSwitcherTitle(stack=self.pages, title=_("Software Source"))
@@ -651,25 +657,19 @@ class SoftwareSourceWindow(Adw.Window):
             flatpak_page, "flatpak", "Flathub · " + _("Automatic"), "network-transmit-receive-symbolic",
         )
         flathub_group = Adw.PreferencesGroup()
-        self.flathub_current = Adw.ActionRow(title=_("Flathub software source"))
-        self.flathub_current.set_subtitle("…")
-        flathub_group.add(self.flathub_current)
+        flathub_row = Adw.ActionRow(title=_("Flathub software source"))
+        flathub_group.add(flathub_row)
         flatpak_page.append(flathub_group)
         self.flathub_fastest = Gtk.Button(label=_("  Switch to Fastest Mirror  ").strip())
         self.flathub_fastest.add_css_class("suggested-action")
         self.flathub_fastest.set_valign(Gtk.Align.CENTER)
         self.flathub_fastest.connect("clicked", lambda _button: self._measure_flathub(automatic=True))
-        self.flathub_current.add_suffix(self.flathub_fastest)
+        flathub_row.add_suffix(self.flathub_fastest)
 
         flatpak_advanced = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         self.pages.add_titled_with_icon(
             flatpak_advanced, "flatpak-advanced", "Flathub · " + _("Advanced"), "preferences-system-symbolic",
         )
-        advanced_flathub_group = Adw.PreferencesGroup()
-        self.flathub_advanced_current = Adw.ActionRow(title=_("Flathub software source"))
-        self.flathub_advanced_current.set_subtitle("…")
-        advanced_flathub_group.add(self.flathub_advanced_current)
-        flatpak_advanced.append(advanced_flathub_group)
         self._flathub_options = tuple(FLATHUB_SOURCES.values())
         self.flathub_dropdown = Gtk.DropDown.new_from_strings(
             [_("Custom address…"), *self._flathub_labels()]
@@ -718,6 +718,7 @@ class SoftwareSourceWindow(Adw.Window):
     def _source_page_changed(self, _stack, _property) -> None:
         flatpak_page = self.pages.get_visible_child_name().startswith("flatpak")
         self.source_overview.set_visible(not flatpak_page)
+        self.flathub_overview.set_visible(flatpak_page)
         if not self._busy:
             self.status.set_label("")
             self.status.set_visible(False)
@@ -736,15 +737,13 @@ class SoftwareSourceWindow(Adw.Window):
             GLib.idle_add(self._flathub_read_complete, uri)
 
     def _flathub_read_failed(self) -> bool:
-        self.flathub_current.set_subtitle(_("Could not read the Flathub source."))
-        self.flathub_advanced_current.set_subtitle(_("Could not read the Flathub source."))
+        self.flathub_current.set_label(_("Could not read the Flathub source."))
         self.output_expander.set_visible(True)
         return self._finish(_("✗ Operation failed: ") + _("Review Terminal Output for details."))
 
     def _flathub_read_complete(self, uri: str, message: str = "") -> bool:
         self._flathub_loaded = True
-        self.flathub_current.set_subtitle(uri or _("Flathub is not configured."))
-        self.flathub_advanced_current.set_subtitle(uri or _("Flathub is not configured."))
+        self.flathub_current.set_label(uri or _("Flathub is not configured."))
         known = uri.rstrip("/") in self._flathub_options
         self.flathub_custom.set_text(uri if uri and not known else "")
         self.flathub_dropdown.set_selected(
