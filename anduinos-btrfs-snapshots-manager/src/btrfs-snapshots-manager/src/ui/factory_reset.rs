@@ -62,6 +62,14 @@ pub(crate) fn confirmation(
     note.set_wrap(true);
     note.set_max_width_chars(60);
     note.add_css_class("dim-label");
+    let cleanup_note = note.clone();
+    purge_history.connect_toggled(move |check| {
+        cleanup_note.set_label(&if check.is_active() {
+            tr("Safety snapshots are created before rollback so recovery can be reversed if it fails. After recovery succeeds, they are deleted along with all non-factory snapshots. Restart follows within 60 seconds.")
+        } else {
+            tr("Safety snapshots are created before rollback. Restart follows within 60 seconds.")
+        });
+    });
     content.append(&note);
     dialog.set_extra_child(Some(&content));
     dialog.add_response("cancel", &tr("Cancel"));
