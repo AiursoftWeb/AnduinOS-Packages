@@ -65,7 +65,7 @@ pub(crate) fn confirmation(
     let cleanup_note = note.clone();
     purge_history.connect_toggled(move |check| {
         cleanup_note.set_label(&if check.is_active() {
-            tr("Safety snapshots are created before rollback so recovery can be reversed if it fails. After recovery succeeds, they are deleted along with all non-factory snapshots. Restart follows within 60 seconds.")
+            tr("All data will be erased and cannot be recovered.")
         } else {
             tr("Safety snapshots are created before rollback. Restart follows within 60 seconds.")
         });
