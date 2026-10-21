@@ -116,27 +116,12 @@ class LaunchTests(unittest.TestCase):
             )
         dialog = dialog_type.return_value
         response = dialog.connect.call_args.args[1]
-        with (
-            patch.object(app.threading, "Thread") as thread,
-            patch.object(app.subprocess, "run", return_value=Mock(
-                returncode=126, stderr="", stdout="",
-            )) as run,
-            patch.object(app.Adw.Toast, "new"),
-            patch.object(app.GLib, "idle_add", side_effect=lambda callback, *args: callback(*args)),
-        ):
+        with patch.object(app.subprocess, "Popen") as start:
             for name in ("cancel", "close", "unexpected"):
                 response(dialog, name)
-            thread.assert_not_called()
-            run.assert_not_called()
-            response(dialog, "install")
-            thread.return_value.start.assert_called_once()
-            thread.call_args.kwargs["target"]()
-        self.assertEqual(run.call_args.args[0], [
-            "/usr/bin/pkexec", "/usr/bin/apt-get", "install", "--yes", "simple-scan",
-        ])
-        self.assertFalse(run.call_args.kwargs.get("shell", False))
+            start.assert_not_called()
+        self.window._run_streaming_package_change.assert_not_called()
         self.window._launch.assert_not_called()
-        self.window._show_error.assert_called_once_with("Installation failed", "Authentication was cancelled.")
 
     def test_factory_reset_delegates_to_snapshots_manager_or_explains_support(self):
         with patch.object(app, "command_available", return_value=True):

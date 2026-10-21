@@ -94,6 +94,70 @@ def _install_style(display) -> None:
     )
 
 
+def _run_operation(parent, title, description, task, completed, failed, *, protect=True):
+    """Keep recovery writes visible; ordinary exports may be dismissed."""
+    window = Adw.Window(transient_for=parent, modal=protect, title=title,
+                        default_width=560, default_height=220)
+    window.set_deletable(not protect)
+    running = True
+    window.connect("close-request", lambda *_: running and protect)
+    guard = parent.connect("close-request", lambda *_: running) if protect else None
+    application = parent.get_application()
+    application.hold()
+    body = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=14)
+    body.append(Adw.HeaderBar())
+    heading = Gtk.Label(label=title, wrap=True)
+    heading.add_css_class("title-2")
+    body.append(heading)
+    body.append(Gtk.Label(label=description, wrap=True))
+    progress = Gtk.ProgressBar()
+    body.append(progress)
+    for child in (heading, heading.get_next_sibling(), progress):
+        child.set_margin_start(24)
+        child.set_margin_end(24)
+    progress.set_margin_bottom(24)
+    window.set_content(body)
+    window.present()
+
+    def pulse():
+        progress.pulse()
+        return GLib.SOURCE_CONTINUE
+
+    timer = GLib.timeout_add(100, pulse)
+
+    def finish(result, error):
+        nonlocal running
+        running = False
+        GLib.source_remove(timer)
+        if guard is not None:
+            parent.disconnect(guard)
+        window.close()
+        try:
+            if error is not None:
+                failed(str(error))
+            else:
+                completed(result)
+        finally:
+            application.release()
+        return GLib.SOURCE_REMOVE
+
+    def worker():
+        try:
+            result = task()
+        except Exception as error:
+            GLib.idle_add(finish, None, error)
+        else:
+            GLib.idle_add(finish, result, None)
+
+    # Allow GTK to render before the blocking recovery or export begins.
+    def start():
+        threading.Thread(target=worker, daemon=True).start()
+        return GLib.SOURCE_REMOVE
+
+    GLib.timeout_add(100, start)
+    return window
+
+
 class RescueWindow(Adw.ApplicationWindow):
     def __init__(self, application: Adw.Application):
         super().__init__(application=application)
@@ -952,25 +1016,15 @@ class FileBrowserPage(Gtk.Box):
         chooser.select_folder(self.parent_window, None, selected)
 
     def _export(self, entry: dict, destination: str) -> None:
-        self.status.set_icon_name("document-save-symbolic")
-        self.status.set_title(_("Copying rescued data"))
-        self.status.set_description(_("Keep the computer powered on until copying finishes."))
-        self.stack.set_visible_child_name("status")
-
-        def worker() -> None:
-            try:
-                exported = export_rescue_file(
-                    str(self.target.get("path") or ""),
-                    str(self.target.get("identity") or ""),
-                    str(entry.get("path") or ""),
-                    destination,
-                )
-            except Exception as error:
-                GLib.idle_add(self._failed, str(error))
-                return
-            GLib.idle_add(self._exported, exported)
-
-        threading.Thread(target=worker, daemon=True).start()
+        path = str(self.target.get("path") or "")
+        identity = str(self.target.get("identity") or "")
+        relative = str(entry.get("path") or "")
+        _run_operation(
+            self.parent_window, _("Copying rescued data"),
+            _("Keep the computer powered on until copying finishes."),
+            lambda: export_rescue_file(path, identity, relative, destination),
+            self._exported, self._failed, protect=False,
+        )
 
     def _exported(self, path: str) -> bool:
         dialog = Adw.MessageDialog(
@@ -1380,20 +1434,13 @@ class SnapshotPage(Gtk.Box):
         dialog.present()
 
     def _create(self, title: str) -> None:
-        self.status.set_icon_name("document-new-symbolic")
-        self.status.set_title(_("Creating system snapshot"))
-        self.status.set_description(_("Keep the computer powered on until this finishes."))
-        self.stack.set_visible_child_name("status")
-
-        def worker() -> None:
-            try:
-                create_rescue_snapshot(*self._target_identity(), title)
-            except Exception as error:
-                GLib.idle_add(self._failed, str(error))
-                return
-            GLib.idle_add(self.load)
-
-        threading.Thread(target=worker, daemon=True).start()
+        identity = self._target_identity()
+        _run_operation(
+            self.parent_window, _("Creating system snapshot"),
+            _("Keep the computer powered on until this finishes."),
+            lambda: create_rescue_snapshot(*identity, title),
+            lambda _result: self.load(), self._failed,
+        )
 
     def _restore_dialog(self, deployment: dict) -> None:
         protect = Gtk.CheckButton(label=_("Create a safety snapshot of the current system first"))
@@ -1423,22 +1470,13 @@ class SnapshotPage(Gtk.Box):
         dialog.present()
 
     def _restore(self, identifier: str, protect_current: bool) -> None:
-        self.status.set_icon_name("system-reboot-symbolic")
-        self.status.set_title(_("Restoring the offline system"))
-        self.status.set_description(_("Keep the computer powered on until recovery is complete."))
-        self.stack.set_visible_child_name("status")
-
-        def worker() -> None:
-            try:
-                restore_rescue_snapshot(
-                    *self._target_identity(), identifier, protect_current
-                )
-            except Exception as error:
-                GLib.idle_add(self._failed, str(error))
-                return
-            GLib.idle_add(self._restored)
-
-        threading.Thread(target=worker, daemon=True).start()
+        identity = self._target_identity()
+        _run_operation(
+            self.parent_window, _("Restoring the offline system"),
+            _("Keep the computer powered on until recovery is complete."),
+            lambda: restore_rescue_snapshot(*identity, identifier, protect_current),
+            lambda _result: self._restored(), self._failed,
+        )
 
     def _restored(self) -> bool:
         dialog = Adw.MessageDialog(

@@ -27,7 +27,7 @@ class OperationWindowTests(unittest.TestCase):
              patch('anduinos_driver_center.app.subprocess.Popen', side_effect=child):
             parent = DriverCenterWindow(app)
             try:
-                parent._run_update_action(Gtk.Button(), ['update', 'fixture'])
+                parent._run_action(Gtk.Button(), ['install-xbox'])
                 deadline = time.monotonic() + 5
                 while parent._operation_running and time.monotonic() < deadline:
                     GLib.MainContext.default().iteration(False)
@@ -40,6 +40,45 @@ class OperationWindowTests(unittest.TestCase):
                 self.assertLess(operation.progress.get_fraction(), 1.0)
                 operation.destroy()
             finally:
+                parent.destroy()
+
+    def test_xbox_install_is_visible_and_exclusive_until_the_helper_exits(self):
+        Gtk.init(); Adw.init()
+        app = Adw.Application(application_id='com.anduinos.XboxOperationTest')
+        app.register(None)
+        start = subprocess.Popen
+        commands = []
+        def child(command, **kwargs):
+            commands.append(command)
+            return start([sys.executable, '-u', '-c',
+                "import time; print('Building Xbox module', flush=True); time.sleep(.25); print('Module ready')"], **kwargs)
+        with patch.object(DriverCenterWindow, 'refresh'), \
+             patch('anduinos_driver_center.app.subprocess.Popen', side_effect=child):
+            parent = DriverCenterWindow(app)
+            operation = None
+            try:
+                button = Gtk.Button(label='Install Driver')
+                parent._run_action(button, ['install-xbox'])
+                operation = next(w for w in Gtk.Window.list_toplevels() if isinstance(w, OperationWindow))
+                self.assertTrue(parent.emit('close-request'))
+                self.assertTrue(operation.emit('close-request'))
+                parent._run_action(Gtk.Button(), ['repair-xbox'])
+                deadline = time.monotonic() + 5
+                while parent._operation_running and time.monotonic() < deadline:
+                    GLib.MainContext.default().iteration(False)
+                    time.sleep(.005)
+                self.assertFalse(parent._operation_running)
+                self.assertFalse(parent.emit('close-request'))
+                self.assertEqual(len(commands), 1)
+                self.assertEqual(commands[0][-1], 'install-xbox')
+                self.assertTrue(button.get_sensitive())
+                self.assertTrue(operation.close_button.get_sensitive())
+                self.assertEqual(operation.progress.get_fraction(), 1.0)
+                buffer = operation.log.get_buffer()
+                self.assertIn('Module ready', buffer.get_text(*buffer.get_bounds(), False))
+            finally:
+                if operation is not None:
+                    operation.destroy()
                 parent.destroy()
 
     def test_running_operation_prevents_close_then_releases_on_failure(self):
