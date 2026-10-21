@@ -62,6 +62,14 @@ def write_pe(path: Path, machine: int) -> None:
     path.write_bytes(data)
 
 
+def prepare_vendor(target: Path, suffix: str = "x64", machine: int = 0x8664) -> None:
+    vendor = target / "boot/efi/EFI/AnduinOS"
+    vendor.mkdir(parents=True, exist_ok=True)
+    for name in (f"shim{suffix}.efi", f"grub{suffix}.efi", f"mm{suffix}.efi"):
+        write_pe(vendor / name, machine)
+    (vendor / "grub.cfg").write_text("configfile /boot/grub/grub.cfg\n")
+
+
 GRUB_INSTALL_HELP = """
 --target=TARGET
 --recheck
@@ -135,62 +143,54 @@ class InstallBootloaderTests(unittest.TestCase):
                 _verify_signed_image(SignatureRunner(), image, 0x8664)
 
     def test_direct_portable_chain_excludes_nvram_registrar_and_matches_vendor(self):
+        for architecture, suffix, machine, boot_name in (
+            (Architecture.AMD64, "x64", 0x8664, "BOOTX64.EFI"),
+            (Architecture.ARM64, "aa64", 0xAA64, "BOOTAA64.EFI"),
+        ):
+            for external in (False, True):
+                with self.subTest(architecture=architecture, external=external), tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    prepare_vendor(target, suffix, machine)
+                    runner = FakeRunner()
+                    plan = valid_plan(architecture=architecture, external_target=external)
+                    with patch("installer_core.bootloader._verify_signed_image"):
+                        _deploy_portable_fallback(runner, target, plan)
+                        _verify_portable_fallback(runner, target, plan)
+                    vendor = target / "boot/efi/EFI/AnduinOS"
+                    fallback = target / "boot/efi/EFI/BOOT"
+                    for source, destination in (
+                        (f"shim{suffix}.efi", boot_name),
+                        (f"grub{suffix}.efi", f"grub{suffix}.efi"),
+                        (f"mm{suffix}.efi", f"mm{suffix}.efi"),
+                        ("grub.cfg", "grub.cfg"),
+                    ):
+                        self.assertEqual((fallback / destination).read_bytes(), (vendor / source).read_bytes())
+                    self.assertFalse((fallback / f"fb{suffix}.efi").exists())
+                    (fallback / f"grub{suffix}.efi").write_bytes(b"tampered")
+                    with self.assertRaisesRegex(RuntimeError, "does not match vendor payload"):
+                        _verify_portable_fallback(runner, target, plan)
+
+    def test_fallback_rejects_wrong_architecture_before_signature_commands(self):
         with tempfile.TemporaryDirectory() as directory:
-            target = Path(directory)
-            vendor = target / "boot/efi/EFI/AnduinOS"
-            vendor.mkdir(parents=True)
-            for name in ("shimx64.efi", "grubx64.efi", "mmx64.efi"):
-                write_pe(vendor / name, 0x8664)
-                with (vendor / name).open("ab") as stream:
-                    stream.write(name.encode())
-            (vendor / "grub.cfg").write_text(
-                "search --fs-uuid root; configfile /boot/grub/grub.cfg",
-                encoding="utf-8",
-            )
+            image = Path(directory) / "loader.efi"
+            write_pe(image, 0xAA64)
             runner = FakeRunner()
-            plan = valid_plan(external_target=True)
-
-            with patch(
-                "installer_core.bootloader._verify_signed_image"
-            ) as verify_signed:
-                _deploy_portable_fallback(runner, target, plan)
-                _verify_portable_fallback(runner, target, plan)
-
-            fallback = target / "boot/efi/EFI/BOOT"
-            self.assertEqual(
-                (fallback / "BOOTX64.EFI").read_bytes(),
-                (vendor / "shimx64.efi").read_bytes(),
-            )
-            self.assertEqual(
-                (fallback / "grubx64.efi").read_bytes(),
-                (vendor / "grubx64.efi").read_bytes(),
-            )
-            self.assertEqual(
-                (fallback / "mmx64.efi").read_bytes(),
-                (vendor / "mmx64.efi").read_bytes(),
-            )
-            self.assertEqual(
-                (fallback / "grub.cfg").read_bytes(),
-                (vendor / "grub.cfg").read_bytes(),
-            )
-            self.assertFalse((fallback / "fbx64.efi").exists())
-            # Three staged images, then three deployed images per verification.
-            self.assertEqual(verify_signed.call_count, 9)
-
-            (fallback / "grubx64.efi").write_bytes(b"tampered")
-            with self.assertRaisesRegex(
-                RuntimeError, "does not match vendor payload"
-            ):
-                _verify_portable_fallback(runner, target, plan)
-
-    def test_portable_chain_rejects_internal_disk_plan_before_writes(self):
-        with tempfile.TemporaryDirectory() as directory:
-            target = Path(directory)
-            runner = FakeRunner()
-            with self.assertRaisesRegex(RuntimeError, "not authorized"):
-                _deploy_portable_fallback(runner, target, valid_plan())
-            self.assertFalse((target / "boot/efi/EFI/BOOT").exists())
+            with self.assertRaisesRegex(RuntimeError, "wrong architecture"):
+                _verify_signed_image(runner, image, 0x8664)
             self.assertEqual(runner.commands, [])
+
+    def test_portable_chain_rejects_shared_esp_plans_before_writes(self):
+        for plan, _inventory in (guided_plan(), manual_plan()):
+            with self.subTest(mode=plan.storage.mode), tempfile.TemporaryDirectory() as directory:
+                target = Path(directory)
+                sentinel = target / "boot/efi/EFI/BOOT/BOOTX64.EFI"
+                sentinel.parent.mkdir(parents=True)
+                sentinel.write_bytes(b"another-system")
+                runner = FakeRunner()
+                with self.assertRaisesRegex(RuntimeError, "not authorized"):
+                    _deploy_portable_fallback(runner, target, plan)
+                self.assertEqual(sentinel.read_bytes(), b"another-system")
+                self.assertEqual(runner.commands, [])
 
     def test_arm64_portable_chain_uses_standard_filenames(self):
         plan = valid_plan(
@@ -220,7 +220,13 @@ class InstallBootloaderTests(unittest.TestCase):
 
         internal = InstallBootloaderStep(FakeRunner())
         internal.preflight(InstallContext(valid_plan(), lambda _message: None))
-        self.assertEqual(internal.runner.required, [])
+        self.assertEqual(
+            internal.runner.required, ["openssl", "sbattach", "sbverify"]
+        )
+        for plan, _inventory in (guided_plan(), manual_plan()):
+            shared = InstallBootloaderStep(FakeRunner())
+            shared.preflight(InstallContext(plan, lambda _message: None))
+            self.assertEqual(shared.runner.required, [])
 
     def compatible_runner(self, target: Path) -> FakeRunner:
         runner = FakeRunner()
@@ -243,7 +249,7 @@ class InstallBootloaderTests(unittest.TestCase):
         )
         return runner
 
-    def test_external_execute_publishes_fallback_and_keeps_vendor_nvram(self):
+    def test_internal_execute_publishes_fallback_and_keeps_vendor_nvram(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             prepare_target(target)
@@ -256,7 +262,7 @@ class InstallBootloaderTests(unittest.TestCase):
             )
             runner = self.compatible_runner(target)
             context = InstallContext(
-                valid_plan(external_target=True),
+                valid_plan(),
                 lambda _message: None,
                 erase_context_values(target),
             )
@@ -325,11 +331,13 @@ class InstallBootloaderTests(unittest.TestCase):
             runner.commands,
         )
 
-    def test_runs_dracut_before_grub_install_and_update_grub_last(self):
+    @patch("installer_core.bootloader._verify_signed_image")
+    def test_runs_dracut_before_grub_install_and_update_grub_last(self, _verify_signature):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             runner = self.compatible_runner(target)
             prepare_target(target)
+            prepare_vendor(target)
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
@@ -474,11 +482,13 @@ class InstallBootloaderTests(unittest.TestCase):
                     Filesystem.XFS,
                 )
 
-    def test_verifies_matching_kernel_grub_bios_and_efi_artifacts(self):
+    @patch("installer_core.bootloader._verify_signed_image")
+    def test_verifies_matching_kernel_grub_bios_and_efi_artifacts(self, _verify_signature):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             runner = self.compatible_runner(target)
             prepare_target(target)
+            prepare_vendor(target)
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
@@ -497,7 +507,7 @@ class InstallBootloaderTests(unittest.TestCase):
             bios.mkdir()
             (bios / "normal.mod").touch()
             vendor = target / "boot/efi/EFI/AnduinOS/shimx64.efi"
-            vendor.parent.mkdir(parents=True)
+            vendor.parent.mkdir(parents=True, exist_ok=True)
             write_pe(vendor, 0x8664)
             runner.outputs[
                 ("chroot", str(target), "dpkg", "--print-architecture")
@@ -518,11 +528,13 @@ class InstallBootloaderTests(unittest.TestCase):
                     context, runner, (target / "boot/grub/grub.cfg").read_text()
                 )
 
-    def test_rejects_kernel_without_matching_initramfs(self):
+    @patch("installer_core.bootloader._verify_signed_image")
+    def test_rejects_kernel_without_matching_initramfs(self, _verify_signature):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             runner = self.compatible_runner(target)
             prepare_target(target)
+            prepare_vendor(target)
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
@@ -534,11 +546,13 @@ class InstallBootloaderTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "matching Dracut initrd"):
                 step.verify(context)
 
-    def test_rejects_wrong_efi_machine(self):
+    @patch("installer_core.bootloader._verify_signed_image")
+    def test_rejects_wrong_efi_machine(self, _verify_signature):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             runner = self.compatible_runner(target)
             prepare_target(target)
+            prepare_vendor(target)
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
@@ -556,7 +570,7 @@ class InstallBootloaderTests(unittest.TestCase):
             bios.mkdir()
             (bios / "normal.mod").touch()
             vendor = target / "boot/efi/EFI/AnduinOS/shimx64.efi"
-            vendor.parent.mkdir(parents=True)
+            vendor.parent.mkdir(parents=True, exist_ok=True)
             write_pe(vendor, 0xAA64)
             runner.outputs[
                 ("chroot", str(target), "lsinitrd", "-m", "/boot/initrd.img-test")

@@ -205,7 +205,7 @@ class EnvironmentReportingTests(unittest.TestCase):
         step.preflight(context)
         step.execute(context)
         self.assertIn(
-            "UEFI fallback bootloader: enabled on the selected external disk",
+            "UEFI fallback bootloader: enabled on the selected disk",
             "\n".join(logs),
         )
 

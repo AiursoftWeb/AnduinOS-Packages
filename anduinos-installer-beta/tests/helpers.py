@@ -122,10 +122,7 @@ def valid_plan(
         ),
         swap=SwapSpec(),
         boot=BootSpec(
-            install_fallback_path=(
-                firmware is Firmware.BIOS
-                or (firmware is Firmware.UEFI and external_target)
-            ),
+            install_fallback_path=True,
             external_target=external_target,
             mok_password_policy=mok_policy,
         ),

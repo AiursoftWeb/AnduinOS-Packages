@@ -60,7 +60,6 @@ class InstallBootloaderStep:
         context.validate_plan()
         if (
             context.plan.platform.firmware is Firmware.UEFI
-            and context.plan.boot.external_target
             and context.plan.boot.install_fallback_path
         ):
             self.runner.require_commands(("openssl", "sbattach", "sbverify"))
@@ -448,10 +447,12 @@ def _deploy_portable_fallback(
     """Deploy the installer-owned portable chain, never GRUB's fallback set.
 
     All UEFI ``grub-install`` calls intentionally use
-    ``--no-extra-removable``, even for an external erase-disk plan.  Allowing
+    ``--no-extra-removable``, even for an erase-disk plan.  Allowing
     grub-install to manage EFI/BOOT can install shim's ``fb*.efi`` NVRAM
     registrar and reproduce the ResetSystem loop tracked by issue #422.
-    Portable mode is instead expressed by ``install_fallback_path`` and lands
+    The new, exclusive ESP in an erase-disk plan can safely receive this chain
+    on either an internal or external disk. Shared ESPs must remain untouched.
+    This intent is expressed by ``install_fallback_path`` and lands
     here after the vendor chain exists.  The copied chain boots shim directly,
     retains MokManager, excludes the registrar, and is verified below.
 
@@ -461,7 +462,6 @@ def _deploy_portable_fallback(
 
     if (
         plan.storage.mode is not InstallMode.ERASE_DISK
-        or not plan.boot.external_target
         or not plan.boot.install_fallback_path
     ):
         raise RuntimeError("Portable fallback is not authorized for this plan")

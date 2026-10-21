@@ -65,34 +65,19 @@ class ValidationTests(unittest.TestCase):
     def test_valid_uefi_without_secure_boot_support(self):
         validate_plan(valid_plan(secure_boot=SecureBoot.UNSUPPORTED))
 
-    def test_uefi_erase_install_rejects_shared_fallback_policy(self):
-        plan = valid_plan()
-        plan = dataclasses.replace(
-            plan,
-            boot=dataclasses.replace(
-                plan.boot,
-                install_fallback_path=True,
-            ),
-        )
-        with self.assertRaisesRegex(
-            PlanValidationError, "fallback policy must match external-drive status"
-        ):
-            validate_plan(plan)
-
-    def test_external_uefi_erase_requires_portable_fallback(self):
-        plan = valid_plan(external_target=True)
-        validate_plan(plan)
-        missing = dataclasses.replace(
-            plan,
-            boot=dataclasses.replace(
-                plan.boot,
-                install_fallback_path=False,
-            ),
-        )
-        with self.assertRaisesRegex(
-            PlanValidationError, "fallback policy must match external-drive status"
-        ):
-            validate_plan(missing)
+    def test_uefi_erase_requires_fallback_on_internal_and_external_disks(self):
+        for architecture in Architecture:
+            for external in (False, True):
+                with self.subTest(architecture=architecture, external=external):
+                    plan = valid_plan(architecture=architecture, external_target=external)
+                    validate_plan(plan)
+                    missing = dataclasses.replace(
+                        plan, boot=dataclasses.replace(plan.boot, install_fallback_path=False),
+                    )
+                    with self.assertRaisesRegex(
+                        PlanValidationError, "must retain the direct EFI fallback",
+                    ):
+                        validate_plan(missing)
 
     def test_bios_erase_install_requires_portable_uefi_fallback(self):
         plan = valid_plan(

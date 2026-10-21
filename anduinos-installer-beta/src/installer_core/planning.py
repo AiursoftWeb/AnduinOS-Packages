@@ -134,7 +134,6 @@ def build_plan(
                 or (
                     platform.firmware is Firmware.UEFI
                     and storage.mode is InstallMode.ERASE_DISK
-                    and disk_binding.external
                 )
             ),
             external_target=disk_binding.external,

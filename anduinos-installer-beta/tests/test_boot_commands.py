@@ -32,7 +32,7 @@ class BootCommandPlanTests(unittest.TestCase):
         self.assertIn("--no-extra-removable", commands.installs[1])
         self.assertIn("--no-nvram", commands.installs[1])
         self.assertIn("--uefi-secure-boot", commands.installs[1])
-        self.assertEqual(commands.efi_fallback, "")
+        self.assertEqual(commands.efi_fallback, "EFI/BOOT/BOOTX64.EFI")
         self.assertEqual(
             commands.loader_path, r"\EFI\AnduinOS\shimx64.efi"
         )
@@ -74,7 +74,7 @@ class BootCommandPlanTests(unittest.TestCase):
         self.assertEqual(len(commands.installs), 1)
         self.assertIn("--target=arm64-efi", commands.installs[0])
         self.assertNotIn("--target=i386-pc", commands.installs[0])
-        self.assertEqual(commands.efi_fallback, "")
+        self.assertEqual(commands.efi_fallback, "EFI/BOOT/BOOTAA64.EFI")
         self.assertIn("--no-extra-removable", commands.installs[0])
         self.assertEqual(
             commands.loader_path, r"\EFI\AnduinOS\shimaa64.efi"
