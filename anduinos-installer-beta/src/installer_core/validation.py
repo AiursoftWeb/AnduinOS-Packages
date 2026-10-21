@@ -189,35 +189,10 @@ def validate_plan(
             errors.append("ESP replacement requires a reused UEFI ESP")
     if type(plan.boot.external_target) is not bool:
         errors.append("External-target policy must be boolean")
-    elif (
-        plan.storage.mode is InstallMode.ERASE_DISK
-        and platform.firmware is Firmware.UEFI
-        and not plan.boot.install_fallback_path
-    ):
-        errors.append(
-            "UEFI erase-disk installs must retain the direct EFI fallback path"
-        )
-    elif (
-        plan.storage.mode is InstallMode.ERASE_DISK
-        and platform.firmware is Firmware.BIOS
-        and not plan.boot.install_fallback_path
-    ):
-        errors.append(
-            "Legacy BIOS erase-disk installs must retain the portable UEFI "
-            "fallback path"
-        )
-    elif (
-        plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
-        and plan.boot.install_fallback_path
-    ):
-        errors.append(
-            "Install alongside must not write the shared EFI fallback path"
-        )
-    elif (
-        plan.storage.mode is InstallMode.MANUAL
-        and plan.boot.install_fallback_path
-    ):
-        errors.append("Manual mode must not write the EFI fallback path")
+    graph = plan.storage.graph
+    if graph is not None and len(graph.boot_targets) == 1:
+        if plan.boot.install_fallback_path != graph.creates_esp:
+            errors.append("EFI fallback is required only for a newly created ESP")
 
     identity = plan.identity
     if identity.username in RESERVED_USERNAMES:

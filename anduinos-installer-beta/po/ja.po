@@ -2015,3 +2015,7 @@ msgstr "{path} の EFI/AnduinOS を置き換えます。古いブートファイ
 
 msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
 msgstr "{path} にはすでに AnduinOS のブートファイルが含まれています。続行すると、新しいインストール環境を起動するために EFI/AnduinOS が置き換えられます。Windows や他のシステムのブートファイルは保持され、この ESP はフォーマットされません。\n\nこの置き換えによって古いシステムのパーティションが削除されることはありませんが、既存のブートエントリーから古い AnduinOS を起動できなくなる可能性があります。両方のインストール環境を保持するには、戻って別の ESP（512 MiB 以上）を作成してください。置き換えの前に古いブートファイルがバックアップされます。"
+
+#: src/pages.py
+msgid "Create fallback boot chain"
+msgstr "フォールバックブートチェーンを作成"

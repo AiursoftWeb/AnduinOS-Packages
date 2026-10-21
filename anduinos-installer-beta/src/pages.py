@@ -7508,6 +7508,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             "Verify kernel module signatures", lang
         ),
         "install-bootloader": _("Install bootloader", lang),
+        "create-fallback-boot-chain": _("Create fallback boot chain", lang),
         "enroll-secure-boot": _("Schedule MOK enrollment", lang),
         "check-other-disk-systems": _(
             "Check for Windows installations", lang

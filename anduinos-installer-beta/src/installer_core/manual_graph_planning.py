@@ -32,6 +32,7 @@ from .storage_graph import (
     StorageGraphOperation,
     SubvolumeDeclaration,
 )
+from .storage_graph_planning import with_new_esp_fallback
 from .storage_inventory import (
     DiskInventory,
     DiskTopologyBinding,
@@ -322,7 +323,7 @@ def build_manual_storage_graph(
             StorageGraphOperation(StorageGraphAction.UPDATE_NVRAM, esp_id),
         )
     )
-    return StorageGraph(
+    graph = StorageGraph(
         schema_version=STORAGE_GRAPH_SCHEMA_VERSION,
         mode=StorageGraphMode.MANUAL,
         inventory_digest=inventory_digest,
@@ -344,6 +345,7 @@ def build_manual_storage_graph(
         operations=tuple(operations),
         requested_capabilities=tuple(capabilities),
     )
+    return with_new_esp_fallback(graph, plan.platform.architecture)
 
 
 def validate_manual_graph_structure(
@@ -396,15 +398,13 @@ def validate_manual_graph_structure(
     boot = graph.boot_targets[0]
     if (
         boot.bios_disk_reference_id
-        or boot.fallback_path
         or boot.vendor_directory != "EFI/AnduinOS"
     ):
         raise ManualStorageGraphError(
-            "Manual boot target must use vendor-only UEFI writes"
+            "Manual boot target must use its UEFI vendor directory"
         )
     forbidden = {
         StorageGraphAction.WRITE_BIOS_BOOTLOADER,
-        StorageGraphAction.WRITE_FALLBACK_BOOT_FILES,
     }
     if any(item.action in forbidden for item in graph.operations):
         raise ManualStorageGraphError(

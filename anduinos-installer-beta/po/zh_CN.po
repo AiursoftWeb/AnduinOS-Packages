@@ -2016,3 +2016,7 @@ msgstr "将替换 {path} 上的 EFI/AnduinOS。旧启动文件将会备份；之
 
 msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
 msgstr "{path} 已包含 AnduinOS 启动文件。继续操作将替换 EFI/AnduinOS，以启动新安装。Windows 和其他系统的启动文件将予以保留；此 ESP 不会被格式化。\n\n此次替换不会删除旧系统分区，但旧版 AnduinOS 可能无法再通过现有启动项启动。若要保留两个安装，请返回并创建一个独立的 ESP（至少 512 MiB）。替换前将备份旧启动文件。"
+
+#: src/pages.py
+msgid "Create fallback boot chain"
+msgstr "创建后备启动链"

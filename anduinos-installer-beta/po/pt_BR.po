@@ -2016,3 +2016,7 @@ msgstr "EFI/AnduinOS em {path} será substituído. Os arquivos de inicializaçã
 
 msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
 msgstr "{path} já contém arquivos de inicialização do AnduinOS. Se você continuar, EFI/AnduinOS será substituído para iniciar a nova instalação. Os arquivos de inicialização do Windows e de outros sistemas serão preservados; esta ESP não será formatada.\n\nEssa substituição não exclui a partição do sistema antigo, mas talvez não seja mais possível iniciar o AnduinOS antigo pela entrada de inicialização existente. Para manter as duas instalações, volte e crie uma ESP separada (com pelo menos 512 MiB). Os arquivos de inicialização antigos serão salvos em backup antes da substituição."
+
+#: src/pages.py
+msgid "Create fallback boot chain"
+msgstr "Criar cadeia de inicialização de fallback"

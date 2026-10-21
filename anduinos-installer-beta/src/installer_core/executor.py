@@ -7,7 +7,7 @@ from pathlib import Path
 
 from .command import CommandRunner
 from .chroot_env import EnterChrootStep, LeaveChrootStep
-from .bootloader import InstallBootloaderStep
+from .bootloader import CreateFallbackBootChainStep, InstallBootloaderStep
 from .secure_boot import (
     EnrollSecureBootStep,
     PrepareSecureBootStep,
@@ -130,9 +130,11 @@ class InstallerExecutor:
             (
                 VerifyDkmsSignaturesStep(self.runner),
                 InstallBootloaderStep(self.runner),
-                EnrollSecureBootStep(self.runner),
             )
         )
+        if plan.platform.firmware is Firmware.UEFI and plan.boot.install_fallback_path:
+            steps.append(CreateFallbackBootChainStep(self.runner))
+        steps.append(EnrollSecureBootStep(self.runner))
         if plan.platform.firmware is Firmware.UEFI:
             steps.append(CheckOtherDiskSystemsStep(self.runner))
             steps.append(CheckLinuxSystemsStep(self.runner))
