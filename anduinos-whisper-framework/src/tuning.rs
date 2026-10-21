@@ -683,36 +683,30 @@ mod tests {
         .unwrap();
         assert_ne!(second, environment_fingerprint(&model, "sample", &worker));
     }
-    #[test]
-    fn selector_cache_generation_manual_path_and_failure_memory() {
-        let directory = tempfile::tempdir().unwrap();
-        let (t, calls) = tuner(Behavior::default());
-        let mut selector = AutomaticSelector::new(
+    fn selector_at(path: &Path, behavior: Behavior) -> (AutomaticSelector<Fake>, Rc<Cell<usize>>) {
+        let (tuner, calls) = tuner(behavior);
+        let selector = AutomaticSelector::new(
             Path::new("data/benchmark"),
             SelectionCache {
-                path: directory.path().join("performance.json"),
+                path: path.to_owned(),
                 measurements: vec![],
             },
-            t,
+            tuner,
         );
+        (selector, calls)
+    }
+
+    #[test]
+    fn settings_changes_and_service_restart_reuse_cached_selection() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("performance.json");
+        let (mut selector, calls) = selector_at(&path, Behavior::default());
         let cancel = AtomicBool::new(false);
         let choice = selector
             .select(&config(), &cancel, false, 0, || {}, FULL_BUDGET)
             .unwrap();
-        assert_eq!(selector.status, "measured");
         let measured_calls = calls.get();
-        selector
-            .select(
-                &config(),
-                &cancel,
-                false,
-                0,
-                || panic!("cached selection must not announce measurement"),
-                FULL_BUDGET,
-            )
-            .unwrap();
-        assert_eq!(calls.get(), measured_calls);
-        assert!(selector.measurements.is_empty());
+        assert!(measured_calls > 0);
         let mut changed = config();
         changed.model = directory.path().join("another-model");
         changed.language = "zh-Hans".into();
@@ -731,38 +725,68 @@ mod tests {
         assert_eq!(selected.threads, 1);
         assert!(!selector.preview_allowed);
         assert_eq!(calls.get(), measured_calls);
-        let (fresh_tuner, fresh_calls) = tuner(Behavior::default());
-        let mut restarted = AutomaticSelector::new(
-            Path::new("data/benchmark"),
-            SelectionCache {
-                path: selector.cache.path.clone(),
-                measurements: vec![],
-            },
-            fresh_tuner,
+        let (mut restarted, fresh_calls) = selector_at(&path, Behavior::default());
+        assert_eq!(
+            restarted
+                .select(
+                    &config(),
+                    &cancel,
+                    false,
+                    0,
+                    || panic!("service restart must reuse selection"),
+                    QUICK_BUDGET,
+                )
+                .unwrap(),
+            choice
         );
-        restarted
+        assert_eq!(restarted.status, "cached");
+        assert!(restarted.measurements.is_empty());
+        assert_eq!(fresh_calls.get(), 0);
+    }
+
+    #[test]
+    fn explicit_retest_ignores_cached_selection() {
+        let directory = tempfile::tempdir().unwrap();
+        let (mut selector, calls) = selector_at(
+            &directory.path().join("performance.json"),
+            Behavior::default(),
+        );
+        let cancel = AtomicBool::new(false);
+        selector
+            .select(&config(), &cancel, false, 0, || {}, FULL_BUDGET)
+            .unwrap();
+        let measured_calls = calls.get();
+        selector
             .select(
                 &config(),
                 &cancel,
                 false,
                 0,
-                || panic!("service restart must reuse selection"),
+                || panic!("cached selection must not announce measurement"),
                 QUICK_BUDGET,
             )
             .unwrap();
-        assert_eq!(fresh_calls.get(), 0);
+        assert_eq!(calls.get(), measured_calls);
         selector
             .select(&config(), &cancel, true, 1, || {}, FULL_BUDGET)
             .unwrap();
+        assert_eq!(selector.status, "measured");
         assert!(calls.get() > measured_calls);
+    }
+
+    #[test]
+    fn manual_backend_and_cancellation_do_not_measure() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("performance.json");
+        let (mut selector, calls) = selector_at(&path, Behavior::default());
         let mut manual = config();
         manual.backend = "cpu".into();
         selector
             .select(
                 &manual,
-                &cancel,
+                &AtomicBool::new(false),
                 false,
-                1,
+                0,
                 || panic!("manual selection must not benchmark"),
                 QUICK_BUDGET,
             )
@@ -770,64 +794,74 @@ mod tests {
         assert_eq!(selector.status, "manual");
         assert!(selector.measurements.is_empty());
         assert!(!selector.preview_allowed);
-        assert_eq!(
-            selector.select(
-                &manual,
-                &AtomicBool::new(true),
+        for config in [manual, config()] {
+            assert_eq!(
+                selector.select(
+                    &config,
+                    &AtomicBool::new(true),
+                    false,
+                    0,
+                    || panic!("cancelled selection must not benchmark"),
+                    QUICK_BUDGET
+                ),
+                Err(WorkerError::Cancelled)
+            );
+        }
+        assert_eq!(calls.get(), 0);
+        assert!(!path.exists());
+    }
+
+    #[test]
+    fn failed_probe_survives_restart_and_explicit_retest_can_retry() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("performance.json");
+        let (mut selector, calls) = selector_at(
+            &path,
+            Behavior {
+                error: true,
+                ..Behavior::default()
+            },
+        );
+        let cancel = AtomicBool::new(false);
+        let fallback = selector
+            .select(&config(), &cancel, false, 0, || {}, QUICK_BUDGET)
+            .unwrap();
+        assert_eq!(selector.status, "fallback");
+        assert_eq!(fallback.backend, "cpu");
+        let failed_calls = calls.get();
+        assert!(failed_calls > 0);
+        selector
+            .select(
+                &config(),
+                &cancel,
                 false,
                 0,
-                || {},
-                QUICK_BUDGET
-            ),
-            Err(WorkerError::Cancelled)
-        );
-        let (t, calls) = tuner(Behavior {
-            error: true,
-            ..Behavior::default()
-        });
-        selector.tuner = t;
-        selector
-            .select(&config(), &cancel, true, 2, || {}, FULL_BUDGET)
-            .unwrap();
-        let failed_calls = calls.get();
-        assert_eq!(selector.status, "fallback");
-        selector
-            .select(
-                &config(),
-                &cancel,
-                false,
-                2,
                 || panic!("must not repeat failed probe"),
-                FULL_BUDGET,
-            )
-            .unwrap();
-        assert_eq!(calls.get(), failed_calls);
-        let (fresh_tuner, fresh_calls) = tuner(Behavior::default());
-        restarted = AutomaticSelector::new(
-            Path::new("data/benchmark"),
-            SelectionCache {
-                path: selector.cache.path.clone(),
-                measurements: vec![],
-            },
-            fresh_tuner,
-        );
-        let fallback = restarted
-            .select(
-                &config(),
-                &cancel,
-                false,
-                2,
-                || panic!("failed measurement must not repeat after restart"),
                 QUICK_BUDGET,
             )
             .unwrap();
-        assert_eq!(fallback.backend, "cpu");
+        assert_eq!(calls.get(), failed_calls);
+        let (mut restarted, fresh_calls) = selector_at(&path, Behavior::default());
+        assert_eq!(
+            restarted
+                .select(
+                    &config(),
+                    &cancel,
+                    false,
+                    0,
+                    || panic!("failed measurement must not repeat after restart"),
+                    QUICK_BUDGET
+                )
+                .unwrap(),
+            fallback
+        );
         assert!(!restarted.preview_allowed);
         assert_eq!(fresh_calls.get(), 0);
-        selector
-            .select(&config(), &cancel, true, 3, || {}, FULL_BUDGET)
+        restarted
+            .select(&config(), &cancel, true, 1, || {}, FULL_BUDGET)
             .unwrap();
-        assert!(calls.get() > failed_calls);
+        assert_eq!(restarted.status, "measured");
+        assert!(fresh_calls.get() > 0);
     }
 }
 impl Default for AutomaticSelector {
