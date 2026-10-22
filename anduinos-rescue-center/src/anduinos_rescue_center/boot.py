@@ -292,7 +292,12 @@ def repair_boot(path: str, identity: str, esp_identity: str, *, run=subprocess.r
         progress(tr("Opening {system} and its EFI partition {esp}").format(
             system=partition.path, esp=esp.path))
     with opened_system(path, identity, esp=esp.path, run=run, mount_base=mount_base) as (root, _partition):
-        for tool in ("usr/bin/dracut", "usr/bin/lsinitrd", "usr/sbin/grub-install", "usr/sbin/update-grub"):
+        own_grub = (root / "usr/lib/anduinos-grub").exists()
+        helper = "/usr/libexec/anduinos-grub-update"
+        tools = ["usr/bin/dracut", "usr/bin/lsinitrd", "usr/sbin/grub-install", "usr/sbin/update-grub"]
+        if own_grub:
+            tools.append(helper.lstrip("/"))
+        for tool in tools:
             if not (root / tool).is_file():
                 raise RuntimeError(tr("Installed boot repair tool is missing: /{tool}").format(tool=tool))
         if progress is not None:
@@ -322,6 +327,10 @@ def repair_boot(path: str, identity: str, esp_identity: str, *, run=subprocess.r
                 raise RuntimeError(tr("The Btrfs initrd lacks the AnduinOS recovery module"))
         if progress is not None:
             progress(tr("Installing AnduinOS GRUB on the selected EFI partition"))
+        if own_grub:
+            # The compatibility image is a derived cache, not a trusted input.
+            # Prepare it inside the selected target without resolving Live's BootCurrent.
+            _repair_command(run, ["chroot", str(root), helper, "prepare"], 300, progress)
         _repair_command(run, ["chroot", str(root), "grub-install", f"--target={architecture}",
                               "--efi-directory=/boot/efi", "--bootloader-id=AnduinOS", "--recheck",
                               "--no-nvram", "--no-extra-removable", "--uefi-secure-boot"], 300, progress)
@@ -334,6 +343,9 @@ def repair_boot(path: str, identity: str, esp_identity: str, *, run=subprocess.r
                     for name in (f"shim{suffix}.efi", f"grub{suffix}.efi", "grub.cfg"))
                 or not complete or not config):
             raise RuntimeError(tr("Boot repair did not produce a complete kernel, GRUB and EFI chain"))
+        if own_grub:
+            # Check the actual ESP files before reporting success or registering them.
+            _repair_command(run, ["chroot", str(root), helper, "first-install-check"], 300, progress)
         if report["nvram_entry"] is False:
             if not _firmware_available():
                 raise RuntimeError(tr("EFI files were repaired, but firmware variables are unavailable"))

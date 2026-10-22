@@ -40,7 +40,9 @@ the currently running root filesystem.
   Guided repair is limited to an unmounted UEFI installation whose FAT EFI
   partition is named in its fstab and found on the selected disk. It uses the
   installer's vendor-only GRUB policy: no writes to other EFI vendors or
-  EFI/BOOT. Separate /boot, BIOS boot and cross-disk EFI arrangements are
+  EFI/BOOT. For the AnduinOS boot stack, it prepares the signed GRUB from
+  trusted package inputs and verifies the final ESP images using the target's
+  toolkit. Separate /boot, BIOS boot and cross-disk EFI arrangements are
   deliberately not guessed at. During repair the interface shows the current
   stage, an indeterminate activity bar, and expandable live command output;
   it does not invent a percentage for operations of unpredictable duration.
