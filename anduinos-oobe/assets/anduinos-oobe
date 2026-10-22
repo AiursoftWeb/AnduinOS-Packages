@@ -2128,6 +2128,12 @@ def create_agents_page(update_navigation=lambda: None):
     page._logo_css = Gtk.CssProvider()
     page._logo_css.load_from_data(b'''
         .agent-logo { background-color: white; border-radius: 12px; padding: 8px; }
+        .agent-recommended {
+            background-color: @accent_bg_color;
+            color: @accent_fg_color;
+            border-radius: 999px;
+            padding: 2px 6px;
+        }
     ''')
     Gtk.StyleContext.add_provider_for_display(
         Gdk.Display.get_default(), page._logo_css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
@@ -2301,7 +2307,19 @@ def create_agents_page(update_navigation=lambda: None):
         installed_label.set_max_width_chars(20)
         installed_label.add_css_class('caption-heading')
         content.append(installed_label)
-        button.set_child(content)
+        overlay = Gtk.Overlay()
+        overlay.set_child(content)
+        if agent.get('recommended'):
+            badge = Gtk.Label(label=_('Recommended'))
+            badge.add_css_class('caption-heading')
+            badge.add_css_class('agent-recommended')
+            badge.set_halign(Gtk.Align.END)
+            badge.set_valign(Gtk.Align.START)
+            badge.set_margin_top(4)
+            badge.set_margin_end(4)
+            badge.set_can_target(False)
+            overlay.add_overlay(badge)
+        button.set_child(overlay)
         button.connect('clicked', clicked, agent)
         cards.append(button)
         entries.append((agent, button, installed_label))

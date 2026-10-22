@@ -115,6 +115,7 @@ def recommendations(_, chinese):
     def agent(identifier, name, description, command, script, arguments=()):
         return {
             'id': identifier, 'name': name, 'description': description,
+            'recommended': command == 'opencode',
             'is_installed': lambda: executable(command) is not None,
             'open': lambda: open_agent(command, arguments),
             'install': lambda output: install_agent(script, output),
