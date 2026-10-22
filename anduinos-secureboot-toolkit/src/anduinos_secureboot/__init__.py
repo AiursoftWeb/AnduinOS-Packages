@@ -19,4 +19,4 @@ __all__ = (
     "parse_secure_boot_status",
 )
 
-__version__ = "2.0.4"
+__version__ = "2.0.5"
