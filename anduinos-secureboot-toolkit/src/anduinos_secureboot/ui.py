@@ -34,6 +34,7 @@ _MESSAGES = {
     "identity-unknown": N_("The signing identity could not be checked. Existing certificates have not been replaced."),
     "identity-missing": N_("Create a local signing certificate before preparing trust."),
     "identity-valid": N_("The signing certificate and private key are valid and match."),
+    "signing-defaults-after-enrollment": N_("The signing certificate is valid. Complete enrollment first; automatic signing will be checked afterward."),
     "signing-key-unavailable": N_("The signing key is missing, unreadable or does not match its certificate. Existing signatures are unchanged."),
     "certificate-unified": N_("This certificate can sign both the bootloader and kernel modules."),
     "certificate-module-only": N_("This certificate can sign drivers only. A new certificate is needed for the AnduinOS bootloader."),
@@ -96,6 +97,20 @@ def _default_icon(name: str):
     return Gtk.Image.new_from_icon_name(name)
 
 
+def _add_result_details(dialog, detail, translate, *, expanded=False):
+    _ = translate
+    if detail:
+        log = Gtk.TextView(editable=False, cursor_visible=False, monospace=True,
+                           wrap_mode=Gtk.WrapMode.WORD_CHAR)
+        log.get_buffer().set_text(detail)
+        scroll = Gtk.ScrolledWindow(height_request=180,
+            hscrollbar_policy=Gtk.PolicyType.NEVER, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
+        scroll.set_child(log)
+        expander = Gtk.Expander(label=_("Details"), expanded=expanded)
+        expander.set_child(scroll)
+        dialog.set_extra_child(expander)
+
+
 def _bootloader_result_dialog(parent, code, payload, translate):
     _ = translate
     dialog = Adw.MessageDialog.new(parent,
@@ -104,16 +119,23 @@ def _bootloader_result_dialog(parent, code, payload, translate):
         if code == 0 else _("The bootloader update could not be completed. Review the details before restarting."))
     detail = "\n".join(filter(None, [payload.get("error", ""), *[
         step.get("detail", "") for step in payload.get("steps", {}).values()]]))
-    if detail:
-        log = Gtk.TextView(editable=False, cursor_visible=False, monospace=True,
-                           wrap_mode=Gtk.WrapMode.WORD_CHAR)
-        log.get_buffer().set_text(detail)
-        scroll = Gtk.ScrolledWindow(height_request=180,
-            hscrollbar_policy=Gtk.PolicyType.NEVER, vscrollbar_policy=Gtk.PolicyType.AUTOMATIC)
-        scroll.set_child(log)
-        expander = Gtk.Expander(label=_("Details"), expanded=code != 0)
-        expander.set_child(scroll)
-        dialog.set_extra_child(expander)
+    _add_result_details(dialog, detail, _, expanded=code != 0)
+    dialog.add_response("ok", _("OK"))
+    return dialog
+
+
+def _repair_result_dialog(parent, action, payload, translate):
+    _ = translate
+    if action == "sync-defaults" and payload.get("steps", {}).get("defaults", {}).get("status") == "success":
+        body = _("Automatic signing now uses your enrolled certificate. The previous configuration has been backed up. No further certificate enrollment is needed.")
+    elif action == "repair-dkms":
+        body = _("Driver signature repair is complete. The system will now check whether the installed drivers are trusted.")
+    else:
+        body = _("The system will now be checked again.")
+    dialog = Adw.MessageDialog.new(parent, _("Operation Finished"), body)
+    detail = "\n".join(filter(None, [step.get("detail", "")
+        for name, step in payload.get("steps", {}).items() if name != "firmware_state"]))
+    _add_result_details(dialog, detail, _)
     dialog.add_response("ok", _("OK"))
     return dialog
 
@@ -351,6 +373,8 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
         progress.close()
         if action in {"install-bootloader", "repair-bootloader"}:
             _bootloader_result_dialog(page.get_root(), code, payload, _).present()
+        elif code == 0 and not payload.get("reboot_required"):
+            _repair_result_dialog(page.get_root(), action, payload, _).present()
         else:
             detail = "\n".join(filter(None, [payload.get("error", ""), *[
                 step.get("detail", "") for step in payload.get("steps", {}).values()

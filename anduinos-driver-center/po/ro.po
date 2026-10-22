@@ -2376,3 +2376,15 @@ msgstr "Repornește în setările UEFI, activează Secure Boot, apoi salvează m
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "The AnduinOS automatic signing configuration will be backed up and reset to use your enrolled certificate. Other custom DKMS settings will not be changed. No certificate enrollment is needed."
 msgstr "Configurația de semnare automată AnduinOS va fi copiată de rezervă și resetată pentru a utiliza certificatul înregistrat. Alte setări DKMS personalizate nu vor fi modificate. Nu este necesară înregistrarea unui certificat."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing certificate is valid. Complete enrollment first; automatic signing will be checked afterward."
+msgstr "Certificatul de semnare este valid. Completați mai întâi înscrierea; semnarea automată va fi verificată ulterior."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Automatic signing now uses your enrolled certificate. The previous configuration has been backed up. No further certificate enrollment is needed."
+msgstr "Semnarea automată utilizează acum certificatul dvs. înscris. Configurarea anterioară a fost copiată de rezervă. Nu este necesară o altă înscriere a certificatului."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
+msgstr "Reparația semnăturii driverului a fost finalizată. Sistemul va verifica acum dacă driverele instalate sunt de încredere."

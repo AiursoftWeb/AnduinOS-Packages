@@ -337,6 +337,45 @@ class TrustPageTests(unittest.TestCase):
         self.worker()
         self.action.assert_called_once_with('repair-defaults')
 
+    def test_successful_repairs_show_translated_summaries_and_keep_diagnostics_in_details(self):
+        for action, row, steps in (
+            ('sync-defaults', 'Local MOK Certificate', {'defaults': {
+                'status': 'success', 'detail': 'Future signing uses the enrolled certificate. Backup at /fixture/backup.'}}),
+            ('repair-dkms', 'Third-party Drivers', {'modules_rebuilt': {
+                'status': 'success', 'detail': 'Rebuilt and reinstalled hid-xpadneo for fixture-kernel'}}),
+        ):
+            with self.subTest(action=action):
+                self.action.reset_mock()
+                self.thread.reset_mock()
+                self.collect.reset_mock()
+                self.page(signing_identity=replace(self.identity, defaults_ready=action != 'sync-defaults'),
+                          modules_ready=action != 'repair-dkms')
+                self.action.return_value = (0, {'steps': {**steps, 'firmware_state': {
+                    'status': 'success', 'detail': 'enabled'}}})
+                self.click(row)
+                self.respond('continue')
+                self.worker()
+                body = self.adw.MessageDialog.new.call_args.args[2]
+                self.assertTrue(body.startswith('translated:'))
+                self.assertNotIn('enabled', body)
+                self.assertNotIn('Future signing', body)
+                self.assertNotIn('Rebuilt and reinstalled', body)
+                self.gtk.Expander.assert_called_with(label='translated:Details', expanded=False)
+                log = self.gtk.TextView.return_value.get_buffer.return_value.set_text.call_args.args[0]
+                self.assertNotIn('enabled', log)
+                self.assertIn(next(iter(steps.values()))['detail'], log)
+                self.action.reset_mock()
+                self.thread.reset_mock()
+
+    def test_skipped_default_sync_does_not_claim_to_have_created_a_backup(self):
+        dialog = ui._repair_result_dialog(None, 'sync-defaults', {'steps': {
+            'defaults': {'status': 'skipped', 'detail': 'No enrolled unified signing identity'},
+            'firmware_state': {'status': 'success', 'detail': 'enabled'},
+        }}, lambda text: 'translated:' + text)
+        body = self.adw.MessageDialog.new.call_args.args[2]
+        self.assertEqual(body, 'translated:The system will now be checked again.')
+        self.assertNotIn('backed up', body)
+
     def test_failed_operation_dialog_omits_successful_firmware_probe(self):
         self.page(modules_ready=False)
         self.action.return_value = (1, {'steps': {
