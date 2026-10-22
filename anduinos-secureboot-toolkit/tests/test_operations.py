@@ -137,13 +137,35 @@ class OperationsTests(unittest.TestCase):
                 install.assert_not_called()
                 deploy.assert_not_called()
 
+    def test_driver_repair_rechecks_defaults_before_any_rebuild_or_write(self):
+        from dataclasses import replace
+        from anduinos_secureboot.decision import Facts
+        from anduinos_secureboot.identity import IdentityStatus
+        from anduinos_secureboot.model import DkmsState, SecureBootState
+        identity = IdentityStatus(purpose="unified", enrollment="enrolled", key_present=True,
+                                  key_valid=True, managed=True, defaults_ready=False)
+        state = SecureBootState(True, True, True, True, "new", signing_identity=identity,
+                                dkms_available=True, headers_available=True)
+        for ready in (False, None, True):
+            with self.subTest(defaults_ready=ready), \
+                 patch("anduinos_secureboot.inspect.collect_facts", return_value=Facts(
+                     replace(state, signing_identity=replace(identity, defaults_ready=ready)), DkmsState())), \
+                 patch.object(operations, "repair_dkms") as repair:
+                result = operations.execute("repair-dkms", Mock())
+                if ready is True:
+                    repair.assert_called_once()
+                else:
+                    self.assertFalse(result.ok)
+                    self.assertIn("signing-defaults-required", result.to_json())
+                    repair.assert_not_called()
+
     def test_legacy_default_repair_requires_the_explicit_manual_action(self):
         for action, manual in (("sync-defaults", False), ("repair-defaults", True)):
             with self.subTest(action=action), \
                  patch("anduinos_secureboot.defaults.sync_defaults") as sync:
                 run = Mock()
                 operations.execute(action, run)
-                sync.assert_called_once_with(run, allow_legacy=manual)
+                sync.assert_called_once_with(run, allow_legacy=manual, repair_config=manual)
 
     def test_helper_reports_operation_errors_and_releases_its_lock(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -2264,3 +2264,7 @@ msgstr "준비 점검을 통과했습니다. 보안 부팅은 아직 비활성�
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Restart to UEFI settings, enable Secure Boot, then save your changes and start AnduinOS. Firmware wording varies by manufacturer. Platform keys and the Microsoft third-party CA are separate from your MOK certificate. The preparation checks shown here do not replace a successful boot with Secure Boot enabled."
 msgstr "다시 시작하여 UEFI 설정으로 들어가 보안 부팅을 활성화한 다음, 변경 사항을 저장하고 AnduinOS를 시작하세요. 펌웨어의 메뉴 명칭은 제조사마다 다릅니다. 플랫폼 키 및 Microsoft 타사 CA는 사용자의 MOK 인증서와 별개입니다. 여기에 표시된 준비 점검만으로는 보안 부팅을 활성화한 상태에서 정상적으로 부팅되는지 확인할 수 없습니다."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The AnduinOS automatic signing configuration will be backed up and reset to use your enrolled certificate. Other custom DKMS settings will not be changed. No certificate enrollment is needed."
+msgstr "AnduinOS 자동 서명 설정을 백업한 뒤 등록된 인증서를 사용하도록 재설정합니다. 다른 사용자 지정 DKMS 설정은 변경되지 않습니다. 인증서를 등록할 필요가 없습니다."

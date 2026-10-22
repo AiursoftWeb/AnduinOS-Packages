@@ -58,6 +58,14 @@ DKMS configuration are rejected. No MOK is deleted; no module is rebuilt.
 The UI detects unsynchronized defaults and offers repair only if needed;
 there is no normal manual activation step. Do not delete the old MOK.
 
+Automatic synchronization leaves an unrecognized signing configuration alone.
+After enrollment, the explicit **Repair Automatic Signing** action confirms a
+private backup and reset of `framework.conf.d/anduinos-sb-sign.conf`, restoring
+the compatibility key pair from the verified identity. Other custom DKMS
+configuration files or signing hooks still require review and are not replaced.
+Driver signature repair waits until these unified signing defaults are verified;
+it does not create another certificate or request another enrollment.
+
 Synchronization also retires the exact `framework.conf.d/mok.conf` template
 written by the July 2026 OOBE Xbox installation flow, provided its obsolete
 `sign_helper.sh` is absent. The file joins the same private backup/rollback

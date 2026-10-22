@@ -2347,3 +2347,7 @@ msgstr "Hazırlık denetimleri başarılı. Güvenli Önyükleme hâlâ devre d�
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Restart to UEFI settings, enable Secure Boot, then save your changes and start AnduinOS. Firmware wording varies by manufacturer. Platform keys and the Microsoft third-party CA are separate from your MOK certificate. The preparation checks shown here do not replace a successful boot with Secure Boot enabled."
 msgstr "UEFI ayarlarına geçmek için yeniden başlatın, Güvenli Önyükleme'yi etkinleştirin, ardından değişikliklerinizi kaydedip AnduinOS'u başlatın. Ürün yazılımındaki ifadeler üreticiye göre değişir. Platform anahtarları ve Microsoft üçüncü taraf sertifika yetkilisi (CA), MOK sertifikanızdan ayrıdır. Burada gösterilen hazırlık denetimleri, Güvenli Önyükleme etkinken başarılı bir önyüklemenin yerini tutmaz."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The AnduinOS automatic signing configuration will be backed up and reset to use your enrolled certificate. Other custom DKMS settings will not be changed. No certificate enrollment is needed."
+msgstr "AnduinOS otomatik imzalama yapılandırması yedeklenecek ve kayıtlı sertifikanızı kullanacak şekilde sıfırlanacak. Diğer özel DKMS ayarları değiştirilmez. Sertifika kaydetmeniz gerekmez."

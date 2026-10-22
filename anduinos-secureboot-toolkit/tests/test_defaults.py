@@ -97,8 +97,9 @@ class DefaultsTests(unittest.TestCase):
         self.firmware.enrolled = {'b' * 40}
         for pending in (set(), {self.fingerprint}):
             self.firmware.pending = pending
-            self.assertEqual(self.sync().steps['defaults'].status, 'skipped')
-            self.assertEqual(before, self.before())
+            for manual in (False, True):
+                self.assertEqual(self.sync(allow_legacy=manual, repair_config=manual).steps['defaults'].status, 'skipped')
+                self.assertEqual(before, self.before())
         self.assertFalse((self.root / 'backups').exists())
 
     def test_unknown_enrollment_fails_closed(self):
@@ -138,16 +139,18 @@ class DefaultsTests(unittest.TestCase):
     def test_invalid_key_never_overwrites_working_files(self):
         before = self.before()
         self.key.write_text('invalid')
-        with self.assertRaisesRegex(ValueError, 'match'):
-            self.sync()
-        self.assertEqual(before, self.before())
+        for manual in (False, True):
+            with self.assertRaisesRegex(ValueError, 'match'):
+                self.sync(allow_legacy=manual, repair_config=manual)
+            self.assertEqual(before, self.before())
 
     def test_redirected_destination_is_rejected(self):
         cert = self.legacy / 'MOK.der'
         cert.unlink()
         cert.symlink_to(self.cert)
-        with self.assertRaisesRegex(ValueError, 'Redirected'):
-            self.sync()
+        for manual in (False, True):
+            with self.assertRaisesRegex(ValueError, 'Redirected'):
+                self.sync(allow_legacy=manual, repair_config=manual)
 
     def test_insecure_key_permissions_are_rejected(self):
         self.key.chmod(0o644)
@@ -164,6 +167,53 @@ class DefaultsTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'requires review'):
             self.sync()
         self.assertFalse(self.ready())
+
+    def test_explicit_repair_recovers_missing_legacy_pair_and_backs_up_corrupt_owned_config(self):
+        broken = ('mok_signing_key="/nonexistent/secureboot-test/MOK.priv"\n'
+                  'mok_certificate="/nonexistent/secureboot-test/MOK.der"\n')
+        self.config.write_text(broken)
+        for name in ('MOK.priv', 'MOK.der'):
+            (self.legacy / name).unlink()
+        before = [self.key.read_bytes(), self.cert.read_bytes()]
+        with self.assertRaisesRegex(ValueError, 'requires review'):
+            self.sync()
+        self.assertEqual(self.config.read_text(), broken)
+        self.assertTrue(self.sync(allow_legacy=True, repair_config=True).ok)
+        self.assertTrue(self.ready())
+        self.assertEqual(before, [self.key.read_bytes(), self.cert.read_bytes()])
+        backup, = (self.root / 'backups').iterdir()
+        self.assertEqual((backup / '0-anduinos-sb-sign.conf').read_text(), broken)
+        self.assertEqual((backup / '0-anduinos-sb-sign.conf').stat().st_mode & 0o777, 0o600)
+        self.assertEqual(self.firmware.enrolled, {'b' * 40, self.fingerprint})
+        self.assertEqual(self.sync(allow_legacy=True, repair_config=True).steps['defaults'].status, 'skipped')
+
+    def test_explicit_repair_still_refuses_other_signing_overrides(self):
+        self.config.write_text('mok_certificate="/nonexistent/cert"\n')
+        override = self.config.parent / 'z-custom.conf'
+        override.write_text('sign_tool="/custom/sign"\n')
+        before = self.before()
+        with self.assertRaisesRegex(ValueError, 'z-custom.conf'):
+            self.sync(allow_legacy=True, repair_config=True)
+        self.assertEqual(before, self.before())
+        self.assertEqual(override.read_text(), 'sign_tool="/custom/sign"\n')
+        self.assertFalse((self.root / 'backups').exists())
+
+    def test_explicit_repair_rolls_back_corrupt_config_if_compatibility_copy_fails(self):
+        self.config.write_text('mok_signing_key="/nonexistent/key"\n')
+        before = self.before()
+        original = defaults.atomic_write
+        failed = False
+        def write(path, data, mode):
+            nonlocal failed
+            if path == self.legacy / 'MOK.der' and not failed:
+                failed = True
+                raise OSError('simulated full disk')
+            return original(path, data, mode)
+        with patch.object(defaults, 'atomic_write', side_effect=write):
+            with self.assertRaisesRegex(OSError, 'full disk'):
+                self.sync(allow_legacy=True, repair_config=True)
+        self.assertEqual(before, self.before())
+        self.assertTrue(self.sync(allow_legacy=True, repair_config=True).ok)
 
     def old_oobe_config(self):
         path = self.config.parent / 'mok.conf'

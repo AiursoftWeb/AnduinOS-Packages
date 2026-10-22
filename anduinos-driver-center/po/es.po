@@ -2363,3 +2363,7 @@ msgstr "Comprobaciones de preparación superadas. Secure Boot sigue desactivado.
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Restart to UEFI settings, enable Secure Boot, then save your changes and start AnduinOS. Firmware wording varies by manufacturer. Platform keys and the Microsoft third-party CA are separate from your MOK certificate. The preparation checks shown here do not replace a successful boot with Secure Boot enabled."
 msgstr "Reinicia para acceder a los ajustes de UEFI, activa Secure Boot, guarda los cambios e inicia AnduinOS. Los términos del firmware varían según el fabricante. Las claves de plataforma y la CA de terceros de Microsoft son independientes de tu certificado MOK. Las comprobaciones de preparación que se muestran aquí no sustituyen un arranque correcto con Secure Boot activado."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The AnduinOS automatic signing configuration will be backed up and reset to use your enrolled certificate. Other custom DKMS settings will not be changed. No certificate enrollment is needed."
+msgstr "La configuración de firma automática de AnduinOS se respaldará y se restablecerá para usar su certificado registrado. No se modificarán otras configuraciones personalizadas de DKMS. No es necesario el registro de certificados."

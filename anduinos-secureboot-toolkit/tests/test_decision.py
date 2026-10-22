@@ -193,6 +193,20 @@ class DecisionTests(unittest.TestCase):
         action = self.assert_action(self.row(facts, "bootloader"), "install-bootloader", allowed=False)
         self.assert_blocker(action, "signing-defaults-required", "certificate")
 
+    def test_untrusted_drivers_wait_for_verified_unified_signing_defaults(self):
+        drivers = DkmsState(modules=("driver.ko",), untrusted_modules=("driver.ko",))
+        for enabled in (True, False):
+            for ready in (False, None):
+                with self.subTest(enabled=enabled, defaults_ready=ready):
+                    identity = replace(self.identity, defaults_ready=ready)
+                    state = replace(self.state, enabled=enabled,
+                                    status=SecureBootStatus.ENABLED if enabled else SecureBootStatus.DISABLED,
+                                    signing_identity=identity, grub=GrubState())
+                    facts = self.facts(state=state, drivers=drivers)
+                    action = self.assert_action(self.row(facts, "drivers"), "repair-dkms", allowed=False)
+                    self.assert_blocker(action, "signing-defaults-required", "certificate")
+                    self.assertEqual(self.core.decide(facts).next_row, "certificate")
+
     def test_pending_enrollment_does_not_explain_downstream_defaults_as_another_problem(self):
         identity = replace(self.identity, enrollment="pending", defaults_ready=False)
         facts = self.facts(state=replace(self.state, signing_identity=identity, grub=GrubState()))

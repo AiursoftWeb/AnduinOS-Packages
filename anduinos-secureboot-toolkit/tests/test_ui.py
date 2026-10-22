@@ -327,6 +327,29 @@ class TrustPageTests(unittest.TestCase):
         self.worker()
         self.action.assert_called_once_with('repair-defaults')
 
+    def test_broken_defaults_are_recommended_before_untrusted_driver_repair(self):
+        self.page(signing_identity=replace(self.identity, defaults_ready=False),
+                  modules_ready=False, grub=GrubState())
+        self.assertEqual(ui.decide(self.facts).next_row, 'certificate')
+        self.click('Local MOK Certificate')
+        self.assertIn('backed up', self.adw.MessageDialog.new.call_args.args[2])
+        self.respond('continue')
+        self.worker()
+        self.action.assert_called_once_with('repair-defaults')
+
+    def test_failed_operation_dialog_omits_successful_firmware_probe(self):
+        self.page(modules_ready=False)
+        self.action.return_value = (1, {'steps': {
+            'secure_boot': {'status': 'success', 'detail': 'enabled'},
+            'modules_rebuilt': {'status': 'failed', 'detail': 'example DKMS build failed'},
+        }})
+        self.click('Third-party Drivers')
+        self.respond('continue')
+        self.worker()
+        title, body = self.adw.MessageDialog.new.call_args.args[1:3]
+        self.assertIn('Operation Failed', title)
+        self.assertEqual(body, 'example DKMS build failed')
+
     def test_installation_rechecks_before_running_the_fixed_action(self):
         self.page(grub=GrubState())
         self.click('AnduinOS Bootloader')

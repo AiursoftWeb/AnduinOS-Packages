@@ -352,7 +352,7 @@ def repair_dkms(
 
 
 def execute(action: str, run: Run = run_command) -> OperationResult:
-    if action in {"install-bootloader", "repair-bootloader"}:
+    if action in {"install-bootloader", "repair-bootloader", "repair-dkms"}:
         from .grub import deploy, install_packages
         from .decision import assess_action
         from .inspect import collect_facts
@@ -362,6 +362,8 @@ def execute(action: str, run: Run = run_command) -> OperationResult:
             result.steps["prerequisites"] = StepResult("failed", "\n".join(
                 blocker.reason for blocker in preflight.blockers))
             return result
+        if action == "repair-dkms":
+            return repair_dkms(run)
         if action == "install-bootloader":
             return install_packages(run)
         result = OperationResult(action)
@@ -373,7 +375,8 @@ def execute(action: str, run: Run = run_command) -> OperationResult:
         return result
     if action in {"sync-defaults", "repair-defaults"}:
         from .defaults import sync_defaults
-        return sync_defaults(run, allow_legacy=action == "repair-defaults")
+        return sync_defaults(run, allow_legacy=action == "repair-defaults",
+                             repair_config=action == "repair-defaults")
     if action in {"prepare-identity", "regenerate-identity"}:
         from .identity import manage_identity
         return manage_identity(action, run)
@@ -391,8 +394,6 @@ def execute(action: str, run: Run = run_command) -> OperationResult:
         result = prepare(run)
         result.steps["boot_chain"] = StepResult("success")
         return result
-    if action == "repair-dkms":
-        return repair_dkms(run)
     raise ValueError(f"unsupported action: {action}")
 
 
