@@ -82,6 +82,7 @@ class GrubSigningTests(unittest.TestCase):
         self.root = Path(self.directory.name)
         self.key, self.cert = self.root / "key", self.root / "cert.der"
         self.enterContext(patch.object(identity, "LEGACY_CERTIFICATE", self.cert))
+        self.enterContext(patch.object(identity, "ROOT", self.root / "identity"))
         self.runner = Runner(self.architecture)
         identity.generate_identity(self.key, self.cert, self.runner.run)
         suffix, _, machine = grub.boot_chain.efi_architecture(self.runner)
@@ -286,6 +287,23 @@ class GrubSigningTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "missing"):
                 grub.verify_first_install(self.runner, vendor.parent.parent)
         self.assertEqual(before_identity, (self.key.read_bytes(), self.cert.read_bytes()))
+
+    def test_offline_verification_uses_managed_signing_identity_instead_of_legacy_copy(self):
+        previous_umask = os.umask(0o022)
+        self.addCleanup(os.umask, previous_umask)
+        with self.installed_chain() as (_image, esp, _vendor, _companions):
+            other_key, other_cert = self.root / "legacy.key", self.root / "legacy.der"
+            identity.generate_identity(other_key, other_cert, self.runner.run)
+            with (patch.object(identity, "LEGACY_CERTIFICATE", other_cert),
+                  patch.object(identity, "current_identity", return_value="a" * 32),
+                  patch.object(grub, "prepare_image", side_effect=AssertionError("Read-only verification")),
+                  patch.object(grub.boot_chain, "resolve_target", side_effect=AssertionError("No Live BootCurrent"))):
+                grub.verify_first_install(self.runner, esp)
+                # A matching legacy copy must not hide a wrong managed authority.
+                with (patch.object(identity, "LEGACY_CERTIFICATE", self.cert),
+                      patch.object(identity, "selected_paths", return_value=(other_key, other_cert))):
+                    with self.assertRaises(ValueError):
+                        grub.verify_first_install(self.runner, esp)
 
     def test_derived_cache_corruption_is_rebuilt_from_the_same_identity(self):
         image = self.prepare()

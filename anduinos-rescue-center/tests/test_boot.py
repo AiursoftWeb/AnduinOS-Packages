@@ -41,6 +41,73 @@ def prepare_root(root: Path) -> None:
 
 
 class BootRepairTests(unittest.TestCase):
+    def test_own_grub_is_prepared_and_final_signature_checked_on_both_architectures(self):
+        for machine, suffix in (("x86_64", "x64"), ("aarch64", "aa64")):
+            for failure in (None, "prepare", "first-install-check", "missing-helper"):
+                with self.subTest(machine=machine, failure=failure), tempfile.TemporaryDirectory() as directory:
+                    root = Path(directory)
+                    prepare_root(root)
+                    tools = ["usr/bin/dracut", "usr/bin/lsinitrd", "usr/sbin/grub-install",
+                             "usr/sbin/update-grub"]
+                    helper = "/usr/libexec/anduinos-grub-update"
+                    if failure != "missing-helper":
+                        tools.append(helper.lstrip("/"))
+                    for tool in tools:
+                        path = root / tool
+                        path.parent.mkdir(parents=True, exist_ok=True)
+                        path.write_bytes(b"tool")
+                    (root / "usr/lib/anduinos-grub").mkdir()
+                    vendor = root / "boot/efi/EFI/AnduinOS"
+                    vendor.mkdir(parents=True)
+                    for name in (f"shim{suffix}.efi", f"grub{suffix}.efi", "grub.cfg"):
+                        (vendor / name).write_bytes(b"boot")
+                    fallback = root / "boot/efi/EFI/BOOT"
+                    fallback.mkdir()
+                    (fallback / "foreign.efi").write_bytes(b"leave unchanged")
+                    esp = Esp("/dev/sda1", EFI_IDENTITY, "1234-ABCD", 1, "/dev/sda", False)
+                    calls = []
+
+                    @contextmanager
+                    def readonly(*_args, **_kwargs):
+                        yield root
+
+                    @contextmanager
+                    def opened(*_args, **_kwargs):
+                        yield root, partition()
+
+                    def run(command, **_kwargs):
+                        calls.append(command)
+                        failed = command[-1] == failure
+                        return subprocess.CompletedProcess(command, int(failed), "", "invalid EFI signature" if failed else "")
+
+                    report = {"repairable": True, "esp_identity": EFI_IDENTITY, "nvram_entry": False}
+                    with (patch("anduinos_rescue_center.boot.diagnose_boot", return_value=report) as diagnosis,
+                          patch("anduinos_rescue_center.boot.resolve_target", return_value=partition()),
+                          patch("anduinos_rescue_center.boot.mounted_readonly", readonly),
+                          patch("anduinos_rescue_center.boot._locate_esp", return_value=esp),
+                          patch("anduinos_rescue_center.boot.opened_system", opened),
+                          patch("anduinos_rescue_center.boot.platform.machine", return_value=machine),
+                          patch("anduinos_rescue_center.boot._firmware_available", return_value=True)):
+                        if failure:
+                            with self.assertRaises(RuntimeError):
+                                repair_boot("/dev/sda2", IDENTITY, EFI_IDENTITY, run=run)
+                            self.assertEqual(diagnosis.call_count, 1, "Failure must not become a successful diagnosis")
+                            self.assertFalse(any(c[0] == "efibootmgr" for c in calls))
+                            if failure in ("prepare", "missing-helper"):
+                                self.assertFalse(any("grub-install" in c for c in calls))
+                        else:
+                            repair_boot("/dev/sda2", IDENTITY, EFI_IDENTITY, run=run)
+                            prepare = calls.index(["chroot", str(root), helper, "prepare"])
+                            install = next(i for i, c in enumerate(calls) if "grub-install" in c)
+                            verify = calls.index(["chroot", str(root), helper, "first-install-check"])
+                            entry = next(i for i, c in enumerate(calls) if c[0] == "efibootmgr")
+                            self.assertLess(prepare, install)
+                            self.assertLess(install, verify)
+                            self.assertLess(verify, entry)
+                            self.assertIn("--no-extra-removable", calls[install])
+                            self.assertIn("--no-nvram", calls[install])
+                    self.assertEqual((fallback / "foreign.efi").read_bytes(), b"leave unchanged")
+
     def test_command_output_is_visible_before_the_command_finishes(self):
         lines = []
         output = _run_streaming_command(

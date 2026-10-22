@@ -166,9 +166,9 @@ def payloads(runner):
 def verify_first_install(runner, esp=boot_chain.ESP):
     """Read back the installed vendor chain before requesting MOK enrollment.
 
-    The installer creates its identity at the legacy paths in the fresh target.
-    Verification must not sign again, require enrollment or resolve BootCurrent:
-    the running firmware still belongs to the Live system.
+    Fresh targets use the installer's legacy identity, even before enrollment.
+    Rescue of an existing managed target uses its selected signing identity.
+    Neither path signs again or resolves the Live system's BootCurrent.
     """
     suffix, _, machine = boot_chain.efi_architecture(runner)
     vendor = esp / "EFI/AnduinOS"
@@ -178,7 +178,10 @@ def verify_first_install(runner, esp=boot_chain.ESP):
         package_payload(source, runner, {"anduinos-grub"})
         deployed = vendor / f"grub{suffix}.efi"
         safe_path(deployed)
-        verify_signature(deployed, identity.LEGACY_CERTIFICATE, runner)
+        certificate = identity.LEGACY_CERTIFICATE
+        if identity.current_identity(identity.ROOT):
+            _, certificate = identity.selected_paths(identity.ROOT, runner=runner)
+        verify_signature(deployed, certificate, runner)
         sources = shim_companions(runner)
         for path in sources.values():
             package_payload(path, runner, {"anduinos-shim-signed"})
