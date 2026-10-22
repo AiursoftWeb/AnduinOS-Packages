@@ -2258,3 +2258,7 @@ msgstr "準備檢查已通過。安全開機仍未啟用。"
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Restart to UEFI settings, enable Secure Boot, then save your changes and start AnduinOS. Firmware wording varies by manufacturer. Platform keys and the Microsoft third-party CA are separate from your MOK certificate. The preparation checks shown here do not replace a successful boot with Secure Boot enabled."
 msgstr "重新啟動並進入 UEFI 設定，啟用安全開機，然後儲存變更並啟動 AnduinOS。韌體中的用語因製造商而異。平台金鑰與 Microsoft 第三方 CA 均與您的 MOK 憑證不同。此處顯示的準備檢查無法取代啟用安全開機後的成功開機驗證。"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The AnduinOS automatic signing configuration will be backed up and reset to use your enrolled certificate. Other custom DKMS settings will not be changed. No certificate enrollment is needed."
+msgstr "AnduinOS 自動簽署設定將會備份並重設為使用您已註冊的憑證。其他自訂 DKMS 設定不會變更。無須註冊憑證。"

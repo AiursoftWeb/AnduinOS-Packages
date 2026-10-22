@@ -353,7 +353,8 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
             _bootloader_result_dialog(page.get_root(), code, payload, _).present()
         else:
             detail = "\n".join(filter(None, [payload.get("error", ""), *[
-                step.get("detail", "") for step in payload.get("steps", {}).values()]]))
+                step.get("detail", "") for step in payload.get("steps", {}).values()
+                if code == 0 or step.get("status") == "failed"]]))
             if code == 0 and payload.get("reboot_required"):
                 detail = (_("A certificate is waiting for enrollment. Restart and select Enroll MOK, Continue, Yes, then enter password 123456.")
                           + "\n\n" + _("Existing bootloader, driver signatures and old enrolled certificates are preserved."))
@@ -442,7 +443,9 @@ def create_secure_boot_page(*, translate=None, icon_factory=None, reboot=None,
             confirm(_("Restart Required"), body, "reboot", _("Restart"), lambda: restart_action(action.id),
                     enrollment=action.id == "reboot-enroll")
         else:
-            body = (_("The bootloader will be signed with your enrolled certificate and deployed. Existing EFI files are backed up. Keep the computer running until the operation finishes.")
+            body = (_("The AnduinOS automatic signing configuration will be backed up and reset to use your enrolled certificate. Other custom DKMS settings will not be changed. No certificate enrollment is needed.")
+                    if action.id == "sync-defaults" else
+                    _("The bootloader will be signed with your enrolled certificate and deployed. Existing EFI files are backed up. Keep the computer running until the operation finishes.")
                     if action.id in {"install-bootloader", "repair-bootloader"} else
                     _("This updates the selected signing configuration. Creating or replacing a certificate preserves existing boot and driver trust. A new certificate requires confirmation in MOKManager after restart."))
             confirm(_(_ACTION_LABELS[action.id]), body, "continue", _("Continue"),

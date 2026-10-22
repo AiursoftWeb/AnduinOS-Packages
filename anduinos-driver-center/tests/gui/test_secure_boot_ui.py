@@ -56,8 +56,8 @@ class SecureBootPageTests(unittest.TestCase):
         values.update(changes)
         return SecureBootState(**values)
 
-    def page(self, state, translate=lambda value: value, next_boot=None):
-        facts = Facts(state, DkmsState(), drivers_checked=True, next_boot=next_boot)
+    def page(self, state, translate=lambda value: value, next_boot=None, drivers=None):
+        facts = Facts(state, drivers or DkmsState(), drivers_checked=True, next_boot=next_boot)
         page = ui.create_secure_boot_page(initial_facts=facts, translate=translate)
         decision = decide(facts)
         self.row_context = {row: (page, result, decision.next_row)
@@ -420,6 +420,32 @@ class SecureBootPageTests(unittest.TestCase):
             dialog.response('continue')
             self.assertEqual(delay.call_args.args[0], 200)
             action.assert_not_called()
+
+    def test_enrolled_identity_with_broken_defaults_recommends_configuration_before_drivers(self):
+        locale_dir = Path(__file__).resolve().parents[2] / 'locale'
+        for language in ['en_GB', 'zh_CN']:
+            with self.subTest(language=language):
+                translate = gettext.translation('anduinos-driver-center', localedir=locale_dir,
+                                                languages=[language]).gettext
+                state = self.state(dkms_available=True, headers_available=True,
+                    signing_identity=IdentityStatus(purpose='unified', enrollment='enrolled',
+                        key_present=True, key_valid=True, managed=True, defaults_ready=False),
+                    grub=GrubState())
+                drivers = DkmsState(modules=('hid_xpadneo.ko',), untrusted_modules=('hid_xpadneo.ko',))
+                page = self.page(state, translate, drivers=drivers)
+                parent = Adw.Window(content=page)
+                self.assertEqual(self.primary(page).get_label(), translate('Repair Automatic Signing'))
+                self.activate(self.row(page, translate('Third-party Drivers')))
+                dialog = self.dialog(parent)
+                self.assertIn(translate(ui._MESSAGES['signing-defaults-required']), dialog.get_body())
+                dialog.destroy()
+                self.activate(self.row(page, translate('Local MOK Certificate')))
+                dialog = self.dialog(parent)
+                self.assertEqual(dialog.get_heading(), translate('Repair Automatic Signing'))
+                self.assertNotIn('123456', dialog.get_body())
+                if language == 'zh_CN':
+                    self.assertIn('备份', dialog.get_body())
+                parent.destroy()
 
     def test_english_and_chinese_rows_have_translated_actions_and_blocker_explanations(self):
         locale_dir = Path(__file__).resolve().parents[2] / 'locale'

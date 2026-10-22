@@ -106,7 +106,7 @@ def atomic_write(path: Path, data: bytes, mode: int) -> None:
 
 
 def sync_defaults(run, root: Path = identity.ROOT, legacy: Path | None = None,
-                  config: Path = CONFIG, *, allow_legacy=False):
+                  config: Path = CONFIG, *, allow_legacy=False, repair_config=False):
     from .operations import CallableRunner, OperationResult, StepResult, _firmware_supports_secure_boot
     result = OperationResult('sync-defaults')
     legacy = legacy or identity.LEGACY_KEY.parent
@@ -137,7 +137,11 @@ def sync_defaults(run, root: Path = identity.ROOT, legacy: Path | None = None,
     managed_config = re.fullmatch(
         rf'mok_signing_key="{re.escape(str(root))}/identities/([0-9a-f]{{32}})/MOK.priv"\n'
         rf'mok_certificate="{re.escape(str(root))}/identities/\1/MOK.der"\n', previous_config)
-    if previous_config and previous_config not in {CONFIG_CONTENT, configuration(key, cert)} and not managed_config:
+    # Only the confirmed manual repair may reset our own configuration file.
+    # Its original bytes are backed up below before any changes. Automatic
+    # synchronization must still leave unknown administrator settings alone.
+    if (previous_config and previous_config not in {CONFIG_CONTENT, configuration(key, cert)}
+            and not managed_config and not repair_config):
         raise ValueError(f'Custom DKMS signing configuration requires review: {config}')
     # DKMS sources other files too. Do not silently claim success if they
     # supply a competing key/certificate or an alternate signing command.

@@ -89,6 +89,11 @@ def assess_action(action_id: str, facts: Facts) -> ActionDecision:
         if identity and identity.enrollment == "enrolled" and identity.defaults_ready is not True:
             blockers.append(Blocker("signing-defaults-required", "certificate"))
     if action_id == "repair-dkms":
+        # Unified identities must first populate DKMS defaults and the legacy
+        # compatibility pair consumed by the existing rebuild operation.
+        if (identity and identity.purpose == "unified" and identity.enrollment == "enrolled"
+                and identity.defaults_ready is not True):
+            blockers.append(Blocker("signing-defaults-required", "certificate"))
         if not state.dkms_available or not state.headers_available:
             blockers.append(Blocker("driver-build-unavailable", "drivers"))
     if action_id == "reboot-enroll":
