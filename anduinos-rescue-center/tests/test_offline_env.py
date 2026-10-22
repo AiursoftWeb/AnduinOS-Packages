@@ -173,10 +173,12 @@ class OfflineEnvironmentTests(unittest.TestCase):
 
             with (patch("anduinos_rescue_center.offline_env.resolve_target", return_value=partition()),
                   patch("anduinos_rescue_center.offline_env.mounted_writable", fake_writable)):
-                with opened_system("/dev/sda2", "a" * 64, run=run, mount_base=root) as (target, _):
+                with opened_system("/dev/sda2", "a" * 64, esp="/dev/sda1", run=run, mount_base=root) as (target, _):
                     self.assertEqual(target, root)
+            self.assertIn(["mount", "-t", "vfat", "-o", "rw,uid=0,gid=0,umask=0077",
+                           "--", "/dev/sda1", str(root / "boot/efi")], calls)
             unmounts = [item[-1] for item in calls if item[0] == "umount"]
-            self.assertEqual(unmounts, [str(root / item) for item in ("run", "proc", "sys", "dev")])
+            self.assertEqual(unmounts, [str(root / item) for item in ("run", "proc", "sys", "dev", "boot/efi")])
             self.assertIn(["mount", "--make-rslave", str(root / "dev")], calls)
 
     def test_symlinked_target_mount_directory_is_rejected_before_bind(self):
