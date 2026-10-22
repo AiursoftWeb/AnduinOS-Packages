@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-oobe</PackageName>
-    <PackageVersion>2.0.5-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.5-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS OOBE — First-run setup wizard and Welcome Center</PackageDescription>
     <Section>utils</Section>
@@ -40,6 +40,7 @@
   <ItemGroup>
     <IncludeFile Include="assets/display_scaling.py" Target="/usr/lib/anduinos-oobe/display_scaling.py" />
     <IncludeFile Include="assets/agents.py" Target="/usr/lib/anduinos-oobe/agents.py" />
+    <IncludeFile Include="assets/create_aitool_shortcut.py" Target="/usr/lib/anduinos-oobe/create_aitool_shortcut.py" />
     <IncludeScript Include="assets/anduinos-oobe" Target="/usr/bin/anduinos-oobe" />
     <IncludeFile Include="assets/anduinos-oobe-autostart.desktop" Target="/etc/xdg/autostart/anduinos-oobe.desktop" />
     <IncludeFolder Include="resources/icons" Target="/usr/share/anduinos-oobe/icons" />

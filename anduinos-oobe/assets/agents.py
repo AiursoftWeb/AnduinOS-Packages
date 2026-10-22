@@ -2,6 +2,7 @@
 
 import glob
 import os
+from pathlib import Path
 import re
 import shlex
 import shutil
@@ -46,9 +47,8 @@ def open_agent(command, arguments=()):
     )
 
 
-def install_agent(script, output):
-    """Stream both output channels and preserve failures anywhere in a pipeline."""
-    command = ['bash', '-o', 'pipefail', '-c', script]
+def run_command(command, output):
+    """Stream the command and both output channels to Advanced Output."""
     output('$ ' + shlex.join(command) + '\n')
     with subprocess.Popen(
         command, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
@@ -58,6 +58,17 @@ def install_agent(script, output):
         for line in process.stdout:
             output(line)
         return process.wait()
+
+
+def install_agent(script, output, identifier=None):
+    """Only create a menu entry after the installer succeeds."""
+    result = run_command(['bash', '-o', 'pipefail', '-c', script], output)
+    if result == 0 and identifier is not None:
+        result = run_command([
+            '/usr/bin/python3', str(Path(__file__).with_name('create_aitool_shortcut.py')),
+            identifier,
+        ], output)
+    return result
 
 
 def recommendations(_, chinese):
@@ -115,9 +126,10 @@ def recommendations(_, chinese):
     def agent(identifier, name, description, command, script, arguments=()):
         return {
             'id': identifier, 'name': name, 'description': description,
+            'recommended': command == 'opencode',
             'is_installed': lambda: executable(command) is not None,
             'open': lambda: open_agent(command, arguments),
-            'install': lambda output: install_agent(script, output),
+            'install': lambda output: install_agent(script, output, identifier),
             'get_notice': lambda: notice(identifier),
         }
 

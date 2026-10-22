@@ -2,6 +2,7 @@ import importlib.machinery
 import os
 from pathlib import Path
 import tempfile
+import subprocess
 import unittest
 from unittest.mock import patch
 
@@ -109,12 +110,14 @@ class AgentOperationsTests(unittest.TestCase):
             self.assertIn('installed\n', output)
 
     def test_deepseek_reuses_a_compatible_runtime_without_downloading_nvm(self):
-        with tempfile.TemporaryDirectory() as home, patch.dict(os.environ, HOME=home, NVM_DIR=str(Path(home) / '.nvm')):
+        with tempfile.TemporaryDirectory() as home, patch.dict(
+                os.environ, HOME=home, NVM_DIR=str(Path(home) / '.nvm'), XDG_DATA_HOME=home + '/data'):
             directory = Path(home) / '.local/bin'
             directory.mkdir(parents=True)
             scripts = {
                 'node': 'exit 0',
-                'npm': 'printf "npm-installed-harness\\n"',
+                'npm': 'printf "#!/bin/sh\\nexit 0\\n" > "$HOME/.local/bin/dsh"; '
+                       'chmod +x "$HOME/.local/bin/dsh"; printf "npm-installed-harness\\n"',
                 'curl': 'printf "unexpected-runtime-download\\n"; exit 9',
             }
             for name, body in scripts.items():
@@ -127,6 +130,67 @@ class AgentOperationsTests(unittest.TestCase):
             self.assertEqual(agent['install'](output.append), 0)
             self.assertIn('npm-installed-harness\n', output)
             self.assertNotIn('unexpected-runtime-download\n', output)
+
+    def test_successful_installs_create_searchable_entries_for_both_lists(self):
+        with tempfile.TemporaryDirectory() as home, patch.dict(
+                os.environ, HOME=home, NVM_DIR=home + '/.nvm', XDG_DATA_HOME=home + '/user data'):
+            directory = Path(home) / '.local/bin'
+            directory.mkdir(parents=True)
+            for command in ('dsh', 'qwen', 'opencode', 'kimi', 'mcode', 'codebuddy',
+                            'claude', 'codex', 'copilot', 'agy', 'grok'):
+                binary = directory / command
+                binary.write_text('#!/bin/sh\nexit 0\n')
+                binary.chmod(0o755)
+            for chinese in (False, True):
+                for item in agents.recommendations(lambda text: text, chinese):
+                    with self.subTest(agent=item['id']):
+                        output = []
+                        self.assertEqual(agents.install_agent('true', output.append, item['id']), 0)
+                        entry = Path(home) / 'user data/applications' / (
+                            'anduinos-agent-' + item['id'] + '.desktop')
+                        text = entry.read_text()
+                        self.assertIn('Name=' + item['name'] + '\n', text)
+                        self.assertIn('Icon=' + str(ROOT / 'resources/icons/agents' /
+                                                 (item['id'] + '.svg')) + '\n', text)
+                        self.assertIn('--launch ' + item['id'] + '\n', text)
+                        self.assertTrue(any('Created application menu entry:' in line for line in output))
+                        self.assertEqual(agents.install_agent('true', output.append, item['id']), 0)
+                        self.assertEqual(entry.read_text(), text)
+
+    def test_failed_or_incomplete_install_does_not_create_a_menu_entry(self):
+        with tempfile.TemporaryDirectory() as home, patch.dict(
+                os.environ, HOME=home, NVM_DIR=home + '/.nvm', XDG_DATA_HOME=home + '/data', PATH='/usr/bin'):
+            output = []
+            self.assertNotEqual(agents.install_agent('false | cat', output.append, 'kimi'), 0)
+            self.assertFalse(any('create_aitool_shortcut.py' in line for line in output))
+            self.assertNotEqual(agents.install_agent('true', output.append, 'kimi'), 0)
+            self.assertIn('The agent executable could not be found.\n', output)
+            self.assertFalse((Path(home) / 'data/applications/anduinos-agent-kimi.desktop').exists())
+
+    def test_shortcut_defaults_to_user_menu_and_launches_with_updated_nvm_runtime(self):
+        with tempfile.TemporaryDirectory(prefix='oobe home ') as home, patch.dict(
+                os.environ, HOME=home, NVM_DIR=home + '/.nvm', XDG_DATA_HOME='', PATH='/usr/bin'):
+            directory = Path(home) / '.local/bin'
+            directory.mkdir(parents=True)
+            terminal = directory / 'ptyxis'
+            terminal.write_text('#!/bin/sh\nprintf "%s\\n" "$@"\n')
+            terminal.chmod(0o755)
+            runtime = Path(home) / '.nvm/versions/node/v24.0.0/bin'
+            runtime.mkdir(parents=True)
+            binary = runtime / 'dsh'
+            binary.write_text('#!/bin/sh\nexit 0\n')
+            binary.chmod(0o755)
+            self.assertEqual(agents.install_agent('true', lambda text: None, 'deepseek'), 0)
+            entry = Path(home) / '.local/share/applications/anduinos-agent-deepseek.desktop'
+            self.assertTrue(entry.is_file())
+            newer = runtime.parent.parent / 'v25.0.0/bin'
+            newer.mkdir(parents=True)
+            binary.rename(newer / 'dsh')
+            result = subprocess.run(
+                ['/usr/bin/python3', str(ROOT / 'assets/create_aitool_shortcut.py'), '--launch', 'deepseek'],
+                capture_output=True, text=True, check=True, timeout=15)
+            self.assertIn(str(newer / 'dsh') + '\nweb\n', result.stdout)
+            self.assertIn('--new-window\n--working-directory\n' + home + '\n', result.stdout)
 
 
 if __name__ == '__main__':
