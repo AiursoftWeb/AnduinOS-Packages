@@ -2482,7 +2482,7 @@ class DriverCenterApplication(Adw.Application):
         dialog.set_application_name(_("AnduinOS Driver Center"))
         dialog.set_application_icon(APP_ID)
         dialog.set_developer_name(_("AnduinOS Team"))
-        dialog.set_version("2.0.4")
+        dialog.set_version("2.0.5")
         dialog.set_comments(
             _("Install, inspect, and repair hardware drivers on AnduinOS.")
         )
