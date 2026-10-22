@@ -345,6 +345,55 @@ class SecureBootPageTests(unittest.TestCase):
                     action.assert_not_called()
                 parent.destroy()
 
+    def test_repair_success_has_a_localized_summary_and_collapsed_original_diagnostics(self):
+        locale_dir = Path(__file__).resolve().parents[2] / 'locale'
+        for language in ['en_GB', 'zh_CN']:
+            translate = gettext.translation('anduinos-driver-center', localedir=locale_dir,
+                                            languages=[language]).gettext
+            for action, name, diagnostic in [
+                ('sync-defaults', 'defaults', 'Future signing uses the enrolled certificate. Backup at /fixture/backup.'),
+                ('repair-dkms', 'modules_rebuilt', 'Rebuilt and reinstalled hid-xpadneo for fixture-kernel'),
+            ]:
+                with self.subTest(language=language, action=action):
+                    dialog = ui._repair_result_dialog(None, action, {'steps': {
+                        'firmware_state': {'status': 'success', 'detail': 'enabled'},
+                        name: {'status': 'success', 'detail': diagnostic},
+                    }}, translate)
+                    try:
+                        self.assertEqual(dialog.get_heading(), translate('Operation Finished'))
+                        body = dialog.get_body()
+                        self.assertNotIn('enabled', body)
+                        self.assertNotIn(diagnostic, body)
+                        self.assertNotIn('/fixture', body)
+                        if language == 'zh_CN':
+                            self.assertTrue(any('\u4e00' <= ch <= '\u9fff' for ch in body))
+                        expander = dialog.get_extra_child()
+                        self.assertIsInstance(expander, Gtk.Expander)
+                        self.assertEqual(expander.get_label(), translate('Details'))
+                        self.assertFalse(expander.get_expanded())
+                        view = expander.get_child().get_child()
+                        buffer = view.get_buffer()
+                        log = buffer.get_text(buffer.get_start_iter(), buffer.get_end_iter(), True)
+                        self.assertIn(diagnostic, log)
+                        self.assertNotIn('enabled', log)
+                    finally:
+                        dialog.destroy()
+
+    def test_pending_certificate_explains_the_remaining_configuration_before_restart(self):
+        locale_dir = Path(__file__).resolve().parents[2] / 'locale'
+        for language in ['en_GB', 'zh_CN']:
+            with self.subTest(language=language):
+                translate = gettext.translation('anduinos-driver-center', localedir=locale_dir,
+                                                languages=[language]).gettext
+                state = self.state(signing_identity=IdentityStatus(purpose='unified', enrollment='pending',
+                    key_present=True, key_valid=True, managed=True, defaults_ready=False), grub=GrubState())
+                page = self.page(state, translate)
+                parent = Adw.Window(content=page)
+                self.assertEqual(self.row(page, translate('Local MOK Certificate')).get_subtitle(),
+                                 translate(ui._MESSAGES['signing-defaults-after-enrollment']))
+                self.assertEqual(self.primary(page).get_label(), translate('Restart to Enroll Certificate'))
+                parent.destroy()
+
     def test_bootloader_result_keeps_logs_in_bounded_details(self):
         log = 'debconf: diagnostic <not markup>\n' * 1000
         for code in (0, 1):

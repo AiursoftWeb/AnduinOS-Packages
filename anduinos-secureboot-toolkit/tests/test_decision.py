@@ -185,6 +185,26 @@ class DecisionTests(unittest.TestCase):
         facts = self.facts(state=self.migration_state(replace(self.identity, enrollment="unknown")))
         self.assert_action(self.row(facts, "enrollment"), "refresh", allowed=True)
 
+    def test_enrollment_does_not_turn_a_green_certificate_into_a_new_warning(self):
+        drivers = DkmsState(modules=("driver.ko",), untrusted_modules=("driver.ko",))
+        for ready in (False, None):
+            for enrollment in ("absent", "pending"):
+                with self.subTest(defaults_ready=ready, enrollment=enrollment):
+                    identity = replace(self.identity, enrollment=enrollment, defaults_ready=ready)
+                    before = self.facts(state=replace(self.state, signing_identity=identity,
+                                                     grub=GrubState()), drivers=drivers)
+                    certificate = self.row(before, "certificate")
+                    self.assertEqual(certificate.tone, "warning")
+                    self.assertEqual(certificate.reason, "signing-defaults-after-enrollment")
+                    action = self.assert_action(certificate, "sync-defaults", allowed=False)
+                    self.assert_blocker(action, "certificate-enrollment-required", "enrollment")
+                    self.assertEqual(self.core.decide(before).next_row, "enrollment")
+                    after = self.facts(state=replace(before.secure_boot,
+                        signing_identity=replace(identity, enrollment="enrolled")), drivers=drivers)
+                    self.assertEqual(self.row(after, "certificate").tone, "warning")
+                    self.assertEqual(self.row(after, "enrollment").tone, "success")
+                    self.assertEqual(self.core.decide(after).next_row, "certificate")
+
     def test_broken_defaults_require_configuration_repair_not_another_enrollment(self):
         identity = replace(self.identity, defaults_ready=False)
         facts = self.facts(state=replace(self.state, signing_identity=identity, grub=GrubState()))

@@ -66,6 +66,12 @@ configuration files or signing hooks still require review and are not replaced.
 Driver signature repair waits until these unified signing defaults are verified;
 it does not create another certificate or request another enrollment.
 
+Before enrollment, a valid unified identity with unverified signing defaults
+stays in a preparation state: the page explains that signing will be checked
+after enrollment, and still directs the user to enrollment first. Successful
+repairs show localized summaries; original diagnostics and backup paths remain
+in bounded, initially collapsed details instead of the main message.
+
 Synchronization also retires the exact `framework.conf.d/mok.conf` template
 written by the July 2026 OOBE Xbox installation flow, provided its obsolete
 `sign_helper.sh` is absent. The file joins the same private backup/rollback

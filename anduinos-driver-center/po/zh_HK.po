@@ -2262,3 +2262,15 @@ msgstr "重新啟動並進入 UEFI 設定，啟用安全啟動，然後儲存變
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "The AnduinOS automatic signing configuration will be backed up and reset to use your enrolled certificate. Other custom DKMS settings will not be changed. No certificate enrollment is needed."
 msgstr "AnduinOS 自動簽署設定將會備份並重設，以使用你已登記的憑證。其他自訂 DKMS 設定不會更改。無需登記憑證。"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing certificate is valid. Complete enrollment first; automatic signing will be checked afterward."
+msgstr "簽署憑證有效。請先完成註冊，之後會檢查自動簽署設定。"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Automatic signing now uses your enrolled certificate. The previous configuration has been backed up. No further certificate enrollment is needed."
+msgstr "自動簽署現已使用已註冊的憑證。先前的設定已備份。無需再註冊憑證。"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
+msgstr "驅動程式簽章修復已完成。系統現在會檢查已安裝的驅動程式是否受信任。"

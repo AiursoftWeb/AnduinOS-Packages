@@ -2317,3 +2317,15 @@ msgstr "รีสตาร์ทเข้าสู่การตั้งค่
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "The AnduinOS automatic signing configuration will be backed up and reset to use your enrolled certificate. Other custom DKMS settings will not be changed. No certificate enrollment is needed."
 msgstr "การตั้งค่าการลงนามอัตโนมัติของ AnduinOS จะถูกสำรองข้อมูลและรีเซ็ตให้ใช้ใบรับรองของคุณที่ได้ลงทะเบียนไว้แล้ว การตั้งค่า DKMS อื่น ๆ ที่กำหนดเองจะไม่มีการเปลี่ยนแปลง ไม่จำเป็นต้องลงทะเบียนใบรับรอง"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing certificate is valid. Complete enrollment first; automatic signing will be checked afterward."
+msgstr "ใบรับรองลายเซ็นมีผลสมบูรณ์ โปรดดำเนินการลงทะเบียนก่อน ระบบจะตรวจสอบการลงนามอัตโนมัติหลังจากนั้น"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Automatic signing now uses your enrolled certificate. The previous configuration has been backed up. No further certificate enrollment is needed."
+msgstr "การลงนามอัตโนมัติใช้ใบรับรองที่ลงทะเบียนของคุณแล้ว การตั้งค่าเดิมได้รับการสำรองข้อมูลแล้ว ไม่จำเป็นต้องลงทะเบียนใบรับรองเพิ่มเติม"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
+msgstr "การแก้ไขลายเซ็นไดรเวอร์เสร็จสมบูรณ์ ระบบจะตรวจสอบว่าไดรเวอร์ที่ติดตั้งไว้ได้รับความไว้วางใจหรือไม่"

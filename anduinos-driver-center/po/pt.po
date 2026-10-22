@@ -2363,3 +2363,15 @@ msgstr "Reinicie para aceder às definições UEFI, ative o Secure Boot, guarde 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "The AnduinOS automatic signing configuration will be backed up and reset to use your enrolled certificate. Other custom DKMS settings will not be changed. No certificate enrollment is needed."
 msgstr "A configuração de assinatura automática do AnduinOS será copiada e redefinida para utilizar o seu certificado registado. Outras definições personalizadas do DKMS não serão alteradas. Não é necessário registo de certificado."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing certificate is valid. Complete enrollment first; automatic signing will be checked afterward."
+msgstr "O certificado de assinatura é válido. Conclua o registo primeiro; a assinatura automática será verificada em seguida."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Automatic signing now uses your enrolled certificate. The previous configuration has been backed up. No further certificate enrollment is needed."
+msgstr "A assinatura automática agora utiliza o seu certificado registado. A configuração anterior foi guardada. Não é necessário mais registo de certificados."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
+msgstr "A reparação da assinatura do controlador está concluída. O sistema irá agora verificar se os controladores instalados são de confiança."

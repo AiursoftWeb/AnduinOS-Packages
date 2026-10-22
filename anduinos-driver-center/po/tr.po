@@ -2351,3 +2351,15 @@ msgstr "UEFI ayarlarına geçmek için yeniden başlatın, Güvenli Önyükleme'
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "The AnduinOS automatic signing configuration will be backed up and reset to use your enrolled certificate. Other custom DKMS settings will not be changed. No certificate enrollment is needed."
 msgstr "AnduinOS otomatik imzalama yapılandırması yedeklenecek ve kayıtlı sertifikanızı kullanacak şekilde sıfırlanacak. Diğer özel DKMS ayarları değiştirilmez. Sertifika kaydetmeniz gerekmez."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing certificate is valid. Complete enrollment first; automatic signing will be checked afterward."
+msgstr "İmzalama sertifikası geçerli. Önce kaydı tamamlayın; otomatik imzalama daha sonra kontrol edilecek."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Automatic signing now uses your enrolled certificate. The previous configuration has been backed up. No further certificate enrollment is needed."
+msgstr "Otomatik imzalama artık kayıtlı sertifikanızı kullanıyor. Önceki yapılandırma yedeklendi. Sertifika kaydı yapmanız gerekmiyor."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
+msgstr "Sürücü imzası onarımı tamamlandı. Sistem şimdi yüklü sürücülerin güvenilir olup olmadığını kontrol edecek."

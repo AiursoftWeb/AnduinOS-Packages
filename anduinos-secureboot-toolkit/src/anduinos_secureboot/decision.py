@@ -129,6 +129,9 @@ def _preparation_rows(facts: Facts) -> tuple[RowDecision, ...]:
     elif identity.key_valid is not True or not identity.key_present:
         certificate = row("certificate", "warning" if identity.key_valid is None else "error",
                           "signing-key-unavailable", "refresh" if identity.key_valid is None else "regenerate-identity")
+    elif (identity.purpose == "unified" and identity.enrollment in {"absent", "pending"}
+          and identity.defaults_ready is not True):
+        certificate = row("certificate", "warning", "signing-defaults-after-enrollment", "sync-defaults")
     elif identity.usable and identity.defaults_ready is False:
         certificate = row("certificate", "warning", "signing-defaults-required", "sync-defaults")
     elif identity.usable and identity.defaults_ready is None:
