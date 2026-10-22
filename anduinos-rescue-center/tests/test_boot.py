@@ -41,6 +41,11 @@ def prepare_root(root: Path) -> None:
 
 
 class BootRepairTests(unittest.TestCase):
+    def setUp(self):
+        # Existing legacy fixtures contain x64 files, independent of the host.
+        # The managed-chain cases below explicitly exercise both architectures.
+        self.enterContext(patch("anduinos_rescue_center.boot.platform.machine", return_value="x86_64"))
+
     def test_own_grub_is_prepared_and_final_signature_checked_on_both_architectures(self):
         for machine, suffix in (("x86_64", "x64"), ("aarch64", "aa64")):
             for failure in (None, "prepare", "first-install-check", "missing-helper"):
