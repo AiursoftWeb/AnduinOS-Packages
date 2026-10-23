@@ -427,10 +427,20 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
             .map_err(|error| {
                 RecoveryError::new(RecoveryErrorCode::InvalidDeployment, error.message)
             })?;
-        if !fallback.can_restore() || fallback.kind != crate::model::DeploymentKind::PreRollback {
+        // A safety copy preserves the original root, including its damage.
+        // It is never selected as the restore destination. If recovery fails,
+        // revert() reactivates the original root protected by the transaction.
+        let damaged_safety = !transaction.home_only
+            && fallback.state == crate::model::DeploymentState::Broken
+            && fallback.failure.is_some()
+            && fallback.snapshot_uuid.is_some()
+            && fallback.snapshot_parent_uuid.is_some();
+        if fallback.kind != crate::model::DeploymentKind::PreRollback
+            || (!fallback.can_restore() && !damaged_safety)
+        {
             return Err(RecoveryError::new(
                 RecoveryErrorCode::InvalidDeployment,
-                "Rollback fallback is not a complete safety snapshot",
+                "Rollback fallback is not a verified safety snapshot",
             ));
         }
         if transaction.home_only
@@ -450,6 +460,16 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
         let fallback_root = self.deployment_root(transaction.fallback_deployment_id);
         ensure_real_directory(&target_root)?;
         ensure_real_directory(&fallback_root)?;
+        if damaged_safety
+            && (self.filesystem.identity(&fallback_root)?
+                != fallback.snapshot_uuid.as_deref().unwrap_or_default()
+                || !self.filesystem.is_read_only(&fallback_root)?)
+        {
+            return Err(RecoveryError::new(
+                RecoveryErrorCode::InvalidDeployment,
+                "Damaged safety copy must match its read-only Btrfs subvolume",
+            ));
+        }
         let expected_uuid = target.snapshot_uuid.as_deref().ok_or_else(|| {
             RecoveryError::new(
                 RecoveryErrorCode::InvalidDeployment,
@@ -981,6 +1001,7 @@ mod tests {
     struct FakeFilesystem {
         fail_at: Arc<Mutex<Option<usize>>>,
         mutation_count: Arc<Mutex<usize>>,
+        writable_safety: bool,
     }
 
     impl FakeFilesystem {
@@ -1045,8 +1066,8 @@ mod tests {
             Ok(TARGET_UUID.into())
         }
 
-        fn is_read_only(&self, _subvolume: &Path) -> Result<bool, RecoveryError> {
-            Ok(true)
+        fn is_read_only(&self, subvolume: &Path) -> Result<bool, RecoveryError> {
+            Ok(!(self.writable_safety && subvolume.join("fallback").exists()))
         }
     }
 
@@ -1442,6 +1463,120 @@ mod tests {
             fs::read_to_string(&target).unwrap(),
             "trusted-confirmation-engine"
         );
+    }
+
+    #[test]
+    fn damaged_safety_copy_does_not_block_a_healthy_restore_or_automatic_revert() {
+        let environment = Environment::new();
+        let snapshot_root = environment
+            .root
+            .join("@snapshots/anduinos-btrfs-snapshots-manager");
+        let store = DeploymentStore::new(&snapshot_root);
+        let mut fallback = store
+            .load_record(environment.transaction.fallback_deployment_id)
+            .unwrap();
+        fallback.state = DeploymentState::Broken;
+        fallback.failure = Some("The original initramfs is missing".into());
+        fallback.initramfs_sha256 = None;
+        // This fixture's filesystem supplies TARGET_UUID for every subvolume.
+        fallback.snapshot_uuid = Some(TARGET_UUID.into());
+        store.write_record(&fallback).unwrap();
+        let engine = RecoveryEngine::new(&environment.root, FakeFilesystem::default());
+        assert_eq!(
+            engine
+                .execute(Some(environment.transaction.id), BOOT_ONE)
+                .unwrap(),
+            RecoveryOutcome::Applied
+        );
+        assert_eq!(
+            engine.execute(None, BOOT_TWO).unwrap(),
+            RecoveryOutcome::Reverted
+        );
+        assert!(environment.root.join("@root/origin").exists());
+        assert!(!fallback.can_restore());
+    }
+
+    #[test]
+    fn damaged_safety_copy_must_match_its_real_subvolume() {
+        let environment = Environment::new();
+        let store = DeploymentStore::new(
+            environment
+                .root
+                .join("@snapshots/anduinos-btrfs-snapshots-manager"),
+        );
+        let mut fallback = store
+            .load_record(environment.transaction.fallback_deployment_id)
+            .unwrap();
+        fallback.state = DeploymentState::Broken;
+        fallback.failure = Some("The original initramfs is missing".into());
+        fallback.initramfs_sha256 = None;
+        store.write_record(&fallback).unwrap();
+        let engine = RecoveryEngine::new(&environment.root, FakeFilesystem::default());
+        assert!(
+            engine
+                .execute(Some(environment.transaction.id), BOOT_ONE)
+                .is_err()
+        );
+        assert!(environment.root.join("@root/origin").exists());
+        assert!(
+            !environment
+                .root
+                .join(environment.transaction.old_root_name())
+                .exists()
+        );
+    }
+
+    #[test]
+    fn writable_damaged_safety_copy_is_rejected_before_root_mutation() {
+        let environment = Environment::new();
+        let store = DeploymentStore::new(
+            environment
+                .root
+                .join("@snapshots/anduinos-btrfs-snapshots-manager"),
+        );
+        let mut fallback = store
+            .load_record(environment.transaction.fallback_deployment_id)
+            .unwrap();
+        fallback.state = DeploymentState::Broken;
+        fallback.failure = Some("Missing original initramfs".into());
+        fallback.snapshot_uuid = Some(TARGET_UUID.into());
+        fallback.initramfs_sha256 = None;
+        store.write_record(&fallback).unwrap();
+        let engine = RecoveryEngine::new(
+            &environment.root,
+            FakeFilesystem {
+                writable_safety: true,
+                ..Default::default()
+            },
+        );
+        let error = engine
+            .execute(Some(environment.transaction.id), BOOT_ONE)
+            .unwrap_err();
+        assert!(error.message.contains("read-only Btrfs subvolume"));
+        assert!(environment.root.join("@root/origin").exists());
+    }
+
+    #[test]
+    fn damaged_restore_destination_is_still_rejected() {
+        let environment = Environment::new();
+        let store = DeploymentStore::new(
+            environment
+                .root
+                .join("@snapshots/anduinos-btrfs-snapshots-manager"),
+        );
+        let mut target = store
+            .load_record(environment.transaction.target_deployment_id)
+            .unwrap();
+        target.state = DeploymentState::Broken;
+        target.failure = Some("Missing initramfs".into());
+        target.initramfs_sha256 = None;
+        store.write_record(&target).unwrap();
+        assert!(
+            RecoveryEngine::new(&environment.root, FakeFilesystem::default())
+                .execute(Some(environment.transaction.id), BOOT_ONE)
+                .is_err()
+        );
+        assert!(environment.root.join("@root/origin").exists());
     }
 
     #[test]

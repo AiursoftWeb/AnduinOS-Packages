@@ -29,6 +29,15 @@ const MOK_CERTIFICATE: &str = "var/lib/shim-signed/mok/MOK.der";
 const MAX_COMMAND_DIAGNOSTIC: usize = 2000;
 const MAX_FAILURE_MESSAGE: usize = 2000;
 
+#[derive(Clone, Copy)]
+enum SnapshotBootIdentity<'a> {
+    Running,
+    Installed(&'a str),
+    // An offline safety copy must preserve a damaged root without claiming
+    // that it is a valid destination for a future system restore.
+    OfflineSafety,
+}
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum OperationPhase {
     Validate,
@@ -238,20 +247,20 @@ impl<R: CommandRunner> OperationEngine<R> {
         F: FnMut(OperationPhase, f64, &str),
     {
         let kernel = read_default_installed_kernel_release(&self.system_root)?;
-        self.create_snapshot_with_kernel(
+        self.create_snapshot_with_boot_identity(
             layout,
             title,
             reason,
             pinned,
             DeploymentKind::Manual,
-            &kernel,
+            SnapshotBootIdentity::Installed(&kernel),
             progress,
         )
     }
 
     /// Create the safety recovery point used immediately before an offline
-    /// root replacement. The resulting deployment is intentionally identical
-    /// to a safety point created by the installed snapshot manager.
+    /// root replacement. Missing boot or package files are preserved as a
+    /// Broken safety copy, never advertised as a healthy restore destination.
     pub fn create_offline_pre_rollback<F>(
         &self,
         layout: &LayoutReport,
@@ -260,27 +269,26 @@ impl<R: CommandRunner> OperationEngine<R> {
     where
         F: FnMut(OperationPhase, f64, &str),
     {
-        let kernel = read_default_installed_kernel_release(&self.system_root)?;
-        self.create_snapshot_with_kernel(
+        self.create_snapshot_with_boot_identity(
             layout,
             "Before offline system restore",
             "Safety snapshot created by AnduinOS Rescue Center",
             false,
             DeploymentKind::PreRollback,
-            &kernel,
+            SnapshotBootIdentity::OfflineSafety,
             progress,
         )
     }
 
     #[allow(clippy::too_many_arguments)]
-    fn create_snapshot_with_kernel<F>(
+    fn create_snapshot_with_boot_identity<F>(
         &self,
         layout: &LayoutReport,
         title: &str,
         reason: &str,
         pinned: bool,
         kind: DeploymentKind,
-        kernel_release: &str,
+        boot_identity: SnapshotBootIdentity<'_>,
         mut progress: F,
     ) -> Result<DeploymentRecord, OperationError>
     where
@@ -303,7 +311,7 @@ impl<R: CommandRunner> OperationEngine<R> {
             pinned,
             kind,
             DeploymentState::Ready,
-            Some(kernel_release),
+            boot_identity,
             progress,
             operation_lock,
             deployments,
@@ -376,7 +384,7 @@ impl<R: CommandRunner> OperationEngine<R> {
             true,
             DeploymentKind::Factory,
             DeploymentState::Ready,
-            Some(&kernel),
+            SnapshotBootIdentity::Installed(&kernel),
             progress,
             operation_lock,
             deployments,
@@ -479,7 +487,7 @@ impl<R: CommandRunner> OperationEngine<R> {
             false,
             DeploymentKind::Automatic,
             DeploymentState::Ready,
-            None,
+            SnapshotBootIdentity::Running,
             progress,
             operation_lock,
             deployments,
@@ -602,7 +610,7 @@ impl<R: CommandRunner> OperationEngine<R> {
             pinned,
             kind,
             completed_state,
-            None,
+            SnapshotBootIdentity::Running,
             progress,
             operation_lock,
             deployments,
@@ -618,7 +626,7 @@ impl<R: CommandRunner> OperationEngine<R> {
         pinned: bool,
         kind: DeploymentKind,
         completed_state: DeploymentState,
-        kernel_release: Option<&str>,
+        boot_identity: SnapshotBootIdentity<'_>,
         mut progress: F,
         _operation_lock: OperationLock,
         deployments: crate::store::DiscoveryReport,
@@ -692,21 +700,38 @@ impl<R: CommandRunner> OperationEngine<R> {
                 0.55,
                 "Hashing package and boot identities",
             );
-            let kernel = match kernel_release {
-                Some(release) => validate_kernel_release(release)?.to_string(),
-                None => read_kernel_release(&self.system_root)?,
+            let identity_result: Result<(), OperationError> = (|| {
+                let kernel = match boot_identity {
+                    SnapshotBootIdentity::Installed(release) => {
+                        validate_kernel_release(release)?.to_string()
+                    }
+                    SnapshotBootIdentity::Running => read_kernel_release(&self.system_root)?,
+                    SnapshotBootIdentity::OfflineSafety => {
+                        read_default_installed_kernel_release(&snapshot)?
+                    }
+                };
+                record.kernel_release = Some(kernel.clone());
+                record.initramfs_sha256 = Some(hash_regular_file(
+                    &snapshot.join("boot").join(format!("initrd.img-{kernel}")),
+                )?);
+                record.boot_artifact_sha256 = Some(hash_regular_file(
+                    &snapshot.join("boot").join(format!("vmlinuz-{kernel}")),
+                )?);
+                record.dpkg_status_sha256 =
+                    Some(hash_regular_file(&snapshot.join("var/lib/dpkg/status"))?);
+                record.mok_certificate_sha256 =
+                    hash_optional_regular_file(&snapshot.join(MOK_CERTIFICATE))?;
+
+                Ok(())
+            })();
+            let completed_state = match identity_result {
+                Ok(()) => completed_state,
+                Err(error) if matches!(boot_identity, SnapshotBootIdentity::OfflineSafety) => {
+                    record.failure = Some(truncate_failure(error.to_string()));
+                    DeploymentState::Broken
+                }
+                Err(error) => return Err(error),
             };
-            record.kernel_release = Some(kernel.clone());
-            record.initramfs_sha256 = Some(hash_regular_file(
-                &snapshot.join("boot").join(format!("initrd.img-{kernel}")),
-            )?);
-            record.boot_artifact_sha256 = Some(hash_regular_file(
-                &snapshot.join("boot").join(format!("vmlinuz-{kernel}")),
-            )?);
-            record.dpkg_status_sha256 =
-                Some(hash_regular_file(&snapshot.join("var/lib/dpkg/status"))?);
-            record.mok_certificate_sha256 =
-                hash_optional_regular_file(&snapshot.join(MOK_CERTIFICATE))?;
 
             progress(
                 OperationPhase::Commit,
@@ -725,6 +750,8 @@ impl<R: CommandRunner> OperationEngine<R> {
             })?;
             self.write_record_atomic(&record)?;
             self.sync_btrfs()?;
+            // The copy is complete even when its original boot files are broken.
+            // Confirmation must retain this history without making it restorable.
             lineage_store
                 .record_recovery_point(&record)
                 .map_err(lineage_error)?;
@@ -1830,7 +1857,12 @@ mod tests {
                 ] {
                     let destination = target.join(relative);
                     fs::create_dir_all(destination.parent().unwrap()).unwrap();
-                    fs::copy(source.join(relative), destination).unwrap();
+                    if source.join(relative).exists() {
+                        fs::copy(source.join(relative), destination).unwrap();
+                    }
+                }
+                if let Ok(link) = fs::read_link(source.join("boot/vmlinuz")) {
+                    symlink(link, target.join("boot/vmlinuz")).unwrap();
                 }
             } else if arguments.starts_with(&["subvolume".into(), "show".into()]) {
                 if self.fail_identity {
@@ -1915,6 +1947,106 @@ mod tests {
         fn drop(&mut self) {
             fs::remove_dir_all(&self.base).unwrap();
         }
+    }
+
+    #[test]
+    fn offline_safety_snapshot_preserves_a_root_with_missing_boot_files() {
+        for missing in [
+            "boot/initrd.img-test-kernel",
+            "boot/vmlinuz-test-kernel",
+            "boot/vmlinuz",
+            "var/lib/dpkg/status",
+        ] {
+            let environment = TestEnvironment::new();
+            let engine = OperationEngine::new(
+                &environment.system_root,
+                &environment.snapshot_root,
+                FakeRunner::new(false),
+            );
+            let target = engine
+                .create_offline_manual(
+                    &environment.layout(),
+                    "Healthy target",
+                    "Test",
+                    true,
+                    |_, _, _| {},
+                )
+                .unwrap();
+            fs::remove_file(environment.system_root.join(missing)).unwrap();
+            let record = engine
+                .create_offline_pre_rollback(&environment.layout(), |_, _, _| {})
+                .unwrap();
+            assert_eq!(record.kind, DeploymentKind::PreRollback);
+            assert_eq!(record.state, DeploymentState::Broken);
+            assert_eq!(record.snapshot_uuid.as_deref(), Some(SNAPSHOT_UUID));
+            assert_eq!(record.snapshot_parent_uuid.as_deref(), Some(PARENT_UUID));
+            assert!(record.failure.is_some());
+            assert!(!record.can_restore());
+            let transaction = crate::transaction::RollbackTransaction::new(
+                target.id,
+                record.id,
+                "test-filesystem",
+                "test-kernel",
+                "a".repeat(64),
+                "b".repeat(64),
+                "c".repeat(64),
+            );
+            let lineage = LineageStore::new(&environment.snapshot_root)
+                .record_activation(
+                    &transaction,
+                    crate::lineage::ActivationOutcome::Confirmed,
+                    Utc::now(),
+                )
+                .unwrap();
+            assert_eq!(lineage.current_head_id, Some(target.id));
+            assert_eq!(lineage.activations[0].safety_recovery_point_id, record.id);
+            assert!(
+                environment
+                    .snapshot_root
+                    .join("deployments")
+                    .join(record.id.to_string())
+                    .join("root")
+                    .is_dir()
+            );
+            assert!(
+                engine
+                    .verify(&environment.layout(), record.id, |_, _, _| {})
+                    .is_err()
+            );
+        }
+    }
+
+    #[test]
+    fn healthy_offline_safety_snapshot_remains_restorable() {
+        let environment = TestEnvironment::new();
+        let engine = OperationEngine::new(
+            &environment.system_root,
+            &environment.snapshot_root,
+            FakeRunner::new(false),
+        );
+        let record = engine
+            .create_offline_pre_rollback(&environment.layout(), |_, _, _| {})
+            .unwrap();
+        assert!(record.can_restore());
+        assert_eq!(record.kind, DeploymentKind::PreRollback);
+        engine
+            .verify(&environment.layout(), record.id, |_, _, _| {})
+            .unwrap();
+    }
+
+    #[test]
+    fn offline_safety_snapshot_still_requires_a_verified_btrfs_copy() {
+        let environment = TestEnvironment::new();
+        let engine = OperationEngine::new(
+            &environment.system_root,
+            &environment.snapshot_root,
+            FakeRunner::new(false).with_identity_failure(),
+        );
+        assert!(
+            engine
+                .create_offline_pre_rollback(&environment.layout(), |_, _, _| {})
+                .is_err()
+        );
     }
 
     #[test]
