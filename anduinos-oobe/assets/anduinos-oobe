@@ -2238,8 +2238,7 @@ def create_agents_page(update_navigation=lambda: None):
         notice = agent['get_notice']()
         if notice['text']:
             body += '\n\n' + notice['text']
-        dialog = Adw.MessageDialog(
-            transient_for=page.get_root(), modal=True,
+        dialog = Adw.AlertDialog(
             heading=_('Install {}?').format(agent['name']),
             body=body,
         )
@@ -2274,7 +2273,7 @@ def create_agents_page(update_navigation=lambda: None):
                 start_install(agent)
 
         dialog.connect('response', responded)
-        dialog.present()
+        dialog.present(page.get_root())
 
     for agent in _agents.recommendations(_, is_chinese_locale()):
         button = Gtk.Button()
