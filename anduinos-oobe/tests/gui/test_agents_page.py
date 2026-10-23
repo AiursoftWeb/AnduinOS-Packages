@@ -5,6 +5,7 @@ from pathlib import Path
 import threading
 import time
 import unittest
+import warnings
 from unittest.mock import patch
 
 
@@ -38,10 +39,14 @@ class AgentsPageTests(unittest.TestCase):
             time.sleep(.01)
         self.fail('Timed out waiting for the page state')
 
-    def dialog(self, parent=None):
-        return next(window for window in oobe.Gtk.Window.get_toplevels()
-                    if isinstance(window, oobe.Adw.MessageDialog) and window.get_visible()
-                    and (parent is None or window.get_transient_for() == parent))
+    def dialog(self, parent):
+        return parent.get_visible_dialog()
+
+    def respond(self, dialog, response):
+        button = next(item for item in descendants(dialog)
+                      if isinstance(item, oobe.Gtk.Button)
+                      and item.get_label() == dialog.get_response_label(response))
+        button.emit('clicked')
 
     def test_consent_progress_output_retry_and_open(self):
         installed = False
@@ -82,8 +87,14 @@ class AgentsPageTests(unittest.TestCase):
                           if isinstance(item, oobe.Gtk.Label)]
         progress = next(item for item in descendants(page) if isinstance(item, oobe.Gtk.ProgressBar))
         self.assertIn('Not installed', labels())
-        button.emit('clicked')
-        consent = self.dialog()
+        with warnings.catch_warnings(record=True) as seen:
+            warnings.simplefilter('always', DeprecationWarning)
+            button.emit('clicked')
+        self.assertEqual([str(item.message) for item in seen
+                          if issubclass(item.category, DeprecationWarning)], [])
+        consent = self.dialog(window)
+        self.assertEqual(consent.get_default_response(), 'cancel')
+        self.assertEqual(consent.get_close_response(), 'cancel')
         self.assertIn('third-party software', consent.get_body())
         self.assertIn('Extra information <not markup>', consent.get_body())
         links = next(item for item in descendants(consent.get_extra_child())
@@ -96,10 +107,14 @@ class AgentsPageTests(unittest.TestCase):
         self.assertEqual(visited, ['https://example.com/terms?a=1&b=2'])
         self.assertEqual(attempts, [])
         self.assertTrue(consent.get_visible())
-        consent.response('cancel')
+        self.respond(consent, 'cancel')
         self.assertEqual(attempts, [])
         button.emit('clicked')
-        self.dialog().response('install')
+        self.dialog(window).close()
+        self.wait_for(lambda: window.get_visible_dialog() is None)
+        self.assertEqual(attempts, [])
+        button.emit('clicked')
+        self.respond(self.dialog(window), 'install')
         self.wait_for(lambda: len(attempts) == 1)
         self.assertTrue(page._install_running)
         self.assertTrue(progress.get_visible())
@@ -126,12 +141,12 @@ class AgentsPageTests(unittest.TestCase):
         button.emit('clicked')
         installed = True
         exitcode = 7
-        self.dialog().response('install')
+        self.respond(self.dialog(window), 'install')
         self.wait_for(lambda: len(attempts) == 2 and not page._install_running)
         self.assertIn('Installation failed. Click the agent to retry.', labels())
         button.emit('clicked')
         exitcode = 0
-        self.dialog().response('install')
+        self.respond(self.dialog(window), 'install')
         self.wait_for(lambda: len(attempts) == 3 and not page._install_running)
         self.assertIn('Installed', labels())
         button.emit('clicked')
@@ -230,8 +245,8 @@ class AgentsPageTests(unittest.TestCase):
         self.assertIn('latest Node.js release', dialog.get_body())
         self.assertIn('nvm', dialog.get_body())
         self.assertIn('DeepSeek Harness', dialog.get_extra_child().get_last_child().get_text())
-        dialog.response('cancel')
-        dialog.destroy()
+        self.respond(dialog, 'cancel')
+        self.wait_for(lambda: window.get_visible_dialog() is None)
         with patch.object(oobe._agents, 'executable', return_value=None):
             buttons[2].emit('clicked')
         dialog = self.dialog(window)
@@ -240,7 +255,7 @@ class AgentsPageTests(unittest.TestCase):
                  if isinstance(item, oobe.Gtk.Label) and item.get_use_markup()]
         self.assertEqual(links, ['OpenCode · Terms of Service · Privacy Policy',
                                  'Z.AI / GLM · Terms of Service · Privacy Policy'])
-        dialog.response('cancel')
+        self.respond(dialog, 'cancel')
 
 
 if __name__ == '__main__':
