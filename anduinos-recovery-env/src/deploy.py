@@ -165,7 +165,7 @@ def grub():
     insmod part_gpt
     insmod ext2
     search --no-floppy --fs-uuid --set=recovery {binding["volume_uuid"]}
-    linux ($recovery)/{DIRECTORY}/current/vmlinuz anduinos.recovery.root={binding["root_uuid"]} loglevel=3
+    linux ($recovery)/{DIRECTORY}/current/vmlinuz anduinos.recovery.root={binding["root_uuid"]} console=tty0 loglevel=3
     initrd ($recovery)/{DIRECTORY}/current/initrd.img
 }}''')
 

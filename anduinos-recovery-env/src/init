@@ -17,6 +17,15 @@ finish() {
     reboot -f
 }
 
+# A rescue mount cannot be remounted read-write. Reopen it only after confirmation.
+writable() {
+    umount "$top" || return 1
+    if ! mount -t btrfs -o rw,subvolid=5 "$device" "$top"; then
+        top=
+        return 1
+    fi
+}
+
 failed() {
     echo
     echo "$*"
@@ -48,7 +57,7 @@ set -- $devices
 device=$1
 top=/run/anduinos-rescue-center/repair-recovery-env
 mkdir -p "$top"
-mount -t btrfs -o ro,nologreplay,subvolid=5 "$device" "$top" || {
+mount -t btrfs -o ro,rescue=nologreplay,subvolid=5 "$device" "$top" || {
     top=
     failed 'Could not open the installed Btrfs system.'
 }
@@ -65,7 +74,7 @@ while :; do
         echo 'Type RESUME to finish that recovery, or press Enter to reboot.'
         read -r answer
         [ "$answer" = RESUME ] || { finish; continue; }
-        mount -o remount,rw "$top" && recovery-offline resume "$top" || failed 'Recovery could not be resumed.'
+        writable && recovery-offline resume "$top" || failed 'Recovery could not be resumed.'
     else
         jq '[.deployments[] | select(.state == "ready")] | sort_by(.created_at) | reverse' /run/snapshots.json > /run/choices.json
         count=$(jq 'length' /run/choices.json)
@@ -83,7 +92,7 @@ while :; do
         echo 'Type RESTORE to confirm, or press Enter to cancel.'
         read -r answer
         [ "$answer" = RESTORE ] || continue
-        mount -o remount,rw "$top" && recovery-offline restore "$top" "$identifier" || failed 'Recovery failed. Re-enter this environment to inspect or resume it.'
+        writable && recovery-offline restore "$top" "$identifier" || failed 'Recovery failed. Re-enter this environment to inspect or resume it.'
     fi
     echo 'Recovery completed. Press Enter to restart AnduinOS.'
     read -r ignored
