@@ -1,0 +1,50 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-recovery-env</PackageName>
+    <PackageVersion>2.0.5-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Independent offline Btrfs snapshot recovery environment</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0-or-later</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
+    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+    <Component>main</Component>
+  </PropertyGroup>
+  <ItemGroup>
+    <BuildSource Name="ubuntu" Condition="'$(Arch)' == 'amd64'" Url="https://archive.ubuntu.com/ubuntu" Suites="$(SuiteShortName) $(SuiteShortName)-updates $(SuiteShortName)-security" Components="main universe" SignedBy="/usr/share/keyrings/ubuntu-archive-keyring.gpg" />
+    <BuildSource Name="ubuntu" Condition="'$(Arch)' == 'arm64'" Url="https://ports.ubuntu.com/ubuntu-ports" Suites="$(SuiteShortName) $(SuiteShortName)-updates $(SuiteShortName)-security" Components="main universe" SignedBy="/usr/share/keyrings/ubuntu-archive-keyring.gpg" />
+    <BuildInput Include="linux-image-generic" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="busybox-static" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="btrfs-progs" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="util-linux" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="jq" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libc6" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgcc-s1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libblkid1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libcom-err2" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libext2fs2t64" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="liblzo2-2" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libudev1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libuuid1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libzstd1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="zlib1g" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libjq1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libonig5" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libcap2" Sources="ubuntu" Arch="$(Arch)" />
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute" />
+    <Dependency Include="python3" />
+    <Dependency Include="util-linux" />
+    <Dependency Include="grub2-common" />
+    <PrebuildCommand Run="python3 build.py" />
+    <PostInstallScript Include="data/postinst" />
+    <PostRemoveScript Include="data/postrm" />
+    <IncludeScript Include="src/deploy.py" Target="/usr/libexec/anduinos-recovery-env" />
+    <IncludeScript Include="data/42_anduinos_recovery" Target="/etc/grub.d/42_anduinos_recovery" />
+    <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-recovery-env/README.md" />
+    <IncludeFile Include="../LICENSE" Target="/usr/share/doc/anduinos-recovery-env/copyright" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+# Leave the separate volume intact; removing a package never destroys a partition.
+case "${1:-}" in
+    remove|purge) command -v update-grub >/dev/null 2>&1 && update-grub ;;
+esac
+exit 0

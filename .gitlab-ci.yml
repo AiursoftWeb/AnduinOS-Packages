@@ -793,3 +793,12 @@ anduinos-desktop:
     - anduinos-desktop-apps
   variables:
     PACKAGE_DIR: anduinos-desktop
+
+anduinos-recovery-env:
+  extends: .publish
+  needs:
+    - lint-all
+    - verify-ci-package-needs
+    - test-all
+  variables:
+    PACKAGE_DIR: anduinos-recovery-env

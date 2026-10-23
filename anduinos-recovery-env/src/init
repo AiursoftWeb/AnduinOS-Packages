@@ -1,0 +1,91 @@
+#!/bin/sh
+# This initramfs never starts or executes programs from the installed system.
+export PATH=/usr/bin:/bin
+export LC_ALL=C
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devtmpfs devtmpfs /dev
+mount -t tmpfs tmpfs /run
+exec </dev/console >/dev/console 2>&1
+
+finish() {
+    sync
+    if [ -n "${top:-}" ] && ! umount "$top"; then
+        echo 'Could not unmount the system. Reboot has been cancelled.'
+        return 1
+    fi
+    reboot -f
+}
+
+failed() {
+    echo
+    echo "$*"
+    echo 'No recovery was completed. Press Enter to reboot.'
+    read -r ignored
+    finish
+    while :; do sleep 3600; done
+}
+
+for driver in $(cat /etc/recovery-drivers); do modprobe "$driver"; done
+uuid=
+for argument in $(cat /proc/cmdline); do
+    case "$argument" in anduinos.recovery.root=*) uuid=${argument#*=} ;; esac
+done
+case "$uuid" in ''|*[!0-9a-fA-F-]*) failed 'The target system UUID is missing or invalid.' ;; esac
+
+echo
+echo 'AnduinOS Recovery Environment'
+echo 'Waiting for the installed system...'
+attempt=0
+while [ "$attempt" -lt 30 ]; do
+    devices=$(blkid | awk -v token="UUID=\"$uuid\"" 'index($0,token) {sub(/:$/, "", $1); print $1}')
+    [ -z "$devices" ] || break
+    sleep 1
+    attempt=$((attempt + 1))
+done
+set -- $devices
+[ "$#" -eq 1 ] || failed 'The target system is missing or has an ambiguous UUID.'
+device=$1
+top=/run/anduinos-rescue-center/repair-recovery-env
+mkdir -p "$top"
+mount -t btrfs -o ro,nologreplay,subvolid=5 "$device" "$top" || {
+    top=
+    failed 'Could not open the installed Btrfs system.'
+}
+
+while :; do
+    if ! recovery-offline list "$top" > /run/snapshots.json; then
+        failed 'This disk does not have a supported AnduinOS snapshot layout.'
+    fi
+    echo
+    echo 'AnduinOS Recovery Environment'
+    echo "System: $uuid"
+    if [ "$(jq -r '.pending != null' /run/snapshots.json)" = true ]; then
+        echo 'A previously confirmed recovery was interrupted.'
+        echo 'Type RESUME to finish that recovery, or press Enter to reboot.'
+        read -r answer
+        [ "$answer" = RESUME ] || { finish; continue; }
+        mount -o remount,rw "$top" && recovery-offline resume "$top" || failed 'Recovery could not be resumed.'
+    else
+        jq '[.deployments[] | select(.state == "ready")] | sort_by(.created_at) | reverse' /run/snapshots.json > /run/choices.json
+        count=$(jq 'length' /run/choices.json)
+        jq -r 'to_entries[] | "\(.key + 1). \(.value.created_at)  \(.value.title | @json) [\(.value.kind)]"' /run/choices.json
+        echo
+        echo '0. Reboot without restoring'
+        printf 'Select a snapshot number: '
+        read -r choice
+        case "$choice" in 0) finish; continue ;; ''|*[!0-9]*) continue ;; esac
+        [ "${#choice}" -le 5 ] && [ "$choice" -ge 1 ] && [ "$choice" -le "$count" ] || continue
+        index=$((choice - 1))
+        identifier=$(jq -r ".[${index}].id" /run/choices.json)
+        jq -r ".[${index}] | \"Restore: \(.title | @json) (\(.created_at))\"" /run/choices.json
+        echo 'This permanently replaces the system. Personal files remain unchanged.'
+        echo 'Type RESTORE to confirm, or press Enter to cancel.'
+        read -r answer
+        [ "$answer" = RESTORE ] || continue
+        mount -o remount,rw "$top" && recovery-offline restore "$top" "$identifier" || failed 'Recovery failed. Re-enter this environment to inspect or resume it.'
+    fi
+    echo 'Recovery completed. Press Enter to restart AnduinOS.'
+    read -r ignored
+    finish
+done
