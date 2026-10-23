@@ -2,6 +2,10 @@
 set -eu
 # Leave the separate volume intact; removing a package never destroys a partition.
 case "${1:-}" in
-    remove|purge) command -v update-grub >/dev/null 2>&1 && update-grub ;;
+    remove|purge)
+        if [ -f /var/lib/anduinos-recovery-env/volume.json ] && command -v update-grub >/dev/null 2>&1; then
+            update-grub
+        fi
+        ;;
 esac
 exit 0

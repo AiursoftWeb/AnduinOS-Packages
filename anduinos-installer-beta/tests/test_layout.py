@@ -15,12 +15,27 @@ from helpers import valid_plan
 
 
 class LayoutTests(unittest.TestCase):
+    def test_recovery_volume_is_btrfs_only_and_never_permanently_mounted(self):
+        for architecture in Architecture:
+            for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):
+                with self.subTest(architecture=architecture, filesystem=filesystem):
+                    layout = build_erase_disk_layout(valid_plan(
+                        architecture=architecture, filesystem=filesystem,
+                    ))
+                    recovery = [p for p in layout.partitions if p.name == "recovery"]
+                    self.assertEqual(len(recovery), int(filesystem is Filesystem.BTRFS))
+                    if recovery:
+                        self.assertEqual(recovery[0].size_mib, 256)
+                        self.assertEqual(recovery[0].filesystem, "ext4")
+                        self.assertIsNone(recovery[0].mount_point)
+                        self.assertEqual(recovery[0].end_mib, layout.partition("root").start_mib)
+
     def test_amd64_layout_supports_bios_and_uefi(self):
         layout = build_erase_disk_layout(valid_plan())
         self.assertEqual(layout.table, "gpt")
         self.assertEqual(
             [part.name for part in layout.partitions],
-            ["bios-boot", "efi-system", "swap", "root"],
+            ["bios-boot", "efi-system", "swap", "recovery", "root"],
         )
         self.assertEqual(layout.partition("bios-boot").flags, ("bios_grub",))
         self.assertEqual(layout.partition("efi-system").size_mib, 1024)
@@ -60,9 +75,9 @@ class LayoutTests(unittest.TestCase):
         amd64 = build_erase_disk_layout(valid_plan(swap_size_mib=0))
         self.assertEqual(
             [part.name for part in amd64.partitions],
-            ["bios-boot", "efi-system", "root"],
+            ["bios-boot", "efi-system", "recovery", "root"],
         )
-        self.assertEqual(amd64.partition("root").number, 3)
+        self.assertEqual(amd64.partition("root").number, 4)
         arm64 = build_erase_disk_layout(
             valid_plan(
                 architecture=Architecture.ARM64,
@@ -71,9 +86,9 @@ class LayoutTests(unittest.TestCase):
         )
         self.assertEqual(
             [part.name for part in arm64.partitions],
-            ["efi-system", "root"],
+            ["efi-system", "recovery", "root"],
         )
-        self.assertEqual(arm64.partition("root").number, 2)
+        self.assertEqual(arm64.partition("root").number, 3)
 
 
 if __name__ == "__main__":

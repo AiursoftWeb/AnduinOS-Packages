@@ -21,6 +21,7 @@ from .storage_graph import (
 )
 from .storage_graph_planning import resolve_storage_graph
 from .storage_inventory import StorageInventory, probe_storage_inventory
+from .layout import erase_disk_overhead_mib
 from .swap_policy import (
     SwapSizingError,
     calculate_swap_sizing,
@@ -129,6 +130,10 @@ def verify_target_disk_environment(
                 (physical_memory_probe or probe_physical_memory_bytes)(),
                 _installation_space_bytes(resolved_plan),
                 esp_size_mib=_installation_esp_size_mib(resolved_plan),
+                layout_overhead_mib=(
+                    erase_disk_overhead_mib(resolved_plan.storage.filesystem)
+                    if resolved_plan.storage.mode is InstallMode.ERASE_DISK else 4
+                ),
             )
             validate_disk_swap_selection(
                 resolved_plan.storage.swap_size_mib,

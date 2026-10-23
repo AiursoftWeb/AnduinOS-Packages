@@ -70,9 +70,17 @@ def verify_payload(path):
     return manifest
 
 
-def target():
-    root = json.loads(run("findmnt", "--json", "--output", "FSTYPE,UUID,FSROOT", "--target", "/"))["filesystems"][0]
+def target(volume_uuid=None, *, if_present=False):
+    binding = read_binding(STATE) if STATE.exists() else None
+    root_mount = run("findmnt", "--json", "--output", "FSTYPE,UUID,FSROOT", "--target", "/", check=False)
+    if not root_mount:
+        if if_present and binding is None:
+            return None  # An image assembly chroot need not have its own mount.
+        raise RuntimeError("Cannot identify the installed root filesystem")
+    root = json.loads(root_mount)["filesystems"][0]
     if root["fstype"] != "btrfs" or root["fsroot"] != "/@root":
+        if if_present and binding is None:
+            return None  # Building the ISO or running Live must never deploy.
         raise RuntimeError("Recovery requires an AnduinOS Btrfs root using @root")
     root_uuid = read_uuid(root["uuid"])
     root_devices = run("blkid", "-c", "/dev/null", "-t", f"UUID={root_uuid}", "-o", "device").splitlines()
@@ -82,12 +90,25 @@ def target():
     types = run("lsblk", "-s", "-n", "-o", "TYPE", root_devices[0]).split()
     if any(kind not in ("disk", "part") for kind in types):
         raise RuntimeError("This recovery version requires an unencrypted disk partition")
-    binding = read_binding(STATE) if STATE.exists() else None
-    query = f"UUID={binding['volume_uuid']}" if binding else f"LABEL={LABEL}"
+    if volume_uuid is not None:
+        volume_uuid = read_uuid(volume_uuid)
+        if binding is not None and binding["volume_uuid"] != volume_uuid:
+            raise RuntimeError("Requested recovery volume differs from the installed binding")
+    selected_uuid = volume_uuid or (binding["volume_uuid"] if binding else None)
+    query = f"UUID={selected_uuid}" if selected_uuid else f"LABEL={LABEL}"
     devices = run("blkid", "-c", "/dev/null", "-t", query, "-o", "device", check=False).splitlines()
+    if not devices and if_present and binding is None and volume_uuid is None:
+        return None
     if len(devices) != 1:
         raise RuntimeError(f"Expected one dedicated {LABEL} recovery volume; found {len(devices)}")
     device = devices[0]
+    if if_present and binding is None:
+        # Automatic discovery must not claim a spare volume on another disk.
+        root_disks = run("lsblk", "--raw", "-s", "-n", "-o", "NAME,TYPE", "-p", root_devices[0]).splitlines()
+        volume_disks = run("lsblk", "--raw", "-s", "-n", "-o", "NAME,TYPE", "-p", device).splitlines()
+        disks = lambda rows: {row.split()[0] for row in rows if row.split()[-1] == "disk"}
+        if disks(root_disks) != disks(volume_disks) or not disks(root_disks):
+            raise RuntimeError("Automatic recovery deployment requires a volume on the system disk")
     info = dict(line.split("=", 1) for line in run("blkid", "-p", "-o", "export", device).splitlines() if "=" in line)
     if info.get("TYPE") != "ext4" or info.get("LABEL") != LABEL:
         raise RuntimeError(f"Recovery volume must be ext4 and labelled {LABEL}")
@@ -99,11 +120,15 @@ def target():
     return device, selected
 
 
-def deploy():
+def deploy(volume_uuid=None, *, if_present=False):
     if os.geteuid() != 0:
         raise RuntimeError("Recovery deployment must run as root")
+    selected = target(volume_uuid, if_present=if_present)
+    if selected is None:
+        print("No recovery deployment is configured for this system.")
+        return
     verify_payload(PAYLOAD)
-    device, binding = target()
+    device, binding = selected
     mount = Path(tempfile.mkdtemp(prefix="anduinos-recovery-", dir="/run"))
     try:
         run("mount", "-t", "ext4", "-o", "nodev,nosuid,noexec", device, str(mount))
@@ -172,10 +197,16 @@ def grub():
 
 if __name__ == "__main__":
     try:
-        if sys.argv[1:] == ["deploy"]:
+        if len(sys.argv) >= 2 and sys.argv[1] == "deploy":
+            import argparse
+            parser = argparse.ArgumentParser()
+            parser.add_argument("command", choices=("deploy",))
+            parser.add_argument("--volume-uuid")
+            parser.add_argument("--if-present", action="store_true")
+            args = parser.parse_args()
             with open("/run/anduinos-recovery-env.lock", "w") as lock:
                 fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                deploy()
+                deploy(args.volume_uuid, if_present=args.if_present)
         elif sys.argv[1:] == ["grub"]:
             grub()
         else:

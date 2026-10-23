@@ -12,7 +12,7 @@ from .coexistence import (
     CoexistenceStatus,
     analyze_guided_coexistence,
 )
-from .layout import build_erase_disk_layout
+from .layout import RECOVERY_LABEL, build_erase_disk_layout
 from .model import Architecture, DiskIdentity, Filesystem, Firmware, InstallMode, InstallPlan
 from .storage_graph import (
     STORAGE_GRAPH_SCHEMA_VERSION,
@@ -382,6 +382,13 @@ def build_erase_disk_storage_graph(
                 label="AnduinOS-swap",
             )
         )
+    if "recovery" in partition_ids:
+        filesystems.append(FilesystemDeclaration(
+            filesystem_id=partition_ids["recovery"],
+            block_id=partition_ids["recovery"],
+            filesystem=GraphFilesystem.EXT4,
+            label=RECOVERY_LABEL,
+        ))
     filesystems.append(
         FilesystemDeclaration(
             filesystem_id=partition_ids["root"],
@@ -461,6 +468,8 @@ def build_erase_disk_storage_graph(
     format_names = ["efi-system"]
     if "swap" in partition_ids:
         format_names.append("swap")
+    if "recovery" in partition_ids:
+        format_names.append("recovery")
     format_names.append("root")
     operations.extend(
         StorageGraphOperation(StorageGraphAction.FORMAT, partition_ids[name])

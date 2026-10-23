@@ -1,6 +1,8 @@
 #!/bin/sh
 set -eu
 if [ "${1:-}" = configure ]; then
-    /usr/libexec/anduinos-recovery-env deploy
-    update-grub
+    /usr/libexec/anduinos-recovery-env deploy --if-present
+    if [ -f /var/lib/anduinos-recovery-env/volume.json ]; then
+        update-grub
+    fi
 fi

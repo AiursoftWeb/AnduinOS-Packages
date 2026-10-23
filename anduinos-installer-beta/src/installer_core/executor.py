@@ -30,7 +30,7 @@ from .language_support import InstallLanguagePacksStep
 from .live_cleanup import RemoveLivePackagesStep
 from .mirrors import SelectFastestAptMirrorStep
 from .network import DetectNetworkConnectivityStep, RecheckNetworkConnectivityStep
-from .model import Filesystem, Firmware, InstallPlan
+from .model import Filesystem, Firmware, InstallMode, InstallPlan
 from .other_systems import CheckOtherDiskSystemsStep
 from .linux_systems import CheckLinuxSystemsStep
 from .regional_config import ConfigureKeyboardStep, InstallInputMethodStep
@@ -46,6 +46,7 @@ from .storage_steps import MountTargetStep, PrepareStorageStep
 from .system_config import ConfigureSystemStep
 from .target_config import ConfigureStorageStep
 from .snapshots_manager import (
+    DeployRecoveryEnvironmentStep,
     CreateFactorySnapshotStep,
     EnsureSnapshotsManagerStep,
 )
@@ -126,6 +127,9 @@ class InstallerExecutor:
         # machine fresh SSH host identity and reapplies the package-owned,
         # default-off remote-access policy as the final network-service state.
         steps.append(ProvisionRemoteAccessStep(self.runner))
+        if (plan.storage.mode is InstallMode.ERASE_DISK
+                and plan.storage.filesystem is Filesystem.BTRFS):
+            steps.append(DeployRecoveryEnvironmentStep(self.runner))
         steps.extend(
             (
                 VerifyDkmsSignaturesStep(self.runner),

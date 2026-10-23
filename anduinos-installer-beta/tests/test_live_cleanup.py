@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 from fakes import FakeRunner
@@ -13,9 +14,9 @@ from installer_core.live_cleanup import (
     RemoveLivePackagesStep,
     VMWARE_GUEST_PACKAGES,
 )
-from installer_core.model import Architecture, Filesystem
+from installer_core.model import Architecture, Filesystem, InstallMode
 from installer_core.steps import InstallContext
-from installer_core.snapshots_manager import SNAPSHOTS_MANAGER_PACKAGE
+from installer_core.snapshots_manager import RECOVERY_PACKAGE, SNAPSHOTS_MANAGER_PACKAGE
 
 
 EXPECTED_LIVE_ONLY_PACKAGES = (
@@ -214,10 +215,10 @@ class RemoveLivePackagesTests(unittest.TestCase):
         self.assertLess(commands.index(mark), purge_index)
         self.assertEqual(
             context.values["persistent_target_packages"],
-            ("openssh-server",),
+            ("openssh-server", "anduinos-recovery-env"),
         )
         self.assertIn(
-            "Retaining installed-system packages: openssh-server",
+            "Retaining installed-system packages: openssh-server, anduinos-recovery-env",
             messages,
         )
 
@@ -321,6 +322,29 @@ class RemoveLivePackagesTests(unittest.TestCase):
         self.assertEqual(
             context.values["live_package_candidates"][-1], SNAPSHOTS_MANAGER_PACKAGE
         )
+
+    def test_recovery_package_is_retained_only_for_new_btrfs_erase_layout(self):
+        for architecture in Architecture:
+            for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):
+                for mode in InstallMode:
+                    with self.subTest(architecture=architecture, filesystem=filesystem, mode=mode):
+                        with tempfile.TemporaryDirectory() as directory:
+                            target = Path(directory)
+                            context = _context(target, filesystem)
+                            context.plan = replace(
+                                context.plan,
+                                storage=replace(context.plan.storage, mode=mode),
+                                platform=replace(context.plan.platform, architecture=architecture),
+                            )
+                            runner = FakeRunner()
+                            runner.outputs[_query(target, RECOVERY_PACKAGE)] = ("ii \n", "", 0)
+                            RemoveLivePackagesStep(runner).execute(context)
+                            commands = [command for command, _ in runner.commands]
+                            retained = ("chroot", str(target), "apt-mark", "manual", RECOVERY_PACKAGE)
+                            expected = mode is InstallMode.ERASE_DISK and filesystem is Filesystem.BTRFS
+                            self.assertEqual(retained in commands, expected)
+                            purged = any("purge" in command and RECOVERY_PACKAGE in command for command in commands)
+                            self.assertEqual(purged, not expected)
 
     def test_advanced_filesystem_tools_survive_installer_autoremove(self):
         for filesystem, package in ADVANCED_FILESYSTEM_TOOL_PACKAGES.items():

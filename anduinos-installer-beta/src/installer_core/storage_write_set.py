@@ -128,9 +128,12 @@ def build_erase_disk_write_set(plan: InstallPlan) -> StorageWriteSet:
     }
     if "swap" in partition_ids:
         format_types["swap"] = "swap"
+    if "recovery" in partition_ids:
+        format_types["recovery"] = "ext4"
     format_names = (
         "efi-system",
         *(("swap",) if "swap" in partition_ids else ()),
+        *(("recovery",) if "recovery" in partition_ids else ()),
         "root",
     )
     for name in format_names:

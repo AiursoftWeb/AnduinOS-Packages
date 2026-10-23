@@ -27,6 +27,7 @@ from .model import (
     StorageSpec,
 )
 from .hostnames import normalize_hostname
+from .layout import erase_disk_overhead_mib
 from .probe import PlatformProbe
 from .storage_graph_planning import build_erase_disk_storage_graph
 from .storage_inventory import DiskTopologyBinding
@@ -58,6 +59,9 @@ def build_plan(
         swap_sizing = calculate_swap_sizing(
             physical_memory_probe(),
             disk.expected_size_bytes,
+            layout_overhead_mib=erase_disk_overhead_mib(
+                Filesystem(str(choices.get("filesystem") or "btrfs"))
+            ),
         )
         requested_swap = choices.get("swap_size_mib")
         swap_size_mib = (

@@ -1,4 +1,5 @@
 import subprocess
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,6 +9,8 @@ from helpers import valid_plan
 from installer_core.command import CommandError
 from installer_core.steps import InstallContext, StepWarning
 from installer_core.snapshots_manager import (
+    DeployRecoveryEnvironmentStep,
+    RECOVERY_DEPLOYER,
     CreateFactorySnapshotStep,
     EnsureSnapshotsManagerStep,
     FACTORY_PROVISIONER,
@@ -84,6 +87,39 @@ def context_for(
     )
     context.values["test_logs"] = logs
     return context
+
+
+class RecoveryDeploymentTests(unittest.TestCase):
+    def test_uses_the_planned_volume_uuid_without_reinstalling_or_refreshing_grub(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            context = context_for(target, online=False)
+            context.values["partition_devices"] = {"recovery": "/dev/nvme0n1p4"}
+            volume_uuid = "12345678-1234-1234-1234-123456789abc"
+            runner = FakeRunner()
+            runner.outputs[("blkid", "-s", "UUID", "-o", "value", "/dev/nvme0n1p4")] = (volume_uuid, "", 0)
+            step = DeployRecoveryEnvironmentStep(runner)
+            step.execute(context)
+            binding = target / "var/lib/anduinos-recovery-env/volume.json"
+            binding.parent.mkdir(parents=True)
+            binding.write_text(json.dumps({"schema": 1, "volume_uuid": volume_uuid}))
+            step.verify(context)
+            commands = [c for c, _ in runner.commands]
+            self.assertIn(("chroot", str(target), RECOVERY_DEPLOYER,
+                           "deploy", "--volume-uuid", volume_uuid), commands)
+            self.assertFalse(any("apt-get" in c or "update-grub" in c or "dpkg-reconfigure" in c for c in commands))
+            binding.write_text(json.dumps({"volume_uuid": "another-volume"}))
+            with self.assertRaisesRegex(RuntimeError, "planned volume"):
+                step.verify(context)
+
+    def test_missing_planned_volume_is_fatal_before_any_deployment(self):
+        with tempfile.TemporaryDirectory() as directory:
+            context = context_for(Path(directory), online=False)
+            context.values["partition_devices"] = {"root": "/dev/vda4"}
+            runner = FakeRunner()
+            with self.assertRaisesRegex(RuntimeError, "did not create"):
+                DeployRecoveryEnvironmentStep(runner).execute(context)
+            self.assertEqual(runner.commands, [])
 
 
 class EnsureSnapshotsManagerTests(unittest.TestCase):

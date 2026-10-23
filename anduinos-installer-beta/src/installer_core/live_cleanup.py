@@ -6,9 +6,9 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .command import CommandError, CommandRunner
-from .model import Architecture, Filesystem
+from .model import Architecture, Filesystem, InstallMode
 from .steps import FailurePolicy, InstallContext
-from .snapshots_manager import SNAPSHOTS_MANAGER_PACKAGE
+from .snapshots_manager import RECOVERY_PACKAGE, SNAPSHOTS_MANAGER_PACKAGE
 
 
 # This is deliberately installer-owned policy. It must not be derived from
@@ -114,6 +114,10 @@ class RemoveLivePackagesStep:
             # make the selected-filesystem capability explicit before the
             # installer package and its orphaned dependencies are removed.
             retained += (SNAPSHOTS_MANAGER_PACKAGE,)
+        recovery_enabled = (context.plan.storage.mode is InstallMode.ERASE_DISK
+                            and context.plan.storage.filesystem is Filesystem.BTRFS)
+        if recovery_enabled:
+            retained += (RECOVERY_PACKAGE,)
         for package in retained:
             self.runner.run(
                 ("chroot", str(target), "apt-mark", "manual", package),
@@ -127,6 +131,8 @@ class RemoveLivePackagesStep:
             )
 
         candidates = list(LIVE_ONLY_PACKAGES)
+        if not recovery_enabled:
+            candidates.append(RECOVERY_PACKAGE)
         if context.plan.storage.filesystem is not Filesystem.BTRFS:
             candidates.append(SNAPSHOTS_MANAGER_PACKAGE)
             context.log(

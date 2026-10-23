@@ -87,7 +87,7 @@ class StorageWriteSetTests(unittest.TestCase):
         ]
         self.assertEqual(
             {item.detail("filesystem") for item in formats},
-            {"vfat", "swap", "btrfs"},
+            {"vfat", "swap", "ext4", "btrfs"},
         )
         subvolumes = [
             item
@@ -104,7 +104,7 @@ class StorageWriteSetTests(unittest.TestCase):
                 for item in subvolumes
             )
         )
-        self.assertEqual(len(write_set.destructive_operations), 4)
+        self.assertEqual(len(write_set.destructive_operations), 5)
         self.assertTrue(boot.bios_required)
         self.assertTrue(
             any(
@@ -156,7 +156,7 @@ class StorageWriteSetTests(unittest.TestCase):
             for item in write_set.operations
             if item.action is StorageAction.CREATE_PARTITION
         ]
-        self.assertEqual(len(creates), 3)
+        self.assertEqual(len(creates), 4)
         self.assertNotIn(
             "bios-boot", {item.detail("name") for item in creates}
         )

@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-btrfs-snapshots-manager</PackageName>
-    <PackageVersion>2.0.5-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.5-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Disk Snapshots Manager — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -29,6 +29,7 @@
     <Dependency Include="libgtk-4-1" />
     <Dependency Include="libadwaita-1-0" />
     <Dependency Include="btrfs-progs" />
+    <Suggest Include="anduinos-recovery-env" />
     <Dependency Include="util-linux" />
     <Dependency Include="polkitd" />
     <Dependency Include="dbus-bin" />
