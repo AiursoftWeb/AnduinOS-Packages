@@ -4,6 +4,7 @@ import gzip
 import hashlib
 import json
 import os
+import posixpath
 from pathlib import Path
 import re
 import shutil
@@ -12,8 +13,8 @@ import tempfile
 
 
 HERE = Path(__file__).resolve().parent
-# Storage, keyboard and firmware framebuffer support; no network or desktop stack.
-DRIVERS = "virtio_pci virtio_mmio virtio_blk virtio_scsi nvme ahci sd_mod usb_storage uas xhci_pci xhci_plat_hcd ehci_pci ohci_pci uhci_hcd usbhid hid_generic atkbd i8042 sdhci_pci sdhci_acpi mmc_block btrfs ext4 virtio_gpu bochs".split()
+# Storage, input and firmware framebuffer support; no network or desktop session.
+DRIVERS = "virtio_pci virtio_mmio virtio_blk virtio_scsi nvme ahci sd_mod usb_storage uas xhci_pci xhci_plat_hcd ehci_pci ohci_pci uhci_hcd usbhid hid_generic atkbd i8042 evdev psmouse virtio_input sdhci_pci sdhci_acpi mmc_block btrfs ext4 simpledrm virtio_gpu bochs".split()
 
 
 def run(*args, **kwargs):
@@ -27,6 +28,85 @@ def output(*args):
 def copy(source, target):
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source, target)
+
+
+class Runtime:
+    """Copy selected files and ELF dependencies, resolving links inside inputs only."""
+    def __init__(self, source, root, arch):
+        self.source, self.root = source, root
+        self.triplet = {"amd64": "x86_64-linux-gnu", "arm64": "aarch64-linux-gnu"}[arch]
+        self.copied = set()
+
+    def resolve(self, path):
+        parts = path.lstrip("/").split("/")
+        for _ in range(40):
+            for index in range(len(parts)):
+                candidate = self.source.joinpath(*parts[:index + 1])
+                if candidate.is_symlink():
+                    target = os.readlink(candidate)
+                    absolute = posixpath.normpath(posixpath.join("/", *parts[:index], target, *parts[index + 1:]))
+                    parts = absolute.lstrip("/").split("/")
+                    break
+            else:
+                return self.source.joinpath(*parts)
+        raise RuntimeError(f"Too many runtime symlinks: {path}")
+
+    def dependencies(self, binary):
+        if binary.read_bytes()[:4] != b"\x7fELF":
+            return
+        dynamic = output("readelf", "-d", str(binary))
+        for name in re.findall(r"Shared library: \[(.*?)\]", dynamic):
+            for directory in (f"usr/lib/{self.triplet}", "usr/lib", f"usr/lib/{self.triplet}/systemd", "usr/lib/systemd"):
+                path = f"/{directory}/{name}"
+                if self.resolve(path).is_file():
+                    self.file(path)
+                    break
+            else:
+                raise RuntimeError(f"Missing runtime library {name} required by {binary.name}")
+        headers = output("readelf", "-l", str(binary))
+        for interpreter in re.findall(r"Requesting program interpreter: (.*?)\]", headers):
+            self.file(interpreter)
+
+    def file(self, path):
+        if path in self.copied:
+            return
+        self.copied.add(path)
+        destination = self.root / path.lstrip("/")
+        copy(self.resolve(path), destination)
+        self.dependencies(destination)
+
+    def tree(self, path):
+        source = self.resolve(path)
+        for item in sorted(source.rglob("*")):
+            relative = posixpath.join(path, item.relative_to(source).as_posix())
+            if "__pycache__" not in item.parts and self.resolve(relative).is_file():
+                self.file(relative)
+
+    def graphics(self):
+        for path in ("/usr/bin/cage", "/usr/sbin/seatd", "/usr/bin/python3.14",
+                     "/usr/lib/systemd/systemd-udevd", "/usr/bin/udevadm"):
+            self.file(path)
+        for path in ("/usr/lib/python3.14", "/usr/lib/python3/dist-packages/gi",
+                     "/usr/lib/python3/dist-packages/cairo", "/usr/share/X11/xkb", "/usr/share/libinput"):
+            self.tree(path)
+        typelibs = "GIRepository-3.0 GModule-2.0 GLib-2.0 Gio-2.0 GObject-2.0 Gtk-4.0 Pango-1.0 freetype2-2.0 HarfBuzz-0.0 cairo-1.0 Gdk-4.0 GdkPixbuf-2.0 PangoCairo-1.0 Gsk-4.0 Graphene-1.0"
+        for name in typelibs.split():
+            self.file(f"/usr/lib/{self.triplet}/girepository-1.0/{name}.typelib")
+        # GI opens these through typelib metadata rather than ELF DT_NEEDED.
+        for name in ("libgtk-4.so.1", "libgdk_pixbuf-2.0.so.0", "libpango-1.0.so.0",
+                     "libpangocairo-1.0.so.0", "libgraphene-1.0.so.0"):
+            self.file(f"/usr/lib/{self.triplet}/{name}")
+        for name in ("50-udev-default.rules", "60-input-id.rules", "60-persistent-input.rules", "60-drm.rules"):
+            self.file("/usr/lib/udev/rules.d/" + name)
+        self.file("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")
+        self.file("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc")
+        self.tree("/usr/share/icons/Adwaita/cursors")
+        (self.root / "etc/fonts").mkdir()
+        (self.root / "etc/fonts/fonts.conf").write_text("<fontconfig><dir>/usr/share/fonts</dir><cachedir>/tmp/fontconfig</cachedir></fontconfig>\n")
+        (self.root / "etc/passwd").write_text("root:x:0:0:root:/root:/bin/sh\n")
+        (self.root / "etc/group").write_text("root:x:0:\nvideo:x:44:\ninput:x:109:\nrender:x:110:\n")
+        (self.root / "etc/recovery-library-path").write_text(f"/usr/lib/{self.triplet}/systemd:/usr/lib/systemd\n")
+        (self.root / "usr/bin/python3").symlink_to("python3.14")
 
 
 def build():
@@ -66,24 +146,30 @@ def build():
     with tempfile.TemporaryDirectory(prefix="recovery-build-") as temporary:
         work = Path(temporary)
         root, modules = work / "root", work / "modules"
-        for name in ("bin", "dev", "proc", "sys", "run", "tmp", "usr/bin", "usr/lib", "etc"):
+        for name in ("bin", "dev", "proc", "sys", "run", "tmp", "root", "usr/bin", "usr/lib", "usr/lib64", "etc"):
             (root / name).mkdir(parents=True, exist_ok=True)
         (root / "lib").symlink_to("usr/lib")
         (root / "lib64").symlink_to("usr/lib64")
+        runtime_source = work / "runtime"
         for item in manifest["Inputs"]:
-            source = inputs / item["ExtractedPath"]
-            for name in ("usr/lib", "usr/lib64"):
-                if (source / name).is_dir():
-                    shutil.copytree(source / name, root / name, symlinks=True, dirs_exist_ok=True)
+            shutil.copytree(inputs / item["ExtractedPath"], runtime_source, symlinks=True, dirs_exist_ok=True)
+        for name, target in (("lib", "usr/lib"), ("lib64", "usr/lib64")):
+            if not (runtime_source / name).exists():
+                (runtime_source / name).symlink_to(target)
+        runtime = Runtime(runtime_source, root, arch)
         extracted = inputs / "extracted"
         busybox = next((extracted / "busybox-static").glob("**/busybox"))
         copy(busybox, root / "bin/busybox")
-        for name in "sh mount umount mkdir cat sleep modprobe ls sync reboot poweroff setsid cttyhack clear awk".split():
+        for name in "sh mount umount mountpoint mkdir chmod cat sleep modprobe ls sync reboot poweroff setsid cttyhack clear awk".split():
             (root / "bin" / name).symlink_to("busybox")
         for package, name in (("btrfs-progs", "btrfs"), ("jq", "jq")):
-            copy(extracted / package / "usr/bin" / name, root / "usr/bin" / name)
+            runtime.file("/usr/bin/" + name)
         copy(extracted / "util-linux/usr/sbin/blkid", root / "usr/bin/blkid")
+        runtime.dependencies(root / "usr/bin/blkid")
         copy(engine, root / "usr/bin/recovery-offline")
+        runtime.dependencies(root / "usr/bin/recovery-offline")
+        runtime.graphics()
+        copy(HERE / "src/gui.py", root / "usr/bin/recovery-gui")
         copy(HERE / "src/init", root / "init")
         (root / "init").chmod(0o755)
 

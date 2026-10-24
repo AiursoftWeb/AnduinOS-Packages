@@ -10,6 +10,8 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
+from datetime import datetime, timezone
 from uuid import UUID
 
 
@@ -195,6 +197,92 @@ def grub():
 }}''')
 
 
+def bounded_json(path, limit=1024 * 1024):
+    if path.is_symlink() or not path.is_file() or path.stat().st_size > limit:
+        raise RuntimeError(f"Invalid recovery record: {path}")
+    return json.loads(path.read_text())
+
+
+def boot_candidate(store, started):
+    """Use the current branch, not a newer snapshot from an abandoned branch."""
+    lineage = bounded_json(store / "history/system-lineage.json", 4 * 1024 * 1024)
+    if lineage["schema_version"] != 1:
+        raise RuntimeError("Unsupported system snapshot history")
+    nodes = {node["recovery_point_id"]: node for node in lineage["nodes"]}
+    head, seen = lineage["current_head_id"], set()
+    while head:
+        head = read_uuid(head)
+        if head in seen:
+            raise RuntimeError("Snapshot history contains a cycle")
+        seen.add(head)
+        node = nodes[head]
+        if node["snapshot_available"] and datetime.fromisoformat(node["created_at"]) <= started:
+            record = bounded_json(store / "metadata" / (head + ".json"))
+            if (record["schema_version"] == 1 and record["id"] == head
+                    and record["state"] == "ready" and not record.get("failure")
+                    and datetime.fromisoformat(record["created_at"]) <= started):
+                read_uuid(record["snapshot_uuid"])
+                return record
+        # Legacy history cannot prove ancestry; leave the badge absent.
+        head = node["parent_id"] if node["relation"] == "exact" else None
+    return None
+
+
+def graphical_session_ready():
+    for line in run("loginctl", "list-sessions", "--no-legend", check=False).splitlines():
+        fields = run("loginctl", "show-session", line.split()[0],
+                     "-p", "Type", "-p", "State", "-p", "Class", "-p", "Remote", check=False)
+        state = dict(part.split("=", 1) for part in fields.splitlines() if "=" in part)
+        if (state.get("Type") in ("x11", "wayland") and state.get("State") == "active"
+                and state.get("Class") in ("greeter", "user") and state.get("Remote") == "no"):
+            return True
+    return False
+
+
+def record_boot():
+    """One advisory checkpoint per successful boot; never write to recovery media."""
+    binding = read_binding(STATE)
+    root = json.loads(run("findmnt", "--json", "-o", "FSTYPE,UUID,FSROOT", "--target", "/"))["filesystems"][0]
+    snapshots = json.loads(run("findmnt", "--json", "-o", "FSTYPE,UUID,FSROOT", "--target", "/.snapshots"))["filesystems"][0]
+    if (root["fstype"] != "btrfs" or root["fsroot"] != "/@root"
+            or snapshots["fsroot"] != "/@snapshots"
+            or root["uuid"] != binding["root_uuid"] or snapshots["uuid"] != root["uuid"]):
+        raise RuntimeError("The snapshot store does not belong to the configured system")
+    store = Path("/.snapshots/anduinos-btrfs-snapshots-manager")
+    if store.resolve() != store:
+        raise RuntimeError("The snapshot store must not be a symbolic link")
+    if any((store / name).exists() for name in ("transactions/pending-rollback.json", "offline-transactions/pending.json")):
+        return  # Unfinished recovery is not evidence of a successful new boot.
+    marker = store / "last-successful-boot.json"
+    boot_id = read_uuid(Path("/proc/sys/kernel/random/boot_id").read_text().strip())
+    if marker.exists():
+        try:
+            if bounded_json(marker, 4096).get("boot_id") == boot_id:
+                return
+        except (OSError, ValueError, RuntimeError):
+            pass  # A damaged advisory marker may be replaced by fresh evidence.
+    epoch = next(line.split()[1] for line in Path("/proc/stat").read_text().splitlines() if line.startswith("btime "))
+    record = boot_candidate(store, datetime.fromtimestamp(int(epoch), timezone.utc))
+    if record is None:
+        return
+    for _ in range(120):
+        if graphical_session_ready():
+            break
+        time.sleep(5)
+    else:
+        return  # Failed or non-graphical boot: preserve the previous checkpoint.
+    snapshot = store / "deployments" / record["id"] / "root"
+    if snapshot.resolve() != snapshot:
+        raise RuntimeError("Snapshot path must not contain symbolic links")
+    actual = re.search(r"(?m)^\s*UUID:\s*(\S+)", run("btrfs", "subvolume", "show", str(snapshot)))
+    if not actual or actual[1] != record["snapshot_uuid"] or run("btrfs", "property", "get", "-ts", str(snapshot), "ro") != "ro=true":
+        raise RuntimeError("The boot checkpoint snapshot is missing or has changed")
+    atomic_json(marker, {"schema": 1, "root_uuid": root["uuid"], "boot_id": boot_id,
+                         "snapshot_id": record["id"], "snapshot_uuid": record["snapshot_uuid"]})
+    run("sync", "-f", str(store))
+    print("Recorded the recovery point available at the last successful graphical boot.")
+
+
 if __name__ == "__main__":
     try:
         if len(sys.argv) >= 2 and sys.argv[1] == "deploy":
@@ -209,8 +297,12 @@ if __name__ == "__main__":
                 deploy(args.volume_uuid, if_present=args.if_present)
         elif sys.argv[1:] == ["grub"]:
             grub()
+        elif sys.argv[1:] == ["record-boot"]:
+            with open("/run/anduinos-recovery-boot.lock", "w") as lock:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                record_boot()
         else:
-            raise RuntimeError("Usage: anduinos-recovery-env {deploy|grub}")
+            raise RuntimeError("Usage: anduinos-recovery-env {deploy|grub|record-boot}")
     except (OSError, ValueError, KeyError, RuntimeError, subprocess.CalledProcessError) as error:
         print(f"AnduinOS recovery: {error}", file=sys.stderr)
         sys.exit(1)

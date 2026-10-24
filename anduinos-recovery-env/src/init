@@ -1,11 +1,14 @@
 #!/bin/sh
 # This initramfs never starts or executes programs from the installed system.
-export PATH=/usr/bin:/bin
+export PATH=/usr/bin:/bin:/usr/sbin
 export LC_ALL=C
 mount -t proc proc /proc
 mount -t sysfs sysfs /sys
 mount -t devtmpfs devtmpfs /dev
 mount -t tmpfs tmpfs /run
+mount -t tmpfs tmpfs /tmp
+mkdir -p /dev/shm
+mount -t tmpfs tmpfs /dev/shm
 exec </dev/console >/dev/console 2>&1
 
 finish() {
@@ -36,6 +39,29 @@ failed() {
 }
 
 for driver in $(cat /etc/recovery-drivers); do modprobe "$driver"; done
+# A standalone software-rendered kiosk; no installed-system GUI or GPU driver.
+export LD_LIBRARY_PATH=$(cat /etc/recovery-library-path)
+/usr/lib/systemd/systemd-udevd --daemon
+udevadm trigger --action=add
+udevadm settle
+mkdir -p /run/user/0
+chmod 700 /run/user/0
+export XDG_RUNTIME_DIR=/run/user/0 HOME=/root LC_ALL=C.UTF-8
+export LIBSEAT_BACKEND=seatd WLR_RENDERER=pixman GSK_RENDERER=cairo
+export GDK_BACKEND=wayland GTK_A11Y=none GSETTINGS_BACKEND=memory
+export XCURSOR_THEME=Adwaita XCURSOR_SIZE=24
+seatd > /run/recovery-seat.log 2>&1 &
+seat_pid=$!
+sleep 1
+cage -- python3 /usr/bin/recovery-gui > /run/recovery-graphics.log 2>&1
+kill "$seat_pid" 2>/dev/null || true
+# Keep recovery possible on firmware without a usable graphical output.
+top=/run/anduinos-rescue-center/repair-recovery-env
+if mountpoint -q "$top"; then
+    umount "$top" || failed 'Could not close the previous recovery session.'
+fi
+top=
+echo 'The graphical browser is unavailable. Continuing with the text menu.'
 uuid=
 for argument in $(cat /proc/cmdline); do
     case "$argument" in anduinos.recovery.root=*) uuid=${argument#*=} ;; esac

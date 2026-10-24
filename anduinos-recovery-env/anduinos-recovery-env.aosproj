@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-recovery-env</PackageName>
-    <PackageVersion>2.0.5-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.5-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Independent offline Btrfs snapshot recovery environment</PackageDescription>
     <Section>admin</Section>
@@ -35,15 +35,161 @@
     <BuildInput Include="libjq1" Sources="ubuntu" Arch="$(Arch)" />
     <BuildInput Include="libonig5" Sources="ubuntu" Arch="$(Arch)" />
     <BuildInput Include="libcap2" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="cage" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="adwaita-icon-theme" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="fonts-dejavu-core" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="fonts-noto-cjk" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="gir1.2-freedesktop" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="gir1.2-gdkpixbuf-2.0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="gir1.2-girepository-3.0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="gir1.2-glib-2.0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="gir1.2-graphene-1.0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="gir1.2-gtk-4.0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="gir1.2-harfbuzz-0.0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="gir1.2-pango-1.0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libatomic1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libavahi-client3" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libavahi-common3" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libbrotli1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libbz2-1.0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libcairo-gobject2" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libcairo-script-interpreter2" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libcairo2" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libcolord2" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libcrypt1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libcups2t64" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libdatrie1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libdb5.3t64" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libdbus-1-3" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libdeflate0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libdisplay-info3" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libdrm2" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libegl1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libepoxy0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libevdev2" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libexpat1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libffi8" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libfontconfig1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libfreetype6" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libfribidi0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgbm1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgdk-pixbuf-2.0-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgirepository-2.0-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgl1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgles2" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libglib2.0-0t64" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libglvnd0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libglx0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libglycin-2-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgmp10" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgnutls30t64" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgraphene-1.0-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgraphite2-3" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgssapi-krb5-2" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgstreamer-gl1.0-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgstreamer-plugins-base1.0-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgstreamer-plugins-extra1.0-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgstreamer1.0-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgtk-4-1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libgudev-1.0-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libharfbuzz-subset0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libharfbuzz0b" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libhogweed6t64" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libidn2-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libinput-bin" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libinput10" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libjbig0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libjpeg-turbo8" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libk5crypto3" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libkeyutils1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libkrb5-3" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libkrb5support0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="liblcms2-2" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="liblerc4" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libliftoff0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="liblzma5" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libmount1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libmtdev1t64" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libncursesw6" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libnettle8t64" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="liborc-0.4-0t64" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libp11-kit0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libpango-1.0-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libpangocairo-1.0-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libpangoft2-1.0-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libpcre2-8-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libpixman-1-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libpng16-16t64" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libpython3.14" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libpython3.14-minimal" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libpython3.14-stdlib" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libreadline8t64" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libseat1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libseccomp2" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libselinux1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libsharpyuv0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libsqlite3-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libssl3t64" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libstdc++6" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libsystemd-shared" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libsystemd0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libtasn1-6" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libthai0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libtiff6" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libtinfo6" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libunistring5" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libvulkan1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libwacom9" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libwayland-client0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libwayland-cursor0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libwayland-egl1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libwayland-server0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libwebp7" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libwlroots-0.19" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libx11-6" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libx11-xcb1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxau6" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxcb-composite0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxcb-dri3-0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxcb-errors0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxcb-ewmh2" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxcb-icccm4" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxcb-present0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxcb-render-util0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxcb-render0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxcb-res0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxcb-shm0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxcb-xfixes0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxcb-xinput0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxcb1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxcursor1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxdamage1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxdmcp6" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxext6" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxfixes3" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxi6" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxinerama1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxkbcommon0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxrandr2" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libxrender1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="python3-cairo" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="python3-gi" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="python3-gi-cairo" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="python3.14-minimal" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="seatd" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="udev" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="xkb-data" Sources="ubuntu" Arch="$(Arch)" />
     <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute" />
     <Dependency Include="python3" />
     <Dependency Include="util-linux" />
+    <Dependency Include="btrfs-progs" />
     <Dependency Include="grub2-common" />
     <PrebuildCommand Run="python3 build.py" />
     <PostInstallScript Include="data/postinst" />
     <PostRemoveScript Include="data/postrm" />
     <IncludeScript Include="src/deploy.py" Target="/usr/libexec/anduinos-recovery-env" />
     <IncludeScript Include="data/42_anduinos_recovery" Target="/etc/grub.d/42_anduinos_recovery" />
+    <SystemdUnit Include="data/anduinos-recovery-boot.service" AutoEnable="true" />
     <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-recovery-env/README.md" />
     <IncludeFile Include="../LICENSE" Target="/usr/share/doc/anduinos-recovery-env/copyright" />
   </ItemGroup>
