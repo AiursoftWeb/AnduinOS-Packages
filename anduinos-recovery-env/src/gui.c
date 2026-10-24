@@ -47,6 +47,17 @@ static char *string_field(jv object, const char *name) {
     jv_free(value);
     return text;
 }
+static char *snapshot_date(jv record) {
+    char *text = string_field(record, "created_at");
+    size_t length = strlen(text);
+    if (length > 19 && text[10] == 'T' && text[length - 1] == 'Z') {
+        /* Records use UTC; omit nanoseconds without inventing a local timezone. */
+        text[10] = ' '; text[19] = 0;
+        char *formatted = NULL;
+        if (asprintf(&formatted, "%s UTC", text) >= 0) { free(text); return formatted; }
+    }
+    return text;
+}
 static bool uuid_valid(const char *value) {
     if (strlen(value) != 36) return false;
     for (int i = 0; i < 36; i++) {
@@ -187,7 +198,7 @@ static void listed(jv report) {
         jv record = jv_array_get(jv_copy(records), i);
         if (jv_get_kind(record) != JV_KIND_OBJECT) { jv_free(record); continue; }
         struct snapshot *s = &snapshots[i];
-        s->id = string_field(record, "id"); s->title = string_field(record, "title"); s->date = string_field(record, "created_at");
+        s->id = string_field(record, "id"); s->title = string_field(record, "title"); s->date = snapshot_date(record);
         char *state = string_field(record, "state"); jv failure = field(record, "failure");
         s->ready = uuid_valid(s->id) && !strcmp(state, "ready") && jv_get_kind(failure) == JV_KIND_NULL;
         s->marked = s->ready && !strcmp(s->id, marked);
