@@ -195,12 +195,12 @@ class EnsureSnapshotsManagerStep:
 
 @dataclass
 class DeployRecoveryEnvironmentStep:
-    """Deploy to the exact filesystem created by the approved storage plan."""
+    """Optionally deploy to the filesystem created by the approved storage plan."""
 
     runner: CommandRunner
     id: str = "deploy-recovery-environment"
     title: str = "Deploy recovery environment"
-    failure_policy: FailurePolicy = FailurePolicy.FATAL
+    failure_policy: FailurePolicy = FailurePolicy.WARNING
     progress_weight: int = 2
     destructive: bool = False
 
@@ -210,6 +210,11 @@ class DeployRecoveryEnvironmentStep:
 
     def execute(self, context: InstallContext) -> None:
         target = _target(context)
+        if not (target / RECOVERY_DEPLOYER.lstrip("/")).is_file():
+            raise StepWarning(
+                f"{RECOVERY_PACKAGE} is unavailable in the copied system; "
+                "installation will continue without the recovery environment"
+            )
         device = context.values["partition_devices"].get("recovery")
         if not device:
             raise RuntimeError("The installation plan did not create a recovery volume")

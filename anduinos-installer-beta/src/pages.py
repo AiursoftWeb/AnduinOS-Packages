@@ -7413,7 +7413,7 @@ def incomplete_feature_steps(outcomes):
         "install-language-packs", "install-input-method",
         "install-multimedia-codecs", "refresh-package-indexes",
         "upgrade-system", "ensure-snapshots-manager",
-        "create-factory-snapshot",
+        "create-factory-snapshot", "deploy-recovery-environment",
         "install-third-party-drivers",
     }
     return tuple(

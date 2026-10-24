@@ -157,7 +157,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
         self.assertEqual(
             queried,
             set(EXPECTED_LIVE_ONLY_PACKAGES)
-            | {"openssh-server", SNAPSHOTS_MANAGER_PACKAGE},
+            | {"openssh-server", SNAPSHOTS_MANAGER_PACKAGE, RECOVERY_PACKAGE},
         )
         self.assertIn(
             (
@@ -215,10 +215,14 @@ class RemoveLivePackagesTests(unittest.TestCase):
         self.assertLess(commands.index(mark), purge_index)
         self.assertEqual(
             context.values["persistent_target_packages"],
-            ("openssh-server", "anduinos-recovery-env"),
+            ("openssh-server",),
+        )
+        self.assertNotIn(
+            ("chroot", str(target), "apt-mark", "manual", RECOVERY_PACKAGE),
+            commands,
         )
         self.assertIn(
-            "Retaining installed-system packages: openssh-server, anduinos-recovery-env",
+            "Retaining installed-system packages: openssh-server",
             messages,
         )
 

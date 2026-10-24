@@ -29,8 +29,9 @@ class ProgressPipelineTests(unittest.TestCase):
             "install-input-method": "succeeded",
             "install-multimedia-codecs": "warning",
             "upgrade-system": "warning",
+            "deploy-recovery-environment": "warning",
             "install-third-party-drivers": "skipped",
-        }), ("install-multimedia-codecs", "upgrade-system"))
+        }), ("install-multimedia-codecs", "upgrade-system", "deploy-recovery-environment"))
         self.assertEqual(incomplete_feature_steps({
             "detect-network-connectivity": "warning",
             "recheck-network-connectivity": "succeeded",

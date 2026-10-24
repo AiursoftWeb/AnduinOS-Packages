@@ -7,6 +7,7 @@ from unittest.mock import patch
 from fakes import FakeRunner
 from helpers import valid_plan
 from installer_core.esp import NvramInspection
+from installer_core.model import Architecture
 from installer_core.steps import InstallContext
 from installer_core.storage_steps import MountTargetStep, PrepareStorageStep
 
@@ -58,6 +59,17 @@ class PrepareStorageStepTests(unittest.TestCase):
             RuntimeError, "EFI variables are read-only"
         ):
             step.preflight(context)
+
+    def test_recovery_partition_requires_formatter_but_not_optional_package(self):
+        for architecture in Architecture:
+            with self.subTest(architecture=architecture):
+                context = InstallContext(
+                    valid_plan(architecture=architecture), lambda _message: None,
+                )
+                runner = FakeRunner()
+                PrepareStorageStep(runner).preflight(context)
+                self.assertIn("mkfs.ext4", runner.required)
+                self.assertNotIn("/usr/libexec/anduinos-recovery-env", runner.required)
 
     def test_zero_disk_swap_does_not_require_or_run_mkswap(self):
         plan = valid_plan(swap_size_mib=0)

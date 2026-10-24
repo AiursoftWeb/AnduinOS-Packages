@@ -166,7 +166,7 @@ class PrepareStorageStep:
         if context.plan.storage.swap_size_mib:
             commands.append("mkswap")
         if "recovery" in execution_plan.commands.devices:
-            commands.extend(("mkfs.ext4", "/usr/libexec/anduinos-recovery-env"))
+            commands.append("mkfs.ext4")
         commands.append(
             {
                 Filesystem.BTRFS: "mkfs.btrfs",

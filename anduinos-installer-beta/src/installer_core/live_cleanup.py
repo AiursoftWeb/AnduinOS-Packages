@@ -116,7 +116,7 @@ class RemoveLivePackagesStep:
             retained += (SNAPSHOTS_MANAGER_PACKAGE,)
         recovery_enabled = (context.plan.storage.mode is InstallMode.ERASE_DISK
                             and context.plan.storage.filesystem is Filesystem.BTRFS)
-        if recovery_enabled:
+        if recovery_enabled and _is_installed(self.runner, target, RECOVERY_PACKAGE):
             retained += (RECOVERY_PACKAGE,)
         for package in retained:
             self.runner.run(
