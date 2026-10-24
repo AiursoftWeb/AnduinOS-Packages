@@ -8,11 +8,13 @@ import posixpath
 from pathlib import Path
 import re
 import shutil
+import struct
 import subprocess
 import tempfile
 
 
 HERE = Path(__file__).resolve().parent
+LVGL_VERSION = "v9.6.0"
 # Storage, input and firmware framebuffer support; no network or desktop session.
 DRIVERS = "virtio_pci virtio_mmio virtio_blk virtio_scsi nvme ahci sd_mod usb_storage uas xhci_pci xhci_plat_hcd ehci_pci ohci_pci uhci_hcd usbhid hid_generic atkbd i8042 evdev psmouse virtio_input sdhci_pci sdhci_acpi mmc_block btrfs ext4 simpledrm virtio_gpu bochs".split()
 
@@ -75,38 +77,37 @@ class Runtime:
         copy(self.resolve(path), destination)
         self.dependencies(destination)
 
-    def tree(self, path):
-        source = self.resolve(path)
-        for item in sorted(source.rglob("*")):
-            relative = posixpath.join(path, item.relative_to(source).as_posix())
-            if "__pycache__" not in item.parts and self.resolve(relative).is_file():
-                self.file(relative)
 
-    def graphics(self):
-        for path in ("/usr/bin/cage", "/usr/sbin/seatd", "/usr/bin/python3.14",
-                     "/usr/lib/systemd/systemd-udevd", "/usr/bin/udevadm"):
-            self.file(path)
-        for path in ("/usr/lib/python3.14", "/usr/lib/python3/dist-packages/gi",
-                     "/usr/lib/python3/dist-packages/cairo", "/usr/share/X11/xkb", "/usr/share/libinput"):
-            self.tree(path)
-        typelibs = "GIRepository-3.0 GModule-2.0 GLib-2.0 Gio-2.0 GObject-2.0 Gtk-4.0 Pango-1.0 freetype2-2.0 HarfBuzz-0.0 cairo-1.0 Gdk-4.0 GdkPixbuf-2.0 PangoCairo-1.0 Gsk-4.0 Graphene-1.0"
-        for name in typelibs.split():
-            self.file(f"/usr/lib/{self.triplet}/girepository-1.0/{name}.typelib")
-        # GI opens these through typelib metadata rather than ELF DT_NEEDED.
-        for name in ("libgtk-4.so.1", "libgdk_pixbuf-2.0.so.0", "libpango-1.0.so.0",
-                     "libpangocairo-1.0.so.0", "libgraphene-1.0.so.0"):
-            self.file(f"/usr/lib/{self.triplet}/{name}")
-        for name in ("50-udev-default.rules", "60-input-id.rules", "60-persistent-input.rules", "60-drm.rules"):
-            self.file("/usr/lib/udev/rules.d/" + name)
-        self.file("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")
-        self.file("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc")
-        self.tree("/usr/share/icons/Adwaita/cursors")
-        (self.root / "etc/fonts").mkdir()
-        (self.root / "etc/fonts/fonts.conf").write_text("<fontconfig><dir>/usr/share/fonts</dir><cachedir>/tmp/fontconfig</cachedir></fontconfig>\n")
-        (self.root / "etc/passwd").write_text("root:x:0:0:root:/root:/bin/sh\n")
-        (self.root / "etc/group").write_text("root:x:0:\nvideo:x:44:\ninput:x:109:\nrender:x:110:\n")
-        (self.root / "etc/recovery-library-path").write_text(f"/usr/lib/{self.triplet}/systemd:/usr/lib/systemd\n")
-        (self.root / "usr/bin/python3").symlink_to("python3.14")
+def build_gui(runtime, directory, lvgl):
+    """Compile the direct framebuffer UI and its original Fluent pointer."""
+    directory.mkdir(parents=True, exist_ok=True)
+    cursor = (HERE / "data/cursor.xcursor").read_bytes()
+    magic, header, _, count = struct.unpack_from("<4I", cursor)
+    if magic != 0x72756358:
+        raise RuntimeError("Invalid Fluent Xcursor resource")
+    entries = [struct.unpack_from("<3I", cursor, header + i * 12) for i in range(count)]
+    position = next(pos for kind, size, pos in entries if kind == 0xfffd0002 and size == 24)
+    header, _, _, _, width, height, xhot, yhot, _ = struct.unpack_from("<9I", cursor, position)
+    pixels = cursor[position + header:position + header + width * height * 4]
+    if len(pixels) != width * height * 4 or not (xhot < width and yhot < height):
+        raise RuntimeError("Incomplete Fluent cursor image")
+    (directory / "cursor.h").write_text(
+        "/* Fluent-icon-theme, vinceliuice, GPL-3.0; see cursor.COPYING. */\n"
+        f"#define FLUENT_CURSOR_HOT_X {xhot}\n#define FLUENT_CURSOR_HOT_Y {yhot}\n"
+        "static const uint8_t fluent_cursor_pixels[] = {" + ",".join(map(str, pixels)) + "};\n"
+        "static const lv_image_dsc_t fluent_cursor = { .header = {"
+        ".magic = LV_IMAGE_HEADER_MAGIC, .cf = LV_COLOR_FORMAT_ARGB8888_PREMULTIPLIED, "
+        f".flags = LV_IMAGE_FLAGS_PREMULTIPLIED, .w = {width}, .h = {height}, .stride = {width * 4}"
+        "}, .data_size = sizeof(fluent_cursor_pixels), .data = fluent_cursor_pixels };\n")
+    run("cmake", "-S", str(HERE), "-B", str(directory), "-DCMAKE_BUILD_TYPE=MinSizeRel",
+        f"-DCMAKE_C_COMPILER={runtime.triplet}-gcc", f"-DCMAKE_CXX_COMPILER={runtime.triplet}-g++",
+        f"-DLVGL_SOURCE={lvgl}", f"-DINPUT_ROOT={runtime.source}", f"-DTARGET_TRIPLET={runtime.triplet}")
+    run("cmake", "--build", str(directory), "--parallel", str(min(os.cpu_count() or 1, 6)))
+    run(f"{runtime.triplet}-strip", str(directory / "recovery-gui"))
+    copy(directory / "recovery-gui", runtime.root / "usr/bin/recovery-gui")
+    runtime.dependencies(runtime.root / "usr/bin/recovery-gui")
+    for source, name in (("dejavu/DejaVuSans.ttf", "DejaVuSans.ttf"), ("wqy/wqy-microhei.ttc", "wqy-microhei.ttc")):
+        copy(runtime.resolve("/usr/share/fonts/truetype/" + source), runtime.root / "usr/share/fonts" / name)
 
 
 def build():
@@ -131,6 +132,11 @@ def build():
     kernel_manifest = json.loads((kernel_inputs / "manifest.json").read_text())
     if len({i["Version"] for i in kernel_manifest["Inputs"]}) != 1:
         raise RuntimeError("Ubuntu kernel and modules versions differ; retry after publication")
+    lvgl = HERE / "obj" / ("lvgl-" + LVGL_VERSION)
+    if not lvgl.exists():
+        run("git", "clone", "--depth=1", "--branch", LVGL_VERSION, "https://github.com/lvgl/lvgl.git", str(lvgl))
+    if output("git", "-C", str(lvgl), "describe", "--tags", "--exact-match") != LVGL_VERSION:
+        raise RuntimeError("Unexpected cached LVGL version")
 
     # Compile only the existing offline engine, never the desktop application.
     cargo_manifest = HERE.parent / "anduinos-btrfs-snapshots-manager/src/Cargo.toml"
@@ -154,22 +160,22 @@ def build():
         for item in manifest["Inputs"]:
             shutil.copytree(inputs / item["ExtractedPath"], runtime_source, symlinks=True, dirs_exist_ok=True)
         for name, target in (("lib", "usr/lib"), ("lib64", "usr/lib64")):
-            if not (runtime_source / name).exists():
+            if not (runtime_source / name).exists() and not (runtime_source / name).is_symlink():
                 (runtime_source / name).symlink_to(target)
         runtime = Runtime(runtime_source, root, arch)
         extracted = inputs / "extracted"
         busybox = next((extracted / "busybox-static").glob("**/busybox"))
         copy(busybox, root / "bin/busybox")
-        for name in "sh mount umount mountpoint mkdir chmod cat sleep modprobe ls sync reboot poweroff setsid cttyhack clear awk".split():
+        for name in "sh mount umount mkdir chmod cat sleep modprobe ls sync reboot poweroff clear awk grep tr readlink stat".split():
             (root / "bin" / name).symlink_to("busybox")
-        for package, name in (("btrfs-progs", "btrfs"), ("jq", "jq")):
+        for name in ("btrfs", "jq", "flock"):
             runtime.file("/usr/bin/" + name)
         copy(extracted / "util-linux/usr/sbin/blkid", root / "usr/bin/blkid")
         runtime.dependencies(root / "usr/bin/blkid")
         copy(engine, root / "usr/bin/recovery-offline")
         runtime.dependencies(root / "usr/bin/recovery-offline")
-        runtime.graphics()
-        copy(HERE / "src/gui.py", root / "usr/bin/recovery-gui")
+        build_gui(runtime, HERE / "obj" / ("gui-" + arch), lvgl)
+        copy(HERE / "src/actions", root / "usr/bin/recovery-action")
         copy(HERE / "src/init", root / "init")
         (root / "init").chmod(0o755)
 
@@ -207,7 +213,7 @@ def build():
         (root / "etc/recovery-drivers").write_text("\n".join(available) + "\n")
         # Fail construction, rather than boot, if an extracted library is missing.
         libraries = {p.name for p in (root / "usr/lib").rglob("*") if p.is_file() or p.is_symlink()}
-        for binary in [root / "usr/bin/btrfs", root / "usr/bin/jq", root / "usr/bin/blkid", root / "usr/bin/recovery-offline"] + [p for p in (root / "usr/lib").rglob("*.so*") if p.is_file() and not p.is_symlink()]:
+        for binary in [p for p in (root / "usr/bin").iterdir() if p.is_file()] + [p for p in (root / "usr/lib").rglob("*.so*") if p.is_file() and not p.is_symlink()]:
             result = subprocess.run(["readelf", "-d", str(binary)], capture_output=True, text=True)
             for needed in re.findall(r"Shared library: \[(.*?)\]", result.stdout):
                 if needed not in libraries:
@@ -228,6 +234,10 @@ def build():
     doc = stage / "usr/share/doc/anduinos-recovery-env"
     doc.mkdir(parents=True, exist_ok=True)
     (doc / "inputs.json").write_text(json.dumps([manifest, kernel_manifest], indent=2) + "\n")
+    (doc / "lvgl-source.txt").write_text("https://github.com/lvgl/lvgl.git\n" + LVGL_VERSION + "\n" +
+        output("git", "-C", str(lvgl), "rev-parse", "HEAD") + "\n")
+    copy(lvgl / "LICENCE.txt", doc / "licenses/LVGL.MIT")
+    copy(HERE / "data/cursor.COPYING", doc / "licenses/Fluent.GPL-3.0")
     for directory in (inputs, kernel_inputs):
         for source in (directory / "extracted").glob("*/usr/share/doc/*/copyright"):
             copy(source, doc / "licenses" / (source.parent.name + ".copyright"))

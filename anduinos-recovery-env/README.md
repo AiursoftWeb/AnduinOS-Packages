@@ -18,11 +18,15 @@ Secure Boot trust-chain enforcement remains a separate stage; qualify this
 development version with Secure Boot disabled.
 
 Build with `apkg build --all` (10.0.65 or newer), Cargo's two Linux GNU targets,
-the corresponding GCC linkers, `cpio`, `gzip`, `kmod`, `zstd` and `binutils`.
+the corresponding GCC/G++ toolchains, CMake, Git, `cpio`, `gzip`, `kmod`,
+`zstd` and `binutils`.
 Verified Ubuntu inputs supply the generic kernel and runtime; no target programs
 or maintainer scripts execute during construction. The source-tree offline
-engine is compiled into the image. Rebuild and bump this package when updating
+engine is compiled into the image. LVGL draws directly through DRM/framebuffer
+and reads Linux input devices; no desktop or display server is included. Rebuild and bump this package when updating
 that engine. Input versions, hashes and copyright notices accompany the package.
+The pointer is the original Fluent-dark-cursors image from
+[Fluent-icon-theme](https://github.com/vinceliuice/Fluent-icon-theme), under GPL-3.0.
 
 Deployment checks the payload and unmounts the volume. Package updates refresh
 the GRUB menu when a volume is configured. On configured systems, a brief boot

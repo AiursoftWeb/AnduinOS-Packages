@@ -1,126 +1,55 @@
 #!/bin/sh
 # This initramfs never starts or executes programs from the installed system.
-export PATH=/usr/bin:/bin:/usr/sbin
-export LC_ALL=C
+export PATH=/usr/bin:/bin:/usr/sbin LC_ALL=C
 mount -t proc proc /proc
 mount -t sysfs sysfs /sys
 mount -t devtmpfs devtmpfs /dev
 mount -t tmpfs tmpfs /run
 mount -t tmpfs tmpfs /tmp
-mkdir -p /dev/shm
-mount -t tmpfs tmpfs /dev/shm
 exec </dev/console >/dev/console 2>&1
-
-finish() {
-    sync
-    if [ -n "${top:-}" ] && ! umount "$top"; then
-        echo 'Could not unmount the system. Reboot has been cancelled.'
-        return 1
-    fi
-    reboot -f
-}
-
-# A rescue mount cannot be remounted read-write. Reopen it only after confirmation.
-writable() {
-    umount "$top" || return 1
-    if ! mount -t btrfs -o rw,subvolid=5 "$device" "$top"; then
-        top=
-        return 1
-    fi
-}
-
-failed() {
-    echo
-    echo "$*"
-    echo 'No recovery was completed. Press Enter to reboot.'
-    read -r ignored
-    finish
-    while :; do sleep 3600; done
-}
-
 for driver in $(cat /etc/recovery-drivers); do modprobe "$driver"; done
-# A standalone software-rendered kiosk; no installed-system GUI or GPU driver.
-export LD_LIBRARY_PATH=$(cat /etc/recovery-library-path)
-/usr/lib/systemd/systemd-udevd --daemon
-udevadm trigger --action=add
-udevadm settle
-mkdir -p /run/user/0
-chmod 700 /run/user/0
-export XDG_RUNTIME_DIR=/run/user/0 HOME=/root LC_ALL=C.UTF-8
-export LIBSEAT_BACKEND=seatd WLR_RENDERER=pixman GSK_RENDERER=cairo
-export GDK_BACKEND=wayland GTK_A11Y=none GSETTINGS_BACKEND=memory
-export XCURSOR_THEME=Adwaita XCURSOR_SIZE=24
-seatd > /run/recovery-seat.log 2>&1 &
-seat_pid=$!
 sleep 1
-cage -- python3 /usr/bin/recovery-gui > /run/recovery-graphics.log 2>&1
-kill "$seat_pid" 2>/dev/null || true
-# Keep recovery possible on firmware without a usable graphical output.
-top=/run/anduinos-rescue-center/repair-recovery-env
-if mountpoint -q "$top"; then
-    umount "$top" || failed 'Could not close the previous recovery session.'
-fi
-top=
+# Direct software rendering. Either graphics backend may be absent on firmware.
+recovery-gui drm >> /run/recovery-graphics.log 2>&1 ||
+    recovery-gui fbdev >> /run/recovery-graphics.log 2>&1
+recovery-gui text
 echo 'The graphical browser is unavailable. Continuing with the text menu.'
-uuid=
-for argument in $(cat /proc/cmdline); do
-    case "$argument" in anduinos.recovery.root=*) uuid=${argument#*=} ;; esac
-done
-case "$uuid" in ''|*[!0-9a-fA-F-]*) failed 'The target system UUID is missing or invalid.' ;; esac
-
-echo
-echo 'AnduinOS Recovery Environment'
-echo 'Waiting for the installed system...'
-attempt=0
-while [ "$attempt" -lt 30 ]; do
-    devices=$(blkid | awk -v token="UUID=\"$uuid\"" 'index($0,token) {sub(/:$/, "", $1); print $1}')
-    [ -z "$devices" ] || break
-    sleep 1
-    attempt=$((attempt + 1))
-done
-set -- $devices
-[ "$#" -eq 1 ] || failed 'The target system is missing or has an ambiguous UUID.'
-device=$1
-top=/run/anduinos-rescue-center/repair-recovery-env
-mkdir -p "$top"
-mount -t btrfs -o ro,rescue=nologreplay,subvolid=5 "$device" "$top" || {
-    top=
-    failed 'Could not open the installed Btrfs system.'
-}
-
 while :; do
-    if ! recovery-offline list "$top" > /run/snapshots.json; then
-        failed 'This disk does not have a supported AnduinOS snapshot layout.'
-    fi
     echo
     echo 'AnduinOS Recovery Environment'
-    echo "System: $uuid"
-    if [ "$(jq -r '.pending != null' /run/snapshots.json)" = true ]; then
-        echo 'A previously confirmed recovery was interrupted.'
-        echo 'Type RESUME to finish that recovery, or press Enter to reboot.'
+    if ! recovery-action list > /run/recovery-choices.json; then
+        echo 'Press Enter to retry, or type REBOOT to restart.'
         read -r answer
-        [ "$answer" = RESUME ] || { finish; continue; }
-        writable && recovery-offline resume "$top" || failed 'Recovery could not be resumed.'
+        [ "$answer" != REBOOT ] || recovery-action restart
+        continue
+    fi
+    if [ "$(jq -r '.pending != null' /run/recovery-choices.json)" = true ]; then
+        echo 'A confirmed recovery was interrupted. Type RESUME to finish, or REBOOT to restart.'
+        read -r answer
+        case "$answer" in
+            RESUME) recovery-action resume || continue ;;
+            REBOOT) recovery-action restart; continue ;;
+            *) continue ;;
+        esac
     else
-        jq '[.deployments[] | select(.state == "ready")] | sort_by(.created_at) | reverse' /run/snapshots.json > /run/choices.json
-        count=$(jq 'length' /run/choices.json)
-        jq -r 'to_entries[] | "\(.key + 1). \(.value.created_at)  \(.value.title | @json) [\(.value.kind)]"' /run/choices.json
-        echo
-        echo '0. Reboot without restoring'
+        jq '[.deployments[] | select(.state == "ready" and .failure == null)]' /run/recovery-choices.json > /run/recovery-ready.json
+        count=$(jq 'length' /run/recovery-ready.json)
+        jq -r 'to_entries[] | "\(.key + 1). \(.value.created_at)  \(.value.title | @json)"' /run/recovery-ready.json
+        echo '0. Restart without restoring'
         printf 'Select a snapshot number: '
         read -r choice
-        case "$choice" in 0) finish; continue ;; ''|*[!0-9]*) continue ;; esac
+        case "$choice" in 0) recovery-action restart; continue ;; ''|*[!0-9]*) continue ;; esac
         [ "${#choice}" -le 5 ] && [ "$choice" -ge 1 ] && [ "$choice" -le "$count" ] || continue
-        index=$((choice - 1))
-        identifier=$(jq -r ".[${index}].id" /run/choices.json)
-        jq -r ".[${index}] | \"Restore: \(.title | @json) (\(.created_at))\"" /run/choices.json
-        echo 'This permanently replaces the system. Personal files remain unchanged.'
-        echo 'Type RESTORE to confirm, or press Enter to cancel.'
+        index=$(awk -v n="$choice" 'BEGIN {print n - 1}')
+        identifier=$(jq -r ".[${index}].id" /run/recovery-ready.json)
+        jq -r ".[${index}] | \"Restore: \(.title | @json) (\(.created_at))\"" /run/recovery-ready.json
+        echo 'This permanently replaces system files and applications. Personal files remain unchanged.'
+        echo 'No new backup snapshot will be created. Type RESTORE to confirm, or press Enter to cancel.'
         read -r answer
         [ "$answer" = RESTORE ] || continue
-        writable && recovery-offline restore "$top" "$identifier" || failed 'Recovery failed. Re-enter this environment to inspect or resume it.'
+        recovery-action restore "$identifier" || continue
     fi
     echo 'Recovery completed. Press Enter to restart AnduinOS.'
     read -r ignored
-    finish
+    recovery-action restart
 done
