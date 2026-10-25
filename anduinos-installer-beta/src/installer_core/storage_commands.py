@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .layout import PartitionLayout, PartitionSpec
+from .layout import PartitionLayout, PartitionSpec, RECOVERY_LABEL
 from .model import Filesystem, InstallMode, InstallPlan
 from .storage_graph import GraphFilesystem, StorageGraphAction
 from .storage_inventory import StorageInventory
@@ -91,6 +91,8 @@ def build_storage_commands(
             ("mkswap", "-L", "AnduinOS-swap", devices["swap"])
         )
     root = devices["root"]
+    if "recovery" in devices:
+        format_commands.append(("mkfs.ext4", "-F", "-L", RECOVERY_LABEL, devices["recovery"]))
     format_commands.append(
         _format_command(
             GraphFilesystem(plan.storage.filesystem.value),

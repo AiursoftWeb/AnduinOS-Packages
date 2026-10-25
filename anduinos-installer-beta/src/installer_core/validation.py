@@ -25,6 +25,7 @@ from .model import (
 from .hostnames import is_canonical_hostname
 from .storage_graph_planning import validate_storage_graph
 from .swap_policy import MINIMUM_ROOT_MIB
+from .layout import erase_disk_overhead_mib
 from .username_policy import RESERVED_USERNAMES, is_valid_username
 
 
@@ -118,7 +119,8 @@ def validate_plan(
 
     if plan.storage.mode is InstallMode.ERASE_DISK:
         reserved = (
-            plan.storage.esp_size_mib + plan.storage.swap_size_mib + 4
+            plan.storage.esp_size_mib + plan.storage.swap_size_mib
+            + erase_disk_overhead_mib(plan.storage.filesystem)
         ) * 1024**2
         if disk.expected_size_bytes - reserved < MINIMUM_ROOT_BYTES:
             errors.append("Partition layout leaves less than 20 GiB for root")

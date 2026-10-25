@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+if [ "${1:-}" = configure ]; then
+    # New in -2. Enable in an image/chroot too; later upgrades preserve a
+    # user's decision to disable it. No checkpoint is written by this script.
+    if dpkg --compare-versions "${2:-0}" lt 2.0.5-2; then
+        systemctl --root=/ enable anduinos-recovery-boot.service
+    fi
+    /usr/libexec/anduinos-recovery-env deploy --if-present
+    if [ -f /var/lib/anduinos-recovery-env/volume.json ]; then
+        update-grub
+    fi
+fi

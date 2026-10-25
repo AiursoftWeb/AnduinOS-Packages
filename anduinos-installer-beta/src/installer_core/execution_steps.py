@@ -209,11 +209,12 @@ class CopySystemStep:
     progress_weight: int = 60
     destructive: bool = False
 
-    # Signing identities belong to the installed machine, never to an ISO.
+    # Signing identities and volume bindings belong to the installed machine.
     # Exclude metadata/backups too: they could otherwise override a fresh MOK.
     signing_excludes = (
         "var/lib/shim-signed/mok",
         "var/lib/anduinos-grub",
+        "var/lib/anduinos-recovery-env",
         "var/lib/anduinos-secureboot",
         "var/lib/anduinos-installer/mok-certificate.sha256",
         "var/lib/dkms/mok.key",

@@ -103,6 +103,7 @@ from installer_core.validation import (
     MINIMUM_DISK_BYTES,
     RECOMMENDED_DISK_BYTES,
 )
+from installer_core.layout import erase_disk_overhead_mib
 from installer_core.swap_policy import (
     calculate_swap_sizing,
     disk_swap_choices_mib,
@@ -3794,6 +3795,7 @@ def build_disk_layout_page(shared, nav_view):
         swap_sizing = calculate_swap_sizing(
             probe_physical_memory_bytes(),
             int(shared.get("disk_size_bytes") or 0),
+            layout_overhead_mib=erase_disk_overhead_mib(Filesystem(filesystem)),
         )
         selected_swap_size_mib = _validated_swap_size(
             shared, swap_sizing
@@ -6724,6 +6726,7 @@ def build_summary_page(shared, nav_view):
             else calculate_swap_sizing(
                 probe_physical_memory_bytes(),
                 int(shared.get("disk_size_bytes") or 0),
+                layout_overhead_mib=erase_disk_overhead_mib(Filesystem(filesystem)),
             )
         )
     except (RuntimeError, ValueError):
@@ -7410,7 +7413,7 @@ def incomplete_feature_steps(outcomes):
         "install-language-packs", "install-input-method",
         "install-multimedia-codecs", "refresh-package-indexes",
         "upgrade-system", "ensure-snapshots-manager",
-        "create-factory-snapshot",
+        "create-factory-snapshot", "deploy-recovery-environment",
         "install-third-party-drivers",
     }
     return tuple(
@@ -7509,6 +7512,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         ),
         "install-bootloader": _("Install bootloader", lang),
         "create-fallback-boot-chain": _("Create fallback boot chain", lang),
+        "deploy-recovery-environment": _("Deploy recovery environment", lang),
         "enroll-secure-boot": _("Schedule MOK enrollment", lang),
         "check-other-disk-systems": _(
             "Check for Windows installations", lang

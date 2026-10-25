@@ -57,6 +57,7 @@ class ExecutorPipelineTests(unittest.TestCase):
             "upgrade-system",
             "ensure-snapshots-manager",
             "provision-remote-access",
+            "deploy-recovery-environment",
             "verify-dkms-signatures",
             "install-bootloader",
             "enroll-secure-boot",

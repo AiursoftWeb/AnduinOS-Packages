@@ -24,7 +24,9 @@ class StorageCommandTests(unittest.TestCase):
         self.assertEqual(commands.devices["bios-boot"], "/dev/nvme0n1p1")
         self.assertEqual(commands.devices["efi-system"], "/dev/nvme0n1p2")
         self.assertEqual(commands.devices["swap"], "/dev/nvme0n1p3")
-        self.assertEqual(commands.devices["root"], "/dev/nvme0n1p4")
+        self.assertEqual(commands.devices["root"], "/dev/nvme0n1p5")
+        self.assertEqual(commands.devices["recovery"], "/dev/nvme0n1p4")
+        self.assertIn(("mkfs.ext4", "-F", "-L", "AOS_RECOVERY", "/dev/nvme0n1p4"), commands.format)
         self.assertIn(
             (
                 "parted",
@@ -47,7 +49,7 @@ class StorageCommandTests(unittest.TestCase):
                 "--force",
                 "--label",
                 "AnduinOS",
-                "/dev/nvme0n1p4",
+                "/dev/nvme0n1p5",
             ),
             commands.format,
         )
@@ -110,9 +112,9 @@ class StorageCommandTests(unittest.TestCase):
         )
         self.assertEqual(
             set(commands.devices),
-            {"bios-boot", "efi-system", "root"},
+            {"bios-boot", "efi-system", "recovery", "root"},
         )
         self.assertFalse(
             any(command[0] == "mkswap" for command in commands.format)
         )
-        self.assertEqual(commands.devices["root"], "/dev/nvme0n1p3")
+        self.assertEqual(commands.devices["root"], "/dev/nvme0n1p4")

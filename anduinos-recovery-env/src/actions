@@ -1,0 +1,84 @@
+#!/bin/sh
+# Shared by the graphical browser and text fallback. Never execute installed code.
+set -eu
+export PATH=/usr/bin:/bin:/usr/sbin LC_ALL=C
+umask 077
+top=/run/anduinos-rescue-center/repair-recovery-env
+mounted=0
+
+fail() { echo "$*" >&2; exit 1; }
+uuid_valid() { printf '%s\n' "$1" | grep -Eq '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'; }
+cleanup() {
+    status=$?
+    trap - EXIT
+    if [ "$mounted" = 1 ] && ! umount "$top"; then
+        echo 'Could not unmount the system. Restart has been cancelled.' >&2
+        exit 1
+    fi
+    exit "$status"
+}
+trap cleanup EXIT
+
+case "${1:-}:$#" in list:1|resume:1|restart:1) ;; restore:2) uuid_valid "$2" || fail 'Invalid snapshot identifier.' ;; *) fail 'Unknown recovery action.' ;; esac
+# The lock survives the GUI exiting while its recovery process is still running.
+exec 9>/run/recovery-operation.lock
+flock -n 9 || fail 'Another recovery operation is still running. Please wait.'
+if awk -v path="$top" '$5 == path {found=1} END {exit !found}' /proc/self/mountinfo; then
+    umount "$top" || fail 'Could not close the previous recovery session.'
+fi
+if [ "$1" = restart ]; then
+    sync
+    reboot -f
+    exit
+fi
+
+uuid=
+count=0
+for argument in $(cat /proc/cmdline); do
+    case "$argument" in anduinos.recovery.root=*) uuid=${argument#*=}; count=$((count + 1)) ;; esac
+done
+[ "$count" = 1 ] && uuid_valid "$uuid" || fail 'The installed system UUID is missing or invalid.'
+uuid=$(printf '%s' "$uuid" | tr A-F a-f)
+attempt=0
+while :; do
+    devices=$(blkid -c /dev/null -t "UUID=$uuid" -o device || true)
+    [ -z "$devices" ] || break
+    attempt=$((attempt + 1))
+    [ "$attempt" -lt 30 ] || break
+    sleep 1
+done
+set -- "$@" $devices
+# list/resume have one argument; restore has two. Never guess among duplicate UUIDs.
+case "$1:$#" in list:2|resume:2) device=$2 ;; restore:3) device=$3 ;; *) fail 'The installed system is missing or its filesystem UUID is ambiguous.' ;; esac
+[ "$(blkid -p -s UUID -o value "$device")" = "$uuid" ] || fail 'The system device has changed. Restart recovery.'
+mkdir -p "$top"
+options=rw,subvolid=5
+[ "$1" != list ] || options=ro,rescue=nologreplay,subvolid=5
+mount -t btrfs -o "$options" "$device" "$top"
+mounted=1
+
+last_boot() {
+    store=$top/@snapshots/anduinos-btrfs-snapshots-manager
+    marker=$store/last-successful-boot.json
+    [ -f "$marker" ] && [ "$(readlink -f "$marker")" = "$marker" ] || return 1
+    [ "$(stat -c %s "$marker")" -le 4096 ] || return 1
+    id=$(jq -er --arg root "$uuid" 'select(.schema == 1 and .root_uuid == $root) | .snapshot_id | select(type == "string")' "$marker") || return 1
+    uuid_valid "$id" || return 1
+    recorded=$(jq -er --arg id "$id" '.deployments[] | select(.id == $id and .state == "ready" and .failure == null) | .snapshot_uuid' /run/recovery-catalog.json) || return 1
+    [ "$recorded" = "$(jq -er '.snapshot_uuid' "$marker")" ] || return 1
+    snapshot=$store/deployments/$id/root
+    [ "$(readlink -f "$snapshot")" = "$snapshot" ] || return 1
+    actual=$(btrfs subvolume show "$snapshot" | awk '$1 == "UUID:" {print $2}') || return 1
+    [ "$actual" = "$recorded" ] && [ "$(btrfs property get -ts "$snapshot" ro)" = ro=true ] || return 1
+    printf '%s' "$id"
+}
+
+case "$1" in
+    list)
+        recovery-offline list "$top" > /run/recovery-catalog.json
+        marked=$(last_boot 2>/dev/null || true)
+        jq -e --arg marked "$marked" 'select(.schema == 1 and (.deployments | type) == "array") | .deployments |= (sort_by(.created_at) | reverse) | .last_successful_boot_id = $marked' /run/recovery-catalog.json
+        ;;
+    restore) recovery-offline restore "$top" "$2"; sync ;;
+    resume) recovery-offline resume "$top"; sync ;;
+esac

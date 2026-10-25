@@ -165,6 +165,8 @@ class PrepareStorageStep:
             commands.append("blkid")
         if context.plan.storage.swap_size_mib:
             commands.append("mkswap")
+        if "recovery" in execution_plan.commands.devices:
+            commands.append("mkfs.ext4")
         commands.append(
             {
                 Filesystem.BTRFS: "mkfs.btrfs",
@@ -418,6 +420,8 @@ class PrepareStorageStep:
         }
         if context.plan.storage.swap_size_mib:
             expected["swap"] = "swap"
+        if "recovery" in devices:
+            expected["recovery"] = "ext4"
         for name, filesystem in expected.items():
             result = self.runner.run(
                 ("blkid", "-s", "TYPE", "-o", "value", devices[name]),

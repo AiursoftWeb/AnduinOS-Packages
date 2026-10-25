@@ -254,6 +254,8 @@ def _verify_parity(
     }
     if "swap" in commands.devices:
         expected_formats[commands.devices["swap"]] = "swap"
+    if "recovery" in commands.devices:
+        expected_formats[commands.devices["recovery"]] = "ext4"
     command_formats = _command_formats(commands)
     if command_formats != expected_formats:
         raise RuntimeError("Storage format commands do not match the layout")
