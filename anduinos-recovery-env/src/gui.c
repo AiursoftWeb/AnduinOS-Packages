@@ -32,6 +32,8 @@ static char *response;
 static size_t response_length;
 static bool response_overflow;
 static char operation[16];
+static uint32_t information_started;
+static bool information_timed_out;
 
 static void start_action(const char *action, const char *identifier);
 static void listed(jv report);
@@ -284,7 +286,8 @@ static void information(jv report) {
         if (i == 1) {
             jv percent = field(report, "used_percent");
             if (jv_get_kind(percent) == JV_KIND_NUMBER && jv_number_value(percent) >= 0 && jv_number_value(percent) <= 100) {
-                lv_obj_t *bar = lv_bar_create(list); lv_obj_set_size(bar, lv_pct(100), 8);
+                lv_obj_t *bar = lv_bar_create(list); lv_group_remove_obj(bar);
+                lv_obj_set_size(bar, lv_pct(100), 8);
                 lv_bar_set_value(bar, (int)jv_number_value(percent), LV_ANIM_OFF);
             }
             jv_free(percent);
@@ -309,6 +312,11 @@ static void failed(const char *message) {
 static void poll_worker(lv_timer_t *timer) {
     (void)timer;
     if (!worker) return;
+    if (!strcmp(operation, "information") && lv_tick_elaps(information_started) > 15000) {
+        /* Only read-only inspection is interruptible. Never cancel a rollback. */
+        if (!information_timed_out) { kill(-worker, SIGTERM); information_timed_out = true; }
+        else if (lv_tick_elaps(information_started) > 17000) kill(-worker, SIGKILL);
+    }
     char buffer[4096]; ssize_t count;
     while ((count = read(worker_fd, buffer, sizeof(buffer))) > 0) {
         if (response_length + (size_t)count > MAX_RESPONSE) { response_overflow = true; continue; }
@@ -330,6 +338,7 @@ static void poll_worker(lv_timer_t *timer) {
     }
     close(worker_fd); worker_fd = -1; worker = 0;
     fprintf(stderr, "Recovery action %s finished: %d\n", operation, status);
+    if (information_timed_out) { failed("Reading system information took too long. System Recovery is still available."); return; }
     if (response_overflow) { failed("The recovery response is too large to display."); return; }
     if (!WIFEXITED(status) || WEXITSTATUS(status)) {
         char details[8192] = {0};
@@ -362,11 +371,13 @@ static void start_action(const char *action, const char *identifier) {
         lv_obj_add_state(lv_obj_get_child(tabs, i), LV_STATE_DISABLED);
     lv_obj_t *spinner = lv_spinner_create(body); lv_obj_set_size(spinner, 40, 40);
     snprintf(operation, sizeof(operation), "%s", action);
+    information_started = lv_tick_get(); information_timed_out = false;
     free(response); response = NULL; response_length = 0; response_overflow = false;
     int fds[2];
     if (pipe2(fds, O_CLOEXEC)) { failed(strerror(errno)); return; }
     worker = fork();
     if (!worker) {
+        if (setpgid(0, 0)) _exit(126);
         close(fds[0]); dup2(fds[1], STDOUT_FILENO); close(fds[1]);
         /* Diagnostic output must never become part of the JSON catalog. */
         int errors = open("/run/recovery-action-error", O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, 0600);
