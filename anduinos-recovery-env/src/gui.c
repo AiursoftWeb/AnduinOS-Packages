@@ -121,7 +121,14 @@ static void close_dialog(void) {
     lv_group_delete(dialog_group); dialog_group = NULL;
 }
 static void cancel(lv_event_t *e) { (void)e; close_dialog(); }
-static void dialog_key(lv_event_t *e) { if (lv_event_get_key(e) == LV_KEY_ESC) close_dialog(); }
+static void dialog_key(lv_event_t *e) {
+    switch (lv_event_get_key(e)) {
+        case LV_KEY_LEFT: lv_group_focus_prev(dialog_group); break;
+        case LV_KEY_RIGHT: lv_group_focus_next(dialog_group); break;
+        case LV_KEY_ESC: close_dialog(); break;
+        default: break;
+    }
+}
 static void accept(lv_event_t *e) {
     struct snapshot *s = lv_event_get_user_data(e);
     char identifier[37]; snprintf(identifier, sizeof(identifier), "%s", s->id);
