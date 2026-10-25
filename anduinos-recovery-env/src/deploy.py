@@ -188,7 +188,7 @@ def grub():
     if not STATE.exists():
         return  # Installing other packages before initial deployment is harmless.
     binding = read_binding(STATE)
-    print(f'''menuentry 'AnduinOS Recovery Environment' --id anduinos-recovery-env {{
+    print(f'''menuentry 'AnduinOS Recovery Environment' --class recovery --id anduinos-recovery-env {{
     insmod part_gpt
     insmod ext2
     search --no-floppy --fs-uuid --set=recovery {binding["volume_uuid"]}
