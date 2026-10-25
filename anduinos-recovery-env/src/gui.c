@@ -16,6 +16,8 @@
 #include <unistd.h>
 #include "cursor.h"
 
+// Default Fluent-round-Dark theme_selected_bg_color.
+#define ACCENT_BLUE 0x3281ea
 #define MAX_RESPONSE (16 * 1024 * 1024)
 struct snapshot { char *id, *title, *date; bool ready, marked; };
 static struct snapshot *snapshots;
@@ -94,18 +96,21 @@ static void page(const char *title, const char *subtitle) {
     lv_obj_set_style_pad_column(tabs, 12, 0);
     lv_obj_t *recovery_tab = button(tabs, "System Recovery", show_recovery, NULL, false);
     lv_obj_t *information_tab = button(tabs, "System Information", show_information, NULL, false);
-    lv_obj_set_style_bg_color(information_page ? information_tab : recovery_tab, lv_color_hex(0x465b76), 0);
+    lv_obj_set_style_bg_color(information_page ? information_tab : recovery_tab, lv_color_mix(lv_color_hex(ACCENT_BLUE), lv_color_hex(0x484848), LV_OPA_30), 0);
     lv_obj_t *heading = label(body, title, 0xf0f0f0);
     lv_obj_set_style_text_font(heading, title_font, 0);
     label(body, subtitle, 0xbdbdbd);
 }
 static lv_obj_t *button(lv_obj_t *parent, const char *text, lv_event_cb_t cb, void *data, bool primary) {
     lv_obj_t *b = lv_button_create(parent);
-    lv_obj_set_style_bg_color(b, lv_color_hex(primary ? 0xe95420 : 0x484848), 0);
+    lv_obj_set_style_bg_color(b, lv_color_hex(primary ? ACCENT_BLUE : 0x484848), 0);
     lv_obj_set_style_radius(b, 9, 0);
     lv_obj_set_style_pad_hor(b, 20, 0); lv_obj_set_style_pad_ver(b, 12, 0);
-    lv_obj_set_style_outline_color(b, lv_color_hex(0xf5ad73), LV_STATE_FOCUSED);
-    lv_obj_set_style_outline_width(b, 2, LV_STATE_FOCUSED);
+    lv_obj_set_style_outline_width(b, 0, LV_STATE_FOCUSED);
+    lv_obj_set_style_border_width(b, 2, 0);
+    lv_obj_set_style_border_opa(b, LV_OPA_TRANSP, 0);
+    lv_obj_set_style_border_color(b, lv_color_hex(ACCENT_BLUE), LV_STATE_FOCUSED);
+    lv_obj_set_style_border_opa(b, LV_OPA_COVER, LV_STATE_FOCUSED);
     lv_obj_t *caption = lv_label_create(b);
     lv_label_set_text(caption, text); lv_obj_center(caption);
     lv_obj_add_event_cb(b, cb, LV_EVENT_CLICKED, data);
@@ -168,7 +173,7 @@ static void confirm(lv_event_t *e) {
     lv_obj_t *no = lv_msgbox_add_footer_button(dialog, "Cancel");
     lv_obj_t *yes = lv_msgbox_add_footer_button(dialog, "Roll Back");
     lv_obj_set_style_bg_color(no, lv_color_hex(0x484848), 0);
-    lv_obj_set_style_bg_color(yes, lv_color_hex(0xe95420), 0);
+    lv_obj_set_style_bg_color(yes, lv_color_hex(ACCENT_BLUE), 0);
     lv_obj_set_height(lv_msgbox_get_footer(dialog), LV_SIZE_CONTENT);
     lv_obj_set_height(no, 44); lv_obj_set_height(yes, 44);
     lv_obj_set_style_radius(no, 9, 0); lv_obj_set_style_radius(yes, 9, 0);
@@ -429,7 +434,7 @@ int main(int argc, char **argv) {
     lv_font_t *cjk = lv_freetype_font_create("/usr/share/fonts/wqy-microhei.ttc", LV_FREETYPE_FONT_RENDER_MODE_BITMAP, 18, LV_FREETYPE_FONT_STYLE_NORMAL);
     if (!body_font || !title_font || !cjk) return 1;
     body_font->fallback = cjk;
-    lv_theme_default_init(display, lv_color_hex(0xe95420), lv_color_hex(0x92d4a7), true, body_font);
+    lv_theme_default_init(display, lv_color_hex(ACCENT_BLUE), lv_color_hex(0x92d4a7), true, body_font);
     main_group = lv_group_create(); select_group(main_group);
     lv_obj_set_style_bg_color(lv_screen_active(), lv_color_hex(0x242424), 0);
     body = lv_obj_create(lv_screen_active()); lv_obj_remove_style_all(body);
