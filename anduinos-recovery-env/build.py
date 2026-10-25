@@ -11,6 +11,7 @@ import shutil
 import struct
 import subprocess
 import tempfile
+import xml.etree.ElementTree as ET
 
 
 HERE = Path(__file__).resolve().parent
@@ -166,7 +167,7 @@ def build():
         extracted = inputs / "extracted"
         busybox = next((extracted / "busybox-static").glob("**/busybox"))
         copy(busybox, root / "bin/busybox")
-        for name in "sh mount umount mkdir chmod cat sleep modprobe ls sync reboot poweroff clear awk grep tr readlink stat".split():
+        for name in "sh mount umount mkdir chmod cat sleep modprobe ls sync reboot poweroff clear awk grep tr readlink stat head od timeout uname".split():
             (root / "bin" / name).symlink_to("busybox")
         for name in ("btrfs", "jq", "flock"):
             runtime.file("/usr/bin/" + name)
@@ -176,6 +177,9 @@ def build():
         runtime.dependencies(root / "usr/bin/recovery-offline")
         build_gui(runtime, HERE / "obj" / ("gui-" + arch), lvgl)
         copy(HERE / "src/actions", root / "usr/bin/recovery-action")
+        copy(HERE / "src/information", root / "usr/bin/recovery-information")
+        version = ET.parse(HERE / "anduinos-recovery-env.aosproj").findtext("PropertyGroup/PackageVersion")
+        (root / "etc/recovery-version").write_text(version.replace("$(SuiteShortName)", suite) + "\n")
         copy(HERE / "src/init", root / "init")
         (root / "init").chmod(0o755)
 

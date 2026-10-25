@@ -20,7 +20,8 @@
 struct snapshot { char *id, *title, *date; bool ready, marked; };
 static struct snapshot *snapshots;
 static int snapshot_count;
-static lv_obj_t *body, *dialog, *pointer;
+static lv_obj_t *body, *dialog, *pointer, *tabs;
+static bool information_page;
 static lv_group_t *main_group, *dialog_group;
 static lv_font_t *body_font, *title_font;
 static int terminal = -1, old_mode = KD_TEXT;
@@ -35,6 +36,9 @@ static char operation[16];
 static void start_action(const char *action, const char *identifier);
 static void listed(jv report);
 static void failed(const char *message);
+static lv_obj_t *button(lv_obj_t *parent, const char *text, lv_event_cb_t cb, void *data, bool primary);
+static void show_recovery(lv_event_t *e) { (void)e; start_action("list", NULL); }
+static void show_information(lv_event_t *e) { (void)e; start_action("information", NULL); }
 
 static void restore_terminal(void) {
     if (terminal >= 0) { ioctl(terminal, KDSETMODE, old_mode); close(terminal); terminal = -1; }
@@ -82,6 +86,13 @@ static lv_obj_t *label(lv_obj_t *parent, const char *text, unsigned color) {
 static void page(const char *title, const char *subtitle) {
     lv_group_remove_all_objs(main_group);
     lv_obj_clean(body);
+    tabs = lv_obj_create(body); lv_obj_remove_style_all(tabs);
+    lv_obj_set_size(tabs, lv_pct(100), LV_SIZE_CONTENT);
+    lv_obj_set_flex_flow(tabs, LV_FLEX_FLOW_ROW);
+    lv_obj_set_style_pad_column(tabs, 12, 0);
+    lv_obj_t *recovery_tab = button(tabs, "System Recovery", show_recovery, NULL, false);
+    lv_obj_t *information_tab = button(tabs, "System Information", show_information, NULL, false);
+    lv_obj_set_style_bg_color(information_page ? information_tab : recovery_tab, lv_color_hex(0x465b76), 0);
     lv_obj_t *heading = label(body, title, 0xf0f0f0);
     lv_obj_set_style_text_font(heading, title_font, 0);
     label(body, subtitle, 0xbdbdbd);
@@ -112,7 +123,7 @@ static void spacer(void) {
     lv_obj_set_flex_grow(space, 1);
 }
 static void restart(lv_event_t *e) { (void)e; start_action("restart", NULL); }
-static void retry(lv_event_t *e) { (void)e; start_action("list", NULL); }
+static void retry(lv_event_t *e) { (void)e; start_action(information_page ? "information" : "list", NULL); }
 static void resume(lv_event_t *e) { (void)e; start_action("resume", NULL); }
 static void close_dialog(void) {
     if (!dialog) return;
@@ -237,8 +248,56 @@ static void listed(jv report) {
     jv_free(issues);
     button(footer(), "Restart", restart, NULL, false);
 }
+static void information(jv report) {
+    jv schema = field(report, "schema"), groups = field(report, "groups");
+    bool valid = jv_get_kind(schema) == JV_KIND_NUMBER && jv_number_value(schema) == 1 &&
+                 jv_get_kind(groups) == JV_KIND_ARRAY && jv_array_length(jv_copy(groups)) <= 8;
+    jv_free(schema);
+    if (!valid) { jv_free(groups); failed("System information could not be read."); return; }
+    page("System Information", "Read-only details. Missing information does not prevent snapshot recovery.");
+    lv_obj_t *list = lv_obj_create(body);
+    lv_obj_set_width(list, lv_pct(100)); lv_obj_set_flex_grow(list, 1);
+    lv_obj_set_style_bg_color(list, lv_color_hex(0x303030), 0);
+    lv_obj_set_style_radius(list, 14, 0); lv_obj_set_style_border_width(list, 0, 0);
+    lv_obj_set_flex_flow(list, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_scroll_dir(list, LV_DIR_VER);
+    lv_group_add_obj(main_group, list);
+    for (int i = 0; i < jv_array_length(jv_copy(groups)); i++) {
+        jv group = jv_array_get(jv_copy(groups), i), rows = field(group, "rows");
+        char *title = string_field(group, "title");
+        label(list, title, 0x92d4a7); free(title);
+        if (jv_get_kind(rows) == JV_KIND_ARRAY && jv_array_length(jv_copy(rows)) <= 32) {
+            for (int n = 0; n < jv_array_length(jv_copy(rows)); n++) {
+                jv record = jv_array_get(jv_copy(rows), n);
+                char *name = string_field(record, "name"), *value = string_field(record, "value");
+                lv_obj_t *row = lv_obj_create(list); lv_obj_remove_style_all(row);
+                lv_obj_set_size(row, lv_pct(100), LV_SIZE_CONTENT);
+                lv_obj_set_flex_flow(row, LV_FLEX_FLOW_ROW);
+                lv_obj_set_style_pad_column(row, 12, 0);
+                lv_obj_t *key = label(row, name, 0xbdbdbd);
+                lv_obj_set_width(key, lv_pct(40));
+                lv_obj_t *text = label(row, *value ? value : "Unavailable", 0xf0f0f0);
+                lv_obj_set_width(text, 0); lv_obj_set_flex_grow(text, 1);
+                free(name); free(value); jv_free(record);
+            }
+        }
+        if (i == 1) {
+            jv percent = field(report, "used_percent");
+            if (jv_get_kind(percent) == JV_KIND_NUMBER && jv_number_value(percent) >= 0 && jv_number_value(percent) <= 100) {
+                lv_obj_t *bar = lv_bar_create(list); lv_obj_set_size(bar, lv_pct(100), 8);
+                lv_bar_set_value(bar, (int)jv_number_value(percent), LV_ANIM_OFF);
+            }
+            jv_free(percent);
+        }
+        jv_free(rows); jv_free(group);
+    }
+    jv_free(groups);
+    char *notice = string_field(report, "notice"); label(list, notice, 0xbdbdbd); free(notice);
+    button(footer(), "Refresh", show_information, NULL, false);
+}
 static void failed(const char *message) {
-    page("Recovery needs attention", "The operation could not be completed. You can retry or restart; an interrupted rollback can be resumed here.");
+    page(information_page ? "Information unavailable" : "Recovery needs attention",
+         information_page ? "You can retry or return to System Recovery." : "The operation could not be completed. You can retry or restart; an interrupted rollback can be resumed here.");
     lv_obj_t *details = lv_obj_create(body);
     lv_obj_set_width(details, lv_pct(100)); lv_obj_set_flex_grow(details, 1);
     lv_obj_set_scroll_dir(details, LV_DIR_VER);
@@ -279,10 +338,12 @@ static void poll_worker(lv_timer_t *timer) {
         failed(*details ? details : response && *response ? response : "The recovery operation failed without returning details.");
         return;
     }
-    if (!strcmp(operation, "list")) {
+    if (!strcmp(operation, "list") || !strcmp(operation, "information")) {
         jv report = jv_parse(response ? response : "");
-        if (jv_get_kind(report) == JV_KIND_OBJECT) listed(report);
-        else failed("The recovery engine returned an unreadable snapshot catalog.");
+        if (jv_get_kind(report) == JV_KIND_OBJECT) {
+            if (information_page) information(report); else listed(report);
+        }
+        else failed(information_page ? "System information could not be read." : "The recovery engine returned an unreadable snapshot catalog.");
         jv_free(report);
     } else if (strcmp(operation, "restart")) {
         page("Your system has been restored", "Restart to use the restored system. Your personal files were left unchanged.");
@@ -292,9 +353,13 @@ static void poll_worker(lv_timer_t *timer) {
 static void start_action(const char *action, const char *identifier) {
     if (worker) return;
     close_dialog();
-    bool loading = !strcmp(action, "list"), restarting = !strcmp(action, "restart");
-    page(loading ? "AnduinOS Recovery" : restarting ? "Restarting…" : "Restoring your system…",
-         loading ? "Looking for system snapshots…" : restarting ? "Please wait." : "Keep the computer powered on. This may take a few minutes.");
+    bool info = !strcmp(action, "information");
+    if (info || !strcmp(action, "list")) information_page = info;
+    bool loading = info || !strcmp(action, "list"), restarting = !strcmp(action, "restart");
+    page(info ? "System Information" : loading ? "AnduinOS Recovery" : restarting ? "Restarting…" : "Restoring your system…",
+         info ? "Reading system information…" : loading ? "Looking for system snapshots…" : restarting ? "Please wait." : "Keep the computer powered on. This may take a few minutes.");
+    for (uint32_t i = 0; i < lv_obj_get_child_count(tabs); i++)
+        lv_obj_add_state(lv_obj_get_child(tabs, i), LV_STATE_DISABLED);
     lv_obj_t *spinner = lv_spinner_create(body); lv_obj_set_size(spinner, 40, 40);
     snprintf(operation, sizeof(operation), "%s", action);
     free(response); response = NULL; response_length = 0; response_overflow = false;
