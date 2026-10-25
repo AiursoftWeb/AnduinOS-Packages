@@ -45,10 +45,7 @@ impl Choice {
     fn from_json(value: &Value) -> Option<Self> {
         let backend = value["backend"].as_str()?;
         let threads = value["threads"].as_u64()?;
-        if !["cpu", "gpu"].contains(&backend)
-            || threads < 1
-            || threads > available_threads().min(256) as u64
-        {
+        if !["cpu", "gpu"].contains(&backend) || threads < 1 || threads > 256 {
             return None;
         }
         Some(Self::new(backend, threads as u32))
@@ -177,11 +174,16 @@ impl SelectionCache {
     pub fn load(&mut self, fingerprint: &str) -> Option<Choice> {
         self.measurements.clear();
         let record: Value = serde_json::from_slice(&read_bounded(&self.path, 65536).ok()?).ok()?;
-        if record["policy"] != POLICY_VERSION || record["fingerprint"] != fingerprint {
-            return None;
-        }
-        let choice = Choice::from_json(&record["selected"])?;
-        if let Some(records) = record["measurements"].as_array() {
+        let mut choice = Choice::from_json(&record["selected"])?;
+        let original_threads = choice.threads;
+        choice.threads = choice.threads.min(available_threads());
+        // Keep the user's measured backend across updates and configuration
+        // changes. Only automatic previews need current performance evidence.
+        if record["policy"] == POLICY_VERSION
+            && record["fingerprint"] == fingerprint
+            && choice.threads == original_threads
+            && let Some(records) = record["measurements"].as_array()
+        {
             self.measurements = records
                 .iter()
                 .filter(|v| v.is_object())
@@ -609,7 +611,11 @@ mod tests {
             .save(
                 "fingerprint",
                 &Choice::new("cpu", 1),
-                &[json!({"kind":"benchmark","text":"SECRET"})],
+                &[
+                    json!({"kind":"benchmark","text":"SECRET"}),
+                    json!({"backend":"cpu","threads":1,"phase":"warm","status":"success","audio_ms":4000,"inference_ms":50}),
+                    json!({"backend":"cpu","threads":1,"phase":"warm","status":"success","audio_ms":4000,"inference_ms":50}),
+                ],
             )
             .unwrap();
         assert_eq!(
@@ -629,12 +635,30 @@ mod tests {
             0o700
         );
         assert_eq!(cache.load("fingerprint"), Some(Choice::new("cpu", 1)));
+        assert!(crate::live_policy::preview_capable(
+            &json!(cache.measurements),
+            &Choice::new("cpu", 1).json()
+        ));
         assert!(
             !std::fs::read_to_string(&cache.path)
                 .unwrap()
                 .contains("SECRET")
         );
-        assert!(cache.load("new driver").is_none());
+        assert_eq!(cache.load("new driver"), Some(Choice::new("cpu", 1)));
+        assert!(cache.measurements.is_empty());
+        let mut record: Value =
+            serde_json::from_slice(&std::fs::read(&cache.path).unwrap()).unwrap();
+        record["policy"] = json!(POLICY_VERSION - 1);
+        std::fs::write(&cache.path, record.to_string()).unwrap();
+        assert_eq!(cache.load("fingerprint"), Some(Choice::new("cpu", 1)));
+        assert!(cache.measurements.is_empty());
+        cache
+            .save("fingerprint", &Choice::new("cpu", 256), &[])
+            .unwrap();
+        assert_eq!(
+            cache.load("fingerprint"),
+            Some(Choice::new("cpu", available_threads().min(256)))
+        );
         std::fs::write(&cache.path, vec![b'x'; 65537]).unwrap();
         assert!(cache.load("fingerprint").is_none());
     }
@@ -659,23 +683,78 @@ mod tests {
         .unwrap();
         assert_ne!(second, environment_fingerprint(&model, "sample", &worker));
     }
-    #[test]
-    fn selector_cache_generation_manual_path_and_failure_memory() {
-        let directory = tempfile::tempdir().unwrap();
-        let (t, calls) = tuner(Behavior::default());
-        let mut selector = AutomaticSelector::new(
+    fn selector_at(path: &Path, behavior: Behavior) -> (AutomaticSelector<Fake>, Rc<Cell<usize>>) {
+        let (tuner, calls) = tuner(behavior);
+        let selector = AutomaticSelector::new(
             Path::new("data/benchmark"),
             SelectionCache {
-                path: directory.path().join("performance.json"),
+                path: path.to_owned(),
                 measurements: vec![],
             },
-            t,
+            tuner,
+        );
+        (selector, calls)
+    }
+
+    #[test]
+    fn settings_changes_and_service_restart_reuse_cached_selection() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("performance.json");
+        let (mut selector, calls) = selector_at(&path, Behavior::default());
+        let cancel = AtomicBool::new(false);
+        let choice = selector
+            .select(&config(), &cancel, false, 0, || {}, FULL_BUDGET)
+            .unwrap();
+        let measured_calls = calls.get();
+        assert!(measured_calls > 0);
+        let mut changed = config();
+        changed.model = directory.path().join("another-model");
+        changed.language = "zh-Hans".into();
+        changed.threads = 1;
+        let selected = selector
+            .select(
+                &changed,
+                &cancel,
+                false,
+                0,
+                || panic!("settings changes must reuse selection"),
+                FULL_BUDGET,
+            )
+            .unwrap();
+        assert_eq!(selected.backend, choice.backend);
+        assert_eq!(selected.threads, 1);
+        assert!(!selector.preview_allowed);
+        assert_eq!(calls.get(), measured_calls);
+        let (mut restarted, fresh_calls) = selector_at(&path, Behavior::default());
+        assert_eq!(
+            restarted
+                .select(
+                    &config(),
+                    &cancel,
+                    false,
+                    0,
+                    || panic!("service restart must reuse selection"),
+                    QUICK_BUDGET,
+                )
+                .unwrap(),
+            choice
+        );
+        assert_eq!(restarted.status, "cached");
+        assert!(restarted.measurements.is_empty());
+        assert_eq!(fresh_calls.get(), 0);
+    }
+
+    #[test]
+    fn explicit_retest_ignores_cached_selection() {
+        let directory = tempfile::tempdir().unwrap();
+        let (mut selector, calls) = selector_at(
+            &directory.path().join("performance.json"),
+            Behavior::default(),
         );
         let cancel = AtomicBool::new(false);
         selector
             .select(&config(), &cancel, false, 0, || {}, FULL_BUDGET)
             .unwrap();
-        assert_eq!(selector.status, "measured");
         let measured_calls = calls.get();
         selector
             .select(
@@ -684,23 +763,30 @@ mod tests {
                 false,
                 0,
                 || panic!("cached selection must not announce measurement"),
-                FULL_BUDGET,
+                QUICK_BUDGET,
             )
             .unwrap();
         assert_eq!(calls.get(), measured_calls);
-        assert!(selector.measurements.is_empty());
         selector
-            .select(&config(), &cancel, false, 1, || {}, FULL_BUDGET)
+            .select(&config(), &cancel, true, 1, || {}, FULL_BUDGET)
             .unwrap();
+        assert_eq!(selector.status, "measured");
         assert!(calls.get() > measured_calls);
+    }
+
+    #[test]
+    fn manual_backend_and_cancellation_do_not_measure() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("performance.json");
+        let (mut selector, calls) = selector_at(&path, Behavior::default());
         let mut manual = config();
         manual.backend = "cpu".into();
         selector
             .select(
                 &manual,
-                &cancel,
+                &AtomicBool::new(false),
                 false,
-                1,
+                0,
                 || panic!("manual selection must not benchmark"),
                 QUICK_BUDGET,
             )
@@ -708,42 +794,74 @@ mod tests {
         assert_eq!(selector.status, "manual");
         assert!(selector.measurements.is_empty());
         assert!(!selector.preview_allowed);
-        assert_eq!(
-            selector.select(
-                &manual,
-                &AtomicBool::new(true),
-                false,
-                0,
-                || {},
-                QUICK_BUDGET
-            ),
-            Err(WorkerError::Cancelled)
+        for config in [manual, config()] {
+            assert_eq!(
+                selector.select(
+                    &config,
+                    &AtomicBool::new(true),
+                    false,
+                    0,
+                    || panic!("cancelled selection must not benchmark"),
+                    QUICK_BUDGET
+                ),
+                Err(WorkerError::Cancelled)
+            );
+        }
+        assert_eq!(calls.get(), 0);
+        assert!(!path.exists());
+    }
+
+    #[test]
+    fn failed_probe_survives_restart_and_explicit_retest_can_retry() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("performance.json");
+        let (mut selector, calls) = selector_at(
+            &path,
+            Behavior {
+                error: true,
+                ..Behavior::default()
+            },
         );
-        let (t, calls) = tuner(Behavior {
-            error: true,
-            ..Behavior::default()
-        });
-        selector.tuner = t;
-        selector
-            .select(&config(), &cancel, true, 2, || {}, FULL_BUDGET)
+        let cancel = AtomicBool::new(false);
+        let fallback = selector
+            .select(&config(), &cancel, false, 0, || {}, QUICK_BUDGET)
             .unwrap();
-        let failed_calls = calls.get();
         assert_eq!(selector.status, "fallback");
+        assert_eq!(fallback.backend, "cpu");
+        let failed_calls = calls.get();
+        assert!(failed_calls > 0);
         selector
             .select(
                 &config(),
                 &cancel,
                 false,
-                2,
+                0,
                 || panic!("must not repeat failed probe"),
-                FULL_BUDGET,
+                QUICK_BUDGET,
             )
             .unwrap();
         assert_eq!(calls.get(), failed_calls);
-        selector
-            .select(&config(), &cancel, false, 3, || {}, FULL_BUDGET)
+        let (mut restarted, fresh_calls) = selector_at(&path, Behavior::default());
+        assert_eq!(
+            restarted
+                .select(
+                    &config(),
+                    &cancel,
+                    false,
+                    0,
+                    || panic!("failed measurement must not repeat after restart"),
+                    QUICK_BUDGET
+                )
+                .unwrap(),
+            fallback
+        );
+        assert!(!restarted.preview_allowed);
+        assert_eq!(fresh_calls.get(), 0);
+        restarted
+            .select(&config(), &cancel, true, 1, || {}, FULL_BUDGET)
             .unwrap();
-        assert!(calls.get() > failed_calls);
+        assert_eq!(restarted.status, "measured");
+        assert!(fresh_calls.get() > 0);
     }
 }
 impl Default for AutomaticSelector {
@@ -821,7 +939,10 @@ impl<E: BenchmarkEngine> AutomaticSelector<E> {
                 .as_bytes(),
             );
             if !force {
-                if let Some(choice) = self.cache.load(&fingerprint) {
+                if let Some(mut choice) = self.cache.load(&fingerprint) {
+                    if config.threads > 0 {
+                        choice.threads = threads;
+                    }
                     self.status = "cached";
                     self.preview_allowed = crate::live_policy::preview_capable(
                         &json!(self.cache.measurements),
@@ -855,6 +976,9 @@ impl<E: BenchmarkEngine> AutomaticSelector<E> {
                 Ok(selected) => selected,
                 Err(WorkerError::Cancelled) => return Err(WorkerError::Cancelled),
                 Err(e) => {
+                    // An unsuccessful first probe must not delay every new
+                    // service process. Retest remains an explicit user action.
+                    let _ = self.cache.save(&fingerprint, &fallback, &[]);
                     self.failed_fingerprint = Some(fingerprint);
                     return Err(e);
                 }

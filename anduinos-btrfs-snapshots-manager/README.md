@@ -27,7 +27,16 @@ target configuration has finished. These factory recovery points are excluded
 from every automatic cleanup policy and cannot be renamed or unpinned. Factory
 reset preserves `@home` by default; an explicit **Roll back user data** switch
 restores all users' Home files and settings to their initial state while retaining
-snapshot history. This is recovery, not secure data erasure for device disposal.
+snapshot history. An additional **Delete all snapshot history** option also
+restores Home and, only after the restored System and Home are confirmed, deletes
+all managed non-factory System and Home snapshots, including pinned snapshots and
+the new safety snapshots. Both original **New OS** recovery points are retained
+for future factory resets. Old replaced subvolumes must finish cleanup before
+this operation completes. Interrupted cleanup remains pending and retries; new
+snapshots are paused until it finishes. Once confirmation starts history deletion,
+the operation cannot be cancelled or reverted. Logs, containers, virtual machines,
+other disks, and files outside the managed snapshot stores are outside this option.
+This is recovery and snapshot-history deletion, not secure data erasure for device disposal.
 Either factory snapshot may be deleted deliberately through a dedicated warning
 that this disables factory recovery for that category.
 The Control Panel opens this guarded workflow with `--factory-reset`. Disk

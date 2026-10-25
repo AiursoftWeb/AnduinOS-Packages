@@ -1721,6 +1721,53 @@ impl SnapshotsManagerHelper {
         }
     }
 
+    /// Schedule the dedicated factory reset transaction. Ordinary restore never resets Home.
+    async fn schedule_factory_reset_with_history_cleanup(
+        &self,
+        #[zbus(header)] hdr: zbus::message::Header<'_>,
+        #[zbus(connection)] connection: &Connection,
+        deployment_id: String,
+    ) -> (bool, String) {
+        let (uid, pid) = Self::get_caller_info(&hdr, connection).await;
+        if let Err(error) = check_authorization(&hdr, connection, POLKIT_ACTION_RESTORE).await {
+            audit::log_auth_failure(uid, pid, POLKIT_ACTION_RESTORE, &error.to_string());
+            return (false, format!("Authorization failed: {error}"));
+        }
+        let id = match deployment_id.parse::<DeploymentId>() {
+            Ok(id) => id,
+            Err(error) => return (false, format!("Invalid factory snapshot ID: {error}")),
+        };
+        match RollbackCoordinator::default()
+            .schedule_factory_reset_with_history_cleanup(id, |_phase, _fraction, _message| {})
+        {
+            Ok(transaction) => match serde_json::to_string(&transaction) {
+                Ok(json) => {
+                    audit::log_operation(
+                        uid,
+                        pid,
+                        "schedule_factory_reset_with_history_cleanup",
+                        &deployment_id,
+                        true,
+                        None,
+                    );
+                    (true, json)
+                }
+                Err(error) => (false, format!("Could not serialize factory reset: {error}")),
+            },
+            Err(error) => {
+                audit::log_operation(
+                    uid,
+                    pid,
+                    "schedule_factory_reset_with_history_cleanup",
+                    &deployment_id,
+                    false,
+                    Some(&error.to_string()),
+                );
+                (false, error.to_string())
+            }
+        }
+    }
+
     /// Cancel a restore only while it is still safe to do so before reboot.
     async fn cancel_deployment_restore(
         &self,

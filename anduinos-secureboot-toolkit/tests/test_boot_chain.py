@@ -20,11 +20,12 @@ UUID = "12345678-1234-1234-1234-123456789abc"
 
 
 class Firmware:
-    def __init__(self, esp):
+    def __init__(self, esp, suffix="x64"):
         self.esp = esp
         self.order = "0000,0007,0003"
         self.current = "0007"
-        self.loader = "grubx64.efi"
+        self.suffix = suffix
+        self.loader = f"grub{suffix}.efi"
         self.new = False
         self.fail_order = False
         self.rollback_order = self.order
@@ -42,7 +43,7 @@ class Firmware:
         result += "Boot0000* Windows Boot Manager HD(1,GPT," + UUID + ",0x800,0x10000)/File(\\EFI\\Microsoft\\Boot\\bootmgfw.efi)\n"
         result += f"Boot0007* AnduinOS HD(1,GPT,{UUID},0x800,0x10000)/File(\\EFI\\AnduinOS\\{self.loader})\n"
         if self.new:
-            result += f"Boot0009* AnduinOS HD(1,GPT,{UUID},0x800,0x10000)/File(\\EFI\\AnduinOS\\shimx64.efi)\n"
+            result += f"Boot0009* AnduinOS HD(1,GPT,{UUID},0x800,0x10000)/File(\\EFI\\AnduinOS\\shim{self.suffix}.efi)\n"
         return result + self.other_entry
 
     def run(self, args, **kwargs):
@@ -59,6 +60,8 @@ class Firmware:
             output = self.boot_prefix
         elif args[0] == "lsblk":
             output = json.dumps({"blockdevices": self.parts})
+        elif args == ["dpkg", "--print-architecture"]:
+            output = "amd64" if self.suffix == "x64" else "arm64"
         elif args == ["efibootmgr", "--verbose"]:
             output = self.output()
         elif args[:2] == ["efibootmgr", "--create-only"]:
@@ -69,6 +72,8 @@ class Firmware:
             self.order = args[2]
         elif args[-1] == "--delete-bootnum":
             self.new = False
+        elif args == ["sync", "-f", str(self.esp)]:
+            pass
         else:
             raise AssertionError(args)
         return subprocess.CompletedProcess(args, 0, output, "")
@@ -76,7 +81,7 @@ class Firmware:
 
 class BootChainTests(unittest.TestCase):
     @contextmanager
-    def fixture(self):
+    def fixture(self, suffix="x64"):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             esp = root / "esp"
@@ -84,23 +89,62 @@ class BootChainTests(unittest.TestCase):
             vendor.mkdir(parents=True)
             (vendor / "grub.cfg").write_text("search --fs-uuid root; configfile /boot/grub/grub.cfg")
             sources = {}
-            for name in ("shimx64.efi", "grubx64.efi", "mmx64.efi"):
+            for name in (f"shim{suffix}.efi", f"grub{suffix}.efi", f"mm{suffix}.efi"):
                 (vendor / name).write_bytes(b"old " + name.encode())
                 source = root / name
                 source.write_bytes(b"new " + name.encode())
                 sources[name] = source
-            for name in ("Microsoft/Boot/bootmgfw.efi", "BOOT/BOOTX64.EFI"):
+            for name in ("Microsoft/Boot/bootmgfw.efi", f"BOOT/BOOT{suffix.upper()}.EFI"):
                 path = esp / "EFI" / name
                 path.parent.mkdir(parents=True)
                 path.write_bytes(b"foreign loader")
-            firmware = Firmware(esp)
+            firmware = Firmware(esp, suffix)
             # Fake only package/signature and dpkg lock boundaries. All disk
             # selection, staging, file replacement and NVRAM logic executes.
-            with (patch.object(boot, "payloads", return_value=(sources, 0x8664)),
+            with (patch.object(boot, "payloads", return_value=(sources, 0x8664 if suffix == "x64" else 0xAA64)),
+                  patch.object(boot, "EFI", esp),
                   patch.object(boot, "partition_number", return_value=1),
                   patch.object(boot, "verify_image"),
                   patch.object(boot, "open", side_effect=lambda *a: (root / "lock").open("a+"))):
                 yield firmware, esp, vendor
+
+    def test_both_architectures_deploy_update_and_preserve_other_loaders(self):
+        for suffix in ("x64", "aa64"):
+            with self.subTest(suffix=suffix), self.fixture(suffix) as (firmware, esp, vendor):
+                boot.prepare_boot_chain(firmware, esp)
+                self.assertEqual(firmware.order, "0000,0009,0003")
+                create = next(call for call in firmware.calls if call[:2] == ["efibootmgr", "--create-only"])
+                self.assertEqual(create[-1], rf"\EFI\AnduinOS\shim{suffix}.efi")
+                sources = {name: esp.parent / name for name in
+                           (f"grub{suffix}.efi", f"shim{suffix}.efi", f"mm{suffix}.efi")}
+                for source in sources.values():
+                    source.write_bytes(b"updated " + source.name.encode())
+                boot.prepare_boot_chain(firmware, esp)
+                for name, source in sources.items():
+                    self.assertEqual((vendor / name).read_bytes(), source.read_bytes())
+                self.assertEqual(sum(call[:2] == ["efibootmgr", "--create-only"] for call in firmware.calls), 1)
+                for name in ("Microsoft/Boot/bootmgfw.efi", f"BOOT/BOOT{suffix.upper()}.EFI"):
+                    self.assertEqual((esp / "EFI" / name).read_bytes(), b"foreign loader")
+
+    def test_both_architectures_restore_files_when_firmware_update_fails(self):
+        for suffix in ("x64", "aa64"):
+            with self.subTest(suffix=suffix), self.fixture(suffix) as (firmware, esp, vendor):
+                before = {path.name: path.read_bytes() for path in vendor.iterdir()}
+                firmware.fail_order = True
+                with self.assertRaisesRegex(ValueError, "NVRAM full"):
+                    boot.prepare_boot_chain(firmware, esp)
+                self.assertEqual(before, {path.name: path.read_bytes() for path in vendor.iterdir()})
+                self.assertEqual(firmware.order, "0000,0007,0003")
+                self.assertFalse(firmware.new)
+
+    def test_architecture_mismatch_fails_before_esp_or_nvram_writes(self):
+        with self.fixture("aa64") as (firmware, esp, vendor):
+            firmware.loader = "shimx64.efi"
+            before = {path.name: path.read_bytes() for path in vendor.iterdir()}
+            with self.assertRaisesRegex(ValueError, "architecture"):
+                boot.prepare_boot_chain(firmware, esp)
+            self.assertEqual(before, {path.name: path.read_bytes() for path in vendor.iterdir()})
+            self.assertFalse(firmware.new)
 
     def test_nvram_parser_accepts_both_efibootmgr_path_formats(self):
         firmware = Firmware(Path("/boot/efi"))
@@ -109,11 +153,35 @@ class BootChainTests(unittest.TestCase):
         self.assertEqual(boot.entries(legacy), boot.entries(modern))
         self.assertEqual(len(boot.entries(modern)), 1)
 
+    def test_legacy_vendor_path_requires_local_uuid_binding_before_repair(self):
+        with self.fixture() as (firmware, esp, vendor):
+            legacy = esp / 'EFI/AnduinOS-P44'
+            vendor.rename(legacy)
+            legacy.joinpath('grub.cfg').write_text(
+                f'search.fs_uuid {firmware.boot_uuid} root\n'
+                f'set prefix=($root){firmware.boot_prefix}\n'
+                'configfile $prefix/grub.cfg\n')
+            original = firmware.output
+            firmware.output = lambda: original().replace('\\EFI\\AnduinOS\\', '\\EFI\\AnduinOS-P44\\')
+            boot.prepare_boot_chain(firmware, esp)
+            self.assertEqual((legacy / 'grubx64.efi').read_bytes(), b'new grubx64.efi')
+            self.assertFalse(vendor.exists())
+            self.assertEqual((esp / 'EFI/Microsoft/Boot/bootmgfw.efi').read_bytes(), b'foreign loader')
+
+    def test_unknown_vendor_suffix_does_not_become_an_owned_boot_entry(self):
+        output = Firmware(Path('/boot/efi')).output().replace('\\EFI\\AnduinOS\\', '\\EFI\\AnduinOS-other\\')
+        self.assertEqual(boot.entries(output), ())
+
     def test_repair_preserves_foreign_files_and_boot_order_positions(self):
         with self.fixture() as (firmware, esp, vendor):
             boot.prepare_boot_chain(firmware, esp)
             self.assertEqual(firmware.order, "0000,0009,0003")
             self.assertEqual(boot.current_loader(firmware), "shim")
+            sync_call = ["sync", "-f", str(esp)]
+            create_index = next(i for i, call in enumerate(firmware.calls)
+                                if call[:2] == ["efibootmgr", "--create-only"])
+            self.assertIn(sync_call, firmware.calls[:create_index])
+            self.assertEqual(firmware.calls[-2], sync_call)
             for name in ("shimx64.efi", "grubx64.efi", "mmx64.efi"):
                 self.assertEqual((vendor / name).read_bytes(), b"new " + name.encode())
             for name in ("Microsoft/Boot/bootmgfw.efi", "BOOT/BOOTX64.EFI"):
@@ -135,6 +203,26 @@ class BootChainTests(unittest.TestCase):
             self.assertFalse(firmware.new)
             self.assertEqual((vendor / "shimx64.efi").read_bytes(), b"old shimx64.efi")
 
+    def test_failed_esp_sync_restores_files_before_selecting_loader(self):
+        with self.fixture() as (firmware, esp, vendor):
+            original = firmware.run
+            failures = []
+
+            def run(args, **kwargs):
+                if args == ["sync", "-f", str(esp)] and not failures:
+                    failures.append(True)
+                    return subprocess.CompletedProcess(args, 1, "", "I/O error")
+                return original(args, **kwargs)
+
+            firmware.run = run
+            with self.assertRaisesRegex(ValueError, "I/O error"):
+                boot.prepare_boot_chain(firmware, esp)
+            self.assertFalse(firmware.new)
+            self.assertEqual(firmware.order, "0000,0007,0003")
+            for name in ("grubx64.efi", "shimx64.efi", "mmx64.efi"):
+                self.assertEqual((vendor / name).read_bytes(), b"old " + name.encode())
+            self.assertIn(["sync", "-f", str(esp)], firmware.calls)
+
     def test_multiple_esps_fail_before_writes(self):
         with self.fixture() as (firmware, esp, vendor):
             firmware.parts.append({**firmware.parts[0], "path": "/dev/test2"})
@@ -146,9 +234,66 @@ class BootChainTests(unittest.TestCase):
     def test_other_current_boot_entry_is_not_repaired(self):
         with self.fixture() as (firmware, esp, _):
             firmware.current = "0000"
-            with self.assertRaisesRegex(ValueError, "ambiguous"):
+            with self.assertRaisesRegex(ValueError, "identify"):
                 boot.prepare_boot_chain(firmware, esp)
             self.assertFalse(firmware.new)
+
+    def bind_local_root(self, firmware, vendor):
+        (vendor / "grub.cfg").write_text(
+            f"search.fs_uuid {firmware.boot_uuid} root\n"
+            f"set prefix=($root)'{firmware.boot_prefix}'\n"
+            "configfile $prefix/grub.cfg\n")
+
+    def test_bios_and_generic_efi_boots_update_the_bound_installation(self):
+        for suffix, mode in (("x64", "bios"), ("x64", "usb"), ("aa64", "usb"),
+                             ("x64", "no-entry"), ("aa64", "no-entry")):
+            with self.subTest(suffix=suffix, mode=mode), self.fixture(suffix) as (firmware, esp, vendor):
+                self.bind_local_root(firmware, vendor)
+                firmware.loader = f"shim{suffix}.efi"
+                firmware.current = "0003"
+                if mode == "no-entry":
+                    firmware.output = lambda: "BootCurrent: 0003\nBootOrder: 0003\n"
+                before_order = firmware.order
+                with patch.object(boot, "EFI", esp / "not-efi" if mode == "bios" else esp):
+                    boot.prepare_boot_chain(firmware, esp)
+                self.assertEqual((vendor / f"grub{suffix}.efi").read_bytes(), b"new " + f"grub{suffix}.efi".encode())
+                self.assertEqual(firmware.order, before_order)
+                self.assertFalse(any(c[:2] in (["efibootmgr", "--create-only"], ["efibootmgr", "--bootorder"])
+                                     for c in firmware.calls))
+                if mode == "bios":
+                    self.assertFalse(any(c[0] == "efibootmgr" for c in firmware.calls))
+
+    def test_owned_portable_chain_updates_and_rolls_back_with_vendor_chain(self):
+        for suffix in ("x64", "aa64"):
+            for fail in (False, True):
+                with self.subTest(suffix=suffix, fail=fail), self.fixture(suffix) as (firmware, esp, vendor):
+                    self.bind_local_root(firmware, vendor)
+                    fallback = esp / "EFI/BOOT"
+                    for name in ("grub.cfg", f"grub{suffix}.efi", f"mm{suffix}.efi"):
+                        shutil.copyfile(vendor / name, fallback / name)
+                    shutil.copyfile(vendor / f"shim{suffix}.efi", fallback / f"BOOT{suffix.upper()}.EFI")
+                    before = {p: p.read_bytes() for d in (vendor, fallback) for p in d.iterdir()}
+                    firmware.fail_order = fail
+                    if fail:
+                        with self.assertRaisesRegex(ValueError, "NVRAM full"):
+                            boot.prepare_boot_chain(firmware, esp)
+                        self.assertEqual(before, {p: p.read_bytes() for p in before})
+                    else:
+                        boot.prepare_boot_chain(firmware, esp)
+                        for name in (f"grub{suffix}.efi", f"mm{suffix}.efi"):
+                            self.assertEqual((fallback / name).read_bytes(), (vendor / name).read_bytes())
+                        self.assertEqual((fallback / f"BOOT{suffix.upper()}.EFI").read_bytes(),
+                                         (vendor / f"shim{suffix}.efi").read_bytes())
+                        boot.prepare_boot_chain(firmware, esp)
+
+    def test_local_grub_stub_cannot_claim_a_foreign_fallback_loader(self):
+        with self.fixture() as (firmware, esp, vendor):
+            self.bind_local_root(firmware, vendor)
+            shutil.copyfile(vendor / "grub.cfg", esp / "EFI/BOOT/grub.cfg")
+            with self.assertRaisesRegex(ValueError, "loader requires manual review"):
+                boot.prepare_boot_chain(firmware, esp)
+            self.assertEqual((esp / "EFI/BOOT/BOOTX64.EFI").read_bytes(), b"foreign loader")
+            self.assertEqual((vendor / "shimx64.efi").read_bytes(), b"old shimx64.efi")
 
     def add_other_installation(self, firmware, vendor, *, chainloaded=True):
         other_uuid = "aaaaaaaa-1234-1234-1234-123456789abc"

@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "Μια πραγματική εγκατάσταση θα δημιουργήσει ένα τοπικό στην συσκευή MOK. Μετά την επανεκκίνηση, επιλέξτε Enroll MOK → Continue → Yes στο MOKManager και πληκτρολογήστε τον κωδικό 123456."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"Στην μπλε οθόνη του MOKManager επιλέξτε Enroll MOK → Continue → Yes, κωδικός: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -492,6 +486,12 @@ msgid "Keyboard"
 msgstr "Πληκτρολόγιο"
 
 #: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
+msgid "Applying keyboard layout…"
+msgstr "Εφαρμογή διάταξης πληκτρολογίου…"
+
+msgid "The keyboard layout could not be applied. Try again."
+msgstr "Δεν ήταν δυνατή η εφαρμογή της διάταξης πληκτρολογίου. Δοκιμάστε ξανά."
+
 msgid "Keyboard Layout"
 msgstr "Διάταξη πληκτρολογίου"
 
@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Διατηρήστε τα Windows ή άλλα διαμερίσματα, επαναχρησιμοποιήστε ή δημιουργήστε ESP και σχεδιάστε διαμερίσματα Root και Swap με ακριβή μεγέθη."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Οι μη αυτόματες αλλαγές είναι καταστροφικές. Οι αρχικές θέσεις των υπαρχόντων διαμερισμάτων δεν μετακινούνται ποτέ. Ένας απλός τόμος NTFS μπορεί να συρρικνωθεί μόνο μετά από αυστηρούς ελέγχους ασφαλείας· οι κρυπτογραφημένοι, προσαρτημένοι ή μη καθαροί τόμοι δεν αλλάζουν ποτέ μέγεθος."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Οι μη αυτόματες αλλαγές είναι καταστροφικές. Οι αρχικές θέσεις των υπαρχόντων διαμερισμάτων δεν μετακινούνται ποτέ. Ένας απλός τόμος NTFS/ext4 μπορεί να συρρικνωθεί μόνο μετά από αυστηρούς ελέγχους ασφαλείας· οι κρυπτογραφημένοι, προσαρτημένοι ή μη καθαροί τόμοι δεν αλλάζουν ποτέ μέγεθος."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "Λείπει η χειροκίνητη επιλογή αποθήκευσης. Επιστρέψτε και αναθεωρήστε την."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ Οι αναφερόμενες αλλαγές μεγέθους NTFS θα μετακινήσουν δεδομένα του συστήματος αρχείων και τα όρια των διαμερισμάτων. Τα αναφερόμενα διαμερίσματα θα διαγραφούν και κάθε αναφερόμενο νέο διαμέρισμα θα μορφοποιηθεί. Δημιουργήστε πρώτα αντίγραφα ασφαλείας των σημαντικών δεδομένων· αυτές οι εργασίες διαμέρισης δεν μπορούν να αναιρεθούν."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Οι αναφερόμενες αλλαγές μεγέθους NTFS/ext4 θα μετακινήσουν δεδομένα του συστήματος αρχείων και τα όρια των διαμερισμάτων. Τα αναφερόμενα διαμερίσματα θα διαγραφούν και κάθε αναφερόμενο νέο διαμέρισμα θα μορφοποιηθεί. Δημιουργήστε πρώτα αντίγραφα ασφαλείας των σημαντικών δεδομένων· αυτές οι εργασίες διαμέρισης δεν μπορούν να αναιρεθούν."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Μόνο τα ρητά καταγεγραμμένα διαμερίσματα θα διαγραφούν ή θα μορφοποιηθούν. Τα διαμερίσματα που δεν εμπλέκονται παραμένουν αμετάβλητα· το EFI/BOOT δεν επαναγράφεται."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Επεξεργασία ενός δίσκου GPT. Οι αρχές των διαμερισμάτων δεν μετακινούνται ποτέ· ένας απλός τόμος NTFS μπορεί να συρρικνωθεί μετά από ελέγχους ασφαλείας."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Επεξεργασία ενός δίσκου GPT. Οι αρχές των διαμερισμάτων δεν μετακινούνται ποτέ· ένας απλός τόμος NTFS/ext4 μπορεί να συρρικνωθεί μετά από ελέγχους ασφαλείας."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "Η συρρίκνωση ext4 μπορεί να προκαλέσει μόνιμη απώλεια δεδομένων. Αντιγράψτε τα σημαντικά αρχεία. Το ελάχιστο μέγεθος είναι εκτίμηση· το σύστημα αρχείων ελέγχεται πριν και μετά την αλλαγή μεγέθους."
+
+msgid "I have backed up my data."
+msgstr "Έχω δημιουργήσει αντίγραφο ασφαλείας των δεδομένων μου."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Η συρρίκνωση Btrfs δεν υποστηρίζεται."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"
@@ -1934,13 +1943,9 @@ msgstr "Μπορείτε να συνεχίσετε τη διαμόρφωση τ�
 msgid "Firmware check complete"
 msgstr "Ο έλεγχος υλικολογισμικού ολοκληρώθηκε"
 
-#: src/pages.py
-msgid "A separate EFI System Partition is required"
-msgstr "Απαιτείται ξεχωριστό διαμέρισμα συστήματος EFI"
 
-#: src/pages.py
-msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
-msgstr "Αυτό το ESP περιέχει ήδη το EFI/AnduinOS. Δημιουργήστε νέο ESP στον μη εκχωρημένο χώρο (τουλάχιστον 512 MiB) ή επιλέξτε άλλο ESP. Η υπάρχουσα εγκατάσταση δεν θα αντικατασταθεί. Το μενού GRUB του νέου συστήματος μπορεί να εκκινήσει το υπάρχον σύστημα."
+
+
 
 #: src/pages.py
 msgid "Checking EFI System Partition…"
@@ -1966,9 +1971,7 @@ msgstr "Κοινόχρηστο ESP"
 msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
 msgstr "Δημιουργία και διαμόρφωση νέου ESP FAT32 σε μη εκχωρημένο χώρο (τουλάχιστον 512 MiB). Τα υπάρχοντα ESP παραμένουν αμετάβλητα."
 
-#: src/pages.py
-msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
-msgstr "Επαναχρησιμοποίηση υγιούς ESP με αρκετό ελεύθερο χώρο, χωρίς διαμόρφωση. Τα αρχεία εκκίνησης άλλων συστημάτων διατηρούνται. Αν υπάρχει ήδη το EFI/AnduinOS, επιλέξτε άλλο ESP ή δημιουργήστε νέο."
+
 
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
@@ -1997,3 +2000,22 @@ msgstr "Κύριο μενού"
 #: src/pages.py
 msgid "Retry"
 msgstr "Επανάληψη"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "Αντικατάσταση των υπαρχόντων αρχείων εκκίνησης του AnduinOS;"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "Επαναχρησιμοποιήστε ένα ESP σε καλή κατάσταση με αρκετό ελεύθερο χώρο, χωρίς να το διαμορφώσετε. Τα αρχεία εκκίνησης άλλων συστημάτων διατηρούνται. Αν υπάρχει ήδη το EFI/AnduinOS, η αντικατάσταση απαιτεί ρητή επιβεβαίωση. Για να παραμείνουν και οι δύο εγκαταστάσεις ανεξάρτητα εκκινήσιμες, επιλέξτε άλλο ESP ή δημιουργήστε ένα νέο."
+
+msgid "Use this ESP and replace"
+msgstr "Χρήση αυτού του ESP και αντικατάσταση"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "Θα αντικατασταθεί το EFI/AnduinOS στο {path}. Θα δημιουργηθεί αντίγραφο ασφαλείας των παλιών αρχείων εκκίνησης· η προηγούμενη καταχώριση εκκίνησης του AnduinOS ενδέχεται να μην μπορεί πλέον να εκκινήσει το παλιό σύστημα."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "Το {path} περιέχει ήδη αρχεία εκκίνησης του AnduinOS. Αν συνεχίσετε, το EFI/AnduinOS θα αντικατασταθεί για την εκκίνηση της νέας εγκατάστασης. Τα αρχεία εκκίνησης των Windows και άλλων συστημάτων θα διατηρηθούν· αυτό το ESP δεν θα διαμορφωθεί.\n\nΑυτή η αντικατάσταση δεν διαγράφει το παλιό διαμέρισμα συστήματος, αλλά το παλιό AnduinOS ενδέχεται να μην μπορεί πλέον να εκκινήσει μέσω της υπάρχουσας καταχώρισης εκκίνησής του. Για να διατηρήσετε και τις δύο εγκαταστάσεις, επιστρέψτε και δημιουργήστε ένα ξεχωριστό ESP (τουλάχιστον 512 MiB). Θα δημιουργηθεί αντίγραφο ασφαλείας των παλιών αρχείων εκκίνησης πριν από την αντικατάσταση."
+
+#: src/pages.py
+msgid "Create fallback boot chain"
+msgstr "Δημιουργία αλυσίδας εφεδρικής εκκίνησης"

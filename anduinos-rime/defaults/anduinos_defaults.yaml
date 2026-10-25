@@ -7,6 +7,9 @@
 patch:
   schema_list:
     - schema: rime_ice
+    - schema: double_pinyin
+    - schema: double_pinyin_mspy
+    - schema: double_pinyin_flypy
 
 
   # 菜单
@@ -33,7 +36,7 @@ patch:
       - traditionalization
       - full_shape
       - search_single_char
-    fold_options: false           # 呼出时是否折叠，多方案时建议折叠 true ，一个方案建议展开 false
+    fold_options: true            # 多方案时折叠选项
     abbreviate_options: true      # 折叠时是否缩写选项
     option_list_separator: ' / '  # 折叠时的选项分隔符
 

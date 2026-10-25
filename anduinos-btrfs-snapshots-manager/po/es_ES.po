@@ -2027,3 +2027,23 @@ msgstr "La reversión está lista. Guarde su trabajo; el equipo se reiniciará e
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback confirmation failed. Restoring the previous state."
 msgstr "Falló la confirmación de la reversión. Restaurando el estado anterior."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points."
+msgstr "Restaurar también los datos de usuario. Tras una recuperación correcta, eliminar las instantáneas que no sean de fábrica; conservar ambos puntos New OS."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Delete all snapshot history"
+msgstr "Eliminar todo el historial de instantáneas"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore all users’ files and settings to their initial state."
+msgstr "Restaurar los archivos y ajustes de todos los usuarios a su estado inicial."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Safety snapshots are created before rollback so recovery can be reversed if it fails. After recovery succeeds, they are deleted along with all non-factory snapshots. Restart follows within 60 seconds."
+msgstr "Safety snapshots are created before rollback so recovery can be reversed if it fails. After recovery succeeds, they are deleted along with all non-factory snapshots. Restart follows within 60 seconds."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "All data will be erased and cannot be recovered."
+msgstr "All data will be erased and cannot be recovered."

@@ -1,5 +1,5 @@
 /*
- * User Themes is intentionally unavailable in GNOME's unlock-dialog mode.
+ * Readability overlay for Fluent unlock mode and the native fallback.
  * Keep lock-screen text legible over both light and dark user wallpapers in
  * the native session theme, without dimming the wallpaper.
  */
@@ -13,7 +13,11 @@
 /* Authentication page: the vertical user widget contains both the real-name
  * and account-name labels, with one selected according to available width. */
 .unlock-dialog .user-widget .user-widget-label {
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45) !important;
+  color: white;
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55) !important;
 }
 
 .unlock-dialog .user-widget.vertical .user-icon {
@@ -27,13 +31,15 @@
 .unlock-dialog .login-dialog-prompt-entry,
 .unlock-dialog .login-dialog-prompt-entry:hover,
 .unlock-dialog .login-dialog-prompt-entry:focus {
-  background-color: rgba(0, 0, 0, 0.21) !important;
+  background-color: rgba(0, 0, 0, 0.26) !important;
   border: 1px solid rgba(255, 255, 255, 0.11);
   color: white !important;
+  caret-color: white !important;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.14) !important;
 }
 
 .unlock-dialog .login-dialog-prompt-entry StLabel.hint-text {
+  color: rgba(255, 255, 255, 0.75) !important;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.14) !important;
 }
 
@@ -47,14 +53,14 @@
  * the same restrained dark glass treatment as the password entry. */
 .unlock-dialog-notifications-container .message,
 .unlock-dialog-notifications-container .unlock-dialog-notification-source {
-  background-color: rgba(0, 0, 0, 0.18) !important;
+  background-color: rgba(0, 0, 0, 0.20) !important;
   border: 1px solid rgba(255, 255, 255, 0.25) !important;
   color: white !important;
 }
 
 .unlock-dialog-notifications-container .message.critical,
 .unlock-dialog-notifications-container .unlock-dialog-notification-source.critical {
-  background-color: rgba(0, 0, 0, 0.24) !important;
+  background-color: rgba(0, 0, 0, 0.28) !important;
 }
 
 .unlock-dialog-notifications-container StLabel {
@@ -68,5 +74,72 @@
 }
 
 .unlock-dialog-notification-count-text {
-  background-color: rgba(255, 255, 255, 0.16) !important;
+  background-color: transparent !important;
+}
+
+/* Preserve a spacious unlock composition while retaining Fluent styling. */
+.unlock-dialog .user-widget.vertical .user-icon {
+  icon-size: 160px;
+}
+.unlock-dialog .user-widget.vertical .user-icon StIcon {
+  width: 112px;
+  height: 112px;
+  padding: 24px;
+}
+.unlock-dialog .user-widget.vertical .user-widget-label {
+  font-size: 20pt;
+  font-weight: normal;
+  padding-top: 24px;
+}
+.unlock-dialog .login-dialog-prompt-layout {
+  width: 348px;
+  padding-top: 16px;
+  spacing: 12px;
+}
+.unlock-dialog .login-dialog-prompt-entry {
+  font-size: 12pt;
+  height: 22px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  margin: 4px 0 0;
+  box-shadow: none !important;
+}
+.unlock-dialog .login-dialog-prompt-entry:focus {
+  border-color: #3281ea !important;
+}
+.unlock-dialog .login-dialog-message {
+  color: white;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.65) !important;
+}
+
+/* GNOME reuses count-text for detailed notification rows as well as counts.
+ * Keep this shared class as plain text; do not paint every body as a badge. */
+.unlock-dialog-notifications-container {
+  width: 368px;
+}
+.unlock-dialog-notifications-container .unlock-dialog-notification-source {
+  padding: 12px 16px;
+  border-radius: 16px;
+  spacing: 12px;
+}
+.unlock-dialog-notifications-container .unlock-dialog-notification-source StBoxLayout {
+  spacing: 6px;
+}
+.unlock-dialog-notifications-container .unlock-dialog-notification-count-text {
+  background-color: transparent !important;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  font-size: 10.5pt;
+  font-weight: normal;
+  color: white !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45) !important;
+}
+.unlock-dialog-notifications-container .unlock-dialog-notification-label {
+  font-size: 10pt;
+  font-weight: normal;
+  color: rgba(255, 255, 255, 0.92) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45) !important;
 }

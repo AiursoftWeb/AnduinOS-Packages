@@ -76,6 +76,7 @@ class SecureBootToolkitTests(unittest.TestCase):
                     "--from-code=UTF-8",
                     f"--output={extracted}",
                     str(ROOT / "assets" / "anduinos-oobe"),
+                    str(ROOT / "assets" / "agents.py"),
                     str(metadata_source),
                 ],
                 check=True,

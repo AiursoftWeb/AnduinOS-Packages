@@ -8,8 +8,9 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock, patch
 
-from frontend import FrontendPlanError, probe_esp_occupied
+from frontend import FrontendPlanError, probe_esp_occupied, _confirmed_esp_replacement
 from installer_core.esp import EspReuseInspection, EspTreeEntry
+from installer_core.model import EspReplacement
 from installer_core.manual_layout import ManualPartitionRole
 from installer_core.storage_ui import ManualStoragePreview
 from storage_probe_cli import main
@@ -17,18 +18,37 @@ from test_other_systems import external_windows_disk
 
 
 class EspFrontendTests(unittest.TestCase):
+    def test_confirmation_is_bound_to_the_current_esp_and_filesystem(self):
+        part = external_windows_disk().partitions[0]
+        authorization = EspReplacement(part.identity.partuuid, part.filesystem_uuid, 'a' * 64)
+        preview = SimpleNamespace(
+            disk=SimpleNamespace(partitions=(part,)),
+            selection=SimpleNamespace(reused_esp_partuuid=part.identity.partuuid))
+        self.assertIsNone(_confirmed_esp_replacement({}, preview))
+        self.assertEqual(_confirmed_esp_replacement({'esp_replacement': authorization}, preview), authorization)
+        for stale in (SimpleNamespace(partuuid='other'),
+                      EspReplacement('other', part.filesystem_uuid, 'a' * 64),
+                      EspReplacement(part.identity.partuuid, 'FFFF-FFFF', 'a' * 64)):
+            with self.subTest(stale=stale), self.assertRaises(FrontendPlanError):
+                _confirmed_esp_replacement({'esp_replacement': stale}, preview)
+        preview.selection.reused_esp_partuuid = ''
+        with self.assertRaises(FrontendPlanError):
+            _confirmed_esp_replacement({'esp_replacement': authorization}, preview)
+
     def test_identity_and_boolean_are_validated_across_polkit_boundary(self):
         part = external_windows_disk().partitions[0]
-        for scenario in ("free", "occupied", "identity", "uuid", "type", "json", "failed"):
+        for scenario in ("free", "occupied", "identity", "uuid", "type", "json", "failed", "digest"):
             with self.subTest(scenario=scenario), patch("frontend.os.geteuid", return_value=1000), patch("frontend.subprocess.run") as run:
                 payload = {"partuuid": part.identity.partuuid, "filesystem_uuid": part.filesystem_uuid,
-                           "occupied": scenario == "occupied"}
+                           "occupied": scenario == "occupied", "vendor_digest": "a" * 64}
                 if scenario == "identity":
                     payload["partuuid"] = "other"
                 elif scenario == "uuid":
                     payload["filesystem_uuid"] = "0000-1111"
                 elif scenario == "type":
                     payload["occupied"] = "false"
+                elif scenario == "digest":
+                    payload.update(occupied=True, vendor_digest='bad')
                 run.return_value = subprocess.CompletedProcess([], int(scenario == "failed"),
                     "invalid" if scenario == "json" else json.dumps(payload), "failed")
                 if scenario in ("free", "occupied"):
@@ -95,7 +115,10 @@ class EspPageGateTests(unittest.TestCase):
                       "shared": shared, "disk": disk, "MIB": 1024**2, "lang": "en_US",
                       "requests": requests, "_": lambda text, lang: text,
                       "_confirm_storage_capacity": lambda page, nav, lang, size, done: done(),
-                      "probe_esp_occupied": Mock(return_value=scenario == "occupied")}
+                      "probe_esp_replacement": Mock(return_value=(
+                          EspReplacement(disk.partitions[0].identity.partuuid,
+                                         disk.partitions[0].filesystem_uuid, "a" * 64)
+                          if scenario == "occupied" else None))}
                 for name in ("page", "nav_view", "workflow", "pulse", "loading", "status", "_set_next",
                              "_replace_draft", "_queue_refresh", "_esp_conflict_dialog", "build_user_page"):
                     ns[name] = Mock()
@@ -110,8 +133,10 @@ class EspPageGateTests(unittest.TestCase):
                     callback(worker(), RuntimeError("read failed") if scenario == "error" else None)
                 self.assertEqual(ns["nav_view"].push.called, scenario in ("free", "new"))
                 if scenario == "occupied":
-                    ns["_replace_draft"].assert_called_once_with(reused_esp_partuuid="")
                     ns["_esp_conflict_dialog"].assert_called_once()
+                    # Closing/cancelling retains the old protection behavior.
+                    ns["_esp_conflict_dialog"].call_args.args[4]()
+                    ns["_replace_draft"].assert_called_once_with(reused_esp_partuuid="")
                 else:
                     ns["_replace_draft"].assert_not_called()
 
@@ -124,7 +149,8 @@ class EspPageGateTests(unittest.TestCase):
                       "_": lambda text, lang: text, "esp_options": [esp, None] if room else [esp],
                       "_guided_selection": lambda: selected,
                       "build_guided_storage_preview": Mock(return_value=SimpleNamespace(reused_esp=esp)),
-                      "probe_esp_occupied": Mock(return_value=True)}
+                      "probe_esp_replacement": Mock(return_value=EspReplacement(
+                          esp.identity.partuuid, esp.filesystem_uuid, "a" * 64))}
                 for name in ("requests", "_finish_loading", "_set_storage_controls", "_set_next", "guidance",
                              "esp_dropdown", "_esp_conflict_dialog", "nav_view", "build_user_page",
                              "loading_label", "loading", "pulse"):
@@ -133,9 +159,44 @@ class EspPageGateTests(unittest.TestCase):
                 ns["on_next"]()
                 worker, callback = ns["requests"].start.call_args.args
                 callback(worker(), None)
+                ns["_esp_conflict_dialog"].call_args.args[4]()
                 self.assertEqual(ns["esp_dropdown"].set_selected.called, room)
                 ns["_esp_conflict_dialog"].assert_called_once()
                 ns["nav_view"].push.assert_not_called()
+
+    def test_manual_replacement_requires_confirmation_and_ignores_stale_dialog(self):
+        disk = external_windows_disk()
+        authorization = EspReplacement(disk.partitions[0].identity.partuuid,
+                                       disk.partitions[0].filesystem_uuid, "a" * 64)
+        for stale in (False, True):
+            with self.subTest(stale=stale):
+                preview = Mock(spec=ManualStoragePreview)
+                preview.selection = SimpleNamespace(new_partitions=(
+                    SimpleNamespace(role=ManualPartitionRole.ROOT, size_mib=32768),),
+                    reused_esp_partuuid=authorization.partuuid)
+                shared = {"manual_storage_preview_model": preview}
+                ns = {"ManualStoragePreview": ManualStoragePreview,
+                      "ManualPartitionRole": ManualPartitionRole, "shared": shared,
+                      "disk": disk, "MIB": 1024**2, "lang": "en_US",
+                      "_": lambda text, lang: text,
+                      "_confirm_storage_capacity": lambda p, n, l, size, done: done(),
+                      "probe_esp_replacement": Mock(return_value=authorization)}
+                for name in ("page", "nav_view", "workflow", "pulse", "loading", "status",
+                             "_set_next", "_replace_draft", "_queue_refresh", "requests",
+                             "_esp_conflict_dialog", "build_user_page"):
+                    ns[name] = Mock()
+                exec(self.code("build_advanced_storage_page"), ns)
+                ns["on_next"]()
+                worker, complete = ns["requests"].start.call_args.args
+                complete(worker(), None)
+                ns["nav_view"].push.assert_not_called()
+                self.assertNotIn("esp_replacement", shared)
+                if stale:
+                    shared["manual_storage_preview_model"] = None
+                ns["_esp_conflict_dialog"].call_args.args[3]()
+                self.assertEqual(ns["nav_view"].push.called, not stale)
+                if not stale:
+                    self.assertEqual(shared["esp_replacement"], authorization)
 
 
 if __name__ == "__main__":

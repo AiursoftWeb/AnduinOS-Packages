@@ -455,6 +455,30 @@ class RemoveLivePackagesTests(unittest.TestCase):
 
             RemoveLivePackagesStep(runner).verify(context)
 
+    def test_verify_accepts_own_boot_stack_providers(self):
+        for provider_state in ("ii ", "iU ", "rc "):
+            with self.subTest(provider_state=provider_state), tempfile.TemporaryDirectory() as directory:
+                target = Path(directory)
+                runner = FakeRunner()
+                context = _context(target)
+                context.values["live_package_candidates"] = ()
+                context.values["persistent_target_packages"] = ()
+                provided = []
+                for package in REQUIRED_BOOT_PACKAGES[Architecture.AMD64]:
+                    if package.startswith(("grub", "shim")):
+                        provided.append(package + " (= 2.14)")
+                    else:
+                        runner.outputs[_query(target, package)] = ("ii \n", "", 0)
+                provided.append("grub-common (= 2.14)")
+                runner.outputs[_providers_query(target)] = (
+                    provider_state + "\t" + ", ".join(provided) + "\n", "", 0,
+                )
+                if provider_state == "ii ":
+                    RemoveLivePackagesStep(runner).verify(context)
+                else:
+                    with self.assertRaisesRegex(RuntimeError, "boot packages are missing"):
+                        RemoveLivePackagesStep(runner).verify(context)
+
     def test_verify_rejects_missing_boot_capability(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)

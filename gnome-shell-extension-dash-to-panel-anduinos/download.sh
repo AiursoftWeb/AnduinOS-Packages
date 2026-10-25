@@ -47,6 +47,10 @@ PY
     patch --batch --forward --directory="$DEPLOY_DIR" --strip=1 \
         < "$SCRIPT_DIR/patches/hide-stock-panel-during-startup.patch"
 
+    echo "[$SUITE] Initializing hidden GNOME Dash icons before sizing..."
+    patch --batch --forward --directory="$DEPLOY_DIR" --strip=1 \
+        < "$SCRIPT_DIR/patches/initialize-hidden-dash-icons.patch"
+
     echo "[$SUITE] Applying AnduinOS panel layout to $DEPLOY_DIR/panelPositions.js..."
 
     sed -i '/export const defaults = \[/,/^\]$/c\

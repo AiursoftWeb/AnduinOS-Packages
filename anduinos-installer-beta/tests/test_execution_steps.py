@@ -1,4 +1,6 @@
 import tempfile
+import shutil
+import subprocess
 import unittest
 from dataclasses import replace
 from pathlib import Path
@@ -16,6 +18,7 @@ from installer_core.execution_steps import (
     UnmountTargetStep,
     VerifyTargetDiskStep,
 )
+from installer_core.command import CommandRunner
 from installer_core.model import Firmware, SecureBoot, SourceSpec
 from installer_core.probe import PlatformProbe
 from installer_core.steps import FailurePolicy, InstallContext, StepRunner, StepStatus
@@ -117,6 +120,33 @@ class CopySystemTests(unittest.TestCase):
             step.execute(context)
             step.verify(context)
         self.assertEqual(runner.commands[-1][0][0], "unsquashfs")
+        self.assertIn('-excludes', runner.commands[-1][0])
+        for path in CopySystemStep.signing_excludes:
+            self.assertIn(path, runner.commands[-1][0])
+
+    @unittest.skipUnless(shutil.which('mksquashfs') and shutil.which('unsquashfs'), 'requires squashfs-tools')
+    def test_real_squashfs_excludes_all_signing_material_but_keeps_programs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            image_root, target = root / 'image', root / 'target'
+            for relative in (*CopySystemStep.signing_excludes, 'etc/os-release',
+                             'usr/lib/python3/dist-packages/anduinos_secureboot/identity.py'):
+                path = image_root / relative
+                if relative in {'var/lib/shim-signed/mok', 'var/lib/anduinos-secureboot'}:
+                    path = path / 'private-secret'
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text('fixture')
+            source = root / 'filesystem.squashfs'
+            subprocess.run(['mksquashfs', str(image_root), str(source), '-noappend', '-processors', '1', '-no-progress'],
+                           check=True, capture_output=True, timeout=30)
+            context = InstallContext(replace(valid_plan(), source=SourceSpec(image_path=str(source))),
+                                     lambda _: None, values={'target': target})
+            step = CopySystemStep(CommandRunner(lambda _: None))
+            step.execute(context)
+            step.verify(context)
+            for relative in CopySystemStep.signing_excludes:
+                self.assertFalse((target / relative).exists(), relative)
+            self.assertTrue((target / 'usr/lib/python3/dist-packages/anduinos_secureboot/identity.py').is_file())
 
 
 class EnvironmentReportingTests(unittest.TestCase):
@@ -175,7 +205,7 @@ class EnvironmentReportingTests(unittest.TestCase):
         step.preflight(context)
         step.execute(context)
         self.assertIn(
-            "UEFI fallback bootloader: enabled on the selected external disk",
+            "UEFI fallback bootloader: enabled on the selected disk",
             "\n".join(logs),
         )
 

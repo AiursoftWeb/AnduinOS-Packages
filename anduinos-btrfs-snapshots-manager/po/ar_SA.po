@@ -2027,3 +2027,23 @@ msgstr "الاسترجاع جاهز. احفظ عملك؛ ستتم إعادة ت�
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback confirmation failed. Restoring the previous state."
 msgstr "فشل تأكيد الاسترجاع. تجري استعادة الحالة السابقة."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points."
+msgstr "استعادة بيانات المستخدمين أيضًا. بعد نجاح الاستعادة، تُحذف اللقطات غير الأصلية مع الاحتفاظ بنقطتي استعادة New OS."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Delete all snapshot history"
+msgstr "حذف سجل اللقطات بالكامل"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore all users’ files and settings to their initial state."
+msgstr "استعادة ملفات وإعدادات جميع المستخدمين إلى حالتها الأولية."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Safety snapshots are created before rollback so recovery can be reversed if it fails. After recovery succeeds, they are deleted along with all non-factory snapshots. Restart follows within 60 seconds."
+msgstr "Safety snapshots are created before rollback so recovery can be reversed if it fails. After recovery succeeds, they are deleted along with all non-factory snapshots. Restart follows within 60 seconds."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "All data will be erased and cannot be recovered."
+msgstr "All data will be erased and cannot be recovered."

@@ -644,6 +644,8 @@ fn build_rec_card(accent: (f64, f64, f64), title: &str, subtitle: &str) -> gtk::
     let card = gtk::Box::builder()
         .orientation(gtk::Orientation::Horizontal)
         .css_classes(["card"])
+        // Keep the full-height accent inside the theme's rounded card edges.
+        .overflow(gtk::Overflow::Hidden)
         .spacing(12)
         .valign(gtk::Align::Start)
         .build();
@@ -753,4 +755,95 @@ fn mini_stat(label: &str, value: &str) -> (gtk::Box, gtk::Label) {
     inner.append(&cap);
     card.append(&inner);
     (card, val)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::views::stress_test_view::StressTestView;
+    use std::time::{Duration, Instant};
+
+    fn settle() {
+        let end = Instant::now() + Duration::from_millis(200);
+        while Instant::now() < end {
+            glib::MainContext::default().iteration(false);
+            std::thread::sleep(Duration::from_millis(5));
+        }
+    }
+
+    fn accent_cards(widget: &gtk::Widget, result: &mut Vec<gtk::Widget>) {
+        if widget.has_css_class("card")
+            && widget
+                .first_child()
+                .is_some_and(|child| child.is::<gtk::DrawingArea>())
+        {
+            result.push(widget.clone());
+        }
+        let mut child = widget.first_child();
+        while let Some(current) = child {
+            accent_cards(&current, result);
+            child = current.next_sibling();
+        }
+    }
+
+    fn assert_rounded_clip(card: &gtk::Widget) {
+        assert_eq!(card.overflow(), gtk::Overflow::Hidden);
+        let width = card.width() as f64;
+        let height = card.height() as f64;
+        assert!(width > 24.0 && height > 24.0);
+        // GTK uses the CSS rounded clip for rendering and hit testing alike.
+        for (x, y) in [
+            (1.0, 1.0),
+            (width - 2.0, 1.0),
+            (1.0, height - 2.0),
+            (width - 2.0, height - 2.0),
+        ] {
+            assert!(card.pick(x, y, gtk::PickFlags::DEFAULT).is_none());
+        }
+        assert!(card
+            .pick(width / 2.0, height / 2.0, gtk::PickFlags::DEFAULT)
+            .is_some());
+    }
+
+    #[test]
+    #[ignore = "requires a graphical display; run with apkg test --profile gui"]
+    fn accent_cards_clip_rounded_corners_in_both_themes() {
+        adw::init().expect("GTK must initialize for the widget test");
+        let manager = adw::StyleManager::default();
+        for scheme in [adw::ColorScheme::ForceLight, adw::ColorScheme::ForceDark] {
+            manager.set_color_scheme(scheme);
+            let recommendation = build_rec_card(
+                (0.15, 0.72, 0.25),
+                "Recommendation",
+                "Rounded card test",
+            );
+            let stress = StressTestView::new();
+            let content = gtk::Box::builder()
+                .orientation(gtk::Orientation::Vertical)
+                .spacing(16)
+                .margin_start(24)
+                .margin_end(24)
+                .margin_top(24)
+                .margin_bottom(24)
+                .build();
+            content.append(&recommendation);
+            content.append(&stress);
+            let window = gtk::Window::builder()
+                .default_width(800)
+                .default_height(700)
+                .child(&content)
+                .build();
+            window.present();
+            settle();
+            assert_rounded_clip(recommendation.upcast_ref());
+            let mut warnings = Vec::new();
+            accent_cards(stress.upcast_ref(), &mut warnings);
+            assert_eq!(warnings.len(), 1, "find the actual stress warning card");
+            assert_rounded_clip(&warnings[0]);
+            // Constructing the view must never start the memory stress test.
+            assert!(!*stress.imp().test_running.borrow());
+            window.destroy();
+            settle();
+        }
+    }
 }

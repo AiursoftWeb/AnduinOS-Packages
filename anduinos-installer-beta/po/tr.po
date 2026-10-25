@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "Gerçek bir kurulum makineye özel bir MOK oluşturacaktır. Yeniden başlattıktan sonra MOKManager'da MOK Kaydet → Devam Et → Evet'i seçin ve 123456 şifresini girin."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"Mavi MOKManager ekranında MOK Kaydet → Devam Et → Evet'i seçin, şifre: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -492,6 +486,12 @@ msgid "Keyboard"
 msgstr "Klavye"
 
 #: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
+msgid "Applying keyboard layout…"
+msgstr "Klavye düzeni uygulanıyor…"
+
+msgid "The keyboard layout could not be applied. Try again."
+msgstr "Klavye düzeni uygulanamadı. Tekrar deneyin."
+
 msgid "Keyboard Layout"
 msgstr "Klavye Düzeni"
 
@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Windows veya diğer bölümleri koruyun, bir ESP’yi yeniden kullanın ya da oluşturun ve Root ile Swap bölümlerini tam boyutlarıyla tasarlayın."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "Manuel değişiklikler yıkıcıdır. Mevcut bölümlerin başlangıç konumları asla taşınmaz. Şifrelenmemiş NTFS birimleri yalnızca sıkı güvenlik denetimlerinden sonra küçültülebilir; şifrelenmiş, bağlı veya düzgün kapatılmamış birimler asla yeniden boyutlandırılmaz."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "Manuel değişiklikler yıkıcıdır. Mevcut bölümlerin başlangıç konumları asla taşınmaz. Şifrelenmemiş NTFS/ext4 birimleri yalnızca sıkı güvenlik denetimlerinden sonra küçültülebilir; şifrelenmiş, bağlı veya düzgün kapatılmamış birimler asla yeniden boyutlandırılmaz."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "Manuel depolama seçimi eksik. Geri dönüp inceleyin."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ Listelenen NTFS yeniden boyutlandırmaları dosya sistemi verilerini ve bölüm sınırlarını taşıyacaktır. Listelenen bölümler silinecek ve listelenen her yeni bölüm biçimlendirilecektir. Önce önemli verileri yedekleyin; bu bölümleme işlemleri geri alınamaz."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ Listelenen NTFS/ext4 yeniden boyutlandırmaları dosya sistemi verilerini ve bölüm sınırlarını taşıyacaktır. Listelenen bölümler silinecek ve listelenen her yeni bölüm biçimlendirilecektir. Önce önemli verileri yedekleyin; bu bölümleme işlemleri geri alınamaz."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "Sadece açıkça listelenen bölümler silinecek veya biçimlendirilecektir. İlişkisiz bölümler değişmeden kalır; EFI/BOOT üzerine yazılmaz."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "Tek bir GPT diskini düzenleyin. Bölüm başlangıçları asla taşınmaz; şifrelenmemiş NTFS, güvenlik kontrollerinden sonra küçültülebilir."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "Tek bir GPT diskini düzenleyin. Bölüm başlangıçları asla taşınmaz; şifrelenmemiş NTFS/ext4, güvenlik kontrollerinden sonra küçültülebilir."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "ext4 küçültme kalıcı veri kaybına yol açabilir. Önemli dosyaları yedekleyin. En küçük boyut bir tahmindir; dosya sistemi boyut değişiminden önce ve sonra denetlenir."
+
+msgid "I have backed up my data."
+msgstr "Verilerimi yedekledim."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Btrfs küçültme desteklenmiyor."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"
@@ -1934,13 +1943,9 @@ msgstr "Kurulumu yapılandırmaya devam edebilirsiniz. Disklerinizde herhangi bi
 msgid "Firmware check complete"
 msgstr "Ürün yazılımı denetimi tamamlandı"
 
-#: src/pages.py
-msgid "A separate EFI System Partition is required"
-msgstr "Ayrı bir EFI sistem bölümü gerekiyor"
 
-#: src/pages.py
-msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
-msgstr "Bu ESP zaten EFI/AnduinOS içeriyor. Ayrılmamış alanda yeni bir ESP oluşturun (en az 512 MiB) veya başka bir ESP seçin. Mevcut kurulumun üzerine yazılmayacak. Yeni sistemin GRUB menüsü mevcut sistemi başlatabilir."
+
+
 
 #: src/pages.py
 msgid "Checking EFI System Partition…"
@@ -1966,9 +1971,7 @@ msgstr "Paylaşılan ESP"
 msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
 msgstr "Ayrılmamış alanda yeni bir FAT32 ESP oluşturup biçimlendirin (en az 512 MiB). Mevcut ESP’ler değişmeden kalır."
 
-#: src/pages.py
-msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
-msgstr "Yeterli boş alanı olan sağlıklı bir ESP’yi biçimlendirmeden yeniden kullanın. Diğer sistemlerin önyükleme dosyaları korunur. EFI/AnduinOS zaten varsa başka bir ESP seçin veya yeni bir tane oluşturun."
+
 
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
@@ -1997,3 +2000,22 @@ msgstr "Ana Menü"
 #: src/pages.py
 msgid "Retry"
 msgstr "Yeniden dene"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "Mevcut AnduinOS önyükleme dosyaları değiştirilsin mi?"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "Biçimlendirmeden, yeterli boş alana sahip sağlıklı bir ESP'yi yeniden kullanın. Diğer sistemlerin önyükleme dosyaları korunur. EFI/AnduinOS zaten varsa, değiştirme işlemi açık onay gerektirir. Her iki kurulumun da bağımsız olarak önyüklenebilir kalması için başka bir ESP seçin veya yeni bir tane oluşturun."
+
+msgid "Use this ESP and replace"
+msgstr "Bu ESP'yi kullan ve değiştir"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "{path} üzerindeki EFI/AnduinOS değiştirilecek. Eski önyükleme dosyaları yedeklenecek; önceki AnduinOS önyükleme girdisi artık eski sistemi başlatamayabilir."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} zaten AnduinOS önyükleme dosyalarını içeriyor. Devam etmek, yeni kurulumu başlatmak için EFI/AnduinOS'yi değiştirecek. Windows ve diğer sistemlerin önyükleme dosyaları korunacak; bu ESP biçimlendirilmeyecek.\n\nBu değiştirme işlemi eski sistem bölümünü silmez, ancak eski AnduinOS mevcut önyükleme girdisi üzerinden artık başlatılamayabilir. Her iki kurulumu da korumak için geri dönüp ayrı bir ESP oluşturun (en az 512 MiB). Değiştirme işleminden önce eski önyükleme dosyaları yedeklenecek."
+
+#: src/pages.py
+msgid "Create fallback boot chain"
+msgstr "Yedek başlatma zinciri oluştur"

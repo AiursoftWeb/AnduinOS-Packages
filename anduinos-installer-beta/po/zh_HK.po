@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "實際安裝將建立本機 MOK。重新啟動後，在 MOKManager 中選擇註冊 MOK → 繼續 → 是，並輸入密碼 123456。"
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"在藍色的 MOKManager 畫面中選擇註冊 MOK → 繼續 → 是，密碼：123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -492,6 +486,12 @@ msgid "Keyboard"
 msgstr "鍵盤"
 
 #: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
+msgid "Applying keyboard layout…"
+msgstr "正在套用鍵盤配置…"
+
+msgid "The keyboard layout could not be applied. Try again."
+msgstr "無法套用鍵盤配置。請重試。"
+
 msgid "Keyboard Layout"
 msgstr "鍵盤佈局"
 
@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "保留 Windows 或其他分割區，重用或建立 ESP，並精確規劃 Root 及 Swap 分割區的大小。"
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "手動變更具有破壞性。現有分割區的起始位置絕不會移動。只有通過嚴格的安全檢查後，才可縮小未加密的 NTFS 磁碟區；加密、已掛載或未正常卸載的磁碟區絕不會調整大小。"
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "手動變更具有破壞性。現有分割區的起始位置絕不會移動。只有通過嚴格的安全檢查後，才可縮小未加密的 NTFS/ext4 磁碟區；加密、已掛載或未正常卸載的磁碟區絕不會調整大小。"
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "缺少手動儲存空間選擇。請返回並檢查。"
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ 列出的 NTFS 調整大小操作將移動檔案系統資料及分割區邊界。列出的分割區將被刪除，所有列出的新分割區都將被格式化。請先備份重要資料；這些分割區操作無法撤銷。"
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ 列出的 NTFS/ext4 調整大小操作將移動檔案系統資料及分割區邊界。列出的分割區將被刪除，所有列出的新分割區都將被格式化。請先備份重要資料；這些分割區操作無法撤銷。"
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "只會刪除或格式化明確列出的分割區。未涉及的分割區保持不變；EFI/BOOT 不會被覆寫。"
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "編輯單一 GPT 磁碟。分割區的起始位置絕不會移動；未加密的 NTFS 磁碟區在通過安全檢查後可被縮小。"
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "編輯單一 GPT 磁碟。分割區的起始位置絕不會移動；未加密的 NTFS/ext4 磁碟區在通過安全檢查後可被縮小。"
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "縮小 ext4 可能導致永久資料遺失。請備份重要檔案。最小容量為估算值；縮容前後都會檢查檔案系統。"
+
+msgid "I have backed up my data."
+msgstr "我已備份資料。"
+
+msgid "Btrfs shrinking is not supported."
+msgstr "暫不支援 Btrfs 縮容。"
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"
@@ -1934,13 +1943,9 @@ msgstr "你可以繼續設定安裝選項。在對磁碟進行任何變更之前
 msgid "Firmware check complete"
 msgstr "韌體檢查完成"
 
-#: src/pages.py
-msgid "A separate EFI System Partition is required"
-msgstr "需要獨立的 EFI 系統分割區"
 
-#: src/pages.py
-msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
-msgstr "此 ESP 已包含 EFI/AnduinOS。請在未分配空間中建立新的 ESP（至少 512 MiB），或選擇其他 ESP。現有安裝不會被覆寫。新系統的 GRUB 選單可以啟動現有系統。"
+
+
 
 #: src/pages.py
 msgid "Checking EFI System Partition…"
@@ -1966,9 +1971,7 @@ msgstr "共用 ESP"
 msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
 msgstr "在未分配空間中建立並格式化新的 FAT32 ESP（至少 512 MiB）。現有 ESP 保持不變。"
 
-#: src/pages.py
-msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
-msgstr "重用健康且空間充足的 ESP，不格式化，保留其他系統的開機檔案。若已存在 EFI/AnduinOS，請另選 ESP 或建立新的 ESP。"
+
 
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
@@ -1997,3 +2000,22 @@ msgstr "主選單"
 #: src/pages.py
 msgid "Retry"
 msgstr "重試"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "要取代現有的 AnduinOS 開機檔案嗎？"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "重用空間充足且狀態正常的 ESP，而不進行格式化。其他系統的開機檔案會予以保留。如果 EFI/AnduinOS 已存在，則必須明確確認才會取代。若要讓兩個安裝都能獨立開機，請選擇另一個 ESP 或建立新的 ESP。"
+
+msgid "Use this ESP and replace"
+msgstr "使用此 ESP 並取代"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "將取代 {path} 上的 EFI/AnduinOS。舊開機檔案會先備份；先前的 AnduinOS 開機項目可能無法再啟動舊系統。"
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} 已包含 AnduinOS 開機檔案。繼續操作將取代 EFI/AnduinOS，以啟動新的安裝。Windows 和其他系統的開機檔案會予以保留；此 ESP 不會格式化。\n\n此取代操作不會刪除舊系統分割區，但舊的 AnduinOS 可能無法再透過現有開機項目啟動。若要保留兩個安裝，請返回並建立獨立的 ESP（至少 512 MiB）。取代前會先備份舊開機檔案。"
+
+#: src/pages.py
+msgid "Create fallback boot chain"
+msgstr "建立後備啟動鏈"

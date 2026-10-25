@@ -140,7 +140,7 @@ def start(iso: Path, output: Path, locale: str, rate: int, from_iso: bool):
         machine += [
             "-kernel", str(output / "vmlinuz"), "-initrd", str(output / "initrd"),
             "-append", "root=live:CDLABEL=anduinos rd.live.dir=LiveOS "
-            "rd.live.squashimg=rootfs.squashfs rd.overlay rd.anduinos.live=1 "
+            "rd.live.squashimg=rootfs.squashfs rd.overlay rd.anduinos.live=1 rd.anduinos.media-check=1 "
             f"locale={locale}.UTF-8 "
             "console=ttyS0 console=tty0 quiet splash plymouth.ignore-serial-consoles",
             "-drive", f"file={iso},media=cdrom,readonly=on,if=ide,throttling.bps-read={rate}",

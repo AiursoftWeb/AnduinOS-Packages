@@ -2027,3 +2027,23 @@ msgstr "พร้อมย้อนคืนแล้ว โปรดบัน�
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback confirmation failed. Restoring the previous state."
 msgstr "ยืนยันการย้อนคืนไม่สำเร็จ กำลังคืนค่าสถานะก่อนหน้า"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points."
+msgstr "คืนค่าข้อมูลผู้ใช้ด้วย หลังจากกู้คืนสำเร็จ ให้ลบสแนปช็อตที่ไม่ใช่จากโรงงาน และเก็บจุดกู้คืน New OS ทั้งสองไว้"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Delete all snapshot history"
+msgstr "ลบประวัติสแนปช็อตทั้งหมด"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore all users’ files and settings to their initial state."
+msgstr "คืนค่าไฟล์และการตั้งค่าของผู้ใช้ทุกคนเป็นสถานะเริ่มต้น"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Safety snapshots are created before rollback so recovery can be reversed if it fails. After recovery succeeds, they are deleted along with all non-factory snapshots. Restart follows within 60 seconds."
+msgstr "Safety snapshots are created before rollback so recovery can be reversed if it fails. After recovery succeeds, they are deleted along with all non-factory snapshots. Restart follows within 60 seconds."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "All data will be erased and cannot be recovered."
+msgstr "All data will be erased and cannot be recovered."

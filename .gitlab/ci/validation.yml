@@ -1,0 +1,10 @@
+.publish:
+  script:
+    - cd "$PACKAGE_DIR"
+    - |
+      if [ "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" = "prod" ]; then
+        APKG_SOURCE="https://apkg.aiursoft.com"
+      else
+        APKG_SOURCE="https://apkg-dev.aiursoft.com"
+      fi
+      apkg build --all --skip-existing --source "$APKG_SOURCE"

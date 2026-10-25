@@ -14,10 +14,11 @@ from .esp import (
     GUIDED_ESP_MINIMUM_FREE_BYTES,
     EspReuseInspection,
     NvramInspection,
+    validate_esp_replacement,
 )
 from .layout import PartitionLayout, build_erase_disk_layout
 from .model import Filesystem, InstallMode, InstallPlan
-from .ntfs_resize import NtfsResizeInspection
+from .resize import ResizeInspection
 from .storage_commands import (
     StorageCommandPlan,
     build_guided_coexistence_storage_commands,
@@ -73,7 +74,7 @@ class ManualStorageExecutionPlan:
     write_set: StorageWriteSet
     esp_partition_number: int
     reuses_esp: bool
-    ntfs_resize_inspections: tuple[NtfsResizeInspection, ...] = ()
+    resize_inspections: tuple[ResizeInspection, ...] = ()
 
 
 def build_erase_disk_execution_plan(
@@ -108,6 +109,7 @@ def build_guided_coexistence_execution_plan(
         reused=reused,
         esp_inspection=esp_inspection,
         nvram_inspection=nvram_inspection,
+        replacement=plan.boot.esp_replacement,
     )
     commands = build_guided_coexistence_storage_commands(plan, inventory)
     write_set = build_guided_coexistence_write_set(plan, inventory)
@@ -147,7 +149,7 @@ def build_manual_storage_execution_plan(
     *,
     esp_inspection: EspReuseInspection | None,
     nvram_inspection: NvramInspection,
-    ntfs_resize_inspections: tuple[NtfsResizeInspection, ...] = (),
+    resize_inspections: tuple[ResizeInspection, ...] = (),
     target: str = "/target",
 ) -> ManualStorageExecutionPlan:
     """Compile manual disk writes only after fresh topology validation."""
@@ -162,17 +164,19 @@ def build_manual_storage_execution_plan(
         reused=reused,
         esp_inspection=esp_inspection,
         nvram_inspection=nvram_inspection,
+        replacement=plan.boot.esp_replacement,
     )
     commands = build_manual_storage_commands(plan, inventory)
-    if len(ntfs_resize_inspections) != len(commands.ntfs_resizes):
-        raise RuntimeError("Every NTFS resize requires a fresh safety inspection")
+    if len(resize_inspections) != len(commands.partition_resizes):
+        raise RuntimeError("Every partition resize requires a fresh safety inspection")
     for resize, inspection in zip(
-        commands.ntfs_resizes,
-        ntfs_resize_inspections,
+        commands.partition_resizes,
+        resize_inspections,
         strict=True,
     ):
         if (
             not inspection.safe
+            or inspection.filesystem != resize.filesystem.value
             or inspection.device != resize.device
             or inspection.current_size_bytes != resize.original_size_bytes
             or inspection.target_size_bytes != resize.target_size_bytes
@@ -180,7 +184,7 @@ def build_manual_storage_execution_plan(
             or resize.target_size_bytes > inspection.maximum_size_bytes
         ):
             raise RuntimeError(
-                "NTFS resize did not pass the fresh safety inspection: "
+                "Partition resize did not pass the fresh safety inspection: "
                 + inspection.message
             )
     execution = ManualStorageExecutionPlan(
@@ -194,7 +198,7 @@ def build_manual_storage_execution_plan(
         write_set=build_manual_storage_write_set(plan, inventory),
         esp_partition_number=esp.identity.number,
         reuses_esp=reused,
-        ntfs_resize_inspections=ntfs_resize_inspections,
+        resize_inspections=resize_inspections,
     )
     _verify_manual_parity(plan, disk, execution)
     return execution
@@ -377,6 +381,7 @@ def _validate_guided_prerequisites(
     reused: bool,
     esp_inspection: EspReuseInspection | None,
     nvram_inspection: NvramInspection,
+    replacement=None,
 ) -> None:
     if not nvram_inspection.available:
         reason = nvram_inspection.reason or "UEFI variables are unavailable"
@@ -384,6 +389,8 @@ def _validate_guided_prerequisites(
             "Cannot safely create the AnduinOS firmware boot entry: " + reason
         )
     if not reused:
+        if replacement is not None:
+            raise RuntimeError("ESP replacement authorization does not refer to a reused ESP")
         if esp_inspection is not None:
             raise RuntimeError("An ESP inspection was supplied for a new ESP")
         return
@@ -397,16 +404,7 @@ def _validate_guided_prerequisites(
     if not esp_inspection.healthy:
         reason = esp_inspection.reason or "FAT consistency check failed"
         raise RuntimeError("Shared ESP is not healthy: " + reason)
-    # Reusing an ESP does not authorize overwriting another installation's
-    # AnduinOS loader. This gate runs before any destructive storage step.
-    if esp_inspection.vendor_entries:
-        raise RuntimeError(
-            "The selected EFI System Partition already contains an "
-            "EFI/AnduinOS directory. Reusing it could overwrite an existing "
-            "AnduinOS bootloader. Select another EFI System Partition or "
-            "create a new one in unallocated space. Files left by an earlier "
-            "installation are not removed automatically."
-        )
+    validate_esp_replacement(esp_inspection, replacement)
     if esp_inspection.free_bytes < GUIDED_ESP_MINIMUM_FREE_BYTES:
         required_mib = GUIDED_ESP_MINIMUM_FREE_BYTES // (1024 * 1024)
         raise RuntimeError(
@@ -518,9 +516,9 @@ def _verify_manual_parity(
         if item.action is StorageGraphAction.RESIZE_PARTITION
     )
     if tuple(resize_declarations) != resize_operations or len(
-        execution.commands.ntfs_resizes
+        execution.commands.partition_resizes
     ) != len(resize_operations):
-        raise RuntimeError("Manual NTFS resize commands drifted")
+        raise RuntimeError("Manual partition resize commands drifted")
     existing_by_reference = {
         f"disk:{disk.identity.stable_id}:existing-partition:"
         f"{item.identity.partuuid}": item
@@ -528,13 +526,14 @@ def _verify_manual_parity(
     }
     for target_id, resize in zip(
         resize_operations,
-        execution.commands.ntfs_resizes,
+        execution.commands.partition_resizes,
         strict=True,
     ):
         declaration = resize_declarations[target_id]
         partition = existing_by_reference[target_id]
         if (
             resize.target_reference_id != target_id
+            or resize.filesystem is not declaration.filesystem
             or resize.disk != disk.identity.path
             or resize.device != partition.identity.path
             or resize.partition_number != partition.identity.number
@@ -543,7 +542,7 @@ def _verify_manual_parity(
             or resize.target_end_bytes
             != partition.identity.start_bytes + declaration.target_size_bytes - 1
         ):
-            raise RuntimeError("Manual NTFS resize commands drifted")
+            raise RuntimeError("Manual partition resize commands drifted")
     replaces_table = any(
         item.action is StorageGraphAction.REPLACE_PARTITION_TABLE
         for item in graph.operations

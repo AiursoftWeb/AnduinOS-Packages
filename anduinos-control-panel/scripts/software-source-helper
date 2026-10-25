@@ -1,23 +1,31 @@
 #!/usr/bin/python3
-"""Restricted privileged APT operations for AnduinOS Control Panel."""
+"""Restricted privileged APT and Flathub operations for AnduinOS Control Panel."""
 
 from __future__ import annotations
 
 import os
+import configparser
 from pathlib import Path
 import stat
 import subprocess
 import sys
 import tempfile
+import urllib.request
 
 from anduinos_control_panel.software_sources import (
     MIRRORS,
+    FLATHUB_REMOTE,
+    FLATHUB_SOURCES,
+    FLATHUB_OFFICIAL_REPO,
+    current_flathub,
     SOURCE_PATH,
     probe_mirror,
     replace_ubuntu_uris,
     system_architecture,
     system_codename,
     validate_mirror_uri,
+    validate_flathub_uri,
+    probe_flathub,
 )
 
 
@@ -107,6 +115,44 @@ def switch_mirror(mirror: str) -> None:
     print(f"Software source switched to {mirror}")
 
 
+def _flatpak(*arguments: str, timeout: int = 300) -> None:
+    result = subprocess.run(
+        ["/usr/bin/flatpak", "--system", *arguments],
+        timeout=timeout, check=False,
+    )
+    if result.returncode:
+        raise RuntimeError(f"Flatpak exited with status {result.returncode}")
+
+
+def switch_flathub(source: str) -> None:
+    uri = validate_flathub_uri(FLATHUB_SOURCES.get(source, source))
+    # Validate custom and built-in endpoints before touching the active remote.
+    probe_flathub(uri)
+    original = current_flathub()
+    if not original:
+        # Bootstrap from the official descriptor to import the original signing key.
+        _flatpak("remote-add", "--if-not-exists", FLATHUB_REMOTE, FLATHUB_OFFICIAL_REPO)
+    try:
+        _flatpak("remote-modify", FLATHUB_REMOTE, "--enable", "--gpg-verify", f"--url={uri}")
+        if current_flathub().rstrip("/") != uri:
+            raise RuntimeError("The system Flathub address did not change as requested")
+    except (OSError, RuntimeError, subprocess.TimeoutExpired) as error:
+        # Never delete a remote or replace its trusted keys to recover a switch.
+        fallback = original or FLATHUB_SOURCES["official"]
+        _flatpak("remote-modify", FLATHUB_REMOTE, f"--url={fallback}")
+        if current_flathub().rstrip("/") != fallback.rstrip("/"):
+            raise RuntimeError("Could not restore the original Flathub source") from error
+        if not original:
+            raise RuntimeError("The selected source failed; official Flathub remains configured") from error
+        raise RuntimeError("The original source was restored") from error
+    print(f"System Flathub switched to {uri}", flush=True)
+    try:
+        _flatpak("update", "--appstream", FLATHUB_REMOTE, timeout=60)
+    except (OSError, subprocess.TimeoutExpired, RuntimeError) as error:
+        # A completed switch remains successful when catalog refresh is unavailable.
+        print(f"Warning: Flathub AppStream refresh failed: {error}", flush=True)
+
+
 def main(arguments: list[str]) -> int:
     if os.geteuid() != 0:
         print("This helper must be run through polkit.", file=sys.stderr)
@@ -115,6 +161,8 @@ def main(arguments: list[str]) -> int:
         match arguments:
             case ["switch-mirror", mirror]:
                 switch_mirror(mirror)
+            case ["switch-flathub", source]:
+                switch_flathub(source)
             case ["refresh"]:
                 _apt("update")
             case ["upgrade"]:
@@ -122,7 +170,7 @@ def main(arguments: list[str]) -> int:
             case _:
                 print("Unknown or incomplete action.", file=sys.stderr)
                 return 64
-    except (OSError, UnicodeError, ValueError, RuntimeError) as error:
+    except (OSError, UnicodeError, ValueError, RuntimeError, configparser.Error, subprocess.TimeoutExpired) as error:
         print(f"Software source operation failed: {error}", file=sys.stderr)
         return 1
     return 0

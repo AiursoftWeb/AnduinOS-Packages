@@ -17,9 +17,8 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
     echo "[$SUITE] Resolving $UUID for GNOME $TARGET..."
     python3 "$SCRIPT_DIR/../lib/resolve-gnome-ext.py" "$UUID" --target "$TARGET" --download --out "$DEPLOY_DIR"
 
-    # Apply Dash to Panel panel blur geometry fix (from Anduin2017/blur-my-shell fork)
-    echo "[$SUITE] Applying Dash to Panel panel blur geometry fix..."
-    patch -d "$DEPLOY_DIR" -p1 < "$SCRIPT_DIR/fix-dtp-panel-blur.patch"
+    # The local panel geometry fix was merged upstream in PR #907.
+    # Keep the resolver-selected upstream implementation, including later fixes.
 done
 
 echo "Done."

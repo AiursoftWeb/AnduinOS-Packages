@@ -2027,3 +2027,23 @@ msgstr "Η επαναφορά είναι έτοιμη. Αποθηκεύστε τ
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback confirmation failed. Restoring the previous state."
 msgstr "Η επιβεβαίωση της επαναφοράς απέτυχε. Επαναφορά της προηγούμενης κατάστασης."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points."
+msgstr "Επαναφορά και των δεδομένων χρηστών. Μετά την επιτυχή ανάκτηση, διαγραφή των μη εργοστασιακών στιγμιοτύπων· διατήρηση και των δύο σημείων New OS."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Delete all snapshot history"
+msgstr "Διαγραφή όλου του ιστορικού στιγμιοτύπων"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore all users’ files and settings to their initial state."
+msgstr "Επαναφορά των αρχείων και ρυθμίσεων όλων των χρηστών στην αρχική τους κατάσταση."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Safety snapshots are created before rollback so recovery can be reversed if it fails. After recovery succeeds, they are deleted along with all non-factory snapshots. Restart follows within 60 seconds."
+msgstr "Safety snapshots are created before rollback so recovery can be reversed if it fails. After recovery succeeds, they are deleted along with all non-factory snapshots. Restart follows within 60 seconds."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "All data will be erased and cannot be recovered."
+msgstr "All data will be erased and cannot be recovered."

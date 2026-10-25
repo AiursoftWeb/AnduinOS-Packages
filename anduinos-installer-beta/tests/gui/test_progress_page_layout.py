@@ -1,13 +1,15 @@
 """The progress steps must remain scrollable inside a short window."""
 
-import time
 import unittest
 from types import SimpleNamespace
 from unittest.mock import patch
 
 import pages
+from helpers import valid_plan
+from test_guided_storage_graph import guided_plan
 from gi.repository import Adw, GLib, Gtk
 from installer_core.model import SecureBoot
+from anduinos_secureboot.enrollment import EnrollmentTutorial
 from ui import load_visual_style
 
 
@@ -20,14 +22,67 @@ def _descendants(widget):
 
 
 def _settle():
-    deadline = time.monotonic() + 0.35
-    context = GLib.MainContext.default()
-    while time.monotonic() < deadline:
-        context.iteration(False)
-        time.sleep(0.005)
+    loop = GLib.MainLoop()
+    GLib.timeout_add(350, lambda: (loop.quit(), GLib.SOURCE_REMOVE)[1])
+    loop.run()
 
 
 class ProgressPageLayoutTests(unittest.TestCase):
+    def test_output_shows_fallback_step_only_when_creating_an_esp(self):
+        for plan, expected in ((valid_plan(), True), (guided_plan()[0], False)):
+            with self.subTest(new_esp=expected):
+                window = Adw.Window(default_width=1000, default_height=780)
+                self.addCleanup(window.destroy)
+                navigation = Adw.NavigationView()
+                window.set_content(navigation)
+                with (patch("pages.threading.Thread"),
+                      patch("pages.GLib.timeout_add_seconds", return_value=0)):
+                    page = pages.build_progress_page(
+                        plan, {"lang": "en_US", "development_mode": True}, navigation)
+                navigation.add(page)
+                window.present()
+                toggle = next(w for w in _descendants(page) if isinstance(w, Gtk.ToggleButton))
+                toggle.set_active(True)
+                _settle()
+                titles = [w.get_text() for w in _descendants(page)
+                          if isinstance(w, Gtk.Label) and w.get_visible()]
+                self.assertEqual("Create fallback boot chain" in titles, expected)
+                window.destroy()
+
+    def test_mok_instructions_appear_once_after_success(self):
+        for development in (False, True):
+            for secure_boot in (SecureBoot.ENABLED, SecureBoot.DISABLED):
+                with self.subTest(development=development, secure_boot=secure_boot):
+                    window = Adw.Window()
+                    self.addCleanup(window.destroy)
+                    navigation = Adw.NavigationView()
+                    window.set_content(navigation)
+                    plan = SimpleNamespace(
+                        regional=SimpleNamespace(input_methods=()),
+                        platform=SimpleNamespace(secure_boot=secure_boot))
+                    with (patch('pages.ordered_progress_steps', return_value=[]),
+                          patch('pages.threading.Thread') as thread,
+                          patch('pages.GLib.timeout_add_seconds', return_value=0)):
+                        page = pages.build_progress_page(
+                            plan, {'lang': 'en_US', 'development_mode': development}, navigation)
+                    navigation.add(page)
+                    window.present()
+                    client = 'DevelopmentExecutorClient' if development else 'ExecutorClient'
+                    with patch('pages.' + client) as executor:
+                        executor.return_value.run.return_value = (True, '')
+                        thread.call_args.kwargs['target']()
+                    _settle()
+                    text = '\n'.join(w.get_text() for w in _descendants(page)
+                                     if isinstance(w, Gtk.Label) and w.get_mapped())
+                    self.assertEqual(text.count('Enroll MOK'),
+                                     1 if secure_boot is SecureBoot.ENABLED else 0)
+                    tutorial = next(w for w in _descendants(page)
+                                    if isinstance(w, EnrollmentTutorial))
+                    self.assertEqual(tutorial.get_visible(),
+                                     secure_boot is SecureBoot.ENABLED and not development)
+                    self.assertEqual(tutorial.get_mapped(), tutorial.get_visible())
+                    window.destroy()
+
     def test_toggle_preserves_live_progress_and_logs_and_failure_opens_output(self):
         window = Adw.Window(default_width=720, default_height=520)
         self.addCleanup(window.destroy)
@@ -121,12 +176,12 @@ class ProgressPageLayoutTests(unittest.TestCase):
         steps = [(str(index), f"Step {index}") for index in range(35)]
         fake_thread = lambda target, daemon: SimpleNamespace(start=target)
         with (patch("pages.ordered_progress_steps", return_value=steps),
-              patch("pages.DevelopmentExecutorClient") as client,
+              patch("pages.ExecutorClient") as client,
               patch("pages.threading.Thread", side_effect=fake_thread),
               patch("pages.GLib.timeout_add_seconds", return_value=0)):
             client.return_value.run.return_value = (True, "")
             page = pages.build_progress_page(
-                plan, {"lang": "en_US", "development_mode": True}, navigation
+                plan, {"lang": "en_US", "development_mode": False}, navigation
             )
         navigation.add(page)
         window.present()
@@ -154,6 +209,36 @@ class ProgressPageLayoutTests(unittest.TestCase):
                       if isinstance(widget, Gtk.ToggleButton)
                       and widget.get_label() == "Output")
         self.assertFalse(toggle.get_active())
+        tutorial = next(w for w in widgets if isinstance(w, EnrollmentTutorial))
+        self.assertTrue(tutorial.get_mapped())
+        self.assertAlmostEqual(tutorial.get_height(), tutorial.get_width() / 1.6, delta=1)
+        adjustment = result_scroll.get_vadjustment()
+        # Mapping can precede allocation during the completion transition.
+        for _ in range(5):
+            if adjustment.get_page_size() > 0:
+                break
+            _settle()
+        self.assertGreater(adjustment.get_page_size(), 0)
+        adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size())
+        _settle()
+        reboot = next(w for w in widgets if isinstance(w, Gtk.Button)
+                      and any(isinstance(child, Gtk.Label) and 'Restart and Enroll' in child.get_text()
+                              for child in _descendants(w)))
+        _, button_bounds = reboot.compute_bounds(window)
+        _, visible_bounds = result_scroll.compute_bounds(window)
+        self.assertLessEqual(button_bounds.get_y() + button_bounds.get_height(),
+                             visible_bounds.get_y() + visible_bounds.get_height())
+        self.assertTrue(reboot.get_sensitive())
+        window.set_default_size(1280, 800)
+        _settle()
+        adjustment.set_value(0)
+        _settle()
+        _, visible_bounds = result_scroll.compute_bounds(window)
+        for widget in (tutorial, reboot):
+            _, bounds = widget.compute_bounds(window)
+            self.assertGreaterEqual(bounds.get_y(), visible_bounds.get_y())
+            self.assertLessEqual(bounds.get_y() + bounds.get_height(),
+                                 visible_bounds.get_y() + visible_bounds.get_height())
         for widget in (result_scroll, progress):
             ok, bounds = widget.compute_bounds(window)
             self.assertTrue(ok)

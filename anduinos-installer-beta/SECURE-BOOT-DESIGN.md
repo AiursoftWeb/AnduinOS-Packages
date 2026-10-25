@@ -6,16 +6,22 @@ Release one preserves Secure Boot on amd64 and arm64 UEFI systems. Legacy BIOS
 has no Secure Boot state. Secure Boot support is a release blocker, not an
 optional best-effort feature.
 
-The implementation follows Ubuntu's Ubiquity/shim workflow:
+The implementation preserves Ubuntu's signed boot chain, with AnduinOS's
+shared unified signing identity policy:
 
 - detect Secure Boot from the running firmware;
-- generate a local MOK with `update-secureboot-policy --new-key`;
+- generate a local unified MOK with `anduinos_secureboot.identity.generate_identity`;
 - install signed shim and signed GRUB;
 - configure DKMS to use the same key;
 - queue the certificate with `mokutil --import`;
 - show MOKManager on reboot for physical-presence confirmation.
 
 AnduinOS uses the documented one-time enrollment password `123456`.
+
+Starting with installer `2.0.5-1` and toolkit `2.0.5-4`, both the installer and
+Driver Center use the same RSA-3072 / digitalSignature / codeSigning generator
+and purpose validation. The module-only OID `1.3.6.1.4.1.2312.16.1.2` is absent.
+This does not deploy a custom GRUB or change the existing signed EFI chain.
 
 ## Differences from Ubiquity
 
@@ -24,11 +30,15 @@ the MOK directory into `/target` without overwriting existing files.
 
 The AnduinOS installer instead:
 
-1. Copies the target filesystem.
+1. Copies the target filesystem while excluding build/Live MOKs, the toolkit
+   identity/backup store, DKMS fallback keys, signing configuration and the
+   installer key marker.
 2. Rejects any unmarked key pair inherited from the squashfs.
 3. Generates a machine-local key directly inside the target.
 4. Records the certificate digest so an interrupted installation reuses the
-   same key rather than generating another pending enrollment.
+   same key rather than generating another pending enrollment. Validate its
+   purpose, validity and private/public pairing before writing that marker;
+   marked module-only or corrupt identities fail rather than passing silently.
 5. Configures DKMS and rebuilds third-party modules.
 6. Generates initramfs and installs signed boot artifacts.
 7. Verifies every signed EFI executable.
@@ -42,26 +52,28 @@ key whose target system or boot chain was never completed.
 Every UEFI installation (erase, coexistence and manual; amd64 and arm64)
 installs the signed chain with `--uefi-secure-boot` and points the AnduinOS
 NVRAM entry at shim, regardless of the current enforcement state. The MOK
-state machine below is separate: when installed with enforcement off, users
-can later prepare/enroll MOK in Driver Center before enabling Secure Boot.
-OOBE no longer manages Secure Boot. A whole-disk erase of an externally
-connected target additionally receives the direct portable fallback described
-below; shared ESPs never do.
+state machine below is separate: when installed with enforcement off on
+supported UEFI firmware, a unified MOK is still generated and used for DKMS.
+No enrollment is requested in that case; users can later enroll the same MOK
+in Driver Center before enabling Secure Boot.
+OOBE no longer manages Secure Boot. An ESP newly created by this installation
+also receives the direct fallback chain before enrollment, regardless of disk
+transport or partitioning mode. Reused ESPs never receive this extra write.
 
 ```text
-Secure Boot disabled, unsupported by UEFI firmware, or Legacy BIOS
+Secure Boot unsupported by UEFI firmware, or Legacy BIOS
         |
         +-- no key generation, no MOK mutation
 
-Secure Boot enabled
+Secure Boot enabled or disabled on supported UEFI firmware
         |
-        +-- verify shim-signed, signed GRUB, mokutil and OpenSSL payloads
+        +-- verify required tools (signed payload check when enabled)
         |
         +-- reuse installer-marked key, otherwise discard inherited key
         |
-        +-- generate MOK.priv (0600) and MOK.der (0644)
+        +-- shared generator: unified MOK.priv (0600) and MOK.der (0644)
         |
-        +-- verify certificate public key matches private key
+        +-- verify pairing, expiry and unified signing permissions
         |
         +-- write explicit DKMS signing configuration
         |
@@ -73,9 +85,13 @@ Secure Boot enabled
         |
         +-- verify the signed AnduinOS vendor EFI chain
         |
+        +-- if enforcement disabled: complete without MOK mutation
+        |
         +-- if already enrolled: complete
         |
         +-- if the same certificate is pending: do not import again
+        |
+        +-- if unrelated requests or unreadable state: fail without importing
         |
         +-- otherwise mokutil --import via stdin password
         |
@@ -107,6 +123,26 @@ The private key must never be copied from the ISO build environment. A marker
 containing the generated certificate's SHA-256 digest distinguishes an
 installer-created target key from squashfs residue and makes retries
 idempotent.
+
+Fresh installations keep a single identity in the standard
+`/var/lib/shim-signed/mok/MOK.{priv,der}` paths. No migration candidate or
+separate activation state is needed: Driver Center recognizes this unified
+identity directly, and actual enrollment is sufficient for trust. The
+toolkit's existing-system migration store is deliberately not copied.
+The new target may sign its own modules before enrollment; this does not grant
+permission to load them under Secure Boot until enrollment succeeds.
+
+Generation and validation use the Live OpenSSL binary with explicit target
+paths; subsequent DKMS and MOK operations run in the target chroot. No command
+generates or overwrites the Live system's signing identity. A redirected
+signing path or unexpected copied identity store aborts initialization.
+
+Package tests use real OpenSSL in temporary targets and a real miniature
+SquashFS extraction, while simulating firmware calls. They cover independent
+keys per installation, retry reuse, partial generation recovery, module-only
+rejection, disabled/unsupported firmware, canceled enrollment and conflicting
+pending requests. These are not a substitute for booting a new ISO and
+completing MOKManager under Secure Boot (the next acceptance stage).
 
 ## DKMS
 

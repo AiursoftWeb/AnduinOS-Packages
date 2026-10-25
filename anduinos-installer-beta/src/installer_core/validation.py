@@ -17,6 +17,7 @@ from .model import (
     Firmware,
     InstallMode,
     InstallPlan,
+    EspReplacement,
     MokPasswordPolicy,
     SCHEMA_VERSION,
     SecureBoot,
@@ -170,37 +171,28 @@ def validate_plan(
         errors.append("MOK password policy does not match Secure Boot state")
     if type(plan.boot.install_fallback_path) is not bool:
         errors.append("EFI fallback-path policy must be boolean")
+    replacement = plan.boot.esp_replacement
+    if replacement is not None:
+        if not isinstance(replacement, EspReplacement):
+            errors.append("Invalid ESP replacement authorization")
+        elif (
+            not isinstance(replacement.partuuid, str)
+            or not re.fullmatch(r"[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}", replacement.partuuid)
+            or not isinstance(replacement.filesystem_uuid, str)
+            or not re.fullmatch(r"[0-9a-fA-F]{4}-[0-9a-fA-F]{4}", replacement.filesystem_uuid)
+            or not isinstance(replacement.vendor_digest, str)
+            or not re.fullmatch(r"[0-9a-f]{64}", replacement.vendor_digest)
+        ):
+            errors.append("Invalid ESP replacement identity or fingerprint")
+        if (plan.storage.mode is InstallMode.ERASE_DISK
+                or platform.firmware is not Firmware.UEFI):
+            errors.append("ESP replacement requires a reused UEFI ESP")
     if type(plan.boot.external_target) is not bool:
         errors.append("External-target policy must be boolean")
-    elif (
-        plan.storage.mode is InstallMode.ERASE_DISK
-        and platform.firmware is Firmware.UEFI
-        and plan.boot.install_fallback_path != plan.boot.external_target
-    ):
-        errors.append(
-            "UEFI erase-disk fallback policy must match external-drive status"
-        )
-    elif (
-        plan.storage.mode is InstallMode.ERASE_DISK
-        and platform.firmware is Firmware.BIOS
-        and not plan.boot.install_fallback_path
-    ):
-        errors.append(
-            "Legacy BIOS erase-disk installs must retain the portable UEFI "
-            "fallback path"
-        )
-    elif (
-        plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
-        and plan.boot.install_fallback_path
-    ):
-        errors.append(
-            "Install alongside must not write the shared EFI fallback path"
-        )
-    elif (
-        plan.storage.mode is InstallMode.MANUAL
-        and plan.boot.install_fallback_path
-    ):
-        errors.append("Manual mode must not write the EFI fallback path")
+    graph = plan.storage.graph
+    if graph is not None and len(graph.boot_targets) == 1:
+        if plan.boot.install_fallback_path != graph.creates_esp:
+            errors.append("EFI fallback is required only for a newly created ESP")
 
     identity = plan.identity
     if identity.username in RESERVED_USERNAMES:

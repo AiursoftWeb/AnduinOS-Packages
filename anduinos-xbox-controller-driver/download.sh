@@ -5,16 +5,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../lib/build-guards.sh"
 need_cmd git
 
-# Fallback to github if the internal gitlab mirror is unreachable during local testing
-REPO_URL="https://gitlab.aiursoft.com/mirror/xpadneo.git"
-FALLBACK_URL="https://github.com/atar-axis/xpadneo.git"
-COMMIT_ID="3879ba0f44e9bcfd500a5b92d02f83885f6b23c7"
-VERSION="v0.11-pre-69-g3879ba0"
+REPO_URL="https://github.com/atar-axis/xpadneo.git"
+COMMIT_ID="547eb90cd9f01de64db888b558f7e1a606c71965"
+VERSION="v0.11-pre-86-g547eb90"
 
 rm -rf "$SCRIPT_DIR/deploy" /tmp/xpadneo
 echo "Cloning xpadneo..."
-git clone "$REPO_URL" /tmp/xpadneo || git clone "$FALLBACK_URL" /tmp/xpadneo
-git -C /tmp/xpadneo checkout "$COMMIT_ID"
+git clone "$REPO_URL" /tmp/xpadneo
+git -C /tmp/xpadneo checkout --detach "$COMMIT_ID"
 
 echo "Structuring deploy folder..."
 mkdir -p "$SCRIPT_DIR/deploy/usr/src/hid-xpadneo-${VERSION}"

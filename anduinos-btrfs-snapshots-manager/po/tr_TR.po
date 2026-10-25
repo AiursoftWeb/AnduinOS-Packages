@@ -2027,3 +2027,23 @@ msgstr "Geri alma hazır. Çalışmanızı kaydedin; bilgisayar 60 saniye içind
 #: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
 msgid "Rollback confirmation failed. Restoring the previous state."
 msgstr "Geri alma onayı başarısız oldu. Önceki durum geri yükleniyor."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points."
+msgstr "Kullanıcı verilerini de geri yükle. Başarılı kurtarmadan sonra fabrika dışı anlık görüntüleri sil; her iki New OS kurtarma noktasını koru."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Delete all snapshot history"
+msgstr "Tüm anlık görüntü geçmişini sil"
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Restore all users’ files and settings to their initial state."
+msgstr "Tüm kullanıcıların dosyalarını ve ayarlarını ilk durumlarına geri yükle."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "Safety snapshots are created before rollback so recovery can be reversed if it fails. After recovery succeeds, they are deleted along with all non-factory snapshots. Restart follows within 60 seconds."
+msgstr "Safety snapshots are created before rollback so recovery can be reversed if it fails. After recovery succeeds, they are deleted along with all non-factory snapshots. Restart follows within 60 seconds."
+
+#: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
+msgid "All data will be erased and cannot be recovered."
+msgstr "All data will be erased and cannot be recovered."

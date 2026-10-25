@@ -263,7 +263,7 @@ def build_manual_disk_map(
                         else ""
                     )
                     + (
-                        "NTFS · Resized"
+                        item.filesystem_type + " · Resized"
                         if resize_for_partuuid(
                             selection, item.identity.partuuid
                         )
@@ -524,7 +524,10 @@ def build_guided_storage_preview(
         inventory_digest=workflow.inventory.digest,
         reused_esp=reused_esp,
     )
-    plan = replace(plan, storage=replace(plan.storage, graph=graph))
+    plan = replace(
+        plan, storage=replace(plan.storage, graph=graph),
+        boot=replace(plan.boot, install_fallback_path=graph.creates_esp),
+    )
     write_set = build_guided_coexistence_write_set(
         plan, workflow.inventory
     )
@@ -582,7 +585,7 @@ def build_guided_storage_confirmation(
             item.action is StorageAction.WRITE_BOOT_FILES
             for item in operations
         ),
-        writes_shared_fallback=any(
+        writes_shared_fallback=preview.reused_esp is not None and any(
             item.action is StorageAction.WRITE_FALLBACK_BOOT_FILES
             for item in operations
         ),
@@ -628,7 +631,10 @@ def build_manual_storage_preview(
         selection,
         inventory_digest=workflow.inventory.digest,
     )
-    plan = replace(plan, storage=replace(plan.storage, graph=graph))
+    plan = replace(
+        plan, storage=replace(plan.storage, graph=graph),
+        boot=replace(plan.boot, install_fallback_path=graph.creates_esp),
+    )
     return ManualStoragePreview(
         selection=selection,
         graph=graph,
@@ -703,7 +709,7 @@ def build_manual_storage_confirmation(
             item.action is StorageAction.WRITE_BOOT_FILES
             for item in operations
         ),
-        writes_shared_fallback=any(
+        writes_shared_fallback=bool(preview.selection.reused_esp_partuuid) and any(
             item.action is StorageAction.WRITE_FALLBACK_BOOT_FILES
             for item in operations
         ),

@@ -32,6 +32,7 @@ from .storage_graph import (
     StorageGraphOperation,
     SubvolumeDeclaration,
 )
+from .storage_graph_planning import with_new_esp_fallback
 from .storage_inventory import (
     DiskInventory,
     DiskTopologyBinding,
@@ -127,7 +128,10 @@ def build_manual_storage_graph(
     partition_resizes = tuple(
         PartitionResizeDeclaration(
             target_reference_id=item.reference_id,
-            filesystem=GraphFilesystem.NTFS,
+            filesystem=GraphFilesystem(next(
+                part.filesystem_type.casefold() for part in disk.partitions
+                if part.identity.partuuid == item.stable_id
+            )),
             original_size_bytes=item.expected_size_bytes,
             target_size_bytes=(
                 resized_requests[item.stable_id].target_size_mib * 1024 * 1024
@@ -319,7 +323,7 @@ def build_manual_storage_graph(
             StorageGraphOperation(StorageGraphAction.UPDATE_NVRAM, esp_id),
         )
     )
-    return StorageGraph(
+    graph = StorageGraph(
         schema_version=STORAGE_GRAPH_SCHEMA_VERSION,
         mode=StorageGraphMode.MANUAL,
         inventory_digest=inventory_digest,
@@ -341,6 +345,7 @@ def build_manual_storage_graph(
         operations=tuple(operations),
         requested_capabilities=tuple(capabilities),
     )
+    return with_new_esp_fallback(graph, plan.platform.architecture)
 
 
 def validate_manual_graph_structure(
@@ -393,15 +398,13 @@ def validate_manual_graph_structure(
     boot = graph.boot_targets[0]
     if (
         boot.bios_disk_reference_id
-        or boot.fallback_path
         or boot.vendor_directory != "EFI/AnduinOS"
     ):
         raise ManualStorageGraphError(
-            "Manual boot target must use vendor-only UEFI writes"
+            "Manual boot target must use its UEFI vendor directory"
         )
     forbidden = {
         StorageGraphAction.WRITE_BIOS_BOOTLOADER,
-        StorageGraphAction.WRITE_FALLBACK_BOOT_FILES,
     }
     if any(item.action in forbidden for item in graph.operations):
         raise ManualStorageGraphError(
@@ -476,14 +479,14 @@ def validate_manual_graph_structure(
     for target_id, declaration in resize_declarations.items():
         reference = references_by_id[target_id]
         if (
-            declaration.filesystem is not GraphFilesystem.NTFS
+            declaration.filesystem not in {GraphFilesystem.NTFS, GraphFilesystem.EXT4}
             or declaration.original_size_bytes != reference.expected_size_bytes
             or declaration.target_size_bytes % mib
             or declaration.target_size_bytes < 4 * 1024 * mib
             or declaration.target_size_bytes >= declaration.original_size_bytes
         ):
             raise ManualStorageGraphError(
-                "Manual NTFS resize declaration is invalid"
+                "Manual partition resize declaration is invalid"
             )
 
     roles = tuple(item.name for item in graph.partitions)

@@ -50,13 +50,19 @@ where
     box_.append(&label);
 
     dialog.set_child(Some(&box_));
+    let dialog_guard = dialog.connect_close_request(|_| gtk::glib::Propagation::Stop);
     dialog.present();
 
-    // Run work on background thread — GTK main loop stays free
+    let guard = parent.connect_close_request(|_| gtk::glib::Propagation::Stop);
+    let application = parent.application();
+    let hold = application.as_ref().map(|app| app.hold());
+    // Run work on background thread — GTK main loop stays free.
     let result = tokio::task::spawn_blocking(task)
         .await
-        .map_err(|e| i18n_fmt(&i18n("Task panicked: {0}"), &[&e.to_string()]))?;
-
+        .map_err(|e| i18n_fmt(&i18n("Task panicked: {0}"), &[&e.to_string()]));
+    parent.disconnect(guard);
+    dialog.disconnect(dialog_guard);
     dialog.close();
-    result
+    drop(hold);
+    result?
 }

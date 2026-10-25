@@ -54,6 +54,15 @@ class OperationsTests(unittest.TestCase):
         probe.start()
         self.addCleanup(probe.stop)
 
+    def test_apt_is_noninteractive_without_changing_parent_environment(self):
+        with patch.dict(operations.os.environ, {"DEBIAN_FRONTEND": "dialog"}), \
+             patch.object(operations.subprocess, "run") as run:
+            operations.run_command(["apt-get", "-y", "install", "anduinos-grub"])
+            self.assertEqual(run.call_args.kwargs["env"]["DEBIAN_FRONTEND"], "noninteractive")
+            self.assertEqual(operations.os.environ["DEBIAN_FRONTEND"], "dialog")
+            operations.run_command(["mokutil", "--sb-state"])
+            self.assertEqual(run.call_args.kwargs["env"]["DEBIAN_FRONTEND"], "dialog")
+
     def test_command_runner_preserves_literal_arguments_stdin_and_failure(self):
         command = ["example-command", "$(id); echo unsafe", "argument with spaces"]
         failed = subprocess.CompletedProcess(command, 23, "", "operation failed")
@@ -108,6 +117,55 @@ class OperationsTests(unittest.TestCase):
             with self.subTest(action=action), self.assertRaises(ValueError):
                 operations.execute(action, run)
         run.assert_not_called()
+
+    def test_desktop_bootloader_actions_recheck_certificate_enrollment(self):
+        from anduinos_secureboot.decision import Facts
+        from anduinos_secureboot.identity import IdentityStatus
+        from anduinos_secureboot.model import DkmsState, GrubState, SecureBootState
+        identity = IdentityStatus(purpose="unified", enrollment="pending", key_present=True,
+                                  key_valid=True, managed=True, defaults_ready=True)
+        state = SecureBootState(False, True, True, True, "old", signing_identity=identity,
+                                grub=GrubState(), setup_mode=False, boot_loader="shim")
+        for action in ("install-bootloader", "repair-bootloader"):
+            with self.subTest(action=action), \
+                 patch("anduinos_secureboot.inspect.collect_facts", return_value=Facts(state, DkmsState())), \
+                 patch("anduinos_secureboot.grub.install_packages") as install, \
+                 patch("anduinos_secureboot.grub.deploy") as deploy:
+                result = operations.execute(action, Mock())
+                self.assertFalse(result.ok)
+                self.assertIn("certificate-enrollment-required", result.to_json())
+                install.assert_not_called()
+                deploy.assert_not_called()
+
+    def test_driver_repair_rechecks_defaults_before_any_rebuild_or_write(self):
+        from dataclasses import replace
+        from anduinos_secureboot.decision import Facts
+        from anduinos_secureboot.identity import IdentityStatus
+        from anduinos_secureboot.model import DkmsState, SecureBootState
+        identity = IdentityStatus(purpose="unified", enrollment="enrolled", key_present=True,
+                                  key_valid=True, managed=True, defaults_ready=False)
+        state = SecureBootState(True, True, True, True, "new", signing_identity=identity,
+                                dkms_available=True, headers_available=True)
+        for ready in (False, None, True):
+            with self.subTest(defaults_ready=ready), \
+                 patch("anduinos_secureboot.inspect.collect_facts", return_value=Facts(
+                     replace(state, signing_identity=replace(identity, defaults_ready=ready)), DkmsState())), \
+                 patch.object(operations, "repair_dkms") as repair:
+                result = operations.execute("repair-dkms", Mock())
+                if ready is True:
+                    repair.assert_called_once()
+                else:
+                    self.assertFalse(result.ok)
+                    self.assertIn("signing-defaults-required", result.to_json())
+                    repair.assert_not_called()
+
+    def test_legacy_default_repair_requires_the_explicit_manual_action(self):
+        for action, manual in (("sync-defaults", False), ("repair-defaults", True)):
+            with self.subTest(action=action), \
+                 patch("anduinos_secureboot.defaults.sync_defaults") as sync:
+                run = Mock()
+                operations.execute(action, run)
+                sync.assert_called_once_with(run, allow_legacy=manual, repair_config=manual)
 
     def test_helper_reports_operation_errors_and_releases_its_lock(self):
         with tempfile.TemporaryDirectory() as directory:

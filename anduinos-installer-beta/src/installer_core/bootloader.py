@@ -18,6 +18,7 @@ from .esp import (
     verify_preserved_esp_tree,
 )
 from .execution_boundaries import emit_boundary
+from .esp_replacement import replace_esp_vendor
 from .model import Architecture, Filesystem, Firmware, InstallMode, InstallPlan
 from .software import verify_driver_boot_payload
 from .steps import FailurePolicy, InstallContext
@@ -57,12 +58,6 @@ class InstallBootloaderStep:
         # Target files do not exist yet: all preflight checks intentionally run
         # before partitioning. Validate only inputs available at that boundary.
         context.validate_plan()
-        if (
-            context.plan.platform.firmware is Firmware.UEFI
-            and context.plan.boot.external_target
-            and context.plan.boot.install_fallback_path
-        ):
-            self.runner.require_commands(("openssl", "sbattach", "sbverify"))
 
     def execute(self, context: InstallContext) -> None:
         target = _target(context)
@@ -125,7 +120,7 @@ class InstallBootloaderStep:
             f"{devices.get('efi-system', 'the selected disk ESP')} "
             "mounted at /boot/efi"
         )
-        if vendor_only:
+        if vendor_only and not context.plan.boot.install_fallback_path:
             context.log(
                 "Only EFI/AnduinOS may change on the selected EFI System "
                 "Partition"
@@ -145,16 +140,11 @@ class InstallBootloaderStep:
         for command in installs:
             if vendor_only:
                 emit_boundary(context, f"{prefix}-boot-files", "before")
+                replace_esp_vendor(context, target, self.runner)
             self.runner.run(command, timeout=300)
             if vendor_only:
                 emit_boundary(context, f"{prefix}-boot-files", "after")
         self.runner.run(commands.configure, timeout=300)
-        if explicit_nvram and getattr(commands, "efi_fallback", ""):
-            _deploy_portable_fallback(
-                self.runner,
-                target,
-                context.plan,
-            )
         if explicit_nvram:
             if vendor_only:
                 emit_boundary(context, f"{prefix}-nvram", "before")
@@ -263,12 +253,6 @@ class InstallBootloaderStep:
                 commands,
                 require_first=True,
             )
-            if getattr(commands, "efi_fallback", ""):
-                _verify_portable_fallback(
-                    self.runner,
-                    target,
-                    context.plan,
-                )
         else:
             fallback = target / "boot/efi" / commands.efi_fallback
             if not fallback.is_file():
@@ -376,6 +360,32 @@ def _target(context: InstallContext) -> Path:
     return target
 
 
+@dataclass
+class CreateFallbackBootChainStep:
+    runner: CommandRunner
+    id: str = "create-fallback-boot-chain"
+    title: str = "Create fallback boot chain"
+    failure_policy: FailurePolicy = FailurePolicy.FATAL
+    progress_weight: int = 1
+    destructive: bool = False
+
+    def preflight(self, context: InstallContext) -> None:
+        context.validate_plan()
+        self.runner.require_commands(("openssl", "sbattach", "sbverify"))
+
+    def execute(self, context: InstallContext) -> None:
+        context.validate_plan()
+        if not context.values.get("target_efi_mounted"):
+            raise RuntimeError("EFI mount state is not active")
+        _deploy_portable_fallback(self.runner, _target(context), context.plan)
+
+    def verify(self, context: InstallContext) -> None:
+        _verify_portable_fallback(self.runner, _target(context), context.plan)
+
+    def cleanup(self, context: InstallContext) -> None:
+        return None
+
+
 def _portable_fallback_paths(
     target: Path,
     plan: InstallPlan,
@@ -446,10 +456,12 @@ def _deploy_portable_fallback(
     """Deploy the installer-owned portable chain, never GRUB's fallback set.
 
     All UEFI ``grub-install`` calls intentionally use
-    ``--no-extra-removable``, even for an external erase-disk plan.  Allowing
+    ``--no-extra-removable``, even for an erase-disk plan.  Allowing
     grub-install to manage EFI/BOOT can install shim's ``fb*.efi`` NVRAM
     registrar and reproduce the ResetSystem loop tracked by issue #422.
-    Portable mode is instead expressed by ``install_fallback_path`` and lands
+    Only an ESP created by this installation may receive this chain.
+    Reused ESPs must remain untouched, even if their fallback path is empty.
+    This intent is expressed by ``install_fallback_path`` and lands
     here after the vendor chain exists.  The copied chain boots shim directly,
     retains MokManager, excludes the registrar, and is verified below.
 
@@ -458,8 +470,8 @@ def _deploy_portable_fallback(
     """
 
     if (
-        plan.storage.mode is not InstallMode.ERASE_DISK
-        or not plan.boot.external_target
+        not plan.storage.graph
+        or not plan.storage.graph.creates_esp
         or not plan.boot.install_fallback_path
     ):
         raise RuntimeError("Portable fallback is not authorized for this plan")

@@ -48,6 +48,7 @@ class NtfsRepairDialogTests(unittest.TestCase):
 
     def show_required_check(self):
         self.namespace["_show_resize_inspection_blocked"](SimpleNamespace(
+            filesystem="ntfs",
             block_reason=NtfsResizeBlockReason.CHECK_REQUIRED,
             message="Run chkdsk /f and please try again, or see option -f.",
         ))
@@ -81,6 +82,7 @@ class NtfsRepairDialogTests(unittest.TestCase):
 
     def test_unrelated_errors_keep_their_original_message_and_close_button(self):
         self.namespace["_show_resize_inspection_blocked"](SimpleNamespace(
+            filesystem="ntfs",
             block_reason=NtfsResizeBlockReason.RANGE_UNAVAILABLE,
             message="Device read failed",
         ))

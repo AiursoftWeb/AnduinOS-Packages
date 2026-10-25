@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-secureboot-toolkit</PackageName>
-    <PackageVersion>2.0.4-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.5-22+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Shared Secure Boot, MOK, and DKMS signing toolkit for AnduinOS applications</PackageDescription>
     <Section>admin</Section>
@@ -26,7 +26,8 @@
     <Dependency Include="gir1.2-adw-1" />
     <Dependency Include="mokutil" />
     <Dependency Include="openssl" />
-    <Dependency Include="shim-signed" />
+    <!-- The core system selects the boot stack. A toolkit -> shim -> GRUB ->
+         toolkit dependency would prevent independent signing consumers. -->
     <Dependency Include="efibootmgr" />
     <Dependency Include="util-linux" />
     <Dependency Include="sbsigntool" />
@@ -36,6 +37,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PostInstallScript Include="scripts/postinst.sh" />
+    <PreInstallScript Include="scripts/preinst.sh" />
+    <PostRemoveScript Include="scripts/postrm.sh" />
+    <!-- Restore the diverted frontend before any DKMS-dependent package's
+         postinst runs, including when DKMS is installed after this toolkit. -->
+    <DpkgTrigger Include="/usr/sbin/dkms" Type="interest" />
+    <DpkgTrigger Include="/usr/libexec/anduinos-dkms-original" Type="interest" />
+    <IncludeScript Include="scripts/anduinos-dkms-wrapper" Target="/usr/libexec/anduinos-dkms-wrapper" />
+    <IncludeFile Include="src/anduinos_secureboot/dkms_guard.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/dkms_guard.py" />
+    <DpkgTrigger Include="anduinos-boot-chain-update" Type="interest-noawait" />
+    <IncludeFile Include="src/anduinos_secureboot/grub.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/grub.py" />
+    <IncludeScript Include="scripts/anduinos-grub-update" Target="/usr/libexec/anduinos-grub-update" />
+    <IncludeScript Include="scripts/anduinos-grub-probe" Target="/usr/libexec/anduinos-grub-probe" />
+    <IncludeFile Include="data/com.anduinos.GrubProbe.policy" Target="/usr/share/polkit-1/actions/com.anduinos.GrubProbe.policy" />
+    <SystemdUnit Include="data/anduinos-signing-defaults.service" AutoEnable="true" />
+    <IncludeFile Include="src/anduinos_secureboot/defaults.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/defaults.py" />
     <IncludeFile Include="src/anduinos_secureboot/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/__init__.py" />
     <IncludeFile Include="src/anduinos_secureboot/firmware.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/firmware.py" />
     <IncludeScript Include="scripts/anduinos-firmware-probe" Target="/usr/libexec/anduinos-firmware-probe" />
@@ -44,8 +61,12 @@
     <IncludeFile Include="src/anduinos_secureboot/boot_chain.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/boot_chain.py" />
     <IncludeFile Include="src/anduinos_secureboot/inspect.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/inspect.py" />
     <IncludeFile Include="src/anduinos_secureboot/model.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/model.py" />
+    <IncludeFile Include="src/anduinos_secureboot/decision.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/decision.py" />
+    <IncludeFile Include="src/anduinos_secureboot/identity.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/identity.py" />
     <IncludeFile Include="src/anduinos_secureboot/operations.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/operations.py" />
     <IncludeFile Include="src/anduinos_secureboot/ui.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/ui.py" />
+    <IncludeFile Include="src/anduinos_secureboot/enrollment.py" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/enrollment.py" />
+    <IncludeFile Include="src/anduinos_secureboot/mok-enrollment.gif" Target="/usr/lib/python3/dist-packages/anduinos_secureboot/mok-enrollment.gif" />
     <IncludeScript Include="scripts/anduinos-secureboot-helper" Target="/usr/libexec/anduinos-secureboot-helper" />
     <IncludeScript Include="scripts/anduinos-securebootctl" Target="/usr/bin/anduinos-securebootctl" />
     <IncludeFile Include="data/com.anduinos.SecureBootToolkit.policy" Target="/usr/share/polkit-1/actions/com.anduinos.SecureBootToolkit.policy" />

@@ -25,6 +25,7 @@ gi.require_version("Gdk", "4.0")
 gi.require_version("Adw", "1")
 
 from gi.repository import Gtk, Gdk, Adw, GLib, Gio, Pango, GObject
+from anduinos_secureboot.enrollment import EnrollmentTutorial
 
 from languages import (
     DEFAULT_LANGUAGE,
@@ -41,7 +42,12 @@ from keyboard_layouts import (
     translate_xkb_description,
     xkb_choice_id,
 )
-from keyboard_preview import KeyboardPreviewError, XkbKeyboardPreview
+from keyboard_preview import KeyboardPreviewError
+from keyboard_session import (
+    KeyboardSessionError,
+    apply_keyboard_layout,
+    keyboard_layout_is_active,
+)
 from frontend import (
     DevelopmentExecutorClient,
     ExecutorClient,
@@ -52,8 +58,8 @@ from frontend import (
     clear_storage_target,
     clear_plaintext_passwords,
     create_install_plan,
-    probe_ntfs_resize,
-    probe_esp_occupied,
+    probe_partition_resize,
+    probe_esp_replacement,
     probe_storage_inventory,
 )
 from installer_core.btrfs import BTRFS_SUBVOLUMES, BtrfsCompression
@@ -227,7 +233,8 @@ _ESP_HELP_SEPARATE = N_(
 _ESP_HELP_SHARED = N_(
     "Reuse a healthy ESP with enough free space, without formatting it. "
     "Other systems' boot files are preserved. If EFI/AnduinOS already "
-    "exists, choose another ESP or create a new one."
+    "exists, replacement requires explicit confirmation. To keep both "
+    "installations independently bootable, choose another ESP or create a new one."
 )
 _ESP_HELP_COMMON = N_(
     "Both options install boot files in EFI/AnduinOS and put the new "
@@ -311,21 +318,29 @@ def _esp_help_button(lang):
     return button
 
 
-def _esp_conflict_dialog(nav_view, lang):
+def _esp_conflict_dialog(nav_view, lang, path, on_replace, on_back):
     dialog = Adw.MessageDialog(
         transient_for=nav_view.get_root(),
-        heading=_("A separate EFI System Partition is required", lang),
+        heading=_("Replace existing AnduinOS boot files?", lang),
         body=_(
-            "This ESP already contains EFI/AnduinOS. Create a new ESP in "
-            "unallocated space (at least 512 MiB), or select another ESP. "
-            "The existing installation will not be overwritten. The new "
-            "system's GRUB menu can start the existing system.", lang,
-        ),
+            "{path} already contains AnduinOS boot files. Continuing will replace "
+            "EFI/AnduinOS to start the new installation. Windows and other systems' "
+            "boot files will be preserved; this ESP will not be formatted.\n\n"
+            "This replacement does not delete the old system partition, but the "
+            "old AnduinOS may no longer start through its existing boot entry. "
+            "To keep both installations, go back and create a separate ESP "
+            "(at least 512 MiB). Old boot files will be backed up before replacement.", lang,
+        ).format(path=path),
     )
-    dialog.add_response("ok", _("OK", lang))
-    dialog.set_default_response("ok")
-    dialog.set_close_response("ok")
+    dialog.add_response("back", _("Back", lang))
+    dialog.add_response("replace", _("Use this ESP and replace", lang))
+    dialog.set_response_appearance("replace", Adw.ResponseAppearance.DESTRUCTIVE)
+    dialog.set_default_response("back")
+    dialog.set_close_response("back")
+    dialog.connect("response", lambda _dialog, response:
+                   on_replace() if response == "replace" else on_back())
     dialog.present()
+    return dialog
 
 
 def _probe_storage_workflow(*, development_mode=False):
@@ -669,9 +684,10 @@ def _planned_page_route(shared):
         platform is not None and platform.secure_boot is SecureBoot.DISABLED
     ):
         route.append("secure-boot-recommendation")
+    route.append("keyboard")
     if bool(shared.get("_network_page_planned")):
         route.append("network")
-    route.extend(_UNCONDITIONAL_PAGE_ROUTE[1:5])
+    route.extend(_UNCONDITIONAL_PAGE_ROUTE[2:5])
     storage_strategy = shared.get("storage_strategy")
     if storage_strategy == StorageStrategy.ADVANCED.value:
         route.append("advanced-storage")
@@ -779,10 +795,9 @@ def _start_power_auto_refresh(page, refresh):
     page.connect("unmap", _stop)
 
 
-def _build_network_or_keyboard_page(shared, nav_view):
+def _build_keyboard_first_page(shared, nav_view):
+    """Keyboard confirmation must precede every password-entry page."""
     _ensure_initial_page_route(shared)
-    if bool(shared.get("_network_page_planned")):
-        return build_network_page(shared, nav_view)
     return build_keyboard_page(shared, nav_view)
 
 
@@ -797,13 +812,13 @@ def secure_boot_recommendation_needed(shared, platform=None) -> bool:
     return platform is not None and platform.secure_boot is SecureBoot.DISABLED
 
 
-def _build_secure_boot_or_network_page(shared, nav_view, *, platform=None):
+def _build_secure_boot_or_keyboard_page(shared, nav_view, *, platform=None):
     if (platform is None and shared.get("_platform_probe_result") is None
             and not shared.get("development_mode")):
         return build_firmware_check_page(shared, nav_view)
     if secure_boot_recommendation_needed(shared, platform):
         return build_secure_boot_page(shared, nav_view)
-    return _build_network_or_keyboard_page(shared, nav_view)
+    return _build_keyboard_first_page(shared, nav_view)
 
 
 def build_firmware_check_page(shared, nav_view):
@@ -837,9 +852,9 @@ def build_firmware_check_page(shared, nav_view):
         platform = shared.get("_platform_probe_result")
         if platform is None:
             # Unknown is allowed for configuration, never for execution.
-            next_page = _build_network_or_keyboard_page(shared, nav_view)
+            next_page = _build_keyboard_first_page(shared, nav_view)
         else:
-            next_page = _build_secure_boot_or_network_page(
+            next_page = _build_secure_boot_or_keyboard_page(
                 shared, nav_view, platform=platform)
         nav_view.push(next_page)
 
@@ -875,7 +890,7 @@ def build_firmware_check_page(shared, nav_view):
         navigation.next_button.set_sensitive(True)
         if not error and nav_view.get_visible_page() is page:
             # Detection is transient: neither Continue nor Back should stop here.
-            next_page = _build_secure_boot_or_network_page(
+            next_page = _build_secure_boot_or_keyboard_page(
                 shared, nav_view, platform=platform)
             stack = nav_view.get_navigation_stack()
             nav_view.replace([
@@ -923,7 +938,7 @@ def build_post_welcome_page(
         warning_needed = low_battery_warning_needed(shared, result)
     if warning_needed:
         return build_low_battery_page(shared, nav_view, result)
-    return _build_secure_boot_or_network_page(shared, nav_view)
+    return _build_secure_boot_or_keyboard_page(shared, nav_view)
 
 
 def _recommended_input_methods(shared):
@@ -1151,8 +1166,9 @@ def build_welcome_page(shared, nav_view):
             l = lang_items[pos]
             shared["lang"] = l.code
             shared["locale"] = l.locale
-            shared["keyboard"] = l.keyboard
-            shared["keyboard_variant"] = ""
+            if not shared.get("_keyboard_user_selected"):
+                shared["keyboard"] = l.keyboard
+                shared["keyboard_variant"] = ""
             shared["timezone"] = default_timezone(l.code)
             shared["input_methods"] = l.default_input_methods
             shared["_preferred_input_methods"] = l.default_input_methods
@@ -1348,7 +1364,7 @@ def build_low_battery_page(shared, nav_view, result: PowerProbeResult):
 
     def _continue_after_power_check():
         nav_view.push(
-            _build_secure_boot_or_network_page(shared, nav_view)
+            _build_secure_boot_or_keyboard_page(shared, nav_view)
         )
 
     def _on_recheck():
@@ -1442,7 +1458,7 @@ def build_secure_boot_page(shared, nav_view):
         body.append(label)
 
     def _continue():
-        nav_view.push(_build_network_or_keyboard_page(shared, nav_view))
+        nav_view.push(_build_keyboard_first_page(shared, nav_view))
 
     def _show_reboot_error(message):
         dialog = Adw.MessageDialog(
@@ -2230,7 +2246,7 @@ def build_network_page(shared, nav_view):
 
     def on_next():
         shared["network_preflight_skipped"] = not _is_online()
-        nav_view.push(build_keyboard_page(shared, nav_view))
+        nav_view.push(build_software_page(shared, nav_view))
 
     content.append(
         _nav_box(
@@ -2359,7 +2375,11 @@ def build_keyboard_page(shared, nav_view):
         xalign=0,
     )
     preview_status.add_css_class("dim-label")
-    preview = None
+    preview_status.set_wrap(True)
+    retry = Gtk.Button(label=_("Retry", lang), halign=Gtk.Align.START)
+    retry.set_visible(False)
+    applying = {"timer": 0, "ready": False}
+    navigation = None
 
     def _render_preview_status(layout, variant):
         description = (
@@ -2370,23 +2390,55 @@ def build_keyboard_page(shared, nav_view):
             f"{xkb_choice_id(layout.id, variant.id if variant else '')}"
         )
 
-    def _activate_preview(layout, variant=""):
-        nonlocal preview
-        try:
-            if preview is None:
-                preview = XkbKeyboardPreview(layout, variant=variant)
-            else:
-                preview.set_layout(layout, variant)
-        except KeyboardPreviewError:
-            test_entry.set_sensitive(False)
-            preview_status.set_text(f"⚠ {xkb_choice_id(layout, variant)}")
-            return False
-        test_entry.set_sensitive(True)
-        return True
+    def _stop_verification(*_args):
+        if applying["timer"]:
+            GLib.source_remove(applying["timer"])
+            applying["timer"] = 0
 
-    initial_variant = active_variants[variant_idx]
-    if _activate_preview(selected_layout.id, keyboard_variant):
-        _render_preview_status(selected_layout, initial_variant)
+    def _set_ready(ready):
+        applying["ready"] = ready
+        test_entry.set_sensitive(ready)
+        if navigation is not None:
+            navigation.next_button.set_sensitive(ready)
+
+    def _apply_selection(*_args):
+        _stop_verification()
+        _set_ready(False)
+        retry.set_visible(False)
+        preview_status.set_text(_("Applying keyboard layout…", lang))
+        layout = layouts[layout_dropdown.get_selected()]
+        variant = active_variants[variant_dropdown.get_selected()]
+        variant_id = variant.id if variant is not None else ""
+
+        def failed():
+            preview_status.set_text(_(
+                "The keyboard layout could not be applied. Try again.", lang
+            ))
+            retry.set_visible(True)
+
+        try:
+            signature = apply_keyboard_layout(layout.id, variant_id)
+        except (KeyboardSessionError, KeyboardPreviewError, GLib.Error) as error:
+            print(f"Could not apply keyboard {layout.id}+{variant_id}: {error}", file=sys.stderr)
+            failed()
+            return
+        attempts = 0
+
+        def verify():
+            nonlocal attempts
+            attempts += 1
+            if keyboard_layout_is_active(test_entry.get_display(), signature):
+                applying["timer"] = 0
+                _set_ready(True)
+                _render_preview_status(layout, variant)
+                return False
+            if attempts >= 50:
+                applying["timer"] = 0
+                failed()
+                return False
+            return True
+
+        applying["timer"] = GLib.timeout_add(100, verify)
 
     changing_variant_model = False
 
@@ -2396,14 +2448,13 @@ def build_keyboard_page(shared, nav_view):
         if not 0 <= index < len(layouts):
             return
         layout = layouts[index]
-        if not _activate_preview(layout.id):
-            return
         shared["keyboard"] = layout.id
         shared["keyboard_variant"] = ""
+        shared["_keyboard_user_selected"] = True
         changing_variant_model = True
         _set_variant_model(layout)
         changing_variant_model = False
-        _render_preview_status(layout, None)
+        _apply_selection()
 
     def _on_variant_changed(dropdown, _pspec):
         if changing_variant_model:
@@ -2418,66 +2469,16 @@ def build_keyboard_page(shared, nav_view):
         layout = layouts[layout_index]
         variant = active_variants[variant_index]
         variant_id = variant.id if variant is not None else ""
-        if not _activate_preview(layout.id, variant_id):
-            return
         shared["keyboard"] = layout.id
         shared["keyboard_variant"] = variant_id
-        _render_preview_status(layout, variant)
+        shared["_keyboard_user_selected"] = True
+        _apply_selection()
 
     layout_dropdown.connect("notify::selected", _on_layout_changed)
     variant_dropdown.connect("notify::selected", _on_variant_changed)
 
-    def _insert_preview_text(text):
-        selected, start, end = test_entry.get_selection_bounds()
-        position = test_entry.get_position()
-        if selected:
-            test_entry.delete_text(start, end)
-            position = start
-        position = test_entry.insert_text(text, position)
-        test_entry.set_position(position)
-
-    key_controller = Gtk.EventControllerKey()
-    key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-
-    def _preview_key_pressed(_controller, keyval, keycode, state):
-        if preview is None:
-            return False
-        if keyval in (Gdk.KEY_BackSpace, Gdk.KEY_Escape):
-            if preview.cancel_composition():
-                return True
-        preview.sync_modifiers(
-            shift=bool(state & Gdk.ModifierType.SHIFT_MASK),
-            control=bool(state & Gdk.ModifierType.CONTROL_MASK),
-            alt=bool(state & Gdk.ModifierType.ALT_MASK),
-            super_key=bool(
-                state
-                & (
-                    Gdk.ModifierType.SUPER_MASK
-                    | Gdk.ModifierType.META_MASK
-                    | Gdk.ModifierType.HYPER_MASK
-                )
-            ),
-            caps_lock=bool(state & Gdk.ModifierType.LOCK_MASK),
-        )
-        result = preview.press(keycode)
-        if result.text:
-            _insert_preview_text(result.text)
-        return result.handled
-
-    def _preview_key_released(_controller, _keyval, keycode, _state):
-        if preview is not None:
-            preview.release(keycode)
-
-    key_controller.connect("key-pressed", _preview_key_pressed)
-    key_controller.connect("key-released", _preview_key_released)
-    test_entry.add_controller(key_controller)
-
-    focus_controller = Gtk.EventControllerFocus()
-    focus_controller.connect(
-        "leave",
-        lambda _controller: preview.reset() if preview is not None else None,
-    )
-    test_entry.add_controller(focus_controller)
+    # Normal GTK input is deliberate: this must exercise the same compositor
+    # layout and input path as the Wi-Fi and account password entries.
     test_entry.connect(
         "icon-release",
         lambda entry, position: (
@@ -2495,6 +2496,39 @@ def build_keyboard_page(shared, nav_view):
     form.append(keyboard_chooser)
     form.append(_labeled(_("Test your keyboard here…", lang), test_entry))
     form.append(preview_status)
+    form.append(retry)
+
+    form_area = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        vexpand=True,
+    )
+    form_area.append(clamp_content(form, 720))
+    content.append(form_area)
+
+    def on_next():
+        if not applying["ready"]:
+            return
+        shared["_keyboard_user_selected"] = True
+        if bool(shared.get("_network_page_planned")):
+            nav_view.push(build_network_page(shared, nav_view))
+        else:
+            nav_view.push(build_software_page(shared, nav_view))
+
+    navigation = _nav_box(
+        lang, on_back=lambda: nav_view.pop(), on_next=on_next, stage=0,
+        next_sensitive=False, shared=shared, page_tag="keyboard"
+    )
+    content.append(navigation)
+    _set_page_content(page, content, scroll_body=True)
+    _set_ready(False)
+    page.connect("shown", _apply_selection)
+    page.connect("hidden", _stop_verification)
+    retry.connect("clicked", _apply_selection)
+    return page
+
+
+def _append_input_method_choices(form, shared, lang):
+    """Input-method downloads belong after the physical keyboard and network."""
 
     recommended_methods = _recommended_input_methods(shared)
     if recommended_methods:
@@ -2573,37 +2607,15 @@ def build_keyboard_page(shared, nav_view):
             choice.connect(
                 "toggled", lambda _button: _save_input_methods()
             )
-        monitor.connect(
+        handler = monitor.connect(
             "network-changed",
             lambda _monitor, _available: _render_input_methods(),
         )
+        form.connect("destroy", lambda *_args: monitor.disconnect(handler))
         _render_input_methods()
     else:
         shared["input_methods"] = ()
         shared["_preferred_input_methods"] = ()
-
-    form_area = Gtk.Box(
-        orientation=Gtk.Orientation.VERTICAL,
-        vexpand=True,
-    )
-    form_area.append(clamp_content(form, 720))
-    content.append(form_area)
-
-    def on_next():
-        nav_view.push(build_software_page(shared, nav_view))
-
-    def on_back():
-        nav_view.pop()
-
-    content.append(
-        _nav_box(
-            lang, on_back=on_back, on_next=on_next, stage=0,
-            shared=shared, page_tag="keyboard"
-        )
-    )
-    _set_page_content(page, content, scroll_body=True)
-    return page
-
 
 # ── page 3: Updates and drivers ─────────────────────────────────────────
 
@@ -2683,6 +2695,7 @@ def build_software_page(shared, nav_view):
     multimedia_detail.add_css_class("dim-label")
     options.append(multimedia)
     options.append(multimedia_detail)
+    _append_input_method_choices(options, shared, lang)
     scroll = _scrolled_window(
         vexpand=True, hscrollbar_policy=Gtk.PolicyType.NEVER
     )
@@ -3569,7 +3582,7 @@ def build_storage_strategy_page(shared, nav_view):
             _set_warning(
                 _(
                     "Manual changes are destructive. Existing partition "
-                    "starts are never moved. Plain NTFS can be shrunk only "
+                    "starts are never moved. Plain NTFS/ext4 can be shrunk only "
                     "after strict safety checks; encrypted, mounted or "
                     "unclean volumes are never resized.",
                     lang,
@@ -4208,6 +4221,7 @@ def build_guided_storage_page(shared, nav_view):
             else _set_next(_guided_selection() is not None)
         ),
     )
+    esp_dropdown.connect("notify::selected", lambda *_args: shared.pop("esp_replacement", None))
 
     def _rescan_and_reselect():
         clear_storage_target(shared)
@@ -4230,7 +4244,7 @@ def build_guided_storage_page(shared, nav_view):
             guidance.set_label(str(error))
             _set_next(False)
             return
-        def finish(occupied=False, error=None):
+        def finish(authorization=None, error=None):
             _finish_loading()
             _set_storage_controls(True)
             _set_next(True)
@@ -4239,16 +4253,25 @@ def build_guided_storage_page(shared, nav_view):
             if error is not None:
                 guidance.set_label(str(error))
                 return
-            if occupied:
-                if None in esp_options:
+            def advance():
+                if _guided_selection() != selected:
+                    return
+                shared["esp_replacement"] = authorization
+                shared["guided_extent_id"] = selected.free_extent_id
+                shared["guided_esp_partuuid"] = selected.reused_esp_partuuid
+                shared["guided_storage_preview_model"] = preview
+                shared["_guided_storage_workflow_model"] = workflow
+                nav_view.push(build_user_page(shared, nav_view))
+
+            def back():
+                shared.pop("esp_replacement", None)
+                if _guided_selection() == selected and None in esp_options:
                     esp_dropdown.set_selected(esp_options.index(None))
-                _esp_conflict_dialog(nav_view, lang)
-                return
-            shared["guided_extent_id"] = selected.free_extent_id
-            shared["guided_esp_partuuid"] = selected.reused_esp_partuuid
-            shared["guided_storage_preview_model"] = preview
-            shared["_guided_storage_workflow_model"] = workflow
-            nav_view.push(build_user_page(shared, nav_view))
+
+            if authorization is not None and shared.get("esp_replacement") != authorization:
+                _esp_conflict_dialog(nav_view, lang, preview.reused_esp.identity.path, advance, back)
+            else:
+                advance()
 
         if preview.reused_esp is None:
             finish()
@@ -4259,7 +4282,7 @@ def build_guided_storage_page(shared, nav_view):
             loading.set_visible(True)
             pulse.start()
             requests.start(
-                lambda: probe_esp_occupied(preview.reused_esp,
+                lambda: probe_esp_replacement(preview.reused_esp,
                     development_mode=bool(shared.get("development_mode"))),
                 finish,
             )
@@ -4530,12 +4553,16 @@ def build_advanced_storage_page(shared, nav_view):
     content.append(
         _page_header(
             "Advanced: Manual Partitioning",
-            "Edit one GPT disk. Partition starts are never moved; plain NTFS "
+            "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 "
             "may be shrunk after safety checks.",
             "advanced",
             lang,
         )
     )
+
+    shrink_hint = Gtk.Label(label=_("Btrfs shrinking is not supported.", lang), wrap=True)
+    shrink_hint.add_css_class("dim-label")
+    content.append(shrink_hint)
 
     disk_notice = Gtk.Box(
         orientation=Gtk.Orientation.HORIZONTAL,
@@ -4833,6 +4860,7 @@ def build_advanced_storage_page(shared, nav_view):
 
     def _replace_draft(**changes):
         nonlocal draft
+        shared.pop("esp_replacement", None)
         resize_requests.invalidate()
         draft = replace(draft, **changes)
         shared["manual_storage_selection_model"] = draft
@@ -5177,6 +5205,8 @@ def build_advanced_storage_page(shared, nav_view):
         )
 
     def _resize_block_message(inspection):
+        if inspection.filesystem == "ext4":
+            return inspection.message
         reason = inspection.block_reason
         if reason is NtfsResizeBlockReason.CHECK_REQUIRED:
             return _(
@@ -5252,6 +5282,9 @@ def build_advanced_storage_page(shared, nav_view):
         )
         warning = Gtk.Label(
             label=_(
+                "Shrinking ext4 can cause permanent data loss. Back up important files. "
+                "The minimum size is an estimate; filesystem checks run before and after resizing."
+                if inspection.filesystem == "ext4" else
                 "This operation moves NTFS data and changes the GPT partition "
                 "boundary. A power loss, failing drive, firmware fault or "
                 "filesystem bug can cause permanent data loss. Back up all "
@@ -5265,7 +5298,7 @@ def build_advanced_storage_page(shared, nav_view):
         form.append(warning)
 
         size_heading = Gtk.Label(
-            label=_("New Windows partition size", lang),
+            label=_("Size (MiB)" if inspection.filesystem == "ext4" else "New Windows partition size", lang),
             xalign=0,
         )
         size_heading.add_css_class("heading")
@@ -5286,6 +5319,7 @@ def build_advanced_storage_page(shared, nav_view):
             1,
         )
         size_spin.set_numeric(True)
+        size_spin.update_property([Gtk.AccessibleProperty.LABEL], [_("Size (MiB)", lang)])
         size_spin.set_value(initial_mib)
         size_row.append(size_spin)
         size_row.append(Gtk.Label(label=_("MiB", lang)))
@@ -5308,6 +5342,11 @@ def build_advanced_storage_page(shared, nav_view):
 
         def update_result(value_mib):
             reclaimed = max(0, current_mib - value_mib)
+            if inspection.filesystem == "ext4":
+                result_label.set_label(
+                    _("Planned size: {size}", lang).format(size=_human_size(value_mib * MIB))
+                    + " · " + _("Unallocated · {size}", lang).format(size=_human_size(reclaimed * MIB)))
+                return
             result_label.set_label(
                 _(
                     "Windows: {windows} · New unallocated space: {free}",
@@ -5342,6 +5381,7 @@ def build_advanced_storage_page(shared, nav_view):
 
         acknowledge = Gtk.CheckButton(
             label=_(
+                "I have backed up my data." if inspection.filesystem == "ext4" else
                 "I have backed up my data and understand that shrinking an "
                 "existing Windows partition can cause permanent data loss.",
                 lang,
@@ -5364,6 +5404,8 @@ def build_advanced_storage_page(shared, nav_view):
         dialog.add_response("cancel", _("Cancel", lang))
         if existing is not None:
             dialog.add_response("remove", _("Undo Planned Resize", lang))
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
         dialog.add_response("apply", _("Plan Resize", lang))
         dialog.set_response_appearance(
             "apply", Adw.ResponseAppearance.DESTRUCTIVE
@@ -5408,7 +5450,7 @@ def build_advanced_storage_page(shared, nav_view):
         dialog.connect("response", response)
         dialog.present()
 
-    def _begin_ntfs_resize(partition):
+    def _begin_partition_resize(partition):
         if any(item.is_bitlocker_partition for item in disk.partitions):
             _show_resize_blocked(
                 _("Turn off BitLocker before shrinking", lang),
@@ -5434,7 +5476,8 @@ def build_advanced_storage_page(shared, nav_view):
         def completed(inspection, error):
             if error is not None:
                 _show_resize_blocked(
-                    _("NTFS safety check failed", lang),
+                    _("NTFS safety check failed" if partition.filesystem_type.casefold() == "ntfs"
+                      else "This partition cannot be resized safely", lang),
                     str(error),
                 )
                 _queue_refresh()
@@ -5447,8 +5490,9 @@ def build_advanced_storage_page(shared, nav_view):
             _queue_refresh()
 
         resize_requests.start(
-            lambda: probe_ntfs_resize(
+            lambda: probe_partition_resize(
                 partition.identity.path,
+                filesystem=partition.filesystem_type.casefold(),
                 development_mode=bool(shared.get("development_mode")),
                 current_size_bytes=partition.identity.size_bytes,
             ),
@@ -5569,14 +5613,14 @@ def build_advanced_storage_page(shared, nav_view):
                     secondary_action_label=(
                         _("Change Size", lang)
                         if (
-                            partition.filesystem_type.casefold() == "ntfs"
+                            partition.filesystem_type.casefold() in {"ntfs", "ext4"}
                             and not draft.reinitialize_gpt
                             and not will_delete
                         )
                         else ""
                     ),
                     secondary_callback=(
-                        lambda selected=partition: _begin_ntfs_resize(selected)
+                        lambda selected=partition: _begin_partition_resize(selected)
                     ),
                 )
             )
@@ -5976,7 +6020,7 @@ def build_advanced_storage_page(shared, nav_view):
             if shared.get("manual_storage_preview_model") is not preview:
                 return
 
-            def finish(occupied=False, error=None):
+            def finish(authorization=None, error=None):
                 pulse.stop()
                 loading.set_visible(False)
                 if shared.get("manual_storage_preview_model") is not preview:
@@ -5985,13 +6029,23 @@ def build_advanced_storage_page(shared, nav_view):
                 if error is not None:
                     status.set_label(str(error))
                     return
-                if occupied:
+                def advance():
+                    if shared.get("manual_storage_preview_model") is not preview:
+                        return
+                    shared["esp_replacement"] = authorization
+                    shared["_manual_storage_workflow_model"] = workflow
+                    nav_view.push(build_user_page(shared, nav_view))
+
+                def back():
+                    if shared.get("manual_storage_preview_model") is not preview:
+                        return
                     _replace_draft(reused_esp_partuuid="")
                     _queue_refresh()
-                    _esp_conflict_dialog(nav_view, lang)
-                    return
-                shared["_manual_storage_workflow_model"] = workflow
-                nav_view.push(build_user_page(shared, nav_view))
+
+                if authorization is not None and shared.get("esp_replacement") != authorization:
+                    _esp_conflict_dialog(nav_view, lang, esp.identity.path, advance, back)
+                else:
+                    advance()
 
             esp = next((item for item in disk.partitions
                         if item.identity.partuuid == preview.selection.reused_esp_partuuid), None)
@@ -6003,7 +6057,7 @@ def build_advanced_storage_page(shared, nav_view):
                 loading.set_visible(True)
                 pulse.start()
                 requests.start(
-                    lambda: probe_esp_occupied(esp,
+                    lambda: probe_esp_replacement(esp,
                         development_mode=bool(shared.get("development_mode"))),
                     finish,
                 )
@@ -6484,6 +6538,9 @@ def build_timezone_page(shared, nav_view):
     )
     tz_scroll.set_child(tz_list)
     tz_scroll.add_css_class("installer-list-card")
+    # Clip selected rows and the scrollbar to the card's CSS rounded corners.
+    # ScrolledWindow defaults to visible overflow, unlike the welcome Frame.
+    tz_scroll.set_overflow(Gtk.Overflow.HIDDEN)
 
     search.connect("search-changed", lambda _s: timezone_filter.changed(
         Gtk.FilterChange.DIFFERENT))
@@ -6951,6 +7008,18 @@ def build_summary_page(shared, nav_view):
         storage_lines = _erase_storage_lines(selected_swap_size_mib)
     storage_lines_start = 5
     lines[storage_lines_start:storage_lines_start] = storage_lines
+    authorization = shared.get("esp_replacement")
+    if authorization is not None and (guided_mode or manual_mode):
+        preview = guided_preview if guided_mode else manual_preview
+        esp = None
+        if isinstance(preview, (GuidedStoragePreview, ManualStoragePreview)):
+            esp = next((p for p in preview.disk.partitions
+                        if p.identity.partuuid == authorization.partuuid), None)
+        if esp is not None:
+            lines.append(escape(_(
+                "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; "
+                "the previous AnduinOS boot entry may no longer start the old system.",
+                lang).format(path=esp.identity.path)))
 
     if filesystem == "btrfs":
         selected_compression = BtrfsCompression(shared.get("btrfs_compression", "balanced"))
@@ -6966,6 +7035,8 @@ def build_summary_page(shared, nav_view):
         margin_end=48,
         margin_top=24,
         wrap=True,
+        # Disk identities can contain long tokens without word boundaries.
+        wrap_mode=Pango.WrapMode.WORD_CHAR,
         xalign=0,
     )
     summary_label.set_markup("\n\n".join(lines))
@@ -7068,7 +7139,7 @@ def build_summary_page(shared, nav_view):
         )
         if guided_mode
         else _(
-            "⚠ Listed NTFS resizes will move filesystem data and partition "
+            "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition "
             "boundaries. Listed partitions will be deleted and every listed "
             "new partition will be formatted. Back up important data first; "
             "these partitioning operations cannot be undone.",
@@ -7437,6 +7508,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             "Verify kernel module signatures", lang
         ),
         "install-bootloader": _("Install bootloader", lang),
+        "create-fallback-boot-chain": _("Create fallback boot chain", lang),
         "enroll-secure-boot": _("Schedule MOK enrollment", lang),
         "check-other-disk-systems": _(
             "Check for Windows installations", lang
@@ -7644,6 +7716,11 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         max_width_chars=64,
     )
     secure_boot_notice.add_css_class("warning")
+    enrollment_tutorial = EnrollmentTutorial(secure_boot_notice.get_label(), scrollable=True)
+    enrollment_tutorial.set_visible(False)
+    enrollment_frame = Adw.Clamp(maximum_size=560, tightening_threshold=420)
+    enrollment_frame.set_child(enrollment_tutorial)
+    enrollment_frame.set_visible(False)
     reboot_label = (
         N_("Restart and Enroll Secure Boot Key")
         if plan.platform.secure_boot is SecureBoot.ENABLED
@@ -7661,11 +7738,14 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         wrap_mode=Pango.WrapMode.WORD_CHAR,
         justify=Gtk.Justification.CENTER,
     ))
+    reboot_btn.set_halign(Gtk.Align.CENTER)
+    reboot_btn.set_margin_top(8)
     reboot_btn.set_visible(False)
     result_box.append(result_icon)
     result_box.append(result_label)
     result_box.append(result_sub)
     result_box.append(secure_boot_notice)
+    result_box.append(enrollment_frame)
     result_box.append(reboot_btn)
     result_scroll = _scrolled_window(
         vexpand=True,
@@ -7770,16 +7850,6 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                             lang,
                         )
                     result_sub.set_label(detail)
-                elif plan.platform.secure_boot is SecureBoot.ENABLED:
-                    result_label.set_label(_("Installation Complete", lang))
-                    result_sub.set_label(
-                        _("Remove the installation media and restart your computer", lang)
-                        + _(
-                            "\nOn the blue MOKManager screen choose Enroll "
-                            "MOK → Continue → Yes, password: 123456",
-                            lang,
-                        )
-                    )
                 else:
                     result_label.set_label(_("Installation Complete", lang))
                     result_sub.set_label(_("Remove the installation media and restart your computer", lang))
@@ -7798,7 +7868,14 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                     )
                 secure_boot_notice.set_visible(
                     plan.platform.secure_boot is SecureBoot.ENABLED
+                    and not shared.get("development_mode")
                 )
+                enrollment_tutorial.set_visible(secure_boot_notice.get_visible())
+                enrollment_frame.set_visible(secure_boot_notice.get_visible())
+                if secure_boot_notice.get_visible():
+                    result_box.set_valign(Gtk.Align.START)
+                    result_box.set_spacing(8)
+                    result_icon.set_pixel_size(32)
                 reboot_btn.set_visible(True)
                 reboot_btn.set_sensitive(not shared.get("development_mode"))
                 if shared.get("development_mode"):

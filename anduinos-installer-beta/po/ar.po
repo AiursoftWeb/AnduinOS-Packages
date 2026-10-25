@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "سيؤدي التثبيت الحقيقي إلى إنشاء MOK محلي للآلة. بعد إعادة التشغيل، اختر Enroll MOK → Continue → Yes في MOKManager وأدخل كلمة المرور 123456."
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"في شاشة MOKManager الزرقاء، اختر Enroll MOK → Continue → Yes، كلمة المرور: 123456"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -492,6 +486,12 @@ msgid "Keyboard"
 msgstr "لوحة المفاتيح"
 
 #: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
+msgid "Applying keyboard layout…"
+msgstr "جارٍ تطبيق تخطيط لوحة المفاتيح…"
+
+msgid "The keyboard layout could not be applied. Try again."
+msgstr "تعذّر تطبيق تخطيط لوحة المفاتيح. حاول مرة أخرى."
+
 msgid "Keyboard Layout"
 msgstr "تخطيط لوحة المفاتيح"
 
@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "احتفظ بـ Windows أو الأقسام الأخرى، وأعد استخدام ESP أو أنشئ واحدًا، وصمّم أقسام Root وSwap بأحجام دقيقة."
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "التغييرات اليدوية مدمّرة. لا تُنقل بدايات الأقسام الموجودة مطلقًا. لا يمكن تصغير وحدة تخزين NTFS غير مشفّرة إلا بعد فحوصات أمان صارمة؛ ولا يُعاد تحجيم وحدات التخزين المشفّرة أو المركّبة أو التي لم تُغلق أنظمة ملفاتها بشكل سليم مطلقًا."
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "التغييرات اليدوية مدمّرة. لا تُنقل بدايات الأقسام الموجودة مطلقًا. لا يمكن تصغير وحدة تخزين NTFS/ext4 غير مشفّرة إلا بعد فحوصات أمان صارمة؛ ولا يُعاد تحجيم وحدات التخزين المشفّرة أو المركّبة أو التي لم تُغلق أنظمة ملفاتها بشكل سليم مطلقًا."
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "يُفقد تحديد التخزين يدويًا. عُد راجعها."
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ ستؤدي عمليات تغيير حجم NTFS المدرجة إلى نقل بيانات نظام الملفات وحدود الأقسام. سيتم حذف الأقسام المدرجة وتنسيق كل قسم جديد مدرج. قم بنسخ البيانات المهمة احتياطيًا أولاً؛ لا يمكن التراجع عن عمليات التقسيم هذه."
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ ستؤدي عمليات تغيير حجم NTFS/ext4 المدرجة إلى نقل بيانات نظام الملفات وحدود الأقسام. سيتم حذف الأقسام المدرجة وتنسيق كل قسم جديد مدرج. قم بنسخ البيانات المهمة احتياطيًا أولاً؛ لا يمكن التراجع عن عمليات التقسيم هذه."
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "سيتم حذف أو تنسيق التقسيمات المدرجة صراحةً فقط. تبقى التقسيمات غير المعنية دون تغيير؛ لن يتم تجاوز EFI/BOOT."
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "تحرير قرص GPT واحد. لا تُنقل بدايات الأقسام مطلقًا؛ يمكن تقليص وحدة تخزين NTFS غير مشفّرة بعد فحوصات الأمان."
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "تحرير قرص GPT واحد. لا تُنقل بدايات الأقسام مطلقًا؛ يمكن تقليص وحدة تخزين NTFS/ext4 غير مشفّرة بعد فحوصات الأمان."
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "قد يؤدي تقليص ext4 إلى فقدان دائم للبيانات. انسخ الملفات المهمة احتياطياً. الحد الأدنى للحجم تقديري؛ يُفحص نظام الملفات قبل تغيير الحجم وبعده."
+
+msgid "I have backed up my data."
+msgstr "لقد نسخت بياناتي احتياطياً."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "تقليص Btrfs غير مدعوم."
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"
@@ -1934,13 +1943,9 @@ msgstr "يمكنك متابعة إعداد التثبيت. يجب أن ينجح 
 msgid "Firmware check complete"
 msgstr "اكتمل فحص البرنامج الثابت"
 
-#: src/pages.py
-msgid "A separate EFI System Partition is required"
-msgstr "يلزم قسم نظام EFI منفصل"
 
-#: src/pages.py
-msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
-msgstr "يحتوي قسم ESP هذا بالفعل على EFI/AnduinOS. أنشئ قسم ESP جديدًا في المساحة غير المخصصة (512 MiB على الأقل)، أو اختر قسم ESP آخر. لن تتم الكتابة فوق التثبيت الحالي. يمكن لقائمة GRUB في النظام الجديد تشغيل النظام الحالي."
+
+
 
 #: src/pages.py
 msgid "Checking EFI System Partition…"
@@ -1966,9 +1971,7 @@ msgstr "قسم ESP مشترك"
 msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
 msgstr "إنشاء قسم ESP جديد وتهيئته بنظام FAT32 في مساحة غير مخصصة (512 MiB على الأقل). تبقى أقسام ESP الحالية دون تغيير."
 
-#: src/pages.py
-msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
-msgstr "إعادة استخدام قسم ESP سليم ذي مساحة فارغة كافية، دون تهيئته. تُحفظ ملفات إقلاع الأنظمة الأخرى. إذا كان EFI/AnduinOS موجودًا بالفعل، فاختر قسم ESP آخر أو أنشئ قسمًا جديدًا."
+
 
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
@@ -1997,3 +2000,22 @@ msgstr "القائمة الرئيسية"
 #: src/pages.py
 msgid "Retry"
 msgstr "إعادة المحاولة"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "استبدال ملفات إقلاع AnduinOS الحالية؟"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "أعِد استخدام قسم ESP سليم تتوفر فيه مساحة خالية كافية، دون تهيئته. ستُحفظ ملفات الإقلاع الخاصة بالأنظمة الأخرى. إذا كان EFI/AnduinOS موجودًا بالفعل، فيتطلب استبداله تأكيدًا صريحًا. لإبقاء كلا التثبيتين قابلين للإقلاع بشكل مستقل، اختر قسم ESP آخر أو أنشئ قسمًا جديدًا."
+
+msgid "Use this ESP and replace"
+msgstr "استخدم قسم ESP هذا واستبدل الملفات"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "سيُستبدل EFI/AnduinOS على {path}. ستُنسخ ملفات الإقلاع القديمة احتياطيًا؛ وقد لا يعود إدخال إقلاع AnduinOS السابق قادرًا على بدء تشغيل النظام القديم."
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "يحتوي {path} بالفعل على ملفات إقلاع AnduinOS. سيؤدي المتابعة إلى استبدال EFI/AnduinOS لبدء التثبيت الجديد. ستُحفظ ملفات إقلاع Windows والأنظمة الأخرى؛ ولن تتم تهيئة قسم ESP هذا.\n\nلا يؤدي هذا الاستبدال إلى حذف قسم النظام القديم، لكن قد يتعذر بدء تشغيل AnduinOS القديم عبر إدخال الإقلاع الحالي. لإبقاء كلا التثبيتين، ارجع وأنشئ قسم ESP منفصلًا (بحجم لا يقل عن 512 MiB). ستُنسخ ملفات الإقلاع القديمة احتياطيًا قبل استبدالها."
+
+#: src/pages.py
+msgid "Create fallback boot chain"
+msgstr "إنشاء سلسلة إقلاع احتياطية"

@@ -32,13 +32,20 @@ and constructs every command itself.
 - Btrfs compression: the automatic storage configuration page offers no
   compression, fast (Zstd 1), balanced (Zstd 3, default), and save space
   (Zstd 6). The selected preset is an allowlisted field in installation plan
-  schema 17 and appears in the confirmation summary. All canonical subvolume
+  schema 18 and appears in the confirmation summary. All canonical subvolume
   mounts apply it before system files are copied, and fstab persists the same
   choice. Advanced manual partitioning exposes the same presets below the
   planned partitions when a Btrfs Root partition exists, and retains the
   selection when switching filesystems or revisiting the page.
   Other filesystem types do not expose or apply Btrfs compression.
   Changing the choice later affects newly written data, not existing extents.
+- Existing AnduinOS EFI files: reusing an occupied ESP requires explicit
+  confirmation, bound to its PARTUUID, FAT UUID and old vendor-tree SHA-256.
+  Schema 18 carries this optional authorization, not arbitrary paths or commands.
+  The executor verifies and backs up the old vendor tree before storage writes,
+  saves recovery files in the installed system, and revalidates immediately
+  before replacing only `EFI/AnduinOS`. The ESP is never formatted. Use separate
+  ESPs to keep two AnduinOS installations independently bootable.
 - Windows boot discovery: after installing the AnduinOS bootloader, inspect
   EFI System Partitions on both the target disk and other disks. Read the
   verified target ESP through its existing mount; inspect other unmounted
@@ -314,12 +321,13 @@ rounded visual boundary and obscure whether the card itself is active.
   makes the GRUB menu visible while leaving the first AnduinOS entry as the
   default. `os-prober`, foreign Windows volumes, foreign ESP writes and
   firmware changes are not involved.
-  External erase-disk targets additionally receive a signed direct
-  `EFI/BOOT` chain on their newly formatted ESP so they remain bootable after
-  moving to firmware with no AnduinOS NVRAM entry. The immutable plan records
-  and privileged preflight revalidates external-disk status; coexistence and
-  manual shared-ESP modes never receive this fallback. The chain deliberately
-  excludes shim's NVRAM-registration fallback to avoid the #422 reset loop.
+  Any newly created ESP receives a signed direct `EFI/BOOT` chain, including
+  erase-disk, guided and manual layouts on internal or external disks.
+  Reused ESPs preserve their fallback files. The plan, write set and privileged
+  validation all use the new-partition declaration, never directory contents,
+  to authorize this write. A separate progress step copies and verifies the
+  chain before MOK enrollment. It excludes shim's NVRAM-registration fallback
+  to avoid the #422 reset loop.
   Destructive boot testing remains part of the VM matrix milestone.
 - Milestone 4 — implementation complete: signed shim/GRUB, machine-local MOK
   generation, explicit DKMS signing, idempotent enrollment scheduling and
@@ -447,7 +455,16 @@ rounded visual boundary and obscure whether the card itself is active.
   dry run immediately before writing, never passes a force option, shrinks the
   filesystem before its GPT tail, then re-probes and verifies the unchanged
   PARTUUID, number and start plus the exact declared size before creating any
-  new partition. ext4, Btrfs and every other filesystem remain non-resizable.
+  new partition. The same declarative pipeline now supports ordinary offline
+  ext4 with 4 KiB blocks and an internal journal. Its read-only probe uses
+  `dumpe2fs -h`, `e2fsck -f -n`, and `resize2fs -P`; the minimum is an estimate
+  with conservative headroom, not a dry-run guarantee. Before writes, fresh
+  inventory and the superblock must match the preserved identity. Within the
+  confirmed destructive boundary, `e2fsck -f -p` must return 0 or 1, followed
+  by `resize2fs` without force, a read-only fsck, and actual UUID/size checks.
+  A failed filesystem operation never authorizes shrinking the GPT boundary.
+  Btrfs and every other filesystem remain non-resizable; encryption, LVM,
+  RAID, mounted filesystems and unsupported ext4 features are refused.
   The same bounded manual editor offers Btrfs, ext4, XFS and F2FS for a newly
   formatted root. Btrfs alone creates the canonical AnduinOS subvolumes and
   enables Disk Snapshots Manager; ext4, XFS and F2FS use one conventional root
@@ -463,6 +480,11 @@ rounded visual boundary and obscure whether the card itself is active.
   release matrices exist.
   Unit and GTK development-mode interaction gates pass; real Windows and
   interrupted-resize VM qualification remains mandatory before release.
+  The rootless ext4/GPT sparse-image regression checks file hashes, symlinks,
+  UUIDs, unchanged starts and neighbouring partitions, then creates a new
+  partition in the released tail. The ISO matrix additionally declares a
+  96 GiB ext4 A → shrink to 40 GiB → install/boot B → chainload/boot A case;
+  it must pass on a rebuilt ISO before claiming end-to-end qualification.
 - Final release gate: complete the VM matrix before promoting and renaming the
   native installer package.
 

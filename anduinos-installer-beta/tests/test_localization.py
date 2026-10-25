@@ -51,6 +51,7 @@ class LocalizationTests(unittest.TestCase):
             "finish and fully shut down Windows before trying again."
         )
         inspection = SimpleNamespace(
+            filesystem="ntfs",
             block_reason=NtfsResizeBlockReason.CHECK_REQUIRED,
             message="Run chkdsk /f and please try again, or see option -f.",
         )

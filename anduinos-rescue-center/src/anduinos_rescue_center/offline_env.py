@@ -109,7 +109,10 @@ def opened_system(
                     mounts.append((destination, False))
             if esp:
                 destination = _mount_directory(root, "boot/efi")
-                _checked_mount(run, ["mount", "-t", "vfat", "-o", "rw", "--", esp, str(destination)])
+                # FAT permissions come from mount options. The signing verifier
+                # must see a root-owned ESP without group/other write access.
+                _checked_mount(run, ["mount", "-t", "vfat", "-o", "rw,uid=0,gid=0,umask=0077",
+                                     "--", esp, str(destination)])
                 mounts.append((destination, False))
             for source in ("dev", "sys"):
                 destination = _mount_directory(root, source)

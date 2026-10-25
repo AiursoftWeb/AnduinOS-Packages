@@ -16,7 +16,7 @@ from .validation import validate_plan
 
 
 @dataclass(frozen=True)
-class NtfsResizeCommandPlan:
+class PartitionResizeCommandPlan:
     target_reference_id: str
     disk: str
     device: str
@@ -24,6 +24,7 @@ class NtfsResizeCommandPlan:
     original_size_bytes: int
     target_size_bytes: int
     target_end_bytes: int
+    filesystem: GraphFilesystem = GraphFilesystem.NTFS
 
 
 @dataclass(frozen=True)
@@ -32,7 +33,7 @@ class StorageCommandPlan:
     format: tuple[tuple[str, ...], ...]
     devices: dict[str, str]
     deactivate_swap_devices: tuple[str, ...] = ()
-    ntfs_resizes: tuple[NtfsResizeCommandPlan, ...] = ()
+    partition_resizes: tuple[PartitionResizeCommandPlan, ...] = ()
 
 
 def partition_path(disk: str, number: int) -> str:
@@ -336,9 +337,10 @@ def build_manual_storage_commands(
             in delete_references
         )
     )
-    ntfs_resizes = tuple(
-        NtfsResizeCommandPlan(
+    partition_resizes = tuple(
+        PartitionResizeCommandPlan(
             target_reference_id=target_id,
+            filesystem=declaration.filesystem,
             disk=disk_path,
             device=existing_by_reference[target_id].identity.path,
             partition_number=existing_by_reference[target_id].identity.number,
@@ -357,7 +359,7 @@ def build_manual_storage_commands(
         format=format_commands,
         devices=devices,
         deactivate_swap_devices=deactivate_swap_devices,
-        ntfs_resizes=ntfs_resizes,
+        partition_resizes=partition_resizes,
     )
 
 

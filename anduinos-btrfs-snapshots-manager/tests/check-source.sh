@@ -9,6 +9,9 @@ for catalog in "$ROOT"/po/*.po; do
 done
 
 factory_messages=(
+    "Delete all snapshot history"
+    "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points."
+    "Restore all users’ files and settings to their initial state."
     "Delete Factory Recovery Point?"
     "Delete and Disable Factory Recovery"
     "Deleting factory recovery point…"

@@ -1080,7 +1080,7 @@ impl SnapshotPage {
         let Some(parent) = self.parent() else {
             return;
         };
-        let (dialog, erase_home) =
+        let (dialog, erase_home, purge_history) =
             super::factory_reset::confirmation(&parent, factory_home_available);
         let weak = self.downgrade();
         let id = item.id.clone();
@@ -1088,13 +1088,17 @@ impl SnapshotPage {
             if response == "reset"
                 && let Some(page) = weak.upgrade()
             {
-                page.schedule_factory_reset(id.clone(), erase_home.is_active());
+                page.schedule_factory_reset(
+                    id.clone(),
+                    erase_home.is_active(),
+                    purge_history.is_active(),
+                );
             }
         });
         dialog.present();
     }
 
-    fn schedule_factory_reset(&self, id: String, reset_home: bool) {
+    fn schedule_factory_reset(&self, id: String, reset_home: bool, purge_history: bool) {
         let Some(parent) = self.parent() else {
             return;
         };
@@ -1105,7 +1109,11 @@ impl SnapshotPage {
             move || {
                 let client = SnapshotsManagerHelperClient::new()?;
                 client.check_factory_reset_readiness(id.clone(), reset_home)?;
-                let result = client.schedule_factory_reset(id, reset_home)?;
+                let result = if purge_history {
+                    client.schedule_factory_reset_with_history_cleanup(id)?
+                } else {
+                    client.schedule_factory_reset(id, reset_home)?
+                };
                 if !result.0 {
                     anyhow::bail!(result.1);
                 }

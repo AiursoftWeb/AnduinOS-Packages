@@ -159,6 +159,14 @@ class StorageGraph:
     operations: tuple[StorageGraphOperation, ...]
     requested_capabilities: tuple[StorageCapability, ...]
 
+    @property
+    def creates_esp(self) -> bool:
+        """The selected ESP is a new partition, not a reused filesystem."""
+        return len(self.boot_targets) == 1 and any(
+            item.partition_id == self.boot_targets[0].efi_filesystem_id
+            for item in self.partitions
+        )
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "schema_version": self.schema_version,

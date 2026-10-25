@@ -12,7 +12,7 @@ from unittest.mock import patch
 
 from installer_core.command import CommandRunner
 from installer_core.ntfs_resize import NTFS_RESIZE
-from installer_core.storage_commands import NtfsResizeCommandPlan
+from installer_core.storage_commands import PartitionResizeCommandPlan
 from installer_core.storage_steps import PrepareStorageStep
 
 
@@ -34,7 +34,7 @@ class PartedShrinkTests(unittest.TestCase):
                 return json.loads(result.stdout)["partitiontable"]
 
             before = table()
-            resize = NtfsResizeCommandPlan(
+            resize = PartitionResizeCommandPlan(
                 target_reference_id="windows", disk=str(image),
                 device="not-a-real-ntfs-device", partition_number=1,
                 original_size_bytes=99 * 1024**2,
@@ -66,12 +66,12 @@ class PartedShrinkTests(unittest.TestCase):
                 return subprocess.CompletedProcess(command, 0, "", "")
 
             step = PrepareStorageStep(SimpleNamespace(run=run))
-            plan = SimpleNamespace(commands=SimpleNamespace(ntfs_resizes=(resize,)))
+            plan = SimpleNamespace(commands=SimpleNamespace(partition_resizes=(resize,)))
             context = SimpleNamespace(log=lambda _message: None)
             with patch("installer_core.storage_steps.inspect_ntfs_resize_with_runner",
                        return_value=SimpleNamespace(safe=True)), \
                     patch.object(step, "_verify_resized_partition_geometry") as verify:
-                step._execute_ntfs_resizes(context, plan)
+                step._execute_partition_resizes(context, plan)
                 verify.assert_called_once_with(context, resize)
             after = table()
             expected = dict(before["partitions"][0], size=resize.target_size_bytes // 512)

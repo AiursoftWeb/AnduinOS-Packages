@@ -94,6 +94,9 @@ def run_command(
     environment = os.environ.copy()
     environment["LC_ALL"] = "C"
     environment["LANG"] = "C"
+    if command and command[0] == "apt-get":
+        # The privileged GUI helper has no terminal for debconf questions.
+        environment["DEBIAN_FRONTEND"] = "noninteractive"
     return subprocess.run(
         command,
         input=stdin,
@@ -349,6 +352,34 @@ def repair_dkms(
 
 
 def execute(action: str, run: Run = run_command) -> OperationResult:
+    if action in {"install-bootloader", "repair-bootloader", "repair-dkms"}:
+        from .grub import deploy, install_packages
+        from .decision import assess_action
+        from .inspect import collect_facts
+        preflight = assess_action(action, collect_facts())
+        if not preflight.allowed:
+            result = OperationResult(action)
+            result.steps["prerequisites"] = StepResult("failed", "\n".join(
+                blocker.reason for blocker in preflight.blockers))
+            return result
+        if action == "repair-dkms":
+            return repair_dkms(run)
+        if action == "install-bootloader":
+            return install_packages(run)
+        result = OperationResult(action)
+        try:
+            deploy(CallableRunner(run))
+            result.steps["bootloader"] = StepResult("success", "Signed AnduinOS GRUB deployed")
+        except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+            result.steps["bootloader"] = StepResult("failed", str(error))
+        return result
+    if action in {"sync-defaults", "repair-defaults"}:
+        from .defaults import sync_defaults
+        return sync_defaults(run, allow_legacy=action == "repair-defaults",
+                             repair_config=action == "repair-defaults")
+    if action in {"prepare-identity", "regenerate-identity"}:
+        from .identity import manage_identity
+        return manage_identity(action, run)
     if action == "prepare":
         from .boot_chain import prepare_boot_chain
 
@@ -363,8 +394,6 @@ def execute(action: str, run: Run = run_command) -> OperationResult:
         result = prepare(run)
         result.steps["boot_chain"] = StepResult("success")
         return result
-    if action == "repair-dkms":
-        return repair_dkms(run)
     raise ValueError(f"unsupported action: {action}")
 
 
@@ -372,9 +401,23 @@ def helper_main(arguments: list[str]) -> int:
     if os.geteuid() != 0:
         print(json.dumps({"schema": 1, "error": "root-required"}))
         return 77
-    if len(arguments) != 1 or arguments[0] not in {"prepare", "repair-dkms"}:
+    if len(arguments) != 1 or arguments[0] not in {
+        "prepare", "repair-dkms", "prepare-identity", "regenerate-identity", "sync-defaults", "repair-defaults",
+        "install-bootloader", "repair-bootloader"
+    }:
         print(json.dumps({"schema": 1, "error": "unsupported-action"}))
         return 64
+
+    # APT owns package locks while its hooks take the signing lock. Holding
+    # that lock across APT here would deadlock against our own child hooks.
+    if arguments == ["install-bootloader"]:
+        try:
+            result = execute(arguments[0])
+            print(result.to_json())
+            return 0 if result.ok else 1
+        except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+            print(json.dumps({"schema": 1, "error": str(error)}))
+            return 1
 
     LOCK_FILE.parent.mkdir(parents=True, exist_ok=True)
     with LOCK_FILE.open("a+", encoding="utf-8") as lock:
@@ -385,7 +428,7 @@ def helper_main(arguments: list[str]) -> int:
             return 75
         try:
             result = execute(arguments[0])
-        except (OSError, subprocess.TimeoutExpired, ValueError) as error:
+        except (OSError, subprocess.TimeoutExpired, ValueError, KeyError, TypeError) as error:
             print(json.dumps({"schema": 1, "error": str(error)}))
             return 1
         print(result.to_json())

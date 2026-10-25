@@ -220,6 +220,16 @@ def _build_manual_write_set_from_disk(
                 )
             )
             continue
+        if operation.action is StorageGraphAction.WRITE_FALLBACK_BOOT_FILES:
+            operations.append(StorageWriteOperation(
+                action=action,
+                target_kind=StorageObjectKind.EFI_SYSTEM_PARTITION,
+                target_id=target_id,
+                display_path=esp_path,
+                destructive=False,
+                details=(("path", boot_target.fallback_path),),
+            ))
+            continue
         if operation.action is StorageGraphAction.UPDATE_NVRAM:
             operations.append(
                 StorageWriteOperation(

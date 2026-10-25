@@ -442,6 +442,8 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
         kind: PersonalSnapshotKind,
         _operation_lock: StoreLock,
     ) -> Result<PersonalSnapshotRecord, PersonalError> {
+        crate::history_cleanup::ensure_creation_allowed(&self.store_root)
+            .map_err(PersonalError::invalid)?;
         let id = PersonalSnapshotId::new();
         let mut record = PersonalSnapshotRecord {
             schema_version: PERSONAL_SNAPSHOT_SCHEMA_VERSION,
@@ -700,6 +702,8 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
         }
         let (snapshot_uuid, snapshot_parent_uuid) = self.snapshot_identity(received)?;
         let _operation_lock = StoreLock::acquire(&self.personal_root().join("operation.lock"))?;
+        crate::history_cleanup::ensure_creation_allowed(&self.store_root)
+            .map_err(PersonalError::invalid)?;
         let id = PersonalSnapshotId::new();
         let mut record = PersonalSnapshotRecord {
             schema_version: PERSONAL_SNAPSHOT_SCHEMA_VERSION,
@@ -756,7 +760,7 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
     ) -> Result<(), PersonalError> {
         ensure_supported(layout)?;
         let _operation_lock = StoreLock::acquire(&self.personal_root().join("operation.lock"))?;
-        self.delete_locked(id, false)
+        self.delete_locked(id, false, false)
     }
 
     /// Explicitly authorized factory deletion, separate from normal/batch cleanup.
@@ -772,13 +776,24 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
                 "The selected snapshot is not a factory recovery point",
             ));
         }
-        self.delete_locked(id, true)
+        self.delete_locked(id, true, false)
+    }
+
+    pub(crate) fn delete_factory_reset_history(
+        &self,
+        layout: &LayoutReport,
+        id: PersonalSnapshotId,
+    ) -> Result<(), PersonalError> {
+        ensure_supported(layout)?;
+        let _operation_lock = StoreLock::acquire(&self.personal_root().join("operation.lock"))?;
+        self.delete_locked(id, false, true)
     }
 
     fn delete_locked(
         &self,
         id: PersonalSnapshotId,
         allow_protected: bool,
+        purge_history: bool,
     ) -> Result<(), PersonalError> {
         // Match system snapshot deletion: never remove a pending restore target.
         // Test/import stores may not yet have a transaction directory.
@@ -796,7 +811,7 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
             .map_err(|error| PersonalError::invalid(error.message))?;
         if pending.is_some_and(|transaction| {
             transaction.factory_home_snapshot_id == Some(id)
-                || transaction.fallback_home_snapshot_id == Some(id)
+                || (transaction.fallback_home_snapshot_id == Some(id) && !purge_history)
         }) {
             return Err(PersonalError::new(
                 PersonalErrorCode::Protected,
@@ -811,11 +826,20 @@ impl<R: CommandRunner> PersonalSnapshotEngine<R> {
                 "The factory Home baseline cannot be deleted",
             ));
         }
-        if !allow_protected && !record.can_delete() {
+        if !allow_protected && !purge_history && !record.can_delete() {
             return Err(PersonalError::new(
                 PersonalErrorCode::Protected,
                 "Personal snapshot is protected",
             ));
+        }
+        if purge_history {
+            crate::history_cleanup::validate_consent(&self.store_root)
+                .map_err(PersonalError::invalid)?;
+            if record.kind == PersonalSnapshotKind::Factory {
+                return Err(PersonalError::invalid(
+                    "History cleanup must preserve the factory Home snapshot",
+                ));
+            }
         }
         let snapshot = self.snapshot_path(id);
         let snapshot_exists = match fs::symlink_metadata(&snapshot) {

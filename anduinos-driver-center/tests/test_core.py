@@ -365,6 +365,23 @@ driver   : nvidia-driver-595-server-open - distro non-free
         self.assertFalse(state.module_available)
         self.assertEqual(state.status, XboxStatus.MODULE_MISSING)
 
+    def test_xbox_accepts_previous_enrolled_certificate_after_identity_rotation(self):
+        from anduinos_driver_center.core import SecureBootState
+
+        secure = SecureBootState(True, True, True, True, "aa12", enrolled_certificate_serials=("bb34",))
+        responses = {
+            ("modinfo", "-F", "filename", "hid-xpadneo"):
+                subprocess.CompletedProcess([], 0, "/lib/modules/hid-xpadneo.ko\n", ""),
+            ("modinfo", "hid-xpadneo"): subprocess.CompletedProcess([], 0, "sig_key: BB:34\n", ""),
+            ("lsmod",): subprocess.CompletedProcess([], 0, "hid_xpadneo 40960 0\n", ""),
+        }
+        state = xbox_state(secure, FakeRunner(responses, installed={"anduinos-xbox-controller-driver"}))
+        self.assertFalse(state.signature_matches)
+        self.assertEqual(state.status, XboxStatus.LOADED)
+        responses[("lsmod",)] = subprocess.CompletedProcess([], 0, "", "")
+        unloaded = xbox_state(secure, FakeRunner(responses, installed={"anduinos-xbox-controller-driver"}))
+        self.assertEqual(unloaded.status, XboxStatus.READY)
+
     def test_xbox_reports_pending_enrollment_separately(self):
         from anduinos_driver_center.core import SecureBootState
 

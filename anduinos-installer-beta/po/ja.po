@@ -36,13 +36,7 @@ msgstr ""
 "\n"
 "実際のインストールでは、マシン固有の MOK が作成されます。再起動後、MOKManager で [MOK の登録] → [続行] → [はい] を選択し、パスワードとして 123456 を入力してください。"
 
-#: src/pages.py:7185
-msgid ""
-"\n"
-"On the blue MOKManager screen choose Enroll MOK → Continue → Yes, password: 123456"
-msgstr ""
-"\n"
-"青い MOKManager画面で [MOK の登録] → [続行] → [はい] を選択し、パスワードは 123456 です"
+
 
 #: src/pages.py:6191
 msgid "; sudo does not require a password"
@@ -492,6 +486,12 @@ msgid "Keyboard"
 msgstr "キーボード"
 
 #: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
+msgid "Applying keyboard layout…"
+msgstr "キーボードレイアウトを適用しています…"
+
+msgid "The keyboard layout could not be applied. Try again."
+msgstr "キーボードレイアウトを適用できませんでした。もう一度お試しください。"
+
 msgid "Keyboard Layout"
 msgstr "キーボードレイアウト"
 
@@ -1376,8 +1376,8 @@ msgid "Keep Windows or other partitions, reuse or create an ESP, and design Root
 msgstr "Windows または他のパーティションを保持し、ESP を再利用または作成して、Root と Swap パーティションのサイズを正確に設計します。"
 
 #: src/pages.py:3230
-msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
-msgstr "手動での変更は破壊的な操作です。既存のパーティションの開始位置は移動されません。暗号化されていない NTFS は、厳格な安全性チェックに合格した場合にのみ縮小できます。暗号化されている、マウントされている、または正常に終了していないボリュームのサイズは変更されません。"
+msgid "Manual changes are destructive. Existing partition starts are never moved. Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, mounted or unclean volumes are never resized."
+msgstr "手動での変更は破壊的な操作です。既存のパーティションの開始位置は移動されません。暗号化されていない NTFS/ext4 は、厳格な安全性チェックに合格した場合にのみ縮小できます。暗号化されている、マウントされている、または正常に終了していないボリュームのサイズは変更されません。"
 
 #: src/pages.py:3410
 msgid "Install Alongside Automatically"
@@ -1742,8 +1742,8 @@ msgid "Manual storage selection is missing. Return and review it."
 msgstr "手動ストレージ選択が欠落しています。戻って確認してください"
 
 #: src/pages.py:6496
-msgid "⚠ Listed NTFS resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
-msgstr "⚠ 一覧に示されたNTFSのサイズ変更により、ファイルシステムデータとパーティションの境界が移動します。一覧に示されたパーティションは削除され、一覧に示されたすべての新しいパーティションはフォーマットされます。まず重要なデータをバックアップしてください。これらのパーティション操作は取り消せません。"
+msgid "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition boundaries. Listed partitions will be deleted and every listed new partition will be formatted. Back up important data first; these partitioning operations cannot be undone."
+msgstr "⚠ 一覧に示されたNTFS/ext4のサイズ変更により、ファイルシステムデータとパーティションの境界が移動します。一覧に示されたパーティションは削除され、一覧に示されたすべての新しいパーティションはフォーマットされます。まず重要なデータをバックアップしてください。これらのパーティション操作は取り消せません。"
 
 #: src/pages.py:6606
 msgid "Apply this manual disk layout?"
@@ -1767,8 +1767,17 @@ msgid "Only the explicitly listed partitions will be deleted or formatted. Uninv
 msgstr "明示的にリストされたパーティションのみが削除またはフォーマットされます。関係のないパーティションは変更されず、EFI/BOOTは上書きされません"
 
 #: src/pages.py:4072
-msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS may be shrunk after safety checks."
-msgstr "1つの GPT ディスクを編集します。パーティションの開始位置は移動しません。暗号化されていない NTFS は、安全性チェックに合格した場合に縮小できます。"
+msgid "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be shrunk after safety checks."
+msgstr "1つの GPT ディスクを編集します。パーティションの開始位置は移動しません。暗号化されていない NTFS/ext4 は、安全性チェックに合格した場合に縮小できます。"
+
+msgid "Shrinking ext4 can cause permanent data loss. Back up important files. The minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr "ext4 の縮小によりデータが永久に失われる可能性があります。重要なファイルをバックアップしてください。最小容量は推定値です。縮小の前後にファイルシステムを検査します。"
+
+msgid "I have backed up my data."
+msgstr "データをバックアップしました。"
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Btrfs の縮小には対応していません。"
 
 #: src/pages.py:5119
 msgid "XFS (classic, scalable)"
@@ -1934,13 +1943,9 @@ msgstr "インストールの設定を続けられます。ディスクに変更
 msgid "Firmware check complete"
 msgstr "ファームウェアの確認が完了しました"
 
-#: src/pages.py
-msgid "A separate EFI System Partition is required"
-msgstr "個別の EFI システムパーティションが必要です"
 
-#: src/pages.py
-msgid "This ESP already contains EFI/AnduinOS. Create a new ESP in unallocated space (at least 512 MiB), or select another ESP. The existing installation will not be overwritten. The new system's GRUB menu can start the existing system."
-msgstr "この ESP には既に EFI/AnduinOS が存在します。未割り当て領域に新しい ESP（512 MiB 以上）を作成するか、別の ESP を選択してください。既存のインストールは上書きされません。新しいシステムの GRUB メニューから既存のシステムを起動できます。"
+
+
 
 #: src/pages.py
 msgid "Checking EFI System Partition…"
@@ -1966,9 +1971,7 @@ msgstr "共有 ESP"
 msgid "Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). Existing ESPs stay unchanged."
 msgstr "未割り当て領域に新しい FAT32 ESP を作成してフォーマットします（512 MiB 以上）。既存の ESP は変更しません。"
 
-#: src/pages.py
-msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, choose another ESP or create a new one."
-msgstr "十分な空き容量のある正常な ESP を、フォーマットせずに再利用します。他のシステムの起動ファイルは保持します。EFI/AnduinOS が既に存在する場合は、別の ESP を選択するか新しく作成してください。"
+
 
 #: src/pages.py
 msgid "Both options install boot files in EFI/AnduinOS and put the new AnduinOS UEFI boot entry first. Detected supported systems get entries in the new GRUB menu; their files and menus are not changed."
@@ -1997,3 +2000,22 @@ msgstr "メインメニュー"
 #: src/pages.py
 msgid "Retry"
 msgstr "再試行"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "既存の AnduinOS ブートファイルを置き換えますか？"
+
+msgid "Reuse a healthy ESP with enough free space, without formatting it. Other systems' boot files are preserved. If EFI/AnduinOS already exists, replacement requires explicit confirmation. To keep both installations independently bootable, choose another ESP or create a new one."
+msgstr "十分な空き容量がある正常な ESP を、フォーマットせずに再利用します。他のシステムのブートファイルは保持されます。EFI/AnduinOS がすでに存在する場合、置き換えには明示的な確認が必要です。両方のインストール環境をそれぞれ独立して起動できるようにするには、別の ESP を選択するか、新しく作成してください。"
+
+msgid "Use this ESP and replace"
+msgstr "この ESP を使用して置き換える"
+
+msgid "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the previous AnduinOS boot entry may no longer start the old system."
+msgstr "{path} の EFI/AnduinOS を置き換えます。古いブートファイルはバックアップされます。以前の AnduinOS のブートエントリーから、古いシステムを起動できなくなる可能性があります。"
+
+msgid "{path} already contains AnduinOS boot files. Continuing will replace EFI/AnduinOS to start the new installation. Windows and other systems' boot files will be preserved; this ESP will not be formatted.\n\nThis replacement does not delete the old system partition, but the old AnduinOS may no longer start through its existing boot entry. To keep both installations, go back and create a separate ESP (at least 512 MiB). Old boot files will be backed up before replacement."
+msgstr "{path} にはすでに AnduinOS のブートファイルが含まれています。続行すると、新しいインストール環境を起動するために EFI/AnduinOS が置き換えられます。Windows や他のシステムのブートファイルは保持され、この ESP はフォーマットされません。\n\nこの置き換えによって古いシステムのパーティションが削除されることはありませんが、既存のブートエントリーから古い AnduinOS を起動できなくなる可能性があります。両方のインストール環境を保持するには、戻って別の ESP（512 MiB 以上）を作成してください。置き換えの前に古いブートファイルがバックアップされます。"
+
+#: src/pages.py
+msgid "Create fallback boot chain"
+msgstr "フォールバックブートチェーンを作成"
