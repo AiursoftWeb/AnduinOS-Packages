@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -117,8 +118,20 @@ def target(volume_uuid=None, *, if_present=False):
     selected = {"schema": 1, "root_uuid": root_uuid, "volume_uuid": read_uuid(info["UUID"])}
     if binding is not None and binding != selected:
         raise RuntimeError("Recovery volume belongs to another installation")
-    if run("findmnt", "-n", "-S", device, check=False):
-        raise RuntimeError("Unmount the recovery volume before deploying it")
+    mounts = run("findmnt", "--json", "--output", "TARGET", "--source", device, check=False)
+    if mounts:
+        paths = [entry["target"] for entry in json.loads(mounts)["filesystems"]]
+        commands = "\n".join(f"  sudo umount -- {shlex.quote(path)}" for path in paths)
+        raise RuntimeError(
+            "Recovery update paused: the recovery volume is already mounted at "
+            + ", ".join(repr(path) for path in paths)
+            + ".\nThe existing recovery environment has not been changed. "
+            "Package configuration is incomplete.\n"
+            "Close file managers and move all terminals out of this volume, then run:\n"
+            "  cd ~\n" + commands + "\n  sudo dpkg --configure -a\n"
+            "If unmount reports that the volume is busy, close the remaining users "
+            "and retry; do not force or lazily unmount it."
+        )
     return device, selected
 
 
