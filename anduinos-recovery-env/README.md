@@ -4,7 +4,9 @@ A small, independent kernel and initramfs for restoring AnduinOS Btrfs system
 snapshots when the installed system cannot boot. An English graphical browser
 reuses Disk Snapshots Manager's offline recovery engine: choose a snapshot,
 confirm the rollback, then restart. Personal files remain unchanged. A text
-menu remains available if graphical startup fails.
+menu remains available if graphical startup fails. The System Information tab
+shows read-only boot, installed-system, storage and hardware details. Unavailable
+hardware fields do not prevent recovery.
 
 This initial development package requires an unmounted, dedicated ext4 volume
 labelled `AOS_RECOVERY` (256 MiB) and an unencrypted AnduinOS Btrfs root using

@@ -19,10 +19,11 @@ cleanup() {
 }
 trap cleanup EXIT
 
-case "${1:-}:$#" in list:1|resume:1|restart:1) ;; restore:2) uuid_valid "$2" || fail 'Invalid snapshot identifier.' ;; *) fail 'Unknown recovery action.' ;; esac
+case "${1:-}:$#" in list:1|information:1|resume:1|restart:1) ;; restore:2) uuid_valid "$2" || fail 'Invalid snapshot identifier.' ;; *) fail 'Unknown recovery action.' ;; esac
 # The lock survives the GUI exiting while its recovery process is still running.
 exec 9>/run/recovery-operation.lock
 flock -n 9 || fail 'Another recovery operation is still running. Please wait.'
+[ "$1" != information ] || exec /usr/bin/recovery-information
 if awk -v path="$top" '$5 == path {found=1} END {exit !found}' /proc/self/mountinfo; then
     umount "$top" || fail 'Could not close the previous recovery session.'
 fi
