@@ -184,6 +184,25 @@ accept_workflow_input() {
     printf '\033[C\nexit\n'
 }
 
+compound_workflow_input() {
+    wait_ready
+    printf 'sudo apt update && sudo '
+    wait_for_suggestion 'apt upgrade' ' '
+    [[ ! -e $TEST_ROOT/sudo.args ]] || fail 'compound prediction executed before acceptance'
+    printf '\033[C\nexit\n'
+}
+
+compound_history_input() {
+    wait_ready
+    for _ in {1..5}; do
+        printf 'sudo apt upgrade -y\n'
+        sleep 0.25
+    done
+    printf 'sudo apt update && sudo '
+    wait_for_suggestion $'\033[90mapt upgrade -y' ' '
+    printf '\033[C\nexit\n'
+}
+
 apt_skeleton_input() {
     wait_ready
     printf 'sudo apt '
@@ -619,6 +638,17 @@ run_session resize_rows_input "$TEST_ROOT/resize-rows.typescript"
 if LC_ALL=C grep -aFq 'NATIVE_TEST> NATIVE_TEST> ' "$TEST_ROOT/resize-rows.typescript"; then
     fail 'row-only terminal resizing left duplicate prompts visible'
 fi
+
+# Compound sessions learn new transitions; keep them after the original
+# scenarios so they do not change those scenarios' persistent history.
+rm -f -- "$TEST_ROOT/sudo.args"
+run_session compound_workflow_input "$TEST_ROOT/compound-workflow.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'apt upgrade' ]] ||
+    fail 'same-line update did not predict upgrade without adding flags'
+
+run_session compound_history_input "$TEST_ROOT/compound-history.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'apt upgrade -y' ]] ||
+    fail 'same-line update did not reuse the learned upgrade flags'
 
 # Keep opt-out lifecycle probes last: they deliberately toggle the master switch
 # and must not influence the persistent ranking exercised above.

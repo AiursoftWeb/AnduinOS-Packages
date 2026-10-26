@@ -68,7 +68,10 @@ locally by default for use after the terminal closes; users can disable this. A 
 additionally learns that, in a given directory, one successful command usually
 follows another. Obvious credential-bearing forms are excluded from learning,
 failed commands do not train transitions, and completion never executes text by
-itself. This filter is defense in depth rather than a secret detector; users who
+itself. History also fills an empty command after `sudo` or a shell operator.
+Within `apt update && sudo `, the update intent suggests `apt upgrade` before
+execution; matching history supplies preferred flags such as `-y`. The default
+adds no flags, and `||` or a pipe does not imply a successful update. This filter is defense in depth rather than a secret detector; users who
 do not want any command import or learning can set `ANDUINOS_GUESS_HISTORY=0`.
 Ordinary destructive commands are eligible because Right Arrow and End only
 accept text and Enter remains the execution boundary. The sole narrow replay
