@@ -2381,3 +2381,84 @@ msgstr "Для автоматической подписи теперь испо
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Восстановление подписей драйверов завершено. Теперь система проверит, доверены ли установленные драйверы."
+
+msgid "Recovery Environment"
+msgstr "Среда восстановления"
+
+msgid "Present"
+msgstr "Присутствует"
+
+msgid "Multiple recovery partitions found"
+msgstr "Найдено несколько разделов восстановления"
+
+msgid "Recovery partition not found"
+msgstr "Раздел восстановления не найден"
+
+msgid "Recovery partition"
+msgstr "Раздел восстановления"
+
+msgid "Recovery package"
+msgstr "Пакет восстановления"
+
+msgid "GRUB menu entry"
+msgstr "Пункт меню GRUB"
+
+msgid "Recovery menu entry not found"
+msgstr "Пункт восстановления в меню не найден"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Не удалось прочитать меню GRUB"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "Состояние пакета определяется по локальному кэшу APT. Источники программ не обновляются."
+
+msgid "Read recovery boot information"
+msgstr "Прочитать сведения о загрузке восстановления"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "Предыдущая подготовка была прервана. Перед повторной попыткой попросите администратора проверить сохранённую таблицу разделов и заголовок swap."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Автоматическая подготовка недоступна для этой конфигурации диска или swap. Попросите администратора создать раздел ext4 AOS_RECOVERY размером 256 MiB и повторите проверку."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Попросите администратора проверить настроенные или дублирующиеся тома восстановления и повторите проверку."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Закройте приложения, потребляющие много памяти, и повторите проверку. Недостаточно свободной RAM для безопасного отключения этого swap."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Развернуть установленный образ восстановления и заново создать меню GRUB?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Установить или обновить только пакет восстановления, используя текущие списки пакетов?"
+
+msgid "Install or update recovery package"
+msgstr "Установить или обновить пакет восстановления"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Не удалось проверить версию-кандидат в локальном кэше APT. Обновите источники в программе обновления и повторите проверку."
+
+msgid "Recovery repair completed."
+msgstr "Восстановление среды восстановления завершено."
+
+msgid "Repair recovery boot menu"
+msgstr "Исправить загрузочное меню восстановления"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Повторите проверку и разрешите доступ только для чтения. Если ошибки сохраняются, восстановите установку центра драйверов и его дисковых утилит."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Уменьшить раздел swap и создать раздел восстановления"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Swap будет временно отключён. Создайте резервную копию данных и оставьте компьютер включённым до завершения операции."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Невозможно продолжить: обычный раздел swap на системном диске не найден."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Невозможно продолжить: раздел swap меньше 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Требуется установленная система AnduinOS Btrfs @root. Запустите установленную систему и повторите проверку."

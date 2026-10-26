@@ -2392,3 +2392,84 @@ msgstr "La signature automatique utilise désormais votre certificat enregistré
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "La réparation des signatures de pilotes est terminée. Le système vérifie maintenant si les pilotes installés sont approuvés."
+
+msgid "Recovery Environment"
+msgstr "Environnement de récupération"
+
+msgid "Present"
+msgstr "Présent"
+
+msgid "Multiple recovery partitions found"
+msgstr "Plusieurs partitions de récupération détectées"
+
+msgid "Recovery partition not found"
+msgstr "Partition de récupération introuvable"
+
+msgid "Recovery partition"
+msgstr "Partition de récupération"
+
+msgid "Recovery package"
+msgstr "Paquet de récupération"
+
+msgid "GRUB menu entry"
+msgstr "Entrée du menu GRUB"
+
+msgid "Recovery menu entry not found"
+msgstr "Entrée de récupération introuvable dans le menu"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Impossible de lire le menu GRUB"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "L’état du paquet utilise le cache APT local. Les sources de logiciels ne sont pas actualisées."
+
+msgid "Read recovery boot information"
+msgstr "Lire les informations de démarrage de récupération"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "Une préparation précédente a été interrompue. Avant de réessayer, demandez à un administrateur de vérifier la table de partitions et l’en-tête swap sauvegardés."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "La préparation automatique est indisponible pour cette configuration de disque ou de swap. Demandez à un administrateur de créer une partition ext4 AOS_RECOVERY de 256 MiB, puis relancez l’analyse."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Demandez à un administrateur de vérifier les volumes de récupération configurés ou en double, puis relancez l’analyse."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Fermez les applications gourmandes en mémoire, puis relancez l’analyse. La RAM disponible est insuffisante pour désactiver ce swap en toute sécurité."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Déployer l’image de récupération installée et régénérer le menu GRUB ?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Installer ou mettre à jour uniquement le paquet de récupération avec les listes de paquets actuelles ?"
+
+msgid "Install or update recovery package"
+msgstr "Installer ou mettre à jour le paquet de récupération"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Aucune version candidate n’a pu être vérifiée dans le cache APT local. Actualisez les sources dans votre gestionnaire de mises à jour, puis relancez l’analyse."
+
+msgid "Recovery repair completed."
+msgstr "Réparation de l’environnement de récupération terminée."
+
+msgid "Repair recovery boot menu"
+msgstr "Réparer le menu de démarrage de récupération"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Relancez l’analyse et autorisez l’inspection en lecture seule. Si les vérifications échouent encore, réparez l’installation du centre de pilotes et de ses outils de disque."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Réduire la partition swap et créer une partition de récupération"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Le swap sera temporairement désactivé. Sauvegardez vos données et maintenez l’ordinateur sous tension jusqu’à la fin de l’opération."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Impossible de continuer : aucune partition swap ordinaire n’a été trouvée sur le disque système."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Impossible de continuer : la partition swap est inférieure à 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "La réparation nécessite un système AnduinOS Btrfs @root installé. Démarrez le système installé, puis relancez l’analyse."

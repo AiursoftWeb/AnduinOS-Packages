@@ -2375,3 +2375,84 @@ msgstr "Automatische ondertekening gebruikt nu uw ingeschreven certificaat. De e
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Herstel van stuurprogramma-ondertekening is voltooid. Het systeem controleert nu of de geïnstalleerde stuurprogramma's vertrouwd zijn."
+
+msgid "Recovery Environment"
+msgstr "Herstelomgeving"
+
+msgid "Present"
+msgstr "Aanwezig"
+
+msgid "Multiple recovery partitions found"
+msgstr "Meerdere herstelpartities gevonden"
+
+msgid "Recovery partition not found"
+msgstr "Herstelpartitie niet gevonden"
+
+msgid "Recovery partition"
+msgstr "Herstelpartitie"
+
+msgid "Recovery package"
+msgstr "Herstelpakket"
+
+msgid "GRUB menu entry"
+msgstr "GRUB-menuoptie"
+
+msgid "Recovery menu entry not found"
+msgstr "Hersteloptie niet gevonden in het menu"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Kan het GRUB-menu niet lezen"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "De pakketstatus gebruikt de lokale APT-cache. Softwarebronnen worden niet vernieuwd."
+
+msgid "Read recovery boot information"
+msgstr "Opstartinformatie voor herstel lezen"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "Een eerdere voorbereiding is onderbroken. Laat een beheerder vóór een nieuwe poging de opgeslagen partitietabel en swapheader controleren."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Automatische voorbereiding is niet beschikbaar voor deze schijf- of swapconfiguratie. Laat een beheerder een ext4-partitie AOS_RECOVERY van 256 MiB maken en scan opnieuw."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Laat een beheerder de ingestelde of dubbele herstelvolumes controleren en scan opnieuw."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Sluit geheugenzware toepassingen en scan opnieuw. Er is onvoldoende RAM beschikbaar om deze swap veilig uit te schakelen."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "De geïnstalleerde herstelimage plaatsen en het GRUB-menu opnieuw genereren?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Alleen het herstelpakket installeren of bijwerken met de huidige pakketlijsten?"
+
+msgid "Install or update recovery package"
+msgstr "Herstelpakket installeren of bijwerken"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Er kon geen kandidaatversie worden gecontroleerd in de lokale APT-cache. Vernieuw de bronnen in uw updatebeheerder en scan opnieuw."
+
+msgid "Recovery repair completed."
+msgstr "Reparatie van de herstelomgeving voltooid."
+
+msgid "Repair recovery boot menu"
+msgstr "Herstelopstartmenu repareren"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Scan opnieuw en sta de inspectie met alleen-lezen toegang toe. Repareer bij aanhoudende fouten de installatie van het stuurprogrammacentrum en de schijfhulpmiddelen."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Swappartitie verkleinen en herstelpartitie maken"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Swap wordt tijdelijk uitgeschakeld. Maak een back-up van uw gegevens en houd de computer ingeschakeld tot de bewerking is voltooid."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Kan niet doorgaan: er is geen gewone swappartitie gevonden op de systeemschijf."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Kan niet doorgaan: de swappartitie is kleiner dan 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Herstel vereist een geïnstalleerd AnduinOS Btrfs @root-systeem. Start het geïnstalleerde systeem en scan opnieuw."

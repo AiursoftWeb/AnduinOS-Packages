@@ -2274,3 +2274,84 @@ msgstr "自動簽署現已使用已註冊的憑證。先前的設定已備份。
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "驅動程式簽章修復已完成。系統現在會檢查已安裝的驅動程式是否受信任。"
+
+msgid "Recovery Environment"
+msgstr "復原環境"
+
+msgid "Present"
+msgstr "存在"
+
+msgid "Multiple recovery partitions found"
+msgstr "找到多個復原分割區"
+
+msgid "Recovery partition not found"
+msgstr "找不到復原分割區"
+
+msgid "Recovery partition"
+msgstr "復原分割區"
+
+msgid "Recovery package"
+msgstr "復原套件"
+
+msgid "GRUB menu entry"
+msgstr "GRUB 選單項目"
+
+msgid "Recovery menu entry not found"
+msgstr "找不到復原選單項目"
+
+msgid "Unable to read the GRUB menu"
+msgstr "無法讀取 GRUB 選單"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "套件狀態根據本機 APT 快取檢查，不更新軟件來源。"
+
+msgid "Read recovery boot information"
+msgstr "讀取復原啟動資訊"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "上次分割區準備工作遭到中斷。重試前，請管理員檢查儲存的分割表及 swap 標頭備份。"
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "目前磁碟或 swap 設定不支援自動準備。請管理員手動建立 256 MiB、標籤為 AOS_RECOVERY 的 ext4 分割區，然後重新掃描。"
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "請管理員檢查已設定或重複的復原分割區，然後重新掃描。"
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "請關閉佔用大量記憶體的應用程式後重新掃描。目前可用記憶體不足，無法安全停用此 swap。"
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "部署已安裝的復原映像並重新產生 GRUB 選單？"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "使用目前套件清單，僅安裝或更新復原套件？"
+
+msgid "Install or update recovery package"
+msgstr "安裝或更新復原套件"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "無法從本機 APT 快取確認候選版本。請在軟件更新程式中更新來源，然後重新掃描。"
+
+msgid "Recovery repair completed."
+msgstr "復原環境修復已完成。"
+
+msgid "Repair recovery boot menu"
+msgstr "修復復原啟動選單"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "請重新掃描並允許唯讀檢查。若仍然失敗，請修復驅動中心及其磁碟工具的安裝。"
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "縮減 swap 分割區並建立復原分割區"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "操作將暫時停用 swap。請備份資料並保持電腦供電，直到操作完成。"
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "無法繼續：系統磁碟上找不到一般 swap 分割區。"
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "無法繼續：swap 分割區小於 512 MiB。"
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "修復復原環境需要已安裝的 AnduinOS Btrfs @root 系統。請啟動已安裝的系統後重新掃描。"

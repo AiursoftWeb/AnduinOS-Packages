@@ -18,6 +18,15 @@ all updates, report live progress and device requests, prompt for required
 restarts, and show the daemon's update history. Firmware authorization and
 signature verification remain owned by fwupd rather than the driver helper.
 
+The Recovery Environment page checks the dedicated ext4 partition, the installed
+recovery package against the local APT cache, and the generated GRUB menu entry.
+Scanning does not refresh software sources or change the system. A fixed
+read-only polkit probe checks boot information and repair eligibility. Non-green
+checks show ordered repair steps. Explicitly confirmed repairs can prepare a
+256 MiB recovery partition from an ordinary system-disk GPT swap partition of
+at least 512 MiB, install or update the recovery package, or repair its boot
+menu. Unsupported layouts explain why automatic preparation cannot continue.
+
 The audio page reports the installed Intel SOF firmware and ALSA UCM packages,
 deployed support files, loaded SOF modules, and active PCI audio drivers.
 Missing AnduinOS audio support packages can be installed through the same
@@ -37,7 +46,7 @@ masks and starts the normal printing units.
 
 The unprivileged UI reads hardware state. Mutating operations go through a
 fixed polkit helper which only accepts drivers reported by `ubuntu-drivers`,
-the AnduinOS xpadneo package, and fixed audio, printing, and Intel graphics operations.
+the AnduinOS xpadneo package, and fixed audio, printing, Intel graphics, and recovery operations.
 
 ## Intel graphics
 

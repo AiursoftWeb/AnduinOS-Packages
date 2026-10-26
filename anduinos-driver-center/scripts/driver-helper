@@ -256,6 +256,18 @@ def main(arguments: list[str]) -> int:
         return 77
     try:
         match arguments:
+            case ["recovery-prepare"]:
+                from anduinos_driver_center.recovery_partition import prepare
+                payload = sys.stdin.read(16385)
+                if len(payload) > 16384:
+                    raise ValueError("Recovery preparation request is too large")
+                prepare(json.loads(payload))
+            case ["recovery-install"]:
+                from anduinos_driver_center.recovery import install_recovery
+                install_recovery()
+            case ["recovery-boot"]:
+                from anduinos_driver_center.recovery import repair_boot
+                repair_boot()
             case ["intel-inspect"]:
                 from anduinos_driver_center.intel_graphics import inspect
                 print(json.dumps(inspect().report()))
@@ -298,7 +310,7 @@ def main(arguments: list[str]) -> int:
             case _:
                 print("Unknown or incomplete action.", file=sys.stderr)
                 return 64
-    except (OSError, ValueError, RuntimeError, SystemError) as error:
+    except (OSError, ValueError, RuntimeError, SystemError, subprocess.SubprocessError) as error:
         print(f"Driver operation failed: {error}", file=sys.stderr)
         return 1
     print("Driver operation completed successfully.")

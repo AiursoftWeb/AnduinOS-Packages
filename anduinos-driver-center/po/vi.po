@@ -2354,3 +2354,84 @@ msgstr "Tính năng ký tự động hiện sử dụng chứng chỉ đã đăn
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Đã sửa xong chữ ký trình điều khiển. Hệ thống sẽ kiểm tra xem các trình điều khiển đã cài đặt có đáng tin cậy hay không."
+
+msgid "Recovery Environment"
+msgstr "Môi trường khôi phục"
+
+msgid "Present"
+msgstr "Có"
+
+msgid "Multiple recovery partitions found"
+msgstr "Tìm thấy nhiều phân vùng khôi phục"
+
+msgid "Recovery partition not found"
+msgstr "Không tìm thấy phân vùng khôi phục"
+
+msgid "Recovery partition"
+msgstr "Phân vùng khôi phục"
+
+msgid "Recovery package"
+msgstr "Gói khôi phục"
+
+msgid "GRUB menu entry"
+msgstr "Mục menu GRUB"
+
+msgid "Recovery menu entry not found"
+msgstr "Không tìm thấy mục khôi phục trong menu"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Không thể đọc menu GRUB"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "Trạng thái gói sử dụng bộ nhớ đệm APT cục bộ. Nguồn phần mềm không được làm mới."
+
+msgid "Read recovery boot information"
+msgstr "Đọc thông tin khởi động khôi phục"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "Lần chuẩn bị trước đã bị gián đoạn. Hãy nhờ quản trị viên kiểm tra bảng phân vùng và phần đầu swap đã lưu trước khi thử lại."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Không thể chuẩn bị tự động với cấu hình đĩa hoặc swap này. Hãy nhờ quản trị viên tạo phân vùng ext4 AOS_RECOVERY 256 MiB rồi quét lại."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Hãy nhờ quản trị viên kiểm tra các ổ khôi phục đã cấu hình hoặc bị trùng rồi quét lại."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Đóng các ứng dụng dùng nhiều bộ nhớ rồi quét lại. Không có đủ RAM trống để tắt swap này một cách an toàn."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Triển khai ảnh khôi phục đã cài và tạo lại menu GRUB?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Chỉ cài hoặc cập nhật gói khôi phục bằng danh sách gói hiện tại?"
+
+msgid "Install or update recovery package"
+msgstr "Cài hoặc cập nhật gói khôi phục"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Không xác minh được phiên bản ứng viên từ bộ nhớ đệm APT cục bộ. Hãy làm mới nguồn trong trình cập nhật phần mềm rồi quét lại."
+
+msgid "Recovery repair completed."
+msgstr "Đã sửa xong môi trường khôi phục."
+
+msgid "Repair recovery boot menu"
+msgstr "Sửa menu khởi động khôi phục"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Quét lại và cho phép kiểm tra chỉ đọc. Nếu vẫn thất bại, hãy sửa bản cài Trung tâm trình điều khiển và các tiện ích đĩa."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Thu nhỏ phân vùng swap và tạo phân vùng khôi phục"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Swap sẽ bị tắt tạm thời. Hãy sao lưu dữ liệu và giữ máy tính bật cho đến khi thao tác hoàn tất."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Không thể tiếp tục: không tìm thấy phân vùng swap thông thường trên đĩa hệ thống."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Không thể tiếp tục: phân vùng swap nhỏ hơn 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Việc sửa chữa cần hệ thống AnduinOS Btrfs @root đã cài. Hãy khởi động hệ thống đã cài rồi quét lại."

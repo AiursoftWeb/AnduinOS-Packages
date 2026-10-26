@@ -2280,3 +2280,84 @@ msgstr "이제 자동 서명에 등록된 인증서를 사용합니다. 이전 �
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "드라이버 서명 복구가 완료되었습니다. 이제 설치된 드라이버를 신뢰할 수 있는지 확인합니다."
+
+msgid "Recovery Environment"
+msgstr "복구 환경"
+
+msgid "Present"
+msgstr "있음"
+
+msgid "Multiple recovery partitions found"
+msgstr "복구 파티션이 여러 개 발견되었습니다"
+
+msgid "Recovery partition not found"
+msgstr "복구 파티션을 찾을 수 없습니다"
+
+msgid "Recovery partition"
+msgstr "복구 파티션"
+
+msgid "Recovery package"
+msgstr "복구 패키지"
+
+msgid "GRUB menu entry"
+msgstr "GRUB 메뉴 항목"
+
+msgid "Recovery menu entry not found"
+msgstr "복구 메뉴 항목을 찾을 수 없습니다"
+
+msgid "Unable to read the GRUB menu"
+msgstr "GRUB 메뉴를 읽을 수 없습니다"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "패키지 상태는 로컬 APT 캐시를 사용합니다. 소프트웨어 소스를 새로 고치지 않습니다."
+
+msgid "Read recovery boot information"
+msgstr "복구 부팅 정보 읽기"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "이전 파티션 준비 작업이 중단되었습니다. 다시 시도하기 전에 관리자에게 저장된 파티션 테이블과 swap 헤더를 확인하도록 요청하세요."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "이 디스크 또는 swap 구성에서는 자동 준비를 사용할 수 없습니다. 관리자에게 256 MiB AOS_RECOVERY ext4 파티션을 수동으로 생성하도록 요청한 후 다시 검사하세요."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "관리자에게 설정되었거나 중복된 복구 볼륨을 확인하도록 요청한 후 다시 검사하세요."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "메모리를 많이 사용하는 앱을 닫고 다시 검사하세요. 이 swap을 안전하게 비활성화하기에 사용 가능한 RAM이 부족합니다."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "설치된 복구 이미지를 배포하고 GRUB 메뉴를 다시 생성할까요?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "현재 패키지 목록을 사용하여 복구 패키지만 설치하거나 업데이트할까요?"
+
+msgid "Install or update recovery package"
+msgstr "복구 패키지 설치 또는 업데이트"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "로컬 APT 캐시에서 후보 버전을 확인할 수 없습니다. 소프트웨어 업데이트 도구에서 소스를 새로 고친 후 다시 검사하세요."
+
+msgid "Recovery repair completed."
+msgstr "복구 환경 수리가 완료되었습니다."
+
+msgid "Repair recovery boot menu"
+msgstr "복구 부팅 메뉴 수리"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "다시 검사하고 읽기 전용 검사를 허용하세요. 계속 실패하면 드라이버 센터와 디스크 도구의 설치를 복구하세요."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "swap 파티션 축소 및 복구 파티션 생성"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "swap이 일시적으로 비활성화됩니다. 데이터를 백업하고 작업이 끝날 때까지 컴퓨터 전원을 유지하세요."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "계속할 수 없음: 시스템 디스크에서 일반 swap 파티션을 찾을 수 없습니다."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "계속할 수 없음: swap 파티션이 512 MiB보다 작습니다."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "복구 환경 수리에는 설치된 AnduinOS Btrfs @root 시스템이 필요합니다. 설치된 시스템을 시작한 후 다시 검사하세요."
