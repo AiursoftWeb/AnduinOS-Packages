@@ -23,7 +23,7 @@ without a suitable volume, including Live image assembly, skips deployment.
 Secure Boot trust-chain enforcement remains a separate stage; qualify this
 development version with Secure Boot disabled.
 
-Build with `apkg build --all` (10.0.65 or newer), Cargo's two Linux GNU targets,
+Build with `apkg build --all` (10.0.70 or newer), Cargo's two Linux GNU targets,
 the corresponding GCC/G++ toolchains, CMake, Git, `cpio`, `gzip`, `kmod`,
 `zstd` and `binutils`.
 Verified Ubuntu inputs supply the generic kernel and runtime; no target programs

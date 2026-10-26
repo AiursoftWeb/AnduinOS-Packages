@@ -165,7 +165,13 @@ def build():
                 (runtime_source / name).symlink_to(target)
         runtime = Runtime(runtime_source, root, arch)
         extracted = inputs / "extracted"
-        busybox = next((extracted / "busybox-static").glob("**/busybox"))
+        # Ubuntu renamed the static binary in Stonking; retain Resolute support.
+        busybox = next((path
+                        for name in ("busybox", "busybox-static")
+                        for path in (extracted / "busybox-static").rglob(name)
+                        if path.is_file() and os.access(path, os.X_OK)), None)
+        if busybox is None:
+            raise RuntimeError("Verified busybox-static input has no executable")
         copy(busybox, root / "bin/busybox")
         for name in "sh mount umount mkdir chmod cat mv sleep modprobe ls sync reboot poweroff clear awk grep tr readlink stat head od timeout uname".split():
             (root / "bin" / name).symlink_to("busybox")
