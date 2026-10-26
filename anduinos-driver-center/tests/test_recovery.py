@@ -155,7 +155,8 @@ class RecoveryTests(unittest.TestCase):
              patch.object(recovery, "require_recovery_volume", return_value="uuid"):
             recovery.install_recovery(commands)
         self.assertEqual(commands.run.call_args_list, [
-            unittest.mock.call("apt-get", "install", "-y", "--no-remove", recovery.PACKAGE),
+            unittest.mock.call("apt-get", "install", "-y", "--no-remove", recovery.PACKAGE,
+                               stream=True, timeout=None),
             unittest.mock.call("dpkg-query", "-W", "-f=${db:Status-Abbrev}", recovery.PACKAGE)])
 
     def test_repair_requires_the_current_root_and_a_unique_unmounted_owned_volume(self):

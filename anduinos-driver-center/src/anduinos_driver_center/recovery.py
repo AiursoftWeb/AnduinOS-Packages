@@ -183,7 +183,7 @@ def install_recovery(commands=None):
         require_recovery_volume(commands)
         # Opening/scanning never refreshes APT, and this fixed action does not
         # hide a source refresh either. A missing cache is reported by APT.
-        commands.run("apt-get", "install", "-y", "--no-remove", PACKAGE)
+        commands.run("apt-get", "install", "-y", "--no-remove", PACKAGE, stream=True, timeout=None)
         result = commands.run("dpkg-query", "-W", "-f=${db:Status-Abbrev}", PACKAGE)
         if not result.stdout.startswith("ii "):
             raise RuntimeError("Recovery package configuration is incomplete. Check the operation details and retry.")
@@ -204,8 +204,9 @@ def repair_boot(commands=None):
             except BlockingIOError as error:
                 raise RuntimeError("A package operation is running. Wait for it to finish, then try again.") from error
         volume_uuid = require_recovery_volume(commands)
-        commands.run("/usr/libexec/anduinos-recovery-env", "deploy", "--volume-uuid", volume_uuid)
-        commands.run("update-grub")
+        commands.run("/usr/libexec/anduinos-recovery-env", "deploy", "--volume-uuid", volume_uuid,
+                     stream=True, timeout=None)
+        commands.run("update-grub", stream=True, timeout=None)
         commands.run("grub-script-check", "/boot/grub/grub.cfg")
         if grub_entry_present() is not True:
             raise RuntimeError("GRUB did not generate the recovery entry. Reinstall anduinos-recovery-env, "

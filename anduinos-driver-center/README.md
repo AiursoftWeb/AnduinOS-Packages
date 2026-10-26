@@ -46,7 +46,7 @@ masks and starts the normal printing units.
 
 The unprivileged UI reads hardware state. Mutating operations go through a
 fixed polkit helper which only accepts drivers reported by `ubuntu-drivers`,
-the AnduinOS xpadneo package, and fixed audio, printing, and Intel graphics operations.
+the AnduinOS xpadneo package, and fixed audio, printing, Intel graphics, and recovery operations.
 
 ## Intel graphics
 

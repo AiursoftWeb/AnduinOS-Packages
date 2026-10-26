@@ -33,15 +33,15 @@ class Commands:
     def __init__(self, verbose=False):
         self.verbose = verbose
 
-    def run(self, *arguments, data=None, check=True):
+    def run(self, *arguments, data=None, check=True, timeout=60, stream=False):
         if self.verbose:
             print("+ " + " ".join(arguments), flush=True)
-        result = subprocess.run(arguments, input=data, capture_output=True, text=True,
-                                timeout=60, env={"PATH": "/usr/sbin:/usr/bin:/sbin:/bin", "LC_ALL": "C"})
-        if self.verbose:
+        result = subprocess.run(arguments, input=data, capture_output=not stream, text=True,
+                                timeout=timeout, env={"PATH": "/usr/sbin:/usr/bin:/sbin:/bin", "LC_ALL": "C"})
+        if self.verbose and not stream:
             print(result.stdout + result.stderr, end="", flush=True)
         if check and result.returncode:
-            raise RuntimeError(f"{arguments[0]} failed: {(result.stderr or result.stdout)[-4000:]}")
+            raise RuntimeError(f"{arguments[0]} failed: {(result.stderr or result.stdout or '')[-4000:]}")
         return result
 
     def text(self, *arguments):
