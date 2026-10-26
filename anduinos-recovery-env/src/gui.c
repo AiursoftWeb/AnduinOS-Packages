@@ -343,6 +343,8 @@ static void confirm(lv_event_t *event)
             "DATA NOT INCLUDED IN A SNAPSHOT WILL BE LOST!");
         lv_obj_set_style_text_font(warning, title_font, 0);
         lv_obj_set_style_text_color(warning, lv_color_hex(0xffb4ab), 0);
+        /* Long snapshot titles must not push the warning below the visible content. */
+        lv_obj_move_to_index(warning, 0);
     }
     lv_obj_t *no = lv_msgbox_add_footer_button(dialog, "Cancel");
     lv_obj_t *yes = lv_msgbox_add_footer_button(dialog, "Roll Back");
