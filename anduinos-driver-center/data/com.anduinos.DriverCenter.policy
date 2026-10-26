@@ -134,4 +134,68 @@
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/anduinos-driver-center/memory-helper</annotate>
   </action>
+  <action id="com.anduinos.DriverCenter.inspect-recovery">
+    <description>Recovery Environment</description>
+    <description xml:lang="ar">بيئة الاسترداد</description>
+    <description xml:lang="da">Gendannelsesmiljø</description>
+    <description xml:lang="de">Wiederherstellungsumgebung</description>
+    <description xml:lang="el">Περιβάλλον ανάκτησης</description>
+    <description xml:lang="es">Entorno de recuperación</description>
+    <description xml:lang="fi">Palautusympäristö</description>
+    <description xml:lang="fr">Environnement de récupération</description>
+    <description xml:lang="hi">पुनर्प्राप्ति परिवेश</description>
+    <description xml:lang="id">Lingkungan Pemulihan</description>
+    <description xml:lang="it">Ambiente di ripristino</description>
+    <description xml:lang="ja">復旧環境</description>
+    <description xml:lang="ko">복구 환경</description>
+    <description xml:lang="nl">Herstelomgeving</description>
+    <description xml:lang="pl">Środowisko odzyskiwania</description>
+    <description xml:lang="pt">Ambiente de recuperação</description>
+    <description xml:lang="pt_BR">Ambiente de recuperação</description>
+    <description xml:lang="ro">Mediu de recuperare</description>
+    <description xml:lang="ru">Среда восстановления</description>
+    <description xml:lang="sv">Återställningsmiljö</description>
+    <description xml:lang="th">สภาพแวดล้อมการกู้คืน</description>
+    <description xml:lang="tr">Kurtarma Ortamı</description>
+    <description xml:lang="uk">Середовище відновлення</description>
+    <description xml:lang="vi">Môi trường khôi phục</description>
+    <description xml:lang="zh_CN">恢复环境</description>
+    <description xml:lang="zh_TW">復原環境</description>
+    <description xml:lang="zh_HK">復原環境</description>
+    <description xml:lang="en_GB">Recovery Environment</description>
+    <message>Read recovery boot information</message>
+    <message xml:lang="ar">قراءة معلومات إقلاع الاسترداد</message>
+    <message xml:lang="da">Læs startoplysninger for gendannelse</message>
+    <message xml:lang="de">Startinformationen zur Wiederherstellung lesen</message>
+    <message xml:lang="el">Ανάγνωση πληροφοριών εκκίνησης ανάκτησης</message>
+    <message xml:lang="es">Leer información de arranque de recuperación</message>
+    <message xml:lang="fi">Lue palautuksen käynnistystiedot</message>
+    <message xml:lang="fr">Lire les informations de démarrage de récupération</message>
+    <message xml:lang="hi">पुनर्प्राप्ति बूट जानकारी पढ़ें</message>
+    <message xml:lang="id">Baca informasi boot pemulihan</message>
+    <message xml:lang="it">Leggi le informazioni di avvio del ripristino</message>
+    <message xml:lang="ja">復旧用の起動情報を読み取る</message>
+    <message xml:lang="ko">복구 부팅 정보 읽기</message>
+    <message xml:lang="nl">Opstartinformatie voor herstel lezen</message>
+    <message xml:lang="pl">Odczytaj informacje o rozruchu odzyskiwania</message>
+    <message xml:lang="pt">Ler informações de arranque de recuperação</message>
+    <message xml:lang="pt_BR">Ler informações de inicialização da recuperação</message>
+    <message xml:lang="ro">Citește informațiile de pornire pentru recuperare</message>
+    <message xml:lang="ru">Прочитать сведения о загрузке восстановления</message>
+    <message xml:lang="sv">Läs startinformation för återställning</message>
+    <message xml:lang="th">อ่านข้อมูลการบูตการกู้คืน</message>
+    <message xml:lang="tr">Kurtarma önyükleme bilgilerini oku</message>
+    <message xml:lang="uk">Прочитати відомості про завантаження відновлення</message>
+    <message xml:lang="vi">Đọc thông tin khởi động khôi phục</message>
+    <message xml:lang="zh_CN">读取恢复启动信息</message>
+    <message xml:lang="zh_TW">讀取復原開機資訊</message>
+    <message xml:lang="zh_HK">讀取復原啟動資訊</message>
+    <message xml:lang="en_GB">Read recovery boot information</message>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/anduinos-driver-center/recovery-probe</annotate>
+  </action>
 </policyconfig>

@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-driver-center</PackageName>
-    <PackageVersion>2.0.5-15+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.5-16+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Driver Center — manage hardware drivers, device firmware, printing, controllers, and Secure Boot support.</PackageDescription>
     <Section>admin</Section>
@@ -41,6 +41,7 @@
   <ItemGroup>
     <IncludeScript Include="scripts/anduinos-driver-center" Target="/usr/bin/anduinos-driver-center" />
     <IncludeScript Include="scripts/memory-helper" Target="/usr/libexec/anduinos-driver-center/memory-helper" />
+    <IncludeScript Include="scripts/recovery-probe" Target="/usr/libexec/anduinos-driver-center/recovery-probe" />
     <IncludeScript Include="scripts/driver-helper" Target="/usr/libexec/anduinos-driver-center/driver-helper" />
     <IncludeFile Include="src/anduinos_driver_center/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/__init__.py" />
     <IncludeFile Include="src/anduinos_driver_center/__main__.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/__main__.py" />
@@ -48,6 +49,7 @@
     <IncludeFile Include="src/anduinos_driver_center/computer.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/computer.py" />
     <IncludeFile Include="src/anduinos_driver_center/computer_ui.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/computer_ui.py" />
     <IncludeFile Include="src/anduinos_driver_center/core.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/core.py" />
+    <IncludeFile Include="src/anduinos_driver_center/recovery.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/recovery.py" />
     <IncludeFile Include="src/anduinos_driver_center/driver_update.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/driver_update.py" />
     <IncludeFile Include="src/anduinos_driver_center/operation_ui.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/operation_ui.py" />
     <IncludeFile Include="src/anduinos_driver_center/intel_graphics.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/intel_graphics.py" />

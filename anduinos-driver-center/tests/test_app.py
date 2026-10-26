@@ -10,6 +10,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from anduinos_driver_center.app import DriverCenterWindow, _command_output_summary  # noqa: E402
 from anduinos_driver_center import app
+from anduinos_driver_center.recovery import RecoveryState
+from anduinos_driver_center.core import PackageState
 from anduinos_secureboot.model import DkmsState, SecureBootState, SecureBootStatus
 
 
@@ -39,15 +41,17 @@ class AppTests(unittest.TestCase):
 
         with patch.object(app, "ComputerPage"), patch.object(app, "_", side_effect=lambda text: text):
             result = DriverCenterWindow._apply_scan(
-                window, graphics, secure_boot, xbox, DkmsState(), Mock(ready=True), printing
+                window, graphics, secure_boot, xbox, DkmsState(), Mock(ready=True), printing,
+                RecoveryState(False, (), PackageState("anduinos-recovery-env", False, None),
+                              None, False, False),
             )
 
         self.assertEqual(result, app.GLib.SOURCE_REMOVE)
         self.assertEqual([row.page_name for row in rows], [
-            "home", "audio", "printing", "xbox", "secure-boot", "firmware", "computer",
+            "home", "audio", "printing", "xbox", "secure-boot", "recovery", "firmware", "computer",
         ])
         window._device_row.assert_any_call("security-high-symbolic", "Secure Boot", "Disabled")
-        self.assertEqual(window.stack.add_named.call_count, 7)
+        self.assertEqual(window.stack.add_named.call_count, 8)
         window.device_list.select_row.assert_called_once_with(rows[0])
         window.refresh_button.set_sensitive.assert_called_once_with(True)
         self.assertFalse(window._rebuilding_navigation)
@@ -86,8 +90,10 @@ class AppTests(unittest.TestCase):
 
     def test_command_line_opens_requested_page_in_new_or_existing_window(self):
         for existing in (False, True):
-            for arguments in (["--page", "secure-boot"], ["--page=secure-boot"]):
+            for arguments in (["--page", "secure-boot"], ["--page=secure-boot"],
+                              ["--page", "recovery"], ["--page=recovery"]):
                 with self.subTest(existing=existing, arguments=arguments):
+                    page = "recovery" if "recovery" in arguments[-1] else "secure-boot"
                     application, command_line = Mock(), Mock()
                     command_line.get_arguments.return_value = ["driver-center", *arguments]
                     window = Mock()
@@ -96,9 +102,9 @@ class AppTests(unittest.TestCase):
                         self.assertEqual(app.DriverCenterApplication.do_command_line(application, command_line), 0)
                     if existing:
                         constructor.assert_not_called()
-                        window._select_page.assert_called_once_with("secure-boot")
+                        window._select_page.assert_called_once_with(page)
                     else:
-                        constructor.assert_called_once_with(application, initial_page="secure-boot")
+                        constructor.assert_called_once_with(application, initial_page=page)
                     window.present.assert_called_once()
 
     def test_unknown_page_or_argument_does_not_open_a_window(self):

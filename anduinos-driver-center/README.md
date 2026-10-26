@@ -18,6 +18,11 @@ all updates, report live progress and device requests, prompt for required
 restarts, and show the daemon's update history. Firmware authorization and
 signature verification remain owned by fwupd rather than the driver helper.
 
+The Recovery Environment page checks the dedicated ext4 partition, the installed
+recovery package against the local APT cache, and the generated GRUB menu entry.
+It does not refresh software sources or change the system. A fixed read-only
+polkit probe checks menu presence when GRUB configuration is restricted to root.
+
 The audio page reports the installed Intel SOF firmware and ALSA UCM packages,
 deployed support files, loaded SOF modules, and active PCI audio drivers.
 Missing AnduinOS audio support packages can be installed through the same

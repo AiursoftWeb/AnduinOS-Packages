@@ -19,6 +19,7 @@ from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
 from .computer_ui import ComputerPage
 from .intel_graphics_ui import IntelGraphicsPage
+from .recovery import RecoveryState, recovery_state
 
 from .core import (
     AudioState,
@@ -334,7 +335,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
         def worker() -> None:
             result = scan_system()
-            GLib.idle_add(self._apply_scan, *result)
+            GLib.idle_add(self._apply_scan, *result, recovery_state())
 
         threading.Thread(target=worker, daemon=True).start()
 
@@ -346,6 +347,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         dkms: DkmsState,
         audio: AudioState,
         printing: PrintingState,
+        recovery: RecoveryState,
     ) -> bool:
         graphics = list(graphics_scan.devices)
         self._graphics_scan = graphics_scan
@@ -451,6 +453,14 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         secure_row.page_title = _("Secure Boot")
         self.device_list.append(secure_row)
         self.stack.add_named(self._secure_boot_page(secure_boot, dkms), "secure-boot")
+
+        recovery_row = self._device_row(
+            "drive-harddisk-symbolic", _("Recovery Environment"), _("System status")
+        )
+        recovery_row.page_name = "recovery"
+        recovery_row.page_title = _("Recovery Environment")
+        self.device_list.append(recovery_row)
+        self.stack.add_named(self._recovery_page(recovery), "recovery")
 
         firmware_snapshot = self._firmware_manager.snapshot
         firmware_row = self._device_row(
@@ -2165,6 +2175,50 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         )
         return page
 
+    def _recovery_page(self, state: RecoveryState) -> Gtk.ScrolledWindow:
+        page, content = self._page_shell(
+            _("Recovery Environment"),
+            _("Package status uses the local APT cache. Software sources are not refreshed."),
+        )
+        group = Adw.PreferencesGroup()
+        content.append(group)
+        partition_detail = _("Unknown")
+        if state.partition is True:
+            partition_detail = _("Present") + " · " + state.devices[0] + " · ext4"
+        elif state.partition is False:
+            partition_detail = (_("Multiple recovery partitions found") if state.devices
+                                else _("Recovery partition not found"))
+
+        package_detail = _("Not installed")
+        if state.package.installed:
+            if state.up_to_date is True:
+                package_detail = _("Up to date")
+            elif state.up_to_date is False:
+                package_detail = _("Update available")
+            else:
+                package_detail = _("Unknown")
+            package_detail += " · " + (state.package.version or _("Unknown"))
+            if state.up_to_date is False and state.candidate:
+                package_detail += " → " + state.candidate
+
+        for title, subtitle, good in (
+            (_("Recovery partition"), partition_detail, state.partition),
+            (_("Recovery package"), package_detail, state.up_to_date),
+            (_("GRUB menu entry"),
+             _("Present") if state.grub_entry is True else (
+                 _("Recovery menu entry not found") if state.grub_entry is False
+                 else _("Unable to read the GRUB menu")), state.grub_entry),
+        ):
+            row = Adw.ActionRow(title=title, subtitle=subtitle)
+            row.set_use_markup(False)
+            row.add_suffix(_status_icon(
+                "object-select-symbolic" if good is True else (
+                    "dialog-warning-symbolic" if good is False else "dialog-information-symbolic"),
+                "success" if good is True else "warning" if good is False else "dim-label",
+            ))
+            group.add(row)
+        return page
+
     def _printing_package_group(
         self,
         title: str,
@@ -2514,7 +2568,7 @@ class DriverCenterApplication(Adw.Application):
                 continue
             command_line.printerr("Unknown option: %s\n" % argument)
             return 2
-        if requested_page not in {"home", "secure-boot", "computer", "intel-graphics"}:
+        if requested_page not in {"home", "secure-boot", "recovery", "computer", "intel-graphics"}:
             command_line.printerr("Unknown Driver Center page: %s\n" % requested_page)
             return 2
 

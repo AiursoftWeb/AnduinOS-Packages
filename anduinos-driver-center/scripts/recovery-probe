@@ -1,0 +1,20 @@
+#!/usr/bin/python3
+"""Return only recovery menu presence from the fixed GRUB configuration."""
+import json
+import os
+import sys
+
+from anduinos_driver_center.recovery import grub_entry_present
+
+
+def main(arguments):
+    if arguments:
+        return 64
+    if os.geteuid() != 0:
+        return 77
+    print(json.dumps({"grub_entry": grub_entry_present()}))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))
