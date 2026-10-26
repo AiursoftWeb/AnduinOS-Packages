@@ -5,12 +5,15 @@ from __future__ import annotations
 from dataclasses import dataclass, field, replace
 from enum import Enum
 from pathlib import Path
+import gettext
 import os
 import re
 import subprocess
 import sys
 from typing import Protocol, Sequence
 from .intel_graphics import IntelSnapshot, inspect as inspect_intel
+
+_ = gettext.gettext
 
 try:
     from anduinos_secureboot import (
@@ -112,7 +115,7 @@ class HardwareDevice:
             model = bracketed[-1].strip()
         if vendor and model and not model.lower().startswith(vendor.lower()):
             return f"{vendor} {model}"
-        return model or vendor or "Graphics device"
+        return model or vendor or _("Graphics device")
 
 
 @dataclass(frozen=True)
