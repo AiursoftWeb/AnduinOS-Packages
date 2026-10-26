@@ -2358,6 +2358,87 @@ msgstr "अब स्वतः हस्ताक्षर के लिए आ�
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "ड्राइवर हस्ताक्षर की मरम्मत पूरी हो गई है। अब सिस्टम जाँच करेगा कि इंस्टॉल किए गए ड्राइवर विश्वसनीय हैं या नहीं।"
 
+msgid "Recovery Environment"
+msgstr "पुनर्प्राप्ति परिवेश"
+
+msgid "Present"
+msgstr "मौजूद"
+
+msgid "Multiple recovery partitions found"
+msgstr "एकाधिक पुनर्प्राप्ति विभाजन मिले"
+
+msgid "Recovery partition not found"
+msgstr "पुनर्प्राप्ति विभाजन नहीं मिला"
+
+msgid "Recovery partition"
+msgstr "पुनर्प्राप्ति विभाजन"
+
+msgid "Recovery package"
+msgstr "पुनर्प्राप्ति पैकेज"
+
+msgid "GRUB menu entry"
+msgstr "GRUB मेनू प्रविष्टि"
+
+msgid "Recovery menu entry not found"
+msgstr "पुनर्प्राप्ति मेनू प्रविष्टि नहीं मिली"
+
+msgid "Unable to read the GRUB menu"
+msgstr "GRUB मेनू पढ़ने में असमर्थ"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "पैकेज की स्थिति स्थानीय APT कैश का उपयोग करती है। सॉफ़्टवेयर स्रोत रीफ़्रेश नहीं किए जाते।"
+
+msgid "Read recovery boot information"
+msgstr "पुनर्प्राप्ति बूट जानकारी पढ़ें"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "पिछली तैयारी बाधित हुई थी। फिर से प्रयास करने से पहले व्यवस्थापक से सहेजी गई विभाजन तालिका और swap हेडर की जाँच करवाएँ।"
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "इस डिस्क या swap कॉन्फ़िगरेशन के लिए स्वचालित तैयारी उपलब्ध नहीं है। व्यवस्थापक से 256 MiB का AOS_RECOVERY ext4 विभाजन बनवाएँ, फिर दोबारा स्कैन करें।"
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "व्यवस्थापक से कॉन्फ़िगर किए गए या डुप्लिकेट पुनर्प्राप्ति वॉल्यूम जाँचने को कहें, फिर दोबारा स्कैन करें।"
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "अधिक मेमोरी उपयोग करने वाले ऐप बंद करके दोबारा स्कैन करें। इस swap को सुरक्षित रूप से बंद करने के लिए पर्याप्त RAM उपलब्ध नहीं है।"
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "स्थापित पुनर्प्राप्ति इमेज तैनात करके GRUB मेनू दोबारा बनाएँ?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "वर्तमान पैकेज सूचियों से केवल पुनर्प्राप्ति पैकेज स्थापित या अपडेट करें?"
+
+msgid "Install or update recovery package"
+msgstr "पुनर्प्राप्ति पैकेज स्थापित या अपडेट करें"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "स्थानीय APT कैश से उम्मीदवार संस्करण सत्यापित नहीं हो सका। सॉफ़्टवेयर अपडेटर में स्रोत रीफ़्रेश करके दोबारा स्कैन करें।"
+
+msgid "Recovery repair completed."
+msgstr "पुनर्प्राप्ति परिवेश की मरम्मत पूरी हुई।"
+
+msgid "Repair recovery boot menu"
+msgstr "पुनर्प्राप्ति बूट मेनू ठीक करें"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "दोबारा स्कैन करें और केवल पढ़ने वाली जाँच की अनुमति दें। जाँच विफल होती रहे तो ड्राइवर केंद्र और उसके डिस्क टूल की स्थापना ठीक करें।"
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "swap विभाजन छोटा करें और पुनर्प्राप्ति विभाजन बनाएँ"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "swap अस्थायी रूप से बंद होगा। डेटा का बैकअप लें और काम पूरा होने तक कंप्यूटर चालू रखें।"
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "आगे नहीं बढ़ सकते: सिस्टम डिस्क पर सामान्य swap विभाजन नहीं मिला।"
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "आगे नहीं बढ़ सकते: swap विभाजन 512 MiB से छोटा है।"
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "मरम्मत के लिए स्थापित AnduinOS Btrfs @root सिस्टम आवश्यक है। स्थापित सिस्टम चालू करके दोबारा स्कैन करें।"
+
 #: src/anduinos_driver_center/core.py
 msgid "Graphics device"
 msgstr "ग्राफ़िक्स डिवाइस"

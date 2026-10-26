@@ -33,6 +33,7 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(paths, {
             "/usr/libexec/anduinos-driver-center/driver-helper",
             "/usr/libexec/anduinos-driver-center/memory-helper",
+            "/usr/libexec/anduinos-driver-center/recovery-probe",
         })
         self.assertFalse(tree.findall(".//annotate[@key='org.freedesktop.policykit.exec.allow_gui']"))
 

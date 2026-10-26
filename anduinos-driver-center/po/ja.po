@@ -2285,6 +2285,87 @@ msgstr "自動署名で登録済みの証明書を使用するようになりま
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "ドライバー署名の修復が完了しました。インストール済みドライバーが信頼されているか確認します。"
 
+msgid "Recovery Environment"
+msgstr "復旧環境"
+
+msgid "Present"
+msgstr "存在します"
+
+msgid "Multiple recovery partitions found"
+msgstr "複数の復旧パーティションが見つかりました"
+
+msgid "Recovery partition not found"
+msgstr "復旧パーティションが見つかりません"
+
+msgid "Recovery partition"
+msgstr "復旧パーティション"
+
+msgid "Recovery package"
+msgstr "復旧パッケージ"
+
+msgid "GRUB menu entry"
+msgstr "GRUBメニュー項目"
+
+msgid "Recovery menu entry not found"
+msgstr "復旧メニュー項目が見つかりません"
+
+msgid "Unable to read the GRUB menu"
+msgstr "GRUBメニューを読み取れません"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "パッケージの状態はローカルのAPTキャッシュを使用します。ソフトウェアソースは更新しません。"
+
+msgid "Read recovery boot information"
+msgstr "復旧用の起動情報を読み取る"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "前回のパーティション準備が中断されました。再試行する前に、保存されたパーティションテーブルとswapヘッダーを管理者に確認してもらってください。"
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "このディスクまたはswap構成では自動準備を利用できません。管理者に256 MiBのAOS_RECOVERY ext4パーティションを手動で作成してもらい、再スキャンしてください。"
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "設定済みまたは重複した復旧ボリュームを管理者に確認してもらい、再スキャンしてください。"
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "メモリーを多く使用するアプリを閉じて再スキャンしてください。このswapを安全に無効化するための空きRAMが不足しています。"
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "インストール済みの復旧イメージを配置してGRUBメニューを再生成しますか？"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "現在のパッケージ一覧を使用して、復旧パッケージのみをインストールまたは更新しますか？"
+
+msgid "Install or update recovery package"
+msgstr "復旧パッケージをインストールまたは更新"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "ローカルのAPTキャッシュから候補バージョンを確認できませんでした。ソフトウェア更新ツールでソースを更新してから再スキャンしてください。"
+
+msgid "Recovery repair completed."
+msgstr "復旧環境の修復が完了しました。"
+
+msgid "Repair recovery boot menu"
+msgstr "復旧用の起動メニューを修復"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "再スキャンして読み取り専用の検査を許可してください。検査に失敗し続ける場合は、ドライバーセンターとディスクツールのインストールを修復してください。"
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "swapパーティションを縮小して復旧パーティションを作成"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "swapを一時的に無効化します。データをバックアップし、操作が完了するまでコンピューターの電源を維持してください。"
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "続行できません：システムディスクに通常のswapパーティションが見つかりません。"
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "続行できません：swapパーティションが512 MiB未満です。"
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "復旧環境の修復には、インストール済みのAnduinOS Btrfs @rootシステムが必要です。インストール済みシステムを起動して再スキャンしてください。"
+
 #: src/anduinos_driver_center/core.py
 msgid "Graphics device"
 msgstr "グラフィックスデバイス"

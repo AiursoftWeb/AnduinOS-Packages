@@ -2401,6 +2401,87 @@ msgstr "Η αυτόματη υπογραφή χρησιμοποιεί πλέον
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Η επιδιόρθωση υπογραφής προγραμμάτων οδήγησης ολοκληρώθηκε. Τώρα θα ελεγχθεί αν τα εγκατεστημένα προγράμματα οδήγησης είναι αξιόπιστα."
 
+msgid "Recovery Environment"
+msgstr "Περιβάλλον ανάκτησης"
+
+msgid "Present"
+msgstr "Υπάρχει"
+
+msgid "Multiple recovery partitions found"
+msgstr "Βρέθηκαν πολλά διαμερίσματα ανάκτησης"
+
+msgid "Recovery partition not found"
+msgstr "Δεν βρέθηκε διαμέρισμα ανάκτησης"
+
+msgid "Recovery partition"
+msgstr "Διαμέρισμα ανάκτησης"
+
+msgid "Recovery package"
+msgstr "Πακέτο ανάκτησης"
+
+msgid "GRUB menu entry"
+msgstr "Καταχώριση μενού GRUB"
+
+msgid "Recovery menu entry not found"
+msgstr "Δεν βρέθηκε καταχώριση ανάκτησης στο μενού"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Δεν είναι δυνατή η ανάγνωση του μενού GRUB"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "Η κατάσταση πακέτου χρησιμοποιεί την τοπική κρυφή μνήμη APT. Οι πηγές λογισμικού δεν ανανεώνονται."
+
+msgid "Read recovery boot information"
+msgstr "Ανάγνωση πληροφοριών εκκίνησης ανάκτησης"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "Μια προηγούμενη προετοιμασία διακόπηκε. Ζητήστε από διαχειριστή να ελέγξει τον αποθηκευμένο πίνακα διαμερισμάτων και την κεφαλίδα swap πριν δοκιμάσετε ξανά."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Η αυτόματη προετοιμασία δεν είναι διαθέσιμη για αυτή τη διαμόρφωση δίσκου ή swap. Ζητήστε από διαχειριστή να δημιουργήσει διαμέρισμα ext4 AOS_RECOVERY 256 MiB και σαρώστε ξανά."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Ζητήστε από διαχειριστή να ελέγξει τους ρυθμισμένους ή διπλότυπους τόμους ανάκτησης και σαρώστε ξανά."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Κλείστε εφαρμογές που καταναλώνουν πολλή μνήμη και σαρώστε ξανά. Δεν υπάρχει αρκετή διαθέσιμη RAM για ασφαλή απενεργοποίηση αυτού του swap."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Να εγκατασταθεί η υπάρχουσα εικόνα ανάκτησης και να δημιουργηθεί ξανά το μενού GRUB;"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Να εγκατασταθεί ή να ενημερωθεί μόνο το πακέτο ανάκτησης με τις τρέχουσες λίστες πακέτων;"
+
+msgid "Install or update recovery package"
+msgstr "Εγκατάσταση ή ενημέρωση πακέτου ανάκτησης"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Δεν ήταν δυνατή η επαλήθευση υποψήφιας έκδοσης από την τοπική κρυφή μνήμη APT. Ανανεώστε τις πηγές στο εργαλείο ενημερώσεων και σαρώστε ξανά."
+
+msgid "Recovery repair completed."
+msgstr "Η επιδιόρθωση περιβάλλοντος ανάκτησης ολοκληρώθηκε."
+
+msgid "Repair recovery boot menu"
+msgstr "Επιδιόρθωση μενού εκκίνησης ανάκτησης"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Σαρώστε ξανά και επιτρέψτε τον έλεγχο μόνο για ανάγνωση. Αν οι έλεγχοι συνεχίζουν να αποτυγχάνουν, επιδιορθώστε την εγκατάσταση του κέντρου οδηγών και των εργαλείων δίσκου."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Σμίκρυνση διαμερίσματος swap και δημιουργία διαμερίσματος ανάκτησης"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Το swap θα απενεργοποιηθεί προσωρινά. Δημιουργήστε αντίγραφα ασφαλείας και διατηρήστε τον υπολογιστή σε λειτουργία μέχρι να ολοκληρωθεί η διαδικασία."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Δεν είναι δυνατή η συνέχεια: δεν βρέθηκε συνηθισμένο διαμέρισμα swap στον δίσκο συστήματος."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Δεν είναι δυνατή η συνέχεια: το διαμέρισμα swap είναι μικρότερο από 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Η επιδιόρθωση απαιτεί εγκατεστημένο σύστημα AnduinOS Btrfs @root. Εκκινήστε το εγκατεστημένο σύστημα και σαρώστε ξανά."
+
 #: src/anduinos_driver_center/core.py
 msgid "Graphics device"
 msgstr "Συσκευή γραφικών"

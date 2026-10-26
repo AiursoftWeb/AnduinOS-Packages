@@ -2351,6 +2351,87 @@ msgstr "Automatisk signering bruger nu dit tilmeldte certifikat. Den tidligere k
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Reparation af drivertekstSignatur er fuldført. Systemet kontrollerer nu, om de installerede drivere er betroede."
 
+msgid "Recovery Environment"
+msgstr "Gendannelsesmiljø"
+
+msgid "Present"
+msgstr "Findes"
+
+msgid "Multiple recovery partitions found"
+msgstr "Flere gendannelsespartitioner fundet"
+
+msgid "Recovery partition not found"
+msgstr "Gendannelsespartition ikke fundet"
+
+msgid "Recovery partition"
+msgstr "Gendannelsespartition"
+
+msgid "Recovery package"
+msgstr "Gendannelsespakke"
+
+msgid "GRUB menu entry"
+msgstr "GRUB-menupunkt"
+
+msgid "Recovery menu entry not found"
+msgstr "Gendannelsesmenupunkt ikke fundet"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Kan ikke læse GRUB-menuen"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "Pakkestatus bruger den lokale APT-cache. Softwarekilder opdateres ikke."
+
+msgid "Read recovery boot information"
+msgstr "Læs startoplysninger for gendannelse"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "En tidligere klargøring blev afbrudt. Bed en administrator kontrollere den gemte partitionstabel og swapheader, før du prøver igen."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Automatisk klargøring er ikke tilgængelig med denne disk- eller swapkonfiguration. Bed en administrator oprette en 256 MiB ext4-partition med navnet AOS_RECOVERY, og scan igen."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Bed en administrator kontrollere de konfigurerede eller dublerede gendannelsesdiskenheder, og scan igen."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Luk hukommelseskrævende programmer, og scan igen. Der er ikke nok ledig RAM til at deaktivere denne swap sikkert."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Udrul det installerede gendannelsesaftryk, og gendan GRUB-menuen?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Installer eller opdater kun gendannelsespakken med de aktuelle pakkelister?"
+
+msgid "Install or update recovery package"
+msgstr "Installer eller opdater gendannelsespakken"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Ingen kandidatversion kunne bekræftes i den lokale APT-cache. Opdater kilderne i din softwareopdatering, og scan igen."
+
+msgid "Recovery repair completed."
+msgstr "Reparation af gendannelsesmiljø fuldført."
+
+msgid "Repair recovery boot menu"
+msgstr "Reparer gendannelsens startmenu"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Scan igen, og tillad inspektionen med læseadgang. Hvis kontrollerne fortsat fejler, skal installationen af drivercenteret og dets diskværktøjer repareres."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Formindsk swappartition, og opret gendannelsespartition"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Swap bliver midlertidigt deaktiveret. Sikkerhedskopiér dine data, og lad computeren være tændt, indtil handlingen er fuldført."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Kan ikke fortsætte: Ingen almindelig swappartition blev fundet på systemdisken."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Kan ikke fortsætte: Swappartitionen er mindre end 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Reparation kræver et installeret AnduinOS Btrfs @root-system. Start det installerede system, og scan igen."
+
 #: src/anduinos_driver_center/core.py
 msgid "Graphics device"
 msgstr "Grafikenhed"

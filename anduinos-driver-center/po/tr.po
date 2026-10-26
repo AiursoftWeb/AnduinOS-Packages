@@ -2364,6 +2364,87 @@ msgstr "Otomatik imzalama artık kayıtlı sertifikanızı kullanıyor. Önceki 
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Sürücü imzası onarımı tamamlandı. Sistem şimdi yüklü sürücülerin güvenilir olup olmadığını kontrol edecek."
 
+msgid "Recovery Environment"
+msgstr "Kurtarma Ortamı"
+
+msgid "Present"
+msgstr "Mevcut"
+
+msgid "Multiple recovery partitions found"
+msgstr "Birden fazla kurtarma bölümü bulundu"
+
+msgid "Recovery partition not found"
+msgstr "Kurtarma bölümü bulunamadı"
+
+msgid "Recovery partition"
+msgstr "Kurtarma bölümü"
+
+msgid "Recovery package"
+msgstr "Kurtarma paketi"
+
+msgid "GRUB menu entry"
+msgstr "GRUB menü girdisi"
+
+msgid "Recovery menu entry not found"
+msgstr "Kurtarma menü girdisi bulunamadı"
+
+msgid "Unable to read the GRUB menu"
+msgstr "GRUB menüsü okunamıyor"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "Paket durumu yerel APT önbelleğini kullanır. Yazılım kaynakları yenilenmez."
+
+msgid "Read recovery boot information"
+msgstr "Kurtarma önyükleme bilgilerini oku"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "Önceki hazırlık kesintiye uğradı. Yeniden denemeden önce bir yöneticiden kaydedilmiş bölüm tablosunu ve swap başlığını incelemesini isteyin."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Bu disk veya swap yapılandırmasında otomatik hazırlık kullanılamıyor. Bir yöneticiden 256 MiB AOS_RECOVERY ext4 bölümü oluşturmasını isteyin, ardından yeniden tarayın."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Bir yöneticiden yapılandırılmış veya yinelenen kurtarma birimlerini denetlemesini isteyin, ardından yeniden tarayın."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Çok bellek kullanan uygulamaları kapatıp yeniden tarayın. Bu swap alanını güvenle devre dışı bırakmak için yeterli RAM yok."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Yüklü kurtarma görüntüsü dağıtılıp GRUB menüsü yeniden oluşturulsun mu?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Geçerli paket listeleri kullanılarak yalnızca kurtarma paketi yüklensin veya güncellensin mi?"
+
+msgid "Install or update recovery package"
+msgstr "Kurtarma paketini yükle veya güncelle"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Yerel APT önbelleğinden aday sürüm doğrulanamadı. Yazılım güncelleyicinizde kaynakları yenileyip tekrar tarayın."
+
+msgid "Recovery repair completed."
+msgstr "Kurtarma ortamı onarımı tamamlandı."
+
+msgid "Repair recovery boot menu"
+msgstr "Kurtarma önyükleme menüsünü onar"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Yeniden tarayın ve salt okunur incelemeye izin verin. Kontroller yine başarısızsa Sürücü Merkezi kurulumunu ve disk araçlarını onarın."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Swap bölümünü küçült ve kurtarma bölümü oluştur"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Swap geçici olarak devre dışı bırakılacak. Verilerinizi yedekleyin ve işlem bitene kadar bilgisayarı açık tutun."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Devam edilemiyor: sistem diskinde normal bir swap bölümü bulunamadı."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Devam edilemiyor: swap bölümü 512 MiB boyutundan küçük."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Onarım için kurulu bir AnduinOS Btrfs @root sistemi gerekir. Kurulu sistemi başlatıp yeniden tarayın."
+
 #: src/anduinos_driver_center/core.py
 msgid "Graphics device"
 msgstr "Grafik aygıtı"

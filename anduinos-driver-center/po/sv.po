@@ -2364,6 +2364,87 @@ msgstr "Automatisk signering använder nu ditt registrerade certifikat. Den tidi
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Reparationen av drivrutinssignaturer är klar. Systemet kontrollerar nu om de installerade drivrutinerna är betrodda."
 
+msgid "Recovery Environment"
+msgstr "Återställningsmiljö"
+
+msgid "Present"
+msgstr "Finns"
+
+msgid "Multiple recovery partitions found"
+msgstr "Flera återställningspartitioner hittades"
+
+msgid "Recovery partition not found"
+msgstr "Återställningspartitionen hittades inte"
+
+msgid "Recovery partition"
+msgstr "Återställningspartition"
+
+msgid "Recovery package"
+msgstr "Återställningspaket"
+
+msgid "GRUB menu entry"
+msgstr "GRUB-menypost"
+
+msgid "Recovery menu entry not found"
+msgstr "Återställningsposten hittades inte i menyn"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Det går inte att läsa GRUB-menyn"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "Paketstatus använder den lokala APT-cachen. Programvarukällorna uppdateras inte."
+
+msgid "Read recovery boot information"
+msgstr "Läs startinformation för återställning"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "En tidigare förberedelse avbröts. Be en administratör kontrollera den sparade partitionstabellen och swap-huvudet innan du försöker igen."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Automatisk förberedelse är inte tillgänglig för denna disk- eller swapkonfiguration. Be en administratör skapa en ext4-partition AOS_RECOVERY på 256 MiB och sök igen."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Be en administratör kontrollera konfigurerade eller dubbla återställningsvolymer och sök igen."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Stäng minneskrävande program och sök igen. Det finns inte tillräckligt med ledigt RAM för att inaktivera denna swap säkert."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Distribuera den installerade återställningsavbildningen och återskapa GRUB-menyn?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Installera eller uppdatera endast återställningspaketet med de aktuella paketlistorna?"
+
+msgid "Install or update recovery package"
+msgstr "Installera eller uppdatera återställningspaketet"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Ingen kandidatversion kunde verifieras i den lokala APT-cachen. Uppdatera källorna i programuppdateraren och sök igen."
+
+msgid "Recovery repair completed."
+msgstr "Reparation av återställningsmiljön klar."
+
+msgid "Repair recovery boot menu"
+msgstr "Reparera återställningens startmeny"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Sök igen och tillåt skrivskyddad inspektion. Om kontrollerna fortfarande misslyckas ska installationen av drivrutinscentret och dess diskverktyg repareras."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Minska swap-partitionen och skapa återställningspartition"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Swap inaktiveras tillfälligt. Säkerhetskopiera dina data och håll datorn påslagen tills åtgärden är klar."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Kan inte fortsätta: Ingen vanlig swap-partition hittades på systemdisken."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Kan inte fortsätta: Swap-partitionen är mindre än 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Reparation kräver ett installerat AnduinOS Btrfs @root-system. Starta det installerade systemet och sök igen."
+
 #: src/anduinos_driver_center/core.py
 msgid "Graphics device"
 msgstr "Grafikenhet"

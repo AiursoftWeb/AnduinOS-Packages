@@ -2377,6 +2377,87 @@ msgstr "Automaattinen allekirjoitus käyttää nyt rekisteröityä todistustasi.
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Kuljettajan allekirjoituksen korjaus on valmis. Järjestelmä tarkistaa nyt, ovatko asennetut kuljettajat luotettavia."
 
+msgid "Recovery Environment"
+msgstr "Palautusympäristö"
+
+msgid "Present"
+msgstr "Löytyy"
+
+msgid "Multiple recovery partitions found"
+msgstr "Löytyi useita palautusosioita"
+
+msgid "Recovery partition not found"
+msgstr "Palautusosiota ei löytynyt"
+
+msgid "Recovery partition"
+msgstr "Palautusosio"
+
+msgid "Recovery package"
+msgstr "Palautuspaketti"
+
+msgid "GRUB menu entry"
+msgstr "GRUB-valikkokohta"
+
+msgid "Recovery menu entry not found"
+msgstr "Palautuksen valikkokohtaa ei löytynyt"
+
+msgid "Unable to read the GRUB menu"
+msgstr "GRUB-valikkoa ei voida lukea"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "Paketin tila perustuu paikalliseen APT-välimuistiin. Ohjelmalähteitä ei päivitetä."
+
+msgid "Read recovery boot information"
+msgstr "Lue palautuksen käynnistystiedot"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "Aiempi valmistelu keskeytyi. Pyydä järjestelmänvalvojaa tarkistamaan tallennettu osiotaulu ja swap-otsake ennen uutta yritystä."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Automaattinen valmistelu ei ole käytettävissä tällä levy- tai swap-kokoonpanolla. Pyydä järjestelmänvalvojaa luomaan 256 MiB:n ext4-osio AOS_RECOVERY ja suorita tarkistus uudelleen."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Pyydä järjestelmänvalvojaa tarkistamaan määritetyt tai päällekkäiset palautustaltiot ja suorita tarkistus uudelleen."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Sulje paljon muistia käyttävät sovellukset ja tarkista uudelleen. Vapaata RAM-muistia ei ole riittävästi tämän swapin turvalliseen poistamiseen käytöstä."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Otetaanko asennettu palautuslevykuva käyttöön ja luodaanko GRUB-valikko uudelleen?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Asennetaanko tai päivitetäänkö vain palautuspaketti nykyisillä pakettiluetteloilla?"
+
+msgid "Install or update recovery package"
+msgstr "Asenna tai päivitä palautuspaketti"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Paikallisesta APT-välimuistista ei voitu varmistaa ehdokasversiota. Päivitä lähteet ohjelmistopäivittimessä ja tarkista uudelleen."
+
+msgid "Recovery repair completed."
+msgstr "Palautusympäristön korjaus valmis."
+
+msgid "Repair recovery boot menu"
+msgstr "Korjaa palautuksen käynnistysvalikko"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Tarkista uudelleen ja salli vain luku -tarkastus. Jos tarkistukset epäonnistuvat edelleen, korjaa ajurikeskuksen ja sen levytyökalujen asennus."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Pienennä swap-osiota ja luo palautusosio"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Swap poistetaan tilapäisesti käytöstä. Varmuuskopioi tiedot ja pidä tietokone käynnissä toimenpiteen loppuun asti."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Ei voida jatkaa: järjestelmälevyltä ei löytynyt tavallista swap-osiota."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Ei voida jatkaa: swap-osio on pienempi kuin 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Korjaus vaatii asennetun AnduinOS Btrfs @root -järjestelmän. Käynnistä asennettu järjestelmä ja tarkista uudelleen."
+
 #: src/anduinos_driver_center/core.py
 msgid "Graphics device"
 msgstr "Grafiikkalaite"

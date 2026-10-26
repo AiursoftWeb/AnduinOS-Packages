@@ -19,6 +19,7 @@ from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
 
 from .computer_ui import ComputerPage
 from .intel_graphics_ui import IntelGraphicsPage
+from .recovery import RecoveryState, recovery_state, repair_step
 
 from .core import (
     AudioState,
@@ -334,7 +335,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
         def worker() -> None:
             result = scan_system()
-            GLib.idle_add(self._apply_scan, *result)
+            GLib.idle_add(self._apply_scan, *result, recovery_state())
 
         threading.Thread(target=worker, daemon=True).start()
 
@@ -346,6 +347,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         dkms: DkmsState,
         audio: AudioState,
         printing: PrintingState,
+        recovery: RecoveryState,
     ) -> bool:
         graphics = list(graphics_scan.devices)
         self._graphics_scan = graphics_scan
@@ -451,6 +453,14 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         secure_row.page_title = _("Secure Boot")
         self.device_list.append(secure_row)
         self.stack.add_named(self._secure_boot_page(secure_boot, dkms), "secure-boot")
+
+        recovery_row = self._device_row(
+            "drive-harddisk-symbolic", _("Recovery Environment"), _("System status")
+        )
+        recovery_row.page_name = "recovery"
+        recovery_row.page_title = _("Recovery Environment")
+        self.device_list.append(recovery_row)
+        self.stack.add_named(self._recovery_page(recovery), "recovery")
 
         firmware_snapshot = self._firmware_manager.snapshot
         firmware_row = self._device_row(
@@ -2165,6 +2175,147 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         )
         return page
 
+    def _recovery_page(self, state: RecoveryState) -> Gtk.ScrolledWindow:
+        page, content = self._page_shell(
+            _("Recovery Environment"),
+            _("Package status uses the local APT cache. Software sources are not refreshed."),
+        )
+        group = Adw.PreferencesGroup()
+        content.append(group)
+        partition_detail = _("Unknown")
+        if state.partition is True:
+            partition_detail = _("Present") + " · " + state.devices[0] + " · ext4"
+        elif state.partition is False:
+            partition_detail = (_("Multiple recovery partitions found") if state.devices
+                                else _("Recovery partition not found"))
+
+        package_detail = _("Not installed")
+        if state.package.installed:
+            if state.up_to_date is True:
+                package_detail = _("Up to date")
+            elif state.up_to_date is False:
+                package_detail = _("Update available")
+            else:
+                package_detail = _("Unknown")
+            package_detail += " · " + (state.package.version or _("Unknown"))
+            if state.up_to_date is False and state.candidate:
+                package_detail += " → " + state.candidate
+
+        for title, subtitle, good in (
+            (_("Recovery partition"), partition_detail, state.partition),
+            (_("Recovery package"), package_detail, state.up_to_date),
+            (_("GRUB menu entry"),
+             _("Present") if state.grub_entry is True else (
+                 _("Recovery menu entry not found") if state.grub_entry is False
+                 else _("Unable to read the GRUB menu")), state.grub_entry),
+        ):
+            row = Adw.ActionRow(title=title, subtitle=subtitle)
+            row.set_use_markup(False)
+            row.add_suffix(_status_icon(
+                "object-select-symbolic" if good is True else (
+                    "dialog-warning-symbolic" if good is False else "dialog-information-symbolic"),
+                "success" if good is True else "warning" if good is False else "dim-label",
+            ))
+            group.add(row)
+        self._append_recovery_repair(content, state)
+        return page
+
+    def _append_recovery_repair(self, content: Gtk.Box, state: RecoveryState) -> None:
+        action, reason = repair_step(state)
+        if reason == "healthy":
+            return
+        prepare_label = _("Shrink swap partition and create recovery partition")
+        install_label = _("Install or update recovery package")
+        boot_label = _("Repair recovery boot menu")
+        repair = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        heading = Gtk.Label(label=_("Next step:"), xalign=0)
+        heading.add_css_class("heading")
+        repair.append(heading)
+        steps = []
+        for number, complete, label in (
+            (1, state.partition, prepare_label),
+            (2, state.up_to_date, install_label),
+            (3, state.grub_entry, boot_label),
+        ):
+            if complete is not True:
+                steps.append(f"{number}. {label}")
+        repair.append(Gtk.Label(label="\n".join(steps), xalign=0, wrap=True))
+        descriptions = {
+            "no-swap": _("Unable to continue: no ordinary swap partition was found on the system disk."),
+            "small-swap": _("Unable to continue: the swap partition is smaller than 512 MiB."),
+            "existing-volume": _("Check the configured or duplicate recovery volumes with an administrator, then scan again."),
+            "bound-volume": _("Check the configured or duplicate recovery volumes with an administrator, then scan again."),
+            "interrupted": _("A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."),
+            "memory": _("Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."),
+            "inspection-failed": _("Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."),
+            "missing-tools": _("Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."),
+            "package-unknown": _("No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."),
+            "menu-unknown": _("Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."),
+            "unsupported-root": _("Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."),
+        }
+        if reason in {"unsupported-layout", "multiple-swaps", "swap-priority"}:
+            description = _("Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again.")
+        else:
+            description = descriptions.get(reason, "")
+        if description:
+            detail = Gtk.Label(label=description, xalign=0, wrap=True)
+            detail.add_css_class("warning" if action is None else "dim-label")
+            repair.append(detail)
+        if reason == "interrupted":
+            repair.append(Gtk.Label(label=state.preparation.get("backup", ""), xalign=0, wrap=True,
+                                    selectable=True))
+        labels = {"prepare": prepare_label, "install": install_label, "boot": boot_label,
+                  "scan": _("Scan again")}
+        disabled_prepare = state.partition is False and reason in {
+            "no-swap", "small-swap", "multiple-swaps", "memory", "swap-priority", "unsupported-layout",
+        }
+        if action or disabled_prepare:
+            button = Gtk.Button(label=labels.get(action, prepare_label), halign=Gtk.Align.START)
+            button.get_child().set_wrap(True)
+            button.get_child().set_max_width_chars(46)
+            button.set_sensitive(action is not None)
+            if action:
+                button.add_css_class("suggested-action")
+                if action == "scan":
+                    button.connect("clicked", lambda _button: self.refresh())
+                else:
+                    button.connect("clicked", lambda clicked: self._confirm_recovery_repair(clicked, action, state))
+            repair.append(button)
+        content.append(repair)
+
+    def _confirm_recovery_repair(self, button, action: str, state: RecoveryState) -> None:
+        import json
+        from .computer import capacity
+        arguments = {"prepare": "recovery-prepare", "install": "recovery-install", "boot": "recovery-boot"}
+        if action not in arguments or getattr(self, "_operation_running", False):
+            return
+        request = None
+        if action == "prepare":
+            request = state.preparation["plan"]
+            body = (
+                _("System disk") + ": " + request["disk"] + "\n"
+                + "swap: " + request["swap"] + " · " + capacity(request["swap_bytes"], True)
+                + " → " + capacity(request["remaining_bytes"], True) + "\n"
+                + _("Recovery partition") + ": " + request["new_device"] + " · 256 MiB · ext4\n\n"
+                + _("Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes.")
+            )
+        elif action == "install":
+            body = _("Install or update only the recovery package using the current software lists?")
+        else:
+            body = _("Deploy the installed recovery image and regenerate the GRUB menu?")
+        dialog = Adw.MessageDialog(transient_for=self, heading=button.get_label(), body=body)
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("apply", _("Apply"))
+        dialog.set_close_response("cancel")
+        dialog.set_default_response("cancel")
+        dialog.set_response_appearance("apply", Adw.ResponseAppearance.DESTRUCTIVE
+                                       if action == "prepare" else Adw.ResponseAppearance.SUGGESTED)
+        dialog.connect("response", lambda _dialog, response: self._run_action(
+            button, [arguments[action]], stdin=json.dumps(request) if request is not None else None,
+            success_message=_("Recovery repair completed."),
+        ) if response == "apply" else None)
+        dialog.present()
+
     def _printing_package_group(
         self,
         title: str,
@@ -2514,7 +2665,7 @@ class DriverCenterApplication(Adw.Application):
                 continue
             command_line.printerr("Unknown option: %s\n" % argument)
             return 2
-        if requested_page not in {"home", "secure-boot", "computer", "intel-graphics"}:
+        if requested_page not in {"home", "secure-boot", "recovery", "computer", "intel-graphics"}:
             command_line.printerr("Unknown Driver Center page: %s\n" % requested_page)
             return 2
 
