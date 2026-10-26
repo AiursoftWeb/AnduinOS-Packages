@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-recovery-env</PackageName>
-    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Independent offline Btrfs snapshot recovery environment</PackageDescription>
     <Section>admin</Section>
@@ -9,9 +9,9 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0-or-later</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetSuites>resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
-    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
     <Component>main</Component>
   </PropertyGroup>
   <ItemGroup>
@@ -45,7 +45,7 @@
     <BuildInput Include="libbz2-1.0" Sources="ubuntu" Arch="$(Arch)" />
     <BuildInput Include="fonts-dejavu-core" Sources="ubuntu" Arch="$(Arch)" />
     <BuildInput Include="fonts-wqy-microhei" Sources="ubuntu" Arch="$(Arch)" />
-    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute" />
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute stonking-addon=stonking" />
     <Dependency Include="python3" />
     <Dependency Include="util-linux" />
     <Dependency Include="btrfs-progs" />
