@@ -31,7 +31,8 @@ def layout(swap_bytes=512 * MIB, sector=512):
     blocks = [dict(name='/dev/vda', type='disk', size=disk_bytes, **{'maj:min': '252:0'}),
               dict(name='/dev/vda2', pkname='/dev/vda', type='part', size=swap_bytes, fstype='swap',
                    uuid=SWAP_UUID, label='AnduinOS-swap', **{'maj:min': '252:2'}),
-              dict(name='/dev/vda3', pkname='/dev/vda', type='part', fstype='btrfs', uuid=ROOT_UUID)]
+              dict(name='/dev/vda3', pkname='/dev/vda', type='part', fstype='btrfs', uuid=ROOT_UUID),
+              dict(name='/dev/vda1', pkname='/dev/vda', type='part', fstype='vfat')]
     identity = dict(TYPE='swap', UUID=SWAP_UUID, LABEL='AnduinOS-swap')
     swaps = [dict(name='/dev/vda2', type='partition', prio=10, used=0)]
     return dict(root=root, blocks=blocks, table=table, identity=identity, swaps=swaps,
@@ -73,12 +74,21 @@ class PreparationPlanTests(unittest.TestCase):
         data = layout()
         data['root']['fsroot'] = '/'
         self.assertEqual(partition.make_plan(**data)['reason'], 'unsupported-root')
+
         data = layout()
         data['blocks'][0]['type'] = 'crypt'
         self.assertEqual(partition.make_plan(**data)['reason'], 'unsupported-root')
         data = layout()
         data['blocks'].append(dict(data['blocks'][2], name='/dev/vdb2'))
         self.assertEqual(partition.make_plan(**data)['reason'], 'unsupported-root')
+
+    def test_kernel_partitions_must_all_exist_in_the_saved_gpt(self):
+        data = layout()
+        data['table']['partitions'] = data['table']['partitions'][:2]
+        self.assertEqual(partition.make_plan(**data)['reason'], 'unsupported-layout')
+        data = layout()
+        data['blocks'].append(dict(name='/dev/vda5', pkname='/dev/vda', type='part'))
+        self.assertEqual(partition.make_plan(**data)['reason'], 'unsupported-layout')
 
     def test_mbr_overlap_misalignment_and_wrong_swap_identity_are_rejected(self):
         for change in ('mbr', 'overlap', 'alignment', 'identity', 'size'):

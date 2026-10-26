@@ -97,6 +97,9 @@ def make_plan(root, blocks, table, identity, swaps, available_memory):
     if table.get("label") != "gpt" or sector not in (512, 4096) or table.get("device") != disk["name"]:
         return {"reason": "unsupported-layout"}
     parts = table["partitions"]
+    kernel_parts = {b["name"] for b in blocks if b.get("type") == "part" and b.get("pkname") == disk["name"]}
+    if {part["node"] for part in parts} != kernel_parts:
+        return {"reason": "unsupported-layout"}
     selected = next((p for p in parts if p["node"] == swap["name"]), None)
     if (not selected or selected["type"].lower() != SWAP_TYPE
             or selected["size"] * sector != int(swap["size"])
