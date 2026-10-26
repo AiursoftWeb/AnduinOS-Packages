@@ -73,7 +73,9 @@ impl ChineseConverter {
         // SAFETY: load the distribution's OpenCC C ABI; keep the library alive
         // until its converter has been closed. No pointer escapes this owner.
         unsafe {
+            // Resolute ships OpenCC 1.1; Stonking ships 1.4 with the same C API.
             let library = libloading::Library::new("libopencc.so.1.1")
+                .or_else(|_| libloading::Library::new("libopencc.so.1.4"))
                 .map_err(|_| "OpenCC is not installed".to_owned())?;
             let open = library
                 .get::<unsafe extern "C" fn(*const c_char) -> *mut c_void>(b"opencc_open\0")

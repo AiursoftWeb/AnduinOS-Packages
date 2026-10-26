@@ -9,13 +9,13 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetSuites>resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
   </PropertyGroup>
   <ItemGroup>
-    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute" />
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute stonking-addon=stonking" />
     <Dependency Include="libc6 (&gt;= 2.34)" />
     <Dependency Include="libggml0 (&gt;= 0.9.11)" />
     <Recommend Include="libggml0-backend-vulkan (&gt;= 0.9.11)" />
