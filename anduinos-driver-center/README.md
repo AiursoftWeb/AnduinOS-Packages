@@ -20,8 +20,12 @@ signature verification remain owned by fwupd rather than the driver helper.
 
 The Recovery Environment page checks the dedicated ext4 partition, the installed
 recovery package against the local APT cache, and the generated GRUB menu entry.
-It does not refresh software sources or change the system. A fixed read-only
-polkit probe checks menu presence when GRUB configuration is restricted to root.
+Scanning does not refresh software sources or change the system. A fixed
+read-only polkit probe checks boot information and repair eligibility. Non-green
+checks show ordered repair steps. Explicitly confirmed repairs can prepare a
+256 MiB recovery partition from an ordinary system-disk GPT swap partition of
+at least 512 MiB, install or update the recovery package, or repair its boot
+menu. Unsupported layouts explain why automatic preparation cannot continue.
 
 The audio page reports the installed Intel SOF firmware and ALSA UCM packages,
 deployed support files, loaded SOF modules, and active PCI audio drivers.

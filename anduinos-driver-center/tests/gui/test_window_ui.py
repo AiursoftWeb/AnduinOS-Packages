@@ -62,6 +62,46 @@ class WindowScanTests(unittest.TestCase):
                 visit(content)
                 self.assertEqual([row.get_subtitle() for row in rows], expected)
 
+    def test_missing_or_small_swap_disables_preparation_and_explains_the_blocker(self):
+        messages = {
+            "no-swap": "no ordinary swap partition",
+            "small-swap": "smaller than 512 MiB",
+        }
+        for reason, message in messages.items():
+            with self.subTest(reason=reason), patch.object(app, "_", side_effect=lambda text: text):
+                state = RecoveryState(False, (), PackageState("anduinos-recovery-env", False, None),
+                                      None, False, False, {"reason": reason})
+                content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+                app.DriverCenterWindow._append_recovery_repair(Mock(), content, state)
+                labels, buttons = [], []
+
+                def visit(widget):
+                    if isinstance(widget, Gtk.Label): labels.append(widget.get_label())
+                    if isinstance(widget, Gtk.Button): buttons.append(widget)
+                    child = widget.get_first_child()
+                    while child:
+                        visit(child)
+                        child = child.get_next_sibling()
+
+                visit(content)
+                self.assertIn(message, "\n".join(labels))
+                self.assertEqual(len(buttons), 1)
+                self.assertFalse(buttons[0].get_sensitive())
+                self.assertEqual(buttons[0].get_label(), "Shrink swap partition and create recovery partition")
+
+    def test_eligible_preparation_opens_confirmation_instead_of_running_a_command(self):
+        with patch.object(app, "_", side_effect=lambda text: text):
+            window = Mock()
+            content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+            state = RecoveryState(False, (), PackageState("anduinos-recovery-env", False, None),
+                                  None, False, False, {"reason": "ready", "plan": {"disk": "/dev/vda"}})
+            app.DriverCenterWindow._append_recovery_repair(window, content, state)
+            button = content.get_first_child().get_last_child()
+            self.assertTrue(button.get_sensitive())
+            button.emit("clicked")
+            window._confirm_recovery_repair.assert_called_once_with(button, "prepare", state)
+            window._run_action.assert_not_called()
+
     def test_initial_scan_and_rescan_build_all_pages_and_preserve_selection(self):
         scan = (
             GraphicsScan(),

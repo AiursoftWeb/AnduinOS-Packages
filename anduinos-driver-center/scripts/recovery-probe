@@ -1,10 +1,11 @@
 #!/usr/bin/python3
-"""Return only recovery menu presence from the fixed GRUB configuration."""
+"""Fixed read-only recovery boot check and system-disk preparation preview."""
 import json
 import os
 import sys
 
 from anduinos_driver_center.recovery import grub_entry_present
+from anduinos_driver_center.recovery_partition import inspect_partition
 
 
 def main(arguments):
@@ -12,7 +13,10 @@ def main(arguments):
         return 64
     if os.geteuid() != 0:
         return 77
-    print(json.dumps({"grub_entry": grub_entry_present()}))
+    inspection = inspect_partition()
+    # Do not expose the full partition table or private backup contents.
+    preparation = {key: inspection[key] for key in ("reason", "plan", "backup") if key in inspection}
+    print(json.dumps({"grub_entry": grub_entry_present(), "preparation": preparation}))
     return 0
 
 

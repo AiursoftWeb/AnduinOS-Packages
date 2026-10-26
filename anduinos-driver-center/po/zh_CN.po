@@ -2258,3 +2258,51 @@ msgstr "包状态根据本地 APT 缓存检查，不刷新软件源。"
 
 msgid "Read recovery boot information"
 msgstr "读取恢复启动信息"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "上一次分区准备被中断。重试前，请管理员检查保存的分区表和 swap 头部备份。"
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "当前磁盘或 swap 配置不支持自动准备。请管理员手动创建 256 MiB、卷标为 AOS_RECOVERY 的 ext4 分区，然后重新扫描。"
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "请管理员检查已绑定或重复的恢复分区，然后重新扫描。"
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "请关闭占用大量内存的应用后重新扫描。当前可用内存不足，无法安全停用该 swap。"
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "部署已安装的恢复镜像并重新生成 GRUB 菜单？"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "使用当前软件包列表，仅安装或更新恢复包？"
+
+msgid "Install or update recovery package"
+msgstr "安装或更新恢复包"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "无法从本地 APT 缓存确认候选版本。请在软件更新器中刷新软件源，然后重新扫描。"
+
+msgid "Recovery repair completed."
+msgstr "恢复环境修复已完成。"
+
+msgid "Repair recovery boot menu"
+msgstr "修复恢复启动菜单"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "请重新扫描并允许只读检测。若仍然失败，请修复驱动中心及其磁盘工具的安装。"
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "缩减 swap 分区并创建恢复分区"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "操作将暂时停用 swap。请备份数据，并保持电脑供电，直到操作结束。"
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "无法继续：系统磁盘上未找到普通 swap 分区。"
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "无法继续：swap 分区小于 512 MiB。"
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "修复恢复环境需要已安装的 AnduinOS Btrfs @root 系统。请启动已安装的系统后重新扫描。"

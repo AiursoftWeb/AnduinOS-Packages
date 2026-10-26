@@ -28,6 +28,8 @@ class HelperTests(unittest.TestCase):
         for arguments in (
             [], ["install-audio", "extra"], ["set-printing-enabled", "maybe"],
             ["install; reboot"], ["$(id)"],
+            ["recovery-prepare", "/dev/sda"], ["recovery-install", "other-package"],
+            ["recovery-boot", "extra"],
         ):
             with (
                 self.subTest(arguments=arguments),

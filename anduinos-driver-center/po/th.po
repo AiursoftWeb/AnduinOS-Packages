@@ -2362,3 +2362,51 @@ msgstr "สถานะแพ็กเกจใช้แคช APT ในเค�
 
 msgid "Read recovery boot information"
 msgstr "อ่านข้อมูลการบูตการกู้คืน"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "การเตรียมก่อนหน้านี้ถูกขัดจังหวะ โปรดให้ผู้ดูแลระบบตรวจสอบตารางพาร์ทิชันและส่วนหัว swap ที่บันทึกไว้ก่อนลองใหม่"
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "ไม่สามารถเตรียมอัตโนมัติสำหรับการกำหนดค่าดิสก์หรือ swap นี้ โปรดให้ผู้ดูแลระบบสร้างพาร์ทิชัน ext4 AOS_RECOVERY ขนาด 256 MiB แล้วสแกนใหม่"
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "โปรดให้ผู้ดูแลระบบตรวจสอบโวลุ่มกู้คืนที่กำหนดค่าไว้หรือซ้ำกัน แล้วสแกนใหม่"
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "ปิดแอปที่ใช้หน่วยความจำมากแล้วสแกนใหม่ มี RAM ว่างไม่พอที่จะปิด swap นี้อย่างปลอดภัย"
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "ติดตั้งอิมเมจกู้คืนที่มีอยู่และสร้างเมนู GRUB ใหม่หรือไม่"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "ติดตั้งหรืออัปเดตเฉพาะแพ็กเกจกู้คืนโดยใช้รายการแพ็กเกจปัจจุบันหรือไม่"
+
+msgid "Install or update recovery package"
+msgstr "ติดตั้งหรืออัปเดตแพ็กเกจกู้คืน"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "ไม่สามารถตรวจสอบรุ่นที่พร้อมติดตั้งจากแคช APT ในเครื่องได้ โปรดรีเฟรชแหล่งซอฟต์แวร์ในโปรแกรมอัปเดตแล้วสแกนใหม่"
+
+msgid "Recovery repair completed."
+msgstr "ซ่อมแซมสภาพแวดล้อมการกู้คืนเสร็จแล้ว"
+
+msgid "Repair recovery boot menu"
+msgstr "ซ่อมแซมเมนูบูตกู้คืน"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "สแกนใหม่และอนุญาตการตรวจสอบแบบอ่านอย่างเดียว หากยังล้มเหลว ให้ซ่อมแซมการติดตั้งศูนย์ไดรเวอร์และเครื่องมือดิสก์"
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "ย่อพาร์ทิชัน swap และสร้างพาร์ทิชันกู้คืน"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "swap จะถูกปิดชั่วคราว โปรดสำรองข้อมูลและเปิดคอมพิวเตอร์ไว้จนกว่าการดำเนินการจะเสร็จ"
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "ดำเนินการต่อไม่ได้: ไม่พบพาร์ทิชัน swap แบบปกติบนดิสก์ระบบ"
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "ดำเนินการต่อไม่ได้: พาร์ทิชัน swap มีขนาดเล็กกว่า 512 MiB"
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "การซ่อมแซมต้องใช้ระบบ AnduinOS Btrfs @root ที่ติดตั้งแล้ว โปรดบูตระบบที่ติดตั้งแล้วและสแกนใหม่"

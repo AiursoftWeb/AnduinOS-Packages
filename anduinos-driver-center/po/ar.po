@@ -2416,3 +2416,51 @@ msgstr "تعتمد حالة الحزمة على ذاكرة APT المحلية. �
 
 msgid "Read recovery boot information"
 msgstr "قراءة معلومات إقلاع الاسترداد"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "توقفت عملية إعداد سابقة. اطلب من مسؤول فحص جدول الأقسام ورأس swap المحفوظين قبل المحاولة مجددًا."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "الإعداد التلقائي غير متاح لتكوين القرص أو swap هذا. اطلب من مسؤول إنشاء قسم ext4 بحجم 256 MiB وتسميته AOS_RECOVERY، ثم أعد الفحص."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "اطلب من مسؤول فحص وحدات الاسترداد المهيأة أو المكررة، ثم أعد الفحص."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "أغلق التطبيقات كثيفة استهلاك الذاكرة وأعد الفحص. لا توجد ذاكرة RAM متاحة كافية لتعطيل swap هذا بأمان."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "هل تريد نشر صورة الاسترداد المثبتة وإعادة إنشاء قائمة GRUB؟"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "هل تريد تثبيت حزمة الاسترداد فقط أو تحديثها باستخدام قوائم الحزم الحالية؟"
+
+msgid "Install or update recovery package"
+msgstr "تثبيت حزمة الاسترداد أو تحديثها"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "تعذر التحقق من إصدار مرشح من ذاكرة APT المحلية. حدّث المصادر في برنامج تحديث البرمجيات ثم أعد الفحص."
+
+msgid "Recovery repair completed."
+msgstr "اكتمل إصلاح بيئة الاسترداد."
+
+msgid "Repair recovery boot menu"
+msgstr "إصلاح قائمة إقلاع الاسترداد"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "أعد الفحص واسمح بالفحص للقراءة فقط. إذا استمر الفشل، فأصلح تثبيت مركز برامج التشغيل وأدوات الأقراص الخاصة به."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "تقليص قسم swap وإنشاء قسم استرداد"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "سيتم تعطيل swap مؤقتًا. انسخ بياناتك احتياطيًا وأبقِ الحاسوب قيد التشغيل حتى تكتمل العملية."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "يتعذر المتابعة: لم يتم العثور على قسم swap عادي على قرص النظام."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "يتعذر المتابعة: قسم swap أصغر من 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "يتطلب الإصلاح نظام AnduinOS Btrfs @root مثبتًا. شغّل النظام المثبت ثم أعد الفحص."

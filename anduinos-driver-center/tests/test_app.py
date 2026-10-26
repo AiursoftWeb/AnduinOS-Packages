@@ -16,6 +16,27 @@ from anduinos_secureboot.model import DkmsState, SecureBootState, SecureBootStat
 
 
 class AppTests(unittest.TestCase):
+    def test_recovery_disk_confirmation_defaults_to_cancel_and_sends_only_the_approved_plan(self):
+        import json
+        plan = dict(disk="/dev/vda", swap="/dev/vda2", new_device="/dev/vda4",
+                    swap_bytes=512 * 1024 * 1024, remaining_bytes=256 * 1024 * 1024)
+        state = RecoveryState(False, (), PackageState("anduinos-recovery-env", False, None),
+                              None, False, False, {"reason": "ready", "plan": plan})
+        window, button = Mock(_operation_running=False), Mock()
+        with patch.object(app.Adw, "MessageDialog") as factory:
+            DriverCenterWindow._confirm_recovery_repair(window, button, "prepare", state)
+        dialog = factory.return_value
+        dialog.set_default_response.assert_called_once_with("cancel")
+        dialog.set_close_response.assert_called_once_with("cancel")
+        self.assertIn("512", factory.call_args.kwargs["body"])
+        self.assertIn("256", factory.call_args.kwargs["body"])
+        callback = dialog.connect.call_args.args[1]
+        callback(dialog, "cancel")
+        window._run_action.assert_not_called()
+        callback(dialog, "apply")
+        self.assertEqual(window._run_action.call_args.args[1], ["recovery-prepare"])
+        self.assertEqual(json.loads(window._run_action.call_args.kwargs["stdin"]), plan)
+
     def test_scan_builds_navigation_and_restores_selection_without_a_display(self):
         window = Mock()
         window._computer_page = None

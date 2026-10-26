@@ -112,7 +112,7 @@ class RecoveryTests(unittest.TestCase):
                 self.assertIs(state.grub_entry, probe if type(probe) is bool else None)
                 self.assertIn(["pkexec", "--disable-internal-agent", recovery.PROBE], runner.commands)
 
-    def test_probe_rejects_arguments_and_unprivileged_calls_and_emits_only_boolean(self):
+    def test_probe_rejects_arguments_and_unprivileged_calls_and_filters_private_context(self):
         path = Path(__file__).resolve().parents[1] / "scripts/recovery-probe"
         loader = SourceFileLoader("recovery_probe", str(path))
         probe = types.ModuleType(loader.name)
@@ -122,6 +122,38 @@ class RecoveryTests(unittest.TestCase):
         with patch.object(probe.os, "geteuid", return_value=0):
             self.assertEqual(probe.main(["/etc/shadow"]), 64)
             output = io.StringIO()
-            with contextlib.redirect_stdout(output), patch.object(probe, "grub_entry_present", return_value=True):
+            with contextlib.redirect_stdout(output), patch.object(probe, "grub_entry_present", return_value=True), \
+                 patch.object(probe, "inspect_partition", return_value={"reason": "ready", "plan": {"disk": "/dev/vda"},
+                                                                       "table": {"private": "not exposed"}}):
                 self.assertEqual(probe.main([]), 0)
-            self.assertEqual(json.loads(output.getvalue()), {"grub_entry": True})
+            self.assertEqual(json.loads(output.getvalue()), {
+                "grub_entry": True, "preparation": {"reason": "ready", "plan": {"disk": "/dev/vda"}}})
+
+    def test_next_repair_step_follows_the_first_unfinished_prerequisite(self):
+        from dataclasses import replace
+        from anduinos_driver_center.core import PackageState
+        missing = recovery.RecoveryState(False, (), PackageState(recovery.PACKAGE, False, None),
+                                         "2", False, False, {"reason": "ready", "plan": {"disk": "/dev/vda"}})
+        self.assertEqual(recovery.repair_step(missing), ("prepare", "ready"))
+        for reason in ("no-swap", "small-swap", "unsupported-layout", "interrupted"):
+            self.assertEqual(recovery.repair_step(replace(missing, preparation={"reason": reason})), (None, reason))
+        prepared = replace(missing, partition=True, devices=("/dev/vda4",), preparation={"reason": "existing-volume"})
+        self.assertEqual(recovery.repair_step(prepared), ("install", "package-missing"))
+        installed = replace(prepared, package=PackageState(recovery.PACKAGE, True, "1"))
+        self.assertEqual(recovery.repair_step(installed), ("install", "package-update"))
+        current = replace(installed, up_to_date=True)
+        self.assertEqual(recovery.repair_step(current), ("boot", "menu-missing"))
+        self.assertEqual(recovery.repair_step(replace(current, grub_entry=True)), (None, "healthy"))
+        self.assertEqual(recovery.repair_step(replace(current, grub_entry=None)), ("scan", "menu-unknown"))
+        self.assertEqual(recovery.repair_step(replace(current, up_to_date=None)), ("scan", "package-unknown"))
+
+    def test_recovery_package_action_never_refreshes_sources_or_removes_packages(self):
+        from contextlib import nullcontext
+        from anduinos_driver_center import recovery_partition
+        commands = types.SimpleNamespace(run=unittest.mock.Mock(return_value=subprocess.CompletedProcess([], 0, "ii ", "")))
+        with patch.object(recovery_partition, "operation_lock", return_value=nullcontext()), \
+             patch.object(recovery, "require_recovery_volume", return_value="uuid"):
+            recovery.install_recovery(commands)
+        self.assertEqual(commands.run.call_args_list, [
+            unittest.mock.call("apt-get", "install", "-y", "--no-remove", recovery.PACKAGE),
+            unittest.mock.call("dpkg-query", "-W", "-f=${db:Status-Abbrev}", recovery.PACKAGE)])
