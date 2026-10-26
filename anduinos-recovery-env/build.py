@@ -167,7 +167,7 @@ def build():
         extracted = inputs / "extracted"
         busybox = next((extracted / "busybox-static").glob("**/busybox"))
         copy(busybox, root / "bin/busybox")
-        for name in "sh mount umount mkdir chmod cat sleep modprobe ls sync reboot poweroff clear awk grep tr readlink stat head od timeout uname".split():
+        for name in "sh mount umount mkdir chmod cat mv sleep modprobe ls sync reboot poweroff clear awk grep tr readlink stat head od timeout uname".split():
             (root / "bin" / name).symlink_to("busybox")
         for name in ("btrfs", "jq", "flock"):
             runtime.file("/usr/bin/" + name)
