@@ -69,7 +69,14 @@ class ListCardClippingTests(unittest.TestCase):
 
                 adjustment = card.get_vadjustment()
                 self.assertGreater(adjustment.get_upper(), adjustment.get_page_size())
-                adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size())
+                # Move focus with the virtualized list, without changing the
+                # selection. Otherwise GTK can reveal the previously focused
+                # row again after the adjustment is changed.
+                card.get_child().scroll_to(
+                    selection.get_model().get_n_items() - 1,
+                    Gtk.ListScrollFlags.FOCUS,
+                    None,
+                )
                 _settle()
                 self.assertGreater(adjustment.get_value(), 0)
                 self._assert_rounded_clip(card)
