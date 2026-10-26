@@ -1,5 +1,6 @@
 """Build the complete scan result twice, without inspecting or changing the host."""
 
+from dataclasses import replace
 import unittest
 from unittest.mock import Mock, patch
 
@@ -12,7 +13,7 @@ from gi.repository import Adw, Gio, GLib, Gtk
 from anduinos_driver_center import app
 from anduinos_driver_center.recovery import RecoveryState
 from anduinos_driver_center.core import (
-    AudioState, GraphicsScan, PackageState, PrintingState, XboxState, XboxStatus,
+    AudioState, DriverOption, HardwareDevice, GraphicsScan, PackageState, PrintingState, XboxState, XboxStatus,
 )
 from anduinos_secureboot.model import DkmsState, GrubState, SecureBootState
 from anduinos_secureboot.identity import IdentityStatus
@@ -102,9 +103,31 @@ class WindowScanTests(unittest.TestCase):
             window._confirm_recovery_repair.assert_called_once_with(button, "prepare", state)
             window._run_action.assert_not_called()
 
+    def test_graphics_subtitle_reports_driver_state_without_vendor_information(self):
+        device = HardwareDevice("gpu", "", "", driver_state_known=True,
+                                active_driver="nouveau", active_driver_healthy=True)
+        option = DriverOption("nvidia-driver", "fixture", recommended=True, installed=True)
+        cases = (
+            (device, "Ready"),
+            (replace(device, vendor="NVIDIA"), "Ready"),
+            (replace(device, driver_state_known=False), "Unknown"),
+            (replace(device, active_driver_healthy=None), "Unknown"),
+            (replace(device, active_driver=None, active_driver_healthy=False), "Support needs attention"),
+            (replace(device, restart_required=True, active_driver_healthy=False), "Reboot Required"),
+            (replace(device, options=(replace(option, installed=False),)), "Not installed"),
+            (replace(device, options=(replace(option, update_available=True),)), "Update available"),
+            (replace(device, active_driver_healthy=False,
+                     options=(replace(option, update_available=True),)), "Support needs attention"),
+        )
+        with patch.object(app, "_", side_effect=lambda text: text):
+            for state, expected in cases:
+                with self.subTest(expected=expected, state=state):
+                    self.assertEqual(app.DriverCenterWindow._graphics_navigation_summary(state),
+                                     f"Driver status: {expected}")
+
     def test_initial_scan_and_rescan_build_all_pages_and_preserve_selection(self):
         scan = (
-            GraphicsScan(),
+            GraphicsScan(devices=(HardwareDevice("gpu", "", ""),)),
             SecureBootState(False, True, True, True, "serial", boot_loader="shim",
                             setup_mode=False,
                             signing_identity=IdentityStatus(purpose="unified", enrollment="enrolled",
@@ -128,14 +151,14 @@ class WindowScanTests(unittest.TestCase):
              patch.object(app, "_", side_effect=lambda text: text):
             window = app.DriverCenterWindow(self.application)
             try:
-                for selected in ("home", "secure-boot", "recovery"):
+                for selected in ("home", "graphics-0", "secure-boot", "recovery"):
                     with self.subTest(selected=selected):
                         window._selected_page_name = selected
                         window._show_loading()
                         self.assertEqual(window.stack.get_visible_child_name(), "loading")
                         self.assertEqual(window._apply_scan(*scan), GLib.SOURCE_REMOVE)
                         self.assertEqual(window.stack.get_visible_child_name(), selected)
-                        expected = ("home", "audio", "printing", "xbox", "secure-boot",
+                        expected = ("home", "graphics-0", "audio", "printing", "xbox", "secure-boot",
                                     "recovery", "firmware", "computer")
                         self.assertEqual(window.stack.get_pages().get_n_items(), len(expected))
                         for index, page_name in enumerate(expected):
@@ -143,8 +166,10 @@ class WindowScanTests(unittest.TestCase):
                             self.assertEqual(window.device_list.get_row_at_index(index).page_name,
                                              page_name)
                         self.assertIsNone(window.device_list.get_row_at_index(len(expected)))
-                        secure_row = window.device_list.get_row_at_index(4)
+                        secure_row = window.device_list.get_row_at_index(5)
                         self.assertEqual(secure_row.subtitle_label.get_label(), "Disabled")
+                        graphics_row = window.device_list.get_row_at_index(1)
+                        self.assertEqual(graphics_row.subtitle_label.get_label(), "Driver status: Unknown")
                         self.assertTrue(window.refresh_button.get_sensitive())
                         self.assertFalse(window._rebuilding_navigation)
                         page = window.stack.get_child_by_name("recovery")

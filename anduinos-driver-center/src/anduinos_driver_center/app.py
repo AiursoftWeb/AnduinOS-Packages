@@ -377,7 +377,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             ):
                 continue
             label = device.title
-            subtitle = device.vendor
+            subtitle = self._graphics_navigation_summary(device)
             row = self._device_row("video-display-symbolic", label, subtitle)
             row.page_name = f"graphics-{index}"
             row.page_title = device.title
@@ -771,6 +771,25 @@ class DriverCenterWindow(Adw.ApplicationWindow):
     @staticmethod
     def _recommended_driver(device: HardwareDevice):
         return next((option for option in device.options if option.recommended), None)
+
+    @classmethod
+    def _graphics_navigation_summary(cls, device: HardwareDevice) -> str:
+        recommended = cls._recommended_driver(device)
+        if recommended and not recommended.installed:
+            status = _("Not installed")
+        elif not device.driver_state_known:
+            status = _("Unknown")
+        elif device.restart_required:
+            status = _("Reboot Required")
+        elif device.active_driver_healthy is False:
+            status = _("Support needs attention")
+        elif recommended and recommended.update_available:
+            status = _("Update available")
+        elif device.active_driver_healthy is True:
+            status = _("Ready")
+        else:
+            status = _("Unknown")
+        return f'{_("Driver status")}: {status}'
 
     def _home_page(
         self,
