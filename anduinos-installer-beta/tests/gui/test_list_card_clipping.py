@@ -26,6 +26,14 @@ def _descendants(widget):
 
 
 class ListCardClippingTests(unittest.TestCase):
+    def setUp(self):
+        # These assertions inspect the settled clip, not scroll animations.
+        # GTK versions differ in how long initial focus scrolling animates.
+        settings = Gtk.Settings.get_default()
+        animated = settings.get_property("gtk-enable-animations")
+        self.addCleanup(settings.set_property, "gtk-enable-animations", animated)
+        settings.set_property("gtk-enable-animations", False)
+
     def _show_page(self, builder, shared):
         window = Adw.Window(default_width=960, default_height=720)
         self.addCleanup(window.destroy)
