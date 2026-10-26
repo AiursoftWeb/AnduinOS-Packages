@@ -10,6 +10,9 @@ pub struct ParsedLine {
     pub source: String,
     pub tokens: Vec<Token>,
     pub command_start: usize,
+    pub command_offset: Option<usize>,
+    pub segment_offset: usize,
+    pub conditional_command: Vec<Token>,
     pub trailing_space: bool,
     pub current_prefix: String,
 }
@@ -17,6 +20,18 @@ pub struct ParsedLine {
 impl ParsedLine {
     pub fn command_tokens(&self) -> &[Token] {
         &self.tokens[self.command_start..]
+    }
+
+    pub fn command_text(&self) -> Option<&str> {
+        self.source.get(self.command_offset?..)
+    }
+
+    pub fn command_wrapper(&self) -> Option<String> {
+        let mut wrapper = self.source[..self.command_offset?].to_owned();
+        if self.command_tokens().is_empty() && !self.trailing_space {
+            wrapper.push(' ');
+        }
+        Some(wrapper)
     }
 
     pub fn command_values(&self) -> Vec<&str> {
@@ -49,6 +64,8 @@ pub fn parse_line(line: &str, cursor: usize) -> Option<ParsedLine> {
     let mut quote = None;
     let mut escaped = false;
     let mut command_start = 0;
+    let mut segment_offset = 0;
+    let mut conditional_command = Vec::new();
     let mut index = 0;
 
     while index < bytes.len() {
@@ -94,8 +111,14 @@ pub fn parse_line(line: &str, cursor: usize) -> Option<ParsedLine> {
         }
         if is_operator_start(byte) {
             finish_token(&mut tokens, &mut value, &mut token_start, index);
+            conditional_command.clear();
+            if bytes[index..].starts_with(b"&&") {
+                let start = unwrap_command_prefix(&tokens, command_start).min(tokens.len());
+                conditional_command.extend_from_slice(&tokens[start..]);
+            }
             index += operator_len(&bytes[index..]);
             command_start = tokens.len();
+            segment_offset = index;
             continue;
         }
         token_start.get_or_insert(index);
@@ -120,11 +143,29 @@ pub fn parse_line(line: &str, cursor: usize) -> Option<ParsedLine> {
             .unwrap_or_default()
     };
     command_start = unwrap_command_prefix(&tokens, command_start);
+    let redirect = segment_offset > 0 && matches!(bytes[segment_offset - 1], b'<' | b'>');
+    let command_offset = if redirect {
+        None
+    } else if let Some(first) = tokens.get(command_start) {
+        Some(first.start)
+    } else if command_start == tokens.len()
+        && !source.trim().is_empty()
+        && quote.is_none()
+        && !escaped
+    {
+        Some(source.len())
+    } else {
+        None
+    };
+    command_start = command_start.min(tokens.len());
 
     Some(ParsedLine {
         source: source.to_owned(),
         tokens,
         command_start,
+        command_offset,
+        segment_offset,
+        conditional_command,
         trailing_space,
         current_prefix,
     })
@@ -183,7 +224,7 @@ fn unwrap_command_prefix(tokens: &[Token], mut start: usize) -> usize {
     while start < tokens.len() && is_assignment(&tokens[start].value) {
         start += 1;
     }
-    start.min(tokens.len())
+    start
 }
 
 fn is_assignment(value: &str) -> bool {

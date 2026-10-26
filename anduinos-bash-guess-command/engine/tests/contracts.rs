@@ -815,3 +815,175 @@ fn git_ref_uses_common_prefix_without_arbitrary_selection() {
     );
     assert!(query("git switch feature-log", now, &world).is_none());
 }
+
+#[test]
+fn compound_apt_update_predicts_upgrade_before_execution() {
+    let world = WorldState::default();
+    for line in [
+        "sudo apt update && sudo",
+        "sudo apt update && sudo ",
+        "sudo apt update && sudo -u root ",
+        "apt update&&",
+        "sudo apt update && sudo ap",
+        "sudo apt update && sudo apt",
+        "sudo apt update && sudo apt ",
+        "sudo apt update && sudo apt up",
+    ] {
+        let suggestion = query(line, 1_000, &world).expect(line);
+        assert!(
+            suggestion.candidate.resulting_line.ends_with("apt upgrade"),
+            "{line}: {suggestion:?}"
+        );
+        assert!(!suggestion.candidate.resulting_line.contains("-y"));
+        assert!(suggestion
+            .candidate
+            .evidence
+            .contains(&anduinos_quiet_engine::Evidence::ConditionalCommand));
+        assert!(!suggestion
+            .candidate
+            .evidence
+            .contains(&anduinos_quiet_engine::Evidence::SuccessfulExit));
+    }
+    assert_eq!(
+        query("sudo apt-get update && sudo ", 1_000, &world)
+            .unwrap()
+            .insertion,
+        "apt-get upgrade"
+    );
+    assert!(world.last_event.is_none());
+    assert_eq!(
+        query("apt update && sudo ", 1_000, &docker_world(1_000))
+            .unwrap()
+            .insertion,
+        "apt upgrade"
+    );
+}
+
+#[test]
+fn conditional_upgrade_learns_flags_and_preserves_history_ranking() {
+    let now = 10_000;
+    let mut world = WorldState::default();
+    for _ in 0..8 {
+        world.observe_command("sudo apt install btop", 0, now - 10);
+    }
+    world.observe_command("sudo apt upgrade --show-upgraded", 0, now - 10);
+    for _ in 0..3 {
+        world.observe_command("sudo apt upgrade -y", 0, now - 10);
+    }
+    for line in [
+        "sudo apt update && sudo",
+        "sudo apt update && sudo ",
+        "sudo apt update && sudo apt up",
+        "sudo apt update && sudo apt upgrade ",
+    ] {
+        let suggestion = query(line, now, &world).expect(line);
+        assert_eq!(
+            suggestion.candidate.resulting_line,
+            "sudo apt update && sudo apt upgrade -y"
+        );
+    }
+    // An explicitly chosen action still owns the current slot.
+    world.apt.packages.push(AptPackage {
+        name: "btop".into(),
+        installed: false,
+    });
+    assert_eq!(
+        query("sudo apt update && sudo apt install b", now, &world)
+            .unwrap()
+            .insertion,
+        "top"
+    );
+    let suggestion = query("sudo apt update && sudo apt upgrade --sh", now, &world).unwrap();
+    assert!(!suggestion.candidate.resulting_line.contains("-y"));
+}
+
+#[test]
+fn empty_command_reuses_history_after_wrappers_and_operators() {
+    let mut world = WorldState::default();
+    world.observe_command("sudo git status --short", 0, 900);
+    for line in [
+        "sudo",
+        "sudo ",
+        "sudo -u root ",
+        "true && sudo ",
+        "false || sudo ",
+        "true; sudo ",
+    ] {
+        let suggestion = query(line, 1_000, &world).expect(line);
+        let separator = if line.ends_with(' ') { "" } else { " " };
+        assert_eq!(
+            suggestion.candidate.resulting_line,
+            format!("{line}{separator}git status --short")
+        );
+    }
+    for line in [
+        "",
+        " ",
+        "sudo -u",
+        "sudo -u ",
+        "apt update && sudo -u ",
+        "echo text >",
+        "echo text > ",
+        "echo text > sudo ",
+    ] {
+        assert!(query(line, 1_000, &world).is_none(), "{line}");
+    }
+}
+
+#[test]
+fn full_compound_history_can_continue_an_empty_command() {
+    let mut world = WorldState::default();
+    world.observe_command("sudo apt update && sudo apt upgrade -y", 0, 900);
+    for line in [
+        "sudo apt update && sudo",
+        "sudo apt update && sudo ",
+        "sudo apt update && sudo apt up",
+    ] {
+        assert_eq!(
+            query(line, 1_000, &world)
+                .expect(line)
+                .candidate
+                .resulting_line,
+            "sudo apt update && sudo apt upgrade -y"
+        );
+    }
+}
+
+#[test]
+fn conditional_update_does_not_cross_unrelated_shell_boundaries() {
+    let mut world = WorldState::default();
+    world.last_event = Some(CommandEvent {
+        action: Action::AptUpdate {
+            command: "apt".into(),
+        },
+        normalized: "apt update".into(),
+        exit_code: 0,
+        at_ms: 900,
+        focus_filter: None,
+    });
+    for line in [
+        "apt update || sudo ",
+        "apt update; sudo ",
+        "apt update | sudo ",
+        "apt update && echo done && sudo ",
+        "echo 'apt update && sudo '",
+        "echo \"apt update && sudo \"",
+        "echo apt update \\&\\& sudo ",
+        "apt update || sudo apt ",
+        "apt update | sudo apt ",
+    ] {
+        if let Some(suggestion) = query(line, 1_000, &world) {
+            assert!(
+                !suggestion
+                    .candidate
+                    .evidence
+                    .contains(&anduinos_quiet_engine::Evidence::ConditionalCommand),
+                "{line}"
+            );
+            assert!(
+                !suggestion.candidate.resulting_line.contains("upgrade"),
+                "{line}: {suggestion:?}"
+            );
+        }
+    }
+}
