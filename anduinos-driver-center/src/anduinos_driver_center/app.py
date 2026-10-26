@@ -2230,11 +2230,19 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         ):
             row = Adw.ActionRow(title=title, subtitle=subtitle)
             row.set_use_markup(False)
-            row.add_suffix(_status_icon(
-                "object-select-symbolic" if good is True else (
-                    "dialog-warning-symbolic" if good is False else "dialog-information-symbolic"),
-                "success" if good is True else "warning" if good is False else "dim-label",
-            ))
+            icon_name = "emblem-ok-symbolic" if good is True else (
+                "dialog-warning-symbolic" if good is False else "dialog-information-symbolic")
+            if good is True and not Gtk.IconTheme.get_for_display(row.get_display()).has_icon(icon_name):
+                icon_name = "object-select-symbolic"
+            icon = Gtk.Image.new_from_icon_name(icon_name)
+            icon.set_pixel_size(16)
+            icon.add_css_class("success" if good is True else "warning" if good is False else "dim-label")
+            indicator = Gtk.Button(child=icon, valign=Gtk.Align.CENTER,
+                                   can_target=False, focusable=False,
+                                   accessible_role=Gtk.AccessibleRole.IMG)
+            indicator.add_css_class("flat")
+            indicator.add_css_class("circular")
+            row.add_suffix(indicator)
             group.add(row)
         self._append_recovery_repair(content, state)
         return page
