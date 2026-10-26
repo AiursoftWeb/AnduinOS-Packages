@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-kernel-parameters</PackageName>
-    <PackageVersion>2.0.5-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS desktop kernel parameters — full dynamic preemption and graphical boot splash</PackageDescription>
     <Section>admin</Section>
@@ -10,20 +10,21 @@
     <LicenseType>GPL-3.0</LicenseType>
     <Conflicts>lowlatency-kernel</Conflicts>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetSuites>resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
   </PropertyGroup>
 
   <ItemGroup>
     <DependencyCheckSource
         Url="https://mirror.aiursoft.com/ubuntu"
-        SuiteMap="resolute-addon=resolute" />
+        SuiteMap="resolute-addon=resolute stonking-addon=stonking" />
   </ItemGroup>
 
   <ItemGroup>
-    <Dependency Include="linux-generic-hwe-26.04" />
+    <Dependency Include="linux-generic-hwe-26.04" Condition="'$(Suite)' == 'resolute-addon'" />
+    <Dependency Include="linux-generic" Condition="'$(Suite)' == 'stonking-addon'" />
     <Dependency Include="grub2-common" />
   </ItemGroup>
 

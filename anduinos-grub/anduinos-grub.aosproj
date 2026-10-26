@@ -9,9 +9,9 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetSuites>resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
-    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
     <Component>main</Component>
     <Provides Condition="'$(Arch)' == 'amd64'">grub-common, grub2-common, grub-pc, grub-pc-bin, grub-efi-amd64, grub-efi-amd64-bin, grub-efi-amd64-unsigned, grub-efi-amd64-signed</Provides>
     <Conflicts Condition="'$(Arch)' == 'amd64'">grub-common, grub2-common, grub-pc, grub-pc-bin, grub-efi-amd64, grub-efi-amd64-bin, grub-efi-amd64-unsigned, grub-efi-amd64-signed</Conflicts>
@@ -32,7 +32,7 @@
     <BuildInput Include="grub-efi-$(Arch)-unsigned" Id="baseline" Sources="ubuntu-amd64" Arch="$(Arch)" Condition="'$(Arch)' == 'amd64'" />
     <BuildInput Include="grub-efi-$(Arch)-unsigned" Id="baseline" Sources="ubuntu-arm64" Arch="$(Arch)" Condition="'$(Arch)' == 'arm64'" />
     <BuildInput Include="grub-pc-bin" Id="bios" Sources="ubuntu-amd64" Arch="amd64" Condition="'$(Arch)' == 'amd64'" />
-    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute" />
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute stonking-addon=stonking" />
     <Dependency Include="anduinos-secureboot-toolkit (&gt;= 2.0.5-8)" />
     <Dependency Include="libc6" />
     <Dependency Include="libdevmapper1.02.1" />
