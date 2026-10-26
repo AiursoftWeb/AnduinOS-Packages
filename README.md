@@ -177,12 +177,12 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-gnome-shell-locale` | Locale | GNOME Shell locale / text overrides |
 | `anduinos-live-settings` | Config | Dracut Live-session regional setup and Live-only systemd policy; removed before target bootloader setup |
 
-### Kernel ownership contract (Resolute)
+### Kernel ownership contract
 
-AnduinOS supports the Resolute kernel path. The canonical owner of kernel
-availability is `anduinos-core-system`, which has a hard dependency on Ubuntu's
-`linux-generic-hwe-26.04` metapackage. The installed desktop reaches it through
-this mandatory chain:
+The canonical owner of kernel availability is `anduinos-core-system`. It
+depends on Ubuntu's `linux-generic-hwe-26.04` on Resolute and `linux-generic`
+on Stonking. Both metapackages retain the matching image and headers. The
+installed Resolute desktop reaches its kernel through this mandatory chain:
 
 ```
 anduinos-desktop
@@ -195,7 +195,7 @@ anduinos-desktop
 
 This dependency chain, rather than an ISO build script, must install and retain
 the kernel. ISO builders must not directly install the split image or headers
-metapackages and must not add a parallel dependency on `linux-generic`. The
+metapackages or add a different kernel track alongside the suite's selection. The
 native installer copies the packaged Live filesystem, retains the kernel
 packages in the target, regenerates the target Dracut initrd and bootloader
 configuration, and verifies that at least one kernel has a matching initrd.
@@ -232,8 +232,8 @@ boot policy, not the kernel binary. It installs
 `/etc/default/grub.d/99-anduinos-desktop.cfg`, appends `preempt=full`, conflicts
 with `lowlatency-kernel`, refreshes GRUB on a real installed system, and marks a
 reboot as required. Its maintainer scripts defer GRUB work inside a chroot. The
-package also depends on `linux-generic-hwe-26.04` so that installing the policy
-standalone cannot leave it paired with an unsupported kernel track.
+package also depends on the same suite-specific metapackage so that installing
+the policy standalone cannot leave it paired with an unsupported kernel track.
 
 `anduinos-desktop` recommends `anduinos-kernel-parameters` on Resolute. The
 official ISO is built with recommends enabled, so both
@@ -255,8 +255,8 @@ marks to force convergence.
 
 Future changes must preserve these invariants:
 
-- `anduinos-core-system` keeps a hard dependency on the supported HWE kernel
-  metapackage.
+- `anduinos-core-system` keeps a hard dependency on the suite's supported kernel
+  metapackage; adding a suite must not leave the system without a kernel.
 - `anduinos-kernel-parameters` remains a separable desktop policy package.
 - ISO construction obtains the kernel through the AnduinOS package graph.
 - Installed-system cleanup never treats kernel packages as Live-only payloads.
