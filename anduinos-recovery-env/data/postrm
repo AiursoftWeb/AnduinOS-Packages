@@ -4,6 +4,13 @@ set -eu
 case "${1:-}" in
     remove|purge)
         systemctl --root=/ disable anduinos-recovery-boot.service >/dev/null 2>&1 || true
+        # Image assembly and installer cleanup run before the bootloader is
+        # ready. Their final bootloader step owns the resulting menu.
+        if systemd-detect-virt --quiet --chroot >/dev/null 2>&1 ||
+           ischroot >/dev/null 2>&1; then
+            echo "AnduinOS recovery: chroot detected; deferring GRUB refresh."
+            exit 0
+        fi
         if [ -f /var/lib/anduinos-recovery-env/volume.json ] && command -v update-grub >/dev/null 2>&1; then
             update-grub
         fi
