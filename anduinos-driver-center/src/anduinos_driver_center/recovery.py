@@ -149,7 +149,8 @@ def require_recovery_volume(commands):
                                 and b.get("type") == "disk" for b in blocks):
         raise RuntimeError("Recovery requires an ordinary, unencrypted system partition")
     binding = json.loads(BINDING.read_text()) if BINDING.exists() else None
-    if binding and (binding.get("schema") != 1 or binding.get("root_uuid") != root["uuid"]):
+    if binding is not None and (not isinstance(binding, dict) or binding.get("schema") != 1
+                                or binding.get("root_uuid") != root["uuid"] or not binding.get("volume_uuid")):
         raise RuntimeError("The recovery binding belongs to another installation")
     volumes = [b for b in blocks if b.get("type") == "part" and b.get("fstype") == "ext4"
                and b.get("label") == "AOS_RECOVERY"

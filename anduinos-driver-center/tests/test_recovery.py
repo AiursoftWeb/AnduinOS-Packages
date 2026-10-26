@@ -157,3 +157,39 @@ class RecoveryTests(unittest.TestCase):
         self.assertEqual(commands.run.call_args_list, [
             unittest.mock.call("apt-get", "install", "-y", "--no-remove", recovery.PACKAGE),
             unittest.mock.call("dpkg-query", "-W", "-f=${db:Status-Abbrev}", recovery.PACKAGE)])
+
+    def test_repair_requires_the_current_root_and_a_unique_unmounted_owned_volume(self):
+        from anduinos_driver_center import recovery_partition
+        root = {"fstype": "btrfs", "fsroot": "/@root", "uuid": "system"}
+        disk = {"name": "/dev/vda", "type": "disk"}
+        system = {"name": "/dev/vda3", "type": "part", "uuid": "system", "pkname": "/dev/vda"}
+        volume = {"name": "/dev/vda4", "type": "part", "fstype": "ext4", "label": "AOS_RECOVERY",
+                  "uuid": "11111111-1111-4111-8111-111111111111", "pkname": "/dev/vda"}
+        blocks = [disk, system, volume]
+        info = {"TYPE": "ext4", "LABEL": "AOS_RECOVERY", "UUID": volume["uuid"]}
+        commands = unittest.mock.Mock()
+        def text(*args):
+            return json.dumps({"filesystems": [root]} if args[0] == "findmnt" else {"blockdevices": blocks})
+        commands.text.side_effect = text
+        commands.run.return_value = subprocess.CompletedProcess([], 1, "", "")
+        with patch.object(recovery_partition, "BINDING", self.binding), \
+             patch.object(recovery_partition, "STATE", Path(self.directory.name, "state")), \
+             patch.object(recovery_partition, "identity", return_value=info):
+            self.assertEqual(recovery.require_recovery_volume(commands), volume["uuid"])
+            for binding in ({}, [], {"schema": 1, "root_uuid": "another", "volume_uuid": volume["uuid"]}):
+                self.binding.write_text(json.dumps(binding))
+                with self.assertRaises(RuntimeError):
+                    recovery.require_recovery_volume(commands)
+            self.binding.unlink()
+            blocks.append(dict(volume))
+            with self.assertRaises(RuntimeError):
+                recovery.require_recovery_volume(commands)
+            blocks.pop()
+            commands.run.return_value = subprocess.CompletedProcess([], 0, json.dumps({
+                "filesystems": [{"target": "/media/Recovery volume"}]}), "")
+            with self.assertRaisesRegex(RuntimeError, "sudo umount -- '/media/Recovery volume'"):
+                recovery.require_recovery_volume(commands)
+            commands.run.return_value = subprocess.CompletedProcess([], 1, "", "")
+            root["fstype"] = "ext4"
+            with self.assertRaises(RuntimeError):
+                recovery.require_recovery_volume(commands)

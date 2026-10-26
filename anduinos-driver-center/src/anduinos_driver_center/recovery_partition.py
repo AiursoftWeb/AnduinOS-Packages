@@ -212,7 +212,9 @@ def verify_geometry(table):
 def verify_disk(plan):
     node = os.stat(plan["disk"])
     if (not stat.S_ISBLK(node.st_mode)
-            or f"{os.major(node.st_rdev)}:{os.minor(node.st_rdev)}" != plan["disk_id"]):
+            or f"{os.major(node.st_rdev)}:{os.minor(node.st_rdev)}" != plan["disk_id"]
+            or int((Path("/sys/class/block") / Path(plan["disk"]).name / "size").read_text()) * 512
+            != plan["disk_bytes"]):
         raise RuntimeError("The system disk identity changed")
 
 
@@ -325,7 +327,10 @@ def rollback(commands, plan, before, after, backup, last_offset):
     other_parts = copy.deepcopy(before)
     other_parts["partitions"] = [p for p in before["partitions"] if p["node"] != plan["swap"]]
     verify_geometry(other_parts)
-    if commands.run("findmnt", "--noheadings", "--source", plan["new_device"], check=False).stdout.strip():
+    mounted = commands.run("findmnt", "--noheadings", "--source", plan["new_device"], check=False)
+    if mounted.returncode not in (0, 1):
+        raise RuntimeError("Cannot determine whether the new partition is mounted")
+    if mounted.stdout.strip():
         raise RuntimeError("The new partition is mounted; unmount it before restoring the saved layout")
     if any(os.path.realpath(s["name"]) == plan["swap"] for s in active_swaps()):
         commands.run("swapoff", plan["swap"])
@@ -334,6 +339,9 @@ def rollback(commands, plan, before, after, backup, last_offset):
         if geometry(plan["new_device"]) != {"start": new["start"] * before["sectorsize"], "size": RECOVERY_BYTES}:
             raise RuntimeError("New partition identity changed; automatic rollback stopped")
         commands.run("partx", "--delete", "--nr", str(plan["new_number"]), plan["disk"])
+    # Removing a kernel partition emits udev events whose probes may briefly
+    # hold the disk lock. Finish them before restoring the saved GPT.
+    commands.run("udevadm", "settle", "--timeout=15")
     with open(plan["disk"], "r+b", buffering=0) as stream:
         fcntl.flock(stream, fcntl.LOCK_EX | fcntl.LOCK_NB)
         for name, offset in (("gpt-first.bin", 0), ("gpt-last.bin", last_offset)):
