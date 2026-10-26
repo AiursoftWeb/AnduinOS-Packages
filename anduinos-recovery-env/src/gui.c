@@ -26,6 +26,8 @@
 /* Default Fluent-round-Dark theme_selected_bg_color. */
 #define ACCENT_BLUE 0x3281ea
 #define MAX_RESPONSE (16 * 1024 * 1024)
+#define ERROR_LOG "/run/recovery-action-error"
+#define MAX_ERROR_DETAILS (64 * 1024)
 
 /* Strings are owned by this catalog and released by free_snapshots(). */
 struct snapshot {
@@ -62,6 +64,11 @@ static char *response;
 static size_t response_length;
 static bool response_overflow;
 static char operation[16];
+
+/* Keep the last failure stable while moving between its summary and details. */
+static char failure_summary[384];
+static char failure_details[MAX_ERROR_DETAILS];
+static bool action_log_current;
 
 /* Read-only inspection has a deadline; a confirmed rollback never does. */
 static uint32_t information_started;
@@ -534,20 +541,83 @@ static void information(jv report)
     button(footer(), "Refresh", show_information, NULL, false);
 }
 
-static void failed(const char *message)
+static void show_failure(lv_event_t *event);
+
+static void show_error_details(lv_event_t *event)
 {
+    (void)event;
+    page("Failure details",
+        "Details of the most recent failed operation. You can photograph this page.");
+
+    lv_obj_t *log = lv_obj_create(body);
+    lv_obj_set_width(log, lv_pct(100));
+    lv_obj_set_flex_grow(log, 1);
+    lv_obj_set_scroll_dir(log, LV_DIR_VER);
+    lv_obj_t *text = label(log, failure_details, 0xf0f0f0);
+    lv_label_set_long_mode(text, LV_LABEL_LONG_WRAP);
+    lv_group_add_obj(main_group, log);
+    button(footer(), "Back", show_failure, NULL, false);
+    lv_group_focus_obj(log);
+}
+
+static void show_failure(lv_event_t *event)
+{
+    (void)event;
     page(information_page ? "Information unavailable" : "Recovery needs attention",
         information_page ? "You can retry or return to System Recovery."
                          : "The operation could not be completed. You can retry or restart; an "
                            "interrupted rollback can be resumed here.");
-    lv_obj_t *details = lv_obj_create(body);
-    lv_obj_set_width(details, lv_pct(100));
-    lv_obj_set_flex_grow(details, 1);
-    lv_obj_set_scroll_dir(details, LV_DIR_VER);
-    label(details, message, 0xf0f0f0);
+    label(body, failure_summary, 0xf0f0f0);
+    button(body, "View Details", show_error_details, NULL, false);
+    spacer();
+
     lv_obj_t *row = footer();
     button(row, "Restart", restart, NULL, false);
     button(row, "Try Again", retry, NULL, true);
+}
+
+static void failed(const char *message)
+{
+    /* The summary stays short; the separate viewer retains multiline diagnostics. */
+    size_t length = strcspn(message, "\r\n");
+    snprintf(failure_summary,
+        sizeof(failure_summary),
+        "%.*s",
+        (int)(length < sizeof(failure_summary) - 1 ? length : sizeof(failure_summary) - 1),
+        message);
+    if (!*failure_summary) {
+        snprintf(failure_summary, sizeof(failure_summary), "The operation could not be completed.");
+    }
+
+    /* Both header fields are bounded, leaving ample room for the log. */
+    size_t used = (size_t)snprintf(failure_details,
+        sizeof(failure_details),
+        "Operation: %s\n\n%s\n\nDiagnostic output:\n",
+        *operation ? operation : "startup",
+        failure_summary);
+    size_t available = sizeof(failure_details) - used;
+    FILE *errors = action_log_current ? fopen(ERROR_LOG, "r") : NULL;
+    bool truncated;
+    if (errors) {
+        used += fread(failure_details + used, 1, available - 1, errors);
+        truncated = fgetc(errors) != EOF;
+        fclose(errors);
+    } else {
+        const char *diagnostic = response && *response ? response : message;
+        size_t length = strlen(diagnostic);
+        truncated = length >= available;
+        size_t copied = truncated ? available - 1 : length;
+        memcpy(failure_details + used, diagnostic, copied);
+        used += copied;
+    }
+    failure_details[used] = '\0';
+    if (truncated) {
+        /* Bound UI memory even when a faulty helper produces an enormous log. */
+        const char suffix[] = "\n[Display limited to the first 64 KiB.]";
+        memcpy(failure_details + sizeof(failure_details) - sizeof(suffix), suffix, sizeof(suffix));
+    }
+
+    show_failure(NULL);
     fprintf(stderr, "Recovery action failed: %s\n", message);
 }
 
@@ -625,7 +695,7 @@ static void poll_worker(lv_timer_t *timer)
 
     if (!WIFEXITED(status) || WEXITSTATUS(status)) {
         char details[8192] = {0};
-        FILE *errors = fopen("/run/recovery-action-error", "r");
+        FILE *errors = action_log_current ? fopen(ERROR_LOG, "r") : NULL;
         if (errors) {
             size_t n = fread(details, 1, sizeof(details) - 1, errors);
             details[n] = 0;
@@ -694,9 +764,22 @@ static void start_action(const char *action, const char *identifier)
     response_length = 0;
     response_overflow = false;
 
+    /* Never attach a previous attempt's log to a pipe/fork/startup failure. */
+    action_log_current = false;
+    failure_summary[0] = '\0';
+    failure_details[0] = '\0';
+    int errors = open(ERROR_LOG, O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, 0600);
+    if (errors < 0) {
+        failed(strerror(errno));
+        return;
+    }
+    action_log_current = true;
+
     int fds[2];
     if (pipe2(fds, O_CLOEXEC)) {
-        failed(strerror(errno));
+        int error = errno;
+        close(errors);
+        failed(strerror(error));
         return;
     }
 
@@ -712,12 +795,6 @@ static void start_action(const char *action, const char *identifier)
         close(fds[1]);
 
         /* Diagnostic output must never become part of the JSON catalog. */
-        int errors =
-            open("/run/recovery-action-error", O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, 0600);
-        if (errors < 0) {
-            perror("Could not open recovery log");
-            _exit(126);
-        }
         dup2(errors, STDERR_FILENO);
         close(errors);
 
@@ -726,12 +803,14 @@ static void start_action(const char *action, const char *identifier)
         perror("Could not start recovery-action");
         _exit(127);
     }
+    int fork_error = errno;
+    close(errors);
     close(fds[1]);
 
     if (worker < 0) {
         close(fds[0]);
         worker = 0;
-        failed(strerror(errno));
+        failed(strerror(fork_error));
         return;
     }
 
