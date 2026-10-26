@@ -26,7 +26,7 @@ class ActualMatcherTests(unittest.TestCase):
     def test_real_config_parser_and_origin_matching(self):
         config = self.apt_pkg.config
         for package, host in PACKAGES.items():
-            for codename in ('noble', 'resolute'):
+            for codename in ('noble', 'resolute', 'stonking'):
                 with self.subTest(package=package, codename=codename):
                     config.clear('Unattended-Upgrade')
                     policy = str(ROOT / 'assets' / POLICY_NAME)
