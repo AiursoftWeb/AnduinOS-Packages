@@ -11,10 +11,10 @@
     <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
     <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetSuites>resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
     <!-- Beta: NO Conflicts, NO Replaces. This is an orphan package.
          After 3-4 months of stable testing, rename to anduinos-installer
          and add Conflicts/Replaces against the Ubuntu Ubiquity packages. -->
@@ -23,7 +23,7 @@
   <ItemGroup>
     <DependencyCheckSource
         Url="https://mirror.aiursoft.com/ubuntu"
-        SuiteMap="resolute-addon=resolute" />
+        SuiteMap="resolute-addon=resolute stonking-addon=stonking" />
   </ItemGroup>
 
   <ItemGroup>

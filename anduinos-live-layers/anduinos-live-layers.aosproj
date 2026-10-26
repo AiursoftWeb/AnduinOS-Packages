@@ -9,16 +9,16 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetSuites>resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
     <Conflicts>casper, initramfs-tools, initramfs-tools-core, initramfs-tools-bin, busybox-initramfs, finalrd, live-tools</Conflicts>
   </PropertyGroup>
 
   <ItemGroup>
     <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu"
-                           SuiteMap="resolute-addon=resolute" />
+                           SuiteMap="resolute-addon=resolute stonking-addon=stonking" />
   </ItemGroup>
 
   <ItemGroup>

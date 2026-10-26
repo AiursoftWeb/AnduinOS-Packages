@@ -8,7 +8,7 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetSuites>resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
 
@@ -17,7 +17,7 @@
     <UpstreamDistro>ubuntu</UpstreamDistro>
     <UpstreamPackage>plymouth-theme-spinner</UpstreamPackage>
     <UpstreamSuite>$(Suite)</UpstreamSuite>
-    <UpstreamSuiteMapping>resolute-addon=resolute</UpstreamSuiteMapping>
+    <UpstreamSuiteMapping>resolute-addon=resolute stonking-addon=stonking</UpstreamSuiteMapping>
     <UpstreamComponent>$(Component)</UpstreamComponent>
     <UpstreamArch>$(Arch)</UpstreamArch>
 
