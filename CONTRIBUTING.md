@@ -167,11 +167,17 @@ is automatically recompiled by the dpkg trigger in `anduinos-dconf-runtime`.
 
 ## Package Versioning
 
-- Fork packages: `$(UpstreamVersion)+anduinos1` — tracks upstream version
-  with our revision suffix.
-- Native packages: semantic versioning (`1.0.2`).
-- Suite-differentiated versions: `64+$(SuiteShortName)2` for extensions that
-  ship different code per GNOME release.
+Follow the [lazy version policy](DEV_GUIDE.md#lazy-package-version-bumps):
+leave unchanged packages alone; when a package needs a change, advance it to
+the current shared code release (for example, `2.0.0-1+resolute` to
+`2.1.0-1+resolute`). Increment the revision if it already uses that release.
+Preserve suite suffixes, epochs and upstream-derived formulas, and verify
+Debian version ordering and the normal APT upgrade path.
+
+Package versions are independent of the OS version. Resolute and Stonking
+share source code, while `base-files` reports the appropriate OS identity.
+A new-suite build of unchanged code does not require a mass version bump or
+an update for users of existing suites.
 
 ## Before Submitting
 
