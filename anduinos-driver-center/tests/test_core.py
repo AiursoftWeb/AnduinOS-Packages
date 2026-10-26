@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import gettext
 from pathlib import Path
 import subprocess
 import sys
@@ -18,6 +19,7 @@ sys.path.insert(
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from anduinos_driver_center.core import (  # noqa: E402
+    HardwareDevice,
     audio_state,
     normalize_key,
     dkms_state,
@@ -82,6 +84,25 @@ driver   : xserver-xorg-video-nouveau - distro free builtin
         self.assertTrue(devices[0].options[0].installed)
         self.assertTrue(devices[0].options[1].free)
         self.assertTrue(devices[0].options[1].builtin)
+
+    def test_graphics_title_localizes_only_the_missing_hardware_name(self):
+        with tempfile.TemporaryDirectory() as directory:
+            catalog = Path(directory) / "driver.mo"
+            subprocess.run(["msgfmt", "-o", str(catalog), str(
+                Path(__file__).resolve().parents[1] / "po/zh_CN.po")], check=True)
+            with catalog.open("rb") as stream:
+                translate = gettext.GNUTranslations(stream).gettext
+            with patch("anduinos_driver_center.core._", side_effect=translate):
+                for vendor, model, expected in (
+                    ("", "", "图形设备"),
+                    (" ", "\t", "图形设备"),
+                    ("NVIDIA Corporation", "AD107M [GeForce RTX 4060 Max-Q]",
+                     "NVIDIA GeForce RTX 4060 Max-Q"),
+                    ("Intel Corporation", "", "Intel"),
+                    ("", "Virtio GPU", "Virtio GPU"),
+                ):
+                    with self.subTest(vendor=vendor, model=model):
+                        self.assertEqual(HardwareDevice("gpu", vendor, model).title, expected)
 
     def test_graphics_scan_distinguishes_no_devices_from_probe_failure(self):
         no_devices = graphics_scan(
