@@ -10,7 +10,7 @@ from ui import load_visual_style
 
 
 def _settle():
-    deadline = time.monotonic() + 0.35
+    deadline = time.monotonic() + 1.0
     context = GLib.MainContext.default()
     while time.monotonic() < deadline:
         context.iteration(False)
