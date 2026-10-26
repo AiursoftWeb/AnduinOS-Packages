@@ -201,11 +201,18 @@ def grub():
     if not STATE.exists():
         return  # Installing other packages before initial deployment is harmless.
     binding = read_binding(STATE)
+    # grub-mkconfig exports the target's configured arguments, including in
+    # installer chroots. Never copy root flags or the running Live command line.
+    configured = shlex.split(os.environ.get("GRUB_CMDLINE_LINUX", "")) + shlex.split(
+        os.environ.get("GRUB_CMDLINE_LINUX_DEFAULT", ""))
+    platform = "".join(" " + flag for flag in
+                       ("clk_ignore_unused", "pd_ignore_unused", "arm64.nopauth")
+                       if flag in configured)
     print(f'''menuentry 'AnduinOS Recovery Environment' --class recovery --id anduinos-recovery-env {{
     insmod part_gpt
     insmod ext2
     search --no-floppy --fs-uuid --set=recovery {binding["volume_uuid"]}
-    linux ($recovery)/{DIRECTORY}/current/vmlinuz anduinos.recovery.root={binding["root_uuid"]} console=tty0 loglevel=3
+    linux ($recovery)/{DIRECTORY}/current/vmlinuz anduinos.recovery.root={binding["root_uuid"]} console=tty0 loglevel=3{platform}
     initrd ($recovery)/{DIRECTORY}/current/initrd.img
 }}''')
 

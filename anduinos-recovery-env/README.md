@@ -31,6 +31,13 @@ or maintainer scripts execute during construction. The source-tree offline
 engine is compiled into the image. LVGL draws directly through DRM/framebuffer
 and reads Linux input devices; no desktop or display server is included. Rebuild and bump this package when updating
 that engine. Input versions, hashes and copyright notices accompany the package.
+ARM64 images also load the SC8280XP PCIe/USB PHY, controller and regulator
+providers needed to reach NVMe storage and USB input on Windows Dev Kit 2023.
+Their module dependencies alone do not describe the board's supplier topology.
+The GRUB entry preserves `clk_ignore_unused`, `pd_ignore_unused` and
+`arm64.nopauth` only when present in the target's GRUB kernel configuration;
+other normal-system arguments are excluded. Firmware framebuffer operation,
+USB input and system-disk discovery still require qualification on real hardware.
 The pointer is the original Fluent-dark-cursors image from
 [Fluent-icon-theme](https://github.com/vinceliuice/Fluent-icon-theme), under GPL-3.0.
 

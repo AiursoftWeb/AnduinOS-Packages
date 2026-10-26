@@ -17,7 +17,10 @@ import xml.etree.ElementTree as ET
 HERE = Path(__file__).resolve().parent
 LVGL_VERSION = "v9.6.0"
 # Storage, input and firmware framebuffer support; no network or desktop session.
-DRIVERS = "virtio_pci virtio_mmio virtio_blk virtio_scsi nvme ahci sd_mod usb_storage uas xhci_pci xhci_plat_hcd ehci_pci ohci_pci uhci_hcd usbhid hid_generic atkbd i8042 evdev psmouse virtio_input sdhci_pci sdhci_acpi mmc_block btrfs ext4 simpledrm virtio_gpu bochs".split()
+DRIVERS = "virtio_pci virtio_mmio virtio_blk virtio_scsi nvme ahci sd_mod usb_storage uas xhci_pci xhci_plat_hcd ehci_pci ohci_pci uhci_hcd usbhid hid_generic hid_logitech_dj hid_logitech_hidpp atkbd i8042 evdev psmouse virtio_input sdhci_pci sdhci_acpi mmc_block btrfs ext4 simpledrm virtio_gpu bochs".split()
+# SC8280XP NVMe/USB suppliers are not dependencies of nvme or xhci.
+# Init loads these explicitly: there is no udev to discover platform devices.
+ARM64_DRIVERS = "spmi_pmic_arb qcom_spmi_pmic pinctrl_spmi_gpio fixed qcom_rpmh_regulator qcom_refgen_regulator phy_qcom_qmp_pcie phy_qcom_qmp_usb phy_qcom_qmp_combo phy_qcom_snps_femto_v2 dwc3 dwc3_qcom_legacy".split()
 
 
 def run(*args, **kwargs):
@@ -197,11 +200,12 @@ def build():
         run("depmod", "-b", str(modules), kernel)
         selected = set()
         available = []
-        for driver in DRIVERS:
+        platform_drivers = ARM64_DRIVERS if arch == "arm64" else []
+        for driver in platform_drivers + DRIVERS:
             result = subprocess.run(["modprobe", "--show-depends", "-d", str(modules),
                                      "-S", kernel, driver], capture_output=True, text=True)
             if result.returncode:
-                if driver in ("btrfs", "ext4", "virtio_blk"):
+                if driver in ("btrfs", "ext4", "virtio_blk") or driver in platform_drivers:
                     raise RuntimeError(f"Required kernel driver is missing: {driver}")
                 continue  # Some buses exist on only one architecture.
             available.append(driver)
