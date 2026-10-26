@@ -4,6 +4,7 @@ set -eu
 export PATH=/usr/bin:/bin:/usr/sbin LC_ALL=C
 umask 077
 top=/run/anduinos-rescue-center/repair-recovery-env
+saved=/run/recovery-current-snapshot.json
 mounted=0
 
 fail() { echo "$*" >&2; exit 1; }
@@ -19,7 +20,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-case "${1:-}:$#" in list:1|information:1|resume:1|restart:1) ;; restore:2) uuid_valid "$2" || fail 'Invalid snapshot identifier.' ;; *) fail 'Unknown recovery action.' ;; esac
+case "${1:-}:$#" in list:1|create:1|information:1|resume:1|restart:1) ;; restore:2) uuid_valid "$2" || fail 'Invalid snapshot identifier.' ;; *) fail 'Unknown recovery action.' ;; esac
 # The lock survives the GUI exiting while its recovery process is still running.
 exec 9>/run/recovery-operation.lock
 flock -n 9 || fail 'Another recovery operation is still running. Please wait.'
@@ -49,8 +50,8 @@ while :; do
     sleep 1
 done
 set -- "$@" $devices
-# list/resume have one argument; restore has two. Never guess among duplicate UUIDs.
-case "$1:$#" in list:2|resume:2) device=$2 ;; restore:3) device=$3 ;; *) fail 'The installed system is missing or its filesystem UUID is ambiguous.' ;; esac
+# Only restore has a snapshot argument. Never guess among duplicate UUIDs.
+case "$1:$#" in list:2|create:2|resume:2) device=$2 ;; restore:3) device=$3 ;; *) fail 'The installed system is missing or its filesystem UUID is ambiguous.' ;; esac
 [ "$(blkid -p -s UUID -o value "$device")" = "$uuid" ] || fail 'The system device has changed. Restart recovery.'
 mkdir -p "$top"
 options=rw,subvolid=5
@@ -58,9 +59,9 @@ options=rw,subvolid=5
 mount -t btrfs -o "$options" "$device" "$top"
 mounted=1
 
-last_boot() {
+marked_snapshot() {
     store=$top/@snapshots/anduinos-btrfs-snapshots-manager
-    marker=$store/last-successful-boot.json
+    marker=$1
     [ -f "$marker" ] && [ "$(readlink -f "$marker")" = "$marker" ] || return 1
     [ "$(stat -c %s "$marker")" -le 4096 ] || return 1
     id=$(jq -er --arg root "$uuid" 'select(.schema == 1 and .root_uuid == $root) | .snapshot_id | select(type == "string")' "$marker") || return 1
@@ -77,9 +78,23 @@ last_boot() {
 case "$1" in
     list)
         recovery-offline list "$top" > /run/recovery-catalog.json
-        marked=$(last_boot 2>/dev/null || true)
-        jq -e --arg marked "$marked" 'select(.schema == 1 and (.deployments | type) == "array") | .deployments |= (sort_by(.created_at) | reverse) | .last_successful_boot_id = $marked' /run/recovery-catalog.json
+        marked=$(marked_snapshot "$top/@snapshots/anduinos-btrfs-snapshots-manager/last-successful-boot.json" 2>/dev/null || true)
+        current=$(marked_snapshot "$saved" 2>/dev/null || true)
+        jq -e --arg marked "$marked" --arg current "$current" 'select(.schema == 1 and (.deployments | type) == "array") | .deployments |= (sort_by(.created_at) | reverse) | .last_successful_boot_id = $marked | .current_snapshot_id = $current' /run/recovery-catalog.json
         ;;
-    restore) recovery-offline restore "$top" "$2"; sync ;;
-    resume) recovery-offline resume "$top"; sync ;;
+    create)
+        # Do not let create's implicit resume replace the state being saved.
+        recovery-offline list "$top" > /run/recovery-catalog.json
+        jq -e '.schema == 1 and .pending == null' /run/recovery-catalog.json >/dev/null || fail 'Finish the interrupted recovery before creating a snapshot.'
+        recovery-offline create "$top" 'Current state before recovery' 'Created in AnduinOS Recovery Environment' > /run/recovery-created.json
+        jq -e --arg root "$uuid" 'select(.schema == 1 and .deployment.state == "ready" and .deployment.failure == null) | {schema: 1, root_uuid: $root, snapshot_id: .deployment.id, snapshot_uuid: .deployment.snapshot_uuid}' /run/recovery-created.json > "$saved.tmp"
+        sync
+        # Publish success only after the writable mount has closed successfully.
+        umount "$top" || fail 'Could not unmount the system after creating the snapshot.'
+        mounted=0
+        mv "$saved.tmp" "$saved"
+        cat /run/recovery-created.json
+        ;;
+    restore) printf '{}\n' > "$saved"; recovery-offline restore "$top" "$2"; sync ;;
+    resume) printf '{}\n' > "$saved"; recovery-offline resume "$top"; sync ;;
 esac

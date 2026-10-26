@@ -6,7 +6,11 @@ reuses Disk Snapshots Manager's offline recovery engine: choose a snapshot,
 confirm the rollback, then restart. Personal files remain unchanged. A text
 menu remains available if graphical startup fails. The System Information tab
 shows read-only boot, installed-system, storage and hardware details. Unavailable
-hardware fields do not prevent recovery.
+hardware fields do not prevent recovery. **Snapshot Current State** saves the
+installed system before a rollback and refreshes the list. Until a snapshot has
+been created successfully in this recovery session, rollback confirmation shows
+a prominent data-loss warning. Snapshot creation requires readable installed
+kernel, initramfs and package metadata; failures leave the warning in place.
 
 This initial development package requires an unmounted, dedicated ext4 volume
 labelled `AOS_RECOVERY` (256 MiB) and an unencrypted AnduinOS Btrfs root using

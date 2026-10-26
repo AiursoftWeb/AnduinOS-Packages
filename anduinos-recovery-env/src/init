@@ -37,15 +37,25 @@ while :; do
         jq '[.deployments[] | select(.state == "ready" and .failure == null)]' /run/recovery-choices.json > /run/recovery-ready.json
         count=$(jq 'length' /run/recovery-ready.json)
         jq -r 'to_entries[] | "\(.key + 1). \(.value.created_at)  \(.value.title | @json)"' /run/recovery-ready.json
+        echo 'S. Snapshot current system state'
         echo '0. Restart without restoring'
         printf 'Select a snapshot number: '
         read -r choice
+        if [ "$choice" = S ] || [ "$choice" = s ]; then
+            if recovery-action create; then
+                echo 'Current system state saved. Personal files are not included.'
+            fi
+            continue
+        fi
         case "$choice" in 0) recovery-action restart; continue ;; ''|*[!0-9]*) continue ;; esac
         [ "${#choice}" -le 5 ] && [ "$choice" -ge 1 ] && [ "$choice" -le "$count" ] || continue
         index=$(awk -v n="$choice" 'BEGIN {print n - 1}')
         identifier=$(jq -r ".[${index}].id" /run/recovery-ready.json)
         jq -r ".[${index}] | \"Restore: \(.title | @json) (\(.created_at))\"" /run/recovery-ready.json
         echo 'This permanently replaces system files and applications. Personal files remain unchanged.'
+        if [ -z "$(jq -r '.current_snapshot_id // ""' /run/recovery-choices.json)" ]; then
+            echo 'DATA NOT INCLUDED IN A SNAPSHOT WILL BE LOST!'
+        fi
         echo 'No new backup snapshot will be created. Type RESTORE to confirm, or press Enter to cancel.'
         read -r answer
         [ "$answer" = RESTORE ] || continue

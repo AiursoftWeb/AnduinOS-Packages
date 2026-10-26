@@ -40,6 +40,7 @@ struct snapshot {
 
 static struct snapshot *snapshots;
 static int snapshot_count;
+static bool current_saved;
 
 /* Widgets belong to LVGL; replacing a page deletes its child widgets. */
 static lv_obj_t *body;
@@ -262,6 +263,12 @@ static void resume(lv_event_t *event)
     start_action("resume", NULL);
 }
 
+static void create_snapshot(lv_event_t *event)
+{
+    (void)event;
+    start_action("create", NULL);
+}
+
 static void close_dialog(void)
 {
     if (!dialog) {
@@ -317,6 +324,7 @@ static void confirm(lv_event_t *event)
     dialog = lv_msgbox_create(NULL);
     int width = lv_display_get_horizontal_resolution(NULL);
     lv_obj_set_width(dialog, width > 600 ? 560 : width - 32);
+    lv_obj_set_style_max_height(dialog, lv_display_get_vertical_resolution(NULL) - 32, 0);
     lv_obj_set_style_bg_color(dialog, lv_color_hex(0x303030), 0);
     lv_obj_set_style_text_color(dialog, lv_color_hex(0xf0f0f0), 0);
     lv_obj_set_style_text_font(dialog, body_font, 0);
@@ -330,6 +338,12 @@ static void confirm(lv_event_t *event)
     lv_msgbox_add_text(dialog,
         "System files and installed applications will return to this snapshot. Personal files will "
         "stay unchanged.\n\nNo new backup snapshot will be created.");
+    if (!current_saved) {
+        lv_obj_t *warning = lv_msgbox_add_text(dialog,
+            "DATA NOT INCLUDED IN A SNAPSHOT WILL BE LOST!");
+        lv_obj_set_style_text_font(warning, title_font, 0);
+        lv_obj_set_style_text_color(warning, lv_color_hex(0xffb4ab), 0);
+    }
     lv_obj_t *no = lv_msgbox_add_footer_button(dialog, "Cancel");
     lv_obj_t *yes = lv_msgbox_add_footer_button(dialog, "Roll Back");
     lv_obj_set_style_bg_color(no, lv_color_hex(0x484848), 0);
@@ -398,6 +412,8 @@ static void listed(jv report)
         return;
     }
     char *marked = string_field(report, "last_successful_boot_id");
+    char *saved = string_field(report, "current_snapshot_id");
+    current_saved = false;
     lv_obj_t *list = lv_obj_create(body);
     lv_obj_set_width(list, lv_pct(100));
     lv_obj_set_flex_grow(list, 1);
@@ -451,6 +467,10 @@ static void listed(jv report)
             lv_obj_t *badge = label(row, "Last successful boot", 0x92d4a7);
             lv_obj_set_width(badge, LV_SIZE_CONTENT);
         }
+        if (snapshot->ready && !strcmp(snapshot->id, saved)) {
+            current_saved = true;
+            label(info, "Current state saved in this recovery session", 0x92d4a7);
+        }
         lv_obj_t *control = button(row, "Roll Back", confirm, snapshot, true);
         if (!snapshot->ready) {
             lv_obj_add_state(control, LV_STATE_DISABLED);
@@ -458,6 +478,7 @@ static void listed(jv report)
     }
     jv_free(records);
     free(marked);
+    free(saved);
     if (!snapshot_count) {
         label(list, "No system snapshots are available.", 0xbdbdbd);
     }
@@ -468,7 +489,9 @@ static void listed(jv report)
             0xd6ac70);
     }
     jv_free(issues);
-    button(footer(), "Restart", restart, NULL, false);
+    lv_obj_t *row = footer();
+    button(row, "Snapshot Current State", create_snapshot, NULL, true);
+    button(row, "Restart", restart, NULL, false);
 }
 
 static void information(jv report)
@@ -722,6 +745,9 @@ static void poll_worker(lv_timer_t *timer)
                        : "The recovery engine returned an unreadable snapshot catalog.");
         }
         jv_free(report);
+    } else if (!strcmp(operation, "create")) {
+        /* The refreshed catalog verifies the saved marker before hiding warnings. */
+        start_action("list", NULL);
     } else if (strcmp(operation, "restart")) {
         page("Your system has been restored",
             "Restart to use the restored system. Your personal files were left unchanged.");
@@ -742,9 +768,11 @@ static void start_action(const char *action, const char *identifier)
     }
     bool loading = info || !strcmp(action, "list");
     bool restarting = !strcmp(action, "restart");
+    bool creating = !strcmp(action, "create");
     page(info         ? "System Information"
          : loading    ? "AnduinOS Recovery"
          : restarting ? "Restarting…"
+         : creating   ? "Saving current system state…"
                       : "Restoring your system…",
         info         ? "Reading system information…"
         : loading    ? "Looking for system snapshots…"
