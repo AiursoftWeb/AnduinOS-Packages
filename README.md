@@ -96,6 +96,7 @@ These replace Ubuntu **files** without removing the Ubuntu **package**.
 | `base-files` | `os-release`, `lsb-release`, `issue`, `issue.net`, `ubuntu-logo-*.png`, `legal` | Epoch `1:` outranks Ubuntu |
 | `anduinos-apt-config` | APT sources (`packages.anduinos.com`) + preferences | Dual pin: `origin` (domain) + `release o=` (Origin field), both at priority 1001; also shipped as `anduinos-apt-config-dev` (→ `apkg-dev.aiursoft.com`) |
 | `anduinos-mimeapps` | `gnome-mimeapps.list` | `dpkg-divert` (original → `.ubuntu-original`) |
+| `anduinos-input-method-policy` | Mozc login initialization script | `dpkg-divert`; input sources stay under installer and user control |
 
 `anduinos-rime` is intentionally absent from this override table. Starting
 with `2.0.1-2`, it owns only Rime Ice resources and an additive distribution

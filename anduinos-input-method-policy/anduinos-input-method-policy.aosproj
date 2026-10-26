@@ -1,0 +1,23 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-input-method-policy</PackageName>
+    <PackageVersion>2.0.5-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Keep input source selection under installer and user control</PackageDescription>
+    <Section>gnome</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <Component>main</Component>
+  </PropertyGroup>
+  <ItemGroup>
+    <IncludeFile Include="assets/ibus-mozc-gnome-initial-setup.sh"
+                 Target="/usr/share/ibus-mozc/ibus-mozc-gnome-initial-setup.sh" Mode="755" />
+    <PreInstallScript Include="scripts/preinst.sh" />
+    <PostRemoveScript Include="scripts/postrm.sh" />
+  </ItemGroup>
+</Project>

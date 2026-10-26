@@ -136,6 +136,13 @@ anduinos-no-snapd:
   variables:
     PACKAGE_DIR: anduinos-no-snapd
 
+anduinos-input-method-policy:
+  extends: .publish
+  needs:
+    - test-all
+  variables:
+    PACKAGE_DIR: anduinos-input-method-policy
+
 anduinos-fonts:
   extends: .publish
   needs:
@@ -790,6 +797,7 @@ anduinos-desktop:
     - anduinos-software-properties-common
     - anduinos-no-snapd
     - anduinos-kernel-parameters
+    - anduinos-input-method-policy
     - anduinos-swap-config
     - anduinos-desktop-apps
   variables:
