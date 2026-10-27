@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-why-ai</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>why — a fully offline, zero-daemon LLM CLI backed by a bundled Gemma 4 E2B model. Ask questions in plain text, pipe in context from stdin, or run --serve for an OpenAI-compatible HTTP API.</PackageDescription>
     <Section>utils</Section>
@@ -42,6 +42,7 @@
     <IncludeScript Include="obj/why" Target="/usr/bin/why" />
     <IncludeFolder Include="obj/usr/share/anduinos-why-ai" Target="/usr/share/anduinos-why-ai" />
     <IncludeFile Include="MODEL-NOTICE" Target="/usr/share/doc/anduinos-why-ai/MODEL-NOTICE" />
+    <IncludeFile Include="obj/ENCODING-NOTICES" Target="/usr/share/doc/anduinos-why-ai/ENCODING-NOTICES" />
     <IncludeFile Include="MODEL-LICENSE" Target="/usr/share/doc/anduinos-why-ai/MODEL-LICENSE" />
   </ItemGroup>
 </Project>

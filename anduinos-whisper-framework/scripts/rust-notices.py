@@ -5,15 +5,20 @@ Includes build-time dependencies as well as linked crates. Read the actual
 downloaded crate notices, never manufacture a license from its SPDX identifier.
 Missing upstream license text fails the build and requires a maintainer review.
 """
+import argparse
 import json
 import os
 from pathlib import Path
 import subprocess
-import sys
 
 
 def main():
-    target, destination = sys.argv[1:]
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("target")
+    parser.add_argument("destination")
+    parser.add_argument("--package", help="Collect one named dependency and the standard-library notices")
+    args = parser.parse_args()
+    target, destination = args.target, args.destination
     metadata = json.loads(subprocess.check_output([
         "cargo", "metadata", "--locked", "--offline", "--format-version=1",
         "--filter-platform", target,
@@ -21,7 +26,9 @@ def main():
     resolved = {node["id"] for node in metadata["resolve"]["nodes"]}
     sections = ["Rust dependency notices\n"
                 "Generated from Cargo.lock and upstream crate source archives.\n"
-                "Includes resolved build dependencies; not all listed code is linked.\n"]
+                + (f"Selected dependency: {args.package}; standard-library notices also included.\n"
+                   if args.package else
+                   "Includes resolved build dependencies; not all listed code is linked.\n")]
     # Cargo metadata does not list the statically linked Rust standard library.
     version = subprocess.check_output(["rustc", "--version"], text=True).split()[1]
     sysroot = Path(subprocess.check_output(["rustc", "--print", "sysroot"], text=True).strip())
@@ -39,7 +46,11 @@ def main():
         raise SystemExit("Missing Rust standard-library notices; set RUST_STDLIB_NOTICES for this toolchain")
     sections.append(f"\nRust standard library {version}\n{standard_notice.read_text()}\n")
     packages = sorted(metadata["packages"], key=lambda p: (p["name"], p["version"]))
+    if args.package and not any(p["name"] == args.package and p["id"] in resolved for p in packages):
+        raise SystemExit(f"Dependency not resolved: {args.package}")
     for package in packages:
+        if args.package and package["name"] != args.package:
+            continue
         if package["id"] not in resolved or not package["source"]:
             continue
         directory = Path(package["manifest_path"]).parent
