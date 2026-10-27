@@ -34,6 +34,12 @@ install() {
     rm -f "$initdir/sbin/dmsquash-live-root"
     inst_script "$moddir/anduinos-live-root.sh" "/sbin/dmsquash-live-root"
     inst_script /usr/libexec/anduinos-media-check
+    # BusyBox may populate this path before our module. Its realpath lacks
+    # -e/--, which the media checker needs to reject missing or escaping paths.
+    # Replace only the initrd entry, preserving the host coreutils provider.
+    local realpath_binary
+    realpath_binary=$(find_binary realpath) || return 1
+    rm -f "$initdir$realpath_binary"
     inst_multiple bash cat checkisomd5 md5sum realpath flock tail sleep sed \
         readlink cut grep stat mktemp mv chmod mkdir rm id findmnt mount umount \
         poweroff awk
