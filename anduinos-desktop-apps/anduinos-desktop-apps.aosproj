@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-apps</PackageName>
-    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default applications — pulls in recommended apps for AnduinOS</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -64,7 +64,8 @@
     <Recommend Include="anduinos-yubikey-manager" />
     <Recommend Include="baobab" />
     <Recommend Include="file-roller" />
-    <Recommend Include="gnome-sushi" />
+    <!-- Sushi 51 requires LibreOffice; keep Stonking's default image lightweight. -->
+    <Recommend Include="gnome-sushi" Condition="'$(Suite)' == 'noble-addon' Or '$(Suite)' == 'resolute-addon'" />
     <Recommend Include="gnome-disk-utility" />
     <Recommend Include="gnome-logs" />
     <Recommend Include="gnome-system-monitor" Condition="'$(Suite)' == 'noble-addon'" />
