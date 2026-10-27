@@ -84,6 +84,12 @@ change.
 
 ### Suites and system identity
 
+Before adding a suite, confirm that the package still serves that release.
+One-shot migration and transitional compatibility packages should target only
+releases with that legacy upgrade path, not every new suite. For example,
+`anduinos-dracut-migration` is Resolute-only; Stonking already starts with
+Dracut. Retire such helpers when their supported migration path ends.
+
 Keep `TargetSuites`, `TargetArchitectures`, conditional inputs, and upstream
 suite mappings consistent. Declare only targets the package supports.
 Rebuilding unchanged code for a newly supported suite does not by itself
