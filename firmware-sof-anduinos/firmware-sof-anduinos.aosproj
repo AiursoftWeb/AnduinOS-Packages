@@ -11,7 +11,7 @@
          /usr/share/doc/firmware-sof-signed/copyright in the installed package. -->
     <LicenseType>Various</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
 
@@ -19,7 +19,7 @@
     <UpstreamDistro>ubuntu</UpstreamDistro>
     <UpstreamPackage>firmware-sof-signed</UpstreamPackage>
     <UpstreamSuite>$(Suite)</UpstreamSuite>
-    <UpstreamSuiteMapping>noble-addon=noble,, resolute-addon=resolute</UpstreamSuiteMapping>
+    <UpstreamSuiteMapping>noble-addon=noble,, resolute-addon=resolute stonking-addon=stonking</UpstreamSuiteMapping>
     <UpstreamComponent>$(Component)</UpstreamComponent>
     <UpstreamArch>all</UpstreamArch>
 
