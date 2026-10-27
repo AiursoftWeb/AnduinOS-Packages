@@ -208,7 +208,7 @@ must target Dracut rather than introduce `initramfs-tools` dependencies or hooks
 
 AnduinOS owns one early-boot stack: `anduinos-core-system` depends directly on
 `dracut`, `dracut-core`, and `dracut-install`, and conflicts with Casper and the
-complete initramfs-tools/finalrd stack. Existing systems receive
+complete initramfs-tools/finalrd stack. Existing Resolute systems receive
 `anduinos-dracut-migration` through the independently upgradable desktop
 metapackage, keeping host boot migration out of shared APT and container
 layers. Its timer waits until every required pure-Dracut candidate is

@@ -9,6 +9,15 @@ has exercised the real offline service, the subsequent timer migration, and a
 verified Dracut reboot. The complete rebooting VM matrix remains a production
 release gate; one green smoke test or retry-timer unit test is not a substitute.
 
+The coordinator is a temporary, Resolute-only compatibility package for
+existing 2.0 installations. Stonking starts with Dracut and must neither build
+nor depend on this helper. New Resolute installations already use Dracut, but
+share the desktop metapackage with older installations. Retire the helper
+once the supported Resolute migration path is no longer needed; routine kernel
+updates remain the responsibility of Dracut and the boot-tools integration.
+Removing build targets does not uninstall previously published packages or
+remove migration state and fallback files from existing machines.
+
 This document defines the upgrade contract for moving an existing AnduinOS
 desktop from `initramfs-tools` to Dracut. It covers both supported entry paths:
 
@@ -57,7 +66,7 @@ independent inode. No completion marker is proof of bootability by itself.
 
 ### `anduinos-desktop`
 
-`anduinos-desktop` depends on `anduinos-dracut-migration`. This is the bootstrap
+On Resolute only, `anduinos-desktop` depends on `anduinos-dracut-migration`. This is the bootstrap
 path for existing desktop installations whose conservative `apt upgrade`
 refuses the generator conflict. The dependency deliberately does not live in
 `anduinos-apt-config`, `anduinos-apt-config-dev`, `anduinos-container`,
