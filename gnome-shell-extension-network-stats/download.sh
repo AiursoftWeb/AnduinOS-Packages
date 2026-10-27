@@ -16,6 +16,31 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
 
     echo "[$SUITE] Resolving $UUID for GNOME $TARGET..."
     python3 "$SCRIPT_DIR/../lib/resolve-gnome-ext.py" "$UUID" --target "$TARGET" --download --out "$DEPLOY_DIR"
+
+    if [[ "$TARGET" -ge 51 ]]; then
+        # GNOME 51 removed St.BoxLayout.vertical; preserve older suite payloads.
+        python3 - "$DEPLOY_DIR/lib/ui" <<'PYTHON'
+from pathlib import Path
+import sys
+
+for name in ("PopupView.js", "ExpandableDeviceMenuItem.js"):
+    path = Path(sys.argv[1]) / name
+    source = path.read_text()
+    old = "vertical: false"
+    if source.count(old) != 1:
+        raise SystemExit(f"Network Stats orientation patch no longer matches {name}")
+    path.write_text(source.replace(old, "orientation: Clutter.Orientation.HORIZONTAL"))
+
+# St.Widget no longer supplies the parent event handler. Unhandled events
+# should keep propagating; the extension's right-click handling stays intact.
+path = Path(sys.argv[1]) / "PopupView.js"
+source = path.read_text()
+old = "return super.vfunc_event(event);"
+if source.count(old) != 1:
+    raise SystemExit("Network Stats event patch no longer matches upstream")
+path.write_text(source.replace(old, "return Clutter.EVENT_PROPAGATE;"))
+PYTHON
+    fi
 done
 
 echo "Done."

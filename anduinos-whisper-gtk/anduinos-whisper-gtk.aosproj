@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-whisper-gtk</PackageName>
-    <PackageVersion>2.0.5-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Voice Typing settings, microphone training, GNOME shortcut, and non-focusing floating microphone bar.</PackageDescription>
     <Section>gnome</Section>
@@ -11,14 +11,14 @@
     <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
     <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetSuites>resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
   </PropertyGroup>
 
   <ItemGroup>
-    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute" />
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute stonking-addon=stonking" />
   </ItemGroup>
 
   <ItemGroup>

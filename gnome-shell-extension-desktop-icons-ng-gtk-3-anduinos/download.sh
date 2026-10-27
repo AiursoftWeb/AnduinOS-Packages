@@ -13,7 +13,7 @@ printf '%s  %s\n' \
     '429171dda75a6d449650679c77370fb7edd17b9b183d68e54ab6892ab478a3f3' \
     "$archive" | sha256sum --check --status
 
-for suite in noble resolute; do
+for suite in noble resolute stonking; do
     destination="$script_dir/deploy/$suite/ding@rastersoft.com"
     rm -rf "$destination"
     mkdir -p "$destination"
@@ -29,9 +29,13 @@ import sys
 from pathlib import Path
 
 metadata = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
-shell = {"noble": "46", "resolute": "50"}[sys.argv[2]]
+shell = {"noble": "46", "resolute": "50", "stonking": "51"}[sys.argv[2]]
 if (metadata.get("uuid"), metadata.get("version")) != ("ding@rastersoft.com", 85):
     raise SystemExit("Downloaded DING is not version 85")
+if shell == "51":
+    # Keep the GTK 3 variant; validate this compatibility target in GNOME 51.
+    metadata["shell-version"].append(shell)
+    Path(sys.argv[1]).write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
 if shell not in metadata.get("shell-version", []):
     raise SystemExit(f"DING v85 does not declare GNOME Shell {shell} support")
 PY

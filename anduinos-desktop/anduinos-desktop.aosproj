@@ -12,10 +12,10 @@
     <Conflicts>yaru-theme-gnome-shell, update-notifier, update-notifier-common, update-manager, update-manager-core, ubuntu-release-upgrader-core, ubuntu-release-upgrader-gtk, ubuntu-desktop, whoopsie</Conflicts>
     <Replaces>yaru-theme-gnome-shell, update-notifier, update-notifier-common, update-manager, update-manager-core, ubuntu-release-upgrader-core, ubuntu-release-upgrader-gtk, ubuntu-desktop, whoopsie</Replaces>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
   </PropertyGroup>
 
   <ItemGroup>
