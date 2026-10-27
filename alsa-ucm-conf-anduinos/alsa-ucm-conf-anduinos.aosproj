@@ -1,13 +1,13 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>alsa-ucm-conf-anduinos</PackageName>
-    <PackageVersion>2.0.5-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.6-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>ALSA Use Case Manager configuration — audio routing profiles for various hardware</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://github.com/alsa-project/alsa-ucm-conf</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
-    <LicenseType>GPL-3.0</LicenseType>
+    <LicenseType>BSD-3-Clause AND MIT</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
@@ -24,5 +24,6 @@
 
   <ItemGroup>
     <IncludeFolder Include="deploy/ucm2/" Target="/usr/share/alsa/ucm2" />
+    <IncludeFile Include="deploy/copyright" Target="/usr/share/doc/alsa-ucm-conf-anduinos/copyright" />
   </ItemGroup>
 </Project>
