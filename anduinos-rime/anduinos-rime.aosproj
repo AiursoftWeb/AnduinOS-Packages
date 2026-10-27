@@ -1,13 +1,13 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-rime</PackageName>
-    <PackageVersion>2.0.5-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.6-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default Chinese input method (rime-ice configuration for ibus-rime)</PackageDescription>
     <Section>utils</Section>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
-    <LicenseType>GPL-3.0</LicenseType>
+    <LicenseType>Various</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-rime/README.md" />
     <IncludeFolder Include="assets/" Target="/usr/share/rime-data/" />
     <IncludeFolder Include="defaults/" Target="/usr/share/rime-data/" />
   </ItemGroup>
