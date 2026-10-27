@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 
 
 def main():
@@ -17,7 +18,7 @@ def main():
     parser.add_argument("target")
     parser.add_argument("destination")
     parser.add_argument("--package", help="Collect one named dependency and the standard-library notices")
-    args = parser.parse_args()
+    args = parser.parse_args(sys.argv[1:])
     target, destination = args.target, args.destination
     metadata = json.loads(subprocess.check_output([
         "cargo", "metadata", "--locked", "--offline", "--format-version=1",
