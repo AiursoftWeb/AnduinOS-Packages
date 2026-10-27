@@ -29,5 +29,6 @@ echo "Building Fluent cursor theme..."
     '
 )
 
+install -m 644 /tmp/Fluent-icon-theme/COPYING "$SCRIPT_DIR/deploy/COPYING"
 rm -rf /tmp/Fluent-icon-theme
 echo "Done. Pre-built icon themes are in deploy/icons/."
