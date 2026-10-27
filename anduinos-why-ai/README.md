@@ -4,8 +4,8 @@ A fully offline, zero-daemon LLM CLI for AnduinOS, backed by a bundled
 [Gemma 4 E2B](https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF) model
 over llama.cpp with Vulkan GPU acceleration.
 
-This package targets AnduinOS 2.x (`resolute-addon`) only. Serve mode uses
-the Resolute `llama.cpp-tools` package, which provides `llama-server`.
+This package targets AnduinOS 2.x (`resolute-addon` and `stonking-addon`).
+Serve mode uses the suite's `llama.cpp-tools` package, which provides `llama-server`.
 
 ## Usage
 

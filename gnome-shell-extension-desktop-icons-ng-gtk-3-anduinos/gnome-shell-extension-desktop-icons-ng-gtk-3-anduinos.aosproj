@@ -9,16 +9,16 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
     <Provides>gnome-shell-extension-desktop-icons-ng, gnome-shell-extension-desktop-icons-ng-anduinos</Provides>
     <Conflicts>gnome-shell-extension-desktop-icons-ng, gnome-shell-extension-desktop-icons-ng-anduinos</Conflicts>
     <Replaces>gnome-shell-extension-desktop-icons-ng, gnome-shell-extension-desktop-icons-ng-anduinos</Replaces>
   </PropertyGroup>
   <ItemGroup>
-    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble resolute-addon=resolute" />
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble resolute-addon=resolute stonking-addon=stonking" />
   </ItemGroup>
   <ItemGroup>
     <Dependency Include="anduinos-dconf-runtime" />
@@ -36,6 +36,9 @@
     <IncludeFolder Include="deploy/resolute/ding@rastersoft.com"
                    Target="/usr/share/gnome-shell/extensions/ding@rastersoft.com"
                    Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFolder Include="deploy/stonking/ding@rastersoft.com"
+                   Target="/usr/share/gnome-shell/extensions/ding@rastersoft.com"
+                   Condition="'$(Suite)' == 'stonking-addon'" />
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />
