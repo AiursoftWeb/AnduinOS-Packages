@@ -9,13 +9,13 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
   </PropertyGroup>
   <ItemGroup>
-    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble resolute-addon=resolute" />
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble resolute-addon=resolute stonking-addon=stonking" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +32,9 @@
     <IncludeFolder Include="deploy/resolute/tiling-assistant@leleat-on-github"
                    Target="/usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github"
                    Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFolder Include="deploy/stonking/tiling-assistant@leleat-on-github"
+                   Target="/usr/share/gnome-shell/extensions/tiling-assistant@leleat-on-github"
+                   Condition="'$(Suite)' == 'stonking-addon'" />
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />
