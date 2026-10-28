@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <!-- Branding: replace Ubuntu logos with AnduinOS logos -->
-    <IncludeFile Include="../anduinos-oobe/resources/icons/anduinos-oobe.svg" Target="/usr/share/pixmaps/ubuntu-logo.svg" />
+    <IncludeFile Include="assets/resolute/ubuntu-logo.svg" Target="/usr/share/pixmaps/ubuntu-logo.svg" />
     <IncludeFile Include="assets/noble/ubuntu-logo-text.png" Target="/usr/share/pixmaps/ubuntu-logo-text.png"
                  Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="assets/noble/ubuntu-logo-text-dark.png" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.png"
