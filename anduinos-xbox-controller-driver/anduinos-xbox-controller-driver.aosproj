@@ -1,13 +1,15 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-xbox-controller-driver</PackageName>
-    <PackageVersion>2.0.5-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Xbox Controller Driver (xpadneo) - seamless Bluetooth gamepad support</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://github.com/atar-axis/xpadneo</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
-    <LicenseType>GPL-3.0</LicenseType>
+    <!-- The kernel driver and helpers retain their file-level upstream licenses;
+         see /usr/share/doc/anduinos-xbox-controller-driver/LICENSE.md. -->
+    <LicenseType>Various</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
