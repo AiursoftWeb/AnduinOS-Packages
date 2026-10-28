@@ -3,6 +3,7 @@ set -eu
 # Leave the separate volume intact; removing a package never destroys a partition.
 case "${1:-}" in
     remove|purge)
+        rm -f /var/lib/anduinos-recovery-env/enable-on-reinstall
         systemctl --root=/ disable anduinos-recovery-boot.service >/dev/null 2>&1 || true
         # Image assembly and installer cleanup run before the bootloader is
         # ready. Their final bootloader step owns the resulting menu.
@@ -19,5 +20,8 @@ case "${1:-}" in
         if [ -f /var/lib/anduinos-recovery-env/volume.json ] && command -v update-grub >/dev/null 2>&1; then
             update-grub
         fi
+        ;;
+    abort-install)
+        rm -f /var/lib/anduinos-recovery-env/enable-on-reinstall
         ;;
 esac

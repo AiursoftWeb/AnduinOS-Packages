@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-recovery-env</PackageName>
-    <PackageVersion>2.1.0-5+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-6+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Independent offline Btrfs snapshot recovery environment</PackageDescription>
     <Section>admin</Section>
@@ -51,6 +51,7 @@
     <Dependency Include="btrfs-progs" />
     <Dependency Include="grub2-common" />
     <PrebuildCommand Run="python3 build.py" />
+    <PreInstallScript Include="data/preinst" />
     <PostInstallScript Include="data/postinst" />
     <PostRemoveScript Include="data/postrm" />
     <IncludeScript Include="src/deploy.py" Target="/usr/libexec/anduinos-recovery-env" />
