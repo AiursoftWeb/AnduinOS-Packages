@@ -94,6 +94,12 @@ fi
                 self.assertEqual(result.returncode, 0, result.stderr)
                 self.assertEqual([call.split()[0] for call in calls], expected)
 
+    def test_failed_upgrade_does_not_hide_the_old_cleanup_failure(self):
+        result, calls = self.run_script("prerm.sh", "failed-upgrade")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("retry the upgrade", result.stderr)
+        self.assertEqual(calls, [])
+
     def test_removal_is_idempotent_and_dkms_failure_is_not_hidden(self):
         result, calls = self.run_script("prerm.sh", "remove")
         self.assertEqual(result.returncode, 0, result.stderr)

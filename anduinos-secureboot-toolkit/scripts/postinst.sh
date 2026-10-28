@@ -1,5 +1,10 @@
 #!/bin/sh
 set -eu
+# Keep upstream DKMS callable throughout unpacking. Other packages can run
+# prerm before our configure step; diverting it in preinst leaves a gap.
+# The wrapper and its Python modules are now unpacked, so switch together.
+dpkg-divert --package anduinos-secureboot-toolkit --add --rename \
+    --divert /usr/libexec/anduinos-dkms-original /usr/sbin/dkms
 if [ -f /usr/libexec/anduinos-dkms-original ]; then
     if [ -e /usr/sbin/dkms ] && [ "$(readlink /usr/sbin/dkms 2>/dev/null || true)" != /usr/libexec/anduinos-dkms-wrapper ]; then
         echo 'Unexpected DKMS frontend; refusing to replace it' >&2
