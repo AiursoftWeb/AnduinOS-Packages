@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>base-files</PackageName>
-    <PackageVersion>1:2.1.1+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>1:2.1.2+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS base files (derived from Ubuntu base-files)</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <!-- Branding: replace Ubuntu logos with AnduinOS logos -->
+    <IncludeFile Include="assets/resolute/ubuntu-logo.svg" Target="/usr/share/pixmaps/ubuntu-logo.svg" />
     <IncludeFile Include="assets/noble/ubuntu-logo-text.png" Target="/usr/share/pixmaps/ubuntu-logo-text.png"
                  Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="assets/noble/ubuntu-logo-text-dark.png" Target="/usr/share/pixmaps/ubuntu-logo-text-dark.png"
