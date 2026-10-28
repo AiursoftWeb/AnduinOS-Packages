@@ -11,7 +11,4 @@ case "${1:-}" in
             rm -f "$state"
         fi
         ;;
-    upgrade)
-        rm -f "$state"
-        ;;
 esac
