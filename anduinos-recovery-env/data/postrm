@@ -11,6 +11,11 @@ case "${1:-}" in
             echo "AnduinOS recovery: chroot detected; deferring GRUB refresh."
             exit 0
         fi
+        if command -v udevadm >/dev/null 2>&1 && [ -S /run/udev/control ]; then
+            udevadm control --reload-rules
+            udevadm trigger --action=change --subsystem-match=block \
+                --attr-match=partition --property-match=ID_FS_LABEL=AOS_RECOVERY
+        fi
         if [ -f /var/lib/anduinos-recovery-env/volume.json ] && command -v update-grub >/dev/null 2>&1; then
             update-grub
         fi
