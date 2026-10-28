@@ -1,17 +1,9 @@
 #!/bin/sh
 set -eu
 if [ "${1:-}" = configure ]; then
-    state=/var/lib/anduinos-recovery-env/enable-on-reinstall
-    restore_service=false
-    if [ -f "$state" ]; then
-        case "$(systemctl --root=/ is-enabled anduinos-recovery-boot.service 2>/dev/null || true)" in
-            masked|masked-runtime) ;;
-            *) restore_service=true ;;
-        esac
-    fi
     # New in -2. Enable in an image/chroot too; later upgrades preserve a
     # user's decision to disable it. No checkpoint is written by this script.
-    if [ "$restore_service" = true ] || dpkg --compare-versions "${2:-0}" lt 2.0.5-2; then
+    if dpkg --compare-versions "${2:-0}" lt 2.0.5-2; then
         systemctl --root=/ enable anduinos-recovery-boot.service
     fi
     # The installer upgrades packages before installing GRUB. It explicitly
@@ -20,7 +12,6 @@ if [ "${1:-}" = configure ]; then
     if systemd-detect-virt --quiet --chroot >/dev/null 2>&1 ||
        ischroot >/dev/null 2>&1; then
         echo "AnduinOS recovery: chroot detected; deferring deployment and GRUB refresh."
-        rm -f "$state"
         exit 0
     fi
     # Apply the desktop visibility policy to existing recovery volumes too.
@@ -33,9 +24,4 @@ if [ "${1:-}" = configure ]; then
     if [ -f /var/lib/anduinos-recovery-env/volume.json ]; then
         update-grub
     fi
-    if [ "$restore_service" = true ] && [ -d /run/systemd/system ]; then
-        systemctl daemon-reload
-        systemctl start anduinos-recovery-boot.service || true
-    fi
-    rm -f "$state"
 fi

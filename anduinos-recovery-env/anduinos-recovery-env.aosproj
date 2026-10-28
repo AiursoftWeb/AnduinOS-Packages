@@ -51,13 +51,13 @@
     <Dependency Include="btrfs-progs" />
     <Dependency Include="grub2-common" />
     <PrebuildCommand Run="python3 build.py" />
-    <PreInstallScript Include="data/preinst" />
     <PostInstallScript Include="data/postinst" />
     <PostRemoveScript Include="data/postrm" />
     <IncludeScript Include="src/deploy.py" Target="/usr/libexec/anduinos-recovery-env" />
     <IncludeScript Include="data/42_anduinos_recovery" Target="/etc/grub.d/42_anduinos_recovery" />
     <IncludeFile Include="assets/99-anduinos-recovery.rules" Target="/usr/lib/udev/rules.d/99-anduinos-recovery.rules" />
     <SystemdUnit Include="data/anduinos-recovery-boot.service" AutoEnable="true" />
+    <IncludeFile Include="data/graphical-recovery.conf" Target="/usr/lib/systemd/system/graphical.target.d/anduinos-recovery.conf" />
     <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-recovery-env/README.md" />
     <IncludeFile Include="../LICENSE" Target="/usr/share/doc/anduinos-recovery-env/copyright" />
   </ItemGroup>
