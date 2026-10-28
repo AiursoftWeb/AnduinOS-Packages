@@ -14,6 +14,12 @@ if [ "${1:-}" = configure ]; then
         echo "AnduinOS recovery: chroot detected; deferring deployment and GRUB refresh."
         exit 0
     fi
+    # Apply the desktop visibility policy to existing recovery volumes too.
+    if command -v udevadm >/dev/null 2>&1 && [ -S /run/udev/control ]; then
+        udevadm control --reload-rules
+        udevadm trigger --action=change --subsystem-match=block \
+            --attr-match=partition --property-match=ID_FS_LABEL=AOS_RECOVERY
+    fi
     /usr/libexec/anduinos-recovery-env deploy --if-present
     if [ -f /var/lib/anduinos-recovery-env/volume.json ]; then
         update-grub
