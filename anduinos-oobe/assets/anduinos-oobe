@@ -2359,7 +2359,7 @@ def create_privacy_page():
     page.append(headline)
 
     body = Gtk.Label(
-        label=_('AnduinOS disables all system-level telemetry by default.') + '\n' + _('We do not collect your usage habits.') + '\n' + \
+        label=_('AnduinOS does not send usage statistics or diagnostic reports to any organization by default.') + '\n' + _('We do not collect your usage habits.') + '\n' + \
                 _('We do not upload your search history.') + '\n' + _('There are no pervasive advertisements.')
     )
     body.add_css_class('title-4')
@@ -2389,8 +2389,8 @@ def create_privacy_page():
 
     # Pledge items
     pledges = [
-        _('✓ Zero telemetry — your activity is yours alone'),
-        _('✓ No data collection — your files stay on your device'),
+        _('✓ Zero telemetry — the operating system itself never reports your activity'),
+        _('✓ No mandatory internet connection — the operating system does not contact AIURSOFT servers except for updates'),
         _('✓ No ads in your operating system'),
         _('✓ Full root access — you truly own your machine'),
         _('✓ UFW firewall — your digital perimeter, defended'),
@@ -2399,6 +2399,7 @@ def create_privacy_page():
 
     for pledge in pledges:
         row = Gtk.Label(label=pledge)
+        row.set_wrap(True)
         row.set_halign(Gtk.Align.START)
         row.set_margin_start(24)
         row.set_margin_top(4)
