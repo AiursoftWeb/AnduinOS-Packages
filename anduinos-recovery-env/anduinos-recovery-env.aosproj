@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-recovery-env</PackageName>
-    <PackageVersion>2.1.0-5+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-6+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Independent offline Btrfs snapshot recovery environment</PackageDescription>
     <Section>admin</Section>
@@ -57,6 +57,7 @@
     <IncludeScript Include="data/42_anduinos_recovery" Target="/etc/grub.d/42_anduinos_recovery" />
     <IncludeFile Include="assets/99-anduinos-recovery.rules" Target="/usr/lib/udev/rules.d/99-anduinos-recovery.rules" />
     <SystemdUnit Include="data/anduinos-recovery-boot.service" AutoEnable="true" />
+    <IncludeFile Include="data/graphical-recovery.conf" Target="/usr/lib/systemd/system/graphical.target.d/anduinos-recovery.conf" />
     <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-recovery-env/README.md" />
     <IncludeFile Include="../LICENSE" Target="/usr/share/doc/anduinos-recovery-env/copyright" />
   </ItemGroup>
