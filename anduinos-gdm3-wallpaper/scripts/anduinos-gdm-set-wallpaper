@@ -230,10 +230,10 @@ do_generate() {
 
 /* GNOME 51 overlays the submit button on the entry. Reserve its space in
    either text direction and keep its icon the same size as the password eye. */
-.login-dialog .login-dialog-prompt-entry :ltr {
+.login-dialog .login-dialog-prompt-entry-area .login-dialog-prompt-entry :ltr {
   padding-right: 2.5em;
 }
-.login-dialog .login-dialog-prompt-entry :rtl {
+.login-dialog .login-dialog-prompt-entry-area .login-dialog-prompt-entry :rtl {
   padding-left: 2.5em;
 }
 .login-dialog .login-dialog-default-button-well :ltr {
