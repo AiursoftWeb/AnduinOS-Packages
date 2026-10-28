@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-secureboot-toolkit</PackageName>
-    <PackageVersion>2.0.5-22+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Shared Secure Boot, MOK, and DKMS signing toolkit for AnduinOS applications</PackageDescription>
     <Section>admin</Section>
@@ -38,7 +38,6 @@
 
   <ItemGroup>
     <PostInstallScript Include="scripts/postinst.sh" />
-    <PreInstallScript Include="scripts/preinst.sh" />
     <PostRemoveScript Include="scripts/postrm.sh" />
     <!-- Restore the diverted frontend before any DKMS-dependent package's
          postinst runs, including when DKMS is installed after this toolkit. -->
