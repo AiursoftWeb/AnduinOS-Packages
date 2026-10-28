@@ -33,5 +33,12 @@ mkdir -p "$SCRIPT_DIR/deploy/etc/udev"
 cp -r /tmp/xpadneo/hid-xpadneo/etc-udev-rules.d "$SCRIPT_DIR/deploy/etc/udev/rules.d"
 cp -r /tmp/xpadneo/hid-xpadneo/etc-modprobe.d "$SCRIPT_DIR/deploy/etc/modprobe.d"
 
+# Preserve the licensing guide and full texts from the same upstream checkout.
+DOC_DIR="$SCRIPT_DIR/deploy/usr/share/doc/anduinos-xbox-controller-driver"
+mkdir -p "$DOC_DIR/LICENSES"
+install -m 0644 /tmp/xpadneo/LICENSE.md "$DOC_DIR/LICENSE.md"
+install -m 0644 /tmp/xpadneo/LICENSES/LICENSE.gpl-2.0.txt "$DOC_DIR/LICENSES/"
+install -m 0644 /tmp/xpadneo/LICENSES/LICENSE.gpl-3.0.txt "$DOC_DIR/LICENSES/"
+
 rm -rf /tmp/xpadneo
 echo "Done. Prepared for DKMS packaging."

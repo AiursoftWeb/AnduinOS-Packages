@@ -7,7 +7,9 @@
     <Section>admin</Section>
     <PackageHomepage>https://github.com/atar-axis/xpadneo</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
-    <LicenseType>GPL-3.0</LicenseType>
+    <!-- The kernel driver and helpers retain their file-level upstream licenses;
+         see /usr/share/doc/anduinos-xbox-controller-driver/LICENSE.md. -->
+    <LicenseType>Various</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
     <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
