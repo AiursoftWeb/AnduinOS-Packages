@@ -186,6 +186,26 @@ class InstallInputMethodTests(unittest.TestCase):
                     any("apt-get" in command for command, _ in runner.commands)
                 )
 
+    def test_rime_libexec_payload_configures_without_network(self):
+        method = input_method("rime")
+        assert method is not None
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_payload(target, method)
+            old_engine = target / "usr/lib/ibus-rime/ibus-engine-rime"
+            new_engine = target / "usr/libexec/ibus-rime/ibus-engine-rime"
+            new_engine.parent.mkdir(parents=True)
+            old_engine.rename(new_engine)
+            context = context_for(target, plan_for("rime"), online=False)
+            step = InstallInputMethodStep(FakeRunner())
+            step.execute(context)
+            step.verify(context)
+            self.assertTrue(context.values["input_methods_installed"])
+
+            new_engine.unlink()
+            with self.assertRaisesRegex(RuntimeError, "payload is incomplete"):
+                step.verify(context)
+
     def test_logs_the_gnome_input_source_value_and_destination(self):
         selected = input_method("rime")
         assert selected is not None
