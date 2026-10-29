@@ -420,10 +420,10 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 printer_count,
             ) % printer_count
         printing_row = self._device_row(
-            "printer-symbolic", _("Printers"), printing_subtitle
+            "printer-symbolic", _("Printing Support"), printing_subtitle
         )
         printing_row.page_name = "printing"
-        printing_row.page_title = _("Printers")
+        printing_row.page_title = _("Printing Support")
         self.device_list.append(printing_row)
         self.stack.add_named(self._printing_page(printing), "printing")
 
@@ -2087,7 +2087,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 spacing=10,
                 halign=Gtk.Align.END,
             )
-            manage_printers = Gtk.Button(label=_("Manage Printers"))
+            manage_printers = Gtk.Button(label=_("Manage Printers in System Settings"))
             manage_printers.add_css_class("suggested-action")
             manage_printers.connect(
                 "clicked",
