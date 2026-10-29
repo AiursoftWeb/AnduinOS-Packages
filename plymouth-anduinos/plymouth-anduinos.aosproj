@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>plymouth-anduinos</PackageName>
-    <PackageVersion>2.0.4+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS boot splash theme</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -55,6 +55,7 @@
     <IncludeFile Include="assets/anduinos_text.png" Target="/usr/share/plymouth/themes/anduinos/watermark.png" />
     <IncludeFile Include="assets/aiursoft-mark-96.png" Target="/usr/share/plymouth/themes/anduinos/bgrt-fallback.png" />
     <IncludeFile Include="assets/anduinos-text.plymouth" Target="/usr/share/plymouth/themes/anduinos-text/anduinos-text.plymouth" />
+    <IncludeFile Include="assets/40-anduinos-graphics.conf" Target="/usr/lib/dracut/dracut.conf.d/40-anduinos-graphics.conf" />
 
     <!-- Register the theme and request the official initramfs update trigger. -->
     <PostInstallScript Include="scripts/postinst.sh" />
