@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop</PackageName>
-    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS complete desktop — metapackage that pulls in all AnduinOS components</PackageDescription>
     <Section>metapackages</Section>
@@ -40,7 +40,10 @@
          Users may explicitly opt out without removing the desktop metapackage. -->
     <Recommend Include="anduinos-no-snapd" />
     <Recommend Include="anduinos-input-method-policy" />
-    <Recommend Include="anduinos-kernel-parameters" Condition="'$(Suite)' == 'resolute-addon'" />
+    <!-- Both desktop suites need the graphical Plymouth console policy. ARM
+         firmware may expose a serial console even without console= arguments;
+         omitting this package makes Plymouth force its text-only details view. -->
+    <Recommend Include="anduinos-kernel-parameters" Condition="'$(Suite)' == 'resolute-addon' Or '$(Suite)' == 'stonking-addon'" />
 
     <!-- Zram swap (compressed RAM) — 50% RAM, lz4. User can override via swapcontrol-gtk. -->
     <Recommend Include="anduinos-swap-config" />
