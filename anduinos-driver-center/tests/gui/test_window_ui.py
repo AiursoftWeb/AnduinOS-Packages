@@ -30,6 +30,58 @@ class WindowScanTests(unittest.TestCase):
         )
         cls.application.register(None)
 
+    def test_printing_lists_every_queue_and_updates_the_default_after_a_new_scan(self):
+        empty = PrintingState(True, True, (), (), None, (), (), (), ())
+        configured = replace(empty, printers=("Office", "Lab&Design"), default_printer="Office")
+        changed = replace(configured, printers=("Lab&Design", "New_Printer"),
+                          default_printer="New_Printer")
+        with patch.object(app.DriverCenterWindow, "refresh"), \
+             patch.object(app.FirmwareManager, "start"), \
+             patch.object(app, "_", side_effect=lambda text: text):
+            for states in ((empty, configured, changed, empty), (changed,)):
+                window = app.DriverCenterWindow(self.application, initial_page="printing")
+                try:
+                    window.stack.add_named(Gtk.Box(), "printing")
+                    window.stack.set_visible_child_name("printing")
+                    for state in states:
+                        page = window._printing_page(state)
+                        window._replace_stack_page("printing", page)
+                        self.assertIs(window.stack.get_child_by_name("printing"), page)
+                        self.assertEqual(window.stack.get_visible_child_name(), "printing")
+                        groups = []
+
+                        def visit(widget):
+                            if isinstance(widget, Adw.PreferencesGroup):
+                                groups.append(widget)
+                            child = widget.get_first_child()
+                            while child:
+                                visit(child)
+                                child = child.get_next_sibling()
+
+                        visit(page)
+                        group = next(group for group in groups
+                                     if group.get_title() == "Configured printers")
+                        rows = []
+
+                        def collect(widget):
+                            if isinstance(widget, Adw.ActionRow):
+                                rows.append(widget)
+                            child = widget.get_first_child()
+                            while child:
+                                collect(child)
+                                child = child.get_next_sibling()
+
+                        collect(group)
+                        self.assertEqual([row.get_title() for row in rows],
+                                         list(state.printers) or ["No printers configured"])
+                        if state.printers:
+                            self.assertEqual([row.get_subtitle() for row in rows],
+                                             ["Default printer" if name == state.default_printer
+                                              else "" for name in state.printers])
+                            self.assertTrue(all(not row.get_use_markup() for row in rows))
+                finally:
+                    window.destroy()
+
     def test_recovery_page_distinguishes_missing_update_and_unknown_states(self):
         from dataclasses import replace
         missing = RecoveryState(False, (), PackageState("anduinos-recovery-env", False, None),

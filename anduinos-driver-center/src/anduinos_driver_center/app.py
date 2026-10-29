@@ -291,6 +291,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self.split.connect("notify::show-sidebar", self._sync_sidebar_controls)
         self.split.connect("notify::collapsed", self._sync_sidebar_controls)
         self._sync_sidebar_controls()
+        self.connect("notify::is-active", self._refresh_printing_on_return)
 
         compact = Adw.Breakpoint.new(
             Adw.BreakpointCondition.parse("max-width: 700px")
@@ -306,6 +307,15 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self.sidebar_toggle.set_visible(self.split.get_collapsed())
         if self.sidebar_toggle.get_active() != self.split.get_show_sidebar():
             self.sidebar_toggle.set_active(self.split.get_show_sidebar())
+
+    def _refresh_printing_on_return(self, *_args) -> None:
+        if (
+            self.is_active()
+            and self._selected_page_name == "printing"
+            and self.refresh_button.get_sensitive()
+            and not getattr(self, "_operation_running", False)
+        ):
+            self.refresh()
 
     def _clear(self, widget: Gtk.Widget) -> None:
         child = widget.get_first_child()
@@ -2119,24 +2129,16 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             _("Enabled") if state.startup_enabled else _("Disabled"),
             True if state.startup_enabled else None,
         )
-        printer_count = len(state.printers)
-        printer_summary = gettext.ngettext(
-            "%d configured printer",
-            "%d configured printers",
-            printer_count,
-        ) % printer_count
-        self._add_state_row(
-            overview,
-            _("Configured printers"),
-            printer_summary,
-            True if printer_count else None,
-        )
-        self._add_state_row(
-            overview,
-            _("Default printer"),
-            state.default_printer or _("Not set"),
-            True if state.default_printer else None,
-        )
+        printers = Adw.PreferencesGroup(title=_("Configured printers"))
+        for name in state.printers:
+            printers.add(Adw.ActionRow(
+                title=name,
+                subtitle=_("Default printer") if name == state.default_printer else "",
+                use_markup=False,
+            ))
+        if not state.printers:
+            printers.add(Adw.ActionRow(title=_("No printers configured")))
+        content.append(printers)
         if not state.printers:
             queue_summary = _("No configured queues")
             queue_good = None
