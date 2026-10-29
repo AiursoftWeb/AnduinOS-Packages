@@ -16,6 +16,21 @@ from anduinos_secureboot.model import DkmsState, SecureBootState, SecureBootStat
 
 
 class AppTests(unittest.TestCase):
+    def test_returning_to_printing_refreshes_unless_scan_or_operation_is_running(self):
+        for active, selected, ready, operating, expected in (
+            (True, "printing", True, False, True),
+            (False, "printing", True, False, False),
+            (True, "home", True, False, False),
+            (True, "printing", False, False, False),
+            (True, "printing", True, True, False),
+        ):
+            with self.subTest(active=active, selected=selected, ready=ready, operating=operating):
+                window = Mock(_selected_page_name=selected, _operation_running=operating)
+                window.is_active.return_value = active
+                window.refresh_button.get_sensitive.return_value = ready
+                DriverCenterWindow._refresh_printing_on_return(window)
+                self.assertEqual(window.refresh.call_count, int(expected))
+
     def test_recovery_disk_confirmation_defaults_to_cancel_and_sends_only_the_approved_plan(self):
         import json
         plan = dict(disk="/dev/vda", swap="/dev/vda2", new_device="/dev/vda4",
