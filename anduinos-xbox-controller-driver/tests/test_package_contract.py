@@ -28,13 +28,20 @@ class DkmsLifecycleTests(unittest.TestCase):
         self.addCleanup(temporary.cleanup)
         self.root = Path(temporary.name)
         self.log = self.root / "commands"
+        self.modules = self.root / "modules"
+        (self.modules / "test-running-kernel" / "build" / "include").mkdir(parents=True)
         bin_dir = self.root / "bin"
         bin_dir.mkdir()
         programs = {
             "uname": '#!/bin/sh\nprintf "%s\\n" test-running-kernel\n',
             "dkms": """#!/bin/sh
 printf '%s\\n' "$*" >> "$DKMS_TEST_LOG"
-[ "$1" != "$DKMS_FAIL_ACTION" ] || exit 37
+if [ "$1" = "$DKMS_FAIL_ACTION" ]; then
+    [ -n "$DKMS_FAIL_KERNEL" ] || exit 37
+    case " $* " in
+        *" $DKMS_FAIL_KERNEL "*) exit 37 ;;
+    esac
+fi
 if [ "$1" = status ]; then
     case " $* " in
         *" -k "*) printf '%s' "$DKMS_KERNEL_STATUS" ;;
@@ -48,15 +55,21 @@ fi
             path.write_text(body)
             path.chmod(0o755)
 
-    def run_script(self, script, action, *, all_status="", kernel_status="", failure=""):
+    def run_script(self, script, action, *, all_status="", kernel_status="", failure="", failure_kernel=""):
         self.log.unlink(missing_ok=True)
+        # Redirect only the kernel directory to an isolated installed-system
+        # fixture; the production script does not accept path overrides.
+        candidate = self.root / script
+        candidate.write_text((ROOT / "scripts" / script).read_text().replace(
+            "/lib/modules/*", str(self.modules / "*")))
         result = subprocess.run(
             [
-                "/bin/sh", str(ROOT / "scripts" / script), action,
+                "/bin/sh", str(candidate), action,
             ],
             env={
                 **os.environ, "PATH": str(self.root / "bin"),
                 "DKMS_TEST_LOG": str(self.log), "DKMS_FAIL_ACTION": failure,
+                "DKMS_FAIL_KERNEL": failure_kernel,
                 "DKMS_ALL_STATUS": all_status, "DKMS_KERNEL_STATUS": kernel_status,
             },
             capture_output=True, text=True, timeout=15,
@@ -74,15 +87,37 @@ fi
                 if failure in ("status", "add", "build"):
                     self.assertNotIn("install", actions)
 
-    def test_registered_driver_is_built_only_for_the_running_kernel(self):
+    def test_failure_on_new_kernel_is_not_hidden_by_success_on_old_kernel(self):
+        (self.modules / "test-z-newer-kernel" / "build" / "include").mkdir(parents=True)
+        result, calls = self.run_script(
+            "postinst.sh", "configure", failure="build", failure_kernel="test-z-newer-kernel")
+        self.assertEqual(result.returncode, 37, result.stderr)
+        self.assertTrue(any(call.startswith("install ") and "-k test-running-kernel" in call
+                            for call in calls))
+        self.assertFalse(any(call.startswith("install ") and "-k test-z-newer-kernel" in call
+                             for call in calls))
+
+    def test_registered_driver_is_built_for_every_installed_kernel_with_headers(self):
+        for kernel in ("test-older-kernel", "test-newer-kernel"):
+            (self.modules / kernel / "build" / "include").mkdir(parents=True)
+        (self.modules / "test-without-headers").mkdir()
         result, calls = self.run_script("postinst.sh", "configure", all_status="registered")
         self.assertEqual(result.returncode, 0, result.stderr)
         actions = [call.split()[0] for call in calls]
         self.assertNotIn("add", actions)
         self.assertEqual(actions[-2:], ["build", "install"])
-        for call in calls[-2:]:
-            arguments = call.split()
-            self.assertEqual(arguments[arguments.index("-k") + 1], "test-running-kernel")
+        for action in ("build", "install"):
+            kernels = [call.split()[call.split().index("-k") + 1]
+                       for call in calls if call.split()[0] == action]
+            self.assertCountEqual(kernels, ["test-running-kernel", "test-older-kernel", "test-newer-kernel"])
+        self.assertIn("test-without-headers: kernel headers are not installed", result.stdout)
+
+    def test_chroot_uses_installed_kernel_instead_of_host_kernel(self):
+        (self.modules / "test-running-kernel").rename(self.modules / "test-target-kernel")
+        result, calls = self.run_script("postinst.sh", "configure")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue(any("-k test-target-kernel" in call for call in calls))
+        self.assertFalse(any("test-running-kernel" in call for call in calls))
 
     def test_installed_driver_is_not_rebuilt_and_built_driver_only_installs(self):
         for state, expected in (("installed", ["status", "status"]), ("built", ["status", "status", "install"])):
