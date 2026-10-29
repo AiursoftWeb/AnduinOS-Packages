@@ -38,5 +38,7 @@ echo "Verifying..."
 [ -f "$OUT_DIR/gnome-shell.css" ] || { echo "ERROR: gnome-shell.css not built" >&2; exit 1; }
 [ -f "$OUT_DIR/assets/checkbox.svg" ] || { echo "ERROR: assets missing" >&2; exit 1; }
 
+install -m 0644 /tmp/Fluent-gtk-theme-gdm/COPYING "$OUT_DIR/COPYING"
+
 rm -rf /tmp/Fluent-gtk-theme-gdm
 echo "Done. Fluent gnome-shell CSS + assets → $OUT_DIR"
