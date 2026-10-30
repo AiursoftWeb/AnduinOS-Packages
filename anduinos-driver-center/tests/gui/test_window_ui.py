@@ -24,11 +24,24 @@ class WindowScanTests(unittest.TestCase):
     def setUpClass(cls):
         Gtk.init()
         Adw.init()
+        try:
+            import gi
+            gi.require_version("Fwupd", "2.0")
+            from gi.repository import Fwupd  # noqa: F401
+        except (ValueError, ImportError, RuntimeError):
+            cls._fwupd_patcher = patch("anduinos_driver_center.firmware._fwupd_bindings")
+            mock = cls._fwupd_patcher.start()
+            mock.return_value.Client.new.return_value = Mock()
         cls.application = Adw.Application(
             application_id="com.anduinos.DriverCenter.WindowTest",
             flags=Gio.ApplicationFlags.NON_UNIQUE,
         )
         cls.application.register(None)
+
+    @classmethod
+    def tearDownClass(cls):
+        if hasattr(cls, "_fwupd_patcher"):
+            cls._fwupd_patcher.stop()
 
     def test_printing_lists_every_queue_and_updates_the_default_after_a_new_scan(self):
         empty = PrintingState(True, True, (), (), None, (), (), (), ())
@@ -245,3 +258,32 @@ class WindowScanTests(unittest.TestCase):
             firmware_start.assert_called_once()
             computer_reload.assert_called()
             scan_system.assert_not_called()
+
+    def test_narrow_window_split_view_collapses_and_avoids_overflow(self):
+        scan = (
+            GraphicsScan(devices=(HardwareDevice("gpu", "NVIDIA RTX 4090", "PCI:10de:2684", driver_state_known=True, active_driver="nvidia", active_driver_healthy=True, options=(DriverOption("nvidia-driver-550", "NVIDIA driver", recommended=True, installed=True),)),)),
+            SecureBootState(False, True, True, True, "serial", boot_loader="shim", setup_mode=False,
+                            signing_identity=IdentityStatus(purpose="unified", enrollment="enrolled", key_present=True, key_valid=True, defaults_ready=True),
+                            grub=GrubState(installed=True, signature="valid", enrollment="enrolled", deployment="ready", active_chain="trusted")),
+            XboxState(XboxStatus.NOT_INSTALLED, False, False, False, None, False),
+            DkmsState(),
+            AudioState(PackageState("firmware-sof-anduinos", True, "1"), PackageState("alsa-ucm-conf-anduinos", True, "1"), True, True, (), ()),
+            PrintingState(True, True, ("Office_Printer", "Design_Lab"), (), "Office_Printer", (), (), (), ()),
+            RecoveryState(True, ("/dev/vda4",), PackageState("anduinos-recovery-env", True, "2.0.5-6+resolute"), "2.0.5-6+resolute", True, True),
+        )
+        with patch.object(app.DriverCenterWindow, "refresh"), \
+             patch.object(app.FirmwareManager, "start"), \
+             patch.object(app.ComputerPage, "reload"):
+            window = app.DriverCenterWindow(self.application)
+            try:
+                self.assertFalse(window.stack.get_hhomogeneous())
+                self.assertEqual(window.get_size_request(), (380, 500))
+                window._apply_scan(*scan)
+                split_min_w = window.split.get_preferred_size()[0].width
+                self.assertLessEqual(split_min_w, 720)
+                window.split.set_collapsed(True)
+                window.split.set_show_sidebar(False)
+                content_min_w = window.split.get_content().get_preferred_size()[0].width
+                self.assertLessEqual(content_min_w, 385)
+            finally:
+                window.destroy()
