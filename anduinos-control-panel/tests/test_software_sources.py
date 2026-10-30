@@ -218,6 +218,31 @@ class SoftwareSourceTests(unittest.TestCase):
             self.assertEqual(source.read_text(), original)
             self.assertEqual(apt.call_count, 2)
 
+    def test_partial_index_failure_triggers_source_rollback(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "ubuntu.sources"
+            original = f"URIs: {MIRRORS[0]}\nSuites: stonking\n"
+            source.write_text(original)
+            calls = []
+
+            def run(command, **kwargs):
+                calls.append(command)
+                # APT only returns nonzero for a partial acquisition failure
+                # when strict index handling is requested.
+                strict = "APT::Update::Error-Mode=any" in command
+                code = 100 if len(calls) == 1 and strict else 0
+                return subprocess.CompletedProcess(command, code)
+
+            with (
+                patch.object(helper, "SOURCE_PATH", source),
+                patch.object(helper, "BACKUP_PATH", source.with_suffix(".bak")),
+                patch.object(helper.subprocess, "run", side_effect=run),
+            ):
+                with self.assertRaisesRegex(RuntimeError, "original source was restored"):
+                    helper.switch_mirror(MIRRORS[1])
+            self.assertEqual(source.read_text(), original)
+            self.assertEqual(len(calls), 2)
+
     def test_privileged_entry_point_requires_root_and_fixed_actions(self):
         with patch.object(helper.os, "geteuid", return_value=1000):
             self.assertEqual(helper.main(["refresh"]), 77)
