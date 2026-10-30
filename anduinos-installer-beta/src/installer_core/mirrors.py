@@ -92,14 +92,14 @@ class MirrorMeasurement:
     bandwidth_mbps: float
 
 
-def select_fastest_mirror(
+def measure_mirrors(
     codename: str,
     architecture: Architecture,
     *,
     candidates: tuple[str, ...] = MIRRORS,
     opener: Callable[..., object] = urllib.request.urlopen,
     clock: Callable[[], float] = time.monotonic,
-) -> MirrorMeasurement:
+) -> tuple[MirrorMeasurement, ...]:
     """Probe latency concurrently, then bandwidth-test the best five."""
 
     def latency(uri: str) -> tuple[str, float | None]:
@@ -165,7 +165,7 @@ def select_fastest_mirror(
             speeds[uri] = speed
 
     latency_by_uri = dict(finalists)
-    best = min(
+    ranked = sorted(
         (uri for uri, _latency in finalists),
         key=lambda uri: (
             -speeds.get(uri, 0.0),
@@ -173,7 +173,16 @@ def select_fastest_mirror(
             not uri.startswith("https://"),
         ),
     )
-    return MirrorMeasurement(best, latency_by_uri[best], speeds.get(best, 0.0))
+    return tuple(
+        MirrorMeasurement(uri, latency_by_uri[uri], speeds.get(uri, 0.0))
+        for uri in ranked
+    )
+
+
+def select_fastest_mirror(
+    codename: str, architecture: Architecture, **kwargs
+) -> MirrorMeasurement:
+    return measure_mirrors(codename, architecture, **kwargs)[0]
 
 
 @dataclass
@@ -199,9 +208,13 @@ class SelectFastestAptMirrorStep:
         if not source.is_file():
             raise RuntimeError("Target Ubuntu Deb822 source file is missing")
         codename = _target_codename(target)
-        measurement = select_fastest_mirror(
+        measurements = measure_mirrors(
             codename, context.plan.platform.architecture
         )
+        # Keep a bounded speed-ranked queue for download preparation only.
+        # Package configuration failures must never consume this queue.
+        measurement = measurements[0]
+        context.values["apt_mirror_remaining"] = [item.uri for item in measurements[1:4]]
         original = source.read_bytes()
         original_mode = source.stat().st_mode & 0o777
         updated = _replace_uris(original.decode("utf-8"), measurement.uri)
@@ -228,6 +241,33 @@ class SelectFastestAptMirrorStep:
         return None
 
 
+def advance_mirror(context: InstallContext) -> bool:
+    """Try the next measured mirror; restore the image source on exhaustion."""
+    source = context.values.get("apt_mirror_source")
+    original = context.values.get("apt_mirror_original")
+    if not isinstance(source, Path) or not isinstance(original, bytes):
+        return False
+    remaining = context.values.get("apt_mirror_remaining")
+    if not isinstance(remaining, list):
+        # Preserve rollback for callers where automatic selection was skipped.
+        if context.values.get("apt_mirror_rolled_back"):
+            return False
+        return restore_original_mirror(context)
+    if not remaining:
+        restore_original_mirror(context)
+        context.values["package_indexes_refreshed"] = False
+        return False
+    mirror = remaining.pop(0)
+    _atomic_write(
+        source, _replace_uris(original.decode("utf-8"), mirror).encode("utf-8"),
+        context.values["apt_mirror_original_mode"],
+    )
+    context.values["apt_mirror_selected"] = mirror
+    context.values["package_indexes_refreshed"] = False
+    context.log(f"Trying next Ubuntu mirror: {mirror}")
+    return True
+
+
 def restore_original_mirror(context: InstallContext) -> bool:
     source = context.values.get("apt_mirror_source")
     original = context.values.get("apt_mirror_original")
@@ -236,6 +276,7 @@ def restore_original_mirror(context: InstallContext) -> bool:
         return False
     _atomic_write(source, original, mode if isinstance(mode, int) else 0o644)
     context.values["apt_mirror_rolled_back"] = True
+    context.log("Restored the installation image's original Ubuntu source")
     return True
 
 
