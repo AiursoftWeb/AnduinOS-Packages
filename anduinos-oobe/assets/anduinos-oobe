@@ -12,6 +12,7 @@ import os
 import sys
 import threading
 import urllib.request
+import urllib.error
 import stat
 import re
 import json
@@ -2538,8 +2539,191 @@ def create_finish_page(on_finish):
     title.set_halign(Gtk.Align.CENTER)
     title.set_wrap(True)
     title.set_justify(Gtk.Justification.CENTER)
-    title.set_margin_bottom(48)
+    title.set_margin_bottom(24)
     page.append(title)
+
+    # ── Rating Box ──
+    rating_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+    rating_box.set_halign(Gtk.Align.CENTER)
+    rating_box.set_margin_bottom(36)
+
+    rate_title = Gtk.Label(label=_('Rate AnduinOS'))
+    rate_title.add_css_class('title-3')
+    rate_title.set_halign(Gtk.Align.CENTER)
+    rating_box.append(rate_title)
+
+    rate_subtitle = Gtk.Label(label=_('Record is anonymous'))
+    rate_subtitle.add_css_class('caption')
+    rate_subtitle.add_css_class('dim-label')
+    rate_subtitle.set_halign(Gtk.Align.CENTER)
+    rate_subtitle.set_margin_bottom(4)
+    rating_box.append(rate_subtitle)
+
+    stars_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+    stars_box.set_halign(Gtk.Align.CENTER)
+    stars_box.set_margin_bottom(8)
+    rating_box.append(stars_box)
+
+    current_rating = [0]
+    star_buttons = []
+    star_images = []
+
+    def _update_stars(val):
+        for idx in range(5):
+            num = idx + 1
+            if num <= val:
+                star_images[idx].set_from_icon_name('starred-symbolic')
+                star_buttons[idx].remove_css_class('dim-label')
+                star_buttons[idx].add_css_class('warning')
+            else:
+                star_images[idx].set_from_icon_name('non-starred-symbolic')
+                star_buttons[idx].remove_css_class('warning')
+                star_buttons[idx].add_css_class('dim-label')
+
+    # Feedback box (for < 5 stars)
+    feedback_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    feedback_box.set_halign(Gtk.Align.CENTER)
+    feedback_box.set_visible(False)
+    feedback_box.set_margin_bottom(8)
+
+    improve_entry = Gtk.Entry()
+    improve_entry.set_placeholder_text(_('How we can improve'))
+    improve_entry.set_size_request(320, -1)
+    improve_entry.set_max_length(1000)
+    feedback_box.append(improve_entry)
+    rating_box.append(feedback_box)
+
+    # Submit button
+    submit_btn = Gtk.Button(label=_('Submit'))
+    submit_btn.add_css_class('pill')
+    submit_btn.set_size_request(140, 36)
+    submit_btn.set_halign(Gtk.Align.CENTER)
+    submit_btn.set_visible(False)
+    submit_btn.set_margin_bottom(6)
+    rating_box.append(submit_btn)
+
+    # Status / message label
+    status_label = Gtk.Label()
+    status_label.set_halign(Gtk.Align.CENTER)
+    status_label.set_wrap(True)
+    status_label.set_justify(Gtk.Justification.CENTER)
+    status_label.set_visible(False)
+    rating_box.append(status_label)
+
+    for i in range(1, 6):
+        img = Gtk.Image.new_from_icon_name('non-starred-symbolic')
+        img.set_pixel_size(28)
+        star_images.append(img)
+        btn = Gtk.Button(child=img)
+        btn.add_css_class('flat')
+        btn.add_css_class('circular')
+        btn.add_css_class('dim-label')
+        btn.set_tooltip_text(f'{i} / 5')
+
+        def _on_star_clicked(b, star_val=i):
+            current_rating[0] = star_val
+            _update_stars(star_val)
+            status_label.set_visible(False)
+            if star_val == 5:
+                feedback_box.set_visible(False)
+                improve_entry.set_text('')
+                submit_btn.set_visible(True)
+            else:
+                feedback_box.set_visible(True)
+                submit_btn.set_visible(True)
+                improve_entry.grab_focus()
+
+        btn.connect('clicked', _on_star_clicked)
+        star_buttons.append(btn)
+        stars_box.append(btn)
+
+    def _on_submit_success():
+        status_label.remove_css_class('dim-label')
+        status_label.remove_css_class('error')
+        status_label.add_css_class('success')
+        status_label.set_text(_('Thank you for your feedback!'))
+        status_label.set_visible(True)
+        feedback_box.set_visible(False)
+        submit_btn.set_visible(False)
+
+    def _on_submit_http_error(code):
+        submit_btn.set_sensitive(True)
+        for b in star_buttons:
+            b.set_sensitive(True)
+        improve_entry.set_sensitive(True)
+        status_label.remove_css_class('dim-label')
+        status_label.remove_css_class('success')
+        status_label.add_css_class('error')
+        if code == 429:
+            status_label.set_text(_('Submission limit reached. Please try again later.'))
+        else:
+            status_label.set_text(_('Failed to submit rating.'))
+        status_label.set_visible(True)
+
+    def _on_submit_error(err_msg):
+        submit_btn.set_sensitive(True)
+        for b in star_buttons:
+            b.set_sensitive(True)
+        improve_entry.set_sensitive(True)
+        status_label.remove_css_class('dim-label')
+        status_label.remove_css_class('success')
+        status_label.add_css_class('error')
+        status_label.set_text(_('Network error. Unable to submit rating.'))
+        status_label.set_visible(True)
+
+    def _submit_rating(btn):
+        rating_val = current_rating[0]
+        if rating_val < 1 or rating_val > 5:
+            return
+
+        comment_raw = improve_entry.get_text().strip() if rating_val < 5 else None
+        comment = comment_raw if comment_raw else None
+
+        submit_btn.set_sensitive(False)
+        for b in star_buttons:
+            b.set_sensitive(False)
+        improve_entry.set_sensitive(False)
+        status_label.remove_css_class('error')
+        status_label.remove_css_class('success')
+        status_label.add_css_class('dim-label')
+        status_label.set_text(_('Submitting...'))
+        status_label.set_visible(True)
+
+        def _network_worker():
+            url = 'https://www.anduinos.com/api/rating'
+            payload = json.dumps({'stars': rating_val, 'comment': comment}).encode('utf-8')
+            req = urllib.request.Request(
+                url,
+                data=payload,
+                headers={
+                    'Content-Type': 'application/json',
+                    'User-Agent': 'anduinos-oobe/2.1',
+                },
+                method='POST',
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=10) as response:
+                    GLib.idle_add(_on_submit_success)
+            except urllib.error.HTTPError as e:
+                GLib.idle_add(_on_submit_http_error, e.code)
+            except Exception as e:
+                GLib.idle_add(_on_submit_error, str(e))
+
+        threading.Thread(target=_network_worker, daemon=True).start()
+
+    submit_btn.connect('clicked', _submit_rating)
+    improve_entry.connect('activate', lambda e: submit_btn.emit('clicked'))
+    page.append(rating_box)
+
+    # Expose widgets on page for testing / verification
+    page._rating_box = rating_box
+    page._star_buttons = star_buttons
+    page._star_images = star_images
+    page._feedback_box = feedback_box
+    page._improve_entry = improve_entry
+    page._submit_btn = submit_btn
+    page._status_label = status_label
+    page._get_rating = lambda: current_rating[0]
 
     # Start button
     start_btn = Gtk.Button(label=_('  Start Your AnduinOS Journey  '))
@@ -2553,6 +2737,8 @@ def create_finish_page(on_finish):
         window = btn.get_root()
         if window and hasattr(window, 'oobe_finish'):
             window.oobe_finish()
+        elif on_finish:
+            on_finish()
 
     start_btn.connect('clicked', lambda b: _on_start(b))
     page.append(start_btn)
