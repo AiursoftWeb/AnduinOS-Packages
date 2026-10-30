@@ -15,7 +15,7 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
+from gi.repository import Adw, Gio, GLib, Gtk, Pango  # noqa: E402
 
 from .computer_ui import ComputerPage
 from .intel_graphics_ui import IntelGraphicsPage
@@ -145,7 +145,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
     def __init__(self, app: Adw.Application, initial_page: str = "home"):
         super().__init__(application=app, title=_("AnduinOS Driver Center"))
         self.set_default_size(1250, 810)
-        self.set_size_request(720, 520)
+        self.set_size_request(380, 500)
         self._computer_page: ComputerPage | None = None
         self._graphics: list[HardwareDevice] = []
         self._secure_boot: SecureBootState | None = None
@@ -285,6 +285,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         content_toolbar.add_top_bar(header)
 
         self.stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
+        self.stack.set_hhomogeneous(False)
         self.stack.set_vexpand(True)
         content_toolbar.set_content(self.stack)
         self.split.set_content(content_toolbar)
@@ -1730,6 +1731,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         button = Gtk.Button(label=_("Apply Changes"))
         button.add_css_class("suggested-action")
         button.set_sensitive(False)
+        if button.get_child() and isinstance(button.get_child(), Gtk.Label):
+            button.get_child().set_wrap(True)
 
         first_check: Gtk.CheckButton | None = None
 
@@ -1854,7 +1857,12 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         footer_content.set_valign(Gtk.Align.CENTER)
         footer_content.set_margin_start(24)
         footer_content.set_margin_end(24)
-        status = Gtk.Label(label=_("Select another driver to apply changes."), xalign=0)
+        status = Gtk.Label(
+            label=_("Select another driver to apply changes."),
+            xalign=0,
+            wrap=True,
+            ellipsize=Pango.EllipsizeMode.END,
+        )
         status.add_css_class("dim-label")
         status.set_hexpand(True)
         footer_content.append(status)
@@ -2099,6 +2107,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             )
             add_printer = Gtk.Button(label=_("Add Printer"))
             add_printer.add_css_class("suggested-action")
+            if add_printer.get_child() and isinstance(add_printer.get_child(), Gtk.Label):
+                add_printer.get_child().set_wrap(True)
             add_printer.connect(
                 "clicked",
                 lambda _button: subprocess.Popen(
