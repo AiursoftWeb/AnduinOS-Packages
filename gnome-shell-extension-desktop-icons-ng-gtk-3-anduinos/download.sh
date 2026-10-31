@@ -2,6 +2,9 @@
 # Pin the last GTK 3 DING release advertised for GNOME Shell 50.
 set -euo pipefail
 
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/build-guards.sh"
+need_cmd patch patch
+
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 archive="$(mktemp)"
 trap 'rm -f "$archive"' EXIT
@@ -39,6 +42,11 @@ if shell == "51":
 if shell not in metadata.get("shell-version", []):
     raise SystemExit(f"DING v85 does not declare GNOME Shell {shell} support")
 PY
+    # Retain GTK 3 on GNOME 50/51; do not switch desktop implementations.
+    if [[ "$suite" == resolute || "$suite" == stonking ]]; then
+        patch --batch --forward --fuzz=0 --directory="$destination" --strip=1 \
+            < "$script_dir/patches/skip-unmapped-focus-targets.patch"
+    fi
     chmod +x "$destination/app/ding.js"
     glib-compile-schemas "$destination/schemas"
 done

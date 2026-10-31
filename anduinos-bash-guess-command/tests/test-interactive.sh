@@ -564,8 +564,10 @@ run_session paste_input "$TEST_ROOT/paste.typescript"
 [[ $(<"$TEST_ROOT/paste-one") == PASTE_ONE &&
    $(<"$TEST_ROOT/paste-two") == PASTE_TWO ]] ||
     fail 'native multiline paste did not execute normally after Enter'
-if LC_ALL=C tr -d '\r' <"$TEST_ROOT/paste.typescript" | grep -Eqi \
-    -- '-- MULTILINE --|RET or C-m:|progress|updating tput cache|ble\.sh'; then
+# Drain the transcript: grep -q may close the pipe after a match, making tr
+# fail with SIGPIPE under pipefail even though completion succeeded.
+if LC_ALL=C tr -d '\r' <"$TEST_ROOT/paste.typescript" | grep -Ei \
+    -- '-- MULTILINE --|RET or C-m:|progress|updating tput cache|ble\.sh' >/dev/null; then
     fail 'line-editor UI leaked into multiline paste'
 fi
 
@@ -580,12 +582,12 @@ run_session recall_history_input "$TEST_ROOT/history-recall.typescript"
 
 run_session path_input "$TEST_ROOT/path.typescript"
 LC_ALL=C tr -d '\r' <"$TEST_ROOT/path.typescript" | \
-    grep -q 'anduinos-bash-guess-command' ||
+    grep 'anduinos-bash-guess-command' >/dev/null ||
     fail 'current-directory snapshot did not complete README.md'
 
 run_session explicit_current_path_input "$TEST_ROOT/explicit-path.typescript"
 LC_ALL=C tr -d '\r' <"$TEST_ROOT/explicit-path.typescript" | \
-    grep -q 'EXPLICIT_PATH_PREFIX' ||
+    grep 'EXPLICIT_PATH_PREFIX' >/dev/null ||
     fail 'an explicit ./ prefix prevented current-directory path completion'
 
 run_session ls_option_path_input "$TEST_ROOT/ls-option-path.typescript"

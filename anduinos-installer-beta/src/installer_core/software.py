@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 
 from .command import CommandError, CommandRunner
-from .mirrors import restore_original_mirror
+from .mirrors import advance_mirror
 from .steps import (
     FailurePolicy,
     InstallContext,
@@ -54,16 +54,20 @@ def refresh_package_indexes(
         "Acquire::http::Timeout=15",
         "-o",
         "Acquire::https::Timeout=15",
+        "-o",
+        "APT::Update::Error-Mode=any",
         "update",
     )
-    result = runner.run(command, check=False, timeout=1800)
-    if result.returncode != 0:
-        if restore_original_mirror(context):
-            context.log(
-                "Selected mirror failed apt update; restored original sources"
-            )
-            result = runner.run(command, check=False, timeout=1800)
-        if result.returncode != 0:
+    # APT otherwise reports success when some indexes failed and old indexes
+    # were reused. A mirror is usable only after a complete signed refresh.
+    while True:
+        try:
+            result = runner.run(command, check=False, timeout=180)
+            if result.returncode == 0:
+                break
+        except CommandError as error:
+            context.log(str(error))
+        if not advance_mirror(context):
             raise CommandError(
                 "Could not refresh package indexes; continuing with the "
                 "installation media's package set"
@@ -141,33 +145,54 @@ class UpgradeSystemStep:
             str(target),
             "/usr/bin/env",
             "DEBIAN_FRONTEND=noninteractive",
+            "LC_ALL=C",
             "apt-get",
             "--yes",
             "-o",
             "Dpkg::Options::=--force-confold",
         )
-        try:
-            download = self.runner.run(
-                (
-                    *command_prefix,
-                    "-o",
-                    "Acquire::Retries=1",
-                    "-o",
-                    "Acquire::http::Timeout=15",
-                    "-o",
-                    "Acquire::https::Timeout=15",
-                    "--download-only",
-                    "upgrade",
-                ),
-                check=False,
-                timeout=7200,
+        while True:
+            try:
+                download = self.runner.run(
+                    (
+                        *command_prefix,
+                        "-o",
+                        "Acquire::Retries=1",
+                        "-o",
+                        "Acquire::http::Timeout=15",
+                        "-o",
+                        "Acquire::https::Timeout=15",
+                        "--download-only",
+                        "upgrade",
+                    ),
+                    check=False,
+                    timeout=7200,
+                )
+            except CommandError as error:
+                # A timeout/command failure without an attributable archive URL
+                # is not proof that changing Ubuntu mirrors would help.
+                raise StepWarning(
+                    "Could not download every system update; skipped the upgrade "
+                    "to preserve the installation media's consistent package set"
+                ) from error
+            if download.returncode == 0:
+                break
+            selected = context.values.get("apt_mirror_selected")
+            output = download.stdout + download.stderr
+            # Only archive fetch failures qualify. Resolver, lock and third-party
+            # repository failures retain their original result. No dpkg ran yet.
+            mirror_failed = isinstance(selected, str) and any(
+                "Failed to fetch " + selected in line for line in output.splitlines()
             )
-        except CommandError as error:
-            raise StepWarning(
-                "Could not download every system update; skipped the upgrade "
-                "to preserve the installation media's consistent package set"
-            ) from error
-        if download.returncode != 0:
+            if mirror_failed and advance_mirror(context):
+                try:
+                    refresh_package_indexes(context, self.runner)
+                except CommandError as error:
+                    raise StepWarning(
+                        "Could not download every system update; skipped the upgrade "
+                        "to preserve the installation media's consistent package set"
+                    ) from error
+                continue
             raise StepWarning(
                 "Could not download every system update; skipped the upgrade "
                 "to preserve the installation media's consistent package set"

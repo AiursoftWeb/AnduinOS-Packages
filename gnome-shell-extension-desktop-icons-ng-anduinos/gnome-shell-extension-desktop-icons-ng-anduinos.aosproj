@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-desktop-icons-ng-anduinos</PackageName>
-    <PackageVersion>2.0.4-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <Section>gnome</Section>
     <PackageDescription>Desktop Icons NG (DING) adds icons to the GNOME desktop. For the best support, please report any issues on GitHub.</PackageDescription>
@@ -24,7 +24,13 @@
   <ItemGroup>
     <Dependency Include="anduinos-dconf-runtime" />
     <Dependency Include="gnome-shell" />
-    <Dependency Include="gir1.2-gnomedesktop-3.0" />
+    <!-- Current DING imports GTK 4, Adw 1 and GnomeDesktop 4 directly.
+         Declare its runtime instead of relying on unrelated desktop apps.
+         Noble still resolves the older GTK 3 implementation. -->
+    <Dependency Include="gir1.2-gnomedesktop-3.0" Condition="'$(Suite)' == 'noble-addon'" />
+    <Dependency Include="gir1.2-gnomedesktop-4.0" Condition="'$(Suite)' != 'noble-addon'" />
+    <Dependency Include="gir1.2-gtk-4.0" Condition="'$(Suite)' != 'noble-addon'" />
+    <Dependency Include="gir1.2-adw-1" Condition="'$(Suite)' != 'noble-addon'" />
     <Dependency Include="gjs" />
     <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
     <Recommend Include="gnome-shell-extension-prefs | gnome-shell-extension-manager" />

@@ -1,0 +1,41 @@
+DING GTK 3: skip unmapped focus targets.
+
+The retained v85 GTK 3 implementation manually reactivates windows after
+map/destroy/Overview events. A GTK window can already appear in the tab
+list with an actor while still being unmapped. Main.activateWindow() then
+triggers Mutter's stack_position >= 0 assertion. Checking only for a
+non-null actor does not prevent this.
+
+Apply the same mapped-actor rule to regular windows and desktop fallback.
+The existing map event refreshes focus once the window is ready. This
+keeps the GTK 3 package and its dependency policy; newer GTK 4 upstream
+releases use a different desktop-window implementation.
+
+Upstream component: https://gitlab.com/rastersoft/desktop-icons-ng
+
+--- a/emulateX11WindowType.js
++++ b/emulateX11WindowType.js
+@@ -407,6 +407,12 @@
+                         let windows = global.display.get_tab_list(Meta.TabList.NORMAL_ALL, global.workspace_manager.get_active_workspace());
+                         let anyActive = false;
+                         for (let window of windows) {
++                            // A tab-list entry can precede the actor's first mapping.
++                            // Activating it then raises a window outside Mutter's
++                            // stack. Let the existing map callback refresh it later.
++                            if (!window.get_compositor_private()?.mapped) {
++                                continue;
++                            }
+                             if ((!window.customJS_ding || !window.customJS_ding._keepAtBottom) && !window.minimized) {
+                                 Main.activateWindow(window);
+                                 anyActive = true;
+@@ -415,6 +421,10 @@
+                         }
+                         if (!anyActive) {
+                             for (let window of this._windowList) {
++                                // The desktop fallback needs the same readiness rule.
++                                if (!window.get_compositor_private()?.mapped) {
++                                    continue;
++                                }
+                                 if (window.customJS_ding && window.customJS_ding._keepAtBottom && !window.minimized) {
+                                     Main.activateWindow(window);
+                                     break;

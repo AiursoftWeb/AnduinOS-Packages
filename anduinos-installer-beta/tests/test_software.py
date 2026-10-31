@@ -12,6 +12,7 @@ from installer_core.software import (
     RefreshPackageIndexesStep,
     UpgradeSystemStep,
 )
+from installer_core.command import CommandError
 from installer_core.steps import InstallContext, StepSkipped, StepWarning
 
 
@@ -227,6 +228,8 @@ class PackageUpdateTests(unittest.TestCase):
                 "Acquire::http::Timeout=15",
                 "-o",
                 "Acquire::https::Timeout=15",
+                "-o",
+                "APT::Update::Error-Mode=any",
                 "update",
             )
             runner.outputs[update_command] = ("", "offline", 100)
@@ -270,6 +273,7 @@ class PackageUpdateTests(unittest.TestCase):
                 str(target),
                 "/usr/bin/env",
                 "DEBIAN_FRONTEND=noninteractive",
+                "LC_ALL=C",
                 "apt-get",
                 "--yes",
                 "-o",
@@ -336,6 +340,32 @@ class PackageUpdateTests(unittest.TestCase):
             self.assertEqual(runner.update_attempts, 2)
             self.assertTrue(context.values["package_indexes_refreshed"])
             self.assertTrue(context.values["apt_mirror_rolled_back"])
+
+    def test_all_measured_index_refreshes_fail_without_a_fifth_attempt(self):
+        class OfflineRunner(FakeRunner):
+            def run(self, command, **kwargs):
+                self.commands.append((tuple(command), kwargs))
+                return subprocess.CompletedProcess(command, 100, "", "archive unavailable")
+
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_apt(target)
+            source = target / "ubuntu.sources"
+            source.write_text("URIs: https://one.example/ubuntu/\n")
+            context = context_for(target)
+            context.values.update({
+                "apt_mirror_source": source,
+                "apt_mirror_original": b"URIs: https://original.example/ubuntu/\n",
+                "apt_mirror_original_mode": 0o640,
+                "apt_mirror_remaining": [f"https://{n}.example/ubuntu/" for n in (2, 3, 4)],
+            })
+            runner = OfflineRunner()
+            with self.assertRaisesRegex(CommandError, "Could not refresh"):
+                RefreshPackageIndexesStep(runner).execute(context)
+            self.assertEqual(len(runner.commands), 4)
+            self.assertEqual(source.read_bytes(), context.values["apt_mirror_original"])
+            self.assertEqual(source.stat().st_mode & 0o777, 0o640)
+            self.assertFalse(context.values["package_indexes_refreshed"])
 
     def test_disabled_updates_run_no_apt_commands(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -463,3 +493,80 @@ class PackageUpdateTests(unittest.TestCase):
             with self.assertRaisesRegex(StepWarning, "offline"):
                 InstallThirdPartyDriversStep(runner).execute(context)
         self.assertEqual(runner.commands, [])
+
+
+class MirrorFallbackTests(unittest.TestCase):
+    def exercise(self, *, failed_downloads=1, third_party=False, configure_error=False):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_apt(target)
+            source = target / "etc/apt/sources.list.d/ubuntu.sources"
+            source.parent.mkdir(parents=True)
+            source.write_text("URIs: https://one.example/ubuntu/\n")
+            context = context_for(target)
+            context.values.update({
+                "package_indexes_refreshed": True,
+                "apt_mirror_source": source,
+                "apt_mirror_original": b"URIs: https://original.example/ubuntu/\n",
+                "apt_mirror_original_mode": 0o644,
+                "apt_mirror_selected": "https://one.example/ubuntu/",
+                "apt_mirror_remaining": [f"https://{n}.example/ubuntu/" for n in (2, 3, 4)],
+            })
+
+            class Runner(FakeRunner):
+                downloads = 0
+                installs = 0
+
+                def run(self, command, **kwargs):
+                    self.commands.append((tuple(command), kwargs))
+                    if "--download-only" in command:
+                        self.downloads += 1
+                        if self.downloads <= failed_downloads:
+                            uri = "https://third-party.example/" if third_party else context.values["apt_mirror_selected"]
+                            return subprocess.CompletedProcess(command, 100, "", f"E: Failed to fetch {uri}pool/pkg.deb 404 Not Found")
+                    if "--no-download" in command:
+                        self.installs += 1
+                        if configure_error:
+                            raise CommandError("postinst failed")
+                    return subprocess.CompletedProcess(command, 0, "", "")
+
+            runner = Runner()
+            error = None
+            try:
+                UpgradeSystemStep(runner).execute(context)
+            except (StepWarning, CommandError) as caught:
+                error = caught
+            return runner, context, source.read_text(), error
+
+    def test_stale_mirror_retries_download_then_installs_once(self):
+        runner, context, source, error = self.exercise()
+        self.assertIsNone(error)
+        self.assertEqual(runner.downloads, 2)
+        self.assertEqual(runner.installs, 1)
+        self.assertIn("https://2.example/", source)
+        self.assertTrue(context.values["system_upgraded"])
+        updates = [c for c, _ in runner.commands if c[-1] == "update"]
+        self.assertEqual(len(updates), 1)
+        self.assertIn("APT::Update::Error-Mode=any", updates[0])
+
+    def test_four_failed_mirrors_restore_source_without_installing(self):
+        runner, context, source, error = self.exercise(failed_downloads=4)
+        self.assertIsInstance(error, StepWarning)
+        self.assertEqual(runner.downloads, 4)
+        self.assertEqual(runner.installs, 0)
+        self.assertIn("original.example", source)
+        self.assertFalse(context.values["package_indexes_refreshed"])
+
+    def test_third_party_failure_does_not_change_ubuntu_mirror(self):
+        runner, context, source, error = self.exercise(third_party=True)
+        self.assertIsInstance(error, StepWarning)
+        self.assertEqual(runner.downloads, 1)
+        self.assertEqual(runner.installs, 0)
+        self.assertIn("one.example", source)
+
+    def test_configuration_failure_is_fatal_without_retry(self):
+        runner, context, source, error = self.exercise(failed_downloads=0, configure_error=True)
+        self.assertIsInstance(error, CommandError)
+        self.assertEqual(runner.downloads, 1)
+        self.assertEqual(runner.installs, 1)
+        self.assertIn("one.example", source)
