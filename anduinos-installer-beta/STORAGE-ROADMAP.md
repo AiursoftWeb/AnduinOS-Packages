@@ -3,11 +3,14 @@
 ## Status and intent
 
 This document defines the post-release-one development plan for storage. The
-beta now exposes both deterministic whole-disk erase and guided coexistence in
-already-unallocated space, with Btrfs or ext4, without a feature flag. Custom
-layouts, encryption and RAID are not currently implemented. Guided mode does
-not shrink, move or repair Windows filesystems and remains subject to the
-unfinished destructive ISO/VM qualification described below.
+beta now exposes deterministic whole-disk erase, guided coexistence in
+already-unallocated space, and a bounded manual GPT editor without a feature
+flag. Automatic and guided modes offer Btrfs or ext4; the manual editor also
+offers XFS and F2FS as conventional single-root filesystems. It can explicitly
+shrink a plain, healthy NTFS or ordinary offline ext4 partition after strict read-only checks; guided
+mode never does so automatically. Encryption and RAID are not currently
+implemented, and the storage paths remain subject to the destructive ISO/VM
+qualification below.
 
 The long-term product has three user-facing storage modes:
 
@@ -17,9 +20,21 @@ The long-term product has three user-facing storage modes:
 3. **Custom storage** — assign partitions, filesystems, Btrfs subvolumes,
    mount points, ESPs and already-prepared arrays.
 
-The installer will not become a general-purpose filesystem repair, partition
-move or partition shrink tool. Those operations remain the responsibility of
-specialist tools and the operating system that owns the data.
+The installer will not become a general-purpose filesystem repair or
+partition-move tool. Its shrink paths are deliberately narrow: explicit
+manual operations on plain NTFS or ordinary offline ext4 that keep the partition start fixed and fail
+closed on BitLocker, mounts, hibernation/Fast Startup, an unclean volume,
+failed consistency checks or an unsafe target assessment. NTFS has a target
+dry run; ext4 has only a conservative minimum estimate and actual post-shrink
+geometry verification. Other resize and repair
+operations remain the responsibility of specialist tools and the operating
+system that owns the data.
+
+The bounded manual editor enforces a 6 GiB hard minimum for Root in both its UI
+model and the privileged storage graph. Root sizes from 6 GiB to 25 GiB are
+allowed only after a strong below-minimum warning; 25 GiB to 50 GiB receives a
+below-recommended warning, and 50 GiB or more proceeds without one. Automatic
+and guided layouts retain their stricter swap and root-space policy.
 
 ## Implementation status
 
@@ -33,7 +48,7 @@ specialist tools and the operating system that owns the data.
 | Storage 2C | complete | free-space compiler, preserved-ESP checks and shared boot policy |
 | Storage 2D | complete | GTK free-extent/ESP selection and typed write-set confirmation |
 | Storage 2E | in progress | beta execution enabled by default; runtime preservation proofs and isolated VM qualification remain |
-| Storage 3 | pending | custom partitions, mounts and Btrfs roles |
+| Storage 3 | in progress | bounded manual GPT editing and guarded NTFS/offline-ext4 shrink implemented; destructive VM qualification remains |
 | Storage 4 | pending | existing LVM containers and arrays |
 | Storage 5 | pending | curated array creation |
 | Storage 6 | pending | LUKS2 and recovery-led encryption |
@@ -138,8 +153,11 @@ those artifacts.
 
 Btrfs remains the default on solid-state and rotational media because
 Disk Snapshots Manager, system snapshots and the shared-space subvolume model are
-AnduinOS capabilities. ext4 remains an explicit classic alternative without
-Disk Snapshots Manager or transactional system rollback.
+AnduinOS capabilities. ext4 remains the classic alternative in every mode.
+Advanced manual mode additionally offers XFS for a scalable conventional root
+and F2FS for users who explicitly want a flash-oriented conventional root.
+Neither receives Btrfs subvolumes, Disk Snapshots Manager or transactional
+system rollback.
 
 The installer must not infer filesystem policy from a device path such as
 `nvme` or `sd`. NVMe is a transport, SATA devices may be SSDs, and rotational
@@ -359,8 +377,96 @@ health and free-space reserve pass validation. Reuse means:
 - fail with recovery instructions if firmware variables cannot be updated,
   rather than silently taking over the shared fallback path.
 
-If the existing ESP is unsuitable, guided mode refuses it. Custom mode may
-allocate a dedicated AnduinOS ESP inside explicitly selected free space.
+By default, preservation-mode preflight refuses to reuse an ESP that contains an
+`EFI/AnduinOS` directory, including case variants, an empty directory or
+partial-install leftovers. Both guided and manual plans stop before destructive
+storage operations unless the user explicitly authorizes replacement. Consent
+is bound to the ESP's PARTUUID, FAT UUID and a fingerprint of every existing
+AnduinOS file and directory. The executor verifies a vendor-only backup in the
+Live session before storage writes, then persists it under
+`/var/backups/anduinos-installer/esp-*` in the new system before replacement.
+The recovery archive does not restore root partitions or firmware boot order.
+Changed identities/files or failed backups stop installation; no unconfirmed
+cleanup is performed. Invalid or unreadable EFI paths also fail closed. Ordinary
+Microsoft/Ubuntu ESP reuse and the existing boot commands are unchanged.
+This guard prevents unconfirmed boot-file replacement; per-installation EFI directory
+names and shared-ESP multi-AnduinOS ownership remain out of scope.
+
+Before advancing from the storage page, the UI checks a selected reused ESP
+through the read-only Polkit helper in a private mount namespace. On an
+AnduinOS namespace conflict, a warning offers explicit vendor-file replacement
+or Back (also the close/default response). Back selects the new-ESP option;
+guided mode does this only if the chosen extent has room, and manual mode asks
+the user to allocate an ESP explicitly. Accepting keeps the selected ESP and
+adds the replacement warning to the final summary. To retain both AnduinOS
+installations, use separate ESPs. The UI never
+silently moves or shrinks the root request. Probe failures do not authorize
+continuation, and the executor independently repeats its full preflight.
+
+### Independent Linux boot chains
+
+After installing the new bootloader, a separate warning-policy step discovers
+complete AnduinOS and Ubuntu shim/GRUB chains on same-disk and other-disk ESPs.
+It mounts unmounted candidates read-only and only reads an already mounted ESP
+when it is the verified installer target. The target's own AnduinOS loader is
+excluded; Ubuntu on that shared target ESP may still be added. Duplicate FAT
+UUIDs, incomplete chains and wrong PE architectures are excluded.
+
+Only the new root gets `/etc/grub.d/43_anduinos_linux`, followed by its own
+`update-grub`. Entries identify the ESP by filesystem UUID and chainload its
+architecture-specific shim. Runtime guards hide missing loaders and prevent
+falling through to the wrong root on a failed UUID search. No foreign kernel,
+initramfs, root configuration, NVRAM entry or ESP is written. Windows discovery,
+`EFI/AnduinOS`, the AnduinOS NVRAM label, `--no-extra-removable`, and the portable
+erase-disk boot policy remain unchanged.
+
+The new GRUB menu is the entry point for selecting the old installation; the
+old installation's menu is not modified. A second GRUB menu is expected.
+Kernel/initramfs updates stay within their own installation. Existing systems
+need the updated Secure Boot Toolkit before multi-ESP automatic repair is
+available: it checks the mounted ESP against fstab and the standard Ubuntu EFI
+stub against this system's GRUB filesystem UUID and relative directory. It
+does not assume BootCurrent identifies the final chainloaded OS. Ambiguous or
+nonstandard layouts still stop automatic repair.
+
+Unit tests and GRUB syntax checks are not release qualification. Before a
+release, test two installed AnduinOS systems (ext4 and Btrfs), AnduinOS beside
+Ubuntu, Secure Boot on/off, kernel/shim/GRUB upgrades in each system, repair
+after chainloading, removal of the other installation, preservation hashes,
+and the existing #422/portable boot regressions in disposable UEFI VMs. No
+shrinking is introduced by the ESP coexistence change itself. The later
+offline-ext4 shrink path has its own destructive qualification below; Btrfs
+shrinking remains unsupported.
+
+### Offline ext4 shrinking
+
+Advanced/manual mode uses the existing resize declaration and shared typed
+assessment, not an imperative command stored in the UI. Only plain, unmounted
+4 KiB ext4 with a supported feature set and internal journal is accepted.
+LUKS, LVM, RAID, unusual ext4 features and Btrfs are not shrink targets.
+The UI requires a backup acknowledgement; saving a size only changes the
+plan, and the operation can be removed before installation starts.
+
+The privileged probe is read-only: superblock geometry, forced no-write fsck,
+then `resize2fs -P`. The minimum reserves at least 2 GiB and 25% headroom over
+the larger of allocated blocks and the tool's estimate, with a 4 GiB floor.
+That is deliberately conservative, not a guarantee that every target succeeds.
+After final confirmation, the executor repeats identity/activity/range checks,
+runs `e2fsck -f -p` (only exit 0/1 accepted), shrinks without force, syncs,
+checks read-only again and verifies UUID and actual filesystem size. Only then
+may it shorten the GPT tail and verify the exact planned boundary before
+creating any new partition. The partition start never moves; failure is not
+advertised as rollback or proof that the filesystem was untouched.
+
+Unit and GTK tests cover refusal and command ordering. A real rootless
+sparse-image test preserves file hashes, links, UUID/PARTUUID, the start and a
+neighbouring partition while freeing space for a new partition. The AMD64 ISO
+case `uefi-nosb-coexistence-ext4-shrink` installs a 96 GiB ext4 A, shrinks it to
+40 GiB through the real UI, installs a separate 50 GiB ext4 B, verifies A's
+file manifest and untouched ESP/swap, boots B, then boots A through B's GRUB.
+The case requires installer >= 2.0.4-15 and a rebuilt ISO. It is a release gate,
+not evidence that a VM run has already passed. Interruption/power-loss testing
+remains part of destructive resize qualification.
 
 Windows discovery and an optional GRUB chainloader entry are usability
 features. Firmware boot entries remain independently usable; detection must
@@ -414,13 +520,14 @@ minimum size, boot constraints and recovery tooling.
 | Driver | Initial status | Disk Snapshots Manager | Notes |
 |---|---|---:|---|
 | Btrfs | supported | conditional | canonical or role-compatible layout |
-| ext4 | supported | no | simple root and conventional split mounts |
-| XFS | deferred | no | requires separate boot/recovery matrix |
-| F2FS | deferred | no | requires device and boot/recovery policy |
+| ext4 | supported | no | conventional root; available in every mode |
+| XFS | supported in bounded manual mode | no | one conventional root; no subvolumes |
+| F2FS | supported in bounded manual mode | no | one flash-oriented conventional root; no subvolumes |
 | ZFS root | out of scope | no | separate packaging, boot and licensing work |
 
 The UI never accepts an executable name, shell fragment or raw formatter
-options as a custom filesystem.
+Automatic erase and guided coexistence deliberately remain Btrfs/ext4-only;
+adding a manual driver does not silently expand those release matrices.
 
 ### Btrfs layout policies
 
@@ -565,6 +672,11 @@ hibernation, BitLocker/TPM, Secure Boot and EFI warnings, then selects one
 exact free extent, Btrfs or ext4, and a reused or dedicated ESP policy.
 Missing free space directs users to shrink in Windows and rescan; rescanning
 returns to the target-disk page and requires a new explicit selection.
+
+The bounded manual editor in this Advanced branch also accepts XFS and F2FS
+for a newly formatted single root. Selecting Btrfs activates the additional
+AnduinOS subvolume and snapshot workflow; selecting ext4, XFS or F2FS mounts
+one root filesystem and copies the target system directly into it.
 
 Future custom storage extends this conditional advanced branch rather than
 adding raw topology controls to the ordinary target-disk page. Every selected
@@ -712,7 +824,8 @@ stable release can claim coexistence qualification.
 ### Storage 3 — custom partition and mount mapping
 
 - Add format/preserve decisions and supported mount roles.
-- Add filesystem-driver capability validation.
+- Extend the existing Btrfs/ext4/XFS/F2FS root-driver capability validation to
+  arbitrary supported mount roles.
 - Add custom Btrfs subvolume selection/creation and the semantic role
   manifest.
 - Expose clear Disk Snapshots Manager compatibility reasons.

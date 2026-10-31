@@ -1,0 +1,1831 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-rescue-center\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-27 20:53+0000\n"
+"PO-Revision-Date: 2026-09-27 00:00+0000\n"
+"Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
+"Language-Team: el_GR\n"
+"Language: el_GR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: data/anduinos-rescue-center-live-shortcut.desktop:3
+msgid "Prepare AnduinOS Rescue Center desktop shortcut"
+msgstr ""
+"Προετοιμασία συντόμευσης επιφάνειας εργασίας για το Κέντρο αποκατάστασης "
+"AnduinOS"
+
+#: data/com.anduinos.RescueCenter.desktop:2
+#: data/com.anduinos.RescueCenter.desktop:14
+#: src/anduinos_rescue_center/app.py:100
+#, python-brace-format
+msgid "AnduinOS Rescue Center"
+msgstr "Κέντρο αποκατάστασης AnduinOS"
+
+#: data/com.anduinos.RescueCenter.desktop:3
+msgid "Find and repair an installed AnduinOS system"
+msgstr "Εύρεση και επιδιόρθωση εγκατεστημένου συστήματος AnduinOS"
+
+#: data/com.anduinos.RescueCenter.desktop:9
+msgid "rescue;recovery;snapshot;password;files;"
+msgstr "διάσωση;αποκατάσταση;στιγμιότυπο;κωδικός πρόσβασης;αρχεία;"
+
+#: data/com.anduinos.RescueCenter.desktop:15
+msgid ""
+"Recover files, accounts, and snapshots from an offline AnduinOS installation"
+msgstr ""
+"Ανάκτηση αρχείων, λογαριασμών και στιγμιότυπων από εγκατάσταση AnduinOS "
+"εκτός λειτουργίας"
+
+#: data/com.anduinos.RescueCenter.desktop:19
+msgid ""
+"Find installed AnduinOS systems from a Live session and perform carefully "
+"scoped offline recovery operations."
+msgstr ""
+"Εντοπίστε εγκατεστημένα συστήματα AnduinOS από μια συνεδρία Live και "
+"εκτελέστε προσεκτικά οριοθετημένες εργασίες αποκατάστασης εκτός σύνδεσης."
+
+#: scripts/anduinos-rescue-center-live-helper:12
+#, python-brace-format
+msgid "The passwordless rescue helper is restricted to AnduinOS Live"
+msgstr ""
+"Το βοηθητικό πρόγραμμα αποκατάστασης χωρίς κωδικό πρόσβασης είναι διαθέσιμο "
+"μόνο στο AnduinOS Live"
+
+#: src/anduinos_rescue_center/app.py:35 src/anduinos_rescue_center/app.py:41
+#, python-brace-format
+msgid "Unknown size"
+msgstr "Άγνωστο μέγεθος"
+
+#: src/anduinos_rescue_center/app.py:108
+#, python-brace-format
+msgid "Offline recovery"
+msgstr "Αποκατάσταση εκτός σύνδεσης"
+
+#: src/anduinos_rescue_center/app.py:108 src/anduinos_rescue_center/app.py:159
+#, python-brace-format
+msgid "Rescue Center"
+msgstr "Κέντρο αποκατάστασης"
+
+#: src/anduinos_rescue_center/app.py:109
+#, python-brace-format
+msgid "Back"
+msgstr "Πίσω"
+
+#: src/anduinos_rescue_center/app.py:113
+#, python-brace-format
+msgid "Scan again"
+msgstr "Σάρωση ξανά"
+
+#: src/anduinos_rescue_center/app.py:175
+#, python-brace-format
+msgid "Choose another system"
+msgstr "Επιλογή άλλου συστήματος"
+
+#: src/anduinos_rescue_center/app.py:185 src/anduinos_rescue_center/app.py:463
+#: src/anduinos_rescue_center/app.py:540
+#, python-brace-format
+msgid "Home"
+msgstr "Αρχική σελίδα"
+
+#: src/anduinos_rescue_center/app.py:185
+#, python-brace-format
+msgid "Offline AnduinOS"
+msgstr "AnduinOS εκτός σύνδεσης"
+
+#: src/anduinos_rescue_center/app.py:188
+#, python-brace-format
+msgid "Show recovery tools"
+msgstr "Εμφάνιση εργαλείων αποκατάστασης"
+
+#: src/anduinos_rescue_center/app.py:206
+#, python-brace-format
+msgid "This is not a Live session"
+msgstr "Αυτή δεν είναι συνεδρία Live"
+
+#: src/anduinos_rescue_center/app.py:208
+#, python-brace-format
+msgid ""
+"Rescue Center is designed for the AnduinOS Live environment. Continuing here"
+" is not recommended. The currently running system will remain unavailable as"
+" a repair target."
+msgstr ""
+"Το Κέντρο Αποκατάστασης έχει σχεδιαστεί για το περιβάλλον AnduinOS Live. Δεν"
+" συνιστάται να συνεχίσετε εδώ. Το σύστημα που εκτελείται αυτήν τη στιγμή δεν"
+" θα είναι διαθέσιμο ως στόχος επισκευής."
+
+#: src/anduinos_rescue_center/app.py:212
+#, python-brace-format
+msgid "Continue anyway"
+msgstr "Συνέχεια ούτως ή άλλως"
+
+#: src/anduinos_rescue_center/app.py:231
+#, python-brace-format
+msgid "Looking for AnduinOS installations"
+msgstr "Αναζήτηση εγκαταστάσεων AnduinOS"
+
+#: src/anduinos_rescue_center/app.py:232
+#, python-brace-format
+msgid "Inspecting disks without changing their filesystems…"
+msgstr "Έλεγχος δίσκων χωρίς αλλαγή στα συστήματα αρχείων τους…"
+
+#: src/anduinos_rescue_center/app.py:248
+#, python-brace-format
+msgid "Could not scan this computer"
+msgstr "Δεν ήταν δυνατή η σάρωση αυτού του υπολογιστή"
+
+#: src/anduinos_rescue_center/app.py:263
+#, python-brace-format
+msgid "START YOUR RECOVERY"
+msgstr "ΞΕΚΙΝΗΣΤΕ ΤΗΝ ΑΠΟΚΑΤΑΣΤΑΣΗ"
+
+#: src/anduinos_rescue_center/app.py:264
+#, python-brace-format
+msgid "Find the system you want to repair"
+msgstr "Βρείτε το σύστημα που θέλετε να επισκευάσετε"
+
+#: src/anduinos_rescue_center/app.py:266
+#, python-brace-format
+msgid ""
+"Choose a detected AnduinOS installation below. We inspect disks read-only "
+"and verify the selected device again before opening it."
+msgstr ""
+"Επιλέξτε παρακάτω μια εγκατάσταση AnduinOS που εντοπίστηκε. Ελέγχουμε τους "
+"δίσκους μόνο για ανάγνωση και επαληθεύουμε ξανά την επιλεγμένη συσκευή πριν "
+"την ανοίξουμε."
+
+#: src/anduinos_rescue_center/app.py:292
+#, python-brace-format
+msgid "Back to detected systems"
+msgstr "Επιστροφή στα συστήματα που εντοπίστηκαν"
+
+#: src/anduinos_rescue_center/app.py:297
+#, python-brace-format
+msgid "All detected disks and partitions"
+msgstr "Όλοι οι δίσκοι και τα διαμερίσματα που εντοπίστηκαν"
+
+#: src/anduinos_rescue_center/app.py:298
+#, python-brace-format
+msgid ""
+"For systems not found automatically. The selected partition is checked again"
+" before repair."
+msgstr ""
+"Για συστήματα που δεν εντοπίστηκαν αυτόματα. Το επιλεγμένο διαμέρισμα "
+"ελέγχεται ξανά πριν από την επισκευή."
+
+#: src/anduinos_rescue_center/app.py:307
+#, python-brace-format
+msgid "No AnduinOS installation found"
+msgstr "Δεν βρέθηκε εγκατάσταση AnduinOS"
+
+#: src/anduinos_rescue_center/app.py:308
+#, python-brace-format
+msgid ""
+"Use Advanced selection to inspect the disks and partitions on this computer."
+msgstr ""
+"Χρησιμοποιήστε την επιλογή «Για προχωρημένους» για να ελέγξετε τους δίσκους "
+"και τα διαμερίσματα σε αυτόν τον υπολογιστή."
+
+#: src/anduinos_rescue_center/app.py:313
+#, python-brace-format
+msgid "Advanced selection"
+msgstr "Επιλογή για προχωρημένους"
+
+#: src/anduinos_rescue_center/app.py:327
+#, python-brace-format
+msgid "Open {system} installation on {partition}"
+msgstr "Άνοιγμα εγκατάστασης {system} στο {partition}"
+
+#: src/anduinos_rescue_center/app.py:329
+#, python-brace-format
+msgid "unknown partition"
+msgstr "άγνωστο διαμέρισμα"
+
+#: src/anduinos_rescue_center/app.py:344 src/anduinos_rescue_center/app.py:709
+#: src/anduinos_rescue_center/app.py:735 src/anduinos_rescue_center/app.py:736
+#: src/anduinos_rescue_center/app.py:737 src/anduinos_rescue_center/app.py:738
+#: src/anduinos_rescue_center/app.py:739
+#: src/anduinos_rescue_center/app.py:1072
+#: src/anduinos_rescue_center/app.py:1080
+#, python-brace-format
+msgid "Unknown"
+msgstr "Άγνωστο"
+
+#: src/anduinos_rescue_center/app.py:349 src/anduinos_rescue_center/app.py:393
+#, python-brace-format
+msgid "Running system"
+msgstr "Σύστημα σε λειτουργία"
+
+#: src/anduinos_rescue_center/app.py:350 src/anduinos_rescue_center/app.py:368
+#: src/anduinos_rescue_center/app.py:395
+#, python-brace-format
+msgid "Live installation media"
+msgstr "Μέσο εγκατάστασης Live"
+
+#: src/anduinos_rescue_center/app.py:351
+#, python-brace-format
+msgid "Unavailable for recovery"
+msgstr "Δεν είναι διαθέσιμο για ανάκτηση"
+
+#: src/anduinos_rescue_center/app.py:363
+#, python-brace-format
+msgid "Disk"
+msgstr "Δίσκος"
+
+#: src/anduinos_rescue_center/app.py:380
+#, python-brace-format
+msgid "Unknown filesystem"
+msgstr "Άγνωστο σύστημα αρχείων"
+
+#: src/anduinos_rescue_center/app.py:383
+#, python-brace-format
+msgid "Could not inspect"
+msgstr "Δεν ήταν δυνατός ο έλεγχος"
+
+#: src/anduinos_rescue_center/app.py:397
+#, python-brace-format
+msgid "Windows cannot be repaired here"
+msgstr "Δεν είναι δυνατή η επιδιόρθωση των Windows από εδώ"
+
+#: src/anduinos_rescue_center/app.py:399
+#, python-brace-format
+msgid "Not available for recovery"
+msgstr "Δεν είναι διαθέσιμο για ανάκτηση"
+
+#: src/anduinos_rescue_center/app.py:407
+#, python-brace-format
+msgid "Inspecting the selected system"
+msgstr "Έλεγχος του επιλεγμένου συστήματος"
+
+#: src/anduinos_rescue_center/app.py:408
+#, python-brace-format
+msgid "Re-checking its disk identity and reading system information…"
+msgstr ""
+"Επανέλεγχος της ταυτότητας του δίσκου και ανάγνωση πληροφοριών συστήματος…"
+
+#: src/anduinos_rescue_center/app.py:427 src/anduinos_rescue_center/app.py:440
+#, python-brace-format
+msgid "Could not open this installation"
+msgstr "Δεν ήταν δυνατό το άνοιγμα αυτής της εγκατάστασης"
+
+#: src/anduinos_rescue_center/app.py:430 src/anduinos_rescue_center/app.py:665
+#: src/anduinos_rescue_center/app.py:690 src/anduinos_rescue_center/app.py:812
+#: src/anduinos_rescue_center/app.py:981
+#: src/anduinos_rescue_center/app.py:1224
+#: src/anduinos_rescue_center/app.py:1449
+#, python-brace-format
+msgid "Close"
+msgstr "Κλείσιμο"
+
+#: src/anduinos_rescue_center/app.py:451
+#, python-brace-format
+msgid "SELECTED INSTALLATION"
+msgstr "ΕΠΙΛΕΓΜΕΝΗ ΕΓΚΑΤΑΣΤΑΣΗ"
+
+#: src/anduinos_rescue_center/app.py:464 src/anduinos_rescue_center/app.py:540
+#, python-brace-format
+msgid "Password reset"
+msgstr "Επαναφορά κωδικού πρόσβασης"
+
+#: src/anduinos_rescue_center/app.py:465 src/anduinos_rescue_center/app.py:540
+#, python-brace-format
+msgid "File browser"
+msgstr "Περιηγητής αρχείων"
+
+#: src/anduinos_rescue_center/app.py:469 src/anduinos_rescue_center/app.py:541
+#: src/anduinos_rescue_center/app.py:603
+#: src/anduinos_rescue_center/app.py:1262
+#, python-brace-format
+msgid "Snapshots & restore"
+msgstr "Στιγμιότυπα και επαναφορά"
+
+#: src/anduinos_rescue_center/app.py:472 src/anduinos_rescue_center/app.py:541
+#, python-brace-format
+msgid "Boot repair"
+msgstr "Επιδιόρθωση εκκίνησης"
+
+#: src/anduinos_rescue_center/app.py:473 src/anduinos_rescue_center/app.py:542
+#: src/anduinos_rescue_center/app.py:609 src/anduinos_rescue_center/app.py:640
+#, python-brace-format
+msgid "Emergency terminal"
+msgstr "Τερματικό έκτακτης ανάγκης"
+
+#: src/anduinos_rescue_center/app.py:475 src/anduinos_rescue_center/app.py:542
+#: src/anduinos_rescue_center/app.py:612
+#, python-brace-format
+msgid "System details"
+msgstr "Λεπτομέρειες συστήματος"
+
+#: src/anduinos_rescue_center/app.py:479
+#, python-brace-format
+msgid "Open {page} page"
+msgstr "Άνοιγμα της σελίδας {page}"
+
+#: src/anduinos_rescue_center/app.py:578
+#, python-brace-format
+msgid "A calmer way back"
+msgstr "Μια πιο ήρεμη επιστροφή"
+
+#: src/anduinos_rescue_center/app.py:578
+#, python-brace-format
+msgid "RECOVERY WORKSPACE"
+msgstr "ΧΩΡΟΣ ΕΡΓΑΣΙΑΣ ΑΠΟΚΑΤΑΣΤΑΣΗΣ"
+
+#: src/anduinos_rescue_center/app.py:579
+#, python-brace-format
+msgid ""
+"Work on this offline installation. Choose a tool on the left; your running "
+"system remains untouched."
+msgstr ""
+"Εργαστείτε σε αυτήν την εγκατάσταση εκτός σύνδεσης. Επιλέξτε ένα εργαλείο "
+"στα αριστερά· το σύστημα που εκτελείται δεν θα επηρεαστεί."
+
+#: src/anduinos_rescue_center/app.py:589
+#, python-brace-format
+msgid "Offline installation · {partition}"
+msgstr "Εγκατάσταση εκτός σύνδεσης · {partition}"
+
+#: src/anduinos_rescue_center/app.py:590
+#, python-brace-format
+msgid "Unknown partition"
+msgstr "Άγνωστο διαμέρισμα"
+
+#: src/anduinos_rescue_center/app.py:596
+#, python-brace-format
+msgid "Recovery tools"
+msgstr "Εργαλεία αποκατάστασης"
+
+#: src/anduinos_rescue_center/app.py:598
+#, python-brace-format
+msgid "Reset a password"
+msgstr "Επαναφορά κωδικού πρόσβασης"
+
+#: src/anduinos_rescue_center/app.py:598
+#, python-brace-format
+msgid "Restore access to a local account."
+msgstr "Αποκαταστήστε την πρόσβαση σε έναν τοπικό λογαριασμό."
+
+#: src/anduinos_rescue_center/app.py:599
+#, python-brace-format
+msgid "Browse and copy files"
+msgstr "Περιήγηση και αντιγραφή αρχείων"
+
+#: src/anduinos_rescue_center/app.py:599
+#, python-brace-format
+msgid "Explore the offline system and copy data out."
+msgstr "Εξερευνήστε το σύστημα εκτός σύνδεσης και αντιγράψτε τα δεδομένα του."
+
+#: src/anduinos_rescue_center/app.py:604
+#, python-brace-format
+msgid "Create a recovery point or roll back the system."
+msgstr ""
+"Δημιουργήστε ένα σημείο αποκατάστασης ή επαναφέρετε το σύστημα σε "
+"προηγούμενη κατάσταση."
+
+#: src/anduinos_rescue_center/app.py:608
+#, python-brace-format
+msgid "Check the installed kernel, GRUB and EFI boot path."
+msgstr ""
+"Ελέγξτε τον εγκατεστημένο πυρήνα, το GRUB και τη διαδρομή εκκίνησης EFI."
+
+#: src/anduinos_rescue_center/app.py:608
+#: src/anduinos_rescue_center/app.py:1016
+#, python-brace-format
+msgid "Diagnose and repair boot"
+msgstr "Διάγνωση και επιδιόρθωση εκκίνησης"
+
+#: src/anduinos_rescue_center/app.py:609
+#, python-brace-format
+msgid "Open an expert shell in this offline system."
+msgstr "Άνοιγμα κελύφους για προχωρημένους σε αυτό το σύστημα εκτός σύνδεσης."
+
+#: src/anduinos_rescue_center/app.py:612
+#, python-brace-format
+msgid "Review the installation before making changes."
+msgstr "Ελέγξτε την εγκατάσταση πριν κάνετε αλλαγές."
+
+#: src/anduinos_rescue_center/app.py:633
+#, python-brace-format
+msgid ""
+"Snapshot restore is available only for the standard AnduinOS Btrfs layout. "
+"File recovery and password reset remain available here."
+msgstr ""
+"Η επαναφορά στιγμιότυπου είναι διαθέσιμη μόνο για την τυπική διάταξη Btrfs "
+"του AnduinOS. Η ανάκτηση αρχείων και η επαναφορά κωδικού πρόσβασης "
+"παραμένουν διαθέσιμες εδώ."
+
+#: src/anduinos_rescue_center/app.py:640
+#, python-brace-format
+msgid "ADVANCED RECOVERY"
+msgstr "ΑΝΑΚΤΗΣΗ ΓΙΑ ΠΡΟΧΩΡΗΜΕΝΟΥΣ"
+
+#: src/anduinos_rescue_center/app.py:641
+#, python-brace-format
+msgid ""
+"Open a root shell inside the selected offline system. Commands can change or"
+" delete its files."
+msgstr ""
+"Ανοίξτε ένα κέλυφος root μέσα στο επιλεγμένο σύστημα εκτός σύνδεσης. Οι "
+"εντολές μπορούν να τροποποιήσουν ή να διαγράψουν τα αρχεία του."
+
+#: src/anduinos_rescue_center/app.py:644
+#, python-brace-format
+msgid ""
+"The terminal will show the target partition before entering it. Type exit "
+"when finished. Recovery will unmount its temporary filesystems and report "
+"any cleanup failure."
+msgstr ""
+"Το τερματικό θα εμφανίσει το διαμέρισμα προορισμού πριν από την είσοδο σε "
+"αυτό. Πληκτρολογήστε exit όταν τελειώσετε. Η ανάκτηση θα αποπροσαρτήσει τα "
+"προσωρινά συστήματα αρχείων και θα αναφέρει τυχόν αποτυχία εκκαθάρισης."
+
+#: src/anduinos_rescue_center/app.py:648
+#, python-brace-format
+msgid "Open target terminal"
+msgstr "Άνοιγμα τερματικού προορισμού"
+
+#: src/anduinos_rescue_center/app.py:653
+#, python-brace-format
+msgid "Open Live terminal instead"
+msgstr "Άνοιγμα τερματικού Live"
+
+#: src/anduinos_rescue_center/app.py:664 src/anduinos_rescue_center/app.py:689
+#, python-brace-format
+msgid "Could not open terminal"
+msgstr "Δεν ήταν δυνατό το άνοιγμα του τερματικού"
+
+#: src/anduinos_rescue_center/app.py:674
+#, python-brace-format
+msgid "Open an expert root shell?"
+msgstr "Άνοιγμα κελύφους root για προχωρημένους;"
+
+#: src/anduinos_rescue_center/app.py:675
+#, python-brace-format
+msgid ""
+"Target: {path}\n"
+"\n"
+"The shell can make unrestricted changes to this offline installation and can also access Live hardware. Use it only if you understand the commands."
+msgstr ""
+"Προορισμός: {path}\n"
+"\n"
+"Το κέλυφος μπορεί να κάνει απεριόριστες αλλαγές σε αυτήν την εγκατάσταση εκτός σύνδεσης και μπορεί επίσης να αποκτήσει πρόσβαση στο υλικό του Live. Χρησιμοποιήστε το μόνο αν κατανοείτε τις εντολές."
+
+#: src/anduinos_rescue_center/app.py:678 src/anduinos_rescue_center/app.py:760
+#: src/anduinos_rescue_center/app.py:1132
+#: src/anduinos_rescue_center/app.py:1365
+#: src/anduinos_rescue_center/app.py:1411
+#, python-brace-format
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: src/anduinos_rescue_center/app.py:679
+#, python-brace-format
+msgid "Open terminal"
+msgstr "Άνοιγμα τερματικού"
+
+#: src/anduinos_rescue_center/app.py:699
+#, python-brace-format
+msgid "ACCOUNT ACCESS"
+msgstr "ΠΡΟΣΒΑΣΗ ΣΤΟΝ ΛΟΓΑΡΙΑΣΜΟ"
+
+#: src/anduinos_rescue_center/app.py:699
+#, python-brace-format
+msgid "Reset a local password"
+msgstr "Επαναφορά τοπικού κωδικού πρόσβασης"
+
+#: src/anduinos_rescue_center/app.py:700
+#, python-brace-format
+msgid ""
+"Choose an account on the offline installation. Existing encrypted login "
+"keyrings are not unlocked by a password reset."
+msgstr ""
+"Επιλέξτε έναν λογαριασμό στην εγκατάσταση που δεν εκτελείται. Οι υπάρχουσες "
+"κρυπτογραφημένες κλειδοθήκες σύνδεσης δεν ξεκλειδώνονται με την επαναφορά "
+"κωδικού πρόσβασης."
+
+#: src/anduinos_rescue_center/app.py:702
+#, python-brace-format
+msgid "Local accounts"
+msgstr "Τοπικοί λογαριασμοί"
+
+#: src/anduinos_rescue_center/app.py:712
+#, python-brace-format
+msgid "Password locked"
+msgstr "Ο κωδικός πρόσβασης είναι κλειδωμένος"
+
+#: src/anduinos_rescue_center/app.py:715 src/anduinos_rescue_center/app.py:761
+#, python-brace-format
+msgid "Reset password"
+msgstr "Επαναφορά κωδικού πρόσβασης"
+
+#: src/anduinos_rescue_center/app.py:721
+#, python-brace-format
+msgid "No local accounts found"
+msgstr "Δεν βρέθηκαν τοπικοί λογαριασμοί"
+
+#: src/anduinos_rescue_center/app.py:728
+#, python-brace-format
+msgid "INSTALLATION DETAILS"
+msgstr "ΛΕΠΤΟΜΕΡΕΙΕΣ ΕΓΚΑΤΑΣΤΑΣΗΣ"
+
+#: src/anduinos_rescue_center/app.py:728
+#, python-brace-format
+msgid "Know what you are repairing"
+msgstr "Μάθετε τι επιδιορθώνετε"
+
+#: src/anduinos_rescue_center/app.py:729
+#, python-brace-format
+msgid ""
+"Information read from the selected offline installation. Its device identity"
+" is rechecked before each operation."
+msgstr ""
+"Πληροφορίες που διαβάστηκαν από την επιλεγμένη εγκατάσταση που δεν "
+"εκτελείται. Η ταυτότητα της συσκευής της επαληθεύεται ξανά πριν από κάθε "
+"ενέργεια."
+
+#: src/anduinos_rescue_center/app.py:731
+#, python-brace-format
+msgid "System"
+msgstr "Σύστημα"
+
+#: src/anduinos_rescue_center/app.py:734
+#, python-brace-format
+msgid "Operating system"
+msgstr "Λειτουργικό σύστημα"
+
+#: src/anduinos_rescue_center/app.py:735
+#, python-brace-format
+msgid "Version"
+msgstr "Έκδοση"
+
+#: src/anduinos_rescue_center/app.py:736
+#, python-brace-format
+msgid "Computer name"
+msgstr "Όνομα υπολογιστή"
+
+#: src/anduinos_rescue_center/app.py:737
+#, python-brace-format
+msgid "Filesystem"
+msgstr "Σύστημα αρχείων"
+
+#: src/anduinos_rescue_center/app.py:738
+#, python-brace-format
+msgid "Partition"
+msgstr "Διαμέρισμα"
+
+#: src/anduinos_rescue_center/app.py:739
+#, python-brace-format
+msgid "Installed kernels"
+msgstr "Εγκατεστημένοι πυρήνες"
+
+#: src/anduinos_rescue_center/app.py:740
+#, python-brace-format
+msgid "Available"
+msgstr "Διαθέσιμο"
+
+#: src/anduinos_rescue_center/app.py:740
+#, python-brace-format
+msgid "Requires the standard AnduinOS Btrfs layout"
+msgstr "Απαιτείται η τυπική διάταξη Btrfs του AnduinOS"
+
+#: src/anduinos_rescue_center/app.py:740
+#, python-brace-format
+msgid "Snapshots"
+msgstr "Στιγμιότυπα"
+
+#: src/anduinos_rescue_center/app.py:746
+#, python-brace-format
+msgid "New password"
+msgstr "Νέος κωδικός πρόσβασης"
+
+#: src/anduinos_rescue_center/app.py:747
+#, python-brace-format
+msgid "Confirm new password"
+msgstr "Επιβεβαίωση νέου κωδικού πρόσβασης"
+
+#: src/anduinos_rescue_center/app.py:753
+#, python-brace-format
+msgid "Reset the password for {username}?"
+msgstr "Να γίνει επαναφορά του κωδικού πρόσβασης για τον χρήστη {username};"
+
+#: src/anduinos_rescue_center/app.py:755
+#, python-brace-format
+msgid ""
+"This changes the local login password on the selected offline system. It "
+"does not unlock an existing encrypted login keyring."
+msgstr ""
+"Αυτό αλλάζει τον τοπικό κωδικό πρόσβασης σύνδεσης στο επιλεγμένο σύστημα "
+"εκτός σύνδεσης. Δεν ξεκλειδώνει μια υπάρχουσα κρυπτογραφημένη κλειδοθήκη "
+"σύνδεσης."
+
+#: src/anduinos_rescue_center/app.py:782
+#, python-brace-format
+msgid "Resetting the password"
+msgstr "Επαναφορά κωδικού πρόσβασης"
+
+#: src/anduinos_rescue_center/app.py:783
+#, python-brace-format
+msgid "Writing the new local account password safely…"
+msgstr "Ασφαλής εγγραφή του νέου κωδικού πρόσβασης τοπικού λογαριασμού…"
+
+#: src/anduinos_rescue_center/app.py:809
+#, python-brace-format
+msgid "Password reset complete"
+msgstr "Η επαναφορά του κωδικού πρόσβασης ολοκληρώθηκε"
+
+#: src/anduinos_rescue_center/app.py:810
+#, python-brace-format
+msgid "The local login password for {username} was changed."
+msgstr ""
+"Ο τοπικός κωδικός πρόσβασης σύνδεσης για τον χρήστη {username} άλλαξε."
+
+#: src/anduinos_rescue_center/app.py:834
+#, python-brace-format
+msgid "Parent folder"
+msgstr "Γονικός φάκελος"
+
+#: src/anduinos_rescue_center/app.py:838
+#, python-brace-format
+msgid "Offline filesystem"
+msgstr "Σύστημα αρχείων εκτός σύνδεσης"
+
+#: src/anduinos_rescue_center/app.py:851
+#, python-brace-format
+msgid "FILE RECOVERY"
+msgstr "ΑΝΑΚΤΗΣΗ ΑΡΧΕΙΩΝ"
+
+#: src/anduinos_rescue_center/app.py:852
+#, python-brace-format
+msgid "Browse and copy your files"
+msgstr "Περιηγηθείτε και αντιγράψτε τα αρχεία σας"
+
+#: src/anduinos_rescue_center/app.py:853
+#, python-brace-format
+msgid "Explore this offline installation without modifying its files."
+msgstr ""
+"Εξερευνήστε αυτήν την εγκατάσταση εκτός σύνδεσης χωρίς να τροποποιήσετε τα "
+"αρχεία της."
+
+#: src/anduinos_rescue_center/app.py:868
+#, python-brace-format
+msgid "Opening offline files"
+msgstr "Άνοιγμα αρχείων εκτός σύνδεσης"
+
+#: src/anduinos_rescue_center/app.py:869
+#, python-brace-format
+msgid "Reading this folder without changing the installed system…"
+msgstr ""
+"Ανάγνωση αυτού του φακέλου χωρίς αλλαγή του εγκατεστημένου συστήματος…"
+
+#: src/anduinos_rescue_center/app.py:898
+#, python-brace-format
+msgid "File"
+msgstr "Αρχείο"
+
+#: src/anduinos_rescue_center/app.py:898
+#, python-brace-format
+msgid "Folder"
+msgstr "Φάκελος"
+
+#: src/anduinos_rescue_center/app.py:898
+#, python-brace-format
+msgid "Other"
+msgstr "Άλλο"
+
+#: src/anduinos_rescue_center/app.py:906
+#, python-brace-format
+msgid "Copy out"
+msgstr "Αντιγραφή σε άλλη θέση"
+
+#: src/anduinos_rescue_center/app.py:917
+#, python-brace-format
+msgid "This folder contains more items"
+msgstr "Αυτός ο φάκελος περιέχει περισσότερα στοιχεία"
+
+#: src/anduinos_rescue_center/app.py:918
+#, python-brace-format
+msgid "Only the first 5,000 entries are shown."
+msgstr "Εμφανίζονται μόνο οι πρώτες 5.000 εγγραφές."
+
+#: src/anduinos_rescue_center/app.py:930
+#, python-brace-format
+msgid "Could not read offline files"
+msgstr "Δεν ήταν δυνατή η ανάγνωση των αρχείων εκτός σύνδεσης"
+
+#: src/anduinos_rescue_center/app.py:932
+#: src/anduinos_rescue_center/app.py:1347
+#, python-brace-format
+msgid "Try again"
+msgstr "Δοκιμάστε ξανά"
+
+#: src/anduinos_rescue_center/app.py:941
+#, python-brace-format
+msgid "Choose where to copy this item"
+msgstr "Επιλέξτε πού θα αντιγραφεί αυτό το στοιχείο"
+
+#: src/anduinos_rescue_center/app.py:956
+#, python-brace-format
+msgid "Copying rescued data"
+msgstr "Αντιγραφή διασωθέντων δεδομένων"
+
+#: src/anduinos_rescue_center/app.py:957
+#, python-brace-format
+msgid "Keep the computer powered on until copying finishes."
+msgstr ""
+"Αφήστε τον υπολογιστή ενεργοποιημένο μέχρι να ολοκληρωθεί η αντιγραφή."
+
+#: src/anduinos_rescue_center/app.py:978
+#, python-brace-format
+msgid "Copy complete"
+msgstr "Η αντιγραφή ολοκληρώθηκε"
+
+#: src/anduinos_rescue_center/app.py:979
+#, python-brace-format
+msgid ""
+"The rescued item was copied to:\n"
+"{path}"
+msgstr ""
+"Το διασωθέν στοιχείο αντιγράφηκε στη θέση:\n"
+"{path}"
+
+#: src/anduinos_rescue_center/app.py:1001
+#: src/anduinos_rescue_center/app.py:1016
+#, python-brace-format
+msgid "BOOT RECOVERY"
+msgstr "ΑΠΟΚΑΤΑΣΤΑΣΗ ΕΚΚΙΝΗΣΗΣ"
+
+#: src/anduinos_rescue_center/app.py:1004
+#, python-brace-format
+msgid "Check boot again"
+msgstr "Έλεγχος εκκίνησης ξανά"
+
+#: src/anduinos_rescue_center/app.py:1017
+#, python-brace-format
+msgid ""
+"Inspect this offline installation before making changes. Repair is offered "
+"only when its EFI partition can be identified on the selected disk."
+msgstr ""
+"Ελέγξτε αυτήν την εγκατάσταση εκτός σύνδεσης πριν κάνετε αλλαγές. Η "
+"επιδιόρθωση είναι διαθέσιμη μόνο όταν μπορεί να εντοπιστεί το διαμέρισμα EFI"
+" της στον επιλεγμένο δίσκο."
+
+#: src/anduinos_rescue_center/app.py:1019
+#, python-brace-format
+msgid "Boot path"
+msgstr "Διαδρομή εκκίνησης"
+
+#: src/anduinos_rescue_center/app.py:1021
+#, python-brace-format
+msgid "Findings"
+msgstr "Ευρήματα"
+
+#: src/anduinos_rescue_center/app.py:1025
+#, python-brace-format
+msgid "Rebuild AnduinOS boot"
+msgstr "Αναδημιουργία εκκίνησης AnduinOS"
+
+#: src/anduinos_rescue_center/app.py:1030
+#, python-brace-format
+msgid "View last repair output"
+msgstr "Προβολή εξόδου τελευταίας επιδιόρθωσης"
+
+#: src/anduinos_rescue_center/app.py:1051
+#, python-brace-format
+msgid "Checking the offline boot path"
+msgstr "Έλεγχος της διαδρομής εκκίνησης εκτός σύνδεσης"
+
+#: src/anduinos_rescue_center/app.py:1052
+#, python-brace-format
+msgid ""
+"Reading the installed kernel, GRUB configuration, EFI files and firmware "
+"entry without changing them…"
+msgstr ""
+"Ανάγνωση του εγκατεστημένου πυρήνα, της διαμόρφωσης GRUB, των αρχείων EFI "
+"και της καταχώρισης υλικολογισμικού χωρίς να γίνουν αλλαγές…"
+
+#: src/anduinos_rescue_center/app.py:1072
+#, python-brace-format
+msgid "Selected installation"
+msgstr "Επιλεγμένη εγκατάσταση"
+
+#: src/anduinos_rescue_center/app.py:1073
+#, python-brace-format
+msgid "EFI partition"
+msgstr "Διαμέρισμα EFI"
+
+#: src/anduinos_rescue_center/app.py:1073
+#, python-brace-format
+msgid "Not identified"
+msgstr "Δεν εντοπίστηκε"
+
+#: src/anduinos_rescue_center/app.py:1074
+#, python-brace-format
+msgid "Kernel and initrd pairs"
+msgstr "Ζεύγη πυρήνα και initrd"
+
+#: src/anduinos_rescue_center/app.py:1074
+#, python-brace-format
+msgid "{complete} of {total}"
+msgstr "{complete} από {total}"
+
+#: src/anduinos_rescue_center/app.py:1076
+#: src/anduinos_rescue_center/app.py:1079
+#, python-brace-format
+msgid "Found"
+msgstr "Βρέθηκε"
+
+#: src/anduinos_rescue_center/app.py:1076
+#, python-brace-format
+msgid "GRUB kernel entry"
+msgstr "Καταχώριση πυρήνα GRUB"
+
+#: src/anduinos_rescue_center/app.py:1076
+#, python-brace-format
+msgid "Missing or incomplete"
+msgstr "Λείπει ή είναι ελλιπές"
+
+#: src/anduinos_rescue_center/app.py:1077
+#, python-brace-format
+msgid "AnduinOS EFI loader"
+msgstr "Φορτωτής EFI του AnduinOS"
+
+#: src/anduinos_rescue_center/app.py:1077
+#: src/anduinos_rescue_center/app.py:1079
+#, python-brace-format
+msgid "Missing"
+msgstr "Λείπει"
+
+#: src/anduinos_rescue_center/app.py:1077
+#, python-brace-format
+msgid "Present"
+msgstr "Υπάρχει"
+
+#: src/anduinos_rescue_center/app.py:1078
+#, python-brace-format
+msgid "Firmware boot entry"
+msgstr "Καταχώριση εκκίνησης υλικολογισμικού"
+
+#: src/anduinos_rescue_center/app.py:1079
+#: src/anduinos_rescue_center/app.py:1336
+#, python-brace-format
+msgid "Unavailable"
+msgstr "Μη διαθέσιμο"
+
+#: src/anduinos_rescue_center/app.py:1091
+#, python-brace-format
+msgid ""
+"Static boot checks found no missing component. A real reboot is still "
+"required."
+msgstr ""
+"Οι στατικοί έλεγχοι εκκίνησης δεν εντόπισαν ελλείποντα στοιχεία. Απαιτείται "
+"πραγματική επανεκκίνηση."
+
+#: src/anduinos_rescue_center/app.py:1100
+#, python-brace-format
+msgid "Repair failed: {error}"
+msgstr "Η επιδιόρθωση απέτυχε: {error}"
+
+#: src/anduinos_rescue_center/app.py:1105
+#, python-brace-format
+msgid "Repair stopped. Review the output before trying again."
+msgstr "Η επιδιόρθωση διακόπηκε. Ελέγξτε την έξοδο πριν δοκιμάσετε ξανά."
+
+#: src/anduinos_rescue_center/app.py:1107
+#: src/anduinos_rescue_center/client.py:229
+#: src/anduinos_rescue_center/client.py:232
+#, python-brace-format
+msgid "Boot repair failed"
+msgstr "Η επιδιόρθωση εκκίνησης απέτυχε"
+
+#: src/anduinos_rescue_center/app.py:1112
+#, python-brace-format
+msgid "Boot check or repair failed"
+msgstr "Ο έλεγχος ή η επιδιόρθωση εκκίνησης απέτυχε"
+
+#: src/anduinos_rescue_center/app.py:1114
+#, python-brace-format
+msgid "Check again"
+msgstr "Έλεγχος ξανά"
+
+#: src/anduinos_rescue_center/app.py:1127
+#, python-brace-format
+msgid "Rebuild boot for this installation?"
+msgstr "Να αναδημιουργηθεί η εκκίνηση για αυτήν την εγκατάσταση;"
+
+#: src/anduinos_rescue_center/app.py:1128
+#, python-brace-format
+msgid ""
+"System: {system}\n"
+"EFI partition: {esp}\n"
+"\n"
+"This will:\n"
+"• {changes}\n"
+"\n"
+"Other EFI vendors and the removable EFI/BOOT path will not be changed."
+msgstr ""
+"Σύστημα: {system}\n"
+"Διαμέρισμα EFI: {esp}\n"
+"\n"
+"Αυτό θα:\n"
+"• {changes}\n"
+"\n"
+"Οι άλλοι προμηθευτές EFI και η διαδρομή EFI/BOOT για αφαιρούμενα μέσα δεν θα τροποποιηθούν."
+
+#: src/anduinos_rescue_center/app.py:1133
+#, python-brace-format
+msgid "Repair boot"
+msgstr "Επιδιόρθωση εκκίνησης"
+
+#: src/anduinos_rescue_center/app.py:1148
+#, python-brace-format
+msgid "Rebuilding the offline boot path"
+msgstr "Αναδημιουργία της διαδρομής εκκίνησης εκτός σύνδεσης"
+
+#: src/anduinos_rescue_center/app.py:1149
+#, python-brace-format
+msgid ""
+"Keep the computer powered on. The stage and output below update as work "
+"proceeds."
+msgstr ""
+"Διατηρήστε τον υπολογιστή σε λειτουργία. Το στάδιο και η έξοδος παρακάτω "
+"ενημερώνονται καθώς προχωρά η εργασία."
+
+#: src/anduinos_rescue_center/app.py:1168
+#, python-brace-format
+msgid "Preparing repair…"
+msgstr "Προετοιμασία επιδιόρθωσης…"
+
+#: src/anduinos_rescue_center/app.py:1172
+#, python-brace-format
+msgid "View output"
+msgstr "Προβολή εξόδου"
+
+#: src/anduinos_rescue_center/app.py:1220
+#, python-brace-format
+msgid "Boot repair finished"
+msgstr "Η επιδιόρθωση εκκίνησης ολοκληρώθηκε"
+
+#: src/anduinos_rescue_center/app.py:1220
+#, python-brace-format
+msgid "Boot repair needs review"
+msgstr "Η επιδιόρθωση εκκίνησης χρειάζεται έλεγχο"
+
+#: src/anduinos_rescue_center/app.py:1221
+#, python-brace-format
+msgid ""
+"Static boot checks passed. Shut down Live, remove the installation media and"
+" test booting."
+msgstr ""
+"Οι στατικοί έλεγχοι εκκίνησης ολοκληρώθηκαν με επιτυχία. Τερματίστε το Live,"
+" αφαιρέστε το μέσο εγκατάστασης και δοκιμάστε την εκκίνηση."
+
+#: src/anduinos_rescue_center/app.py:1222
+#, python-brace-format
+msgid ""
+"Some checks still report a problem. Review the findings before rebooting."
+msgstr ""
+"Ορισμένοι έλεγχοι εξακολουθούν να αναφέρουν πρόβλημα. Ελέγξτε τα ευρήματα "
+"πριν από την επανεκκίνηση."
+
+#: src/anduinos_rescue_center/app.py:1241
+#, python-brace-format
+msgid "SYSTEM RECOVERY POINTS"
+msgstr "ΣΗΜΕΙΑ ΕΠΑΝΑΦΟΡΑΣ ΣΥΣΤΗΜΑΤΟΣ"
+
+#: src/anduinos_rescue_center/app.py:1244
+#, python-brace-format
+msgid "Create snapshot"
+msgstr "Δημιουργία στιγμιότυπου"
+
+#: src/anduinos_rescue_center/app.py:1261
+#, python-brace-format
+msgid "SYSTEM RECOVERY"
+msgstr "ΑΝΑΚΤΗΣΗ ΣΥΣΤΗΜΑΤΟΣ"
+
+#: src/anduinos_rescue_center/app.py:1263
+#, python-brace-format
+msgid ""
+"Create a recovery point or return this offline system to an earlier state. "
+"Personal files in Home are not part of system snapshots."
+msgstr ""
+"Δημιουργήστε ένα σημείο επαναφοράς ή επαναφέρετε αυτό το σύστημα που "
+"βρίσκεται εκτός λειτουργίας σε προηγούμενη κατάσταση. Τα προσωπικά αρχεία "
+"στον φάκελο Home δεν περιλαμβάνονται στα στιγμιότυπα συστήματος."
+
+#: src/anduinos_rescue_center/app.py:1277
+#, python-brace-format
+msgid "Loading system snapshots"
+msgstr "Φόρτωση στιγμιότυπων συστήματος"
+
+#: src/anduinos_rescue_center/app.py:1279
+#, python-brace-format
+msgid "Checking recovery metadata and completing any interrupted restore…"
+msgstr ""
+"Έλεγχος μεταδεδομένων ανάκτησης και ολοκλήρωση τυχόν διακοπείσας επαναφοράς…"
+
+#: src/anduinos_rescue_center/app.py:1299
+#, python-brace-format
+msgid "No system snapshots"
+msgstr "Δεν υπάρχουν στιγμιότυπα συστήματος"
+
+#: src/anduinos_rescue_center/app.py:1300
+#, python-brace-format
+msgid "Create a snapshot before making risky system changes."
+msgstr ""
+"Δημιουργήστε ένα στιγμιότυπο πριν κάνετε επικίνδυνες αλλαγές στο σύστημα."
+
+#: src/anduinos_rescue_center/app.py:1306
+#, python-brace-format
+msgid "System snapshot"
+msgstr "Στιγμιότυπο συστήματος"
+
+#: src/anduinos_rescue_center/app.py:1311
+#, python-brace-format
+msgid "Factory"
+msgstr "Εργοστασιακό"
+
+#: src/anduinos_rescue_center/app.py:1311
+#, python-brace-format
+msgid "Manual"
+msgstr "Χειροκίνητο"
+
+#: src/anduinos_rescue_center/app.py:1312
+#, python-brace-format
+msgid "Automatic"
+msgstr "Αυτόματο"
+
+#: src/anduinos_rescue_center/app.py:1312
+#, python-brace-format
+msgid "Before update"
+msgstr "Πριν από την ενημέρωση"
+
+#: src/anduinos_rescue_center/app.py:1313
+#, python-brace-format
+msgid "After update"
+msgstr "Μετά την ενημέρωση"
+
+#: src/anduinos_rescue_center/app.py:1313
+#, python-brace-format
+msgid "Before restore"
+msgstr "Πριν από την επαναφορά"
+
+#: src/anduinos_rescue_center/app.py:1314
+#, python-brace-format
+msgid "Imported"
+msgstr "Εισηγμένο"
+
+#: src/anduinos_rescue_center/app.py:1317
+#, python-brace-format
+msgid "Creating"
+msgstr "Δημιουργία"
+
+#: src/anduinos_rescue_center/app.py:1317
+#, python-brace-format
+msgid "Ready"
+msgstr "Έτοιμο"
+
+#: src/anduinos_rescue_center/app.py:1318
+#, python-brace-format
+msgid "Broken"
+msgstr "Κατεστραμμένο"
+
+#: src/anduinos_rescue_center/app.py:1318
+#, python-brace-format
+msgid "Incomplete"
+msgstr "Ατελές"
+
+#: src/anduinos_rescue_center/app.py:1319
+#, python-brace-format
+msgid "Deleting"
+msgstr "Διαγραφή…"
+
+#: src/anduinos_rescue_center/app.py:1328
+#, python-brace-format
+msgid "Restore"
+msgstr "Επαναφορά"
+
+#: src/anduinos_rescue_center/app.py:1345
+#: src/anduinos_rescue_center/snapshots.py:124
+#, python-brace-format
+msgid "Snapshot operation failed"
+msgstr "Η λειτουργία στιγμιότυπου απέτυχε"
+
+#: src/anduinos_rescue_center/app.py:1356
+#, python-brace-format
+msgid "Snapshot name"
+msgstr "Όνομα στιγμιότυπου"
+
+#: src/anduinos_rescue_center/app.py:1361
+#, python-brace-format
+msgid "Create a snapshot of the offline system?"
+msgstr "Να δημιουργηθεί στιγμιότυπο του συστήματος εκτός σύνδεσης;"
+
+#: src/anduinos_rescue_center/app.py:1362
+#, python-brace-format
+msgid "Personal files in Home are not included in system snapshots."
+msgstr ""
+"Τα προσωπικά αρχεία στον φάκελο Home δεν περιλαμβάνονται στα στιγμιότυπα "
+"συστήματος."
+
+#: src/anduinos_rescue_center/app.py:1366
+#, python-brace-format
+msgid "Create"
+msgstr "Δημιουργία"
+
+#: src/anduinos_rescue_center/app.py:1384
+#, python-brace-format
+msgid "Creating system snapshot"
+msgstr "Δημιουργία στιγμιότυπου συστήματος"
+
+#: src/anduinos_rescue_center/app.py:1385
+#, python-brace-format
+msgid "Keep the computer powered on until this finishes."
+msgstr "Αφήστε τον υπολογιστή ενεργοποιημένο μέχρι να ολοκληρωθεί."
+
+#: src/anduinos_rescue_center/app.py:1399
+#, python-brace-format
+msgid "Create a safety snapshot of the current system first"
+msgstr "Δημιουργία πρώτα ενός στιγμιότυπου ασφαλείας του τρέχοντος συστήματος"
+
+#: src/anduinos_rescue_center/app.py:1403
+#, python-brace-format
+msgid "Restore {snapshot}?"
+msgstr "Να γίνει επαναφορά του {snapshot};"
+
+#: src/anduinos_rescue_center/app.py:1404
+#, python-brace-format
+msgid "this snapshot"
+msgstr "αυτό το στιγμιότυπο"
+
+#: src/anduinos_rescue_center/app.py:1406
+#, python-brace-format
+msgid ""
+"The offline system root will be replaced immediately. Personal files in Home"
+" will not be changed. Do not power off the computer during recovery."
+msgstr ""
+"Η ρίζα του συστήματος εκτός σύνδεσης θα αντικατασταθεί αμέσως. Τα προσωπικά "
+"αρχεία στον φάκελο Home δεν θα τροποποιηθούν. Μην απενεργοποιήσετε τον "
+"υπολογιστή κατά την επαναφορά."
+
+#: src/anduinos_rescue_center/app.py:1412
+#, python-brace-format
+msgid "Restore system"
+msgstr "Επαναφορά συστήματος"
+
+#: src/anduinos_rescue_center/app.py:1427
+#, python-brace-format
+msgid "Restoring the offline system"
+msgstr "Επαναφορά του συστήματος εκτός σύνδεσης"
+
+#: src/anduinos_rescue_center/app.py:1428
+#, python-brace-format
+msgid "Keep the computer powered on until recovery is complete."
+msgstr ""
+"Αφήστε τον υπολογιστή ενεργοποιημένο μέχρι να ολοκληρωθεί η επαναφορά."
+
+#: src/anduinos_rescue_center/app.py:1446
+#, python-brace-format
+msgid "System restore complete"
+msgstr "Η επαναφορά συστήματος ολοκληρώθηκε"
+
+#: src/anduinos_rescue_center/app.py:1447
+#, python-brace-format
+msgid ""
+"Shut down the Live session, remove the installation media, and start "
+"AnduinOS."
+msgstr ""
+"Τερματίστε τη συνεδρία Live, αφαιρέστε το μέσο εγκατάστασης και εκκινήστε το"
+" AnduinOS."
+
+#: src/anduinos_rescue_center/boot.py:37
+#, python-brace-format
+msgid "The installed system has no readable /etc/fstab"
+msgstr "Το εγκατεστημένο σύστημα δεν έχει αναγνώσιμο αρχείο /etc/fstab"
+
+#: src/anduinos_rescue_center/boot.py:41
+#, python-brace-format
+msgid "A separate /boot partition needs manual repair"
+msgstr "Ένα ξεχωριστό διαμέρισμα /boot χρειάζεται χειροκίνητη επιδιόρθωση"
+
+#: src/anduinos_rescue_center/boot.py:44
+#, python-brace-format
+msgid "Exactly one FAT EFI partition must be declared in /etc/fstab"
+msgstr "Στο /etc/fstab πρέπει να δηλώνεται ακριβώς ένα διαμέρισμα EFI FAT"
+
+#: src/anduinos_rescue_center/boot.py:47
+#, python-brace-format
+msgid "The EFI partition must use an explicit UUID or PARTUUID"
+msgstr "Το διαμέρισμα EFI πρέπει να προσδιορίζεται ρητά με UUID ή PARTUUID"
+
+#: src/anduinos_rescue_center/boot.py:59
+#, python-brace-format
+msgid "Could not identify the EFI partition"
+msgstr "Δεν ήταν δυνατός ο εντοπισμός του διαμερίσματος EFI"
+
+#: src/anduinos_rescue_center/boot.py:63
+#, python-brace-format
+msgid "lsblk returned invalid EFI partition data"
+msgstr "Η εντολή lsblk επέστρεψε μη έγκυρα δεδομένα για το διαμέρισμα EFI"
+
+#: src/anduinos_rescue_center/boot.py:72
+#, python-brace-format
+msgid "The declared EFI partition is not FAT"
+msgstr "Το δηλωμένο διαμέρισμα EFI δεν είναι FAT"
+
+#: src/anduinos_rescue_center/boot.py:76
+#, python-brace-format
+msgid "The declared FAT partition is not marked as an EFI System Partition"
+msgstr ""
+"Το δηλωμένο διαμέρισμα FAT δεν έχει επισημανθεί ως διαμέρισμα συστήματος EFI"
+
+#: src/anduinos_rescue_center/boot.py:80
+#, python-brace-format
+msgid "The EFI device or partition number is invalid"
+msgstr "Η συσκευή ή ο αριθμός διαμερίσματος EFI δεν είναι έγκυρος"
+
+#: src/anduinos_rescue_center/boot.py:91
+#, python-brace-format
+msgid "The EFI partition was not uniquely found on the selected disk"
+msgstr ""
+"Δεν εντοπίστηκε με μοναδικό τρόπο το διαμέρισμα EFI στον επιλεγμένο δίσκο"
+
+#: src/anduinos_rescue_center/boot.py:151
+#, python-brace-format
+msgid "The selected installation must be offline and unmounted"
+msgstr ""
+"Το επιλεγμένο σύστημα πρέπει να είναι εκτός σύνδεσης και να μην είναι "
+"προσαρτημένο"
+
+#: src/anduinos_rescue_center/boot.py:157
+#, python-brace-format
+msgid "No installed kernel was found in /boot"
+msgstr "Δεν βρέθηκε εγκατεστημένος πυρήνας στο /boot"
+
+#: src/anduinos_rescue_center/boot.py:159
+#, python-brace-format
+msgid "At least one kernel has no matching initrd"
+msgstr "Τουλάχιστον ένας πυρήνας δεν έχει αντίστοιχο initrd"
+
+#: src/anduinos_rescue_center/boot.py:161
+#, python-brace-format
+msgid ""
+"GRUB configuration is missing or does not reference a complete kernel/initrd"
+" pair"
+msgstr ""
+"Η διαμόρφωση του GRUB λείπει ή δεν αναφέρεται σε πλήρες ζεύγος πυρήνα/initrd"
+
+#: src/anduinos_rescue_center/boot.py:170
+#, python-brace-format
+msgid "The EFI partition is already mounted; unmount it before repair"
+msgstr ""
+"Η κατάτμηση EFI είναι ήδη προσαρτημένη· αποπροσαρτήστε την πριν από την "
+"επιδιόρθωση"
+
+#: src/anduinos_rescue_center/boot.py:178
+#, python-brace-format
+msgid "The AnduinOS EFI loader is missing"
+msgstr "Λείπει ο φορτωτής εκκίνησης EFI του AnduinOS"
+
+#: src/anduinos_rescue_center/boot.py:181
+#, python-brace-format
+msgid "No matching AnduinOS firmware boot entry was found"
+msgstr "Δεν βρέθηκε αντίστοιχη εγγραφή εκκίνησης υλικολογισμικού του AnduinOS"
+
+#: src/anduinos_rescue_center/boot.py:183
+#, python-brace-format
+msgid ""
+"An active AnduinOS firmware boot entry could not be verified in BootOrder"
+msgstr ""
+"Δεν ήταν δυνατή η επαλήθευση ενεργής εγγραφής εκκίνησης υλικολογισμικού του "
+"AnduinOS στο BootOrder"
+
+#: src/anduinos_rescue_center/boot.py:186
+#, python-brace-format
+msgid "The Live session was not booted with accessible UEFI variables"
+msgstr "Η συνεδρία Live δεν εκκινήθηκε με προσβάσιμες μεταβλητές UEFI"
+
+#: src/anduinos_rescue_center/boot.py:195
+#, python-brace-format
+msgid "Install GRUB only in EFI/AnduinOS"
+msgstr "Εγκατάσταση του GRUB μόνο στο EFI/AnduinOS"
+
+#: src/anduinos_rescue_center/boot.py:195
+#, python-brace-format
+msgid "Rebuild installed initrds"
+msgstr "Αναδημιουργία των εγκατεστημένων initrd"
+
+#: src/anduinos_rescue_center/boot.py:196
+#, python-brace-format
+msgid "Regenerate GRUB configuration"
+msgstr "Αναδημιουργία της διαμόρφωσης του GRUB"
+
+#: src/anduinos_rescue_center/boot.py:197
+#, python-brace-format
+msgid "Create an AnduinOS firmware entry first in BootOrder only if missing"
+msgstr ""
+"Δημιουργία εγγραφής υλικολογισμικού του AnduinOS στην αρχή του BootOrder, "
+"μόνο αν λείπει"
+
+#: src/anduinos_rescue_center/boot.py:205
+#: src/anduinos_rescue_center/boot.py:271
+#, python-brace-format
+msgid "Boot repair command failed: {command}"
+msgstr "Η εντολή επιδιόρθωσης εκκίνησης απέτυχε: {command}"
+
+#: src/anduinos_rescue_center/boot.py:222
+#: src/anduinos_rescue_center/client.py:33
+#, python-brace-format
+msgid "Completed: {command}"
+msgstr "Ολοκληρώθηκε: {command}"
+
+#: src/anduinos_rescue_center/boot.py:253
+#, python-brace-format
+msgid "Boot repair output is too large: {command}"
+msgstr "Η έξοδος επιδιόρθωσης εκκίνησης είναι υπερβολικά μεγάλη: {command}"
+
+#: src/anduinos_rescue_center/boot.py:279
+#, python-brace-format
+msgid "Checking the selected system and EFI partition again"
+msgstr "Έλεγχος ξανά του επιλεγμένου συστήματος και της κατάτμησης EFI"
+
+#: src/anduinos_rescue_center/boot.py:282
+#, python-brace-format
+msgid "The selected EFI partition changed or cannot be repaired safely"
+msgstr ""
+"Η επιλεγμένη κατάτμηση EFI άλλαξε ή δεν μπορεί να επιδιορθωθεί με ασφάλεια"
+
+#: src/anduinos_rescue_center/boot.py:288
+#, python-brace-format
+msgid "The selected EFI partition changed before repair"
+msgstr "Η επιλεγμένη κατάτμηση EFI άλλαξε πριν από την επιδιόρθωση"
+
+#: src/anduinos_rescue_center/boot.py:292
+#: src/anduinos_rescue_center/client.py:36
+#, python-brace-format
+msgid "Opening {system} and its EFI partition {esp}"
+msgstr "Άνοιγμα του {system} και της κατάτμησης EFI {esp}"
+
+#: src/anduinos_rescue_center/boot.py:297
+#, python-brace-format
+msgid "Installed boot repair tool is missing: /{tool}"
+msgstr "Λείπει το εγκατεστημένο εργαλείο επιδιόρθωσης εκκίνησης: /{tool}"
+
+#: src/anduinos_rescue_center/boot.py:299
+#, python-brace-format
+msgid "Rebuilding installed initrds; this may take several minutes"
+msgstr ""
+"Αναδημιουργία των εγκατεστημένων initrd· αυτό μπορεί να διαρκέσει αρκετά "
+"λεπτά"
+
+#: src/anduinos_rescue_center/boot.py:306
+#, python-brace-format
+msgid "Dracut produced no matching kernel/initrd pair"
+msgstr "Το Dracut δεν δημιούργησε αντίστοιχο ζεύγος kernel/initrd"
+
+#: src/anduinos_rescue_center/boot.py:310
+#: src/anduinos_rescue_center/client.py:39
+#, python-brace-format
+msgid "Checking installed initrd for kernel {kernel}"
+msgstr "Έλεγχος του εγκατεστημένου initrd για τον kernel {kernel}"
+
+#: src/anduinos_rescue_center/boot.py:316
+#, python-brace-format
+msgid "An installed-system initrd still contains Live boot modules"
+msgstr ""
+"Ένα initrd του εγκατεστημένου συστήματος εξακολουθεί να περιέχει μονάδες "
+"εκκίνησης Live"
+
+#: src/anduinos_rescue_center/boot.py:318
+#, python-brace-format
+msgid "The Btrfs initrd lacks the AnduinOS recovery module"
+msgstr "Από το initrd Btrfs λείπει η μονάδα ανάκτησης AnduinOS"
+
+#: src/anduinos_rescue_center/boot.py:320
+#, python-brace-format
+msgid "Installing AnduinOS GRUB on the selected EFI partition"
+msgstr "Εγκατάσταση του GRUB του AnduinOS στο επιλεγμένο διαμέρισμα EFI"
+
+#: src/anduinos_rescue_center/boot.py:325
+#, python-brace-format
+msgid "Generating the installed system's GRUB menu"
+msgstr "Δημιουργία του μενού GRUB του εγκατεστημένου συστήματος"
+
+#: src/anduinos_rescue_center/boot.py:332
+#, python-brace-format
+msgid "Boot repair did not produce a complete kernel, GRUB and EFI chain"
+msgstr ""
+"Η επιδιόρθωση εκκίνησης δεν δημιούργησε πλήρη αλυσίδα πυρήνα, GRUB και EFI"
+
+#: src/anduinos_rescue_center/boot.py:335
+#, python-brace-format
+msgid "EFI files were repaired, but firmware variables are unavailable"
+msgstr ""
+"Τα αρχεία EFI επιδιορθώθηκαν, αλλά οι μεταβλητές υλικολογισμικού δεν είναι "
+"διαθέσιμες"
+
+#: src/anduinos_rescue_center/boot.py:337
+#, python-brace-format
+msgid "Creating the missing AnduinOS firmware boot entry"
+msgstr ""
+"Δημιουργία της καταχώρισης εκκίνησης AnduinOS που λείπει από το "
+"υλικολογισμικό"
+
+#: src/anduinos_rescue_center/boot.py:342
+#, python-brace-format
+msgid "Re-checking the complete boot path without writing"
+msgstr "Επανέλεγχος της πλήρους διαδρομής εκκίνησης χωρίς εγγραφή αλλαγών"
+
+#: src/anduinos_rescue_center/client.py:75
+#, python-brace-format
+msgid "Storage scan failed"
+msgstr "Η σάρωση αποθηκευτικού χώρου απέτυχε"
+
+#: src/anduinos_rescue_center/client.py:79
+#: src/anduinos_rescue_center/client.py:105
+#: src/anduinos_rescue_center/client.py:308
+#: src/anduinos_rescue_center/client.py:364
+#, python-brace-format
+msgid "The rescue helper returned invalid data"
+msgstr "Ο βοηθός διάσωσης επέστρεψε μη έγκυρα δεδομένα"
+
+#: src/anduinos_rescue_center/client.py:81
+#: src/anduinos_rescue_center/client.py:107
+#: src/anduinos_rescue_center/client.py:310
+#: src/anduinos_rescue_center/client.py:366
+#, python-brace-format
+msgid "The rescue helper protocol is incompatible"
+msgstr "Το πρωτόκολλο του βοηθού διάσωσης δεν είναι συμβατό"
+
+#: src/anduinos_rescue_center/client.py:92
+#: src/anduinos_rescue_center/client.py:120
+#: src/anduinos_rescue_center/client.py:242
+#: src/anduinos_rescue_center/client.py:323
+#: src/anduinos_rescue_center/client.py:354
+#, python-brace-format
+msgid "Invalid rescue target identity"
+msgstr "Μη έγκυρη ταυτότητα στόχου διάσωσης"
+
+#: src/anduinos_rescue_center/client.py:101
+#, python-brace-format
+msgid "Target inspection failed"
+msgstr "Η επιθεώρηση του στόχου απέτυχε"
+
+#: src/anduinos_rescue_center/client.py:122
+#: src/anduinos_rescue_center/operations.py:57
+#, python-brace-format
+msgid "The new password is empty or unsupported"
+msgstr "Ο νέος κωδικός πρόσβασης είναι κενός ή δεν υποστηρίζεται"
+
+#: src/anduinos_rescue_center/client.py:132
+#: src/anduinos_rescue_center/operations.py:71
+#, python-brace-format
+msgid "Password reset failed"
+msgstr "Η επαναφορά του κωδικού πρόσβασης απέτυχε"
+
+#: src/anduinos_rescue_center/client.py:143
+#, python-brace-format
+msgid "File listing failed"
+msgstr "Η καταχώριση των αρχείων απέτυχε"
+
+#: src/anduinos_rescue_center/client.py:156
+#, python-brace-format
+msgid "Export failed"
+msgstr "Η εξαγωγή απέτυχε"
+
+#: src/anduinos_rescue_center/client.py:161
+#, python-brace-format
+msgid "The rescue helper did not report the exported file"
+msgstr "Το βοηθητικό πρόγραμμα διάσωσης δεν ανέφερε το εξαγόμενο αρχείο"
+
+#: src/anduinos_rescue_center/client.py:171
+#, python-brace-format
+msgid "Snapshot listing failed"
+msgstr "Η καταχώριση των στιγμιότυπων απέτυχε"
+
+#: src/anduinos_rescue_center/client.py:182
+#, python-brace-format
+msgid "Invalid snapshot name"
+msgstr "Μη έγκυρο όνομα στιγμιότυπου"
+
+#: src/anduinos_rescue_center/client.py:184
+#, python-brace-format
+msgid "Snapshot creation failed"
+msgstr "Η δημιουργία στιγμιότυπου απέτυχε"
+
+#: src/anduinos_rescue_center/client.py:198
+#, python-brace-format
+msgid "Invalid recovery point ID"
+msgstr "Μη έγκυρο αναγνωριστικό σημείου επαναφοράς"
+
+#: src/anduinos_rescue_center/client.py:201
+#, python-brace-format
+msgid "System restore failed"
+msgstr "Η επαναφορά του συστήματος απέτυχε"
+
+#: src/anduinos_rescue_center/client.py:213
+#, python-brace-format
+msgid "Boot diagnosis failed"
+msgstr "Η διάγνωση εκκίνησης απέτυχε"
+
+#: src/anduinos_rescue_center/client.py:225
+#, python-brace-format
+msgid "Invalid EFI partition identity"
+msgstr "Μη έγκυρη ταυτότητα διαμερίσματος EFI"
+
+#: src/anduinos_rescue_center/client.py:286
+#, python-brace-format
+msgid "The rescue helper returned too much data"
+msgstr "Το βοηθητικό πρόγραμμα διάσωσης επέστρεψε υπερβολικά πολλά δεδομένα"
+
+#: src/anduinos_rescue_center/client.py:290
+#, python-brace-format
+msgid "The rescue helper returned an oversized progress line"
+msgstr "Ο βοηθός αποκατάστασης επέστρεψε μια υπερβολικά μεγάλη γραμμή προόδου"
+
+#: src/anduinos_rescue_center/client.py:321
+#, python-brace-format
+msgid "The emergency terminal is available only in AnduinOS Live"
+msgstr "Το τερματικό έκτακτης ανάγκης είναι διαθέσιμο μόνο στο AnduinOS Live"
+
+#: src/anduinos_rescue_center/client.py:326
+#: src/anduinos_rescue_center/client.py:341
+#, python-brace-format
+msgid "Ptyxis is not installed in this Live session"
+msgstr "Το Ptyxis δεν είναι εγκατεστημένο σε αυτήν τη συνεδρία Live"
+
+#: src/anduinos_rescue_center/client.py:328
+#, python-brace-format
+msgid "Offline AnduinOS recovery"
+msgstr "Αποκατάσταση AnduinOS χωρίς σύνδεση"
+
+#: src/anduinos_rescue_center/client.py:338
+#, python-brace-format
+msgid "A verified AnduinOS Live session is required"
+msgstr "Απαιτείται επαληθευμένη συνεδρία AnduinOS Live"
+
+#: src/anduinos_rescue_center/client.py:342
+#, python-brace-format
+msgid "AnduinOS Live terminal"
+msgstr "Τερματικό AnduinOS Live"
+
+#: src/anduinos_rescue_center/files.py:34
+#: src/anduinos_rescue_center/files.py:87
+#: src/anduinos_rescue_center/offline_env.py:27
+#: src/anduinos_rescue_center/operations.py:43
+#: src/anduinos_rescue_center/storage.py:317
+#, python-brace-format
+msgid "The selected partition is not an AnduinOS installation"
+msgstr "Η επιλεγμένη κατάτμηση δεν είναι εγκατάσταση AnduinOS"
+
+#: src/anduinos_rescue_center/files.py:37
+#, python-brace-format
+msgid "The selected location is not a directory"
+msgstr "Η επιλεγμένη τοποθεσία δεν είναι κατάλογος"
+
+#: src/anduinos_rescue_center/files.py:80
+#: src/anduinos_rescue_center/privileged.py:41
+#, python-brace-format
+msgid "Could not identify the desktop user"
+msgstr "Δεν ήταν δυνατός ο εντοπισμός του χρήστη της επιφάνειας εργασίας"
+
+#: src/anduinos_rescue_center/files.py:90
+#, python-brace-format
+msgid "Export a file or folder instead of the whole system"
+msgstr "Εξαγάγετε ένα αρχείο ή έναν φάκελο αντί για ολόκληρο το σύστημα"
+
+#: src/anduinos_rescue_center/files.py:93
+#, python-brace-format
+msgid "Symbolic links and special files cannot be exported"
+msgstr "Δεν είναι δυνατή η εξαγωγή συμβολικών συνδέσμων και ειδικών αρχείων"
+
+#: src/anduinos_rescue_center/files.py:96
+#, python-brace-format
+msgid "A file with this name already exists at the destination"
+msgstr "Υπάρχει ήδη ένα αρχείο με αυτό το όνομα στον προορισμό"
+
+#: src/anduinos_rescue_center/files.py:105
+#, python-brace-format
+msgid "Could not sync exported data"
+msgstr "Δεν ήταν δυνατός ο συγχρονισμός των εξαγόμενων δεδομένων"
+
+#: src/anduinos_rescue_center/files.py:125
+#, python-brace-format
+msgid "The selected path escapes the offline system"
+msgstr "Η επιλεγμένη διαδρομή βρίσκεται εκτός του συστήματος εκτός σύνδεσης"
+
+#: src/anduinos_rescue_center/files.py:139
+#, python-brace-format
+msgid "Choose a folder in your Home directory or on your removable media"
+msgstr ""
+"Επιλέξτε έναν φάκελο στον προσωπικό σας κατάλογο ή σε αφαιρούμενο μέσο"
+
+#: src/anduinos_rescue_center/files.py:148
+#, python-brace-format
+msgid "Invalid offline file path"
+msgstr "Μη έγκυρη διαδρομή αρχείου στο σύστημα εκτός σύνδεσης"
+
+#: src/anduinos_rescue_center/files.py:183
+#, python-brace-format
+msgid "Cannot export special file: {name}"
+msgstr "Δεν είναι δυνατή η εξαγωγή ειδικού αρχείου: {name}"
+
+#: src/anduinos_rescue_center/offline_env.py:25
+#, python-brace-format
+msgid "The selected system root is unavailable or unsafe"
+msgstr "Η επιλεγμένη ρίζα συστήματος δεν είναι διαθέσιμη ή ασφαλής"
+
+#: src/anduinos_rescue_center/offline_env.py:41
+#, python-brace-format
+msgid "Unsafe target mount directory: /{path}"
+msgstr "Μη ασφαλής κατάλογος προσάρτησης προορισμού: /{path}"
+
+#: src/anduinos_rescue_center/offline_env.py:48
+#, python-brace-format
+msgid "Mount failed: {command}"
+msgstr "Απέτυχε η προσάρτηση: {command}"
+
+#: src/anduinos_rescue_center/offline_env.py:87
+#, python-brace-format
+msgid "Unmount the offline installation before opening it for repair"
+msgstr ""
+"Αποπροσαρτήστε την εγκατάσταση εκτός σύνδεσης πριν την ανοίξετε για "
+"επιδιόρθωση"
+
+#: src/anduinos_rescue_center/offline_env.py:134
+#, python-brace-format
+msgid "Could not unmount recovery filesystems: {details}"
+msgstr ""
+"Δεν ήταν δυνατός ο αποπροσαρτήματος των συστημάτων αρχείων ανάκτησης: "
+"{details}"
+
+#: src/anduinos_rescue_center/offline_env.py:142
+#, python-brace-format
+msgid "An interactive AnduinOS Live terminal is required"
+msgstr "Απαιτείται ένα διαδραστικό τερματικό AnduinOS Live"
+
+#: src/anduinos_rescue_center/offline_env.py:146
+#, python-brace-format
+msgid ""
+"This is a root shell in the selected offline system. Type exit to unmount "
+"it.\n"
+msgstr ""
+"Αυτό είναι ένα κέλυφος root στο επιλεγμένο σύστημα εκτός σύνδεσης. "
+"Πληκτρολογήστε exit για να το αποπροσαρτήσετε.\n"
+
+#: src/anduinos_rescue_center/operations.py:35
+#: src/anduinos_rescue_center/storage.py:306
+#, python-brace-format
+msgid "The currently running system cannot be a rescue target"
+msgstr ""
+"Το σύστημα που εκτελείται αυτήν τη στιγμή δεν μπορεί να χρησιμοποιηθεί ως "
+"στόχος διάσωσης"
+
+#: src/anduinos_rescue_center/operations.py:37
+#, python-brace-format
+msgid "Unmount the selected partition before changing a password"
+msgstr ""
+"Αποπροσαρτήστε το επιλεγμένο διαμέρισμα πριν αλλάξετε κωδικό πρόσβασης"
+
+#: src/anduinos_rescue_center/operations.py:55
+#, python-brace-format
+msgid "Invalid local account name"
+msgstr "Μη έγκυρο όνομα τοπικού λογαριασμού"
+
+#: src/anduinos_rescue_center/operations.py:60
+#, python-brace-format
+msgid "The selected local account no longer exists"
+msgstr "Ο επιλεγμένος τοπικός λογαριασμός δεν υπάρχει πλέον"
+
+#: src/anduinos_rescue_center/operations.py:77
+#, python-brace-format
+msgid "Could not sync the new password"
+msgstr "Δεν ήταν δυνατός ο συγχρονισμός του νέου κωδικού πρόσβασης"
+
+#: src/anduinos_rescue_center/privileged.py:21
+#, python-brace-format
+msgid "The rescue helper must run as root"
+msgstr "Το βοηθητικό πρόγραμμα διάσωσης πρέπει να εκτελείται ως root"
+
+#: src/anduinos_rescue_center/privileged.py:33
+#, python-brace-format
+msgid "The new password is too long"
+msgstr "Ο νέος κωδικός πρόσβασης είναι υπερβολικά μεγάλος"
+
+#: src/anduinos_rescue_center/privileged.py:53
+#, python-brace-format
+msgid "Invalid protection choice"
+msgstr "Μη έγκυρη επιλογή προστασίας"
+
+#: src/anduinos_rescue_center/snapshots.py:39
+#, python-brace-format
+msgid "The snapshot name is invalid"
+msgstr "Το όνομα του στιγμιότυπου δεν είναι έγκυρο"
+
+#: src/anduinos_rescue_center/snapshots.py:44
+#, python-brace-format
+msgid "Created from AnduinOS Rescue Center"
+msgstr "Δημιουργήθηκε από το Κέντρο διάσωσης AnduinOS"
+
+#: src/anduinos_rescue_center/snapshots.py:60
+#, python-brace-format
+msgid "The recovery point ID is invalid"
+msgstr "Το αναγνωριστικό του σημείου επαναφοράς δεν είναι έγκυρο"
+
+#: src/anduinos_rescue_center/snapshots.py:94
+#, python-brace-format
+msgid "The currently running system cannot be a recovery target"
+msgstr ""
+"Το σύστημα που εκτελείται αυτήν τη στιγμή δεν μπορεί να χρησιμοποιηθεί ως "
+"στόχος επαναφοράς"
+
+#: src/anduinos_rescue_center/snapshots.py:96
+#, python-brace-format
+msgid "Unmount the selected partition before managing snapshots"
+msgstr ""
+"Αποπροσαρτήστε το επιλεγμένο διαμέρισμα πριν από τη διαχείριση στιγμιότυπων"
+
+#: src/anduinos_rescue_center/snapshots.py:98
+#, python-brace-format
+msgid "System snapshots require the standard AnduinOS Btrfs layout"
+msgstr ""
+"Τα στιγμιότυπα συστήματος απαιτούν την τυπική διάταξη Btrfs του AnduinOS"
+
+#: src/anduinos_rescue_center/snapshots.py:105
+#, python-brace-format
+msgid "The selected partition is not a standard AnduinOS Btrfs installation"
+msgstr ""
+"Το επιλεγμένο διαμέρισμα δεν είναι τυπική εγκατάσταση Btrfs του AnduinOS"
+
+#: src/anduinos_rescue_center/snapshots.py:128
+#, python-brace-format
+msgid "The snapshot engine returned invalid data"
+msgstr "Η μηχανή στιγμιότυπων επέστρεψε μη έγκυρα δεδομένα"
+
+#: src/anduinos_rescue_center/snapshots.py:130
+#, python-brace-format
+msgid "The snapshot engine protocol is incompatible"
+msgstr "Το πρωτόκολλο της μηχανής στιγμιότυπων δεν είναι συμβατό"
+
+#: src/anduinos_rescue_center/storage.py:58
+#, python-brace-format
+msgid "Could not enumerate storage"
+msgstr "Δεν ήταν δυνατή η απαρίθμηση των συσκευών αποθήκευσης"
+
+#: src/anduinos_rescue_center/storage.py:62
+#: src/anduinos_rescue_center/storage.py:64
+#: src/anduinos_rescue_center/storage.py:349
+#, python-brace-format
+msgid "lsblk returned invalid storage data"
+msgstr "Η εντολή lsblk επέστρεψε μη έγκυρα δεδομένα αποθήκευσης"
+
+#: src/anduinos_rescue_center/storage.py:196
+#: src/anduinos_rescue_center/storage.py:245
+#, python-brace-format
+msgid "Mount failed"
+msgstr "Η προσάρτηση απέτυχε"
+
+#: src/anduinos_rescue_center/storage.py:211
+#: src/anduinos_rescue_center/storage.py:257
+#, python-brace-format
+msgid "Could not unmount {mountpoint}"
+msgstr "Δεν ήταν δυνατή η αποπροσάρτηση του {mountpoint}"
+
+#: src/anduinos_rescue_center/storage.py:232
+#, python-brace-format
+msgid "This filesystem is not supported for repair operations"
+msgstr ""
+"Αυτό το σύστημα αρχείων δεν υποστηρίζεται για λειτουργίες επιδιόρθωσης"
+
+#: src/anduinos_rescue_center/storage.py:345
+#, python-brace-format
+msgid "Could not re-check the selected disk"
+msgstr "Δεν ήταν δυνατός ο επανέλεγχος του επιλεγμένου δίσκου"
+
+#: src/anduinos_rescue_center/storage.py:362
+#, python-brace-format
+msgid "The selected partition changed after it was scanned"
+msgstr "Το επιλεγμένο διαμέρισμα άλλαξε μετά τη σάρωσή του"
+
+#: src/anduinos_rescue_center/storage.py:379
+#, python-brace-format
+msgid "The selected partition is no longer available"
+msgstr "Το επιλεγμένο διαμέρισμα δεν είναι πλέον διαθέσιμο"
+
+#: src/anduinos_rescue_center/storage.py:403
+#, python-brace-format
+msgid "Invalid block-device path"
+msgstr "Μη έγκυρη διαδρομή συσκευής μπλοκ"
+
+#: src/anduinos_rescue_center/storage.py:407
+#, python-brace-format
+msgid "Block device is unavailable"
+msgstr "Η συσκευή μπλοκ δεν είναι διαθέσιμη"
+
+#: src/anduinos_rescue_center/storage.py:409
+#, python-brace-format
+msgid "Target is not a block device"
+msgstr "Ο προορισμός δεν είναι συσκευή μπλοκ"

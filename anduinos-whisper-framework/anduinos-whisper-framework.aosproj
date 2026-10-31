@@ -1,0 +1,81 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-whisper-framework</PackageName>
+    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Offline voice-typing engine for AnduinOS, using PipeWire and whisper.cpp.</PackageDescription>
+    <Section>utils</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon stonking-addon</TargetSuites>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute stonking-addon=stonking" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Dependency Include="python3" />
+    <Dependency Include="python3-gi" />
+    <Dependency Include="libc6" />
+    <Dependency Include="libgcc-s1" />
+    <Dependency Include="libglib2.0-0t64" />
+    <Dependency Include="libgstreamer1.0-0" />
+    <Dependency Include="libgstreamer-plugins-base1.0-0" />
+    <Dependency Include="dconf-gsettings-backend | gsettings-backend" />
+    <Dependency Include="gir1.2-gstreamer-1.0" />
+    <Dependency Include="gir1.2-gst-plugins-base-1.0" />
+    <Dependency Include="gstreamer1.0-pipewire" />
+    <Dependency Include="gstreamer1.0-plugins-base" />
+    <Dependency Include="gstreamer1.0-plugins-good" />
+    <Dependency Include="gstreamer1.0-plugins-bad" />
+    <Dependency Include="anduinos-whisper-worker" />
+    <Dependency Include="pipewire-bin" />
+    <Dependency Include="sound-theme-freedesktop" />
+    <Dependency Include="libopencc1.1" Condition="'$(Suite)' == 'resolute-addon'" />
+    <Dependency Include="libopencc1.4" Condition="'$(Suite)' == 'stonking-addon'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="bash scripts/download-model.sh" />
+    <PrebuildCommand Run="bash scripts/download-vad-model.sh" />
+    <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IncludeScript Include="obj/amd64/anduinos-whisper-framework" Target="/usr/libexec/anduinos-whisper-framework" Condition="'$(Arch)' == 'amd64'" />
+    <IncludeScript Include="obj/arm64/anduinos-whisper-framework" Target="/usr/libexec/anduinos-whisper-framework" Condition="'$(Arch)' == 'arm64'" />
+    <IncludeScript Include="obj/amd64/anduinos-voice-diagnostics" Target="/usr/bin/anduinos-voice-diagnostics" Condition="'$(Arch)' == 'amd64'" />
+    <IncludeScript Include="obj/arm64/anduinos-voice-diagnostics" Target="/usr/bin/anduinos-voice-diagnostics" Condition="'$(Arch)' == 'arm64'" />
+    <!-- Python is retained only for the existing GTK import API, not service execution. -->
+    <IncludeFile Include="src/anduinos_whisper_framework/__init__.py" Target="/usr/lib/python3/dist-packages/anduinos_whisper_framework/__init__.py" />
+    <IncludeFile Include="src/anduinos_whisper_framework/config.py" Target="/usr/lib/python3/dist-packages/anduinos_whisper_framework/config.py" />
+    <IncludeFile Include="src/anduinos_whisper_framework/live_policy.py" Target="/usr/lib/python3/dist-packages/anduinos_whisper_framework/live_policy.py" />
+    <IncludeFile Include="src/anduinos_whisper_framework/diagnostics.py" Target="/usr/lib/python3/dist-packages/anduinos_whisper_framework/diagnostics.py" />
+    <IncludeFile Include="src/anduinos_whisper_framework/audio.py" Target="/usr/lib/python3/dist-packages/anduinos_whisper_framework/audio.py" />
+    <IncludeFile Include="src/anduinos_whisper_framework/devices.py" Target="/usr/lib/python3/dist-packages/anduinos_whisper_framework/devices.py" />
+    <IncludeFile Include="data/com.anduinos.VoiceTyping.service" Target="/usr/share/dbus-1/services/com.anduinos.VoiceTyping.service" />
+    <IncludeFile Include="data/com.anduinos.voice-typing.gschema.xml" Target="/usr/share/glib-2.0/schemas/com.anduinos.voice-typing.gschema.xml" />
+    <IncludeFile Include="obj/models/ggml-base.bin" Target="/usr/share/anduinos-whisper-framework/models/ggml-base.bin" />
+    <IncludeFile Include="obj/models/ggml-silero-v6.2.0.bin" Target="/usr/share/anduinos-whisper-framework/models/ggml-silero-v6.2.0.bin" />
+    <IncludeFile Include="VAD-NOTICE" Target="/usr/share/doc/anduinos-whisper-framework/VAD-NOTICE" />
+    <IncludeFile Include="VAD-LICENSE" Target="/usr/share/doc/anduinos-whisper-framework/VAD-LICENSE" />
+    <IncludeFile Include="MODEL-NOTICE" Target="/usr/share/doc/anduinos-whisper-framework/MODEL-NOTICE" />
+    <IncludeFile Include="MODEL-LICENSE" Target="/usr/share/doc/anduinos-whisper-framework/MODEL-LICENSE" />
+    <IncludeFile Include="obj/amd64/RUST-THIRD-PARTY-NOTICES" Target="/usr/share/doc/anduinos-whisper-framework/RUST-THIRD-PARTY-NOTICES" Condition="'$(Arch)' == 'amd64'" />
+    <IncludeFile Include="obj/arm64/RUST-THIRD-PARTY-NOTICES" Target="/usr/share/doc/anduinos-whisper-framework/RUST-THIRD-PARTY-NOTICES" Condition="'$(Arch)' == 'arm64'" />
+    <IncludeFolder Include="data/benchmark" Target="/usr/share/anduinos-whisper-framework/benchmark" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="gtk-helpers" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+    <TestCommand Name="rust" Profile="anduinos-package-release-test" Run="cargo test --locked" TimeoutSeconds="3600" />
+    <TestCommand Name="rust-native" Profile="voice-native" Run="cargo test --locked --test native_runtime -- --ignored --test-threads=1" TimeoutSeconds="1800" />
+    <TestCommand Name="benchmarks" Profile="voice-cpu" Run="bash tests/run-cpu.sh" TimeoutSeconds="7200" />
+  </ItemGroup>
+</Project>

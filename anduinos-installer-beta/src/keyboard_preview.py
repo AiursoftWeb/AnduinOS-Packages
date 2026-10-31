@@ -1,10 +1,8 @@
-"""Isolated XKB translation for the installer's physical-keyboard tester.
+"""Compile and inspect XKB choices independently of the desktop compositor.
 
-The desktop compositor translates key events with the session's active
-layout.  The installer must instead preview the layout selected for the target
-system without mutating the user's GNOME input sources.  This module consumes
-GTK's raw XKB-compatible keycodes and translates them with a private
-libxkbcommon state machine.
+The installer uses the keymap signature to verify the real session keymap.
+The isolated translator also supports testing XKB behavior without a desktop;
+it must not replace normal GTK input handling in the installer text fields.
 """
 
 from __future__ import annotations
@@ -88,6 +86,15 @@ def _library():
     lib.xkb_keymap_unref.argtypes = (pointer,)
     lib.xkb_keymap_mod_get_index.argtypes = (pointer, ctypes.c_char_p)
     lib.xkb_keymap_mod_get_index.restype = ctypes.c_uint32
+    lib.xkb_keymap_num_levels_for_key.argtypes = (
+        pointer, ctypes.c_uint32, ctypes.c_uint32,
+    )
+    lib.xkb_keymap_num_levels_for_key.restype = ctypes.c_uint32
+    lib.xkb_keymap_key_get_syms_by_level.argtypes = (
+        pointer, ctypes.c_uint32, ctypes.c_uint32, ctypes.c_uint32,
+        ctypes.POINTER(ctypes.POINTER(ctypes.c_uint32)),
+    )
+    lib.xkb_keymap_key_get_syms_by_level.restype = ctypes.c_int
 
     lib.xkb_state_new.argtypes = (pointer,)
     lib.xkb_state_new.restype = pointer
@@ -225,11 +232,11 @@ class XkbKeyboardPreview:
         """Atomically replace the preview keymap and reset transient state."""
 
         names = _RuleNames(
-            None,
+            b"evdev",
             self._model.encode(),
             layout.encode(),
-            variant.encode() if variant else None,
-            None,
+            variant.encode(),
+            b"",
         )
         if hasattr(self._lib, "xkb_keymap_new_from_names2"):
             keymap = self._lib.xkb_keymap_new_from_names2(
@@ -286,6 +293,30 @@ class XkbKeyboardPreview:
         self._state = state
         self._compose_state = compose_state
         self._pressed.clear()
+
+    def keymap_signature(self) -> dict[int, dict[int, int]]:
+        """Return the first group's single-symbol keys, including shift levels.
+
+        GDK exposes one keysym per key/group/level. Multi-symbol XKB entries
+        cannot be compared through that API and are deliberately omitted.
+        """
+
+        result = {}
+        for keycode in range(8, 256):
+            levels = {}
+            count = self._lib.xkb_keymap_num_levels_for_key(
+                self._keymap, keycode, 0
+            )
+            for level in range(count):
+                symbols = ctypes.POINTER(ctypes.c_uint32)()
+                size = self._lib.xkb_keymap_key_get_syms_by_level(
+                    self._keymap, keycode, 0, level, ctypes.byref(symbols)
+                )
+                if size == 1 and symbols[0]:
+                    levels[level] = symbols[0]
+            if levels:
+                result[keycode] = levels
+        return result
 
     @property
     def composing(self) -> bool:

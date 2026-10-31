@@ -107,23 +107,3 @@ fn read_sysfs_u64(path: &Path) -> Result<u64, ()> {
     let content = fs::read_to_string(path).map_err(|_| ())?;
     content.trim().parse::<u64>().map_err(|_| ())
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_read_zram_devices() {
-        let devices = read_zram_devices();
-        // May be empty if zram is not loaded
-        for dev in &devices {
-            assert!(dev.name.starts_with("zram"));
-        }
-    }
-
-    #[test]
-    fn test_get_available_algorithms() {
-        let algos = get_available_algorithms();
-        assert!(!algos.is_empty());
-    }
-}

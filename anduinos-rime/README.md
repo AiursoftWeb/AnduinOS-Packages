@@ -7,6 +7,13 @@ used for Chinese input on AnduinOS. It depends on `ibus-rime` and
 generates pinyin comments for its correction filter, which removes them from
 ordinary candidates and retains only useful pronunciation or spelling hints.
 
+Natural Code, Microsoft and Xiaohe Shuangpin are also available. Full Pinyin
+remains the default. Select Chinese (Rime), press `F4` or `Ctrl+grave` to open
+the Rime schema menu, and choose a Shuangpin layout. If the new schemas do not
+appear after upgrading, select Deploy from the Rime input-source menu. A user
+with a personal `default.custom.yaml` must add the desired schemas to its
+`schema_list` manually.
+
 This directory is the canonical source of AnduinOS Rime. Upstream Rime Ice
 updates are reviewed and imported directly into `assets/`; the package must not
 download input method content from a second AnduinOS-Rime repository at build
@@ -55,3 +62,16 @@ this migration release, the post-install script itself can be removed.
 
 Starting with `2.0.1-3`, the distribution patch is loaded directly from Rime's
 shared data directory instead of being copied to new accounts by the installer.
+
+## Licensing
+
+[Rime Ice](https://github.com/iDvel/rime-ice) is published under GPL-3.0-only.
+This package also contains files with their own upstream licenses. In
+particular, `lua/search.lua` credits Mirtle and is licensed under
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+Retain the authorship, source and license notices supplied in individual files;
+the package license label does not replace those terms. AnduinOS packaging and
+configuration changes are available in this repository under its GPL-3.0 license.
+
+The installed resources are in `/usr/share/rime-data/`. The GPL version 3 text
+is available on AnduinOS at `/usr/share/common-licenses/GPL-3`.

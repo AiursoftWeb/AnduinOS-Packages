@@ -6,18 +6,18 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .command import CommandError, CommandRunner
-from .model import Architecture, Filesystem
+from .model import Architecture, Filesystem, InstallMode
 from .steps import FailurePolicy, InstallContext
-from .snapshots_manager import SNAPSHOTS_MANAGER_PACKAGE
+from .snapshots_manager import RECOVERY_PACKAGE, SNAPSHOTS_MANAGER_PACKAGE
 
 
 # This is deliberately installer-owned policy. It must not be derived from
-# Casper's historical filesystem.manifest-desktop convention.
+# a historical Live-boot filesystem.manifest-desktop convention.
 LIVE_ONLY_PACKAGES = (
-    "casper",
+    "anduinos-live-layers",
+    "anduinos-rescue-center",
     "discover",
     "laptop-detect",
-    "os-prober",
     "gparted",
     "anduinos-installer-beta",
     "anduinos-live-settings",
@@ -34,13 +34,23 @@ VMWARE_GUEST_PACKAGES = (
 # retained before purging the Live bridge and running autoremove.
 PERSISTENT_TARGET_PACKAGES = ("openssh-server",)
 
+# These tools are installed as dependencies of the removable installer, but
+# remain essential administration and repair tools for their selected root
+# filesystem after the installer package is purged and autoremove runs.
+ADVANCED_FILESYSTEM_TOOL_PACKAGES = {
+    Filesystem.XFS: "xfsprogs",
+    Filesystem.F2FS: "f2fs-tools",
+}
+
 # This is a post-autoremove composition contract, not an apt-mark exception.
 # The persistent anduinos-core-system metapackage owns these packages so boot
 # maintenance remains available after the removable Live installer is purged.
 REQUIRED_BOOT_PACKAGES = {
     Architecture.AMD64: (
         "anduinos-core-system",
-        "grub-common",
+        "dracut",
+        "dracut-core",
+        "dracut-install",
         "grub2-common",
         "grub-pc-bin",
         "grub-efi-amd64-bin",
@@ -49,13 +59,20 @@ REQUIRED_BOOT_PACKAGES = {
     ),
     Architecture.ARM64: (
         "anduinos-core-system",
-        "grub-common",
+        "dracut",
+        "dracut-core",
+        "dracut-install",
         "grub2-common",
         "grub-efi-arm64-bin",
         "grub-efi-arm64-signed",
         "shim-signed",
     ),
 }
+
+# Debian dependencies may be satisfied by a real package or by an installed
+# package's Provides field. Ubuntu 26.04 folds grub-common into grub2-common,
+# while older suites still install grub-common as a concrete package.
+REQUIRED_BOOT_CAPABILITIES = ("grub-common",)
 
 
 @dataclass
@@ -78,6 +95,29 @@ class RemoveLivePackagesStep:
             for package in PERSISTENT_TARGET_PACKAGES
             if _is_installed(self.runner, target, package)
         )
+        filesystem_tool = ADVANCED_FILESYSTEM_TOOL_PACKAGES.get(
+            context.plan.storage.filesystem
+        )
+        if filesystem_tool:
+            if not _is_installed(self.runner, target, filesystem_tool):
+                raise RuntimeError(
+                    "Selected root filesystem tools are missing: "
+                    + filesystem_tool
+                )
+            retained += (filesystem_tool,)
+        if (
+            context.plan.storage.filesystem is Filesystem.BTRFS
+            and _is_installed(self.runner, target, SNAPSHOTS_MANAGER_PACKAGE)
+        ):
+            # The ISO deliberately carries this package for offline Btrfs
+            # installations. Do not rely on the copied Live system's APT mark:
+            # make the selected-filesystem capability explicit before the
+            # installer package and its orphaned dependencies are removed.
+            retained += (SNAPSHOTS_MANAGER_PACKAGE,)
+        recovery_enabled = (context.plan.storage.mode is InstallMode.ERASE_DISK
+                            and context.plan.storage.filesystem is Filesystem.BTRFS)
+        if recovery_enabled and _is_installed(self.runner, target, RECOVERY_PACKAGE):
+            retained += (RECOVERY_PACKAGE,)
         for package in retained:
             self.runner.run(
                 ("chroot", str(target), "apt-mark", "manual", package),
@@ -91,10 +131,13 @@ class RemoveLivePackagesStep:
             )
 
         candidates = list(LIVE_ONLY_PACKAGES)
-        if context.plan.storage.filesystem is Filesystem.EXT4:
+        if not recovery_enabled:
+            candidates.append(RECOVERY_PACKAGE)
+        if context.plan.storage.filesystem is not Filesystem.BTRFS:
             candidates.append(SNAPSHOTS_MANAGER_PACKAGE)
             context.log(
-                "Disk Snapshots Manager cleanup policy: remove it from the ext4 target"
+                "Disk Snapshots Manager cleanup policy: remove it from the "
+                f"{context.plan.storage.filesystem.value} target"
             )
         else:
             context.log(
@@ -191,12 +234,22 @@ class RemoveLivePackagesStep:
         missing_boot_packages = tuple(
             package
             for package in required_boot_packages
-            if not _is_installed(self.runner, target, package)
+            if not _is_installed_or_provided(self.runner, target, package)
         )
         if missing_boot_packages:
             raise RuntimeError(
                 "Installed-system boot packages are missing after cleanup: "
                 + ", ".join(missing_boot_packages)
+            )
+        missing_boot_capabilities = tuple(
+            capability
+            for capability in REQUIRED_BOOT_CAPABILITIES
+            if not _is_installed_or_provided(self.runner, target, capability)
+        )
+        if missing_boot_capabilities:
+            raise RuntimeError(
+                "Installed-system boot capabilities are missing after cleanup: "
+                + ", ".join(missing_boot_capabilities)
             )
         self.runner.run(
             ("chroot", str(target), "dpkg", "--audit"), timeout=60
@@ -224,6 +277,43 @@ def _is_installed(
         timeout=10,
     )
     return result.returncode == 0 and result.stdout.startswith("ii ")
+
+
+def _is_installed_or_provided(
+    runner: CommandRunner,
+    target: Path,
+    capability: str,
+) -> bool:
+    if _is_installed(runner, target, capability):
+        return True
+    result = runner.run(
+        (
+            "chroot",
+            str(target),
+            "dpkg-query",
+            "--show",
+            "--showformat=${db:Status-Abbrev}\\t${Provides}\\n",
+        ),
+        check=False,
+        timeout=30,
+    )
+    if result.returncode != 0:
+        return False
+    for line in result.stdout.splitlines():
+        try:
+            status, provided = line.split("\t", maxsplit=1)
+        except ValueError:
+            continue
+        if not status.startswith("ii "):
+            continue
+        for item in provided.split(","):
+            item = item.strip()
+            if not item:
+                continue
+            name = item.split(maxsplit=1)[0].split(":", maxsplit=1)[0]
+            if name == capability:
+                return True
+    return False
 
 
 def _detect_virtualization(runner: CommandRunner) -> str | None:

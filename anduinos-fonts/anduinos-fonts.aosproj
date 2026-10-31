@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-fonts</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default fonts and fontconfig — Cascadia Code, Noto Sans/Serif, Nerd Fonts Symbols, Twemoji COLRv1 &amp; Noto Color Emoji</PackageDescription>
     <Section>fonts</Section>
@@ -9,10 +9,10 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0-only AND OFL-1.1 AND MIT AND CC-BY-4.0 AND Apache-2.0 AND Unlicense</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
   </PropertyGroup>
 
   <ItemGroup>
@@ -88,5 +88,8 @@
 
   <ItemGroup>
     <PostInstallScript Include="scripts/postinst.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="rendering" Profile="anduinos-package-release-test" Run="sh tests/check-nerd-symbols.sh" TimeoutSeconds="120" />
   </ItemGroup>
 </Project>

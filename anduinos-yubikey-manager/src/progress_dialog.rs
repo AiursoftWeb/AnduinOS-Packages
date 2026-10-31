@@ -50,11 +50,18 @@ where
     );
 
     dialog.set_child(Some(&content));
+    let dialog_guard = dialog.connect_close_request(|_| gtk::glib::Propagation::Stop);
     dialog.present();
 
+    let guard = parent.connect_close_request(|_| gtk::glib::Propagation::Stop);
+    let application = parent.application();
+    let hold = application.as_ref().map(|app| app.hold());
     let result = gio::spawn_blocking(task)
         .await
-        .map_err(|_| i18n("The YubiKey operation stopped unexpectedly."))?;
+        .map_err(|_| i18n("The YubiKey operation stopped unexpectedly."));
+    parent.disconnect(guard);
+    dialog.disconnect(dialog_guard);
     dialog.close();
-    result
+    drop(hold);
+    result?
 }

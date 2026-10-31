@@ -1,0 +1,27 @@
+#!/bin/sh
+set -eu
+if [ "${1:-}" = configure ]; then
+    # New in -2. Enable in an image/chroot too; later upgrades preserve a
+    # user's decision to disable it. No checkpoint is written by this script.
+    if dpkg --compare-versions "${2:-0}" lt 2.0.5-2; then
+        systemctl --root=/ enable anduinos-recovery-boot.service
+    fi
+    # The installer upgrades packages before installing GRUB. It explicitly
+    # deploys the recovery volume and generates the menu later. Do not claim
+    # a volume or refresh an unfinished boot setup from a package hook.
+    if systemd-detect-virt --quiet --chroot >/dev/null 2>&1 ||
+       ischroot >/dev/null 2>&1; then
+        echo "AnduinOS recovery: chroot detected; deferring deployment and GRUB refresh."
+        exit 0
+    fi
+    # Apply the desktop visibility policy to existing recovery volumes too.
+    if command -v udevadm >/dev/null 2>&1 && [ -S /run/udev/control ]; then
+        udevadm control --reload-rules
+        udevadm trigger --action=change --subsystem-match=block \
+            --attr-match=partition --property-match=ID_FS_LABEL=AOS_RECOVERY
+    fi
+    /usr/libexec/anduinos-recovery-env deploy --if-present
+    if [ -f /var/lib/anduinos-recovery-env/volume.json ]; then
+        update-grub
+    fi
+fi

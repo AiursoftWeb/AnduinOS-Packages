@@ -1,0 +1,15 @@
+#!/usr/bin/python3
+"""Read-only fixed probe; never accepts paths or signing operations."""
+from dataclasses import asdict
+import json
+import os
+import sys
+from anduinos_secureboot.grub import inspect_grub
+from anduinos_secureboot.identity import inspect_identity
+from anduinos_secureboot.inspect import SubprocessRunner
+
+if os.geteuid() != 0 or sys.argv[1:] not in ([], ['identity']):
+    raise SystemExit(64)
+state = (inspect_identity(SubprocessRunner(), privileged=True) if sys.argv[1:]
+         else inspect_grub(privileged=True))
+print(json.dumps(asdict(state)))

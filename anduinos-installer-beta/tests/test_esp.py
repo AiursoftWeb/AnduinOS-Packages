@@ -2,6 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 from fakes import FakeRunner
 from test_coexistence import windows_disk
@@ -87,6 +88,7 @@ class EspInspectionTests(unittest.TestCase):
 
     def test_nvram_verification_binds_partition_and_vendor_loader(self):
         output = (
+            "BootOrder: 0007,0001\n"
             "Boot0001* Windows Boot Manager "
             "HD(1,GPT,part-1,0x800,0x100000)/"
             "File(\\EFI\\Microsoft\\Boot\\bootmgfw.efi)\n"
@@ -99,6 +101,7 @@ class EspInspectionTests(unittest.TestCase):
             label="AnduinOS",
             partuuid="part-1",
             loader=r"\EFI\AnduinOS\shimx64.efi",
+            require_first=True,
         )
         with self.assertRaisesRegex(RuntimeError, "was not created"):
             verify_nvram_entry(
@@ -107,6 +110,36 @@ class EspInspectionTests(unittest.TestCase):
                 partuuid="other-partition",
                 loader=r"\EFI\AnduinOS\shimx64.efi",
             )
+
+        wrong_order = output.replace(
+            "BootOrder: 0007,0001", "BootOrder: 0001,0007"
+        )
+        with self.assertRaisesRegex(RuntimeError, "not first"):
+            verify_nvram_entry(
+                wrong_order,
+                label="AnduinOS",
+                partuuid="part-1",
+                loader=r"\EFI\AnduinOS\shimx64.efi",
+                require_first=True,
+            )
+
+    def test_nvram_verification_accepts_raw_efi_device_paths(self):
+        output = (
+            "BootOrder: 0000,0001\n"
+            "Boot0000* AnduinOS "
+            "HD(2,GPT,part-2,0x1800,0x200000)/"
+            "\\EFI\\ANDUINOS\\SHIMX64.EFI\n"
+        )
+        self.assertEqual(
+            verify_nvram_entry(
+                output,
+                label="AnduinOS",
+                partuuid="part-2",
+                loader=r"\EFI\AnduinOS\shimx64.efi",
+                require_first=True,
+            ),
+            "0000",
+        )
 
     def test_vendor_tree_can_change_but_windows_and_fallback_cannot(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -125,7 +158,7 @@ class EspInspectionTests(unittest.TestCase):
             vendor_snapshot = capture_esp_vendor_tree(root)
             self.assertEqual(
                 tuple(item.relative_path for item in vendor_snapshot),
-                ("EFI/AnduinOS/shimx64.efi",),
+                ("EFI/AnduinOS", "EFI/AnduinOS/shimx64.efi"),
             )
 
             vendor.write_bytes(b"new-anduinos")
@@ -134,6 +167,55 @@ class EspInspectionTests(unittest.TestCase):
             microsoft.write_bytes(b"changed")
             with self.assertRaisesRegex(RuntimeError, "outside EFI/AnduinOS"):
                 verify_preserved_esp_tree(snapshot, root)
+
+    def test_empty_and_mixed_case_vendor_directories_are_occupied(self):
+        for name in ("EFI/AnduinOS", "efi/ANDUINOS", "EfI/anduinos"):
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                (root / name).mkdir(parents=True)
+                entries = capture_esp_vendor_tree(root)
+                self.assertEqual(len(entries), 1)
+                self.assertEqual(entries[0].relative_path, name)
+                self.assertEqual(entries[0].kind, "directory")
+
+    def test_vendor_inspection_rejects_redirected_or_invalid_namespace(self):
+        for name in ("efi", "efi/ANDUINOS"):
+            for kind in ("file", "symlink"):
+                with self.subTest(name=name, kind=kind):
+                    with tempfile.TemporaryDirectory() as directory:
+                        root = Path(directory)
+                        path = root / name
+                        path.parent.mkdir(parents=True, exist_ok=True)
+                        if kind == "file":
+                            path.write_bytes(b"occupied")
+                        else:
+                            path.symlink_to(root / "missing")
+                        with self.assertRaisesRegex(RuntimeError, "Invalid EFI"):
+                            capture_esp_vendor_tree(root)
+
+    def test_vendor_inspection_rejects_ambiguous_case_variants(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "EFI/AnduinOS").mkdir(parents=True)
+            (root / "EFI/ANDUINOS").mkdir()
+            with self.assertRaisesRegex(RuntimeError, "Ambiguous EFI"):
+                capture_esp_vendor_tree(root)
+
+    def test_vendor_inspection_propagates_directory_read_errors(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "EFI/AnduinOS").mkdir(parents=True)
+            with patch.object(Path, "iterdir", side_effect=PermissionError("denied")):
+                with self.assertRaises(PermissionError):
+                    capture_esp_vendor_tree(root)
+
+            def unreadable_walk(_path, *, followlinks, onerror):
+                onerror(PermissionError("denied"))
+                return iter(())
+
+            with patch("installer_core.esp.os.walk", side_effect=unreadable_walk):
+                with self.assertRaises(PermissionError):
+                    capture_esp_vendor_tree(root)
 
 
 if __name__ == "__main__":

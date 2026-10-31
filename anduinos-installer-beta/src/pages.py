@@ -11,6 +11,7 @@ import threading
 import re
 import html
 import subprocess
+from dataclasses import replace
 
 # Allow absolute imports when run directly (not as a package).
 import sys, os
@@ -24,10 +25,10 @@ gi.require_version("Gdk", "4.0")
 gi.require_version("Adw", "1")
 
 from gi.repository import Gtk, Gdk, Adw, GLib, Gio, Pango, GObject
+from anduinos_secureboot.enrollment import EnrollmentTutorial
 
 from languages import (
     DEFAULT_LANGUAGE,
-    KEYBOARD_LAYOUTS,
     LANGUAGES,
     RTL_LANGUAGES,
     default_timezone,
@@ -36,7 +37,17 @@ from languages import (
     Language as LangData,
 )
 from i18n import _, N_
-from keyboard_preview import KeyboardPreviewError, XkbKeyboardPreview
+from keyboard_layouts import (
+    keyboard_layouts,
+    translate_xkb_description,
+    xkb_choice_id,
+)
+from keyboard_preview import KeyboardPreviewError
+from keyboard_session import (
+    KeyboardSessionError,
+    apply_keyboard_layout,
+    keyboard_layout_is_active,
+)
 from frontend import (
     DevelopmentExecutorClient,
     ExecutorClient,
@@ -47,9 +58,11 @@ from frontend import (
     clear_storage_target,
     clear_plaintext_passwords,
     create_install_plan,
+    probe_partition_resize,
+    probe_esp_replacement,
     probe_storage_inventory,
 )
-from installer_core.btrfs import BTRFS_SUBVOLUMES
+from installer_core.btrfs import BTRFS_SUBVOLUMES, BtrfsCompression
 from installer_core.coexistence import CoexistenceNoticeCode
 from installer_core.executor import describe_installation_pipeline
 from installer_core.layout import MIB, build_erase_disk_layout_spec
@@ -59,20 +72,43 @@ from installer_core.model import (
     InstallPlan,
     SecureBoot,
 )
+from installer_core.manual_layout import (
+    HARD_MINIMUM_ROOT_MIB,
+    ManualPartitionRequest,
+    ManualPartitionResizeRequest,
+    ManualPartitionRole,
+    ManualStorageSelection,
+    manual_available_extents,
+    resize_for_partuuid,
+)
+from installer_core.ntfs_resize import NtfsResizeBlockReason
 from installer_core.power import PowerProbeResult, probe_power_supply
 from installer_core.probe import ProbeError, probe_platform
 from installer_core.storage_ui import (
     GuidedStoragePreview,
     GuidedStorageSelection,
+    ManualDiskSegmentKind,
+    ManualStoragePreview,
     StorageDiskChoice,
     StorageWorkflow,
     build_guided_storage_preview,
     build_guided_storage_confirmation,
+    build_development_storage_workflow,
+    build_manual_disk_map,
+    build_manual_storage_preview,
+    build_manual_storage_confirmation,
     build_storage_workflow,
 )
+from installer_core.validation import (
+    MINIMUM_DISK_BYTES,
+    RECOMMENDED_DISK_BYTES,
+)
+from installer_core.layout import erase_disk_overhead_mib
 from installer_core.swap_policy import (
     calculate_swap_sizing,
+    disk_swap_choices_mib,
     probe_physical_memory_bytes,
+    validate_disk_swap_selection,
 )
 from installer_core.username_policy import (
     is_valid_username,
@@ -101,9 +137,17 @@ from installer_core.wifi import (
     set_wifi_radio,
     wifi_radio_enabled,
 )
-from slideshow import load_slides
+from slideshow import load_slides, slideshow_root
 from ui import card, clamp_content, icon_picture, page_hero
 from async_work import LatestBackgroundRequest, ProgressPulse
+
+
+_MANUAL_ROOT_FILESYSTEMS = (
+    Filesystem.BTRFS,
+    Filesystem.EXT4,
+    Filesystem.XFS,
+    Filesystem.F2FS,
+)
 
 
 _COEXISTENCE_NOTICE_MESSAGES = {
@@ -183,14 +227,141 @@ _SHRINK_WITH_PARTITION_TOOL_MESSAGE = N_(
 _LAYOUT_FREE_SPACE_MINIMUM_BYTES = 4 * 1024**2
 
 
-def _probe_storage_workflow():
+_ESP_HELP_SEPARATE = N_(
+    "Create and format a new FAT32 ESP in unallocated space (at least "
+    "512 MiB). Existing ESPs stay unchanged."
+)
+_ESP_HELP_SHARED = N_(
+    "Reuse a healthy ESP with enough free space, without formatting it. "
+    "Other systems' boot files are preserved. If EFI/AnduinOS already "
+    "exists, replacement requires explicit confirmation. To keep both "
+    "installations independently bootable, choose another ESP or create a new one."
+)
+_ESP_HELP_COMMON = N_(
+    "Both options install boot files in EFI/AnduinOS and put the new "
+    "AnduinOS UEFI boot entry first. Detected supported systems get "
+    "entries in the new GRUB menu; their files and menus are not changed."
+)
+
+
+def _esp_help_dialog(parent, lang):
+    """Read-only explanation; opening help never changes a storage plan."""
+    window = Adw.Window(
+        transient_for=parent, modal=True, destroy_with_parent=True,
+        title=_("EFI System Partition", lang),
+        default_width=800, default_height=440,
+    )
+    direction = Gtk.TextDirection.RTL if lang in RTL_LANGUAGES else Gtk.TextDirection.LTR
+    window.set_direction(direction)
+    outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+    outer.append(Adw.HeaderBar())
+    body = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL, spacing=18,
+        margin_start=24, margin_end=24, margin_top=12, margin_bottom=12,
+    )
+
+    def label(text, *, heading=False):
+        result = Gtk.Label(
+            label=_(text, lang), wrap=True, wrap_mode=Pango.WrapMode.WORD_CHAR,
+            xalign=1 if direction == Gtk.TextDirection.RTL else 0,
+            selectable=not heading,
+        )
+        result.set_direction(direction)
+        if heading:
+            result.add_css_class("heading")
+        return result
+
+    # Keep the promised physical left/right comparison even in Arabic.
+    columns = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=18, homogeneous=True)
+    columns.set_direction(Gtk.TextDirection.LTR)
+    for title, text in (
+        (N_("Separate ESP"), _ESP_HELP_SEPARATE),
+        (N_("Shared ESP"), _ESP_HELP_SHARED),
+    ):
+        column = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12, hexpand=True)
+        column.set_direction(direction)
+        column.append(label(title, heading=True))
+        column.append(label(text))
+        columns.append(column)
+    body.append(columns)
+    body.append(Gtk.Separator())
+    body.append(label(_ESP_HELP_COMMON))
+    scroll = Gtk.ScrolledWindow(vexpand=True, hscrollbar_policy=Gtk.PolicyType.NEVER)
+    scroll.set_child(body)
+    outer.append(scroll)
+    close = Gtk.Button(label=_("OK", lang), halign=Gtk.Align.END,
+                       margin_end=24, margin_start=24, margin_top=6, margin_bottom=18)
+    close.connect("clicked", lambda _button: window.close())
+    outer.append(close)
+    window.set_content(outer)
+    window.set_focus(close)
+    keys = Gtk.EventControllerKey()
+
+    def key_pressed(_controller, keyval, _keycode, _state):
+        if keyval == Gdk.KEY_Escape:
+            window.close()
+            return True
+        return False
+
+    keys.connect("key-pressed", key_pressed)
+    window.add_controller(keys)
+    window.present()
+    return window
+
+
+def _esp_help_button(lang):
+    button = Gtk.Button(icon_name="dialog-question-symbolic", valign=Gtk.Align.CENTER)
+    button.add_css_class("flat")
+    text = _("Compare ESP options", lang)
+    button.set_tooltip_text(text)
+    button.update_property([Gtk.AccessibleProperty.LABEL], [text])
+    button.connect("clicked", lambda widget: _esp_help_dialog(widget.get_root(), lang))
+    return button
+
+
+def _esp_conflict_dialog(nav_view, lang, path, on_replace, on_back):
+    dialog = Adw.MessageDialog(
+        transient_for=nav_view.get_root(),
+        heading=_("Replace existing AnduinOS boot files?", lang),
+        body=_(
+            "{path} already contains AnduinOS boot files. Continuing will replace "
+            "EFI/AnduinOS to start the new installation. Windows and other systems' "
+            "boot files will be preserved; this ESP will not be formatted.\n\n"
+            "This replacement does not delete the old system partition, but the "
+            "old AnduinOS may no longer start through its existing boot entry. "
+            "To keep both installations, go back and create a separate ESP "
+            "(at least 512 MiB). Old boot files will be backed up before replacement.", lang,
+        ).format(path=path),
+    )
+    dialog.add_response("back", _("Back", lang))
+    dialog.add_response("replace", _("Use this ESP and replace", lang))
+    dialog.set_response_appearance("replace", Adw.ResponseAppearance.DESTRUCTIVE)
+    dialog.set_default_response("back")
+    dialog.set_close_response("back")
+    dialog.connect("response", lambda _dialog, response:
+                   on_replace() if response == "replace" else on_back())
+    dialog.present()
+    return dialog
+
+
+def _probe_storage_workflow(*, development_mode=False):
     """Collect the complete storage snapshot without touching GTK state."""
 
+    if development_mode:
+        return build_development_storage_workflow(probe_platform())
     return build_storage_workflow(
         probe_storage_inventory(),
-        probe_platform(),
-        live_device=_find_live_device(),
+        probe_platform(recover=True),
     )
+
+
+def _probe_install_target(*, development_mode=False):
+    """Recheck the same target universe shown by the storage page."""
+
+    if development_mode:
+        workflow = _probe_storage_workflow(development_mode=True)
+        return workflow.inventory, workflow.platform
+    return probe_storage_inventory(), probe_platform(recover=True)
 
 
 def _coexistence_notice_text(notice, lang, windows_detected):
@@ -228,6 +399,18 @@ class LanguageItem(GObject.Object):
 
 
 # ── helpers ──────────────────────────────────────────────────────────────
+
+def _scrolled_window(*, inset=False, **properties):
+    """Create a predictable scrollbar that never overlays page content."""
+
+    properties.setdefault("vscrollbar_policy", Gtk.PolicyType.AUTOMATIC)
+    scroll = Gtk.ScrolledWindow(**properties)
+    scroll.set_overlay_scrolling(False)
+    if inset:
+        scroll.set_margin_start(48)
+        scroll.set_margin_end(48)
+    return scroll
+
 
 def _nav_btn(label_key: str, lang: str, callback, sensitive: bool = True,
              css_classes: list[str] | None = None):
@@ -302,6 +485,58 @@ def _page_header(title, subtitle, icon, lang):
     return page_hero(_(title, lang), _(subtitle, lang), icon)
 
 
+def _set_page_content(page, content, *, scroll_body=False):
+    """Keep the page title and navigation reachable on short displays."""
+
+    children = []
+    child = content.get_first_child()
+    while child is not None:
+        children.append(child)
+        child = child.get_next_sibling()
+    hero = next((child for child in children
+                 if child.has_css_class("installer-hero")), None)
+    if hero is None:
+        page.set_child(content)
+        return
+
+    compact_title = Gtk.Label(
+        visible=False, wrap=True, margin_top=8,
+        margin_start=24, margin_end=24,
+    )
+    compact_title.add_css_class("title-3")
+    hero._title_label.bind_property(
+        "label", compact_title, "label", GObject.BindingFlags.SYNC_CREATE
+    )
+    content.insert_child_after(compact_title, hero)
+
+    if scroll_body:
+        body = Gtk.Box(orientation=Gtk.Orientation.VERTICAL,
+                       spacing=content.get_spacing())
+        for child in children[children.index(hero) + 1:-1]:
+            content.remove(child)
+            body.append(child)
+        scroll = _scrolled_window(
+            vexpand=True, hscrollbar_policy=Gtk.PolicyType.NEVER
+        )
+        scroll.set_child(body)
+        content.insert_child_after(scroll, compact_title)
+
+    responsive = Adw.BreakpointBin(width_request=720, height_request=360)
+    responsive.set_child(content)
+    compact = Adw.Breakpoint.new(
+        Adw.BreakpointCondition.parse("max-height: 620px")
+    )
+    compact.add_setter(hero, "visible", False)
+    compact.add_setter(compact_title, "visible", True)
+    child = content.get_first_child()
+    while child is not None:
+        if isinstance(child, Gtk.ScrolledWindow):
+            compact.add_setter(child, "vscrollbar-policy", Gtk.PolicyType.ALWAYS)
+        child = child.get_next_sibling()
+    responsive.add_breakpoint(compact)
+    page.set_child(responsive)
+
+
 def internet_connection_ready(monitor=None) -> bool:
     """Return true only for a complete, non-portal Internet connection."""
 
@@ -374,6 +609,7 @@ _UNCONDITIONAL_PAGE_ROUTE = (
     "disk",
     "storage-strategy",
     "user",
+    "advanced-options",
     "timezone",
     "summary",
     "progress",
@@ -429,12 +665,7 @@ def _ensure_initial_page_route(shared):
         return
     power = probe_power_supply()
     shared[_POWER_PROBE_RESULT_KEY] = power
-    try:
-        shared["_platform_probe_result"] = probe_platform()
-    except ProbeError:
-        # Keep the recommendation in the route; normal validation will still
-        # surface the failed platform probe before any installation action.
-        shared["_platform_probe_result"] = None
+    shared.setdefault("_platform_probe_result", None)
     shared["_network_page_planned"] = should_show_network_page(shared)
     shared["_page_route_initialized"] = True
 
@@ -448,18 +679,24 @@ def _planned_page_route(shared):
     ):
         route.append("low-battery")
     platform = shared.get("_platform_probe_result")
-    if bool(shared.get("development_mode")) or not (
-        platform is not None
-        and platform.secure_boot is SecureBoot.ENABLED
+    if platform is None and not bool(shared.get("development_mode")):
+        route.append("firmware-check")
+    if bool(shared.get("development_mode")) or (
+        platform is not None and platform.secure_boot is SecureBoot.DISABLED
     ):
         route.append("secure-boot-recommendation")
+    route.append("keyboard")
     if bool(shared.get("_network_page_planned")):
         route.append("network")
-    route.extend(_UNCONDITIONAL_PAGE_ROUTE[1:5])
-    if shared.get("storage_strategy") == (
-        StorageStrategy.ADVANCED_COEXISTENCE.value
-    ):
+    route.extend(_UNCONDITIONAL_PAGE_ROUTE[2:5])
+    storage_strategy = shared.get("storage_strategy")
+    if storage_strategy == StorageStrategy.ADVANCED.value:
         route.append("advanced-storage")
+    elif storage_strategy in {
+        StorageStrategy.ERASE_BTRFS.value,
+        StorageStrategy.ERASE_EXT4.value,
+    }:
+        route.append("disk-layout")
     route.extend(_UNCONDITIONAL_PAGE_ROUTE[5:])
     return tuple(route)
 
@@ -559,30 +796,130 @@ def _start_power_auto_refresh(page, refresh):
     page.connect("unmap", _stop)
 
 
-def _build_network_or_keyboard_page(shared, nav_view):
+def _build_keyboard_first_page(shared, nav_view):
+    """Keyboard confirmation must precede every password-entry page."""
     _ensure_initial_page_route(shared)
-    if bool(shared.get("_network_page_planned")):
-        return build_network_page(shared, nav_view)
     return build_keyboard_page(shared, nav_view)
 
 
 def secure_boot_recommendation_needed(shared, platform=None) -> bool:
-    """Show the recommendation unless Secure Boot is known to be enabled."""
+    """Recommend enabling only when Secure Boot is known to be disabled."""
 
     if bool(shared.get("development_mode")):
         return True
     if platform is None:
         _ensure_initial_page_route(shared)
         platform = shared.get("_platform_probe_result")
-    if platform is None:
-        platform = probe_platform()
-    return platform.secure_boot is not SecureBoot.ENABLED
+    return platform is not None and platform.secure_boot is SecureBoot.DISABLED
 
 
-def _build_secure_boot_or_network_page(shared, nav_view, *, platform=None):
+def _build_secure_boot_or_keyboard_page(shared, nav_view, *, platform=None):
+    if (platform is None and shared.get("_platform_probe_result") is None
+            and not shared.get("development_mode")):
+        return build_firmware_check_page(shared, nav_view)
     if secure_boot_recommendation_needed(shared, platform):
         return build_secure_boot_page(shared, nav_view)
-    return _build_network_or_keyboard_page(shared, nav_view)
+    return _build_keyboard_first_page(shared, nav_view)
+
+
+def build_firmware_check_page(shared, nav_view):
+    """Recover firmware access off-thread before optional recommendations."""
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
+    page = Adw.NavigationPage(title=_("Checking firmware", lang))
+    page.set_tag("firmware-check")
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+    hero = _page_header("Checking firmware", "Checking Secure Boot support…",
+                        "secure-boot", lang)
+    content.append(hero)
+    body = card(spacing=16)
+    body.set_valign(Gtk.Align.START)
+    body.set_margin_start(32)
+    body.set_margin_end(32)
+    body.set_margin_top(28)
+    body.set_margin_bottom(20)
+    status_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+    spinner = Gtk.Spinner(spinning=True)
+    status_row.append(spinner)
+    status = Gtk.Label(label=_("Checking Secure Boot support…", lang),
+                       wrap=True, xalign=0, hexpand=True)
+    status.add_css_class("heading")
+    status_row.append(status)
+    body.append(status_row)
+    details = Gtk.Label(wrap=True, selectable=True, xalign=0)
+    body.append(details)
+    request = LatestBackgroundRequest(GLib.idle_add)
+
+    def advance():
+        platform = shared.get("_platform_probe_result")
+        if platform is None:
+            # Unknown is allowed for configuration, never for execution.
+            next_page = _build_keyboard_first_page(shared, nav_view)
+        else:
+            next_page = _build_secure_boot_or_keyboard_page(
+                shared, nav_view, platform=platform)
+        nav_view.push(next_page)
+
+    navigation = _nav_box(lang, on_back=lambda: nav_view.pop(),
+                          on_next=advance, next_label="Continue",
+                          next_sensitive=False, stage=0, shared=shared,
+                          page_tag="firmware-check")
+
+    def complete(platform, error):
+        spinner.stop()
+        spinner.set_visible(False)
+        retry.set_sensitive(True)
+        shared["_platform_probe_result"] = platform
+        shared["_platform_probe_error"] = str(error) if error else ""
+        if error:
+            status.set_label(_("Unable to determine Secure Boot support", lang))
+            details.set_label(_(
+                "You can continue configuring the installation. Firmware detection "
+                "must succeed before any changes are made to your disks.", lang
+            ) + "\n\n" + str(error))
+        else:
+            status.set_label(_("Firmware check complete", lang))
+            details.set_label(_(
+                "{architecture} / {firmware} / Secure Boot: {secure_boot}", lang
+            ).format(
+                architecture=platform.architecture.value,
+                firmware=platform.firmware.value,
+                secure_boot=platform.secure_boot.value,
+            ))
+        hero._title_label.set_label(status.get_label())
+        hero._subtitle_label.set_visible(False)
+        retry.set_visible(bool(error))
+        navigation.next_button.set_sensitive(True)
+        if not error and nav_view.get_visible_page() is page:
+            # Detection is transient: neither Continue nor Back should stop here.
+            next_page = _build_secure_boot_or_keyboard_page(
+                shared, nav_view, platform=platform)
+            stack = nav_view.get_navigation_stack()
+            nav_view.replace([
+                stack.get_item(index) for index in range(stack.get_n_items() - 1)
+            ] + [next_page])
+            _wizard_progress_controller(shared).refresh()
+
+    def start():
+        spinner.set_visible(True)
+        spinner.start()
+        status.set_label(_("Checking Secure Boot support…", lang))
+        hero._title_label.set_label(_("Checking firmware", lang))
+        hero._subtitle_label.set_visible(True)
+        details.set_label("")
+        retry.set_visible(False)
+        retry.set_sensitive(False)
+        navigation.next_button.set_sensitive(False)
+        request.start(lambda: probe_platform(recover=True), complete)
+
+    retry = _nav_btn("Retry", lang, start)
+    retry.set_visible(False)
+    body.append(retry)
+    content.append(clamp_content(body, maximum_size=720))
+    content.append(navigation)
+    _set_page_content(page, content, scroll_body=True)
+    page.connect("shown", lambda *_args: start())
+    page.connect("hidden", lambda *_args: request.invalidate())
+    return page
 
 
 def build_post_welcome_page(
@@ -602,7 +939,7 @@ def build_post_welcome_page(
         warning_needed = low_battery_warning_needed(shared, result)
     if warning_needed:
         return build_low_battery_page(shared, nav_view, result)
-    return _build_secure_boot_or_network_page(shared, nav_view)
+    return _build_secure_boot_or_keyboard_page(shared, nav_view)
 
 
 def _recommended_input_methods(shared):
@@ -694,20 +1031,24 @@ def _list_item_row():
         spacing=2,
         margin_top=8,
         margin_bottom=8,
-        margin_start=12,
-        margin_end=12,
+        margin_start=0,
+        margin_end=0,
     )
     row.add_css_class("installer-list-row")
     title = Gtk.Label(
         halign=Gtk.Align.START,
         xalign=0,
         ellipsize=Pango.EllipsizeMode.END,
+        margin_start=12,
+        margin_end=12,
     )
     title.add_css_class("heading")
     subtitle = Gtk.Label(
         halign=Gtk.Align.START,
         xalign=0,
         ellipsize=Pango.EllipsizeMode.END,
+        margin_start=12,
+        margin_end=12,
     )
     subtitle.add_css_class("dim-label")
     row.append(title)
@@ -753,10 +1094,13 @@ def build_welcome_page(shared, nav_view):
 
     lang_list = Gtk.ListView(model=Gtk.SingleSelection(model=list_store),
                              factory=factory)
+    lang_list.add_css_class("installer-list-view")
     lang_list.set_vexpand(True)
 
-    lang_scroll = Gtk.ScrolledWindow(min_content_width=300,
-                                     hscrollbar_policy=Gtk.PolicyType.NEVER)
+    lang_scroll = _scrolled_window(
+        min_content_width=300,
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+    )
     lang_scroll.set_child(lang_list)
     lang_frame = Gtk.Frame()
     lang_frame.set_child(lang_scroll)
@@ -787,21 +1131,21 @@ def build_welcome_page(shared, nav_view):
     right_box.append(welcome_desc)
 
     # ── layout ──
-    hpaned = Gtk.Paned(
+    layout = Gtk.Box(
         orientation=Gtk.Orientation.HORIZONTAL,
-        position=340,
-        wide_handle=True,
+        spacing=24,
         vexpand=True,
         margin_start=32,
         margin_end=32,
         margin_top=18,
         margin_bottom=12,
     )
-    hpaned.set_start_child(lang_frame)
-    hpaned.set_end_child(right_box)
+    lang_frame.set_size_request(340, -1)
+    layout.append(lang_frame)
+    layout.append(right_box)
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    content.append(hpaned)
+    content.append(layout)
 
     # ── handlers ──
     sel = lang_list.get_model()
@@ -823,7 +1167,9 @@ def build_welcome_page(shared, nav_view):
             l = lang_items[pos]
             shared["lang"] = l.code
             shared["locale"] = l.locale
-            shared["keyboard"] = l.keyboard
+            if not shared.get("_keyboard_user_selected"):
+                shared["keyboard"] = l.keyboard
+                shared["keyboard_variant"] = ""
             shared["timezone"] = default_timezone(l.code)
             shared["input_methods"] = l.default_input_methods
             shared["_preferred_input_methods"] = l.default_input_methods
@@ -1019,7 +1365,7 @@ def build_low_battery_page(shared, nav_view, result: PowerProbeResult):
 
     def _continue_after_power_check():
         nav_view.push(
-            _build_secure_boot_or_network_page(shared, nav_view)
+            _build_secure_boot_or_keyboard_page(shared, nav_view)
         )
 
     def _on_recheck():
@@ -1053,7 +1399,7 @@ def build_low_battery_page(shared, nav_view, result: PowerProbeResult):
     content.append(navigation)
     _render_status(result)
     _start_power_auto_refresh(page, _on_recheck)
-    page.set_child(content)
+    _set_page_content(page, content, scroll_body=True)
     return page
 
 
@@ -1113,7 +1459,7 @@ def build_secure_boot_page(shared, nav_view):
         body.append(label)
 
     def _continue():
-        nav_view.push(_build_network_or_keyboard_page(shared, nav_view))
+        nav_view.push(_build_keyboard_first_page(shared, nav_view))
 
     def _show_reboot_error(message):
         dialog = Adw.MessageDialog(
@@ -1158,7 +1504,7 @@ def build_secure_boot_page(shared, nav_view):
     )
     navigation.next_button.remove_css_class("suggested-action")
     content.append(navigation)
-    page.set_child(content)
+    _set_page_content(page, content, scroll_body=True)
     return page
 
 
@@ -1291,7 +1637,7 @@ def build_network_page(shared, nav_view):
 
     wifi_group = Adw.PreferencesGroup()
     network_rows = []
-    wifi_scroll = Gtk.ScrolledWindow(
+    wifi_scroll = _scrolled_window(
         vexpand=True,
         min_content_height=220,
         hscrollbar_policy=Gtk.PolicyType.NEVER,
@@ -1901,7 +2247,7 @@ def build_network_page(shared, nav_view):
 
     def on_next():
         shared["network_preflight_skipped"] = not _is_online()
-        nav_view.push(build_keyboard_page(shared, nav_view))
+        nav_view.push(build_software_page(shared, nav_view))
 
     content.append(
         _nav_box(
@@ -1914,21 +2260,18 @@ def build_network_page(shared, nav_view):
             page_tag="network",
         )
     )
-    page.set_child(content)
+    _set_page_content(page, content)
     _render_connectivity()
     return page
 
 
 # ── page 3: Keyboard layout ──────────────────────────────────────────────
 
-# Physical layouts and their labels come from the same validated policy as
-# languages and input methods. New layouts never require a Python edit.
-XKB_VARIANTS = list(KEYBOARD_LAYOUTS.items())
-
-
 def build_keyboard_page(shared, nav_view):
     lang = shared.get("lang", DEFAULT_LANGUAGE)
-    keyboard = shared.get("keyboard", "us")
+    keyboard = str(shared.get("keyboard", "us"))
+    keyboard_variant = str(shared.get("keyboard_variant", ""))
+    layouts = keyboard_layouts()
     page = Adw.NavigationPage(title=_("Keyboard Layout", lang))
     page.set_tag("keyboard")
 
@@ -1942,23 +2285,84 @@ def build_keyboard_page(shared, nav_view):
         )
     )
 
-    # Find the index of the current keyboard variant
-    variant_names = [v[0] for v in XKB_VARIANTS]
-    default_idx = 0
-    for i, (code, _name) in enumerate(XKB_VARIANTS):
-        if code == keyboard:
-            default_idx = i
-            break
+    fallback_layout_idx = next(
+        (index for index, layout in enumerate(layouts) if layout.id == "us"),
+        0,
+    )
+    layout_idx = next(
+        (index for index, layout in enumerate(layouts) if layout.id == keyboard),
+        fallback_layout_idx,
+    )
+    selected_layout = layouts[layout_idx]
+    variant_idx = next(
+        (
+            index
+            for index, variant in enumerate(selected_layout.variants, start=1)
+            if variant.id == keyboard_variant
+        ),
+        0,
+    )
+    keyboard_variant = (
+        selected_layout.variants[variant_idx - 1].id if variant_idx else ""
+    )
+    shared["keyboard"] = selected_layout.id
+    shared["keyboard_variant"] = keyboard_variant
 
-    # Dropdown and an isolated XKB preview. The preview uses raw hardware
-    # keycodes, so it follows this selection rather than the desktop session's
-    # current layout and never mutates the user's GNOME input sources.
-    kbd_store = Gtk.StringList()
-    for _code, name in XKB_VARIANTS:
-        kbd_store.append(_(name, lang))
+    # Interface-language policy only supplies the initial recommendation.
+    # xkb-data remains the authority for every selectable physical layout.
+    layout_store = Gtk.StringList()
+    for layout in layouts:
+        layout_store.append(
+            translate_xkb_description(layout.description, str(lang))
+        )
+    layout_dropdown = Gtk.DropDown(model=layout_store)
+    layout_dropdown.set_expression(
+        Gtk.PropertyExpression.new(Gtk.StringObject, None, "string")
+    )
+    layout_dropdown.set_enable_search(True)
+    layout_dropdown.set_selected(layout_idx)
 
-    kbd_dropdown = Gtk.DropDown(model=kbd_store)
-    kbd_dropdown.set_selected(default_idx)
+    variant_dropdown = Gtk.DropDown()
+    variant_dropdown.set_expression(
+        Gtk.PropertyExpression.new(Gtk.StringObject, None, "string")
+    )
+    variant_dropdown.set_enable_search(True)
+    active_variants = ()
+
+    def _set_variant_model(layout, selected_variant=""):
+        nonlocal active_variants
+        active_variants = (None, *layout.variants)
+        store = Gtk.StringList()
+        # The base layout is the default variant. Reusing its XKB-owned
+        # description avoids inventing an untranslated installer label.
+        store.append(
+            translate_xkb_description(layout.description, str(lang))
+        )
+        selected = 0
+        for index, variant in enumerate(layout.variants, start=1):
+            store.append(
+                translate_xkb_description(variant.description, str(lang))
+            )
+            if variant.id == selected_variant:
+                selected = index
+        variant_dropdown.set_model(store)
+        variant_dropdown.set_selected(selected)
+        variant_dropdown.set_sensitive(bool(layout.variants))
+
+    _set_variant_model(selected_layout, keyboard_variant)
+
+    keyboard_chooser = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=12,
+    )
+    keyboard_chooser.set_homogeneous(True)
+    keyboard_chooser.set_hexpand(True)
+    layout_field = _labeled(_("Keyboard Layout", lang), layout_dropdown)
+    layout_field.set_hexpand(True)
+    variant_field = _labeled(_("Layout Variant", lang), variant_dropdown)
+    variant_field.set_hexpand(True)
+    keyboard_chooser.append(layout_field)
+    keyboard_chooser.append(variant_field)
 
     test_entry = Gtk.Entry(
         placeholder_text=_("Test your keyboard here…", lang)
@@ -1972,92 +2376,110 @@ def build_keyboard_page(shared, nav_view):
         xalign=0,
     )
     preview_status.add_css_class("dim-label")
-    preview = None
+    preview_status.set_wrap(True)
+    retry = Gtk.Button(label=_("Retry", lang), halign=Gtk.Align.START)
+    retry.set_visible(False)
+    applying = {"timer": 0, "ready": False}
+    navigation = None
 
-    def _render_preview_status(index):
-        code, name = XKB_VARIANTS[index]
-        preview_status.set_text(f"{_(name, lang)} · {code}")
-
-    def _activate_preview(layout):
-        nonlocal preview
-        try:
-            if preview is None:
-                preview = XkbKeyboardPreview(layout)
-            else:
-                preview.set_layout(layout)
-        except KeyboardPreviewError:
-            test_entry.set_sensitive(False)
-            preview_status.set_text(f"⚠ {layout}")
-            return False
-        test_entry.set_sensitive(True)
-        return True
-
-    initial_layout = XKB_VARIANTS[default_idx][0]
-    if _activate_preview(initial_layout):
-        _render_preview_status(default_idx)
-
-    def _on_kbd_changed(dd, _pspec):
-        idx = dd.get_selected()
-        if 0 <= idx < len(XKB_VARIANTS):
-            layout = XKB_VARIANTS[idx][0]
-            if not _activate_preview(layout):
-                return
-            shared["keyboard"] = layout
-            _render_preview_status(idx)
-
-    kbd_dropdown.connect("notify::selected", _on_kbd_changed)
-
-    def _insert_preview_text(text):
-        selected, start, end = test_entry.get_selection_bounds()
-        position = test_entry.get_position()
-        if selected:
-            test_entry.delete_text(start, end)
-            position = start
-        position = test_entry.insert_text(text, position)
-        test_entry.set_position(position)
-
-    key_controller = Gtk.EventControllerKey()
-    key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
-
-    def _preview_key_pressed(_controller, keyval, keycode, state):
-        if preview is None:
-            return False
-        if keyval in (Gdk.KEY_BackSpace, Gdk.KEY_Escape):
-            if preview.cancel_composition():
-                return True
-        preview.sync_modifiers(
-            shift=bool(state & Gdk.ModifierType.SHIFT_MASK),
-            control=bool(state & Gdk.ModifierType.CONTROL_MASK),
-            alt=bool(state & Gdk.ModifierType.ALT_MASK),
-            super_key=bool(
-                state
-                & (
-                    Gdk.ModifierType.SUPER_MASK
-                    | Gdk.ModifierType.META_MASK
-                    | Gdk.ModifierType.HYPER_MASK
-                )
-            ),
-            caps_lock=bool(state & Gdk.ModifierType.LOCK_MASK),
+    def _render_preview_status(layout, variant):
+        description = (
+            variant.description if variant is not None else layout.description
         )
-        result = preview.press(keycode)
-        if result.text:
-            _insert_preview_text(result.text)
-        return result.handled
+        preview_status.set_text(
+            f"{translate_xkb_description(description, str(lang))} · "
+            f"{xkb_choice_id(layout.id, variant.id if variant else '')}"
+        )
 
-    def _preview_key_released(_controller, _keyval, keycode, _state):
-        if preview is not None:
-            preview.release(keycode)
+    def _stop_verification(*_args):
+        if applying["timer"]:
+            GLib.source_remove(applying["timer"])
+            applying["timer"] = 0
 
-    key_controller.connect("key-pressed", _preview_key_pressed)
-    key_controller.connect("key-released", _preview_key_released)
-    test_entry.add_controller(key_controller)
+    def _set_ready(ready):
+        applying["ready"] = ready
+        test_entry.set_sensitive(ready)
+        if navigation is not None:
+            navigation.next_button.set_sensitive(ready)
 
-    focus_controller = Gtk.EventControllerFocus()
-    focus_controller.connect(
-        "leave",
-        lambda _controller: preview.reset() if preview is not None else None,
-    )
-    test_entry.add_controller(focus_controller)
+    def _apply_selection(*_args):
+        _stop_verification()
+        _set_ready(False)
+        retry.set_visible(False)
+        preview_status.set_text(_("Applying keyboard layout…", lang))
+        layout = layouts[layout_dropdown.get_selected()]
+        variant = active_variants[variant_dropdown.get_selected()]
+        variant_id = variant.id if variant is not None else ""
+
+        def failed():
+            preview_status.set_text(_(
+                "The keyboard layout could not be applied. Try again.", lang
+            ))
+            retry.set_visible(True)
+
+        try:
+            signature = apply_keyboard_layout(layout.id, variant_id)
+        except (KeyboardSessionError, KeyboardPreviewError, GLib.Error) as error:
+            print(f"Could not apply keyboard {layout.id}+{variant_id}: {error}", file=sys.stderr)
+            failed()
+            return
+        attempts = 0
+
+        def verify():
+            nonlocal attempts
+            attempts += 1
+            if keyboard_layout_is_active(test_entry.get_display(), signature):
+                applying["timer"] = 0
+                _set_ready(True)
+                _render_preview_status(layout, variant)
+                return False
+            if attempts >= 50:
+                applying["timer"] = 0
+                failed()
+                return False
+            return True
+
+        applying["timer"] = GLib.timeout_add(100, verify)
+
+    changing_variant_model = False
+
+    def _on_layout_changed(dropdown, _pspec):
+        nonlocal changing_variant_model
+        index = dropdown.get_selected()
+        if not 0 <= index < len(layouts):
+            return
+        layout = layouts[index]
+        shared["keyboard"] = layout.id
+        shared["keyboard_variant"] = ""
+        shared["_keyboard_user_selected"] = True
+        changing_variant_model = True
+        _set_variant_model(layout)
+        changing_variant_model = False
+        _apply_selection()
+
+    def _on_variant_changed(dropdown, _pspec):
+        if changing_variant_model:
+            return
+        layout_index = layout_dropdown.get_selected()
+        variant_index = dropdown.get_selected()
+        if (
+            not 0 <= layout_index < len(layouts)
+            or not 0 <= variant_index < len(active_variants)
+        ):
+            return
+        layout = layouts[layout_index]
+        variant = active_variants[variant_index]
+        variant_id = variant.id if variant is not None else ""
+        shared["keyboard"] = layout.id
+        shared["keyboard_variant"] = variant_id
+        shared["_keyboard_user_selected"] = True
+        _apply_selection()
+
+    layout_dropdown.connect("notify::selected", _on_layout_changed)
+    variant_dropdown.connect("notify::selected", _on_variant_changed)
+
+    # Normal GTK input is deliberate: this must exercise the same compositor
+    # layout and input path as the Wi-Fi and account password entries.
     test_entry.connect(
         "icon-release",
         lambda entry, position: (
@@ -2072,9 +2494,42 @@ def build_keyboard_page(shared, nav_view):
     form.set_margin_end(48)
     form.set_margin_top(48)
     form.set_margin_bottom(12)
-    form.append(_labeled(_("Keyboard Layout", lang), kbd_dropdown))
+    form.append(keyboard_chooser)
     form.append(_labeled(_("Test your keyboard here…", lang), test_entry))
     form.append(preview_status)
+    form.append(retry)
+
+    form_area = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        vexpand=True,
+    )
+    form_area.append(clamp_content(form, 720))
+    content.append(form_area)
+
+    def on_next():
+        if not applying["ready"]:
+            return
+        shared["_keyboard_user_selected"] = True
+        if bool(shared.get("_network_page_planned")):
+            nav_view.push(build_network_page(shared, nav_view))
+        else:
+            nav_view.push(build_software_page(shared, nav_view))
+
+    navigation = _nav_box(
+        lang, on_back=lambda: nav_view.pop(), on_next=on_next, stage=0,
+        next_sensitive=False, shared=shared, page_tag="keyboard"
+    )
+    content.append(navigation)
+    _set_page_content(page, content, scroll_body=True)
+    _set_ready(False)
+    page.connect("shown", _apply_selection)
+    page.connect("hidden", _stop_verification)
+    retry.connect("clicked", _apply_selection)
+    return page
+
+
+def _append_input_method_choices(form, shared, lang):
+    """Input-method downloads belong after the physical keyboard and network."""
 
     recommended_methods = _recommended_input_methods(shared)
     if recommended_methods:
@@ -2153,37 +2608,15 @@ def build_keyboard_page(shared, nav_view):
             choice.connect(
                 "toggled", lambda _button: _save_input_methods()
             )
-        monitor.connect(
+        handler = monitor.connect(
             "network-changed",
             lambda _monitor, _available: _render_input_methods(),
         )
+        form.connect("destroy", lambda *_args: monitor.disconnect(handler))
         _render_input_methods()
     else:
         shared["input_methods"] = ()
         shared["_preferred_input_methods"] = ()
-
-    form_area = Gtk.Box(
-        orientation=Gtk.Orientation.VERTICAL,
-        vexpand=True,
-    )
-    form_area.append(clamp_content(form, 720))
-    content.append(form_area)
-
-    def on_next():
-        nav_view.push(build_software_page(shared, nav_view))
-
-    def on_back():
-        nav_view.pop()
-
-    content.append(
-        _nav_box(
-            lang, on_back=on_back, on_next=on_next, stage=0,
-            shared=shared, page_tag="keyboard"
-        )
-    )
-    page.set_child(content)
-    return page
-
 
 # ── page 3: Updates and drivers ─────────────────────────────────────────
 
@@ -2193,14 +2626,13 @@ def build_software_page(shared, nav_view):
     page.set_tag("software")
 
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(
-        _page_header(
-            "Updates and Drivers",
-            "Choose optional software to install",
-            "updates",
-            lang,
-        )
+    hero = _page_header(
+        "Updates and Drivers",
+        "Choose optional software to install",
+        "updates",
+        lang,
     )
+    content.append(hero)
 
     options = Gtk.Box(
         orientation=Gtk.Orientation.VERTICAL,
@@ -2208,7 +2640,6 @@ def build_software_page(shared, nav_view):
         margin_start=48,
         margin_end=48,
         margin_top=32,
-        vexpand=True,
     )
     options.add_css_class("installer-card")
 
@@ -2265,7 +2696,12 @@ def build_software_page(shared, nav_view):
     multimedia_detail.add_css_class("dim-label")
     options.append(multimedia)
     options.append(multimedia_detail)
-    content.append(options)
+    _append_input_method_choices(options, shared, lang)
+    scroll = _scrolled_window(
+        vexpand=True, hscrollbar_policy=Gtk.PolicyType.NEVER
+    )
+    scroll.set_child(options)
+    content.append(scroll)
 
     update_preference_key = "_preferred_install_updates"
     driver_preference_key = "_preferred_install_third_party_drivers"
@@ -2348,7 +2784,7 @@ def build_software_page(shared, nav_view):
             shared=shared, page_tag="software"
         )
     )
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -2361,7 +2797,7 @@ def _disk_card_button(
 
     disk = choice.disk
     identity = disk.identity
-    available = not choice.is_live_media
+    available = choice.selectable
     button = Gtk.ToggleButton(sensitive=available)
     button.add_css_class("disk-card-button")
 
@@ -2464,13 +2900,17 @@ def _disk_card_button(
     body.append(layout)
 
     notices = []
+    if disk.external:
+        notices.append(_("External drive", lang))
+    if disk.read_only:
+        notices.append(_("Read-only", lang))
     if choice.coexistence.windows_detected:
         notices.append(_("Windows detected", lang))
     if choice.coexistence.bitlocker_detected:
         notices.append(_("BitLocker detected", lang))
     if choice.is_live_media:
         notices.append(_("Live USB — excluded", lang))
-    elif not choice.erase_available:
+    elif not choice.erase_available and not disk.read_only:
         notices.append(_("Too small", lang))
     if notices:
         notice = Gtk.Label(
@@ -2509,10 +2949,9 @@ def build_disk_page(shared, nav_view):
         vexpand=True,
     )
     disk_list.add_css_class("disk-card-list")
-    disk_scroll = Gtk.ScrolledWindow(
+    disk_scroll = _scrolled_window(
+        inset=True,
         hscrollbar_policy=Gtk.PolicyType.NEVER,
-        margin_start=48,
-        margin_end=48,
         vexpand=True,
     )
     disk_scroll.set_child(disk_list)
@@ -2547,9 +2986,48 @@ def build_disk_page(shared, nav_view):
     loading.set_visible(False)
     content.append(loading)
 
+    disk_actions = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=12,
+        halign=Gtk.Align.CENTER,
+    )
+    content.append(disk_actions)
     rescan = Gtk.Button(label=_("Rescan Storage", lang))
-    rescan.set_halign(Gtk.Align.CENTER)
-    content.append(rescan)
+    disk_actions.append(rescan)
+
+    show_external = Gtk.Button(label=_("Show External Drives", lang))
+    show_external.set_visible(not shared.get("show_external_disks", False))
+    disk_actions.append(show_external)
+
+    def _confirm_external(confirmed, details=""):
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_("External drive", lang),
+            body=details + _(
+                "Disconnecting an external drive can cause installation failure or data loss. "
+                "Booting on another computer may require additional setup. "
+                "For portable use, consider AnduinOS ToGo.", lang
+            ),
+        )
+        dialog.add_response("cancel", _("Cancel", lang))
+        dialog.add_response("continue", _("Continue", lang))
+        warning_icon = Gtk.Image.new_from_icon_name("dialog-warning-symbolic")
+        warning_icon.set_pixel_size(48)
+        warning_icon.add_css_class("warning")
+        dialog.set_extra_child(warning_icon)
+        dialog.set_response_appearance("continue", Adw.ResponseAppearance.DESTRUCTIVE)
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+        dialog.connect("response", lambda _dialog, response:
+                       confirmed() if response == "continue" and page.get_mapped() else None)
+        dialog.present()
+
+    def _show_external():
+        shared["show_external_disks"] = True
+        show_external.set_visible(False)
+        _rescan()
+
+    show_external.connect("clicked", lambda _button: _confirm_external(_show_external))
 
     next_button = None
     requests = LatestBackgroundRequest(GLib.idle_add)
@@ -2573,7 +3051,7 @@ def build_disk_page(shared, nav_view):
 
     def _on_disk_selected():
         choice = _selected_choice()
-        if choice is None or choice.is_live_media:
+        if choice is None or not choice.selectable:
             _set_next(False)
             return
         bind_storage_target(shared, choice)
@@ -2613,8 +3091,12 @@ def build_disk_page(shared, nav_view):
             return
 
         assert workflow is not None
+        shared["_platform_probe_result"] = workflow.platform
         first_button = None
         for choice in workflow.disks:
+            # Preserve the old default list, including USB SSDs reporting RM=0.
+            if choice.disk.removable and not shared.get("show_external_disks", False):
+                continue
             button = _disk_card_button(choice, lang)
             if first_button is None:
                 first_button = button
@@ -2672,7 +3154,9 @@ def build_disk_page(shared, nav_view):
         loading.set_visible(True)
         pulse.start()
         requests.start(
-            _probe_storage_workflow,
+            lambda: _probe_storage_workflow(
+                development_mode=bool(shared.get("development_mode"))
+            ),
             lambda workflow, error: _apply_workflow(
                 workflow,
                 error,
@@ -2688,9 +3172,23 @@ def build_disk_page(shared, nav_view):
     rescan.connect("clicked", lambda _button: _rescan())
 
     def on_next():
-        if _selected_choice() is None:
+        choice = _selected_choice()
+        if choice is None or not choice.selectable:
             return
-        nav_view.push(build_storage_strategy_page(shared, nav_view))
+
+        def proceed():
+            if _selected_choice() is choice:
+                nav_view.push(build_storage_strategy_page(shared, nav_view))
+
+        if choice.disk.external:
+            identity = choice.disk.identity
+            details = (
+                f"{identity.model}\n{_human_size(identity.expected_size_bytes)}\n"
+                f"{identity.path}\n{identity.serial or identity.stable_id}\n\n"
+            )
+            _confirm_external(proceed, details)
+        else:
+            proceed()
 
     nav = _nav_box(
         lang,
@@ -2703,7 +3201,7 @@ def build_disk_page(shared, nav_view):
     )
     next_button = nav.next_button
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
 
     def _page_unmapped(_widget):
         requests.invalidate()
@@ -2718,6 +3216,204 @@ def build_disk_page(shared, nav_view):
     page.connect("map", _page_mapped)
     page.connect("unmap", _page_unmapped)
     return page
+
+
+# ── automatic disk layout helpers ───────────────────────────────────────
+
+def _uses_external_drive_mode(shared):
+    return (
+        shared.get("storage_mode", InstallMode.ERASE_DISK.value)
+        == InstallMode.ERASE_DISK.value
+        and bool(shared.get("disk_external"))
+    )
+
+
+def _validated_swap_size(shared, swap_sizing):
+    if swap_sizing is None:
+        return None
+    requested_swap = shared.get("swap_size_mib")
+    if not isinstance(requested_swap, int):
+        requested_swap = swap_sizing.swap_size_mib
+    try:
+        validate_disk_swap_selection(requested_swap, swap_sizing)
+    except ValueError:
+        requested_swap = swap_sizing.swap_size_mib
+    shared["swap_size_mib"] = requested_swap
+    return requested_swap
+
+
+def _swap_assessment(swap_sizing, swap_size_mib, lang):
+    if swap_size_mib == swap_sizing.swap_size_mib:
+        return (
+            "emblem-ok-symbolic",
+            "installer-success-card",
+            _("✓ Best performance — AnduinOS recommended Swap size.", lang),
+            None,
+        )
+    if swap_size_mib == 0:
+        message = _(
+            "Disk Swap will not be created. ZRAM remains enabled, "
+            "but sustained memory pressure can terminate applications "
+            "and hibernation is unavailable. This is strongly discouraged.",
+            lang,
+        )
+        return (
+            "dialog-error-symbolic",
+            "installer-danger-card",
+            message,
+            message,
+        )
+    if swap_size_mib < swap_sizing.runtime_target_mib:
+        message = _(
+            "This is below AnduinOS's runtime safety target. ZRAM still "
+            "works, but heavy browser or application workloads can run out "
+            "of backing memory sooner; hibernation is also unavailable.",
+            lang,
+        )
+    elif swap_size_mib < swap_sizing.hibernation_target_mib:
+        message = _(
+            "This size protects ordinary memory pressure, but is smaller "
+            "than the hibernation target. Hibernation may fail or be "
+            "unavailable.",
+            lang,
+        )
+    else:
+        message = _(
+            "This exceeds the AnduinOS recommendation. It consumes more "
+            "disk space and normally does not improve runtime performance.",
+            lang,
+        )
+    return (
+        "dialog-warning-symbolic",
+        "installer-warning-card",
+        message,
+        message,
+    )
+
+
+def _swap_control(swap_sizing, selected_swap_size_mib, lang, on_changed,
+                  *, standalone=False):
+    swap_choices = tuple(
+        sorted(
+            {
+                *disk_swap_choices_mib(swap_sizing),
+                selected_swap_size_mib,
+            }
+        )
+    )
+    recommended_index = swap_choices.index(swap_sizing.swap_size_mib)
+    selected_index = swap_choices.index(selected_swap_size_mib)
+
+    control = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=10,
+        margin_start=12,
+        margin_end=12,
+        margin_top=14,
+        margin_bottom=12,
+    )
+    control.add_css_class(
+        "installer-card" if standalone else "swap-control-card"
+    )
+    header = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=12,
+    )
+    title = Gtk.Label(
+        label=_("Swap", lang),
+        xalign=0,
+        hexpand=True,
+    )
+    title.add_css_class("heading")
+    size_label = Gtk.Label(xalign=1)
+    size_label.add_css_class("swap-size")
+    header.append(title)
+    header.append(size_label)
+    control.append(header)
+
+    adjustment = Gtk.Adjustment(
+        value=selected_index,
+        lower=0,
+        upper=len(swap_choices) - 1,
+        step_increment=1,
+        page_increment=1,
+        page_size=0,
+    )
+    scale = Gtk.Scale(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        adjustment=adjustment,
+        draw_value=False,
+        digits=0,
+        hexpand=True,
+    )
+    scale.set_round_digits(0)
+    scale.add_mark(
+        recommended_index,
+        Gtk.PositionType.BOTTOM,
+        "✓",
+    )
+    control.append(scale)
+
+    scale_ends = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+    scale_ends.append(
+        Gtk.Label(label=_("0 GiB · ZRAM only", lang), xalign=0, hexpand=True)
+    )
+    scale_ends.append(
+        Gtk.Label(
+            label=_("{size} GiB · Max", lang).format(
+                size=swap_sizing.maximum_custom_mib // 1024
+            ),
+            xalign=1,
+        )
+    )
+    control.append(scale_ends)
+
+    status = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=10,
+    )
+    status_icon = Gtk.Image()
+    status_label = Gtk.Label(xalign=0, wrap=True, hexpand=True)
+    status.append(status_icon)
+    status.append(status_label)
+    control.append(status)
+
+    zram_status = Gtk.Label(
+        label=_(
+            "ZRAM always remains enabled: 50% of RAM · LZ4 · "
+            "priority 100. Disk Swap uses priority 10.",
+            lang,
+        ),
+        xalign=0,
+        wrap=True,
+    )
+    zram_status.add_css_class("dim-label")
+    control.append(zram_status)
+
+    def _set_choice(swap_size_mib):
+        size_label.set_label(f"{swap_size_mib // 1024} GiB")
+        icon_name, css_class, status_text, _warning_text = (
+            _swap_assessment(swap_sizing, swap_size_mib, lang)
+        )
+        status_icon.set_from_icon_name(icon_name)
+        status_label.set_label(status_text)
+        for old_class in (
+            "installer-success-card",
+            "installer-warning-card",
+            "installer-danger-card",
+        ):
+            status.remove_css_class(old_class)
+        status.add_css_class(css_class)
+        on_changed(swap_size_mib)
+
+    def _scale_changed(changed_scale):
+        index = int(round(changed_scale.get_value()))
+        changed_scale.set_value(index)
+        _set_choice(swap_choices[index])
+
+    scale.connect("value-changed", _scale_changed)
+    _set_choice(selected_swap_size_mib)
+    return control
 
 
 # ── page 5: Storage strategy ─────────────────────────────────────────────
@@ -2834,14 +3530,14 @@ def build_storage_strategy_page(shared, nav_view):
         enabled=erase_available,
     )
     _add_strategy(
-        StorageStrategy.ADVANCED_COEXISTENCE,
-        _("Advanced — keep existing systems", lang),
+        StorageStrategy.ADVANCED,
+        _("Advanced", lang),
         _(
-            "Use already-unallocated space and preserve existing partitions. "
-            "This is the only Windows coexistence path.",
+            "Keep Windows or other partitions, reuse or create an ESP, and "
+            "design Root and Swap partitions with exact sizes.",
             lang,
         ),
-        "advanced",
+        "flashing-disk",
     )
     content.append(options)
 
@@ -2883,15 +3579,16 @@ def build_storage_strategy_page(shared, nav_view):
     def _show_strategy(strategy):
         apply_storage_strategy(shared, strategy)
         _wizard_progress_controller(shared).refresh()
-        if strategy is StorageStrategy.ADVANCED_COEXISTENCE:
+        if strategy is StorageStrategy.ADVANCED:
             _set_warning(
                 _(
-                    "Advanced coexistence can affect EFI firmware state and "
-                    "may trigger BitLocker recovery. It never shrinks or "
-                    "repairs Windows volumes.",
+                    "Manual changes are destructive. Existing partition "
+                    "starts are never moved. Plain NTFS/ext4 can be shrunk only "
+                    "after strict safety checks; encrypted, mounted or "
+                    "unclean volumes are never resized.",
                     lang,
                 ),
-                "advanced",
+                "flashing-disk",
             )
         else:
             _set_warning(
@@ -2930,15 +3627,7 @@ def build_storage_strategy_page(shared, nav_view):
     ):
         strategy_buttons[StorageStrategy.ERASE_BTRFS].set_active(True)
     elif not erase_available:
-        _set_warning(
-            _(
-                "This disk is too small for whole-disk installation. "
-                "Advanced may continue only if suitable unallocated space "
-                "exists.",
-                lang,
-            ),
-            "advanced",
-        )
+        _set_warning(_("Too small", lang), "advanced")
     else:
         _set_warning(
             _(
@@ -2953,10 +3642,15 @@ def build_storage_strategy_page(shared, nav_view):
         strategy = _selected_strategy()
         if strategy is None:
             return
-        if strategy is StorageStrategy.ADVANCED_COEXISTENCE:
+        if strategy is StorageStrategy.ADVANCED:
             nav_view.push(build_advanced_storage_page(shared, nav_view))
         else:
-            nav_view.push(build_user_page(shared, nav_view))
+            if not erase_available:
+                return
+            _confirm_storage_capacity(
+                page, nav_view, lang, int(shared.get("disk_size_bytes") or 0),
+                lambda: nav_view.push(build_disk_layout_page(shared, nav_view)),
+            )
 
     nav = _nav_box(
         lang,
@@ -2969,20 +3663,194 @@ def build_storage_strategy_page(shared, nav_view):
     )
     next_button = nav.next_button
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content, scroll_body=True)
     return page
 
 
-# ── page 6: Advanced coexistence storage ────────────────────────────────
+# ── automatic disk layout ───────────────────────────────────────────────
 
-def build_advanced_storage_page(shared, nav_view):
+def storage_capacity_warning(size_bytes):
+    """Classify the applicable disk/root capacity; callers choose the scope."""
+    if size_bytes < HARD_MINIMUM_ROOT_MIB * MIB:
+        return "blocked"
+    if size_bytes < MINIMUM_DISK_BYTES:
+        return "error"
+    if size_bytes < RECOMMENDED_DISK_BYTES:
+        return "warning"
+    return None
+
+
+def _confirm_storage_capacity(page, nav_view, lang, size_bytes, confirmed):
+    severity = storage_capacity_warning(size_bytes)
+    if severity is None:
+        confirmed()
+        return
+    if severity == "blocked":
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_("Too small", lang),
+            body=_(
+                "At least 6 GiB is required to install AnduinOS.",
+                lang,
+            ),
+        )
+        icon = Gtk.Image.new_from_icon_name("dialog-error-symbolic")
+        icon.set_pixel_size(48)
+        icon.add_css_class("error")
+        dialog.set_extra_child(icon)
+        dialog.add_response("cancel", _("Cancel", lang))
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+        dialog.present()
+        return
+    dialog = Adw.MessageDialog(
+        transient_for=nav_view.get_root(),
+        heading=_("25 GiB minimum; 50 GiB recommended.", lang),
+        body=_("Below the minimum. Installation or updates may fail. Continue?", lang)
+        if severity == "error" else
+        _("Below the recommended capacity. Space may run out quickly. Continue?", lang),
+    )
+    icon = Gtk.Image.new_from_icon_name("dialog-warning-symbolic")
+    icon.set_pixel_size(48)
+    icon.add_css_class(severity)
+    dialog.set_extra_child(icon)
+    dialog.add_response("cancel", _("Cancel", lang))
+    dialog.add_response("continue", _("Continue", lang))
+    if severity == "error":
+        dialog.set_response_appearance("continue", Adw.ResponseAppearance.DESTRUCTIVE)
+    dialog.set_default_response("cancel")
+    dialog.set_close_response("cancel")
+    dialog.connect("response", lambda _dialog, response:
+                   confirmed() if response == "continue" and page.get_mapped() else None)
+    dialog.present()
+
+BTRFS_COMPRESSION_CHOICES = (
+    (BtrfsCompression.NONE, N_("No compression"), N_("Store files without compression.")),
+    (BtrfsCompression.FAST, N_("Fast compression"), N_("Prioritize speed and reduce CPU usage.")),
+    (BtrfsCompression.BALANCED, N_("Balanced (default)"), N_("Balance compression speed and disk space usage.")),
+    (BtrfsCompression.SPACE, N_("Save space"), N_("Compress more to save space, using more CPU when writing.")),
+)
+
+
+def _btrfs_compression_control(shared, lang):
+    group = Adw.PreferencesGroup()
+    presets = [item[0] for item in BTRFS_COMPRESSION_CHOICES]
+    selected = BtrfsCompression(shared.get("btrfs_compression", "balanced"))
+    row = Adw.ComboRow(
+        title=_("Btrfs file compression", lang),
+        model=Gtk.StringList.new([_(item[1], lang) for item in BTRFS_COMPRESSION_CHOICES]),
+        selected=presets.index(selected),
+    )
+
+    def changed(*_args):
+        preset, _title, description = BTRFS_COMPRESSION_CHOICES[row.get_selected()]
+        shared["btrfs_compression"] = preset.value
+        row.set_subtitle(_(description, lang))
+
+    row.connect("notify::selected", changed)
+    changed()
+    group.add(row)
+    return group
+
+
+def build_disk_layout_page(shared, nav_view):
     lang = shared.get("lang", DEFAULT_LANGUAGE)
-    page = Adw.NavigationPage(title=_("Advanced Storage", lang))
-    page.set_tag("advanced-storage")
+    page = Adw.NavigationPage(
+        title=_("Configure storage and swap", lang)
+    )
+    page.set_tag("disk-layout")
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+    filesystem = str(shared.get("filesystem", "btrfs"))
+    layout_subtitle = " · ".join(
+        value
+        for value in (
+            filesystem.upper() if filesystem == "ext4" else filesystem.title(),
+            str(shared.get("disk_size", "?")),
+            str(shared.get("disk", "?")),
+        )
+        if value
+    )
+    content.append(
+        _page_header(
+            "Configure storage and swap",
+            layout_subtitle,
+            "disk",
+            lang,
+        )
+    )
+
+    settings = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=12,
+        margin_start=72,
+        margin_end=72,
+        margin_top=18,
+        vexpand=True,
+        valign=Gtk.Align.START,
+    )
+    if filesystem == "btrfs":
+        settings.append(_btrfs_compression_control(shared, lang))
+    error_message = ""
+    try:
+        swap_sizing = calculate_swap_sizing(
+            probe_physical_memory_bytes(),
+            int(shared.get("disk_size_bytes") or 0),
+            layout_overhead_mib=erase_disk_overhead_mib(Filesystem(filesystem)),
+        )
+        selected_swap_size_mib = _validated_swap_size(
+            shared, swap_sizing
+        )
+
+        def _swap_changed(swap_size_mib):
+            shared["swap_size_mib"] = swap_size_mib
+
+        settings.append(
+            _swap_control(
+                swap_sizing,
+                selected_swap_size_mib,
+                lang,
+                _swap_changed,
+                standalone=True,
+            )
+        )
+    except (RuntimeError, ValueError) as error:
+        error_message = str(error)
+        failure = Gtk.Label(
+            label=error_message,
+            xalign=0,
+            wrap=True,
+        )
+        failure.add_css_class("installer-danger-card")
+        settings.append(failure)
+    scroll = _scrolled_window(
+        hscrollbar_policy=Gtk.PolicyType.NEVER, vexpand=True,
+    )
+    scroll.set_child(settings)
+    content.append(scroll)
+
+    nav = _nav_box(
+        lang,
+        on_back=lambda: nav_view.pop(),
+        on_next=lambda: nav_view.push(build_user_page(shared, nav_view)),
+        next_sensitive=not bool(error_message),
+        shared=shared,
+        page_tag="disk-layout",
+    )
+    content.append(nav)
+    _set_page_content(page, content)
+    return page
+
+
+# ── page 6: Guided coexistence storage ──────────────────────────────────
+
+def build_guided_storage_page(shared, nav_view):
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
+    page = Adw.NavigationPage(title=_("Install Alongside", lang))
+    page.set_tag("guided-storage")
     content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
     content.append(
         _page_header(
-            "Advanced: Install Alongside",
+            "Install Alongside Automatically",
             "Use only existing unallocated space on the selected disk.",
             "advanced",
             lang,
@@ -3075,7 +3943,11 @@ def build_advanced_storage_page(shared, nav_view):
         )
     )
     esp_dropdown = Gtk.DropDown()
-    controls.append(esp_dropdown)
+    esp_selector = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
+    esp_dropdown.set_hexpand(True)
+    esp_selector.append(esp_dropdown)
+    esp_selector.append(_esp_help_button(lang))
+    controls.append(esp_selector)
     guidance = Gtk.Label(
         halign=Gtk.Align.START,
         wrap=True,
@@ -3101,7 +3973,8 @@ def build_advanced_storage_page(shared, nav_view):
     rescan = Gtk.Button(label=_("Rescan and Reselect Disk", lang))
     rescan.set_halign(Gtk.Align.START)
     controls.append(rescan)
-    controls_scroll = Gtk.ScrolledWindow(
+    controls_scroll = _scrolled_window(
+        inset=True,
         hscrollbar_policy=Gtk.PolicyType.NEVER,
         vexpand=True,
     )
@@ -3216,6 +4089,7 @@ def build_advanced_storage_page(shared, nav_view):
             return
         workflow = result
         assert workflow is not None
+        shared["_platform_probe_result"] = workflow.platform
         try:
             candidate = workflow.disk(
                 str(shared.get("disk_stable_id") or "")
@@ -3312,7 +4186,12 @@ def build_advanced_storage_page(shared, nav_view):
         _set_storage_controls(False)
         loading.set_visible(True)
         pulse.start()
-        requests.start(_probe_storage_workflow, _apply_workflow)
+        requests.start(
+            lambda: _probe_storage_workflow(
+                development_mode=bool(shared.get("development_mode"))
+            ),
+            _apply_workflow,
+        )
 
     def _filesystem_changed():
         shared["filesystem"] = (
@@ -3344,6 +4223,7 @@ def build_advanced_storage_page(shared, nav_view):
             else _set_next(_guided_selection() is not None)
         ),
     )
+    esp_dropdown.connect("notify::selected", lambda *_args: shared.pop("esp_replacement", None))
 
     def _rescan_and_reselect():
         clear_storage_target(shared)
@@ -3366,10 +4246,1825 @@ def build_advanced_storage_page(shared, nav_view):
             guidance.set_label(str(error))
             _set_next(False)
             return
-        shared["guided_extent_id"] = selected.free_extent_id
-        shared["guided_esp_partuuid"] = selected.reused_esp_partuuid
-        shared["guided_storage_preview_model"] = preview
-        nav_view.push(build_user_page(shared, nav_view))
+        def finish(authorization=None, error=None):
+            _finish_loading()
+            _set_storage_controls(True)
+            _set_next(True)
+            if _guided_selection() != selected:
+                return
+            if error is not None:
+                guidance.set_label(str(error))
+                return
+            def advance():
+                if _guided_selection() != selected:
+                    return
+                shared["esp_replacement"] = authorization
+                shared["guided_extent_id"] = selected.free_extent_id
+                shared["guided_esp_partuuid"] = selected.reused_esp_partuuid
+                shared["guided_storage_preview_model"] = preview
+                shared["_guided_storage_workflow_model"] = workflow
+                nav_view.push(build_user_page(shared, nav_view))
+
+            def back():
+                shared.pop("esp_replacement", None)
+                if _guided_selection() == selected and None in esp_options:
+                    esp_dropdown.set_selected(esp_options.index(None))
+
+            if authorization is not None and shared.get("esp_replacement") != authorization:
+                _esp_conflict_dialog(nav_view, lang, preview.reused_esp.identity.path, advance, back)
+            else:
+                advance()
+
+        if preview.reused_esp is None:
+            finish()
+        else:
+            _set_next(False)
+            _set_storage_controls(False)
+            loading_label.set_label(_("Checking EFI System Partition…", lang))
+            loading.set_visible(True)
+            pulse.start()
+            requests.start(
+                lambda: probe_esp_replacement(preview.reused_esp,
+                    development_mode=bool(shared.get("development_mode"))),
+                finish,
+            )
+
+    nav = _nav_box(
+        lang,
+        on_back=lambda: nav_view.pop(),
+        on_next=on_next,
+        next_sensitive=False,
+        stage=1,
+        shared=shared,
+        page_tag="guided-storage",
+    )
+    next_button = nav.next_button
+    _filesystem_changed()
+    content.append(nav)
+    _set_page_content(page, content)
+
+    def _page_mapped(_widget):
+        requests.activate()
+        _load_workflow()
+
+    def _page_unmapped(_widget):
+        requests.invalidate()
+        pulse.stop()
+        loading.set_visible(False)
+
+    page.connect("map", _page_mapped)
+    page.connect("unmap", _page_unmapped)
+    return page
+
+
+# ── page 6: Manual GPT storage ──────────────────────────────────────────
+
+MANUAL_PARTITION_ROLES = (
+    ManualPartitionRole.EFI_SYSTEM,
+    ManualPartitionRole.ROOT,
+    ManualPartitionRole.SWAP,
+)
+
+
+def _manual_role_choices(lang):
+    return [_manual_role_title(role, lang) for role in MANUAL_PARTITION_ROLES]
+
+
+def _manual_role_title(role, lang):
+    return {
+        ManualPartitionRole.EFI_SYSTEM: _("ESP", lang),
+        ManualPartitionRole.ROOT: _("Root", lang),
+        ManualPartitionRole.SWAP: _("Swap", lang),
+    }[role]
+
+
+def _manual_segment_title(segment, lang, *, compact=False):
+    title = {
+        ManualDiskSegmentKind.NEW_ESP: _manual_role_title(
+            ManualPartitionRole.EFI_SYSTEM, lang
+        ),
+        ManualDiskSegmentKind.NEW_ROOT: _manual_role_title(
+            ManualPartitionRole.ROOT, lang
+        ),
+        ManualDiskSegmentKind.NEW_SWAP: _manual_role_title(
+            ManualPartitionRole.SWAP, lang
+        ),
+        ManualDiskSegmentKind.FREE: _("Unallocated", lang),
+    }.get(segment.kind, segment.title)
+    if compact and segment.kind in {
+        ManualDiskSegmentKind.PRESERVED,
+        ManualDiskSegmentKind.DELETED,
+    }:
+        number = re.search(r"(?:p)?(\d+)$", title)
+        if number:
+            return f"P{number.group(1)}"
+    return title
+
+
+def _manual_segment_spans(segments):
+    """Fit every disk segment into one bounded, non-scrolling track."""
+
+    total_columns = max(100, len(segments) * 6)
+    minimum = min(6, total_columns // max(1, len(segments)))
+    weighted_sizes = [max(1, item.size_mib) ** 0.65 for item in segments]
+    remaining = total_columns - minimum * len(segments)
+    total_weight = sum(weighted_sizes) or 1
+    exact = [remaining * item / total_weight for item in weighted_sizes]
+    spans = [minimum + int(item) for item in exact]
+    missing = total_columns - sum(spans)
+    order = sorted(
+        range(len(segments)),
+        key=lambda index: exact[index] - int(exact[index]),
+        reverse=True,
+    )
+    for index in order[:missing]:
+        spans[index] += 1
+    return total_columns, tuple(spans)
+
+
+def _manual_segment_annotation(segment, reused_esp_partuuid, lang):
+    selected_esp_id = (
+        f"preserved:{reused_esp_partuuid}"
+        if reused_esp_partuuid
+        else "new:efi-system"
+    )
+    if segment.segment_id == selected_esp_id:
+        return (
+            f"AnduinOS {_manual_role_title(ManualPartitionRole.EFI_SYSTEM, lang)}",
+            "esp",
+        )
+    if segment.kind is ManualDiskSegmentKind.NEW_SWAP:
+        return (
+            " ".join(
+                (
+                    _("New", lang),
+                    "AnduinOS",
+                    _manual_role_title(ManualPartitionRole.SWAP, lang),
+                )
+            ),
+            "swap",
+        )
+    if segment.kind is ManualDiskSegmentKind.NEW_ROOT:
+        return (
+            " ".join(
+                (
+                    _("New", lang),
+                    "AnduinOS",
+                    _manual_role_title(ManualPartitionRole.ROOT, lang),
+                )
+            ),
+            "root",
+        )
+    return None
+
+
+def _manual_disk_map_track(
+    segments,
+    lang,
+    *,
+    reused_esp_partuuid=None,
+):
+    track = Gtk.Grid(column_homogeneous=True, column_spacing=3, hexpand=True)
+    track.add_css_class("partition-map-track")
+    total_columns, spans = _manual_segment_spans(segments)
+    column = 0
+    for segment, span in zip(segments, spans, strict=True):
+        compact = span / total_columns < 0.12
+        block = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=2,
+            height_request=58,
+            hexpand=True,
+            valign=Gtk.Align.FILL,
+        )
+        block.add_css_class("partition-map-segment")
+        block.add_css_class(f"partition-map-{segment.kind.value}")
+        if compact:
+            block.add_css_class("partition-map-segment-compact")
+        title = Gtk.Label(
+            label=_manual_segment_title(segment, lang, compact=compact),
+            ellipsize=Pango.EllipsizeMode.END,
+            xalign=0,
+        )
+        title.add_css_class("partition-map-title")
+        size = Gtk.Label(
+            label=_human_size(segment.size_mib * MIB),
+            ellipsize=Pango.EllipsizeMode.END,
+            xalign=0,
+        )
+        size.add_css_class("partition-map-size")
+        block.append(title)
+        block.append(size)
+        block.set_tooltip_text(
+            _("{name} · {size} · {start}–{end} MiB", lang).format(
+                name=_manual_segment_title(segment, lang),
+                size=_human_size(segment.size_mib * MIB),
+                start=segment.start_mib,
+                end=segment.end_mib,
+            )
+        )
+        track.attach(block, column, 0, span, 1)
+        column += span
+
+    if reused_esp_partuuid is None:
+        return track
+    annotations = tuple(
+        _manual_segment_annotation(segment, reused_esp_partuuid, lang)
+        for segment in segments
+    )
+    if not any(annotations):
+        return track
+
+    annotation_track = Gtk.Grid(
+        column_homogeneous=True,
+        column_spacing=3,
+        hexpand=True,
+    )
+    annotation_track.add_css_class("partition-map-annotations")
+    column = 0
+    for annotation, span in zip(annotations, spans, strict=True):
+        if annotation is None:
+            marker = Gtk.Box(hexpand=True)
+        else:
+            text, role_class = annotation
+            marker = Gtk.Box(
+                orientation=Gtk.Orientation.VERTICAL,
+                spacing=0,
+                hexpand=True,
+                halign=Gtk.Align.FILL,
+                valign=Gtk.Align.END,
+            )
+            marker.add_css_class("partition-map-annotation")
+            marker.add_css_class(
+                f"partition-map-annotation-{role_class}"
+            )
+            label = Gtk.Label(
+                label=text,
+                wrap=True,
+                wrap_mode=Pango.WrapMode.WORD_CHAR,
+                justify=Gtk.Justification.CENTER,
+                xalign=0.5,
+            )
+            label.add_css_class("partition-map-annotation-label")
+            arrow = Gtk.Label(label="↓")
+            arrow.add_css_class("partition-map-annotation-arrow")
+            marker.append(label)
+            marker.append(arrow)
+            marker.set_tooltip_text(text)
+        annotation_track.attach(marker, column, 0, span, 1)
+        column += span
+
+    annotated_track = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=1,
+    )
+    annotated_track.append(annotation_track)
+    annotated_track.append(track)
+    return annotated_track
+
+
+def _manual_disk_map_panel(disk, draft, lang):
+    disk_map = build_manual_disk_map(disk, draft)
+    panel = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+    panel.add_css_class("partition-map-panel")
+    for title, segments, reused_esp_partuuid in (
+        (_("Current disk", lang), disk_map.current, None),
+        (
+            _("Planned result", lang),
+            disk_map.planned,
+            draft.reused_esp_partuuid,
+        ),
+    ):
+        heading = Gtk.Label(label=title, xalign=0)
+        heading.add_css_class("partition-map-heading")
+        panel.append(heading)
+        panel.append(
+            _manual_disk_map_track(
+                segments,
+                lang,
+                reused_esp_partuuid=reused_esp_partuuid,
+            )
+        )
+    return panel
+
+def build_advanced_storage_page(shared, nav_view):
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
+    page = Adw.NavigationPage(title=_("Advanced Storage", lang))
+    page.set_tag("advanced-storage")
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+    content.append(
+        _page_header(
+            "Advanced: Manual Partitioning",
+            "Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 "
+            "may be shrunk after safety checks.",
+            "advanced",
+            lang,
+        )
+    )
+
+    shrink_hint = Gtk.Label(label=_("Btrfs shrinking is not supported.", lang), wrap=True)
+    shrink_hint.add_css_class("dim-label")
+    content.append(shrink_hint)
+
+    disk_notice = Gtk.Box(
+        orientation=Gtk.Orientation.HORIZONTAL,
+        spacing=12,
+        margin_start=48,
+        margin_end=48,
+    )
+    disk_notice.add_css_class("installer-callout")
+    disk_icon = Gtk.Image.new_from_icon_name("drive-harddisk-symbolic")
+    disk_icon.set_pixel_size(24)
+    disk_notice.append(disk_icon)
+    disk_copy = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
+    target = Gtk.Label(
+        label=_("Target: {disk} ({size} — {model})", lang).format(
+            disk=shared.get("disk", "?"),
+            size=shared.get("disk_size", "?"),
+            model=shared.get("disk_model", "?"),
+        ),
+        xalign=0,
+        wrap=True,
+    )
+    target.add_css_class("partition-editor-title")
+    disk_copy.append(target)
+    if shared.get("disk_windows_detected"):
+        windows_notice = Gtk.Label(
+            label=_(
+                "Windows was detected. Its partitions remain preserved "
+                "unless you explicitly mark them for deletion.",
+                lang,
+            ),
+            xalign=0,
+            wrap=True,
+            hexpand=True,
+        )
+        windows_notice.add_css_class("dim-label")
+        disk_copy.append(windows_notice)
+    disk_notice.append(disk_copy)
+    content.append(disk_notice)
+
+    workspace = Adw.ViewStack(vexpand=True)
+    switcher = Adw.ViewSwitcher(
+        stack=workspace,
+        policy=Adw.ViewSwitcherPolicy.WIDE,
+        halign=Gtk.Align.CENTER,
+    )
+    switcher.add_css_class("manual-storage-switcher")
+    content.append(switcher)
+
+    planner = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=12,
+        margin_start=48,
+        margin_end=48,
+        margin_top=8,
+    )
+    planner.add_css_class("installer-card")
+    disk_map_box = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=8,
+    )
+    disk_map_box.append(
+        Gtk.Label(label=_("Loading storage devices…", lang), xalign=0)
+    )
+    planner.append(disk_map_box)
+    planning_scroll = _scrolled_window(
+        inset=True,
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+        vexpand=True,
+    )
+    planning_scroll.set_child(clamp_content(planner, 980))
+    workspace.add_titled_with_icon(
+        planning_scroll,
+        "plan",
+        _("Planned result", lang),
+        "drive-harddisk-symbolic",
+    )
+
+    editor = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=12,
+        margin_start=48,
+        margin_end=48,
+        margin_top=8,
+    )
+    editor.add_css_class("installer-card")
+
+    table_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+    table_label = Gtk.Label(
+        label=_("Loading storage devices…", lang),
+        xalign=0,
+        hexpand=True,
+        wrap=True,
+    )
+    table_label.add_css_class("heading")
+    table_button = Gtk.Button(
+        label=_("Initialize New GPT", lang),
+        sensitive=False,
+    )
+    table_button.add_css_class("destructive-action")
+    table_row.append(table_label)
+    table_row.append(table_button)
+    editor.append(table_row)
+
+    selected_filesystem = next(
+        (
+            item
+            for item in _MANUAL_ROOT_FILESYSTEMS
+            if item.value == shared.get("filesystem")
+        ),
+        Filesystem.BTRFS,
+    )
+
+    editor.append(Gtk.Separator())
+    editor.append(
+        Gtk.Label(
+            label=_("Existing partitions", lang),
+            xalign=0,
+            css_classes=["heading"],
+        )
+    )
+    existing_box = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=6,
+    )
+    editor.append(existing_box)
+
+    esp_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+    esp_copy = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=2,
+        hexpand=True,
+    )
+    esp_title = Gtk.Label(label=_("EFI System Partition", lang), xalign=0)
+    esp_title.add_css_class("partition-editor-title")
+    esp_help = Gtk.Label(
+        label=_(
+            "Reuse a healthy existing ESP without formatting it, or create "
+            "a new one in available space.",
+            lang,
+        ),
+        xalign=0,
+        wrap=True,
+    )
+    esp_help.add_css_class("dim-label")
+    esp_copy.append(esp_title)
+    esp_copy.append(esp_help)
+    esp_row.append(esp_copy)
+    esp_dropdown = Gtk.DropDown(sensitive=False)
+    esp_row.append(esp_dropdown)
+    esp_row.append(_esp_help_button(lang))
+    editor.append(esp_row)
+
+    editor.append(Gtk.Separator())
+    editor.append(
+        Gtk.Label(
+            label=_("New partitions", lang),
+            xalign=0,
+            css_classes=["heading"],
+        )
+    )
+    planned_box = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=6,
+    )
+    editor.append(planned_box)
+    compression_control = _btrfs_compression_control(shared, lang)
+    compression_control.set_visible(False)
+    editor.append(compression_control)
+
+    creator_heading = Gtk.Box(
+        orientation=Gtk.Orientation.VERTICAL,
+        spacing=2,
+        margin_top=6,
+    )
+    creator_title = Gtk.Label(label=_("Add a partition", lang), xalign=0)
+    creator_title.add_css_class("heading")
+    creator_help = Gtk.Label(
+        label=_(
+            "Choose an available range, exact start position, and size. "
+            "Nothing is written until installation begins.",
+            lang,
+        ),
+        xalign=0,
+        wrap=True,
+    )
+    creator_help.add_css_class("dim-label")
+    creator_heading.append(creator_title)
+    creator_heading.append(creator_help)
+    editor.append(creator_heading)
+
+    create_grid = Gtk.Grid(column_spacing=8, row_spacing=6)
+    create_grid.add_css_class("partition-creator")
+    create_grid.attach(Gtk.Label(label=_("Role", lang)), 0, 0, 1, 1)
+    create_grid.attach(Gtk.Label(label=_("Available space", lang)), 1, 0, 3, 1)
+    create_grid.attach(Gtk.Label(label=_("Start (MiB)", lang)), 0, 2, 1, 1)
+    create_grid.attach(Gtk.Label(label=_("Size (MiB)", lang)), 1, 2, 1, 1)
+    role_dropdown = Gtk.DropDown(
+        model=Gtk.StringList.new(_manual_role_choices(lang)),
+        sensitive=False,
+    )
+    role_dropdown.update_property(
+        [Gtk.AccessibleProperty.LABEL], [_('Role', lang)]
+    )
+    role_dropdown.set_selected(1)
+    extent_dropdown = Gtk.DropDown(hexpand=True, sensitive=False)
+    start_input = Gtk.SpinButton.new_with_range(1, 1, 1)
+    start_input.update_property(
+        [Gtk.AccessibleProperty.LABEL], [_('Start (MiB)', lang)]
+    )
+    start_input.set_numeric(True)
+    start_input.set_sensitive(False)
+    size_input = Gtk.SpinButton.new_with_range(1, 1, 1)
+    size_input.update_property(
+        [Gtk.AccessibleProperty.LABEL], [_('Size (MiB)', lang)]
+    )
+    size_input.set_numeric(True)
+    size_input.set_sensitive(False)
+    fill_button = Gtk.Button(
+        label=_("Use All", lang),
+        sensitive=False,
+    )
+    add_button = Gtk.Button(
+        label=_("Add Partition", lang),
+        sensitive=False,
+    )
+    add_button.add_css_class("suggested-action")
+    create_grid.attach(role_dropdown, 0, 1, 1, 1)
+    create_grid.attach(extent_dropdown, 1, 1, 3, 1)
+    create_grid.attach(start_input, 0, 3, 1, 1)
+    create_grid.attach(size_input, 1, 3, 1, 1)
+    create_grid.attach(fill_button, 2, 3, 1, 1)
+    create_grid.attach(add_button, 3, 3, 1, 1)
+    editor.append(create_grid)
+
+    status = Gtk.Label(xalign=0, wrap=True, selectable=True)
+    status.add_css_class("installer-callout")
+    editor.append(status)
+
+    loading = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+    loading.append(
+        Gtk.Label(label=_("Loading storage devices…", lang), xalign=0)
+    )
+    loading_progress = Gtk.ProgressBar(hexpand=True)
+    loading_progress.add_css_class("installer-progress")
+    loading.append(loading_progress)
+    editor.append(loading)
+
+    editing_scroll = _scrolled_window(
+        inset=True,
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+        vexpand=True,
+    )
+    editing_scroll.set_child(clamp_content(editor, 980))
+    workspace.add_titled_with_icon(
+        editing_scroll,
+        "edit",
+        _("Edit", lang),
+        "document-edit-symbolic",
+    )
+    content.append(workspace)
+
+    workflow = None
+    disk = None
+    draft = None
+    extents = []
+    esp_options = []
+    updating = False
+    geometry_updating = False
+    next_button = None
+    refresh_source_id = None
+    retired_widgets = []
+    requests = LatestBackgroundRequest(GLib.idle_add)
+    resize_requests = LatestBackgroundRequest(GLib.idle_add)
+    pulse = ProgressPulse(
+        loading_progress, GLib.timeout_add, GLib.source_remove
+    )
+
+    def _clear_box(box):
+        # GTK may finish pointer-release bookkeeping after a clicked row has
+        # been unparented. Keep the previous rendered generation alive until
+        # the next refresh so GTK never observes a finalized event target.
+        child = box.get_first_child()
+        while child is not None:
+            following = child.get_next_sibling()
+            box.remove(child)
+            retired_widgets.append(child)
+            child = following
+
+    def _set_next(enabled):
+        if next_button is not None:
+            next_button.set_sensitive(enabled)
+
+    def _role():
+        return MANUAL_PARTITION_ROLES[role_dropdown.get_selected()]
+
+    def _replace_draft(**changes):
+        nonlocal draft
+        shared.pop("esp_replacement", None)
+        resize_requests.invalidate()
+        draft = replace(draft, **changes)
+        shared["manual_storage_selection_model"] = draft
+        shared["manual_storage_preview_model"] = None
+
+    def _queue_refresh():
+        """Refresh after the current GTK signal has finished dispatching."""
+
+        nonlocal refresh_source_id
+        if refresh_source_id is not None:
+            return
+
+        def run_refresh():
+            nonlocal refresh_source_id
+            refresh_source_id = None
+            _refresh()
+            return GLib.SOURCE_REMOVE
+
+        # Pointer-release handling and DropDown popovers may retain the
+        # activated widget through the next frame. Rebuilding its row from an
+        # idle callback is therefore still too early on GTK/Wayland. Let the
+        # interaction and its close animation settle before replacing rows or
+        # models; repeated edits are coalesced into this one refresh.
+        refresh_source_id = GLib.timeout_add(250, run_refresh)
+
+    def _partition_row(
+        primary,
+        secondary,
+        action_label,
+        callback,
+        *,
+        action_enabled=True,
+        status_text="",
+        status_class="preserve",
+        will_delete=False,
+        icon_name="drive-harddisk-symbolic",
+        secondary_action_label="",
+        secondary_callback=None,
+        inline_widget=None,
+    ):
+        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        row.add_css_class("partition-editor-row")
+        if will_delete:
+            row.add_css_class("partition-editor-row-delete")
+        icon = Gtk.Image.new_from_icon_name(icon_name)
+        icon.set_pixel_size(24)
+        icon.set_valign(Gtk.Align.CENTER)
+        row.append(icon)
+        copy = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=2,
+            hexpand=True,
+        )
+        title = Gtk.Label(label=primary, xalign=0, selectable=True)
+        title.add_css_class("partition-editor-title")
+        copy.append(title)
+        detail = Gtk.Label(label=secondary, xalign=0, wrap=True)
+        detail.add_css_class("dim-label")
+        copy.append(detail)
+        row.append(copy)
+        if status_text:
+            badge = Gtk.Label(label=status_text)
+            badge.add_css_class("partition-status")
+            badge.add_css_class(f"partition-status-{status_class}")
+            badge.set_valign(Gtk.Align.CENTER)
+            row.append(badge)
+        if inline_widget is not None:
+            row.append(inline_widget)
+        if secondary_action_label and secondary_callback is not None:
+            secondary_button = Gtk.Button(label=secondary_action_label)
+            secondary_button.connect(
+                "clicked", lambda _button: secondary_callback()
+            )
+            row.append(secondary_button)
+        button = Gtk.Button(label=action_label)
+        button.set_sensitive(action_enabled)
+        if will_delete and action_enabled:
+            button.add_css_class("destructive-action")
+        button.connect("clicked", lambda _button: callback())
+        row.append(button)
+        return row
+
+    def _minimum_partition_size(role):
+        return {
+            ManualPartitionRole.EFI_SYSTEM: 512,
+            ManualPartitionRole.ROOT: HARD_MINIMUM_ROOT_MIB,
+            ManualPartitionRole.SWAP: 1,
+        }[role]
+
+    def _recommended_partition_size(role, maximum):
+        if role is ManualPartitionRole.EFI_SYSTEM:
+            return min(maximum, 1024)
+        recommended_swap = min(maximum, 4096)
+        if workflow is not None:
+            try:
+                recommended_swap = calculate_swap_sizing(
+                    workflow.physical_memory_bytes,
+                    maximum * MIB,
+                    esp_size_mib=0,
+                ).swap_size_mib
+            except (RuntimeError, ValueError):
+                pass
+        if role is ManualPartitionRole.SWAP:
+            return min(maximum, max(1, recommended_swap))
+        has_swap = any(
+            item.role is ManualPartitionRole.SWAP
+            for item in draft.new_partitions
+        )
+        minimum = _minimum_partition_size(role)
+        if not has_swap and maximum - recommended_swap >= minimum:
+            return maximum - recommended_swap
+        return maximum
+
+    def _refresh_geometry(*, reset_start=False, reset_size=False):
+        nonlocal geometry_updating
+        if geometry_updating:
+            return
+        position = extent_dropdown.get_selected()
+        if not (0 <= position < len(extents)):
+            start_input.set_sensitive(False)
+            size_input.set_sensitive(False)
+            fill_button.set_sensitive(False)
+            add_button.set_sensitive(False)
+            return
+        extent = extents[position]
+        role = _role()
+        minimum = _minimum_partition_size(role)
+        geometry_updating = True
+        try:
+            latest_start = max(
+                extent.start_mib,
+                extent.end_mib - minimum,
+            )
+            start_input.set_range(extent.start_mib, latest_start)
+            start = start_input.get_value_as_int()
+            if (
+                reset_start
+                or start < extent.start_mib
+                or start > latest_start
+            ):
+                start = extent.start_mib
+                start_input.set_value(start)
+            maximum = extent.end_mib - start
+            size_input.set_range(minimum, max(minimum, maximum))
+            size = size_input.get_value_as_int()
+            if reset_size or size < minimum or size > maximum:
+                size_input.set_value(
+                    _recommended_partition_size(role, maximum)
+                )
+            role_available = not any(
+                item.role is role for item in draft.new_partitions
+            )
+            valid = maximum >= minimum and role_available
+            start_input.set_sensitive(maximum >= minimum)
+            size_input.set_sensitive(maximum >= minimum)
+            fill_button.set_sensitive(maximum >= minimum)
+            add_button.set_sensitive(valid)
+        finally:
+            geometry_updating = False
+
+    def _fill_available_space():
+        position = extent_dropdown.get_selected()
+        if not (0 <= position < len(extents)):
+            return
+        maximum = extents[position].end_mib - start_input.get_value_as_int()
+        size_input.set_value(maximum)
+
+    def _edit_partition(selected):
+        remaining = tuple(
+            item
+            for item in draft.new_partitions
+            if item is not selected
+        )
+        without_selected = replace(draft, new_partitions=remaining)
+        available = manual_available_extents(disk, without_selected)
+        container = next(
+            (
+                item
+                for item in available
+                if selected.start_mib >= item.start_mib
+                and selected.end_mib <= item.end_mib
+            ),
+            None,
+        )
+        if container is None:
+            status.set_label(
+                _("That partition can no longer be edited safely.", lang)
+            )
+            return
+
+        minimum = _minimum_partition_size(selected.role)
+        form = Gtk.Grid(
+            column_spacing=10,
+            row_spacing=8,
+            margin_top=8,
+            margin_bottom=8,
+        )
+        form.attach(
+            Gtk.Label(label=_("Start (MiB)", lang), xalign=0),
+            0,
+            0,
+            1,
+            1,
+        )
+        edit_start = Gtk.SpinButton.new_with_range(
+            container.start_mib,
+            container.end_mib - minimum,
+            1,
+        )
+        edit_start.set_value(selected.start_mib)
+        form.attach(edit_start, 1, 0, 1, 1)
+        form.attach(
+            Gtk.Label(label=_("Size (MiB)", lang), xalign=0),
+            0,
+            1,
+            1,
+            1,
+        )
+        edit_size = Gtk.SpinButton.new_with_range(
+            minimum,
+            container.end_mib - selected.start_mib,
+            1,
+        )
+        edit_size.set_value(selected.size_mib)
+        form.attach(edit_size, 1, 1, 1, 1)
+        use_all = Gtk.Button(label=_("Use All Available Space", lang))
+        form.attach(use_all, 0, 2, 2, 1)
+
+        changing = {"active": False}
+
+        def update_edit_limit(*_args):
+            if changing["active"]:
+                return
+            changing["active"] = True
+            try:
+                maximum = (
+                    container.end_mib - edit_start.get_value_as_int()
+                )
+                edit_size.set_range(minimum, maximum)
+                if edit_size.get_value_as_int() > maximum:
+                    edit_size.set_value(maximum)
+            finally:
+                changing["active"] = False
+
+        edit_start.connect("value-changed", update_edit_limit)
+        use_all.connect(
+            "clicked",
+            lambda _button: edit_size.set_value(
+                container.end_mib - edit_start.get_value_as_int()
+            ),
+        )
+
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_("Edit {role} partition", lang).format(
+                role=_manual_role_title(selected.role, lang)
+            ),
+            body=_(
+                "Choose an exact position and size inside the available "
+                "range. Other planned partitions are not moved.",
+                lang,
+            ),
+            extra_child=form,
+        )
+        dialog.add_response("cancel", _("Cancel", lang))
+        dialog.add_response("apply", _("Apply Changes", lang))
+        dialog.set_default_response("apply")
+
+        def apply_edit(_dialog, response):
+            if response != "apply":
+                return
+            start_mib = edit_start.get_value_as_int()
+            edited = ManualPartitionRequest(
+                selected.role,
+                start_mib,
+                start_mib + edit_size.get_value_as_int(),
+            )
+            _replace_draft(
+                new_partitions=tuple(
+                    sorted(
+                        (*remaining, edited),
+                        key=lambda item: item.start_mib,
+                    )
+                )
+            )
+            _queue_refresh()
+
+        dialog.connect("response", apply_edit)
+        dialog.present()
+
+    def _show_resize_blocked(heading, body, *, repair_steps=None):
+        failure = Gtk.Label(
+            label=body,
+            xalign=0,
+            wrap=True,
+            selectable=True,
+        )
+        failure.add_css_class("installer-danger-card")
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=heading,
+            extra_child=failure,
+        )
+        dialog.add_response("close", _("Close", lang))
+        dialog.set_default_response("close")
+        dialog.set_close_response("close")
+        if repair_steps is not None:
+            dialog.add_response("repair-steps", _("View Repair Steps", lang))
+
+            def show_steps(_dialog, response):
+                if response != "repair-steps":
+                    return
+                steps = Adw.MessageDialog(
+                    transient_for=nav_view.get_root(),
+                    heading=_("Repair Steps", lang),
+                    extra_child=Gtk.Label(
+                        label=repair_steps, xalign=0, wrap=True, selectable=True,
+                    ),
+                )
+                steps.add_response("close", _("Close", lang))
+                steps.set_default_response("close")
+                steps.set_close_response("close")
+                steps.present()
+
+            dialog.connect("response", show_steps)
+        dialog.present()
+
+    def _show_resize_inspection_blocked(inspection):
+        message = _resize_block_message(inspection)
+        repair_steps = None
+        if inspection.block_reason is NtfsResizeBlockReason.CHECK_REQUIRED:
+            repair_steps = message
+            message = _(
+                "This NTFS volume requires a disk check in Windows before "
+                "it can be resized safely.",
+                lang,
+            )
+        _show_resize_blocked(
+            _("This partition cannot be resized safely", lang),
+            message,
+            repair_steps=repair_steps,
+        )
+
+    def _resize_block_message(inspection):
+        if inspection.filesystem == "ext4":
+            return inspection.message
+        reason = inspection.block_reason
+        if reason is NtfsResizeBlockReason.CHECK_REQUIRED:
+            return _(
+                "This NTFS volume requires a disk check. In Windows, back up "
+                "important files and run 'chkdsk X: /f' as administrator "
+                "(replace X with this volume's drive letter). If prompted, "
+                "schedule the check, then restart into Windows. Let the check "
+                "finish and fully shut down Windows before trying again.",
+                lang,
+            )
+        if reason is NtfsResizeBlockReason.BITLOCKER:
+            return _(
+                "BitLocker was detected. Return to Windows, open Manage "
+                "BitLocker, choose Turn off BitLocker, and wait until "
+                "decryption reaches 100%. Suspending protection is not "
+                "enough. Back up the recovery key, fully shut Windows down, "
+                "then start the installer again.",
+                lang,
+            )
+        if reason is NtfsResizeBlockReason.HIBERNATED:
+            return _(
+                "Windows is hibernated or Fast Startup is active. In an "
+                "Administrator Terminal run 'powercfg /h off', disable Fast "
+                "Startup, then run 'shutdown /s /t 0'. Start the installer "
+                "again only after Windows has fully shut down.",
+                lang,
+            )
+        if reason in {
+            NtfsResizeBlockReason.UNCLEAN,
+            NtfsResizeBlockReason.INCONSISTENT,
+            NtfsResizeBlockReason.CHECK_FAILED,
+        }:
+            return _(
+                "Windows did not leave this NTFS volume clean. Return to "
+                "Windows, run 'chkdsk C: /f', allow every requested reboot "
+                "to finish, then fully shut Windows down before trying again.",
+                lang,
+            )
+        if reason is NtfsResizeBlockReason.MFT_RELOCATION_UNSAFE:
+            return _(
+                "This target would require moving critical NTFS MFT metadata "
+                "through a currently unsafe upstream code path. Choose a "
+                "larger Windows size or shrink the volume from Windows.",
+                lang,
+            )
+        if reason in {
+            NtfsResizeBlockReason.MOUNTED,
+            NtfsResizeBlockReason.IN_USE,
+        }:
+            return _(
+                "This NTFS volume is mounted or in use. Unmount it and rescan "
+                "storage before continuing.",
+                lang,
+            )
+        return inspection.message
+
+    def _show_resize_dialog(partition, inspection):
+        minimum_mib = inspection.minimum_size_bytes // MIB
+        maximum_mib = inspection.maximum_size_bytes // MIB
+        current_mib = partition.identity.size_bytes // MIB
+        existing = resize_for_partuuid(draft, partition.identity.partuuid)
+        initial_mib = (
+            existing.target_size_mib
+            if existing is not None
+            else max(minimum_mib, min(maximum_mib, current_mib // 2))
+        )
+
+        form = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=10,
+            margin_top=8,
+            margin_bottom=8,
+        )
+        warning = Gtk.Label(
+            label=_(
+                "Shrinking ext4 can cause permanent data loss. Back up important files. "
+                "The minimum size is an estimate; filesystem checks run before and after resizing."
+                if inspection.filesystem == "ext4" else
+                "This operation moves NTFS data and changes the GPT partition "
+                "boundary. A power loss, failing drive, firmware fault or "
+                "filesystem bug can cause permanent data loss. Back up all "
+                "important Windows files before continuing.",
+                lang,
+            ),
+            xalign=0,
+            wrap=True,
+        )
+        warning.add_css_class("installer-warning-card")
+        form.append(warning)
+
+        size_heading = Gtk.Label(
+            label=_("Size (MiB)" if inspection.filesystem == "ext4" else "New Windows partition size", lang),
+            xalign=0,
+        )
+        size_heading.add_css_class("heading")
+        form.append(size_heading)
+        scale = Gtk.Scale.new_with_range(
+            Gtk.Orientation.HORIZONTAL,
+            minimum_mib,
+            maximum_mib,
+            256,
+        )
+        scale.set_draw_value(False)
+        scale.set_value(initial_mib)
+        form.append(scale)
+        size_row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        size_spin = Gtk.SpinButton.new_with_range(
+            minimum_mib,
+            maximum_mib,
+            1,
+        )
+        size_spin.set_numeric(True)
+        size_spin.update_property([Gtk.AccessibleProperty.LABEL], [_("Size (MiB)", lang)])
+        size_spin.set_value(initial_mib)
+        size_row.append(size_spin)
+        size_row.append(Gtk.Label(label=_("MiB", lang)))
+        range_label = Gtk.Label(
+            label=_("Allowed: {minimum}–{maximum}", lang).format(
+                minimum=_human_size(inspection.minimum_size_bytes),
+                maximum=_human_size(inspection.maximum_size_bytes),
+            ),
+            xalign=0,
+            hexpand=True,
+        )
+        range_label.add_css_class("dim-label")
+        size_row.append(range_label)
+        form.append(size_row)
+        result_label = Gtk.Label(xalign=0, wrap=True)
+        result_label.add_css_class("partition-editor-title")
+        form.append(result_label)
+
+        synchronized = {"active": False}
+
+        def update_result(value_mib):
+            reclaimed = max(0, current_mib - value_mib)
+            if inspection.filesystem == "ext4":
+                result_label.set_label(
+                    _("Planned size: {size}", lang).format(size=_human_size(value_mib * MIB))
+                    + " · " + _("Unallocated · {size}", lang).format(size=_human_size(reclaimed * MIB)))
+                return
+            result_label.set_label(
+                _(
+                    "Windows: {windows} · New unallocated space: {free}",
+                    lang,
+                ).format(
+                    windows=_human_size(value_mib * MIB),
+                    free=_human_size(reclaimed * MIB),
+                )
+            )
+
+        def scale_changed(_widget):
+            if synchronized["active"]:
+                return
+            synchronized["active"] = True
+            value = int(round(scale.get_value()))
+            size_spin.set_value(value)
+            update_result(value)
+            synchronized["active"] = False
+
+        def spin_changed(_widget):
+            if synchronized["active"]:
+                return
+            synchronized["active"] = True
+            value = size_spin.get_value_as_int()
+            scale.set_value(value)
+            update_result(value)
+            synchronized["active"] = False
+
+        scale.connect("value-changed", scale_changed)
+        size_spin.connect("value-changed", spin_changed)
+        update_result(initial_mib)
+
+        acknowledge = Gtk.CheckButton(
+            label=_(
+                "I have backed up my data." if inspection.filesystem == "ext4" else
+                "I have backed up my data and understand that shrinking an "
+                "existing Windows partition can cause permanent data loss.",
+                lang,
+            )
+        )
+        form.append(acknowledge)
+
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_("Change the size of {partition}?", lang).format(
+                partition=partition.identity.path
+            ),
+            body=_(
+                "The partition start will not move. Only its end will move "
+                "left, creating unallocated space immediately after it.",
+                lang,
+            ),
+            extra_child=form,
+        )
+        dialog.add_response("cancel", _("Cancel", lang))
+        if existing is not None:
+            dialog.add_response("remove", _("Undo Planned Resize", lang))
+        dialog.set_default_response("cancel")
+        dialog.set_close_response("cancel")
+        dialog.add_response("apply", _("Plan Resize", lang))
+        dialog.set_response_appearance(
+            "apply", Adw.ResponseAppearance.DESTRUCTIVE
+        )
+        dialog.set_response_enabled("apply", False)
+        acknowledge.connect(
+            "toggled",
+            lambda button: dialog.set_response_enabled(
+                "apply", button.get_active()
+            ),
+        )
+
+        def response(_dialog, response_id):
+            remaining = tuple(
+                item
+                for item in draft.resized_partitions
+                if item.partuuid != partition.identity.partuuid
+            )
+            if response_id == "remove":
+                _replace_draft(resized_partitions=remaining)
+                _queue_refresh()
+                return
+            if response_id != "apply":
+                return
+            planned = ManualPartitionResizeRequest(
+                partuuid=partition.identity.partuuid,
+                original_size_bytes=partition.identity.size_bytes,
+                target_size_mib=size_spin.get_value_as_int(),
+            )
+            by_partuuid = {
+                item.partuuid: item for item in (*remaining, planned)
+            }
+            _replace_draft(
+                resized_partitions=tuple(
+                    by_partuuid[item.identity.partuuid]
+                    for item in disk.partitions
+                    if item.identity.partuuid in by_partuuid
+                )
+            )
+            _queue_refresh()
+
+        dialog.connect("response", response)
+        dialog.present()
+
+    def _begin_partition_resize(partition):
+        if any(item.is_bitlocker_partition for item in disk.partitions):
+            _show_resize_blocked(
+                _("Turn off BitLocker before shrinking", lang),
+                _(
+                    "BitLocker was detected. Return to Windows, open Manage "
+                    "BitLocker, choose Turn off BitLocker, and wait until "
+                    "decryption reaches 100%. Suspending protection is not "
+                    "enough. Back up the recovery key, fully shut Windows "
+                    "down, then start the installer again.",
+                    lang,
+                ),
+            )
+            return
+        status.set_label(
+            _("Checking whether {partition} can be resized safely…", lang).format(
+                partition=partition.identity.path
+            )
+        )
+        status.remove_css_class("installer-success-card")
+        status.add_css_class("installer-warning-card")
+        _set_next(False)
+
+        def completed(inspection, error):
+            if error is not None:
+                _show_resize_blocked(
+                    _("NTFS safety check failed" if partition.filesystem_type.casefold() == "ntfs"
+                      else "This partition cannot be resized safely", lang),
+                    str(error),
+                )
+                _queue_refresh()
+                return
+            if not inspection.safe:
+                _show_resize_inspection_blocked(inspection)
+                _queue_refresh()
+                return
+            _show_resize_dialog(partition, inspection)
+            _queue_refresh()
+
+        resize_requests.start(
+            lambda: probe_partition_resize(
+                partition.identity.path,
+                filesystem=partition.filesystem_type.casefold(),
+                development_mode=bool(shared.get("development_mode")),
+                current_size_bytes=partition.identity.size_bytes,
+            ),
+            completed,
+        )
+
+    def _refresh():
+        nonlocal extents, esp_options, updating
+        if draft is None or disk is None:
+            return
+        retired_widgets.clear()
+        updating = True
+        table_button.set_sensitive(True)
+        shared["filesystem"] = draft.filesystem.value
+        compression_control.set_visible(
+            draft.filesystem is Filesystem.BTRFS
+            and any(
+                item.role is ManualPartitionRole.ROOT
+                for item in draft.new_partitions
+            )
+        )
+        table_label.set_label(
+            _("New empty GPT — every existing partition will be deleted", lang)
+            if draft.reinitialize_gpt
+            else _("Keep current GPT — only marked partitions are deleted", lang)
+        )
+        table_button.set_label(
+            _("Keep Current GPT", lang)
+            if draft.reinitialize_gpt
+            else _("Initialize New GPT", lang)
+        )
+        _clear_box(disk_map_box)
+        disk_map_box.append(_manual_disk_map_panel(disk, draft, lang))
+
+        _clear_box(existing_box)
+        deleted = set(draft.deleted_partuuids)
+        for partition in disk.partitions:
+            partuuid = partition.identity.partuuid
+            will_delete = draft.reinitialize_gpt or partuuid in deleted
+            planned_resize = resize_for_partuuid(draft, partuuid)
+            filesystem_name = partition.filesystem_type or _("unknown", lang)
+            status_text = _("WILL DELETE", lang) if will_delete else _("Preserve", lang)
+
+            def toggle_partition(selected=partuuid):
+                marked = set(draft.deleted_partuuids)
+                if selected in marked:
+                    marked.remove(selected)
+                else:
+                    marked.add(selected)
+                reused = draft.reused_esp_partuuid
+                if selected in marked and reused == selected:
+                    reused = ""
+                _replace_draft(
+                    deleted_partuuids=tuple(
+                        item.identity.partuuid
+                        for item in disk.partitions
+                        if item.identity.partuuid in marked
+                    ),
+                    reused_esp_partuuid=reused,
+                    resized_partitions=tuple(
+                        item
+                        for item in draft.resized_partitions
+                        if item.partuuid != selected
+                    ),
+                )
+                _queue_refresh()
+
+            existing_box.append(
+                _partition_row(
+                    f"{partition.identity.path} · {_human_size(partition.identity.size_bytes)}",
+                    " · ".join(
+                        item
+                        for item in (
+                            filesystem_name,
+                            partition.filesystem_label,
+                            (
+                                _("Planned size: {size}", lang).format(
+                                    size=_human_size(
+                                        planned_resize.target_size_mib * MIB
+                                    )
+                                )
+                                if planned_resize is not None
+                                else ""
+                            ),
+                            _("EFI System Partition", lang)
+                            if partition.is_efi_system_partition
+                            else "",
+                        )
+                        if item
+                    ),
+                    (
+                        _("Deleted by new GPT", lang)
+                        if draft.reinitialize_gpt
+                        else _("Undo", lang)
+                        if will_delete
+                        else _("Delete", lang)
+                    ),
+                    toggle_partition,
+                    action_enabled=not draft.reinitialize_gpt,
+                    status_text=(
+                        _("RESIZE", lang)
+                        if planned_resize is not None and not will_delete
+                        else status_text
+                    ),
+                    status_class=(
+                        "resize"
+                        if planned_resize is not None and not will_delete
+                        else "delete"
+                        if will_delete
+                        else "preserve"
+                    ),
+                    will_delete=will_delete,
+                    icon_name=(
+                        "computer-symbolic"
+                        if partition.is_windows_partition
+                        else "drive-harddisk-symbolic"
+                    ),
+                    secondary_action_label=(
+                        _("Change Size", lang)
+                        if (
+                            partition.filesystem_type.casefold() in {"ntfs", "ext4"}
+                            and not draft.reinitialize_gpt
+                            and not will_delete
+                        )
+                        else ""
+                    ),
+                    secondary_callback=(
+                        lambda selected=partition: _begin_partition_resize(selected)
+                    ),
+                )
+            )
+        if not disk.partitions:
+            empty = Gtk.Label(
+                label=_("This disk has no existing partitions.", lang),
+                xalign=0,
+            )
+            empty.add_css_class("partition-empty-state")
+            existing_box.append(empty)
+
+        preserved_esps = [
+            item
+            for item in disk.partitions
+            if not draft.reinitialize_gpt
+            and item.identity.partuuid not in deleted
+            and item.is_efi_filesystem_candidate
+            and item.filesystem_uuid
+        ]
+        esp_options = [None, *preserved_esps]
+        esp_dropdown.set_model(
+            Gtk.StringList.new(
+                [_("Create a new ESP partition", lang)]
+                + [
+                    _("Reuse {path} ({size})", lang).format(
+                        path=item.identity.path,
+                        size=_human_size(item.identity.size_bytes),
+                    )
+                    for item in preserved_esps
+                ]
+            )
+        )
+        selected_esp = next(
+            (
+                index
+                for index, item in enumerate(esp_options)
+                if item is not None
+                and item.identity.partuuid == draft.reused_esp_partuuid
+            ),
+            0,
+        )
+        esp_dropdown.set_selected(selected_esp)
+
+        _clear_box(planned_box)
+        for request in draft.new_partitions:
+            def remove_partition(selected=request):
+                _replace_draft(
+                    new_partitions=tuple(
+                        item
+                        for item in draft.new_partitions
+                        if item is not selected
+                    )
+                )
+                _queue_refresh()
+
+            root_filesystem = None
+            if request.role is ManualPartitionRole.ROOT:
+                root_filesystem = Gtk.DropDown(
+                    model=Gtk.StringList.new(
+                        [
+                            _("Btrfs (recommended)", lang),
+                            _("ext4 (classic)", lang),
+                            _("XFS (classic, scalable)", lang),
+                            _("F2FS (flash-optimized)", lang),
+                        ]
+                    )
+                )
+                root_filesystem.set_selected(
+                    _MANUAL_ROOT_FILESYSTEMS.index(draft.filesystem)
+                )
+                root_filesystem.set_tooltip_text(_("Filesystem", lang))
+                root_filesystem.connect(
+                    "notify::selected",
+                    lambda dropdown, _pspec: _filesystem_changed(dropdown),
+                )
+
+            planned_box.append(
+                _partition_row(
+                    _manual_role_title(request.role, lang),
+                    _("{size} · {start}–{end} MiB", lang).format(
+                        size=_human_size(request.size_mib * MIB),
+                        start=request.start_mib,
+                        end=request.end_mib,
+                    ),
+                    _("Remove", lang),
+                    remove_partition,
+                    status_text=_("New", lang),
+                    status_class="new",
+                    icon_name="list-add-symbolic",
+                    secondary_action_label=_("Edit", lang),
+                    secondary_callback=(
+                        lambda selected=request: _edit_partition(selected)
+                    ),
+                    inline_widget=root_filesystem,
+                )
+            )
+        if not draft.new_partitions:
+            empty = Gtk.Label(
+                label=_(
+                    "No new partitions yet. Add an ESP if needed, one Root "
+                    "partition, and optionally Swap.",
+                    lang,
+                ),
+                xalign=0,
+                wrap=True,
+            )
+            empty.add_css_class("partition-empty-state")
+            planned_box.append(empty)
+
+        extents = list(manual_available_extents(disk, draft))
+        extent_dropdown.set_model(
+            Gtk.StringList.new(
+                [
+                    _("{size} at {start} MiB", lang).format(
+                        size=_human_size(item.size_mib * MIB),
+                        start=item.start_mib,
+                    )
+                    for item in extents
+                ]
+            )
+        )
+        if extents:
+            extent_dropdown.set_selected(0)
+        planned_roles = {item.role for item in draft.new_partitions}
+        if (
+            not draft.reused_esp_partuuid
+            and ManualPartitionRole.EFI_SYSTEM not in planned_roles
+        ):
+            role_dropdown.set_selected(0)
+        elif ManualPartitionRole.ROOT not in planned_roles:
+            role_dropdown.set_selected(1)
+        elif ManualPartitionRole.SWAP not in planned_roles:
+            role_dropdown.set_selected(2)
+        updating = False
+        esp_dropdown.set_sensitive(True)
+        role_dropdown.set_sensitive(True)
+        extent_dropdown.set_sensitive(bool(extents))
+        size_input.set_sensitive(bool(extents))
+        _refresh_geometry(reset_start=True, reset_size=True)
+
+        try:
+            preview = build_manual_storage_preview(workflow, draft)
+        except ValueError as error:
+            planned_roles = {item.role for item in draft.new_partitions}
+            missing = []
+            if not draft.reused_esp_partuuid and (
+                ManualPartitionRole.EFI_SYSTEM not in planned_roles
+            ):
+                missing.append(_("an ESP of at least 512 MiB", lang))
+            if ManualPartitionRole.ROOT not in planned_roles:
+                missing.append(_("Root", lang))
+            status.set_label(
+                _("Complete the plan: {requirements}.", lang).format(
+                    requirements=", ".join(missing)
+                )
+                if missing
+                else str(error)
+            )
+            status.remove_css_class("installer-success-card")
+            status.add_css_class("installer-warning-card")
+            _set_next(False)
+        else:
+            shared["manual_storage_preview_model"] = preview
+            status.set_label(
+                _(
+                    "Layout is valid. Only the listed resizes, deletes, "
+                    "creates and formats will be sent to the privileged "
+                    "executor.",
+                    lang,
+                )
+            )
+            status.remove_css_class("installer-warning-card")
+            status.add_css_class("installer-success-card")
+            _set_next(True)
+
+    def _esp_changed():
+        if updating or draft is None:
+            return
+        position = esp_dropdown.get_selected()
+        if not (0 <= position < len(esp_options)):
+            return
+        selected = esp_options[position]
+        reused = selected.identity.partuuid if selected is not None else ""
+        requests_without_esp = tuple(
+            item
+            for item in draft.new_partitions
+            if item.role is not ManualPartitionRole.EFI_SYSTEM
+        )
+        _replace_draft(
+            reused_esp_partuuid=reused,
+            new_partitions=(
+                requests_without_esp if reused else draft.new_partitions
+            ),
+        )
+        _queue_refresh()
+
+    def _add_partition():
+        if draft is None:
+            return
+        position = extent_dropdown.get_selected()
+        if not (0 <= position < len(extents)):
+            return
+        extent = extents[position]
+        role = _role()
+        if any(item.role is role for item in draft.new_partitions):
+            status.set_label(_("That partition role already exists.", lang))
+            return
+        size_mib = size_input.get_value_as_int()
+        start_mib = start_input.get_value_as_int()
+        request = ManualPartitionRequest(
+            role,
+            start_mib,
+            start_mib + size_mib,
+        )
+        new_partitions = tuple(
+            sorted(
+                (*draft.new_partitions, request),
+                key=lambda item: item.start_mib,
+            )
+        )
+        _replace_draft(
+            reused_esp_partuuid=(
+                ""
+                if role is ManualPartitionRole.EFI_SYSTEM
+                else draft.reused_esp_partuuid
+            ),
+            new_partitions=new_partitions,
+        )
+        _queue_refresh()
+
+    def _toggle_table():
+        if draft is None:
+            return
+        if draft.reinitialize_gpt:
+            _replace_draft(
+                reinitialize_gpt=False,
+                deleted_partuuids=(),
+                reused_esp_partuuid="",
+                new_partitions=(),
+                resized_partitions=(),
+            )
+            _queue_refresh()
+            return
+        dialog = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_("Initialize a new GPT?", lang),
+            body=_(
+                "Every existing partition and all data on this disk will be "
+                "deleted. You must then create a new ESP and Root partition.",
+                lang,
+            ),
+        )
+        dialog.add_response("cancel", _("Cancel", lang))
+        dialog.add_response("confirm", _("Initialize GPT", lang))
+        dialog.set_response_appearance(
+            "confirm", Adw.ResponseAppearance.DESTRUCTIVE
+        )
+
+        def confirmed(_dialog, response):
+            if response != "confirm":
+                return
+            _replace_draft(
+                reinitialize_gpt=True,
+                deleted_partuuids=(),
+                reused_esp_partuuid="",
+                new_partitions=(),
+                resized_partitions=(),
+            )
+            _queue_refresh()
+
+        dialog.connect("response", confirmed)
+        dialog.present()
+
+    def _apply_workflow(result, error):
+        nonlocal workflow, disk, draft
+        pulse.stop()
+        loading.set_visible(False)
+        if error is not None:
+            status.set_label(
+                _("Storage devices could not be loaded: {error}", lang).format(
+                    error=error
+                )
+            )
+            return
+        workflow = result
+        shared["_platform_probe_result"] = workflow.platform
+        try:
+            choice = workflow.disk(str(shared.get("disk_stable_id") or ""))
+        except KeyError:
+            status.set_label(
+                _("The selected disk changed or disappeared.", lang)
+            )
+            return
+        if bind_storage_target(shared, choice):
+            status.set_label(
+                _("The selected disk topology changed. Select it again.", lang)
+            )
+            return
+        disk = choice.disk
+        stored = shared.get("manual_storage_selection_model")
+        if (
+            isinstance(stored, ManualStorageSelection)
+            and stored.disk_stable_id == disk.identity.stable_id
+            and stored.disk_topology_digest == disk.topology_digest
+        ):
+            draft = stored
+        else:
+            reusable_esp = next(
+                (
+                    item
+                    for item in disk.partitions
+                    if item.is_efi_filesystem_candidate
+                    and item.filesystem_uuid
+                ),
+                None,
+            )
+            draft = ManualStorageSelection(
+                disk_stable_id=disk.identity.stable_id,
+                disk_size_bytes=disk.identity.expected_size_bytes,
+                disk_topology_digest=disk.topology_digest,
+                reinitialize_gpt=False,
+                deleted_partuuids=(),
+                reused_esp_partuuid=(
+                    reusable_esp.identity.partuuid if reusable_esp else ""
+                ),
+                filesystem=selected_filesystem,
+                new_partitions=(),
+            )
+            shared["manual_storage_selection_model"] = draft
+        _queue_refresh()
+
+    def _load_workflow():
+        table_label.set_label(_("Loading storage devices…", lang))
+        table_button.set_sensitive(False)
+        esp_dropdown.set_sensitive(False)
+        role_dropdown.set_sensitive(False)
+        extent_dropdown.set_sensitive(False)
+        start_input.set_sensitive(False)
+        size_input.set_sensitive(False)
+        fill_button.set_sensitive(False)
+        add_button.set_sensitive(False)
+        loading.set_visible(True)
+        pulse.start()
+        _set_next(False)
+        requests.start(
+            lambda: _probe_storage_workflow(
+                development_mode=bool(shared.get("development_mode"))
+            ),
+            _apply_workflow,
+        )
+
+    table_button.connect("clicked", lambda _button: _toggle_table())
+    add_button.connect("clicked", lambda _button: _add_partition())
+    esp_dropdown.connect(
+        "notify::selected", lambda _widget, _pspec: _esp_changed()
+    )
+    extent_dropdown.connect(
+        "notify::selected",
+        lambda _widget, _pspec: _refresh_geometry(
+            reset_start=True,
+            reset_size=True,
+        ),
+    )
+    role_dropdown.connect(
+        "notify::selected",
+        lambda _widget, _pspec: _refresh_geometry(reset_size=True),
+    )
+    start_input.connect(
+        "value-changed",
+        lambda _widget: _refresh_geometry(),
+    )
+    fill_button.connect(
+        "clicked", lambda _button: _fill_available_space()
+    )
+
+    def _filesystem_changed(dropdown):
+        if draft is None:
+            return
+        position = dropdown.get_selected()
+        if not (0 <= position < len(_MANUAL_ROOT_FILESYSTEMS)):
+            return
+        selected = _MANUAL_ROOT_FILESYSTEMS[position]
+        _replace_draft(filesystem=selected)
+        _queue_refresh()
+
+    def on_next():
+        if not isinstance(
+            shared.get("manual_storage_preview_model"),
+            ManualStoragePreview,
+        ):
+            return
+        preview = shared["manual_storage_preview_model"]
+        root = next(item for item in preview.selection.new_partitions
+                    if item.role is ManualPartitionRole.ROOT)
+
+        def proceed():
+            if shared.get("manual_storage_preview_model") is not preview:
+                return
+
+            def finish(authorization=None, error=None):
+                pulse.stop()
+                loading.set_visible(False)
+                if shared.get("manual_storage_preview_model") is not preview:
+                    return
+                _set_next(True)
+                if error is not None:
+                    status.set_label(str(error))
+                    return
+                def advance():
+                    if shared.get("manual_storage_preview_model") is not preview:
+                        return
+                    shared["esp_replacement"] = authorization
+                    shared["_manual_storage_workflow_model"] = workflow
+                    nav_view.push(build_user_page(shared, nav_view))
+
+                def back():
+                    if shared.get("manual_storage_preview_model") is not preview:
+                        return
+                    _replace_draft(reused_esp_partuuid="")
+                    _queue_refresh()
+
+                if authorization is not None and shared.get("esp_replacement") != authorization:
+                    _esp_conflict_dialog(nav_view, lang, esp.identity.path, advance, back)
+                else:
+                    advance()
+
+            esp = next((item for item in disk.partitions
+                        if item.identity.partuuid == preview.selection.reused_esp_partuuid), None)
+            if esp is None:
+                finish()
+            else:
+                _set_next(False)
+                status.set_label(_("Checking EFI System Partition…", lang))
+                loading.set_visible(True)
+                pulse.start()
+                requests.start(
+                    lambda: probe_esp_replacement(esp,
+                        development_mode=bool(shared.get("development_mode"))),
+                    finish,
+                )
+
+        _confirm_storage_capacity(page, nav_view, lang, root.size_mib * MIB, proceed)
 
     nav = _nav_box(
         lang,
@@ -3381,37 +6076,28 @@ def build_advanced_storage_page(shared, nav_view):
         page_tag="advanced-storage",
     )
     next_button = nav.next_button
-    _filesystem_changed()
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
+
+    def _page_mapped(_widget):
+        requests.activate()
+        resize_requests.activate()
+        _load_workflow()
 
     def _page_unmapped(_widget):
+        nonlocal refresh_source_id
         requests.invalidate()
+        resize_requests.invalidate()
         pulse.stop()
         loading.set_visible(False)
+        if refresh_source_id is not None:
+            GLib.source_remove(refresh_source_id)
+            refresh_source_id = None
+        retired_widgets.clear()
 
-    page.connect("map", lambda _widget: requests.activate())
+    page.connect("map", _page_mapped)
     page.connect("unmap", _page_unmapped)
-    _load_workflow()
     return page
-
-
-def _find_live_device():
-    """Heuristic: find the block device backing /cdrom or /rofs."""
-    try:
-        import subprocess
-        # Check common live media mount points
-        for mp in ["/cdrom", "/run/live/medium"]:
-            out = subprocess.check_output(
-                ["findmnt", "-n", "-o", "SOURCE", mp],
-                text=True, timeout=3,
-            ).strip()
-            if out and out.startswith("/dev/"):
-                # Strip partition number to get the base device
-                return _base_device(out)
-    except Exception:
-        pass
-    return ""
 
 
 def _human_size(size_bytes: int) -> str:
@@ -3421,16 +6107,6 @@ def _human_size(size_bytes: int) -> str:
             return f"{size:.1f} {unit}"
         size /= 1024
     return f"{size_bytes} B"
-
-
-def _base_device(dev_path: str) -> str:
-    """Strip partition suffix from a device path.  /dev/sda1 → /dev/sda"""
-    import re
-    m = re.match(r"(/dev/(?:nvme\d+n\d+|mmcblk\d+|sd[a-z]+|vd[a-z]+))\d+", dev_path)
-    if m:
-        return m.group(1)
-    # If it's already a base device, return it
-    return dev_path
 
 
 # ── page 7: User account ─────────────────────────────────────────────────
@@ -3617,7 +6293,8 @@ def build_user_page(shared, nav_view):
     shared["_clear_password_ui"] = _clear_password_ui
     host_entry.connect("changed", lambda _e: _validate())
 
-    account_scroll = Gtk.ScrolledWindow(
+    account_scroll = _scrolled_window(
+        inset=True,
         hscrollbar_policy=Gtk.PolicyType.NEVER,
         vexpand=True,
     )
@@ -3654,7 +6331,7 @@ def build_user_page(shared, nav_view):
     )
     nxt_btn = nav.next_button
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -3734,7 +6411,7 @@ def build_advanced_options_page(shared, nav_view):
     )
     _choice_row(
         local_group,
-        N_("Log in to the desktop automatically"),
+        N_("Log in to the desktop without a password"),
         N_(
             "Open this account's desktop automatically when the computer "
             "starts."
@@ -3778,7 +6455,8 @@ def build_advanced_options_page(shared, nav_view):
         row.connect("notify::active", _on_choice_toggled, key)
     _update_security_warning()
 
-    options_scroll = Gtk.ScrolledWindow(
+    options_scroll = _scrolled_window(
+        inset=True,
         hscrollbar_policy=Gtk.PolicyType.NEVER,
         vexpand=True,
     )
@@ -3801,7 +6479,7 @@ def build_advanced_options_page(shared, nav_view):
             page_tag="advanced-options",
         )
     )
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -3854,11 +6532,17 @@ def build_timezone_page(shared, nav_view):
 
     tz_list = Gtk.ListView(model=Gtk.SingleSelection(model=filter_model),
                            factory=factory, vexpand=True)
-    tz_scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER,
-                                   margin_start=48, margin_end=48,
-                                   vexpand=True)
+    tz_list.add_css_class("installer-list-view")
+    tz_scroll = _scrolled_window(
+        inset=True,
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+        vexpand=True,
+    )
     tz_scroll.set_child(tz_list)
     tz_scroll.add_css_class("installer-list-card")
+    # Clip selected rows and the scrollbar to the card's CSS rounded corners.
+    # ScrolledWindow defaults to visible overflow, unlike the welcome Frame.
+    tz_scroll.set_overflow(Gtk.Overflow.HIDDEN)
 
     search.connect("search-changed", lambda _s: timezone_filter.changed(
         Gtk.FilterChange.DIFFERENT))
@@ -3923,7 +6607,7 @@ def build_timezone_page(shared, nav_view):
             shared=shared, page_tag="timezone"
         )
     )
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -3972,7 +6656,9 @@ def build_summary_page(shared, nav_view):
         shared.get("storage_mode")
         == InstallMode.GUIDED_COEXISTENCE.value
     )
+    manual_mode = shared.get("storage_mode") == InstallMode.MANUAL.value
     guided_preview = shared.get("guided_storage_preview_model")
+    manual_preview = shared.get("manual_storage_preview_model")
     if development_mode:
         development_banner = Gtk.Label(
             label=_(
@@ -3999,7 +6685,12 @@ def build_summary_page(shared, nav_view):
     secure_boot_enabled = False
     platform = None
     try:
-        platform = probe_platform()
+        # Storage scanning already acquired this snapshot off-thread. The
+        # executor independently rechecks it as root immediately before work.
+        platform = shared.get("_platform_probe_result")
+        if platform is None:
+            raise ProbeError(shared.get("_platform_probe_error") or
+                             "Firmware detection has not completed")
         secure_boot_enabled = platform.secure_boot is SecureBoot.ENABLED
         platform_text = _(
             "{architecture} / {firmware} / Secure Boot: {secure_boot}",
@@ -4021,24 +6712,39 @@ def build_summary_page(shared, nav_view):
             f"{item.name}→{item.mount_point}" for item in BTRFS_SUBVOLUMES
         )
         if filesystem == "btrfs"
-        else _("single ext4 root filesystem", lang)
+        else (
+            _("single ext4 root filesystem", lang)
+            if filesystem == "ext4"
+            else f"single {filesystem.upper()} root filesystem"
+        )
     )
     swap_sizing = None
     try:
-        swap_sizing = (
+        swap_sizing = None if manual_mode else (
             guided_preview.swap_sizing
             if guided_mode and isinstance(guided_preview, GuidedStoragePreview)
             else calculate_swap_sizing(
                 probe_physical_memory_bytes(),
                 int(shared.get("disk_size_bytes") or 0),
+                layout_overhead_mib=erase_disk_overhead_mib(Filesystem(filesystem)),
             )
         )
     except (RuntimeError, ValueError):
         pass
+    if (
+        swap_sizing is not None
+        and guided_mode
+        and isinstance(guided_preview, GuidedStoragePreview)
+    ):
+        shared["swap_size_mib"] = guided_preview.swap_size_mib
+    selected_swap_size_mib = _validated_swap_size(shared, swap_sizing)
+    keyboard_id = xkb_choice_id(
+        str(shared.get("keyboard", "us")),
+        str(shared.get("keyboard_variant", "")),
+    )
     lines = [
         f"<b>{_('Language', lang)}:</b> {lang_name}",
-        f"<b>{_('Keyboard', lang)}:</b> "
-        f"{escape(shared.get('keyboard', 'us'))}",
+        f"<b>{_('Keyboard', lang)}:</b> {escape(keyboard_id)}",
         f"<b>{_('Target Disk', lang)}:</b> "
         f"{escape(shared.get('disk', '?'))} "
         f"({escape(shared.get('disk_size', '?'))} — "
@@ -4125,78 +6831,128 @@ def build_summary_page(shared, nav_view):
             f"<b>{_('Install input method', lang)}:</b> {method_summary}",
         )
 
-    if guided_mode:
-        if not isinstance(guided_preview, GuidedStoragePreview):
-            platform_error = platform_error or _(
-                "Guided storage selection is missing. Rescan and select the "
-                "target again.",
+    def _guided_storage_lines(preview):
+        confirmation = build_guided_storage_confirmation(preview)
+        preserved_paths = ", ".join(confirmation.preserved_paths)
+        created_partitions = ", ".join(
+            _("{name}: {start}–{end} MiB", lang).format(
+                name=item.name,
+                start=item.start_mib,
+                end=item.end_mib,
+            )
+            for item in confirmation.new_partitions
+        )
+        formatted_paths = ", ".join(
+            _("{path} as {filesystem}", lang).format(
+                path=item.display_path,
+                filesystem=item.filesystem,
+            )
+            for item in confirmation.formats
+        )
+        if confirmation.reused_esp_path:
+            esp_policy = _(
+                "Reuse {path}; never format it; verify FAT health, "
+                "identity and 64 MiB free before writing.",
+                lang,
+            ).format(path=confirmation.reused_esp_path)
+        else:
+            esp_policy = _(
+                "Create and format a dedicated AnduinOS EFI System "
+                "Partition inside the selected space.",
                 lang,
             )
-        else:
-            confirmation = build_guided_storage_confirmation(guided_preview)
-            preserved_paths = ", ".join(confirmation.preserved_paths)
-            created_partitions = ", ".join(
-                _("{name}: {start}–{end} MiB", lang).format(
-                    name=item.name,
-                    start=item.start_mib,
-                    end=item.end_mib,
-                )
-                for item in confirmation.new_partitions
+        return [
+            f"<b>{_('Storage mode', lang)}:</b> "
+            + _("Install alongside", lang),
+            f"<b>{_('Selected unallocated space', lang)}:</b> "
+            + _("{size} at {offset}", lang).format(
+                size=_human_size(preview.extent.size_bytes),
+                offset=_human_size(preview.extent.start_bytes),
+            ),
+            f"<b>{_('Preserved partitions', lang)}:</b> "
+            + _("{count}: {paths}", lang).format(
+                count=len(confirmation.preserved_paths),
+                paths=escape(preserved_paths),
+            ),
+            f"<b>{_('New partitions', lang)}:</b> "
+            + escape(created_partitions),
+            f"<b>{_('Formats', lang)}:</b> "
+            + escape(formatted_paths),
+            f"<b>{_('EFI policy', lang)}:</b> " + escape(esp_policy),
+            f"<b>{_('Boot policy', lang)}:</b> "
+            + _(
+                "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, "
+                "and require a verified AnduinOS NVRAM entry.",
+                lang,
+            ),
+        ]
+
+    def _manual_storage_lines(preview):
+        confirmation = build_manual_storage_confirmation(preview)
+        preserved = ", ".join(confirmation.preserved_paths) or _("none", lang)
+        deleted = ", ".join(confirmation.deleted_paths) or _("none", lang)
+        resized = ", ".join(
+            _("{path}: {before} → {after} (free {reclaimed})", lang).format(
+                path=item.display_path,
+                before=_human_size(item.original_size_bytes),
+                after=_human_size(item.target_size_bytes),
+                reclaimed=_human_size(item.reclaimed_bytes),
             )
-            formatted_paths = ", ".join(
-                _("{path} as {filesystem}", lang).format(
-                    path=item.display_path,
-                    filesystem=item.filesystem,
-                )
-                for item in confirmation.formats
+            for item in confirmation.resized_partitions
+        ) or _("none", lang)
+        created = ", ".join(
+            _("{name}: {size} MiB ({start}–{end})", lang).format(
+                name=item.name,
+                size=item.end_mib - item.start_mib,
+                start=item.start_mib,
+                end=item.end_mib,
             )
-            if confirmation.reused_esp_path:
-                esp_policy = _(
-                    "Reuse {path}; never format it; verify FAT health, "
-                    "identity and 64 MiB free before writing.",
-                    lang,
-                ).format(
-                    path=confirmation.reused_esp_path
-                )
-            else:
-                esp_policy = _(
-                    "Create and format a dedicated AnduinOS EFI System "
-                    "Partition inside the selected space.",
-                    lang,
-                )
-            coexistence_lines = [
-                f"<b>{_('Storage mode', lang)}:</b> "
-                + _("Install alongside", lang),
-                f"<b>{_('Selected unallocated space', lang)}:</b> "
-                + _("{size} at {offset}", lang).format(
-                    size=_human_size(guided_preview.extent.size_bytes),
-                    offset=_human_size(guided_preview.extent.start_bytes),
-                ),
-                f"<b>{_('Preserved partitions', lang)}:</b> "
-                + _("{count}: {paths}", lang).format(
-                    count=len(confirmation.preserved_paths),
-                    paths=escape(preserved_paths),
-                ),
-                f"<b>{_('New partitions', lang)}:</b> "
-                + escape(created_partitions),
-                f"<b>{_('Formats', lang)}:</b> "
-                + escape(formatted_paths),
-                f"<b>{_('EFI policy', lang)}:</b> "
-                + escape(esp_policy),
-                f"<b>{_('Boot policy', lang)}:</b> "
-                + _(
-                    "Write only EFI/AnduinOS, do not overwrite EFI/BOOT, "
-                    "and require a verified AnduinOS NVRAM entry.",
-                    lang,
-                ),
-            ]
-            lines[5:5] = coexistence_lines
-    elif platform is not None and swap_sizing is not None:
+            for item in confirmation.new_partitions
+        )
+        formats = ", ".join(
+            _("{path} as {filesystem}", lang).format(
+                path=item.display_path,
+                filesystem=item.filesystem,
+            )
+            for item in confirmation.formats
+        )
+        table_policy = (
+            _("Initialize a new empty GPT", lang)
+            if confirmation.reinitializes_gpt
+            else _("Keep the current GPT", lang)
+        )
+        esp_policy = (
+            _(
+                "Reuse {path}; inspect it and never format it.",
+                lang,
+            ).format(path=confirmation.reused_esp_path)
+            if confirmation.reused_esp_path
+            else _("Create and format a new EFI System Partition.", lang)
+        )
+        return [
+            f"<b>{_('Storage mode', lang)}:</b> "
+            + _("Advanced manual GPT", lang),
+            f"<b>{_('Partition table', lang)}:</b> {escape(table_policy)}",
+            f"<b>{_('Preserved partitions', lang)}:</b> {escape(preserved)}",
+            f"<b>{_('Deleted partitions', lang)}:</b> {escape(deleted)}",
+            f"<b>{_('Resized partitions', lang)}:</b> {escape(resized)}",
+            f"<b>{_('New partitions', lang)}:</b> {escape(created)}",
+            f"<b>{_('Formats', lang)}:</b> {escape(formats)}",
+            f"<b>{_('EFI policy', lang)}:</b> {escape(esp_policy)}",
+            f"<b>{_('Boot policy', lang)}:</b> "
+            + _(
+                "Write only EFI/AnduinOS, preserve EFI/BOOT, and create a "
+                "verified AnduinOS NVRAM entry.",
+                lang,
+            ),
+        ]
+
+    def _erase_storage_lines(swap_size_mib):
         layout = build_erase_disk_layout_spec(
             architecture=platform.architecture,
             filesystem=Filesystem(filesystem),
             esp_size_mib=1024,
-            swap_size_mib=swap_sizing.swap_size_mib,
+            swap_size_mib=swap_size_mib,
         )
         disk_size_mib = int(shared.get("disk_size_bytes") or 0) // MIB
         partition_rows = []
@@ -4220,7 +6976,7 @@ def build_summary_page(shared, nav_view):
             elif item.flags:
                 details.append(",".join(item.flags))
             partition_rows.append(" · ".join(details))
-        lines[5:5] = [
+        return [
             f"<b>{_('Storage mode', lang)}:</b> "
             + _(
                 "Erase every partition and all data on the selected disk.",
@@ -4230,11 +6986,60 @@ def build_summary_page(shared, nav_view):
             + escape("\n".join(partition_rows)),
         ]
 
+    storage_lines = []
+    if guided_mode:
+        if not isinstance(guided_preview, GuidedStoragePreview):
+            platform_error = platform_error or _(
+                "Guided storage selection is missing. Rescan and select the "
+                "target again.",
+                lang,
+            )
+        else:
+            storage_lines = _guided_storage_lines(guided_preview)
+    elif manual_mode:
+        if not isinstance(manual_preview, ManualStoragePreview):
+            platform_error = platform_error or _(
+                "Manual storage selection is missing. Return and review it.",
+                lang,
+            )
+        else:
+            storage_lines = _manual_storage_lines(manual_preview)
+    elif (
+        platform is not None
+        and selected_swap_size_mib is not None
+    ):
+        storage_lines = _erase_storage_lines(selected_swap_size_mib)
+    storage_lines_start = 5
+    lines[storage_lines_start:storage_lines_start] = storage_lines
+    authorization = shared.get("esp_replacement")
+    if authorization is not None and (guided_mode or manual_mode):
+        preview = guided_preview if guided_mode else manual_preview
+        esp = None
+        if isinstance(preview, (GuidedStoragePreview, ManualStoragePreview)):
+            esp = next((p for p in preview.disk.partitions
+                        if p.identity.partuuid == authorization.partuuid), None)
+        if esp is not None:
+            lines.append(escape(_(
+                "Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; "
+                "the previous AnduinOS boot entry may no longer start the old system.",
+                lang).format(path=esp.identity.path)))
+
+    if filesystem == "btrfs":
+        selected_compression = BtrfsCompression(shared.get("btrfs_compression", "balanced"))
+        compression_title = next(title for preset, title, _description in BTRFS_COMPRESSION_CHOICES
+                                 if preset is selected_compression)
+        lines.insert(
+            storage_lines_start + len(storage_lines) + 1,
+            f"<b>{_('Btrfs file compression', lang)}:</b> {escape(_(compression_title, lang))}",
+        )
+
     summary_label = Gtk.Label(
         margin_start=48,
         margin_end=48,
         margin_top=24,
         wrap=True,
+        # Disk identities can contain long tokens without word boundaries.
+        wrap_mode=Pango.WrapMode.WORD_CHAR,
         xalign=0,
     )
     summary_label.set_markup("\n\n".join(lines))
@@ -4243,59 +7048,88 @@ def build_summary_page(shared, nav_view):
     summary_card.set_margin_end(48)
     summary_card.set_margin_top(12)
     summary_card.append(summary_label)
-    if swap_sizing is not None:
-        swap_gib = swap_sizing.swap_size_mib // 1024
-        hibernation_gib = swap_sizing.hibernation_target_mib // 1024
-        runtime_gib = swap_sizing.runtime_target_mib // 1024
-        budget_gib = swap_sizing.disk_budget_mib // 1024
-        swap_details = [
-            f"RAM = {_human_size(swap_sizing.physical_memory_bytes)}",
-            "swap ≥ 2 GiB",
-            "/ ≥ 20 GiB",
-            f"swap ≤ {budget_gib} GiB  (disk − ESP − /)",
-            (
-                f"ceil(RAM) + 1 GiB = {hibernation_gib} GiB  ✓"
-                if swap_sizing.hibernation_capacity
-                else f"ceil(RAM) + 1 GiB = {hibernation_gib} GiB  ✗"
-            ),
-        ]
-        if not swap_sizing.hibernation_capacity:
-            swap_details.append(
-                f"ceil(RAM / 2) ≤ 64 GiB = {runtime_gib} GiB  ✓"
+    swap_warning_for_install = None
+    if swap_sizing is not None and selected_swap_size_mib is not None:
+        swap_warning_for_install = _swap_assessment(
+            swap_sizing,
+            selected_swap_size_mib,
+            lang,
+        )[3]
+
+        # Guided storage is retained for compatibility with unfinished flows.
+        # Automatic erase modes configure Swap on the disk-layout page instead.
+        if guided_mode:
+            def _guided_swap_changed(swap_size_mib):
+                nonlocal guided_preview
+                nonlocal storage_lines
+                nonlocal swap_warning_for_install
+                shared["swap_size_mib"] = swap_size_mib
+                swap_warning_for_install = _swap_assessment(
+                    swap_sizing,
+                    swap_size_mib,
+                    lang,
+                )[3]
+                workflow = shared.get("_guided_storage_workflow_model")
+                if isinstance(workflow, StorageWorkflow) and isinstance(
+                    guided_preview, GuidedStoragePreview
+                ):
+                    guided_preview = build_guided_storage_preview(
+                        workflow,
+                        guided_preview.selection,
+                        swap_size_mib=swap_size_mib,
+                    )
+                    shared["guided_storage_preview_model"] = guided_preview
+                    updated_storage_lines = _guided_storage_lines(
+                        guided_preview
+                    )
+                    lines[
+                        storage_lines_start:
+                        storage_lines_start + len(storage_lines)
+                    ] = updated_storage_lines
+                    storage_lines = updated_storage_lines
+                    summary_label.set_markup("\n\n".join(lines))
+
+            summary_card.append(
+                _swap_control(
+                    swap_sizing,
+                    selected_swap_size_mib,
+                    lang,
+                    _guided_swap_changed,
+                )
             )
-        swap_details.append(f"⇒ swap = {swap_gib} GiB")
-        swap_explanation = Gtk.Expander(
-            label=f"{_('Swap', lang)}: {swap_gib} GiB · ⚙ AUTO ⓘ",
-            margin_start=12,
-            margin_end=12,
-            margin_bottom=8,
-        )
-        swap_explanation.set_tooltip_text(
-            _(
-                "4 GiB disk swap (priority 10) + "
-                "50% RAM LZ4 zram (priority 100)",
-                lang,
-            ).replace("4 GiB", f"{swap_gib} GiB", 1)
-        )
-        detail_label = Gtk.Label(
-            xalign=0,
-            wrap=True,
-            selectable=True,
-            margin_start=24,
-            margin_top=8,
-            margin_bottom=8,
-        )
-        detail_label.set_markup(
-            "<tt>" + escape("\n".join(swap_details)) + "</tt>"
-        )
-        swap_explanation.set_child(detail_label)
-        summary_card.append(swap_explanation)
-    summary_scroll = Gtk.ScrolledWindow(
+    summary_scroll = _scrolled_window(
+        inset=True,
         hscrollbar_policy=Gtk.PolicyType.NEVER,
         vexpand=True,
     )
     summary_scroll.set_child(clamp_content(summary_card, 860))
     content.append(summary_scroll)
+
+    if _uses_external_drive_mode(shared):
+        portable_boot = Gtk.Box(
+            orientation=Gtk.Orientation.HORIZONTAL,
+            spacing=14,
+            margin_start=48,
+            margin_end=48,
+            margin_top=12,
+        )
+        portable_boot.add_css_class("installer-success-card")
+        portable_boot.append(icon_picture("flashing-disk", 42))
+        portable_boot.append(
+            Gtk.Label(
+                label=_(
+                    "External drive mode — AnduinOS will add a portable "
+                    "UEFI boot path so this drive can boot on another UEFI "
+                    "computer without an existing AnduinOS firmware boot "
+                    "entry.",
+                    lang,
+                ),
+                wrap=True,
+                xalign=0,
+                hexpand=True,
+            )
+        )
+        content.append(portable_boot)
 
     # Warning
     warning_text = (
@@ -4308,6 +7142,14 @@ def build_summary_page(shared, nav_view):
         )
         if guided_mode
         else _(
+            "⚠ Listed NTFS/ext4 resizes will move filesystem data and partition "
+            "boundaries. Listed partitions will be deleted and every listed "
+            "new partition will be formatted. Back up important data first; "
+            "these partitioning operations cannot be undone.",
+            lang,
+        )
+        if manual_mode
+        else _(
             "⚠ This will erase ALL data on the selected disk. "
             "This action cannot be undone.",
             lang,
@@ -4317,7 +7159,7 @@ def build_summary_page(shared, nav_view):
     warn.add_css_class("warning")
     warn.add_css_class(
         "installer-warning-card"
-        if guided_mode
+        if guided_mode or manual_mode
         else "installer-danger-card"
     )
     warn.set_halign(Gtk.Align.CENTER)
@@ -4393,7 +7235,9 @@ def build_summary_page(shared, nav_view):
         recheck_pulse.start()
 
         def _probe_target():
-            return probe_storage_inventory(), probe_platform()
+            return _probe_install_target(
+                development_mode=development_mode
+            )
 
         recheck_requests.start(_probe_target, _apply_recheck)
 
@@ -4407,6 +7251,9 @@ def build_summary_page(shared, nav_view):
         elif guided_mode:
             confirmation_heading = N_("Install in the selected free space?")
             confirmation_action = N_("Install Alongside")
+        elif manual_mode:
+            confirmation_heading = N_("Apply this manual disk layout?")
+            confirmation_action = N_("Apply Layout and Install")
         else:
             confirmation_heading = N_("Erase the entire selected disk?")
             confirmation_action = N_("Erase Disk and Install")
@@ -4429,6 +7276,12 @@ def build_summary_page(shared, nav_view):
                     ).format(disk=disk)
                     if guided_mode
                     else _(
+                        "AnduinOS will apply only the reviewed manual changes "
+                        "to {disk}.\n\n",
+                        lang,
+                    ).format(disk=disk)
+                    if manual_mode
+                    else _(
                         "All partitions and data on {disk} will be "
                         "destroyed.\n\n",
                         lang,
@@ -4450,6 +7303,13 @@ def build_summary_page(shared, nav_view):
                         lang,
                     )
                     if guided_mode
+                    else _(
+                        "Only the explicitly listed partitions will be "
+                        "deleted or formatted. Uninvolved partitions remain "
+                        "unchanged; EFI/BOOT is not overwritten.",
+                        lang,
+                    )
+                    if manual_mode
                     else _(
                         "This installer does not shrink or preserve other "
                         "systems.",
@@ -4483,7 +7343,33 @@ def build_summary_page(shared, nav_view):
             return
         assert install_button is not None
         install_button.set_sensitive(False)
-        _start_recheck()
+        if swap_warning_for_install is None:
+            _start_recheck()
+            return
+        warning = Adw.MessageDialog(
+            transient_for=nav_view.get_root(),
+            heading=_("Review your custom Swap size", lang),
+            body=(
+                f"{swap_warning_for_install}\n\n"
+                + _("ZRAM will remain enabled regardless of this choice.", lang)
+            ),
+        )
+        warning.add_response("back", _("Back", lang))
+        warning.add_response("continue", _("Continue", lang))
+        warning.set_response_appearance(
+            "continue", Adw.ResponseAppearance.SUGGESTED
+        )
+        warning.set_default_response("back")
+        warning.set_close_response("back")
+
+        def _warning_response(_dialog, response):
+            if response == "continue":
+                _start_recheck()
+            else:
+                install_button.set_sensitive(True)
+
+        warning.connect("response", _warning_response)
+        warning.present()
 
     def on_back():
         nav_view.pop()
@@ -4495,6 +7381,8 @@ def build_summary_page(shared, nav_view):
         next_label=(
             _("Install Alongside", lang)
             if guided_mode
+            else _("Apply Layout and Install", lang)
+            if manual_mode
             else _("Install", lang)
         ),
         next_destructive=not development_mode,
@@ -4505,7 +7393,7 @@ def build_summary_page(shared, nav_view):
     install_button = nav.next_button
     install_button.set_sensitive(not bool(platform_error))
     content.append(nav)
-    page.set_child(content)
+    _set_page_content(page, content)
 
     def _page_unmapped(_widget):
         recheck_requests.invalidate()
@@ -4518,6 +7406,21 @@ def build_summary_page(shared, nav_view):
 
 
 # ── page 10: Progress / Installation ─────────────────────────────────────
+
+def incomplete_feature_steps(outcomes):
+    """Report missing features, not a transient probe that later recovered."""
+    features = {
+        "install-language-packs", "install-input-method",
+        "install-multimedia-codecs", "refresh-package-indexes",
+        "upgrade-system", "ensure-snapshots-manager",
+        "create-factory-snapshot", "deploy-recovery-environment",
+        "install-third-party-drivers",
+    }
+    return tuple(
+        step for step, status in outcomes.items()
+        if step in features and status in ("warning", "failed")
+    )
+
 
 def ordered_progress_steps(plan: InstallPlan, step_titles):
     """Return localized progress rows in canonical executor order."""
@@ -4541,14 +7444,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     page = Adw.NavigationPage(title=_("Installing AnduinOS", lang))
     page.set_tag("progress")
 
-    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-    content.append(
-        _page_header(
-            "Installing AnduinOS",
-            "Please do not turn off your computer",
-            "disk-snapshots-manager",
-            lang,
-        )
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+    output_toggle = Gtk.ToggleButton(
+        label=_("Output", lang), valign=Gtk.Align.CENTER,
     )
 
     selected_methods = tuple(
@@ -4568,7 +7466,11 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "detect-network-connectivity": _(
             "Detect Internet connectivity", lang
         ),
+        "recheck-network-connectivity": _(
+            "Detect Internet connectivity", lang
+        ),
         "verify-target-disk": _("Verify target disk isolation", lang),
+        "check-installation-media": _("Check installation media", lang),
         "prepare-storage": _("Prepare installation disk", lang),
         "mount-target": _("Mount target filesystems", lang),
         "copy-system": _("Copy AnduinOS system", lang),
@@ -4600,16 +7502,22 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "ensure-snapshots-manager": _(
             "Ensure Disk Snapshots Manager is available", lang
         ),
+        "create-factory-snapshot": _(
+            "Create initial system recovery point", lang
+        ),
         "install-third-party-drivers": _("Install hardware drivers", lang),
         "provision-remote-access": _("Configure Secure Shell", lang),
         "verify-dkms-signatures": _(
             "Verify kernel module signatures", lang
         ),
         "install-bootloader": _("Install bootloader", lang),
+        "create-fallback-boot-chain": _("Create fallback boot chain", lang),
+        "deploy-recovery-environment": _("Deploy recovery environment", lang),
         "enroll-secure-boot": _("Schedule MOK enrollment", lang),
         "check-other-disk-systems": _(
-            "Check systems on other disks", lang
+            "Check for Windows installations", lang
         ),
+        "check-linux-systems": _("Check for other Linux installations", lang),
         "leave-chroot": _("Finalize target environment", lang),
         "unmount-target": _("Unmount installed system", lang),
     }
@@ -4642,7 +7550,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         margin_start=12,
     )
     left_title.add_css_class("heading")
-    left_scroll = Gtk.ScrolledWindow(
+    left_scroll = _scrolled_window(
         hscrollbar_policy=Gtk.PolicyType.NEVER,
         vexpand=True,
         min_content_width=285,
@@ -4658,12 +7566,16 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     # Log view
     log_buf = Gtk.TextBuffer()
     log_view = Gtk.TextView(buffer=log_buf, editable=False, monospace=True,
-                            margin_start=48, margin_end=48, margin_top=12,
-                            vexpand=True)
+                            left_margin=12, right_margin=12,
+                            top_margin=12, bottom_margin=12,
+                            hexpand=True, vexpand=True)
     log_view.set_wrap_mode(Gtk.WrapMode.WORD_CHAR)
-    log_scroll = Gtk.ScrolledWindow(hscrollbar_policy=Gtk.PolicyType.NEVER,
-                                    vexpand=True)
+    log_scroll = _scrolled_window(
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+        vexpand=True,
+    )
     log_scroll.set_child(log_view)
+    log_scroll.add_css_class("installer-log-scroll")
     output_notice = Gtk.Label(
         visible=False,
         wrap=True,
@@ -4678,7 +7590,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     )
     save_log_button = Gtk.Button(label=_("Save Log", lang))
     save_log_button.connect(
-        "clicked", lambda _button: _save_log(log_buf)
+        "clicked", lambda button: _save_log(log_buf, button, lang)
     )
     output_actions = Gtk.Box(
         orientation=Gtk.Orientation.HORIZONTAL,
@@ -4701,50 +7613,57 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         vexpand=True,
     )
     for slide in slides:
-        slide_box = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=10,
-            margin_top=16,
-            margin_bottom=8,
-            margin_start=18,
-            margin_end=18,
-        )
+        slide_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        slide_box.add_css_class("legacy-slide")
+        wide = slide.key in {"welcome", "support"}
+        if wide:
+            slide_box.add_css_class("legacy-slide-wide")
         title = Gtk.Label(
             label=slide.title,
             wrap=True,
-            justify=Gtk.Justification.CENTER,
+            xalign=0,
         )
-        title.add_css_class("title-2")
+        title.add_css_class("legacy-slide-title")
+        stage = Gtk.Overlay(vexpand=True)
+        background = Gtk.Picture.new_for_filename(str(
+            slide.image if wide else slideshow_root() / "background.png"))
+        background.set_content_fit(Gtk.ContentFit.COVER)
+        background.set_can_shrink(True)
+        stage.set_child(background)
+        columns = Gtk.Box(spacing=20, margin_start=36, margin_end=30,
+                          margin_top=25, margin_bottom=35)
+        text = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+        for paragraph in slide.paragraphs_markup:
+            body = Gtk.Label(label=paragraph, use_markup=True, wrap=True, xalign=0,
+                             wrap_mode=Pango.WrapMode.WORD_CHAR)
+            body.add_css_class("legacy-slide-paragraph")
+            text.append(body)
+        text_scroll = _scrolled_window(hscrollbar_policy=Gtk.PolicyType.NEVER)
+        text_scroll.set_size_request(350 if wide else 248, -1)
+        text_scroll.set_child(text)
+        columns.append(text_scroll)
         picture = Gtk.Picture.new_for_filename(str(slide.image))
         picture.set_content_fit(Gtk.ContentFit.CONTAIN)
         picture.set_can_shrink(True)
-        picture.set_vexpand(True)
-        picture.set_size_request(-1, 190)
-        body = Gtk.Label(
-            label=slide.body,
-            wrap=True,
-            justify=Gtk.Justification.CENTER,
-            max_width_chars=72,
-        )
-        body.add_css_class("dim-label")
+        picture.set_hexpand(True)
+        picture.set_valign(Gtk.Align.START)
+        picture.add_css_class("legacy-slide-picture")
+        if not wide:
+            columns.append(picture)
+        else:
+            columns.append(Gtk.Box(hexpand=True))
+        stage.add_overlay(columns)
+        stage.set_measure_overlay(columns, False)
         slide_box.append(title)
-        slide_box.append(picture)
-        slide_box.append(body)
+        slide_box.append(stage)
         slide_stack.add_named(slide_box, slide.key)
 
     slide_position = {"value": 0}
-    dots = Gtk.Label()
 
     def _show_slide(position):
         position %= len(slides)
         slide_position["value"] = position
         slide_stack.set_visible_child_name(slides[position].key)
-        dots.set_label(
-            "  ".join(
-                "●" if index == position else "○"
-                for index in range(len(slides))
-            )
-        )
 
     previous = Gtk.Button.new_from_icon_name("go-previous-symbolic")
     previous.set_tooltip_text(_("Previous slide", lang))
@@ -4758,22 +7677,18 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "clicked",
         lambda _button: _show_slide(slide_position["value"] + 1),
     )
-    slide_controls = Gtk.Box(
-        orientation=Gtk.Orientation.HORIZONTAL,
-        spacing=12,
-        halign=Gtk.Align.CENTER,
-        margin_bottom=10,
-    )
-    slide_controls.append(previous)
-    slide_controls.append(dots)
-    slide_controls.append(following)
-    slideshow_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    slideshow_box.append(slide_stack)
-    slideshow_box.append(slide_controls)
+    slideshow_box = Gtk.Overlay(vexpand=True)
+    slideshow_box.set_child(slide_stack)
+    for button, alignment in ((previous, Gtk.Align.START), (following, Gtk.Align.END)):
+        button.set_halign(alignment)
+        button.set_valign(Gtk.Align.CENTER)
+        button.add_css_class("legacy-slide-arrow")
+        slideshow_box.add_overlay(button)
     _show_slide(0)
 
     def _advance_slide():
-        _show_slide(slide_position["value"] + 1)
+        if not output_toggle.get_active():
+            _show_slide(slide_position["value"] + 1)
         return True
 
     slide_timer = {"id": GLib.timeout_add_seconds(9, _advance_slide)}
@@ -4805,6 +7720,11 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         max_width_chars=64,
     )
     secure_boot_notice.add_css_class("warning")
+    enrollment_tutorial = EnrollmentTutorial(secure_boot_notice.get_label(), scrollable=True)
+    enrollment_tutorial.set_visible(False)
+    enrollment_frame = Adw.Clamp(maximum_size=560, tightening_threshold=420)
+    enrollment_frame.set_child(enrollment_tutorial)
+    enrollment_frame.set_visible(False)
     reboot_label = (
         N_("Restart and Enroll Secure Boot Key")
         if plan.platform.secure_boot is SecureBoot.ENABLED
@@ -4816,40 +7736,39 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         lambda: _do_reboot(),
         css_classes=["suggested-action"],
     )
+    reboot_btn.set_child(Gtk.Label(
+        label=_(reboot_label, lang),
+        wrap=True,
+        wrap_mode=Pango.WrapMode.WORD_CHAR,
+        justify=Gtk.Justification.CENTER,
+    ))
+    reboot_btn.set_halign(Gtk.Align.CENTER)
+    reboot_btn.set_margin_top(8)
     reboot_btn.set_visible(False)
     result_box.append(result_icon)
     result_box.append(result_label)
     result_box.append(result_sub)
     result_box.append(secure_boot_notice)
+    result_box.append(enrollment_frame)
     result_box.append(reboot_btn)
+    result_scroll = _scrolled_window(
+        vexpand=True,
+        hscrollbar_policy=Gtk.PolicyType.NEVER,
+    )
+    result_scroll.set_child(result_box)
 
     mode_stack = Gtk.Stack(
         transition_type=Gtk.StackTransitionType.CROSSFADE,
         transition_duration=250,
         vexpand=True,
     )
-    mode_stack.add_titled(
-        slideshow_box, "discover", _("Discover AnduinOS", lang)
-    )
-    output_page = mode_stack.add_titled(
-        output_box, "output", _("Output", lang)
-    )
-    complete_page = mode_stack.add_titled(
-        result_box, "complete", _("Complete", lang)
-    )
-    complete_page.set_visible(False)
-    mode_stack.set_visible_child_name("discover")
-    mode_switcher = Gtk.StackSwitcher(
-        stack=mode_stack,
-        halign=Gtk.Align.CENTER,
-        margin_top=8,
-        margin_bottom=4,
-    )
-    right_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-    right_box.append(mode_switcher)
-    right_box.append(mode_stack)
+    presentation_stack = Gtk.Stack(vexpand=True)
+    presentation_stack.add_named(slideshow_box, "slides")
+    presentation_stack.add_named(result_scroll, "result")
+    presentation_stack.set_visible_child_name("slides")
+    mode_stack.add_named(presentation_stack, "discover")
     output_frame = Gtk.Frame()
-    output_frame.set_child(right_box)
+    output_frame.set_child(output_box)
     output_frame.add_css_class("progress-card")
 
     workspace = Gtk.Paned(
@@ -4857,23 +7776,33 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         position=330,
         wide_handle=True,
         vexpand=True,
-        margin_start=24,
-        margin_end=24,
-        margin_top=12,
+        margin_start=12,
+        margin_end=12,
+        margin_top=6,
     )
     workspace.set_start_child(left_frame)
     workspace.set_end_child(output_frame)
     workspace.set_resize_start_child(False)
     workspace.set_shrink_start_child(False)
-    content.append(workspace)
+    mode_stack.add_named(workspace, "output")
+    mode_stack.set_visible_child_name("discover")
+    output_toggle.connect("toggled", lambda button: mode_stack.set_visible_child_name(
+        "output" if button.get_active() else "discover"))
+    content.append(mode_stack)
 
     progress_status = Gtk.Label(
         label=_("Preparing installation…", lang),
-        halign=Gtk.Align.START,
-        margin_start=48,
-        margin_end=48,
-        margin_top=12,
+        xalign=0,
+        hexpand=True,
+        wrap=True,
+        wrap_mode=Pango.WrapMode.WORD_CHAR,
     )
+    progress_status.set_tooltip_text(_("Please do not turn off your computer", lang))
+    status_row = Gtk.Box(
+        spacing=16, margin_start=48, margin_end=48, margin_top=8,
+    )
+    status_row.append(progress_status)
+    status_row.append(output_toggle)
     progress = Gtk.ProgressBar(
         margin_start=48,
         margin_end=48,
@@ -4882,19 +7811,8 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     )
     progress.set_show_text(True)
     progress.add_css_class("installer-progress")
-    content.append(progress_status)
+    content.append(status_row)
     content.append(progress)
-    progress_footer = _nav_box(
-        lang,
-        on_back=lambda: None,
-        on_next=lambda: None,
-        stage=4,
-        show_back=False,
-        shared=shared,
-        page_tag="progress",
-    )
-    progress_footer.next_button.set_visible(False)
-    content.append(progress_footer)
 
     # Log callback (thread-safe via GLib.idle_add)
     def log(msg: str):
@@ -4936,22 +7854,32 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                             lang,
                         )
                     result_sub.set_label(detail)
-                elif plan.platform.secure_boot is SecureBoot.ENABLED:
-                    result_label.set_label(_("Installation Complete", lang))
-                    result_sub.set_label(
-                        _("Remove the installation media and restart your computer", lang)
-                        + _(
-                            "\nOn the blue MOKManager screen choose Enroll "
-                            "MOK → Continue → Yes, password: 123456",
-                            lang,
-                        )
-                    )
                 else:
                     result_label.set_label(_("Installation Complete", lang))
                     result_sub.set_label(_("Remove the installation media and restart your computer", lang))
+                incomplete = incomplete_feature_steps(step_outcomes)
+                if incomplete and not shared.get("development_mode"):
+                    heading = _(
+                        "System installed, but some features could not be completed",
+                        lang,
+                    )
+                    progress_status.set_label(heading)
+                    result_label.set_label(heading)
+                    result_icon.set_from_icon_name("dialog-warning-symbolic")
+                    result_sub.set_label(
+                        "\n".join("• " + step_titles[step] for step in incomplete)
+                        + "\n\n" + result_sub.get_label()
+                    )
                 secure_boot_notice.set_visible(
                     plan.platform.secure_boot is SecureBoot.ENABLED
+                    and not shared.get("development_mode")
                 )
+                enrollment_tutorial.set_visible(secure_boot_notice.get_visible())
+                enrollment_frame.set_visible(secure_boot_notice.get_visible())
+                if secure_boot_notice.get_visible():
+                    result_box.set_valign(Gtk.Align.START)
+                    result_box.set_spacing(8)
+                    result_icon.set_pixel_size(32)
                 reboot_btn.set_visible(True)
                 reboot_btn.set_sensitive(not shared.get("development_mode"))
                 if shared.get("development_mode"):
@@ -4962,16 +7890,16 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                             lang,
                         )
                     )
-                complete_page.set_visible(True)
-                mode_stack.set_visible_child_name("complete")
+                presentation_stack.set_visible_child_name("result")
+                output_toggle.set_active(False)
             else:
                 progress_status.set_label(_("Installation failed", lang))
                 output_notice.set_label(
                     f"{_('Installation Failed', lang)}\n{error}"
                 )
                 output_notice.set_visible(True)
-                output_page.set_title(_("Output • Error", lang))
-                mode_stack.set_visible_child_name("output")
+                output_toggle.set_label(_("Output • Error", lang))
+                output_toggle.set_active(True)
                 log(f"ERROR: {error}")
             return False
         GLib.idle_add(_done)
@@ -4999,9 +7927,11 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
         "skipped": "–",
     }
     warning_count = {"value": 0}
+    step_outcomes = {}
 
     def update_step_status(step: str, status: str, message: str):
         def _update():
+            step_outcomes[step] = status
             widgets = step_rows.get(step)
             if widgets is None:
                 return False
@@ -5014,18 +7944,19 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             light.set_label(status_symbols.get(status, "○"))
             if status == "running":
                 label.add_css_class("step-active")
+                progress_status.set_label(step_titles.get(step, step))
             else:
                 label.remove_css_class("step-active")
             row.set_tooltip_text(message or step_titles.get(step, step))
             if status == "warning":
                 warning_count["value"] += 1
-                output_page.set_title(
+                output_toggle.set_label(
                     _("Output • {count} warning(s)", lang).format(
                         count=warning_count["value"]
                     )
                 )
             elif status == "failed":
-                output_page.set_title(_("Output • Error", lang))
+                output_toggle.set_label(_("Output • Error", lang))
                 output_notice.set_label(
                     message
                     or _("{step} failed", lang).format(
@@ -5033,7 +7964,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
                     )
                 )
                 output_notice.set_visible(True)
-                mode_stack.set_visible_child_name("output")
+                output_toggle.set_active(True)
             return False
         GLib.idle_add(_update)
 
@@ -5052,7 +7983,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
     thread = threading.Thread(target=execute, daemon=True)
     thread.start()
 
-    page.set_child(content)
+    _set_page_content(page, content)
     return page
 
 
@@ -5065,16 +7996,53 @@ def _do_reboot():
         pass
 
 
-def _save_log(log_buf):
-    """Save the install log to the current live user's home directory."""
-    try:
+def _save_log(log_buf, widget, lang):
+    """Save a snapshot through the desktop chooser without pausing installation."""
+    parent = widget.get_root()
+    chooser = Gtk.FileDialog(
+        title=_("Save Log", lang), modal=True,
+        initial_name="anduinos-install.log",
+    )
+
+    def notify(heading, body):
+        dialog = Adw.MessageDialog(
+            transient_for=parent, heading=heading, body=body,
+        )
+        dialog.add_response("ok", _("OK", lang))
+        dialog.present()
+
+    def written(file, result):
+        try:
+            file.replace_contents_finish(result)
+        except GLib.Error as error:
+            notify(_("Save Log", lang), error.message)
+        else:
+            notify(_("Saved", lang), file.get_parse_name())
+
+    def selected(dialog, result):
+        try:
+            file = dialog.save_finish(result)
+        except GLib.Error as error:
+            if not any(error.matches(Gtk.DialogError.quark(), code) for code in (
+                Gtk.DialogError.DISMISSED, Gtk.DialogError.CANCELLED,
+            )):
+                notify(_("Save Log", lang), error.message)
+            return
+        if file is None:
+            return
+        # Read on the GTK thread only after the user confirms the destination.
+        # Later log events continue in the UI while this immutable snapshot saves.
         text = log_buf.get_text(
-            log_buf.get_start_iter(), log_buf.get_end_iter(), False)
-        dest = os.path.join(os.path.expanduser("~"), "anduinos-install.log")
-        with open(dest, "w", encoding="utf-8") as f:
-            f.write(text)
-    except Exception:
-        pass
+            log_buf.get_start_iter(), log_buf.get_end_iter(), False,
+        )
+        # GBytes owns the data until the asynchronous write completes.
+        file.replace_contents_bytes_async(
+            GLib.Bytes.new(text.encode("utf-8")), None, False,
+            Gio.FileCreateFlags.PRIVATE | Gio.FileCreateFlags.REPLACE_DESTINATION,
+            None, written,
+        )
+
+    chooser.save(parent, None, selected)
 
 
 def _copy_log(log_buf, widget):

@@ -1,5 +1,4 @@
 import os
-import shutil
 import subprocess
 import tempfile
 import unittest
@@ -125,10 +124,14 @@ class WifiMigrationTests(unittest.TestCase):
             step.cleanup(context)
             self.assertFalse(destination.exists())
 
-    @unittest.skipUnless(shutil.which("netplan"), "netplan is not installed")
-    def test_netplan_fixture_has_the_expected_networkmanager_mapping(self):
+    def test_migrated_wifi_is_accepted_by_real_netplan(self):
+        runner = FakeRunner()
+        runner.outputs[ACTIVE_WIFI_COMMAND] = (f"{ACTIVE_UUID}:802-11-wireless\n", "", 0)
         with tempfile.TemporaryDirectory() as directory:
-            target = Path(directory)
+            source = Path(directory) / "live-netplan"
+            source.mkdir(mode=0o755)
+            self.write_profile(source, ACTIVE_UUID)
+            target = Path(directory) / "target"
             netplan = target / "etc/netplan"
             netplan.mkdir(parents=True)
             base = netplan / "01-network-manager-all.yaml"
@@ -136,7 +139,10 @@ class WifiMigrationTests(unittest.TestCase):
                 "network:\n  version: 2\n  renderer: NetworkManager\n"
             )
             base.chmod(0o600)
-            self.write_profile(netplan, ACTIVE_UUID)
+            context = self.context(target)
+            step = self.make_step(runner, source)
+            step.preflight(context)
+            step.execute(context)
 
             result = subprocess.run(
                 (

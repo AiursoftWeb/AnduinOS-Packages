@@ -26,7 +26,33 @@ and constructs every command itself.
 - Storage mode: erase one complete disk. Guided coexistence, custom layouts
   and RAID are post-release-one work defined in
   [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
-- Filesystems: Btrfs by default, ext4 as an alternative.
+- Filesystems: Btrfs by default and ext4 as the classic alternative in
+  automatic and guided modes. Advanced manual mode additionally offers XFS
+  and F2FS as conventional single-root filesystems.
+- Btrfs compression: the automatic storage configuration page offers no
+  compression, fast (Zstd 1), balanced (Zstd 3, default), and save space
+  (Zstd 6). The selected preset is an allowlisted field in installation plan
+  schema 18 and appears in the confirmation summary. All canonical subvolume
+  mounts apply it before system files are copied, and fstab persists the same
+  choice. Advanced manual partitioning exposes the same presets below the
+  planned partitions when a Btrfs Root partition exists, and retains the
+  selection when switching filesystems or revisiting the page.
+  Other filesystem types do not expose or apply Btrfs compression.
+  Changing the choice later affects newly written data, not existing extents.
+- Existing AnduinOS EFI files: reusing an occupied ESP requires explicit
+  confirmation, bound to its PARTUUID, FAT UUID and old vendor-tree SHA-256.
+  Schema 18 carries this optional authorization, not arbitrary paths or commands.
+  The executor verifies and backs up the old vendor tree before storage writes,
+  saves recovery files in the installed system, and revalidates immediately
+  before replacing only `EFI/AnduinOS`. The ESP is never formatted. Use separate
+  ESPs to keep two AnduinOS installations independently bootable.
+- Windows boot discovery: after installing the AnduinOS bootloader, inspect
+  EFI System Partitions on both the target disk and other disks. Read the
+  verified target ESP through its existing mount; inspect other unmounted
+  ESPs using temporary read-only mounts. Recognizing a Windows data partition
+  is not required. Only valid Windows EFI loaders for the target architecture
+  with unambiguous FAT UUIDs receive GRUB chainloader entries. Discovery does
+  not modify Microsoft EFI files or remount the shared target ESP.
 - Machine identity: the account page accepts one RFC-style ASCII hostname
   label, including upper-case input, digits and internal hyphens. The planner
   converts it to a lower-case systemd static hostname before constructing the
@@ -69,14 +95,28 @@ and constructs every command itself.
   64 GiB. zram has the higher runtime priority. Partition capacity alone does
   not enable hibernation; resume configuration and platform support remain
   separate requirements.
-- Live system: Casper remains the image/boot transport for release one.
-  `anduinos-live-settings` is a hard dependency of the installer: Casper
-  applies the GRUB-selected locale and the package-owned initramfs hook applies
-  the selected timezone. A dedicated installer step purges the fixed Live-only
-  package set from the copied target. It retains Disk Snapshots Manager on
-  Btrfs but purges it on ext4, removes VMware guest integration from
-  non-VMware targets, and purges orphaned packages. This policy does not use
-  Ubiquity's historical dual manifest convention.
+- Live system: Dracut `dmsquash-live` mounts the single
+  `/LiveOS/rootfs.squashfs`, composes the temporary or persistent overlay, and
+  `anduinos-live-layers` preserves `/cdrom` plus the installer source under
+  `/run/anduinos-live`. `anduinos-live-settings` is a hard dependency of the
+  installer and applies the GRUB-selected locale/timezone, creates the Live
+  user, and configures automatic login through a systemd oneshot. A dedicated
+  installer step purges the fixed Live-only package set from the copied target.
+  It retains Disk Snapshots Manager on Btrfs but purges it on every classic
+  root filesystem, retains the selected XFS or F2FS userspace tools when
+  required, removes VMware guest integration from non-VMware targets, and
+  purges orphaned packages. This policy does not use Ubiquity's historical
+  dual manifest convention.
+- Initial recovery point: after all target-system configuration and optional
+  package changes have completed, every Btrfs installation invokes the target
+  Disk Snapshots Manager before leaving the chroot. The manager idempotently
+  creates exactly one pinned, read-only `@root` snapshot named `New OS` and one
+  hidden, pinned initial `@home` baseline, using the target's installed default
+  kernel rather than the Live kernel. Automatic cleanup cannot remove, rename,
+  or unpin either factory baseline. Factory reset preserves `@home` by default;
+  the user may explicitly restore the initial Home baseline. A missing transitional
+  package or a snapshot-creation failure is a visible installation warning,
+  not a reason to discard an otherwise bootable installed system.
 - Software: refreshing package indexes and installing available updates is
   enabled by default. An offline index-refresh failure is a warning and skips
   the upgrade; after an upgrade transaction starts, any APT/dpkg failure is
@@ -148,8 +188,13 @@ and constructs every command itself.
 
 The GTK process always runs as the desktop user. Ordinary `lsblk` discovery
 stays unprivileged. Exact free-space geometry crosses Polkit through
-`anduinos-installer-storage-probe`, a read-only helper that accepts exactly one
-validated fixed whole-disk path and can execute only `parted ... print free`.
+`anduinos-installer-storage-probe`, a read-only helper that accepts one
+validated whole-disk path for `parted ... print free`, or an explicit
+`--ntfs-inspect` / `--esp-inspect` partition request. The ESP request resolves
+the current inventory, enters a private mount namespace, and runs the same
+read-only FAT/vendor inspection used by executor preflight. Its UI result is
+advisory, checked against the selected PARTUUID and filesystem UUID; it never
+replaces executor authorization or allows forced reuse.
 The shared inventory probe forces the C locale for both `lsblk` and `parted`,
 so translated machine-output flags cannot change the topology authorization
 digest between the desktop process and the root executor.
@@ -201,11 +246,11 @@ defined in [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
 AnduinOS ISO builds now ship this beta as the default installer so the
 destructive VM matrix can run against the real image. The legacy Ubiquity
 integration package has been retired and is no longer built or published.
-`anduinos-bwrap-hack` remains available independently but is not installed
-automatically.
+The obsolete `anduinos-bwrap-hack` compatibility package has also been retired
+and is no longer built or published.
 
 The package owns both its application-menu entry and a GNOME autostart helper.
-The helper creates a trusted desktop launcher only in a non-root Casper
+The helper creates a trusted desktop launcher only in a non-root Dracut Live
 session, inside that Live user's runtime home. It never writes to `/etc/skel`,
 so no dead installer shortcut can enter the installed user's home. The
 launcher package carries its own independent copy of the OOBE box-and-logo
@@ -276,6 +321,13 @@ rounded visual boundary and obscure whether the card itself is active.
   makes the GRUB menu visible while leaving the first AnduinOS entry as the
   default. `os-prober`, foreign Windows volumes, foreign ESP writes and
   firmware changes are not involved.
+  Any newly created ESP receives a signed direct `EFI/BOOT` chain, including
+  erase-disk, guided and manual layouts on internal or external disks.
+  Reused ESPs preserve their fallback files. The plan, write set and privileged
+  validation all use the new-partition declaration, never directory contents,
+  to authorize this write. A separate progress step copies and verifies the
+  chain before MOK enrollment. It excludes shim's NVRAM-registration fallback
+  to avoid the #422 reset loop.
   Destructive boot testing remains part of the VM matrix milestone.
 - Milestone 4 — implementation complete: signed shim/GRUB, machine-local MOK
   generation, explicit DKMS signing, idempotent enrollment scheduling and
@@ -298,8 +350,8 @@ rounded visual boundary and obscure whether the card itself is active.
   it has run from a real AnduinOS ISO and booted the installed virtual disk.
 - Milestone 5C — implementation complete: the ISO build installs
   `anduinos-installer-beta`, excludes it from the installed target manifest,
-  and rejects accidental inclusion of the retired Ubiquity/bwrap stack. Casper
-  remains the live boot transport.
+  rejects accidental inclusion of the retired Ubiquity/bwrap stack, and boots
+  the Live root through the dedicated Dracut image.
 - Milestone 6A — complete: schema v2 carries immutable update and third-party
   driver choices; GTK defaults to updates on and non-free drivers off; summary
   and development simulation expose the resulting fixed pipeline.
@@ -327,13 +379,25 @@ rounded visual boundary and obscure whether the card itself is active.
   installer-owned data and rendered by native GTK4. No WebKit, JavaScript,
   Ubiquity or installer-config dependency is introduced. The dashboard opens
   on an automatically advancing presentation with manual navigation and can
-  switch instantly to the live Output view.
+  switch instantly to the live Output view. The default presentation fills the
+  page with the historical title strip, wallpaper, text/screenshot layout and
+  side arrows. A bottom-right Output toggle reveals the task list and live log;
+  the current task name and overall progress bar stay below both modes.
+  The wallpaper is the updated asset from `AnduinOS-Packages` at `b1975b31`,
+  under `anduinos-installer-config/assets/slides/link/background.png`;
+  `link/base.css` in that historical tree is the layout reference. The older
+  `AnduinOS-2` copy predates this wallpaper update. HTML remains installer-owned
+  data under `assets/slideshow`, including its localized variants.
 - Milestone 7C — complete: warning events accumulate on the Output switcher
   without interrupting the presentation; fatal errors reveal and focus the
   live log with an error banner; successful completion stops the carousel and
   opens a dedicated completion/MOK/reboot card. Output can be copied or saved
-  to the live user's home directory, while the presentation and log remain
-  available after completion.
+  through a Save As chooser, including while installation is running. Saving
+  writes a snapshot from the moment the destination is confirmed, without
+  blocking installation; success and write failures are reported visibly.
+  Completion replaces the presentation
+  inside the default mode; the Output toggle still opens the retained log,
+  without introducing a third mode or hiding the completion instructions.
 - Milestone 8A — complete: read-only storage inventory records stable disk and
   partition identities, exact allocated/free geometry, filesystems, ESPs and
   topology digests. The existing erase-disk executor freezes a typed write set
@@ -382,12 +446,52 @@ rounded visual boundary and obscure whether the card itself is active.
   preservation, independent boot, hard-power-cut and partial-target recovery
   runs remain mandatory. See
   [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
+- Milestone 8H — implementation complete: the bounded manual GPT editor can
+  preserve, delete, create and format explicitly declared partitions and can
+  shrink plain NTFS without moving its start. The unprivileged UI obtains a
+  read-only `ntfs-3g.probe`/`ntfsresize` assessment through its fixed Polkit
+  helper. BitLocker, mounted, hibernated/Fast-Startup, dirty or inconsistent
+  volumes are hard failures. The executor repeats the complete target-specific
+  dry run immediately before writing, never passes a force option, shrinks the
+  filesystem before its GPT tail, then re-probes and verifies the unchanged
+  PARTUUID, number and start plus the exact declared size before creating any
+  new partition. The same declarative pipeline now supports ordinary offline
+  ext4 with 4 KiB blocks and an internal journal. Its read-only probe uses
+  `dumpe2fs -h`, `e2fsck -f -n`, and `resize2fs -P`; the minimum is an estimate
+  with conservative headroom, not a dry-run guarantee. Before writes, fresh
+  inventory and the superblock must match the preserved identity. Within the
+  confirmed destructive boundary, `e2fsck -f -p` must return 0 or 1, followed
+  by `resize2fs` without force, a read-only fsck, and actual UUID/size checks.
+  A failed filesystem operation never authorizes shrinking the GPT boundary.
+  Btrfs and every other filesystem remain non-resizable; encryption, LVM,
+  RAID, mounted filesystems and unsupported ext4 features are refused.
+  The same bounded manual editor offers Btrfs, ext4, XFS and F2FS for a newly
+  formatted root. Btrfs alone creates the canonical AnduinOS subvolumes and
+  enables Disk Snapshots Manager; ext4, XFS and F2FS use one conventional root
+  mount and direct system copy. An existing BitLocker partition can be
+  preserved while AnduinOS uses separate unallocated space; deleting that
+  partition, replacing its disk's GPT and shrinking any partition on that disk
+  remain blocked while it is present. Manual Root has a 6 GiB hard floor
+  enforced by both the editor and privileged plan validation; 6–25 GiB
+  requires an explicit low-capacity confirmation, 25–50 GiB remains below the
+  recommendation, and 50 GiB or more proceeds without a capacity warning.
+  XFS and F2FS are
+  intentionally not exposed in automatic or guided layouts until their broader
+  release matrices exist.
+  Unit and GTK development-mode interaction gates pass; real Windows and
+  interrupted-resize VM qualification remains mandatory before release.
+  The rootless ext4/GPT sparse-image regression checks file hashes, symlinks,
+  UUIDs, unchanged starts and neighbouring partitions, then creates a new
+  partition in the released tail. The ISO matrix additionally declares a
+  96 GiB ext4 A → shrink to 40 GiB → install/boot B → chainload/boot A case;
+  it must pass on a rebuilt ISO before claiming end-to-end qualification.
 - Final release gate: complete the VM matrix before promoting and renaming the
   native installer package.
 
 Disk encryption, TPM2 unlocking and FIDO2 unlocking are explicitly outside
-the release-one scope. Release one supports unencrypted ext4 and unencrypted
-Btrfs only.
+the release-one scope. Automatic and guided release-one layouts support
+unencrypted ext4 and unencrypted Btrfs only; the bounded Advanced manual mode
+also supports unencrypted XFS and F2FS roots.
 
 ## Post-release-one storage direction
 

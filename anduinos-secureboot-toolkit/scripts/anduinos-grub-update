@@ -1,0 +1,10 @@
+#!/usr/bin/python3
+"""Fixed root-only signing/package deployment entry point."""
+import sys
+from anduinos_secureboot.grub import update_main
+
+try:
+    raise SystemExit(update_main(sys.argv[1:]))
+except Exception as error:
+    print(f"AnduinOS bootloader update failed: {error}", file=sys.stderr)
+    raise SystemExit(1)

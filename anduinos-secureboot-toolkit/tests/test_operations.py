@@ -1,13 +1,18 @@
 from pathlib import Path
+import contextlib
+import io
+import json
 import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import Mock, patch
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from anduinos_secureboot import operations  # noqa: E402
+from anduinos_secureboot.firmware import probe_firmware
 
 
 TEST_KERNEL = "test-kernel"
@@ -36,9 +41,150 @@ def with_secure_boot_enabled(run):
 
 
 class OperationsTests(unittest.TestCase):
-    def test_prepare_skips_known_non_enforcing_firmware_states(self):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.efi = Path(temporary.name)
+        (self.efi / "efivars").mkdir()
+        self.mountinfo = self.efi / "mountinfo"
+        self.mountinfo.write_text(
+            f"30 20 0:30 / {self.efi / 'efivars'} rw - efivarfs efivarfs rw\n")
+        probe = patch.object(operations, "probe_firmware", side_effect=lambda **kwargs:
+            probe_firmware(efi_path=self.efi, mountinfo=self.mountinfo, **kwargs))
+        probe.start()
+        self.addCleanup(probe.stop)
+
+    def test_apt_is_noninteractive_without_changing_parent_environment(self):
+        with patch.dict(operations.os.environ, {"DEBIAN_FRONTEND": "dialog"}), \
+             patch.object(operations.subprocess, "run") as run:
+            operations.run_command(["apt-get", "-y", "install", "anduinos-grub"])
+            self.assertEqual(run.call_args.kwargs["env"]["DEBIAN_FRONTEND"], "noninteractive")
+            self.assertEqual(operations.os.environ["DEBIAN_FRONTEND"], "dialog")
+            operations.run_command(["mokutil", "--sb-state"])
+            self.assertEqual(run.call_args.kwargs["env"]["DEBIAN_FRONTEND"], "dialog")
+
+    def test_command_runner_preserves_literal_arguments_stdin_and_failure(self):
+        command = ["example-command", "$(id); echo unsafe", "argument with spaces"]
+        failed = subprocess.CompletedProcess(command, 23, "", "operation failed")
+        with patch.object(operations.subprocess, "run", return_value=failed) as run:
+            result = operations.run_command(command, stdin="private input\n")
+        self.assertEqual(result.returncode, 23)
+        self.assertEqual(result.stderr, "operation failed")
+        run.assert_called_once()
+        self.assertEqual(run.call_args.args[0], command)
+        self.assertFalse(run.call_args.kwargs.get("shell", False))
+        self.assertEqual(run.call_args.kwargs["input"], "private input\n")
+        self.assertNotIn("private input", repr(run.call_args.args))
+
+    def test_unprivileged_helper_request_has_no_operation_or_lock_side_effect(self):
+        output = io.StringIO()
+        lock = Mock()
+        with (
+            patch.object(operations.os, "geteuid", return_value=1000),
+            patch.object(operations, "LOCK_FILE", lock),
+            patch.object(operations, "execute") as execute,
+            contextlib.redirect_stdout(output),
+        ):
+            code = operations.helper_main(["prepare"])
+        self.assertNotEqual(code, 0)
+        self.assertEqual(json.loads(output.getvalue())["error"], "root-required")
+        execute.assert_not_called()
+        self.assertEqual(lock.mock_calls, [])
+
+    def test_helper_rejects_unknown_extra_and_shell_arguments_before_any_operation(self):
+        for arguments in (
+            [], ["prepare", "extra"], ["repair-dkms", "--force"],
+            ["prepare; reboot"], ["$(id)"], ["prepare\nrepair-dkms"],
+        ):
+            with self.subTest(arguments=arguments):
+                output = io.StringIO()
+                lock = Mock()
+                with (
+                    patch.object(operations.os, "geteuid", return_value=0),
+                    patch.object(operations, "LOCK_FILE", lock),
+                    patch.object(operations, "execute") as execute,
+                    contextlib.redirect_stdout(output),
+                ):
+                    code = operations.helper_main(arguments)
+                self.assertNotEqual(code, 0)
+                self.assertEqual(json.loads(output.getvalue())["error"], "unsupported-action")
+                execute.assert_not_called()
+                self.assertEqual(lock.mock_calls, [])
+
+    def test_dispatch_rejects_unsupported_actions_without_running_commands(self):
+        run = Mock()
+        for action in ("", "reboot", "prepare; id", "repair-dkms\nprepare"):
+            with self.subTest(action=action), self.assertRaises(ValueError):
+                operations.execute(action, run)
+        run.assert_not_called()
+
+    def test_desktop_bootloader_actions_recheck_certificate_enrollment(self):
+        from anduinos_secureboot.decision import Facts
+        from anduinos_secureboot.identity import IdentityStatus
+        from anduinos_secureboot.model import DkmsState, GrubState, SecureBootState
+        identity = IdentityStatus(purpose="unified", enrollment="pending", key_present=True,
+                                  key_valid=True, managed=True, defaults_ready=True)
+        state = SecureBootState(False, True, True, True, "old", signing_identity=identity,
+                                grub=GrubState(), setup_mode=False, boot_loader="shim")
+        for action in ("install-bootloader", "repair-bootloader"):
+            with self.subTest(action=action), \
+                 patch("anduinos_secureboot.inspect.collect_facts", return_value=Facts(state, DkmsState())), \
+                 patch("anduinos_secureboot.grub.install_packages") as install, \
+                 patch("anduinos_secureboot.grub.deploy") as deploy:
+                result = operations.execute(action, Mock())
+                self.assertFalse(result.ok)
+                self.assertIn("certificate-enrollment-required", result.to_json())
+                install.assert_not_called()
+                deploy.assert_not_called()
+
+    def test_driver_repair_rechecks_defaults_before_any_rebuild_or_write(self):
+        from dataclasses import replace
+        from anduinos_secureboot.decision import Facts
+        from anduinos_secureboot.identity import IdentityStatus
+        from anduinos_secureboot.model import DkmsState, SecureBootState
+        identity = IdentityStatus(purpose="unified", enrollment="enrolled", key_present=True,
+                                  key_valid=True, managed=True, defaults_ready=False)
+        state = SecureBootState(True, True, True, True, "new", signing_identity=identity,
+                                dkms_available=True, headers_available=True)
+        for ready in (False, None, True):
+            with self.subTest(defaults_ready=ready), \
+                 patch("anduinos_secureboot.inspect.collect_facts", return_value=Facts(
+                     replace(state, signing_identity=replace(identity, defaults_ready=ready)), DkmsState())), \
+                 patch.object(operations, "repair_dkms") as repair:
+                result = operations.execute("repair-dkms", Mock())
+                if ready is True:
+                    repair.assert_called_once()
+                else:
+                    self.assertFalse(result.ok)
+                    self.assertIn("signing-defaults-required", result.to_json())
+                    repair.assert_not_called()
+
+    def test_legacy_default_repair_requires_the_explicit_manual_action(self):
+        for action, manual in (("sync-defaults", False), ("repair-defaults", True)):
+            with self.subTest(action=action), \
+                 patch("anduinos_secureboot.defaults.sync_defaults") as sync:
+                run = Mock()
+                operations.execute(action, run)
+                sync.assert_called_once_with(run, allow_legacy=manual, repair_config=manual)
+
+    def test_helper_reports_operation_errors_and_releases_its_lock(self):
+        with tempfile.TemporaryDirectory() as directory:
+            lock_file = Path(directory) / "operation.lock"
+            for _ in range(2):
+                output = io.StringIO()
+                with (
+                    patch.object(operations.os, "geteuid", return_value=0),
+                    patch.object(operations, "LOCK_FILE", lock_file),
+                    patch.object(operations, "execute", side_effect=OSError("device unavailable")) as execute,
+                    contextlib.redirect_stdout(output),
+                ):
+                    code = operations.helper_main(["prepare"])
+                self.assertNotEqual(code, 0)
+                self.assertEqual(json.loads(output.getvalue())["error"], "device unavailable")
+                execute.assert_called_once_with("prepare")
+
+    def test_prepare_skips_unsupported_firmware(self):
         for output in (
-            "SecureBoot disabled\n",
             "This system doesn't support Secure Boot\n",
         ):
             with self.subTest(output=output):
@@ -46,7 +192,7 @@ class OperationsTests(unittest.TestCase):
 
                 def run(command, **kwargs):
                     calls.append(list(command))
-                    return subprocess.CompletedProcess(command, 0, output, "")
+                    return subprocess.CompletedProcess(command, 255, "", output)
 
                 result = operations.prepare(run)
                 self.assertTrue(result.ok)
@@ -56,6 +202,7 @@ class OperationsTests(unittest.TestCase):
                 self.assertEqual(calls, [["mokutil", "--sb-state"]])
 
     def test_prepare_fails_closed_when_firmware_state_is_unknown(self):
+        self.mountinfo.write_text("")
         calls = []
 
         def run(command, **kwargs):
@@ -83,7 +230,10 @@ class OperationsTests(unittest.TestCase):
                 return subprocess.CompletedProcess(command, code, "", "")
 
             result = operations.prepare(
-                with_secure_boot_enabled(run),
+                lambda command, **kwargs: (
+                    subprocess.CompletedProcess(command, 0, "SecureBoot disabled\n", "")
+                    if command == ["mokutil", "--sb-state"] else run(command, **kwargs)
+                ),
                 private,
                 certificate,
                 config,
@@ -93,6 +243,7 @@ class OperationsTests(unittest.TestCase):
             self.assertTrue(result.ok)
             import_call = next(item for item in calls if item[0][:2] == ["mokutil", "--import"])
             self.assertEqual(import_call[1]["stdin"], "123456\n123456\n")
+            self.assertIn(["mokutil", "--timeout", "-1"], [command for command, _ in calls])
             self.assertEqual(config.read_text(), operations.CONFIG_CONTENT)
             self.assertFalse(any(command[0] == "dkms" for command, _ in calls))
             self.assertEqual(result.steps["modules_rebuilt"].status, "skipped")

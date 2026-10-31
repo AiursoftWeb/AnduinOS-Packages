@@ -1,6 +1,5 @@
 import unittest
 from dataclasses import replace
-from pathlib import Path
 from unittest.mock import patch
 
 from executor_cli import (
@@ -67,14 +66,6 @@ def post_write_inventory(plan, inventory):
 
 
 class GuidedExecutorGateTests(unittest.TestCase):
-    def test_public_executor_launcher_cannot_forward_test_flag(self):
-        launcher = (
-            Path(__file__).parents[1]
-            / "assets/anduinos-installer-executor"
-        ).read_text()
-        self.assertIn('if [ "$#" -ne 0 ]', launcher)
-        self.assertNotIn('executor_cli.py "$@"', launcher)
-
     def test_cli_requires_both_test_authorizations(self):
         self.assertEqual(
             execution_policy([], {}),

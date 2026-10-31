@@ -3,6 +3,7 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from installer_core.model import Architecture, Firmware, SecureBoot
 from installer_core.probe import (
@@ -43,13 +44,15 @@ class PlatformProbeTests(unittest.TestCase):
             )
         self.assertEqual(result.secure_boot, SecureBoot.ENABLED)
 
-    def test_uefi_without_secure_boot_support_is_explicit(self):
+    @patch("anduinos_secureboot.firmware._mount_type", return_value="efivarfs")
+    def test_uefi_without_secure_boot_support_is_explicit(self, _mount):
         with tempfile.TemporaryDirectory() as directory:
+            (Path(directory) / "efivars").mkdir()
             result = probe_platform(
                 machine="x86_64",
                 efi_path=Path(directory),
                 run=lambda *args, **kwargs: completed(
-                    "This system doesn't support Secure Boot"
+                    stderr="This system doesn't support Secure Boot\n", returncode=255
                 ),
             )
         self.assertEqual(result.firmware, Firmware.UEFI)
@@ -57,7 +60,7 @@ class PlatformProbeTests(unittest.TestCase):
 
     def test_contradictory_secure_boot_output_is_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
-            with self.assertRaisesRegex(ProbeError, "unambiguous"):
+            with self.assertRaisesRegex(ProbeError, "contradictory-output"):
                 probe_platform(
                     machine="x86_64",
                     efi_path=Path(directory),
@@ -69,7 +72,7 @@ class PlatformProbeTests(unittest.TestCase):
 
     def test_failed_secure_boot_probe_rejects_plausible_output(self):
         with tempfile.TemporaryDirectory() as directory:
-            with self.assertRaisesRegex(ProbeError, "mokutil failed"):
+            with self.assertRaisesRegex(ProbeError, "efivarfs-unmounted"):
                 probe_platform(
                     machine="x86_64",
                     efi_path=Path(directory),

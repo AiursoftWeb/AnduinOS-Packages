@@ -153,7 +153,12 @@ class NetworkTests(unittest.TestCase):
         )
         self.assertLess(mirror_index, bottles_index)
 
-    def test_hardware_drivers_page_follows_secure_boot_when_shown(self):
+    def test_secure_boot_is_entirely_owned_by_driver_center(self):
+        self.assertFalse(hasattr(oobe, "create_secureboot_page"))
+        self.assertFalse(hasattr(oobe, "_inspect_secure_boot"))
+        self.assertFalse(hasattr(oobe, "_shared_secure_boot_page"))
+
+    def test_hardware_drivers_page_follows_security(self):
         window = types.SimpleNamespace(
             is_oobe=True,
             _update_nav_buttons=lambda: None,
@@ -162,11 +167,6 @@ class NetworkTests(unittest.TestCase):
         with (
             mock.patch.object(
                 oobe, "internet_connection_ready", return_value=True
-            ),
-            mock.patch.object(
-                oobe,
-                "_inspect_secure_boot",
-                return_value=types.SimpleNamespace(enforcement_inactive=False),
             ),
             mock.patch.object(oobe, "is_arm64", return_value=True),
             mock.patch.object(oobe, "is_chinese_locale", return_value=False),
@@ -176,22 +176,18 @@ class NetworkTests(unittest.TestCase):
             )
 
         factory_names = [factory.__code__.co_names for factory in factories]
-        update_index = next(
-            index for index, names in enumerate(factory_names)
-            if "create_update_page" in names
-        )
-        secure_boot_index = next(
-            index for index, names in enumerate(factory_names)
-            if "create_secureboot_page" in names
-        )
+        self.assertFalse(any("create_secureboot_page" in names for names in factory_names))
         hardware_index = next(
             index for index, names in enumerate(factory_names)
             if "create_hardware_drivers_page" in names
         )
-        self.assertEqual(secure_boot_index, update_index + 1)
-        self.assertEqual(hardware_index, secure_boot_index + 1)
+        security_index = next(
+            index for index, names in enumerate(factory_names)
+            if "create_security_page" in names
+        )
+        self.assertEqual(hardware_index, security_index + 1)
 
-    def test_hardware_drivers_page_follows_update_without_secure_boot(self):
+    def test_hardware_drivers_page_follows_security_without_secure_boot(self):
         window = types.SimpleNamespace(
             is_oobe=True,
             _update_nav_buttons=lambda: None,
@@ -200,11 +196,6 @@ class NetworkTests(unittest.TestCase):
         with (
             mock.patch.object(
                 oobe, "internet_connection_ready", return_value=True
-            ),
-            mock.patch.object(
-                oobe,
-                "_inspect_secure_boot",
-                return_value=types.SimpleNamespace(enforcement_inactive=True),
             ),
             mock.patch.object(oobe, "is_arm64", return_value=True),
             mock.patch.object(oobe, "is_chinese_locale", return_value=False),
@@ -217,15 +208,15 @@ class NetworkTests(unittest.TestCase):
         self.assertFalse(any(
             "create_secureboot_page" in names for names in factory_names
         ))
-        update_index = next(
+        security_index = next(
             index for index, names in enumerate(factory_names)
-            if "create_update_page" in names
+            if "create_security_page" in names
         )
         hardware_index = next(
             index for index, names in enumerate(factory_names)
             if "create_hardware_drivers_page" in names
         )
-        self.assertEqual(hardware_index, update_index + 1)
+        self.assertEqual(hardware_index, security_index + 1)
 
     def test_navigation_refresh_waits_until_controls_are_ready(self):
         building_window = types.SimpleNamespace(_nav_ready=False)

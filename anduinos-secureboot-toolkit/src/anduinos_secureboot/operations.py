@@ -17,9 +17,9 @@ from .inspect import (
     Runner,
     certificate_enrolled,
     certificate_pending,
-    parse_secure_boot_status,
 )
 from .model import SecureBootStatus
+from .firmware import probe_firmware
 
 
 ENROLLMENT_PASSWORD = "123456"
@@ -94,6 +94,9 @@ def run_command(
     environment = os.environ.copy()
     environment["LC_ALL"] = "C"
     environment["LANG"] = "C"
+    if command and command[0] == "apt-get":
+        # The privileged GUI helper has no terminal for debconf questions.
+        environment["DEBIAN_FRONTEND"] = "noninteractive"
     return subprocess.run(
         command,
         input=stdin,
@@ -233,17 +236,17 @@ def _write_signing_config(path: Path = DKMS_CONFIG) -> None:
         temporary.unlink(missing_ok=True)
 
 
-def _firmware_enforces_secure_boot(result: OperationResult, run: Run) -> bool:
-    probe = run(["mokutil", "--sb-state"], timeout=10)
-    status = parse_secure_boot_status(probe)
-    if status is SecureBootStatus.ENABLED:
+def _firmware_supports_secure_boot(result: OperationResult, run: Run) -> bool:
+    evidence = probe_firmware(run=lambda command, **kwargs: run(command, timeout=10))
+    status = evidence.status
+    if status in {SecureBootStatus.ENABLED, SecureBootStatus.DISABLED}:
         result.steps["firmware_state"] = StepResult("success", status.value)
         return True
-    if status in {SecureBootStatus.DISABLED, SecureBootStatus.UNSUPPORTED}:
+    if status is SecureBootStatus.UNSUPPORTED:
         result.steps["firmware_state"] = StepResult("skipped", status.value)
         return False
     result.steps["firmware_state"] = StepResult(
-        "failed", "Secure Boot state could not be determined"
+        "failed", f"Secure Boot state could not be determined: {evidence.reason}: {evidence.detail}"
     )
     return False
 
@@ -258,7 +261,7 @@ def prepare(
     available: CommandAvailable = command_available,
 ) -> OperationResult:
     result = OperationResult("prepare")
-    if not _firmware_enforces_secure_boot(result, run):
+    if not _firmware_supports_secure_boot(result, run):
         return result
 
     if private_key.is_file() and certificate.is_file():
@@ -298,6 +301,13 @@ def prepare(
                 return result
             result.steps["enrollment_queued"] = StepResult("success")
         result.reboot_required = True
+        # Match the installer: do not let the enrollment screen disappear
+        # before the user has time to follow Driver Center's instructions.
+        timeout = run(["mokutil", "--timeout", "-1"], timeout=30)
+        result.steps["enrollment_timeout"] = StepResult(
+            "success" if timeout.returncode == 0 else "skipped",
+            "" if timeout.returncode == 0 else _detail(timeout),
+        )
 
     _rebuild_installed_dkms_modules(
         result,
@@ -318,7 +328,7 @@ def repair_dkms(
     available: CommandAvailable = command_available,
 ) -> OperationResult:
     result = OperationResult("repair-dkms")
-    if not _firmware_enforces_secure_boot(result, run):
+    if not _firmware_supports_secure_boot(result, run):
         return result
     if private_key.is_file() and certificate.is_file():
         try:
@@ -342,10 +352,48 @@ def repair_dkms(
 
 
 def execute(action: str, run: Run = run_command) -> OperationResult:
+    if action in {"install-bootloader", "repair-bootloader", "repair-dkms"}:
+        from .grub import deploy, install_packages
+        from .decision import assess_action
+        from .inspect import collect_facts
+        preflight = assess_action(action, collect_facts())
+        if not preflight.allowed:
+            result = OperationResult(action)
+            result.steps["prerequisites"] = StepResult("failed", "\n".join(
+                blocker.reason for blocker in preflight.blockers))
+            return result
+        if action == "repair-dkms":
+            return repair_dkms(run)
+        if action == "install-bootloader":
+            return install_packages(run)
+        result = OperationResult(action)
+        try:
+            deploy(CallableRunner(run))
+            result.steps["bootloader"] = StepResult("success", "Signed AnduinOS GRUB deployed")
+        except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+            result.steps["bootloader"] = StepResult("failed", str(error))
+        return result
+    if action in {"sync-defaults", "repair-defaults"}:
+        from .defaults import sync_defaults
+        return sync_defaults(run, allow_legacy=action == "repair-defaults",
+                             repair_config=action == "repair-defaults")
+    if action in {"prepare-identity", "regenerate-identity"}:
+        from .identity import manage_identity
+        return manage_identity(action, run)
     if action == "prepare":
-        return prepare(run)
-    if action == "repair-dkms":
-        return repair_dkms(run)
+        from .boot_chain import prepare_boot_chain
+
+        result = OperationResult("prepare")
+        if not _firmware_supports_secure_boot(result, run):
+            return result
+        try:
+            prepare_boot_chain(CallableRunner(run))
+        except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+            result.steps["boot_chain"] = StepResult("failed", str(error))
+            return result
+        result = prepare(run)
+        result.steps["boot_chain"] = StepResult("success")
+        return result
     raise ValueError(f"unsupported action: {action}")
 
 
@@ -353,9 +401,23 @@ def helper_main(arguments: list[str]) -> int:
     if os.geteuid() != 0:
         print(json.dumps({"schema": 1, "error": "root-required"}))
         return 77
-    if len(arguments) != 1 or arguments[0] not in {"prepare", "repair-dkms"}:
+    if len(arguments) != 1 or arguments[0] not in {
+        "prepare", "repair-dkms", "prepare-identity", "regenerate-identity", "sync-defaults", "repair-defaults",
+        "install-bootloader", "repair-bootloader"
+    }:
         print(json.dumps({"schema": 1, "error": "unsupported-action"}))
         return 64
+
+    # APT owns package locks while its hooks take the signing lock. Holding
+    # that lock across APT here would deadlock against our own child hooks.
+    if arguments == ["install-bootloader"]:
+        try:
+            result = execute(arguments[0])
+            print(result.to_json())
+            return 0 if result.ok else 1
+        except (OSError, ValueError, subprocess.TimeoutExpired) as error:
+            print(json.dumps({"schema": 1, "error": str(error)}))
+            return 1
 
     LOCK_FILE.parent.mkdir(parents=True, exist_ok=True)
     with LOCK_FILE.open("a+", encoding="utf-8") as lock:
@@ -366,7 +428,7 @@ def helper_main(arguments: list[str]) -> int:
             return 75
         try:
             result = execute(arguments[0])
-        except (OSError, subprocess.TimeoutExpired, ValueError) as error:
+        except (OSError, subprocess.TimeoutExpired, ValueError, KeyError, TypeError) as error:
             print(json.dumps({"schema": 1, "error": str(error)}))
             return 1
         print(result.to_json())

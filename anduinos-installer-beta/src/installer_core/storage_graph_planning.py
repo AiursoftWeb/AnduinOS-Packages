@@ -12,8 +12,8 @@ from .coexistence import (
     CoexistenceStatus,
     analyze_guided_coexistence,
 )
-from .layout import build_erase_disk_layout
-from .model import Architecture, DiskIdentity, Filesystem, InstallMode, InstallPlan
+from .layout import RECOVERY_LABEL, build_erase_disk_layout
+from .model import Architecture, DiskIdentity, Filesystem, Firmware, InstallMode, InstallPlan
 from .storage_graph import (
     STORAGE_GRAPH_SCHEMA_VERSION,
     BlockReference,
@@ -47,6 +47,32 @@ SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 class StorageGraphValidationError(ValueError):
     pass
+
+
+def with_new_esp_fallback(
+    graph: StorageGraph, architecture: Architecture,
+) -> StorageGraph:
+    """Only a newly created ESP receives our direct default boot path."""
+    if not graph.creates_esp:
+        return graph
+    boot = graph.boot_targets[0]
+    fallback = (
+        "EFI/BOOT/BOOTX64.EFI"
+        if architecture is Architecture.AMD64 else "EFI/BOOT/BOOTAA64.EFI"
+    )
+    operations = list(graph.operations)
+    vendor_index = next(
+        index for index, item in enumerate(operations)
+        if item.action is StorageGraphAction.WRITE_BOOT_FILES
+    )
+    operations.insert(vendor_index + 1, StorageGraphOperation(
+        StorageGraphAction.WRITE_FALLBACK_BOOT_FILES, boot.efi_filesystem_id,
+    ))
+    return replace(
+        graph,
+        boot_targets=(replace(boot, fallback_path=fallback),),
+        operations=tuple(operations),
+    )
 
 
 def build_guided_coexistence_storage_graph(
@@ -111,19 +137,19 @@ def build_guided_coexistence_storage_graph(
 
     start_mib = _ceil_div(extent.start_bytes, MIB)
     end_mib = (extent.end_bytes + 1) // MIB
+    swap_names = ("swap",) if plan.storage.swap_size_mib else ()
     names = (
-        ("efi-system", "swap", "root")
+        ("efi-system", *swap_names, "root")
         if reused_esp is None
-        else ("swap", "root")
+        else (*swap_names, "root")
     )
     numbers = _next_partition_numbers(
         {item.identity.number for item in disk.partitions},
         len(names),
     )
-    sizes_mib = {
-        "efi-system": plan.storage.esp_size_mib,
-        "swap": plan.storage.swap_size_mib,
-    }
+    sizes_mib = {"efi-system": plan.storage.esp_size_mib}
+    if plan.storage.swap_size_mib:
+        sizes_mib["swap"] = plan.storage.swap_size_mib
     cursor = start_mib
     partitions: list[PartitionDeclaration] = []
     partition_ids: dict[str, str] = {}
@@ -182,20 +208,21 @@ def build_guided_coexistence_storage_graph(
                 label="",
             )
         )
-    filesystems.extend(
-        (
+    if "swap" in partition_ids:
+        filesystems.append(
             FilesystemDeclaration(
                 filesystem_id=partition_ids["swap"],
                 block_id=partition_ids["swap"],
                 filesystem=GraphFilesystem.SWAP,
                 label="AnduinOS-swap",
-            ),
-            FilesystemDeclaration(
-                filesystem_id=partition_ids["root"],
-                block_id=partition_ids["root"],
-                filesystem=GraphFilesystem(plan.storage.filesystem.value),
-                label="AnduinOS",
-            ),
+            )
+        )
+    filesystems.append(
+        FilesystemDeclaration(
+            filesystem_id=partition_ids["root"],
+            block_id=partition_ids["root"],
+            filesystem=GraphFilesystem(plan.storage.filesystem.value),
+            label="AnduinOS",
         )
     )
 
@@ -275,7 +302,7 @@ def build_guided_coexistence_storage_graph(
         StorageGraphOperation(StorageGraphAction.WRITE_BOOT_FILES, esp_id),
         StorageGraphOperation(StorageGraphAction.UPDATE_NVRAM, esp_id),
     ]
-    return StorageGraph(
+    graph = StorageGraph(
         schema_version=STORAGE_GRAPH_SCHEMA_VERSION,
         mode=StorageGraphMode.GUIDED_COEXISTENCE,
         inventory_digest=inventory_digest,
@@ -286,6 +313,7 @@ def build_guided_coexistence_storage_graph(
             extent_reference,
         ),
         partitions=tuple(partitions),
+        partition_resizes=(),
         filesystems=tuple(filesystems),
         subvolumes=subvolumes,
         mounts=mounts,
@@ -300,6 +328,7 @@ def build_guided_coexistence_storage_graph(
         operations=tuple(operations),
         requested_capabilities=tuple(capabilities),
     )
+    return with_new_esp_fallback(graph, plan.platform.architecture)
 
 
 def build_erase_disk_storage_graph(
@@ -336,25 +365,37 @@ def build_erase_disk_storage_graph(
         )
         for item in layout.partitions
     )
-    filesystems = (
+    filesystems = [
         FilesystemDeclaration(
             filesystem_id=partition_ids["efi-system"],
             block_id=partition_ids["efi-system"],
             filesystem=GraphFilesystem.VFAT,
             label="ANDUIN_EFI",
         ),
-        FilesystemDeclaration(
-            filesystem_id=partition_ids["swap"],
-            block_id=partition_ids["swap"],
-            filesystem=GraphFilesystem.SWAP,
-            label="AnduinOS-swap",
-        ),
+    ]
+    if "swap" in partition_ids:
+        filesystems.append(
+            FilesystemDeclaration(
+                filesystem_id=partition_ids["swap"],
+                block_id=partition_ids["swap"],
+                filesystem=GraphFilesystem.SWAP,
+                label="AnduinOS-swap",
+            )
+        )
+    if "recovery" in partition_ids:
+        filesystems.append(FilesystemDeclaration(
+            filesystem_id=partition_ids["recovery"],
+            block_id=partition_ids["recovery"],
+            filesystem=GraphFilesystem.EXT4,
+            label=RECOVERY_LABEL,
+        ))
+    filesystems.append(
         FilesystemDeclaration(
             filesystem_id=partition_ids["root"],
             block_id=partition_ids["root"],
             filesystem=GraphFilesystem(plan.storage.filesystem.value),
             label="AnduinOS",
-        ),
+        )
     )
 
     subvolumes = ()
@@ -400,11 +441,6 @@ def build_erase_disk_storage_graph(
         ),
     )
 
-    fallback = (
-        "EFI/BOOT/BOOTX64.EFI"
-        if plan.platform.architecture is Architecture.AMD64
-        else "EFI/BOOT/BOOTAA64.EFI"
-    )
     boot_targets = (
         BootTarget(
             efi_filesystem_id=partition_ids["efi-system"],
@@ -414,7 +450,7 @@ def build_erase_disk_storage_graph(
                 else ""
             ),
             vendor_directory="EFI/AnduinOS",
-            fallback_path=fallback,
+            fallback_path="",
         ),
     )
 
@@ -429,9 +465,15 @@ def build_erase_disk_storage_graph(
         )
         for item in partitions
     )
+    format_names = ["efi-system"]
+    if "swap" in partition_ids:
+        format_names.append("swap")
+    if "recovery" in partition_ids:
+        format_names.append("recovery")
+    format_names.append("root")
     operations.extend(
         StorageGraphOperation(StorageGraphAction.FORMAT, partition_ids[name])
-        for name in ("efi-system", "swap", "root")
+        for name in format_names
     )
     operations.extend(
         StorageGraphOperation(
@@ -450,20 +492,21 @@ def build_erase_disk_storage_graph(
                 StorageGraphAction.WRITE_BIOS_BOOTLOADER, disk_id
             )
         )
-    operations.extend(
-        (
-            StorageGraphOperation(
-                StorageGraphAction.WRITE_BOOT_FILES,
-                partition_ids["efi-system"],
-            ),
-            StorageGraphOperation(
-                StorageGraphAction.WRITE_FALLBACK_BOOT_FILES,
-                partition_ids["efi-system"],
-            ),
+    operations.append(
+        StorageGraphOperation(
+            StorageGraphAction.WRITE_BOOT_FILES,
+            partition_ids["efi-system"],
         )
     )
+    if plan.platform.firmware is Firmware.UEFI:
+        operations.append(
+            StorageGraphOperation(
+                StorageGraphAction.UPDATE_NVRAM,
+                partition_ids["efi-system"],
+            )
+        )
 
-    return StorageGraph(
+    graph = StorageGraph(
         schema_version=STORAGE_GRAPH_SCHEMA_VERSION,
         mode=StorageGraphMode.ERASE_DISK,
         inventory_digest=inventory_digest,
@@ -480,13 +523,15 @@ def build_erase_disk_storage_graph(
             ),
         ),
         partitions=partitions,
-        filesystems=filesystems,
+        partition_resizes=(),
+        filesystems=tuple(filesystems),
         subvolumes=subvolumes,
         mounts=mounts,
         boot_targets=boot_targets,
         operations=tuple(operations),
         requested_capabilities=tuple(capabilities),
     )
+    return with_new_esp_fallback(graph, plan.platform.architecture)
 
 
 def validate_storage_graph(plan: InstallPlan) -> None:
@@ -504,8 +549,33 @@ def validate_storage_graph(plan: InstallPlan) -> None:
         raise StorageGraphValidationError("Storage graph mode does not match")
     if not SHA256_RE.fullmatch(graph.inventory_digest):
         raise StorageGraphValidationError("Invalid storage inventory digest")
+    if len(graph.boot_targets) == 1:
+        boot = graph.boot_targets[0]
+        expected_path = (
+            ("EFI/BOOT/BOOTX64.EFI"
+             if plan.platform.architecture is Architecture.AMD64
+             else "EFI/BOOT/BOOTAA64.EFI")
+            if graph.creates_esp else ""
+        )
+        fallback_targets = tuple(
+            item.target_id for item in graph.operations
+            if item.action is StorageGraphAction.WRITE_FALLBACK_BOOT_FILES
+        )
+        expected_targets = (boot.efi_filesystem_id,) if graph.creates_esp else ()
+        if (
+            boot.fallback_path != expected_path
+            or fallback_targets != expected_targets
+        ):
+            raise StorageGraphValidationError(
+                "EFI fallback writes must target only the newly created ESP"
+            )
     if graph.mode is StorageGraphMode.GUIDED_COEXISTENCE:
         _validate_guided_graph_structure(plan, graph)
+        return
+    if graph.mode is StorageGraphMode.MANUAL:
+        from .manual_graph_planning import validate_manual_graph_structure
+
+        validate_manual_graph_structure(plan, graph)
         return
     if len(graph.block_references) != 1:
         raise StorageGraphValidationError(
@@ -631,11 +701,16 @@ def resolve_storage_graph(
                 stable_id=reference.stable_id,
                 expected_size_bytes=reference.expected_size_bytes,
                 topology_digest=reference.topology_digest,
+                external=plan.boot.external_target,
             ),
             inventory,
         )
     except StaleStorageInventoryError as error:
         raise StorageGraphValidationError(str(error)) from error
+    if current.external != plan.boot.external_target:
+        raise StorageGraphValidationError(
+            "Selected disk external-drive status changed"
+        )
     resolved = DiskIdentity(
         path=current.identity.path,
         stable_id=current.identity.stable_id,
@@ -763,11 +838,10 @@ def _validate_guided_graph_structure(
     boot = graph.boot_targets[0]
     if (
         boot.bios_disk_reference_id
-        or boot.fallback_path
         or boot.vendor_directory != "EFI/AnduinOS"
     ):
         raise StorageGraphValidationError(
-            "Coexistence boot target cannot use BIOS or fallback paths"
+            "Coexistence boot target must use its UEFI vendor directory"
         )
     preserved_targets = tuple(
         item.target_id
@@ -783,11 +857,10 @@ def _validate_guided_graph_structure(
     forbidden = {
         StorageGraphAction.REPLACE_PARTITION_TABLE,
         StorageGraphAction.WRITE_BIOS_BOOTLOADER,
-        StorageGraphAction.WRITE_FALLBACK_BOOT_FILES,
     }
     if any(item.action in forbidden for item in graph.operations):
         raise StorageGraphValidationError(
-            "Coexistence graph contains a whole-disk or fallback write"
+            "Coexistence graph contains a whole-disk boot write"
         )
     extent_start_mib = _ceil_div(extent.start_bytes, MIB)
     extent_end_mib = (

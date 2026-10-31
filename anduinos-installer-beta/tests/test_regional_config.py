@@ -80,6 +80,29 @@ class ConfigureKeyboardTests(unittest.TestCase):
         self.assertIn('XKBLAYOUT="us"', content)
         self.assertIn('XKBVARIANT=""', content)
 
+    def test_configures_a_catalogued_keyboard_variant(self):
+        base = valid_plan()
+        plan = replace(
+            base,
+            regional=replace(
+                base.regional,
+                keyboard=replace(
+                    base.regional.keyboard,
+                    layout="us",
+                    variant="intl",
+                ),
+            ),
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            context = context_for(target, plan, online=False)
+            step = ConfigureKeyboardStep()
+            step.execute(context)
+            step.verify(context)
+            content = (target / "etc/default/keyboard").read_text()
+        self.assertIn('XKBLAYOUT="us"', content)
+        self.assertIn('XKBVARIANT="intl"', content)
+
 
 class InstallInputMethodTests(unittest.TestCase):
     def test_non_input_method_locale_is_skipped_and_clears_live_default(self):
@@ -163,6 +186,26 @@ class InstallInputMethodTests(unittest.TestCase):
                     any("apt-get" in command for command, _ in runner.commands)
                 )
 
+    def test_rime_libexec_payload_configures_without_network(self):
+        method = input_method("rime")
+        assert method is not None
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_payload(target, method)
+            old_engine = target / "usr/lib/ibus-rime/ibus-engine-rime"
+            new_engine = target / "usr/libexec/ibus-rime/ibus-engine-rime"
+            new_engine.parent.mkdir(parents=True)
+            old_engine.rename(new_engine)
+            context = context_for(target, plan_for("rime"), online=False)
+            step = InstallInputMethodStep(FakeRunner())
+            step.execute(context)
+            step.verify(context)
+            self.assertTrue(context.values["input_methods_installed"])
+
+            new_engine.unlink()
+            with self.assertRaisesRegex(RuntimeError, "payload is incomplete"):
+                step.verify(context)
+
     def test_logs_the_gnome_input_source_value_and_destination(self):
         selected = input_method("rime")
         assert selected is not None
@@ -197,6 +240,36 @@ class InstallInputMethodTests(unittest.TestCase):
             "and mru-sources remain managed by GNOME",
             messages,
         )
+
+    def test_gnome_input_source_preserves_the_keyboard_variant(self):
+        selected = input_method("rime")
+        assert selected is not None
+        plan = plan_for(selected.id)
+        plan = replace(
+            plan,
+            regional=replace(
+                plan.regional,
+                keyboard=replace(
+                    plan.regional.keyboard,
+                    layout="us",
+                    variant="intl",
+                ),
+            ),
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_payload(target, selected)
+            context = context_for(target, plan, online=False)
+            step = InstallInputMethodStep(FakeRunner())
+            step.execute(context)
+            step.verify(context)
+            override = (
+                target
+                / "usr/share/glib-2.0/schemas"
+                / "99_anduinos_default_input.gschema.override"
+            ).read_text(encoding="utf-8")
+
+        self.assertIn("('xkb', 'us+intl')", override)
 
     def test_multiple_selected_methods_are_all_registered_in_policy_order(self):
         selected = tuple(

@@ -2,7 +2,9 @@
 import sys
 import subprocess
 import os
+import shutil
 import threading
+import tempfile
 
 import gi
 gi.require_version('Gtk', '4.0')
@@ -46,7 +48,15 @@ def recommendation_text(recommendation, field, default=""):
     return _(text) if text else default
 
 DEFAULT_BOTTLE_NAME = "Default"
+BOTTLES_CONFIGURATOR_PATHS = (
+    "/usr/share/anduinos-exe-runner/configure-bottles.py",
+    os.path.join(os.path.dirname(__file__), "configure-bottles.py"),
+)
 OLE_COMPOUND_FILE_MAGIC = b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1"
+
+def find_bottles_configurator():
+    """Return the packaged Bottles configurator visible to the host process."""
+    return next((path for path in BOTTLES_CONFIGURATOR_PATHS if os.path.isfile(path)), None)
 
 def is_supported_windows_file(path):
     """Return whether path is a valid PE executable or MSI package."""
@@ -351,78 +361,6 @@ class RunnerApp(Adw.Application):
             self.set_status(_("Installation Failed"), _("An error occurred while installing Bottles. Please expand advanced status to view logs."), show_progress=False)
             return
             
-        self.set_status(_("Downloading Components"), _("Initializing core gaming components (DXVK, VKD3D, Runner, etc.)..."), show_progress=True)
-        init_script = """import sys
-import gi
-gi.require_version('Gtk', '4.0')
-gi.require_version('Adw', '1')
-from gi.repository import GLib, Gio
-
-pkgdatadir = "/app/share/bottles"
-sys.path.insert(1, pkgdatadir)
-
-data_resource = Gio.Resource.load(f"{pkgdatadir}/data.gresource")
-bottles_resource = Gio.Resource.load(f"{pkgdatadir}/bottles.gresource")
-data_resource._register()
-bottles_resource._register()
-
-from bottles.backend.managers.manager import Manager
-from bottles.backend.utils.threading import RunAsync
-
-def run_manager():
-    m = Manager(False, check_connection=True)
-    loop = GLib.MainLoop()
-
-    def my_progress(*args, **kwargs):
-        pass
-
-    retries = 3
-    def on_done(res, error=None):
-        nonlocal retries
-        if not res.status and retries > 0:
-            retries -= 1
-            print(f"Checks failed, retrying... ({retries} left)", flush=True)
-            RunAsync(
-                task_func=m.checks,
-                callback=on_done,
-                install_latest=True,
-                first_run=True,
-                progress_callback=my_progress
-            )
-        else:
-            print(f"Result: {res.status}", flush=True)
-            loop.quit()
-
-    def start_run():
-        print("Starting checks in background...", flush=True)
-        RunAsync(
-            task_func=m.checks,
-            callback=on_done,
-            install_latest=True,
-            first_run=True,
-            progress_callback=my_progress
-        )
-        return False
-        
-    GLib.timeout_add_seconds(2, start_run)
-    loop.run()
-
-run_manager()
-"""
-        import os
-        import uuid
-        sandbox_dir = os.path.expanduser("~/.var/app/com.usebottles.bottles")
-        os.makedirs(sandbox_dir, exist_ok=True)
-        script_path = os.path.join(sandbox_dir, f"init_bottles_{uuid.uuid4().hex}.py")
-        with open(script_path, "w") as f:
-            f.write(init_script)
-            
-        code = self.run_subprocess(["flatpak", "run", "--command=python3", "com.usebottles.bottles", script_path])
-        try:
-            os.remove(script_path)
-        except:
-            pass
-        
         self.set_status(_("Configuring Bottle"), _("Initializing Windows virtual bottle (Default)..."), show_progress=True)
         code = self.run_subprocess(["flatpak", "run", "--branch=stable", "--command=bottles-cli", "com.usebottles.bottles", "new", "--bottle-name", DEFAULT_BOTTLE_NAME, "--environment", "application"])
         
@@ -431,64 +369,36 @@ run_manager()
             return
             
         self.set_status(_("Configuring Fonts"), _("Installing core fonts to prevent text rendering issues..."), show_progress=True)
-        fonts_script = """import sys
-pkgdatadir = "/app/share/bottles"
-sys.path.insert(1, pkgdatadir)
-import gi
-gi.require_version('Gtk', '4.0')
-gi.require_version('Adw', '1')
-from gi.repository import GLib, Gio
-data_resource = Gio.Resource.load(f"{pkgdatadir}/data.gresource")
-bottles_resource = Gio.Resource.load(f"{pkgdatadir}/bottles.gresource")
-data_resource._register()
-bottles_resource._register()
+        configurator_path = find_bottles_configurator()
+        if configurator_path is None:
+            self.log("Bottles configurator helper was not found.")
+            self.set_status(_("Configuration Failed"), _("An error occurred while initializing the bottle. Please expand advanced status to view logs."), show_progress=False)
+            return
 
-from bottles.backend.managers.manager import Manager
-from bottles.backend.utils.threading import RunAsync
+        sandbox_dir = os.path.expanduser("~/.var/app/com.usebottles.bottles")
+        os.makedirs(sandbox_dir, exist_ok=True)
+        descriptor, sandbox_script = tempfile.mkstemp(
+            prefix="anduinos-configure-bottles-",
+            suffix=".py",
+            dir=sandbox_dir,
+        )
+        os.close(descriptor)
+        shutil.copyfile(configurator_path, sandbox_script)
 
-m = Manager(False, check_connection=True)
-loop = GLib.MainLoop()
-
-def my_progress(*args, **kwargs):
-    pass
-
-def on_checks_done(res, error=None):
-    b = m.local_bottles.get("Default")
-    if not b:
-        loop.quit()
-        return
-
-    deps_to_install = ["cjkfonts", "allfonts"]
-    for dep in deps_to_install:
-        manifest = m.dependency_manager.get_dependency(dep)
-        if manifest:
-            print(f"Installing {dep}...")
-            m.dependency_manager.install(b, [dep, manifest])
-            
-    loop.quit()
-
-def start_run():
-    RunAsync(
-        task_func=m.checks,
-        callback=on_checks_done,
-        install_latest=True,
-        first_run=False,
-        progress_callback=my_progress
-    )
-    return False
-
-GLib.timeout_add_seconds(1, start_run)
-loop.run()
-"""
-        script_path2 = os.path.join(sandbox_dir, f"install_fonts_{uuid.uuid4().hex}.py")
-        with open(script_path2, "w") as f:
-            f.write(fonts_script)
-            
-        code = self.run_subprocess(["flatpak", "run", "--command=python3", "com.usebottles.bottles", script_path2])
         try:
-            os.remove(script_path2)
-        except:
-            pass
+            code = self.run_subprocess([
+                "flatpak", "run", "--command=python3", "com.usebottles.bottles",
+                sandbox_script, DEFAULT_BOTTLE_NAME,
+            ])
+        finally:
+            try:
+                os.remove(sandbox_script)
+            except OSError:
+                pass
+
+        if code != 0:
+            self.set_status(_("Configuration Failed"), _("An error occurred while initializing the bottle. Please expand advanced status to view logs."), show_progress=False)
+            return
 
         self.log(_("Installation and configuration complete!"))
         self.set_status(_("Starting program"), _("Bottle is ready, about to launch application..."), show_progress=True)

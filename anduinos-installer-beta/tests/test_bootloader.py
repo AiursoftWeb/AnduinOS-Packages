@@ -1,29 +1,50 @@
+import subprocess
 import tempfile
 import unittest
 from dataclasses import replace
 from pathlib import Path
+from unittest.mock import patch
 
 from fakes import FakeRunner
 from helpers import valid_plan
-from installer_core.bootloader import InstallBootloaderStep
+from installer_core.bootloader import (
+    InstallBootloaderStep,
+    CreateFallbackBootChainStep,
+    _deploy_portable_fallback,
+    _ensure_vendor_nvram_first,
+    _portable_fallback_paths,
+    _verify_signed_image,
+    _verify_portable_fallback,
+    _verify_grub_filesystem_modules,
+)
+from installer_core.boot_commands import build_boot_commands
 from installer_core.esp import (
     NvramInspection,
     capture_preserved_esp_tree,
 )
 from installer_core.storage_planning import (
     build_guided_coexistence_execution_plan,
+    build_manual_storage_execution_plan,
 )
+from installer_core.model import Architecture, Filesystem
 from installer_core.steps import InstallContext
 from installer_core.validation import ExecutionPolicy
 from test_guided_storage_graph import guided_plan
 from test_guided_storage_planning import healthy_esp
+from test_manual_storage_graph import manual_plan
+from test_manual_layout import selection
+from installer_core.manual_layout import ManualPartitionRequest, ManualPartitionRole
+from test_manual_storage_planning import healthy_esp as healthy_manual_esp
+from test_esp_replacement import replacement_plan, PARTUUID, FSUUID
+from installer_core.esp import EspReuseInspection, EspTreeEntry
 
 
 def prepare_target(target: Path) -> None:
     for executable in (
         "usr/sbin/grub-install",
         "usr/sbin/update-grub",
-        "usr/sbin/update-initramfs",
+        "usr/bin/dracut",
+        "usr/bin/lsinitrd",
     ):
         path = target / executable
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -44,6 +65,14 @@ def write_pe(path: Path, machine: int) -> None:
     path.write_bytes(data)
 
 
+def prepare_vendor(target: Path, suffix: str = "x64", machine: int = 0x8664) -> None:
+    vendor = target / "boot/efi/EFI/AnduinOS"
+    vendor.mkdir(parents=True, exist_ok=True)
+    for name in (f"shim{suffix}.efi", f"grub{suffix}.efi", f"mm{suffix}.efi"):
+        write_pe(vendor / name, machine)
+    (vendor / "grub.cfg").write_text("configfile /boot/grub/grub.cfg\n")
+
+
 GRUB_INSTALL_HELP = """
 --target=TARGET
 --recheck
@@ -55,23 +84,310 @@ GRUB_INSTALL_HELP = """
 """
 
 
+def erase_context_values(target: Path) -> dict[str, object]:
+    return {
+        "target": target,
+        "target_efi_mounted": True,
+        "partition_devices": {"efi-system": "/dev/nvme0n1p2"},
+    }
+
+
 class InstallBootloaderTests(unittest.TestCase):
+    def test_replacement_failure_stops_before_grub_or_nvram_writes_in_both_modes(self):
+        for manual in (False, True):
+            with self.subTest(manual=manual), tempfile.TemporaryDirectory() as directory:
+                target = Path(directory)
+                prepare_target(target)
+                (target / 'usr/lib/grub/x86_64-efi/btrfs.mod').touch()
+                plan, inventory = replacement_plan(manual)
+                inspection = EspReuseInspection(PARTUUID, FSUUID, True, 128 * 1024**2,
+                    vendor_entries=(EspTreeEntry('EFI/AnduinOS', 'directory', 0),))
+                builder = (build_manual_storage_execution_plan if manual
+                           else build_guided_coexistence_execution_plan)
+                execution = builder(plan, inventory, esp_inspection=inspection,
+                    nvram_inspection=NvramInspection(True), target=str(target))
+                runner = self.compatible_runner(target)
+                context = InstallContext(plan, lambda _: None, values={
+                    'target': target, 'target_efi_mounted': True,
+                    'partition_devices': execution.commands.devices,
+                    ('manual' if manual else 'guided') + '_storage_execution_plan': execution})
+                with patch('installer_core.bootloader.replace_esp_vendor',
+                           side_effect=OSError('backup verification failed')) as replace_vendor:
+                    with self.assertRaisesRegex(OSError, 'backup verification failed'):
+                        InstallBootloaderStep(runner).execute(context)
+                replace_vendor.assert_called_once_with(context, target, runner)
+                commands = [command for command, _ in runner.commands]
+                self.assertIn(execution.boot_commands.initrd, commands)
+                self.assertNotIn(execution.boot_commands.install, commands)
+                self.assertNotIn(execution.boot_commands.nvram_create, commands)
+
+    def test_portable_signature_check_rejects_a_bad_authenticode_digest(self):
+        class SignatureRunner(FakeRunner):
+            def run(self, command, **kwargs):
+                command = tuple(command)
+                self.commands.append((command, kwargs))
+                if command[:3] == ("openssl", "pkcs7", "-inform"):
+                    return subprocess.CompletedProcess(
+                        command,
+                        0,
+                        "-----BEGIN CERTIFICATE-----\n"
+                        "test\n"
+                        "-----END CERTIFICATE-----\n",
+                        "",
+                    )
+                if command[:2] == ("sbverify", "--cert"):
+                    return subprocess.CompletedProcess(command, 1, "", "bad digest")
+                return subprocess.CompletedProcess(command, 0, "", "")
+
+        with tempfile.TemporaryDirectory() as directory:
+            image = Path(directory) / "shimx64.efi"
+            write_pe(image, 0x8664)
+            with self.assertRaisesRegex(RuntimeError, "signature is invalid"):
+                _verify_signed_image(SignatureRunner(), image, 0x8664)
+
+    def test_direct_portable_chain_excludes_nvram_registrar_and_matches_vendor(self):
+        for architecture, suffix, machine, boot_name in (
+            (Architecture.AMD64, "x64", 0x8664, "BOOTX64.EFI"),
+            (Architecture.ARM64, "aa64", 0xAA64, "BOOTAA64.EFI"),
+        ):
+            for external in (False, True):
+                with self.subTest(architecture=architecture, external=external), tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    prepare_vendor(target, suffix, machine)
+                    runner = FakeRunner()
+                    plan = valid_plan(architecture=architecture, external_target=external)
+                    with patch("installer_core.bootloader._verify_signed_image"):
+                        _deploy_portable_fallback(runner, target, plan)
+                        _verify_portable_fallback(runner, target, plan)
+                    vendor = target / "boot/efi/EFI/AnduinOS"
+                    fallback = target / "boot/efi/EFI/BOOT"
+                    for source, destination in (
+                        (f"shim{suffix}.efi", boot_name),
+                        (f"grub{suffix}.efi", f"grub{suffix}.efi"),
+                        (f"mm{suffix}.efi", f"mm{suffix}.efi"),
+                        ("grub.cfg", "grub.cfg"),
+                    ):
+                        self.assertEqual((fallback / destination).read_bytes(), (vendor / source).read_bytes())
+                    self.assertFalse((fallback / f"fb{suffix}.efi").exists())
+                    (fallback / f"grub{suffix}.efi").write_bytes(b"tampered")
+                    with self.assertRaisesRegex(RuntimeError, "does not match vendor payload"):
+                        _verify_portable_fallback(runner, target, plan)
+
+    def test_new_guided_and_manual_esp_deploy_and_verify_the_same_chain(self):
+        chosen = selection(
+            reinitialize=True, reused_esp="", new_partitions=(
+                ManualPartitionRequest(ManualPartitionRole.EFI_SYSTEM, 1, 1025),
+                ManualPartitionRequest(ManualPartitionRole.ROOT, 1025, 40 * 1024),
+            ),
+        )
+        for arch, suffix, machine in ((Architecture.AMD64, "x64", 0x8664),
+                                     (Architecture.ARM64, "aa64", 0xAA64)):
+            for plan, _inventory in (
+                guided_plan(reuse_esp=False, architecture=arch),
+                manual_plan(chosen=chosen, architecture=arch),
+            ):
+                with self.subTest(mode=plan.storage.mode, architecture=arch), tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    prepare_vendor(target, suffix, machine)
+                    context = InstallContext(plan, lambda _message: None,
+                                             {"target": target, "target_efi_mounted": True})
+                    step = CreateFallbackBootChainStep(FakeRunner())
+                    with patch("installer_core.bootloader._verify_signed_image"):
+                        step.execute(context)
+                        step.verify(context)
+                    for source, destination in _portable_fallback_paths(target, plan):
+                        self.assertEqual(source.read_bytes(), destination.read_bytes())
+
+    def test_reused_esp_rejects_fallback_even_with_a_forged_flag(self):
+        for arch in Architecture:
+            for plan, _inventory in (guided_plan(architecture=arch), manual_plan(architecture=arch)):
+                with self.subTest(mode=plan.storage.mode, architecture=arch), tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    sentinel = target / "boot/efi/EFI/BOOT/old-loader.efi"
+                    sentinel.parent.mkdir(parents=True)
+                    sentinel.write_bytes(b"another system")
+                    forged = replace(plan, boot=replace(plan.boot, install_fallback_path=True))
+                    runner = FakeRunner()
+                    with self.assertRaisesRegex(RuntimeError, "not authorized"):
+                        _deploy_portable_fallback(runner, target, forged)
+                    self.assertEqual(sentinel.read_bytes(), b"another system")
+                    self.assertEqual(list(sentinel.parent.iterdir()), [sentinel])
+                    self.assertEqual(runner.commands, [])
+
+    def test_fallback_rejects_wrong_architecture_before_signature_commands(self):
+        with tempfile.TemporaryDirectory() as directory:
+            image = Path(directory) / "loader.efi"
+            write_pe(image, 0xAA64)
+            runner = FakeRunner()
+            with self.assertRaisesRegex(RuntimeError, "wrong architecture"):
+                _verify_signed_image(runner, image, 0x8664)
+            self.assertEqual(runner.commands, [])
+
+    def test_portable_chain_rejects_shared_esp_plans_before_writes(self):
+        for plan, _inventory in (guided_plan(), manual_plan()):
+            with self.subTest(mode=plan.storage.mode), tempfile.TemporaryDirectory() as directory:
+                target = Path(directory)
+                sentinel = target / "boot/efi/EFI/BOOT/BOOTX64.EFI"
+                sentinel.parent.mkdir(parents=True)
+                sentinel.write_bytes(b"another-system")
+                runner = FakeRunner()
+                with self.assertRaisesRegex(RuntimeError, "not authorized"):
+                    _deploy_portable_fallback(runner, target, plan)
+                self.assertEqual(sentinel.read_bytes(), b"another-system")
+                self.assertEqual(runner.commands, [])
+
+    def test_arm64_portable_chain_uses_standard_filenames(self):
+        plan = valid_plan(
+            architecture=Architecture.ARM64,
+            external_target=True,
+        )
+        pairs = _portable_fallback_paths(Path("/target"), plan)
+        self.assertEqual(
+            tuple((source.name, destination.name) for source, destination in pairs),
+            (
+                ("grubaa64.efi", "grubaa64.efi"),
+                ("mmaa64.efi", "mmaa64.efi"),
+                ("grub.cfg", "grub.cfg"),
+                ("shimaa64.efi", "BOOTAA64.EFI"),
+            ),
+        )
+
+    def test_portable_fallback_tools_are_required_only_when_written(self):
+        external = CreateFallbackBootChainStep(FakeRunner())
+        external_context = InstallContext(
+            valid_plan(external_target=True), lambda _message: None
+        )
+        external.preflight(external_context)
+        self.assertEqual(
+            external.runner.required, ["openssl", "sbattach", "sbverify"]
+        )
+
+        internal = CreateFallbackBootChainStep(FakeRunner())
+        internal.preflight(InstallContext(valid_plan(), lambda _message: None))
+        self.assertEqual(
+            internal.runner.required, ["openssl", "sbattach", "sbverify"]
+        )
+        for plan, _inventory in (guided_plan(), manual_plan()):
+            shared = InstallBootloaderStep(FakeRunner())
+            shared.preflight(InstallContext(plan, lambda _message: None))
+            self.assertEqual(shared.runner.required, [])
+
     def compatible_runner(self, target: Path) -> FakeRunner:
         runner = FakeRunner()
         runner.outputs[
             ("chroot", str(target), "grub-install", "--help")
         ] = (GRUB_INSTALL_HELP, "", 0)
+        runner.outputs[
+            ("blkid", "-s", "PARTUUID", "-o", "value", "/dev/nvme0n1p2")
+        ] = ("part-2\n", "", 0)
+        runner.outputs[("efibootmgr", "--verbose")] = (
+            "BootOrder: 0007,0001\n"
+            "Boot0007* AnduinOS "
+            "HD(2,GPT,part-2,0x1800,0x200000)/"
+            "File(\\EFI\\AnduinOS\\shimx64.efi)\n"
+            "Boot0001* UEFI OS "
+            "HD(2,GPT,part-2,0x1800,0x200000)/"
+            "File(\\EFI\\BOOT\\BOOTX64.EFI)\n",
+            "",
+            0,
+        )
         return runner
 
-    def test_runs_initramfs_before_grub_install_and_update_grub_last(self):
+    def test_internal_execute_publishes_fallback_and_keeps_vendor_nvram(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_target(target)
+            vendor = target / "boot/efi/EFI/AnduinOS"
+            vendor.mkdir(parents=True)
+            for name in ("shimx64.efi", "grubx64.efi", "mmx64.efi"):
+                write_pe(vendor / name, 0x8664)
+            (vendor / "grub.cfg").write_text(
+                "configfile /boot/grub/grub.cfg\n", encoding="utf-8"
+            )
+            runner = self.compatible_runner(target)
+            context = InstallContext(
+                valid_plan(),
+                lambda _message: None,
+                erase_context_values(target),
+            )
+
+            with patch("installer_core.bootloader._verify_signed_image"):
+                InstallBootloaderStep(runner).execute(context)
+                CreateFallbackBootChainStep(runner).execute(context)
+                CreateFallbackBootChainStep(runner).verify(context)
+
+            fallback = target / "boot/efi/EFI/BOOT"
+            self.assertTrue((fallback / "BOOTX64.EFI").is_file())
+            self.assertFalse((fallback / "fbx64.efi").exists())
+            commands = [item[0] for item in runner.commands]
+            self.assertLess(
+                commands.index(("chroot", str(target), "update-grub")),
+                next(
+                    index
+                    for index, command in enumerate(commands)
+                    if command[:2] == ("efibootmgr", "--create")
+                ),
+            )
+
+    def test_moves_vendor_entry_to_the_front_of_boot_order(self):
+        class ReorderingRunner(FakeRunner):
+            def run(self, command, **kwargs):
+                command = tuple(command)
+                result = super().run(command, **kwargs)
+                if command == ("efibootmgr", "--bootorder", "0007,0001"):
+                    self.outputs[("efibootmgr", "--verbose")] = (
+                        self.outputs[("efibootmgr", "--verbose")][0].replace(
+                            "BootOrder: 0001,0007",
+                            "BootOrder: 0007,0001",
+                        ),
+                        "",
+                        0,
+                    )
+                return result
+
+        runner = ReorderingRunner()
+        runner.outputs[
+            ("blkid", "-s", "PARTUUID", "-o", "value", "/dev/nvme0n1p2")
+        ] = ("part-2\n", "", 0)
+        runner.outputs[("efibootmgr", "--verbose")] = (
+            "BootOrder: 0001,0007\n"
+            "Boot0001* UEFI OS "
+            "HD(2,GPT,part-2,0x1800,0x200000)/"
+            "\\EFI\\BOOT\\BOOTX64.EFI\n"
+            "Boot0007* AnduinOS "
+            "HD(2,GPT,part-2,0x1800,0x200000)/"
+            "\\EFI\\AnduinOS\\shimx64.efi\n",
+            "",
+            0,
+        )
+        context = InstallContext(
+            valid_plan(),
+            lambda _message: None,
+            erase_context_values(Path("/target")),
+        )
+
+        _ensure_vendor_nvram_first(
+            runner,
+            context,
+            build_boot_commands(context.plan, "/target"),
+        )
+
+        self.assertIn(
+            (("efibootmgr", "--bootorder", "0007,0001"), {"timeout": 30}),
+            runner.commands,
+        )
+
+    @patch("installer_core.bootloader._verify_signed_image")
+    def test_runs_dracut_before_grub_install_and_update_grub_last(self, _verify_signature):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             runner = self.compatible_runner(target)
             prepare_target(target)
+            prepare_vendor(target)
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
-                {"target": target, "target_efi_mounted": True},
+                erase_context_values(target),
             )
             step = InstallBootloaderStep(runner)
             step.preflight(context)
@@ -80,27 +396,149 @@ class InstallBootloaderTests(unittest.TestCase):
         commands = [item[0] for item in runner.commands]
         self.assertEqual(commands[0][2:], ("grub-install", "--help"))
         self.assertFalse(runner.commands[0][1]["log_output"])
-        self.assertEqual(commands[1][2], "update-initramfs")
-        self.assertEqual(commands[-1][2], "update-grub")
+        self.assertEqual(commands[1][2], "dracut")
+        self.assertIn("--no-hostonly-cmdline", commands[1])
+        self.assertIn("--regenerate-all", commands[1])
+        self.assertIn(
+            ("chroot", str(target), "update-grub"),
+            commands,
+        )
+        self.assertEqual(commands[-1], ("efibootmgr", "--verbose"))
         self.assertEqual(
             [
                 command[3]
                 for command in commands
-                if command[2] == "grub-install"
+                if len(command) > 3
+                and command[2] == "grub-install"
                 and command[3].startswith("--target=")
             ],
             ["--target=i386-pc", "--target=x86_64-efi"],
         )
 
-    def test_verifies_matching_kernel_grub_bios_and_efi_artifacts(self):
+    def test_advanced_root_filesystems_require_grub_and_initrd_drivers(self):
+        cases = {
+            Filesystem.XFS: "kernel/fs/xfs/xfs.ko.zst",
+            Filesystem.F2FS: "kernel/fs/f2fs/f2fs.ko.zst",
+        }
+        for filesystem, initrd_module in cases.items():
+            with self.subTest(filesystem=filesystem.value):
+                with tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    prepare_target(target)
+                    grub_module = (
+                        target
+                        / "usr/lib/grub/x86_64-efi"
+                        / f"{filesystem.value}.mod"
+                    )
+                    grub_module.touch()
+                    plan, inventory = manual_plan(filesystem=filesystem)
+                    execution = build_manual_storage_execution_plan(
+                        plan,
+                        inventory,
+                        esp_inspection=healthy_manual_esp(inventory),
+                        nvram_inspection=NvramInspection(True),
+                        target=str(target),
+                    )
+                    runner = self.compatible_runner(target)
+                    esp = execution.commands.devices["efi-system"]
+                    runner.outputs[
+                        ("blkid", "-s", "PARTUUID", "-o", "value", esp)
+                    ] = ("part-1\n", "", 0)
+                    runner.outputs[execution.boot_commands.nvram_verify] = (
+                        "BootOrder: 0007\n"
+                        "Boot0007* AnduinOS "
+                        "HD(1,GPT,part-1,0x800,0x100000)/"
+                        "File(\\EFI\\AnduinOS\\shimx64.efi)\n",
+                        "",
+                        0,
+                    )
+                    context = InstallContext(
+                        plan,
+                        lambda _message: None,
+                        values={
+                            "target": target,
+                            "target_efi_mounted": True,
+                            "partition_devices": execution.commands.devices,
+                            "manual_storage_execution_plan": execution,
+                        },
+                    )
+                    step = InstallBootloaderStep(runner)
+                    step.execute(context)
+
+                    (target / "boot/vmlinuz-test").touch()
+                    (target / "boot/initrd.img-test").touch()
+                    (target / "boot/grub").mkdir(exist_ok=True)
+                    (target / "boot/grub/grub.cfg").write_text(
+                        "menuentry 'AnduinOS' { linux /boot/vmlinuz-test }\n"
+                    )
+                    vendor = target / "boot/efi/EFI/AnduinOS/shimx64.efi"
+                    vendor.parent.mkdir(parents=True)
+                    write_pe(vendor, 0x8664)
+                    runner.outputs[
+                        ("chroot", str(target), "dpkg", "--print-architecture")
+                    ] = ("amd64\n", "", 0)
+                    runner.outputs[
+                        (
+                            "chroot",
+                            str(target),
+                            "lsinitrd",
+                            "-m",
+                            "/boot/initrd.img-test",
+                        )
+                    ] = ("rootfs-block\n", "", 0)
+                    initrd_command = (
+                        "chroot",
+                        str(target),
+                        "lsinitrd",
+                        "/boot/initrd.img-test",
+                    )
+                    runner.outputs[initrd_command] = (
+                        initrd_module + "\n",
+                        "",
+                        0,
+                    )
+                    step.verify(context)
+
+                    runner.outputs[initrd_command] = ("", "", 0)
+                    with self.assertRaisesRegex(
+                        RuntimeError,
+                        "missing its root filesystem driver",
+                    ):
+                        step.verify(context)
+
+    def test_missing_advanced_grub_filesystem_module_is_fatal(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_target(target)
+            installs = (
+                (
+                    "chroot",
+                    str(target),
+                    "grub-install",
+                    "--target=x86_64-efi",
+                ),
+            )
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "GRUB xfs modules are missing",
+            ):
+                _verify_grub_filesystem_modules(
+                    target,
+                    installs,
+                    Filesystem.XFS,
+                )
+
+    @patch("installer_core.bootloader._verify_signed_image")
+    def test_verifies_matching_kernel_grub_bios_and_efi_artifacts(self, _verify_signature):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             runner = self.compatible_runner(target)
             prepare_target(target)
+            prepare_vendor(target)
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
-                {"target": target, "target_efi_mounted": True},
+                erase_context_values(target),
             )
             step = InstallBootloaderStep(runner)
             step.execute(context)
@@ -114,39 +552,57 @@ class InstallBootloaderTests(unittest.TestCase):
             bios = target / "boot/grub/i386-pc"
             bios.mkdir()
             (bios / "normal.mod").touch()
-            fallback = target / "boot/efi/EFI/BOOT/BOOTX64.EFI"
-            fallback.parent.mkdir(parents=True)
-            write_pe(fallback, 0x8664)
+            vendor = target / "boot/efi/EFI/AnduinOS/shimx64.efi"
+            vendor.parent.mkdir(parents=True, exist_ok=True)
+            write_pe(vendor, 0x8664)
             runner.outputs[
                 ("chroot", str(target), "dpkg", "--print-architecture")
             ] = ("amd64\n", "", 0)
+            runner.outputs[
+                ("chroot", str(target), "lsinitrd", "-m", "/boot/initrd.img-6.14-test")
+            ] = ("anduinos-btrfs-snapshots-manager\n", "", 0)
             step.verify(context)
+            # A driver payload failure must abort this real pipeline step,
+            # not remain an unused helper or a warning after installation.
+            with patch(
+                "installer_core.bootloader.verify_driver_boot_payload",
+                side_effect=RuntimeError("target kernel lacks NVIDIA modules"),
+            ) as verify_drivers:
+                with self.assertRaisesRegex(RuntimeError, "lacks NVIDIA modules"):
+                    step.verify(context)
+                verify_drivers.assert_called_once_with(
+                    context, runner, (target / "boot/grub/grub.cfg").read_text()
+                )
 
-    def test_rejects_kernel_without_matching_initramfs(self):
+    @patch("installer_core.bootloader._verify_signed_image")
+    def test_rejects_kernel_without_matching_initramfs(self, _verify_signature):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             runner = self.compatible_runner(target)
             prepare_target(target)
+            prepare_vendor(target)
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
-                {"target": target, "target_efi_mounted": True},
+                erase_context_values(target),
             )
             step = InstallBootloaderStep(runner)
             step.execute(context)
             (target / "boot/vmlinuz-6.14-test").touch()
-            with self.assertRaisesRegex(RuntimeError, "matching initramfs"):
+            with self.assertRaisesRegex(RuntimeError, "matching Dracut initrd"):
                 step.verify(context)
 
-    def test_rejects_wrong_efi_machine(self):
+    @patch("installer_core.bootloader._verify_signed_image")
+    def test_rejects_wrong_efi_machine(self, _verify_signature):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             runner = self.compatible_runner(target)
             prepare_target(target)
+            prepare_vendor(target)
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
-                {"target": target, "target_efi_mounted": True},
+                erase_context_values(target),
             )
             step = InstallBootloaderStep(runner)
             step.execute(context)
@@ -159,9 +615,12 @@ class InstallBootloaderTests(unittest.TestCase):
             bios = target / "boot/grub/i386-pc"
             bios.mkdir()
             (bios / "normal.mod").touch()
-            fallback = target / "boot/efi/EFI/BOOT/BOOTX64.EFI"
-            fallback.parent.mkdir(parents=True)
-            write_pe(fallback, 0xAA64)
+            vendor = target / "boot/efi/EFI/AnduinOS/shimx64.efi"
+            vendor.parent.mkdir(parents=True, exist_ok=True)
+            write_pe(vendor, 0xAA64)
+            runner.outputs[
+                ("chroot", str(target), "lsinitrd", "-m", "/boot/initrd.img-test")
+            ] = ("anduinos-btrfs-snapshots-manager\n", "", 0)
             with self.assertRaisesRegex(RuntimeError, "does not match"):
                 step.verify(context)
 
@@ -176,7 +635,7 @@ class InstallBootloaderTests(unittest.TestCase):
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
-                {"target": target, "target_efi_mounted": True},
+                erase_context_values(target),
             )
 
             with self.assertRaisesRegex(
@@ -198,7 +657,7 @@ class InstallBootloaderTests(unittest.TestCase):
             context = InstallContext(
                 valid_plan(),
                 lambda _message: None,
-                {"target": target, "target_efi_mounted": True},
+                erase_context_values(target),
             )
 
             with self.assertRaisesRegex(
@@ -240,6 +699,7 @@ class InstallBootloaderTests(unittest.TestCase):
                 ("blkid", "-s", "PARTUUID", "-o", "value", esp_device)
             ] = ("part-1\n", "", 0)
             nvram = (
+                "BootOrder: 0007,0001\n"
                 "Boot0001* Windows Boot Manager "
                 "HD(1,GPT,part-1,0x800,0x100000)/"
                 "File(\\EFI\\Microsoft\\Boot\\bootmgfw.efi)\n"
@@ -255,6 +715,9 @@ class InstallBootloaderTests(unittest.TestCase):
             runner.outputs[
                 ("chroot", str(target), "dpkg", "--print-architecture")
             ] = ("amd64\n", "", 0)
+            runner.outputs[
+                ("chroot", str(target), "lsinitrd", "-m", "/boot/initrd.img-test")
+            ] = ("anduinos-btrfs-snapshots-manager\n", "", 0)
             logs = []
             context = InstallContext(
                 plan,

@@ -1,0 +1,53 @@
+Upstream: https://gitlab.com/arcmenu/ArcMenu/-/commit/7932c89d2800eac583867cc9fa2a5dc991bd9ec2
+Subject: Mark constants.js strings for translation with a no-op stub
+
+Backport to the extension archive (which omits the src/ prefix).
+Remove when the dynamically resolved upstream release includes this fix.
+
+diff --git a/src/constants.js b/src/constants.js
+--- a/src/constants.js
++++ b/src/constants.js
+@@ -1,10 +1,12 @@
+-import {domain} from 'gettext';
+-const {gettext: _} = domain('arcmenu');
+-
+ export const DASH_TO_PANEL_UUID = 'dash-to-panel@jderose9.github.com';
+ export const AZTASKBAR_UUID = 'aztaskbar@aztaskbar.gitlab.com';
+ export const RESOURCE_PATH = 'resource:///org/gnome/shell/extensions/arcmenu/icons/scalable';
+ 
++// No-op marker so xgettext extracts strings into the .pot file. The text domain isn't bound
++// yet at import time, so nothing is translated here. Translate with the real
++// gettext where the string is displayed.
++const _ = s => s;
++
+ export const ClutterAction = {
+     CLICK: 0,
+     PAN: 1,
+@@ -281,8 +283,11 @@ export const MenuLayoutsInfo = [
+ 
+ export const ArcMenuLogoSymbolic = 'arcmenu-logo-symbolic';
+ 
+-export const TranslatableSettingsStrings = [_('Software'), _('Settings'), _('Tweaks'), _('Terminal'),
+-    _('Activities Overview'), _('ArcMenu Settings'), _('Files')];
++const TranslatableStrings_ = [
++    _('Home'), _('Documents'), _('Music'), _('Pictures'), _('Videos'), _('Downloads'),
++    _('Computer'), _('Network'), _('Recent'), _('Software'), _('Settings'), _('Tweaks'), _('Terminal'),
++    _('Activities Overview'), _('ArcMenu Settings'), _('Files'),
++];
+ 
+ export const ShortcutCommands = {
+     SUSPEND: 'ArcMenu_Suspend',
+
+diff --git a/src/menuWidgets.js b/src/menuWidgets.js
+--- a/src/menuWidgets.js
++++ b/src/menuWidgets.js
+@@ -1043,7 +1043,7 @@ export class PowerButton extends ArcMenuButtonItem {
+     }
+ 
+     constructor(menuLayout, powerType) {
+-        super(menuLayout, Constants.PowerOptions[powerType].name,
++        super(menuLayout, _(Constants.PowerOptions[powerType].name),
+             Constants.PowerOptions[powerType].icon);
+         this.powerType = powerType;
+ 
+

@@ -1,0 +1,9 @@
+#!/usr/bin/python3
+import sys
+from anduinos_secureboot.dkms_guard import main
+
+try:
+    main(sys.argv[1:])
+except (OSError, ValueError) as error:
+    print(f"AnduinOS DKMS signing stopped: {error}. Open Driver Center to repair Secure Boot.", file=sys.stderr)
+    raise SystemExit(1)

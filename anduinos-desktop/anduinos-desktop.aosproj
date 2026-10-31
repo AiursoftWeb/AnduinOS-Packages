@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS complete desktop — metapackage that pulls in all AnduinOS components</PackageDescription>
     <Section>metapackages</Section>
@@ -12,10 +12,10 @@
     <Conflicts>yaru-theme-gnome-shell, update-notifier, update-notifier-common, update-manager, update-manager-core, ubuntu-release-upgrader-core, ubuntu-release-upgrader-gtk, ubuntu-desktop, whoopsie</Conflicts>
     <Replaces>yaru-theme-gnome-shell, update-notifier, update-notifier-common, update-manager, update-manager-core, ubuntu-release-upgrader-core, ubuntu-release-upgrader-gtk, ubuntu-desktop, whoopsie</Replaces>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +24,10 @@
          Pulls in anduinos-core-system via its own dependency chain.
          ============================================================ -->
     <Dependency Include="anduinos-desktop-core" />
+    <!-- Existing Resolute desktops can upgrade this metapackage conservatively
+         before the conflicting core-system transition. Keep this host-only
+         bootstrap above shared APT and container layers. -->
+    <Dependency Include="anduinos-dracut-migration" Condition="'$(Suite)' == 'resolute-addon'" />
 
     <!-- ============================================================
          AnduinOS Brand Packages
@@ -32,8 +36,14 @@
     <Dependency Include="anduinos-apt-config | anduinos-apt-config-dev" />
     <Recommend Include="anduinos-apt-config" />
     <Dependency Include="base-files" />
-    <Dependency Include="anduinos-no-snapd" />
-    <Recommend Include="anduinos-kernel-parameters" Condition="'$(Suite)' == 'resolute-addon'" />
+    <!-- Default policy, not a prerequisite for keeping the desktop installed.
+         Users may explicitly opt out without removing the desktop metapackage. -->
+    <Recommend Include="anduinos-no-snapd" />
+    <Recommend Include="anduinos-input-method-policy" />
+    <!-- Both desktop suites need the graphical Plymouth console policy. ARM
+         firmware may expose a serial console even without console= arguments;
+         omitting this package makes Plymouth force its text-only details view. -->
+    <Recommend Include="anduinos-kernel-parameters" Condition="'$(Suite)' == 'resolute-addon' Or '$(Suite)' == 'stonking-addon'" />
 
     <!-- Zram swap (compressed RAM) — 50% RAM, lz4. User can override via swapcontrol-gtk. -->
     <Recommend Include="anduinos-swap-config" />

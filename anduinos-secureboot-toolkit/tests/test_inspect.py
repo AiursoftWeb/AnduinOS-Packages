@@ -3,6 +3,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
@@ -20,15 +21,25 @@ from anduinos_secureboot.model import SecureBootStatus  # noqa: E402
 class FakeRunner:
     def __init__(self, responses=None):
         self.responses = responses or {}
+        self.calls = []
 
     def run(self, command, timeout=10):
         command = tuple(command)
+        self.calls.append(command)
         return self.responses.get(
             command, subprocess.CompletedProcess(command, 1, "", "")
         )
 
 
 class InspectTests(unittest.TestCase):
+    def test_unreadable_module_directory_is_not_reported_as_no_drivers(self):
+        from anduinos_secureboot.model import SecureBootState
+        state = SecureBootState(True, True, True, True, "fixture")
+        with tempfile.TemporaryDirectory() as directory, patch.object(
+                Path, "iterdir", side_effect=PermissionError("Cannot inspect modules")):
+            with self.assertRaises(PermissionError):
+                inspect_dkms(state, FakeRunner(), Path(directory))
+
     def test_normalizes_certificate_keys(self):
         self.assertEqual(normalize_key("AA:12 bb"), "aa12bb")
         self.assertIsNone(normalize_key("---"))
@@ -69,14 +80,16 @@ class InspectTests(unittest.TestCase):
                     SecureBootStatus.UNKNOWN,
                 )
 
-    def test_unsupported_firmware_is_not_treated_as_probe_failure(self):
+    @patch("anduinos_secureboot.firmware._mount_type", return_value="efivarfs")
+    def test_unsupported_firmware_is_not_treated_as_probe_failure(self, _mount):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            (root / "efivars").mkdir()
             state = inspect_secure_boot(
                 FakeRunner(
                     {
                         ("mokutil", "--sb-state"): subprocess.CompletedProcess(
-                            [], 0, "This system doesn't support Secure Boot\n", ""
+                            [], 255, "", "This system doesn't support Secure Boot\n"
                         )
                     }
                 ),
@@ -84,12 +97,37 @@ class InspectTests(unittest.TestCase):
                 root / "missing.der",
                 "test-kernel",
                 root / "missing.conf",
+                root,
             )
         self.assertEqual(state.status, SecureBootStatus.UNSUPPORTED)
         self.assertFalse(state.supported)
         self.assertTrue(state.state_known)
         self.assertTrue(state.enforcement_inactive)
         self.assertTrue(state.ready)
+
+    def test_legacy_bios_is_explicitly_unsupported_without_efi(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            runner = FakeRunner(
+                {
+                    ("mokutil", "--sb-state"): subprocess.CompletedProcess(
+                        [], 0, "SecureBoot enabled\n", ""
+                    )
+                }
+            )
+            state = inspect_secure_boot(
+                runner,
+                root / "missing.priv",
+                root / "missing.der",
+                "test-kernel",
+                root / "missing.conf",
+                root / "missing-efi",
+            )
+        self.assertEqual(state.status, SecureBootStatus.UNSUPPORTED)
+        self.assertFalse(state.enabled)
+        self.assertTrue(state.state_known)
+        self.assertTrue(state.enforcement_inactive)
+        self.assertNotIn(("mokutil", "--sb-state"), runner.calls)
 
     def test_indeterminate_probe_fails_closed(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -102,6 +140,7 @@ class InspectTests(unittest.TestCase):
                 root / "missing.der",
                 "test-kernel",
                 root / "missing.conf",
+                root,
             )
             dkms = inspect_dkms(
                 state,
@@ -136,7 +175,12 @@ class InspectTests(unittest.TestCase):
                 ("openssl", "x509", "-in", str(certificate), "-inform", "DER", "-noout", "-fingerprint", "-sha1"): subprocess.CompletedProcess([], 0, "sha1 Fingerprint=AA:12\n", ""),
             }
             state = inspect_secure_boot(
-                FakeRunner(responses), private, certificate, "test-kernel", configuration
+                FakeRunner(responses),
+                private,
+                certificate,
+                "test-kernel",
+                configuration,
+                root,
             )
             self.assertTrue(state.ready)
             self.assertTrue(state.trust_ready)
@@ -167,7 +211,7 @@ class InspectTests(unittest.TestCase):
         self.assertFalse(state.ready)
         self.assertFalse(state.enrollment_required)
 
-    def test_disabled_secure_boot_needs_no_key_config_or_module_signature(self):
+    def test_disabled_boot_allows_drivers_but_still_reports_preparation_needed(self):
         from anduinos_secureboot.model import SecureBootState
 
         secure_boot = SecureBootState(
@@ -180,7 +224,7 @@ class InspectTests(unittest.TestCase):
         )
         self.assertTrue(secure_boot.trust_ready)
         self.assertTrue(secure_boot.ready)
-        self.assertFalse(secure_boot.enrollment_required)
+        self.assertTrue(secure_boot.enrollment_required)
 
         with tempfile.TemporaryDirectory() as directory:
             module = Path(directory) / "unsigned.ko"
@@ -195,8 +239,8 @@ class InspectTests(unittest.TestCase):
                 ),
                 Path(directory),
             )
-        self.assertEqual(state.trusted_modules, ("unsigned.ko",))
-        self.assertTrue(state.ready)
+        self.assertEqual(state.untrusted_modules, ("unsigned.ko",))
+        self.assertFalse(state.ready)
 
     def test_empty_pending_mok_list_is_not_an_error(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -215,7 +259,12 @@ class InspectTests(unittest.TestCase):
                 ("openssl", "x509", "-in", str(certificate), "-inform", "DER", "-noout", "-fingerprint", "-sha1"): subprocess.CompletedProcess([], 0, "sha1 Fingerprint=AA:12\n", ""),
             }
             state = inspect_secure_boot(
-                FakeRunner(responses), private, certificate, "test-kernel", configuration
+                FakeRunner(responses),
+                private,
+                certificate,
+                "test-kernel",
+                configuration,
+                root,
             )
             self.assertFalse(state.enrolled)
             self.assertFalse(state.enrollment_pending)

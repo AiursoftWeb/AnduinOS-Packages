@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-accent-user-theme</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Makes user themes to follow system accent color and color scheme Light or Dark, a fork from https://github.com/taiwbi/gnome-accent-directories This extension is included by default in BRGV-OS and AnduinOS — packaged for AnduinOS</PackageDescription>
     <Section>gnome</Section>
@@ -9,13 +9,13 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
   </PropertyGroup>
   <ItemGroup>
-    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble resolute-addon=resolute" />
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble resolute-addon=resolute stonking-addon=stonking" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +31,9 @@
     <IncludeFolder Include="deploy/resolute/accent-user-theme@brgvos"
                    Target="/usr/share/gnome-shell/extensions/accent-user-theme@brgvos"
                    Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFolder Include="deploy/stonking/accent-user-theme@brgvos"
+                   Target="/usr/share/gnome-shell/extensions/accent-user-theme@brgvos"
+                   Condition="'$(Suite)' == 'stonking-addon'" />
   </ItemGroup>
   <ItemGroup>
     <PrebuildCommand Run="bash download.sh" />

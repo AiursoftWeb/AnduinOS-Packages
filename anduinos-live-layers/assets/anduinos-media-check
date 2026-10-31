@@ -1,0 +1,371 @@
+#!/bin/bash
+# Shared by the initrd and installer. No disk writes; state belongs to /run.
+set -uo pipefail
+export LC_ALL=C
+
+state=/run/anduinos-live
+media=/cdrom
+source_image=
+device=
+interactive=0
+locale=en_US
+child=
+watcher=
+graphical=0
+details_index=0
+details_pages=()
+percent=-1
+status=unavailable
+reason=
+decision=none
+backend=files
+root_name=LiveOS/rootfs.squashfs
+catalog=/usr/share/anduinos-live/media-check
+
+while (($#)); do
+    case "$1" in
+        --media) media=$2; shift 2 ;;
+        --source) source_image=$2; shift 2 ;;
+        --device) device=$2; shift 2 ;;
+        --state-dir) state=$2; shift 2 ;;
+        --locale) locale=$2; shift 2 ;;
+        --interactive) interactive=1; shift ;;
+        *) printf 'Unknown media-check argument: %s\n' "$1" >&2; exit 3 ;;
+    esac
+done
+
+mkdir -p "$state" || exit 3
+chmod 0755 "$state"
+exec 9>"$state/media-check.lock"
+flock -x 9
+work=$(mktemp -d "$state/.media-check.XXXXXX") || exit 3
+log=$state/media-check.log
+report=$state/media-check.result
+manifest=$media/md5sum.txt
+source_image=${source_image:-$media/$root_name}
+cleanup() {
+    [[ -z $child ]] || kill "$child" 2>/dev/null || :
+    [[ -z $watcher ]] || kill "$watcher" 2>/dev/null || :
+    if ((graphical)); then
+        plymouth ignore-keystroke --keys=sSrRdDcCpP 2>/dev/null || :
+        # Ubuntu two-step ends its transient fsck UI on 100. This releases
+        # only the display; the authoritative report retains failed/skipped.
+        plymouth display-message --text='' 2>/dev/null || :
+        plymouth update --status=fsck:md5sums:100 2>/dev/null || :
+    fi
+    # Only the exact private mktemp directory created by this invocation.
+    rm -r -- "$work"
+}
+trap cleanup EXIT
+trap 'status=unavailable; reason=interrupted; decision=none; write_result; exit 3' INT TERM
+
+declare -A messages=(
+    [checking]='Checking installation media…'
+    [wait]='The desktop will start automatically when the check finishes.'
+    [skip]='[S] Skip check'
+    [passed]='Installation media check passed.'
+    [failed]='Installation media appears to be corrupted or could not be read reliably.'
+    [advice]='The download or USB write may be incomplete, or the USB drive or connection may be unreliable. Rewrite the image or try another USB drive or port.'
+    [unavailable]='Unable to verify this installation media.'
+    [unknown]='Checksum information is missing or this media layout could not be verified.'
+    [skipped]='Installation media check was skipped.'
+    [actions]='[D] Details   [R] Retry   [P] Power off   [C] Continue to Live session anyway'
+    [back]='[R] Return'
+    [blocked]='Installation has stopped before changing any partitions. Check or rewrite the installation media and try again.'
+)
+locale=${locale%%.*}
+locale=${locale%%@*}
+if [[ $locale =~ ^[a-zA-Z_]+$ && -f $catalog/$locale.txt ]]; then
+    while IFS='=' read -r key value; do
+        [[ -z ${messages[$key]+present} || -z $value ]] || messages[$key]=$value
+    done < "$catalog/$locale.txt"
+fi
+
+fingerprint() {
+    # Detect replacement of the source during this check.
+    stat -Lc '%d:%i:%s:%y:%z' -- "$source_image" 2>/dev/null || return 1
+}
+identity=$(fingerprint) || identity=missing
+write_result() {
+    local current
+    current=$(fingerprint) || current=missing
+    if [[ $status == passed && $identity != "$current" ]]; then
+        status=unavailable
+        reason=source-changed
+    fi
+    {
+        printf 'version=1\nsource_id=%s\n' "$identity"
+        printf 'status=%s\nreason=%s\ndecision=%s\nbackend=%s\n' \
+            "$status" "$reason" "$decision" "$backend"
+    } > "$work/result"
+    chmod 0644 "$work/result"
+    mv -f -- "$work/result" "$report"
+    printf 'ANDUINOS_MEDIA_RESULT=%s reason=%s backend=%s\n' "$status" "$reason" "$backend"
+}
+if ((interactive)) && plymouth --ping 2>/dev/null; then
+    graphical=1
+    # Keep the installed two-step theme and its firmware BGRT background.
+    # Its native fsck protocol temporarily owns progress during verification.
+    plymouth show-splash 2>/dev/null || graphical=0
+fi
+
+use_console() {
+    graphical=0
+    # watch-keystroke owns keyboard input while it is alive.  Merely falling
+    # back from a failed renderer would therefore leave the recovery screen
+    # visible but its console shortcuts unusable.
+    if [[ -n $watcher ]]; then
+        kill "$watcher" 2>/dev/null || :
+        wait "$watcher" 2>/dev/null || :
+        watcher=
+    fi
+}
+prepare_details() {
+    local text=$1 line word chunk candidate
+    local -a words parts=()
+    # Standard two-step replaces the main message; it does not assemble our
+    # old private message fragments. Page long UTF-8 advice/logs with D, below
+    # the control protocol's byte limit. Split only at spaces, never in UTF-8.
+    while IFS= read -r line || [[ -n $line ]]; do
+        words=()
+        read -r -a words <<< "$line"
+        chunk=
+        for word in "${words[@]}"; do
+            candidate=${chunk:+$chunk }$word
+            if ((${#candidate} > 90)) && [[ -n $chunk ]]; then
+                parts+=("$chunk")
+                chunk=$word
+            else
+                chunk=$candidate
+            fi
+        done
+        parts+=("$chunk")
+    done <<< "$text"
+    details_pages=("${parts[@]}")
+    details_index=0
+}
+footer() {
+    if ((graphical)); then
+        plymouth display-message --text="keys:$1" 2>/dev/null || use_console
+    fi
+}
+show() {
+    printf '%s\n' "$1"
+    if ((graphical)); then
+        # A daemon can answer --ping while its renderer is already going away
+        # (notably with direct-kernel VM boots).  Stop treating it as graphical
+        # after the first failed request so the recovery keys remain usable on
+        # /dev/console instead of being sent to a dead Plymouth client.
+        plymouth display-message --text="$1" 2>/dev/null || use_console
+    fi
+}
+progress() {
+    local value=$1
+    ((value >= 0 && value <= 100)) || return
+    ((value != percent)) || return
+    percent=$value
+    printf 'ANDUINOS_MEDIA_PROGRESS=%s\n' "$value"
+    if ((graphical)); then
+        if ! plymouth update --status="fsck:md5sums:$value" 2>/dev/null; then
+            use_console
+        fi
+    elif ((interactive)); then
+        printf '\r%s %3d%%\n' "${messages[checking]}" "$value" > /dev/console
+    fi
+}
+arm_keys() {
+    if ((graphical)); then
+        [[ -z $watcher ]] || kill "$watcher" 2>/dev/null || :
+        plymouth watch-keystroke --keys=sSrRdDcCpP > "$work/key" 2>/dev/null 9>&- &
+        watcher=$!
+    fi
+}
+read_key() {
+    key=
+    if ((graphical)); then
+        if [[ -s $work/key ]]; then
+            IFS= read -r -n 1 key < "$work/key" || :
+            : > "$work/key"
+            arm_keys
+        fi
+        sleep 0.1
+    elif ((interactive)); then
+        IFS= read -r -s -n 1 -t 0.1 key < /dev/console || :
+    else
+        sleep 0.1
+    fi
+}
+wait_checker() {
+    local size=${1:-0} offset=0 file_percent=0 last= now=0
+    while kill -0 "$child" 2>/dev/null; do
+        if [[ $backend == iso ]]; then
+            last=$(tail -n 1 "$work/progress")
+            [[ $last =~ ^[0-9]+$ ]] && progress "$((last > 99 ? 99 : last))"
+        elif ((size > 0)); then
+            # coreutils hashes a regular file on fd 3. Use its real read offset,
+            # never elapsed time, and only after confirming which file is open.
+            if [[ $(readlink "/proc/$child/fd/3" 2>/dev/null) == "$checking_path" ]]; then
+                offset=$(awk '$1 == "pos:" {print $2}' "/proc/$child/fdinfo/3" 2>/dev/null)
+                if [[ $offset =~ ^[0-9]+$ ]]; then
+                    ((offset <= size)) || offset=$size
+                    file_percent=$(((completed + offset) * 99 / total))
+                    progress "$file_percent"
+                fi
+            fi
+        fi
+        read_key
+        if [[ $key == s || $key == S ]]; then
+            kill "$child" 2>/dev/null || :
+            # A stalled kernel read must not freeze the UI while waiting for
+            # cancellation. The remaining child is read-only, never a writer.
+            status=skipped; reason=user-skipped; decision=continue
+            child=
+            return 2
+        fi
+    done
+    wait "$child"
+    local rc=$?
+    child=
+    return "$rc"
+}
+
+check_files() {
+    backend=files
+    local digest size path rel actual resolved media_root
+    local required_root=0 required_kernel=0 required_initrd=0 required_packages=0
+    total=0
+    completed=0
+    [[ -f $manifest && ! -L $manifest ]] || { reason=no-file-manifest; return 3; }
+    media_root=$(realpath -e -- "$media") || { reason=missing-media; return 3; }
+    : > "$work/entries"
+    # Reuse the md5sum.txt already shipped by every AnduinOS ISO. Validate and
+    # normalize it into a private list before hashing anything: never hand
+    # attacker-controlled options or paths outside the mounted medium to md5sum.
+    while read -r digest path; do
+        [[ $digest =~ ^[a-f0-9]{32}$ && $path == ./* \
+            && $path != *$'\n'* && $path != *$'\r'* ]] \
+            || { reason=invalid-manifest; return 3; }
+        rel=${path#./}
+        [[ /$rel/ != */../* ]] || { reason=invalid-manifest; return 3; }
+        resolved=$(realpath -e -- "$media/$rel" 2>/dev/null) \
+            || { reason=missing-file; return 1; }
+        [[ $resolved == "$media_root/"* && -f $resolved && ! -L $media/$rel ]] \
+            || { reason=missing-file; return 1; }
+        size=$(stat -Lc '%s' -- "$resolved")
+        [[ $size =~ ^[0-9]{1,16}$ ]] || { reason=invalid-file-size; return 3; }
+        printf '%s %s %s\n' "$digest" "$size" "$rel" >> "$work/entries"
+        case "$rel" in
+            LiveOS/rootfs.squashfs) ((size > 0)) || { reason=invalid-file-size; return 3; }
+                required_root=1
+                [[ $(stat -Lc '%d:%i' "$resolved") == "$(stat -Lc '%d:%i' "$source_image")" ]] \
+                    || { reason=wrong-source; return 3; } ;;
+            LiveOS/vmlinuz) ((size > 0)) || { reason=invalid-file-size; return 3; }
+                required_kernel=1 ;;
+            LiveOS/initrd) ((size > 0)) || { reason=invalid-file-size; return 3; }
+                required_initrd=1 ;;
+            LiveOS/filesystem.manifest) ((size > 0)) || { reason=invalid-file-size; return 3; }
+                required_packages=1 ;;
+        esac
+        total=$((total + 10#$size))
+    done < "$manifest"
+    ((required_root && required_kernel && required_initrd && required_packages && total > 0)) \
+        || { reason=incomplete-manifest; return 3; }
+    while read -r digest size rel; do
+        checking_path=$(realpath -e -- "$media/$rel")
+        printf 'Checking %s\n' "$rel" >> "$log"
+        [[ $(stat -Lc '%s' "$checking_path") == "$size" ]] || { reason=size-mismatch; return 1; }
+        md5sum -- "$checking_path" > "$work/digest" 2>> "$log" 9>&- &
+        child=$!
+        wait_checker "$size" || return $?
+        read -r actual _ < "$work/digest"
+        [[ $actual == "$digest" ]] || { reason=checksum-mismatch; return 1; }
+        completed=$((completed + 10#$size))
+        progress "$((completed * 99 / total))"
+    done < "$work/entries"
+    return 0
+}
+
+run_check() {
+    : > "$log"
+    status=unavailable; reason=; decision=none; percent=-1
+    show "${messages[checking]}"
+    progress 0
+    footer "${messages[skip]}"
+    printf '%s\n%s\n' "${messages[wait]}" "${messages[skip]}"
+    arm_keys
+    local rc=3 message
+    # Only the exact ISO device/image supplied by the Dracut wrapper. Never
+    # discover a USB parent by guessing: Ventoy's host disk is not our ISO.
+    if [[ -n $device ]]; then
+        backend=iso
+        checkisomd5 --gauge "$device" < /dev/null > "$work/progress" 2>> "$log" 9>&- &
+        child=$!
+        wait_checker; rc=$?
+        case $rc in
+            0) reason=iso-checksum ;;
+            2) reason=user-skipped ;;
+            *)
+                if grep -q 'No checksum information available' "$log"; then
+                    # A recognized ISO without embedded metadata can still
+                    # have a valid file manifest. A bad checksum is NOT ignored.
+                    check_files; rc=$?
+                elif grep -q 'result is: FAIL' "$log"; then
+                    reason=iso-checksum-mismatch; rc=1
+                else
+                    reason=checker-error; rc=3
+                fi ;;
+        esac
+    else
+        check_files; rc=$?
+    fi
+    case $rc in
+        0) status=passed; reason=${reason:-file-checksums} ;;
+        2) status=skipped; reason=${reason:-user-skipped} ;;
+        1) status=failed; reason=${reason:-read-error} ;;
+        *) status=unavailable; reason=${reason:-checker-error} ;;
+    esac
+    write_result
+    if [[ $status == passed ]]; then
+        progress 100
+        show "${messages[passed]}"
+        return 0
+    fi
+    [[ $status != skipped ]] || { show "${messages[skipped]}"; return 2; }
+    if [[ $status == failed ]]; then
+        message="${messages[failed]}"
+        prepare_details "${messages[advice]}"$'\n'"$(tail -n 8 "$log")"
+    else
+        message="${messages[unavailable]}"
+        prepare_details "${messages[unknown]}"$'\n'"$(tail -n 8 "$log")"
+    fi
+    show "$message"
+    footer "${messages[actions]}"
+    printf '%s\n' "${details_pages[@]}"
+    ((!interactive)) || printf '%s\n' "${messages[actions]}"
+    return 1
+}
+
+while :; do
+    run_check; rc=$?
+    [[ $status != passed ]] || exit 0
+    if ((!interactive)); then
+        printf '%s\n' "${messages[blocked]}" >&2
+        exit "$rc"
+    fi
+    [[ $status != skipped ]] || exit 2
+    while :; do
+        read_key
+        case "$key" in
+            r|R) break ;;
+            c|C)
+                # Record the failure even when the user continues to Live.
+                decision=continue
+                write_result
+                exit 2 ;;
+            p|P) poweroff -f; exit 1 ;;
+            d|D)
+                show "${details_pages[$details_index]}"
+                details_index=$(((details_index + 1) % ${#details_pages[@]})) ;;
+        esac
+    done
+done

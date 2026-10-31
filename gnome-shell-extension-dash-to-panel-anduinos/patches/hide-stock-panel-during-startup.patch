@@ -1,0 +1,51 @@
+--- a/extension.js
++++ b/extension.js
+@@ -61 +61,28 @@
+-  async enable() {
++  enable() {
++    return this._enableAsync().catch((error) => {
++      this._restoreStartupPanel()
++      throw error
++    })
++  }
++
++  _hideStartupPanel() {
++    if (!Main.layoutManager._startingUp || this._startupPanelBox) return
++
++    this._startupPanelBox = Main.layoutManager.panelBox
++    this._startupPanelOpacity = this._startupPanelBox.opacity
++    this._startupPanelBox.opacity = 0
++  }
++
++  _restoreStartupPanel() {
++    if (!this._startupPanelBox) return
++
++    this._startupPanelBox.opacity = this._startupPanelOpacity
++    this._startupPanelBox = null
++    this._startupPanelOpacity = null
++  }
++
++  async _enableAsync() {
++    // Hide GNOME's stock top panel while asynchronous monitor discovery runs.
++    // The same actor is reused by Dash to Panel and revealed after it is ready.
++    this._hideStartupPanel()
++
+@@ -128,3 +155,7 @@
+-      panelManager = new PanelManager.PanelManager()
+-      panelManager.enable()
+-      ubuntuDockDelayId = 0
++      try {
++        panelManager = new PanelManager.PanelManager()
++        panelManager.enable()
++      } finally {
++        this._restoreStartupPanel()
++        ubuntuDockDelayId = 0
++      }
+@@ -154 +185,6 @@
+-    if (ubuntuDockDelayId) GLib.Source.remove(ubuntuDockDelayId)
++    if (ubuntuDockDelayId) {
++      GLib.Source.remove(ubuntuDockDelayId)
++      ubuntuDockDelayId = 0
++    }
++
++    this._restoreStartupPanel()

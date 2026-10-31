@@ -40,6 +40,7 @@ pub enum Evidence {
     LiveEntity { generation: u64 },
     PreviousCommand(&'static str),
     SuccessfulExit,
+    ConditionalCommand,
     UniqueMatch,
     RecentListing,
     FilterMatch(String),

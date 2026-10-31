@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="anduinos-whisper-gtk">
+  <schema id="com.anduinos.voice-typing" path="/com/anduinos/voice-typing/">
+    <key name="toggle-shortcut" type="as">
+      <default>['&lt;Super&gt;h']</default>
+      <summary>Global voice typing shortcut</summary>
+    </key>
+    <key name="microphone" type="s">
+      <default>''</default>
+      <summary>PipeWire node name, or empty for the system default</summary>
+    </key>
+    <key name="language" type="s">
+      <default>'auto'</default>
+      <summary>Recognition language and Chinese output script</summary>
+    </key>
+    <key name="model" type="s">
+      <default>'base'</default>
+      <summary>Speech recognition model</summary>
+    </key>
+    <key name="recognition-backend" type="s">
+      <choices><choice value="auto"/><choice value="cpu"/><choice value="gpu"/></choices>
+      <default>'auto'</default>
+      <summary>Measured automatic backend selection or manual override</summary>
+    </key>
+    <key name="recognition-threads" type="u">
+      <default>0</default>
+      <range min="0" max="256"/>
+      <summary>Recognition threads, or zero for automatic selection</summary>
+    </key>
+    <key name="tuning-generation" type="u">
+      <default>0</default>
+      <summary>Increment to request fresh performance measurements on next start</summary>
+    </key>
+    <key name="full-tuning-pending" type="b">
+      <default>false</default>
+      <summary>Run the complete performance measurement on the next start</summary>
+    </key>
+    <key name="automatic-punctuation" type="b">
+      <default>true</default>
+      <summary>Keep punctuation recognized by Whisper</summary>
+    </key>
+    <key name="voice-commands" type="b">
+      <default>true</default>
+      <summary>Enable exact-match punctuation and layout commands</summary>
+    </key>
+    <key name="audio-cues" type="b">
+      <default>true</default>
+      <summary>Play a subtle sound when listening starts or stops</summary>
+    </key>
+    <key name="show-preview" type="b">
+      <default>true</default>
+      <summary>Briefly preview recognized text before inserting it</summary>
+    </key>
+    <key name="live-transcription-mode" type="s">
+      <choices><choice value="auto"/><choice value="on"/><choice value="off"/></choices>
+      <default>'auto'</default>
+      <summary>Automatically select live transcription or explicitly enable or disable it</summary>
+    </key>
+    <key name="live-transcription" type="b">
+      <default>true</default>
+      <summary>Show periodically refreshed partial transcripts while speaking</summary>
+    </key>
+    <key name="noise-reduction" type="b">
+      <default>false</default>
+      <summary>Apply moderate WebRTC noise suppression and bounded microphone gain</summary>
+    </key>
+    <key name="preview-delay" type="u">
+      <default>350</default>
+      <range min="0" max="2000"/>
+      <summary>Preview duration in milliseconds</summary>
+    </key>
+    <key name="silence-threshold" type="d">
+      <default>-42.0</default>
+      <range min="-60.0" max="-20.0"/>
+      <summary>Legacy energy threshold (unused by WebRTC voice detection)</summary>
+    </key>
+    <key name="overlay-x" type="i">
+      <default>0</default>
+      <summary>Horizontal offset from the centered overlay position</summary>
+    </key>
+  </schema>
+</schemalist>

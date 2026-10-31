@@ -8,22 +8,28 @@ from .btrfs import BTRFS_SUBVOLUMES
 from .boot_commands import (
     GuidedBootCommandPlan,
     build_guided_coexistence_boot_commands,
+    build_manual_boot_commands,
 )
 from .esp import (
     GUIDED_ESP_MINIMUM_FREE_BYTES,
     EspReuseInspection,
     NvramInspection,
+    validate_esp_replacement,
 )
 from .layout import PartitionLayout, build_erase_disk_layout
 from .model import Filesystem, InstallMode, InstallPlan
+from .resize import ResizeInspection
 from .storage_commands import (
     StorageCommandPlan,
     build_guided_coexistence_storage_commands,
+    build_manual_storage_commands,
     build_storage_commands,
     partition_path,
 )
 from .storage_graph import BlockReferenceKind, StorageGraphAction
 from .storage_graph_planning import validate_guided_coexistence_graph
+from .manual_graph_planning import validate_manual_storage_graph
+from .manual_write_set import build_manual_storage_write_set
 from .storage_inventory import (
     DiskInventory,
     PartitionIdentity,
@@ -59,6 +65,18 @@ class GuidedCoexistenceExecutionPlan:
     reuses_esp: bool
 
 
+@dataclass(frozen=True)
+class ManualStorageExecutionPlan:
+    """Frozen GPT edits, formats and vendor-only UEFI boot writes."""
+
+    commands: StorageCommandPlan
+    boot_commands: GuidedBootCommandPlan
+    write_set: StorageWriteSet
+    esp_partition_number: int
+    reuses_esp: bool
+    resize_inspections: tuple[ResizeInspection, ...] = ()
+
+
 def build_erase_disk_execution_plan(
     plan: InstallPlan,
 ) -> EraseDiskExecutionPlan:
@@ -91,6 +109,7 @@ def build_guided_coexistence_execution_plan(
         reused=reused,
         esp_inspection=esp_inspection,
         nvram_inspection=nvram_inspection,
+        replacement=plan.boot.esp_replacement,
     )
     commands = build_guided_coexistence_storage_commands(plan, inventory)
     write_set = build_guided_coexistence_write_set(plan, inventory)
@@ -122,6 +141,80 @@ def resolve_guided_esp_partition(
     validate_plan(plan, allow_guided_compilation=True)
     disk = validate_guided_coexistence_graph(plan, inventory)
     return _guided_esp_partition(plan, disk)
+
+
+def build_manual_storage_execution_plan(
+    plan: InstallPlan,
+    inventory: StorageInventory,
+    *,
+    esp_inspection: EspReuseInspection | None,
+    nvram_inspection: NvramInspection,
+    resize_inspections: tuple[ResizeInspection, ...] = (),
+    target: str = "/target",
+) -> ManualStorageExecutionPlan:
+    """Compile manual disk writes only after fresh topology validation."""
+
+    if plan.storage.mode is not InstallMode.MANUAL:
+        raise ValueError("Plan is not manual partitioning")
+    validate_plan(plan, allow_guided_compilation=True)
+    disk = validate_manual_storage_graph(plan, inventory)
+    esp, reused = _graph_esp_partition(plan, disk)
+    _validate_guided_prerequisites(
+        esp,
+        reused=reused,
+        esp_inspection=esp_inspection,
+        nvram_inspection=nvram_inspection,
+        replacement=plan.boot.esp_replacement,
+    )
+    commands = build_manual_storage_commands(plan, inventory)
+    if len(resize_inspections) != len(commands.partition_resizes):
+        raise RuntimeError("Every partition resize requires a fresh safety inspection")
+    for resize, inspection in zip(
+        commands.partition_resizes,
+        resize_inspections,
+        strict=True,
+    ):
+        if (
+            not inspection.safe
+            or inspection.filesystem != resize.filesystem.value
+            or inspection.device != resize.device
+            or inspection.current_size_bytes != resize.original_size_bytes
+            or inspection.target_size_bytes != resize.target_size_bytes
+            or resize.target_size_bytes < inspection.minimum_size_bytes
+            or resize.target_size_bytes > inspection.maximum_size_bytes
+        ):
+            raise RuntimeError(
+                "Partition resize did not pass the fresh safety inspection: "
+                + inspection.message
+            )
+    execution = ManualStorageExecutionPlan(
+        commands=commands,
+        boot_commands=build_manual_boot_commands(
+            plan,
+            target,
+            disk_path=disk.identity.path,
+            esp_partition_number=esp.identity.number,
+        ),
+        write_set=build_manual_storage_write_set(plan, inventory),
+        esp_partition_number=esp.identity.number,
+        reuses_esp=reused,
+        resize_inspections=resize_inspections,
+    )
+    _verify_manual_parity(plan, disk, execution)
+    return execution
+
+
+def resolve_manual_esp_partition(
+    plan: InstallPlan,
+    inventory: StorageInventory,
+) -> tuple[PartitionInventory, bool]:
+    """Resolve the selected ESP from a freshly validated manual graph."""
+
+    if plan.storage.mode is not InstallMode.MANUAL:
+        raise ValueError("Plan is not manual partitioning")
+    validate_plan(plan, allow_guided_compilation=True)
+    disk = validate_manual_storage_graph(plan, inventory)
+    return _graph_esp_partition(plan, disk)
 
 
 def _verify_parity(
@@ -157,9 +250,12 @@ def _verify_parity(
 
     expected_formats = {
         commands.devices["efi-system"]: "vfat",
-        commands.devices["swap"]: "swap",
         commands.devices["root"]: plan.storage.filesystem.value,
     }
+    if "swap" in commands.devices:
+        expected_formats[commands.devices["swap"]] = "swap"
+    if "recovery" in commands.devices:
+        expected_formats[commands.devices["recovery"]] = "ext4"
     command_formats = _command_formats(commands)
     if command_formats != expected_formats:
         raise RuntimeError("Storage format commands do not match the layout")
@@ -206,6 +302,8 @@ def _command_formats(commands: StorageCommandPlan) -> dict[str, str]:
         "mkswap": "swap",
         "mkfs.btrfs": "btrfs",
         "mkfs.ext4": "ext4",
+        "mkfs.xfs": "xfs",
+        "mkfs.f2fs": "f2fs",
     }
     for command in commands.format:
         filesystem = command_types.get(command[0])
@@ -219,6 +317,13 @@ def _command_formats(commands: StorageCommandPlan) -> dict[str, str]:
 
 
 def _guided_esp_partition(
+    plan: InstallPlan,
+    disk: DiskInventory,
+) -> tuple[PartitionInventory, bool]:
+    return _graph_esp_partition(plan, disk)
+
+
+def _graph_esp_partition(
     plan: InstallPlan,
     disk: DiskInventory,
 ) -> tuple[PartitionInventory, bool]:
@@ -278,6 +383,7 @@ def _validate_guided_prerequisites(
     reused: bool,
     esp_inspection: EspReuseInspection | None,
     nvram_inspection: NvramInspection,
+    replacement=None,
 ) -> None:
     if not nvram_inspection.available:
         reason = nvram_inspection.reason or "UEFI variables are unavailable"
@@ -285,6 +391,8 @@ def _validate_guided_prerequisites(
             "Cannot safely create the AnduinOS firmware boot entry: " + reason
         )
     if not reused:
+        if replacement is not None:
+            raise RuntimeError("ESP replacement authorization does not refer to a reused ESP")
         if esp_inspection is not None:
             raise RuntimeError("An ESP inspection was supplied for a new ESP")
         return
@@ -298,6 +406,7 @@ def _validate_guided_prerequisites(
     if not esp_inspection.healthy:
         reason = esp_inspection.reason or "FAT consistency check failed"
         raise RuntimeError("Shared ESP is not healthy: " + reason)
+    validate_esp_replacement(esp_inspection, replacement)
     if esp_inspection.free_bytes < GUIDED_ESP_MINIMUM_FREE_BYTES:
         required_mib = GUIDED_ESP_MINIMUM_FREE_BYTES // (1024 * 1024)
         raise RuntimeError(
@@ -375,3 +484,142 @@ def _verify_guided_parity(
         nvram_writes[0].detail("loader") != boot.loader_path
     ):
         raise RuntimeError("Coexistence NVRAM command drifted")
+
+
+def _verify_manual_parity(
+    plan: InstallPlan,
+    disk: DiskInventory,
+    execution: ManualStorageExecutionPlan,
+) -> None:
+    graph = plan.storage.graph
+    assert graph is not None
+    graph_operations = tuple(
+        (item.action.value, item.target_id) for item in graph.operations
+    )
+    write_operations = tuple(
+        (item.action.value, item.target_id)
+        for item in execution.write_set.operations
+    )
+    if graph_operations != write_operations:
+        raise RuntimeError("Manual graph and write set drifted")
+
+    partition_commands = execution.commands.partition
+    if any(
+        "resizepart" in item or "move" in item
+        for item in partition_commands
+    ):
+        raise RuntimeError("Manual commands contain a forbidden geometry edit")
+    resize_declarations = {
+        item.target_reference_id: item for item in graph.partition_resizes
+    }
+    resize_operations = tuple(
+        item.target_id
+        for item in graph.operations
+        if item.action is StorageGraphAction.RESIZE_PARTITION
+    )
+    if tuple(resize_declarations) != resize_operations or len(
+        execution.commands.partition_resizes
+    ) != len(resize_operations):
+        raise RuntimeError("Manual partition resize commands drifted")
+    existing_by_reference = {
+        f"disk:{disk.identity.stable_id}:existing-partition:"
+        f"{item.identity.partuuid}": item
+        for item in disk.partitions
+    }
+    for target_id, resize in zip(
+        resize_operations,
+        execution.commands.partition_resizes,
+        strict=True,
+    ):
+        declaration = resize_declarations[target_id]
+        partition = existing_by_reference[target_id]
+        if (
+            resize.target_reference_id != target_id
+            or resize.filesystem is not declaration.filesystem
+            or resize.disk != disk.identity.path
+            or resize.device != partition.identity.path
+            or resize.partition_number != partition.identity.number
+            or resize.original_size_bytes != declaration.original_size_bytes
+            or resize.target_size_bytes != declaration.target_size_bytes
+            or resize.target_end_bytes
+            != partition.identity.start_bytes + declaration.target_size_bytes - 1
+        ):
+            raise RuntimeError("Manual partition resize commands drifted")
+    replaces_table = any(
+        item.action is StorageGraphAction.REPLACE_PARTITION_TABLE
+        for item in graph.operations
+    )
+    mklabels = tuple(item for item in partition_commands if "mklabel" in item)
+    removals = tuple(item for item in partition_commands if "rm" in item)
+    if replaces_table:
+        expected_mklabel = (
+            (
+                "parted",
+                "--script",
+                disk.identity.path,
+                "mklabel",
+                "gpt",
+            ),
+        )
+        if mklabels != expected_mklabel or removals:
+            raise RuntimeError("Manual replacement-table commands drifted")
+    else:
+        references = {
+            item.reference_id: item.stable_id
+            for item in graph.block_references
+            if item.kind is BlockReferenceKind.PARTITION
+        }
+        numbers = {
+            item.identity.partuuid: item.identity.number
+            for item in disk.partitions
+        }
+        expected_removals = tuple(
+            (
+                "parted",
+                "--script",
+                disk.identity.path,
+                "rm",
+                str(numbers[references[operation.target_id]]),
+            )
+            for operation in graph.operations
+            if operation.action is StorageGraphAction.DELETE_PARTITION
+        )
+        if mklabels or removals != expected_removals:
+            raise RuntimeError("Manual delete commands drifted")
+
+    creates = tuple(item for item in partition_commands if "mkpart" in item)
+    if len(creates) != len(graph.partitions):
+        raise RuntimeError("Manual partition commands drifted")
+    for declaration, command in zip(graph.partitions, creates, strict=True):
+        if command[-2:] != (
+            f"{declaration.start_mib}MiB",
+            f"{declaration.end_mib}MiB",
+        ):
+            raise RuntimeError("Manual partition geometry drifted")
+
+    filesystems = {
+        item.block_id: item.filesystem.value for item in graph.filesystems
+    }
+    expected_formats = {
+        execution.commands.devices[item.name]: filesystems[item.partition_id]
+        for item in graph.partitions
+    }
+    if _command_formats(execution.commands) != expected_formats:
+        raise RuntimeError("Manual format commands drifted")
+
+    boot = execution.boot_commands
+    if (
+        "--no-extra-removable" not in boot.install
+        or "--no-nvram" not in boot.install
+        or any("i386-pc" in item for item in boot.install)
+    ):
+        raise RuntimeError("Manual boot command violates vendor-only policy")
+    nvram_writes = tuple(
+        item
+        for item in execution.write_set.operations
+        if item.action is StorageAction.UPDATE_NVRAM
+    )
+    if len(nvram_writes) != 1 or (
+        nvram_writes[0].detail("loader") != boot.loader_path
+    ):
+        raise RuntimeError("Manual NVRAM command drifted")

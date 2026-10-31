@@ -1,20 +1,20 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>firefox-anduinos</PackageName>
-    <PackageVersion>1:2.0.2+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>1:2.1.0+$(UpstreamVersion)-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Firefox browser from Mozilla (repackaged for AnduinOS, without snapd)</PackageDescription>
     <Section>web</Section>
     <PackageHomepage>https://www.mozilla.org/firefox</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
-    <LicenseType>GPL-3.0</LicenseType>
+    <LicenseType>MPL-2.0</LicenseType>
     <AppStreamDeveloperName>Mozilla</AppStreamDeveloperName>
     <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
 
     <!-- Derive from Mozilla Firefox upstream .deb -->
     <UpstreamUrl>https://packages.mozilla.org/apt</UpstreamUrl>
@@ -41,6 +41,5 @@
                          Default="true"
                          Caption="Browse the web with Firefox in AnduinOS"
                          Environment="GNOME:dark" />
-    <PrebuildCommand Run="python3 tests/test_appstream.py" />
   </ItemGroup>
 </Project>

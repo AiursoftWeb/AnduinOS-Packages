@@ -5,16 +5,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../lib/build-guards.sh"
 need_cmd git
 
-# Fallback to github if the internal gitlab mirror is unreachable during local testing
-REPO_URL="https://gitlab.aiursoft.com/mirror/xpadneo.git"
-FALLBACK_URL="https://github.com/atar-axis/xpadneo.git"
-COMMIT_ID="3acca9f"
-VERSION="v0.11-pre-63-g3acca9f"
+REPO_URL="https://github.com/atar-axis/xpadneo.git"
+COMMIT_ID="547eb90cd9f01de64db888b558f7e1a606c71965"
+VERSION="v0.11-pre-86-g547eb90"
 
 rm -rf "$SCRIPT_DIR/deploy" /tmp/xpadneo
 echo "Cloning xpadneo..."
-git clone "$REPO_URL" /tmp/xpadneo || git clone "$FALLBACK_URL" /tmp/xpadneo
-git -C /tmp/xpadneo checkout "$COMMIT_ID"
+git clone "$REPO_URL" /tmp/xpadneo
+git -C /tmp/xpadneo checkout --detach "$COMMIT_ID"
 
 echo "Structuring deploy folder..."
 mkdir -p "$SCRIPT_DIR/deploy/usr/src/hid-xpadneo-${VERSION}"
@@ -34,6 +32,13 @@ chmod +x "$SCRIPT_DIR/deploy/usr/src/hid-xpadneo-${VERSION}/dkms.post_remove"
 mkdir -p "$SCRIPT_DIR/deploy/etc/udev"
 cp -r /tmp/xpadneo/hid-xpadneo/etc-udev-rules.d "$SCRIPT_DIR/deploy/etc/udev/rules.d"
 cp -r /tmp/xpadneo/hid-xpadneo/etc-modprobe.d "$SCRIPT_DIR/deploy/etc/modprobe.d"
+
+# Preserve the licensing guide and full texts from the same upstream checkout.
+DOC_DIR="$SCRIPT_DIR/deploy/usr/share/doc/anduinos-xbox-controller-driver"
+mkdir -p "$DOC_DIR/LICENSES"
+install -m 0644 /tmp/xpadneo/LICENSE.md "$DOC_DIR/LICENSE.md"
+install -m 0644 /tmp/xpadneo/LICENSES/LICENSE.gpl-2.0.txt "$DOC_DIR/LICENSES/"
+install -m 0644 /tmp/xpadneo/LICENSES/LICENSE.gpl-3.0.txt "$DOC_DIR/LICENSES/"
 
 rm -rf /tmp/xpadneo
 echo "Done. Prepared for DKMS packaging."

@@ -1,0 +1,23 @@
+#!/bin/sh
+set -eu
+# Leave the separate volume intact; removing a package never destroys a partition.
+case "${1:-}" in
+    remove|purge)
+        systemctl --root=/ disable anduinos-recovery-boot.service >/dev/null 2>&1 || true
+        # Image assembly and installer cleanup run before the bootloader is
+        # ready. Their final bootloader step owns the resulting menu.
+        if systemd-detect-virt --quiet --chroot >/dev/null 2>&1 ||
+           ischroot >/dev/null 2>&1; then
+            echo "AnduinOS recovery: chroot detected; deferring GRUB refresh."
+            exit 0
+        fi
+        if command -v udevadm >/dev/null 2>&1 && [ -S /run/udev/control ]; then
+            udevadm control --reload-rules
+            udevadm trigger --action=change --subsystem-match=block \
+                --attr-match=partition --property-match=ID_FS_LABEL=AOS_RECOVERY
+        fi
+        if [ -f /var/lib/anduinos-recovery-env/volume.json ] && command -v update-grub >/dev/null 2>&1; then
+            update-grub
+        fi
+        ;;
+esac

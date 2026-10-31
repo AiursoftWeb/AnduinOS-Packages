@@ -1,4 +1,5 @@
 import unittest
+from itertools import product
 
 from helpers import (
     TEST_INVENTORY_DIGEST,
@@ -8,6 +9,7 @@ from helpers import (
 from installer_core.model import (
     Architecture,
     DiskIdentity,
+    Filesystem,
     Firmware,
     SecureBoot,
 )
@@ -18,12 +20,43 @@ from installer_core.swap_policy import GIB
 
 
 class PlanningTests(unittest.TestCase):
+    def test_uefi_erase_always_prepares_a_direct_fallback_on_its_new_esp(self):
+        original = valid_plan()
+        for architecture, filesystem, external, secure_boot in product(
+            Architecture, (Filesystem.BTRFS, Filesystem.EXT4), (False, True),
+            (SecureBoot.ENABLED, SecureBoot.DISABLED),
+        ):
+            with self.subTest(architecture=architecture, filesystem=filesystem,
+                              external=external, secure_boot=secure_boot):
+                plan = build_plan(
+                    {
+                        "locale": "en_US.UTF-8", "keyboard": "us",
+                        "hostname": original.identity.hostname,
+                        "username": original.identity.username,
+                        "full_name": original.identity.full_name,
+                        "timezone": "UTC", "filesystem": filesystem.value,
+                    },
+                    original.storage.disk,
+                    PlatformProbe(architecture, Firmware.UEFI, secure_boot),
+                    original.identity.password_hash,
+                    disk_binding=DiskTopologyBinding(
+                        original.storage.disk.stable_id,
+                        original.storage.disk.expected_size_bytes,
+                        TEST_TOPOLOGY_DIGEST, external=external,
+                    ),
+                    inventory_digest=TEST_INVENTORY_DIGEST,
+                    physical_memory_probe=lambda: 8 * GIB,
+                )
+                self.assertEqual(plan.boot.external_target, external)
+                self.assertTrue(plan.boot.install_fallback_path)
+
     def test_chinese_plan_selects_rime_and_mok_policy(self):
         original = valid_plan()
         choices = {
             "lang": "zh_CN",
             "locale": "zh_CN.UTF-8",
             "keyboard": "us",
+            "keyboard_variant": "intl",
             "filesystem": "btrfs",
             "hostname": original.identity.hostname,
             "username": original.identity.username,
@@ -55,6 +88,7 @@ class PlanningTests(unittest.TestCase):
         )
         self.assertEqual(plan.regional.input_methods, ("rime",))
         self.assertEqual(plan.regional.keyboard.layout, "us")
+        self.assertEqual(plan.regional.keyboard.variant, "intl")
         self.assertEqual(plan.boot.mok_password_policy.value, "anduinos-default")
         self.assertFalse(plan.software.install_updates)
         self.assertTrue(plan.software.install_third_party_drivers)
@@ -89,6 +123,36 @@ class PlanningTests(unittest.TestCase):
             inventory_digest=TEST_INVENTORY_DIGEST,
         )
         self.assertEqual(plan.regional.input_methods, ("rime",))
+
+    def test_user_selected_zero_disk_swap_is_preserved_in_plan_and_graph(self):
+        original = valid_plan()
+        choices = {
+            "locale": "en_US.UTF-8",
+            "keyboard": "us",
+            "hostname": original.identity.hostname,
+            "username": original.identity.username,
+            "full_name": original.identity.full_name,
+            "timezone": "UTC",
+            "swap_size_mib": 0,
+        }
+        plan = build_plan(
+            choices,
+            DiskIdentity("/dev/sda", "serial:test", 64 * 1024**3),
+            PlatformProbe(
+                Architecture.AMD64, Firmware.UEFI, SecureBoot.DISABLED
+            ),
+            "$y$j9T$example$example",
+            disk_binding=DiskTopologyBinding(
+                "serial:test", 64 * 1024**3, TEST_TOPOLOGY_DIGEST
+            ),
+            inventory_digest=TEST_INVENTORY_DIGEST,
+            physical_memory_probe=lambda: 8 * GIB,
+        )
+        self.assertEqual(plan.storage.swap_size_mib, 0)
+        self.assertNotIn(
+            "swap",
+            {item.name for item in plan.storage.graph.partitions},
+        )
 
     def test_recommended_input_method_can_be_declined(self):
         original = valid_plan()

@@ -4,7 +4,7 @@ from dataclasses import replace
 
 from helpers import TEST_PHYSICAL_MEMORY_BYTES, valid_plan
 from test_coexistence import windows_disk
-from installer_core.model import Filesystem, InstallMode, InstallPlan
+from installer_core.model import Architecture, Filesystem, InstallMode, InstallPlan
 from installer_core.storage_graph import (
     BlockReferenceKind,
     StorageGraphAction,
@@ -23,9 +23,9 @@ from installer_core.validation import validate_plan
 INVENTORY_DIGEST = "c" * 64
 
 
-def guided_plan(*, free_gib=24, filesystem=Filesystem.BTRFS, reuse_esp=True):
+def guided_plan(*, free_gib=24, filesystem=Filesystem.BTRFS, reuse_esp=True, architecture=Architecture.AMD64):
     disk = windows_disk(free_gib=free_gib)
-    base = valid_plan(filesystem=filesystem)
+    base = valid_plan(filesystem=filesystem, architecture=architecture)
     draft = replace(
         base,
         storage=replace(
@@ -56,7 +56,8 @@ def guided_plan(*, free_gib=24, filesystem=Filesystem.BTRFS, reuse_esp=True):
         inventory_digest=INVENTORY_DIGEST,
         reused_esp=esp,
     )
-    plan = replace(draft, storage=replace(draft.storage, graph=graph))
+    plan = replace(draft, storage=replace(draft.storage, graph=graph),
+                   boot=replace(draft.boot, install_fallback_path=graph.creates_esp))
     inventory = StorageInventory((disk,), INVENTORY_DIGEST)
     return plan, inventory
 
@@ -117,6 +118,31 @@ class GuidedStorageGraphTests(unittest.TestCase):
         self.assertIn(
             (StorageGraphAction.FORMAT, esp_id),
             tuple((item.action, item.target_id) for item in graph.operations),
+        )
+        self.assertTrue(plan.boot.install_fallback_path)
+        self.assertEqual(graph.boot_targets[0].fallback_path, "EFI/BOOT/BOOTX64.EFI")
+        self.assertIn(
+            (StorageGraphAction.WRITE_FALLBACK_BOOT_FILES, esp_id),
+            tuple((item.action, item.target_id) for item in graph.operations),
+        )
+
+    def test_external_coexistence_never_authorizes_shared_fallback_write(self):
+        plan, _inventory = guided_plan(reuse_esp=True)
+        plan = replace(
+            plan,
+            boot=replace(
+                plan.boot,
+                external_target=True,
+                install_fallback_path=False,
+            ),
+        )
+        validate_plan(plan)
+        self.assertEqual(plan.storage.graph.boot_targets[0].fallback_path, "")
+        self.assertFalse(
+            any(
+                item.action is StorageGraphAction.WRITE_FALLBACK_BOOT_FILES
+                for item in plan.storage.graph.operations
+            )
         )
 
     def test_graph_round_trip_contains_no_device_paths_or_commands(self):
@@ -196,7 +222,7 @@ class GuidedStorageGraphTests(unittest.TestCase):
             storage=replace(plan.storage, graph=changed),
         )
         with self.assertRaisesRegex(
-            StorageGraphValidationError, "whole-disk or fallback write"
+            StorageGraphValidationError, "whole-disk|fallback writes"
         ):
             validate_storage_graph(changed_plan)
 
@@ -211,7 +237,7 @@ class GuidedStorageGraphTests(unittest.TestCase):
             boot=replace(plan.boot, install_fallback_path=True),
         )
         with self.assertRaisesRegex(
-            ValueError, "must not write the shared EFI fallback path"
+            ValueError, "EFI fallback is required only for a newly created ESP"
         ):
             validate_plan(changed)
 

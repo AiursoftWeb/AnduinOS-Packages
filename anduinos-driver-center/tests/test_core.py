@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import gettext
 from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(
     0,
@@ -17,6 +19,7 @@ sys.path.insert(
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from anduinos_driver_center.core import (  # noqa: E402
+    HardwareDevice,
     audio_state,
     normalize_key,
     dkms_state,
@@ -81,6 +84,25 @@ driver   : xserver-xorg-video-nouveau - distro free builtin
         self.assertTrue(devices[0].options[0].installed)
         self.assertTrue(devices[0].options[1].free)
         self.assertTrue(devices[0].options[1].builtin)
+
+    def test_graphics_title_localizes_only_the_missing_hardware_name(self):
+        with tempfile.TemporaryDirectory() as directory:
+            catalog = Path(directory) / "driver.mo"
+            subprocess.run(["msgfmt", "-o", str(catalog), str(
+                Path(__file__).resolve().parents[1] / "po/zh_CN.po")], check=True)
+            with catalog.open("rb") as stream:
+                translate = gettext.GNUTranslations(stream).gettext
+            with patch("anduinos_driver_center.core._", side_effect=translate):
+                for vendor, model, expected in (
+                    ("", "", "图形设备"),
+                    (" ", "\t", "图形设备"),
+                    ("NVIDIA Corporation", "AD107M [GeForce RTX 4060 Max-Q]",
+                     "NVIDIA GeForce RTX 4060 Max-Q"),
+                    ("Intel Corporation", "", "Intel"),
+                    ("", "Virtio GPU", "Virtio GPU"),
+                ):
+                    with self.subTest(vendor=vendor, model=model):
+                        self.assertEqual(HardwareDevice("gpu", vendor, model).title, expected)
 
     def test_graphics_scan_distinguishes_no_devices_from_probe_failure(self):
         no_devices = graphics_scan(
@@ -283,39 +305,53 @@ driver   : nvidia-driver-595-server-open - distro non-free
             private = Path(directory) / "MOK.priv"
             certificate = Path(directory) / "MOK.der"
             configuration = Path(directory) / "anduinos-sb-sign.conf"
+            efi_firmware = Path(directory) / "efi"
             private.write_text("private")
             certificate.write_text("certificate")
             configuration.write_text("configuration")
+            efi_firmware.mkdir()
             responses = {
                 ("mokutil", "--sb-state"): subprocess.CompletedProcess([], 0, "SecureBoot enabled\n", ""),
                 ("mokutil", "--test-key", str(certificate)): subprocess.CompletedProcess([], 1, "MOK.der is already enrolled\n", ""),
                 ("openssl", "x509", "-in", str(certificate), "-inform", "DER", "-noout", "-serial"): subprocess.CompletedProcess([], 0, "serial=AA12BB34\n", ""),
             }
             state = secure_boot_state(
-                FakeRunner(responses), private, certificate, configuration
+                FakeRunner(responses),
+                private,
+                certificate,
+                configuration,
+                efi_firmware,
             )
             self.assertTrue(state.ready)
             self.assertEqual(state.certificate_serial, "aa12bb34")
 
     def test_unsupported_secure_boot_remains_a_known_non_enforcing_state(self):
-        state = secure_boot_state(
-            FakeRunner(
-                {
-                    ("mokutil", "--sb-state"): subprocess.CompletedProcess(
-                        [], 0, "This system doesn't support Secure Boot\n", ""
-                    )
-                }
-            )
-        )
+        with tempfile.TemporaryDirectory() as directory:
+            efi = Path(directory)
+            (efi / "efivars").mkdir()
+            with patch("anduinos_secureboot.firmware._mount_type", return_value="efivarfs"):
+                state = secure_boot_state(
+                    FakeRunner({("mokutil", "--sb-state"): subprocess.CompletedProcess(
+                        [], 255, "", "This system doesn't support Secure Boot\n")}),
+                    private_key=efi / "missing.priv",
+                    certificate=efi / "missing.der",
+                    configuration=efi / "missing.conf",
+                    efi_firmware=efi,
+                )
         self.assertEqual(state.status, SecureBootStatus.UNSUPPORTED)
         self.assertTrue(state.ready)
         self.assertTrue(state.enforcement_inactive)
 
     def test_failed_secure_boot_probe_blocks_driver_readiness(self):
-        state = secure_boot_state(FakeRunner())
-        self.assertEqual(state.status, SecureBootStatus.UNKNOWN)
-        self.assertFalse(state.ready)
-        self.assertFalse(state.enforcement_inactive)
+        with tempfile.TemporaryDirectory() as directory:
+            efi_firmware = Path(directory) / "efi"
+            efi_firmware.mkdir()
+            state = secure_boot_state(
+                FakeRunner(), efi_firmware=efi_firmware
+            )
+            self.assertEqual(state.status, SecureBootStatus.UNKNOWN)
+            self.assertFalse(state.ready)
+            self.assertFalse(state.enforcement_inactive)
 
     def test_xbox_distinguishes_signature_mismatch_from_missing_module(self):
         from anduinos_driver_center.core import SecureBootState
@@ -349,6 +385,23 @@ driver   : nvidia-driver-595-server-open - distro non-free
         self.assertTrue(state.installed)
         self.assertFalse(state.module_available)
         self.assertEqual(state.status, XboxStatus.MODULE_MISSING)
+
+    def test_xbox_accepts_previous_enrolled_certificate_after_identity_rotation(self):
+        from anduinos_driver_center.core import SecureBootState
+
+        secure = SecureBootState(True, True, True, True, "aa12", enrolled_certificate_serials=("bb34",))
+        responses = {
+            ("modinfo", "-F", "filename", "hid-xpadneo"):
+                subprocess.CompletedProcess([], 0, "/lib/modules/hid-xpadneo.ko\n", ""),
+            ("modinfo", "hid-xpadneo"): subprocess.CompletedProcess([], 0, "sig_key: BB:34\n", ""),
+            ("lsmod",): subprocess.CompletedProcess([], 0, "hid_xpadneo 40960 0\n", ""),
+        }
+        state = xbox_state(secure, FakeRunner(responses, installed={"anduinos-xbox-controller-driver"}))
+        self.assertFalse(state.signature_matches)
+        self.assertEqual(state.status, XboxStatus.LOADED)
+        responses[("lsmod",)] = subprocess.CompletedProcess([], 0, "", "")
+        unloaded = xbox_state(secure, FakeRunner(responses, installed={"anduinos-xbox-controller-driver"}))
+        self.assertEqual(unloaded.status, XboxStatus.READY)
 
     def test_xbox_reports_pending_enrollment_separately(self):
         from anduinos_driver_center.core import SecureBootState
@@ -461,7 +514,7 @@ driver   : nvidia-driver-595-server-open - distro non-free
             ),
         )
         self.assertTrue(secure.ready)
-        self.assertFalse(secure.enrollment_required)
+        self.assertTrue(secure.enrollment_required)
         self.assertEqual(state.status, XboxStatus.READY)
 
     def test_dkms_health_reports_modules_signed_by_a_different_key(self):

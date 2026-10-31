@@ -88,11 +88,14 @@ preflight() {
     fi
     findmnt -n -o OPTIONS --target /.snapshots | tr ',' '\n' | grep -Fxq noexec &&
         die "the snapshot store is noexec and cannot host the bound confirmation artifact"
-    command -v lsinitramfs >/dev/null || die "lsinitramfs is required"
-    listing=$(lsinitramfs "$initramfs") ||
+    command -v lsinitrd >/dev/null || die "lsinitrd is required"
+    listing=$(lsinitrd "$initramfs" | awk '
+        $1 ~ /^l/ && $(NF - 1) == "->" { print $(NF - 2); next }
+        $1 ~ /^[bcdps-]/ { print $NF }
+    ') ||
         die "the installed initramfs could not be inspected"
     for member in \
-        scripts/local-premount/anduinos-btrfs-snapshots-manager \
+        var/lib/dracut/hooks/pre-mount/50-anduinos-btrfs-snapshots-manager.sh \
         usr/libexec/anduinos-btrfs-snapshots-manager-initramfs \
         usr/libexec/anduinos-btrfs-snapshots-manager-confirm \
         etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version \

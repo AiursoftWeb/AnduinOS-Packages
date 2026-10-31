@@ -1,0 +1,13 @@
+Silero VAD v6.2.0 (GGML conversion for whisper.cpp)
+
+Upstream model project: https://github.com/snakers4/silero-vad
+Converted model: https://huggingface.co/ggml-org/whisper-vad
+Pinned revision: c5c26827b67dfd053856f92e824e14fdcc123daf
+File: ggml-silero-v6.2.0.bin
+Size: 885098 bytes
+SHA-256: 2aa269b785eeb53a82983a20501ddf7c1d9c48e33ab63a41391ac6c9f7fb6987
+License: MIT (see VAD-LICENSE)
+
+This small CPU-only model detects speech activity. It does not transcribe speech
+and does not change the selected Whisper recognition model. The model is acquired
+and verified at package build time; voice typing does not download it at runtime.

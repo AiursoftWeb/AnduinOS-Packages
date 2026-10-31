@@ -22,24 +22,6 @@ fn parse_cmdline(content: &str) -> (Option<String>, Option<u64>) {
     (resume_device, resume_offset)
 }
 
-fn parse_initramfs_resume(content: &str) -> Option<String> {
-    content.lines().find_map(|line| {
-        let line = line.trim();
-        if line.is_empty() || line.starts_with('#') {
-            return None;
-        }
-        let value = line
-            .strip_prefix("RESUME=")?
-            .trim()
-            .trim_matches(['\'', '"']);
-        if value.is_empty() || value == "none" {
-            None
-        } else {
-            Some(value.to_string())
-        }
-    })
-}
-
 fn parse_disk_modes(content: &str) -> Vec<String> {
     content
         .split_whitespace()
@@ -183,13 +165,10 @@ pub fn check_hibernation() -> HibernationStatus {
     if let Ok(content) = fs::read_to_string(crate::config::PROC_CMDLINE) {
         (status.resume_device, status.resume_offset) = parse_cmdline(&content);
     }
-    status.initramfs_resume = fs::read_to_string(crate::config::INITRAMFS_RESUME)
-        .ok()
-        .and_then(|content| parse_initramfs_resume(&content));
-    status.configured_target = status
-        .resume_device
-        .clone()
-        .or_else(|| status.initramfs_resume.clone());
+    // Dracut and the kernel consume resume= from the kernel command line. A
+    // configuration file that is absent from that command line cannot make
+    // hibernation functional, so report only the effective boot contract.
+    status.configured_target = status.resume_device.clone();
     status.resolved_target = status.configured_target.as_deref().and_then(resolve_device);
 
     let total_ram = crate::swap::sysctl::read_total_ram().unwrap_or(0);
@@ -253,16 +232,7 @@ mod tests {
 
     #[test]
     fn ignores_disabled_resume_configuration() {
-        assert_eq!(parse_initramfs_resume("# old\nRESUME=none\n"), None);
         assert_eq!(parse_cmdline("quiet resume=none").0, None);
-    }
-
-    #[test]
-    fn parses_quoted_initramfs_resume() {
-        assert_eq!(
-            parse_initramfs_resume("RESUME=\"UUID=dead-beef\"\n").as_deref(),
-            Some("UUID=dead-beef")
-        );
     }
 
     #[test]

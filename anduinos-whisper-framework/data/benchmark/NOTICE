@@ -1,0 +1,25 @@
+FLEURS benchmark excerpts, Google and the FLEURS contributors.
+Source: https://huggingface.co/datasets/google/fleurs
+Revision: 70bb2e84b976b7e960aa89f1c648e09c59f894dd
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+Dataset paper: https://arxiv.org/abs/2205.12446
+
+These four validation recordings and their transcriptions are excerpts from
+FLEURS, not recordings of AnduinOS users. No endorsement by the original
+authors is implied. Audio was converted to mono 16 kHz signed 16-bit PCM WAV
+with metadata removed; no speech was cut or added. Regression tests may add
+deterministic synthetic noise in memory; those are modified samples, not the
+original recording conditions. The application never uploads these samples.
+
+Original archives under the pinned revision:
+data/en_us/audio/dev.tar.gz
+SHA256 2658fda72f199e12676ecac9415094667a4e14e149b146e568ea00b2a2f0954c
+data/cmn_hans_cn/audio/dev.tar.gz
+SHA256 3bc33212d5974eef7feb04bc4792458d6cd7e14ff10a1a24772f3c45ea87a822
+Original transcripts: data/en_us/dev.tsv and data/cmn_hans_cn/dev.tsv
+Individual archive member names and converted hashes are in manifest.json.
+
+This small, fixed smoke/regression corpus does not represent all accents,
+microphones, languages or noise conditions. Never describe its results as
+general speech-recognition accuracy or as Lunar Lake hardware validation.

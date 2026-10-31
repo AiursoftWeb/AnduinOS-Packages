@@ -30,10 +30,20 @@ fresh writable variable-store template with platform keys enrolled. Merely
 booting with UEFI firmware does **not** prove Secure Boot is enabled. Confirm
 `mokutil --sb-state` in both the live environment and installed system.
 
-Also keep one UEFI VM whose firmware explicitly lacks Secure Boot support.
-`mokutil --sb-state` must report that unsupported state, the storage page must
-remain usable, and the resulting plan must omit MOK enrollment and Secure Boot
-GRUB flags. Malformed or contradictory probe output must still stop safely.
+The matrix explicitly includes `amd64-uefi-unsupported-btrfs` and
+`amd64-uefi-unsupported-ext4`. Use firmware built without Secure Boot support;
+a disabled Secure Boot toggle does not satisfy these rows. Record the shared
+firmware probe JSON from both the Live environment and installed system and
+require `status=unsupported`, `uefi=true`, and `reason=secureboot-variable-absent`.
+The `expected_secure_boot` field is the required observed state; the legacy
+boolean alone cannot distinguish disabled from unsupported.
+
+The welcome page must continue without recommending Secure Boot, storage must
+remain usable, and the plan must omit MOK enrollment. Retain the signed UEFI
+shim/GRUB chain and existing Secure Boot GRUB installation flags. Remove the
+ISO and verify the target disk boots. Malformed data and contradictory states
+must remain unknown and prevent destructive execution; permissions and a
+missing efivarfs must exercise automatic recovery instead of this row.
 
 Example dry run:
 
@@ -68,6 +78,13 @@ firmware for arm64.
 9. No live-session-only packages, mounts, DNS files or `policy-rc.d` remain.
 10. Kernel, initramfs and GRUB artifacts agree. The fallback EFI loader exists
     for UEFI rows.
+11. Every Btrfs row contains exactly one healthy, pinned system snapshot named
+    `New OS` and one hidden, pinned factory Home baseline; rerunning the factory
+    provisioner reports the same pair and creates no duplicate. Classic
+    filesystem rows contain no factory snapshots. A normal factory reset keeps
+    a marker created in Home. Repeating it with **Erase user files** removes the
+    marker and Home snapshot history, while an interrupted boot restores both
+    the previous root and Home subvolumes.
 
 For Secure Boot rows, also require:
 
@@ -297,17 +314,11 @@ still reports that manual review is required: retain the guest verification
 output, screenshots and explicit observations of independent Windows and
 AnduinOS boots.
 
-Before placing an installer build into an ISO, inspect the actual `.deb`, not
-only the source manifest:
-
-```sh
-python3 scripts/verify-built-package.py /path/to/anduinos-installer-beta.deb
-```
-
-This verifies that the private planner/evidence CLIs and their core modules
-are present, the public executor still rejects arguments, required runtime
-dependencies are declared, no public test-tool launcher exists and no Python
-cache entered the package.
+Validate the installer through source-level execution tests and the isolated
+VM behavior checks above. Public launcher argument rejection and mount
+isolation are tested directly; package file copying and Debian metadata
+generation belong to Apkg's own tests, not a second installer-specific deb
+inspector.
 
 ### Custom-layout campaign
 

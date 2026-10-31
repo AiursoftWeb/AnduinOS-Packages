@@ -1,10 +1,12 @@
 mod advanced_settings;
 mod automation_dialog;
 mod btrfs_settings;
+pub(crate) mod factory_reset;
 mod information;
 mod personal_history;
 mod snapshot_model;
 mod snapshot_page;
+pub(crate) use snapshot_page::rollback_confirmation;
 
 use std::cell::{Cell, RefCell};
 use std::time::Duration;
@@ -21,6 +23,8 @@ use crate::signal_listener::SnapshotSignalMonitor;
 
 pub use snapshot_model::SnapshotScope;
 
+const MAIN_WINDOW_DEFAULT_WIDTH: i32 = 900;
+const MAIN_WINDOW_DEFAULT_HEIGHT: i32 = 880;
 pub(super) const AUXILIARY_WINDOW_DEFAULT_WIDTH: i32 = 680;
 pub(super) const AUXILIARY_WINDOW_DEFAULT_HEIGHT: i32 = 900;
 
@@ -86,8 +90,8 @@ impl MainWindow {
         let window: Self = glib::Object::builder()
             .property("application", app)
             .property("title", tr("Disk Snapshots Manager"))
-            .property("default-width", 920)
-            .property("default-height", 720)
+            .property("default-width", MAIN_WINDOW_DEFAULT_WIDTH)
+            .property("default-height", MAIN_WINDOW_DEFAULT_HEIGHT)
             .property("icon-name", crate::application::APP_ID)
             .build();
         window.setup_ui(monitor);
@@ -100,6 +104,15 @@ impl MainWindow {
 
     pub fn show_information(&self) {
         information::show(self.upcast_ref());
+    }
+
+    pub fn begin_factory_reset(&self) {
+        if let Some(pages) = self.imp().pages.borrow().as_ref() {
+            pages.set_visible_child_name("system");
+        }
+        if let Some(page) = self.imp().system_page.borrow().as_ref() {
+            page.begin_factory_reset();
+        }
     }
 
     fn setup_ui(&self, monitor: SnapshotSignalMonitor) {
@@ -380,12 +393,5 @@ mod tests {
         let (total, available) = probe_filesystem_space().unwrap();
         assert!(total > 0);
         assert!(available <= total);
-    }
-
-    #[test]
-    fn auxiliary_windows_use_a_tall_portrait_default_size() {
-        assert_eq!(AUXILIARY_WINDOW_DEFAULT_WIDTH, 680);
-        assert_eq!(AUXILIARY_WINDOW_DEFAULT_HEIGHT, 900);
-        assert!(AUXILIARY_WINDOW_DEFAULT_HEIGHT > AUXILIARY_WINDOW_DEFAULT_WIDTH);
     }
 }

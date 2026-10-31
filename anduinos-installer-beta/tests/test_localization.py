@@ -1,10 +1,13 @@
 import ast
 import gettext
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
+from types import SimpleNamespace
 
 from i18n import DOMAIN, _, clear_translation_cache
 from languages import DEFAULT_LANGUAGE, KEYBOARD_LAYOUTS, LANGUAGES
+from installer_core.ntfs_resize import NtfsResizeBlockReason
 
 
 PACKAGE = Path(__file__).resolve().parents[1]
@@ -13,6 +16,65 @@ LOCALE_DIR = PACKAGE / "locale"
 
 
 class LocalizationTests(unittest.TestCase):
+    def test_esp_help_is_translated_in_all_supported_languages(self):
+        tree = ast.parse((PACKAGE / "src/pages.py").read_text(encoding="utf-8"))
+        messages = ["Compare ESP options", "Separate ESP", "Shared ESP"]
+        for node in tree.body:
+            if isinstance(node, ast.Assign) and any(
+                isinstance(target, ast.Name) and target.id.startswith("_ESP_HELP_")
+                for target in node.targets
+            ):
+                messages.append(ast.literal_eval(node.value.args[0]))
+        self.assertEqual(6, len(messages))
+        for language in LANGUAGES:
+            with self.subTest(language=language.code):
+                for source in messages:
+                    translated = _(source, language.code)
+                    self.assertTrue(translated)
+                    if language.code not in {DEFAULT_LANGUAGE, "en_GB"}:
+                        self.assertNotEqual(source, translated)
+                    for token in ("512 MiB", "FAT32", "EFI/AnduinOS", "UEFI", "GRUB"):
+                        if token in source:
+                            self.assertIn(token, translated)
+
+    def test_disk_check_error_uses_selected_language_instead_of_raw_force_advice(self):
+        tree = ast.parse((PACKAGE / "src/pages.py").read_text(encoding="utf-8"))
+        function = next(node for node in ast.walk(tree)
+                        if isinstance(node, ast.FunctionDef)
+                        and node.name == "_resize_block_message")
+        code = compile(ast.Module(body=[function], type_ignores=[]), "pages.py", "exec")
+        source = (
+            "This NTFS volume requires a disk check. In Windows, back up "
+            "important files and run 'chkdsk X: /f' as administrator "
+            "(replace X with this volume's drive letter). If prompted, "
+            "schedule the check, then restart into Windows. Let the check "
+            "finish and fully shut down Windows before trying again."
+        )
+        inspection = SimpleNamespace(
+            filesystem="ntfs",
+            block_reason=NtfsResizeBlockReason.CHECK_REQUIRED,
+            message="Run chkdsk /f and please try again, or see option -f.",
+        )
+        self.assertEqual(len(LANGUAGES), 28)
+        for language in LANGUAGES:
+            with self.subTest(language=language.code):
+                namespace = {"_": _, "lang": language.code,
+                             "NtfsResizeBlockReason": NtfsResizeBlockReason}
+                exec(code, namespace)
+                message = namespace["_resize_block_message"](inspection)
+                self.assertTrue(message)
+                self.assertNotIn("option -f", message)
+                self.assertIn("chkdsk X: /f", message)
+                self.assertNotIn("chkdsk C:", message)
+                self.assertEqual(message, _(source, language.code))
+                if language.code not in {DEFAULT_LANGUAGE, "en_GB"}:
+                    self.assertNotEqual(message, source)
+        self.assertEqual(_(source, "zh_CN"),
+                         "此 NTFS 分区需要磁盘检查。请进入 Windows，备份重要文件，"
+                         "以管理员身份运行“chkdsk X: /f”（将 X 替换为此分区的盘符）。"
+                         "如提示安排检查，请确认，然后重启进入 Windows。"
+                         "等待检查完成并彻底关闭 Windows 后，再重试。")
+
     def tearDown(self):
         clear_translation_cache()
 
@@ -71,8 +133,36 @@ class LocalizationTests(unittest.TestCase):
         self.assertNotEqual(_("Next", "zh_CN"), "Next")
         self.assertNotEqual(_("Next", "de"), "Next")
 
+    def test_external_drive_mode_explanation_is_localized(self):
+        source = (
+            "External drive mode — AnduinOS will add a portable UEFI boot "
+            "path so this drive can boot on another UEFI computer without "
+            "an existing AnduinOS firmware boot entry."
+        )
+        for language in LANGUAGES:
+            with self.subTest(language=language.code):
+                translated = _(source, language.code)
+                self.assertTrue(translated)
+                if language.code not in {DEFAULT_LANGUAGE, "en_GB"}:
+                    self.assertNotEqual(translated, source)
+
     def test_catalog_message_set_matches_source_and_policy(self):
         source_messages = set(KEYBOARD_LAYOUTS.values())
+        for desktop in sorted((PACKAGE / "assets").glob("*.desktop")):
+            for line in desktop.read_text(encoding="utf-8").splitlines():
+                key, separator, value = line.partition("=")
+                if separator and key in {"Name", "GenericName", "Comment", "Keywords"}:
+                    if value:
+                        source_messages.add(value)
+        for policy in sorted((PACKAGE / "assets").glob("*.policy")):
+            root = ET.parse(policy).getroot()
+            for action in root.findall("action"):
+                for tag in ("description", "message"):
+                    for element in action.findall(tag):
+                        if "{http://www.w3.org/XML/1998/namespace}lang" not in element.attrib:
+                            value = (element.text or "").strip()
+                            if value:
+                                source_messages.add(value)
         for source in sorted((PACKAGE / "src").rglob("*.py")):
             tree = ast.parse(source.read_text(encoding="utf-8"))
             for node in ast.walk(tree):

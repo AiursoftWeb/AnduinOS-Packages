@@ -12,9 +12,10 @@ from enum import Enum
 from typing import Any
 
 from .storage_graph import StorageGraph
+from .btrfs import BtrfsCompression
 
 
-SCHEMA_VERSION = 12
+SCHEMA_VERSION = 18
 
 
 class Architecture(str, Enum):
@@ -43,6 +44,8 @@ class InstallMode(str, Enum):
 class Filesystem(str, Enum):
     BTRFS = "btrfs"
     EXT4 = "ext4"
+    XFS = "xfs"
+    F2FS = "f2fs"
 
 
 class MokPasswordPolicy(str, Enum):
@@ -57,7 +60,7 @@ class AuthenticationMode(str, Enum):
 
 @dataclass(frozen=True)
 class SourceSpec:
-    image_path: str = "/cdrom/casper/filesystem.squashfs"
+    image_path: str = "/run/anduinos-live/rootfs.squashfs"
 
 
 @dataclass(frozen=True)
@@ -77,6 +80,7 @@ class StorageSpec:
     esp_size_mib: int = 1024
     swap_size_mib: int = 2048
     graph: StorageGraph | None = None
+    btrfs_compression: BtrfsCompression = BtrfsCompression.BALANCED
 
 
 @dataclass(frozen=True)
@@ -127,9 +131,20 @@ class SwapSpec:
 
 
 @dataclass(frozen=True)
+class EspReplacement:
+    """Explicit authorization for one inspected AnduinOS EFI namespace."""
+
+    partuuid: str
+    filesystem_uuid: str
+    vendor_digest: str
+
+
+@dataclass(frozen=True)
 class BootSpec:
-    install_fallback_path: bool = True
+    install_fallback_path: bool = False
+    external_target: bool = False
     mok_password_policy: MokPasswordPolicy = MokPasswordPolicy.NOT_APPLICABLE
+    esp_replacement: EspReplacement | None = None
 
 
 @dataclass(frozen=True)
@@ -199,6 +214,7 @@ class InstallPlan:
                 "filesystem",
                 "esp_size_mib",
                 "swap_size_mib",
+                "btrfs_compression",
                 "graph",
             },
             "storage",
@@ -215,6 +231,7 @@ class InstallPlan:
                 **storage_data,
                 "mode": InstallMode(storage_data["mode"]),
                 "filesystem": Filesystem(storage_data["filesystem"]),
+                "btrfs_compression": BtrfsCompression(storage_data["btrfs_compression"]),
                 "disk": disk,
                 "graph": StorageGraph.from_dict(storage_data["graph"]),
             }
@@ -312,15 +329,22 @@ class InstallPlan:
         boot_data = _object(root["boot"], "boot")
         _exact_fields(
             boot_data,
-            {"install_fallback_path", "mok_password_policy"},
+            {"install_fallback_path", "external_target", "mok_password_policy", "esp_replacement"},
             "boot",
         )
+        replacement = boot_data["esp_replacement"]
+        if replacement is not None:
+            replacement = _object(replacement, "boot.esp_replacement")
+            _exact_fields(replacement, {"partuuid", "filesystem_uuid", "vendor_digest"},
+                          "boot.esp_replacement")
+            replacement = EspReplacement(**replacement)
         boot = BootSpec(
             **{
                 **boot_data,
                 "mok_password_policy": MokPasswordPolicy(
                     boot_data["mok_password_policy"]
                 ),
+                "esp_replacement": replacement,
             }
         )
         return cls(

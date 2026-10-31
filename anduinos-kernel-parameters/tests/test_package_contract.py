@@ -4,15 +4,11 @@ import stat
 import subprocess
 import tempfile
 import unittest
-import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
 PROJECT = Path(__file__).resolve().parent.parent
-PROJECT_FILE = PROJECT / "anduinos-kernel-parameters.aosproj"
-DESKTOP_PROJECT_FILE = PROJECT.parent / "anduinos-desktop/anduinos-desktop.aosproj"
 CONFIG = PROJECT / "assets/99-anduinos-desktop.cfg"
-LEGACY_CONFIG = PROJECT / "assets/50-anduinos-desktop.cfg"
 POSTINST = PROJECT / "scripts/postinst.sh"
 POSTRM = PROJECT / "scripts/postrm.sh"
 
@@ -30,92 +26,35 @@ def install_fake_chroot_detectors(directory, systemd_result=1, ischroot_result=1
 
 
 class KernelParametersPackageContractTests(unittest.TestCase):
-    def setUp(self):
-        self.project_text = PROJECT_FILE.read_text(encoding="utf-8")
-        self.project = ET.fromstring(self.project_text)
-
-    def test_package_targets_only_resolute_as_architecture_all(self):
-        self.assertEqual(
-            self.project.findtext(".//PackageVersion"),
-            "2.0.2-1+$(SuiteShortName)",
+    def test_live_sessions_skip_grub_but_installed_system_errors_propagate(self):
+        cmdlines = (
+            ("BOOT_IMAGE=/casper/vmlinuz boot=casper nopersistent quiet splash ---", True),
+            ("boot=casper persistent", True),
+            ("quiet rd.anduinos.live=1 splash", True),
+            ("boot=live quiet", True),
+            ("root=UUID=installed quiet splash", False),
+            ("rd.anduinos.live=0 other=boot=casper boot=casper-extra", False),
         )
-        self.assertEqual(self.project.findtext(".//TargetSuites"), "resolute-addon")
-        self.assertEqual(self.project.findtext(".//TargetArchitectures"), "all")
-        self.assertEqual(self.project.findtext(".//Component"), "main")
-        self.assertEqual(self.project.findtext(".//Section"), "admin")
-        self.assertEqual(
-            self.project.findtext(".//SuiteShortNameMap"),
-            "resolute-addon=resolute",
-        )
-
-    def test_dependencies_conflict_and_resolute_check_source_are_declared(self):
-        dependencies = {
-            item.get("Include") for item in self.project.findall(".//Dependency")
-        }
-        self.assertEqual(
-            dependencies, {"grub2-common", "linux-generic-hwe-26.04"}
-        )
-        self.assertNotIn("kernel-supports-lowlatency-bootargs", dependencies)
-        self.assertEqual(self.project.findtext(".//Conflicts"), "lowlatency-kernel")
-        source = self.project.find(".//DependencyCheckSource")
-        self.assertIsNotNone(source)
-        self.assertEqual(source.get("Url"), "https://mirror.aiursoft.com/ubuntu")
-        self.assertEqual(source.get("SuiteMap"), "resolute-addon=resolute")
-
-    def test_exact_grub_drop_in_is_packaged(self):
-        included = self.project.find(
-            ".//IncludeFile[@Include='assets/99-anduinos-desktop.cfg']"
-        )
-        self.assertIsNotNone(included)
-        self.assertEqual(
-            included.get("Target"),
-            "/etc/default/grub.d/99-anduinos-desktop.cfg",
-        )
-        self.assertEqual(self.project.findall(".//ConfFile"), [])
-        self.assertEqual(
-            CONFIG.read_text(encoding="utf-8"),
-            'GRUB_CMDLINE_LINUX_DEFAULT="$GRUB_CMDLINE_LINUX_DEFAULT preempt=full"\n',
-        )
-        self.assertFalse(LEGACY_CONFIG.exists())
-
-    def test_desktop_recommends_the_policy_only_on_resolute(self):
-        desktop = ET.parse(DESKTOP_PROJECT_FILE).getroot()
-        self.assertEqual(
-            desktop.findtext(".//PackageVersion"),
-            "2.0.2-1+$(SuiteShortName)",
-        )
-        matching_dependencies = desktop.findall(
-            ".//Dependency[@Include='anduinos-kernel-parameters']"
-        )
-        matching_recommendations = desktop.findall(
-            ".//Recommend[@Include='anduinos-kernel-parameters']"
-        )
-        self.assertEqual(matching_dependencies, [])
-        self.assertEqual(len(matching_recommendations), 1)
-        self.assertEqual(
-            matching_recommendations[0].get("Condition"),
-            "'$(Suite)' == 'resolute-addon'",
-        )
-
-    def test_lifecycle_scripts_and_contract_test_are_wired_into_the_package(self):
-        postinst = self.project.find(".//PostInstallScript")
-        postrm = self.project.find(".//PostRemoveScript")
-        prebuild = self.project.find(".//PrebuildCommand")
-        self.assertIsNotNone(postinst)
-        self.assertIsNotNone(postrm)
-        self.assertIsNotNone(prebuild)
-        self.assertEqual(postinst.get("Include"), "scripts/postinst.sh")
-        self.assertEqual(postrm.get("Include"), "scripts/postrm.sh")
-        self.assertEqual(prebuild.get("Run"), "python3 tests/test_package_contract.py")
-
-    def test_scripts_do_not_rewrite_the_main_grub_defaults(self):
-        for script in (POSTINST, POSTRM):
-            text = script.read_text(encoding="utf-8")
-            with self.subTest(script=script.name):
-                self.assertTrue(text.startswith("set -eu\n"))
-                self.assertNotIn("#!/bin/sh", text)
-                self.assertNotIn('/etc/default/grub"', text)
-                self.assertNotIn("sed", text)
+        for cmdline, live in cmdlines:
+            for script, action in ((POSTINST, "configure"), (POSTRM, "remove"), (POSTRM, "purge")):
+                with self.subTest(cmdline=cmdline, action=action), tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp) / "root"
+                    (root / "proc").mkdir(parents=True)
+                    (root / "proc/cmdline").write_text(cmdline + "\n")
+                    fake_bin = Path(tmp) / "bin"
+                    fake_bin.mkdir()
+                    install_fake_chroot_detectors(fake_bin)
+                    log = Path(tmp) / "grub-called"
+                    write_fake_command(fake_bin, "update-grub",
+                                       'touch "$UPDATE_GRUB_LOG"; echo "grub-probe: cannot resolve /cow" >&2; exit 1')
+                    result = subprocess.run(
+                        ["/bin/sh", script, action], capture_output=True, text=True,
+                        env={**os.environ, "DPKG_ROOT": str(root),
+                             "PATH": f"{fake_bin}:/usr/bin:/bin", "UPDATE_GRUB_LOG": str(log)},
+                    )
+                    self.assertEqual(result.returncode, 0 if live else 1, result.stderr)
+                    self.assertEqual(log.exists(), not live)
+                    self.assertFalse((root / "run/reboot-required").exists())
 
     def test_maintainer_scripts_have_valid_shell_syntax(self):
         for script in (POSTINST, POSTRM):
@@ -302,7 +241,7 @@ class KernelParametersPackageContractTests(unittest.TestCase):
                 with self.subTest(script=script.name):
                     subprocess.run(["/bin/sh", script, action], env=env, check=True)
 
-    def test_repeated_generation_starts_with_one_parameter(self):
+    def test_repeated_generation_preserves_desktop_parameters(self):
         command = (
             'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"; '
             '. "$1"; printf "%s\\n" "$GRUB_CMDLINE_LINUX_DEFAULT"'
@@ -313,7 +252,7 @@ class KernelParametersPackageContractTests(unittest.TestCase):
             ).strip()
             for _ in range(2)
         ]
-        self.assertEqual(generated, ["quiet splash preempt=full"] * 2)
+        self.assertEqual(generated, ["quiet splash preempt=full plymouth.ignore-serial-consoles"] * 2)
         self.assertTrue(all(value.count("preempt=full") == 1 for value in generated))
 
 

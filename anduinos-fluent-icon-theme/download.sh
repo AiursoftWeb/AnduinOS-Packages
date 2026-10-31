@@ -7,11 +7,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../lib/build-guards.sh"
 need_cmd git
 
-FLUENT_ICON_COMMIT="ad627380"
+FLUENT_ICON_COMMIT="c8a244f571ef8fb47812bdc9dbce76546cedce69"
 
 rm -rf "$SCRIPT_DIR/deploy" /tmp/Fluent-icon-theme
-git clone https://gitlab.aiursoft.com/mirror/fluent-icon-theme/ /tmp/Fluent-icon-theme
-git -C /tmp/Fluent-icon-theme checkout "$FLUENT_ICON_COMMIT"
+git clone https://github.com/vinceliuice/Fluent-icon-theme.git /tmp/Fluent-icon-theme
+git -C /tmp/Fluent-icon-theme checkout --detach "$FLUENT_ICON_COMMIT"
 
 echo "Building Fluent icon theme (all colors)..."
 mkdir -p "$SCRIPT_DIR/deploy/icons"
@@ -29,5 +29,6 @@ echo "Building Fluent cursor theme..."
     '
 )
 
+install -m 644 /tmp/Fluent-icon-theme/COPYING "$SCRIPT_DIR/deploy/COPYING"
 rm -rf /tmp/Fluent-icon-theme
 echo "Done. Pre-built icon themes are in deploy/icons/."

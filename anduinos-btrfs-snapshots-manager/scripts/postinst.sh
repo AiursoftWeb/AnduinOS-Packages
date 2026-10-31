@@ -1,5 +1,19 @@
 set -eu
 
+[ "${1:-}" = configure ] || exit 0
+
+in_chroot() {
+    [ -x /usr/bin/systemd-detect-virt ] \
+        && /usr/bin/systemd-detect-virt --chroot --quiet
+}
+
+if [ ! -x /usr/libexec/anduinos-dracut-verify ]; then
+    echo 'anduinos-btrfs-snapshots-manager: required initrd writer is missing; reinstall anduinos-boot-tools' >&2
+    exit 1
+fi
+# Let dpkg finish configuring newly unpacked kernels before generating images.
+update-initramfs -u
+
 systemd-tmpfiles --create /usr/lib/tmpfiles.d/anduinos-btrfs-snapshots-manager.conf || true
 
 for config_name in apt-snapshots.toml automation.toml; do
@@ -25,12 +39,11 @@ if mountpoint -q /boot/efi; then
     fi
 fi
 
-if [ -x /usr/sbin/update-grub ]; then
+if [ -x /usr/libexec/anduinos-dracut-verify ] && ! in_chroot; then
     # Disk Snapshots Manager must not inspect or mount unrelated disks while installing.
     # Its generated entries are independent of os-prober results.
     PATH="/usr/libexec/anduinos-btrfs-snapshots-manager/no-os-prober:/usr/sbin:/usr/bin:/sbin:/bin" \
-        /usr/sbin/update-grub || \
-        echo "Warning: Disk Snapshots Manager could not refresh the GRUB configuration" >&2
+        /usr/libexec/anduinos-dracut-verify --update-grub
 fi
 
 # A recovery boot may have installed a one-boot unit under /run to shadow an

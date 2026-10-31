@@ -18,7 +18,7 @@ pub(crate) fn enabled() -> bool {
 }
 
 fn persistence_enabled() -> bool {
-    enabled() && std::env::var("ANDUINOS_GUESS_PERSIST").as_deref() == Ok("1")
+    enabled() && std::env::var("ANDUINOS_GUESS_PERSIST").map_or(true, |value| value == "1")
 }
 
 pub(crate) fn state_path() -> Option<PathBuf> {
@@ -27,6 +27,7 @@ pub(crate) fn state_path() -> Option<PathBuf> {
     }
     let root = std::env::var_os("XDG_STATE_HOME")
         .map(PathBuf::from)
+        .filter(|path| path.is_absolute())
         .or_else(|| {
             std::env::var_os("HOME").map(|home| PathBuf::from(home).join(".local/state"))
         })?;
@@ -266,13 +267,28 @@ fn read_tail_text(path: &Path, limit: u64) -> Option<String> {
     String::from_utf8(bytes).ok()
 }
 
+pub(crate) fn generation(path: &Path) -> String {
+    read_tail_text(&path.with_file_name("generation"), 128)
+        .unwrap_or_default()
+        .trim()
+        .to_owned()
+}
+
+#[cfg(test)]
 pub(crate) fn record(path: &Path, event: &HistoryEntry) -> io::Result<()> {
+    record_guarded(path, event, &generation(path))
+}
+
+pub(crate) fn record_guarded(path: &Path, event: &HistoryEntry, expected: &str) -> io::Result<()> {
     let Some(parent) = path.parent() else {
         return Ok(());
     };
     fs::create_dir_all(parent)?;
     fs::set_permissions(parent, fs::Permissions::from_mode(0o700))?;
     let _lock = acquire_lock(path)?;
+    if generation(path) != expected {
+        return Ok(());
+    }
     let mut file = open_private(path, true, false)?;
     writeln!(
         file,
@@ -288,13 +304,25 @@ pub(crate) fn record(path: &Path, event: &HistoryEntry) -> io::Result<()> {
     compact(path, &snapshot)
 }
 
+#[cfg(test)]
 pub(crate) fn record_transition(path: &Path, event: &TransitionEntry) -> io::Result<()> {
+    record_transition_guarded(path, event, &generation(path))
+}
+
+pub(crate) fn record_transition_guarded(
+    path: &Path,
+    event: &TransitionEntry,
+    expected: &str,
+) -> io::Result<()> {
     let Some(parent) = path.parent() else {
         return Ok(());
     };
     fs::create_dir_all(parent)?;
     fs::set_permissions(parent, fs::Permissions::from_mode(0o700))?;
     let _lock = acquire_lock(path)?;
+    if generation(path) != expected {
+        return Ok(());
+    }
     let mut file = open_private(path, true, false)?;
     writeln!(
         file,

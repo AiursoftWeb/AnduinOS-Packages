@@ -132,6 +132,12 @@ async fn main() -> Result<()> {
                 };
                 RecoveryScope::parse(&scope).map(failure_notification)
             }
+            "AutomaticSnapshotPaused" => {
+                let Ok((scope,)) = message.body().deserialize::<(String,)>() else {
+                    continue;
+                };
+                RecoveryScope::parse(&scope).map(paused_notification)
+            }
             "AutomaticCleanupSucceeded" => {
                 let Ok((system_deleted, personal_deleted)) =
                     message.body().deserialize::<(u64, u64)>()
@@ -181,6 +187,22 @@ fn failure_notification(scope: RecoveryScope) -> RenderedNotification {
         tr("Automatic Snapshot Failed"),
         body,
         NotificationUrgency::Critical,
+    )
+}
+
+fn paused_notification(scope: RecoveryScope) -> RenderedNotification {
+    let body = match scope {
+        RecoveryScope::System => tr(
+            "Low disk space paused scheduled system snapshots. They will resume automatically when space is available.",
+        ),
+        RecoveryScope::Personal => tr(
+            "Low disk space paused scheduled Home snapshots. They will resume automatically when space is available.",
+        ),
+    };
+    RenderedNotification::new(
+        tr("Automatic snapshots paused"),
+        body,
+        NotificationUrgency::Normal,
     )
 }
 
@@ -312,6 +334,10 @@ mod tests {
             NotificationUrgency::Critical
         );
         assert_eq!(
+            paused_notification(RecoveryScope::Personal).urgency,
+            NotificationUrgency::Normal
+        );
+        assert_eq!(
             cleanup_notification(1, 0)
                 .expect("one deletion produces a notification")
                 .urgency,
@@ -328,5 +354,17 @@ mod tests {
         let personal = creation_notification(RecoveryScope::Personal, false);
         assert_eq!(personal.title, "Home Snapshot Created");
         assert_eq!(personal.body, "The Home snapshot was created successfully.");
+    }
+
+    #[test]
+    fn low_space_notification_explains_that_creation_resumes_automatically() {
+        let system = paused_notification(RecoveryScope::System);
+        assert_eq!(system.title, "Automatic snapshots paused");
+        assert!(system.body.contains("scheduled system snapshots"));
+        assert!(system.body.contains("resume automatically"));
+
+        let personal = paused_notification(RecoveryScope::Personal);
+        assert!(personal.body.contains("scheduled Home snapshots"));
+        assert!(personal.body.contains("resume automatically"));
     }
 }

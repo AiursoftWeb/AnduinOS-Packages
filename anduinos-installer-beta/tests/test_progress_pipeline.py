@@ -2,11 +2,43 @@ import unittest
 
 from helpers import valid_plan
 from installer_core.executor import InstallerExecutor
-from installer_core.model import Filesystem
-from pages import ordered_progress_steps
+from installer_core.model import Architecture, Filesystem
+from test_guided_storage_graph import guided_plan
+from test_manual_storage_graph import manual_plan
+from pages import ordered_progress_steps, incomplete_feature_steps
 
 
 class ProgressPipelineTests(unittest.TestCase):
+    def test_recovery_deployment_only_for_new_whole_disk_btrfs_before_grub(self):
+        for arch in Architecture:
+            plans = (valid_plan(architecture=arch),
+                     valid_plan(architecture=arch, filesystem=Filesystem.EXT4),
+                     guided_plan(architecture=arch)[0], manual_plan(architecture=arch)[0])
+            for index, plan in enumerate(plans):
+                with self.subTest(architecture=arch, mode=plan.storage.mode, filesystem=plan.storage.filesystem):
+                    ids = [s.id for s in InstallerExecutor(lambda _: None).build_steps(plan)]
+                    self.assertEqual("deploy-recovery-environment" in ids, index == 0)
+                    if index == 0:
+                        self.assertLess(ids.index("deploy-recovery-environment"), ids.index("install-bootloader"))
+                        self.assertLess(ids.index("install-bootloader"), ids.index("create-factory-snapshot"))
+
+    def test_completion_lists_missing_features_not_recovered_network(self):
+        self.assertEqual(incomplete_feature_steps({
+            "detect-network-connectivity": "warning",
+            "recheck-network-connectivity": "succeeded",
+            "install-input-method": "succeeded",
+            "install-multimedia-codecs": "warning",
+            "upgrade-system": "warning",
+            "deploy-recovery-environment": "warning",
+            "install-third-party-drivers": "skipped",
+        }), ("install-multimedia-codecs", "upgrade-system", "deploy-recovery-environment"))
+        self.assertEqual(incomplete_feature_steps({
+            "detect-network-connectivity": "warning",
+            "recheck-network-connectivity": "succeeded",
+            "install-input-method": "succeeded",
+            "install-multimedia-codecs": "succeeded",
+        }), ())
+
     def test_progress_rows_follow_canonical_executor_order(self):
         plans = (
             valid_plan(
@@ -41,6 +73,20 @@ class ProgressPipelineTests(unittest.TestCase):
                     )
                 )
                 self.assertEqual(displayed, canonical)
+
+    def test_fallback_step_is_between_bootloader_and_enrollment_only_for_new_esp(self):
+        for arch in Architecture:
+            plans = (valid_plan(architecture=arch),
+                     guided_plan(reuse_esp=False, architecture=arch)[0],
+                     guided_plan(architecture=arch)[0], manual_plan(architecture=arch)[0])
+            for plan in plans:
+                with self.subTest(architecture=arch, mode=plan.storage.mode,
+                                  new_esp=plan.storage.graph.creates_esp):
+                    ids = [step.id for step in InstallerExecutor(lambda _: None).build_steps(plan)]
+                    self.assertEqual("create-fallback-boot-chain" in ids, plan.storage.graph.creates_esp)
+                    if plan.storage.graph.creates_esp:
+                        self.assertLess(ids.index("install-bootloader"), ids.index("create-fallback-boot-chain"))
+                        self.assertLess(ids.index("create-fallback-boot-chain"), ids.index("enroll-secure-boot"))
 
     def test_every_canonical_step_requires_a_title(self):
         plan = valid_plan()

@@ -107,6 +107,213 @@ fn old_root_name() -> String {
 
 #[test]
 #[ignore = "requires root and a disposable Btrfs loopback image"]
+fn real_btrfs_aaa_offline_restore_replaces_root_and_preserves_home() {
+    use anduinos_recovery_engine::offline::{OfflinePhase, OfflineRecoveryEngine};
+    use std::os::unix::fs::symlink;
+
+    assert_eq!(unsafe { libc::geteuid() }, 0);
+    let root = fixture_root();
+    let system_root = root.join("@root");
+    let store = root.join("@snapshots/anduinos-btrfs-snapshots-manager");
+    let kernel = fs::read_to_string(system_root.join("proc/sys/kernel/osrelease"))
+        .unwrap()
+        .trim()
+        .to_string();
+    let default_kernel = system_root.join("boot/vmlinuz");
+    match fs::remove_file(&default_kernel) {
+        Ok(()) => {}
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+        Err(error) => panic!("could not reset kernel link: {error}"),
+    }
+    symlink(format!("vmlinuz-{kernel}"), &default_kernel).unwrap();
+    fs::write(system_root.join("offline-marker"), "before").unwrap();
+    fs::write(root.join("@home/offline-home-marker"), "must survive").unwrap();
+
+    let operations = OperationEngine::new(&system_root, &store, SystemCommandRunner);
+    let target = operations
+        .create_offline_manual(
+            &supported_layout(),
+            "Offline loopback target",
+            "Exercise Live recovery root replacement",
+            false,
+            |_, _, _| {},
+        )
+        .unwrap();
+    fs::write(system_root.join("offline-marker"), "after").unwrap();
+
+    let transaction = OfflineRecoveryEngine::system(&root)
+        .restore(target.id)
+        .unwrap();
+    assert_eq!(transaction.phase, OfflinePhase::Completed);
+    let deleted = Command::new("/usr/bin/btrfs")
+        .args(["subvolume", "list", "-d"])
+        .arg(&root)
+        .output()
+        .unwrap();
+    assert!(deleted.status.success());
+    assert!(
+        deleted.stdout.is_empty(),
+        "offline restore reported success with deleted subvolumes still pending: {}",
+        String::from_utf8_lossy(&deleted.stdout)
+    );
+    assert_eq!(
+        fs::read_to_string(root.join("@root/offline-marker")).unwrap(),
+        "before"
+    );
+    assert_eq!(
+        fs::read_to_string(root.join("@home/offline-home-marker")).unwrap(),
+        "must survive"
+    );
+    assert!(
+        !fs::read_dir(&root)
+            .unwrap()
+            .filter_map(Result::ok)
+            .any(|entry| entry
+                .file_name()
+                .to_string_lossy()
+                .starts_with("@root.rescue-center-"))
+    );
+    operations.delete(&supported_layout(), target.id).unwrap();
+}
+
+#[test]
+#[ignore = "requires root and a disposable Btrfs loopback image"]
+fn real_btrfs_home_rollback_preserves_root_and_history_and_can_revert() {
+    use anduinos_recovery_engine::personal::{FactoryHomeSnapshotOutcome, PersonalSnapshotEngine};
+    use anduinos_recovery_engine::recovery::{
+        RecoveryEngine, RecoveryFilesystem, RecoveryOutcome, SystemRecoveryFilesystem,
+    };
+    use anduinos_recovery_engine::transaction::{
+        RollbackPhase, RollbackTransaction, TransactionStore,
+    };
+    use sha2::{Digest, Sha256};
+    use std::os::unix::fs::PermissionsExt;
+
+    assert_eq!(unsafe { libc::geteuid() }, 0);
+    let root = fixture_root();
+    let store = root.join("@snapshots/anduinos-btrfs-snapshots-manager");
+    let layout = supported_layout();
+    let system = OperationEngine::new(root.join("@root"), &store, SystemCommandRunner);
+    fs::create_dir_all(root.join("@root/etc")).unwrap();
+    fs::write(
+        root.join("@root/etc/passwd"),
+        "root:x:0:0::/root:/bin/bash\nalice:x:0:0::/home/alice:/bin/bash\n",
+    )
+    .unwrap();
+    fs::create_dir_all(root.join("@home/alice")).unwrap();
+    fs::write(root.join("@home/alice/settings"), "initial").unwrap();
+    let personal = PersonalSnapshotEngine::new(root.join("@home"), &store, SystemCommandRunner);
+    let FactoryHomeSnapshotOutcome::Created(factory) =
+        personal.create_factory_if_missing(&layout).unwrap()
+    else {
+        panic!("fresh loopback store must have no factory Home");
+    };
+    let baseline = personal
+        .create_manual(&layout, "User baseline", "Home rollback target", false)
+        .unwrap();
+    fs::write(root.join("@home/alice/settings"), "changed").unwrap();
+    let safety = personal
+        .create_manual(&layout, "Before rollback", "Safety", false)
+        .unwrap();
+    let anchor = system.create_pre_rollback(&layout, |_, _, _| {}).unwrap();
+    let root_uuid = SystemRecoveryFilesystem
+        .identity(&root.join("@root"))
+        .unwrap();
+    fs::write(
+        root.join("@root/latest-change"),
+        "must survive Home rollback",
+    )
+    .unwrap();
+    fs::create_dir_all(store.join("recovery-boot")).unwrap();
+    let confirm = store.join("recovery-boot/confirm");
+    fs::write(&confirm, "test confirmation artifact").unwrap();
+    fs::set_permissions(&confirm, fs::Permissions::from_mode(0o700)).unwrap();
+    let mut transaction = RollbackTransaction::new(
+        anchor.id,
+        anchor.id,
+        "eeeeeeee-1111-4222-8333-ffffffffffff",
+        "test-kernel",
+        "a".repeat(64),
+        "b".repeat(64),
+        format!("{:x}", Sha256::digest(fs::read(&confirm).unwrap())),
+    );
+    transaction.home_only = true;
+    transaction.enable_home_reset(&baseline).unwrap();
+    transaction.fallback_home_snapshot_id = Some(safety.id);
+    transaction
+        .transition(RollbackPhase::Armed, chrono::Utc::now())
+        .unwrap();
+    let transactions = TransactionStore::new(&store);
+    transactions.create(&transaction).unwrap();
+    assert!(personal.delete(&layout, baseline.id).is_err());
+    assert!(personal.delete(&layout, safety.id).is_err());
+    let recovery = RecoveryEngine::new(&root, SystemRecoveryFilesystem);
+    assert_eq!(
+        recovery
+            .execute(Some(transaction.id), "11111111-2222-4333-8444-555555555555")
+            .unwrap(),
+        RecoveryOutcome::Applied
+    );
+    assert_eq!(
+        fs::read_to_string(root.join("@home/alice/settings")).unwrap(),
+        "initial"
+    );
+    assert_eq!(
+        SystemRecoveryFilesystem
+            .identity(&root.join("@root"))
+            .unwrap(),
+        root_uuid
+    );
+    assert!(root.join("@root/latest-change").exists());
+    assert_eq!(
+        fs::read_to_string(personal.snapshot_path(safety.id).join("alice/settings")).unwrap(),
+        "changed"
+    );
+    assert_read_only(&personal.snapshot_path(factory.id));
+    assert_eq!(
+        recovery
+            .execute(None, "66666666-7777-4888-8999-aaaaaaaaaaaa")
+            .unwrap(),
+        RecoveryOutcome::Reverted
+    );
+    assert_eq!(
+        fs::read_to_string(root.join("@home/alice/settings")).unwrap(),
+        "changed"
+    );
+    assert_eq!(
+        SystemRecoveryFilesystem
+            .identity(&root.join("@root"))
+            .unwrap(),
+        root_uuid
+    );
+    transactions.remove().unwrap();
+    // A nested Home subvolume is not copied into ordinary Btrfs snapshots.
+    // Refuse the next restore before moving either live subvolume.
+    personal.check_restore_capacity(&layout).unwrap();
+    create_subvolume(&root.join("@home/alice/nested"));
+    fs::write(root.join("@home/alice/nested/important"), "not in snapshot").unwrap();
+    assert!(personal.check_restore_capacity(&layout).is_err());
+    transactions.create(&transaction).unwrap();
+    assert!(
+        recovery
+            .execute(Some(transaction.id), "11111111-2222-4333-8444-555555555555")
+            .is_err()
+    );
+    assert_eq!(
+        fs::read_to_string(root.join("@home/alice/nested/important")).unwrap(),
+        "not in snapshot"
+    );
+    assert_eq!(
+        SystemRecoveryFilesystem
+            .identity(&root.join("@root"))
+            .unwrap(),
+        root_uuid
+    );
+    transactions.remove().unwrap();
+}
+
+#[test]
+#[ignore = "requires root and a disposable Btrfs loopback image"]
 fn real_btrfs_old_root_cleanup_handles_empty_nested_subvolumes() {
     assert_eq!(unsafe { libc::geteuid() }, 0, "this test must run as root");
     let root = fixture_root();

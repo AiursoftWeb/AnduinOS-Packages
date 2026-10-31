@@ -6,7 +6,7 @@ use super::super::shared::show_result;
 use super::{MaintenanceControl, query_btrfs_status};
 use crate::dbus_client::{BtrfsFilesystemStatus, BtrfsScrubDetails, SnapshotsManagerHelperClient};
 use crate::i18n::{tr, trf};
-use snapshots_manager_common::format_bytes;
+use snapshots_manager_common::{format_bytes, format_elapsed_time};
 
 #[derive(Clone)]
 struct ProgressWidgets {
@@ -14,6 +14,21 @@ struct ProgressWidgets {
     progress: gtk::ProgressBar,
     details: gtk::Label,
     errors: gtk::Label,
+}
+
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+struct ScrubRunIdentity {
+    generation: u64,
+    started_at: Option<String>,
+}
+
+impl From<&BtrfsFilesystemStatus> for ScrubRunIdentity {
+    fn from(status: &BtrfsFilesystemStatus) -> Self {
+        Self {
+            generation: status.scrub_details.generation,
+            started_at: status.scrub_details.started_at.clone(),
+        }
+    }
 }
 
 pub(super) fn connect(parent: &adw::PreferencesWindow, control: &MaintenanceControl) {
@@ -64,8 +79,8 @@ fn start(parent: &adw::PreferencesWindow, control: &MaintenanceControl) {
     glib::spawn_future_local(async move {
         // This marker exists only while the dialog is open. It prevents an old
         // completed result from being mistaken for the scrub just requested.
-        let baseline_started_at = match query_btrfs_status().await {
-            Ok(status) => status.scrub_details.started_at,
+        let baseline = match query_btrfs_status().await {
+            Ok(status) => ScrubRunIdentity::from(&status),
             Err(error) => {
                 if let Some(parent) = weak_parent.upgrade() {
                     update_control(&control, "unavailable");
@@ -78,8 +93,7 @@ fn start(parent: &adw::PreferencesWindow, control: &MaintenanceControl) {
             return;
         };
         update_control(&control, "running");
-        let progress_window =
-            show_progress(&parent, &control, baseline_started_at.as_deref(), true);
+        let progress_window = show_progress(&parent, &control, Some(baseline), true);
         let result = gio::spawn_blocking(|| {
             SnapshotsManagerHelperClient::new()?.run_btrfs_maintenance_action("scrub-start")
         })
@@ -97,7 +111,7 @@ fn start(parent: &adw::PreferencesWindow, control: &MaintenanceControl) {
 fn show_progress(
     parent: &adw::PreferencesWindow,
     control: &MaintenanceControl,
-    baseline_started_at: Option<&str>,
+    baseline: Option<ScrubRunIdentity>,
     wait_for_new_run: bool,
 ) -> adw::Window {
     let window = adw::Window::builder()
@@ -148,13 +162,7 @@ fn show_progress(
         errors,
     };
     connect_cancel(parent, &widgets.window, &cancel);
-    monitor(
-        parent,
-        control,
-        &widgets,
-        baseline_started_at.map(str::to_string),
-        wait_for_new_run,
-    );
+    monitor(parent, control, &widgets, baseline, wait_for_new_run);
     widgets.window
 }
 
@@ -191,7 +199,7 @@ fn monitor(
     parent: &adw::PreferencesWindow,
     control: &MaintenanceControl,
     widgets: &ProgressWidgets,
-    baseline_started_at: Option<String>,
+    baseline: Option<ScrubRunIdentity>,
     wait_for_new_run: bool,
 ) {
     let weak_parent = parent.downgrade();
@@ -212,7 +220,7 @@ fn monitor(
             match result {
                 Ok(status) if status.scrub != "unavailable" => {
                     failed_queries = 0;
-                    if status_is_current(&status, baseline_started_at.as_deref()) {
+                    if status_is_current(&status, baseline.as_ref()) {
                         current_run_observed = true;
                     }
 
@@ -295,13 +303,16 @@ fn monitor(
     });
 }
 
-fn status_is_current(status: &BtrfsFilesystemStatus, baseline_started_at: Option<&str>) -> bool {
+fn status_is_current(status: &BtrfsFilesystemStatus, baseline: Option<&ScrubRunIdentity>) -> bool {
     status.scrub == "running"
-        || status
-            .scrub_details
-            .started_at
-            .as_deref()
-            .is_some_and(|started_at| Some(started_at) != baseline_started_at)
+        || baseline.is_none_or(|baseline| {
+            status.scrub_details.generation > baseline.generation
+                || status
+                    .scrub_details
+                    .started_at
+                    .as_ref()
+                    .is_some_and(|started_at| Some(started_at) != baseline.started_at.as_ref())
+        })
 }
 
 fn update_progress(
@@ -311,6 +322,7 @@ fn update_progress(
     scrub: &BtrfsScrubDetails,
 ) {
     if let (Some(checked), Some(total)) = (scrub.bytes_scrubbed, scrub.total_bytes)
+        && checked > 0
         && total > 0
     {
         let fraction = (checked as f64 / total as f64).clamp(0.0, 1.0);
@@ -386,6 +398,10 @@ fn result_presentation(status: &BtrfsFilesystemStatus) -> (String, String) {
             tr("Integrity Check Cancelled"),
             tr("The integrity check was cancelled before it finished."),
         ),
+        "failed" => (
+            tr("Integrity Check Failed"),
+            tr("Btrfs could not complete the integrity check."),
+        ),
         _ => (
             tr("Integrity Check Result Unavailable"),
             tr("Btrfs did not provide a completed scrub result."),
@@ -398,9 +414,17 @@ fn result_presentation(status: &BtrfsFilesystemStatus) -> (String, String) {
     }
     if let Some(duration) = scrub.duration.as_deref() {
         lines.push(trf("Duration: {0}", &[duration]));
+    } else if let Some(elapsed) = scrub.elapsed_seconds {
+        lines.push(trf(
+            "Duration: {0}",
+            &[&format_elapsed_time(elapsed.try_into().unwrap_or(i64::MAX))],
+        ));
     }
     if let Some(rate) = scrub.rate_bytes_per_second.filter(|rate| *rate > 0) {
         lines.push(trf("Average rate: {0}/s", &[&format_bytes(rate)]));
+    }
+    if let Some(error) = scrub.error.as_deref() {
+        lines.push(trf("Details: {0}", &[error]));
     }
     lines.push(String::new());
     lines.push(tr("Diagnostic counters"));
@@ -443,33 +467,48 @@ mod tests {
         let old = BtrfsFilesystemStatus {
             scrub: "finished-clean".into(),
             scrub_details: BtrfsScrubDetails {
+                generation: 4,
                 started_at: Some("Mon Aug 10 03:55:45 2026".into()),
                 ..BtrfsScrubDetails::default()
             },
             ..BtrfsFilesystemStatus::default()
         };
-        assert!(!status_is_current(&old, Some("Mon Aug 10 03:55:45 2026")));
+        let baseline = ScrubRunIdentity::from(&old);
+        assert!(!status_is_current(&old, Some(&baseline)));
 
         let running = BtrfsFilesystemStatus {
             scrub: "running".into(),
             ..old.clone()
         };
-        assert!(status_is_current(
-            &running,
-            Some("Mon Aug 10 03:55:45 2026")
-        ));
+        assert!(status_is_current(&running, Some(&baseline)));
 
         let newly_finished = BtrfsFilesystemStatus {
             scrub_details: BtrfsScrubDetails {
+                generation: 5,
                 started_at: Some("Mon Aug 10 04:32:27 2026".into()),
                 ..old.scrub_details.clone()
             },
             ..old
         };
-        assert!(status_is_current(
-            &newly_finished,
-            Some("Mon Aug 10 03:55:45 2026")
-        ));
+        assert!(status_is_current(&newly_finished, Some(&baseline)));
+    }
+
+    #[test]
+    fn generation_identifies_fast_scrubs_without_a_persisted_start_time() {
+        let baseline = ScrubRunIdentity {
+            generation: 9,
+            started_at: None,
+        };
+        let completed = BtrfsFilesystemStatus {
+            scrub: "finished-clean".into(),
+            scrub_details: BtrfsScrubDetails {
+                generation: 10,
+                started_at: None,
+                ..BtrfsScrubDetails::default()
+            },
+            ..BtrfsFilesystemStatus::default()
+        };
+        assert!(status_is_current(&completed, Some(&baseline)));
     }
 
     #[test]
@@ -508,5 +547,25 @@ mod tests {
         assert_eq!(heading, tr("Integrity Problems Found"));
         assert!(body.contains(&tr("Btrfs found errors that could not be repaired. Back up important files and investigate the storage device.")));
         assert!(body.contains(&trf("Checksum errors: {0}", &["2"])));
+    }
+
+    #[test]
+    fn helper_failure_is_never_presented_as_a_clean_scrub() {
+        let status = BtrfsFilesystemStatus {
+            scrub: "failed".into(),
+            scrub_details: BtrfsScrubDetails {
+                elapsed_seconds: Some(3),
+                error: Some("status recording failed".into()),
+                ..BtrfsScrubDetails::default()
+            },
+            ..BtrfsFilesystemStatus::default()
+        };
+        let (heading, body) = result_presentation(&status);
+        assert_eq!(heading, tr("Integrity Check Failed"));
+        assert!(body.contains(&tr("Btrfs could not complete the integrity check.")));
+        assert!(body.contains(&trf("Details: {0}", &["status recording failed"])));
+        assert!(!body.contains(&tr(
+            "No file system integrity errors were found in allocated data and metadata."
+        )));
     }
 }

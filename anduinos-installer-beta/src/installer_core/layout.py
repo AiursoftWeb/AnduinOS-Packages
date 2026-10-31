@@ -10,6 +10,13 @@ from .model import Architecture, Filesystem, Firmware, InstallMode, InstallPlan
 MIB = 1024 * 1024
 BIOS_GRUB_SIZE_MIB = 2
 ALIGNMENT_MIB = 1
+RECOVERY_SIZE_MIB = 256
+RECOVERY_LABEL = "AOS_RECOVERY"
+
+
+def erase_disk_overhead_mib(filesystem: Filesystem) -> int:
+    """Reserve alignment/BIOS metadata and the Btrfs recovery filesystem."""
+    return 4 + (RECOVERY_SIZE_MIB if filesystem is Filesystem.BTRFS else 0)
 
 
 @dataclass(frozen=True)
@@ -99,19 +106,31 @@ def build_erase_disk_layout_spec(
     )
     cursor += esp_size_mib
 
-    swap_number = len(parts) + 1
-    parts.append(
-        PartitionSpec(
-            number=swap_number,
-            name="swap",
-            start_mib=cursor,
-            end_mib=cursor + swap_size_mib,
-            filesystem="linux-swap",
-            mount_point=None,
-            flags=("swap",),
+    if swap_size_mib:
+        swap_number = len(parts) + 1
+        parts.append(
+            PartitionSpec(
+                number=swap_number,
+                name="swap",
+                start_mib=cursor,
+                end_mib=cursor + swap_size_mib,
+                filesystem="linux-swap",
+                mount_point=None,
+                flags=("swap",),
+            )
         )
-    )
-    cursor += swap_size_mib
+        cursor += swap_size_mib
+
+    if filesystem is Filesystem.BTRFS:
+        parts.append(PartitionSpec(
+            number=len(parts) + 1,
+            name="recovery",
+            start_mib=cursor,
+            end_mib=cursor + RECOVERY_SIZE_MIB,
+            filesystem="ext4",
+            mount_point=None,
+        ))
+        cursor += RECOVERY_SIZE_MIB
 
     root_number = len(parts) + 1
     parts.append(

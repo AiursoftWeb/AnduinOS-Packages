@@ -1,26 +1,29 @@
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 from fakes import FakeRunner
 from helpers import valid_plan
 from installer_core.live_cleanup import (
+    ADVANCED_FILESYSTEM_TOOL_PACKAGES,
     LIVE_ONLY_PACKAGES,
     PERSISTENT_TARGET_PACKAGES,
+    REQUIRED_BOOT_CAPABILITIES,
     REQUIRED_BOOT_PACKAGES,
     RemoveLivePackagesStep,
     VMWARE_GUEST_PACKAGES,
 )
-from installer_core.model import Architecture, Filesystem
+from installer_core.model import Architecture, Filesystem, InstallMode
 from installer_core.steps import InstallContext
-from installer_core.snapshots_manager import SNAPSHOTS_MANAGER_PACKAGE
+from installer_core.snapshots_manager import RECOVERY_PACKAGE, SNAPSHOTS_MANAGER_PACKAGE
 
 
 EXPECTED_LIVE_ONLY_PACKAGES = (
-    "casper",
+    "anduinos-live-layers",
+    "anduinos-rescue-center",
     "discover",
     "laptop-detect",
-    "os-prober",
     "gparted",
     "anduinos-installer-beta",
     "anduinos-live-settings",
@@ -35,6 +38,16 @@ def _query(target: Path, package: str) -> tuple[str, ...]:
         "--show",
         "--showformat=${db:Status-Abbrev}",
         package,
+    )
+
+
+def _providers_query(target: Path) -> tuple[str, ...]:
+    return (
+        "chroot",
+        str(target),
+        "dpkg-query",
+        "--show",
+        "--showformat=${db:Status-Abbrev}\\t${Provides}\\n",
     )
 
 
@@ -58,7 +71,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
         payload = plan.to_dict()
         self.assertEqual(
             payload["source"],
-            {"image_path": "/cdrom/casper/filesystem.squashfs"},
+            {"image_path": "/run/anduinos-live/rootfs.squashfs"},
         )
         payload["source"]["desktop_manifest_path"] = "/legacy"
         with self.assertRaisesRegex(
@@ -71,10 +84,19 @@ class RemoveLivePackagesTests(unittest.TestCase):
         self.assertNotIn(SNAPSHOTS_MANAGER_PACKAGE, LIVE_ONLY_PACKAGES)
         self.assertEqual(PERSISTENT_TARGET_PACKAGES, ("openssh-server",))
         self.assertEqual(
+            ADVANCED_FILESYSTEM_TOOL_PACKAGES,
+            {
+                Filesystem.XFS: "xfsprogs",
+                Filesystem.F2FS: "f2fs-tools",
+            },
+        )
+        self.assertEqual(
             REQUIRED_BOOT_PACKAGES[Architecture.AMD64],
             (
                 "anduinos-core-system",
-                "grub-common",
+                "dracut",
+                "dracut-core",
+                "dracut-install",
                 "grub2-common",
                 "grub-pc-bin",
                 "grub-efi-amd64-bin",
@@ -86,7 +108,9 @@ class RemoveLivePackagesTests(unittest.TestCase):
             REQUIRED_BOOT_PACKAGES[Architecture.ARM64],
             (
                 "anduinos-core-system",
-                "grub-common",
+                "dracut",
+                "dracut-core",
+                "dracut-install",
                 "grub2-common",
                 "grub-efi-arm64-bin",
                 "grub-efi-arm64-signed",
@@ -101,13 +125,19 @@ class RemoveLivePackagesTests(unittest.TestCase):
                 "xserver-xorg-video-vmware",
             ),
         )
+        self.assertEqual(REQUIRED_BOOT_CAPABILITIES, ("grub-common",))
 
     def test_btrfs_purges_installed_live_packages_and_retains_snapshots_manager(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory)
             runner = FakeRunner()
-            for package in ("casper", "anduinos-installer-beta"):
+            for package in ("anduinos-live-layers", "anduinos-installer-beta"):
                 runner.outputs[_query(target, package)] = ("ii \n", "", 0)
+            runner.outputs[_query(target, SNAPSHOTS_MANAGER_PACKAGE)] = (
+                "ii \n",
+                "",
+                0,
+            )
             context = _context(target)
             step = RemoveLivePackagesStep(runner)
             step.preflight(context)
@@ -117,7 +147,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
             command for command, _kwargs in runner.commands if "purge" in command
         )
         self.assertEqual(
-            purge[-2:], ("casper", "anduinos-installer-beta")
+            purge[-2:], ("anduinos-live-layers", "anduinos-installer-beta")
         )
         queried = {
             command[-1]
@@ -126,9 +156,23 @@ class RemoveLivePackagesTests(unittest.TestCase):
         }
         self.assertEqual(
             queried,
-            set(EXPECTED_LIVE_ONLY_PACKAGES) | {"openssh-server"},
+            set(EXPECTED_LIVE_ONLY_PACKAGES)
+            | {"openssh-server", SNAPSHOTS_MANAGER_PACKAGE, RECOVERY_PACKAGE},
         )
-        self.assertNotIn(SNAPSHOTS_MANAGER_PACKAGE, queried)
+        self.assertIn(
+            (
+                "chroot",
+                str(target),
+                "apt-mark",
+                "manual",
+                SNAPSHOTS_MANAGER_PACKAGE,
+            ),
+            [command for command, _kwargs in runner.commands],
+        )
+        self.assertIn(
+            SNAPSHOTS_MANAGER_PACKAGE,
+            context.values["persistent_target_packages"],
+        )
 
     def test_marks_live_composed_openssh_as_a_persistent_target_package(self):
         messages = []
@@ -173,6 +217,10 @@ class RemoveLivePackagesTests(unittest.TestCase):
             context.values["persistent_target_packages"],
             ("openssh-server",),
         )
+        self.assertNotIn(
+            ("chroot", str(target), "apt-mark", "manual", RECOVERY_PACKAGE),
+            commands,
+        )
         self.assertIn(
             "Retaining installed-system packages: openssh-server",
             messages,
@@ -183,7 +231,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
             target = Path(directory)
             runner = FakeRunner()
             runner.outputs[DETECT_VIRTUALIZATION] = ("vmware\n", "", 0)
-            runner.outputs[_query(target, "casper")] = ("ii \n", "", 0)
+            runner.outputs[_query(target, "anduinos-live-layers")] = ("ii \n", "", 0)
             context = _context(target)
             RemoveLivePackagesStep(runner).execute(context)
 
@@ -279,6 +327,81 @@ class RemoveLivePackagesTests(unittest.TestCase):
             context.values["live_package_candidates"][-1], SNAPSHOTS_MANAGER_PACKAGE
         )
 
+    def test_recovery_package_is_retained_only_for_new_btrfs_erase_layout(self):
+        for architecture in Architecture:
+            for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):
+                for mode in InstallMode:
+                    with self.subTest(architecture=architecture, filesystem=filesystem, mode=mode):
+                        with tempfile.TemporaryDirectory() as directory:
+                            target = Path(directory)
+                            context = _context(target, filesystem)
+                            context.plan = replace(
+                                context.plan,
+                                storage=replace(context.plan.storage, mode=mode),
+                                platform=replace(context.plan.platform, architecture=architecture),
+                            )
+                            runner = FakeRunner()
+                            runner.outputs[_query(target, RECOVERY_PACKAGE)] = ("ii \n", "", 0)
+                            RemoveLivePackagesStep(runner).execute(context)
+                            commands = [command for command, _ in runner.commands]
+                            retained = ("chroot", str(target), "apt-mark", "manual", RECOVERY_PACKAGE)
+                            expected = mode is InstallMode.ERASE_DISK and filesystem is Filesystem.BTRFS
+                            self.assertEqual(retained in commands, expected)
+                            purged = any("purge" in command and RECOVERY_PACKAGE in command for command in commands)
+                            self.assertEqual(purged, not expected)
+
+    def test_advanced_filesystem_tools_survive_installer_autoremove(self):
+        for filesystem, package in ADVANCED_FILESYSTEM_TOOL_PACKAGES.items():
+            with self.subTest(filesystem=filesystem.value):
+                with tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    runner = FakeRunner()
+                    runner.outputs[_query(target, package)] = (
+                        "ii \n",
+                        "",
+                        0,
+                    )
+                    runner.outputs[
+                        _query(target, "anduinos-installer-beta")
+                    ] = ("ii \n", "", 0)
+                    context = _context(target, filesystem)
+                    RemoveLivePackagesStep(runner).execute(context)
+
+                commands = [
+                    command for command, _kwargs in runner.commands
+                ]
+                mark = (
+                    "chroot",
+                    str(target),
+                    "apt-mark",
+                    "manual",
+                    package,
+                )
+                autoremove = next(
+                    command
+                    for command in commands
+                    if "autoremove" in command
+                )
+                self.assertIn(mark, commands)
+                self.assertLess(commands.index(mark), commands.index(autoremove))
+                self.assertIn(
+                    package,
+                    context.values["persistent_target_packages"],
+                )
+                self.assertIn(
+                    SNAPSHOTS_MANAGER_PACKAGE,
+                    context.values["live_package_candidates"],
+                )
+
+    def test_missing_selected_filesystem_tools_are_fatal(self):
+        with tempfile.TemporaryDirectory() as directory:
+            context = _context(Path(directory), Filesystem.XFS)
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "Selected root filesystem tools are missing: xfsprogs",
+            ):
+                RemoveLivePackagesStep(FakeRunner()).execute(context)
+
     def test_missing_packages_are_a_successful_noop(self):
         with tempfile.TemporaryDirectory() as directory:
             runner = FakeRunner()
@@ -333,10 +456,94 @@ class RemoveLivePackagesTests(unittest.TestCase):
                         "",
                         0,
                     )
+            runner.outputs[_query(target, "grub-common")] = ("ii \n", "", 0)
 
             with self.assertRaisesRegex(
                 RuntimeError,
                 "boot packages are missing after cleanup: grub-pc-bin",
+            ):
+                RemoveLivePackagesStep(runner).verify(context)
+
+    def test_verify_accepts_installed_provider_for_boot_capability(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            runner = FakeRunner()
+            context = _context(target)
+            context.values["live_package_candidates"] = ()
+            context.values["persistent_target_packages"] = ()
+            for package in REQUIRED_BOOT_PACKAGES[Architecture.AMD64]:
+                runner.outputs[_query(target, package)] = ("ii \n", "", 0)
+            runner.outputs[_providers_query(target)] = (
+                "ii \t\n"
+                "ii \txdg-desktop-portal-backend (= 1.7.1)\n"
+                "ii \tgrub-common (= 2.14-2ubuntu2.1)\n",
+                "",
+                0,
+            )
+
+            RemoveLivePackagesStep(runner).verify(context)
+
+    def test_verify_accepts_own_boot_stack_providers(self):
+        for provider_state in ("ii ", "iU ", "rc "):
+            with self.subTest(provider_state=provider_state), tempfile.TemporaryDirectory() as directory:
+                target = Path(directory)
+                runner = FakeRunner()
+                context = _context(target)
+                context.values["live_package_candidates"] = ()
+                context.values["persistent_target_packages"] = ()
+                provided = []
+                for package in REQUIRED_BOOT_PACKAGES[Architecture.AMD64]:
+                    if package.startswith(("grub", "shim")):
+                        provided.append(package + " (= 2.14)")
+                    else:
+                        runner.outputs[_query(target, package)] = ("ii \n", "", 0)
+                provided.append("grub-common (= 2.14)")
+                runner.outputs[_providers_query(target)] = (
+                    provider_state + "\t" + ", ".join(provided) + "\n", "", 0,
+                )
+                if provider_state == "ii ":
+                    RemoveLivePackagesStep(runner).verify(context)
+                else:
+                    with self.assertRaisesRegex(RuntimeError, "boot packages are missing"):
+                        RemoveLivePackagesStep(runner).verify(context)
+
+    def test_verify_rejects_missing_boot_capability(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            runner = FakeRunner()
+            context = _context(target)
+            context.values["live_package_candidates"] = ()
+            context.values["persistent_target_packages"] = ()
+            for package in REQUIRED_BOOT_PACKAGES[Architecture.AMD64]:
+                runner.outputs[_query(target, package)] = ("ii \n", "", 0)
+
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "boot capabilities are missing after cleanup: grub-common",
+            ):
+                RemoveLivePackagesStep(runner).verify(context)
+
+    def test_verify_ignores_empty_and_noninstalled_provides(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            runner = FakeRunner()
+            context = _context(target)
+            context.values["live_package_candidates"] = ()
+            context.values["persistent_target_packages"] = ()
+            for package in REQUIRED_BOOT_PACKAGES[Architecture.AMD64]:
+                runner.outputs[_query(target, package)] = ("ii \n", "", 0)
+            runner.outputs[_providers_query(target)] = (
+                "ii \t\n"
+                "ii \txdg-desktop-portal-backend (= 1.7.1)\n"
+                "un \tgrub-common (= 2.14-2ubuntu2.1)\n"
+                "rc \tgrub-common (= 2.14-2ubuntu2.1)\n",
+                "",
+                0,
+            )
+
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "boot capabilities are missing after cleanup: grub-common",
             ):
                 RemoveLivePackagesStep(runner).verify(context)
 

@@ -94,8 +94,8 @@ impl YubiKeyManagerWindow {
         glib::Object::builder()
             .property("application", app)
             .property("title", i18n("AnduinOS YubiKey Security Center"))
-            .property("default-width", 900)
-            .property("default-height", 650)
+            .property("default-width", 1266)
+            .property("default-height", 795)
             .property("icon-name", "com.anduinos.yubikeymanager")
             .build()
     }
@@ -941,6 +941,8 @@ fn build_passkeys_page() -> (gtk::ScrolledWindow, gtk::Box) {
         .build();
     let root = gtk::ScrolledWindow::builder()
         .hscrollbar_policy(gtk::PolicyType::Never)
+        .vscrollbar_policy(gtk::PolicyType::Automatic)
+        .overlay_scrolling(false)
         .child(&clamp)
         .build();
     (root, status)
@@ -1097,14 +1099,15 @@ fn rebuild_git(
             let button = button.clone();
             let weak = weak.clone();
             glib::spawn_future_local(async move {
-                let result = gio::spawn_blocking(backend::install_git)
-                    .await
-                    .unwrap_or_else(|_| {
-                        Err(i18n("The Git installation task stopped unexpectedly."))
-                    });
                 let Some(window) = weak.upgrade() else {
                     return;
                 };
+                let result = progress_dialog::run_with_progress(
+                    window.upcast_ref(),
+                    &i18n("Installing Git…"),
+                    backend::install_git,
+                )
+                .await;
                 match result {
                     Ok(()) => window.refresh(),
                     Err(error) => {

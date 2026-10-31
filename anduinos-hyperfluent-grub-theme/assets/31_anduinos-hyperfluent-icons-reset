@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+
+# Leave later custom/update menu generators with their original GRUB options.
+cat <<'EOF'
+if [ "$anduinos_theme_icon_scope" = 1 ]; then
+    set menuentry_id_option="$anduinos_theme_original_id_option"
+    unset anduinos_theme_original_id_option
+    unset anduinos_theme_icon_scope
+fi
+EOF

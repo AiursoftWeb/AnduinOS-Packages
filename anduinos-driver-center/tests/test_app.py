@@ -1,14 +1,233 @@
 from pathlib import Path
 import sys
+import subprocess
 import unittest
+import io
+from unittest.mock import MagicMock, Mock, patch
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from anduinos_driver_center.app import _command_output_summary  # noqa: E402
+from anduinos_driver_center.app import DriverCenterWindow, _command_output_summary  # noqa: E402
+from anduinos_driver_center import app
+from anduinos_driver_center.recovery import RecoveryState
+from anduinos_driver_center.core import PackageState
+from anduinos_secureboot.model import DkmsState, SecureBootState, SecureBootStatus
 
 
 class AppTests(unittest.TestCase):
+    def test_returning_to_printing_refreshes_unless_scan_or_operation_is_running(self):
+        for active, selected, ready, operating, expected in (
+            (True, "printing", True, False, True),
+            (False, "printing", True, False, False),
+            (True, "home", True, False, False),
+            (True, "printing", False, False, False),
+            (True, "printing", True, True, False),
+        ):
+            with self.subTest(active=active, selected=selected, ready=ready, operating=operating):
+                window = Mock(_selected_page_name=selected, _operation_running=operating)
+                window.is_active.return_value = active
+                window.refresh_button.get_sensitive.return_value = ready
+                DriverCenterWindow._refresh_printing_on_return(window)
+                self.assertEqual(window.refresh.call_count, int(expected))
+
+    def test_recovery_disk_confirmation_defaults_to_cancel_and_sends_only_the_approved_plan(self):
+        import json
+        plan = dict(disk="/dev/vda", swap="/dev/vda2", new_device="/dev/vda4",
+                    swap_bytes=512 * 1024 * 1024, remaining_bytes=256 * 1024 * 1024)
+        state = RecoveryState(False, (), PackageState("anduinos-recovery-env", False, None),
+                              None, False, False, {"reason": "ready", "plan": plan})
+        window, button = Mock(_operation_running=False), Mock()
+        with patch.object(app.Adw, "MessageDialog") as factory:
+            DriverCenterWindow._confirm_recovery_repair(window, button, "prepare", state)
+        dialog = factory.return_value
+        dialog.set_default_response.assert_called_once_with("cancel")
+        dialog.set_close_response.assert_called_once_with("cancel")
+        self.assertIn("512", factory.call_args.kwargs["body"])
+        self.assertIn("256", factory.call_args.kwargs["body"])
+        callback = dialog.connect.call_args.args[1]
+        callback(dialog, "cancel")
+        window._run_action.assert_not_called()
+        callback(dialog, "apply")
+        self.assertEqual(window._run_action.call_args.args[1], ["recovery-prepare"])
+        self.assertEqual(json.loads(window._run_action.call_args.kwargs["stdin"]), plan)
+
+    def test_scan_builds_navigation_and_restores_selection_without_a_display(self):
+        window = Mock()
+        window._computer_page = None
+        window._selected_page_name = "home"
+        rows = []
+        window.device_list.append.side_effect = rows.append
+        window.device_list.get_row_at_index.side_effect = lambda index: (
+            rows[index] if index < len(rows) else None
+        )
+        window._device_row.side_effect = lambda *args: Mock()
+        graphics = Mock(devices=(), intel=None)
+        from anduinos_secureboot.identity import IdentityStatus
+        from anduinos_secureboot.model import GrubState
+        secure_boot = SecureBootState(
+            False, True, True, True, "serial", boot_loader="shim", setup_mode=False,
+            signing_identity=IdentityStatus(purpose="unified", enrollment="enrolled", key_present=True,
+                                            key_valid=True, defaults_ready=True),
+            grub=GrubState(installed=True, signature="valid", enrollment="enrolled", deployment="ready", active_chain="trusted"),
+        )
+        printing = Mock(printers=(), service_running=True, missing_required_packages=(),
+                        disabled_printers=())
+        xbox = Mock(status=app.XboxStatus.NOT_INSTALLED)
+
+        with patch.object(app, "ComputerPage"), patch.object(app, "_", side_effect=lambda text: text):
+            result = DriverCenterWindow._apply_scan(
+                window, graphics, secure_boot, xbox, DkmsState(), Mock(ready=True), printing,
+                RecoveryState(False, (), PackageState("anduinos-recovery-env", False, None),
+                              None, False, False),
+            )
+
+        self.assertEqual(result, app.GLib.SOURCE_REMOVE)
+        self.assertEqual([row.page_name for row in rows], [
+            "home", "audio", "printing", "xbox", "secure-boot", "recovery", "firmware", "computer",
+        ])
+        window._device_row.assert_any_call("security-high-symbolic", "Secure Boot", "Disabled")
+        self.assertEqual(window.stack.add_named.call_count, 8)
+        window.device_list.select_row.assert_called_once_with(rows[0])
+        window.refresh_button.set_sensitive.assert_called_once_with(True)
+        self.assertFalse(window._rebuilding_navigation)
+
+    def test_secure_boot_summary_distinguishes_disabled_from_unprepared(self):
+        from dataclasses import replace
+        from anduinos_secureboot.identity import IdentityStatus
+        from anduinos_secureboot.model import GrubState
+        identity = IdentityStatus(purpose="unified", enrollment="enrolled", key_present=True,
+                                  key_valid=True, defaults_ready=True)
+        ready = SecureBootState(False, True, True, True, "serial", boot_loader="shim", setup_mode=False,
+            signing_identity=identity, grub=GrubState(installed=True, signature="valid", enrollment="enrolled", deployment="ready", active_chain="trusted"))
+        modules = DkmsState()
+        with patch.object(app, "_", side_effect=lambda text: text):
+            self.assertEqual(app._secure_boot_summary(ready, modules), (
+                "Disabled", "Secure Boot is disabled", "installed-pill"))
+            for state, dkms in (
+                (replace(ready, setup_mode=True), modules),
+                (replace(ready, enrolled=False, signing_identity=replace(identity, enrollment="absent")), modules),
+                (replace(ready, boot_loader="grub", grub=replace(ready.grub, deployment="pending")), modules),
+                (replace(ready, configuration_present=False, signing_identity=replace(identity, defaults_ready=False)), modules),
+                (replace(ready, grub=GrubState()), modules),
+                (ready, DkmsState(modules=("driver",), untrusted_modules=("driver",))),
+            ):
+                with self.subTest(state=state, dkms=dkms):
+                    self.assertEqual(app._secure_boot_summary(state, dkms)[0], "Action required")
+            enabled = replace(ready, enabled=True, status=SecureBootStatus.ENABLED)
+            self.assertEqual(app._secure_boot_summary(enabled, modules)[0], "Trusted")
+            self.assertEqual(app._secure_boot_summary(replace(enabled, grub=GrubState()), modules)[0],
+                             "Action required")
+            self.assertEqual(app._secure_boot_summary(enabled, DkmsState(modules=("driver",), untrusted_modules=("driver",)))[0],
+                             "Action required")
+            for status, label in ((SecureBootStatus.UNKNOWN, "Unknown"),
+                                  (SecureBootStatus.UNSUPPORTED, "Not available")):
+                self.assertEqual(app._secure_boot_summary(replace(ready, status=status), modules)[0], label)
+
+    def test_command_line_opens_requested_page_in_new_or_existing_window(self):
+        for existing in (False, True):
+            for arguments in (["--page", "secure-boot"], ["--page=secure-boot"],
+                              ["--page", "recovery"], ["--page=recovery"]):
+                with self.subTest(existing=existing, arguments=arguments):
+                    page = "recovery" if "recovery" in arguments[-1] else "secure-boot"
+                    application, command_line = Mock(), Mock()
+                    command_line.get_arguments.return_value = ["driver-center", *arguments]
+                    window = Mock()
+                    application.get_active_window.return_value = window if existing else None
+                    with patch.object(app, "DriverCenterWindow", return_value=window) as constructor:
+                        self.assertEqual(app.DriverCenterApplication.do_command_line(application, command_line), 0)
+                    if existing:
+                        constructor.assert_not_called()
+                        window._select_page.assert_called_once_with(page)
+                    else:
+                        constructor.assert_called_once_with(application, initial_page=page)
+                    window.present.assert_called_once()
+
+    def test_unknown_page_or_argument_does_not_open_a_window(self):
+        for arguments in (["--page"], ["--page=unknown"], ["--unexpected"]):
+            with self.subTest(arguments=arguments):
+                application, command_line = Mock(), Mock()
+                command_line.get_arguments.return_value = ["driver-center", *arguments]
+                with patch.object(app, "DriverCenterWindow") as constructor:
+                    self.assertNotEqual(app.DriverCenterApplication.do_command_line(application, command_line), 0)
+                constructor.assert_not_called()
+                application.get_active_window.assert_not_called()
+                command_line.printerr.assert_called_once()
+
+    def test_all_package_actions_use_the_guarded_streaming_window(self):
+        for action in ("install-xbox", "repair-xbox", "install", "repair-nvidia",
+                       "install-recommended", "install-audio", "repair-audio",
+                       "install-printing-support", "refresh-driver-info", "update"):
+            with self.subTest(action=action):
+                window, button = Mock(), Mock()
+                DriverCenterWindow._run_action(window, button, [action])
+                window._run_update_action.assert_called_once_with(button, [action], None, None, None)
+
+    def run_action_result(self, result):
+        window = Mock(_operation_running=False)
+        button = Mock()
+        process = MagicMock()
+        process.__enter__.return_value = process
+        process.stdout = io.StringIO(result.stdout + result.stderr)
+        process.wait.return_value = result.returncode
+        with (
+            patch("anduinos_driver_center.operation_ui.OperationWindow"),
+            patch("anduinos_driver_center.app.subprocess.Popen", return_value=process),
+            patch("anduinos_driver_center.app.threading.Thread") as thread,
+            patch("anduinos_driver_center.app.GLib.idle_add") as idle,
+        ):
+            thread.side_effect = lambda *, target, **kwargs: Mock(start=target)
+            DriverCenterWindow._run_update_action(window, button, ["repair-nvidia", "nvidia-driver-610-open"])
+        return idle.call_args.args[4]
+
+    def test_failure_preserves_stderr_and_stdout(self):
+        stdout = "+ apt-get install -y --reinstall nvidia-driver-610-open\n"
+        stderr = "E: Unable to correct problems, you have held broken packages.\nDriver operation failed: apt-get exited with status 100\n"
+        message = self.run_action_result(subprocess.CompletedProcess([], 1, stdout, stderr))
+        self.assertEqual(message, (stdout + stderr).strip())
+
+    def test_failure_preserves_multiline_stdout_without_stderr(self):
+        stdout = "The following packages have unmet dependencies:\n nvidia-driver: Depends: unavailable-package\n"
+        message = self.run_action_result(subprocess.CompletedProcess([], 1, stdout, ""))
+        self.assertEqual(message, stdout.strip())
+
+    def test_failure_preserves_stderr_without_stdout(self):
+        message = self.run_action_result(subprocess.CompletedProcess([], 1, "", "Authorization failed\n"))
+        self.assertEqual(message, "Authorization failed")
+
+    def test_empty_failure_uses_unknown_error_dialog(self):
+        message = self.run_action_result(subprocess.CompletedProcess([], 1, "", ""))
+        window = Mock()
+        button = Mock()
+        DriverCenterWindow._action_done(window, button, "Apply", 1, message)
+        window._action_error.assert_called_once_with(app._("unknown error"))
+        window.refresh.assert_not_called()
+        button.set_sensitive.assert_called_once_with(True)
+
+    def test_success_uses_last_line_of_the_merged_output(self):
+        message = self.run_action_result(subprocess.CompletedProcess([], 0, "command output\nDone\n", "warning"))
+        self.assertEqual(message, "warning")
+
+    def test_failure_dialog_has_scrollable_copyable_details(self):
+        with (
+            patch("anduinos_driver_center.app.Adw.MessageDialog") as dialog_type,
+            patch("anduinos_driver_center.app.Gtk.TextView") as text_view_type,
+            patch("anduinos_driver_center.app._scrolled_window") as scrolled_type,
+        ):
+            message = "E: Package unavailable\n" + "package details\n" * 200
+            DriverCenterWindow._action_error(None, message)
+        dialog = dialog_type.return_value
+        scroll = dialog.set_extra_child.call_args.args[0]
+        self.assertIs(scroll, scrolled_type.return_value)
+        details = text_view_type.return_value
+        scroll.set_child.assert_called_once_with(details)
+        details.get_buffer.return_value.set_text.assert_called_once_with(message)
+        self.assertFalse(text_view_type.call_args.kwargs["editable"])
+        self.assertFalse(text_view_type.call_args.kwargs["cursor_visible"])
+        self.assertEqual(scrolled_type.call_args.kwargs["max_content_height"], 360)
+        self.assertNotIn(message, dialog_type.call_args.kwargs["heading"])
+        dialog.present.assert_called_once()
+
     def test_recommended_install_uses_the_ubuntu_drivers_conclusion(self):
         output = """+ apt-get update
 Reading package lists... Done

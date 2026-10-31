@@ -50,6 +50,8 @@ def valid_plan(
     automatic_login: bool | None = None,
     ssh_password_login: bool = False,
     disk: DiskIdentity | None = None,
+    swap_size_mib: int | None = None,
+    external_target: bool = False,
 ) -> InstallPlan:
     mok_policy = (
         MokPasswordPolicy.ANDUINOS_DEFAULT
@@ -70,10 +72,14 @@ def valid_plan(
             mode=InstallMode.ERASE_DISK,
             disk=selected_disk,
             filesystem=filesystem,
-            swap_size_mib=calculate_swap_sizing(
-                TEST_PHYSICAL_MEMORY_BYTES,
-                selected_disk.expected_size_bytes,
-            ).swap_size_mib,
+            swap_size_mib=(
+                calculate_swap_sizing(
+                    TEST_PHYSICAL_MEMORY_BYTES,
+                    selected_disk.expected_size_bytes,
+                ).swap_size_mib
+                if swap_size_mib is None
+                else swap_size_mib
+            ),
         ),
         platform=PlatformSpec(
             architecture=architecture,
@@ -115,7 +121,11 @@ def valid_plan(
             install_multimedia_codecs=install_multimedia_codecs,
         ),
         swap=SwapSpec(),
-        boot=BootSpec(mok_password_policy=mok_policy),
+        boot=BootSpec(
+            install_fallback_path=True,
+            external_target=external_target,
+            mok_password_policy=mok_policy,
+        ),
     )
     graph = build_erase_disk_storage_graph(
         plan,
@@ -123,6 +133,7 @@ def valid_plan(
             stable_id=plan.storage.disk.stable_id,
             expected_size_bytes=plan.storage.disk.expected_size_bytes,
             topology_digest=TEST_TOPOLOGY_DIGEST,
+            external=external_target,
         ),
         TEST_INVENTORY_DIGEST,
     )
@@ -134,6 +145,7 @@ def valid_inventory(
     *,
     topology_digest: str = TEST_TOPOLOGY_DIGEST,
     path: str | None = None,
+    external: bool | None = None,
 ) -> StorageInventory:
     selected_plan = plan or valid_plan()
     identity = selected_plan.storage.disk
@@ -146,5 +158,10 @@ def valid_inventory(
         partitions=(),
         free_extents=(),
         topology_digest=topology_digest,
+        removable=(
+            selected_plan.boot.external_target
+            if external is None
+            else external
+        ),
     )
     return StorageInventory((disk,), TEST_INVENTORY_DIGEST)

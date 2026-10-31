@@ -82,7 +82,12 @@ impl StressTestView {
         self.set_spacing(0);
         self.set_vexpand(true);
 
-        let scroll = gtk::ScrolledWindow::builder().vexpand(true).build();
+        let scroll = gtk::ScrolledWindow::builder()
+            .hscrollbar_policy(gtk::PolicyType::Never)
+            .vscrollbar_policy(gtk::PolicyType::Automatic)
+            .overlay_scrolling(false)
+            .vexpand(true)
+            .build();
         let inner = gtk::Box::builder()
             .orientation(gtk::Orientation::Vertical)
             .spacing(18)
@@ -117,6 +122,8 @@ impl StressTestView {
         let banner = gtk::Box::builder()
             .orientation(gtk::Orientation::Horizontal)
             .css_classes(["card"])
+            // Clip the edge-to-edge warning accent to the rounded card.
+            .overflow(gtk::Overflow::Hidden)
             .spacing(0)
             .valign(gtk::Align::Start)
             .build();

@@ -372,6 +372,33 @@ impl LineageStore {
         })
     }
 
+    /// Record the active root selected by an external, offline rescue tool.
+    /// Offline recovery has no boot-confirmation transaction and may be
+    /// explicitly requested without a permanent safety snapshot, so it must
+    /// not invent an ordinary activation event merely to update the head.
+    pub fn record_offline_head(
+        &self,
+        target_recovery_point_id: DeploymentId,
+    ) -> Result<SystemLineage, LineageError> {
+        self.mutate(|lineage| {
+            let lineage = lineage
+                .as_mut()
+                .ok_or_else(|| LineageError::invalid("system lineage is not initialized"))?;
+            if !lineage.nodes.iter().any(|node| {
+                node.recovery_point_id == target_recovery_point_id && node.snapshot_available
+            }) {
+                return Err(LineageError::invalid(
+                    "offline recovery target is missing from the system lineage",
+                ));
+            }
+            if lineage.current_head_id == Some(target_recovery_point_id) {
+                return Ok(false);
+            }
+            lineage.current_head_id = Some(target_recovery_point_id);
+            Ok(true)
+        })
+    }
+
     pub fn mark_snapshot_removed(
         &self,
         recovery_point_id: DeploymentId,

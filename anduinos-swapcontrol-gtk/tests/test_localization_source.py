@@ -2,12 +2,11 @@ import re
 import unittest
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 RUST_STRING = r'"(?:[^"\\]|\\.)*"'
 
-
 class LocalizationSourceTests(unittest.TestCase):
+
     def test_formatted_messages_are_marked_with_i18n(self):
         violations = []
         pattern = re.compile(rf"\bi18n_fmt\s*\(\s*({RUST_STRING})", re.DOTALL)
@@ -34,7 +33,6 @@ class LocalizationSourceTests(unittest.TestCase):
                 line = content.count("\n", 0, match.start()) + 1
                 violations.append(f"{source.relative_to(ROOT)}:{line}")
         self.assertEqual([], violations)
-
 
 if __name__ == "__main__":
     unittest.main()

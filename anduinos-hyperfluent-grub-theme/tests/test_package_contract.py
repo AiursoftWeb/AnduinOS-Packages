@@ -1,0 +1,179 @@
+"""Theme assets, GRUB syntax, and package lifecycle regression checks."""
+
+import os
+import re
+import stat
+import struct
+import subprocess
+import tempfile
+import unittest
+from pathlib import Path
+
+
+PACKAGE = Path(__file__).resolve().parent.parent
+THEME = PACKAGE / "assets/theme"
+POSTINST = PACKAGE / "scripts/postinst.sh"
+POSTRM = PACKAGE / "scripts/postrm.sh"
+
+
+def fake_command(directory: Path, name: str, body: str) -> None:
+    path = directory / name
+    path.write_text(f"#!/bin/sh\n{body}\n", encoding="utf-8")
+    path.chmod(path.stat().st_mode | stat.S_IXUSR)
+
+
+class PackageContractTests(unittest.TestCase):
+    def test_theme_is_self_contained_and_secure_boot_safe(self) -> None:
+        config = (THEME / "theme.txt").read_text(encoding="utf-8")
+        self.assertIn('desktop-image: "background.png"', config)
+        self.assertTrue((THEME / "background.png").is_file())
+        with (THEME / "background.png").open("rb") as background:
+            self.assertEqual(background.read(16)[:8], b"\x89PNG\r\n\x1a\n")
+            width, height = struct.unpack(">II", background.read(8))
+        self.assertEqual(width * 9, height * 16)
+        # Preserve branding proportions on both 16:9 and 16:10. The live menu
+        # must own its panel instead of relying on a painted frame in the art.
+        self.assertIn('desktop-image-scale-method: "crop"', config)
+        self.assertIn('desktop-image-h-align: "left"', config)
+        self.assertIn('menu_pixmap_style = "menu_box_*.png"', config)
+        self.assertTrue((THEME / "menu_box_c.png").is_file())
+        self.assertTrue((THEME / "select_c.png").is_file())
+        self.assertFalse(list(THEME.rglob("*.pf2")))
+        self.assertNotIn("font:", config)
+        self.assertNotIn("item_font", config)
+        live = (THEME / "live-grub.cfg").read_text(encoding="utf-8")
+        self.assertIn('if [ "$theme_font_ready" = "1" ]', live)
+        self.assertIn("insmod gfxmenu", live)
+        self.assertIn("insmod png", live)
+        self.assertNotIn(".pf2", live)
+
+    def test_editor_has_enough_width_to_remain_left_anchored(self) -> None:
+        config = (THEME / "theme.txt").read_text(encoding="utf-8")
+        left = re.search(r'^terminal-left: "(\d+)%"$', config, re.MULTILINE)
+        width = re.search(r'^terminal-width: "(\d+)%"$', config, re.MULTILINE)
+        self.assertIsNotNone(left)
+        self.assertIsNotNone(width)
+        self.assertLessEqual(int(left.group(1)), 8)
+        # GRUB silently centers a terminal narrower than its 80-column editor.
+        self.assertGreaterEqual(int(width.group(1)), 66)
+        self.assertLessEqual(int(left.group(1)) + int(width.group(1)), 100)
+
+    def test_activation_is_guarded_and_does_not_change_other_grub_policy(self) -> None:
+        config = (PACKAGE / "assets/30-anduinos-hyperfluent.cfg").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("if [ -f /usr/share/grub/themes/anduinos-hyperfluent/theme.txt ]", config)
+        self.assertIn("GRUB_THEME=", config)
+        for forbidden in ("GRUB_TIMEOUT", "GRUB_DEFAULT", "GRUB_CMDLINE", "GRUB_TERMINAL"):
+            self.assertNotIn(forbidden, config)
+
+    def test_icon_classes_are_scoped_around_stock_grub_generators(self) -> None:
+        assets = PACKAGE / "assets"
+        names = (
+            "09_z_anduinos-hyperfluent-icons",
+            "30_s_anduinos-hyperfluent-efi-icon",
+            "31_anduinos-hyperfluent-icons-reset",
+        )
+        outputs = []
+        for name in names:
+            script = assets / name
+            subprocess.run(["/bin/sh", "-n", str(script)], check=True)
+            outputs.append(subprocess.check_output(["/bin/sh", str(script)], text=True))
+        self.assertTrue((THEME / "icons/recovery.png").is_file())
+        self.assertTrue((THEME / "icons/efi.png").is_file())
+
+        # Check the assembled GRUB language, not only each producer's shell.
+        config = (
+            'set menuentry_id_option="--id"\n'
+            + outputs[0]
+            + "menuentry 'AnduinOS' --class anduinos $menuentry_id_option 'main' {\n true\n}\n"
+            + "submenu 'Advanced options' $menuentry_id_option 'advanced' {\n"
+            + " menuentry 'Recovery' --class recovery $menuentry_id_option 'recovery' {\n true\n }\n}\n"
+            + "menuentry 'Windows' --class windows $menuentry_id_option 'windows' {\n true\n}\n"
+            + outputs[1]
+            + "menuentry 'UEFI Firmware Settings' $menuentry_id_option 'firmware' {\n true\n}\n"
+            + outputs[2]
+            + "menuentry 'Custom' $menuentry_id_option 'custom' {\n true\n}\n"
+        )
+        subprocess.run(["grub-script-check"], input=config, text=True, check=True)
+        self.assertIn('set menuentry_id_option="--class recovery $menuentry_id_option"', outputs[0])
+        self.assertIn('set menuentry_id_option="--class efi $anduinos_theme_original_id_option"', outputs[1])
+        self.assertIn('set menuentry_id_option="$anduinos_theme_original_id_option"', outputs[2])
+
+    def test_maintainer_scripts_refresh_only_on_install_and_remove(self) -> None:
+        for script in (POSTINST, POSTRM):
+            subprocess.run(["/bin/sh", "-n", script], check=True)
+        for script, action, refresh in (
+            (POSTINST, "configure", True),
+            (POSTINST, "abort-upgrade", False),
+            (POSTRM, "remove", True),
+            (POSTRM, "purge", True),
+            (POSTRM, "upgrade", False),
+            (POSTRM, "failed-upgrade", False),
+        ):
+            with self.subTest(script=script.name, action=action):
+                with tempfile.TemporaryDirectory() as temporary:
+                    directory = Path(temporary)
+                    log = directory / "update-grub.log"
+                    fake_command(directory, "systemd-detect-virt", "exit 1")
+                    fake_command(directory, "ischroot", "exit 1")
+                    fake_command(
+                        directory,
+                        "update-grub",
+                        'printf "updated\\n" >> "$GRUB_TEST_LOG"',
+                    )
+                    env = {
+                        **os.environ,
+                        "PATH": f"{directory}:/usr/bin:/bin",
+                        "GRUB_TEST_LOG": str(log),
+                        "ANDUINOS_LIVE_MARKER": str(directory / "missing-live-marker"),
+                    }
+                    subprocess.run(["/bin/sh", script, action], env=env, check=True)
+                    self.assertEqual(log.exists(), refresh)
+
+    def test_chroot_does_not_refresh_host_grub(self) -> None:
+        for detector in ("systemd-detect-virt", "ischroot"):
+            with self.subTest(detector=detector), tempfile.TemporaryDirectory() as temporary:
+                directory = Path(temporary)
+                log = directory / "update-grub.log"
+                for name in ("systemd-detect-virt", "ischroot"):
+                    fake_command(directory, name, f"exit {0 if name == detector else 1}")
+                fake_command(directory, "update-grub", f'touch "{log}"')
+                env = {
+                    **os.environ,
+                    "PATH": f"{directory}:/usr/bin:/bin",
+                    "ANDUINOS_LIVE_MARKER": str(directory / "missing-live-marker"),
+                }
+                for script, action in ((POSTINST, "configure"), (POSTRM, "remove")):
+                    subprocess.run(["/bin/sh", script, action], env=env, check=True)
+                self.assertFalse(log.exists())
+
+    def test_live_session_does_not_refresh_grub(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            marker = directory / "live-environment"
+            marker.write_text("ANDUINOS_LIVE=1\n", encoding="utf-8")
+            log = directory / "update-grub.log"
+            fake_command(directory, "systemd-detect-virt", "exit 1")
+            fake_command(directory, "ischroot", "exit 1")
+            fake_command(directory, "update-grub", f'touch "{log}"')
+            env = {
+                **os.environ,
+                "PATH": f"{directory}:/usr/bin:/bin",
+                "ANDUINOS_LIVE_MARKER": str(marker),
+            }
+            for script, action in (
+                (POSTINST, "configure"),
+                (POSTRM, "remove"),
+                (POSTRM, "purge"),
+            ):
+                subprocess.run(["/bin/sh", script, action], env=env, check=True)
+            self.assertFalse(log.exists())
+
+            marker.write_text("ANDUINOS_LIVE=0\n", encoding="utf-8")
+            subprocess.run(["/bin/sh", POSTINST, "configure"], env=env, check=True)
+            self.assertTrue(log.exists())
+
+
+if __name__ == "__main__":
+    unittest.main()

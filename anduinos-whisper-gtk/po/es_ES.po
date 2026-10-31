@@ -1,0 +1,696 @@
+# anduinos-whisper-gtk translations.
+# Copyright (C) 2026 AnduinOS contributors
+# This file is distributed under the same license as anduinos-whisper-gtk.
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-whisper-gtk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-13 10:01+0000\n"
+"PO-Revision-Date: 2026-09-09 12:05+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/anduinos_whisper_gtk/app.py:30
+msgid "Automatic detection"
+msgstr "Detección automática del idioma"
+
+#: src/anduinos_whisper_gtk/app.py:31
+#: data/voice-typing@anduinos.com/extension.js:88
+#: data/voice-typing@anduinos.com/extension.js:89
+msgid "Simplified Chinese"
+msgstr "Chino simplificado"
+
+#: src/anduinos_whisper_gtk/app.py:32
+#: data/voice-typing@anduinos.com/extension.js:89
+msgid "Traditional Chinese"
+msgstr "Chino tradicional"
+
+#: src/anduinos_whisper_gtk/app.py:33
+#: data/voice-typing@anduinos.com/extension.js:90
+msgid "English"
+msgstr "Inglés"
+
+#: src/anduinos_whisper_gtk/app.py:34
+#: data/voice-typing@anduinos.com/extension.js:90
+msgid "Spanish"
+msgstr "Español"
+
+#: src/anduinos_whisper_gtk/app.py:35
+#: data/voice-typing@anduinos.com/extension.js:91
+msgid "French"
+msgstr "Francés"
+
+#: src/anduinos_whisper_gtk/app.py:36
+#: data/voice-typing@anduinos.com/extension.js:91
+msgid "German"
+msgstr "Alemán"
+
+#: src/anduinos_whisper_gtk/app.py:37
+#: data/voice-typing@anduinos.com/extension.js:91
+msgid "Japanese"
+msgstr "Japonés"
+
+#: src/anduinos_whisper_gtk/app.py:38
+#: data/voice-typing@anduinos.com/extension.js:91
+msgid "Korean"
+msgstr "Coreano"
+
+#: src/anduinos_whisper_gtk/app.py:39
+#: data/voice-typing@anduinos.com/extension.js:92
+msgid "Russian"
+msgstr "Ruso"
+
+#: src/anduinos_whisper_gtk/app.py:40
+#: data/voice-typing@anduinos.com/extension.js:92
+msgid "Portuguese"
+msgstr "Portugués"
+
+#: src/anduinos_whisper_gtk/app.py:44 src/anduinos_whisper_gtk/app.py:67
+#: src/anduinos_whisper_gtk/app.py:97 src/anduinos_whisper_gtk/app.py:438
+msgid "Voice Typing"
+msgstr "Dictado por voz"
+
+#: src/anduinos_whisper_gtk/app.py:45
+#: data/voice-typing@anduinos.com/extension.js:71
+#: data/voice-typing@anduinos.com/extension.js:112
+#: data/voice-typing@anduinos.com/extension.js:170
+#: data/voice-typing@anduinos.com/extension.js:326
+#: data/voice-typing@anduinos.com/extension.js:442
+#: data/voice-typing@anduinos.com/extension.js:477
+#: data/voice-typing@anduinos.com/extension.js:504
+msgid "Ready"
+msgstr "Listo"
+
+#: src/anduinos_whisper_gtk/app.py:46
+#: data/voice-typing@anduinos.com/extension.js:74
+#: data/voice-typing@anduinos.com/extension.js:393
+#: data/voice-typing@anduinos.com/extension.js:480
+msgid "Listening…"
+msgstr "Escuchando…"
+
+#: src/anduinos_whisper_gtk/app.py:47
+msgid "Sign out required"
+msgstr "Cierre de sesión requerido"
+
+#: src/anduinos_whisper_gtk/app.py:48
+msgid "Needs attention"
+msgstr "Requiere atención"
+
+#: src/anduinos_whisper_gtk/app.py:52
+msgid "Sign out and back in to finish enabling Voice Typing."
+msgstr ""
+"Cierre la sesión y vuelva a iniciarla para finalizar la activación del "
+"dictado por voz."
+
+#: src/anduinos_whisper_gtk/app.py:92
+msgid "Settings"
+msgstr "Configuración"
+
+#: src/anduinos_whisper_gtk/app.py:99
+msgid ""
+"Use the keyboard shortcut to dictate into the focused application. Speech is "
+"processed locally and is never uploaded."
+msgstr ""
+"Use el atajo de teclado para dictar en la aplicación enfocada. El audio se "
+"procesa en este equipo y nunca se sube."
+
+#: src/anduinos_whisper_gtk/app.py:104
+msgid "Status"
+msgstr "Estado"
+
+#: src/anduinos_whisper_gtk/app.py:104
+msgid "Checking the local service…"
+msgstr "Comprobando el servicio local…"
+
+#: src/anduinos_whisper_gtk/app.py:108 src/anduinos_whisper_gtk/app.py:432
+msgid "Start"
+msgstr "Iniciar"
+
+#: src/anduinos_whisper_gtk/app.py:117
+msgid "Input"
+msgstr "Entrada"
+
+#: src/anduinos_whisper_gtk/app.py:118
+msgid "System default"
+msgstr "Predeterminado del sistema"
+
+#: src/anduinos_whisper_gtk/app.py:121
+msgid "Microphone"
+msgstr "Micrófono"
+
+#: src/anduinos_whisper_gtk/app.py:132
+msgid "Language"
+msgstr "Idioma"
+
+#: src/anduinos_whisper_gtk/app.py:143
+msgid "Behavior"
+msgstr "Comportamiento"
+
+#: src/anduinos_whisper_gtk/app.py:145
+msgid "Keyboard shortcut"
+msgstr "Atajo de teclado"
+
+#: src/anduinos_whisper_gtk/app.py:146
+msgid "Activate voice typing from anywhere"
+msgstr "Activar el dictado por voz desde cualquier lugar"
+
+#: src/anduinos_whisper_gtk/app.py:150
+msgid "Disabled"
+msgstr "Deshabilitado"
+
+#: src/anduinos_whisper_gtk/app.py:154
+msgid "Change…"
+msgstr "Cambiar…"
+
+#: src/anduinos_whisper_gtk/app.py:166
+msgid "Noise reduction"
+msgstr "Reducción de ruido"
+
+#: src/anduinos_whisper_gtk/app.py:167
+msgid ""
+"Reduce background noise and balance microphone level; restart listening "
+"after changing this"
+msgstr ""
+"Reducir el ruido de fondo y equilibrar el nivel del micrófono; reiniciar la "
+"escucha tras cambiarlo"
+
+#: src/anduinos_whisper_gtk/app.py:171
+msgid "Automatic punctuation"
+msgstr "Puntuación automática"
+
+#: src/anduinos_whisper_gtk/app.py:172
+msgid "Keep punctuation recognized from speech"
+msgstr "Mantener la puntuación reconocida a partir del habla"
+
+#: src/anduinos_whisper_gtk/app.py:176
+msgid "Voice commands"
+msgstr "Comandos de voz"
+
+#: src/anduinos_whisper_gtk/app.py:177
+msgid "Recognize commands such as “new line” and “comma”"
+msgstr "Reconocer comandos como «nueva línea» y «coma»"
+
+#: src/anduinos_whisper_gtk/app.py:181
+msgid "Final result preview"
+msgstr "Vista previa del resultado final"
+
+#: src/anduinos_whisper_gtk/app.py:182
+msgid "Pause briefly before inserting the completed phrase"
+msgstr "Haga una breve pausa antes de insertar el texto final"
+
+#: src/anduinos_whisper_gtk/app.py:186
+msgid "Start and stop sounds"
+msgstr "Sonidos de inicio y parada"
+
+#: src/anduinos_whisper_gtk/app.py:187
+msgid "Play a subtle microphone cue"
+msgstr "Reproducir una señal sonora discreta para el micrófono"
+
+#: src/anduinos_whisper_gtk/app.py:197
+msgid "Performance diagnostics"
+msgstr "Diagnóstico de rendimiento"
+
+#: src/anduinos_whisper_gtk/app.py:198
+msgid ""
+"Export timings from the current voice session. No recordings or recognized "
+"text are included."
+msgstr ""
+"Exportar los tiempos de la sesión de voz actual. No se incluyen grabaciones "
+"ni texto reconocido."
+
+#: src/anduinos_whisper_gtk/app.py:200 src/anduinos_whisper_gtk/app.py:294
+msgid "Export diagnostic report"
+msgstr "Exportar informe de diagnóstico"
+
+#: src/anduinos_whisper_gtk/app.py:201
+msgid "Export"
+msgstr "Exportar"
+
+#: src/anduinos_whisper_gtk/app.py:209
+msgid "Recognition performance"
+msgstr "Rendimiento del reconocimiento"
+
+#: src/anduinos_whisper_gtk/app.py:211
+msgid ""
+"Changes apply next time listening starts. Automatic selection measures "
+"bundled audio without using your microphone or changing your model."
+msgstr ""
+"Los cambios se aplicarán la próxima vez que se inicie la escucha. La "
+"selección automática mide el audio integrado sin usar su micrófono ni "
+"cambiar su modelo."
+
+#: src/anduinos_whisper_gtk/app.py:217
+msgid ""
+"First use takes at most 10 seconds and results are cached. Wait for "
+"Listening before speaking; press the microphone button again to cancel "
+"preparation."
+msgstr ""
+"La primera ejecución tarda como máximo 10 segundos y los resultados se "
+"almacenan en caché. Espera a que aparezca «Escuchando» antes de hablar; "
+"vuelve a pulsar el botón del micrófono para cancelar la preparación."
+
+#: src/anduinos_whisper_gtk/app.py:223
+msgid "Recognition backend"
+msgstr "Backend de reconocimiento"
+
+#: src/anduinos_whisper_gtk/app.py:224
+msgid "Automatic (measured)"
+msgstr "Automático (medido)"
+
+#: src/anduinos_whisper_gtk/app.py:224
+msgid "CPU"
+msgstr "CPU"
+
+#: src/anduinos_whisper_gtk/app.py:224
+msgid "GPU (CPU fallback)"
+msgstr "GPU (con respaldo de CPU)"
+
+#: src/anduinos_whisper_gtk/app.py:231
+msgid "Recognition threads"
+msgstr "Hilos de reconocimiento"
+
+#: src/anduinos_whisper_gtk/app.py:231
+msgid "0 selects automatically; more threads are not always faster"
+msgstr "0 selecciona automáticamente; más hilos no siempre es más rápido"
+
+#: src/anduinos_whisper_gtk/app.py:239
+msgid "Measure again on next start"
+msgstr "Volver a medir en el próximo inicio"
+
+#: src/anduinos_whisper_gtk/app.py:241
+msgid "A complete test may take up to one minute. The microphone remains off."
+msgstr ""
+"Una prueba completa puede tardar hasta un minuto. El micrófono permanece "
+"apagado."
+
+#: src/anduinos_whisper_gtk/app.py:244
+msgid "Retest"
+msgstr "Repetir prueba"
+
+#: src/anduinos_whisper_gtk/app.py:248
+msgid "Restore automatic backend and thread selection"
+msgstr "Restaurar la selección automática de backend e hilos"
+
+#: src/anduinos_whisper_gtk/app.py:250
+msgid "Restore defaults"
+msgstr "Restaurar valores predeterminados"
+
+#: src/anduinos_whisper_gtk/app.py:273
+msgid "Performance will be measured next time listening starts"
+msgstr "El rendimiento se medirá la próxima vez que se inicie la escucha"
+
+#: src/anduinos_whisper_gtk/app.py:288
+msgid "No diagnostic report available"
+msgstr "No hay informe de diagnóstico disponible"
+
+#: src/anduinos_whisper_gtk/app.py:289
+msgid ""
+"Start a voice session, then export its report before closing the microphone "
+"bar."
+msgstr ""
+"Inicia una sesión de voz y exporta su informe antes de cerrar la barra del "
+"micrófono."
+
+#: src/anduinos_whisper_gtk/app.py:291 src/anduinos_whisper_gtk/app.py:315
+#: src/anduinos_whisper_gtk/app.py:647
+msgid "Close"
+msgstr "Cerrar"
+
+#: src/anduinos_whisper_gtk/app.py:313
+msgid "Could not save diagnostic report"
+msgstr "No se pudo guardar el informe de diagnóstico"
+
+#: src/anduinos_whisper_gtk/app.py:314
+msgid "Check that the selected folder is writable and has free space."
+msgstr ""
+"Compruebe que la carpeta seleccionada sea de escritura y tenga espacio libre."
+
+#: src/anduinos_whisper_gtk/app.py:319
+msgid "Models"
+msgstr "Modelos"
+
+#: src/anduinos_whisper_gtk/app.py:322
+msgid "Offline speech models"
+msgstr "Modelos de voz sin conexión"
+
+#: src/anduinos_whisper_gtk/app.py:324
+msgid ""
+"The Base multilingual model is installed with Voice Typing. Optional models "
+"are verified before use."
+msgstr ""
+"El modelo Base multilingüe se instala con el dictado por voz. Los modelos "
+"opcionales se verifican antes de su uso."
+
+#: src/anduinos_whisper_gtk/app.py:337
+msgid "Remove downloaded model"
+msgstr "Eliminar modelo descargado"
+
+#: src/anduinos_whisper_gtk/app.py:340
+#, python-format
+msgid "Remove %s"
+msgstr "Eliminar %s"
+
+#: src/anduinos_whisper_gtk/app.py:354
+msgid "Microphone Training"
+msgstr "Calibración del micrófono"
+
+#: src/anduinos_whisper_gtk/app.py:358
+msgid "Check your speaking setup"
+msgstr "Compruebe su configuración de voz"
+
+#: src/anduinos_whisper_gtk/app.py:360
+msgid ""
+"Whisper does not need a personal voice profile. Use this page to check the "
+"processed microphone level, distance, and background noise. This test does "
+"not train the model or measure recognition accuracy."
+msgstr ""
+"Whisper no requiere un perfil de voz personal. Use esta página para "
+"comprobar el nivel del micrófono procesado, la distancia y el ruido de "
+"fondo. Esta prueba no entrena el modelo ni mide la precisión del "
+"reconocimiento."
+
+#: src/anduinos_whisper_gtk/app.py:367
+msgid "Practice phrase"
+msgstr "Frase de práctica"
+
+#: src/anduinos_whisper_gtk/app.py:368
+msgid "“Voice typing makes writing faster and more accessible.”"
+msgstr "«El dictado por voz hace que escribir sea más rápido y accesible»."
+
+#: src/anduinos_whisper_gtk/app.py:374
+msgid "Input level"
+msgstr "Nivel de entrada"
+
+#: src/anduinos_whisper_gtk/app.py:375
+msgid "Speak normally; aim for the middle of the meter"
+msgstr ""
+"Hable con normalidad; procure mantener el nivel de entrada cerca del centro "
+"del medidor"
+
+#: src/anduinos_whisper_gtk/app.py:379
+msgid "Microphone input level"
+msgstr "Nivel de entrada del micrófono"
+
+#: src/anduinos_whisper_gtk/app.py:385
+msgid "Microphone test"
+msgstr "Prueba de micrófono"
+
+#: src/anduinos_whisper_gtk/app.py:386
+msgid "No audio is saved during this test"
+msgstr "No se guarda audio durante esta prueba"
+
+#: src/anduinos_whisper_gtk/app.py:388 src/anduinos_whisper_gtk/app.py:707
+msgid "Start Test"
+msgstr "Iniciar prueba"
+
+#: src/anduinos_whisper_gtk/app.py:393
+msgid "Tips for better recognition"
+msgstr "Consejos para mejorar el reconocimiento"
+
+#: src/anduinos_whisper_gtk/app.py:396
+msgid "Speak naturally"
+msgstr "Hable de forma natural"
+
+#: src/anduinos_whisper_gtk/app.py:397
+msgid "Use short phrases and pause briefly between sentences"
+msgstr "Use frases cortas y haga una breve pausa entre oraciones"
+
+#: src/anduinos_whisper_gtk/app.py:401
+msgid "Reduce background noise"
+msgstr "Reduzca el ruido de fondo"
+
+#: src/anduinos_whisper_gtk/app.py:402
+msgid "Keep the microphone close without speaking directly into it"
+msgstr "Mantenga el micrófono cerca, pero no hable directamente hacia él"
+
+#: src/anduinos_whisper_gtk/app.py:406
+msgid "Choose the language"
+msgstr "Elija el idioma"
+
+#: src/anduinos_whisper_gtk/app.py:407
+msgid "A fixed language is faster than automatic detection"
+msgstr "Seleccionar un idioma es más rápido que detectarlo automáticamente"
+
+#: src/anduinos_whisper_gtk/app.py:430
+msgid "Stop"
+msgstr "Detener"
+
+#: src/anduinos_whisper_gtk/app.py:448
+msgid "Live transcription"
+msgstr "Transcripción en tiempo real"
+
+#: src/anduinos_whisper_gtk/app.py:449
+msgid "Automatic enables live transcription only when performance allows"
+msgstr ""
+"El modo automático activa la transcripción en directo solo si el rendimiento "
+"lo permite"
+
+#: src/anduinos_whisper_gtk/app.py:450
+msgid "Automatic"
+msgstr "Automático"
+
+#: src/anduinos_whisper_gtk/app.py:450
+msgid "On"
+msgstr "Activado"
+
+#: src/anduinos_whisper_gtk/app.py:450
+#: data/voice-typing@anduinos.com/extension.js:414
+#: data/voice-typing@anduinos.com/extension.js:475
+msgid "Off"
+msgstr "Desactivado"
+
+#: src/anduinos_whisper_gtk/app.py:491
+msgid "Set Keyboard Shortcut"
+msgstr "Establecer atajo de teclado"
+
+#: src/anduinos_whisper_gtk/app.py:513
+msgid "Press the new shortcut"
+msgstr "Pulse el nuevo atajo"
+
+#: src/anduinos_whisper_gtk/app.py:517
+msgid "The keys you press will be used to start or stop Voice Typing."
+msgstr ""
+"Las teclas que pulse se utilizarán para iniciar o detener el dictado por voz."
+
+#: src/anduinos_whisper_gtk/app.py:525
+msgid "Waiting for input…"
+msgstr "Esperando entrada…"
+
+#: src/anduinos_whisper_gtk/app.py:531
+msgid "Esc cancels · Backspace disables the shortcut"
+msgstr "Esc cancela · Backspace deshabilita el atajo"
+
+#: src/anduinos_whisper_gtk/app.py:593
+#, python-format
+msgid "Download %s from Hugging Face?"
+msgstr "¿Descargar %s desde Hugging Face?"
+
+#: src/anduinos_whisper_gtk/app.py:595
+msgid ""
+"This optional model is hosted by Hugging Face, a third-party service. "
+"AnduinOS is not affiliated with, sponsored by, or partnered with Hugging "
+"Face.\n"
+"\n"
+"If you continue, your computer will connect directly to huggingface.co. "
+"Hugging Face will receive your public IP address and that address may reveal "
+"your approximate location.\n"
+"\n"
+"Privacy policy: https://huggingface.co/privacy"
+msgstr ""
+"Este modelo opcional está alojado en Hugging Face, un servicio de terceros. "
+"AnduinOS no está afiliado a Hugging Face, no cuenta con su patrocinio ni "
+"mantiene ninguna asociación con ella.\n"
+"\n"
+"Si continúa, su equipo se conectará directamente a huggingface.co. Hugging "
+"Face recibirá su dirección IP pública, que podría revelar su ubicación "
+"aproximada.\n"
+"\n"
+"Política de privacidad: https://huggingface.co/privacy"
+
+#: src/anduinos_whisper_gtk/app.py:604 src/anduinos_whisper_gtk/app.py:658
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/anduinos_whisper_gtk/app.py:605
+msgid "Continue Download"
+msgstr "Continuar con la descarga"
+
+#: src/anduinos_whisper_gtk/app.py:627 src/anduinos_whisper_gtk/app.py:686
+msgid "Downloading…"
+msgstr "Descargando…"
+
+#: src/anduinos_whisper_gtk/app.py:645
+msgid "Retry"
+msgstr "Reintentar"
+
+#: src/anduinos_whisper_gtk/app.py:646
+msgid "Model download failed"
+msgstr "La descarga del modelo ha fallado"
+
+#: src/anduinos_whisper_gtk/app.py:655
+#, python-format
+msgid "Remove %s model?"
+msgstr "¿Eliminar el modelo %s?"
+
+#: src/anduinos_whisper_gtk/app.py:656
+msgid "The model can be downloaded again later."
+msgstr "El modelo se puede volver a descargar más tarde."
+
+#: src/anduinos_whisper_gtk/app.py:659
+msgid "Remove"
+msgstr "Eliminar"
+
+#: src/anduinos_whisper_gtk/app.py:695
+msgid "In Use"
+msgstr "En uso"
+
+#: src/anduinos_whisper_gtk/app.py:698
+msgid "Use"
+msgstr "Usar"
+
+#: src/anduinos_whisper_gtk/app.py:701
+msgid "Download"
+msgstr "Descargar"
+
+#: src/anduinos_whisper_gtk/app.py:707
+msgid "Stop Test"
+msgstr "Detener prueba"
+
+#: src/anduinos_whisper_gtk/app.py:741
+msgid "AnduinOS Voice Typing"
+msgstr "Dictado por voz de AnduinOS"
+
+#: src/anduinos_whisper_gtk/app.py:743
+msgid "AnduinOS Team"
+msgstr "Equipo de AnduinOS"
+
+#: src/anduinos_whisper_gtk/app.py:745
+msgid "Private, offline speech-to-text for the whole desktop."
+msgstr "Dictado por voz privado y sin conexión para todo el escritorio."
+
+#: src/anduinos_whisper_gtk/app.py:753
+#, python-format
+msgid "%.0f MB"
+msgstr "%.0f MB"
+
+#: data/voice-typing@anduinos.com/extension.js:72
+msgid "Loading speech model…"
+msgstr "Cargando modelo de voz…"
+
+#: data/voice-typing@anduinos.com/extension.js:73
+msgid "Measuring performance — microphone off"
+msgstr "Midiendo rendimiento — micrófono desactivado"
+
+#: data/voice-typing@anduinos.com/extension.js:75
+msgid "Recognizing…"
+msgstr "Reconociendo…"
+
+#: data/voice-typing@anduinos.com/extension.js:76
+#: data/voice-typing@anduinos.com/extension.js:401
+msgid "Finishing recognition…"
+msgstr "Finalizando el reconocimiento…"
+
+#: data/voice-typing@anduinos.com/extension.js:77
+msgid "Testing microphone…"
+msgstr "Probando el micrófono…"
+
+#: data/voice-typing@anduinos.com/extension.js:78
+msgid "No speech detected"
+msgstr "No se ha detectado voz"
+
+#: data/voice-typing@anduinos.com/extension.js:79
+msgid "Microphone unavailable"
+msgstr "Micrófono no disponible"
+
+#: data/voice-typing@anduinos.com/extension.js:83
+#: data/voice-typing@anduinos.com/extension.js:84
+#, javascript-format
+msgid "Performance test… %ds"
+msgstr "Prueba de rendimiento… %d s"
+
+#: data/voice-typing@anduinos.com/extension.js:88
+#: data/voice-typing@anduinos.com/extension.js:344
+msgid "Auto"
+msgstr "Automático"
+
+#: data/voice-typing@anduinos.com/extension.js:597
+msgid "Voice typing is disabled in password fields"
+msgstr "El dictado por voz está deshabilitado en los campos de contraseña"
+
+#: data/voice-typing@anduinos.com/extension.js:603
+msgid "Select a text field before dictating"
+msgstr "Seleccione un campo de texto antes de dictar"
+
+#~ msgid "Show words in the microphone bar while you speak"
+#~ msgstr "Mostrar las palabras en la barra del micrófono mientras habla"
+
+#, javascript-format
+#~ msgid ""
+#~ "Optimizing recognition for first use: %d seconds remaining (microphone "
+#~ "off; click the microphone to cancel)"
+#~ msgstr ""
+#~ "Optimizando el reconocimiento para el primer uso: quedan %d segundos "
+#~ "(micrófono apagado; haga clic en el micrófono para cancelar)"
+
+#, javascript-format
+#~ msgid ""
+#~ "Measuring recognition performance: %d seconds remaining (microphone off; "
+#~ "click the microphone to cancel)"
+#~ msgstr ""
+#~ "Midiendo rendimiento del reconocimiento: quedan %d segundos (micrófono "
+#~ "desactivado; haga clic en el micrófono para cancelar)"
+
+#~ msgid "Briefly preview recognized text before inserting it"
+#~ msgstr ""
+#~ "Mostrar una vista previa breve del texto reconocido antes de insertarlo"
+
+#~ msgid "Configure offline system-wide dictation"
+#~ msgstr "Configurar el dictado por voz sin conexión a nivel de sistema"
+
+#~ msgid "Enable exact-match punctuation and layout commands"
+#~ msgstr ""
+#~ "Activar comandos de coincidencia exacta para la puntuación y el formato "
+#~ "de texto"
+
+#~ msgid "Global voice typing shortcut"
+#~ msgstr "Atajo global de dictado por voz"
+
+#~ msgid "Horizontal offset from the centered overlay position"
+#~ msgstr ""
+#~ "Desplazamiento horizontal desde la posición centrada de la superposición"
+
+#~ msgid "Keep punctuation recognized by Whisper"
+#~ msgstr "Mantener la puntuación reconocida por Whisper"
+
+#~ msgid "PipeWire node name, or empty for the system default"
+#~ msgstr ""
+#~ "Nombre del nodo de PipeWire; déjelo vacío para usar el nodo "
+#~ "predeterminado del sistema"
+
+#~ msgid "Play a subtle sound when listening starts or stops"
+#~ msgstr "Reproducir un sonido discreto al iniciar o detener la escucha"
+
+#~ msgid "Preview duration in milliseconds"
+#~ msgstr "Duración de la vista previa en milisegundos"
+
+#~ msgid "Recognition language and Chinese output script"
+#~ msgstr "Idioma de reconocimiento y guion de salida para chino"
+
+#~ msgid "Show periodically refreshed partial transcripts while speaking"
+#~ msgstr ""
+#~ "Mostrar transcripciones parciales actualizadas periódicamente mientras "
+#~ "habla"
+
+#~ msgid "Speech recognition model"
+#~ msgstr "Modelo de reconocimiento de voz"
+
+#~ msgid "Voice activity threshold in decibels"
+#~ msgstr "Umbral de actividad de voz en decibelios"
+
+#~ msgid "voice;typing;dictation;speech;microphone;accessibility;"
+#~ msgstr "voz;escritura;dictado;habla;micrófono;accesibilidad;"

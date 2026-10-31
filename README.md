@@ -62,7 +62,6 @@ User **cannot** install both.  Dpkg removes the Ubuntu package at install time.
 | 10 | `anduinos-session` | `ubuntu-session` | yes | + postinst purges `10_ubuntu-session.gschema.override` |
 | 11 | `anduinos-gnome-extensions` | `gnome-shell-ubuntu-extensions` | yes | Metapackage — AnduinOS-curated extension set |
 | 13 | `anduinos-software-properties-common` | `software-properties-common` | yes | Patches `add-apt-repository` → `--distro=ubuntu` |
-| 14 | `anduinos-software-properties-gtk` | `software-properties-gtk` | yes | Strips Ubuntu Pro ads; suppresses `ubuntu-pro-client` dep |
 | 15 | `firefox-anduinos` | `firefox` | — | Mozilla Apt `.deb`, not the snap wrapper |
 | 16 | `firmware-sof-anduinos` | `firmware-sof-signed` | yes | Newer Intel SOF from `thesofproject/sof-bin` |
 | 17 | `alsa-ucm-conf-anduinos` | `alsa-ucm-conf` | yes | `1.2.16` vs Ubuntu `1.2.15.3` |
@@ -97,7 +96,7 @@ These replace Ubuntu **files** without removing the Ubuntu **package**.
 | `base-files` | `os-release`, `lsb-release`, `issue`, `issue.net`, `ubuntu-logo-*.png`, `legal` | Epoch `1:` outranks Ubuntu |
 | `anduinos-apt-config` | APT sources (`packages.anduinos.com`) + preferences | Dual pin: `origin` (domain) + `release o=` (Origin field), both at priority 1001; also shipped as `anduinos-apt-config-dev` (→ `apkg-dev.aiursoft.com`) |
 | `anduinos-mimeapps` | `gnome-mimeapps.list` | `dpkg-divert` (original → `.ubuntu-original`) |
-| `anduinos-bwrap-hack` | `bwrap` → `bwrap.real` + shim | Swallows `bwrap` failures on Live squashfs |
+| `anduinos-input-method-policy` | Mozc login initialization script | `dpkg-divert`; input sources stay under installer and user control |
 
 `anduinos-rime` is intentionally absent from this override table. Starting
 with `2.0.1-2`, it owns only Rime Ice resources and an additive distribution
@@ -148,6 +147,7 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | Package | Type | Description |
 |---|---|---|
 | `anduinos-container` | Metapackage | Minimal container base (shell, networking, sudo, editor) |
+| `anduinos-boot-tools` | Boot tools | Existing initrd verifier, Dracut proof module, and migration safety hooks |
 | `anduinos-core-system` | Metapackage | Core system foundation (kernel, networking, boot, firmware, APT, security) |
 | `anduinos-kernel-parameters` | Config | AnduinOS 2.0 desktop GRUB drop-in enabling `preempt=full` on Ubuntu's generic kernel |
 | `anduinos-desktop-apps` | Metapackage | Default application selection (browser, office, media, utilities) |
@@ -157,10 +157,16 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-fluent-gtk-theme` | Theme | Fluent UI GTK theme |
 | `anduinos-fluent-icon-theme` | Theme | Fluent UI Icon theme |
 | `anduinos-gdm3-wallpaper` | Theme | GDM3 dynamic wallpaper engine |
-| `anduinos-appearance` | App | Taskbar layout switcher (Windows 11 / Classic) |
+| `anduinos-appearance` | App | Taskbar layout switcher (Centered / Classic) |
 | `anduinos-appstore` | App | Flatpak-based app store with Flathub remote |
+| `anduinos-control-panel` | App | GTK4/libadwaita category hub for system settings, hardware tools, accounts, applications, appearance, and recovery |
+| `anduinos-whisper-framework` | Optional service | Local PipeWire and whisper.cpp speech-recognition framework with the multilingual Base model |
+| `anduinos-whisper-gtk` | Optional app | Voice Typing settings, microphone training, global shortcut, and non-focusing GNOME overlay |
 | `anduinos-driver-center` | App | Focused GTK4 driver manager for graphics, Xbox controllers, and Secure Boot trust |
 | `anduinos-btrfs-snapshots-manager` | App | GTK4/libadwaita manager for symmetric System and Personal Files Btrfs snapshots, automatic retention, file recovery, and guarded system rollback |
+| `anduinos-rescue-center` | Live app | GTK4/libadwaita rescue environment for discovering offline AnduinOS installations and recovering systems, accounts, files, and Btrfs snapshots |
+| `anduinos-dracut-migration` | Migration | Retry-safe bootstrap that moves existing installations from initramfs-tools to the published pure-Dracut package set |
+| `anduinos-live-layers` | Core | Dracut Live root integration, temporary/persistent overlay composition, expanded-USB GPT repair, `/cdrom`, and installer source contracts |
 | `anduinos-secureboot-toolkit` | Library | Shared Secure Boot, MOK enrollment, and DKMS signing health/repair backend and UI |
 | `anduinos-deskmon` | Service | Desktop monitoring / hardware info agent |
 | `anduinos-system-tweaks` | Config | System tuning (swappiness, I/O scheduler, sysctl) |
@@ -169,14 +175,14 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-dconf-runtime` | Core | dconf profile and dpkg trigger runtime for GNOME system defaults |
 | `anduinos-dconf-defaults` | Config | dconf / gsettings defaults for GNOME |
 | `anduinos-gnome-shell-locale` | Locale | GNOME Shell locale / text overrides |
-| `anduinos-live-settings` | Config | Casper regional hooks and Live-only systemd policy; removed before target bootloader setup |
+| `anduinos-live-settings` | Config | Dracut Live-session regional setup and Live-only systemd policy; removed before target bootloader setup |
 
-### Kernel ownership contract (Resolute)
+### Kernel ownership contract
 
-AnduinOS supports the Resolute kernel path. The canonical owner of kernel
-availability is `anduinos-core-system`, which has a hard dependency on Ubuntu's
-`linux-generic-hwe-26.04` metapackage. The installed desktop reaches it through
-this mandatory chain:
+The canonical owner of kernel availability is `anduinos-core-system`. It
+depends on Ubuntu's `linux-generic-hwe-26.04` on Resolute and `linux-generic`
+on Stonking. Both metapackages retain the matching image and headers. The
+installed Resolute desktop reaches its kernel through this mandatory chain:
 
 ```
 anduinos-desktop
@@ -189,18 +195,45 @@ anduinos-desktop
 
 This dependency chain, rather than an ISO build script, must install and retain
 the kernel. ISO builders must not directly install the split image or headers
-metapackages and must not add a parallel dependency on `linux-generic`. The
+metapackages or add a different kernel track alongside the suite's selection. The
 native installer copies the packaged Live filesystem, retains the kernel
-packages in the target, regenerates the initramfs and bootloader configuration,
-and verifies that at least one kernel has a matching initramfs.
+packages in the target, regenerates the target Dracut initrd and bootloader
+configuration, and verifies that at least one kernel has a matching initrd.
+
+AnduinOS has fully adopted Dracut as its only supported initramfs generator;
+support for `initramfs-tools` has been discontinued. Legacy migration and
+compatibility helpers exist only to transition systems to Dracut, not to
+maintain a second supported boot stack. New packages and boot integrations
+must target Dracut rather than introduce `initramfs-tools` dependencies or hooks.
+
+AnduinOS owns one early-boot stack: `anduinos-core-system` depends directly on
+`dracut`, `dracut-core`, and `dracut-install`, and conflicts with Casper and the
+complete initramfs-tools/finalrd stack. Existing Resolute systems receive
+`anduinos-dracut-migration` through the independently upgradable desktop
+metapackage, keeping host boot migration out of shared APT and container
+layers. Its timer waits until every required pure-Dracut candidate is
+published, rejects any APT plan that removes an `anduinos-*` package, replaces
+the generator stack in one transaction, and validates every generated image
+with `lsinitrd` before recording completion. The PackageKit bootstrap,
+synchronous boot-tools guard, power-loss, atomic-GRUB, and fallback implementation
+and its release qualification contract are documented in
+[`anduinos-dracut-migration/DESIGN.md`](anduinos-dracut-migration/DESIGN.md).
+
+`anduinos-core-system` is a dependency-only metapackage. `anduinos-boot-tools`
+owns the existing boot scripts and Dracut proof module formerly shipped by core;
+Plymouth and Disk Snapshots Manager depend on it directly. This split preserves
+the verifier path, migration state, and module names. During upgrade it removes
+the old core diversions and restores the Ubuntu-provided `update-initramfs` and
+`update-grub` entry points. It installs no replacement for either command.
+Kernel updates and trigger ordering remain the responsibility of Ubuntu packages.
 
 `anduinos-kernel-parameters` has a separate responsibility: it owns the desktop
 boot policy, not the kernel binary. It installs
 `/etc/default/grub.d/99-anduinos-desktop.cfg`, appends `preempt=full`, conflicts
 with `lowlatency-kernel`, refreshes GRUB on a real installed system, and marks a
 reboot as required. Its maintainer scripts defer GRUB work inside a chroot. The
-package also depends on `linux-generic-hwe-26.04` so that installing the policy
-standalone cannot leave it paired with an unsupported kernel track.
+package also depends on the same suite-specific metapackage so that installing
+the policy standalone cannot leave it paired with an unsupported kernel track.
 
 `anduinos-desktop` recommends `anduinos-kernel-parameters` on Resolute. The
 official ISO is built with recommends enabled, so both
@@ -222,8 +255,8 @@ marks to force convergence.
 
 Future changes must preserve these invariants:
 
-- `anduinos-core-system` keeps a hard dependency on the supported HWE kernel
-  metapackage.
+- `anduinos-core-system` keeps a hard dependency on the suite's supported kernel
+  metapackage; adding a suite must not leave the system without a kernel.
 - `anduinos-kernel-parameters` remains a separable desktop policy package.
 - ISO construction obtains the kernel through the AnduinOS package graph.
 - Installed-system cleanup never treats kernel packages as Live-only payloads.
@@ -239,25 +272,45 @@ future hardware-enablement track.
 Each package is built via the GitLab CI pipeline (`.gitlab-ci.yml`). Packages use the `Aiursoft.Apkg.Sdk` and can be built locally with:
 
 ```
-apkg publish
+apkg build --all
 ```
+
+Each package owns its source, tests and build helpers. Run package tests with
+`apkg test --profile anduinos-package-release-test`; do not place package tests at the repository root or add
+package-specific policy to `lib/`. Shared helpers must be genuinely generic.
+
+CI uses one common package recipe: merge requests and non-release branches build
+all targets; `master` and `prod` deploy with `--all --skip-existing`. When
+preflight confirms that every requested target version is already published,
+the build is skipped, but the independent `lint-all` and `test-all` gates still
+run before every package job. `--skip-duplicate` only
+skips duplicate uploads after building and is not a substitute. Bump
+`PackageVersion` when changing package content or dependency metadata.
+Package `needs` include both internal dependencies and all mandatory gates.
+See [DEV_GUIDE.md](DEV_GUIDE.md) for profile selection and the current workflow.
+For a new OS point release, follow the
+[selective version-bump checklist](DEV_GUIDE.md#preparing-a-new-anduinos-point-release).
 
 ### TL;DR: What needs manual effort vs what auto-builds
 
 | Category | Packages | Monthly action |
 |---|---|---|
 | 🔧 **Manual — update commit/version** | Apkg client, Fluent GTK theme, Fluent icon theme, ALSA UCM Conf, Firmware SOF, Xbox Driver | Edit `download.sh` + bump `.aosproj` |
-| 🤖 **Auto — CI resolves at build time** | 19 GNOME Shell extensions | Trigger CI; resolver pulls latest from extensions.gnome.org |
-| 🤖 **Auto — pulls latest upstream .deb** | base-files, plymouth, software-properties-common, software-properties-gtk, firefox | Trigger CI; pulls latest from Ubuntu/Mozilla mirrors |
-| 🤖 **Auto — metapackages** | anduinos-desktop, theme, desktop-core, etc. | Trigger CI only if dependency list changed |
+| 🤖 **Auto — CI resolves at build time** | 14 GNOME Shell extensions | Bump their package versions and run CI; the resolver pulls compatible releases from extensions.gnome.org |
+| 🤖 **Auto — pulls latest upstream .deb** | base-files, plymouth, software-properties-common, firefox | Bump their package versions and run CI; the build pulls from Ubuntu/Mozilla mirrors |
+| 🤖 **Auto — metapackages** | anduinos-desktop, theme, desktop-core, etc. | Bump the package version and run CI when the dependency list changes |
 
-**Bottom line:** 6 packages need manual edits each month. Everything else = run CI.
+**Bottom line:** Check the 6 pinned packages monthly. Any changed package needs a new version before CI can publish it; existing published versions are skipped.
 
 ---
 
 ## Monthly Update Manual
 
 All external sources must be checked **at least once per month** to keep packages from falling behind upstream. This section is the step-by-step checklist.
+
+Fluent may follow the latest pinned upstream commit; Apkg follows published NuGet versions, and SOF follows stable releases.
+ALSA UCM and xpadneo temporarily use pinned development snapshots. Switch each to the first suitable stable release without losing the currently shipped functionality; after that, update only to stable releases.
+Never roll upstream source back to an older release or lower `PackageVersion` relative to `master`; bump affected package revisions when their contents change.
 
 ---
 
@@ -268,19 +321,19 @@ Run through this table each month. If anything has changed upstream, follow the 
 | # | What | Where to check | Update action |
 |---|---|---|---|
 | 1 | **Apkg client** | `apkg/download.sh` (`VERSION`) + [apkg-nuget] | Update version and checksums → section B.4 |
-| 2 | **Fluent GTK theme** | `anduinos-fluent-gtk-theme/download.sh:5` (commit) + [gtk-mirror] | Update commit → section B |
-| 3 | **Fluent icon theme** | `anduinos-fluent-icon-theme/download.sh:5` (commit) + [icon-mirror] | Update commit → section B |
+| 2 | **Fluent GTK theme** | `anduinos-fluent-gtk-theme/download.sh:5` (commit) + [gtk-repo] | Update commit → section B |
+| 3 | **Fluent icon theme** | `anduinos-fluent-icon-theme/download.sh:5` (commit) + [icon-repo] | Update commit → section B |
 | 4 | **ALSA UCM Conf** | `alsa-ucm-conf-anduinos/download.sh:5` (commit) + upstream [alsa-repo] | Update commit → section B |
 | 5 | **SOF firmware** | `firmware-sof-anduinos/download.sh:5` (`SOF_VERSION`) + upstream [sof-releases] | Update version → section C |
-| 6 | **Xbox Controller Driver** | `anduinos-xbox-controller-driver/download.sh` (`COMMIT_ID`) + [xpadneo-mirror] | Update commit → section B |
+| 6 | **Xbox Controller Driver** | `anduinos-xbox-controller-driver/download.sh` (`COMMIT_ID`) + [xpadneo-repo] | Update commit → section B |
 | 7 | **GNOME Shell version map** | `lib/gnome-versions.sh:3-7` — compare with Ubuntu's `gnome-shell` package for each supported suite | Update map → section D |
 | 8 | **GNOME Shell extensions** | Run a CI build — the resolver fetches the latest compatible version dynamically | Update version → section D |
 
 [sof-releases]: https://github.com/thesofproject/sof-bin/releases
 [alsa-repo]: https://github.com/alsa-project/alsa-ucm-conf
-[gtk-mirror]: https://gitlab.aiursoft.com/mirror/fluent-gtk-theme/
-[icon-mirror]: https://gitlab.aiursoft.com/mirror/fluent-icon-theme/
-[xpadneo-mirror]: https://gitlab.aiursoft.com/mirror/xpadneo/
+[gtk-repo]: https://github.com/vinceliuice/Fluent-gtk-theme/
+[icon-repo]: https://github.com/vinceliuice/Fluent-icon-theme/
+[xpadneo-repo]: https://github.com/atar-axis/xpadneo/
 [apkg-nuget]: https://www.nuget.org/packages/Aiursoft.Apkg.Client
 
 ---
@@ -292,20 +345,20 @@ Four packages clone a git repo and pin to a specific commit hash. Both the **com
 #### B.1 Check for updates
 
 ```bash
-# Fluent GTK theme (mirrored on gitlab.aiursoft.com)
-git ls-remote https://gitlab.aiursoft.com/mirror/fluent-gtk-theme.git HEAD
+# Fluent GTK theme (upstream on GitHub)
+git ls-remote https://github.com/vinceliuice/Fluent-gtk-theme.git HEAD
 
-# Fluent icon theme (mirrored on gitlab.aiursoft.com)
-git ls-remote https://gitlab.aiursoft.com/mirror/fluent-icon-theme.git HEAD
+# Fluent icon theme (upstream on GitHub)
+git ls-remote https://github.com/vinceliuice/Fluent-icon-theme.git HEAD
 
 # ALSA UCM Conf (upstream: alsa-project/alsa-ucm-conf)
 git ls-remote https://github.com/alsa-project/alsa-ucm-conf.git HEAD
 
-# Xbox Controller Driver (mirrored on gitlab.aiursoft.com)
-git ls-remote https://gitlab.aiursoft.com/mirror/xpadneo.git HEAD
+# Xbox Controller Driver (upstream on GitHub)
+git ls-remote https://github.com/atar-axis/xpadneo.git HEAD
 ```
 
-Compare the returned HEAD hash against the pinned commit in each `download.sh`. If different, an update is available.
+Compare upstream HEAD with the pinned commit in each `download.sh`, then select a reference according to the policy above. A different HEAD does not automatically authorize a development snapshot after a package has switched to stable releases.
 
 For **ALSA UCM Conf**, check the upstream `configure.ac` for the version. For **Fluent** packages, check [GitHub releases](https://github.com/vinceliuice/Fluent-gtk-theme/releases) for the current upstream version (informational — not encoded in PackageVersion).
 
@@ -313,7 +366,7 @@ For **ALSA UCM Conf**, check the upstream `configure.ac` for the version. For **
 
 For each outdated package, update **two files**:
 
-1. **`download.sh`** — update the `*_COMMIT` variable to the new HEAD hash
+1. **`download.sh`** — update the commit variable to the selected full commit hash
 2. **`*.aosproj`** — bump the Debian revision suffix in `<PackageVersion>` (e.g. `-1` → `-2`)
 
 Example diff for Fluent GTK theme:
@@ -327,6 +380,8 @@ Example diff for Fluent GTK theme:
 -<PackageVersion>2.0.0~rc2-1+$(SuiteShortName)</PackageVersion>
 +<PackageVersion>2.0.0~rc2-2+$(SuiteShortName)</PackageVersion>
 ```
+
+For xpadneo, also update `VERSION` to the result of `git describe --tags <pinned-commit>`; it determines the DKMS source directory and configuration. Keep the same `VERSION` in `scripts/postinst.sh` and `scripts/prerm.sh`. Fluent GTK is used by both `anduinos-fluent-gtk-theme` and `anduinos-gdm3-wallpaper`: update and bump both packages together.
 
 #### B.3 Rebuild and verify
 
@@ -388,7 +443,7 @@ Do not commit `apkg/deploy/`; it is regenerated by `download.sh` during the buil
 
 `firmware-sof-anduinos` replaces Ubuntu's SOF firmware with a newer Intel `sof-bin` release tarball.
 
-> **⚠️ Version sync trap:** The SOF version now appears in **two places** — `download.sh` (`SOF_VERSION`) **and** `.aosproj` (`PackageVersion`). When upgrading SOF, update **both** together or the package version won't reflect reality.
+> **⚠️ Version sync trap:** When upgrading `SOF_VERSION` in `download.sh`, also increment the Debian revision in `.aosproj` (`PackageVersion`) so CI publishes a new package. Keep the existing AnduinOS version and suite suffix conventions.
 
 #### C.1 Check for updates
 
@@ -401,11 +456,11 @@ Update **both files**:
 ```diff
 # download.sh
 -SOF_VERSION="2025.12.2"
-+SOF_VERSION="2026.03"   # update to new release tag
++SOF_VERSION="2026.09.2"   # update to new release tag
 
 # firmware-sof-anduinos.aosproj
--<PackageVersion>2.0.0~rc2-2025.12.2+$(SuiteShortName)</PackageVersion>
-+<PackageVersion>2.0.0~rc2-2026.03+$(SuiteShortName)</PackageVersion>   # sync SOF version
+-<PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
++<PackageVersion>2.0.2-2+$(SuiteShortName)</PackageVersion>   # bump packaging revision
 ```
 
 The downloaded Intel tarball and extracted cache under `deploy/` are **not** committed — the CI regenerates them at build time via `download.sh`.
@@ -419,7 +474,7 @@ apkg publish
 
 ---
 
-### D. GNOME Shell Extensions (19 packages)
+### D. GNOME Shell Extensions (14 dynamically resolved packages)
 
 These are resolved **dynamically at build time**: the resolver (`lib/resolve-gnome-ext.py`) queries `extensions.gnome.org` for the best compatible version for each target GNOME Shell version. This means extension code is always up-to-date on every build — no monthly check needed for the extension code itself.
 
@@ -444,32 +499,32 @@ If a mismatch is found, update `lib/gnome-versions.sh`:
 ```bash
 declare -A GNOME_TARGETS=(
     [noble]=46      # Ubuntu 24.04 LTS
-    [questing]=49   # Ubuntu 25.10
     [resolute]=50   # Ubuntu 26.04 LTS
+    [stonking]=51   # Ubuntu 26.10
     # ^ update or add entries as needed
 )
 ```
 
-Then **CI rebuilds all 19 extension packages automatically** — the new GNOME version will be picked up by the resolver on the next build.
+After bumping the affected package versions, CI will build them with the updated GNOME version map; the resolver selects the appropriate upstream extension during each build.
 
 #### D.2 Extension `.aosproj` version numbers
 
-Each extension's `.aosproj` uses a unified `<PackageVersion>` of `2.0.0~rc2-1+$(SuiteShortName)`. Bump the Debian revision suffix (e.g. `-1` → `-2`) when packaging changes. The resolver fetches the latest extension code at build time, so the extension code itself is always up-to-date regardless of the package version.
+Each extension has its own `<PackageVersion>` in its `.aosproj`. Bump the Debian revision suffix (e.g. `-1` → `-2`) when packaging changes or when a new upstream build must be published. The resolver fetches the latest compatible extension code during that build; CI skips package versions that are already published.
 
 ```diff
--<PackageVersion>2.0.0~rc2-1+$(SuiteShortName)</PackageVersion>
-+<PackageVersion>2.0.0~rc2-2+$(SuiteShortName)</PackageVersion>
+-<PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
++<PackageVersion>2.0.3-2+$(SuiteShortName)</PackageVersion>
 ```
 
 #### D.3 Special-cased extension: desktop-icons-ng-anduinos
 
-`gnome-shell-extension-desktop-icons-ng-anduinos` explicitly conflicts with Ubuntu's `gnome-shell-extension-desktop-icons-ng` (same UUID `ding@rastersoft.com`). It also carries a custom `metadata.patch` in its deploy directories. When the upstream DING extension releases a new version, verify the patch still applies cleanly.
+`gnome-shell-extension-desktop-icons-ng-anduinos` explicitly conflicts with Ubuntu's `gnome-shell-extension-desktop-icons-ng` (same UUID `ding@rastersoft.com`). Its pre-build script downloads the upstream extension for each supported GNOME version and makes `app/ding.js` executable. The desktop context menu and its translations are left upstream.
 
 ---
 
 ### E. Upstream-Derived Packages
 
-Six packages derive from upstream `.deb` packages at build time via `UpstreamUrl`:
+Five packages derive from upstream `.deb` packages at build time via `UpstreamUrl`:
 
 | Package | Upstream source | Repository |
 |---|---|---|
@@ -477,7 +532,6 @@ Six packages derive from upstream `.deb` packages at build time via `UpstreamUrl
 | `firmware-sof-anduinos` | `firmware-sof-signed` | Ubuntu mirror |
 | `plymouth-anduinos` | `plymouth-theme-spinner` | Ubuntu mirror |
 | `anduinos-software-properties-common` | `software-properties-common` | Ubuntu mirror |
-| `anduinos-software-properties-gtk` | `software-properties-gtk` | Ubuntu mirror |
 | `firefox-anduinos` | `firefox` | Mozilla APT (`packages.mozilla.org`) |
 
 These are rebuilt by CI and pull the latest upstream source at build time, so the **upstream base** stays up-to-date. `firmware-sof-anduinos` still needs the separate Intel release check from section C.
@@ -579,7 +633,7 @@ sudo apt install -y \
     plymouth-anduinos \
     alsa-ucm-conf-anduinos \
     firmware-sof-anduinos \
-    initramfs-tools \
+    dracut \
     snapd- \
     firefox- \
     ubuntu-session- \
@@ -594,7 +648,6 @@ sudo apt install -y \
     ubuntu-release-upgrader-core- \
     ubuntu-release-upgrader-gtk- \
     whoopsie- \
-    anduinos-software-properties-gtk- \
     software-properties-gtk- \
     software-properties-common- \
     firmware-sof-signed- \

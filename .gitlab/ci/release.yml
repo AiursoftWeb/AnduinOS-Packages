@@ -1,0 +1,15 @@
+.publish:
+  script:
+    - cd "$PACKAGE_DIR"
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "prod" ]; then
+        APKG_SOURCE="https://apkg.aiursoft.com"
+        APKG_KEY="$APKG_PROD_API_KEY"
+      else
+        APKG_SOURCE="https://apkg-dev.aiursoft.com"
+        APKG_KEY="$APKG_DEV_API_KEY"
+      fi
+      apkg deploy --all \
+        --source "$APKG_SOURCE" \
+        --api-key "$APKG_KEY" \
+        --skip-existing

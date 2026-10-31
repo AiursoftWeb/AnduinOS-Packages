@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import json
 from pathlib import Path
+from uuid import UUID
 
 from .command import CommandError, CommandRunner
 from .software import refresh_package_indexes
@@ -11,6 +13,11 @@ from .steps import FailurePolicy, InstallContext, StepWarning
 
 
 SNAPSHOTS_MANAGER_PACKAGE = "anduinos-btrfs-snapshots-manager"
+RECOVERY_PACKAGE = "anduinos-recovery-env"
+RECOVERY_DEPLOYER = "/usr/libexec/anduinos-recovery-env"
+FACTORY_PROVISIONER = (
+    "/usr/libexec/anduinos-btrfs-snapshots-manager-provision-factory"
+)
 
 
 def _target(context: InstallContext) -> Path:
@@ -181,6 +188,104 @@ class EnsureSnapshotsManagerStep:
             ("chroot", str(target), "dpkg", "--audit"),
             timeout=300,
         )
+
+    def cleanup(self, context: InstallContext) -> None:
+        return None
+
+
+@dataclass
+class DeployRecoveryEnvironmentStep:
+    """Optionally deploy to the filesystem created by the approved storage plan."""
+
+    runner: CommandRunner
+    id: str = "deploy-recovery-environment"
+    title: str = "Deploy recovery environment"
+    failure_policy: FailurePolicy = FailurePolicy.WARNING
+    progress_weight: int = 2
+    destructive: bool = False
+
+    def preflight(self, context: InstallContext) -> None:
+        context.validate_plan()
+        self.runner.require_commands(("chroot", "blkid"))
+
+    def execute(self, context: InstallContext) -> None:
+        target = _target(context)
+        if not (target / RECOVERY_DEPLOYER.lstrip("/")).is_file():
+            raise StepWarning(
+                f"{RECOVERY_PACKAGE} is unavailable in the copied system; "
+                "installation will continue without the recovery environment"
+            )
+        device = context.values["partition_devices"].get("recovery")
+        if not device:
+            raise RuntimeError("The installation plan did not create a recovery volume")
+        volume_uuid = str(UUID(self.runner.run(
+            ("blkid", "-s", "UUID", "-o", "value", device), timeout=10,
+        ).stdout.strip()))
+        self.runner.run(
+            ("chroot", str(target), RECOVERY_DEPLOYER,
+             "deploy", "--volume-uuid", volume_uuid), timeout=300,
+        )
+        context.values["recovery_volume_uuid"] = volume_uuid
+        context.log("Recovery environment deployed to " + device)
+
+    def verify(self, context: InstallContext) -> None:
+        binding = json.loads((_target(context) / "var/lib/anduinos-recovery-env/volume.json").read_text())
+        if binding.get("volume_uuid") != context.values.get("recovery_volume_uuid"):
+            raise RuntimeError("Recovery deployment did not bind the planned volume")
+
+    def cleanup(self, context: InstallContext) -> None:
+        return None
+
+
+@dataclass
+class CreateFactorySnapshotStep:
+    """Create the protected initial Btrfs system and Home recovery points."""
+
+    runner: CommandRunner
+    id: str = "create-factory-snapshot"
+    title: str = "Create initial system recovery point"
+    failure_policy: FailurePolicy = FailurePolicy.WARNING
+    progress_weight: int = 3
+    destructive: bool = False
+
+    def preflight(self, context: InstallContext) -> None:
+        context.validate_plan()
+        self.runner.require_commands(("chroot",))
+
+    def execute(self, context: InstallContext) -> None:
+        context.values["factory_snapshot_ready"] = False
+        if not context.values.get("snapshots_manager_installed"):
+            raise StepWarning(
+                "Disk Snapshots Manager is unavailable; the initial system "
+                "and Home recovery points were not created"
+            )
+        target = _target(context)
+        provisioner = target / FACTORY_PROVISIONER.lstrip("/")
+        if not provisioner.is_file():
+            raise StepWarning(
+                "Disk Snapshots Manager does not provide factory recovery "
+                "provisioning; the initial system and Home recovery points were not created"
+            )
+        result = self.runner.run(
+            ("chroot", str(target), FACTORY_PROVISIONER),
+            timeout=1800,
+        )
+        context.values["factory_snapshot_ready"] = True
+        detail = result.stdout.strip()
+        context.log(
+            "Initial system and Home recovery points: "
+            + (detail if detail else "New OS is ready")
+        )
+
+    def verify(self, context: InstallContext) -> None:
+        if not context.values.get("factory_snapshot_ready"):
+            return
+        target = _target(context)
+        self.runner.run(
+            ("chroot", str(target), FACTORY_PROVISIONER, "--check"),
+            timeout=300,
+        )
+        context.log("Initial system and Home recovery point verification: ready")
 
     def cleanup(self, context: InstallContext) -> None:
         return None

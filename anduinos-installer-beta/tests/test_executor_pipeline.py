@@ -32,17 +32,22 @@ class ExecutorPipelineTests(unittest.TestCase):
             InstallerExecutor(lambda _message: None).run(valid_plan())
         pipeline = CapturingStepRunner.captured
         self.assertEqual(
-            pipeline[:3],
+            pipeline[:4],
             (
                 "detect-boot-environment",
                 "detect-network-connectivity",
                 "verify-target-disk",
+                "check-installation-media",
             ),
         )
         expected = (
+            "check-installation-media",
+            "prepare-storage",
+            "mount-target",
             "copy-system",
             "migrate-wifi-connection",
             "configure-keyboard-layout",
+            "recheck-network-connectivity",
             "select-fastest-apt-mirror",
             "prepare-secure-boot",
             "install-language-packs",
@@ -52,10 +57,13 @@ class ExecutorPipelineTests(unittest.TestCase):
             "upgrade-system",
             "ensure-snapshots-manager",
             "provision-remote-access",
+            "deploy-recovery-environment",
             "verify-dkms-signatures",
             "install-bootloader",
             "enroll-secure-boot",
             "check-other-disk-systems",
+            "check-linux-systems",
+            "create-factory-snapshot",
         )
         positions = tuple(pipeline.index(step) for step in expected)
         self.assertEqual(positions, tuple(sorted(positions)))
@@ -133,12 +141,28 @@ class ExecutorPipelineTests(unittest.TestCase):
             "ensure-snapshots-manager",
             CapturingStepRunner.captured,
         )
+        self.assertNotIn(
+            "create-factory-snapshot",
+            CapturingStepRunner.captured,
+        )
 
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
             InstallerExecutor(lambda _message: None).run(valid_plan())
         self.assertIn(
             "ensure-snapshots-manager",
             CapturingStepRunner.captured,
+        )
+        self.assertIn(
+            "create-factory-snapshot",
+            CapturingStepRunner.captured,
+        )
+        self.assertLess(
+            CapturingStepRunner.captured.index("ensure-snapshots-manager"),
+            CapturingStepRunner.captured.index("create-factory-snapshot"),
+        )
+        self.assertLess(
+            CapturingStepRunner.captured.index("create-factory-snapshot"),
+            CapturingStepRunner.captured.index("leave-chroot"),
         )
 
     def test_other_disk_system_check_is_uefi_only_and_near_the_end(self):

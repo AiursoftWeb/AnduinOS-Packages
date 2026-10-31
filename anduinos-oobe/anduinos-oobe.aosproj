@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-oobe</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS OOBE — First-run setup wizard and Welcome Center</PackageDescription>
     <Section>utils</Section>
@@ -11,38 +11,40 @@
     <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
     <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
   </PropertyGroup>
 
   <ItemGroup>
-    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble resolute-addon=resolute" />
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="noble-addon=noble resolute-addon=resolute stonking-addon=stonking" />
   </ItemGroup>
 
   <ItemGroup>
     <Dependency Include="python3" />
     <Dependency Include="python3-gi" />
+    <Dependency Include="curl" />
+    <Dependency Include="ptyxis | gnome-terminal" />
     <Dependency Include="gir1.2-gtk-4.0" />
     <Dependency Include="gir1.2-adw-1" />
     <Dependency Include="dconf-cli" />
     <Dependency Include="ufw" />
     <Dependency Include="flatpak" />
     <Dependency Include="pkexec" />
-    <Dependency Include="anduinos-appearance (&gt;= 2.0.1-5)" />
+    <Dependency Include="anduinos-appearance" />
     <Dependency Include="network-manager" />
-    <Dependency Include="anduinos-secureboot-toolkit" />
-    <Dependency Include="anduinos-driver-center (&gt;= 2.0.0-8)" />
+    <Dependency Include="anduinos-driver-center" />
   </ItemGroup>
 
   <ItemGroup>
+    <IncludeFile Include="assets/display_scaling.py" Target="/usr/lib/anduinos-oobe/display_scaling.py" />
+    <IncludeFile Include="assets/agents.py" Target="/usr/lib/anduinos-oobe/agents.py" />
+    <IncludeFile Include="assets/create_aitool_shortcut.py" Target="/usr/lib/anduinos-oobe/create_aitool_shortcut.py" />
     <IncludeScript Include="assets/anduinos-oobe" Target="/usr/bin/anduinos-oobe" />
     <IncludeFile Include="assets/anduinos-oobe-autostart.desktop" Target="/etc/xdg/autostart/anduinos-oobe.desktop" />
     <IncludeFolder Include="resources/icons" Target="/usr/share/anduinos-oobe/icons" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
-    <IncludeScript Include="scripts/network-service-helper" Target="/usr/libexec/anduinos-oobe/network-service-helper" />
-    <IncludeFile Include="data/com.anduinos.oobe.policy" Target="/usr/share/polkit-1/actions/com.anduinos.oobe.policy" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,8 +54,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PrebuildCommand Run="python3 -m py_compile assets/anduinos-oobe" />
-    <PrebuildCommand Run="LANGUAGE=C PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" />
     <PrebuildCommand Run="bash compile-locales.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+    <TestCommand Name="widgets" Profile="gui" Run="PYTHONDONTWRITEBYTECODE=1 LANGUAGE=C GSETTINGS_BACKEND=memory GDK_BACKEND=x11 GSK_RENDERER=cairo xvfb-run -a python3 -m unittest discover -s tests/gui -v" TimeoutSeconds="300" />
   </ItemGroup>
 </Project>

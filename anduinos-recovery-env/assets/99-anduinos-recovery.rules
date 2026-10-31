@@ -1,0 +1,2 @@
+# The dedicated recovery filesystem is not a desktop data volume.
+SUBSYSTEM=="block", ENV{DEVTYPE}=="partition", ENV{ID_FS_TYPE}=="ext4", ENV{ID_FS_LABEL}=="AOS_RECOVERY", ENV{UDISKS_IGNORE}="1"

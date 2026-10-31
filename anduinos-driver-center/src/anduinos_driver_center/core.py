@@ -5,11 +5,15 @@ from __future__ import annotations
 from dataclasses import dataclass, field, replace
 from enum import Enum
 from pathlib import Path
+import gettext
 import os
 import re
 import subprocess
 import sys
 from typing import Protocol, Sequence
+from .intel_graphics import IntelSnapshot, inspect as inspect_intel
+
+_ = gettext.gettext
 
 try:
     from anduinos_secureboot import (
@@ -99,6 +103,7 @@ class HardwareDevice:
     active_driver_healthy: bool | None = None
     active_driver_version: str | None = None
     active_driver_error: str | None = None
+    restart_required: bool = False
     options: tuple[DriverOption, ...] = field(default_factory=tuple)
 
     @property
@@ -110,13 +115,14 @@ class HardwareDevice:
             model = bracketed[-1].strip()
         if vendor and model and not model.lower().startswith(vendor.lower()):
             return f"{vendor} {model}"
-        return model or vendor or "Graphics device"
+        return model or vendor or _("Graphics device")
 
 
 @dataclass(frozen=True)
 class GraphicsScan:
     devices: tuple[HardwareDevice, ...] = field(default_factory=tuple)
     error: str | None = None
+    intel: IntelSnapshot | None = None
 
     @property
     def successful(self) -> bool:
@@ -216,6 +222,14 @@ class PrintingState:
             for package in self.core_packages + self.driverless_packages
             if not package.installed
         )
+
+
+def nvidia_restart_required(driver, installed_module_version, runner) -> bool:
+    if driver != "nvidia" or not installed_module_version:
+        return False
+    loaded = runner.run(["cat", "/sys/module/nvidia/version"])
+    return bool(loaded.returncode == 0 and loaded.stdout.strip()
+                and loaded.stdout.strip() != installed_module_version)
 
 
 def package_is_installed(package: str, runner: Runner) -> bool:
@@ -382,9 +396,14 @@ def secure_boot_state(
     private_key: Path = MOK_PRIVATE_KEY,
     certificate: Path = MOK_CERTIFICATE,
     configuration: Path = Path("/etc/dkms/framework.conf.d/anduinos-sb-sign.conf"),
+    efi_firmware: Path = Path("/sys/firmware/efi"),
 ) -> SecureBootState:
     return _inspect_secure_boot(
-        runner, private_key, certificate, configuration=configuration
+        runner,
+        private_key,
+        certificate,
+        configuration=configuration,
+        efi_firmware=efi_firmware,
     )
 
 
@@ -550,6 +569,7 @@ def parse_ubuntu_driver_devices(output: str, runner: Runner) -> list[HardwareDev
                     active_driver_healthy=driver_healthy,
                     active_driver_version=driver_version,
                     active_driver_error=driver_error,
+                    restart_required=nvidia_restart_required(active_driver, driver_version, runner),
                     options=_options_with_active_driver(
                         options, active_driver, driver_version
                     ),
@@ -618,17 +638,21 @@ def xbox_state(
         signature and secure_boot.certificate_serial
         and signature == secure_boot.certificate_serial
     )
+    trusted = bool(signature and (
+        (matches and secure_boot.enrolled)
+        or signature in secure_boot.enrolled_certificate_serials
+    ))
     if not installed:
         status = XboxStatus.NOT_INSTALLED
     elif not module_available:
         status = XboxStatus.MODULE_MISSING
     elif not secure_boot.state_known:
         status = XboxStatus.SECURE_BOOT_UNKNOWN
-    elif secure_boot.enabled and secure_boot.enrollment_pending:
+    elif secure_boot.enabled and not trusted and secure_boot.enrollment_pending:
         status = XboxStatus.ENROLLMENT_PENDING
-    elif secure_boot.enabled and not secure_boot.enrolled:
+    elif secure_boot.enabled and not trusted and not secure_boot.enrolled:
         status = XboxStatus.TRUST_SETUP_REQUIRED
-    elif secure_boot.enabled and not matches:
+    elif secure_boot.enabled and not trusted:
         status = XboxStatus.SIGNATURE_MISMATCH
     elif not load_state_known:
         status = XboxStatus.LOAD_STATE_UNKNOWN
@@ -666,8 +690,9 @@ def scan_system(
 ]:
     runner = runner or SubprocessRunner()
     secure_boot = secure_boot_state(runner)
+    graphics = replace(graphics_scan(runner), intel=inspect_intel(runner=runner.run))
     return (
-        graphics_scan(runner),
+        graphics,
         secure_boot,
         xbox_state(secure_boot, runner),
         dkms_state(secure_boot, runner),

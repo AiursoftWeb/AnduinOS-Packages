@@ -121,22 +121,35 @@ impl DashboardView {
     fn setup_ui(&self) {
         let imp = self.imp();
         self.set_orientation(gtk::Orientation::Vertical);
-        self.set_spacing(18);
-        self.set_margin_start(24);
-        self.set_margin_end(24);
-        self.set_margin_top(24);
-        self.set_margin_bottom(24);
+        self.set_spacing(0);
         self.set_vexpand(true);
 
+        let scroll = gtk::ScrolledWindow::builder()
+            .hscrollbar_policy(gtk::PolicyType::Never)
+            .vscrollbar_policy(gtk::PolicyType::Automatic)
+            .overlay_scrolling(false)
+            .vexpand(true)
+            .build();
+        let inner = gtk::Box::builder()
+            .orientation(gtk::Orientation::Vertical)
+            .spacing(18)
+            .margin_start(24)
+            .margin_end(24)
+            .margin_top(24)
+            .margin_bottom(24)
+            .build();
+        scroll.set_child(Some(&inner));
+        self.append(&scroll);
+
         // Title
-        self.append(
+        inner.append(
             &gtk::Label::builder()
                 .label(&i18n("Memory Overview"))
                 .css_classes(["title-1"])
                 .halign(gtk::Align::Start)
                 .build(),
         );
-        self.append(
+        inner.append(
             &gtk::Label::builder()
                 .label(&i18n(
                     "Real-time RAM, swap, and compression subsystem status",
@@ -158,7 +171,7 @@ impl DashboardView {
                 let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
                 i18n_fmt(&i18n("for {0} GiB RAM"), &[&format!("{:.0}", ram_gb)])
             };
-            self.append(
+            inner.append(
                 &gtk::Label::builder()
                     .use_markup(true)
                     .label(&i18n_fmt(
@@ -178,33 +191,39 @@ impl DashboardView {
             .spacing(6)
             .valign(gtk::Align::Start)
             .build();
-        self.append(&rec_box);
+        inner.append(&rec_box);
         *imp.recommendation_box.borrow_mut() = Some(rec_box);
 
         // ─── RAM spec bar ────────────────────────────────────────────
-        let spec = gtk::Grid::builder()
+        let spec = gtk::FlowBox::builder()
             .row_spacing(8)
             .column_spacing(8)
-            .column_homogeneous(true)
+            .homogeneous(true)
+            .selection_mode(gtk::SelectionMode::None)
+            .min_children_per_line(2)
+            .max_children_per_line(4)
             .build();
         let (c0, l0) = mini_stat(&i18n("Total RAM"), "...");
         let (c1, l1) = mini_stat(&i18n("Type"), "...");
         let (c2, l2) = mini_stat(&i18n("Speed"), "...");
         let (c3, l3) = mini_stat(&i18n("Channels"), "...");
-        spec.attach(&c0, 0, 0, 1, 1);
-        spec.attach(&c1, 1, 0, 1, 1);
-        spec.attach(&c2, 2, 0, 1, 1);
-        spec.attach(&c3, 3, 0, 1, 1);
-        self.append(&spec);
+        spec.insert(&c0, -1);
+        spec.insert(&c1, -1);
+        spec.insert(&c2, -1);
+        spec.insert(&c3, -1);
+        inner.append(&spec);
         *imp.ram_total.borrow_mut() = Some(l0);
         *imp.ram_type.borrow_mut() = Some(l1);
         *imp.ram_speed.borrow_mut() = Some(l2);
         *imp.ram_dimm.borrow_mut() = Some(l3);
 
         // ─── Ring + Bars row ─────────────────────────────────────────
-        let middle = gtk::Box::builder()
-            .orientation(gtk::Orientation::Horizontal)
-            .spacing(24)
+        let middle = gtk::FlowBox::builder()
+            .column_spacing(24)
+            .row_spacing(18)
+            .selection_mode(gtk::SelectionMode::None)
+            .min_children_per_line(1)
+            .max_children_per_line(2)
             .build();
 
         // Left side: ring + legend
@@ -229,7 +248,7 @@ impl DashboardView {
         ring_col.append(&legend);
         *imp.legend.borrow_mut() = Some(legend);
 
-        middle.append(&ring_col);
+        middle.insert(&ring_col, -1);
 
         // Right: 3 usage bars (align top to match ring)
         let bars = gtk::Box::builder()
@@ -253,14 +272,17 @@ impl DashboardView {
         bars.append(&swap_bar);
         *imp.swap_bar.borrow_mut() = Some(swap_bar);
 
-        middle.append(&bars);
-        self.append(&middle);
+        middle.insert(&bars, -1);
+        inner.append(&middle);
 
         // ─── Bottom status cards ────────────────────────────────────
-        let grid = gtk::Grid::builder()
+        let grid = gtk::FlowBox::builder()
             .row_spacing(8)
             .column_spacing(8)
-            .column_homogeneous(true)
+            .homogeneous(true)
+            .selection_mode(gtk::SelectionMode::None)
+            .min_children_per_line(2)
+            .max_children_per_line(5)
             .build();
 
         let (c1, s1) = info_card("drive-harddisk-symbolic", &i18n("Swap"), "");
@@ -269,12 +291,12 @@ impl DashboardView {
         let (c4, s4) = info_card("weather-clear-night-symbolic", &i18n("Hibernation"), "");
         let (c5, s5) = info_card("preferences-system-symbolic", &i18n("Swappiness"), "");
 
-        grid.attach(&c1, 0, 0, 1, 1);
-        grid.attach(&c2, 1, 0, 1, 1);
-        grid.attach(&c3, 2, 0, 1, 1);
-        grid.attach(&c4, 3, 0, 1, 1);
-        grid.attach(&c5, 4, 0, 1, 1);
-        self.append(&grid);
+        grid.insert(&c1, -1);
+        grid.insert(&c2, -1);
+        grid.insert(&c3, -1);
+        grid.insert(&c4, -1);
+        grid.insert(&c5, -1);
+        inner.append(&grid);
 
         *imp.swap_sub.borrow_mut() = Some(s1);
         *imp.zswap_sub.borrow_mut() = Some(s2);
@@ -622,6 +644,8 @@ fn build_rec_card(accent: (f64, f64, f64), title: &str, subtitle: &str) -> gtk::
     let card = gtk::Box::builder()
         .orientation(gtk::Orientation::Horizontal)
         .css_classes(["card"])
+        // Keep the full-height accent inside the theme's rounded card edges.
+        .overflow(gtk::Overflow::Hidden)
         .spacing(12)
         .valign(gtk::Align::Start)
         .build();
@@ -731,4 +755,95 @@ fn mini_stat(label: &str, value: &str) -> (gtk::Box, gtk::Label) {
     inner.append(&cap);
     card.append(&inner);
     (card, val)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::views::stress_test_view::StressTestView;
+    use std::time::{Duration, Instant};
+
+    fn settle() {
+        let end = Instant::now() + Duration::from_millis(200);
+        while Instant::now() < end {
+            glib::MainContext::default().iteration(false);
+            std::thread::sleep(Duration::from_millis(5));
+        }
+    }
+
+    fn accent_cards(widget: &gtk::Widget, result: &mut Vec<gtk::Widget>) {
+        if widget.has_css_class("card")
+            && widget
+                .first_child()
+                .is_some_and(|child| child.is::<gtk::DrawingArea>())
+        {
+            result.push(widget.clone());
+        }
+        let mut child = widget.first_child();
+        while let Some(current) = child {
+            accent_cards(&current, result);
+            child = current.next_sibling();
+        }
+    }
+
+    fn assert_rounded_clip(card: &gtk::Widget) {
+        assert_eq!(card.overflow(), gtk::Overflow::Hidden);
+        let width = card.width() as f64;
+        let height = card.height() as f64;
+        assert!(width > 24.0 && height > 24.0);
+        // GTK uses the CSS rounded clip for rendering and hit testing alike.
+        for (x, y) in [
+            (1.0, 1.0),
+            (width - 2.0, 1.0),
+            (1.0, height - 2.0),
+            (width - 2.0, height - 2.0),
+        ] {
+            assert!(card.pick(x, y, gtk::PickFlags::DEFAULT).is_none());
+        }
+        assert!(card
+            .pick(width / 2.0, height / 2.0, gtk::PickFlags::DEFAULT)
+            .is_some());
+    }
+
+    #[test]
+    #[ignore = "requires a graphical display; run with apkg test --profile gui"]
+    fn accent_cards_clip_rounded_corners_in_both_themes() {
+        adw::init().expect("GTK must initialize for the widget test");
+        let manager = adw::StyleManager::default();
+        for scheme in [adw::ColorScheme::ForceLight, adw::ColorScheme::ForceDark] {
+            manager.set_color_scheme(scheme);
+            let recommendation = build_rec_card(
+                (0.15, 0.72, 0.25),
+                "Recommendation",
+                "Rounded card test",
+            );
+            let stress = StressTestView::new();
+            let content = gtk::Box::builder()
+                .orientation(gtk::Orientation::Vertical)
+                .spacing(16)
+                .margin_start(24)
+                .margin_end(24)
+                .margin_top(24)
+                .margin_bottom(24)
+                .build();
+            content.append(&recommendation);
+            content.append(&stress);
+            let window = gtk::Window::builder()
+                .default_width(800)
+                .default_height(700)
+                .child(&content)
+                .build();
+            window.present();
+            settle();
+            assert_rounded_clip(recommendation.upcast_ref());
+            let mut warnings = Vec::new();
+            accent_cards(stress.upcast_ref(), &mut warnings);
+            assert_eq!(warnings.len(), 1, "find the actual stress warning card");
+            assert_rounded_clip(&warnings[0]);
+            // Constructing the view must never start the memory stress test.
+            assert!(!*stress.imp().test_running.borrow());
+            window.destroy();
+            settle();
+        }
+    }
 }

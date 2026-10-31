@@ -1,4 +1,6 @@
 import tempfile
+import shutil
+import subprocess
 import unittest
 from dataclasses import replace
 from pathlib import Path
@@ -10,17 +12,82 @@ from helpers import (
     valid_plan,
 )
 from installer_core.execution_steps import (
+    CheckInstallationMediaStep,
     CopySystemStep,
     DetectBootEnvironmentStep,
     UnmountTargetStep,
     VerifyTargetDiskStep,
 )
+from installer_core.command import CommandRunner
 from installer_core.model import Firmware, SecureBoot, SourceSpec
 from installer_core.probe import PlatformProbe
-from installer_core.steps import InstallContext
+from installer_core.steps import FailurePolicy, InstallContext, StepRunner, StepStatus
+
+
+class MediaCheckTests(unittest.TestCase):
+    def test_media_status_matches_scan_and_only_success_allows_disk_writes(self):
+        class MediaRunner(FakeRunner):
+            def run(self, command, **kwargs):
+                self_test.assertEqual(statuses[-1],
+                                      ("check-installation-media", StepStatus.RUNNING))
+                self_test.assertFalse(sentinel.executed)
+                result = super().run(command, **kwargs)
+                result.returncode = returncode
+                result.stderr = "Media check did not pass." if returncode else ""
+                return result
+
+        class DestructiveSentinel:
+            id = "format"
+            title = "Format"
+            progress_weight = 1
+            destructive = True
+            executed = False
+            failure_policy = FailurePolicy.FATAL
+
+            def preflight(self, context):
+                pass
+
+            def execute(self, context):
+                self_test.assertIn(("check-installation-media", StepStatus.SUCCEEDED), statuses)
+                self.executed = True
+
+            def verify(self, context):
+                pass
+
+            def cleanup(self, context):
+                pass
+
+        self_test = self
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "rootfs.squashfs"
+            source.write_bytes(b"fixture")
+            for returncode in (0, 1, 2, 3):
+                with self.subTest(returncode=returncode):
+                    context = InstallContext(replace(valid_plan(), source=SourceSpec(str(source))),
+                                             lambda _: None)
+                    statuses = []
+                    sentinel = DestructiveSentinel()
+                    runner = MediaRunner()
+                    result = StepRunner(
+                        [CheckInstallationMediaStep(runner), sentinel],
+                        status=lambda step, status, message: statuses.append((step, status)),
+                    ).run(context)
+                    self.assertEqual(result.succeeded, returncode == 0)
+                    self.assertEqual(result.destructive_started, returncode == 0)
+                    self.assertEqual(sentinel.executed, returncode == 0)
+                    self.assertEqual(result.results[0].step_id, "check-installation-media")
+                    self.assertEqual(result.results[0].status,
+                                     StepStatus.FAILED if returncode else StepStatus.SUCCEEDED)
+                    self.assertEqual(len(runner.commands), 1)
+                    self.assertEqual(runner.commands[0][0], (
+                        "/usr/libexec/anduinos-media-check", "--source", str(source),
+                        "--locale", context.plan.regional.locale,
+                    ))
+                    self.assertIsNone(runner.commands[0][1]["timeout"])
 
 
 class CopySystemTests(unittest.TestCase):
+
     def test_preflight_requires_existing_source(self):
         plan = replace(
             valid_plan(),
@@ -53,6 +120,33 @@ class CopySystemTests(unittest.TestCase):
             step.execute(context)
             step.verify(context)
         self.assertEqual(runner.commands[-1][0][0], "unsquashfs")
+        self.assertIn('-excludes', runner.commands[-1][0])
+        for path in CopySystemStep.signing_excludes:
+            self.assertIn(path, runner.commands[-1][0])
+
+    @unittest.skipUnless(shutil.which('mksquashfs') and shutil.which('unsquashfs'), 'requires squashfs-tools')
+    def test_real_squashfs_excludes_all_signing_material_but_keeps_programs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            image_root, target = root / 'image', root / 'target'
+            for relative in (*CopySystemStep.signing_excludes, 'etc/os-release',
+                             'usr/lib/python3/dist-packages/anduinos_secureboot/identity.py'):
+                path = image_root / relative
+                if relative in {'var/lib/shim-signed/mok', 'var/lib/anduinos-secureboot'}:
+                    path = path / 'private-secret'
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text('fixture')
+            source = root / 'filesystem.squashfs'
+            subprocess.run(['mksquashfs', str(image_root), str(source), '-noappend', '-processors', '1', '-no-progress'],
+                           check=True, capture_output=True, timeout=30)
+            context = InstallContext(replace(valid_plan(), source=SourceSpec(image_path=str(source))),
+                                     lambda _: None, values={'target': target})
+            step = CopySystemStep(CommandRunner(lambda _: None))
+            step.execute(context)
+            step.verify(context)
+            for relative in CopySystemStep.signing_excludes:
+                self.assertFalse((target / relative).exists(), relative)
+            self.assertTrue((target / 'usr/lib/python3/dist-packages/anduinos_secureboot/identity.py').is_file())
 
 
 class EnvironmentReportingTests(unittest.TestCase):
@@ -95,6 +189,25 @@ class EnvironmentReportingTests(unittest.TestCase):
         output = "\n".join(logs)
         self.assertIn("Firmware mode: UEFI", output)
         self.assertIn("Secure Boot: enabled", output)
+
+    def test_external_uefi_fallback_is_reported_explicitly(self):
+        plan = valid_plan(external_target=True)
+        logs = []
+        step = DetectBootEnvironmentStep(
+            FakeRunner(),
+            platform_probe=lambda: PlatformProbe(
+                plan.platform.architecture,
+                plan.platform.firmware,
+                plan.platform.secure_boot,
+            ),
+        )
+        context = InstallContext(plan, logs.append)
+        step.preflight(context)
+        step.execute(context)
+        self.assertIn(
+            "UEFI fallback bootloader: enabled on the selected disk",
+            "\n".join(logs),
+        )
 
     def test_uefi_without_secure_boot_support_is_explicit(self):
         plan = valid_plan(secure_boot=SecureBoot.UNSUPPORTED)

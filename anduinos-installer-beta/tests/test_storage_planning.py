@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from helpers import valid_plan
 from installer_core.layout import build_erase_disk_layout
-from installer_core.model import Filesystem
+from installer_core.model import Architecture, Filesystem, Firmware, SecureBoot
 from installer_core.storage_commands import (
     StorageCommandPlan,
     build_storage_commands,
@@ -17,6 +17,50 @@ from installer_core.storage_write_set import (
 
 
 class EraseDiskExecutionPlanTests(unittest.TestCase):
+    def test_boot_writes_match_firmware_and_portability_in_complete_plan(self):
+        platforms = (
+            (Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED),
+            (Architecture.AMD64, Firmware.UEFI, SecureBoot.DISABLED),
+            (Architecture.ARM64, Firmware.UEFI, SecureBoot.ENABLED),
+            (Architecture.ARM64, Firmware.UEFI, SecureBoot.DISABLED),
+            (Architecture.AMD64, Firmware.BIOS, SecureBoot.NOT_APPLICABLE),
+        )
+        for architecture, firmware, secure_boot in platforms:
+            for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):
+                for external in (False, True):
+                    with self.subTest(
+                        architecture=architecture,
+                        firmware=firmware,
+                        secure_boot=secure_boot,
+                        filesystem=filesystem,
+                        external=external,
+                    ):
+                        plan = valid_plan(
+                            architecture=architecture,
+                            firmware=firmware,
+                            secure_boot=secure_boot,
+                            filesystem=filesystem,
+                            external_target=external,
+                        )
+                        execution = build_erase_disk_execution_plan(plan)
+                        expected_actions = [
+                            StorageAction.WRITE_BOOT_FILES,
+                            StorageAction.WRITE_FALLBACK_BOOT_FILES,
+                        ]
+                        if firmware is Firmware.UEFI:
+                            expected_actions.append(StorageAction.UPDATE_NVRAM)
+                        boot_writes = execution.write_set.operations[
+                            -len(expected_actions):
+                        ]
+                        self.assertEqual(
+                            [item.action for item in boot_writes],
+                            expected_actions,
+                        )
+                        self.assertEqual(
+                            {item.target_id for item in boot_writes},
+                            {plan.storage.graph.boot_targets[0].efi_filesystem_id},
+                        )
+
     def test_composes_commands_and_write_set_from_one_layout(self):
         execution = build_erase_disk_execution_plan(valid_plan())
         self.assertEqual(

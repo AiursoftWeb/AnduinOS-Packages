@@ -24,13 +24,13 @@ from gi.repository import Gtk, Adw, Gio, GLib
 from i18n import _, N_
 from languages import default_timezone, detect_system_language
 from pages import build_all_pages
-from frontend import guided_storage_enabled
 from installer_core.hostnames import (
     detect_device_type,
     generate_random_suffix,
     suggest_hostname,
 )
 from ui import load_visual_style
+from app_menu import InstallerMenu
 
 
 APP_ID = "com.anduinos.InstallerBeta"
@@ -52,12 +52,14 @@ class InstallerApplication(Adw.Application):
         self.shared_state: dict[str, object] = {
             "lang": detected_language.code,
             "keyboard": detected_language.keyboard,
+            "keyboard_variant": "",
             "disk": "",
             "disk_size": "",
             "disk_size_bytes": 0,
             "disk_model": "",
             "disk_stable_id": "",
             "disk_topology_digest": "",
+            "disk_external": False,
             "disk_windows_detected": False,
             "disk_bitlocker_detected": False,
             "disk_has_existing_partitions": False,
@@ -67,8 +69,8 @@ class InstallerApplication(Adw.Application):
             "guided_extent_id": "",
             "guided_esp_partuuid": "",
             "guided_storage_preview_model": None,
-            "guided_storage_enabled": guided_storage_enabled(),
             "filesystem": "btrfs",
+            "btrfs_compression": "balanced",
             "username": "",
             "full_name": "",
             "password": "",
@@ -101,7 +103,12 @@ class InstallerApplication(Adw.Application):
         Gtk.Window.set_default_icon_name(ICON_NAME)
 
     def do_activate(self):
-        """Build and present the main window."""
+        """Build the main window once, then present it on later activations."""
+        active_window = self.get_active_window()
+        if active_window is not None:
+            active_window.present()
+            return
+
         try:
             lang = str(self.shared_state["lang"])
             title_message = (
@@ -124,12 +131,19 @@ class InstallerApplication(Adw.Application):
             header = Adw.HeaderBar()
             win_title = Adw.WindowTitle(title=title)
             header.set_title_widget(win_title)
+            menu = InstallerMenu(win, self.shared_state)
+            header.pack_end(menu)
+            # Permit source-tree previews to use the same icon as installed builds.
+            Gtk.IconTheme.get_for_display(win.get_display()).add_search_path(
+                os.path.join(_install_dir, "..", "assets")
+            )
             toolbar.add_top_bar(header)
 
             def _set_window_language(language: str):
                 localized_title = _(title_message, language)
                 win.set_title(localized_title)
                 win_title.set_title(localized_title)
+                menu.refresh_language(language)
 
             self.shared_state["_set_window_language"] = _set_window_language
 

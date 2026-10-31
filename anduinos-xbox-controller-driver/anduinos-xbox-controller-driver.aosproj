@@ -1,23 +1,26 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-xbox-controller-driver</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Xbox Controller Driver (xpadneo) - seamless Bluetooth gamepad support</PackageDescription>
     <Section>admin</Section>
     <PackageHomepage>https://github.com/atar-axis/xpadneo</PackageHomepage>
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
-    <LicenseType>GPL-3.0</LicenseType>
+    <!-- The kernel driver and helpers retain their file-level upstream licenses;
+         see /usr/share/doc/anduinos-xbox-controller-driver/LICENSE.md. -->
+    <LicenseType>Various</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
   </PropertyGroup>
 
   <ItemGroup>
     <Dependency Include="dkms" />
     <Dependency Include="linux-headers-generic-hwe-26.04" Condition="'$(Suite)' == 'resolute-addon'" />
+    <Dependency Include="linux-headers-generic" Condition="'$(Suite)' == 'stonking-addon'" />
     <Dependency Include="bluez" />
     <Dependency Include="joystick" />
   </ItemGroup>
@@ -34,5 +37,8 @@
   <ItemGroup>
     <PostInstallScript Include="scripts/postinst.sh" />
     <PreRemoveScript Include="scripts/prerm.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
   </ItemGroup>
 </Project>

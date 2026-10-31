@@ -130,64 +130,25 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
         mkdir -p "$EXTRACT_DIR"
         dpkg-deb -x "$deb" "$EXTRACT_DIR" 2>/dev/null || continue
 
-        # Find gnome-shell.mo
-        mo_file=$(find "$EXTRACT_DIR" -name "gnome-shell.mo" -path "*/LC_MESSAGES/*" 2>/dev/null | head -1)
-        if [ -z "$mo_file" ]; then
-            continue
-        fi
+        # Regional catalogues share langpacks (zh_HK/zh_TW, pt/pt_BR).
+        # Process every catalogue, not just find's first result.
+        while IFS= read -r -d '' mo_file; do
+            locale_dir=${mo_file%/LC_MESSAGES/gnome-shell.mo}
+            lang=${locale_dir##*/}
+            [[ "$lang" =~ ^en ]] && continue
+            [[ -n "${ADD[$lang]+isset}" ]] || continue
 
-        # Determine language from path (e.g. .../zh_CN/LC_MESSAGES/gnome-shell.mo → zh_CN)
-        lang=$(echo "$mo_file" | grep -oP '/\K[^/]+(?=/LC_MESSAGES/gnome-shell\.mo$)')
-        if [ -z "$lang" ]; then
-            continue
-        fi
+            echo "[$SUITE] Patching gnome-shell.mo: $lang"
+            po_file="$APT_DIR/gnome-shell-$lang.po"
+            msgunfmt "$mo_file" -o "$po_file"
+            sed -i '/msgid "Pin to Dash"/{n;s/.*/msgstr "'"${ADD[$lang]}"'"/}' "$po_file"
+            sed -i '/msgid "Unpin"/{n;s/.*/msgstr "'"${REMOVE[$lang]}"'"/}' "$po_file"
 
-        # Map Ubuntu lang code to our translation key
-        # Ubuntu uses zh_CN (from zh-hans), zh_TW (from zh-hant), etc.
-        # Skip English variants — English is created from scratch below
-        [[ "$lang" =~ ^en ]] && continue
-
-        case "$lang" in
-            zh_CN) key="zh_CN" ;;
-            zh_TW) key="zh_TW" ;;
-            ja)    key="ja" ;;
-            ko)    key="ko" ;;
-            vi)    key="vi" ;;
-            th)    key="th" ;;
-            de)    key="de" ;;
-            fr)    key="fr" ;;
-            es)    key="es" ;;
-            ru)    key="ru" ;;
-            it)    key="it" ;;
-            pt)    key="pt" ;;
-            pt_BR) key="pt_BR" ;;
-            nl)    key="nl" ;;
-            sv)    key="sv" ;;
-            pl)    key="pl" ;;
-            tr)    key="tr" ;;
-            ar)    key="ar" ;;
-            ro)    key="ro" ;;
-            en|en_US|en_GB|en_AU) key="en" ;;
-            *)     continue ;;
-        esac
-
-        if [ -z "${ADD[$key]+isset}" ]; then
-            continue
-        fi
-
-        echo "[$SUITE] Patching gnome-shell.mo: $lang"
-
-        msgunfmt "$mo_file" -o /tmp/gnome-shell.po 2>/dev/null || continue
-
-        sed -i '/msgid "Pin to Dash"/{n;s/.*/msgstr "'"${ADD[$key]}"'"/}' /tmp/gnome-shell.po
-        sed -i '/msgid "Unpin"/{n;s/.*/msgstr "'"${REMOVE[$key]}"'"/}' /tmp/gnome-shell.po
-
-        out_dir="$DEPLOY_DIR/$lang/LC_MESSAGES"
-        mkdir -p "$out_dir"
-        msgfmt /tmp/gnome-shell.po -o "$out_dir/gnome-shell.mo"
-        rm -f /tmp/gnome-shell.po
-
-        patched=$((patched + 1))
+            out_dir="$DEPLOY_DIR/$lang/LC_MESSAGES"
+            mkdir -p "$out_dir"
+            msgfmt "$po_file" -o "$out_dir/gnome-shell.mo"
+            patched=$((patched + 1))
+        done < <(find "$EXTRACT_DIR" -name "gnome-shell.mo" -path "*/LC_MESSAGES/*" -print0)
     done
 
     # English: create from scratch (en langpack has no .mo — en is the source)
@@ -195,7 +156,7 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
         echo "[$SUITE] Creating English gnome-shell.mo..."
         out_dir="$DEPLOY_DIR/en/LC_MESSAGES"
         mkdir -p "$out_dir"
-        cat > /tmp/gnome-shell-en.po << EOF
+        cat > "$APT_DIR/gnome-shell-en.po" << EOF
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -206,8 +167,7 @@ msgstr "${ADD[en]}"
 msgid "Unpin"
 msgstr "${REMOVE[en]}"
 EOF
-        msgfmt /tmp/gnome-shell-en.po -o "$out_dir/gnome-shell.mo"
-        rm -f /tmp/gnome-shell-en.po
+        msgfmt "$APT_DIR/gnome-shell-en.po" -o "$out_dir/gnome-shell.mo"
         patched=$((patched + 1))
     fi
 

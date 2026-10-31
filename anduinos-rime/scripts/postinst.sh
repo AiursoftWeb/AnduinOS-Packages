@@ -28,6 +28,23 @@ if [ "$1" = "configure" ]; then
     remove_legacy_diversion \
         /usr/share/language-selector/data/pkg_depends \
         /usr/share/language-selector/data/pkg_depends.ubuntu
+
+    # Apkg stores package files with epoch timestamps. Rime compares those
+    # timestamps with the user's last deployment and otherwise skips upgrades.
+    for file in \
+        /usr/share/rime-data/anduinos_defaults.yaml \
+        /usr/share/rime-data/default.custom.yaml \
+        /usr/share/rime-data/rime_ice.schema.yaml \
+        /usr/share/rime-data/rime_ice.custom.yaml \
+        /usr/share/rime-data/melt_eng.schema.yaml \
+        /usr/share/rime-data/double_pinyin.schema.yaml \
+        /usr/share/rime-data/double_pinyin.custom.yaml \
+        /usr/share/rime-data/double_pinyin_mspy.schema.yaml \
+        /usr/share/rime-data/double_pinyin_mspy.custom.yaml \
+        /usr/share/rime-data/double_pinyin_flypy.schema.yaml \
+        /usr/share/rime-data/double_pinyin_flypy.custom.yaml; do
+        [ ! -f "$file" ] || touch "$file"
+    done
 fi
 
 #DEBHELPER#

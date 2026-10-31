@@ -1,14 +1,22 @@
 import subprocess
+import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from fakes import FakeRunner
 from helpers import valid_plan
+from test_steps import FakeStep
 from installer_core.command import CommandError
-from installer_core.steps import InstallContext, StepWarning
+from installer_core.model import Architecture
+from installer_core.steps import InstallContext, StepRunner, StepStatus, StepWarning
 from installer_core.snapshots_manager import (
+    DeployRecoveryEnvironmentStep,
+    RECOVERY_DEPLOYER,
+    CreateFactorySnapshotStep,
     EnsureSnapshotsManagerStep,
+    FACTORY_PROVISIONER,
     SNAPSHOTS_MANAGER_PACKAGE,
 )
 
@@ -82,6 +90,89 @@ def context_for(
     )
     context.values["test_logs"] = logs
     return context
+
+
+class RecoveryDeploymentTests(unittest.TestCase):
+    def create_deployer(self, target):
+        deployer = target / RECOVERY_DEPLOYER.lstrip("/")
+        deployer.parent.mkdir(parents=True)
+        deployer.touch()
+
+    def test_uses_the_planned_volume_uuid_without_reinstalling_or_refreshing_grub(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            self.create_deployer(target)
+            context = context_for(target, online=False)
+            context.values["partition_devices"] = {"recovery": "/dev/nvme0n1p4"}
+            volume_uuid = "12345678-1234-1234-1234-123456789abc"
+            runner = FakeRunner()
+            runner.outputs[("blkid", "-s", "UUID", "-o", "value", "/dev/nvme0n1p4")] = (volume_uuid, "", 0)
+            step = DeployRecoveryEnvironmentStep(runner)
+            step.execute(context)
+            binding = target / "var/lib/anduinos-recovery-env/volume.json"
+            binding.parent.mkdir(parents=True)
+            binding.write_text(json.dumps({"schema": 1, "volume_uuid": volume_uuid}))
+            step.verify(context)
+            commands = [c for c, _ in runner.commands]
+            self.assertIn(("chroot", str(target), RECOVERY_DEPLOYER,
+                           "deploy", "--volume-uuid", volume_uuid), commands)
+            self.assertFalse(any("apt-get" in c or "update-grub" in c or "dpkg-reconfigure" in c for c in commands))
+            binding.write_text(json.dumps({"volume_uuid": "another-volume"}))
+            with self.assertRaisesRegex(RuntimeError, "planned volume"):
+                step.verify(context)
+
+    def test_missing_planned_volume_never_deploys_to_another_volume(self):
+        with tempfile.TemporaryDirectory() as directory:
+            self.create_deployer(Path(directory))
+            context = context_for(Path(directory), online=False)
+            context.values["partition_devices"] = {"root": "/dev/vda4"}
+            runner = FakeRunner()
+            with self.assertRaisesRegex(RuntimeError, "did not create"):
+                DeployRecoveryEnvironmentStep(runner).execute(context)
+            self.assertEqual(runner.commands, [])
+
+    def test_unavailable_recovery_warns_and_continues_installation(self):
+        for architecture in Architecture:
+            for failure in ("missing-package", "deployment", "verification"):
+                with self.subTest(architecture=architecture, failure=failure), \
+                        tempfile.TemporaryDirectory() as directory:
+                    target = Path(directory)
+                    context = context_for(target, online=False)
+                    context.plan = valid_plan(architecture=architecture)
+                    context.values["partition_devices"] = {"recovery": "/dev/vda4"}
+                    volume_uuid = "12345678-1234-1234-1234-123456789abc"
+                    runner = FakeRunner()
+                    runner.outputs[("blkid", "-s", "UUID", "-o", "value", "/dev/vda4")] = (volume_uuid, "", 0)
+                    deploy = ("chroot", str(target), RECOVERY_DEPLOYER,
+                              "deploy", "--volume-uuid", volume_uuid)
+                    if failure != "missing-package":
+                        self.create_deployer(target)
+                    if failure == "verification":
+                        binding = target / "var/lib/anduinos-recovery-env/volume.json"
+                        binding.parent.mkdir(parents=True)
+                        binding.write_text(json.dumps({"volume_uuid": "wrong-volume"}))
+                    run = runner.run
+
+                    def execute(command, **kwargs):
+                        if tuple(command) == deploy and failure == "deployment":
+                            raise CommandError("Recovery deployment failed")
+                        return run(command, **kwargs)
+
+                    events = []
+                    statuses = []
+                    step = DeployRecoveryEnvironmentStep(runner)
+                    with patch.object(runner, "run", side_effect=execute):
+                        result = StepRunner(
+                            [step, FakeStep("install-bootloader", events)],
+                            status=lambda name, status, message: statuses.append((name, status)),
+                        ).run(context)
+                    self.assertTrue(result.succeeded)
+                    self.assertEqual(result.results[0].status, StepStatus.WARNING)
+                    self.assertIn((step.id, StepStatus.WARNING), statuses)
+                    self.assertIn("install-bootloader:verify", events)
+                    if failure == "missing-package":
+                        self.assertIn("anduinos-recovery-env", result.warnings[0].message)
+                        self.assertEqual(runner.commands, [])
 
 
 class EnsureSnapshotsManagerTests(unittest.TestCase):
@@ -186,6 +277,60 @@ class EnsureSnapshotsManagerTests(unittest.TestCase):
                 "inconsistent package state",
             ):
                 EnsureSnapshotsManagerStep(runner).execute(context)
+
+
+class CreateFactorySnapshotTests(unittest.TestCase):
+    def test_provisions_and_verifies_new_os_inside_target(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            context = context_for(target, online=False)
+            context.values["snapshots_manager_installed"] = True
+            provisioner = target / FACTORY_PROVISIONER.lstrip("/")
+            provisioner.parent.mkdir(parents=True, exist_ok=True)
+            provisioner.touch()
+            runner = FakeRunner()
+            runner.outputs[
+                ("chroot", str(target), FACTORY_PROVISIONER)
+            ] = ("created factory-id\n", "", 0)
+
+            step = CreateFactorySnapshotStep(runner)
+            step.execute(context)
+            step.verify(context)
+
+        commands = [command for command, _ in runner.commands]
+        self.assertIn(
+            ("chroot", str(target), FACTORY_PROVISIONER),
+            commands,
+        )
+        self.assertIn(
+            ("chroot", str(target), FACTORY_PROVISIONER, "--check"),
+            commands,
+        )
+        self.assertTrue(context.values["factory_snapshot_ready"])
+        self.assertIn(
+            "created factory-id",
+            "\n".join(context.values["test_logs"]),
+        )
+
+    def test_missing_manager_is_a_visible_warning(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            context = context_for(target, online=False)
+            context.values["snapshots_manager_installed"] = False
+            with self.assertRaisesRegex(StepWarning, "not created"):
+                CreateFactorySnapshotStep(FakeRunner()).execute(context)
+
+        self.assertFalse(context.values["factory_snapshot_ready"])
+
+    def test_old_manager_without_provisioner_is_a_visible_warning(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            context = context_for(target, online=False)
+            context.values["snapshots_manager_installed"] = True
+            with self.assertRaisesRegex(StepWarning, "does not provide"):
+                CreateFactorySnapshotStep(FakeRunner()).execute(context)
+
+        self.assertFalse(context.values["factory_snapshot_ready"])
 
 
 if __name__ == "__main__":

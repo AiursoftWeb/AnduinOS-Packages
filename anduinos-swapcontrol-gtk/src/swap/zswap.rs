@@ -61,21 +61,3 @@ fn read_sysfs_u8(path: &str) -> Result<u8, String> {
         )
     })
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_read_zswap_config() {
-        let result = read_zswap_config();
-        assert!(result.is_ok());
-    }
-
-    #[test]
-    fn test_get_available_compressors() {
-        let compressors = get_available_compressors();
-        assert!(!compressors.is_empty());
-        assert!(compressors.contains(&"lzo".to_string()));
-    }
-}

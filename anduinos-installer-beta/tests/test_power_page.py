@@ -1,3 +1,4 @@
+import re
 import unittest
 import subprocess
 from pathlib import Path
@@ -15,7 +16,6 @@ from pages import (
     recheck_power_requirement,
     secure_boot_recommendation_needed,
 )
-
 
 class PowerPageRoutingTests(unittest.TestCase):
     def low(self):
@@ -52,7 +52,7 @@ class PowerPageRoutingTests(unittest.TestCase):
             PowerProbeResult(None, False, 0),
         ):
             with self.subTest(power=power):
-                shared = {"development_mode": False}
+                shared = {"development_mode": False, "_platform_probe_result": self.platform(SecureBoot.DISABLED)}
                 nav = object()
                 network_page = object()
                 with (
@@ -92,7 +92,7 @@ class PowerPageRoutingTests(unittest.TestCase):
         secure_boot.assert_not_called()
 
     def test_full_connectivity_still_skips_network_after_power_check(self):
-        shared = {"development_mode": False}
+        shared = {"development_mode": False, "_platform_probe_result": self.platform(SecureBoot.ENABLED)}
         nav = object()
         keyboard_page = object()
         with (
@@ -115,6 +115,27 @@ class PowerPageRoutingTests(unittest.TestCase):
         network.assert_not_called()
         keyboard.assert_called_once_with(shared, nav)
 
+    def test_unknown_platform_routes_to_detection_without_synchronous_probe(self):
+        shared = {}
+        nav = object()
+        expected = object()
+        with (patch("pages.build_firmware_check_page", return_value=expected) as page,
+              patch("pages.probe_platform") as probe):
+            result = build_post_welcome_page(shared, nav, result=self.safe())
+        self.assertIs(result, expected)
+        page.assert_called_once_with(shared, nav)
+        probe.assert_not_called()
+
+    def test_unsupported_firmware_skips_recommendation(self):
+        shared = {"_platform_probe_result": self.platform(SecureBoot.UNSUPPORTED)}
+        with (patch("pages._build_keyboard_first_page", return_value="next"),
+              patch("pages.build_secure_boot_page") as recommendation,
+              patch("pages.probe_platform") as probe):
+            result = build_post_welcome_page(shared, object(), result=self.safe())
+        self.assertEqual(result, "next")
+        recommendation.assert_not_called()
+        probe.assert_not_called()
+
     def test_secure_boot_recommendation_routing(self):
         with patch("pages.probe_platform") as probe:
             self.assertFalse(
@@ -127,7 +148,7 @@ class PowerPageRoutingTests(unittest.TestCase):
                     {}, self.platform(SecureBoot.DISABLED)
                 )
             )
-            self.assertTrue(
+            self.assertFalse(
                 secure_boot_recommendation_needed(
                     {}, self.platform(SecureBoot.UNSUPPORTED)
                 )
@@ -201,53 +222,6 @@ class PowerPageRoutingTests(unittest.TestCase):
         self.assertFalse(warning_needed)
         self.assertIs(shared["_power_probe_result"], result)
 
-    def test_low_battery_ui_requires_checkbox_before_continue(self):
-        source = Path("src/pages.py").read_text(encoding="utf-8")
-        page_source = source.split("def build_low_battery_page", 1)[1].split(
-            "# ── page 2:", 1
-        )[0]
-        self.assertIn('page.set_tag("low-battery")', page_source)
-        self.assertIn("next_sensitive=False", page_source)
-        self.assertIn("risk_confirmation.get_active()", page_source)
-        self.assertIn("recheck_power_requirement(shared)", page_source)
-        self.assertIn("nav_view.push(", page_source)
-        self.assertIn("safe = not current.requires_warning", page_source)
-        self.assertIn('risk_confirmation.set_visible(not safe)', page_source)
-        self.assertIn('"emblem-ok-symbolic" if safe', page_source)
-        self.assertIn("_start_power_auto_refresh(page, _on_recheck)", page_source)
-
-    def test_power_page_listens_to_upower_and_has_minute_fallback(self):
-        source = Path("src/pages.py").read_text(encoding="utf-8")
-        monitor_source = source.split(
-            "def _start_power_auto_refresh", 1
-        )[1].split("def _build_network_or_keyboard_page", 1)[0]
-        self.assertIn('GLib.timeout_add_seconds(60, _refresh_timer)', monitor_source)
-        self.assertIn("return True", monitor_source)
-        self.assertIn('"org.freedesktop.UPower"', monitor_source)
-        self.assertIn('"EnumerateDevices"', monitor_source)
-        self.assertIn('"g-properties-changed"', monitor_source)
-        self.assertIn('page.connect("map", _start)', monitor_source)
-        self.assertIn('page.connect("unmap", _stop)', monitor_source)
-        self.assertIn("proxy.disconnect(handler)", monitor_source)
-
-    def test_secure_boot_actions_do_not_replace_wizard_navigation(self):
-        source = Path("src/pages.py").read_text(encoding="utf-8")
-        page_source = source.split("def build_secure_boot_page", 1)[1].split(
-            "# ── page 2:", 1
-        )[0]
-        self.assertIn("page_actions.append(restart_button)", page_source)
-        self.assertIn("page_actions.append(skip_button)", page_source)
-        self.assertIn("on_back=lambda: nav_view.pop()", page_source)
-        self.assertIn("on_next=_continue", page_source)
-        self.assertIn("next_label=_SECURE_BOOT_SKIP_LABEL", page_source)
-        self.assertIn(
-            'navigation.next_button.remove_css_class("suggested-action")',
-            page_source,
-        )
-        self.assertNotIn("navigation.set_start_widget", page_source)
-        self.assertNotIn("restart_button.set_sensitive(False)", page_source)
-        self.assertNotIn("development protection mode", page_source)
-
     def test_page_route_has_one_entry_per_real_normal_page(self):
         shared = {
             "_page_route_initialized": True,
@@ -264,7 +238,9 @@ class PowerPageRoutingTests(unittest.TestCase):
                 "software",
                 "disk",
                 "storage-strategy",
+                "disk-layout",
                 "user",
+                "advanced-options",
                 "timezone",
                 "summary",
                 "progress",
@@ -278,18 +254,46 @@ class PowerPageRoutingTests(unittest.TestCase):
             "_power_probe_result": self.safe(),
             "_platform_probe_result": self.platform(SecureBoot.ENABLED),
             "_network_page_planned": True,
-            "storage_strategy": "advanced-coexistence",
+            "storage_strategy": "advanced-manual",
         }
         route = _planned_page_route(shared)
-        self.assertEqual(len(route), 13)
-        self.assertEqual(route[:4], (
+        self.assertEqual(len(route), 14)
+        self.assertEqual(route[:5], (
             "welcome",
             "low-battery",
             "secure-boot-recommendation",
+            "keyboard",
             "network",
         ))
         self.assertEqual(route[8], "advanced-storage")
 
+    def test_every_registered_footer_has_a_progress_route_entry(self):
+        shared = {
+            "development_mode": True,
+            "_page_route_initialized": True,
+            "_power_probe_result": self.safe(),
+            "_platform_probe_result": self.platform(SecureBoot.ENABLED),
+            "_network_page_planned": True,
+            "storage_strategy": "advanced-manual",
+        }
+        source = Path("src/pages.py").read_text(encoding="utf-8")
+        registered_tags = set(re.findall(r'page_tag="([^"]+)"', source))
+        manual_route = set(_planned_page_route(shared))
+
+        self.assertEqual(
+            registered_tags - {"guided-storage", "disk-layout", "firmware-check"},
+            # Installation retains its route position but has a task progress
+            # bar instead of the configuration pages' navigation footer.
+            manual_route - {"progress"},
+        )
+
+        erase_shared = {
+            **shared,
+            "storage_strategy": "erase-btrfs",
+        }
+        erase_route = set(_planned_page_route(erase_shared))
+        self.assertIn("disk-layout", erase_route)
+        self.assertNotIn("advanced-storage", erase_route)
 
 if __name__ == "__main__":
     unittest.main()

@@ -5,11 +5,24 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
 import sys
 from collections.abc import Callable, Sequence
 
+from installer_core.ntfs_resize import inspect_ntfs_resize
+from installer_core.ext4_resize import inspect_ext4_resize
 from installer_core.probe import SUPPORTED_WHOLE_DISK_RE
+from installer_core.command import CommandRunner
+from installer_core.esp import inspect_esp_for_reuse, esp_vendor_digest
+from installer_core.mount_namespace import isolate_mount_namespace
+from installer_core.storage_inventory import probe_storage_inventory
+
+
+SUPPORTED_PARTITION_RE = re.compile(
+    r"^/dev/(?:sd[a-z]+[0-9]+|vd[a-z]+[0-9]+|xvd[a-z]+[0-9]+|"
+    r"nvme[0-9]+n[0-9]+p[0-9]+|mmcblk[0-9]+p[0-9]+)$"
+)
 
 
 def _error(message: str) -> int:
@@ -26,8 +39,17 @@ def main(
     args = tuple(sys.argv[1:] if arguments is None else arguments)
     if geteuid() != 0:
         return _error("The storage probe must be authorized by Polkit.")
+    if len(args) == 2 and args[0] == "--ntfs-inspect":
+        return _inspect_resize(args[1], run=run)
+    if len(args) == 2 and args[0] == "--ext4-inspect":
+        return _inspect_resize(args[1], run=run, filesystem="ext4")
+    if len(args) == 2 and args[0] == "--esp-inspect":
+        return _inspect_esp(args[1])
     if len(args) != 1 or not SUPPORTED_WHOLE_DISK_RE.fullmatch(args[0]):
-        return _error("The storage probe accepts exactly one supported whole disk.")
+        return _error(
+            "The storage probe accepts one supported whole disk or one "
+            "explicit NTFS/ext4 inspection."
+        )
     disk = args[0]
     environment = dict(os.environ, LC_ALL="C", LANGUAGE="C")
 
@@ -39,7 +61,7 @@ def main(
                 "--nodeps",
                 "--paths",
                 "--output",
-                "PATH,TYPE,RM",
+                "PATH,TYPE",
                 disk,
             ],
             capture_output=True,
@@ -61,9 +83,8 @@ def main(
         len(devices) != 1
         or str(device.get("path") or "") != disk
         or str(device.get("type") or "") != "disk"
-        or bool(device.get("rm"))
     ):
-        return _error("The requested device is not a supported fixed whole disk")
+        return _error("The requested device is not a supported whole disk")
 
     try:
         result = run(
@@ -88,6 +109,95 @@ def main(
     sys.stdout.write(result.stdout)
     sys.stderr.write(result.stderr)
     return result.returncode
+
+
+def _inspect_esp(partition: str) -> int:
+    """Advisory UI check only; executor repeats its authoritative preflight."""
+    if not SUPPORTED_PARTITION_RE.fullmatch(partition):
+        return _error("The ESP probe requires one supported partition path.")
+    try:
+        inventory = probe_storage_inventory()
+        matches = [p for d in inventory.disks for p in d.partitions
+                   if p.identity.path == partition]
+        if len(matches) != 1:
+            raise ValueError("The selected ESP could not be uniquely identified")
+        isolate_mount_namespace()
+        result = inspect_esp_for_reuse(
+            matches[0], CommandRunner(lambda message: print(message, file=sys.stderr)),
+        )
+        if not result.healthy:
+            raise ValueError(result.reason)
+        print(json.dumps({"partuuid": result.partuuid,
+                          "filesystem_uuid": result.filesystem_uuid,
+                          "occupied": bool(result.vendor_entries),
+                          "vendor_digest": esp_vendor_digest(result.vendor_entries)
+                          if result.vendor_entries else ""}))
+        return 0
+    except (OSError, RuntimeError, ValueError) as error:
+        return _error(f"Cannot inspect the selected ESP: {error}")
+
+
+def _inspect_resize(
+    partition: str,
+    *,
+    run: Callable[..., subprocess.CompletedProcess[str]],
+    filesystem: str = "ntfs",
+) -> int:
+    if not SUPPORTED_PARTITION_RE.fullmatch(partition):
+        return _error("The resize probe requires one supported partition path.")
+    environment = dict(os.environ, LC_ALL="C", LANGUAGE="C")
+    try:
+        identity = run(
+            [
+                "/usr/bin/lsblk",
+                "--json",
+                "--bytes",
+                "--paths",
+                "--nodeps",
+                "--output",
+                "PATH,SIZE,TYPE,RM,FSTYPE,PARTUUID,MOUNTPOINTS",
+                partition,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+            env=environment,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired) as error:
+        return _error(f"Cannot validate the selected partition: {error}")
+    if identity.returncode != 0:
+        return _error(identity.stderr.strip() or "lsblk validation failed")
+    try:
+        devices = json.loads(identity.stdout)["blockdevices"]
+        device = devices[0]
+        mountpoints = device.get("mountpoints") or []
+    except (IndexError, KeyError, TypeError, json.JSONDecodeError):
+        return _error("lsblk returned invalid partition identity data")
+    if not isinstance(mountpoints, list):
+        mountpoints = [mountpoints]
+    if (
+        len(devices) != 1
+        or str(device.get("path") or "") != partition
+        or str(device.get("type") or "") != "part"
+        or bool(device.get("rm"))
+        or not str(device.get("partuuid") or "")
+    ):
+        return _error("The requested device is not a supported fixed partition")
+    try:
+        size_bytes = int(device.get("size") or 0)
+    except (TypeError, ValueError):
+        return _error("lsblk returned an invalid partition size")
+    inspector = inspect_ext4_resize if filesystem == "ext4" else inspect_ntfs_resize
+    inspection = inspector(
+        partition,
+        size_bytes,
+        filesystem=str(device.get("fstype") or ""),
+        mounted=any(item for item in mountpoints),
+        run=run,
+    )
+    print(inspection.to_json())
+    return 0
 
 
 if __name__ == "__main__":

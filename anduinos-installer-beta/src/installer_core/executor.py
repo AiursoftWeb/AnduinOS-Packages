@@ -7,7 +7,7 @@ from pathlib import Path
 
 from .command import CommandRunner
 from .chroot_env import EnterChrootStep, LeaveChrootStep
-from .bootloader import InstallBootloaderStep
+from .bootloader import CreateFallbackBootChainStep, InstallBootloaderStep
 from .secure_boot import (
     EnrollSecureBootStep,
     PrepareSecureBootStep,
@@ -20,6 +20,7 @@ from .software import (
     UpgradeSystemStep,
 )
 from .execution_steps import (
+    CheckInstallationMediaStep,
     CopySystemStep,
     DetectBootEnvironmentStep,
     UnmountTargetStep,
@@ -28,9 +29,10 @@ from .execution_steps import (
 from .language_support import InstallLanguagePacksStep
 from .live_cleanup import RemoveLivePackagesStep
 from .mirrors import SelectFastestAptMirrorStep
-from .network import DetectNetworkConnectivityStep
-from .model import Filesystem, Firmware, InstallPlan
+from .network import DetectNetworkConnectivityStep, RecheckNetworkConnectivityStep
+from .model import Filesystem, Firmware, InstallMode, InstallPlan
 from .other_systems import CheckOtherDiskSystemsStep
+from .linux_systems import CheckLinuxSystemsStep
 from .regional_config import ConfigureKeyboardStep, InstallInputMethodStep
 from .remote_access import ProvisionRemoteAccessStep
 from .steps import (
@@ -43,7 +45,11 @@ from .steps import (
 from .storage_steps import MountTargetStep, PrepareStorageStep
 from .system_config import ConfigureSystemStep
 from .target_config import ConfigureStorageStep
-from .snapshots_manager import EnsureSnapshotsManagerStep
+from .snapshots_manager import (
+    DeployRecoveryEnvironmentStep,
+    CreateFactorySnapshotStep,
+    EnsureSnapshotsManagerStep,
+)
 from .wifi_migration import MigrateWifiConnectionStep
 from .validation import ExecutionPolicy, validate_plan_for_execution
 
@@ -85,6 +91,7 @@ class InstallerExecutor:
             DetectBootEnvironmentStep(self.runner),
             DetectNetworkConnectivityStep(),
             VerifyTargetDiskStep(self.runner),
+            CheckInstallationMediaStep(self.runner),
             PrepareStorageStep(self.runner, target=self.target),
             MountTargetStep(self.runner, target=self.target),
             CopySystemStep(self.runner),
@@ -93,6 +100,7 @@ class InstallerExecutor:
             EnterChrootStep(self.runner, target=self.target),
             RemoveLivePackagesStep(self.runner),
             ConfigureKeyboardStep(),
+            RecheckNetworkConnectivityStep(),
             SelectFastestAptMirrorStep(),
             # Establish the target-owned DKMS key before any package operation
             # can build kernel modules. Never let an upgrade inherit the
@@ -119,15 +127,23 @@ class InstallerExecutor:
         # machine fresh SSH host identity and reapplies the package-owned,
         # default-off remote-access policy as the final network-service state.
         steps.append(ProvisionRemoteAccessStep(self.runner))
+        if (plan.storage.mode is InstallMode.ERASE_DISK
+                and plan.storage.filesystem is Filesystem.BTRFS):
+            steps.append(DeployRecoveryEnvironmentStep(self.runner))
         steps.extend(
             (
                 VerifyDkmsSignaturesStep(self.runner),
                 InstallBootloaderStep(self.runner),
-                EnrollSecureBootStep(self.runner),
             )
         )
+        if plan.platform.firmware is Firmware.UEFI and plan.boot.install_fallback_path:
+            steps.append(CreateFallbackBootChainStep(self.runner))
+        steps.append(EnrollSecureBootStep(self.runner))
         if plan.platform.firmware is Firmware.UEFI:
             steps.append(CheckOtherDiskSystemsStep(self.runner))
+            steps.append(CheckLinuxSystemsStep(self.runner))
+        if plan.storage.filesystem is Filesystem.BTRFS:
+            steps.append(CreateFactorySnapshotStep(self.runner))
         steps.extend(
             (
                 LeaveChrootStep(self.runner),

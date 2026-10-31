@@ -6,16 +6,22 @@ Release one preserves Secure Boot on amd64 and arm64 UEFI systems. Legacy BIOS
 has no Secure Boot state. Secure Boot support is a release blocker, not an
 optional best-effort feature.
 
-The implementation follows Ubuntu's Ubiquity/shim workflow:
+The implementation preserves Ubuntu's signed boot chain, with AnduinOS's
+shared unified signing identity policy:
 
 - detect Secure Boot from the running firmware;
-- generate a local MOK with `update-secureboot-policy --new-key`;
+- generate a local unified MOK with `anduinos_secureboot.identity.generate_identity`;
 - install signed shim and signed GRUB;
 - configure DKMS to use the same key;
 - queue the certificate with `mokutil --import`;
 - show MOKManager on reboot for physical-presence confirmation.
 
 AnduinOS uses the documented one-time enrollment password `123456`.
+
+Starting with installer `2.0.5-1` and toolkit `2.0.5-4`, both the installer and
+Driver Center use the same RSA-3072 / digitalSignature / codeSigning generator
+and purpose validation. The module-only OID `1.3.6.1.4.1.2312.16.1.2` is absent.
+This does not deploy a custom GRUB or change the existing signed EFI chain.
 
 ## Differences from Ubiquity
 
@@ -24,11 +30,15 @@ the MOK directory into `/target` without overwriting existing files.
 
 The AnduinOS installer instead:
 
-1. Copies the target filesystem.
+1. Copies the target filesystem while excluding build/Live MOKs, the toolkit
+   identity/backup store, DKMS fallback keys, signing configuration and the
+   installer key marker.
 2. Rejects any unmarked key pair inherited from the squashfs.
 3. Generates a machine-local key directly inside the target.
 4. Records the certificate digest so an interrupted installation reuses the
-   same key rather than generating another pending enrollment.
+   same key rather than generating another pending enrollment. Validate its
+   purpose, validity and private/public pairing before writing that marker;
+   marked module-only or corrupt identities fail rather than passing silently.
 5. Configures DKMS and rebuilds third-party modules.
 6. Generates initramfs and installs signed boot artifacts.
 7. Verifies every signed EFI executable.
@@ -39,20 +49,31 @@ key whose target system or boot chain was never completed.
 
 ## State machine
 
+Every UEFI installation (erase, coexistence and manual; amd64 and arm64)
+installs the signed chain with `--uefi-secure-boot` and points the AnduinOS
+NVRAM entry at shim, regardless of the current enforcement state. The MOK
+state machine below is separate: when installed with enforcement off on
+supported UEFI firmware, a unified MOK is still generated and used for DKMS.
+No enrollment is requested in that case; users can later enroll the same MOK
+in Driver Center before enabling Secure Boot.
+OOBE no longer manages Secure Boot. An ESP newly created by this installation
+also receives the direct fallback chain before enrollment, regardless of disk
+transport or partitioning mode. Reused ESPs never receive this extra write.
+
 ```text
-Secure Boot disabled, unsupported by UEFI firmware, or Legacy BIOS
+Secure Boot unsupported by UEFI firmware, or Legacy BIOS
         |
         +-- no key generation, no MOK mutation
 
-Secure Boot enabled
+Secure Boot enabled or disabled on supported UEFI firmware
         |
-        +-- verify shim-signed, signed GRUB, mokutil and OpenSSL payloads
+        +-- verify required tools (signed payload check when enabled)
         |
         +-- reuse installer-marked key, otherwise discard inherited key
         |
-        +-- generate MOK.priv (0600) and MOK.der (0644)
+        +-- shared generator: unified MOK.priv (0600) and MOK.der (0644)
         |
-        +-- verify certificate public key matches private key
+        +-- verify pairing, expiry and unified signing permissions
         |
         +-- write explicit DKMS signing configuration
         |
@@ -62,11 +83,15 @@ Secure Boot enabled
         |
         +-- grub-install --uefi-secure-boot
         |
-        +-- verify signed named and fallback EFI chains
+        +-- verify the signed AnduinOS vendor EFI chain
+        |
+        +-- if enforcement disabled: complete without MOK mutation
         |
         +-- if already enrolled: complete
         |
         +-- if the same certificate is pending: do not import again
+        |
+        +-- if unrelated requests or unreadable state: fail without importing
         |
         +-- otherwise mokutil --import via stdin password
         |
@@ -99,6 +124,26 @@ containing the generated certificate's SHA-256 digest distinguishes an
 installer-created target key from squashfs residue and makes retries
 idempotent.
 
+Fresh installations keep a single identity in the standard
+`/var/lib/shim-signed/mok/MOK.{priv,der}` paths. No migration candidate or
+separate activation state is needed: Driver Center recognizes this unified
+identity directly, and actual enrollment is sufficient for trust. The
+toolkit's existing-system migration store is deliberately not copied.
+The new target may sign its own modules before enrollment; this does not grant
+permission to load them under Secure Boot until enrollment succeeds.
+
+Generation and validation use the Live OpenSSL binary with explicit target
+paths; subsequent DKMS and MOK operations run in the target chroot. No command
+generates or overwrites the Live system's signing identity. A redirected
+signing path or unexpected copied identity store aborts initialization.
+
+Package tests use real OpenSSL in temporary targets and a real miniature
+SquashFS extraction, while simulating firmware calls. They cover independent
+keys per installation, retry reuse, partial generation recovery, module-only
+rejection, disabled/unsupported firmware, canceled enrollment and conflicting
+pending requests. These are not a substitute for booting a new ISO and
+completing MOKManager under Secure Boot (the next acceptance stage).
+
 ## DKMS
 
 The installer writes:
@@ -122,21 +167,47 @@ failure. The following initramfs rebuild includes the resulting modules.
 
 amd64 requires signed:
 
-- `EFI/BOOT/BOOTX64.EFI`;
 - `EFI/AnduinOS/shimx64.efi`;
 - `EFI/AnduinOS/grubx64.efi`.
 
 arm64 requires signed:
 
-- `EFI/BOOT/BOOTAA64.EFI`;
 - `EFI/AnduinOS/shimaa64.efi`;
 - `EFI/AnduinOS/grubaa64.efi`.
 
 Each file is checked with `sbverify`. The PE machine field is also checked by
 the bootloader verifier to prevent an amd64/arm64 mismatch.
 
-The fallback artifacts above are release-one erase-disk requirements. The
-installer owns that ESP completely in erase-disk mode.
+Ordinary UEFI installations do not require or validate
+`EFI/BOOT/BOOTX64.EFI` or `EFI/BOOT/BOOTAA64.EFI`. They use the vendor path and
+an explicitly verified AnduinOS NVRAM entry. The immutable plan records whether
+the selected disk was external, and privileged preflight rejects any change in
+that property before storage writes.
+
+For an external target in erase-disk mode, the newly formatted, installer-owned
+ESP also receives a direct portable chain:
+
+- `EFI/BOOT/BOOTX64.EFI` or `BOOTAA64.EFI`: the signed shim payload;
+- `EFI/BOOT/grubx64.efi` or `grubaa64.efi`: signed GRUB;
+- `EFI/BOOT/mmx64.efi` or `mmaa64.efi`: signed MokManager;
+- `EFI/BOOT/grub.cfg`: an exact copy of the verified vendor configuration.
+
+GRUB installation still uses `--no-extra-removable`. The installer stages each
+file, checks PE architecture, cryptographically verifies each EFI signature,
+and publishes the shim entry last. It rejects symlinks and confirms every
+portable file is byte-for-byte identical to the corresponding vendor payload.
+It never installs `fbx64.efi` or `fbaa64.efi`, so portable boot does not enter
+shim's NVRAM-registration-and-ResetSystem path that caused #422. The normal
+AnduinOS NVRAM entry is still created and points to the vendor shim.
+
+This portable policy is forbidden for coexistence and manual layouts because
+their ESP may be shared with Windows or another operating system.
+
+When an amd64 erase-disk installation is launched through Legacy BIOS, the
+installer still writes a removable-media EFI path so the resulting disk can
+also boot on UEFI machines without relying on NVRAM services that were not
+available during installation. That BIOS portability path is separate from
+the Secure Boot MOK enrollment chain described here.
 
 ## Future coexistence and redundant boot targets
 
@@ -211,4 +282,15 @@ selection. Release still requires real UEFI tests for:
 - firmware that rejects EFI-variable writes;
 - interrupted installation before and after enrollment scheduling.
 - coexistence without changing pre-existing ESP files or fallback loaders;
+- external erase-disk boot with empty firmware variables, with Secure Boot
+  both disabled and enabled, without a ResetSystem loop;
 - multi-ESP synchronization and member-loss boot after RAID support exists.
+
+On 2026-09-22 the amd64 portable layout was exercised with QEMU q35/KVM,
+OVMF Secure Boot firmware and a fresh OVMF variable store containing no
+AnduinOS entry. The same disk reached the signed kernel and guest userspace
+once with Secure Boot disabled and once with Microsoft UEFI certificates and
+Secure Boot enabled. In both cases `BootCurrent` was OVMF's auto-created
+`UEFI Misc Device`, not an AnduinOS NVRAM entry, and only one kernel boot was
+observed. The ESP contained shim, signed GRUB, MokManager and `grub.cfg` under
+`EFI/BOOT`, with no `fbx64.efi`.

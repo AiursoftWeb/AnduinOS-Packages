@@ -62,7 +62,7 @@ def draw_preview(area, cr, w, h, style: str, position: str):
     """Draw a desktop preview with the taskbar on the requested edge."""
     del area
     start_centered = style == "eleven"
-    icons_centered = style in ("eleven", "seperated")
+    icons_centered = style in ("eleven", "separated")
     bar_thick = 18
     icon_w, icon_h, icon_r, icon_gap, icon_count = 14, 14, 3, 5, 5
     start_w, start_h = 18, 12
@@ -70,6 +70,21 @@ def draw_preview(area, cr, w, h, style: str, position: str):
     cr.set_source_rgb(0.12, 0.12, 0.14)
     cr.rectangle(0, 0, w, h)
     cr.fill()
+
+    if style == 'gnome':
+        # GNOME's top bar: overview at left, clock in the middle, system at right.
+        cr.set_source_rgb(0.05, 0.05, 0.06)
+        cr.rectangle(0, 0, w, bar_thick)
+        cr.fill()
+        cr.set_source_rgba(1, 1, 1, 0.8)
+        rounded_rect(cr, 8, 7, 12, 4, 2)
+        cr.fill()
+        cr.select_font_face('sans-serif')
+        cr.set_font_size(7)
+        cr.move_to(w / 2 - 10, 12)
+        cr.show_text('12:34')
+        _draw_sys_tray(cr, w - 52, 5)
+        return
 
     if position == "bottom":
         bar_x, bar_y, bar_w, bar_h = 0, h - bar_thick, w, bar_thick

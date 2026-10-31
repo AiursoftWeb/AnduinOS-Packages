@@ -17,10 +17,10 @@ MENU_CONFIG = {
     ("eleven", "top"): ("11", "TopCentered"),
     ("eleven", "left"): ("11", "Off"),
     ("eleven", "right"): ("11", "Off"),
-    ("seperated", "bottom"): ("arcmenu", "BottomLeft"),
-    ("seperated", "top"): ("arcmenu", "TopLeft"),
-    ("seperated", "left"): ("arcmenu", "TopLeft"),
-    ("seperated", "right"): ("arcmenu", "TopRight"),
+    ("separated", "bottom"): ("arcmenu", "BottomLeft"),
+    ("separated", "top"): ("arcmenu", "TopLeft"),
+    ("separated", "left"): ("arcmenu", "TopLeft"),
+    ("separated", "right"): ("arcmenu", "TopRight"),
 }
 
 MIN_MENU_HEIGHT = 650
@@ -31,8 +31,8 @@ MAX_SCREEN_HEIGHT = 1080
 MENU_MAX_HEIGHT = {
     "eleven": MIN_MENU_HEIGHT,
     "classic": MAX_MENU_HEIGHT,
-    # Seperated uses the same ArcMenu layout as Classic.
-    "seperated": MAX_MENU_HEIGHT,
+    # Separated uses the same ArcMenu layout as Classic.
+    "separated": MAX_MENU_HEIGHT,
 }
 
 POSITIONS = {
@@ -45,7 +45,7 @@ POSITIONS = {
 
 def _make_panel_element_positions(style: str, monitors: list[str]) -> str:
     """Build Dash-to-Panel's panel-element-positions JSON."""
-    if style == "seperated":
+    if style == "separated":
         elements = [
             {"element": "centerBox", "visible": True, "position": "stackedTL"},
             {"element": "taskbar", "visible": True, "position": "centerMonitor"},
@@ -100,7 +100,7 @@ def detect_current() -> tuple[str, str]:
     menu_layout = dconf_read(f"{ARC}/menu-layout")
     if menu_layout and "arcmenu" in menu_layout:
         elements = dconf_read(f"{DTP}/panel-element-positions")
-        style = "seperated" if elements and "centerMonitor" in elements else "classic"
+        style = "separated" if elements and "centerMonitor" in elements else "classic"
     else:
         style = "eleven"
 
@@ -221,7 +221,7 @@ def calculate_menu_height(style: str, screen_height: int | None = None) -> int:
     return min(MENU_MAX_HEIGHT[style], adaptive_height)
 
 
-def apply_style_and_position(style: str, position: str) -> bool:
+def apply_style_and_position(style: str, position: str, *, screen_height=None) -> bool:
     """Apply one complete taskbar style and position through dconf."""
     menu_layout, force_menu = MENU_CONFIG[(style, position)]
     panel_position = POSITIONS[position]
@@ -231,7 +231,7 @@ def apply_style_and_position(style: str, position: str) -> bool:
         {monitor: panel_position for monitor in monitors}
     )
     panel_sizes = _panel_sizes(monitors)
-    menu_height = calculate_menu_height(style)
+    menu_height = calculate_menu_height(style, screen_height)
 
     try:
         subprocess.run(

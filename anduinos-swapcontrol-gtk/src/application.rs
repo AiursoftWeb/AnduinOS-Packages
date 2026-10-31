@@ -73,7 +73,11 @@ impl SwapcontrolApplication {
 
         let action_quit = gio::ActionEntry::builder("quit")
             .activate(move |app: &Self, _, _| {
-                app.quit();
+                if let Some(window) = app.active_window() {
+                    window.close();
+                } else {
+                    app.quit();
+                }
             })
             .build();
 

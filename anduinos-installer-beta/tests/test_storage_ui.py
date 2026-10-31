@@ -93,6 +93,36 @@ class StorageWorkflowTests(unittest.TestCase):
             if item.action is StorageAction.FORMAT
         }
         self.assertEqual(formats, {"vfat", "swap", "ext4"})
+        fallback = [item for item in preview.write_set.operations
+                    if item.action is StorageAction.WRITE_FALLBACK_BOOT_FILES]
+        self.assertEqual(len(fallback), 1)
+        self.assertEqual(fallback[0].display_path,
+                         next(item.display_path for item in preview.write_set.operations
+                              if item.action is StorageAction.FORMAT
+                              and item.detail("filesystem") == "vfat"))
+        self.assertFalse(build_guided_storage_confirmation(preview).writes_shared_fallback)
+
+    def test_zero_disk_swap_preview_keeps_only_root_and_preserved_esp(self):
+        model = workflow()
+        selection = recommended_guided_selection(
+            model.disks[0], Filesystem.BTRFS
+        )
+        preview = build_guided_storage_preview(
+            model,
+            selection,
+            swap_size_mib=0,
+        )
+        self.assertEqual(preview.swap_size_mib, 0)
+        self.assertEqual(
+            tuple(item.name for item in preview.graph.partitions),
+            ("root",),
+        )
+        formats = {
+            item.detail("filesystem")
+            for item in preview.write_set.operations
+            if item.action is StorageAction.FORMAT
+        }
+        self.assertEqual(formats, {"btrfs"})
 
     def test_confirmation_is_reduced_from_the_typed_write_set(self):
         model = workflow()

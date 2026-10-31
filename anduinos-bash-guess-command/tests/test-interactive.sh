@@ -6,16 +6,16 @@ ARCH="$(dpkg --print-architecture 2>/dev/null || uname -m)"
 case $ARCH in
     amd64|x86_64) ARCH=amd64 ;;
     arm64|aarch64) ARCH=arm64 ;;
-    *) printf 'SKIP: unsupported test architecture: %s\n' "$ARCH"; exit 0 ;;
+    *) printf 'Unsupported test architecture: %s\n' "$ARCH" >&2; exit 1 ;;
 esac
 
 fail() { printf 'FAIL: %s\n' "$1" >&2; exit 1; }
 
-MODULE="$ROOT/deploy/$ARCH/anduinos-ghost.so"
-DAEMON="$ROOT/deploy/$ARCH/anduinos-quietd"
+MODULE="${ANDUINOS_GHOST_MODULE:-$ROOT/deploy/$ARCH/anduinos-ghost.so}"
+DAEMON="${ANDUINOS_QUIETD:-$ROOT/deploy/$ARCH/anduinos-quietd}"
 [[ -r $MODULE && -x $DAEMON ]] || {
-    printf 'SKIP: build native frontend and engine for %s first.\n' "$ARCH"
-    exit 0
+    printf 'Missing native frontend or engine; run apkg test to compile test artifacts.\n' >&2
+    exit 1
 }
 
 TEST_ROOT="$(mktemp -d)"
@@ -125,10 +125,50 @@ sed "s|HISTFILE='/dev/null'|HISTFILE='$TEST_ROOT/home/import.bash_history'|" \
 
 run_session_with_rcfile() {
     local producer=$1 transcript=$2 rcfile=$3
-    "$producer" | ANDUINOS_GUESS_COMMAND=0 TERM=xterm-256color \
+    : >"$transcript"
+    TEST_TRANSCRIPT="$transcript" TEST_RCFILE="$rcfile" "$producer" | ANDUINOS_GUESS_COMMAND=0 TERM=xterm-256color \
         HOME="$TEST_ROOT/home" \
-        script -qefc "bash --noprofile --rcfile '$rcfile' -i" \
+        timeout --kill-after=2 30 script -qefc "bash --noprofile --rcfile '$rcfile' -i" \
         "$transcript" >/dev/null
+}
+
+wait_ready() {
+    local deadline=$((SECONDS + 10))
+    until grep -Fq 'NATIVE_TEST> ' "$TEST_TRANSCRIPT"; do
+        ((SECONDS < deadline)) || fail "interactive Bash did not become ready"
+        sleep 0.01
+    done
+    [[ $TEST_RCFILE == "$TEST_ROOT/late-disabled-bashrc" ]] && return 0
+    # A prompt can precede the asynchronous native helper's first response.
+    # Probe the real frontend before sending scenario commands whose completion
+    # events must be observed; never assume a fixed startup delay is sufficient.
+    local probe="$TEST_ROOT/frontend-ready"
+    while ((SECONDS < deadline)); do
+        rm -f -- "$probe" "$probe.done"
+        printf "anduinos_ghost diagnose 'git stat' >'%s'; : >'%s.done'\n" "$probe" "$probe"
+        until [[ -f $probe.done ]]; do
+            ((SECONDS < deadline)) || fail "native frontend probe did not finish"
+            sleep 0.01
+        done
+        grep -Fq 'query=git stat suggestion=us ' "$probe" && return 0
+        # A timed-out probe restarts the helper. Allow cold initialization
+        # before probing again, otherwise rapid retries can starve startup.
+        sleep 0.2
+    done
+    fail "native frontend did not become ready"
+}
+
+wait_for_suggestion() {
+    local expected=$1 last_character=${2:-_} deadline=$((SECONDS + 10))
+    until grep -Fq "$expected" "$TEST_TRANSCRIPT"; do
+        ((SECONDS < deadline)) || fail "suggestion did not become ready: $expected"
+        # Retype the last character to issue a new query after cold startup.
+        # Redisplay alone deliberately reuses the frontend's cached suggestion.
+        printf '\177'
+        sleep 0.02
+        printf '%s' "$last_character"
+        sleep 0.02
+    done
 }
 
 run_session() {
@@ -136,30 +176,49 @@ run_session() {
 }
 
 accept_workflow_input() {
-    sleep 0.5
+    wait_ready
     printf 'sudo apt update\n'
     sleep 0.2
     printf 'sudo apt up'
-    sleep 0.2
+    wait_for_suggestion 'grade' 'p'
+    printf '\033[C\nexit\n'
+}
+
+compound_workflow_input() {
+    wait_ready
+    printf 'sudo apt update && sudo '
+    wait_for_suggestion 'apt upgrade' ' '
+    [[ ! -e $TEST_ROOT/sudo.args ]] || fail 'compound prediction executed before acceptance'
+    printf '\033[C\nexit\n'
+}
+
+compound_history_input() {
+    wait_ready
+    for _ in {1..5}; do
+        printf 'sudo apt upgrade -y\n'
+        sleep 0.25
+    done
+    printf 'sudo apt update && sudo '
+    wait_for_suggestion $'\033[90mapt upgrade -y' ' '
     printf '\033[C\nexit\n'
 }
 
 apt_skeleton_input() {
-    sleep 0.5
+    wait_ready
     printf 'sudo apt '
-    sleep 0.2
+    wait_for_suggestion 'update' ' '
     printf '\033[C\nexit\n'
 }
 
 apt_package_input() {
-    sleep 0.5
+    wait_ready
     printf 'sudo apt install b'
-    sleep 0.2
+    wait_for_suggestion 'top' 'b'
     printf '\033[C\nexit\n'
 }
 
 enter_native_input() {
-    sleep 0.5
+    wait_ready
     printf 'sudo apt up'
     sleep 0.2
     printf '\r'
@@ -168,64 +227,64 @@ enter_native_input() {
 }
 
 end_accept_input() {
-    sleep 0.5
+    wait_ready
     printf 'sudo apt update\n'
     sleep 0.2
     printf 'sudo apt up'
-    sleep 0.2
+    wait_for_suggestion 'grade' 'p'
     printf '\033[4~\nexit\n'
 }
 
 end_midline_input() {
-    sleep 0.5
+    wait_ready
     printf 'sudo apt update\n'
     sleep 0.2
     printf 'sudo apt up'
-    sleep 0.2
+    wait_for_suggestion 'grade' 'p'
     printf '\033[D\033[4~\nexit\n'
 }
 
 docker_input() {
-    sleep 0.5
+    wait_ready
     printf 'sudo docker ps\n'
     sleep 0.35
     printf 'sudo docker exec -it '
-    sleep 0.2
+    wait_for_suggestion 'kind_bassi' ' '
     printf '\033[C\nexit\n'
 }
 
 docker_mind_reading_input() {
-    sleep 0.5
+    wait_ready
     printf 'sudo docker ps\n'
     sleep 0.35
     printf 'sudo docker e'
-    sleep 0.2
+    wait_for_suggestion 'kind_bassi' 'e'
     printf '\033[C\nexit\n'
 }
 
 docker_skeleton_input() {
-    sleep 0.5
+    wait_ready
     printf 'sudo docker '
-    sleep 0.2
+    wait_for_suggestion 'ps' ' '
     printf '\033[C\nexit\n'
 }
 
 git_skeleton_input() {
-    sleep 0.5
+    wait_ready
     printf 'sudo git'
-    sleep 0.2
+    wait_for_suggestion 'status' 't'
     printf '\033[C\nexit\n'
 }
 
 git_checkout_input() {
-    sleep 0.5
+    wait_ready
     printf 'sudo git che'
-    sleep 0.2
+    wait_for_suggestion 'ckout' 'e'
     printf '\033[C\nexit\n'
 }
 
 docker_ambiguous_input() {
-    sleep 0.5
+    wait_ready
     touch "$TEST_ROOT/multiple-containers"
     printf 'sudo docker ps\n'
     sleep 0.35
@@ -235,7 +294,7 @@ docker_ambiguous_input() {
 }
 
 paste_input() {
-    sleep 0.5
+    wait_ready
     printf '\033[200~printf PASTE_ONE >%s/paste-one\nprintf PASTE_TWO >%s/paste-two\033[201~' \
         "$TEST_ROOT" "$TEST_ROOT"
     sleep 0.25
@@ -245,44 +304,44 @@ paste_input() {
 }
 
 learn_history_input() {
-    sleep 0.5
+    wait_ready
     printf "printf PERSONAL_MEMORY >'%s/personal-memory'\n" "$TEST_ROOT"
     sleep 0.25
     printf 'exit\n'
 }
 
 recall_history_input() {
-    sleep 0.5
+    wait_ready
     printf 'printf PERSONAL_'
-    sleep 0.2
+    wait_for_suggestion 'MEMORY' '_'
     printf '\033[C\nexit\n'
 }
 
 import_bash_history_input() {
-    sleep 0.5
+    wait_ready
     printf 'printf IMPORTED_'
-    sleep 0.2
+    wait_for_suggestion HISTORY
     printf '\033[C\nexit\n'
 }
 
 path_input() {
-    sleep 0.7
+    wait_ready
     printf 'cat READ'
-    sleep 0.2
+    wait_for_suggestion 'ME.md' 'D'
     printf '\033[C\nexit\n'
 }
 
 explicit_current_path_input() {
-    sleep 0.5
+    wait_ready
     printf 'cd %s\n' "$TEST_ROOT/home"
     sleep 0.3
     printf 'cat ./.bash_a'
-    sleep 0.2
+    wait_for_suggestion 'lpha' 'a'
     printf '\033[C\nexit\n'
 }
 
 ls_option_path_input() {
-    sleep 0.5
+    wait_ready
     printf 'cd %s\n' "$TEST_ROOT/home"
     sleep 0.3
     printf 'ls -ashl ./de'
@@ -291,12 +350,12 @@ ls_option_path_input() {
 }
 
 native_tab_input() {
-    sleep 0.5
+    wait_ready
     printf 'nativecmd nat\t\nexit\n'
 }
 
 transition_input() {
-    sleep 0.5
+    wait_ready
     printf 'printf CONTEXT_ONE >%s/context-one\n' "$TEST_ROOT"
     sleep 0.15
     printf 'printf CONTEXT_TWO >%s/context-two\n' "$TEST_ROOT"
@@ -309,7 +368,7 @@ transition_input() {
 }
 
 created_directory_input() {
-    sleep 0.5
+    wait_ready
     printf 'mkdir %s/smart-directory\n' "$TEST_ROOT"
     sleep 0.3
     printf 'cd %s/sm' "$TEST_ROOT"
@@ -320,28 +379,28 @@ created_directory_input() {
 }
 
 ssh_host_input() {
-    sleep 0.7
+    wait_ready
     printf 'ssh prod'
-    sleep 0.2
+    wait_for_suggestion 'uction-api' 'd'
     printf '\033[C\nexit\n'
 }
 
 dd_input_path_input() {
-    sleep 0.6
+    wait_ready
     printf 'sudo dd if=/'
-    sleep 0.2
+    wait_for_suggestion 'dev/' '/'
     printf '\033[C\nexit\n'
 }
 
 dd_empty_output_input() {
-    sleep 0.6
+    wait_ready
     printf 'sudo dd of='
     sleep 0.2
     printf '\033[C\nexit\n'
 }
 
 destructive_history_input() {
-    sleep 0.6
+    wait_ready
     printf 'sudo rm -rf /nonexistent-anduinos-ghost-test\n'
     sleep 0.2
     printf 'sudo rm -'
@@ -350,7 +409,7 @@ destructive_history_input() {
 }
 
 loader_lifecycle_input() {
-    sleep 0.5
+    wait_ready
     printf 'declare -p PROMPT_COMMAND >%s/prompt-command\n' "$TEST_ROOT"
     printf 'helper=$(pgrep -P $$ -x anduinos-quietd); [[ -n $helper && ! -e /proc/$helper/fd/9 ]] && printf CLOSED >%s/fd-hygiene\n' "$TEST_ROOT"
     sleep 0.2
@@ -358,16 +417,16 @@ loader_lifecycle_input() {
 }
 
 helper_recovery_input() {
-    sleep 0.5
+    wait_ready
     printf 'kill -KILL "$(pgrep -P $$ -x anduinos-quietd)"\n'
     sleep 0.5
     printf 'sudo git che'
-    sleep 0.2
+    wait_for_suggestion 'ckout' 'e'
     printf '\033[C\nexit\n'
 }
 
 disabled_prediction_probe_input() {
-    sleep 0.5
+    wait_ready
     printf 'helper=$(pgrep -P $$ -x anduinos-quietd || :); [[ -z $helper ]] && printf STOPPED >%s/helper-stopped\n' "$TEST_ROOT"
     printf 'sudo docker p'
     sleep 0.2
@@ -375,7 +434,7 @@ disabled_prediction_probe_input() {
 }
 
 runtime_disable_input() {
-    sleep 0.5
+    wait_ready
     printf 'export ANDUINOS_GUESS_COMMAND=0\n'
     sleep 0.2
     printf 'helper=$(pgrep -P $$ -x anduinos-quietd || :); [[ -z $helper ]] && printf STOPPED >%s/runtime-helper-stopped\n' "$TEST_ROOT"
@@ -385,19 +444,19 @@ runtime_disable_input() {
 }
 
 runtime_reenable_input() {
-    sleep 0.5
+    wait_ready
     printf 'export ANDUINOS_GUESS_COMMAND=0\n'
     sleep 0.2
     printf 'export ANDUINOS_GUESS_COMMAND=1\n'
     sleep 0.3
     printf 'sudo git che'
-    sleep 0.2
+    wait_for_suggestion 'ckout' 'e'
     printf '\033[C\nexit\n'
 }
 
 resize_input() {
     local shell_pid= tty_path= columns
-    sleep 0.5
+    wait_ready
     for _ in {1..20}; do
         shell_pid=$(pgrep -n -f "bash --noprofile --rcfile $TEST_ROOT/bashrc -i" || :)
         if [[ -n $shell_pid ]]; then
@@ -416,7 +475,7 @@ resize_input() {
 
 resize_rows_input() {
     local shell_pid= tty_path= rows
-    sleep 0.5
+    wait_ready
     for _ in {1..20}; do
         shell_pid=$(pgrep -n -f "bash --noprofile --rcfile $TEST_ROOT/bashrc -i" || :)
         if [[ -n $shell_pid ]]; then
@@ -505,8 +564,10 @@ run_session paste_input "$TEST_ROOT/paste.typescript"
 [[ $(<"$TEST_ROOT/paste-one") == PASTE_ONE &&
    $(<"$TEST_ROOT/paste-two") == PASTE_TWO ]] ||
     fail 'native multiline paste did not execute normally after Enter'
-if LC_ALL=C tr -d '\r' <"$TEST_ROOT/paste.typescript" | grep -Eqi \
-    -- '-- MULTILINE --|RET or C-m:|progress|updating tput cache|ble\.sh'; then
+# Drain the transcript: grep -q may close the pipe after a match, making tr
+# fail with SIGPIPE under pipefail even though completion succeeded.
+if LC_ALL=C tr -d '\r' <"$TEST_ROOT/paste.typescript" | grep -Ei \
+    -- '-- MULTILINE --|RET or C-m:|progress|updating tput cache|ble\.sh' >/dev/null; then
     fail 'line-editor UI leaked into multiline paste'
 fi
 
@@ -521,12 +582,12 @@ run_session recall_history_input "$TEST_ROOT/history-recall.typescript"
 
 run_session path_input "$TEST_ROOT/path.typescript"
 LC_ALL=C tr -d '\r' <"$TEST_ROOT/path.typescript" | \
-    grep -q 'anduinos-bash-guess-command' ||
+    grep 'anduinos-bash-guess-command' >/dev/null ||
     fail 'current-directory snapshot did not complete README.md'
 
 run_session explicit_current_path_input "$TEST_ROOT/explicit-path.typescript"
 LC_ALL=C tr -d '\r' <"$TEST_ROOT/explicit-path.typescript" | \
-    grep -q 'EXPLICIT_PATH_PREFIX' ||
+    grep 'EXPLICIT_PATH_PREFIX' >/dev/null ||
     fail 'an explicit ./ prefix prevented current-directory path completion'
 
 run_session ls_option_path_input "$TEST_ROOT/ls-option-path.typescript"
@@ -579,6 +640,17 @@ run_session resize_rows_input "$TEST_ROOT/resize-rows.typescript"
 if LC_ALL=C grep -aFq 'NATIVE_TEST> NATIVE_TEST> ' "$TEST_ROOT/resize-rows.typescript"; then
     fail 'row-only terminal resizing left duplicate prompts visible'
 fi
+
+# Compound sessions learn new transitions; keep them after the original
+# scenarios so they do not change those scenarios' persistent history.
+rm -f -- "$TEST_ROOT/sudo.args"
+run_session compound_workflow_input "$TEST_ROOT/compound-workflow.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'apt upgrade' ]] ||
+    fail 'same-line update did not predict upgrade without adding flags'
+
+run_session compound_history_input "$TEST_ROOT/compound-history.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'apt upgrade -y' ]] ||
+    fail 'same-line update did not reuse the learned upgrade flags'
 
 # Keep opt-out lifecycle probes last: they deliberately toggle the master switch
 # and must not influence the persistent ranking exercised above.

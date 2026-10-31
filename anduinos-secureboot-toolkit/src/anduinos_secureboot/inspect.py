@@ -9,6 +9,8 @@ import shutil
 import subprocess
 from typing import Protocol, Sequence
 
+from .firmware import parse_secure_boot_status, probe_firmware, recover_firmware
+
 from .model import (
     DkmsState,
     ModuleState,
@@ -20,6 +22,7 @@ from .model import (
 MOK_PRIVATE_KEY = Path("/var/lib/shim-signed/mok/MOK.priv")
 MOK_CERTIFICATE = Path("/var/lib/shim-signed/mok/MOK.der")
 DKMS_CONFIG = Path("/etc/dkms/framework.conf.d/anduinos-sb-sign.conf")
+EFI_FIRMWARE = Path("/sys/firmware/efi")
 
 
 class Runner(Protocol):
@@ -145,37 +148,25 @@ def certificate_pending(certificate: Path, runner: Runner) -> bool:
     )
 
 
-def parse_secure_boot_status(
-    result: subprocess.CompletedProcess[str],
-) -> SecureBootStatus:
-    """Parse every explicit mokutil state without guessing on failures."""
-    if result.returncode != 0:
-        return SecureBootStatus.UNKNOWN
-    output = f"{result.stdout}\n{result.stderr}".lower()
-    reported_states = {
-        status
-        for status, reported in (
-            (
-                SecureBootStatus.ENABLED,
-                "secureboot enabled" in output
-                or "secure boot enabled" in output,
-            ),
-            (
-                SecureBootStatus.DISABLED,
-                "secureboot disabled" in output
-                or "secure boot disabled" in output,
-            ),
-            (
-                SecureBootStatus.UNSUPPORTED,
-                "doesn't support secure boot" in output
-                or "does not support secure boot" in output,
-            ),
-        )
-        if reported
-    }
-    if len(reported_states) == 1:
-        return reported_states.pop()
-    return SecureBootStatus.UNKNOWN
+def enrolled_certificate_serials(runner: Runner) -> tuple[str, ...]:
+    """Signer identifiers from the enrolled MOK certificates, not pending keys.
+
+    Keep the old enrollment usable while the local signing identity is rotated.
+    This is signature-identifier inspection, not a substitute for the kernel's
+    cryptographic verification when a module is actually loaded.
+    """
+    result = runner.run(["mokutil", "--list-enrolled"])
+    if result.returncode:
+        return ()
+    serials = set()
+    for decimal_hex, multiline in re.findall(
+        r"Serial Number:[ \t]*(?:[0-9]+[ \t]+\(0x([0-9a-fA-F]+)\)|\n[ \t]*([0-9a-fA-F:]+))",
+        result.stdout,
+    ):
+        key = normalize_key(decimal_hex or multiline)
+        if key:
+            serials.add(key)
+    return tuple(sorted(serials))
 
 
 def inspect_secure_boot(
@@ -184,10 +175,30 @@ def inspect_secure_boot(
     certificate: Path = MOK_CERTIFICATE,
     kernel_release: str | None = None,
     configuration: Path = DKMS_CONFIG,
+    efi_firmware: Path = EFI_FIRMWARE,
+    *,
+    recover: bool = False,
 ) -> SecureBootState:
+    from .boot_chain import current_loader, setup_mode
+    from .grub import inspect_grub
+
     runner = runner or SubprocessRunner()
-    state = runner.run(["mokutil", "--sb-state"])
-    status = parse_secure_boot_status(state)
+    identity = None
+    if private_key == MOK_PRIVATE_KEY and certificate == MOK_CERTIFICATE:
+        from .identity import inspect_identity, selected_paths
+        identity = inspect_identity(runner)
+        try:
+            private_key, certificate = selected_paths(runner=runner, state=identity)
+        except (OSError, ValueError, KeyError, TypeError):
+            # Keep the existing working identity visible if migration metadata
+            # is damaged; the separate identity diagnostic explains the fault.
+            pass
+    evidence = probe_firmware(
+        run=lambda command, **kwargs: runner.run(command), efi_path=efi_firmware
+    )
+    if recover:
+        evidence = recover_firmware(evidence)
+    status = evidence.status
     enabled = status is SecureBootStatus.ENABLED
     key_present = private_key.is_file()
     certificate_present = certificate.is_file()
@@ -216,6 +227,13 @@ def inspect_secure_boot(
         headers_available=headers_available,
         configuration_present=configuration.is_file(),
         status=status,
+        firmware_reason=evidence.reason,
+        firmware_detail=evidence.detail,
+        setup_mode=setup_mode(efi_firmware) if efi_firmware.exists() else None,
+        boot_loader=current_loader(runner) if efi_firmware.exists() else "unknown",
+        enrolled_certificate_serials=enrolled_certificate_serials(runner),
+        signing_identity=identity,
+        grub=inspect_grub(runner) if identity is not None else None,
     )
 
 
@@ -242,29 +260,21 @@ def inspect_dkms(
     module_directory = module_directory or Path(
         "/lib/modules", os.uname().release, "updates/dkms"
     )
-    if not module_directory.is_dir():
-        return DkmsState()
-
     details: list[ModuleState] = []
     try:
         paths = sorted(module_directory.iterdir())
-    except OSError:
+    except FileNotFoundError:
         return DkmsState()
     for path in paths:
         if not path.name.endswith((".ko", ".ko.xz", ".ko.zst")):
             continue
         signature = module_signature(str(path), runner)
-        trusted = bool(
-            secure_boot.enforcement_inactive
-            or (
-                secure_boot.status is SecureBootStatus.ENABLED
-                and secure_boot.enrolled
-                and signature
-                and secure_boot.certificate_serial
-                and signature == secure_boot.certificate_serial
-            )
-        )
-        details.append(ModuleState(path.name, str(path), signature, trusted))
+        current = bool(signature and signature == secure_boot.certificate_serial)
+        trusted = bool(signature and (
+            (current and secure_boot.enrolled)
+            or signature in secure_boot.enrolled_certificate_serials
+        ))
+        details.append(ModuleState(path.name, str(path), signature, trusted, current))
 
     return DkmsState(
         modules=tuple(item.name for item in details),
@@ -272,3 +282,14 @@ def inspect_dkms(
         untrusted_modules=tuple(item.name for item in details if not item.trusted),
         details=tuple(details),
     )
+
+
+def collect_facts(*, recover=False):
+    """Collect a page snapshot without claiming unobserved next-boot trust."""
+    from .decision import Facts
+    secure_boot = inspect_secure_boot(recover=recover)
+    try:
+        dkms, checked = inspect_dkms(secure_boot), True
+    except OSError:
+        dkms, checked = DkmsState(), False
+    return Facts(secure_boot, dkms, drivers_checked=checked)

@@ -6,13 +6,13 @@ ARCH="$(dpkg --print-architecture 2>/dev/null || uname -m)"
 case $ARCH in
     amd64|x86_64) ARCH=amd64 ;;
     arm64|aarch64) ARCH=arm64 ;;
-    *) printf 'SKIP: unsupported test architecture: %s\n' "$ARCH"; exit 0 ;;
+    *) printf 'Unsupported test architecture: %s\n' "$ARCH" >&2; exit 1 ;;
 esac
 
-MODULE="$ROOT/deploy/$ARCH/anduinos-ghost.so"
+MODULE="${ANDUINOS_GHOST_MODULE:-$ROOT/deploy/$ARCH/anduinos-ghost.so}"
 [[ -r $MODULE ]] || {
-    printf 'SKIP: build %s before Readline lifecycle tests.\n' "$MODULE"
-    exit 0
+    printf 'Missing module: %s; run apkg test to compile test artifacts.\n' "$MODULE" >&2
+    exit 1
 }
 
 fail() { printf 'FAIL: %s\n' "$1" >&2; exit 1; }
@@ -62,34 +62,43 @@ printf 'set enable-bracketed-paste off\n' >"$TEST_ROOT/inputrc-off"
 
 run_session() {
     local producer=$1 transcript=$2 rcfile=$3 inputrc=$4
-    "$producer" | TERM=xterm-256color LC_ALL=C.UTF-8 \
+    : >"$transcript"
+    TEST_TRANSCRIPT="$transcript" "$producer" | TERM=xterm-256color LC_ALL=C.UTF-8 \
         INPUTRC="$inputrc" HOME="$TEST_ROOT/home" \
-        script -qefc "bash --noprofile --rcfile '$rcfile' -i" \
+        timeout --kill-after=2 30 script -qefc "bash --noprofile --rcfile '$rcfile' -i" \
         "$transcript" >/dev/null
 }
 
+wait_ready() {
+    local deadline=$((SECONDS + 10))
+    until grep -Fq 'READLINE_TEST> ' "$TEST_TRANSCRIPT"; do
+        ((SECONDS < deadline)) || fail "interactive Bash did not become ready"
+        sleep 0.01
+    done
+}
+
 baseline_input() {
-    sleep 0.3
+    wait_ready
     printf "bind -v >'%s/baseline.vars'\nexit\n" "$TEST_ROOT"
 }
 
 enabled_input() {
-    sleep 0.3
+    wait_ready
     printf "bind -v >'%s/enabled.vars'\nexit\n" "$TEST_ROOT"
 }
 
 explicit_on_input() {
-    sleep 0.3
+    wait_ready
     printf "bind -v >'%s/explicit-on.vars'\nexit\n" "$TEST_ROOT"
 }
 
 explicit_off_input() {
-    sleep 0.3
+    wait_ready
     printf "bind -v >'%s/explicit-off.vars'\nexit\n" "$TEST_ROOT"
 }
 
 paste_input() {
-    sleep 0.3
+    wait_ready
     printf '\033[200~printf PASTE_ONE >%s/paste-one\nprintf PASTE_TWO >%s/paste-two\033[201~' \
         "$TEST_ROOT" "$TEST_ROOT"
     sleep 0.2
