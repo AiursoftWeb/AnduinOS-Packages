@@ -1000,8 +1000,9 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             if graphics_scan.intel and graphics_scan.intel.devices and not graphics_scan.devices:
                 graphics_target = "intel-graphics"
                 graphics_subtitle = "Intel Graphics"
-                graphics_state = _("Kernel module")
-                graphics_class = "installed-pill"
+                if not all(device.driver in {"i915", "xe"} for device in graphics_scan.intel.devices):
+                    graphics_state = _("Kernel module")
+                    graphics_class = "installed-pill"
         cards.insert(
             self._overview_card(
                 "video-display-symbolic",

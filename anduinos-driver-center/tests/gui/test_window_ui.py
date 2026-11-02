@@ -207,6 +207,55 @@ class WindowScanTests(unittest.TestCase):
             computer_reload.assert_called()
             scan_system.assert_not_called()
 
+    def test_intel_overview_requires_every_gpu_to_have_a_native_driver(self):
+        from anduinos_driver_center.intel_graphics import IntelDevice, IntelSnapshot
+
+        secure_boot = SecureBootState(False, True, True, True, "serial")
+        audio = AudioState(PackageState("firmware-sof-signed", True, "1"),
+                           PackageState("alsa-ucm-conf", True, "1"), True, True, (), ())
+        printing = PrintingState(True, True, (), (), None, (), (), (), ())
+        xbox = XboxState(XboxStatus.NOT_INSTALLED, False, False, False, None, False)
+        cases = (
+            (("i915",), None, "Ready", "success-pill"),
+            (("xe",), None, "Ready", "success-pill"),
+            (("i915", "xe"), None, "Ready", "success-pill"),
+            (("",), None, "Kernel module", "installed-pill"),
+            (("vfio-pci",), None, "Kernel module", "installed-pill"),
+            (("i915", ""), None, "Kernel module", "installed-pill"),
+            (("i915",), "Scan failed", "Action required", "warning-pill"),
+        )
+        with patch.object(app.DriverCenterWindow, "refresh"), \
+             patch.object(app.FirmwareManager, "start"), \
+             patch.object(app, "_", side_effect=lambda text: text):
+            window = app.DriverCenterWindow(self.application)
+            try:
+                for drivers, error, expected, css_class in cases:
+                    with self.subTest(drivers=drivers, error=error):
+                        devices = [IntelDevice(f"0000:00:0{index}.0", "1234", "Intel Graphics",
+                                               driver, "", False)
+                                   for index, driver in enumerate(drivers)]
+                        scan = GraphicsScan(intel=IntelSnapshot(devices=devices), error=error)
+                        with patch.object(window, "_overview_card", wraps=window._overview_card) as card:
+                            page = window._home_page(scan, secure_boot, xbox, audio, printing, DkmsState())
+                        self.assertEqual(card.call_args_list[0].args[2], expected)
+                        self.assertEqual(card.call_args_list[0].args[4], css_class)
+                        if not error:
+                            self.assertEqual(card.call_args_list[0].args[5], "intel-graphics")
+                        labels = []
+
+                        def visit(widget):
+                            if isinstance(widget, Gtk.Label) and widget.has_css_class(css_class):
+                                labels.append(widget.get_label())
+                            child = widget.get_first_child()
+                            while child:
+                                visit(child)
+                                child = child.get_next_sibling()
+
+                        visit(page)
+                        self.assertIn(expected, labels)
+            finally:
+                window.destroy()
+
     def test_narrow_window_split_view_collapses_and_avoids_overflow(self):
         scan = (
             GraphicsScan(devices=(HardwareDevice("gpu", "NVIDIA RTX 4090", "PCI:10de:2684", driver_state_known=True, active_driver="nvidia", active_driver_healthy=True, options=(DriverOption("nvidia-driver-550", "NVIDIA driver", recommended=True, installed=True),)),)),
