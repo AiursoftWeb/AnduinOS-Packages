@@ -58,19 +58,31 @@ not require a package version bump.
 Bump affected packages when changing installed code, resources, translations,
 dependencies, maintainer scripts, or build inputs that require a new package
 for existing users. Shared build changes can affect packages outside their
-own directories. Once a package needs a change, jump directly to the current
-shared code release and start its Debian revision at `-1`:
+own directories. When an old package needs a change, normally advance it to
+our current shared package-code series, rather than the host OS version.
 
-- While the shared code release is 2.1.0, an old
-  `2.0.0-1+$(SuiteShortName)` becomes `2.1.0-1+$(SuiteShortName)`.
-- If that package is already at `2.1.0-1+$(SuiteShortName)`, its next change
-  becomes `2.1.0-2+$(SuiteShortName)`; do not reset an existing revision.
+The third component of a package version is independent of OS releases. It
+may advance before an OS release with the same number exists; there is no
+requirement to keep every package at `2.1.0-X` until AnduinOS 2.1.0 ships.
+Either advancing the Debian revision (`2.1.0-1` to `2.1.0-2`) or the package
+patch component (`2.1.0-1` to `2.1.1-1`) is allowed. Neither promises a matching
+OS release. Preserve already published `2.1.1` and `2.1.2` package versions;
+do not downgrade or renumber them for cosmetic consistency.
+
+- An old `2.0.0-1+$(SuiteShortName)` may become
+  `2.1.0-1+$(SuiteShortName)` when its contents change.
+- A changed `2.1.2-1+$(SuiteShortName)` may become
+  `2.1.2-2+$(SuiteShortName)` or `2.1.3-1+$(SuiteShortName)`.
 - An untouched 2.0.0 package remains 2.0.0, including in a newer OS release.
 
+This policy was clarified on 2026-11-02 after package patch versions advanced
+ahead of the unreleased OS. Avoid disruptive renumbering; the essential
+constraints are meaningful changes, increasing APT versions and immutable
+published artifacts, rather than visual alignment with an OS release.
+
 Preserve epochs, suite suffixes and upstream-derived version expressions.
-For example, `1:2.0.0+$(UpstreamVersion)-3+$(SuiteShortName)` can become
-`1:2.1.0+$(UpstreamVersion)-1+$(SuiteShortName)`. Tools with independent
-upstream versions, notably `apkg`, retain their own versioning scheme.
+Tools with independent upstream versions, notably `apkg`, retain their own
+versioning scheme.
 Check the complete concrete version with `dpkg --compare-versions` against
 the published version for each existing target; even a suffix change can
 alter ordering. Verify APT's candidate and normal upgrade path. Direct

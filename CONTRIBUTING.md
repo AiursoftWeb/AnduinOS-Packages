@@ -168,9 +168,11 @@ is automatically recompiled by the dpkg trigger in `anduinos-dconf-runtime`.
 ## Package Versioning
 
 Follow the [lazy version policy](DEV_GUIDE.md#lazy-package-version-bumps):
-leave unchanged packages alone; when a package needs a change, advance it to
-the current shared code release (for example, `2.0.0-1+resolute` to
-`2.1.0-1+resolute`). Increment the revision if it already uses that release.
+leave unchanged packages alone; when a package needs a change, normally advance
+an old package to the current shared package-code series. Package patch numbers
+and Debian revisions may advance independently of OS releases; a package may
+already be `2.1.2` before AnduinOS 2.1.0 ships. Keep published versions and choose
+a higher version for changed contents, rather than renumbering for consistency.
 Preserve suite suffixes, epochs and upstream-derived formulas, and verify
 Debian version ordering and the normal APT upgrade path.
 
