@@ -76,12 +76,103 @@ pub trait RecoveryFilesystem: Clone + Send + Sync + 'static {
     fn identity(&self, subvolume: &Path) -> Result<String, RecoveryError>;
     fn is_read_only(&self, subvolume: &Path) -> Result<bool, RecoveryError>;
     fn has_descendants(&self, subvolume: &Path) -> Result<bool, RecoveryError>;
+
+    /// Only these empty systemd storage subvolumes may be discarded by offline recovery.
+    fn empty_system_subvolumes(&self, root: &Path) -> Result<Vec<PathBuf>, RecoveryError> {
+        if self.has_descendants(root)? {
+            return Err(RecoveryError::new(
+                RecoveryErrorCode::UnsafeLayout,
+                "The current root contains unsupported nested Btrfs subvolumes",
+            ));
+        }
+        Ok(Vec::new())
+    }
 }
 
 #[derive(Clone, Copy, Debug, Default)]
 pub struct SystemRecoveryFilesystem;
 
 impl RecoveryFilesystem for SystemRecoveryFilesystem {
+    fn empty_system_subvolumes(&self, root: &Path) -> Result<Vec<PathBuf>, RecoveryError> {
+        let output = run_btrfs(&[
+            OsString::from("subvolume"),
+            OsString::from("list"),
+            OsString::from("-o"),
+            root.as_os_str().to_owned(),
+        ])?;
+        let output = std::str::from_utf8(&output).map_err(|_| {
+            RecoveryError::new(
+                RecoveryErrorCode::UnsafeLayout,
+                "Btrfs returned a non-UTF-8 subvolume path",
+            )
+        })?;
+        let name = root
+            .file_name()
+            .and_then(|name| name.to_str())
+            .ok_or_else(|| {
+                RecoveryError::new(RecoveryErrorCode::UnsafeLayout, "Invalid offline root path")
+            })?;
+        let mut children = Vec::new();
+        for line in output.lines().filter(|line| !line.trim().is_empty()) {
+            let reported = line
+                .split_once(" path ")
+                .map(|(_, path)| path)
+                .ok_or_else(|| {
+                    RecoveryError::new(
+                        RecoveryErrorCode::UnsafeLayout,
+                        "Unrecognized Btrfs subvolume record",
+                    )
+                })?;
+            let reported = reported.strip_prefix("<FS_TREE>/").unwrap_or(reported);
+            let relative = reported.strip_prefix(&format!("{name}/")).ok_or_else(|| {
+                RecoveryError::new(
+                    RecoveryErrorCode::UnsafeLayout,
+                    "Btrfs reported a child outside the offline root",
+                )
+            })?;
+            if !matches!(relative, "var/lib/machines" | "var/lib/portables") {
+                return Err(RecoveryError::new(
+                    RecoveryErrorCode::UnsafeLayout,
+                    format!("Offline recovery cannot replace nested subvolume: {reported}"),
+                ));
+            }
+            let mut target = root.to_path_buf();
+            for component in Path::new(relative).components() {
+                target.push(component);
+                let metadata = fs::symlink_metadata(&target).map_err(|error| {
+                    io_error("Could not inspect the offline system subvolume", error)
+                })?;
+                if !metadata.file_type().is_dir() {
+                    return Err(RecoveryError::new(
+                        RecoveryErrorCode::UnsafeLayout,
+                        format!(
+                            "Offline system subvolume path is not a real directory: {reported}"
+                        ),
+                    ));
+                }
+            }
+            let mut entries = fs::read_dir(&target)
+                .map_err(|error| io_error("Could not read the offline system subvolume", error))?;
+            if entries
+                .next()
+                .transpose()
+                .map_err(|error| io_error("Could not read the offline system subvolume", error))?
+                .is_some()
+            {
+                return Err(RecoveryError::new(
+                    RecoveryErrorCode::UnsafeLayout,
+                    format!(
+                        "Offline recovery cannot replace non-empty system subvolume: {reported}"
+                    ),
+                ));
+            }
+            children.push(target);
+        }
+        children.sort();
+        children.dedup();
+        Ok(children)
+    }
+
     fn has_descendants(&self, subvolume: &Path) -> Result<bool, RecoveryError> {
         let output = run_btrfs(&[
             OsString::from("subvolume"),

@@ -141,9 +141,77 @@ fn real_btrfs_aaa_offline_restore_replaces_root_and_preserves_home() {
         .unwrap();
     fs::write(system_root.join("offline-marker"), "after").unwrap();
 
-    let transaction = OfflineRecoveryEngine::system(&root)
-        .restore(target.id)
-        .unwrap();
+    let engine = OfflineRecoveryEngine::system(&root);
+    let machines = system_root.join("var/lib/machines");
+    let portables = system_root.join("var/lib/portables");
+    fs::create_dir_all(system_root.join("var/lib")).unwrap();
+    create_subvolume(&machines);
+    create_subvolume(&portables);
+
+    // Reproduce the laptop's normal systemd-created layout. Discovery stays
+    // available even when a child contains data that cannot be rolled back.
+    fs::write(machines.join("customer.raw"), b"preserve machine data").unwrap();
+    engine.validate().unwrap();
+    assert!(engine.pending().unwrap().is_none());
+    let error = engine.restore(target.id).unwrap_err();
+    assert!(error.message.contains("non-empty system subvolume"));
+    assert!(error.message.contains("var/lib/machines"));
+    assert_eq!(
+        fs::read(machines.join("customer.raw")).unwrap(),
+        b"preserve machine data"
+    );
+    assert_eq!(
+        fs::read_to_string(system_root.join("offline-marker")).unwrap(),
+        "after"
+    );
+    assert!(engine.pending().unwrap().is_none());
+    fs::remove_file(machines.join("customer.raw")).unwrap();
+
+    fs::write(portables.join("customer.raw"), b"preserve portable data").unwrap();
+    assert!(
+        engine
+            .restore(target.id)
+            .unwrap_err()
+            .message
+            .contains("var/lib/portables")
+    );
+    assert_eq!(
+        fs::read(portables.join("customer.raw")).unwrap(),
+        b"preserve portable data"
+    );
+    fs::remove_file(portables.join("customer.raw")).unwrap();
+
+    let unknown = system_root.join("custom-storage");
+    create_subvolume(&unknown);
+    engine.validate().unwrap();
+    assert!(
+        engine
+            .restore(target.id)
+            .unwrap_err()
+            .message
+            .contains("custom-storage")
+    );
+    assert!(
+        unknown.is_dir(),
+        "unsupported subvolumes must be retained even when empty"
+    );
+    anduinos_recovery_engine::recovery::RecoveryFilesystem::delete(
+        &anduinos_recovery_engine::recovery::SystemRecoveryFilesystem,
+        &unknown,
+    )
+    .unwrap();
+
+    let nested = machines.join("nested");
+    create_subvolume(&nested);
+    assert!(engine.restore(target.id).is_err());
+    assert!(nested.is_dir());
+    anduinos_recovery_engine::recovery::RecoveryFilesystem::delete(
+        &anduinos_recovery_engine::recovery::SystemRecoveryFilesystem,
+        &nested,
+    )
+    .unwrap();
+
+    let transaction = engine.restore(target.id).unwrap();
     assert_eq!(transaction.phase, OfflinePhase::Completed);
     let deleted = Command::new("/usr/bin/btrfs")
         .args(["subvolume", "list", "-d"])
