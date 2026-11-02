@@ -43,6 +43,7 @@ class ExtensionSwitchTests(unittest.TestCase):
                  "-c", textwrap.dedent("""\
                     import runpy
                     import subprocess
+                    from unittest import mock
                     from gi.repository import Gio, GLib
                     from pathlib import Path
 
@@ -50,7 +51,9 @@ class ExtensionSwitchTests(unittest.TestCase):
                         str(Path('src/anduinos-appearance').resolve()),
                         run_name='AnduinOSAppearanceTest'
                     )
-                    page = app['PanelWidgetsPage'](object())
+                    globals_ = app['PanelWidgetsPage'].__init__.__globals__
+                    with mock.patch.dict(globals_, {'extension_settings': lambda *_: None}):
+                        page = app['PanelWidgetsPage'](object())
                     assert not page.layout_picker_row.get_sensitive(), \
                         'missing optional tiling settings must not crash Appearance'
                     ding = page._widget_rows['ding@rastersoft.com']
