@@ -83,12 +83,11 @@ def _ext_is_enabled(uuid):
             uuid not in settings.get_strv('disabled-extensions'))
 
 
-def taskbar_settings():
+def extension_settings(uuid, schema_id, required_keys):
     """Load the extension's own schema without requiring a global installation."""
     source = Gio.SettingsSchemaSource.get_default()
-    schema_id = 'org.gnome.shell.extensions.dash-to-panel'
     for data_dir in [GLib.get_user_data_dir(), *GLib.get_system_data_dirs()]:
-        directory = Path(data_dir) / 'gnome-shell/extensions' / DTP_UUID / 'schemas'
+        directory = Path(data_dir) / 'gnome-shell/extensions' / uuid / 'schemas'
         if not (directory / 'gschemas.compiled').is_file():
             continue
         try:
@@ -100,11 +99,15 @@ def taskbar_settings():
             continue
     else:
         schema = source.lookup(schema_id, True) if source else None
-    if not schema or not all(schema.has_key(key) for key in (
-        'intellihide', 'intellihide-use-pointer',
-    )):
+    if not schema or not all(schema.has_key(key) for key in required_keys):
         return None
     return Gio.Settings.new_full(schema, None, None)
+
+
+def taskbar_settings():
+    return extension_settings(DTP_UUID, 'org.gnome.shell.extensions.dash-to-panel', (
+        'intellihide', 'intellihide-use-pointer',
+    ))
 
 
 def taskbar_behavior_group(settings):
@@ -393,6 +396,26 @@ class PanelWidgetsPage(Adw.PreferencesPage):
         tb_group.add(self.activities_row)
 
         self.add(tb_group)
+
+        tiling_group = Adw.PreferencesGroup(title=_('Window Tiling'))
+        self.layout_picker_row = Adw.SwitchRow(
+            title=_('Show Top Window Layout Menu'),
+            subtitle=_('Show split-screen layout choices at the top while dragging a window.'),
+        )
+        tiling_group.add(self.layout_picker_row)
+        self.add(tiling_group)
+        self._tiling_settings = extension_settings(
+            'tiling-assistant@leleat-on-github',
+            'org.gnome.shell.extensions.tiling-assistant', ('enable-layout-picker',),
+        )
+        # This controls the layout picker, not edge snapping or the extension
+        # itself. Bind the real setting so changes in either app stay in sync;
+        # opening Appearance must not create an override of the system default.
+        if self._tiling_settings is None:
+            self.layout_picker_row.set_sensitive(False)
+        else:
+            self._tiling_settings.bind('enable-layout-picker', self.layout_picker_row,
+                                      'active', Gio.SettingsBindFlags.DEFAULT)
 
     def _sync_extension_rows(self, settings, key):
         enabled = set(settings.get_strv(key))

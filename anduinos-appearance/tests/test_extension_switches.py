@@ -51,6 +51,8 @@ class ExtensionSwitchTests(unittest.TestCase):
                         run_name='AnduinOSAppearanceTest'
                     )
                     page = app['PanelWidgetsPage'](object())
+                    assert not page.layout_picker_row.get_sensitive(), \
+                        'missing optional tiling settings must not crash Appearance'
                     ding = page._widget_rows['ding@rastersoft.com']
                     assert subprocess.run(
                         ['dconf', 'read', '/org/gnome/shell/enabled-extensions'],
@@ -74,6 +76,74 @@ class ExtensionSwitchTests(unittest.TestCase):
                 capture_output=True,
                 text=True,
                 timeout=30,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_layout_picker_default_user_choice_and_external_changes(self):
+        with tempfile.TemporaryDirectory(prefix="appearance-tiling-test-") as directory:
+            root = Path(directory)
+            schemas = root / 'schemas'
+            schemas.mkdir()
+            (schemas / 'shell.gschema.xml').write_text('''\
+                <schemalist>
+                  <schema id="org.gnome.shell" path="/org/gnome/shell/">
+                    <key name="enabled-extensions" type="as"><default>[]</default></key>
+                  </schema>
+                </schemalist>
+            ''')
+            # Extension schemas are normally local to their install directory,
+            # rather than registered in the global GSettings schema source.
+            extension_schemas = root / 'share/gnome-shell/extensions/tiling-assistant@leleat-on-github/schemas'
+            extension_schemas.mkdir(parents=True)
+            (extension_schemas / 'tiling.gschema.xml').write_text('''\
+                <schemalist>
+                  <schema id="org.gnome.shell.extensions.tiling-assistant"
+                          path="/org/gnome/shell/extensions/tiling-assistant/">
+                    <key name="enable-layout-picker" type="b"><default>false</default></key>
+                  </schema>
+                </schemalist>
+            ''')
+            for path in (schemas, extension_schemas):
+                subprocess.run(['glib-compile-schemas', str(path)], check=True)
+            environment = dict(os.environ, GSETTINGS_BACKEND='memory',
+                               GSETTINGS_SCHEMA_DIR=str(schemas),
+                               XDG_DATA_HOME=str(root / 'share'),
+                               XDG_DATA_DIRS=str(root / 'system-share'),
+                               GDK_BACKEND='x11', LANGUAGE='C', PYTHONPATH=str(SRC))
+            result = subprocess.run(
+                ['dbus-run-session', '--', 'xvfb-run', '-a', sys.executable, '-c',
+                 textwrap.dedent('''\
+                    import runpy
+                    from gi.repository import Gio, GLib
+                    app = runpy.run_path('src/anduinos-appearance', run_name='test')
+                    page = app['PanelWidgetsPage'](object())
+                    row = page.layout_picker_row
+                    settings = page._tiling_settings
+                    key = 'enable-layout-picker'
+
+                    def drain():
+                        while GLib.MainContext.default().pending():
+                            GLib.MainContext.default().iteration(False)
+
+                    assert row.get_sensitive()
+                    assert not row.get_active(), 'show the effective system default'
+                    assert settings.get_user_value(key) is None, \
+                        'opening Appearance must not save a user override'
+                    row.set_active(True)
+                    drain()
+                    assert settings.get_boolean(key), 'the switch must enable the real feature'
+                    reopened = app['PanelWidgetsPage'](object())
+                    assert reopened.layout_picker_row.get_active(), \
+                        'an explicit user choice must survive reopening'
+                    settings.set_boolean(key, False)
+                    drain()
+                    assert not row.get_active() and not reopened.layout_picker_row.get_active(), \
+                        'changes from extension preferences must refresh both windows'
+                    settings.reset(key)
+                    drain()
+                    assert not row.get_active()
+                    assert settings.get_user_value(key) is None
+                ''')], cwd=ROOT, env=environment, capture_output=True, text=True, timeout=30,
             )
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
