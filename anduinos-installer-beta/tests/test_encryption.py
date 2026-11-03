@@ -189,6 +189,12 @@ class EncryptedStorageTests(unittest.TestCase):
                     f"initrd\tnewc:/anduinos-unlock.key:{prefix}/etc/anduinos-luks/machine.key {prefix}/boot/initrd.img-test\n"
                     "### END /etc/grub.d/10_linux ###\n"
                 )
+                from installer_core.bootloader import _configure_graphical_unlock
+                _configure_graphical_unlock(context, target)
+                self.assertEqual(stub.read_text().split(), [
+                    "anduinos_unlock", LUKS_UUID.replace("-", ""),
+                    inner_uuid, prefix + "/boot/grub",
+                ])
                 _verify_encrypted_boot_output(context, target, menu)
                 broken = menu.replace("newc:/anduinos-unlock.key:", "missing:")
                 with self.assertRaisesRegex(RuntimeError, "RAM credential"):
