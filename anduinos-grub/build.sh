@@ -59,6 +59,9 @@ stage_package_files() {
     local doc=$APKG_STAGE_DIR/usr/share/doc/anduinos-grub
     local service
     cp -a "$tools/usr" "$tools/etc" "$APKG_STAGE_DIR/"
+    # Extend the package-owned generator rather than copying its Linux menus
+    # into a second script. Plain installations never enable this handoff.
+    python3 patch-linux-generator.py "$APKG_STAGE_DIR/etc/grub.d/10_linux"
     cp -a "$inputs/modules/usr/." "$APKG_STAGE_DIR/usr/"
     if [ "$arch" = amd64 ]; then
         cp -a "$inputs/bios/usr/." "$APKG_STAGE_DIR/usr/"

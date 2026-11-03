@@ -14,6 +14,7 @@ import shlex
 import shutil
 import struct
 import tempfile
+from uuid import UUID
 
 from .inspect import Runner
 
@@ -137,11 +138,42 @@ def verify_local_esp_binding(runner: Runner, esp: Path, device: str, cfg: Path) 
     prefix = command(runner, ["grub-mkrelpath", "/boot/grub"]).strip()
     if not uuid or not prefix.startswith("/") or cfg.stat().st_size > 16384:
         raise ValueError("Cannot identify this system's GRUB directory")
-    lines = [shlex.split(line, comments=True) for line in cfg.read_text().splitlines()]
+    text = cfg.read_text()
+    encrypted = any(shlex.split(line, comments=True)[:1] == ["cryptomount"]
+                    for line in text.splitlines())
+    outer = (command(runner, ["grub-probe", "--target=cryptodisk_uuid", "/boot/grub"]).strip()
+             if encrypted else "")
+    verify_grub_configuration(text, uuid, prefix, outer)
+
+
+def verify_grub_configuration(
+    text: str, filesystem_uuid: str, prefix: str, cryptodisk_uuid: str = "",
+) -> None:
+    """Bind the ordinary Ubuntu stub to known root identities without running it.
+
+    Used by both first installation and existing-system deployment. Encrypted
+    grub-install emits one extra cryptomount and a cryptouuid search hint; both
+    must refer to the known outer volume. The inner UUID and prefix remain the
+    same authority as in the ordinary three-line configuration.
+    """
+    lines = [shlex.split(line, comments=True) for line in text.splitlines()]
     lines = [line for line in lines if line]
+    crypt_hint = ""
+    if cryptodisk_uuid:
+        try:
+            outer = UUID(cryptodisk_uuid)
+            if len(lines) != 4 or lines[0][:2] != ["cryptomount", "-u"] or len(lines[0]) != 3:
+                raise ValueError
+            if UUID(lines[0][2]) != outer:
+                raise ValueError
+        except ValueError:
+            raise ValueError("EFI encrypted root does not match this system") from None
+        crypt_hint = "cryptouuid/" + outer.hex
+        lines = lines[1:]
     if (len(lines) != 3 or len(lines[0]) < 3
-            or lines[0][:3] != ["search.fs_uuid", uuid, "root"]
-            or any(not re.fullmatch(r"hd[0-9]+(?:,(?:gpt|msdos)[0-9]+)?", hint)
+            or lines[0][:3] != ["search.fs_uuid", filesystem_uuid, "root"]
+            or any((not crypt_hint or hint != crypt_hint)
+                   and not re.fullmatch(r"hd[0-9]+(?:,(?:gpt|msdos)[0-9]+)?", hint)
                    for hint in lines[0][3:])
             or lines[1] != ["set", f"prefix=($root){prefix}"]
             or lines[2] != ["configfile", "$prefix/grub.cfg"]):

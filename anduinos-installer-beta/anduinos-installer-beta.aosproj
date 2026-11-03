@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.1.0-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -77,7 +77,7 @@
     <Dependency Include="anduinos-swap-config" />
     <Dependency Include="shim-signed" />
     <Dependency Include="mokutil" />
-    <Dependency Include="anduinos-secureboot-toolkit (&gt;= 2.0.5-16)" />
+    <Dependency Include="anduinos-secureboot-toolkit (&gt;= 2.1.0-2)" />
     <Dependency Include="openssl" />
     <Dependency Include="sbsigntool" />
     <Dependency Include="squashfs-tools" />
@@ -94,6 +94,9 @@
          extended formats. Suggests records availability without pulling the
          codec payload into the Live image or ordinary installer installs. -->
     <Suggest Include="anduinos-multimedia-codecs" />
+    <!-- Required by the gated encrypted-boot path. Suggests records its
+         availability without replacing an existing ordinary Ubuntu loader. -->
+    <Suggest Include="anduinos-grub (&gt;= 2.1.0-1)" />
   </ItemGroup>
 
   <ItemGroup>

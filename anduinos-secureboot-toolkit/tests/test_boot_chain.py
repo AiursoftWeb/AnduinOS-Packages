@@ -34,6 +34,7 @@ class Firmware:
         self.fstab_source = "/dev/test1"
         self.boot_uuid = "abcd1234-1234-1234-1234-123456789abc"
         self.boot_prefix = "/boot/grub"
+        self.crypt_uuid = "87654321-1234-1234-1234-123456789abc"
         self.hint_uuid = UUID
         self.parts = [{"path": "/dev/test1", "pkname": "/dev/test", "type": "part",
                        "parttype": boot.ESP_TYPE, "partuuid": UUID, "partn": 1}]
@@ -55,7 +56,7 @@ class Firmware:
             source = self.fstab_source if "--fstab" in args else "/dev/test1"
             output = json.dumps({"filesystems": [{"source": source, "target": str(self.esp), "fstype": "vfat", "options": "rw,nosuid"}]})
         elif args[0] == "grub-probe":
-            output = self.boot_uuid
+            output = self.crypt_uuid if "--target=cryptodisk_uuid" in args else self.boot_uuid
         elif args[0] == "grub-mkrelpath":
             output = self.boot_prefix
         elif args[0] == "lsblk":
@@ -294,6 +295,23 @@ class BootChainTests(unittest.TestCase):
                 boot.prepare_boot_chain(firmware, esp)
             self.assertEqual((esp / "EFI/BOOT/BOOTX64.EFI").read_bytes(), b"foreign loader")
             self.assertEqual((vendor / "shimx64.efi").read_bytes(), b"old shimx64.efi")
+
+    def test_encrypted_root_binding_survives_native_loader_updates(self):
+        for suffix in ("x64", "aa64"):
+            for prefix in ("/boot/grub", "/@root/boot/grub"):
+                with self.subTest(suffix=suffix, prefix=prefix), self.fixture(suffix) as (firmware, esp, vendor):
+                    firmware.boot_prefix = prefix
+                    firmware.current = "0003"  # Generic/fallback firmware boot.
+                    self.bind_local_root(firmware, vendor)
+                    ordinary = (vendor / "grub.cfg").read_text()
+                    encrypted = "cryptomount -u " + firmware.crypt_uuid.replace("-", "") + "\n" + ordinary
+                    (vendor / "grub.cfg").write_text(encrypted)
+                    boot.prepare_boot_chain(firmware, esp)
+                    self.assertEqual((vendor / "grub.cfg").read_text(), encrypted)
+                    self.assertEqual((vendor / f"grub{suffix}.efi").read_bytes(), b"new grub" + suffix.encode() + b".efi")
+                    firmware.crypt_uuid = "aaaaaaaa-1234-1234-1234-123456789abc"
+                    with self.assertRaisesRegex(ValueError, "encrypted root does not match"):
+                        boot.resolve_target(firmware, esp)
 
     def add_other_installation(self, firmware, vendor, *, chainloaded=True):
         other_uuid = "aaaaaaaa-1234-1234-1234-123456789abc"

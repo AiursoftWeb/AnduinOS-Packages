@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .command import CommandError, CommandRunner
-from .model import Architecture, Filesystem, InstallMode
+from .model import Architecture, EncryptionMode, Filesystem, InstallMode
 from .steps import FailurePolicy, InstallContext
 from .snapshots_manager import RECOVERY_PACKAGE, SNAPSHOTS_MANAGER_PACKAGE
 
@@ -33,6 +33,7 @@ VMWARE_GUEST_PACKAGES = (
 # but are capabilities of the installed desktop. Mark them as explicitly
 # retained before purging the Live bridge and running autoremove.
 PERSISTENT_TARGET_PACKAGES = ("openssh-server",)
+ENCRYPTED_ROOT_PACKAGES = ("cryptsetup-bin", "systemd-cryptsetup")
 
 # These tools are installed as dependencies of the removable installer, but
 # remain essential administration and repair tools for their selected root
@@ -95,6 +96,14 @@ class RemoveLivePackagesStep:
             for package in PERSISTENT_TARGET_PACKAGES
             if _is_installed(self.runner, target, package)
         )
+        if context.plan.storage.encryption is EncryptionMode.LUKS2:
+            # The removable installer brings cryptsetup into the Live image.
+            # Its removal must not orphan the installed root's unlock tools.
+            # Retain them only for the explicitly selected encrypted layout.
+            for package in ENCRYPTED_ROOT_PACKAGES:
+                if not _is_installed(self.runner, target, package):
+                    raise RuntimeError("Encrypted-root tools are missing: " + package)
+            retained += ENCRYPTED_ROOT_PACKAGES
         filesystem_tool = ADVANCED_FILESYSTEM_TOOL_PACKAGES.get(
             context.plan.storage.filesystem
         )

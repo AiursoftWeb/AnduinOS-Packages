@@ -18,6 +18,9 @@ from installer_core.encryption import (
 )
 from installer_core.esp import NvramInspection
 from installer_core.executor import InstallerExecutor
+from installer_core.live_cleanup import ENCRYPTED_ROOT_PACKAGES, RemoveLivePackagesStep
+from installer_core.boot_commands import build_boot_commands
+from installer_core.bootloader import _verify_encrypted_boot_output
 from installer_core.model import (
     Architecture, EncryptionMode, Filesystem, Firmware, InstallMode,
     InstallPlan, SecureBoot, SwapEncryption,
@@ -30,6 +33,7 @@ from installer_core.storage_steps import PrepareStorageStep
 from installer_core.storage_write_set import StorageAction
 from installer_core.target_config import (
     ConfigureStorageStep, ENCRYPTED_SLEEP_PATH, ENCRYPTED_SLEEP_POLICY,
+    ENCRYPTED_GRUB_PATH,
 )
 from installer_core.validation import ExecutionPolicy, PlanValidationError, validate_plan
 
@@ -132,6 +136,63 @@ class EncryptedStorageTests(unittest.TestCase):
         encrypted = encrypted_plan(swap_size_mib=0)
         self.assertFalse(encrypted.encrypted_swap)
         self.assertEqual(len(encrypted.storage.graph.encrypted_volumes), 1)
+
+    def test_encrypted_boot_commands_never_install_bios(self):
+        for architecture in Architecture:
+            commands = build_boot_commands(encrypted_plan(architecture=architecture), "/target")
+            self.assertFalse(commands.bios_required)
+            self.assertEqual(len(commands.installs), 1)
+            self.assertIn("--no-extra-removable", commands.installs[0])
+            self.assertIn("--uefi-secure-boot", commands.installs[0])
+
+    def test_live_installer_removal_preserves_encrypted_root_tools(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            runner = FakeRunner()
+            context = InstallContext(encrypted_plan(), lambda _: None, values={
+                "target": target, "chroot_environment_ready": True,
+            })
+            for package in ENCRYPTED_ROOT_PACKAGES:
+                runner.outputs[(
+                    "chroot", str(target), "dpkg-query", "--show",
+                    "--showformat=${db:Status-Abbrev}", package,
+                )] = ("ii ", "", 0)
+            RemoveLivePackagesStep(runner).execute(context)
+            for package in ENCRYPTED_ROOT_PACKAGES:
+                self.assertIn(
+                    ("chroot", str(target), "apt-mark", "manual", package),
+                    [command for command, _ in runner.commands],
+                )
+
+    def test_encrypted_linux_menu_and_efi_stub_use_both_volume_identities(self):
+        inner_uuid = "abcdef01-1234-1234-1234-123456789abc"
+        for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):
+            context = InstallContext(encrypted_plan(filesystem=filesystem), lambda _: None, values={
+                "root_luks_uuid": LUKS_UUID, "root_filesystem_uuid": inner_uuid,
+            })
+            prefix = "/@root" if filesystem is Filesystem.BTRFS else ""
+            with tempfile.TemporaryDirectory() as directory:
+                target = Path(directory)
+                stub = target / "boot/efi/EFI/AnduinOS/grub.cfg"
+                stub.parent.mkdir(parents=True)
+                # The actual upstream grub-install format, including its
+                # cryptouuid search hint and quoted relative prefix.
+                stub.write_text(
+                    f"cryptomount -u {LUKS_UUID}\n"
+                    f"search.fs_uuid {inner_uuid} root cryptouuid/{LUKS_UUID.replace('-', '')}\n"
+                    f"set prefix=($root)'{prefix}/boot/grub'\n"
+                    "configfile $prefix/grub.cfg\n"
+                )
+                menu = (
+                    "### BEGIN /etc/grub.d/10_linux ###\n"
+                    f"linux\t{prefix}/boot/vmlinuz-test root=UUID={inner_uuid} rd.luks.uuid=luks-{LUKS_UUID}\n"
+                    f"initrd\tnewc:/anduinos-unlock.key:{prefix}/etc/anduinos-luks/machine.key {prefix}/boot/initrd.img-test\n"
+                    "### END /etc/grub.d/10_linux ###\n"
+                )
+                _verify_encrypted_boot_output(context, target, menu)
+                broken = menu.replace("newc:/anduinos-unlock.key:", "missing:")
+                with self.assertRaisesRegex(RuntimeError, "RAM credential"):
+                    _verify_encrypted_boot_output(context, target, broken)
 
     def test_release_refuses_encryption_before_any_commands(self):
         runner = FakeRunner()
@@ -241,6 +302,9 @@ class EncryptedStorageTests(unittest.TestCase):
                     self.assertEqual(
                         (target / ENCRYPTED_SLEEP_PATH).read_text(), ENCRYPTED_SLEEP_POLICY,
                     )
+                    defaults = (target / ENCRYPTED_GRUB_PATH).read_text()
+                    self.assertIn("export GRUB_ANDUINOS_CRYPT_HANDOFF=y", defaults)
+                    self.assertIn("rd.luks.uuid=luks-" + LUKS_UUID, defaults)
                     self.assertEqual(credentials.passphrase, "")
                     self.assertIsNone(context.encryption_credentials)
 
