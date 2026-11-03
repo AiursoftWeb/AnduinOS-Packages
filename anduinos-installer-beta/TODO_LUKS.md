@@ -14,6 +14,53 @@ The first milestone should provide reliable encryption at rest. It must not be
 blocked on TPM auto-unlock, FIDO2, hibernation, hybrid sleep, arbitrary storage
 stacks, or LVM.
 
+## Current implementation checkpoint — 2026-11-03
+
+The current route uses the AnduinOS GRUB build to open LUKS2 directly; the
+historical detached-LUKS1-header and UKI alternatives below are archived design
+material, not instructions to implement both routes. The selective boot-tools
+Dracut handoff is merged. This installer increment provides storage provisioning
+only; release execution still rejects encrypted plans and the GTK page remains
+unchanged until boot-chain and interface acceptance are complete.
+
+- Plan schema 19 / storage graph 6 contain encryption policy and distinct outer
+  partitions / inner block volumes, never passwords or key material. Only new
+  whole-disk UEFI Btrfs/ext4 layouts are eligible. Blank/default policy keeps
+  existing unencrypted behavior; reused ESP and coexistence are unchanged.
+- An encrypted executor invocation reads a second, bounded private stdin line:
+  an object containing `passphrase` and `recovery_key`. It is not part of the
+  plan, a command argument, progress event or retained log. Current qualified
+  input is 8–128 printable ASCII characters and a generated 48-character hex
+  recovery key; the future password page must explain the input boundary.
+- Human slots use Argon2id with a 64 MiB cap, one lane and CPU-calibrated time.
+  A separate 64-byte random machine key uses PBKDF2 and is stored only at
+  `/etc/anduinos-luks/machine.key` inside encrypted root. No human password or
+  recovery key is persisted. New credentials cross cryptsetup through anonymous
+  RAM descriptors; each new slot is tested before continuing.
+- `partition_devices` always means physical partitions; `filesystem_devices`
+  resolves root/swap through installation-owned mappings. The installer uses
+  `anduinos-install-root` / `anduinos-install-swap`, distinct from boot mappings,
+  and refuses occupied names. Failure cleanup closes only its successful opens.
+- Root crypttab uses the outer LUKS UUID and the reserved `anduinos-root` name;
+  fstab uses the inner filesystem UUID. The machine key is omitted from initrd
+  construction and the merged boot-tools module consumes its RAM handoff.
+- Swap follows root encryption by default. Random-key swap uses GPT PARTUUID in
+  crypttab and `/dev/mapper/anduinos-swap` in fstab, since its filesystem UUID
+  changes on every activation. Explicit plain swap retains a filesystem UUID;
+  zero disk swap retains zram only. Encrypted installations explicitly disable
+  hibernation, hybrid sleep and suspend-then-hibernate through systemd policy.
+
+Whole-disk reinstall also clears old signatures on each declared physical
+FORMAT target before mkfs. This avoids retaining a LUKS header when switching
+back to plaintext. It does not clear preserved partitions, reused ESPs or
+whole-disk devices. Random-swap opening is explicitly noninteractive because a
+previous layout may leave a filesystem signature at the new swap location.
+
+Storage-component VM results do not qualify complete installation, GRUB,
+first MOK enrollment, RE, Live rescue, credentials GUI or full ISO acceptance.
+The agreed project milestones remain separate. No new cryptography daemon,
+build framework, package fork or host firmware change is required here.
+
 ## Archived staged conclusion — 2026-08-09
 
 **No final production boot architecture has been approved.** The

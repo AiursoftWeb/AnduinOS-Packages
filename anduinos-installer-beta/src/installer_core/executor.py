@@ -6,6 +6,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 from .command import CommandRunner
+from .encryption import EncryptionCredentials
 from .chroot_env import EnterChrootStep, LeaveChrootStep
 from .bootloader import CreateFallbackBootChainStep, InstallBootloaderStep
 from .secure_boot import (
@@ -74,15 +75,26 @@ class InstallerExecutor:
         self.runner = runner or CommandRunner(log)
         self.execution_policy = execution_policy
 
-    def run(self, plan: InstallPlan) -> InstallResult:
-        validate_plan_for_execution(plan, self.execution_policy)
-        context = InstallContext(
-            plan,
-            self.log,
-            execution_policy=self.execution_policy,
-        )
-        steps = self.build_steps(plan)
-        return StepRunner(steps, self.progress, self.status).run(context)
+    def run(
+        self, plan: InstallPlan, *,
+        encryption_credentials: EncryptionCredentials | None = None,
+    ) -> InstallResult:
+        context = None
+        try:
+            validate_plan_for_execution(plan, self.execution_policy)
+            context = InstallContext(
+                plan,
+                self.log,
+                execution_policy=self.execution_policy,
+                encryption_credentials=encryption_credentials,
+            )
+            steps = self.build_steps(plan)
+            return StepRunner(steps, self.progress, self.status).run(context)
+        finally:
+            if encryption_credentials is not None:
+                encryption_credentials.clear()
+            if context is not None:
+                context.encryption_credentials = None
 
     def build_steps(self, plan: InstallPlan) -> list[InstallStep]:
         """Build the canonical ordered pipeline without executing it."""

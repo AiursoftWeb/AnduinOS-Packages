@@ -18,6 +18,8 @@ from .model import (
     InstallMode,
     InstallPlan,
     EspReplacement,
+    EncryptionMode,
+    SwapEncryption,
     MokPasswordPolicy,
     SCHEMA_VERSION,
     SecureBoot,
@@ -66,6 +68,13 @@ def validate_plan_for_execution(
         plan,
         allow_guided_compilation=True,
     )
+    # This independently reviewable backend is deliberately not exposed by
+    # the installer. Remove this gate only with the boot-chain/GUI acceptance;
+    # otherwise a valid storage plan could create an unbootable installation.
+    if policy is ExecutionPolicy.RELEASE and plan.storage.encryption is not EncryptionMode.NONE:
+        raise PlanValidationError([
+            "Encrypted installation is not enabled in the release installer yet"
+        ])
     if (
         policy is ExecutionPolicy.RELEASE
         and plan.identity.authentication
@@ -105,6 +114,16 @@ def validate_plan(
 
     if not isinstance(plan.storage.btrfs_compression, BtrfsCompression):
         errors.append("Unsupported Btrfs compression preset")
+    if not isinstance(plan.storage.encryption, EncryptionMode):
+        errors.append("Unsupported disk encryption mode")
+    if not isinstance(plan.swap.encryption, SwapEncryption):
+        errors.append("Unsupported swap encryption policy")
+    if plan.storage.encryption is EncryptionMode.LUKS2 and (
+        plan.storage.mode is not InstallMode.ERASE_DISK
+        or plan.platform.firmware is not Firmware.UEFI
+        or plan.storage.filesystem not in {Filesystem.BTRFS, Filesystem.EXT4}
+    ):
+        errors.append("Encryption requires a new whole-disk UEFI Btrfs or ext4 installation")
 
     disk = plan.storage.disk
     if not WHOLE_DISK_RE.fullmatch(disk.path):
@@ -120,7 +139,10 @@ def validate_plan(
     if plan.storage.mode is InstallMode.ERASE_DISK:
         reserved = (
             plan.storage.esp_size_mib + plan.storage.swap_size_mib
-            + erase_disk_overhead_mib(plan.storage.filesystem)
+            + erase_disk_overhead_mib(
+                plan.storage.filesystem,
+                encrypted=plan.storage.encryption is EncryptionMode.LUKS2,
+            )
         ) * 1024**2
         if disk.expected_size_bytes - reserved < MINIMUM_ROOT_BYTES:
             errors.append("Partition layout leaves less than 20 GiB for root")

@@ -15,7 +15,7 @@ from .storage_graph import StorageGraph
 from .btrfs import BtrfsCompression
 
 
-SCHEMA_VERSION = 18
+SCHEMA_VERSION = 19
 
 
 class Architecture(str, Enum):
@@ -46,6 +46,18 @@ class Filesystem(str, Enum):
     EXT4 = "ext4"
     XFS = "xfs"
     F2FS = "f2fs"
+
+
+class EncryptionMode(str, Enum):
+    NONE = "none"
+    LUKS2 = "luks2"
+
+
+class SwapEncryption(str, Enum):
+    # Follow root encryption by default. PLAIN is an explicit performance
+    # exception; a zero swap size still means no disk swap in either mode.
+    AUTO = "auto"
+    PLAIN = "plain"
 
 
 class MokPasswordPolicy(str, Enum):
@@ -81,6 +93,7 @@ class StorageSpec:
     swap_size_mib: int = 2048
     graph: StorageGraph | None = None
     btrfs_compression: BtrfsCompression = BtrfsCompression.BALANCED
+    encryption: EncryptionMode = EncryptionMode.NONE
 
 
 @dataclass(frozen=True)
@@ -128,6 +141,7 @@ class SwapSpec:
     zram_algorithm: str = "lz4"
     zram_priority: int = 100
     disk_priority: int = 10
+    encryption: SwapEncryption = SwapEncryption.AUTO
 
 
 @dataclass(frozen=True)
@@ -166,6 +180,14 @@ class InstallPlan:
     software: SoftwareSpec = field(default_factory=SoftwareSpec)
     swap: SwapSpec = field(default_factory=SwapSpec)
     boot: BootSpec = field(default_factory=BootSpec)
+
+    @property
+    def encrypted_swap(self) -> bool:
+        return (
+            self.storage.encryption is EncryptionMode.LUKS2
+            and self.storage.swap_size_mib > 0
+            and self.swap.encryption is SwapEncryption.AUTO
+        )
 
     def to_dict(self) -> dict[str, Any]:
         """Return a JSON/YAML-safe mapping."""
@@ -215,6 +237,7 @@ class InstallPlan:
                 "esp_size_mib",
                 "swap_size_mib",
                 "btrfs_compression",
+                "encryption",
                 "graph",
             },
             "storage",
@@ -232,6 +255,7 @@ class InstallPlan:
                 "mode": InstallMode(storage_data["mode"]),
                 "filesystem": Filesystem(storage_data["filesystem"]),
                 "btrfs_compression": BtrfsCompression(storage_data["btrfs_compression"]),
+                "encryption": EncryptionMode(storage_data["encryption"]),
                 "disk": disk,
                 "graph": StorageGraph.from_dict(storage_data["graph"]),
             }
@@ -322,10 +346,13 @@ class InstallPlan:
                 "zram_algorithm",
                 "zram_priority",
                 "disk_priority",
+                "encryption",
             },
             "swap",
         )
-        swap = SwapSpec(**swap_data)
+        swap = SwapSpec(
+            **{**swap_data, "encryption": SwapEncryption(swap_data["encryption"])}
+        )
         boot_data = _object(root["boot"], "boot")
         _exact_fields(
             boot_data,

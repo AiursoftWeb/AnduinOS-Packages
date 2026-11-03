@@ -8,6 +8,11 @@ from pathlib import Path
 
 from .btrfs import BTRFS_SUBVOLUMES
 from .command import CommandRunner
+from .encryption import (
+    close_encrypted_volumes,
+    preflight_encryption,
+    prepare_encrypted_volume,
+)
 from .esp import inspect_esp_for_reuse, inspect_nvram
 from .esp_replacement import backup_esp_replacement
 from .execution_boundaries import emit_boundary
@@ -152,6 +157,7 @@ class PrepareStorageStep:
         context.values["storage_disk_path"] = storage_disk_path
         context.values["storage_execution_plan"] = execution_plan
         context.values["storage_write_set"] = execution_plan.write_set
+        preflight_encryption(context, self.runner, execution_plan.commands.encrypted_volumes)
         commands = [
             "parted",
             "partprobe",
@@ -161,6 +167,8 @@ class PrepareStorageStep:
             "swapoff",
             "sync",
         ]
+        if context.plan.storage.mode is InstallMode.ERASE_DISK:
+            commands.append("wipefs")
         if context.plan.boot.esp_replacement is not None:
             commands.append("blkid")
         if context.plan.storage.swap_size_mib:
@@ -226,6 +234,7 @@ class PrepareStorageStep:
         if isinstance(execution_plan, EraseDiskExecutionPlan):
             context.values["layout"] = execution_plan.layout
         context.values["partition_devices"] = commands.devices
+        context.values["filesystem_devices"] = commands.filesystem_devices
         # A previous failed attempt can leave the newly-created swap partition
         # active in the Live session.  That open block device prevents the
         # kernel from accepting a replacement partition table.  Disable only
@@ -268,13 +277,24 @@ class PrepareStorageStep:
             if not Path(device).exists():
                 raise RuntimeError(f"Partition device did not appear: {device}")
         device_names = {
-            device: name for name, device in commands.devices.items()
+            device: name for name, device in commands.filesystem_devices.items()
         }
+        encrypted = {item.device: item for item in commands.encrypted_volumes}
         for index, command in enumerate(commands.format):
             name = device_names.get(command[-1], str(index + 1))
             boundary = f"{boundary_prefix}-format-{name}"
             if guided or manual:
                 emit_boundary(context, boundary, "before")
+            volume = encrypted.get(command[-1])
+            if volume is not None:
+                prepare_encrypted_volume(context, self.runner, volume)
+            elif isinstance(execution_plan, EraseDiskExecutionPlan):
+                # mkfs.btrfs --force does not remove LUKS signatures at byte
+                # 0/16384. Reinstalling an encrypted disk as plaintext would
+                # otherwise leave both signatures and still probe as LUKS.
+                # FORMAT already authorizes this exact physical partition;
+                # never clear a preserved/reused ESP or a whole-disk device.
+                self.runner.run(("wipefs", "--all", "--", command[-1]), timeout=30)
             self.runner.run(command, timeout=300)
             if guided or manual:
                 emit_boundary(context, boundary, "after")
@@ -413,7 +433,7 @@ class PrepareStorageStep:
                 "resize; no new partition will be created"
             )
     def verify(self, context: InstallContext) -> None:
-        devices = context.values["partition_devices"]
+        devices = context.values.get("filesystem_devices", context.values["partition_devices"])
         expected = {
             "efi-system": "vfat",
             "root": context.plan.storage.filesystem.value,
@@ -432,6 +452,13 @@ class PrepareStorageStep:
                 raise RuntimeError(
                     f"{name} has filesystem {actual!r}, expected {filesystem!r}"
                 )
+        for volume in context.values.get("opened_encrypted_volumes", []):
+            if volume.volume_type.value == "luks2":
+                result = self.runner.run(
+                    ("blkid", "-s", "TYPE", "-o", "value", volume.source), timeout=10,
+                )
+                if result.stdout.strip() != "crypto_LUKS":
+                    raise RuntimeError("The root partition is not a LUKS container")
         preservation = context.values.get("guided_preservation_snapshot")
         if isinstance(preservation, GuidedPreservationSnapshot):
             verify_guided_storage_result(
@@ -453,6 +480,7 @@ class PrepareStorageStep:
         # Partitioning cannot be rolled back. Later mount steps own unmounting,
         # while this step owns any swap area created on the selected disk.
         deactivate_target_swap(context, self.runner, strict=False)
+        close_encrypted_volumes(context, self.runner, strict=False)
         self._settle_existing_partition_table(context, strict=False)
 
     def _settle_existing_partition_table(
@@ -506,7 +534,7 @@ class MountTargetStep:
             raise RuntimeError(f"Target is already mounted: {self.target}")
 
     def execute(self, context: InstallContext) -> None:
-        devices = context.values["partition_devices"]
+        devices = context.values.get("filesystem_devices", context.values["partition_devices"])
         self.target.mkdir(parents=True, exist_ok=True)
         root = devices["root"]
         if context.plan.storage.filesystem is Filesystem.BTRFS:
@@ -560,7 +588,7 @@ class MountTargetStep:
         context.values["target"] = self.target
 
     def verify(self, context: InstallContext) -> None:
-        devices = context.values["partition_devices"]
+        devices = context.values.get("filesystem_devices", context.values["partition_devices"])
         expected_sources = {
             self.target: devices["root"],
             self.target / "boot/efi": devices["efi-system"],
@@ -630,6 +658,9 @@ def deactivate_target_swap(
     candidates: set[str] = set()
     if isinstance(devices, dict) and devices.get("swap"):
         candidates.add(str(devices["swap"]))
+    filesystem_devices = context.values.get("filesystem_devices", {})
+    if filesystem_devices.get("swap"):
+        candidates.add(filesystem_devices["swap"])
     execution_plan = context.values.get("storage_execution_plan")
     if isinstance(execution_plan, ManualStorageExecutionPlan):
         candidates.update(execution_plan.commands.deactivate_swap_devices)

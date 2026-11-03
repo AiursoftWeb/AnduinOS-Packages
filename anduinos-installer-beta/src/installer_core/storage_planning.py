@@ -25,6 +25,8 @@ from .storage_commands import (
     build_manual_storage_commands,
     build_storage_commands,
     partition_path,
+    installation_mapper_name,
+    EncryptedVolumeCommandPlan,
 )
 from .storage_graph import BlockReferenceKind, StorageGraphAction
 from .storage_graph_planning import validate_guided_coexistence_graph
@@ -248,12 +250,13 @@ def _verify_parity(
     if creates != commands.devices:
         raise RuntimeError("Storage write set partition devices drifted")
 
+    devices = commands.filesystem_devices
     expected_formats = {
-        commands.devices["efi-system"]: "vfat",
-        commands.devices["root"]: plan.storage.filesystem.value,
+        devices["efi-system"]: "vfat",
+        devices["root"]: plan.storage.filesystem.value,
     }
     if "swap" in commands.devices:
-        expected_formats[commands.devices["swap"]] = "swap"
+        expected_formats[devices["swap"]] = "swap"
     if "recovery" in commands.devices:
         expected_formats[commands.devices["recovery"]] = "ext4"
     command_formats = _command_formats(commands)
@@ -285,6 +288,16 @@ def _verify_parity(
         raise RuntimeError("Storage graph is missing")
     if graph.partition_table != layout.table:
         raise RuntimeError("Storage graph partition table drifted")
+    names = {item.partition_id: item.name for item in graph.partitions}
+    expected_volumes = tuple(
+        EncryptedVolumeCommandPlan(
+            names[item.partition_id], commands.devices[names[item.partition_id]],
+            installation_mapper_name(names[item.partition_id]), item.volume_type,
+        )
+        for item in graph.encrypted_volumes
+    )
+    if commands.encrypted_volumes != expected_volumes:
+        raise RuntimeError("Encrypted volume commands drifted from the storage graph")
     graph_operations = tuple(
         (item.action.value, item.target_id) for item in graph.operations
     )
