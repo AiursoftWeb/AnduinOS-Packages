@@ -61,6 +61,13 @@ class InstallBootloaderStep:
         # Target files do not exist yet: all preflight checks intentionally run
         # before partitioning. Validate only inputs available at that boundary.
         context.validate_plan()
+        if context.plan.storage.encryption is EncryptionMode.LUKS2:
+            # The Live payload is copied into the new system. Reject old media
+            # before partitioning, rather than discovering an Ubuntu-only GRUB
+            # after the encrypted root has already been created.
+            suffix = "x64" if context.plan.platform.architecture is Architecture.AMD64 else "aa64"
+            self.runner.run(("test", "-s", f"/usr/lib/anduinos-grub/grub{suffix}.efi"))
+            self.runner.run(("grep", "-q", "GRUB_ANDUINOS_CRYPT_HANDOFF", "/etc/grub.d/10_linux"))
 
     def execute(self, context: InstallContext) -> None:
         target = _target(context)

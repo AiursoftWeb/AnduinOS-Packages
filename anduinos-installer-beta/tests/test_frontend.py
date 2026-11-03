@@ -509,6 +509,40 @@ class FrontendPlanTests(unittest.TestCase):
             ],
         )
 
+    def test_native_preview_preserves_both_executor_opt_ins_across_sudo(self):
+        from installer_core.destructive_test import (
+            GUIDED_TEST_ENVIRONMENT,
+            GUIDED_TEST_FLAG,
+        )
+
+        process = unittest.mock.Mock()
+        process.stdin = io.StringIO()
+        process.stdin.close = lambda: None
+        process.stdout = io.StringIO('{"event":"complete","error":""}\n')
+        process.stderr = io.StringIO("")
+        process.wait.return_value = 0
+        with (
+            patch("frontend.os.geteuid", return_value=1000),
+            patch("frontend.subprocess.Popen", return_value=process) as spawn,
+        ):
+            succeeded, error = ExecutorClient(
+                "/test/executor", destructive_test=True
+            ).run(self.make_plan(), lambda _message: None, lambda *_args: None)
+
+        self.assertTrue(succeeded, error)
+        command = spawn.call_args.args[0]
+        self.assertEqual(command[:2], ["/usr/bin/sudo", "--non-interactive"])
+        self.assertIn("/usr/bin/systemd-inhibit", command)
+        self.assertEqual(command[-5:], [
+            "/usr/bin/env",
+            f"{GUIDED_TEST_ENVIRONMENT}=1",
+            "/usr/bin/python3",
+            "/usr/lib/anduinos-installer-beta/executor_cli.py",
+            GUIDED_TEST_FLAG,
+        ])
+        self.assertNotIn("/test/executor", command)
+        self.assertNotIn("plaintext-secret", " ".join(command))
+
     def test_development_client_never_starts_a_process(self):
         logs = []
         progress = []
@@ -831,6 +865,34 @@ class FrontendPlanTests(unittest.TestCase):
 
 
 class DiskCredentialWizardTests(unittest.TestCase):
+    def test_native_preview_requires_the_existing_vm_marker_and_virtualization(self):
+        from frontend import disposable_encryption_preview
+        from installer_core.destructive_test import GUIDED_TEST_ENVIRONMENT
+
+        with (
+            patch.dict("os.environ", {}, clear=True),
+            patch("frontend.detect_virtualization") as probe,
+        ):
+            self.assertFalse(disposable_encryption_preview())
+            probe.assert_not_called()
+
+        for virtualization, expected in (
+            ("kvm", True), ("qemu", True), ("", False), ("docker", False)
+        ):
+            with (
+                self.subTest(virtualization=virtualization),
+                patch.dict("os.environ", {GUIDED_TEST_ENVIRONMENT: "1"}),
+                patch("frontend.detect_virtualization", return_value=virtualization),
+            ):
+                self.assertEqual(disposable_encryption_preview(), expected)
+
+    def test_native_preview_builds_a_real_encrypted_plan_without_simulation(self):
+        from installer_core.model import EncryptionMode
+
+        values = self.encrypted_state()
+        values.update(development_mode=False, _encryption_preview=True)
+        self.assertIs(self.make_plan(values).storage.encryption, EncryptionMode.LUKS2)
+
     def encrypted_state(self):
         values = state()
         values.update(development_mode=True, disk_password="disk-example-only",
