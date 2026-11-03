@@ -7,21 +7,21 @@ desktop-image-scale-method: "stretch"
 desktop-color: "#101722"
 terminal-box: "terminal_box_*.png"
 terminal-left: "8%"
-terminal-top: "33%"
+terminal-top: "30%"
 terminal-width: "84%"
-terminal-height: "380"
-terminal-border: "16"
+terminal-height: "400"
+terminal-border: "8"
 terminal-font: "DejaVu Sans Mono Regular 14"
 + image {
  left = 50%-36
- top = 4%
+ top = 3%
  width = 72
  height = 72
  file = "logo.png"
 }
 + label {
  left = 0
- top = 18%
+ top = 16%
  width = 100%
  align = "center"
  text = "Unlock your disk"
@@ -30,7 +30,7 @@ terminal-font: "DejaVu Sans Mono Regular 14"
 }
 + label {
  left = 0
- top = 25%
+ top = 23%
  width = 100%
  align = "center"
  text = "Enter your disk password to start AnduinOS."
