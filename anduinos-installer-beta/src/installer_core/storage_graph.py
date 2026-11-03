@@ -12,7 +12,7 @@ from enum import Enum
 from typing import Any
 
 
-STORAGE_GRAPH_SCHEMA_VERSION = 5
+STORAGE_GRAPH_SCHEMA_VERSION = 6
 
 
 class StorageGraphMode(str, Enum):
@@ -49,6 +49,8 @@ class StorageGraphAction(str, Enum):
     RESIZE_PARTITION = "resize-partition"
     CREATE_PARTITION = "create-partition"
     FORMAT = "format"
+    CREATE_LUKS = "create-luks"
+    OPEN_ENCRYPTED_VOLUME = "open-encrypted-volume"
     CREATE_SUBVOLUME = "create-subvolume"
     CONFIGURE_MOUNTS = "configure-mounts"
     WRITE_BIOS_BOOTLOADER = "write-bios-bootloader"
@@ -113,6 +115,20 @@ class FilesystemDeclaration:
     label: str
 
 
+class EncryptedVolumeType(str, Enum):
+    LUKS2 = "luks2"
+    RANDOM_SWAP = "random-swap"
+
+
+@dataclass(frozen=True)
+class EncryptedVolumeDeclaration:
+    """A distinct block layer, never a formatter option or a secret."""
+
+    volume_id: str
+    partition_id: str
+    volume_type: EncryptedVolumeType
+
+
 @dataclass(frozen=True)
 class SubvolumeDeclaration:
     subvolume_id: str
@@ -158,6 +174,7 @@ class StorageGraph:
     boot_targets: tuple[BootTarget, ...]
     operations: tuple[StorageGraphOperation, ...]
     requested_capabilities: tuple[StorageCapability, ...]
+    encrypted_volumes: tuple[EncryptedVolumeDeclaration, ...] = ()
 
     @property
     def creates_esp(self) -> bool:
@@ -249,6 +266,14 @@ class StorageGraph:
             "requested_capabilities": [
                 item.value for item in self.requested_capabilities
             ],
+            "encrypted_volumes": [
+                {
+                    "volume_id": item.volume_id,
+                    "partition_id": item.partition_id,
+                    "volume_type": item.volume_type.value,
+                }
+                for item in self.encrypted_volumes
+            ],
         }
 
     @classmethod
@@ -270,6 +295,7 @@ class StorageGraph:
                 "boot_targets",
                 "operations",
                 "requested_capabilities",
+                "encrypted_volumes",
             },
             "storage.graph",
         )
@@ -348,7 +374,24 @@ class StorageGraph:
                     "storage.graph.requested_capabilities",
                 )
             ),
+            encrypted_volumes=tuple(
+                _encrypted_volume(item, index)
+                for index, item in enumerate(
+                    _list(graph["encrypted_volumes"], "storage.graph.encrypted_volumes")
+                )
+            ),
         )
+
+
+def _encrypted_volume(value: object, index: int) -> EncryptedVolumeDeclaration:
+    path = f"storage.graph.encrypted_volumes[{index}]"
+    item = _mapping(value, path)
+    _exact_fields(item, {"volume_id", "partition_id", "volume_type"}, path)
+    return EncryptedVolumeDeclaration(
+        volume_id=_string(item["volume_id"], f"{path}.volume_id"),
+        partition_id=_string(item["partition_id"], f"{path}.partition_id"),
+        volume_type=EncryptedVolumeType(item["volume_type"]),
+    )
 
 
 def _block_reference(value: object, index: int) -> BlockReference:

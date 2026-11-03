@@ -4,7 +4,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable, Protocol
+from typing import TYPE_CHECKING, Any, Callable, Protocol
+
+if TYPE_CHECKING:
+    from .encryption import EncryptionCredentials
 
 from .execution_boundaries import emit_boundary
 from .model import InstallMode, InstallPlan
@@ -41,6 +44,9 @@ class InstallContext:
     values: dict[str, Any] = field(default_factory=dict)
     destructive_started: bool = False
     execution_policy: ExecutionPolicy = ExecutionPolicy.RELEASE
+    # Process-local only. This field never participates in InstallPlan JSON,
+    # write-set display, logs or progress events.
+    encryption_credentials: EncryptionCredentials | None = field(default=None, repr=False)
 
     def validate_plan(self) -> None:
         validate_plan_for_execution(self.plan, self.execution_policy)

@@ -9,8 +9,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .layout import PartitionLayout, PartitionSpec, RECOVERY_LABEL
-from .model import Filesystem, InstallMode, InstallPlan
-from .storage_graph import GraphFilesystem, StorageGraphAction
+from .model import EncryptionMode, Filesystem, InstallMode, InstallPlan
+from .storage_graph import EncryptedVolumeType, GraphFilesystem, StorageGraphAction
 from .storage_inventory import StorageInventory
 from .validation import validate_plan
 
@@ -28,12 +28,37 @@ class PartitionResizeCommandPlan:
 
 
 @dataclass(frozen=True)
+class EncryptedVolumeCommandPlan:
+    name: str
+    source: str
+    mapper_name: str
+    volume_type: EncryptedVolumeType
+
+    @property
+    def device(self) -> str:
+        return "/dev/mapper/" + self.mapper_name
+
+
+def installation_mapper_name(name: str) -> str:
+    # Separate from the installed system's anduinos-root/anduinos-swap names.
+    # A Live session may already have another installed root unlocked.
+    return {"root": "anduinos-install-root", "swap": "anduinos-install-swap"}[name]
+
+
+@dataclass(frozen=True)
 class StorageCommandPlan:
     partition: tuple[tuple[str, ...], ...]
     format: tuple[tuple[str, ...], ...]
     devices: dict[str, str]
     deactivate_swap_devices: tuple[str, ...] = ()
     partition_resizes: tuple[PartitionResizeCommandPlan, ...] = ()
+    encrypted_volumes: tuple[EncryptedVolumeCommandPlan, ...] = ()
+
+    @property
+    def filesystem_devices(self) -> dict[str, str]:
+        devices = dict(self.devices)
+        devices.update((item.name, item.device) for item in self.encrypted_volumes)
+        return devices
 
 
 def partition_path(disk: str, number: int) -> str:
@@ -83,14 +108,28 @@ def build_storage_commands(
             )
         devices[part.name] = partition_path(disk, part.number)
 
+    encrypted_volumes = []
+    if plan.storage.encryption is EncryptionMode.LUKS2:
+        encrypted_volumes.append(EncryptedVolumeCommandPlan(
+            "root", devices["root"], installation_mapper_name("root"),
+            EncryptedVolumeType.LUKS2,
+        ))
+        if plan.encrypted_swap:
+            encrypted_volumes.append(EncryptedVolumeCommandPlan(
+                "swap", devices["swap"], installation_mapper_name("swap"),
+                EncryptedVolumeType.RANDOM_SWAP,
+            ))
+    filesystem_devices = dict(devices)
+    filesystem_devices.update((item.name, item.device) for item in encrypted_volumes)
+
     format_commands: list[tuple[str, ...]] = [
         ("mkfs.vfat", "-F", "32", "-n", "ANDUIN_EFI", devices["efi-system"]),
     ]
     if "swap" in devices:
         format_commands.append(
-            ("mkswap", "-L", "AnduinOS-swap", devices["swap"])
+            ("mkswap", "-L", "AnduinOS-swap", filesystem_devices["swap"])
         )
-    root = devices["root"]
+    root = filesystem_devices["root"]
     if "recovery" in devices:
         format_commands.append(("mkfs.ext4", "-F", "-L", RECOVERY_LABEL, devices["recovery"]))
     format_commands.append(
@@ -104,6 +143,7 @@ def build_storage_commands(
         partition=tuple(partition_commands),
         format=tuple(format_commands),
         devices=devices,
+        encrypted_volumes=tuple(encrypted_volumes),
     )
 
 

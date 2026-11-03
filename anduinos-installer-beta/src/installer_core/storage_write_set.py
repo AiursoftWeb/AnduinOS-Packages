@@ -6,7 +6,7 @@ pure and does not replace or execute the already-tested command plan.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import Enum
 
 from .btrfs import BTRFS_SUBVOLUMES
@@ -23,8 +23,9 @@ from .storage_graph import (
     BlockReferenceKind,
     GraphFilesystem,
     StorageGraphAction,
+    EncryptedVolumeType,
 )
-from .storage_commands import partition_path
+from .storage_commands import installation_mapper_name, partition_path
 from .storage_inventory import DiskInventory, StorageInventory
 from .validation import validate_plan
 
@@ -35,6 +36,7 @@ class StorageObjectKind(str, Enum):
     FILESYSTEM = "filesystem"
     SUBVOLUME = "subvolume"
     EFI_SYSTEM_PARTITION = "efi-system-partition"
+    ENCRYPTED_VOLUME = "encrypted-volume"
 
 
 class StorageAction(str, Enum):
@@ -45,6 +47,8 @@ class StorageAction(str, Enum):
     RESIZE_PARTITION = "resize-partition"
     CREATE_PARTITION = "create-partition"
     FORMAT = "format"
+    CREATE_LUKS = "create-luks"
+    OPEN_ENCRYPTED_VOLUME = "open-encrypted-volume"
     CREATE_SUBVOLUME = "create-subvolume"
     CONFIGURE_MOUNTS = "configure-mounts"
     WRITE_BIOS_BOOTLOADER = "write-bios-bootloader"
@@ -244,11 +248,57 @@ def build_erase_disk_write_set(plan: InstallPlan) -> StorageWriteSet:
                 ),
             )
         )
-    return StorageWriteSet(
+    return _with_encrypted_writes(plan, StorageWriteSet(
         mode=plan.storage.mode,
         disk_stable_id=disk.stable_id,
         operations=tuple(operations),
-    )
+    ))
+
+
+def _with_encrypted_writes(plan: InstallPlan, writes: StorageWriteSet) -> StorageWriteSet:
+    graph = plan.storage.graph
+    assert graph is not None
+    if not graph.encrypted_volumes:
+        return writes
+
+    volumes = {item.partition_id: item for item in graph.encrypted_volumes}
+    names = {item.partition_id: item.name for item in graph.partitions}
+    sources = {
+        item.partition_id: partition_path(plan.storage.disk.path, item.number)
+        for item in graph.partitions
+    }
+    paths = {
+        key: "/dev/mapper/" + installation_mapper_name(names[key]) for key in volumes
+    }
+    result = []
+    for item in writes.operations:
+        if item.action is StorageAction.WRITE_BIOS_BOOTLOADER:
+            continue
+        volume = volumes.get(item.target_id)
+        if item.action is StorageAction.FORMAT and volume is not None:
+            if volume.volume_type is EncryptedVolumeType.LUKS2:
+                result.append(StorageWriteOperation(
+                    StorageAction.CREATE_LUKS, StorageObjectKind.PARTITION,
+                    volume.partition_id, sources[volume.partition_id], True,
+                    (("type", "luks2"), ("pbkdf", "argon2id")),
+                ))
+            result.append(StorageWriteOperation(
+                StorageAction.OPEN_ENCRYPTED_VOLUME, StorageObjectKind.ENCRYPTED_VOLUME,
+                volume.volume_id, paths[volume.partition_id], False,
+                (("source", sources[volume.partition_id]),
+                 ("type", volume.volume_type.value)),
+            ))
+        if item.action is not StorageAction.CREATE_PARTITION:
+            for partition_id, encrypted in volumes.items():
+                if item.target_id == partition_id or item.target_id.startswith(partition_id + ":subvolume:"):
+                    item = replace(
+                        item,
+                        target_id=encrypted.volume_id + item.target_id[len(partition_id):],
+                        display_path=item.display_path.replace(sources[partition_id], paths[partition_id], 1),
+                    )
+                    break
+        result.append(item)
+    return replace(writes, operations=tuple(result))
 
 
 def build_guided_coexistence_write_set(

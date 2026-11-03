@@ -8,6 +8,7 @@ from time import sleep
 from typing import Callable
 
 from .command import CommandRunner
+from .encryption import close_encrypted_volumes
 from .preflight import (
     verify_platform_environment,
     verify_target_disk_environment,
@@ -212,6 +213,8 @@ class CopySystemStep:
     # Signing identities and volume bindings belong to the installed machine.
     # Exclude metadata/backups too: they could otherwise override a fresh MOK.
     signing_excludes = (
+        "etc/anduinos-luks",
+        "etc/crypttab",
         "var/lib/shim-signed/mok",
         "var/lib/anduinos-grub",
         "var/lib/anduinos-recovery-env",
@@ -284,6 +287,7 @@ class UnmountTargetStep:
             self.runner.run(("umount", str(target)), timeout=30)
             context.values["target_root_mounted"] = False
         deactivate_target_swap(context, self.runner)
+        close_encrypted_volumes(context, self.runner, strict=True)
 
     def verify(self, context: InstallContext) -> None:
         if context.values.get("target_efi_mounted") or context.values.get(

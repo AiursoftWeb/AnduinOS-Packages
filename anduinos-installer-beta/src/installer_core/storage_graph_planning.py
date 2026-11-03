@@ -13,13 +13,15 @@ from .coexistence import (
     analyze_guided_coexistence,
 )
 from .layout import RECOVERY_LABEL, build_erase_disk_layout
-from .model import Architecture, DiskIdentity, Filesystem, Firmware, InstallMode, InstallPlan
+from .model import Architecture, DiskIdentity, EncryptionMode, Filesystem, Firmware, InstallMode, InstallPlan
 from .storage_graph import (
     STORAGE_GRAPH_SCHEMA_VERSION,
     BlockReference,
     BlockReferenceKind,
     BootTarget,
     FilesystemDeclaration,
+    EncryptedVolumeDeclaration,
+    EncryptedVolumeType,
     GraphFilesystem,
     MountDeclaration,
     MountRole,
@@ -531,7 +533,78 @@ def build_erase_disk_storage_graph(
         operations=tuple(operations),
         requested_capabilities=tuple(capabilities),
     )
-    return with_new_esp_fallback(graph, plan.platform.architecture)
+    graph = with_new_esp_fallback(graph, plan.platform.architecture)
+    return _with_encrypted_volumes(plan, graph)
+
+
+def _with_encrypted_volumes(plan: InstallPlan, graph: StorageGraph) -> StorageGraph:
+    """Insert block layers while preserving the existing filesystem policy.
+
+    IDs on either side of encryption must differ: formatting the outer
+    partition as Btrfs/ext4 would silently destroy its newly created header.
+    The graph, write set and executable commands are compared before writes.
+    """
+    if plan.storage.encryption is not EncryptionMode.LUKS2:
+        return graph
+
+    partitions = {item.name: item.partition_id for item in graph.partitions}
+    volumes = [EncryptedVolumeDeclaration(
+        volume_id=partitions["root"] + ":unlocked",
+        partition_id=partitions["root"],
+        volume_type=EncryptedVolumeType.LUKS2,
+    )]
+    if plan.encrypted_swap:
+        volumes.append(EncryptedVolumeDeclaration(
+            volume_id=partitions["swap"] + ":unlocked",
+            partition_id=partitions["swap"],
+            volume_type=EncryptedVolumeType.RANDOM_SWAP,
+        ))
+    by_partition = {item.partition_id: item for item in volumes}
+    replacements = {item.partition_id: item.volume_id for item in volumes}
+    for item in graph.subvolumes:
+        replacements[item.subvolume_id] = (
+            replacements[item.filesystem_id] + ":subvolume:" + item.name
+        )
+
+    operations = []
+    for item in graph.operations:
+        if item.action is StorageGraphAction.WRITE_BIOS_BOOTLOADER:
+            continue  # Encrypted installations support UEFI only.
+        volume = by_partition.get(item.target_id)
+        if item.action is StorageGraphAction.FORMAT and volume is not None:
+            if volume.volume_type is EncryptedVolumeType.LUKS2:
+                operations.append(StorageGraphOperation(
+                    StorageGraphAction.CREATE_LUKS, volume.partition_id,
+                ))
+            operations.append(StorageGraphOperation(
+                StorageGraphAction.OPEN_ENCRYPTED_VOLUME, volume.volume_id,
+            ))
+        # CREATE_PARTITION still addresses the physical partition. Other
+        # filesystem/subvolume operations address the new inner block layer.
+        target = (item.target_id if item.action is StorageGraphAction.CREATE_PARTITION
+                  else replacements.get(item.target_id, item.target_id))
+        operations.append(replace(item, target_id=target))
+
+    return replace(
+        graph,
+        encrypted_volumes=tuple(volumes),
+        filesystems=tuple(replace(
+            item,
+            filesystem_id=replacements.get(item.filesystem_id, item.filesystem_id),
+            block_id=replacements.get(item.block_id, item.block_id),
+        ) for item in graph.filesystems),
+        subvolumes=tuple(replace(
+            item,
+            subvolume_id=replacements[item.subvolume_id],
+            filesystem_id=replacements[item.filesystem_id],
+        ) for item in graph.subvolumes),
+        mounts=tuple(replace(
+            item, source_id=replacements.get(item.source_id, item.source_id),
+        ) for item in graph.mounts),
+        boot_targets=tuple(replace(item, bios_disk_reference_id="")
+                           for item in graph.boot_targets),
+        operations=tuple(operations),
+    )
 
 
 def validate_storage_graph(plan: InstallPlan) -> None:
@@ -547,6 +620,8 @@ def validate_storage_graph(plan: InstallPlan) -> None:
         )
     if graph.mode.value != plan.storage.mode.value:
         raise StorageGraphValidationError("Storage graph mode does not match")
+    if graph.encrypted_volumes and plan.storage.mode is not InstallMode.ERASE_DISK:
+        raise StorageGraphValidationError("Encrypted volumes require a new whole-disk layout")
     if not SHA256_RE.fullmatch(graph.inventory_digest):
         raise StorageGraphValidationError("Invalid storage inventory digest")
     if len(graph.boot_targets) == 1:

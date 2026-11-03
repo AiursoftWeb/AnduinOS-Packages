@@ -7,13 +7,14 @@ import os
 import sys
 
 from installer_core.executor import InstallerExecutor
+from installer_core.encryption import read_encryption_credentials
 from installer_core.destructive_test import (
     GUIDED_TEST_ENVIRONMENT,
     GUIDED_TEST_FLAG,
     execution_policy,
     require_disposable_guided_vm,
 )
-from installer_core.model import InstallPlan
+from installer_core.model import EncryptionMode, InstallPlan
 from installer_core.mount_namespace import isolate_mount_namespace
 from installer_core.validation import (
     ExecutionPolicy,
@@ -27,6 +28,7 @@ def main() -> int:
     if os.geteuid() != 0:
         emit({"event": "complete", "error": "Executor must run as root"})
         return 1
+    credentials = None
     try:
         policy = execution_policy(sys.argv[1:], dict(os.environ))
         isolate_mount_namespace()
@@ -37,6 +39,8 @@ def main() -> int:
         if policy is ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST:
             require_disposable_guided_vm(plan)
         validate_plan_for_execution(plan, policy)
+        if plan.storage.encryption is EncryptionMode.LUKS2:
+            credentials = read_encryption_credentials(sys.stdin)
 
         executor = InstallerExecutor(
             lambda message: emit({"event": "log", "message": message}),
@@ -58,7 +62,7 @@ def main() -> int:
             ),
             execution_policy=policy,
         )
-        result = executor.run(plan)
+        result = executor.run(plan, encryption_credentials=credentials)
         if not result.succeeded:
             error = next(
                 (
@@ -75,6 +79,9 @@ def main() -> int:
     except Exception as error:
         emit({"event": "complete", "error": str(error)})
         return 1
+    finally:
+        if credentials is not None:
+            credentials.clear()
 
 
 if __name__ == "__main__":

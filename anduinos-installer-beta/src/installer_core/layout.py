@@ -14,9 +14,11 @@ RECOVERY_SIZE_MIB = 256
 RECOVERY_LABEL = "AOS_RECOVERY"
 
 
-def erase_disk_overhead_mib(filesystem: Filesystem) -> int:
+def erase_disk_overhead_mib(filesystem: Filesystem, *, encrypted: bool = False) -> int:
     """Reserve alignment/BIOS metadata and the Btrfs recovery filesystem."""
-    return 4 + (RECOVERY_SIZE_MIB if filesystem is Filesystem.BTRFS else 0)
+    # The LUKS2 header lives inside the root partition, before its filesystem.
+    return (4 + (RECOVERY_SIZE_MIB if filesystem is Filesystem.BTRFS else 0)
+            + (16 if encrypted else 0))
 
 
 @dataclass(frozen=True)
