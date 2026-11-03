@@ -12,9 +12,12 @@ from dataclasses import replace
 from enum import Enum
 
 from installer_core.executor import describe_installation_pipeline
+from installer_core.encryption import EncryptionCredentials
 from installer_core.btrfs import BtrfsCompression
 from installer_core.model import (
+    EncryptionMode,
     Filesystem,
+    Firmware,
     InstallMode,
     InstallPlan,
     StorageSpec,
@@ -201,6 +204,7 @@ def clear_manual_storage_selection(state: dict[str, object]) -> None:
 def clear_storage_strategy(state: dict[str, object]) -> None:
     """Clear choices whose meaning depends on one exact target topology."""
 
+    clear_disk_credentials(state)
     state["storage_strategy"] = ""
     state["storage_mode"] = InstallMode.ERASE_DISK.value
     state["filesystem"] = Filesystem.BTRFS.value
@@ -267,6 +271,7 @@ def apply_storage_strategy(
         raise ValueError("Invalid storage strategy")
     changed = state.get("storage_strategy") != strategy.value
     if changed:
+        clear_disk_credentials(state)
         clear_guided_storage_selection(state)
         clear_manual_storage_selection(state)
         state.pop("swap_size_mib", None)
@@ -297,9 +302,52 @@ def _human_size(size_bytes: int) -> str:
     return f"{size_bytes} B"
 
 
+def clear_disk_credentials(state: dict[str, object]) -> None:
+    """Drop wizard references and clear entries without leaving a UI copy."""
+    for name in ("disk_password", "disk_password_confirmation", "disk_recovery_key"):
+        state[name] = ""
+    state["disk_recovery_key_saved"] = False
+    state["swap_encryption"] = "auto"
+    clear_ui = state.pop("_clear_disk_password_ui", None)
+    if callable(clear_ui):
+        clear_ui()
+
+
+def prepare_encryption_credentials(state: dict[str, object]) -> EncryptionCredentials | None:
+    """Validate the wizard inputs without serializing them into the plan."""
+    password = str(state.get("disk_password") or "")
+    confirmation = str(state.get("disk_password_confirmation") or "")
+    if not password and not confirmation:
+        return None
+    if not state.get("development_mode"):
+        raise FrontendPlanError("Encrypted installation is not available yet")
+    if state.get("storage_mode", "erase-disk") != "erase-disk":
+        raise FrontendPlanError("Disk encryption requires a new whole-disk installation")
+    if password != confirmation:
+        raise FrontendPlanError("The disk passwords do not match")
+    credentials = EncryptionCredentials(password, str(state.get("disk_recovery_key") or ""))
+    try:
+        credentials.validate()
+        if not state.get("disk_recovery_key_saved"):
+            raise FrontendPlanError("Save the recovery key before continuing")
+    except Exception:
+        credentials.clear()
+        raise
+    return credentials
+
+
+def _validate_executor_credentials(plan: InstallPlan, credentials: EncryptionCredentials | None) -> None:
+    encrypted = plan.storage.encryption is EncryptionMode.LUKS2
+    if encrypted != (credentials is not None):
+        raise ValueError("Disk credentials do not match the installation plan")
+    if credentials is not None:
+        credentials.validate()
+
+
 def clear_plaintext_passwords(state: dict[str, object]) -> None:
     """Erase account secrets from both shared state and the visible entries."""
 
+    clear_disk_credentials(state)
     state["password"] = ""
     state["password_confirmation"] = ""
     clear_ui = state.pop("_clear_password_ui", None)
@@ -331,6 +379,17 @@ def create_install_plan(
             clear_plaintext_passwords(state)
         raise FrontendPlanError("Unsupported storage mode")
 
+    swap_encryption = str(state.get("swap_encryption", "auto"))
+    encryption = EncryptionMode.NONE
+    try:
+        credentials = prepare_encryption_credentials(state)
+        if credentials is not None:
+            encryption = EncryptionMode.LUKS2
+            credentials.clear()
+    except Exception:
+        if clear_passwords:
+            clear_plaintext_passwords(state)
+        raise
     password = str(state.get("password") or "")
     confirmation = str(state.get("password_confirmation") or "")
     try:
@@ -378,10 +437,12 @@ def create_install_plan(
         state["disk"] = selected.identity.path
     if platform is None:
         platform = probe_platform()
-    base_choices = state
+    if encryption is EncryptionMode.LUKS2 and platform.firmware is not Firmware.UEFI:
+        raise FrontendPlanError("Disk encryption requires UEFI")
+    base_choices = dict(state, encryption=encryption.value, swap_encryption=swap_encryption)
     storage_override = None
     if storage_mode is InstallMode.MANUAL:
-        base_choices = dict(state)
+        base_choices = dict(base_choices)
         base_choices.pop("swap_size_mib", None)
         previous_preview = state.get("manual_storage_preview_model")
         if not isinstance(previous_preview, ManualStoragePreview):
@@ -514,13 +575,18 @@ class ExecutorClient:
         log: Callable[[str], None],
         progress: Callable[[str, int, int], None],
         step_status: Callable[[str, str, str], None] | None = None,
+        *,
+        encryption_credentials: EncryptionCredentials | None = None,
     ) -> tuple[bool, str]:
         step_status = step_status or (
             lambda _step, _status, _message: None
         )
         try:
             validate_plan(plan)
+            _validate_executor_credentials(plan, encryption_credentials)
         except Exception as error:
+            if encryption_credentials is not None:
+                encryption_credentials.clear()
             return False, str(error)
         inhibited_helper = [
             "/usr/bin/systemd-inhibit",
@@ -548,7 +614,16 @@ class ExecutorClient:
             assert process.stdin is not None
             assert process.stdout is not None
             process.stdin.write(json.dumps(plan.to_dict()) + "\n")
+            if encryption_credentials is not None:
+                # The executor reads this second private line separately. It
+                # never enters the immutable plan, argv or progress stream.
+                process.stdin.write(json.dumps({
+                    "passphrase": encryption_credentials.passphrase,
+                    "recovery_key": encryption_credentials.recovery_key,
+                }) + "\n")
             process.stdin.close()
+            if encryption_credentials is not None:
+                encryption_credentials.clear()
 
             final_error = ""
             for line in process.stdout:
@@ -581,6 +656,9 @@ class ExecutorClient:
             return True, ""
         except OSError as error:
             return False, f"Could not start privileged executor: {error}"
+        finally:
+            if encryption_credentials is not None:
+                encryption_credentials.clear()
 
 
 class DevelopmentExecutorClient:
@@ -592,15 +670,22 @@ class DevelopmentExecutorClient:
         log: Callable[[str], None],
         progress: Callable[[str, int, int], None],
         step_status: Callable[[str, str, str], None] | None = None,
+        *,
+        encryption_credentials: EncryptionCredentials | None = None,
     ) -> tuple[bool, str]:
         step_status = step_status or (
             lambda _step, _status, _message: None
         )
         try:
             validate_plan(plan)
+            _validate_executor_credentials(plan, encryption_credentials)
         except Exception as error:
+            if encryption_credentials is not None:
+                encryption_credentials.clear()
             return False, str(error)
 
+        if encryption_credentials is not None:
+            encryption_credentials.clear()
         pipeline = describe_installation_pipeline(plan)
         total = sum(weight for _step, weight in pipeline)
         completed = 0
