@@ -73,6 +73,9 @@
     <Dependency Include="grub2-common" />
     <Dependency Include="dracut" />
     <Dependency Include="cryptsetup-bin" />
+    <!-- Dracut only suggests this handler; encrypted roots require it even
+         when the Live image is assembled without recommended packages. -->
+    <Dependency Include="systemd-cryptsetup" />
     <Dependency Include="anduinos-boot-tools (&gt;= 2.1.0-1)" />
     <Dependency Include="anduinos-swap-config" />
     <Dependency Include="shim-signed" />
