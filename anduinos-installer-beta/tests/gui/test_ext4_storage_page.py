@@ -18,6 +18,24 @@ from test_manual_layout import manual_disk, selection
 
 
 class DiskEncryptionPageTests(unittest.TestCase):
+    def test_native_vm_preview_exposes_credentials_without_development_mode(self):
+        shared = state()
+        shared.update(
+            development_mode=False,
+            _encryption_preview=True,
+            _platform_probe_result=PlatformProbe(
+                Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED
+            ),
+        )
+        with patch("pages.probe_physical_memory_bytes", return_value=8 * 1024**3):
+            page = pages.build_disk_layout_page(shared, Mock())
+
+        entries = [
+            widget for widget in descendants(page)
+            if isinstance(widget, Adw.PasswordEntryRow)
+        ]
+        self.assertEqual(len(entries), 2)
+
     def test_blank_mismatch_and_saved_key_control_continuation_for_both_filesystems(self):
         from frontend import clear_disk_credentials
         for filesystem in ("btrfs", "ext4"):

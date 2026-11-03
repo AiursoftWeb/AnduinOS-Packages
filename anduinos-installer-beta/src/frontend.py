@@ -13,6 +13,10 @@ from enum import Enum
 
 from installer_core.executor import describe_installation_pipeline
 from installer_core.encryption import EncryptionCredentials
+from installer_core.destructive_test import (
+    ALLOWED_TEST_VIRTUALIZATIONS, GUIDED_TEST_ENVIRONMENT, GUIDED_TEST_FLAG,
+    detect_virtualization,
+)
 from installer_core.btrfs import BtrfsCompression
 from installer_core.model import (
     EncryptionMode,
@@ -313,13 +317,24 @@ def clear_disk_credentials(state: dict[str, object]) -> None:
         clear_ui()
 
 
+def disposable_encryption_preview() -> bool:
+    """Reuse the existing VM-only executor opt-in for M1 installation tests.
+
+    This only exposes controls. The privileged executor independently requires
+    both opt-ins, root, QEMU/KVM and its exact disposable /dev/vda target.
+    Ordinary launches and --development retain their existing behavior.
+    """
+    return (os.environ.get(GUIDED_TEST_ENVIRONMENT) == "1"
+            and detect_virtualization() in ALLOWED_TEST_VIRTUALIZATIONS)
+
+
 def prepare_encryption_credentials(state: dict[str, object]) -> EncryptionCredentials | None:
     """Validate the wizard inputs without serializing them into the plan."""
     password = str(state.get("disk_password") or "")
     confirmation = str(state.get("disk_password_confirmation") or "")
     if not password and not confirmation:
         return None
-    if not state.get("development_mode"):
+    if not (state.get("development_mode") or state.get("_encryption_preview")):
         raise FrontendPlanError("Encrypted installation is not available yet")
     if state.get("storage_mode", "erase-disk") != "erase-disk":
         raise FrontendPlanError("Disk encryption requires a new whole-disk installation")
@@ -566,8 +581,12 @@ def _confirmed_esp_replacement(state, preview):
 class ExecutorClient:
     """Stream one immutable plan to the privileged helper as JSON events."""
 
-    def __init__(self, helper: str = "/usr/bin/anduinos-installer-executor"):
+    def __init__(
+        self, helper: str = "/usr/bin/anduinos-installer-executor", *,
+        destructive_test: bool = False,
+    ):
         self.helper = helper
+        self.destructive_test = destructive_test
 
     def run(
         self,
@@ -595,6 +614,14 @@ class ExecutorClient:
             "--why=Installing AnduinOS",
             self.helper,
         ]
+        if self.destructive_test:
+            # Carry both existing executor opt-ins across sudo explicitly;
+            # sudo's environment filtering must not turn a VM test into a
+            # release invocation. The helper still verifies the VM and target.
+            inhibited_helper[-1:] = [
+                "/usr/bin/env", f"{GUIDED_TEST_ENVIRONMENT}=1",
+                self.helper, GUIDED_TEST_FLAG,
+            ]
         # The inhibitor protects the privileged executor's destructive
         # lifetime, so acquire it inside the same privilege boundary. Asking
         # the unprivileged GTK process for a block inhibitor is unreliable when

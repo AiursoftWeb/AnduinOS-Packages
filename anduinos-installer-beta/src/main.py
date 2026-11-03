@@ -24,6 +24,7 @@ from gi.repository import Gtk, Adw, Gio, GLib
 from i18n import _, N_
 from languages import default_timezone, detect_system_language
 from pages import build_all_pages
+from frontend import disposable_encryption_preview
 from installer_core.hostnames import (
     detect_device_type,
     generate_random_suffix,
@@ -93,6 +94,7 @@ class InstallerApplication(Adw.Application):
             "locale": detected_language.locale,
             "installation_running": False,
             "development_mode": development_mode,
+            "_encryption_preview": disposable_encryption_preview(),
             "install_updates": True,
             "install_third_party_drivers": False,
             "install_multimedia_codecs": False,

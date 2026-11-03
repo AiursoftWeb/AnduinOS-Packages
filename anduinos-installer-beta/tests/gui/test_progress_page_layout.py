@@ -28,6 +28,38 @@ def _settle():
 
 
 class ProgressPageLayoutTests(unittest.TestCase):
+    def test_native_preview_uses_real_executor_and_development_stays_simulated(self):
+        for development in (False, True):
+            with self.subTest(development=development):
+                plan = SimpleNamespace(
+                    regional=SimpleNamespace(input_methods=()),
+                    platform=SimpleNamespace(secure_boot=SecureBoot.DISABLED),
+                )
+                with (
+                    patch("pages.ordered_progress_steps", return_value=[]),
+                    patch("pages.threading.Thread") as thread,
+                    patch("pages.GLib.timeout_add_seconds", return_value=0),
+                ):
+                    pages.build_progress_page(plan, {
+                        "lang": "en_US",
+                        "development_mode": development,
+                        "_encryption_preview": True,
+                    }, Adw.NavigationView())
+                with (
+                    patch("pages.ExecutorClient") as native,
+                    patch("pages.DevelopmentExecutorClient") as simulated,
+                ):
+                    native.return_value.run.return_value = (True, "")
+                    simulated.return_value.run.return_value = (True, "")
+                    thread.call_args.kwargs["target"]()
+                if development:
+                    simulated.assert_called_once_with()
+                    native.assert_not_called()
+                else:
+                    native.assert_called_once_with(destructive_test=True)
+                    simulated.assert_not_called()
+                _settle()
+
     def test_output_shows_fallback_step_only_when_creating_an_esp(self):
         for plan, expected in ((valid_plan(), True), (guided_plan()[0], False)):
             with self.subTest(new_esp=expected):

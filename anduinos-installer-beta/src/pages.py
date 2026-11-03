@@ -3765,9 +3765,11 @@ _DISK_ENCRYPTION_ERRORS = (
 
 
 def _disk_encryption_available(shared):
-    # Preview through the existing development mode until full ISO/recovery
-    # acceptance; the privileged release executor independently keeps its gate.
-    if not shared.get("development_mode") or shared.get("storage_mode", "erase-disk") != "erase-disk":
+    # Preview in simulation or the existing disposable-VM test capability.
+    # The privileged release executor independently keeps its gate.
+    if not (shared.get("development_mode") or shared.get("_encryption_preview")):
+        return False
+    if shared.get("storage_mode", "erase-disk") != "erase-disk":
         return False
     if shared.get("filesystem", "btrfs") not in {"btrfs", "ext4"}:
         return False
@@ -8139,7 +8141,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view, *, encryption_crede
         client = (
             DevelopmentExecutorClient()
             if shared.get("development_mode")
-            else ExecutorClient()
+            else ExecutorClient(destructive_test=bool(shared.get("_encryption_preview")))
         )
         success, error = client.run(
             plan, log, update_progress, update_step_status,

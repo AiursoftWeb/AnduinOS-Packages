@@ -19,12 +19,19 @@ stacks, or LVM.
 The current route uses the AnduinOS GRUB build to open LUKS2 directly; the
 historical detached-LUKS1-header and UKI alternatives below are archived design
 material, not instructions to implement both routes. The selective boot-tools
-Dracut handoff and storage provisioning are merged. The current increment wires
-that storage into the existing GRUB generator and signed deployment. The next
-increment previews optional disk password, confirmation, recovery-key saving
-acknowledgement and swap policy through the existing development mode only.
-Release execution still rejects encrypted plans; ordinary installer pages remain
-unchanged until complete ISO, enrollment and recovery acceptance.
+Dracut handoff, storage provisioning, signed GRUB deployment and credentials
+wizard are merged. Development mode continues to simulate installation. M1
+integration additionally exposes the same wizard under the existing disposable
+VM test opt-in; it uses the real privileged executor rather than the simulator.
+The executor independently requires both existing test opt-ins, root, QEMU/KVM
+and the exact disposable `/dev/vda` target. The UI's virtualization check is
+only an early availability check, never permission to write a disk.
+
+Ordinary launch still hides encryption and release execution still rejects
+encrypted plans. The VM preview does not qualify physical installation, RE,
+Live rescue or the complete release matrix. Encrypted preflight also checks
+that the Live source contains the native AnduinOS GRUB payload and credential
+handoff generator before any partitioning begins.
 
 - Plan schema 19 / storage graph 6 contain encryption policy and distinct outer
   partitions / inner block volumes, never passwords or key material. Only new
