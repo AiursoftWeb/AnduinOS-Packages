@@ -58,15 +58,19 @@ from frontend import (
     clear_storage_target,
     clear_plaintext_passwords,
     create_install_plan,
+    prepare_encryption_credentials,
     probe_partition_resize,
     probe_esp_replacement,
     probe_storage_inventory,
 )
+from installer_core.encryption import generate_recovery_key
 from installer_core.btrfs import BTRFS_SUBVOLUMES, BtrfsCompression
 from installer_core.coexistence import CoexistenceNoticeCode
 from installer_core.executor import describe_installation_pipeline
 from installer_core.layout import MIB, build_erase_disk_layout_spec
 from installer_core.model import (
+    EncryptionMode,
+    Firmware,
     Filesystem,
     InstallMode,
     InstallPlan,
@@ -3753,6 +3757,143 @@ def _btrfs_compression_control(shared, lang):
     return group
 
 
+_DISK_ENCRYPTION_ERRORS = (
+    N_("The disk passwords do not match"),
+    N_("Disk password must contain 8 to 128 printable ASCII characters"),
+    N_("Save the recovery key before continuing"),
+)
+
+
+def _disk_encryption_available(shared):
+    # Preview through the existing development mode until full ISO/recovery
+    # acceptance; the privileged release executor independently keeps its gate.
+    if not shared.get("development_mode") or shared.get("storage_mode", "erase-disk") != "erase-disk":
+        return False
+    if shared.get("filesystem", "btrfs") not in {"btrfs", "ext4"}:
+        return False
+    platform = shared.get("_platform_probe_result")
+    if platform is None:
+        try:
+            platform = probe_platform()
+        except (RuntimeError, ValueError):
+            return False
+    return platform.firmware is Firmware.UEFI
+
+
+def _disk_encryption_control(shared, lang, changed):
+    group = Adw.PreferencesGroup(title=_("Disk encryption", lang))
+    group.set_description(_(
+        "Leave blank to keep the disk unencrypted. Use 8–128 ASCII characters; "
+        "the boot password uses the US keyboard layout.", lang))
+    password = Adw.PasswordEntryRow(title=_("Disk password (optional)", lang))
+    confirmation = Adw.PasswordEntryRow(title=_("Confirm disk password", lang))
+    password.set_text(str(shared.get("disk_password") or ""))
+    confirmation.set_text(str(shared.get("disk_password_confirmation") or ""))
+    group.add(password)
+    group.add(confirmation)
+
+    recovery = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10,
+                       margin_start=12, margin_end=12, margin_top=12)
+    instruction = Gtk.Label(label=_(
+        "Save this recovery key on another device. It unlocks your disk "
+        "if you forget the password.", lang), wrap=True, xalign=0)
+    key_label = Gtk.Label(selectable=True, wrap=True, xalign=0,
+                          wrap_mode=Pango.WrapMode.CHAR)
+    key_label.add_css_class("monospace")
+    saved = Gtk.CheckButton(label=_("I saved the recovery key outside this computer.", lang))
+    saved.set_active(bool(shared.get("disk_recovery_key_saved")))
+    recovery.append(instruction)
+    recovery.append(key_label)
+    recovery.append(saved)
+    group.add(recovery)
+    swap = Adw.SwitchRow(title=_("Encrypt disk swap", lang),
+                         subtitle=_("Uses a new random key at each startup. Hibernation is unavailable.", lang))
+    swap.set_active(shared.get("swap_encryption", "auto") != "plain")
+    group.add(swap)
+    warning = Gtk.Label(label=_("Disk swap will store data without encryption.", lang),
+                        wrap=True, xalign=0, margin_start=12, margin_end=12)
+    warning.add_css_class("warning")
+    group.add(warning)
+    error_label = Gtk.Label(wrap=True, xalign=0, margin_start=12, margin_end=12)
+    error_label.add_css_class("error")
+    group.add(error_label)
+    clearing = False
+
+    def validate():
+        try:
+            credentials = prepare_encryption_credentials(shared)
+            if credentials is not None:
+                credentials.clear()
+                if "swap_size_mib" in shared:
+                    sizing = calculate_swap_sizing(
+                        probe_physical_memory_bytes(), int(shared.get("disk_size_bytes") or 0),
+                        layout_overhead_mib=erase_disk_overhead_mib(
+                            Filesystem(shared.get("filesystem", "btrfs")), encrypted=True),
+                    )
+                    try:
+                        validate_disk_swap_selection(shared["swap_size_mib"], sizing)
+                    except ValueError:
+                        error_label.set_label(_("Reduce disk swap to leave room for encryption.", lang))
+                        error_label.set_visible(True)
+                        return False
+        except (ValueError, RuntimeError) as error:
+            message = str(error)
+            error_label.set_label(_(message, lang) if message in _DISK_ENCRYPTION_ERRORS
+                                  else _("Review disk encryption settings.", lang))
+            error_label.set_visible(True)
+            return False
+        error_label.set_visible(False)
+        return True
+
+    def refresh_swap():
+        active = bool(shared.get("disk_password") or shared.get("disk_password_confirmation"))
+        has_swap = shared.get("swap_size_mib", 1) != 0
+        swap.set_visible(active)
+        swap.set_sensitive(has_swap)
+        warning.set_visible(active and has_swap and not swap.get_active())
+
+    def modified(*_args):
+        if clearing:
+            return
+        shared["disk_password"] = password.get_text()
+        shared["disk_password_confirmation"] = confirmation.get_text()
+        active = bool(password.get_text() or confirmation.get_text())
+        confirmation.set_visible(active)
+        recovery.set_visible(active)
+        if active and not shared.get("disk_recovery_key"):
+            shared["disk_recovery_key"] = generate_recovery_key()
+            saved.set_active(False)
+        elif not active:
+            shared["disk_recovery_key"] = ""
+            saved.set_active(False)
+        key_label.set_label(str(shared.get("disk_recovery_key") or ""))
+        shared["disk_recovery_key_saved"] = active and saved.get_active()
+        shared["swap_encryption"] = "auto" if not active or swap.get_active() else "plain"
+        refresh_swap()
+        validate()
+        changed()
+
+    def clear_entries():
+        nonlocal clearing
+        clearing = True
+        try:
+            password.set_text("")
+            confirmation.set_text("")
+            key_label.set_label("")
+            saved.set_active(False)
+            swap.set_active(True)
+        finally:
+            clearing = False
+
+    password.connect("changed", modified)
+    confirmation.connect("changed", modified)
+    saved.connect("toggled", modified)
+    swap.connect("notify::active", modified)
+    shared["_clear_disk_password_ui"] = clear_entries
+    modified()
+    return group, validate, refresh_swap
+
+
 def build_disk_layout_page(shared, nav_view):
     lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(
@@ -3790,7 +3931,19 @@ def build_disk_layout_page(shared, nav_view):
     )
     if filesystem == "btrfs":
         settings.append(_btrfs_compression_control(shared, lang))
+    next_button = None
     error_message = ""
+    validate_encryption = lambda: True
+    refresh_encrypted_swap = lambda: None
+
+    def settings_changed():
+        if next_button is not None:
+            next_button.set_sensitive(not error_message and validate_encryption())
+
+    if _disk_encryption_available(shared):
+        encryption_group, validate_encryption, refresh_encrypted_swap = _disk_encryption_control(
+            shared, lang, settings_changed)
+        settings.append(encryption_group)
     try:
         swap_sizing = calculate_swap_sizing(
             probe_physical_memory_bytes(),
@@ -3803,6 +3956,8 @@ def build_disk_layout_page(shared, nav_view):
 
         def _swap_changed(swap_size_mib):
             shared["swap_size_mib"] = swap_size_mib
+            refresh_encrypted_swap()
+            settings_changed()
 
         settings.append(
             _swap_control(
@@ -3831,11 +3986,14 @@ def build_disk_layout_page(shared, nav_view):
     nav = _nav_box(
         lang,
         on_back=lambda: nav_view.pop(),
-        on_next=lambda: nav_view.push(build_user_page(shared, nav_view)),
-        next_sensitive=not bool(error_message),
+        on_next=lambda: (nav_view.push(build_user_page(shared, nav_view))
+                         if not error_message and validate_encryption() else None),
+        next_sensitive=not bool(error_message) and validate_encryption(),
         shared=shared,
         page_tag="disk-layout",
     )
+    next_button = nav.next_button
+    refresh_encrypted_swap()
     content.append(nav)
     _set_page_content(page, content)
     return page
@@ -6969,7 +7127,8 @@ def build_summary_page(shared, nav_view):
                 f"#{item.number}",
                 item.name,
                 size_text,
-                item.filesystem or "—",
+                "crypto_LUKS" if item.mount_point == "/" and shared.get("disk_password")
+                else item.filesystem or "—",
             ]
             if item.mount_point:
                 details.append(f"→ {item.mount_point}")
@@ -7032,6 +7191,13 @@ def build_summary_page(shared, nav_view):
             storage_lines_start + len(storage_lines) + 1,
             f"<b>{_('Btrfs file compression', lang)}:</b> {escape(_(compression_title, lang))}",
         )
+
+    if shared.get("disk_password") or shared.get("disk_password_confirmation"):
+        lines.append(f"<b>{_('Disk encryption', lang)}:</b> LUKS2")
+        lines.append(_("Recovery key saved", lang))
+        if selected_swap_size_mib:
+            lines.append(_("Disk swap is unencrypted", lang) if shared.get("swap_encryption") == "plain"
+                         else _("Disk swap is encrypted; hibernation is unavailable", lang))
 
     summary_label = Gtk.Label(
         margin_start=48,
@@ -7331,9 +7497,10 @@ def build_summary_page(shared, nav_view):
             if response != "confirm":
                 install_button.set_sensitive(True)
                 return
+            credentials = prepare_encryption_credentials(shared)
             clear_plaintext_passwords(shared)
             shared["installation_running"] = True
-            nav_view.push(build_progress_page(plan, shared, nav_view))
+            nav_view.push(build_progress_page(plan, shared, nav_view, encryption_credentials=credentials))
 
         dialog.connect("response", _confirmed)
         dialog.present()
@@ -7439,7 +7606,7 @@ def ordered_progress_steps(plan: InstallPlan, step_titles):
     )
 
 
-def build_progress_page(plan: InstallPlan, shared, nav_view):
+def build_progress_page(plan: InstallPlan, shared, nav_view, *, encryption_credentials=None):
     lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(title=_("Installing AnduinOS", lang))
     page.set_tag("progress")
@@ -7975,7 +8142,8 @@ def build_progress_page(plan: InstallPlan, shared, nav_view):
             else ExecutorClient()
         )
         success, error = client.run(
-            plan, log, update_progress, update_step_status
+            plan, log, update_progress, update_step_status,
+            encryption_credentials=encryption_credentials,
         )
         on_done(success, error)
 

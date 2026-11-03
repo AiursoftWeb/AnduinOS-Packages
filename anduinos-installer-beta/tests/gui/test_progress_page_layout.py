@@ -114,7 +114,8 @@ class ProgressPageLayoutTests(unittest.TestCase):
                              and w.get_label() == "Installing AnduinOS"
                              for w in widgets))
 
-        def run(_plan, log, update_progress, update_status):
+        def run(_plan, log, update_progress, update_status, *, encryption_credentials=None):
+            self.assertIsNone(encryption_credentials)
             log("first line")
             update_progress("copy-system", 2, 5)
             update_status("copy-system", "running", "copying")

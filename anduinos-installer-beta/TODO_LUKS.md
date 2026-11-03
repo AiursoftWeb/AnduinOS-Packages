@@ -20,9 +20,11 @@ The current route uses the AnduinOS GRUB build to open LUKS2 directly; the
 historical detached-LUKS1-header and UKI alternatives below are archived design
 material, not instructions to implement both routes. The selective boot-tools
 Dracut handoff and storage provisioning are merged. The current increment wires
-that storage into the existing GRUB generator and signed deployment. Release
-execution still rejects encrypted plans and the GTK page remains unchanged
-until boot-chain and interface acceptance are complete.
+that storage into the existing GRUB generator and signed deployment. The next
+increment previews optional disk password, confirmation, recovery-key saving
+acknowledgement and swap policy through the existing development mode only.
+Release execution still rejects encrypted plans; ordinary installer pages remain
+unchanged until complete ISO, enrollment and recovery acceptance.
 
 - Plan schema 19 / storage graph 6 contain encryption policy and distinct outer
   partitions / inner block volumes, never passwords or key material. Only new
@@ -32,7 +34,12 @@ until boot-chain and interface acceptance are complete.
   an object containing `passphrase` and `recovery_key`. It is not part of the
   plan, a command argument, progress event or retained log. Current qualified
   input is 8–128 printable ASCII characters and a generated 48-character hex
-  recovery key; the future password page must explain the input boundary.
+  recovery key; the development password page explains the input boundary.
+  Blank disk-password fields retain the ordinary layout. Mismatched passwords
+  and an unacknowledged recovery key prevent continuation. Changing the target
+  or storage strategy discards those credentials; canceling final confirmation
+  preserves editing, while confirming sends one private line and clears the
+  wizard copies. The summary records policy only, never credentials.
 - Human slots use Argon2id with a 64 MiB cap, one lane and CPU-calibrated time.
   A separate 64-byte random machine key uses PBKDF2 and is stored only at
   `/etc/anduinos-luks/machine.key` inside encrypted root. No human password or
@@ -62,7 +69,7 @@ UUID, prefix and cryptouuid hint against the local installed root. Installer
 cleanup explicitly retains the root's cryptsetup runtime dependencies.
 
 This does not wire the recovery-environment entry into that handoff. First MOK
-enrollment, graphical credentials, RE, Live rescue and the complete release ISO
+enrollment, full credentials-to-installed-system acceptance, RE, Live rescue and the complete release ISO
 matrix remain separate acceptance work; do not remove the release gate yet.
 
 Whole-disk reinstall also clears old signatures on each declared physical

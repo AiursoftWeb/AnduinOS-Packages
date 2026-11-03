@@ -10,6 +10,9 @@ from languages import DEFAULT_LOCALE, Language, language_for_locale
 from .btrfs import BtrfsCompression
 from .model import (
     AccessSpec,
+    EncryptionMode,
+    SwapSpec,
+    SwapEncryption,
     BootSpec,
     AuthenticationMode,
     Firmware,
@@ -60,7 +63,8 @@ def build_plan(
             physical_memory_probe(),
             disk.expected_size_bytes,
             layout_overhead_mib=erase_disk_overhead_mib(
-                Filesystem(str(choices.get("filesystem") or "btrfs"))
+                Filesystem(str(choices.get("filesystem") or "btrfs")),
+                encrypted=choices.get("encryption", "none") == "luks2",
             ),
         )
         requested_swap = choices.get("swap_size_mib")
@@ -75,6 +79,7 @@ def build_plan(
             disk=disk,
             filesystem=Filesystem(str(choices.get("filesystem") or "btrfs")),
             swap_size_mib=swap_size_mib,
+            encryption=EncryptionMode(str(choices.get("encryption", "none"))),
             btrfs_compression=BtrfsCompression(
                 choices.get("btrfs_compression", "balanced")
             ),
@@ -99,6 +104,7 @@ def build_plan(
             authentication=AuthenticationMode.PASSWORD,
             password_hash=password_hash,
         ),
+        swap=SwapSpec(encryption=SwapEncryption(str(choices.get("swap_encryption", "auto")))),
         access=AccessSpec(
             sudo_without_password=bool(
                 choices.get("sudo_without_password", False)

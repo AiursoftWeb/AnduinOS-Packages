@@ -828,3 +828,125 @@ class FrontendPlanTests(unittest.TestCase):
         self.assertTrue(succeeded)
         self.assertEqual(error, "")
         popen.assert_called_once()
+
+
+class DiskCredentialWizardTests(unittest.TestCase):
+    def encrypted_state(self):
+        values = state()
+        values.update(development_mode=True, disk_password="disk-example-only",
+                      disk_password_confirmation="disk-example-only",
+                      disk_recovery_key="1234567890abcdef" * 3, disk_recovery_key_saved=True,
+                      swap_encryption="plain")
+        return values
+
+    def make_plan(self, values, **kwargs):
+        disk = DiskIdentity("/dev/sda", "serial:test", 64 * 1024**3, "Test", "test")
+        platform = PlatformProbe(Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED)
+        with patch("frontend.hash_password", return_value="$6$salt$hash"):
+            return create_install_plan(values, inventory=inventory_for(disk),
+                                       platform=platform, **kwargs)
+
+    def test_encrypted_choices_keep_secrets_out_of_plan_and_preserve_plain_swap(self):
+        from installer_core.model import EncryptionMode, SwapEncryption
+        values = self.encrypted_state()
+        secrets = (values["disk_password"], values["disk_recovery_key"])
+        plan = self.make_plan(values)
+        self.assertIs(plan.storage.encryption, EncryptionMode.LUKS2)
+        self.assertIs(plan.swap.encryption, SwapEncryption.PLAIN)
+        serialized = json.dumps(plan.to_dict())
+        for secret in secrets:
+            self.assertNotIn(secret, serialized)
+        for key in ("disk_password", "disk_password_confirmation", "disk_recovery_key"):
+            self.assertEqual(values[key], "")
+
+    def test_ext4_and_btrfs_share_the_same_opt_in_encryption_policy(self):
+        from installer_core.model import EncryptionMode
+        for filesystem in ("ext4", "btrfs"):
+            with self.subTest(filesystem=filesystem):
+                values = self.encrypted_state()
+                values["filesystem"] = filesystem
+                plan = self.make_plan(values)
+                self.assertIs(plan.storage.encryption, EncryptionMode.LUKS2)
+                self.assertEqual(plan.storage.filesystem.value, filesystem)
+
+    def test_bios_cannot_accept_disk_credentials(self):
+        values = self.encrypted_state()
+        disk = DiskIdentity("/dev/sda", "serial:test", 64 * 1024**3, "Test", "test")
+        with patch("frontend.hash_password", return_value="$6$salt$hash"):
+            with self.assertRaisesRegex(FrontendPlanError, "requires UEFI"):
+                create_install_plan(
+                    values, inventory=inventory_for(disk),
+                    platform=PlatformProbe(Architecture.AMD64, Firmware.BIOS, SecureBoot.DISABLED),
+                )
+        self.assertEqual(values["disk_password"], "")
+        self.assertEqual(values["disk_recovery_key"], "")
+
+    def test_confirmation_cancellation_keeps_editable_credentials(self):
+        values = self.encrypted_state()
+        self.make_plan(values, clear_passwords=False)
+        self.assertEqual(values["disk_password"], "disk-example-only")
+        self.assertEqual(values["disk_recovery_key"], "1234567890abcdef" * 3)
+        self.assertTrue(values["disk_recovery_key_saved"])
+
+    def test_invalid_or_unacknowledged_disk_credentials_never_become_plain_installation(self):
+        for updates in ({"disk_password_confirmation": "different"},
+                        {"disk_recovery_key_saved": False},
+                        {"development_mode": False},
+                        {"disk_password": "short", "disk_password_confirmation": "short"}):
+            with self.subTest(updates=updates):
+                values = self.encrypted_state()
+                values.update(updates)
+                with self.assertRaises((ValueError, FrontendPlanError)):
+                    self.make_plan(values)
+
+    def test_plain_empty_inputs_preserve_default_policy(self):
+        from installer_core.model import EncryptionMode, SwapEncryption
+        plan = self.make_plan(state())
+        self.assertIs(plan.storage.encryption, EncryptionMode.NONE)
+        self.assertIs(plan.swap.encryption, SwapEncryption.AUTO)
+
+    def test_new_target_or_strategy_invalidates_saved_key_and_visible_entries(self):
+        values = self.encrypted_state()
+        cleared = []
+        values["_clear_disk_password_ui"] = lambda: cleared.append(True)
+        apply_storage_strategy(values, StorageStrategy.ADVANCED)
+        self.assertEqual(cleared, [True])
+        self.assertFalse(values["disk_recovery_key_saved"])
+        self.assertEqual(values["disk_recovery_key"], "")
+
+    def test_executor_transports_credentials_on_separate_private_line_then_clears(self):
+        from installer_core.encryption import EncryptionCredentials
+        values = self.encrypted_state()
+        plan = self.make_plan(values, clear_passwords=False)
+        credential = EncryptionCredentials("disk-example-only", "1234567890abcdef" * 3)
+        stream = io.StringIO()
+        stream.close = lambda: None
+        class Process:
+            stdin = stream
+            stdout = io.StringIO('{"event":"complete","error":""}\n')
+            stderr = io.StringIO("")
+            def wait(self):
+                return 0
+        logs = []
+        with patch("frontend.subprocess.Popen", return_value=Process()) as spawn:
+            ok, error = ExecutorClient("/test/executor").run(
+                plan, logs.append, lambda *_args: None,
+                encryption_credentials=credential)
+        self.assertTrue(ok, error)
+        lines = stream.getvalue().splitlines()
+        self.assertEqual(len(lines), 2)
+        self.assertNotIn("passphrase", json.loads(lines[0]))
+        self.assertEqual(json.loads(lines[1]), {
+            "passphrase": "disk-example-only", "recovery_key": "1234567890abcdef" * 3})
+        self.assertNotIn("disk-example-only", str(spawn.call_args))
+        self.assertNotIn("1234567890abcdef" * 3, "\n".join(logs))
+        self.assertEqual(credential.passphrase, "")
+        self.assertEqual(credential.recovery_key, "")
+
+    def test_missing_credentials_fail_before_starting_helper(self):
+        plan = self.make_plan(self.encrypted_state())
+        with patch("frontend.subprocess.Popen") as spawn:
+            ok, _error = ExecutorClient("/test/executor").run(
+                plan, lambda *_args: None, lambda *_args: None)
+        self.assertFalse(ok)
+        spawn.assert_not_called()
