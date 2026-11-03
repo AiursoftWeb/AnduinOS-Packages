@@ -1,7 +1,8 @@
 # AnduinOS GRUB
 
 `apkg build --all` produces separate amd64 and arm64 packages from one recipe.
-Use apkg with BuildInput and SuiteShortName support (10.0.65 or newer).
+Use apkg 10.0.72 or newer. Stonking requires its SHA-512-only repository input
+support; older clients can build Resolute but cannot resolve Stonking indexes.
 On an amd64 or arm64 Linux build host, apkg fetches the latest Ubuntu binaries
 from the mapped suite, updates and security pockets, with archive signature and
 package hash verification. Install `ubuntu-keyring`, `dpkg`, Python 3 and the

@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .layout import build_erase_disk_layout
-from .model import Architecture, Firmware, InstallMode, InstallPlan
+from .model import Architecture, EncryptionMode, Firmware, InstallMode, InstallPlan
 from .validation import validate_plan
 
 
@@ -39,7 +39,9 @@ def build_boot_commands(plan: InstallPlan, target: str) -> BootCommandPlan:
     installs: list[tuple[str, ...]] = []
     disk = plan.storage.disk.path
 
-    if plan.platform.architecture is Architecture.AMD64:
+    bios_required = (plan.platform.architecture is Architecture.AMD64
+                     and plan.storage.encryption is EncryptionMode.NONE)
+    if bios_required:
         # The amd64 disk is deliberately portable between old BIOS and UEFI.
         installs.append(
             chroot
@@ -52,9 +54,14 @@ def build_boot_commands(plan: InstallPlan, target: str) -> BootCommandPlan:
         )
         efi_target = "x86_64-efi"
         fallback = "EFI/BOOT/BOOTX64.EFI"
-    else:
+    elif plan.platform.architecture is Architecture.ARM64:
         efi_target = "arm64-efi"
         fallback = "EFI/BOOT/BOOTAA64.EFI"
+    else:
+        # LUKS2 installations are UEFI-only, even on amd64. Keep the ordinary
+        # unencrypted BIOS/UEFI portable disk policy above unchanged.
+        efi_target = "x86_64-efi"
+        fallback = "EFI/BOOT/BOOTX64.EFI"
 
     efi_install = [
         *chroot,
@@ -113,7 +120,7 @@ def build_boot_commands(plan: InstallPlan, target: str) -> BootCommandPlan:
         installs=tuple(installs),
         configure=chroot + ("update-grub",),
         efi_fallback=fallback,
-        bios_required=plan.platform.architecture is Architecture.AMD64,
+        bios_required=bios_required,
         nvram_create=(
             (
                 "efibootmgr",

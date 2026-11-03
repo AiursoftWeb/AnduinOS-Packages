@@ -19,9 +19,10 @@ stacks, or LVM.
 The current route uses the AnduinOS GRUB build to open LUKS2 directly; the
 historical detached-LUKS1-header and UKI alternatives below are archived design
 material, not instructions to implement both routes. The selective boot-tools
-Dracut handoff is merged. This installer increment provides storage provisioning
-only; release execution still rejects encrypted plans and the GTK page remains
-unchanged until boot-chain and interface acceptance are complete.
+Dracut handoff and storage provisioning are merged. The current increment wires
+that storage into the existing GRUB generator and signed deployment. Release
+execution still rejects encrypted plans and the GTK page remains unchanged
+until boot-chain and interface acceptance are complete.
 
 - Plan schema 19 / storage graph 6 contain encryption policy and distinct outer
   partitions / inner block volumes, never passwords or key material. Only new
@@ -49,6 +50,20 @@ unchanged until boot-chain and interface acceptance are complete.
   changes on every activation. Explicit plain swap retains a filesystem UUID;
   zero disk swap retains zram only. Encrypted installations explicitly disable
   hibernation, hybrid sleep and suspend-then-hibernate through systemd policy.
+
+The boot integration keeps Ubuntu's `10_linux` discovery and menu layout.
+Only installer-created encrypted roots export `GRUB_ANDUINOS_CRYPT_HANDOFF=y`.
+For those roots, each Linux initrd command appends a GRUB `newc:` RAM handoff
+read from the encrypted machine-key path; early microcode remains first.
+Kernel updates use the same generator. No key-containing archive is saved in
+`/boot` or the ESP. The standard grub-install encrypted stub remains upstream
+code; shared toolkit validation checks its outer LUKS UUID, inner filesystem
+UUID, prefix and cryptouuid hint against the local installed root. Installer
+cleanup explicitly retains the root's cryptsetup runtime dependencies.
+
+This does not wire the recovery-environment entry into that handoff. First MOK
+enrollment, graphical credentials, RE, Live rescue and the complete release ISO
+matrix remain separate acceptance work; do not remove the release gate yet.
 
 Whole-disk reinstall also clears old signatures on each declared physical
 FORMAT target before mkfs. This avoids retaining a LUKS header when switching

@@ -23,6 +23,20 @@ ENCRYPTED_SLEEP_POLICY = (
     "AllowSuspendThenHibernate=no\n"
 )
 ENCRYPTED_SLEEP_PATH = "etc/systemd/sleep.conf.d/40-anduinos-encrypted-install.conf"
+ENCRYPTED_GRUB_PATH = "etc/default/grub.d/40-anduinos-encryption.cfg"
+
+
+def encrypted_grub_defaults(luks_uuid: str) -> str:
+    # The flag is exported because grub-mkconfig executes 10_linux as a child.
+    # Both defaults and their UUID live inside encrypted root, never on ESP.
+    return (
+        "# Installed encrypted root; preserve the upstream Linux menu generator.\n"
+        "GRUB_ENABLE_CRYPTODISK=y\n"
+        "export GRUB_ANDUINOS_CRYPT_HANDOFF=y\n"
+        "GRUB_DISABLE_LINUX_UUID=false\n"
+        "GRUB_FORCE_PARTUUID=\n"
+        f'GRUB_CMDLINE_LINUX="${{GRUB_CMDLINE_LINUX:-}} rd.luks.uuid=luks-{luks_uuid}"\n'
+    )
 
 
 @dataclass
@@ -101,6 +115,8 @@ class ConfigureStorageStep:
             if luks_uuid == uuids["root"]:
                 raise RuntimeError("LUKS and inner filesystem identities must differ")
             crypttab = f"{ROOT_BOOT_MAPPING} UUID={luks_uuid} none luks,x-initrd.attach\n"
+            context.values["root_luks_uuid"] = luks_uuid
+            context.values["root_filesystem_uuid"] = uuids["root"]
             if context.plan.encrypted_swap:
                 partuuid = str(UUID(self.runner.run(
                     ("blkid", "-s", "PARTUUID", "-o", "value", raw["swap"]),
@@ -111,6 +127,9 @@ class ConfigureStorageStep:
                     f"swap,cipher={SWAP_CIPHER},size={SWAP_KEY_BITS}\n"
                 )
             install_machine_key(context, self.runner, target)
+            grub_defaults = target / ENCRYPTED_GRUB_PATH
+            grub_defaults.parent.mkdir(parents=True, exist_ok=True)
+            grub_defaults.write_text(encrypted_grub_defaults(luks_uuid), encoding="utf-8")
             # Random-key swap cannot resume an old memory image. Even the
             # explicit plaintext-swap exception does not enable hibernation in
             # this first encrypted-installation policy.
@@ -159,6 +178,9 @@ class ConfigureStorageStep:
         if (target / "etc/crypttab").read_text() != context.values["target_crypttab"]:
             raise RuntimeError("Generated crypttab failed verification")
         if context.plan.storage.encryption is EncryptionMode.LUKS2:
+            defaults = encrypted_grub_defaults(context.values["root_luks_uuid"])
+            if (target / ENCRYPTED_GRUB_PATH).read_text() != defaults:
+                raise RuntimeError("Encrypted GRUB configuration failed verification")
             if (target / ENCRYPTED_SLEEP_PATH).read_text() != ENCRYPTED_SLEEP_POLICY:
                 raise RuntimeError("Encrypted installation must disable hibernation")
             key = target / MACHINE_KEY_PATH
