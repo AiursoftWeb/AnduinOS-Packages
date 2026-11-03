@@ -28,7 +28,9 @@ handoff uses the ordinary disk-password prompt. Root discovery, activation,
 mounting and switch_root remain upstream responsibilities.
 
 The initqueue completion and pre-pivot hooks remove the transient files once
-the root mapping exists. This is file-lifetime cleanup, not a claim that every
+the root mapping exists. A RAM-only ownership marker ensures that cleanup
+leaves keys supplied by other components alone; the marker is also removed.
+This is file-lifetime cleanup, not a claim that every
 copy in physical memory has been erased. See systemd's [crypttab key acquisition
 rules](https://www.freedesktop.org/software/systemd/man/latest/crypttab.html):
 `keyfile-erase` does not remove auto-discovered keys, so explicit cleanup is

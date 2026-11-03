@@ -24,7 +24,13 @@ anduinos_prepare_key() {
 
     mkdir -p -m 0700 /run/cryptsetup-keys.d || return 1
     chmod 0600 "$incoming" || return 1
-    mv -- "$incoming" "$destination" || return 1
+    # Hooks run in separate processes. This RAM-only ownership marker lets
+    # cleanup distinguish our file from another component's existing key.
+    (umask 077; : > /run/anduinos-crypt-key-owned) || return 1
+    if ! mv -- "$incoming" "$destination"; then
+        rm -f -- /run/anduinos-crypt-key-owned
+        return 1
+    fi
 }
 
 anduinos_prepare_key
