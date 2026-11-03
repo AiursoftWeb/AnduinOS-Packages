@@ -617,10 +617,14 @@ class ExecutorClient:
         if self.destructive_test:
             # Carry both existing executor opt-ins across sudo explicitly;
             # sudo's environment filtering must not turn a VM test into a
-            # release invocation. The helper still verifies the VM and target.
+            # release invocation. Keep the public no-arguments launcher intact:
+            # only this explicitly selected VM path calls the internal CLI.
+            # That CLI independently verifies root, virtualization and target.
             inhibited_helper[-1:] = [
                 "/usr/bin/env", f"{GUIDED_TEST_ENVIRONMENT}=1",
-                self.helper, GUIDED_TEST_FLAG,
+                "/usr/bin/python3",
+                "/usr/lib/anduinos-installer-beta/executor_cli.py",
+                GUIDED_TEST_FLAG,
             ]
         # The inhibitor protects the privileged executor's destructive
         # lifetime, so acquire it inside the same privilege boundary. Asking

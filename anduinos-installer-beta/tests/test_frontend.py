@@ -533,12 +533,14 @@ class FrontendPlanTests(unittest.TestCase):
         command = spawn.call_args.args[0]
         self.assertEqual(command[:2], ["/usr/bin/sudo", "--non-interactive"])
         self.assertIn("/usr/bin/systemd-inhibit", command)
-        self.assertEqual(command[-4:], [
+        self.assertEqual(command[-5:], [
             "/usr/bin/env",
             f"{GUIDED_TEST_ENVIRONMENT}=1",
-            "/test/executor",
+            "/usr/bin/python3",
+            "/usr/lib/anduinos-installer-beta/executor_cli.py",
             GUIDED_TEST_FLAG,
         ])
+        self.assertNotIn("/test/executor", command)
         self.assertNotIn("plaintext-secret", " ".join(command))
 
     def test_development_client_never_starts_a_process(self):
