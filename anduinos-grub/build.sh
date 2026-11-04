@@ -46,11 +46,16 @@ validate_input_versions() {
 
 assemble_efi() {
     local mkimage=$inputs/tools-$host_arch/usr/bin/grub-mkimage
+    local check=$inputs/tools-$host_arch/usr/bin/grub-script-check
     local modules=$inputs/modules/usr/lib/grub/$platform
     local baseline=$inputs/baseline/usr/lib/grub/$platform/monolithic/grub$suffix.efi
     # Keep work available to subsequent staging and the process-wide EXIT trap.
     work=$(mktemp -d)
     trap 'rm -rf "$work"' EXIT
+    # A functions-only file is reported as empty by grub-script-check. Parse
+    # the library together with its callers, without executing any GRUB code.
+    cat bootstrap.cfg unlock/functions.cfg unlock/menu.cfg > "$work/check.cfg"
+    "$check" "$work/check.cfg"
     python3 assemble-efi.py "$mkimage" "$modules" "$baseline" bootstrap.cfg \
         "$work/grub$suffix.efi" "$work"
 }

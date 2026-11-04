@@ -1,7 +1,7 @@
-"""Reassemble Ubuntu's EFI baseline with encryption modules, on either host ISA.
+"""Reassemble Ubuntu's EFI baseline and pre-decryption UI, on either host ISA.
 
-Only reads PE/ELF metadata; grub-mkimage performs all linking. Keeping the actual
-Ubuntu module list, memdisk and SBAT avoids a version-pinned duplicate recipe.
+grub-mkimage performs all linking. Keeping Ubuntu's actual module list, font
+and SBAT avoids a version-pinned duplicate recipe.
 """
 import csv
 import io
@@ -10,6 +10,7 @@ import re
 import struct
 import subprocess
 import sys
+import tarfile
 
 
 def region(data, offset, size):
@@ -94,6 +95,37 @@ def sbat_with_identity(data, module_version):
     return output.getvalue()
 
 
+def unlock_memdisk(original, mkimage, resources, destination, work):
+    """Keep Ubuntu's exact font while adding the pre-decryption interface.
+
+    grub-fstest comes from the same already verified native tools input as
+    grub-mkimage. It reads Ubuntu's squashfs without mounting or adding a build
+    dependency. A plain tar lets the existing GRUB filesystem module read all
+    resources from the signed EFI image, including fonts under Secure Boot.
+    """
+    baseline = work / "upstream-memdisk.img"
+    baseline.write_bytes(original)
+    fstest = str(Path(mkimage).with_name("grub-fstest"))
+    for path, expected in (("/", ["fonts/"]), ("/fonts", ["unicode.pf2"])):
+        names = subprocess.check_output([fstest, str(baseline), "ls", path], text=True).split()
+        if names != expected:
+            raise ValueError("Upstream font memdisk layout changed; review before repacking")
+    font = work / "unicode.pf2"
+    subprocess.run([fstest, str(baseline), "cp", "/fonts/unicode.pf2", str(font)], check=True)
+    with tarfile.open(destination, "w", format=tarfile.USTAR_FORMAT) as archive:
+        files = [("fonts/unicode.pf2", font)]
+        files += [("anduinos-unlock/" + path.name, path)
+                  for path in sorted(resources.iterdir())
+                  if path.is_file() and path.suffix in (".cfg", ".txt", ".png", ".pf2")]
+        for name, path in files:
+            content = path.read_bytes()
+            entry = tarfile.TarInfo(name)
+            entry.mode = 0o644
+            entry.size = len(content)
+            archive.addfile(entry, io.BytesIO(content))
+    return font.read_bytes()
+
+
 def assemble(mkimage, modules, baseline, config, output, work):
     modules, baseline, config, output, work = map(Path, (modules, baseline, config, output, work))
     platform = modules.name
@@ -105,7 +137,7 @@ def assemble(mkimage, modules, baseline, config, output, work):
     if any(kind not in (0, 1, 3) for kind, _ in objects):
         raise ValueError("New upstream embedded object type: review before repacking")
     base_names = {elf_module_name(data) for kind, data in objects if kind == 0}
-    names = base_names | {"btrfs", "luks2", "argon2"}
+    names = base_names | {"btrfs", "luks2", "argon2", "tar"}
     if "peimage" not in base_names:
         raise ValueError("Missing Ubuntu shim verification module")
     for name in names:
@@ -128,7 +160,7 @@ def assemble(mkimage, modules, baseline, config, output, work):
     if len(memdisks) != 1:
         raise ValueError("Expected one upstream font memdisk")
     memdisk = work / "memdisk.img"
-    memdisk.write_bytes(memdisks[0])
+    font = unlock_memdisk(memdisks[0], mkimage, config.parent / "unlock", memdisk, work)
     command += ["-m", str(memdisk), *sorted(names)]
     subprocess.run(command, check=True)
     actual_machine, actual = pe_sections(output.read_bytes())
@@ -136,8 +168,11 @@ def assemble(mkimage, modules, baseline, config, output, work):
     actual_names = {elf_module_name(data) for kind, data in actual_objects if kind == 0}
     if actual_machine != machine or not names <= actual_names:
         raise ValueError("Assembled EFI lost required architecture/modules")
-    if [data for kind, data in actual_objects if kind == 1] != memdisks:
-        raise ValueError("Assembled EFI lost the upstream memdisk")
+    if [data for kind, data in actual_objects if kind == 1] != [memdisk.read_bytes()]:
+        raise ValueError("Assembled EFI lost the pre-decryption resources")
+    with tarfile.open(fileobj=io.BytesIO(memdisk.read_bytes())) as archive:
+        if archive.extractfile("fonts/unicode.pf2").read() != font:
+            raise ValueError("Assembled EFI lost the upstream font")
     if [data.rstrip(b"\0") for kind, data in actual_objects if kind == 2] != [config.read_bytes().rstrip(b"\0")]:
         raise ValueError("Assembled EFI lost the AnduinOS bootstrap config")
     if actual[".sbat"].rstrip(b"\0") != sbat.read_bytes():
