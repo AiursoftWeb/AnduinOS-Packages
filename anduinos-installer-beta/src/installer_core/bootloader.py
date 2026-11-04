@@ -10,7 +10,8 @@ import shutil
 import tempfile
 from uuid import UUID
 
-from anduinos_secureboot.boot_chain import verify_grub_configuration
+from anduinos_secureboot.boot_chain import graphical_grub_configuration, verify_grub_configuration
+from anduinos_secureboot.defaults import atomic_write
 
 from .boot_commands import build_boot_commands
 from .command import CommandRunner
@@ -67,6 +68,8 @@ class InstallBootloaderStep:
             # after the encrypted root has already been created.
             suffix = "x64" if context.plan.platform.architecture is Architecture.AMD64 else "aa64"
             self.runner.run(("test", "-s", f"/usr/lib/anduinos-grub/grub{suffix}.efi"))
+            self.runner.run(("grep", "-a", "-q", "function anduinos_unlock {",
+                             f"/usr/lib/anduinos-grub/grub{suffix}.efi"))
             self.runner.run(("grep", "-q", "GRUB_ANDUINOS_CRYPT_HANDOFF", "/etc/grub.d/10_linux"))
 
     def execute(self, context: InstallContext) -> None:
@@ -155,6 +158,8 @@ class InstallBootloaderStep:
             self.runner.run(command, timeout=300)
             if vendor_only:
                 emit_boundary(context, f"{prefix}-boot-files", "after")
+        if context.plan.storage.encryption is EncryptionMode.LUKS2:
+            _configure_graphical_unlock(context, target)
         self.runner.run(commands.configure, timeout=300)
         if explicit_nvram:
             if vendor_only:
@@ -335,6 +340,9 @@ def _check_encrypted_boot_inputs(
     suffix = "x64" if context.plan.platform.architecture is Architecture.AMD64 else "aa64"
     if not (target / f"usr/lib/anduinos-grub/grub{suffix}.efi").is_file():
         raise RuntimeError("Encrypted installation requires the native AnduinOS GRUB package")
+    image = target / f"usr/lib/anduinos-grub/grub{suffix}.efi"
+    if b"function anduinos_unlock {" not in image.read_bytes():
+        raise RuntimeError("Update AnduinOS GRUB to support the graphical disk unlock page")
     generator = target / "etc/grub.d/10_linux"
     if not generator.is_file() or "GRUB_ANDUINOS_CRYPT_HANDOFF" not in generator.read_text():
         raise RuntimeError("Update AnduinOS GRUB to support encrypted-root menu generation")
@@ -358,6 +366,20 @@ def _check_encrypted_boot_inputs(
 
 def _encrypted_root_prefix(context: InstallContext) -> str:
     return "/@root" if context.plan.storage.filesystem is Filesystem.BTRFS else ""
+
+
+def _configure_graphical_unlock(context: InstallContext, target: Path) -> None:
+    # grub-install has just created this installation's vendor stub. Verify
+    # both volume identities before replacing its direct cryptomount command;
+    # the existing later fallback step copies the exact configured chain.
+    stub = target / "boot/efi/EFI/AnduinOS/grub.cfg"
+    if stub.is_symlink() or not stub.is_file():
+        raise RuntimeError("Encrypted EFI configuration is missing or redirected")
+    configured = graphical_grub_configuration(
+        stub.read_text(), context.values["root_filesystem_uuid"],
+        _encrypted_root_prefix(context) + "/boot/grub", context.values["root_luks_uuid"],
+    )
+    atomic_write(stub, configured.encode(), 0o644)
 
 
 def _verify_encrypted_boot_output(

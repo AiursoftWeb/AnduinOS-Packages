@@ -341,6 +341,33 @@ class BootChainTests(unittest.TestCase):
                 boot.prepare_boot_chain(firmware, esp)
                 self.assertEqual(sum(c[:2] == ["efibootmgr", "--create-only"] for c in firmware.calls), 1)
 
+    def test_graphical_unlock_keeps_local_binding_and_owned_fallback(self):
+        for prefix in ("/boot/grub", "/@root/boot/grub"):
+            with self.subTest(prefix=prefix), self.fixture() as (firmware, esp, vendor):
+                firmware.boot_prefix = prefix
+                self.add_other_installation(firmware, vendor)
+                original = "cryptomount -u " + firmware.crypt_uuid + "\n" + (vendor / "grub.cfg").read_text()
+                configured = boot.graphical_grub_configuration(
+                    original, firmware.boot_uuid, prefix, firmware.crypt_uuid,
+                )
+                (vendor / "grub.cfg").write_text(configured)
+                fallback = esp / "EFI/BOOT"
+                fallback.mkdir(parents=True, exist_ok=True)
+                (fallback / "grub.cfg").write_text(configured)
+                (fallback / "BOOTX64.EFI").write_bytes((vendor / "shimx64.efi").read_bytes())
+                self.assertEqual(boot.resolve_target(firmware, esp).device, "/dev/test1")
+                self.assertEqual(boot.owned_fallback(
+                    firmware, esp, boot.resolve_target(firmware, esp), vendor / "shimx64.efi",
+                ), fallback)
+                for changed in (configured.replace(firmware.boot_uuid, "wrong-root"),
+                                configured.replace(prefix, "/other/boot/grub"),
+                                configured.replace(firmware.crypt_uuid.replace("-", ""), "0" * 32),
+                                configured + "configfile /other/grub.cfg\n"):
+                    with self.assertRaises(ValueError):
+                        boot.verify_grub_configuration(changed, firmware.boot_uuid, prefix, firmware.crypt_uuid)
+                with self.assertRaises(ValueError):
+                    boot.verify_grub_configuration(configured, firmware.boot_uuid, prefix)
+
     def test_multi_esp_direct_boot_is_allowed_with_local_binding(self):
         with self.fixture() as (firmware, esp, vendor):
             self.add_other_installation(firmware, vendor, chainloaded=False)
