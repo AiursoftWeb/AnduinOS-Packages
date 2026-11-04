@@ -196,6 +196,12 @@ class EncryptedStorageTests(unittest.TestCase):
                     inner_uuid, prefix + "/boot/grub",
                 ])
                 _verify_encrypted_boot_output(context, target, menu)
+                if filesystem is Filesystem.BTRFS:
+                    recovery = "87654321-1234-1234-1234-123456789abc"
+                    context.values["recovery_volume_uuid"] = recovery
+                    _configure_graphical_unlock(context, target)
+                    self.assertEqual(stub.read_text().split()[-1], recovery)
+                    _verify_encrypted_boot_output(context, target, menu)
                 broken = menu.replace("newc:/anduinos-unlock.key:", "missing:")
                 with self.assertRaisesRegex(RuntimeError, "RAM credential"):
                     _verify_encrypted_boot_output(context, target, broken)

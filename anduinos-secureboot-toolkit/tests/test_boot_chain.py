@@ -368,6 +368,26 @@ class BootChainTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     boot.verify_grub_configuration(configured, firmware.boot_uuid, prefix)
 
+    def test_independent_recovery_requires_the_exact_optional_volume(self):
+        outer = "12345678-1234-1234-1234-123456789abc"
+        inner = "abcdef01-1234-1234-1234-123456789abc"
+        recovery = "87654321-1234-1234-1234-123456789abc"
+        prefix = "/@root/boot/grub"
+        original = (f"cryptomount -u {outer}\n"
+                    f"search.fs_uuid {inner} root cryptouuid/{outer.replace('-', '')}\n"
+                    f"set prefix=($root){prefix}\nconfigfile $prefix/grub.cfg\n")
+        configured = boot.graphical_grub_configuration(original, inner, prefix, outer, recovery)
+        self.assertEqual(configured.split(), [
+            "anduinos_unlock", outer.replace("-", ""), inner, prefix, recovery,
+        ])
+        boot.verify_grub_configuration(configured, inner, prefix, outer, recovery)
+        for expected in ("", outer):
+            with self.assertRaises(ValueError):
+                boot.verify_grub_configuration(configured, inner, prefix, outer, expected)
+        # Previously installed three-argument stubs continue to verify.
+        legacy = boot.graphical_grub_configuration(original, inner, prefix, outer)
+        boot.verify_grub_configuration(legacy, inner, prefix, outer, recovery)
+
     def test_multi_esp_direct_boot_is_allowed_with_local_binding(self):
         with self.fixture() as (firmware, esp, vendor):
             self.add_other_installation(firmware, vendor, chainloaded=False)

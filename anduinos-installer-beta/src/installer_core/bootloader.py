@@ -343,6 +343,9 @@ def _check_encrypted_boot_inputs(
     image = target / f"usr/lib/anduinos-grub/grub{suffix}.efi"
     if b"function anduinos_unlock {" not in image.read_bytes():
         raise RuntimeError("Update AnduinOS GRUB to support the graphical disk unlock page")
+    if (context.values.get("recovery_volume_uuid")
+            and b"set anduinos_unlock_recovery=$4" not in image.read_bytes()):
+        raise RuntimeError("Update AnduinOS GRUB to support the independent recovery entry")
     generator = target / "etc/grub.d/10_linux"
     if not generator.is_file() or "GRUB_ANDUINOS_CRYPT_HANDOFF" not in generator.read_text():
         raise RuntimeError("Update AnduinOS GRUB to support encrypted-root menu generation")
@@ -378,6 +381,7 @@ def _configure_graphical_unlock(context: InstallContext, target: Path) -> None:
     configured = graphical_grub_configuration(
         stub.read_text(), context.values["root_filesystem_uuid"],
         _encrypted_root_prefix(context) + "/boot/grub", context.values["root_luks_uuid"],
+        context.values.get("recovery_volume_uuid", ""),
     )
     atomic_write(stub, configured.encode(), 0o644)
 
@@ -392,6 +396,7 @@ def _verify_encrypted_boot_output(
         context.values["root_filesystem_uuid"],
         _encrypted_root_prefix(context) + "/boot/grub",
         context.values["root_luks_uuid"],
+        context.values.get("recovery_volume_uuid", ""),
     )
     # Inspect only upstream Linux entries. RE and foreign-system entries have
     # their own lifecycle and must not accidentally receive this root's key.
