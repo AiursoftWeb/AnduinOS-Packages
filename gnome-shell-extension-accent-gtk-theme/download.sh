@@ -4,6 +4,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../lib/gnome-versions.sh"
+source "$SCRIPT_DIR/../lib/build-guards.sh"
+need_cmd patch patch
 
 UUID="accent-gtk-theme@brgvos"
 
@@ -16,6 +18,8 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
 
     echo "[$SUITE] Resolving $UUID for GNOME $TARGET..."
     python3 "$SCRIPT_DIR/../lib/resolve-gnome-ext.py" "$UUID" --target "$TARGET" --download --out "$DEPLOY_DIR"
+    patch --batch --forward --fuzz=0 --directory="$DEPLOY_DIR" --strip=1 \
+        < "$SCRIPT_DIR/patches/preserve-theme-on-lock.patch"
 done
 
 echo "Done."
