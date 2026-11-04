@@ -17,7 +17,7 @@ import xml.etree.ElementTree as ET
 HERE = Path(__file__).resolve().parent
 LVGL_VERSION = "v9.6.0"
 # Storage, input and firmware framebuffer support; no network or desktop session.
-DRIVERS = "virtio_pci virtio_mmio virtio_blk virtio_scsi nvme ahci sd_mod usb_storage uas xhci_pci xhci_plat_hcd ehci_pci ohci_pci uhci_hcd usbhid hid_generic hid_logitech_dj hid_logitech_hidpp atkbd i8042 evdev psmouse virtio_input sdhci_pci sdhci_acpi mmc_block btrfs ext4 simpledrm virtio_gpu bochs".split()
+DRIVERS = "virtio_pci virtio_mmio virtio_blk virtio_scsi nvme ahci sd_mod usb_storage uas xhci_pci xhci_plat_hcd ehci_pci ohci_pci uhci_hcd usbhid hid_generic hid_logitech_dj hid_logitech_hidpp atkbd i8042 evdev psmouse virtio_input sdhci_pci sdhci_acpi mmc_block btrfs ext4 dm_crypt xts ecb aes_generic efivarfs simpledrm virtio_gpu bochs".split()
 # SC8280XP NVMe/USB suppliers are not dependencies of nvme or xhci.
 # Init loads these explicitly: there is no udev to discover platform devices.
 ARM64_DRIVERS = "spmi_pmic_arb qcom_spmi_pmic pinctrl_spmi_gpio fixed qcom_rpmh_regulator qcom_refgen_regulator phy_qcom_qmp_pcie phy_qcom_qmp_usb phy_qcom_qmp_combo phy_qcom_snps_femto_v2 dwc3 dwc3_qcom_legacy".split()
@@ -176,17 +176,19 @@ def build():
         if busybox is None:
             raise RuntimeError("Verified busybox-static input has no executable")
         copy(busybox, root / "bin/busybox")
-        for name in "sh mount umount mkdir chmod cat mv sleep modprobe ls sync reboot poweroff clear awk grep tr readlink stat head od timeout uname".split():
+        for name in "sh mount umount mkdir chmod cat mv rm sleep modprobe ls sync reboot poweroff clear awk grep tr readlink stat head od timeout uname".split():
             (root / "bin" / name).symlink_to("busybox")
         for name in ("btrfs", "jq", "flock"):
             runtime.file("/usr/bin/" + name)
         copy(extracted / "util-linux/usr/sbin/blkid", root / "usr/bin/blkid")
         runtime.dependencies(root / "usr/bin/blkid")
+        runtime.file("/usr/sbin/cryptsetup")
         copy(engine, root / "usr/bin/recovery-offline")
         runtime.dependencies(root / "usr/bin/recovery-offline")
         build_gui(runtime, HERE / "obj" / ("gui-" + arch), lvgl)
         copy(HERE / "src/actions", root / "usr/bin/recovery-action")
         copy(HERE / "src/information", root / "usr/bin/recovery-information")
+        copy(HERE / "src/unlock", root / "usr/bin/recovery-unlock")
         version = ET.parse(HERE / "anduinos-recovery-env.aosproj").findtext("PropertyGroup/PackageVersion")
         (root / "etc/recovery-version").write_text(version.replace("$(SuiteShortName)", suite) + "\n")
         copy(HERE / "src/init", root / "init")
@@ -205,7 +207,7 @@ def build():
             result = subprocess.run(["modprobe", "--show-depends", "-d", str(modules),
                                      "-S", kernel, driver], capture_output=True, text=True)
             if result.returncode:
-                if driver in ("btrfs", "ext4", "virtio_blk") or driver in platform_drivers:
+                if driver in ("btrfs", "ext4", "virtio_blk", "dm_crypt", "xts", "ecb") or driver in platform_drivers:
                     raise RuntimeError(f"Required kernel driver is missing: {driver}")
                 continue  # Some buses exist on only one architecture.
             available.append(driver)

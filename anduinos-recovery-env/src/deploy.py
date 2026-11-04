@@ -36,8 +36,38 @@ def read_binding(path):
     value = json.loads(path.read_text())
     if value.get("schema") != 1:
         raise RuntimeError("Unsupported recovery volume binding")
-    return {"schema": 1, "root_uuid": read_uuid(value["root_uuid"]),
-            "volume_uuid": read_uuid(value["volume_uuid"])}
+    binding = {"schema": 1, "root_uuid": read_uuid(value["root_uuid"]),
+               "volume_uuid": read_uuid(value["volume_uuid"])}
+    if "luks_uuid" in value:
+        binding["luks_uuid"] = read_uuid(value["luks_uuid"])
+    return binding
+
+
+def encrypted_root(device):
+    """Accept the installer's single LUKS2 partition, not arbitrary DM stacks."""
+    rows = [line.split() for line in run(
+        "lsblk", "--raw", "-s", "-n", "-p", "-o", "NAME,TYPE", device).splitlines()]
+    types = [row[1] for row in rows]
+    if all(kind in ("disk", "part") for kind in types):
+        return {}
+    if types != ["crypt", "part", "disk"]:
+        raise RuntimeError("Recovery requires a partition or one LUKS2 partition")
+    container = rows[1][0]
+    run("cryptsetup", "isLuks", "--type", "luks2", container)
+    uuid = read_uuid(run("cryptsetup", "luksUUID", container))
+    expected = ["anduinos-root", f"UUID={uuid}", "none", "luks,x-initrd.attach"]
+    entries = [line.split() for line in Path("/etc/crypttab").read_text().splitlines()
+               if line.strip() and not line.lstrip().startswith("#")]
+    if [entry for entry in entries if entry[0] == "anduinos-root"] != [expected]:
+        raise RuntimeError("Encrypted recovery requires the installer's root binding")
+    key = Path("/etc/anduinos-luks/machine.key")
+    if key.is_symlink() or not key.is_file() or key.stat().st_size != 64:
+        raise RuntimeError("The installed root machine credential is missing or invalid")
+    if key.stat().st_uid != 0 or key.stat().st_mode & 0o777 != 0o600:
+        raise RuntimeError("The installed root machine credential must be root-owned mode 0600")
+    run("cryptsetup", "open", "--type", "luks2", "--test-passphrase",
+        "--key-file", str(key), container)
+    return {"luks_uuid": uuid}
 
 
 def atomic_json(path, value):
@@ -89,10 +119,7 @@ def target(volume_uuid=None, *, if_present=False):
     root_devices = run("blkid", "-c", "/dev/null", "-t", f"UUID={root_uuid}", "-o", "device").splitlines()
     if len(root_devices) != 1:
         raise RuntimeError("Recovery requires a single, unambiguous root device")
-    # Encrypted/mapped storage needs a separate unlock stage, not a guessed device.
-    types = run("lsblk", "-s", "-n", "-o", "TYPE", root_devices[0]).split()
-    if any(kind not in ("disk", "part") for kind in types):
-        raise RuntimeError("This recovery version requires an unencrypted disk partition")
+    encryption = encrypted_root(root_devices[0])
     if volume_uuid is not None:
         volume_uuid = read_uuid(volume_uuid)
         if binding is not None and binding["volume_uuid"] != volume_uuid:
@@ -115,7 +142,8 @@ def target(volume_uuid=None, *, if_present=False):
     info = dict(line.split("=", 1) for line in run("blkid", "-p", "-o", "export", device).splitlines() if "=" in line)
     if info.get("TYPE") != "ext4" or info.get("LABEL") != LABEL:
         raise RuntimeError(f"Recovery volume must be ext4 and labelled {LABEL}")
-    selected = {"schema": 1, "root_uuid": root_uuid, "volume_uuid": read_uuid(info["UUID"])}
+    selected = {"schema": 1, "root_uuid": root_uuid,
+                "volume_uuid": read_uuid(info["UUID"]), **encryption}
     if binding is not None and binding != selected:
         raise RuntimeError("Recovery volume belongs to another installation")
     mounts = run("findmnt", "--json", "--output", "TARGET", "--source", device, check=False)
@@ -208,12 +236,24 @@ def grub():
     platform = "".join(" " + flag for flag in
                        ("clk_ignore_unused", "pd_ignore_unused", "arm64.nopauth")
                        if flag in configured)
+    luks = binding.get("luks_uuid")
+    unlock = f" anduinos.recovery.luks={luks}" if luks else ""
+    # The key is read from the already unlocked root, never copied to the
+    # public recovery volume. Missing keys retain a manual recovery path.
+    initrd = f"    initrd ($recovery)/{DIRECTORY}/current/initrd.img"
+    if luks:
+        initrd = f'''    search --no-floppy --fs-uuid --set=system {binding["root_uuid"]}
+    if [ -f ($system)/@root/etc/anduinos-luks/machine.key ]; then
+{initrd} newc:/anduinos-unlock.key:($system)/@root/etc/anduinos-luks/machine.key
+    else
+{initrd}
+    fi'''
     print(f'''menuentry 'AnduinOS Recovery Environment' --class recovery --id anduinos-recovery-env {{
     insmod part_gpt
     insmod ext2
     search --no-floppy --fs-uuid --set=recovery {binding["volume_uuid"]}
-    linux ($recovery)/{DIRECTORY}/current/vmlinuz anduinos.recovery.root={binding["root_uuid"]} console=tty0 loglevel=3{platform}
-    initrd ($recovery)/{DIRECTORY}/current/initrd.img
+    linux ($recovery)/{DIRECTORY}/current/vmlinuz anduinos.recovery.root={binding["root_uuid"]}{unlock} console=tty0 loglevel=3{platform}
+{initrd}
 }}''')
 
 

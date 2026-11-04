@@ -17,7 +17,10 @@ secure_boot='Unavailable'
 if [ ! -d /sys/firmware/efi ]; then
     secure_boot='Not booted using UEFI'
 else
-    sb=$(od -An -tu1 -j4 -N1 /sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c 2>/dev/null | number)
+    # Read attributes and data together: seeking a special efivarfs file is
+    # not equivalent to skipping bytes in a regular file on every runtime.
+    sb=$(od -An -tu1 -N5 /sys/firmware/efi/efivars/SecureBoot-8be4df61-93ca-11d2-aa0d-00e098032b8c 2>/dev/null |
+        awk 'NR == 1 {print $5}' | number)
     case "$sb" in 0) secure_boot=Disabled ;; 1) secure_boot=Enabled ;; esac
 fi
 computer=$(read_value /sys/class/dmi/id/product_name)
@@ -41,7 +44,14 @@ if [ "$count" = 1 ] && printf '%s\n' "$uuid" | grep -Eq '^[0-9a-fA-F]{8}-[0-9a-f
     set -- $devices
     if [ "$#" = 1 ] && [ -b "$1" ]; then
         device=$1
-        block=$(readlink -f "/sys/class/block/${device##*/}")
+        node=$(readlink -f "$device")
+        block=$(readlink -f "/sys/class/block/${node##*/}")
+        # A supported encrypted root has exactly one backing partition. Keep
+        # filesystem space on the mapping, but hardware facts on the real disk.
+        if [ -d "$block/slaves" ]; then
+            set -- "$block"/slaves/*
+            if [ "$#" = 1 ] && [ -e "$1" ]; then block=$(readlink -f "$1"); fi
+        fi
         if [ -f "$block/partition" ]; then block=${block%/*}; fi
         disk=/dev/${block##*/}
         model=$(read_value "$block/device/model")

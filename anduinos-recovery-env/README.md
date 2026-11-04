@@ -13,15 +13,29 @@ a prominent data-loss warning. Snapshot creation requires readable installed
 kernel, initramfs and package metadata; failures leave the warning in place.
 
 This initial development package requires an unmounted, dedicated ext4 volume
-labelled `AOS_RECOVERY` (256 MiB) and an unencrypted AnduinOS Btrfs root using
-the standard subvolume layout. It never creates or formats partitions. Initial
-deployment binds both filesystem UUIDs; later updates reuse that binding.
+labelled `AOS_RECOVERY` (256 MiB) and an AnduinOS Btrfs root using the standard
+subvolume layout. The root may be a plain partition or the installer's single
+LUKS2 partition; LVM, RAID and other mapped layouts remain unsupported. It never
+creates or formats partitions. Initial deployment binds both filesystem UUIDs
+and, for encryption, the outer LUKS UUID; later updates reuse that binding.
 New Btrfs erase-disk installations create this volume and explicitly deploy
 the preinstalled payload before generating GRUB. Existing users do not receive
 the package automatically: Disk Snapshots Manager only suggests it. Installation
 without a suitable volume, including Live image assembly, skips deployment.
-Secure Boot trust-chain enforcement remains a separate stage; qualify this
-development version with Secure Boot disabled.
+The encrypted GRUB entry reads the existing machine credential from the unlocked
+root into the RAM-only `/anduinos-unlock.key` cpio entry. The public recovery
+volume never stores that credential. Recovery opens only the bound LUKS2
+container, verifies its inner Btrfs UUID and removes the incoming file before
+starting the browser. If the credential is missing or rejected, the native text
+prompt accepts the disk password or recovery key; failed input can be retried
+or the machine restarted. The mapping lives for the recovery session, while
+individual actions still mount/unmount the filesystem themselves.
+
+This component adds encrypted-volume deployment and the installed GRUB menu
+entry; an independent entry surviving a missing installed `grub.cfg` is a
+separate integration step. Secure Boot being enabled does not by itself
+authenticate this initramfs. This package does not add payload signing or claim
+that removing the RAM file erases every copy from physical memory.
 
 Build with `apkg build --all` (10.0.70 or newer), Cargo's two Linux GNU targets,
 the corresponding GCC/G++ toolchains, CMake, Git, `cpio`, `gzip`, `kmod`,

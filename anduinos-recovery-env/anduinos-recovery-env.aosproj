@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-recovery-env</PackageName>
-    <PackageVersion>2.1.0-7+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-8+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Independent offline Btrfs snapshot recovery environment</PackageDescription>
     <Section>admin</Section>
@@ -22,6 +22,17 @@
     <BuildInput Include="btrfs-progs" Sources="ubuntu" Arch="$(Arch)" />
     <BuildInput Include="util-linux" Sources="ubuntu" Arch="$(Arch)" />
     <BuildInput Include="jq" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="cryptsetup-bin" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libcryptsetup12" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libpopt0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libdevmapper1.02.1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libargon2-1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libjson-c5" Sources="ubuntu" Arch="$(Arch)" />
+    <!-- OpenSSL's ABI differs; keep both target suites on their native library. -->
+    <BuildInput Include="libssl3t64" Sources="ubuntu" Arch="$(Arch)" Condition="'$(Suite)' == 'resolute-addon'" />
+    <BuildInput Include="libssl4" Sources="ubuntu" Arch="$(Arch)" Condition="'$(Suite)' == 'stonking-addon'" />
+    <BuildInput Include="libselinux1" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libpcre2-8-0" Sources="ubuntu" Arch="$(Arch)" />
     <BuildInput Include="libc6" Sources="ubuntu" Arch="$(Arch)" />
     <BuildInput Include="libgcc-s1" Sources="ubuntu" Arch="$(Arch)" />
     <BuildInput Include="libblkid1" Sources="ubuntu" Arch="$(Arch)" />
@@ -49,6 +60,7 @@
     <Dependency Include="python3" />
     <Dependency Include="util-linux" />
     <Dependency Include="btrfs-progs" />
+    <Dependency Include="cryptsetup-bin" />
     <Dependency Include="grub2-common" />
     <PrebuildCommand Run="python3 build.py" />
     <PostInstallScript Include="data/postinst" />
