@@ -302,6 +302,14 @@ def _encrypted_inputs(root: Path, partition: Partition) -> None:
         raise RuntimeError(tr("The installed disk unlock key is missing or unsafe"))
     if not (root / "usr/lib/anduinos-grub").is_dir():
         raise RuntimeError(tr("Encrypted boot repair requires the AnduinOS bootloader"))
+    suffix = "x64" if platform.machine() == "x86_64" else "aa64"
+    image = _safe_regular_file(root, f"usr/lib/anduinos-grub/grub{suffix}.efi")
+    generator = _safe_regular_file(root, "etc/grub.d/10_linux")
+    if (image is None or image.stat().st_size > 16 * 1024 * 1024
+            or b"function anduinos_unlock {" not in image.read_bytes()
+            or generator is None or generator.stat().st_size > 1024 * 1024
+            or "GRUB_ANDUINOS_CRYPT_HANDOFF" not in generator.read_text()):
+        raise RuntimeError(tr("Encrypted boot repair requires the AnduinOS bootloader"))
 
 
 def _encrypted_output(root: Path, partition: Partition, run, progress) -> None:

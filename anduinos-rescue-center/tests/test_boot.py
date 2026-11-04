@@ -393,6 +393,10 @@ class EncryptedBootRepairTests(unittest.TestCase):
                 key.write_bytes(b'fixture-public-key'[:1] * 64)
                 key.chmod(0o600)
                 (root / 'usr/lib/anduinos-grub').mkdir()
+                suffix = 'x64' if __import__('platform').machine() == 'x86_64' else 'aa64'
+                (root / f'usr/lib/anduinos-grub/grub{suffix}.efi').write_bytes(b'function anduinos_unlock {')
+                (root / 'etc/grub.d').mkdir()
+                (root / 'etc/grub.d/10_linux').write_text('GRUB_ANDUINOS_CRYPT_HANDOFF')
                 _encrypted_inputs(root, part)
                 self.assertEqual(crypttab.read_text(), text)
                 crypttab.write_text(text.replace(part.luks_uuid, '22222222-2222-4222-8222-222222222222'))
