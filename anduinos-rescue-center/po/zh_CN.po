@@ -1720,3 +1720,166 @@ msgstr "块设备不可用"
 #, python-brace-format
 msgid "Target is not a block device"
 msgstr "目标不是块设备"
+
+#: src/anduinos_rescue_center/app.py:306
+#, python-brace-format
+msgid "Closing encrypted volume"
+msgstr "正在关闭加密卷"
+
+#: src/anduinos_rescue_center/app.py:307
+#, python-brace-format
+msgid "Waiting for the selected volume to close…"
+msgstr "正在等待所选卷关闭…"
+
+#: src/anduinos_rescue_center/app.py:430 src/anduinos_rescue_center/app.py:441
+#, python-brace-format
+msgid "Encrypted volume"
+msgstr "加密卷"
+
+#: src/anduinos_rescue_center/app.py:507
+#, python-brace-format
+msgid "Unlock encrypted volume"
+msgstr "解锁加密卷"
+
+#: src/anduinos_rescue_center/app.py:508
+#, python-brace-format
+msgid ""
+"Enter the disk password or recovery key. This does not change the password."
+msgstr "输入磁盘密码或恢复密钥。此操作不会更改密码。"
+
+#: src/anduinos_rescue_center/app.py:512
+#, python-brace-format
+msgid "Disk password or recovery key"
+msgstr "磁盘密码或恢复密钥"
+
+#: src/anduinos_rescue_center/app.py:515
+#, python-brace-format
+msgid "Unlock"
+msgstr "解锁"
+
+#: src/anduinos_rescue_center/app.py:526
+#, python-brace-format
+msgid "Unlocking encrypted volume"
+msgstr "正在解锁加密卷"
+
+#: src/anduinos_rescue_center/app.py:527
+#, python-brace-format
+msgid "Checking the selected volume and reading system information…"
+msgstr "正在检查所选卷并读取系统信息…"
+
+#: src/anduinos_rescue_center/boot.py:284
+#: src/anduinos_rescue_center/boot.py:297
+#, python-brace-format
+msgid "The encrypted root configuration is missing or inconsistent"
+msgstr "缺少加密根文件系统配置或配置不一致"
+
+#: src/anduinos_rescue_center/boot.py:300
+#, python-brace-format
+msgid "The installed disk unlock key is missing or unsafe"
+msgstr "已安装的磁盘解锁密钥缺失或不安全"
+
+#: src/anduinos_rescue_center/boot.py:302
+#, python-brace-format
+msgid "Encrypted boot repair requires the AnduinOS bootloader"
+msgstr "加密启动修复需要 AnduinOS 引导加载程序"
+
+#: src/anduinos_rescue_center/boot.py:315
+#, python-brace-format
+msgid "The repaired bootloader identifies a different encrypted volume"
+msgstr "修复后的引导加载程序指向不同的加密卷"
+
+#: src/anduinos_rescue_center/boot.py:322
+#, python-brace-format
+msgid "The recovery volume does not match the encrypted system"
+msgstr "恢复卷与加密系统不匹配"
+
+#: src/anduinos_rescue_center/boot.py:326
+#, python-brace-format
+msgid "The repaired EFI configuration is missing or unsafe"
+msgstr "修复后的 EFI 配置缺失或不安全"
+
+#: src/anduinos_rescue_center/boot.py:343
+#: src/anduinos_rescue_center/boot.py:353
+#, python-brace-format
+msgid "The repaired menu is missing the encrypted root handoff"
+msgstr "修复后的菜单缺少加密根文件系统接管项"
+
+#: src/anduinos_rescue_center/boot.py:411
+#, python-brace-format
+msgid "The rebuilt initrd is missing encrypted root support"
+msgstr "重建的 initrd 缺少加密根文件系统支持"
+
+#: src/anduinos_rescue_center/boot.py:420
+#, python-brace-format
+msgid "The rebuilt initrd contains a persistent disk unlock key"
+msgstr "重建的 initrd 包含持久化磁盘解锁密钥"
+
+#: src/anduinos_rescue_center/client.py:117
+#: src/anduinos_rescue_center/encryption.py:50
+#, python-brace-format
+msgid "The disk password is empty or unsupported"
+msgstr "磁盘密码为空或不受支持"
+
+#: src/anduinos_rescue_center/client.py:121
+#, python-brace-format
+msgid "Could not unlock the volume"
+msgstr "无法解锁卷"
+
+#: src/anduinos_rescue_center/client.py:132
+#: src/anduinos_rescue_center/encryption.py:108
+#: src/anduinos_rescue_center/encryption.py:112
+#: src/anduinos_rescue_center/encryption.py:115
+#, python-brace-format
+msgid "Invalid unlock session"
+msgstr "无效的解锁会话"
+
+#: src/anduinos_rescue_center/client.py:136
+#, python-brace-format
+msgid "Could not close the unlocked volume"
+msgstr "无法关闭已解锁的卷"
+
+#: src/anduinos_rescue_center/encryption.py:53
+#, python-brace-format
+msgid "Select an offline encrypted volume"
+msgstr "选择一个离线加密卷"
+
+#: src/anduinos_rescue_center/encryption.py:57
+#, python-brace-format
+msgid "Only LUKS2 volumes are supported"
+msgstr "仅支持 LUKS2 卷"
+
+#: src/anduinos_rescue_center/encryption.py:68
+#, python-brace-format
+msgid "The recovery runtime directory is unsafe"
+msgstr "恢复运行时目录不安全"
+
+#: src/anduinos_rescue_center/encryption.py:78
+#, python-brace-format
+msgid "Could not unlock the volume. Check the password or recovery key."
+msgstr "无法解锁卷。请检查密码或恢复密钥。"
+
+#: src/anduinos_rescue_center/encryption.py:83
+#, python-brace-format
+msgid "The unlocked device is not ready"
+msgstr "已解锁的设备未就绪"
+
+#: src/anduinos_rescue_center/encryption.py:86
+#, python-brace-format
+msgid "The unlocked device does not match the selected volume"
+msgstr "已解锁的设备与所选卷不匹配"
+
+#: src/anduinos_rescue_center/encryption.py:100
+#: src/anduinos_rescue_center/encryption.py:122
+#, python-brace-format
+msgid "Could not close the unlocked volume; it may still be in use"
+msgstr "无法关闭已解锁的卷；它可能仍在使用中"
+
+#: src/anduinos_rescue_center/encryption.py:118
+#, python-brace-format
+msgid "Unmount the unlocked volume before closing it"
+msgstr "关闭前请先卸载已解锁的卷"
+
+#: src/anduinos_rescue_center/storage.py:412
+#, python-brace-format
+msgid "The encrypted volume has an unsupported or ambiguous mapping"
+msgstr "加密卷具有不支持或歧义的映射"

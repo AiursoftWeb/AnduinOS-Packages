@@ -13,6 +13,7 @@ from .files import export_file, list_files
 from .snapshots import create_snapshot, list_snapshots, restore_snapshot
 from .boot import diagnose_boot, repair_boot
 from .offline_env import emergency_shell
+from .encryption import unlock_volume, lock_volume
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -25,6 +26,11 @@ def main(argv: list[str] | None = None) -> int:
             return emergency_shell(arguments[1], arguments[2])
         if arguments == ["probe"]:
             payload = probe_inventory().to_dict()
+        elif len(arguments) == 3 and arguments[0] == "unlock":
+            password = sys.stdin.read(4097)
+            payload = unlock_volume(arguments[1], arguments[2], password)
+        elif len(arguments) == 2 and arguments[0] == "lock":
+            payload = lock_volume(arguments[1])
         elif len(arguments) == 3 and arguments[0] == "inspect":
             payload = inspect_target(arguments[1], arguments[2])
         elif len(arguments) == 4 and arguments[0] == "reset-password":
@@ -68,6 +74,7 @@ def main(argv: list[str] | None = None) -> int:
             print(
                 "Usage: anduinos-rescue-center-helper "
                 "{probe|inspect DEVICE IDENTITY|reset-password DEVICE IDENTITY USER|"
+                "unlock DEVICE IDENTITY|lock SESSION|"
                 "list-files DEVICE IDENTITY PATH|export DEVICE IDENTITY PATH DESTINATION|"
                 "list-snapshots DEVICE IDENTITY|create-snapshot DEVICE IDENTITY TITLE|"
                 "restore-snapshot DEVICE IDENTITY ID {true|false}|"

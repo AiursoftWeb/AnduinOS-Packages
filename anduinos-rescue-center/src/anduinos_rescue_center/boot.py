@@ -10,6 +10,8 @@ import selectors
 import shlex
 import signal
 import subprocess
+import tempfile
+from uuid import UUID
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -272,6 +274,88 @@ def _run_streaming_command(
     return decoded
 
 
+def _encrypted_inputs(root: Path, partition: Partition) -> None:
+    """Support our installed layout without rewriting its encryption policy."""
+    if not partition.encrypted:
+        return
+    crypttab = _safe_regular_file(root, "etc/crypttab")
+    fstab = _safe_regular_file(root, "etc/fstab")
+    if crypttab is None or fstab is None:
+        raise RuntimeError(tr("The encrypted root configuration is missing or inconsistent"))
+    if max(crypttab.stat().st_size, fstab.stat().st_size) > 128 * 1024:
+        raise RuntimeError(tr("The encrypted root configuration is missing or inconsistent"))
+    entries = [line.split() for line in crypttab.read_text().splitlines()
+               if line.strip() and not line.lstrip().startswith("#")]
+    selected = [entry for entry in entries if entry[:1] == ["anduinos-root"]]
+    expected = "UUID=" + partition.luks_uuid
+    roots = [line.split() for line in fstab.read_text().splitlines()
+             if line.strip() and not line.lstrip().startswith("#")]
+    roots = [entry for entry in roots if len(entry) >= 3 and entry[1] == "/"]
+    if (len(selected) != 1 or len(selected[0]) != 4
+            or selected[0][1:3] != [expected, "none"]
+            or not {"luks", "x-initrd.attach"}.issubset(selected[0][3].split(","))
+            or len(roots) != 1 or roots[0][0] != "UUID=" + partition.filesystem_uuid
+            or roots[0][2] != partition.filesystem):
+        raise RuntimeError(tr("The encrypted root configuration is missing or inconsistent"))
+    key = _safe_regular_file(root, "etc/anduinos-luks/machine.key")
+    if key is None or key.stat().st_size != 64 or key.stat().st_mode & 0o077:
+        raise RuntimeError(tr("The installed disk unlock key is missing or unsafe"))
+    if not (root / "usr/lib/anduinos-grub").is_dir():
+        raise RuntimeError(tr("Encrypted boot repair requires the AnduinOS bootloader"))
+
+
+def _encrypted_output(root: Path, partition: Partition, run, progress) -> None:
+    """Rebind only the freshly installed vendor stub to the native unlock UI."""
+    from anduinos_secureboot.boot_chain import graphical_grub_configuration
+
+    prefix = "/@root/boot/grub" if partition.filesystem == "btrfs" else "/boot/grub"
+    for target, expected in (("fs_uuid", partition.filesystem_uuid),
+                             ("cryptodisk_uuid", partition.luks_uuid)):
+        actual = _repair_command(run, ["chroot", str(root), "grub-probe",
+                                      "--target=" + target, "/boot/grub"], 30, progress).strip()
+        matches = actual == expected if target == "fs_uuid" else UUID(actual) == UUID(expected)
+        if not matches:
+            raise RuntimeError(tr("The repaired bootloader identifies a different encrypted volume"))
+    recovery_uuid = ""
+    binding = _safe_regular_file(root, "var/lib/anduinos-recovery-env/volume.json")
+    if binding is not None and partition.filesystem == "btrfs":
+        data = json.loads(binding.read_text())
+        if (data.get("schema") != 1 or data.get("root_uuid") != partition.filesystem_uuid
+                or data.get("luks_uuid") != partition.luks_uuid):
+            raise RuntimeError(tr("The recovery volume does not match the encrypted system"))
+        recovery_uuid = str(UUID(data["volume_uuid"]))
+    stub = root / "boot/efi/EFI/AnduinOS/grub.cfg"
+    if stub.is_symlink() or not stub.is_file() or stub.stat().st_size > 16384:
+        raise RuntimeError(tr("The repaired EFI configuration is missing or unsafe"))
+    text = graphical_grub_configuration(stub.read_text(), partition.filesystem_uuid,
+                                        prefix, partition.luks_uuid, recovery_uuid)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(dir=stub.parent, delete=False) as stream:
+            temporary = Path(stream.name)
+            stream.write(text.encode())
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, stub)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+    config = (root / "boot/grub/grub.cfg").read_text()
+    start, end = "### BEGIN /etc/grub.d/10_linux ###", "### END /etc/grub.d/10_linux ###"
+    if config.count(start) != 1 or config.count(end) != 1:
+        raise RuntimeError(tr("The repaired menu is missing the encrypted root handoff"))
+    linux = config.split(start, 1)[1].split(end, 1)[0]
+    initrds = [line.split() for line in linux.splitlines() if line.lstrip().startswith("initrd\t")]
+    kernels = [line.split() for line in linux.splitlines() if line.lstrip().startswith("linux\t")]
+    key_prefix = "/@root" if partition.filesystem == "btrfs" else ""
+    handoff = "newc:/anduinos-unlock.key:" + key_prefix + "/etc/anduinos-luks/machine.key"
+    required = {"root=UUID=" + partition.filesystem_uuid,
+                "rd.luks.uuid=luks-" + partition.luks_uuid}
+    if (not initrds or any(line.count(handoff) != 1 for line in initrds)
+            or not kernels or any(not required.issubset(line) for line in kernels)):
+        raise RuntimeError(tr("The repaired menu is missing the encrypted root handoff"))
+
+
 def repair_boot(path: str, identity: str, esp_identity: str, *, run=subprocess.run,
                 mount_base: Path = Path("/run/anduinos-rescue-center"),
                 progress: Callable[[str], None] | None = None) -> dict[str, object]:
@@ -283,6 +367,7 @@ def repair_boot(path: str, identity: str, esp_identity: str, *, run=subprocess.r
     partition = resolve_target(path, identity, run=run)
     with mounted_readonly(partition.path, partition.filesystem, run=run, mount_base=mount_base) as top:
         root = system_root(top, partition)
+        _encrypted_inputs(root, partition)
         esp = _locate_esp(partition, _efi_spec(root), run=run)
     if esp.identity != esp_identity or esp.mounted:
         raise RuntimeError(tr("The selected EFI partition changed before repair"))
@@ -292,6 +377,7 @@ def repair_boot(path: str, identity: str, esp_identity: str, *, run=subprocess.r
         progress(tr("Opening {system} and its EFI partition {esp}").format(
             system=partition.path, esp=esp.path))
     with opened_system(path, identity, esp=esp.path, run=run, mount_base=mount_base) as (root, _partition):
+        _encrypted_inputs(root, partition)
         own_grub = (root / "usr/lib/anduinos-grub").exists()
         helper = "/usr/libexec/anduinos-grub-update"
         tools = ["usr/bin/dracut", "usr/bin/lsinitrd", "usr/sbin/grub-install", "usr/sbin/update-grub"]
@@ -323,6 +409,18 @@ def repair_boot(path: str, identity: str, esp_identity: str, *, run=subprocess.r
             ).splitlines())
             if forbidden.intersection(modules):
                 raise RuntimeError(tr("An installed-system initrd still contains Live boot modules"))
+            if partition.encrypted:
+                if not {"anduinos-crypt", "crypt", "systemd-cryptsetup"}.issubset(modules):
+                    raise RuntimeError(tr("The rebuilt initrd is missing encrypted root support"))
+                inventory = _repair_command(
+                    run, ["chroot", str(root), "lsinitrd", f"/boot/initrd.img-{version}"],
+                    60, progress,
+                )
+                if any(name in inventory for name in (
+                    "etc/anduinos-luks/machine.key", "anduinos-unlock.key",
+                    "cryptsetup-keys.d/anduinos-root.key",
+                )):
+                    raise RuntimeError(tr("The rebuilt initrd contains a persistent disk unlock key"))
             if partition.filesystem == "btrfs" and "anduinos-btrfs-snapshots-manager" not in modules:
                 raise RuntimeError(tr("The Btrfs initrd lacks the AnduinOS recovery module"))
         if progress is not None:
@@ -343,6 +441,8 @@ def repair_boot(path: str, identity: str, esp_identity: str, *, run=subprocess.r
                     for name in (f"shim{suffix}.efi", f"grub{suffix}.efi", "grub.cfg"))
                 or not complete or not config):
             raise RuntimeError(tr("Boot repair did not produce a complete kernel, GRUB and EFI chain"))
+        if partition.encrypted:
+            _encrypted_output(root, partition, run, progress)
         if own_grub:
             # Check the actual ESP files before reporting success or registering them.
             _repair_command(run, ["chroot", str(root), helper, "first-install-check"], 300, progress)

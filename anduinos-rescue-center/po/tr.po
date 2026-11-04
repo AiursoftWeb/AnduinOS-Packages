@@ -1785,3 +1785,166 @@ msgstr "Blok aygıtı kullanılamıyor"
 #, python-brace-format
 msgid "Target is not a block device"
 msgstr "Hedef bir blok aygıtı değil"
+
+#: src/anduinos_rescue_center/app.py:306
+#, python-brace-format
+msgid "Closing encrypted volume"
+msgstr "Şifreli birimi kapatılıyor"
+
+#: src/anduinos_rescue_center/app.py:307
+#, python-brace-format
+msgid "Waiting for the selected volume to close…"
+msgstr "Seçilen birimin kapatılması bekleniyor…"
+
+#: src/anduinos_rescue_center/app.py:430 src/anduinos_rescue_center/app.py:441
+#, python-brace-format
+msgid "Encrypted volume"
+msgstr "Şifreli birim"
+
+#: src/anduinos_rescue_center/app.py:507
+#, python-brace-format
+msgid "Unlock encrypted volume"
+msgstr "Şifreli birimi aç"
+
+#: src/anduinos_rescue_center/app.py:508
+#, python-brace-format
+msgid ""
+"Enter the disk password or recovery key. This does not change the password."
+msgstr "Disk şifresini veya kurtarma anahtarını girin. Bu işlem şifreyi değiştirmez."
+
+#: src/anduinos_rescue_center/app.py:512
+#, python-brace-format
+msgid "Disk password or recovery key"
+msgstr "Disk şifresi veya kurtarma anahtarı"
+
+#: src/anduinos_rescue_center/app.py:515
+#, python-brace-format
+msgid "Unlock"
+msgstr "Aç"
+
+#: src/anduinos_rescue_center/app.py:526
+#, python-brace-format
+msgid "Unlocking encrypted volume"
+msgstr "Şifreli birim açılıyor"
+
+#: src/anduinos_rescue_center/app.py:527
+#, python-brace-format
+msgid "Checking the selected volume and reading system information…"
+msgstr "Seçilen birim kontrol ediliyor ve sistem bilgileri okunuyor…"
+
+#: src/anduinos_rescue_center/boot.py:284
+#: src/anduinos_rescue_center/boot.py:297
+#, python-brace-format
+msgid "The encrypted root configuration is missing or inconsistent"
+msgstr "Şifreli kök yapılandırması eksik veya tutarsız"
+
+#: src/anduinos_rescue_center/boot.py:300
+#, python-brace-format
+msgid "The installed disk unlock key is missing or unsafe"
+msgstr "Yüklü disk açma anahtarı eksik veya güvensiz"
+
+#: src/anduinos_rescue_center/boot.py:302
+#, python-brace-format
+msgid "Encrypted boot repair requires the AnduinOS bootloader"
+msgstr "Şifreli açılma onarımı için AnduinOS önyükleyicisi gereklidir"
+
+#: src/anduinos_rescue_center/boot.py:315
+#, python-brace-format
+msgid "The repaired bootloader identifies a different encrypted volume"
+msgstr "Onarılan önyükleyici farklı bir şifreli birimi tanımlıyor"
+
+#: src/anduinos_rescue_center/boot.py:322
+#, python-brace-format
+msgid "The recovery volume does not match the encrypted system"
+msgstr "Kurtarma birimi şifreli sistemle eşleşmiyor"
+
+#: src/anduinos_rescue_center/boot.py:326
+#, python-brace-format
+msgid "The repaired EFI configuration is missing or unsafe"
+msgstr "Onarılan EFI yapılandırması eksik veya güvensiz"
+
+#: src/anduinos_rescue_center/boot.py:343
+#: src/anduinos_rescue_center/boot.py:353
+#, python-brace-format
+msgid "The repaired menu is missing the encrypted root handoff"
+msgstr "Onarılan menüde şifreli kök devir eksik"
+
+#: src/anduinos_rescue_center/boot.py:411
+#, python-brace-format
+msgid "The rebuilt initrd is missing encrypted root support"
+msgstr "Yeniden derlenen initrd'de şifreli kök desteği eksik"
+
+#: src/anduinos_rescue_center/boot.py:420
+#, python-brace-format
+msgid "The rebuilt initrd contains a persistent disk unlock key"
+msgstr "Yeniden derlenen initrd kalıcı bir disk açma anahtarı içeriyor"
+
+#: src/anduinos_rescue_center/client.py:117
+#: src/anduinos_rescue_center/encryption.py:50
+#, python-brace-format
+msgid "The disk password is empty or unsupported"
+msgstr "Disk şifresi boş veya desteklenmiyor"
+
+#: src/anduinos_rescue_center/client.py:121
+#, python-brace-format
+msgid "Could not unlock the volume"
+msgstr "Birim açılamadı"
+
+#: src/anduinos_rescue_center/client.py:132
+#: src/anduinos_rescue_center/encryption.py:108
+#: src/anduinos_rescue_center/encryption.py:112
+#: src/anduinos_rescue_center/encryption.py:115
+#, python-brace-format
+msgid "Invalid unlock session"
+msgstr "Geçersiz açma oturumu"
+
+#: src/anduinos_rescue_center/client.py:136
+#, python-brace-format
+msgid "Could not close the unlocked volume"
+msgstr "Açılmış birim kapatılamadı"
+
+#: src/anduinos_rescue_center/encryption.py:53
+#, python-brace-format
+msgid "Select an offline encrypted volume"
+msgstr "Çevrimdışı bir şifreli birim seçin"
+
+#: src/anduinos_rescue_center/encryption.py:57
+#, python-brace-format
+msgid "Only LUKS2 volumes are supported"
+msgstr "Yalnızca LUKS2 birimleri desteklenir"
+
+#: src/anduinos_rescue_center/encryption.py:68
+#, python-brace-format
+msgid "The recovery runtime directory is unsafe"
+msgstr "Kurtarma çalışma zamanı dizini güvensiz"
+
+#: src/anduinos_rescue_center/encryption.py:78
+#, python-brace-format
+msgid "Could not unlock the volume. Check the password or recovery key."
+msgstr "Birim açılamadı. Şifreyi veya kurtarma anahtarını kontrol edin."
+
+#: src/anduinos_rescue_center/encryption.py:83
+#, python-brace-format
+msgid "The unlocked device is not ready"
+msgstr "Açılmış cihaz hazır değil"
+
+#: src/anduinos_rescue_center/encryption.py:86
+#, python-brace-format
+msgid "The unlocked device does not match the selected volume"
+msgstr "Açılmış cihaz seçilen birimle eşleşmiyor"
+
+#: src/anduinos_rescue_center/encryption.py:100
+#: src/anduinos_rescue_center/encryption.py:122
+#, python-brace-format
+msgid "Could not close the unlocked volume; it may still be in use"
+msgstr "Açılmış birim kapatılamadı; hâlâ kullanımda olabilir"
+
+#: src/anduinos_rescue_center/encryption.py:118
+#, python-brace-format
+msgid "Unmount the unlocked volume before closing it"
+msgstr "Kapatmadan önce açılmış birimi çıkartın"
+
+#: src/anduinos_rescue_center/storage.py:412
+#, python-brace-format
+msgid "The encrypted volume has an unsupported or ambiguous mapping"
+msgstr "Şifreli birim desteklenmeyen veya belirsiz bir eşlemeye sahip"

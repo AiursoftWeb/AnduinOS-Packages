@@ -1799,3 +1799,166 @@ msgstr "Blokapparaat is niet beschikbaar"
 #, python-brace-format
 msgid "Target is not a block device"
 msgstr "Doel is geen blokapparaat"
+
+#: src/anduinos_rescue_center/app.py:306
+#, python-brace-format
+msgid "Closing encrypted volume"
+msgstr "Bezig met sluiten van versleuteld volume"
+
+#: src/anduinos_rescue_center/app.py:307
+#, python-brace-format
+msgid "Waiting for the selected volume to close…"
+msgstr "Wachten tot het geselecteerde volume is gesloten…"
+
+#: src/anduinos_rescue_center/app.py:430 src/anduinos_rescue_center/app.py:441
+#, python-brace-format
+msgid "Encrypted volume"
+msgstr "Versleuteld volume"
+
+#: src/anduinos_rescue_center/app.py:507
+#, python-brace-format
+msgid "Unlock encrypted volume"
+msgstr "Ontgrendel versleuteld volume"
+
+#: src/anduinos_rescue_center/app.py:508
+#, python-brace-format
+msgid ""
+"Enter the disk password or recovery key. This does not change the password."
+msgstr "Voer het schijfwachtwoord of herstelcode in. Dit wijzigt het wachtwoord niet."
+
+#: src/anduinos_rescue_center/app.py:512
+#, python-brace-format
+msgid "Disk password or recovery key"
+msgstr "Schijfwachtwoord of herstelcode"
+
+#: src/anduinos_rescue_center/app.py:515
+#, python-brace-format
+msgid "Unlock"
+msgstr "Ontgrendelen"
+
+#: src/anduinos_rescue_center/app.py:526
+#, python-brace-format
+msgid "Unlocking encrypted volume"
+msgstr "Bezig met ontgrendelen van versleuteld volume"
+
+#: src/anduinos_rescue_center/app.py:527
+#, python-brace-format
+msgid "Checking the selected volume and reading system information…"
+msgstr "Geselecteerd volume controleren en systeeminfo lezen…"
+
+#: src/anduinos_rescue_center/boot.py:284
+#: src/anduinos_rescue_center/boot.py:297
+#, python-brace-format
+msgid "The encrypted root configuration is missing or inconsistent"
+msgstr "De configuratie voor het versleutelde root-systeem ontbreekt of is inconsistent"
+
+#: src/anduinos_rescue_center/boot.py:300
+#, python-brace-format
+msgid "The installed disk unlock key is missing or unsafe"
+msgstr "De geïnstalleerde sleutel voor het ontgrendelen van de schijf ontbreekt of is onveilig"
+
+#: src/anduinos_rescue_center/boot.py:302
+#, python-brace-format
+msgid "Encrypted boot repair requires the AnduinOS bootloader"
+msgstr "Herstel van versleutelde opstart vereist de AnduinOS-bootloader"
+
+#: src/anduinos_rescue_center/boot.py:315
+#, python-brace-format
+msgid "The repaired bootloader identifies a different encrypted volume"
+msgstr "De herstelde bootloader identificeert een ander versleuteld volume"
+
+#: src/anduinos_rescue_center/boot.py:322
+#, python-brace-format
+msgid "The recovery volume does not match the encrypted system"
+msgstr "Het herstelvolume komt niet overeen met het versleutelde systeem"
+
+#: src/anduinos_rescue_center/boot.py:326
+#, python-brace-format
+msgid "The repaired EFI configuration is missing or unsafe"
+msgstr "De herstelde EFI-configuratie ontbreekt of is onveilig"
+
+#: src/anduinos_rescue_center/boot.py:343
+#: src/anduinos_rescue_center/boot.py:353
+#, python-brace-format
+msgid "The repaired menu is missing the encrypted root handoff"
+msgstr "Het herstelde menu mist de overdracht van het versleutelde root-systeem"
+
+#: src/anduinos_rescue_center/boot.py:411
+#, python-brace-format
+msgid "The rebuilt initrd is missing encrypted root support"
+msgstr "De herbouwde initrd mist ondersteuning voor het versleutelde root-systeem"
+
+#: src/anduinos_rescue_center/boot.py:420
+#, python-brace-format
+msgid "The rebuilt initrd contains a persistent disk unlock key"
+msgstr "De herbouwde initrd bevat een permanente sleutel voor het ontgrendelen van de schijf"
+
+#: src/anduinos_rescue_center/client.py:117
+#: src/anduinos_rescue_center/encryption.py:50
+#, python-brace-format
+msgid "The disk password is empty or unsupported"
+msgstr "Het schijfwachtwoord is leeg of wordt niet ondersteund"
+
+#: src/anduinos_rescue_center/client.py:121
+#, python-brace-format
+msgid "Could not unlock the volume"
+msgstr "Het volume kon niet worden ontgrendeld"
+
+#: src/anduinos_rescue_center/client.py:132
+#: src/anduinos_rescue_center/encryption.py:108
+#: src/anduinos_rescue_center/encryption.py:112
+#: src/anduinos_rescue_center/encryption.py:115
+#, python-brace-format
+msgid "Invalid unlock session"
+msgstr "Ongeldige ontgrendelingsessie"
+
+#: src/anduinos_rescue_center/client.py:136
+#, python-brace-format
+msgid "Could not close the unlocked volume"
+msgstr "Het ontgrendelde volume kon niet worden gesloten"
+
+#: src/anduinos_rescue_center/encryption.py:53
+#, python-brace-format
+msgid "Select an offline encrypted volume"
+msgstr "Selecteer een offline versleuteld volume"
+
+#: src/anduinos_rescue_center/encryption.py:57
+#, python-brace-format
+msgid "Only LUKS2 volumes are supported"
+msgstr "Alleen LUKS2-volumes worden ondersteund"
+
+#: src/anduinos_rescue_center/encryption.py:68
+#, python-brace-format
+msgid "The recovery runtime directory is unsafe"
+msgstr "De tijdelijke herstelmap is onveilig"
+
+#: src/anduinos_rescue_center/encryption.py:78
+#, python-brace-format
+msgid "Could not unlock the volume. Check the password or recovery key."
+msgstr "Het volume kon niet worden ontgrendeld. Controleer het wachtwoord of de herstelcode."
+
+#: src/anduinos_rescue_center/encryption.py:83
+#, python-brace-format
+msgid "The unlocked device is not ready"
+msgstr "Het ontgrendelde apparaat is niet gereed"
+
+#: src/anduinos_rescue_center/encryption.py:86
+#, python-brace-format
+msgid "The unlocked device does not match the selected volume"
+msgstr "Het ontgrendelde apparaat komt niet overeen met het geselecteerde volume"
+
+#: src/anduinos_rescue_center/encryption.py:100
+#: src/anduinos_rescue_center/encryption.py:122
+#, python-brace-format
+msgid "Could not close the unlocked volume; it may still be in use"
+msgstr "Het ontgrendelde volume kon niet worden gesloten; het wordt mogelijk nog gebruikt"
+
+#: src/anduinos_rescue_center/encryption.py:118
+#, python-brace-format
+msgid "Unmount the unlocked volume before closing it"
+msgstr "Koppel het ontgrendelde volume los voordat u het sluit"
+
+#: src/anduinos_rescue_center/storage.py:412
+#, python-brace-format
+msgid "The encrypted volume has an unsupported or ambiguous mapping"
+msgstr "Het versleutelde volume heeft een niet-ondersteunde of ambiguwe mapping"

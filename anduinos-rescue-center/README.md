@@ -56,12 +56,27 @@ the currently running root filesystem.
   chroot mounts are unmounted on exit (or a cleanup failure is reported), and a target
   directory symlink cannot redirect a mount onto the Live host. A root chroot
   shell is **not** a security sandbox.
-- Encrypted filesystems and package repair remain outside this release.
+- The picker offers locked LUKS2 volumes without claiming to know the installed
+  system. Enter the disk password or recovery key to inspect the inner Btrfs or
+  ext4 filesystem. Passwords use standard input; only mapping metadata is kept
+  in the private Live runtime directory. Returning to the picker or closing the
+  window closes mappings created by this window. Pre-existing user mappings are
+  reused and left open. A busy mapping reports a cleanup failure instead of
+  pretending to have closed. Abrupt process termination may leave an unlocked
+  mapping until it is closed manually or the Live session is shut down.
+- Encrypted boot repair supports the installer-created single-root layout with
+  the native AnduinOS GRUB and intact crypttab, fstab and internal machine key.
+  It rebuilds initrds, checks encryption modules and transient-key handoff, and
+  preserves the graphical unlock and bound independent recovery entry. It never
+  formats a LUKS volume, changes a key slot, or removes encryption. Ambiguous or
+  unsupported mappings, inaccessible volumes and inconsistent encryption
+  configuration require review. Package repair, missing kernel package payloads,
+  damaged LUKS headers and password recovery are outside this release.
 
 ## Tests
 
 ```bash
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C \
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:../anduinos-secureboot-toolkit/src LANGUAGE=C \
   python3 -m unittest discover -s tests -v
 ```
 

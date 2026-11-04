@@ -1812,3 +1812,166 @@ msgstr "O dispositivo de blocos não está disponível"
 #, python-brace-format
 msgid "Target is not a block device"
 msgstr "O destino não é um dispositivo de blocos"
+
+#: src/anduinos_rescue_center/app.py:306
+#, python-brace-format
+msgid "Closing encrypted volume"
+msgstr "Encerrando volume criptografado"
+
+#: src/anduinos_rescue_center/app.py:307
+#, python-brace-format
+msgid "Waiting for the selected volume to close…"
+msgstr "Aguardando o encerramento do volume selecionado…"
+
+#: src/anduinos_rescue_center/app.py:430 src/anduinos_rescue_center/app.py:441
+#, python-brace-format
+msgid "Encrypted volume"
+msgstr "Volume criptografado"
+
+#: src/anduinos_rescue_center/app.py:507
+#, python-brace-format
+msgid "Unlock encrypted volume"
+msgstr "Desbloquear volume criptografado"
+
+#: src/anduinos_rescue_center/app.py:508
+#, python-brace-format
+msgid ""
+"Enter the disk password or recovery key. This does not change the password."
+msgstr "Digite a senha do disco ou a chave de recuperação. Isso não altera a senha."
+
+#: src/anduinos_rescue_center/app.py:512
+#, python-brace-format
+msgid "Disk password or recovery key"
+msgstr "Senha do disco ou chave de recuperação"
+
+#: src/anduinos_rescue_center/app.py:515
+#, python-brace-format
+msgid "Unlock"
+msgstr "Desbloquear"
+
+#: src/anduinos_rescue_center/app.py:526
+#, python-brace-format
+msgid "Unlocking encrypted volume"
+msgstr "Desbloqueando volume criptografado"
+
+#: src/anduinos_rescue_center/app.py:527
+#, python-brace-format
+msgid "Checking the selected volume and reading system information…"
+msgstr "Verificando o volume selecionado e lendo informações do sistema…"
+
+#: src/anduinos_rescue_center/boot.py:284
+#: src/anduinos_rescue_center/boot.py:297
+#, python-brace-format
+msgid "The encrypted root configuration is missing or inconsistent"
+msgstr "A configuração de raiz criptografada está ausente ou inconsistente"
+
+#: src/anduinos_rescue_center/boot.py:300
+#, python-brace-format
+msgid "The installed disk unlock key is missing or unsafe"
+msgstr "A chave de desbloqueio do disco instalada está ausente ou insegura"
+
+#: src/anduinos_rescue_center/boot.py:302
+#, python-brace-format
+msgid "Encrypted boot repair requires the AnduinOS bootloader"
+msgstr "A reparação da inicialização criptografada requer o bootloader do AnduinOS"
+
+#: src/anduinos_rescue_center/boot.py:315
+#, python-brace-format
+msgid "The repaired bootloader identifies a different encrypted volume"
+msgstr "O bootloader reparado identifica um volume criptografado diferente"
+
+#: src/anduinos_rescue_center/boot.py:322
+#, python-brace-format
+msgid "The recovery volume does not match the encrypted system"
+msgstr "O volume de recuperação não corresponde ao sistema criptografado"
+
+#: src/anduinos_rescue_center/boot.py:326
+#, python-brace-format
+msgid "The repaired EFI configuration is missing or unsafe"
+msgstr "A configuração EFI reparada está ausente ou insegura"
+
+#: src/anduinos_rescue_center/boot.py:343
+#: src/anduinos_rescue_center/boot.py:353
+#, python-brace-format
+msgid "The repaired menu is missing the encrypted root handoff"
+msgstr "O menu reparado não contém a passagem de raiz criptografada"
+
+#: src/anduinos_rescue_center/boot.py:411
+#, python-brace-format
+msgid "The rebuilt initrd is missing encrypted root support"
+msgstr "O initrd reconstruído não possui suporte para raiz criptografada"
+
+#: src/anduinos_rescue_center/boot.py:420
+#, python-brace-format
+msgid "The rebuilt initrd contains a persistent disk unlock key"
+msgstr "O initrd reconstruído contém uma chave de desbloqueio de disco persistente"
+
+#: src/anduinos_rescue_center/client.py:117
+#: src/anduinos_rescue_center/encryption.py:50
+#, python-brace-format
+msgid "The disk password is empty or unsupported"
+msgstr "A senha do disco está vazia ou não é suportada"
+
+#: src/anduinos_rescue_center/client.py:121
+#, python-brace-format
+msgid "Could not unlock the volume"
+msgstr "Não foi possível desbloquear o volume"
+
+#: src/anduinos_rescue_center/client.py:132
+#: src/anduinos_rescue_center/encryption.py:108
+#: src/anduinos_rescue_center/encryption.py:112
+#: src/anduinos_rescue_center/encryption.py:115
+#, python-brace-format
+msgid "Invalid unlock session"
+msgstr "Sessão de desbloqueio inválida"
+
+#: src/anduinos_rescue_center/client.py:136
+#, python-brace-format
+msgid "Could not close the unlocked volume"
+msgstr "Não foi possível encerrar o volume desbloqueado"
+
+#: src/anduinos_rescue_center/encryption.py:53
+#, python-brace-format
+msgid "Select an offline encrypted volume"
+msgstr "Selecione um volume criptografado offline"
+
+#: src/anduinos_rescue_center/encryption.py:57
+#, python-brace-format
+msgid "Only LUKS2 volumes are supported"
+msgstr "Apenas volumes LUKS2 são suportados"
+
+#: src/anduinos_rescue_center/encryption.py:68
+#, python-brace-format
+msgid "The recovery runtime directory is unsafe"
+msgstr "O diretório de runtime de recuperação é inseguro"
+
+#: src/anduinos_rescue_center/encryption.py:78
+#, python-brace-format
+msgid "Could not unlock the volume. Check the password or recovery key."
+msgstr "Não foi possível desbloquear o volume. Verifique a senha ou a chave de recuperação."
+
+#: src/anduinos_rescue_center/encryption.py:83
+#, python-brace-format
+msgid "The unlocked device is not ready"
+msgstr "O dispositivo desbloqueado não está pronto"
+
+#: src/anduinos_rescue_center/encryption.py:86
+#, python-brace-format
+msgid "The unlocked device does not match the selected volume"
+msgstr "O dispositivo desbloqueado não corresponde ao volume selecionado"
+
+#: src/anduinos_rescue_center/encryption.py:100
+#: src/anduinos_rescue_center/encryption.py:122
+#, python-brace-format
+msgid "Could not close the unlocked volume; it may still be in use"
+msgstr "Não foi possível encerrar o volume desbloqueado; ele pode ainda estar em uso"
+
+#: src/anduinos_rescue_center/encryption.py:118
+#, python-brace-format
+msgid "Unmount the unlocked volume before closing it"
+msgstr "Desmonte o volume desbloqueado antes de encerrá-lo"
+
+#: src/anduinos_rescue_center/storage.py:412
+#, python-brace-format
+msgid "The encrypted volume has an unsupported or ambiguous mapping"
+msgstr "O volume criptografado possui um mapeamento não suportado ou ambíguo"

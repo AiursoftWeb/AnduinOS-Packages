@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-rescue-center</PackageName>
-    <PackageVersion>2.0.5-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Live-session rescue center for discovering and repairing AnduinOS installations</PackageDescription>
     <Section>admin</Section>
@@ -27,6 +27,9 @@
     <Dependency Include="gir1.2-adw-1" />
     <Dependency Include="pkexec" />
     <Dependency Include="util-linux" />
+    <Dependency Include="cryptsetup" />
+    <Dependency Include="udev" />
+    <Dependency Include="anduinos-secureboot-toolkit" />
     <Dependency Include="btrfs-progs" />
     <Dependency Include="e2fsprogs" />
     <Dependency Include="xfsprogs" />
@@ -65,7 +68,7 @@
   <ItemGroup>
     <PrebuildCommand Run="bash compile-locales.sh" />
     <TestCommand Name="source" Profile="anduinos-package-release-test"
-                 Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C python3 -m unittest discover -s tests -v"
+                 Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:../anduinos-secureboot-toolkit/src LANGUAGE=C python3 -m unittest discover -s tests -v"
                  TimeoutSeconds="300" />
   </ItemGroup>
 </Project>

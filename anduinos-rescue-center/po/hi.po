@@ -1779,3 +1779,166 @@ msgstr "ब्लॉक डिवाइस उपलब्ध नहीं ह�
 #, python-brace-format
 msgid "Target is not a block device"
 msgstr "लक्ष्य ब्लॉक डिवाइस नहीं है"
+
+#: src/anduinos_rescue_center/app.py:306
+#, python-brace-format
+msgid "Closing encrypted volume"
+msgstr "एन्क्रिप्टेड वॉल्यूम बंद हो रहा है"
+
+#: src/anduinos_rescue_center/app.py:307
+#, python-brace-format
+msgid "Waiting for the selected volume to close…"
+msgstr "चयनित वॉल्यूम बंद होने का प्रतीक्षा कर रहा है…"
+
+#: src/anduinos_rescue_center/app.py:430 src/anduinos_rescue_center/app.py:441
+#, python-brace-format
+msgid "Encrypted volume"
+msgstr "एन्क्रिप्टेड वॉल्यूम"
+
+#: src/anduinos_rescue_center/app.py:507
+#, python-brace-format
+msgid "Unlock encrypted volume"
+msgstr "एन्क्रिप्टेड वॉल्यूम अनलॉक करें"
+
+#: src/anduinos_rescue_center/app.py:508
+#, python-brace-format
+msgid ""
+"Enter the disk password or recovery key. This does not change the password."
+msgstr "डिस्क पासवर्ड या रिकवरी कुंजी दर्ज करें। इससे पासवर्ड नहीं बदलता।"
+
+#: src/anduinos_rescue_center/app.py:512
+#, python-brace-format
+msgid "Disk password or recovery key"
+msgstr "डिस्क पासवर्ड या रिकवरी कुंजी"
+
+#: src/anduinos_rescue_center/app.py:515
+#, python-brace-format
+msgid "Unlock"
+msgstr "अनलॉक करें"
+
+#: src/anduinos_rescue_center/app.py:526
+#, python-brace-format
+msgid "Unlocking encrypted volume"
+msgstr "एन्क्रिप्टेड वॉल्यूम अनलॉक हो रहा है"
+
+#: src/anduinos_rescue_center/app.py:527
+#, python-brace-format
+msgid "Checking the selected volume and reading system information…"
+msgstr "चयनित वॉल्यूम की जांच और प्रणाली जानकारी पढ़ी जा रही है…"
+
+#: src/anduinos_rescue_center/boot.py:284
+#: src/anduinos_rescue_center/boot.py:297
+#, python-brace-format
+msgid "The encrypted root configuration is missing or inconsistent"
+msgstr "एन्क्रिप्टेड रूट कॉन्फ़िगरेशन गायब या असंगत है"
+
+#: src/anduinos_rescue_center/boot.py:300
+#, python-brace-format
+msgid "The installed disk unlock key is missing or unsafe"
+msgstr "इंस्टॉल की गई डिस्क अनलॉक कुंजी गायब या असुरक्षित है"
+
+#: src/anduinos_rescue_center/boot.py:302
+#, python-brace-format
+msgid "Encrypted boot repair requires the AnduinOS bootloader"
+msgstr "एन्क्रिप्टेड बूट रिपेयर के लिए AnduinOS बूटलोडर आवश्यक है"
+
+#: src/anduinos_rescue_center/boot.py:315
+#, python-brace-format
+msgid "The repaired bootloader identifies a different encrypted volume"
+msgstr "रिपेयर किया गया बूटलोडर एक अलग एन्क्रिप्टेड वॉल्यूम की पहचान करता है"
+
+#: src/anduinos_rescue_center/boot.py:322
+#, python-brace-format
+msgid "The recovery volume does not match the encrypted system"
+msgstr "रिकवरी वॉल्यूम एन्क्रिप्टेड सिस्टम से मेल नहीं खाता"
+
+#: src/anduinos_rescue_center/boot.py:326
+#, python-brace-format
+msgid "The repaired EFI configuration is missing or unsafe"
+msgstr "रिपेयर की गई EFI कॉन्फ़िगरेशन गायब या असुरक्षित है"
+
+#: src/anduinos_rescue_center/boot.py:343
+#: src/anduinos_rescue_center/boot.py:353
+#, python-brace-format
+msgid "The repaired menu is missing the encrypted root handoff"
+msgstr "रिपेयर किए गए मेनू में एन्क्रिप्टेड रूट हैंडओफ़ गायब है"
+
+#: src/anduinos_rescue_center/boot.py:411
+#, python-brace-format
+msgid "The rebuilt initrd is missing encrypted root support"
+msgstr "पुनर्निर्मित initrd में एन्क्रिप्टेड रूट सपोर्ट गायब है"
+
+#: src/anduinos_rescue_center/boot.py:420
+#, python-brace-format
+msgid "The rebuilt initrd contains a persistent disk unlock key"
+msgstr "पुनर्निर्मित initrd में स्थायी डिस्क अनलॉक कुंजी शामिल है"
+
+#: src/anduinos_rescue_center/client.py:117
+#: src/anduinos_rescue_center/encryption.py:50
+#, python-brace-format
+msgid "The disk password is empty or unsupported"
+msgstr "डिस्क पासवर्ड खाली या अमान्य है"
+
+#: src/anduinos_rescue_center/client.py:121
+#, python-brace-format
+msgid "Could not unlock the volume"
+msgstr "वॉल्यूम अनलॉक नहीं हो सका"
+
+#: src/anduinos_rescue_center/client.py:132
+#: src/anduinos_rescue_center/encryption.py:108
+#: src/anduinos_rescue_center/encryption.py:112
+#: src/anduinos_rescue_center/encryption.py:115
+#, python-brace-format
+msgid "Invalid unlock session"
+msgstr "अमान्य अनलॉक सत्र"
+
+#: src/anduinos_rescue_center/client.py:136
+#, python-brace-format
+msgid "Could not close the unlocked volume"
+msgstr "अनलॉक किया गया वॉल्यूम बंद नहीं हो सका"
+
+#: src/anduinos_rescue_center/encryption.py:53
+#, python-brace-format
+msgid "Select an offline encrypted volume"
+msgstr "ऑफ़लाइन एन्क्रिप्टेड वॉल्यूम चुनें"
+
+#: src/anduinos_rescue_center/encryption.py:57
+#, python-brace-format
+msgid "Only LUKS2 volumes are supported"
+msgstr "केवल LUKS2 वॉल्यूम समर्थित हैं"
+
+#: src/anduinos_rescue_center/encryption.py:68
+#, python-brace-format
+msgid "The recovery runtime directory is unsafe"
+msgstr "रिकवरी रनटाइम डायरेक्टरी असुरक्षित है"
+
+#: src/anduinos_rescue_center/encryption.py:78
+#, python-brace-format
+msgid "Could not unlock the volume. Check the password or recovery key."
+msgstr "वॉल्यूम अनलॉक नहीं हो सका। पासवर्ड या रिकवरी कुंजी की जांच करें।"
+
+#: src/anduinos_rescue_center/encryption.py:83
+#, python-brace-format
+msgid "The unlocked device is not ready"
+msgstr "अनलॉक किया गया डिवाइस तैयार नहीं है"
+
+#: src/anduinos_rescue_center/encryption.py:86
+#, python-brace-format
+msgid "The unlocked device does not match the selected volume"
+msgstr "अनलॉक किया गया डिवाइस चयनित वॉल्यूम से मेल नहीं खाता"
+
+#: src/anduinos_rescue_center/encryption.py:100
+#: src/anduinos_rescue_center/encryption.py:122
+#, python-brace-format
+msgid "Could not close the unlocked volume; it may still be in use"
+msgstr "अनलॉक किया गया वॉल्यूम बंद नहीं हो सका; यह अभी भी उपयोग में हो सकता है"
+
+#: src/anduinos_rescue_center/encryption.py:118
+#, python-brace-format
+msgid "Unmount the unlocked volume before closing it"
+msgstr "इसे बंद करने से पहले अनलॉक किए गए वॉल्यूम को अउंमाउंट करें"
+
+#: src/anduinos_rescue_center/storage.py:412
+#, python-brace-format
+msgid "The encrypted volume has an unsupported or ambiguous mapping"
+msgstr "एन्क्रिप्टेड वॉल्यूम का समर्थित या स्पष्ट मैपिंग नहीं है"
