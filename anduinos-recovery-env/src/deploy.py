@@ -70,19 +70,22 @@ def encrypted_root(device):
     return {"luks_uuid": uuid}
 
 
-def atomic_json(path, value):
+def atomic_write(path, text):
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(mode="w", dir=path.parent, delete=False) as stream:
         temporary = Path(stream.name)
         try:
-            json.dump(value, stream)
-            stream.write("\n")
+            stream.write(text)
             stream.flush()
             os.fsync(stream.fileno())
             os.chmod(temporary, 0o644)
             os.replace(temporary, path)
         finally:
             temporary.unlink(missing_ok=True)
+
+
+def atomic_json(path, value):
+    atomic_write(path, json.dumps(value) + "\n")
 
 
 def digest(path):
@@ -172,6 +175,17 @@ def deploy(volume_uuid=None, *, if_present=False):
         return
     verify_payload(PAYLOAD)
     device, binding = selected
+    # The public menu is bound to this installation and uses only the RE's
+    # own kernel/initrd. It remains usable when the installed /boot is lost.
+    configured = run("sh", "-c", """
+if [ -f /etc/default/grub ]; then . /etc/default/grub; fi
+for file in /etc/default/grub.d/*.cfg; do
+    if [ -f "$file" ]; then . "$file"; fi
+done
+printf '%s\\n' "${GRUB_CMDLINE_LINUX:-}" "${GRUB_CMDLINE_LINUX_DEFAULT:-}"
+""")
+    recovery_config = ("set timeout=-1\nset timeout_style=menu\nset default=0\n"
+                       + recovery_menu(binding, configured))
     mount = Path(tempfile.mkdtemp(prefix="anduinos-recovery-", dir="/run"))
     try:
         run("mount", "-t", "ext4", "-o", "nodev,nosuid,noexec", device, str(mount))
@@ -197,6 +211,15 @@ def deploy(volume_uuid=None, *, if_present=False):
                         os.fsync(stream.fileno())
                 candidate.chmod(0o755)
                 verify_payload(candidate)
+                # Stage the independent menu before selecting the new payload.
+                # Its binding is unchanged across updates and current selects
+                # both boot files, so either payload remains a coherent target.
+                menu = owned / "grub.cfg"
+                if menu.is_symlink() or (menu.exists() and not menu.is_file()):
+                    raise RuntimeError("Recovery menu is redirected or not a regular file")
+                atomic_write(menu, recovery_config)
+                if menu.read_text() != recovery_config:
+                    raise RuntimeError("Recovery menu read-back failed")
                 run("sync", "-f", str(mount))
                 # One directory pointer selects both files. Never delete the old
                 # image before the complete replacement has been read back.
@@ -225,14 +248,11 @@ def deploy(volume_uuid=None, *, if_present=False):
     print("Recovery environment deployed and volume unmounted.")
 
 
-def grub():
-    if not STATE.exists():
-        return  # Installing other packages before initial deployment is harmless.
-    binding = read_binding(STATE)
+def recovery_menu(binding, configured):
+    """One boot recipe for the installed and independent recovery menus."""
     # grub-mkconfig exports the target's configured arguments, including in
     # installer chroots. Never copy root flags or the running Live command line.
-    configured = shlex.split(os.environ.get("GRUB_CMDLINE_LINUX", "")) + shlex.split(
-        os.environ.get("GRUB_CMDLINE_LINUX_DEFAULT", ""))
+    configured = shlex.split(configured)
     platform = "".join(" " + flag for flag in
                        ("clk_ignore_unused", "pd_ignore_unused", "arm64.nopauth")
                        if flag in configured)
@@ -248,13 +268,21 @@ def grub():
     else
 {initrd}
     fi'''
-    print(f'''menuentry 'AnduinOS Recovery Environment' --class recovery --id anduinos-recovery-env {{
+    return f'''menuentry 'AnduinOS Recovery Environment' --class recovery --id anduinos-recovery-env {{
     insmod part_gpt
     insmod ext2
     search --no-floppy --fs-uuid --set=recovery {binding["volume_uuid"]}
     linux ($recovery)/{DIRECTORY}/current/vmlinuz anduinos.recovery.root={binding["root_uuid"]}{unlock} console=tty0 loglevel=3{platform}
 {initrd}
-}}''')
+}}\n'''
+
+
+def grub():
+    if not STATE.exists():
+        return  # Installing other packages before initial deployment is harmless.
+    configured = (os.environ.get("GRUB_CMDLINE_LINUX", "") + " "
+                  + os.environ.get("GRUB_CMDLINE_LINUX_DEFAULT", ""))
+    print(recovery_menu(read_binding(STATE), configured), end="")
 
 
 def bounded_json(path, limit=1024 * 1024):

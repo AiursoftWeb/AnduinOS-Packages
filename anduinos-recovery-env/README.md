@@ -31,9 +31,14 @@ prompt accepts the disk password or recovery key; failed input can be retried
 or the machine restarted. The mapping lives for the recovery session, while
 individual actions still mount/unmount the filesystem themselves.
 
-This component adds encrypted-volume deployment and the installed GRUB menu
-entry; an independent entry surviving a missing installed `grub.cfg` is a
-separate integration step. Secure Boot being enabled does not by itself
+New encrypted Btrfs installations also bind the recovery volume UUID in their
+EFI unlock stub. If the installed `grub.cfg` is missing, the native GRUB opens
+an independent menu on that volume, using Recovery's own kernel and initramfs.
+Deployment generates both menus from one boot recipe. Existing three-argument
+unlock stubs and plain installations keep their previous behavior; ext4 does
+not gain snapshot recovery. The encrypted root must still be readable enough
+to open its LUKS container. Missing machine credentials use the manual Recovery
+prompt described above. Secure Boot being enabled does not by itself
 authenticate this initramfs. This package does not add payload signing or claim
 that removing the RAM file erases every copy from physical memory.
 

@@ -143,11 +143,20 @@ def verify_local_esp_binding(runner: Runner, esp: Path, device: str, cfg: Path) 
                     for line in text.splitlines())
     outer = (command(runner, ["grub-probe", "--target=cryptodisk_uuid", "/boot/grub"]).strip()
              if encrypted else "")
-    verify_grub_configuration(text, uuid, prefix, outer)
+    recovery_uuid = ""
+    if any(shlex.split(line, comments=True)[:1] == ["anduinos_unlock"]
+           and len(shlex.split(line, comments=True)) == 5 for line in text.splitlines()):
+        binding = json.loads(Path("/var/lib/anduinos-recovery-env/volume.json").read_text())
+        if (binding.get("schema") != 1 or binding.get("root_uuid") != uuid
+                or UUID(binding.get("luks_uuid", "")) != UUID(outer)):
+            raise ValueError("EFI recovery entry does not match this system")
+        recovery_uuid = str(UUID(binding["volume_uuid"]))
+    verify_grub_configuration(text, uuid, prefix, outer, recovery_uuid)
 
 
 def verify_grub_configuration(
     text: str, filesystem_uuid: str, prefix: str, cryptodisk_uuid: str = "",
+    recovery_uuid: str = "",
 ) -> None:
     """Bind the Ubuntu or native graphical stub without executing its contents.
 
@@ -156,10 +165,14 @@ def verify_grub_configuration(
     must refer to the known outer volume. The graphical entry carries those
     same identities as three arguments to a function built into the native EFI.
     """
+    if recovery_uuid and prefix != "/@root/boot/grub":
+        raise ValueError("Independent recovery requires the installed Btrfs root")
     lines = [shlex.split(line, comments=True) for line in text.splitlines()]
     lines = [line for line in lines if line]
     if len(lines) == 1 and lines[0][:1] == ["anduinos_unlock"] and cryptodisk_uuid:
         expected = ["anduinos_unlock", UUID(cryptodisk_uuid).hex, filesystem_uuid, prefix]
+        if len(lines[0]) == 5 and recovery_uuid:
+            expected.append(str(UUID(recovery_uuid)))
         if lines[0] != expected:
             raise ValueError("EFI graphical unlock does not match this system")
         return
@@ -187,6 +200,7 @@ def verify_grub_configuration(
 
 def graphical_grub_configuration(
     text: str, filesystem_uuid: str, prefix: str, cryptodisk_uuid: str,
+    recovery_uuid: str = "",
 ) -> str:
     """Convert only a verified encrypted-root stub to the EFI's built-in UI.
 
@@ -196,10 +210,11 @@ def graphical_grub_configuration(
     """
     if not cryptodisk_uuid:
         raise ValueError("Graphical unlock requires an encrypted root")
-    verify_grub_configuration(text, filesystem_uuid, prefix, cryptodisk_uuid)
-    return " ".join(shlex.quote(value) for value in (
-        "anduinos_unlock", UUID(cryptodisk_uuid).hex, filesystem_uuid, prefix,
-    )) + "\n"
+    verify_grub_configuration(text, filesystem_uuid, prefix, cryptodisk_uuid, recovery_uuid)
+    arguments = ["anduinos_unlock", UUID(cryptodisk_uuid).hex, filesystem_uuid, prefix]
+    if recovery_uuid:
+        arguments.append(str(UUID(recovery_uuid)))
+    return " ".join(shlex.quote(value) for value in arguments) + "\n"
 
 
 def resolve_target(runner: Runner, esp: Path = ESP) -> Target:

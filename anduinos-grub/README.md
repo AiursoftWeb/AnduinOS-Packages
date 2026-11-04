@@ -27,7 +27,11 @@ layouts or lost output metadata fail the build instead of reducing features.
 
 New encrypted installations can call the embedded `anduinos_unlock` function
 with the outer LUKS UUID, inner filesystem UUID and GRUB directory. The installer
-and Secure Boot toolkit verify these same identities. Existing Ubuntu stubs
+and Secure Boot toolkit verify these same identities. New encrypted Btrfs
+installations may additionally supply their bound recovery volume UUID. If the
+installed menu is missing, GRUB opens the independent menu on that volume; it
+uses Recovery's own boot files and embedded graphical resources. This adds no
+firmware boot entry. Existing three-argument and Ubuntu stubs
 remain supported; plain installations retain their original startup path.
 
 The page uses GRUB's existing graphical theme and native password reader. It
