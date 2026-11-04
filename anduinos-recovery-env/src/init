@@ -3,14 +3,19 @@
 export PATH=/usr/bin:/bin:/usr/sbin LC_ALL=C
 mount -t proc proc /proc
 mount -t sysfs sysfs /sys
-# Read firmware state without allowing variable updates.
-[ ! -d /sys/firmware/efi/efivars ] || mount -t efivarfs -o ro efivarfs /sys/firmware/efi/efivars
 mount -t devtmpfs devtmpfs /dev
 mount -t tmpfs tmpfs /run
 mount -t tmpfs tmpfs /tmp
 exec </dev/console >/dev/console 2>&1
 for driver in $(cat /etc/recovery-drivers); do modprobe "$driver"; done
+# efivarfs can be modular: load drivers before reading firmware state.
+[ ! -d /sys/firmware/efi/efivars ] || mount -t efivarfs -o ro efivarfs /sys/firmware/efi/efivars
 sleep 1
+while ! recovery-unlock; do
+    echo 'Press Enter to retry unlocking, or type REBOOT to restart.'
+    read -r answer
+    [ "$answer" != REBOOT ] || reboot -f
+done
 # Direct software rendering. Either graphics backend may be absent on firmware.
 recovery-gui drm >> /run/recovery-graphics.log 2>&1 ||
     recovery-gui fbdev >> /run/recovery-graphics.log 2>&1

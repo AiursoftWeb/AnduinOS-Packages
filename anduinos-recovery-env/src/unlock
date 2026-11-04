@@ -1,0 +1,66 @@
+#!/bin/sh
+# Open only the explicitly bound LUKS2 root before starting the offline browser.
+# This initramfs has no systemd: it consumes the same RAM credential directly.
+set -eu
+export PATH=/usr/bin:/bin:/usr/sbin LC_ALL=C
+umask 077
+incoming=/anduinos-unlock.key
+mapper=anduinos-recovery-root
+trap 'rm -f -- "$incoming"' EXIT
+
+fail() { echo "$*" >&2; exit 1; }
+uuid_valid() {
+    printf '%s\n' "$1" | grep -Eq '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'
+}
+
+root= luks= roots=0 containers=0
+for argument in $(cat /proc/cmdline); do
+    case "$argument" in
+        anduinos.recovery.root=*) root=${argument#*=}; roots=$((roots + 1)) ;;
+        anduinos.recovery.luks=*) luks=${argument#*=}; containers=$((containers + 1)) ;;
+    esac
+done
+[ "$containers" != 0 ] || exit 0  # Existing plaintext installations stay unchanged.
+[ "$containers" = 1 ] && uuid_valid "$luks" || fail 'Invalid encrypted recovery binding.'
+[ "$roots" = 1 ] && uuid_valid "$root" || fail 'Invalid installed filesystem binding.'
+luks=$(printf '%s' "$luks" | tr A-F a-f)
+root=$(printf '%s' "$root" | tr A-F a-f)
+[ ! -e "/dev/mapper/$mapper" ] || fail 'A recovery mapping already exists. Restart recovery.'
+
+attempt=0
+while :; do
+    devices=$(blkid -c /dev/null -t "UUID=$luks" -o device || true)
+    [ -z "$devices" ] || break
+    attempt=$((attempt + 1))
+    [ "$attempt" -lt 30 ] || break
+    sleep 1
+done
+set -- $devices
+[ "$#" = 1 ] || fail 'The encrypted system is missing or its UUID is ambiguous.'
+device=$1
+cryptsetup isLuks --type luks2 "$device" || fail 'The system is not a supported LUKS2 volume.'
+
+opened=0
+if [ -f "$incoming" ] && [ ! -L "$incoming" ] && [ "$(stat -c %s "$incoming")" = 64 ]; then
+    chmod 0600 "$incoming"
+    if cryptsetup open --type luks2 --key-file "$incoming" "$device" "$mapper"; then
+        opened=1
+    fi
+fi
+# Do not retain a rejected or successfully consumed key during user interaction.
+rm -f -- "$incoming"
+if [ "$opened" = 0 ]; then
+    echo 'Unlock the installed system to continue recovery.'
+    echo 'Enter your disk password or recovery key. Characters are hidden.'
+    cryptsetup open --type luks2 --tries 1 "$device" "$mapper" ||
+        fail 'The disk could not be unlocked. You can retry or restart.'
+fi
+
+# Opening a container does not establish ownership of the filesystem within it.
+if [ "$(blkid -p -s TYPE -o value "/dev/mapper/$mapper")" != btrfs ] ||
+   [ "$(blkid -p -s UUID -o value "/dev/mapper/$mapper")" != "$root" ]; then
+    cryptsetup close "$mapper"
+    fail 'The unlocked filesystem does not match this recovery environment.'
+fi
+# The mapping stays open for this RAM-only recovery session. Individual actions
+# continue to mount/unmount it themselves and still reject duplicate root UUIDs.
