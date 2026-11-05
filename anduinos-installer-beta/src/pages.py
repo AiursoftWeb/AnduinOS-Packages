@@ -7406,6 +7406,8 @@ def build_summary_page(shared, nav_view):
             try:
                 require_rescue_center_closed()
             except PreflightError:
+                assert install_button is not None
+                install_button.set_sensitive(True)
                 failure = Adw.MessageDialog(
                     transient_for=nav_view.get_root(),
                     heading=_("Close Rescue Center before installing", lang),
