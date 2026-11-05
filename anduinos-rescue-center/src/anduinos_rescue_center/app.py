@@ -523,11 +523,11 @@ class RescueWindow(Adw.ApplicationWindow):
     def _unlock_dialog(self, partition: dict) -> None:
         dialog = Adw.MessageDialog(
             transient_for=self, heading=_("Unlock encrypted volume"),
-            body=_("Enter the disk password or recovery key. This does not change the password."),
+            body=_("Enter the disk password or emergency recovery key. The system-generated key also unlocks the disk. This does not change the password."),
         )
         entry = Gtk.PasswordEntry(show_peek_icon=True)
         entry.connect("activate", lambda *_: dialog.response("unlock"))
-        entry.update_property([Gtk.AccessibleProperty.LABEL], [_("Disk password or recovery key")])
+        entry.update_property([Gtk.AccessibleProperty.LABEL], [_("Disk password or emergency recovery key")])
         dialog.set_extra_child(entry)
         dialog.add_response("cancel", _("Cancel"))
         dialog.add_response("unlock", _("Unlock"))

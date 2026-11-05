@@ -94,7 +94,7 @@ class DiskEncryptionPageTests(unittest.TestCase):
             page = pages.build_summary_page(shared, Mock())
         text = "\n".join(w.get_text() for w in descendants(page) if isinstance(w, Gtk.Label))
         self.assertIn("LUKS2", text)
-        self.assertIn("Recovery key saved", text)
+        self.assertIn("Emergency recovery key saved", text)
         self.assertIn("crypto_LUKS", text)
         self.assertNotIn(shared["disk_password"], text)
         self.assertNotIn(shared["disk_recovery_key"], text)

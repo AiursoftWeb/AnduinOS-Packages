@@ -27,7 +27,7 @@ root into the RAM-only `/anduinos-unlock.key` cpio entry. The public recovery
 volume never stores that credential. Recovery opens only the bound LUKS2
 container, verifies its inner Btrfs UUID and removes the incoming file before
 starting the browser. If the credential is missing or rejected, the native text
-prompt accepts the disk password or recovery key; failed input can be retried
+prompt accepts the disk password or emergency recovery key; failed input can be retried
 or the machine restarted. The mapping lives for the recovery session, while
 individual actions still mount/unmount the filesystem themselves.
 

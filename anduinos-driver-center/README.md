@@ -27,9 +27,9 @@ this page does not convert existing installations. Snapshot recovery applies
 to Btrfs; ext4 users are directed to Rescue Center on Live media.
 
 Encrypted AnduinOS installations can change the disk password and replace the
-recovery key from this page. Administrator authentication and the current disk
-password are required. Save a replacement recovery key outside the computer
-before applying it. Earlier previews also require their original recovery key
+emergency recovery key from this page. Administrator authentication is required. Normal credential changes use the
+current disk password; a forgotten password can be reset with the emergency key. Save a replacement emergency recovery key outside the computer
+before applying it. Earlier previews also require their original emergency recovery key
 once to identify the three credential roles; ambiguous/custom layouts stay
 unchanged. Human credentials keep the installer's Argon2id policy.
 
@@ -207,3 +207,17 @@ python3 -m unittest discover -s tests -v
 ```
 
 GTK behavior tests can also run headlessly with `xvfb-run -a python3 -m unittest discover -s tests -v`.
+
+A system-generated **emergency recovery key** unlocks the disk independently
+of the disk password. Use the password normally and keep the emergency key
+outside the computer. **Reset forgotten disk password** uses that key to set a
+new password without requiring the forgotten password; it preserves the
+emergency key and the internal startup credential. Administrator authorization
+is still required. This does not reset the desktop account's login password.
+
+For an unmarked initial encryption preview, emergency reset accepts only its
+documented three-slot layout: emergency key in slot 1, machine key in slot 2,
+password in the remaining slot 0. Both available credentials are tested and
+must not unlock other slots. Extra slots, foreign tokens and ambiguous roles
+are rejected rather than guessed. Normal password-authenticated adoption still
+requires the original emergency key once.

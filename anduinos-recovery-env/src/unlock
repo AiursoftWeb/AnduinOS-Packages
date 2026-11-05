@@ -51,7 +51,8 @@ fi
 rm -f -- "$incoming"
 if [ "$opened" = 0 ]; then
     echo 'Unlock the installed system to continue recovery.'
-    echo 'Enter your disk password or recovery key. Characters are hidden.'
+    echo 'Normally use your password; the system-generated emergency key also unlocks the disk.'
+    echo 'Enter your disk password or emergency recovery key. Characters are hidden.'
     cryptsetup open --type luks2 --tries 1 "$device" "$mapper" ||
         fail 'The disk could not be unlocked. You can retry or restart.'
 fi

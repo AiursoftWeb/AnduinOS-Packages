@@ -66,7 +66,7 @@ the currently running root filesystem.
   cleanup. The installer requires Rescue Center and its helpers to exit and
   retains its independent device/mount-namespace usage checks.
 - The picker offers locked LUKS2 volumes without claiming to know the installed
-  system. Enter the disk password or recovery key to inspect the inner Btrfs or
+  system. Enter the disk password or emergency recovery key to inspect the inner Btrfs or
   ext4 filesystem. Passwords use standard input; only mapping metadata is kept
   in the private Live runtime directory. Returning to the picker or closing the
   window closes mappings created by this window. Pre-existing user mappings are
