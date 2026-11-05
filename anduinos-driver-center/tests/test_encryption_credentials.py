@@ -175,3 +175,98 @@ class CredentialTests(unittest.TestCase):
             alter(header["tokens"]["0"])
             with self.assertRaises(CredentialError):
                 managed_token(header)
+
+
+class EmergencyResetTests(unittest.TestCase):
+    def reset(self, replacement="reset-password", current=RECOVERY):
+        return dict(request(current=current, replacement=replacement),
+                    authentication="recovery", legacy_recovery="")
+
+    def assert_preserved(self, volume, password, recovery=RECOVERY):
+        token = managed_token(volume.header())[1]
+        self.assertIsNone(token["pending"])
+        self.assertEqual(len(volume.keys), 3)
+        self.assertTrue(volume.test(token["roles"]["password"], password))
+        self.assertTrue(volume.test(token["roles"]["recovery"], recovery))
+        self.assertTrue(volume.test(token["roles"]["machine"], MACHINE))
+
+    def test_reset_needs_only_emergency_key_for_managed_and_initial_preview(self):
+        for managed in (False, True):
+            with self.subTest(managed=managed):
+                volume = MemoryVolume()
+                if managed:
+                    change(volume, request())
+                change(volume, self.reset())
+                self.assert_preserved(volume, "reset-password")
+                self.assertNotIn(PASSWORD, volume.keys.values())
+                self.assertNotIn("new-password", volume.keys.values())
+
+    def test_rotated_recovery_role_is_used_instead_of_fixed_slot(self):
+        volume = MemoryVolume()
+        change(volume, request("recovery", replacement="b" * 48))
+        self.assertNotEqual(managed_token(volume.header())[1]["roles"]["recovery"], "1")
+        change(volume, self.reset(current="b" * 48))
+        self.assert_preserved(volume, "reset-password", "b" * 48)
+
+    def test_wrong_key_or_password_in_key_field_never_writes(self):
+        for managed in (False, True):
+            for credential in ("incorrect-key", PASSWORD):
+                with self.subTest(managed=managed, credential=credential):
+                    volume = MemoryVolume()
+                    if managed:
+                        change(volume, request(replacement="temporary-password"))
+                    before, events = volume.header(), list(volume.events)
+                    with self.assertRaisesRegex(CredentialError, "wrong-recovery-key"):
+                        change(volume, self.reset(current=credential))
+                    self.assertEqual(volume.header(), before)
+                    self.assertEqual(volume.events, events)
+
+    def test_ambiguous_preview_layout_is_not_adopted_using_emergency_key(self):
+        for mutate in (
+            lambda v: v.keys.update({"9": "external"}),
+            lambda v: v.keys.update({"0": RECOVERY}),
+            lambda v: v.keys.update({"0": MACHINE}),
+            lambda v: v.tokens.update({"4": {"type": "foreign"}}),
+        ):
+            volume = MemoryVolume()
+            mutate(volume)
+            before = volume.header()
+            with self.assertRaisesRegex(CredentialError, "unsupported-layout"):
+                change(volume, self.reset())
+            self.assertEqual(volume.header(), before)
+            self.assertFalse(volume.events)
+
+    def test_reset_does_not_allow_recovery_to_replace_itself_or_machine(self):
+        for role in ("recovery", "machine"):
+            volume = MemoryVolume()
+            with self.assertRaisesRegex(CredentialError, "invalid-request"):
+                change(volume, dict(self.reset(), role=role))
+            self.assertFalse(volume.events)
+
+    def test_interrupted_reset_retries_with_same_emergency_key(self):
+        # Include adoption and every durable transaction boundary. The reset
+        # never requires learning the old or partly promoted password.
+        for managed in (False, True):
+            for boundary in range(1, 6 if managed else 7):
+                with self.subTest(managed=managed, boundary=boundary):
+                    volume = MemoryVolume()
+                    if managed:
+                        change(volume, request())
+                    volume.stop_after = len(volume.events) + boundary
+                    with self.assertRaises(PowerLoss):
+                        change(volume, self.reset())
+                    self.assertIn(RECOVERY, volume.keys.values())
+                    self.assertIn(MACHINE, volume.keys.values())
+                    volume.stop_after = None
+                    change(volume, self.reset(replacement="final-password"))
+                    self.assert_preserved(volume, "final-password")
+                    self.assertNotIn("reset-password", volume.keys.values())
+
+    def test_reset_does_not_reuse_emergency_or_existing_password(self):
+        volume = MemoryVolume()
+        change(volume, request())
+        for replacement in (RECOVERY, "new-password"):
+            before = volume.header()
+            with self.assertRaisesRegex(CredentialError, "credential-reused"):
+                change(volume, self.reset(replacement=replacement))
+            self.assertEqual(volume.header(), before)

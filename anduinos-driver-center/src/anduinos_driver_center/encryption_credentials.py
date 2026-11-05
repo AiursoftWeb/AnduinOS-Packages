@@ -86,11 +86,11 @@ class Volume:
             data=json.dumps(token).encode(),
         )
 
-    def add(self, slot, password_slot, current, replacement):
+    def add(self, slot, authentication_slot, current, replacement):
         with key_file(replacement) as (descriptor, name):
             self.run(
                 ["luksAddKey", "--batch-mode", "--key-file", "-",
-                 "--key-slot", str(password_slot), "--new-key-slot", str(slot),
+                 "--key-slot", str(authentication_slot), "--new-key-slot", str(slot),
                  *HUMAN_PBKDF, self.device, name],
                 data=current.encode("ascii"), pass_fds=(descriptor,),
             )
@@ -174,24 +174,36 @@ def managed_token(header):
     return token_id, copy.deepcopy(token)
 
 
-def initialize(volume, current, recovery):
-    """Adopt an earlier preview only after testing all three distinct roles."""
+def initialize(volume, current, recovery, authentication="password"):
+    """Adopt only the documented initial preview layout, never arbitrary slots.
+
+    Password-authenticated adoption still checks the original emergency key.
+    A forgotten-password reset cannot ask for the forgotten password: instead
+    verify the emergency key in preview slot 1 and the local machine key in
+    slot 2, with no duplicate use in any other slot. The only remaining slot
+    is the preview's password slot 0, which the user explicitly replaces.
+    """
     header = volume.header()
     token_id, token = managed_token(header)
     if token is not None:
         return token_id, token
     if set(header["keyslots"]) != {"0", "1", "2"}:
         raise CredentialError("unsupported-layout")
-    if not volume.test("0", current):
-        raise CredentialError("wrong-password")
-    if not recovery:
-        raise CredentialError("setup-required")
-    if not volume.test("1", recovery):
-        raise CredentialError("wrong-recovery-key")
+    authentication_slot = "1" if authentication == "recovery" else "0"
+    error = "wrong-recovery-key" if authentication == "recovery" else "wrong-password"
+    if not volume.test(authentication_slot, current):
+        raise CredentialError(error)
+    if authentication == "password":
+        if not recovery:
+            raise CredentialError("setup-required")
+        if not volume.test("1", recovery):
+            raise CredentialError("wrong-recovery-key")
+        if volume.test("0", recovery) or volume.test("2", recovery):
+            raise CredentialError("unsupported-layout")
     if not volume.test("2", volume.machine):
         raise CredentialError("machine-unavailable")
-    if (volume.test("1", current) or volume.test("0", recovery)
-            or volume.test("2", current) or volume.test("2", recovery)):
+    if (any(volume.test(slot, current) for slot in ("0", "1", "2") if slot != authentication_slot)
+            or any(volume.test(slot, volume.machine) for slot in ("0", "1"))):
         raise CredentialError("unsupported-layout")
     token = dict(type=TOKEN_TYPE, version=1, keyslots=["0", "1", "2"],
                  roles=dict(password="0", recovery="1", machine="2"), pending=None)
@@ -232,23 +244,29 @@ def resume(volume, token_id, token):
 
 
 def change(volume, request):
-    if not isinstance(request, dict) or set(request) != {"role", "current", "replacement", "legacy_recovery"}:
+    required = {"role", "current", "replacement", "legacy_recovery"}
+    if (not isinstance(request, dict) or not required <= set(request)
+            or set(request) - required - {"authentication"}):
         raise CredentialError("invalid-request")
     role = request["role"]
     if role not in {"password", "recovery"} or any(not isinstance(request[key], str) for key in ("current", "replacement", "legacy_recovery")):
+        raise CredentialError("invalid-request")
+    authentication = request.get("authentication", "password")
+    if (not isinstance(authentication, str) or authentication not in {"password", "recovery"}
+            or (authentication == "recovery" and role != "password")):
         raise CredentialError("invalid-request")
     current, replacement = request["current"], request["replacement"]
     if (not re.fullmatch(r"[ -~]{8,128}", current)
             or not re.fullmatch(r"[ -~]{8,128}" if role == "password" else r"[0-9a-f]{48}", replacement)
             or len(request["legacy_recovery"]) > 128):
         raise CredentialError("invalid-request")
-    token_id, token = initialize(volume, current, request["legacy_recovery"])
-    if not volume.test(token["roles"]["password"], current):
-        raise CredentialError("wrong-password")
+    token_id, token = initialize(volume, current, request["legacy_recovery"], authentication)
+    if not volume.test(token["roles"][authentication], current):
+        raise CredentialError("wrong-recovery-key" if authentication == "recovery" else "wrong-password")
     if not volume.test(token["roles"]["machine"], volume.machine):
         raise CredentialError("machine-unavailable")
     for slot in volume.header()["keyslots"]:
-        if slot != token["roles"]["password"] and volume.test(slot, current):
+        if slot != token["roles"][authentication] and volume.test(slot, current):
             raise CredentialError("unsupported-layout")
     # Reject credential reuse before any recovery of an interrupted operation.
     for slot in volume.header()["keyslots"]:
@@ -268,7 +286,9 @@ def change(volume, request):
     token["pending"] = dict(role=role, old=old, new=free, phase="prepare")
     save(volume, token_id, token, previous)
     previous = copy.deepcopy(token)
-    volume.add(free, token["roles"]["password"], current, replacement)
+    # Authentication and replacement are independent roles. Emergency reset
+    # authenticates with the recovery slot; only the password slot is retired.
+    volume.add(free, token["roles"][authentication], current, replacement)
     if not volume.test(free, replacement):
         raise CredentialError("verification-failed")
     token["roles"][role] = free

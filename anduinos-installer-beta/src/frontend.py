@@ -344,7 +344,7 @@ def prepare_encryption_credentials(state: dict[str, object]) -> EncryptionCreden
     try:
         credentials.validate()
         if not state.get("disk_recovery_key_saved"):
-            raise FrontendPlanError("Save the recovery key before continuing")
+            raise FrontendPlanError("Save the emergency recovery key before continuing")
     except Exception:
         credentials.clear()
         raise

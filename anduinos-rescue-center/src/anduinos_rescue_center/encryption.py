@@ -75,7 +75,7 @@ def unlock_volume(path: str, identity: str, password: str, *,
                       "--", path, name], input=password, capture_output=True,
                      text=True, timeout=180, check=False)
         if result.returncode:
-            raise RuntimeError(tr("Could not unlock the volume. Check the password or recovery key."))
+            raise RuntimeError(tr("Could not unlock the volume. Check the password or emergency recovery key."))
         opened = True
         result = run(["udevadm", "settle", "--timeout=10"], capture_output=True,
                      text=True, timeout=15, check=False)

@@ -119,7 +119,7 @@ class WindowScanTests(unittest.TestCase):
                         visit(page)
                         self.assertEqual([button.get_label() for button in buttons],
                                          (["Recovery Environment"] if navigation else [])
-                                         + (["Open", "Open"] if state.root.encrypted is True else []))
+                                         + (["Open", "Open", "Open"] if state.root.encrypted is True else []))
                         if navigation:
                             with patch.object(window, "_select_page") as select:
                                 buttons[0].emit("clicked")
@@ -161,6 +161,42 @@ class WindowScanTests(unittest.TestCase):
                             self.assertEqual(json.loads(run.call_args.kwargs["input"])["current"], "old-password")
                             self.assertIn("incorrect", dialog.message.get_label())
                             self.assertNotIn("private diagnostic", dialog.message.get_label())
+                            self.assertFalse(window._operation_running)
+                        finally:
+                            dialog.clear()
+                            dialog.destroy()
+            finally:
+                window.destroy()
+
+    def test_emergency_reset_form_needs_key_and_new_password_only(self):
+        from anduinos_driver_center.encryption_ui import CredentialDialog
+        import json
+        with patch.object(app.DriverCenterWindow, "refresh"), patch.object(app.FirmwareManager, "start"):
+            window = app.DriverCenterWindow(self.application)
+            try:
+                for managed in (False, True):
+                    with self.subTest(managed=managed), \
+                         patch("anduinos_driver_center.encryption_ui.threading.Thread") as thread, \
+                         patch("anduinos_driver_center.encryption_ui.GLib.idle_add", side_effect=lambda fn, *args: fn(*args)), \
+                         patch("anduinos_driver_center.encryption_ui.subprocess.run", return_value=Mock(returncode=0, stdout=json.dumps({"managed": managed, "pending": False}))) as run:
+                        thread.side_effect = lambda *, target, **kwargs: Mock(start=target)
+                        dialog = CredentialDialog(window, "password", "recovery")
+                        try:
+                            self.assertEqual(dialog.current.get_title(), "Emergency recovery key")
+                            self.assertFalse(dialog.recovery.get_visible())
+                            self.assertIn("do not need the forgotten password", dialog.message.get_label())
+                            dialog.current.set_text("a" * 48)
+                            dialog.replacement.set_text("new-password")
+                            dialog.confirmation.set_text("new-password")
+                            self.assertTrue(dialog.apply.get_sensitive())
+                            run.return_value = Mock(returncode=1, stdout=json.dumps({"error": "wrong-recovery-key"}))
+                            dialog.apply.emit("clicked")
+                            payload = json.loads(run.call_args.kwargs["input"])
+                            self.assertEqual(payload["authentication"], "recovery")
+                            self.assertEqual(payload["current"], "a" * 48)
+                            self.assertEqual(payload["legacy_recovery"], "")
+                            self.assertNotIn("a" * 48, " ".join(run.call_args.args[0]))
+                            self.assertIn("emergency recovery key is incorrect", dialog.message.get_label())
                             self.assertFalse(window._operation_running)
                         finally:
                             dialog.clear()
