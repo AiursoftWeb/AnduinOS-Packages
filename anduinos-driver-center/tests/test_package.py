@@ -61,6 +61,7 @@ class PackageTests(unittest.TestCase):
                     str(ROOT / "src" / "anduinos_driver_center" / "computer_ui.py"),
                     str(ROOT / "src" / "anduinos_driver_center" / "intel_graphics_ui.py"),
                     str(ROOT / "src" / "anduinos_driver_center" / "operation_ui.py"),
+                    str(ROOT / "src" / "anduinos_driver_center" / "encryption_ui.py"),
                     str(toolkit_ui),
                 ],
                 check=True,

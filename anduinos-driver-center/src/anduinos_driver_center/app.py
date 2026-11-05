@@ -20,6 +20,8 @@ from gi.repository import Adw, Gio, GLib, Gtk, Pango  # noqa: E402
 from .computer_ui import ComputerPage
 from .intel_graphics_ui import IntelGraphicsPage
 from .recovery import RecoveryState, recovery_state, repair_step
+from .encryption import EncryptionState, encryption_state
+from .encryption_ui import create_encryption_page, encryption_summary
 
 from .core import (
     AudioState,
@@ -336,7 +338,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
         def worker() -> None:
             result = scan_system()
-            GLib.idle_add(self._apply_scan, *result, recovery_state())
+            GLib.idle_add(self._apply_scan, *result, recovery_state(), encryption_state())
 
         threading.Thread(target=worker, daemon=True).start()
 
@@ -349,6 +351,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         audio: AudioState,
         printing: PrintingState,
         recovery: RecoveryState,
+        encryption: EncryptionState | None = None,
     ) -> bool:
         graphics = list(graphics_scan.devices)
         self._graphics_scan = graphics_scan
@@ -454,6 +457,15 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         secure_row.page_title = _("Secure Boot")
         self.device_list.append(secure_row)
         self.stack.add_named(self._secure_boot_page(secure_boot, dkms), "secure-boot")
+
+        encryption = encryption or EncryptionState()
+        encryption_row = self._device_row(
+            "changes-prevent-symbolic", _("Disk Encryption"), encryption_summary(encryption),
+        )
+        encryption_row.page_name = "encryption"
+        encryption_row.page_title = _("Disk Encryption")
+        self.device_list.append(encryption_row)
+        self.stack.add_named(create_encryption_page(self, encryption, recovery), "encryption")
 
         recovery_row = self._device_row(
             "drive-harddisk-symbolic", _("Recovery Environment"), _("System status")
@@ -2671,7 +2683,7 @@ class DriverCenterApplication(Adw.Application):
         dialog.set_application_name(_("AnduinOS Driver Center"))
         dialog.set_application_icon(APP_ID)
         dialog.set_developer_name(_("AnduinOS Team"))
-        dialog.set_version("2.0.5")
+        dialog.set_version("2.1.0")
         dialog.set_comments(
             _("Install, inspect, and repair hardware drivers on AnduinOS.")
         )
@@ -2703,7 +2715,7 @@ class DriverCenterApplication(Adw.Application):
                 continue
             command_line.printerr("Unknown option: %s\n" % argument)
             return 2
-        if requested_page not in {"home", "secure-boot", "recovery", "computer", "intel-graphics"}:
+        if requested_page not in {"home", "secure-boot", "encryption", "recovery", "computer", "intel-graphics"}:
             command_line.printerr("Unknown Driver Center page: %s\n" % requested_page)
             return 2
 
