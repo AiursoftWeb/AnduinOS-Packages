@@ -187,3 +187,21 @@ Release qualification procedures, the historical baseline, evidence template,
 and incident roots are documented in
 [docs/ROLLBACK-RELEASE-TEST-PLAN.md](docs/ROLLBACK-RELEASE-TEST-PLAN.md). Stop
 after every rebooting lane and collect its evidence before arming another rollback.
+
+
+## Encrypted snapshot rollback
+
+The one-shot snapshot rollback entry has its own GRUB generator; Ubuntu's
+`10_linux` does not generate it. Installer-created encrypted roots export
+`GRUB_ANDUINOS_CRYPT_HANDOFF=y`, which also enables the rollback entry's existing
+RAM-only credential handoff. The generator checks the encrypted-root abstraction
+and the root-owned, mode-0600, 64-byte internal credential before emitting its
+`newc:` reference after the verified recovery initramfs. GRUB reads this file
+from encrypted `@root` at boot. No credential bytes are copied to the ESP or
+the persistent recovery image. Unencrypted installations keep the original entry.
+
+Disk passwords and emergency recovery keys belong to LUKS metadata outside
+system snapshots. Rolling back a system must not restore retired keyslots. The
+internal boot credential remains stable across credential changes so an older
+root snapshot can still boot. Missing internal credentials remain an explicit
+repair limitation; this change does not recreate or rotate them.
