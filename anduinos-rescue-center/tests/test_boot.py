@@ -372,3 +372,63 @@ class BootRepairTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class EncryptedBootRepairTests(unittest.TestCase):
+    def test_bound_encryption_policy_and_private_key_are_required_without_rewriting_them(self):
+        from dataclasses import replace
+        from anduinos_rescue_center.boot import _encrypted_inputs
+        for filesystem in ('btrfs', 'ext4'):
+            with self.subTest(filesystem=filesystem), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                prepare_root(root)
+                part = replace(partition(), filesystem=filesystem, encrypted=True,
+                               luks_uuid='11111111-1111-4111-8111-111111111111')
+                crypttab = root / 'etc/crypttab'
+                text = f'anduinos-root UUID={part.luks_uuid} none luks,x-initrd.attach\n'
+                crypttab.write_text(text)
+                with (root / 'etc/fstab').open('a') as f:
+                    f.write(f'UUID={part.filesystem_uuid} / {filesystem} defaults 0 0\n')
+                key = root / 'etc/anduinos-luks/machine.key'
+                key.parent.mkdir()
+                key.write_bytes(b'fixture-public-key'[:1] * 64)
+                key.chmod(0o600)
+                (root / 'usr/lib/anduinos-grub').mkdir()
+                suffix = 'x64' if __import__('platform').machine() == 'x86_64' else 'aa64'
+                (root / f'usr/lib/anduinos-grub/grub{suffix}.efi').write_bytes(b'function anduinos_unlock {')
+                (root / 'etc/grub.d').mkdir()
+                (root / 'etc/grub.d/10_linux').write_text('GRUB_ANDUINOS_CRYPT_HANDOFF')
+                _encrypted_inputs(root, part)
+                self.assertEqual(crypttab.read_text(), text)
+                crypttab.write_text(text.replace(part.luks_uuid, '22222222-2222-4222-8222-222222222222'))
+                with self.assertRaisesRegex(RuntimeError, 'inconsistent'):
+                    _encrypted_inputs(root, part)
+                crypttab.write_text(text)
+                key.chmod(0o644)
+                with self.assertRaisesRegex(RuntimeError, 'unsafe'):
+                    _encrypted_inputs(root, part)
+
+    def test_graphical_stub_rebind_keeps_root_uuids_and_ram_handoff(self):
+        from dataclasses import replace
+        from anduinos_rescue_center.boot import _encrypted_output
+        outer = '11111111-1111-4111-8111-111111111111'
+        for filesystem in ('btrfs', 'ext4'):
+            with self.subTest(filesystem=filesystem), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                prepare_root(root)
+                part = replace(partition(), filesystem=filesystem, encrypted=True, luks_uuid=outer)
+                prefix = '/@root' if filesystem == 'btrfs' else ''
+                stub = root / 'boot/efi/EFI/AnduinOS/grub.cfg'
+                stub.parent.mkdir(parents=True)
+                stub.write_text(f'cryptomount -u {outer.replace("-", "")}\n'
+                                f'search.fs_uuid {part.filesystem_uuid} root cryptouuid/{outer.replace("-", "")}\n'
+                                f'set prefix=($root){prefix}/boot/grub\nconfigfile $prefix/grub.cfg\n')
+                (root / 'boot/grub/grub.cfg').write_text(
+                    '### BEGIN /etc/grub.d/10_linux ###\n'
+                    f' linux\t/vmlinuz-test root=UUID={part.filesystem_uuid} rd.luks.uuid=luks-{outer}\n'
+                    f' initrd\t/initrd-test newc:/anduinos-unlock.key:{prefix}/etc/anduinos-luks/machine.key\n'
+                    '### END /etc/grub.d/10_linux ###\n')
+                def run(command, **kwargs):
+                    value = part.filesystem_uuid if '--target=fs_uuid' in command else outer
+                    return subprocess.CompletedProcess(command, 0, value, '')
+                _encrypted_output(root, part, run, None)
+                self.assertEqual(stub.read_text(), f'anduinos_unlock {outer.replace("-", "")} {part.filesystem_uuid} {prefix}/boot/grub\n')

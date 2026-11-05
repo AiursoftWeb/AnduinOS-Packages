@@ -110,6 +110,32 @@ def inspect_target(
     return payload
 
 
+def unlock_volume(path: str, identity: str, password: str, *, run=subprocess.run) -> dict:
+    if not path.startswith("/dev/") or len(identity) != 64:
+        raise ValueError(tr("Invalid rescue target identity"))
+    if not password or len(password) > 4096 or "\n" in password or "\0" in password:
+        raise ValueError(tr("The disk password is empty or unsupported"))
+    result = run([*_helper_command(), "unlock", path, identity], input=password,
+                 capture_output=True, text=True, timeout=240, check=False)
+    if result.returncode:
+        raise RuntimeError(_localize_helper_error(result.stderr.strip()) or tr("Could not unlock the volume"))
+    payload = json.loads(result.stdout)
+    if not isinstance(payload, dict) or payload.get("schema") != 1:
+        raise RuntimeError(tr("The rescue helper protocol is incompatible"))
+    return payload
+
+
+def lock_volume(session: str, *, run=subprocess.run) -> None:
+    from uuid import UUID
+
+    if UUID(session).hex != session:
+        raise ValueError(tr("Invalid unlock session"))
+    result = run([*_helper_command(), "lock", session], capture_output=True,
+                 text=True, timeout=60, check=False)
+    if result.returncode:
+        raise RuntimeError(_localize_helper_error(result.stderr.strip()) or tr("Could not close the unlocked volume"))
+
+
 def reset_password(
     path: str,
     identity: str,

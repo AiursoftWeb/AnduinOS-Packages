@@ -13,6 +13,7 @@ def can_open_partition(disk: dict, partition: dict) -> bool:
         and partition.get("identity")
         and not partition.get("active_system")
         and not disk.get("live_medium")
-        and str(partition.get("filesystem") or "").lower() in SUPPORTED_FILESYSTEMS
+        and str(partition.get("filesystem") or "").lower() in SUPPORTED_FILESYSTEMS | {"crypto_luks"}
+        and not (partition.get("encrypted") and partition.get("probe_error"))
         and partition.get("os_kind") != "windows"
     )

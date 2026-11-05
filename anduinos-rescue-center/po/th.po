@@ -1763,3 +1763,166 @@ msgstr "อุปกรณ์บล็อกไม่พร้อมใช้ง
 #, python-brace-format
 msgid "Target is not a block device"
 msgstr "เป้าหมายไม่ใช่อุปกรณ์บล็อก"
+
+#: src/anduinos_rescue_center/app.py:306
+#, python-brace-format
+msgid "Closing encrypted volume"
+msgstr "กำลังปิดโวลุ่มที่เข้ารหัส"
+
+#: src/anduinos_rescue_center/app.py:307
+#, python-brace-format
+msgid "Waiting for the selected volume to close…"
+msgstr "กำลังรอให้โวลุ่มที่เลือกปิด…"
+
+#: src/anduinos_rescue_center/app.py:430 src/anduinos_rescue_center/app.py:441
+#, python-brace-format
+msgid "Encrypted volume"
+msgstr "โวลุ่มที่เข้ารหัส"
+
+#: src/anduinos_rescue_center/app.py:507
+#, python-brace-format
+msgid "Unlock encrypted volume"
+msgstr "ปลดล็อกโวลุ่มที่เข้ารหัส"
+
+#: src/anduinos_rescue_center/app.py:508
+#, python-brace-format
+msgid ""
+"Enter the disk password or recovery key. This does not change the password."
+msgstr "ป้อนรหัสผ่านดิสก์หรือคีย์กู้คืน สิ่งนี้ไม่เปลี่ยนแปลงรหัสผ่าน"
+
+#: src/anduinos_rescue_center/app.py:512
+#, python-brace-format
+msgid "Disk password or recovery key"
+msgstr "รหัสผ่านดิสก์หรือคีย์กู้คืน"
+
+#: src/anduinos_rescue_center/app.py:515
+#, python-brace-format
+msgid "Unlock"
+msgstr "ปลดล็อก"
+
+#: src/anduinos_rescue_center/app.py:526
+#, python-brace-format
+msgid "Unlocking encrypted volume"
+msgstr "กำลังปลดล็อกโวลุ่มที่เข้ารหัส"
+
+#: src/anduinos_rescue_center/app.py:527
+#, python-brace-format
+msgid "Checking the selected volume and reading system information…"
+msgstr "กำลังตรวจสอบโวลุ่มที่เลือกและอ่านข้อมูลระบบ…"
+
+#: src/anduinos_rescue_center/boot.py:284
+#: src/anduinos_rescue_center/boot.py:297
+#, python-brace-format
+msgid "The encrypted root configuration is missing or inconsistent"
+msgstr "การกำหนดค่ารากที่เข้ารหัสหายไปหรือไม่สอดคล้องกัน"
+
+#: src/anduinos_rescue_center/boot.py:300
+#, python-brace-format
+msgid "The installed disk unlock key is missing or unsafe"
+msgstr "คีย์ปลดล็อกดิสก์ที่ติดตั้งหายไปหรือไม่ปลอดภัย"
+
+#: src/anduinos_rescue_center/boot.py:302
+#, python-brace-format
+msgid "Encrypted boot repair requires the AnduinOS bootloader"
+msgstr "การซ่อมแซมการบูตที่เข้ารหัสต้องการโหลดเดอร์ AnduinOS"
+
+#: src/anduinos_rescue_center/boot.py:315
+#, python-brace-format
+msgid "The repaired bootloader identifies a different encrypted volume"
+msgstr "โหลดเดอร์ที่ซ่อมแล้วระบุโวลุ่มที่เข้ารหัสอีกตัวหนึ่ง"
+
+#: src/anduinos_rescue_center/boot.py:322
+#, python-brace-format
+msgid "The recovery volume does not match the encrypted system"
+msgstr "โวลุ่มกู้คืนไม่ตรงกับระบบที่เข้ารหัส"
+
+#: src/anduinos_rescue_center/boot.py:326
+#, python-brace-format
+msgid "The repaired EFI configuration is missing or unsafe"
+msgstr "การกำหนดค่า EFI ที่ซ่อมแล้วหายไปหรือไม่ปลอดภัย"
+
+#: src/anduinos_rescue_center/boot.py:343
+#: src/anduinos_rescue_center/boot.py:353
+#, python-brace-format
+msgid "The repaired menu is missing the encrypted root handoff"
+msgstr "เมนูที่ซ่อมแล้วขาดการส่งต่อรากที่เข้ารหัส"
+
+#: src/anduinos_rescue_center/boot.py:411
+#, python-brace-format
+msgid "The rebuilt initrd is missing encrypted root support"
+msgstr "initrd ที่สร้างใหม่ขาดการสนับสนุนรากที่เข้ารหัส"
+
+#: src/anduinos_rescue_center/boot.py:420
+#, python-brace-format
+msgid "The rebuilt initrd contains a persistent disk unlock key"
+msgstr "initrd ที่สร้างใหม่มีคีย์ปลดล็อกดิสก์ถาวร"
+
+#: src/anduinos_rescue_center/client.py:117
+#: src/anduinos_rescue_center/encryption.py:50
+#, python-brace-format
+msgid "The disk password is empty or unsupported"
+msgstr "รหัสผ่านดิสก์ว่างเปล่าหรือไม่รองรับ"
+
+#: src/anduinos_rescue_center/client.py:121
+#, python-brace-format
+msgid "Could not unlock the volume"
+msgstr "ไม่สามารถปลดล็อกโวลุ่มได้"
+
+#: src/anduinos_rescue_center/client.py:132
+#: src/anduinos_rescue_center/encryption.py:108
+#: src/anduinos_rescue_center/encryption.py:112
+#: src/anduinos_rescue_center/encryption.py:115
+#, python-brace-format
+msgid "Invalid unlock session"
+msgstr "เซสชันปลดล็อกไม่ถูกต้อง"
+
+#: src/anduinos_rescue_center/client.py:136
+#, python-brace-format
+msgid "Could not close the unlocked volume"
+msgstr "ไม่สามารถปิดโวลุ่มที่ปลดล็อกแล้วได้"
+
+#: src/anduinos_rescue_center/encryption.py:53
+#, python-brace-format
+msgid "Select an offline encrypted volume"
+msgstr "เลือกโวลุ่มที่เข้ารหัสแบบออฟไลน์"
+
+#: src/anduinos_rescue_center/encryption.py:57
+#, python-brace-format
+msgid "Only LUKS2 volumes are supported"
+msgstr "รองรับเฉพาะโวลุ่ม LUKS2"
+
+#: src/anduinos_rescue_center/encryption.py:68
+#, python-brace-format
+msgid "The recovery runtime directory is unsafe"
+msgstr "ไดเรกทอรีรันไทม์กู้คืนไม่ปลอดภัย"
+
+#: src/anduinos_rescue_center/encryption.py:78
+#, python-brace-format
+msgid "Could not unlock the volume. Check the password or recovery key."
+msgstr "ไม่สามารถปลดล็อกโวลุ่มได้ ตรวจสอบรหัสผ่านหรือคีย์กู้คืน"
+
+#: src/anduinos_rescue_center/encryption.py:83
+#, python-brace-format
+msgid "The unlocked device is not ready"
+msgstr "อุปกรณ์ที่ปลดล็อกแล้วไม่พร้อม"
+
+#: src/anduinos_rescue_center/encryption.py:86
+#, python-brace-format
+msgid "The unlocked device does not match the selected volume"
+msgstr "อุปกรณ์ที่ปลดล็อกแล้วไม่ตรงกับโวลุ่มที่เลือก"
+
+#: src/anduinos_rescue_center/encryption.py:100
+#: src/anduinos_rescue_center/encryption.py:122
+#, python-brace-format
+msgid "Could not close the unlocked volume; it may still be in use"
+msgstr "ไม่สามารถปิดโวลุ่มที่ปลดล็อกแล้วได้ อาจยังถูกใช้งานอยู่"
+
+#: src/anduinos_rescue_center/encryption.py:118
+#, python-brace-format
+msgid "Unmount the unlocked volume before closing it"
+msgstr "ถอดโวลุ่มที่ปลดล็อกแล้วออกก่อนปิด"
+
+#: src/anduinos_rescue_center/storage.py:412
+#, python-brace-format
+msgid "The encrypted volume has an unsupported or ambiguous mapping"
+msgstr "โวลุ่มที่เข้ารหัสมีแมปปิ้งที่ไม่รองรับหรือกำกวม"
