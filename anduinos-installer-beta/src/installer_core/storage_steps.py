@@ -19,6 +19,7 @@ from .execution_boundaries import emit_boundary
 from .ext4_resize import inspect_ext4_resize_with_runner, shrink_ext4_filesystem
 from .storage_graph import GraphFilesystem
 from .model import Architecture, Filesystem, Firmware, InstallMode
+from .preflight import require_rescue_center_closed
 from .ntfs_resize import (
     NTFS_RESIZE,
     inspect_ntfs_resize_with_runner,
@@ -186,6 +187,9 @@ class PrepareStorageStep:
         self.runner.require_commands(commands)
 
     def execute(self, context: InstallContext) -> None:
+        # Media verification can take minutes after all-step preflight. Repeat
+        # the friendly guard immediately before the first storage mutation.
+        require_rescue_center_closed()
         execution_plan = context.values.get("storage_execution_plan")
         if (
             context.plan.storage.mode is InstallMode.GUIDED_COEXISTENCE

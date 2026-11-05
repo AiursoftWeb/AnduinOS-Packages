@@ -1,6 +1,8 @@
 import os
 import stat
 import unittest
+import tempfile
+from pathlib import Path
 from dataclasses import replace
 from unittest import mock
 
@@ -11,6 +13,7 @@ from helpers import (
     valid_plan,
 )
 from installer_core.preflight import (
+    require_rescue_center_closed,
     NamespaceMount,
     PreflightError,
     _find_target_mount,
@@ -36,6 +39,31 @@ class ExecutionPreflightTests(unittest.TestCase):
         )
         memory_probe.start()
         self.addCleanup(memory_probe.stop)
+
+    def test_rescue_window_and_orphan_helper_block_but_unrelated_arguments_do_not(self):
+        with tempfile.TemporaryDirectory() as directory:
+            proc = Path(directory)
+            entry = proc / "123" / "cmdline"
+            entry.parent.mkdir()
+            for script in ("anduinos-rescue-center", "anduinos-rescue-center-live-helper",
+                           "anduinos-rescue-center-helper"):
+                entry.write_bytes(b"/usr/bin/python3\0/usr/bin/" + script.encode() + b"\0shell\0")
+                with self.subTest(script=script), self.assertRaisesRegex(PreflightError, "close Rescue Center normally"):
+                    require_rescue_center_closed(proc)
+            entry.write_bytes(b"/usr/bin/editor\0/usr/bin/anduinos-rescue-center\0")
+            require_rescue_center_closed(proc)
+            entry.unlink()
+            require_rescue_center_closed(proc)
+
+    def test_rescue_guard_precedes_inventory_and_any_disk_command(self):
+        runner = self.idle_target_runner()
+        inventory = mock.Mock()
+        with mock.patch("installer_core.preflight.require_rescue_center_closed",
+                        side_effect=PreflightError("close Rescue Center normally")):
+            with self.assertRaisesRegex(PreflightError, "close Rescue Center"):
+                verify_target_disk_environment(valid_plan(), runner, inventory_probe=inventory)
+        inventory.assert_not_called()
+        self.assertEqual(runner.commands, [])
 
     def idle_target_runner(self, disk="/dev/nvme0n1"):
         runner = FakeRunner()

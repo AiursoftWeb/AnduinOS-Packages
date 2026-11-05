@@ -12,7 +12,7 @@ from .operations import reset_password
 from .files import export_file, list_files
 from .snapshots import create_snapshot, list_snapshots, restore_snapshot
 from .boot import diagnose_boot, repair_boot
-from .offline_env import emergency_shell
+from .offline_env import emergency_shell, finish_emergency_shell
 from .encryption import unlock_volume, lock_volume
 
 
@@ -26,6 +26,8 @@ def main(argv: list[str] | None = None) -> int:
             return emergency_shell(arguments[1], arguments[2])
         if arguments == ["probe"]:
             payload = probe_inventory().to_dict()
+        elif len(arguments) == 3 and arguments[0] == "finish-shell":
+            payload = finish_emergency_shell(arguments[1], arguments[2])
         elif len(arguments) == 3 and arguments[0] == "unlock":
             password = sys.stdin.read(4097)
             payload = unlock_volume(arguments[1], arguments[2], password)
@@ -80,7 +82,7 @@ def main(argv: list[str] | None = None) -> int:
                 "restore-snapshot DEVICE IDENTITY ID {true|false}|"
                 "diagnose-boot DEVICE IDENTITY|repair-boot DEVICE IDENTITY EFI_IDENTITY|"
                 "repair-boot-stream DEVICE IDENTITY EFI_IDENTITY|"
-                "shell DEVICE IDENTITY}",
+                "shell DEVICE IDENTITY|finish-shell DEVICE IDENTITY}",
                 file=sys.stderr,
             )
             return 64
