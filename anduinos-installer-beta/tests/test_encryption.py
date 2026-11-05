@@ -13,7 +13,7 @@ from fakes import FakeRunner
 from helpers import valid_plan
 from installer_core.encryption import (
     EncryptionCredentials, MACHINE_KEY_PATH, close_encrypted_volumes,
-    generate_recovery_key, preflight_encryption, prepare_encrypted_volume,
+    generate_recovery_key, install_machine_key, preflight_encryption, prepare_encrypted_volume,
     read_encryption_credentials,
 )
 from installer_core.esp import NvramInspection
@@ -73,6 +73,9 @@ class RecordingCryptsetup(FakeRunner):
         if tuple(command[:2]) == ("cryptsetup", "luksAddKey"):
             descriptor, = kwargs["pass_fds"]
             self.new_keys.append(os.pread(descriptor, 4096, 0))
+        if tuple(command[:3]) == ("cryptsetup", "token", "import"):
+            readback = ("cryptsetup", "luksDump", "--dump-json-metadata", command[-1])
+            self.outputs.setdefault(readback, (json.dumps({"tokens": {"0": json.loads(kwargs["input_text"])}}), "", 0))
         return super().run(command, **kwargs)
 
 
@@ -267,6 +270,37 @@ class EncryptedStorageTests(unittest.TestCase):
         close_encrypted_volumes(context, runner, strict=True)
         self.assertFalse(context.values["opened_encrypted_volumes"])
         self.assertEqual(runner.commands[-1][0], ("cryptsetup", "close", "anduinos-install-root"))
+
+    def test_machine_setup_records_verified_credential_roles_in_the_luks_header(self):
+        plan = encrypted_plan()
+        volume = build_erase_disk_execution_plan(plan).commands.encrypted_volumes[0]
+        token = dict(type="anduinos-credentials", version=1, keyslots=["0", "1", "2"],
+                     roles=dict(password="0", recovery="1", machine="2"), pending=None)
+        for readback_ok in (True, False):
+            with self.subTest(readback_ok=readback_ok), tempfile.TemporaryDirectory() as temporary:
+                target = Path(temporary)
+                runner = RecordingCryptsetup()
+                runner.outputs[("cryptsetup", "luksDump", "--dump-json-metadata", volume.source)] = (
+                    json.dumps({"tokens": {"0": token}} if readback_ok else {}), "", 0)
+                context = InstallContext(plan, lambda _: None,
+                    encryption_credentials=EncryptionCredentials(PASSPHRASE, RECOVERY))
+                context.values["opened_encrypted_volumes"] = [volume]
+                if not readback_ok:
+                    with self.assertRaisesRegex(RuntimeError, "credential roles"):
+                        install_machine_key(context, runner, target)
+                    self.assertFalse((target / MACHINE_KEY_PATH).exists())
+                    continue
+                install_machine_key(context, runner, target)
+                key = target / MACHINE_KEY_PATH
+                self.assertEqual(key.stat().st_mode & 0o777, 0o600)
+                self.assertEqual(key.read_bytes(), runner.new_keys[0])
+                self.assertEqual(len(key.read_bytes()), 64)
+                self.assertIsNone(context.encryption_credentials)
+                add = runner.commands[0][0]
+                self.assertEqual(add[add.index("--new-key-slot") + 1], "2")
+                imported = next(options["input_text"] for command, options in runner.commands
+                                if command[:3] == ("cryptsetup", "token", "import"))
+                self.assertEqual(json.loads(imported), token)
 
     def test_target_config_distinguishes_luks_filesystem_and_random_swap(self):
         for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):

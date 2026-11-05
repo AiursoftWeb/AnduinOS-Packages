@@ -29,7 +29,8 @@ class HelperTests(unittest.TestCase):
             [], ["install-audio", "extra"], ["set-printing-enabled", "maybe"],
             ["install; reboot"], ["$(id)"],
             ["recovery-prepare", "/dev/sda"], ["recovery-install", "other-package"],
-            ["recovery-boot", "extra"],
+            ["recovery-boot", "extra"], ["encryption-change", "/dev/sda"],
+            ["encryption-inspect", "extra"],
         ):
             with (
                 self.subTest(arguments=arguments),
@@ -39,6 +40,13 @@ class HelperTests(unittest.TestCase):
             ):
                 self.assertNotEqual(driver_helper.main(arguments), 0)
                 run.assert_not_called()
+
+    def test_encryption_dispatch_uses_the_same_guarded_helper_and_private_stream(self):
+        for action in ("inspect", "change"):
+            with self.subTest(action=action), patch.object(driver_helper.os, "geteuid", return_value=0), \
+                 patch("anduinos_driver_center.encryption_credentials.main", return_value=0) as operation:
+                self.assertEqual(driver_helper.main(["encryption-" + action]), 0)
+                operation.assert_called_once_with(action, driver_helper.sys.stdin)
 
     def test_command_boundary_preserves_arguments_and_reports_failure(self):
         arguments = ["test-program", "literal; $(not-a-command)"]

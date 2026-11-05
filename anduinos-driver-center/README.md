@@ -26,6 +26,19 @@ read keys, authenticate or change the disk. Plain installations remain valid;
 this page does not convert existing installations. Snapshot recovery applies
 to Btrfs; ext4 users are directed to Rescue Center on Live media.
 
+Encrypted AnduinOS installations can change the disk password and replace the
+recovery key from this page. Administrator authentication and the current disk
+password are required. Save a replacement recovery key outside the computer
+before applying it. Earlier previews also require their original recovery key
+once to identify the three credential roles; ambiguous/custom layouts stay
+unchanged. Human credentials keep the installer's Argon2id policy.
+
+Credential roles and interrupted-change progress live in a small LUKS2 token,
+so Btrfs rollback preserves the current credential policy. A new slot is tested
+before its predecessor is retired. The internal startup key stays unchanged;
+no GRUB/initrd regeneration is needed for these changes. External keyslot edits,
+TPM/FIDO enrolment and general keyslot editing are outside this first version.
+
 The Recovery Environment page checks the dedicated ext4 partition, the installed
 recovery package against the local APT cache, and the generated GRUB menu entry.
 Scanning does not refresh software sources or change the system. A fixed
