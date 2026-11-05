@@ -104,11 +104,12 @@ def _add_key(
     passphrase: str,
     new_key: bytes,
     pbkdf: tuple[str, ...],
+    slot: int,
 ) -> None:
     with _key_file(new_key) as (descriptor, key_path):
         runner.run(
             ("cryptsetup", "luksAddKey", "--batch-mode", "--key-file", "-",
-             *pbkdf, source, key_path),
+             *pbkdf, "--new-key-slot", str(slot), source, key_path),
             input_text=passphrase, pass_fds=(descriptor,),
             log_output=False, timeout=180,
         )
@@ -116,7 +117,8 @@ def _add_key(
         # evidence that the supplied recovery/machine credential can unlock.
         os.lseek(descriptor, 0, os.SEEK_SET)
         runner.run(
-            ("cryptsetup", "open", "--test-passphrase", "--key-file", key_path, source),
+            ("cryptsetup", "open", "--test-passphrase", "--key-slot", str(slot),
+             "--key-file", key_path, source),
             pass_fds=(descriptor,), log_output=False, timeout=180,
         )
 
@@ -155,11 +157,11 @@ def prepare_encrypted_volume(
         runner.run(
             ("cryptsetup", "luksFormat", "--batch-mode", "--type", "luks2",
              "--cipher", "aes-xts-plain64", "--key-size", "512",
-             *HUMAN_PBKDF, "--key-file", "-", volume.source),
+             *HUMAN_PBKDF, "--key-slot", "0", "--key-file", "-", volume.source),
             input_text=credentials.passphrase, log_output=False, timeout=180,
         )
         _add_key(runner, volume.source, credentials.passphrase,
-                 credentials.recovery_key.encode("ascii"), HUMAN_PBKDF)
+                 credentials.recovery_key.encode("ascii"), HUMAN_PBKDF, 1)
         runner.run(
             ("cryptsetup", "open", "--type", "luks2", "--key-file", "-",
              volume.source, volume.mapper_name),
@@ -206,7 +208,22 @@ def install_machine_key(
             output.write(key)
             output.flush()
             os.fsync(output.fileno())
-        _add_key(runner, volume.source, credentials.passphrase, key, MACHINE_PBKDF)
+        _add_key(runner, volume.source, credentials.passphrase, key, MACHINE_PBKDF, 2)
+        # LUKS2 owns credential roles, so rolling root back cannot resurrect an
+        # obsolete password policy. No secret is stored in this token.
+        token = dict(type="anduinos-credentials", version=1,
+                     keyslots=["0", "1", "2"],
+                     roles=dict(password="0", recovery="1", machine="2"), pending=None)
+        runner.run(
+            ("cryptsetup", "token", "import", "--token-id", "0", "--json-file", "-", volume.source),
+            input_text=json.dumps(token), log_output=False, timeout=30,
+        )
+        metadata = runner.run(
+            ("cryptsetup", "luksDump", "--dump-json-metadata", volume.source),
+            log_output=False, timeout=30,
+        )
+        if json.loads(metadata.stdout).get("tokens", {}).get("0") != token:
+            raise RuntimeError("Could not verify disk credential roles")
     except Exception:
         (target / MACHINE_KEY_PATH).unlink()
         raise

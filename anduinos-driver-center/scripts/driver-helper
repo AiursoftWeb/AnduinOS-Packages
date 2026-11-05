@@ -256,6 +256,9 @@ def main(arguments: list[str]) -> int:
         return 77
     try:
         match arguments:
+            case ["encryption-inspect"] | ["encryption-change"]:
+                from anduinos_driver_center.encryption_credentials import main as credentials
+                return credentials(arguments[0].removeprefix("encryption-"), sys.stdin)
             case ["recovery-prepare"]:
                 from anduinos_driver_center.recovery_partition import prepare
                 payload = sys.stdin.read(16385)

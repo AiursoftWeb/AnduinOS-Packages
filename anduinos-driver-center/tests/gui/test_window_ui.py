@@ -118,11 +118,53 @@ class WindowScanTests(unittest.TestCase):
 
                         visit(page)
                         self.assertEqual([button.get_label() for button in buttons],
-                                         ["Recovery Environment"] if navigation else [])
+                                         (["Recovery Environment"] if navigation else [])
+                                         + (["Open", "Open"] if state.root.encrypted is True else []))
                         if navigation:
                             with patch.object(window, "_select_page") as select:
                                 buttons[0].emit("clicked")
                                 select.assert_called_once_with("recovery")
+            finally:
+                window.destroy()
+
+    def test_password_and_recovery_forms_validate_before_sending_secrets(self):
+        from anduinos_driver_center.encryption_ui import CredentialDialog
+        import json
+        with patch.object(app.DriverCenterWindow, "refresh"), patch.object(app.FirmwareManager, "start"):
+            window = app.DriverCenterWindow(self.application)
+            try:
+                for role in ("password", "recovery"):
+                    with self.subTest(role=role), \
+                         patch("anduinos_driver_center.encryption_ui.threading.Thread") as thread, \
+                         patch("anduinos_driver_center.encryption_ui.GLib.idle_add", side_effect=lambda fn, *args: fn(*args)), \
+                         patch("anduinos_driver_center.encryption_ui.subprocess.run", return_value=Mock(returncode=0, stdout=json.dumps({"managed": True, "pending": False}))) as run:
+                        thread.side_effect = lambda *, target, **kwargs: Mock(start=target)
+                        dialog = CredentialDialog(window, role)
+                        try:
+                            self.assertFalse(dialog.apply.get_sensitive())
+                            dialog.current.set_text("old-password")
+                            if role == "password":
+                                dialog.replacement.set_text("new-password")
+                                dialog.confirmation.set_text("different")
+                                self.assertFalse(dialog.apply.get_sensitive())
+                                dialog.confirmation.set_text("new-password")
+                            else:
+                                self.assertEqual(len(dialog.replacement.get_text()), 48)
+                                self.assertFalse(dialog.apply.get_sensitive())
+                                dialog.saved.set_active(True)
+                            self.assertTrue(dialog.apply.get_sensitive())
+                            run.return_value = Mock(returncode=1, stdout=json.dumps({"error": "wrong-password"}), stderr="private diagnostic")
+                            dialog.apply.emit("clicked")
+                            command = run.call_args.args[0]
+                            self.assertEqual(command, ["pkexec", "/usr/libexec/anduinos-driver-center/driver-helper", "encryption-change"])
+                            self.assertNotIn("old-password", " ".join(command))
+                            self.assertEqual(json.loads(run.call_args.kwargs["input"])["current"], "old-password")
+                            self.assertIn("incorrect", dialog.message.get_label())
+                            self.assertNotIn("private diagnostic", dialog.message.get_label())
+                            self.assertFalse(window._operation_running)
+                        finally:
+                            dialog.clear()
+                            dialog.destroy()
             finally:
                 window.destroy()
 
