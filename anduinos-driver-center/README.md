@@ -18,6 +18,14 @@ all updates, report live progress and device requests, prompt for required
 restarts, and show the daemon's update history. Firmware authorization and
 signature verification remain owned by fwupd rather than the driver helper.
 
+The Disk Encryption page reports encryption for the running system volume,
+Home and active disk swap. It follows actual block-device relationships rather
+than a particular mapper name, distinguishes zram from disk swap, and leaves
+ambiguous or inaccessible storage metadata unknown. Opening the page does not
+read keys, authenticate or change the disk. Plain installations remain valid;
+this page does not convert existing installations. Snapshot recovery applies
+to Btrfs; ext4 users are directed to Rescue Center on Live media.
+
 The Recovery Environment page checks the dedicated ext4 partition, the installed
 recovery package against the local APT cache, and the generated GRUB menu entry.
 Scanning does not refresh software sources or change the system. A fixed

@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-driver-center</PackageName>
-    <PackageVersion>2.1.0-8+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-9+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Driver Center — manage hardware drivers, device firmware, printing, controllers, and Secure Boot support.</PackageDescription>
     <Section>admin</Section>
@@ -52,6 +52,8 @@
     <IncludeFile Include="src/anduinos_driver_center/computer_ui.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/computer_ui.py" />
     <IncludeFile Include="src/anduinos_driver_center/core.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/core.py" />
     <IncludeFile Include="src/anduinos_driver_center/recovery.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/recovery.py" />
+    <IncludeFile Include="src/anduinos_driver_center/encryption.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/encryption.py" />
+    <IncludeFile Include="src/anduinos_driver_center/encryption_ui.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/encryption_ui.py" />
     <IncludeFile Include="src/anduinos_driver_center/recovery_partition.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/recovery_partition.py" />
     <IncludeFile Include="src/anduinos_driver_center/driver_update.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/driver_update.py" />
     <IncludeFile Include="src/anduinos_driver_center/operation_ui.py" Target="/usr/lib/python3/dist-packages/anduinos_driver_center/operation_ui.py" />

@@ -76,6 +76,56 @@ class WindowScanTests(unittest.TestCase):
                 visit(content)
                 self.assertEqual([row.get_subtitle() for row in rows], expected)
 
+    def test_encryption_page_shows_mixed_coverage_without_offering_ext4_snapshot_repair(self):
+        from anduinos_driver_center.encryption import EncryptionState, VolumeState
+        from anduinos_driver_center.encryption_ui import create_encryption_page
+        missing = RecoveryState(False, (), PackageState("anduinos-recovery-env", False, None),
+                                None, False, False)
+        encrypted = EncryptionState(
+            VolumeState("/dev/mapper/system", "ext4", True),
+            VolumeState("/dev/vda3", "ext4", False),
+            (VolumeState("/dev/vda2", "swap", False), VolumeState("/dev/zram0", memory=True)), True,
+        )
+        ready = replace(missing, partition=True, grub_entry=True,
+                        package=PackageState("anduinos-recovery-env", True, "1"))
+        cases = (
+            (encrypted, missing, ["Encrypted · ext4", "Not encrypted · ext4",
+                                 "Unencrypted disk swap is active", "Memory-based swap; not a disk partition",
+                                 "Not applicable to ext4. Use Rescue Center from the Live USB."], False),
+            (replace(encrypted, root=VolumeState("/dev/mapper/system", "btrfs", True)),
+             ready, ["Encrypted · btrfs", "Not encrypted · ext4", "Unencrypted disk swap is active",
+                     "Memory-based swap; not a disk partition", "Configured"], True),
+            (EncryptionState(), missing, ["Unknown", "Unknown", "Unknown", "Unknown"], False),
+        )
+        with patch.object(app.DriverCenterWindow, "refresh"), patch.object(app.FirmwareManager, "start"):
+            window = app.DriverCenterWindow(self.application)
+            try:
+                for state, recovery, expected, navigation in cases:
+                    with self.subTest(state=state):
+                        with patch.object(window, "_add_state_row", wraps=window._add_state_row) as add_row:
+                            page = create_encryption_page(window, state, recovery)
+                        self.assertEqual([call.args[2] for call in add_row.call_args_list], expected)
+                        self.assertTrue(all(call.args[3] is not False for call in add_row.call_args_list))
+                        buttons = []
+
+                        def visit(widget):
+                            if isinstance(widget, Gtk.Button):
+                                buttons.append(widget)
+                            child = widget.get_first_child()
+                            while child:
+                                visit(child)
+                                child = child.get_next_sibling()
+
+                        visit(page)
+                        self.assertEqual([button.get_label() for button in buttons],
+                                         ["Recovery Environment"] if navigation else [])
+                        if navigation:
+                            with patch.object(window, "_select_page") as select:
+                                buttons[0].emit("clicked")
+                                select.assert_called_once_with("recovery")
+            finally:
+                window.destroy()
+
     def test_missing_or_small_swap_disables_preparation_and_explains_the_blocker(self):
         messages = {
             "no-swap": "no ordinary swap partition",
@@ -164,7 +214,7 @@ class WindowScanTests(unittest.TestCase):
              patch.object(app, "_", side_effect=lambda text: text):
             window = app.DriverCenterWindow(self.application)
             try:
-                for selected in ("home", "graphics-0", "secure-boot", "recovery"):
+                for selected in ("home", "graphics-0", "secure-boot", "encryption", "recovery"):
                     with self.subTest(selected=selected):
                         window._selected_page_name = selected
                         window._show_loading()
@@ -172,7 +222,7 @@ class WindowScanTests(unittest.TestCase):
                         self.assertEqual(window._apply_scan(*scan), GLib.SOURCE_REMOVE)
                         self.assertEqual(window.stack.get_visible_child_name(), selected)
                         expected = ("home", "graphics-0", "audio", "printing", "xbox", "secure-boot",
-                                    "recovery", "firmware", "computer")
+                                    "encryption", "recovery", "firmware", "computer")
                         self.assertEqual(window.stack.get_pages().get_n_items(), len(expected))
                         for index, page_name in enumerate(expected):
                             self.assertIsNotNone(window.stack.get_child_by_name(page_name))

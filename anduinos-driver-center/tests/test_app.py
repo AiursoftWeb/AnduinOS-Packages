@@ -60,7 +60,8 @@ class AppTests(unittest.TestCase):
                         disabled_printers=())
         xbox = Mock(status=app.XboxStatus.NOT_INSTALLED)
 
-        with patch.object(app, "ComputerPage"), patch.object(app, "_", side_effect=lambda text: text):
+        with patch.object(app, "ComputerPage"), patch.object(app, "create_encryption_page"), \
+             patch.object(app, "_", side_effect=lambda text: text):
             result = DriverCenterWindow._apply_scan(
                 window, graphics, secure_boot, xbox, DkmsState(), Mock(ready=True), printing,
                 RecoveryState(False, (), PackageState("anduinos-recovery-env", False, None),
@@ -69,10 +70,10 @@ class AppTests(unittest.TestCase):
 
         self.assertEqual(result, app.GLib.SOURCE_REMOVE)
         self.assertEqual([row.page_name for row in rows], [
-            "home", "audio", "printing", "xbox", "secure-boot", "recovery", "firmware", "computer",
+            "home", "audio", "printing", "xbox", "secure-boot", "encryption", "recovery", "firmware", "computer",
         ])
         window._device_row.assert_any_call("security-high-symbolic", "Secure Boot", "Disabled")
-        self.assertEqual(window.stack.add_named.call_count, 8)
+        self.assertEqual(window.stack.add_named.call_count, 9)
         window.device_list.select_row.assert_called_once_with(rows[0])
         window.refresh_button.set_sensitive.assert_called_once_with(True)
         self.assertFalse(window._rebuilding_navigation)
@@ -112,9 +113,10 @@ class AppTests(unittest.TestCase):
     def test_command_line_opens_requested_page_in_new_or_existing_window(self):
         for existing in (False, True):
             for arguments in (["--page", "secure-boot"], ["--page=secure-boot"],
-                              ["--page", "recovery"], ["--page=recovery"]):
+                              ["--page", "recovery"], ["--page=recovery"],
+                              ["--page", "encryption"], ["--page=encryption"]):
                 with self.subTest(existing=existing, arguments=arguments):
-                    page = "recovery" if "recovery" in arguments[-1] else "secure-boot"
+                    page = arguments[-1].removeprefix("--page=")
                     application, command_line = Mock(), Mock()
                     command_line.get_arguments.return_value = ["driver-center", *arguments]
                     window = Mock()
