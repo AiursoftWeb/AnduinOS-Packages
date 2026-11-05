@@ -7399,6 +7399,24 @@ def build_summary_page(shared, nav_view):
         _show_install_confirmation(plan)
 
     def _start_recheck():
+        if not development_mode:
+            from installer_core.preflight import (
+                PreflightError, require_rescue_center_closed,
+            )
+            try:
+                require_rescue_center_closed()
+            except PreflightError:
+                assert install_button is not None
+                install_button.set_sensitive(True)
+                failure = Adw.MessageDialog(
+                    transient_for=nav_view.get_root(),
+                    heading=_("Close Rescue Center before installing", lang),
+                    body=_("Please close Rescue Center normally, including its emergency terminal, "
+                           "and wait for disk cleanup before installing.", lang),
+                )
+                failure.add_response("ok", _("OK", lang))
+                failure.present()
+                return
         recheck.set_visible(True)
         recheck_pulse.start()
 
@@ -8063,8 +8081,14 @@ def build_progress_page(plan: InstallPlan, shared, nav_view, *, encryption_crede
                 output_toggle.set_active(False)
             else:
                 progress_status.set_label(_("Installation failed", lang))
+                from installer_core.preflight import RESCUE_RUNNING_MESSAGE
+                display_error = (
+                    _("Please close Rescue Center normally, including its emergency terminal, "
+                      "and wait for disk cleanup before installing.", lang)
+                    if RESCUE_RUNNING_MESSAGE in error else error
+                )
                 output_notice.set_label(
-                    f"{_('Installation Failed', lang)}\n{error}"
+                    f"{_('Installation Failed', lang)}\n{display_error}"
                 )
                 output_notice.set_visible(True)
                 output_toggle.set_label(_("Output • Error", lang))

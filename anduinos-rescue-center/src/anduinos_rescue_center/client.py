@@ -344,7 +344,7 @@ def open_emergency_terminal(
     identity: str,
     *,
     launch: Callable[..., subprocess.Popen] = subprocess.Popen,
-) -> None:
+) -> subprocess.Popen:
     if not is_trusted_live_environment():
         raise RuntimeError(tr("The emergency terminal is available only in AnduinOS Live"))
     if not path.startswith("/dev/") or len(identity) != 64:
@@ -352,11 +352,18 @@ def open_emergency_terminal(
     terminal = shutil.which("ptyxis")
     if terminal is None:
         raise RuntimeError(tr("Ptyxis is not installed in this Live session"))
-    launch(
-        [terminal, "--new-window", "--title", tr("Offline AnduinOS recovery"),
+    # A dedicated process lets GTK notice a closed terminal, independently of
+    # other Ptyxis windows. Its exit alone does not prove helper cleanup.
+    return launch(
+        [terminal, "--standalone", "--new-window", "--title", tr("Offline AnduinOS recovery"),
          "--", "pkexec", LIVE_HELPER, "shell", path, identity],
         start_new_session=True,
     )
+
+
+def finish_emergency_terminal(path: str, identity: str, *, run=subprocess.run) -> dict:
+    return _json_action(["finish-shell", path, identity],
+                        tr("Could not release the recovery disk"), run=run, timeout=120)
 
 
 def open_live_terminal(

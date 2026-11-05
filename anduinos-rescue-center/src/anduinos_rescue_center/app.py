@@ -17,7 +17,7 @@ from .client import list_files as list_rescue_files
 from .client import create_snapshot as create_rescue_snapshot
 from .client import diagnose_boot as diagnose_rescue_boot
 from .client import list_snapshots as list_rescue_snapshots
-from .client import open_emergency_terminal
+from .client import open_emergency_terminal, finish_emergency_terminal
 from .client import open_live_terminal
 from .client import lock_volume, unlock_volume
 from .client import probe
@@ -171,6 +171,8 @@ class RescueWindow(Adw.ApplicationWindow):
         self._target_payload: dict = {}
         self._unlock_session = ""
         self._closing = False
+        self._terminal_process = None
+        self._terminal_target = None
         self.connect("close-request", self._close_requested)
 
         self.toolbar = Adw.ToolbarView()
@@ -311,6 +313,12 @@ class RescueWindow(Adw.ApplicationWindow):
         if (getattr(self, "_operation_running", False)
                 or getattr(getattr(self, "boot_page", None), "_repair_active", False)):
             return True
+        if self._terminal_target:
+            if self._terminal_process is not None:
+                self._terminal_notice()
+            else:
+                self._finish_terminal(self.close)
+            return True
         if self._closing or not self._unlock_session:
             return False
 
@@ -324,6 +332,12 @@ class RescueWindow(Adw.ApplicationWindow):
     def scan(self) -> None:
         if (getattr(self, "_operation_running", False)
                 or getattr(getattr(self, "boot_page", None), "_repair_active", False)):
+            return
+        if self._terminal_target:
+            if self._terminal_process is not None:
+                self._terminal_notice()
+            else:
+                self._finish_terminal(self.scan)
             return
         if self._unlock_session:
             self._release_volume(self.scan)
@@ -812,6 +826,12 @@ class RescueWindow(Adw.ApplicationWindow):
             failed.present()
 
     def _terminal_dialog(self, target: dict) -> None:
+        if self._terminal_target:
+            if self._terminal_process is not None:
+                self._terminal_notice()
+            else:
+                self._finish_terminal()
+            return
         path = str(target.get("path") or "")
         identity = str(target.get("identity") or "")
         dialog = Adw.MessageDialog(
@@ -829,7 +849,23 @@ class RescueWindow(Adw.ApplicationWindow):
             if response != "open":
                 return
             try:
-                open_emergency_terminal(path, identity)
+                self._terminal_process = open_emergency_terminal(path, identity)
+                self._terminal_target = (path, identity)
+                self.workspace_pages.set_sensitive(False)
+                # Keep the application present after Ptyxis closes: the helper
+                # may still be unwinding its chroot mounts in the background.
+                application = self.get_application()
+                application.hold()
+
+                def watch_terminal():
+                    if self._terminal_process.poll() is None:
+                        return GLib.SOURCE_CONTINUE
+                    self._terminal_process = None
+                    self._finish_terminal()
+                    application.release()
+                    return GLib.SOURCE_REMOVE
+
+                GLib.timeout_add(200, watch_terminal)
             except Exception as error:
                 failed = Adw.MessageDialog(transient_for=self, heading=_("Could not open terminal"), body=_(str(error)))
                 failed.add_response("close", _("Close"))
@@ -838,6 +874,34 @@ class RescueWindow(Adw.ApplicationWindow):
 
         dialog.connect("response", responded)
         dialog.present()
+
+    def _terminal_notice(self) -> None:
+        dialog = Adw.MessageDialog(
+            transient_for=self, heading=_("Close the emergency terminal first"),
+            body=_("Finish copying your files and close the emergency terminal. Rescue Center will then unmount the disk."),
+        )
+        dialog.add_response("close", _("Close"))
+        dialog.present()
+
+    def _finish_terminal(self, completed=None) -> None:
+        def released(_result):
+            self._terminal_target = None
+            self.workspace_pages.set_sensitive(True)
+            if completed:
+                completed()
+
+        def failed(message):
+            dialog = Adw.MessageDialog(
+                transient_for=self, heading=_("Could not release the recovery disk"), body=message,
+            )
+            dialog.add_response("close", _("Close"))
+            dialog.present()
+
+        _run_operation(
+            self, _("Unmounting recovery filesystems"),
+            _("Please wait before closing Rescue Center or starting installation."),
+            lambda: finish_emergency_terminal(*self._terminal_target), released, failed,
+        )
 
     def _password_page(self, payload: dict) -> Gtk.Widget:
         page = self._page_intro(

@@ -55,7 +55,16 @@ the currently running root filesystem.
   are not automatically mounted. Device identity is checked again, temporary
   chroot mounts are unmounted on exit (or a cleanup failure is reported), and a target
   directory symlink cannot redirect a mount onto the Live host. A root chroot
-  shell is **not** a security sandbox.
+  shell is **not** a security sandbox. Each target terminal uses a dedicated
+  Ptyxis process. Closing it starts a visible cleanup wait in Rescue Center;
+  its root helper survives the terminal hangup to unmount the chroot. The UI
+  verifies that the helper has exited and the target is unmounted before
+  reporting success. Busy background processes produce an error, never a
+  forced or lazy unmount. Close the terminal before closing Rescue Center;
+  its owned LUKS mapping is released when Rescue Center closes. SIGKILL or a
+  helper crash can still leave mounts; these are not reported as successful
+  cleanup. The installer requires Rescue Center and its helpers to exit and
+  retains its independent device/mount-namespace usage checks.
 - The picker offers locked LUKS2 volumes without claiming to know the installed
   system. Enter the disk password or recovery key to inspect the inner Btrfs or
   ext4 filesystem. Passwords use standard input; only mapping metadata is kept

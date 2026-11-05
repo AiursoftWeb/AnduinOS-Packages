@@ -13,6 +13,15 @@ from installer_core.storage_steps import MountTargetStep, PrepareStorageStep
 
 
 class PrepareStorageStepTests(unittest.TestCase):
+    def test_rescue_started_after_preflight_blocks_before_storage_mutation(self):
+        runner = FakeRunner()
+        context = InstallContext(valid_plan(), lambda _message: None)
+        with patch("installer_core.storage_steps.require_rescue_center_closed",
+                   side_effect=RuntimeError("close Rescue Center normally")):
+            with self.assertRaisesRegex(RuntimeError, "close Rescue Center"):
+                PrepareStorageStep(runner).execute(context)
+        self.assertEqual(runner.commands, [])
+
     def test_executes_partitioning_before_formatting(self):
         plan = valid_plan()
         runner = FakeRunner()
