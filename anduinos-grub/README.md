@@ -35,7 +35,7 @@ firmware boot entry. Existing three-argument and Ubuntu stubs
 remain supported; plain installations retain their original startup path.
 
 The page uses GRUB's existing graphical theme and native password reader. It
-accepts a disk password or recovery key, keeps input hidden, supports Backspace
+accepts a disk password or emergency recovery key, keeps input hidden, supports Backspace
 and retries unsuccessful input. Successful unlock loads the installed system's
 existing GRUB menu. It does not copy that menu into the ESP or draw a second
 desktop. Graphics failure retains a text prompt; configured serial output is

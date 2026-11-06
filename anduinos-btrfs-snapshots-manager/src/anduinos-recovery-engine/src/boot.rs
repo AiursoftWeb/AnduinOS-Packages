@@ -4,7 +4,7 @@ use std::fs::{self, OpenOptions};
 use std::io::{Read, Write};
 use std::os::unix::ffi::OsStrExt;
 use std::os::unix::fs::OpenOptionsExt;
-use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
+use std::os::unix::fs::{DirBuilderExt, MetadataExt, PermissionsExt};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -16,6 +16,8 @@ use crate::model::DeploymentState;
 use crate::store::DeploymentStore;
 use crate::transaction::{RECOVERY_PROTOCOL_VERSION, RollbackPhase, TransactionStore};
 
+const GRUB_PROBE: &str = "/usr/sbin/grub-probe";
+const MACHINE_KEY: &str = "/etc/anduinos-luks/machine.key";
 const GRUB_MKRELPATH: &str = "/usr/bin/grub-mkrelpath";
 const GRUB_EDITENV: &str = "/usr/bin/grub-editenv";
 const MOUNTPOINT: &str = "/usr/bin/mountpoint";
@@ -301,6 +303,55 @@ impl<R: BootToolRunner> BootIntegration<R> {
     }
 
     pub fn recovery_menu_entry(&self) -> Result<Option<String>, BootError> {
+        self.recovery_menu_entry_with_key(None)
+    }
+
+    /// The rollback entry bypasses Ubuntu's 10_linux generator, so it must
+    /// explicitly use the same encrypted-root RAM handoff as normal boots.
+    /// Only the installer's exported opt-in selects this path. The credential
+    /// stays inside the encrypted root and is read by GRUB into RAM at boot;
+    /// neither the ESP nor the stored recovery initramfs receives its bytes.
+    pub fn encrypted_recovery_menu_entry(&self) -> Result<Option<String>, BootError> {
+        let abstraction = self.runner.output(
+            Path::new(GRUB_PROBE),
+            &[OsStr::new("--target=abstraction"), OsStr::new("/")],
+        )?;
+        if !abstraction
+            .split_whitespace()
+            .any(|value| value == "cryptodisk")
+        {
+            return Err(BootError::new(
+                BootErrorCode::UnsupportedEnvironment,
+                "Encrypted recovery handoff requires an encrypted root",
+            ));
+        }
+        let key = Path::new(MACHINE_KEY);
+        let metadata = fs::symlink_metadata(key).map_err(|error| {
+            BootError::new(
+                BootErrorCode::UnsupportedEnvironment,
+                format!("Could not inspect the internal boot credential: {error}"),
+            )
+        })?;
+        validate_machine_credential(
+            metadata.is_file(),
+            metadata.uid(),
+            metadata.mode(),
+            metadata.len(),
+        )?;
+        let key_path = self.grub_path(key)?;
+        if key_path != "/@root/etc/anduinos-luks/machine.key" {
+            return Err(BootError::new(
+                BootErrorCode::UnsupportedEnvironment,
+                "Encrypted recovery handoff requires the installed @root credential",
+            ));
+        }
+        self.recovery_menu_entry_with_key(Some(&key_path))
+    }
+
+    fn recovery_menu_entry_with_key(
+        &self,
+        machine_key: Option<&str>,
+    ) -> Result<Option<String>, BootError> {
         let Some(transaction) = TransactionStore::new(&self.snapshot_root)
             .load_pending()
             .map_err(|error| BootError::new(BootErrorCode::InvalidTransaction, error.message))?
@@ -356,6 +407,9 @@ impl<R: BootToolRunner> BootIntegration<R> {
         let id = transaction.id.to_string();
         let entry_id = &transaction.grub_entry_id;
         let fs_uuid = &transaction.root_filesystem_uuid;
+        let handoff = machine_key.map_or_else(String::new, |path| {
+            format!(" newc:/anduinos-unlock.key:{path}")
+        });
         Ok(Some(format!(
             "menuentry 'Disk Snapshots Manager recovery' --class anduinos --class gnu-linux --id '{entry_id}' {{\n\
              \tinsmod btrfs\n\
@@ -364,7 +418,7 @@ impl<R: BootToolRunner> BootIntegration<R> {
              \tset btrfs_snapshots_manager_next_entry='{entry_id}'\n\
              \tsave_env -f \"($btrfs_snapshots_manager_esp)/EFI/anduinos/btrfs-snapshots-manager-grubenv\" btrfs_snapshots_manager_next_entry\n\
              \tlinux {kernel_path} root=UUID={fs_uuid} ro rootflags=subvol=@root anduinos.btrfs_snapshots_manager={id} anduinos.btrfs_snapshots_manager_protocol={protocol}\n\
-             \tinitrd {initramfs_path}\n\
+             \tinitrd {initramfs_path}{handoff}\n\
              }}\n",
             protocol = transaction.recovery_protocol_version
         )))
@@ -446,6 +500,21 @@ impl<R: BootToolRunner> BootIntegration<R> {
         }
         Ok(value.to_string())
     }
+}
+
+fn validate_machine_credential(
+    regular: bool,
+    owner: u32,
+    mode: u32,
+    size: u64,
+) -> Result<(), BootError> {
+    if !regular || owner != 0 || mode & 0o7777 != 0o600 || size != 64 {
+        return Err(BootError::new(
+            BootErrorCode::UnsupportedEnvironment,
+            "The internal boot credential must be a root-owned mode-0600 regular 64-byte file",
+        ));
+    }
+    Ok(())
 }
 
 fn initramfs_listing_contains(output: &str, required: &str) -> bool {
@@ -1047,6 +1116,44 @@ mod tests {
         assert!(entry.contains("anduinos.btrfs_snapshots_manager_protocol=2"));
         assert!(entry.contains("set btrfs_snapshots_manager_next_entry="));
         assert!(entry.contains("save_env -f \"($btrfs_snapshots_manager_esp)"));
+    }
+
+    #[test]
+    fn encrypted_rollback_appends_the_ram_credential_after_the_verified_initramfs() {
+        let environment = Environment::new();
+        let integration = BootIntegration::new(
+            &environment.root,
+            FakeTools {
+                env: String::new(),
+                unsafe_path: false,
+                calls: Default::default(),
+            },
+        );
+        let plain = integration.recovery_menu_entry().unwrap().unwrap();
+        assert!(!plain.contains("newc:"));
+        let encrypted = integration
+            .recovery_menu_entry_with_key(Some("/@root/etc/anduinos-luks/machine.key"))
+            .unwrap()
+            .unwrap();
+        assert!(encrypted.contains(
+            "initrd /initrd.img newc:/anduinos-unlock.key:/@root/etc/anduinos-luks/machine.key\n"
+        ));
+        assert_eq!(encrypted.matches("newc:").count(), 1);
+        assert!(encrypted.contains(&environment.transaction.grub_entry_id));
+    }
+
+    #[test]
+    fn internal_boot_credential_requires_the_installer_file_shape() {
+        assert!(validate_machine_credential(true, 0, 0o100600, 64).is_ok());
+        for (regular, owner, mode, size) in [
+            (false, 0, 0o120600, 64),
+            (true, 1000, 0o100600, 64),
+            (true, 0, 0o100644, 64),
+            (true, 0, 0o100600, 63),
+            (true, 0, 0o100600, 65),
+        ] {
+            assert!(validate_machine_credential(regular, owner, mode, size).is_err());
+        }
     }
 
     #[test]
