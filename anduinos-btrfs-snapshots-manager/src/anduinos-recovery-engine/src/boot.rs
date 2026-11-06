@@ -11,6 +11,7 @@ use std::process::Command;
 use sha2::{Digest, Sha256};
 
 use crate::RECOVERY_STORE_ROOT;
+use crate::model::DeploymentRecord;
 #[cfg(test)]
 use crate::model::DeploymentState;
 use crate::store::DeploymentStore;
@@ -22,6 +23,7 @@ const GRUB_MKRELPATH: &str = "/usr/bin/grub-mkrelpath";
 const GRUB_EDITENV: &str = "/usr/bin/grub-editenv";
 const MOUNTPOINT: &str = "/usr/bin/mountpoint";
 const LSINITRD: &str = "/usr/bin/lsinitrd";
+const DRACUT: &str = "/usr/bin/dracut";
 const KERNEL_RELEASE: &str = "/proc/sys/kernel/osrelease";
 const SYSTEM_BOOT_ROOT: &str = "/boot";
 const RECOVERY_BOOT_DIRECTORY: &str = "recovery-boot";
@@ -34,12 +36,14 @@ const INITRAMFS_SCRIPT: &str =
 const INITRAMFS_BINARY: &str = "usr/libexec/anduinos-btrfs-snapshots-manager-initramfs";
 const INITRAMFS_CONFIRM_BINARY: &str = "usr/libexec/anduinos-btrfs-snapshots-manager-confirm";
 const INITRAMFS_PROTOCOL: &str = "etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version";
-const INITRAMFS_REQUIRED_TOOLS: [&str; 5] = [
+const INITRAMFS_REQUIRED_TOOLS: [&str; 7] = [
     "usr/bin/cat",
     "usr/bin/chmod",
     "usr/bin/cp",
     "usr/bin/ln",
     "usr/bin/mkdir",
+    "usr/bin/mount",
+    "usr/bin/btrfs",
 ];
 pub const GRUB_EXTERNAL_ENVIRONMENT: &str =
     "/boot/efi/EFI/anduinos/btrfs-snapshots-manager-grubenv";
@@ -63,6 +67,13 @@ pub struct RecoveryBootArtifacts {
     pub kernel_sha256: String,
     pub initramfs_sha256: String,
     pub confirm_sha256: String,
+}
+
+struct TargetBootSource {
+    kernel_release: String,
+    kernel: PathBuf,
+    modules: PathBuf,
+    firmware: PathBuf,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -185,7 +196,16 @@ impl BootIntegration<SystemBootToolRunner> {
         self.verify_external_environment_block()
     }
 
-    pub fn provision_recovery_boot_artifacts(&self) -> Result<RecoveryBootArtifacts, BootError> {
+    pub fn provision_recovery_boot_artifacts(
+        &self,
+        target: Option<&DeploymentRecord>,
+    ) -> Result<RecoveryBootArtifacts, BootError> {
+        if let Some(target) = target {
+            let source = self.target_boot_source(target)?;
+            verify_fallback_modules(&source.kernel_release, Path::new("/lib/modules"))?;
+            return self
+                .provision_target_recovery_artifacts(target, Path::new(SYSTEM_CONFIRM_BINARY));
+        }
         self.provision_recovery_boot_artifacts_from(
             Path::new(KERNEL_RELEASE),
             Path::new(SYSTEM_BOOT_ROOT),
@@ -193,20 +213,152 @@ impl BootIntegration<SystemBootToolRunner> {
         )
     }
 
-    /// Verify that the running kernel, initramfs, userspace confirmation
-    /// engine, and snapshot-external executable storage can support recovery.
-    pub fn verify_recovery_boot_source(&self) -> Result<(), BootError> {
-        self.verify_recovery_boot_source_from(
-            Path::new(KERNEL_RELEASE),
-            Path::new(SYSTEM_BOOT_ROOT),
-            Path::new(SYSTEM_CONFIRM_BINARY),
-        )?;
+    /// System restores need the target kernel and modules. Home-only restores
+    /// keep the running root and can reuse its existing recovery initramfs.
+    pub fn verify_recovery_boot_source(
+        &self,
+        target: Option<&DeploymentRecord>,
+    ) -> Result<(), BootError> {
+        if let Some(target) = target {
+            let source = self.target_boot_source(target)?;
+            verify_fallback_modules(&source.kernel_release, Path::new("/lib/modules"))?;
+            self.verify_fallback_initramfs(&source)?;
+            ensure_regular_file(Path::new(DRACUT))?;
+            ensure_regular_file(Path::new(SYSTEM_CONFIRM_BINARY))?;
+        } else {
+            self.verify_recovery_boot_source_from(
+                Path::new(KERNEL_RELEASE),
+                Path::new(SYSTEM_BOOT_ROOT),
+                Path::new(SYSTEM_CONFIRM_BINARY),
+            )?;
+        }
         ensure_real_directory(&self.snapshot_root, false)?;
         ensure_executable_filesystem(&self.snapshot_root)
     }
 }
 
 impl<R: BootToolRunner> BootIntegration<R> {
+    fn target_boot_source(&self, target: &DeploymentRecord) -> Result<TargetBootSource, BootError> {
+        let release = target.kernel_release.as_deref().ok_or_else(|| {
+            BootError::new(
+                BootErrorCode::InvalidDeployment,
+                "Recovery metadata has no kernel release",
+            )
+        })?;
+        validate_kernel_release(release)?;
+        let root = self
+            .snapshot_root
+            .join("deployments")
+            .join(target.id.to_string())
+            .join("root");
+        ensure_real_directory(&root, false)?;
+        let kernel = root.join("boot").join(format!("vmlinuz-{release}"));
+        ensure_regular_file(&kernel)?;
+        // Resolve usr-merged /lib while keeping the boot inputs inside this
+        // verified snapshot, rather than silently mixing its kernel with the
+        // running system's copy of the modules or firmware.
+        let directory = |relative: &Path| {
+            let canonical = fs::canonicalize(root.join(relative))
+                .and_then(|path| fs::canonicalize(&root).map(|root| (root, path)))
+                .map_err(|error| {
+                    BootError::new(
+                        BootErrorCode::InvalidDeployment,
+                        format!("Could not inspect the snapshot boot files: {error}"),
+                    )
+                })?;
+            if !canonical.1.starts_with(&canonical.0) {
+                return Err(BootError::new(
+                    BootErrorCode::InvalidDeployment,
+                    "The boot files are outside the selected system snapshot",
+                ));
+            }
+            ensure_real_directory(&canonical.1, false)?;
+            Ok(canonical.1)
+        };
+        let modules = directory(&Path::new("lib/modules").join(release))?;
+        let firmware = directory(Path::new("lib/firmware"))?;
+        ensure_regular_file(&modules.join("modules.dep"))?;
+        Ok(TargetBootSource {
+            kernel_release: release.to_string(),
+            kernel,
+            modules,
+            firmware,
+        })
+    }
+
+    fn verify_fallback_initramfs(&self, source: &TargetBootSource) -> Result<(), BootError> {
+        // If the first boot fails, GRUB reads the restored root's normal
+        // menu. Its original initrd must understand the pending transaction
+        // well enough to revert; a newly built first-boot image is not enough.
+        let original_initramfs = source
+            .kernel
+            .with_file_name(format!("initrd.img-{}", source.kernel_release));
+        ensure_regular_file(&original_initramfs)?;
+        self.verify_initramfs_compatibility(&original_initramfs)?;
+        let protocol = self.runner.output(
+            Path::new(LSINITRD),
+            &[
+                OsStr::new("--file"),
+                OsStr::new(INITRAMFS_PROTOCOL),
+                original_initramfs.as_os_str(),
+            ],
+        )?;
+        if protocol.trim() != RECOVERY_PROTOCOL_VERSION.to_string() {
+            return Err(BootError::new(
+                BootErrorCode::UnsupportedEnvironment,
+                "The snapshot's initramfs cannot safely revert an unconfirmed restore. Use the independent Recovery Environment instead.",
+            ));
+        }
+        Ok(())
+    }
+
+    fn provision_target_recovery_artifacts(
+        &self,
+        target: &DeploymentRecord,
+        confirm: &Path,
+    ) -> Result<RecoveryBootArtifacts, BootError> {
+        let source = self.target_boot_source(target)?;
+        ensure_regular_file(confirm)?;
+        ensure_real_directory(&self.snapshot_root, false)?;
+        let recovery_boot = self.snapshot_root.join(RECOVERY_BOOT_DIRECTORY);
+        ensure_real_directory(&recovery_boot, true)?;
+        ensure_executable_filesystem(&recovery_boot)?;
+        let temporary = recovery_boot.join(format!(".initrd.{}.tmp", uuid::Uuid::new_v4()));
+        // A protocol-compatible old initrd may still contain older recovery tools.
+        // Build with today's recovery tools and the target's modules instead
+        // of booting a new kernel into an old root without matching drivers.
+        // The ordinary one-shot transaction and confirmation protocol stay intact.
+        let result = (|| {
+            self.runner.output(
+                Path::new(DRACUT),
+                &[
+                    OsStr::new("--force"),
+                    OsStr::new("--no-hostonly"),
+                    OsStr::new("--no-hostonly-cmdline"),
+                    OsStr::new("--kmoddir"),
+                    source.modules.as_os_str(),
+                    OsStr::new("--fwdir"),
+                    source.firmware.as_os_str(),
+                    temporary.as_os_str(),
+                    OsStr::new(&source.kernel_release),
+                ],
+            )?;
+            self.verify_initramfs_compatibility(&temporary)?;
+            copy_regular_file_atomic(&source.kernel, &recovery_boot.join(RECOVERY_KERNEL), 0o600)?;
+            copy_regular_file_atomic(&temporary, &recovery_boot.join(RECOVERY_INITRAMFS), 0o600)?;
+            copy_regular_file_atomic(confirm, &recovery_boot.join(RECOVERY_CONFIRM), 0o700)?;
+            ensure_protected_executable(&recovery_boot.join(RECOVERY_CONFIRM))?;
+            Ok(RecoveryBootArtifacts {
+                kernel_release: source.kernel_release,
+                kernel_sha256: hash_regular_file(&recovery_boot.join(RECOVERY_KERNEL))?,
+                initramfs_sha256: hash_regular_file(&recovery_boot.join(RECOVERY_INITRAMFS))?,
+                confirm_sha256: hash_regular_file(&recovery_boot.join(RECOVERY_CONFIRM))?,
+            })
+        })();
+        let _ = fs::remove_file(temporary);
+        result
+    }
+
     fn verify_recovery_boot_source_from(
         &self,
         kernel_release_path: &Path,
@@ -271,6 +423,25 @@ impl<R: BootToolRunner> BootIntegration<R> {
                     format!(
                         "The current initramfs does not contain recovery protocol {RECOVERY_PROTOCOL_VERSION}: missing {required}"
                     ),
+                ));
+            }
+        }
+        // A sandbox can let Dracut finish while rejecting preservation of a
+        // setuid program's mode. Catch that concrete failure before arming it.
+        // Symlink members are resolved by Dracut; the confirmation executable
+        // intentionally remains non-executable until staged by our boot hook.
+        for required in INITRAMFS_REQUIRED_TOOLS {
+            if output.lines().any(|line| {
+                let fields = line.split_whitespace().collect::<Vec<_>>();
+                fields.last().copied() == Some(required)
+                    && fields.first().is_some_and(|mode| {
+                        mode.starts_with('-')
+                            && !matches!(mode.as_bytes().get(3), Some(b'x' | b's'))
+                    })
+            }) {
+                return Err(BootError::new(
+                    BootErrorCode::UnsupportedEnvironment,
+                    format!("The recovery initramfs contains a non-executable program: {required}"),
                 ));
             }
         }
@@ -544,6 +715,23 @@ fn initramfs_listing_contains(output: &str, required: &str) -> bool {
     })
 }
 
+/// A failed target boots its original initramfs before reverting to the protected
+/// current root. That root must also support the selected kernel. Do not arm a
+/// restore which can succeed forward but strand its automatic fallback without
+/// drivers; the independent recovery environment can restore such older roots.
+fn verify_fallback_modules(release: &str, modules_root: &Path) -> Result<(), BootError> {
+    let modules = modules_root.join(release);
+    if ensure_real_directory(&modules, false).is_err()
+        || ensure_regular_file(&modules.join("modules.dep")).is_err()
+    {
+        return Err(BootError::new(
+            BootErrorCode::UnsupportedEnvironment,
+            "The current system no longer has the target kernel's modules. Restore this snapshot from the independent Recovery Environment instead.",
+        ));
+    }
+    Ok(())
+}
+
 fn ensure_regular_file(path: &Path) -> Result<(), BootError> {
     let metadata = std::fs::symlink_metadata(path).map_err(|error| {
         BootError::new(
@@ -574,7 +762,10 @@ fn read_kernel_release(path: &Path) -> Result<String, BootError> {
             format!("Could not read the running kernel release: {error}"),
         )
     })?;
-    let value = value.trim();
+    validate_kernel_release(value.trim()).map(str::to_string)
+}
+
+fn validate_kernel_release(value: &str) -> Result<&str, BootError> {
     if value.is_empty()
         || value.len() > 128
         || !value
@@ -583,10 +774,10 @@ fn read_kernel_release(path: &Path) -> Result<String, BootError> {
     {
         return Err(BootError::new(
             BootErrorCode::UnsupportedEnvironment,
-            "The running kernel release is unsafe",
+            "The recovery kernel release is unsafe",
         ));
     }
-    Ok(value.to_string())
+    Ok(value)
 }
 
 pub(crate) fn copy_regular_file_atomic(
@@ -991,6 +1182,154 @@ mod tests {
             output,
             "../lib/cargo/bin/coreutils/cat"
         ));
+    }
+
+    #[test]
+    fn system_recovery_uses_target_modules_and_current_recovery_programs() {
+        #[derive(Clone)]
+        struct BuildingTools {
+            fail: bool,
+            nonexecutable_mount: bool,
+            protocol: &'static str,
+            calls: std::sync::Arc<std::sync::Mutex<Vec<Vec<std::ffi::OsString>>>>,
+        }
+
+        impl BootToolRunner for BuildingTools {
+            fn output(&self, program: &Path, arguments: &[&OsStr]) -> Result<String, BootError> {
+                if program == Path::new(LSINITRD)
+                    && arguments.first().copied() == Some(OsStr::new("--file"))
+                {
+                    return Ok(self.protocol.into());
+                }
+                if program == Path::new(DRACUT) {
+                    self.calls
+                        .lock()
+                        .unwrap()
+                        .push(arguments.iter().map(|a| a.to_os_string()).collect());
+                    fs::write(
+                        Path::new(arguments[arguments.len() - 2]),
+                        "new-recovery-image",
+                    )
+                    .unwrap();
+                    if self.fail {
+                        return Err(BootError::new(
+                            BootErrorCode::CommandFailed,
+                            "initrd build failed",
+                        ));
+                    }
+                    return Ok(String::new());
+                }
+                let output = FakeTools {
+                    env: String::new(),
+                    unsafe_path: false,
+                    calls: Default::default(),
+                }
+                .output(program, arguments)?;
+                if program == Path::new(LSINITRD) && self.nonexecutable_mount {
+                    return Ok(output.replace(
+                        "usr/bin/mount\n",
+                        "-rw------- 1 root root 67864 Jan 1 00:00 usr/bin/mount\n",
+                    ));
+                }
+                Ok(output)
+            }
+        }
+
+        for (fail, nonexecutable_mount) in [(false, false), (true, false), (false, true)] {
+            let environment = Environment::new();
+            let target = DeploymentStore::new(&environment.root)
+                .load_record(environment.transaction.target_deployment_id)
+                .unwrap();
+            let store = environment.root.join("artifacts");
+            let root = store
+                .join("deployments")
+                .join(target.id.to_string())
+                .join("root");
+            let release = target.kernel_release.as_deref().unwrap();
+            fs::create_dir_all(root.join("boot")).unwrap();
+            let modules = root.join("usr/lib/modules").join(release);
+            fs::create_dir_all(&modules).unwrap();
+            fs::create_dir_all(root.join("usr/lib/firmware")).unwrap();
+            symlink("usr/lib", root.join("lib")).unwrap();
+            fs::write(modules.join("modules.dep"), "").unwrap();
+            fs::write(
+                root.join("boot").join(format!("vmlinuz-{release}")),
+                "target-kernel",
+            )
+            .unwrap();
+            // The target's old initrd is deliberately absent. Building the
+            // recovery image must use today's tools and the snapshot's modules.
+            let current_modules = environment.root.join("current-modules");
+            assert!(verify_fallback_modules(release, &current_modules).is_err());
+            fs::create_dir_all(current_modules.join(release)).unwrap();
+            fs::write(current_modules.join(release).join("modules.dep"), "").unwrap();
+            verify_fallback_modules(release, &current_modules).unwrap();
+            let confirm = environment.root.join("current-confirm");
+            fs::write(&confirm, "current-confirm").unwrap();
+            fs::set_permissions(&confirm, fs::Permissions::from_mode(0o755)).unwrap();
+            let recovery = store.join(RECOVERY_BOOT_DIRECTORY);
+            fs::create_dir(&recovery).unwrap();
+            for name in [RECOVERY_KERNEL, RECOVERY_INITRAMFS, RECOVERY_CONFIRM] {
+                fs::write(recovery.join(name), "previous-artifact").unwrap();
+            }
+            let tools = BuildingTools {
+                fail,
+                nonexecutable_mount,
+                protocol: "2",
+                calls: Default::default(),
+            };
+            let calls = tools.calls.clone();
+            let integration = BootIntegration::new(&store, tools);
+            let result = integration.provision_target_recovery_artifacts(&target, &confirm);
+            if fail || nonexecutable_mount {
+                assert!(result.is_err());
+                for name in [RECOVERY_KERNEL, RECOVERY_INITRAMFS, RECOVERY_CONFIRM] {
+                    assert_eq!(
+                        fs::read_to_string(recovery.join(name)).unwrap(),
+                        "previous-artifact"
+                    );
+                }
+            } else {
+                assert_eq!(result.unwrap().kernel_release, release);
+                assert_eq!(
+                    fs::read_to_string(recovery.join(RECOVERY_KERNEL)).unwrap(),
+                    "target-kernel"
+                );
+                assert_eq!(
+                    fs::read_to_string(recovery.join(RECOVERY_INITRAMFS)).unwrap(),
+                    "new-recovery-image"
+                );
+                assert_eq!(
+                    fs::read_to_string(recovery.join(RECOVERY_CONFIRM)).unwrap(),
+                    "current-confirm"
+                );
+            }
+            let calls = calls.lock().unwrap();
+            assert_eq!(calls.len(), 1);
+            assert_eq!(calls[0][4], modules.as_os_str());
+            assert_eq!(calls[0][6], root.join("usr/lib/firmware").as_os_str());
+            assert_eq!(calls[0].last().unwrap(), release);
+            assert_eq!(fs::read_dir(&recovery).unwrap().count(), 3);
+            let original_initramfs = root.join("boot").join(format!("initrd.img-{release}"));
+            let source = integration.target_boot_source(&target).unwrap();
+            assert!(integration.verify_fallback_initramfs(&source).is_err());
+            fs::write(&original_initramfs, "original-image").unwrap();
+            if !nonexecutable_mount {
+                integration.verify_fallback_initramfs(&source).unwrap();
+                let legacy = BootIntegration::new(
+                    &store,
+                    BuildingTools {
+                        fail: false,
+                        nonexecutable_mount: false,
+                        protocol: "1",
+                        calls: Default::default(),
+                    },
+                );
+                assert!(legacy.verify_fallback_initramfs(&source).is_err());
+            }
+            fs::remove_file(modules.join("modules.dep")).unwrap();
+            assert!(integration.target_boot_source(&target).is_err());
+        }
     }
 
     #[test]

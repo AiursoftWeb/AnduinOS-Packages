@@ -96,14 +96,27 @@ and shared-machine fleets. Deployment metadata records only storage lifecycle;
 rollback progress and outcomes live exclusively in the transaction ledger. Old
 transaction-shaped deployment states are accepted as `ready` when upgrading and
 never disable the Restore action.
-The recovery engine creates and protects a current-system fallback, copies the
-currently running kernel, a protocol-verified initramfs, and the matching userspace
-confirmation engine into the snapshot-external recovery store, and binds all three
-hashes to the transaction. GRUB keeps selecting this
-trusted recovery image until initramfs or userspace durably completes or fails the
-transaction. Every synchronized root switch is recorded as a persistent checkpoint.
+The recovery engine creates and protects a current-system fallback. For a system
+restore, it uses the target snapshot's kernel, modules, and firmware, and builds
+a recovery initramfs with the currently installed recovery programs. This keeps
+the booted kernel consistent with the restored root after a kernel upgrade.
+The current root must also retain that kernel's modules, so an unconfirmed target
+can automatically revert without losing its drivers. If those modules have been
+removed, preparation stops before creating or arming a transaction; use the
+independent Recovery Environment for that older snapshot instead.
+The snapshot stays read-only. Its original initramfs must support the existing
+recovery protocol, so a subsequent boot can revert an unconfirmed restore even
+when it reads the old root's normal GRUB menu. Older snapshots without that
+protocol must also be restored from the independent Recovery Environment.
+The kernel, verified initramfs, and matching confirmation engine are kept in the
+snapshot-external recovery store, with all three hashes bound to the existing
+transaction. An initramfs build failure stops preparation before arming a restore.
+The one-shot GRUB entry boots this verified recovery image. Every synchronized
+root switch is recorded as a persistent checkpoint; subsequent boots either
+confirm the restored system or revert the protected current root.
 Home rollback uses the same early-boot, power-loss-resumable switch for `@home`.
 A Home-only transaction leaves the root subvolume unchanged and verifies its UUID.
+It reuses the running system's kernel and protocol-verified initramfs.
 Account home paths and UID/GID ownership must match the running system; this check
 is repeated before early-boot replacement. A combined factory reset switches root
 and Home together. Nested Btrfs subvolumes in Home block whole-Home rollback,
