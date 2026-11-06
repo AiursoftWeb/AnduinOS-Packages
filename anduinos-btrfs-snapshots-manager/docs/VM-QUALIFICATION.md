@@ -109,6 +109,12 @@ the exact package version and executable return, the selected deployment remains
 reusable as `ready`, the pending transaction is gone, and its terminal history
 contains at least one initramfs entry and the final synchronized checkpoint.
 
+Protocol-3 restores restart once after applying the snapshot, before ordinary
+boot. Capture both boot IDs and the kernel used by each. Repeat with different
+kernel ABIs, then repeat fallback with the old ABI modules removed from the
+current root. Verify legacy protocol-2 same-ABI snapshots remain usable and old
+cross-ABI snapshots are rejected before preparing a transaction.
+
 ## Hard power-loss matrix (`RRP2-VM-005`)
 
 The initramfs binary prints `SNAPSHOTS-MANAGER-CHECKPOINT <name>` only after the
@@ -125,7 +131,8 @@ Do not use an orderly shutdown.
 | `writable-target-created` | Automatic fallback completes and removes the unused target root |
 | `current-root-protected` | Automatic fallback restores the protected current root |
 | `target-root-activated` | Automatic fallback restores the protected current root |
-| `booted-unconfirmed-recorded` | The next unrequested boot reverts to the protected fallback |
+| `applied-awaiting-boot-recorded` | The next normal boot attempts the target; it must not immediately revert |
+| `booted-unconfirmed-recorded` | The target boot began; another unconfirmed boot reverts and restarts |
 
 To qualify interruption during fallback, first interrupt an apply boundary.
 Power on, then hard-stop again at each revert checkpoint:

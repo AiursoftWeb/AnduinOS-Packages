@@ -96,12 +96,24 @@ and shared-machine fleets. Deployment metadata records only storage lifecycle;
 rollback progress and outcomes live exclusively in the transaction ledger. Old
 transaction-shaped deployment states are accepted as `ready` when upgrading and
 never disable the Restore action.
-The recovery engine creates and protects a current-system fallback, copies the
-currently running kernel, a protocol-verified initramfs, and the matching userspace
-confirmation engine into the snapshot-external recovery store, and binds all three
-hashes to the transaction. GRUB keeps selecting this
-trusted recovery image until initramfs or userspace durably completes or fails the
-transaction. Every synchronized root switch is recorded as a persistent checkpoint.
+The recovery engine protects the current system, then freezes the running kernel,
+verified initramfs and confirmation executable in the snapshot-external store.
+A one-shot GRUB entry starts this recovery image. Protocol 3 switches the selected
+subvolumes, records completion, synchronizes/unmounts, and restarts immediately.
+The normal GRUB menu then loads the restored system's own kernel and initramfs.
+Only this separate target boot can confirm success. An unconfirmed target is
+reverted on a subsequent recovery-hook boot, followed by another restart.
+The target need not share the current kernel or retain its modules in the current
+root. Both initrds must support the restart protocol; immutable snapshots are
+never rewritten. Older protocol-2 snapshots retain their original same-kernel
+path. For older cross-kernel snapshots, use Live Rescue Center from an installation
+USB or the independent Recovery Environment. Existing transactions keep their
+original protocol when upgrading. A kernel that cannot reach its recovery hook
+still requires an explicit rescue boot. Encrypted disks may require unlocking
+again after the additional restart.
+Every synchronized subvolume switch has a durable checkpoint. The frozen,
+transaction-bound confirmation executable is reused across the root switch,
+including when the restored initramfs embeds an older package version.
 Home rollback uses the same early-boot, power-loss-resumable switch for `@home`.
 A Home-only transaction leaves the root subvolume unchanged and verifies its UUID.
 Account home paths and UID/GID ownership must match the running system; this check

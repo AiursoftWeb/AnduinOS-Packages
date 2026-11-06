@@ -699,6 +699,7 @@ mod tests {
             "b".repeat(64),
             "c".repeat(64),
         );
+        transaction.use_continue_boot_protocol();
         transaction
             .transition(RollbackPhase::Armed, Utc::now())
             .unwrap();

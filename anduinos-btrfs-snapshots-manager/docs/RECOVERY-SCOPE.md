@@ -75,23 +75,23 @@ recovery engine and helper. If target verification or fallback preparation
 fails, no restart is scheduled. Until restart, the pending transaction can be
 cancelled through the helper.
 
-The recovery kernel, initramfs, and userspace confirmation engine are copied from
-the running system into the snapshot-external recovery store before GRUB is armed.
-The initramfs must contain the matching recovery script, engine, confirmation
-binary, and protocol marker, and all three executable artifacts are hash-bound to
-the transaction. Recovery does not execute the possibly old kernel, initramfs, or
-confirmation engine found inside the selected snapshot. The EFI selector acts as a lease:
-the recovery menu entry rearms it before starting the kernel, and only terminal
-userspace reconciliation clears it.
+The running kernel, verified initramfs and confirmation executable are frozen in
+the snapshot-external recovery store before the one-shot GRUB entry is armed.
+Protocol 3 records a completed disk switch and restarts after sync/unmount. The
+next ordinary GRUB boot loads the restored root's kernel/initramfs and records a
+distinct target boot ID. Only that boot can confirm success. Failed target boots
+revert the protected root on a later recovery-hook boot and restart again.
+The selector is consumed once; it is not a persistent firmware boot entry.
 
-Before changing the root subvolume, the trusted initramfs verifies its confirmation
-binary against the transaction and atomically stages it in the external
-`recovery-boot` directory. A hardened transient unit is carried in `/run`, but its
-`ExecStart` points to that protected external artifact; no executable payload is
-run from `/run`, which may legitimately be mounted `noexec`. This shadows an older
-installed confirmation service for one boot, so restoring a snapshot made by an
-older package cannot silently downgrade the code that confirms, reverts, or fails
-the new transaction. Nothing is written into the immutable snapshot itself.
+Schemas 1–6 retain their original reconciliation semantics. Old protocol-2
+snapshots can still use the same-kernel path. Old cross-kernel targets are refused
+before any new safety snapshot or boot selector write; use Live Rescue Center or
+independent RE instead. No historical snapshot is modified. Protocol 3 freezes
+the confirmation executable once and validates its bound digest on both boots,
+rather than replacing it with an older executable from the restored initrd.
+The transient unit remains in `/run`, while its executable remains in the external
+store so `/run` may stay `noexec`. A kernel/initrd that never reaches the recovery
+hook cannot perform automatic fallback; it needs an explicit rescue boot.
 
 Initramfs detects the root filesystem itself and never depends on a shell variable
 computed—but not exported—by another early-boot process. An explicit recovery
@@ -99,16 +99,17 @@ request that cannot enter the matching recovery protocol fails visibly. The engi
 persists its boot ID, attempt counter, and last synchronized filesystem checkpoint;
 userspace treats a requested boot that reached userspace without initramfs entry as
 a failed transaction, restores safe deployment states, and archives the diagnostic.
-An armed transaction from an earlier transaction schema or recovery protocol
-encountered during a package upgrade is likewise cancelled and archived instead of
-being interpreted by incompatible recovery code or left as a stale GRUB loop.
+Unsupported armed protocol-1 transactions encountered during a package upgrade
+are cancelled and archived instead of being interpreted by incompatible code.
+Schema-6/protocol-2 transactions retain their original continue-boot behavior;
+newly scheduling such a snapshot is limited to the same default kernel ABI.
 Already-applied legacy transactions remain readable only for identity-checked
 confirmation, reversion, and terminal cleanup.
 
 Release claims for this boundary require numbered evidence rather than an
 informal successful boot. The release ledger in
 [ROLLBACK-RELEASE-TEST-PLAN.md](ROLLBACK-RELEASE-TEST-PLAN.md) records normal
-protocol-2 confirmation, legacy reconciliation, automatic fallback, Secure Boot,
+current confirmation, legacy reconciliation, automatic fallback, Secure Boot,
 and every hard-power-loss checkpoint. A restored package or executable proves
 only that initramfs activated the target root; terminal `confirmed` history,
 userspace service success, an empty one-shot selector, and cleanup of staging

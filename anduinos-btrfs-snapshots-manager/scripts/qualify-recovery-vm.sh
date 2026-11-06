@@ -79,7 +79,7 @@ preflight() {
     kernel_release=$(tr -d '\n' </proc/sys/kernel/osrelease)
     initramfs="/boot/initrd.img-$kernel_release"
     [[ -f "$initramfs" ]] || die "the running kernel's initramfs is missing"
-    [[ $(/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs --protocol-version) == 2 ]] ||
+    [[ $(/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs --protocol-version) == 3 ]] ||
         die "the installed recovery engine protocol is incompatible"
     if findmnt -n -o OPTIONS --target /run | tr ',' '\n' | grep -Fxq noexec; then
         echo "Confirmed: /run is noexec; the recovery confirmation regression is active"
@@ -99,7 +99,7 @@ preflight() {
         usr/libexec/anduinos-btrfs-snapshots-manager-initramfs \
         usr/libexec/anduinos-btrfs-snapshots-manager-confirm \
         etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version \
-        usr/bin/cat usr/bin/chmod usr/bin/cp usr/bin/ln usr/bin/mkdir; do
+        usr/bin/cat usr/bin/chmod usr/bin/cp usr/bin/ln usr/bin/mkdir usr/bin/sync usr/sbin/reboot; do
         grep -Fxq "$member" <<<"$listing" ||
             die "the installed initramfs is missing $member"
     done
@@ -189,7 +189,9 @@ verify_rollback() {
     archive="$RECOVERY_STORE/rollback-history/$transaction_id.json"
     jq -e --arg target "$target" \
         '.phase == "confirmed" and .target_deployment_id == $target and
-         .checkpoint == "booted-unconfirmed-recorded" and .initramfs_attempts >= 1' \
+         .checkpoint == "booted-unconfirmed-recorded" and .initramfs_attempts >= 1 and
+         .schema_version == 7 and .recovery_protocol_version == 3 and
+         (.target_boot_id | type == "string") and .target_boot_id != .applying_boot_id' \
         "$archive" >/dev/null || die "the durable rollback history is missing or incomplete"
 
     state=$(jq '.phase = "verified"' <<<"$state")
@@ -260,7 +262,9 @@ verify_docker_autoremove() {
         <<<"$status" >/dev/null || die "the Docker rollback target is not reusable and ready"
     transaction_id=$(jq -er '.pending.id' <<<"$state")
     archive="$RECOVERY_STORE/rollback-history/$transaction_id.json"
-    jq -e '.phase == "confirmed" and .checkpoint == "booted-unconfirmed-recorded"' \
+    jq -e '.phase == "confirmed" and .checkpoint == "booted-unconfirmed-recorded" and
+           .schema_version == 7 and .recovery_protocol_version == 3 and
+           (.target_boot_id | type == "string") and .target_boot_id != .applying_boot_id' \
         "$archive" >/dev/null || die "the Docker rollback diagnostic history is incomplete"
     state=$(jq '.phase = "verified"' <<<"$state")
     write_state "$state"

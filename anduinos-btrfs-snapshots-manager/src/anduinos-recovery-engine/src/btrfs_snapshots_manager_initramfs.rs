@@ -54,6 +54,12 @@ fn main() -> ExitCode {
     };
 
     match RecoveryEngine::default().execute_with_observer(requested, &boot_id, print_checkpoint) {
+        Ok(RecoveryOutcome::RestartRequired) => {
+            eprintln!(
+                "Disk Snapshots Manager completed the disk switch; restarting before normal boot"
+            );
+            ExitCode::from(20)
+        }
         Ok(RecoveryOutcome::NoAction) => ExitCode::SUCCESS,
         Ok(RecoveryOutcome::Applied) => {
             eprintln!("Disk Snapshots Manager activated the selected system snapshot");

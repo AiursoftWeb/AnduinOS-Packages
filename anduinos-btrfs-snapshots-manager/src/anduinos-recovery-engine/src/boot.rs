@@ -11,10 +11,13 @@ use std::process::Command;
 use sha2::{Digest, Sha256};
 
 use crate::RECOVERY_STORE_ROOT;
+use crate::model::DeploymentRecord;
 #[cfg(test)]
 use crate::model::DeploymentState;
 use crate::store::DeploymentStore;
-use crate::transaction::{RECOVERY_PROTOCOL_VERSION, RollbackPhase, TransactionStore};
+use crate::transaction::{
+    CONTINUE_BOOT_PROTOCOL_VERSION, RECOVERY_PROTOCOL_VERSION, RollbackPhase, TransactionStore,
+};
 
 const GRUB_PROBE: &str = "/usr/sbin/grub-probe";
 const MACHINE_KEY: &str = "/etc/anduinos-luks/machine.key";
@@ -34,12 +37,14 @@ const INITRAMFS_SCRIPT: &str =
 const INITRAMFS_BINARY: &str = "usr/libexec/anduinos-btrfs-snapshots-manager-initramfs";
 const INITRAMFS_CONFIRM_BINARY: &str = "usr/libexec/anduinos-btrfs-snapshots-manager-confirm";
 const INITRAMFS_PROTOCOL: &str = "etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version";
-const INITRAMFS_REQUIRED_TOOLS: [&str; 5] = [
+const INITRAMFS_REQUIRED_TOOLS: [&str; 7] = [
     "usr/bin/cat",
     "usr/bin/chmod",
     "usr/bin/cp",
     "usr/bin/ln",
     "usr/bin/mkdir",
+    "usr/bin/sync",
+    "usr/sbin/reboot",
 ];
 pub const GRUB_EXTERNAL_ENVIRONMENT: &str =
     "/boot/efi/EFI/anduinos/btrfs-snapshots-manager-grubenv";
@@ -207,6 +212,51 @@ impl BootIntegration<SystemBootToolRunner> {
 }
 
 impl<R: BootToolRunner> BootIntegration<R> {
+    /// Old initrds cannot acknowledge the deliberate extra boot. Keep their
+    /// same-kernel path; a cross-kernel legacy target needs offline recovery.
+    pub fn target_recovery_protocol(&self, target: &DeploymentRecord) -> Result<u32, BootError> {
+        let release = self.target_kernel_release(target)?;
+        let image = self
+            .snapshot_root
+            .join("deployments")
+            .join(target.id.to_string())
+            .join("root/boot")
+            .join(format!("initrd.img-{release}"));
+        ensure_regular_file(&image)?;
+        let value = self.runner.output(
+            Path::new(LSINITRD),
+            &[
+                OsStr::new("--file"),
+                OsStr::new(INITRAMFS_PROTOCOL),
+                image.as_os_str(),
+            ],
+        )?;
+        match value.trim().parse::<u32>().ok() {
+            Some(RECOVERY_PROTOCOL_VERSION) => Ok(RECOVERY_PROTOCOL_VERSION),
+            Some(CONTINUE_BOOT_PROTOCOL_VERSION)
+                if read_kernel_release(Path::new(KERNEL_RELEASE))? == release =>
+            {
+                Ok(CONTINUE_BOOT_PROTOCOL_VERSION)
+            }
+            _ => Err(BootError::new(
+                BootErrorCode::UnsupportedEnvironment,
+                "This older snapshot requires offline recovery. Use Live Rescue Center or the independent Recovery Environment.",
+            )),
+        }
+    }
+
+    pub fn target_kernel_release(&self, target: &DeploymentRecord) -> Result<String, BootError> {
+        // Manual snapshots can be taken after installing a new kernel but before
+        // rebooting. The recorded running ABI is not necessarily GRUB's default.
+        let root = self
+            .snapshot_root
+            .join("deployments")
+            .join(target.id.to_string())
+            .join("root");
+        crate::operations::read_default_installed_kernel_release(&root)
+            .map_err(|error| BootError::new(BootErrorCode::InvalidDeployment, error.message))
+    }
+
     fn verify_recovery_boot_source_from(
         &self,
         kernel_release_path: &Path,
@@ -273,6 +323,20 @@ impl<R: BootToolRunner> BootIntegration<R> {
                     ),
                 ));
             }
+        }
+        let protocol = self.runner.output(
+            Path::new(LSINITRD),
+            &[
+                OsStr::new("--file"),
+                OsStr::new(INITRAMFS_PROTOCOL),
+                initramfs.as_os_str(),
+            ],
+        )?;
+        if protocol.trim() != RECOVERY_PROTOCOL_VERSION.to_string() {
+            return Err(BootError::new(
+                BootErrorCode::UnsupportedEnvironment,
+                "The current initramfs must be refreshed before preparing a restore",
+            ));
         }
         Ok(())
     }
@@ -364,7 +428,10 @@ impl<R: BootToolRunner> BootIntegration<R> {
         ) {
             return Ok(None);
         }
-        if transaction.recovery_protocol_version != RECOVERY_PROTOCOL_VERSION {
+        if !matches!(
+            transaction.recovery_protocol_version,
+            CONTINUE_BOOT_PROTOCOL_VERSION | RECOVERY_PROTOCOL_VERSION
+        ) {
             return Err(BootError::new(
                 BootErrorCode::InvalidTransaction,
                 "A legacy recovery transaction cannot be armed with the current boot protocol",
@@ -441,7 +508,10 @@ impl<R: BootToolRunner> BootIntegration<R> {
                 "Only an armed rollback transaction can select the one-shot GRUB entry",
             ));
         }
-        if transaction.recovery_protocol_version != RECOVERY_PROTOCOL_VERSION {
+        if !matches!(
+            transaction.recovery_protocol_version,
+            CONTINUE_BOOT_PROTOCOL_VERSION | RECOVERY_PROTOCOL_VERSION
+        ) {
             return Err(BootError::new(
                 BootErrorCode::InvalidTransaction,
                 "A legacy recovery transaction cannot be selected for boot",
@@ -575,6 +645,11 @@ fn read_kernel_release(path: &Path) -> Result<String, BootError> {
         )
     })?;
     let value = value.trim();
+    validate_kernel_release(value)?;
+    Ok(value.to_string())
+}
+
+fn validate_kernel_release(value: &str) -> Result<(), BootError> {
     if value.is_empty()
         || value.len() > 128
         || !value
@@ -586,7 +661,7 @@ fn read_kernel_release(path: &Path) -> Result<String, BootError> {
             "The running kernel release is unsafe",
         ));
     }
-    Ok(value.to_string())
+    Ok(())
 }
 
 pub(crate) fn copy_regular_file_atomic(
@@ -849,6 +924,9 @@ mod tests {
                 return Ok(self.env.clone());
             }
             if program == Path::new(LSINITRD) {
+                if arguments.first() == Some(&OsStr::new("--file")) {
+                    return Ok(RECOVERY_PROTOCOL_VERSION.to_string());
+                }
                 return Ok(format!(
                     "{INITRAMFS_SCRIPT}\n{INITRAMFS_BINARY}\n{INITRAMFS_CONFIRM_BINARY}\n{INITRAMFS_PROTOCOL}\n{}\n",
                     INITRAMFS_REQUIRED_TOOLS.join("\n")
@@ -920,6 +998,7 @@ mod tests {
                 hash_regular_file(&initramfs).unwrap(),
                 hash_regular_file(&confirm).unwrap(),
             );
+            transaction.use_continue_boot_protocol();
             transaction
                 .transition(RollbackPhase::Armed, Utc::now())
                 .unwrap();
@@ -1271,5 +1350,56 @@ mod tests {
                 "{GRUB_EDITENV} {GRUB_EXTERNAL_ENVIRONMENT} unset {GRUB_NEXT_ENTRY_VARIABLE}"
             )
         }));
+    }
+    #[test]
+    fn old_snapshot_protocol_is_allowed_only_with_the_running_kernel() {
+        #[derive(Clone)]
+        struct ProtocolTools(u32);
+        impl BootToolRunner for ProtocolTools {
+            fn output(&self, _: &Path, _: &[&OsStr]) -> Result<String, BootError> {
+                Ok(self.0.to_string())
+            }
+        }
+        let environment = Environment::new();
+        let mut target = DeploymentStore::new(&environment.root)
+            .load_record(environment.transaction.target_deployment_id)
+            .unwrap();
+        let release = read_kernel_release(Path::new(KERNEL_RELEASE)).unwrap();
+        let boot = environment
+            .root
+            .join("deployments")
+            .join(target.id.to_string())
+            .join("root/boot");
+        fs::create_dir_all(&boot).unwrap();
+        fs::write(boot.join(format!("initrd.img-{release}")), "old image").unwrap();
+        fs::write(boot.join(format!("vmlinuz-{release}")), "kernel").unwrap();
+        symlink(format!("vmlinuz-{release}"), boot.join("vmlinuz")).unwrap();
+        target.kernel_release = Some("recorded-running-kernel".into());
+        assert_eq!(
+            BootIntegration::new(&environment.root, ProtocolTools(2))
+                .target_recovery_protocol(&target)
+                .unwrap(),
+            2
+        );
+        fs::remove_file(boot.join("vmlinuz")).unwrap();
+        symlink("vmlinuz-different-kernel", boot.join("vmlinuz")).unwrap();
+        fs::write(boot.join("vmlinuz-different-kernel"), "kernel").unwrap();
+        fs::write(boot.join("initrd.img-different-kernel"), "old image").unwrap();
+        assert!(
+            BootIntegration::new(&environment.root, ProtocolTools(2))
+                .target_recovery_protocol(&target)
+                .is_err()
+        );
+        assert_eq!(
+            BootIntegration::new(&environment.root, ProtocolTools(3))
+                .target_recovery_protocol(&target)
+                .unwrap(),
+            3
+        );
+        assert!(
+            BootIntegration::new(&environment.root, ProtocolTools(4))
+                .target_recovery_protocol(&target)
+                .is_err()
+        );
     }
 }

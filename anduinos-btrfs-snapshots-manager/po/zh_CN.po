@@ -2047,3 +2047,11 @@ msgstr "回滚前会创建安全快照，以便恢复失败时回退。恢复成
 #: src/btrfs-snapshots-manager/src/ui/factory_reset.rs
 msgid "All data will be erased and cannot be recovered."
 msgstr "所有数据都会抹除并且无法恢复。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Recovery may restart this computer again. You may need to unlock encrypted disks again."
+msgstr "恢复过程中电脑可能会再次重启。加密磁盘可能需要再次输入密码解锁。"
+
+#: src/btrfs-snapshots-manager/src/ui/snapshot_page.rs
+msgid "Restore this older snapshot using Live Rescue Center from an installation USB, or use Recovery Environment."
+msgstr "请从安装 U 盘启动 Live 救援中心，或使用恢复环境，还原这个较旧的快照。"

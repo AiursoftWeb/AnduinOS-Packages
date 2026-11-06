@@ -1631,8 +1631,12 @@ fn show_rollback_ready(parent: &adw::ApplicationWindow) {
     let dialog = adw::MessageDialog::new(
         Some(parent),
         Some(&tr("Restart Required — Rollback Armed")),
-        Some(&tr(
-            "Rollback is ready. Save your work; this computer will restart within 60 seconds.",
+        Some(&format!(
+            "{}\n\n{}",
+            tr("Rollback is ready. Save your work; this computer will restart within 60 seconds."),
+            tr(
+                "Recovery may restart this computer again. You may need to unlock encrypted disks again."
+            ),
         )),
     );
     dialog.add_response(
@@ -1744,6 +1748,15 @@ fn request_system_reboot_with(program: &std::path::Path) -> anyhow::Result<()> {
 }
 
 fn show_error(parent: &adw::ApplicationWindow, message: &str) {
+    let localized;
+    let message = if message.contains("This older snapshot requires offline recovery.") {
+        localized = tr(
+            "Restore this older snapshot using Live Rescue Center from an installation USB, or use Recovery Environment.",
+        );
+        localized.as_str()
+    } else {
+        message
+    };
     show_information(parent, &tr("Operation Failed"), message);
 }
 
