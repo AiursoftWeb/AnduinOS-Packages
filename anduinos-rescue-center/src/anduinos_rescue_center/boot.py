@@ -152,9 +152,15 @@ def diagnose_boot(path: str, identity: str, *, run=subprocess.run,
     if partition.active_system or partition.mountpoints:
         raise RuntimeError(tr("The selected installation must be offline and unmounted"))
     issues: list[str] = []
+    encryption_ready = True
     with mounted_readonly(partition.path, partition.filesystem, run=run, mount_base=mount_base) as top:
         root = system_root(top, partition)
         kernels, complete, config = _boot_files(root)
+        try:
+            _encrypted_inputs(root, partition, run=run)
+        except RuntimeError as error:
+            encryption_ready = False
+            issues.append(str(error))
         if not kernels:
             issues.append(tr("No installed kernel was found in /boot"))
         if len(complete) != len(kernels):
@@ -192,7 +198,8 @@ def diagnose_boot(path: str, identity: str, *, run=subprocess.run,
         "kernel_count": len(kernels), "complete_pairs": len(complete),
         "grub_config": config, "efi_loader": vendor_loader,
         "nvram_entry": nvram, "issues": issues,
-        "repairable": bool(esp and not esp.mounted and kernels and nvram is not None and firmware_available
+        "repairable": bool(encryption_ready and esp and not esp.mounted and kernels
+                           and nvram is not None and firmware_available
                            and platform.machine() in {"x86_64", "aarch64"}),
         "changes": [tr("Rebuild installed initrds"), tr("Install GRUB only in EFI/AnduinOS"),
                     tr("Regenerate GRUB configuration"),
@@ -274,7 +281,7 @@ def _run_streaming_command(
     return decoded
 
 
-def _encrypted_inputs(root: Path, partition: Partition) -> None:
+def _encrypted_inputs(root: Path, partition: Partition, *, run=subprocess.run) -> None:
     """Support our installed layout without rewriting its encryption policy."""
     if not partition.encrypted:
         return
@@ -291,7 +298,7 @@ def _encrypted_inputs(root: Path, partition: Partition) -> None:
     roots = [line.split() for line in fstab.read_text().splitlines()
              if line.strip() and not line.lstrip().startswith("#")]
     roots = [entry for entry in roots if len(entry) >= 3 and entry[1] == "/"]
-    if (len(selected) != 1 or len(selected[0]) != 4
+    if (not partition.container_path or len(selected) != 1 or len(selected[0]) != 4
             or selected[0][1:3] != [expected, "none"]
             or not {"luks", "x-initrd.attach"}.issubset(selected[0][3].split(","))
             or len(roots) != 1 or roots[0][0] != "UUID=" + partition.filesystem_uuid
@@ -299,6 +306,19 @@ def _encrypted_inputs(root: Path, partition: Partition) -> None:
         raise RuntimeError(tr("The encrypted root configuration is missing or inconsistent"))
     key = _safe_regular_file(root, "etc/anduinos-luks/machine.key")
     if key is None or key.stat().st_size != 64 or key.stat().st_mode & 0o077:
+        raise RuntimeError(tr("The installed disk unlock key is missing or unsafe"))
+    # Size and permissions do not prove that this file still unlocks the volume.
+    # Test only the re-probed container: no mapping or LUKS metadata is changed.
+    # Repeat this check before repair writes, rather than trusting a UI report.
+    try:
+        result = run(
+            ["cryptsetup", "open", "--type", "luks2", "--test-passphrase",
+             "--key-file", str(key), "--", partition.container_path],
+            capture_output=True, text=True, timeout=30, check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired) as error:
+        raise RuntimeError(tr("The installed disk unlock key is missing or unsafe")) from error
+    if result.returncode:
         raise RuntimeError(tr("The installed disk unlock key is missing or unsafe"))
     if not (root / "usr/lib/anduinos-grub").is_dir():
         raise RuntimeError(tr("Encrypted boot repair requires the AnduinOS bootloader"))
@@ -375,7 +395,7 @@ def repair_boot(path: str, identity: str, esp_identity: str, *, run=subprocess.r
     partition = resolve_target(path, identity, run=run)
     with mounted_readonly(partition.path, partition.filesystem, run=run, mount_base=mount_base) as top:
         root = system_root(top, partition)
-        _encrypted_inputs(root, partition)
+        _encrypted_inputs(root, partition, run=run)
         esp = _locate_esp(partition, _efi_spec(root), run=run)
     if esp.identity != esp_identity or esp.mounted:
         raise RuntimeError(tr("The selected EFI partition changed before repair"))
@@ -385,7 +405,7 @@ def repair_boot(path: str, identity: str, esp_identity: str, *, run=subprocess.r
         progress(tr("Opening {system} and its EFI partition {esp}").format(
             system=partition.path, esp=esp.path))
     with opened_system(path, identity, esp=esp.path, run=run, mount_base=mount_base) as (root, _partition):
-        _encrypted_inputs(root, partition)
+        _encrypted_inputs(root, partition, run=run)
         own_grub = (root / "usr/lib/anduinos-grub").exists()
         helper = "/usr/libexec/anduinos-grub-update"
         tools = ["usr/bin/dracut", "usr/bin/lsinitrd", "usr/sbin/grub-install", "usr/sbin/update-grub"]

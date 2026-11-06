@@ -4,6 +4,7 @@ import sys
 import tempfile
 import unittest
 from contextlib import contextmanager
+from dataclasses import replace
 from pathlib import Path
 from unittest.mock import patch
 
@@ -38,6 +39,27 @@ def prepare_root(root: Path) -> None:
         " initrd /initrd.img-7.0-test\n}\n",
         encoding="utf-8",
     )
+
+
+def prepare_encrypted_root(root: Path, filesystem: str) -> tuple[Partition, Path]:
+    prepare_root(root)
+    part = replace(partition(), filesystem=filesystem, encrypted=True,
+                   container_path="/dev/sda2",
+                   luks_uuid="11111111-1111-4111-8111-111111111111")
+    (root / "etc/crypttab").write_text(
+        f"anduinos-root UUID={part.luks_uuid} none luks,x-initrd.attach\n")
+    with (root / "etc/fstab").open("a") as stream:
+        stream.write(f"UUID={part.filesystem_uuid} / {filesystem} defaults 0 0\n")
+    key = root / "etc/anduinos-luks/machine.key"
+    key.parent.mkdir()
+    key.write_bytes(b"fixture-public-key"[:1] * 64)
+    key.chmod(0o600)
+    (root / "usr/lib/anduinos-grub").mkdir()
+    suffix = "x64" if __import__("platform").machine() == "x86_64" else "aa64"
+    (root / f"usr/lib/anduinos-grub/grub{suffix}.efi").write_bytes(b"function anduinos_unlock {")
+    (root / "etc/grub.d").mkdir()
+    (root / "etc/grub.d/10_linux").write_text("GRUB_ANDUINOS_CRYPT_HANDOFF")
+    return part, key
 
 
 class BootRepairTests(unittest.TestCase):
@@ -374,38 +396,102 @@ if __name__ == "__main__":
     unittest.main()
 
 class EncryptedBootRepairTests(unittest.TestCase):
+    def test_diagnosis_rejects_missing_or_unusable_machine_key_before_repair_writes(self):
+        for filesystem in ("btrfs", "ext4"):
+            for state in ("missing", "rejected", "timeout", "accepted"):
+                with self.subTest(filesystem=filesystem, state=state), tempfile.TemporaryDirectory() as directory:
+                    top = Path(directory) / "root"
+                    top.mkdir()
+                    part, key = prepare_encrypted_root(top, filesystem)
+                    # system_root resolves @root on Btrfs in the real mount.
+                    efi = Path(directory) / "efi"
+                    vendor = efi / "EFI/AnduinOS"
+                    vendor.mkdir(parents=True)
+                    for name in ("shimx64.efi", "grubx64.efi", "grub.cfg"):
+                        (vendor / name).write_bytes(b"present")
+                    if state == "missing":
+                        key.unlink()
+                    calls = []
+
+                    def run(command, **_kwargs):
+                        calls.append(command)
+                        if state == "timeout":
+                            raise subprocess.TimeoutExpired(command, 30)
+                        return subprocess.CompletedProcess(command, 0 if state == "accepted" else 2, "", "")
+
+                    @contextmanager
+                    def readonly(path, _filesystem, **_kwargs):
+                        yield top if path == part.path else efi
+
+                    esp = Esp("/dev/sda1", EFI_IDENTITY, "1234-ABCD", 1, "/dev/sda", False)
+                    with (patch("anduinos_rescue_center.boot.resolve_target", return_value=part),
+                          patch("anduinos_rescue_center.boot.mounted_readonly", readonly),
+                          patch("anduinos_rescue_center.boot.system_root", side_effect=lambda root, _part: root),
+                          patch("anduinos_rescue_center.boot._locate_esp", return_value=esp),
+                          patch("anduinos_rescue_center.boot._nvram_entry", return_value=True),
+                          patch("anduinos_rescue_center.boot._firmware_available", return_value=True),
+                          patch("anduinos_rescue_center.boot.platform.machine", return_value="x86_64"),
+                          patch("anduinos_rescue_center.boot.opened_system") as opened):
+                        # Both native payloads keep the test independent of host architecture.
+                        (top / "usr/lib/anduinos-grub/grubx64.efi").write_bytes(b"function anduinos_unlock {")
+                        report = diagnose_boot(part.path, part.identity, run=run)
+                        self.assertEqual(report["repairable"], state == "accepted")
+                        if state == "accepted":
+                            self.assertEqual(report["issues"], [])
+                        else:
+                            self.assertTrue(any("unlock key" in issue for issue in report["issues"]))
+                            with self.assertRaisesRegex(RuntimeError, "cannot be repaired safely"):
+                                repair_boot(part.path, part.identity, EFI_IDENTITY, run=run)
+                            opened.assert_not_called()
+                    expected = ["cryptsetup", "open", "--type", "luks2", "--test-passphrase",
+                                "--key-file", str(key), "--", part.container_path]
+                    self.assertEqual(calls, [] if state == "missing" else [expected] * (1 if state == "accepted" else 2))
+
+    def test_repair_rechecks_machine_key_after_diagnosis_before_opening_writable_root(self):
+        for filesystem in ("btrfs", "ext4"):
+            with self.subTest(filesystem=filesystem), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                part, _key = prepare_encrypted_root(root, filesystem)
+
+                def rejected(command, **_kwargs):
+                    return subprocess.CompletedProcess(command, 2, "", "")
+
+                @contextmanager
+                def readonly(*_args, **_kwargs):
+                    yield root
+
+                with (patch("anduinos_rescue_center.boot.diagnose_boot", return_value={
+                          "repairable": True, "esp_identity": EFI_IDENTITY}),
+                      patch("anduinos_rescue_center.boot.resolve_target", return_value=part),
+                      patch("anduinos_rescue_center.boot.mounted_readonly", readonly),
+                      patch("anduinos_rescue_center.boot.system_root", return_value=root),
+                      patch("anduinos_rescue_center.boot.opened_system") as opened):
+                    with self.assertRaisesRegex(RuntimeError, "unlock key"):
+                        repair_boot(part.path, part.identity, EFI_IDENTITY, run=rejected)
+                    opened.assert_not_called()
+
     def test_bound_encryption_policy_and_private_key_are_required_without_rewriting_them(self):
         from dataclasses import replace
         from anduinos_rescue_center.boot import _encrypted_inputs
         for filesystem in ('btrfs', 'ext4'):
             with self.subTest(filesystem=filesystem), tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
-                prepare_root(root)
-                part = replace(partition(), filesystem=filesystem, encrypted=True,
-                               luks_uuid='11111111-1111-4111-8111-111111111111')
+                part, key = prepare_encrypted_root(root, filesystem)
                 crypttab = root / 'etc/crypttab'
-                text = f'anduinos-root UUID={part.luks_uuid} none luks,x-initrd.attach\n'
-                crypttab.write_text(text)
-                with (root / 'etc/fstab').open('a') as f:
-                    f.write(f'UUID={part.filesystem_uuid} / {filesystem} defaults 0 0\n')
-                key = root / 'etc/anduinos-luks/machine.key'
-                key.parent.mkdir()
-                key.write_bytes(b'fixture-public-key'[:1] * 64)
-                key.chmod(0o600)
-                (root / 'usr/lib/anduinos-grub').mkdir()
-                suffix = 'x64' if __import__('platform').machine() == 'x86_64' else 'aa64'
-                (root / f'usr/lib/anduinos-grub/grub{suffix}.efi').write_bytes(b'function anduinos_unlock {')
-                (root / 'etc/grub.d').mkdir()
-                (root / 'etc/grub.d/10_linux').write_text('GRUB_ANDUINOS_CRYPT_HANDOFF')
-                _encrypted_inputs(root, part)
+                text = crypttab.read_text()
+
+                def run(command, **_kwargs):
+                    return subprocess.CompletedProcess(command, 0, '', '')
+
+                _encrypted_inputs(root, part, run=run)
                 self.assertEqual(crypttab.read_text(), text)
                 crypttab.write_text(text.replace(part.luks_uuid, '22222222-2222-4222-8222-222222222222'))
                 with self.assertRaisesRegex(RuntimeError, 'inconsistent'):
-                    _encrypted_inputs(root, part)
+                    _encrypted_inputs(root, part, run=run)
                 crypttab.write_text(text)
                 key.chmod(0o644)
                 with self.assertRaisesRegex(RuntimeError, 'unsafe'):
-                    _encrypted_inputs(root, part)
+                    _encrypted_inputs(root, part, run=run)
 
     def test_graphical_stub_rebind_keeps_root_uuids_and_ram_handoff(self):
         from dataclasses import replace

@@ -75,6 +75,9 @@ the currently running root filesystem.
   mapping until it is closed manually or the Live session is shut down.
 - Encrypted boot repair supports the installer-created single-root layout with
   the native AnduinOS GRUB and intact crypttab, fstab and internal machine key.
+  Diagnosis also tests that the internal key unlocks the selected LUKS container
+  without changing its metadata. A missing or unusable key disables guided boot
+  repair; this release does not recreate internal keys or change key slots.
   It rebuilds initrds, checks encryption modules and transient-key handoff, and
   preserves the graphical unlock and bound independent recovery entry. It never
   formats a LUKS volume, changes a key slot, or removes encryption. Ambiguous or
