@@ -189,7 +189,9 @@ verify_rollback() {
     archive="$RECOVERY_STORE/rollback-history/$transaction_id.json"
     jq -e --arg target "$target" \
         '.phase == "confirmed" and .target_deployment_id == $target and
-         .checkpoint == "booted-unconfirmed-recorded" and .initramfs_attempts >= 1' \
+         .checkpoint == "booted-unconfirmed-recorded" and .initramfs_attempts >= 1 and
+         .schema_version == 7 and .recovery_protocol_version == 3 and
+         (.target_boot_id | type == "string") and .target_boot_id != .applying_boot_id' \
         "$archive" >/dev/null || die "the durable rollback history is missing or incomplete"
 
     state=$(jq '.phase = "verified"' <<<"$state")
@@ -260,7 +262,9 @@ verify_docker_autoremove() {
         <<<"$status" >/dev/null || die "the Docker rollback target is not reusable and ready"
     transaction_id=$(jq -er '.pending.id' <<<"$state")
     archive="$RECOVERY_STORE/rollback-history/$transaction_id.json"
-    jq -e '.phase == "confirmed" and .checkpoint == "booted-unconfirmed-recorded"' \
+    jq -e '.phase == "confirmed" and .checkpoint == "booted-unconfirmed-recorded" and
+           .schema_version == 7 and .recovery_protocol_version == 3 and
+           (.target_boot_id | type == "string") and .target_boot_id != .applying_boot_id' \
         "$archive" >/dev/null || die "the Docker rollback diagnostic history is incomplete"
     state=$(jq '.phase = "verified"' <<<"$state")
     write_state "$state"

@@ -1,6 +1,6 @@
 # Rollback release qualification
 
-This document defines recovery protocol 2 qualification procedures and evidence
+This document defines recovery protocol 3 qualification procedures and evidence
 requirements. Results belong to the tested commit and package version and must
 be recorded in the release issue or artifact store using the template below.
 Passing unit tests or restoring one package does not qualify a global recovery
@@ -47,7 +47,7 @@ Preconditions:
 
 - installed package is the APKG-built release candidate, with its version and
   source commit recorded;
-- installed and initramfs recovery protocol both report `2`;
+- installed and initramfs recovery protocol both report `3`;
 - CLI status reports no pending rollback and no recovery issue;
 - the EFI one-shot GRUB environment is empty;
 - no package snapshot transaction is pending; and
@@ -55,7 +55,7 @@ Preconditions:
 
 Procedure:
 
-1. Create a manual snapshot titled `LKG protocol v2 rollback test` and record its
+1. Create a manual snapshot titled `LKG protocol v3 rollback test` and record its
    deployment ID, creation time, snapshot UUID, and installed `docker.io` version.
 2. Run `sudo apt-get remove --yes docker.io`. Do not use `autoremove` in this host
    lane; the broader autoremove scenario belongs to disposable VM test
@@ -70,8 +70,10 @@ Procedure:
    another. If a logind/systemd inhibitor refuses the request, the App must display
    the diagnostic. Record it, close the inhibitor, and restart through the desktop
    power UI without cancelling the armed transaction.
-6. Allow the GRUB one-shot selector to enter the recovery entry. Do not manually
-   select normal boot.
+6. Allow the GRUB one-shot selector to enter the recovery entry. It must apply
+   the restore and restart before entering the target root. Allow the subsequent
+   ordinary GRUB boot to start the restored system; unlock encrypted disks again
+   if prompted. Do not select the recovery entry a second time.
 7. After the graphical session is fully online, collect the evidence bundle
    before creating or arming any other rollback.
 

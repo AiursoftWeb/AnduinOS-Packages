@@ -99,16 +99,17 @@ request that cannot enter the matching recovery protocol fails visibly. The engi
 persists its boot ID, attempt counter, and last synchronized filesystem checkpoint;
 userspace treats a requested boot that reached userspace without initramfs entry as
 a failed transaction, restores safe deployment states, and archives the diagnostic.
-An armed transaction from an earlier transaction schema or recovery protocol
-encountered during a package upgrade is likewise cancelled and archived instead of
-being interpreted by incompatible recovery code or left as a stale GRUB loop.
+Unsupported armed protocol-1 transactions encountered during a package upgrade
+are cancelled and archived instead of being interpreted by incompatible code.
+Schema-6/protocol-2 transactions retain their original continue-boot behavior;
+newly scheduling such a snapshot is limited to the same default kernel ABI.
 Already-applied legacy transactions remain readable only for identity-checked
 confirmation, reversion, and terminal cleanup.
 
 Release claims for this boundary require numbered evidence rather than an
 informal successful boot. The release ledger in
 [ROLLBACK-RELEASE-TEST-PLAN.md](ROLLBACK-RELEASE-TEST-PLAN.md) records normal
-protocol-2 confirmation, legacy reconciliation, automatic fallback, Secure Boot,
+current confirmation, legacy reconciliation, automatic fallback, Secure Boot,
 and every hard-power-loss checkpoint. A restored package or executable proves
 only that initramfs activated the target root; terminal `confirmed` history,
 userspace service success, an empty one-shot selector, and cleanup of staging
