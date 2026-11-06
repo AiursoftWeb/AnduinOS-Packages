@@ -106,6 +106,10 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
     patch --batch --forward --fuzz=0 --directory="$DEPLOY_DIR" --strip=2 \
         < "$SCRIPT_DIR/patches/translate-constants-at-display-time.patch"
 
+    echo "[$SUITE] Keeping the on-screen keyboard above the opened menu..."
+    patch --batch --forward --fuzz=0 --directory="$DEPLOY_DIR" --strip=2 \
+        < "$SCRIPT_DIR/patches/keep-opened-menu-below-osk.patch"
+
     # ── AnduinOS customizations ───────────────────────────────────────
 
     # 1. Replace ArcMenu logo with AnduinOS logo
