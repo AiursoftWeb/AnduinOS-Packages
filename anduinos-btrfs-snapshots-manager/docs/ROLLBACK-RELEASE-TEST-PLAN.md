@@ -81,7 +81,7 @@ Pass criteria:
 - CLI status reports `pending: null` and no issues;
 - the target deployment and protected fallback are both `ready`;
 - the same target remains selectable for another rollback after confirmation;
-- terminal history is `confirmed` under transaction schema 5 and protocol 2;
+- terminal history is `confirmed` under schema 7/protocol 3, with distinct recovery and target boot IDs;
 - the confirmation service executed successfully with no `203/EXEC`;
 - its executable was the digest-bound external `recovery-boot/confirm`, not a
   payload below `/run`;

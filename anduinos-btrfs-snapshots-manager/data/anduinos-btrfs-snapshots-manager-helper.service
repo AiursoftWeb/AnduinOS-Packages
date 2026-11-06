@@ -25,10 +25,7 @@ StateDirectoryMode=0755
 ReadWritePaths=-/home -/.snapshots -/var/lib/anduinos-btrfs-snapshots-manager -/sys/fs/btrfs -/etc/anduinos-btrfs-snapshots-manager -/boot/grub -/boot/efi -/run/media -/media -/mnt
 RestrictAddressFamilies=AF_UNIX AF_NETLINK
 RestrictNamespaces=true
-# Dracut preserves source file modes, including the setuid mount executable.
-# Blocking that chmod leaves a non-executable copy in an otherwise valid image.
-# NoNewPrivileges still prevents this service from gaining privileges by exec.
-RestrictSUIDSGID=false
+RestrictSUIDSGID=true
 LockPersonality=true
 MemoryDenyWriteExecute=true
 SystemCallArchitectures=native
@@ -38,10 +35,7 @@ ProtectClock=true
 ProtectControlGroups=true
 ProtectHostname=true
 ProtectKernelLogs=true
-# Recovery image construction needs read access to installed kernel modules.
-# ProtectSystem keeps them read-only; the explicit capability allow-list and
-# @module syscall filter above still prohibit loading or unloading modules.
-ProtectKernelModules=false
+ProtectKernelModules=true
 ProtectKernelTunables=true
 RestrictRealtime=true
 UMask=0077

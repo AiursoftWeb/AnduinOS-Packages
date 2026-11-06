@@ -79,7 +79,7 @@ preflight() {
     kernel_release=$(tr -d '\n' </proc/sys/kernel/osrelease)
     initramfs="/boot/initrd.img-$kernel_release"
     [[ -f "$initramfs" ]] || die "the running kernel's initramfs is missing"
-    [[ $(/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs --protocol-version) == 2 ]] ||
+    [[ $(/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs --protocol-version) == 3 ]] ||
         die "the installed recovery engine protocol is incompatible"
     if findmnt -n -o OPTIONS --target /run | tr ',' '\n' | grep -Fxq noexec; then
         echo "Confirmed: /run is noexec; the recovery confirmation regression is active"
@@ -99,7 +99,7 @@ preflight() {
         usr/libexec/anduinos-btrfs-snapshots-manager-initramfs \
         usr/libexec/anduinos-btrfs-snapshots-manager-confirm \
         etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version \
-        usr/bin/cat usr/bin/chmod usr/bin/cp usr/bin/ln usr/bin/mkdir; do
+        usr/bin/cat usr/bin/chmod usr/bin/cp usr/bin/ln usr/bin/mkdir usr/bin/sync usr/sbin/reboot; do
         grep -Fxq "$member" <<<"$listing" ||
             die "the installed initramfs is missing $member"
     done

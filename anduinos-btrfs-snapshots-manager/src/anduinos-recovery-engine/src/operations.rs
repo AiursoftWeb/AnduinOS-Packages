@@ -1584,7 +1584,9 @@ fn read_kernel_release(system_root: &Path) -> Result<String, OperationError> {
     Ok(validate_kernel_release(release.trim())?.to_string())
 }
 
-fn read_default_installed_kernel_release(system_root: &Path) -> Result<String, OperationError> {
+pub(crate) fn read_default_installed_kernel_release(
+    system_root: &Path,
+) -> Result<String, OperationError> {
     let link = system_root.join("boot/vmlinuz");
     let target = fs::read_link(&link)
         .map_err(|error| io_error("Could not read the default installed kernel link", error))?;

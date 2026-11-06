@@ -305,6 +305,7 @@ fn real_btrfs_home_rollback_preserves_root_and_history_and_can_revert() {
         "b".repeat(64),
         format!("{:x}", Sha256::digest(fs::read(&confirm).unwrap())),
     );
+    transaction.use_continue_boot_protocol();
     transaction.home_only = true;
     transaction.enable_home_reset(&baseline).unwrap();
     transaction.fallback_home_snapshot_id = Some(safety.id);

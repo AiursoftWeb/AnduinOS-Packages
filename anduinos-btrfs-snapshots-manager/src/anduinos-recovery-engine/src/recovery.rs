@@ -20,8 +20,8 @@ use crate::personal::{PersonalSnapshotEngine, PersonalSnapshotState};
 use crate::store::DeploymentStore;
 pub use crate::transaction::RecoveryCheckpoint;
 use crate::transaction::{
-    MAX_APPLY_ATTEMPTS, RECOVERY_PROTOCOL_VERSION, RollbackId, RollbackPhase, RollbackTransaction,
-    TransactionError, TransactionStore,
+    MAX_APPLY_ATTEMPTS, RollbackId, RollbackPhase, RollbackTransaction, TransactionError,
+    TransactionStore,
 };
 
 const BTRFS: &str = "/usr/bin/btrfs";
@@ -33,6 +33,7 @@ pub enum RecoveryOutcome {
     Applied,
     Reverted,
     FailedSafe,
+    RestartRequired,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -318,14 +319,23 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
         else {
             return Ok(false);
         };
+        let expected = (transaction.recovery_protocol_version >= 2)
+            .then_some(transaction.recovery_confirm_sha256.as_str());
+        let frozen = snapshot_root.join("recovery-boot").join(RECOVERY_CONFIRM);
+        if let Some(digest) = expected {
+            if ensure_protected_executable(&frozen).is_ok()
+                && hash_regular_file(&frozen).is_ok_and(|actual| actual == digest)
+            {
+                // A target initrd can contain an older confirmer. Preserve the
+                // already bound current executable across both normal boots.
+                return Ok(true);
+            }
+        }
         ensure_protected_executable(source).map_err(|error| {
             RecoveryError::new(RecoveryErrorCode::InvalidTransaction, error.message)
         })?;
-        let source_digest = hash_regular_file(source).map_err(|error| {
-            RecoveryError::new(RecoveryErrorCode::InvalidTransaction, error.message)
-        })?;
-        if transaction.recovery_protocol_version == RECOVERY_PROTOCOL_VERSION
-            && source_digest != transaction.recovery_confirm_sha256
+        if expected
+            .is_some_and(|digest| !hash_regular_file(source).is_ok_and(|actual| actual == digest))
         {
             return Err(RecoveryError::new(
                 RecoveryErrorCode::InvalidTransaction,
@@ -340,10 +350,8 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
         ensure_protected_executable(&target).map_err(|error| {
             RecoveryError::new(RecoveryErrorCode::InvalidTransaction, error.message)
         })?;
-        if transaction.recovery_protocol_version == RECOVERY_PROTOCOL_VERSION
-            && hash_regular_file(&target).map_err(|error| {
-                RecoveryError::new(RecoveryErrorCode::InvalidTransaction, error.message)
-            })? != transaction.recovery_confirm_sha256
+        if expected
+            .is_some_and(|digest| !hash_regular_file(&target).is_ok_and(|actual| actual == digest))
         {
             return Err(RecoveryError::new(
                 RecoveryErrorCode::InvalidTransaction,
@@ -368,7 +376,24 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
             return Ok(RecoveryOutcome::NoAction);
         };
 
+        // Remember the boot performing a restart-only revert as well. If the
+        // reboot syscall fails, another hook invocation must not enter that root.
+        if transaction.restarts_after_apply()
+            && (transaction.phase == RollbackPhase::Reverting
+                || (transaction.phase == RollbackPhase::Applying && requested.is_none())
+                || (transaction.phase == RollbackPhase::BootedUnconfirmed
+                    && transaction.target_boot_id.as_deref() != Some(boot_id)))
+        {
+            transaction.initramfs_boot_id = Some(boot_id.to_string());
+            store.update(&transaction).map_err(transaction_error)?;
+        }
         match transaction.phase {
+            RollbackPhase::Reverted
+                if transaction.restarts_after_apply()
+                    && transaction.initramfs_boot_id.as_deref() == Some(boot_id) =>
+            {
+                Ok(RecoveryOutcome::RestartRequired)
+            }
             RollbackPhase::Preparing
             | RollbackPhase::Reverted
             | RollbackPhase::Confirmed
@@ -423,16 +448,7 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
                 store.update(&transaction).map_err(transaction_error)?;
                 checkpoint(RecoveryCheckpoint::ApplyStarted);
                 self.apply(&store, &mut transaction, &mut checkpoint)?;
-                transaction
-                    .transition(RollbackPhase::BootedUnconfirmed, Utc::now())
-                    .map_err(transaction_error)?;
-                persist_checkpoint(
-                    &store,
-                    &mut transaction,
-                    RecoveryCheckpoint::BootedUnconfirmedRecorded,
-                    &mut checkpoint,
-                )?;
-                Ok(RecoveryOutcome::Applied)
+                self.finish_apply(&store, &mut transaction, &mut checkpoint)
             }
             RollbackPhase::Applying => {
                 if requested == Some(transaction.id)
@@ -457,22 +473,33 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
                     store.update(&transaction).map_err(transaction_error)?;
                     checkpoint(RecoveryCheckpoint::ApplyStarted);
                     self.apply(&store, &mut transaction, &mut checkpoint)?;
-                    transaction
-                        .transition(RollbackPhase::BootedUnconfirmed, Utc::now())
-                        .map_err(transaction_error)?;
-                    persist_checkpoint(
-                        &store,
-                        &mut transaction,
-                        RecoveryCheckpoint::BootedUnconfirmedRecorded,
-                        &mut checkpoint,
-                    )?;
-                    Ok(RecoveryOutcome::Applied)
+                    self.finish_apply(&store, &mut transaction, &mut checkpoint)
                 } else {
                     self.revert_transaction(&store, &mut transaction, &mut checkpoint)
                 }
             }
+            RollbackPhase::AppliedAwaitingBoot => {
+                if transaction.applying_boot_id.as_deref() == Some(boot_id) || requested.is_some() {
+                    return Ok(RecoveryOutcome::RestartRequired);
+                }
+                transaction
+                    .record_target_boot(boot_id, Utc::now())
+                    .map_err(transaction_error)?;
+                persist_checkpoint(
+                    &store,
+                    &mut transaction,
+                    RecoveryCheckpoint::BootedUnconfirmedRecorded,
+                    &mut checkpoint,
+                )?;
+                Ok(RecoveryOutcome::NoAction)
+            }
             RollbackPhase::BootedUnconfirmed => {
-                if transaction.applying_boot_id.as_deref() == Some(boot_id) {
+                let expected_boot = if transaction.restarts_after_apply() {
+                    transaction.target_boot_id.as_deref()
+                } else {
+                    transaction.applying_boot_id.as_deref()
+                };
+                if expected_boot == Some(boot_id) {
                     Ok(RecoveryOutcome::NoAction)
                 } else {
                     self.revert_transaction(&store, &mut transaction, &mut checkpoint)
@@ -484,9 +511,38 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
         }
     }
 
+    fn finish_apply(
+        &self,
+        store: &TransactionStore,
+        transaction: &mut RollbackTransaction,
+        checkpoint: &mut impl FnMut(RecoveryCheckpoint),
+    ) -> Result<RecoveryOutcome, RecoveryError> {
+        let restarting = transaction.restarts_after_apply();
+        let (phase, completed) = if restarting {
+            (
+                RollbackPhase::AppliedAwaitingBoot,
+                RecoveryCheckpoint::AppliedAwaitingBootRecorded,
+            )
+        } else {
+            (
+                RollbackPhase::BootedUnconfirmed,
+                RecoveryCheckpoint::BootedUnconfirmedRecorded,
+            )
+        };
+        transaction
+            .transition(phase, Utc::now())
+            .map_err(transaction_error)?;
+        persist_checkpoint(store, transaction, completed, checkpoint)?;
+        Ok(if restarting {
+            RecoveryOutcome::RestartRequired
+        } else {
+            RecoveryOutcome::Applied
+        })
+    }
+
     fn validate_deployments(&self, transaction: &RollbackTransaction) -> Result<(), RecoveryError> {
         let root = self.snapshot_root();
-        if transaction.recovery_protocol_version == RECOVERY_PROTOCOL_VERSION {
+        if transaction.recovery_protocol_version >= 2 {
             let confirm = root.join("recovery-boot").join(RECOVERY_CONFIRM);
             ensure_protected_executable(&confirm).map_err(|error| {
                 RecoveryError::new(RecoveryErrorCode::InvalidTransaction, error.message)
@@ -799,7 +855,11 @@ impl<F: RecoveryFilesystem> RecoveryEngine<F> {
             RecoveryCheckpoint::RevertedRecorded,
             checkpoint,
         )?;
-        Ok(RecoveryOutcome::Reverted)
+        Ok(if transaction.restarts_after_apply() {
+            RecoveryOutcome::RestartRequired
+        } else {
+            RecoveryOutcome::Reverted
+        })
     }
 
     fn revert(
@@ -1179,6 +1239,7 @@ mod tests {
                 "b".repeat(64),
                 hash_regular_file(&confirm).unwrap(),
             );
+            transaction.use_continue_boot_protocol();
             transaction
                 .transition(RollbackPhase::Armed, Utc::now())
                 .unwrap();
@@ -1521,14 +1582,8 @@ mod tests {
             "trusted-confirmation-engine"
         );
 
-        fs::write(&source, "untrusted-confirmation-engine").unwrap();
-        assert_eq!(
-            engine
-                .stage_confirmation_artifact(&source)
-                .unwrap_err()
-                .code,
-            RecoveryErrorCode::InvalidTransaction
-        );
+        fs::write(&source, "older-confirmation-engine").unwrap();
+        assert!(engine.stage_confirmation_artifact(&source).unwrap());
         assert_eq!(
             fs::read_to_string(&target).unwrap(),
             "trusted-confirmation-engine"
@@ -1766,5 +1821,164 @@ mod tests {
                 "failure {failure}"
             );
         }
+    }
+    fn restarting_environment() -> Environment {
+        let mut environment = Environment::new();
+        environment.transaction.schema_version = 7;
+        environment.transaction.recovery_protocol_version = 3;
+        environment.transaction.target_kernel_release = Some("test-kernel".into());
+        TransactionStore::new(
+            environment
+                .root
+                .join("@snapshots/anduinos-btrfs-snapshots-manager"),
+        )
+        .update(&environment.transaction)
+        .unwrap();
+        environment
+    }
+
+    #[test]
+    fn restarting_restore_acknowledges_normal_boot_before_failed_boot_fallback() {
+        let environment = restarting_environment();
+        let engine = RecoveryEngine::new(&environment.root, FakeFilesystem::default());
+        assert_eq!(
+            engine
+                .execute(Some(environment.transaction.id), BOOT_ONE)
+                .unwrap(),
+            RecoveryOutcome::RestartRequired
+        );
+        assert_eq!(environment.phase(), RollbackPhase::AppliedAwaitingBoot);
+        assert_eq!(
+            engine.execute(None, BOOT_ONE).unwrap(),
+            RecoveryOutcome::RestartRequired
+        );
+        assert_eq!(
+            engine.execute(None, BOOT_TWO).unwrap(),
+            RecoveryOutcome::NoAction
+        );
+        assert_eq!(environment.phase(), RollbackPhase::BootedUnconfirmed);
+        assert!(environment.root.join("@root/target").exists());
+        assert_eq!(
+            engine.execute(None, BOOT_TWO).unwrap(),
+            RecoveryOutcome::NoAction
+        );
+        let fallback_boot = "33333333-3333-4333-8333-333333333333";
+        assert_eq!(
+            engine.execute(None, fallback_boot).unwrap(),
+            RecoveryOutcome::RestartRequired
+        );
+        assert_eq!(environment.phase(), RollbackPhase::Reverted);
+        assert!(environment.root.join("@root/origin").exists());
+        assert_eq!(
+            engine.execute(None, fallback_boot).unwrap(),
+            RecoveryOutcome::RestartRequired
+        );
+        assert_eq!(
+            engine
+                .execute(None, "44444444-4444-4444-8444-444444444444")
+                .unwrap(),
+            RecoveryOutcome::NoAction
+        );
+    }
+
+    #[test]
+    fn reselecting_recovery_does_not_acknowledge_the_target_boot() {
+        let environment = restarting_environment();
+        let engine = RecoveryEngine::new(&environment.root, FakeFilesystem::default());
+        engine
+            .execute(Some(environment.transaction.id), BOOT_ONE)
+            .unwrap();
+        assert_eq!(
+            engine
+                .execute(Some(environment.transaction.id), BOOT_TWO)
+                .unwrap(),
+            RecoveryOutcome::RestartRequired
+        );
+        assert_eq!(environment.phase(), RollbackPhase::AppliedAwaitingBoot);
+    }
+
+    #[test]
+    fn restarting_factory_reset_and_home_restore_keep_their_data_boundaries() {
+        for home_only in [false, true] {
+            let mut environment = if home_only {
+                home_only_environment()
+            } else {
+                restarting_environment()
+            };
+            if home_only {
+                environment.transaction.schema_version = 7;
+                environment.transaction.recovery_protocol_version = 3;
+                environment.transaction.target_kernel_release = Some("test-kernel".into());
+            } else {
+                environment.enable_home_reset();
+            }
+            let store = TransactionStore::new(
+                environment
+                    .root
+                    .join("@snapshots/anduinos-btrfs-snapshots-manager"),
+            );
+            store.update(&environment.transaction).unwrap();
+            let engine = RecoveryEngine::new(&environment.root, FakeFilesystem::default());
+            assert_eq!(
+                engine
+                    .execute(Some(environment.transaction.id), BOOT_ONE)
+                    .unwrap(),
+                RecoveryOutcome::RestartRequired
+            );
+            assert!(
+                environment
+                    .root
+                    .join(if home_only {
+                        "@home/alice/factory-default"
+                    } else {
+                        "@home/factory-default"
+                    })
+                    .exists()
+            );
+            assert!(
+                environment
+                    .root
+                    .join(if home_only {
+                        "@root/origin"
+                    } else {
+                        "@root/target"
+                    })
+                    .exists()
+            );
+            assert_eq!(
+                engine.execute(None, BOOT_TWO).unwrap(),
+                RecoveryOutcome::NoAction
+            );
+            assert_eq!(
+                engine
+                    .execute(None, "33333333-3333-4333-8333-333333333333")
+                    .unwrap(),
+                RecoveryOutcome::RestartRequired
+            );
+            assert!(environment.root.join("@root/origin").exists());
+            assert!(environment.root.join("@home/user-data").exists());
+        }
+    }
+
+    #[test]
+    fn restarting_restore_recovers_interruption_after_synchronized_root_activation() {
+        let environment = restarting_environment();
+        let engine = RecoveryEngine::new(&environment.root, FakeFilesystem::default());
+        let cut = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            engine
+                .execute_with_observer(Some(environment.transaction.id), BOOT_ONE, |checkpoint| {
+                    if checkpoint == RecoveryCheckpoint::TargetRootActivated {
+                        panic!("interrupted after sync");
+                    }
+                })
+                .unwrap();
+        }));
+        assert!(cut.is_err());
+        assert_eq!(environment.phase(), RollbackPhase::Applying);
+        assert_eq!(
+            engine.execute(None, BOOT_TWO).unwrap(),
+            RecoveryOutcome::RestartRequired
+        );
+        assert!(environment.root.join("@root/origin").exists());
     }
 }
