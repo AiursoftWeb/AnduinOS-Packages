@@ -135,8 +135,10 @@ internal disk credential, retained history, and one further ordinary restart
 before starting another transaction. Ext4 has no Btrfs rollback lane.
 
 Protocol 3 consumes the one-shot GRUB selection once. Its recovery entry must
-not rearm itself: Home rollback retains the current root and its recovery menu
-entry. After an interrupted apply, the normal initramfs hook restores the
+not rearm itself, and its generator must follow `10_linux`: Home rollback
+retains the current root and its recovery menu entry. Confirm that upgrading the
+package removes the old `09_anduinos_btrfs_snapshots_manager` generator; only the
+new `41_anduinos_btrfs_snapshots_manager` remains. After an interrupted apply, the normal initramfs hook restores the
 protected original system. Protocol 2 keeps its existing recovery retry path.
 
 ## Hard power-loss matrix (`RRP2-VM-005`)
