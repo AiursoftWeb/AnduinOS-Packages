@@ -6,7 +6,8 @@ hardware drivers and updating device firmware. It replaces the only broadly usef
 authentication, and release-upgrade user interfaces.
 
 The responsive home page summarizes automatic driver recommendations and the
-health of graphics, audio, printing, Xbox controller, and Secure Boot support.
+health of graphics, audio, printing, Xbox controller, Secure Boot, device firmware,
+Recovery Environment, and disk encryption.
 It compares installed and candidate versions of the recommended graphics
 driver, can refresh package information, and exposes the equivalent of
 `ubuntu-drivers install` through the same restricted privileged helper used by
@@ -47,6 +48,12 @@ checks show ordered repair steps. Explicitly confirmed repairs can prepare a
 256 MiB recovery partition from an ordinary system-disk GPT swap partition of
 at least 512 MiB, install or update the recovery package, or repair its boot
 menu. Unsupported layouts explain why automatic preparation cannot continue.
+
+Disk credential changes show a separate modal window with an indeterminate
+progress bar while the helper verifies and updates credentials. This window
+contains no credential input or helper output. Unencrypted installations show
+that enabling encryption in place is not supported; a new installation using
+the latest AnduinOS ISO is required.
 
 The audio page reports the installed Intel SOF firmware and ALSA UCM packages,
 deployed support files, loaded SOF modules, and active PCI audio drivers.

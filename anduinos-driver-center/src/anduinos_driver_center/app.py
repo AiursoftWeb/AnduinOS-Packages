@@ -155,6 +155,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self._dkms: DkmsState | None = None
         self._audio: AudioState | None = None
         self._printing: PrintingState | None = None
+        self._recovery: RecoveryState | None = None
+        self._encryption = EncryptionState()
         self._graphics_scan = GraphicsScan()
         self._selected_package: str | None = None
         self._selected_page_name: str | None = initial_page
@@ -361,6 +363,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self._dkms = dkms
         self._audio = audio
         self._printing = printing
+        self._recovery = recovery
+        self._encryption = encryption or EncryptionState()
         self.refresh_button.set_sensitive(True)
         self.device_list.set_sensitive(True)
         self._clear(self.device_list)
@@ -371,7 +375,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         home_row.page_title = _("Home")
         self.device_list.append(home_row)
         self.stack.add_named(
-            self._home_page(graphics_scan, secure_boot, xbox, audio, printing, dkms),
+            self._home_page(graphics_scan, secure_boot, xbox, audio, printing, dkms,
+                            recovery, self._encryption),
             "home",
         )
 
@@ -458,7 +463,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self.device_list.append(secure_row)
         self.stack.add_named(self._secure_boot_page(secure_boot, dkms), "secure-boot")
 
-        encryption = encryption or EncryptionState()
+        encryption = self._encryption
         encryption_row = self._device_row(
             "changes-prevent-symbolic", _("Disk Encryption"), encryption_summary(encryption),
         )
@@ -621,6 +626,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             and self._audio is not None
             and self._printing is not None
             and self._dkms is not None
+            and self._recovery is not None
         ):
             self._replace_stack_page(
                 "home",
@@ -631,6 +637,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                     self._audio,
                     self._printing,
                     self._dkms,
+                    self._recovery,
+                    self._encryption,
                 ),
             )
 
@@ -812,6 +820,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         audio: AudioState,
         printing: PrintingState,
         dkms: DkmsState,
+        recovery: RecoveryState,
+        encryption: EncryptionState,
     ) -> Gtk.Widget:
         scroll = _scrolled_window()
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
@@ -1122,6 +1132,39 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 "firmware",
             ),
             -1,
+        )
+        # Reuse this scan's read-only facts. Rendering a home card must not
+        # prompt for authorization or start another storage scan.
+        recovery_reason = repair_step(recovery)[1]
+        if encryption.root.filesystem == "ext4":
+            recovery_label = _("Not available")
+            recovery_subtitle = _("Not applicable to ext4. Use Rescue Center from the Live USB.")
+            recovery_class = "installed-pill"
+        elif recovery_reason == "healthy":
+            recovery_label = _("Ready")
+            recovery_subtitle = _("Configured")
+            recovery_class = "success-pill"
+        elif recovery.partition is False and not recovery.devices:
+            recovery_label = _("Not installed")
+            recovery_subtitle = _("Recovery partition not found")
+            recovery_class = "installed-pill"
+        else:
+            recovery_label = _("Unknown") if recovery.partition is None else _("Needs attention")
+            recovery_subtitle = _("Check recovery configuration")
+            recovery_class = "installed-pill" if recovery.partition is None else "warning-pill"
+        cards.insert(
+            self._overview_card(
+                "drive-harddisk-symbolic", _("Recovery Environment"),
+                recovery_label, recovery_subtitle, recovery_class, "recovery",
+            ), -1,
+        )
+        cards.insert(
+            self._overview_card(
+                "changes-prevent-symbolic", _("Disk Encryption"),
+                encryption_summary(encryption), _("Encryption coverage"),
+                "success-pill" if encryption.root.encrypted is True else "installed-pill",
+                "encryption",
+            ), -1,
         )
         content.append(cards)
 

@@ -10,6 +10,7 @@ import threading
 from gi.repository import Adw, GLib, Gtk
 
 from .encryption import EncryptionState
+from .operation_ui import OperationWindow
 
 _ = gettext.gettext
 HELPER = "/usr/libexec/anduinos-driver-center/driver-helper"
@@ -98,7 +99,7 @@ def create_encryption_page(window, state: EncryptionState, recovery):
         )
     if state.root.encrypted is False:
         note = Gtk.Label(
-            label=_("Disk encryption can be selected during a new installation."),
+            label=_("Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."),
             wrap=True, xalign=0,
         )
         note.add_css_class("dim-label")
@@ -134,6 +135,7 @@ class CredentialDialog(Adw.Window):
         self.role = role
         self.authentication = authentication
         self.busy = False
+        self.operation = None
         self.legacy = False
         self.ready = False
         self.entries = {}
@@ -226,6 +228,12 @@ class CredentialDialog(Adw.Window):
         self.cancel.set_sensitive(False)
         self.apply.set_sensitive(False)
         self.message.set_label(_("Checking credential configuration…") if operation == "inspect" else _("Updating the disk credential. Keep the computer powered on."))
+        # The helper performs multiple expensive key derivations. Pulse until
+        # its response arrives; it does not expose a truthful percentage.
+        self.operation = OperationWindow(
+            self, title=self.get_title(), message=self.message.get_label(), show_log=False,
+        )
+        self.operation.present()
         # Serialized input is never put in argv, environment, an operation log,
         # an exception dialog or a persistent file.
         data = None if payload is None else json.dumps(payload) + "\n"
@@ -249,6 +257,13 @@ class CredentialDialog(Adw.Window):
         threading.Thread(target=worker, daemon=True).start()
 
     def done(self, operation, result):
+        # Do not forward helper output to the shared operation log: this
+        # response belongs to a credential transaction and may contain secrets.
+        self.operation.finish(
+            1 if "error" in result else 0, "", title=self.get_title(),
+        )
+        self.operation.destroy()
+        self.operation = None
         self.busy = False
         self.window._operation_running = False
         self.window.disconnect(self.guard)

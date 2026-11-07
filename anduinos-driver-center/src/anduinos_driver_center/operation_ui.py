@@ -10,16 +10,19 @@ _ = gettext.gettext
 
 
 class OperationWindow(Adw.Window):
-    def __init__(self, parent):
-        super().__init__(transient_for=parent, modal=True, title=_("Working…"))
-        self.set_default_size(760, 500)
+    def __init__(self, parent, *, title=None, message=None, show_log=True):
+        super().__init__(transient_for=parent, modal=True, title=title or _("Working…"))
+        if show_log:
+            self.set_default_size(760, 500)
+        else:
+            self.set_default_size(540, 220)
         self.running = True
         self.connect('close-request', lambda *_: self.running)
         layout = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         header = Adw.HeaderBar()
         header.set_show_end_title_buttons(False)
         layout.append(header)
-        self.status = Gtk.Label(label=_("Working…"), wrap=True)
+        self.status = Gtk.Label(label=message or _("Working…"), wrap=True)
         self.status.set_margin_start(20)
         self.status.set_margin_end(20)
         layout.append(self.status)
@@ -34,6 +37,7 @@ class OperationWindow(Adw.Window):
         scroll = Gtk.ScrolledWindow(vexpand=True)
         scroll.set_child(self.log)
         layout.append(scroll)
+        scroll.set_visible(show_log)
         self.close_button = Gtk.Button(label=_("OK"), sensitive=False)
         self.close_button.set_margin_start(20)
         self.close_button.set_margin_end(20)
@@ -58,12 +62,15 @@ class OperationWindow(Adw.Window):
         buffer.delete_mark(mark)
         return GLib.SOURCE_REMOVE
 
-    def finish(self, code, message):
+    def finish(self, code, message, *, title=None):
         self.running = False
         GLib.source_remove(self._pulse)
         self.progress.set_fraction(1.0 if code == 0 else 0.0)
         self.status.set_label(message)
-        self.set_title(_("Driver operation failed: ").rstrip(': ') if code else _("Driver changes completed. Restart may be required."))
+        self.set_title(title or (
+            _("Driver operation failed: ").rstrip(': ') if code
+            else _("Driver changes completed. Restart may be required.")
+        ))
         if code:
             self.status.add_css_class('error')
         self.close_button.set_sensitive(True)

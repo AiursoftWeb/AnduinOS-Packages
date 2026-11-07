@@ -95,6 +95,10 @@ class WindowScanTests(unittest.TestCase):
             (replace(encrypted, root=VolumeState("/dev/mapper/system", "btrfs", True)),
              ready, ["Encrypted · btrfs", "Not encrypted · ext4", "Unencrypted disk swap is active",
                      "Memory-based swap; not a disk partition", "Configured"], True),
+            (replace(encrypted, root=VolumeState("/dev/vda1", "ext4", False)),
+             missing, ["Not encrypted · ext4", "Not encrypted · ext4",
+                       "Unencrypted disk swap is active", "Memory-based swap; not a disk partition",
+                       "Not applicable to ext4. Use Rescue Center from the Live USB."], False),
             (EncryptionState(), missing, ["Unknown", "Unknown", "Unknown", "Unknown"], False),
         )
         with patch.object(app.DriverCenterWindow, "refresh"), patch.object(app.FirmwareManager, "start"):
@@ -120,6 +124,19 @@ class WindowScanTests(unittest.TestCase):
                         self.assertEqual([button.get_label() for button in buttons],
                                          (["Recovery Environment"] if navigation else [])
                                          + (["Open", "Open", "Open"] if state.root.encrypted is True else []))
+                        labels = []
+                        def collect_labels(widget):
+                            if isinstance(widget, Gtk.Label):
+                                labels.append(widget.get_label())
+                            child = widget.get_first_child()
+                            while child:
+                                collect_labels(child)
+                                child = child.get_next_sibling()
+                        collect_labels(page)
+                        reinstall = [text for text in labels if "Reinstall using the latest" in text]
+                        self.assertEqual(bool(reinstall), state.root.encrypted is False)
+                        if reinstall:
+                            self.assertIn("not supported yet", reinstall[0])
                         if navigation:
                             with patch.object(window, "_select_page") as select:
                                 buttons[0].emit("clicked")
@@ -167,6 +184,83 @@ class WindowScanTests(unittest.TestCase):
                             dialog.destroy()
             finally:
                 window.destroy()
+
+    def test_slow_credential_operation_keeps_progress_visible_and_releases_every_outcome(self):
+        import json
+        import threading
+        import time
+        from anduinos_driver_center.encryption_ui import CredentialDialog
+
+        def pump_until(predicate):
+            deadline = time.monotonic() + 5
+            while not predicate() and time.monotonic() < deadline:
+                GLib.MainContext.default().iteration(False)
+                time.sleep(.005)
+            self.assertTrue(predicate())
+
+        for code, response in ((0, {}), (1, {"error": "wrong-password"}), (126, {})):
+            with self.subTest(code=code), \
+                 patch.object(app.DriverCenterWindow, "refresh"), \
+                 patch.object(app.FirmwareManager, "start"):
+                release = threading.Event()
+                started = threading.Event()
+                changes = []
+
+                def helper(command, **kwargs):
+                    if command[-1] == "encryption-inspect":
+                        return Mock(returncode=0, stdout='{"managed": true}')
+                    changes.append(command)
+                    started.set()
+                    release.wait(5)
+                    return Mock(returncode=code, stdout=json.dumps(response))
+
+                with patch("anduinos_driver_center.encryption_ui.subprocess.run", side_effect=helper):
+                    window = app.DriverCenterWindow(self.application)
+                    window.refresh.reset_mock()
+                    dialog = CredentialDialog(window, "password")
+                    try:
+                        pump_until(lambda: dialog.ready)
+                        dialog.current.set_text("old-password")
+                        dialog.replacement.set_text("new-password")
+                        dialog.confirmation.set_text("new-password")
+                        dialog.apply.emit("clicked")
+                        pump_until(started.is_set)
+                        progress = dialog.operation
+                        self.assertTrue(progress.get_visible())
+                        self.assertTrue(progress.get_modal())
+                        self.assertTrue(progress.emit("close-request"))
+                        self.assertTrue(dialog.emit("close-request"))
+                        self.assertTrue(window.emit("close-request"))
+                        self.assertFalse(dialog.apply.get_sensitive())
+                        self.assertFalse(dialog.cancel.get_sensitive())
+                        self.assertLess(progress.progress.get_fraction(), 1)
+                        buffer = progress.log.get_buffer()
+                        self.assertEqual(buffer.get_char_count(), 0)
+                        # A UI timer still runs while the privileged boundary waits.
+                        ticks = []
+                        GLib.timeout_add(30, lambda: ticks.append(True) and False)
+                        pump_until(lambda: bool(ticks))
+                        self.assertTrue(dialog.busy)
+                        dialog.submit(None)
+                        self.assertEqual(len(changes), 1)
+                        release.set()
+                        pump_until(lambda: not dialog.busy)
+                        self.assertIsNone(dialog.operation)
+                        self.assertFalse(window._operation_running)
+                        self.assertFalse(window.emit("close-request"))
+                        if code:
+                            self.assertTrue(dialog.apply.get_sensitive())
+                            self.assertTrue(dialog.cancel.get_sensitive())
+                            self.assertIn("incorrect" if code == 1 else "cancelled",
+                                          dialog.message.get_label())
+                        else:
+                            self.assertEqual(dialog.current.get_text(), "")
+                            window.refresh.assert_called_once()
+                    finally:
+                        release.set()
+                        pump_until(lambda: not dialog.busy)
+                        dialog.destroy()
+                        window.destroy()
 
     def test_emergency_reset_form_needs_key_and_new_password_only(self):
         from anduinos_driver_center.encryption_ui import CredentialDialog
@@ -298,6 +392,24 @@ class WindowScanTests(unittest.TestCase):
                         window._show_loading()
                         self.assertEqual(window.stack.get_visible_child_name(), "loading")
                         self.assertEqual(window._apply_scan(*scan), GLib.SOURCE_REMOVE)
+                        def descendants(widget):
+                            yield widget
+                            child = widget.get_first_child()
+                            while child:
+                                yield from descendants(child)
+                                child = child.get_next_sibling()
+
+                        for target, title in (("recovery", "Recovery Environment"),
+                                              ("encryption", "Disk Encryption")):
+                            home = window.stack.get_child_by_name("home")
+                            card = next(widget for widget in descendants(home)
+                                        if isinstance(widget, Gtk.Button)
+                                        and any(isinstance(label, Gtk.Label)
+                                                and label.get_label() == title
+                                                for label in descendants(widget)))
+                            card.emit("clicked")
+                            self.assertEqual(window.stack.get_visible_child_name(), target)
+                        window._select_page(selected)
                         self.assertEqual(window.stack.get_visible_child_name(), selected)
                         expected = ("home", "graphics-0", "audio", "printing", "xbox", "secure-boot",
                                     "encryption", "recovery", "firmware", "computer")
@@ -364,7 +476,12 @@ class WindowScanTests(unittest.TestCase):
                                    for index, driver in enumerate(drivers)]
                         scan = GraphicsScan(intel=IntelSnapshot(devices=devices), error=error)
                         with patch.object(window, "_overview_card", wraps=window._overview_card) as card:
-                            page = window._home_page(scan, secure_boot, xbox, audio, printing, DkmsState())
+                            page = window._home_page(
+                                scan, secure_boot, xbox, audio, printing, DkmsState(),
+                                RecoveryState(False, (), PackageState("anduinos-recovery-env", False, None),
+                                              None, False, False),
+                                app.EncryptionState(),
+                            )
                         self.assertEqual(card.call_args_list[0].args[2], expected)
                         self.assertEqual(card.call_args_list[0].args[4], css_class)
                         if not error:
