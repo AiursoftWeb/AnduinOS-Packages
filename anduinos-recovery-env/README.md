@@ -61,7 +61,13 @@ The pointer is the original Fluent-dark-cursors image from
 [Fluent-icon-theme](https://github.com/vinceliuice/Fluent-icon-theme), under GPL-3.0.
 
 Deployment checks the payload and unmounts the volume. Package updates refresh
-the GRUB menu when a volume is configured. On configured systems, a brief boot
+the GRUB menu when a volume is configured. Updates stage and verify a complete
+replacement before switching the directory selected by `current`. Retrying
+an interrupted deployment removes unselected staging directories before checking
+free space, retaining the selected image. If a terminated process leaves the
+volume mounted, close its users, unmount it normally and run
+`sudo dpkg --configure -a`; the deployment error lists the mount paths.
+On configured systems, a brief boot
 service records the recovery point available before a successful graphical
 boot. The browser labels it **Last successful boot**; this is a checkpoint,
 not an independent boot test of that snapshot. Recording neither creates a
