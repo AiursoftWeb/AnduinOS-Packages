@@ -37,6 +37,7 @@ for arg in $(cat /proc/cmdline); do
     case "$arg" in anduinos.recovery.root=*) uuid=${arg#*=}; count=$((count + 1)) ;; esac
 done
 device= disk= model= capacity= temperature= os= total= free= available=
+encryption=Unavailable
 notice='The installed system could not be identified. Hardware information is still available.'
 if [ "$count" = 1 ] && printf '%s\n' "$uuid" | grep -Eq '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'; then
     uuid=$(printf '%s' "$uuid" | tr A-F a-f)
@@ -46,6 +47,13 @@ if [ "$count" = 1 ] && printf '%s\n' "$uuid" | grep -Eq '^[0-9a-fA-F]{8}-[0-9a-f
         device=$1
         node=$(readlink -f "$device")
         block=$(readlink -f "/sys/class/block/${node##*/}")
+        # Report the target root's storage, not whether its mapping is unlocked.
+        # Unknown mappings must not be presented as an unencrypted installation.
+        case "$(read_value "$block/dm/uuid")" in
+            CRYPT-LUKS1-*) encryption='Enabled (LUKS1)' ;;
+            CRYPT-LUKS2-*) encryption='Enabled (LUKS2)' ;;
+            '') [ ! -f "$block/partition" ] || encryption=Disabled ;;
+        esac
         # A supported encrypted root has exactly one backing partition. Keep
         # filesystem space on the mapping, but hardware facts on the real disk.
         if [ -d "$block/slaves" ]; then
@@ -85,7 +93,8 @@ if [ "$count" = 1 ] && printf '%s\n' "$uuid" | grep -Eq '^[0-9a-fA-F]{8}-[0-9a-f
         fi
     fi
 fi
-jq -M -n --arg sb "$secure_boot" --arg computer "$computer" --arg cpu "$cpu" --arg cpus "$cpus" \
+jq -M -n --arg sb "$secure_boot" --arg encryption "$encryption" \
+    --arg computer "$computer" --arg cpu "$cpu" --arg cpus "$cpus" \
     --arg frequency "$frequency" --arg memory "$memory" --arg version "$version" --arg kernel "$kernel" \
     --arg device "$device" --arg disk "$disk" --arg model "$model" --arg capacity "$capacity" \
     --arg temperature "$temperature" --arg os "$os" --arg total "$total" --arg free "$free" \
@@ -96,7 +105,8 @@ jq -M -n --arg sb "$secure_boot" --arg computer "$computer" --arg cpu "$cpu" --a
     {schema: 1, notice: $notice,
      used_percent: (try (((($total|tonumber) - ($free|tonumber)) / ($total|tonumber) * 100) | round) catch null),
      groups: [
-       {title: "Boot environment", rows: [row("Secure Boot"; $sb), row("Recovery version"; $version), row("Recovery kernel"; $kernel)]},
+       {title: "Boot environment", rows: [row("Secure Boot"; $sb), row("Disk encryption"; $encryption),
+         row("Recovery version"; $version), row("Recovery kernel"; $kernel)]},
        {title: "Installed system", rows: [row("System"; $os), row("Target partition"; $device),
          row("Filesystem"; if $total == "" then "" else "Btrfs" end), row("Total space"; ([$total | gib][0] // "")),
          row("Used space"; (try (($total|tonumber) - ($free|tonumber) | gib) catch "")),
