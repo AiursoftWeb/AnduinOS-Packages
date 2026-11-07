@@ -98,7 +98,7 @@ transaction-shaped deployment states are accepted as `ready` when upgrading and
 never disable the Restore action.
 The recovery engine protects the current system, then freezes the running kernel,
 verified initramfs and confirmation executable in the snapshot-external store.
-A one-shot GRUB entry starts this recovery image. Protocol 3 switches the selected
+The one-shot GRUB entry **Start snapshot rollback (one-time)** starts this recovery image. Protocol 3 switches the selected
 subvolumes, records completion, synchronizes/unmounts, and restarts immediately.
 The normal GRUB menu then loads the restored system's own kernel and initramfs.
 Only this separate target boot can confirm success. An unconfirmed target is

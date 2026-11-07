@@ -492,7 +492,7 @@ impl<R: BootToolRunner> BootIntegration<R> {
             )
         };
         Ok(Some(format!(
-            "menuentry 'Disk Snapshots Manager recovery' --class anduinos --class gnu-linux --id '{entry_id}' {{\n\
+            "menuentry 'Start snapshot rollback (one-time)' --class anduinos --class gnu-linux --id '{entry_id}' {{\n\
              \tinsmod btrfs\n\
              \tsearch --no-floppy --fs-uuid --set=root {fs_uuid}\n\
              \techo 'Starting AnduinOS system recovery…'\n\
