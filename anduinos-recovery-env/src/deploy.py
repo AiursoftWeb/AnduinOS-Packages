@@ -106,6 +106,27 @@ def verify_payload(path):
     return manifest
 
 
+def prune_unselected_payloads(owned):
+    """Reclaim interrupted staging directories without changing the boot target."""
+    current = owned / "current"
+    selected = None
+    if current.is_symlink():
+        name = os.readlink(current)
+        selected = owned / name
+        if (not re.fullmatch(r"payload-[a-z0-9_]{8}", name)
+                or selected.is_symlink() or not selected.is_dir()):
+            return  # An unfamiliar selector needs inspection, not cleanup.
+    elif current.exists():
+        return
+    # The caller has verified this installation's owner binding. Only our
+    # generated directory names are eligible, including an interrupted first
+    # deployment with no current selector yet. Leave other volume files alone.
+    for old in owned.iterdir():
+        if (old != selected and re.fullmatch(r"payload-[a-z0-9_]{8}", old.name)
+                and not old.is_symlink() and old.is_dir()):
+            shutil.rmtree(old)
+
+
 def target(volume_uuid=None, *, if_present=False):
     binding = read_binding(STATE) if STATE.exists() else None
     root_mount = run("findmnt", "--json", "--output", "FSTYPE,UUID,FSROOT", "--target", "/", check=False)
@@ -200,6 +221,10 @@ printf '%s\\n' "${GRUB_CMDLINE_LINUX:-}" "${GRUB_CMDLINE_LINUX_DEFAULT:-}"
                 raise RuntimeError("The recovery volume is not empty; refusing to overwrite it")
             owned.mkdir(exist_ok=True)
             atomic_json(owned / "owner.json", binding)
+            # SIGKILL/power loss bypasses the staging exception handler. Reclaim
+            # those unselected copies before checking space, or repeated
+            # interruptions can make every later update fail on a full volume.
+            prune_unselected_payloads(owned)
             required = sum((PAYLOAD / name).stat().st_size for name in (*FILES, "manifest.json")) + 4 * 1024 * 1024
             if shutil.disk_usage(mount).free < required:
                 raise RuntimeError("Not enough recovery space to stage an update while preserving the current image")
@@ -232,9 +257,7 @@ printf '%s\\n' "${GRUB_CMDLINE_LINUX:-}" "${GRUB_CMDLINE_LINUX_DEFAULT:-}"
                 if not (owned / "current").is_symlink() or os.readlink(owned / "current") != candidate.name:
                     shutil.rmtree(candidate)
                 raise
-            for old in owned.iterdir():
-                if old != candidate and re.fullmatch(r"payload-[a-z0-9_]{8}", old.name) and not old.is_symlink():
-                    shutil.rmtree(old)
+            prune_unselected_payloads(owned)
             run("sync", "-f", str(mount))
         finally:
             run("umount", str(mount))
