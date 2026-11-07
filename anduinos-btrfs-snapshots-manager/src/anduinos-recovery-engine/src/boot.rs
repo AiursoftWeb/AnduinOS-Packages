@@ -477,14 +477,26 @@ impl<R: BootToolRunner> BootIntegration<R> {
         let handoff = machine_key.map_or_else(String::new, |path| {
             format!(" newc:/anduinos-unlock.key:{path}")
         });
+        // Protocol 2 resumes in its recovery entry after an interrupted apply.
+        // Protocol 3 must return to normal boot after the disk switch instead.
+        // In particular, Home-only recovery keeps the current grub.cfg, so
+        // rearming here would select this same entry on every restart forever.
+        // An interrupted protocol-3 apply is safely reverted by the normal
+        // initramfs hook; it does not need a second one-shot recovery selection.
+        let retry_selection = if transaction.restarts_after_apply() {
+            String::new()
+        } else {
+            format!(
+                "\tset btrfs_snapshots_manager_next_entry='{entry_id}'\n\
+                 \tsave_env -f \"($btrfs_snapshots_manager_esp)/EFI/anduinos/btrfs-snapshots-manager-grubenv\" btrfs_snapshots_manager_next_entry\n"
+            )
+        };
         Ok(Some(format!(
             "menuentry 'Disk Snapshots Manager recovery' --class anduinos --class gnu-linux --id '{entry_id}' {{\n\
              \tinsmod btrfs\n\
              \tsearch --no-floppy --fs-uuid --set=root {fs_uuid}\n\
              \techo 'Starting AnduinOS system recovery…'\n\
-             \tset btrfs_snapshots_manager_next_entry='{entry_id}'\n\
-             \tsave_env -f \"($btrfs_snapshots_manager_esp)/EFI/anduinos/btrfs-snapshots-manager-grubenv\" btrfs_snapshots_manager_next_entry\n\
-             \tlinux {kernel_path} root=UUID={fs_uuid} ro rootflags=subvol=@root anduinos.btrfs_snapshots_manager={id} anduinos.btrfs_snapshots_manager_protocol={protocol}\n\
+             {retry_selection}\tlinux {kernel_path} root=UUID={fs_uuid} ro rootflags=subvol=@root anduinos.btrfs_snapshots_manager={id} anduinos.btrfs_snapshots_manager_protocol={protocol}\n\
              \tinitrd {initramfs_path}{handoff}\n\
              }}\n",
             protocol = transaction.recovery_protocol_version
@@ -1195,6 +1207,37 @@ mod tests {
         assert!(entry.contains("anduinos.btrfs_snapshots_manager_protocol=2"));
         assert!(entry.contains("set btrfs_snapshots_manager_next_entry="));
         assert!(entry.contains("save_env -f \"($btrfs_snapshots_manager_esp)"));
+    }
+
+    #[test]
+    fn restarting_recovery_does_not_rearm_its_grub_selector() {
+        let mut environment = Environment::new();
+        environment.transaction.schema_version = 7;
+        environment.transaction.recovery_protocol_version = 3;
+        environment.transaction.target_kernel_release = Some("test-kernel".into());
+        TransactionStore::new(&environment.root)
+            .update(&environment.transaction)
+            .unwrap();
+        let integration = BootIntegration::new(
+            &environment.root,
+            FakeTools {
+                env: String::new(),
+                unsafe_path: false,
+                calls: Default::default(),
+            },
+        );
+
+        // Both encrypted and plain Home restores keep the current grub.cfg.
+        // The recovery entry must not select itself again after its disk switch.
+        for machine_key in [None, Some("/@root/etc/anduinos-luks/machine.key")] {
+            let entry = integration
+                .recovery_menu_entry_with_key(machine_key)
+                .unwrap()
+                .unwrap();
+            assert!(entry.contains("anduinos.btrfs_snapshots_manager_protocol=3"));
+            assert!(!entry.contains("set btrfs_snapshots_manager_next_entry="));
+            assert!(!entry.contains("save_env"));
+        }
     }
 
     #[test]

@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-btrfs-snapshots-manager</PackageName>
-    <PackageVersion>2.1.0-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Disk Snapshots Manager — graphical Btrfs system recovery and Personal Files history</PackageDescription>
     <Section>admin</Section>
@@ -78,7 +78,7 @@
     <IncludeScript Include="data/dracut/91anduinos-btrfs-snapshots-manager/anduinos-btrfs-snapshots-manager.sh"
                    Target="/usr/lib/dracut/modules.d/91anduinos-btrfs-snapshots-manager/anduinos-btrfs-snapshots-manager.sh" />
     <IncludeFile Include="data/recovery-protocol-version" Target="/usr/share/anduinos-btrfs-snapshots-manager/recovery-protocol-version" />
-    <IncludeScript Include="data/09_anduinos_btrfs_snapshots_manager" Target="/etc/grub.d/09_anduinos_btrfs_snapshots_manager" />
+    <IncludeScript Include="data/41_anduinos_btrfs_snapshots_manager" Target="/etc/grub.d/41_anduinos_btrfs_snapshots_manager" />
     <IncludeScript Include="data/01_anduinos_btrfs_snapshots_manager_env" Target="/etc/grub.d/01_anduinos_btrfs_snapshots_manager_env" />
     <IncludeScript Include="data/no-os-prober" Target="/usr/libexec/anduinos-btrfs-snapshots-manager/no-os-prober/os-prober" />
     <IncludeScript Include="data/no-os-prober" Target="/usr/libexec/anduinos-btrfs-snapshots-manager/no-os-prober/linux-boot-prober" />

@@ -174,5 +174,22 @@ printf 'initramfs %s\\n' "$*" >> "$TEST_COMMAND_LOG"
         self.assertEqual(self.admin.read_text(), "administrator override\n")
 
 
+
+class BootMenuOrderingTests(unittest.TestCase):
+    def test_recovery_does_not_become_the_default_zero_entry(self):
+        # Home rollback leaves grub.cfg unchanged. After the one-shot selection
+        # is consumed, GRUB_DEFAULT=0 must point to Linux rather than recovery.
+        import xml.etree.ElementTree as ET
+
+        project = ET.parse(ROOT / "anduinos-btrfs-snapshots-manager.aosproj")
+        generators = [item for item in project.iter("IncludeScript")
+                      if item.attrib["Target"].startswith("/etc/grub.d/")
+                      and not item.attrib["Target"].endswith("_env")]
+        self.assertEqual(len(generators), 1)
+        generator = generators[0]
+        target = Path(generator.attrib["Target"]).name
+        self.assertEqual(sorted([target, "10_linux"])[0], "10_linux")
+        self.assertTrue((ROOT / generator.attrib["Include"]).is_file())
+
 if __name__ == "__main__":
     unittest.main()
