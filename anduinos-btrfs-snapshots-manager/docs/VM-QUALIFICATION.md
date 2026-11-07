@@ -115,6 +115,30 @@ kernel ABIs, then repeat fallback with the old ABI modules removed from the
 current root. Verify legacy protocol-2 same-ABI snapshots remain usable and old
 cross-ABI snapshots are rejected before preparing a transaction.
 
+## Home and factory restart selection
+
+Repeat the Home-only and factory lanes on both architectures and suites, with
+plain and encrypted Btrfs roots. Keep the same acceptance rules for each image.
+For encrypted roots, enter the disk password at each requested unlock; a second
+unlock after the recovery-owned restart is expected.
+
+Create a Personal Files snapshot, then edit one file, delete another, and add a
+third. Schedule Home rollback through the App. Let the firmware use its default
+selection after recovery restarts; do not manually select normal boot to hide a
+recovery-entry loop. Verify the original file contents and UID/GID, unchanged
+root UUID and package database, preserved safety history, and a confirmed
+schema-7/protocol-3 transaction with different applying and target boot IDs.
+
+Then restore the same factory point twice: first preserving Home and then
+resetting Home. Check both the system and personal-file results, unchanged
+internal disk credential, retained history, and one further ordinary restart
+before starting another transaction. Ext4 has no Btrfs rollback lane.
+
+Protocol 3 consumes the one-shot GRUB selection once. Its recovery entry must
+not rearm itself: Home rollback retains the current root and its recovery menu
+entry. After an interrupted apply, the normal initramfs hook restores the
+protected original system. Protocol 2 keeps its existing recovery retry path.
+
 ## Hard power-loss matrix (`RRP2-VM-005`)
 
 The initramfs binary prints `SNAPSHOTS-MANAGER-CHECKPOINT <name>` only after the
