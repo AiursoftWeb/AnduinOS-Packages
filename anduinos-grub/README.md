@@ -37,9 +37,10 @@ remain supported; plain installations retain their original startup path.
 The page uses GRUB's existing graphical theme and native password reader. It
 accepts a disk password or emergency recovery key, keeps input hidden, supports Backspace
 and retries unsuccessful input. Successful unlock loads the installed system's
-existing GRUB menu. It does not copy that menu into the ESP or draw a second
-desktop. Graphics failure retains a text prompt; configured serial output is
-preserved. The native prompt still shows the volume identity and has no bullets.
+existing GRUB menu. Before loading it, the page releases its graphical terminal
+so the installed menu applies the configured resolution, font and theme. It
+does not copy that menu into the ESP or draw a second desktop. Graphics failure
+retains a text prompt; configured serial output is preserved. The native prompt still shows the volume identity and has no bullets.
 
 Artwork and small ASCII fonts ship inside the EFI, available before decrypting
 `/boot`. The native `grub-fstest` from the existing tools input extracts Ubuntu's
