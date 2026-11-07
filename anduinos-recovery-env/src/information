@@ -45,8 +45,10 @@ if [ "$count" = 1 ] && printf '%s\n' "$uuid" | grep -Eq '^[0-9a-fA-F]{8}-[0-9a-f
     set -- $devices
     if [ "$#" = 1 ] && [ -b "$1" ]; then
         device=$1
-        node=$(readlink -f "$device")
-        block=$(readlink -f "/sys/class/block/${node##*/}")
+        # cryptsetup can create a block node instead of a /dev/dm-N symlink.
+        # Device numbers identify the same kernel object in either layout.
+        numbers=$(stat -c '%t:%T' "$device")
+        block=$(readlink -f "/sys/dev/block/$(printf '%d:%d' "0x${numbers%:*}" "0x${numbers#*:}")")
         # Report the target root's storage, not whether its mapping is unlocked.
         # Unknown mappings must not be presented as an unencrypted installation.
         case "$(read_value "$block/dm/uuid")" in
