@@ -50,6 +50,7 @@ class DiskEncryptionPageTests(unittest.TestCase):
                         nav.push.assert_not_called()
                         self.assertEqual(dialog.get_default_response(), "cancel")
                         self.assertEqual(dialog.get_close_response(), "cancel")
+                        self.assertEqual(dialog.get_response_label("continue"), "Continue")
                         self.assertEqual(dialog.get_response_appearance("continue"),
                                          Adw.ResponseAppearance.DESTRUCTIVE)
                         self.assertIn("physical access", dialog.get_body())

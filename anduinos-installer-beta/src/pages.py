@@ -3906,7 +3906,7 @@ def _confirm_unencrypted_installation(page, nav_view, lang, confirmed):
             "your data. Set a disk password to protect your data.", lang),
     )
     dialog.add_response("cancel", _("Cancel", lang))
-    dialog.add_response("continue", _("Continue anyway", lang))
+    dialog.add_response("continue", _("Continue", lang))
     dialog.set_response_appearance("continue", Adw.ResponseAppearance.DESTRUCTIVE)
     dialog.set_default_response("cancel")
     dialog.set_close_response("cancel")
