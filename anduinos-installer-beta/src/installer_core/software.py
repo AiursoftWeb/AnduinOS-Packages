@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 import re
+import subprocess
 
 from .command import CommandError, CommandRunner
 from .mirrors import advance_mirror
@@ -73,6 +74,68 @@ def refresh_package_indexes(
                 "installation media's package set"
             )
     context.values["package_indexes_refreshed"] = True
+
+
+def _download_with_mirror_fallback(
+    context: InstallContext,
+    runner: CommandRunner,
+    command: tuple[str, ...],
+    *,
+    timeout: int,
+) -> subprocess.CompletedProcess[str]:
+    """Consume the existing mirror queue only for attributable fetch failures.
+
+    The caller must use --download-only and LC_ALL=C. No dpkg scripts run in
+    this loop; a new mirror must pass a complete signed index refresh first.
+    """
+    while True:
+        result = runner.run(command, check=False, timeout=timeout)
+        if result.returncode == 0:
+            return result
+        selected = context.values.get("apt_mirror_selected")
+        output = result.stdout + result.stderr
+        mirror_failed = isinstance(selected, str) and any(
+            "Failed to fetch " + selected in line for line in output.splitlines()
+        )
+        # A lock, resolver error or third-party URL is not evidence against
+        # the selected Ubuntu mirror. Keep the original failure in those cases.
+        if not mirror_failed or not advance_mirror(context):
+            return result
+        try:
+            refresh_package_indexes(context, runner)
+        except CommandError as error:
+            context.log(str(error))
+            return result
+
+
+def install_target_packages(
+    context: InstallContext,
+    runner: CommandRunner,
+    packages: tuple[str, ...],
+) -> subprocess.CompletedProcess[str]:
+    """Download optional packages with failover, then configure exactly once."""
+    target = _target(context)
+    _require_target_command(target, "usr/bin/apt-get")
+    prefix = (
+        "chroot", str(target), "/usr/bin/env",
+        "DEBIAN_FRONTEND=noninteractive", "LC_ALL=C", "apt-get",
+        "--yes", "--no-install-recommends",
+        "-o", "Acquire::Retries=1",
+        "-o", "Acquire::http::Timeout=15",
+        "-o", "Acquire::https::Timeout=15",
+    )
+    download = _download_with_mirror_fallback(
+        context, runner, (*prefix, "--download-only", "install", *packages),
+        timeout=3600,
+    )
+    if download.returncode != 0:
+        return download
+    # Once dpkg starts, retain the existing per-step failure/health policy.
+    # Configuration failures must never start another mirror/download attempt.
+    return runner.run(
+        (*prefix, "--no-download", "install", *packages),
+        check=False, timeout=3600,
+    )
 
 
 @dataclass
@@ -151,48 +214,22 @@ class UpgradeSystemStep:
             "-o",
             "Dpkg::Options::=--force-confold",
         )
-        while True:
-            try:
-                download = self.runner.run(
-                    (
-                        *command_prefix,
-                        "-o",
-                        "Acquire::Retries=1",
-                        "-o",
-                        "Acquire::http::Timeout=15",
-                        "-o",
-                        "Acquire::https::Timeout=15",
-                        "--download-only",
-                        "upgrade",
-                    ),
-                    check=False,
-                    timeout=7200,
-                )
-            except CommandError as error:
-                # A timeout/command failure without an attributable archive URL
-                # is not proof that changing Ubuntu mirrors would help.
-                raise StepWarning(
-                    "Could not download every system update; skipped the upgrade "
-                    "to preserve the installation media's consistent package set"
-                ) from error
-            if download.returncode == 0:
-                break
-            selected = context.values.get("apt_mirror_selected")
-            output = download.stdout + download.stderr
-            # Only archive fetch failures qualify. Resolver, lock and third-party
-            # repository failures retain their original result. No dpkg ran yet.
-            mirror_failed = isinstance(selected, str) and any(
-                "Failed to fetch " + selected in line for line in output.splitlines()
+        try:
+            download = _download_with_mirror_fallback(
+                context, self.runner,
+                (*command_prefix,
+                 "-o", "Acquire::Retries=1",
+                 "-o", "Acquire::http::Timeout=15",
+                 "-o", "Acquire::https::Timeout=15",
+                 "--download-only", "upgrade"),
+                timeout=7200,
             )
-            if mirror_failed and advance_mirror(context):
-                try:
-                    refresh_package_indexes(context, self.runner)
-                except CommandError as error:
-                    raise StepWarning(
-                        "Could not download every system update; skipped the upgrade "
-                        "to preserve the installation media's consistent package set"
-                    ) from error
-                continue
+        except CommandError as error:
+            raise StepWarning(
+                "Could not download every system update; skipped the upgrade "
+                "to preserve the installation media's consistent package set"
+            ) from error
+        if download.returncode != 0:
             raise StepWarning(
                 "Could not download every system update; skipped the upgrade "
                 "to preserve the installation media's consistent package set"
@@ -311,26 +348,8 @@ class InstallMultimediaCodecsStep:
                 "formats; everyday playback remains available"
             ) from error
 
-        result = self.runner.run(
-            (
-                "chroot",
-                str(target),
-                "/usr/bin/env",
-                "DEBIAN_FRONTEND=noninteractive",
-                "apt-get",
-                "--yes",
-                "--no-install-recommends",
-                "-o",
-                "Acquire::Retries=1",
-                "-o",
-                "Acquire::http::Timeout=15",
-                "-o",
-                "Acquire::https::Timeout=15",
-                "install",
-                MULTIMEDIA_CODECS_PACKAGE,
-            ),
-            check=False,
-            timeout=3600,
+        result = install_target_packages(
+            context, self.runner, (MULTIMEDIA_CODECS_PACKAGE,),
         )
         if result.returncode != 0:
             if not _package_state_is_consistent(target, self.runner):

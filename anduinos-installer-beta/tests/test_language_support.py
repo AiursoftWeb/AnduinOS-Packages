@@ -55,7 +55,7 @@ class PackageRunner(FakeRunner):
                 "ii " if package in self.installed else "",
                 "",
             )
-        if "install" in command:
+        if "install" in command and "--download-only" not in command:
             if self.fail_install:
                 return subprocess.CompletedProcess(
                     command, 100, "", "package download failed"
@@ -153,6 +153,48 @@ class InstallLanguagePacksTests(unittest.TestCase):
             with self.assertRaisesRegex(StepWarning, "Could not download"):
                 InstallLanguagePacksStep(runner).execute(context)
         self.assertFalse(context.values["language_packs_installed"])
+
+
+    def test_language_pack_fetch_uses_next_mirror_before_configuration(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            apt = target / "usr/bin/apt-get"
+            apt.parent.mkdir(parents=True)
+            apt.touch()
+            source = target / "ubuntu.sources"
+            source.write_text("URIs: https://one.example/ubuntu/\n")
+            context = context_for(target, "de", online=True)
+            context.values.update({
+                "package_indexes_refreshed": True,
+                "apt_mirror_source": source,
+                "apt_mirror_selected": "https://one.example/ubuntu/",
+                "apt_mirror_original": b"URIs: https://original.example/ubuntu/\n",
+                "apt_mirror_original_mode": 0o644,
+                "apt_mirror_remaining": ["https://two.example/ubuntu/"],
+            })
+
+            class Runner(PackageRunner):
+                downloads = 0
+
+                def run(self, command, **kwargs):
+                    if "--download-only" in command:
+                        self.downloads += 1
+                        if self.downloads == 1:
+                            self.commands.append((tuple(command), kwargs))
+                            return subprocess.CompletedProcess(
+                                command, 100, "", "E: Failed to fetch "
+                                "https://one.example/ubuntu/pool/language.deb 403 Forbidden",
+                            )
+                    return super().run(command, **kwargs)
+
+            runner = Runner()
+            step = InstallLanguagePacksStep(runner)
+            step.execute(context)
+            step.verify(context)
+            self.assertEqual(runner.downloads, 2)
+            self.assertTrue(context.values["language_packs_installed"])
+            self.assertIn("two.example", source.read_text())
+            self.assertEqual(sum("--no-download" in c for c, _ in runner.commands), 1)
 
 
 if __name__ == "__main__":
