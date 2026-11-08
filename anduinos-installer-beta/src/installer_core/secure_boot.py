@@ -87,9 +87,7 @@ class PrepareSecureBootStep:
             # First installation must sign before enrollment: MokManager will
             # establish trust on the next boot. Existing-system replacement
             # uses the toolkit's stricter enrolled-certificate precondition.
-            signed = self.runner.run(("chroot", str(target), "/usr/libexec/anduinos-grub-update", "first-install"), timeout=120, check=False)
-            if signed.returncode:
-                raise RuntimeError("AnduinOS GRUB signing failed: " + (signed.stderr or signed.stdout).strip())
+            prepare_grub_signature(self.runner, target, context.plan)
             _require_signed_payloads(target, context.plan)
         context.values["secure_boot_certificate_sha1"] = _sha1(certificate)
         context.values["secure_boot_prepared"] = True
@@ -261,6 +259,20 @@ class EnrollSecureBootStep:
 
 def _enabled(plan: InstallPlan) -> bool:
     return plan.platform.secure_boot is SecureBoot.ENABLED
+
+
+def prepare_grub_signature(runner: CommandRunner, target: Path, plan: InstallPlan) -> None:
+    """Prepare the current native package without changing the target identity."""
+    if not _has_own_grub(plan, target):
+        return
+    result = runner.run(
+        ("chroot", str(target), "/usr/libexec/anduinos-grub-update", "first-install"),
+        timeout=120, check=False,
+    )
+    if result.returncode:
+        raise RuntimeError(
+            "AnduinOS GRUB signing failed: " + (result.stderr or result.stdout).strip()
+        )
 
 
 def _needs_identity(plan: InstallPlan, target: Path | None = None) -> bool:
