@@ -327,7 +327,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
             context.values["live_package_candidates"][-1], SNAPSHOTS_MANAGER_PACKAGE
         )
 
-    def test_recovery_package_is_retained_only_for_new_btrfs_erase_layout(self):
+    def test_recovery_package_is_removed_when_no_recovery_volume_is_planned(self):
         for architecture in Architecture:
             for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):
                 for mode in InstallMode:
@@ -340,6 +340,9 @@ class RemoveLivePackagesTests(unittest.TestCase):
                                 storage=replace(context.plan.storage, mode=mode),
                                 platform=replace(context.plan.platform, architecture=architecture),
                             )
+                            if mode is InstallMode.MANUAL:
+                                from test_manual_storage_graph import manual_plan
+                                context.plan, _ = manual_plan(filesystem=filesystem, architecture=architecture)
                             runner = FakeRunner()
                             runner.outputs[_query(target, RECOVERY_PACKAGE)] = ("ii \n", "", 0)
                             RemoveLivePackagesStep(runner).execute(context)
@@ -349,6 +352,24 @@ class RemoveLivePackagesTests(unittest.TestCase):
                             self.assertEqual(retained in commands, expected)
                             purged = any("purge" in command and RECOVERY_PACKAGE in command for command in commands)
                             self.assertEqual(purged, not expected)
+
+    def test_manual_recovery_package_survives_installer_cleanup(self):
+        from test_manual_layout import selection, ManualPartitionRequest, ManualPartitionRole
+        from test_manual_storage_graph import manual_plan
+        base = selection()
+        chosen = replace(base, new_partitions=(*base.new_partitions,
+            ManualPartitionRequest(ManualPartitionRole.RECOVERY, 113 * 1024, 113 * 1024 + 256)))
+        plan, _ = manual_plan(chosen=chosen)
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            context = _context(target)
+            context.plan = plan
+            runner = FakeRunner()
+            runner.outputs[_query(target, RECOVERY_PACKAGE)] = ("ii \n", "", 0)
+            RemoveLivePackagesStep(runner).execute(context)
+            commands = [command for command, _ in runner.commands]
+            self.assertIn(("chroot", str(target), "apt-mark", "manual", RECOVERY_PACKAGE), commands)
+            self.assertFalse(any("purge" in command and RECOVERY_PACKAGE in command for command in commands))
 
     def test_advanced_filesystem_tools_survive_installer_autoremove(self):
         for filesystem, package in ADVANCED_FILESYSTEM_TOOL_PACKAGES.items():

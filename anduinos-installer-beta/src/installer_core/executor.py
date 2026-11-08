@@ -139,14 +139,7 @@ class InstallerExecutor:
         # machine fresh SSH host identity and reapplies the package-owned,
         # default-off remote-access policy as the final network-service state.
         steps.append(ProvisionRemoteAccessStep(self.runner))
-        if plan.storage.filesystem is Filesystem.BTRFS and (
-            plan.storage.mode is InstallMode.ERASE_DISK
-            or (
-                plan.storage.mode is InstallMode.MANUAL
-                and plan.storage.graph is not None
-                and any(item.name == "recovery" for item in plan.storage.graph.partitions)
-            )
-        ):
+        if plan.recovery_enabled:
             steps.append(DeployRecoveryEnvironmentStep(self.runner))
         steps.extend(
             (
