@@ -1,3 +1,4 @@
+import subprocess
 import tempfile
 import unittest
 from dataclasses import replace
@@ -377,6 +378,7 @@ class InstallInputMethodTests(unittest.TestCase):
                 str(target),
                 "/usr/bin/env",
                 "DEBIAN_FRONTEND=noninteractive",
+                "LC_ALL=C",
                 "apt-get",
                 "--yes",
                 "--no-install-recommends",
@@ -386,6 +388,7 @@ class InstallInputMethodTests(unittest.TestCase):
                 "Acquire::http::Timeout=15",
                 "-o",
                 "Acquire::https::Timeout=15",
+                "--download-only",
                 "install",
                 *selected.packages,
             )
@@ -395,3 +398,47 @@ class InstallInputMethodTests(unittest.TestCase):
         commands = [item[0] for item in runner.commands]
         self.assertIn(("chroot", str(target), "dpkg", "--audit"), commands)
         self.assertIn(("chroot", str(target), "apt-get", "check"), commands)
+
+
+    def test_input_method_fetch_uses_next_mirror_and_configures_once(self):
+        selected = input_method("mozc")
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_apt(target)
+            source = target / "ubuntu.sources"
+            source.write_text("URIs: https://one.example/ubuntu/\n")
+            context = context_for(target, plan_for(selected.id), online=True)
+            context.values.update({
+                "package_indexes_refreshed": True,
+                "apt_mirror_source": source,
+                "apt_mirror_selected": "https://one.example/ubuntu/",
+                "apt_mirror_original": b"URIs: https://original.example/ubuntu/\n",
+                "apt_mirror_original_mode": 0o644,
+                "apt_mirror_remaining": ["https://two.example/ubuntu/"],
+            })
+
+            class Runner(FakeRunner):
+                downloads = 0
+                configurations = 0
+
+                def run(self, command, **kwargs):
+                    if "--download-only" in command:
+                        self.downloads += 1
+                        if self.downloads == 1:
+                            self.commands.append((tuple(command), kwargs))
+                            return subprocess.CompletedProcess(
+                                command, 100, "", "E: Failed to fetch "
+                                "https://one.example/ubuntu/pool/ibus.deb 403 Forbidden",
+                            )
+                    if "--no-download" in command:
+                        self.configurations += 1
+                        prepare_payload(target, selected)
+                    return super().run(command, **kwargs)
+
+            runner = Runner()
+            step = InstallInputMethodStep(runner)
+            step.execute(context)
+            step.verify(context)
+            self.assertEqual((runner.downloads, runner.configurations), (2, 1))
+            self.assertTrue(context.values["input_methods_installed"])
+            self.assertIn("two.example", source.read_text())

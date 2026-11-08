@@ -73,7 +73,9 @@ class PackageUpdateTests(unittest.TestCase):
             for command, _kwargs in runner.commands
             if command[-2:] == ("install", MULTIMEDIA_CODECS_PACKAGE)
         ]
-        self.assertEqual(len(install_commands), 1)
+        self.assertEqual(len(install_commands), 2)
+        self.assertIn("--download-only", install_commands[0])
+        self.assertIn("--no-download", install_commands[1])
         self.assertIn("--no-install-recommends", install_commands[0])
         self.assertTrue(context.values["package_indexes_refreshed"])
 
@@ -129,6 +131,7 @@ class PackageUpdateTests(unittest.TestCase):
                 str(target),
                 "/usr/bin/env",
                 "DEBIAN_FRONTEND=noninteractive",
+                "LC_ALL=C",
                 "apt-get",
                 "--yes",
                 "--no-install-recommends",
@@ -138,6 +141,7 @@ class PackageUpdateTests(unittest.TestCase):
                 "Acquire::http::Timeout=15",
                 "-o",
                 "Acquire::https::Timeout=15",
+                "--download-only",
                 "install",
                 MULTIMEDIA_CODECS_PACKAGE,
             )
@@ -170,6 +174,7 @@ class PackageUpdateTests(unittest.TestCase):
                 str(target),
                 "/usr/bin/env",
                 "DEBIAN_FRONTEND=noninteractive",
+                "LC_ALL=C",
                 "apt-get",
                 "--yes",
                 "--no-install-recommends",
@@ -179,6 +184,7 @@ class PackageUpdateTests(unittest.TestCase):
                 "Acquire::http::Timeout=15",
                 "-o",
                 "Acquire::https::Timeout=15",
+                "--no-download",
                 "install",
                 MULTIMEDIA_CODECS_PACKAGE,
             )
@@ -570,3 +576,113 @@ class MirrorFallbackTests(unittest.TestCase):
         self.assertEqual(runner.downloads, 1)
         self.assertEqual(runner.installs, 1)
         self.assertIn("one.example", source)
+
+
+class OptionalPackageMirrorTests(unittest.TestCase):
+    def exercise(
+        self, *, failures=1, failure_url=None,
+        configure_failure=False, index_failure=False,
+    ):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_apt(target)
+            source = target / "ubuntu.sources"
+            source.write_text("URIs: https://one.example/ubuntu/\n")
+            context = InstallContext(
+                valid_plan(install_multimedia_codecs=True), lambda _message: None,
+                {
+                    "target": target,
+                    "chroot_environment_ready": True,
+                    "network_online": True,
+                    "package_indexes_refreshed": True,
+                    "apt_mirror_source": source,
+                    "apt_mirror_selected": "https://one.example/ubuntu/",
+                    "apt_mirror_original": b"URIs: https://original.example/ubuntu/\n",
+                    "apt_mirror_original_mode": 0o640,
+                    "apt_mirror_remaining": [
+                        f"https://{i}.example/ubuntu/" for i in (2, 3, 4)
+                    ],
+                },
+            )
+
+            class Runner(CodecInstallRunner):
+                downloads = 0
+                configurations = 0
+
+                def run(self, command, **kwargs):
+                    if "install" in command:
+                        self.commands.append((tuple(command), kwargs))
+                        if "--no-download" in command:
+                            self.configurations += 1
+                            return subprocess.CompletedProcess(
+                                command, 100 if configure_failure else 0,
+                                "", "postinst failed" if configure_failure else "",
+                            )
+                        self.downloads += 1
+                        if self.downloads <= failures:
+                            url = failure_url or context.values["apt_mirror_selected"]
+                            return subprocess.CompletedProcess(
+                                command, 100, "",
+                                f"E: Failed to fetch {url}pool/codec.deb 403 Forbidden",
+                            )
+                        return subprocess.CompletedProcess(command, 0, "", "")
+                    if index_failure and command[-1] == "update":
+                        self.commands.append((tuple(command), kwargs))
+                        return subprocess.CompletedProcess(
+                            command, 100, "", "index unavailable",
+                        )
+                    return super().run(command, **kwargs)
+
+            runner = Runner()
+            error = None
+            try:
+                InstallMultimediaCodecsStep(runner).execute(context)
+            except (CommandError, StepWarning) as caught:
+                error = caught
+            return (
+                runner, context, source.read_text(),
+                source.stat().st_mode & 0o777, error,
+            )
+
+    def test_codec_fetch_403_tries_next_mirror_before_configuring_once(self):
+        runner, context, source, _mode, error = self.exercise()
+        self.assertIsNone(error)
+        self.assertEqual((runner.downloads, runner.configurations), (2, 1))
+        self.assertIn("https://2.example/", source)
+        self.assertTrue(context.values["multimedia_codecs_installed"])
+        installs = [c for c, _ in runner.commands if "install" in c]
+        self.assertTrue(all("LC_ALL=C" in c for c in installs))
+        self.assertTrue(all("--download-only" in c for c in installs[:-1]))
+        self.assertIn("--no-download", installs[-1])
+
+    def test_four_codec_fetch_failures_restore_source_without_configuring(self):
+        runner, context, source, mode, error = self.exercise(failures=4)
+        self.assertIsInstance(error, StepWarning)
+        self.assertEqual((runner.downloads, runner.configurations), (4, 0))
+        self.assertEqual(source, context.values["apt_mirror_original"].decode())
+        self.assertEqual(mode, 0o640)
+        self.assertFalse(context.values["package_indexes_refreshed"])
+
+    def test_other_repository_failure_does_not_consume_ubuntu_mirrors(self):
+        runner, context, source, _mode, error = self.exercise(
+            failure_url="https://addon.example/",
+        )
+        self.assertIsInstance(error, StepWarning)
+        self.assertEqual((runner.downloads, runner.configurations), (1, 0))
+        self.assertEqual(len(context.values["apt_mirror_remaining"]), 3)
+        self.assertIn("one.example", source)
+
+    def test_package_configuration_failure_never_retries_on_another_mirror(self):
+        runner, context, source, _mode, error = self.exercise(
+            failures=0, configure_failure=True,
+        )
+        self.assertIsInstance(error, StepWarning)
+        self.assertEqual((runner.downloads, runner.configurations), (1, 1))
+        self.assertEqual(len(context.values["apt_mirror_remaining"]), 3)
+        self.assertIn("one.example", source)
+
+    def test_exhausted_index_refresh_never_configures_partial_downloads(self):
+        runner, context, _source, _mode, error = self.exercise(index_failure=True)
+        self.assertIsInstance(error, StepWarning)
+        self.assertEqual((runner.downloads, runner.configurations), (1, 0))
+        self.assertFalse(context.values["package_indexes_refreshed"])

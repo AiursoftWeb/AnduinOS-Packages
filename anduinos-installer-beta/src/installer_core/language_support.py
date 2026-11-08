@@ -8,7 +8,7 @@ from pathlib import Path
 from languages import language_for_locale, language_pack_packages
 
 from .command import CommandError, CommandRunner
-from .software import refresh_package_indexes
+from .software import install_target_packages, refresh_package_indexes
 from .steps import FailurePolicy, InstallContext, StepWarning
 
 
@@ -62,26 +62,8 @@ class InstallLanguagePacksStep:
                 f"{language.native_name} language support"
             ) from error
 
-        result = self.runner.run(
-            (
-                "chroot",
-                str(target),
-                "/usr/bin/env",
-                "DEBIAN_FRONTEND=noninteractive",
-                "apt-get",
-                "--yes",
-                "--no-install-recommends",
-                "-o",
-                "Acquire::Retries=1",
-                "-o",
-                "Acquire::http::Timeout=15",
-                "-o",
-                "Acquire::https::Timeout=15",
-                "install",
-                *packages,
-            ),
-            check=False,
-            timeout=3600,
+        result = install_target_packages(
+            context, self.runner, packages,
         )
         if result.returncode != 0:
             raise StepWarning(

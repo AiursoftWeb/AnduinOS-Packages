@@ -9,7 +9,7 @@ from languages import InputMethod, input_method, language_for_locale
 from keyboard_layouts import xkb_choice_id
 
 from .command import CommandError, CommandRunner
-from .software import refresh_package_indexes
+from .software import install_target_packages, refresh_package_indexes
 from .steps import FailurePolicy, InstallContext, StepSkipped, StepWarning
 
 
@@ -131,26 +131,8 @@ class InstallInputMethodStep:
                     "methods; the physical keyboard "
                     "layout is still configured"
                 ) from error
-            result = self.runner.run(
-                (
-                    "chroot",
-                    str(target),
-                    "/usr/bin/env",
-                    "DEBIAN_FRONTEND=noninteractive",
-                    "apt-get",
-                    "--yes",
-                    "--no-install-recommends",
-                    "-o",
-                    "Acquire::Retries=1",
-                    "-o",
-                    "Acquire::http::Timeout=15",
-                    "-o",
-                    "Acquire::https::Timeout=15",
-                    "install",
-                    *packages,
-                ),
-                check=False,
-                timeout=3600,
+            result = install_target_packages(
+                context, self.runner, packages,
             )
             if result.returncode != 0:
                 if not _package_state_is_consistent(target, self.runner):
