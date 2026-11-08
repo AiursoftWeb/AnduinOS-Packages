@@ -215,8 +215,6 @@ def validate_manual_selection(
         )
     if roles.count(ManualPartitionRole.SWAP) > 1:
         raise ManualLayoutError("Manual layout supports at most one Swap partition")
-    if ManualPartitionRole.RECOVERY in roles and selection.filesystem is not Filesystem.BTRFS:
-        raise ManualLayoutError("RE requires Btrfs Root. Remove RE or select Btrfs.")
 
     allocatable = _base_allocatable_extents(disk, selection)
     previous_end = -1

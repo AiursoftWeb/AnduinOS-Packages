@@ -2106,14 +2106,14 @@ msgstr "ยังไม่มีพาร์ทิชันใหม่ เพ�
 msgid "RE must be at least 256 MiB"
 msgstr "RE ต้องมีขนาดอย่างน้อย 256 MiB"
 
-msgid "RE needs at least 256 MiB and a Btrfs Root. It lets you restore snapshots when the installed system cannot start. It is optional; other filesystems use Live USB rescue."
-msgstr "RE ต้องการขนาดอย่างน้อย 256 MiB และ Root แบบ Btrfs ช่วยให้คุณกู้คืนสแนปชอตได้เมื่อระบบที่ติดตั้งไว้ไม่สามารถเริ่มต้นได้ เป็นส่วนประกอบที่ไม่บังคับ; ระบบไฟล์อื่นใช้ Live USB เพื่อกู้คืน"
-
-msgid "RE requires Btrfs Root. Remove RE or select Btrfs."
-msgstr "RE ต้องการ Root แบบ Btrfs ถอด RE ออกหรือเลือก Btrfs"
-
 msgid "Recovery environment (RE)"
 msgstr "สภาพแวดล้อมกู้คืน (RE)"
 
 msgid "Review optional partitions"
 msgstr "ตรวจสอบพาร์ทิชันที่เป็นตัวเลือก"
+
+msgid "Force continue"
+msgstr "บังคับดำเนินการต่อ"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE ต้องมีขนาดอย่างน้อย 256 MiB สามารถแสดงข้อมูลระบบได้แม้ระบบที่ติดตั้งไว้ไม่สามารถเริ่มต้นทำงานได้ การกู้คืนจากภาพสำรอง (Snapshot) ใช้งานเฉพาะกับ Btrfs เท่านั้น RE เป็นส่วนเสริม หากไม่ได้กำหนดค่าไว้ ให้ใช้ USB แบบ Live เพื่อช่วยเหลือ"

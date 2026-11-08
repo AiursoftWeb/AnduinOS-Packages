@@ -389,6 +389,19 @@ static void listed(jv report)
         return;
     }
     free_snapshots();
+    jv supported = field(report, "snapshots_supported");
+    bool information_only = jv_get_kind(supported) == JV_KIND_FALSE;
+    jv_free(supported);
+    if (information_only) {
+        jv_free(records);
+        current_saved = false;
+        page("AnduinOS Recovery",
+            "Snapshot recovery requires Btrfs. You can still view system information or restart.");
+        spacer();
+        lv_obj_t *row = footer();
+        button(row, "Restart", restart, NULL, false);
+        return;
+    }
     jv pending = field(report, "pending");
     bool interrupted = jv_get_kind(pending) != JV_KIND_NULL && jv_is_valid(pending);
     jv_free(pending);

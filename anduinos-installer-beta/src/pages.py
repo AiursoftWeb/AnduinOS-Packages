@@ -4519,7 +4519,6 @@ MANUAL_PARTITION_ROLES = (
 )
 
 _MANUAL_RECOVERY_ERRORS = {
-    "RE requires Btrfs Root. Remove RE or select Btrfs.": N_("RE requires Btrfs Root. Remove RE or select Btrfs."),
     "RE must be at least 256 MiB": N_("RE must be at least 256 MiB"),
 }
 
@@ -4945,7 +4944,7 @@ def build_advanced_storage_page(shared, nav_view):
     )
     editor.append(planned_box)
     editor.append(Gtk.Label(
-        label=_("RE needs at least 256 MiB and a Btrfs Root. It lets you restore snapshots when the installed system cannot start. It is optional; other filesystems use Live USB rescue.", lang),
+        label=_("RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured.", lang),
         xalign=0, wrap=True, css_classes=["dim-label"],
     ))
     compression_control = _btrfs_compression_control(shared, lang)
@@ -5196,7 +5195,7 @@ def build_advanced_storage_page(shared, nav_view):
         )
         minimum = _minimum_partition_size(role)
         reserved = 0 if has_swap else recommended_swap
-        if draft.filesystem is Filesystem.BTRFS and not any(
+        if not any(
             item.role is ManualPartitionRole.RECOVERY for item in draft.new_partitions
         ):
             reserved += RECOVERY_SIZE_MIB
@@ -5243,9 +5242,7 @@ def build_advanced_storage_page(shared, nav_view):
             role_available = not any(
                 item.role is role for item in draft.new_partitions
             )
-            valid = maximum >= minimum and role_available and (
-                role is not ManualPartitionRole.RECOVERY or draft.filesystem is Filesystem.BTRFS
-            )
+            valid = maximum >= minimum and role_available
             start_input.set_sensitive(maximum >= minimum)
             size_input.set_sensitive(maximum >= minimum)
             fill_button.set_sensitive(maximum >= minimum)
@@ -5986,7 +5983,7 @@ def build_advanced_storage_page(shared, nav_view):
             role_dropdown.set_selected(1)
         elif ManualPartitionRole.SWAP not in planned_roles:
             role_dropdown.set_selected(2)
-        elif draft.filesystem is Filesystem.BTRFS and ManualPartitionRole.RECOVERY not in planned_roles:
+        elif ManualPartitionRole.RECOVERY not in planned_roles:
             role_dropdown.set_selected(3)
         notices = _manual_optional_partition_notices(draft, lang)
         optional_notices.set_label("\n".join(notices))
@@ -7623,10 +7620,10 @@ def build_summary_page(shared, nav_view):
                 + _("ZRAM will remain enabled regardless of this choice.", lang)
             ),
         )
-        warning.add_response("back", _("Back", lang))
-        warning.add_response("continue", _("Continue", lang))
+        warning.add_response("back", _("Cancel", lang) if manual_notices else _("Back", lang))
+        warning.add_response("continue", _("Force continue", lang) if manual_notices else _("Continue", lang))
         warning.set_response_appearance(
-            "continue", Adw.ResponseAppearance.SUGGESTED
+            "continue", Adw.ResponseAppearance.DESTRUCTIVE if manual_notices else Adw.ResponseAppearance.SUGGESTED
         )
         warning.set_default_response("back")
         warning.set_close_response("back")

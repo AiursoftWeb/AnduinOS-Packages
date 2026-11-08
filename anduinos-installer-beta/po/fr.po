@@ -2106,14 +2106,14 @@ msgstr "Pas encore de nouvelles partitions. Ajoutez une ESP si nécessaire, une 
 msgid "RE must be at least 256 MiB"
 msgstr "RE doit être d'au moins 256 Mo"
 
-msgid "RE needs at least 256 MiB and a Btrfs Root. It lets you restore snapshots when the installed system cannot start. It is optional; other filesystems use Live USB rescue."
-msgstr "RE nécessite au moins 256 Mo et une Racine Btrfs. Il vous permet de restaurer des instantanés lorsque le système installé ne peut pas démarrer. Il est optionnel ; d'autres systèmes de fichiers utilisent le secours par clé USB Live."
-
-msgid "RE requires Btrfs Root. Remove RE or select Btrfs."
-msgstr "RE nécessite une Racine Btrfs. Supprimez RE ou sélectionnez Btrfs."
-
 msgid "Recovery environment (RE)"
 msgstr "Environnement de récupération (RE)"
 
 msgid "Review optional partitions"
 msgstr "Vérifier les partitions optionnelles"
+
+msgid "Force continue"
+msgstr "Forcer la poursuite"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE nécessite au moins 256 Mo. Il peut afficher des informations système même lorsque le système installé ne peut pas démarrer. La récupération par instantanés n'est disponible qu'avec Btrfs. RE est facultatif ; utilisez une clé USB Live pour le secours s'il n'est pas configuré."

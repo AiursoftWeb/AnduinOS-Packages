@@ -2106,14 +2106,14 @@ msgstr "아직 새 파티션이 없습니다. 필요에 따라 ESP를 추가하�
 msgid "RE must be at least 256 MiB"
 msgstr "RE는 최소 256 MiB 이상이어야 합니다"
 
-msgid "RE needs at least 256 MiB and a Btrfs Root. It lets you restore snapshots when the installed system cannot start. It is optional; other filesystems use Live USB rescue."
-msgstr "RE에는 최소 256 MiB와 Btrfs Root가 필요합니다. 설치된 시스템이 시작할 수 없을 때 스냅샷을 복원할 수 있습니다. 선택 사항이며, 다른 파일 시스템은 Live USB 구제를 사용합니다."
-
-msgid "RE requires Btrfs Root. Remove RE or select Btrfs."
-msgstr "RE에는 Btrfs Root가 필요합니다. RE를 제거하거나 Btrfs를 선택하세요."
-
 msgid "Recovery environment (RE)"
 msgstr "재covery 환경 (RE)"
 
 msgid "Review optional partitions"
 msgstr "선택적 파티션 검토"
+
+msgid "Force continue"
+msgstr "강제 계속"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE는 최소 256 MiB가 필요합니다. 설치된 시스템이 시작되지 않을 때에도 시스템 정보를 표시할 수 있습니다. 스냅샷 복원은 Btrfs에서만 사용할 수 있습니다. RE는 선택 사항이며, 구성되지 않은 경우 구호를 위해 라이브 USB를 사용하십시오."

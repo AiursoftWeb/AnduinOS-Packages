@@ -36,7 +36,7 @@ count=0
 for arg in $(cat /proc/cmdline); do
     case "$arg" in anduinos.recovery.root=*) uuid=${arg#*=}; count=$((count + 1)) ;; esac
 done
-device= disk= model= capacity= temperature= os= total= free= available=
+device= disk= model= capacity= temperature= os= total= free= available= filesystem=
 encryption=Unavailable
 notice='The installed system could not be identified. Hardware information is still available.'
 if [ "$count" = 1 ] && printf '%s\n' "$uuid" | grep -Eq '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'; then
@@ -72,11 +72,20 @@ if [ "$count" = 1 ] && printf '%s\n' "$uuid" | grep -Eq '^[0-9a-fA-F]{8}-[0-9a-f
         done
         notice='The target filesystem could not be read. Space and system version are unavailable.'
         mkdir -p "$mountpoint"
+        filesystem=$(timeout -k 1 3 blkid -p -s TYPE -o value "$device" 2>/dev/null || true)
+        options=
+        case "$filesystem" in
+            btrfs) options=ro,rescue=nologreplay,subvolid=5 ;;
+            ext4) options=ro,noload ;;
+            xfs) options=ro,norecovery ;;
+            f2fs) options=ro,norecovery ;;
+        esac
         # Refuse to reuse an unexpected mount; never unmount another operation.
-        if ! awk -v path="$mountpoint" '$5 == path {found=1} END {exit !found}' /proc/self/mountinfo &&
-           timeout -k 1 3 mount -t btrfs -o ro,rescue=nologreplay,subvolid=5 "$device" "$mountpoint" 2>/dev/null; then
+        if [ -n "$options" ] && ! awk -v path="$mountpoint" '$5 == path {found=1} END {exit !found}' /proc/self/mountinfo &&
+           timeout -k 1 3 mount -t "$filesystem" -o "$options" "$device" "$mountpoint" 2>/dev/null; then
             mounted=1
-            root=$mountpoint/@root
+            root=$mountpoint
+            [ "$filesystem" != btrfs ] || root=$mountpoint/@root
             for release in "$root/etc/os-release" "$root/usr/lib/os-release"; do
                 resolved=$(readlink -f "$release")
                 case "$resolved" in "$root/"*)
@@ -91,7 +100,11 @@ if [ "$count" = 1 ] && printf '%s\n' "$uuid" | grep -Eq '^[0-9a-fA-F]{8}-[0-9a-f
                 free=$(awk -v s="$1" -v n="$3" 'BEGIN {printf "%.0f", s*n}')
                 available=$(awk -v s="$1" -v n="$4" 'BEGIN {printf "%.0f", s*n}')
             fi
-            notice='Space is reported for the entire Btrfs filesystem. Snapshots share data; their sizes cannot be added together.'
+            if [ "$filesystem" = btrfs ]; then
+                notice='Space is reported for the entire Btrfs filesystem. Snapshots share data; their sizes cannot be added together.'
+            else
+                notice='Snapshot recovery requires Btrfs. System information is available for this filesystem.'
+            fi
         fi
     fi
 fi
@@ -100,7 +113,7 @@ jq -M -n --arg sb "$secure_boot" --arg encryption "$encryption" \
     --arg frequency "$frequency" --arg memory "$memory" --arg version "$version" --arg kernel "$kernel" \
     --arg device "$device" --arg disk "$disk" --arg model "$model" --arg capacity "$capacity" \
     --arg temperature "$temperature" --arg os "$os" --arg total "$total" --arg free "$free" \
-    --arg available "$available" --arg notice "$notice" '
+    --arg available "$available" --arg filesystem "$filesystem" --arg notice "$notice" '
     def value: if length == 0 then "Unavailable" else . end;
     def gib: tonumber? / 1073741824 * 10 | round / 10 | tostring + " GiB";
     def row($name; $v): {name: $name, value: ($v | value)};
@@ -110,7 +123,7 @@ jq -M -n --arg sb "$secure_boot" --arg encryption "$encryption" \
        {title: "Boot environment", rows: [row("Secure Boot"; $sb), row("Disk encryption"; $encryption),
          row("Recovery version"; $version), row("Recovery kernel"; $kernel)]},
        {title: "Installed system", rows: [row("System"; $os), row("Target partition"; $device),
-         row("Filesystem"; if $total == "" then "" else "Btrfs" end), row("Total space"; ([$total | gib][0] // "")),
+         row("Filesystem"; if $total == "" then "" else $filesystem end), row("Total space"; ([$total | gib][0] // "")),
          row("Used space"; (try (($total|tonumber) - ($free|tonumber) | gib) catch "")),
          row("Available space"; ([$available | gib][0] // ""))]},
        {title: "Hardware", rows: [row("Computer"; $computer), row("CPU"; $cpu), row("Logical CPUs"; $cpus),

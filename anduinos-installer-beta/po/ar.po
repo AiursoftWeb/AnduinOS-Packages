@@ -2106,14 +2106,14 @@ msgstr "لا توجد وحدات جديدة بعد. أضف ESP إذا لزم ا�
 msgid "RE must be at least 256 MiB"
 msgstr "يجب أن تكون RE بحجم 256 ميغابايت على الأقل"
 
-msgid "RE needs at least 256 MiB and a Btrfs Root. It lets you restore snapshots when the installed system cannot start. It is optional; other filesystems use Live USB rescue."
-msgstr "تتطلب RE حجم 256 ميغابايت على الأقل ووحدة جذر Btrfs. تتيح لك استعادة اللقطات عندما لا يمكن بدء تشغيل النظام المثبت. هي اختيارية؛ أنظمة الملفات الأخرى تستخدم وحدة USB حية للإنقاذ."
-
-msgid "RE requires Btrfs Root. Remove RE or select Btrfs."
-msgstr "تتطلب RE وحدة جذر Btrfs. احذف RE أو اختر Btrfs."
-
 msgid "Recovery environment (RE)"
 msgstr "بيئة الاسترداد (RE)"
 
 msgid "Review optional partitions"
 msgstr "راجع الوحدات الاختيارية"
+
+msgid "Force continue"
+msgstr "المتابعة القسرية"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "يتطلب RE مساحة لا تقل عن 256 ميغابايت. يمكنه عرض معلومات النظام حتى عندما لا يعمل النظام المثبت. التعافي عبر اللقطات متاح فقط مع Btrfs. RE اختياري؛ استخدم وحدة USB حية للإنقاذ إذا لم يتم تكوينه."

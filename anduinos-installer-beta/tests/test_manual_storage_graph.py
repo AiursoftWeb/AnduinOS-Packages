@@ -73,30 +73,31 @@ class ManualStorageGraphTests(unittest.TestCase):
         from installer_core.storage_commands import build_manual_storage_commands
         from installer_core.executor import InstallerExecutor
         for architecture in Architecture:
-            for include_recovery in (False, True):
-                with self.subTest(architecture=architecture, recovery=include_recovery):
-                    base = selection()
-                    chosen = replace(base, new_partitions=(*base.new_partitions,
-                        ManualPartitionRequest(ManualPartitionRole.RECOVERY, 113 * 1024, 113 * 1024 + 256)
-                    )) if include_recovery else base
-                    plan, inventory = manual_plan(chosen=chosen, architecture=architecture)
-                    validate_plan(plan)
-                    validate_manual_storage_graph(plan, inventory)
-                    decoded = InstallPlan.from_dict(plan.to_dict())
-                    self.assertEqual(decoded, plan)
-                    commands = build_manual_storage_commands(plan, inventory)
-                    self.assertEqual("recovery" in commands.devices, include_recovery)
-                    if include_recovery:
-                        self.assertIn(("mkfs.ext4", "-F", "-L", "AOS_RECOVERY",
-                                       commands.devices["recovery"]), commands.format)
-                    pipeline = InstallerExecutor(lambda _message: None).build_steps(plan)
-                    self.assertEqual("deploy-recovery-environment" in [item.id for item in pipeline],
-                                     include_recovery)
+            for filesystem in Filesystem:
+                for include_recovery in (False, True):
+                    with self.subTest(architecture=architecture, recovery=include_recovery):
+                        base = selection(filesystem=filesystem)
+                        chosen = replace(base, new_partitions=(*base.new_partitions,
+                            ManualPartitionRequest(ManualPartitionRole.RECOVERY, 113 * 1024, 113 * 1024 + 256)
+                        )) if include_recovery else base
+                        plan, inventory = manual_plan(chosen=chosen, architecture=architecture, filesystem=filesystem)
+                        validate_plan(plan)
+                        validate_manual_storage_graph(plan, inventory)
+                        decoded = InstallPlan.from_dict(plan.to_dict())
+                        self.assertEqual(decoded, plan)
+                        commands = build_manual_storage_commands(plan, inventory)
+                        self.assertEqual("recovery" in commands.devices, include_recovery)
+                        if include_recovery:
+                            self.assertIn(("mkfs.ext4", "-F", "-L", "AOS_RECOVERY",
+                                           commands.devices["recovery"]), commands.format)
+                        pipeline = InstallerExecutor(lambda _message: None).build_steps(plan)
+                        self.assertEqual("deploy-recovery-environment" in [item.id for item in pipeline],
+                                         include_recovery)
 
-    def test_recovery_rejects_undersized_and_non_btrfs_roots(self):
+    def test_recovery_rejects_undersized_volumes(self):
         for filesystem, size, message in (
             (Filesystem.BTRFS, 255, "at least 256 MiB"),
-            (Filesystem.EXT4, 256, "requires Btrfs"),
+            (Filesystem.EXT4, 255, "at least 256 MiB"),
         ):
             with self.subTest(filesystem=filesystem, size=size):
                 base = selection(filesystem=filesystem)

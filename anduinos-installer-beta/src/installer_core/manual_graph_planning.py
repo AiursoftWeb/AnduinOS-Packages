@@ -508,8 +508,6 @@ def validate_manual_graph_structure(
         raise ManualStorageGraphError("Manual partition roles are invalid")
     recovery = next((item for item in graph.partitions if item.name == "recovery"), None)
     if recovery is not None:
-        if plan.storage.filesystem is not Filesystem.BTRFS:
-            raise ManualStorageGraphError("RE requires Btrfs Root. Remove RE or select Btrfs.")
         if recovery.end_mib is None or recovery.end_mib - recovery.start_mib < RECOVERY_SIZE_MIB:
             raise ManualStorageGraphError("RE must be at least 256 MiB")
     root = next(

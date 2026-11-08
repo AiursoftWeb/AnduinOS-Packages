@@ -2106,14 +2106,14 @@ msgstr "尚無新分區。如有需要，請加入 ESP、一個 Root 分區，�
 msgid "RE must be at least 256 MiB"
 msgstr "RE 必須至少為 256 MiB"
 
-msgid "RE needs at least 256 MiB and a Btrfs Root. It lets you restore snapshots when the installed system cannot start. It is optional; other filesystems use Live USB rescue."
-msgstr "RE 需要至少 256 MiB 和一個 Btrfs Root。它讓你在已安裝系統無法啟動時恢復快照。這是可選的；其他檔案系統使用 Live USB 救援。"
-
-msgid "RE requires Btrfs Root. Remove RE or select Btrfs."
-msgstr "RE 需要 Btrfs Root。請移除 RE 或選擇 Btrfs。"
-
 msgid "Recovery environment (RE)"
 msgstr "恢復環境 (RE)"
 
 msgid "Review optional partitions"
 msgstr "檢視可選分區"
+
+msgid "Force continue"
+msgstr "強制繼續"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE 最少需要 256 MiB。即使已安裝的系統無法啟動，它也能顯示系統資訊。只有使用 Btrfs 時支援快照恢復。RE 是可選的；如果未設定，請使用 Live USB 進行救援。"

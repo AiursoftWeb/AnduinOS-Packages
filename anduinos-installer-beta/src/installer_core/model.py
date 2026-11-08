@@ -183,8 +183,8 @@ class InstallPlan:
 
     @property
     def recovery_enabled(self) -> bool:
-        return self.storage.filesystem is Filesystem.BTRFS and (
-            self.storage.mode is InstallMode.ERASE_DISK
+        return (
+            self.storage.mode is InstallMode.ERASE_DISK and self.storage.filesystem is Filesystem.BTRFS
             or (
                 self.storage.mode is InstallMode.MANUAL
                 and self.storage.graph is not None

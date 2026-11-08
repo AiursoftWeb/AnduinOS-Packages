@@ -135,10 +135,16 @@ def target(volume_uuid=None, *, if_present=False):
             return None  # An image assembly chroot need not have its own mount.
         raise RuntimeError("Cannot identify the installed root filesystem")
     root = json.loads(root_mount)["filesystems"][0]
-    if root["fstype"] != "btrfs" or root["fsroot"] != "/@root":
+    supported = (root["fstype"] == "btrfs" and root["fsroot"] == "/@root") or (
+        root["fstype"] in ("ext4", "xfs", "f2fs") and root["fsroot"] == "/")
+    if not supported:
         if if_present and binding is None:
             return None  # Building the ISO or running Live must never deploy.
-        raise RuntimeError("Recovery requires an AnduinOS Btrfs root using @root")
+        raise RuntimeError("Recovery requires an installed Btrfs, ext4, XFS or F2FS root")
+    if root["fstype"] != "btrfs" and binding is None and volume_uuid is None:
+        if if_present:
+            return None  # A non-Btrfs installation must explicitly opt into RE.
+        raise RuntimeError("Select a dedicated recovery volume for this installation")
     root_uuid = read_uuid(root["uuid"])
     root_devices = run("blkid", "-c", "/dev/null", "-t", f"UUID={root_uuid}", "-o", "device").splitlines()
     if len(root_devices) != 1:
@@ -286,8 +292,13 @@ def recovery_menu(binding, configured):
     initrd = f"    initrd ($recovery)/{DIRECTORY}/current/initrd.img"
     if luks:
         initrd = f'''    search --no-floppy --fs-uuid --set=system {binding["root_uuid"]}
-    if [ -f ($system)/@root/etc/anduinos-luks/machine.key ]; then
-{initrd} newc:/anduinos-unlock.key:($system)/@root/etc/anduinos-luks/machine.key
+    probe --fs --set=system_fs ($system)
+    set machine_key=/etc/anduinos-luks/machine.key
+    if [ "$system_fs" = btrfs ]; then
+        set machine_key=/@root/etc/anduinos-luks/machine.key
+    fi
+    if [ -f ($system)$machine_key ]; then
+{initrd} newc:/anduinos-unlock.key:($system)$machine_key
     else
 {initrd}
     fi'''
