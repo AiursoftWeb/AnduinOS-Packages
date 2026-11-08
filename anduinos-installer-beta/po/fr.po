@@ -1639,10 +1639,6 @@ msgstr "Supprimer"
 msgid "New"
 msgstr "Nouvelle"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Aucune nouvelle partition pour l’instant. Ajoutez une ESP si nécessaire, une partition Root et éventuellement Swap."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Clé de récupération d'urgence enregistrée"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Toute personne ayant un accès physique à cet ordinateur pourra accéder à vos données. Définissez un mot de passe du disque pour protéger vos données."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "Aucune partition RE. Si le système ne peut pas démarrer, vous aurez besoin d'une clé USB Live pour le secours."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Pas d'échange disque. ZRAM restera disponible, mais il n'y aura pas d'espace d'échange disque."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Pas encore de nouvelles partitions. Ajoutez une ESP si nécessaire, une partition Racine et, optionnellement, Swap et RE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE doit être d'au moins 256 Mo"
+
+msgid "Recovery environment (RE)"
+msgstr "Environnement de récupération (RE)"
+
+msgid "Review optional partitions"
+msgstr "Vérifier les partitions optionnelles"
+
+msgid "Force continue"
+msgstr "Forcer la poursuite"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE nécessite au moins 256 Mo. Il peut afficher des informations système même lorsque le système installé ne peut pas démarrer. La récupération par instantanés n'est disponible qu'avec Btrfs. RE est facultatif ; utilisez une clé USB Live pour le secours s'il n'est pas configuré."

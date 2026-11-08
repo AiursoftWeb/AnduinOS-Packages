@@ -1639,10 +1639,6 @@ msgstr "Eliminar"
 msgid "New"
 msgstr "Nueva"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Aún no hay particiones nuevas. Añada una ESP si es necesaria, una partición Root y, opcionalmente, Swap."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Clave de recuperación de emergencia guardada"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Cualquier persona con acceso físico a este equipo podrá acceder a sus datos. Establezca una contraseña del disco para proteger sus datos."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "Sin partición RE. Si el sistema no puede iniciarse, necesitará un USB Live para la recuperación."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Sin intercambio en disco. ZRAM seguirá estando disponible, pero no habrá espacio de intercambio en disco."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Aún no hay nuevas particiones. Añada una ESP si es necesario, una partición Raíz y, opcionalmente, Intercambio y RE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE debe ser de al menos 256 MiB"
+
+msgid "Recovery environment (RE)"
+msgstr "Entorno de recuperación (RE)"
+
+msgid "Review optional partitions"
+msgstr "Revisar particiones opcionales"
+
+msgid "Force continue"
+msgstr "Forzar la continuación"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE requiere al menos 256 MiB. Puede mostrar información del sistema incluso cuando el sistema instalado no puede iniciar. La recuperación mediante instantáneas solo está disponible con Btrfs. RE es opcional; use un USB Live para la recuperación si no se ha configurado."

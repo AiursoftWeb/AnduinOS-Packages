@@ -1639,10 +1639,6 @@ msgstr "Удалить"
 msgid "New"
 msgstr "Новый"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Новых разделов пока нет. При необходимости добавьте ESP, один раздел Root и необязательный Swap."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Аварийный ключ восстановления сохранё�
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Любой, кто имеет физический доступ к этому компьютеру, сможет получить доступ к вашим данным. Задайте пароль диска для защиты данных."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "Нет раздела RE. Если система не может запуститься, для восстановления потребуется загрузочная флешка Live USB."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Нет swap на диске. ZRAM по-прежнему будет доступен, но пространства swap на диске не будет."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Новых разделов пока нет. Добавьте ESP при необходимости, один раздел Root и, при желании, Swap и RE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "Раздел RE должен быть не менее 256 МБ"
+
+msgid "Recovery environment (RE)"
+msgstr "Среда восстановления (RE)"
+
+msgid "Review optional partitions"
+msgstr "Проверьте опциональные разделы"
+
+msgid "Force continue"
+msgstr "Принудительно продолжить"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "Для RE требуется минимум 256 МБ. Он может отображать информацию о системе, даже если установленная система не может быть запущена. Восстановление из снимков доступно только для Btrfs. RE является необязательным; используйте загрузочную USB-флешку для аварийного восстановления, если он не настроен."

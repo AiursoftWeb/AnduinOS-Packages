@@ -1639,10 +1639,6 @@ msgstr "Hapus"
 msgid "New"
 msgstr "Baru"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Belum ada partisi baru. Tambahkan ESP jika diperlukan, satu partisi Root, dan Swap opsional."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Kunci pemulihan darurat disimpan"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Siapa pun yang memiliki akses fisik ke komputer ini akan dapat mengakses data Anda. Tetapkan kata sandi disk untuk melindungi data Anda."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "Tidak ada partisi RE. Jika sistem tidak dapat dimulai, Anda akan membutuhkan Live USB untuk penyelamatan."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Tidak ada swap disk. ZRAM masih akan tersedia, tetapi tidak akan ada ruang swap disk."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Belum ada partisi baru. Tambahkan ESP jika diperlukan, satu partisi Root, dan secara opsional Swap dan RE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE harus minimal 256 MiB"
+
+msgid "Recovery environment (RE)"
+msgstr "Lingkungan pemulihan (RE)"
+
+msgid "Review optional partitions"
+msgstr "Tinjau partisi opsional"
+
+msgid "Force continue"
+msgstr "Lanjutkan dengan memaksa"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE membutuhkan minimal 256 MiB. Ini dapat menampilkan informasi sistem bahkan jika sistem yang diinstal tidak dapat dimulai. Pemulihan snapshot hanya tersedia dengan Btrfs. RE bersifat opsional; gunakan USB Live untuk penyelamatan jika tidak dikonfigurasi."

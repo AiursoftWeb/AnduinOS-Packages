@@ -1639,10 +1639,6 @@ msgstr "Ta bort"
 msgid "New"
 msgstr "Ny"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Inga nya partitioner ännu. Lägg till en ESP vid behov, en Root-partition och eventuellt Swap."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Nödlösenord sparat"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Alla med fysisk tillgång till den här datorn kommer att kunna komma åt dina data. Ange ett disklösenord för att skydda dina data."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "Ingen RE-partition. Om systemet inte kan starta krävs en Live USB för räddning."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Ingen diskswap. ZRAM kommer fortfarande att vara tillgänglig, men det finns ingen swap-utrymme på disken."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Inga nya partitioner ännu. Lägg till en ESP om behövs, en Root-partition och valfritt Swap och RE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE måste vara minst 256 MiB"
+
+msgid "Recovery environment (RE)"
+msgstr "Återställningsmiljö (RE)"
+
+msgid "Review optional partitions"
+msgstr "Granska valfria partitioner"
+
+msgid "Force continue"
+msgstr "Tvinga fram att fortsätta"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE kräver minst 256 MiB. Den kan visa systeminformation även om det installerade systemet inte kan starta. Återställning via snapshot är endast tillgänglig med Btrfs. RE är valfri; använd en Live USB för räddning om den inte är konfigurerad."

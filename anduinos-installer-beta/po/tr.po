@@ -1639,10 +1639,6 @@ msgstr "Kaldır"
 msgid "New"
 msgstr "Yeni"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Henüz yeni bölüm yok. Gerekirse bir ESP, bir Root bölümü ve isteğe bağlı olarak Swap ekleyin."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Acil durum kurtarma anahtarı kaydedildi"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Bu bilgisayara fiziksel erişimi olan herkes verilerinize erişebilecektir. Verilerinizi korumak için bir disk parolası belirleyin."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "RE bölümü yok. Sistem başlatılamazsa, kurtarma için bir Live USB'ye ihtiyacınız olacak."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Disk swap yok. ZRAM hâlâ kullanılabilir olacak, ancak disk swap alanı olmayacak."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Henüz yeni bölümler yok. Gerekirse bir ESP, bir Root bölümü ve isteğe bağlı olarak Swap ve RE ekleyin."
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE en az 256 MiB olmalıdır"
+
+msgid "Recovery environment (RE)"
+msgstr "Kurtarma ortamı (RE)"
+
+msgid "Review optional partitions"
+msgstr "İsteğe bağlı bölümleri gözden geçirin"
+
+msgid "Force continue"
+msgstr "Devam et"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE en az 256 MiB gerektirir. Kurulu sistem başlatılamasa bile sistem bilgilerini gösterebilir. Görüntü kurtarması yalnızca Btrfs ile kullanılabilir. RE isteğe bağlıdır; yapılandırılmadıysa kurtarma için Canlı USB kullanın."

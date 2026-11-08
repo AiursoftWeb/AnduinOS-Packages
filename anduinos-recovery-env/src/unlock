@@ -58,7 +58,9 @@ if [ "$opened" = 0 ]; then
 fi
 
 # Opening a container does not establish ownership of the filesystem within it.
-if [ "$(blkid -p -s TYPE -o value "/dev/mapper/$mapper")" != btrfs ] ||
+filesystem=$(blkid -p -s TYPE -o value "/dev/mapper/$mapper")
+case "$filesystem" in btrfs|ext4|xfs|f2fs) supported=1 ;; *) supported=0 ;; esac
+if [ "$supported" != 1 ] ||
    [ "$(blkid -p -s UUID -o value "/dev/mapper/$mapper")" != "$root" ]; then
     cryptsetup close "$mapper"
     fail 'The unlocked filesystem does not match this recovery environment.'

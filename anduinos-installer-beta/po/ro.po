@@ -1639,10 +1639,6 @@ msgstr "Elimină"
 msgid "New"
 msgstr "Nouă"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Nu există încă partiții noi. Adaugă un ESP dacă este necesar, o partiție Root și, opțional, Swap."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Cheia de recuperare de urgență a fost salvată"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Oricine are acces fizic la acest computer va putea accesa datele dvs. Setați o parolă pentru disc pentru a vă proteja datele."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "Fără partiție RE. Dacă sistemul nu poate porni, va fi nevoie de un stick USB Live pentru recuperare."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Fără swap pe disc. ZRAM va rămâne disponibil, dar nu va exista spațiu de swap pe disc."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Încă nu există partiții noi. Adăugați un ESP dacă este necesar, o partiție Root și, opțional, Swap și RE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE trebuie să aibă cel puțin 256 MiB"
+
+msgid "Recovery environment (RE)"
+msgstr "Mediu de recuperare (RE)"
+
+msgid "Review optional partitions"
+msgstr "Verificați partițiile opționale"
+
+msgid "Force continue"
+msgstr "Forțează continuarea"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE are nevoie de cel puțin 256 MiB. Poate afișa informații despre sistem chiar dacă sistemul instalat nu se poate porni. Recuperarea prin instantanee este disponibilă doar cu Btrfs. RE este opțional; folosiți un USB Live pentru recuperare dacă nu este configurat."

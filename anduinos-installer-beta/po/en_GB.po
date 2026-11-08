@@ -1640,10 +1640,6 @@ msgstr "Remove"
 msgid "New"
 msgstr "New"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2098,3 +2094,27 @@ msgstr "Emergency recovery key saved"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE must be at least 256 MiB"
+
+msgid "Recovery environment (RE)"
+msgstr "Recovery environment (RE)"
+
+msgid "Review optional partitions"
+msgstr "Review optional partitions"
+
+msgid "Force continue"
+msgstr "Force continue"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."

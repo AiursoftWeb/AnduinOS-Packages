@@ -53,6 +53,15 @@ set -- "$@" $devices
 # Only restore has a snapshot argument. Never guess among duplicate UUIDs.
 case "$1:$#" in list:2|create:2|resume:2) device=$2 ;; restore:3) device=$3 ;; *) fail 'The installed system is missing or its filesystem UUID is ambiguous.' ;; esac
 [ "$(blkid -p -s UUID -o value "$device")" = "$uuid" ] || fail 'The system device has changed. Restart recovery.'
+filesystem=$(blkid -p -s TYPE -o value "$device")
+case "$filesystem" in
+    btrfs) ;;
+    ext4|xfs|f2fs)
+        [ "$1" = list ] || fail 'Snapshot recovery requires Btrfs. System information and restart are available.'
+        jq -n '{schema: 1, deployments: [], pending: null, snapshots_supported: false}'
+        exit 0 ;;
+    *) fail 'The installed filesystem is not supported by this recovery environment.' ;;
+esac
 mkdir -p "$top"
 options=rw,subvolid=5
 [ "$1" != list ] || options=ro,rescue=nologreplay,subvolid=5

@@ -30,6 +30,15 @@ while :; do
         [ "$answer" != REBOOT ] || recovery-action restart
         continue
     fi
+    if [ "$(jq -r '.snapshots_supported == false' /run/recovery-choices.json)" = true ]; then
+        echo 'Snapshot recovery requires Btrfs. Type INFO for system information or REBOOT to restart.'
+        read -r answer
+        case "$answer" in
+            INFO) recovery-action information | jq . ;;
+            REBOOT) recovery-action restart ;;
+        esac
+        continue
+    fi
     if [ "$(jq -r '.pending != null' /run/recovery-choices.json)" = true ]; then
         echo 'A confirmed recovery was interrupted. Type RESUME to finish, or REBOOT to restart.'
         read -r answer

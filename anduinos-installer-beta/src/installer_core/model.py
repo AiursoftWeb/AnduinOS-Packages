@@ -182,6 +182,17 @@ class InstallPlan:
     boot: BootSpec = field(default_factory=BootSpec)
 
     @property
+    def recovery_enabled(self) -> bool:
+        return (
+            self.storage.mode is InstallMode.ERASE_DISK and self.storage.filesystem is Filesystem.BTRFS
+            or (
+                self.storage.mode is InstallMode.MANUAL
+                and self.storage.graph is not None
+                and any(item.name == "recovery" for item in self.storage.graph.partitions)
+            )
+        )
+
+    @property
     def encrypted_swap(self) -> bool:
         return (
             self.storage.encryption is EncryptionMode.LUKS2

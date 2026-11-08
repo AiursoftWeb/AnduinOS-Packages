@@ -1639,10 +1639,6 @@ msgstr "हटाएँ"
 msgid "New"
 msgstr "नया"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "अभी कोई नया पार्टिशन नहीं है। आवश्यकता हो तो ESP, एक Root पार्टिशन और वैकल्पिक Swap जोड़ें।"
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "आपातकालीन रिकवरी कुंजी सुर
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "इस कंप्यूटर तक भौतिक पहुँच रखने वाला कोई भी व्यक्ति आपके डेटा तक पहुँच सकेगा। अपने डेटा की सुरक्षा के लिए डिस्क का पासवर्ड सेट करें।"
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "कोई RE विभाजन नहीं। यदि प्रणाली शुरू नहीं हो पाती है, तो आपको बचाव के लिए Live USB की आवश्यकता होगी।"
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "कोई डिस्क स्वैप नहीं। ZRAM अभी भी उपलब्ध रहेगा, लेकिन कोई डिस्क स्वैप स्पेस नहीं होगी।"
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "अभी तक कोई नए विभाजन नहीं। आवश्यकता हो तो एक ESP जोड़ें, एक Root विभाजन, और वैकल्पिक रूप से Swap और RE।"
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE को कम से कम 256 MiB होना चाहिए"
+
+msgid "Recovery environment (RE)"
+msgstr "पुनर्प्राप्ति वातावरण (RE)"
+
+msgid "Review optional partitions"
+msgstr "वैकल्पिक विभाजनों की समीक्षा करें"
+
+msgid "Force continue"
+msgstr "जबरदस्ती जारी रखें"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE को कम से कम 256 MiB की आवश्यकता होती है। यदि स्थापित सिस्टम शुरू नहीं हो पाता है, तो भी यह सिस्टम जानकारी दिखा सकता है। स्नैपशॉट रिकवरी केवल Btrfs के साथ उपलब्ध है। RE वैकल्पिक है; यदि इसका कॉन्फ़िगरेशन नहीं किया गया है, तो रेस्क्यू के लिए Live USB का उपयोग करें।"

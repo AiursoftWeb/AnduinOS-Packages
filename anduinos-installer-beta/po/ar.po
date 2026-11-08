@@ -1639,10 +1639,6 @@ msgstr "الإزالة"
 msgid "New"
 msgstr "جديد"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "لا توجد أقسام جديدة بعد. أضف ESP عند الحاجة، وقسم Root واحدًا، وقسم Swap اختياريًا."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "تم حفظ مفتاح الاسترداد للطوارئ"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "سيتمكن أي شخص يمكنه الوصول فعليًا إلى هذا الكمبيوتر من الوصول إلى بياناتك. عيّن كلمة مرور للقرص لحماية بياناتك."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "لا توجد وحدة نظام استرداد. إذا تعذر بدء تشغيل النظام، فستحتاج إلى وحدة USB حية للإنقاذ."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "لا توجد ذاكرة تبديل على القرص. ستظل ZRAM متاحة، لكن لن يكون هناك مساحة تبديل على القرص."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "لا توجد وحدات جديدة بعد. أضف ESP إذا لزم الأمر، ووحدة جذر واحدة، وخيارياً Swap وRE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "يجب أن تكون RE بحجم 256 ميغابايت على الأقل"
+
+msgid "Recovery environment (RE)"
+msgstr "بيئة الاسترداد (RE)"
+
+msgid "Review optional partitions"
+msgstr "راجع الوحدات الاختيارية"
+
+msgid "Force continue"
+msgstr "المتابعة القسرية"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "يتطلب RE مساحة لا تقل عن 256 ميغابايت. يمكنه عرض معلومات النظام حتى عندما لا يعمل النظام المثبت. التعافي عبر اللقطات متاح فقط مع Btrfs. RE اختياري؛ استخدم وحدة USB حية للإنقاذ إذا لم يتم تكوينه."

@@ -1639,10 +1639,6 @@ msgstr "Αφαίρεση"
 msgid "New"
 msgstr "Νέο"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Δεν υπάρχουν ακόμη νέα διαμερίσματα. Προσθέστε ESP αν χρειάζεται, ένα διαμέρισμα Root και προαιρετικά Swap."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Ο κλειδί έκτακτης ανάγκης αποθηκεύτηκε
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Οποιοσδήποτε έχει φυσική πρόσβαση σε αυτόν τον υπολογιστή θα μπορεί να έχει πρόσβαση στα δεδομένα σας. Ορίστε έναν κωδικό δίσκου για να προστατεύσετε τα δεδομένα σας."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "Δεν υπάρχει διαμέρισμα RE. Αν το σύστημα δεν μπορεί να ξεκινήσει, θα χρειαστείτε ένα Live USB για διάσωση."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Δεν υπάρχει swap δίσκου. Το ZRAM θα παραμείνει διαθέσιμο, αλλά δεν θα υπάρχει χώρος swap στον δίσκο."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Δεν υπάρχουν νέα διαμερίσματα ακόμα. Προσθέστε ένα ESP αν χρειάζεται, ένα διαμέρισμα Root και προαιρετικά Swap και RE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "Το RE πρέπει να είναι τουλάχιστον 256 MiB"
+
+msgid "Recovery environment (RE)"
+msgstr "Περιβάλλον ανάρρωσης (RE)"
+
+msgid "Review optional partitions"
+msgstr "Ελέγξτε τα προαιρετικά διαμερίσματα"
+
+msgid "Force continue"
+msgstr "Εξαναγκαστική συνέχιση"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "Το RE απαιτεί τουλάχιστον 256 MiB. Μπορεί να εμφανίζει πληροφορίες συστήματος ακόμα και όταν το εγκατεστημένο σύστημα δεν μπορεί να ξεκινήσει. Η ανάκτηση μέσω στιγμιοτύπων είναι διαθέσιμη μόνο με Btrfs. Το RE είναι προαιρετικό; χρησιμοποιήστε ένα Live USB για διάσωση εάν δεν έχει ρυθμιστεί."

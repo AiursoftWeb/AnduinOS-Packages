@@ -1639,10 +1639,6 @@ msgstr "Remover"
 msgid "New"
 msgstr "Nova"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Ainda não existem novas partições. Adicione uma ESP se necessário, uma partição Root e, opcionalmente, Swap."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Chave de recuperação de emergência salva"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Qualquer pessoa com acesso físico a este computador poderá aceder aos seus dados. Defina uma palavra-passe do disco para proteger os seus dados."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "Sem partição RE. Se o sistema não puder iniciar, será necessário um Live USB para resgate."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Sem swap em disco. O ZRAM ainda estará disponível, mas não haverá espaço de swap em disco."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Ainda não há novas partições. Adicione um ESP, se necessário, uma partição Root e, opcionalmente, Swap e RE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "O RE deve ter pelo menos 256 MiB"
+
+msgid "Recovery environment (RE)"
+msgstr "Ambiente de recuperação (RE)"
+
+msgid "Review optional partitions"
+msgstr "Revisar partições opcionais"
+
+msgid "Force continue"
+msgstr "Forçar continuar"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "O RE precisa de pelo menos 256 MiB. Pode mostrar informações do sistema mesmo quando o sistema instalado não consegue iniciar. A recuperação por snapshot está disponível apenas com Btrfs. O RE é opcional; use um USB Live para resgate se não estiver configurado."

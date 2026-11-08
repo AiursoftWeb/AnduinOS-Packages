@@ -1639,10 +1639,6 @@ msgstr "Видалити"
 msgid "New"
 msgstr "Новий"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Нових розділів ще немає. За потреби додайте ESP, один розділ Root і необов’язковий Swap."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Аварійний ключ відновлення збережено"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Будь-хто, хто має фізичний доступ до цього комп’ютера, зможе отримати доступ до ваших даних. Установіть пароль диска, щоб захистити свої дані."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "Немає розділу RE. Якщо система не зможе запуститися, для порятунку знадобиться Live USB."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Немає обміну на диск. ZRAM залишиться доступним, але не буде простору обміну на диску."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Ще немає нових розділів. Додайте ESP за потреби, один розділ Root, а також опційно Swap та RE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE має бути не менше 256 MiB"
+
+msgid "Recovery environment (RE)"
+msgstr "Середовища відновлення (RE)"
+
+msgid "Review optional partitions"
+msgstr "Перевірте необов'язкові розділи"
+
+msgid "Force continue"
+msgstr "Примусово продовжити"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE потребує щонайменше 256 МБ. Він може відображати інформацію про систему, навіть якщо встановлена система не може завантажитися. Відновлення зі знімків доступно лише для Btrfs. RE є необов'язковим; якщо його не налаштовано, використовуйте Live USB для порятунку."

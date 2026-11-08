@@ -123,8 +123,7 @@ class RemoveLivePackagesStep:
             # make the selected-filesystem capability explicit before the
             # installer package and its orphaned dependencies are removed.
             retained += (SNAPSHOTS_MANAGER_PACKAGE,)
-        recovery_enabled = (context.plan.storage.mode is InstallMode.ERASE_DISK
-                            and context.plan.storage.filesystem is Filesystem.BTRFS)
+        recovery_enabled = context.plan.recovery_enabled
         if recovery_enabled and _is_installed(self.runner, target, RECOVERY_PACKAGE):
             retained += (RECOVERY_PACKAGE,)
         for package in retained:

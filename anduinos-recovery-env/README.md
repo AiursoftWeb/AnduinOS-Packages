@@ -1,7 +1,8 @@
 # AnduinOS Recovery Environment
 
 A small, independent kernel and initramfs for restoring AnduinOS Btrfs system
-snapshots when the installed system cannot boot. An English graphical browser
+snapshots when the installed system cannot boot. ext4, XFS and F2FS roots can
+also use RE to view system information and restart; snapshot actions are unavailable. An English graphical browser
 reuses Disk Snapshots Manager's offline recovery engine: choose a snapshot,
 confirm the rollback, then restart. Personal files remain unchanged. A text
 menu remains available if graphical startup fails. The System Information tab
@@ -16,8 +17,9 @@ a prominent data-loss warning. Snapshot creation requires readable installed
 kernel, initramfs and package metadata; failures leave the warning in place.
 
 This initial development package requires an unmounted, dedicated ext4 volume
-labelled `AOS_RECOVERY` (256 MiB) and an AnduinOS Btrfs root using the standard
-subvolume layout. The root may be a plain partition or the installer's single
+labelled `AOS_RECOVERY` (at least 256 MiB) and an AnduinOS root using Btrfs
+with the standard subvolume layout, ext4, XFS or F2FS. Non-Btrfs installations
+explicitly select a recovery volume during initial deployment. The root may be a plain partition or the installer's single
 LUKS2 partition; LVM, RAID and other mapped layouts remain unsupported. It never
 creates or formats partitions. Initial deployment binds both filesystem UUIDs
 and, for encryption, the outer LUKS UUID; later updates reuse that binding.
@@ -28,7 +30,7 @@ without a suitable volume, including Live image assembly, skips deployment.
 The encrypted GRUB entry reads the existing machine credential from the unlocked
 root into the RAM-only `/anduinos-unlock.key` cpio entry. The public recovery
 volume never stores that credential. Recovery opens only the bound LUKS2
-container, verifies its inner Btrfs UUID and removes the incoming file before
+container, verifies its inner filesystem UUID and removes the incoming file before
 starting the browser. If the credential is missing or rejected, the native text
 prompt accepts the disk password or emergency recovery key; failed input can be retried
 or the machine restarted. The mapping lives for the recovery session, while

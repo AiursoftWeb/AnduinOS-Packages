@@ -1639,10 +1639,6 @@ msgstr "Poista"
 msgid "New"
 msgstr "Uusi"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Uusia osioita ei vielä ole. Lisää tarvittaessa ESP, yksi Root-osio ja valinnainen Swap."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Hätäpalautustunnus tallennettu"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Kuka tahansa, jolla on fyysinen pääsy tähän tietokoneeseen, voi käyttää tietojasi. Suojaa tietosi asettamalla levyn salasana."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "Ei RE-osaa. Jos järjestelmä ei käynnisty, pelastus vaatii Live USB -levyn."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Ei levyswapia. ZRAM on edelleen käytettävissä, mutta levyswap-tilaa ei ole."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Ei vielä uusia osioita. Lisää tarvittaessa ESP, yksi Root-osio ja valinnaisesti Swap ja RE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE:n on oltava vähintään 256 MiB"
+
+msgid "Recovery environment (RE)"
+msgstr "Palautusympäristö (RE)"
+
+msgid "Review optional partitions"
+msgstr "Tarkista valinnaiset osiot"
+
+msgid "Force continue"
+msgstr "Pakota jatku"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE vaatii vähintään 256 MiB. Se voi näyttää järjestelmätietoja myös silloin, kun asennettu järjestelmä ei käynnisty. Snapshot-palautus on käytettävissä vain Btrfs-järjestelmässä. RE on valinnainen; käytä Live USB -levyä pelastukseen, jos sitä ei ole määritetty."

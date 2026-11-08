@@ -1639,10 +1639,6 @@ msgstr "Verwijderen"
 msgid "New"
 msgstr "Nieuw"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Nog geen nieuwe partities. Voeg indien nodig een ESP, één Root-partitie en optioneel Swap toe."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Noodsleutel opgeslagen"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Iedereen met fysieke toegang tot deze computer kan uw gegevens bekijken. Stel een schijfwachtwoord in om uw gegevens te beschermen."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "Geen RE-partitie. Als het systeem niet kan starten, hebt u een Live USB nodig voor redding."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Geen schijfswap. ZRAM is nog steeds beschikbaar, maar er is geen schijfswapruimte."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Nog geen nieuwe partities. Voeg indien nodig een ESP toe, één Root-partitie en optioneel Swap en RE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE moet minimaal 256 MiB zijn"
+
+msgid "Recovery environment (RE)"
+msgstr "Herstelmomgeving (RE)"
+
+msgid "Review optional partitions"
+msgstr "Optionele partities controleren"
+
+msgid "Force continue"
+msgstr "Forceer doorgaan"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE heeft minimaal 256 MiB nodig. Het kan systeem informatie tonen zelfs wanneer het geïnstalleerde systeem niet kan starten. Snapshot-herstel is alleen beschikbaar met Btrfs. RE is optioneel; gebruik een Live USB voor redding als het niet is geconfigureerd."

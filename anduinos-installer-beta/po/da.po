@@ -1639,10 +1639,6 @@ msgstr "Fjern"
 msgid "New"
 msgstr "Ny"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Ingen nye partitioner endnu. Tilføj om nødvendigt en ESP, én Root-partition og eventuelt Swap."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Nøgle til akut gendannelse gemt"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Alle med fysisk adgang til denne computer vil kunne få adgang til dine data. Angiv en diskadgangskode for at beskytte dine data."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "Ingen RE-partition. Hvis systemet ikke kan starte, skal du bruge en Live USB til redning."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Ingen disk-swap. ZRAM vil stadig være tilgængelig, men der vil ikke være swap-plads på disken."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Ingen nye partitioner endnu. Tilføj en ESP hvis nødvendigt, én Root-partition og valgfrit Swap og RE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE skal være mindst 256 MiB"
+
+msgid "Recovery environment (RE)"
+msgstr "Genopretningsmiljø (RE)"
+
+msgid "Review optional partitions"
+msgstr "Gennemse valgfrie partitioner"
+
+msgid "Force continue"
+msgstr "Tving fremad"
+
+msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr "RE kræver mindst 256 MiB. Det kan vise systeminformation, selv hvis det installerede system ikke kan starte. Snapshot-gendannelse er kun tilgængelig med Btrfs. RE er valgfrit; brug en Live USB til redning, hvis det ikke er konfigureret."
