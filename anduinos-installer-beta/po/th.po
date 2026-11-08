@@ -1639,10 +1639,6 @@ msgstr "ลบ"
 msgid "New"
 msgstr "ใหม่"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "ยังไม่มีพาร์ทิชันใหม่ เพิ่ม ESP หากจำเป็น เพิ่มพาร์ทิชัน Root หนึ่งพาร์ทิชัน และ Swap ตามต้องการ"
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "บันทึกคีย์กู้ภัยฉุกเฉินแ
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "ผู้ที่เข้าถึงคอมพิวเตอร์เครื่องนี้ได้ทางกายภาพจะสามารถเข้าถึงข้อมูลของคุณได้ ตั้งรหัสผ่านดิสก์เพื่อปกป้องข้อมูลของคุณ"
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "ไม่มีพาร์ทิชัน RE หากระบบไม่สามารถเริ่มต้นได้ คุณจะต้องใช้ Live USB เพื่อกู้คืนระบบ"
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "ไม่มีสวอปบนดิสก์ ZRAM ยังคงพร้อมใช้งาน แต่จะไม่มีพื้นที่สวอปบนดิสก์"
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "ยังไม่มีพาร์ทิชันใหม่ เพิ่ม ESP หากจำเป็น พาร์ทิชัน Root หนึ่งพาร์ทิชัน และสวอปกับ RE เป็นตัวเลือก"
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE ต้องมีขนาดอย่างน้อย 256 MiB"
+
+msgid "RE needs at least 256 MiB and a Btrfs Root. It lets you restore snapshots when the installed system cannot start. It is optional; other filesystems use Live USB rescue."
+msgstr "RE ต้องการขนาดอย่างน้อย 256 MiB และ Root แบบ Btrfs ช่วยให้คุณกู้คืนสแนปชอตได้เมื่อระบบที่ติดตั้งไว้ไม่สามารถเริ่มต้นได้ เป็นส่วนประกอบที่ไม่บังคับ; ระบบไฟล์อื่นใช้ Live USB เพื่อกู้คืน"
+
+msgid "RE requires Btrfs Root. Remove RE or select Btrfs."
+msgstr "RE ต้องการ Root แบบ Btrfs ถอด RE ออกหรือเลือก Btrfs"
+
+msgid "Recovery environment (RE)"
+msgstr "สภาพแวดล้อมกู้คืน (RE)"
+
+msgid "Review optional partitions"
+msgstr "ตรวจสอบพาร์ทิชันที่เป็นตัวเลือก"

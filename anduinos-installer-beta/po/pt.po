@@ -1639,10 +1639,6 @@ msgstr "Remover"
 msgid "New"
 msgstr "Nova"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Ainda não existem novas partições. Adicione uma ESP se necessário, uma partição Root e, opcionalmente, Swap."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Chave de recuperação de emergência salva"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Qualquer pessoa com acesso físico a este computador poderá aceder aos seus dados. Defina uma palavra-passe do disco para proteger os seus dados."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "Sem partição RE. Se o sistema não puder iniciar, será necessário um Live USB para resgate."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Sem swap em disco. O ZRAM ainda estará disponível, mas não haverá espaço de swap em disco."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Ainda não há novas partições. Adicione um ESP, se necessário, uma partição Root e, opcionalmente, Swap e RE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "O RE deve ter pelo menos 256 MiB"
+
+msgid "RE needs at least 256 MiB and a Btrfs Root. It lets you restore snapshots when the installed system cannot start. It is optional; other filesystems use Live USB rescue."
+msgstr "O RE requer pelo menos 256 MiB e um Root Btrfs. Ele permite restaurar snapshots quando o sistema instalado não pode iniciar. É opcional; outros sistemas de arquivos usam resgate via Live USB."
+
+msgid "RE requires Btrfs Root. Remove RE or select Btrfs."
+msgstr "O RE requer Root Btrfs. Remova o RE ou selecione Btrfs."
+
+msgid "Recovery environment (RE)"
+msgstr "Ambiente de recuperação (RE)"
+
+msgid "Review optional partitions"
+msgstr "Revisar partições opcionais"

@@ -1639,10 +1639,6 @@ msgstr "Entfernen"
 msgid "New"
 msgstr "Neu"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Noch keine neuen Partitionen. Fügen Sie bei Bedarf eine ESP, eine Root-Partition und optional Swap hinzu."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Notwiederherstellungsschlüssel gespeichert"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Jede Person mit physischem Zugang zu diesem Computer kann auf Ihre Daten zugreifen. Legen Sie ein Festplattenpasswort fest, um Ihre Daten zu schützen."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "Keine RE-Partition. Wenn das System nicht starten kann, wird ein Live-USB-Stick für die Rettung benötigt."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Kein Disk-Swap. ZRAM ist weiterhin verfügbar, aber es gibt keinen Swap-Speicher auf der Festplatte."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Noch keine neuen Partitionen. Füge ggf. eine ESP, eine Root-Partition und optional Swap und RE hinzu."
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE muss mindestens 256 MiB betragen"
+
+msgid "RE needs at least 256 MiB and a Btrfs Root. It lets you restore snapshots when the installed system cannot start. It is optional; other filesystems use Live USB rescue."
+msgstr "RE benötigt mindestens 256 MiB und eine Btrfs-Root. Sie ermöglicht die Wiederherstellung von Snapshots, wenn das installierte System nicht starten kann. Sie ist optional; andere Dateisysteme verwenden Live-USB-Rettung."
+
+msgid "RE requires Btrfs Root. Remove RE or select Btrfs."
+msgstr "RE erfordert eine Btrfs-Root. Entferne RE oder wähle Btrfs."
+
+msgid "Recovery environment (RE)"
+msgstr "Wiederherstellungsumgebung (RE)"
+
+msgid "Review optional partitions"
+msgstr "Optionale Partitionen überprüfen"

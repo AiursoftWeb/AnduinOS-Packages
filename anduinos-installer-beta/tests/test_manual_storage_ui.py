@@ -7,6 +7,7 @@ from pages import (
     _manual_role_choices,
     _manual_segment_annotation,
     _manual_segment_spans,
+    _manual_optional_partition_notices,
     _probe_storage_workflow,
 )
 from installer_core.model import Architecture, Firmware, SecureBoot
@@ -143,7 +144,37 @@ class ManualStorageUiTests(unittest.TestCase):
         with patch("pages._", side_effect=lambda text, lang: f"{lang}:{text}"):
             self.assertEqual(_manual_role_choices("test-locale"), [
                 "test-locale:ESP", "test-locale:Root", "test-locale:Swap",
+                "test-locale:Recovery environment (RE)",
             ])
+
+    def test_optional_partition_notices_follow_the_actual_layout(self):
+        base = selection()
+        recovery = ManualPartitionRequest(ManualPartitionRole.RECOVERY, 113 * 1024, 113 * 1024 + 256)
+        self.assertEqual(len(_manual_optional_partition_notices(base, "en_US")), 1)
+        complete = replace(base, new_partitions=(*base.new_partitions, recovery))
+        self.assertEqual(_manual_optional_partition_notices(complete, "en_US"), [])
+        root_only = replace(base, new_partitions=base.new_partitions[:1])
+        notices = _manual_optional_partition_notices(root_only, "en_US")
+        self.assertEqual(len(notices), 2)
+        self.assertIn("Live USB", notices[0])
+        self.assertIn("ZRAM", notices[1])
+        from installer_core.model import Filesystem
+        self.assertEqual(len(_manual_optional_partition_notices(
+            replace(root_only, filesystem=Filesystem.EXT4), "en_US")), 1)
+
+    def test_recovery_partition_is_visible_in_disk_map_and_write_confirmation(self):
+        base = selection()
+        chosen = replace(base, new_partitions=(*base.new_partitions,
+            ManualPartitionRequest(ManualPartitionRole.RECOVERY, 113 * 1024, 113 * 1024 + 256)))
+        preview = build_manual_storage_preview(self.workflow, chosen)
+        confirmation = build_manual_storage_confirmation(preview)
+        self.assertIn("recovery", [item.name for item in confirmation.new_partitions])
+        self.assertIn("ext4", [item.filesystem for item in confirmation.formats])
+        segment = next(item for item in build_manual_disk_map(self.disk, chosen).planned
+                       if item.kind is ManualDiskSegmentKind.NEW_RECOVERY)
+        self.assertEqual(segment.size_mib, 256)
+        self.assertEqual(_manual_segment_annotation(segment, chosen.reused_esp_partuuid, "en_US"),
+                         ("Recovery environment (RE)", "recovery"))
 
     def setUp(self):
         self.disk = manual_disk()

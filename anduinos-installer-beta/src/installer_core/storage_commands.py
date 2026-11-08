@@ -350,6 +350,8 @@ def build_manual_storage_commands(
     expected_devices = {"efi-system", "root"}
     if plan.storage.swap_size_mib:
         expected_devices.add("swap")
+    if any(item.name == "recovery" for item in graph.partitions):
+        expected_devices.add("recovery")
     if set(devices) != expected_devices:
         raise RuntimeError("Manual graph did not resolve target devices")
 
@@ -359,6 +361,8 @@ def build_manual_storage_commands(
         if item.action is StorageGraphAction.FORMAT
     }
     format_commands = tuple(
+        ("mkfs.ext4", "-F", "-L", RECOVERY_LABEL, devices[part.name])
+        if part.name == "recovery" else
         _format_command(
             filesystems[part.partition_id],
             devices[part.name],

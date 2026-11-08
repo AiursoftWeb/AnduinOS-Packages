@@ -1774,12 +1774,6 @@ msgstr ""
 msgid "New"
 msgstr ""
 
-#: src/pages.py:5156
-msgid ""
-"No new partitions yet. Add an ESP if needed, one Root partition, and "
-"optionally Swap."
-msgstr ""
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2233,4 +2227,28 @@ msgid "I saved the emergency recovery key outside this computer."
 msgstr ""
 
 msgid "Emergency recovery key saved"
+msgstr ""
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr ""
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr ""
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr ""
+
+msgid "RE must be at least 256 MiB"
+msgstr ""
+
+msgid "RE needs at least 256 MiB and a Btrfs Root. It lets you restore snapshots when the installed system cannot start. It is optional; other filesystems use Live USB rescue."
+msgstr ""
+
+msgid "RE requires Btrfs Root. Remove RE or select Btrfs."
+msgstr ""
+
+msgid "Recovery environment (RE)"
+msgstr ""
+
+msgid "Review optional partitions"
 msgstr ""

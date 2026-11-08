@@ -1639,10 +1639,6 @@ msgstr "移除"
 msgid "New"
 msgstr "新增"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "尚未建立新分割區。如有需要，請新增 ESP、一個 Root 分割區，以及可選的 Swap 分割區。"
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "已儲存緊急恢復金鑰"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "任何能實際接觸這部電腦的人都可以存取你的資料。建議設定硬碟密碼以保護資料。"
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "無 RE 分區。如果系統無法啟動，你需要使用 Live USB 進行救援。"
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "無磁碟 swap。ZRAM 仍會可用，但沒有磁碟 swap 空間。"
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "尚無新分區。如有需要，請加入 ESP、一個 Root 分區，以及可選的 Swap 和 RE。"
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE 必須至少為 256 MiB"
+
+msgid "RE needs at least 256 MiB and a Btrfs Root. It lets you restore snapshots when the installed system cannot start. It is optional; other filesystems use Live USB rescue."
+msgstr "RE 需要至少 256 MiB 和一個 Btrfs Root。它讓你在已安裝系統無法啟動時恢復快照。這是可選的；其他檔案系統使用 Live USB 救援。"
+
+msgid "RE requires Btrfs Root. Remove RE or select Btrfs."
+msgstr "RE 需要 Btrfs Root。請移除 RE 或選擇 Btrfs。"
+
+msgid "Recovery environment (RE)"
+msgstr "恢復環境 (RE)"
+
+msgid "Review optional partitions"
+msgstr "檢視可選分區"

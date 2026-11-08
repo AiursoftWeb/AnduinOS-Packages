@@ -2,6 +2,8 @@
 
 import time
 import unittest
+from dataclasses import replace
+from unittest.mock import Mock, patch
 
 import pages
 from gi.repository import Adw, GLib, Gtk
@@ -26,6 +28,57 @@ def _settle():
 
 
 class SummaryPageLayoutTests(unittest.TestCase):
+    def test_missing_optional_partitions_require_confirmation_before_disk_recheck(self):
+        from test_manual_layout import manual_disk, selection
+        from installer_core.model import Architecture, Firmware, SecureBoot
+        from installer_core.probe import PlatformProbe
+        from installer_core.storage_inventory import StorageInventory
+        from installer_core.storage_ui import build_manual_storage_preview, build_storage_workflow
+        from test_frontend import state
+        disk = manual_disk()
+        platform = PlatformProbe(Architecture.AMD64, Firmware.UEFI, SecureBoot.DISABLED)
+        workflow = build_storage_workflow(StorageInventory((disk,), "e" * 64), platform,
+                                          physical_memory_probe=lambda: 8 * 1024**3)
+        base = selection()
+        chosen = replace(base, new_partitions=base.new_partitions[:1])
+        preview = build_manual_storage_preview(workflow, chosen)
+        shared = state()
+        shared.update(development_mode=True, storage_mode="manual", filesystem="btrfs",
+                      disk=disk.identity.path, manual_storage_preview_model=preview,
+                      _platform_probe_result=platform)
+        window = Gtk.Window()
+        self.addCleanup(window.destroy)
+        nav = Mock()
+        nav.get_root.return_value = window
+        request = Mock()
+        with patch("pages.LatestBackgroundRequest", return_value=request):
+            page = pages.build_summary_page(shared, nav)
+            window.set_child(page)
+            window.present()
+            _settle()
+            footer = next(w for w in _descendants(page) if w.has_css_class("wizard-navigation"))
+            for response in ("back", "continue"):
+                footer.next_button.emit("clicked")
+                _settle()
+                dialog = next(w for w in Gtk.Window.get_toplevels()
+                              if isinstance(w, Adw.MessageDialog) and w.get_visible())
+                self.addCleanup(dialog.destroy)
+                self.assertEqual(dialog.get_heading(), "Review optional partitions")
+                self.assertIn("Live USB", dialog.get_body())
+                self.assertIn("ZRAM", dialog.get_body())
+                self.assertEqual(dialog.get_default_response(), "back")
+                self.assertEqual(dialog.get_close_response(), "back")
+                request.start.assert_not_called()
+                nav.push.assert_not_called()
+                dialog.response(response)
+                _settle()
+                if response == "back":
+                    self.assertTrue(footer.next_button.get_sensitive())
+                    request.start.assert_not_called()
+                else:
+                    request.start.assert_called_once()
+                dialog.destroy()
+
     def test_long_disk_identity_keeps_navigation_visible_and_summary_scrollable(self):
         stable_id = "wwn:nvme." + "144d5336374b4e453057313030333830" * 6
         for lang in ("en_US", "zh_CN"):

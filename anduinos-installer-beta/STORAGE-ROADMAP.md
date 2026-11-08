@@ -30,6 +30,13 @@ geometry verification. Other resize and repair
 operations remain the responsibility of specialist tools and the operating
 system that owns the data.
 
+Advanced manual partitioning can create an optional recovery environment (RE)
+partition for a Btrfs root. It needs at least 256 MiB, uses ext4, and receives the
+same recovery deployment as an automatic Btrfs installation. Other root
+filesystems use Live USB rescue. ESP and Root remain required. If RE or disk
+swap is omitted, the editor and summary explain the missing capability, and
+installation requires confirmation; ZRAM remains available without disk swap.
+
 The bounded manual editor enforces a 6 GiB hard minimum for Root in both its UI
 model and the privileged storage graph. Root sizes from 6 GiB to 25 GiB are
 allowed only after a strong below-minimum warning; 25 GiB to 50 GiB receives a

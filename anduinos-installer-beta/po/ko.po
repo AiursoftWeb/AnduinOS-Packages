@@ -1639,10 +1639,6 @@ msgstr "제거"
 msgid "New"
 msgstr "새로 만들기"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "아직 새 파티션이 없습니다. 필요한 경우 ESP, Root 파티션 하나, 선택적으로 Swap을 추가하십시오."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "비상 복구 키 저장됨"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "이 컴퓨터에 물리적으로 접근할 수 있는 사람은 누구나 데이터에 접근할 수 있습니다. 데이터를 보호하려면 디스크 암호를 설정하세요."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "RE 파티션이 없습니다. 시스템이 시작할 수 없는 경우 구제를 위해 Live USB가 필요합니다."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "디스크 스왑이 없습니다. ZRAM은 여전히 사용할 수 있지만, 디스크 스왑 공간은 없습니다."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "아직 새 파티션이 없습니다. 필요에 따라 ESP를 추가하고, Root 파티션을 하나, 그리고 선택적으로 Swap 및 RE를 추가하세요."
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE는 최소 256 MiB 이상이어야 합니다"
+
+msgid "RE needs at least 256 MiB and a Btrfs Root. It lets you restore snapshots when the installed system cannot start. It is optional; other filesystems use Live USB rescue."
+msgstr "RE에는 최소 256 MiB와 Btrfs Root가 필요합니다. 설치된 시스템이 시작할 수 없을 때 스냅샷을 복원할 수 있습니다. 선택 사항이며, 다른 파일 시스템은 Live USB 구제를 사용합니다."
+
+msgid "RE requires Btrfs Root. Remove RE or select Btrfs."
+msgstr "RE에는 Btrfs Root가 필요합니다. RE를 제거하거나 Btrfs를 선택하세요."
+
+msgid "Recovery environment (RE)"
+msgstr "재covery 환경 (RE)"
+
+msgid "Review optional partitions"
+msgstr "선택적 파티션 검토"

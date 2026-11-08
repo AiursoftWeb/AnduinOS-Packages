@@ -67,7 +67,7 @@ from installer_core.encryption import generate_recovery_key
 from installer_core.btrfs import BTRFS_SUBVOLUMES, BtrfsCompression
 from installer_core.coexistence import CoexistenceNoticeCode
 from installer_core.executor import describe_installation_pipeline
-from installer_core.layout import MIB, build_erase_disk_layout_spec
+from installer_core.layout import MIB, RECOVERY_SIZE_MIB, build_erase_disk_layout_spec
 from installer_core.model import (
     EncryptionMode,
     Firmware,
@@ -4515,7 +4515,13 @@ MANUAL_PARTITION_ROLES = (
     ManualPartitionRole.EFI_SYSTEM,
     ManualPartitionRole.ROOT,
     ManualPartitionRole.SWAP,
+    ManualPartitionRole.RECOVERY,
 )
+
+_MANUAL_RECOVERY_ERRORS = {
+    "RE requires Btrfs Root. Remove RE or select Btrfs.": N_("RE requires Btrfs Root. Remove RE or select Btrfs."),
+    "RE must be at least 256 MiB": N_("RE must be at least 256 MiB"),
+}
 
 
 def _manual_role_choices(lang):
@@ -4527,7 +4533,18 @@ def _manual_role_title(role, lang):
         ManualPartitionRole.EFI_SYSTEM: _("ESP", lang),
         ManualPartitionRole.ROOT: _("Root", lang),
         ManualPartitionRole.SWAP: _("Swap", lang),
+        ManualPartitionRole.RECOVERY: _("Recovery environment (RE)", lang),
     }[role]
+
+
+def _manual_optional_partition_notices(selection, lang):
+    roles = {item.role for item in selection.new_partitions}
+    notices = []
+    if selection.filesystem is Filesystem.BTRFS and ManualPartitionRole.RECOVERY not in roles:
+        notices.append(_("No RE partition. If the system cannot start, you will need a Live USB for rescue.", lang))
+    if ManualPartitionRole.SWAP not in roles:
+        notices.append(_("No disk swap. ZRAM will still be available, but there will be no disk swap space.", lang))
+    return notices
 
 
 def _manual_segment_title(segment, lang, *, compact=False):
@@ -4540,6 +4557,9 @@ def _manual_segment_title(segment, lang, *, compact=False):
         ),
         ManualDiskSegmentKind.NEW_SWAP: _manual_role_title(
             ManualPartitionRole.SWAP, lang
+        ),
+        ManualDiskSegmentKind.NEW_RECOVERY: _manual_role_title(
+            ManualPartitionRole.RECOVERY, lang
         ),
         ManualDiskSegmentKind.FREE: _("Unallocated", lang),
     }.get(segment.kind, segment.title)
@@ -4596,6 +4616,8 @@ def _manual_segment_annotation(segment, reused_esp_partuuid, lang):
             ),
             "swap",
         )
+    if segment.kind is ManualDiskSegmentKind.NEW_RECOVERY:
+        return (_manual_role_title(ManualPartitionRole.RECOVERY, lang), "recovery")
     if segment.kind is ManualDiskSegmentKind.NEW_ROOT:
         return (
             " ".join(
@@ -4922,6 +4944,10 @@ def build_advanced_storage_page(shared, nav_view):
         spacing=6,
     )
     editor.append(planned_box)
+    editor.append(Gtk.Label(
+        label=_("RE needs at least 256 MiB and a Btrfs Root. It lets you restore snapshots when the installed system cannot start. It is optional; other filesystems use Live USB rescue.", lang),
+        xalign=0, wrap=True, css_classes=["dim-label"],
+    ))
     compression_control = _btrfs_compression_control(shared, lang)
     compression_control.set_visible(False)
     editor.append(compression_control)
@@ -4994,6 +5020,8 @@ def build_advanced_storage_page(shared, nav_view):
     status = Gtk.Label(xalign=0, wrap=True, selectable=True)
     status.add_css_class("installer-callout")
     editor.append(status)
+    optional_notices = Gtk.Label(xalign=0, wrap=True, css_classes=["warning"])
+    editor.append(optional_notices)
 
     loading = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
     loading.append(
@@ -5142,11 +5170,14 @@ def build_advanced_storage_page(shared, nav_view):
             ManualPartitionRole.EFI_SYSTEM: 512,
             ManualPartitionRole.ROOT: HARD_MINIMUM_ROOT_MIB,
             ManualPartitionRole.SWAP: 1,
+            ManualPartitionRole.RECOVERY: RECOVERY_SIZE_MIB,
         }[role]
 
     def _recommended_partition_size(role, maximum):
         if role is ManualPartitionRole.EFI_SYSTEM:
             return min(maximum, 1024)
+        if role is ManualPartitionRole.RECOVERY:
+            return min(maximum, RECOVERY_SIZE_MIB)
         recommended_swap = min(maximum, 4096)
         if workflow is not None:
             try:
@@ -5164,8 +5195,13 @@ def build_advanced_storage_page(shared, nav_view):
             for item in draft.new_partitions
         )
         minimum = _minimum_partition_size(role)
-        if not has_swap and maximum - recommended_swap >= minimum:
-            return maximum - recommended_swap
+        reserved = 0 if has_swap else recommended_swap
+        if draft.filesystem is Filesystem.BTRFS and not any(
+            item.role is ManualPartitionRole.RECOVERY for item in draft.new_partitions
+        ):
+            reserved += RECOVERY_SIZE_MIB
+        if maximum - reserved >= minimum:
+            return maximum - reserved
         return maximum
 
     def _refresh_geometry(*, reset_start=False, reset_size=False):
@@ -5207,7 +5243,9 @@ def build_advanced_storage_page(shared, nav_view):
             role_available = not any(
                 item.role is role for item in draft.new_partitions
             )
-            valid = maximum >= minimum and role_available
+            valid = maximum >= minimum and role_available and (
+                role is not ManualPartitionRole.RECOVERY or draft.filesystem is Filesystem.BTRFS
+            )
             start_input.set_sensitive(maximum >= minimum)
             size_input.set_sensitive(maximum >= minimum)
             fill_button.set_sensitive(maximum >= minimum)
@@ -5915,7 +5953,7 @@ def build_advanced_storage_page(shared, nav_view):
             empty = Gtk.Label(
                 label=_(
                     "No new partitions yet. Add an ESP if needed, one Root "
-                    "partition, and optionally Swap.",
+                    "partition, and optionally Swap and RE.",
                     lang,
                 ),
                 xalign=0,
@@ -5948,6 +5986,11 @@ def build_advanced_storage_page(shared, nav_view):
             role_dropdown.set_selected(1)
         elif ManualPartitionRole.SWAP not in planned_roles:
             role_dropdown.set_selected(2)
+        elif draft.filesystem is Filesystem.BTRFS and ManualPartitionRole.RECOVERY not in planned_roles:
+            role_dropdown.set_selected(3)
+        notices = _manual_optional_partition_notices(draft, lang)
+        optional_notices.set_label("\n".join(notices))
+        optional_notices.set_visible(bool(notices))
         updating = False
         esp_dropdown.set_sensitive(True)
         role_dropdown.set_sensitive(True)
@@ -5971,7 +6014,7 @@ def build_advanced_storage_page(shared, nav_view):
                     requirements=", ".join(missing)
                 )
                 if missing
-                else str(error)
+                else _(_MANUAL_RECOVERY_ERRORS.get(str(error), str(error)), lang)
             )
             status.remove_css_class("installer-success-card")
             status.add_css_class("installer-warning-card")
@@ -7233,6 +7276,12 @@ def build_summary_page(shared, nav_view):
             lines.append(_("Disk swap is unencrypted", lang) if shared.get("swap_encryption") == "plain"
                          else _("Disk swap is encrypted; hibernation is unavailable", lang))
 
+    manual_notices = (
+        _manual_optional_partition_notices(manual_preview.selection, lang)
+        if manual_mode and isinstance(manual_preview, ManualStoragePreview) else []
+    )
+    lines.extend(escape(notice) for notice in manual_notices)
+
     summary_label = Gtk.Label(
         margin_start=48,
         margin_end=48,
@@ -7562,13 +7611,14 @@ def build_summary_page(shared, nav_view):
             return
         assert install_button is not None
         install_button.set_sensitive(False)
-        if swap_warning_for_install is None:
+        if swap_warning_for_install is None and not manual_notices:
             _start_recheck()
             return
         warning = Adw.MessageDialog(
             transient_for=nav_view.get_root(),
-            heading=_("Review your custom Swap size", lang),
+            heading=_("Review optional partitions", lang) if manual_notices else _("Review your custom Swap size", lang),
             body=(
+                "\n\n".join(manual_notices) if manual_notices else
                 f"{swap_warning_for_install}\n\n"
                 + _("ZRAM will remain enabled regardless of this choice.", lang)
             ),

@@ -1639,10 +1639,6 @@ msgstr "Fjern"
 msgid "New"
 msgstr "Ny"
 
-#: src/pages.py:5156
-msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap."
-msgstr "Ingen nye partitioner endnu. Tilføj om nødvendigt en ESP, én Root-partition og eventuelt Swap."
-
 #: src/pages.py:5170
 #, python-brace-format
 msgid "{size} at {start} MiB"
@@ -2097,3 +2093,27 @@ msgstr "Nøgle til akut gendannelse gemt"
 #: src/pages.py
 msgid "Anyone with physical access to this computer will be able to access your data. Set a disk password to protect your data."
 msgstr "Alle med fysisk adgang til denne computer vil kunne få adgang til dine data. Angiv en diskadgangskode for at beskytte dine data."
+
+msgid "No RE partition. If the system cannot start, you will need a Live USB for rescue."
+msgstr "Ingen RE-partition. Hvis systemet ikke kan starte, skal du bruge en Live USB til redning."
+
+msgid "No disk swap. ZRAM will still be available, but there will be no disk swap space."
+msgstr "Ingen disk-swap. ZRAM vil stadig være tilgængelig, men der vil ikke være swap-plads på disken."
+
+msgid "No new partitions yet. Add an ESP if needed, one Root partition, and optionally Swap and RE."
+msgstr "Ingen nye partitioner endnu. Tilføj en ESP hvis nødvendigt, én Root-partition og valgfrit Swap og RE."
+
+msgid "RE must be at least 256 MiB"
+msgstr "RE skal være mindst 256 MiB"
+
+msgid "RE needs at least 256 MiB and a Btrfs Root. It lets you restore snapshots when the installed system cannot start. It is optional; other filesystems use Live USB rescue."
+msgstr "RE kræver mindst 256 MiB og en Btrfs Root. Den giver dig mulighed for at gendanne snapshots, når det installerede system ikke kan starte. Den er valgfri; andre filsystemer bruger Live USB-redning."
+
+msgid "RE requires Btrfs Root. Remove RE or select Btrfs."
+msgstr "RE kræver Btrfs Root. Fjern RE eller vælg Btrfs."
+
+msgid "Recovery environment (RE)"
+msgstr "Genopretningsmiljø (RE)"
+
+msgid "Review optional partitions"
+msgstr "Gennemse valgfrie partitioner"
