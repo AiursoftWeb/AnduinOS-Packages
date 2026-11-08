@@ -18,6 +18,61 @@ from test_manual_layout import manual_disk, selection
 
 
 class DiskEncryptionPageTests(unittest.TestCase):
+    def test_unencrypted_next_requires_confirmation_and_encrypted_next_does_not(self):
+        for filesystem in ("btrfs", "ext4"):
+            with self.subTest(filesystem=filesystem):
+                shared = state()
+                shared.update(
+                    development_mode=True, filesystem=filesystem,
+                    _platform_probe_result=PlatformProbe(
+                        Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED),
+                )
+                window = Gtk.Window()
+                self.addCleanup(window.destroy)
+                nav = Mock()
+                nav.get_root.return_value = window
+                with patch("pages.probe_physical_memory_bytes", return_value=8 * 1024**3), \
+                        patch("pages.build_user_page", return_value=Adw.NavigationPage()):
+                    page = pages.build_disk_layout_page(shared, nav)
+                    window.set_child(page)
+                    window.present()
+                    dispatch_refresh()
+                    widgets = list(descendants(page))
+                    footer = next(w for w in widgets if w.has_css_class("wizard-navigation"))
+
+                    # Cancelling does not acknowledge future attempts to proceed.
+                    for response in ("cancel", "continue"):
+                        footer.next_button.emit("clicked")
+                        dispatch_refresh()
+                        dialog = next(w for w in Gtk.Window.get_toplevels()
+                                      if isinstance(w, Adw.MessageDialog) and w.get_visible())
+                        self.addCleanup(dialog.destroy)
+                        nav.push.assert_not_called()
+                        self.assertEqual(dialog.get_default_response(), "cancel")
+                        self.assertEqual(dialog.get_close_response(), "cancel")
+                        self.assertEqual(dialog.get_response_label("continue"), "Continue")
+                        self.assertEqual(dialog.get_response_appearance("continue"),
+                                         Adw.ResponseAppearance.DESTRUCTIVE)
+                        self.assertIn("physical access", dialog.get_body())
+                        dialog.response(response)
+                        dispatch_refresh()
+                        if response == "cancel":
+                            nav.push.assert_not_called()
+                        else:
+                            nav.push.assert_called_once()
+                        dialog.destroy()
+
+                    nav.push.reset_mock()
+                    entries = [w for w in widgets if isinstance(w, Adw.PasswordEntryRow)]
+                    entries[0].set_text("example-disk-password")
+                    entries[1].set_text("example-disk-password")
+                    next(w for w in widgets if isinstance(w, Gtk.CheckButton)).set_active(True)
+                    footer.next_button.emit("clicked")
+                    nav.push.assert_called_once()
+                    self.assertFalse(any(isinstance(w, Adw.MessageDialog) and w.get_visible()
+                                         for w in Gtk.Window.get_toplevels()))
+                window.destroy()
+
     def test_native_vm_preview_exposes_credentials_without_development_mode(self):
         shared = state()
         shared.update(

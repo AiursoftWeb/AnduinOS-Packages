@@ -3897,6 +3897,24 @@ def _disk_encryption_control(shared, lang, changed):
     return group, validate, refresh_swap
 
 
+def _confirm_unencrypted_installation(page, nav_view, lang, confirmed):
+    dialog = Adw.MessageDialog(
+        transient_for=nav_view.get_root(),
+        heading=_("Disk encryption", lang),
+        body=_(
+            "Anyone with physical access to this computer will be able to access "
+            "your data. Set a disk password to protect your data.", lang),
+    )
+    dialog.add_response("cancel", _("Cancel", lang))
+    dialog.add_response("continue", _("Continue", lang))
+    dialog.set_response_appearance("continue", Adw.ResponseAppearance.DESTRUCTIVE)
+    dialog.set_default_response("cancel")
+    dialog.set_close_response("cancel")
+    dialog.connect("response", lambda _dialog, response:
+                   confirmed() if response == "continue" and page.get_mapped() else None)
+    dialog.present()
+
+
 def build_disk_layout_page(shared, nav_view):
     lang = shared.get("lang", DEFAULT_LANGUAGE)
     page = Adw.NavigationPage(
@@ -3986,11 +4004,24 @@ def build_disk_layout_page(shared, nav_view):
     scroll.set_child(settings)
     content.append(scroll)
 
+    def next_page():
+        if error_message or not validate_encryption():
+            return
+
+        def confirmed():
+            nav_view.push(build_user_page(shared, nav_view))
+
+        # Warn where the user can choose encryption. Unsupported layouts keep
+        # their existing navigation rather than suggesting an unavailable option.
+        if _disk_encryption_available(shared) and not shared.get("disk_password"):
+            _confirm_unencrypted_installation(page, nav_view, lang, confirmed)
+        else:
+            confirmed()
+
     nav = _nav_box(
         lang,
         on_back=lambda: nav_view.pop(),
-        on_next=lambda: (nav_view.push(build_user_page(shared, nav_view))
-                         if not error_message and validate_encryption() else None),
+        on_next=next_page,
         next_sensitive=not bool(error_message) and validate_encryption(),
         shared=shared,
         page_tag="disk-layout",
