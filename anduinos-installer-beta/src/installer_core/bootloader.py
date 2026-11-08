@@ -25,6 +25,7 @@ from .execution_boundaries import emit_boundary
 from .esp_replacement import replace_esp_vendor
 from .model import Architecture, EncryptionMode, Filesystem, Firmware, InstallMode, InstallPlan
 from .software import verify_driver_boot_payload
+from .secure_boot import prepare_grub_signature
 from .steps import FailurePolicy, InstallContext
 from .storage_planning import (
     GuidedCoexistenceExecutionPlan,
@@ -149,6 +150,11 @@ class InstallBootloaderStep:
                 "Other disks and Windows EFI boot files will not be modified"
             )
         _check_encrypted_boot_inputs(context, self.runner, target)
+        # Identity preparation runs before optional package upgrades. Refresh
+        # its derived GRUB image now so grub-install cannot deploy an older
+        # package's signature cache. The toolkit reuses an unchanged image;
+        # it neither replaces the identity nor requires enrollment on this boot.
+        prepare_grub_signature(self.runner, target, context.plan)
         self.runner.run(commands.initrd, timeout=1200)
         prefix = "guided" if guided else "manual"
         for command in installs:
