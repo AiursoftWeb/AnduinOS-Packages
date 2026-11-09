@@ -536,13 +536,16 @@ impl SnapshotsManagerHelper {
             .rate_limiter
             .check_rate_limit(&uid, "create_scheduled_deployment")
         {
-            audit::log_snapshot_create(uid, pid, &title, false, Some("rate limit exceeded"));
+            // Boot and calendar timers can fire seconds apart. Coalesce their
+            // automatic requests; a duplicate is not a failed snapshot operation.
+            log::info!(
+                "Skipping repeated scheduled system snapshot request ({} ms remaining)",
+                wait.as_millis()
+            );
             return (
-                false,
-                format!(
-                    "Please wait {} seconds before creating another system snapshot",
-                    wait.as_secs()
-                ),
+                true,
+                serde_json::json!({ "created": false, "reason": "recent-scheduled-request" })
+                    .to_string(),
             );
         }
         let config = match AutomationConfig::load_from_file(
@@ -747,12 +750,16 @@ impl SnapshotsManagerHelper {
             .rate_limiter
             .check_rate_limit(&uid, "create_scheduled_personal_snapshot")
         {
+            // Match System scheduling: adjacent timer activations are a no-op.
+            // Keep the limiter and all real snapshot errors intact.
+            log::info!(
+                "Skipping repeated scheduled Home snapshot request ({} ms remaining)",
+                wait.as_millis()
+            );
             return (
-                false,
-                format!(
-                    "Please wait {} seconds before creating another Home snapshot",
-                    wait.as_secs()
-                ),
+                true,
+                serde_json::json!({ "created": false, "reason": "recent-scheduled-request" })
+                    .to_string(),
             );
         }
         let config = match AutomationConfig::load_from_file(
