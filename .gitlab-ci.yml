@@ -446,6 +446,10 @@ anduinos-swap-config:
 
 anduinos-btrfs-snapshots-manager:
   extends: .publish
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - anduinos-btrfs-snapshots-manager/bin/*.deb
   needs:
     - test-all
     - anduinos-boot-tools
