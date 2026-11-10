@@ -6,6 +6,7 @@ downloaded crate notices, never manufacture a license from its SPDX identifier.
 Missing upstream license text fails the build and requires a maintainer review.
 """
 import argparse
+import gzip
 import json
 import os
 from pathlib import Path
@@ -63,7 +64,7 @@ def main():
             sections.append(f"\n--- {file.name} ---\n{file.read_text()}\n")
     output = Path(destination)
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text("".join(sections))
+    output.write_bytes(gzip.compress("".join(sections).encode("utf-8"), compresslevel=9, mtime=0))
 
 
 if __name__ == "__main__":

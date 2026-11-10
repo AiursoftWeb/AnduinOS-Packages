@@ -44,4 +44,4 @@ if [ "$ARCH" == "arm64" ]; then
 else
     NOTICE_TARGET="$(rustc -vV | sed -n 's/^host: //p')"
 fi
-python3 "$SCRIPT_DIR/scripts/rust-notices.py" "$NOTICE_TARGET" obj/RUST-THIRD-PARTY-NOTICES
+python3 "$SCRIPT_DIR/scripts/rust-notices.py" "$NOTICE_TARGET" obj/RUST-THIRD-PARTY-NOTICES.gz
