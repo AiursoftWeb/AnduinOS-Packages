@@ -195,3 +195,13 @@ Flatpak application ID `com.yubico.yubioath` is installed and, when available, o
 external application. When it is unavailable, the page can open the application's official
 Flathub `.flatpakref` through the system `flatpak+https` handler, which opens
 GNOME Software directly. The security center never installs the Flatpak itself.
+
+## Dependency notices
+
+The existing build collects licence and attribution texts from Cargo's resolved
+dependency sources and the installed Rust standard-library notices. The generated
+`RUST-THIRD-PARTY-NOTICES` is installed under
+`/usr/share/doc/anduinos-yubikey-manager/`. It also lists resolved build dependencies;
+it is not a claim that every listed crate is linked into the executable. Missing
+licence text fails the build rather than silently producing incomplete notices.
+Custom toolchains may supply their existing notice file with `RUST_STDLIB_NOTICES`.
