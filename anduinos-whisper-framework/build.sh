@@ -23,7 +23,7 @@ if [[ "$arch" != "$(dpkg --print-architecture)" ]]; then
 fi
 pkg-config --exists gio-2.0 gstreamer-1.0 gstreamer-app-1.0
 cargo build --locked --release --target "$target" --bins
-python3 scripts/rust-notices.py "$target" "obj/$arch/RUST-THIRD-PARTY-NOTICES"
+python3 scripts/rust-notices.py "$target" "obj/$arch/RUST-THIRD-PARTY-NOTICES.gz"
 output="${CARGO_TARGET_DIR:-target}/$target/release"
 for binary in anduinos-whisper-framework anduinos-voice-diagnostics; do
     install -Dm755 "$output/$binary" "obj/$arch/$binary"

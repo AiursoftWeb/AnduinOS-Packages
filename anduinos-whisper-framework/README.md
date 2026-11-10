@@ -62,7 +62,7 @@ standard library, target linker and target development libraries (for example
 and writes architecture-specific binaries to `obj/amd64` or `obj/arm64`.
 It does not install build dependencies or modify the running service.
 Builds also collect upstream crate license/copyright texts from the locked Cargo
-sources into `RUST-THIRD-PARTY-NOTICES` in the deb documentation. Missing license
+sources into `RUST-THIRD-PARTY-NOTICES.gz` in the deb documentation (read with `zcat` or `zless`). Missing license
 text fails the build rather than silently omitting attribution.
 The bundle includes the Rust standard-library notices from the toolchain or
 matching distribution package. Custom toolchains can provide their matching
