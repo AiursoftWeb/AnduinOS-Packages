@@ -8,6 +8,7 @@ For crates omitting workspace licences, use their recorded GitHub source commit
 and cache the source archive under obj; never substitute a moving branch.
 """
 import argparse
+import gzip
 import json
 import os
 from pathlib import Path, PurePosixPath
@@ -116,7 +117,7 @@ def main():
             sections.append(f"\n--- {name} ---\n{text}\n")
     output = Path(destination)
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text("".join(sections))
+    output.write_bytes(gzip.compress("".join(sections).encode("utf-8"), compresslevel=9, mtime=0))
 
 
 if __name__ == "__main__":

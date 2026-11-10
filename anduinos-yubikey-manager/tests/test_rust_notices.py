@@ -1,5 +1,6 @@
 """The installed notice must retain actual upstream texts and reject omissions."""
 import importlib.util
+import gzip
 import json
 import os
 from pathlib import Path
@@ -18,7 +19,7 @@ class RustNoticesTests(unittest.TestCase):
     def collect(self, root, packages, target="x86_64-unknown-linux-gnu"):
         standard = root / "stdlib-notice"
         standard.write_text("Real toolchain attribution")
-        output = root / "notices"
+        output = root / "notices.gz"
         metadata = {"packages": packages,
                     "resolve": {"nodes": [{"id": p["id"]} for p in packages]}}
         with patch.dict(os.environ, {"RUST_STDLIB_NOTICES": str(standard)}), \
@@ -28,7 +29,7 @@ class RustNoticesTests(unittest.TestCase):
             notices.main()
         self.assertIn("--filter-platform", command.call_args_list[0].args[0])
         self.assertIn(target, command.call_args_list[0].args[0])
-        return output.read_text()
+        return gzip.decompress(output.read_bytes()).decode("utf-8")
 
     def dependency(self, root, name, spelling):
         folder = root / name
@@ -59,7 +60,7 @@ class RustNoticesTests(unittest.TestCase):
             (root / "missing/LICENSE").unlink()
             with self.assertRaisesRegex(SystemExit, "Missing license text: missing"):
                 self.collect(root, [package])
-            self.assertFalse((root / "notices").exists())
+            self.assertFalse((root / "notices.gz").exists())
 
     def test_declared_nested_license_file_is_retained(self):
         with tempfile.TemporaryDirectory() as directory:
