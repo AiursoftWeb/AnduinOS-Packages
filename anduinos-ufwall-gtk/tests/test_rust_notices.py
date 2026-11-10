@@ -1,9 +1,11 @@
 """The installed notice must retain actual upstream texts and reject omissions."""
 import importlib.util
+import io
 import json
 import os
 from pathlib import Path
 import tempfile
+import tarfile
 import unittest
 from unittest.mock import patch
 
@@ -71,3 +73,33 @@ class RustNoticesTests(unittest.TestCase):
             (root / "nested/LICENSE").unlink()
             package["license_file"] = "legal/terms.txt"
             self.assertIn("Upstream nested licence", self.collect(root, [package]))
+
+    def test_omitted_workspace_licence_uses_recorded_revision_and_is_cached(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            package = self.dependency(root, "workspace", "LICENSE")
+            (root / "workspace/LICENSE").unlink()
+            revision = "a" * 40
+            package["repository"] = "https://github.com/example/project"
+            (root / "workspace/.cargo_vcs_info.json").write_text(json.dumps({
+                "git": {"sha1": revision}, "path_in_vcs": "workspace"}))
+            buffer = io.BytesIO()
+            with tarfile.open(fileobj=buffer, mode="w:gz") as archive:
+                for name, text in {"LICENSE-MIT": "Original MIT permission",
+                                   "workspace/NOTICE": "Original attribution",
+                                   "other/LICENSE": "Unrelated package"}.items():
+                    data = text.encode()
+                    member = tarfile.TarInfo("source/" + name)
+                    member.size = len(data)
+                    archive.addfile(member, io.BytesIO(data))
+            with patch.object(notices.urllib.request, "urlopen",
+                              return_value=io.BytesIO(buffer.getvalue())) as request:
+                text = self.collect(root, [package])
+            self.assertIn("Original MIT permission", text)
+            self.assertIn("Original attribution", text)
+            self.assertNotIn("Unrelated package", text)
+            self.assertEqual(request.call_args.args[0],
+                             "https://codeload.github.com/example/project/tar.gz/" + revision)
+            with patch.object(notices.urllib.request, "urlopen") as request:
+                self.assertEqual(self.collect(root, [package]), text)
+                request.assert_not_called()
