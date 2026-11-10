@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-whisper-framework</PackageName>
-    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Offline voice-typing engine for AnduinOS, using PipeWire and whisper.cpp.</PackageDescription>
     <Section>utils</Section>
@@ -68,8 +68,8 @@
     <IncludeFile Include="VAD-LICENSE" Target="/usr/share/doc/anduinos-whisper-framework/VAD-LICENSE" />
     <IncludeFile Include="MODEL-NOTICE" Target="/usr/share/doc/anduinos-whisper-framework/MODEL-NOTICE" />
     <IncludeFile Include="MODEL-LICENSE" Target="/usr/share/doc/anduinos-whisper-framework/MODEL-LICENSE" />
-    <IncludeFile Include="obj/amd64/RUST-THIRD-PARTY-NOTICES" Target="/usr/share/doc/anduinos-whisper-framework/RUST-THIRD-PARTY-NOTICES" Condition="'$(Arch)' == 'amd64'" />
-    <IncludeFile Include="obj/arm64/RUST-THIRD-PARTY-NOTICES" Target="/usr/share/doc/anduinos-whisper-framework/RUST-THIRD-PARTY-NOTICES" Condition="'$(Arch)' == 'arm64'" />
+    <IncludeFile Include="obj/amd64/RUST-THIRD-PARTY-NOTICES.gz" Target="/usr/share/doc/anduinos-whisper-framework/RUST-THIRD-PARTY-NOTICES.gz" Condition="'$(Arch)' == 'amd64'" />
+    <IncludeFile Include="obj/arm64/RUST-THIRD-PARTY-NOTICES.gz" Target="/usr/share/doc/anduinos-whisper-framework/RUST-THIRD-PARTY-NOTICES.gz" Condition="'$(Arch)' == 'arm64'" />
     <IncludeFolder Include="data/benchmark" Target="/usr/share/anduinos-whisper-framework/benchmark" />
   </ItemGroup>
   <ItemGroup>

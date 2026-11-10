@@ -34,4 +34,4 @@ else
 fi
 
 python3 "$SCRIPT_DIR/../anduinos-whisper-framework/scripts/rust-notices.py" --package encoding_rs \
-    "$target" "$SCRIPT_DIR/obj/ENCODING-NOTICES"
+    "$target" "$SCRIPT_DIR/obj/ENCODING-NOTICES.gz"
