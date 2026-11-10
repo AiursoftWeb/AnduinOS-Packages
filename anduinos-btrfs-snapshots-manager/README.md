@@ -55,7 +55,11 @@ and Home scopes. A continuous low-space episode emits at most one desktop
 notification, and the state clears after space recovers.
 
 The systemd timer remains installed and enabled even when both automatic scopes
-are off. On every run the privileged helper compares the newest snapshot with the
+are off. Boot and calendar activations can occur within the helper's five-second
+request window. Repeated scheduled requests then return a successful no-op rather
+than failing the timer or issuing a failure notification; retention cleanup still
+runs. Manual snapshot throttling and actual storage errors remain unchanged.
+On every run the privileged helper compares the newest snapshot with the
 configured freshness target under the same storage lock used for creation, so a
 machine that was asleep or powered off creates at most one catch-up snapshot on the
 next timer activation. The default package policy creates a system
