@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-ufwall-gtk</PackageName>
-    <PackageVersion>2.0.5-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.0.5-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Firewall Configuration — a modern GTK4 and Libadwaita frontend for monitoring firewall activity and managing UFW status, rules, and application profiles.</PackageDescription>
     <Section>admin</Section>
@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <IncludeScript Include="obj/ufwall-gtk" Target="/usr/bin/ufwall-gtk" />
+    <IncludeFile Include="obj/RUST-THIRD-PARTY-NOTICES" Target="/usr/share/doc/anduinos-ufwall-gtk/RUST-THIRD-PARTY-NOTICES" />
     <IncludeScript Include="obj/ufwall-auditor" Target="/usr/libexec/ufwall-gtk/ufwall-auditor" />
     <IncludeScript Include="scripts/network-service-helper" Target="/usr/libexec/ufwall-gtk/network-service-helper" />
     <IncludeFile Include="data/com.anduinos.ufwall.policy" Target="/usr/share/polkit-1/actions/com.anduinos.ufwall.policy" />
