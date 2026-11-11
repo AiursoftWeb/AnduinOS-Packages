@@ -184,5 +184,72 @@
       <allow_active>auth_admin_keep</allow_active>
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/ufwall-gtk/network-service-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">set-mdns-enabled</annotate>
+  </action>
+  <action id="com.anduinos.ufwall.inspect-firewalls">
+    <description>Inspect firewall configuration</description>
+    <description xml:lang="ar_SA">فحص إعدادات جدار الحماية</description>
+    <description xml:lang="da_DK">Inspicer firewallkonfiguration</description>
+    <description xml:lang="de_DE">Firewall-Konfiguration inspizieren</description>
+    <description xml:lang="el_GR">Εξέταση ρυθμίσεων firewall</description>
+    <description xml:lang="en_GB">Inspect firewall configuration</description>
+    <description xml:lang="es_ES">Inspeccionar la configuración del firewall</description>
+    <description xml:lang="fi_FI">Tarkastele palomuurin asetukset</description>
+    <description xml:lang="fr_FR">Inspecter la configuration du pare-feu</description>
+    <description xml:lang="hi_IN">फ़ायरवॉल कॉन्फ़िगरेशन की जाँच करें</description>
+    <description xml:lang="id_ID">Periksa konfigurasi firewall</description>
+    <description xml:lang="it_IT">Ispeziona la configurazione del firewall</description>
+    <description xml:lang="ja_JP">ファイアウォール設定を検査</description>
+    <description xml:lang="ko_KR">방화벽 구성 검사</description>
+    <description xml:lang="nl_NL">Firewallconfiguratie inspecteren</description>
+    <description xml:lang="pl_PL">Sprawdź konfigurację zapory</description>
+    <description xml:lang="pt_BR">Inspecionar configuração do firewall</description>
+    <description xml:lang="pt_PT">Inspecionar a configuração do firewall</description>
+    <description xml:lang="ro_RO">Inspectați configurația firewallului</description>
+    <description xml:lang="ru_RU">Осмотреть конфигурацию брандмауэра</description>
+    <description xml:lang="sv_SE">Inspektera brandväggskonfiguration</description>
+    <description xml:lang="th_TH">ตรวจสอบการกำหนดค่าไฟร์วอลล์</description>
+    <description xml:lang="tr_TR">Güvenlik duvarı yapılandırmasını denetleyin</description>
+    <description xml:lang="uk_UA">Інспекція конфігурації файрвола</description>
+    <description xml:lang="vi_VN">Kiểm tra cấu hình tường lửa</description>
+    <description xml:lang="zh_CN">检查防火墙配置</description>
+    <description xml:lang="zh_HK">檢視防火牆設定</description>
+    <description xml:lang="zh_TW">檢視防火牆設定</description>
+    <message>Authentication is required to inspect active firewall rules</message>
+    <message xml:lang="ar_SA">يتطلب التحقق من صلاحيات لإدارة قواعد جدار الحماية النشطة</message>
+    <message xml:lang="da_DK">Der kræves godkendelse for at inspicere aktive firewallregler</message>
+    <message xml:lang="de_DE">Authentifizierung ist erforderlich, um aktive Firewall-Regeln zu inspizieren</message>
+    <message xml:lang="el_GR">Απαιτείται έλεγχος ταυτότητας για την εξέταση των ενεργών κανόνων του firewall</message>
+    <message xml:lang="en_GB">Authentication is required to inspect active firewall rules</message>
+    <message xml:lang="es_ES">Se requiere autenticación para inspeccionar las reglas de firewall activas</message>
+    <message xml:lang="fi_FI">Aktiivisten palomuurisääntöjen tarkastelemiseen tarvitaan valtuutus</message>
+    <message xml:lang="fr_FR">L'authentification est requise pour inspecter les règles de pare-feu actives</message>
+    <message xml:lang="hi_IN">सक्रिय फ़ायरवॉल नियमों की जाँच के लिए प्रमाणीकरण आवश्यक है</message>
+    <message xml:lang="id_ID">Autentikasi diperlukan untuk memeriksa aturan firewall yang aktif</message>
+    <message xml:lang="it_IT">È necessaria l'autenticazione per ispezionare le regole attive del firewall</message>
+    <message xml:lang="ja_JP">アクティブなファイアウォールルールの検査には認証が必要です</message>
+    <message xml:lang="ko_KR">활성 방화벽 규칙을 검사하려면 인증이 필요합니다</message>
+    <message xml:lang="nl_NL">Er is authenticatie vereist om actieve firewallregels te inspecteren</message>
+    <message xml:lang="pl_PL">Wymagane jest uwierzytelnianie, aby sprawdzić aktywne reguły zapory</message>
+    <message xml:lang="pt_BR">É necessária autenticação para inspecionar as regras de firewall ativas</message>
+    <message xml:lang="pt_PT">É necessária autenticação para inspecionar as regras de firewall ativas</message>
+    <message xml:lang="ro_RO">Autentificarea este necesară pentru a inspecta regulile active de firewall</message>
+    <message xml:lang="ru_RU">Для просмотра активных правил брандмауэра требуется аутентификация</message>
+    <message xml:lang="sv_SE">Autentisering krävs för att inspektera aktiva brandväggsregler</message>
+    <message xml:lang="th_TH">จำเป็นต้องมีการตรวจสอบสิทธิ์เพื่อตรวจสอบกฎไฟร์วอลล์ที่ใช้งานอยู่</message>
+    <message xml:lang="tr_TR">Aktif güvenlik duvarı kurallarını denetlemek için kimlik doğrulaması gerekli</message>
+    <message xml:lang="uk_UA">Для перегляду активних правил файрвола потрібне розпізнавання</message>
+    <message xml:lang="vi_VN">Yêu cầu xác thực để kiểm tra các quy tắc tường lửa đang hoạt động</message>
+    <message xml:lang="zh_CN">需要身份验证才能检查活动的防火墙规则</message>
+    <message xml:lang="zh_HK">需要驗證權限以檢視現行防火牆規則</message>
+    <message xml:lang="zh_TW">需要身份驗證才能檢視現行的防火牆規則</message>
+    <icon_name>network-firewall-symbolic</icon_name>
+    <defaults>
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/ufwall-gtk/network-service-helper</annotate>
+    <annotate key="org.freedesktop.policykit.exec.argv1">firewall-health</annotate>
   </action>
 </policyconfig>

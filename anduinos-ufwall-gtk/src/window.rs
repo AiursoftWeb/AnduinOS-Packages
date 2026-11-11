@@ -250,6 +250,23 @@ impl UfwallWindow {
             view.refresh_mdns();
         }
 
+        // Missing UFW must leave the dashboard explanation visible instead of
+        // opening an unrelated authentication/error dialog on every refresh.
+        let available = crate::ufw::health::ufw_available();
+        if let Some(view) = imp.status_view.borrow().as_ref() {
+            view.set_ufw_available(available);
+        }
+        if !available {
+            if let Some(stack) = imp.stack.borrow().as_ref() {
+                if matches!(stack.visible_child_name().as_deref(), Some("rules" | "profiles")) {
+                    stack.set_visible_child_name("dashboard");
+                }
+            }
+            if let Some(row) = imp.rules_row.borrow().as_ref() { row.set_visible(false); }
+            if let Some(row) = imp.profiles_row.borrow().as_ref() { row.set_visible(false); }
+            return;
+        }
+
         // Read status using backend
         match backend::read_status() {
             Ok(status) => {
