@@ -35,8 +35,14 @@ def snapshot_plan(system_root):
         return {"state": "unavailable", "reason": "No snapshot integration installed"}
     try:
         import tomllib
-        if policy.is_file() and tomllib.loads(policy.read_text()).get("snapshot_before", True) is False:
-            return {"state": "disabled", "reason": "Disabled in existing APT snapshot policy"}
+        if policy.is_file():
+            data = tomllib.loads(policy.read_text())
+            require(set(data) == {"apt"} and isinstance(data["apt"], dict), "Invalid snapshot policy")
+            settings = data["apt"]
+            require(set(settings) <= {"snapshot_before", "snapshot_after"} and
+                    all(type(value) is bool for value in settings.values()), "Invalid snapshot policy")
+            if settings.get("snapshot_before", True) is False:
+                return {"state": "disabled", "reason": "Disabled in existing APT snapshot policy"}
         fs = run(["findmnt", "--noheadings", "--output", "FSTYPE", "--target", "/"]).decode().strip()
         if fs != "btrfs":
             return {"state": "unavailable", "reason": "System filesystem does not support this snapshot integration"}

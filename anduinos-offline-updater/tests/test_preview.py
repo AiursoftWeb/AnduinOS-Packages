@@ -16,7 +16,7 @@ from anduinos_offline_updater.bundle import verify
 from anduinos_offline_updater.cli import main
 from anduinos_offline_updater.manifest import read_json
 from anduinos_offline_updater.native import BundleError, run
-from anduinos_offline_updater.planning import preview
+from anduinos_offline_updater.planning import preview, snapshot_plan
 
 
 class PreviewTests(unittest.TestCase):
@@ -197,6 +197,20 @@ class PreviewTests(unittest.TestCase):
         self.assertEqual(result["state"], "blocked")
         self.assertTrue(result["read_only"])
         self.assertFalse(result["can_install"])
+
+    def test_snapshot_policy_uses_the_existing_apt_table(self):
+        self.assertEqual(snapshot_plan(self.system)["state"], "unknown")
+        with patch("pathlib.Path.is_file", return_value=False):
+            self.assertEqual(snapshot_plan(Path("/"))["state"], "unavailable")
+        cases = [("[apt]\nsnapshot_before = false\n", b"btrfs\n", "disabled"),
+                 ("[apt]\nsnapshot_before = true\n", b"ext4\n", "unavailable"),
+                 ("[apt]\nsnapshot_before = true\n", b"btrfs\n", "requires-layout-check"),
+                 ("snapshot_before = false\n", b"btrfs\n", "unknown")]
+        for policy, filesystem, state in cases:
+            with self.subTest(state=state), patch("pathlib.Path.is_file", return_value=True), \
+                    patch("pathlib.Path.read_text", return_value=policy), \
+                    patch("anduinos_offline_updater.planning.run", return_value=filesystem):
+                self.assertEqual(snapshot_plan(Path("/"))["state"], state)
 
     def test_unfinished_dpkg_wrong_suite_and_low_space(self):
         p = self.system / "var/lib/dpkg/status"; p.write_text(p.read_text().replace("ok installed", "ok unpacked", 1))
