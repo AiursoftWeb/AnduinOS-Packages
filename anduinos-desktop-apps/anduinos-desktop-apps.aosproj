@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-apps</PackageName>
-    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS default applications — pulls in recommended apps for AnduinOS</PackageDescription>
     <PackageHomepage>https://www.anduinos.com</PackageHomepage>
@@ -57,6 +57,7 @@
     <!-- System & Maintenance -->
     <Recommend Include="anduinos-control-panel" />
     <Recommend Include="anduinos-driver-center" />
+    <Recommend Include="anduinos-offline-updater" Condition="'$(Suite)' == 'resolute-addon' Or '$(Suite)' == 'stonking-addon'" />
     <Recommend Include="anduinos-oobe" />
     <Recommend Include="anduinos-exe-runner" />
     <Recommend Include="anduinos-ufwall-gtk" />

@@ -1,6 +1,7 @@
 """Command-line entry point for read-only bundle verification and preview."""
 import argparse
 import json
+import sys
 import tempfile
 from pathlib import Path
 
@@ -23,6 +24,10 @@ def running_version():
 
 
 def main(argv=None):
+    argv = sys.argv[1:] if argv is None else argv
+    if not argv or argv == ["gui"]:
+        from .gui import main as gui_main
+        return gui_main()
     client_version = running_version()
     parser = argparse.ArgumentParser(description="Verify or preview an AnduinOS offline update. This version never installs packages.")
     parser.add_argument("--version", action="version", version=client_version)
@@ -63,3 +68,7 @@ def main(argv=None):
             print(reason)
         print("Read-only preview. No system packages were changed.")
     return 2 if report["state"] == "blocked" else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
