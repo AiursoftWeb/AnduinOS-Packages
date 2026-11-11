@@ -28,6 +28,13 @@ class InstallationChecks(unittest.TestCase):
             check_targets(manifest, initial, final)
         final[("vim", "amd64")] = {"Version": "6"}
         check_targets(manifest, initial, final)
+        manifest["required_installed_targets"][0]["architecture"] = "amd64"
+        final[("base-files", "all")] = {"Version": "2.0.0"}
+        with self.assertRaisesRegex(BundleError, "base-files"):
+            check_targets(manifest, initial, final)
+        final.pop(("base-files", "all"))
+        final[("base-files", "amd64")] = {"Version": "2.0.5"}
+        check_targets(manifest, initial, final)
 
     def test_bootstrap_and_self_replacement_cannot_start(self):
         for report in ({"state": "updater-update-required"}, {"state": "blocked", "blockers": ["Held package"]},

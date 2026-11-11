@@ -14,7 +14,7 @@ from . import jobs
 from .bundle import verify
 from .manifest import require
 from .native import paragraphs, run
-from .planning import installed, os_release, resolve_stage
+from .planning import check_targets, installed, os_release, resolve_stage
 
 SNAPSHOTS = Path("/.snapshots/anduinos-btrfs-snapshots-manager")
 
@@ -126,16 +126,6 @@ def snapshot_result(before, plan, expected=1):
         result["state"] = "unconfirmed"
         result["reason"] = str(error)[-1000:]
     return result
-
-
-def check_targets(manifest, initial, final):
-    for package in manifest["required_installed_targets"]:
-        key = (package["name"], package["architecture"])
-        if key not in initial and key not in final: continue
-        if key not in final and key[0] in manifest["allowed_removals"]: continue
-        require(key in final and apt_pkg.version_compare(final[key]["Version"], package["version"]) >= 0,
-                f"Required installed target not satisfied: {key[0]} >= {package['version']}")
-    require(any(name == manifest["version_package"] for name, _ in final), "OS version package is missing")
 
 
 def execute(identifier):

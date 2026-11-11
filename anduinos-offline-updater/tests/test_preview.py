@@ -121,6 +121,16 @@ class PreviewTests(unittest.TestCase):
         self.state("2.0.0", "1", self.package("vim", "1", "vim-common (= 1)")); result = self.inspect()
         self.assertEqual(result["state"], "blocked", result); self.assertIn("vim", str(result["blockers"]))
 
+    def test_architecture_transition_does_not_skip_a_held_target(self):
+        status = self.system / "var/lib/dpkg/status"
+        original = status.read_text().replace("Architecture: all", "Architecture: amd64", 1)
+        status.write_text(original)
+        self.assertEqual(self.inspect()["state"], "update-available")
+        status.write_text(original.replace("Status: install ok installed", "Status: hold ok installed", 1))
+        result = self.inspect()
+        self.assertEqual(result["state"], "blocked", result)
+        self.assertIn("base-files", str(result["blockers"]))
+
     def test_preferences_are_preserved_and_hooks_never_run(self):
         directory = self.system / "etc/apt/preferences.d"; directory.mkdir(parents=True)
         (directory / "hold-library").write_text("Package: base-library\nPin: version 5\nPin-Priority: -1\n")
