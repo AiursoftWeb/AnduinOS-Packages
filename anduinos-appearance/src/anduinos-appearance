@@ -352,6 +352,27 @@ class PanelWidgetsPage(Adw.PreferencesPage):
         self.set_title(_('Panel Widgets'))
         self.set_icon_name('application-x-addon-symbolic')
 
+        self._interface_settings = Gio.Settings.new('org.gnome.desktop.interface')
+        self._syncing_icon_theme = False
+        icon_group = Adw.PreferencesGroup(title=_('Application Icons'))
+        icon_choices = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL,
+                               halign=Gtk.Align.CENTER, homogeneous=True)
+        icon_choices.add_css_class('linked')
+        self.icon_buttons = {}
+        for theme, label in (('Fluent-dark', 'AnduinOS'),
+                             ('Adwaita', _('App Defaults'))):
+            button = Gtk.ToggleButton(label=label)
+            if self.icon_buttons:
+                button.set_group(next(iter(self.icon_buttons.values())))
+            button.connect('toggled', self._on_icon_theme_toggled, theme)
+            icon_choices.append(button)
+            self.icon_buttons[theme] = button
+        icon_group.add(icon_choices)
+        self.add(icon_group)
+        self._interface_settings.connect('changed::icon-theme', self._sync_icon_theme)
+        self._interface_settings.connect('writable-changed::icon-theme', self._sync_icon_theme)
+        self._sync_icon_theme()
+
         group = Adw.PreferencesGroup()
         group.set_title(_('Panel Indicators'))
         group.set_description(_('Toggle panel indicator widgets on or off.'))
@@ -416,6 +437,26 @@ class PanelWidgetsPage(Adw.PreferencesPage):
         else:
             self._tiling_settings.bind('enable-layout-picker', self.layout_picker_row,
                                       'active', Gio.SettingsBindFlags.DEFAULT)
+
+    def _sync_icon_theme(self, *_args):
+        theme = self._interface_settings.get_string('icon-theme')
+        self._syncing_icon_theme = True
+        try:
+            for name, button in self.icon_buttons.items():
+                # Other Fluent variants also belong to the AnduinOS choice.
+                active = theme == name or (name == 'Fluent-dark' and
+                                          theme.startswith('Fluent'))
+                button.set_active(active)
+                button.set_sensitive(self._interface_settings.is_writable('icon-theme'))
+        finally:
+            self._syncing_icon_theme = False
+
+    def _on_icon_theme_toggled(self, button, theme):
+        if self._syncing_icon_theme or not button.get_active():
+            return
+        if not self._interface_settings.set_string('icon-theme', theme):
+            self.win._toast(_('Failed to change icon theme.'))
+        self._sync_icon_theme()
 
     def _sync_extension_rows(self, settings, key):
         enabled = set(settings.get_strv(key))
