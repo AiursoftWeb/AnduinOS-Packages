@@ -49,6 +49,22 @@ class InstallationChecks(unittest.TestCase):
             self.assertEqual(result["state"], "unconfirmed")
             self.assertFalse(result["transactions"][0]["pre_snapshot_verified"])
 
+    def test_snapshot_inventory_uses_cli_array_and_checks_real_uuid(self):
+        with tempfile.TemporaryDirectory() as directory:
+            record = Path(directory) / "transaction.json"
+            record.write_text(json.dumps({"id": "test", "pre_deployment_id": "snapshot", "failure": None}))
+            inventory = json.dumps([{"id": "snapshot", "state": "ready", "snapshot_uuid": "actual-uuid"}]).encode()
+            with patch("anduinos_offline_updater.install.snapshot_records", return_value={record}), \
+                    patch("anduinos_offline_updater.install.run", side_effect=[inventory, b"  UUID: actual-uuid\n"]):
+                self.assertEqual(snapshot_result(set(), {"state": "requires-layout-check"})["state"], "created")
+            for failure in (b"{}", b"not json"):
+                with patch("anduinos_offline_updater.install.snapshot_records", return_value={record}), \
+                        patch("anduinos_offline_updater.install.run", return_value=failure):
+                    self.assertEqual(snapshot_result(set(), {"state": "requires-layout-check"})["state"], "unconfirmed")
+            with patch("anduinos_offline_updater.install.snapshot_records", return_value={record}), \
+                    patch("anduinos_offline_updater.install.run", side_effect=TimeoutError("Snapshot service unavailable")):
+                self.assertEqual(snapshot_result(set(), {"state": "requires-layout-check"})["state"], "unconfirmed")
+
     def test_space_counts_cache_and_installation_on_same_filesystem(self):
         with tempfile.TemporaryDirectory() as directory, patch("os.path.ismount", return_value=False):
             # /tmp may itself be a different filesystem on the test host.

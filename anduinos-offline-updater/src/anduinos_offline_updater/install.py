@@ -108,7 +108,8 @@ def snapshot_result(before, plan, expected=1):
             if identifier:
                 # The recovery store validates metadata and the actual subvolume.
                 output = json.loads(run(["/usr/bin/anduinos-btrfs-snapshots-manager-cli", "list", "--json"]))
-                for deployment in output.get("deployments", []):
+                require(isinstance(output, list), "Unexpected snapshot inventory format")
+                for deployment in output:
                     if deployment.get("id") != identifier or deployment.get("state") != "ready": continue
                     root = SNAPSHOTS / "deployments" / identifier / "root"
                     details = run(["btrfs", "subvolume", "show", str(root)]).decode()
@@ -119,8 +120,11 @@ def snapshot_result(before, plan, expected=1):
         if plan["state"] not in ("unavailable", "disabled"):
             result["state"] = "created" if len(result["transactions"]) >= expected and all(
                 t["pre_snapshot_verified"] and not t["failure"] for t in result["transactions"]) else "unconfirmed"
-    except (OSError, ValueError, KeyError):
+    except Exception as error:
+        # Snapshot reporting is best effort, like the existing APT hook. Its
+        # failure must not erase a successfully verified package result.
         result["state"] = "unconfirmed"
+        result["reason"] = str(error)[-1000:]
     return result
 
 
