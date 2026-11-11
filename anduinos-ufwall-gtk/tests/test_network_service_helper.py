@@ -49,6 +49,7 @@ class NetworkServiceHelperTests(unittest.TestCase):
             annotations["org.freedesktop.policykit.exec.path"],
             "/usr/libexec/ufwall-gtk/network-service-helper",
         )
+        self.assertEqual("set-mdns-enabled", annotations["org.freedesktop.policykit.exec.argv1"])
         self.assertNotIn(
             "org.freedesktop.policykit.exec.allow_gui", annotations
         )

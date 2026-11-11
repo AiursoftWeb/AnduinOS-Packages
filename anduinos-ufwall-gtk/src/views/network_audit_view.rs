@@ -443,6 +443,10 @@ impl NetworkAuditView {
                         }
                     };
                     
+                    // Keep the observation visible without requiring a hover;
+                    // a red icon alone is easily mistaken for a firewall verdict.
+                    row.set_subtitle(&format!("{}\n{}", subtitle_text,
+                        tooltip.lines().next().unwrap_or("").trim_end_matches(':')));
                     let status_icon = gtk::Image::builder()
                         .icon_name(if is_connected { "network-transmit-receive-symbolic" } else { "network-error-symbolic" })
                         .css_classes(if is_connected { ["success"].to_vec() } else { ["error"].to_vec() })
