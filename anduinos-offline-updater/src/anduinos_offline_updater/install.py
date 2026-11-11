@@ -134,7 +134,7 @@ def execute(identifier):
         job = jobs.status(identifier, 0)
         require(job["state"] == "queued", "Job is not queued")
         wrote_packages, completed, attempted = False, 0, 0
-        snapshot_before = snapshot_records()
+        snapshot = {"state": "not-needed", "transactions": []}
         plan = json.loads((path / "plan.json").read_text())
         try:
             jobs.update(path, state="checking")
@@ -149,50 +149,55 @@ def execute(identifier):
             repository = path / "payload/repository"
             configure(path, repository, manifest["architecture"])
             with apt_pkg.SystemLock():
-                raw = Path("/var/lib/dpkg/status").read_bytes()
-                require(hashlib.sha256(raw).hexdigest() == current["status_sha256"], "Package state changed; inspect and confirm again")
-                initial = installed(paragraphs(raw.decode()))
-                require(not run(["dpkg", "--audit"]).strip(), "dpkg reports unfinished work; repair it before updating")
-                with apt.Cache(progress=OpProgress(), memonly=True) as cache:
-                    cache.update(AcquireProgress(), pulse_interval=0)
-                if any(s["changes"] for s in plan["stages"]):
-                    jobs.update(path, space=space_check(path, manifest, current))
-                for number, approved in enumerate(plan["stages"], start=1):
+                # Attribute snapshots while APT excludes other package transactions.
+                snapshot_before = snapshot_records()
+                try:
+                    raw = Path("/var/lib/dpkg/status").read_bytes()
+                    require(hashlib.sha256(raw).hexdigest() == current["status_sha256"], "Package state changed; inspect and confirm again")
+                    initial = installed(paragraphs(raw.decode()))
+                    require(not run(["dpkg", "--audit"]).strip(), "dpkg reports unfinished work; repair it before updating")
                     with apt.Cache(progress=OpProgress(), memonly=True) as cache:
-                        changes, _, _ = resolve_stage(cache, approved["stage"], manifest)
-                        require(changes == approved["changes"], "APT plan changed; no further stages will run")
-                        if changes:
-                            space_check(path, manifest, current)
-                            # Both before and after approval we disallow self replacement until
-                            # the separate bootstrap/process-handoff milestone is implemented.
-                            jobs.ensure_installable({"state": "update-available", "stages": [{"changes": changes}]})
-                            progress = PackageProgress(path)
-                            jobs.update(path, state="installing", stage=number, stage_count=len(plan["stages"]))
-                            wrote_packages = True
-                            attempted += 1
-                            try:
-                                cache.commit(fetch_progress=DownloadProgress(path), install_progress=progress,
-                                             allow_unauthenticated=False)
-                            finally:
-                                progress.write_stream.close(); progress.status_stream.close()
-                            cache.open(OpProgress())
-                            require(cache.broken_count == 0, "Installed package dependencies are broken")
-                            actual = installed(paragraphs(Path("/var/lib/dpkg/status").read_text()))
-                            for change in changes:
-                                record = actual.get((change["name"], change["architecture"]))
-                                require((record["Version"] if record else None) == change["after"],
-                                        "Installed version differs from plan: " + change["name"])
-                        completed = number
-                        jobs.update(path, completed_stages=completed)
-                final = installed(paragraphs(Path("/var/lib/dpkg/status").read_text()))
-                check_targets(manifest, initial, final)
-                require(os_release("/usr/lib/os-release").get("VERSION_ID") == manifest["target_version"], "Target OS version was not installed")
-                require(not run(["dpkg", "--audit"]).strip(), "dpkg reports unfinished work after installation")
+                        cache.update(AcquireProgress(), pulse_interval=0)
+                    if any(s["changes"] for s in plan["stages"]):
+                        jobs.update(path, space=space_check(path, manifest, current))
+                    for number, approved in enumerate(plan["stages"], start=1):
+                        with apt.Cache(progress=OpProgress(), memonly=True) as cache:
+                            changes, _, _ = resolve_stage(cache, approved["stage"], manifest)
+                            require(changes == approved["changes"], "APT plan changed; no further stages will run")
+                            if changes:
+                                space_check(path, manifest, current)
+                                # Both before and after approval we disallow self replacement until
+                                # the separate bootstrap/process-handoff milestone is implemented.
+                                jobs.ensure_installable({"state": "update-available", "stages": [{"changes": changes}]})
+                                progress = PackageProgress(path)
+                                jobs.update(path, state="installing", stage=number, stage_count=len(plan["stages"]))
+                                wrote_packages = True
+                                attempted += 1
+                                try:
+                                    cache.commit(fetch_progress=DownloadProgress(path), install_progress=progress,
+                                                 allow_unauthenticated=False)
+                                finally:
+                                    progress.write_stream.close(); progress.status_stream.close()
+                                cache.open(OpProgress())
+                                require(cache.broken_count == 0, "Installed package dependencies are broken")
+                                actual = installed(paragraphs(Path("/var/lib/dpkg/status").read_text()))
+                                for change in changes:
+                                    record = actual.get((change["name"], change["architecture"]))
+                                    require((record["Version"] if record else None) == change["after"],
+                                            "Installed version differs from plan: " + change["name"])
+                            completed = number
+                            jobs.update(path, completed_stages=completed)
+                    final = installed(paragraphs(Path("/var/lib/dpkg/status").read_text()))
+                    check_targets(manifest, initial, final)
+                    require(os_release("/usr/lib/os-release").get("VERSION_ID") == manifest["target_version"], "Target OS version was not installed")
+                    require(not run(["dpkg", "--audit"]).strip(), "dpkg reports unfinished work after installation")
+                finally:
+                    snapshot = snapshot_result(snapshot_before, plan["snapshot"], attempted)
             jobs.update(path, state="complete" if wrote_packages else "already-installed", progress=None,
                         reboot_required=Path("/var/run/reboot-required").exists(),
-                        snapshot=snapshot_result(snapshot_before, plan["snapshot"], attempted))
+                        snapshot=snapshot)
         except Exception as error:
             jobs.update(path, state="partial" if wrote_packages else "blocked", error=str(error)[-4000:],
-                        completed_stages=completed, snapshot=snapshot_result(snapshot_before, plan["snapshot"], attempted))
+                        completed_stages=completed, snapshot=snapshot)
             return 2
         return 0
