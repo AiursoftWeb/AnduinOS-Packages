@@ -1,0 +1,47 @@
+--- a/extension.js
++++ b/extension.js
+@@ -23,6 +23,7 @@
+     _preferences;
+     _accentColorChangedId = 0;
+     _colorSchemeChangedId = 0;
++    _iconThemeChangedId = 0;
+     iconThemesLight = Object.values({});
+     iconThemesDark = Object.values({});
+ 
+@@ -61,6 +62,8 @@
+         this._accentColorChangedId = this._settings.connect("changed::accent-color", this._onAccentColorChanged.bind(this));
+         // Connect to color scheme changes
+         this._colorSchemeChangedId = this._settings.connect("changed::color-scheme", this._onAccentColorChanged.bind(this));
++        // Reapply the current accent when the user selects Fluent again.
++        this._iconThemeChangedId = this._settings.connect("changed::icon-theme", this._onAccentColorChanged.bind(this));
+         // Initial theme update
+         this._onAccentColorChanged();
+     }
+@@ -72,9 +75,13 @@
+             this._settings.disconnect(this._accentColorChangedId);
+             this._accentColorChangedId = 0;
+         }
+-        if (this._preferences && this._colorSchemeChangedId) {
+-            this._preferences.disconnect(this._colorSchemeChangedId);
++        if (this._settings && this._colorSchemeChangedId) {
++            this._settings.disconnect(this._colorSchemeChangedId);
+             this._colorSchemeChangedId = 0;
++        }
++        if (this._settings && this._iconThemeChangedId) {
++            this._settings.disconnect(this._iconThemeChangedId);
++            this._iconThemeChangedId = 0;
+         }
+         // Clear the iconThemes array
+         this.iconThemesLight = [];
+@@ -88,6 +95,11 @@
+ 
+      // Next metod is called when extension is enabled, color accent, edit a new path to the themes, or the switch for set link gtk4 local is changed
+     _onAccentColorChanged() {
++        // Keep app defaults and third-party icon themes across logins and
++        // appearance changes. Only Fluent themes follow the system accent.
++        const currentTheme = this._settings?.get_string("icon-theme");
++        if (!currentTheme?.startsWith("Fluent"))
++            return;
+         if(this._settings?.get_string("color-scheme") === 'prefer-dark')
+         {
+         // Get the current accent color
