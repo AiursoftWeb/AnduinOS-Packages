@@ -148,6 +148,37 @@ def session():
             dollar()
             wait(lambda: password.get_text() == '$')
             print('GNOME/Wayland: actual installer tester, selection replacement and password input passed', flush=True)
+
+            # Language selection must change the live session before the
+            # separate keyboard page is ever constructed.
+            from keyboard_preview import XkbKeyboardPreview
+            from languages import LANGUAGES
+            signature = apply_keyboard_layout('us')
+            wait(lambda: keyboard_layout_is_active(Gdk.Display.get_default(), signature))
+            shared = {'lang': 'en_US', 'keyboard': 'us', 'keyboard_variant': ''}
+            navigation = Adw.NavigationView()
+            welcome = pages.build_welcome_page(shared, navigation)
+            navigation.add(welcome)
+            window.set_child(navigation)
+            wait(lambda: welcome.get_mapped())
+            selection = next(w for w in descendants(welcome)
+                             if isinstance(w, Gtk.ListView)).get_model()
+            selection.set_selected(next(i for i, language in enumerate(LANGUAGES)
+                                        if language.code == 'fr'))
+            with XkbKeyboardPreview('fr') as keyboard:
+                french = keyboard.keymap_signature()
+            wait(lambda: keyboard_layout_is_active(Gdk.Display.get_default(), french))
+            assert navigation.get_visible_page() is welcome
+            assert Gio.Settings.new('org.gnome.desktop.input-sources').get_value('sources').unpack() == [('xkb', 'fr')]
+            entry = Gtk.Entry()
+            window.set_child(entry)
+            entry.grab_focus()
+            wait(lambda: window.is_active())
+            for pressed in (True, False):
+                call(remote_path, remote_interface, 'NotifyKeyboardKeycode',
+                     GLib.Variant('(ub)', (16, pressed)))
+            wait(lambda: entry.get_text() == 'a')
+            print('GNOME/Wayland: welcome French selection immediately changes session and physical Q key types a', flush=True)
         except Exception:
             log.flush()
             print(log_path.read_text()[-10000:], file=sys.stderr)

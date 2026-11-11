@@ -1169,6 +1169,7 @@ def build_welcome_page(shared, nav_view):
         pos = sel.get_selected()
         if pos != Gtk.INVALID_LIST_POSITION:
             l = lang_items[pos]
+            language_changed = shared.get("lang") != l.code
             shared["lang"] = l.code
             shared["locale"] = l.locale
             if not shared.get("_keyboard_user_selected"):
@@ -1186,6 +1187,28 @@ def build_welcome_page(shared, nav_view):
             set_window_language = shared.get("_set_window_language")
             if callable(set_window_language):
                 set_window_language(l.code)
+            if language_changed and not shared.get("_keyboard_user_selected"):
+                _apply_language_keyboard()
+
+    def _apply_language_keyboard():
+        try:
+            apply_keyboard_layout(shared["keyboard"], shared["keyboard_variant"])
+        except (KeyboardSessionError, KeyboardPreviewError, GLib.Error) as error:
+            print(f"Could not apply welcome keyboard: {error}", file=sys.stderr)
+            language = str(shared["lang"])
+            dialog = Adw.MessageDialog(
+                transient_for=nav_view.get_root(),
+                heading=_("Keyboard", language),
+                body=_("The keyboard layout could not be applied. Try again.", language),
+            )
+            dialog.add_response("close", _("Close", language))
+            dialog.add_response("retry", _("Retry", language))
+            dialog.set_default_response("retry")
+            dialog.set_close_response("close")
+            dialog.connect("response", lambda _dialog, response: (
+                _apply_language_keyboard() if response == "retry" else None
+            ))
+            dialog.present()
 
     sel.connect("selection-changed", lambda _s, _p, _n: _on_lang_selected())
 

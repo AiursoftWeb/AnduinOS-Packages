@@ -103,6 +103,7 @@ class KeyboardPageTests(unittest.TestCase):
         selected_variant = pages.keyboard_layouts()[index].variants[0].id
         self.apply.assert_called_with('ch', selected_variant)
         self.assertTrue(self.shared['_keyboard_user_selected'])
+        self.apply.reset_mock()
         welcome = pages.build_welcome_page(self.shared, self.nav)
         languages = next(w for w in descendants(welcome) if isinstance(w, Gtk.ListView))
         languages.get_model().set_selected(next(i for i, language in enumerate(LANGUAGES)
@@ -110,6 +111,7 @@ class KeyboardPageTests(unittest.TestCase):
         self.assertEqual(self.shared['lang'], 'fr')
         self.assertEqual(self.shared['keyboard'], 'ch')
         self.assertEqual(self.shared['keyboard_variant'], selected_variant)
+        self.apply.assert_not_called()
 
     def test_unconfirmed_language_still_supplies_default_layout(self):
         shared = {'lang': 'en_US', 'keyboard': 'us', 'keyboard_variant': ''}
@@ -118,6 +120,38 @@ class KeyboardPageTests(unittest.TestCase):
         languages.get_model().set_selected(next(i for i, language in enumerate(LANGUAGES)
                                                if language.code == 'fr'))
         self.assertEqual((shared['keyboard'], shared['keyboard_variant']), ('fr', ''))
+        self.apply.assert_called_once_with('fr', '')
+
+    def test_welcome_initialization_does_not_replace_current_session_layout(self):
+        shared = {'lang': 'fr', 'keyboard': 'fr', 'keyboard_variant': ''}
+        pages.build_welcome_page(shared, Adw.NavigationView())
+        self.apply.assert_not_called()
+
+    def test_welcome_keyboard_failure_can_retry_current_language(self):
+        shared = {'lang': 'en_US', 'keyboard': 'us', 'keyboard_variant': ''}
+        nav = Adw.NavigationView()
+        welcome = pages.build_welcome_page(shared, nav)
+        nav.add(welcome)
+        window = Adw.Window(content=nav)
+        self.addCleanup(window.destroy)
+        window.present()
+        settle()
+        selection = next(w for w in descendants(welcome)
+                         if isinstance(w, Gtk.ListView)).get_model()
+        self.apply.side_effect = KeyboardSessionError('locked')
+        selection.set_selected(next(i for i, language in enumerate(LANGUAGES)
+                                    if language.code == 'fr'))
+        settle()
+        dialog = next(w for w in Gtk.Window.list_toplevels()
+                      if isinstance(w, Adw.MessageDialog)
+                      and w.get_transient_for() is window)
+        self.addCleanup(dialog.destroy)
+        self.assertTrue(dialog.get_visible())
+        self.apply.side_effect = None
+        dialog.response('retry')
+        settle()
+        self.assertEqual(self.apply.call_count, 2)
+        self.apply.assert_called_with('fr', '')
 
     def test_input_method_download_choices_are_only_on_software_page(self):
         self.build(lang='zh_CN', locale='zh_CN.UTF-8')
