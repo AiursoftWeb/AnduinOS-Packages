@@ -1,0 +1,9 @@
+udisks2 (2.11.2-1ubuntu1aos1) stonking; urgency=medium
+
+  * Initialize the provider's block lookup table before worker threads start.
+  * Query known blocks under the existing provider lock in the probing thread,
+    keeping the uevent monitor independent of device processing.
+  * Preserve Ubuntu's existing patches and binary package structure.
+
+ -- Cici OpenAI <cici@aiursoft.com>  Wed, 11 Nov 2026 00:00:00 +0000
+

@@ -1,0 +1,70 @@
+Description: Initialize and synchronize the provider block-device lookup table
+ Create sysfs_to_block before either worker can access the provider. Perform
+ the known-block lookup in the probing thread under the existing provider lock,
+ keeping the uevent monitor independent of main-thread device processing.
+Author: Cici OpenAI <cici@aiursoft.com>
+Origin: vendor
+Forwarded: no
+Last-Update: 2026-11-11
+
+--- a/src/udiskslinuxprovider.c
++++ b/src/udiskslinuxprovider.c
+@@ -292,6 +292,7 @@
+ {
+   UDisksLinuxProvider *provider = UDISKS_LINUX_PROVIDER (user_data);
+   ProbeRequest *request;
++  const gchar *sysfs_path;
+   gboolean dev_initialized = FALSE;
+   guint n_tries = 0;
+ 
+@@ -304,6 +305,12 @@
+        */
+       if (request == (gpointer) 0xdeadbeef)
+         goto out;
++
++      /* Do not block the monitor thread on the main thread's cache lock. */
++      sysfs_path = g_udev_device_get_sysfs_path (request->udev_device);
++      G_LOCK (provider_lock);
++      request->known_block = sysfs_path != NULL && g_hash_table_contains (provider->sysfs_to_block, sysfs_path);
++      G_UNLOCK (provider_lock);
+ 
+       /* Try to wait for the device to become initialized(*) before we start
+        * gathering data for it.
+@@ -351,14 +358,10 @@
+ {
+   UDisksLinuxProvider *provider = UDISKS_LINUX_PROVIDER (user_data);
+   ProbeRequest *request;
+-  const gchar *sysfs_path;
+ 
+   request = g_slice_new0 (ProbeRequest);
+   request->provider = g_object_ref (provider);
+   request->udev_device = g_object_ref (device);
+-
+-  sysfs_path = g_udev_device_get_sysfs_path (device);
+-  request->known_block = sysfs_path != NULL && g_hash_table_contains (provider->sysfs_to_block, sysfs_path);
+ 
+   /* process uevent in "probing-thread" */
+   g_async_queue_push (provider->probe_request_queue, request);
+@@ -397,6 +400,11 @@
+ static void
+ udisks_linux_provider_init (UDisksLinuxProvider *provider)
+ {
++  /* Initialize before publishing the provider to either worker thread. */
++  provider->sysfs_to_block = g_hash_table_new_full (g_str_hash,
++                                                    g_str_equal,
++                                                    g_free,
++                                                    (GDestroyNotify) g_object_unref);
+ }
+ 
+ static void
+@@ -739,10 +747,6 @@
+   if (UDISKS_PROVIDER_CLASS (udisks_linux_provider_parent_class)->start != NULL)
+     UDISKS_PROVIDER_CLASS (udisks_linux_provider_parent_class)->start (_provider);
+ 
+-  provider->sysfs_to_block = g_hash_table_new_full (g_str_hash,
+-                                                    g_str_equal,
+-                                                    g_free,
+-                                                    (GDestroyNotify) g_object_unref);
+   provider->vpd_to_drive = g_hash_table_new_full (g_str_hash,
+                                                   g_str_equal,
+                                                   g_free,
