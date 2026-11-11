@@ -355,12 +355,13 @@ class PanelWidgetsPage(Adw.PreferencesPage):
         self._interface_settings = Gio.Settings.new('org.gnome.desktop.interface')
         self._syncing_icon_theme = False
         icon_group = Adw.PreferencesGroup(title=_('Application Icons'))
-        icon_choices = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        icon_choices = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL,
+                               halign=Gtk.Align.CENTER, homogeneous=True)
         icon_choices.add_css_class('linked')
         self.icon_buttons = {}
         for theme, label in (('Fluent-dark', 'AnduinOS'),
                              ('Adwaita', _('App Defaults'))):
-            button = Gtk.ToggleButton(label=label, hexpand=True)
+            button = Gtk.ToggleButton(label=label)
             if self.icon_buttons:
                 button.set_group(next(iter(self.icon_buttons.values())))
             button.connect('toggled', self._on_icon_theme_toggled, theme)
