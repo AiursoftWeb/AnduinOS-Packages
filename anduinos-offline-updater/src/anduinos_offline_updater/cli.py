@@ -6,13 +6,26 @@ from pathlib import Path
 
 from . import VERSION
 from .bundle import verify
-from .native import BundleError
+from .native import BundleError, run
 from .planning import preview
 
 
+def running_version():
+    """Keep the Debian suffix, but never claim newly installed code is loaded."""
+    try:
+        value = run(["dpkg-query", "--admindir=/var/lib/dpkg", "--show",
+                     "--showformat=${Version}", "anduinos-offline-updater"]).decode().strip()
+        if value == VERSION or value.startswith(VERSION + "+"):
+            return value
+    except BundleError:
+        pass  # Source-tree validation has no installed package.
+    return VERSION
+
+
 def main(argv=None):
+    client_version = running_version()
     parser = argparse.ArgumentParser(description="Verify or preview an AnduinOS offline update. This version never installs packages.")
-    parser.add_argument("--version", action="version", version=VERSION)
+    parser.add_argument("--version", action="version", version=client_version)
     sub = parser.add_subparsers(dest="command", required=True)
     for name in ("verify", "inspect"):
         command = sub.add_parser(name)
@@ -29,7 +42,8 @@ def main(argv=None):
         with tempfile.TemporaryDirectory(prefix="offline-updater-", dir=args.work_directory) as name:
             result = verify(args.file, args.keyring, name)
             if args.command == "inspect":
-                report = preview(result["manifest"], Path(name) / "repository", args.keyring, args.system_root, args.work_directory)
+                report = preview(result["manifest"], Path(name) / "repository", args.keyring, args.system_root,
+                                 args.work_directory, client_version=client_version)
                 report.update(signer=result["signer"], archive_bytes=args.file.stat().st_size)
             else:
                 m = result["manifest"]
