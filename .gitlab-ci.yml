@@ -818,3 +818,10 @@ anduinos-recovery-env:
     - test-all
   variables:
     PACKAGE_DIR: anduinos-recovery-env
+
+anduinos-offline-updater:
+  extends: .publish
+  needs:
+    - test-all
+  variables:
+    PACKAGE_DIR: anduinos-offline-updater

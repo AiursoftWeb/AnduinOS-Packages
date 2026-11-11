@@ -1,0 +1,51 @@
+"""Command-line entry point for read-only bundle verification and preview."""
+import argparse
+import json
+import tempfile
+from pathlib import Path
+
+from . import VERSION
+from .bundle import verify
+from .native import BundleError
+from .planning import preview
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Verify or preview an AnduinOS offline update. This version never installs packages.")
+    parser.add_argument("--version", action="version", version=VERSION)
+    sub = parser.add_subparsers(dest="command", required=True)
+    for name in ("verify", "inspect"):
+        command = sub.add_parser(name)
+        command.add_argument("file", type=Path)
+        command.add_argument("--keyring", type=Path, default=Path("/usr/share/keyrings/anduinos-offline-updates.gpg"),
+                             help="External trusted keyring. Test signing keys are not shipped.")
+        command.add_argument("--work-directory", type=Path, help="Existing temporary-storage parent directory")
+        command.add_argument("--json", action="store_true")
+        if name == "inspect":
+            command.add_argument("--system-root", type=Path, default=Path("/"),
+                                 help="Read captured system state from a different root; no files there are changed")
+    args = parser.parse_args(argv)
+    try:
+        with tempfile.TemporaryDirectory(prefix="offline-updater-", dir=args.work_directory) as name:
+            result = verify(args.file, args.keyring, name)
+            if args.command == "inspect":
+                report = preview(result["manifest"], Path(name) / "repository", args.keyring, args.system_root, args.work_directory)
+                report.update(signer=result["signer"], archive_bytes=args.file.stat().st_size)
+            else:
+                m = result["manifest"]
+                report = {"state": "verified", "target_version": m["target_version"], "batch_id": m["batch_id"],
+                          "signer": result["signer"], "package_count": len(m["packages"]),
+                          "unpacked_bytes": result["unpacked_bytes"], "required_installer_features": m.get("required_installer_features", []),
+                          "read_only": True, "can_install": False}
+    except (BundleError, OSError) as error:
+        report = {"state": "blocked", "blockers": [str(error)], "read_only": True, "can_install": False}
+    if args.json:
+        print(json.dumps(report, indent=2))
+    else:
+        print(f'Status: {report["state"]}')
+        if "target_version" in report:
+            print(f'Target: {report["target_version"]}')
+        for reason in report.get("blockers", []):
+            print(reason)
+        print("Read-only preview. No system packages were changed.")
+    return 2 if report["state"] == "blocked" else 0

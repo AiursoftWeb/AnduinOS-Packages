@@ -1,0 +1,34 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-offline-updater</PackageName>
+    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Verify and preview cumulative AnduinOS offline update bundles</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon stonking-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
+  </PropertyGroup>
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute stonking-addon=stonking" />
+    <Dependency Include="python3" />
+    <Dependency Include="python3-apt" />
+    <Dependency Include="apt" />
+    <Dependency Include="dpkg" />
+    <Dependency Include="gpgv" />
+    <Dependency Include="util-linux" />
+  </ItemGroup>
+  <ItemGroup>
+    <IncludeScript Include="src/anduinos-offline-updater" Target="/usr/bin/anduinos-offline-updater" />
+    <IncludeFolder Include="src/anduinos_offline_updater/" Target="/usr/lib/python3/dist-packages/anduinos_offline_updater/" />
+    <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-offline-updater/README.md" Mode="644" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+  </ItemGroup>
+</Project>
