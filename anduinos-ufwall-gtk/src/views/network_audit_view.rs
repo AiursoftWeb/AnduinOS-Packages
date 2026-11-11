@@ -431,15 +431,15 @@ impl NetworkAuditView {
                     
                     let tooltip = if is_connected {
                         if stat.direction == "Inbound" {
-                            "Connection Established:\nReceived inbound request and successfully replied (Uploaded > 0)."
+                            i18n("Reply Traffic Observed:\nInbound traffic and a reply were observed. This does not confirm a successful application connection.")
                         } else {
-                            "Connection Established:\nSent outbound request and successfully received reply (Downloaded > 0)."
+                            i18n("Reply Traffic Observed:\nOutbound traffic and a reply were observed. This does not confirm a successful application connection.")
                         }
                     } else {
                         if stat.direction == "Inbound" {
-                            "Blocked or Ignored:\nReceived inbound request but never replied (Uploaded = 0)."
+                            i18n("No Reply Observed:\nIncoming traffic was observed without a reply. This does not prove that a firewall blocked it.")
                         } else {
-                            "Blocked or No Response:\nSent outbound request but never received reply (Downloaded = 0)."
+                            i18n("No Reply Observed:\nOutgoing traffic was observed without a reply. This does not prove that a firewall blocked it.")
                         }
                     };
                     
@@ -448,7 +448,7 @@ impl NetworkAuditView {
                         .css_classes(if is_connected { ["success"].to_vec() } else { ["error"].to_vec() })
                         .valign(gtk::Align::Center)
                         .margin_end(10)
-                        .tooltip_text(tooltip)
+                        .tooltip_text(&tooltip)
                         .build();
                     row.add_prefix(&status_icon);
                     
