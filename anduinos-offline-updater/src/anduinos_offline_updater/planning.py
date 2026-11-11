@@ -121,6 +121,58 @@ def configure(work, repository, keyring, system_root, architecture):
     apt_pkg.init_system()
 
 
+def resolve_stage(cache, stage, m, *, bootstrap_needed=False):
+    """One solver and safety gate for both simulation and installation."""
+    catalog = {identity(p["identity"]): p for p in m["packages"]}
+    require(cache.broken_count == 0, "The current package dependencies are broken")
+    if stage["operation"] == "dist-upgrade":
+        cache.upgrade(dist_upgrade=True)
+    else:
+        for name in stage["packages"]:
+            require(name in cache and cache[name].candidate is not None, f"No local candidate for {name}")
+            cache[name].mark_install(auto_fix=True, auto_inst=True, from_user=False)
+    require(cache.broken_count == 0, "Local bundle cannot resolve required dependencies")
+    changes, replacements, peak_installed = [], [], 0
+    for item in cache.get_changes():
+        before = item.installed.version if item.installed else None
+        arch = item.installed.architecture if item.marked_delete else item.candidate.architecture
+        require(item._pkg.selected_state != apt_pkg.SELSTATE_HOLD, f"Held package would change: {item.name}")
+        if item.marked_delete:
+            require(not bootstrap_needed and not item.essential and item.name in m["allowed_removals"], f"Unapproved package removal: {item.name}")
+            after = None
+        else:
+            candidate = item.candidate
+            after = candidate.version
+            require(before is None or apt_pkg.version_compare(after, before) >= 0, f"Downgrade refused: {item.name}")
+            pkg = catalog.get((item.name, after, arch))
+            require(pkg is not None and any(o.trusted for o in candidate.origins), f"Candidate is outside the authenticated bundle: {item.name}")
+            record = paragraphs(str(candidate.record))[0]
+            require(record.get("SHA256") == pkg["content"]["sha256"] and record.get("Filename") == pkg["path"][len("repository/"):], f"Candidate identity differs from bundle: {item.name}")
+            peak_installed += max(0, candidate.installed_size)
+            for key in ("Filename", "Size", "MD5sum", "SHA1", "SHA256", "SHA512", "Description-md5"):
+                record.pop(key, None)
+            record["Status"] = "install ok installed"
+            replacements.append(record)
+        changes.append({"action": "remove" if after is None else "install", "name": item.name,
+                        "architecture": arch, "before": before, "after": after})
+    return sorted(changes, key=lambda c: (c["name"], c["architecture"])), replacements, peak_installed
+
+
+def check_targets(manifest, initial, final):
+    # Foreign architectures are rejected earlier. A package may legitimately
+    # transition between Architecture: all and the native architecture.
+    initial_names = {name for name, _ in initial}
+    final_by_name = {name: record for (name, _), record in final.items()}
+    require(len(final_by_name) == len(final), "Duplicate native/all installed package identity")
+    for package in manifest["required_installed_targets"]:
+        name = package["name"]
+        if name not in initial_names and name not in final_by_name: continue
+        if name not in final_by_name and name in manifest["allowed_removals"]: continue
+        require(name in final_by_name and apt_pkg.version_compare(final_by_name[name]["Version"], package["version"]) >= 0,
+                f"Required installed target not satisfied: {name} >= {package['version']}")
+    require(manifest["version_package"] in final_by_name, "OS version package is missing")
+
+
 def simulate(m, repository, keyring, system_root, work, *, client_version=VERSION):
     status_file = system_root / "var/lib/dpkg/status"
     status_bytes = status_file.read_bytes()
@@ -130,8 +182,6 @@ def simulate(m, repository, keyring, system_root, work, *, client_version=VERSIO
     configure(work, repository, keyring, system_root, m["architecture"])
     status = work / "state/status"
     status.write_bytes(status_bytes)
-    catalog = {identity(p["identity"]): p for p in m["packages"]}
-    target_by_key = {(name, arch): ver for name, ver, arch in catalog}
     with apt.Cache(progress=OpProgress(), memonly=True) as cache:
         cache.update(AcquireProgress(), pulse_interval=0)
     boot = m.get("bootstrap")
@@ -143,39 +193,10 @@ def simulate(m, repository, keyring, system_root, work, *, client_version=VERSIO
     results, peak_installed = [], 0
     for stage in stages:
         with apt.Cache(progress=OpProgress(), memonly=True) as cache:
-            require(cache.broken_count == 0, "The current package dependencies are broken")
-            if stage["operation"] == "dist-upgrade":
-                cache.upgrade(dist_upgrade=True)
-            else:
-                for name in stage["packages"]:
-                    require(name in cache and cache[name].candidate is not None, f"No local candidate for {name}")
-                    cache[name].mark_install(auto_fix=True, auto_inst=True, from_user=False)
-            require(cache.broken_count == 0, "Local bundle cannot resolve required dependencies")
-            changes, replacements = [], []
-            for item in cache.get_changes():
-                before = item.installed.version if item.installed else None
-                arch = item.installed.architecture if item.marked_delete else item.candidate.architecture
-                require(item._pkg.selected_state != apt_pkg.SELSTATE_HOLD, f"Held package would change: {item.name}")
-                if item.marked_delete:
-                    require(not bootstrap_needed and not item.essential and item.name in m["allowed_removals"], f"Unapproved package removal: {item.name}")
-                    after = None
-                else:
-                    candidate = item.candidate
-                    after = candidate.version
-                    require(before is None or apt_pkg.version_compare(after, before) >= 0, f"Downgrade refused: {item.name}")
-                    pkg = catalog.get((item.name, after, arch))
-                    require(pkg is not None and any(o.trusted for o in candidate.origins), f"Candidate is outside the authenticated bundle: {item.name}")
-                    record = paragraphs(str(candidate.record))[0]
-                    require(record.get("SHA256") == pkg["content"]["sha256"] and record.get("Filename") == pkg["path"][len("repository/"):], f"Candidate identity differs from bundle: {item.name}")
-                    peak_installed += max(0, candidate.installed_size)
-                    for key in ("Filename", "Size", "MD5sum", "SHA1", "SHA256", "SHA512", "Description-md5"):
-                        record.pop(key, None)
-                    record["Status"] = "install ok installed"
-                    replacements.append(record)
-                changes.append({"action": "remove" if after is None else "install", "name": item.name,
-                                "architecture": arch, "before": before, "after": after})
-            changed = {(c["name"], c["architecture"]) for c in changes}
-            records = [r for r in records if (r.get("Package"), r.get("Architecture")) not in changed] + replacements
+            changes, replacements, expanded = resolve_stage(cache, stage, m, bootstrap_needed=bootstrap_needed)
+            peak_installed += expanded
+            changed = {c["name"] for c in changes}
+            records = [r for r in records if r.get("Package") not in changed] + replacements
             status.write_text(control_text(records))
             results.append({"stage": stage, "changes": sorted(changes, key=lambda c: (c["name"], c["architecture"]))})
     final = installed(records)
@@ -185,14 +206,7 @@ def simulate(m, repository, keyring, system_root, work, *, client_version=VERSIO
                 "Bootstrap updater is held back or unavailable")
         require(any(c["name"] == boot["package"] for s in results for c in s["changes"]), "Installed updater and running version disagree; restart the updater")
     else:
-        for key, minimum in target_by_key.items():
-            if key not in initial and key not in final:
-                continue
-            if key not in final and key[0] in m["allowed_removals"]:
-                continue
-            require(key in final and apt_pkg.version_compare(final[key]["Version"], minimum) >= 0,
-                    f"Required installed target not satisfied: {key[0]} >= {minimum}")
-        require(any(name == m["version_package"] for name, _ in final), "OS version package is missing")
+        check_targets(m, initial, final)
     require(status_file.read_bytes() == status_bytes, "System package state changed during preview; try again")
     return results, peak_installed, bootstrap_needed, hashlib.sha256(status_bytes).hexdigest()
 
