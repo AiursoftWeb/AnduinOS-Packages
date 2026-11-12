@@ -1,0 +1,145 @@
+#!/usr/bin/python3
+# SPDX-License-Identifier: AGPL-3.0-only
+# Greedy TDT decoding adapted from Canonical Myna and Kieirra's Murmure.
+# Copyright (C) 2025-2026 Kieirra; (C) 2026 Canonical Ltd.; (C) 2026 AnduinOS contributors.
+"""Private resident Parakeet CPU worker. Audio travels only through pipes."""
+import json
+import os
+from pathlib import Path
+import re
+import resource
+import signal
+import struct
+import sys
+import time
+
+
+class Cancelled(Exception):
+    pass
+
+
+class Parakeet:
+    def __init__(self, directory, threads):
+        import numpy as np
+        import onnxruntime as ort
+        ort.disable_telemetry_events()
+        self.np = np
+        def session(name, count):
+            options = ort.SessionOptions()
+            options.intra_op_num_threads = count
+            options.inter_op_num_threads = 1
+            options.log_severity_level = 3
+            return ort.InferenceSession(str(Path(directory) / name), options,
+                                       providers=['CPUExecutionProvider'])
+        self.preprocessor = session('nemo128.onnx', 1)
+        self.encoder = session('encoder-model.int8.onnx', threads)
+        self.decoder = session('decoder_joint-model.int8.onnx', 1)
+        self.vocab = []
+        self.blank = None
+        for line in (Path(directory) / 'vocab.txt').read_text().splitlines():
+            piece, index = line.rsplit(' ', 1)
+            index = int(index)
+            if not 0 <= index < 100000:
+                raise ValueError('Invalid model vocabulary')
+            self.vocab.extend([''] * max(0, index + 1 - len(self.vocab)))
+            self.vocab[index] = piece.replace('▁', ' ')
+            if piece == '<blk>':
+                self.blank = index
+        if self.blank is None:
+            raise ValueError('Missing model blank token')
+
+    def transcribe(self, pcm, cancelled):
+        np = self.np
+        def check():
+            if cancelled():
+                raise Cancelled()
+        check()
+        samples = np.frombuffer(pcm, dtype='<i2').astype(np.float32) / 32768
+        features, lengths = self.preprocessor.run(
+            ['features', 'features_lens'],
+            {'waveforms': samples.reshape(1, -1),
+             'waveforms_lens': np.array([len(samples)], dtype=np.int64)})
+        check()
+        encoded, lengths = self.encoder.run(
+            ['outputs', 'encoded_lengths'], {'audio_signal': features, 'length': lengths})
+        check()
+        encoded = np.ascontiguousarray(encoded.transpose(0, 2, 1))[0]
+        states = (np.zeros((2, 1, 640), dtype=np.float32),
+                  np.zeros((2, 1, 640), dtype=np.float32))
+        token, frame, emitted = self.blank, 0, 0
+        pieces = []
+        while frame < int(lengths[0]):
+            check()
+            logits, state1, state2 = self.decoder.run(
+                ['outputs', 'output_states_1', 'output_states_2'],
+                {'encoder_outputs': encoded[frame].reshape(1, 1024, 1),
+                 'targets': np.array([[token]], dtype=np.int32),
+                 'target_length': np.array([1], dtype=np.int32),
+                 'input_states_1': states[0], 'input_states_2': states[1]})
+            logits = logits.reshape(-1)
+            predicted = int(np.argmax(logits[:len(self.vocab)]))
+            duration = int(np.argmax(logits[len(self.vocab):]))
+            if predicted != self.blank:
+                pieces.append(self.vocab[predicted])
+                token, states = predicted, (state1, state2)
+                emitted += 1
+            if duration:
+                frame, emitted = frame + duration, 0
+            elif predicted == self.blank or emitted >= 10:
+                frame, emitted = frame + 1, 0
+        check()
+        return re.sub(r'\A\s|\s\B|(\s)\b', lambda m: ' ' if m.group(1) else '', ''.join(pieces))
+
+
+def main():
+    if len(sys.argv) != 6:
+        return 2
+    threads = int(sys.argv[3])
+    if not 1 <= threads <= 256 or sys.argv[4] != 'cpu':
+        return 2
+    cancelled = False
+    def cancel(_signal, _frame):
+        nonlocal cancelled
+        cancelled = True
+    signal.signal(signal.SIGUSR1, cancel)
+    started = time.monotonic()
+    engine = Parakeet(sys.argv[1], threads)
+    def send(value):
+        print(json.dumps(value, ensure_ascii=False), flush=True)
+    send({'status': 'ready', 'metrics': {'backend': 'cpu',
+          'initialization_ms': (time.monotonic() - started) * 1000}})
+    def read_exact(length):
+        result = bytearray()
+        while len(result) < length:
+            block = sys.stdin.buffer.read(length - len(result))
+            if not block:
+                raise EOFError()
+            result.extend(block)
+        return result
+    while True:
+        try:
+            header = read_exact(4)
+        except EOFError:
+            return 0
+        size, = struct.unpack('<I', header)
+        if size % 2 or not 16000 <= size <= 60 * 32000:
+            return 2
+        pcm = read_exact(size)
+        started = time.monotonic()
+        try:
+            text = engine.transcribe(pcm, lambda: cancelled)
+            send({'status': 'success', 'text': text, 'metrics': {
+                'engine': 'resident', 'backend': 'cpu', 'threads': threads,
+                'audio_ms': size / 32, 'inference_ms': (time.monotonic() - started) * 1000,
+                'peak_rss_mib': resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024}})
+        except Cancelled:
+            send({'status': 'cancelled'})
+        finally:
+            cancelled = False
+
+
+if __name__ == '__main__':
+    try:
+        sys.exit(main())
+    except (EOFError, BrokenPipeError):
+        sys.exit(0)

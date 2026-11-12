@@ -7,6 +7,7 @@ use std::process::Command;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 
+pub const PARAKEET_WORKER: &str = "/usr/libexec/anduinos-parakeet-worker";
 pub const WORKER: &str = "/usr/libexec/anduinos-whisper-worker";
 pub const VAD_MODEL: &str = "/usr/share/anduinos-whisper-framework/models/ggml-silero-v6.2.0.bin";
 
@@ -60,8 +61,12 @@ impl ResidentEngine {
     pub fn with_executable(config: EngineConfig, executable: &Path) -> Result<Self, WorkerError> {
         config.validate()?;
         Ok(Self {
+            executable: if config.model.is_dir() && executable == Path::new(WORKER) {
+                PARAKEET_WORKER.into()
+            } else {
+                executable.to_owned()
+            },
             config,
-            executable: executable.to_owned(),
             transport: None,
             converter: None,
             last_metrics: Map::new(),
@@ -91,7 +96,7 @@ impl ResidentEngine {
         }
         if !self.is_running() {
             self.close();
-            if !self.config.model.is_file() {
+            if !self.config.model.is_file() && !crate::config::installed_path(&self.config.model) {
                 return Err(WorkerError::Protocol(
                     "The selected speech model is not installed",
                 ));
