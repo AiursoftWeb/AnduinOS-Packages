@@ -710,7 +710,10 @@ class SettingsWindow(Adw.PreferencesWindow):
             if self._closed:
                 return GLib.SOURCE_REMOVE
             self._refresh_all_models()
-            self._select_model(key)
+            # A large optional download must not interrupt an active dictation.
+            # The user explicitly chooses Use after Parakeet is ready.
+            if key != "parakeet":
+                self._select_model(key)
             return GLib.SOURCE_REMOVE
 
         def failed(message: str) -> bool:

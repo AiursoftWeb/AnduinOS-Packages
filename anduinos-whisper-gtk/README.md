@@ -85,7 +85,8 @@ same microphone, shortcut, cancellation, and text insertion as Whisper.
 Allow about 1.5 GiB RAM; usage depends on phrase length and the runtime.
 Chinese, Japanese and Korean require a Whisper model. Selecting Parakeet with
 an unsupported language asks for a supported language before changing models.
-Downloads can be cancelled and retried; removing a selected user model returns
+Downloads can be cancelled and retried. After downloading Parakeet, choose Use
+explicitly; the download never switches an active dictation. Removing a selected user model returns
 to Base. Base remains bundled and selected by default.
 
 The CPU worker uses distribution ONNX Runtime and NumPy packages, installed
