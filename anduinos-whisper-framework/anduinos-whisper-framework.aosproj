@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-whisper-framework</PackageName>
-    <PackageVersion>2.1.0-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Offline voice-typing engine for AnduinOS, using PipeWire and whisper.cpp.</PackageDescription>
     <Section>utils</Section>
@@ -35,6 +35,7 @@
     <Dependency Include="gstreamer1.0-plugins-good" />
     <Dependency Include="gstreamer1.0-plugins-bad" />
     <Dependency Include="anduinos-whisper-worker" />
+    <Dependency Include="anduinos-parakeet-worker" />
     <Dependency Include="pipewire-bin" />
     <Dependency Include="sound-theme-freedesktop" />
     <Dependency Include="libopencc1.1" Condition="'$(Suite)' == 'resolute-addon'" />

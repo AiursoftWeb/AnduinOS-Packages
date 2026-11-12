@@ -487,6 +487,7 @@ anduinos-whisper-framework:
   needs:
     - test-all
     - anduinos-whisper-worker
+    - anduinos-parakeet-worker
   variables:
     PACKAGE_DIR: anduinos-whisper-framework
 
@@ -826,3 +827,10 @@ anduinos-offline-updater:
     - test-all
   variables:
     PACKAGE_DIR: anduinos-offline-updater
+
+anduinos-parakeet-worker:
+  extends: .publish
+  needs:
+    - test-all
+  variables:
+    PACKAGE_DIR: anduinos-parakeet-worker

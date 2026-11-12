@@ -53,6 +53,7 @@ pub enum Event {
     },
 }
 enum Payload {
+    Release,
     Prepare(SessionConfig),
     Audio {
         config: EngineConfig,
@@ -114,10 +115,7 @@ impl BackendPaths {
 }
 impl Shared {
     pub fn model_installed(&self, key: &str) -> bool {
-        self.paths
-            .model(key)
-            .metadata()
-            .is_ok_and(|s| s.is_file() && s.len() >= 1_000_000)
+        crate::config::installed_path(&self.paths.model(key))
     }
     fn emit(&self, event: Event) {
         let _ = self.events.try_send(event);
@@ -147,6 +145,15 @@ impl Shared {
         c.preview_allowed = false;
         self.invalidate_locked(&mut c);
         c.session
+    }
+    pub fn release_model(&self) {
+        let session = self.current_session();
+        let _ = self.queue.put(Work::Final(Job {
+            session,
+            generation: 0,
+            queued: Instant::now(),
+            payload: Payload::Release,
+        }));
     }
     pub fn prepare(&self, session: u64, config: SessionConfig) {
         let c = self.control.lock().unwrap();
@@ -447,6 +454,7 @@ fn worker_loop(shared: Arc<Shared>) {
             c.current = Some((partial, cancel.clone()));
         }
         let (kind, audio_ms) = match &job.payload {
+            Payload::Release => ("release", 0.0),
             Payload::Prepare(_) => ("prepare", 0.0),
             Payload::Audio { pcm, partial, .. } => (
                 if *partial { "partial" } else { "final" },
@@ -483,6 +491,9 @@ fn run_job(
     selector: &mut AutomaticSelector,
 ) -> Result<(), WorkerError> {
     match &job.payload {
+        Payload::Release => {
+            engine.invalidate();
+        }
         Payload::Prepare(config) => {
             let mut selected = EngineConfig::new(
                 shared.paths.model(&config.model),

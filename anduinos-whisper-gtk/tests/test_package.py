@@ -139,7 +139,7 @@ class PackageTests(unittest.TestCase):
 
     @mock.patch.object(settings_app, "model_installed", return_value=False)
     def test_uninstalled_model_click_only_opens_consent(self, _installed):
-        window = mock.Mock()
+        window = mock.Mock(downloading_models=set())
 
         settings_app.SettingsWindow._model_action(window, mock.Mock(), "tiny")
 
@@ -194,10 +194,20 @@ class PackageTests(unittest.TestCase):
         settings_app.SettingsWindow._refresh_model_row(window, "small")
 
         progress.set_visible.assert_called_once_with(True)
-        button.set_sensitive.assert_called_once_with(False)
-        button.set_label.assert_called_once_with("Downloading…")
+        button.set_sensitive.assert_called_once_with(True)
+        button.set_label.assert_called_once_with("Cancel")
         remove_button.set_visible.assert_called_once_with(False)
         window.settings.get_string.assert_not_called()
+
+    def test_parakeet_download_does_not_automatically_switch_active_model(self):
+        window = mock.Mock(_closed=False, downloading_models=set())
+        window.model_rows = {"parakeet": tuple(mock.Mock() for _ in range(4))}
+        settings_app.SettingsWindow._start_model_download(window, "parakeet")
+        completed = window.downloader.download.call_args.args[2]
+        completed()
+        window._refresh_all_models.assert_called_once()
+        window._select_model.assert_not_called()
+        window.settings.set_string.assert_not_called()
 
     def test_duplicate_download_start_is_ignored(self):
         window = mock.Mock()

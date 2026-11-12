@@ -916,6 +916,14 @@ impl<E: BenchmarkEngine> AutomaticSelector<E> {
         })
         .min(available_threads());
         let fallback = Choice::new("cpu", threads);
+        // The optional INT8 Parakeet export has a CPU execution provider only.
+        // Keep Whisper's measured choices/cache unchanged; previews remain off
+        // in Automatic until this backend has its own validated measurements.
+        if config.model.is_dir() {
+            self.status = "manual";
+            return Ok(fallback);
+        }
+
         if config.backend != "auto" {
             self.status = "manual";
             return Ok(Choice::new(&config.backend, threads));
