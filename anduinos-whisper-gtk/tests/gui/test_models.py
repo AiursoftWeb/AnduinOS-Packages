@@ -46,11 +46,17 @@ class ModelWidgetsTests(unittest.TestCase):
         self.assertEqual(self.window.settings.get_string('language'), 'auto')
         self.assertEqual(self.window.backend_row.get_selected(), 1)
         self.assertFalse(self.window.backend_row.get_sensitive())
-        # Attempting Chinese while Parakeet is active leaves the valid language intact.
-        self.window.language_row.set_selected(1)
-        self.assertEqual(self.window.settings.get_string('language'), 'auto')
+        codes = [item[0] for item in self.window.language_choices]
+        self.assertEqual(len(codes), 26)
+        self.assertNotIn('zh-Hans', codes)
+        self.assertNotIn('ja', codes)
+        self.window.language_row.set_selected(codes.index('fr'))
+        self.assertEqual(self.window.settings.get_string('language'), 'fr')
         self.window._select_model('small')
         self.assertTrue(self.window.backend_row.get_sensitive())
+        self.assertEqual(self.window.language_choices, app.LANGUAGES)
+        self.assertEqual(self.window.settings.get_string('language'), 'fr')
+        self.assertEqual(self.window.language_choices[self.window.language_row.get_selected()][0], 'fr')
 
     def test_cancel_button_keeps_other_downloads_unchanged(self):
         self.window.downloading_models = {'parakeet', 'small'}
@@ -60,3 +66,23 @@ class ModelWidgetsTests(unittest.TestCase):
         with patch.object(self.window.downloader, 'cancel') as cancel:
             button.emit('clicked')
             cancel.assert_called_once_with('parakeet')
+
+    def test_model_change_filters_languages_without_changing_supported_selection(self):
+        self.window.settings.set_string('language', 'mt')
+        self.window._select_model('parakeet')
+        self.assertEqual(self.window.settings.get_string('language'), 'mt')
+        self.assertEqual(self.window.language_choices[self.window.language_row.get_selected()][0], 'mt')
+        # Shared settings changes also update the list without corrupting selection.
+        self.window.settings.set_string('model', 'base')
+        self.assertEqual(self.window.language_choices, app.LANGUAGES)
+        self.window.settings.set_string('language', 'zh-Hans')
+        self.assertEqual(self.window.language_choices[self.window.language_row.get_selected()][0], 'zh-Hans')
+
+    def test_cancel_incompatible_model_switch_keeps_whisper_language_choices(self):
+        shown = []
+        with patch.object(Adw.AlertDialog, 'present', new=lambda dialog, parent: shown.append(dialog)):
+            self.window._select_model('parakeet')
+        shown[0].emit('response', 'cancel')
+        self.assertEqual(self.window.settings.get_string('model'), 'base')
+        self.assertEqual(self.window.settings.get_string('language'), 'zh-Hans')
+        self.assertEqual(self.window.language_choices, app.LANGUAGES)

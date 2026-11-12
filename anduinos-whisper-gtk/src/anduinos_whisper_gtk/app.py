@@ -140,15 +140,13 @@ class SettingsWindow(Adw.PreferencesWindow):
         self.microphone_row.connect("notify::selected", self._microphone_changed)
         input_group.add(self.microphone_row)
 
-        language_names = Gtk.StringList.new([item[1] for item in LANGUAGES])
-        self.language_row = Adw.ComboRow(title=_("Language"), model=language_names)
-        language = self.settings.get_string("language") or "auto"
-        if language == "zh":
-            language = "zh-Hans"
-        self.language_row.set_selected(
-            next((index for index, item in enumerate(LANGUAGES) if item[0] == language), 0)
-        )
+        self.language_choices = []
+        self._syncing_languages = False
+        self.language_row = Adw.ComboRow(title=_("Language"))
+        self._sync_languages()
         self.language_row.connect("notify::selected", self._language_changed)
+        self.settings.connect("changed::model", self._sync_languages)
+        self.settings.connect("changed::language", self._sync_languages)
         input_group.add(self.language_row)
         page.add(input_group)
 
@@ -491,16 +489,27 @@ class SettingsWindow(Adw.PreferencesWindow):
         selected = min(row.get_selected(), len(self.microphones) - 1)
         self.settings.set_string("microphone", self.microphones[selected][0])
 
+    def _sync_languages(self, *_args) -> None:
+        model = self.settings.get_string("model")
+        choices = [item for item in LANGUAGES if model_language_supported(model, item[0])]
+        current = self.settings.get_string("language")
+        current = "zh-Hans" if current == "zh" else current
+        self._syncing_languages = True
+        try:
+            if choices != self.language_choices:
+                self.language_choices = choices
+                self.language_row.set_model(Gtk.StringList.new([item[1] for item in choices]))
+            self.language_row.set_selected(next(
+                (i for i, item in enumerate(choices) if item[0] == current), 0))
+        finally:
+            self._syncing_languages = False
+
     def _language_changed(self, row: Adw.ComboRow, _parameter) -> None:
-        selected = min(row.get_selected(), len(LANGUAGES) - 1)
-        language = LANGUAGES[selected][0]
-        if not model_language_supported(self.settings.get_string("model"), language):
-            self.add_toast(Adw.Toast(title=PARAKEET_HELP))
-            current = self.settings.get_string("language")
-            current = "zh-Hans" if current == "zh" else current
-            row.set_selected(next(i for i, item in enumerate(LANGUAGES) if item[0] == current))
+        if self._syncing_languages:
             return
-        self.settings.set_string("language", language)
+        selected = row.get_selected()
+        if selected < len(self.language_choices):
+            self.settings.set_string("language", self.language_choices[selected][0])
 
     def _refresh_shortcut(self) -> None:
         shortcuts = self.settings.get_strv("toggle-shortcut")
@@ -617,8 +626,6 @@ class SettingsWindow(Adw.PreferencesWindow):
             def chosen(_dialog, response):
                 if response == "use":
                     self.settings.set_string("language", choices[chooser.get_selected()][0])
-                    self.language_row.set_selected(next(i for i, item in enumerate(LANGUAGES)
-                        if item[0] == self.settings.get_string("language")))
                     self.settings.set_string("model", key)
                     self._refresh_all_models()
             dialog.connect("response", chosen)
