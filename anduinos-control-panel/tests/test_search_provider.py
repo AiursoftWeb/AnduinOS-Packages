@@ -103,7 +103,7 @@ class SearchProviderTests(unittest.TestCase):
         self.assertEqual(results, ["hardware.drivers", "security.secure-boot"])
 
     def test_offline_update_search_tracks_package_installation_and_removal(self):
-        identifier = "system.offline-update"
+        identifier = "programs.offline-update"
         with patch("anduinos_control_panel.search_provider.package_installed", return_value=False) as installed:
             self.assertEqual(_result_ids(["atgz"]), [])
             self.assertEqual(_result_metas([identifier]), [])

@@ -232,8 +232,6 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             action("system.startup-boot"),
             action("system.virtual-memory"),
         ]
-        if package_installed(OFFLINE_UPDATER_PACKAGE):
-            system_actions.append(action("system.offline-update"))
 
         security_actions = [action("security.secure-boot")]
         if seahorse_installed:
@@ -250,6 +248,21 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                 ),
             ),
         ]
+
+        programs_actions = [
+            action("programs.software-source"),
+            action("programs.uninstall"),
+            action(
+                "programs.permissions",
+                (
+                    _("Manage application permissions with Flatseal")
+                    if flatseal_installed
+                    else _("Install Flatseal to manage application permissions")
+                ),
+            ),
+        ]
+        if package_installed(OFFLINE_UPDATER_PACKAGE):
+            programs_actions.append(action("programs.offline-update"))
 
         categories = [
             (
@@ -302,18 +315,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             (
                 _("Programs"),
                 "gnome-software.svg",
-                [
-                    action("programs.software-source"),
-                    action("programs.uninstall"),
-                    action(
-                        "programs.permissions",
-                        (
-                            _("Manage application permissions with Flatseal")
-                            if flatseal_installed
-                            else _("Install Flatseal to manage application permissions")
-                        ),
-                    ),
-                ],
+                programs_actions,
             ),
             (
                 _("AI Stack"),

@@ -72,10 +72,12 @@ class LaunchTests(unittest.TestCase):
                 self.window.reset_mock()
                 app.ControlPanelWindow._rebuild_categories(self.window)
                 actions = next(call.args[2] for call in self.window._append_category.call_args_list
-                               if call.args[0] == "System")
+                               if call.args[0] == "Programs")
                 entries = [action for action in actions if action[0] == "Offline Update"]
                 if installed:
                     self.assertEqual(len(entries), 1)
+                    titles = [action[0] for action in actions]
+                    self.assertEqual(titles.index("Offline Update"), titles.index("Permission Settings") + 1)
                     entries[0][2]()
                     self.window._launch.assert_called_once_with(["anduinos-offline-updater", "gui"])
                 else:

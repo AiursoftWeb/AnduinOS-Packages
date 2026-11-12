@@ -110,15 +110,6 @@ def topics() -> tuple[ControlPanelTopic, ...]:
             command=("swapcontrol-gtk",),
         ),
         _topic(
-            "system.offline-update",
-            "system",
-            N_("Offline Update"),
-            N_("Open an offline update package"),
-            ("offline", "update", "atgz", "离线更新", "離線更新"),
-            "com.anduinos.offlineupdater",
-            command=("anduinos-offline-updater", "gui"),
-        ),
-        _topic(
             "security.secure-boot",
             "security",
             N_("Secure Boot Status"),
@@ -285,6 +276,15 @@ def topics() -> tuple[ControlPanelTopic, ...]:
             ("permission", "flatpak", "flatseal", "sandbox", "权限", "沙盒"),
             "com.github.tchx84.Flatseal",
             handler="flatseal",
+        ),
+        _topic(
+            "programs.offline-update",
+            "programs",
+            N_("Offline Update"),
+            N_("Open an offline update package"),
+            ("offline", "update", "atgz", "离线更新", "離線更新"),
+            "com.anduinos.offlineupdater",
+            command=("anduinos-offline-updater", "gui"),
         ),
         _topic(
             "ai.on-device",

@@ -56,7 +56,7 @@ def _topic_is_searchable(topic: ControlPanelTopic) -> bool:
         SNAPSHOT_PACKAGE
     ):
         return False
-    if topic.identifier == "system.offline-update" and not package_installed(
+    if topic.identifier == "programs.offline-update" and not package_installed(
         OFFLINE_UPDATER_PACKAGE
     ):
         return False
