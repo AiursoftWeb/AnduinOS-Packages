@@ -60,6 +60,29 @@ class LaunchTests(unittest.TestCase):
         self.window = Mock()
         self.enterContext(patch.object(app, "_", side_effect=lambda text: text))
 
+    def test_offline_update_entry_follows_installation_and_opens_the_gui(self):
+        self.window._activate_topic.side_effect = lambda identifier: (
+            app.ControlPanelWindow._activate_topic(self.window, identifier)
+        )
+        for installed in (False, True, False):
+            with self.subTest(installed=installed), \
+                    patch.object(app, "package_installed", side_effect=lambda name: installed if name == "anduinos-offline-updater" else False), \
+                    patch.object(app, "flatpak_installed", return_value=False), \
+                    patch.object(app, "command_available", return_value=False):
+                self.window.reset_mock()
+                app.ControlPanelWindow._rebuild_categories(self.window)
+                actions = next(call.args[2] for call in self.window._append_category.call_args_list
+                               if call.args[0] == "System")
+                entries = [action for action in actions if action[0] == "Offline Update"]
+                if installed:
+                    self.assertEqual(len(entries), 1)
+                    entries[0][2]()
+                    self.window._launch.assert_called_once_with(["anduinos-offline-updater", "gui"])
+                else:
+                    self.assertEqual(entries, [])
+                    self.window._launch.assert_not_called()
+                self.window._offer_recommended_install.assert_not_called()
+
     def test_launch_reports_failed_process_output_but_not_success(self):
         for successful, stdout, stderr, detail in (
             (True, "", "harmless warning", None),

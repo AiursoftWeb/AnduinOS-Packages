@@ -15,6 +15,7 @@ Runner = Callable[..., subprocess.CompletedProcess[str]]
 BOTTLES_APP_ID = "com.usebottles.bottles"
 DEJA_DUP_APP_ID = "org.gnome.DejaDup"
 SNAPSHOT_PACKAGE = "anduinos-btrfs-snapshots-manager"
+OFFLINE_UPDATER_PACKAGE = "anduinos-offline-updater"
 VOICE_TYPING_PACKAGE = "anduinos-whisper-gtk"
 WHY_AI_PACKAGE = "anduinos-why-ai"
 WHY_PLACEHOLDER_PACKAGE = "anduinos-why-placeholder"

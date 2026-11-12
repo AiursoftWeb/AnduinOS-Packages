@@ -102,6 +102,22 @@ class SearchProviderTests(unittest.TestCase):
         results = invocation.return_value.call_args.args[0].unpack()[0]
         self.assertEqual(results, ["hardware.drivers", "security.secure-boot"])
 
+    def test_offline_update_search_tracks_package_installation_and_removal(self):
+        identifier = "system.offline-update"
+        with patch("anduinos_control_panel.search_provider.package_installed", return_value=False) as installed:
+            self.assertEqual(_result_ids(["atgz"]), [])
+            self.assertEqual(_result_metas([identifier]), [])
+            self.assertIsNone(_activation_arguments(identifier))
+            installed.return_value = True
+            results = _result_ids(["atgz"])
+            self.assertEqual(results, [identifier])
+            self.assertEqual(_result_metas(results)[0]["name"].unpack(), "Offline Update")
+            self.assertEqual(_activation_arguments(identifier), ["anduinos-offline-updater", "gui"])
+            installed.return_value = False
+            self.assertEqual(_result_ids(["atgz"], results), [])
+            self.assertEqual(_result_metas(results), [])
+            self.assertIsNone(_activation_arguments(identifier))
+
     def test_external_results_open_directly_and_internal_results_deep_link(self):
         self.assertEqual(_activation_arguments("network.firewall"), ["ufwall-gtk"])
         self.assertEqual(

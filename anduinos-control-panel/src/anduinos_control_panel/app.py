@@ -18,6 +18,7 @@ gi.require_version("GdkPixbuf", "2.0")
 gi.require_version("Pango", "1.0")
 from gi.repository import Adw, Gdk, GdkPixbuf, Gio, GLib, Gtk, Pango  # noqa: E402
 
+from . import __version__
 from .model import (
     BOTTLES_APP_ID,
     DEJA_DUP_APP_ID,
@@ -25,6 +26,7 @@ from .model import (
     GRUB_DISPLAY_HIGH_RESOLUTION,
     GRUB_DISPLAY_AUTOMATIC,
     SNAPSHOT_PACKAGE,
+    OFFLINE_UPDATER_PACKAGE,
     VOICE_TYPING_PACKAGE,
     WHY_AI_PACKAGE,
     WHY_PLACEHOLDER_PACKAGE,
@@ -230,6 +232,8 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             action("system.startup-boot"),
             action("system.virtual-memory"),
         ]
+        if package_installed(OFFLINE_UPDATER_PACKAGE):
+            system_actions.append(action("system.offline-update"))
 
         security_actions = [action("security.secure-boot")]
         if seahorse_installed:
@@ -1986,7 +1990,7 @@ class ControlPanelApplication(Adw.Application):
         dialog.set_application_name(_("AnduinOS Control Panel"))
         dialog.set_application_icon(APP_ID)
         dialog.set_developer_name(_("AnduinOS Team"))
-        dialog.set_version("2.0.5")
+        dialog.set_version(__version__)
         dialog.set_comments(_("Find and manage AnduinOS system settings."))
         dialog.set_website("https://www.anduinos.com")
         dialog.set_issue_url(

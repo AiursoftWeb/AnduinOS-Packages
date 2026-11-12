@@ -10,7 +10,7 @@ import gi
 gi.require_version("Gio", "2.0")
 from gi.repository import Gio, GLib  # noqa: E402
 
-from .model import SNAPSHOT_PACKAGE, package_installed
+from .model import OFFLINE_UPDATER_PACKAGE, SNAPSHOT_PACKAGE, package_installed
 from .topics import ControlPanelTopic, get_topic, search_topics
 
 
@@ -50,10 +50,14 @@ SEARCH_PROVIDER_XML = """
 
 
 def _topic_is_searchable(topic: ControlPanelTopic) -> bool:
-    # Match the Control Panel's Backup and Recovery category. Check each time
+    # Match optional entries in the Control Panel. Check each time
     # so installing or removing the package also updates a running provider.
     if topic.identifier == "recovery.snapshots" and not package_installed(
         SNAPSHOT_PACKAGE
+    ):
+        return False
+    if topic.identifier == "system.offline-update" and not package_installed(
+        OFFLINE_UPDATER_PACKAGE
     ):
         return False
     if not topic.availability_command:
