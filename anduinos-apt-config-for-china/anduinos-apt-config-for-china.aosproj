@@ -1,0 +1,41 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-apt-config-for-china</PackageName>
+    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Official AnduinOS APT sources and update policy for the China mirror</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
+    <Component>main</Component>
+    <!-- Satisfy installed desktops that depend on the original production configuration. -->
+    <Provides>anduinos-apt-config</Provides>
+    <Conflicts>anduinos-apt-config, anduinos-apt-config-dev</Conflicts>
+    <Replaces>anduinos-apt-config, anduinos-apt-config-dev</Replaces>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Dependency Include="anduinos-archive-keyring" />
+  </ItemGroup>
+
+  <ItemGroup>
+
+    <!-- APT pinning: prefer AnduinOS packages over upstream Ubuntu -->
+    <IncludeFile Include="assets/anduinos" Target="/etc/apt/preferences.d/anduinos" />
+    <IncludeFile Include="assets/52anduinos-unattended-upgrades" Target="/etc/apt/apt.conf.d/52anduinos-unattended-upgrades" />
+
+    <!-- Per-arch per-suite APT sources — architectures match the target -->
+    <IncludeFile Include="assets/amd64/noble/anduinos.sources"      Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'noble-addon' and '$(Arch)' == 'amd64'" />
+    <IncludeFile Include="assets/amd64/resolute/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'amd64'" />
+    <IncludeFile Include="assets/arm64/noble/anduinos.sources"      Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'noble-addon' and '$(Arch)' == 'arm64'" />
+    <IncludeFile Include="assets/arm64/resolute/anduinos.sources"   Target="/etc/apt/sources.list.d/anduinos.sources" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'arm64'" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+  </ItemGroup>
+</Project>
