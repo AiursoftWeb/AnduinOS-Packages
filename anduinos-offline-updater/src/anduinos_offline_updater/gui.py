@@ -118,7 +118,7 @@ class UpdateWindow(Adw.ApplicationWindow):
                 dialog.add_response("close", _("Close"))
                 dialog.present(self)
 
-    def choose_file(self, *_):
+    def choose_file(self, *_args):
         if self.busy:
             return
         filters = Gio.ListStore.new(Gtk.FileFilter)
@@ -179,7 +179,7 @@ class UpdateWindow(Adw.ApplicationWindow):
         app, file = data
         self.busy = False
         try:
-            _, output, _stderr = process.communicate_utf8_finish(result)
+            _communicated, output, _stderr = process.communicate_utf8_finish(result)
             if not process.get_if_exited() or process.get_exit_status() not in (0, 2):
                 raise ValueError(_("The update could not be checked. Try choosing the file again."))
             report = json.loads(output)

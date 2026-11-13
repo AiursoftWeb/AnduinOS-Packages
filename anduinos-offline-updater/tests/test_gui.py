@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import time
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 
 @unittest.skipUnless(os.environ.get("DISPLAY"), "Run with the APKG gui profile")
@@ -40,7 +40,38 @@ class DesktopTests(unittest.TestCase):
     def file(self, path):
         return self.gui.Gio.File.new_for_path(str(path))
 
-    def complete(self, path, *, close=False):
+    def choose_dialog(self):
+        widget = self.window.content.get_first_child()
+        while widget is not None:
+            if isinstance(widget, self.gui.Gtk.Button) and widget.get_label() == self.gui._("Choose Update File"):
+                widget.emit("clicked")
+                break
+            widget = widget.get_next_sibling()
+        else:
+            self.fail("Choose Update File button is missing")
+        deadline = time.monotonic() + 5
+        context = self.gui.GLib.MainContext.default()
+        while time.monotonic() < deadline:
+            while context.pending():
+                context.iteration(False)
+            for dialog in self.gui.Gtk.Window.get_toplevels():
+                if isinstance(dialog, self.gui.Gtk.FileChooserDialog) and dialog.get_visible():
+                    return dialog
+            time.sleep(0.01)
+        self.fail("Clicking Choose Update File did not open the file chooser")
+
+    def test_file_chooser_can_be_cancelled_and_opened_again(self):
+        for _attempt in range(2):
+            dialog = self.choose_dialog()
+            dialog.response(self.gui.Gtk.ResponseType.CANCEL)
+            context = self.gui.GLib.MainContext.default()
+            while context.pending():
+                context.iteration(False)
+            self.assertFalse(self.window.busy)
+            self.assertIsNone(self.window.report)
+            self.assertFalse(self.window.back.get_visible())
+
+    def complete(self, path, *, close=False, use_picker=False):
         original = self.gui.Gio.Subprocess.new
         commands = []
         def spawn(argv, flags):
@@ -50,7 +81,24 @@ class DesktopTests(unittest.TestCase):
             return original([*argv, "--keyring", str(self.fixture.keyring),
                              "--system-root", str(self.fixture.system)], flags)
         with patch.object(self.gui.Gio.Subprocess, "new", side_effect=spawn):
-            self.assertTrue(self.window.inspect_files([self.file(path)]))
+            if use_picker:
+                dialog = self.choose_dialog()
+                self.assertTrue(dialog.set_file(self.file(path)))
+                deadline = time.monotonic() + 5
+                context = self.gui.GLib.MainContext.default()
+                while (dialog.get_file() is None or dialog.get_file().get_path() != str(path)) and time.monotonic() < deadline:
+                    while context.pending():
+                        context.iteration(False)
+                    time.sleep(0.01)
+                self.assertEqual(dialog.get_file().get_path(), str(path))
+                dialog.response(self.gui.Gtk.ResponseType.ACCEPT)
+                while not commands and time.monotonic() < deadline:
+                    while context.pending():
+                        context.iteration(False)
+                    time.sleep(0.01)
+                self.assertTrue(commands, "Selected file was not sent to the inspector")
+            else:
+                self.assertTrue(self.window.inspect_files([self.file(path)]))
         if close:
             self.window.close()
         deadline = time.monotonic() + 30
@@ -87,6 +135,23 @@ class DesktopTests(unittest.TestCase):
         self.assertEqual(report["target_version"], "2.0.5")
         self.assertFalse(report["can_install"])
         self.assertTrue(report["read_only"])
+
+    def test_file_chooser_selection_runs_real_inspector(self):
+        report = self.complete(self.fixture.bundle, use_picker=True)
+        self.assertEqual(report["state"], "update-available", report)
+        self.assertEqual(report["target_version"], "2.0.5")
+        self.assertFalse(report["can_install"])
+
+    def test_failed_inspector_shows_the_readable_error(self):
+        process = Mock()
+        process.communicate_utf8_finish.return_value = (True, "", "")
+        process.get_if_exited.return_value = True
+        process.get_exit_status.return_value = 1
+        application = Mock()
+        self.window.inspected(process, None, (application, self.fixture.bundle))
+        self.assertEqual(self.window.content.get_last_child().get_label(),
+                         self.gui._("The update could not be checked. Try choosing the file again."))
+        application.release.assert_called_once()
 
     def test_already_installed_uses_actual_required_targets(self):
         self.fixture.state("2.0.5", "5")
