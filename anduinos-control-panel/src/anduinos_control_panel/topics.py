@@ -278,6 +278,15 @@ def topics() -> tuple[ControlPanelTopic, ...]:
             handler="flatseal",
         ),
         _topic(
+            "programs.offline-update",
+            "programs",
+            N_("Offline Update"),
+            N_("Open an offline update package"),
+            ("offline", "update", "atgz", "离线更新", "離線更新"),
+            "com.anduinos.offlineupdater",
+            command=("anduinos-offline-updater", "gui"),
+        ),
+        _topic(
             "ai.on-device",
             "ai",
             N_("On-device AI"),

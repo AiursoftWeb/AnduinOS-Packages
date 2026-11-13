@@ -1,8 +1,9 @@
 # AnduinOS Offline Updater
 
 Choose or drop an official `.atgz` cumulative update and preview its effect on
-your system. Open **Offline Updater** from the applications menu, or run
-`anduinos-offline-updater` without arguments.
+your system. Open **Control Panel → Programs → Offline Update** when this package
+is installed, or run `anduinos-offline-updater` without arguments.
+The updater is hidden from application menus, like other Control Panel tools.
 
 The desktop currently provides a **read-only preview**. The command line also
 provides an installation preview for validation on supported systems.
