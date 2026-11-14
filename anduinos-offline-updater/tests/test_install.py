@@ -9,8 +9,9 @@ from unittest.mock import patch
 import apt_pkg
 
 from anduinos_offline_updater import jobs
-from anduinos_offline_updater.install import check_targets, snapshot_result, space_check
+from anduinos_offline_updater.install import check_targets, finish_handoff, snapshot_result, space_check
 from anduinos_offline_updater.native import BundleError
+from anduinos_offline_updater.planning import replaces_runtime
 
 
 class InstallationChecks(unittest.TestCase):
@@ -36,11 +37,60 @@ class InstallationChecks(unittest.TestCase):
         final[("base-files", "amd64")] = {"Version": "2.0.5"}
         check_targets(manifest, initial, final)
 
-    def test_bootstrap_and_self_replacement_cannot_start(self):
-        for report in ({"state": "updater-update-required"}, {"state": "blocked", "blockers": ["Held package"]},
+    def test_bootstrap_requires_an_explicit_minimal_installation(self):
+        for report in ({"state": "blocked", "blockers": ["Held package"]},
                        {"state": "update-available", "stages": [{"changes": [{"name": "anduinos-offline-updater"}]}]}):
             with self.assertRaises(BundleError): jobs.ensure_installable(report)
         jobs.ensure_installable({"state": "already-installed", "stages": [{"changes": []}]})
+
+    def test_bootstrap_never_accepts_removals_or_dist_upgrade(self):
+        report = {"state": "updater-update-required", "stages": [{"stage": {"operation": "install"},
+                  "changes": [{"name": "anduinos-offline-updater", "action": "install"}]}]}
+        jobs.ensure_installable(report)
+        report["stages"][0]["changes"].append({"name": "other", "action": "remove"})
+        with self.assertRaises(BundleError): jobs.ensure_installable(report)
+        report["stages"][0]["changes"].pop()
+        report["stages"][0]["stage"]["operation"] = "dist-upgrade"
+        with self.assertRaises(BundleError): jobs.ensure_installable(report)
+
+    def test_handoff_reverifies_and_requires_a_fresh_confirmation(self):
+        import hashlib
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory); (path / "bundle.atgz").write_bytes(b"immutable")
+            job = {"archive_sha256": hashlib.sha256(b"immutable").hexdigest()}
+            plan = {"state": "update-available", "stages": [{"changes": [{"name": "base-files"}]}]}
+            jobs.update(path, state="handoff", plan_sha256="old", bootstrap_completed=True)
+            with patch("anduinos_offline_updater.jobs.inspect_import", return_value=plan):
+                self.assertEqual(finish_handoff(path, job), 0)
+            status = json.loads((path / "status.json").read_text())
+            self.assertEqual(status["state"], "prepared")
+            self.assertNotEqual(status["plan_sha256"], "old")
+            self.assertTrue(status["confirmation_required"])
+            self.assertEqual(json.loads((path / "plan.json").read_text()), plan)
+            (path / "bundle.atgz").write_bytes(b"changed")
+            with patch("anduinos_offline_updater.jobs.inspect_import") as inspect:
+                self.assertEqual(finish_handoff(path, job), 2)
+                inspect.assert_not_called()
+            self.assertEqual(json.loads((path / "status.json").read_text())["state"], "partial")
+
+    def test_unsupported_installer_after_bootstrap_is_partial_not_success(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            for report in ({"state": "blocked", "blockers": ["Unknown installer feature"]},
+                           {"state": "updater-update-required", "stages": [{"stage": {"operation": "install"},
+                            "changes": [{"name": "anduinos-offline-updater", "action": "install"}]}]}):
+                with patch("anduinos_offline_updater.install.check_archive"), \
+                        patch("anduinos_offline_updater.jobs.inspect_import", return_value=report):
+                    self.assertEqual(finish_handoff(path, {}), 2)
+                self.assertEqual(json.loads((path / "status.json").read_text())["state"], "partial")
+
+    def test_handoff_covers_native_runtime_without_selecting_all_python_apps(self):
+        for name in ("anduinos-offline-updater", "python3", "python3-minimal", "python3-apt",
+                     "python3.14", "python3.14-minimal", "libpython3-stdlib", "libpython3.14t64",
+                     "libpython3.14-stdlib", "libapt-pkg7.0"):
+            self.assertTrue(replaces_runtime(name), name)
+        for name in ("python3-requests", "python3-gi", "python3-pyqt6", "vim", "docker-ce"):
+            self.assertFalse(replaces_runtime(name), name)
 
     def test_no_snapshot_is_not_an_installation_blocker(self):
         with patch("anduinos_offline_updater.install.snapshot_records", return_value=set()):
