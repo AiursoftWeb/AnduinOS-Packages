@@ -3966,9 +3966,9 @@ def build_disk_layout_page(shared, nav_view):
             shared, lang, settings_changed)
         settings.append(encryption_group)
     elif not shared.get("has_pro_entitlement"):
-        settings.append(Gtk.Label(
-            label=_("Disk encryption is under development.", lang),
-            xalign=0, wrap=True,
+        settings.append(Gtk.LinkButton.new_with_label(
+            "https://www.anduinos.com/pro",
+            _("Disk encryption is a Pro feature. Visit https://www.anduinos.com/pro", lang),
         ))
     try:
         swap_sizing = calculate_swap_sizing(

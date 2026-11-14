@@ -28,7 +28,7 @@ class DiskEncryptionPageTests(unittest.TestCase):
             page = pages.build_disk_layout_page(shared, Mock())
         widgets = list(descendants(page))
         self.assertFalse(any(isinstance(w, Adw.PasswordEntryRow) for w in widgets))
-        self.assertTrue(any(isinstance(w, Gtk.Label) and w.get_label() == "磁盘加密功能正在开发……" for w in widgets))
+        self.assertTrue(any(isinstance(w, Gtk.LinkButton) and w.get_label() == "磁盘加密是专业版独有的功能 请去 https://www.anduinos.com/pro" and w.get_uri() == "https://www.anduinos.com/pro" for w in widgets))
         self.assertEqual(len(pages._manual_role_choices("en_US")), 3)
         self.assertEqual(len(pages._manual_role_choices("en_US", has_pro_entitlement=True)), 4)
 
