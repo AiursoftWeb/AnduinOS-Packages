@@ -43,7 +43,7 @@ peak or snapshot size; live installation must recheck mount-specific capacity,
 APT locks and the confirmed plan. Snapshot availability is not a requirement.
 
 The format is defined in
-[ATGZ v1](https://gitlab.aiursoft.com/aiursoft/anduinosofflinebundles/-/blob/master/docs/atgz-v1.md).
+[ATGZ v1](https://github.com/AiursoftWeb/anduinosofflinebundles/blob/master/docs/atgz-v1.md).
 The builder is a separate C# tool; the desktop does not need its .NET runtime.
 
 ## Build and test
