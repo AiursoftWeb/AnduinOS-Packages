@@ -173,6 +173,24 @@ def check_targets(manifest, initial, final):
     require(manifest["version_package"] in final_by_name, "OS version package is missing")
 
 
+def replaces_runtime(name):
+    # These packages can replace this interpreter, its APT binding or our code.
+    return (name == "anduinos-offline-updater" or name in ("python3", "python3-minimal", "python3-apt") or
+            re.fullmatch(r"libpython3(?:\.\d+)?(?:t64)?(?:-(?:minimal|stdlib))?|python3\.\d+(?:-minimal)?|libapt-pkg[0-9].*", name) is not None)
+
+
+def bootstrap_plan(cache, manifest, packages):
+    # Keep the updater and its installed interpreter/APT components in one
+    # handoff, even when the manifest requests an explicit minimum version.
+    packages = set(packages) | {item.name for item in cache if replaces_runtime(item.name) and
+                                item.installed is not None and item.candidate is not None and
+                                apt_pkg.version_compare(item.candidate.version, item.installed.version) > 0}
+    stage = {"operation": "install", "packages": sorted(packages)}
+    changes, _, expanded = resolve_stage(cache, stage, manifest, bootstrap_needed=True)
+    require(any(replaces_runtime(c["name"]) for c in changes), "Bootstrap made no updater or runtime change")
+    return [{"stage": stage, "changes": changes}], expanded
+
+
 def simulate(m, repository, keyring, system_root, work, *, client_version=VERSION):
     status_file = system_root / "var/lib/dpkg/status"
     status_bytes = status_file.read_bytes()
@@ -189,24 +207,35 @@ def simulate(m, repository, keyring, system_root, work, *, client_version=VERSIO
     extra = m.get("required_installer_features", [])
     if extra and not bootstrap_needed:
         raise BundleError("This updater does not implement: " + ", ".join(extra) + "; a compatible updater is required")
-    stages = [{"operation": "install", "packages": [boot["package"]]}] if bootstrap_needed else m["stages"]
+    if bootstrap_needed:
+        with apt.Cache(progress=OpProgress(), memonly=True) as cache:
+            results, expanded = bootstrap_plan(cache, m, [boot["package"]])
+        change = next((c for c in results[0]["changes"] if c["name"] == boot["package"]), None)
+        require(change is not None and apt_pkg.version_compare(change["after"], boot["minimum_version"]) >= 0,
+                "Bootstrap updater is held back or unavailable; restart if it was already installed")
+        require(status_file.read_bytes() == status_bytes, "System package state changed during preview; try again")
+        return results, expanded, True, hashlib.sha256(status_bytes).hexdigest()
+    stages = m["stages"]
     results, peak_installed = [], 0
     for stage in stages:
         with apt.Cache(progress=OpProgress(), memonly=True) as cache:
             changes, replacements, expanded = resolve_stage(cache, stage, m, bootstrap_needed=bootstrap_needed)
+            runtime = {c["name"] for c in changes if replaces_runtime(c["name"])}
+            if runtime:
+                # Replan the minimal bootstrap from the original installed state,
+                # not a simulated later OS migration. No removal permission applies.
+                status.write_bytes(status_bytes)
+                with apt.Cache(progress=OpProgress(), memonly=True) as bootstrap_cache:
+                    bootstrap, size = bootstrap_plan(bootstrap_cache, m, runtime)
+                require(status_file.read_bytes() == status_bytes, "System package state changed during preview; try again")
+                return bootstrap, size, True, hashlib.sha256(status_bytes).hexdigest()
             peak_installed += expanded
             changed = {c["name"] for c in changes}
             records = [r for r in records if r.get("Package") not in changed] + replacements
             status.write_text(control_text(records))
             results.append({"stage": stage, "changes": sorted(changes, key=lambda c: (c["name"], c["architecture"]))})
     final = installed(records)
-    if bootstrap_needed:
-        updated = [r for (name, _), r in final.items() if name == boot["package"]]
-        require(len(updated) == 1 and apt_pkg.version_compare(updated[0]["Version"], boot["minimum_version"]) >= 0,
-                "Bootstrap updater is held back or unavailable")
-        require(any(c["name"] == boot["package"] for s in results for c in s["changes"]), "Installed updater and running version disagree; restart the updater")
-    else:
-        check_targets(m, initial, final)
+    check_targets(m, initial, final)
     require(status_file.read_bytes() == status_bytes, "System package state changed during preview; try again")
     return results, peak_installed, bootstrap_needed, hashlib.sha256(status_bytes).hexdigest()
 
