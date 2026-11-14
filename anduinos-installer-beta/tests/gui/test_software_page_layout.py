@@ -27,6 +27,10 @@ def _descendants(widget):
 
 
 class SoftwarePageLayoutTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        Adw.init()
+
     def test_only_simplified_chinese_routes_through_source_choice(self):
         from unittest.mock import Mock
         for lang in ("zh_CN", "zh_TW", "en_US"):
@@ -58,9 +62,16 @@ class SoftwarePageLayoutTests(unittest.TestCase):
                 self.assertEqual(len(buttons), 2)
                 self.assertIn("AIURSOFT LIMITED", buttons[0].get_tooltip_text())
                 self.assertIn("苏州艾软科技", buttons[1].get_tooltip_text())
-                buttons[int(selected)].emit("clicked")
+                self.assertTrue(buttons[int(not selected)].get_active())
+                buttons[int(selected)].set_active(True)
+                self.assertTrue(buttons[int(selected)].get_active())
+                self.assertFalse(buttons[int(not selected)].get_active())
+                self.assertIs(shared["download_from_china"], selected)
+                navigation.push.assert_not_called()
+                footer = next(w for w in _descendants(page)
+                              if w.has_css_class("wizard-navigation"))
+                footer.next_button.emit("clicked")
                 command.assert_not_called()
-            self.assertIs(shared["download_from_china"], selected)
             navigation.push.assert_called_once_with(summary)
 
     def test_china_choices_fit_low_resolution_and_preserve_back_navigation(self):
@@ -89,7 +100,13 @@ class SoftwarePageLayoutTests(unittest.TestCase):
         self.assertAlmostEqual(*text_positions, delta=1)
         footer = next(w for w in widgets if w.has_css_class("wizard-navigation"))
         self.assertTrue(footer.back_button.get_mapped())
-        self.assertFalse(footer.next_button.get_visible())
+        self.assertTrue(footer.next_button.get_mapped())
+        dots = footer.get_center_widget()
+        self.assertTrue(dots.get_mapped())
+        self.assertGreater(dots.get_width(), 0)
+        dot_widgets = list(_descendants(dots))[1:]
+        self.assertEqual(len(dot_widgets), len(pages._planned_page_route(shared)))
+        self.assertEqual(sum(w.has_css_class("wizard-dot-active") for w in dot_widgets), 1)
         ok, bounds = footer.compute_bounds(window)
         self.assertTrue(ok)
         self.assertLessEqual(bounds.get_y() + bounds.get_height(), window.get_height())

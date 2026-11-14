@@ -6890,11 +6890,17 @@ def build_china_sources_page(shared, nav_view):
     ))
     choices = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16,
                       margin_top=16, margin_bottom=16)
+    first_button = None
     for enabled, icon, message in (
         (False, "globe", N_("Continue with global AnduinOS operated by AIURSOFT LIMITED, obtaining software from the global service network (not compliant in mainland China)")),
         (True, "china-flag", N_("Use mainland China AnduinOS operated by Suzhou Aiursoft Technology, obtaining software from China")),
     ):
-        button = Gtk.Button()
+        button = Gtk.ToggleButton()
+        if first_button is None:
+            first_button = button
+        else:
+            button.set_group(first_button)
+        button.set_active(enabled == bool(shared.get("download_from_china", False)))
         button.add_css_class("china-source-choice")
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20,
                       margin_start=20, margin_end=20,
@@ -6917,10 +6923,10 @@ def build_china_sources_page(shared, nav_view):
         row.append(label)
         button.set_child(row)
         button.set_tooltip_text(_(message, lang))
-        def choose(_button, selected=enabled):
-            shared["download_from_china"] = selected
-            nav_view.push(build_summary_page(shared, nav_view))
-        button.connect("clicked", choose)
+        def choose(source_button, selected=enabled):
+            if source_button.get_active():
+                shared["download_from_china"] = selected
+        button.connect("toggled", choose)
         choices.append(button)
     notice = Gtk.Label(label=_(
         "This option changes how software is obtained. The mainland China version may not provide access to some software.", lang),
@@ -6932,10 +6938,10 @@ def build_china_sources_page(shared, nav_view):
     scroll.set_child(clamp_content(choices, 860))
     content.append(scroll)
     navigation = _nav_box(
-        lang, on_back=lambda: nav_view.pop(), on_next=lambda: None, stage=2,
+        lang, on_back=lambda: nav_view.pop(),
+        on_next=lambda: nav_view.push(build_summary_page(shared, nav_view)), stage=2,
         shared=shared, page_tag="china-sources",
     )
-    navigation.next_button.set_visible(False)
     content.append(navigation)
     _set_page_content(page, content)
     return page
