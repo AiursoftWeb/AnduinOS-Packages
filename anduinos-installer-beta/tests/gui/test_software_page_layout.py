@@ -77,6 +77,16 @@ class SoftwarePageLayoutTests(unittest.TestCase):
         buttons = [w for w in widgets if w.has_css_class("china-source-choice")]
         self.assertEqual(len(buttons), 2)
         self.assertTrue(all(w.get_mapped() for w in buttons))
+        text_positions = []
+        for button in buttons:
+            icon_slot = button.get_child().get_first_child()
+            label = icon_slot.get_next_sibling()
+            self.assertEqual(icon_slot.get_width(), 64)
+            self.assertEqual(icon_slot.get_height(), 64)
+            ok, bounds = label.compute_bounds(window)
+            self.assertTrue(ok)
+            text_positions.append(bounds.get_x())
+        self.assertAlmostEqual(*text_positions, delta=1)
         footer = next(w for w in widgets if w.has_css_class("wizard-navigation"))
         self.assertTrue(footer.back_button.get_mapped())
         self.assertFalse(footer.next_button.get_visible())

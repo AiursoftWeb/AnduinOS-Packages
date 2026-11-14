@@ -6891,7 +6891,7 @@ def build_china_sources_page(shared, nav_view):
     choices = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16,
                       margin_top=16, margin_bottom=16)
     for enabled, icon, message in (
-        (False, "globe", N_("Continue with global AnduinOS operated by AIURSOFT LIMITED, obtaining software internationally")),
+        (False, "globe", N_("Continue with global AnduinOS operated by AIURSOFT LIMITED, obtaining software from the global service network (not compliant in mainland China)")),
         (True, "china-flag", N_("Use mainland China AnduinOS operated by Suzhou Aiursoft Technology, obtaining software from China")),
     ):
         button = Gtk.Button()
@@ -6899,7 +6899,18 @@ def build_china_sources_page(shared, nav_view):
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20,
                       margin_start=20, margin_end=20,
                       margin_top=20, margin_bottom=20)
-        row.append(icon_picture(icon, 64))
+        icon_slot = Gtk.Overlay(width_request=64, height_request=64,
+                                hexpand=False, vexpand=False,
+                                halign=Gtk.Align.START, valign=Gtk.Align.CENTER)
+        icon_slot.set_child(Gtk.Box(width_request=64, height_request=64))
+        picture = icon_picture(icon, 64)
+        picture.set_size_request(-1, -1)
+        picture.set_halign(Gtk.Align.FILL)
+        picture.set_valign(Gtk.Align.FILL)
+        icon_slot.add_overlay(picture)
+        # Keep the rectangular flag's aspect ratio out of column measurement.
+        icon_slot.set_measure_overlay(picture, False)
+        row.append(icon_slot)
         label = Gtk.Label(label=_(message, lang), wrap=True, xalign=0,
                           hexpand=True, max_width_chars=46)
         label.add_css_class("heading")
@@ -6912,8 +6923,7 @@ def build_china_sources_page(shared, nav_view):
         button.connect("clicked", choose)
         choices.append(button)
     notice = Gtk.Label(label=_(
-        "This choice only changes the installation plan. Unavailable mirrors "
-        "will be skipped with a warning during installation.", lang),
+        "This option changes how software is obtained. The mainland China version may not provide access to some software.", lang),
         wrap=True, xalign=0)
     notice.add_css_class("dim-label")
     notice.add_css_class("caption")
