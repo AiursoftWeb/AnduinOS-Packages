@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-installer-beta</PackageName>
-    <PackageVersion>2.1.0-16+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-17+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GTK4 native installer — ground-up rewrite replacing Ubiquity</PackageDescription>
     <Section>admin</Section>
@@ -30,6 +30,10 @@
     <!-- Package-local release gate. APKG runs this from the project directory
          and aborts the build immediately when syntax, UT, or hygiene fails. -->
     <PrebuildCommand Run="bash compile-locales.sh" />
+    <PrebuildCommand Run="bash bundle-china-config.sh resolute-addon amd64" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash bundle-china-config.sh resolute-addon arm64" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'arm64'" />
+    <PrebuildCommand Run="bash bundle-china-config.sh stonking-addon amd64" Condition="'$(Suite)' == 'stonking-addon' and '$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash bundle-china-config.sh stonking-addon arm64" Condition="'$(Suite)' == 'stonking-addon' and '$(Arch)' == 'arm64'" />
   </ItemGroup>
 
   <ItemGroup>
@@ -97,6 +101,8 @@
          extended formats. Suggests records availability without pulling the
          codec payload into the Live image or ordinary installer installs. -->
     <Suggest Include="anduinos-multimedia-codecs" />
+    <!-- Bundled for the optional regional-source installation step. -->
+    <Suggest Include="anduinos-apt-config-for-china" />
     <!-- Required by the gated encrypted-boot path. Suggests records its
          availability without replacing an existing ordinary Ubuntu loader. -->
     <Suggest Include="anduinos-grub (&gt;= 2.1.0-3)" />
@@ -120,6 +126,10 @@
                  Target="/usr/lib/anduinos-installer-beta/create-live-shortcut" Mode="755" />
     <IncludeFile Include="assets/anduinos-installer-beta-live-shortcut.desktop"
                  Target="/etc/xdg/autostart/anduinos-installer-beta-live-shortcut.desktop" Mode="644" />
+    <IncludeFile Include="obj/china-config/resolute-addon/amd64/china-apt-config.deb" Target="/usr/share/anduinos-installer-beta/china-apt-config.deb" Mode="644" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'amd64'" />
+    <IncludeFile Include="obj/china-config/resolute-addon/arm64/china-apt-config.deb" Target="/usr/share/anduinos-installer-beta/china-apt-config.deb" Mode="644" Condition="'$(Suite)' == 'resolute-addon' and '$(Arch)' == 'arm64'" />
+    <IncludeFile Include="obj/china-config/stonking-addon/amd64/china-apt-config.deb" Target="/usr/share/anduinos-installer-beta/china-apt-config.deb" Mode="644" Condition="'$(Suite)' == 'stonking-addon' and '$(Arch)' == 'amd64'" />
+    <IncludeFile Include="obj/china-config/stonking-addon/arm64/china-apt-config.deb" Target="/usr/share/anduinos-installer-beta/china-apt-config.deb" Mode="644" Condition="'$(Suite)' == 'stonking-addon' and '$(Arch)' == 'arm64'" />
     <!-- Python source tree -->
     <IncludeFolder Include="src/"
                    Target="/usr/lib/anduinos-installer-beta/" />

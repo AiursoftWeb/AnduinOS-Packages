@@ -337,6 +337,8 @@ def validate_plan(
         errors.append("Third-party-driver policy must be boolean")
     if type(plan.software.install_multimedia_codecs) is not bool:
         errors.append("Multimedia-codec policy must be boolean")
+    if type(plan.software.download_from_china) is not bool:
+        errors.append("China-download policy must be boolean")
 
     if errors:
         raise PlanValidationError(errors)

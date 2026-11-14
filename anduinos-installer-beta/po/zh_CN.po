@@ -2118,3 +2118,43 @@ msgstr "强制继续"
 
 msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
 msgstr "RE 至少需要 256 MiB。系统无法启动时，仍可在 RE 中查看系统信息。快照恢复仅适用于 Btrfs。RE 是可选的；未配置时请使用 Live USB 救援。"
+
+#: src/pages.py
+msgid "Are you in mainland China?"
+msgstr "您在中国大陆吗？"
+
+#: src/pages.py
+msgid "Choose where to obtain software during installation and future updates"
+msgstr "选择安装和日后更新时获取软件的来源"
+
+#: src/pages.py
+msgid "Continue with global AnduinOS operated by AIURSOFT LIMITED, obtaining software internationally"
+msgstr "继续使用由AIURSOFT LIMITED运营的全球版AnduinOS，从国际获取软件"
+
+#: src/pages.py
+msgid "Use mainland China AnduinOS operated by Suzhou Aiursoft Technology, obtaining software from China"
+msgstr "使用由苏州艾软科技运营的中国大陆版AnduinOS，从中国获取软件"
+
+#: src/pages.py
+msgid "This choice only changes the installation plan. Unavailable mirrors will be skipped with a warning during installation."
+msgstr "此选择仅修改安装计划。安装时会先测试软件源；无法连接的源将保留原配置，显示警告后继续安装。"
+
+#: src/pages.py
+msgid "Software sources"
+msgstr "软件源"
+
+#: src/pages.py
+msgid "Mainland China — packages.aiursoft.cn and USTC Flathub"
+msgstr "中国大陆 — packages.aiursoft.cn 和中科大 Flathub"
+
+#: src/pages.py
+msgid "Keep existing software sources"
+msgstr "保留现有软件源"
+
+#: src/pages.py
+msgid "Switch to mainland China software sources"
+msgstr "切换到中国大陆软件源"
+
+#: src/pages.py
+msgid "Some Chinese software sources could not be configured. Installation will continue with the available sources."
+msgstr "部分中国大陆软件源未能配置。安装将使用可用的软件源继续。"

@@ -35,3 +35,5 @@ under GPL-3.0; its upstream project is
 <https://github.com/vinceliuice/Fluent-icon-theme>. The AnduinOS-owned and
 user-curated illustrations were supplied specifically for these applications
 and are kept as package-local source assets.
+
+`globe.svg` is package-local globe artwork; `china-flag.svg` is a geometric rendering of the Chinese national flag using its standard 30 × 20 construction grid.

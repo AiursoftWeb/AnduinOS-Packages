@@ -2875,7 +2875,7 @@ class OobeWindow(Adw.ApplicationWindow):
         )
         # Let Chinese users switch Flathub to the local mirror before offering
         # Bottles, so the large Flatpak download uses the faster source.
-        if is_chinese_locale():
+        if is_chinese_locale() and not _is_flathub_china_mirror():
             factories.append(lambda: create_flathub_mirror_page())
         # Bottles (Wine) is x86-only — no Flatpak on aarch64 and emulation
         # of x86 Windows apps on ARM is not "with ease".

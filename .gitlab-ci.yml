@@ -619,6 +619,7 @@ anduinos-installer-beta:
   extends: .publish
   needs:
     - test-all
+    - anduinos-apt-config-for-china
     - anduinos-rescue-center
     - anduinos-live-layers
     - anduinos-live-settings

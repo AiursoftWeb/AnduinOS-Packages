@@ -12,7 +12,7 @@ conditions are defined by `OobeWindow._get_page_factories()` in
 | 4 | Digital Sovereignty, Under Your Control | Always shown | Kept |
 | 5 | Secure Boot Configuration | Shown when the Secure Boot status is `ENABLED` or `UNKNOWN` | Kept |
 | 6 | Configure Hardware Drivers? | Always shown | Kept |
-| 7 | USTC Flathub Mirror for China | Shown when `LANGUAGE` (preferred) or `LANG` starts with `zh_CN` | Removed |
+| 7 | USTC Flathub Mirror for China | Shown when `LANGUAGE` (preferred) or `LANG` starts with `zh_CN` and the system Flathub remote is not already a recognized Chinese mirror | Removed |
 | 8 | Run Windows Apps, with Ease (Bottles) | Shown when the CPU architecture is not `aarch64` | Removed |
 | 9 | The Magic at Your Fingertips (Shortcuts) | Always shown | Kept |
 | 10 | Productive From Day One (App Recommendations) | Always added initially | Removed |

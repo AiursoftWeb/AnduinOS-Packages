@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from pathlib import Path
 
+from .china_mirrors import SwitchChinaSourcesStep
 from .command import CommandRunner
 from .encryption import EncryptionCredentials
 from .chroot_env import EnterChrootStep, LeaveChrootStep
@@ -118,9 +119,13 @@ class InstallerExecutor:
             # can build kernel modules. Never let an upgrade inherit the
             # copied Live image's signing identity.
             PrepareSecureBootStep(self.runner),
+        ]
+        if plan.software.download_from_china:
+            steps.append(SwitchChinaSourcesStep(self.runner))
+        steps.extend((
             InstallLanguagePacksStep(self.runner),
             InstallInputMethodStep(self.runner),
-        ]
+        ))
         if plan.software.install_multimedia_codecs:
             steps.append(InstallMultimediaCodecsStep(self.runner))
         steps.append(ConfigureSystemStep(self.runner))

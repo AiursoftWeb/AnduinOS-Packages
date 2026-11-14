@@ -54,6 +54,7 @@ class PlanningTests(unittest.TestCase):
         original = valid_plan()
         choices = {
             "lang": "zh_CN",
+            "download_from_china": True,
             "locale": "zh_CN.UTF-8",
             "keyboard": "us",
             "keyboard_variant": "intl",
@@ -86,6 +87,7 @@ class PlanningTests(unittest.TestCase):
             inventory_digest=TEST_INVENTORY_DIGEST,
             physical_memory_probe=lambda: 8 * GIB,
         )
+        self.assertTrue(plan.software.download_from_china)
         self.assertEqual(plan.regional.input_methods, ("rime",))
         self.assertEqual(plan.regional.keyboard.layout, "us")
         self.assertEqual(plan.regional.keyboard.variant, "intl")

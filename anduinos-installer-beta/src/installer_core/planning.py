@@ -126,6 +126,10 @@ def build_plan(
             input_methods=_input_method_choices(choices, language),
         ),
         software=SoftwareSpec(
+            download_from_china=(
+                language.code == "zh_CN"
+                and bool(choices.get("download_from_china", False))
+            ),
             install_updates=bool(choices.get("install_updates", True)),
             install_third_party_drivers=bool(
                 choices.get("install_third_party_drivers", False)

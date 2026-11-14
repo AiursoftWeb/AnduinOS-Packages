@@ -2117,3 +2117,43 @@ msgstr "บังคับดำเนินการต่อ"
 
 msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
 msgstr "RE ต้องมีขนาดอย่างน้อย 256 MiB สามารถแสดงข้อมูลระบบได้แม้ระบบที่ติดตั้งไว้ไม่สามารถเริ่มต้นทำงานได้ การกู้คืนจากภาพสำรอง (Snapshot) ใช้งานเฉพาะกับ Btrfs เท่านั้น RE เป็นส่วนเสริม หากไม่ได้กำหนดค่าไว้ ให้ใช้ USB แบบ Live เพื่อช่วยเหลือ"
+
+#: src/pages.py
+msgid "Are you in mainland China?"
+msgstr "คุณอยู่ในจีนแผ่นดินใหญ่หรือไม่?"
+
+#: src/pages.py
+msgid "Choose where to obtain software during installation and future updates"
+msgstr "เลือกแหล่งซอฟต์แวร์สำหรับการติดตั้งและการอัปเดตในอนาคต"
+
+#: src/pages.py
+msgid "Continue with global AnduinOS operated by AIURSOFT LIMITED, obtaining software internationally"
+msgstr "ใช้ AnduinOS รุ่นสากลที่ดำเนินการโดย AIURSOFT LIMITED ต่อไป และรับซอฟต์แวร์จากแหล่งต่างประเทศ"
+
+#: src/pages.py
+msgid "Use mainland China AnduinOS operated by Suzhou Aiursoft Technology, obtaining software from China"
+msgstr "ใช้ AnduinOS รุ่นจีนแผ่นดินใหญ่ที่ดำเนินการโดย Suzhou Aiursoft Technology และรับซอฟต์แวร์จากจีน"
+
+#: src/pages.py
+msgid "This choice only changes the installation plan. Unavailable mirrors will be skipped with a warning during installation."
+msgstr "ตัวเลือกนี้เปลี่ยนเฉพาะแผนการติดตั้ง มิเรอร์ที่เชื่อมต่อไม่ได้จะถูกข้ามพร้อมคำเตือนระหว่างติดตั้ง"
+
+#: src/pages.py
+msgid "Software sources"
+msgstr "แหล่งซอฟต์แวร์"
+
+#: src/pages.py
+msgid "Mainland China — packages.aiursoft.cn and USTC Flathub"
+msgstr "จีนแผ่นดินใหญ่ — packages.aiursoft.cn และ USTC Flathub"
+
+#: src/pages.py
+msgid "Keep existing software sources"
+msgstr "คงแหล่งซอฟต์แวร์เดิม"
+
+#: src/pages.py
+msgid "Switch to mainland China software sources"
+msgstr "เปลี่ยนไปใช้แหล่งซอฟต์แวร์ในจีนแผ่นดินใหญ่"
+
+#: src/pages.py
+msgid "Some Chinese software sources could not be configured. Installation will continue with the available sources."
+msgstr "ไม่สามารถกำหนดค่าแหล่งซอฟต์แวร์จีนบางแห่งได้ การติดตั้งจะดำเนินต่อด้วยแหล่งที่พร้อมใช้งาน"
