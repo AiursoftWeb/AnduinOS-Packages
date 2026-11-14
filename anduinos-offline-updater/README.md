@@ -105,6 +105,14 @@ explicitly removed. Save any needed diagnostic results, then release the space:
 anduinos-offline-updater discard JOB_ID
 ```
 
-This installation preview rejects updater self-replacement and bootstrap jobs;
-process handoff, the desktop install button and broader failure-recovery
-qualification are subsequent milestones. It is not yet a production updater.
+If the bundle upgrades the updater or its Python/APT runtime, the first plan
+contains only that bootstrap and its necessary dependencies, without removals.
+After it finishes, a fresh worker verifies the same imported archive and plans
+the remaining update. Run `status` again: `prepared` includes the new `preview`
+and `plan_sha256`. Review that plan and run `install` with its new confirmation
+hash. The old confirmation cannot start the remaining update. A second bootstrap
+in the same job stops with `partial`; an unsupported installer capability also
+stops instead of retrying indefinitely.
+
+The desktop install button and broader release qualification remain subsequent
+milestones. It is not yet a production updater.

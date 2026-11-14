@@ -11,6 +11,7 @@ import apt_pkg
 from apt.progress.base import AcquireProgress, InstallProgress, OpProgress
 
 from . import jobs
+from .cli import running_version
 from .bundle import verify
 from .manifest import require
 from .native import paragraphs, run
@@ -128,24 +129,55 @@ def snapshot_result(before, plan, expected=1):
     return result
 
 
+def check_archive(path, job):
+    with (path / "bundle.atgz").open("rb") as stream:
+        require(hashlib.file_digest(stream, "sha256").hexdigest() == job["archive_sha256"], "Imported file identity changed")
+
+
+def finish_handoff(path, job):
+    """Only the newly exec'd interpreter may inspect the post-bootstrap system."""
+    try:
+        check_archive(path, job)
+        report = jobs.inspect_import(path)
+        jobs.ensure_installable(report)
+        require(report["state"] != "updater-update-required", "A second bootstrap was requested; no automatic self-update loop is allowed")
+        plan_hash = jobs.save_plan(path, report)
+        jobs.update(path, state="prepared", plan_sha256=plan_hash, progress=None,
+                    handoff_version=running_version(), confirmation_required=True,
+                    completed_stages=0, stage=None, stage_count=len(report["stages"]),
+                    message="Updater/runtime upgraded. Review and confirm the remaining installation plan.")
+        return 0
+    except Exception as error:
+        jobs.update(path, state="partial", error=str(error)[-4000:], progress=None)
+        return 2
+
+
 def execute(identifier):
     path = jobs.job_path(identifier)
     with jobs.job_lock(path):
         job = jobs.status(identifier, 0)
+        if job["state"] == "handoff":
+            return finish_handoff(path, job)
         require(job["state"] == "queued", "Job is not queued")
-        wrote_packages, completed, attempted = False, 0, 0
+        wrote_packages, completed, attempted = bool(job.get("bootstrap_completed")), 0, 0
+        handoff = False
+        worker_version = running_version()
         snapshot = {"state": "not-needed", "transactions": []}
         plan = json.loads((path / "plan.json").read_text())
         try:
             jobs.update(path, state="checking")
-            with (path / "bundle.atgz").open("rb") as stream:
-                require(hashlib.file_digest(stream, "sha256").hexdigest() == job["archive_sha256"], "Imported file identity changed")
+            check_archive(path, job)
+            # A confirmed continuation re-verifies and recreates the same payload.
+            if (path / "payload").exists(): shutil.rmtree(path / "payload")
             verified = verify(path / "bundle.atgz", jobs.KEYRING, path / "payload")
             manifest = verified["manifest"]
             current = jobs.inspect_import(path)
             jobs.ensure_installable(current)
-            require(current["stages"] == plan["stages"] and current["current_version"] == plan["current_version"],
+            require(current["state"] == plan["state"] and current["stages"] == plan["stages"] and
+                    current["current_version"] == plan["current_version"],
                     "Installation plan changed; inspect and confirm again")
+            bootstrap = plan["state"] == "updater-update-required"
+            require(not bootstrap or not job.get("bootstrap_completed"), "This job has already completed its bootstrap")
             repository = path / "payload/repository"
             configure(path, repository, manifest["architecture"])
             with apt_pkg.SystemLock():
@@ -162,13 +194,12 @@ def execute(identifier):
                         jobs.update(path, space=space_check(path, manifest, current))
                     for number, approved in enumerate(plan["stages"], start=1):
                         with apt.Cache(progress=OpProgress(), memonly=True) as cache:
-                            changes, _, _ = resolve_stage(cache, approved["stage"], manifest)
+                            changes, _, _ = resolve_stage(cache, approved["stage"], manifest, bootstrap_needed=bootstrap)
                             require(changes == approved["changes"], "APT plan changed; no further stages will run")
                             if changes:
                                 space_check(path, manifest, current)
-                                # Both before and after approval we disallow self replacement until
-                                # the separate bootstrap/process-handoff milestone is implemented.
-                                jobs.ensure_installable({"state": "update-available", "stages": [{"changes": changes}]})
+                                jobs.ensure_installable({"state": plan["state"],
+                                                          "stages": [{"stage": approved["stage"], "changes": changes}]})
                                 progress = PackageProgress(path)
                                 jobs.update(path, state="installing", stage=number, stage_count=len(plan["stages"]))
                                 wrote_packages = True
@@ -188,16 +219,32 @@ def execute(identifier):
                             completed = number
                             jobs.update(path, completed_stages=completed)
                     final = installed(paragraphs(Path("/var/lib/dpkg/status").read_text()))
-                    check_targets(manifest, initial, final)
-                    require(os_release("/usr/lib/os-release").get("VERSION_ID") == manifest["target_version"], "Target OS version was not installed")
+                    if not bootstrap:
+                        check_targets(manifest, initial, final)
+                        require(os_release("/usr/lib/os-release").get("VERSION_ID") == manifest["target_version"], "Target OS version was not installed")
                     require(not run(["dpkg", "--audit"]).strip(), "dpkg reports unfinished work after installation")
                 finally:
                     snapshot = snapshot_result(snapshot_before, plan["snapshot"], attempted)
-            jobs.update(path, state="complete" if wrote_packages else "already-installed", progress=None,
-                        reboot_required=Path("/var/run/reboot-required").exists(),
-                        snapshot=snapshot)
+            if bootstrap:
+                jobs.atomic_json(path / "bootstrap-plan.json", plan)
+                jobs.update(path, state="handoff", progress=None, bootstrap_completed=True,
+                            bootstrap_version=worker_version, bootstrap_snapshot=snapshot)
+                handoff = True
+            else:
+                jobs.update(path, state="complete" if wrote_packages else "already-installed", progress=None,
+                            confirmation_required=False, reboot_required=Path("/var/run/reboot-required").exists(),
+                            snapshot=snapshot)
         except Exception as error:
             jobs.update(path, state="partial" if wrote_packages else "blocked", error=str(error)[-4000:],
                         completed_stages=completed, snapshot=snapshot)
             return 2
-        return 0
+    if handoff:
+        try:
+            # Replaces all Python modules and python-apt bindings, in the same
+            # inhibited system service. Both the APT and job locks are now closed.
+            os.execv(jobs.HELPER, [jobs.HELPER, "run", identifier])
+        except OSError as error:
+            with jobs.job_lock(path):
+                jobs.update(path, state="partial", error="Cannot start the updated worker: " + str(error))
+            return 2
+    return 0
