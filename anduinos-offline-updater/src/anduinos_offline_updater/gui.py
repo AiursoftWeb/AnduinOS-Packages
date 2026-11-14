@@ -258,7 +258,9 @@ class UpdateWindow(Adw.ApplicationWindow):
                              (_("Package expansion estimate"), size("package_expansion_upper_estimate_bytes")),
                              (_("System snapshot"), snapshot_text)):
             row = Adw.ActionRow(title=title)
-            row.add_suffix(text(value, "dim-label"))
+            suffix = text(value, "dim-label")
+            suffix.set_wrap(False)
+            row.add_suffix(suffix)
             group.add(row)
         self.content.append(group)
         self.content.append(text(_("Installation space and snapshot availability must be checked again before installing."), "caption", "dim-label"))
@@ -473,7 +475,7 @@ class UpdateWindow(Adw.ApplicationWindow):
                   _("You already have this update") if success else _("Update stopped"),
                   _("Your installed packages have been checked.") if success else
                   _("Some packages may already have changed. Check the details before trying again."),
-                  "emblem-ok-symbolic" if success else "dialog-warning-symbolic")
+                  "object-select-symbolic" if success else "dialog-warning-symbolic")
         if report.get("reboot_required"):
             self.content.append(text(_("Restart your computer to finish applying the update."), "accent"))
         snapshot = report.get("snapshot", {}).get("state")

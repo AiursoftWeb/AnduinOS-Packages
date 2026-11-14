@@ -241,6 +241,9 @@ class DesktopTests(unittest.TestCase):
         self.window.job = "a" * 32
         self.window.show_job(dict(state="complete", reboot_required=True, snapshot=dict(state="unconfirmed")))
         self.assertIn(self.gui._("Update complete"), self.labels())
+        icon = self.window.content.get_first_child().get_icon_name()
+        theme = self.gui.Gtk.IconTheme.get_for_display(self.window.get_display())
+        self.assertTrue(theme.has_icon(icon), "Success must use an icon available in the standard theme")
         self.assertIn(self.gui._("Restart your computer to finish applying the update."), self.labels())
         self.assertIn(self.gui._("A recovery snapshot could not be confirmed."), self.labels())
         self.assertNotIn(self.gui._("System snapshot created"), self.labels())
