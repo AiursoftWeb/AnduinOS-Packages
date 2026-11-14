@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 11:59+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: id\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "Diperlukan updater versi yang lebih baru"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "Lingkup pemulihan tidak dapat dikonfirmasi."
 
 msgid "AnduinOS update packages"
 msgstr "Paket pembaruan AnduinOS"
@@ -78,6 +75,9 @@ msgstr "Versi saat ini"
 msgid "Disabled"
 msgstr "Nonaktif"
 
+msgid "Exit"
+msgstr "Keluar"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Dapatkan pembaruan dari pusat manfaat Pro Anda"
 
@@ -98,9 +98,6 @@ msgstr "Jaga komputer tetap terhubung ke sumber daya. Menutup jendela ini tidak 
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "Jaga komputer tetap terhubung ke sumber daya. Anda dapat menutup jendela ini dan kembali untuk memeriksa kemajuan."
-
-msgid "No snapshot was needed"
-msgstr "Tidak ada snapshot yang diperlukan"
 
 msgid "No system packages were changed."
 msgstr "Tidak ada paket sistem yang diubah."
@@ -141,9 +138,6 @@ msgstr "Memulai ulang pembaru…"
 msgid "Review your update"
 msgstr "Tinjau pembaruan Anda"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "Beberapa paket mungkin sudah berubah. Periksa detail sebelum mencoba lagi."
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Tahap {current} dari {total}"
@@ -156,15 +150,6 @@ msgstr "Memulai pembaruan Anda…"
 
 msgid "System snapshot"
 msgstr "Snapshot sistem"
-
-msgid "System snapshot created"
-msgstr "Snapshot sistem dibuat"
-
-msgid "System snapshots are disabled"
-msgstr "Snapshot sistem dinonaktifkan"
-
-msgid "System snapshots are unavailable"
-msgstr "Snapshot sistem tidak tersedia"
 
 msgid "Technical details"
 msgstr "Detail teknis"
@@ -202,11 +187,14 @@ msgstr "Tidak diketahui"
 msgid "Update complete"
 msgstr "Pembaruan selesai"
 
+msgid "Update could not start"
+msgstr "Pembaruan tidak dapat dimulai"
+
+msgid "Update failed"
+msgstr "Pembaruan gagal"
+
 msgid "Update from a file"
 msgstr "Pembaruan dari file"
-
-msgid "Update stopped"
-msgstr "Pembaruan dihentikan"
 
 msgid "Update to"
 msgstr "Pembaruan ke"
@@ -223,14 +211,5 @@ msgstr "Bekerja…"
 msgid "You already have this update"
 msgstr "Anda sudah memiliki pembaruan ini"
 
-msgid "Your installed packages have been checked."
-msgstr "Paket yang terinstal telah diperiksa."
-
 msgid "or drop an .atgz file here"
 msgstr "atau jatuhkan file .atgz di sini"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "Hanya pratinjau. Instalasi pembaruan tidak tersedia dalam build ini."
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "Periksa paket pembaruan offline AnduinOS"

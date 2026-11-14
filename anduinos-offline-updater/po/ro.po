@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 12:04+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: ro\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "Este actualizator necesită o versiune mai nouă"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "Nu s-a putut confirma o instantanee de recuperare."
 
 msgid "AnduinOS update packages"
 msgstr "Pachete de actualizare AnduinOS"
@@ -78,6 +75,9 @@ msgstr "Versiunea curentă"
 msgid "Disabled"
 msgstr "Dezactivat"
 
+msgid "Exit"
+msgstr "Ieșire"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Obțineți actualizări din centrul de beneficii Pro"
 
@@ -98,9 +98,6 @@ msgstr "Păstrați computerul conectat la o sursă de alimentare. Închiderea ac
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "Păstrați computerul conectat la o sursă de alimentare. Puteți închide această fereastră și reveniți să verificați progresul."
-
-msgid "No snapshot was needed"
-msgstr "Nu a fost necesară o instantanee"
 
 msgid "No system packages were changed."
 msgstr "Nu s-au modificat pachete de sistem."
@@ -141,9 +138,6 @@ msgstr "Se repornește actualizatorul…"
 msgid "Review your update"
 msgstr "Revizuiți actualizarea"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "Unele pachete ar putea fi deja modificate. Verificați detaliile înainte de a încerca din nou."
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Etapa {current} din {total}"
@@ -156,15 +150,6 @@ msgstr "Se pornește actualizarea…"
 
 msgid "System snapshot"
 msgstr "Instantaneu de sistem"
-
-msgid "System snapshot created"
-msgstr "Instantanee de sistem creată"
-
-msgid "System snapshots are disabled"
-msgstr "Instantaneele de sistem sunt dezactivate"
-
-msgid "System snapshots are unavailable"
-msgstr "Instantaneele de sistem nu sunt disponibile"
 
 msgid "Technical details"
 msgstr "Detalii tehnice"
@@ -202,11 +187,14 @@ msgstr "Necunoscut"
 msgid "Update complete"
 msgstr "Actualizare finalizată"
 
+msgid "Update could not start"
+msgstr "Actualizarea nu a putut începe"
+
+msgid "Update failed"
+msgstr "Eșec la actualizare"
+
 msgid "Update from a file"
 msgstr "Actualizare din fișier"
-
-msgid "Update stopped"
-msgstr "Actualizare oprită"
 
 msgid "Update to"
 msgstr "Actualizare la"
@@ -223,14 +211,5 @@ msgstr "Se lucrează…"
 msgid "You already have this update"
 msgstr "Aveți deja această actualizare"
 
-msgid "Your installed packages have been checked."
-msgstr "Pachetele instalate au fost verificate."
-
 msgid "or drop an .atgz file here"
 msgstr "sau trageți un fișier .atgz aici"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "Doar previzualizare. Instalarea actualizărilor nu este disponibilă în această versiune."
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "Verificați un pachet de actualizare offline AnduinOS"

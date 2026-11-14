@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 11:58+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: hi\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "नए अपडेटर की आवश्यकता है"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "पुनर्स्थापना स्नैपशॉट की पुष्टि नहीं हो सकी।"
 
 msgid "AnduinOS update packages"
 msgstr "AnduinOS अपडेट पैकेज"
@@ -78,6 +75,9 @@ msgstr "वर्तमान संस्करण"
 msgid "Disabled"
 msgstr "निष्क्रिय"
 
+msgid "Exit"
+msgstr "निकलें"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "अपने Pro लाभ केंद्र से अपडेट प्राप्त करें"
 
@@ -98,9 +98,6 @@ msgstr "अपना कंप्यूटर पावर से कनेक�
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "अपना कंप्यूटर पावर से कनेक्ट रखें। आप इस विंडो को बंद कर सकते हैं और प्रगति देखने के लिए वापस आ सकते हैं।"
-
-msgid "No snapshot was needed"
-msgstr "कोई स्नैपशॉट आवश्यक नहीं था"
 
 msgid "No system packages were changed."
 msgstr "कोई सिस्टम पैकेज बदला नहीं गया।"
@@ -141,9 +138,6 @@ msgstr "अपडेटर पुनः आरंभ हो रहा है…"
 msgid "Review your update"
 msgstr "अपना अपडेट समीक्षा करें"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "कुछ पैकेज पहले से बदल चुके होंगे। दोबारा कोशिश करने से पहले विवरण देखें।"
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "चरण {current} of {total}"
@@ -156,15 +150,6 @@ msgstr "आपका अपडेट शुरू हो रहा है…"
 
 msgid "System snapshot"
 msgstr "सिस्टम स्नैपशॉट"
-
-msgid "System snapshot created"
-msgstr "सिस्टम स्नैपशॉट बनाया गया"
-
-msgid "System snapshots are disabled"
-msgstr "सिस्टम स्नैपशॉट बंद हैं"
-
-msgid "System snapshots are unavailable"
-msgstr "सिस्टम स्नैपशॉट उपलब्ध नहीं हैं"
 
 msgid "Technical details"
 msgstr "तकनीकी विवरण"
@@ -202,11 +187,14 @@ msgstr "अज्ञात"
 msgid "Update complete"
 msgstr "अपडेट पूर्ण"
 
+msgid "Update could not start"
+msgstr "अपडेट शुरू नहीं हो सका"
+
+msgid "Update failed"
+msgstr "अपडेट विफल"
+
 msgid "Update from a file"
 msgstr "फ़ाइल से अपडेट करें"
-
-msgid "Update stopped"
-msgstr "अपडेट रुका"
 
 msgid "Update to"
 msgstr "अपडेट करें"
@@ -223,14 +211,5 @@ msgstr "कार्य कर रहा है…"
 msgid "You already have this update"
 msgstr "आपके पास इस अपडेट की पहले से उपलब्धता है"
 
-msgid "Your installed packages have been checked."
-msgstr "आपके इंस्टॉल किए गए पैकेज की जांच कर ली गई है।"
-
 msgid "or drop an .atgz file here"
 msgstr "या यहाँ एक .atgz फ़ाइल छोड़ें"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "केवल पूर्वावलोकन। इस बिल्ड में अपडेट इंस्टॉल करना उपलब्ध नहीं है।"
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "AnduinOS ऑफ़लाइन अपडेट पैकेज की जाँच करें"

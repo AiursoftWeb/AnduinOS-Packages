@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 11:59+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: it\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "È richiesto un programmatore di aggiornamento più recente"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "Non è stato possibile confermare uno snapshot di ripristino."
 
 msgid "AnduinOS update packages"
 msgstr "Pacchetti di aggiornamento AnduinOS"
@@ -78,6 +75,9 @@ msgstr "Versione attuale"
 msgid "Disabled"
 msgstr "Disattivato"
 
+msgid "Exit"
+msgstr "Esci"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Ottieni aggiornamenti dal tuo centro vantaggi Pro"
 
@@ -98,9 +98,6 @@ msgstr "Mantieni il computer collegato all'alimentazione. Chiudere questa finest
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "Mantieni il computer collegato all'alimentazione. Puoi chiudere questa finestra e tornare in seguito per verificare i progressi."
-
-msgid "No snapshot was needed"
-msgstr "Nessuno snapshot era necessario"
 
 msgid "No system packages were changed."
 msgstr "Nessun pacchetto di sistema è stato modificato."
@@ -141,9 +138,6 @@ msgstr "Riavvio dell'aggiornatore…"
 msgid "Review your update"
 msgstr "Rivedi il tuo aggiornamento"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "Alcuni pacchetti potrebbero essere già stati modificati. Controlla i dettagli prima di riprovare."
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Fase {current} di {total}"
@@ -156,15 +150,6 @@ msgstr "Avvio dell'aggiornamento…"
 
 msgid "System snapshot"
 msgstr "Snapshot del sistema"
-
-msgid "System snapshot created"
-msgstr "Snapshot di sistema creato"
-
-msgid "System snapshots are disabled"
-msgstr "Gli snapshot di sistema sono disabilitati"
-
-msgid "System snapshots are unavailable"
-msgstr "Gli snapshot di sistema non sono disponibili"
 
 msgid "Technical details"
 msgstr "Dettagli tecnici"
@@ -202,11 +187,14 @@ msgstr "Sconosciuto"
 msgid "Update complete"
 msgstr "Aggiornamento completato"
 
+msgid "Update could not start"
+msgstr "Impossibile avviare l'aggiornamento"
+
+msgid "Update failed"
+msgstr "Aggiornamento non riuscito"
+
 msgid "Update from a file"
 msgstr "Aggiorna da un file"
-
-msgid "Update stopped"
-msgstr "Aggiornamento interrotto"
 
 msgid "Update to"
 msgstr "Aggiorna a"
@@ -223,14 +211,5 @@ msgstr "Lavoro in corso…"
 msgid "You already have this update"
 msgstr "Hai già questo aggiornamento"
 
-msgid "Your installed packages have been checked."
-msgstr "I pacchetti installati sono stati verificati."
-
 msgid "or drop an .atgz file here"
 msgstr "oppure trascina qui un file .atgz"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "Solo anteprima. L'installazione degli aggiornamenti non è disponibile in questa build."
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "Verifica un pacchetto di aggiornamento offline AnduinOS"

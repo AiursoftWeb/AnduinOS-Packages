@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 11:52+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: zh_TW\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "需要較新的更新程式"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "無法確認復原快照。"
 
 msgid "AnduinOS update packages"
 msgstr "AnduinOS 更新套件"
@@ -78,6 +75,9 @@ msgstr "目前版本"
 msgid "Disabled"
 msgstr "已停用"
 
+msgid "Exit"
+msgstr "離開"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "從您的 Pro 權益中心取得更新"
 
@@ -98,9 +98,6 @@ msgstr "請保持電腦連接電源。關閉此視窗不會停止更新。"
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "請保持電腦連接電源。您可以關閉此視窗並稍後回來查看進度。"
-
-msgid "No snapshot was needed"
-msgstr "不需要快照"
 
 msgid "No system packages were changed."
 msgstr "系統套件未變更。"
@@ -141,9 +138,6 @@ msgstr "正在重新啟動更新程式…"
 msgid "Review your update"
 msgstr "檢視您的更新"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "部分套件可能已變更。請在重試前檢查詳細資訊。"
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "第 {current} 階段，共 {total} 階段"
@@ -156,15 +150,6 @@ msgstr "正在啟動您的更新…"
 
 msgid "System snapshot"
 msgstr "系統快照"
-
-msgid "System snapshot created"
-msgstr "已建立系統快照"
-
-msgid "System snapshots are disabled"
-msgstr "系統快照已停用"
-
-msgid "System snapshots are unavailable"
-msgstr "系統快照不可用"
 
 msgid "Technical details"
 msgstr "技術詳細資訊"
@@ -202,11 +187,14 @@ msgstr "未知"
 msgid "Update complete"
 msgstr "更新完成"
 
+msgid "Update could not start"
+msgstr "無法啟動更新"
+
+msgid "Update failed"
+msgstr "更新失敗"
+
 msgid "Update from a file"
 msgstr "從檔案更新"
-
-msgid "Update stopped"
-msgstr "更新已停止"
 
 msgid "Update to"
 msgstr "更新至"
@@ -223,14 +211,5 @@ msgstr "處理中…"
 msgid "You already have this update"
 msgstr "您已安裝此更新"
 
-msgid "Your installed packages have been checked."
-msgstr "已檢查您已安裝的套件。"
-
 msgid "or drop an .atgz file here"
 msgstr "或將 .atgz 檔案拖曳至此處"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "僅供預覽。此版本無法安裝更新。"
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "檢查 AnduinOS 離線更新套件"

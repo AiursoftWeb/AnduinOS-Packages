@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 11:57+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: el\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "Απαιτείται νεότερη έκδοση ενημερωτή"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "Δεν ήταν δυνατή η επιβεβαίωση του στιγμιότυπου αποκατάστασης."
 
 msgid "AnduinOS update packages"
 msgstr "Πακέτα ενημέρωσης AnduinOS"
@@ -78,6 +75,9 @@ msgstr "Τρέχουσα έκδοση"
 msgid "Disabled"
 msgstr "Απενεργοποιημένο"
 
+msgid "Exit"
+msgstr "Έξοδος"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Λάβετε ενημερώσεις από το κέντρο προνομίων Pro σας"
 
@@ -98,9 +98,6 @@ msgstr "Κρατήστε τον υπολογιστή σας συνδεδεμέν
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "Κρατήστε τον υπολογιστή σας συνδεδεμένο σε ρεύμα. Μπορείτε να κλείσετε αυτό το παράθυρο και να επιστρέψετε για έλεγχο της πρόοδου."
-
-msgid "No snapshot was needed"
-msgstr "Δεν απαιτούνταν στιγμιότυπο"
 
 msgid "No system packages were changed."
 msgstr "Δεν άλλαξαν πακέτα συστήματος."
@@ -141,9 +138,6 @@ msgstr "Επανεκκίνηση του ενημερωτή…"
 msgid "Review your update"
 msgstr "Επισκόπηση ενημέρωσής σας"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "Μερικά πακέτα μπορεί να έχουν ήδη αλλάξει. Ελέγξτε τις λεπτομέρειες πριν δοκιμάσετε ξανά."
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Φάση {current} από {total}"
@@ -156,15 +150,6 @@ msgstr "Έναρξη της ενημέρωσής σας…"
 
 msgid "System snapshot"
 msgstr "Στιγμιότυπο συστήματος"
-
-msgid "System snapshot created"
-msgstr "Δημιουργήθηκε στιγμιότυπο συστήματος"
-
-msgid "System snapshots are disabled"
-msgstr "Τα στιγμιότυπα συστήματος είναι απενεργοποιημένα"
-
-msgid "System snapshots are unavailable"
-msgstr "Τα στιγμιότυπα συστήματος δεν είναι διαθέσιμα"
 
 msgid "Technical details"
 msgstr "Τεχνικές λεπτομέρειες"
@@ -202,11 +187,14 @@ msgstr "Άγνωστο"
 msgid "Update complete"
 msgstr "Ολοκλήρωση ενημέρωσης"
 
+msgid "Update could not start"
+msgstr "Δεν μπόρεσε να ξεκινήσει η ενημέρωση"
+
+msgid "Update failed"
+msgstr "Η ενημέρωση απέτυχε"
+
 msgid "Update from a file"
 msgstr "Ενημέρωση από αρχείο"
-
-msgid "Update stopped"
-msgstr "Η ενημέρωση σταμάτησε"
 
 msgid "Update to"
 msgstr "Ενημέρωση σε"
@@ -223,14 +211,5 @@ msgstr "Εργασία…"
 msgid "You already have this update"
 msgstr "Έχετε ήδη αυτή την ενημέρωση"
 
-msgid "Your installed packages have been checked."
-msgstr "Τα εγκατεστημένα πακέτα σας έχουν ελεγχθεί."
-
 msgid "or drop an .atgz file here"
 msgstr "ή ρίξτε ένα αρχείο .atgz εδώ"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "Μόνο προεπισκόπηση. Η εγκατάσταση ενημερώσεων δεν είναι διαθέσιμη σε αυτή την έκδοση."
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "Έλεγχος πακέτου εκτός σύνδεσης ενημέρωσης AnduinOS"

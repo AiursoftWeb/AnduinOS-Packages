@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 11:55+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: fi\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "Uudempi päivitystooli vaaditaan"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "Palautuskuvaa ei voitu vahvistaa."
 
 msgid "AnduinOS update packages"
 msgstr "AnduinOS-päivityspaketit"
@@ -78,6 +75,9 @@ msgstr "Nykyinen versio"
 msgid "Disabled"
 msgstr "Ei käytössä"
 
+msgid "Exit"
+msgstr "Lopeta"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Hae päivitykset Pro-eduuttasi keskuksesta"
 
@@ -98,9 +98,6 @@ msgstr "Pidä tietokoneesi kytkettynä virtalähteeseen. Ikunan sulkeminen ei ke
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "Pidä tietokoneesi kytkettynä virtalähteeseen. Voit sulkea tämän ikkunan ja palata tarkistamaan edistymisen."
-
-msgid "No snapshot was needed"
-msgstr "Kuvaa ei tarvittu"
 
 msgid "No system packages were changed."
 msgstr "Järjestelmäpaketteja ei muutettu."
@@ -141,9 +138,6 @@ msgstr "Käynnistetään päivitysohjelmistoa…"
 msgid "Review your update"
 msgstr "Tarkista päivityksesi"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "Osa paketeista voi olla jo muuttunut. Tarkista tiedot ennen uudelleenyritystä."
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Vaihe {current} / {total}"
@@ -156,15 +150,6 @@ msgstr "Aloitetaan päivityksesi…"
 
 msgid "System snapshot"
 msgstr "Järjestelmävarakopio"
-
-msgid "System snapshot created"
-msgstr "Järjestelmäkuvakappale luotu"
-
-msgid "System snapshots are disabled"
-msgstr "Järjestelmäkuvakappaleet ovat poissa käytöstä"
-
-msgid "System snapshots are unavailable"
-msgstr "Järjestelmäkuvakappaleet eivät ole käytettävissä"
 
 msgid "Technical details"
 msgstr "Tekniset tiedot"
@@ -202,11 +187,14 @@ msgstr "Tuntematon"
 msgid "Update complete"
 msgstr "Päivitys valmis"
 
+msgid "Update could not start"
+msgstr "Päivitystä ei voitu käynnistää"
+
+msgid "Update failed"
+msgstr "Päivitys epäonnistui"
+
 msgid "Update from a file"
 msgstr "Päivitä tiedostosta"
-
-msgid "Update stopped"
-msgstr "Päivitys keskeytetty"
 
 msgid "Update to"
 msgstr "Päivitetään versioon"
@@ -223,14 +211,5 @@ msgstr "Työt meneillään…"
 msgid "You already have this update"
 msgstr "Sinulla on jo tämä päivitys"
 
-msgid "Your installed packages have been checked."
-msgstr "Asennetut paketit on tarkistettu."
-
 msgid "or drop an .atgz file here"
 msgstr "tai vedä .atgz-tiedosto tähän"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "Vain esikatselu. Päivitysten asennus ei ole käytettävissä tässä versiossa."
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "Tarkista AnduinOS-poissaolopäivityspaketti"

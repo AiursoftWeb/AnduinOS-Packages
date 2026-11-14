@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 11:53+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: nl\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "Er is een nieuwere updater vereist"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "Kon geen herstelsnapshot bevestigen."
 
 msgid "AnduinOS update packages"
 msgstr "AnduinOS-updatepakketten"
@@ -78,6 +75,9 @@ msgstr "Huidige versie"
 msgid "Disabled"
 msgstr "Uitgeschakeld"
 
+msgid "Exit"
+msgstr "Afsluiten"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Haal updates op vanuit uw Pro-voordelen"
 
@@ -98,9 +98,6 @@ msgstr "Houd uw computer aangesloten op de stroom. Het sluiten van dit venster s
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "Houd uw computer aangesloten op de stroom. U kunt dit venster sluiten en later terugkomen om de voortgang te controleren."
-
-msgid "No snapshot was needed"
-msgstr "Er was geen snapshot nodig"
 
 msgid "No system packages were changed."
 msgstr "Er zijn geen systeempakketten gewijzigd."
@@ -141,9 +138,6 @@ msgstr "Updater wordt opnieuw opgestart…"
 msgid "Review your update"
 msgstr "Bekijk uw update"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "Sommige pakketten kunnen al zijn gewijzigd. Controleer de details voordat u het opnieuw probeert."
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Stap {current} van {total}"
@@ -156,15 +150,6 @@ msgstr "Uw update wordt gestart…"
 
 msgid "System snapshot"
 msgstr "Systeem-snapshot"
-
-msgid "System snapshot created"
-msgstr "Systeem-snapshot aangemaakt"
-
-msgid "System snapshots are disabled"
-msgstr "Systeem-snapshots zijn uitgeschakeld"
-
-msgid "System snapshots are unavailable"
-msgstr "Systeem-snapshots zijn niet beschikbaar"
 
 msgid "Technical details"
 msgstr "Technische details"
@@ -202,11 +187,14 @@ msgstr "Onbekend"
 msgid "Update complete"
 msgstr "Update voltooid"
 
+msgid "Update could not start"
+msgstr "Bijwerken kon niet starten"
+
+msgid "Update failed"
+msgstr "Bijwerken mislukt"
+
 msgid "Update from a file"
 msgstr "Update vanuit bestand"
-
-msgid "Update stopped"
-msgstr "Update gestopt"
 
 msgid "Update to"
 msgstr "Updaten naar"
@@ -223,14 +211,5 @@ msgstr "Bezig…"
 msgid "You already have this update"
 msgstr "U heeft al deze update"
 
-msgid "Your installed packages have been checked."
-msgstr "Uw geïnstalleerde pakketten zijn gecontroleerd."
-
 msgid "or drop an .atgz file here"
 msgstr "of sleep hier een .atgz-bestand"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "Alleen voorbeeld. Het installeren van updates is niet beschikbaar in deze build."
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "Controleer een AnduinOS offline-updatepakket"

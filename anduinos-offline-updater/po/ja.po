@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 12:00+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: ja\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "新しい更新プログラムが必要です"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "復旧スナップショットの確認に失敗しました。"
 
 msgid "AnduinOS update packages"
 msgstr "AnduinOS 更新パッケージ"
@@ -78,6 +75,9 @@ msgstr "現在のバージョン"
 msgid "Disabled"
 msgstr "無効"
 
+msgid "Exit"
+msgstr "終了"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Pro ベネフィットセンターから更新を取得"
 
@@ -98,9 +98,6 @@ msgstr "コンピューターを電源に接続してください。このウィ
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "コンピューターを電源に接続してください。このウィンドウを閉じて、後で進捗を確認できます。"
-
-msgid "No snapshot was needed"
-msgstr "スナップショットは不要でした"
 
 msgid "No system packages were changed."
 msgstr "システムパッケージは変更されていません。"
@@ -141,9 +138,6 @@ msgstr "アップデータ再起動中…"
 msgid "Review your update"
 msgstr "更新を確認"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "一部のパッケージは変更されている可能性があります。再試行する前に詳細を確認してください。"
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "ステップ {current} / {total}"
@@ -156,15 +150,6 @@ msgstr "更新を開始中…"
 
 msgid "System snapshot"
 msgstr "システムスナップショット"
-
-msgid "System snapshot created"
-msgstr "システムスナップショットを作成しました"
-
-msgid "System snapshots are disabled"
-msgstr "システムスナップショットは無効です"
-
-msgid "System snapshots are unavailable"
-msgstr "システムスナップショットは利用できません"
 
 msgid "Technical details"
 msgstr "技術的な詳細"
@@ -202,11 +187,14 @@ msgstr "不明"
 msgid "Update complete"
 msgstr "更新完了"
 
+msgid "Update could not start"
+msgstr "更新を開始できませんでした"
+
+msgid "Update failed"
+msgstr "更新に失敗しました"
+
 msgid "Update from a file"
 msgstr "ファイルから更新"
-
-msgid "Update stopped"
-msgstr "更新が停止しました"
 
 msgid "Update to"
 msgstr "更新先"
@@ -223,14 +211,5 @@ msgstr "処理中…"
 msgid "You already have this update"
 msgstr "この更新は既に適用済みです"
 
-msgid "Your installed packages have been checked."
-msgstr "インストール済みパッケージが確認されました。"
-
 msgid "or drop an .atgz file here"
 msgstr "または .atgz ファイルをここにドロップ"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "プレビューのみ。このビルドでは更新のインストールは利用できません。"
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "AnduinOS オフライン更新パッケージを確認"

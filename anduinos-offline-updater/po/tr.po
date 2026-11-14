@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 12:07+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: tr\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "Yeni bir güncelleyici gerekli"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "Bir kurtarma anlık görüntüsü onaylanamadı."
 
 msgid "AnduinOS update packages"
 msgstr "AnduinOS güncelleme paketleri"
@@ -78,6 +75,9 @@ msgstr "Mevcut sürüm"
 msgid "Disabled"
 msgstr "Devre dışı"
 
+msgid "Exit"
+msgstr "Çıkış"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Güncellemeleri Pro avantajlar merkezinizden alın"
 
@@ -98,9 +98,6 @@ msgstr "Bilgisayarınızı güç kaynağına bağlı tutun. Bu pencereyi kapatma
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "Bilgisayarınızı güç kaynağına bağlı tutun. Bu pencereyi kapatabilir ve ilerlemeyi kontrol etmek için dönebilirsiniz."
-
-msgid "No snapshot was needed"
-msgstr "Anlık görüntü gerekmedi"
 
 msgid "No system packages were changed."
 msgstr "Sistem paketlerinde değişiklik yapılmadı."
@@ -141,9 +138,6 @@ msgstr "Güncelleyici yeniden başlatılıyor…"
 msgid "Review your update"
 msgstr "Güncellemenizi gözden geçirin"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "Bazı paketler zaten değişmiş olabilir. Tekrar denemeden önce ayrıntıları kontrol edin."
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "{total} aşamasından {current}. aşama"
@@ -156,15 +150,6 @@ msgstr "Güncellemeniz başlatılıyor…"
 
 msgid "System snapshot"
 msgstr "Sistem görüntüsü"
-
-msgid "System snapshot created"
-msgstr "Sistem anlık görüntüsü oluşturuldu"
-
-msgid "System snapshots are disabled"
-msgstr "Sistem anlık görüntüleri devre dışı"
-
-msgid "System snapshots are unavailable"
-msgstr "Sistem anlık görüntüleri kullanılamıyor"
 
 msgid "Technical details"
 msgstr "Teknik ayrıntılar"
@@ -202,11 +187,14 @@ msgstr "Bilinmiyor"
 msgid "Update complete"
 msgstr "Güncelleme tamamlandı"
 
+msgid "Update could not start"
+msgstr "Güncelleme başlatılamadı"
+
+msgid "Update failed"
+msgstr "Güncelleme başarısız oldu"
+
 msgid "Update from a file"
 msgstr "Dosyadan güncelle"
-
-msgid "Update stopped"
-msgstr "Güncelleme durduruldu"
 
 msgid "Update to"
 msgstr "Güncelle"
@@ -223,14 +211,5 @@ msgstr "Çalışıyor…"
 msgid "You already have this update"
 msgstr "Bu güncellemeye zaten sahipsiniz"
 
-msgid "Your installed packages have been checked."
-msgstr "Yüklü paketleriniz kontrol edildi."
-
 msgid "or drop an .atgz file here"
 msgstr "veya bir .atgz dosyasını buraya sürükleyin"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "Yalnızca önizleme. Bu sürümde güncellemeleri yüklemek mevcut değil."
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "Bir AnduinOS çevrimdışı güncelleme paketini kontrol edin"

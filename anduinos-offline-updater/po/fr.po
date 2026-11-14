@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 11:55+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: fr\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "Un programme de mise à jour plus récent est requis"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "Impossible de confirmer une image de récupération."
 
 msgid "AnduinOS update packages"
 msgstr "Paquets de mise à jour AnduinOS"
@@ -78,6 +75,9 @@ msgstr "Version actuelle"
 msgid "Disabled"
 msgstr "Désactivé"
 
+msgid "Exit"
+msgstr "Quitter"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Obtenez les mises à jour depuis votre centre d’avantages Pro"
 
@@ -98,9 +98,6 @@ msgstr "Gardez votre ordinateur branché sur secteur. Fermer cette fenêtre n'ar
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "Gardez votre ordinateur branché sur secteur. Vous pouvez fermer cette fenêtre et revenir vérifier l'avancement."
-
-msgid "No snapshot was needed"
-msgstr "Aucune image n'était nécessaire"
 
 msgid "No system packages were changed."
 msgstr "Aucun paquet système n’a été modifié."
@@ -141,9 +138,6 @@ msgstr "Redémarrage du gestionnaire de mises à jour…"
 msgid "Review your update"
 msgstr "Vérifiez votre mise à jour"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "Certains paquets ont peut-être déjà changé. Vérifiez les détails avant de réessayer."
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Étape {current} sur {total}"
@@ -156,15 +150,6 @@ msgstr "Démarrage de votre mise à jour…"
 
 msgid "System snapshot"
 msgstr "Instantané système"
-
-msgid "System snapshot created"
-msgstr "Image système créée"
-
-msgid "System snapshots are disabled"
-msgstr "Les images système sont désactivées"
-
-msgid "System snapshots are unavailable"
-msgstr "Les images système sont indisponibles"
 
 msgid "Technical details"
 msgstr "Détails techniques"
@@ -202,11 +187,14 @@ msgstr "Inconnu"
 msgid "Update complete"
 msgstr "Mise à jour terminée"
 
+msgid "Update could not start"
+msgstr "Impossible de démarrer la mise à jour"
+
+msgid "Update failed"
+msgstr "Échec de la mise à jour"
+
 msgid "Update from a file"
 msgstr "Mise à jour depuis un fichier"
-
-msgid "Update stopped"
-msgstr "Mise à jour arrêtée"
 
 msgid "Update to"
 msgstr "Mettre à jour vers"
@@ -223,14 +211,5 @@ msgstr "Traitement en cours…"
 msgid "You already have this update"
 msgstr "Vous avez déjà cette mise à jour"
 
-msgid "Your installed packages have been checked."
-msgstr "Vos paquets installés ont été vérifiés."
-
 msgid "or drop an .atgz file here"
 msgstr "ou déposez un fichier .atgz ici"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "Aperçu uniquement. L’installation des mises à jour n’est pas disponible dans cette version."
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "Vérifier un paquet de mise à jour hors ligne AnduinOS"

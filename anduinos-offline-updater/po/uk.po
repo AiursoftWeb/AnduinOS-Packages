@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 12:08+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: uk\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "Потрібен новіший оновлювач"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "Не вдалося підтвердити створення відновлювального снімка."
 
 msgid "AnduinOS update packages"
 msgstr "Пакети оновлень AnduinOS"
@@ -78,6 +75,9 @@ msgstr "Поточна версія"
 msgid "Disabled"
 msgstr "Вимкнено"
 
+msgid "Exit"
+msgstr "Вийти"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Отримуйте оновлення з вашого центру переваг Pro"
 
@@ -98,9 +98,6 @@ msgstr "Тримайте комп’ютер підключеним до мер�
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "Тримайте комп’ютер підключеним до мережі. Ви можете закрити це вікно та повернутися для перевірки прогресу."
-
-msgid "No snapshot was needed"
-msgstr "Снімок не був потрібен"
 
 msgid "No system packages were changed."
 msgstr "Системні пакети не були змінені."
@@ -141,9 +138,6 @@ msgstr "Перезавантаження засобу оновлення…"
 msgid "Review your update"
 msgstr "Перегляньте ваше оновлення"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "Деякі пакунки можуть уже змінитися. Перевірте деталі перед повторною спробою."
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Етап {current} з {total}"
@@ -156,15 +150,6 @@ msgstr "Початок вашого оновлення…"
 
 msgid "System snapshot"
 msgstr "Знімок системи"
-
-msgid "System snapshot created"
-msgstr "Снімок системи створено"
-
-msgid "System snapshots are disabled"
-msgstr "Снімки системи вимкнено"
-
-msgid "System snapshots are unavailable"
-msgstr "Снімки системи недоступні"
 
 msgid "Technical details"
 msgstr "Технічні деталі"
@@ -202,11 +187,14 @@ msgstr "Невідомо"
 msgid "Update complete"
 msgstr "Оновлення завершено"
 
+msgid "Update could not start"
+msgstr "Не вдалося розпочати оновлення"
+
+msgid "Update failed"
+msgstr "Не вдалося оновити"
+
 msgid "Update from a file"
 msgstr "Оновлення з файлу"
-
-msgid "Update stopped"
-msgstr "Оновлення зупинено"
 
 msgid "Update to"
 msgstr "Оновити до"
@@ -223,14 +211,5 @@ msgstr "Виконується…"
 msgid "You already have this update"
 msgstr "У вас вже є це оновлення"
 
-msgid "Your installed packages have been checked."
-msgstr "Ваші встановлені пакунки перевірено."
-
 msgid "or drop an .atgz file here"
 msgstr "або перетягніть файл .atgz сюди"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "Лише перегляд. Встановлення оновлень недоступне в цій збірці."
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "Перевірка пакета офлайн-оновлення AnduinOS"

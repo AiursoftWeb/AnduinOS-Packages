@@ -69,8 +69,11 @@ Reopen the app as the same user to reconnect to the saved job. If the updater
 upgrades itself first, review and confirm the remaining plan before continuing.
 The UI does not silently retry a failed or interrupted package transaction.
 
-After saving any needed technical details, **Remove Imported File** deletes the
-root-owned copy and job history. It does not delete your original download.
+The result screen shows success, failure or a blocked update with a matching
+status icon. **Exit** closes the window without requesting authorization or
+deleting diagnostic records. Reopening the app retains the last result.
+Under **Technical details**, **Remove Imported File** deletes the root-owned
+copy and job history. It does not delete your original download.
 Keep an independent backup and connect your computer to power before updating.
 
 To run the

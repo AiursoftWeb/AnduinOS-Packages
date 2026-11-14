@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 12:06+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: sv\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "En nyare uppdateringshanterare krävs"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "Kunde inte bekräfta ett återställningsmoment."
 
 msgid "AnduinOS update packages"
 msgstr "AnduinOS-uppdateringspaket"
@@ -78,6 +75,9 @@ msgstr "Aktuell version"
 msgid "Disabled"
 msgstr "Inaktiverad"
 
+msgid "Exit"
+msgstr "Avsluta"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Hämta uppdateringar från din Pro-fördelscentral"
 
@@ -98,9 +98,6 @@ msgstr "Håll datorn ansluten till ström. Att stänga det här fönstret stoppa
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "Håll datorn ansluten till ström. Du kan stänga det här fönstret och återkomma för att kontrollera framdriften."
-
-msgid "No snapshot was needed"
-msgstr "Inget moment behövdes"
 
 msgid "No system packages were changed."
 msgstr "Inga systempaket ändrades."
@@ -141,9 +138,6 @@ msgstr "Startar om uppdateraren…"
 msgid "Review your update"
 msgstr "Granska din uppdatering"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "Vissa paket kan redan ha ändrats. Kontrollera detaljerna innan du försöker igen."
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Steg {current} av {total}"
@@ -156,15 +150,6 @@ msgstr "Startar din uppdatering…"
 
 msgid "System snapshot"
 msgstr "Systemsnapshot"
-
-msgid "System snapshot created"
-msgstr "Systemmoment skapat"
-
-msgid "System snapshots are disabled"
-msgstr "Systemmoment är inaktiverade"
-
-msgid "System snapshots are unavailable"
-msgstr "Systemmoment är inte tillgängliga"
 
 msgid "Technical details"
 msgstr "Tekniska detaljer"
@@ -202,11 +187,14 @@ msgstr "Okänd"
 msgid "Update complete"
 msgstr "Uppdatering klar"
 
+msgid "Update could not start"
+msgstr "Uppdateringen kunde inte startas"
+
+msgid "Update failed"
+msgstr "Uppdateringen misslyckades"
+
 msgid "Update from a file"
 msgstr "Uppdatera från fil"
-
-msgid "Update stopped"
-msgstr "Uppdatering stoppad"
 
 msgid "Update to"
 msgstr "Uppdatera till"
@@ -223,14 +211,5 @@ msgstr "Arbetar…"
 msgid "You already have this update"
 msgstr "Du har redan denna uppdatering"
 
-msgid "Your installed packages have been checked."
-msgstr "Dina installerade paket har kontrollerats."
-
 msgid "or drop an .atgz file here"
 msgstr "eller släpp en .atgz-fil här"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "Endast förhandsvisning. Installation av uppdateringar är inte tillgänglig i denna version."
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "Kontrollera ett AnduinOS offline-uppdateringspaket"

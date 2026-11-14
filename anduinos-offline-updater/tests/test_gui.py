@@ -245,17 +245,39 @@ class DesktopTests(unittest.TestCase):
         theme = self.gui.Gtk.IconTheme.get_for_display(self.window.get_display())
         self.assertTrue(theme.has_icon(icon), "Success must use an icon available in the standard theme")
         self.assertIn(self.gui._("Restart your computer to finish applying the update."), self.labels())
-        self.assertIn(self.gui._("A recovery snapshot could not be confirmed."), self.labels())
+        details = self.window.content.get_last_child()
+        self.assertFalse(details.get_expanded())
+        self.assertIn('"state": "unconfirmed"', details.get_child().get_first_child().get_label())
         self.assertNotIn(self.gui._("System snapshot created"), self.labels())
+        self.assertFalse(self.window.footer.get_visible())
+        self.assertTrue(self.window.content.get_first_child().has_css_class("success"))
 
     def test_partial_and_interrupted_never_offer_blind_install_retry(self):
         self.window.job = "a" * 32
-        for state in ("partial", "interrupted", "blocked"):
+        for state in ("partial", "interrupted", "failed", "blocked"):
             self.window.show_job(dict(state=state, error="<dpkg needs inspection>"))
-            self.assertIn(self.gui._("Update stopped"), self.labels())
+            self.assertIn(self.gui._("Update could not start") if state == "blocked" else
+                          self.gui._("Update failed"), self.labels())
             self.assertNotIn(self.gui._("Update complete"), self.labels())
             self.assertNotIn(self.gui._("Start Update"), self.labels())
             self.assertNotIn(self.gui._("No system packages were changed."), self.labels())
+            details = self.window.content.get_last_child()
+            self.assertFalse(details.get_expanded())
+            self.assertIn("<dpkg needs inspection>", details.get_child().get_first_child().get_label())
+            self.assertNotIn("<dpkg needs inspection>", self.labels())
+            self.assertTrue(self.window.content.get_first_child().has_css_class(
+                "warning" if state == "blocked" else "error"))
+
+    def test_result_exit_does_not_require_authorization_or_erase_diagnostics(self):
+        self.window.job = "a" * 32
+        self.window.remember()
+        self.window.show_job(dict(state="partial", error="installArchives() failed"))
+        with patch.object(self.window, "command") as command:
+            self.window.content.get_last_child().get_prev_sibling().emit("clicked")
+            command.assert_not_called()
+        self.assertTrue(self.window.closed)
+        self.assertTrue(self.window.bookmark.exists())
+        self.assertTrue(self.fixture.bundle.exists())
 
     def test_reopen_reconnects_without_reinstalling_or_trusting_a_saved_hash(self):
         preview = self.complete(self.fixture.bundle)

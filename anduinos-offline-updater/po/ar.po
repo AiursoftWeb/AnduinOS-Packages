@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 11:50+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: ar\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "يتطلب مُحدِّث أحدث"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "تعذّر تأكيد لقطة استرداد."
 
 msgid "AnduinOS update packages"
 msgstr "حزم تحديثات AnduinOS"
@@ -78,6 +75,9 @@ msgstr "الإصدار الحالي"
 msgid "Disabled"
 msgstr "معطَّل"
 
+msgid "Exit"
+msgstr "خروج"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "احصل على التحديثات من مركز مزايا Pro الخاصة بك"
 
@@ -98,9 +98,6 @@ msgstr "أبقِ حاسوبك متصلاً بمصدر الطاقة. إغلاق �
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "أبقِ حاسوبك متصلاً بمصدر الطاقة. يمكنك إغلاق هذه النافذة والعودة للتحقق من التقدم."
-
-msgid "No snapshot was needed"
-msgstr "لم تكن هناك حاجة إلى لقطة"
 
 msgid "No system packages were changed."
 msgstr "لم يتم تغيير أي حزم نظام."
@@ -141,9 +138,6 @@ msgstr "جارٍ إعادة تشغيل محدّث النظام…"
 msgid "Review your update"
 msgstr "راجع تحديثك"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "قد تكون بعض الحزم قد تغيّرت بالفعل. افحص التفاصيل قبل المحاولة مرة أخرى."
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "المرحلة {current} من {total}"
@@ -156,15 +150,6 @@ msgstr "جارٍ بدء التحديث…"
 
 msgid "System snapshot"
 msgstr "لقطة النظام"
-
-msgid "System snapshot created"
-msgstr "تم إنشاء لقطة نظام"
-
-msgid "System snapshots are disabled"
-msgstr "لقطات النظام معطّلة"
-
-msgid "System snapshots are unavailable"
-msgstr "لقطات النظام غير متاحة"
 
 msgid "Technical details"
 msgstr "تفاصيل تقنية"
@@ -202,11 +187,14 @@ msgstr "غير معروف"
 msgid "Update complete"
 msgstr "اكتمل التحديث"
 
+msgid "Update could not start"
+msgstr "تعذر بدء التحديث"
+
+msgid "Update failed"
+msgstr "فشل التحديث"
+
 msgid "Update from a file"
 msgstr "تحديث من ملف"
-
-msgid "Update stopped"
-msgstr "توقف التحديث"
 
 msgid "Update to"
 msgstr "التحديث إلى"
@@ -223,14 +211,5 @@ msgstr "جارٍ العمل…"
 msgid "You already have this update"
 msgstr "لديك هذا التحديث بالفعل"
 
-msgid "Your installed packages have been checked."
-msgstr "تم فحص الحزم المثبّتة لديك."
-
 msgid "or drop an .atgz file here"
 msgstr "أو اسحب ملف .atgz هنا"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "معاينة فقط. تثبيت التحديثات غير متاح في هذا الإصدار."
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "فحص حزمة تحديث AnduinOS دون اتصال"

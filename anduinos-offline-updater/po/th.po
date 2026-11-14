@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 12:06+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: th\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "ต้องอัปเดตตัวอัปเดตเวอร์ชันใหม่"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "ไม่สามารถยืนยันภาพสำรองระบบได้"
 
 msgid "AnduinOS update packages"
 msgstr "แพ็กเกจอัปเดต AnduinOS"
@@ -78,6 +75,9 @@ msgstr "เวอร์ชันปัจจุบัน"
 msgid "Disabled"
 msgstr "ปิดใช้งาน"
 
+msgid "Exit"
+msgstr "ออก"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "รับอัปเดตจากศูนย์สิทธิประโยชน์ Pro ของคุณ"
 
@@ -98,9 +98,6 @@ msgstr "เสียบปลั๊กไฟให้คอมพิวเตอ
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "เสียบปลั๊กไฟให้คอมพิวเตอร์ คุณสามารถปิดหน้าต่างนี้และกลับมาดูความคืบหน้าได้"
-
-msgid "No snapshot was needed"
-msgstr "ไม่จำเป็นต้องสร้างภาพสำรองระบบ"
 
 msgid "No system packages were changed."
 msgstr "ไม่มีแพ็กเกจระบบถูกเปลี่ยนแปลง"
@@ -141,9 +138,6 @@ msgstr "กำลังรีสตาร์ทตัวอัปเดต…"
 msgid "Review your update"
 msgstr "ตรวจสอบการอัปเดตของคุณ"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "บางแพ็กเกจอาจมีการเปลี่ยนแปลงแล้ว ตรวจสอบรายละเอียดก่อนลองใหม่"
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "ขั้นตอน {current} จาก {total}"
@@ -156,15 +150,6 @@ msgstr "กำลังเริ่มการอัปเดตของคุ
 
 msgid "System snapshot"
 msgstr "สแนปชอตระบบ"
-
-msgid "System snapshot created"
-msgstr "สร้างภาพสำรองระบบแล้ว"
-
-msgid "System snapshots are disabled"
-msgstr "การสำรองภาพระบบถูกปิดใช้งาน"
-
-msgid "System snapshots are unavailable"
-msgstr "การสำรองภาพระบบไม่พร้อมใช้งาน"
 
 msgid "Technical details"
 msgstr "รายละเอียดทางเทคนิค"
@@ -202,11 +187,14 @@ msgstr "ไม่ทราบ"
 msgid "Update complete"
 msgstr "การอัปเดตเสร็จสมบูรณ์"
 
+msgid "Update could not start"
+msgstr "ไม่สามารถเริ่มการอัปเดตได้"
+
+msgid "Update failed"
+msgstr "การอัปเดตล้มเหลว"
+
 msgid "Update from a file"
 msgstr "อัปเดตจากไฟล์"
-
-msgid "Update stopped"
-msgstr "หยุดการอัปเดตแล้ว"
 
 msgid "Update to"
 msgstr "อัปเดตเป็น"
@@ -223,14 +211,5 @@ msgstr "กำลังทำงาน…"
 msgid "You already have this update"
 msgstr "คุณมีอัปเดตนี้แล้ว"
 
-msgid "Your installed packages have been checked."
-msgstr "ตรวจสอบแพ็กเกจที่ติดตั้งแล้ว"
-
 msgid "or drop an .atgz file here"
 msgstr "หรือลากไฟล์ .atgz มาที่นี่"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "ดูตัวอย่างเท่านั้น การอัปเดตไม่พร้อมใช้งานในเวอร์ชันนี้"
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "ตรวจสอบแพ็กเกจอัปเดตออฟไลน์ AnduinOS"

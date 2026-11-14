@@ -16,6 +16,9 @@ PRO_PACKAGES_URL = "https://www.anduinos.com/pro/offline-update-package"
 STYLE = """
 .offline-updater .title-1 { font-size: 29px; font-weight: 800; }
 .offline-updater button.large-button { padding: 12px 32px; font-size: 14px; }
+.offline-updater .result-icon.success { color: @success_color; }
+.offline-updater .result-icon.error { color: @error_color; }
+.offline-updater .result-icon.warning { color: @warning_color; }
 """
 SOURCE_LOCALES = Path(__file__).resolve().parents[2] / "locale"
 _ = gettext.translation("anduinos-offline-updater",
@@ -64,6 +67,7 @@ class UpdateWindow(Adw.ApplicationWindow):
         footer.set_margin_top(10)
         footer.set_margin_bottom(16)
         toolbar.add_bottom_bar(footer)
+        self.footer = footer
         drop = Gtk.DropTarget.new(Gdk.FileList, Gdk.DragAction.COPY)
         drop.connect("drop", self.on_drop)
         self.add_controller(drop)
@@ -78,8 +82,9 @@ class UpdateWindow(Adw.ApplicationWindow):
         except (OSError, ValueError, KeyError, TypeError):
             pass
 
-    def page(self, title, description=None, icon=None):
+    def page(self, title, description=None, icon=None, icon_class="accent"):
         self.progress_bar = None
+        self.footer.set_visible(True)
         self.content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=18,
                                valign=Gtk.Align.CENTER, vexpand=True)
         self.content.set_margin_top(32)
@@ -89,7 +94,8 @@ class UpdateWindow(Adw.ApplicationWindow):
         if icon:
             image = Gtk.Image.new_from_icon_name(icon)
             image.set_pixel_size(96)
-            image.add_css_class("accent")
+            image.add_css_class("result-icon")
+            image.add_css_class(icon_class)
             image.set_margin_bottom(12)
             self.content.append(image)
         self.content.append(text(title, "title-1"))
@@ -214,7 +220,7 @@ class UpdateWindow(Adw.ApplicationWindow):
     def error(self, reason):
         self.report = None
         self.back.set_visible(True)
-        self.page(_("Cannot preview this update"), _("No system packages were changed."), "dialog-warning-symbolic")
+        self.page(_("Cannot preview this update"), _("No system packages were changed."), "dialog-warning-symbolic", "warning")
         # Treat bundle filenames and verifier diagnostics as plain text, never markup.
         detail = text(reason, "dim-label")
         detail.set_selectable(True)
@@ -393,7 +399,7 @@ class UpdateWindow(Adw.ApplicationWindow):
         self.back.set_visible(False)
         self.page(_("Cannot read the update status"),
                   _("The update may still be running. Reconnect to check it; do not start another installation."),
-                  "dialog-warning-symbolic")
+                  "dialog-warning-symbolic", "warning")
         self.content.append(text(reason, "dim-label"))
         self.content.append(text(self.job, "caption", "dim-label"))
         self.button(_("Reconnect"), lambda *_: self.poll_job(), True)
@@ -471,31 +477,33 @@ class UpdateWindow(Adw.ApplicationWindow):
             self.poll_source = GLib.timeout_add_seconds(1, self.poll_job)
             return
         success = state in {"complete", "already-installed"}
+        blocked = state == "blocked"
         self.page(_("Update complete") if state == "complete" else
-                  _("You already have this update") if success else _("Update stopped"),
-                  _("Your installed packages have been checked.") if success else
-                  _("Some packages may already have changed. Check the details before trying again."),
-                  "object-select-symbolic" if success else "dialog-warning-symbolic")
+                  _("You already have this update") if success else
+                  _("Update could not start") if blocked else _("Update failed"),
+                  icon="object-select-symbolic" if success else
+                  "dialog-warning-symbolic" if blocked else "dialog-error-symbolic",
+                  icon_class="success" if success else "warning" if blocked else "error")
+        self.footer.set_visible(False)
         if report.get("reboot_required"):
-            self.content.append(text(_("Restart your computer to finish applying the update."), "accent"))
-        snapshot = report.get("snapshot", {}).get("state")
-        if snapshot:
-            values = {"created": _("System snapshot created"), "disabled": _("System snapshots are disabled"),
-                      "unavailable": _("System snapshots are unavailable"), "not-needed": _("No snapshot was needed")}
-            self.content.append(text(values.get(snapshot, _("A recovery snapshot could not be confirmed.")), "dim-label"))
-        if report.get("error"):
-            self.content.append(text(report["error"], "dim-label"))
-        self.details(report)
-        self.button(_("Remove Imported File"), self.discard)
-        self.content.append(text(_("This removes the imported copy and job history, not your original download."), "caption", "dim-label"))
+            self.content.append(text(_("Restart your computer to finish applying the update."), "dim-label"))
+        self.button(_("Exit"), lambda *_: self.close(), True)
+        self.details(report, cleanup=True)
 
-    def details(self, report):
+    def details(self, report, cleanup=False):
         details = Gtk.Expander(label=_("Technical details"))
+        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=18)
         detail = Gtk.Label(label=json.dumps(report, indent=2, ensure_ascii=False),
                            wrap=True, selectable=True, xalign=0)
         detail.add_css_class("monospace")
         detail.add_css_class("caption")
-        details.set_child(detail)
+        content.append(detail)
+        if cleanup:
+            button = Gtk.Button(label=_("Remove Imported File"), halign=Gtk.Align.CENTER)
+            button.connect("clicked", self.discard)
+            content.append(button)
+            content.append(text(_("This removes the imported copy and job history, not your original download."), "caption", "dim-label"))
+        details.set_child(content)
         self.content.append(details)
         return detail
 

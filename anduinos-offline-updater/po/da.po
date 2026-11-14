@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 09:03+0000\n"
+"POT-Creation-Date: 2026-11-14 10:10+0000\n"
 "PO-Revision-Date: 2026-09-09 11:52+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: da\n"
@@ -16,9 +16,6 @@ msgstr ""
 
 msgid "A newer updater is required"
 msgstr "Der kræves en nyere opdatering"
-
-msgid "A recovery snapshot could not be confirmed."
-msgstr "En gendannelsessnap kunne ikke bekræftes."
 
 msgid "AnduinOS update packages"
 msgstr "AnduinOS-opdateringspakker"
@@ -78,6 +75,9 @@ msgstr "Aktuel version"
 msgid "Disabled"
 msgstr "Deaktiveret"
 
+msgid "Exit"
+msgstr "Afslut"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Hent opdateringer fra dit Pro-fordelecenter"
 
@@ -98,9 +98,6 @@ msgstr "Hold computeren tilsluttet strømmen. Lukningen af dette vindue stopper 
 
 msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr "Hold computeren tilsluttet strømmen. Du kan lukke dette vindue og vende tilbage for at tjekke fremskridt."
-
-msgid "No snapshot was needed"
-msgstr "Ingen snap var nødvendig"
 
 msgid "No system packages were changed."
 msgstr "Ingen systempakker blev ændret."
@@ -141,9 +138,6 @@ msgstr "Genstarter opdateringsprogrammet…"
 msgid "Review your update"
 msgstr "Gennemgå din opdatering"
 
-msgid "Some packages may already have changed. Check the details before trying again."
-msgstr "Nogle pakker kan allerede være ændret. Tjek detaljerne, før du prøver igen."
-
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Trin {current} af {total}"
@@ -156,15 +150,6 @@ msgstr "Starter din opdatering…"
 
 msgid "System snapshot"
 msgstr "System-snapshot"
-
-msgid "System snapshot created"
-msgstr "Systemsnap oprettet"
-
-msgid "System snapshots are disabled"
-msgstr "Systemsnaps er deaktiveret"
-
-msgid "System snapshots are unavailable"
-msgstr "Systemsnaps er utilgængelige"
 
 msgid "Technical details"
 msgstr "Tekniske detaljer"
@@ -202,11 +187,14 @@ msgstr "Ukendt"
 msgid "Update complete"
 msgstr "Opdatering fuldført"
 
+msgid "Update could not start"
+msgstr "Opdateringen kunne ikke startes"
+
+msgid "Update failed"
+msgstr "Opdateringen fejlede"
+
 msgid "Update from a file"
 msgstr "Opdater fra fil"
-
-msgid "Update stopped"
-msgstr "Opdatering stoppet"
 
 msgid "Update to"
 msgstr "Opdater til"
@@ -223,14 +211,5 @@ msgstr "Arbejder…"
 msgid "You already have this update"
 msgstr "Du har allerede denne opdatering"
 
-msgid "Your installed packages have been checked."
-msgstr "Dine installerede pakker er blevet kontrolleret."
-
 msgid "or drop an .atgz file here"
 msgstr "eller slip en .atgz-fil her"
-
-#~ msgid "Preview only. Installing updates is not available in this build."
-#~ msgstr "Kun forudvisning. Installation af opdateringer er ikke tilgængelig i denne version."
-
-#~ msgid "Check an AnduinOS offline update package"
-#~ msgstr "Kontroller en AnduinOS offline-opdateringspakke"
