@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-offline-updater</PackageName>
-    <PackageVersion>2.1.0-10+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-11+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Preview and install cumulative AnduinOS offline update bundles</PackageDescription>
     <Section>admin</Section>
@@ -40,6 +40,8 @@
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
     <PrebuildCommand Run="sh -n scripts/postinst.sh" />
     <PrebuildCommand Run="bash compile-locales.sh" />
+    <PrebuildCommand Run="bash fetch-signing-key.sh" />
+    <IncludeFile Include="deploy/anduinos-offline-updates.gpg" Target="/usr/share/keyrings/anduinos-offline-updates.gpg" Mode="644" />
     <PostInstallScript Include="scripts/postinst.sh" />
     <AppStreamApplication Include="data/com.anduinos.offlineupdater.desktop" Icon="data/com.anduinos.offlineupdater.svg" />
   </ItemGroup>

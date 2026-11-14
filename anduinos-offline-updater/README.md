@@ -18,11 +18,15 @@ anduinos-offline-updater inspect update.atgz --json
 anduinos-offline-updater verify update.atgz --json
 ```
 
-A trusted external keyring is required. The default path is
-`/usr/share/keyrings/anduinos-offline-updates.gpg`; this package does not ship a
-production or test signing key. For development, explicitly select your trusted
-fixture key with `--keyring /path/to/trusted.gpg`. Never trust a key supplied by an
-unverified bundle.
+The official signing public key is installed at
+`/usr/share/keyrings/anduinos-offline-updates.gpg`. Package builds download it
+via HTTPS and check its SHA-256 against the value in `fetch-signing-key.sh`;
+a failed download or checksum mismatch stops the build. Verification on the
+installed system is fully offline. Changing the trusted key requires a reviewed
+source change and a package update.
+
+For development, explicitly select your trusted fixture key with
+`--keyring /path/to/trusted.gpg`. Never trust a key supplied by an unverified bundle.
 
 The preview validates signatures, payload hashes and repository metadata, then
 uses native APT with copied package state and preferences. It does not contact
