@@ -56,7 +56,7 @@ class ProgressPageLayoutTests(unittest.TestCase):
                     simulated.assert_called_once_with()
                     native.assert_not_called()
                 else:
-                    native.assert_called_once_with(destructive_test=True)
+                    native.assert_called_once_with(destructive_test=True, has_pro_entitlement=False)
                     simulated.assert_not_called()
                 _settle()
 

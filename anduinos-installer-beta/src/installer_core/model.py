@@ -94,6 +94,7 @@ class StorageSpec:
     graph: StorageGraph | None = None
     btrfs_compression: BtrfsCompression = BtrfsCompression.BALANCED
     encryption: EncryptionMode = EncryptionMode.NONE
+    include_recovery: bool = False
 
 
 @dataclass(frozen=True)
@@ -184,7 +185,7 @@ class InstallPlan:
     @property
     def recovery_enabled(self) -> bool:
         return (
-            self.storage.mode is InstallMode.ERASE_DISK and self.storage.filesystem is Filesystem.BTRFS
+            self.storage.mode is InstallMode.ERASE_DISK and self.storage.include_recovery
             or (
                 self.storage.mode is InstallMode.MANUAL
                 and self.storage.graph is not None
@@ -249,6 +250,7 @@ class InstallPlan:
                 "swap_size_mib",
                 "btrfs_compression",
                 "encryption",
+                "include_recovery",
                 "graph",
             },
             "storage",

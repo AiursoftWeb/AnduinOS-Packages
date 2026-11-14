@@ -10,6 +10,7 @@ from .validation import ExecutionPolicy
 
 
 GUIDED_TEST_FLAG = "--guided-destructive-test"
+PRO_ENTITLEMENT_FLAG = "--pro-entitlement"
 GUIDED_TEST_ENVIRONMENT = "ANDUINOS_INSTALLER_DESTRUCTIVE_TEST"
 ALLOWED_TEST_VIRTUALIZATIONS = {"kvm", "qemu"}
 
@@ -20,7 +21,7 @@ def execution_policy(
 ) -> ExecutionPolicy:
     """Require two executor-owned opt-ins for destructive coexistence tests."""
 
-    unknown = [item for item in arguments if item != GUIDED_TEST_FLAG]
+    unknown = [item for item in arguments if item not in (GUIDED_TEST_FLAG, PRO_ENTITLEMENT_FLAG)]
     if unknown:
         raise ValueError("Unknown executor argument: " + unknown[0])
     requested = GUIDED_TEST_FLAG in arguments
@@ -30,11 +31,10 @@ def execution_policy(
             "Guided destructive tests require both the executor flag and "
             "the disposable-VM environment marker"
         )
-    return (
-        ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST
-        if requested
-        else ExecutionPolicy.RELEASE
-    )
+    pro = PRO_ENTITLEMENT_FLAG in arguments
+    if requested:
+        return ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST_PRO if pro else ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST
+    return ExecutionPolicy.PRO if pro else ExecutionPolicy.RELEASE
 
 
 def detect_virtualization() -> str:

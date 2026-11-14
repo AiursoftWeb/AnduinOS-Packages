@@ -1,6 +1,11 @@
 import unittest
 
-from helpers import valid_plan
+from helpers import valid_plan as _valid_plan
+
+
+def valid_plan(**kwargs):
+    kwargs.setdefault("include_recovery", kwargs.get("filesystem", "btrfs") == "btrfs")
+    return _valid_plan(**kwargs)
 from installer_core.layout import build_erase_disk_layout
 from installer_core.boot_commands import build_boot_commands
 from installer_core.model import Architecture, DiskIdentity, Filesystem

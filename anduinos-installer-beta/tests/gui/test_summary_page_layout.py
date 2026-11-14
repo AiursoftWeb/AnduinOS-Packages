@@ -43,7 +43,7 @@ class SummaryPageLayoutTests(unittest.TestCase):
         chosen = replace(base, new_partitions=base.new_partitions[:1])
         preview = build_manual_storage_preview(workflow, chosen)
         shared = state()
-        shared.update(development_mode=True, storage_mode="manual", filesystem="btrfs",
+        shared.update(development_mode=True, has_pro_entitlement=True, storage_mode="manual", filesystem="btrfs",
                       disk=disk.identity.path, manual_storage_preview_model=preview,
                       _platform_probe_result=platform)
         window = Gtk.Window()

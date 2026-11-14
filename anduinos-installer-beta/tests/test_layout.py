@@ -11,7 +11,12 @@ from installer_core.model import (
     SecureBoot,
 )
 
-from helpers import valid_plan
+from helpers import valid_plan as _valid_plan
+
+
+def valid_plan(**kwargs):
+    kwargs.setdefault("include_recovery", kwargs.get("filesystem", "btrfs") == "btrfs")
+    return _valid_plan(**kwargs)
 
 
 class LayoutTests(unittest.TestCase):
@@ -67,6 +72,7 @@ class LayoutTests(unittest.TestCase):
                 filesystem=plan.storage.filesystem,
                 esp_size_mib=plan.storage.esp_size_mib,
                 swap_size_mib=plan.storage.swap_size_mib,
+                include_recovery=plan.storage.include_recovery,
             ),
             build_erase_disk_layout(plan),
         )

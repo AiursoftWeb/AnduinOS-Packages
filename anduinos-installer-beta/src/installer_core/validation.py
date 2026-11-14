@@ -54,6 +54,8 @@ class ExecutionPolicy(str, Enum):
 
     RELEASE = "release"
     GUIDED_DESTRUCTIVE_TEST = "guided-destructive-test"
+    PRO = "pro"
+    GUIDED_DESTRUCTIVE_TEST_PRO = "guided-destructive-test-pro"
 
 
 def validate_plan_for_execution(
@@ -71,12 +73,14 @@ def validate_plan_for_execution(
     # This independently reviewable backend is deliberately not exposed by
     # the installer. Remove this gate only with the boot-chain/GUI acceptance;
     # otherwise a valid storage plan could create an unbootable installation.
-    if policy is ExecutionPolicy.RELEASE and plan.storage.encryption is not EncryptionMode.NONE:
+    if policy not in (ExecutionPolicy.PRO, ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST_PRO) and plan.storage.encryption is not EncryptionMode.NONE:
         raise PlanValidationError([
             "Encrypted installation is not enabled in the release installer yet"
         ])
+    if policy not in (ExecutionPolicy.PRO, ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST_PRO) and plan.recovery_enabled:
+        raise PlanValidationError(["Recovery environment requires Pro entitlement"])
     if (
-        policy is ExecutionPolicy.RELEASE
+        policy in (ExecutionPolicy.RELEASE, ExecutionPolicy.PRO)
         and plan.identity.authentication
         is AuthenticationMode.PASSWORDLESS_SHARED
     ):
@@ -93,6 +97,9 @@ def validate_plan(
     """Validate an erase-disk, guided-coexistence or manual GPT plan."""
 
     errors: list[str] = []
+
+    if not isinstance(plan.storage.include_recovery, bool):
+        errors.append("Recovery selection must be a boolean")
 
     if plan.schema_version != SCHEMA_VERSION:
         errors.append(
@@ -142,6 +149,7 @@ def validate_plan(
             + erase_disk_overhead_mib(
                 plan.storage.filesystem,
                 encrypted=plan.storage.encryption is EncryptionMode.LUKS2,
+                include_recovery=plan.storage.include_recovery,
             )
         ) * 1024**2
         if disk.expected_size_bytes - reserved < MINIMUM_ROOT_BYTES:
