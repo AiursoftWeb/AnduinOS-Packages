@@ -23,7 +23,7 @@ TERMINAL = {"complete", "already-installed", "blocked", "partial", "failed", "in
 
 
 def atomic_json(path, value, mode=0o600):
-    temporary = path.with_name("." + path.name + ".tmp")
+    temporary = path.with_name("." + path.name + "." + uuid.uuid4().hex + ".tmp")
     fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, mode)
     try:
         with os.fdopen(fd, "w") as stream:
@@ -67,11 +67,15 @@ def job_lock(path):
 def status(identifier, uid):
     report = json.loads((job_path(identifier) / "status.json").read_text())
     require(uid in (0, report["owner_uid"]), "This job belongs to another user")
-    if report["state"] in {"queued", "checking", "installing"} and time.time() - report["updated_at"] > 10:
+    if report["state"] in {"queued", "checking", "installing", "handoff"} and time.time() - report["updated_at"] > 10:
         active = subprocess.run(["systemctl", "show", "--value", "--property=ActiveState", report["unit"] + ".service"],
                                 capture_output=True, text=True, check=False, timeout=10)
-        if active.stdout.strip() in {"inactive", "failed"}:
+        boot_changed = report.get("boot_id") != Path("/proc/sys/kernel/random/boot_id").read_text().strip()
+        if boot_changed or active.returncode != 0 or active.stdout.strip() in {"inactive", "failed"}:
             report.update(state="interrupted", error="Installation service stopped without a final result; inspect dpkg before retrying")
+    if report["state"] == "prepared" and report.get("confirmation_required"):
+        # Older prepared jobs have a private plan and no handoff to review.
+        report["preview"] = json.loads((job_path(identifier) / "plan.json").read_text())
     return report
 
 
@@ -130,10 +134,25 @@ def inspect_import(path):
 
 
 def ensure_installable(report):
-    require(report["state"] in ("update-available", "already-installed"),
+    require(report["state"] in ("update-available", "already-installed", "updater-update-required"),
             "; ".join(report.get("blockers", [])) or "This bundle requires a newer installation engine")
-    require(not any(c["name"] == "anduinos-offline-updater" for s in report["stages"] for c in s["changes"]),
-            "Updater self-update handoff is not available in this installation preview")
+    if report["state"] == "updater-update-required":
+        require(len(report["stages"]) == 1 and report["stages"][0]["stage"]["operation"] == "install" and
+                report["stages"][0]["changes"] and
+                all(c["action"] == "install" for c in report["stages"][0]["changes"]),
+                "Bootstrap must be one explicit installation without removals")
+    else:
+        from .planning import replaces_runtime
+        require(not any(replaces_runtime(c["name"]) for s in report["stages"] for c in s["changes"]),
+                "Updater/runtime changes require a separate process handoff")
+
+
+def save_plan(path, report):
+    plan_hash = hashlib.sha256(json.dumps(report, sort_keys=True).encode()).hexdigest()
+    # Like dpkg's public package inventory, the plan contains no archive data.
+    # The unprivileged owner needs it to review a post-handoff confirmation.
+    atomic_json(path / "plan.json", report, mode=0o644)
+    return plan_hash
 
 
 def prepare(source, uid):
@@ -145,8 +164,7 @@ def prepare(source, uid):
         report = inspect_import(path)
         ensure_installable(report)
         # Bind confirmation to the complete root-produced plan, not caller JSON.
-        plan_hash = hashlib.sha256(json.dumps(report, sort_keys=True).encode()).hexdigest()
-        atomic_json(path / "plan.json", report)
+        plan_hash = save_plan(path, report)
         # Keep the large package plan out of frequently rewritten progress records.
         result = update(path, state="prepared", archive_sha256=digest, archive_bytes=size,
                         plan_sha256=plan_hash)
@@ -162,8 +180,8 @@ def start(identifier, plan_hash, uid):
         report = status(identifier, uid)
         require(report["state"] == "prepared" and report["plan_sha256"] == plan_hash,
                 "The confirmed plan is no longer available")
-        unit = "anduinos-offline-update-" + identifier
-        update(path, state="queued", unit=unit, boot_id=Path("/proc/sys/kernel/random/boot_id").read_text().strip())
+        unit = "anduinos-offline-update-" + identifier + "-" + uuid.uuid4().hex[:8]
+        update(path, state="queued", confirmation_required=False, unit=unit, boot_id=Path("/proc/sys/kernel/random/boot_id").read_text().strip())
         try:
             run(["systemd-run", "--quiet", "--collect", "--unit=" + unit,
                  "--property=Type=exec", "--property=TimeoutStopSec=infinity",

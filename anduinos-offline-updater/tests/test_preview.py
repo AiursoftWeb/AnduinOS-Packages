@@ -34,7 +34,7 @@ class PreviewTests(unittest.TestCase):
         packages, index = [], []
         for name, ver, depends in [("base-files", "2.0.5-1", "base-library (>= 5)"), ("base-library", "5", None),
                                   ("vim-common", "5", None), ("anduinos-offline-updater", "2.1.0-2", "bootstrap-library (>= 2)"),
-                                  ("bootstrap-library", "2", None)]:
+                                  ("bootstrap-library", "2", None), ("python3-apt", "2", None)]:
             directory = cls.root / name; (directory / "DEBIAN").mkdir(parents=True)
             (directory / "DEBIAN").chmod(0o755)
             control = f"Package: {name}\nVersion: {ver}\nArchitecture: all\nInstalled-Size: 16\nMaintainer: Test <test@example.invalid>\nDescription: Offline test\n"
@@ -151,6 +151,28 @@ class PreviewTests(unittest.TestCase):
         m["bootstrap"]["minimum_version"] = "99"
         with tempfile.TemporaryDirectory(dir=self.work) as out:
             with self.assertRaises(BundleError): verify(self.pack(m, "bad-minimum"), self.keyring, out)
+
+    def test_ordinary_self_update_is_split_before_system_changes(self):
+        self.state("2.0.0", "1", self.package("anduinos-offline-updater", "2.1.0-1"))
+        result = self.inspect()
+        self.assertEqual(result["state"], "updater-update-required", result)
+        self.assertEqual({c["name"] for s in result["stages"] for c in s["changes"]},
+                         {"anduinos-offline-updater", "bootstrap-library"})
+        self.state("2.0.0", "1", self.package("anduinos-offline-updater", "2.1.0-2", "bootstrap-library (>= 2)") +
+                   self.package("bootstrap-library", "2"))
+        result = self.inspect(client_version="2.1.0-2")
+        self.assertEqual(result["state"], "update-available", result)
+        self.assertFalse(any(c["name"] == "anduinos-offline-updater" for s in result["stages"] for c in s["changes"]))
+
+    def test_explicit_bootstrap_groups_the_native_runtime_before_handoff(self):
+        self.state("2.0.0", "1", self.package("anduinos-offline-updater", "2.1.0-1") +
+                   self.package("python3-apt", "1"))
+        m = copy.deepcopy(self.manifest); m["required_features"].append("updater-bootstrap-v1")
+        m["bootstrap"] = {"schema_version": 1, "package": "anduinos-offline-updater", "minimum_version": "2.1.0-2"}
+        result = self.inspect(self.pack(m, "native-runtime"))
+        self.assertEqual(result["state"], "updater-update-required", result)
+        self.assertEqual({c["name"] for s in result["stages"] for c in s["changes"]},
+                         {"anduinos-offline-updater", "bootstrap-library", "python3-apt"})
 
     def test_newer_os_refused_and_newer_packages_kept(self):
         self.state("2.0.6", "6")
