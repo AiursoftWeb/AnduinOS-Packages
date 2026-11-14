@@ -73,7 +73,8 @@ def status(identifier, uid):
         boot_changed = report.get("boot_id") != Path("/proc/sys/kernel/random/boot_id").read_text().strip()
         if boot_changed or active.returncode != 0 or active.stdout.strip() in {"inactive", "failed"}:
             report.update(state="interrupted", error="Installation service stopped without a final result; inspect dpkg before retrying")
-    if report["state"] == "prepared":
+    if report["state"] == "prepared" and report.get("confirmation_required"):
+        # Older prepared jobs have a private plan and no handoff to review.
         report["preview"] = json.loads((job_path(identifier) / "plan.json").read_text())
     return report
 

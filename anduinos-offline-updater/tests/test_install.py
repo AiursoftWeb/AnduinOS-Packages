@@ -92,6 +92,18 @@ class InstallationChecks(unittest.TestCase):
         for name in ("python3-requests", "python3-gi", "python3-pyqt6", "vim", "docker-ce"):
             self.assertFalse(replaces_runtime(name), name)
 
+    def test_existing_prepared_jobs_remain_readable_without_a_public_plan(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            jobs.update(path, state="prepared", owner_uid=1000)
+            with patch("anduinos_offline_updater.jobs.job_path", return_value=path):
+                self.assertEqual(jobs.status("unused", 1000)["state"], "prepared")
+                with self.assertRaises(BundleError): jobs.status("unused", 1001)
+                plan = {"state": "update-available", "stages": []}
+                jobs.save_plan(path, plan)
+                jobs.update(path, confirmation_required=True)
+                self.assertEqual(jobs.status("unused", 1000)["preview"], plan)
+
     def test_no_snapshot_is_not_an_installation_blocker(self):
         with patch("anduinos_offline_updater.install.snapshot_records", return_value=set()):
             self.assertEqual(snapshot_result(set(), {"state": "unavailable"})["state"], "unavailable")
