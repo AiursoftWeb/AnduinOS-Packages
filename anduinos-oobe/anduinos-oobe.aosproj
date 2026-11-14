@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-oobe</PackageName>
-    <PackageVersion>2.1.0-4+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-5+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS OOBE — First-run setup wizard and Welcome Center</PackageDescription>
     <Section>utils</Section>
@@ -23,6 +23,9 @@
 
   <ItemGroup>
     <Dependency Include="python3" />
+    <Dependency Include="apt" />
+    <Dependency Include="dpkg" />
+    <Suggest Include="anduinos-apt-config-for-china" />
     <Dependency Include="python3-gi" />
     <Dependency Include="curl" />
     <Dependency Include="ptyxis | gnome-terminal" />
@@ -39,12 +42,20 @@
 
   <ItemGroup>
     <IncludeFile Include="assets/display_scaling.py" Target="/usr/lib/anduinos-oobe/display_scaling.py" />
+    <IncludeFile Include="assets/software_sources.py" Target="/usr/lib/anduinos-oobe/software_sources.py" Mode="644" />
     <IncludeFile Include="assets/agents.py" Target="/usr/lib/anduinos-oobe/agents.py" />
     <IncludeFile Include="assets/create_aitool_shortcut.py" Target="/usr/lib/anduinos-oobe/create_aitool_shortcut.py" />
     <IncludeScript Include="assets/anduinos-oobe" Target="/usr/bin/anduinos-oobe" />
     <IncludeFile Include="assets/anduinos-oobe-autostart.desktop" Target="/etc/xdg/autostart/anduinos-oobe.desktop" />
     <IncludeFolder Include="resources/icons" Target="/usr/share/anduinos-oobe/icons" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
+    <IncludeFile Include="obj/china-config/noble-addon/amd64/china-apt-config.deb" Target="/usr/share/anduinos-oobe/china-config/amd64.deb" Mode="644" Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="obj/china-config/noble-addon/arm64/china-apt-config.deb" Target="/usr/share/anduinos-oobe/china-config/arm64.deb" Mode="644" Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="obj/china-config/resolute-addon/amd64/china-apt-config.deb" Target="/usr/share/anduinos-oobe/china-config/amd64.deb" Mode="644" Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="obj/china-config/resolute-addon/arm64/china-apt-config.deb" Target="/usr/share/anduinos-oobe/china-config/arm64.deb" Mode="644" Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="obj/china-config/stonking-addon/amd64/china-apt-config.deb" Target="/usr/share/anduinos-oobe/china-config/amd64.deb" Mode="644" Condition="'$(Suite)' == 'stonking-addon'" />
+    <IncludeFile Include="obj/china-config/stonking-addon/arm64/china-apt-config.deb" Target="/usr/share/anduinos-oobe/china-config/arm64.deb" Mode="644" Condition="'$(Suite)' == 'stonking-addon'" />
+
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +66,10 @@
 
   <ItemGroup>
     <PrebuildCommand Run="bash compile-locales.sh" />
+    <PrebuildCommand Run="bash bundle-china-config.sh noble-addon" Condition="'$(Suite)' == 'noble-addon'" />
+    <PrebuildCommand Run="bash bundle-china-config.sh resolute-addon" Condition="'$(Suite)' == 'resolute-addon'" />
+    <PrebuildCommand Run="bash bundle-china-config.sh stonking-addon" Condition="'$(Suite)' == 'stonking-addon'" />
+
   </ItemGroup>
   <ItemGroup>
     <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src LANGUAGE=C python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />

@@ -12,7 +12,7 @@ conditions are defined by `OobeWindow._get_page_factories()` in
 | 4 | Digital Sovereignty, Under Your Control | Always shown | Kept |
 | 5 | Secure Boot Configuration | Shown when the Secure Boot status is `ENABLED` or `UNKNOWN` | Kept |
 | 6 | Configure Hardware Drivers? | Always shown | Kept |
-| 7 | USTC Flathub Mirror for China | Shown when `LANGUAGE` (preferred) or `LANG` starts with `zh_CN` and the system Flathub remote is not already a recognized Chinese mirror | Removed |
+| 7 | Mainland China Software Sources | Shown when `LANGUAGE` (preferred) or `LANG` starts with `zh_CN` and both the China AnduinOS APT configuration and a recognized Chinese system Flathub mirror are not already configured | Removed |
 | 8 | Run Windows Apps, with Ease (Bottles) | Shown when the CPU architecture is not `aarch64` | Removed |
 | 9 | The Magic at Your Fingertips (Shortcuts) | Always shown | Kept |
 | 10 | Productive From Day One (App Recommendations) | Always added initially | Removed |
@@ -49,3 +49,7 @@ conditions are defined by `OobeWindow._get_page_factories()` in
 - Network readiness detection: `internet_connection_ready()`
 - CPU architecture detection: `is_arm64()`
 - Chinese locale detection: `is_chinese_locale()`
+
+The source page uses two large choices with the same operator labels and globe/flag artwork as the installer; its header uses a distinct location pin. Global continues without changing sources. China immediately probes signed AnduinOS APT metadata and USTC OSTree metadata before applying available sources through the existing authorization mechanism. It runs in the background, blocks duplicate operations while busy, advances on success, and permits retry or continuation after a warning. Only the installer defers changes to a saved execution plan. The package bundles both supported architecture variants of the configuration for its target suite.
+
+The globe and location-pin SVGs are package-local artwork shared with the installer. The national flag uses the standard 30 × 20 construction grid.
