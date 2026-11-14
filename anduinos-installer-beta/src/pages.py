@@ -6893,7 +6893,7 @@ def build_china_sources_page(shared, nav_view):
     first_button = None
     for enabled, icon, message in (
         (False, "globe", N_("Continue with global AnduinOS operated by AIURSOFT LIMITED, obtaining software from the global service network (not compliant in mainland China)")),
-        (True, "china-flag", N_("Use mainland China AnduinOS operated by Suzhou Aiursoft Technology, obtaining software from China")),
+        (True, "china-flag", N_("Use mainland China AnduinOS operated by Suzhou Aiursoft Technology Co., Ltd., obtaining software from software servers in China.")),
     ):
         button = Gtk.ToggleButton()
         if first_button is None:

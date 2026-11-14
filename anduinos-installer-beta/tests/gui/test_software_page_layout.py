@@ -61,7 +61,7 @@ class SoftwarePageLayoutTests(unittest.TestCase):
                            if isinstance(w, Gtk.Button) and w.has_css_class("china-source-choice")]
                 self.assertEqual(len(buttons), 2)
                 self.assertIn("AIURSOFT LIMITED", buttons[0].get_tooltip_text())
-                self.assertIn("苏州艾软科技", buttons[1].get_tooltip_text())
+                self.assertIn("苏州艾软科技有限公司", buttons[1].get_tooltip_text())
                 self.assertTrue(buttons[int(not selected)].get_active())
                 buttons[int(selected)].set_active(True)
                 self.assertTrue(buttons[int(selected)].get_active())
