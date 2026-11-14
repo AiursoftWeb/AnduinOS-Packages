@@ -46,7 +46,11 @@ class InstallerApplication(Adw.Application):
         development_mode: bool = False,
         bypass_payment: bool = False,
     ):
-        super().__init__(application_id=APP_ID)
+        # A Live session may already have opened the ordinary installer. Use a
+        # separate application identity for the explicit test session, so GTK
+        # does not forward its launch to the existing non-Pro process.
+        application_id = f"{APP_ID}.ProTest" if bypass_payment else APP_ID
+        super().__init__(application_id=application_id)
         detected_language = detect_system_language()
         hostname_device_type = detect_device_type()
         hostname_random_suffix = generate_random_suffix()
