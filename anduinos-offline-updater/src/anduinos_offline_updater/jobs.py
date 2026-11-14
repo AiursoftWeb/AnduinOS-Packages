@@ -68,6 +68,11 @@ def job_lock(path):
 def status(identifier, uid):
     report = json.loads((job_path(identifier) / "status.json").read_text())
     require(uid in (0, report["owner_uid"]), "This job belongs to another user")
+    if (report["state"] in {"complete", "already-installed"} and report.get("reboot_required") and
+            report.get("boot_id") and report["boot_id"] != Path("/proc/sys/kernel/random/boot_id").read_text().strip()):
+        # Keep the stored result as history, but do not repeat a reboot request
+        # that has already been satisfied. Another update may request a new one.
+        report["reboot_required"] = Path("/var/run/reboot-required").exists()
     if report["state"] in {"queued", "checking", "installing", "handoff"} and time.time() - report["updated_at"] > 10:
         active = subprocess.run(["systemctl", "show", "--value", "--property=ActiveState", report["unit"] + ".service"],
                                 capture_output=True, text=True, check=False, timeout=10)

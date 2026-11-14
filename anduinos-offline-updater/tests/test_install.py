@@ -110,6 +110,19 @@ class InstallationChecks(unittest.TestCase):
             self.assertEqual(snapshot_result(set(), {"state": "unavailable"})["state"], "unavailable")
             self.assertEqual(snapshot_result(set(), {"state": "requires-layout-check"})["state"], "unconfirmed")
 
+    def test_completed_job_does_not_repeat_a_satisfied_reboot_request(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            jobs.update(path, state="complete", owner_uid=1000, reboot_required=True, boot_id="previous-boot")
+            with patch("anduinos_offline_updater.jobs.job_path", return_value=path):
+                with patch.object(Path, "exists", return_value=False):
+                    self.assertFalse(jobs.status("unused", 1000)["reboot_required"])
+                with patch.object(Path, "exists", return_value=True):
+                    self.assertTrue(jobs.status("unused", 1000)["reboot_required"])
+                jobs.update(path, boot_id=Path("/proc/sys/kernel/random/boot_id").read_text().strip())
+                with patch.object(Path, "exists", return_value=False):
+                    self.assertTrue(jobs.status("unused", 1000)["reboot_required"])
+
     def test_hook_success_without_snapshot_is_not_reported_as_protected(self):
         with tempfile.TemporaryDirectory() as directory:
             record = Path(directory) / "transaction.json"
