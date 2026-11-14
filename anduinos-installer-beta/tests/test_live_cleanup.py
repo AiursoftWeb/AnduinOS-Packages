@@ -1,10 +1,21 @@
+from installer_core.validation import ExecutionPolicy
 import tempfile
 import unittest
 from dataclasses import replace
 from pathlib import Path
 
 from fakes import FakeRunner
-from helpers import valid_plan
+from helpers import valid_plan as _valid_plan
+
+
+def _pro_context(*args, **kwargs):
+    kwargs.setdefault("execution_policy", ExecutionPolicy.PRO)
+    return InstallContext(*args, **kwargs)
+
+
+def valid_plan(**kwargs):
+    kwargs.setdefault("include_recovery", kwargs.get("filesystem", "btrfs") == "btrfs")
+    return _valid_plan(**kwargs)
 from installer_core.live_cleanup import (
     ADVANCED_FILESYSTEM_TOOL_PACKAGES,
     LIVE_ONLY_PACKAGES,
@@ -58,7 +69,7 @@ def _context(
     root: Path,
     filesystem: Filesystem = Filesystem.BTRFS,
 ) -> InstallContext:
-    return InstallContext(
+    return _pro_context(
         valid_plan(filesystem=filesystem),
         lambda _message: None,
         values={"target": root, "chroot_environment_ready": True},
@@ -189,7 +200,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
                 "",
                 0,
             )
-            context = InstallContext(
+            context = _pro_context(
                 valid_plan(),
                 messages.append,
                 values={
@@ -569,7 +580,7 @@ class RemoveLivePackagesTests(unittest.TestCase):
                 RemoveLivePackagesStep(runner).verify(context)
 
     def test_execute_requires_the_prepared_target_chroot(self):
-        context = InstallContext(
+        context = _pro_context(
             valid_plan(),
             lambda _message: None,
             values={"target": Path("/target")},

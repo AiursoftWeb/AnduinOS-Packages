@@ -334,7 +334,7 @@ def prepare_encryption_credentials(state: dict[str, object]) -> EncryptionCreden
     confirmation = str(state.get("disk_password_confirmation") or "")
     if not password and not confirmation:
         return None
-    if not (state.get("development_mode") or state.get("_encryption_preview")):
+    if not state.get("has_pro_entitlement"):
         raise FrontendPlanError("Encrypted installation is not available yet")
     if state.get("storage_mode", "erase-disk") != "erase-disk":
         raise FrontendPlanError("Disk encryption requires a new whole-disk installation")
@@ -584,9 +584,11 @@ class ExecutorClient:
     def __init__(
         self, helper: str = "/usr/bin/anduinos-installer-executor", *,
         destructive_test: bool = False,
+        has_pro_entitlement: bool = False,
     ):
         self.helper = helper
         self.destructive_test = destructive_test
+        self.has_pro_entitlement = has_pro_entitlement
 
     def run(
         self,
@@ -626,6 +628,8 @@ class ExecutorClient:
                 "/usr/lib/anduinos-installer-beta/executor_cli.py",
                 GUIDED_TEST_FLAG,
             ]
+        if self.has_pro_entitlement:
+            inhibited_helper.append("--pro-entitlement")
         # The inhibitor protects the privileged executor's destructive
         # lifetime, so acquire it inside the same privilege boundary. Asking
         # the unprivileged GTK process for a block inhibitor is unreliable when

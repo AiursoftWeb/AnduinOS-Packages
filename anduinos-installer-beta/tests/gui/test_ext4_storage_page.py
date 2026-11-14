@@ -18,12 +18,26 @@ from test_manual_layout import manual_disk, selection
 
 
 class DiskEncryptionPageTests(unittest.TestCase):
+    def test_free_session_hides_passwords_and_displays_chinese_message(self):
+        shared = state()
+        shared.update(lang="zh_CN", development_mode=False,
+                      has_pro_entitlement=False,
+                      _platform_probe_result=PlatformProbe(
+                          Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED))
+        with patch("pages.probe_physical_memory_bytes", return_value=8 * 1024**3):
+            page = pages.build_disk_layout_page(shared, Mock())
+        widgets = list(descendants(page))
+        self.assertFalse(any(isinstance(w, Adw.PasswordEntryRow) for w in widgets))
+        self.assertTrue(any(isinstance(w, Gtk.Label) and w.get_label() == "磁盘加密功能正在开发……" for w in widgets))
+        self.assertEqual(len(pages._manual_role_choices("en_US")), 3)
+        self.assertEqual(len(pages._manual_role_choices("en_US", has_pro_entitlement=True)), 4)
+
     def test_unencrypted_next_requires_confirmation_and_encrypted_next_does_not(self):
         for filesystem in ("btrfs", "ext4"):
             with self.subTest(filesystem=filesystem):
                 shared = state()
                 shared.update(
-                    development_mode=True, filesystem=filesystem,
+                    development_mode=True, has_pro_entitlement=True, filesystem=filesystem,
                     _platform_probe_result=PlatformProbe(
                         Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED),
                 )
@@ -77,6 +91,7 @@ class DiskEncryptionPageTests(unittest.TestCase):
         shared = state()
         shared.update(
             development_mode=False,
+            has_pro_entitlement=True,
             _encryption_preview=True,
             _platform_probe_result=PlatformProbe(
                 Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED
@@ -96,7 +111,7 @@ class DiskEncryptionPageTests(unittest.TestCase):
         for filesystem in ("btrfs", "ext4"):
             with self.subTest(filesystem=filesystem):
                 shared = state()
-                shared.update(development_mode=True, filesystem=filesystem,
+                shared.update(development_mode=True, has_pro_entitlement=True, filesystem=filesystem,
                     swap_size_mib=4096, _platform_probe_result=PlatformProbe(
                         Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED))
                 with patch("pages.probe_physical_memory_bytes", return_value=8 * 1024**3):

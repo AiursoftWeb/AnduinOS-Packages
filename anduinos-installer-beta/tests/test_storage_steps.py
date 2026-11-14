@@ -1,3 +1,4 @@
+from installer_core.validation import ExecutionPolicy
 import subprocess
 import tempfile
 import unittest
@@ -5,7 +6,17 @@ from pathlib import Path
 from unittest.mock import patch
 
 from fakes import FakeRunner
-from helpers import valid_plan
+from helpers import valid_plan as _valid_plan
+
+
+def _pro_context(*args, **kwargs):
+    kwargs.setdefault("execution_policy", ExecutionPolicy.PRO)
+    return InstallContext(*args, **kwargs)
+
+
+def valid_plan(**kwargs):
+    kwargs.setdefault("include_recovery", kwargs.get("filesystem", "btrfs") == "btrfs")
+    return _valid_plan(**kwargs)
 from installer_core.esp import NvramInspection
 from installer_core.model import Architecture
 from installer_core.steps import InstallContext
@@ -15,7 +26,7 @@ from installer_core.storage_steps import MountTargetStep, PrepareStorageStep
 class PrepareStorageStepTests(unittest.TestCase):
     def test_rescue_started_after_preflight_blocks_before_storage_mutation(self):
         runner = FakeRunner()
-        context = InstallContext(valid_plan(), lambda _message: None)
+        context = _pro_context(valid_plan(), lambda _message: None)
         with patch("installer_core.storage_steps.require_rescue_center_closed",
                    side_effect=RuntimeError("close Rescue Center normally")):
             with self.assertRaisesRegex(RuntimeError, "close Rescue Center"):
@@ -25,7 +36,7 @@ class PrepareStorageStepTests(unittest.TestCase):
     def test_executes_partitioning_before_formatting(self):
         plan = valid_plan()
         runner = FakeRunner()
-        context = InstallContext(plan, lambda _message: None)
+        context = _pro_context(plan, lambda _message: None)
         step = PrepareStorageStep(runner)
 
         with patch("installer_core.storage_steps.Path.exists", return_value=True):
@@ -44,7 +55,7 @@ class PrepareStorageStepTests(unittest.TestCase):
     def test_preflight_requires_filesystem_tools(self):
         plan = valid_plan()
         runner = FakeRunner()
-        context = InstallContext(plan, lambda _message: None)
+        context = _pro_context(plan, lambda _message: None)
         PrepareStorageStep(runner).preflight(context)
         self.assertIn("mkfs.btrfs", runner.required)
         self.assertIn("mkswap", runner.required)
@@ -57,7 +68,7 @@ class PrepareStorageStepTests(unittest.TestCase):
         )
 
     def test_uefi_erase_preflight_requires_writable_nvram(self):
-        context = InstallContext(valid_plan(), lambda _message: None)
+        context = _pro_context(valid_plan(), lambda _message: None)
         step = PrepareStorageStep(
             FakeRunner(),
             nvram_inspector=lambda _runner: NvramInspection(
@@ -72,7 +83,7 @@ class PrepareStorageStepTests(unittest.TestCase):
     def test_recovery_partition_requires_formatter_but_not_optional_package(self):
         for architecture in Architecture:
             with self.subTest(architecture=architecture):
-                context = InstallContext(
+                context = _pro_context(
                     valid_plan(architecture=architecture), lambda _message: None,
                 )
                 runner = FakeRunner()
@@ -83,7 +94,7 @@ class PrepareStorageStepTests(unittest.TestCase):
     def test_zero_disk_swap_does_not_require_or_run_mkswap(self):
         plan = valid_plan(swap_size_mib=0)
         runner = FakeRunner()
-        context = InstallContext(plan, lambda _message: None)
+        context = _pro_context(plan, lambda _message: None)
         step = PrepareStorageStep(runner)
         step.preflight(context)
         self.assertNotIn("mkswap", runner.required)
@@ -102,7 +113,7 @@ class PrepareStorageStepTests(unittest.TestCase):
     def test_execute_reuses_the_preflight_execution_plan(self):
         plan = valid_plan()
         runner = FakeRunner()
-        context = InstallContext(plan, lambda _message: None)
+        context = _pro_context(plan, lambda _message: None)
         step = PrepareStorageStep(runner)
         step.preflight(context)
         frozen = context.values["erase_disk_execution_plan"]
@@ -124,7 +135,7 @@ class PrepareStorageStepTests(unittest.TestCase):
             0,
         )
         logs = []
-        context = InstallContext(plan, logs.append)
+        context = _pro_context(plan, logs.append)
 
         with patch("installer_core.storage_steps.Path.exists", return_value=True):
             PrepareStorageStep(runner).execute(context)
@@ -146,7 +157,7 @@ class PrepareStorageStepTests(unittest.TestCase):
         runner.outputs[
             ("swapon", "--show=NAME", "--noheadings", "--raw")
         ] = ("/dev/nvme0n1p3\n", "", 0)
-        context = InstallContext(
+        context = _pro_context(
             plan,
             lambda _message: None,
             values={
@@ -200,7 +211,7 @@ class PrepareStorageStepTests(unittest.TestCase):
 
         runner.run = run
         logs = []
-        context = InstallContext(plan, logs.append)
+        context = _pro_context(plan, logs.append)
 
         with patch("installer_core.storage_steps.Path.exists", return_value=True):
             PrepareStorageStep(runner).execute(context)
@@ -213,7 +224,7 @@ class MountTargetStepTests(unittest.TestCase):
     def test_btrfs_mounts_complete_subvolume_abi_and_efi(self):
         plan = valid_plan()
         runner = FakeRunner()
-        context = InstallContext(
+        context = _pro_context(
             plan,
             lambda _message: None,
             values={
@@ -287,7 +298,7 @@ class MountTargetStepTests(unittest.TestCase):
                 )
             ] = (source, "", 0)
         logs = []
-        context = InstallContext(
+        context = _pro_context(
             valid_plan(),
             logs.append,
             values={
@@ -329,7 +340,7 @@ class MountTargetStepTests(unittest.TestCase):
                 str(target / "boot/efi"),
             )
         ] = ("/dev/sda1\n", "", 0)
-        context = InstallContext(
+        context = _pro_context(
             valid_plan(),
             lambda _message: None,
             values={
@@ -357,7 +368,7 @@ class MountTargetStepTests(unittest.TestCase):
             target / "var/lib/containers",
             target / "var/lib/libvirt/images",
         ]
-        context = InstallContext(
+        context = _pro_context(
             valid_plan(),
             lambda _message: None,
             values={
@@ -376,7 +387,7 @@ class MountTargetStepTests(unittest.TestCase):
     def test_cleanup_unmounts_efi_before_root(self):
         plan = valid_plan()
         runner = FakeRunner()
-        context = InstallContext(
+        context = _pro_context(
             plan,
             lambda _message: None,
             values={

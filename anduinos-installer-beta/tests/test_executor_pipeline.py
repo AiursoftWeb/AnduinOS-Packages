@@ -1,7 +1,13 @@
+from installer_core.validation import ExecutionPolicy
 import unittest
 from unittest.mock import patch
 
-from helpers import valid_plan
+from helpers import valid_plan as _valid_plan
+
+
+def valid_plan(**kwargs):
+    kwargs.setdefault("include_recovery", kwargs.get("filesystem", "btrfs") == "btrfs")
+    return _valid_plan(**kwargs)
 from installer_core.executor import (
     InstallerExecutor,
     describe_installation_pipeline,
@@ -23,13 +29,13 @@ class ExecutorPipelineTests(unittest.TestCase):
     def test_guided_pipeline_is_available_under_default_beta_policy(self):
         plan, _inventory = guided_plan()
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
-            InstallerExecutor(lambda _message: None).run(plan)
+            InstallerExecutor(lambda _message: None, execution_policy=ExecutionPolicy.PRO).run(plan)
         self.assertIn("prepare-storage", CapturingStepRunner.captured)
         self.assertIn("install-bootloader", CapturingStepRunner.captured)
 
     def test_software_and_secure_boot_order_is_fixed(self):
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
-            InstallerExecutor(lambda _message: None).run(valid_plan())
+            InstallerExecutor(lambda _message: None, execution_policy=ExecutionPolicy.PRO).run(valid_plan())
         pipeline = CapturingStepRunner.captured
         self.assertEqual(
             pipeline[:4],
@@ -95,7 +101,7 @@ class ExecutorPipelineTests(unittest.TestCase):
     def test_optional_driver_step_is_only_present_when_selected(self):
         plan = valid_plan(install_third_party_drivers=True)
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
-            InstallerExecutor(lambda _message: None).run(plan)
+            InstallerExecutor(lambda _message: None, execution_policy=ExecutionPolicy.PRO).run(plan)
         self.assertIn(
             "install-third-party-drivers", CapturingStepRunner.captured
         )
@@ -112,7 +118,7 @@ class ExecutorPipelineTests(unittest.TestCase):
     def test_optional_multimedia_step_is_only_present_when_selected(self):
         plan = valid_plan(install_multimedia_codecs=True)
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
-            InstallerExecutor(lambda _message: None).run(plan)
+            InstallerExecutor(lambda _message: None, execution_policy=ExecutionPolicy.PRO).run(plan)
         pipeline = CapturingStepRunner.captured
         self.assertIn("install-multimedia-codecs", pipeline)
         self.assertLess(
@@ -125,7 +131,7 @@ class ExecutorPipelineTests(unittest.TestCase):
         )
 
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
-            InstallerExecutor(lambda _message: None).run(valid_plan())
+            InstallerExecutor(lambda _message: None, execution_policy=ExecutionPolicy.PRO).run(valid_plan())
         self.assertNotIn(
             "install-multimedia-codecs", CapturingStepRunner.captured
         )
@@ -134,7 +140,7 @@ class ExecutorPipelineTests(unittest.TestCase):
         from installer_core.model import Filesystem
 
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
-            InstallerExecutor(lambda _message: None).run(
+            InstallerExecutor(lambda _message: None, execution_policy=ExecutionPolicy.PRO).run(
                 valid_plan(filesystem=Filesystem.EXT4)
             )
         self.assertNotIn(
@@ -147,7 +153,7 @@ class ExecutorPipelineTests(unittest.TestCase):
         )
 
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
-            InstallerExecutor(lambda _message: None).run(valid_plan())
+            InstallerExecutor(lambda _message: None, execution_policy=ExecutionPolicy.PRO).run(valid_plan())
         self.assertIn(
             "ensure-snapshots-manager",
             CapturingStepRunner.captured,
@@ -167,7 +173,7 @@ class ExecutorPipelineTests(unittest.TestCase):
 
     def test_other_disk_system_check_is_uefi_only_and_near_the_end(self):
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
-            InstallerExecutor(lambda _message: None).run(valid_plan())
+            InstallerExecutor(lambda _message: None, execution_policy=ExecutionPolicy.PRO).run(valid_plan())
         pipeline = CapturingStepRunner.captured
         self.assertLess(
             pipeline.index("enroll-secure-boot"),
@@ -185,7 +191,7 @@ class ExecutorPipelineTests(unittest.TestCase):
             secure_boot=SecureBoot.NOT_APPLICABLE,
         )
         with patch("installer_core.executor.StepRunner", CapturingStepRunner):
-            InstallerExecutor(lambda _message: None).run(bios_plan)
+            InstallerExecutor(lambda _message: None, execution_policy=ExecutionPolicy.PRO).run(bios_plan)
         self.assertNotIn(
             "check-other-disk-systems", CapturingStepRunner.captured
         )

@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .command import CommandRunner
-from .model import Architecture, InstallMode, InstallPlan, PlatformSpec
+from .model import Architecture, EncryptionMode, InstallMode, InstallPlan, PlatformSpec
 from .probe import PlatformProbe, probe_platform
 from anduinos_secureboot.firmware import prepare_live_interface
 from .storage_commands import partition_path
@@ -173,7 +173,11 @@ def verify_target_disk_environment(
                 _installation_space_bytes(resolved_plan),
                 esp_size_mib=_installation_esp_size_mib(resolved_plan),
                 layout_overhead_mib=(
-                    erase_disk_overhead_mib(resolved_plan.storage.filesystem)
+                    erase_disk_overhead_mib(
+                        resolved_plan.storage.filesystem,
+                        encrypted=resolved_plan.storage.encryption is EncryptionMode.LUKS2,
+                        include_recovery=resolved_plan.storage.include_recovery,
+                    )
                     if resolved_plan.storage.mode is InstallMode.ERASE_DISK else 4
                 ),
             )
