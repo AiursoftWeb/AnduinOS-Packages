@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 09:03+0000\n"
 "PO-Revision-Date: 2026-09-09 12:00+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: ja\n"
@@ -17,14 +17,26 @@ msgstr ""
 msgid "A newer updater is required"
 msgstr "新しい更新プログラムが必要です"
 
+msgid "A recovery snapshot could not be confirmed."
+msgstr "復旧スナップショットの確認に失敗しました。"
+
 msgid "AnduinOS update packages"
 msgstr "AnduinOS 更新パッケージ"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "ファイルのインポートとインストール計画の確認を承認してください。まだパッケージはインストールされていません。"
 
 msgid "Cannot preview this update"
 msgstr "この更新はプレビューできません"
 
+msgid "Cannot read the update status"
+msgstr "更新ステータスを読み取れません"
+
 msgid "Check required"
 msgstr "確認が必要です"
+
+msgid "Checking the installation…"
+msgstr "インストールを確認中…"
 
 msgid "Checking your update…"
 msgstr "更新を確認中…"
@@ -32,8 +44,12 @@ msgstr "更新を確認中…"
 msgid "Choose Update File"
 msgstr "更新ファイルを選択"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "AnduinOS 更新パッケージを選択してください。\nファイルの確認にはインターネット接続は不要です。"
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"AnduinOS 更新パッケージを選択してください。\n"
+"ファイルの確認にはインターネット接続は不要です。"
 
 msgid "Choose another file"
 msgstr "別のファイルを選択"
@@ -44,11 +60,17 @@ msgstr "ローカルの .atgz ファイルを 1 つ選択してください。"
 msgid "Close"
 msgstr "閉じる"
 
+msgid "Continue"
+msgstr "続行"
+
 msgid "Could not open the file"
 msgstr "ファイルを開けませんでした"
 
 msgid "Could not open the website"
 msgstr "Web サイトを開けませんでした"
+
+msgid "Could not save the update session"
+msgstr "更新セッションを保存できませんでした"
 
 msgid "Current version"
 msgstr "現在のバージョン"
@@ -61,6 +83,24 @@ msgstr "Pro ベネフィットセンターから更新を取得"
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "インストール前に、インストールスペースとスナップショットの利用可能性を再確認する必要があります。"
+
+msgid "Installing your update…"
+msgstr "更新をインストール中…"
+
+msgid "Keep an independent backup of important files."
+msgstr "重要なファイルの独立したバックアップを作成してください。"
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "コマンドラインから再接続するには、このジョブIDを保持してください。"
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "コンピューターを電源に接続してください。このウィンドウを閉じても更新は停止しません。"
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "コンピューターを電源に接続してください。このウィンドウを閉じて、後で進捗を確認できます。"
+
+msgid "No snapshot was needed"
+msgstr "スナップショットは不要でした"
 
 msgid "No system packages were changed."
 msgstr "システムパッケージは変更されていません。"
@@ -77,14 +117,54 @@ msgstr "パッケージの変更"
 msgid "Package expansion estimate"
 msgstr "パッケージ展開の推定サイズ"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "プレビューのみ。このビルドでは更新のインストールは利用できません。"
+msgid "Preparing your update…"
+msgstr "更新を準備中…"
+
+msgid "Reconnect"
+msgstr "再接続"
+
+msgid "Reconnecting to your update…"
+msgstr "更新に再接続中…"
+
+msgid "Remove Imported File"
+msgstr "インポート済みファイルを削除"
+
+msgid "Removing the imported file…"
+msgstr "インポート済みファイルを削除中…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "更新の適用を完了するには、コンピューターを再起動してください。"
+
+msgid "Restarting the updater…"
+msgstr "アップデータ再起動中…"
 
 msgid "Review your update"
 msgstr "更新を確認"
 
+msgid "Some packages may already have changed. Check the details before trying again."
+msgstr "一部のパッケージは変更されている可能性があります。再試行する前に詳細を確認してください。"
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "ステップ {current} / {total}"
+
+msgid "Start Update"
+msgstr "更新を開始"
+
+msgid "Starting your update…"
+msgstr "更新を開始中…"
+
 msgid "System snapshot"
 msgstr "システムスナップショット"
+
+msgid "System snapshot created"
+msgstr "システムスナップショットを作成しました"
+
+msgid "System snapshots are disabled"
+msgstr "システムスナップショットは無効です"
+
+msgid "System snapshots are unavailable"
+msgstr "システムスナップショットは利用できません"
 
 msgid "Technical details"
 msgstr "技術的な詳細"
@@ -92,29 +172,65 @@ msgstr "技術的な詳細"
 msgid "Temporary storage"
 msgstr "一時ストレージ"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "リクエストが完了しませんでした。承認がキャンセルされた可能性があります。"
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "更新を確認できませんでした。ファイルを選択し直してください。"
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "更新がまだ実行中である可能性があります。確認するには再接続してください。別のインストールを開始しないでください。"
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "アップデータがアップグレードされました。残りの更新を確認して承認してください。"
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "これにより、インポートされたコピーとジョブ履歴が削除されますが、元のダウンロードは削除されません。"
+
+msgid "This update needs review"
+msgstr "この更新の確認が必要です"
 
 msgid "Unavailable"
 msgstr "利用不可"
 
+msgid "Unexpected update response."
+msgstr "予期しない更新応答です。"
+
 msgid "Unknown"
 msgstr "不明"
+
+msgid "Update complete"
+msgstr "更新完了"
 
 msgid "Update from a file"
 msgstr "ファイルから更新"
 
+msgid "Update stopped"
+msgstr "更新が停止しました"
+
 msgid "Update to"
 msgstr "更新先"
+
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "コマンドラインでこの古い更新セッションを確認するか、インポート済みファイルを削除して再選択してください。"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "署名を検証し、システムを確認しています。数分かかる場合があります。"
 
+msgid "Working…"
+msgstr "処理中…"
+
 msgid "You already have this update"
 msgstr "この更新は既に適用済みです"
+
+msgid "Your installed packages have been checked."
+msgstr "インストール済みパッケージが確認されました。"
 
 msgid "or drop an .atgz file here"
 msgstr "または .atgz ファイルをここにドロップ"
 
-msgid "Check an AnduinOS offline update package"
-msgstr "AnduinOS オフライン更新パッケージを確認"
+#~ msgid "Preview only. Installing updates is not available in this build."
+#~ msgstr "プレビューのみ。このビルドでは更新のインストールは利用できません。"
+
+#~ msgid "Check an AnduinOS offline update package"
+#~ msgstr "AnduinOS オフライン更新パッケージを確認"

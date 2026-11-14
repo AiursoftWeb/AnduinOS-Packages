@@ -1,5 +1,6 @@
 """Native GTK interactions with real signed fixtures and the CLI inspector."""
 import hashlib
+import json
 import os
 from pathlib import Path
 import time
@@ -27,6 +28,8 @@ class DesktopTests(unittest.TestCase):
     def setUp(self):
         self.fixture = self.fixtures()
         self.fixture.setUp()
+        self.state_patch = patch.object(self.gui.GLib, "get_user_state_dir", return_value=str(self.fixture.work / "state"))
+        self.state_patch.start()
         self.window = self.gui.UpdateWindow(self.application)
         self.window.present()
         self.status = Path("/var/lib/dpkg/status")
@@ -34,6 +37,7 @@ class DesktopTests(unittest.TestCase):
 
     def tearDown(self):
         self.window.close()
+        self.state_patch.stop()
         self.fixture.tearDown()
         self.assertEqual(hashlib.sha256(self.status.read_bytes()).hexdigest(), self.before)
 
@@ -170,6 +174,128 @@ class DesktopTests(unittest.TestCase):
         with patch.object(self.gui.GLib, "get_user_cache_dir", return_value=str(directory)):
             self.complete(self.fixture.bundle, close=True)
         self.assertFalse(any((directory / "anduinos-offline-updater").iterdir()))
+
+    def job_report(self, preview, **fields):
+        return dict(job_id="a" * 32, state="prepared", plan_sha256="b" * 64, preview=preview, **fields)
+
+    def labels(self):
+        result = []
+        def walk(widget):
+            if isinstance(widget, self.gui.Gtk.Label): result.append(widget.get_label())
+            child = widget.get_first_child()
+            while child:
+                walk(child)
+                child = child.get_next_sibling()
+        walk(self.window.content)
+        return result
+
+    def test_install_requires_root_import_and_exact_root_plan_confirmation(self):
+        preview = self.complete(self.fixture.bundle)
+        with patch.object(self.window, "command") as command:
+            self.window.prepare()
+            self.assertEqual(command.call_args.args[0], ["prepare", str(self.fixture.bundle)])
+            prepared = self.job_report(preview)
+            self.window.prepared(prepared, None)
+            self.assertFalse(self.window.back.get_visible())
+            self.assertEqual(json.loads(self.window.bookmark.read_text())["job_id"], "a" * 32)
+            self.window.start_update()
+            self.assertEqual(command.call_args.args[0], ["install", "a" * 32, "--confirm-plan", "b" * 64])
+            self.window.start_update()
+            self.assertEqual(command.call_count, 2, "Double click must not start another request")
+
+    def test_cancelled_import_does_not_create_a_session_or_offer_install(self):
+        self.window.busy = True
+        self.window.prepared(None, "Authorization cancelled")
+        self.assertFalse(self.window.busy)
+        self.assertIsNone(self.window.job)
+        self.assertFalse(self.window.bookmark.exists())
+        self.assertIn(self.gui._("No system packages were changed."), self.labels())
+
+    def test_handoff_requires_a_new_confirmation_and_never_autostarts(self):
+        preview = self.complete(self.fixture.bundle)
+        self.window.job = "a" * 32
+        with patch.object(self.window, "command") as command:
+            self.window.show_job(dict(self.job_report(preview, confirmation_required=True), plan_sha256="c" * 64))
+            command.assert_not_called()
+            self.assertIn(self.gui._("The updater has been upgraded. Review and confirm the remaining update."), self.labels())
+            self.window.start_update()
+            self.assertEqual(command.call_args.args[0][-1], "c" * 64)
+
+    def test_progress_is_real_and_does_not_rebuild_the_page_or_allow_another_file(self):
+        self.window.job = "a" * 32
+        report = dict(job_id=self.window.job, state="installing", stage=1, stage_count=2,
+                      progress=dict(phase="dpkg", package="vim", percent=35))
+        self.window.show_job(report)
+        content = self.window.content
+        bar = self.window.progress_bar
+        self.assertAlmostEqual(bar.get_fraction(), .35)
+        report["progress"]["percent"] = 64
+        self.window.show_job(report)
+        self.assertIs(self.window.content, content)
+        self.assertIs(self.window.progress_bar, bar)
+        self.assertAlmostEqual(bar.get_fraction(), .64)
+        self.assertFalse(self.window.inspect_files([self.file(self.fixture.bundle)]))
+        self.assertFalse(self.window.back.get_visible())
+
+    def test_success_snapshot_and_reboot_are_not_assumed(self):
+        self.window.job = "a" * 32
+        self.window.show_job(dict(state="complete", reboot_required=True, snapshot=dict(state="unconfirmed")))
+        self.assertIn(self.gui._("Update complete"), self.labels())
+        self.assertIn(self.gui._("Restart your computer to finish applying the update."), self.labels())
+        self.assertIn(self.gui._("A recovery snapshot could not be confirmed."), self.labels())
+        self.assertNotIn(self.gui._("System snapshot created"), self.labels())
+
+    def test_partial_and_interrupted_never_offer_blind_install_retry(self):
+        self.window.job = "a" * 32
+        for state in ("partial", "interrupted", "blocked"):
+            self.window.show_job(dict(state=state, error="<dpkg needs inspection>"))
+            self.assertIn(self.gui._("Update stopped"), self.labels())
+            self.assertNotIn(self.gui._("Update complete"), self.labels())
+            self.assertNotIn(self.gui._("Start Update"), self.labels())
+            self.assertNotIn(self.gui._("No system packages were changed."), self.labels())
+
+    def test_reopen_reconnects_without_reinstalling_or_trusting_a_saved_hash(self):
+        preview = self.complete(self.fixture.bundle)
+        self.window.prepared(self.job_report(preview), None)
+        self.window.close()
+        with patch.object(self.gui.UpdateWindow, "command") as command:
+            self.window = self.gui.UpdateWindow(self.application)
+            self.window.present()
+            self.assertEqual(command.call_args.args[0], ["status", "a" * 32])
+        self.window.show_job(dict(state="installing", progress={}))
+        with patch.object(self.window, "command") as command:
+            self.window.close()
+            command.assert_not_called()
+            self.assertIsNone(self.window.poll_source)
+        self.assertTrue(self.window.bookmark.exists())
+
+    def test_response_loss_keeps_the_job_and_only_offers_reconnect(self):
+        self.window.job = "a" * 32
+        self.window.started(None, "Caller response was lost")
+        self.assertTrue(self.window.busy)
+        self.assertIn(self.gui._("Reconnect"), self.labels())
+        self.assertNotIn(self.gui._("Start Update"), self.labels())
+
+    def test_session_removed_from_cli_does_not_leave_the_app_stuck(self):
+        self.window.job = "a" * 32
+        self.window.remember()
+        with patch("anduinos_offline_updater.jobs.ROOT", self.fixture.work / "removed-jobs"):
+            self.window.queried(None, "Job no longer exists")
+        self.assertIsNone(self.window.job)
+        self.assertFalse(self.window.bookmark.exists())
+        self.assertFalse(self.window.busy)
+
+    def test_discard_is_explicit_and_only_clears_bookmark_after_success(self):
+        preview = self.complete(self.fixture.bundle)
+        self.window.prepared(self.job_report(preview), None)
+        with patch.object(self.window, "command") as command:
+            self.window.discard()
+            self.assertEqual(command.call_args.args[0], ["discard", "a" * 32])
+            self.assertTrue(self.window.bookmark.exists())
+            self.window.discarded(dict(state="discarded"), None)
+        self.assertIsNone(self.window.job)
+        self.assertFalse(self.window.bookmark.exists())
+        self.assertTrue(self.fixture.bundle.exists())
 
 
 if __name__ == "__main__":

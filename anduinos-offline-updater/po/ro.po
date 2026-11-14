@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 09:03+0000\n"
 "PO-Revision-Date: 2026-09-09 12:04+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: ro\n"
@@ -17,14 +17,26 @@ msgstr ""
 msgid "A newer updater is required"
 msgstr "Este actualizator necesită o versiune mai nouă"
 
+msgid "A recovery snapshot could not be confirmed."
+msgstr "Nu s-a putut confirma o instantanee de recuperare."
+
 msgid "AnduinOS update packages"
 msgstr "Pachete de actualizare AnduinOS"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "Autorizați importarea fișierului și verificarea planului de instalare. Niciun pachet nu a fost instalat încă."
 
 msgid "Cannot preview this update"
 msgstr "Nu se poate previzualiza această actualizare"
 
+msgid "Cannot read the update status"
+msgstr "Nu se poate citi starea actualizării"
+
 msgid "Check required"
 msgstr "Verificare necesară"
+
+msgid "Checking the installation…"
+msgstr "Se verifică instalarea…"
 
 msgid "Checking your update…"
 msgstr "Se verifică actualizarea dvs.…"
@@ -32,8 +44,12 @@ msgstr "Se verifică actualizarea dvs.…"
 msgid "Choose Update File"
 msgstr "Alegeți fișierul de actualizare"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "Alegeți un pachet de actualizare AnduinOS.\nNu este necesară o conexiune la internet pentru a verifica fișierul."
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"Alegeți un pachet de actualizare AnduinOS.\n"
+"Nu este necesară o conexiune la internet pentru a verifica fișierul."
 
 msgid "Choose another file"
 msgstr "Alegeți alt fișier"
@@ -44,11 +60,17 @@ msgstr "Alegeți un fișier .atgz local."
 msgid "Close"
 msgstr "Închide"
 
+msgid "Continue"
+msgstr "Continuă"
+
 msgid "Could not open the file"
 msgstr "Nu s-a putut deschide fișierul"
 
 msgid "Could not open the website"
 msgstr "Nu s-a putut deschide site-ul web"
+
+msgid "Could not save the update session"
+msgstr "Nu s-a putut salva sesiunea de actualizare"
 
 msgid "Current version"
 msgstr "Versiunea curentă"
@@ -61,6 +83,24 @@ msgstr "Obțineți actualizări din centrul de beneficii Pro"
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "Spațiul de instalare și disponibilitatea instantaneei sistemului trebuie verificate din nou înainte de instalare."
+
+msgid "Installing your update…"
+msgstr "Se instalează actualizarea…"
+
+msgid "Keep an independent backup of important files."
+msgstr "Păstrați o copie de rezervă independentă pentru fișierele importante."
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "Păstrați acest ID de sarcină pentru a vă reconecta din linia de comandă."
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "Păstrați computerul conectat la o sursă de alimentare. Închiderea acestei ferestre nu va opri actualizarea."
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "Păstrați computerul conectat la o sursă de alimentare. Puteți închide această fereastră și reveniți să verificați progresul."
+
+msgid "No snapshot was needed"
+msgstr "Nu a fost necesară o instantanee"
 
 msgid "No system packages were changed."
 msgstr "Nu s-au modificat pachete de sistem."
@@ -77,14 +117,54 @@ msgstr "Modificări de pachete"
 msgid "Package expansion estimate"
 msgstr "Estimare extindere pachete"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "Doar previzualizare. Instalarea actualizărilor nu este disponibilă în această versiune."
+msgid "Preparing your update…"
+msgstr "Se pregătește actualizarea…"
+
+msgid "Reconnect"
+msgstr "Reconectare"
+
+msgid "Reconnecting to your update…"
+msgstr "Se reconectează la actualizarea dvs.…"
+
+msgid "Remove Imported File"
+msgstr "Elimină fișierul importat"
+
+msgid "Removing the imported file…"
+msgstr "Se elimină fișierul importat…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "Reporniți computerul pentru a finaliza aplicarea actualizării."
+
+msgid "Restarting the updater…"
+msgstr "Se repornește actualizatorul…"
 
 msgid "Review your update"
 msgstr "Revizuiți actualizarea"
 
+msgid "Some packages may already have changed. Check the details before trying again."
+msgstr "Unele pachete ar putea fi deja modificate. Verificați detaliile înainte de a încerca din nou."
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "Etapa {current} din {total}"
+
+msgid "Start Update"
+msgstr "Pornește actualizarea"
+
+msgid "Starting your update…"
+msgstr "Se pornește actualizarea…"
+
 msgid "System snapshot"
 msgstr "Instantaneu de sistem"
+
+msgid "System snapshot created"
+msgstr "Instantanee de sistem creată"
+
+msgid "System snapshots are disabled"
+msgstr "Instantaneele de sistem sunt dezactivate"
+
+msgid "System snapshots are unavailable"
+msgstr "Instantaneele de sistem nu sunt disponibile"
 
 msgid "Technical details"
 msgstr "Detalii tehnice"
@@ -92,29 +172,65 @@ msgstr "Detalii tehnice"
 msgid "Temporary storage"
 msgstr "Stocare temporară"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "Solicitarea nu s-a finalizat. Autorizarea ar putea fi fost anulată."
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "Actualizarea nu a putut fi verificată. Încercați să alegeți din nou fișierul."
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "Actualizarea ar putea fi încă în curs de execuție. Reconectați pentru a o verifica; nu inițiați o altă instalare."
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "Actualizatorul a fost actualizat. Examinați și confirmați actualizarea rămasă."
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "Aceasta elimină copia importată și istoricul sarcinilor, nu descărcarea originală."
+
+msgid "This update needs review"
+msgstr "Această actualizare necesită examinare"
 
 msgid "Unavailable"
 msgstr "Indisponibil"
 
+msgid "Unexpected update response."
+msgstr "Răspuns neașteptat la actualizare."
+
 msgid "Unknown"
 msgstr "Necunoscut"
+
+msgid "Update complete"
+msgstr "Actualizare finalizată"
 
 msgid "Update from a file"
 msgstr "Actualizare din fișier"
 
+msgid "Update stopped"
+msgstr "Actualizare oprită"
+
 msgid "Update to"
 msgstr "Actualizare la"
+
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "Folosiți linia de comandă pentru a examina această sesiune de actualizare mai veche sau eliminați fișierul importat și selectați-o din nou."
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Se verifică semnătura și se analizează sistemul. Acest lucru poate dura câteva minute."
 
+msgid "Working…"
+msgstr "Se lucrează…"
+
 msgid "You already have this update"
 msgstr "Aveți deja această actualizare"
+
+msgid "Your installed packages have been checked."
+msgstr "Pachetele instalate au fost verificate."
 
 msgid "or drop an .atgz file here"
 msgstr "sau trageți un fișier .atgz aici"
 
-msgid "Check an AnduinOS offline update package"
-msgstr "Verificați un pachet de actualizare offline AnduinOS"
+#~ msgid "Preview only. Installing updates is not available in this build."
+#~ msgstr "Doar previzualizare. Instalarea actualizărilor nu este disponibilă în această versiune."
+
+#~ msgid "Check an AnduinOS offline update package"
+#~ msgstr "Verificați un pachet de actualizare offline AnduinOS"

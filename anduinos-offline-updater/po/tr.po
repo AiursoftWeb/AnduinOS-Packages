@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 09:03+0000\n"
 "PO-Revision-Date: 2026-09-09 12:07+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: tr\n"
@@ -17,14 +17,26 @@ msgstr ""
 msgid "A newer updater is required"
 msgstr "Yeni bir güncelleyici gerekli"
 
+msgid "A recovery snapshot could not be confirmed."
+msgstr "Bir kurtarma anlık görüntüsü onaylanamadı."
+
 msgid "AnduinOS update packages"
 msgstr "AnduinOS güncelleme paketleri"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "Dosyanın içe aktarılmasını ve kurulum planının kontrol edilmesini onaylayın. Henüz paket kurulmadı."
 
 msgid "Cannot preview this update"
 msgstr "Bu güncellemeyi önizlenemiyor"
 
+msgid "Cannot read the update status"
+msgstr "Güncelleme durumu okunamıyor"
+
 msgid "Check required"
 msgstr "Kontrol gerekli"
+
+msgid "Checking the installation…"
+msgstr "Kurulum kontrol ediliyor…"
 
 msgid "Checking your update…"
 msgstr "Güncellemeniz kontrol ediliyor…"
@@ -32,8 +44,12 @@ msgstr "Güncellemeniz kontrol ediliyor…"
 msgid "Choose Update File"
 msgstr "Güncelleme Dosyası Seç"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "Bir AnduinOS güncelleme paketi seçin.\nDosyayı kontrol etmek için internet bağlantısına gerek yoktur."
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"Bir AnduinOS güncelleme paketi seçin.\n"
+"Dosyayı kontrol etmek için internet bağlantısına gerek yoktur."
 
 msgid "Choose another file"
 msgstr "Başka bir dosya seç"
@@ -44,11 +60,17 @@ msgstr "Tek bir yerel .atgz dosyası seçin."
 msgid "Close"
 msgstr "Kapat"
 
+msgid "Continue"
+msgstr "Devam Et"
+
 msgid "Could not open the file"
 msgstr "Dosya açılamadı"
 
 msgid "Could not open the website"
 msgstr "Web sitesi açılamadı"
+
+msgid "Could not save the update session"
+msgstr "Güncelleme oturumu kaydedilemedi"
 
 msgid "Current version"
 msgstr "Mevcut sürüm"
@@ -61,6 +83,24 @@ msgstr "Güncellemeleri Pro avantajlar merkezinizden alın"
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "Yüklemeden önce kurulum alanı ve sistem görüntüsü kullanımları yeniden kontrol edilmelidir."
+
+msgid "Installing your update…"
+msgstr "Güncellemeniz kuruluyor…"
+
+msgid "Keep an independent backup of important files."
+msgstr "Önemli dosyaların bağımsız bir yedeğini tutun."
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "Komut satırından yeniden bağlanmak için bu iş kimliğini saklayın."
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "Bilgisayarınızı güç kaynağına bağlı tutun. Bu pencereyi kapatmak güncellemeyi durdurmaz."
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "Bilgisayarınızı güç kaynağına bağlı tutun. Bu pencereyi kapatabilir ve ilerlemeyi kontrol etmek için dönebilirsiniz."
+
+msgid "No snapshot was needed"
+msgstr "Anlık görüntü gerekmedi"
 
 msgid "No system packages were changed."
 msgstr "Sistem paketlerinde değişiklik yapılmadı."
@@ -77,14 +117,54 @@ msgstr "Paket değişiklikleri"
 msgid "Package expansion estimate"
 msgstr "Paket genişleme tahmini"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "Yalnızca önizleme. Bu sürümde güncellemeleri yüklemek mevcut değil."
+msgid "Preparing your update…"
+msgstr "Güncellemeniz hazırlanıyor…"
+
+msgid "Reconnect"
+msgstr "Yeniden Bağlan"
+
+msgid "Reconnecting to your update…"
+msgstr "Güncellemenize yeniden bağlanılıyor…"
+
+msgid "Remove Imported File"
+msgstr "İçe Aktarılan Dosyayı Kaldır"
+
+msgid "Removing the imported file…"
+msgstr "İçe aktarılan dosya kaldırılıyor…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "Güncellemeyi uygulamayı tamamlamak için bilgisayarınızı yeniden başlatın."
+
+msgid "Restarting the updater…"
+msgstr "Güncelleyici yeniden başlatılıyor…"
 
 msgid "Review your update"
 msgstr "Güncellemenizi gözden geçirin"
 
+msgid "Some packages may already have changed. Check the details before trying again."
+msgstr "Bazı paketler zaten değişmiş olabilir. Tekrar denemeden önce ayrıntıları kontrol edin."
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "{total} aşamasından {current}. aşama"
+
+msgid "Start Update"
+msgstr "Güncellemeyi Başlat"
+
+msgid "Starting your update…"
+msgstr "Güncellemeniz başlatılıyor…"
+
 msgid "System snapshot"
 msgstr "Sistem görüntüsü"
+
+msgid "System snapshot created"
+msgstr "Sistem anlık görüntüsü oluşturuldu"
+
+msgid "System snapshots are disabled"
+msgstr "Sistem anlık görüntüleri devre dışı"
+
+msgid "System snapshots are unavailable"
+msgstr "Sistem anlık görüntüleri kullanılamıyor"
 
 msgid "Technical details"
 msgstr "Teknik ayrıntılar"
@@ -92,29 +172,65 @@ msgstr "Teknik ayrıntılar"
 msgid "Temporary storage"
 msgstr "Geçici depolama"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "İstek tamamlanmadı. Yetkilendirme iptal edilmiş olabilir."
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "Güncelleme kontrol edilemedi. Dosyayı tekrar seçmeyi deneyin."
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "Güncelleme hâlâ çalışıyor olabilir. Kontrol etmek için yeniden bağlanın; başka bir kurulum başlatmayın."
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "Güncelleyici yükseltildi. Kalan güncellemeyi gözden geçirin ve onaylayın."
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "Bu, içe aktarılan kopyayı ve iş geçmişini kaldırır; orijinal indirmenizi değil."
+
+msgid "This update needs review"
+msgstr "Bu güncelleme gözden geçirilmeli"
 
 msgid "Unavailable"
 msgstr "Mevcut değil"
 
+msgid "Unexpected update response."
+msgstr "Beklenmeyen güncelleme yanıtı."
+
 msgid "Unknown"
 msgstr "Bilinmiyor"
+
+msgid "Update complete"
+msgstr "Güncelleme tamamlandı"
 
 msgid "Update from a file"
 msgstr "Dosyadan güncelle"
 
+msgid "Update stopped"
+msgstr "Güncelleme durduruldu"
+
 msgid "Update to"
 msgstr "Güncelle"
+
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "Bu eski güncelleme oturumunu gözden geçirmek için komut satırını kullanın veya içe aktarılan dosyasını kaldırıp yeniden seçin."
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "İmza doğrulanıyor ve sisteminiz kontrol ediliyor. Bu birkaç dakika sürebilir."
 
+msgid "Working…"
+msgstr "Çalışıyor…"
+
 msgid "You already have this update"
 msgstr "Bu güncellemeye zaten sahipsiniz"
+
+msgid "Your installed packages have been checked."
+msgstr "Yüklü paketleriniz kontrol edildi."
 
 msgid "or drop an .atgz file here"
 msgstr "veya bir .atgz dosyasını buraya sürükleyin"
 
-msgid "Check an AnduinOS offline update package"
-msgstr "Bir AnduinOS çevrimdışı güncelleme paketini kontrol edin"
+#~ msgid "Preview only. Installing updates is not available in this build."
+#~ msgstr "Yalnızca önizleme. Bu sürümde güncellemeleri yüklemek mevcut değil."
+
+#~ msgid "Check an AnduinOS offline update package"
+#~ msgstr "Bir AnduinOS çevrimdışı güncelleme paketini kontrol edin"

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 09:03+0000\n"
 "PO-Revision-Date: 2026-09-09 12:06+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: th\n"
@@ -17,14 +17,26 @@ msgstr ""
 msgid "A newer updater is required"
 msgstr "ต้องอัปเดตตัวอัปเดตเวอร์ชันใหม่"
 
+msgid "A recovery snapshot could not be confirmed."
+msgstr "ไม่สามารถยืนยันภาพสำรองระบบได้"
+
 msgid "AnduinOS update packages"
 msgstr "แพ็กเกจอัปเดต AnduinOS"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "อนุมัติการนำเข้าไฟล์และตรวจสอบแผนการติดตั้ง ยังไม่ได้ติดตั้งแพ็กเกจใด ๆ"
 
 msgid "Cannot preview this update"
 msgstr "ไม่สามารถดูตัวอย่างการอัปเดตนี้"
 
+msgid "Cannot read the update status"
+msgstr "ไม่สามารถอ่านสถานะการอัปเดตได้"
+
 msgid "Check required"
 msgstr "ต้องตรวจสอบ"
+
+msgid "Checking the installation…"
+msgstr "กำลังตรวจสอบการติดตั้ง…"
 
 msgid "Checking your update…"
 msgstr "กำลังตรวจสอบการอัปเดตของคุณ…"
@@ -32,8 +44,12 @@ msgstr "กำลังตรวจสอบการอัปเดตของ
 msgid "Choose Update File"
 msgstr "เลือกไฟล์อัปเดต"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "เลือกแพ็กเกจอัปเดต AnduinOS\nไม่ต้องการเชื่อมต่ออินเทอร์เน็ตเพื่อตรวจสอบไฟล์"
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"เลือกแพ็กเกจอัปเดต AnduinOS\n"
+"ไม่ต้องการเชื่อมต่ออินเทอร์เน็ตเพื่อตรวจสอบไฟล์"
 
 msgid "Choose another file"
 msgstr "เลือกไฟล์อื่น"
@@ -44,11 +60,17 @@ msgstr "เลือกไฟล์ .atgz ในเครื่องหนึ�
 msgid "Close"
 msgstr "ปิด"
 
+msgid "Continue"
+msgstr "ดำเนินการต่อ"
+
 msgid "Could not open the file"
 msgstr "ไม่สามารถเปิดไฟล์ได้"
 
 msgid "Could not open the website"
 msgstr "ไม่สามารถเปิดเว็บไซต์ได้"
+
+msgid "Could not save the update session"
+msgstr "ไม่สามารถเซสชันการอัปเดตได้"
 
 msgid "Current version"
 msgstr "เวอร์ชันปัจจุบัน"
@@ -61,6 +83,24 @@ msgstr "รับอัปเดตจากศูนย์สิทธิปร
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "ต้องตรวจสอบพื้นที่ติดตั้งและความพร้อมใช้งานของสแนปชอตระบบใหม่อีกครั้งก่อนติดตั้ง"
+
+msgid "Installing your update…"
+msgstr "กำลังติดตั้งการอัปเดตของคุณ…"
+
+msgid "Keep an independent backup of important files."
+msgstr "ทำสำเนาสำรองอิสระของไฟล์สำคัญไว้ด้วย"
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "เก็บรหัสงานนี้ไว้เพื่อเชื่อมต่อใหม่จากบรรทัดคำสั่ง"
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "เสียบปลั๊กไฟให้คอมพิวเตอร์ การปิดหน้าต่างนี้จะไม่หยุดการอัปเดต"
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "เสียบปลั๊กไฟให้คอมพิวเตอร์ คุณสามารถปิดหน้าต่างนี้และกลับมาดูความคืบหน้าได้"
+
+msgid "No snapshot was needed"
+msgstr "ไม่จำเป็นต้องสร้างภาพสำรองระบบ"
 
 msgid "No system packages were changed."
 msgstr "ไม่มีแพ็กเกจระบบถูกเปลี่ยนแปลง"
@@ -77,14 +117,54 @@ msgstr "การเปลี่ยนแปลงของแพ็กเกจ
 msgid "Package expansion estimate"
 msgstr "ประมาณการพื้นที่ขยายแพ็กเกจ"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "ดูตัวอย่างเท่านั้น การอัปเดตไม่พร้อมใช้งานในเวอร์ชันนี้"
+msgid "Preparing your update…"
+msgstr "กำลังเตรียมการอัปเดตของคุณ…"
+
+msgid "Reconnect"
+msgstr "เชื่อมต่อใหม่"
+
+msgid "Reconnecting to your update…"
+msgstr "กำลังเชื่อมต่อใหม่กับการอัปเดตของคุณ…"
+
+msgid "Remove Imported File"
+msgstr "ลบไฟล์ที่นำเข้า"
+
+msgid "Removing the imported file…"
+msgstr "กำลังลบไฟล์ที่นำเข้า…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "รีสตาร์ทคอมพิวเตอร์เพื่อเสร็จสิ้นการติดตั้งการอัปเดต"
+
+msgid "Restarting the updater…"
+msgstr "กำลังรีสตาร์ทตัวอัปเดต…"
 
 msgid "Review your update"
 msgstr "ตรวจสอบการอัปเดตของคุณ"
 
+msgid "Some packages may already have changed. Check the details before trying again."
+msgstr "บางแพ็กเกจอาจมีการเปลี่ยนแปลงแล้ว ตรวจสอบรายละเอียดก่อนลองใหม่"
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "ขั้นตอน {current} จาก {total}"
+
+msgid "Start Update"
+msgstr "เริ่มอัปเดต"
+
+msgid "Starting your update…"
+msgstr "กำลังเริ่มการอัปเดตของคุณ…"
+
 msgid "System snapshot"
 msgstr "สแนปชอตระบบ"
+
+msgid "System snapshot created"
+msgstr "สร้างภาพสำรองระบบแล้ว"
+
+msgid "System snapshots are disabled"
+msgstr "การสำรองภาพระบบถูกปิดใช้งาน"
+
+msgid "System snapshots are unavailable"
+msgstr "การสำรองภาพระบบไม่พร้อมใช้งาน"
 
 msgid "Technical details"
 msgstr "รายละเอียดทางเทคนิค"
@@ -92,29 +172,65 @@ msgstr "รายละเอียดทางเทคนิค"
 msgid "Temporary storage"
 msgstr "พื้นที่จัดเก็บชั่วคราว"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "คำขอไม่เสร็จสมบูรณ์ การอนุมัติอาจถูกยกเลิกแล้ว"
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "ไม่สามารถตรวจสอบการอัปเดตได้ ลองเลือกไฟล์อีกครั้ง"
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "การอัปเดตอาจยังทำงานอยู่ เชื่อมต่อใหม่เพื่อตรวจสอบ อย่าเริ่มการติดตั้งอีก"
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "ตัวอัปเดตได้รับการอัปเกรดแล้ว ตรวจสอบและยืนยันการอัปเดตที่เหลือ"
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "การดำเนินการนี้จะลบสำเนาที่นำเข้าและประวัติงาน ไม่ใช่การดาวน์โหลดเดิมของคุณ"
+
+msgid "This update needs review"
+msgstr "การอัปเดตนี้ต้องได้รับการตรวจสอบ"
 
 msgid "Unavailable"
 msgstr "ไม่พร้อมใช้งาน"
 
+msgid "Unexpected update response."
+msgstr "การตอบสนองการอัปเดตที่ไม่คาดคิด"
+
 msgid "Unknown"
 msgstr "ไม่ทราบ"
+
+msgid "Update complete"
+msgstr "การอัปเดตเสร็จสมบูรณ์"
 
 msgid "Update from a file"
 msgstr "อัปเดตจากไฟล์"
 
+msgid "Update stopped"
+msgstr "หยุดการอัปเดตแล้ว"
+
 msgid "Update to"
 msgstr "อัปเดตเป็น"
+
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "ใช้บรรทัดคำสั่งเพื่อตรวจสอบเซสชันการอัปเดตรุ่นเก่านี้ หรือลบไฟล์ที่นำเข้าและเลือกอีกครั้ง"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "กำลังตรวจสอบลายเซ็นและระบบของคุณ อาจใช้เวลาหลายนาที"
 
+msgid "Working…"
+msgstr "กำลังทำงาน…"
+
 msgid "You already have this update"
 msgstr "คุณมีอัปเดตนี้แล้ว"
+
+msgid "Your installed packages have been checked."
+msgstr "ตรวจสอบแพ็กเกจที่ติดตั้งแล้ว"
 
 msgid "or drop an .atgz file here"
 msgstr "หรือลากไฟล์ .atgz มาที่นี่"
 
-msgid "Check an AnduinOS offline update package"
-msgstr "ตรวจสอบแพ็กเกจอัปเดตออฟไลน์ AnduinOS"
+#~ msgid "Preview only. Installing updates is not available in this build."
+#~ msgstr "ดูตัวอย่างเท่านั้น การอัปเดตไม่พร้อมใช้งานในเวอร์ชันนี้"
+
+#~ msgid "Check an AnduinOS offline update package"
+#~ msgstr "ตรวจสอบแพ็กเกจอัปเดตออฟไลน์ AnduinOS"

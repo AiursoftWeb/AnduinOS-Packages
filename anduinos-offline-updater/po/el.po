@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 09:03+0000\n"
 "PO-Revision-Date: 2026-09-09 11:57+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: el\n"
@@ -17,14 +17,26 @@ msgstr ""
 msgid "A newer updater is required"
 msgstr "Απαιτείται νεότερη έκδοση ενημερωτή"
 
+msgid "A recovery snapshot could not be confirmed."
+msgstr "Δεν ήταν δυνατή η επιβεβαίωση του στιγμιότυπου αποκατάστασης."
+
 msgid "AnduinOS update packages"
 msgstr "Πακέτα ενημέρωσης AnduinOS"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "Εξουσιοδοτήστε την εισαγωγή του αρχείου και τον έλεγχο του σχεδίου εγκατάστασης. Δεν έχουν εγκατασταθεί πακέτα ακόμα."
 
 msgid "Cannot preview this update"
 msgstr "Δεν είναι δυνατή η προεπισκόπηση αυτής της ενημέρωσης"
 
+msgid "Cannot read the update status"
+msgstr "Δεν είναι δυνατή η ανάγνωση της κατάστασης ενημέρωσης"
+
 msgid "Check required"
 msgstr "Έλεγχος απαιτείται"
+
+msgid "Checking the installation…"
+msgstr "Έλεγχος της εγκατάστασης…"
 
 msgid "Checking your update…"
 msgstr "Έλεγχος ενημέρωσής σας…"
@@ -32,8 +44,12 @@ msgstr "Έλεγχος ενημέρωσής σας…"
 msgid "Choose Update File"
 msgstr "Επιλογή αρχείου ενημέρωσης"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "Επιλέξτε ένα πακέτο ενημέρωσης AnduinOS.\nΔεν απαιτείται σύνδεση στο διαδίκτυο για τον έλεγχο του αρχείου."
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"Επιλέξτε ένα πακέτο ενημέρωσης AnduinOS.\n"
+"Δεν απαιτείται σύνδεση στο διαδίκτυο για τον έλεγχο του αρχείου."
 
 msgid "Choose another file"
 msgstr "Επιλέξτε άλλο αρχείο"
@@ -44,11 +60,17 @@ msgstr "Επιλέξτε ένα τοπικό αρχείο .atgz."
 msgid "Close"
 msgstr "Κλείσιμο"
 
+msgid "Continue"
+msgstr "Συνέχεια"
+
 msgid "Could not open the file"
 msgstr "Δεν ήταν δυνατή η άνοιξη του αρχείου"
 
 msgid "Could not open the website"
 msgstr "Δεν ήταν δυνατή η άνοιξη της ιστοσελίδας"
+
+msgid "Could not save the update session"
+msgstr "Δεν ήταν δυνατή η αποθήκευση της συνεδρίας ενημέρωσης"
 
 msgid "Current version"
 msgstr "Τρέχουσα έκδοση"
@@ -61,6 +83,24 @@ msgstr "Λάβετε ενημερώσεις από το κέντρο προνο�
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "Πρέπει να επαναληφθεί ο έλεγχος του χώρου εγκατάστασης και της διαθεσιμότητας στιγμιότυπου πριν την εγκατάσταση."
+
+msgid "Installing your update…"
+msgstr "Εγκατάσταση της ενημέρωσής σας…"
+
+msgid "Keep an independent backup of important files."
+msgstr "Κρατήστε ένα ανεξάρτητο αντίγραφο ασφαλείας σημαντικών αρχείων."
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "Κρατήστε αυτόν τον αναγνωριστικό εργασίας για επανασύνδεση από τη γραμμή εντολών."
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "Κρατήστε τον υπολογιστή σας συνδεδεμένο σε ρεύμα. Το κλείσιμο του παραθύρου δεν θα σταματήσει την ενημέρωση."
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "Κρατήστε τον υπολογιστή σας συνδεδεμένο σε ρεύμα. Μπορείτε να κλείσετε αυτό το παράθυρο και να επιστρέψετε για έλεγχο της πρόοδου."
+
+msgid "No snapshot was needed"
+msgstr "Δεν απαιτούνταν στιγμιότυπο"
 
 msgid "No system packages were changed."
 msgstr "Δεν άλλαξαν πακέτα συστήματος."
@@ -77,14 +117,54 @@ msgstr "Αλλαγές πακέτων"
 msgid "Package expansion estimate"
 msgstr "Εκτίμηση επέκτασης πακέτων"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "Μόνο προεπισκόπηση. Η εγκατάσταση ενημερώσεων δεν είναι διαθέσιμη σε αυτή την έκδοση."
+msgid "Preparing your update…"
+msgstr "Ετοιμασία της ενημέρωσής σας…"
+
+msgid "Reconnect"
+msgstr "Επανασύνδεση"
+
+msgid "Reconnecting to your update…"
+msgstr "Επανασύνδεση στην ενημέρωσή σας…"
+
+msgid "Remove Imported File"
+msgstr "Αφαίρεση Εισαγόμενου Αρχείου"
+
+msgid "Removing the imported file…"
+msgstr "Αφαίρεση του εισαγόμενου αρχείου…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "Επανεκκινήστε τον υπολογιστή σας για να ολοκληρώσετε την εφαρμογή της ενημέρωσης."
+
+msgid "Restarting the updater…"
+msgstr "Επανεκκίνηση του ενημερωτή…"
 
 msgid "Review your update"
 msgstr "Επισκόπηση ενημέρωσής σας"
 
+msgid "Some packages may already have changed. Check the details before trying again."
+msgstr "Μερικά πακέτα μπορεί να έχουν ήδη αλλάξει. Ελέγξτε τις λεπτομέρειες πριν δοκιμάσετε ξανά."
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "Φάση {current} από {total}"
+
+msgid "Start Update"
+msgstr "Έναρξη Ενημέρωσης"
+
+msgid "Starting your update…"
+msgstr "Έναρξη της ενημέρωσής σας…"
+
 msgid "System snapshot"
 msgstr "Στιγμιότυπο συστήματος"
+
+msgid "System snapshot created"
+msgstr "Δημιουργήθηκε στιγμιότυπο συστήματος"
+
+msgid "System snapshots are disabled"
+msgstr "Τα στιγμιότυπα συστήματος είναι απενεργοποιημένα"
+
+msgid "System snapshots are unavailable"
+msgstr "Τα στιγμιότυπα συστήματος δεν είναι διαθέσιμα"
 
 msgid "Technical details"
 msgstr "Τεχνικές λεπτομέρειες"
@@ -92,29 +172,65 @@ msgstr "Τεχνικές λεπτομέρειες"
 msgid "Temporary storage"
 msgstr "Προσωρινή αποθήκευση"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "Η αίτηση δεν ολοκληρώθηκε. Η εξουσιοδότηση μπορεί να έχει ακυρωθεί."
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "Δεν ήταν δυνατός ο έλεγχος της ενημέρωσης. Προσπαθήστε να επιλέξετε ξανά το αρχείο."
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "Η ενημέρωση μπορεί να εξακολουθεί να εκτελείται. Επανασυνδεθείτε για έλεγχο. Μην ξεκινήσετε άλλη εγκατάσταση."
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "Ο ενημερωτής έχει αναβαθμιστεί. Εξετάστε και επιβεβαιώστε την υπολοιπόμενη ενημέρωση."
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "Αυτό αφαιρεί το εισαγόμενο αντίγραφο και το ιστορικό εργασίας, όχι την αρχική σας λήψη."
+
+msgid "This update needs review"
+msgstr "Αυτή η ενημέρωση χρειάζεται εξέταση"
 
 msgid "Unavailable"
 msgstr "Μη διαθέσιμο"
 
+msgid "Unexpected update response."
+msgstr "Απροσδόκητη απόκριση ενημέρωσης."
+
 msgid "Unknown"
 msgstr "Άγνωστο"
+
+msgid "Update complete"
+msgstr "Ολοκλήρωση ενημέρωσης"
 
 msgid "Update from a file"
 msgstr "Ενημέρωση από αρχείο"
 
+msgid "Update stopped"
+msgstr "Η ενημέρωση σταμάτησε"
+
 msgid "Update to"
 msgstr "Ενημέρωση σε"
+
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "Χρησιμοποιήστε τη γραμμή εντολών για να εξετάσετε αυτήν την παλαιότερη συνεδρία ενημέρωσης ή να αφαιρέσετε το εισαγόμενο αρχείο και να το επιλέξετε ξανά."
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Επαλήθευση υπογραφής και έλεγχος συστήματος. Μπορεί να πάρει μερικά λεπτά."
 
+msgid "Working…"
+msgstr "Εργασία…"
+
 msgid "You already have this update"
 msgstr "Έχετε ήδη αυτή την ενημέρωση"
+
+msgid "Your installed packages have been checked."
+msgstr "Τα εγκατεστημένα πακέτα σας έχουν ελεγχθεί."
 
 msgid "or drop an .atgz file here"
 msgstr "ή ρίξτε ένα αρχείο .atgz εδώ"
 
-msgid "Check an AnduinOS offline update package"
-msgstr "Έλεγχος πακέτου εκτός σύνδεσης ενημέρωσης AnduinOS"
+#~ msgid "Preview only. Installing updates is not available in this build."
+#~ msgstr "Μόνο προεπισκόπηση. Η εγκατάσταση ενημερώσεων δεν είναι διαθέσιμη σε αυτή την έκδοση."
+
+#~ msgid "Check an AnduinOS offline update package"
+#~ msgstr "Έλεγχος πακέτου εκτός σύνδεσης ενημέρωσης AnduinOS"

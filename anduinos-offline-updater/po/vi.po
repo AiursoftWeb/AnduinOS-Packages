@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 09:03+0000\n"
 "PO-Revision-Date: 2026-09-09 12:09+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: vi\n"
@@ -17,14 +17,26 @@ msgstr ""
 msgid "A newer updater is required"
 msgstr "Cần trình cập nhật mới hơn"
 
+msgid "A recovery snapshot could not be confirmed."
+msgstr "Không thể xác nhận bản chụp khôi phục."
+
 msgid "AnduinOS update packages"
 msgstr "Gói cập nhật AnduinOS"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "Cấp quyền nhập tệp và kiểm tra kế hoạch cài đặt. Chưa cài đặt gói nào."
 
 msgid "Cannot preview this update"
 msgstr "Không thể xem trước bản cập nhật này"
 
+msgid "Cannot read the update status"
+msgstr "Không thể đọc trạng thái cập nhật"
+
 msgid "Check required"
 msgstr "Kiểm tra bắt buộc"
+
+msgid "Checking the installation…"
+msgstr "Đang kiểm tra cài đặt…"
 
 msgid "Checking your update…"
 msgstr "Đang kiểm tra bản cập nhật của bạn…"
@@ -32,8 +44,12 @@ msgstr "Đang kiểm tra bản cập nhật của bạn…"
 msgid "Choose Update File"
 msgstr "Chọn tệp cập nhật"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "Chọn một gói cập nhật AnduinOS.\nKhông cần kết nối internet để kiểm tra tệp."
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"Chọn một gói cập nhật AnduinOS.\n"
+"Không cần kết nối internet để kiểm tra tệp."
 
 msgid "Choose another file"
 msgstr "Chọn tệp khác"
@@ -44,11 +60,17 @@ msgstr "Chọn một tệp .atgz cục bộ."
 msgid "Close"
 msgstr "Đóng"
 
+msgid "Continue"
+msgstr "Tiếp tục"
+
 msgid "Could not open the file"
 msgstr "Không thể mở tệp"
 
 msgid "Could not open the website"
 msgstr "Không thể mở trang web"
+
+msgid "Could not save the update session"
+msgstr "Không thể lưu phiên cập nhật"
 
 msgid "Current version"
 msgstr "Phiên bản hiện tại"
@@ -61,6 +83,24 @@ msgstr "Nhận bản cập nhật từ trung tâm quyền lợi Pro của bạn"
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "Dung lượng cài đặt và khả dụng của bản sao hệ thống phải được kiểm tra lại trước khi cài đặt."
+
+msgid "Installing your update…"
+msgstr "Đang cài đặt bản cập nhật…"
+
+msgid "Keep an independent backup of important files."
+msgstr "Giữ bản sao lưu độc lập các tệp quan trọng."
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "Giữ ID công việc này để kết nối lại từ dòng lệnh."
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "Giữ máy tính kết nối nguồn điện. Đóng cửa sổ này sẽ không dừng bản cập nhật."
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "Giữ máy tính kết nối nguồn điện. Bạn có thể đóng cửa sổ này và quay lại để kiểm tra tiến độ."
+
+msgid "No snapshot was needed"
+msgstr "Không cần bản chụp"
 
 msgid "No system packages were changed."
 msgstr "Không có gói hệ thống nào bị thay đổi."
@@ -77,14 +117,54 @@ msgstr "Thay đổi gói"
 msgid "Package expansion estimate"
 msgstr "Ước tính giải nén gói"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "Chỉ xem trước. Việc cài đặt bản cập nhật không khả dụng trong bản dựng này."
+msgid "Preparing your update…"
+msgstr "Đang chuẩn bị bản cập nhật…"
+
+msgid "Reconnect"
+msgstr "Kết nối lại"
+
+msgid "Reconnecting to your update…"
+msgstr "Đang kết nối lại bản cập nhật…"
+
+msgid "Remove Imported File"
+msgstr "Xóa tệp đã nhập"
+
+msgid "Removing the imported file…"
+msgstr "Đang xóa tệp đã nhập…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "Khởi động lại máy tính để hoàn tất việc áp dụng bản cập nhật."
+
+msgid "Restarting the updater…"
+msgstr "Đang khởi động lại trình cập nhật…"
 
 msgid "Review your update"
 msgstr "Xem xét bản cập nhật của bạn"
 
+msgid "Some packages may already have changed. Check the details before trying again."
+msgstr "Một số gói có thể đã thay đổi. Kiểm tra chi tiết trước khi thử lại."
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "Giai đoạn {current} trên {total}"
+
+msgid "Start Update"
+msgstr "Bắt đầu cập nhật"
+
+msgid "Starting your update…"
+msgstr "Đang bắt đầu bản cập nhật…"
+
 msgid "System snapshot"
 msgstr "Bản sao hệ thống"
+
+msgid "System snapshot created"
+msgstr "Đã tạo bản chụp hệ thống"
+
+msgid "System snapshots are disabled"
+msgstr "Bản chụp hệ thống bị vô hiệu hóa"
+
+msgid "System snapshots are unavailable"
+msgstr "Bản chụp hệ thống không khả dụng"
 
 msgid "Technical details"
 msgstr "Chi tiết kỹ thuật"
@@ -92,29 +172,65 @@ msgstr "Chi tiết kỹ thuật"
 msgid "Temporary storage"
 msgstr "Bộ nhớ tạm"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "Yêu cầu không hoàn tất. Cấp quyền có thể đã bị hủy."
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "Không thể kiểm tra bản cập nhật. Hãy thử chọn tệp một lần nữa."
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "Bản cập nhật có thể vẫn đang chạy. Kết nối lại để kiểm tra; không bắt đầu cài đặt khác."
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "Trình cập nhật đã được nâng cấp. Xem xét và xác nhận phần cập nhật còn lại."
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "Hành động này xóa bản sao đã nhập và lịch sử công việc, không xóa bản tải xuống gốc của bạn."
+
+msgid "This update needs review"
+msgstr "Bản cập nhật này cần xem xét"
 
 msgid "Unavailable"
 msgstr "Không khả dụng"
 
+msgid "Unexpected update response."
+msgstr "Phản hồi cập nhật không mong đợi."
+
 msgid "Unknown"
 msgstr "Không xác định"
+
+msgid "Update complete"
+msgstr "Hoàn tất cập nhật"
 
 msgid "Update from a file"
 msgstr "Cập nhật từ tệp"
 
+msgid "Update stopped"
+msgstr "Đã dừng cập nhật"
+
 msgid "Update to"
 msgstr "Cập nhật lên"
+
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "Dùng dòng lệnh để xem xét phiên cập nhật cũ này, hoặc xóa tệp đã nhập và chọn lại."
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Đang xác minh chữ ký và kiểm tra hệ thống. Quá trình này có thể mất vài phút."
 
+msgid "Working…"
+msgstr "Đang xử lý…"
+
 msgid "You already have this update"
 msgstr "Bạn đã có bản cập nhật này"
+
+msgid "Your installed packages have been checked."
+msgstr "Đã kiểm tra các gói đã cài đặt."
 
 msgid "or drop an .atgz file here"
 msgstr "hoặc thả tệp .atgz vào đây"
 
-msgid "Check an AnduinOS offline update package"
-msgstr "Kiểm tra gói cập nhật ngoại tuyến AnduinOS"
+#~ msgid "Preview only. Installing updates is not available in this build."
+#~ msgstr "Chỉ xem trước. Việc cài đặt bản cập nhật không khả dụng trong bản dựng này."
+
+#~ msgid "Check an AnduinOS offline update package"
+#~ msgstr "Kiểm tra gói cập nhật ngoại tuyến AnduinOS"

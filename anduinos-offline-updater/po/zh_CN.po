@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 09:03+0000\n"
 "PO-Revision-Date: 2026-09-09 11:50+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: zh_CN\n"
@@ -17,14 +17,26 @@ msgstr ""
 msgid "A newer updater is required"
 msgstr "需要更新版本的更新器"
 
+msgid "A recovery snapshot could not be confirmed."
+msgstr "无法确认恢复快照。"
+
 msgid "AnduinOS update packages"
 msgstr "AnduinOS 更新包"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "授权导入文件并检查安装计划。尚未安装任何软件包。"
 
 msgid "Cannot preview this update"
 msgstr "无法预览此更新"
 
+msgid "Cannot read the update status"
+msgstr "无法读取更新状态"
+
 msgid "Check required"
 msgstr "待检查"
+
+msgid "Checking the installation…"
+msgstr "正在检查安装…"
 
 msgid "Checking your update…"
 msgstr "正在检查您的更新…"
@@ -32,8 +44,12 @@ msgstr "正在检查您的更新…"
 msgid "Choose Update File"
 msgstr "选择更新文件"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "选择一个 AnduinOS 更新包。\n检查文件无需互联网连接。"
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"选择一个 AnduinOS 更新包。\n"
+"检查文件无需互联网连接。"
 
 msgid "Choose another file"
 msgstr "选择其他文件"
@@ -44,11 +60,17 @@ msgstr "选择一个本地 .atgz 文件。"
 msgid "Close"
 msgstr "关闭"
 
+msgid "Continue"
+msgstr "继续"
+
 msgid "Could not open the file"
 msgstr "无法打开文件"
 
 msgid "Could not open the website"
 msgstr "无法打开网站"
+
+msgid "Could not save the update session"
+msgstr "无法保存更新会话"
 
 msgid "Current version"
 msgstr "当前版本"
@@ -61,6 +83,24 @@ msgstr "从您的 Pro 权益中心获取更新"
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "安装前必须重新检查安装空间和系统快照可用性。"
+
+msgid "Installing your update…"
+msgstr "正在安装您的更新…"
+
+msgid "Keep an independent backup of important files."
+msgstr "保留重要文件的独立备份。"
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "保留此任务 ID 以便从命令行重新连接。"
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "保持电脑连接电源。关闭此窗口不会停止更新。"
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "保持电脑连接电源。您可以关闭此窗口，稍后返回查看进度。"
+
+msgid "No snapshot was needed"
+msgstr "无需创建快照"
 
 msgid "No system packages were changed."
 msgstr "未改动任何系统软件包。"
@@ -77,14 +117,54 @@ msgstr "包变更"
 msgid "Package expansion estimate"
 msgstr "预计软件包展开大小"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "此版本仅支持预览，尚不能安装更新。"
+msgid "Preparing your update…"
+msgstr "正在准备您的更新…"
+
+msgid "Reconnect"
+msgstr "重新连接"
+
+msgid "Reconnecting to your update…"
+msgstr "正在重新连接到您的更新…"
+
+msgid "Remove Imported File"
+msgstr "移除已导入文件"
+
+msgid "Removing the imported file…"
+msgstr "正在移除已导入文件…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "重启电脑以完成更新应用。"
+
+msgid "Restarting the updater…"
+msgstr "正在重启更新程序…"
 
 msgid "Review your update"
 msgstr "查看您的更新"
 
+msgid "Some packages may already have changed. Check the details before trying again."
+msgstr "部分软件包可能已更改。在重试前请检查详细信息。"
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "阶段 {current} / {total}"
+
+msgid "Start Update"
+msgstr "开始更新"
+
+msgid "Starting your update…"
+msgstr "正在开始您的更新…"
+
 msgid "System snapshot"
 msgstr "系统快照"
+
+msgid "System snapshot created"
+msgstr "已创建系统快照"
+
+msgid "System snapshots are disabled"
+msgstr "系统快照已禁用"
+
+msgid "System snapshots are unavailable"
+msgstr "系统快照不可用"
 
 msgid "Technical details"
 msgstr "技术详情"
@@ -92,29 +172,65 @@ msgstr "技术详情"
 msgid "Temporary storage"
 msgstr "临时存储"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "请求未完成。授权可能已被取消。"
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "无法检查更新。请尝试重新选择文件。"
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "更新可能仍在运行。请重新连接以检查；不要开始另一个安装。"
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "更新器已升级。请检查并确认剩余更新。"
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "这将移除导入副本和任务历史，而非您的原始下载。"
+
+msgid "This update needs review"
+msgstr "此更新需要审阅"
 
 msgid "Unavailable"
 msgstr "不可用"
 
+msgid "Unexpected update response."
+msgstr "意外的更新响应。"
+
 msgid "Unknown"
 msgstr "未知"
+
+msgid "Update complete"
+msgstr "更新完成"
 
 msgid "Update from a file"
 msgstr "从文件更新"
 
+msgid "Update stopped"
+msgstr "更新已停止"
+
 msgid "Update to"
 msgstr "更新到"
+
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "请使用命令行审阅此较早的更新会话，或移除其已导入文件并重新选择。"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "正在验证签名并检查您的系统。这可能需要几分钟。"
 
+msgid "Working…"
+msgstr "处理中…"
+
 msgid "You already have this update"
 msgstr "您已安装此更新"
+
+msgid "Your installed packages have been checked."
+msgstr "已检查您已安装的软件包。"
 
 msgid "or drop an .atgz file here"
 msgstr "或在此处拖放 .atgz 文件"
 
-msgid "Check an AnduinOS offline update package"
-msgstr "检查 AnduinOS 离线更新包"
+#~ msgid "Preview only. Installing updates is not available in this build."
+#~ msgstr "此版本仅支持预览，尚不能安装更新。"
+
+#~ msgid "Check an AnduinOS offline update package"
+#~ msgstr "检查 AnduinOS 离线更新包"

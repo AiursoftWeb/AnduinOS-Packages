@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 09:03+0000\n"
 "PO-Revision-Date: 2026-09-09 11:54+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: en_GB\n"
@@ -17,14 +17,26 @@ msgstr ""
 msgid "A newer updater is required"
 msgstr "A newer updater is required"
 
+msgid "A recovery snapshot could not be confirmed."
+msgstr "A recovery snapshot could not be confirmed."
+
 msgid "AnduinOS update packages"
 msgstr "AnduinOS update packages"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "Authorise importing the file and checking the installation plan. No packages have been installed yet."
 
 msgid "Cannot preview this update"
 msgstr "Cannot preview this update"
 
+msgid "Cannot read the update status"
+msgstr "Cannot read the update status"
+
 msgid "Check required"
 msgstr "Check required"
+
+msgid "Checking the installation…"
+msgstr "Checking the installation…"
 
 msgid "Checking your update…"
 msgstr "Checking your update…"
@@ -32,8 +44,12 @@ msgstr "Checking your update…"
 msgid "Choose Update File"
 msgstr "Choose Update File"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
 
 msgid "Choose another file"
 msgstr "Choose another file"
@@ -44,11 +60,17 @@ msgstr "Choose one local .atgz file."
 msgid "Close"
 msgstr "Close"
 
+msgid "Continue"
+msgstr "Continue"
+
 msgid "Could not open the file"
 msgstr "Could not open the file"
 
 msgid "Could not open the website"
 msgstr "Could not open the website"
+
+msgid "Could not save the update session"
+msgstr "Could not save the update session"
 
 msgid "Current version"
 msgstr "Current version"
@@ -61,6 +83,24 @@ msgstr "Get updates from your Pro benefits center"
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "Installation space and snapshot availability must be checked again before installing."
+
+msgid "Installing your update…"
+msgstr "Installing your update…"
+
+msgid "Keep an independent backup of important files."
+msgstr "Keep an independent backup of important files."
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "Keep this job ID to reconnect from the command line."
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "Keep your computer connected to power. Closing this window will not stop the update."
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "Keep your computer connected to power. You can close this window and return to check progress."
+
+msgid "No snapshot was needed"
+msgstr "No snapshot was needed"
 
 msgid "No system packages were changed."
 msgstr "No system packages were changed."
@@ -77,14 +117,54 @@ msgstr "Package changes"
 msgid "Package expansion estimate"
 msgstr "Package expansion estimate"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "Preview only. Installing updates is not available in this build."
+msgid "Preparing your update…"
+msgstr "Preparing your update…"
+
+msgid "Reconnect"
+msgstr "Reconnect"
+
+msgid "Reconnecting to your update…"
+msgstr "Reconnecting to your update…"
+
+msgid "Remove Imported File"
+msgstr "Remove Imported File"
+
+msgid "Removing the imported file…"
+msgstr "Removing the imported file…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "Restart your computer to finish applying the update."
+
+msgid "Restarting the updater…"
+msgstr "Restarting the updater…"
 
 msgid "Review your update"
 msgstr "Review your update"
 
+msgid "Some packages may already have changed. Check the details before trying again."
+msgstr "Some packages may already have changed. Check the details before trying again."
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "Stage {current} of {total}"
+
+msgid "Start Update"
+msgstr "Start Update"
+
+msgid "Starting your update…"
+msgstr "Starting your update…"
+
 msgid "System snapshot"
 msgstr "System snapshot"
+
+msgid "System snapshot created"
+msgstr "System snapshot created"
+
+msgid "System snapshots are disabled"
+msgstr "System snapshots are disabled"
+
+msgid "System snapshots are unavailable"
+msgstr "System snapshots are unavailable"
 
 msgid "Technical details"
 msgstr "Technical details"
@@ -92,29 +172,65 @@ msgstr "Technical details"
 msgid "Temporary storage"
 msgstr "Temporary storage"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "The request did not complete. Authorisation may have been cancelled."
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "The update could not be checked. Try choosing the file again."
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "The update may still be running. Reconnect to check it; do not start another installation."
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "The updater has been upgraded. Review and confirm the remaining update."
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "This removes the imported copy and job history, not your original download."
+
+msgid "This update needs review"
+msgstr "This update needs review"
 
 msgid "Unavailable"
 msgstr "Unavailable"
 
+msgid "Unexpected update response."
+msgstr "Unexpected update response."
+
 msgid "Unknown"
 msgstr "Unknown"
+
+msgid "Update complete"
+msgstr "Update complete"
 
 msgid "Update from a file"
 msgstr "Update from a file"
 
+msgid "Update stopped"
+msgstr "Update stopped"
+
 msgid "Update to"
 msgstr "Update to"
+
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "Use the command line to review this older update session, or remove its imported file and choose it again."
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Verifying the signature and checking your system. This may take a few minutes."
 
+msgid "Working…"
+msgstr "Working…"
+
 msgid "You already have this update"
 msgstr "You already have this update"
+
+msgid "Your installed packages have been checked."
+msgstr "Your installed packages have been checked."
 
 msgid "or drop an .atgz file here"
 msgstr "or drop an .atgz file here"
 
-msgid "Check an AnduinOS offline update package"
-msgstr "Check an AnduinOS offline update package"
+#~ msgid "Preview only. Installing updates is not available in this build."
+#~ msgstr "Preview only. Installing updates is not available in this build."
+
+#~ msgid "Check an AnduinOS offline update package"
+#~ msgstr "Check an AnduinOS offline update package"

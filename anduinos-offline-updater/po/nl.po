@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 09:03+0000\n"
 "PO-Revision-Date: 2026-09-09 11:53+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: nl\n"
@@ -17,14 +17,26 @@ msgstr ""
 msgid "A newer updater is required"
 msgstr "Er is een nieuwere updater vereist"
 
+msgid "A recovery snapshot could not be confirmed."
+msgstr "Kon geen herstelsnapshot bevestigen."
+
 msgid "AnduinOS update packages"
 msgstr "AnduinOS-updatepakketten"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "Autoriseer het importeren van het bestand en het controleren van het installatieplan. Er zijn nog geen pakketten geïnstalleerd."
 
 msgid "Cannot preview this update"
 msgstr "Kan deze update niet weergeven"
 
+msgid "Cannot read the update status"
+msgstr "Kan de status van de update niet lezen"
+
 msgid "Check required"
 msgstr "Controle vereist"
+
+msgid "Checking the installation…"
+msgstr "Installatie wordt gecontroleerd…"
 
 msgid "Checking your update…"
 msgstr "Uw update wordt gecontroleerd…"
@@ -32,8 +44,12 @@ msgstr "Uw update wordt gecontroleerd…"
 msgid "Choose Update File"
 msgstr "Updatebestand kiezen"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "Kies een AnduinOS-updatepakket.\nGeen internetverbinding nodig om het bestand te controleren."
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"Kies een AnduinOS-updatepakket.\n"
+"Geen internetverbinding nodig om het bestand te controleren."
 
 msgid "Choose another file"
 msgstr "Ander bestand kiezen"
@@ -44,11 +60,17 @@ msgstr "Kies één lokaal .atgz-bestand."
 msgid "Close"
 msgstr "Sluiten"
 
+msgid "Continue"
+msgstr "Doorgaan"
+
 msgid "Could not open the file"
 msgstr "Kon het bestand niet openen"
 
 msgid "Could not open the website"
 msgstr "Kon de website niet openen"
+
+msgid "Could not save the update session"
+msgstr "Kon de update-sessie niet opslaan"
 
 msgid "Current version"
 msgstr "Huidige versie"
@@ -61,6 +83,24 @@ msgstr "Haal updates op vanuit uw Pro-voordelen"
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "Beschikbare installatieruimte en snapshotbeschikbaarheid moeten opnieuw worden gecontroleerd vóór installatie."
+
+msgid "Installing your update…"
+msgstr "Uw update wordt geïnstalleerd…"
+
+msgid "Keep an independent backup of important files."
+msgstr "Behoud een onafhankelijke back-up van belangrijke bestanden."
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "Behoud deze taak-ID om via de opdrachtregel opnieuw te verbinden."
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "Houd uw computer aangesloten op de stroom. Het sluiten van dit venster stopt de update niet."
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "Houd uw computer aangesloten op de stroom. U kunt dit venster sluiten en later terugkomen om de voortgang te controleren."
+
+msgid "No snapshot was needed"
+msgstr "Er was geen snapshot nodig"
 
 msgid "No system packages were changed."
 msgstr "Er zijn geen systeempakketten gewijzigd."
@@ -77,14 +117,54 @@ msgstr "Pakketwijzigingen"
 msgid "Package expansion estimate"
 msgstr "Schatting pakketuitbreiding"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "Alleen voorbeeld. Het installeren van updates is niet beschikbaar in deze build."
+msgid "Preparing your update…"
+msgstr "Uw update wordt voorbereid…"
+
+msgid "Reconnect"
+msgstr "Opnieuw verbinden"
+
+msgid "Reconnecting to your update…"
+msgstr "Opnieuw verbinding maken met uw update…"
+
+msgid "Remove Imported File"
+msgstr "Geïmporteerd bestand verwijderen"
+
+msgid "Removing the imported file…"
+msgstr "Geïmporteerd bestand wordt verwijderd…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "Start uw computer opnieuw op om de update toe te passen."
+
+msgid "Restarting the updater…"
+msgstr "Updater wordt opnieuw opgestart…"
 
 msgid "Review your update"
 msgstr "Bekijk uw update"
 
+msgid "Some packages may already have changed. Check the details before trying again."
+msgstr "Sommige pakketten kunnen al zijn gewijzigd. Controleer de details voordat u het opnieuw probeert."
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "Stap {current} van {total}"
+
+msgid "Start Update"
+msgstr "Update starten"
+
+msgid "Starting your update…"
+msgstr "Uw update wordt gestart…"
+
 msgid "System snapshot"
 msgstr "Systeem-snapshot"
+
+msgid "System snapshot created"
+msgstr "Systeem-snapshot aangemaakt"
+
+msgid "System snapshots are disabled"
+msgstr "Systeem-snapshots zijn uitgeschakeld"
+
+msgid "System snapshots are unavailable"
+msgstr "Systeem-snapshots zijn niet beschikbaar"
 
 msgid "Technical details"
 msgstr "Technische details"
@@ -92,29 +172,65 @@ msgstr "Technische details"
 msgid "Temporary storage"
 msgstr "Tijdelijke opslag"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "De aanvraag is niet voltooid. De autorisatie is mogelijk geannuleerd."
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "De update kon niet worden gecontroleerd. Probeer het bestand opnieuw te kiezen."
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "De update kan nog bezig zijn. Verbinder opnieuw om dit te controleren; start geen andere installatie."
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "De updater is geüpgraded. Beoordeel en bevestig de resterende update."
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "Dit verwijdert de geïmporteerde kopie en taakgeschiedenis, niet uw oorspronkelijke download."
+
+msgid "This update needs review"
+msgstr "Deze update vereist beoordeling"
 
 msgid "Unavailable"
 msgstr "Niet beschikbaar"
 
+msgid "Unexpected update response."
+msgstr "Onverwacht update-antwoord."
+
 msgid "Unknown"
 msgstr "Onbekend"
+
+msgid "Update complete"
+msgstr "Update voltooid"
 
 msgid "Update from a file"
 msgstr "Update vanuit bestand"
 
+msgid "Update stopped"
+msgstr "Update gestopt"
+
 msgid "Update to"
 msgstr "Updaten naar"
+
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "Gebruik de opdrachtregel om deze oudere update-sessie te beoordelen, of verwijder het geïmporteerde bestand en kies het opnieuw."
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Handtekening wordt geverifieerd en systeem wordt gecontroleerd. Dit kan enkele minuten duren."
 
+msgid "Working…"
+msgstr "Bezig…"
+
 msgid "You already have this update"
 msgstr "U heeft al deze update"
+
+msgid "Your installed packages have been checked."
+msgstr "Uw geïnstalleerde pakketten zijn gecontroleerd."
 
 msgid "or drop an .atgz file here"
 msgstr "of sleep hier een .atgz-bestand"
 
-msgid "Check an AnduinOS offline update package"
-msgstr "Controleer een AnduinOS offline-updatepakket"
+#~ msgid "Preview only. Installing updates is not available in this build."
+#~ msgstr "Alleen voorbeeld. Het installeren van updates is niet beschikbaar in deze build."
+
+#~ msgid "Check an AnduinOS offline update package"
+#~ msgstr "Controleer een AnduinOS offline-updatepakket"

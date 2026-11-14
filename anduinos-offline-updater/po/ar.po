@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 09:03+0000\n"
 "PO-Revision-Date: 2026-09-09 11:50+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: ar\n"
@@ -17,14 +17,26 @@ msgstr ""
 msgid "A newer updater is required"
 msgstr "يتطلب مُحدِّث أحدث"
 
+msgid "A recovery snapshot could not be confirmed."
+msgstr "تعذّر تأكيد لقطة استرداد."
+
 msgid "AnduinOS update packages"
 msgstr "حزم تحديثات AnduinOS"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "أذِن باستيراد الملف وفحص خطة التثبيت. لم يتم تثبيت أي حزم بعد."
 
 msgid "Cannot preview this update"
 msgstr "تعذّر معاينة هذا التحديث"
 
+msgid "Cannot read the update status"
+msgstr "تعذّر قراءة حالة التحديث"
+
 msgid "Check required"
 msgstr "الفحص مطلوب"
+
+msgid "Checking the installation…"
+msgstr "جارٍ فحص التثبيت…"
 
 msgid "Checking your update…"
 msgstr "جارٍ فحص تحديثك…"
@@ -32,8 +44,12 @@ msgstr "جارٍ فحص تحديثك…"
 msgid "Choose Update File"
 msgstr "اختيار ملف التحديث"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "اختر حزمة تحديث AnduinOS.\nلا حاجة لاتصال بالإنترنت لفحص الملف."
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"اختر حزمة تحديث AnduinOS.\n"
+"لا حاجة لاتصال بالإنترنت لفحص الملف."
 
 msgid "Choose another file"
 msgstr "اختر ملفًا آخر"
@@ -44,11 +60,17 @@ msgstr "اختر ملف .atgz محليًا واحدًا."
 msgid "Close"
 msgstr "إغلاق"
 
+msgid "Continue"
+msgstr "متابعة"
+
 msgid "Could not open the file"
 msgstr "تعذّر فتح الملف"
 
 msgid "Could not open the website"
 msgstr "تعذّر فتح الموقع"
+
+msgid "Could not save the update session"
+msgstr "تعذّر حفظ جلسة التحديث"
 
 msgid "Current version"
 msgstr "الإصدار الحالي"
@@ -61,6 +83,24 @@ msgstr "احصل على التحديثات من مركز مزايا Pro الخا
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "يجب إعادة فحص مساحة التثبيت وتوفّر لقطة النظام قبل التثبيت."
+
+msgid "Installing your update…"
+msgstr "جارٍ تثبيت التحديث…"
+
+msgid "Keep an independent backup of important files."
+msgstr "احتفظ بنسخة احتياطية مستقلة للملفات المهمة."
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "احتفظ بهذا المعرّف لإعادة الاتصال من سطر الأوامر."
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "أبقِ حاسوبك متصلاً بمصدر الطاقة. إغلاق هذه النافذة لن يوقف التحديث."
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "أبقِ حاسوبك متصلاً بمصدر الطاقة. يمكنك إغلاق هذه النافذة والعودة للتحقق من التقدم."
+
+msgid "No snapshot was needed"
+msgstr "لم تكن هناك حاجة إلى لقطة"
 
 msgid "No system packages were changed."
 msgstr "لم يتم تغيير أي حزم نظام."
@@ -77,14 +117,54 @@ msgstr "تغييرات الحزم"
 msgid "Package expansion estimate"
 msgstr "تقدير توسّع الحزم"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "معاينة فقط. تثبيت التحديثات غير متاح في هذا الإصدار."
+msgid "Preparing your update…"
+msgstr "جارٍ تجهيز التحديث…"
+
+msgid "Reconnect"
+msgstr "إعادة الاتصال"
+
+msgid "Reconnecting to your update…"
+msgstr "جارٍ إعادة الاتصال بتحديثك…"
+
+msgid "Remove Imported File"
+msgstr "إزالة الملف المستورد"
+
+msgid "Removing the imported file…"
+msgstr "جارٍ إزالة الملف المستورد…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "أعد تشغيل حاسوبك لإكمال تطبيق التحديث."
+
+msgid "Restarting the updater…"
+msgstr "جارٍ إعادة تشغيل محدّث النظام…"
 
 msgid "Review your update"
 msgstr "راجع تحديثك"
 
+msgid "Some packages may already have changed. Check the details before trying again."
+msgstr "قد تكون بعض الحزم قد تغيّرت بالفعل. افحص التفاصيل قبل المحاولة مرة أخرى."
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "المرحلة {current} من {total}"
+
+msgid "Start Update"
+msgstr "بدء التحديث"
+
+msgid "Starting your update…"
+msgstr "جارٍ بدء التحديث…"
+
 msgid "System snapshot"
 msgstr "لقطة النظام"
+
+msgid "System snapshot created"
+msgstr "تم إنشاء لقطة نظام"
+
+msgid "System snapshots are disabled"
+msgstr "لقطات النظام معطّلة"
+
+msgid "System snapshots are unavailable"
+msgstr "لقطات النظام غير متاحة"
 
 msgid "Technical details"
 msgstr "تفاصيل تقنية"
@@ -92,29 +172,65 @@ msgstr "تفاصيل تقنية"
 msgid "Temporary storage"
 msgstr "التخزين المؤقت"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "لم يكتمل الطلب. قد تكون الأذونات تمّ إلغاؤها."
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "تعذّر فحص التحديث. حاول اختيار الملف مرة أخرى."
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "قد لا يزال التحديث قيد التشغيل. أعد الاتصال للتحقق منه؛ لا تبدأ تثبيتًا آخر."
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "تم ترقية محدّث النظام. راجع وأكّد التحديث المتبقي."
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "هذا يزيل النسخة المستورد وسجل المهمة، وليس تنزيلك الأصلي."
+
+msgid "This update needs review"
+msgstr "هذا التحديث بحاجة إلى مراجعة"
 
 msgid "Unavailable"
 msgstr "غير متاح"
 
+msgid "Unexpected update response."
+msgstr "استجابة تحديث غير متوقعة."
+
 msgid "Unknown"
 msgstr "غير معروف"
+
+msgid "Update complete"
+msgstr "اكتمل التحديث"
 
 msgid "Update from a file"
 msgstr "تحديث من ملف"
 
+msgid "Update stopped"
+msgstr "توقف التحديث"
+
 msgid "Update to"
 msgstr "التحديث إلى"
+
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "استخدم سطر الأوامر لمراجعة جلسة التحديث الأقدم هذه، أو أزل ملفها المستورد واخترها مرة أخرى."
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "جارٍ التحقق من التوقيع وفحص نظامك. قد يستغرق ذلك بضع دقائق."
 
+msgid "Working…"
+msgstr "جارٍ العمل…"
+
 msgid "You already have this update"
 msgstr "لديك هذا التحديث بالفعل"
+
+msgid "Your installed packages have been checked."
+msgstr "تم فحص الحزم المثبّتة لديك."
 
 msgid "or drop an .atgz file here"
 msgstr "أو اسحب ملف .atgz هنا"
 
-msgid "Check an AnduinOS offline update package"
-msgstr "فحص حزمة تحديث AnduinOS دون اتصال"
+#~ msgid "Preview only. Installing updates is not available in this build."
+#~ msgstr "معاينة فقط. تثبيت التحديثات غير متاح في هذا الإصدار."
+
+#~ msgid "Check an AnduinOS offline update package"
+#~ msgstr "فحص حزمة تحديث AnduinOS دون اتصال"

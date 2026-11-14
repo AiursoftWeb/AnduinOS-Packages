@@ -101,6 +101,7 @@ class InstallationChecks(unittest.TestCase):
                 with self.assertRaises(BundleError): jobs.status("unused", 1001)
                 plan = {"state": "update-available", "stages": []}
                 jobs.save_plan(path, plan)
+                self.assertEqual(jobs.status("unused", 1000)["preview"], plan)
                 jobs.update(path, confirmation_required=True)
                 self.assertEqual(jobs.status("unused", 1000)["preview"], plan)
 

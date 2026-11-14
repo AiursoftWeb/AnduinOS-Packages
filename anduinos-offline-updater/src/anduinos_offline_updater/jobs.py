@@ -27,6 +27,7 @@ def atomic_json(path, value, mode=0o600):
     fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, mode)
     try:
         with os.fdopen(fd, "w") as stream:
+            os.fchmod(stream.fileno(), mode)
             json.dump(value, stream, indent=2)
             stream.write("\n"); stream.flush(); os.fsync(stream.fileno())
         os.replace(temporary, path)
@@ -73,8 +74,11 @@ def status(identifier, uid):
         boot_changed = report.get("boot_id") != Path("/proc/sys/kernel/random/boot_id").read_text().strip()
         if boot_changed or active.returncode != 0 or active.stdout.strip() in {"inactive", "failed"}:
             report.update(state="interrupted", error="Installation service stopped without a final result; inspect dpkg before retrying")
-    if report["state"] == "prepared" and report.get("confirmation_required"):
-        # Older prepared jobs have a private plan and no handoff to review.
+    plan = job_path(identifier) / "plan.json"
+    if report["state"] == "prepared" and (report.get("confirmation_required") or
+            (plan.exists() and plan.stat().st_mode & stat.S_IROTH)):
+        # New jobs expose package metadata for reconnecting GTK. Legacy private
+        # plans remain queryable without requiring their contents to be readable.
         report["preview"] = json.loads((job_path(identifier) / "plan.json").read_text())
     return report
 
