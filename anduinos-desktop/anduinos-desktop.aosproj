@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop</PackageName>
-    <PackageVersion>2.1.0-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS complete desktop — metapackage that pulls in all AnduinOS components</PackageDescription>
     <Section>metapackages</Section>
@@ -33,8 +33,8 @@
          AnduinOS Brand Packages
          These define what makes AnduinOS AnduinOS.
          ============================================================ -->
-    <Dependency Include="anduinos-apt-config | anduinos-apt-config-dev" />
-    <Recommend Include="anduinos-apt-config" />
+    <Dependency Include="anduinos-apt-config | anduinos-apt-config-for-china | anduinos-apt-config-dev" />
+    <Recommend Include="anduinos-apt-config | anduinos-apt-config-for-china | anduinos-apt-config-dev" />
     <Dependency Include="base-files" />
     <!-- Default policy, not a prerequisite for keeping the desktop installed.
          Users may explicitly opt out without removing the desktop metapackage. -->

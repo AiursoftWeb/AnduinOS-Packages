@@ -106,6 +106,14 @@ anduinos-apt-config:
   variables:
     PACKAGE_DIR: anduinos-apt-config
 
+anduinos-apt-config-for-china:
+  extends: .publish
+  needs:
+    - test-all
+    - anduinos-archive-keyring
+  variables:
+    PACKAGE_DIR: anduinos-apt-config-for-china
+
 anduinos-gdm3-wallpaper:
   extends: .publish
   needs:
@@ -798,6 +806,7 @@ anduinos-desktop:
     - anduinos-appstore
     - anduinos-apt-config
     - anduinos-apt-config-dev
+    - anduinos-apt-config-for-china
     - anduinos-deskmon
     - anduinos-theme-sync
     - base-files

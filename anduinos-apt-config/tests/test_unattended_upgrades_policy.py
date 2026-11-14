@@ -48,7 +48,7 @@ class ActualMatcherTests(unittest.TestCase):
                     for suffix in ('-addon', '-webapps'):
                         suite = codename + suffix
                         self.assertTrue(allowed('Aiursoft Apkg', suite))
-                        foreign_hosts = ['third-party.example', 'apkg-dev.aiursoft.com']
+                        foreign_hosts = ['packages.aiursoft.cn', 'third-party.example', 'apkg-dev.aiursoft.com']
                         for foreign in foreign_hosts:
                             self.assertFalse(allowed('Aiursoft Apkg', suite, foreign))
                         self.assertFalse(allowed('Unrelated vendor', suite))
