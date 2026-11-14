@@ -165,8 +165,8 @@ def verify_grub_configuration(
     must refer to the known outer volume. The graphical entry carries those
     same identities as three arguments to a function built into the native EFI.
     """
-    if recovery_uuid and prefix != "/@root/boot/grub":
-        raise ValueError("Independent recovery requires the installed Btrfs root")
+    if recovery_uuid and prefix not in ("/@root/boot/grub", "/boot/grub"):
+        raise ValueError("Independent recovery requires the installed root")
     lines = [shlex.split(line, comments=True) for line in text.splitlines()]
     lines = [line for line in lines if line]
     if len(lines) == 1 and lines[0][:1] == ["anduinos_unlock"] and cryptodisk_uuid:
