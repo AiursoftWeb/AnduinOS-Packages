@@ -37,3 +37,5 @@ user-curated illustrations were supplied specifically for these applications
 and are kept as package-local source assets.
 
 `globe.svg` is package-local globe artwork; `china-flag.svg` is a geometric rendering of the Chinese national flag using its standard 30 × 20 construction grid.
+
+`location.svg` is original package-local location-pin artwork for the software-region page header.

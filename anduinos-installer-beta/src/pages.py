@@ -6886,7 +6886,7 @@ def build_china_sources_page(shared, nav_view):
     content.append(_page_header(
         "Are you in mainland China?",
         "Choose where to obtain software during installation and future updates",
-        "globe", lang,
+        "location", lang,
     ))
     choices = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16,
                       margin_top=16, margin_bottom=16)
