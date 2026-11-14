@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 11:58+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: hi\n"
@@ -20,6 +20,14 @@ msgstr "नए अपडेटर की आवश्यकता है"
 msgid "AnduinOS update packages"
 msgstr "AnduinOS अपडेट पैकेज"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "फ़ाइल आयात करने और इंस्टॉलेशन योजना की जांच के लिए अधिकृत करें। अभी कोई पैकेज इंस्टॉल नहीं किया गया है।"
 
@@ -31,6 +39,9 @@ msgstr "अपडेट स्थिति पढ़ी नहीं जा स�
 
 msgid "Check required"
 msgstr "जाँच आवश्यक है"
+
+msgid "Check the details before trying again."
+msgstr "फिर से कोशिश करने से पहले विवरण देखें।"
 
 msgid "Checking the installation…"
 msgstr "इंस्टॉलेशन की जांच हो रही है…"
@@ -75,8 +86,8 @@ msgstr "वर्तमान संस्करण"
 msgid "Disabled"
 msgstr "निष्क्रिय"
 
-msgid "Exit"
-msgstr "निकलें"
+msgid "Done"
+msgstr "पूर्ण"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "अपने Pro लाभ केंद्र से अपडेट प्राप्त करें"
@@ -113,6 +124,10 @@ msgstr "पैकेज परिवर्तन"
 
 msgid "Package expansion estimate"
 msgstr "पैकेज विस्तार का अनुमान"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "नियोजित अपडेट: {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "आपका अपडेट तैयार हो रहा है…"
@@ -210,6 +225,9 @@ msgstr "कार्य कर रहा है…"
 
 msgid "You already have this update"
 msgstr "आपके पास इस अपडेट की पहले से उपलब्धता है"
+
+msgid "You can keep using your computer."
+msgstr "आप अपने कंप्यूटर का उपयोग जारी रख सकते हैं।"
 
 msgid "or drop an .atgz file here"
 msgstr "या यहाँ एक .atgz फ़ाइल छोड़ें"

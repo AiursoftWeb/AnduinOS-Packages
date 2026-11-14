@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 11:59+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: it\n"
@@ -20,6 +20,14 @@ msgstr "È richiesto un programmatore di aggiornamento più recente"
 msgid "AnduinOS update packages"
 msgstr "Pacchetti di aggiornamento AnduinOS"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Autorizza l'importazione del file e la verifica del piano di installazione. Nessun pacchetto è ancora installato."
 
@@ -31,6 +39,9 @@ msgstr "Impossibile leggere lo stato dell'aggiornamento"
 
 msgid "Check required"
 msgstr "Verifica obbligatoria"
+
+msgid "Check the details before trying again."
+msgstr "Controlla i dettagli prima di riprovare."
 
 msgid "Checking the installation…"
 msgstr "Verifica dell'installazione…"
@@ -75,8 +86,8 @@ msgstr "Versione attuale"
 msgid "Disabled"
 msgstr "Disattivato"
 
-msgid "Exit"
-msgstr "Esci"
+msgid "Done"
+msgstr "Fine"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Ottieni aggiornamenti dal tuo centro vantaggi Pro"
@@ -113,6 +124,10 @@ msgstr "Modifiche ai pacchetti"
 
 msgid "Package expansion estimate"
 msgstr "Stima dell'espansione dei pacchetti"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Aggiornamento pianificato: {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "Preparazione dell'aggiornamento…"
@@ -210,6 +225,9 @@ msgstr "Lavoro in corso…"
 
 msgid "You already have this update"
 msgstr "Hai già questo aggiornamento"
+
+msgid "You can keep using your computer."
+msgstr "Puoi continuare a usare il computer."
 
 msgid "or drop an .atgz file here"
 msgstr "oppure trascina qui un file .atgz"

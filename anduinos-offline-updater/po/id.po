@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 11:59+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: id\n"
@@ -20,6 +20,14 @@ msgstr "Diperlukan updater versi yang lebih baru"
 msgid "AnduinOS update packages"
 msgstr "Paket pembaruan AnduinOS"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Otorisasi impor file dan pemeriksaan rencana instalasi. Belum ada paket yang diinstal."
 
@@ -31,6 +39,9 @@ msgstr "Tidak dapat membaca status pembaruan"
 
 msgid "Check required"
 msgstr "Periksa persyaratan"
+
+msgid "Check the details before trying again."
+msgstr "Periksa detail sebelum mencoba lagi."
 
 msgid "Checking the installation…"
 msgstr "Memeriksa instalasi…"
@@ -75,8 +86,8 @@ msgstr "Versi saat ini"
 msgid "Disabled"
 msgstr "Nonaktif"
 
-msgid "Exit"
-msgstr "Keluar"
+msgid "Done"
+msgstr "Selesai"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Dapatkan pembaruan dari pusat manfaat Pro Anda"
@@ -113,6 +124,10 @@ msgstr "Perubahan paket"
 
 msgid "Package expansion estimate"
 msgstr "Perkiraan ekspansi paket"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Pembaruan direncanakan: {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "Menyiapkan pembaruan Anda…"
@@ -210,6 +225,9 @@ msgstr "Bekerja…"
 
 msgid "You already have this update"
 msgstr "Anda sudah memiliki pembaruan ini"
+
+msgid "You can keep using your computer."
+msgstr "Anda bisa terus menggunakan komputer."
 
 msgid "or drop an .atgz file here"
 msgstr "atau jatuhkan file .atgz di sini"

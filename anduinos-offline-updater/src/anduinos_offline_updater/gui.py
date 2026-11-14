@@ -485,9 +485,17 @@ class UpdateWindow(Adw.ApplicationWindow):
                   "dialog-warning-symbolic" if blocked else "dialog-error-symbolic",
                   icon_class="success" if success else "warning" if blocked else "error")
         self.footer.set_visible(False)
-        if report.get("reboot_required"):
-            self.content.append(text(_("Restart your computer to finish applying the update."), "dim-label"))
-        self.button(_("Exit"), lambda *_: self.close(), True)
+        source, target = report.get("source_version"), report.get("target_version")
+        if source and target and state != "already-installed":
+            summary = (_("AnduinOS {source} → {target}") if success else
+                       _("Planned update: {source} → {target}")).format(source=source, target=target)
+            self.content.append(text(summary, "title-2"))
+        elif target:
+            self.content.append(text(_("AnduinOS {version}").format(version=target), "title-2"))
+        next_step = (_("Restart your computer to finish applying the update.") if report.get("reboot_required") else
+                     _("You can keep using your computer.")) if success else _("Check the details before trying again.")
+        self.content.append(text(next_step, "dim-label"))
+        self.button(_("Done") if success else _("Close"), lambda *_: self.close(), True)
         self.details(report, cleanup=True)
 
     def details(self, report, cleanup=False):

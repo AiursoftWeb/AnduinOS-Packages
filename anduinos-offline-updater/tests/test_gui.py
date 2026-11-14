@@ -239,8 +239,11 @@ class DesktopTests(unittest.TestCase):
 
     def test_success_snapshot_and_reboot_are_not_assumed(self):
         self.window.job = "a" * 32
-        self.window.show_job(dict(state="complete", reboot_required=True, snapshot=dict(state="unconfirmed")))
+        self.window.show_job(dict(state="complete", source_version="2.0.0", target_version="2.0.5",
+                                  reboot_required=True, snapshot=dict(state="unconfirmed")))
         self.assertIn(self.gui._("Update complete"), self.labels())
+        self.assertIn(self.gui._("AnduinOS {source} → {target}").format(source="2.0.0", target="2.0.5"), self.labels())
+        self.assertIn(self.gui._("Done"), self.labels())
         icon = self.window.content.get_first_child().get_icon_name()
         theme = self.gui.Gtk.IconTheme.get_for_display(self.window.get_display())
         self.assertTrue(theme.has_icon(icon), "Success must use an icon available in the standard theme")
@@ -255,12 +258,16 @@ class DesktopTests(unittest.TestCase):
     def test_partial_and_interrupted_never_offer_blind_install_retry(self):
         self.window.job = "a" * 32
         for state in ("partial", "interrupted", "failed", "blocked"):
-            self.window.show_job(dict(state=state, error="<dpkg needs inspection>"))
+            self.window.show_job(dict(state=state, source_version="2.0.0", target_version="2.0.5",
+                                      error="<dpkg needs inspection>"))
             self.assertIn(self.gui._("Update could not start") if state == "blocked" else
                           self.gui._("Update failed"), self.labels())
             self.assertNotIn(self.gui._("Update complete"), self.labels())
             self.assertNotIn(self.gui._("Start Update"), self.labels())
             self.assertNotIn(self.gui._("No system packages were changed."), self.labels())
+            self.assertIn(self.gui._("Planned update: {source} → {target}").format(source="2.0.0", target="2.0.5"), self.labels())
+            self.assertIn(self.gui._("Check the details before trying again."), self.labels())
+            self.assertNotIn(self.gui._("Done"), self.labels())
             details = self.window.content.get_last_child()
             self.assertFalse(details.get_expanded())
             self.assertIn("<dpkg needs inspection>", details.get_child().get_first_child().get_label())
@@ -268,16 +275,26 @@ class DesktopTests(unittest.TestCase):
             self.assertTrue(self.window.content.get_first_child().has_css_class(
                 "warning" if state == "blocked" else "error"))
 
-    def test_result_exit_does_not_require_authorization_or_erase_diagnostics(self):
+    def test_done_closes_without_authorization_reboot_or_erasing_diagnostics(self):
         self.window.job = "a" * 32
         self.window.remember()
-        self.window.show_job(dict(state="partial", error="installArchives() failed"))
+        self.window.show_job(dict(state="complete", source_version="2.0.0", target_version="2.0.5", reboot_required=False))
+        self.assertIn(self.gui._("You can keep using your computer."), self.labels())
+        self.assertNotIn(self.gui._("Restart your computer to finish applying the update."), self.labels())
         with patch.object(self.window, "command") as command:
-            self.window.content.get_last_child().get_prev_sibling().emit("clicked")
+            button = self.window.content.get_last_child().get_prev_sibling()
+            self.assertEqual(button.get_label(), self.gui._("Done"))
+            button.emit("clicked")
             command.assert_not_called()
         self.assertTrue(self.window.closed)
         self.assertTrue(self.window.bookmark.exists())
         self.assertTrue(self.fixture.bundle.exists())
+
+    def test_already_installed_shows_one_version_without_claiming_an_upgrade(self):
+        self.window.show_job(dict(state="already-installed", source_version="2.0.5", target_version="2.0.5"))
+        self.assertIn(self.gui._("You already have this update"), self.labels())
+        self.assertIn(self.gui._("AnduinOS {version}").format(version="2.0.5"), self.labels())
+        self.assertIn(self.gui._("Done"), self.labels())
 
     def test_reopen_reconnects_without_reinstalling_or_trusting_a_saved_hash(self):
         preview = self.complete(self.fixture.bundle)

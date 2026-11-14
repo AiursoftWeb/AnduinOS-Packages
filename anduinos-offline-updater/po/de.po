@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 11:56+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: de\n"
@@ -20,6 +20,14 @@ msgstr "Neuere Updater-Version erforderlich"
 msgid "AnduinOS update packages"
 msgstr "AnduinOS-Updatepakete"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Import der Datei und Überprüfung des Installationsplans autorisieren. Es wurden noch keine Pakete installiert."
 
@@ -31,6 +39,9 @@ msgstr "Aktualisierungsstatus kann nicht gelesen werden"
 
 msgid "Check required"
 msgstr "Prüfung erforderlich"
+
+msgid "Check the details before trying again."
+msgstr "Prüfe die Details vor einem erneuten Versuch."
 
 msgid "Checking the installation…"
 msgstr "Installationsprüfung läuft…"
@@ -75,8 +86,8 @@ msgstr "Aktuelle Version"
 msgid "Disabled"
 msgstr "Deaktiviert"
 
-msgid "Exit"
-msgstr "Beenden"
+msgid "Done"
+msgstr "Fertig"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Updates im Pro-Kundenbereich herunterladen"
@@ -113,6 +124,10 @@ msgstr "Paketänderungen"
 
 msgid "Package expansion estimate"
 msgstr "Geschätzte Größe nach dem Entpacken"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Geplantes Update: {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "Ihre Aktualisierung wird vorbereitet…"
@@ -210,6 +225,9 @@ msgstr "Arbeite…"
 
 msgid "You already have this update"
 msgstr "Dieses Update ist bereits installiert"
+
+msgid "You can keep using your computer."
+msgstr "Du kannst deinen Computer weiter nutzen."
 
 msgid "or drop an .atgz file here"
 msgstr "oder legen Sie hier eine .atgz-Datei ab"

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 12:02+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: pt\n"
@@ -20,6 +20,14 @@ msgstr "É necessário um atualizador mais recente"
 msgid "AnduinOS update packages"
 msgstr "Pacotes de atualização do AnduinOS"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Autorizar a importação do ficheiro e a verificação do plano de instalação. Nenhum pacote foi instalado."
 
@@ -31,6 +39,9 @@ msgstr "Não é possível ler o estado da atualização"
 
 msgid "Check required"
 msgstr "Verificação obrigatória"
+
+msgid "Check the details before trying again."
+msgstr "Verifique os detalhes antes de tentar novamente."
 
 msgid "Checking the installation…"
 msgstr "A verificar a instalação…"
@@ -75,8 +86,8 @@ msgstr "Versão atual"
 msgid "Disabled"
 msgstr "Desativado"
 
-msgid "Exit"
-msgstr "Sair"
+msgid "Done"
+msgstr "Concluído"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Obtenha atualizações no seu centro de benefícios Pro"
@@ -113,6 +124,10 @@ msgstr "Alterações nos pacotes"
 
 msgid "Package expansion estimate"
 msgstr "Estimativa de expansão de pacotes"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Atualização planejada: {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "A preparar a sua atualização…"
@@ -210,6 +225,9 @@ msgstr "A trabalhar…"
 
 msgid "You already have this update"
 msgstr "Você já possui esta atualização"
+
+msgid "You can keep using your computer."
+msgstr "Você pode continuar usando o computador."
 
 msgid "or drop an .atgz file here"
 msgstr "ou solte um arquivo .atgz aqui"

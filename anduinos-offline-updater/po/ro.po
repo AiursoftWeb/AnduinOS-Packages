@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 12:04+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: ro\n"
@@ -20,6 +20,14 @@ msgstr "Este actualizator necesită o versiune mai nouă"
 msgid "AnduinOS update packages"
 msgstr "Pachete de actualizare AnduinOS"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Autorizați importarea fișierului și verificarea planului de instalare. Niciun pachet nu a fost instalat încă."
 
@@ -31,6 +39,9 @@ msgstr "Nu se poate citi starea actualizării"
 
 msgid "Check required"
 msgstr "Verificare necesară"
+
+msgid "Check the details before trying again."
+msgstr "Verifică detaliile înainte de a încerca din nou."
 
 msgid "Checking the installation…"
 msgstr "Se verifică instalarea…"
@@ -75,8 +86,8 @@ msgstr "Versiunea curentă"
 msgid "Disabled"
 msgstr "Dezactivat"
 
-msgid "Exit"
-msgstr "Ieșire"
+msgid "Done"
+msgstr "Gata"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Obțineți actualizări din centrul de beneficii Pro"
@@ -113,6 +124,10 @@ msgstr "Modificări de pachete"
 
 msgid "Package expansion estimate"
 msgstr "Estimare extindere pachete"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Actualizare planificată: {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "Se pregătește actualizarea…"
@@ -210,6 +225,9 @@ msgstr "Se lucrează…"
 
 msgid "You already have this update"
 msgstr "Aveți deja această actualizare"
+
+msgid "You can keep using your computer."
+msgstr "Poți continua să folosești computerul."
 
 msgid "or drop an .atgz file here"
 msgstr "sau trageți un fișier .atgz aici"

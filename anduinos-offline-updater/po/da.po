@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 11:52+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: da\n"
@@ -20,6 +20,14 @@ msgstr "Der kræves en nyere opdatering"
 msgid "AnduinOS update packages"
 msgstr "AnduinOS-opdateringspakker"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Godkend import af filen og kontrol af installationsplanen. Ingen pakker er installeret endnu."
 
@@ -31,6 +39,9 @@ msgstr "Kan ikke læse opdateringsstatus"
 
 msgid "Check required"
 msgstr "Kontrol påkrævet"
+
+msgid "Check the details before trying again."
+msgstr "Tjek detaljerne, før du prøver igen."
 
 msgid "Checking the installation…"
 msgstr "Tjekker installationen…"
@@ -75,8 +86,8 @@ msgstr "Aktuel version"
 msgid "Disabled"
 msgstr "Deaktiveret"
 
-msgid "Exit"
-msgstr "Afslut"
+msgid "Done"
+msgstr "Færdig"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Hent opdateringer fra dit Pro-fordelecenter"
@@ -113,6 +124,10 @@ msgstr "Pakkeændringer"
 
 msgid "Package expansion estimate"
 msgstr "Estimat for pakkeudpakning"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Planlagt opdatering: {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "Forbereder din opdatering…"
@@ -210,6 +225,9 @@ msgstr "Arbejder…"
 
 msgid "You already have this update"
 msgstr "Du har allerede denne opdatering"
+
+msgid "You can keep using your computer."
+msgstr "Du kan fortsætte med at bruge din computer."
 
 msgid "or drop an .atgz file here"
 msgstr "eller slip en .atgz-fil her"

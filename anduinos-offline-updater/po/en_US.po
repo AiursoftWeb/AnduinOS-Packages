@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater 2.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-08-06 07:08+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: en_US\n"
@@ -20,6 +20,14 @@ msgstr "A newer updater is required"
 msgid "AnduinOS update packages"
 msgstr "AnduinOS update packages"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Authorize importing the file and checking the installation plan. No packages are installed yet."
 
@@ -31,6 +39,9 @@ msgstr "Cannot read the update status"
 
 msgid "Check required"
 msgstr "Check required"
+
+msgid "Check the details before trying again."
+msgstr "Review details before retrying."
 
 msgid "Checking the installation…"
 msgstr "Checking the installation…"
@@ -75,8 +86,8 @@ msgstr "Current version"
 msgid "Disabled"
 msgstr "Disabled"
 
-msgid "Exit"
-msgstr "Quit"
+msgid "Done"
+msgstr "Done"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Get updates from your Pro benefits center"
@@ -113,6 +124,10 @@ msgstr "Package changes"
 
 msgid "Package expansion estimate"
 msgstr "Package expansion estimate"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Planned update: {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "Preparing your update…"
@@ -210,6 +225,9 @@ msgstr "Working…"
 
 msgid "You already have this update"
 msgstr "You already have this update"
+
+msgid "You can keep using your computer."
+msgstr "You can keep using your computer."
 
 msgid "or drop an .atgz file here"
 msgstr "or drop an .atgz file here"

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 12:00+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: ja\n"
@@ -20,6 +20,14 @@ msgstr "新しい更新プログラムが必要です"
 msgid "AnduinOS update packages"
 msgstr "AnduinOS 更新パッケージ"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "ファイルのインポートとインストール計画の確認を承認してください。まだパッケージはインストールされていません。"
 
@@ -31,6 +39,9 @@ msgstr "更新ステータスを読み取れません"
 
 msgid "Check required"
 msgstr "確認が必要です"
+
+msgid "Check the details before trying again."
+msgstr "再試行する前に詳細をご確認ください。"
 
 msgid "Checking the installation…"
 msgstr "インストールを確認中…"
@@ -75,8 +86,8 @@ msgstr "現在のバージョン"
 msgid "Disabled"
 msgstr "無効"
 
-msgid "Exit"
-msgstr "終了"
+msgid "Done"
+msgstr "完了"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Pro ベネフィットセンターから更新を取得"
@@ -113,6 +124,10 @@ msgstr "パッケージの変更"
 
 msgid "Package expansion estimate"
 msgstr "パッケージ展開の推定サイズ"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "予定されている更新: {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "更新を準備中…"
@@ -210,6 +225,9 @@ msgstr "処理中…"
 
 msgid "You already have this update"
 msgstr "この更新は既に適用済みです"
+
+msgid "You can keep using your computer."
+msgstr "コンピューターを继续使用できます。"
 
 msgid "or drop an .atgz file here"
 msgstr "または .atgz ファイルをここにドロップ"

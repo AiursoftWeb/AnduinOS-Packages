@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 11:53+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: nl\n"
@@ -20,6 +20,14 @@ msgstr "Er is een nieuwere updater vereist"
 msgid "AnduinOS update packages"
 msgstr "AnduinOS-updatepakketten"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Autoriseer het importeren van het bestand en het controleren van het installatieplan. Er zijn nog geen pakketten geïnstalleerd."
 
@@ -31,6 +39,9 @@ msgstr "Kan de status van de update niet lezen"
 
 msgid "Check required"
 msgstr "Controle vereist"
+
+msgid "Check the details before trying again."
+msgstr "Controleer de details alvorens opnieuw te proberen."
 
 msgid "Checking the installation…"
 msgstr "Installatie wordt gecontroleerd…"
@@ -75,8 +86,8 @@ msgstr "Huidige versie"
 msgid "Disabled"
 msgstr "Uitgeschakeld"
 
-msgid "Exit"
-msgstr "Afsluiten"
+msgid "Done"
+msgstr "Klaar"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Haal updates op vanuit uw Pro-voordelen"
@@ -113,6 +124,10 @@ msgstr "Pakketwijzigingen"
 
 msgid "Package expansion estimate"
 msgstr "Schatting pakketuitbreiding"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Geplande update: {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "Uw update wordt voorbereid…"
@@ -210,6 +225,9 @@ msgstr "Bezig…"
 
 msgid "You already have this update"
 msgstr "U heeft al deze update"
+
+msgid "You can keep using your computer."
+msgstr "Je kunt je computer gewoon blijven gebruiken."
 
 msgid "or drop an .atgz file here"
 msgstr "of sleep hier een .atgz-bestand"

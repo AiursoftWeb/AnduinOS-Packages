@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 11:55+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: fr\n"
@@ -20,6 +20,14 @@ msgstr "Un programme de mise à jour plus récent est requis"
 msgid "AnduinOS update packages"
 msgstr "Paquets de mise à jour AnduinOS"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Autorisez l'importation du fichier et la vérification du plan d'installation. Aucun paquet n'est installé pour l'instant."
 
@@ -31,6 +39,9 @@ msgstr "Impossible de lire l'état de la mise à jour"
 
 msgid "Check required"
 msgstr "Vérification requise"
+
+msgid "Check the details before trying again."
+msgstr "Vérifiez les détails avant de réessayer."
 
 msgid "Checking the installation…"
 msgstr "Vérification de l'installation…"
@@ -75,8 +86,8 @@ msgstr "Version actuelle"
 msgid "Disabled"
 msgstr "Désactivé"
 
-msgid "Exit"
-msgstr "Quitter"
+msgid "Done"
+msgstr "Terminé"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Obtenez les mises à jour depuis votre centre d’avantages Pro"
@@ -113,6 +124,10 @@ msgstr "Modifications des paquets"
 
 msgid "Package expansion estimate"
 msgstr "Estimation de l’extraction des paquets"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Mise à jour prévue : {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "Préparation de votre mise à jour…"
@@ -210,6 +225,9 @@ msgstr "Traitement en cours…"
 
 msgid "You already have this update"
 msgstr "Vous avez déjà cette mise à jour"
+
+msgid "You can keep using your computer."
+msgstr "Vous pouvez continuer à utiliser votre ordinateur."
 
 msgid "or drop an .atgz file here"
 msgstr "ou déposez un fichier .atgz ici"

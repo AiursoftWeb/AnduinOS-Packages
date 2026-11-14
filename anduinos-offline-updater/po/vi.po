@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 12:09+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: vi\n"
@@ -20,6 +20,14 @@ msgstr "Cần trình cập nhật mới hơn"
 msgid "AnduinOS update packages"
 msgstr "Gói cập nhật AnduinOS"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Cấp quyền nhập tệp và kiểm tra kế hoạch cài đặt. Chưa cài đặt gói nào."
 
@@ -31,6 +39,9 @@ msgstr "Không thể đọc trạng thái cập nhật"
 
 msgid "Check required"
 msgstr "Kiểm tra bắt buộc"
+
+msgid "Check the details before trying again."
+msgstr "Kiểm tra chi tiết trước khi thử lại."
 
 msgid "Checking the installation…"
 msgstr "Đang kiểm tra cài đặt…"
@@ -75,8 +86,8 @@ msgstr "Phiên bản hiện tại"
 msgid "Disabled"
 msgstr "Đã tắt"
 
-msgid "Exit"
-msgstr "Thoát"
+msgid "Done"
+msgstr "Xong"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Nhận bản cập nhật từ trung tâm quyền lợi Pro của bạn"
@@ -113,6 +124,10 @@ msgstr "Thay đổi gói"
 
 msgid "Package expansion estimate"
 msgstr "Ước tính giải nén gói"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Cập nhật dự kiến: {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "Đang chuẩn bị bản cập nhật…"
@@ -210,6 +225,9 @@ msgstr "Đang xử lý…"
 
 msgid "You already have this update"
 msgstr "Bạn đã có bản cập nhật này"
+
+msgid "You can keep using your computer."
+msgstr "Bạn có thể tiếp tục sử dụng máy tính."
 
 msgid "or drop an .atgz file here"
 msgstr "hoặc thả tệp .atgz vào đây"

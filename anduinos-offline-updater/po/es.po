@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 12:05+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: es\n"
@@ -20,6 +20,14 @@ msgstr "Se requiere un actualizador más nuevo"
 msgid "AnduinOS update packages"
 msgstr "Paquetes de actualización de AnduinOS"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Autorice la importación del archivo y la revisión del plan de instalación. Aún no se instalan paquetes."
 
@@ -31,6 +39,9 @@ msgstr "No se puede leer el estado de la actualización"
 
 msgid "Check required"
 msgstr "Comprobación obligatoria"
+
+msgid "Check the details before trying again."
+msgstr "Revisa los detalles antes de reintentar."
 
 msgid "Checking the installation…"
 msgstr "Comprobando la instalación…"
@@ -75,8 +86,8 @@ msgstr "Versión actual"
 msgid "Disabled"
 msgstr "Desactivado"
 
-msgid "Exit"
-msgstr "Salir"
+msgid "Done"
+msgstr "Listo"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Obtén actualizaciones desde tu centro de beneficios Pro"
@@ -113,6 +124,10 @@ msgstr "Cambios en paquetes"
 
 msgid "Package expansion estimate"
 msgstr "Estimación de expansión de paquetes"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Actualización planificada: {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "Preparando su actualización…"
@@ -210,6 +225,9 @@ msgstr "Trabajando…"
 
 msgid "You already have this update"
 msgstr "Ya tienes esta actualización"
+
+msgid "You can keep using your computer."
+msgstr "Puedes seguir usando tu equipo."
 
 msgid "or drop an .atgz file here"
 msgstr "o arrastra un archivo .atgz aquí"

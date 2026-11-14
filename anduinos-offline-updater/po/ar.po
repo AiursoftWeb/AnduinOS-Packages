@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 11:50+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: ar\n"
@@ -20,6 +20,14 @@ msgstr "يتطلب مُحدِّث أحدث"
 msgid "AnduinOS update packages"
 msgstr "حزم تحديثات AnduinOS"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} ← {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "أذِن باستيراد الملف وفحص خطة التثبيت. لم يتم تثبيت أي حزم بعد."
 
@@ -31,6 +39,9 @@ msgstr "تعذّر قراءة حالة التحديث"
 
 msgid "Check required"
 msgstr "الفحص مطلوب"
+
+msgid "Check the details before trying again."
+msgstr "راجع التفاصيل قبل المحاولة مرة أخرى."
 
 msgid "Checking the installation…"
 msgstr "جارٍ فحص التثبيت…"
@@ -75,8 +86,8 @@ msgstr "الإصدار الحالي"
 msgid "Disabled"
 msgstr "معطَّل"
 
-msgid "Exit"
-msgstr "خروج"
+msgid "Done"
+msgstr "تم"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "احصل على التحديثات من مركز مزايا Pro الخاصة بك"
@@ -113,6 +124,10 @@ msgstr "تغييرات الحزم"
 
 msgid "Package expansion estimate"
 msgstr "تقدير توسّع الحزم"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "تحديث مخطط: {source} ← {target}"
 
 msgid "Preparing your update…"
 msgstr "جارٍ تجهيز التحديث…"
@@ -210,6 +225,9 @@ msgstr "جارٍ العمل…"
 
 msgid "You already have this update"
 msgstr "لديك هذا التحديث بالفعل"
+
+msgid "You can keep using your computer."
+msgstr "يمكنك مواصلة استخدام الحاسوب."
 
 msgid "or drop an .atgz file here"
 msgstr "أو اسحب ملف .atgz هنا"

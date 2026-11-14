@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 11:55+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: fi\n"
@@ -20,6 +20,14 @@ msgstr "Uudempi päivitystooli vaaditaan"
 msgid "AnduinOS update packages"
 msgstr "AnduinOS-päivityspaketit"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Hyväksy tiedoston tuominen ja asennussuunnitelman tarkistus. Paketteja ei ole vielä asennettu."
 
@@ -31,6 +39,9 @@ msgstr "Päivityksen tilaa ei voi lukea"
 
 msgid "Check required"
 msgstr "Tarkistus vaaditaan"
+
+msgid "Check the details before trying again."
+msgstr "Tarkista tiedot ennen uudelleenyritystä."
 
 msgid "Checking the installation…"
 msgstr "Tarkistetaan asennusta…"
@@ -75,8 +86,8 @@ msgstr "Nykyinen versio"
 msgid "Disabled"
 msgstr "Ei käytössä"
 
-msgid "Exit"
-msgstr "Lopeta"
+msgid "Done"
+msgstr "Valmis"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Hae päivitykset Pro-eduuttasi keskuksesta"
@@ -113,6 +124,10 @@ msgstr "Pakettimuutokset"
 
 msgid "Package expansion estimate"
 msgstr "Arvio pakettien purkautumisesta"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Suunniteltu päivitys: {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "Valmistellaan päivitystäsi…"
@@ -210,6 +225,9 @@ msgstr "Työt meneillään…"
 
 msgid "You already have this update"
 msgstr "Sinulla on jo tämä päivitys"
+
+msgid "You can keep using your computer."
+msgstr "Voit jatkaa tietokoneen käyttöä."
 
 msgid "or drop an .atgz file here"
 msgstr "tai vedä .atgz-tiedosto tähän"

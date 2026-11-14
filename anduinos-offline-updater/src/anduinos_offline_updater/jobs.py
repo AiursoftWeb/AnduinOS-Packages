@@ -85,6 +85,18 @@ def status(identifier, uid):
         # New jobs expose package metadata for reconnecting GTK. Legacy private
         # plans remain queryable without requiring their contents to be readable.
         report["preview"] = json.loads((job_path(identifier) / "plan.json").read_text())
+    if not report.get("source_version") or not report.get("target_version"):
+        # Older jobs kept versions only in the public installation plan.
+        # Never infer a completed job's starting version from today's system.
+        try:
+            if plan.stat().st_mode & stat.S_IROTH:
+                preview = json.loads(plan.read_text())
+                for name, key in (("source_version", "current_version"), ("target_version", "target_version")):
+                    value = preview.get(key)
+                    if isinstance(value, str) and value:
+                        report.setdefault(name, value)
+        except (OSError, ValueError, AttributeError):
+            pass
     return report
 
 
@@ -176,7 +188,8 @@ def prepare(source, uid):
         plan_hash = save_plan(path, report)
         # Keep the large package plan out of frequently rewritten progress records.
         result = update(path, state="prepared", archive_sha256=digest, archive_bytes=size,
-                        plan_sha256=plan_hash)
+                        plan_sha256=plan_hash, source_version=report["current_version"],
+                        target_version=report["target_version"])
         return dict(result, preview=report)
     except Exception:
         shutil.rmtree(path)

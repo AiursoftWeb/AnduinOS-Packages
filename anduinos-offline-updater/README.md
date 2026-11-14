@@ -69,9 +69,10 @@ Reopen the app as the same user to reconnect to the saved job. If the updater
 upgrades itself first, review and confirm the remaining plan before continuing.
 The UI does not silently retry a failed or interrupted package transaction.
 
-The result screen shows success, failure or a blocked update with a matching
-status icon. **Exit** closes the window without requesting authorization or
-deleting diagnostic records. Reopening the app retains the last result.
+The result screen shows the outcome, the original and target versions, and what
+to do next. A required restart is shown explicitly. **Done** closes a successful
+update; **Close** dismisses a failure. Neither requests authorization, restarts
+the computer or deletes diagnostics. Reopening the app retains the last result.
 Under **Technical details**, **Remove Imported File** deletes the root-owned
 copy and job history. It does not delete your original download.
 Keep an independent backup and connect your computer to power before updating.

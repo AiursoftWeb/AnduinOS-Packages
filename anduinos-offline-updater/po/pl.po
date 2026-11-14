@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 12:01+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: pl\n"
@@ -20,6 +20,14 @@ msgstr "Wymagany nowszy aktualizator"
 msgid "AnduinOS update packages"
 msgstr "Pakiety aktualizacji AnduinOS"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Autoryzuj import pliku i sprawdzenie planu instalacji. Żadne pakiety nie zostały jeszcze zainstalowane."
 
@@ -31,6 +39,9 @@ msgstr "Nie można odczytać statusu aktualizacji"
 
 msgid "Check required"
 msgstr "Wymagana weryfikacja"
+
+msgid "Check the details before trying again."
+msgstr "Sprawdź szczegóły przed ponowną próbą."
 
 msgid "Checking the installation…"
 msgstr "Sprawdzanie instalacji…"
@@ -75,8 +86,8 @@ msgstr "Bieżąca wersja"
 msgid "Disabled"
 msgstr "Wyłączone"
 
-msgid "Exit"
-msgstr "Zamknij"
+msgid "Done"
+msgstr "Zakończ"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Pobierz aktualizacje z centrum korzyści Pro"
@@ -113,6 +124,10 @@ msgstr "Zmiany pakietów"
 
 msgid "Package expansion estimate"
 msgstr "Szacowany rozmiar po rozpakowaniu"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Planowana aktualizacja: {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "Przygotowywanie aktualizacji…"
@@ -210,6 +225,9 @@ msgstr "Praca…"
 
 msgid "You already have this update"
 msgstr "Posiadasz już tę aktualizację"
+
+msgid "You can keep using your computer."
+msgstr "Możesz nadal korzystać z komputera."
 
 msgid "or drop an .atgz file here"
 msgstr "lub upuść tutaj plik .atgz"

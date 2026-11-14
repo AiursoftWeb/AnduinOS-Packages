@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:10+0000\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 12:06+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: th\n"
@@ -20,6 +20,14 @@ msgstr "ต้องอัปเดตตัวอัปเดตเวอร์
 msgid "AnduinOS update packages"
 msgstr "แพ็กเกจอัปเดต AnduinOS"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "อนุมัติการนำเข้าไฟล์และตรวจสอบแผนการติดตั้ง ยังไม่ได้ติดตั้งแพ็กเกจใด ๆ"
 
@@ -31,6 +39,9 @@ msgstr "ไม่สามารถอ่านสถานะการอัป
 
 msgid "Check required"
 msgstr "ต้องตรวจสอบ"
+
+msgid "Check the details before trying again."
+msgstr "ตรวจสอบรายละเอียดก่อนลองใหม่"
 
 msgid "Checking the installation…"
 msgstr "กำลังตรวจสอบการติดตั้ง…"
@@ -75,8 +86,8 @@ msgstr "เวอร์ชันปัจจุบัน"
 msgid "Disabled"
 msgstr "ปิดใช้งาน"
 
-msgid "Exit"
-msgstr "ออก"
+msgid "Done"
+msgstr "เสร็จสิ้น"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "รับอัปเดตจากศูนย์สิทธิประโยชน์ Pro ของคุณ"
@@ -113,6 +124,10 @@ msgstr "การเปลี่ยนแปลงของแพ็กเกจ
 
 msgid "Package expansion estimate"
 msgstr "ประมาณการพื้นที่ขยายแพ็กเกจ"
+
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "อัปเดตที่วางแผนไว้: {source} → {target}"
 
 msgid "Preparing your update…"
 msgstr "กำลังเตรียมการอัปเดตของคุณ…"
@@ -210,6 +225,9 @@ msgstr "กำลังทำงาน…"
 
 msgid "You already have this update"
 msgstr "คุณมีอัปเดตนี้แล้ว"
+
+msgid "You can keep using your computer."
+msgstr "คุณยังใช้งานคอมพิวเตอร์ต่อได้"
 
 msgid "or drop an .atgz file here"
 msgstr "หรือลากไฟล์ .atgz มาที่นี่"
