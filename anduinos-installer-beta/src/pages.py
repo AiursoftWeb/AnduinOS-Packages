@@ -702,6 +702,8 @@ def _planned_page_route(shared):
     }:
         route.append("disk-layout")
     route.extend(_UNCONDITIONAL_PAGE_ROUTE[5:])
+    if shared.get("lang") == "zh_CN":
+        route.insert(route.index("summary"), "china-sources")
     return tuple(route)
 
 
@@ -1171,6 +1173,8 @@ def build_welcome_page(shared, nav_view):
             l = lang_items[pos]
             shared["lang"] = l.code
             shared["locale"] = l.locale
+            if l.code != "zh_CN":
+                shared["download_from_china"] = False
             if not shared.get("_keyboard_user_selected"):
                 shared["keyboard"] = l.keyboard
                 shared["keyboard_variant"] = ""
@@ -6836,7 +6840,11 @@ def build_timezone_page(shared, nav_view):
     content.append(tz_scroll)
 
     def on_next():
-        nav_view.push(build_summary_page(shared, nav_view))
+        if lang == "zh_CN":
+            nav_view.push(build_china_sources_page(shared, nav_view))
+        else:
+            shared["download_from_china"] = False
+            nav_view.push(build_summary_page(shared, nav_view))
 
     def on_back():
         nav_view.pop()
@@ -6876,6 +6884,76 @@ def _load_timezones():
 
 
 # ── page 10: Summary ─────────────────────────────────────────────────────
+
+def build_china_sources_page(shared, nav_view):
+    """Record a software-source preference; all I/O belongs to the executor."""
+    lang = shared.get("lang", DEFAULT_LANGUAGE)
+    page = Adw.NavigationPage(title=_("Are you in mainland China?", lang))
+    page.set_tag("china-sources")
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+    content.append(_page_header(
+        "Are you in mainland China?",
+        "Choose where to obtain software during installation and future updates",
+        "location", lang,
+    ))
+    choices = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16,
+                      margin_top=16, margin_bottom=16)
+    first_button = None
+    for enabled, icon, message in (
+        (False, "globe", N_("Continue with global AnduinOS operated by AIURSOFT LIMITED, obtaining software from the global service network. (not compliant in mainland China)")),
+        (True, "china-flag", N_("Use mainland China AnduinOS operated by Suzhou Aiursoft Technology Co., Ltd., obtaining software from software servers in China.")),
+    ):
+        button = Gtk.ToggleButton()
+        if first_button is None:
+            first_button = button
+        else:
+            button.set_group(first_button)
+        button.set_active(enabled == bool(shared.get("download_from_china", False)))
+        button.add_css_class("china-source-choice")
+        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20,
+                      margin_start=20, margin_end=20,
+                      margin_top=20, margin_bottom=20)
+        icon_slot = Gtk.Overlay(width_request=64, height_request=64,
+                                hexpand=False, vexpand=False,
+                                halign=Gtk.Align.START, valign=Gtk.Align.CENTER)
+        icon_slot.set_child(Gtk.Box(width_request=64, height_request=64))
+        picture = icon_picture(icon, 64)
+        picture.set_size_request(-1, -1)
+        picture.set_halign(Gtk.Align.FILL)
+        picture.set_valign(Gtk.Align.FILL)
+        icon_slot.add_overlay(picture)
+        # Keep the rectangular flag's aspect ratio out of column measurement.
+        icon_slot.set_measure_overlay(picture, False)
+        row.append(icon_slot)
+        label = Gtk.Label(label=_(message, lang), wrap=True, xalign=0,
+                          hexpand=True, max_width_chars=46)
+        label.add_css_class("heading")
+        row.append(label)
+        button.set_child(row)
+        button.set_tooltip_text(_(message, lang))
+        def choose(source_button, selected=enabled):
+            if source_button.get_active():
+                shared["download_from_china"] = selected
+        button.connect("toggled", choose)
+        choices.append(button)
+    notice = Gtk.Label(label=_(
+        "This option changes how software is obtained. The mainland China version may not provide access to some software.", lang),
+        wrap=True, xalign=0)
+    notice.add_css_class("dim-label")
+    notice.add_css_class("caption")
+    choices.append(notice)
+    scroll = _scrolled_window(vexpand=True, hscrollbar_policy=Gtk.PolicyType.NEVER)
+    scroll.set_child(clamp_content(choices, 860))
+    content.append(scroll)
+    navigation = _nav_box(
+        lang, on_back=lambda: nav_view.pop(),
+        on_next=lambda: nav_view.push(build_summary_page(shared, nav_view)), stage=2,
+        shared=shared, page_tag="china-sources",
+    )
+    content.append(navigation)
+    _set_page_content(page, content)
+    return page
+
 
 def build_summary_page(shared, nav_view):
     lang = shared.get("lang", DEFAULT_LANGUAGE)
@@ -7288,6 +7366,12 @@ def build_summary_page(shared, nav_view):
     )
     lines.extend(escape(notice) for notice in manual_notices)
 
+    if lang == "zh_CN":
+        lines.append(f"<b>{_('Software sources', lang)}:</b> " + (
+            _("Mainland China — packages.aiursoft.cn and USTC Flathub", lang)
+            if shared.get("download_from_china", False)
+            else _("Keep existing software sources", lang)
+        ))
     summary_label = Gtk.Label(
         margin_start=48,
         margin_end=48,
@@ -7768,6 +7852,7 @@ def build_progress_page(plan: InstallPlan, shared, nav_view, *, encryption_crede
         "select-fastest-apt-mirror": _(
             "Select fastest package mirror", lang
         ),
+        "switch-china-sources": _("Switch to mainland China software sources", lang),
         "prepare-secure-boot": _("Prepare Secure Boot", lang),
         "install-language-packs": _(
             "Ensure required language packs are installed", lang
@@ -8088,6 +8173,13 @@ def build_progress_page(plan: InstallPlan, shared, nav_view, *, encryption_crede
     progress.add_css_class("installer-progress")
     content.append(status_row)
     content.append(progress)
+    china_warning = Gtk.Label(label=_(
+        "Some Chinese software sources could not be configured. "
+        "Installation will continue with the available sources.", lang),
+        wrap=True, xalign=0, margin_start=48, margin_end=48, visible=False)
+    china_warning.add_css_class("caption")
+    china_warning.add_css_class("warning")
+    content.append(china_warning)
 
     # Log callback (thread-safe via GLib.idle_add)
     def log(msg: str):
@@ -8213,6 +8305,8 @@ def build_progress_page(plan: InstallPlan, shared, nav_view, *, encryption_crede
     def update_step_status(step: str, status: str, message: str):
         def _update():
             step_outcomes[step] = status
+            if step == "switch-china-sources" and status == "warning":
+                china_warning.set_visible(True)
             widgets = step_rows.get(step)
             if widgets is None:
                 return False

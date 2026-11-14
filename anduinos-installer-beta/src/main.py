@@ -106,6 +106,7 @@ class InstallerApplication(Adw.Application):
             "install_updates": True,
             "install_third_party_drivers": False,
             "install_multimedia_codecs": False,
+            "download_from_china": False,
             "input_methods": detected_language.default_input_methods,
             "_preferred_install_updates": True,
             "_preferred_install_third_party_drivers": False,

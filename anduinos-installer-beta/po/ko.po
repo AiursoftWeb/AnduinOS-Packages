@@ -2118,5 +2118,45 @@ msgstr "강제 계속"
 msgid "RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
 msgstr "RE는 최소 256 MiB가 필요합니다. 설치된 시스템이 시작되지 않을 때에도 시스템 정보를 표시할 수 있습니다. 스냅샷 복원은 Btrfs에서만 사용할 수 있습니다. RE는 선택 사항이며, 구성되지 않은 경우 구호를 위해 라이브 USB를 사용하십시오."
 
+#: src/pages.py
+msgid "Are you in mainland China?"
+msgstr "중국 본토에 계신가요?"
+
+#: src/pages.py
+msgid "Choose where to obtain software during installation and future updates"
+msgstr "설치 및 향후 업데이트에 사용할 소프트웨어 소스를 선택하세요"
+
+#: src/pages.py
+msgid "Continue with global AnduinOS operated by AIURSOFT LIMITED, obtaining software from the global service network. (not compliant in mainland China)"
+msgstr "AIURSOFT LIMITED에서 운영하는 글로벌 AnduinOS를 계속 사용하고 글로벌 서비스 네트워크에서 소프트웨어 받기(중국 본토 규정 미준수)"
+
+#: src/pages.py
+msgid "Use mainland China AnduinOS operated by Suzhou Aiursoft Technology Co., Ltd., obtaining software from software servers in China."
+msgstr "Suzhou Aiursoft Technology Co., Ltd.에서 운영하는 중국 본토용 AnduinOS를 사용하고 중국의 소프트웨어 서버에서 소프트웨어 받기."
+
+#: src/pages.py
+msgid "This option changes how software is obtained. The mainland China version may not provide access to some software."
+msgstr "이 옵션은 소프트웨어를 받는 방식을 변경합니다. 중국 본토 버전에서는 일부 소프트웨어를 받지 못할 수 있습니다."
+
+#: src/pages.py
+msgid "Software sources"
+msgstr "소프트웨어 소스"
+
+#: src/pages.py
+msgid "Mainland China — packages.aiursoft.cn and USTC Flathub"
+msgstr "중국 본토 — packages.aiursoft.cn 및 USTC Flathub"
+
+#: src/pages.py
+msgid "Keep existing software sources"
+msgstr "기존 소프트웨어 소스 유지"
+
+#: src/pages.py
+msgid "Switch to mainland China software sources"
+msgstr "중국 본토 소프트웨어 소스로 전환"
+
+#: src/pages.py
+msgid "Some Chinese software sources could not be configured. Installation will continue with the available sources."
+msgstr "일부 중국 소프트웨어 소스를 구성할 수 없습니다. 사용 가능한 소스로 설치를 계속합니다."
+
 msgid "Disk encryption is a Pro feature. Visit https://www.anduinos.com/pro"
 msgstr "디스크 암호화는 Pro 기능입니다. https://www.anduinos.com/pro 를 방문하세요"

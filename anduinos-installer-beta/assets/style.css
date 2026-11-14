@@ -505,3 +505,12 @@
 .step-failed { color: @error_color; }
 .step-skipped { color: alpha(@window_fg_color, 0.45); }
 .step-active { font-weight: 700; }
+
+/* Large, equally weighted regional source choices. */
+button.china-source-choice { border-radius: 18px; padding: 0; }
+button.china-source-choice:hover { background: alpha(@accent_color, 0.12); }
+
+button.china-source-choice:checked {
+  background: alpha(@accent_color, 0.12);
+  box-shadow: inset 0 0 0 2px @accent_color;
+}

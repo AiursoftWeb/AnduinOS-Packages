@@ -167,6 +167,7 @@ class SoftwareSpec:
     install_updates: bool = True
     install_third_party_drivers: bool = False
     install_multimedia_codecs: bool = False
+    download_from_china: bool = False
 
 
 @dataclass(frozen=True)
@@ -340,12 +341,15 @@ class InstallPlan:
         )
 
         software_data = _object(root["software"], "software")
+        # Older saved plans retain the original global-source behavior.
+        software_data = {"download_from_china": False, **software_data}
         _exact_fields(
             software_data,
             {
                 "install_updates",
                 "install_third_party_drivers",
                 "install_multimedia_codecs",
+                "download_from_china",
             },
             "software",
         )

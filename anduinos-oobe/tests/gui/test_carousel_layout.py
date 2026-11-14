@@ -4,7 +4,7 @@ import importlib.machinery
 import importlib.util
 from pathlib import Path
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 
 SCRIPT = Path(__file__).resolve().parents[2] / "assets" / "anduinos-oobe"
@@ -25,6 +25,41 @@ class CarouselLayoutTests(unittest.TestCase):
         loop = oobe.GLib.MainLoop()
         oobe.GLib.timeout_add(100, lambda: (loop.quit(), False)[1])
         loop.run()
+
+    def test_source_cards_apply_on_click_and_never_require_an_extra_next(self):
+        def descendants(widget):
+            yield widget
+            child = widget.get_first_child()
+            while child:
+                yield from descendants(child)
+                child = child.get_next_sibling()
+        for warnings in ([], ["unreachable"]):
+            with self.subTest(warnings=warnings):
+                navigate, update = Mock(), Mock()
+                page = oobe.create_flathub_mirror_page(navigate, update)
+                buttons = [w for w in descendants(page) if w.has_css_class("oobe-source-choice")]
+                self.assertEqual(len(buttons), 2)
+                with patch.object(oobe._software_sources, "switch_to_china", return_value=warnings) as switch, patch.object(oobe.threading, "Thread") as thread:
+                    switch.assert_not_called()
+                    buttons[0].emit("clicked")
+                    navigate.assert_called_once_with()
+                    navigate.reset_mock()
+                    buttons[1].emit("clicked")
+                    self.assertTrue(page._install_running)
+                    self.assertTrue(page._block_carousel)
+                    self.assertTrue(all(not button.get_sensitive() for button in buttons))
+                    buttons[1].emit("clicked")
+                    self.assertEqual(thread.call_count, 1)
+                    thread.call_args.kwargs["target"]()
+                    self.settle()
+                    switch.assert_called_once_with()
+                    self.assertFalse(page._install_running)
+                    self.assertTrue(all(button.get_sensitive() for button in buttons))
+                    if warnings:
+                        navigate.assert_not_called()
+                        self.assertFalse(page._hide_next)
+                    else:
+                        navigate.assert_called_once_with()
 
     def test_driver_page_can_continue_before_and_after_opening_driver_center(self):
         settings = oobe.Gtk.Settings.get_default()
