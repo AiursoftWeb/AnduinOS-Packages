@@ -38,7 +38,9 @@
     <IncludeFolder Include="src/anduinos_offline_updater/" Target="/usr/lib/python3/dist-packages/anduinos_offline_updater/" />
     <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-offline-updater/README.md" Mode="644" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
+    <PrebuildCommand Run="sh -n scripts/postinst.sh" />
     <PrebuildCommand Run="bash compile-locales.sh" />
+    <PostInstallScript Include="scripts/postinst.sh" />
     <AppStreamApplication Include="data/com.anduinos.offlineupdater.desktop" Icon="data/com.anduinos.offlineupdater.svg" />
   </ItemGroup>
   <ItemGroup>
