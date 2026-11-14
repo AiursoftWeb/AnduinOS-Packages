@@ -399,6 +399,8 @@ class BootChainTests(unittest.TestCase):
         configured = boot.graphical_grub_configuration(original, inner, prefix, outer, recovery)
         boot.verify_grub_configuration(configured, inner, prefix, outer, recovery)
         with self.assertRaises(ValueError):
+            boot.verify_grub_configuration(configured, inner, prefix, outer, outer)
+        with self.assertRaises(ValueError):
             boot.graphical_grub_configuration(original, inner, "/other/boot/grub", outer, recovery)
 
     def test_multi_esp_direct_boot_is_allowed_with_local_binding(self):
