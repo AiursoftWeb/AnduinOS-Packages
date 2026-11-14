@@ -6,7 +6,8 @@ import gi
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 gi.require_version('Gio', '2.0')
-from gi.repository import Gtk, Adw, Gio, GLib, Gdk
+gi.require_version('GdkPixbuf', '2.0')
+from gi.repository import Gtk, Adw, Gio, GLib, Gdk, GdkPixbuf
 import subprocess
 import os
 import sys
@@ -1668,10 +1669,19 @@ def create_flathub_mirror_page(navigate_next=lambda: None, update_nav=lambda: No
     Gtk.StyleContext.add_provider_for_display(
         page.get_display(), page._source_css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
+    def source_icon(name):
+        # SVG intrinsic dimensions (the flag is 30x20) must not become a tiny
+        # texture that GTK later enlarges. Render enough pixels for HiDPI too.
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(_icon(name), 256, 256, True)
+        image = Gtk.Image.new_from_paintable(Gdk.Texture.new_for_pixbuf(pixbuf))
+        image.set_pixel_size(64)
+        image.set_size_request(64, 64)
+        image.set_valign(Gtk.Align.CENTER)
+        return image
+
     hero = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20)
     hero.add_css_class('oobe-source-hero')
-    pin = _create_image('location.svg')
-    pin.set_pixel_size(64)
+    pin = source_icon('location.svg')
     hero.append(pin)
     heading = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8,
                       valign=Gtk.Align.CENTER, hexpand=True)
@@ -1691,10 +1701,7 @@ def create_flathub_mirror_page(navigate_next=lambda: None, update_nav=lambda: No
         button.add_css_class('oobe-source-choice')
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20,
                       margin_start=20, margin_end=20, margin_top=20, margin_bottom=20)
-        image = _create_image(icon)
-        image.set_pixel_size(64)
-        image.set_size_request(64, 64)
-        image.set_valign(Gtk.Align.CENTER)
+        image = source_icon(icon)
         row.append(image)
         text = Gtk.Label(label=message, wrap=True, xalign=0, hexpand=True,
                          max_width_chars=46)
