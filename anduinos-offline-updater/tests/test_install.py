@@ -101,6 +101,7 @@ class InstallationChecks(unittest.TestCase):
                 with self.assertRaises(BundleError): jobs.status("unused", 1001)
                 plan = {"state": "update-available", "stages": []}
                 jobs.save_plan(path, plan)
+                self.assertEqual(jobs.status("unused", 1000)["preview"], plan)
                 jobs.update(path, confirmation_required=True)
                 self.assertEqual(jobs.status("unused", 1000)["preview"], plan)
 
@@ -108,6 +109,35 @@ class InstallationChecks(unittest.TestCase):
         with patch("anduinos_offline_updater.install.snapshot_records", return_value=set()):
             self.assertEqual(snapshot_result(set(), {"state": "unavailable"})["state"], "unavailable")
             self.assertEqual(snapshot_result(set(), {"state": "requires-layout-check"})["state"], "unconfirmed")
+
+    def test_result_versions_survive_handoff_and_legacy_result_reconnect(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            jobs.update(path, state="complete", owner_uid=1000)
+            jobs.save_plan(path, {"current_version": "2.0.0", "target_version": "2.0.5"})
+            with patch("anduinos_offline_updater.jobs.job_path", return_value=path):
+                report = jobs.status("unused", 1000)
+                self.assertEqual((report["source_version"], report["target_version"]), ("2.0.0", "2.0.5"))
+                self.assertNotIn("preview", report)
+                with self.assertRaises(BundleError): jobs.status("unused", 1001)
+                jobs.update(path, source_version="2.0.0", target_version="2.0.5")
+                jobs.save_plan(path, {"current_version": "2.0.5", "target_version": "2.0.5"})
+                report = jobs.status("unused", 1000)
+                self.assertEqual(report["source_version"], "2.0.0")
+                self.assertEqual(report["target_version"], "2.0.5")
+
+    def test_completed_job_does_not_repeat_a_satisfied_reboot_request(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            jobs.update(path, state="complete", owner_uid=1000, reboot_required=True, boot_id="previous-boot")
+            with patch("anduinos_offline_updater.jobs.job_path", return_value=path):
+                with patch.object(Path, "exists", return_value=False):
+                    self.assertFalse(jobs.status("unused", 1000)["reboot_required"])
+                with patch.object(Path, "exists", return_value=True):
+                    self.assertTrue(jobs.status("unused", 1000)["reboot_required"])
+                jobs.update(path, boot_id=Path("/proc/sys/kernel/random/boot_id").read_text().strip())
+                with patch.object(Path, "exists", return_value=False):
+                    self.assertTrue(jobs.status("unused", 1000)["reboot_required"])
 
     def test_hook_success_without_snapshot_is_not_reported_as_protected(self):
         with tempfile.TemporaryDirectory() as directory:

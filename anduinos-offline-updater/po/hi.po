@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 11:58+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: hi\n"
@@ -20,11 +20,31 @@ msgstr "नए अपडेटर की आवश्यकता है"
 msgid "AnduinOS update packages"
 msgstr "AnduinOS अपडेट पैकेज"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "फ़ाइल आयात करने और इंस्टॉलेशन योजना की जांच के लिए अधिकृत करें। अभी कोई पैकेज इंस्टॉल नहीं किया गया है।"
+
 msgid "Cannot preview this update"
 msgstr "इस अपडेट का पूर्वावलोकन नहीं किया जा सकता"
 
+msgid "Cannot read the update status"
+msgstr "अपडेट स्थिति पढ़ी नहीं जा सकती"
+
 msgid "Check required"
 msgstr "जाँच आवश्यक है"
+
+msgid "Check the details before trying again."
+msgstr "फिर से कोशिश करने से पहले विवरण देखें।"
+
+msgid "Checking the installation…"
+msgstr "इंस्टॉलेशन की जांच हो रही है…"
 
 msgid "Checking your update…"
 msgstr "आपका अपडेट जाँचा जा रहा है…"
@@ -32,8 +52,12 @@ msgstr "आपका अपडेट जाँचा जा रहा है…"
 msgid "Choose Update File"
 msgstr "अपडेट फ़ाइल चुनें"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "AnduinOS अपडेट पैकेज चुनें।\nफ़ाइल जाँचने के लिए इंटरनेट कनेक्शन की आवश्यकता नहीं है।"
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"AnduinOS अपडेट पैकेज चुनें।\n"
+"फ़ाइल जाँचने के लिए इंटरनेट कनेक्शन की आवश्यकता नहीं है।"
 
 msgid "Choose another file"
 msgstr "कोई अन्य फ़ाइल चुनें"
@@ -44,11 +68,17 @@ msgstr "एक स्थानीय .atgz फ़ाइल चुनें।"
 msgid "Close"
 msgstr "बंद करें"
 
+msgid "Continue"
+msgstr "जारी रखें"
+
 msgid "Could not open the file"
 msgstr "फ़ाइल नहीं खुल सकी"
 
 msgid "Could not open the website"
 msgstr "वेबसाइट नहीं खुल सकी"
+
+msgid "Could not save the update session"
+msgstr "अपडेट सत्र सहेजा नहीं जा सका"
 
 msgid "Current version"
 msgstr "वर्तमान संस्करण"
@@ -56,11 +86,29 @@ msgstr "वर्तमान संस्करण"
 msgid "Disabled"
 msgstr "निष्क्रिय"
 
+msgid "Done"
+msgstr "पूर्ण"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "अपने Pro लाभ केंद्र से अपडेट प्राप्त करें"
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "इंस्टॉल करने से पहले इंस्टॉलेशन स्पेस और सिस्टम स्नैपशॉट की उपलब्धता की पुनः जाँच करनी होगी।"
+
+msgid "Installing your update…"
+msgstr "आपका अपडेट इंस्टॉल हो रहा है…"
+
+msgid "Keep an independent backup of important files."
+msgstr "महत्वपूर्ण फ़ाइलों की एक स्वतंत्र बैकअप रखें।"
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "कमांड लाइन से पुनः कनेक्ट करने के लिए यह जॉब ID रखें।"
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "अपना कंप्यूटर पावर से कनेक्ट रखें। इस विंडो को बंद करने से अपडेट नहीं रुकेगा।"
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "अपना कंप्यूटर पावर से कनेक्ट रखें। आप इस विंडो को बंद कर सकते हैं और प्रगति देखने के लिए वापस आ सकते हैं।"
 
 msgid "No system packages were changed."
 msgstr "कोई सिस्टम पैकेज बदला नहीं गया।"
@@ -77,11 +125,43 @@ msgstr "पैकेज परिवर्तन"
 msgid "Package expansion estimate"
 msgstr "पैकेज विस्तार का अनुमान"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "केवल पूर्वावलोकन। इस बिल्ड में अपडेट इंस्टॉल करना उपलब्ध नहीं है।"
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "नियोजित अपडेट: {source} → {target}"
+
+msgid "Preparing your update…"
+msgstr "आपका अपडेट तैयार हो रहा है…"
+
+msgid "Reconnect"
+msgstr "पुनः कनेक्ट करें"
+
+msgid "Reconnecting to your update…"
+msgstr "आपके अपडेट से पुनः कनेक्ट हो रहा है…"
+
+msgid "Remove Imported File"
+msgstr "आयातित फ़ाइल हटाएं"
+
+msgid "Removing the imported file…"
+msgstr "आयातित फ़ाइल हटाई जा रही है…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "अपडेट लागू करने के लिए अपने कंप्यूटर को पुनः आरंभ करें।"
+
+msgid "Restarting the updater…"
+msgstr "अपडेटर पुनः आरंभ हो रहा है…"
 
 msgid "Review your update"
 msgstr "अपना अपडेट समीक्षा करें"
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "चरण {current} of {total}"
+
+msgid "Start Update"
+msgstr "अपडेट शुरू करें"
+
+msgid "Starting your update…"
+msgstr "आपका अपडेट शुरू हो रहा है…"
 
 msgid "System snapshot"
 msgstr "सिस्टम स्नैपशॉट"
@@ -92,14 +172,41 @@ msgstr "तकनीकी विवरण"
 msgid "Temporary storage"
 msgstr "अस्थायी भंडारण"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "अनुरोध पूर्ण नहीं हुआ। अधिकृत करना रद्द किया गया हो सकता है।"
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "अपडेट की जाँच नहीं की जा सकी। पुनः फ़ाइल चुनने का प्रयास करें।"
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "अपडेट अभी भी चल रहा हो सकता है। इसकी जांच के लिए पुनः कनेक्ट करें; कोई और इंस्टॉलेशन न शुरू करें।"
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "अपडेटर को अपग्रेड किया गया है। शेष अपडेट की समीक्षा करें और पुष्टि करें।"
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "यह आयातित कॉपी और जॉब इतिहास को हटाता है, आपकी मूल डाउनलोड को नहीं।"
+
+msgid "This update needs review"
+msgstr "इस अपडेट की समीक्षा की आवश्यकता है"
 
 msgid "Unavailable"
 msgstr "अनुपलब्ध"
 
+msgid "Unexpected update response."
+msgstr "अप्रत्याशित अपडेट प्रतिक्रिया।"
+
 msgid "Unknown"
 msgstr "अज्ञात"
+
+msgid "Update complete"
+msgstr "अपडेट पूर्ण"
+
+msgid "Update could not start"
+msgstr "अपडेट शुरू नहीं हो सका"
+
+msgid "Update failed"
+msgstr "अपडेट विफल"
 
 msgid "Update from a file"
 msgstr "फ़ाइल से अपडेट करें"
@@ -107,14 +214,20 @@ msgstr "फ़ाइल से अपडेट करें"
 msgid "Update to"
 msgstr "अपडेट करें"
 
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "इस पुराने अपडेट सत्र की समीक्षा के लिए कमांड लाइन का उपयोग करें, या इसकी आयातित फ़ाइल हटाकर इसे फिर से चुनें।"
+
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "हस्ताक्षर सत्यापित कर रहे हैं और आपका सिस्टम जाँच रहे हैं। इसमें कुछ मिनट लग सकते हैं।"
+
+msgid "Working…"
+msgstr "कार्य कर रहा है…"
 
 msgid "You already have this update"
 msgstr "आपके पास इस अपडेट की पहले से उपलब्धता है"
 
+msgid "You can keep using your computer."
+msgstr "आप अपने कंप्यूटर का उपयोग जारी रख सकते हैं।"
+
 msgid "or drop an .atgz file here"
 msgstr "या यहाँ एक .atgz फ़ाइल छोड़ें"
-
-msgid "Check an AnduinOS offline update package"
-msgstr "AnduinOS ऑफ़लाइन अपडेट पैकेज की जाँच करें"

@@ -27,6 +27,7 @@ def atomic_json(path, value, mode=0o600):
     fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, mode)
     try:
         with os.fdopen(fd, "w") as stream:
+            os.fchmod(stream.fileno(), mode)
             json.dump(value, stream, indent=2)
             stream.write("\n"); stream.flush(); os.fsync(stream.fileno())
         os.replace(temporary, path)
@@ -67,15 +68,35 @@ def job_lock(path):
 def status(identifier, uid):
     report = json.loads((job_path(identifier) / "status.json").read_text())
     require(uid in (0, report["owner_uid"]), "This job belongs to another user")
+    if (report["state"] in {"complete", "already-installed"} and report.get("reboot_required") and
+            report.get("boot_id") and report["boot_id"] != Path("/proc/sys/kernel/random/boot_id").read_text().strip()):
+        # Keep the stored result as history, but do not repeat a reboot request
+        # that has already been satisfied. Another update may request a new one.
+        report["reboot_required"] = Path("/var/run/reboot-required").exists()
     if report["state"] in {"queued", "checking", "installing", "handoff"} and time.time() - report["updated_at"] > 10:
         active = subprocess.run(["systemctl", "show", "--value", "--property=ActiveState", report["unit"] + ".service"],
                                 capture_output=True, text=True, check=False, timeout=10)
         boot_changed = report.get("boot_id") != Path("/proc/sys/kernel/random/boot_id").read_text().strip()
         if boot_changed or active.returncode != 0 or active.stdout.strip() in {"inactive", "failed"}:
             report.update(state="interrupted", error="Installation service stopped without a final result; inspect dpkg before retrying")
-    if report["state"] == "prepared" and report.get("confirmation_required"):
-        # Older prepared jobs have a private plan and no handoff to review.
+    plan = job_path(identifier) / "plan.json"
+    if report["state"] == "prepared" and (report.get("confirmation_required") or
+            (plan.exists() and plan.stat().st_mode & stat.S_IROTH)):
+        # New jobs expose package metadata for reconnecting GTK. Legacy private
+        # plans remain queryable without requiring their contents to be readable.
         report["preview"] = json.loads((job_path(identifier) / "plan.json").read_text())
+    if not report.get("source_version") or not report.get("target_version"):
+        # Older jobs kept versions only in the public installation plan.
+        # Never infer a completed job's starting version from today's system.
+        try:
+            if plan.stat().st_mode & stat.S_IROTH:
+                preview = json.loads(plan.read_text())
+                for name, key in (("source_version", "current_version"), ("target_version", "target_version")):
+                    value = preview.get(key)
+                    if isinstance(value, str) and value:
+                        report.setdefault(name, value)
+        except (OSError, ValueError, AttributeError):
+            pass
     return report
 
 
@@ -167,7 +188,8 @@ def prepare(source, uid):
         plan_hash = save_plan(path, report)
         # Keep the large package plan out of frequently rewritten progress records.
         result = update(path, state="prepared", archive_sha256=digest, archive_bytes=size,
-                        plan_sha256=plan_hash)
+                        plan_sha256=plan_hash, source_version=report["current_version"],
+                        target_version=report["target_version"])
         return dict(result, preview=report)
     except Exception:
         shutil.rmtree(path)

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 11:51+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: zh_HK\n"
@@ -20,11 +20,31 @@ msgstr "需要較新版本的更新器"
 msgid "AnduinOS update packages"
 msgstr "AnduinOS 更新套件"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "授權匯入檔案並檢查安裝計劃。目前尚未安裝任何套件。"
+
 msgid "Cannot preview this update"
 msgstr "無法預覽此更新"
 
+msgid "Cannot read the update status"
+msgstr "無法讀取更新狀態"
+
 msgid "Check required"
 msgstr "待檢查"
+
+msgid "Check the details before trying again."
+msgstr "請檢查詳情後再試一次。"
+
+msgid "Checking the installation…"
+msgstr "正在檢查安裝…"
 
 msgid "Checking your update…"
 msgstr "正在檢查您的更新…"
@@ -32,8 +52,12 @@ msgstr "正在檢查您的更新…"
 msgid "Choose Update File"
 msgstr "選擇更新檔案"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "選擇一個 AnduinOS 更新套件。\n檢查檔案無需網際網路連線。"
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"選擇一個 AnduinOS 更新套件。\n"
+"檢查檔案無需網際網路連線。"
 
 msgid "Choose another file"
 msgstr "選擇另一個檔案"
@@ -44,11 +68,17 @@ msgstr "選擇一個本地 .atgz 檔案。"
 msgid "Close"
 msgstr "關閉"
 
+msgid "Continue"
+msgstr "繼續"
+
 msgid "Could not open the file"
 msgstr "無法開啟檔案"
 
 msgid "Could not open the website"
 msgstr "無法開啟網站"
+
+msgid "Could not save the update session"
+msgstr "無法儲存更新工作階段"
 
 msgid "Current version"
 msgstr "目前版本"
@@ -56,11 +86,29 @@ msgstr "目前版本"
 msgid "Disabled"
 msgstr "已停用"
 
+msgid "Done"
+msgstr "完成"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "從您的 Pro 權益中心獲取更新"
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "安裝前必須再次檢查安裝空間和系統快照可用性。"
+
+msgid "Installing your update…"
+msgstr "正在安裝您的更新…"
+
+msgid "Keep an independent backup of important files."
+msgstr "請保留重要檔案的獨立備份。"
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "請保留此工作 ID 以便從命令列重新連線。"
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "請保持電腦連接電源。關閉此視窗不會停止更新。"
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "請保持電腦連接電源。您可以關閉此視窗，稍後回來查看進度。"
 
 msgid "No system packages were changed."
 msgstr "沒有變更任何系統套件。"
@@ -77,11 +125,43 @@ msgstr "套件變更"
 msgid "Package expansion estimate"
 msgstr "預計套件解壓後大小"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "僅供預覽。此版本無法安裝更新。"
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "計劃更新：{source} → {target}"
+
+msgid "Preparing your update…"
+msgstr "正在準備您的更新…"
+
+msgid "Reconnect"
+msgstr "重新連線"
+
+msgid "Reconnecting to your update…"
+msgstr "正在重新連線至您的更新…"
+
+msgid "Remove Imported File"
+msgstr "移除匯入檔案"
+
+msgid "Removing the imported file…"
+msgstr "正在移除匯入檔案…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "請重新啟動電腦以完成更新套用。"
+
+msgid "Restarting the updater…"
+msgstr "正在重新啟動更新程式…"
 
 msgid "Review your update"
 msgstr "查看您的更新"
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "第 {current} 階段，共 {total} 階段"
+
+msgid "Start Update"
+msgstr "開始更新"
+
+msgid "Starting your update…"
+msgstr "正在啟動您的更新…"
 
 msgid "System snapshot"
 msgstr "系統快照"
@@ -92,14 +172,41 @@ msgstr "技術詳情"
 msgid "Temporary storage"
 msgstr "暫存空間"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "請求未完成。授權可能已取消。"
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "無法檢查更新。請嘗試重新選擇檔案。"
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "更新可能仍在執行中。請重新連線以檢查狀態；請勿啟動另一項安裝。"
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "更新程式已升級。請檢視並確認剩餘的更新。"
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "此操作將移除匯入的副本及工作歷史記錄，而非您的原始下載檔案。"
+
+msgid "This update needs review"
+msgstr "此更新需要審閱"
 
 msgid "Unavailable"
 msgstr "不可用"
 
+msgid "Unexpected update response."
+msgstr "意外的更新回應。"
+
 msgid "Unknown"
 msgstr "未知"
+
+msgid "Update complete"
+msgstr "更新完成"
+
+msgid "Update could not start"
+msgstr "無法開始更新"
+
+msgid "Update failed"
+msgstr "更新失敗"
 
 msgid "Update from a file"
 msgstr "從檔案更新"
@@ -107,14 +214,20 @@ msgstr "從檔案更新"
 msgid "Update to"
 msgstr "更新至"
 
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "請使用命令列檢視此較舊的更新工作階段，或移除其匯入檔案並重新選擇。"
+
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "正在驗證簽名並檢查您的系統。這可能需要幾分鐘。"
+
+msgid "Working…"
+msgstr "處理中…"
 
 msgid "You already have this update"
 msgstr "您已安裝此更新"
 
+msgid "You can keep using your computer."
+msgstr "可繼續使用電腦。"
+
 msgid "or drop an .atgz file here"
 msgstr "或將 .atgz 檔案拖曳至此處"
-
-msgid "Check an AnduinOS offline update package"
-msgstr "檢查 AnduinOS 離線更新套件"

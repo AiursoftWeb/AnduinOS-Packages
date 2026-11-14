@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 11:55+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: fi\n"
@@ -20,11 +20,31 @@ msgstr "Uudempi päivitystooli vaaditaan"
 msgid "AnduinOS update packages"
 msgstr "AnduinOS-päivityspaketit"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "Hyväksy tiedoston tuominen ja asennussuunnitelman tarkistus. Paketteja ei ole vielä asennettu."
+
 msgid "Cannot preview this update"
 msgstr "Tätä päivitystä ei voi esikatsella"
 
+msgid "Cannot read the update status"
+msgstr "Päivityksen tilaa ei voi lukea"
+
 msgid "Check required"
 msgstr "Tarkistus vaaditaan"
+
+msgid "Check the details before trying again."
+msgstr "Tarkista tiedot ennen uudelleenyritystä."
+
+msgid "Checking the installation…"
+msgstr "Tarkistetaan asennusta…"
 
 msgid "Checking your update…"
 msgstr "Tarkistetaan päivityksesi…"
@@ -32,8 +52,12 @@ msgstr "Tarkistetaan päivityksesi…"
 msgid "Choose Update File"
 msgstr "Valitse päivitystiedosto"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "Valitse AnduinOS-päivityspaketti.\nTiedoston tarkistukseen ei tarvita internet-yhteyttä."
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"Valitse AnduinOS-päivityspaketti.\n"
+"Tiedoston tarkistukseen ei tarvita internet-yhteyttä."
 
 msgid "Choose another file"
 msgstr "Valitse toinen tiedosto"
@@ -44,11 +68,17 @@ msgstr "Valitse yksi paikallinen .atgz-tiedosto."
 msgid "Close"
 msgstr "Sulje"
 
+msgid "Continue"
+msgstr "Jatka"
+
 msgid "Could not open the file"
 msgstr "Tiedostoa ei voitu avata"
 
 msgid "Could not open the website"
 msgstr "Verkkosivua ei voitu avata"
+
+msgid "Could not save the update session"
+msgstr "Päivityssessiota ei voitu tallentaa"
 
 msgid "Current version"
 msgstr "Nykyinen versio"
@@ -56,11 +86,29 @@ msgstr "Nykyinen versio"
 msgid "Disabled"
 msgstr "Ei käytössä"
 
+msgid "Done"
+msgstr "Valmis"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Hae päivitykset Pro-eduuttasi keskuksesta"
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "Asennustila ja varakopion saatavuus on tarkistettava uudelleen ennen asennusta."
+
+msgid "Installing your update…"
+msgstr "Asennetaan päivitystäsi…"
+
+msgid "Keep an independent backup of important files."
+msgstr "Pidä itsenäinen varmuuskopio tärkeistä tiedostoista."
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "Tallenna tämä tehtävän tunnus, jotta voit yhdistää komentoriviltä."
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "Pidä tietokoneesi kytkettynä virtalähteeseen. Ikunan sulkeminen ei keskeytä päivitystä."
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "Pidä tietokoneesi kytkettynä virtalähteeseen. Voit sulkea tämän ikkunan ja palata tarkistamaan edistymisen."
 
 msgid "No system packages were changed."
 msgstr "Järjestelmäpaketteja ei muutettu."
@@ -77,11 +125,43 @@ msgstr "Pakettimuutokset"
 msgid "Package expansion estimate"
 msgstr "Arvio pakettien purkautumisesta"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "Vain esikatselu. Päivitysten asennus ei ole käytettävissä tässä versiossa."
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Suunniteltu päivitys: {source} → {target}"
+
+msgid "Preparing your update…"
+msgstr "Valmistellaan päivitystäsi…"
+
+msgid "Reconnect"
+msgstr "Yhdistä uudelleen"
+
+msgid "Reconnecting to your update…"
+msgstr "Yhdistetään päivitykseesi…"
+
+msgid "Remove Imported File"
+msgstr "Poista tuotu tiedosto"
+
+msgid "Removing the imported file…"
+msgstr "Poistetaan tuotua tiedostoa…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "Käynnistä tietokone uudelleen, jotta päivityksen soveltaminen valmistuu."
+
+msgid "Restarting the updater…"
+msgstr "Käynnistetään päivitysohjelmistoa…"
 
 msgid "Review your update"
 msgstr "Tarkista päivityksesi"
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "Vaihe {current} / {total}"
+
+msgid "Start Update"
+msgstr "Aloita päivitys"
+
+msgid "Starting your update…"
+msgstr "Aloitetaan päivityksesi…"
 
 msgid "System snapshot"
 msgstr "Järjestelmävarakopio"
@@ -92,14 +172,41 @@ msgstr "Tekniset tiedot"
 msgid "Temporary storage"
 msgstr "Väliaikainen tallennustila"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "Pyyntö ei valmistanut. Valtuutus on saattanut peruutettu."
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "Päivitystä ei voitu tarkistaa. Yritä valita tiedosto uudelleen."
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "Päivitys voi olla edelleen käynnissä. Yhdistä uudelleen tarkistamaan; älä aloita uutta asennusta."
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "Päivitysohjelma on päivitetty. Tarkista ja vahvista jäljellä oleva päivitys."
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "Tämä poistaa tuodun kopion ja tehtävän historian, ei alkuperäistä lataustasi."
+
+msgid "This update needs review"
+msgstr "Tämä päivitys tarvitsee tarkistuksen"
 
 msgid "Unavailable"
 msgstr "Ei käytettävissä"
 
+msgid "Unexpected update response."
+msgstr "Odottamaton päivitysvastaus."
+
 msgid "Unknown"
 msgstr "Tuntematon"
+
+msgid "Update complete"
+msgstr "Päivitys valmis"
+
+msgid "Update could not start"
+msgstr "Päivitystä ei voitu käynnistää"
+
+msgid "Update failed"
+msgstr "Päivitys epäonnistui"
 
 msgid "Update from a file"
 msgstr "Päivitä tiedostosta"
@@ -107,14 +214,20 @@ msgstr "Päivitä tiedostosta"
 msgid "Update to"
 msgstr "Päivitetään versioon"
 
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "Tarkista tämä vanhempi päivityssessio komentoriviltä tai poista sen tuotu tiedosto ja valitse se uudelleen."
+
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Vahvistetaan allekirjoitusta ja tarkistetaan järjestelmäsi. Tämä voi kestää muutaman minuutin."
+
+msgid "Working…"
+msgstr "Työt meneillään…"
 
 msgid "You already have this update"
 msgstr "Sinulla on jo tämä päivitys"
 
+msgid "You can keep using your computer."
+msgstr "Voit jatkaa tietokoneen käyttöä."
+
 msgid "or drop an .atgz file here"
 msgstr "tai vedä .atgz-tiedosto tähän"
-
-msgid "Check an AnduinOS offline update package"
-msgstr "Tarkista AnduinOS-poissaolopäivityspaketti"
