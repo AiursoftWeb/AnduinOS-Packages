@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 11:52+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: da\n"
@@ -20,11 +20,31 @@ msgstr "Der kræves en nyere opdatering"
 msgid "AnduinOS update packages"
 msgstr "AnduinOS-opdateringspakker"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "Godkend import af filen og kontrol af installationsplanen. Ingen pakker er installeret endnu."
+
 msgid "Cannot preview this update"
 msgstr "Kan ikke forudvise denne opdatering"
 
+msgid "Cannot read the update status"
+msgstr "Kan ikke læse opdateringsstatus"
+
 msgid "Check required"
 msgstr "Kontrol påkrævet"
+
+msgid "Check the details before trying again."
+msgstr "Tjek detaljerne, før du prøver igen."
+
+msgid "Checking the installation…"
+msgstr "Tjekker installationen…"
 
 msgid "Checking your update…"
 msgstr "Kontrollerer din opdatering…"
@@ -32,8 +52,12 @@ msgstr "Kontrollerer din opdatering…"
 msgid "Choose Update File"
 msgstr "Vælg opdateringsfil"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "Vælg en AnduinOS-opdateringspakke.\nDer kræves ikke internetforbindelse for at kontrollere filen."
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"Vælg en AnduinOS-opdateringspakke.\n"
+"Der kræves ikke internetforbindelse for at kontrollere filen."
 
 msgid "Choose another file"
 msgstr "Vælg en anden fil"
@@ -44,11 +68,17 @@ msgstr "Vælg én lokal .atgz-fil."
 msgid "Close"
 msgstr "Luk"
 
+msgid "Continue"
+msgstr "Fortsæt"
+
 msgid "Could not open the file"
 msgstr "Kunne ikke åbne filen"
 
 msgid "Could not open the website"
 msgstr "Kunne ikke åbne webstedet"
+
+msgid "Could not save the update session"
+msgstr "Kunne ikke gemme opdateringssessionen"
 
 msgid "Current version"
 msgstr "Aktuel version"
@@ -56,11 +86,29 @@ msgstr "Aktuel version"
 msgid "Disabled"
 msgstr "Deaktiveret"
 
+msgid "Done"
+msgstr "Færdig"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Hent opdateringer fra dit Pro-fordelecenter"
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "Installationsplads og tilgængelighed af system-snapshot skal kontrolleres igen før installation."
+
+msgid "Installing your update…"
+msgstr "Installerer din opdatering…"
+
+msgid "Keep an independent backup of important files."
+msgstr "Opret uafhængig sikkerhedskopi af vigtige filer."
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "Gem dette job-ID for at genforbinde fra kommandolinjen."
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "Hold computeren tilsluttet strømmen. Lukningen af dette vindue stopper ikke opdateringen."
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "Hold computeren tilsluttet strømmen. Du kan lukke dette vindue og vende tilbage for at tjekke fremskridt."
 
 msgid "No system packages were changed."
 msgstr "Ingen systempakker blev ændret."
@@ -77,11 +125,43 @@ msgstr "Pakkeændringer"
 msgid "Package expansion estimate"
 msgstr "Estimat for pakkeudpakning"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "Kun forudvisning. Installation af opdateringer er ikke tilgængelig i denne version."
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Planlagt opdatering: {source} → {target}"
+
+msgid "Preparing your update…"
+msgstr "Forbereder din opdatering…"
+
+msgid "Reconnect"
+msgstr "Genforbind"
+
+msgid "Reconnecting to your update…"
+msgstr "Genforbinder til din opdatering…"
+
+msgid "Remove Imported File"
+msgstr "Fjern importeret fil"
+
+msgid "Removing the imported file…"
+msgstr "Fjerner den importerede fil…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "Genstart computeren for at færdiggøre opdateringen."
+
+msgid "Restarting the updater…"
+msgstr "Genstarter opdateringsprogrammet…"
 
 msgid "Review your update"
 msgstr "Gennemgå din opdatering"
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "Trin {current} af {total}"
+
+msgid "Start Update"
+msgstr "Start opdatering"
+
+msgid "Starting your update…"
+msgstr "Starter din opdatering…"
 
 msgid "System snapshot"
 msgstr "System-snapshot"
@@ -92,14 +172,41 @@ msgstr "Tekniske detaljer"
 msgid "Temporary storage"
 msgstr "Midlertidig opbevaring"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "Anmodningen blev ikke fuldført. Godkendelse kan være blevet annulleret."
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "Opdateringen kunne ikke kontrolleres. Prøv at vælge filen igen."
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "Opdateringen kører muligvis stadig. Genforbind for at tjekke den; start ikke en ny installation."
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "Opdateringsprogrammet er opdateret. Gennemse og bekræft den resterende opdatering."
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "Dette fjerner den importerede kopi og jobhistorikken, ikke din oprindelige download."
+
+msgid "This update needs review"
+msgstr "Denne opdatering skal gennemses"
 
 msgid "Unavailable"
 msgstr "Ikke tilgængelig"
 
+msgid "Unexpected update response."
+msgstr "Uventet opdateringssvar."
+
 msgid "Unknown"
 msgstr "Ukendt"
+
+msgid "Update complete"
+msgstr "Opdatering fuldført"
+
+msgid "Update could not start"
+msgstr "Opdateringen kunne ikke startes"
+
+msgid "Update failed"
+msgstr "Opdateringen fejlede"
 
 msgid "Update from a file"
 msgstr "Opdater fra fil"
@@ -107,14 +214,20 @@ msgstr "Opdater fra fil"
 msgid "Update to"
 msgstr "Opdater til"
 
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "Brug kommandolinjen til at gennemse denne ældre opdateringssession, eller fjern den importerede fil og vælg den igen."
+
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Verificerer signaturen og kontrollerer dit system. Dette kan tage et par minutter."
+
+msgid "Working…"
+msgstr "Arbejder…"
 
 msgid "You already have this update"
 msgstr "Du har allerede denne opdatering"
 
+msgid "You can keep using your computer."
+msgstr "Du kan fortsætte med at bruge din computer."
+
 msgid "or drop an .atgz file here"
 msgstr "eller slip en .atgz-fil her"
-
-msgid "Check an AnduinOS offline update package"
-msgstr "Kontroller en AnduinOS offline-opdateringspakke"

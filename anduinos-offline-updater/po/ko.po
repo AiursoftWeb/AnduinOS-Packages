@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 12:01+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: ko\n"
@@ -20,11 +20,31 @@ msgstr "새로운 업데이트 관리자가 필요합니다"
 msgid "AnduinOS update packages"
 msgstr "AnduinOS 업데이트 패키지"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "파일 가져오기 및 설치 계획 확인을 승인하십시오. 아직 패키지가 설치되지 않았습니다."
+
 msgid "Cannot preview this update"
 msgstr "이 업데이트를 미리 볼 수 없습니다"
 
+msgid "Cannot read the update status"
+msgstr "업데이트 상태를 읽을 수 없습니다"
+
 msgid "Check required"
 msgstr "확인 필요"
+
+msgid "Check the details before trying again."
+msgstr "다시 시도하기 전 세부 정보를 확인하세요."
+
+msgid "Checking the installation…"
+msgstr "설정을 확인하는 중…"
 
 msgid "Checking your update…"
 msgstr "업데이트 확인 중…"
@@ -32,8 +52,12 @@ msgstr "업데이트 확인 중…"
 msgid "Choose Update File"
 msgstr "업데이트 파일 선택"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "AnduinOS 업데이트 패키지를 선택하세요.\n파일 확인에 인터넷 연결이 필요하지 않습니다."
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"AnduinOS 업데이트 패키지를 선택하세요.\n"
+"파일 확인에 인터넷 연결이 필요하지 않습니다."
 
 msgid "Choose another file"
 msgstr "다른 파일 선택"
@@ -44,11 +68,17 @@ msgstr "로컬 .atgz 파일 하나를 선택하세요."
 msgid "Close"
 msgstr "닫기"
 
+msgid "Continue"
+msgstr "계속"
+
 msgid "Could not open the file"
 msgstr "파일을 열 수 없습니다"
 
 msgid "Could not open the website"
 msgstr "웹사이트를 열 수 없습니다"
+
+msgid "Could not save the update session"
+msgstr "업데이트 세션을 저장할 수 없습니다"
 
 msgid "Current version"
 msgstr "현재 버전"
@@ -56,11 +86,29 @@ msgstr "현재 버전"
 msgid "Disabled"
 msgstr "비활성화됨"
 
+msgid "Done"
+msgstr "완료"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Pro 혜택 센터에서 업데이트를 받으세요"
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "설치 전 설치 공간 및 스냅샷 사용 가능 여부를 다시 확인해야 합니다."
+
+msgid "Installing your update…"
+msgstr "업데이트를 설치하는 중…"
+
+msgid "Keep an independent backup of important files."
+msgstr "중요 파일의 독립적인 백업을 유지하십시오."
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "명령줄에서 다시 연결하려면 이 작업 ID를 유지하십시오."
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "전원이 연결된 상태로 유지하십시오. 이 창을 닫아도 업데이트는 중단되지 않습니다."
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "전원이 연결된 상태로 유지하십시오. 이 창을 닫았다가 다시 확인하여 진행 상황을 볼 수 있습니다."
 
 msgid "No system packages were changed."
 msgstr "시스템 패키지가 변경되지 않았습니다."
@@ -77,11 +125,43 @@ msgstr "패키지 변경 사항"
 msgid "Package expansion estimate"
 msgstr "패키지 확장 예상치"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "미리보기만 가능합니다. 이 빌드에서는 업데이트 설치를 지원하지 않습니다."
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "예정된 업데이트: {source} → {target}"
+
+msgid "Preparing your update…"
+msgstr "업데이트를 준비하는 중…"
+
+msgid "Reconnect"
+msgstr "다시 연결"
+
+msgid "Reconnecting to your update…"
+msgstr "업데이트에 다시 연결하는 중…"
+
+msgid "Remove Imported File"
+msgstr "가져온 파일 제거"
+
+msgid "Removing the imported file…"
+msgstr "가져온 파일을 제거하는 중…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "업데이트 적용을 완료하려면 컴퓨터를 재시작하십시오."
+
+msgid "Restarting the updater…"
+msgstr "업데이트 도구를 재시작하는 중…"
 
 msgid "Review your update"
 msgstr "업데이트 검토"
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "단계 {current}/{total}"
+
+msgid "Start Update"
+msgstr "업데이트 시작"
+
+msgid "Starting your update…"
+msgstr "업데이트를 시작하는 중…"
 
 msgid "System snapshot"
 msgstr "시스템 스냅샷"
@@ -92,14 +172,41 @@ msgstr "기술적 세부 정보"
 msgid "Temporary storage"
 msgstr "임시 저장 공간"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "요청이 완료되지 않았습니다. 승인이 취소되었을 수 있습니다."
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "업데이트를 확인할 수 없습니다. 파일을 다시 선택해 보세요."
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "업데이트가 여전히 실행 중일 수 있습니다. 확인하려면 다시 연결하십시오. 다른 설치를 시작하지 마십시오."
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "업데이트 도구가 업그레이드되었습니다. 남은 업데이트를 검토하고 확인하십시오."
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "이 작업은 가져온 사본과 작업 기록을 제거하며, 원래 다운로드 파일은 유지됩니다."
+
+msgid "This update needs review"
+msgstr "이 업데이트는 검토가 필요합니다"
 
 msgid "Unavailable"
 msgstr "사용 불가"
 
+msgid "Unexpected update response."
+msgstr "예기치 않은 업데이트 응답입니다."
+
 msgid "Unknown"
 msgstr "알 수 없음"
+
+msgid "Update complete"
+msgstr "업데이트 완료"
+
+msgid "Update could not start"
+msgstr "업데이트를 시작할 수 없습니다"
+
+msgid "Update failed"
+msgstr "업데이트 실패"
 
 msgid "Update from a file"
 msgstr "파일에서 업데이트"
@@ -107,14 +214,20 @@ msgstr "파일에서 업데이트"
 msgid "Update to"
 msgstr "업데이트 대상"
 
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "명령줄에서 이 이전 업데이트 세션을 검토하거나, 가져온 파일을 제거한 후 다시 선택하십시오."
+
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "서명을 검증하고 시스템을 확인하는 중입니다. 몇 분 정도 걸릴 수 있습니다."
+
+msgid "Working…"
+msgstr "처리 중…"
 
 msgid "You already have this update"
 msgstr "이미 이 업데이트를 보유하고 있습니다"
 
+msgid "You can keep using your computer."
+msgstr "계속 사용하실 수 있습니다."
+
 msgid "or drop an .atgz file here"
 msgstr "또는 .atgz 파일을 여기에 드롭하세요"
-
-msgid "Check an AnduinOS offline update package"
-msgstr "AnduinOS 오프라인 업데이트 패키지 확인"

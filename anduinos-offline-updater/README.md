@@ -1,12 +1,11 @@
 # AnduinOS Offline Updater
 
-Choose or drop an official `.atgz` cumulative update and preview its effect on
-your system. Open **Control Panel → Programs → Offline Update** when this package
+Choose or drop an official `.atgz` cumulative update, review its effect on
+your system and install it offline. Open **Control Panel → Programs → Offline Update** when this package
 is installed, or run `anduinos-offline-updater` without arguments.
 The updater is hidden from application menus, like other Control Panel tools.
 
-The desktop currently provides a **read-only preview**. The command line also
-provides an installation preview for validation on supported systems.
+The desktop and command line use the same native APT installation engine.
 Neither interface requires activation or checks your purchase status.
 Official update packages are a paid AnduinOS Pro benefit, available through the
 [Pro benefits center](https://www.anduinos.com/pro/offline-update-package).
@@ -63,6 +62,21 @@ opens when requested. Temporary files use the user's cache directory and are
 removed when inspection finishes, including after the window closes. The default
 production trust key is still required and is not supplied by this package.
 
+Select **Continue** to authorize importing a verified file. Review the freshly
+checked installation plan, then select **Start Update** to install it. Progress
+comes from the system service; closing the window does not stop installation.
+Reopen the app as the same user to reconnect to the saved job. If the updater
+upgrades itself first, review and confirm the remaining plan before continuing.
+The UI does not silently retry a failed or interrupted package transaction.
+
+The result screen shows the outcome, the original and target versions, and what
+to do next. A required restart is shown explicitly. **Done** closes a successful
+update; **Close** dismisses a failure. Neither requests authorization, restarts
+the computer or deletes diagnostics. Reopening the app retains the last result.
+Under **Technical details**, **Remove Imported File** deletes the root-owned
+copy and job history. It does not delete your original download.
+Keep an independent backup and connect your computer to power before updating.
+
 To run the
 GTK interaction tests, use the existing APKG `gui` profile (GTK4, Libadwaita,
 PyGObject, Xvfb and a session bus are required).
@@ -114,5 +128,5 @@ hash. The old confirmation cannot start the remaining update. A second bootstrap
 in the same job stops with `partial`; an unsupported installer capability also
 stops instead of retrying indefinitely.
 
-The desktop install button and broader release qualification remain subsequent
-milestones. It is not yet a production updater.
+Production signing-key distribution and broader release qualification remain
+separate milestones. Official automated package downloads are not available yet.

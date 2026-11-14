@@ -1,8 +1,20 @@
-# AnduinOS Offline Updater translations.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the anduinos-offline-updater package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: anduinos-offline-updater\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "A newer updater is required"
@@ -11,10 +23,30 @@ msgstr ""
 msgid "AnduinOS update packages"
 msgstr ""
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr ""
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr ""
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr ""
+
 msgid "Cannot preview this update"
 msgstr ""
 
+msgid "Cannot read the update status"
+msgstr ""
+
 msgid "Check required"
+msgstr ""
+
+msgid "Check the details before trying again."
+msgstr ""
+
+msgid "Checking the installation…"
 msgstr ""
 
 msgid "Checking your update…"
@@ -23,7 +55,9 @@ msgstr ""
 msgid "Choose Update File"
 msgstr ""
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
 msgstr ""
 
 msgid "Choose another file"
@@ -35,10 +69,16 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+msgid "Continue"
+msgstr ""
+
 msgid "Could not open the file"
 msgstr ""
 
 msgid "Could not open the website"
+msgstr ""
+
+msgid "Could not save the update session"
 msgstr ""
 
 msgid "Current version"
@@ -47,10 +87,28 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
+msgid "Done"
+msgstr ""
+
 msgid "Get updates from your Pro benefits center"
 msgstr ""
 
 msgid "Installation space and snapshot availability must be checked again before installing."
+msgstr ""
+
+msgid "Installing your update…"
+msgstr ""
+
+msgid "Keep an independent backup of important files."
+msgstr ""
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr ""
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr ""
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
 msgstr ""
 
 msgid "No system packages were changed."
@@ -68,10 +126,42 @@ msgstr ""
 msgid "Package expansion estimate"
 msgstr ""
 
-msgid "Preview only. Installing updates is not available in this build."
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr ""
+
+msgid "Preparing your update…"
+msgstr ""
+
+msgid "Reconnect"
+msgstr ""
+
+msgid "Reconnecting to your update…"
+msgstr ""
+
+msgid "Remove Imported File"
+msgstr ""
+
+msgid "Removing the imported file…"
+msgstr ""
+
+msgid "Restart your computer to finish applying the update."
+msgstr ""
+
+msgid "Restarting the updater…"
 msgstr ""
 
 msgid "Review your update"
+msgstr ""
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr ""
+
+msgid "Start Update"
+msgstr ""
+
+msgid "Starting your update…"
 msgstr ""
 
 msgid "System snapshot"
@@ -83,13 +173,40 @@ msgstr ""
 msgid "Temporary storage"
 msgstr ""
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr ""
+
 msgid "The update could not be checked. Try choosing the file again."
+msgstr ""
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr ""
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr ""
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr ""
+
+msgid "This update needs review"
 msgstr ""
 
 msgid "Unavailable"
 msgstr ""
 
+msgid "Unexpected update response."
+msgstr ""
+
 msgid "Unknown"
+msgstr ""
+
+msgid "Update complete"
+msgstr ""
+
+msgid "Update could not start"
+msgstr ""
+
+msgid "Update failed"
 msgstr ""
 
 msgid "Update from a file"
@@ -98,14 +215,20 @@ msgstr ""
 msgid "Update to"
 msgstr ""
 
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr ""
+
 msgid "Verifying the signature and checking your system. This may take a few minutes."
+msgstr ""
+
+msgid "Working…"
 msgstr ""
 
 msgid "You already have this update"
 msgstr ""
 
-msgid "or drop an .atgz file here"
+msgid "You can keep using your computer."
 msgstr ""
 
-msgid "Check an AnduinOS offline update package"
+msgid "or drop an .atgz file here"
 msgstr ""

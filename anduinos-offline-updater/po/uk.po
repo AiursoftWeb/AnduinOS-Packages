@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 12:08+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: uk\n"
@@ -20,11 +20,31 @@ msgstr "Потрібен новіший оновлювач"
 msgid "AnduinOS update packages"
 msgstr "Пакети оновлень AnduinOS"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "Авторизуйте імпорт файлу та перевірку плану встановлення. Пакунок ще не встановлено."
+
 msgid "Cannot preview this update"
 msgstr "Неможливо переглянути це оновлення"
 
+msgid "Cannot read the update status"
+msgstr "Не вдалося прочитати статус оновлення"
+
 msgid "Check required"
 msgstr "Перевірка обов'язкова"
+
+msgid "Check the details before trying again."
+msgstr "Перевірте деталі перед повторною спробою."
+
+msgid "Checking the installation…"
+msgstr "Перевірка встановлення…"
 
 msgid "Checking your update…"
 msgstr "Перевірка вашого оновлення…"
@@ -32,8 +52,12 @@ msgstr "Перевірка вашого оновлення…"
 msgid "Choose Update File"
 msgstr "Обрати файл оновлення"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "Оберіть пакет оновлення AnduinOS.\nДля перевірки файлу інтернет не потрібен."
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"Оберіть пакет оновлення AnduinOS.\n"
+"Для перевірки файлу інтернет не потрібен."
 
 msgid "Choose another file"
 msgstr "Обрати інший файл"
@@ -44,11 +68,17 @@ msgstr "Оберіть один локальний файл .atgz."
 msgid "Close"
 msgstr "Закрити"
 
+msgid "Continue"
+msgstr "Продовжити"
+
 msgid "Could not open the file"
 msgstr "Не вдалося відкрити файл"
 
 msgid "Could not open the website"
 msgstr "Не вдалося відкрити веб-сайт"
+
+msgid "Could not save the update session"
+msgstr "Не вдалося зберегти сеанс оновлення"
 
 msgid "Current version"
 msgstr "Поточна версія"
@@ -56,11 +86,29 @@ msgstr "Поточна версія"
 msgid "Disabled"
 msgstr "Вимкнено"
 
+msgid "Done"
+msgstr "Готово"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Отримуйте оновлення з вашого центру переваг Pro"
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "Перед встановленням потрібно знову перевірити наявність місця для встановлення та доступність знімка системи."
+
+msgid "Installing your update…"
+msgstr "Встановлення вашого оновлення…"
+
+msgid "Keep an independent backup of important files."
+msgstr "Зберігайте незалежну резервну копію важливих файлів."
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "Зберігайте цей ID завдання для повторного підключення з командного рядка."
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "Тримайте комп’ютер підключеним до мережі. Закриття цього вікна не зупинить оновлення."
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "Тримайте комп’ютер підключеним до мережі. Ви можете закрити це вікно та повернутися для перевірки прогресу."
 
 msgid "No system packages were changed."
 msgstr "Системні пакети не були змінені."
@@ -77,11 +125,43 @@ msgstr "Зміни пакетів"
 msgid "Package expansion estimate"
 msgstr "Оцінка розпакування пакетів"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "Лише перегляд. Встановлення оновлень недоступне в цій збірці."
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Заплановане оновлення: {source} → {target}"
+
+msgid "Preparing your update…"
+msgstr "Підготовка вашого оновлення…"
+
+msgid "Reconnect"
+msgstr "Підключити знову"
+
+msgid "Reconnecting to your update…"
+msgstr "Повторне підключення до вашого оновлення…"
+
+msgid "Remove Imported File"
+msgstr "Видалити імпортований файл"
+
+msgid "Removing the imported file…"
+msgstr "Видалення імпортованого файлу…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "Перезавантажте комп’ютер, щоб завершити застосування оновлення."
+
+msgid "Restarting the updater…"
+msgstr "Перезавантаження засобу оновлення…"
 
 msgid "Review your update"
 msgstr "Перегляньте ваше оновлення"
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "Етап {current} з {total}"
+
+msgid "Start Update"
+msgstr "Почати оновлення"
+
+msgid "Starting your update…"
+msgstr "Початок вашого оновлення…"
 
 msgid "System snapshot"
 msgstr "Знімок системи"
@@ -92,14 +172,41 @@ msgstr "Технічні деталі"
 msgid "Temporary storage"
 msgstr "Тимчасове сховище"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "Запит не завершився. Авторизацію може бути скасовано."
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "Не вдалося перевірити оновлення. Спробуйте обрати файл ще раз."
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "Оновлення може ще виконуватися. Підключіться, щоб перевірити; не починайте інше встановлення."
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "Засіб оновлення оновлено. Перевірте та підтвердіть залишок оновлення."
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "Це видаляє імпортовану копію та історію завдань, а не ваш початковий завантажений файл."
+
+msgid "This update needs review"
+msgstr "Це оновлення потребує перевірки"
 
 msgid "Unavailable"
 msgstr "Недоступно"
 
+msgid "Unexpected update response."
+msgstr "Неочікувана відповідь оновлення."
+
 msgid "Unknown"
 msgstr "Невідомо"
+
+msgid "Update complete"
+msgstr "Оновлення завершено"
+
+msgid "Update could not start"
+msgstr "Не вдалося розпочати оновлення"
+
+msgid "Update failed"
+msgstr "Не вдалося оновити"
 
 msgid "Update from a file"
 msgstr "Оновлення з файлу"
@@ -107,14 +214,20 @@ msgstr "Оновлення з файлу"
 msgid "Update to"
 msgstr "Оновити до"
 
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "Використовуйте командний рядок для перегляду цього старішого сеансу оновлення, або видаліть його імпортований файл і оберіть його знову."
+
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Перевірка підпису та аналіз вашої системи. Це може зайняти кілька хвилин."
+
+msgid "Working…"
+msgstr "Виконується…"
 
 msgid "You already have this update"
 msgstr "У вас вже є це оновлення"
 
+msgid "You can keep using your computer."
+msgstr "Ви можете продовжувати користуватися комп’ютером."
+
 msgid "or drop an .atgz file here"
 msgstr "або перетягніть файл .atgz сюди"
-
-msgid "Check an AnduinOS offline update package"
-msgstr "Перевірка пакета офлайн-оновлення AnduinOS"

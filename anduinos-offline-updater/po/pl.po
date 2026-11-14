@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"POT-Creation-Date: 2026-11-14 10:56+0000\n"
 "PO-Revision-Date: 2026-09-09 12:01+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: pl\n"
@@ -20,11 +20,31 @@ msgstr "Wymagany nowszy aktualizator"
 msgid "AnduinOS update packages"
 msgstr "Pakiety aktualizacji AnduinOS"
 
+#, python-brace-format
+msgid "AnduinOS {source} → {target}"
+msgstr "AnduinOS {source} → {target}"
+
+#, python-brace-format
+msgid "AnduinOS {version}"
+msgstr "AnduinOS {version}"
+
+msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
+msgstr "Autoryzuj import pliku i sprawdzenie planu instalacji. Żadne pakiety nie zostały jeszcze zainstalowane."
+
 msgid "Cannot preview this update"
 msgstr "Nie można podglądać tej aktualizacji"
 
+msgid "Cannot read the update status"
+msgstr "Nie można odczytać statusu aktualizacji"
+
 msgid "Check required"
 msgstr "Wymagana weryfikacja"
+
+msgid "Check the details before trying again."
+msgstr "Sprawdź szczegóły przed ponowną próbą."
+
+msgid "Checking the installation…"
+msgstr "Sprawdzanie instalacji…"
 
 msgid "Checking your update…"
 msgstr "Sprawdzanie aktualizacji…"
@@ -32,8 +52,12 @@ msgstr "Sprawdzanie aktualizacji…"
 msgid "Choose Update File"
 msgstr "Wybierz plik aktualizacji"
 
-msgid "Choose an AnduinOS update package.\nNo internet connection needed to check the file."
-msgstr "Wybierz pakiet aktualizacji AnduinOS.\nNie jest wymagane połączenie z internetem do sprawdzenia pliku."
+msgid ""
+"Choose an AnduinOS update package.\n"
+"No internet connection needed to check the file."
+msgstr ""
+"Wybierz pakiet aktualizacji AnduinOS.\n"
+"Nie jest wymagane połączenie z internetem do sprawdzenia pliku."
 
 msgid "Choose another file"
 msgstr "Wybierz inny plik"
@@ -44,11 +68,17 @@ msgstr "Wybierz jeden lokalny plik .atgz."
 msgid "Close"
 msgstr "Zamknij"
 
+msgid "Continue"
+msgstr "Kontynuuj"
+
 msgid "Could not open the file"
 msgstr "Nie można otworzyć pliku"
 
 msgid "Could not open the website"
 msgstr "Nie można otworzyć strony internetowej"
+
+msgid "Could not save the update session"
+msgstr "Nie można zapisać sesji aktualizacji"
 
 msgid "Current version"
 msgstr "Bieżąca wersja"
@@ -56,11 +86,29 @@ msgstr "Bieżąca wersja"
 msgid "Disabled"
 msgstr "Wyłączone"
 
+msgid "Done"
+msgstr "Zakończ"
+
 msgid "Get updates from your Pro benefits center"
 msgstr "Pobierz aktualizacje z centrum korzyści Pro"
 
 msgid "Installation space and snapshot availability must be checked again before installing."
 msgstr "Dostępność miejsca na instalację i migawki systemu musi zostać ponownie sprawdzona przed instalacją."
+
+msgid "Installing your update…"
+msgstr "Instalowanie aktualizacji…"
+
+msgid "Keep an independent backup of important files."
+msgstr "Utrzymuj niezależną kopię zapasową ważnych plików."
+
+msgid "Keep this job ID to reconnect from the command line."
+msgstr "Zapisz ten identyfikator zadania, aby połączyć się ponownie z wiersza poleceń."
+
+msgid "Keep your computer connected to power. Closing this window will not stop the update."
+msgstr "Podłącz komputer do zasilania. Zamknięcie tego okna nie zatrzyma aktualizacji."
+
+msgid "Keep your computer connected to power. You can close this window and return to check progress."
+msgstr "Podłącz komputer do zasilania. Możesz zamknąć to okno i wrócić, aby sprawdzić postęp."
 
 msgid "No system packages were changed."
 msgstr "Nie zmieniono żadnych pakietów systemowych."
@@ -77,11 +125,43 @@ msgstr "Zmiany pakietów"
 msgid "Package expansion estimate"
 msgstr "Szacowany rozmiar po rozpakowaniu"
 
-msgid "Preview only. Installing updates is not available in this build."
-msgstr "Tylko podgląd. Instalacja aktualizacji nie jest dostępna w tej wersji."
+#, python-brace-format
+msgid "Planned update: {source} → {target}"
+msgstr "Planowana aktualizacja: {source} → {target}"
+
+msgid "Preparing your update…"
+msgstr "Przygotowywanie aktualizacji…"
+
+msgid "Reconnect"
+msgstr "Połącz ponownie"
+
+msgid "Reconnecting to your update…"
+msgstr "Łączenie ponownie z aktualizacją…"
+
+msgid "Remove Imported File"
+msgstr "Usuń zaimportowany plik"
+
+msgid "Removing the imported file…"
+msgstr "Usuwanie zaimportowanego pliku…"
+
+msgid "Restart your computer to finish applying the update."
+msgstr "Uruchom ponownie komputer, aby zakończyć stosowanie aktualizacji."
+
+msgid "Restarting the updater…"
+msgstr "Uruchamianie ponownie aktualizatora…"
 
 msgid "Review your update"
 msgstr "Przejrzyj swoją aktualizację"
+
+#, python-brace-format
+msgid "Stage {current} of {total}"
+msgstr "Etap {current} z {total}"
+
+msgid "Start Update"
+msgstr "Rozpocznij aktualizację"
+
+msgid "Starting your update…"
+msgstr "Rozpoczynanie aktualizacji…"
 
 msgid "System snapshot"
 msgstr "Migawka systemu"
@@ -92,14 +172,41 @@ msgstr "Szczegóły techniczne"
 msgid "Temporary storage"
 msgstr "Pamięć tymczasowa"
 
+msgid "The request did not complete. Authorization may have been cancelled."
+msgstr "Żądanie nie zostało zakończone. Autoryzacja mogła zostać anulowana."
+
 msgid "The update could not be checked. Try choosing the file again."
 msgstr "Nie udało się sprawdzić aktualizacji. Spróbuj wybrać plik ponownie."
+
+msgid "The update may still be running. Reconnect to check it; do not start another installation."
+msgstr "Aktualizacja może nadal się wykonywać. Połącz się ponownie, aby to sprawdzić; nie rozpoczynaj innej instalacji."
+
+msgid "The updater has been upgraded. Review and confirm the remaining update."
+msgstr "Aktualizator został uaktualniony. Przeglądaj i potwierdź pozostałą aktualizację."
+
+msgid "This removes the imported copy and job history, not your original download."
+msgstr "To usuwa zaimportowaną kopię i historię zadań, a nie oryginalne pobranie."
+
+msgid "This update needs review"
+msgstr "Ta aktualizacja wymaga przeglądu"
 
 msgid "Unavailable"
 msgstr "Niedostępne"
 
+msgid "Unexpected update response."
+msgstr "Niespodziewana odpowiedź aktualizacji."
+
 msgid "Unknown"
 msgstr "Nieznane"
+
+msgid "Update complete"
+msgstr "Aktualizacja zakończona"
+
+msgid "Update could not start"
+msgstr "Nie można uruchomić aktualizacji"
+
+msgid "Update failed"
+msgstr "Aktualizacja nie powiodła się"
 
 msgid "Update from a file"
 msgstr "Aktualizacja z pliku"
@@ -107,14 +214,20 @@ msgstr "Aktualizacja z pliku"
 msgid "Update to"
 msgstr "Aktualizuj do"
 
+msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
+msgstr "Użyj wiersza poleceń, aby przeglądać tę starszą sesję aktualizacji, lub usuń jej zaimportowany plik i wybierz ponownie."
+
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Weryfikacja podpisu i sprawdzanie systemu. Może to potrwać kilka minut."
+
+msgid "Working…"
+msgstr "Praca…"
 
 msgid "You already have this update"
 msgstr "Posiadasz już tę aktualizację"
 
+msgid "You can keep using your computer."
+msgstr "Możesz nadal korzystać z komputera."
+
 msgid "or drop an .atgz file here"
 msgstr "lub upuść tutaj plik .atgz"
-
-msgid "Check an AnduinOS offline update package"
-msgstr "Sprawdź pakiet aktualizacji offline AnduinOS"

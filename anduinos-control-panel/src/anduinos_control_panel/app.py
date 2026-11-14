@@ -26,7 +26,7 @@ from .model import (
     GRUB_DISPLAY_HIGH_RESOLUTION,
     GRUB_DISPLAY_AUTOMATIC,
     SNAPSHOT_PACKAGE,
-    OFFLINE_UPDATER_PACKAGE,
+    # OFFLINE_UPDATER_PACKAGE,  # Restore with the Pro offline-update entry.
     VOICE_TYPING_PACKAGE,
     WHY_AI_PACKAGE,
     WHY_PLACEHOLDER_PACKAGE,
@@ -261,8 +261,9 @@ class ControlPanelWindow(Adw.ApplicationWindow):
                 ),
             ),
         ]
-        if package_installed(OFFLINE_UPDATER_PACKAGE):
-            programs_actions.append(action("programs.offline-update"))
+        # Restore this entry when Pro activation is available.
+        # if package_installed(OFFLINE_UPDATER_PACKAGE):
+        #     programs_actions.append(action("programs.offline-update"))
 
         categories = [
             (
