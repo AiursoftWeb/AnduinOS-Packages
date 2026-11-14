@@ -1653,18 +1653,15 @@ def create_shortcuts_page():
 
 def create_flathub_mirror_page(navigate_next=lambda: None, update_nav=lambda: None):
     """Choose a region and apply it immediately, without an extra Next click."""
-    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16,
-                   margin_start=24, margin_end=24, margin_top=24, margin_bottom=24)
+    page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0,
+                   margin_start=48, margin_end=48, margin_top=24, margin_bottom=24)
     page._requires_internet = True
     page._hide_next = True
     page._install_running = False
     page.add_css_class('oobe-software-sources')
     page._source_css = Gtk.CssProvider()
     page._source_css.load_from_data(b'''
-        .oobe-source-hero { background: linear-gradient(110deg, #1765e5, #7353df);
-                            color: white; border-radius: 20px; padding: 20px; }
-        button.oobe-source-choice { border-radius: 18px; padding: 0; }
-        button.oobe-source-choice:hover { background: alpha(@accent_color, 0.12); }
+        button.oobe-source-choice { padding: 0; }
     ''')
     Gtk.StyleContext.add_provider_for_display(
         page.get_display(), page._source_css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
@@ -1679,18 +1676,21 @@ def create_flathub_mirror_page(navigate_next=lambda: None, update_nav=lambda: No
         image.set_valign(Gtk.Align.CENTER)
         return image
 
-    hero = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20)
-    hero.add_css_class('oobe-source-hero')
+    center = Gtk.Box(orientation=Gtk.Orientation.VERTICAL,
+                     valign=Gtk.Align.CENTER, vexpand=True)
+    page.append(center)
     pin = source_icon('location.svg')
-    hero.append(pin)
-    heading = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8,
-                      valign=Gtk.Align.CENTER, hexpand=True)
-    title = Gtk.Label(label=_('Are you in mainland China?'), wrap=True, xalign=0)
+    pin.set_pixel_size(72)
+    pin.set_size_request(72, 72)
+    pin.set_halign(Gtk.Align.CENTER)
+    center.append(pin)
+    title = Gtk.Label(label=_('Are you in mainland China?'), wrap=True,
+                      justify=Gtk.Justification.CENTER, halign=Gtk.Align.CENTER,
+                      margin_top=12, margin_bottom=24)
     title.add_css_class('title-1')
-    heading.append(title)
-    heading.append(Gtk.Label(label=_('Software sources'), xalign=0))
-    hero.append(heading)
-    page.append(hero)
+    center.append(title)
+    choices = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+    center.append(choices)
 
     buttons = []
     for china, icon, message in (
@@ -1711,19 +1711,21 @@ def create_flathub_mirror_page(navigate_next=lambda: None, update_nav=lambda: No
         button.set_tooltip_text(message)
         button.connect('clicked', lambda _button, selected=china: choose(selected))
         buttons.append(button)
-        page.append(button)
+        choices.append(button)
 
     notice = Gtk.Label(label=_('This option changes how software is obtained. The mainland China version may not provide access to some software.'), wrap=True, xalign=0)
     notice.add_css_class('dim-label')
     notice.add_css_class('caption')
-    page.append(notice)
+    notice.set_margin_top(16)
+    center.append(notice)
     status_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
     spinner = Gtk.Spinner()
     status_box.append(spinner)
     status_label = Gtk.Label(wrap=True, xalign=0, hexpand=True)
     status_label.add_css_class('caption')
     status_box.append(status_label)
-    page.append(status_box)
+    status_box.set_margin_top(8)
+    center.append(status_box)
 
     def running(value):
         page._install_running = value
