@@ -7,6 +7,15 @@ Release one has no user-supplied mount paths. Future custom storage may carry
 declarative mount paths only after the executor normalizes and validates them
 and constructs every command itself.
 
+## Installation-session Pro state
+
+The session starts without Pro entitlement. `--bypass-payment` grants it for
+that installer session so acceptance tests can exercise recovery and encrypted
+installation. A future activation page should grant the same
+`has_pro_entitlement` state before storage selection; it does not need another
+set of storage controls. The switch is intentionally available to testers and
+does not validate payment or provide a tamper-resistant entitlement boundary.
+
 ## Release-one contract
 
 - Architectures: amd64 and arm64.

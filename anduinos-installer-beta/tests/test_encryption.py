@@ -234,7 +234,7 @@ class EncryptedStorageTests(unittest.TestCase):
         plan = encrypted_plan()
         runner = FakeRunner()
         context = InstallContext(plan, lambda _: None,
-                                 execution_policy=ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST)
+                                 execution_policy=ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST_PRO)
         step = PrepareStorageStep(runner, nvram_inspector=lambda _: NvramInspection(True))
         result = StepRunner([step]).run(context)
         self.assertFalse(result.succeeded)

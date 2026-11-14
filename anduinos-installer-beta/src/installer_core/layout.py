@@ -14,10 +14,10 @@ RECOVERY_SIZE_MIB = 256
 RECOVERY_LABEL = "AOS_RECOVERY"
 
 
-def erase_disk_overhead_mib(filesystem: Filesystem, *, encrypted: bool = False) -> int:
+def erase_disk_overhead_mib(filesystem: Filesystem, *, encrypted: bool = False, include_recovery: bool = False) -> int:
     """Reserve alignment/BIOS metadata and the Btrfs recovery filesystem."""
     # The LUKS2 header lives inside the root partition, before its filesystem.
-    return (4 + (RECOVERY_SIZE_MIB if filesystem is Filesystem.BTRFS else 0)
+    return (4 + (RECOVERY_SIZE_MIB if include_recovery else 0)
             + (16 if encrypted else 0))
 
 
@@ -65,6 +65,7 @@ def build_erase_disk_layout(plan: InstallPlan) -> PartitionLayout:
         filesystem=plan.storage.filesystem,
         esp_size_mib=plan.storage.esp_size_mib,
         swap_size_mib=plan.storage.swap_size_mib,
+        include_recovery=plan.storage.include_recovery,
     )
 
 
@@ -74,6 +75,7 @@ def build_erase_disk_layout_spec(
     filesystem: Filesystem,
     esp_size_mib: int,
     swap_size_mib: int,
+    include_recovery: bool = False,
 ) -> PartitionLayout:
     """Build the same layout for a pre-installation UI preview."""
 
@@ -123,7 +125,7 @@ def build_erase_disk_layout_spec(
         )
         cursor += swap_size_mib
 
-    if filesystem is Filesystem.BTRFS:
+    if include_recovery:
         parts.append(PartitionSpec(
             number=len(parts) + 1,
             name="recovery",

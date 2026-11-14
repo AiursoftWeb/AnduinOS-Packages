@@ -388,6 +388,21 @@ class BootChainTests(unittest.TestCase):
         legacy = boot.graphical_grub_configuration(original, inner, prefix, outer)
         boot.verify_grub_configuration(legacy, inner, prefix, outer, recovery)
 
+    def test_independent_recovery_supports_the_ext4_root_prefix(self):
+        outer = "12345678-1234-1234-1234-123456789abc"
+        inner = "abcdef01-1234-1234-1234-123456789abc"
+        recovery = "87654321-1234-1234-1234-123456789abc"
+        prefix = "/boot/grub"
+        original = (f"cryptomount -u {outer}\n"
+                    f"search.fs_uuid {inner} root cryptouuid/{outer.replace('-', '')}\n"
+                    f"set prefix=($root){prefix}\nconfigfile $prefix/grub.cfg\n")
+        configured = boot.graphical_grub_configuration(original, inner, prefix, outer, recovery)
+        boot.verify_grub_configuration(configured, inner, prefix, outer, recovery)
+        with self.assertRaises(ValueError):
+            boot.verify_grub_configuration(configured, inner, prefix, outer, outer)
+        with self.assertRaises(ValueError):
+            boot.graphical_grub_configuration(original, inner, "/other/boot/grub", outer, recovery)
+
     def test_multi_esp_direct_boot_is_allowed_with_local_binding(self):
         with self.fixture() as (firmware, esp, vendor):
             self.add_other_installation(firmware, vendor, chainloaded=False)

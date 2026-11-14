@@ -65,6 +65,7 @@ def build_plan(
             layout_overhead_mib=erase_disk_overhead_mib(
                 Filesystem(str(choices.get("filesystem") or "btrfs")),
                 encrypted=choices.get("encryption", "none") == "luks2",
+                include_recovery=bool(choices.get("has_pro_entitlement")),
             ),
         )
         requested_swap = choices.get("swap_size_mib")
@@ -80,6 +81,7 @@ def build_plan(
             filesystem=Filesystem(str(choices.get("filesystem") or "btrfs")),
             swap_size_mib=swap_size_mib,
             encryption=EncryptionMode(str(choices.get("encryption", "none"))),
+            include_recovery=bool(choices.get("has_pro_entitlement")),
             btrfs_compression=BtrfsCompression(
                 choices.get("btrfs_compression", "balanced")
             ),

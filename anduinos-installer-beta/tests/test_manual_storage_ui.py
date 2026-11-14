@@ -142,9 +142,12 @@ class ManualStorageUiTests(unittest.TestCase):
 
     def test_partition_role_choices_are_translated(self):
         with patch("pages._", side_effect=lambda text, lang: f"{lang}:{text}"):
-            self.assertEqual(_manual_role_choices("test-locale"), [
+            self.assertEqual(_manual_role_choices("test-locale", has_pro_entitlement=True), [
                 "test-locale:ESP", "test-locale:Root", "test-locale:Swap",
                 "test-locale:Recovery environment (RE)",
+            ])
+            self.assertEqual(_manual_role_choices("test-locale"), [
+                "test-locale:ESP", "test-locale:Root", "test-locale:Swap",
             ])
 
     def test_optional_partition_notices_follow_the_actual_layout(self):

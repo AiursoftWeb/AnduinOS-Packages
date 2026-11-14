@@ -890,12 +890,12 @@ class DiskCredentialWizardTests(unittest.TestCase):
         from installer_core.model import EncryptionMode
 
         values = self.encrypted_state()
-        values.update(development_mode=False, _encryption_preview=True)
+        values.update(development_mode=False, _encryption_preview=True, has_pro_entitlement=True)
         self.assertIs(self.make_plan(values).storage.encryption, EncryptionMode.LUKS2)
 
     def encrypted_state(self):
         values = state()
-        values.update(development_mode=True, disk_password="disk-example-only",
+        values.update(development_mode=True, has_pro_entitlement=True, disk_password="disk-example-only",
                       disk_password_confirmation="disk-example-only",
                       disk_recovery_key="1234567890abcdef" * 3, disk_recovery_key_saved=True,
                       swap_encryption="plain")
@@ -953,7 +953,7 @@ class DiskCredentialWizardTests(unittest.TestCase):
     def test_invalid_or_unacknowledged_disk_credentials_never_become_plain_installation(self):
         for updates in ({"disk_password_confirmation": "different"},
                         {"disk_recovery_key_saved": False},
-                        {"development_mode": False},
+                        {"has_pro_entitlement": False},
                         {"disk_password": "short", "disk_password_confirmation": "short"}):
             with self.subTest(updates=updates):
                 values = self.encrypted_state()

@@ -3769,9 +3769,8 @@ _DISK_ENCRYPTION_ERRORS = (
 
 
 def _disk_encryption_available(shared):
-    # Preview in simulation or the existing disposable-VM test capability.
-    # The privileged release executor independently keeps its gate.
-    if not (shared.get("development_mode") or shared.get("_encryption_preview")):
+    # Both the test bypass and future activation grant the same capability.
+    if not shared.get("has_pro_entitlement"):
         return False
     if shared.get("storage_mode", "erase-disk") != "erase-disk":
         return False
@@ -3835,7 +3834,8 @@ def _disk_encryption_control(shared, lang, changed):
                     sizing = calculate_swap_sizing(
                         probe_physical_memory_bytes(), int(shared.get("disk_size_bytes") or 0),
                         layout_overhead_mib=erase_disk_overhead_mib(
-                            Filesystem(shared.get("filesystem", "btrfs")), encrypted=True),
+                            Filesystem(shared.get("filesystem", "btrfs")), encrypted=True,
+                            include_recovery=bool(shared.get("has_pro_entitlement"))),
                     )
                     try:
                         validate_disk_swap_selection(shared["swap_size_mib"], sizing)
@@ -3969,11 +3969,16 @@ def build_disk_layout_page(shared, nav_view):
         encryption_group, validate_encryption, refresh_encrypted_swap = _disk_encryption_control(
             shared, lang, settings_changed)
         settings.append(encryption_group)
+    elif not shared.get("has_pro_entitlement"):
+        settings.append(Gtk.Label(
+            label=_("Disk encryption is under development.", lang),
+            xalign=0, wrap=True,
+        ))
     try:
         swap_sizing = calculate_swap_sizing(
             probe_physical_memory_bytes(),
             int(shared.get("disk_size_bytes") or 0),
-            layout_overhead_mib=erase_disk_overhead_mib(Filesystem(filesystem)),
+            layout_overhead_mib=erase_disk_overhead_mib(Filesystem(filesystem), include_recovery=bool(shared.get("has_pro_entitlement"))),
         )
         selected_swap_size_mib = _validated_swap_size(
             shared, swap_sizing
@@ -4527,8 +4532,9 @@ _MANUAL_RECOVERY_ERRORS = {
 }
 
 
-def _manual_role_choices(lang):
-    return [_manual_role_title(role, lang) for role in MANUAL_PARTITION_ROLES]
+def _manual_role_choices(lang, *, has_pro_entitlement=False):
+    roles = MANUAL_PARTITION_ROLES if has_pro_entitlement else MANUAL_PARTITION_ROLES[:-1]
+    return [_manual_role_title(role, lang) for role in roles]
 
 
 def _manual_role_title(role, lang):
@@ -4540,10 +4546,10 @@ def _manual_role_title(role, lang):
     }[role]
 
 
-def _manual_optional_partition_notices(selection, lang):
+def _manual_optional_partition_notices(selection, lang, *, has_pro_entitlement=True):
     roles = {item.role for item in selection.new_partitions}
     notices = []
-    if selection.filesystem is Filesystem.BTRFS and ManualPartitionRole.RECOVERY not in roles:
+    if has_pro_entitlement and selection.filesystem is Filesystem.BTRFS and ManualPartitionRole.RECOVERY not in roles:
         notices.append(_("No RE partition. If the system cannot start, you will need a Live USB for rescue.", lang))
     if ManualPartitionRole.SWAP not in roles:
         notices.append(_("No disk swap. ZRAM will still be available, but there will be no disk swap space.", lang))
@@ -4947,10 +4953,11 @@ def build_advanced_storage_page(shared, nav_view):
         spacing=6,
     )
     editor.append(planned_box)
-    editor.append(Gtk.Label(
-        label=_("RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured.", lang),
-        xalign=0, wrap=True, css_classes=["dim-label"],
-    ))
+    if shared.get("has_pro_entitlement"):
+        editor.append(Gtk.Label(
+            label=_("RE needs at least 256 MiB. It can show system information even when the installed system cannot start. Snapshot recovery is available only with Btrfs. RE is optional; use a Live USB for rescue if it is not configured.", lang),
+            xalign=0, wrap=True, css_classes=["dim-label"],
+        ))
     compression_control = _btrfs_compression_control(shared, lang)
     compression_control.set_visible(False)
     editor.append(compression_control)
@@ -4982,8 +4989,9 @@ def build_advanced_storage_page(shared, nav_view):
     create_grid.attach(Gtk.Label(label=_("Available space", lang)), 1, 0, 3, 1)
     create_grid.attach(Gtk.Label(label=_("Start (MiB)", lang)), 0, 2, 1, 1)
     create_grid.attach(Gtk.Label(label=_("Size (MiB)", lang)), 1, 2, 1, 1)
+    available_roles = MANUAL_PARTITION_ROLES if shared.get("has_pro_entitlement") else MANUAL_PARTITION_ROLES[:-1]
     role_dropdown = Gtk.DropDown(
-        model=Gtk.StringList.new(_manual_role_choices(lang)),
+        model=Gtk.StringList.new(_manual_role_choices(lang, has_pro_entitlement=bool(shared.get("has_pro_entitlement")))),
         sensitive=False,
     )
     role_dropdown.update_property(
@@ -5081,7 +5089,7 @@ def build_advanced_storage_page(shared, nav_view):
             next_button.set_sensitive(enabled)
 
     def _role():
-        return MANUAL_PARTITION_ROLES[role_dropdown.get_selected()]
+        return available_roles[role_dropdown.get_selected()]
 
     def _replace_draft(**changes):
         nonlocal draft
@@ -5956,7 +5964,7 @@ def build_advanced_storage_page(shared, nav_view):
                     "No new partitions yet. Add an ESP if needed, one Root "
                     "partition, and optionally Swap and RE.",
                     lang,
-                ),
+                ) if shared.get("has_pro_entitlement") else _("Add a partition", lang),
                 xalign=0,
                 wrap=True,
             )
@@ -5987,9 +5995,9 @@ def build_advanced_storage_page(shared, nav_view):
             role_dropdown.set_selected(1)
         elif ManualPartitionRole.SWAP not in planned_roles:
             role_dropdown.set_selected(2)
-        elif ManualPartitionRole.RECOVERY not in planned_roles:
+        elif shared.get("has_pro_entitlement") and ManualPartitionRole.RECOVERY not in planned_roles:
             role_dropdown.set_selected(3)
-        notices = _manual_optional_partition_notices(draft, lang)
+        notices = _manual_optional_partition_notices(draft, lang, has_pro_entitlement=bool(shared.get("has_pro_entitlement")))
         optional_notices.set_label("\n".join(notices))
         optional_notices.set_visible(bool(notices))
         updating = False
@@ -7036,7 +7044,7 @@ def build_summary_page(shared, nav_view):
             else calculate_swap_sizing(
                 probe_physical_memory_bytes(),
                 int(shared.get("disk_size_bytes") or 0),
-                layout_overhead_mib=erase_disk_overhead_mib(Filesystem(filesystem)),
+                layout_overhead_mib=erase_disk_overhead_mib(Filesystem(filesystem), include_recovery=bool(shared.get("has_pro_entitlement"))),
             )
         )
     except (RuntimeError, ValueError):
@@ -7263,6 +7271,7 @@ def build_summary_page(shared, nav_view):
             filesystem=Filesystem(filesystem),
             esp_size_mib=1024,
             swap_size_mib=swap_size_mib,
+            include_recovery=bool(shared.get("has_pro_entitlement")),
         )
         disk_size_mib = int(shared.get("disk_size_bytes") or 0) // MIB
         partition_rows = []
@@ -7352,7 +7361,7 @@ def build_summary_page(shared, nav_view):
                          else _("Disk swap is encrypted; hibernation is unavailable", lang))
 
     manual_notices = (
-        _manual_optional_partition_notices(manual_preview.selection, lang)
+        _manual_optional_partition_notices(manual_preview.selection, lang, has_pro_entitlement=bool(shared.get("has_pro_entitlement")))
         if manual_mode and isinstance(manual_preview, ManualStoragePreview) else []
     )
     lines.extend(escape(notice) for notice in manual_notices)
@@ -8338,7 +8347,8 @@ def build_progress_page(plan: InstallPlan, shared, nav_view, *, encryption_crede
         client = (
             DevelopmentExecutorClient()
             if shared.get("development_mode")
-            else ExecutorClient(destructive_test=bool(shared.get("_encryption_preview")))
+            else ExecutorClient(destructive_test=bool(shared.get("_encryption_preview")),
+                                has_pro_entitlement=bool(shared.get("has_pro_entitlement")))
         )
         success, error = client.run(
             plan, log, update_progress, update_step_status,

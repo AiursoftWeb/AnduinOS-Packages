@@ -15,6 +15,15 @@ class InstallerMenuTests(unittest.TestCase):
         self.menu = InstallerMenu(self.window, self.shared)
         self.window.set_content(self.menu)
 
+    def test_test_bypass_uses_a_separate_application_identity(self):
+        from main import APP_ID, InstallerApplication
+        ordinary = InstallerApplication()
+        bypass = InstallerApplication(bypass_payment=True)
+        self.assertEqual(ordinary.get_application_id(), APP_ID)
+        self.assertEqual(bypass.get_application_id(), APP_ID + ".ProTest")
+        self.assertFalse(ordinary.shared_state["has_pro_entitlement"])
+        self.assertTrue(bypass.shared_state["has_pro_entitlement"])
+
     def labels(self):
         model = self.menu.get_menu_model()
         return [model.get_item_attribute_value(index, "label", None).unpack()

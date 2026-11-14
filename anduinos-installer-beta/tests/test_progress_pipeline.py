@@ -1,6 +1,11 @@
 import unittest
 
-from helpers import valid_plan
+from helpers import valid_plan as _valid_plan
+
+
+def valid_plan(**kwargs):
+    kwargs.setdefault("include_recovery", kwargs.get("filesystem", "btrfs") == "btrfs")
+    return _valid_plan(**kwargs)
 from installer_core.executor import InstallerExecutor
 from installer_core.model import Architecture, Filesystem
 from test_guided_storage_graph import guided_plan

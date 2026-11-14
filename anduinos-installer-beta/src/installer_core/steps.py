@@ -189,7 +189,7 @@ class StepRunner:
     ) -> str:
         if (
             context.execution_policy
-            is ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST
+            in (ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST, ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST_PRO)
             and context.plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
         ):
             return f"guided-step-{step.id}"

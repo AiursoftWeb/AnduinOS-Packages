@@ -36,7 +36,7 @@ def main() -> int:
         if not line:
             raise ValueError("No installation plan was provided")
         plan = InstallPlan.from_dict(json.loads(line))
-        if policy is ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST:
+        if policy in (ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST, ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST_PRO):
             require_disposable_guided_vm(plan)
         validate_plan_for_execution(plan, policy)
         if plan.storage.encryption is EncryptionMode.LUKS2:
