@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:56+0000\n"
+"POT-Creation-Date: 2026-11-15 10:11+0000\n"
 "PO-Revision-Date: 2026-09-09 12:08+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: uk\n"
@@ -30,6 +30,12 @@ msgstr "AnduinOS {version}"
 
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Авторизуйте імпорт файлу та перевірку плану встановлення. Пакунок ще не встановлено."
+
+msgid "Built (UTC)"
+msgstr "Зібрано (UTC)"
+
+msgid "Cannot install this update"
+msgstr "Неможливо встановити це оновлення"
 
 msgid "Cannot preview this update"
 msgstr "Неможливо переглянути це оновлення"
@@ -80,14 +86,14 @@ msgstr "Не вдалося відкрити веб-сайт"
 msgid "Could not save the update session"
 msgstr "Не вдалося зберегти сеанс оновлення"
 
-msgid "Current version"
-msgstr "Поточна версія"
-
 msgid "Disabled"
 msgstr "Вимкнено"
 
 msgid "Done"
 msgstr "Готово"
+
+msgid "File size"
+msgstr "Розмір файлу"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Отримуйте оновлення з вашого центру переваг Pro"
@@ -153,6 +159,9 @@ msgstr "Перезавантаження засобу оновлення…"
 msgid "Review your update"
 msgstr "Перегляньте ваше оновлення"
 
+msgid "Signature"
+msgstr "Підпис"
+
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Етап {current} з {total}"
@@ -172,6 +181,9 @@ msgstr "Технічні деталі"
 msgid "Temporary storage"
 msgstr "Тимчасове сховище"
 
+msgid "The current system version could not be determined. Check your system before updating."
+msgstr "Не вдалося визначити поточну версію системи. Перевірте систему перед оновленням."
+
 msgid "The request did not complete. Authorization may have been cancelled."
 msgstr "Запит не завершився. Авторизацію може бути скасовано."
 
@@ -184,11 +196,31 @@ msgstr "Оновлення може ще виконуватися. Підклю�
 msgid "The updater has been upgraded. Review and confirm the remaining update."
 msgstr "Засіб оновлення оновлено. Перевірте та підтвердіть залишок оновлення."
 
+msgid "This computer"
+msgstr "Цей комп'ютер"
+
+msgid "This file has not passed verification."
+msgstr "Цей файл не пройшов перевірку."
+
+msgid "This package is for a different AnduinOS series. Choose an update for your system version."
+msgstr "Цей пакет призначений для іншої серії AnduinOS. Оберіть оновлення для вашої версії системи."
+
+#, python-brace-format
+msgid "This package is for a different architecture. Choose a package for {architecture}."
+msgstr "Цей пакет призначений для іншої архітектури. Оберіть пакет для {architecture}."
+
+#, python-brace-format
+msgid "This package is for a different system branch. Choose an update for {suite}."
+msgstr "Цей пакет призначений для іншої гілки системи. Оберіть оновлення для {suite}."
+
 msgid "This removes the imported copy and job history, not your original download."
 msgstr "Це видаляє імпортовану копію та історію завдань, а не ваш початковий завантажений файл."
 
 msgid "This update needs review"
 msgstr "Це оновлення потребує перевірки"
+
+msgid "This update requires AnduinOS."
+msgstr "Для цього оновлення потрібна AnduinOS."
 
 msgid "Unavailable"
 msgstr "Недоступно"
@@ -211,11 +243,14 @@ msgstr "Не вдалося оновити"
 msgid "Update from a file"
 msgstr "Оновлення з файлу"
 
-msgid "Update to"
-msgstr "Оновити до"
+msgid "Update package"
+msgstr "Пакет оновлення"
 
 msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
 msgstr "Використовуйте командний рядок для перегляду цього старішого сеансу оновлення, або видаліть його імпортований файл і оберіть його знову."
+
+msgid "Verified"
+msgstr "Перевірено"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Перевірка підпису та аналіз вашої системи. Це може зайняти кілька хвилин."
@@ -228,6 +263,10 @@ msgstr "У вас вже є це оновлення"
 
 msgid "You can keep using your computer."
 msgstr "Ви можете продовжувати користуватися комп’ютером."
+
+#, python-brace-format
+msgid "Your system is newer than this update. Choose an update for {version} or later."
+msgstr "Ваша система новіша за це оновлення. Оберіть оновлення для {version} або новішої версії."
 
 msgid "or drop an .atgz file here"
 msgstr "або перетягніть файл .atgz сюди"

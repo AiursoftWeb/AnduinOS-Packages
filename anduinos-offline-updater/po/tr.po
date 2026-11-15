@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:56+0000\n"
+"POT-Creation-Date: 2026-11-15 10:11+0000\n"
 "PO-Revision-Date: 2026-09-09 12:07+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: tr\n"
@@ -30,6 +30,12 @@ msgstr "AnduinOS {version}"
 
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Dosyanın içe aktarılmasını ve kurulum planının kontrol edilmesini onaylayın. Henüz paket kurulmadı."
+
+msgid "Built (UTC)"
+msgstr "Derleme (UTC)"
+
+msgid "Cannot install this update"
+msgstr "Bu güncelleme kurulamadı"
 
 msgid "Cannot preview this update"
 msgstr "Bu güncellemeyi önizlenemiyor"
@@ -80,14 +86,14 @@ msgstr "Web sitesi açılamadı"
 msgid "Could not save the update session"
 msgstr "Güncelleme oturumu kaydedilemedi"
 
-msgid "Current version"
-msgstr "Mevcut sürüm"
-
 msgid "Disabled"
 msgstr "Devre dışı"
 
 msgid "Done"
 msgstr "Bitti"
+
+msgid "File size"
+msgstr "Dosya boyutu"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Güncellemeleri Pro avantajlar merkezinizden alın"
@@ -153,6 +159,9 @@ msgstr "Güncelleyici yeniden başlatılıyor…"
 msgid "Review your update"
 msgstr "Güncellemenizi gözden geçirin"
 
+msgid "Signature"
+msgstr "İmza"
+
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "{total} aşamasından {current}. aşama"
@@ -172,6 +181,9 @@ msgstr "Teknik ayrıntılar"
 msgid "Temporary storage"
 msgstr "Geçici depolama"
 
+msgid "The current system version could not be determined. Check your system before updating."
+msgstr "Mevcut sistem sürümü belirlenemedi. Güncellemeden önce sisteminizi kontrol edin."
+
 msgid "The request did not complete. Authorization may have been cancelled."
 msgstr "İstek tamamlanmadı. Yetkilendirme iptal edilmiş olabilir."
 
@@ -184,11 +196,31 @@ msgstr "Güncelleme hâlâ çalışıyor olabilir. Kontrol etmek için yeniden b
 msgid "The updater has been upgraded. Review and confirm the remaining update."
 msgstr "Güncelleyici yükseltildi. Kalan güncellemeyi gözden geçirin ve onaylayın."
 
+msgid "This computer"
+msgstr "Bu bilgisayar"
+
+msgid "This file has not passed verification."
+msgstr "Bu dosya doğrulama testinden geçemedi."
+
+msgid "This package is for a different AnduinOS series. Choose an update for your system version."
+msgstr "Bu paket farklı bir AnduinOS serisi içindir. Sisteminizin sürümü için bir güncelleme seçin."
+
+#, python-brace-format
+msgid "This package is for a different architecture. Choose a package for {architecture}."
+msgstr "Bu paket farklı bir mimari içindir. {architecture} için bir paket seçin."
+
+#, python-brace-format
+msgid "This package is for a different system branch. Choose an update for {suite}."
+msgstr "Bu paket farklı bir sistem dalı içindir. {suite} için bir güncelleme seçin."
+
 msgid "This removes the imported copy and job history, not your original download."
 msgstr "Bu, içe aktarılan kopyayı ve iş geçmişini kaldırır; orijinal indirmenizi değil."
 
 msgid "This update needs review"
 msgstr "Bu güncelleme gözden geçirilmeli"
+
+msgid "This update requires AnduinOS."
+msgstr "Bu güncelleme AnduinOS gerektirir."
 
 msgid "Unavailable"
 msgstr "Mevcut değil"
@@ -211,11 +243,14 @@ msgstr "Güncelleme başarısız oldu"
 msgid "Update from a file"
 msgstr "Dosyadan güncelle"
 
-msgid "Update to"
-msgstr "Güncelle"
+msgid "Update package"
+msgstr "Güncelleme paketi"
 
 msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
 msgstr "Bu eski güncelleme oturumunu gözden geçirmek için komut satırını kullanın veya içe aktarılan dosyasını kaldırıp yeniden seçin."
+
+msgid "Verified"
+msgstr "Doğrulandı"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "İmza doğrulanıyor ve sisteminiz kontrol ediliyor. Bu birkaç dakika sürebilir."
@@ -228,6 +263,10 @@ msgstr "Bu güncellemeye zaten sahipsiniz"
 
 msgid "You can keep using your computer."
 msgstr "Bilgisayarınızı kullanmaya devam edebilirsiniz."
+
+#, python-brace-format
+msgid "Your system is newer than this update. Choose an update for {version} or later."
+msgstr "Sisteminiz bu güncellemeden yeni. {version} veya sonrasına yönelik bir güncelleme seçin."
 
 msgid "or drop an .atgz file here"
 msgstr "veya bir .atgz dosyasını buraya sürükleyin"

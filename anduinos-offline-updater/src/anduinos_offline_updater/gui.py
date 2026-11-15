@@ -6,11 +6,12 @@ from pathlib import Path
 import re
 import sys
 import tempfile
+from datetime import datetime, timezone
 
 import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gdk, Gio, GLib, Gtk
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango
 
 PRO_PACKAGES_URL = "https://www.anduinos.com/pro/offline-update-package"
 STYLE = """
@@ -225,32 +226,90 @@ class UpdateWindow(Adw.ApplicationWindow):
         detail = text(reason, "dim-label")
         detail.set_selectable(True)
         self.content.append(detail)
+        self.button(_("Choose another file"), self.choose_file, True)
+        self.button(_("Close"), lambda *_: self.close())
+
+    def package_information(self, file, report):
+        bundle = report.get("bundle", {})
+        system = report.get("current_system", {})
+        versions = Gtk.Box(spacing=24, homogeneous=True)
+        for caption, version, information in ((_("This computer"), report.get("current_version"), system),
+                                               (_("Update package"), report["target_version"], bundle)):
+            column = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
+            column.append(text(caption, "dim-label"))
+            column.append(text(version or _("Unknown"), "title-1"))
+            if bundle:
+                column.append(text(" · ".join(information.get(key) or _("Unknown")
+                                              for key in ("suite", "architecture")), "dim-label"))
+            versions.append(column)
+        self.content.append(versions)
+        name = text(file.name, "caption", "dim-label")
+        name.set_wrap(False)
+        name.set_ellipsize(Pango.EllipsizeMode.MIDDLE)
+        name.set_tooltip_text(file.name)
+        name.set_selectable(True)
+        self.content.append(name)
+        if not bundle or report.get("verification") != "verified":
+            return
+        group = Adw.PreferencesGroup()
+        built = datetime.fromisoformat(bundle["created_utc"]).astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M")
+        for title, value in ((_("Built (UTC)"), built),
+                             (_("File size"), GLib.format_size(report["archive_bytes"])),
+                             (_("Signature"), _("Verified"))):
+            row = Adw.ActionRow(title=title)
+            suffix = text(value, "dim-label")
+            suffix.set_wrap(False)
+            row.add_suffix(suffix)
+            group.add(row)
+        self.content.append(group)
+
+    def incompatibility(self, report):
+        system = report.get("current_system", {})
+        messages = {
+            "downgrade": _("Your system is newer than this update. Choose an update for {version} or later.").format(
+                version=report.get("current_version") or _("Unknown")),
+            "architecture": _("This package is for a different architecture. Choose a package for {architecture}.").format(
+                architecture=system.get("architecture") or _("Unknown")),
+            "suite": _("This package is for a different system branch. Choose an update for {suite}.").format(
+                suite=system.get("suite") or _("Unknown")),
+            "release-line": _("This package is for a different AnduinOS series. Choose an update for your system version."),
+            "system": _("This update requires AnduinOS."),
+            "system-version": _("The current system version could not be determined. Check your system before updating."),
+        }
+        issues = report.get("compatibility_issues", [])
+        if "system" in issues:
+            issues = ["system"]
+        elif "suite" in issues or "release-line" in issues:
+            # A different OS series is not a same-series downgrade. Avoid
+            # repeating that mismatch three ways in the primary explanation.
+            issues = [code for code in issues if code != "downgrade" and
+                      not (code == "release-line" and "suite" in issues)]
+        return "\n".join(messages[code] for code in issues if code in messages) or "\n".join(report.get("blockers", []))
 
     def show_report(self, file, report):
         state = report["state"]
-        if state == "blocked":
+        if state == "blocked" and report.get("verification") != "verified":
             self.error("\n".join(report.get("blockers", [])))
+            self.content.prepend(text(_("This file has not passed verification."), "dim-label"))
             return
         headings = {"update-available": _("Review your update"),
                     "already-installed": _("You already have this update"),
-                    "updater-update-required": _("A newer updater is required")}
+                    "updater-update-required": _("A newer updater is required"),
+                    "blocked": _("Cannot install this update")}
         if state not in headings:
             raise ValueError(_("The update could not be checked. Try choosing the file again."))
         self.report = report
         self.file = file
         self.back.set_visible(not self.job)
         self.page(headings[state])
-        versions = Gtk.Box(spacing=24, homogeneous=True)
-        for caption, value in ((_("Current version"), report["current_version"]),
-                               (_("Update to"), report["target_version"])):
-            column = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
-            column.append(text(caption, "dim-label"))
-            column.append(text(value, "title-1"))
-            versions.append(column)
-        self.content.append(versions)
-        name = text(file.name, "caption", "dim-label")
-        name.set_selectable(True)
-        self.content.append(name)
+        if state == "blocked":
+            self.content.append(text(self.incompatibility(report), "dim-label"))
+        self.package_information(file, report)
+        if state == "blocked":
+            self.button(_("Choose another file"), self.choose_file, True)
+            self.button(_("Close"), lambda *_: self.close())
+            self.details(report)
+            return
         changes = sum(len(stage["changes"]) for stage in report["stages"])
         space = report["space"]
         group = Adw.PreferencesGroup()
@@ -321,7 +380,8 @@ class UpdateWindow(Adw.ApplicationWindow):
         process.communicate_utf8_async(None, None, finished)
 
     def prepare(self, *_args):
-        if self.busy or self.job or not self.file:
+        if (self.busy or self.job or not self.file or not self.report or
+                self.report["state"] not in ("update-available", "updater-update-required")):
             return
         self.busy = True
         self.back.set_visible(False)

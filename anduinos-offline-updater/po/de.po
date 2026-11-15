@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:56+0000\n"
+"POT-Creation-Date: 2026-11-15 10:11+0000\n"
 "PO-Revision-Date: 2026-09-09 11:56+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: de\n"
@@ -30,6 +30,12 @@ msgstr "AnduinOS {version}"
 
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Import der Datei und Überprüfung des Installationsplans autorisieren. Es wurden noch keine Pakete installiert."
+
+msgid "Built (UTC)"
+msgstr "Erstellt (UTC)"
+
+msgid "Cannot install this update"
+msgstr "Dieses Update kann nicht installiert werden"
 
 msgid "Cannot preview this update"
 msgstr "Dieses Update kann nicht angezeigt werden"
@@ -80,14 +86,14 @@ msgstr "Die Website konnte nicht geöffnet werden"
 msgid "Could not save the update session"
 msgstr "Aktualisierungssitzung konnte nicht gespeichert werden"
 
-msgid "Current version"
-msgstr "Aktuelle Version"
-
 msgid "Disabled"
 msgstr "Deaktiviert"
 
 msgid "Done"
 msgstr "Fertig"
+
+msgid "File size"
+msgstr "Dateigröße"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Updates im Pro-Kundenbereich herunterladen"
@@ -153,6 +159,9 @@ msgstr "Updater wird neu gestartet…"
 msgid "Review your update"
 msgstr "Ihr Update überprüfen"
 
+msgid "Signature"
+msgstr "Signatur"
+
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Schritt {current} von {total}"
@@ -172,6 +181,9 @@ msgstr "Technische Details"
 msgid "Temporary storage"
 msgstr "Temporärer Speicher"
 
+msgid "The current system version could not be determined. Check your system before updating."
+msgstr "Die aktuelle Systemversion konnte nicht ermittelt werden. Prüfen Sie Ihr System vor dem Update."
+
 msgid "The request did not complete. Authorization may have been cancelled."
 msgstr "Die Anfrage wurde nicht abgeschlossen. Die Autorisierung wurde möglicherweise abgebrochen."
 
@@ -184,11 +196,31 @@ msgstr "Die Aktualisierung läuft möglicherweise noch. Verbinden Sie sich erneu
 msgid "The updater has been upgraded. Review and confirm the remaining update."
 msgstr "Der Updater wurde aktualisiert. Prüfen und bestätigen Sie die verbleibende Aktualisierung."
 
+msgid "This computer"
+msgstr "Dieser Computer"
+
+msgid "This file has not passed verification."
+msgstr "Diese Datei hat die Verifizierung nicht bestanden."
+
+msgid "This package is for a different AnduinOS series. Choose an update for your system version."
+msgstr "Dieses Paket ist für eine andere AnduinOS-Serie. Wählen Sie ein Update für Ihre Systemversion."
+
+#, python-brace-format
+msgid "This package is for a different architecture. Choose a package for {architecture}."
+msgstr "Dieses Paket ist für eine andere Architektur vorgesehen. Wählen Sie ein Paket für {architecture}."
+
+#, python-brace-format
+msgid "This package is for a different system branch. Choose an update for {suite}."
+msgstr "Dieses Paket ist für einen anderen Systemzweig. Wählen Sie ein Update für {suite}."
+
 msgid "This removes the imported copy and job history, not your original download."
 msgstr "Dies entfernt die importierte Kopie und die Job-Historie, nicht Ihren ursprünglichen Download."
 
 msgid "This update needs review"
 msgstr "Diese Aktualisierung muss geprüft werden"
+
+msgid "This update requires AnduinOS."
+msgstr "Dieses Update erfordert AnduinOS."
 
 msgid "Unavailable"
 msgstr "Nicht verfügbar"
@@ -211,11 +243,14 @@ msgstr "Update fehlgeschlagen"
 msgid "Update from a file"
 msgstr "Update aus Datei"
 
-msgid "Update to"
-msgstr "Aktualisieren auf"
+msgid "Update package"
+msgstr "Aktualisierungspaket"
 
 msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
 msgstr "Verwenden Sie die Befehlszeile, um diese ältere Aktualisierungssitzung zu prüfen, oder entfernen Sie die importierte Datei und wählen Sie sie erneut."
+
+msgid "Verified"
+msgstr "Verifiziert"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Signatur wird geprüft und System wird überprüft. Dies kann einige Minuten dauern."
@@ -228,6 +263,10 @@ msgstr "Dieses Update ist bereits installiert"
 
 msgid "You can keep using your computer."
 msgstr "Du kannst deinen Computer weiter nutzen."
+
+#, python-brace-format
+msgid "Your system is newer than this update. Choose an update for {version} or later."
+msgstr "Ihr System ist neuer als dieses Update. Wählen Sie ein Update auf Version {version} oder höher."
 
 msgid "or drop an .atgz file here"
 msgstr "oder legen Sie hier eine .atgz-Datei ab"

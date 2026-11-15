@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:56+0000\n"
+"POT-Creation-Date: 2026-11-15 10:11+0000\n"
 "PO-Revision-Date: 2026-09-09 11:50+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: zh_CN\n"
@@ -30,6 +30,12 @@ msgstr "AnduinOS {version}"
 
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "授权导入文件并检查安装计划。尚未安装任何软件包。"
+
+msgid "Built (UTC)"
+msgstr "编译时间（UTC）"
+
+msgid "Cannot install this update"
+msgstr "无法安装此更新"
 
 msgid "Cannot preview this update"
 msgstr "无法预览此更新"
@@ -80,14 +86,14 @@ msgstr "无法打开网站"
 msgid "Could not save the update session"
 msgstr "无法保存更新会话"
 
-msgid "Current version"
-msgstr "当前版本"
-
 msgid "Disabled"
 msgstr "已禁用"
 
 msgid "Done"
 msgstr "完成"
+
+msgid "File size"
+msgstr "文件大小"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "从您的 Pro 权益中心获取更新"
@@ -153,6 +159,9 @@ msgstr "正在重启更新程序…"
 msgid "Review your update"
 msgstr "查看您的更新"
 
+msgid "Signature"
+msgstr "签名"
+
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "阶段 {current} / {total}"
@@ -172,6 +181,9 @@ msgstr "技术详情"
 msgid "Temporary storage"
 msgstr "临时存储"
 
+msgid "The current system version could not be determined. Check your system before updating."
+msgstr "无法确定当前系统版本。更新前请检查系统。"
+
 msgid "The request did not complete. Authorization may have been cancelled."
 msgstr "请求未完成。授权可能已被取消。"
 
@@ -184,11 +196,31 @@ msgstr "更新可能仍在运行。请重新连接以检查；不要开始另一
 msgid "The updater has been upgraded. Review and confirm the remaining update."
 msgstr "更新器已升级。请检查并确认剩余更新。"
 
+msgid "This computer"
+msgstr "当前系统"
+
+msgid "This file has not passed verification."
+msgstr "此文件未通过验证。"
+
+msgid "This package is for a different AnduinOS series. Choose an update for your system version."
+msgstr "这个包不适用于当前 AnduinOS 系列。请选择与当前系统匹配的更新包。"
+
+#, python-brace-format
+msgid "This package is for a different architecture. Choose a package for {architecture}."
+msgstr "更新包与本机架构不匹配。请选择 {architecture} 更新包。"
+
+#, python-brace-format
+msgid "This package is for a different system branch. Choose an update for {suite}."
+msgstr "更新包与当前系统分支不匹配。请选择 {suite} 更新包。"
+
 msgid "This removes the imported copy and job history, not your original download."
 msgstr "这将移除导入副本和任务历史，而非您的原始下载。"
 
 msgid "This update needs review"
 msgstr "此更新需要审阅"
+
+msgid "This update requires AnduinOS."
+msgstr "此更新需要 AnduinOS。"
 
 msgid "Unavailable"
 msgstr "不可用"
@@ -211,11 +243,14 @@ msgstr "更新失败"
 msgid "Update from a file"
 msgstr "从文件更新"
 
-msgid "Update to"
-msgstr "更新到"
+msgid "Update package"
+msgstr "更新包"
 
 msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
 msgstr "请使用命令行审阅此较早的更新会话，或移除其已导入文件并重新选择。"
+
+msgid "Verified"
+msgstr "验证通过"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "正在验证签名并检查您的系统。这可能需要几分钟。"
@@ -228,6 +263,10 @@ msgstr "您已安装此更新"
 
 msgid "You can keep using your computer."
 msgstr "可继续正常使用电脑。"
+
+#, python-brace-format
+msgid "Your system is newer than this update. Choose an update for {version} or later."
+msgstr "当前系统比这个更新包更新。请选择目标版本为 {version} 或更高版本的更新包。"
 
 msgid "or drop an .atgz file here"
 msgstr "或在此处拖放 .atgz 文件"
