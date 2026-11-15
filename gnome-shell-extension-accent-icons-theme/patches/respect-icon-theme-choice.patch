@@ -10,7 +10,7 @@ an unlocked session should reset the icon theme.
  import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
  import Gio from 'gi://Gio';
 +import * as Main from 'resource:///org/gnome/shell/ui/main.js';
- 
+
  export default class AccentColorIconsThemeExtension extends Extension {
      _settings;
      _preferences;
@@ -19,7 +19,7 @@ an unlocked session should reset the icon theme.
 +    _iconThemeChangedId = 0;
      iconThemesLight = Object.values({});
      iconThemesDark = Object.values({});
- 
+
 @@ -61,6 +63,8 @@
          this._accentColorChangedId = this._settings.connect("changed::accent-color", this._onAccentColorChanged.bind(this));
          // Connect to color scheme changes
@@ -56,7 +56,7 @@ an unlocked session should reset the icon theme.
          this._settings = null;
          this._preferences = null;
 @@ -88,6 +99,11 @@
- 
+
       // Next metod is called when extension is enabled, color accent, edit a new path to the themes, or the switch for set link gtk4 local is changed
      _onAccentColorChanged() {
 +        // Keep app defaults and third-party icon themes across logins and
