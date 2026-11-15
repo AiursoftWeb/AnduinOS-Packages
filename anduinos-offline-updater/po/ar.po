@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:56+0000\n"
+"POT-Creation-Date: 2026-11-15 10:11+0000\n"
 "PO-Revision-Date: 2026-09-09 11:50+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: ar\n"
@@ -30,6 +30,12 @@ msgstr "AnduinOS {version}"
 
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "أذِن باستيراد الملف وفحص خطة التثبيت. لم يتم تثبيت أي حزم بعد."
+
+msgid "Built (UTC)"
+msgstr "تاريخ البناء (UTC)"
+
+msgid "Cannot install this update"
+msgstr "تعذّر تثبيت هذا التحديث"
 
 msgid "Cannot preview this update"
 msgstr "تعذّر معاينة هذا التحديث"
@@ -80,14 +86,14 @@ msgstr "تعذّر فتح الموقع"
 msgid "Could not save the update session"
 msgstr "تعذّر حفظ جلسة التحديث"
 
-msgid "Current version"
-msgstr "الإصدار الحالي"
-
 msgid "Disabled"
 msgstr "معطَّل"
 
 msgid "Done"
 msgstr "تم"
+
+msgid "File size"
+msgstr "حجم الملف"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "احصل على التحديثات من مركز مزايا Pro الخاصة بك"
@@ -153,6 +159,9 @@ msgstr "جارٍ إعادة تشغيل محدّث النظام…"
 msgid "Review your update"
 msgstr "راجع تحديثك"
 
+msgid "Signature"
+msgstr "التوقيع"
+
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "المرحلة {current} من {total}"
@@ -172,6 +181,9 @@ msgstr "تفاصيل تقنية"
 msgid "Temporary storage"
 msgstr "التخزين المؤقت"
 
+msgid "The current system version could not be determined. Check your system before updating."
+msgstr "تعذّر تحديد إصدار النظام الحالي. تحقق من نظامك قبل التحديث."
+
 msgid "The request did not complete. Authorization may have been cancelled."
 msgstr "لم يكتمل الطلب. قد تكون الأذونات تمّ إلغاؤها."
 
@@ -184,11 +196,31 @@ msgstr "قد لا يزال التحديث قيد التشغيل. أعد الات
 msgid "The updater has been upgraded. Review and confirm the remaining update."
 msgstr "تم ترقية محدّث النظام. راجع وأكّد التحديث المتبقي."
 
+msgid "This computer"
+msgstr "هذا الحاسوب"
+
+msgid "This file has not passed verification."
+msgstr "لم يمرّ هذا الملف عبر التحقق."
+
+msgid "This package is for a different AnduinOS series. Choose an update for your system version."
+msgstr "هذه الحزمة مخصصة لسلسلة AnduinOS مختلفة. اختر تحديثًا مخصصًا لإصدار نظامك."
+
+#, python-brace-format
+msgid "This package is for a different architecture. Choose a package for {architecture}."
+msgstr "هذه الحزمة مخصصة لمعمارية مختلفة. اختر حزمة مخصصة لـ {architecture}."
+
+#, python-brace-format
+msgid "This package is for a different system branch. Choose an update for {suite}."
+msgstr "هذه الحزمة مخصصة لفروع نظام مختلفة. اختر تحديثًا مخصصًا لـ {suite}."
+
 msgid "This removes the imported copy and job history, not your original download."
 msgstr "هذا يزيل النسخة المستورد وسجل المهمة، وليس تنزيلك الأصلي."
 
 msgid "This update needs review"
 msgstr "هذا التحديث بحاجة إلى مراجعة"
+
+msgid "This update requires AnduinOS."
+msgstr "يتطلب هذا التحديث AnduinOS."
 
 msgid "Unavailable"
 msgstr "غير متاح"
@@ -211,11 +243,14 @@ msgstr "فشل التحديث"
 msgid "Update from a file"
 msgstr "تحديث من ملف"
 
-msgid "Update to"
-msgstr "التحديث إلى"
+msgid "Update package"
+msgstr "حزمة التحديث"
 
 msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
 msgstr "استخدم سطر الأوامر لمراجعة جلسة التحديث الأقدم هذه، أو أزل ملفها المستورد واخترها مرة أخرى."
+
+msgid "Verified"
+msgstr "موثّق"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "جارٍ التحقق من التوقيع وفحص نظامك. قد يستغرق ذلك بضع دقائق."
@@ -228,6 +263,10 @@ msgstr "لديك هذا التحديث بالفعل"
 
 msgid "You can keep using your computer."
 msgstr "يمكنك مواصلة استخدام الحاسوب."
+
+#, python-brace-format
+msgid "Your system is newer than this update. Choose an update for {version} or later."
+msgstr "نظامك أحدث من هذا التحديث. اختر تحديثًا للإصدار {version} أو أحدث."
 
 msgid "or drop an .atgz file here"
 msgstr "أو اسحب ملف .atgz هنا"

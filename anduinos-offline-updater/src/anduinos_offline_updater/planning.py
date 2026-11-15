@@ -241,20 +241,47 @@ def simulate(m, repository, keyring, system_root, work, *, client_version=VERSIO
 
 
 def preview(m, repository, keyring, system_root, workspace_root=None, *, client_version=VERSION):
+    # The caller has authenticated the manifest and payload. Keep that identity
+    # in the report even when this machine cannot install the update.
     system_root = Path(system_root).resolve()
-    os_info = os_release(system_root / "usr/lib/os-release")
-    require(os_info.get("ID") == "anduinos" and os_info.get("UBUNTU_CODENAME") == m["suite"] and
-            os_info.get("VERSION_ID", "").startswith(m["release_line"] + "."), "System is outside this bundle's release line or suite")
-    current = os_info["VERSION_ID"]
-    require(apt_pkg.version_compare(current, m["target_version"]) <= 0, "Older target OS version; downgrade refused")
-    if system_root == Path("/"):
-        require(run(["dpkg", "--print-architecture"]).decode().strip() == m["architecture"], "Bundle architecture does not match this machine")
-    result = {"current_version": current, "target_version": m["target_version"], "batch_id": m["batch_id"],
+    result = {"current_version": None, "target_version": m["target_version"], "batch_id": m["batch_id"],
+              "bundle": {key: m[key] for key in ("target_version", "suite", "release_line", "architecture", "created_utc")},
+              "current_system": {}, "compatibility_issues": [],
               "state": "blocked", "read_only": True, "can_install": False, "stages": [], "blockers": [],
               "snapshot": snapshot_plan(system_root), "space": {"staging_bytes": sum(f["size"] for f in m["files"].values()),
               "snapshot_bytes": None, "peak_install_bytes": None, "requires_installation_recheck": True,
               "measurement_scope": "live-system" if system_root == Path("/") else "validation-host"}}
     try:
+        os_info = os_release(system_root / "usr/lib/os-release")
+        current = os_info.get("VERSION_ID", "")
+        result["current_version"] = current
+        result["current_system"].update(id=os_info.get("ID"), version=current,
+                                        suite=os_info.get("UBUNTU_CODENAME"))
+        if system_root == Path("/"):
+            architecture = run(["dpkg", "--print-architecture"]).decode().strip()
+        else:
+            # A captured root may record its native architecture. Never label it
+            # using the validation host's architecture or the bundle's value.
+            arch_file = system_root / "var/lib/dpkg/arch"
+            architecture = next(iter(arch_file.read_text().splitlines()), None) if arch_file.is_file() else None
+        result["current_system"]["architecture"] = architecture
+        checks = [
+            (os_info.get("ID") == "anduinos", "system", "This update requires AnduinOS"),
+            (os_info.get("UBUNTU_CODENAME") == m["suite"], "suite", "The system branch does not match this update"),
+            (current.startswith(m["release_line"] + "."), "release-line", "The system release line does not match this update"),
+            (architecture is None or architecture == m["architecture"], "architecture", "The architecture does not match this update"),
+        ]
+        if re.fullmatch(r"[0-9]+(?:\.[0-9]+)+", current):
+            checks.append((apt_pkg.version_compare(current, m["target_version"]) <= 0, "downgrade",
+                           f"This system is {current}; this update targets {m['target_version']}. Downgrading is not supported"))
+        else:
+            checks.append((False, "system-version", "The current system version could not be determined"))
+        for valid, code, message in checks:
+            if not valid:
+                result["compatibility_issues"].append(code)
+                result["blockers"].append(message)
+        if result["blockers"]:
+            return result
         with tempfile.TemporaryDirectory(prefix="offline-plan-", dir=workspace_root) as name:
             stages, expanded, bootstrap, status_hash = simulate(m, repository, keyring, system_root, Path(name), client_version=client_version)
             result.update(stages=stages, status_sha256=status_hash)

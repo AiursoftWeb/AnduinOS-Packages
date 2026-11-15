@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:56+0000\n"
+"POT-Creation-Date: 2026-11-15 10:11+0000\n"
 "PO-Revision-Date: 2026-09-09 11:59+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: id\n"
@@ -30,6 +30,12 @@ msgstr "AnduinOS {version}"
 
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Otorisasi impor file dan pemeriksaan rencana instalasi. Belum ada paket yang diinstal."
+
+msgid "Built (UTC)"
+msgstr "Dibuat (UTC)"
+
+msgid "Cannot install this update"
+msgstr "Tidak dapat menginstal pembaruan ini"
 
 msgid "Cannot preview this update"
 msgstr "Tidak dapat menampilkan pratinjau pembaruan ini"
@@ -80,14 +86,14 @@ msgstr "Tidak dapat membuka situs web"
 msgid "Could not save the update session"
 msgstr "Tidak dapat menyimpan sesi pembaruan"
 
-msgid "Current version"
-msgstr "Versi saat ini"
-
 msgid "Disabled"
 msgstr "Nonaktif"
 
 msgid "Done"
 msgstr "Selesai"
+
+msgid "File size"
+msgstr "Ukuran file"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Dapatkan pembaruan dari pusat manfaat Pro Anda"
@@ -153,6 +159,9 @@ msgstr "Memulai ulang pembaru…"
 msgid "Review your update"
 msgstr "Tinjau pembaruan Anda"
 
+msgid "Signature"
+msgstr "Tanda tangan"
+
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Tahap {current} dari {total}"
@@ -172,6 +181,9 @@ msgstr "Detail teknis"
 msgid "Temporary storage"
 msgstr "Penyimpanan sementara"
 
+msgid "The current system version could not be determined. Check your system before updating."
+msgstr "Versi sistem saat ini tidak dapat ditentukan. Periksa sistem Anda sebelum memperbarui."
+
 msgid "The request did not complete. Authorization may have been cancelled."
 msgstr "Permintaan tidak selesai. Otorisasi mungkin dibatalkan."
 
@@ -184,11 +196,31 @@ msgstr "Pembaruan mungkin masih berjalan. Hubungkan kembali untuk memeriksanya; 
 msgid "The updater has been upgraded. Review and confirm the remaining update."
 msgstr "Pembaru telah diperbarui. Tinjau dan konfirmasi sisa pembaruan."
 
+msgid "This computer"
+msgstr "Komputer ini"
+
+msgid "This file has not passed verification."
+msgstr "File ini tidak lolos verifikasi."
+
+msgid "This package is for a different AnduinOS series. Choose an update for your system version."
+msgstr "Paket ini untuk seri AnduinOS yang berbeda. Pilih pembaruan untuk versi sistem Anda."
+
+#, python-brace-format
+msgid "This package is for a different architecture. Choose a package for {architecture}."
+msgstr "Paket ini untuk arsitektur yang berbeda. Pilih paket untuk {architecture}."
+
+#, python-brace-format
+msgid "This package is for a different system branch. Choose an update for {suite}."
+msgstr "Paket ini untuk cabang sistem yang berbeda. Pilih pembaruan untuk {suite}."
+
 msgid "This removes the imported copy and job history, not your original download."
 msgstr "Ini menghapus salinan impor dan riwayat tugas, bukan unduhan asli Anda."
 
 msgid "This update needs review"
 msgstr "Pembaruan ini perlu ditinjau"
+
+msgid "This update requires AnduinOS."
+msgstr "Pembaruan ini membutuhkan AnduinOS."
 
 msgid "Unavailable"
 msgstr "Tidak tersedia"
@@ -211,11 +243,14 @@ msgstr "Pembaruan gagal"
 msgid "Update from a file"
 msgstr "Pembaruan dari file"
 
-msgid "Update to"
-msgstr "Pembaruan ke"
+msgid "Update package"
+msgstr "Paket pembaruan"
 
 msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
 msgstr "Gunakan baris perintah untuk meninjau sesi pembaruan lama ini, atau hapus file impornya dan pilih lagi."
+
+msgid "Verified"
+msgstr "Terverifikasi"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Memverifikasi tanda tangan dan memeriksa sistem Anda. Ini mungkin memakan waktu beberapa menit."
@@ -228,6 +263,10 @@ msgstr "Anda sudah memiliki pembaruan ini"
 
 msgid "You can keep using your computer."
 msgstr "Anda bisa terus menggunakan komputer."
+
+#, python-brace-format
+msgid "Your system is newer than this update. Choose an update for {version} or later."
+msgstr "Sistem Anda lebih baru daripada pembaruan ini. Pilih pembaruan untuk {version} atau lebih baru."
 
 msgid "or drop an .atgz file here"
 msgstr "atau jatuhkan file .atgz di sini"

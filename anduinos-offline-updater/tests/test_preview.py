@@ -90,6 +90,7 @@ class PreviewTests(unittest.TestCase):
         self.case = tempfile.TemporaryDirectory(prefix="case-", dir=self.root); self.work = Path(self.case.name)
         self.system = self.work / "system"; (self.system / "usr/lib").mkdir(parents=True)
         (self.system / "var/lib/dpkg").mkdir(parents=True); self.state("2.0.0", "1")
+        (self.system / "var/lib/dpkg/arch").write_text("amd64\n")
 
     def tearDown(self): self.case.cleanup()
 
@@ -176,10 +177,26 @@ class PreviewTests(unittest.TestCase):
 
     def test_newer_os_refused_and_newer_packages_kept(self):
         self.state("2.0.6", "6")
-        with self.assertRaises(BundleError): self.inspect()
+        result = self.inspect()
+        self.assertEqual(result["state"], "blocked")
+        self.assertIn("downgrade", result["compatibility_issues"])
+        self.assertEqual(result["current_system"]["version"], "2.0.6")
+        self.assertEqual(result["bundle"]["target_version"], "2.0.5")
+        self.assertEqual(result["bundle"]["created_utc"], "2026-11-11T00:00:00Z")
+        self.assertFalse(result["stages"])
         self.state("2.0.0", "6"); result = self.inspect()
         self.assertEqual(result["state"], "update-available", result)
         self.assertFalse(any(c["name"] == "base-library" for s in result["stages"] for c in s["changes"]))
+
+    def test_incompatible_architecture_keeps_verified_identity_without_planning(self):
+        (self.system / "var/lib/dpkg/arch").write_text("arm64\n")
+        with patch("anduinos_offline_updater.planning.simulate") as simulate:
+            result = self.inspect()
+            simulate.assert_not_called()
+        self.assertEqual(result["state"], "blocked")
+        self.assertEqual(result["compatibility_issues"], ["architecture"])
+        self.assertEqual(result["current_system"]["architecture"], "arm64")
+        self.assertEqual(result["bundle"]["architecture"], "amd64")
 
     def test_bad_signature_hash_missing_extra_and_traversal(self):
         def corrupt(v):
@@ -257,7 +274,11 @@ class PreviewTests(unittest.TestCase):
         p = self.system / "var/lib/dpkg/status"; p.write_text(p.read_text().replace("ok installed", "ok unpacked", 1))
         self.assertEqual(self.inspect()["state"], "blocked"); self.state("2.0.0", "1")
         (self.system / "usr/lib/os-release").write_text("ID=anduinos\nVERSION_ID=2.0.0\nUBUNTU_CODENAME=wrong\n")
-        with self.assertRaises(BundleError): self.inspect()
+        result = self.inspect()
+        self.assertEqual(result["state"], "blocked")
+        self.assertIn("suite", result["compatibility_issues"])
+        self.assertEqual(result["current_system"]["suite"], "wrong")
+        self.assertEqual(result["bundle"]["suite"], "resolute")
         with tempfile.TemporaryDirectory(dir=self.work) as out:
             with patch("anduinos_offline_updater.bundle.shutil.disk_usage", return_value=shutil._ntuple_diskusage(1, 1, 0)):
                 with self.assertRaisesRegex(BundleError, "Insufficient space"): verify(self.bundle, self.keyring, out)

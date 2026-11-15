@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:56+0000\n"
+"POT-Creation-Date: 2026-11-15 10:11+0000\n"
 "PO-Revision-Date: 2026-09-09 12:09+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: vi\n"
@@ -30,6 +30,12 @@ msgstr "AnduinOS {version}"
 
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Cấp quyền nhập tệp và kiểm tra kế hoạch cài đặt. Chưa cài đặt gói nào."
+
+msgid "Built (UTC)"
+msgstr "Được xây dựng (UTC)"
+
+msgid "Cannot install this update"
+msgstr "Không thể cài đặt bản cập nhật này"
 
 msgid "Cannot preview this update"
 msgstr "Không thể xem trước bản cập nhật này"
@@ -80,14 +86,14 @@ msgstr "Không thể mở trang web"
 msgid "Could not save the update session"
 msgstr "Không thể lưu phiên cập nhật"
 
-msgid "Current version"
-msgstr "Phiên bản hiện tại"
-
 msgid "Disabled"
 msgstr "Đã tắt"
 
 msgid "Done"
 msgstr "Xong"
+
+msgid "File size"
+msgstr "Kích thước tệp"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Nhận bản cập nhật từ trung tâm quyền lợi Pro của bạn"
@@ -153,6 +159,9 @@ msgstr "Đang khởi động lại trình cập nhật…"
 msgid "Review your update"
 msgstr "Xem xét bản cập nhật của bạn"
 
+msgid "Signature"
+msgstr "Chữ ký"
+
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Giai đoạn {current} trên {total}"
@@ -172,6 +181,9 @@ msgstr "Chi tiết kỹ thuật"
 msgid "Temporary storage"
 msgstr "Bộ nhớ tạm"
 
+msgid "The current system version could not be determined. Check your system before updating."
+msgstr "Không thể xác định phiên bản hệ thống hiện tại. Kiểm tra hệ thống trước khi cập nhật."
+
 msgid "The request did not complete. Authorization may have been cancelled."
 msgstr "Yêu cầu không hoàn tất. Cấp quyền có thể đã bị hủy."
 
@@ -184,11 +196,31 @@ msgstr "Bản cập nhật có thể vẫn đang chạy. Kết nối lại để
 msgid "The updater has been upgraded. Review and confirm the remaining update."
 msgstr "Trình cập nhật đã được nâng cấp. Xem xét và xác nhận phần cập nhật còn lại."
 
+msgid "This computer"
+msgstr "Máy tính này"
+
+msgid "This file has not passed verification."
+msgstr "Tệp này chưa qua xác minh."
+
+msgid "This package is for a different AnduinOS series. Choose an update for your system version."
+msgstr "Gói này dành cho dòng AnduinOS khác. Chọn bản cập nhật cho phiên bản hệ thống của bạn."
+
+#, python-brace-format
+msgid "This package is for a different architecture. Choose a package for {architecture}."
+msgstr "Gói này dành cho kiến trúc khác. Chọn gói cho {architecture}."
+
+#, python-brace-format
+msgid "This package is for a different system branch. Choose an update for {suite}."
+msgstr "Gói này dành cho nhánh hệ thống khác. Chọn bản cập nhật cho {suite}."
+
 msgid "This removes the imported copy and job history, not your original download."
 msgstr "Hành động này xóa bản sao đã nhập và lịch sử công việc, không xóa bản tải xuống gốc của bạn."
 
 msgid "This update needs review"
 msgstr "Bản cập nhật này cần xem xét"
+
+msgid "This update requires AnduinOS."
+msgstr "Bản cập nhật này yêu cầu AnduinOS."
 
 msgid "Unavailable"
 msgstr "Không khả dụng"
@@ -211,11 +243,14 @@ msgstr "Cập nhật thất bại"
 msgid "Update from a file"
 msgstr "Cập nhật từ tệp"
 
-msgid "Update to"
-msgstr "Cập nhật lên"
+msgid "Update package"
+msgstr "Gói cập nhật"
 
 msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
 msgstr "Dùng dòng lệnh để xem xét phiên cập nhật cũ này, hoặc xóa tệp đã nhập và chọn lại."
+
+msgid "Verified"
+msgstr "Đã xác minh"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Đang xác minh chữ ký và kiểm tra hệ thống. Quá trình này có thể mất vài phút."
@@ -228,6 +263,10 @@ msgstr "Bạn đã có bản cập nhật này"
 
 msgid "You can keep using your computer."
 msgstr "Bạn có thể tiếp tục sử dụng máy tính."
+
+#, python-brace-format
+msgid "Your system is newer than this update. Choose an update for {version} or later."
+msgstr "Hệ thống của bạn mới hơn bản cập nhật này. Chọn bản cập nhật cho {version} hoặc mới hơn."
 
 msgid "or drop an .atgz file here"
 msgstr "hoặc thả tệp .atgz vào đây"

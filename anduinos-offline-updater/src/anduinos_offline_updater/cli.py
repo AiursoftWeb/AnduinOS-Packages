@@ -72,7 +72,7 @@ def main(argv=None):
             if args.command == "inspect":
                 report = preview(result["manifest"], Path(name) / "repository", args.keyring, args.system_root,
                                  args.work_directory, client_version=client_version)
-                report.update(signer=result["signer"], archive_bytes=args.file.stat().st_size)
+                report.update(verification="verified", signer=result["signer"], archive_bytes=args.file.stat().st_size)
             else:
                 m = result["manifest"]
                 report = {"state": "verified", "target_version": m["target_version"], "batch_id": m["batch_id"],
@@ -80,7 +80,8 @@ def main(argv=None):
                           "unpacked_bytes": result["unpacked_bytes"], "required_installer_features": m.get("required_installer_features", []),
                           "read_only": True, "can_install": False}
     except (BundleError, OSError) as error:
-        report = {"state": "blocked", "blockers": [str(error)], "read_only": True, "can_install": False}
+        report = {"state": "blocked", "verification": "unverified", "blockers": [str(error)],
+                  "read_only": True, "can_install": False}
     if args.json:
         print(json.dumps(report, indent=2))
     else:

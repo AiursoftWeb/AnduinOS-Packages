@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:56+0000\n"
+"POT-Creation-Date: 2026-11-15 10:11+0000\n"
 "PO-Revision-Date: 2026-09-09 11:58+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: hi\n"
@@ -30,6 +30,12 @@ msgstr "AnduinOS {version}"
 
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "फ़ाइल आयात करने और इंस्टॉलेशन योजना की जांच के लिए अधिकृत करें। अभी कोई पैकेज इंस्टॉल नहीं किया गया है।"
+
+msgid "Built (UTC)"
+msgstr "निर्मित (UTC)"
+
+msgid "Cannot install this update"
+msgstr "यह अपडेट इंस्टॉल नहीं किया जा सकता"
 
 msgid "Cannot preview this update"
 msgstr "इस अपडेट का पूर्वावलोकन नहीं किया जा सकता"
@@ -80,14 +86,14 @@ msgstr "वेबसाइट नहीं खुल सकी"
 msgid "Could not save the update session"
 msgstr "अपडेट सत्र सहेजा नहीं जा सका"
 
-msgid "Current version"
-msgstr "वर्तमान संस्करण"
-
 msgid "Disabled"
 msgstr "निष्क्रिय"
 
 msgid "Done"
 msgstr "पूर्ण"
+
+msgid "File size"
+msgstr "फ़ाइल आकार"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "अपने Pro लाभ केंद्र से अपडेट प्राप्त करें"
@@ -153,6 +159,9 @@ msgstr "अपडेटर पुनः आरंभ हो रहा है…"
 msgid "Review your update"
 msgstr "अपना अपडेट समीक्षा करें"
 
+msgid "Signature"
+msgstr "सिग्नेचर"
+
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "चरण {current} of {total}"
@@ -172,6 +181,9 @@ msgstr "तकनीकी विवरण"
 msgid "Temporary storage"
 msgstr "अस्थायी भंडारण"
 
+msgid "The current system version could not be determined. Check your system before updating."
+msgstr "वर्तमान सिस्टम संस्करण निर्धारित नहीं किया जा सका। अपडेट से पहले अपने सिस्टम की जाँच करें।"
+
 msgid "The request did not complete. Authorization may have been cancelled."
 msgstr "अनुरोध पूर्ण नहीं हुआ। अधिकृत करना रद्द किया गया हो सकता है।"
 
@@ -184,11 +196,31 @@ msgstr "अपडेट अभी भी चल रहा हो सकता �
 msgid "The updater has been upgraded. Review and confirm the remaining update."
 msgstr "अपडेटर को अपग्रेड किया गया है। शेष अपडेट की समीक्षा करें और पुष्टि करें।"
 
+msgid "This computer"
+msgstr "यह कंप्यूटर"
+
+msgid "This file has not passed verification."
+msgstr "यह फ़ाइल सत्यापन से नहीं गुज़री है।"
+
+msgid "This package is for a different AnduinOS series. Choose an update for your system version."
+msgstr "यह पैकेज किसी अन्य AnduinOS श्रृंखला के लिए है। अपने सिस्टम संस्करण के लिए अपडेट चुनें।"
+
+#, python-brace-format
+msgid "This package is for a different architecture. Choose a package for {architecture}."
+msgstr "यह पैकेज किसी अन्य आर्किटेक्चर के लिए है। {architecture} के लिए पैकेज चुनें।"
+
+#, python-brace-format
+msgid "This package is for a different system branch. Choose an update for {suite}."
+msgstr "यह पैकेज किसी अन्य सिस्टम ब्रांच के लिए है। {suite} के लिए अपडेट चुनें।"
+
 msgid "This removes the imported copy and job history, not your original download."
 msgstr "यह आयातित कॉपी और जॉब इतिहास को हटाता है, आपकी मूल डाउनलोड को नहीं।"
 
 msgid "This update needs review"
 msgstr "इस अपडेट की समीक्षा की आवश्यकता है"
+
+msgid "This update requires AnduinOS."
+msgstr "इस अपडेट के लिए AnduinOS आवश्यक है।"
 
 msgid "Unavailable"
 msgstr "अनुपलब्ध"
@@ -211,11 +243,14 @@ msgstr "अपडेट विफल"
 msgid "Update from a file"
 msgstr "फ़ाइल से अपडेट करें"
 
-msgid "Update to"
-msgstr "अपडेट करें"
+msgid "Update package"
+msgstr "अपडेट पैकेज"
 
 msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
 msgstr "इस पुराने अपडेट सत्र की समीक्षा के लिए कमांड लाइन का उपयोग करें, या इसकी आयातित फ़ाइल हटाकर इसे फिर से चुनें।"
+
+msgid "Verified"
+msgstr "सत्यापित"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "हस्ताक्षर सत्यापित कर रहे हैं और आपका सिस्टम जाँच रहे हैं। इसमें कुछ मिनट लग सकते हैं।"
@@ -228,6 +263,10 @@ msgstr "आपके पास इस अपडेट की पहले से
 
 msgid "You can keep using your computer."
 msgstr "आप अपने कंप्यूटर का उपयोग जारी रख सकते हैं।"
+
+#, python-brace-format
+msgid "Your system is newer than this update. Choose an update for {version} or later."
+msgstr "आपका सिस्टम इस अपडेट से नया है। {version} या बाद के लिए अपडेट चुनें।"
 
 msgid "or drop an .atgz file here"
 msgstr "या यहाँ एक .atgz फ़ाइल छोड़ें"

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:56+0000\n"
+"POT-Creation-Date: 2026-11-15 10:11+0000\n"
 "PO-Revision-Date: 2026-09-09 11:52+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: da\n"
@@ -30,6 +30,12 @@ msgstr "AnduinOS {version}"
 
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Godkend import af filen og kontrol af installationsplanen. Ingen pakker er installeret endnu."
+
+msgid "Built (UTC)"
+msgstr "Bygget (UTC)"
+
+msgid "Cannot install this update"
+msgstr "Kan ikke installere denne opdatering"
 
 msgid "Cannot preview this update"
 msgstr "Kan ikke forudvise denne opdatering"
@@ -80,14 +86,14 @@ msgstr "Kunne ikke åbne webstedet"
 msgid "Could not save the update session"
 msgstr "Kunne ikke gemme opdateringssessionen"
 
-msgid "Current version"
-msgstr "Aktuel version"
-
 msgid "Disabled"
 msgstr "Deaktiveret"
 
 msgid "Done"
 msgstr "Færdig"
+
+msgid "File size"
+msgstr "Filstørrelse"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Hent opdateringer fra dit Pro-fordelecenter"
@@ -153,6 +159,9 @@ msgstr "Genstarter opdateringsprogrammet…"
 msgid "Review your update"
 msgstr "Gennemgå din opdatering"
 
+msgid "Signature"
+msgstr "Signatur"
+
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Trin {current} af {total}"
@@ -172,6 +181,9 @@ msgstr "Tekniske detaljer"
 msgid "Temporary storage"
 msgstr "Midlertidig opbevaring"
 
+msgid "The current system version could not be determined. Check your system before updating."
+msgstr "Den aktuelle systemversion kunne ikke bestemmes. Tjek dit system, før du opdaterer."
+
 msgid "The request did not complete. Authorization may have been cancelled."
 msgstr "Anmodningen blev ikke fuldført. Godkendelse kan være blevet annulleret."
 
@@ -184,11 +196,31 @@ msgstr "Opdateringen kører muligvis stadig. Genforbind for at tjekke den; start
 msgid "The updater has been upgraded. Review and confirm the remaining update."
 msgstr "Opdateringsprogrammet er opdateret. Gennemse og bekræft den resterende opdatering."
 
+msgid "This computer"
+msgstr "Denne computer"
+
+msgid "This file has not passed verification."
+msgstr "Denne fil er ikke blevet verificeret."
+
+msgid "This package is for a different AnduinOS series. Choose an update for your system version."
+msgstr "Denne pakke er til en anden AnduinOS-serie. Vælg en opdatering til din systemversion."
+
+#, python-brace-format
+msgid "This package is for a different architecture. Choose a package for {architecture}."
+msgstr "Denne pakke er til en anden arkitektur. Vælg en pakke til {architecture}."
+
+#, python-brace-format
+msgid "This package is for a different system branch. Choose an update for {suite}."
+msgstr "Denne pakke er til en anden systemgren. Vælg en opdatering til {suite}."
+
 msgid "This removes the imported copy and job history, not your original download."
 msgstr "Dette fjerner den importerede kopi og jobhistorikken, ikke din oprindelige download."
 
 msgid "This update needs review"
 msgstr "Denne opdatering skal gennemses"
+
+msgid "This update requires AnduinOS."
+msgstr "Denne opdatering kræver AnduinOS."
 
 msgid "Unavailable"
 msgstr "Ikke tilgængelig"
@@ -211,11 +243,14 @@ msgstr "Opdateringen fejlede"
 msgid "Update from a file"
 msgstr "Opdater fra fil"
 
-msgid "Update to"
-msgstr "Opdater til"
+msgid "Update package"
+msgstr "Opdateringspakke"
 
 msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
 msgstr "Brug kommandolinjen til at gennemse denne ældre opdateringssession, eller fjern den importerede fil og vælg den igen."
+
+msgid "Verified"
+msgstr "Verificeret"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Verificerer signaturen og kontrollerer dit system. Dette kan tage et par minutter."
@@ -228,6 +263,10 @@ msgstr "Du har allerede denne opdatering"
 
 msgid "You can keep using your computer."
 msgstr "Du kan fortsætte med at bruge din computer."
+
+#, python-brace-format
+msgid "Your system is newer than this update. Choose an update for {version} or later."
+msgstr "Dit system er nyere end denne opdatering. Vælg en opdatering til {version} eller nyere."
 
 msgid "or drop an .atgz file here"
 msgstr "eller slip en .atgz-fil her"

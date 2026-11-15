@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:56+0000\n"
+"POT-Creation-Date: 2026-11-15 10:11+0000\n"
 "PO-Revision-Date: 2026-09-09 11:55+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: fi\n"
@@ -30,6 +30,12 @@ msgstr "AnduinOS {version}"
 
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Hyväksy tiedoston tuominen ja asennussuunnitelman tarkistus. Paketteja ei ole vielä asennettu."
+
+msgid "Built (UTC)"
+msgstr "Rakennettu (UTC)"
+
+msgid "Cannot install this update"
+msgstr "Tätä päivitystä ei voi asenta"
 
 msgid "Cannot preview this update"
 msgstr "Tätä päivitystä ei voi esikatsella"
@@ -80,14 +86,14 @@ msgstr "Verkkosivua ei voitu avata"
 msgid "Could not save the update session"
 msgstr "Päivityssessiota ei voitu tallentaa"
 
-msgid "Current version"
-msgstr "Nykyinen versio"
-
 msgid "Disabled"
 msgstr "Ei käytössä"
 
 msgid "Done"
 msgstr "Valmis"
+
+msgid "File size"
+msgstr "Tiedoston koko"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Hae päivitykset Pro-eduuttasi keskuksesta"
@@ -153,6 +159,9 @@ msgstr "Käynnistetään päivitysohjelmistoa…"
 msgid "Review your update"
 msgstr "Tarkista päivityksesi"
 
+msgid "Signature"
+msgstr "Allekirjoitus"
+
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Vaihe {current} / {total}"
@@ -172,6 +181,9 @@ msgstr "Tekniset tiedot"
 msgid "Temporary storage"
 msgstr "Väliaikainen tallennustila"
 
+msgid "The current system version could not be determined. Check your system before updating."
+msgstr "Nykyistä järjestelmäversiota ei voitu määrittää. Tarkista järjestelmäsi ennen päivitystä."
+
 msgid "The request did not complete. Authorization may have been cancelled."
 msgstr "Pyyntö ei valmistanut. Valtuutus on saattanut peruutettu."
 
@@ -184,11 +196,31 @@ msgstr "Päivitys voi olla edelleen käynnissä. Yhdistä uudelleen tarkistamaan
 msgid "The updater has been upgraded. Review and confirm the remaining update."
 msgstr "Päivitysohjelma on päivitetty. Tarkista ja vahvista jäljellä oleva päivitys."
 
+msgid "This computer"
+msgstr "Tämä tietokone"
+
+msgid "This file has not passed verification."
+msgstr "Tämä tiedosto ei ole läpäissyt varmistusta."
+
+msgid "This package is for a different AnduinOS series. Choose an update for your system version."
+msgstr "Tämä paketti on eri AnduinOS-sarjalle. Valitse päivitys järjestelmäversiollesi."
+
+#, python-brace-format
+msgid "This package is for a different architecture. Choose a package for {architecture}."
+msgstr "Tämä paketti on eri arkkitehtuurille. Valitse paketti arkkitehtuurille {architecture}."
+
+#, python-brace-format
+msgid "This package is for a different system branch. Choose an update for {suite}."
+msgstr "Tämä paketti on eri järjestelmähaaraan. Valitse päivitys haaraan {suite}."
+
 msgid "This removes the imported copy and job history, not your original download."
 msgstr "Tämä poistaa tuodun kopion ja tehtävän historian, ei alkuperäistä lataustasi."
 
 msgid "This update needs review"
 msgstr "Tämä päivitys tarvitsee tarkistuksen"
+
+msgid "This update requires AnduinOS."
+msgstr "Tämä päivitys vaatii AnduinOS-järjestelmän."
 
 msgid "Unavailable"
 msgstr "Ei käytettävissä"
@@ -211,11 +243,14 @@ msgstr "Päivitys epäonnistui"
 msgid "Update from a file"
 msgstr "Päivitä tiedostosta"
 
-msgid "Update to"
-msgstr "Päivitetään versioon"
+msgid "Update package"
+msgstr "Päivityspaketti"
 
 msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
 msgstr "Tarkista tämä vanhempi päivityssessio komentoriviltä tai poista sen tuotu tiedosto ja valitse se uudelleen."
+
+msgid "Verified"
+msgstr "Vahvistettu"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Vahvistetaan allekirjoitusta ja tarkistetaan järjestelmäsi. Tämä voi kestää muutaman minuutin."
@@ -228,6 +263,10 @@ msgstr "Sinulla on jo tämä päivitys"
 
 msgid "You can keep using your computer."
 msgstr "Voit jatkaa tietokoneen käyttöä."
+
+#, python-brace-format
+msgid "Your system is newer than this update. Choose an update for {version} or later."
+msgstr "Järjestelmäsi on uudempi kuin tämä päivitys. Valitse päivitys versiolle {version} tai uudemmalle."
 
 msgid "or drop an .atgz file here"
 msgstr "tai vedä .atgz-tiedosto tähän"

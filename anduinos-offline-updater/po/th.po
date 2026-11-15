@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:56+0000\n"
+"POT-Creation-Date: 2026-11-15 10:11+0000\n"
 "PO-Revision-Date: 2026-09-09 12:06+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: th\n"
@@ -30,6 +30,12 @@ msgstr "AnduinOS {version}"
 
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "อนุมัติการนำเข้าไฟล์และตรวจสอบแผนการติดตั้ง ยังไม่ได้ติดตั้งแพ็กเกจใด ๆ"
+
+msgid "Built (UTC)"
+msgstr "สร้าง (UTC)"
+
+msgid "Cannot install this update"
+msgstr "ไม่สามารถติดตั้งการอัปเดตนี้ได้"
 
 msgid "Cannot preview this update"
 msgstr "ไม่สามารถดูตัวอย่างการอัปเดตนี้"
@@ -80,14 +86,14 @@ msgstr "ไม่สามารถเปิดเว็บไซต์ได้
 msgid "Could not save the update session"
 msgstr "ไม่สามารถเซสชันการอัปเดตได้"
 
-msgid "Current version"
-msgstr "เวอร์ชันปัจจุบัน"
-
 msgid "Disabled"
 msgstr "ปิดใช้งาน"
 
 msgid "Done"
 msgstr "เสร็จสิ้น"
+
+msgid "File size"
+msgstr "ขนาดไฟล์"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "รับอัปเดตจากศูนย์สิทธิประโยชน์ Pro ของคุณ"
@@ -153,6 +159,9 @@ msgstr "กำลังรีสตาร์ทตัวอัปเดต…"
 msgid "Review your update"
 msgstr "ตรวจสอบการอัปเดตของคุณ"
 
+msgid "Signature"
+msgstr "ลายเซ็น"
+
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "ขั้นตอน {current} จาก {total}"
@@ -172,6 +181,9 @@ msgstr "รายละเอียดทางเทคนิค"
 msgid "Temporary storage"
 msgstr "พื้นที่จัดเก็บชั่วคราว"
 
+msgid "The current system version could not be determined. Check your system before updating."
+msgstr "ไม่สามารถระบุเวอร์ชันระบบปัจจุบันได้ ตรวจสอบระบบก่อนอัปเดต"
+
 msgid "The request did not complete. Authorization may have been cancelled."
 msgstr "คำขอไม่เสร็จสมบูรณ์ การอนุมัติอาจถูกยกเลิกแล้ว"
 
@@ -184,11 +196,31 @@ msgstr "การอัปเดตอาจยังทำงานอยู่
 msgid "The updater has been upgraded. Review and confirm the remaining update."
 msgstr "ตัวอัปเดตได้รับการอัปเกรดแล้ว ตรวจสอบและยืนยันการอัปเดตที่เหลือ"
 
+msgid "This computer"
+msgstr "คอมพิวเตอร์เครื่องนี้"
+
+msgid "This file has not passed verification."
+msgstr "ไฟล์นี้ยังไม่ผ่านการตรวจสอบ"
+
+msgid "This package is for a different AnduinOS series. Choose an update for your system version."
+msgstr "แพ็กเกจนี้ใช้กับ AnduinOS รุ่นอื่น เลือกการอัปเดตสำหรับเวอร์ชันระบบของคุณ"
+
+#, python-brace-format
+msgid "This package is for a different architecture. Choose a package for {architecture}."
+msgstr "แพ็กเกจนี้ใช้กับสถาปัตยกรรมอื่น เลือกแพ็กเกจสำหรับ {architecture}"
+
+#, python-brace-format
+msgid "This package is for a different system branch. Choose an update for {suite}."
+msgstr "แพ็กเกจนี้ใช้กับระบบสาขาอื่น เลือกการอัปเดตสำหรับ {suite}"
+
 msgid "This removes the imported copy and job history, not your original download."
 msgstr "การดำเนินการนี้จะลบสำเนาที่นำเข้าและประวัติงาน ไม่ใช่การดาวน์โหลดเดิมของคุณ"
 
 msgid "This update needs review"
 msgstr "การอัปเดตนี้ต้องได้รับการตรวจสอบ"
+
+msgid "This update requires AnduinOS."
+msgstr "การอัปเดตนี้ต้องใช้ AnduinOS"
 
 msgid "Unavailable"
 msgstr "ไม่พร้อมใช้งาน"
@@ -211,11 +243,14 @@ msgstr "การอัปเดตล้มเหลว"
 msgid "Update from a file"
 msgstr "อัปเดตจากไฟล์"
 
-msgid "Update to"
-msgstr "อัปเดตเป็น"
+msgid "Update package"
+msgstr "แพ็กเกจอัปเดต"
 
 msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
 msgstr "ใช้บรรทัดคำสั่งเพื่อตรวจสอบเซสชันการอัปเดตรุ่นเก่านี้ หรือลบไฟล์ที่นำเข้าและเลือกอีกครั้ง"
+
+msgid "Verified"
+msgstr "ตรวจสอบแล้ว"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "กำลังตรวจสอบลายเซ็นและระบบของคุณ อาจใช้เวลาหลายนาที"
@@ -228,6 +263,10 @@ msgstr "คุณมีอัปเดตนี้แล้ว"
 
 msgid "You can keep using your computer."
 msgstr "คุณยังใช้งานคอมพิวเตอร์ต่อได้"
+
+#, python-brace-format
+msgid "Your system is newer than this update. Choose an update for {version} or later."
+msgstr "ระบบของคุณใหม่กว่าการอัปเดตนี้ เลือกการอัปเดตสำหรับ {version} หรือใหม่กว่า"
 
 msgid "or drop an .atgz file here"
 msgstr "หรือลากไฟล์ .atgz มาที่นี่"

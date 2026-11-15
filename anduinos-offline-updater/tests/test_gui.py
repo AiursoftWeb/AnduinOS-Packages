@@ -153,8 +153,7 @@ class DesktopTests(unittest.TestCase):
         process.get_exit_status.return_value = 1
         application = Mock()
         self.window.inspected(process, None, (application, self.fixture.bundle))
-        self.assertEqual(self.window.content.get_last_child().get_label(),
-                         self.gui._("The update could not be checked. Try choosing the file again."))
+        self.assertIn(self.gui._("The update could not be checked. Try choosing the file again."), self.labels())
         application.release.assert_called_once()
 
     def test_already_installed_uses_actual_required_targets(self):
@@ -168,6 +167,34 @@ class DesktopTests(unittest.TestCase):
         file.write_bytes(b"not an archive")
         self.assertIsNone(self.complete(file))
         self.assertTrue(self.window.back.get_visible())
+        self.assertIn(self.gui._("This file has not passed verification."), self.labels())
+        self.assertNotIn(self.gui._("Verified"), self.labels())
+        self.assertNotIn(self.gui._("Update package"), self.labels())
+
+    def test_verified_older_package_shows_both_versions_and_next_steps(self):
+        self.fixture.state("2.0.6", "6")
+        report = self.complete(self.fixture.bundle)
+        self.assertEqual(report["state"], "blocked")
+        self.assertEqual(report["verification"], "verified")
+        for label in ("2.0.6", "2.0.5", "resolute · amd64", "2026-11-11 00:00",
+                      self.gui._("Verified"), self.gui._("Choose another file"), self.gui._("Close")):
+            self.assertIn(label, self.labels())
+        self.assertIn(self.gui._("Your system is newer than this update. Choose an update for {version} or later.").format(
+            version="2.0.6"), self.labels())
+        self.assertNotIn(self.gui._("Continue"), self.labels())
+        self.assertNotIn(self.gui._("Start Update"), self.labels())
+        self.assertFalse(self.window.content.get_last_child().get_expanded())
+        with patch.object(self.window, "command") as command:
+            self.window.prepare()
+            command.assert_not_called()
+
+    def test_wrong_architecture_displays_machine_and_package_without_install(self):
+        (self.fixture.system / "var/lib/dpkg/arch").write_text("arm64\n")
+        report = self.complete(self.fixture.bundle)
+        self.assertEqual(report["state"], "blocked")
+        self.assertIn("resolute · arm64", self.labels())
+        self.assertIn("resolute · amd64", self.labels())
+        self.assertNotIn(self.gui._("Continue"), self.labels())
 
     def test_closing_window_allows_child_to_clean_up(self):
         directory = self.fixture.work / "user-cache"

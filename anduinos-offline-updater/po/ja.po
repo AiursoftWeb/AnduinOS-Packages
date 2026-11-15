@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:56+0000\n"
+"POT-Creation-Date: 2026-11-15 10:11+0000\n"
 "PO-Revision-Date: 2026-09-09 12:00+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: ja\n"
@@ -30,6 +30,12 @@ msgstr "AnduinOS {version}"
 
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "ファイルのインポートとインストール計画の確認を承認してください。まだパッケージはインストールされていません。"
+
+msgid "Built (UTC)"
+msgstr "ビルド日時 (UTC)"
+
+msgid "Cannot install this update"
+msgstr "この更新をインストールできません。"
 
 msgid "Cannot preview this update"
 msgstr "この更新はプレビューできません"
@@ -80,14 +86,14 @@ msgstr "Web サイトを開けませんでした"
 msgid "Could not save the update session"
 msgstr "更新セッションを保存できませんでした"
 
-msgid "Current version"
-msgstr "現在のバージョン"
-
 msgid "Disabled"
 msgstr "無効"
 
 msgid "Done"
 msgstr "完了"
+
+msgid "File size"
+msgstr "ファイルサイズ"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Pro ベネフィットセンターから更新を取得"
@@ -153,6 +159,9 @@ msgstr "アップデータ再起動中…"
 msgid "Review your update"
 msgstr "更新を確認"
 
+msgid "Signature"
+msgstr "署名"
+
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "ステップ {current} / {total}"
@@ -172,6 +181,9 @@ msgstr "技術的な詳細"
 msgid "Temporary storage"
 msgstr "一時ストレージ"
 
+msgid "The current system version could not be determined. Check your system before updating."
+msgstr "現在のシステムバージョンを特定できません。更新前にシステムを確認してください。"
+
 msgid "The request did not complete. Authorization may have been cancelled."
 msgstr "リクエストが完了しませんでした。承認がキャンセルされた可能性があります。"
 
@@ -184,11 +196,31 @@ msgstr "更新がまだ実行中である可能性があります。確認する
 msgid "The updater has been upgraded. Review and confirm the remaining update."
 msgstr "アップデータがアップグレードされました。残りの更新を確認して承認してください。"
 
+msgid "This computer"
+msgstr "このコンピューター"
+
+msgid "This file has not passed verification."
+msgstr "このファイルは検証に失敗しました。"
+
+msgid "This package is for a different AnduinOS series. Choose an update for your system version."
+msgstr "このパッケージは別のAnduinOSシリーズ向けです。システムバージョン向けの更新を選択してください。"
+
+#, python-brace-format
+msgid "This package is for a different architecture. Choose a package for {architecture}."
+msgstr "このパッケージは別のアーキテクチャ向けです。{architecture}向けのパッケージを選択してください。"
+
+#, python-brace-format
+msgid "This package is for a different system branch. Choose an update for {suite}."
+msgstr "このパッケージは別のシステムブランチ向けです。{suite}向けの更新を選択してください。"
+
 msgid "This removes the imported copy and job history, not your original download."
 msgstr "これにより、インポートされたコピーとジョブ履歴が削除されますが、元のダウンロードは削除されません。"
 
 msgid "This update needs review"
 msgstr "この更新の確認が必要です"
+
+msgid "This update requires AnduinOS."
+msgstr "この更新にはAnduinOSが必要です。"
 
 msgid "Unavailable"
 msgstr "利用不可"
@@ -211,11 +243,14 @@ msgstr "更新に失敗しました"
 msgid "Update from a file"
 msgstr "ファイルから更新"
 
-msgid "Update to"
-msgstr "更新先"
+msgid "Update package"
+msgstr "更新パッケージ"
 
 msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
 msgstr "コマンドラインでこの古い更新セッションを確認するか、インポート済みファイルを削除して再選択してください。"
+
+msgid "Verified"
+msgstr "検証済み"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "署名を検証し、システムを確認しています。数分かかる場合があります。"
@@ -228,6 +263,10 @@ msgstr "この更新は既に適用済みです"
 
 msgid "You can keep using your computer."
 msgstr "コンピューターを继续使用できます。"
+
+#, python-brace-format
+msgid "Your system is newer than this update. Choose an update for {version} or later."
+msgstr "このシステムは、この更新よりも新しいバージョンです。{version}以降の更新を選択してください。"
 
 msgid "or drop an .atgz file here"
 msgstr "または .atgz ファイルをここにドロップ"

@@ -35,9 +35,11 @@ packages, missing required targets, unapproved removals and downgrades block the
 plan. Additional applications are retained; they are not all promised updates.
 
 `--system-root /path/to/captured-root` reads captured `usr/lib/os-release`,
-`var/lib/dpkg/status`, optional APT preferences and extended state. This is for
+`var/lib/dpkg/status`, optional `var/lib/dpkg/arch` (native architecture first), APT preferences and extended state. This is for
 validation and cannot prove the captured machine's live filesystem or snapshot
 layout. `--work-directory` chooses temporary storage for the unpacked bundle.
+
+After verification, the preview retains the package target, suite, architecture and UTC build time even if the current system is incompatible. The GTK view compares the computer and update package, explains the blocker and offers another file without allowing installation. Failed verification never labels package metadata as trusted.
 
 Results distinguish `update-available`, `already-installed`, `blocked` and
 `updater-update-required`. The latter previews only the updater bootstrap,

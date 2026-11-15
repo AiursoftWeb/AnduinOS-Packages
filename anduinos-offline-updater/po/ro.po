@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: anduinos-offline-updater\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 10:56+0000\n"
+"POT-Creation-Date: 2026-11-15 10:11+0000\n"
 "PO-Revision-Date: 2026-09-09 12:04+0000\n"
 "Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
 "Language-Team: ro\n"
@@ -30,6 +30,12 @@ msgstr "AnduinOS {version}"
 
 msgid "Authorize importing the file and checking the installation plan. No packages are installed yet."
 msgstr "Autorizați importarea fișierului și verificarea planului de instalare. Niciun pachet nu a fost instalat încă."
+
+msgid "Built (UTC)"
+msgstr "Construit (UTC)"
+
+msgid "Cannot install this update"
+msgstr "Nu se poate instala această actualizare"
 
 msgid "Cannot preview this update"
 msgstr "Nu se poate previzualiza această actualizare"
@@ -80,14 +86,14 @@ msgstr "Nu s-a putut deschide site-ul web"
 msgid "Could not save the update session"
 msgstr "Nu s-a putut salva sesiunea de actualizare"
 
-msgid "Current version"
-msgstr "Versiunea curentă"
-
 msgid "Disabled"
 msgstr "Dezactivat"
 
 msgid "Done"
 msgstr "Gata"
+
+msgid "File size"
+msgstr "Dimensiunea fișierului"
 
 msgid "Get updates from your Pro benefits center"
 msgstr "Obțineți actualizări din centrul de beneficii Pro"
@@ -153,6 +159,9 @@ msgstr "Se repornește actualizatorul…"
 msgid "Review your update"
 msgstr "Revizuiți actualizarea"
 
+msgid "Signature"
+msgstr "Semnătură"
+
 #, python-brace-format
 msgid "Stage {current} of {total}"
 msgstr "Etapa {current} din {total}"
@@ -172,6 +181,9 @@ msgstr "Detalii tehnice"
 msgid "Temporary storage"
 msgstr "Stocare temporară"
 
+msgid "The current system version could not be determined. Check your system before updating."
+msgstr "Versiunea curentă a sistemului nu a putut fi determinată. Verificați sistemul înainte de actualizare."
+
 msgid "The request did not complete. Authorization may have been cancelled."
 msgstr "Solicitarea nu s-a finalizat. Autorizarea ar putea fi fost anulată."
 
@@ -184,11 +196,31 @@ msgstr "Actualizarea ar putea fi încă în curs de execuție. Reconectați pent
 msgid "The updater has been upgraded. Review and confirm the remaining update."
 msgstr "Actualizatorul a fost actualizat. Examinați și confirmați actualizarea rămasă."
 
+msgid "This computer"
+msgstr "Acest computer"
+
+msgid "This file has not passed verification."
+msgstr "Acest fișier nu a trecut de verificare."
+
+msgid "This package is for a different AnduinOS series. Choose an update for your system version."
+msgstr "Acest pachet este pentru o serie diferită de AnduinOS. Alegeți o actualizare pentru versiunea sistemului dumneavoastră."
+
+#, python-brace-format
+msgid "This package is for a different architecture. Choose a package for {architecture}."
+msgstr "Acest pachet este pentru o arhitectură diferită. Alegeți un pachet pentru {architecture}."
+
+#, python-brace-format
+msgid "This package is for a different system branch. Choose an update for {suite}."
+msgstr "Acest pachet este pentru o ramură de sistem diferită. Alegeți o actualizare pentru {suite}."
+
 msgid "This removes the imported copy and job history, not your original download."
 msgstr "Aceasta elimină copia importată și istoricul sarcinilor, nu descărcarea originală."
 
 msgid "This update needs review"
 msgstr "Această actualizare necesită examinare"
+
+msgid "This update requires AnduinOS."
+msgstr "Această actualizare necesită AnduinOS."
 
 msgid "Unavailable"
 msgstr "Indisponibil"
@@ -211,11 +243,14 @@ msgstr "Eșec la actualizare"
 msgid "Update from a file"
 msgstr "Actualizare din fișier"
 
-msgid "Update to"
-msgstr "Actualizare la"
+msgid "Update package"
+msgstr "Pachet de actualizare"
 
 msgid "Use the command line to review this older update session, or remove its imported file and choose it again."
 msgstr "Folosiți linia de comandă pentru a examina această sesiune de actualizare mai veche sau eliminați fișierul importat și selectați-o din nou."
+
+msgid "Verified"
+msgstr "Verificat"
 
 msgid "Verifying the signature and checking your system. This may take a few minutes."
 msgstr "Se verifică semnătura și se analizează sistemul. Acest lucru poate dura câteva minute."
@@ -228,6 +263,10 @@ msgstr "Aveți deja această actualizare"
 
 msgid "You can keep using your computer."
 msgstr "Poți continua să folosești computerul."
+
+#, python-brace-format
+msgid "Your system is newer than this update. Choose an update for {version} or later."
+msgstr "Sistemul dumneavoastră este mai nou decât această actualizare. Alegeți o actualizare pentru {version} sau ulterior."
 
 msgid "or drop an .atgz file here"
 msgstr "sau trageți un fișier .atgz aici"
