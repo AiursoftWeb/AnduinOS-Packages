@@ -277,6 +277,13 @@ class UpdateWindow(Adw.ApplicationWindow):
             "system-version": _("The current system version could not be determined. Check your system before updating."),
         }
         issues = report.get("compatibility_issues", [])
+        if "system" in issues:
+            issues = ["system"]
+        elif "suite" in issues or "release-line" in issues:
+            # A different OS series is not a same-series downgrade. Avoid
+            # repeating that mismatch three ways in the primary explanation.
+            issues = [code for code in issues if code != "downgrade" and
+                      not (code == "release-line" and "suite" in issues)]
         return "\n".join(messages[code] for code in issues if code in messages) or "\n".join(report.get("blockers", []))
 
     def show_report(self, file, report):

@@ -196,6 +196,17 @@ class DesktopTests(unittest.TestCase):
         self.assertIn("resolute · amd64", self.labels())
         self.assertNotIn(self.gui._("Continue"), self.labels())
 
+    def test_different_series_has_one_branch_explanation_not_three_duplicates(self):
+        (self.fixture.system / "usr/lib/os-release").write_text(
+            "ID=anduinos\nVERSION_ID=2.1.0\nUBUNTU_CODENAME=stonking\n")
+        report = self.complete(self.fixture.bundle)
+        self.assertEqual(report["state"], "blocked")
+        self.assertIn("stonking · amd64", self.labels())
+        self.assertIn("resolute · amd64", self.labels())
+        self.assertEqual(self.window.incompatibility(report), self.gui._(
+            "This package is for a different system branch. Choose an update for {suite}.").format(suite="stonking"))
+        self.assertIn("downgrade", report["compatibility_issues"], "Full diagnostics remain available")
+
     def test_closing_window_allows_child_to_clean_up(self):
         directory = self.fixture.work / "user-cache"
         with patch.object(self.gui.GLib, "get_user_cache_dir", return_value=str(directory)):
