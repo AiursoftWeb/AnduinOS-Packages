@@ -360,6 +360,72 @@ class WindowScanTests(unittest.TestCase):
                     self.assertEqual(app.DriverCenterWindow._graphics_navigation_summary(state),
                                      f"Driver status: {expected}")
 
+    def test_community_pro_cards_and_bypass_management_survive_rescan(self):
+        from anduinos_driver_center.encryption import EncryptionState, VolumeState
+        scan = (GraphicsScan(), SecureBootState(False, True, False, False, None),
+                XboxState(XboxStatus.NOT_INSTALLED, False, False, False, None, False), DkmsState(),
+                AudioState(PackageState("firmware-sof-anduinos", True, "1"),
+                           PackageState("alsa-ucm-conf-anduinos", True, "1"), True, True, (), ()),
+                PrintingState(True, True, (), (), None, (), (), (), ()),
+                RecoveryState(False, (), PackageState("anduinos-recovery-env", False, None),
+                              None, False, False, {"reason": "ready", "plan": {}}))
+        plaintext = EncryptionState(root=VolumeState("/dev/vda3", "btrfs", False))
+        def descendants(widget):
+            yield widget
+            child = widget.get_first_child()
+            while child:
+                yield from descendants(child)
+                child = child.get_next_sibling()
+
+        for entitled in (False, True):
+            with self.subTest(entitled=entitled), \
+                 patch.object(app.DriverCenterWindow, "refresh"), \
+                 patch.object(app.FirmwareManager, "start"), patch.object(app.ComputerPage, "reload"), \
+                 patch.object(app, "_", side_effect=lambda text: text):
+                window = app.DriverCenterWindow(self.application, has_pro_entitlement=entitled)
+                try:
+                    for refresh in range(2):
+                        window._apply_scan(*scan, plaintext)
+                        home = window.stack.get_child_by_name("home")
+                        flow = next(widget for widget in descendants(home)
+                                    if isinstance(widget, Gtk.FlowBox) and any(
+                                        isinstance(label, Gtk.Label) and label.get_label() == "Recovery Environment"
+                                        for label in descendants(widget)))
+                        self.assertIsNone(flow.get_child_at_index(8))
+                        cards = [flow.get_child_at_index(index).get_child() for index in range(8)]
+                        for target, title in (("recovery", "Recovery Environment"),
+                                              ("encryption", "Disk Encryption")):
+                            card = next(card for card in cards if any(isinstance(label, Gtk.Label)
+                                        and label.get_label() == title for label in descendants(card)))
+                            with patch.object(app.Gtk, "show_uri") as uri:
+                                card.emit("clicked")
+                            if entitled:
+                                uri.assert_not_called()
+                                self.assertEqual(window.stack.get_visible_child_name(), target)
+                                self.assertIsNotNone(window.stack.get_child_by_name(target))
+                            else:
+                                labels = [label.get_label() for label in descendants(card)
+                                          if isinstance(label, Gtk.Label)]
+                                self.assertIn("Pro feature", labels)
+                                self.assertIn("Purchase AnduinOS Pro", labels)
+                                uri.assert_called_once_with(window, "https://www.anduinos.com/pro", 0)
+                                self.assertIsNone(window.stack.get_child_by_name(target))
+                                self.assertEqual(window.stack.get_visible_child_name(), "home")
+                                rows = [window.device_list.get_row_at_index(i)
+                                        for i in range(window.stack.get_pages().get_n_items())]
+                                self.assertNotIn(target, [row.page_name for row in rows])
+                        if entitled:
+                            recovery = window.stack.get_child_by_name("recovery")
+                            self.assertTrue(any(isinstance(button, Gtk.Button) and button.get_label()
+                                == "Shrink swap partition and create recovery partition"
+                                for button in descendants(recovery)))
+                            encryption = window.stack.get_child_by_name("encryption")
+                            self.assertTrue(any(isinstance(label, Gtk.Label) and
+                                "Reinstall using the latest AnduinOS ISO" in label.get_label()
+                                for label in descendants(encryption)))
+                finally:
+                    window.destroy()
+
     def test_initial_scan_and_rescan_build_all_pages_and_preserve_selection(self):
         scan = (
             GraphicsScan(devices=(HardwareDevice("gpu", "", ""),)),
@@ -384,7 +450,7 @@ class WindowScanTests(unittest.TestCase):
              patch.object(app.ComputerPage, "reload") as computer_reload, \
              patch.object(app, "scan_system") as scan_system, \
              patch.object(app, "_", side_effect=lambda text: text):
-            window = app.DriverCenterWindow(self.application)
+            window = app.DriverCenterWindow(self.application, has_pro_entitlement=True)
             try:
                 for selected in ("home", "graphics-0", "secure-boot", "encryption", "recovery"):
                     with self.subTest(selected=selected):

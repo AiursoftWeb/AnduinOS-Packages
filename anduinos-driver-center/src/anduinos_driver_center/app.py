@@ -53,6 +53,7 @@ from anduinos_secureboot.decision import Facts, decide
 
 
 APP_ID = "com.anduinos.DriverCenter"
+PRO_URL = "https://www.anduinos.com/pro"
 HELPER = "/usr/libexec/anduinos-driver-center/driver-helper"
 HELPER_SUCCESS_MESSAGE = "Driver operation completed successfully."
 
@@ -144,8 +145,10 @@ def _scrolled_window(**properties) -> Gtk.ScrolledWindow:
 
 
 class DriverCenterWindow(Adw.ApplicationWindow):
-    def __init__(self, app: Adw.Application, initial_page: str = "home"):
+    def __init__(self, app: Adw.Application, initial_page: str = "home",
+                 *, has_pro_entitlement: bool = False):
         super().__init__(application=app, title=_("AnduinOS Driver Center"))
+        self.has_pro_entitlement = has_pro_entitlement
         self.set_default_size(1250, 810)
         self.set_size_request(380, 500)
         self._computer_page: ComputerPage | None = None
@@ -340,7 +343,12 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
         def worker() -> None:
             result = scan_system()
-            GLib.idle_add(self._apply_scan, *result, recovery_state(), encryption_state())
+            recovery = RecoveryState(None, (), PackageState("anduinos-recovery-env", False, None),
+                                     None, None, None)
+            encryption = EncryptionState()
+            if self.has_pro_entitlement:
+                recovery, encryption = recovery_state(), encryption_state()
+            GLib.idle_add(self._apply_scan, *result, recovery, encryption)
 
         threading.Thread(target=worker, daemon=True).start()
 
@@ -463,22 +471,23 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self.device_list.append(secure_row)
         self.stack.add_named(self._secure_boot_page(secure_boot, dkms), "secure-boot")
 
-        encryption = self._encryption
-        encryption_row = self._device_row(
-            "changes-prevent-symbolic", _("Disk Encryption"), encryption_summary(encryption),
-        )
-        encryption_row.page_name = "encryption"
-        encryption_row.page_title = _("Disk Encryption")
-        self.device_list.append(encryption_row)
-        self.stack.add_named(create_encryption_page(self, encryption, recovery), "encryption")
+        if self.has_pro_entitlement:
+            encryption = self._encryption
+            encryption_row = self._device_row(
+                "changes-prevent-symbolic", _("Disk Encryption"), encryption_summary(encryption),
+            )
+            encryption_row.page_name = "encryption"
+            encryption_row.page_title = _("Disk Encryption")
+            self.device_list.append(encryption_row)
+            self.stack.add_named(create_encryption_page(self, encryption, recovery), "encryption")
 
-        recovery_row = self._device_row(
-            "drive-harddisk-symbolic", _("Recovery Environment"), _("System status")
-        )
-        recovery_row.page_name = "recovery"
-        recovery_row.page_title = _("Recovery Environment")
-        self.device_list.append(recovery_row)
-        self.stack.add_named(self._recovery_page(recovery), "recovery")
+            recovery_row = self._device_row(
+                "drive-harddisk-symbolic", _("Recovery Environment"), _("System status")
+            )
+            recovery_row.page_name = "recovery"
+            recovery_row.page_title = _("Recovery Environment")
+            self.device_list.append(recovery_row)
+            self.stack.add_named(self._recovery_page(recovery), "recovery")
 
         firmware_snapshot = self._firmware_manager.snapshot
         firmware_row = self._device_row(
@@ -546,6 +555,9 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 self.split.set_show_sidebar(False)
 
     def _select_page(self, page_name: str) -> None:
+        if page_name in {"encryption", "recovery"} and not self.has_pro_entitlement:
+            Gtk.show_uri(self, PRO_URL, 0)
+            return
         row = self.device_list.get_row_at_index(0)
         while row:
             if getattr(row, "page_name", None) == page_name:
@@ -1133,39 +1145,49 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             ),
             -1,
         )
-        # Reuse this scan's read-only facts. Rendering a home card must not
-        # prompt for authorization or start another storage scan.
-        recovery_reason = repair_step(recovery)[1]
-        if encryption.root.filesystem == "ext4":
-            recovery_label = _("Not available")
-            recovery_subtitle = _("Not applicable to ext4. Use Rescue Center from the Live USB.")
-            recovery_class = "installed-pill"
-        elif recovery_reason == "healthy":
-            recovery_label = _("Ready")
-            recovery_subtitle = _("Configured")
-            recovery_class = "success-pill"
-        elif recovery.partition is False and not recovery.devices:
-            recovery_label = _("Not installed")
-            recovery_subtitle = _("Recovery partition not found")
-            recovery_class = "installed-pill"
+        if self.has_pro_entitlement:
+            # Reuse this scan's read-only facts. Rendering a home card must not
+            # prompt for authorization or start another storage scan.
+            recovery_reason = repair_step(recovery)[1]
+            if encryption.root.filesystem == "ext4":
+                recovery_label = _("Not available")
+                recovery_subtitle = _("Not applicable to ext4. Use Rescue Center from the Live USB.")
+                recovery_class = "installed-pill"
+            elif recovery_reason == "healthy":
+                recovery_label = _("Ready")
+                recovery_subtitle = _("Configured")
+                recovery_class = "success-pill"
+            elif recovery.partition is False and not recovery.devices:
+                recovery_label = _("Not installed")
+                recovery_subtitle = _("Recovery partition not found")
+                recovery_class = "installed-pill"
+            else:
+                recovery_label = _("Unknown") if recovery.partition is None else _("Needs attention")
+                recovery_subtitle = _("Check recovery configuration")
+                recovery_class = "installed-pill" if recovery.partition is None else "warning-pill"
+            cards.insert(
+                self._overview_card(
+                    "drive-harddisk-symbolic", _("Recovery Environment"),
+                    recovery_label, recovery_subtitle, recovery_class, "recovery",
+                ), -1,
+            )
+            cards.insert(
+                self._overview_card(
+                    "changes-prevent-symbolic", _("Disk Encryption"),
+                    encryption_summary(encryption), _("Encryption coverage"),
+                    "success-pill" if encryption.root.encrypted is True else "installed-pill",
+                    "encryption",
+                ), -1,
+            )
         else:
-            recovery_label = _("Unknown") if recovery.partition is None else _("Needs attention")
-            recovery_subtitle = _("Check recovery configuration")
-            recovery_class = "installed-pill" if recovery.partition is None else "warning-pill"
-        cards.insert(
-            self._overview_card(
-                "drive-harddisk-symbolic", _("Recovery Environment"),
-                recovery_label, recovery_subtitle, recovery_class, "recovery",
-            ), -1,
-        )
-        cards.insert(
-            self._overview_card(
-                "changes-prevent-symbolic", _("Disk Encryption"),
-                encryption_summary(encryption), _("Encryption coverage"),
-                "success-pill" if encryption.root.encrypted is True else "installed-pill",
-                "encryption",
-            ), -1,
-        )
+            for icon, title, target in (
+                ("drive-harddisk-symbolic", _("Recovery Environment"), "recovery"),
+                ("changes-prevent-symbolic", _("Disk Encryption"), "encryption"),
+            ):
+                cards.insert(self._overview_card(
+                    icon, title, _("Pro feature"), _("Purchase AnduinOS Pro"),
+                    "installed-pill", target,
+                ), -1)
         content.append(cards)
 
         if recommendations:
@@ -2709,11 +2731,13 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
 
 class DriverCenterApplication(Adw.Application):
-    def __init__(self):
+    def __init__(self, bypass_payment: bool = False):
         super().__init__(
-            application_id=APP_ID,
+            application_id=f"{APP_ID}.ProTest" if bypass_payment else APP_ID,
             flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
         )
+
+        self.has_pro_entitlement = bypass_payment
 
     def do_startup(self) -> None:
         Adw.Application.do_startup(self)
@@ -2739,7 +2763,9 @@ class DriverCenterApplication(Adw.Application):
         dialog.present(self.get_active_window())
 
     def do_activate(self) -> None:
-        window = self.get_active_window() or DriverCenterWindow(self)
+        window = self.get_active_window() or DriverCenterWindow(
+            self, has_pro_entitlement=self.has_pro_entitlement
+        )
         window.present()
 
     def do_command_line(self, command_line: Gio.ApplicationCommandLine) -> int:
@@ -2748,6 +2774,9 @@ class DriverCenterApplication(Adw.Application):
         index = 1
         while index < len(arguments):
             argument = arguments[index]
+            if argument == "--bypass-payment":
+                index += 1
+                continue
             if argument == "--page" and index + 1 < len(arguments):
                 requested_page = arguments[index + 1]
                 index += 2
@@ -2762,9 +2791,12 @@ class DriverCenterApplication(Adw.Application):
             command_line.printerr("Unknown Driver Center page: %s\n" % requested_page)
             return 2
 
+        if requested_page in {"encryption", "recovery"} and not self.has_pro_entitlement:
+            requested_page = "home"
         window = self.get_active_window()
         if window is None:
-            window = DriverCenterWindow(self, initial_page=requested_page)
+            window = DriverCenterWindow(self, initial_page=requested_page,
+                                        has_pro_entitlement=self.has_pro_entitlement)
         else:
             window._selected_page_name = requested_page
             window._select_page(requested_page)
@@ -2774,4 +2806,4 @@ class DriverCenterApplication(Adw.Application):
 
 def main() -> int:
     Adw.init()
-    return DriverCenterApplication().run(sys.argv)
+    return DriverCenterApplication(bypass_payment="--bypass-payment" in sys.argv).run(sys.argv)

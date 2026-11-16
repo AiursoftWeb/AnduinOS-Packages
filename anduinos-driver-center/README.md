@@ -7,7 +7,18 @@ authentication, and release-upgrade user interfaces.
 
 The responsive home page summarizes automatic driver recommendations and the
 health of graphics, audio, printing, Xbox controller, Secure Boot, device firmware,
-Recovery Environment, and disk encryption.
+Recovery Environment, and disk encryption. By default, the last two cards show
+**Pro feature** and **Purchase AnduinOS Pro** and open
+<https://www.anduinos.com/pro>; their management pages are hidden.
+
+For internal qualification, launch `anduinos-driver-center --bypass-payment`.
+This enables the existing recovery and encryption pages for that application
+session. It uses a separate application instance from the community mode and
+does not save an activation or change the default launcher. Recovery retains
+its swap-shrinking preparation workflow, while unencrypted systems are directed
+to reinstall for encryption. Community mode does not run the recovery or
+encryption storage probes. `--page recovery` and `--page encryption` require
+the bypass flag; otherwise they open Home.
 It compares installed and candidate versions of the recommended graphics
 driver, can refresh package information, and exposes the equivalent of
 `ubuntu-drivers install` through the same restricted privileged helper used by
