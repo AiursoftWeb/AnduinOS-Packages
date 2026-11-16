@@ -34,18 +34,22 @@ if [ "$1" = "configure" ]; then
         exit 0
     fi
 
-    # Register our theme without changing an existing administrator selection,
-    # even when the alternatives group was previously in automatic mode.
+    # Upgrades retain the current selection, including automatic mode. On a
+    # first install, let our priority replace the automatic upstream default,
+    # but still respect a manually selected theme.
     if [ -f "$OUT_FILE" ]; then
-        selected=$(update-alternatives --query gdm-theme.gresource 2>/dev/null | sed -n 's/^Value: //p')
+        alternative=$(update-alternatives --query gdm-theme.gresource 2>/dev/null || true)
+        selected=$(printf '%s\n' "$alternative" | sed -n 's/^Value: //p')
+        status=$(printf '%s\n' "$alternative" | sed -n 's/^Status: //p')
         update-alternatives --install \
-            /usr/share/gnome-shell/gdm-theme.gresource \
+            "/usr/share/gnome-shell/gdm-theme.gresource" \
             gdm-theme.gresource \
             "$OUT_FILE" \
             150
             
         current=$(update-alternatives --query gdm-theme.gresource 2>/dev/null | sed -n 's/^Value: //p')
-        if [ -n "$selected" ] && [ "$selected" != "$current" ]; then
+        if [ -n "$selected" ] && [ "$selected" != "$current" ] &&
+            { [ -n "${2:-}" ] || [ "$status" = manual ]; }; then
             update-alternatives --set gdm-theme.gresource "$selected" || true
         fi
     fi

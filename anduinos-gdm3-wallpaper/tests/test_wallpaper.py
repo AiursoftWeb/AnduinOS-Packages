@@ -77,7 +77,7 @@ class WallpaperTests(unittest.TestCase):
         return subprocess.check_output(['gresource', 'extract', str(self.output), RESOURCE])
 
     def configure(self, expect_warning=False, previous_version=VERSION):
-        result = self.run_command('sh', str(self.postinst), 'configure', previous_version)
+        result = self.run_command('sh', '-e', str(self.postinst), 'configure', previous_version)
         if not expect_warning:
             self.assertNotIn('Warning: Cannot', result.stdout)
 
@@ -92,6 +92,19 @@ class WallpaperTests(unittest.TestCase):
         self.configure()
         self.assertEqual(self.background(), b'updated packaged background')
         self.assertFalse(self.saved.exists())
+
+    def test_first_install_replaces_upstream_automatic_default(self):
+        link = self.share / 'gnome-shell/gdm-theme.gresource'
+        self.run_command('update-alternatives', '--install', str(link), 'gdm-theme.gresource', str(self.base), '50')
+        self.configure(previous_version='')
+        self.assertEqual(link.resolve(), self.output)
+
+    def test_first_install_respects_manually_selected_theme(self):
+        link = self.share / 'gnome-shell/gdm-theme.gresource'
+        self.run_command('update-alternatives', '--install', str(link), 'gdm-theme.gresource', str(self.base), '50')
+        self.run_command('update-alternatives', '--set', 'gdm-theme.gresource', str(self.base))
+        self.configure(previous_version='')
+        self.assertEqual(link.resolve(), self.base)
 
     def test_old_custom_background_migrates_and_survives_repeated_upgrades(self):
         self.make_resource(self.output, b'old customized image with effects')
