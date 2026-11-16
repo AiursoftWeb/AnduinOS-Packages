@@ -406,7 +406,7 @@ class WindowScanTests(unittest.TestCase):
                             else:
                                 labels = [label.get_label() for label in descendants(card)
                                           if isinstance(label, Gtk.Label)]
-                                self.assertIn("Pro feature", labels)
+                                self.assertIn("👑 Pro feature", labels)
                                 self.assertIn("Purchase AnduinOS Pro", labels)
                                 uri.assert_called_once_with(window, "https://www.anduinos.com/pro", 0)
                                 self.assertIsNone(window.stack.get_child_by_name(target))
