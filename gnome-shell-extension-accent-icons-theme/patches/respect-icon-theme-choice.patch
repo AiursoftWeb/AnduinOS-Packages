@@ -1,18 +1,10 @@
-Preserve icon choices across lock/unlock and respect app defaults.
+Preserve the selected icon theme while stopping accent synchronization.
 
-Locking temporarily disables user extensions; only an explicit disable in
-an unlocked session should reset the icon theme.
+Extension lifecycle changes release resources without changing user preferences.
 
 --- a/extension.js
 +++ b/extension.js
-@@ -17,12 +17,14 @@
-  */
- import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
- import Gio from 'gi://Gio';
-+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-
- export default class AccentColorIconsThemeExtension extends Extension {
-     _settings;
+@@ -23,6 +23,7 @@
      _preferences;
      _accentColorChangedId = 0;
      _colorSchemeChangedId = 0;
@@ -20,7 +12,7 @@ an unlocked session should reset the icon theme.
      iconThemesLight = Object.values({});
      iconThemesDark = Object.values({});
 
-@@ -61,6 +63,8 @@
+@@ -61,6 +62,8 @@
          this._accentColorChangedId = this._settings.connect("changed::accent-color", this._onAccentColorChanged.bind(this));
          // Connect to color scheme changes
          this._colorSchemeChangedId = this._settings.connect("changed::color-scheme", this._onAccentColorChanged.bind(this));
@@ -29,7 +21,7 @@ an unlocked session should reset the icon theme.
          // Initial theme update
          this._onAccentColorChanged();
      }
-@@ -72,15 +76,22 @@
+@@ -72,15 +75,18 @@
              this._settings.disconnect(this._accentColorChangedId);
              this._accentColorChangedId = 0;
          }
@@ -46,16 +38,13 @@ an unlocked session should reset the icon theme.
          // Clear the iconThemes array
          this.iconThemesLight = [];
          this.iconThemesDark = [];
-         // Optionally reset to default icon theme
+-        // Optionally reset to default icon theme
 -        this._setIconTheme("Adwaita");
-+        // Locking pauses the extension without changing the chosen icons.
-+        if (!Main.sessionMode.isLocked) {
-+            this._setIconTheme("Adwaita");
-+        }
++        // Stopping accent synchronization preserves the chosen icon theme.
          // Null out settings
          this._settings = null;
          this._preferences = null;
-@@ -88,6 +99,11 @@
+@@ -88,6 +94,11 @@
 
       // Next metod is called when extension is enabled, color accent, edit a new path to the themes, or the switch for set link gtk4 local is changed
      _onAccentColorChanged() {
