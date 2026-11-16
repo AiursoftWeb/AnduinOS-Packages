@@ -39,6 +39,7 @@ class AppTests(unittest.TestCase):
 
     def test_scan_builds_navigation_and_restores_selection_without_a_display(self):
         window = Mock()
+        window.has_pro_entitlement = True
         window._computer_page = None
         window._selected_page_name = "home"
         rows = []
@@ -111,24 +112,57 @@ class AppTests(unittest.TestCase):
                 self.assertEqual(app._secure_boot_summary(replace(ready, status=status), modules)[0], label)
 
     def test_command_line_opens_requested_page_in_new_or_existing_window(self):
-        for existing in (False, True):
-            for arguments in (["--page", "secure-boot"], ["--page=secure-boot"],
-                              ["--page", "recovery"], ["--page=recovery"],
-                              ["--page", "encryption"], ["--page=encryption"]):
-                with self.subTest(existing=existing, arguments=arguments):
-                    page = arguments[-1].removeprefix("--page=")
-                    application, command_line = Mock(), Mock()
-                    command_line.get_arguments.return_value = ["driver-center", *arguments]
-                    window = Mock()
-                    application.get_active_window.return_value = window if existing else None
-                    with patch.object(app, "DriverCenterWindow", return_value=window) as constructor:
-                        self.assertEqual(app.DriverCenterApplication.do_command_line(application, command_line), 0)
-                    if existing:
-                        constructor.assert_not_called()
-                        window._select_page.assert_called_once_with(page)
-                    else:
-                        constructor.assert_called_once_with(application, initial_page=page)
-                    window.present.assert_called_once()
+        for entitled in (False, True):
+            for existing in (False, True):
+                for arguments in ([], ["--page", "secure-boot"], ["--page=secure-boot"],
+                                  ["--page", "recovery"], ["--page=recovery"],
+                                  ["--page", "encryption"], ["--page=encryption"]):
+                    with self.subTest(entitled=entitled, existing=existing, arguments=arguments):
+                        page = arguments[-1].removeprefix("--page=") if arguments else "home"
+                        expected = "home" if not entitled and page in {"recovery", "encryption"} else page
+                        application, command_line = Mock(has_pro_entitlement=entitled), Mock()
+                        command_line.get_arguments.return_value = ["driver-center", *arguments,
+                                                                  *(["--bypass-payment"] if entitled else [])]
+                        with patch.object(app, "DriverCenterWindow") as constructor:
+                            window = Mock(has_pro_entitlement=entitled) if existing else constructor.return_value
+                            application.get_active_window.return_value = window if existing else None
+                            self.assertEqual(app.DriverCenterApplication.do_command_line(application, command_line), 0)
+                        if existing:
+                            constructor.assert_not_called()
+                            window._select_page.assert_called_once_with(expected)
+                        else:
+                            constructor.assert_called_once_with(application, initial_page=expected,
+                                                                has_pro_entitlement=entitled)
+                        window.present.assert_called_once()
+
+    def test_main_selects_separate_community_and_bypass_sessions(self):
+        for entitled in (False, True):
+            arguments = ["driver-center"] + (["--bypass-payment"] if entitled else [])
+            with self.subTest(entitled=entitled), patch.object(app.sys, "argv", arguments), \
+                 patch.object(app.Adw, "init"), patch.object(app, "DriverCenterApplication") as factory:
+                app.main()
+                factory.assert_called_once_with(bypass_payment=entitled)
+                factory.return_value.run.assert_called_once_with(arguments)
+        normal, preview = app.DriverCenterApplication(), app.DriverCenterApplication(True)
+        self.assertEqual(normal.get_application_id(), app.APP_ID)
+        self.assertEqual(preview.get_application_id(), app.APP_ID + ".ProTest")
+        self.assertFalse(normal.has_pro_entitlement)
+        self.assertTrue(preview.has_pro_entitlement)
+
+    def test_community_scan_does_not_run_paid_storage_probes(self):
+        for entitled in (False, True):
+            window = Mock(has_pro_entitlement=entitled)
+            with self.subTest(entitled=entitled), \
+                 patch.object(app, "scan_system", return_value=()) as scan, \
+                 patch.object(app, "recovery_state") as recovery, \
+                 patch.object(app, "encryption_state") as encryption, \
+                 patch.object(app.GLib, "idle_add"), \
+                 patch.object(app.threading, "Thread") as thread:
+                thread.side_effect = lambda *, target, **kwargs: Mock(start=target)
+                app.DriverCenterWindow.refresh(window)
+                scan.assert_called_once()
+                self.assertEqual(recovery.call_count, int(entitled))
+                self.assertEqual(encryption.call_count, int(entitled))
 
     def test_unknown_page_or_argument_does_not_open_a_window(self):
         for arguments in (["--page"], ["--page=unknown"], ["--unexpected"]):
