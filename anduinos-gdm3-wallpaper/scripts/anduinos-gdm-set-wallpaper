@@ -7,6 +7,9 @@
 
 set -e
 
+STATE_DIR="/var/lib/anduinos-gdm3-wallpaper"
+DEFAULT_WALLPAPER="/usr/share/anduinos-gdm3-wallpaper/Floating-objects-dark.png"
+
 # ── Output helpers ───────────────────────────────────────────────────────────
 
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
@@ -30,6 +33,9 @@ OPTIONS
   -b, --blur             Apply blur effect to the wallpaper
   -d, --darken           Apply darken overlay to the wallpaper
   -h, --help             Show this help message
+
+When writing the installed AnduinOS theme, the processed wallpaper is saved
+in $STATE_DIR so package upgrades preserve it even if the original is deleted.
 EOF
   exit 0
 }
@@ -163,8 +169,10 @@ do_generate() {
   prompt "Extracting base theme files from: $source_file"
 
   # Work in a temp directory
-  tmpdir="$(mktemp -d)"
-  trap "rm -rf $tmpdir" EXIT
+  # Keep compilation on the destination filesystem for atomic replacement.
+  mkdir -p "$(dirname "$output")"
+  tmpdir="$(mktemp -d "$(dirname "$output")/.anduinos-gdm-XXXXXX")"
+  trap "rm -rf -- $(printf '%q' "$tmpdir")" EXIT
 
   # ── Step 1: Extract ALL resources from the source gresource ──
   prompt "Extracting resources..."
@@ -306,11 +314,25 @@ do_generate() {
 
   # ── Step 4: Compile ──
   prompt "Compiling new gresource to $output..."
-  mkdir -p "$(dirname "$output")"
   glib-compile-resources \
     --sourcedir="$tmpdir" \
-    --target="$output" \
+    --target="$tmpdir/compiled.gresource" \
     "$tmpdir/theme.gresource.xml"
+
+  chmod 644 "$tmpdir/compiled.gresource"
+  if [[ "$(readlink -m -- "$output")" == "$STATE_DIR/anduinos-theme.gresource" ]]; then
+    # Save the finished image: upgrades neither need the original nor apply
+    # blur/darken twice. Default installs continue to follow the packaged image.
+    if [[ "$wallpaper" == "$DEFAULT_WALLPAPER" && "$BLUR" == false && "$DARKEN" == false ]]; then
+      rm -f -- "$STATE_DIR/wallpaper.png"
+    else
+      install -m 644 "$tmpdir/background.png" "$tmpdir/saved-wallpaper"
+      mv -f -- "$tmpdir/saved-wallpaper" "$STATE_DIR/wallpaper.png"
+    fi
+  fi
+  mv -f -- "$tmpdir/compiled.gresource" "$output"
+  rm -rf -- "$tmpdir"
+  trap - EXIT
 
   prompt "Successfully generated theme at $output"
 }
