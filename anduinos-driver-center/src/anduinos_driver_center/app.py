@@ -195,6 +195,10 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 color: @window_fg_color;
                 background-color: alpha(@window_fg_color, 0.10);
             }
+            .pro-pill {
+                color: @warning_color;
+                background-color: alpha(@warning_color, 0.16);
+            }
             .success-pill {
                 color: @success_color;
                 background-color: alpha(@success_color, 0.14);
@@ -1185,8 +1189,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 ("changes-prevent-symbolic", _("Disk Encryption"), "encryption"),
             ):
                 cards.insert(self._overview_card(
-                    icon, title, _("Pro feature"), _("Purchase AnduinOS Pro"),
-                    "installed-pill", target,
+                    icon, title, "👑 " + _("Pro feature"), _("Purchase AnduinOS Pro"),
+                    "pro-pill", target,
                 ), -1)
         content.append(cards)
 
