@@ -1,7 +1,8 @@
 # AnduinOS GRUB
 
 `apkg build --all` produces separate amd64 and arm64 packages from one recipe.
-Use apkg with BuildInput and SuiteShortName support (10.0.65 or newer).
+Use apkg 10.0.72 or newer. Stonking requires its SHA-512-only repository input
+support; older clients can build Resolute but cannot resolve Stonking indexes.
 On an amd64 or arm64 Linux build host, apkg fetches the latest Ubuntu binaries
 from the mapped suite, updates and security pockets, with archive signature and
 package hash verification. Install `ubuntu-keyring`, `dpkg`, Python 3 and the
@@ -17,10 +18,40 @@ release mismatch fails the build. Host runtime incompatibility also fails;
 there is no silent fallback to an arbitrary installed tool.
 
 `assemble-efi.py` reads the matching official unsigned EFI's module list,
-font memdisk and SBAT, adds Btrfs/LUKS2/Argon2 and assembles our unsigned EFI.
+font and SBAT, adds Btrfs/LUKS2/Argon2 and assembles our unsigned EFI.
 All upstream SBAT revocation identities are preserved, with `grub.anduinos`
 added. Shim verification is not disabled. Missing modules, unexpected binary
 layouts or lost output metadata fail the build instead of reducing features.
+
+## Disk unlock page
+
+New encrypted installations can call the embedded `anduinos_unlock` function
+with the outer LUKS UUID, inner filesystem UUID and GRUB directory. The installer
+and Secure Boot toolkit verify these same identities. New encrypted Btrfs
+installations may additionally supply their bound recovery volume UUID. If the
+installed menu is missing, GRUB opens the independent menu on that volume; it
+uses Recovery's own boot files and embedded graphical resources. This adds no
+firmware boot entry. Existing three-argument and Ubuntu stubs
+remain supported; plain installations retain their original startup path.
+
+The page uses GRUB's existing graphical theme and native password reader. It
+accepts a disk password or emergency recovery key, keeps input hidden, supports Backspace
+and retries unsuccessful input. Successful unlock loads the installed system's
+existing GRUB menu. Before loading it, the page releases its graphical terminal
+so the installed menu applies the configured resolution, font and theme. It
+does not copy that menu into the ESP or draw a second desktop. Graphics failure
+retains a text prompt; configured serial output is preserved. The native prompt still shows the volume identity and has no bullets.
+
+Artwork and small ASCII fonts ship inside the EFI, available before decrypting
+`/boot`. The native `grub-fstest` from the existing tools input extracts Ubuntu's
+Unicode font unchanged. The build puts it and the UI resources in a tar memdisk;
+the tar filesystem module is embedded too. No source GRUB fork, mounted image or
+new build/runtime dependency is needed. `unlock/render.py` regenerates artwork
+only when changing the design, using existing `ffmpeg` and `grub-mkfont` tools;
+it is not run when building a package. DejaVu's license ships in the package.
+
+This component does not open the release installer's encryption controls or
+implement encrypted Recovery Environment support; those have separate gates.
 The old pinned Docker/source/SBAT recipe has been removed (recoverable in Git).
 
 `manifest.json`, `sbat.csv` and `modules.txt` ship in

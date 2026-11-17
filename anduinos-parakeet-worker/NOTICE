@@ -1,0 +1,12 @@
+The greedy TDT decoder is adapted from Canonical Myna's Parakeet adapter and
+Kieirra's Murmure. Copyright (C) 2025-2026 Kieirra, (C) 2026 Canonical Ltd.
+Changes for AnduinOS (C) 2026 AnduinOS contributors: CPU-only resident pipe
+worker, cancellation and bounded input. Licensed under AGPL-3.0-only.
+https://github.com/canonical/myna/blob/11fa2e49fc498627f440ab521257b01af58a8da9/server/src/myna/testbed/parakeet.py
+https://github.com/Kieirra/murmure
+
+Optional model: NVIDIA Parakeet TDT 0.6B v3, CC-BY-4.0.
+https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3
+INT8 export distributed by https://github.com/Kieirra/murmure-model (1.2.0).
+No model weights are bundled in this package. See the model card and licence
+before redistributing weights: https://creativecommons.org/licenses/by/4.0/

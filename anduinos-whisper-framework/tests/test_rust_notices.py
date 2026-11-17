@@ -1,4 +1,5 @@
 """Build-time notice generation must support rustup and fail closed."""
+import gzip
 import importlib.util
 import json
 import os
@@ -20,7 +21,7 @@ class RustNoticesTests(unittest.TestCase):
             root = Path(directory)
             doc = root / "share/doc/rust"
             doc.mkdir(parents=True)
-            output = root / "result"
+            output = root / "result.gz"
             names = ("COPYRIGHT-library.html", "COPYRIGHT", "COPYRIGHT.html")
             for name in names:
                 (doc / name).write_text("notice: " + name)
@@ -31,15 +32,15 @@ class RustNoticesTests(unittest.TestCase):
                             json.dumps({"packages": [], "resolve": {"nodes": []}}),
                             "rustc 1.98.1", str(root)]):
                     notices.main()
-                    self.assertIn("notice: " + name, output.read_text())
-                    self.assertEqual(output.read_text().count("notice: "), 1)
+                    self.assertIn("notice: " + name, gzip.decompress(output.read_bytes()).decode("utf-8"))
+                    self.assertEqual(gzip.decompress(output.read_bytes()).decode("utf-8").count("notice: "), 1)
                 (doc / name).unlink()
 
     def test_explicit_notice_override_is_not_silently_ignored(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             override = root / "custom-notice"
-            output = root / "result"
+            output = root / "result.gz"
             for exists in (True, False):
                 if exists:
                     override.write_text("custom toolchain notice")
@@ -53,7 +54,7 @@ class RustNoticesTests(unittest.TestCase):
                             "rustc 1.98.1", str(root)]):
                     if exists:
                         notices.main()
-                        self.assertIn("custom toolchain notice", output.read_text())
+                        self.assertIn("custom toolchain notice", gzip.decompress(output.read_bytes()).decode("utf-8"))
                     else:
                         with self.assertRaisesRegex(SystemExit, "Missing Rust standard-library notices"):
                             notices.main()

@@ -675,8 +675,8 @@ msgid "Your Data. Your Rules. Period."
 msgstr "ข้อมูลของคุณ กฎของคุณ จบสิ้น"
 
 #: assets/anduinos-oobe:2129
-msgid "AnduinOS disables all system-level telemetry by default."
-msgstr "AnduinOS ปิดการใช้งาน telemetry ระดับระบบทั้งหมดโดยค่าเริ่มต้น"
+msgid "AnduinOS does not send usage statistics or diagnostic reports to any organization by default."
+msgstr "ตามค่าเริ่มต้น AnduinOS จะไม่ส่งสถิติการใช้งานหรือรายงานการวินิจฉัยให้องค์กรใด ๆ"
 
 #: assets/anduinos-oobe:2129
 msgid "We do not collect your usage habits."
@@ -697,12 +697,12 @@ msgid ""
 msgstr "ในยุคที่ควบคุมโดยอัลกอริทึมและการสอดแนม นี่คือคำมั่นสัญญาที่หนักแน่นที่สุดของเราต่อคุณ"
 
 #: assets/anduinos-oobe:2159
-msgid "✓ Zero telemetry — your activity is yours alone"
-msgstr "✓ ไม่มีเทเลเมทรี — กิจกรรมของคุณเป็นของคุณเพียงผู้เดียว"
+msgid "✓ Zero telemetry — the operating system itself never reports your activity"
+msgstr "✓ ไม่มีเทเลเมทรี — ตัวระบบปฏิบัติการจะไม่รายงานกิจกรรมของคุณอย่างเด็ดขาด"
 
 #: assets/anduinos-oobe:2160
-msgid "✓ No data collection — your files stay on your device"
-msgstr "✓ ไม่มีการเก็บข้อมูล — ไฟล์ของคุณยังคงอยู่บนอุปกรณ์ของคุณ"
+msgid "✓ No mandatory internet connection — the operating system does not contact AIURSOFT servers except for updates"
+msgstr "✓ ไม่บังคับเชื่อมต่ออินเทอร์เน็ต — ระบบปฏิบัติการจะไม่ติดต่อเซิร์ฟเวอร์ของ AIURSOFT ยกเว้นเพื่ออัปเดต"
 
 #: assets/anduinos-oobe:2161
 msgid "✓ No ads in your operating system"
@@ -964,3 +964,62 @@ msgstr "นโยบายความเป็นส่วนตัว"
 
 msgid "Recommended"
 msgstr "แนะนำ"
+
+msgid "Rate AnduinOS"
+msgstr "ให้คะแนน AnduinOS"
+
+msgid "Record is anonymous"
+msgstr "ข้อมูลการให้คะแนนนี้ไม่ระบุตัวตน"
+
+msgid "How we can improve"
+msgstr "เราจะปรับปรุงได้อย่างไร"
+
+msgid "Submit"
+msgstr "ส่ง"
+
+msgid "Thank you for your feedback!"
+msgstr "ขอบคุณสำหรับความคิดเห็นของคุณ!"
+
+msgid "Submission limit reached. Please try again later."
+msgstr "ส่งความคิดเห็นครบจำนวนที่กำหนดแล้ว โปรดลองอีกครั้งในภายหลัง"
+
+msgid "Failed to submit rating."
+msgstr "ส่งคะแนนไม่สำเร็จ"
+
+msgid "Network error. Unable to submit rating."
+msgstr "เกิดข้อผิดพลาดเกี่ยวกับเครือข่าย ไม่สามารถส่งคะแนนได้"
+
+msgid "Submitting..."
+msgstr "กำลังส่ง..."
+
+#: assets/anduinos-oobe
+msgid "Are you in mainland China?"
+msgstr "คุณอยู่ในจีนแผ่นดินใหญ่หรือไม่?"
+
+#: assets/anduinos-oobe
+msgid "Software sources"
+msgstr "แหล่งซอฟต์แวร์"
+
+#: assets/anduinos-oobe
+msgid "Continue with global AnduinOS operated by AIURSOFT LIMITED, obtaining software from the global service network. (not compliant in mainland China)"
+msgstr "ใช้ AnduinOS รุ่นสากลที่ดำเนินการโดย AIURSOFT LIMITED ต่อไป และรับซอฟต์แวร์จากเครือข่ายบริการทั่วโลก (ไม่เป็นไปตามข้อกำหนดในจีนแผ่นดินใหญ่)"
+
+#: assets/anduinos-oobe
+msgid "Use mainland China AnduinOS operated by Suzhou Aiursoft Technology Co., Ltd., obtaining software from software servers in China."
+msgstr "ใช้ AnduinOS รุ่นจีนแผ่นดินใหญ่ที่ดำเนินการโดย Suzhou Aiursoft Technology Co., Ltd. และรับซอฟต์แวร์จากเซิร์ฟเวอร์ซอฟต์แวร์ในจีน"
+
+#: assets/anduinos-oobe
+msgid "This option changes how software is obtained. The mainland China version may not provide access to some software."
+msgstr "ตัวเลือกนี้จะเปลี่ยนวิธีรับซอฟต์แวร์ รุ่นจีนแผ่นดินใหญ่อาจไม่สามารถเข้าถึงซอฟต์แวร์บางส่วนได้"
+
+#: assets/anduinos-oobe
+msgid "Testing software sources..."
+msgstr "กำลังทดสอบแหล่งซอฟต์แวร์..."
+
+#: assets/anduinos-oobe
+msgid "Some software sources could not be changed. You can retry or continue."
+msgstr "ไม่สามารถเปลี่ยนแหล่งซอฟต์แวร์บางแห่งได้ คุณสามารถลองอีกครั้งหรือดำเนินการต่อ"
+
+#: assets/anduinos-oobe
+msgid "Software sources have been changed."
+msgstr "เปลี่ยนแหล่งซอฟต์แวร์แล้ว"

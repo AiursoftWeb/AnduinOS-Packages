@@ -40,11 +40,11 @@ fi
 protocol_file=/etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version
 installed_protocol="$(cat "$protocol_file" 2>/dev/null || true)"
 binary_protocol="$(/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs --protocol-version 2>/dev/null || true)"
-if [ "$installed_protocol" != 2 ] || [ "$binary_protocol" != "$installed_protocol" ]; then
+if [ "$installed_protocol" != 3 ] || [ "$binary_protocol" != "$installed_protocol" ]; then
     fail_or_skip "the Dracut recovery protocol is incomplete or inconsistent"
     return $?
 fi
-if [ -n "$requested" ] && [ "$requested_protocol" != "$installed_protocol" ]; then
+if [ -n "$requested" ] && [ "$requested_protocol" != "$installed_protocol" ] && [ "$requested_protocol" != 2 ]; then
     fail_or_skip "the requested recovery protocol is incompatible"
     return $?
 fi
@@ -96,11 +96,23 @@ else
     /usr/libexec/anduinos-btrfs-snapshots-manager-initramfs || status=$?
 fi
 status="${status:-0}"
-if [ "$status" -ne 0 ]; then
-    warn "Disk Snapshots Manager could not complete the recovery transaction"
-    if [ ! -d "$top_level/@root" ]; then
-        die "Disk Snapshots Manager cannot find a bootable @root subvolume"
+if [ "$status" -eq 20 ]; then
+    # Do not carry this kernel into a root restored from another kernel version.
+    # Both the completed apply and automatic revert are durably recorded first.
+    if ! sync || ! umount "$top_level"; then
+        die "Disk Snapshots Manager could not release the completed restore for restart"
+        return 1
     fi
+    reboot -f
+    die "Disk Snapshots Manager could not restart after completing the restore"
+    return 1
+fi
+if [ "$status" -ne 0 ]; then
+    # The active root may already have changed. Never continue with a kernel
+    # chosen for the pre-restore root after a partially completed operation.
+    die "Disk Snapshots Manager could not complete the recovery transaction"
+    umount "$top_level" || true
+    return 1
 fi
 
 if [ "$staged_confirmation" -eq 1 ] && [ -f "$transaction" ]; then

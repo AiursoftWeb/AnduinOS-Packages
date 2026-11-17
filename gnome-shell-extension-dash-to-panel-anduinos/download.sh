@@ -51,6 +51,10 @@ PY
     patch --batch --forward --directory="$DEPLOY_DIR" --strip=1 \
         < "$SCRIPT_DIR/patches/initialize-hidden-dash-icons.patch"
 
+    echo "[$SUITE] Resetting pointer hover after a rejected auto-hide reveal..."
+    patch --batch --forward --directory="$DEPLOY_DIR" --strip=1 \
+        < "$SCRIPT_DIR/patches/reset-intellihide-pointer-hover.patch"
+
     echo "[$SUITE] Applying AnduinOS panel layout to $DEPLOY_DIR/panelPositions.js..."
 
     sed -i '/export const defaults = \[/,/^\]$/c\

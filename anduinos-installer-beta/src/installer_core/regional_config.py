@@ -9,7 +9,7 @@ from languages import InputMethod, input_method, language_for_locale
 from keyboard_layouts import xkb_choice_id
 
 from .command import CommandError, CommandRunner
-from .software import refresh_package_indexes
+from .software import install_target_packages, refresh_package_indexes
 from .steps import FailurePolicy, InstallContext, StepSkipped, StepWarning
 
 
@@ -131,26 +131,8 @@ class InstallInputMethodStep:
                     "methods; the physical keyboard "
                     "layout is still configured"
                 ) from error
-            result = self.runner.run(
-                (
-                    "chroot",
-                    str(target),
-                    "/usr/bin/env",
-                    "DEBIAN_FRONTEND=noninteractive",
-                    "apt-get",
-                    "--yes",
-                    "--no-install-recommends",
-                    "-o",
-                    "Acquire::Retries=1",
-                    "-o",
-                    "Acquire::http::Timeout=15",
-                    "-o",
-                    "Acquire::https::Timeout=15",
-                    "install",
-                    *packages,
-                ),
-                check=False,
-                timeout=3600,
+            result = install_target_packages(
+                context, self.runner, packages,
             )
             if result.returncode != 0:
                 if not _package_state_is_consistent(target, self.runner):
@@ -324,11 +306,21 @@ def _selected_input_methods(
     return tuple(methods)
 
 
+def _input_method_payload_path(target: Path, relative: Path) -> Path:
+    path = target / relative
+    # ibus-rime moved its engine from lib to libexec in Stonking. Keep
+    # accepting Resolute's layout without changing the upstream package.
+    if relative == Path("usr/lib/ibus-rime/ibus-engine-rime") and not path.is_file():
+        return target / "usr/libexec/ibus-rime/ibus-engine-rime"
+    return path
+
+
 def _input_method_payload_complete(
     target: Path, method: InputMethod
 ) -> bool:
     return all(
-        (target / relative).is_file() for relative in method.required_paths
+        _input_method_payload_path(target, relative).is_file()
+        for relative in method.required_paths
     )
 
 
@@ -336,7 +328,7 @@ def _verify_input_method_payload(target: Path, method: InputMethod) -> None:
     missing = [
         str(path)
         for relative in method.required_paths
-        if not (path := target / relative).is_file()
+        if not (path := _input_method_payload_path(target, relative)).is_file()
     ]
     if missing:
         raise RuntimeError(

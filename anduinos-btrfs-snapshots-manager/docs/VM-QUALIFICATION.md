@@ -109,6 +109,38 @@ the exact package version and executable return, the selected deployment remains
 reusable as `ready`, the pending transaction is gone, and its terminal history
 contains at least one initramfs entry and the final synchronized checkpoint.
 
+Protocol-3 restores restart once after applying the snapshot, before ordinary
+boot. Capture both boot IDs and the kernel used by each. Repeat with different
+kernel ABIs, then repeat fallback with the old ABI modules removed from the
+current root. Verify legacy protocol-2 same-ABI snapshots remain usable and old
+cross-ABI snapshots are rejected before preparing a transaction.
+
+## Home and factory restart selection
+
+Repeat the Home-only and factory lanes on both architectures and suites, with
+plain and encrypted Btrfs roots. Keep the same acceptance rules for each image.
+For encrypted roots, enter the disk password at each requested unlock; a second
+unlock after the recovery-owned restart is expected.
+
+Create a Personal Files snapshot, then edit one file, delete another, and add a
+third. Schedule Home rollback through the App. Let the firmware use its default
+selection after recovery restarts; do not manually select normal boot to hide a
+recovery-entry loop. Verify the original file contents and UID/GID, unchanged
+root UUID and package database, preserved safety history, and a confirmed
+schema-7/protocol-3 transaction with different applying and target boot IDs.
+
+Then restore the same factory point twice: first preserving Home and then
+resetting Home. Check both the system and personal-file results, unchanged
+internal disk credential, retained history, and one further ordinary restart
+before starting another transaction. Ext4 has no Btrfs rollback lane.
+
+Protocol 3 consumes the one-shot GRUB selection once. Its recovery entry must
+not rearm itself, and its generator must follow `10_linux`: Home rollback
+retains the current root and its recovery menu entry. Confirm that upgrading the
+package removes the old `09_anduinos_btrfs_snapshots_manager` generator; only the
+new `41_anduinos_btrfs_snapshots_manager` remains. After an interrupted apply, the normal initramfs hook restores the
+protected original system. Protocol 2 keeps its existing recovery retry path.
+
 ## Hard power-loss matrix (`RRP2-VM-005`)
 
 The initramfs binary prints `SNAPSHOTS-MANAGER-CHECKPOINT <name>` only after the
@@ -125,7 +157,8 @@ Do not use an orderly shutdown.
 | `writable-target-created` | Automatic fallback completes and removes the unused target root |
 | `current-root-protected` | Automatic fallback restores the protected current root |
 | `target-root-activated` | Automatic fallback restores the protected current root |
-| `booted-unconfirmed-recorded` | The next unrequested boot reverts to the protected fallback |
+| `applied-awaiting-boot-recorded` | The next normal boot attempts the target; it must not immediately revert |
+| `booted-unconfirmed-recorded` | The target boot began; another unconfirmed boot reverts and restarts |
 
 To qualify interruption during fallback, first interrupt an apply boundary.
 Power on, then hard-stop again at each revert checkpoint:

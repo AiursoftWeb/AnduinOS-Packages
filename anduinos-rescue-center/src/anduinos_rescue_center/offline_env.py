@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import os
+import signal
 import stat
 import subprocess
 import tempfile
+import time
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from pathlib import Path
@@ -144,18 +146,62 @@ def opened_system(
                 raise RuntimeError(tr("Could not unmount recovery filesystems: {details}").format(details=", ".join(failures)))
 
 
+def finish_emergency_shell(path: str, identity: str, *, run: Run = subprocess.run) -> dict:
+    """Wait for the terminal's helper to finish unmounting, then verify release.
+
+    A terminal process can exit before its privileged helper. Never equate the
+    vanished window with a released disk, or force-unmount a busy filesystem.
+    """
+    deadline = time.monotonic() + 90
+    while _emergency_shell_running(path, identity):
+        if time.monotonic() >= deadline:
+            raise RuntimeError(tr("The emergency terminal is still running. Close it normally and try again."))
+        time.sleep(0.2)
+    partition = resolve_target(path, identity, run=run)
+    if partition.mountpoints:
+        raise RuntimeError(tr("Recovery filesystems are still in use. Close programs using the disk and try again."))
+    return {"schema": 1, "released": True}
+
+
+def _emergency_shell_running(path: str, identity: str) -> bool:
+    for entry in Path("/proc").glob("[0-9]*/cmdline"):
+        try:
+            arguments = entry.read_bytes().rstrip(b"\0").split(b"\0")
+        except (FileNotFoundError, ProcessLookupError):
+            continue
+        helpers = (b"/usr/libexec/anduinos-rescue-center-helper",
+                   b"/usr/libexec/anduinos-rescue-center-live-helper")
+        for helper in helpers:
+            if helper in arguments:
+                tail = arguments[arguments.index(helper) + 1:]
+                if tail == [b"shell", os.fsencode(path), os.fsencode(identity)]:
+                    return True
+    return False
+
+
+def _restore_shell_signals() -> None:
+    # Only the supervisor survives a terminal hangup; the interactive shell and
+    # ordinary commands must retain their normal terminal-close behaviour.
+    signal.signal(signal.SIGHUP, signal.SIG_DFL)
+
+
 def emergency_shell(path: str, identity: str, *, run: Run = subprocess.run) -> int:
     """Attach an expert shell to the selected system from a Live terminal."""
     from .live import is_trusted_live_environment
 
     if not is_trusted_live_environment() or not os.isatty(0) or not os.isatty(1):
         raise RuntimeError(tr("An interactive AnduinOS Live terminal is required"))
-    with opened_system(path, identity, mount_home=True, run=run) as (root, partition):
-        shell = "/bin/bash" if (root / "bin/bash").is_file() else "/bin/sh"
-        print(f"\nOffline AnduinOS: {partition.path} ({partition.filesystem})")
-        print(tr("This is a root shell in the selected offline system. Type exit to unmount it.\n"))
-        result = run(
-            ["chroot", str(root), shell], check=False,
-            env={"HOME": "/root", "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin", "TERM": os.environ.get("TERM", "xterm-256color")},
-        )
-        return result.returncode
+    previous_hangup = signal.signal(signal.SIGHUP, signal.SIG_IGN)
+    try:
+        with opened_system(path, identity, mount_home=True, run=run) as (root, partition):
+            shell = "/bin/bash" if (root / "bin/bash").is_file() else "/bin/sh"
+            print(f"\nOffline AnduinOS: {partition.path} ({partition.filesystem})")
+            print(tr("This is a root shell in the selected offline system. Type exit to unmount it.\n"), flush=True)
+            result = run(
+                ["chroot", str(root), shell], check=False,
+                preexec_fn=_restore_shell_signals,
+                env={"HOME": "/root", "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin", "TERM": os.environ.get("TERM", "xterm-256color")},
+            )
+            return result.returncode
+    finally:
+        signal.signal(signal.SIGHUP, previous_hangup)

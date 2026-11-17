@@ -64,6 +64,14 @@ class PackageTests(unittest.TestCase):
                 objects = assembly.grub_objects(sections["mods"])
                 names = {assembly.elf_module_name(data) for kind, data in objects if kind == 0}
                 self.assertTrue({"btrfs", "luks2", "argon2", "peimage", "linux"} <= names)
+                self.assertIn("tar", names)
+                memdisk = next(data for kind, data in objects if kind == 1)
+                with tarfile.open(fileobj=io.BytesIO(memdisk)) as embedded:
+                    self.assertTrue(embedded.extractfile("fonts/unicode.pf2").read().startswith(b"FILE"))
+                    for resource in (ROOT / "unlock").iterdir():
+                        if resource.suffix in (".cfg", ".txt", ".png", ".pf2"):
+                            self.assertEqual(embedded.extractfile("anduinos-unlock/" + resource.name).read(),
+                                             resource.read_bytes())
                 doc = "usr/share/doc/anduinos-grub/"
                 self.assertTrue(read(archive, files, doc + "copyright"))
                 self.assertEqual(names, set(read(archive, files, doc + "modules.txt").decode().splitlines()))

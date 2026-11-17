@@ -1246,8 +1246,8 @@ msgid "Generating & Signing..."
 msgstr "Genererer & Signerer..."
 
 #: src/anduinos_driver_center/app.py:1940
-msgid "Add Printer"
-msgstr "Tilføj printer"
+msgid "Manage Printers in System Settings"
+msgstr "Administrer printere i systemindstillinger"
 
 #: src/anduinos_driver_center/app.py:1365
 #: src/anduinos_driver_center/app.py:1390
@@ -2350,3 +2350,282 @@ msgstr "Automatisk signering bruger nu dit tilmeldte certifikat. Den tidligere k
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Reparation af drivertekstSignatur er fuldført. Systemet kontrollerer nu, om de installerede drivere er betroede."
+
+msgid "Recovery Environment"
+msgstr "Gendannelsesmiljø"
+
+msgid "Present"
+msgstr "Findes"
+
+msgid "Multiple recovery partitions found"
+msgstr "Flere gendannelsespartitioner fundet"
+
+msgid "Recovery partition not found"
+msgstr "Gendannelsespartition ikke fundet"
+
+msgid "Recovery partition"
+msgstr "Gendannelsespartition"
+
+msgid "Recovery package"
+msgstr "Gendannelsespakke"
+
+msgid "GRUB menu entry"
+msgstr "GRUB-menupunkt"
+
+msgid "Recovery menu entry not found"
+msgstr "Gendannelsesmenupunkt ikke fundet"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Kan ikke læse GRUB-menuen"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "Pakkestatus bruger den lokale APT-cache. Softwarekilder opdateres ikke."
+
+msgid "Read recovery boot information"
+msgstr "Læs startoplysninger for gendannelse"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "En tidligere klargøring blev afbrudt. Bed en administrator kontrollere den gemte partitionstabel og swapheader, før du prøver igen."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Automatisk klargøring er ikke tilgængelig med denne disk- eller swapkonfiguration. Bed en administrator oprette en 256 MiB ext4-partition med navnet AOS_RECOVERY, og scan igen."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Bed en administrator kontrollere de konfigurerede eller dublerede gendannelsesdiskenheder, og scan igen."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Luk hukommelseskrævende programmer, og scan igen. Der er ikke nok ledig RAM til at deaktivere denne swap sikkert."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Udrul det installerede gendannelsesaftryk, og gendan GRUB-menuen?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Installer eller opdater kun gendannelsespakken med de aktuelle pakkelister?"
+
+msgid "Install or update recovery package"
+msgstr "Installer eller opdater gendannelsespakken"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Ingen kandidatversion kunne bekræftes i den lokale APT-cache. Opdater kilderne i din softwareopdatering, og scan igen."
+
+msgid "Recovery repair completed."
+msgstr "Reparation af gendannelsesmiljø fuldført."
+
+msgid "Repair recovery boot menu"
+msgstr "Reparer gendannelsens startmenu"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Scan igen, og tillad inspektionen med læseadgang. Hvis kontrollerne fortsat fejler, skal installationen af drivercenteret og dets diskværktøjer repareres."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Formindsk swappartition, og opret gendannelsespartition"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Swap bliver midlertidigt deaktiveret. Sikkerhedskopiér dine data, og lad computeren være tændt, indtil handlingen er fuldført."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Kan ikke fortsætte: Ingen almindelig swappartition blev fundet på systemdisken."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Kan ikke fortsætte: Swappartitionen er mindre end 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Reparation kræver et installeret AnduinOS Btrfs @root-system. Start det installerede system, og scan igen."
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr "Grafikenhed"
+
+msgid "Encrypted"
+msgstr "Krypteret"
+
+msgid "Not encrypted"
+msgstr "Ikke krypteret"
+
+msgid "Disk Encryption"
+msgstr "Diskkryptering"
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr "Tjek kryptering for systemfiler, personlige filer og swap."
+
+msgid "Unencrypted disk swap is active"
+msgstr "Ukrypteret diskswap er aktiv"
+
+msgid "No disk swap is active"
+msgstr "Ingen diskswap er aktiv"
+
+msgid "Disk swap"
+msgstr "Diskswap"
+
+msgid "Encryption coverage"
+msgstr "Krypteringsdækning"
+
+msgid "System files"
+msgstr "Systemfiler"
+
+msgid "Personal files (Home)"
+msgstr "Personlige filer (Home)"
+
+msgid "Memory-based swap; not a disk partition"
+msgstr "Swap baseret på hukommelse; ikke en diskpartition"
+
+msgid "System recovery"
+msgstr "Systemgendannelse"
+
+msgid "Snapshot Recovery Environment"
+msgstr "Gendannelsesmiljø med snapshots"
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr "Ikke relevant for ext4. Brug Rescue Center fra Live USB'en."
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr "Ukrypteret swap kan gemme personlige data fra hukommelsen."
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr "Diskkryptering kan vælges under en ny installation."
+
+msgid "Configured"
+msgstr "Konfigureret"
+
+msgid "Check recovery configuration"
+msgstr "Tjek gendannelseskonfiguration"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using the current disk password."
+msgstr "Kredensialetableringen blev ikke fuldført. Bevar dine gamle og nye kredensialer, og prøv igen med det aktuelle disk-adgangskode."
+
+msgid "Current disk password"
+msgstr "Aktuel disk-adgangskode"
+
+msgid "Current recovery key"
+msgstr "Aktuel genopretningsnøgle"
+
+msgid "Unlock credentials"
+msgstr "Oplås kredensialer"
+
+msgid "Change disk password"
+msgstr "Skift disk-adgangskode"
+
+msgid "Replace recovery key"
+msgstr "Erstat genopretningsnøgle"
+
+msgid "Checking credential configuration…"
+msgstr "Kontrollerer kredensialetablering…"
+
+msgid "New disk password"
+msgstr "Ny disk-adgangskode"
+
+msgid "Confirm new disk password"
+msgstr "Bekræft ny disk-adgangskode"
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr "Opdaterer disk-kredensialet. Hold computeren tændt."
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr "Den aktuelle disk-adgangskode er forkert. Ingen kredensiale blev ændret."
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr "Den aktuelle genopretningsnøgle er forkert. Ingen kredensiale blev ændret."
+
+msgid "Enter the current recovery key once to identify this preview's credential roles."
+msgstr "Indtast den aktuelle genopretningsnøgle én gang for at identificere denne forhåndsvisningens kredensialemapper."
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr "Vælg et nyt kredensiale, der ikke allerede bruges af denne disk."
+
+msgid "Check the password length, characters and confirmation."
+msgstr "Tjek adgangskodens længde, tegn og bekræftelse."
+
+msgid "The internal startup credential could not be verified. Use Rescue Center from the Live USB."
+msgstr "Det interne opstartskredensiale kunne ikke verificeres. Brug Redningssenter fra Live-USB."
+
+msgid "This credential layout cannot be managed automatically. No existing credential was removed."
+msgstr "Denne kredensialemapping kan ikke håndteres automatisk. Eksisterende kredensiale blev ikke fjernet."
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr "Diskkonfigurationen blev ændret. Stop andre diskværktøjer og prøv igen."
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr "En anden disk-kredensialetablering kører. Vent og prøv igen."
+
+msgid "Administrator authentication was cancelled."
+msgstr "Administratorgodkendelse blev afbrudt."
+
+msgid "There is no free credential slot. Existing credentials remain available."
+msgstr "Der er ingen ledige kredensialemapper. Eksisterende kredensiale er stadig tilgængelige."
+
+msgid "The new credential could not be verified. Keep your existing credentials and try again."
+msgstr "Det nye kredensiale kunne ikke verificeres. Bevar dine eksisterende kredensiale og prøv igen."
+
+msgid "Open"
+msgstr "Åbn"
+
+msgid "New recovery key"
+msgstr "Ny genopretningsnøgle"
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr "Jeg har gemt den nye genopretningsnøgle uden for denne computer."
+
+msgid "This earlier preview needs the current recovery key once to identify its credential roles."
+msgstr "Denne tidligere forhåndsvisning kræver den aktuelle genopretningsnøgle én gang for at identificere dens kredensialemapper."
+
+msgid "The internal startup credential stays unchanged. The old credential stops working after success."
+msgstr "Det interne opstartskredensiale forbliver uændret. Det gamle kredensiale ophører med at fungere efter succes."
+
+msgid "Disk password changed."
+msgstr "Disk-adgangskode skiftet."
+
+msgid "Recovery key replaced."
+msgstr "Genopretningsnøgle erstattet."
+
+msgid "Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."
+msgstr "Brug 8 til 128 udskrivbare ASCII-tegn. Opstartsbrugeren bruger et US-tastaturlayout."
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using your disk password or emergency recovery key."
+msgstr "Kredensialetoperationen blev ikke færdiggjort. Gem dine gamle og nye kredensiale, og prøv igen med din diskadgangskode eller nøgle til akut gendannelse."
+
+msgid "The emergency recovery key is generated by the system. Like your disk password, it unlocks the disk. Use your password normally; use the key in an emergency. Keep it outside this computer."
+msgstr "Nøglen til akut gendannelse genereres af systemet. Ligesom din diskadgangskode låser den disken op. Brug adgangskoden normalt, og brug nøglen i en nødsituation. Gem den uden for denne computer."
+
+msgid "Current emergency recovery key"
+msgstr "Aktuel nøgle til akut gendannelse"
+
+msgid "Replace emergency recovery key"
+msgstr "Erstat nøgle til akut gendannelse"
+
+msgid "Reset forgotten disk password"
+msgstr "Nulstil glemt diskadgangskode"
+
+msgid "Emergency recovery key"
+msgstr "Nøgle til akut gendannelse"
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr "Nøglen til akut gendannelse er forkert. Ingen kredensiale blev ændret."
+
+msgid "Enter the current emergency recovery key once to identify this preview's credential roles."
+msgstr "Indtast den aktuelle nøgle til akut gendannelse én gang for at identificere denne forudvisningens kredensiale roller."
+
+msgid "New emergency recovery key"
+msgstr "Ny nøgle til akut gendannelse"
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr "Jeg har gemt den nye nøgle til akut gendannelse uden for denne computer."
+
+msgid "This earlier preview needs the current emergency recovery key once to identify its credential roles."
+msgstr "Denne tidligere forudvisning kræver den aktuelle nøgle til akut gendannelse én gang for at identificere dens kredensiale roller."
+
+msgid "Emergency recovery key replaced."
+msgstr "Nøglen til akut gendannelse er erstattet."
+
+msgid "Enter your emergency recovery key to set a new disk password. You do not need the forgotten password. Your emergency recovery key stays valid."
+msgstr "Indtast din nøgle til akut gendannelse for at indstille en ny diskadgangskode. Du behøver ikke den glemte adgangskode. Din nøgle til akut gendannelse forbliver gyldig."
+
+msgid "Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr "Aktivering af diskkryptering på en eksisterende installation understøttes endnu ikke. Geninstaller med den nyeste AnduinOS-ISO for at aktivere diskkryptering."
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr "Pro-funktion"
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
+msgstr "Køb AnduinOS Pro"

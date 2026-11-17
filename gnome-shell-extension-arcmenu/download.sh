@@ -10,6 +10,7 @@ source "$SCRIPT_DIR/../lib/gnome-versions.sh"
 source "$SCRIPT_DIR/../lib/build-guards.sh"
 need_cmd msgunfmt gettext
 need_cmd msgfmt gettext
+need_cmd patch patch
 
 UUID="arcmenu@arcmenu.com"
 
@@ -100,6 +101,14 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
 
     echo "[$SUITE] Resolving $UUID for GNOME $TARGET..."
     python3 "$SCRIPT_DIR/../lib/resolve-gnome-ext.py" "$UUID" --target "$TARGET" --download --out "$DEPLOY_DIR"
+
+    echo "[$SUITE] Deferring translations until the extension's locale is initialized..."
+    patch --batch --forward --fuzz=0 --directory="$DEPLOY_DIR" --strip=2 \
+        < "$SCRIPT_DIR/patches/translate-constants-at-display-time.patch"
+
+    echo "[$SUITE] Keeping the on-screen keyboard above the opened menu..."
+    patch --batch --forward --fuzz=0 --directory="$DEPLOY_DIR" --strip=2 \
+        < "$SCRIPT_DIR/patches/keep-opened-menu-below-osk.patch"
 
     # ── AnduinOS customizations ───────────────────────────────────────
 

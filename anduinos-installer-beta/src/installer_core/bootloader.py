@@ -8,6 +8,10 @@ from pathlib import Path
 import re
 import shutil
 import tempfile
+from uuid import UUID
+
+from anduinos_secureboot.boot_chain import graphical_grub_configuration, verify_grub_configuration
+from anduinos_secureboot.defaults import atomic_write
 
 from .boot_commands import build_boot_commands
 from .command import CommandRunner
@@ -19,8 +23,9 @@ from .esp import (
 )
 from .execution_boundaries import emit_boundary
 from .esp_replacement import replace_esp_vendor
-from .model import Architecture, Filesystem, Firmware, InstallMode, InstallPlan
+from .model import Architecture, EncryptionMode, Filesystem, Firmware, InstallMode, InstallPlan
 from .software import verify_driver_boot_payload
+from .secure_boot import prepare_grub_signature
 from .steps import FailurePolicy, InstallContext
 from .storage_planning import (
     GuidedCoexistenceExecutionPlan,
@@ -58,6 +63,15 @@ class InstallBootloaderStep:
         # Target files do not exist yet: all preflight checks intentionally run
         # before partitioning. Validate only inputs available at that boundary.
         context.validate_plan()
+        if context.plan.storage.encryption is EncryptionMode.LUKS2:
+            # The Live payload is copied into the new system. Reject old media
+            # before partitioning, rather than discovering an Ubuntu-only GRUB
+            # after the encrypted root has already been created.
+            suffix = "x64" if context.plan.platform.architecture is Architecture.AMD64 else "aa64"
+            self.runner.run(("test", "-s", f"/usr/lib/anduinos-grub/grub{suffix}.efi"))
+            self.runner.run(("grep", "-a", "-q", "function anduinos_unlock {",
+                             f"/usr/lib/anduinos-grub/grub{suffix}.efi"))
+            self.runner.run(("grep", "-q", "GRUB_ANDUINOS_CRYPT_HANDOFF", "/etc/grub.d/10_linux"))
 
     def execute(self, context: InstallContext) -> None:
         target = _target(context)
@@ -135,6 +149,12 @@ class InstallBootloaderStep:
             context.log(
                 "Other disks and Windows EFI boot files will not be modified"
             )
+        _check_encrypted_boot_inputs(context, self.runner, target)
+        # Identity preparation runs before optional package upgrades. Refresh
+        # its derived GRUB image now so grub-install cannot deploy an older
+        # package's signature cache. The toolkit reuses an unchanged image;
+        # it neither replaces the identity nor requires enrollment on this boot.
+        prepare_grub_signature(self.runner, target, context.plan)
         self.runner.run(commands.initrd, timeout=1200)
         prefix = "guided" if guided else "manual"
         for command in installs:
@@ -144,6 +164,8 @@ class InstallBootloaderStep:
             self.runner.run(command, timeout=300)
             if vendor_only:
                 emit_boundary(context, f"{prefix}-boot-files", "after")
+        if context.plan.storage.encryption is EncryptionMode.LUKS2:
+            _configure_graphical_unlock(context, target)
         self.runner.run(commands.configure, timeout=300)
         if explicit_nvram:
             if vendor_only:
@@ -198,6 +220,19 @@ class InstallBootloaderStep:
                     "Installed-system initrd contains Live modules: "
                     + ", ".join(unexpected)
                 )
+            if context.plan.storage.encryption is EncryptionMode.LUKS2:
+                required = {"anduinos-crypt", "crypt", "systemd-cryptsetup"}
+                if not required.issubset(modules):
+                    raise RuntimeError("Encrypted initrd is missing the standard root handoff")
+                inventory = self.runner.run(
+                    ("chroot", str(target), "lsinitrd", f"/boot/initrd.img-{version}"),
+                    timeout=60,
+                ).stdout
+                if any(name in inventory for name in (
+                    "etc/anduinos-luks/machine.key", "anduinos-unlock.key",
+                    "cryptsetup-keys.d/anduinos-root.key",
+                )):
+                    raise RuntimeError("The generated initrd contains a persistent disk credential")
             if (
                 context.plan.storage.filesystem is Filesystem.BTRFS
                 and "anduinos-btrfs-snapshots-manager" not in modules
@@ -231,6 +266,7 @@ class InstallBootloaderStep:
         if "menuentry " not in config or "vmlinuz-" not in config:
             raise RuntimeError("GRUB configuration has no Linux boot entry")
         verify_driver_boot_payload(context, self.runner, config)
+        _verify_encrypted_boot_output(context, target, config)
 
         guided = context.plan.storage.mode is InstallMode.GUIDED_COEXISTENCE
         manual = context.plan.storage.mode is InstallMode.MANUAL
@@ -300,6 +336,92 @@ class InstallBootloaderStep:
 
     def cleanup(self, context: InstallContext) -> None:
         return None
+
+
+def _check_encrypted_boot_inputs(
+    context: InstallContext, runner: CommandRunner, target: Path,
+) -> None:
+    if context.plan.storage.encryption is not EncryptionMode.LUKS2:
+        return
+    suffix = "x64" if context.plan.platform.architecture is Architecture.AMD64 else "aa64"
+    if not (target / f"usr/lib/anduinos-grub/grub{suffix}.efi").is_file():
+        raise RuntimeError("Encrypted installation requires the native AnduinOS GRUB package")
+    image = target / f"usr/lib/anduinos-grub/grub{suffix}.efi"
+    if b"function anduinos_unlock {" not in image.read_bytes():
+        raise RuntimeError("Update AnduinOS GRUB to support the graphical disk unlock page")
+    if (context.values.get("recovery_volume_uuid")
+            and b"set anduinos_unlock_recovery=$4" not in image.read_bytes()):
+        raise RuntimeError("Update AnduinOS GRUB to support the independent recovery entry")
+    generator = target / "etc/grub.d/10_linux"
+    if not generator.is_file() or "GRUB_ANDUINOS_CRYPT_HANDOFF" not in generator.read_text():
+        raise RuntimeError("Update AnduinOS GRUB to support encrypted-root menu generation")
+    (target / "boot/grub").mkdir(parents=True, exist_ok=True)
+    for probe_target, expected in (
+        ("cryptodisk_uuid", context.values["root_luks_uuid"]),
+        ("fs_uuid", context.values["root_filesystem_uuid"]),
+    ):
+        actual = runner.run(
+            ("chroot", str(target), "grub-probe", f"--target={probe_target}", "/boot/grub"),
+            timeout=30,
+        ).stdout.strip()
+        if UUID(actual) != UUID(expected):
+            raise RuntimeError("Encrypted boot files do not belong to the installation root")
+    prefix = runner.run(
+        ("chroot", str(target), "grub-mkrelpath", "/boot/grub"), timeout=30,
+    ).stdout.strip()
+    if prefix != _encrypted_root_prefix(context) + "/boot/grub":
+        raise RuntimeError("Encrypted boot files have an unsupported filesystem location")
+
+
+def _encrypted_root_prefix(context: InstallContext) -> str:
+    return "/@root" if context.plan.storage.filesystem is Filesystem.BTRFS else ""
+
+
+def _configure_graphical_unlock(context: InstallContext, target: Path) -> None:
+    # grub-install has just created this installation's vendor stub. Verify
+    # both volume identities before replacing its direct cryptomount command;
+    # the existing later fallback step copies the exact configured chain.
+    stub = target / "boot/efi/EFI/AnduinOS/grub.cfg"
+    if stub.is_symlink() or not stub.is_file():
+        raise RuntimeError("Encrypted EFI configuration is missing or redirected")
+    configured = graphical_grub_configuration(
+        stub.read_text(), context.values["root_filesystem_uuid"],
+        _encrypted_root_prefix(context) + "/boot/grub", context.values["root_luks_uuid"],
+        context.values.get("recovery_volume_uuid", ""),
+    )
+    atomic_write(stub, configured.encode(), 0o644)
+
+
+def _verify_encrypted_boot_output(
+    context: InstallContext, target: Path, config: str,
+) -> None:
+    if context.plan.storage.encryption is not EncryptionMode.LUKS2:
+        return
+    verify_grub_configuration(
+        (target / "boot/efi/EFI/AnduinOS/grub.cfg").read_text(),
+        context.values["root_filesystem_uuid"],
+        _encrypted_root_prefix(context) + "/boot/grub",
+        context.values["root_luks_uuid"],
+        context.values.get("recovery_volume_uuid", ""),
+    )
+    # Inspect only upstream Linux entries. RE and foreign-system entries have
+    # their own lifecycle and must not accidentally receive this root's key.
+    start = "### BEGIN /etc/grub.d/10_linux ###"
+    end = "### END /etc/grub.d/10_linux ###"
+    if config.count(start) != 1 or config.count(end) != 1:
+        raise RuntimeError("Encrypted Linux menu generation could not be identified")
+    linux = config.split(start, 1)[1].split(end, 1)[0]
+    initrds = [line.split() for line in linux.splitlines() if line.strip().startswith("initrd\t")]
+    handoff = f"newc:/anduinos-unlock.key:{_encrypted_root_prefix(context)}/etc/anduinos-luks/machine.key"
+    if not initrds or any(arguments.count(handoff) != 1 for arguments in initrds):
+        raise RuntimeError("An encrypted Linux entry is missing its RAM credential handoff")
+    kernels = [line.split() for line in linux.splitlines() if line.strip().startswith("linux\t")]
+    required = {
+        "root=UUID=" + context.values["root_filesystem_uuid"],
+        "rd.luks.uuid=luks-" + context.values["root_luks_uuid"],
+    }
+    if not kernels or any(not required.issubset(arguments) for arguments in kernels):
+        raise RuntimeError("An encrypted Linux entry identifies the wrong root volume")
 
 
 def _verify_vendor_nvram(

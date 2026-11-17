@@ -1211,7 +1211,7 @@ msgid "Generating & Signing..."
 msgstr ""
 
 #: src/anduinos_driver_center/app.py:1940
-msgid "Add Printer"
+msgid "Manage Printers in System Settings"
 msgstr ""
 
 #: src/anduinos_driver_center/app.py:1365
@@ -2172,4 +2172,283 @@ msgstr ""
 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
+msgstr ""
+
+msgid "Recovery Environment"
+msgstr ""
+
+msgid "Present"
+msgstr ""
+
+msgid "Multiple recovery partitions found"
+msgstr ""
+
+msgid "Recovery partition not found"
+msgstr ""
+
+msgid "Recovery partition"
+msgstr ""
+
+msgid "Recovery package"
+msgstr ""
+
+msgid "GRUB menu entry"
+msgstr ""
+
+msgid "Recovery menu entry not found"
+msgstr ""
+
+msgid "Unable to read the GRUB menu"
+msgstr ""
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr ""
+
+msgid "Read recovery boot information"
+msgstr ""
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr ""
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr ""
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr ""
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr ""
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr ""
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr ""
+
+msgid "Install or update recovery package"
+msgstr ""
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr ""
+
+msgid "Recovery repair completed."
+msgstr ""
+
+msgid "Repair recovery boot menu"
+msgstr ""
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr ""
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr ""
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr ""
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr ""
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr ""
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr ""
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr ""
+
+msgid "Encrypted"
+msgstr ""
+
+msgid "Not encrypted"
+msgstr ""
+
+msgid "Disk Encryption"
+msgstr ""
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr ""
+
+msgid "Unencrypted disk swap is active"
+msgstr ""
+
+msgid "No disk swap is active"
+msgstr ""
+
+msgid "Disk swap"
+msgstr ""
+
+msgid "Encryption coverage"
+msgstr ""
+
+msgid "System files"
+msgstr ""
+
+msgid "Personal files (Home)"
+msgstr ""
+
+msgid "Memory-based swap; not a disk partition"
+msgstr ""
+
+msgid "System recovery"
+msgstr ""
+
+msgid "Snapshot Recovery Environment"
+msgstr ""
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr ""
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr ""
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr ""
+
+msgid "Configured"
+msgstr ""
+
+msgid "Check recovery configuration"
+msgstr ""
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using the current disk password."
+msgstr ""
+
+msgid "Current disk password"
+msgstr ""
+
+msgid "Current recovery key"
+msgstr ""
+
+msgid "Unlock credentials"
+msgstr ""
+
+msgid "Change disk password"
+msgstr ""
+
+msgid "Replace recovery key"
+msgstr ""
+
+msgid "Checking credential configuration…"
+msgstr ""
+
+msgid "New disk password"
+msgstr ""
+
+msgid "Confirm new disk password"
+msgstr ""
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr ""
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr ""
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr ""
+
+msgid "Enter the current recovery key once to identify this preview's credential roles."
+msgstr ""
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr ""
+
+msgid "Check the password length, characters and confirmation."
+msgstr ""
+
+msgid "The internal startup credential could not be verified. Use Rescue Center from the Live USB."
+msgstr ""
+
+msgid "This credential layout cannot be managed automatically. No existing credential was removed."
+msgstr ""
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr ""
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr ""
+
+msgid "Administrator authentication was cancelled."
+msgstr ""
+
+msgid "There is no free credential slot. Existing credentials remain available."
+msgstr ""
+
+msgid "The new credential could not be verified. Keep your existing credentials and try again."
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "New recovery key"
+msgstr ""
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr ""
+
+msgid "This earlier preview needs the current recovery key once to identify its credential roles."
+msgstr ""
+
+msgid "The internal startup credential stays unchanged. The old credential stops working after success."
+msgstr ""
+
+msgid "Disk password changed."
+msgstr ""
+
+msgid "Recovery key replaced."
+msgstr ""
+
+msgid "Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."
+msgstr ""
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using your disk password or emergency recovery key."
+msgstr ""
+
+msgid "The emergency recovery key is generated by the system. Like your disk password, it unlocks the disk. Use your password normally; use the key in an emergency. Keep it outside this computer."
+msgstr ""
+
+msgid "Current emergency recovery key"
+msgstr ""
+
+msgid "Replace emergency recovery key"
+msgstr ""
+
+msgid "Reset forgotten disk password"
+msgstr ""
+
+msgid "Emergency recovery key"
+msgstr ""
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr ""
+
+msgid "Enter the current emergency recovery key once to identify this preview's credential roles."
+msgstr ""
+
+msgid "New emergency recovery key"
+msgstr ""
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr ""
+
+msgid "This earlier preview needs the current emergency recovery key once to identify its credential roles."
+msgstr ""
+
+msgid "Emergency recovery key replaced."
+msgstr ""
+
+msgid "Enter your emergency recovery key to set a new disk password. You do not need the forgotten password. Your emergency recovery key stays valid."
+msgstr ""
+
+msgid "Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr ""
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr ""
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
 msgstr ""

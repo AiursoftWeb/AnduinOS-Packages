@@ -133,7 +133,11 @@ export default class VoiceTypingExtension extends Extension {
         });
         this._buildOverlay();
         this._exportUiController();
-        this._virtualKeyboard = Clutter.get_default_backend()
+        // GNOME 51 removed the global Clutter getter; retain older Shell support.
+        const backend = typeof Clutter.get_default_backend === 'function'
+            ? Clutter.get_default_backend()
+            : global.stage.context.get_backend();
+        this._virtualKeyboard = backend
             .get_default_seat()
             .create_virtual_device(Clutter.InputDeviceType.KEYBOARD_DEVICE);
         this._clipboard = St.Clipboard.get_default();
@@ -277,7 +281,7 @@ export default class VoiceTypingExtension extends Extension {
 
     _buildOverlay() {
         this._root = new St.BoxLayout({
-            vertical: true,
+            orientation: Clutter.Orientation.VERTICAL,
             style_class: 'voice-typing-root',
             visible: false,
             reactive: false,

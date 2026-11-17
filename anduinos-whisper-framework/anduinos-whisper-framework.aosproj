@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-whisper-framework</PackageName>
-    <PackageVersion>2.0.5-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Offline voice-typing engine for AnduinOS, using PipeWire and whisper.cpp.</PackageDescription>
     <Section>utils</Section>
@@ -9,14 +9,14 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>resolute-addon</TargetSuites>
+    <TargetSuites>resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>amd64 arm64</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
   </PropertyGroup>
 
   <ItemGroup>
-    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute" />
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute stonking-addon=stonking" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,9 +35,11 @@
     <Dependency Include="gstreamer1.0-plugins-good" />
     <Dependency Include="gstreamer1.0-plugins-bad" />
     <Dependency Include="anduinos-whisper-worker" />
+    <Dependency Include="anduinos-parakeet-worker" />
     <Dependency Include="pipewire-bin" />
     <Dependency Include="sound-theme-freedesktop" />
-    <Dependency Include="libopencc1.1" />
+    <Dependency Include="libopencc1.1" Condition="'$(Suite)' == 'resolute-addon'" />
+    <Dependency Include="libopencc1.4" Condition="'$(Suite)' == 'stonking-addon'" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,8 +69,8 @@
     <IncludeFile Include="VAD-LICENSE" Target="/usr/share/doc/anduinos-whisper-framework/VAD-LICENSE" />
     <IncludeFile Include="MODEL-NOTICE" Target="/usr/share/doc/anduinos-whisper-framework/MODEL-NOTICE" />
     <IncludeFile Include="MODEL-LICENSE" Target="/usr/share/doc/anduinos-whisper-framework/MODEL-LICENSE" />
-    <IncludeFile Include="obj/amd64/RUST-THIRD-PARTY-NOTICES" Target="/usr/share/doc/anduinos-whisper-framework/RUST-THIRD-PARTY-NOTICES" Condition="'$(Arch)' == 'amd64'" />
-    <IncludeFile Include="obj/arm64/RUST-THIRD-PARTY-NOTICES" Target="/usr/share/doc/anduinos-whisper-framework/RUST-THIRD-PARTY-NOTICES" Condition="'$(Arch)' == 'arm64'" />
+    <IncludeFile Include="obj/amd64/RUST-THIRD-PARTY-NOTICES.gz" Target="/usr/share/doc/anduinos-whisper-framework/RUST-THIRD-PARTY-NOTICES.gz" Condition="'$(Arch)' == 'amd64'" />
+    <IncludeFile Include="obj/arm64/RUST-THIRD-PARTY-NOTICES.gz" Target="/usr/share/doc/anduinos-whisper-framework/RUST-THIRD-PARTY-NOTICES.gz" Condition="'$(Arch)' == 'arm64'" />
     <IncludeFolder Include="data/benchmark" Target="/usr/share/anduinos-whisper-framework/benchmark" />
   </ItemGroup>
   <ItemGroup>

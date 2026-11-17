@@ -183,6 +183,7 @@ class ManualDiskSegmentKind(str, Enum):
     NEW_ESP = "new-esp"
     NEW_ROOT = "new-root"
     NEW_SWAP = "new-swap"
+    NEW_RECOVERY = "new-recovery"
     FREE = "free"
 
 
@@ -299,6 +300,7 @@ def build_manual_disk_map(
         ManualPartitionRole.EFI_SYSTEM: ManualDiskSegmentKind.NEW_ESP,
         ManualPartitionRole.ROOT: ManualDiskSegmentKind.NEW_ROOT,
         ManualPartitionRole.SWAP: ManualDiskSegmentKind.NEW_SWAP,
+        ManualPartitionRole.RECOVERY: ManualDiskSegmentKind.NEW_RECOVERY,
     }
     planned.extend(
         ManualDiskSegment(

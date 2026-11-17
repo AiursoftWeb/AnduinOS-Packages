@@ -12,7 +12,7 @@ gi.require_version("Gdk", "4.0")
 gi.require_version("Gtk", "4.0")
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk  # noqa: E402
 
-from anduinos_whisper_framework.config import MODELS, SETTINGS_SCHEMA, model_installed
+from anduinos_whisper_framework.config import MODELS, SETTINGS_SCHEMA, model_installed, model_language_supported
 from anduinos_whisper_framework.live_policy import live_mode
 
 from .dbus import VoiceServiceClient, VoiceUiClient
@@ -39,6 +39,16 @@ LANGUAGES = [
     ("ru", _("Russian")),
     ("pt", _("Portuguese")),
 ]
+
+# Endonyms make every newly supported spoken language recognisable in every UI locale.
+LANGUAGES += [(code, name) for code, name in (
+    ("it", "Italiano"), ("pl", "Polski"), ("uk", "Українська"), ("nl", "Nederlands"),
+    ("ro", "Română"), ("cs", "Čeština"), ("el", "Ελληνικά"), ("hu", "Magyar"),
+    ("sv", "Svenska"), ("bg", "Български"), ("da", "Dansk"), ("fi", "Suomi"),
+    ("sk", "Slovenčina"), ("hr", "Hrvatski"), ("lt", "Lietuvių"), ("sl", "Slovenščina"),
+    ("lv", "Latviešu"), ("et", "Eesti"), ("mt", "Malti"),
+)]
+PARAKEET_HELP = _("Parakeet supports 25 European languages. Choose a supported language or a Whisper model.")
 
 STATE_LABELS = {
     "closed": _("Voice Typing"),
@@ -78,6 +88,7 @@ class SettingsWindow(Adw.PreferencesWindow):
         ] = {}
         self.testing = False
         self.ui_state = "checking"
+        self._closed = False
         self._shortcut_dialog: Adw.Dialog | None = None
         self.connect("close-request", self._closing)
         self.ui_client.subscribe(self._state_changed)
@@ -85,6 +96,7 @@ class SettingsWindow(Adw.PreferencesWindow):
         self._build_general_page()
         self._build_models_page()
         self._build_training_page()
+        self._refresh_all_models()
         GLib.idle_add(self._load_state)
 
     def _build_general_page(self) -> None:
@@ -128,15 +140,13 @@ class SettingsWindow(Adw.PreferencesWindow):
         self.microphone_row.connect("notify::selected", self._microphone_changed)
         input_group.add(self.microphone_row)
 
-        language_names = Gtk.StringList.new([item[1] for item in LANGUAGES])
-        self.language_row = Adw.ComboRow(title=_("Language"), model=language_names)
-        language = self.settings.get_string("language") or "auto"
-        if language == "zh":
-            language = "zh-Hans"
-        self.language_row.set_selected(
-            next((index for index, item in enumerate(LANGUAGES) if item[0] == language), 0)
-        )
+        self.language_choices = []
+        self._syncing_languages = False
+        self.language_row = Adw.ComboRow(title=_("Language"))
+        self._sync_languages()
         self.language_row.connect("notify::selected", self._language_changed)
+        self.settings.connect("changed::model", self._sync_languages)
+        self.settings.connect("changed::language", self._sync_languages)
         input_group.add(self.language_row)
         page.add(input_group)
 
@@ -260,11 +270,16 @@ class SettingsWindow(Adw.PreferencesWindow):
         return group
 
     def _backend_changed(self, row, _parameter):
+        if self.settings.get_string("model") == "parakeet":
+            return
         selected = row.get_selected()
         if selected < 3:
             self.settings.set_string("recognition-backend", ("auto", "cpu", "gpu")[selected])
 
     def _retest_performance(self, _button):
+        if self.settings.get_string("model") == "parakeet":
+            self.add_toast(Adw.Toast(title=_("25 European languages · CPU · about 1.5 GiB RAM")))
+            return
         self.settings.set_string("recognition-backend", "auto")
         self.backend_row.set_selected(0)
         self.settings.set_boolean("full-tuning-pending", True)
@@ -328,7 +343,11 @@ class SettingsWindow(Adw.PreferencesWindow):
         page.add(group)
         for key, model in MODELS.items():
             size = _format_size(model.size)
-            row = Adw.ActionRow(title=_(model.title), subtitle=f"{_(model.description)} · {size}")
+            description = (_("25 European languages · CPU · about 1.5 GiB RAM")
+                           if key == "parakeet" else _(model.description))
+            if model.installed_size:
+                size = _("%(download)s download · %(installed)s installed") % {"download": size, "installed": _format_size(model.installed_size)}
+            row = Adw.ActionRow(title=_(model.title), subtitle=f"{description} · {size}")
             progress = Gtk.ProgressBar(valign=Gtk.Align.CENTER, width_request=110)
             progress.set_visible(False)
             remove_button = Gtk.Button(
@@ -470,9 +489,27 @@ class SettingsWindow(Adw.PreferencesWindow):
         selected = min(row.get_selected(), len(self.microphones) - 1)
         self.settings.set_string("microphone", self.microphones[selected][0])
 
+    def _sync_languages(self, *_args) -> None:
+        model = self.settings.get_string("model")
+        choices = [item for item in LANGUAGES if model_language_supported(model, item[0])]
+        current = self.settings.get_string("language")
+        current = "zh-Hans" if current == "zh" else current
+        self._syncing_languages = True
+        try:
+            if choices != self.language_choices:
+                self.language_choices = choices
+                self.language_row.set_model(Gtk.StringList.new([item[1] for item in choices]))
+            self.language_row.set_selected(next(
+                (i for i, item in enumerate(choices) if item[0] == current), 0))
+        finally:
+            self._syncing_languages = False
+
     def _language_changed(self, row: Adw.ComboRow, _parameter) -> None:
-        selected = min(row.get_selected(), len(LANGUAGES) - 1)
-        self.settings.set_string("language", LANGUAGES[selected][0])
+        if self._syncing_languages:
+            return
+        selected = row.get_selected()
+        if selected < len(self.language_choices):
+            self.settings.set_string("language", self.language_choices[selected][0])
 
     def _refresh_shortcut(self) -> None:
         shortcuts = self.settings.get_strv("toggle-shortcut")
@@ -576,11 +613,34 @@ class SettingsWindow(Adw.PreferencesWindow):
         dialog.connect("closed", closed)
         dialog.present(self)
 
+    def _select_model(self, key: str) -> None:
+        if not model_language_supported(key, self.settings.get_string("language")):
+            choices = [item for item in LANGUAGES if model_language_supported(key, item[0])]
+            chooser = Adw.ComboRow(title=_("Language"),
+                                  model=Gtk.StringList.new([item[1] for item in choices]))
+            dialog = Adw.AlertDialog(heading=_("Choose the language"), body=PARAKEET_HELP)
+            dialog.set_extra_child(chooser)
+            dialog.add_response("cancel", _("Cancel"))
+            dialog.add_response("use", _("Use"))
+            dialog.set_close_response("cancel")
+            def chosen(_dialog, response):
+                if response == "use":
+                    self.settings.set_string("language", choices[chooser.get_selected()][0])
+                    self.settings.set_string("model", key)
+                    self._refresh_all_models()
+            dialog.connect("response", chosen)
+            dialog.present(self)
+            return
+        self.settings.set_string("model", key)
+        self._refresh_all_models()
+
     def _model_action(self, _button: Gtk.Button, key: str) -> None:
+        if key in self.downloading_models:
+            self.downloader.cancel(key)
+            return
         if model_installed(key):
             if self.settings.get_string("model") != key:
-                self.settings.set_string("model", key)
-                self._refresh_all_models()
+                self._select_model(key)
             return
         self._confirm_model_download(key)
 
@@ -589,6 +649,24 @@ class SettingsWindow(Adw.PreferencesWindow):
             self._confirm_remove_model(key)
 
     def _confirm_model_download(self, key: str) -> None:
+        if key == "parakeet":
+            dialog = Adw.AlertDialog(
+                heading=_("Download %s from GitHub?") % MODELS[key].title,
+                body=_("This optional model is downloaded from GitHub. GitHub receives your public IP address.")
+                     + "\n\n" + _("25 European languages · CPU · about 1.5 GiB RAM")
+                     + "\n" + _("%(download)s download · %(installed)s installed") % {
+                         "download": _format_size(MODELS[key].size),
+                         "installed": _format_size(MODELS[key].installed_size)}
+                     + "\n\nCC-BY-4.0 · https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3"
+                     + "\nhttps://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+            )
+            dialog.add_response("cancel", _("Cancel"))
+            dialog.add_response("download", _("Continue Download"))
+            dialog.set_default_response("cancel")
+            dialog.set_close_response("cancel")
+            dialog.connect("response", self._model_download_response, key)
+            dialog.present(self)
+            return
         dialog = Adw.AlertDialog(
             heading=_("Download %s from Hugging Face?") % _(MODELS[key].title),
             body=_(
@@ -622,26 +700,38 @@ class SettingsWindow(Adw.PreferencesWindow):
             return
         self.downloading_models.add(key)
         row, button, remove_button, progress = self.model_rows[key]
-        button.set_sensitive(False)
+        button.set_sensitive(True)
         remove_button.set_visible(False)
-        button.set_label(_("Downloading…"))
+        button.set_label(_("Cancel"))
         progress.set_visible(True)
         progress.set_fraction(0.0)
 
         def updated(fraction: float) -> bool:
+            if self._closed:
+                return GLib.SOURCE_REMOVE
             progress.set_fraction(fraction)
             return GLib.SOURCE_REMOVE
 
         def completed() -> bool:
             self.downloading_models.discard(key)
-            self.settings.set_string("model", key)
+            if self._closed:
+                return GLib.SOURCE_REMOVE
             self._refresh_all_models()
+            # A large optional download must not interrupt an active dictation.
+            # The user explicitly chooses Use after Parakeet is ready.
+            if key != "parakeet":
+                self._select_model(key)
             return GLib.SOURCE_REMOVE
 
         def failed(message: str) -> bool:
             self.downloading_models.discard(key)
+            if self._closed:
+                return GLib.SOURCE_REMOVE
             progress.set_visible(False)
             button.set_sensitive(True)
+            if not message:
+                self._refresh_model_row(key)
+                return GLib.SOURCE_REMOVE
             button.set_label(_("Retry"))
             dialog = Adw.AlertDialog(heading=_("Model download failed"), body=message)
             dialog.add_response("close", _("Close"))
@@ -675,6 +765,9 @@ class SettingsWindow(Adw.PreferencesWindow):
             self._refresh_all_models()
 
     def _refresh_all_models(self) -> None:
+        parakeet = self.settings.get_string("model") == "parakeet"
+        self.backend_row.set_sensitive(not parakeet)
+        self.backend_row.set_selected(1 if parakeet else ("auto", "cpu", "gpu").index(self.settings.get_string("recognition-backend")))
         for key in MODELS:
             self._refresh_model_row(key)
 
@@ -682,8 +775,8 @@ class SettingsWindow(Adw.PreferencesWindow):
         _row, button, remove_button, progress = self.model_rows[key]
         if key in self.downloading_models:
             progress.set_visible(True)
-            button.set_sensitive(False)
-            button.set_label(_("Downloading…"))
+            button.set_sensitive(True)
+            button.set_label(_("Cancel"))
             button.remove_css_class("suggested-action")
             remove_button.set_visible(False)
             return
@@ -712,6 +805,9 @@ class SettingsWindow(Adw.PreferencesWindow):
             self.meter.set_fraction(0.0)
 
     def _closing(self, _window) -> bool:
+        self._closed = True
+        for key in tuple(self.downloading_models):
+            self.downloader.cancel(key)
         if self.testing:
             try:
                 self.client.call_sync("StopTest")

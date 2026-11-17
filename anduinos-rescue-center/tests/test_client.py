@@ -16,6 +16,7 @@ from anduinos_rescue_center.client import (
     inspect_target,
     list_files,
     open_emergency_terminal,
+    finish_emergency_terminal,
     open_live_terminal,
     probe,
     reset_password,
@@ -183,8 +184,21 @@ class ClientTests(unittest.TestCase):
               patch("anduinos_rescue_center.client.shutil.which", return_value="/usr/bin/ptyxis")):
             open_emergency_terminal("/dev/sda2", "a" * 64, launch=launch)
         self.assertEqual(calls[0][0][-4:], [LIVE_HELPER, "shell", "/dev/sda2", "a" * 64])
+        self.assertIn("--standalone", calls[0][0])
         self.assertIn("pkexec", calls[0][0])
         self.assertTrue(calls[0][1]["start_new_session"])
+
+    def test_terminal_exit_waits_for_verified_helper_cleanup(self):
+        calls = []
+
+        def run(command, **kwargs):
+            calls.append(command)
+            return subprocess.CompletedProcess(command, 0, '{"schema":1,"released":true}', "")
+
+        self.assertTrue(finish_emergency_terminal("/dev/sda2", "a" * 64, run=run)["released"])
+        self.assertEqual(calls, [["pkexec", HELPER, "finish-shell", "/dev/sda2", "a" * 64]])
+        with self.assertRaises(ValueError):
+            finish_emergency_terminal("/tmp/path", "a" * 64, run=run)
 
     def test_live_terminal_fallback_does_not_request_root(self):
         calls = []

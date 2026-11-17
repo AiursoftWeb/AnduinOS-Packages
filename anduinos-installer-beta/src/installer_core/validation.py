@@ -18,6 +18,8 @@ from .model import (
     InstallMode,
     InstallPlan,
     EspReplacement,
+    EncryptionMode,
+    SwapEncryption,
     MokPasswordPolicy,
     SCHEMA_VERSION,
     SecureBoot,
@@ -25,6 +27,7 @@ from .model import (
 from .hostnames import is_canonical_hostname
 from .storage_graph_planning import validate_storage_graph
 from .swap_policy import MINIMUM_ROOT_MIB
+from .layout import erase_disk_overhead_mib
 from .username_policy import RESERVED_USERNAMES, is_valid_username
 
 
@@ -51,6 +54,8 @@ class ExecutionPolicy(str, Enum):
 
     RELEASE = "release"
     GUIDED_DESTRUCTIVE_TEST = "guided-destructive-test"
+    PRO = "pro"
+    GUIDED_DESTRUCTIVE_TEST_PRO = "guided-destructive-test-pro"
 
 
 def validate_plan_for_execution(
@@ -65,8 +70,17 @@ def validate_plan_for_execution(
         plan,
         allow_guided_compilation=True,
     )
+    # This independently reviewable backend is deliberately not exposed by
+    # the installer. Remove this gate only with the boot-chain/GUI acceptance;
+    # otherwise a valid storage plan could create an unbootable installation.
+    if policy not in (ExecutionPolicy.PRO, ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST_PRO) and plan.storage.encryption is not EncryptionMode.NONE:
+        raise PlanValidationError([
+            "Encrypted installation is not enabled in the release installer yet"
+        ])
+    if policy not in (ExecutionPolicy.PRO, ExecutionPolicy.GUIDED_DESTRUCTIVE_TEST_PRO) and plan.recovery_enabled:
+        raise PlanValidationError(["Recovery environment requires Pro entitlement"])
     if (
-        policy is ExecutionPolicy.RELEASE
+        policy in (ExecutionPolicy.RELEASE, ExecutionPolicy.PRO)
         and plan.identity.authentication
         is AuthenticationMode.PASSWORDLESS_SHARED
     ):
@@ -83,6 +97,9 @@ def validate_plan(
     """Validate an erase-disk, guided-coexistence or manual GPT plan."""
 
     errors: list[str] = []
+
+    if not isinstance(plan.storage.include_recovery, bool):
+        errors.append("Recovery selection must be a boolean")
 
     if plan.schema_version != SCHEMA_VERSION:
         errors.append(
@@ -104,6 +121,16 @@ def validate_plan(
 
     if not isinstance(plan.storage.btrfs_compression, BtrfsCompression):
         errors.append("Unsupported Btrfs compression preset")
+    if not isinstance(plan.storage.encryption, EncryptionMode):
+        errors.append("Unsupported disk encryption mode")
+    if not isinstance(plan.swap.encryption, SwapEncryption):
+        errors.append("Unsupported swap encryption policy")
+    if plan.storage.encryption is EncryptionMode.LUKS2 and (
+        plan.storage.mode is not InstallMode.ERASE_DISK
+        or plan.platform.firmware is not Firmware.UEFI
+        or plan.storage.filesystem not in {Filesystem.BTRFS, Filesystem.EXT4}
+    ):
+        errors.append("Encryption requires a new whole-disk UEFI Btrfs or ext4 installation")
 
     disk = plan.storage.disk
     if not WHOLE_DISK_RE.fullmatch(disk.path):
@@ -118,7 +145,12 @@ def validate_plan(
 
     if plan.storage.mode is InstallMode.ERASE_DISK:
         reserved = (
-            plan.storage.esp_size_mib + plan.storage.swap_size_mib + 4
+            plan.storage.esp_size_mib + plan.storage.swap_size_mib
+            + erase_disk_overhead_mib(
+                plan.storage.filesystem,
+                encrypted=plan.storage.encryption is EncryptionMode.LUKS2,
+                include_recovery=plan.storage.include_recovery,
+            )
         ) * 1024**2
         if disk.expected_size_bytes - reserved < MINIMUM_ROOT_BYTES:
             errors.append("Partition layout leaves less than 20 GiB for root")
@@ -313,6 +345,8 @@ def validate_plan(
         errors.append("Third-party-driver policy must be boolean")
     if type(plan.software.install_multimedia_codecs) is not bool:
         errors.append("Multimedia-codec policy must be boolean")
+    if type(plan.software.download_from_china) is not bool:
+        errors.append("China-download policy must be boolean")
 
     if errors:
         raise PlanValidationError(errors)

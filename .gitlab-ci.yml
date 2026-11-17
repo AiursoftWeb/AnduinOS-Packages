@@ -106,6 +106,14 @@ anduinos-apt-config:
   variables:
     PACKAGE_DIR: anduinos-apt-config
 
+anduinos-apt-config-for-china:
+  extends: .publish
+  needs:
+    - test-all
+    - anduinos-archive-keyring
+  variables:
+    PACKAGE_DIR: anduinos-apt-config-for-china
+
 anduinos-gdm3-wallpaper:
   extends: .publish
   needs:
@@ -135,6 +143,13 @@ anduinos-no-snapd:
     - test-all
   variables:
     PACKAGE_DIR: anduinos-no-snapd
+
+anduinos-input-method-policy:
+  extends: .publish
+  needs:
+    - test-all
+  variables:
+    PACKAGE_DIR: anduinos-input-method-policy
 
 anduinos-fonts:
   extends: .publish
@@ -439,11 +454,16 @@ anduinos-swap-config:
 
 anduinos-btrfs-snapshots-manager:
   extends: .publish
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - anduinos-btrfs-snapshots-manager/bin/*.deb
   needs:
     - test-all
     - anduinos-boot-tools
     - anduinos-core-system
     - anduinos-secureboot-toolkit
+    - anduinos-recovery-env
   variables:
     PACKAGE_DIR: anduinos-btrfs-snapshots-manager
 
@@ -452,6 +472,7 @@ anduinos-rescue-center:
   needs:
     - test-all
     - anduinos-btrfs-snapshots-manager
+    - anduinos-secureboot-toolkit
   variables:
     PACKAGE_DIR: anduinos-rescue-center
 
@@ -474,6 +495,7 @@ anduinos-whisper-framework:
   needs:
     - test-all
     - anduinos-whisper-worker
+    - anduinos-parakeet-worker
   variables:
     PACKAGE_DIR: anduinos-whisper-framework
 
@@ -597,9 +619,12 @@ anduinos-installer-beta:
   extends: .publish
   needs:
     - test-all
+    - anduinos-apt-config-for-china
     - anduinos-rescue-center
     - anduinos-live-layers
     - anduinos-live-settings
+    - anduinos-boot-tools
+    - anduinos-grub
     - anduinos-multimedia-codecs
     - anduinos-swap-config
     - anduinos-secureboot-toolkit
@@ -750,6 +775,7 @@ anduinos-oobe:
     - test-all
     - anduinos-appearance
     - anduinos-driver-center
+    - anduinos-apt-config-for-china
   variables:
     PACKAGE_DIR: anduinos-oobe
 
@@ -759,6 +785,7 @@ anduinos-desktop-apps:
     - test-all
     - anduinos-control-panel
     - anduinos-driver-center
+    - anduinos-offline-updater
     - anduinos-mimeapps
     - firefox-anduinos
     - anduinos-ufwall-gtk
@@ -781,6 +808,7 @@ anduinos-desktop:
     - anduinos-appstore
     - anduinos-apt-config
     - anduinos-apt-config-dev
+    - anduinos-apt-config-for-china
     - anduinos-deskmon
     - anduinos-theme-sync
     - base-files
@@ -789,7 +817,31 @@ anduinos-desktop:
     - anduinos-software-properties-common
     - anduinos-no-snapd
     - anduinos-kernel-parameters
+    - anduinos-input-method-policy
     - anduinos-swap-config
     - anduinos-desktop-apps
   variables:
     PACKAGE_DIR: anduinos-desktop
+
+anduinos-recovery-env:
+  extends: .publish
+  needs:
+    - lint-all
+    - verify-ci-package-needs
+    - test-all
+  variables:
+    PACKAGE_DIR: anduinos-recovery-env
+
+anduinos-offline-updater:
+  extends: .publish
+  needs:
+    - test-all
+  variables:
+    PACKAGE_DIR: anduinos-offline-updater
+
+anduinos-parakeet-worker:
+  extends: .publish
+  needs:
+    - test-all
+  variables:
+    PACKAGE_DIR: anduinos-parakeet-worker

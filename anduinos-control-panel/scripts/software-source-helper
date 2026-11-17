@@ -69,8 +69,13 @@ def _source() -> tuple[bytes, int]:
 def _apt(*arguments: str) -> None:
     environment = os.environ.copy()
     environment["DEBIAN_FRONTEND"] = "noninteractive"
+    # An incomplete refresh must trigger switch_mirror's existing rollback;
+    # APT's default can return zero while retaining stale or missing indexes.
+    options = APT_OPTIONS
+    if "update" in arguments:
+        options = (*options, "-o", "APT::Update::Error-Mode=any")
     result = subprocess.run(
-        [APT_GET, *APT_OPTIONS, *arguments],
+        [APT_GET, *options, *arguments],
         env=environment,
         check=False,
     )

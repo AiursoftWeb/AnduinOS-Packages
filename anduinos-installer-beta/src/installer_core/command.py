@@ -40,6 +40,7 @@ class CommandRunner:
         check: bool = True,
         log_output: bool = True,
         environment: dict[str, str] | None = None,
+        pass_fds: tuple[int, ...] = (),
     ) -> subprocess.CompletedProcess[str]:
         argv = [str(value) for value in command]
         self.log(f"$ {shlex.join(argv)}")
@@ -52,6 +53,7 @@ class CommandRunner:
                 text=True,
                 bufsize=1,
                 env=environment,
+                pass_fds=pass_fds,
             )
         except OSError as error:
             raise CommandError(f"Could not run {shlex.join(argv)}: {error}") from error

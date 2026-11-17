@@ -1,16 +1,18 @@
 use adw::prelude::*;
 use adw::subclass::prelude::*;
 use gtk::glib;
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 
 use crate::i18n::i18n;
-use crate::ufw::stats;
+use crate::ufw::{stats, health};
 
 mod imp {
     use super::*;
 
     #[derive(Default)]
     pub struct DashboardView {
+        pub health_row: RefCell<Option<adw::ActionRow>>,
+        pub health_in_flight: Cell<bool>,
         pub total_events_label: RefCell<Option<gtk::Label>>,
         pub blocked_events_label: RefCell<Option<gtk::Label>>,
         pub top_ips_group: RefCell<Option<adw::PreferencesGroup>>,
@@ -60,6 +62,26 @@ impl DashboardView {
 
     fn setup_ui(&self) {
         let imp = self.imp();
+
+        // Always show the scope and health of the firewall controls first.
+        let health_group = adw::PreferencesGroup::builder().build();
+        let health_row = adw::ActionRow::builder()
+            .title(i18n("Checking firewall configuration…"))
+            .subtitle(i18n("This application manages UFW only."))
+            .title_lines(0)
+            .subtitle_lines(0)
+            .build();
+        health_row.set_use_markup(false);
+        health_row.add_css_class("firewall-health");
+        let css = gtk::CssProvider::new();
+        css.load_from_data(".firewall-health .title { font-size: 1.3em; font-weight: bold; }");
+        gtk::style_context_add_provider_for_display(
+            &self.display(), &css, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
+        );
+        health_row.add_prefix(&gtk::Image::builder().icon_name("security-high-symbolic").pixel_size(40).build());
+        health_group.add(&health_row);
+        self.add(&health_group);
+        *imp.health_row.borrow_mut() = Some(health_row);
 
         // Summary Cards
         let cards_box = gtk::Box::builder()
@@ -187,6 +209,7 @@ impl DashboardView {
 
     pub fn refresh_data(&self) {
         let imp = self.imp();
+        self.refresh_health();
         let limit = match imp.log_count_combo.borrow().as_ref().unwrap().selected() {
             0 => 50,
             1 => 100,
@@ -212,6 +235,41 @@ impl DashboardView {
 
             if let Some(view) = weak_self.upgrade() {
                 view.populate(events, listening);
+            }
+        });
+    }
+
+    fn refresh_health(&self) {
+        let imp = self.imp();
+        if imp.health_in_flight.replace(true) { return; }
+        if let Some(row) = imp.health_row.borrow().as_ref() {
+            row.set_title(&i18n("Checking firewall configuration…"));
+        }
+        let weak = self.downgrade();
+        glib::spawn_future_local(async move {
+            let report = tokio::task::spawn_blocking(health::inspect).await;
+            if let Some(view) = weak.upgrade() {
+                if let Some(row) = view.imp().health_row.borrow().as_ref() {
+                    row.remove_css_class("error");
+                    row.remove_css_class("warning");
+                    match report {
+                        Ok(report) => {
+                            row.set_title(&report.title());
+                            row.set_subtitle(&report.explanation());
+                            if report.needs_attention() {
+                                row.add_css_class("error");
+                            } else if !report.errors.is_empty() || report.managers.iter().any(|m| m.installed) {
+                                row.add_css_class("warning");
+                            }
+                        }
+                        Err(_) => {
+                            row.set_title(&i18n("Cannot confirm the complete firewall state"));
+                            row.set_subtitle(&i18n("Firewall inspection failed. Use Refresh to retry."));
+                            row.add_css_class("warning");
+                        }
+                    }
+                }
+                view.imp().health_in_flight.set(false);
             }
         });
     }

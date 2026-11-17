@@ -21,7 +21,10 @@ use crate::personal::{
     PersonalSnapshotEngine, PersonalSnapshotId, PersonalSnapshotKind, PersonalSnapshotRecord,
 };
 use crate::secure_boot::SecureBootValidator;
-use crate::transaction::{RollbackPhase, RollbackTransaction, TransactionStore};
+use crate::transaction::{
+    CONTINUE_BOOT_PROTOCOL_VERSION, RECOVERY_PROTOCOL_VERSION, RollbackPhase, RollbackTransaction,
+    TransactionStore,
+};
 
 const BLKID: &str = "/usr/sbin/blkid";
 const UPDATE_GRUB: &str = "/usr/sbin/update-grub";
@@ -146,6 +149,17 @@ pub trait RollbackBackend {
     fn create_fallback(&self) -> Result<DeploymentRecord, RollbackError>;
     fn root_filesystem_uuid(&self, report: &LayoutReport) -> Result<String, RollbackError>;
     fn verify_one_shot_support(&self) -> Result<(), RollbackError>;
+    fn target_recovery_protocol(&self, _target: &DeploymentRecord) -> Result<u32, RollbackError> {
+        Ok(RECOVERY_PROTOCOL_VERSION)
+    }
+    fn target_kernel_release(&self, target: &DeploymentRecord) -> Result<String, RollbackError> {
+        target.kernel_release.clone().ok_or_else(|| {
+            RollbackError::new(
+                RollbackErrorCode::InvalidTarget,
+                "Snapshot kernel identity is missing",
+            )
+        })
+    }
     fn verify_recovery_boot_source(&self) -> Result<(), RollbackError>;
     fn provision_recovery_boot_artifacts(&self) -> Result<RecoveryBootArtifacts, RollbackError>;
     fn create_transaction(&self, transaction: &RollbackTransaction) -> Result<(), RollbackError>;
@@ -196,8 +210,10 @@ impl RollbackBackend for SystemRollbackBackend {
             .join("deployments")
             .join(id.to_string())
             .join("root");
+        let mut boot_record = record.clone();
+        boot_record.kernel_release = Some(self.target_kernel_release(&record)?);
         SecureBootValidator::default()
-            .verify_target(&snapshot_root, &record)
+            .verify_target(&snapshot_root, &boot_record)
             .map_err(|error| {
                 RollbackError::new(
                     RollbackErrorCode::InvalidTarget,
@@ -309,6 +325,18 @@ impl RollbackBackend for SystemRollbackBackend {
         BootIntegration::default()
             .ensure_external_environment_block()
             .map(|_| ())
+            .map_err(|error| RollbackError::new(RollbackErrorCode::BootIntegration, error.message))
+    }
+
+    fn target_recovery_protocol(&self, target: &DeploymentRecord) -> Result<u32, RollbackError> {
+        BootIntegration::default()
+            .target_recovery_protocol(target)
+            .map_err(|error| RollbackError::new(RollbackErrorCode::BootIntegration, error.message))
+    }
+
+    fn target_kernel_release(&self, target: &DeploymentRecord) -> Result<String, RollbackError> {
+        BootIntegration::default()
+            .target_kernel_release(target)
             .map_err(|error| RollbackError::new(RollbackErrorCode::BootIntegration, error.message))
     }
 
@@ -468,6 +496,7 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
         };
         let root_uuid = self.backend.root_filesystem_uuid(&report)?;
         self.backend.check_fallback_capacity(&report)?;
+        self.backend.target_recovery_protocol(&target)?;
         self.backend.verify_recovery_boot_source()?;
         self.backend.verify_one_shot_support()?;
         Ok((target, report, root_uuid, factory_home))
@@ -552,6 +581,13 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
             boot.initramfs_sha256,
             boot.confirm_sha256,
         );
+        // Home-only recovery keeps this root, including its default initrd.
+        // Apply the same compatibility gate before arming any transaction.
+        if self.backend.target_recovery_protocol(&anchor)? == CONTINUE_BOOT_PROTOCOL_VERSION {
+            transaction.use_continue_boot_protocol();
+        } else {
+            transaction.target_kernel_release = Some(self.backend.target_kernel_release(&anchor)?);
+        }
         transaction.home_only = true;
         transaction
             .enable_home_reset(&home)
@@ -613,6 +649,8 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
         );
         let (target, report, root_uuid, factory_home) =
             self.validate_ready(target_id, factory_reset, reset_home)?;
+        let protocol = self.backend.target_recovery_protocol(&target)?;
+        let target_kernel = self.backend.target_kernel_release(&target)?;
         let recovery_boot = self.backend.provision_recovery_boot_artifacts()?;
 
         progress(
@@ -635,6 +673,11 @@ impl<B: RollbackBackend> RollbackCoordinator<B> {
             recovery_boot.initramfs_sha256,
             recovery_boot.confirm_sha256,
         );
+        if protocol == CONTINUE_BOOT_PROTOCOL_VERSION {
+            transaction.use_continue_boot_protocol();
+        } else {
+            transaction.target_kernel_release = Some(target_kernel);
+        }
         if let Some(factory_home) = factory_home.as_ref() {
             transaction
                 .enable_home_reset(factory_home)

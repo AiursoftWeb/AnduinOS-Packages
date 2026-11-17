@@ -9,10 +9,10 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,59 +28,78 @@
     -->
     <IncludeFile Include="deploy/noble/en/LC_MESSAGES/gnome-shell.mo"     Target="/usr/share/locale/en/LC_MESSAGES/gnome-shell.mo"     Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/en/LC_MESSAGES/gnome-shell.mo"  Target="/usr/share/locale/en/LC_MESSAGES/gnome-shell.mo"     Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/en/LC_MESSAGES/gnome-shell.mo"  Target="/usr/share/locale/en/LC_MESSAGES/gnome-shell.mo"     Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/zh_CN/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/zh_CN/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/zh_CN/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/zh_CN/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/zh_CN/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/zh_CN/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/zh_TW/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/zh_TW/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/zh_TW/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/zh_TW/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/zh_TW/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/zh_TW/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/ja/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/ja/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/ja/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ja/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/ja/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ja/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/ko/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/ko/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/ko/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ko/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/ko/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ko/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/vi/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/vi/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/vi/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/vi/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/vi/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/vi/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/th/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/th/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/th/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/th/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/th/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/th/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/de/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/de/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/de/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/de/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/de/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/de/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/fr/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/fr/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/fr/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/fr/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/fr/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/fr/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/es/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/es/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/es/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/es/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/es/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/es/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/ru/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/ru/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/ru/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ru/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/ru/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ru/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/it/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/it/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/it/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/it/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/it/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/it/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/pt_BR/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/pt_BR/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/pt_BR/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/pt_BR/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/pt_BR/LC_MESSAGES/gnome-shell.mo" Target="/usr/share/locale/pt_BR/LC_MESSAGES/gnome-shell.mo"   Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/nl/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/nl/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/nl/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/nl/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/nl/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/nl/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/sv/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/sv/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/sv/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/sv/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/sv/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/sv/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/pl/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/pl/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/pl/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/pl/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/pl/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/pl/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/tr/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/tr/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/tr/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/tr/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/tr/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/tr/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/ar/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/ar/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/ar/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ar/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/ar/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ar/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
 
     <IncludeFile Include="deploy/noble/ro/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/ro/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/ro/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ro/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/ro/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ro/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
   </ItemGroup>
 </Project>

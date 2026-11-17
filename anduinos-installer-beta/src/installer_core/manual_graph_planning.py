@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 
 from .btrfs import BTRFS_SUBVOLUMES
+from .layout import RECOVERY_LABEL, RECOVERY_SIZE_MIB
 from .manual_layout import (
     HARD_MINIMUM_ROOT_MIB,
     ManualPartitionRequest,
@@ -204,6 +205,14 @@ def build_manual_storage_graph(
                 label="AnduinOS-swap",
             )
         )
+    recovery_id = partition_ids.get(ManualPartitionRole.RECOVERY)
+    if recovery_id:
+        filesystems.append(FilesystemDeclaration(
+            filesystem_id=recovery_id,
+            block_id=recovery_id,
+            filesystem=GraphFilesystem.EXT4,
+            label=RECOVERY_LABEL,
+        ))
     filesystems.append(
         FilesystemDeclaration(
             filesystem_id=root_id,
@@ -497,6 +506,10 @@ def validate_manual_graph_structure(
         or roles.count(ManualPartitionRole.ROOT.value) != 1
     ):
         raise ManualStorageGraphError("Manual partition roles are invalid")
+    recovery = next((item for item in graph.partitions if item.name == "recovery"), None)
+    if recovery is not None:
+        if recovery.end_mib is None or recovery.end_mib - recovery.start_mib < RECOVERY_SIZE_MIB:
+            raise ManualStorageGraphError("RE must be at least 256 MiB")
     root = next(
         item
         for item in graph.partitions

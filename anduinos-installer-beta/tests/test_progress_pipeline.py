@@ -1,6 +1,11 @@
 import unittest
 
-from helpers import valid_plan
+from helpers import valid_plan as _valid_plan
+
+
+def valid_plan(**kwargs):
+    kwargs.setdefault("include_recovery", kwargs.get("filesystem", "btrfs") == "btrfs")
+    return _valid_plan(**kwargs)
 from installer_core.executor import InstallerExecutor
 from installer_core.model import Architecture, Filesystem
 from test_guided_storage_graph import guided_plan
@@ -9,6 +14,19 @@ from pages import ordered_progress_steps, incomplete_feature_steps
 
 
 class ProgressPipelineTests(unittest.TestCase):
+    def test_recovery_deployment_only_for_new_whole_disk_btrfs_before_grub(self):
+        for arch in Architecture:
+            plans = (valid_plan(architecture=arch),
+                     valid_plan(architecture=arch, filesystem=Filesystem.EXT4),
+                     guided_plan(architecture=arch)[0], manual_plan(architecture=arch)[0])
+            for index, plan in enumerate(plans):
+                with self.subTest(architecture=arch, mode=plan.storage.mode, filesystem=plan.storage.filesystem):
+                    ids = [s.id for s in InstallerExecutor(lambda _: None).build_steps(plan)]
+                    self.assertEqual("deploy-recovery-environment" in ids, index == 0)
+                    if index == 0:
+                        self.assertLess(ids.index("deploy-recovery-environment"), ids.index("install-bootloader"))
+                        self.assertLess(ids.index("install-bootloader"), ids.index("create-factory-snapshot"))
+
     def test_completion_lists_missing_features_not_recovered_network(self):
         self.assertEqual(incomplete_feature_steps({
             "detect-network-connectivity": "warning",
@@ -16,8 +34,9 @@ class ProgressPipelineTests(unittest.TestCase):
             "install-input-method": "succeeded",
             "install-multimedia-codecs": "warning",
             "upgrade-system": "warning",
+            "deploy-recovery-environment": "warning",
             "install-third-party-drivers": "skipped",
-        }), ("install-multimedia-codecs", "upgrade-system"))
+        }), ("install-multimedia-codecs", "upgrade-system", "deploy-recovery-environment"))
         self.assertEqual(incomplete_feature_steps({
             "detect-network-connectivity": "warning",
             "recheck-network-connectivity": "succeeded",

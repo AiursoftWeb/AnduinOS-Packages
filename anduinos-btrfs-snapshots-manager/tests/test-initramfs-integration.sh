@@ -15,7 +15,7 @@ mkdir -p \
     "$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/transactions" \
     "$TEST_ROOT/usr/libexec"
 touch "$TEST_ROOT/root-device"
-printf '2\n' > "$TEST_ROOT/etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version"
+printf '3\n' > "$TEST_ROOT/etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version"
 printf '{}\n' > "$TEST_ROOT/top/@snapshots/anduinos-btrfs-snapshots-manager/transactions/pending-rollback.json"
 
 cat > "$TEST_ROOT/lib/dracut-lib.sh" <<'EOF'
@@ -60,7 +60,19 @@ exit 0
 EOF
 cat > "$TEST_ROOT/bin/umount" <<'EOF'
 #!/bin/sh
+printf 'umount\n' >> "$TEST_ROOT/restart-order"
 exit 0
+EOF
+cat > "$TEST_ROOT/bin/sync" <<'EOF'
+#!/bin/sh
+printf 'sync\n' >> "$TEST_ROOT/restart-order"
+exit "${TEST_SYNC_STATUS:-0}"
+EOF
+cat > "$TEST_ROOT/bin/reboot" <<'EOF'
+#!/bin/sh
+printf 'reboot\n' >> "$TEST_ROOT/restart-order"
+# Never invoke the host's reboot command; emulate a refused restart.
+exit 1
 EOF
 cat > "$TEST_ROOT/bin/chmod" <<'EOF'
 #!/bin/sh
@@ -75,7 +87,7 @@ EOF
 cat > "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs" <<'EOF'
 #!/bin/sh
 if [ "${1:-}" = "--protocol-version" ]; then
-    printf '2\n'
+    printf '3\n'
     exit 0
 fi
 if [ "${1:-}" = "--stage-confirmation-artifact" ]; then
@@ -97,6 +109,8 @@ chmod 0755 \
     "$TEST_ROOT/bin/mount" \
     "$TEST_ROOT/bin/chmod" \
     "$TEST_ROOT/bin/umount" \
+    "$TEST_ROOT/bin/sync" \
+    "$TEST_ROOT/bin/reboot" \
     "$TEST_ROOT/usr/libexec/anduinos-btrfs-snapshots-manager-initramfs"
 # Match the byte-preserving mode used while Dracut assembles the image.  The
 # production pre-mount hook must activate this payload before staging it.
@@ -131,6 +145,7 @@ run_script()
         TEST_ROOT="$TEST_ROOT" \
         TEST_FSTYPE="$1" \
         TEST_ENGINE_STATUS="${2:-0}" \
+        TEST_SYNC_STATUS="${3:-0}" \
         /bin/sh -c '. "$1"' dracut-hook "$TEST_ROOT/dracut-pre-mount"
 }
 
@@ -186,5 +201,36 @@ if run_script btrfs; then
 fi
 grep -Fq 'requested recovery protocol is incompatible' "$TEST_ROOT/failures"
 test ! -e "$TEST_ROOT/invocations"
+
+# A restarting restore must sync and unmount before asking for reboot. A
+# failed restart or failed disk release must never fall through to switch_root.
+printf 'anduinos.btrfs_snapshots_manager=%s anduinos.btrfs_snapshots_manager_protocol=3\n' \
+    "$ROLLBACK_ID" > "$TEST_ROOT/proc/cmdline"
+rm -f "$TEST_ROOT/restart-order" "$TEST_ROOT/failures" \
+    "$TEST_ROOT/run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service"
+if run_script btrfs 20; then
+    echo "A refused restart unexpectedly continued to userspace" >&2
+    exit 1
+fi
+printf 'sync\numount\nreboot\n' > "$TEST_ROOT/expected-order"
+cmp "$TEST_ROOT/expected-order" "$TEST_ROOT/restart-order"
+grep -Fq 'could not restart' "$TEST_ROOT/failures"
+test ! -e "$TEST_ROOT/run/systemd/system/anduinos-btrfs-snapshots-manager-confirm.service"
+
+rm -f "$TEST_ROOT/restart-order" "$TEST_ROOT/failures"
+if run_script btrfs 20 1; then
+    echo "A failed synchronization unexpectedly continued" >&2
+    exit 1
+fi
+printf 'sync\n' > "$TEST_ROOT/expected-order"
+cmp "$TEST_ROOT/expected-order" "$TEST_ROOT/restart-order"
+grep -Fq 'could not release' "$TEST_ROOT/failures"
+
+rm -f "$TEST_ROOT/failures"
+if run_script btrfs 1; then
+    echo "A partially failed restore unexpectedly continued" >&2
+    exit 1
+fi
+grep -Fq 'could not complete' "$TEST_ROOT/failures"
 
 echo "Dracut pre-mount source integration tests passed"

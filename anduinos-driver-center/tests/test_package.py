@@ -33,6 +33,7 @@ class PackageTests(unittest.TestCase):
         self.assertEqual(paths, {
             "/usr/libexec/anduinos-driver-center/driver-helper",
             "/usr/libexec/anduinos-driver-center/memory-helper",
+            "/usr/libexec/anduinos-driver-center/recovery-probe",
         })
         self.assertFalse(tree.findall(".//annotate[@key='org.freedesktop.policykit.exec.allow_gui']"))
 
@@ -56,9 +57,11 @@ class PackageTests(unittest.TestCase):
                     "--keyword=ngettext:1,2", "--from-code=UTF-8",
                     f"--output={extracted}",
                     str(ROOT / "src" / "anduinos_driver_center" / "app.py"),
+                    str(ROOT / "src" / "anduinos_driver_center" / "core.py"),
                     str(ROOT / "src" / "anduinos_driver_center" / "computer_ui.py"),
                     str(ROOT / "src" / "anduinos_driver_center" / "intel_graphics_ui.py"),
                     str(ROOT / "src" / "anduinos_driver_center" / "operation_ui.py"),
+                    str(ROOT / "src" / "anduinos_driver_center" / "encryption_ui.py"),
                     str(toolkit_ui),
                 ],
                 check=True,

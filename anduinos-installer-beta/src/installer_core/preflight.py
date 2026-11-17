@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .command import CommandRunner
-from .model import Architecture, InstallMode, InstallPlan, PlatformSpec
+from .model import Architecture, EncryptionMode, InstallMode, InstallPlan, PlatformSpec
 from .probe import PlatformProbe, probe_platform
 from anduinos_secureboot.firmware import prepare_live_interface
 from .storage_commands import partition_path
@@ -21,6 +21,7 @@ from .storage_graph import (
 )
 from .storage_graph_planning import resolve_storage_graph
 from .storage_inventory import StorageInventory, probe_storage_inventory
+from .layout import erase_disk_overhead_mib
 from .swap_policy import (
     SwapSizingError,
     calculate_swap_sizing,
@@ -45,6 +46,47 @@ class NamespaceMount:
 
 
 NamespaceMountProbe = Callable[[tuple[str, ...]], NamespaceMount | None]
+
+RESCUE_RUNNING_MESSAGE = (
+    "Please close Rescue Center normally, including its emergency terminal, "
+    "and wait for disk cleanup before installing."
+)
+
+
+def require_rescue_center_closed(proc: Path = Path("/proc")) -> None:
+    """Include helpers: a closed desktop window does not imply released disks.
+
+    This is a friendly pre-write guard, not a replacement for the block-device
+    and cross-namespace mount checks below. Those still reject crashed sessions.
+    """
+    names = {
+        "anduinos-rescue-center", "anduinos-rescue-center-helper",
+        "anduinos-rescue-center-live-helper",
+    }
+    for entry in proc.glob("[0-9]*/cmdline"):
+        try:
+            arguments = os.fsdecode(entry.read_bytes()).rstrip("\0").split("\0")
+        except (FileNotFoundError, ProcessLookupError):
+            continue
+        # Check executable/script positions, not arbitrary document arguments.
+        executable = Path(arguments[0]).name
+        scripts = ()
+        if executable.startswith("python"):
+            for index, argument in enumerate(arguments[1:], 1):
+                if argument == "-c":
+                    break
+                if argument == "-m":
+                    if arguments[index + 1:index + 2] in (
+                        ["anduinos_rescue_center"], ["anduinos_rescue_center.app"],
+                        ["anduinos_rescue_center.privileged"],
+                    ):
+                        raise PreflightError(RESCUE_RUNNING_MESSAGE)
+                    break
+                if not argument.startswith("-"):
+                    scripts = (argument,)
+                    break
+        if executable in names or any(Path(item).name in names for item in scripts):
+            raise PreflightError(RESCUE_RUNNING_MESSAGE)
 
 
 def verify_execution_environment(
@@ -110,6 +152,7 @@ def verify_target_disk_environment(
 ) -> InstallPlan:
     validate_plan_for_execution(plan, execution_policy)
     runner.require_root()
+    require_rescue_center_closed()
 
     try:
         inventory = inventory_probe()
@@ -129,6 +172,14 @@ def verify_target_disk_environment(
                 (physical_memory_probe or probe_physical_memory_bytes)(),
                 _installation_space_bytes(resolved_plan),
                 esp_size_mib=_installation_esp_size_mib(resolved_plan),
+                layout_overhead_mib=(
+                    erase_disk_overhead_mib(
+                        resolved_plan.storage.filesystem,
+                        encrypted=resolved_plan.storage.encryption is EncryptionMode.LUKS2,
+                        include_recovery=resolved_plan.storage.include_recovery,
+                    )
+                    if resolved_plan.storage.mode is InstallMode.ERASE_DISK else 4
+                ),
             )
             validate_disk_swap_selection(
                 resolved_plan.storage.swap_size_mib,

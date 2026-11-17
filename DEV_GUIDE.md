@@ -43,60 +43,103 @@ derives and relocates an upstream theme.
 
 ## Versions and target selection
 
-Bump `PackageVersion` when changing installed code, resources, translations,
-dependencies, or maintainer scripts. A successful pipeline does not imply
-that changed source was published under an already existing version.
+### Lazy package version bumps
+
+Package versions describe shared package code, not the installed OS release.
+AnduinOS 2.0 (Resolute) and 2.1 (Stonking) use the same package sources; they do
+not need separate long-lived source branches or matching package version sets.
+
+Keep an unchanged package's version. Do not mass-bump packages when releasing
+an ISO, advancing the OS version, or adding a supported Ubuntu suite. This
+avoids making users download and reinstall unchanged packages through APT.
+Repository-only documentation and tests that do not change shipped output do
+not require a package version bump.
+
+Bump affected packages when changing installed code, resources, translations,
+dependencies, maintainer scripts, or build inputs that require a new package
+for existing users. Shared build changes can affect packages outside their
+own directories. When an old package needs a change, normally advance it to
+our current shared package-code series, rather than the host OS version.
+
+The third component of a package version is independent of OS releases. It
+may advance before an OS release with the same number exists; there is no
+requirement to keep every package at `2.1.0-X` until AnduinOS 2.1.0 ships.
+Either advancing the Debian revision (`2.1.0-1` to `2.1.0-2`) or the package
+patch component (`2.1.0-1` to `2.1.1-1`) is allowed. Neither promises a matching
+OS release. Preserve already published `2.1.1` and `2.1.2` package versions;
+do not downgrade or renumber them for cosmetic consistency.
+
+- An old `2.0.0-1+$(SuiteShortName)` may become
+  `2.1.0-1+$(SuiteShortName)` when its contents change.
+- A changed `2.1.2-1+$(SuiteShortName)` may become
+  `2.1.2-2+$(SuiteShortName)` or `2.1.3-1+$(SuiteShortName)`.
+- An untouched 2.0.0 package remains 2.0.0, including in a newer OS release.
+
+This policy was clarified on 2026-11-02 after package patch versions advanced
+ahead of the unreleased OS. Avoid disruptive renumbering; the essential
+constraints are meaningful changes, increasing APT versions and immutable
+published artifacts, rather than visual alignment with an OS release.
+
+Preserve epochs, suite suffixes and upstream-derived version expressions.
+Tools with independent upstream versions, notably `apkg`, retain their own
+versioning scheme.
+Check the complete concrete version with `dpkg --compare-versions` against
+the published version for each existing target; even a suffix change can
+alter ordering. Verify APT's candidate and normal upgrade path. Direct
+`dpkg -i` installation alone does not prove that APT considers it an upgrade.
+
+Never publish different contents under an existing package name, version and
+architecture. A successful build is not evidence of publication:
+`--skip-existing` preserves already published versions. A necessary rebuild
+for an existing target must get a higher version when its shipped contents
+change.
+
+### Suites and system identity
+
+Before adding a suite, confirm that the package still serves that release.
+One-shot migration and transitional compatibility packages should target only
+releases with that legacy upgrade path, not every new suite. For example,
+`anduinos-dracut-migration` is Resolute-only; Stonking already starts with
+Dracut. Retire such helpers when their supported migration path ends.
 
 Keep `TargetSuites`, `TargetArchitectures`, conditional inputs, and upstream
 suite mappings consistent. Declare only targets the package supports.
+Rebuilding unchanged code for a newly supported suite does not by itself
+require advancing its shared code version or reissuing existing-suite packages.
+For example, an unchanged `2.0.0-1+resolute` package can gain a
+`2.0.0-1+stonking` build. Build and validate each target using its appropriate
+inputs; shared source does not imply interchangeable binaries.
 
 When output differs between suites, use distinct versions. In particular,
 different `arch=all` payloads must not share the same package name and version
 across suites. Use `$(SuiteShortName)` with `SuiteShortNameMap`, or `$(Suite)`,
-to distinguish suite-specific output. A condition alone does not require a
-version suffix if the resulting packages are identical.
+to distinguish suite-specific output. Preserve existing suffixes; a condition
+alone does not require a new suffix when the resulting packages are identical.
 
-For upstream-derived packages, `$(UpstreamVersion)` can be part of the version
-expression; retain a revision component that can be bumped for local changes.
-Do not assume every derived package uses the same version formula.
+A Resolute system may legitimately contain `2.0.0`, `2.0.5` and
+`2.1.0-1+resolute` package versions at the same time. The package version prefix
+does not move that system to Stonking. APT sources select the suite; normal
+package updates must not silently change them.
 
-### Preparing a new AnduinOS point release
+The OS version comes from suite-specific `base-files` identity files:
+`os-release`, `lsb-release`, `issue`, and `issue.net`. Resolute reports 2.0.x;
+Stonking reports 2.1.x. Users should check System Settings or fastfetch for
+their OS version, rather than infer it from an individual package. Update OS
+identity when releasing that OS, independently of shared package versions.
+Application About/version strings describe the application; update them with
+that application's release, not merely to match the host OS. Keep affected
+first-party Cargo versions and their local entries in `Cargo.lock` consistent;
+do not rewrite third-party dependency versions or historical test fixtures.
 
-Start from the tag or commit of the **last published release**, not from the
-previous development build. For example, use
-`git diff --name-status release-2.0.2..HEAD` when preparing 2.0.3 (replace the
-tag for future releases). Review that diff and the package history to identify
-new packages and those whose installed payload, dependencies, maintainer
-scripts, or pinned upstream source changed. Review changes to shared build
-helpers and CI separately: a package can be affected even when its own
-directory has no diff. Exclude removed packages. Record deliberate exceptions
-rather than treating the diff as an automatic version-bump script. For the
-2.0.3 preparation,
-`anduinos-container` was intentionally reissued although its directory had
-not changed. Unchanged packages normally keep their published versions. This
-is safe in a newer OS release: not every installed package needs the OS's
-current version number.
+### Preparing a new AnduinOS release
 
-For each selected AnduinOS package, change its `.aosproj` to the new OS version
-and reset the Debian revision to `-1`, for example
-`2.0.2-27+$(SuiteShortName)` → `2.0.3-1+$(SuiteShortName)`. Preserve an epoch
-and upstream-derived formula where present: `1:2.0.2+$(UpstreamVersion)-2`
-becomes `1:2.0.3+$(UpstreamVersion)-1`, not a plain `2.0.3-1`. Check with
-`dpkg --compare-versions` that the new version sorts above the published one.
-Tools with independent upstream versions, notably `apkg`, retain their own
-versioning scheme. Never change a package's contents without a new package
-version: release-branch publishing uses `--skip-existing` and will not replace
-an already published version.
-
-Keep the OS identity and user-visible versions coherent. Update `base-files`'
-`os-release`, `lsb-release`, `issue`, and `issue.net`; the installer and affected
-applications' About/version constants; and first-party Rust `Cargo.toml`
-versions together with their local-package entries in `Cargo.lock`. Review
-extension `version-name` fields where applicable. Search for the old version
-and classify each remaining occurrence: an unchanged package, an upgrade-test
-fixture, a historical document, or an actual missed release string. Do not
-rewrite historical upgrade inputs or third-party Cargo dependency versions
-merely to make the search empty.
+Review changes since the **last published release**, including package
+history, dependencies, maintainer scripts, pinned upstream inputs and shared
+build helpers. Identify packages that need delivery under the policy above;
+do not automatically bump every changed directory or re-bump changes that
+already have an appropriate newer package version. Exclude removed packages.
+Record deliberately required rebuilds, rather than turning exceptions into
+routine mass version updates. Unchanged packages remain valid in the new OS.
 
 Before publishing, review the complete diff and run `git diff --check`, lint
 all `.aosproj` files, `python3 lib/verify-ci-package-needs.py`,

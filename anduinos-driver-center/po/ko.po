@@ -1203,8 +1203,8 @@ msgid "Generating & Signing..."
 msgstr "생성 및 서명 중..."
 
 #: src/anduinos_driver_center/app.py:1940
-msgid "Add Printer"
-msgstr "프린터 추가"
+msgid "Manage Printers in System Settings"
+msgstr "시스템 설정에서 프린터 관리"
 
 #: src/anduinos_driver_center/app.py:1365
 #: src/anduinos_driver_center/app.py:1390
@@ -2280,3 +2280,282 @@ msgstr "이제 자동 서명에 등록된 인증서를 사용합니다. 이전 �
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "드라이버 서명 복구가 완료되었습니다. 이제 설치된 드라이버를 신뢰할 수 있는지 확인합니다."
+
+msgid "Recovery Environment"
+msgstr "복구 환경"
+
+msgid "Present"
+msgstr "있음"
+
+msgid "Multiple recovery partitions found"
+msgstr "복구 파티션이 여러 개 발견되었습니다"
+
+msgid "Recovery partition not found"
+msgstr "복구 파티션을 찾을 수 없습니다"
+
+msgid "Recovery partition"
+msgstr "복구 파티션"
+
+msgid "Recovery package"
+msgstr "복구 패키지"
+
+msgid "GRUB menu entry"
+msgstr "GRUB 메뉴 항목"
+
+msgid "Recovery menu entry not found"
+msgstr "복구 메뉴 항목을 찾을 수 없습니다"
+
+msgid "Unable to read the GRUB menu"
+msgstr "GRUB 메뉴를 읽을 수 없습니다"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "패키지 상태는 로컬 APT 캐시를 사용합니다. 소프트웨어 소스를 새로 고치지 않습니다."
+
+msgid "Read recovery boot information"
+msgstr "복구 부팅 정보 읽기"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "이전 파티션 준비 작업이 중단되었습니다. 다시 시도하기 전에 관리자에게 저장된 파티션 테이블과 swap 헤더를 확인하도록 요청하세요."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "이 디스크 또는 swap 구성에서는 자동 준비를 사용할 수 없습니다. 관리자에게 256 MiB AOS_RECOVERY ext4 파티션을 수동으로 생성하도록 요청한 후 다시 검사하세요."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "관리자에게 설정되었거나 중복된 복구 볼륨을 확인하도록 요청한 후 다시 검사하세요."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "메모리를 많이 사용하는 앱을 닫고 다시 검사하세요. 이 swap을 안전하게 비활성화하기에 사용 가능한 RAM이 부족합니다."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "설치된 복구 이미지를 배포하고 GRUB 메뉴를 다시 생성할까요?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "현재 패키지 목록을 사용하여 복구 패키지만 설치하거나 업데이트할까요?"
+
+msgid "Install or update recovery package"
+msgstr "복구 패키지 설치 또는 업데이트"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "로컬 APT 캐시에서 후보 버전을 확인할 수 없습니다. 소프트웨어 업데이트 도구에서 소스를 새로 고친 후 다시 검사하세요."
+
+msgid "Recovery repair completed."
+msgstr "복구 환경 수리가 완료되었습니다."
+
+msgid "Repair recovery boot menu"
+msgstr "복구 부팅 메뉴 수리"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "다시 검사하고 읽기 전용 검사를 허용하세요. 계속 실패하면 드라이버 센터와 디스크 도구의 설치를 복구하세요."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "swap 파티션 축소 및 복구 파티션 생성"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "swap이 일시적으로 비활성화됩니다. 데이터를 백업하고 작업이 끝날 때까지 컴퓨터 전원을 유지하세요."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "계속할 수 없음: 시스템 디스크에서 일반 swap 파티션을 찾을 수 없습니다."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "계속할 수 없음: swap 파티션이 512 MiB보다 작습니다."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "복구 환경 수리에는 설치된 AnduinOS Btrfs @root 시스템이 필요합니다. 설치된 시스템을 시작한 후 다시 검사하세요."
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr "그래픽 장치"
+
+msgid "Encrypted"
+msgstr "암호화됨"
+
+msgid "Not encrypted"
+msgstr "암호화 안 됨"
+
+msgid "Disk Encryption"
+msgstr "디스크 암호화"
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr "시스템 파일, 개인 파일 및 스왑의 암호화를 확인합니다."
+
+msgid "Unencrypted disk swap is active"
+msgstr "비암호화 디스크 스왑이 활성 상태입니다"
+
+msgid "No disk swap is active"
+msgstr "디스크 스왑이 비활성 상태입니다"
+
+msgid "Disk swap"
+msgstr "디스크 스왑"
+
+msgid "Encryption coverage"
+msgstr "암호화 범위"
+
+msgid "System files"
+msgstr "시스템 파일"
+
+msgid "Personal files (Home)"
+msgstr "개인 파일 (홈)"
+
+msgid "Memory-based swap; not a disk partition"
+msgstr "메모리 기반 스왑; 디스크 파티션 아님"
+
+msgid "System recovery"
+msgstr "시스템 복구"
+
+msgid "Snapshot Recovery Environment"
+msgstr "스냅샷 복구 환경"
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr "ext4에는 적용되지 않습니다. Live USB에서 구제 센터를 사용하세요."
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr "비암호화 스왑은 메모리의 개인 데이터를 저장할 수 있습니다."
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr "디스크 암호화는 새 설치 시 선택할 수 있습니다."
+
+msgid "Configured"
+msgstr "구성됨"
+
+msgid "Check recovery configuration"
+msgstr "복구 구성을 확인합니다"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using the current disk password."
+msgstr "자격 증명 작업이 완료되지 않았습니다. 기존 및 새 자격 증명을 유지한 뒤 현재 디스크 비밀번호를 사용하여 다시 시도하십시오."
+
+msgid "Current disk password"
+msgstr "현재 디스크 비밀번호"
+
+msgid "Current recovery key"
+msgstr "현재 복구 키"
+
+msgid "Unlock credentials"
+msgstr "자격 증명 잠금 해제"
+
+msgid "Change disk password"
+msgstr "디스크 비밀번호 변경"
+
+msgid "Replace recovery key"
+msgstr "복구 키 교체"
+
+msgid "Checking credential configuration…"
+msgstr "자격 증명 구성 확인 중…"
+
+msgid "New disk password"
+msgstr "새 디스크 비밀번호"
+
+msgid "Confirm new disk password"
+msgstr "새 디스크 비밀번호 확인"
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr "디스크 자격 증명을 업데이트하는 중입니다. 컴퓨터 전원을 유지하십시오."
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr "현재 디스크 비밀번호가 올바르지 않습니다. 자격 증명이 변경되지 않았습니다."
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr "현재 복구 키가 올바르지 않습니다. 자격 증명이 변경되지 않았습니다."
+
+msgid "Enter the current recovery key once to identify this preview's credential roles."
+msgstr "이 미리보기의 자격 증명 역할을 식별하려면 현재 복구 키를 한 번 입력하십시오."
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr "이 디스크에서 이미 사용되지 않는 새 자격 증명을 선택하십시오."
+
+msgid "Check the password length, characters and confirmation."
+msgstr "비밀번호 길이, 문자 및 확인 사항을 확인하십시오."
+
+msgid "The internal startup credential could not be verified. Use Rescue Center from the Live USB."
+msgstr "내부 시작 자격 증명을 확인하지 못했습니다. 라이브 USB에서 구조 센터를 사용하십시오."
+
+msgid "This credential layout cannot be managed automatically. No existing credential was removed."
+msgstr "이 자격 증명 구성을 자동으로 관리할 수 없습니다. 기존 자격 증명이 제거되지 않았습니다."
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr "디스크 구성이 변경되었습니다. 다른 디스크 도구를 중지하고 다시 시도하십시오."
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr "다른 디스크 자격 증명 작업이 진행 중입니다. 잠시 기다린 후 다시 시도하십시오."
+
+msgid "Administrator authentication was cancelled."
+msgstr "관리자 인증이 취소되었습니다."
+
+msgid "There is no free credential slot. Existing credentials remain available."
+msgstr "사용 가능한 자격 증명 슬롯이 없습니다. 기존 자격 증명은 계속 사용할 수 있습니다."
+
+msgid "The new credential could not be verified. Keep your existing credentials and try again."
+msgstr "새 자격 증명을 확인하지 못했습니다. 기존 자격 증명을 유지한 채 다시 시도하십시오."
+
+msgid "Open"
+msgstr "열기"
+
+msgid "New recovery key"
+msgstr "새 복구 키"
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr "새 복구 키를 이 컴퓨터 외부에 저장했습니다."
+
+msgid "This earlier preview needs the current recovery key once to identify its credential roles."
+msgstr "이 이전 미리보기의 자격 증명 역할을 식별하려면 현재 복구 키를 한 번 필요합니다."
+
+msgid "The internal startup credential stays unchanged. The old credential stops working after success."
+msgstr "내부 시작 자격 증명은 변경되지 않습니다. 성공 후 기존 자격 증명은 작동하지 않습니다."
+
+msgid "Disk password changed."
+msgstr "디스크 비밀번호가 변경되었습니다."
+
+msgid "Recovery key replaced."
+msgstr "복구 키가 교체되었습니다."
+
+msgid "Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."
+msgstr "인쇄 가능한 ASCII 문자 8~128자를 사용하십시오. 시작 화면은 US 키보드 레이아웃을 사용합니다."
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using your disk password or emergency recovery key."
+msgstr "자격 증명 작업이 완료되지 않았습니다. 기존 및 새 자격 증명을 유지한 다음, 디스크 비밀번호 또는 비상 복구 키를 사용하여 다시 시도하세요."
+
+msgid "The emergency recovery key is generated by the system. Like your disk password, it unlocks the disk. Use your password normally; use the key in an emergency. Keep it outside this computer."
+msgstr "비상 복구 키는 시스템에서 생성됩니다. 디스크 비밀번호와 마찬가지로 디스크를 잠금 해제합니다. 평소에는 비밀번호를, 비상 상황에서는 키를 사용하세요. 이 컴퓨터 외부에 보관하세요."
+
+msgid "Current emergency recovery key"
+msgstr "현재 비상 복구 키"
+
+msgid "Replace emergency recovery key"
+msgstr "비상 복구 키 교체"
+
+msgid "Reset forgotten disk password"
+msgstr "잊은 디스크 비밀번호 초기화"
+
+msgid "Emergency recovery key"
+msgstr "비상 복구 키"
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr "비상 복구 키가 올바르지 않습니다. 자격 증명이 변경되지 않았습니다."
+
+msgid "Enter the current emergency recovery key once to identify this preview's credential roles."
+msgstr "이 미리보기의 자격 증명 역할을 식별하려면 현재 비상 복구 키를 한 번 입력하세요."
+
+msgid "New emergency recovery key"
+msgstr "새 비상 복구 키"
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr "새 비상 복구 키를 이 컴퓨터 외부에 저장했습니다."
+
+msgid "This earlier preview needs the current emergency recovery key once to identify its credential roles."
+msgstr "이전 미리보기의 자격 증명 역할을 식별하려면 현재 비상 복구 키가 한 번 필요합니다."
+
+msgid "Emergency recovery key replaced."
+msgstr "비상 복구 키가 교체되었습니다."
+
+msgid "Enter your emergency recovery key to set a new disk password. You do not need the forgotten password. Your emergency recovery key stays valid."
+msgstr "비상 복구 키를 입력하여 새 디스크 비밀번호를 설정하세요. 잊어버린 비밀번호는 필요하지 않습니다. 비상 복구 키는 계속 유효합니다."
+
+msgid "Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr "기존 설치에서 디스크 암호화를 활성화하는 기능은 아직 지원되지 않습니다. 디스크 암호화를 활성화하려면 최신 AnduinOS ISO로 다시 설치하세요."
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr "Pro 전용 기능"
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
+msgstr "AnduinOS Pro를 구매하세요"

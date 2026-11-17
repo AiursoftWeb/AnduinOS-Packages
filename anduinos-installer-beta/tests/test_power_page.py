@@ -269,6 +269,7 @@ class PowerPageRoutingTests(unittest.TestCase):
 
     def test_every_registered_footer_has_a_progress_route_entry(self):
         shared = {
+            "lang": "zh_CN",
             "development_mode": True,
             "_page_route_initialized": True,
             "_power_probe_result": self.safe(),

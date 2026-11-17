@@ -13,21 +13,49 @@ pub fn model_path(key: &str) -> PathBuf {
 }
 fn resolve_model(key: &str, user: &Path, system: &Path) -> PathBuf {
     let key = match key {
-        "tiny" | "base" | "small" => key,
+        "tiny" | "base" | "small" | "parakeet" => key,
         _ => "base",
     };
-    let name = format!("ggml-{key}.bin");
+    let name = if key == "parakeet" {
+        "parakeet-v3".to_owned()
+    } else {
+        format!("ggml-{key}.bin")
+    };
     let local = user.join(&name);
-    if local.is_file() {
+    if local.is_file() || (key == "parakeet" && local.is_dir()) {
         local
     } else {
         system.join(name)
     }
 }
+pub fn installed_path(path: &Path) -> bool {
+    if path.is_dir() {
+        [
+            "encoder-model.int8.onnx",
+            "decoder_joint-model.int8.onnx",
+            "nemo128.onnx",
+            "vocab.txt",
+        ]
+        .iter()
+        .all(|name| {
+            path.join(name)
+                .metadata()
+                .is_ok_and(|s| s.is_file() && s.len() > 0)
+        })
+    } else {
+        path.metadata()
+            .is_ok_and(|s| s.is_file() && s.len() >= 1_000_000)
+    }
+}
 pub fn model_installed(key: &str) -> bool {
-    model_path(key)
-        .metadata()
-        .is_ok_and(|s| s.is_file() && s.len() >= 1_000_000)
+    installed_path(&model_path(key))
+}
+pub fn parakeet_language(language: &str) -> bool {
+    [
+        "auto", "en", "de", "fr", "es", "it", "pt", "ru", "pl", "uk", "nl", "ro", "cs", "el", "hu",
+        "sv", "bg", "da", "fi", "sk", "hr", "lt", "sl", "lv", "et", "mt",
+    ]
+    .contains(&language)
 }
 pub fn settings() -> Result<gio::Settings, String> {
     let schema = gio::SettingsSchemaSource::default()
@@ -136,6 +164,28 @@ mod tests {
             .complete_full_tuning(&settings)
             .unwrap();
         assert!(!settings.boolean("full-tuning-pending"));
+    }
+    #[test]
+    fn optional_parakeet_needs_all_files_and_supported_language() {
+        let directory = tempfile::tempdir().unwrap();
+        let model = directory.path().join("parakeet-v3");
+        std::fs::create_dir(&model).unwrap();
+        assert!(!installed_path(&model));
+        for name in [
+            "encoder-model.int8.onnx",
+            "decoder_joint-model.int8.onnx",
+            "nemo128.onnx",
+            "vocab.txt",
+        ] {
+            std::fs::write(model.join(name), b"fixture").unwrap();
+        }
+        assert!(installed_path(&model));
+        assert_eq!(
+            resolve_model("parakeet", directory.path(), Path::new("/missing")),
+            model
+        );
+        assert!(parakeet_language("fr"));
+        assert!(!parakeet_language("zh-Hans"));
     }
     #[test]
     fn unknown_model_never_becomes_a_path_component() {

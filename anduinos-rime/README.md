@@ -62,3 +62,16 @@ this migration release, the post-install script itself can be removed.
 
 Starting with `2.0.1-3`, the distribution patch is loaded directly from Rime's
 shared data directory instead of being copied to new accounts by the installer.
+
+## Licensing
+
+[Rime Ice](https://github.com/iDvel/rime-ice) is published under GPL-3.0-only.
+This package also contains files with their own upstream licenses. In
+particular, `lua/search.lua` credits Mirtle and is licensed under
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+Retain the authorship, source and license notices supplied in individual files;
+the package license label does not replace those terms. AnduinOS packaging and
+configuration changes are available in this repository under its GPL-3.0 license.
+
+The installed resources are in `/usr/share/rime-data/`. The GPL version 3 text
+is available on AnduinOS at `/usr/share/common-licenses/GPL-3`.

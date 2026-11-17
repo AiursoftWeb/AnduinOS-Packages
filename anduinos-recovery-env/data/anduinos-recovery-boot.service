@@ -1,0 +1,16 @@
+[Unit]
+Description=Remember the recovery point from a successful graphical boot
+After=local-fs.target systemd-logind.service anduinos-btrfs-snapshots-manager-confirm.service
+Wants=systemd-logind.service
+ConditionPathExists=/var/lib/anduinos-recovery-env/volume.json
+ConditionPathIsMountPoint=/.snapshots
+
+[Service]
+Type=exec
+ExecStart=/usr/libexec/anduinos-recovery-env record-boot
+TimeoutStopSec=5
+Nice=19
+UMask=0077
+
+[Install]
+WantedBy=graphical.target

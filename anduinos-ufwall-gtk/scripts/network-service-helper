@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import os
+import json
+import shutil
 import subprocess
 import sys
 
@@ -29,7 +31,118 @@ def set_mdns_enabled(enabled: bool) -> None:
         run(["systemctl", "mask", "--now", *MDNS_UNITS])
 
 
+# Read-only checks deliberately use fixed commands and accept no caller paths.
+FIREWALL_PACKAGES = (
+    "ufw", "firewalld", "nftables", "netfilter-persistent", "iptables-persistent",
+)
+FIREWALL_UNITS = {
+    "firewalld": "firewalld.service",
+    "nftables": "nftables.service",
+    "netfilter-persistent": "netfilter-persistent.service",
+}
+
+
+def query(command: list[str]) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        command, capture_output=True, text=True, check=False, timeout=5,
+        env={**os.environ, "LC_ALL": "C", "LANGUAGE": "C"},
+    )
+
+
+def rule_owners(document: dict) -> set[str]:
+    """Identify filtering chains, without calling Docker/libvirt/UFW conflicts."""
+    entries = document["nftables"]
+    if not isinstance(entries, list):
+        raise ValueError("Invalid nftables response")
+    rules = {
+        (r["rule"]["family"], r["rule"]["table"], r["rule"]["chain"])
+        for r in entries if "rule" in r
+    }
+    managed_tables = {
+        (c["chain"]["family"], c["chain"]["table"])
+        for c in entries if "chain" in c
+        and c["chain"]["name"].startswith(("ufw-", "ufw6-", "DOCKER", "LIBVIRT"))
+    }
+    owners = set()
+    for item in entries:
+        chain = item.get("chain", {})
+        if chain.get("hook") not in ("input", "output", "forward", "prerouting", "ingress"):
+            continue
+        family, table = chain["family"], chain["table"]
+        if table == "firewalld":
+            # Its hooked chains remain relevant even after package removal.
+            owners.add("firewalld")
+        elif (family, table) not in managed_tables and not table.startswith(("docker", "libvirt", "ufw")):
+            if chain.get("policy") == "drop" or (family, table, chain["name"]) in rules:
+                owners.add("nftables")
+    return owners
+
+
+def firewall_health() -> dict:
+    report = {
+        "ufw_available": os.path.isfile("/usr/sbin/ufw") and os.access("/usr/sbin/ufw", os.X_OK),
+        "managers": [], "errors": [],
+    }
+    installed = set()
+    try:
+        result = query([
+            "dpkg-query", "--show", "--showformat=${binary:Package}\t${db:Status-Status}\n",
+            *FIREWALL_PACKAGES,
+        ])
+        # dpkg-query returns 1 when some requested packages are absent.
+        if result.returncode not in (0, 1):
+            raise ValueError("Package query failed")
+        for line in result.stdout.splitlines():
+            package, status = line.split("\t", 1)
+            if status == "installed":
+                installed.add(package.split(":", 1)[0])
+    except (OSError, subprocess.TimeoutExpired, ValueError):
+        report["errors"].append("packages")
+
+    for name, unit in FIREWALL_UNITS.items():
+        manager = {"name": name, "installed": name in installed,
+                   "active": False, "enabled": False, "rules": False}
+        if name == "netfilter-persistent":
+            manager["installed"] |= "iptables-persistent" in installed
+        try:
+            result = query(["systemctl", "show", unit, "--no-pager",
+                            "--property=LoadState,ActiveState,UnitFileState"])
+            if result.returncode:
+                raise ValueError("Service query failed")
+            state = dict(line.split("=", 1) for line in result.stdout.splitlines() if "=" in line)
+            if not {"LoadState", "ActiveState", "UnitFileState"} <= state.keys():
+                raise ValueError("Incomplete service state")
+            if state["LoadState"] not in ("loaded", "masked", "not-found"):
+                raise ValueError("Unreadable service unit")
+            if state["ActiveState"] == "failed":
+                report["errors"].append(name)
+            manager["active"] = state["ActiveState"] in ("active", "activating", "reloading", "deactivating")
+            manager["enabled"] = state["UnitFileState"] in ("enabled", "enabled-runtime")
+        except (OSError, subprocess.TimeoutExpired, ValueError):
+            report["errors"].append(name)
+        report["managers"].append(manager)
+
+    try:
+        # nft is optional. Its absence cannot be reported as a clean ruleset.
+        if not shutil.which("nft"):
+            raise ValueError("nft unavailable")
+        result = query(["nft", "--json", "list", "ruleset"])
+        if result.returncode:
+            raise ValueError("Ruleset query failed")
+        owners = rule_owners(json.loads(result.stdout))
+        for manager in report["managers"]:
+            manager["rules"] = manager["name"] in owners
+    except (OSError, subprocess.TimeoutExpired, ValueError, KeyError, TypeError):
+        report["errors"].append("rules")
+    return report
+
+
 def main(arguments: list[str]) -> int:
+    # Public package/service information remains available if rule inspection
+    # authorization is cancelled. nft failures are explicitly reported.
+    if arguments == ["firewall-health"]:
+        print(json.dumps(firewall_health()))
+        return 0
     if os.geteuid() != 0:
         print("This helper must be run through polkit.", file=sys.stderr)
         return 77

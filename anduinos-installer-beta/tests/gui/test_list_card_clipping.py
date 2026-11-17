@@ -10,7 +10,7 @@ from ui import load_visual_style
 
 
 def _settle():
-    deadline = time.monotonic() + 0.35
+    deadline = time.monotonic() + 1.0
     context = GLib.MainContext.default()
     while time.monotonic() < deadline:
         context.iteration(False)
@@ -26,6 +26,14 @@ def _descendants(widget):
 
 
 class ListCardClippingTests(unittest.TestCase):
+    def setUp(self):
+        # These assertions inspect the settled clip, not scroll animations.
+        # GTK versions differ in how long initial focus scrolling animates.
+        settings = Gtk.Settings.get_default()
+        animated = settings.get_property("gtk-enable-animations")
+        self.addCleanup(settings.set_property, "gtk-enable-animations", animated)
+        settings.set_property("gtk-enable-animations", False)
+
     def _show_page(self, builder, shared):
         window = Adw.Window(default_width=960, default_height=720)
         self.addCleanup(window.destroy)
@@ -69,7 +77,14 @@ class ListCardClippingTests(unittest.TestCase):
 
                 adjustment = card.get_vadjustment()
                 self.assertGreater(adjustment.get_upper(), adjustment.get_page_size())
-                adjustment.set_value(adjustment.get_upper() - adjustment.get_page_size())
+                # Move focus with the virtualized list, without changing the
+                # selection. Otherwise GTK can reveal the previously focused
+                # row again after the adjustment is changed.
+                card.get_child().scroll_to(
+                    selection.get_model().get_n_items() - 1,
+                    Gtk.ListScrollFlags.FOCUS,
+                    None,
+                )
                 _settle()
                 self.assertGreater(adjustment.get_value(), 0)
                 self._assert_rounded_clip(card)

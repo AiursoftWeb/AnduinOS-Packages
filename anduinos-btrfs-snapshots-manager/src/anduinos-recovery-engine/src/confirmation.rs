@@ -477,13 +477,22 @@ impl<B: ConfirmationBackend> ConfirmationEngine<B> {
         &self,
         transaction: &RollbackTransaction,
     ) -> Result<(), ConfirmationError> {
-        if self.backend.boot_id()? != transaction.applying_boot_id.clone().unwrap_or_default() {
+        let expected_boot = if transaction.restarts_after_apply() {
+            transaction.target_boot_id.as_deref()
+        } else {
+            transaction.applying_boot_id.as_deref()
+        };
+        if Some(self.backend.boot_id()?.as_str()) != expected_boot {
             return Err(ConfirmationError::new(
                 ConfirmationErrorCode::IdentityMismatch,
                 "Rollback confirmation is running in a different boot",
             ));
         }
-        if self.backend.kernel_release()? != transaction.kernel_release {
+        let expected_kernel = transaction
+            .target_kernel_release
+            .as_deref()
+            .unwrap_or(&transaction.kernel_release);
+        if self.backend.kernel_release()? != expected_kernel {
             return Err(ConfirmationError::new(
                 ConfirmationErrorCode::IdentityMismatch,
                 "The running kernel does not match the rollback transaction",
@@ -1061,6 +1070,7 @@ mod tests {
                 "b".repeat(64),
                 "c".repeat(64),
             );
+            transaction.use_continue_boot_protocol();
             transaction
                 .transition(RollbackPhase::Armed, Utc::now())
                 .unwrap();
@@ -1757,5 +1767,38 @@ mod tests {
             inner.records[&transaction.fallback_deployment_id].state,
             DeploymentState::Ready
         );
+    }
+    #[test]
+    fn target_confirmation_accepts_a_distinct_boot_and_its_older_kernel() {
+        let (backend, mut transaction) = FakeBackend::booted();
+        transaction.schema_version = 7;
+        transaction.recovery_protocol_version = 3;
+        transaction.applying_boot_id = Some("11111111-2222-4333-8444-555555555555".into());
+        transaction.target_boot_id = Some(BOOT.into());
+        transaction.kernel_release = "7.1.0-recovery".into();
+        transaction.target_kernel_release = Some("7.0.0-test".into());
+        transaction.validate().unwrap();
+        backend.inner.lock().unwrap().transaction = Some(transaction);
+        assert_eq!(
+            ConfirmationEngine::new(backend).reconcile().unwrap(),
+            ConfirmationOutcome::Confirmed
+        );
+    }
+
+    #[test]
+    fn recovery_completion_cannot_be_confirmed_as_a_successful_target_boot() {
+        let (backend, mut transaction) = FakeBackend::booted();
+        transaction.schema_version = 7;
+        transaction.recovery_protocol_version = 3;
+        transaction.phase = RollbackPhase::AppliedAwaitingBoot;
+        transaction.target_kernel_release = Some("7.0.0-test".into());
+        backend.inner.lock().unwrap().transaction = Some(transaction);
+        assert_eq!(
+            ConfirmationEngine::new(backend.clone())
+                .reconcile()
+                .unwrap(),
+            ConfirmationOutcome::NoAction
+        );
+        assert!(backend.inner.lock().unwrap().archived.is_empty());
     }
 }

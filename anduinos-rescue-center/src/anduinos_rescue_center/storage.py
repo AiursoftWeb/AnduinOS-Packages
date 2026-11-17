@@ -79,28 +79,13 @@ def probe_inventory(
                 continue
             path = _string(node.get("path"))
             filesystem = _string(node.get("fstype")).lower()
-            mountpoints = tuple(
-                item for item in (node.get("mountpoints") or ()) if isinstance(item, str) and item
-            )
-            identity = _identity(
-                path,
-                _string(node.get("maj:min")),
-                _string(node.get("uuid")),
-                _string(node.get("partuuid")),
-                _integer(node.get("size")),
-            )
-            partition = Partition(
-                path=path,
-                parent=disk_path,
-                size_bytes=_integer(node.get("size")),
-                filesystem=filesystem,
-                filesystem_uuid=_string(node.get("uuid")),
-                label=_string(node.get("label")),
-                partuuid=_string(node.get("partuuid")),
-                mountpoints=mountpoints,
-                identity=identity,
-                active_system="/" in mountpoints,
-            )
+            partition = _partition(node, disk_path)
+            if filesystem == "crypto_luks":
+                try:
+                    partition = _mapped_partition(node, disk_path)
+                except RuntimeError as error:
+                    partition = replace(partition, probe_error=str(error))
+            path, filesystem = partition.path, partition.filesystem
             if filesystem in {"btrfs", "ext2", "ext3", "ext4", "xfs", "ntfs", "ntfs3"}:
                 try:
                     found = inspector(path, filesystem)
@@ -380,31 +365,58 @@ def resolve_target(path: str, identity: str, *, run: Run = subprocess.run) -> Pa
             continue
         parent = _string(root.get("path"))
         for node in _descendants(root):
-            if node.get("type") != "part" or node.get("path") != path:
+            if node.get("type") != "part":
                 continue
-            current = _identity(
-                path, _string(node.get("maj:min")), _string(node.get("uuid")),
-                _string(node.get("partuuid")), _integer(node.get("size")),
-            )
-            if current != identity:
+            partition = _partition(node, parent)
+            if partition.filesystem == "crypto_luks" and partition.path != path:
+                children = [child for child in _descendants(node) if child.get("path") == path]
+                if not children:
+                    continue
+                partition = _mapped_partition(node, parent)
+            if partition.path != path:
+                continue
+            if partition.identity != identity:
                 raise RuntimeError(tr("The selected partition changed after it was scanned"))
-            mounts = tuple(
-                item for item in (node.get("mountpoints") or ())
-                if isinstance(item, str) and item
-            )
-            return Partition(
-                path=path,
-                parent=parent,
-                size_bytes=_integer(node.get("size")),
-                filesystem=_string(node.get("fstype")).lower(),
-                filesystem_uuid=_string(node.get("uuid")),
-                label=_string(node.get("label")),
-                partuuid=_string(node.get("partuuid")),
-                mountpoints=mounts,
-                identity=current,
-                active_system="/" in mounts,
-            )
+            return partition
     raise RuntimeError(tr("The selected partition is no longer available"))
+
+
+def _partition(node: dict, parent: str) -> Partition:
+    """Bind physical partitions, including mount use below a locked container."""
+    path = _string(node.get("path"))
+    mounts = tuple(sorted({
+        item for child in [node, *_descendants(node)]
+        for item in (child.get("mountpoints") or ()) if isinstance(item, str) and item
+    }))
+    return Partition(
+        path=path, parent=parent, size_bytes=_integer(node.get("size")),
+        filesystem=_string(node.get("fstype")).lower(),
+        filesystem_uuid=_string(node.get("uuid")), label=_string(node.get("label")),
+        partuuid=_string(node.get("partuuid")), mountpoints=mounts,
+        identity=_identity(path, _string(node.get("maj:min")), _string(node.get("uuid")),
+                           _string(node.get("partuuid")), _integer(node.get("size"))),
+        active_system="/" in mounts,
+        encrypted=_string(node.get("fstype")).lower() == "crypto_luks",
+    )
+
+
+def _mapped_partition(outer: dict, parent: str) -> Partition:
+    """Accept one direct LUKS mapping; never guess between aliases or layers."""
+    container = _partition(outer, parent)
+    children = outer.get("children") or []
+    if not children:
+        return container
+    if (len(children) != 1 or children[0].get("type") != "crypt"
+            or children[0].get("children")
+            or _string(children[0].get("fstype")).lower() not in {"btrfs", "ext4"}):
+        raise RuntimeError(tr("The encrypted volume has an unsupported or ambiguous mapping"))
+    mapped = _partition(children[0], parent)
+    return replace(
+        mapped, encrypted=True, container_path=container.path,
+        container_identity=container.identity, luks_uuid=container.filesystem_uuid,
+        identity=hashlib.sha256((container.identity + mapped.identity).encode()).hexdigest(),
+        active_system=container.active_system, mountpoints=container.mountpoints,
+    )
 
 
 def probe_secure_boot(*, run: Run = subprocess.run) -> str:

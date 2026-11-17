@@ -17,6 +17,159 @@ from test_frontend import state
 from test_manual_layout import manual_disk, selection
 
 
+class DiskEncryptionPageTests(unittest.TestCase):
+    def test_free_session_hides_passwords_and_displays_chinese_message(self):
+        shared = state()
+        shared.update(lang="zh_CN", development_mode=False,
+                      has_pro_entitlement=False,
+                      _platform_probe_result=PlatformProbe(
+                          Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED))
+        with patch("pages.probe_physical_memory_bytes", return_value=8 * 1024**3):
+            page = pages.build_disk_layout_page(shared, Mock())
+        widgets = list(descendants(page))
+        self.assertFalse(any(isinstance(w, Adw.PasswordEntryRow) for w in widgets))
+        self.assertTrue(any(isinstance(w, Gtk.LinkButton) and w.get_label() == "磁盘加密是专业版独有的功能 请去 https://www.anduinos.com/pro" and w.get_uri() == "https://www.anduinos.com/pro" for w in widgets))
+        self.assertEqual(len(pages._manual_role_choices("en_US")), 3)
+        self.assertEqual(len(pages._manual_role_choices("en_US", has_pro_entitlement=True)), 4)
+
+    def test_unencrypted_next_requires_confirmation_and_encrypted_next_does_not(self):
+        for filesystem in ("btrfs", "ext4"):
+            with self.subTest(filesystem=filesystem):
+                shared = state()
+                shared.update(
+                    development_mode=True, has_pro_entitlement=True, filesystem=filesystem,
+                    _platform_probe_result=PlatformProbe(
+                        Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED),
+                )
+                window = Gtk.Window()
+                self.addCleanup(window.destroy)
+                nav = Mock()
+                nav.get_root.return_value = window
+                with patch("pages.probe_physical_memory_bytes", return_value=8 * 1024**3), \
+                        patch("pages.build_user_page", return_value=Adw.NavigationPage()):
+                    page = pages.build_disk_layout_page(shared, nav)
+                    window.set_child(page)
+                    window.present()
+                    dispatch_refresh()
+                    widgets = list(descendants(page))
+                    footer = next(w for w in widgets if w.has_css_class("wizard-navigation"))
+
+                    # Cancelling does not acknowledge future attempts to proceed.
+                    for response in ("cancel", "continue"):
+                        footer.next_button.emit("clicked")
+                        dispatch_refresh()
+                        dialog = next(w for w in Gtk.Window.get_toplevels()
+                                      if isinstance(w, Adw.MessageDialog) and w.get_visible())
+                        self.addCleanup(dialog.destroy)
+                        nav.push.assert_not_called()
+                        self.assertEqual(dialog.get_default_response(), "cancel")
+                        self.assertEqual(dialog.get_close_response(), "cancel")
+                        self.assertEqual(dialog.get_response_label("continue"), "Continue")
+                        self.assertEqual(dialog.get_response_appearance("continue"),
+                                         Adw.ResponseAppearance.DESTRUCTIVE)
+                        self.assertIn("physical access", dialog.get_body())
+                        dialog.response(response)
+                        dispatch_refresh()
+                        if response == "cancel":
+                            nav.push.assert_not_called()
+                        else:
+                            nav.push.assert_called_once()
+                        dialog.destroy()
+
+                    nav.push.reset_mock()
+                    entries = [w for w in widgets if isinstance(w, Adw.PasswordEntryRow)]
+                    entries[0].set_text("example-disk-password")
+                    entries[1].set_text("example-disk-password")
+                    next(w for w in widgets if isinstance(w, Gtk.CheckButton)).set_active(True)
+                    footer.next_button.emit("clicked")
+                    nav.push.assert_called_once()
+                    self.assertFalse(any(isinstance(w, Adw.MessageDialog) and w.get_visible()
+                                         for w in Gtk.Window.get_toplevels()))
+                window.destroy()
+
+    def test_native_vm_preview_exposes_credentials_without_development_mode(self):
+        shared = state()
+        shared.update(
+            development_mode=False,
+            has_pro_entitlement=True,
+            _encryption_preview=True,
+            _platform_probe_result=PlatformProbe(
+                Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED
+            ),
+        )
+        with patch("pages.probe_physical_memory_bytes", return_value=8 * 1024**3):
+            page = pages.build_disk_layout_page(shared, Mock())
+
+        entries = [
+            widget for widget in descendants(page)
+            if isinstance(widget, Adw.PasswordEntryRow)
+        ]
+        self.assertEqual(len(entries), 2)
+
+    def test_blank_mismatch_and_saved_key_control_continuation_for_both_filesystems(self):
+        from frontend import clear_disk_credentials
+        for filesystem in ("btrfs", "ext4"):
+            with self.subTest(filesystem=filesystem):
+                shared = state()
+                shared.update(development_mode=True, has_pro_entitlement=True, filesystem=filesystem,
+                    swap_size_mib=4096, _platform_probe_result=PlatformProbe(
+                        Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED))
+                with patch("pages.probe_physical_memory_bytes", return_value=8 * 1024**3):
+                    page = pages.build_disk_layout_page(shared, Mock())
+                    widgets = list(descendants(page))
+                    entries = [w for w in widgets if isinstance(w, Adw.PasswordEntryRow)]
+                    saved = next(w for w in widgets if isinstance(w, Gtk.CheckButton))
+                    swap = next(w for w in widgets if isinstance(w, Adw.SwitchRow))
+                    footer = next(w for w in widgets if w.has_css_class("wizard-navigation"))
+                    self.assertTrue(footer.next_button.get_sensitive())
+                    entries[0].set_text("example-disk-password")
+                    entries[1].set_text("does-not-match")
+                    self.assertFalse(footer.next_button.get_sensitive())
+                    entries[1].set_text("example-disk-password")
+                    self.assertFalse(footer.next_button.get_sensitive())
+                    self.assertEqual(len(shared["disk_recovery_key"]), 48)
+                    saved.set_active(True)
+                    self.assertTrue(footer.next_button.get_sensitive())
+                    swap.set_active(False)
+                    self.assertEqual(shared["swap_encryption"], "plain")
+                    self.assertTrue(any(isinstance(w, Gtk.Label) and w.get_visible()
+                        and "without encryption" in w.get_text() for w in widgets))
+                    clear_disk_credentials(shared)
+                    self.assertTrue(all(not row.get_text() for row in entries))
+                    self.assertFalse(saved.get_active())
+                    self.assertEqual(shared["disk_recovery_key"], "")
+
+    def test_release_bios_and_manual_layouts_hide_encryption_controls(self):
+        for updates in ({"development_mode": False}, {"storage_mode": "manual"},
+                        {"_platform_probe_result": PlatformProbe(
+                            Architecture.AMD64, Firmware.BIOS, SecureBoot.DISABLED)}):
+            with self.subTest(updates=updates):
+                shared = state()
+                shared.update(development_mode=True, _platform_probe_result=PlatformProbe(
+                    Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED))
+                shared.update(updates)
+                with patch("pages.probe_physical_memory_bytes", return_value=8 * 1024**3):
+                    page = pages.build_disk_layout_page(shared, Mock())
+                self.assertFalse(any(isinstance(w, Adw.PasswordEntryRow)
+                                     for w in descendants(page)))
+
+    def test_encrypted_summary_shows_policy_without_credentials(self):
+        shared = state()
+        shared.update(development_mode=True, disk_password="example-disk-password",
+            disk_password_confirmation="example-disk-password",
+            disk_recovery_key="1234567890abcdef" * 3, disk_recovery_key_saved=True,
+            swap_size_mib=4096, _platform_probe_result=PlatformProbe(
+                Architecture.AMD64, Firmware.UEFI, SecureBoot.ENABLED))
+        with patch("pages.probe_physical_memory_bytes", return_value=8 * 1024**3):
+            page = pages.build_summary_page(shared, Mock())
+        text = "\n".join(w.get_text() for w in descendants(page) if isinstance(w, Gtk.Label))
+        self.assertIn("LUKS2", text)
+        self.assertIn("Emergency recovery key saved", text)
+        self.assertIn("crypto_LUKS", text)
+        self.assertNotIn(shared["disk_password"], text)
+        self.assertNotIn(shared["disk_recovery_key"], text)
+
+
 class Ext4StoragePageTests(unittest.TestCase):
     def test_ext4_requires_backup_ack_and_only_records_a_plan_then_can_undo(self):
         self.addCleanup(dispatch_refresh)

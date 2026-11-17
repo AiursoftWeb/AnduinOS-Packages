@@ -12,6 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("assembly", ROOT / "assemble-efi.py")
 assembly = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(assembly)
+generator_spec = importlib.util.spec_from_file_location("linux_generator", ROOT / "patch-linux-generator.py")
+linux_generator = importlib.util.module_from_spec(generator_spec)
+generator_spec.loader.exec_module(linux_generator)
 
 
 def pe_fixture(machine=0x8664, signed=False):
@@ -45,6 +48,60 @@ def module_fixture(name):
 
 
 class AssemblyTests(unittest.TestCase):
+    def test_encrypted_linux_entries_use_runtime_handoff_for_every_kernel(self):
+        # Redirect only the Linux-side credential path into this fixture. GRUB
+        # paths still describe the real supported ext4/Btrfs root layouts.
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            key = root / "machine.key"
+            key.write_bytes(os.urandom(64))
+            source = '''#!/bin/sh
+set -eu
+uses_abstraction() { return 0; }
+make_system_path_relative_to_its_root() { printf '%s' "$TEST_GRUB_PATH"; }
+GRUB_DEVICE_BOOT=/dev/mapper/test-root
+for version in current previous; do
+  initrd="initrd.img-$version"
+  initrd_path=" /boot/microcode /boot/$initrd"
+  initrd_path_only_early=
+  printf 'initrd %s\\n' "$initrd_path"
+done
+'''
+            script = root / "10_linux"
+            script.write_text(linux_generator.patch_generator(source).replace(
+                "anduinos_key=/etc/anduinos-luks/machine.key", f"anduinos_key={key}"))
+            for prefix in ("", "/@root"):
+                environment = dict(
+                    os.environ, GRUB_ANDUINOS_CRYPT_HANDOFF="y", GRUB_ENABLE_CRYPTODISK="y",
+                    TEST_GRUB_PATH=prefix + "/etc/anduinos-luks/machine.key",
+                )
+                result = subprocess.run(["sh", str(script)], env=environment,
+                                        capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                for version, line in zip(("current", "previous"), result.stdout.splitlines(), strict=True):
+                    self.assertEqual(line.split(), [
+                        "initrd", "/boot/microcode", "/boot/initrd.img-" + version,
+                        "newc:/anduinos-unlock.key:" + environment["TEST_GRUB_PATH"],
+                    ])
+                environment["GRUB_ANDUINOS_CRYPT_HANDOFF"] = ""
+                ordinary = subprocess.run(["sh", str(script)], env=environment,
+                                          capture_output=True, text=True)
+                self.assertEqual(ordinary.returncode, 0, ordinary.stderr)
+                self.assertNotIn("newc:", ordinary.stdout)
+                self.assertIn("/boot/initrd.img-previous", ordinary.stdout)
+            key.unlink()
+            environment["GRUB_ANDUINOS_CRYPT_HANDOFF"] = "y"
+            missing = subprocess.run(["sh", str(script)], env=environment,
+                                     capture_output=True, text=True)
+            self.assertNotEqual(missing.returncode, 0)
+            self.assertIn("handoff is not ready", missing.stderr)
+
+    def test_upstream_generator_changes_require_review(self):
+        for source in ("", linux_generator.ANCHOR * 2,
+                       linux_generator.ANCHOR + "# GRUB_ANDUINOS_CRYPT_HANDOFF"):
+            with self.assertRaisesRegex(ValueError, "review"):
+                linux_generator.patch_generator(source)
+
     def test_update_hook_accepts_only_the_native_efi_target(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

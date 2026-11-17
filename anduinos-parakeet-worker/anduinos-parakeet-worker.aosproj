@@ -1,0 +1,27 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-parakeet-worker</PackageName>
+    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Private offline Parakeet speech recognition worker for AnduinOS Voice Typing. Model weights are downloaded separately by the user.</PackageDescription>
+    <Section>utils</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>AGPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon stonking-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
+  </PropertyGroup>
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute stonking-addon=stonking" />
+    <Dependency Include="python3" />
+    <Dependency Include="python3-numpy" />
+    <Dependency Include="python3-onnxruntime" />
+    <IncludeScript Include="src/anduinos-parakeet-worker" Target="/usr/libexec/anduinos-parakeet-worker" />
+    <IncludeFile Include="NOTICE" Target="/usr/share/doc/anduinos-parakeet-worker/NOTICE" />
+    <IncludeFile Include="LICENSE" Target="/usr/share/doc/anduinos-parakeet-worker/LICENSE" />
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+  </ItemGroup>
+</Project>

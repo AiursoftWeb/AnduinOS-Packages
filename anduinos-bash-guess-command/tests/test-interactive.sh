@@ -184,6 +184,25 @@ accept_workflow_input() {
     printf '\033[C\nexit\n'
 }
 
+compound_workflow_input() {
+    wait_ready
+    printf 'sudo apt update && sudo '
+    wait_for_suggestion 'apt upgrade' ' '
+    [[ ! -e $TEST_ROOT/sudo.args ]] || fail 'compound prediction executed before acceptance'
+    printf '\033[C\nexit\n'
+}
+
+compound_history_input() {
+    wait_ready
+    for _ in {1..5}; do
+        printf 'sudo apt upgrade -y\n'
+        sleep 0.25
+    done
+    printf 'sudo apt update && sudo '
+    wait_for_suggestion $'\033[90mapt upgrade -y' ' '
+    printf '\033[C\nexit\n'
+}
+
 apt_skeleton_input() {
     wait_ready
     printf 'sudo apt '
@@ -545,8 +564,10 @@ run_session paste_input "$TEST_ROOT/paste.typescript"
 [[ $(<"$TEST_ROOT/paste-one") == PASTE_ONE &&
    $(<"$TEST_ROOT/paste-two") == PASTE_TWO ]] ||
     fail 'native multiline paste did not execute normally after Enter'
-if LC_ALL=C tr -d '\r' <"$TEST_ROOT/paste.typescript" | grep -Eqi \
-    -- '-- MULTILINE --|RET or C-m:|progress|updating tput cache|ble\.sh'; then
+# Drain the transcript: grep -q may close the pipe after a match, making tr
+# fail with SIGPIPE under pipefail even though completion succeeded.
+if LC_ALL=C tr -d '\r' <"$TEST_ROOT/paste.typescript" | grep -Ei \
+    -- '-- MULTILINE --|RET or C-m:|progress|updating tput cache|ble\.sh' >/dev/null; then
     fail 'line-editor UI leaked into multiline paste'
 fi
 
@@ -561,12 +582,12 @@ run_session recall_history_input "$TEST_ROOT/history-recall.typescript"
 
 run_session path_input "$TEST_ROOT/path.typescript"
 LC_ALL=C tr -d '\r' <"$TEST_ROOT/path.typescript" | \
-    grep -q 'anduinos-bash-guess-command' ||
+    grep 'anduinos-bash-guess-command' >/dev/null ||
     fail 'current-directory snapshot did not complete README.md'
 
 run_session explicit_current_path_input "$TEST_ROOT/explicit-path.typescript"
 LC_ALL=C tr -d '\r' <"$TEST_ROOT/explicit-path.typescript" | \
-    grep -q 'EXPLICIT_PATH_PREFIX' ||
+    grep 'EXPLICIT_PATH_PREFIX' >/dev/null ||
     fail 'an explicit ./ prefix prevented current-directory path completion'
 
 run_session ls_option_path_input "$TEST_ROOT/ls-option-path.typescript"
@@ -619,6 +640,17 @@ run_session resize_rows_input "$TEST_ROOT/resize-rows.typescript"
 if LC_ALL=C grep -aFq 'NATIVE_TEST> NATIVE_TEST> ' "$TEST_ROOT/resize-rows.typescript"; then
     fail 'row-only terminal resizing left duplicate prompts visible'
 fi
+
+# Compound sessions learn new transitions; keep them after the original
+# scenarios so they do not change those scenarios' persistent history.
+rm -f -- "$TEST_ROOT/sudo.args"
+run_session compound_workflow_input "$TEST_ROOT/compound-workflow.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'apt upgrade' ]] ||
+    fail 'same-line update did not predict upgrade without adding flags'
+
+run_session compound_history_input "$TEST_ROOT/compound-history.typescript"
+[[ $(<"$TEST_ROOT/sudo.args") == 'apt upgrade -y' ]] ||
+    fail 'same-line update did not reuse the learned upgrade flags'
 
 # Keep opt-out lifecycle probes last: they deliberately toggle the master switch
 # and must not influence the persistent ranking exercised above.

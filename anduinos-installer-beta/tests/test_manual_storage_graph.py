@@ -69,6 +69,52 @@ def manual_plan(
 
 
 class ManualStorageGraphTests(unittest.TestCase):
+    def test_optional_recovery_partition_formats_and_deploys_only_when_selected(self):
+        from installer_core.storage_commands import build_manual_storage_commands
+        from installer_core.executor import InstallerExecutor
+        for architecture in Architecture:
+            for filesystem in Filesystem:
+                for include_recovery in (False, True):
+                    with self.subTest(architecture=architecture, recovery=include_recovery):
+                        base = selection(filesystem=filesystem)
+                        chosen = replace(base, new_partitions=(*base.new_partitions,
+                            ManualPartitionRequest(ManualPartitionRole.RECOVERY, 113 * 1024, 113 * 1024 + 256)
+                        )) if include_recovery else base
+                        plan, inventory = manual_plan(chosen=chosen, architecture=architecture, filesystem=filesystem)
+                        validate_plan(plan)
+                        validate_manual_storage_graph(plan, inventory)
+                        decoded = InstallPlan.from_dict(plan.to_dict())
+                        self.assertEqual(decoded, plan)
+                        commands = build_manual_storage_commands(plan, inventory)
+                        self.assertEqual("recovery" in commands.devices, include_recovery)
+                        if include_recovery:
+                            self.assertIn(("mkfs.ext4", "-F", "-L", "AOS_RECOVERY",
+                                           commands.devices["recovery"]), commands.format)
+                        pipeline = InstallerExecutor(lambda _message: None).build_steps(plan)
+                        self.assertEqual("deploy-recovery-environment" in [item.id for item in pipeline],
+                                         include_recovery)
+
+    def test_recovery_rejects_undersized_volumes(self):
+        for filesystem, size, message in (
+            (Filesystem.BTRFS, 255, "at least 256 MiB"),
+            (Filesystem.EXT4, 255, "at least 256 MiB"),
+        ):
+            with self.subTest(filesystem=filesystem, size=size):
+                base = selection(filesystem=filesystem)
+                chosen = replace(base, new_partitions=(*base.new_partitions,
+                    ManualPartitionRequest(ManualPartitionRole.RECOVERY, 113 * 1024, 113 * 1024 + size)))
+                with self.assertRaisesRegex(ValueError, message):
+                    manual_plan(chosen=chosen, filesystem=filesystem)
+        base = selection()
+        chosen = replace(base, new_partitions=(*base.new_partitions,
+            ManualPartitionRequest(ManualPartitionRole.RECOVERY, 113 * 1024, 113 * 1024 + 256)))
+        plan, _inventory = manual_plan(chosen=chosen)
+        bad = replace(plan.storage.graph, partitions=tuple(
+            replace(item, end_mib=item.start_mib + 255) if item.name == "recovery" else item
+            for item in plan.storage.graph.partitions))
+        with self.assertRaisesRegex(ValueError, "at least 256 MiB"):
+            validate_plan(replace(plan, storage=replace(plan.storage, graph=bad)))
+
     def test_preserved_bitlocker_is_valid_in_privileged_manual_graph(self):
         original = manual_disk()
         disk = replace(

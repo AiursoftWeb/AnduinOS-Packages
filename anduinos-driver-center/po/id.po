@@ -1260,8 +1260,8 @@ msgid "Generating & Signing..."
 msgstr "Menghasilkan & Menandatangani..."
 
 #: src/anduinos_driver_center/app.py:1940
-msgid "Add Printer"
-msgstr "Tambahkan Printer"
+msgid "Manage Printers in System Settings"
+msgstr "Kelola Printer di Pengaturan Sistem"
 
 #: src/anduinos_driver_center/app.py:1365
 #: src/anduinos_driver_center/app.py:1390
@@ -2365,3 +2365,282 @@ msgstr "Penandatanganan otomatis sekarang menggunakan sertifikat yang terdaftar.
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Perbaikan tanda tangan driver selesai. Sistem sekarang akan memeriksa apakah driver yang terinstal dapat dipercaya."
+
+msgid "Recovery Environment"
+msgstr "Lingkungan Pemulihan"
+
+msgid "Present"
+msgstr "Ada"
+
+msgid "Multiple recovery partitions found"
+msgstr "Ditemukan beberapa partisi pemulihan"
+
+msgid "Recovery partition not found"
+msgstr "Partisi pemulihan tidak ditemukan"
+
+msgid "Recovery partition"
+msgstr "Partisi pemulihan"
+
+msgid "Recovery package"
+msgstr "Paket pemulihan"
+
+msgid "GRUB menu entry"
+msgstr "Entri menu GRUB"
+
+msgid "Recovery menu entry not found"
+msgstr "Entri menu pemulihan tidak ditemukan"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Tidak dapat membaca menu GRUB"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "Status paket menggunakan cache APT lokal. Sumber perangkat lunak tidak disegarkan."
+
+msgid "Read recovery boot information"
+msgstr "Baca informasi boot pemulihan"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "Persiapan sebelumnya terhenti. Mintalah administrator memeriksa tabel partisi dan header swap yang disimpan sebelum mencoba lagi."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Persiapan otomatis tidak tersedia untuk konfigurasi disk atau swap ini. Mintalah administrator membuat partisi ext4 AOS_RECOVERY 256 MiB, lalu pindai lagi."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Mintalah administrator memeriksa volume pemulihan yang dikonfigurasi atau duplikat, lalu pindai lagi."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Tutup aplikasi yang memakai banyak memori dan pindai lagi. RAM yang tersedia tidak cukup untuk menonaktifkan swap ini dengan aman."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Terapkan citra pemulihan yang terpasang dan buat ulang menu GRUB?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Pasang atau perbarui hanya paket pemulihan menggunakan daftar paket saat ini?"
+
+msgid "Install or update recovery package"
+msgstr "Pasang atau perbarui paket pemulihan"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Versi kandidat tidak dapat diverifikasi dari cache APT lokal. Segarkan sumber di pemutakhir perangkat lunak, lalu pindai lagi."
+
+msgid "Recovery repair completed."
+msgstr "Perbaikan lingkungan pemulihan selesai."
+
+msgid "Repair recovery boot menu"
+msgstr "Perbaiki menu boot pemulihan"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Pindai lagi dan izinkan pemeriksaan hanya baca. Jika pemeriksaan tetap gagal, perbaiki instalasi Pusat Driver dan utilitas disknya."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Perkecil partisi swap dan buat partisi pemulihan"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Swap akan dinonaktifkan sementara. Cadangkan data dan biarkan komputer tetap menyala hingga operasi selesai."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Tidak dapat melanjutkan: partisi swap biasa tidak ditemukan pada disk sistem."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Tidak dapat melanjutkan: partisi swap lebih kecil dari 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Perbaikan memerlukan sistem AnduinOS Btrfs @root yang terpasang. Jalankan sistem terpasang dan pindai lagi."
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr "Perangkat grafis"
+
+msgid "Encrypted"
+msgstr "Terenkripsi"
+
+msgid "Not encrypted"
+msgstr "Tidak terenkripsi"
+
+msgid "Disk Encryption"
+msgstr "Enkripsi Disk"
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr "Periksa enkripsi untuk file sistem, file pribadi, dan swap."
+
+msgid "Unencrypted disk swap is active"
+msgstr "Swap disk tidak terenkripsi aktif"
+
+msgid "No disk swap is active"
+msgstr "Tidak ada swap disk aktif"
+
+msgid "Disk swap"
+msgstr "Swap disk"
+
+msgid "Encryption coverage"
+msgstr "Cakupan enkripsi"
+
+msgid "System files"
+msgstr "File sistem"
+
+msgid "Personal files (Home)"
+msgstr "File pribadi (Home)"
+
+msgid "Memory-based swap; not a disk partition"
+msgstr "Swap berbasis memori; bukan partisi disk"
+
+msgid "System recovery"
+msgstr "Pemulihan sistem"
+
+msgid "Snapshot Recovery Environment"
+msgstr "Lingkungan Pemulihan Snapshot"
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr "Tidak berlaku untuk ext4. Gunakan Pusat Penyelamatan dari Live USB."
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr "Swap tidak terenkripsi dapat menyimpan data pribadi dari memori."
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr "Enkripsi disk dapat dipilih saat instalasi baru."
+
+msgid "Configured"
+msgstr "Terkonfigurasi"
+
+msgid "Check recovery configuration"
+msgstr "Periksa konfigurasi pemulihan"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using the current disk password."
+msgstr "Operasi kredensial tidak selesai. Simpan kredensial lama dan baru Anda, lalu coba lagi menggunakan kata sandi disk saat ini."
+
+msgid "Current disk password"
+msgstr "Kata sandi disk saat ini"
+
+msgid "Current recovery key"
+msgstr "Kunci pemulihan saat ini"
+
+msgid "Unlock credentials"
+msgstr "Kredensial pembuka"
+
+msgid "Change disk password"
+msgstr "Ubah kata sandi disk"
+
+msgid "Replace recovery key"
+msgstr "Ganti kunci pemulihan"
+
+msgid "Checking credential configuration…"
+msgstr "Memeriksa konfigurasi kredensial…"
+
+msgid "New disk password"
+msgstr "Kata sandi disk baru"
+
+msgid "Confirm new disk password"
+msgstr "Konfirmasi kata sandi disk baru"
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr "Memperbarui kredensial disk. Jaga agar komputer tetap menyala."
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr "Kata sandi disk saat ini salah. Tidak ada kredensial yang diubah."
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr "Kunci pemulihan saat ini salah. Tidak ada kredensial yang diubah."
+
+msgid "Enter the current recovery key once to identify this preview's credential roles."
+msgstr "Masukkan kunci pemulihan saat ini sekali untuk mengidentifikasi peran kredensial pratinjau ini."
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr "Pilih kredensial baru yang belum digunakan oleh disk ini."
+
+msgid "Check the password length, characters and confirmation."
+msgstr "Periksa panjang, karakter, dan konfirmasi kata sandi."
+
+msgid "The internal startup credential could not be verified. Use Rescue Center from the Live USB."
+msgstr "Kredensial startup internal tidak dapat diverifikasi. Gunakan Rescue Center dari USB Live."
+
+msgid "This credential layout cannot be managed automatically. No existing credential was removed."
+msgstr "Tata letak kredensial ini tidak dapat dikelola secara otomatis. Tidak ada kredensial yang dihapus."
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr "Konfigurasi disk berubah. Hentikan alat disk lain dan coba lagi."
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr "Operasi kredensial disk lain sedang berjalan. Tunggu dan coba lagi."
+
+msgid "Administrator authentication was cancelled."
+msgstr "Autentikasi administrator dibatalkan."
+
+msgid "There is no free credential slot. Existing credentials remain available."
+msgstr "Tidak ada slot kredensial kosong. Kredensial yang ada tetap tersedia."
+
+msgid "The new credential could not be verified. Keep your existing credentials and try again."
+msgstr "Kredensial baru tidak dapat diverifikasi. Simpan kredensial yang ada dan coba lagi."
+
+msgid "Open"
+msgstr "Buka"
+
+msgid "New recovery key"
+msgstr "Kunci pemulihan baru"
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr "Saya telah menyimpan kunci pemulihan baru di luar komputer ini."
+
+msgid "This earlier preview needs the current recovery key once to identify its credential roles."
+msgstr "Pratinjau sebelumnya ini membutuhkan kunci pemulihan saat ini sekali untuk mengidentifikasi peran kredensialnya."
+
+msgid "The internal startup credential stays unchanged. The old credential stops working after success."
+msgstr "Kredensial startup internal tetap tidak berubah. Kredensial lama berhenti berfungsi setelah berhasil."
+
+msgid "Disk password changed."
+msgstr "Kata sandi disk diubah."
+
+msgid "Recovery key replaced."
+msgstr "Kunci pemulihan diganti."
+
+msgid "Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."
+msgstr "Gunakan 8 hingga 128 karakter ASCII yang dapat dicetak. Layar boot menggunakan tata letak keyboard AS."
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using your disk password or emergency recovery key."
+msgstr "Operasi kredensial tidak selesai. Simpan kredensial lama dan baru Anda, lalu coba lagi menggunakan kata sandi disk atau kunci pemulihan darurat."
+
+msgid "The emergency recovery key is generated by the system. Like your disk password, it unlocks the disk. Use your password normally; use the key in an emergency. Keep it outside this computer."
+msgstr "Kunci pemulihan darurat dibuat oleh sistem. Seperti kata sandi disk, kunci ini membuka disk. Gunakan kata sandi untuk pemakaian normal; gunakan kunci dalam keadaan darurat. Simpan di luar komputer ini."
+
+msgid "Current emergency recovery key"
+msgstr "Kunci pemulihan darurat saat ini"
+
+msgid "Replace emergency recovery key"
+msgstr "Ganti kunci pemulihan darurat"
+
+msgid "Reset forgotten disk password"
+msgstr "Atur ulang kata sandi disk yang terlupakan"
+
+msgid "Emergency recovery key"
+msgstr "Kunci pemulihan darurat"
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr "Kunci pemulihan darurat salah. Tidak ada kredensial yang diubah."
+
+msgid "Enter the current emergency recovery key once to identify this preview's credential roles."
+msgstr "Masukkan kunci pemulihan darurat saat ini sekali untuk mengidentifikasi peran kredensial pratinjau ini."
+
+msgid "New emergency recovery key"
+msgstr "Kunci pemulihan darurat baru"
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr "Saya telah menyimpan kunci pemulihan darurat baru di luar komputer ini."
+
+msgid "This earlier preview needs the current emergency recovery key once to identify its credential roles."
+msgstr "Pratinjau sebelumnya ini membutuhkan kunci pemulihan darurat saat ini sekali untuk mengidentifikasi peran kredensialnya."
+
+msgid "Emergency recovery key replaced."
+msgstr "Kunci pemulihan darurat diganti."
+
+msgid "Enter your emergency recovery key to set a new disk password. You do not need the forgotten password. Your emergency recovery key stays valid."
+msgstr "Masukkan kunci pemulihan darurat Anda untuk mengatur kata sandi disk baru. Anda tidak memerlukan kata sandi yang terlupakan. Kunci pemulihan darurat Anda tetap valid."
+
+msgid "Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr "Mengaktifkan enkripsi disk pada instalasi yang sudah ada belum didukung. Instal ulang menggunakan ISO AnduinOS terbaru untuk mengaktifkan enkripsi disk."
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr "Fitur Pro"
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
+msgstr "Beli AnduinOS Pro"

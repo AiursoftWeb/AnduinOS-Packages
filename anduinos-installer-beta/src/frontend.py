@@ -12,9 +12,16 @@ from dataclasses import replace
 from enum import Enum
 
 from installer_core.executor import describe_installation_pipeline
+from installer_core.encryption import EncryptionCredentials
+from installer_core.destructive_test import (
+    ALLOWED_TEST_VIRTUALIZATIONS, GUIDED_TEST_ENVIRONMENT, GUIDED_TEST_FLAG,
+    detect_virtualization,
+)
 from installer_core.btrfs import BtrfsCompression
 from installer_core.model import (
+    EncryptionMode,
     Filesystem,
+    Firmware,
     InstallMode,
     InstallPlan,
     StorageSpec,
@@ -201,6 +208,7 @@ def clear_manual_storage_selection(state: dict[str, object]) -> None:
 def clear_storage_strategy(state: dict[str, object]) -> None:
     """Clear choices whose meaning depends on one exact target topology."""
 
+    clear_disk_credentials(state)
     state["storage_strategy"] = ""
     state["storage_mode"] = InstallMode.ERASE_DISK.value
     state["filesystem"] = Filesystem.BTRFS.value
@@ -267,6 +275,7 @@ def apply_storage_strategy(
         raise ValueError("Invalid storage strategy")
     changed = state.get("storage_strategy") != strategy.value
     if changed:
+        clear_disk_credentials(state)
         clear_guided_storage_selection(state)
         clear_manual_storage_selection(state)
         state.pop("swap_size_mib", None)
@@ -297,9 +306,63 @@ def _human_size(size_bytes: int) -> str:
     return f"{size_bytes} B"
 
 
+def clear_disk_credentials(state: dict[str, object]) -> None:
+    """Drop wizard references and clear entries without leaving a UI copy."""
+    for name in ("disk_password", "disk_password_confirmation", "disk_recovery_key"):
+        state[name] = ""
+    state["disk_recovery_key_saved"] = False
+    state["swap_encryption"] = "auto"
+    clear_ui = state.pop("_clear_disk_password_ui", None)
+    if callable(clear_ui):
+        clear_ui()
+
+
+def disposable_encryption_preview() -> bool:
+    """Reuse the existing VM-only executor opt-in for M1 installation tests.
+
+    This only exposes controls. The privileged executor independently requires
+    both opt-ins, root, QEMU/KVM and its exact disposable /dev/vda target.
+    Ordinary launches and --development retain their existing behavior.
+    """
+    return (os.environ.get(GUIDED_TEST_ENVIRONMENT) == "1"
+            and detect_virtualization() in ALLOWED_TEST_VIRTUALIZATIONS)
+
+
+def prepare_encryption_credentials(state: dict[str, object]) -> EncryptionCredentials | None:
+    """Validate the wizard inputs without serializing them into the plan."""
+    password = str(state.get("disk_password") or "")
+    confirmation = str(state.get("disk_password_confirmation") or "")
+    if not password and not confirmation:
+        return None
+    if not state.get("has_pro_entitlement"):
+        raise FrontendPlanError("Encrypted installation is not available yet")
+    if state.get("storage_mode", "erase-disk") != "erase-disk":
+        raise FrontendPlanError("Disk encryption requires a new whole-disk installation")
+    if password != confirmation:
+        raise FrontendPlanError("The disk passwords do not match")
+    credentials = EncryptionCredentials(password, str(state.get("disk_recovery_key") or ""))
+    try:
+        credentials.validate()
+        if not state.get("disk_recovery_key_saved"):
+            raise FrontendPlanError("Save the emergency recovery key before continuing")
+    except Exception:
+        credentials.clear()
+        raise
+    return credentials
+
+
+def _validate_executor_credentials(plan: InstallPlan, credentials: EncryptionCredentials | None) -> None:
+    encrypted = plan.storage.encryption is EncryptionMode.LUKS2
+    if encrypted != (credentials is not None):
+        raise ValueError("Disk credentials do not match the installation plan")
+    if credentials is not None:
+        credentials.validate()
+
+
 def clear_plaintext_passwords(state: dict[str, object]) -> None:
     """Erase account secrets from both shared state and the visible entries."""
 
+    clear_disk_credentials(state)
     state["password"] = ""
     state["password_confirmation"] = ""
     clear_ui = state.pop("_clear_password_ui", None)
@@ -331,6 +394,17 @@ def create_install_plan(
             clear_plaintext_passwords(state)
         raise FrontendPlanError("Unsupported storage mode")
 
+    swap_encryption = str(state.get("swap_encryption", "auto"))
+    encryption = EncryptionMode.NONE
+    try:
+        credentials = prepare_encryption_credentials(state)
+        if credentials is not None:
+            encryption = EncryptionMode.LUKS2
+            credentials.clear()
+    except Exception:
+        if clear_passwords:
+            clear_plaintext_passwords(state)
+        raise
     password = str(state.get("password") or "")
     confirmation = str(state.get("password_confirmation") or "")
     try:
@@ -378,10 +452,12 @@ def create_install_plan(
         state["disk"] = selected.identity.path
     if platform is None:
         platform = probe_platform()
-    base_choices = state
+    if encryption is EncryptionMode.LUKS2 and platform.firmware is not Firmware.UEFI:
+        raise FrontendPlanError("Disk encryption requires UEFI")
+    base_choices = dict(state, encryption=encryption.value, swap_encryption=swap_encryption)
     storage_override = None
     if storage_mode is InstallMode.MANUAL:
-        base_choices = dict(state)
+        base_choices = dict(base_choices)
         base_choices.pop("swap_size_mib", None)
         previous_preview = state.get("manual_storage_preview_model")
         if not isinstance(previous_preview, ManualStoragePreview):
@@ -505,8 +581,14 @@ def _confirmed_esp_replacement(state, preview):
 class ExecutorClient:
     """Stream one immutable plan to the privileged helper as JSON events."""
 
-    def __init__(self, helper: str = "/usr/bin/anduinos-installer-executor"):
+    def __init__(
+        self, helper: str = "/usr/bin/anduinos-installer-executor", *,
+        destructive_test: bool = False,
+        has_pro_entitlement: bool = False,
+    ):
         self.helper = helper
+        self.destructive_test = destructive_test
+        self.has_pro_entitlement = has_pro_entitlement
 
     def run(
         self,
@@ -514,13 +596,18 @@ class ExecutorClient:
         log: Callable[[str], None],
         progress: Callable[[str, int, int], None],
         step_status: Callable[[str, str, str], None] | None = None,
+        *,
+        encryption_credentials: EncryptionCredentials | None = None,
     ) -> tuple[bool, str]:
         step_status = step_status or (
             lambda _step, _status, _message: None
         )
         try:
             validate_plan(plan)
+            _validate_executor_credentials(plan, encryption_credentials)
         except Exception as error:
+            if encryption_credentials is not None:
+                encryption_credentials.clear()
             return False, str(error)
         inhibited_helper = [
             "/usr/bin/systemd-inhibit",
@@ -529,6 +616,20 @@ class ExecutorClient:
             "--why=Installing AnduinOS",
             self.helper,
         ]
+        if self.destructive_test:
+            # Carry both existing executor opt-ins across sudo explicitly;
+            # sudo's environment filtering must not turn a VM test into a
+            # release invocation. Keep the public no-arguments launcher intact:
+            # only this explicitly selected VM path calls the internal CLI.
+            # That CLI independently verifies root, virtualization and target.
+            inhibited_helper[-1:] = [
+                "/usr/bin/env", f"{GUIDED_TEST_ENVIRONMENT}=1",
+                "/usr/bin/python3",
+                "/usr/lib/anduinos-installer-beta/executor_cli.py",
+                GUIDED_TEST_FLAG,
+            ]
+        if self.has_pro_entitlement:
+            inhibited_helper.append("--pro-entitlement")
         # The inhibitor protects the privileged executor's destructive
         # lifetime, so acquire it inside the same privilege boundary. Asking
         # the unprivileged GTK process for a block inhibitor is unreliable when
@@ -548,7 +649,16 @@ class ExecutorClient:
             assert process.stdin is not None
             assert process.stdout is not None
             process.stdin.write(json.dumps(plan.to_dict()) + "\n")
+            if encryption_credentials is not None:
+                # The executor reads this second private line separately. It
+                # never enters the immutable plan, argv or progress stream.
+                process.stdin.write(json.dumps({
+                    "passphrase": encryption_credentials.passphrase,
+                    "recovery_key": encryption_credentials.recovery_key,
+                }) + "\n")
             process.stdin.close()
+            if encryption_credentials is not None:
+                encryption_credentials.clear()
 
             final_error = ""
             for line in process.stdout:
@@ -581,6 +691,9 @@ class ExecutorClient:
             return True, ""
         except OSError as error:
             return False, f"Could not start privileged executor: {error}"
+        finally:
+            if encryption_credentials is not None:
+                encryption_credentials.clear()
 
 
 class DevelopmentExecutorClient:
@@ -592,15 +705,22 @@ class DevelopmentExecutorClient:
         log: Callable[[str], None],
         progress: Callable[[str, int, int], None],
         step_status: Callable[[str, str, str], None] | None = None,
+        *,
+        encryption_credentials: EncryptionCredentials | None = None,
     ) -> tuple[bool, str]:
         step_status = step_status or (
             lambda _step, _status, _message: None
         )
         try:
             validate_plan(plan)
+            _validate_executor_credentials(plan, encryption_credentials)
         except Exception as error:
+            if encryption_credentials is not None:
+                encryption_credentials.clear()
             return False, str(error)
 
+        if encryption_credentials is not None:
+            encryption_credentials.clear()
         pipeline = describe_installation_pipeline(plan)
         total = sum(weight for _step, weight in pipeline)
         completed = 0
