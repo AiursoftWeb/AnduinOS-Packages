@@ -11,6 +11,7 @@ mod imp {
 
     #[derive(Default)]
     pub struct DashboardView {
+        pub health_group: RefCell<Option<adw::PreferencesGroup>>,
         pub health_title: RefCell<Option<gtk::Label>>,
         pub health_summary: RefCell<Option<gtk::Label>>,
         pub health_details: RefCell<Option<gtk::Label>>,
@@ -66,8 +67,8 @@ impl DashboardView {
     fn setup_ui(&self) {
         let imp = self.imp();
 
-        // Always show the scope and health of the firewall controls first.
-        let health_group = adw::PreferencesGroup::builder().build();
+        // Only show the health card when the inspection needs attention.
+        let health_group = adw::PreferencesGroup::builder().visible(false).build();
         // Match Swap Control's recommendation card: a clipped 4px accent,
         // a normal heading and caption text, with evidence available on demand.
         let card = gtk::Box::builder()
@@ -126,6 +127,7 @@ impl DashboardView {
         card.append(&inner);
         health_group.add(&card);
         self.add(&health_group);
+        *imp.health_group.borrow_mut() = Some(health_group);
         *imp.health_title.borrow_mut() = Some(title);
         *imp.health_summary.borrow_mut() = Some(summary);
         *imp.health_details.borrow_mut() = Some(details);
@@ -317,6 +319,7 @@ impl DashboardView {
                             &message,
                         );
                         view.set_health_color((0.93, 0.73, 0.0));
+                        view.set_health_visible(true);
                     }
                 }
                 view.imp().health_in_flight.set(false);
@@ -325,15 +328,23 @@ impl DashboardView {
     }
 
     fn update_health(&self, report: &health::Health) {
+        let needs_attention = report.needs_attention();
+        let warning = !report.errors.is_empty() || report.has_other_manager_installed();
+        self.set_health_visible(needs_attention || warning);
+        if !needs_attention && !warning { return; }
         self.set_health_text(&report.title(), &report.summary(), &report.explanation());
-        let color = if report.needs_attention() {
+        let color = if needs_attention {
             (0.93, 0.20, 0.20)
-        } else if !report.errors.is_empty() || report.has_other_manager_installed() {
-            (0.93, 0.73, 0.0)
         } else {
-            (0.15, 0.72, 0.25)
+            (0.93, 0.73, 0.0)
         };
         self.set_health_color(color);
+    }
+
+    fn set_health_visible(&self, visible: bool) {
+        if let Some(group) = self.imp().health_group.borrow().as_ref() {
+            group.set_visible(visible);
+        }
     }
 
     fn set_health_text(&self, title: &str, summary: &str, details: &str) {
