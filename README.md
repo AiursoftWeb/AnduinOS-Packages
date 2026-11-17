@@ -532,7 +532,7 @@ These URLs are not on a monthly schedule, but should be reviewed whenever infras
 | `https://apkg-dev.aiursoft.com/artifacts/anduinos/` | `anduinos-apt-config-dev/deploy/**/*.sources` | APT repo (dev channel) |
 | `https://packages.anduinos.com/artifacts/anduinos/` | `anduinos-apt-config/deploy/**/*.sources` | APT repo (production channel) |
 | `https://packages.aiursoft.cn/artifacts/anduinos/` | `anduinos-apt-config-for-china/assets/**/*.sources` | APT repo (production mirror for China) |
-| `https://nuget.aiursoft.com/v3/index.json` | `nuget.config:5` | NuGet source for build tools |
+| `https://nupkg.aiursoft.com/v3/index.json` | `nuget.config:5` | NuGet source for build tools |
 | `https://dl.flathub.org/repo/flathub.flatpakrepo` | `anduinos-appstore/scripts/postinst.sh:4` | Flathub remote |
 | `https://mirror.aiursoft.com/ubuntu` | Multiple `.aosproj` files | Ubuntu mirror |
 
