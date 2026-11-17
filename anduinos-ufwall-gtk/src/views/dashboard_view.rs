@@ -208,8 +208,17 @@ impl DashboardView {
     }
 
     pub fn refresh_data(&self) {
-        let imp = self.imp();
         self.refresh_health();
+        self.refresh_statistics();
+    }
+
+    pub fn refresh_with_health(&self, report: &health::Health) {
+        self.update_health(report);
+        self.refresh_statistics();
+    }
+
+    fn refresh_statistics(&self) {
+        let imp = self.imp();
         let limit = match imp.log_count_combo.borrow().as_ref().unwrap().selected() {
             0 => 50,
             1 => 100,
@@ -254,13 +263,7 @@ impl DashboardView {
                     row.remove_css_class("warning");
                     match report {
                         Ok(report) => {
-                            row.set_title(&report.title());
-                            row.set_subtitle(&report.explanation());
-                            if report.needs_attention() {
-                                row.add_css_class("error");
-                            } else if !report.errors.is_empty() || report.has_other_manager_installed() {
-                                row.add_css_class("warning");
-                            }
+                            view.update_health(&report);
                         }
                         Err(_) => {
                             row.set_title(&i18n("Cannot confirm the complete firewall state"));
@@ -272,6 +275,20 @@ impl DashboardView {
                 view.imp().health_in_flight.set(false);
             }
         });
+    }
+
+    fn update_health(&self, report: &health::Health) {
+        if let Some(row) = self.imp().health_row.borrow().as_ref() {
+            row.remove_css_class("error");
+            row.remove_css_class("warning");
+            row.set_title(&report.title());
+            row.set_subtitle(&report.explanation());
+            if report.needs_attention() {
+                row.add_css_class("error");
+            } else if !report.errors.is_empty() || report.has_other_manager_installed() {
+                row.add_css_class("warning");
+            }
+        }
     }
 
     fn populate(
