@@ -49,15 +49,62 @@ def query(command: list[str]) -> subprocess.CompletedProcess:
     )
 
 
+def docker_raw_guards(entries: list[dict]) -> list[dict]:
+    """Recognize endpoint guards using the corresponding Docker port rule.
+
+    Docker also writes directly into raw/PREROUTING, outside named DOCKER
+    chains. Do not exempt that whole table or trust a bridge name alone.
+    """
+    guards = []
+    for item in entries:
+        rule = item.get("rule", {})
+        family = rule.get("family")
+        if family not in ("ip", "ip6") or rule.get("table") != "filter" or rule.get("chain") != "DOCKER":
+            continue
+        expressions = rule.get("expr", [])
+        if {"accept": None} not in expressions:
+            continue
+        addresses = [e["match"]["right"] for e in expressions if e.get("match", {}).get("left") ==
+                     {"payload": {"protocol": family, "field": "daddr"}}
+                     and e["match"].get("op") == "==" and isinstance(e["match"].get("right"), str)]
+        bridges = [e["match"]["right"] for e in expressions if e.get("match", {}).get("left") ==
+                   {"meta": {"key": "oifname"}} and e["match"].get("op") == "=="
+                   and isinstance(e["match"].get("right"), str)]
+        for address in addresses:
+            for bridge in bridges:
+                destination = {"match": {"op": "==", "left": {
+                    "payload": {"protocol": family, "field": "daddr"}}, "right": address}}
+                ingress = {"match": {"op": "!=", "left": {
+                    "meta": {"key": "iifname"}}, "right": bridge}}
+                if ingress in expressions:
+                    guards.append({"family": family, "table": "raw", "chain": "PREROUTING",
+                                   "expr": [destination, ingress, {"drop": None}]})
+    return guards
+
+
 def rule_owners(document: dict) -> set[str]:
     """Identify filtering chains, without calling Docker/libvirt/UFW conflicts."""
     entries = document["nftables"]
     if not isinstance(entries, list):
         raise ValueError("Invalid nftables response")
-    rules = {
-        (r["rule"]["family"], r["rule"]["table"], r["rule"]["chain"])
-        for r in entries if "rule" in r
+    guards = docker_raw_guards(entries)
+    docker_raw_chains = {
+        (c["chain"]["family"], "raw", "PREROUTING")
+        for c in entries if "chain" in c
+        and c["chain"].get("table") == "raw" and c["chain"].get("name") == "PREROUTING"
+        and c["chain"].get("type") == "filter" and c["chain"].get("hook") == "prerouting"
+        and c["chain"].get("prio") == -300 and c["chain"].get("policy") == "accept"
     }
+    rules = set()
+    for item in entries:
+        if "rule" not in item:
+            continue
+        rule = item["rule"]
+        key = (rule["family"], rule["table"], rule["chain"])
+        normalized = {k: rule[k] for k in ("family", "table", "chain")}
+        normalized["expr"] = [e for e in rule.get("expr", []) if set(e) != {"counter"}]
+        if key not in docker_raw_chains or normalized not in guards:
+            rules.add(key)
     managed_tables = {
         (c["chain"]["family"], c["chain"]["table"])
         for c in entries if "chain" in c
