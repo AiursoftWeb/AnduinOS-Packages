@@ -15,10 +15,13 @@ import gi
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gio, GLib, Gtk  # noqa: E402
+from gi.repository import Adw, Gio, GLib, Gtk, Pango  # noqa: E402
 
 from .computer_ui import ComputerPage
 from .intel_graphics_ui import IntelGraphicsPage
+from .recovery import RecoveryState, recovery_state, repair_step
+from .encryption import EncryptionState, encryption_state
+from .encryption_ui import create_encryption_page, encryption_summary
 
 from .core import (
     AudioState,
@@ -50,6 +53,7 @@ from anduinos_secureboot.decision import Facts, decide
 
 
 APP_ID = "com.anduinos.DriverCenter"
+PRO_URL = "https://www.anduinos.com/pro"
 HELPER = "/usr/libexec/anduinos-driver-center/driver-helper"
 HELPER_SUCCESS_MESSAGE = "Driver operation completed successfully."
 
@@ -141,10 +145,12 @@ def _scrolled_window(**properties) -> Gtk.ScrolledWindow:
 
 
 class DriverCenterWindow(Adw.ApplicationWindow):
-    def __init__(self, app: Adw.Application, initial_page: str = "home"):
+    def __init__(self, app: Adw.Application, initial_page: str = "home",
+                 *, has_pro_entitlement: bool = False):
         super().__init__(application=app, title=_("AnduinOS Driver Center"))
+        self.has_pro_entitlement = has_pro_entitlement
         self.set_default_size(1250, 810)
-        self.set_size_request(720, 520)
+        self.set_size_request(380, 500)
         self._computer_page: ComputerPage | None = None
         self._graphics: list[HardwareDevice] = []
         self._secure_boot: SecureBootState | None = None
@@ -152,6 +158,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self._dkms: DkmsState | None = None
         self._audio: AudioState | None = None
         self._printing: PrintingState | None = None
+        self._recovery: RecoveryState | None = None
+        self._encryption = EncryptionState()
         self._graphics_scan = GraphicsScan()
         self._selected_package: str | None = None
         self._selected_page_name: str | None = initial_page
@@ -186,6 +194,10 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             .installed-pill {
                 color: @window_fg_color;
                 background-color: alpha(@window_fg_color, 0.10);
+            }
+            .pro-pill {
+                color: @warning_color;
+                background-color: alpha(@warning_color, 0.16);
             }
             .success-pill {
                 color: @success_color;
@@ -284,6 +296,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         content_toolbar.add_top_bar(header)
 
         self.stack = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
+        self.stack.set_hhomogeneous(False)
         self.stack.set_vexpand(True)
         content_toolbar.set_content(self.stack)
         self.split.set_content(content_toolbar)
@@ -334,7 +347,12 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
         def worker() -> None:
             result = scan_system()
-            GLib.idle_add(self._apply_scan, *result)
+            recovery = RecoveryState(None, (), PackageState("anduinos-recovery-env", False, None),
+                                     None, None, None)
+            encryption = EncryptionState()
+            if self.has_pro_entitlement:
+                recovery, encryption = recovery_state(), encryption_state()
+            GLib.idle_add(self._apply_scan, *result, recovery, encryption)
 
         threading.Thread(target=worker, daemon=True).start()
 
@@ -346,6 +364,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         dkms: DkmsState,
         audio: AudioState,
         printing: PrintingState,
+        recovery: RecoveryState,
+        encryption: EncryptionState | None = None,
     ) -> bool:
         graphics = list(graphics_scan.devices)
         self._graphics_scan = graphics_scan
@@ -355,6 +375,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         self._dkms = dkms
         self._audio = audio
         self._printing = printing
+        self._recovery = recovery
+        self._encryption = encryption or EncryptionState()
         self.refresh_button.set_sensitive(True)
         self.device_list.set_sensitive(True)
         self._clear(self.device_list)
@@ -365,7 +387,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         home_row.page_title = _("Home")
         self.device_list.append(home_row)
         self.stack.add_named(
-            self._home_page(graphics_scan, secure_boot, xbox, audio, printing, dkms),
+            self._home_page(graphics_scan, secure_boot, xbox, audio, printing, dkms,
+                            recovery, self._encryption),
             "home",
         )
 
@@ -375,7 +398,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             ):
                 continue
             label = device.title
-            subtitle = device.vendor
+            subtitle = self._graphics_navigation_summary(device)
             row = self._device_row("video-display-symbolic", label, subtitle)
             row.page_name = f"graphics-{index}"
             row.page_title = device.title
@@ -418,10 +441,10 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 printer_count,
             ) % printer_count
         printing_row = self._device_row(
-            "printer-symbolic", _("Printers"), printing_subtitle
+            "printer-symbolic", _("Printing Support"), printing_subtitle
         )
         printing_row.page_name = "printing"
-        printing_row.page_title = _("Printers")
+        printing_row.page_title = _("Printing Support")
         self.device_list.append(printing_row)
         self.stack.add_named(self._printing_page(printing), "printing")
 
@@ -451,6 +474,24 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         secure_row.page_title = _("Secure Boot")
         self.device_list.append(secure_row)
         self.stack.add_named(self._secure_boot_page(secure_boot, dkms), "secure-boot")
+
+        if self.has_pro_entitlement:
+            encryption = self._encryption
+            encryption_row = self._device_row(
+                "changes-prevent-symbolic", _("Disk Encryption"), encryption_summary(encryption),
+            )
+            encryption_row.page_name = "encryption"
+            encryption_row.page_title = _("Disk Encryption")
+            self.device_list.append(encryption_row)
+            self.stack.add_named(create_encryption_page(self, encryption, recovery), "encryption")
+
+            recovery_row = self._device_row(
+                "drive-harddisk-symbolic", _("Recovery Environment"), _("System status")
+            )
+            recovery_row.page_name = "recovery"
+            recovery_row.page_title = _("Recovery Environment")
+            self.device_list.append(recovery_row)
+            self.stack.add_named(self._recovery_page(recovery), "recovery")
 
         firmware_snapshot = self._firmware_manager.snapshot
         firmware_row = self._device_row(
@@ -518,6 +559,9 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 self.split.set_show_sidebar(False)
 
     def _select_page(self, page_name: str) -> None:
+        if page_name in {"encryption", "recovery"} and not self.has_pro_entitlement:
+            Gtk.show_uri(self, PRO_URL, 0)
+            return
         row = self.device_list.get_row_at_index(0)
         while row:
             if getattr(row, "page_name", None) == page_name:
@@ -598,6 +642,7 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             and self._audio is not None
             and self._printing is not None
             and self._dkms is not None
+            and self._recovery is not None
         ):
             self._replace_stack_page(
                 "home",
@@ -608,6 +653,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                     self._audio,
                     self._printing,
                     self._dkms,
+                    self._recovery,
+                    self._encryption,
                 ),
             )
 
@@ -762,6 +809,25 @@ class DriverCenterWindow(Adw.ApplicationWindow):
     def _recommended_driver(device: HardwareDevice):
         return next((option for option in device.options if option.recommended), None)
 
+    @classmethod
+    def _graphics_navigation_summary(cls, device: HardwareDevice) -> str:
+        recommended = cls._recommended_driver(device)
+        if recommended and not recommended.installed:
+            status = _("Not installed")
+        elif not device.driver_state_known:
+            status = _("Unknown")
+        elif device.restart_required:
+            status = _("Reboot Required")
+        elif device.active_driver_healthy is False:
+            status = _("Support needs attention")
+        elif recommended and recommended.update_available:
+            status = _("Update available")
+        elif device.active_driver_healthy is True:
+            status = _("Ready")
+        else:
+            status = _("Unknown")
+        return f'{_("Driver status")}: {status}'
+
     def _home_page(
         self,
         graphics_scan: GraphicsScan,
@@ -770,6 +836,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         audio: AudioState,
         printing: PrintingState,
         dkms: DkmsState,
+        recovery: RecoveryState,
+        encryption: EncryptionState,
     ) -> Gtk.Widget:
         scroll = _scrolled_window()
         content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
@@ -970,8 +1038,9 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             if graphics_scan.intel and graphics_scan.intel.devices and not graphics_scan.devices:
                 graphics_target = "intel-graphics"
                 graphics_subtitle = "Intel Graphics"
-                graphics_state = _("Kernel module")
-                graphics_class = "installed-pill"
+                if not all(device.driver in {"i915", "xe"} for device in graphics_scan.intel.devices):
+                    graphics_state = _("Kernel module")
+                    graphics_class = "installed-pill"
         cards.insert(
             self._overview_card(
                 "video-display-symbolic",
@@ -1080,6 +1149,49 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             ),
             -1,
         )
+        if self.has_pro_entitlement:
+            # Reuse this scan's read-only facts. Rendering a home card must not
+            # prompt for authorization or start another storage scan.
+            recovery_reason = repair_step(recovery)[1]
+            if encryption.root.filesystem == "ext4":
+                recovery_label = _("Not available")
+                recovery_subtitle = _("Not applicable to ext4. Use Rescue Center from the Live USB.")
+                recovery_class = "installed-pill"
+            elif recovery_reason == "healthy":
+                recovery_label = _("Ready")
+                recovery_subtitle = _("Configured")
+                recovery_class = "success-pill"
+            elif recovery.partition is False and not recovery.devices:
+                recovery_label = _("Not installed")
+                recovery_subtitle = _("Recovery partition not found")
+                recovery_class = "installed-pill"
+            else:
+                recovery_label = _("Unknown") if recovery.partition is None else _("Needs attention")
+                recovery_subtitle = _("Check recovery configuration")
+                recovery_class = "installed-pill" if recovery.partition is None else "warning-pill"
+            cards.insert(
+                self._overview_card(
+                    "drive-harddisk-symbolic", _("Recovery Environment"),
+                    recovery_label, recovery_subtitle, recovery_class, "recovery",
+                ), -1,
+            )
+            cards.insert(
+                self._overview_card(
+                    "changes-prevent-symbolic", _("Disk Encryption"),
+                    encryption_summary(encryption), _("Encryption coverage"),
+                    "success-pill" if encryption.root.encrypted is True else "installed-pill",
+                    "encryption",
+                ), -1,
+            )
+        else:
+            for icon, title, target in (
+                ("drive-harddisk-symbolic", _("Recovery Environment"), "recovery"),
+                ("changes-prevent-symbolic", _("Disk Encryption"), "encryption"),
+            ):
+                cards.insert(self._overview_card(
+                    icon, title, "👑 " + _("Pro feature"), _("Purchase AnduinOS Pro"),
+                    "pro-pill", target,
+                ), -1)
         content.append(cards)
 
         if recommendations:
@@ -1691,6 +1803,8 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         button = Gtk.Button(label=_("Apply Changes"))
         button.add_css_class("suggested-action")
         button.set_sensitive(False)
+        if button.get_child() and isinstance(button.get_child(), Gtk.Label):
+            button.get_child().set_wrap(True)
 
         first_check: Gtk.CheckButton | None = None
 
@@ -1815,7 +1929,12 @@ class DriverCenterWindow(Adw.ApplicationWindow):
         footer_content.set_valign(Gtk.Align.CENTER)
         footer_content.set_margin_start(24)
         footer_content.set_margin_end(24)
-        status = Gtk.Label(label=_("Select another driver to apply changes."), xalign=0)
+        status = Gtk.Label(
+            label=_("Select another driver to apply changes."),
+            xalign=0,
+            wrap=True,
+            ellipsize=Pango.EllipsizeMode.END,
+        )
         status.add_css_class("dim-label")
         status.set_hexpand(True)
         footer_content.append(status)
@@ -2058,15 +2177,17 @@ class DriverCenterWindow(Adw.ApplicationWindow):
                 spacing=10,
                 halign=Gtk.Align.END,
             )
-            add_printer = Gtk.Button(label=_("Add Printer"))
-            add_printer.add_css_class("suggested-action")
-            add_printer.connect(
+            manage_printers = Gtk.Button(label=_("Manage Printers in System Settings"))
+            manage_printers.add_css_class("suggested-action")
+            if manage_printers.get_child() and isinstance(manage_printers.get_child(), Gtk.Label):
+                manage_printers.get_child().set_wrap(True)
+            manage_printers.connect(
                 "clicked",
                 lambda _button: subprocess.Popen(
                     ["gnome-control-center", "printers"]
                 ),
             )
-            printer_actions.append(add_printer)
+            printer_actions.append(manage_printers)
             content.append(printer_actions)
 
         overview = Adw.PreferencesGroup(title=_("System status"))
@@ -2164,6 +2285,155 @@ class DriverCenterWindow(Adw.ApplicationWindow):
             )
         )
         return page
+
+    def _recovery_page(self, state: RecoveryState) -> Gtk.ScrolledWindow:
+        page, content = self._page_shell(
+            _("Recovery Environment"),
+            _("Package status uses the local APT cache. Software sources are not refreshed."),
+        )
+        group = Adw.PreferencesGroup()
+        content.append(group)
+        partition_detail = _("Unknown")
+        if state.partition is True:
+            partition_detail = _("Present") + " · " + state.devices[0] + " · ext4"
+        elif state.partition is False:
+            partition_detail = (_("Multiple recovery partitions found") if state.devices
+                                else _("Recovery partition not found"))
+
+        package_detail = _("Not installed")
+        if state.package.installed:
+            if state.up_to_date is True:
+                package_detail = _("Up to date")
+            elif state.up_to_date is False:
+                package_detail = _("Update available")
+            else:
+                package_detail = _("Unknown")
+            package_detail += " · " + (state.package.version or _("Unknown"))
+            if state.up_to_date is False and state.candidate:
+                package_detail += " → " + state.candidate
+
+        for title, subtitle, good in (
+            (_("Recovery partition"), partition_detail, state.partition),
+            (_("Recovery package"), package_detail, state.up_to_date),
+            (_("GRUB menu entry"),
+             _("Present") if state.grub_entry is True else (
+                 _("Recovery menu entry not found") if state.grub_entry is False
+                 else _("Unable to read the GRUB menu")), state.grub_entry),
+        ):
+            row = Adw.ActionRow(title=title, subtitle=subtitle)
+            row.set_use_markup(False)
+            icon_name = "emblem-ok-symbolic" if good is True else (
+                "dialog-warning-symbolic" if good is False else "dialog-information-symbolic")
+            if good is True and not Gtk.IconTheme.get_for_display(row.get_display()).has_icon(icon_name):
+                icon_name = "object-select-symbolic"
+            icon = Gtk.Image.new_from_icon_name(icon_name)
+            icon.set_pixel_size(16)
+            icon.add_css_class("success" if good is True else "warning" if good is False else "dim-label")
+            indicator = Gtk.Button(child=icon, valign=Gtk.Align.CENTER,
+                                   can_target=False, focusable=False,
+                                   accessible_role=Gtk.AccessibleRole.IMG)
+            indicator.add_css_class("flat")
+            indicator.add_css_class("circular")
+            row.add_suffix(indicator)
+            group.add(row)
+        self._append_recovery_repair(content, state)
+        return page
+
+    def _append_recovery_repair(self, content: Gtk.Box, state: RecoveryState) -> None:
+        action, reason = repair_step(state)
+        if reason == "healthy":
+            return
+        prepare_label = _("Shrink swap partition and create recovery partition")
+        install_label = _("Install or update recovery package")
+        boot_label = _("Repair recovery boot menu")
+        repair = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
+        heading = Gtk.Label(label=_("Next step:"), xalign=0)
+        heading.add_css_class("heading")
+        repair.append(heading)
+        steps = []
+        for number, complete, label in (
+            (1, state.partition, prepare_label),
+            (2, state.up_to_date, install_label),
+            (3, state.grub_entry, boot_label),
+        ):
+            if complete is not True:
+                steps.append(f"{number}. {label}")
+        repair.append(Gtk.Label(label="\n".join(steps), xalign=0, wrap=True))
+        descriptions = {
+            "no-swap": _("Unable to continue: no ordinary swap partition was found on the system disk."),
+            "small-swap": _("Unable to continue: the swap partition is smaller than 512 MiB."),
+            "existing-volume": _("Check the configured or duplicate recovery volumes with an administrator, then scan again."),
+            "bound-volume": _("Check the configured or duplicate recovery volumes with an administrator, then scan again."),
+            "interrupted": _("A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."),
+            "memory": _("Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."),
+            "inspection-failed": _("Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."),
+            "missing-tools": _("Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."),
+            "package-unknown": _("No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."),
+            "menu-unknown": _("Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."),
+            "unsupported-root": _("Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."),
+        }
+        if reason in {"unsupported-layout", "multiple-swaps", "swap-priority"}:
+            description = _("Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again.")
+        else:
+            description = descriptions.get(reason, "")
+        if description:
+            detail = Gtk.Label(label=description, xalign=0, wrap=True)
+            detail.add_css_class("warning" if action is None else "dim-label")
+            repair.append(detail)
+        if reason == "interrupted":
+            repair.append(Gtk.Label(label=state.preparation.get("backup", ""), xalign=0, wrap=True,
+                                    selectable=True))
+        labels = {"prepare": prepare_label, "install": install_label, "boot": boot_label,
+                  "scan": _("Scan again")}
+        disabled_prepare = state.partition is False and reason in {
+            "no-swap", "small-swap", "multiple-swaps", "memory", "swap-priority", "unsupported-layout",
+        }
+        if action or disabled_prepare:
+            button = Gtk.Button(label=labels.get(action, prepare_label), halign=Gtk.Align.START)
+            button.get_child().set_wrap(True)
+            button.get_child().set_max_width_chars(46)
+            button.set_sensitive(action is not None)
+            if action:
+                button.add_css_class("suggested-action")
+                if action == "scan":
+                    button.connect("clicked", lambda _button: self.refresh())
+                else:
+                    button.connect("clicked", lambda clicked: self._confirm_recovery_repair(clicked, action, state))
+            repair.append(button)
+        content.append(repair)
+
+    def _confirm_recovery_repair(self, button, action: str, state: RecoveryState) -> None:
+        import json
+        from .computer import capacity
+        arguments = {"prepare": "recovery-prepare", "install": "recovery-install", "boot": "recovery-boot"}
+        if action not in arguments or getattr(self, "_operation_running", False):
+            return
+        request = None
+        if action == "prepare":
+            request = state.preparation["plan"]
+            body = (
+                _("System disk") + ": " + request["disk"] + "\n"
+                + "swap: " + request["swap"] + " · " + capacity(request["swap_bytes"], True)
+                + " → " + capacity(request["remaining_bytes"], True) + "\n"
+                + _("Recovery partition") + ": " + request["new_device"] + " · 256 MiB · ext4\n\n"
+                + _("Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes.")
+            )
+        elif action == "install":
+            body = _("Install or update only the recovery package using the current software lists?")
+        else:
+            body = _("Deploy the installed recovery image and regenerate the GRUB menu?")
+        dialog = Adw.MessageDialog(transient_for=self, heading=button.get_label(), body=body)
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("apply", _("Apply"))
+        dialog.set_close_response("cancel")
+        dialog.set_default_response("cancel")
+        dialog.set_response_appearance("apply", Adw.ResponseAppearance.DESTRUCTIVE
+                                       if action == "prepare" else Adw.ResponseAppearance.SUGGESTED)
+        dialog.connect("response", lambda _dialog, response: self._run_action(
+            button, [arguments[action]], stdin=json.dumps(request) if request is not None else None,
+            success_message=_("Recovery repair completed."),
+        ) if response == "apply" else None)
+        dialog.present()
 
     def _printing_package_group(
         self,
@@ -2465,11 +2735,13 @@ class DriverCenterWindow(Adw.ApplicationWindow):
 
 
 class DriverCenterApplication(Adw.Application):
-    def __init__(self):
+    def __init__(self, bypass_payment: bool = False):
         super().__init__(
-            application_id=APP_ID,
+            application_id=f"{APP_ID}.ProTest" if bypass_payment else APP_ID,
             flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
         )
+
+        self.has_pro_entitlement = bypass_payment
 
     def do_startup(self) -> None:
         Adw.Application.do_startup(self)
@@ -2482,7 +2754,7 @@ class DriverCenterApplication(Adw.Application):
         dialog.set_application_name(_("AnduinOS Driver Center"))
         dialog.set_application_icon(APP_ID)
         dialog.set_developer_name(_("AnduinOS Team"))
-        dialog.set_version("2.0.5")
+        dialog.set_version("2.1.0")
         dialog.set_comments(
             _("Install, inspect, and repair hardware drivers on AnduinOS.")
         )
@@ -2495,7 +2767,9 @@ class DriverCenterApplication(Adw.Application):
         dialog.present(self.get_active_window())
 
     def do_activate(self) -> None:
-        window = self.get_active_window() or DriverCenterWindow(self)
+        window = self.get_active_window() or DriverCenterWindow(
+            self, has_pro_entitlement=self.has_pro_entitlement
+        )
         window.present()
 
     def do_command_line(self, command_line: Gio.ApplicationCommandLine) -> int:
@@ -2504,6 +2778,9 @@ class DriverCenterApplication(Adw.Application):
         index = 1
         while index < len(arguments):
             argument = arguments[index]
+            if argument == "--bypass-payment":
+                index += 1
+                continue
             if argument == "--page" and index + 1 < len(arguments):
                 requested_page = arguments[index + 1]
                 index += 2
@@ -2514,13 +2791,16 @@ class DriverCenterApplication(Adw.Application):
                 continue
             command_line.printerr("Unknown option: %s\n" % argument)
             return 2
-        if requested_page not in {"home", "secure-boot", "computer", "intel-graphics"}:
+        if requested_page not in {"home", "secure-boot", "encryption", "recovery", "computer", "intel-graphics"}:
             command_line.printerr("Unknown Driver Center page: %s\n" % requested_page)
             return 2
 
+        if requested_page in {"encryption", "recovery"} and not self.has_pro_entitlement:
+            requested_page = "home"
         window = self.get_active_window()
         if window is None:
-            window = DriverCenterWindow(self, initial_page=requested_page)
+            window = DriverCenterWindow(self, initial_page=requested_page,
+                                        has_pro_entitlement=self.has_pro_entitlement)
         else:
             window._selected_page_name = requested_page
             window._select_page(requested_page)
@@ -2530,4 +2810,4 @@ class DriverCenterApplication(Adw.Application):
 
 def main() -> int:
     Adw.init()
-    return DriverCenterApplication().run(sys.argv)
+    return DriverCenterApplication(bypass_payment="--bypass-payment" in sys.argv).run(sys.argv)

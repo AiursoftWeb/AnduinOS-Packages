@@ -1284,8 +1284,8 @@ msgid "Generating & Signing..."
 msgstr "Δημιουργία και υπογραφή…"
 
 #: src/anduinos_driver_center/app.py:1940
-msgid "Add Printer"
-msgstr "Προσθήκη εκτυπωτή"
+msgid "Manage Printers in System Settings"
+msgstr "Διαχείριση εκτυπωτών στις Ρυθμίσεις συστήματος"
 
 #: src/anduinos_driver_center/app.py:1365
 #: src/anduinos_driver_center/app.py:1390
@@ -2400,3 +2400,282 @@ msgstr "Η αυτόματη υπογραφή χρησιμοποιεί πλέον
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Η επιδιόρθωση υπογραφής προγραμμάτων οδήγησης ολοκληρώθηκε. Τώρα θα ελεγχθεί αν τα εγκατεστημένα προγράμματα οδήγησης είναι αξιόπιστα."
+
+msgid "Recovery Environment"
+msgstr "Περιβάλλον ανάκτησης"
+
+msgid "Present"
+msgstr "Υπάρχει"
+
+msgid "Multiple recovery partitions found"
+msgstr "Βρέθηκαν πολλά διαμερίσματα ανάκτησης"
+
+msgid "Recovery partition not found"
+msgstr "Δεν βρέθηκε διαμέρισμα ανάκτησης"
+
+msgid "Recovery partition"
+msgstr "Διαμέρισμα ανάκτησης"
+
+msgid "Recovery package"
+msgstr "Πακέτο ανάκτησης"
+
+msgid "GRUB menu entry"
+msgstr "Καταχώριση μενού GRUB"
+
+msgid "Recovery menu entry not found"
+msgstr "Δεν βρέθηκε καταχώριση ανάκτησης στο μενού"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Δεν είναι δυνατή η ανάγνωση του μενού GRUB"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "Η κατάσταση πακέτου χρησιμοποιεί την τοπική κρυφή μνήμη APT. Οι πηγές λογισμικού δεν ανανεώνονται."
+
+msgid "Read recovery boot information"
+msgstr "Ανάγνωση πληροφοριών εκκίνησης ανάκτησης"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "Μια προηγούμενη προετοιμασία διακόπηκε. Ζητήστε από διαχειριστή να ελέγξει τον αποθηκευμένο πίνακα διαμερισμάτων και την κεφαλίδα swap πριν δοκιμάσετε ξανά."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Η αυτόματη προετοιμασία δεν είναι διαθέσιμη για αυτή τη διαμόρφωση δίσκου ή swap. Ζητήστε από διαχειριστή να δημιουργήσει διαμέρισμα ext4 AOS_RECOVERY 256 MiB και σαρώστε ξανά."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Ζητήστε από διαχειριστή να ελέγξει τους ρυθμισμένους ή διπλότυπους τόμους ανάκτησης και σαρώστε ξανά."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Κλείστε εφαρμογές που καταναλώνουν πολλή μνήμη και σαρώστε ξανά. Δεν υπάρχει αρκετή διαθέσιμη RAM για ασφαλή απενεργοποίηση αυτού του swap."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Να εγκατασταθεί η υπάρχουσα εικόνα ανάκτησης και να δημιουργηθεί ξανά το μενού GRUB;"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Να εγκατασταθεί ή να ενημερωθεί μόνο το πακέτο ανάκτησης με τις τρέχουσες λίστες πακέτων;"
+
+msgid "Install or update recovery package"
+msgstr "Εγκατάσταση ή ενημέρωση πακέτου ανάκτησης"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Δεν ήταν δυνατή η επαλήθευση υποψήφιας έκδοσης από την τοπική κρυφή μνήμη APT. Ανανεώστε τις πηγές στο εργαλείο ενημερώσεων και σαρώστε ξανά."
+
+msgid "Recovery repair completed."
+msgstr "Η επιδιόρθωση περιβάλλοντος ανάκτησης ολοκληρώθηκε."
+
+msgid "Repair recovery boot menu"
+msgstr "Επιδιόρθωση μενού εκκίνησης ανάκτησης"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Σαρώστε ξανά και επιτρέψτε τον έλεγχο μόνο για ανάγνωση. Αν οι έλεγχοι συνεχίζουν να αποτυγχάνουν, επιδιορθώστε την εγκατάσταση του κέντρου οδηγών και των εργαλείων δίσκου."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Σμίκρυνση διαμερίσματος swap και δημιουργία διαμερίσματος ανάκτησης"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Το swap θα απενεργοποιηθεί προσωρινά. Δημιουργήστε αντίγραφα ασφαλείας και διατηρήστε τον υπολογιστή σε λειτουργία μέχρι να ολοκληρωθεί η διαδικασία."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Δεν είναι δυνατή η συνέχεια: δεν βρέθηκε συνηθισμένο διαμέρισμα swap στον δίσκο συστήματος."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Δεν είναι δυνατή η συνέχεια: το διαμέρισμα swap είναι μικρότερο από 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Η επιδιόρθωση απαιτεί εγκατεστημένο σύστημα AnduinOS Btrfs @root. Εκκινήστε το εγκατεστημένο σύστημα και σαρώστε ξανά."
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr "Συσκευή γραφικών"
+
+msgid "Encrypted"
+msgstr "Κρυπτογραφημένο"
+
+msgid "Not encrypted"
+msgstr "Μη κρυπτογραφημένο"
+
+msgid "Disk Encryption"
+msgstr "Κρυπτογράφηση δίσκου"
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr "Ελέγξτε την κρυπτογράφηση για αρχεία συστήματος, προσωπικά αρχεία και swap."
+
+msgid "Unencrypted disk swap is active"
+msgstr "Ενεργή μη κρυπτογραφημένη διακίνηση δίσκου"
+
+msgid "No disk swap is active"
+msgstr "Καμία ενεργή διακίνηση δίσκου"
+
+msgid "Disk swap"
+msgstr "Διακίνηση δίσκου"
+
+msgid "Encryption coverage"
+msgstr "Κάλυψη κρυπτογράφησης"
+
+msgid "System files"
+msgstr "Αρχεία συστήματος"
+
+msgid "Personal files (Home)"
+msgstr "Προσωπικά αρχεία (Home)"
+
+msgid "Memory-based swap; not a disk partition"
+msgstr "Διακίνηση βάσει μνήμης; όχι τομέας δίσκου"
+
+msgid "System recovery"
+msgstr "Επαναφορά συστήματος"
+
+msgid "Snapshot Recovery Environment"
+msgstr "Περιβάλλον Επαναφοράς Στιγμιαίου Σχεδίου"
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr "Δεν εφαρμόζεται στο ext4. Χρησιμοποιήστε το Κέντρο Διάσωσης από το Live USB."
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr "Η μη κρυπτογραφημένη διακίνηση μπορεί να αποθηκεύσει προσωπικά δεδομένα από τη μνήμη."
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr "Η κρυπτογράφηση δίσκου μπορεί να επιλεγεί κατά τη νέα εγκατάσταση."
+
+msgid "Configured"
+msgstr "Ρυθμισμένο"
+
+msgid "Check recovery configuration"
+msgstr "Έλεγχος ρυθμίσεων επαναφοράς"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using the current disk password."
+msgstr "Η λειτουργία διαπιστευτηρίων δεν ολοκληρώθηκε. Κρατήστε τα παλιά και νέα διαπιστευτήρια και δοκιμάστε ξανά χρησιμοποιώντας τον τρέχοντα κωδικό δίσκου."
+
+msgid "Current disk password"
+msgstr "Τρέχων κωδικός δίσκου"
+
+msgid "Current recovery key"
+msgstr "Τρέχον κλειδί ανάρτησης"
+
+msgid "Unlock credentials"
+msgstr "Διαπιστευτήρια αποκλειδώσεως"
+
+msgid "Change disk password"
+msgstr "Αλλαγή κωδικού δίσκου"
+
+msgid "Replace recovery key"
+msgstr "Αντικατάσταση κλειδιού ανάρτησης"
+
+msgid "Checking credential configuration…"
+msgstr "Έλεγχος ρυθμίσεων διαπιστευτηρίων…"
+
+msgid "New disk password"
+msgstr "Νέος κωδικός δίσκου"
+
+msgid "Confirm new disk password"
+msgstr "Επιβεβαίωση νέου κωδικού δίσκου"
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr "Ενημέρωση διαπιστευτηρίου δίσκου. Κρατήστε τον υπολογιστή ενεργοποιημένο."
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr "Ο τρέχων κωδικός δίσκου είναι λανθασμένος. Δεν άλλαξε διαπιστευτήριο."
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr "Το τρέχον κλειδί ανάρτησης είναι λανθασμένο. Δεν άλλαξε διαπιστευτήριο."
+
+msgid "Enter the current recovery key once to identify this preview's credential roles."
+msgstr "Εισαγάγετε τον τρέχοντα κωδικό ανάρτησης μία φορά για να ταυτοποιήσετε τους ρόλους διαπιστευτηρίων αυτής της προεπισκόπησης."
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr "Επιλέξτε ένα νέο διαπιστευτήριο που δεν χρησιμοποιείται ήδη από αυτόν τον δίσκο."
+
+msgid "Check the password length, characters and confirmation."
+msgstr "Ελέγξτε το μήκος, τους χαρακτήρες και την επιβεβαίωση του κωδικού."
+
+msgid "The internal startup credential could not be verified. Use Rescue Center from the Live USB."
+msgstr "Δεν ήταν δυνατή η επαλήθευση του εσωτερικού διαπιστευτηρίου εκκίνησης. Χρησιμοποιήστε το Κέντρο Σώζοντος από το USB Live."
+
+msgid "This credential layout cannot be managed automatically. No existing credential was removed."
+msgstr "Αυτό το διάταγμα διαπιστευτηρίων δεν διαχειρίζεται αυτόματα. Δεν αφαιρέθηκε υπάρχον διαπιστευτήριο."
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr "Η ρύθμιση δίσκου άλλαξε. Διακόψτε άλλα εργαλεία δίσκου και δοκιμάστε ξανά."
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr "Μια άλλη λειτουργία διαπιστευτηρίου δίσκου εκτελείται. Περιμένετε και δοκιμάστε ξανά."
+
+msgid "Administrator authentication was cancelled."
+msgstr "Η πιστοποίηση διαχειριστή ακυρώθηκε."
+
+msgid "There is no free credential slot. Existing credentials remain available."
+msgstr "Δεν υπάρχει ελεύθερη θέση διαπιστευτηρίου. Τα υπάρχοντα διαπιστευτήρια παραμένουν διαθέσιμα."
+
+msgid "The new credential could not be verified. Keep your existing credentials and try again."
+msgstr "Δεν ήταν δυνατή η επαλήθευση του νέου διαπιστευτηρίου. Κρατήστε τα υπάρχοντα διαπιστευτήρια σας και δοκιμάστε ξανά."
+
+msgid "Open"
+msgstr "Άνοιγμα"
+
+msgid "New recovery key"
+msgstr "Νέο κλειδί ανάρτησης"
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr "Έχω αποθηκεύσει το νέο κλειδί ανάρτησης εκτός από αυτόν τον υπολογιστή."
+
+msgid "This earlier preview needs the current recovery key once to identify its credential roles."
+msgstr "Αυτή η προηγούμενη προεπισκόπηση χρειάζεται τον τρέχοντα κωδικό ανάρτησης μία φορά για να ταυτοποιήσει τους ρόλους διαπιστευτηρίων της."
+
+msgid "The internal startup credential stays unchanged. The old credential stops working after success."
+msgstr "Το εσωτερικό διαπιστευτήριο εκκίνησης παραμένει αμετάβλητο. Το παλιό διαπιστευτήριο σταματά να λειτουργεί μετά από επιτυχία."
+
+msgid "Disk password changed."
+msgstr "Ο κωδικός δίσκου άλλαξε."
+
+msgid "Recovery key replaced."
+msgstr "Το κλειδί ανάρτησης αντικαταστάθηκε."
+
+msgid "Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."
+msgstr "Χρησιμοποιήστε 8 έως 128 τυπωτούς χαρακτήρες ASCII. Η οθόνη εκκίνησης χρησιμοποιεί διάταξη πληκτρολογίου ΗΠΑ."
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using your disk password or emergency recovery key."
+msgstr "Η λειτουργία διαπιστευτηρίων δεν ολοκληρώθηκε. Διατηρήστε τα παλιά και τα νέα διαπιστευτήρια και δοκιμάστε ξανά χρησιμοποιώντας τον κωδικό δίσκου ή τον κλειδί έκτακτης ανάγκης."
+
+msgid "The emergency recovery key is generated by the system. Like your disk password, it unlocks the disk. Use your password normally; use the key in an emergency. Keep it outside this computer."
+msgstr "Ο κλειδί έκτακτης ανάγκης δημιουργείται από το σύστημα. Όπως ο κωδικός δίσκου, ξεκλειδώνει τον δίσκο. Χρησιμοποιήστε τον κωδικό σας κανονικά και τον κλειδί σε έκτακτη ανάγκη. Καταγράψτε τον εκτός από αυτόν τον υπολογιστή."
+
+msgid "Current emergency recovery key"
+msgstr "Τρέχων κλειδί έκτακτης ανάγκης"
+
+msgid "Replace emergency recovery key"
+msgstr "Αντικατάσταση κλειδιού έκτακτης ανάγκης"
+
+msgid "Reset forgotten disk password"
+msgstr "Επαναφορά ξεχασμένου κωδικού δίσκου"
+
+msgid "Emergency recovery key"
+msgstr "Κλειδί έκτακτης ανάγκης"
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr "Ο κλειδί έκτακτης ανάγκης είναι εσφαλμένος. Δεν άλλαξε κανένα διαπιστευτήριο."
+
+msgid "Enter the current emergency recovery key once to identify this preview's credential roles."
+msgstr "Εισάγετε τον τρέχοντα κλειδί έκτακτης ανάγκης μία φορά για να ταυτοποιήσετε τους ρόλους διαπιστευτηρίων αυτής της προεπισκόπησης."
+
+msgid "New emergency recovery key"
+msgstr "Νέο κλειδί έκτακτης ανάγκης"
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr "Έχω αποθηκεύσει τον νέο κλειδί έκτακτης ανάγκης εκτός από αυτόν τον υπολογιστή."
+
+msgid "This earlier preview needs the current emergency recovery key once to identify its credential roles."
+msgstr "Αυτή η προηγούμενη προεπισκόπηση απαιτεί τον τρέχοντα κλειδί έκτακτης ανάγκης μία φορά για να ταυτοποιήσει τους ρόλους διαπιστευτηρίων της."
+
+msgid "Emergency recovery key replaced."
+msgstr "Ο κλειδί έκτακτης ανάγκης αντικαταστάθηκε."
+
+msgid "Enter your emergency recovery key to set a new disk password. You do not need the forgotten password. Your emergency recovery key stays valid."
+msgstr "Εισάγετε τον κλειδί έκτακτης ανάγκης για να ορίσετε νέο κωδικό δίσκου. Δεν χρειάζεστε τον ξεχασμένο κωδικό. Ο κλειδί έκτακτης ανάγκης παραμένει έγκυρος."
+
+msgid "Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr "Η ενεργοποίηση κρυπτογράφησης δίσκου σε υπάρχουσα εγκατάσταση δεν υποστηρίζεται ακόμη. Επανεγκαταστήστε χρησιμοποιώντας το πιο πρόσφατο ISO του AnduinOS για να ενεργοποιήσετε την κρυπτογράφηση δίσκου."
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr "Λειτουργία Pro"
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
+msgstr "Αγοράστε το AnduinOS Pro"

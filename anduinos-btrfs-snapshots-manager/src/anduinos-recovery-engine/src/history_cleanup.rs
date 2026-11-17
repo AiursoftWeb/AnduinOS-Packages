@@ -261,6 +261,7 @@ mod tests {
                 "b".repeat(64),
                 "c".repeat(64),
             );
+            transaction.use_continue_boot_protocol();
             transaction.enable_home_reset(&factory_home).unwrap();
             transaction.purge_history = true;
             transaction.fallback_home_snapshot_id = Some(old_home.id);

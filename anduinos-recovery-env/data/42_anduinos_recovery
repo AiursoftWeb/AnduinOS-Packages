@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+if [ -x /usr/libexec/anduinos-recovery-env ]; then
+    /usr/libexec/anduinos-recovery-env grub
+fi

@@ -22,7 +22,7 @@ install() {
         /usr/libexec/anduinos-btrfs-snapshots-manager-initramfs \
         /usr/libexec/anduinos-btrfs-snapshots-manager-confirm \
         /usr/bin/btrfs \
-        cat chmod cp ln mkdir mount umount readlink blkid
+        cat chmod cp ln mkdir mount umount readlink blkid sync reboot
     inst_simple \
         /usr/share/anduinos-btrfs-snapshots-manager/recovery-protocol-version \
         /etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version

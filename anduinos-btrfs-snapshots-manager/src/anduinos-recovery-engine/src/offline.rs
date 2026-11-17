@@ -135,6 +135,9 @@ impl<F: RecoveryFilesystem> OfflineRecoveryEngine<F> {
             }
         }
         self.validate_target(target_deployment_id)?;
+        self.filesystem
+            .empty_system_subvolumes(&self.top_level.join("@root"))
+            .map_err(fs_error)?;
         let transaction = OfflineTransaction::new(target_deployment_id);
         self.write_pending(&transaction)?;
         self.converge(transaction)
@@ -186,6 +189,16 @@ impl<F: RecoveryFilesystem> OfflineRecoveryEngine<F> {
                         // Commit recovery history before discarding the only
                         // temporary copy of the pre-restore root.
                         self.record_head(transaction.target_deployment_id)?;
+                        // Inspect all children before removing any. Retry safely after power loss;
+                        // only empty, known systemd subvolumes are ever discarded.
+                        let children = self
+                            .filesystem
+                            .empty_system_subvolumes(&old)
+                            .map_err(fs_error)?;
+                        for child in children {
+                            self.filesystem.delete(&child).map_err(fs_error)?;
+                            self.filesystem.sync(&self.top_level).map_err(fs_error)?;
+                        }
                         self.filesystem.delete(&old).map_err(fs_error)?;
                         self.filesystem.sync(&self.top_level).map_err(fs_error)?;
                     }
@@ -209,11 +222,17 @@ impl<F: RecoveryFilesystem> OfflineRecoveryEngine<F> {
             }
             match state {
                 (true, false, false) => {
+                    self.filesystem
+                        .empty_system_subvolumes(&root)
+                        .map_err(fs_error)?;
                     self.filesystem.snapshot(&target, &new).map_err(fs_error)?;
                     self.filesystem.sync(&self.top_level).map_err(fs_error)?;
                     self.update_phase(&mut transaction, OfflinePhase::WritableTargetCreated)?;
                 }
                 (true, false, true) => {
+                    self.filesystem
+                        .empty_system_subvolumes(&root)
+                        .map_err(fs_error)?;
                     self.filesystem.rename(&root, &old).map_err(fs_error)?;
                     self.filesystem.sync(&self.top_level).map_err(fs_error)?;
                     self.update_phase(&mut transaction, OfflinePhase::CurrentRootProtected)?;
@@ -257,12 +276,8 @@ impl<F: RecoveryFilesystem> OfflineRecoveryEngine<F> {
         let root = self.top_level.join("@root");
         if real_directory(&root)? {
             self.filesystem.identity(&root).map_err(fs_error)?;
-            if self.filesystem.has_descendants(&root).map_err(fs_error)? {
-                return Err(OfflineError::new(
-                    OfflineErrorCode::UnsafeLayout,
-                    "The current root contains nested Btrfs subvolumes and cannot be replaced safely",
-                ));
-            }
+            // Listing snapshots and inspecting a pending transaction are read-only.
+            // Validate descendant data only when replacing or deleting a root.
         } else {
             let pending = self.pending_path();
             match fs::symlink_metadata(&pending) {
@@ -513,7 +528,12 @@ impl Drop for OfflineLock {
 }
 
 fn fs_error(error: crate::recovery::RecoveryError) -> OfflineError {
-    OfflineError::new(OfflineErrorCode::CommandFailed, error.message)
+    let code = match error.code {
+        crate::recovery::RecoveryErrorCode::UnsafeLayout => OfflineErrorCode::UnsafeLayout,
+        crate::recovery::RecoveryErrorCode::Io => OfflineErrorCode::Io,
+        _ => OfflineErrorCode::CommandFailed,
+    };
+    OfflineError::new(code, error.message)
 }
 
 fn real_directory(path: &Path) -> Result<bool, OfflineError> {
@@ -592,6 +612,7 @@ mod tests {
         target_uuid: String,
         operations: Arc<Mutex<Vec<String>>>,
         fail_wait_once: Arc<Mutex<bool>>,
+        fail_old_root_delete_once: Arc<Mutex<bool>>,
     }
 
     impl RecoveryFilesystem for FakeFilesystem {
@@ -609,6 +630,20 @@ mod tests {
         }
 
         fn delete(&self, subvolume: &Path) -> Result<(), crate::recovery::RecoveryError> {
+            let mut fail = self.fail_old_root_delete_once.lock().unwrap();
+            if *fail
+                && subvolume
+                    .file_name()
+                    .unwrap()
+                    .to_string_lossy()
+                    .starts_with("@root.rescue-center-old-")
+            {
+                *fail = false;
+                return Err(crate::recovery::RecoveryError {
+                    code: crate::recovery::RecoveryErrorCode::CommandFailed,
+                    message: "injected old-root deletion failure".into(),
+                });
+            }
             fs::remove_dir_all(subvolume).unwrap();
             self.operations.lock().unwrap().push("delete".into());
             Ok(())
@@ -655,6 +690,17 @@ mod tests {
 
         fn is_read_only(&self, subvolume: &Path) -> Result<bool, crate::recovery::RecoveryError> {
             Ok(subvolume == self.target)
+        }
+
+        fn empty_system_subvolumes(
+            &self,
+            root: &Path,
+        ) -> Result<Vec<PathBuf>, crate::recovery::RecoveryError> {
+            Ok(["var/lib/machines", "var/lib/portables"]
+                .into_iter()
+                .map(|name| root.join(name))
+                .filter(|path| path.is_dir())
+                .collect())
         }
 
         fn has_descendants(
@@ -725,6 +771,7 @@ mod tests {
                     target_uuid,
                     operations: Arc::new(Mutex::new(Vec::new())),
                     fail_wait_once: Arc::new(Mutex::new(false)),
+                    fail_old_root_delete_once: Arc::new(Mutex::new(false)),
                 },
             }
         }
@@ -819,6 +866,31 @@ mod tests {
                 .filter(|operation| operation.as_str() == "wait-deleted")
                 .count(),
             2
+        );
+    }
+
+    #[test]
+    fn interrupted_empty_system_child_cleanup_resumes_after_root_activation() {
+        let fixture = Fixture::new();
+        for name in ["var/lib/machines", "var/lib/portables"] {
+            fs::create_dir_all(fixture.top.join("@root").join(name)).unwrap();
+        }
+        *fixture.filesystem.fail_old_root_delete_once.lock().unwrap() = true;
+        let engine = fixture.engine();
+        let error = engine.restore(fixture.target_id).unwrap_err();
+        assert!(error.message.contains("injected old-root deletion failure"));
+        let pending = engine.pending().unwrap().unwrap();
+        assert_eq!(pending.phase, OfflinePhase::TargetRootActivated);
+        let old = fixture.top.join(pending.old_root_name());
+        assert!(old.is_dir());
+        assert!(!old.join("var/lib/machines").exists());
+        assert!(!old.join("var/lib/portables").exists());
+        let completed = engine.resume().unwrap().unwrap();
+        assert_eq!(completed.phase, OfflinePhase::Completed);
+        assert!(!old.exists());
+        assert_eq!(
+            fs::read_to_string(fixture.top.join("@root/marker")).unwrap(),
+            "target"
         );
     }
 

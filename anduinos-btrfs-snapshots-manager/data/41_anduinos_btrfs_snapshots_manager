@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+
+# Keep ordinary Linux first when a protocol-3 restore retains this grub.cfg
+# (Home-only recovery). The ESP selector still selects recovery by its stable
+# entry ID for the requested boot; a cleared selector must select normal boot.
+
+exec /usr/libexec/anduinos-btrfs-snapshots-manager-boot-config

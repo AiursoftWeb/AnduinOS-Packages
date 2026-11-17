@@ -1277,8 +1277,8 @@ msgid "Generating & Signing..."
 msgstr "جاري الإنشاء والتوقيع..."
 
 #: src/anduinos_driver_center/app.py:1940
-msgid "Add Printer"
-msgstr "إضافة طابعة"
+msgid "Manage Printers in System Settings"
+msgstr "إدارة الطابعات في إعدادات النظام"
 
 #: src/anduinos_driver_center/app.py:1365
 #: src/anduinos_driver_center/app.py:1390
@@ -2383,3 +2383,282 @@ msgstr "يستخدم التوقيع التلقائي الآن شهادتك ال�
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "اكتمل إصلاح توقيع البرنامج المساعد. سيُجري النظام الآن فحصًا لتحديد ما إذا كانت البرامج المساعدة المثبّتة موثوقة."
+
+msgid "Recovery Environment"
+msgstr "بيئة الاسترداد"
+
+msgid "Present"
+msgstr "موجود"
+
+msgid "Multiple recovery partitions found"
+msgstr "تم العثور على عدة أقسام للاسترداد"
+
+msgid "Recovery partition not found"
+msgstr "لم يتم العثور على قسم الاسترداد"
+
+msgid "Recovery partition"
+msgstr "قسم الاسترداد"
+
+msgid "Recovery package"
+msgstr "حزمة الاسترداد"
+
+msgid "GRUB menu entry"
+msgstr "إدخال قائمة GRUB"
+
+msgid "Recovery menu entry not found"
+msgstr "لم يتم العثور على إدخال قائمة الاسترداد"
+
+msgid "Unable to read the GRUB menu"
+msgstr "تعذرت قراءة قائمة GRUB"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "تعتمد حالة الحزمة على ذاكرة APT المحلية. لا يتم تحديث مصادر البرامج."
+
+msgid "Read recovery boot information"
+msgstr "قراءة معلومات إقلاع الاسترداد"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "توقفت عملية إعداد سابقة. اطلب من مسؤول فحص جدول الأقسام ورأس swap المحفوظين قبل المحاولة مجددًا."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "الإعداد التلقائي غير متاح لتكوين القرص أو swap هذا. اطلب من مسؤول إنشاء قسم ext4 بحجم 256 MiB وتسميته AOS_RECOVERY، ثم أعد الفحص."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "اطلب من مسؤول فحص وحدات الاسترداد المهيأة أو المكررة، ثم أعد الفحص."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "أغلق التطبيقات كثيفة استهلاك الذاكرة وأعد الفحص. لا توجد ذاكرة RAM متاحة كافية لتعطيل swap هذا بأمان."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "هل تريد نشر صورة الاسترداد المثبتة وإعادة إنشاء قائمة GRUB؟"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "هل تريد تثبيت حزمة الاسترداد فقط أو تحديثها باستخدام قوائم الحزم الحالية؟"
+
+msgid "Install or update recovery package"
+msgstr "تثبيت حزمة الاسترداد أو تحديثها"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "تعذر التحقق من إصدار مرشح من ذاكرة APT المحلية. حدّث المصادر في برنامج تحديث البرمجيات ثم أعد الفحص."
+
+msgid "Recovery repair completed."
+msgstr "اكتمل إصلاح بيئة الاسترداد."
+
+msgid "Repair recovery boot menu"
+msgstr "إصلاح قائمة إقلاع الاسترداد"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "أعد الفحص واسمح بالفحص للقراءة فقط. إذا استمر الفشل، فأصلح تثبيت مركز برامج التشغيل وأدوات الأقراص الخاصة به."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "تقليص قسم swap وإنشاء قسم استرداد"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "سيتم تعطيل swap مؤقتًا. انسخ بياناتك احتياطيًا وأبقِ الحاسوب قيد التشغيل حتى تكتمل العملية."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "يتعذر المتابعة: لم يتم العثور على قسم swap عادي على قرص النظام."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "يتعذر المتابعة: قسم swap أصغر من 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "يتطلب الإصلاح نظام AnduinOS Btrfs @root مثبتًا. شغّل النظام المثبت ثم أعد الفحص."
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr "جهاز رسومات"
+
+msgid "Encrypted"
+msgstr "مشفّر"
+
+msgid "Not encrypted"
+msgstr "غير مشفّر"
+
+msgid "Disk Encryption"
+msgstr "تشفير القرص"
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr "تحقق من تشفير ملفات النظام والملفات الشخصية والمقايض."
+
+msgid "Unencrypted disk swap is active"
+msgstr "مقايض قرص غير مشفّر نشط"
+
+msgid "No disk swap is active"
+msgstr "لا يوجد مقايض قرص نشط"
+
+msgid "Disk swap"
+msgstr "مقايض القرص"
+
+msgid "Encryption coverage"
+msgstr "تغطية التشفير"
+
+msgid "System files"
+msgstr "ملفات النظام"
+
+msgid "Personal files (Home)"
+msgstr "الملفات الشخصية (Home)"
+
+msgid "Memory-based swap; not a disk partition"
+msgstr "مقايض مبنٍ على الذاكرة؛ ليس قسم قرص"
+
+msgid "System recovery"
+msgstr "استعادة النظام"
+
+msgid "Snapshot Recovery Environment"
+msgstr "بيئة استعادة اللقطات"
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr "غير قابل للتطبيق على ext4. استخدم مركز الإنقاذ من USB الحية."
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr "يمكن لمقايض غير مشفّر تخزين بيانات شخصية من الذاكرة."
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr "يمكن اختيار تشفير القرص أثناء تثبيت جديد."
+
+msgid "Configured"
+msgstr "مُهيّأ"
+
+msgid "Check recovery configuration"
+msgstr "تحقق من إعداد الاستعادة"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using the current disk password."
+msgstr "لم تكتمل عملية الاعتمادات. احتفظ باعتماداتك القديمة والجديدة، ثم حاول مرة أخرى باستخدام كلمة مرور القرص الحالية."
+
+msgid "Current disk password"
+msgstr "كلمة مرور القرص الحالية"
+
+msgid "Current recovery key"
+msgstr "مفتاح الاسترداد الحالي"
+
+msgid "Unlock credentials"
+msgstr "اعتمادات فك القفل"
+
+msgid "Change disk password"
+msgstr "تغيير كلمة مرور القرص"
+
+msgid "Replace recovery key"
+msgstr "استبدال مفتاح الاسترداد"
+
+msgid "Checking credential configuration…"
+msgstr "جارٍ فحص إعداد الاعتمادات…"
+
+msgid "New disk password"
+msgstr "كلمة مرور القرص الجديدة"
+
+msgid "Confirm new disk password"
+msgstr "تأكيد كلمة مرور القرص الجديدة"
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr "جارٍ تحديث اعتماد القرص. أبقي الحاسوب قيد التشغيل."
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr "كلمة مرور القرص الحالية غير صحيحة. لم يتم تغيير أي اعتماد."
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr "مفتاح الاسترداد الحالي غير صحيح. لم يتم تغيير أي اعتماد."
+
+msgid "Enter the current recovery key once to identify this preview's credential roles."
+msgstr "أدخل مفتاح الاسترداد الحالي مرة واحدة لتحديد أدوار الاعتمادات في هذا المعاينة."
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr "اختر اعتمادًا جديدًا غير مستخدم بالفعل بواسطة هذا القرص."
+
+msgid "Check the password length, characters and confirmation."
+msgstr "تحقق من طول كلمة المرور والأحرف والتأكيد."
+
+msgid "The internal startup credential could not be verified. Use Rescue Center from the Live USB."
+msgstr "تعذر التحقق من اعتماد الإقلاع الداخلي. استخدم مركز الإنقاذ من وحدة الذاكرة الفلاش."
+
+msgid "This credential layout cannot be managed automatically. No existing credential was removed."
+msgstr "لا يمكن إدارة تخطيط الاعتمادات هذا تلقائيًا. لم تتم إزالة أي اعتماد موجود."
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr "تغيرت إعدادات القرص. أوقف أدوات الأقراص الأخرى وحاول مرة أخرى."
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr "هناك عملية اعتماد قرص أخرى قيد التشغيل. انتظر وحاول مرة أخرى."
+
+msgid "Administrator authentication was cancelled."
+msgstr "تم إلغاء مصادقة المسؤول."
+
+msgid "There is no free credential slot. Existing credentials remain available."
+msgstr "لا توجد خانة اعتماد فارغة. تبقى الاعتمادات الحالية متاحة."
+
+msgid "The new credential could not be verified. Keep your existing credentials and try again."
+msgstr "تعذر التحقق من الاعتماد الجديد. احتفظ باعتماداتك الحالية وحاول مرة أخرى."
+
+msgid "Open"
+msgstr "فتح"
+
+msgid "New recovery key"
+msgstr "مفتاح استرداد جديد"
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr "لقد حفظت مفتاح الاسترداد الجديد خارج هذا الحاسوب."
+
+msgid "This earlier preview needs the current recovery key once to identify its credential roles."
+msgstr "تحتاج هذه المعاينة السابقة إلى مفتاح الاسترداد الحالي مرة واحدة لتحديد أدوار الاعتمادات."
+
+msgid "The internal startup credential stays unchanged. The old credential stops working after success."
+msgstr "يبقى اعتماد الإقلاع الداخلي دون تغيير. يتوقف الاعتماد القديم عن العمل بعد النجاح."
+
+msgid "Disk password changed."
+msgstr "تم تغيير كلمة مرور القرص."
+
+msgid "Recovery key replaced."
+msgstr "تم استبدال مفتاح الاسترداد."
+
+msgid "Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."
+msgstr "استخدم من 8 إلى 128 حرفًا ASCII قابلًا للطباعة. تستخدم شاشة الإقلاع تخطيط لوحة مفاتيح أمريكي."
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using your disk password or emergency recovery key."
+msgstr "لم تُنه عملية المصادقة. احتفظ بمصادقاتك القديمة والجديدة، ثم أعد المحاولة باستخدام كلمة مرور القرص أو مفتاح الاسترداد للطوارئ."
+
+msgid "The emergency recovery key is generated by the system. Like your disk password, it unlocks the disk. Use your password normally; use the key in an emergency. Keep it outside this computer."
+msgstr "يولّد النظام مفتاح الاسترداد للطوارئ. مثل كلمة مرور القرص، يُفتح القرص به. استخدم كلمة المرور بشكل عادي، واستخدم المفتاح في الطوارئ. احتفظ به خارج هذا الحاسوب."
+
+msgid "Current emergency recovery key"
+msgstr "مفتاح الاسترداد للطوارئ الحالي"
+
+msgid "Replace emergency recovery key"
+msgstr "استبدال مفتاح الاسترداد للطوارئ"
+
+msgid "Reset forgotten disk password"
+msgstr "إعادة تعيين كلمة مرور القرص المنسية"
+
+msgid "Emergency recovery key"
+msgstr "مفتاح الاسترداد للطوارئ"
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr "مفتاح الاسترداد للطوارئ غير صحيح. لم يتم تغيير أي مصادقة."
+
+msgid "Enter the current emergency recovery key once to identify this preview's credential roles."
+msgstr "أدخل مفتاح الاسترداد للطوارئ الحالي مرة واحدة لتحديد أدوار المصادقة في هذه المعاينة."
+
+msgid "New emergency recovery key"
+msgstr "مفتاح الاسترداد للطوارئ الجديد"
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr "لقد حفظت مفتاح الاسترداد للطوارئ الجديد خارج هذا الحاسوب."
+
+msgid "This earlier preview needs the current emergency recovery key once to identify its credential roles."
+msgstr "تتطلب هذه المعاينة السابقة مفتاح الاسترداد للطوارئ الحالي مرة واحدة لتحديد أدوار المصادقة الخاصة بها."
+
+msgid "Emergency recovery key replaced."
+msgstr "تم استبدال مفتاح الاسترداد للطوارئ."
+
+msgid "Enter your emergency recovery key to set a new disk password. You do not need the forgotten password. Your emergency recovery key stays valid."
+msgstr "أدخل مفتاح الاسترداد للطوارئ لإعداد كلمة مرور قرص جديدة. لا تحتاج إلى كلمة المرور المنسية. يبقى مفتاح الاسترداد للطوارئ صالحًا."
+
+msgid "Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr "لا يُدعم حتى الآن تفعيل تشفير القرص على نظام مثبت مسبقًا. أعد التثبيت باستخدام أحدث صورة ISO من AnduinOS لتفعيل تشفير القرص."
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr "ميزة Pro"
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
+msgstr "اشترِ AnduinOS Pro"

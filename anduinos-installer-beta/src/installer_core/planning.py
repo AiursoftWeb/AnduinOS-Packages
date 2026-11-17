@@ -10,6 +10,9 @@ from languages import DEFAULT_LOCALE, Language, language_for_locale
 from .btrfs import BtrfsCompression
 from .model import (
     AccessSpec,
+    EncryptionMode,
+    SwapSpec,
+    SwapEncryption,
     BootSpec,
     AuthenticationMode,
     Firmware,
@@ -27,6 +30,7 @@ from .model import (
     StorageSpec,
 )
 from .hostnames import normalize_hostname
+from .layout import erase_disk_overhead_mib
 from .probe import PlatformProbe
 from .storage_graph_planning import build_erase_disk_storage_graph
 from .storage_inventory import DiskTopologyBinding
@@ -58,6 +62,11 @@ def build_plan(
         swap_sizing = calculate_swap_sizing(
             physical_memory_probe(),
             disk.expected_size_bytes,
+            layout_overhead_mib=erase_disk_overhead_mib(
+                Filesystem(str(choices.get("filesystem") or "btrfs")),
+                encrypted=choices.get("encryption", "none") == "luks2",
+                include_recovery=bool(choices.get("has_pro_entitlement")),
+            ),
         )
         requested_swap = choices.get("swap_size_mib")
         swap_size_mib = (
@@ -71,6 +80,8 @@ def build_plan(
             disk=disk,
             filesystem=Filesystem(str(choices.get("filesystem") or "btrfs")),
             swap_size_mib=swap_size_mib,
+            encryption=EncryptionMode(str(choices.get("encryption", "none"))),
+            include_recovery=bool(choices.get("has_pro_entitlement")),
             btrfs_compression=BtrfsCompression(
                 choices.get("btrfs_compression", "balanced")
             ),
@@ -95,6 +106,7 @@ def build_plan(
             authentication=AuthenticationMode.PASSWORD,
             password_hash=password_hash,
         ),
+        swap=SwapSpec(encryption=SwapEncryption(str(choices.get("swap_encryption", "auto")))),
         access=AccessSpec(
             sudo_without_password=bool(
                 choices.get("sudo_without_password", False)
@@ -116,6 +128,10 @@ def build_plan(
             input_methods=_input_method_choices(choices, language),
         ),
         software=SoftwareSpec(
+            download_from_china=(
+                language.code == "zh_CN"
+                and bool(choices.get("download_from_china", False))
+            ),
             install_updates=bool(choices.get("install_updates", True)),
             install_third_party_drivers=bool(
                 choices.get("install_third_party_drivers", False)

@@ -12,7 +12,7 @@ class UnlockPackagingTests(unittest.TestCase):
     def test_runs_only_in_unlock_mode(self):
         metadata = json.loads((ROOT / 'assets/unlock-theme@anduinos.com/metadata.json').read_text())
         self.assertEqual(metadata['session-modes'], ['unlock-dialog'])
-        self.assertEqual(metadata['shell-version'], ['46', '50'])
+        self.assertEqual(metadata['shell-version'], ['46', '50', '51'])
         defaults = configparser.ConfigParser(interpolation=None)
         defaults.read(ROOT.parent / 'anduinos-dconf-defaults/assets/99-anduinos-defaults.gschema.override')
         self.assertIn("'" + metadata['uuid'] + "'", defaults['org.gnome.shell']['enabled-extensions'])

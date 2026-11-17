@@ -1208,8 +1208,8 @@ msgid "Generating & Signing..."
 msgstr "生成および署名中..."
 
 #: src/anduinos_driver_center/app.py:1940
-msgid "Add Printer"
-msgstr "プリンターを追加"
+msgid "Manage Printers in System Settings"
+msgstr "システム設定でプリンターを管理"
 
 #: src/anduinos_driver_center/app.py:1365
 #: src/anduinos_driver_center/app.py:1390
@@ -2284,3 +2284,282 @@ msgstr "自動署名で登録済みの証明書を使用するようになりま
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "ドライバー署名の修復が完了しました。インストール済みドライバーが信頼されているか確認します。"
+
+msgid "Recovery Environment"
+msgstr "復旧環境"
+
+msgid "Present"
+msgstr "存在します"
+
+msgid "Multiple recovery partitions found"
+msgstr "複数の復旧パーティションが見つかりました"
+
+msgid "Recovery partition not found"
+msgstr "復旧パーティションが見つかりません"
+
+msgid "Recovery partition"
+msgstr "復旧パーティション"
+
+msgid "Recovery package"
+msgstr "復旧パッケージ"
+
+msgid "GRUB menu entry"
+msgstr "GRUBメニュー項目"
+
+msgid "Recovery menu entry not found"
+msgstr "復旧メニュー項目が見つかりません"
+
+msgid "Unable to read the GRUB menu"
+msgstr "GRUBメニューを読み取れません"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "パッケージの状態はローカルのAPTキャッシュを使用します。ソフトウェアソースは更新しません。"
+
+msgid "Read recovery boot information"
+msgstr "復旧用の起動情報を読み取る"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "前回のパーティション準備が中断されました。再試行する前に、保存されたパーティションテーブルとswapヘッダーを管理者に確認してもらってください。"
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "このディスクまたはswap構成では自動準備を利用できません。管理者に256 MiBのAOS_RECOVERY ext4パーティションを手動で作成してもらい、再スキャンしてください。"
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "設定済みまたは重複した復旧ボリュームを管理者に確認してもらい、再スキャンしてください。"
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "メモリーを多く使用するアプリを閉じて再スキャンしてください。このswapを安全に無効化するための空きRAMが不足しています。"
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "インストール済みの復旧イメージを配置してGRUBメニューを再生成しますか？"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "現在のパッケージ一覧を使用して、復旧パッケージのみをインストールまたは更新しますか？"
+
+msgid "Install or update recovery package"
+msgstr "復旧パッケージをインストールまたは更新"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "ローカルのAPTキャッシュから候補バージョンを確認できませんでした。ソフトウェア更新ツールでソースを更新してから再スキャンしてください。"
+
+msgid "Recovery repair completed."
+msgstr "復旧環境の修復が完了しました。"
+
+msgid "Repair recovery boot menu"
+msgstr "復旧用の起動メニューを修復"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "再スキャンして読み取り専用の検査を許可してください。検査に失敗し続ける場合は、ドライバーセンターとディスクツールのインストールを修復してください。"
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "swapパーティションを縮小して復旧パーティションを作成"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "swapを一時的に無効化します。データをバックアップし、操作が完了するまでコンピューターの電源を維持してください。"
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "続行できません：システムディスクに通常のswapパーティションが見つかりません。"
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "続行できません：swapパーティションが512 MiB未満です。"
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "復旧環境の修復には、インストール済みのAnduinOS Btrfs @rootシステムが必要です。インストール済みシステムを起動して再スキャンしてください。"
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr "グラフィックスデバイス"
+
+msgid "Encrypted"
+msgstr "暗号化済み"
+
+msgid "Not encrypted"
+msgstr "暗号化されていません"
+
+msgid "Disk Encryption"
+msgstr "ディスク暗号化"
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr "システムファイル、個人ファイル、スワップの暗号化を確認します。"
+
+msgid "Unencrypted disk swap is active"
+msgstr "暗号化されていないディスクスワップが有効です"
+
+msgid "No disk swap is active"
+msgstr "ディスクスワップが無効です"
+
+msgid "Disk swap"
+msgstr "ディスクスワップ"
+
+msgid "Encryption coverage"
+msgstr "暗号化の適用範囲"
+
+msgid "System files"
+msgstr "システムファイル"
+
+msgid "Personal files (Home)"
+msgstr "個人ファイル (ホーム)"
+
+msgid "Memory-based swap; not a disk partition"
+msgstr "メモリベースのスワップ。ディスクパーティションではありません"
+
+msgid "System recovery"
+msgstr "システム復旧"
+
+msgid "Snapshot Recovery Environment"
+msgstr "スナップショット復旧環境"
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr "ext4には適用されません。ライブUSBからレスキューセンターを使用してください。"
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr "暗号化されていないスワップは、メモリからの個人データを保存する可能性があります。"
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr "ディスク暗号化は新規インストール時に選択できます。"
+
+msgid "Configured"
+msgstr "設定済み"
+
+msgid "Check recovery configuration"
+msgstr "復旧設定を確認"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using the current disk password."
+msgstr "認証情報の操作が完了しませんでした。古い認証情報と新しい認証情報を保持し、現在のディスクパスワードを使用して再試行してください。"
+
+msgid "Current disk password"
+msgstr "現在のディスクパスワード"
+
+msgid "Current recovery key"
+msgstr "現在のリカバリーキー"
+
+msgid "Unlock credentials"
+msgstr "認証情報"
+
+msgid "Change disk password"
+msgstr "ディスクパスワードの変更"
+
+msgid "Replace recovery key"
+msgstr "リカバリーキーの交換"
+
+msgid "Checking credential configuration…"
+msgstr "認証情報の設定を確認中…"
+
+msgid "New disk password"
+msgstr "新しいディスクパスワード"
+
+msgid "Confirm new disk password"
+msgstr "新しいディスクパスワードの確認"
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr "ディスク認証情報を更新中。コンピューターの電源をオンに保ってください。"
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr "現在のディスクパスワードが正しくありません。認証情報は変更されていません。"
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr "現在のリカバリーキーが正しくありません。認証情報は変更されていません。"
+
+msgid "Enter the current recovery key once to identify this preview's credential roles."
+msgstr "このプレビューの認証情報の役割を識別するために、現在のリカバリーキーを1回入力してください。"
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr "このディスクでまだ使用されていない新しい認証情報を選択してください。"
+
+msgid "Check the password length, characters and confirmation."
+msgstr "パスワードの長さ、文字、確認内容を確認してください。"
+
+msgid "The internal startup credential could not be verified. Use Rescue Center from the Live USB."
+msgstr "内部の起動認証情報を検証できませんでした。Live USBから救助センターを使用してください。"
+
+msgid "This credential layout cannot be managed automatically. No existing credential was removed."
+msgstr "この認証情報のレイアウトは自動管理できません。既存の認証情報は削除されていません。"
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr "ディスク設定が変更されました。他のディスクツールを停止して再試行してください。"
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr "別のディスク認証情報の操作が実行中です。待ってから再試行してください。"
+
+msgid "Administrator authentication was cancelled."
+msgstr "管理者認証がキャンセルされました。"
+
+msgid "There is no free credential slot. Existing credentials remain available."
+msgstr "空き認証情報スロットがありません。既存の認証情報は引き続き利用可能です。"
+
+msgid "The new credential could not be verified. Keep your existing credentials and try again."
+msgstr "新しい認証情報を検証できませんでした。既存の認証情報を保持し、再試行してください。"
+
+msgid "Open"
+msgstr "ホーム"
+
+msgid "New recovery key"
+msgstr "新しいリカバリーキー"
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr "新しいリカバリーキーはこのコンピューターの外に保存しました。"
+
+msgid "This earlier preview needs the current recovery key once to identify its credential roles."
+msgstr "この以前のプレビューの認証情報の役割を識別するために、現在のリカバリーキーを1回必要とします。"
+
+msgid "The internal startup credential stays unchanged. The old credential stops working after success."
+msgstr "内部の起動認証情報は変更されません。成功後、古い認証情報は無効になります。"
+
+msgid "Disk password changed."
+msgstr "ディスクパスワードを変更しました。"
+
+msgid "Recovery key replaced."
+msgstr "リカバリーキーを交換しました。"
+
+msgid "Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."
+msgstr "8文字から128文字の印刷可能なASCII文字を使用してください。起動画面ではUSキーボードレイアウトを使用します。"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using your disk password or emergency recovery key."
+msgstr "認証情報の操作が完了しませんでした。古い認証情報と新しい認証情報を確認してから、ディスクパスワードまたは緊急復旧キーを使って再試行してください。"
+
+msgid "The emergency recovery key is generated by the system. Like your disk password, it unlocks the disk. Use your password normally; use the key in an emergency. Keep it outside this computer."
+msgstr "緊急復旧キーはシステムによって生成されます。ディスクパスワードと同様に、ディスクを解除します。通常はパスワードを使用し、緊急時にはキーを使用してください。このコンピュータの外に保管してください。"
+
+msgid "Current emergency recovery key"
+msgstr "現在の緊急復旧キー"
+
+msgid "Replace emergency recovery key"
+msgstr "緊急復旧キーを置き換える"
+
+msgid "Reset forgotten disk password"
+msgstr "忘れたディスクパスワードをリセット"
+
+msgid "Emergency recovery key"
+msgstr "緊急復旧キー"
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr "緊急復旧キーが正しくありません。認証情報は変更されていません。"
+
+msgid "Enter the current emergency recovery key once to identify this preview's credential roles."
+msgstr "このプレビューの認証情報の役割を特定するために、現在の緊急復旧キーを一度入力してください。"
+
+msgid "New emergency recovery key"
+msgstr "新しい緊急復旧キー"
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr "新しい緊急復旧キーをこのコンピュータの外に保存しました。"
+
+msgid "This earlier preview needs the current emergency recovery key once to identify its credential roles."
+msgstr "この以前のプレビューでは、認証情報の役割を特定するために現在の緊急復旧キーを一度入力する必要があります。"
+
+msgid "Emergency recovery key replaced."
+msgstr "緊急復旧キーを置き換えました。"
+
+msgid "Enter your emergency recovery key to set a new disk password. You do not need the forgotten password. Your emergency recovery key stays valid."
+msgstr "新しいディスクパスワードを設定するために、緊急復旧キーを入力してください。忘れたパスワードは不要です。緊急復旧キーは引き続き有効です。"
+
+msgid "Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr "既存のインストールでディスク暗号化を有効にすることは、まだサポートされていません。ディスク暗号化を有効にするには、最新の AnduinOS ISO を使用して再インストールしてください。"
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr "Pro 限定機能"
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
+msgstr "AnduinOS Pro を購入してください"

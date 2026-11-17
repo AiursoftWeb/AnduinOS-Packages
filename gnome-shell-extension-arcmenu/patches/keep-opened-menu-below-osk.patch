@@ -1,0 +1,22 @@
+Upstream: https://gitlab.com/arcmenu/ArcMenu/-/merge_requests/287
+Subject: Keep the opened menu below the on-screen keyboard
+
+Backport to the extension archive (which omits the src/ prefix).
+Remove when the dynamically resolved upstream release includes this fix.
+
+diff --git a/src/menuButton.js b/src/menuButton.js
+--- a/src/menuButton.js
++++ b/src/menuButton.js
+@@ -809,6 +809,12 @@
+             this._menuButton?.setDefaultMenuView();
+         }
+         super.open(animate);
++
++        // Opening raises the menu; keep the on-screen keyboard's keys accessible.
++        const keyboardGroup = ShellVersion >= 51
++            ? global.compositor.get_input_panel_group()
++            : Main.layoutManager.keyboardBox;
++        Main.uiGroup.set_child_below_sibling(this.actor, keyboardGroup);
+     }
+ 
+     close(animate) {

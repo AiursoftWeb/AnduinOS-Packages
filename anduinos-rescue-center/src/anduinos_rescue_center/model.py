@@ -24,6 +24,12 @@ class Partition:
     hostname: str = ""
     btrfs_layout: bool = False
     probe_error: str = ""
+    # A mapped filesystem retains its physical partition and outer LUKS identity.
+    # Repair code still receives the filesystem path, never the encrypted bytes.
+    encrypted: bool = False
+    container_path: str = ""
+    container_identity: str = ""
+    luks_uuid: str = ""
 
     @property
     def is_anduinos(self) -> bool:

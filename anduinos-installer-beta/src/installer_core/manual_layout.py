@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 
+from .layout import RECOVERY_SIZE_MIB
 from .model import Filesystem
 from .storage_inventory import DiskInventory, PartitionInventory
 
@@ -26,6 +27,7 @@ class ManualPartitionRole(str, Enum):
     EFI_SYSTEM = "efi-system"
     ROOT = "root"
     SWAP = "swap"
+    RECOVERY = "recovery"
 
 
 @dataclass(frozen=True)
@@ -249,6 +251,8 @@ def validate_manual_selection(
             raise ManualLayoutError(
                 "The Root partition must be at least 6 GiB"
             )
+        if request.role is ManualPartitionRole.RECOVERY and request.size_mib < RECOVERY_SIZE_MIB:
+            raise ManualLayoutError("RE must be at least 256 MiB")
 
 
 def manual_available_extents(

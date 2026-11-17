@@ -1234,8 +1234,8 @@ msgid "Generating & Signing..."
 msgstr "กำลังสร้าง & ลงนาม..."
 
 #: src/anduinos_driver_center/app.py:1940
-msgid "Add Printer"
-msgstr "เพิ่มเครื่องพิมพ์"
+msgid "Manage Printers in System Settings"
+msgstr "จัดการเครื่องพิมพ์ในการตั้งค่าระบบ"
 
 #: src/anduinos_driver_center/app.py:1365
 #: src/anduinos_driver_center/app.py:1390
@@ -2329,3 +2329,282 @@ msgstr "การลงนามอัตโนมัติใช้ใบรั
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "การแก้ไขลายเซ็นไดรเวอร์เสร็จสมบูรณ์ ระบบจะตรวจสอบว่าไดรเวอร์ที่ติดตั้งไว้ได้รับความไว้วางใจหรือไม่"
+
+msgid "Recovery Environment"
+msgstr "สภาพแวดล้อมการกู้คืน"
+
+msgid "Present"
+msgstr "มีอยู่"
+
+msgid "Multiple recovery partitions found"
+msgstr "พบพาร์ทิชันการกู้คืนหลายรายการ"
+
+msgid "Recovery partition not found"
+msgstr "ไม่พบพาร์ทิชันการกู้คืน"
+
+msgid "Recovery partition"
+msgstr "พาร์ทิชันการกู้คืน"
+
+msgid "Recovery package"
+msgstr "แพ็กเกจการกู้คืน"
+
+msgid "GRUB menu entry"
+msgstr "รายการเมนู GRUB"
+
+msgid "Recovery menu entry not found"
+msgstr "ไม่พบรายการเมนูการกู้คืน"
+
+msgid "Unable to read the GRUB menu"
+msgstr "ไม่สามารถอ่านเมนู GRUB ได้"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "สถานะแพ็กเกจใช้แคช APT ในเครื่อง โดยไม่รีเฟรชแหล่งซอฟต์แวร์"
+
+msgid "Read recovery boot information"
+msgstr "อ่านข้อมูลการบูตการกู้คืน"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "การเตรียมก่อนหน้านี้ถูกขัดจังหวะ โปรดให้ผู้ดูแลระบบตรวจสอบตารางพาร์ทิชันและส่วนหัว swap ที่บันทึกไว้ก่อนลองใหม่"
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "ไม่สามารถเตรียมอัตโนมัติสำหรับการกำหนดค่าดิสก์หรือ swap นี้ โปรดให้ผู้ดูแลระบบสร้างพาร์ทิชัน ext4 AOS_RECOVERY ขนาด 256 MiB แล้วสแกนใหม่"
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "โปรดให้ผู้ดูแลระบบตรวจสอบโวลุ่มกู้คืนที่กำหนดค่าไว้หรือซ้ำกัน แล้วสแกนใหม่"
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "ปิดแอปที่ใช้หน่วยความจำมากแล้วสแกนใหม่ มี RAM ว่างไม่พอที่จะปิด swap นี้อย่างปลอดภัย"
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "ติดตั้งอิมเมจกู้คืนที่มีอยู่และสร้างเมนู GRUB ใหม่หรือไม่"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "ติดตั้งหรืออัปเดตเฉพาะแพ็กเกจกู้คืนโดยใช้รายการแพ็กเกจปัจจุบันหรือไม่"
+
+msgid "Install or update recovery package"
+msgstr "ติดตั้งหรืออัปเดตแพ็กเกจกู้คืน"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "ไม่สามารถตรวจสอบรุ่นที่พร้อมติดตั้งจากแคช APT ในเครื่องได้ โปรดรีเฟรชแหล่งซอฟต์แวร์ในโปรแกรมอัปเดตแล้วสแกนใหม่"
+
+msgid "Recovery repair completed."
+msgstr "ซ่อมแซมสภาพแวดล้อมการกู้คืนเสร็จแล้ว"
+
+msgid "Repair recovery boot menu"
+msgstr "ซ่อมแซมเมนูบูตกู้คืน"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "สแกนใหม่และอนุญาตการตรวจสอบแบบอ่านอย่างเดียว หากยังล้มเหลว ให้ซ่อมแซมการติดตั้งศูนย์ไดรเวอร์และเครื่องมือดิสก์"
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "ย่อพาร์ทิชัน swap และสร้างพาร์ทิชันกู้คืน"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "swap จะถูกปิดชั่วคราว โปรดสำรองข้อมูลและเปิดคอมพิวเตอร์ไว้จนกว่าการดำเนินการจะเสร็จ"
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "ดำเนินการต่อไม่ได้: ไม่พบพาร์ทิชัน swap แบบปกติบนดิสก์ระบบ"
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "ดำเนินการต่อไม่ได้: พาร์ทิชัน swap มีขนาดเล็กกว่า 512 MiB"
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "การซ่อมแซมต้องใช้ระบบ AnduinOS Btrfs @root ที่ติดตั้งแล้ว โปรดบูตระบบที่ติดตั้งแล้วและสแกนใหม่"
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr "อุปกรณ์กราฟิก"
+
+msgid "Encrypted"
+msgstr "เข้ารหัสแล้ว"
+
+msgid "Not encrypted"
+msgstr "ไม่เข้ารหัส"
+
+msgid "Disk Encryption"
+msgstr "การเข้ารหัสดิสก์"
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr "ตรวจสอบการเข้ารหัสสำหรับไฟล์ระบบ ไฟล์ส่วนตัว และสวอป"
+
+msgid "Unencrypted disk swap is active"
+msgstr "สวอปดิสก์ที่ไม่เข้ารหัสกำลังทำงานอยู่"
+
+msgid "No disk swap is active"
+msgstr "สวอปดิสก์ไม่ได้ทำงาน"
+
+msgid "Disk swap"
+msgstr "สวอปดิสก์"
+
+msgid "Encryption coverage"
+msgstr "ขอบเขตการเข้ารหัส"
+
+msgid "System files"
+msgstr "ไฟล์ระบบ"
+
+msgid "Personal files (Home)"
+msgstr "ไฟล์ส่วนตัว (Home)"
+
+msgid "Memory-based swap; not a disk partition"
+msgstr "สวอปบนหน่วยความจำ; ไม่ใช่พาร์ติชันดิสก์"
+
+msgid "System recovery"
+msgstr "การกู้คืนระบบ"
+
+msgid "Snapshot Recovery Environment"
+msgstr "สภาพแวดล้อมการกู้คืนจากสแนปช็อต"
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr "ไม่ใช้กับ ext4. ใช้ศูนย์กู้ภัยจาก Live USB แทน"
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr "สวอปที่ไม่เข้ารหัสสามารถจัดเก็บข้อมูลส่วนตัวจากหน่วยความจำได้"
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr "สามารถเลือกการเข้ารหัสดิสก์ได้ขณะติดตั้งใหม่"
+
+msgid "Configured"
+msgstr "ตั้งค่าแล้ว"
+
+msgid "Check recovery configuration"
+msgstr "ตรวจสอบการตั้งค่าการกู้คืน"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using the current disk password."
+msgstr "การดำเนินการรับรองตัวตนไม่เสร็จสมบูรณ์ กรุณาเก็บข้อมูลรับรองตัวตนเดิมและใหม่ไว้ แล้วลองใหม่โดยใช้รหัสผ่านดิสก์ปัจจุบัน"
+
+msgid "Current disk password"
+msgstr "รหัสผ่านดิสก์ปัจจุบัน"
+
+msgid "Current recovery key"
+msgstr "คีย์กู้คืนปัจจุบัน"
+
+msgid "Unlock credentials"
+msgstr "ข้อมูลรับรองตัวตนปลดล็อก"
+
+msgid "Change disk password"
+msgstr "เปลี่ยนรหัสผ่านดิสก์"
+
+msgid "Replace recovery key"
+msgstr "แทนที่คีย์กู้คืน"
+
+msgid "Checking credential configuration…"
+msgstr "กำลังตรวจสอบการกำหนดค่าข้อมูลรับรองตัวตน…"
+
+msgid "New disk password"
+msgstr "รหัสผ่านดิสก์ใหม่"
+
+msgid "Confirm new disk password"
+msgstr "ยืนยันรหัสผ่านดิสก์ใหม่"
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr "กำลังอัปเดตข้อมูลรับรองตัวตนดิสก์ กรุณาเปิดเครื่องไว้"
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr "รหัสผ่านดิสก์ปัจจุบันไม่ถูกต้อง ไม่มีการเปลี่ยนข้อมูลรับรองตัวตน"
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr "คีย์กู้คืนปัจจุบันไม่ถูกต้อง ไม่มีการเปลี่ยนข้อมูลรับรองตัวตน"
+
+msgid "Enter the current recovery key once to identify this preview's credential roles."
+msgstr "ป้อนคีย์กู้คืนปัจจุบันครั้งเดียวเพื่อระบุบทบาทข้อมูลรับรองตัวตนของตัวอย่างนี้"
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr "เลือกข้อมูลรับรองตัวตนใหม่ที่ไม่ได้ใช้โดยดิสก์นี้แล้ว"
+
+msgid "Check the password length, characters and confirmation."
+msgstr "ตรวจสอบความยาวอักขระและการยืนยันรหัสผ่าน"
+
+msgid "The internal startup credential could not be verified. Use Rescue Center from the Live USB."
+msgstr "ไม่สามารถตรวจสอบข้อมูลรับรองตัวตนเริ่มทำงานภายในได้请使用 Rescue Center จาก Live USB"
+
+msgid "This credential layout cannot be managed automatically. No existing credential was removed."
+msgstr "ไม่สามารถจัดการโครงสร้างข้อมูลรับรองตัวตนนี้ได้โดยอัตโนมัติ ไม่มีการลบข้อมูลรับรองตัวตนที่มีอยู่"
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr "การกำหนดค่าดิสก์เปลี่ยนไป หยุดเครื่องมือดิสก์อื่นแล้วลองใหม่"
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr "การดำเนินการข้อมูลรับรองตัวตนดิสก์อื่นกำลังทำงาน รอสักครู่แล้วลองใหม่"
+
+msgid "Administrator authentication was cancelled."
+msgstr "การยืนยันตัวตนผู้ดูแลระบบถูกยกเลิก"
+
+msgid "There is no free credential slot. Existing credentials remain available."
+msgstr "ไม่มีช่องข้อมูลรับรองตัวตนว่างอยู่ ข้อมูลรับรองตัวตนที่มีอยู่ยังคงใช้งานได้ตามปกติ"
+
+msgid "The new credential could not be verified. Keep your existing credentials and try again."
+msgstr "ไม่สามารถตรวจสอบข้อมูลรับรองตัวตนใหม่ได้ เก็บข้อมูลรับรองตัวตนเดิมของคุณไว้แล้วลองใหม่"
+
+msgid "Open"
+msgstr "เปิด"
+
+msgid "New recovery key"
+msgstr "คีย์กู้คืนใหม่"
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr "ฉันได้บันทึกคีย์กู้คืนใหม่ไว้ภายนอกเครื่องนี้แล้ว"
+
+msgid "This earlier preview needs the current recovery key once to identify its credential roles."
+msgstr "ตัวอย่างก่อนหน้านี้อาจต้องการคีย์กู้คืนปัจจุบันครั้งเดียวเพื่อระบุบทบาทข้อมูลรับรองตัวตน"
+
+msgid "The internal startup credential stays unchanged. The old credential stops working after success."
+msgstr "ข้อมูลรับรองตัวตนเริ่มทำงานภายในไม่เปลี่ยนแปลง ข้อมูลรับรองตัวตนเดิมจะหยุดทำงานหลังจากสำเร็จ"
+
+msgid "Disk password changed."
+msgstr "เปลี่ยนรหัสผ่านดิสก์แล้ว"
+
+msgid "Recovery key replaced."
+msgstr "แทนที่คีย์กู้คืนแล้ว"
+
+msgid "Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."
+msgstr "ใช้ตัวอักษร ASCII ที่พิมพ์ได้ 8 ถึง 128 ตัว หน้าจอเริ่มทำงานใช้เลย์เอาต์คีย์บอร์ดแบบ US"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using your disk password or emergency recovery key."
+msgstr "การดำเนินการกับข้อมูลรับรองไม่เสร็จสมบูรณ์ กรุณาเก็บรักษาข้อมูลรับรองเดิมและใหม่ไว้ แล้วลองอีกครั้งโดยใช้รหัสผ่านดิสก์หรือคีย์กู้ภัยฉุกเฉิน"
+
+msgid "The emergency recovery key is generated by the system. Like your disk password, it unlocks the disk. Use your password normally; use the key in an emergency. Keep it outside this computer."
+msgstr "คีย์กู้ภัยฉุกเฉินถูกสร้างโดยระบบ เช่นเดียวกับรหัสผ่านดิสก์ ใช้ปลดล็อกดิสก์ได้ ใช้รหัสผ่านตามปกติ และใช้คีย์ในกรณีฉุกเฉิน เก็บคีย์นี้ไว้ภายนอกคอมพิวเตอร์เครื่องนี้"
+
+msgid "Current emergency recovery key"
+msgstr "คีย์กู้ภัยฉุกเฉินปัจจุบัน"
+
+msgid "Replace emergency recovery key"
+msgstr "แทนที่คีย์กู้ภัยฉุกเฉิน"
+
+msgid "Reset forgotten disk password"
+msgstr "รีเซ็ตรหัสผ่านดิสก์ที่ลืม"
+
+msgid "Emergency recovery key"
+msgstr "คีย์กู้ภัยฉุกเฉิน"
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr "คีย์กู้ภัยฉุกเฉินไม่ถูกต้อง ไม่มีการเปลี่ยนแปลงข้อมูลรับรอง"
+
+msgid "Enter the current emergency recovery key once to identify this preview's credential roles."
+msgstr "กรอกคีย์กู้ภัยฉุกเฉินปัจจุบันหนึ่งครั้งเพื่อระบุบทบาทของข้อมูลรับรองในรุ่นพรีวิวนี้"
+
+msgid "New emergency recovery key"
+msgstr "คีย์กู้ภัยฉุกเฉินใหม่"
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr "ฉันได้บันทึกคีย์กู้ภัยฉุกเฉินใหม่วางไว้ภายนอกคอมพิวเตอร์เครื่องนี้แล้ว"
+
+msgid "This earlier preview needs the current emergency recovery key once to identify its credential roles."
+msgstr "รุ่นพรีวิวก่อนหน้านี้ต้องการคีย์กู้ภัยฉุกเฉินปัจจุบันหนึ่งครั้งเพื่อระบุบทบาทของข้อมูลรับรอง"
+
+msgid "Emergency recovery key replaced."
+msgstr "แทนที่คีย์กู้ภัยฉุกเฉินแล้ว"
+
+msgid "Enter your emergency recovery key to set a new disk password. You do not need the forgotten password. Your emergency recovery key stays valid."
+msgstr "กรอกคีย์กู้ภัยฉุกเฉินเพื่อตั้งรหัสผ่านดิสก์ใหม่ คุณไม่จำเป็นต้องจำรหัสผ่านที่ลืม คีย์กู้ภัยฉุกเฉินของคุณยังคงมีผลใช้ได้"
+
+msgid "Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr "ยังไม่รองรับการเปิดการเข้ารหัสดิสก์บนระบบที่ติดตั้งอยู่แล้ว โปรดติดตั้งใหม่ด้วย ISO ของ AnduinOS รุ่นล่าสุดเพื่อเปิดการเข้ารหัสดิสก์"
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr "คุณสมบัติ Pro"
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
+msgstr "ซื้อ AnduinOS Pro"

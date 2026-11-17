@@ -1271,8 +1271,8 @@ msgid "Generating & Signing..."
 msgstr "Se generează și semnează..."
 
 #: src/anduinos_driver_center/app.py:1940
-msgid "Add Printer"
-msgstr "Adaugă imprimantă"
+msgid "Manage Printers in System Settings"
+msgstr "Gestionează imprimantele în Setări de sistem"
 
 #: src/anduinos_driver_center/app.py:1365
 #: src/anduinos_driver_center/app.py:1390
@@ -2388,3 +2388,282 @@ msgstr "Semnarea automată utilizează acum certificatul dvs. înscris. Configur
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Reparația semnăturii driverului a fost finalizată. Sistemul va verifica acum dacă driverele instalate sunt de încredere."
+
+msgid "Recovery Environment"
+msgstr "Mediu de recuperare"
+
+msgid "Present"
+msgstr "Prezentă"
+
+msgid "Multiple recovery partitions found"
+msgstr "Au fost găsite mai multe partiții de recuperare"
+
+msgid "Recovery partition not found"
+msgstr "Partiția de recuperare nu a fost găsită"
+
+msgid "Recovery partition"
+msgstr "Partiție de recuperare"
+
+msgid "Recovery package"
+msgstr "Pachet de recuperare"
+
+msgid "GRUB menu entry"
+msgstr "Intrare în meniul GRUB"
+
+msgid "Recovery menu entry not found"
+msgstr "Intrarea de recuperare nu a fost găsită în meniu"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Meniul GRUB nu poate fi citit"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "Starea pachetului folosește memoria cache APT locală. Sursele software nu sunt reîmprospătate."
+
+msgid "Read recovery boot information"
+msgstr "Citește informațiile de pornire pentru recuperare"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "O pregătire anterioară a fost întreruptă. Înainte de a reîncerca, cereți unui administrator să verifice tabela de partiții și antetul swap salvate."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Pregătirea automată nu este disponibilă pentru această configurație de disc sau swap. Cereți unui administrator să creeze o partiție ext4 AOS_RECOVERY de 256 MiB, apoi scanați din nou."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Cereți unui administrator să verifice volumele de recuperare configurate sau duplicate, apoi scanați din nou."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Închideți aplicațiile care consumă multă memorie și scanați din nou. Nu există suficientă memorie RAM disponibilă pentru a dezactiva acest swap în siguranță."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Implementați imaginea de recuperare instalată și regenerați meniul GRUB?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Instalați sau actualizați numai pachetul de recuperare folosind listele de pachete actuale?"
+
+msgid "Install or update recovery package"
+msgstr "Instalați sau actualizați pachetul de recuperare"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Nu s-a putut verifica o versiune candidată din memoria cache APT locală. Reîmprospătați sursele în managerul de actualizări, apoi scanați din nou."
+
+msgid "Recovery repair completed."
+msgstr "Repararea mediului de recuperare s-a încheiat."
+
+msgid "Repair recovery boot menu"
+msgstr "Reparați meniul de pornire pentru recuperare"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Scanați din nou și permiteți inspecția doar în citire. Dacă verificările eșuează în continuare, reparați instalarea centrului de drivere și a utilitarelor de disc."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Micșorați partiția swap și creați o partiție de recuperare"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Swap va fi dezactivat temporar. Faceți copii de siguranță ale datelor și mențineți calculatorul pornit până la încheierea operației."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Nu se poate continua: pe discul de sistem nu s-a găsit nicio partiție swap obișnuită."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Nu se poate continua: partiția swap este mai mică de 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Repararea necesită un sistem AnduinOS Btrfs @root instalat. Porniți sistemul instalat și scanați din nou."
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr "Dispozitiv grafic"
+
+msgid "Encrypted"
+msgstr "Șifrat"
+
+msgid "Not encrypted"
+msgstr "Neșifrat"
+
+msgid "Disk Encryption"
+msgstr "Șifrarea discului"
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr "Verifică șifrarea pentru fișierele de sistem, fișierele personale și swap-ul."
+
+msgid "Unencrypted disk swap is active"
+msgstr "Swap-ul pe disc neșifrat este activ"
+
+msgid "No disk swap is active"
+msgstr "Niciun swap pe disc nu este activ"
+
+msgid "Disk swap"
+msgstr "Swap pe disc"
+
+msgid "Encryption coverage"
+msgstr "Acoperirea șifrării"
+
+msgid "System files"
+msgstr "Fișiere de sistem"
+
+msgid "Personal files (Home)"
+msgstr "Fișiere personale (Home)"
+
+msgid "Memory-based swap; not a disk partition"
+msgstr "Swap bazat pe memorie; nu este o partiție de disc"
+
+msgid "System recovery"
+msgstr "Recuperarea sistemului"
+
+msgid "Snapshot Recovery Environment"
+msgstr "Mediu de recuperare prin instantanee"
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr "Nu se aplică pentru ext4. Folosește Centrul de salvare de pe USB-ul Live."
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr "Swap-ul neșifrat poate stoca date personale din memorie."
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr "Șifrarea discului poate fi selectată la o instalare nouă."
+
+msgid "Configured"
+msgstr "Configurat"
+
+msgid "Check recovery configuration"
+msgstr "Verifică configurația de recuperare"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using the current disk password."
+msgstr "Operația de autentificare nu s-a încheiat. Păstrați credențialele vechi și noi, apoi încercați din nou cu parola actuală a discului."
+
+msgid "Current disk password"
+msgstr "Parola actuală a discului"
+
+msgid "Current recovery key"
+msgstr "Cheia de recuperare actuală"
+
+msgid "Unlock credentials"
+msgstr "Credențiale de deblocare"
+
+msgid "Change disk password"
+msgstr "Modificare parolă disc"
+
+msgid "Replace recovery key"
+msgstr "Înlocuire cheie de recuperare"
+
+msgid "Checking credential configuration…"
+msgstr "Verificare configurare credențiale…"
+
+msgid "New disk password"
+msgstr "Parolă nouă disc"
+
+msgid "Confirm new disk password"
+msgstr "Confirmare parolă nouă disc"
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr "Actualizare credențiale disc. Păstrați computerul pornit."
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr "Parola actuală a discului este incorectă. Nicio credențială nu a fost modificată."
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr "Cheia de recuperare actuală este incorectă. Nicio credențială nu a fost modificată."
+
+msgid "Enter the current recovery key once to identify this preview's credential roles."
+msgstr "Introduceți o dată cheia de recuperare actuală pentru a identifica rolurile de credențiale din această previzualizare."
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr "Alegeți o credențială nouă care nu este deja utilizată de acest disc."
+
+msgid "Check the password length, characters and confirmation."
+msgstr "Verificați lungimea, caracterele și confirmarea parolei."
+
+msgid "The internal startup credential could not be verified. Use Rescue Center from the Live USB."
+msgstr "Credențiala internă de pornire nu a putut fi verificată. Folosiți Centrul de Salvare de pe stick-ul Live USB."
+
+msgid "This credential layout cannot be managed automatically. No existing credential was removed."
+msgstr "Acest layout de credențiale nu poate fi gestionat automat. Nicio credențială existentă nu a fost eliminată."
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr "Configurarea discului s-a modificat. Opriți alte utilitare de disc și încercați din nou."
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr "O altă operație de credențiale disc este în curs. Așteptați și încercați din nou."
+
+msgid "Administrator authentication was cancelled."
+msgstr "Autentificarea administratorului a fost anulată."
+
+msgid "There is no free credential slot. Existing credentials remain available."
+msgstr "Nu există slot liber pentru credențiale. Credențialele existente rămân disponibile."
+
+msgid "The new credential could not be verified. Keep your existing credentials and try again."
+msgstr "Credențiala nouă nu a putut fi verificată. Păstrați credențialele existente și încercați din nou."
+
+msgid "Open"
+msgstr "Deschide"
+
+msgid "New recovery key"
+msgstr "Cheie de recuperare nouă"
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr "Am salvat cheia de recuperare nouă în afara acestui computer."
+
+msgid "This earlier preview needs the current recovery key once to identify its credential roles."
+msgstr "Această previzualizare anterioară necesită cheia de recuperare actuală o dată pentru a identifica rolurile de credențiale."
+
+msgid "The internal startup credential stays unchanged. The old credential stops working after success."
+msgstr "Credențiala internă de pornire rămâne neschimbată. Credențiala veche nu va mai funcționa după succes."
+
+msgid "Disk password changed."
+msgstr "Parola discului a fost modificată."
+
+msgid "Recovery key replaced."
+msgstr "Cheia de recuperare a fost înlocuită."
+
+msgid "Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."
+msgstr "Folosiți de la 8 la 128 caractere ASCII imprimabile. Ecranul de pornire folosește un layout de tastatură US."
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using your disk password or emergency recovery key."
+msgstr "Operația cu datele de autentificare nu s-a finalizat. Păstrați vechile și noile date de autentificare, apoi încercați din nou folosind parola discului sau cheia de recuperare de urgență."
+
+msgid "The emergency recovery key is generated by the system. Like your disk password, it unlocks the disk. Use your password normally; use the key in an emergency. Keep it outside this computer."
+msgstr "Cheia de recuperare de urgență este generată de sistem. La fel ca parola discului, aceasta deblochează discul. Folosiți parola în mod normal; folosiți cheia în caz de urgență. Păstrați-o în afara acestui computer."
+
+msgid "Current emergency recovery key"
+msgstr "Cheia de recuperare de urgență curentă"
+
+msgid "Replace emergency recovery key"
+msgstr "Înlocuiește cheia de recuperare de urgență"
+
+msgid "Reset forgotten disk password"
+msgstr "Resetează parola discului uitată"
+
+msgid "Emergency recovery key"
+msgstr "Cheia de recuperare de urgență"
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr "Cheia de recuperare de urgență este incorectă. Nicio date de autentificare nu a fost modificată."
+
+msgid "Enter the current emergency recovery key once to identify this preview's credential roles."
+msgstr "Introduceți o dată cheia de recuperare de urgență curentă pentru a identifica rolurile de autentificare din această previzualizare."
+
+msgid "New emergency recovery key"
+msgstr "Cheia de recuperare de urgență nouă"
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr "Am salvat cheia de recuperare de urgență nouă în afara acestui computer."
+
+msgid "This earlier preview needs the current emergency recovery key once to identify its credential roles."
+msgstr "Această previzualizare anterioară necesită cheia de recuperare de urgență curentă o dată pentru a-și identifica rolurile de autentificare."
+
+msgid "Emergency recovery key replaced."
+msgstr "Cheia de recuperare de urgență a fost înlocuită."
+
+msgid "Enter your emergency recovery key to set a new disk password. You do not need the forgotten password. Your emergency recovery key stays valid."
+msgstr "Introduceți cheia de recuperare de urgență pentru a configura o parolă nouă de disc. Nu aveți nevoie de parola uitată. Cheia de recuperare de urgență rămâne validă."
+
+msgid "Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr "Activarea criptării discului pe o instalare existentă nu este încă acceptată. Reinstalați folosind cea mai recentă imagine ISO AnduinOS pentru a activa criptarea discului."
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr "Funcție Pro"
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
+msgstr "Cumpărați AnduinOS Pro"

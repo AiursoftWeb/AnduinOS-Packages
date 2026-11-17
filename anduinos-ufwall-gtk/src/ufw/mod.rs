@@ -1,4 +1,5 @@
 pub mod backend;
+pub mod health;
 pub mod monitor;
 pub mod stats;
 pub mod traffic_monitor;

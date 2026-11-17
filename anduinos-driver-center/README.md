@@ -6,7 +6,19 @@ hardware drivers and updating device firmware. It replaces the only broadly usef
 authentication, and release-upgrade user interfaces.
 
 The responsive home page summarizes automatic driver recommendations and the
-health of graphics, audio, printing, Xbox controller, and Secure Boot support.
+health of graphics, audio, printing, Xbox controller, Secure Boot, device firmware,
+Recovery Environment, and disk encryption. By default, the last two cards show
+**Pro feature** and **Purchase AnduinOS Pro** and open
+<https://www.anduinos.com/pro>; their management pages are hidden.
+
+For internal qualification, launch `anduinos-driver-center --bypass-payment`.
+This enables the existing recovery and encryption pages for that application
+session. It uses a separate application instance from the community mode and
+does not save an activation or change the default launcher. Recovery retains
+its swap-shrinking preparation workflow, while unencrypted systems are directed
+to reinstall for encryption. Community mode does not run the recovery or
+encryption storage probes. `--page recovery` and `--page encryption` require
+the bypass flag; otherwise they open Home.
 It compares installed and candidate versions of the recommended graphics
 driver, can refresh package information, and exposes the equivalent of
 `ubuntu-drivers install` through the same restricted privileged helper used by
@@ -17,6 +29,42 @@ refresh enabled metadata sources, inspect available releases, install one or
 all updates, report live progress and device requests, prompt for required
 restarts, and show the daemon's update history. Firmware authorization and
 signature verification remain owned by fwupd rather than the driver helper.
+
+The Disk Encryption page reports encryption for the running system volume,
+Home and active disk swap. It follows actual block-device relationships rather
+than a particular mapper name, distinguishes zram from disk swap, and leaves
+ambiguous or inaccessible storage metadata unknown. Opening the page does not
+read keys, authenticate or change the disk. Plain installations remain valid;
+this page does not convert existing installations. Snapshot recovery applies
+to Btrfs; ext4 users are directed to Rescue Center on Live media.
+
+Encrypted AnduinOS installations can change the disk password and replace the
+emergency recovery key from this page. Administrator authentication is required. Normal credential changes use the
+current disk password; a forgotten password can be reset with the emergency key. Save a replacement emergency recovery key outside the computer
+before applying it. Earlier previews also require their original emergency recovery key
+once to identify the three credential roles; ambiguous/custom layouts stay
+unchanged. Human credentials keep the installer's Argon2id policy.
+
+Credential roles and interrupted-change progress live in a small LUKS2 token,
+so Btrfs rollback preserves the current credential policy. A new slot is tested
+before its predecessor is retired. The internal startup key stays unchanged;
+no GRUB/initrd regeneration is needed for these changes. External keyslot edits,
+TPM/FIDO enrolment and general keyslot editing are outside this first version.
+
+The Recovery Environment page checks the dedicated ext4 partition, the installed
+recovery package against the local APT cache, and the generated GRUB menu entry.
+Scanning does not refresh software sources or change the system. A fixed
+read-only polkit probe checks boot information and repair eligibility. Non-green
+checks show ordered repair steps. Explicitly confirmed repairs can prepare a
+256 MiB recovery partition from an ordinary system-disk GPT swap partition of
+at least 512 MiB, install or update the recovery package, or repair its boot
+menu. Unsupported layouts explain why automatic preparation cannot continue.
+
+Disk credential changes show a separate modal window with an indeterminate
+progress bar while the helper verifies and updates credentials. This window
+contains no credential input or helper output. Unencrypted installations show
+that enabling encryption in place is not supported; a new installation using
+the latest AnduinOS ISO is required.
 
 The audio page reports the installed Intel SOF firmware and ALSA UCM packages,
 deployed support files, loaded SOF modules, and active PCI audio drivers.
@@ -37,7 +85,7 @@ masks and starts the normal printing units.
 
 The unprivileged UI reads hardware state. Mutating operations go through a
 fixed polkit helper which only accepts drivers reported by `ubuntu-drivers`,
-the AnduinOS xpadneo package, and fixed audio, printing, and Intel graphics operations.
+the AnduinOS xpadneo package, and fixed audio, printing, Intel graphics, and recovery operations.
 
 ## Intel graphics
 
@@ -177,3 +225,17 @@ python3 -m unittest discover -s tests -v
 ```
 
 GTK behavior tests can also run headlessly with `xvfb-run -a python3 -m unittest discover -s tests -v`.
+
+A system-generated **emergency recovery key** unlocks the disk independently
+of the disk password. Use the password normally and keep the emergency key
+outside the computer. **Reset forgotten disk password** uses that key to set a
+new password without requiring the forgotten password; it preserves the
+emergency key and the internal startup credential. Administrator authorization
+is still required. This does not reset the desktop account's login password.
+
+For an unmarked initial encryption preview, emergency reset accepts only its
+documented three-slot layout: emergency key in slot 1, machine key in slot 2,
+password in the remaining slot 0. Both available credentials are tested and
+must not unlock other slots. Extra slots, foreign tokens and ambiguous roles
+are rejected rather than guessed. Normal password-authenticated adoption still
+requires the original emergency key once.

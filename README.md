@@ -1,10 +1,27 @@
-# AnduinOS Packages
+<a name="anduinos-packages"></a>
+# Aiursoft AnduinOS Packages
 
 [![GPL licensed](https://img.shields.io/badge/license-GPL-blue.svg)](https://github.com/AiursoftWeb/AnduinOS-Packages/blob/master/LICENSE)
 
 AnduinOS APKG package sources.
 
-## Directory Naming Convention
+## Overview
+
+### What is AnduinOS Packages?
+
+This repository maintains the APKG package sources used by AnduinOS: package definitions, payloads, build helpers, maintainer scripts and package-owned tests. It is distinct from the ISO assembler and from the package-hosting service.
+
+## Installation
+
+To consume the operating system packages, follow the existing [AnduinOS installation and package documentation](https://docs.anduinos.com/). The conversion procedure in Usage makes system-wide package changes; read its suite check and complete command before using it.
+
+For source development, install the .NET SDK required by the chosen `Aiursoft.Apkg.Sdk` and the [APKG CLI](https://github.com/AiursoftWeb/Apkg#cli), then work in a clone of this repository. Native package build prerequisites depend on each package's `.aosproj` and helper scripts; installing the CLI alone does not provide every native build tool. Follow [DEV_GUIDE.md](DEV_GUIDE.md) and [CONTRIBUTING.md](CONTRIBUTING.md) for the existing package workflow.
+
+## Usage
+
+The package layout, replacement contracts and maintenance procedures below describe the actual payload and upgrade behavior. Read them before changing packages or converting an existing Ubuntu machine.
+
+### Directory Naming Convention
 
 Each package directory follows a strict naming convention. **There is only one
 `.gitignore`** — the one at the repository root. No per-package `.gitignore`
@@ -26,7 +43,7 @@ files.
 | `target/` | **Rust / Cargo** build output. | ❌ **Gitignored** | `target/release/` |
 | `__pycache__/` | **Python** bytecode cache. | ❌ **Gitignored** | `.pyc` |
 
-### Why `deploy/` is gitignored
+#### Why `deploy/` is gitignored
 
 The APKG build pipeline uses `deploy/` as a **staging area** — build scripts
 copy compiled output there, and the SDK reads it to assemble the `.deb`.
@@ -35,7 +52,7 @@ Committing `deploy/` would mix build artifacts with source control.
 For files that go into the package **without compilation** (the majority of
 AnduinOS packages), use `assets/` instead.
 
-## Package conflicts
+### Package conflicts
 
 The following AnduinOS packages explicitly replace or conflict with
 Ubuntu's official packages.  Every Ubuntu package name appears exactly
@@ -43,7 +60,7 @@ once — there is no overlap.
 
 ---
 
-### 🔴 Hard Replace — dpkg `Conflicts` + `Replaces` + `Provides`
+#### 🔴 Hard Replace — dpkg `Conflicts` + `Replaces` + `Provides`
 
 User **cannot** install both.  Dpkg removes the Ubuntu package at install time.
 
@@ -72,7 +89,7 @@ User **cannot** install both.  Dpkg removes the Ubuntu package at install time.
 
 ---
 
-### 🟡 Dual Recommend — `anduinos-X | ubuntu-X`
+#### 🟡 Dual Recommend — `anduinos-X | ubuntu-X`
 
 Defined in `anduinos-desktop-core` as alternative `Depends`.  The AnduinOS
 version is listed first (preferred), but the user can `apt install ubuntu-X`
@@ -87,15 +104,16 @@ to switch back.
 
 ---
 
-### 🟢 Soft Override — files only, package stays
+#### 🟢 Soft Override — files only, package stays
 
 These replace Ubuntu **files** without removing the Ubuntu **package**.
 
 | AnduinOS Package | Files overridden | Mechanism |
 |---|---|---|
 | `base-files` | `os-release`, `lsb-release`, `issue`, `issue.net`, `ubuntu-logo-*.png`, `legal` | Epoch `1:` outranks Ubuntu |
-| `anduinos-apt-config` | APT sources (`packages.anduinos.com`) + preferences | Dual pin: `origin` (domain) + `release o=` (Origin field), both at priority 1001; also shipped as `anduinos-apt-config-dev` (→ `apkg-dev.aiursoft.com`) |
+| `anduinos-apt-config` | APT sources (`packages.anduinos.com`) + preferences | Dual pin: `origin` (domain) + `release o=` (Origin field), both at priority 1001; also shipped as `anduinos-apt-config-dev` (→ `apkg-dev.aiursoft.com`) and `anduinos-apt-config-for-china` (→ `packages.aiursoft.cn`, same production channel) |
 | `anduinos-mimeapps` | `gnome-mimeapps.list` | `dpkg-divert` (original → `.ubuntu-original`) |
+| `anduinos-input-method-policy` | Mozc login initialization script | `dpkg-divert`; input sources stay under installer and user control |
 
 `anduinos-rime` is intentionally absent from this override table. Starting
 with `2.0.1-2`, it owns only Rime Ice resources and an additive distribution
@@ -109,7 +127,7 @@ disappear after the migration release.
 
 ---
 
-### Cascading removal
+#### Cascading removal
 
 `anduinos-desktop` → `anduinos-desktop-core` → `anduinos-no-snapd` triggers:
 
@@ -139,7 +157,7 @@ anduinos-desktop  ──Conflicts──→  ubuntu-desktop
 
 ---
 
-### 🟦 Brand Packages — AnduinOS only, no Ubuntu conflict
+#### 🟦 Brand Packages — AnduinOS only, no Ubuntu conflict
 
 These ship files or declare dependencies without replacing any Ubuntu package.
 
@@ -176,12 +194,12 @@ These ship files or declare dependencies without replacing any Ubuntu package.
 | `anduinos-gnome-shell-locale` | Locale | GNOME Shell locale / text overrides |
 | `anduinos-live-settings` | Config | Dracut Live-session regional setup and Live-only systemd policy; removed before target bootloader setup |
 
-### Kernel ownership contract (Resolute)
+#### Kernel ownership contract
 
-AnduinOS supports the Resolute kernel path. The canonical owner of kernel
-availability is `anduinos-core-system`, which has a hard dependency on Ubuntu's
-`linux-generic-hwe-26.04` metapackage. The installed desktop reaches it through
-this mandatory chain:
+The canonical owner of kernel availability is `anduinos-core-system`. It
+depends on Ubuntu's `linux-generic-hwe-26.04` on Resolute and `linux-generic`
+on Stonking. Both metapackages retain the matching image and headers. The
+installed Resolute desktop reaches its kernel through this mandatory chain:
 
 ```
 anduinos-desktop
@@ -194,7 +212,7 @@ anduinos-desktop
 
 This dependency chain, rather than an ISO build script, must install and retain
 the kernel. ISO builders must not directly install the split image or headers
-metapackages and must not add a parallel dependency on `linux-generic`. The
+metapackages or add a different kernel track alongside the suite's selection. The
 native installer copies the packaged Live filesystem, retains the kernel
 packages in the target, regenerates the target Dracut initrd and bootloader
 configuration, and verifies that at least one kernel has a matching initrd.
@@ -207,7 +225,7 @@ must target Dracut rather than introduce `initramfs-tools` dependencies or hooks
 
 AnduinOS owns one early-boot stack: `anduinos-core-system` depends directly on
 `dracut`, `dracut-core`, and `dracut-install`, and conflicts with Casper and the
-complete initramfs-tools/finalrd stack. Existing systems receive
+complete initramfs-tools/finalrd stack. Existing Resolute systems receive
 `anduinos-dracut-migration` through the independently upgradable desktop
 metapackage, keeping host boot migration out of shared APT and container
 layers. Its timer waits until every required pure-Dracut candidate is
@@ -231,8 +249,8 @@ boot policy, not the kernel binary. It installs
 `/etc/default/grub.d/99-anduinos-desktop.cfg`, appends `preempt=full`, conflicts
 with `lowlatency-kernel`, refreshes GRUB on a real installed system, and marks a
 reboot as required. Its maintainer scripts defer GRUB work inside a chroot. The
-package also depends on `linux-generic-hwe-26.04` so that installing the policy
-standalone cannot leave it paired with an unsupported kernel track.
+package also depends on the same suite-specific metapackage so that installing
+the policy standalone cannot leave it paired with an unsupported kernel track.
 
 `anduinos-desktop` recommends `anduinos-kernel-parameters` on Resolute. The
 official ISO is built with recommends enabled, so both
@@ -254,8 +272,8 @@ marks to force convergence.
 
 Future changes must preserve these invariants:
 
-- `anduinos-core-system` keeps a hard dependency on the supported HWE kernel
-  metapackage.
+- `anduinos-core-system` keeps a hard dependency on the suite's supported kernel
+  metapackage; adding a suite must not leave the system without a kernel.
 - `anduinos-kernel-parameters` remains a separable desktop policy package.
 - ISO construction obtains the kernel through the AnduinOS package graph.
 - Installed-system cleanup never treats kernel packages as Live-only payloads.
@@ -266,44 +284,7 @@ Future changes must preserve these invariants:
 AnduinBook OEM kernel work is outside this contract and remains a separate
 future hardware-enablement track.
 
-## Build
-
-Each package is built via the GitLab CI pipeline (`.gitlab-ci.yml`). Packages use the `Aiursoft.Apkg.Sdk` and can be built locally with:
-
-```
-apkg build --all
-```
-
-Each package owns its source, tests and build helpers. Run package tests with
-`apkg test --profile anduinos-package-release-test`; do not place package tests at the repository root or add
-package-specific policy to `lib/`. Shared helpers must be genuinely generic.
-
-CI uses one common package recipe: merge requests and non-release branches build
-all targets; `master` and `prod` deploy with `--all --skip-existing`. When
-preflight confirms that every requested target version is already published,
-the build is skipped, but the independent `lint-all` and `test-all` gates still
-run before every package job. `--skip-duplicate` only
-skips duplicate uploads after building and is not a substitute. Bump
-`PackageVersion` when changing package content or dependency metadata.
-Package `needs` include both internal dependencies and all mandatory gates.
-See [DEV_GUIDE.md](DEV_GUIDE.md) for profile selection and the current workflow.
-For a new OS point release, follow the
-[selective version-bump checklist](DEV_GUIDE.md#preparing-a-new-anduinos-point-release).
-
-### TL;DR: What needs manual effort vs what auto-builds
-
-| Category | Packages | Monthly action |
-|---|---|---|
-| 🔧 **Manual — update commit/version** | Apkg client, Fluent GTK theme, Fluent icon theme, ALSA UCM Conf, Firmware SOF, Xbox Driver | Edit `download.sh` + bump `.aosproj` |
-| 🤖 **Auto — CI resolves at build time** | 14 GNOME Shell extensions | Bump their package versions and run CI; the resolver pulls compatible releases from extensions.gnome.org |
-| 🤖 **Auto — pulls latest upstream .deb** | base-files, plymouth, software-properties-common, firefox | Bump their package versions and run CI; the build pulls from Ubuntu/Mozilla mirrors |
-| 🤖 **Auto — metapackages** | anduinos-desktop, theme, desktop-core, etc. | Bump the package version and run CI when the dependency list changes |
-
-**Bottom line:** Check the 6 pinned packages monthly. Any changed package needs a new version before CI can publish it; existing published versions are skipped.
-
----
-
-## Monthly Update Manual
+### Monthly Update Manual
 
 All external sources must be checked **at least once per month** to keep packages from falling behind upstream. This section is the step-by-step checklist.
 
@@ -313,7 +294,7 @@ Never roll upstream source back to an older release or lower `PackageVersion` re
 
 ---
 
-### A. Quick Checklist (5 min triage)
+#### A. Quick Checklist (5 min triage)
 
 Run through this table each month. If anything has changed upstream, follow the detailed steps in the matching section below.
 
@@ -337,11 +318,11 @@ Run through this table each month. If anything has changed upstream, follow the 
 
 ---
 
-### B. Pinned Upstream Packages
+#### B. Pinned Upstream Packages
 
 Four packages clone a git repo and pin to a specific commit hash. Both the **commit hash** and the **`.aosproj` PackageVersion** must be updated together. The Apkg client is pinned to a NuGet release and is covered separately in section B.4.
 
-#### B.1 Check for updates
+##### B.1 Check for updates
 
 ```bash
 # Fluent GTK theme (upstream on GitHub)
@@ -361,7 +342,7 @@ Compare upstream HEAD with the pinned commit in each `download.sh`, then select 
 
 For **ALSA UCM Conf**, check the upstream `configure.ac` for the version. For **Fluent** packages, check [GitHub releases](https://github.com/vinceliuice/Fluent-gtk-theme/releases) for the current upstream version (informational — not encoded in PackageVersion).
 
-#### B.2 Apply the update
+##### B.2 Apply the update
 
 For each outdated package, update **two files**:
 
@@ -382,14 +363,14 @@ Example diff for Fluent GTK theme:
 
 For xpadneo, also update `VERSION` to the result of `git describe --tags <pinned-commit>`; it determines the DKMS source directory and configuration. Keep the same `VERSION` in `scripts/postinst.sh` and `scripts/prerm.sh`. Fluent GTK is used by both `anduinos-fluent-gtk-theme` and `anduinos-gdm3-wallpaper`: update and bump both packages together.
 
-#### B.3 Rebuild and verify
+##### B.3 Rebuild and verify
 
 ```bash
 cd <package-dir>
 apkg publish
 ```
 
-#### B.4 Apkg client
+##### B.4 Apkg client
 
 The `apkg` package extracts the framework-dependent client from an official NuGet package. Once per month, compare `VERSION` in `apkg/download.sh` with the latest stable [Aiursoft.Apkg.Client release][apkg-nuget]. When a new release is available:
 
@@ -438,17 +419,17 @@ Do not commit `apkg/deploy/`; it is regenerated by `download.sh` during the buil
 
 ---
 
-### C. Firmware SOF (Version-Pinned Tarball)
+#### C. Firmware SOF (Version-Pinned Tarball)
 
 `firmware-sof-anduinos` replaces Ubuntu's SOF firmware with a newer Intel `sof-bin` release tarball.
 
 > **⚠️ Version sync trap:** When upgrading `SOF_VERSION` in `download.sh`, also increment the Debian revision in `.aosproj` (`PackageVersion`) so CI publishes a new package. Keep the existing AnduinOS version and suite suffix conventions.
 
-#### C.1 Check for updates
+##### C.1 Check for updates
 
 Visit [sof-bin releases](https://github.com/thesofproject/sof-bin/releases) and compare the latest tag against `SOF_VERSION` in `firmware-sof-anduinos/download.sh`.
 
-#### C.2 Apply the update
+##### C.2 Apply the update
 
 Update **both files**:
 
@@ -464,7 +445,7 @@ Update **both files**:
 
 The downloaded Intel tarball and extracted cache under `deploy/` are **not** committed — the CI regenerates them at build time via `download.sh`.
 
-#### C.3 Rebuild and verify
+##### C.3 Rebuild and verify
 
 ```bash
 cd firmware-sof-anduinos
@@ -473,13 +454,13 @@ apkg publish
 
 ---
 
-### D. GNOME Shell Extensions (14 dynamically resolved packages)
+#### D. GNOME Shell Extensions (14 dynamically resolved packages)
 
 These are resolved **dynamically at build time**: the resolver (`lib/resolve-gnome-ext.py`) queries `extensions.gnome.org` for the best compatible version for each target GNOME Shell version. This means extension code is always up-to-date on every build — no monthly check needed for the extension code itself.
 
 However, two things still need attention:
 
-#### D.1 GNOME Shell version map (`lib/gnome-versions.sh`)
+##### D.1 GNOME Shell version map (`lib/gnome-versions.sh`)
 
 This file maps Ubuntu suite codenames to GNOME Shell major versions. It must be updated whenever:
 
@@ -506,7 +487,7 @@ declare -A GNOME_TARGETS=(
 
 After bumping the affected package versions, CI will build them with the updated GNOME version map; the resolver selects the appropriate upstream extension during each build.
 
-#### D.2 Extension `.aosproj` version numbers
+##### D.2 Extension `.aosproj` version numbers
 
 Each extension has its own `<PackageVersion>` in its `.aosproj`. Bump the Debian revision suffix (e.g. `-1` → `-2`) when packaging changes or when a new upstream build must be published. The resolver fetches the latest compatible extension code during that build; CI skips package versions that are already published.
 
@@ -515,13 +496,13 @@ Each extension has its own `<PackageVersion>` in its `.aosproj`. Bump the Debian
 +<PackageVersion>2.0.3-2+$(SuiteShortName)</PackageVersion>
 ```
 
-#### D.3 Special-cased extension: desktop-icons-ng-anduinos
+##### D.3 Special-cased extension: desktop-icons-ng-anduinos
 
 `gnome-shell-extension-desktop-icons-ng-anduinos` explicitly conflicts with Ubuntu's `gnome-shell-extension-desktop-icons-ng` (same UUID `ding@rastersoft.com`). Its pre-build script downloads the upstream extension for each supported GNOME version and makes `app/ding.js` executable. The desktop context menu and its translations are left upstream.
 
 ---
 
-### E. Upstream-Derived Packages
+#### E. Upstream-Derived Packages
 
 Five packages derive from upstream `.deb` packages at build time via `UpstreamUrl`:
 
@@ -539,7 +520,7 @@ These are rebuilt by CI and pull the latest upstream source at build time, so th
 
 ---
 
-### F. Internal Infrastructure (As-Needed)
+#### F. Internal Infrastructure (As-Needed)
 
 These URLs are not on a monthly schedule, but should be reviewed whenever infrastructure changes:
 
@@ -550,13 +531,14 @@ These URLs are not on a monthly schedule, but should be reviewed whenever infras
 | `https://apkg-dev.aiursoft.com/artifacts/certs/anduinos` | `anduinos-archive-keyring.aosproj:17` | GPG signing key |
 | `https://apkg-dev.aiursoft.com/artifacts/anduinos/` | `anduinos-apt-config-dev/deploy/**/*.sources` | APT repo (dev channel) |
 | `https://packages.anduinos.com/artifacts/anduinos/` | `anduinos-apt-config/deploy/**/*.sources` | APT repo (production channel) |
+| `https://packages.aiursoft.cn/artifacts/anduinos/` | `anduinos-apt-config-for-china/assets/**/*.sources` | APT repo (production mirror for China) |
 | `https://nuget.aiursoft.com/v3/index.json` | `nuget.config:5` | NuGet source for build tools |
 | `https://dl.flathub.org/repo/flathub.flatpakrepo` | `anduinos-appstore/scripts/postinst.sh:4` | Flathub remote |
 | `https://mirror.aiursoft.com/ubuntu` | Multiple `.aosproj` files | Ubuntu mirror |
 
 ---
 
-### G. Monthly Update Order
+#### G. Monthly Update Order
 
 When doing a full monthly triage, follow this order — earlier packages are dependencies of later ones:
 
@@ -570,7 +552,7 @@ When doing a full monthly triage, follow this order — earlier packages are dep
 
 For each updated package, push to `master` — CI runs `apkg publish && apkg push` automatically.
 
-### H. One-command conversion script
+#### H. One-command conversion script
 
 One-command conversion from a standard Ubuntu installation to AnduinOS.
 
@@ -666,3 +648,73 @@ sudo apt reinstall -y base-files
 sudo dconf update
 dconf reset -f /org/gnome/
 ```
+
+## Configuration
+
+Package inputs are declared in each directory's `.aosproj`: package identity/version, architectures/suites, dependencies/conflicts/replacements, payload paths, maintainer hooks and build/test profiles. Preserve the full definitions and bump the package version when payload or dependency metadata changes.
+
+- `.gitignore` at the repository root controls generated output; directory roles are described in Usage.
+- [nuget.config](nuget.config) configures package restore for the SDK/toolchain; use the existing approved build environment for internal CI.
+- [.gitlab-ci.yml](.gitlab-ci.yml) and `.gitlab/ci/` declare common gates, package ordering and release/validation behavior. Keep `needs` consistent with internal package dependencies and all mandatory gates.
+- `download.sh`, build scripts and package assets hold package-specific upstream version/commit/configuration values. The monthly manual above retains their full examples and update steps.
+- APKG's `--source`, `--profile`, `--all` and `--skip-existing` options select repository, test/build scope and publication preflight behavior as described in the existing development guide and commands below. They do not replace package versioning.
+
+## Development
+
+<a name="build"></a>
+Each package is built via the GitLab CI pipeline (`.gitlab-ci.yml`). Packages use the `Aiursoft.Apkg.Sdk` and can be built locally with:
+
+```
+apkg build --all
+```
+
+Each package owns its source, tests and build helpers. Run package tests with
+`apkg test --profile anduinos-package-release-test`; do not place package tests at the repository root or add
+package-specific policy to `lib/`. Shared helpers must be genuinely generic.
+
+CI uses one common package recipe: merge requests and non-release branches build
+all targets; `master` and `prod` deploy with `--all --skip-existing`. When
+preflight confirms that every requested target version is already published,
+the build is skipped, but the independent `lint-all` and `test-all` gates still
+run before every package job. `--skip-duplicate` only
+skips duplicate uploads after building and is not a substitute. Bump
+`PackageVersion` when changing package content or dependency metadata.
+Package `needs` include both internal dependencies and all mandatory gates.
+See [DEV_GUIDE.md](DEV_GUIDE.md) for profile selection and the current workflow.
+For a new OS point release, follow the
+[selective version-bump checklist](DEV_GUIDE.md#preparing-a-new-anduinos-point-release).
+
+<a name="tldr-what-needs-manual-effort-vs-what-auto-builds"></a>
+**TL;DR: What needs manual effort vs what auto-builds**
+
+| Category | Packages | Monthly action |
+|---|---|---|
+| 🔧 **Manual — update commit/version** | Apkg client, Fluent GTK theme, Fluent icon theme, ALSA UCM Conf, Firmware SOF, Xbox Driver | Edit `download.sh` + bump `.aosproj` |
+| 🤖 **Auto — CI resolves at build time** | 14 GNOME Shell extensions | Bump their package versions and run CI; the resolver pulls compatible releases from extensions.gnome.org |
+| 🤖 **Auto — pulls latest upstream .deb** | base-files, plymouth, software-properties-common, firefox | Bump their package versions and run CI; the build pulls from Ubuntu/Mozilla mirrors |
+| 🤖 **Auto — metapackages** | anduinos-desktop, theme, desktop-core, etc. | Bump the package version and run CI when the dependency list changes |
+
+**Bottom line:** Check the 6 pinned packages monthly. Any changed package needs a new version before CI can publish it; existing published versions are skipped.
+
+---
+
+The root README is repository documentation, not a package payload. Changes to package-owned README files that are included by `.aosproj` are payload changes and follow the package-version rule. Use the existing per-package test profiles rather than executing installation or conversion snippets on the development host.
+
+## Documentation
+
+- [Package development guide](DEV_GUIDE.md): package ownership, build/test profiles and point-release preparation.
+- [Contribution instructions](CONTRIBUTING.md): the existing project-specific development conventions.
+
+## How to contribute
+
+There are many ways to contribute to the project: logging bugs, submitting pull requests, reporting issues, and creating suggestions.
+
+Even if you have push rights on the repository, you should create a personal fork and create feature branches there when you need them. This keeps the main repository clean and your workflow cruft out of sight.
+
+We're also interested in your feedback on the future of this project. You can submit a suggestion or feature request through the issue tracker. To make this process more effective, we're asking that these include more information to help define them more clearly.
+
+
+
+## License
+
+Licensed under [GPL-3.0](LICENSE).

@@ -5,7 +5,9 @@ from __future__ import annotations
 from collections.abc import Callable
 from pathlib import Path
 
+from .china_mirrors import SwitchChinaSourcesStep
 from .command import CommandRunner
+from .encryption import EncryptionCredentials
 from .chroot_env import EnterChrootStep, LeaveChrootStep
 from .bootloader import CreateFallbackBootChainStep, InstallBootloaderStep
 from .secure_boot import (
@@ -30,7 +32,7 @@ from .language_support import InstallLanguagePacksStep
 from .live_cleanup import RemoveLivePackagesStep
 from .mirrors import SelectFastestAptMirrorStep
 from .network import DetectNetworkConnectivityStep, RecheckNetworkConnectivityStep
-from .model import Filesystem, Firmware, InstallPlan
+from .model import Filesystem, Firmware, InstallMode, InstallPlan
 from .other_systems import CheckOtherDiskSystemsStep
 from .linux_systems import CheckLinuxSystemsStep
 from .regional_config import ConfigureKeyboardStep, InstallInputMethodStep
@@ -46,6 +48,7 @@ from .storage_steps import MountTargetStep, PrepareStorageStep
 from .system_config import ConfigureSystemStep
 from .target_config import ConfigureStorageStep
 from .snapshots_manager import (
+    DeployRecoveryEnvironmentStep,
     CreateFactorySnapshotStep,
     EnsureSnapshotsManagerStep,
 )
@@ -73,15 +76,26 @@ class InstallerExecutor:
         self.runner = runner or CommandRunner(log)
         self.execution_policy = execution_policy
 
-    def run(self, plan: InstallPlan) -> InstallResult:
-        validate_plan_for_execution(plan, self.execution_policy)
-        context = InstallContext(
-            plan,
-            self.log,
-            execution_policy=self.execution_policy,
-        )
-        steps = self.build_steps(plan)
-        return StepRunner(steps, self.progress, self.status).run(context)
+    def run(
+        self, plan: InstallPlan, *,
+        encryption_credentials: EncryptionCredentials | None = None,
+    ) -> InstallResult:
+        context = None
+        try:
+            validate_plan_for_execution(plan, self.execution_policy)
+            context = InstallContext(
+                plan,
+                self.log,
+                execution_policy=self.execution_policy,
+                encryption_credentials=encryption_credentials,
+            )
+            steps = self.build_steps(plan)
+            return StepRunner(steps, self.progress, self.status).run(context)
+        finally:
+            if encryption_credentials is not None:
+                encryption_credentials.clear()
+            if context is not None:
+                context.encryption_credentials = None
 
     def build_steps(self, plan: InstallPlan) -> list[InstallStep]:
         """Build the canonical ordered pipeline without executing it."""
@@ -105,9 +119,13 @@ class InstallerExecutor:
             # can build kernel modules. Never let an upgrade inherit the
             # copied Live image's signing identity.
             PrepareSecureBootStep(self.runner),
+        ]
+        if plan.software.download_from_china:
+            steps.append(SwitchChinaSourcesStep(self.runner))
+        steps.extend((
             InstallLanguagePacksStep(self.runner),
             InstallInputMethodStep(self.runner),
-        ]
+        ))
         if plan.software.install_multimedia_codecs:
             steps.append(InstallMultimediaCodecsStep(self.runner))
         steps.append(ConfigureSystemStep(self.runner))
@@ -126,6 +144,8 @@ class InstallerExecutor:
         # machine fresh SSH host identity and reapplies the package-owned,
         # default-off remote-access policy as the final network-service state.
         steps.append(ProvisionRemoteAccessStep(self.runner))
+        if plan.recovery_enabled:
+            steps.append(DeployRecoveryEnvironmentStep(self.runner))
         steps.extend(
             (
                 VerifyDkmsSignaturesStep(self.runner),

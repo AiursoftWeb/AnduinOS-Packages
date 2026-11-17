@@ -1,3 +1,4 @@
+import signal
 import subprocess
 import tempfile
 import unittest
@@ -7,7 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from anduinos_rescue_center.model import Partition
-from anduinos_rescue_center.offline_env import _provide_dns, emergency_shell, opened_system
+from anduinos_rescue_center.offline_env import _provide_dns, emergency_shell, finish_emergency_shell, opened_system
 
 
 def partition() -> Partition:
@@ -221,6 +222,27 @@ class OfflineEnvironmentTests(unittest.TestCase):
             unmounts = [item[-1] for item in calls if item[0] == "umount"]
             self.assertEqual(unmounts, [str(root / "sys"), str(root / "dev")])
 
+    def test_terminal_cleanup_waits_for_helper_and_rejects_busy_mounts(self):
+        from dataclasses import replace
+
+        with (patch("anduinos_rescue_center.offline_env._emergency_shell_running",
+                    side_effect=[True, False]),
+              patch("anduinos_rescue_center.offline_env.time.sleep") as sleep,
+              patch("anduinos_rescue_center.offline_env.resolve_target", return_value=partition())):
+            self.assertTrue(finish_emergency_shell("/dev/sda2", "a" * 64)["released"])
+            sleep.assert_called_once()
+        busy = replace(partition(), mountpoints=("/run/leftover",))
+        with (patch("anduinos_rescue_center.offline_env._emergency_shell_running", return_value=False),
+              patch("anduinos_rescue_center.offline_env.resolve_target", return_value=busy)):
+            with self.assertRaisesRegex(RuntimeError, "still in use"):
+                finish_emergency_shell("/dev/sda2", "a" * 64)
+
+    def test_terminal_cleanup_timeout_never_reports_release(self):
+        with (patch("anduinos_rescue_center.offline_env._emergency_shell_running", return_value=True),
+              patch("anduinos_rescue_center.offline_env.time.monotonic", side_effect=[0, 91])):
+            with self.assertRaisesRegex(RuntimeError, "still running"):
+                finish_emergency_shell("/dev/sda2", "a" * 64)
+
     def test_emergency_shell_requires_live_tty_and_uses_selected_root(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -233,15 +255,18 @@ class OfflineEnvironmentTests(unittest.TestCase):
                 yield root, partition()
 
             def run(command, **kwargs):
+                self.assertEqual(signal.getsignal(signal.SIGHUP), signal.SIG_IGN)
                 calls.append((command, kwargs))
                 return subprocess.CompletedProcess(command, 0)
 
+            original_hangup = signal.getsignal(signal.SIGHUP)
             with (patch("anduinos_rescue_center.live.is_trusted_live_environment", return_value=True),
                   patch("anduinos_rescue_center.offline_env.os.isatty", return_value=True),
                   patch("anduinos_rescue_center.offline_env.opened_system", wraps=opened) as system,
                   patch("sys.stdout", new_callable=StringIO)):
                 self.assertEqual(emergency_shell("/dev/sda2", "a" * 64, run=run), 0)
                 self.assertTrue(system.call_args.kwargs["mount_home"])
+            self.assertEqual(signal.getsignal(signal.SIGHUP), original_hangup)
             self.assertEqual(calls[0][0], ["chroot", str(root), "/bin/bash"])
             self.assertEqual(calls[0][1]["env"]["HOME"], "/root")
 

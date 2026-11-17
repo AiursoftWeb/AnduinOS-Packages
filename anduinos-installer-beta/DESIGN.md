@@ -7,6 +7,15 @@ Release one has no user-supplied mount paths. Future custom storage may carry
 declarative mount paths only after the executor normalizes and validates them
 and constructs every command itself.
 
+## Installation-session Pro state
+
+The session starts without Pro entitlement. `--bypass-payment` grants it for
+that installer session so acceptance tests can exercise recovery and encrypted
+installation. A future activation page should grant the same
+`has_pro_entitlement` state before storage selection; it does not need another
+set of storage controls. The switch is intentionally available to testers and
+does not validate payment or provide a tamper-resistant entitlement boundary.
+
 ## Release-one contract
 
 - Architectures: amd64 and arm64.
@@ -510,3 +519,14 @@ No mode is exposed merely because its UI exists. Each mode requires its
 executor, preservation checks, power-cut campaign and boot matrix to pass.
 The complete plan and invariants live in
 [`STORAGE-ROADMAP.md`](STORAGE-ROADMAP.md).
+
+### Live rescue handoff
+
+Before confirmation, privileged target preflight, and the first storage write,
+the installer asks users to close Rescue Center and its emergency terminal
+normally and wait for cleanup. This process check includes orphaned helpers;
+it does not depend on Rescue Center being installed or running. Existing
+block-device, mapper and cross-namespace mount checks remain authoritative
+for leftover resources after a crash. The installer never kills rescue work
+or force-unmounts a disk on the user's behalf. These checks are not a global
+process lock preventing another application from starting later.

@@ -30,6 +30,19 @@ pub(crate) fn generate(
         }
         _ => {}
     }
+    if let Some(expected) = conditional_apt_upgrade(parsed) {
+        push_contextual(
+            parsed,
+            slot,
+            &expected,
+            0.86,
+            Risk::Moderate,
+            vec![Evidence::ConditionalCommand],
+            Vec::new(),
+            None,
+            &mut candidates,
+        );
+    }
     workflow_candidates(parsed, slot, world, now_ms, &mut candidates);
     transition_candidates(parsed, slot, world, now_ms, &mut candidates);
     personal_candidates(parsed, slot, world, now_ms, &mut candidates);
@@ -242,13 +255,15 @@ fn transition_candidates(
     let Some(current) = normalized_command(parsed) else {
         return;
     };
-    if current.trim().len() < 2 {
+    if (!current.is_empty() && current.trim().len() < 2) || parsed.segment_offset > 0 {
         return;
     }
     let Some(kind) = learned_kind(slot) else {
         return;
     };
-    let typed_wrapper = &parsed.source[..parsed.command_tokens()[0].start];
+    let Some(typed_wrapper) = parsed.command_wrapper() else {
+        return;
+    };
     for entry in &world.transitions {
         if entry.previous != previous.normalized
             || entry.next == current
@@ -303,6 +318,11 @@ fn workflow_candidates(
     now_ms: u64,
     out: &mut Vec<Candidate>,
 ) {
+    // A compound line supplies its own predecessor. A previous prompt's
+    // workflow must not override the command currently being composed.
+    if parsed.segment_offset > 0 {
+        return;
+    }
     let Some(event) = world
         .last_event
         .as_ref()
@@ -542,10 +562,10 @@ fn push_contextual(
     expires_at_ms: Option<u64>,
     out: &mut Vec<Candidate>,
 ) {
-    let Some(first) = parsed.command_tokens().first() else {
+    let Some(wrapper) = parsed.command_wrapper() else {
         return;
     };
-    let resulting_line = format!("{}{}", &parsed.source[..first.start], expected);
+    let resulting_line = format!("{wrapper}{expected}");
     if resulting_line == parsed.source || !resulting_line.starts_with(&parsed.source) {
         return;
     }
@@ -619,9 +639,20 @@ fn personal_candidates(
     let Some(current_command) = normalized_command(parsed) else {
         return;
     };
-    let typed_wrapper = &parsed.source[..parsed.command_tokens()[0].start];
+    let Some(typed_wrapper) = parsed.command_wrapper() else {
+        return;
+    };
+    let expected = conditional_apt_upgrade(parsed);
     for entry in &world.history {
-        let history_command = normalized_history_command(&entry.command);
+        // Retain an exact compound-line continuation as well as standalone
+        // commands that can be reused after the current wrapper/operator.
+        let whole_line =
+            entry.command.starts_with(&parsed.source) && entry.command.starts_with(&typed_wrapper);
+        let history_command = if whole_line {
+            entry.command[parsed.command_offset.unwrap()..].trim_start()
+        } else {
+            normalized_history_command(&entry.command)
+        };
         if history_command == current_command || !history_command.starts_with(current_command) {
             continue;
         }
@@ -648,10 +679,27 @@ fn personal_candidates(
         if same_directory {
             evidence.push(Evidence::SameDirectory);
         }
+        if expected.as_ref().is_some_and(|expected| {
+            history_command == expected
+                || history_command
+                    .strip_prefix(expected)
+                    .is_some_and(|tail| tail.starts_with(' '))
+        }) {
+            // Context outranks the generic default while preserving frequency,
+            // recency and directory differences between matching habits.
+            confidence = 0.95 + (confidence - 0.66) * 0.10;
+            evidence.push(Evidence::ConditionalCommand);
+        } else {
+            confidence = confidence.min(0.86);
+        }
         out.push(Candidate::personal(
-            format!("{typed_wrapper}{history_command}"),
+            if whole_line {
+                entry.command.clone()
+            } else {
+                format!("{typed_wrapper}{history_command}")
+            },
             kind,
-            confidence.min(0.86),
+            confidence,
             Risk::Safe,
             evidence,
         ));
@@ -659,8 +707,7 @@ fn personal_candidates(
 }
 
 fn normalized_command(parsed: &ParsedLine) -> Option<&str> {
-    let start = parsed.command_tokens().first()?.start;
-    parsed.source.get(start..)
+    parsed.command_text()
 }
 
 fn normalized_history_command(command: &str) -> &str {
@@ -713,6 +760,11 @@ fn learned_apt_package_is_eligible(
     let Some(package_name) = candidate_values.get(package_index) else {
         return false;
     };
+    // A remembered option after an action is not a package name. It is only
+    // replayed from history; no default option is invented here.
+    if package_name.starts_with('-') {
+        return true;
+    }
     world
         .apt
         .packages
@@ -1027,6 +1079,17 @@ fn common_prefix(values: &[String]) -> String {
     common
 }
 
+fn conditional_apt_upgrade(parsed: &ParsedLine) -> Option<String> {
+    let previous = &parsed.conditional_command;
+    if previous.len() != 2
+        || !matches!(previous[0].value.as_str(), "apt" | "apt-get")
+        || previous[1].value != "update"
+    {
+        return None;
+    }
+    Some(format!("{} upgrade", previous[0].value))
+}
+
 fn apt_candidates(parsed: &ParsedLine, world: &WorldState, now_ms: u64, out: &mut Vec<Candidate>) {
     let values = parsed.command_values();
     let command = values[0];
@@ -1052,6 +1115,9 @@ fn apt_candidates(parsed: &ParsedLine, world: &WorldState, now_ms: u64, out: &mu
         }
     }
 
+    if parsed.segment_offset > 0 {
+        return;
+    }
     let Some(event) = &world.last_event else {
         return;
     };

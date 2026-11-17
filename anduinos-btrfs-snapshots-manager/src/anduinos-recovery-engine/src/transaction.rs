@@ -12,9 +12,11 @@ use uuid::Uuid;
 use crate::model::DeploymentId;
 use crate::personal::{PersonalSnapshotId, PersonalSnapshotRecord};
 
-pub const ROLLBACK_SCHEMA_VERSION: u32 = 6;
-pub const RECOVERY_PROTOCOL_VERSION: u32 = 2;
+pub const ROLLBACK_SCHEMA_VERSION: u32 = 7;
+pub const RECOVERY_PROTOCOL_VERSION: u32 = 3;
 const LEGACY_RECOVERY_PROTOCOL_VERSION: u32 = 1;
+pub const CONTINUE_BOOT_PROTOCOL_VERSION: u32 = 2;
+const CONTINUE_BOOT_SCHEMA_VERSION: u32 = 6;
 pub const MAX_APPLY_ATTEMPTS: u32 = 3;
 const MAX_TRANSACTION_BYTES: u64 = 1024 * 1024;
 const MAX_FAILURE_LENGTH: usize = 2000;
@@ -56,6 +58,7 @@ pub enum RollbackPhase {
     Preparing,
     Armed,
     Applying,
+    AppliedAwaitingBoot,
     BootedUnconfirmed,
     Reverting,
     Reverted,
@@ -75,6 +78,7 @@ pub enum RecoveryCheckpoint {
     WritableHomeCreated,
     CurrentHomeProtected,
     TargetHomeActivated,
+    AppliedAwaitingBootRecorded,
     BootedUnconfirmedRecorded,
     RevertStarted,
     RestoredRootMovedAside,
@@ -98,6 +102,7 @@ impl RecoveryCheckpoint {
             Self::WritableHomeCreated => "writable-home-created",
             Self::CurrentHomeProtected => "current-home-protected",
             Self::TargetHomeActivated => "target-home-activated",
+            Self::AppliedAwaitingBootRecorded => "applied-awaiting-boot-recorded",
             Self::BootedUnconfirmedRecorded => "booted-unconfirmed-recorded",
             Self::RevertStarted => "revert-started",
             Self::RestoredRootMovedAside => "restored-root-moved-aside",
@@ -118,7 +123,11 @@ impl RollbackPhase {
             (self, next),
             (Preparing, Armed | Failed)
                 | (Armed, Applying | Failed)
-                | (Applying, BootedUnconfirmed | Reverting | Failed)
+                | (
+                    Applying,
+                    AppliedAwaitingBoot | BootedUnconfirmed | Reverting | Failed
+                )
+                | (AppliedAwaitingBoot, BootedUnconfirmed | Reverting)
                 | (BootedUnconfirmed, Confirmed | Reverting)
                 | (Reverting, Reverted | Failed)
         )
@@ -145,6 +154,11 @@ pub struct RollbackTransaction {
     pub checkpoint_at: Option<DateTime<Utc>>,
     pub apply_attempts: u32,
     pub applying_boot_id: Option<String>,
+    /// Protocol 3 separates the recovery boot from the restored system's first boot.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub target_boot_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub target_kernel_release: Option<String>,
     pub root_filesystem_uuid: String,
     pub kernel_release: String,
     pub recovery_kernel_sha256: String,
@@ -256,7 +270,7 @@ impl LegacyRollbackTransactionV1 {
             })
         };
         RollbackTransaction {
-            schema_version: ROLLBACK_SCHEMA_VERSION,
+            schema_version: CONTINUE_BOOT_SCHEMA_VERSION,
             id: self.id,
             target_deployment_id: self.target_deployment_id,
             fallback_deployment_id: self.fallback_deployment_id,
@@ -274,6 +288,8 @@ impl LegacyRollbackTransactionV1 {
             checkpoint_at: checkpoint.map(|_| self.updated_at),
             apply_attempts: self.apply_attempts,
             applying_boot_id: self.applying_boot_id,
+            target_boot_id: None,
+            target_kernel_release: None,
             root_filesystem_uuid: self.root_filesystem_uuid,
             kernel_release: self.kernel_release,
             // Version 1 did not bind external recovery artifacts. Zero digests make the
@@ -306,7 +322,7 @@ impl LegacyRollbackTransactionV2 {
         let cancel_before_apply =
             matches!(self.phase, RollbackPhase::Preparing | RollbackPhase::Armed);
         RollbackTransaction {
-            schema_version: ROLLBACK_SCHEMA_VERSION,
+            schema_version: CONTINUE_BOOT_SCHEMA_VERSION,
             id: self.id,
             target_deployment_id: self.target_deployment_id,
             fallback_deployment_id: self.fallback_deployment_id,
@@ -328,6 +344,8 @@ impl LegacyRollbackTransactionV2 {
             checkpoint_at: self.checkpoint_at,
             apply_attempts: self.apply_attempts,
             applying_boot_id: self.applying_boot_id,
+            target_boot_id: None,
+            target_kernel_release: None,
             root_filesystem_uuid: self.root_filesystem_uuid,
             kernel_release: self.kernel_release,
             recovery_kernel_sha256: self.recovery_kernel_sha256,
@@ -355,7 +373,7 @@ impl LegacyRollbackTransactionV2 {
 impl LegacyRollbackTransactionV3 {
     fn migrate(self) -> RollbackTransaction {
         RollbackTransaction {
-            schema_version: ROLLBACK_SCHEMA_VERSION,
+            schema_version: CONTINUE_BOOT_SCHEMA_VERSION,
             id: self.id,
             target_deployment_id: self.target_deployment_id,
             fallback_deployment_id: self.fallback_deployment_id,
@@ -369,6 +387,8 @@ impl LegacyRollbackTransactionV3 {
             checkpoint_at: self.checkpoint_at,
             apply_attempts: self.apply_attempts,
             applying_boot_id: self.applying_boot_id,
+            target_boot_id: None,
+            target_kernel_release: None,
             root_filesystem_uuid: self.root_filesystem_uuid,
             kernel_release: self.kernel_release,
             recovery_kernel_sha256: self.recovery_kernel_sha256,
@@ -398,6 +418,7 @@ impl RollbackTransaction {
     ) -> Self {
         let id = RollbackId::new();
         let now = Utc::now();
+        let kernel_release = kernel_release.into();
         Self {
             schema_version: ROLLBACK_SCHEMA_VERSION,
             id,
@@ -413,8 +434,10 @@ impl RollbackTransaction {
             checkpoint_at: None,
             apply_attempts: 0,
             applying_boot_id: None,
+            target_boot_id: None,
+            target_kernel_release: Some(kernel_release.clone()),
             root_filesystem_uuid: root_filesystem_uuid.into(),
-            kernel_release: kernel_release.into(),
+            kernel_release,
             recovery_kernel_sha256: recovery_kernel_sha256.into(),
             recovery_initramfs_sha256: recovery_initramfs_sha256.into(),
             recovery_confirm_sha256: recovery_confirm_sha256.into(),
@@ -427,6 +450,37 @@ impl RollbackTransaction {
             factory_home_snapshot_uuid: None,
             failure: None,
         }
+    }
+
+    /// Retain the on-disk protocol understood by an old snapshot's initramfs.
+    /// Only same-kernel targets may be newly scheduled with this compatibility path.
+    pub fn use_continue_boot_protocol(&mut self) {
+        self.schema_version = CONTINUE_BOOT_SCHEMA_VERSION;
+        self.recovery_protocol_version = CONTINUE_BOOT_PROTOCOL_VERSION;
+        self.target_boot_id = None;
+        self.target_kernel_release = None;
+    }
+
+    pub fn restarts_after_apply(&self) -> bool {
+        self.recovery_protocol_version == RECOVERY_PROTOCOL_VERSION
+    }
+
+    pub fn record_target_boot(
+        &mut self,
+        boot_id: &str,
+        now: DateTime<Utc>,
+    ) -> Result<(), TransactionError> {
+        validate_uuid(boot_id, "target boot ID")?;
+        if self.phase != RollbackPhase::AppliedAwaitingBoot
+            || self.applying_boot_id.as_deref() == Some(boot_id)
+        {
+            return Err(TransactionError::new(
+                TransactionErrorCode::InvalidTransition,
+                "Only a subsequent boot may start the restored system",
+            ));
+        }
+        self.target_boot_id = Some(boot_id.to_string());
+        self.transition(RollbackPhase::BootedUnconfirmed, now)
     }
 
     pub fn enable_home_reset(
@@ -586,7 +640,10 @@ impl RollbackTransaction {
     }
 
     pub fn validate(&self) -> Result<(), TransactionError> {
-        if self.schema_version != ROLLBACK_SCHEMA_VERSION {
+        if !matches!(
+            self.schema_version,
+            CONTINUE_BOOT_SCHEMA_VERSION | ROLLBACK_SCHEMA_VERSION
+        ) {
             return Err(TransactionError::new(
                 TransactionErrorCode::UnsupportedSchema,
                 format!(
@@ -642,7 +699,7 @@ impl RollbackTransaction {
             "recovery confirmation engine",
         )?;
         match self.recovery_protocol_version {
-            RECOVERY_PROTOCOL_VERSION => {
+            CONTINUE_BOOT_PROTOCOL_VERSION | RECOVERY_PROTOCOL_VERSION => {
                 if [
                     &self.recovery_kernel_sha256,
                     &self.recovery_initramfs_sha256,
@@ -751,6 +808,7 @@ impl RollbackTransaction {
         if matches!(
             self.phase,
             RollbackPhase::Applying
+                | RollbackPhase::AppliedAwaitingBoot
                 | RollbackPhase::BootedUnconfirmed
                 | RollbackPhase::Reverting
                 | RollbackPhase::Reverted
@@ -776,6 +834,56 @@ impl RollbackTransaction {
         }
         if let Some(boot_id) = &self.applying_boot_id {
             validate_uuid(boot_id, "initramfs boot ID")?;
+        }
+        if self.restarts_after_apply() {
+            if self.schema_version != ROLLBACK_SCHEMA_VERSION {
+                return Err(TransactionError::new(
+                    TransactionErrorCode::InvalidRecord,
+                    "Restarting restores require the current transaction schema",
+                ));
+            }
+            let target_kernel = self.target_kernel_release.as_deref().ok_or_else(|| {
+                TransactionError::new(
+                    TransactionErrorCode::InvalidRecord,
+                    "Target kernel identity is missing",
+                )
+            })?;
+            validate_kernel_release(target_kernel)?;
+            let target_started = matches!(
+                self.phase,
+                RollbackPhase::BootedUnconfirmed | RollbackPhase::Confirmed
+            );
+            if target_started && self.target_boot_id.is_none() {
+                return Err(TransactionError::new(
+                    TransactionErrorCode::InvalidRecord,
+                    "Target boot identity is missing",
+                ));
+            }
+            if let Some(boot_id) = &self.target_boot_id {
+                validate_uuid(boot_id, "target boot ID")?;
+                if self.applying_boot_id.as_ref() == Some(boot_id)
+                    || matches!(
+                        self.phase,
+                        RollbackPhase::Preparing
+                            | RollbackPhase::Armed
+                            | RollbackPhase::Applying
+                            | RollbackPhase::AppliedAwaitingBoot
+                    )
+                {
+                    return Err(TransactionError::new(
+                        TransactionErrorCode::InvalidRecord,
+                        "Target boot identity precedes a separate normal boot",
+                    ));
+                }
+            }
+        } else if self.phase == RollbackPhase::AppliedAwaitingBoot
+            || self.target_boot_id.is_some()
+            || self.target_kernel_release.is_some()
+        {
+            return Err(TransactionError::new(
+                TransactionErrorCode::InvalidRecord,
+                "Continue-boot transactions cannot contain restart-only state",
+            ));
         }
         if self.phase == RollbackPhase::Failed && self.failure.is_none() {
             return Err(TransactionError::new(
@@ -911,7 +1019,7 @@ impl TransactionStore {
                 .map(LegacyRollbackTransactionV3::migrate),
             4 => {
                 let mut value = value;
-                value["schema_version"] = ROLLBACK_SCHEMA_VERSION.into();
+                value["schema_version"] = CONTINUE_BOOT_SCHEMA_VERSION.into();
                 value["purge_history"] = false.into();
                 value["home_only"] = false.into();
                 value["fallback_home_snapshot_id"] = serde_json::Value::Null;
@@ -919,11 +1027,11 @@ impl TransactionStore {
             }
             5 => {
                 let mut value = value;
-                value["schema_version"] = ROLLBACK_SCHEMA_VERSION.into();
+                value["schema_version"] = CONTINUE_BOOT_SCHEMA_VERSION.into();
                 value["purge_history"] = false.into();
                 serde_json::from_value::<RollbackTransaction>(value)
             }
-            6 => serde_json::from_value::<RollbackTransaction>(value),
+            6 | 7 => serde_json::from_value::<RollbackTransaction>(value),
             other => {
                 return Err(TransactionError::new(
                     TransactionErrorCode::UnsupportedSchema,
@@ -1248,7 +1356,7 @@ mod tests {
     }
 
     fn transaction() -> RollbackTransaction {
-        RollbackTransaction::new(
+        let mut value = RollbackTransaction::new(
             DeploymentId::new(),
             DeploymentId::new(),
             "aaaaaaaa-1111-4222-8333-bbbbbbbbbbbb",
@@ -1256,7 +1364,9 @@ mod tests {
             "a".repeat(64),
             "b".repeat(64),
             "c".repeat(64),
-        )
+        );
+        value.use_continue_boot_protocol();
+        value
     }
 
     #[test]
@@ -1384,7 +1494,7 @@ mod tests {
         .unwrap();
 
         let migrated = environment.store().load_pending().unwrap().unwrap();
-        assert_eq!(migrated.schema_version, ROLLBACK_SCHEMA_VERSION);
+        assert_eq!(migrated.schema_version, CONTINUE_BOOT_SCHEMA_VERSION);
         assert_eq!(migrated.phase, RollbackPhase::Failed);
         assert_eq!(migrated.initramfs_attempts, 0);
         assert!(
@@ -1421,7 +1531,7 @@ mod tests {
         .unwrap();
 
         let migrated = environment.store().load_pending().unwrap().unwrap();
-        assert_eq!(migrated.schema_version, ROLLBACK_SCHEMA_VERSION);
+        assert_eq!(migrated.schema_version, CONTINUE_BOOT_SCHEMA_VERSION);
         assert_eq!(migrated.phase, RollbackPhase::BootedUnconfirmed);
         assert_eq!(
             migrated.recovery_protocol_version,
@@ -1452,7 +1562,7 @@ mod tests {
         .unwrap();
 
         let migrated = environment.store().load_pending().unwrap().unwrap();
-        assert_eq!(migrated.schema_version, ROLLBACK_SCHEMA_VERSION);
+        assert_eq!(migrated.schema_version, CONTINUE_BOOT_SCHEMA_VERSION);
         assert!(!migrated.reset_home);
         assert!(migrated.factory_home_snapshot_id.is_none());
         assert!(migrated.factory_home_snapshot_uuid.is_none());
@@ -1474,7 +1584,7 @@ mod tests {
         )
         .unwrap();
         let migrated = environment.store().load_pending().unwrap().unwrap();
-        assert_eq!(migrated.schema_version, ROLLBACK_SCHEMA_VERSION);
+        assert_eq!(migrated.schema_version, CONTINUE_BOOT_SCHEMA_VERSION);
         assert!(!migrated.home_only && !migrated.reset_home);
         assert!(migrated.fallback_home_snapshot_id.is_none());
     }
@@ -1491,7 +1601,7 @@ mod tests {
         )
         .unwrap();
         let migrated = environment.store().load_pending().unwrap().unwrap();
-        assert_eq!(migrated.schema_version, ROLLBACK_SCHEMA_VERSION);
+        assert_eq!(migrated.schema_version, CONTINUE_BOOT_SCHEMA_VERSION);
         assert!(!migrated.purge_history);
     }
 
@@ -1592,5 +1702,40 @@ mod tests {
             invalid_failure.validate().unwrap_err().code,
             TransactionErrorCode::InvalidRecord
         );
+    }
+    #[test]
+    fn restart_protocol_requires_a_distinct_target_boot_and_kernel_identity() {
+        let mut value = transaction();
+        value.schema_version = ROLLBACK_SCHEMA_VERSION;
+        value.recovery_protocol_version = RECOVERY_PROTOCOL_VERSION;
+        value.target_kernel_release = Some("old-kernel".into());
+        value.transition(RollbackPhase::Armed, Utc::now()).unwrap();
+        let first = "11111111-1111-4111-8111-111111111111";
+        value.record_initramfs_entry(first, Utc::now()).unwrap();
+        value.begin_apply(first, Utc::now()).unwrap();
+        value
+            .transition(RollbackPhase::AppliedAwaitingBoot, Utc::now())
+            .unwrap();
+        assert!(value.record_target_boot(first, Utc::now()).is_err());
+        value
+            .record_target_boot("22222222-2222-4222-8222-222222222222", Utc::now())
+            .unwrap();
+        value.validate().unwrap();
+        value.target_kernel_release = None;
+        assert!(value.validate().is_err());
+    }
+
+    #[test]
+    fn v6_round_trip_preserves_old_protocol_and_omits_restart_fields() {
+        let store = TestStore::new();
+        let value = transaction();
+        store.store().create(&value).unwrap();
+        let loaded = store.store().load_pending().unwrap().unwrap();
+        assert_eq!(loaded, value);
+        let json = serde_json::to_value(loaded).unwrap();
+        assert_eq!(json["schema_version"], 6);
+        assert_eq!(json["recovery_protocol_version"], 2);
+        assert!(json.get("target_boot_id").is_none());
+        assert!(json.get("target_kernel_release").is_none());
     }
 }

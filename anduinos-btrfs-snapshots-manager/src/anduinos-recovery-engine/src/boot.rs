@@ -4,18 +4,23 @@ use std::fs::{self, OpenOptions};
 use std::io::{Read, Write};
 use std::os::unix::ffi::OsStrExt;
 use std::os::unix::fs::OpenOptionsExt;
-use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
+use std::os::unix::fs::{DirBuilderExt, MetadataExt, PermissionsExt};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use sha2::{Digest, Sha256};
 
 use crate::RECOVERY_STORE_ROOT;
+use crate::model::DeploymentRecord;
 #[cfg(test)]
 use crate::model::DeploymentState;
 use crate::store::DeploymentStore;
-use crate::transaction::{RECOVERY_PROTOCOL_VERSION, RollbackPhase, TransactionStore};
+use crate::transaction::{
+    CONTINUE_BOOT_PROTOCOL_VERSION, RECOVERY_PROTOCOL_VERSION, RollbackPhase, TransactionStore,
+};
 
+const GRUB_PROBE: &str = "/usr/sbin/grub-probe";
+const MACHINE_KEY: &str = "/etc/anduinos-luks/machine.key";
 const GRUB_MKRELPATH: &str = "/usr/bin/grub-mkrelpath";
 const GRUB_EDITENV: &str = "/usr/bin/grub-editenv";
 const MOUNTPOINT: &str = "/usr/bin/mountpoint";
@@ -32,12 +37,14 @@ const INITRAMFS_SCRIPT: &str =
 const INITRAMFS_BINARY: &str = "usr/libexec/anduinos-btrfs-snapshots-manager-initramfs";
 const INITRAMFS_CONFIRM_BINARY: &str = "usr/libexec/anduinos-btrfs-snapshots-manager-confirm";
 const INITRAMFS_PROTOCOL: &str = "etc/anduinos-btrfs-snapshots-manager/recovery-protocol-version";
-const INITRAMFS_REQUIRED_TOOLS: [&str; 5] = [
+const INITRAMFS_REQUIRED_TOOLS: [&str; 7] = [
     "usr/bin/cat",
     "usr/bin/chmod",
     "usr/bin/cp",
     "usr/bin/ln",
     "usr/bin/mkdir",
+    "usr/bin/sync",
+    "usr/sbin/reboot",
 ];
 pub const GRUB_EXTERNAL_ENVIRONMENT: &str =
     "/boot/efi/EFI/anduinos/btrfs-snapshots-manager-grubenv";
@@ -205,6 +212,51 @@ impl BootIntegration<SystemBootToolRunner> {
 }
 
 impl<R: BootToolRunner> BootIntegration<R> {
+    /// Old initrds cannot acknowledge the deliberate extra boot. Keep their
+    /// same-kernel path; a cross-kernel legacy target needs offline recovery.
+    pub fn target_recovery_protocol(&self, target: &DeploymentRecord) -> Result<u32, BootError> {
+        let release = self.target_kernel_release(target)?;
+        let image = self
+            .snapshot_root
+            .join("deployments")
+            .join(target.id.to_string())
+            .join("root/boot")
+            .join(format!("initrd.img-{release}"));
+        ensure_regular_file(&image)?;
+        let value = self.runner.output(
+            Path::new(LSINITRD),
+            &[
+                OsStr::new("--file"),
+                OsStr::new(INITRAMFS_PROTOCOL),
+                image.as_os_str(),
+            ],
+        )?;
+        match value.trim().parse::<u32>().ok() {
+            Some(RECOVERY_PROTOCOL_VERSION) => Ok(RECOVERY_PROTOCOL_VERSION),
+            Some(CONTINUE_BOOT_PROTOCOL_VERSION)
+                if read_kernel_release(Path::new(KERNEL_RELEASE))? == release =>
+            {
+                Ok(CONTINUE_BOOT_PROTOCOL_VERSION)
+            }
+            _ => Err(BootError::new(
+                BootErrorCode::UnsupportedEnvironment,
+                "This older snapshot requires offline recovery. Use Live Rescue Center or the independent Recovery Environment.",
+            )),
+        }
+    }
+
+    pub fn target_kernel_release(&self, target: &DeploymentRecord) -> Result<String, BootError> {
+        // Manual snapshots can be taken after installing a new kernel but before
+        // rebooting. The recorded running ABI is not necessarily GRUB's default.
+        let root = self
+            .snapshot_root
+            .join("deployments")
+            .join(target.id.to_string())
+            .join("root");
+        crate::operations::read_default_installed_kernel_release(&root)
+            .map_err(|error| BootError::new(BootErrorCode::InvalidDeployment, error.message))
+    }
+
     fn verify_recovery_boot_source_from(
         &self,
         kernel_release_path: &Path,
@@ -272,6 +324,20 @@ impl<R: BootToolRunner> BootIntegration<R> {
                 ));
             }
         }
+        let protocol = self.runner.output(
+            Path::new(LSINITRD),
+            &[
+                OsStr::new("--file"),
+                OsStr::new(INITRAMFS_PROTOCOL),
+                initramfs.as_os_str(),
+            ],
+        )?;
+        if protocol.trim() != RECOVERY_PROTOCOL_VERSION.to_string() {
+            return Err(BootError::new(
+                BootErrorCode::UnsupportedEnvironment,
+                "The current initramfs must be refreshed before preparing a restore",
+            ));
+        }
         Ok(())
     }
 
@@ -301,6 +367,55 @@ impl<R: BootToolRunner> BootIntegration<R> {
     }
 
     pub fn recovery_menu_entry(&self) -> Result<Option<String>, BootError> {
+        self.recovery_menu_entry_with_key(None)
+    }
+
+    /// The rollback entry bypasses Ubuntu's 10_linux generator, so it must
+    /// explicitly use the same encrypted-root RAM handoff as normal boots.
+    /// Only the installer's exported opt-in selects this path. The credential
+    /// stays inside the encrypted root and is read by GRUB into RAM at boot;
+    /// neither the ESP nor the stored recovery initramfs receives its bytes.
+    pub fn encrypted_recovery_menu_entry(&self) -> Result<Option<String>, BootError> {
+        let abstraction = self.runner.output(
+            Path::new(GRUB_PROBE),
+            &[OsStr::new("--target=abstraction"), OsStr::new("/")],
+        )?;
+        if !abstraction
+            .split_whitespace()
+            .any(|value| value == "cryptodisk")
+        {
+            return Err(BootError::new(
+                BootErrorCode::UnsupportedEnvironment,
+                "Encrypted recovery handoff requires an encrypted root",
+            ));
+        }
+        let key = Path::new(MACHINE_KEY);
+        let metadata = fs::symlink_metadata(key).map_err(|error| {
+            BootError::new(
+                BootErrorCode::UnsupportedEnvironment,
+                format!("Could not inspect the internal boot credential: {error}"),
+            )
+        })?;
+        validate_machine_credential(
+            metadata.is_file(),
+            metadata.uid(),
+            metadata.mode(),
+            metadata.len(),
+        )?;
+        let key_path = self.grub_path(key)?;
+        if key_path != "/@root/etc/anduinos-luks/machine.key" {
+            return Err(BootError::new(
+                BootErrorCode::UnsupportedEnvironment,
+                "Encrypted recovery handoff requires the installed @root credential",
+            ));
+        }
+        self.recovery_menu_entry_with_key(Some(&key_path))
+    }
+
+    fn recovery_menu_entry_with_key(
+        &self,
+        machine_key: Option<&str>,
+    ) -> Result<Option<String>, BootError> {
         let Some(transaction) = TransactionStore::new(&self.snapshot_root)
             .load_pending()
             .map_err(|error| BootError::new(BootErrorCode::InvalidTransaction, error.message))?
@@ -313,7 +428,10 @@ impl<R: BootToolRunner> BootIntegration<R> {
         ) {
             return Ok(None);
         }
-        if transaction.recovery_protocol_version != RECOVERY_PROTOCOL_VERSION {
+        if !matches!(
+            transaction.recovery_protocol_version,
+            CONTINUE_BOOT_PROTOCOL_VERSION | RECOVERY_PROTOCOL_VERSION
+        ) {
             return Err(BootError::new(
                 BootErrorCode::InvalidTransaction,
                 "A legacy recovery transaction cannot be armed with the current boot protocol",
@@ -356,15 +474,30 @@ impl<R: BootToolRunner> BootIntegration<R> {
         let id = transaction.id.to_string();
         let entry_id = &transaction.grub_entry_id;
         let fs_uuid = &transaction.root_filesystem_uuid;
+        let handoff = machine_key.map_or_else(String::new, |path| {
+            format!(" newc:/anduinos-unlock.key:{path}")
+        });
+        // Protocol 2 resumes in its recovery entry after an interrupted apply.
+        // Protocol 3 must return to normal boot after the disk switch instead.
+        // In particular, Home-only recovery keeps the current grub.cfg, so
+        // rearming here would select this same entry on every restart forever.
+        // An interrupted protocol-3 apply is safely reverted by the normal
+        // initramfs hook; it does not need a second one-shot recovery selection.
+        let retry_selection = if transaction.restarts_after_apply() {
+            String::new()
+        } else {
+            format!(
+                "\tset btrfs_snapshots_manager_next_entry='{entry_id}'\n\
+                 \tsave_env -f \"($btrfs_snapshots_manager_esp)/EFI/anduinos/btrfs-snapshots-manager-grubenv\" btrfs_snapshots_manager_next_entry\n"
+            )
+        };
         Ok(Some(format!(
-            "menuentry 'Disk Snapshots Manager recovery' --class anduinos --class gnu-linux --id '{entry_id}' {{\n\
+            "menuentry 'Start snapshot rollback (one-time)' --class anduinos --class gnu-linux --id '{entry_id}' {{\n\
              \tinsmod btrfs\n\
              \tsearch --no-floppy --fs-uuid --set=root {fs_uuid}\n\
              \techo 'Starting AnduinOS system recovery…'\n\
-             \tset btrfs_snapshots_manager_next_entry='{entry_id}'\n\
-             \tsave_env -f \"($btrfs_snapshots_manager_esp)/EFI/anduinos/btrfs-snapshots-manager-grubenv\" btrfs_snapshots_manager_next_entry\n\
-             \tlinux {kernel_path} root=UUID={fs_uuid} ro rootflags=subvol=@root anduinos.btrfs_snapshots_manager={id} anduinos.btrfs_snapshots_manager_protocol={protocol}\n\
-             \tinitrd {initramfs_path}\n\
+             {retry_selection}\tlinux {kernel_path} root=UUID={fs_uuid} ro rootflags=subvol=@root anduinos.btrfs_snapshots_manager={id} anduinos.btrfs_snapshots_manager_protocol={protocol}\n\
+             \tinitrd {initramfs_path}{handoff}\n\
              }}\n",
             protocol = transaction.recovery_protocol_version
         )))
@@ -387,7 +520,10 @@ impl<R: BootToolRunner> BootIntegration<R> {
                 "Only an armed rollback transaction can select the one-shot GRUB entry",
             ));
         }
-        if transaction.recovery_protocol_version != RECOVERY_PROTOCOL_VERSION {
+        if !matches!(
+            transaction.recovery_protocol_version,
+            CONTINUE_BOOT_PROTOCOL_VERSION | RECOVERY_PROTOCOL_VERSION
+        ) {
             return Err(BootError::new(
                 BootErrorCode::InvalidTransaction,
                 "A legacy recovery transaction cannot be selected for boot",
@@ -448,6 +584,21 @@ impl<R: BootToolRunner> BootIntegration<R> {
     }
 }
 
+fn validate_machine_credential(
+    regular: bool,
+    owner: u32,
+    mode: u32,
+    size: u64,
+) -> Result<(), BootError> {
+    if !regular || owner != 0 || mode & 0o7777 != 0o600 || size != 64 {
+        return Err(BootError::new(
+            BootErrorCode::UnsupportedEnvironment,
+            "The internal boot credential must be a root-owned mode-0600 regular 64-byte file",
+        ));
+    }
+    Ok(())
+}
+
 fn initramfs_listing_contains(output: &str, required: &str) -> bool {
     output.lines().any(|line| {
         let line = line.trim();
@@ -506,6 +657,11 @@ fn read_kernel_release(path: &Path) -> Result<String, BootError> {
         )
     })?;
     let value = value.trim();
+    validate_kernel_release(value)?;
+    Ok(value.to_string())
+}
+
+fn validate_kernel_release(value: &str) -> Result<(), BootError> {
     if value.is_empty()
         || value.len() > 128
         || !value
@@ -517,7 +673,7 @@ fn read_kernel_release(path: &Path) -> Result<String, BootError> {
             "The running kernel release is unsafe",
         ));
     }
-    Ok(value.to_string())
+    Ok(())
 }
 
 pub(crate) fn copy_regular_file_atomic(
@@ -780,6 +936,9 @@ mod tests {
                 return Ok(self.env.clone());
             }
             if program == Path::new(LSINITRD) {
+                if arguments.first() == Some(&OsStr::new("--file")) {
+                    return Ok(RECOVERY_PROTOCOL_VERSION.to_string());
+                }
                 return Ok(format!(
                     "{INITRAMFS_SCRIPT}\n{INITRAMFS_BINARY}\n{INITRAMFS_CONFIRM_BINARY}\n{INITRAMFS_PROTOCOL}\n{}\n",
                     INITRAMFS_REQUIRED_TOOLS.join("\n")
@@ -851,6 +1010,7 @@ mod tests {
                 hash_regular_file(&initramfs).unwrap(),
                 hash_regular_file(&confirm).unwrap(),
             );
+            transaction.use_continue_boot_protocol();
             transaction
                 .transition(RollbackPhase::Armed, Utc::now())
                 .unwrap();
@@ -1050,6 +1210,75 @@ mod tests {
     }
 
     #[test]
+    fn restarting_recovery_does_not_rearm_its_grub_selector() {
+        let mut environment = Environment::new();
+        environment.transaction.schema_version = 7;
+        environment.transaction.recovery_protocol_version = 3;
+        environment.transaction.target_kernel_release = Some("test-kernel".into());
+        TransactionStore::new(&environment.root)
+            .update(&environment.transaction)
+            .unwrap();
+        let integration = BootIntegration::new(
+            &environment.root,
+            FakeTools {
+                env: String::new(),
+                unsafe_path: false,
+                calls: Default::default(),
+            },
+        );
+
+        // Both encrypted and plain Home restores keep the current grub.cfg.
+        // The recovery entry must not select itself again after its disk switch.
+        for machine_key in [None, Some("/@root/etc/anduinos-luks/machine.key")] {
+            let entry = integration
+                .recovery_menu_entry_with_key(machine_key)
+                .unwrap()
+                .unwrap();
+            assert!(entry.contains("anduinos.btrfs_snapshots_manager_protocol=3"));
+            assert!(!entry.contains("set btrfs_snapshots_manager_next_entry="));
+            assert!(!entry.contains("save_env"));
+        }
+    }
+
+    #[test]
+    fn encrypted_rollback_appends_the_ram_credential_after_the_verified_initramfs() {
+        let environment = Environment::new();
+        let integration = BootIntegration::new(
+            &environment.root,
+            FakeTools {
+                env: String::new(),
+                unsafe_path: false,
+                calls: Default::default(),
+            },
+        );
+        let plain = integration.recovery_menu_entry().unwrap().unwrap();
+        assert!(!plain.contains("newc:"));
+        let encrypted = integration
+            .recovery_menu_entry_with_key(Some("/@root/etc/anduinos-luks/machine.key"))
+            .unwrap()
+            .unwrap();
+        assert!(encrypted.contains(
+            "initrd /initrd.img newc:/anduinos-unlock.key:/@root/etc/anduinos-luks/machine.key\n"
+        ));
+        assert_eq!(encrypted.matches("newc:").count(), 1);
+        assert!(encrypted.contains(&environment.transaction.grub_entry_id));
+    }
+
+    #[test]
+    fn internal_boot_credential_requires_the_installer_file_shape() {
+        assert!(validate_machine_credential(true, 0, 0o100600, 64).is_ok());
+        for (regular, owner, mode, size) in [
+            (false, 0, 0o120600, 64),
+            (true, 1000, 0o100600, 64),
+            (true, 0, 0o100644, 64),
+            (true, 0, 0o100600, 63),
+            (true, 0, 0o100600, 65),
+        ] {
+            assert!(validate_machine_credential(regular, owner, mode, size).is_err());
+        }
+    }
+
+    #[test]
     fn refuses_recovery_artifacts_changed_after_the_transaction_was_armed() {
         let environment = Environment::new();
         fs::write(
@@ -1164,5 +1393,56 @@ mod tests {
                 "{GRUB_EDITENV} {GRUB_EXTERNAL_ENVIRONMENT} unset {GRUB_NEXT_ENTRY_VARIABLE}"
             )
         }));
+    }
+    #[test]
+    fn old_snapshot_protocol_is_allowed_only_with_the_running_kernel() {
+        #[derive(Clone)]
+        struct ProtocolTools(u32);
+        impl BootToolRunner for ProtocolTools {
+            fn output(&self, _: &Path, _: &[&OsStr]) -> Result<String, BootError> {
+                Ok(self.0.to_string())
+            }
+        }
+        let environment = Environment::new();
+        let mut target = DeploymentStore::new(&environment.root)
+            .load_record(environment.transaction.target_deployment_id)
+            .unwrap();
+        let release = read_kernel_release(Path::new(KERNEL_RELEASE)).unwrap();
+        let boot = environment
+            .root
+            .join("deployments")
+            .join(target.id.to_string())
+            .join("root/boot");
+        fs::create_dir_all(&boot).unwrap();
+        fs::write(boot.join(format!("initrd.img-{release}")), "old image").unwrap();
+        fs::write(boot.join(format!("vmlinuz-{release}")), "kernel").unwrap();
+        symlink(format!("vmlinuz-{release}"), boot.join("vmlinuz")).unwrap();
+        target.kernel_release = Some("recorded-running-kernel".into());
+        assert_eq!(
+            BootIntegration::new(&environment.root, ProtocolTools(2))
+                .target_recovery_protocol(&target)
+                .unwrap(),
+            2
+        );
+        fs::remove_file(boot.join("vmlinuz")).unwrap();
+        symlink("vmlinuz-different-kernel", boot.join("vmlinuz")).unwrap();
+        fs::write(boot.join("vmlinuz-different-kernel"), "kernel").unwrap();
+        fs::write(boot.join("initrd.img-different-kernel"), "old image").unwrap();
+        assert!(
+            BootIntegration::new(&environment.root, ProtocolTools(2))
+                .target_recovery_protocol(&target)
+                .is_err()
+        );
+        assert_eq!(
+            BootIntegration::new(&environment.root, ProtocolTools(3))
+                .target_recovery_protocol(&target)
+                .unwrap(),
+            3
+        );
+        assert!(
+            BootIntegration::new(&environment.root, ProtocolTools(4))
+                .target_recovery_protocol(&target)
+                .is_err()
+        );
     }
 }

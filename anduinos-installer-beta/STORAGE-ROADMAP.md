@@ -30,6 +30,15 @@ geometry verification. Other resize and repair
 operations remain the responsibility of specialist tools and the operating
 system that owns the data.
 
+A Pro installation session can create an optional recovery environment (RE)
+partition for any supported root filesystem in the manual editor; automatic
+Btrfs and ext4 layouts create it. Without Pro entitlement the installer does
+not offer or create RE. Snapshot recovery requires Btrfs; other filesystems
+retain system information and restart. RE needs at least 256 MiB and uses
+ext4. ESP and Root remain required. When a Pro Btrfs installation omits RE,
+or an installation omits disk swap, the editor and summary explain the missing
+capability and require confirmation. ZRAM remains available without disk swap.
+
 The bounded manual editor enforces a 6 GiB hard minimum for Root in both its UI
 model and the privileged storage graph. Root sizes from 6 GiB to 25 GiB are
 allowed only after a strong below-minimum warning; 25 GiB to 50 GiB receives a

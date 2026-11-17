@@ -1,0 +1,52 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-offline-updater</PackageName>
+    <PackageVersion>2.1.0-12+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Preview and install cumulative AnduinOS offline update bundles</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <AppStreamDeveloperName>AnduinOS Team</AppStreamDeveloperName>
+    <AppStreamMetadataLicense>CC0-1.0</AppStreamMetadataLicense>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon stonking-addon</TargetSuites>
+    <TargetArchitectures>all</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
+  </PropertyGroup>
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute stonking-addon=stonking" />
+    <Dependency Include="python3" />
+    <Dependency Include="python3-apt" />
+    <Dependency Include="python3-gi" />
+    <Dependency Include="python3-gi-cairo" />
+    <Dependency Include="gir1.2-gtk-4.0" />
+    <Dependency Include="gir1.2-adw-1" />
+    <Dependency Include="apt" />
+    <Dependency Include="dpkg" />
+    <Dependency Include="gpgv" />
+    <Dependency Include="util-linux" />
+    <Dependency Include="pkexec" />
+    <Dependency Include="systemd" />
+  </ItemGroup>
+  <ItemGroup>
+    <IncludeScript Include="src/anduinos-offline-updater" Target="/usr/bin/anduinos-offline-updater" />
+    <IncludeScript Include="scripts/anduinos-offline-updater-helper" Target="/usr/libexec/anduinos-offline-updater-helper" />
+    <IncludeFile Include="data/com.anduinos.OfflineUpdater.policy" Target="/usr/share/polkit-1/actions/com.anduinos.OfflineUpdater.policy" Mode="644" />
+    <IncludeFolder Include="src/anduinos_offline_updater/" Target="/usr/lib/python3/dist-packages/anduinos_offline_updater/" />
+    <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-offline-updater/README.md" Mode="644" />
+    <IncludeFolder Include="locale" Target="/usr/share/locale" />
+    <PrebuildCommand Run="sh -n scripts/postinst.sh" />
+    <PrebuildCommand Run="bash compile-locales.sh" />
+    <PrebuildCommand Run="bash fetch-signing-key.sh" />
+    <IncludeFile Include="deploy/anduinos-offline-updates.gpg" Target="/usr/share/keyrings/anduinos-offline-updates.gpg" Mode="644" />
+    <PostInstallScript Include="scripts/postinst.sh" />
+    <AppStreamApplication Include="data/com.anduinos.offlineupdater.desktop" Icon="data/com.anduinos.offlineupdater.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+    <TestCommand Name="desktop" Profile="gui" Run="LANGUAGE=C GSETTINGS_BACKEND=memory GDK_BACKEND=x11 GTK_A11Y=none PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src dbus-run-session -- xvfb-run -a python3 -m unittest discover -s tests -p test_gui.py -v" TimeoutSeconds="300" />
+  </ItemGroup>
+</Project>

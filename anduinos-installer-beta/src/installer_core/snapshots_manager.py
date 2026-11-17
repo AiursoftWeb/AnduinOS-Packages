@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import json
 from pathlib import Path
+from uuid import UUID
 
 from .command import CommandError, CommandRunner
 from .software import refresh_package_indexes
@@ -11,6 +13,8 @@ from .steps import FailurePolicy, InstallContext, StepWarning
 
 
 SNAPSHOTS_MANAGER_PACKAGE = "anduinos-btrfs-snapshots-manager"
+RECOVERY_PACKAGE = "anduinos-recovery-env"
+RECOVERY_DEPLOYER = "/usr/libexec/anduinos-recovery-env"
 FACTORY_PROVISIONER = (
     "/usr/libexec/anduinos-btrfs-snapshots-manager-provision-factory"
 )
@@ -184,6 +188,50 @@ class EnsureSnapshotsManagerStep:
             ("chroot", str(target), "dpkg", "--audit"),
             timeout=300,
         )
+
+    def cleanup(self, context: InstallContext) -> None:
+        return None
+
+
+@dataclass
+class DeployRecoveryEnvironmentStep:
+    """Optionally deploy to the filesystem created by the approved storage plan."""
+
+    runner: CommandRunner
+    id: str = "deploy-recovery-environment"
+    title: str = "Deploy recovery environment"
+    failure_policy: FailurePolicy = FailurePolicy.WARNING
+    progress_weight: int = 2
+    destructive: bool = False
+
+    def preflight(self, context: InstallContext) -> None:
+        context.validate_plan()
+        self.runner.require_commands(("chroot", "blkid"))
+
+    def execute(self, context: InstallContext) -> None:
+        target = _target(context)
+        if not (target / RECOVERY_DEPLOYER.lstrip("/")).is_file():
+            raise StepWarning(
+                f"{RECOVERY_PACKAGE} is unavailable in the copied system; "
+                "installation will continue without the recovery environment"
+            )
+        device = context.values["partition_devices"].get("recovery")
+        if not device:
+            raise RuntimeError("The installation plan did not create a recovery volume")
+        volume_uuid = str(UUID(self.runner.run(
+            ("blkid", "-s", "UUID", "-o", "value", device), timeout=10,
+        ).stdout.strip()))
+        self.runner.run(
+            ("chroot", str(target), RECOVERY_DEPLOYER,
+             "deploy", "--volume-uuid", volume_uuid), timeout=300,
+        )
+        context.values["recovery_volume_uuid"] = volume_uuid
+        context.log("Recovery environment deployed to " + device)
+
+    def verify(self, context: InstallContext) -> None:
+        binding = json.loads((_target(context) / "var/lib/anduinos-recovery-env/volume.json").read_text())
+        if binding.get("volume_uuid") != context.values.get("recovery_volume_uuid"):
+            raise RuntimeError("Recovery deployment did not bind the planned volume")
 
     def cleanup(self, context: InstallContext) -> None:
         return None

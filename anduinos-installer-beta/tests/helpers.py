@@ -6,6 +6,7 @@ from installer_core.model import (
     AuthenticationMode,
     BootSpec,
     DiskIdentity,
+    EncryptionMode,
     Filesystem,
     Firmware,
     IdentitySpec,
@@ -52,6 +53,8 @@ def valid_plan(
     disk: DiskIdentity | None = None,
     swap_size_mib: int | None = None,
     external_target: bool = False,
+    include_recovery: bool = False,
+    encryption: EncryptionMode = EncryptionMode.NONE,
 ) -> InstallPlan:
     mok_policy = (
         MokPasswordPolicy.ANDUINOS_DEFAULT
@@ -72,6 +75,8 @@ def valid_plan(
             mode=InstallMode.ERASE_DISK,
             disk=selected_disk,
             filesystem=filesystem,
+            include_recovery=include_recovery,
+            encryption=encryption,
             swap_size_mib=(
                 calculate_swap_sizing(
                     TEST_PHYSICAL_MEMORY_BYTES,

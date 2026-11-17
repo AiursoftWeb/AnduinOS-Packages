@@ -27,6 +27,90 @@ def _descendants(widget):
 
 
 class SoftwarePageLayoutTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        Adw.init()
+
+    def test_only_simplified_chinese_routes_through_source_choice(self):
+        from unittest.mock import Mock
+        for lang in ("zh_CN", "zh_TW", "en_US"):
+            with self.subTest(lang=lang):
+                shared = {"lang": lang, "download_from_china": True,
+                          "_page_route_initialized": True}
+                navigation = Mock()
+                chosen = Adw.NavigationPage(title="Source choice")
+                summary = Adw.NavigationPage(title="Review")
+                page = pages.build_timezone_page(shared, navigation)
+                footer = next(w for w in _descendants(page) if w.has_css_class("wizard-navigation"))
+                with patch("pages.build_china_sources_page", return_value=chosen), patch("pages.build_summary_page", return_value=summary):
+                    footer.next_button.emit("clicked")
+                navigation.push.assert_called_once_with(chosen if lang == "zh_CN" else summary)
+                if lang != "zh_CN":
+                    self.assertFalse(shared["download_from_china"])
+
+    def test_china_choice_only_records_plan_preference(self):
+        from unittest.mock import Mock
+        for selected in (False, True):
+            shared = {"lang": "zh_CN", "download_from_china": not selected,
+                      "_page_route_initialized": True}
+            navigation = Mock()
+            summary = Adw.NavigationPage(title="Review")
+            with patch("pages.subprocess.run") as command, patch("pages.build_summary_page", return_value=summary):
+                page = pages.build_china_sources_page(shared, navigation)
+                buttons = [w for w in _descendants(page)
+                           if isinstance(w, Gtk.Button) and w.has_css_class("china-source-choice")]
+                self.assertEqual(len(buttons), 2)
+                self.assertIn("AIURSOFT LIMITED", buttons[0].get_tooltip_text())
+                self.assertIn("苏州艾软科技有限公司", buttons[1].get_tooltip_text())
+                self.assertTrue(buttons[int(not selected)].get_active())
+                buttons[int(selected)].set_active(True)
+                self.assertTrue(buttons[int(selected)].get_active())
+                self.assertFalse(buttons[int(not selected)].get_active())
+                self.assertIs(shared["download_from_china"], selected)
+                navigation.push.assert_not_called()
+                footer = next(w for w in _descendants(page)
+                              if w.has_css_class("wizard-navigation"))
+                footer.next_button.emit("clicked")
+                command.assert_not_called()
+            navigation.push.assert_called_once_with(summary)
+
+    def test_china_choices_fit_low_resolution_and_preserve_back_navigation(self):
+        window = Adw.Window(default_width=800, default_height=600)
+        self.addCleanup(window.destroy)
+        navigation = Adw.NavigationView()
+        shared = {"lang": "zh_CN", "_page_route_initialized": True}
+        page = pages.build_china_sources_page(shared, navigation)
+        navigation.add(page)
+        window.set_content(navigation)
+        window.present()
+        _settle()
+        widgets = list(_descendants(page))
+        buttons = [w for w in widgets if w.has_css_class("china-source-choice")]
+        self.assertEqual(len(buttons), 2)
+        self.assertTrue(all(w.get_mapped() for w in buttons))
+        text_positions = []
+        for button in buttons:
+            icon_slot = button.get_child().get_first_child()
+            label = icon_slot.get_next_sibling()
+            self.assertEqual(icon_slot.get_width(), 64)
+            self.assertEqual(icon_slot.get_height(), 64)
+            ok, bounds = label.compute_bounds(window)
+            self.assertTrue(ok)
+            text_positions.append(bounds.get_x())
+        self.assertAlmostEqual(*text_positions, delta=1)
+        footer = next(w for w in widgets if w.has_css_class("wizard-navigation"))
+        self.assertTrue(footer.back_button.get_mapped())
+        self.assertTrue(footer.next_button.get_mapped())
+        dots = footer.get_center_widget()
+        self.assertTrue(dots.get_mapped())
+        self.assertGreater(dots.get_width(), 0)
+        dot_widgets = list(_descendants(dots))[1:]
+        self.assertEqual(len(dot_widgets), len(pages._planned_page_route(shared)))
+        self.assertEqual(sum(w.has_css_class("wizard-dot-active") for w in dot_widgets), 1)
+        ok, bounds = footer.compute_bounds(window)
+        self.assertTrue(ok)
+        self.assertLessEqual(bounds.get_y() + bounds.get_height(), window.get_height())
+
     def test_keyboard_dropdown_search_filters_layouts_and_variants(self):
         page = pages.build_keyboard_page({"lang": "en_US"}, Adw.NavigationView())
         dropdowns = [w for w in _descendants(page)

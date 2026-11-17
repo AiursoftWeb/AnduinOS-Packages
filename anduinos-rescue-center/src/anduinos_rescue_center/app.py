@@ -17,8 +17,9 @@ from .client import list_files as list_rescue_files
 from .client import create_snapshot as create_rescue_snapshot
 from .client import diagnose_boot as diagnose_rescue_boot
 from .client import list_snapshots as list_rescue_snapshots
-from .client import open_emergency_terminal
+from .client import open_emergency_terminal, finish_emergency_terminal
 from .client import open_live_terminal
+from .client import lock_volume, unlock_volume
 from .client import probe
 from .client import repair_boot as repair_rescue_boot
 from .client import reset_password as reset_rescue_password
@@ -100,6 +101,7 @@ def _run_operation(parent, title, description, task, completed, failed, *, prote
                         default_width=560, default_height=220)
     window.set_deletable(not protect)
     running = True
+    parent._operation_running = True
     window.connect("close-request", lambda *_: running and protect)
     guard = parent.connect("close-request", lambda *_: running) if protect else None
     application = parent.get_application()
@@ -128,6 +130,7 @@ def _run_operation(parent, title, description, task, completed, failed, *, prote
     def finish(result, error):
         nonlocal running
         running = False
+        parent._operation_running = False
         GLib.source_remove(timer)
         if guard is not None:
             parent.disconnect(guard)
@@ -166,6 +169,11 @@ class RescueWindow(Adw.ApplicationWindow):
         _install_style(self.get_display())
         self._continued = is_live_environment()
         self._target_payload: dict = {}
+        self._unlock_session = ""
+        self._closing = False
+        self._terminal_process = None
+        self._terminal_target = None
+        self.connect("close-request", self._close_requested)
 
         self.toolbar = Adw.ToolbarView()
         self.header = Adw.HeaderBar()
@@ -286,7 +294,54 @@ class RescueWindow(Adw.ApplicationWindow):
         self.status.set_child(None)
         self.scan()
 
+    def _release_volume(self, completed) -> None:
+        """Keep the window alive until our mapping has actually been closed."""
+        session = self._unlock_session
+
+        def release():
+            lock_volume(session)
+
+        def released(_result):
+            self._unlock_session = ""
+            completed()
+
+        _run_operation(self, _("Closing encrypted volume"),
+                       _("Waiting for the selected volume to close…"), release,
+                       released, self._target_failed)
+
+    def _close_requested(self, *_args) -> bool:
+        if (getattr(self, "_operation_running", False)
+                or getattr(getattr(self, "boot_page", None), "_repair_active", False)):
+            return True
+        if self._terminal_target:
+            if self._terminal_process is not None:
+                self._terminal_notice()
+            else:
+                self._finish_terminal(self.close)
+            return True
+        if self._closing or not self._unlock_session:
+            return False
+
+        def closed():
+            self._closing = True
+            self.close()
+
+        self._release_volume(closed)
+        return True
+
     def scan(self) -> None:
+        if (getattr(self, "_operation_running", False)
+                or getattr(getattr(self, "boot_page", None), "_repair_active", False)):
+            return
+        if self._terminal_target:
+            if self._terminal_process is not None:
+                self._terminal_notice()
+            else:
+                self._finish_terminal(self.scan)
+            return
+        if self._unlock_session:
+            self._release_volume(self.scan)
+            return
         if not self._continued:
             return
         self.refresh.set_sensitive(False)
@@ -340,7 +395,8 @@ class RescueWindow(Adw.ApplicationWindow):
         installations = [
             (disk, part) for disk in disks
             for part in disk.get("partitions", [])
-            if isinstance(part, dict) and part.get("os_kind") == "anduinos"
+            if isinstance(part, dict) and (part.get("os_kind") == "anduinos"
+                                          or part.get("filesystem") == "crypto_luks")
         ]
         pages = Gtk.Stack(transition_type=Gtk.StackTransitionType.CROSSFADE)
         pages.set_vhomogeneous(False)
@@ -389,17 +445,18 @@ class RescueWindow(Adw.ApplicationWindow):
         button.update_property(
             [Gtk.AccessibleProperty.LABEL],
             [_('Open {system} installation on {partition}').format(
-                system=partition.get('os_name') or 'AnduinOS',
+                system=partition.get('os_name') or _('Encrypted volume'),
                 partition=partition.get('path') or _('unknown partition'))],
         )
         button.connect("clicked", lambda _button, item=partition: self._open_system(item))
         body = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=18)
-        symbol = _icon("drive-harddisk-system-symbolic", 36)
+        symbol = _icon("changes-prevent-symbolic" if partition.get("encrypted")
+                       else "drive-harddisk-system-symbolic", 36)
         symbol.add_css_class("rescue-mark")
         body.append(symbol)
         details = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         details.set_hexpand(True)
-        details.append(_text(str(partition.get("os_name") or "AnduinOS"), "title-3"))
+        details.append(_text(str(partition.get("os_name") or _("Encrypted volume")), "title-3"))
         details.append(_text(" · ".join(value for value in (
             str(partition.get("hostname") or ""),
             str(disk.get("model") or disk.get("path") or ""),
@@ -463,7 +520,45 @@ class RescueWindow(Adw.ApplicationWindow):
                 row.set_subtitle(details + " · " + _("Not available for recovery"))
             group.add(row)
 
+    def _unlock_dialog(self, partition: dict) -> None:
+        dialog = Adw.MessageDialog(
+            transient_for=self, heading=_("Unlock encrypted volume"),
+            body=_("Enter the disk password or emergency recovery key. The system-generated key also unlocks the disk. This does not change the password."),
+        )
+        entry = Gtk.PasswordEntry(show_peek_icon=True)
+        entry.connect("activate", lambda *_: dialog.response("unlock"))
+        entry.update_property([Gtk.AccessibleProperty.LABEL], [_("Disk password or emergency recovery key")])
+        dialog.set_extra_child(entry)
+        dialog.add_response("cancel", _("Cancel"))
+        dialog.add_response("unlock", _("Unlock"))
+        dialog.set_response_appearance("unlock", Adw.ResponseAppearance.SUGGESTED)
+        dialog.set_default_response("unlock")
+        dialog.set_close_response("cancel")
+
+        def responded(_dialog, response):
+            password = entry.get_text()
+            entry.set_text("")
+            if response != "unlock":
+                return
+            _run_operation(
+                self, _("Unlocking encrypted volume"),
+                _("Checking the selected volume and reading system information…"),
+                lambda: unlock_volume(partition["path"], partition["identity"], password),
+                self._unlocked, self._open_failed,
+            )
+
+        dialog.connect("response", responded)
+        dialog.present()
+        entry.grab_focus()
+
+    def _unlocked(self, payload: dict) -> bool:
+        self._unlock_session = str(payload.get("unlock_session") or "")
+        return self._render_target(payload)
+
     def _open_system(self, partition: dict) -> None:
+        if partition.get("filesystem") == "crypto_luks":
+            self._unlock_dialog(partition)
+            return
         path = str(partition.get("path") or "")
         identity = str(partition.get("identity") or "")
         self.refresh.set_sensitive(False)
@@ -731,6 +826,12 @@ class RescueWindow(Adw.ApplicationWindow):
             failed.present()
 
     def _terminal_dialog(self, target: dict) -> None:
+        if self._terminal_target:
+            if self._terminal_process is not None:
+                self._terminal_notice()
+            else:
+                self._finish_terminal()
+            return
         path = str(target.get("path") or "")
         identity = str(target.get("identity") or "")
         dialog = Adw.MessageDialog(
@@ -748,7 +849,23 @@ class RescueWindow(Adw.ApplicationWindow):
             if response != "open":
                 return
             try:
-                open_emergency_terminal(path, identity)
+                self._terminal_process = open_emergency_terminal(path, identity)
+                self._terminal_target = (path, identity)
+                self.workspace_pages.set_sensitive(False)
+                # Keep the application present after Ptyxis closes: the helper
+                # may still be unwinding its chroot mounts in the background.
+                application = self.get_application()
+                application.hold()
+
+                def watch_terminal():
+                    if self._terminal_process.poll() is None:
+                        return GLib.SOURCE_CONTINUE
+                    self._terminal_process = None
+                    self._finish_terminal()
+                    application.release()
+                    return GLib.SOURCE_REMOVE
+
+                GLib.timeout_add(200, watch_terminal)
             except Exception as error:
                 failed = Adw.MessageDialog(transient_for=self, heading=_("Could not open terminal"), body=_(str(error)))
                 failed.add_response("close", _("Close"))
@@ -757,6 +874,34 @@ class RescueWindow(Adw.ApplicationWindow):
 
         dialog.connect("response", responded)
         dialog.present()
+
+    def _terminal_notice(self) -> None:
+        dialog = Adw.MessageDialog(
+            transient_for=self, heading=_("Close the emergency terminal first"),
+            body=_("Finish copying your files and close the emergency terminal. Rescue Center will then unmount the disk."),
+        )
+        dialog.add_response("close", _("Close"))
+        dialog.present()
+
+    def _finish_terminal(self, completed=None) -> None:
+        def released(_result):
+            self._terminal_target = None
+            self.workspace_pages.set_sensitive(True)
+            if completed:
+                completed()
+
+        def failed(message):
+            dialog = Adw.MessageDialog(
+                transient_for=self, heading=_("Could not release the recovery disk"), body=message,
+            )
+            dialog.add_response("close", _("Close"))
+            dialog.present()
+
+        _run_operation(
+            self, _("Unmounting recovery filesystems"),
+            _("Please wait before closing Rescue Center or starting installation."),
+            lambda: finish_emergency_terminal(*self._terminal_target), released, failed,
+        )
 
     def _password_page(self, payload: dict) -> Gtk.Widget:
         page = self._page_intro(

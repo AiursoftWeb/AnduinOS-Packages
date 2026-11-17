@@ -34,6 +34,7 @@ class Firmware:
         self.fstab_source = "/dev/test1"
         self.boot_uuid = "abcd1234-1234-1234-1234-123456789abc"
         self.boot_prefix = "/boot/grub"
+        self.crypt_uuid = "87654321-1234-1234-1234-123456789abc"
         self.hint_uuid = UUID
         self.parts = [{"path": "/dev/test1", "pkname": "/dev/test", "type": "part",
                        "parttype": boot.ESP_TYPE, "partuuid": UUID, "partn": 1}]
@@ -55,7 +56,7 @@ class Firmware:
             source = self.fstab_source if "--fstab" in args else "/dev/test1"
             output = json.dumps({"filesystems": [{"source": source, "target": str(self.esp), "fstype": "vfat", "options": "rw,nosuid"}]})
         elif args[0] == "grub-probe":
-            output = self.boot_uuid
+            output = self.crypt_uuid if "--target=cryptodisk_uuid" in args else self.boot_uuid
         elif args[0] == "grub-mkrelpath":
             output = self.boot_prefix
         elif args[0] == "lsblk":
@@ -295,6 +296,23 @@ class BootChainTests(unittest.TestCase):
             self.assertEqual((esp / "EFI/BOOT/BOOTX64.EFI").read_bytes(), b"foreign loader")
             self.assertEqual((vendor / "shimx64.efi").read_bytes(), b"old shimx64.efi")
 
+    def test_encrypted_root_binding_survives_native_loader_updates(self):
+        for suffix in ("x64", "aa64"):
+            for prefix in ("/boot/grub", "/@root/boot/grub"):
+                with self.subTest(suffix=suffix, prefix=prefix), self.fixture(suffix) as (firmware, esp, vendor):
+                    firmware.boot_prefix = prefix
+                    firmware.current = "0003"  # Generic/fallback firmware boot.
+                    self.bind_local_root(firmware, vendor)
+                    ordinary = (vendor / "grub.cfg").read_text()
+                    encrypted = "cryptomount -u " + firmware.crypt_uuid.replace("-", "") + "\n" + ordinary
+                    (vendor / "grub.cfg").write_text(encrypted)
+                    boot.prepare_boot_chain(firmware, esp)
+                    self.assertEqual((vendor / "grub.cfg").read_text(), encrypted)
+                    self.assertEqual((vendor / f"grub{suffix}.efi").read_bytes(), b"new grub" + suffix.encode() + b".efi")
+                    firmware.crypt_uuid = "aaaaaaaa-1234-1234-1234-123456789abc"
+                    with self.assertRaisesRegex(ValueError, "encrypted root does not match"):
+                        boot.resolve_target(firmware, esp)
+
     def add_other_installation(self, firmware, vendor, *, chainloaded=True):
         other_uuid = "aaaaaaaa-1234-1234-1234-123456789abc"
         firmware.parts.append({**firmware.parts[0], "path": "/dev/test2", "partuuid": other_uuid})
@@ -322,6 +340,68 @@ class BootChainTests(unittest.TestCase):
                 self.assertEqual(boot.resolve_target(firmware, esp).entry.number, "0009")
                 boot.prepare_boot_chain(firmware, esp)
                 self.assertEqual(sum(c[:2] == ["efibootmgr", "--create-only"] for c in firmware.calls), 1)
+
+    def test_graphical_unlock_keeps_local_binding_and_owned_fallback(self):
+        for prefix in ("/boot/grub", "/@root/boot/grub"):
+            with self.subTest(prefix=prefix), self.fixture() as (firmware, esp, vendor):
+                firmware.boot_prefix = prefix
+                self.add_other_installation(firmware, vendor)
+                original = "cryptomount -u " + firmware.crypt_uuid + "\n" + (vendor / "grub.cfg").read_text()
+                configured = boot.graphical_grub_configuration(
+                    original, firmware.boot_uuid, prefix, firmware.crypt_uuid,
+                )
+                (vendor / "grub.cfg").write_text(configured)
+                fallback = esp / "EFI/BOOT"
+                fallback.mkdir(parents=True, exist_ok=True)
+                (fallback / "grub.cfg").write_text(configured)
+                (fallback / "BOOTX64.EFI").write_bytes((vendor / "shimx64.efi").read_bytes())
+                self.assertEqual(boot.resolve_target(firmware, esp).device, "/dev/test1")
+                self.assertEqual(boot.owned_fallback(
+                    firmware, esp, boot.resolve_target(firmware, esp), vendor / "shimx64.efi",
+                ), fallback)
+                for changed in (configured.replace(firmware.boot_uuid, "wrong-root"),
+                                configured.replace(prefix, "/other/boot/grub"),
+                                configured.replace(firmware.crypt_uuid.replace("-", ""), "0" * 32),
+                                configured + "configfile /other/grub.cfg\n"):
+                    with self.assertRaises(ValueError):
+                        boot.verify_grub_configuration(changed, firmware.boot_uuid, prefix, firmware.crypt_uuid)
+                with self.assertRaises(ValueError):
+                    boot.verify_grub_configuration(configured, firmware.boot_uuid, prefix)
+
+    def test_independent_recovery_requires_the_exact_optional_volume(self):
+        outer = "12345678-1234-1234-1234-123456789abc"
+        inner = "abcdef01-1234-1234-1234-123456789abc"
+        recovery = "87654321-1234-1234-1234-123456789abc"
+        prefix = "/@root/boot/grub"
+        original = (f"cryptomount -u {outer}\n"
+                    f"search.fs_uuid {inner} root cryptouuid/{outer.replace('-', '')}\n"
+                    f"set prefix=($root){prefix}\nconfigfile $prefix/grub.cfg\n")
+        configured = boot.graphical_grub_configuration(original, inner, prefix, outer, recovery)
+        self.assertEqual(configured.split(), [
+            "anduinos_unlock", outer.replace("-", ""), inner, prefix, recovery,
+        ])
+        boot.verify_grub_configuration(configured, inner, prefix, outer, recovery)
+        for expected in ("", outer):
+            with self.assertRaises(ValueError):
+                boot.verify_grub_configuration(configured, inner, prefix, outer, expected)
+        # Previously installed three-argument stubs continue to verify.
+        legacy = boot.graphical_grub_configuration(original, inner, prefix, outer)
+        boot.verify_grub_configuration(legacy, inner, prefix, outer, recovery)
+
+    def test_independent_recovery_supports_the_ext4_root_prefix(self):
+        outer = "12345678-1234-1234-1234-123456789abc"
+        inner = "abcdef01-1234-1234-1234-123456789abc"
+        recovery = "87654321-1234-1234-1234-123456789abc"
+        prefix = "/boot/grub"
+        original = (f"cryptomount -u {outer}\n"
+                    f"search.fs_uuid {inner} root cryptouuid/{outer.replace('-', '')}\n"
+                    f"set prefix=($root){prefix}\nconfigfile $prefix/grub.cfg\n")
+        configured = boot.graphical_grub_configuration(original, inner, prefix, outer, recovery)
+        boot.verify_grub_configuration(configured, inner, prefix, outer, recovery)
+        with self.assertRaises(ValueError):
+            boot.verify_grub_configuration(configured, inner, prefix, outer, outer)
+        with self.assertRaises(ValueError):
+            boot.graphical_grub_configuration(original, inner, "/other/boot/grub", outer, recovery)
 
     def test_multi_esp_direct_boot_is_allowed_with_local_binding(self):
         with self.fixture() as (firmware, esp, vendor):

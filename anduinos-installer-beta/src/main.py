@@ -24,6 +24,7 @@ from gi.repository import Gtk, Adw, Gio, GLib
 from i18n import _, N_
 from languages import default_timezone, detect_system_language
 from pages import build_all_pages
+from frontend import disposable_encryption_preview
 from installer_core.hostnames import (
     detect_device_type,
     generate_random_suffix,
@@ -43,8 +44,13 @@ class InstallerApplication(Adw.Application):
     def __init__(
         self,
         development_mode: bool = False,
+        bypass_payment: bool = False,
     ):
-        super().__init__(application_id=APP_ID)
+        # A Live session may already have opened the ordinary installer. Use a
+        # separate application identity for the explicit test session, so GTK
+        # does not forward its launch to the existing non-Pro process.
+        application_id = f"{APP_ID}.ProTest" if bypass_payment else APP_ID
+        super().__init__(application_id=application_id)
         detected_language = detect_system_language()
         hostname_device_type = detect_device_type()
         hostname_random_suffix = generate_random_suffix()
@@ -71,6 +77,11 @@ class InstallerApplication(Adw.Application):
             "guided_storage_preview_model": None,
             "filesystem": "btrfs",
             "btrfs_compression": "balanced",
+            "disk_password": "",
+            "disk_password_confirmation": "",
+            "disk_recovery_key": "",
+            "disk_recovery_key_saved": False,
+            "swap_encryption": "auto",
             "username": "",
             "full_name": "",
             "password": "",
@@ -88,9 +99,14 @@ class InstallerApplication(Adw.Application):
             "locale": detected_language.locale,
             "installation_running": False,
             "development_mode": development_mode,
+            # Session capability: a future activation page can grant the same
+            # entitlement without changing storage-page consumers.
+            "has_pro_entitlement": bypass_payment,
+            "_encryption_preview": disposable_encryption_preview(),
             "install_updates": True,
             "install_third_party_drivers": False,
             "install_multimedia_codecs": False,
+            "download_from_china": False,
             "input_methods": detected_language.default_input_methods,
             "_preferred_install_updates": True,
             "_preferred_install_third_party_drivers": False,
@@ -187,8 +203,10 @@ def main():
         "--development" in sys.argv
         or os.environ.get("ANDUINOS_INSTALLER_DEVELOPMENT") == "1"
     )
-    argv = [argument for argument in sys.argv if argument != "--development"]
-    app = InstallerApplication(development_mode)
+    bypass_payment = "--bypass-payment" in sys.argv
+    argv = [argument for argument in sys.argv
+            if argument not in ("--development", "--bypass-payment")]
+    app = InstallerApplication(development_mode, bypass_payment)
     return app.run(argv)
 
 

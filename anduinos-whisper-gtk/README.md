@@ -75,3 +75,24 @@ virtual keyboard. It uses the normal paste shortcut, including `Ctrl + Shift +
 V` for terminals, which works on both X11 and Wayland without granting access
 to `/dev/uinput`. For compatibility, the recognized phrase becomes the current
 text clipboard item.
+
+## Optional Parakeet model
+
+The Models page also offers Parakeet TDT 0.6B v3 for 25 European languages.
+The verified INT8 archive is downloaded from GitHub only after consent (about
+631 MB download, 812 MB installed). Recognition stays offline and uses the
+same microphone, shortcut, cancellation, and text insertion as Whisper.
+Allow about 1.5 GiB RAM; usage depends on phrase length and the runtime.
+Chinese, Japanese and Korean require a Whisper model. Selecting Parakeet with
+an unsupported language asks for a supported language before changing models.
+Downloads can be cancelled and retried. After downloading Parakeet, choose Use
+explicitly; the download never switches an active dictation. Removing a selected user model returns
+to Base. Base remains bundled and selected by default.
+
+The CPU worker uses distribution ONNX Runtime and NumPy packages, installed
+with Voice Typing. Model weights are optional and are not bundled. There is
+no Snap or runtime pip installation. See `anduinos-parakeet-worker/NOTICE` for
+code attribution and the model's CC-BY-4.0 licence. Parakeet uses the CPU even
+when a Whisper GPU preference is saved. Automatic live previews remain off
+for this backend until separately measured; explicit On still enables them.
+Changing models stops the old session and releases its inference worker.

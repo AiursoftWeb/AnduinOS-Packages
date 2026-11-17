@@ -62,8 +62,29 @@ standard library, target linker and target development libraries (for example
 and writes architecture-specific binaries to `obj/amd64` or `obj/arm64`.
 It does not install build dependencies or modify the running service.
 Builds also collect upstream crate license/copyright texts from the locked Cargo
-sources into `RUST-THIRD-PARTY-NOTICES` in the deb documentation. Missing license
+sources into `RUST-THIRD-PARTY-NOTICES.gz` in the deb documentation (read with `zcat` or `zless`). Missing license
 text fails the build rather than silently omitting attribution.
 The bundle includes the Rust standard-library notices from the toolchain or
 matching distribution package. Custom toolchains can provide their matching
 notice file through `RUST_STDLIB_NOTICES`.
+
+## Optional Parakeet backend
+
+The `parakeet` model key resolves a verified per-user `parakeet-v3` directory.
+It routes the existing resident pipe protocol to `anduinos-parakeet-worker`;
+Whisper and Silero still use the native worker. Parakeet's INT8 export is
+CPU-only and accepts automatic detection or one of its 25 European languages.
+The service validates this independently of the settings UI. Model changes
+cancel outstanding work and invalidate the resident engine. Idle eviction,
+queue bounds and cancellation deadlines are shared with Whisper.
+
+Run the optional native gate with verified weights and the candidate worker:
+
+```sh
+ANDUINOS_PARAKEET_MODEL=/absolute/path/parakeet-v3 \
+ANDUINOS_PARAKEET_WORKER=/absolute/path/anduinos-parakeet-worker \
+cargo test --locked --test native_runtime optional_parakeet_pipe -- --ignored
+```
+
+The gate exercises actual CPU recognition, cancellation and reuse, idle
+release, and engine invalidation. It does not download models or record audio.

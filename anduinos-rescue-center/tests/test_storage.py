@@ -222,3 +222,46 @@ class InterruptedRecoveryTests(unittest.TestCase):
             (top / '@root').symlink_to(outside, target_is_directory=True)
             with self.assertRaises(RuntimeError):
                 inspect_mounted_filesystem(top, 'btrfs')
+
+class EncryptedDiscoveryTests(unittest.TestCase):
+    def tree(self, mounts=()):
+        self.outer = {'path': '/dev/vda3', 'type': 'part', 'size': 100000,
+                      'maj:min': '254:3', 'uuid': 'luks-uuid', 'partuuid': 'physical',
+                      'fstype': 'crypto_LUKS', 'mountpoints': []}
+        self.inner = {'path': '/dev/mapper/user-root', 'type': 'crypt', 'size': 90000,
+                      'maj:min': '253:0', 'uuid': 'inner-uuid', 'fstype': 'ext4',
+                      'mountpoints': list(mounts)}
+        self.outer['children'] = [self.inner]
+        return {'blockdevices': [{'path': '/dev/vda', 'type': 'disk', 'children': [self.outer]}]}
+
+    def test_mapped_root_binds_outer_identity_and_keeps_running_root_protection(self):
+        from anduinos_rescue_center.storage import resolve_target
+        tree = self.tree(['/'])
+        run = lambda c, **k: subprocess.CompletedProcess(c, 0, json.dumps(tree), '')
+        part = probe_inventory(run=run, inspect=lambda *_: SystemIdentity('anduinos')).installations[0]
+        self.assertTrue(part.active_system)
+        self.assertEqual(part.parent, '/dev/vda')
+        self.assertEqual(part.container_path, '/dev/vda3')
+        self.assertEqual(part.luks_uuid, 'luks-uuid')
+        self.assertEqual(part.filesystem_uuid, 'inner-uuid')
+        self.assertEqual(resolve_target(part.path, part.identity, run=run).identity, part.identity)
+        self.outer['uuid'] = 'another-container'
+        with self.assertRaisesRegex(RuntimeError, 'changed'):
+            resolve_target(part.path, part.identity, run=run)
+
+    def test_locked_volume_is_visible_without_claiming_an_installed_os(self):
+        tree = self.tree()
+        del self.outer['children']
+        run = lambda c, **k: subprocess.CompletedProcess(c, 0, json.dumps(tree), '')
+        inventory = probe_inventory(run=run, inspect=lambda *_: self.fail('Locked bytes must not be mounted'))
+        self.assertEqual(inventory.installations, ())
+        self.assertTrue(inventory.disks[0].partitions[0].encrypted)
+        self.assertEqual(inventory.disks[0].partitions[0].filesystem, 'crypto_luks')
+
+    def test_ambiguous_mappings_are_not_guessed(self):
+        tree = self.tree()
+        self.outer['children'].append(dict(self.inner, path='/dev/mapper/alias'))
+        run = lambda c, **k: subprocess.CompletedProcess(c, 0, json.dumps(tree), '')
+        part = probe_inventory(run=run, inspect=lambda *_: self.fail()).disks[0].partitions[0]
+        self.assertEqual(part.filesystem, 'crypto_luks')
+        self.assertIn('ambiguous', part.probe_error)

@@ -55,7 +55,7 @@ class MirrorSelectionTests(unittest.TestCase):
                 {"network_online": False, "target": target},
             )
             with patch(
-                "installer_core.mirrors.select_fastest_mirror"
+                "installer_core.mirrors.measure_mirrors"
             ) as select:
                 result = StepRunner(
                     [SelectFastestAptMirrorStep()]
@@ -87,7 +87,7 @@ class MirrorSelectionTests(unittest.TestCase):
                 {"network_online": True, "target": target},
             )
             with patch(
-                "installer_core.mirrors.select_fastest_mirror",
+                "installer_core.mirrors.measure_mirrors",
                 side_effect=RuntimeError("No mirror is reachable"),
             ):
                 result = StepRunner(
@@ -156,9 +156,13 @@ class MirrorSelectionTests(unittest.TestCase):
             measurement = MirrorMeasurement(
                 "http://fast.example/ubuntu/", 12.0, 250.0
             )
+            alternatives = tuple(
+                MirrorMeasurement(f"https://{n}.example/ubuntu/", 20.0, 100.0 / n)
+                for n in range(2, 6)
+            )
             with patch(
-                "installer_core.mirrors.select_fastest_mirror",
-                return_value=measurement,
+                "installer_core.mirrors.measure_mirrors",
+                return_value=(measurement, *alternatives),
             ):
                 step = SelectFastestAptMirrorStep()
                 step.execute(context)
@@ -166,6 +170,8 @@ class MirrorSelectionTests(unittest.TestCase):
 
             content = source.read_text()
             self.assertIn("URIs: http://fast.example/ubuntu/", content)
+            self.assertEqual(context.values["apt_mirror_remaining"],
+                             [item.uri for item in alternatives[:3]])
             self.assertIn("Suites: resolute resolute-updates", content)
             self.assertIn("Signed-By:", content)
             self.assertEqual(source.stat().st_mode & 0o777, 0o640)

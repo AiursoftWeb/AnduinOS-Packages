@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
-if [ "$#" -ne 0 ]; then
-    echo "The public installer executor does not accept arguments." >&2
+if [ "$#" -gt 1 ] || { [ "$#" -eq 1 ] && [ "$1" != "--pro-entitlement" ]; }; then
+    echo "The public installer executor does not accept arguments other than --pro-entitlement." >&2
     exit 2
 fi
-exec /usr/bin/python3 /usr/lib/anduinos-installer-beta/executor_cli.py
+exec /usr/bin/python3 /usr/lib/anduinos-installer-beta/executor_cli.py "$@"

@@ -1258,8 +1258,8 @@ msgid "Generating & Signing..."
 msgstr "Gerando e Assinando..."
 
 #: src/anduinos_driver_center/app.py:1940
-msgid "Add Printer"
-msgstr "Adicionar impressora"
+msgid "Manage Printers in System Settings"
+msgstr "Gerenciar impressoras nas Configurações do sistema"
 
 #: src/anduinos_driver_center/app.py:1365
 #: src/anduinos_driver_center/app.py:1390
@@ -2368,3 +2368,282 @@ msgstr "A assinatura automática agora usa o certificado inscrito. A configuraç
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "O reparo da assinatura do driver foi concluído. Agora, o sistema verificará se os drivers instalados são confiáveis."
+
+msgid "Recovery Environment"
+msgstr "Ambiente de recuperação"
+
+msgid "Present"
+msgstr "Presente"
+
+msgid "Multiple recovery partitions found"
+msgstr "Foram encontradas várias partições de recuperação"
+
+msgid "Recovery partition not found"
+msgstr "Partição de recuperação não encontrada"
+
+msgid "Recovery partition"
+msgstr "Partição de recuperação"
+
+msgid "Recovery package"
+msgstr "Pacote de recuperação"
+
+msgid "GRUB menu entry"
+msgstr "Entrada do menu GRUB"
+
+msgid "Recovery menu entry not found"
+msgstr "Entrada de recuperação não encontrada no menu"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Não é possível ler o menu GRUB"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "O estado do pacote usa o cache local do APT. As fontes de software não são atualizadas."
+
+msgid "Read recovery boot information"
+msgstr "Ler informações de inicialização da recuperação"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "Uma preparação anterior foi interrompida. Antes de tentar novamente, peça a um administrador que confira a tabela de partições e o cabeçalho swap salvos."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "A preparação automática não está disponível para esta configuração de disco ou swap. Peça a um administrador que crie uma partição ext4 AOS_RECOVERY de 256 MiB e verifique novamente."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Peça a um administrador que confira os volumes de recuperação configurados ou duplicados e verifique novamente."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Feche os aplicativos que consomem muita memória e verifique novamente. Não há RAM disponível suficiente para desativar este swap com segurança."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Implantar a imagem de recuperação instalada e gerar novamente o menu GRUB?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Instalar ou atualizar apenas o pacote de recuperação usando as listas de pacotes atuais?"
+
+msgid "Install or update recovery package"
+msgstr "Instalar ou atualizar o pacote de recuperação"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Não foi possível verificar uma versão candidata no cache APT local. Atualize as fontes no gerenciador de atualizações e verifique novamente."
+
+msgid "Recovery repair completed."
+msgstr "Reparo do ambiente de recuperação concluído."
+
+msgid "Repair recovery boot menu"
+msgstr "Reparar o menu de inicialização da recuperação"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Verifique novamente e permita a inspeção somente leitura. Se as verificações continuarem falhando, repare a instalação da central de drivers e das ferramentas de disco."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Reduzir a partição swap e criar uma partição de recuperação"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "O swap será desativado temporariamente. Faça backup dos dados e mantenha o computador ligado até a operação terminar."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Não é possível continuar: nenhuma partição swap comum foi encontrada no disco do sistema."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Não é possível continuar: a partição swap é menor que 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "O reparo requer um sistema AnduinOS Btrfs @root instalado. Inicie o sistema instalado e verifique novamente."
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr "Dispositivo gráfico"
+
+msgid "Encrypted"
+msgstr "Criptografado"
+
+msgid "Not encrypted"
+msgstr "Não criptografado"
+
+msgid "Disk Encryption"
+msgstr "Criptografia de disco"
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr "Verifique a criptografia dos arquivos do sistema, arquivos pessoais e swap."
+
+msgid "Unencrypted disk swap is active"
+msgstr "Swap de disco não criptografado está ativo"
+
+msgid "No disk swap is active"
+msgstr "Nenhum swap de disco está ativo"
+
+msgid "Disk swap"
+msgstr "Swap de disco"
+
+msgid "Encryption coverage"
+msgstr "Abrangência da criptografia"
+
+msgid "System files"
+msgstr "Arquivos do sistema"
+
+msgid "Personal files (Home)"
+msgstr "Arquivos pessoais (Home)"
+
+msgid "Memory-based swap; not a disk partition"
+msgstr "Swap baseado em memória; não é uma partição de disco"
+
+msgid "System recovery"
+msgstr "Recuperação do sistema"
+
+msgid "Snapshot Recovery Environment"
+msgstr "Ambiente de Recuperação de Snapshot"
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr "Não aplicável ao ext4. Use o Centro de Resgate do Live USB."
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr "Swap não criptografado pode armazenar dados pessoais da memória."
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr "A criptografia do disco pode ser selecionada durante uma nova instalação."
+
+msgid "Configured"
+msgstr "Configurado"
+
+msgid "Check recovery configuration"
+msgstr "Verifique a configuração de recuperação"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using the current disk password."
+msgstr "A operação de credenciais não foi concluída. Mantenha suas credenciais antiga e nova, então tente novamente usando a senha atual do disco."
+
+msgid "Current disk password"
+msgstr "Senha atual do disco"
+
+msgid "Current recovery key"
+msgstr "Chave de recuperação atual"
+
+msgid "Unlock credentials"
+msgstr "Credenciais de desbloqueio"
+
+msgid "Change disk password"
+msgstr "Alterar senha do disco"
+
+msgid "Replace recovery key"
+msgstr "Substituir chave de recuperação"
+
+msgid "Checking credential configuration…"
+msgstr "Verificando configuração de credenciais…"
+
+msgid "New disk password"
+msgstr "Nova senha do disco"
+
+msgid "Confirm new disk password"
+msgstr "Confirmar nova senha do disco"
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr "Atualizando a credencial do disco. Mantenha o computador ligado."
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr "A senha atual do disco está incorreta. Nenhuma credencial foi alterada."
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr "A chave de recuperação atual está incorreta. Nenhuma credencial foi alterada."
+
+msgid "Enter the current recovery key once to identify this preview's credential roles."
+msgstr "Insira a chave de recuperação atual uma vez para identificar os papéis das credenciais desta pré-visualização."
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr "Escolha uma nova credencial que ainda não seja usada por este disco."
+
+msgid "Check the password length, characters and confirmation."
+msgstr "Verifique o comprimento, os caracteres e a confirmação da senha."
+
+msgid "The internal startup credential could not be verified. Use Rescue Center from the Live USB."
+msgstr "A credencial interna de inicialização não pôde ser verificada. Use o Centro de Resgate do Live USB."
+
+msgid "This credential layout cannot be managed automatically. No existing credential was removed."
+msgstr "Este layout de credenciais não pode ser gerenciado automaticamente. Nenhuma credencial existente foi removida."
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr "A configuração do disco foi alterada. Pare outras ferramentas de disco e tente novamente."
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr "Outra operação de credencial do disco está em execução. Aguarde e tente novamente."
+
+msgid "Administrator authentication was cancelled."
+msgstr "A autenticação do administrador foi cancelada."
+
+msgid "There is no free credential slot. Existing credentials remain available."
+msgstr "Não há slot de credencial livre. As credenciais existentes permanecem disponíveis."
+
+msgid "The new credential could not be verified. Keep your existing credentials and try again."
+msgstr "A nova credencial não pôde ser verificada. Mantenha suas credenciais existentes e tente novamente."
+
+msgid "Open"
+msgstr "Abrir"
+
+msgid "New recovery key"
+msgstr "Nova chave de recuperação"
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr "Salvei a nova chave de recuperação fora deste computador."
+
+msgid "This earlier preview needs the current recovery key once to identify its credential roles."
+msgstr "Esta pré-visualização anterior precisa da chave de recuperação atual uma vez para identificar seus papéis de credenciais."
+
+msgid "The internal startup credential stays unchanged. The old credential stops working after success."
+msgstr "A credencial interna de inicialização permanece inalterada. A credencial antiga para de funcionar após o sucesso."
+
+msgid "Disk password changed."
+msgstr "Senha do disco alterada."
+
+msgid "Recovery key replaced."
+msgstr "Chave de recuperação substituída."
+
+msgid "Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."
+msgstr "Use de 8 a 128 caracteres ASCII imprimíveis. A tela de inicialização usa um layout de teclado dos EUA."
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using your disk password or emergency recovery key."
+msgstr "A operação de credenciais não foi concluída. Mantenha suas credenciais antiga e nova e tente novamente usando sua senha do disco ou a chave de recuperação de emergência."
+
+msgid "The emergency recovery key is generated by the system. Like your disk password, it unlocks the disk. Use your password normally; use the key in an emergency. Keep it outside this computer."
+msgstr "A chave de recuperação de emergência é gerada pelo sistema. Assim como a senha do disco, ela desbloqueia o disco. Use sua senha normalmente; use a chave em caso de emergência. Guarde-a fora deste computador."
+
+msgid "Current emergency recovery key"
+msgstr "Chave de recuperação de emergência atual"
+
+msgid "Replace emergency recovery key"
+msgstr "Substituir chave de recuperação de emergência"
+
+msgid "Reset forgotten disk password"
+msgstr "Redefinir senha do disco esquecida"
+
+msgid "Emergency recovery key"
+msgstr "Chave de recuperação de emergência"
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr "A chave de recuperação de emergência está incorreta. Nenhuma credencial foi alterada."
+
+msgid "Enter the current emergency recovery key once to identify this preview's credential roles."
+msgstr "Digite a chave de recuperação de emergência atual uma vez para identificar os papéis das credenciais desta pré-visualização."
+
+msgid "New emergency recovery key"
+msgstr "Nova chave de recuperação de emergência"
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr "Salvei a nova chave de recuperação de emergência fora deste computador."
+
+msgid "This earlier preview needs the current emergency recovery key once to identify its credential roles."
+msgstr "Esta pré-visualização anterior precisa da chave de recuperação de emergência atual uma vez para identificar seus papéis de credenciais."
+
+msgid "Emergency recovery key replaced."
+msgstr "Chave de recuperação de emergência substituída."
+
+msgid "Enter your emergency recovery key to set a new disk password. You do not need the forgotten password. Your emergency recovery key stays valid."
+msgstr "Digite sua chave de recuperação de emergência para definir uma nova senha do disco. Você não precisa da senha esquecida. Sua chave de recuperação de emergência permanece válida."
+
+msgid "Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr "Ainda não é possível ativar a criptografia de disco em uma instalação existente. Reinstale usando a ISO mais recente do AnduinOS para ativar a criptografia de disco."
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr "Recurso Pro"
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
+msgstr "Compre o AnduinOS Pro"

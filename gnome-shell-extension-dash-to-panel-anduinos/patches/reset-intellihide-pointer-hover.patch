@@ -1,0 +1,14 @@
+Backport: https://github.com/home-sweet-gnome/dash-to-panel/commit/2160163a152b28badb5ed838d4ef8712c5298a7e
+Reset stale hover while hidden so a rejected reveal can be retried.
+
+--- a/intellihide.js
++++ b/intellihide.js
+@@ -389,7 +389,7 @@
+       this._hoveredOut = !hover
+       this._hover = hover
+       this._queueUpdatePanelPosition()
+-    }
++    } else this._hover = false
+   }
+ 
+   _pointerIn(x, y, fixedOffset, limitSizeSetting) {

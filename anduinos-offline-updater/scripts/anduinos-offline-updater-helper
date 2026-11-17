@@ -1,0 +1,5 @@
+#!/usr/bin/python3 -I
+from anduinos_offline_updater.privileged import main
+
+if __name__ == "__main__":
+    raise SystemExit(main())

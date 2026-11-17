@@ -433,3 +433,42 @@ fn native_corpus_accuracy_against_cli() {
     assert_eq!(checked, 16);
     println!("All {checked} clean/noisy corpus cases pass CLI accuracy nonregression");
 }
+
+#[test]
+#[ignore = "requires optional Parakeet worker and verified weights"]
+fn optional_parakeet_pipe_cancel_reuse_and_idle_eviction() {
+    use anduinos_whisper_framework::session_engine::SessionEngine;
+    use anduinos_whisper_framework::transport::WorkerError;
+    use std::sync::atomic::Ordering;
+    use std::time::{Duration, Instant};
+    let model: std::path::PathBuf = std::env::var("ANDUINOS_PARAKEET_MODEL").unwrap().into();
+    let worker: std::path::PathBuf = std::env::var("ANDUINOS_PARAKEET_WORKER").unwrap().into();
+    let fixture = std::fs::read("data/benchmark/en-short.wav").unwrap();
+    // Use the same decoder as production calibration, rather than assuming a WAV header length.
+    let (pcm, _) =
+        anduinos_whisper_framework::calibration::load(Path::new("data/benchmark"), "en").unwrap();
+    assert!(!fixture.is_empty());
+    let config = EngineConfig::new(model, "en".into(), 4, "cpu".into());
+    let factory = move |config| ResidentEngine::with_executable(config, &worker);
+    let mut session = SessionEngine::with_factory(factory, Duration::from_millis(10));
+    let cancel = AtomicBool::new(false);
+    let text = session.transcribe(&config, &pcm, &cancel).unwrap();
+    assert!(text.to_lowercase().contains("festivals"), "{text}");
+    assert!(!session.prepare(&config, &pcm, &cancel).unwrap());
+    session.release_if_idle(Instant::now() + Duration::from_secs(1));
+    assert!(session.prepare(&config, &pcm, &cancel).unwrap());
+    std::thread::scope(|scope| {
+        scope.spawn(|| {
+            std::thread::sleep(Duration::from_millis(2));
+            cancel.store(true, Ordering::Release);
+        });
+        assert_eq!(
+            session.transcribe(&config, &pcm.repeat(3), &cancel),
+            Err(WorkerError::Cancelled)
+        );
+    });
+    cancel.store(false, Ordering::Release);
+    assert_eq!(session.transcribe(&config, &pcm, &cancel).unwrap(), text);
+    session.invalidate();
+    assert!(session.prepare(&config, &pcm, &cancel).unwrap());
+}

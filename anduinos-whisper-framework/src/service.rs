@@ -119,6 +119,9 @@ impl Service {
         self.drop_capture(false);
         self.runtime.shared.new_session(false, false);
         let config = SessionConfig::read(&self.settings);
+        if config.model == "parakeet" && !crate::config::parakeet_language(&config.language) {
+            return Err("Parakeet supports 25 European languages. Choose a supported language or a Whisper model.".into());
+        }
         if !self.runtime.shared.model_installed(&config.model) {
             return Err("The selected speech model is not installed".into());
         }
@@ -398,10 +401,6 @@ pub fn run_with(paths: BackendPaths, capture_factory: CaptureFactory) -> Result<
         .unwrap_or_default();
     let (runtime, events) = Runtime::with_paths(paths);
     runtime.shared.set_live_mode(config::live_mode(&settings));
-    let shared = runtime.shared.clone();
-    let settings_handler = settings.connect_changed(None, move |settings, _| {
-        shared.set_live_mode(config::live_mode(settings))
-    });
     let main_loop = glib::MainLoop::new(None, false);
     let service = Rc::new(RefCell::new(Service {
         settings: settings.clone(),
@@ -418,6 +417,18 @@ pub fn run_with(paths: BackendPaths, capture_factory: CaptureFactory) -> Result<
         countdown: None,
         restore: None,
     }));
+    let weak_settings = Rc::downgrade(&service);
+    let shared_settings = service.borrow().runtime.shared.clone();
+    let settings_handler = settings.connect_changed(None, move |settings, key| {
+        shared_settings.set_live_mode(config::live_mode(settings));
+        if key == "model" {
+            if let Some(service) = weak_settings.upgrade() {
+                let mut service = service.borrow_mut();
+                service.stop(false);
+                service.runtime.shared.release_model();
+            }
+        }
+    });
     let node = gio::DBusNodeInfo::for_xml(INTROSPECTION).map_err(|e| e.to_string())?;
     let weak = Rc::downgrade(&service);
     let registration = connection

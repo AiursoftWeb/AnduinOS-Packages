@@ -7,6 +7,9 @@
 
 set -e
 
+STATE_DIR="/var/lib/anduinos-gdm3-wallpaper"
+DEFAULT_WALLPAPER="/usr/share/anduinos-gdm3-wallpaper/Floating-objects-dark.png"
+
 # ── Output helpers ───────────────────────────────────────────────────────────
 
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
@@ -30,6 +33,9 @@ OPTIONS
   -b, --blur             Apply blur effect to the wallpaper
   -d, --darken           Apply darken overlay to the wallpaper
   -h, --help             Show this help message
+
+When writing the installed AnduinOS theme, the processed wallpaper is saved
+in $STATE_DIR so package upgrades preserve it even if the original is deleted.
 EOF
   exit 0
 }
@@ -163,8 +169,10 @@ do_generate() {
   prompt "Extracting base theme files from: $source_file"
 
   # Work in a temp directory
-  tmpdir="$(mktemp -d)"
-  trap "rm -rf $tmpdir" EXIT
+  # Keep compilation on the destination filesystem for atomic replacement.
+  mkdir -p "$(dirname "$output")"
+  tmpdir="$(mktemp -d "$(dirname "$output")/.anduinos-gdm-XXXXXX")"
+  trap "rm -rf -- $(printf '%q' "$tmpdir")" EXIT
 
   # ── Step 1: Extract ALL resources from the source gresource ──
   prompt "Extracting resources..."
@@ -228,11 +236,33 @@ do_generate() {
   background-color: transparent !important;
 }
 
-/* ── Ubuntu Customizations Override ───────────────────────── */
-/* Ubuntu adds a custom .a11y-button to the login dialog which isn't in upstream Fluent.
-   Force full-circle shape and give it breathing room from screen edges. */
+/* GNOME 51 overlays the submit button on the entry. Reserve its space in
+   either text direction and keep its icon the same size as the password eye. */
+.login-dialog .login-dialog-prompt-entry-area .login-dialog-prompt-entry :ltr {
+  padding-right: 2.5em;
+}
+.login-dialog .login-dialog-prompt-entry-area .login-dialog-prompt-entry :rtl {
+  padding-left: 2.5em;
+}
+.login-dialog .login-dialog-default-button-well :ltr {
+  margin-right: 0.5em;
+}
+.login-dialog .login-dialog-default-button-well :rtl {
+  margin-left: 0.5em;
+}
+.login-dialog .login-dialog-button.next-button {
+  padding: 0;
+  background-color: transparent !important;
+}
+.login-dialog .login-dialog-button.next-button StIcon {
+  icon-size: 16px;
+}
+
+/* Match the authentication options and accessibility buttons. */
 .login-dialog .login-dialog-button.a11y-button,
-.unlock-dialog .login-dialog-button.a11y-button {
+.unlock-dialog .login-dialog-button.a11y-button,
+.login-dialog .login-dialog-button.login-dialog-auth-menu-button,
+.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button {
   padding: 10px !important;
   margin: 8px !important;
   border-radius: 999px !important;
@@ -246,19 +276,27 @@ do_generate() {
 .login-dialog .login-dialog-button.a11y-button:hover,
 .login-dialog .login-dialog-button.a11y-button:focus,
 .unlock-dialog .login-dialog-button.a11y-button:hover,
-.unlock-dialog .login-dialog-button.a11y-button:focus {
+.unlock-dialog .login-dialog-button.a11y-button:focus,
+.login-dialog .login-dialog-button.login-dialog-auth-menu-button:hover,
+.login-dialog .login-dialog-button.login-dialog-auth-menu-button:focus,
+.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:hover,
+.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:focus {
   color: rgba(255, 255, 255, 1.0) !important;
   background-color: rgba(255, 255, 255, 0.25) !important;
   box-shadow: none !important;
 }
 .login-dialog .login-dialog-button.a11y-button:active,
-.unlock-dialog .login-dialog-button.a11y-button:active {
+.unlock-dialog .login-dialog-button.a11y-button:active,
+.login-dialog .login-dialog-button.login-dialog-auth-menu-button:active,
+.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:active {
   color: rgba(255, 255, 255, 1.0) !important;
   background-color: rgba(255, 255, 255, 0.3) !important;
   box-shadow: none !important;
 }
 .login-dialog .login-dialog-button.a11y-button StIcon,
-.unlock-dialog .login-dialog-button.a11y-button StIcon {
+.unlock-dialog .login-dialog-button.a11y-button StIcon,
+.login-dialog .login-dialog-button.login-dialog-auth-menu-button StIcon,
+.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button StIcon {
   icon-size: 16px !important;
 }
 /* Push the button bar itself away from the screen edges */
@@ -276,11 +314,25 @@ do_generate() {
 
   # ── Step 4: Compile ──
   prompt "Compiling new gresource to $output..."
-  mkdir -p "$(dirname "$output")"
   glib-compile-resources \
     --sourcedir="$tmpdir" \
-    --target="$output" \
+    --target="$tmpdir/compiled.gresource" \
     "$tmpdir/theme.gresource.xml"
+
+  chmod 644 "$tmpdir/compiled.gresource"
+  if [[ "$(readlink -m -- "$output")" == "$STATE_DIR/anduinos-theme.gresource" ]]; then
+    # Save the finished image: upgrades neither need the original nor apply
+    # blur/darken twice. Default installs continue to follow the packaged image.
+    if [[ "$wallpaper" == "$DEFAULT_WALLPAPER" && "$BLUR" == false && "$DARKEN" == false ]]; then
+      rm -f -- "$STATE_DIR/wallpaper.png"
+    else
+      install -m 644 "$tmpdir/background.png" "$tmpdir/saved-wallpaper"
+      mv -f -- "$tmpdir/saved-wallpaper" "$STATE_DIR/wallpaper.png"
+    fi
+  fi
+  mv -f -- "$tmpdir/compiled.gresource" "$output"
+  rm -rf -- "$tmpdir"
+  trap - EXIT
 
   prompt "Successfully generated theme at $output"
 }

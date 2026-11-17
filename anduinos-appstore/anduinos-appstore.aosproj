@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-appstore</PackageName>
-    <PackageVersion>2.0.2-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS app store metapackage — GNOME Software with Flatpak support. Install this if you want a graphical app store and Flatpak sandboxed applications.</PackageDescription>
     <Section>metapackages</Section>
@@ -9,17 +9,17 @@
     <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
     <LicenseType>GPL-3.0</LicenseType>
     <TargetDistro>anduinos</TargetDistro>
-    <TargetSuites>noble-addon resolute-addon</TargetSuites>
+    <TargetSuites>noble-addon resolute-addon stonking-addon</TargetSuites>
     <TargetArchitectures>all</TargetArchitectures>
     <Component>main</Component>
-    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute</SuiteShortNameMap>
+    <SuiteShortNameMap>noble-addon=noble resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
   </PropertyGroup>
 
   <ItemGroup>
     <Recommend Include="flatpak" />
     <Recommend Include="gnome-software" />
     <Recommend Include="gnome-software-plugin-flatpak" />
-    <Recommend Include="gnome-software-plugin-fwupd" Condition="'$(Suite)' == 'resolute-addon'" />
+    <Recommend Include="gnome-software-plugin-fwupd" Condition="'$(Suite)' == 'resolute-addon' or '$(Suite)' == 'stonking-addon'" />
     <!-- Don NOT preinstall flatseal because a lot of users don't need it and make them confused. Users can install it manually if they want to. -->
     <!-- <Recommend Include="flatseal" Condition="'$(Suite)' == 'resolute-addon'" /> -->
   </ItemGroup>

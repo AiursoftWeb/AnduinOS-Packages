@@ -1261,8 +1261,8 @@ msgid "Generating & Signing..."
 msgstr "Genereren & Ondertekenen..."
 
 #: src/anduinos_driver_center/app.py:1940
-msgid "Add Printer"
-msgstr "Printer toevoegen"
+msgid "Manage Printers in System Settings"
+msgstr "Printers beheren in Systeeminstellingen"
 
 #: src/anduinos_driver_center/app.py:1365
 #: src/anduinos_driver_center/app.py:1390
@@ -2375,3 +2375,282 @@ msgstr "Automatische ondertekening gebruikt nu uw ingeschreven certificaat. De e
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Herstel van stuurprogramma-ondertekening is voltooid. Het systeem controleert nu of de geïnstalleerde stuurprogramma's vertrouwd zijn."
+
+msgid "Recovery Environment"
+msgstr "Herstelomgeving"
+
+msgid "Present"
+msgstr "Aanwezig"
+
+msgid "Multiple recovery partitions found"
+msgstr "Meerdere herstelpartities gevonden"
+
+msgid "Recovery partition not found"
+msgstr "Herstelpartitie niet gevonden"
+
+msgid "Recovery partition"
+msgstr "Herstelpartitie"
+
+msgid "Recovery package"
+msgstr "Herstelpakket"
+
+msgid "GRUB menu entry"
+msgstr "GRUB-menuoptie"
+
+msgid "Recovery menu entry not found"
+msgstr "Hersteloptie niet gevonden in het menu"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Kan het GRUB-menu niet lezen"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "De pakketstatus gebruikt de lokale APT-cache. Softwarebronnen worden niet vernieuwd."
+
+msgid "Read recovery boot information"
+msgstr "Opstartinformatie voor herstel lezen"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "Een eerdere voorbereiding is onderbroken. Laat een beheerder vóór een nieuwe poging de opgeslagen partitietabel en swapheader controleren."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Automatische voorbereiding is niet beschikbaar voor deze schijf- of swapconfiguratie. Laat een beheerder een ext4-partitie AOS_RECOVERY van 256 MiB maken en scan opnieuw."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Laat een beheerder de ingestelde of dubbele herstelvolumes controleren en scan opnieuw."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Sluit geheugenzware toepassingen en scan opnieuw. Er is onvoldoende RAM beschikbaar om deze swap veilig uit te schakelen."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "De geïnstalleerde herstelimage plaatsen en het GRUB-menu opnieuw genereren?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Alleen het herstelpakket installeren of bijwerken met de huidige pakketlijsten?"
+
+msgid "Install or update recovery package"
+msgstr "Herstelpakket installeren of bijwerken"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Er kon geen kandidaatversie worden gecontroleerd in de lokale APT-cache. Vernieuw de bronnen in uw updatebeheerder en scan opnieuw."
+
+msgid "Recovery repair completed."
+msgstr "Reparatie van de herstelomgeving voltooid."
+
+msgid "Repair recovery boot menu"
+msgstr "Herstelopstartmenu repareren"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Scan opnieuw en sta de inspectie met alleen-lezen toegang toe. Repareer bij aanhoudende fouten de installatie van het stuurprogrammacentrum en de schijfhulpmiddelen."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Swappartitie verkleinen en herstelpartitie maken"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Swap wordt tijdelijk uitgeschakeld. Maak een back-up van uw gegevens en houd de computer ingeschakeld tot de bewerking is voltooid."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Kan niet doorgaan: er is geen gewone swappartitie gevonden op de systeemschijf."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Kan niet doorgaan: de swappartitie is kleiner dan 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Herstel vereist een geïnstalleerd AnduinOS Btrfs @root-systeem. Start het geïnstalleerde systeem en scan opnieuw."
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr "Grafisch apparaat"
+
+msgid "Encrypted"
+msgstr "Versleuteld"
+
+msgid "Not encrypted"
+msgstr "Niet versleuteld"
+
+msgid "Disk Encryption"
+msgstr "Schijfversleuteling"
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr "Controleer versleuteling voor systeembestanden, persoonlijke bestanden en swap."
+
+msgid "Unencrypted disk swap is active"
+msgstr "Onversleutelde schijfswap is actief"
+
+msgid "No disk swap is active"
+msgstr "Geen schijfswap is actief"
+
+msgid "Disk swap"
+msgstr "Schijfswap"
+
+msgid "Encryption coverage"
+msgstr "Versleutelingsdekking"
+
+msgid "System files"
+msgstr "Systeembestanden"
+
+msgid "Personal files (Home)"
+msgstr "Persoonlijke bestanden (Home)"
+
+msgid "Memory-based swap; not a disk partition"
+msgstr "Geheugengebaseerde swap; geen schijfpartitie"
+
+msgid "System recovery"
+msgstr "Systeemherstel"
+
+msgid "Snapshot Recovery Environment"
+msgstr "Snapshot-herstelomgeving"
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr "Niet van toepassing op ext4. Gebruik Rescue Center vanaf de Live USB."
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr "Onversleutelde swap kan persoonlijke gegevens uit het geheugen opslaan."
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr "Schijfversleuteling kan worden geselecteerd tijdens een nieuwe installatie."
+
+msgid "Configured"
+msgstr "Geconfigureerd"
+
+msgid "Check recovery configuration"
+msgstr "Controleer herstelconfiguratie"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using the current disk password."
+msgstr "De verificatie is niet voltooid. Houd uw oude en nieuwe inloggegevens bij de hand en probeer het opnieuw met het huidige schijfwachtwoord."
+
+msgid "Current disk password"
+msgstr "Huidig schijfwachtwoord"
+
+msgid "Current recovery key"
+msgstr "Huidige herstelcode"
+
+msgid "Unlock credentials"
+msgstr "Inloggegevens ontgrendelen"
+
+msgid "Change disk password"
+msgstr "Schijfwachtwoord wijzigen"
+
+msgid "Replace recovery key"
+msgstr "Herstelcode vervangen"
+
+msgid "Checking credential configuration…"
+msgstr "Inlogconfiguratie wordt gecontroleerd…"
+
+msgid "New disk password"
+msgstr "Nieuw schijfwachtwoord"
+
+msgid "Confirm new disk password"
+msgstr "Nieuw schijfwachtwoord bevestigen"
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr "Schijfinloggegevens worden bijgewerkt. Houd de computer ingeschakeld."
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr "Het huidige schijfwachtwoord is onjuist. Er is geen inloggegevens gewijzigd."
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr "De huidige herstelcode is onjuist. Er is geen inloggegevens gewijzigd."
+
+msgid "Enter the current recovery key once to identify this preview's credential roles."
+msgstr "Voer de huidige herstelcode één keer in om de inlogrollen van deze voorbeeldweergave te identificeren."
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr "Kies een nieuwe inloggegevens die niet al door deze schijf wordt gebruikt."
+
+msgid "Check the password length, characters and confirmation."
+msgstr "Controleer de wachtlengte, tekens en bevestiging."
+
+msgid "The internal startup credential could not be verified. Use Rescue Center from the Live USB."
+msgstr "De interne opstartinloggegevens konden niet worden geverifieerd. Gebruik het Reddingscentrum vanaf de Live USB."
+
+msgid "This credential layout cannot be managed automatically. No existing credential was removed."
+msgstr "Deze inlogindeling kan niet automatisch worden beheerd. Er is geen bestaande inloggegevens verwijderd."
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr "De schijfconfiguratie is gewijzigd. Stop andere schijfinstrumenten en probeer het opnieuw."
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr "Een andere schijfinlogbewerking wordt uitgevoerd. Wacht en probeer het opnieuw."
+
+msgid "Administrator authentication was cancelled."
+msgstr "Beheerdersauthenticatie is geannuleerd."
+
+msgid "There is no free credential slot. Existing credentials remain available."
+msgstr "Er is geen vrij inlogslot. Bestaande inloggegevens blijven beschikbaar."
+
+msgid "The new credential could not be verified. Keep your existing credentials and try again."
+msgstr "De nieuwe inloggegevens konden niet worden geverifieerd. Houd uw bestaande inloggegevens bij de hand en probeer het opnieuw."
+
+msgid "Open"
+msgstr "Openen"
+
+msgid "New recovery key"
+msgstr "Nieuwe herstelcode"
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr "Ik heb de nieuwe herstelcode buiten deze computer opgeslagen."
+
+msgid "This earlier preview needs the current recovery key once to identify its credential roles."
+msgstr "Deze eerdere voorbeeldweergave heeft de huidige herstelcode één keer nodig om de inlogrollen te identificeren."
+
+msgid "The internal startup credential stays unchanged. The old credential stops working after success."
+msgstr "De interne opstartinloggegevens blijven ongewijzigd. De oude inloggegevens stopt met werken na succes."
+
+msgid "Disk password changed."
+msgstr "Schijfwachtwoord gewijzigd."
+
+msgid "Recovery key replaced."
+msgstr "Herstelcode vervangen."
+
+msgid "Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."
+msgstr "Gebruik 8 tot 128 afgedrukbare ASCII-tekens. Het opstartscherm gebruikt een VS-toetsenbordindeling."
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using your disk password or emergency recovery key."
+msgstr "De operatie met de inloggegevens is niet voltooid. Bewaar je oude en nieuwe inloggegevens en probeer het opnieuw met je schijfwachtwoord of noodsleutel."
+
+msgid "The emergency recovery key is generated by the system. Like your disk password, it unlocks the disk. Use your password normally; use the key in an emergency. Keep it outside this computer."
+msgstr "De noodsleutel wordt door het systeem gegenereerd. Net als je schijfwachtwoord ontgrendelt deze de schijf. Gebruik je wachtwoord normaal en de sleutel in noodgevallen. Bewaar de sleutel buiten deze computer."
+
+msgid "Current emergency recovery key"
+msgstr "Huidige noodsleutel"
+
+msgid "Replace emergency recovery key"
+msgstr "Noodsleutel vervangen"
+
+msgid "Reset forgotten disk password"
+msgstr "Vergeten schijfwachtwoord resetten"
+
+msgid "Emergency recovery key"
+msgstr "Noodsleutel"
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr "De noodsleutel is onjuist. Er is geen inloggegevens gewijzigd."
+
+msgid "Enter the current emergency recovery key once to identify this preview's credential roles."
+msgstr "Voer de huidige noodsleutel één keer in om de rollen van de inloggegevens in deze voorbeeldweergave te identificeren."
+
+msgid "New emergency recovery key"
+msgstr "Nieuwe noodsleutel"
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr "Ik heb de nieuwe noodsleutel buiten deze computer opgeslagen."
+
+msgid "This earlier preview needs the current emergency recovery key once to identify its credential roles."
+msgstr "Voor deze eerdere voorbeeldweergave is de huidige noodsleutel één keer nodig om de rollen van de inloggegevens te identificeren."
+
+msgid "Emergency recovery key replaced."
+msgstr "Noodsleutel vervangen."
+
+msgid "Enter your emergency recovery key to set a new disk password. You do not need the forgotten password. Your emergency recovery key stays valid."
+msgstr "Voer je noodsleutel in om een nieuw schijfwachtwoord in te stellen. Je hebt het vergeten wachtwoord niet nodig. Je noodsleutel blijft geldig."
+
+msgid "Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr "Schijfversleuteling inschakelen op een bestaande installatie wordt nog niet ondersteund. Installeer opnieuw met de nieuwste AnduinOS-ISO om schijfversleuteling in te schakelen."
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr "Pro-functie"
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
+msgstr "Koop AnduinOS Pro"

@@ -1254,8 +1254,8 @@ msgid "Generating & Signing..."
 msgstr "Oluşturuluyor ve İmzalanıyor..."
 
 #: src/anduinos_driver_center/app.py:1940
-msgid "Add Printer"
-msgstr "Yazıcı Ekle"
+msgid "Manage Printers in System Settings"
+msgstr "Yazıcıları Sistem Ayarları'nda Yönet"
 
 #: src/anduinos_driver_center/app.py:1365
 #: src/anduinos_driver_center/app.py:1390
@@ -2363,3 +2363,282 @@ msgstr "Otomatik imzalama artık kayıtlı sertifikanızı kullanıyor. Önceki 
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Sürücü imzası onarımı tamamlandı. Sistem şimdi yüklü sürücülerin güvenilir olup olmadığını kontrol edecek."
+
+msgid "Recovery Environment"
+msgstr "Kurtarma Ortamı"
+
+msgid "Present"
+msgstr "Mevcut"
+
+msgid "Multiple recovery partitions found"
+msgstr "Birden fazla kurtarma bölümü bulundu"
+
+msgid "Recovery partition not found"
+msgstr "Kurtarma bölümü bulunamadı"
+
+msgid "Recovery partition"
+msgstr "Kurtarma bölümü"
+
+msgid "Recovery package"
+msgstr "Kurtarma paketi"
+
+msgid "GRUB menu entry"
+msgstr "GRUB menü girdisi"
+
+msgid "Recovery menu entry not found"
+msgstr "Kurtarma menü girdisi bulunamadı"
+
+msgid "Unable to read the GRUB menu"
+msgstr "GRUB menüsü okunamıyor"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "Paket durumu yerel APT önbelleğini kullanır. Yazılım kaynakları yenilenmez."
+
+msgid "Read recovery boot information"
+msgstr "Kurtarma önyükleme bilgilerini oku"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "Önceki hazırlık kesintiye uğradı. Yeniden denemeden önce bir yöneticiden kaydedilmiş bölüm tablosunu ve swap başlığını incelemesini isteyin."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Bu disk veya swap yapılandırmasında otomatik hazırlık kullanılamıyor. Bir yöneticiden 256 MiB AOS_RECOVERY ext4 bölümü oluşturmasını isteyin, ardından yeniden tarayın."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Bir yöneticiden yapılandırılmış veya yinelenen kurtarma birimlerini denetlemesini isteyin, ardından yeniden tarayın."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Çok bellek kullanan uygulamaları kapatıp yeniden tarayın. Bu swap alanını güvenle devre dışı bırakmak için yeterli RAM yok."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Yüklü kurtarma görüntüsü dağıtılıp GRUB menüsü yeniden oluşturulsun mu?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Geçerli paket listeleri kullanılarak yalnızca kurtarma paketi yüklensin veya güncellensin mi?"
+
+msgid "Install or update recovery package"
+msgstr "Kurtarma paketini yükle veya güncelle"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Yerel APT önbelleğinden aday sürüm doğrulanamadı. Yazılım güncelleyicinizde kaynakları yenileyip tekrar tarayın."
+
+msgid "Recovery repair completed."
+msgstr "Kurtarma ortamı onarımı tamamlandı."
+
+msgid "Repair recovery boot menu"
+msgstr "Kurtarma önyükleme menüsünü onar"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Yeniden tarayın ve salt okunur incelemeye izin verin. Kontroller yine başarısızsa Sürücü Merkezi kurulumunu ve disk araçlarını onarın."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Swap bölümünü küçült ve kurtarma bölümü oluştur"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Swap geçici olarak devre dışı bırakılacak. Verilerinizi yedekleyin ve işlem bitene kadar bilgisayarı açık tutun."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Devam edilemiyor: sistem diskinde normal bir swap bölümü bulunamadı."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Devam edilemiyor: swap bölümü 512 MiB boyutundan küçük."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Onarım için kurulu bir AnduinOS Btrfs @root sistemi gerekir. Kurulu sistemi başlatıp yeniden tarayın."
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr "Grafik aygıtı"
+
+msgid "Encrypted"
+msgstr "Şifreli"
+
+msgid "Not encrypted"
+msgstr "Şifresiz"
+
+msgid "Disk Encryption"
+msgstr "Disk Şifrelemesi"
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr "Sistem dosyaları, kişisel dosyalar ve takas için şifrelemeyi kontrol edin."
+
+msgid "Unencrypted disk swap is active"
+msgstr "Şifresiz disk takası etkin"
+
+msgid "No disk swap is active"
+msgstr "Disk takası etkin değil"
+
+msgid "Disk swap"
+msgstr "Disk takası"
+
+msgid "Encryption coverage"
+msgstr "Şifreleme kapsamı"
+
+msgid "System files"
+msgstr "Sistem dosyaları"
+
+msgid "Personal files (Home)"
+msgstr "Kişisel dosyalar (Home)"
+
+msgid "Memory-based swap; not a disk partition"
+msgstr "Bellek tabanlı takas; disk bölümü değil"
+
+msgid "System recovery"
+msgstr "Sistem Kurtarma"
+
+msgid "Snapshot Recovery Environment"
+msgstr "Görüntü Kurtarma Ortamı"
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr "ext4 için geçerli değil. Canlı USB'den Kurtarma Merkezi'ni kullanın."
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr "Şifresiz takas, bellekdeki kişisel verileri saklayabilir."
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr "Disk şifrelemesi, yeni kurulum sırasında seçilebilir."
+
+msgid "Configured"
+msgstr "Yapılandırıldı"
+
+msgid "Check recovery configuration"
+msgstr "Kurtarma yapılandırmasını kontrol edin"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using the current disk password."
+msgstr "Kimlik işlemi tamamlanmadı. Eski ve yeni kimlik bilgilerinizi saklayın, ardından mevcut disk şifresiyle tekrar deneyin."
+
+msgid "Current disk password"
+msgstr "Mevcut disk şifresi"
+
+msgid "Current recovery key"
+msgstr "Mevcut kurtarma anahtarı"
+
+msgid "Unlock credentials"
+msgstr "Kilit kimlik bilgileri"
+
+msgid "Change disk password"
+msgstr "Disk şifresini değiştir"
+
+msgid "Replace recovery key"
+msgstr "Kurtarma anahtarını değiştir"
+
+msgid "Checking credential configuration…"
+msgstr "Kimlik yapılandırması denetleniyor…"
+
+msgid "New disk password"
+msgstr "Yeni disk şifresi"
+
+msgid "Confirm new disk password"
+msgstr "Yeni disk şifresini onayla"
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr "Disk kimliği güncelleniyor. Bilgisayarı açık tutun."
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr "Mevcut disk şifresi hatalı. Hiçbir kimlik değiştirilmedi."
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr "Mevcut kurtarma anahtarı hatalı. Hiçbir kimlik değiştirilmedi."
+
+msgid "Enter the current recovery key once to identify this preview's credential roles."
+msgstr "Bu önizlemenin kimlik rollerini belirlemek için mevcut kurtarma anahtarını bir kez girin."
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr "Bu disk tarafından henüz kullanılmayan yeni bir kimlik seçin."
+
+msgid "Check the password length, characters and confirmation."
+msgstr "Şifre uzunluğunu, karakterleri ve onayı kontrol edin."
+
+msgid "The internal startup credential could not be verified. Use Rescue Center from the Live USB."
+msgstr "Dahili başlatma kimliği doğrulanamadı. Live USB'den Kurtarma Merkezi'ni kullanın."
+
+msgid "This credential layout cannot be managed automatically. No existing credential was removed."
+msgstr "Bu kimlik düzeni otomatik olarak yönetilemez. Mevcut kimlik kaldırılmadı."
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr "Disk yapılandırması değişti. Diğer disk araçlarını durdurun ve tekrar deneyin."
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr "Başka bir disk kimlik işlemi çalışıyor. Bekleyin ve tekrar deneyin."
+
+msgid "Administrator authentication was cancelled."
+msgstr "Yönetici kimlik doğrulaması iptal edildi."
+
+msgid "There is no free credential slot. Existing credentials remain available."
+msgstr "Boş kimlik yuvası yok. Mevcut kimlikler kullanılabilir durumda."
+
+msgid "The new credential could not be verified. Keep your existing credentials and try again."
+msgstr "Yeni kimlik doğrulanamadı. Mevcut kimlik bilgilerinizi saklayın ve tekrar deneyin."
+
+msgid "Open"
+msgstr "Aç"
+
+msgid "New recovery key"
+msgstr "Yeni kurtarma anahtarı"
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr "Yeni kurtarma anahtarını bu bilgisayarın dışında kaydettim."
+
+msgid "This earlier preview needs the current recovery key once to identify its credential roles."
+msgstr "Bu önceki önizleme, kimlik rollerini belirlemek için mevcut kurtarma anahtarını bir kez gerektiriyor."
+
+msgid "The internal startup credential stays unchanged. The old credential stops working after success."
+msgstr "Dahili başlatma kimliği değişmez. Başarıdan sonra eski kimlik çalışmayı durdurur."
+
+msgid "Disk password changed."
+msgstr "Disk şifresi değiştirildi."
+
+msgid "Recovery key replaced."
+msgstr "Kurtarma anahtarı değiştirildi."
+
+msgid "Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."
+msgstr "8 ila 128 yazdırılabilir ASCII karakteri kullanın. Başlatma ekranı ABD klavye düzeni kullanır."
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using your disk password or emergency recovery key."
+msgstr "Kimlik bilgisi işlemi tamamlanmadı. Eski ve yeni kimlik bilgilerinizi saklayın, ardından disk şifreniz veya acil durum kurtarma anahtarınızla tekrar deneyin."
+
+msgid "The emergency recovery key is generated by the system. Like your disk password, it unlocks the disk. Use your password normally; use the key in an emergency. Keep it outside this computer."
+msgstr "Acil durum kurtarma anahtarı sistem tarafından oluşturulur. Disk şifreniz gibi diski açar. Normalde şifrenizi, acil durumlarda anahtarı kullanın. Bunu bu bilgisayarın dışında saklayın."
+
+msgid "Current emergency recovery key"
+msgstr "Mevcut acil durum kurtarma anahtarı"
+
+msgid "Replace emergency recovery key"
+msgstr "Acil durum kurtarma anahtarını değiştir"
+
+msgid "Reset forgotten disk password"
+msgstr "Unutulmuş disk şifresini sıfırla"
+
+msgid "Emergency recovery key"
+msgstr "Acil durum kurtarma anahtarı"
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr "Acil durum kurtarma anahtarı hatalı. Hiçbir kimlik bilgisi değiştirilmedi."
+
+msgid "Enter the current emergency recovery key once to identify this preview's credential roles."
+msgstr "Bu önizlemenin kimlik bilgi rollerini belirlemek için mevcut acil durum kurtarma anahtarını bir kez girin."
+
+msgid "New emergency recovery key"
+msgstr "Yeni acil durum kurtarma anahtarı"
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr "Yeni acil durum kurtarma anahtarını bu bilgisayarın dışında kaydettim."
+
+msgid "This earlier preview needs the current emergency recovery key once to identify its credential roles."
+msgstr "Bu önceki önizleme, kimlik bilgi rollerini belirlemek için mevcut acil durum kurtarma anahtarını bir kez gerektiriyor."
+
+msgid "Emergency recovery key replaced."
+msgstr "Acil durum kurtarma anahtarı değiştirildi."
+
+msgid "Enter your emergency recovery key to set a new disk password. You do not need the forgotten password. Your emergency recovery key stays valid."
+msgstr "Yeni bir disk şifresi ayarlamak için acil durum kurtarma anahtarınızı girin. Unutulmuş şifreye ihtiyacınız yok. Acil durum kurtarma anahtarınız geçerli kalır."
+
+msgid "Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr "Mevcut bir kurulumda disk şifrelemesini etkinleştirmek henüz desteklenmiyor. Disk şifrelemesini etkinleştirmek için en son AnduinOS ISO dosyasını kullanarak yeniden kurulum yapın."
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr "Pro özelliği"
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
+msgstr "AnduinOS Pro satın alın"

@@ -26,7 +26,7 @@ from installer_core.storage_planning import (
     build_guided_coexistence_execution_plan,
     build_manual_storage_execution_plan,
 )
-from installer_core.model import Architecture, Filesystem
+from installer_core.model import Architecture, Filesystem, SecureBoot
 from installer_core.steps import InstallContext
 from installer_core.validation import ExecutionPolicy
 from test_guided_storage_graph import guided_plan
@@ -93,6 +93,66 @@ def erase_context_values(target: Path) -> dict[str, object]:
 
 
 class InstallBootloaderTests(unittest.TestCase):
+    def test_package_upgrade_is_signed_before_final_bootloader_installation(self):
+        for arch in Architecture:
+            for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):
+                for secure_boot in (SecureBoot.ENABLED, SecureBoot.DISABLED):
+                    with self.subTest(arch=arch, filesystem=filesystem, secure_boot=secure_boot), \
+                            tempfile.TemporaryDirectory() as directory:
+                        target = Path(directory)
+                        prepare_target(target)
+                        plan = valid_plan(architecture=arch, filesystem=filesystem,
+                                          secure_boot=secure_boot)
+                        suffix, platform = (("x64", "x86_64") if arch is Architecture.AMD64
+                                            else ("aa64", "arm64"))
+                        source = target / f"usr/lib/anduinos-grub/grub{suffix}.efi"
+                        source.parent.mkdir(parents=True)
+                        source.write_bytes(b"new package payload after online upgrade")
+                        signed = target / f"usr/lib/grub/{platform}-efi-signed/grub{suffix}.efi.signed"
+                        signed.parent.mkdir(parents=True)
+                        signed.write_bytes(b"old payload signed during identity preparation")
+                        runner = self.compatible_runner(target, suffix=suffix)
+                        run = runner.run
+
+                        def install_with_cached_signature(command, **kwargs):
+                            result = run(command, **kwargs)
+                            if command[-2:] == ("/usr/libexec/anduinos-grub-update", "first-install"):
+                                signed.write_bytes(source.read_bytes())
+                            if command[:3] == ("chroot", str(target), "grub-install") and "--help" not in command:
+                                if signed.read_bytes() != source.read_bytes():
+                                    raise RuntimeError("grub-install received the stale signed payload")
+                            return result
+
+                        runner.run = install_with_cached_signature
+                        context = InstallContext(plan, lambda _: None, erase_context_values(target))
+                        InstallBootloaderStep(runner).execute(context)
+                        self.assertEqual(signed.read_bytes(), source.read_bytes())
+                        commands = [command for command, _ in runner.commands]
+                        refresh = ("chroot", str(target), "/usr/libexec/anduinos-grub-update", "first-install")
+                        self.assertEqual(commands.count(refresh), 1)
+                        boot = build_boot_commands(plan, str(target))
+                        self.assertLess(commands.index(refresh), commands.index(boot.initrd))
+
+    def test_refusing_new_grub_payload_stops_before_boot_artifact_writes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory)
+            prepare_target(target)
+            source = target / "usr/lib/anduinos-grub/grubx64.efi"
+            source.parent.mkdir(parents=True)
+            source.touch()
+            runner = self.compatible_runner(target)
+            refresh = ("chroot", str(target), "/usr/libexec/anduinos-grub-update", "first-install")
+            runner.outputs[refresh] = ("", "package input verification failed", 1)
+            plan = valid_plan()
+            context = InstallContext(plan, lambda _: None, erase_context_values(target))
+            with self.assertRaisesRegex(RuntimeError, "GRUB signing failed"):
+                InstallBootloaderStep(runner).execute(context)
+            commands = [command for command, _ in runner.commands]
+            boot = build_boot_commands(plan, str(target))
+            self.assertNotIn(boot.initrd, commands)
+            self.assertNotIn(boot.nvram_create, commands)
+            self.assertFalse(any(command in commands for command in boot.installs))
+
     def test_replacement_failure_stops_before_grub_or_nvram_writes_in_both_modes(self):
         for manual in (False, True):
             with self.subTest(manual=manual), tempfile.TemporaryDirectory() as directory:
@@ -272,7 +332,7 @@ class InstallBootloaderTests(unittest.TestCase):
             shared.preflight(InstallContext(plan, lambda _message: None))
             self.assertEqual(shared.runner.required, [])
 
-    def compatible_runner(self, target: Path) -> FakeRunner:
+    def compatible_runner(self, target: Path, *, suffix: str = "x64") -> FakeRunner:
         runner = FakeRunner()
         runner.outputs[
             ("chroot", str(target), "grub-install", "--help")
@@ -284,10 +344,10 @@ class InstallBootloaderTests(unittest.TestCase):
             "BootOrder: 0007,0001\n"
             "Boot0007* AnduinOS "
             "HD(2,GPT,part-2,0x1800,0x200000)/"
-            "File(\\EFI\\AnduinOS\\shimx64.efi)\n"
+            f"File(\\EFI\\AnduinOS\\shim{suffix}.efi)\n"
             "Boot0001* UEFI OS "
             "HD(2,GPT,part-2,0x1800,0x200000)/"
-            "File(\\EFI\\BOOT\\BOOTX64.EFI)\n",
+            f"File(\\EFI\\BOOT\\BOOT{suffix.upper()}.EFI)\n",
             "",
             0,
         )

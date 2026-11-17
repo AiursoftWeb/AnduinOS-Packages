@@ -17,6 +17,8 @@ OTHER_CATALOGS = tuple(
 )
 
 NEW_TRANSLATIONS = {
+    "Recovery may restart this computer again. You may need to unlock encrypted disks again.": "恢复过程中电脑可能会再次重启。加密磁盘可能需要再次输入密码解锁。",
+    "Restore this older snapshot using Live Rescue Center from an installation USB, or use Recovery Environment.": "请从安装 U 盘启动 Live 救援中心，或使用恢复环境，还原这个较旧的快照。",
     "All data will be erased and cannot be recovered.": "所有数据都会抹除并且无法恢复。",
     "Delete all snapshot history": "清除所有历史快照",
     "Also restore user data. Delete non-factory snapshots after recovery succeeds; keep both New OS recovery points.": "同时恢复用户数据。恢复成功后删除所有非出厂快照；保留两个 New OS 出厂恢复点。",

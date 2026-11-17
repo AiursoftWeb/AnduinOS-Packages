@@ -1266,8 +1266,8 @@ msgid "Generating & Signing..."
 msgstr "Генерация и подпись..."
 
 #: src/anduinos_driver_center/app.py:1940
-msgid "Add Printer"
-msgstr "Добавить принтер"
+msgid "Manage Printers in System Settings"
+msgstr "Управление принтерами в системных настройках"
 
 #: src/anduinos_driver_center/app.py:1365
 #: src/anduinos_driver_center/app.py:1390
@@ -2381,3 +2381,282 @@ msgstr "Для автоматической подписи теперь испо
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Восстановление подписей драйверов завершено. Теперь система проверит, доверены ли установленные драйверы."
+
+msgid "Recovery Environment"
+msgstr "Среда восстановления"
+
+msgid "Present"
+msgstr "Присутствует"
+
+msgid "Multiple recovery partitions found"
+msgstr "Найдено несколько разделов восстановления"
+
+msgid "Recovery partition not found"
+msgstr "Раздел восстановления не найден"
+
+msgid "Recovery partition"
+msgstr "Раздел восстановления"
+
+msgid "Recovery package"
+msgstr "Пакет восстановления"
+
+msgid "GRUB menu entry"
+msgstr "Пункт меню GRUB"
+
+msgid "Recovery menu entry not found"
+msgstr "Пункт восстановления в меню не найден"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Не удалось прочитать меню GRUB"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "Состояние пакета определяется по локальному кэшу APT. Источники программ не обновляются."
+
+msgid "Read recovery boot information"
+msgstr "Прочитать сведения о загрузке восстановления"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "Предыдущая подготовка была прервана. Перед повторной попыткой попросите администратора проверить сохранённую таблицу разделов и заголовок swap."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Автоматическая подготовка недоступна для этой конфигурации диска или swap. Попросите администратора создать раздел ext4 AOS_RECOVERY размером 256 MiB и повторите проверку."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Попросите администратора проверить настроенные или дублирующиеся тома восстановления и повторите проверку."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Закройте приложения, потребляющие много памяти, и повторите проверку. Недостаточно свободной RAM для безопасного отключения этого swap."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Развернуть установленный образ восстановления и заново создать меню GRUB?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Установить или обновить только пакет восстановления, используя текущие списки пакетов?"
+
+msgid "Install or update recovery package"
+msgstr "Установить или обновить пакет восстановления"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Не удалось проверить версию-кандидат в локальном кэше APT. Обновите источники в программе обновления и повторите проверку."
+
+msgid "Recovery repair completed."
+msgstr "Восстановление среды восстановления завершено."
+
+msgid "Repair recovery boot menu"
+msgstr "Исправить загрузочное меню восстановления"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Повторите проверку и разрешите доступ только для чтения. Если ошибки сохраняются, восстановите установку центра драйверов и его дисковых утилит."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Уменьшить раздел swap и создать раздел восстановления"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Swap будет временно отключён. Создайте резервную копию данных и оставьте компьютер включённым до завершения операции."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Невозможно продолжить: обычный раздел swap на системном диске не найден."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Невозможно продолжить: раздел swap меньше 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Требуется установленная система AnduinOS Btrfs @root. Запустите установленную систему и повторите проверку."
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr "Графическое устройство"
+
+msgid "Encrypted"
+msgstr "Зашифровано"
+
+msgid "Not encrypted"
+msgstr "Не зашифровано"
+
+msgid "Disk Encryption"
+msgstr "Шифрование диска"
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr "Проверьте шифрование для системных файлов, личных файлов и swap."
+
+msgid "Unencrypted disk swap is active"
+msgstr "Активен незашифрованный swap на диске"
+
+msgid "No disk swap is active"
+msgstr "Swap на диске не активен"
+
+msgid "Disk swap"
+msgstr "Swap на диске"
+
+msgid "Encryption coverage"
+msgstr "Область шифрования"
+
+msgid "System files"
+msgstr "Системные файлы"
+
+msgid "Personal files (Home)"
+msgstr "Личные файлы (Home)"
+
+msgid "Memory-based swap; not a disk partition"
+msgstr "Swap в оперативной памяти; не раздел диска"
+
+msgid "System recovery"
+msgstr "Восстановление системы"
+
+msgid "Snapshot Recovery Environment"
+msgstr "Среда восстановления из снимков"
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr "Не применимо к ext4. Используйте Rescue Center с Live USB."
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr "Незашифрованный swap может хранить личные данные из памяти."
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr "Шифрование диска можно выбрать при новой установке."
+
+msgid "Configured"
+msgstr "Настроено"
+
+msgid "Check recovery configuration"
+msgstr "Проверьте конфигурацию восстановления"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using the current disk password."
+msgstr "Операция с учётными данными не завершена. Сохраните старые и новые данные, затем повторите попытку, используя текущий пароль диска."
+
+msgid "Current disk password"
+msgstr "Текущий пароль диска"
+
+msgid "Current recovery key"
+msgstr "Текущий ключ восстановления"
+
+msgid "Unlock credentials"
+msgstr "Учётные данные для разблокировки"
+
+msgid "Change disk password"
+msgstr "Изменить пароль диска"
+
+msgid "Replace recovery key"
+msgstr "Заменить ключ восстановления"
+
+msgid "Checking credential configuration…"
+msgstr "Проверка конфигурации учётных данных…"
+
+msgid "New disk password"
+msgstr "Новый пароль диска"
+
+msgid "Confirm new disk password"
+msgstr "Подтвердите новый пароль диска"
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr "Обновление учётных данных диска. Не выключайте компьютер."
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr "Текущий пароль диска неверен. Учётные данные не изменены."
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr "Текущий ключ восстановления неверен. Учётные данные не изменены."
+
+msgid "Enter the current recovery key once to identify this preview's credential roles."
+msgstr "Введите текущий ключ восстановления один раз, чтобы определить роли учётных данных этого предпросмотра."
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr "Выберите новые учётные данные, которые ещё не используются этим диском."
+
+msgid "Check the password length, characters and confirmation."
+msgstr "Проверьте длину пароля, символы и совпадение подтверждения."
+
+msgid "The internal startup credential could not be verified. Use Rescue Center from the Live USB."
+msgstr "Не удалось проверить внутренние учётные данные загрузки. Используйте Центр восстановления с Live USB."
+
+msgid "This credential layout cannot be managed automatically. No existing credential was removed."
+msgstr "Эту схему учётных данных нельзя управлять автоматически. Существующие учётные данные не удалены."
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr "Конфигурация диска изменилась. Остановите другие инструменты работы с диском и повторите попытку."
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr "Выполняется другая операция с учётными данными диска. Подождите и повторите попытку."
+
+msgid "Administrator authentication was cancelled."
+msgstr "Аутентификация администратора отменена."
+
+msgid "There is no free credential slot. Existing credentials remain available."
+msgstr "Нет свободных слотов для учётных данных. Существующие учётные данные остаются доступными."
+
+msgid "The new credential could not be verified. Keep your existing credentials and try again."
+msgstr "Не удалось проверить новые учётные данные. Сохраните существующие учётные данные и повторите попытку."
+
+msgid "Open"
+msgstr "Открыть"
+
+msgid "New recovery key"
+msgstr "Новый ключ восстановления"
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr "Я сохранил новый ключ восстановления вне этого компьютера."
+
+msgid "This earlier preview needs the current recovery key once to identify its credential roles."
+msgstr "Для этого предыдущего предпросмотра требуется текущий ключ восстановления один раз, чтобы определить роли его учётных данных."
+
+msgid "The internal startup credential stays unchanged. The old credential stops working after success."
+msgstr "Внутренние учётные данные загрузки остаются неизменными. Старые учётные данные перестанут работать после успешного завершения."
+
+msgid "Disk password changed."
+msgstr "Пароль диска изменён."
+
+msgid "Recovery key replaced."
+msgstr "Ключ восстановления заменён."
+
+msgid "Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."
+msgstr "Используйте от 8 до 128 печатных символов ASCII. Экран загрузки использует раскладку US."
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using your disk password or emergency recovery key."
+msgstr "Операция с учётными данными не завершена. Сохраните старые и новые учётные данные, затем повторите попытку, используя пароль диска или аварийный ключ восстановления."
+
+msgid "The emergency recovery key is generated by the system. Like your disk password, it unlocks the disk. Use your password normally; use the key in an emergency. Keep it outside this computer."
+msgstr "Аварийный ключ восстановления генерируется системой. Как и пароль диска, он открывает диск. Используйте пароль для повседневных задач, а ключ — в экстренных случаях. Храните ключ вне этого компьютера."
+
+msgid "Current emergency recovery key"
+msgstr "Текущий аварийный ключ восстановления"
+
+msgid "Replace emergency recovery key"
+msgstr "Заменить аварийный ключ восстановления"
+
+msgid "Reset forgotten disk password"
+msgstr "Сбросить забытый пароль диска"
+
+msgid "Emergency recovery key"
+msgstr "Аварийный ключ восстановления"
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr "Аварийный ключ восстановления неверен. Учётные данные не изменены."
+
+msgid "Enter the current emergency recovery key once to identify this preview's credential roles."
+msgstr "Введите текущий аварийный ключ восстановления один раз, чтобы определить роли учётных данных в этом превью."
+
+msgid "New emergency recovery key"
+msgstr "Новый аварийный ключ восстановления"
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr "Я сохранил новый аварийный ключ восстановления вне этого компьютера."
+
+msgid "This earlier preview needs the current emergency recovery key once to identify its credential roles."
+msgstr "Для этого более раннего превью требуется ввести текущий аварийный ключ восстановления один раз, чтобы определить роли учётных данных."
+
+msgid "Emergency recovery key replaced."
+msgstr "Аварийный ключ восстановления заменён."
+
+msgid "Enter your emergency recovery key to set a new disk password. You do not need the forgotten password. Your emergency recovery key stays valid."
+msgstr "Введите аварийный ключ восстановления, чтобы установить новый пароль диска. Забытый пароль не требуется. Ваш аварийный ключ восстановления остаётся действительным."
+
+msgid "Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr "Включение шифрования диска в существующей системе пока не поддерживается. Для включения шифрования переустановите систему с помощью последнего ISO-образа AnduinOS."
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr "Функция Pro"
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
+msgstr "Приобретите AnduinOS Pro"

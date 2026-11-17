@@ -1256,8 +1256,8 @@ msgid "Generating & Signing..."
 msgstr "उत्पन्न किया जा रहा है & साइन किया जा रहा है..."
 
 #: src/anduinos_driver_center/app.py:1940
-msgid "Add Printer"
-msgstr "प्रिंटर जोड़ें"
+msgid "Manage Printers in System Settings"
+msgstr "सिस्टम सेटिंग में प्रिंटर प्रबंधित करें"
 
 #: src/anduinos_driver_center/app.py:1365
 #: src/anduinos_driver_center/app.py:1390
@@ -2357,3 +2357,282 @@ msgstr "अब स्वतः हस्ताक्षर के लिए आ�
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "ड्राइवर हस्ताक्षर की मरम्मत पूरी हो गई है। अब सिस्टम जाँच करेगा कि इंस्टॉल किए गए ड्राइवर विश्वसनीय हैं या नहीं।"
+
+msgid "Recovery Environment"
+msgstr "पुनर्प्राप्ति परिवेश"
+
+msgid "Present"
+msgstr "मौजूद"
+
+msgid "Multiple recovery partitions found"
+msgstr "एकाधिक पुनर्प्राप्ति विभाजन मिले"
+
+msgid "Recovery partition not found"
+msgstr "पुनर्प्राप्ति विभाजन नहीं मिला"
+
+msgid "Recovery partition"
+msgstr "पुनर्प्राप्ति विभाजन"
+
+msgid "Recovery package"
+msgstr "पुनर्प्राप्ति पैकेज"
+
+msgid "GRUB menu entry"
+msgstr "GRUB मेनू प्रविष्टि"
+
+msgid "Recovery menu entry not found"
+msgstr "पुनर्प्राप्ति मेनू प्रविष्टि नहीं मिली"
+
+msgid "Unable to read the GRUB menu"
+msgstr "GRUB मेनू पढ़ने में असमर्थ"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "पैकेज की स्थिति स्थानीय APT कैश का उपयोग करती है। सॉफ़्टवेयर स्रोत रीफ़्रेश नहीं किए जाते।"
+
+msgid "Read recovery boot information"
+msgstr "पुनर्प्राप्ति बूट जानकारी पढ़ें"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "पिछली तैयारी बाधित हुई थी। फिर से प्रयास करने से पहले व्यवस्थापक से सहेजी गई विभाजन तालिका और swap हेडर की जाँच करवाएँ।"
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "इस डिस्क या swap कॉन्फ़िगरेशन के लिए स्वचालित तैयारी उपलब्ध नहीं है। व्यवस्थापक से 256 MiB का AOS_RECOVERY ext4 विभाजन बनवाएँ, फिर दोबारा स्कैन करें।"
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "व्यवस्थापक से कॉन्फ़िगर किए गए या डुप्लिकेट पुनर्प्राप्ति वॉल्यूम जाँचने को कहें, फिर दोबारा स्कैन करें।"
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "अधिक मेमोरी उपयोग करने वाले ऐप बंद करके दोबारा स्कैन करें। इस swap को सुरक्षित रूप से बंद करने के लिए पर्याप्त RAM उपलब्ध नहीं है।"
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "स्थापित पुनर्प्राप्ति इमेज तैनात करके GRUB मेनू दोबारा बनाएँ?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "वर्तमान पैकेज सूचियों से केवल पुनर्प्राप्ति पैकेज स्थापित या अपडेट करें?"
+
+msgid "Install or update recovery package"
+msgstr "पुनर्प्राप्ति पैकेज स्थापित या अपडेट करें"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "स्थानीय APT कैश से उम्मीदवार संस्करण सत्यापित नहीं हो सका। सॉफ़्टवेयर अपडेटर में स्रोत रीफ़्रेश करके दोबारा स्कैन करें।"
+
+msgid "Recovery repair completed."
+msgstr "पुनर्प्राप्ति परिवेश की मरम्मत पूरी हुई।"
+
+msgid "Repair recovery boot menu"
+msgstr "पुनर्प्राप्ति बूट मेनू ठीक करें"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "दोबारा स्कैन करें और केवल पढ़ने वाली जाँच की अनुमति दें। जाँच विफल होती रहे तो ड्राइवर केंद्र और उसके डिस्क टूल की स्थापना ठीक करें।"
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "swap विभाजन छोटा करें और पुनर्प्राप्ति विभाजन बनाएँ"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "swap अस्थायी रूप से बंद होगा। डेटा का बैकअप लें और काम पूरा होने तक कंप्यूटर चालू रखें।"
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "आगे नहीं बढ़ सकते: सिस्टम डिस्क पर सामान्य swap विभाजन नहीं मिला।"
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "आगे नहीं बढ़ सकते: swap विभाजन 512 MiB से छोटा है।"
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "मरम्मत के लिए स्थापित AnduinOS Btrfs @root सिस्टम आवश्यक है। स्थापित सिस्टम चालू करके दोबारा स्कैन करें।"
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr "ग्राफ़िक्स डिवाइस"
+
+msgid "Encrypted"
+msgstr "एन्क्रिप्टेड"
+
+msgid "Not encrypted"
+msgstr "अन-एन्क्रिप्टेड"
+
+msgid "Disk Encryption"
+msgstr "डिस्क एन्क्रिप्शन"
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr "सिस्टम फ़ाइलों, व्यक्तिगत फ़ाइलों और स्वैप के लिए एन्क्रिप्शन की जाँच करें।"
+
+msgid "Unencrypted disk swap is active"
+msgstr "अन-एन्क्रिप्टेड डिस्क स्वैप सक्रिय है"
+
+msgid "No disk swap is active"
+msgstr "कोई डिस्क स्वैप सक्रिय नहीं है"
+
+msgid "Disk swap"
+msgstr "डिस्क स्वैप"
+
+msgid "Encryption coverage"
+msgstr "एन्क्रिप्शन कवरेज"
+
+msgid "System files"
+msgstr "सिस्टम फ़ाइलें"
+
+msgid "Personal files (Home)"
+msgstr "व्यक्तिगत फ़ाइलें (होम)"
+
+msgid "Memory-based swap; not a disk partition"
+msgstr "मेमोरी-आधारित स्वैप; डिस्क पार्टिशन नहीं"
+
+msgid "System recovery"
+msgstr "सिस्टम रिकवरी"
+
+msgid "Snapshot Recovery Environment"
+msgstr "स्नैपशॉट रिकवरी एनवायरनमेंट"
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr "ext4 के लिए लागू नहीं। लाइव USB से रेस्क्यू सेंटर का उपयोग करें।"
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr "अन-एन्क्रिप्टेड स्वैप में मेमोरी से व्यक्तिगत डेटा संग्रहित हो सकता है।"
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr "नई इंस्टॉलेशन के दौरान डिस्क एन्क्रिप्शन चुना जा सकता है।"
+
+msgid "Configured"
+msgstr "कॉन्फ़िगर किया गया"
+
+msgid "Check recovery configuration"
+msgstr "रिकवरी कॉन्फ़िगरेशन की जाँच करें"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using the current disk password."
+msgstr "प्रमापन कार्रवाई पूरी नहीं हुई। पुराने और नए प्रमापन को सुरक्षित रखें, फिर वर्तमान डिस्क पासवर्ड का उपयोग करके पुनः प्रयास करें।"
+
+msgid "Current disk password"
+msgstr "वर्तमान डिस्क पासवर्ड"
+
+msgid "Current recovery key"
+msgstr "वर्तमान रिकवरी की"
+
+msgid "Unlock credentials"
+msgstr "प्रमापन अनलॉक करें"
+
+msgid "Change disk password"
+msgstr "डिस्क पासवर्ड बदलें"
+
+msgid "Replace recovery key"
+msgstr "रिकवरी की बदलें"
+
+msgid "Checking credential configuration…"
+msgstr "प्रमापन विन्यास की जाँच की जा रही है…"
+
+msgid "New disk password"
+msgstr "नया डिस्क पासवर्ड"
+
+msgid "Confirm new disk password"
+msgstr "नया डिस्क पासवर्ड की पुष्टि करें"
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr "डिस्क प्रमापन अपडेट किया जा रहा है। कंप्यूटर चालू रहने दें।"
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr "वर्तमान डिस्क पासवर्ड गलत है। कोई प्रमापन नहीं बदला गया।"
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr "वर्तमान रिकवरी की गलत है। कोई प्रमापन नहीं बदला गया।"
+
+msgid "Enter the current recovery key once to identify this preview's credential roles."
+msgstr "इस प्रीव्यू के प्रमापन भूमिकाओं की पहचान करने के लिए वर्तमान रिकवरी की एक बार दर्ज करें।"
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr "एक ऐसा नया प्रमापन चुनें जो इस डिस्क द्वारा पहले से उपयोग न किया जा रहा हो।"
+
+msgid "Check the password length, characters and confirmation."
+msgstr "पासवर्ड की लंबाई, वर्ण और पुष्टि की जाँच करें।"
+
+msgid "The internal startup credential could not be verified. Use Rescue Center from the Live USB."
+msgstr "आंतरिक स्टार्टअप प्रमापन की सत्यापित नहीं की जा सकी। Live USB से Rescue Center का उपयोग करें।"
+
+msgid "This credential layout cannot be managed automatically. No existing credential was removed."
+msgstr "यह प्रमापन लेआउट स्वतः प्रबंधित नहीं किया जा सकता है। कोई मौजूदा प्रमापन हटाया नहीं गया।"
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr "डिस्क विन्यास बदल गया है। अन्य डिस्क टूल्स को बंद करें और पुनः प्रयास करें।"
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr "एक अन्य डिस्क प्रमापन कार्रवाई चल रही है। प्रतीक्षा करें और पुनः प्रयास करें।"
+
+msgid "Administrator authentication was cancelled."
+msgstr "एडमिनिस्ट्रेटर प्रमाणीकरण रद्द कर दिया गया।"
+
+msgid "There is no free credential slot. Existing credentials remain available."
+msgstr "कोई खाली प्रमापन स्लॉट नहीं है। मौजूदा प्रमापन उपलब्ध रहेंगे।"
+
+msgid "The new credential could not be verified. Keep your existing credentials and try again."
+msgstr "नए प्रमापन की सत्यापित नहीं की जा सकी। अपने मौजूदा प्रमापन को सुरक्षित रखें और पुनः प्रयास करें।"
+
+msgid "Open"
+msgstr "खोलें"
+
+msgid "New recovery key"
+msgstr "नई रिकवरी की"
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr "मैंने नई रिकवरी की को इस कंप्यूटर के बाहर सुरक्षित कर लिया है।"
+
+msgid "This earlier preview needs the current recovery key once to identify its credential roles."
+msgstr "इस पूर्ववर्ती प्रीव्यू को अपनी प्रमापन भूमिकाओं की पहचान करने के लिए वर्तमान रिकवरी की एक बार की आवश्यकता है।"
+
+msgid "The internal startup credential stays unchanged. The old credential stops working after success."
+msgstr "आंतरिक स्टार्टअप प्रमापन अपरिवर्तित रहता है। सफलता के बाद पुराना प्रमापन काम करना बंद कर देता है।"
+
+msgid "Disk password changed."
+msgstr "डिस्क पासवर्ड बदल दिया गया।"
+
+msgid "Recovery key replaced."
+msgstr "रिकवरी की बदल दी गई।"
+
+msgid "Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."
+msgstr "8 से 128 प्रिंटेबल ASCII वर्णों का उपयोग करें। बूट स्क्रीन US कीबोर्ड लेआउट का उपयोग करती है।"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using your disk password or emergency recovery key."
+msgstr "सूचना क्रिया पूर्ण नहीं हुई। अपनी पुरानी और नई सूचनाएँ सुरक्षित रखें, फिर डिस्क पासवर्ड या आपातकालीन रिकवरी कुंजी का उपयोग करके पुनः प्रयास करें।"
+
+msgid "The emergency recovery key is generated by the system. Like your disk password, it unlocks the disk. Use your password normally; use the key in an emergency. Keep it outside this computer."
+msgstr "आपातकालीन रिकवरी कुंजी सिस्टम द्वारा जनरेट की जाती है। आपके डिस्क पासवर्ड की तरह, यह डिस्क को अनलॉक करती है। सामान्य रूप से पासवर्ड का उपयोग करें; आपातकाल में कुंजी का उपयोग करें। इसे इस कंप्यूटर से बाहर सुरक्षित रखें।"
+
+msgid "Current emergency recovery key"
+msgstr "वर्तमान आपातकालीन रिकवरी कुंजी"
+
+msgid "Replace emergency recovery key"
+msgstr "आपातकालीन रिकवरी कुंजी बदलें"
+
+msgid "Reset forgotten disk password"
+msgstr "भूला हुआ डिस्क पासवर्ड रीसेट करें"
+
+msgid "Emergency recovery key"
+msgstr "आपातकालीन रिकवरी कुंजी"
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr "आपातकालीन रिकवरी कुंजी गलत है। कोई सूचना नहीं बदली गई।"
+
+msgid "Enter the current emergency recovery key once to identify this preview's credential roles."
+msgstr "इस प्रीव्यू की सूचना भूमिकाओं की पहचान करने के लिए वर्तमान आपातकालीन रिकवरी कुंजी एक बार दर्ज करें।"
+
+msgid "New emergency recovery key"
+msgstr "नई आपातकालीन रिकवरी कुंजी"
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr "मैंने नई आपातकालीन रिकवरी कुंजी इस कंप्यूटर से बाहर सुरक्षित कर ली है।"
+
+msgid "This earlier preview needs the current emergency recovery key once to identify its credential roles."
+msgstr "इस पूर्व प्रीव्यू को अपनी सूचना भूमिकाओं की पहचान करने के लिए वर्तमान आपातकालीन रिकवरी कुंजी एक बार की आवश्यकता है।"
+
+msgid "Emergency recovery key replaced."
+msgstr "आपातकालीन रिकवरी कुंजी बदल दी गई।"
+
+msgid "Enter your emergency recovery key to set a new disk password. You do not need the forgotten password. Your emergency recovery key stays valid."
+msgstr "नया डिस्क पासवर्ड सेट करने के लिए अपनी आपातकालीन रिकवरी कुंजी दर्ज करें। आपको भूला हुआ पासवर्ड की आवश्यकता नहीं है। आपकी आपातकालीन रिकवरी कुंजी वैध रहती है।"
+
+msgid "Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr "मौजूदा इंस्टॉलेशन पर डिस्क एन्क्रिप्शन चालू करना अभी समर्थित नहीं है। डिस्क एन्क्रिप्शन चालू करने के लिए नवीनतम AnduinOS ISO का उपयोग करके फिर से इंस्टॉल करें।"
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr "Pro सुविधा"
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
+msgstr "AnduinOS Pro खरीदें"

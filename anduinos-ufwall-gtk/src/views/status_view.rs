@@ -86,13 +86,24 @@ impl StatusView {
             .build()
     }
 
+    pub fn set_ufw_available(&self, available: bool) {
+        if let Some(row) = self.imp().active_switch.borrow().as_ref() {
+            row.set_sensitive(available);
+            if !available { row.set_subtitle(&i18n("UFW is not installed")); }
+        }
+        if !available {
+            if let Some(group) = self.imp().policy_group.borrow().as_ref() { group.set_sensitive(false); }
+            if let Some(row) = self.imp().logging_combo.borrow().as_ref() { row.set_sensitive(false); }
+        } else if let Some(row) = self.imp().logging_combo.borrow().as_ref() { row.set_sensitive(true); }
+    }
+
     fn setup_ui(&self) {
         let imp = self.imp();
 
         let status_group = adw::PreferencesGroup::builder().build();
 
         let active_switch = adw::SwitchRow::builder()
-            .title(i18n("Firewall"))
+            .title(i18n("UFW Firewall"))
             .subtitle(i18n("Inactive"))
             .build();
 

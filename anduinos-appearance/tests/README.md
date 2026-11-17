@@ -15,6 +15,12 @@ Extension operations are mocked in this test; `test_profiles.py` covers single-
 key state updates, preservation of unrelated extensions, legacy configuration
 repair, asynchronous/transitional states, settling, timeouts and ERROR handling.
 
+`test_extension_switches.py` also exercises the application icon choices with
+real GTK buttons and isolated GSettings: switching both ways, reopening,
+external theme changes, third-party themes, locked settings and failed writes.
+Opening the page must not create overrides or change cursors, GTK themes or
+extensions.
+
 For optional screenshots, create a temporary directory, set
 `APPEARANCE_TEST_SCREENSHOTS` to that directory and run the tests. This requires
 FFmpeg; it is not required by the normal test suite.

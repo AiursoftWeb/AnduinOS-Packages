@@ -1258,8 +1258,8 @@ msgid "Generating & Signing..."
 msgstr "Genererar & signerar..."
 
 #: src/anduinos_driver_center/app.py:1940
-msgid "Add Printer"
-msgstr "Lägg till skrivare"
+msgid "Manage Printers in System Settings"
+msgstr "Hantera skrivare i systeminställningarna"
 
 #: src/anduinos_driver_center/app.py:1365
 #: src/anduinos_driver_center/app.py:1390
@@ -2363,3 +2363,282 @@ msgstr "Automatisk signering använder nu ditt registrerade certifikat. Den tidi
 #: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
 msgid "Driver signature repair is complete. The system will now check whether the installed drivers are trusted."
 msgstr "Reparationen av drivrutinssignaturer är klar. Systemet kontrollerar nu om de installerade drivrutinerna är betrodda."
+
+msgid "Recovery Environment"
+msgstr "Återställningsmiljö"
+
+msgid "Present"
+msgstr "Finns"
+
+msgid "Multiple recovery partitions found"
+msgstr "Flera återställningspartitioner hittades"
+
+msgid "Recovery partition not found"
+msgstr "Återställningspartitionen hittades inte"
+
+msgid "Recovery partition"
+msgstr "Återställningspartition"
+
+msgid "Recovery package"
+msgstr "Återställningspaket"
+
+msgid "GRUB menu entry"
+msgstr "GRUB-menypost"
+
+msgid "Recovery menu entry not found"
+msgstr "Återställningsposten hittades inte i menyn"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Det går inte att läsa GRUB-menyn"
+
+msgid "Package status uses the local APT cache. Software sources are not refreshed."
+msgstr "Paketstatus använder den lokala APT-cachen. Programvarukällorna uppdateras inte."
+
+msgid "Read recovery boot information"
+msgstr "Läs startinformation för återställning"
+
+msgid "A previous preparation was interrupted. Ask an administrator to inspect the saved partition table and swap header before retrying."
+msgstr "En tidigare förberedelse avbröts. Be en administratör kontrollera den sparade partitionstabellen och swap-huvudet innan du försöker igen."
+
+msgid "Automatic preparation is unavailable for this disk or swap configuration. Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then scan again."
+msgstr "Automatisk förberedelse är inte tillgänglig för denna disk- eller swapkonfiguration. Be en administratör skapa en ext4-partition AOS_RECOVERY på 256 MiB och sök igen."
+
+msgid "Check the configured or duplicate recovery volumes with an administrator, then scan again."
+msgstr "Be en administratör kontrollera konfigurerade eller dubbla återställningsvolymer och sök igen."
+
+msgid "Close memory-heavy applications and scan again. There is not enough available RAM to disable this swap safely."
+msgstr "Stäng minneskrävande program och sök igen. Det finns inte tillräckligt med ledigt RAM för att inaktivera denna swap säkert."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr "Distribuera den installerade återställningsavbildningen och återskapa GRUB-menyn?"
+
+msgid "Install or update only the recovery package using the current software lists?"
+msgstr "Installera eller uppdatera endast återställningspaketet med de aktuella paketlistorna?"
+
+msgid "Install or update recovery package"
+msgstr "Installera eller uppdatera återställningspaketet"
+
+msgid "No package candidate could be verified from the local APT cache. Refresh sources in your software updater, then scan again."
+msgstr "Ingen kandidatversion kunde verifieras i den lokala APT-cachen. Uppdatera källorna i programuppdateraren och sök igen."
+
+msgid "Recovery repair completed."
+msgstr "Reparation av återställningsmiljön klar."
+
+msgid "Repair recovery boot menu"
+msgstr "Reparera återställningens startmeny"
+
+msgid "Scan again and allow the read-only inspection. If checks still fail, repair the Driver Center installation and its disk utilities."
+msgstr "Sök igen och tillåt skrivskyddad inspektion. Om kontrollerna fortfarande misslyckas ska installationen av drivrutinscentret och dess diskverktyg repareras."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Minska swap-partitionen och skapa återställningspartition"
+
+msgid "Swap will be temporarily disabled. Back up your data and keep the computer powered on until this operation finishes."
+msgstr "Swap inaktiveras tillfälligt. Säkerhetskopiera dina data och håll datorn påslagen tills åtgärden är klar."
+
+msgid "Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr "Kan inte fortsätta: Ingen vanlig swap-partition hittades på systemdisken."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Kan inte fortsätta: Swap-partitionen är mindre än 512 MiB."
+
+msgid "Recovery repair requires an installed AnduinOS Btrfs @root system. Start the installed system and scan again."
+msgstr "Reparation kräver ett installerat AnduinOS Btrfs @root-system. Starta det installerade systemet och sök igen."
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr "Grafikenhet"
+
+msgid "Encrypted"
+msgstr "Krypterad"
+
+msgid "Not encrypted"
+msgstr "Ej krypterad"
+
+msgid "Disk Encryption"
+msgstr "Diskkryptering"
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr "Kontrollera kryptering av systemfiler, personliga filer och utbytesminne."
+
+msgid "Unencrypted disk swap is active"
+msgstr "Oskyddat diskutbytesminne är aktivt"
+
+msgid "No disk swap is active"
+msgstr "Inget diskutbytesminne är aktivt"
+
+msgid "Disk swap"
+msgstr "Diskutbytesminne"
+
+msgid "Encryption coverage"
+msgstr "Krypteringsomfattning"
+
+msgid "System files"
+msgstr "Systemfiler"
+
+msgid "Personal files (Home)"
+msgstr "Personliga filer (Hem)"
+
+msgid "Memory-based swap; not a disk partition"
+msgstr "Utbytesminne i minnet; inte en diskpartition"
+
+msgid "System recovery"
+msgstr "Systemåterställning"
+
+msgid "Snapshot Recovery Environment"
+msgstr "Återställningsmiljö för ögonblicksbilder"
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr "Gäller inte för ext4. Använd Rescue Center från Live-USB."
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr "Oskyddat utbytesminne kan lagra personliga data från minnet."
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr "Diskkryptering kan väljas vid ny installation."
+
+msgid "Configured"
+msgstr "Konfigurerad"
+
+msgid "Check recovery configuration"
+msgstr "Kontrollera återställningskonfiguration"
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using the current disk password."
+msgstr "Autentiseringsprocessen slutfördes inte. Behåll dina gamla och nya uppgifter och försök igen med det aktuella disklösenordet."
+
+msgid "Current disk password"
+msgstr "Aktuellt disklösenord"
+
+msgid "Current recovery key"
+msgstr "Aktuell återställningsnyckel"
+
+msgid "Unlock credentials"
+msgstr "Upplåsning av uppgifter"
+
+msgid "Change disk password"
+msgstr "Byt disklösenord"
+
+msgid "Replace recovery key"
+msgstr "Byt ut återställningsnyckel"
+
+msgid "Checking credential configuration…"
+msgstr "Kontrollerar konfiguration av uppgifter…"
+
+msgid "New disk password"
+msgstr "NYTT disklösenord"
+
+msgid "Confirm new disk password"
+msgstr "Bekräfta nytt disklösenord"
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr "Uppdaterar diskuppgifter. Håll datorn påslagen."
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr "Det aktuella disklösenordet är felaktigt. Inga uppgifter ändrades."
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr "Den aktuella återställningsnyckeln är felaktig. Inga uppgifter ändrades."
+
+msgid "Enter the current recovery key once to identify this preview's credential roles."
+msgstr "Ange den aktuella återställningsnyckeln en gång för att identifiera denna förhandsvisnings uppgiftsroller."
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr "Välj en ny uppgift som inte redan används av den här disken."
+
+msgid "Check the password length, characters and confirmation."
+msgstr "Kontrollera lösenordets längd, tecken och bekräftelse."
+
+msgid "The internal startup credential could not be verified. Use Rescue Center from the Live USB."
+msgstr "Det interna startuppgiften kunde inte verifieras. Använd Räddningscentral från Live USB."
+
+msgid "This credential layout cannot be managed automatically. No existing credential was removed."
+msgstr "Denna uppgiftslayout kan inte hanteras automatiskt. Ingen befintlig uppgift togs bort."
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr "Diskkonfigurationen ändrades. Stoppa andra diskverktyg och försök igen."
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr "En annan diskuppgiftsprocess pågår. Vänta och försök igen."
+
+msgid "Administrator authentication was cancelled."
+msgstr "Administratörsgodkännande avbröts."
+
+msgid "There is no free credential slot. Existing credentials remain available."
+msgstr "Ingen ledig uppgiftsplats. Befintliga uppgifter förblir tillgängliga."
+
+msgid "The new credential could not be verified. Keep your existing credentials and try again."
+msgstr "Den nya uppgiften kunde inte verifieras. Behåll dina befintliga uppgifter och försök igen."
+
+msgid "Open"
+msgstr "Öppna"
+
+msgid "New recovery key"
+msgstr "NYTT återställningsnyckel"
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr "Jag har sparat den nya återställningsnyckeln utanför denna dator."
+
+msgid "This earlier preview needs the current recovery key once to identify its credential roles."
+msgstr "Denna tidigare förhandsvisning behöver den aktuella återställningsnyckeln en gång för att identifiera dess uppgiftsroller."
+
+msgid "The internal startup credential stays unchanged. The old credential stops working after success."
+msgstr "Det interna startuppgiften förblir oförändrat. Den gamla uppgiften slutar fungera efter lyckad process."
+
+msgid "Disk password changed."
+msgstr "Disklösenordet ändrat."
+
+msgid "Recovery key replaced."
+msgstr "Återställningsnyckeln bytt ut."
+
+msgid "Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."
+msgstr "Använd 8 till 128 skrivbara ASCII-tecken. Startskärmen använder en US-tangentbordlayout."
+
+msgid "The credential operation did not finish. Keep your old and new credentials, then try again using your disk password or emergency recovery key."
+msgstr "Autentiseringsoperationen slutfördes inte. Behåll dina gamla och nya inloggningsuppgifter och försök igen med ditt disklösenord eller nödlösenord."
+
+msgid "The emergency recovery key is generated by the system. Like your disk password, it unlocks the disk. Use your password normally; use the key in an emergency. Keep it outside this computer."
+msgstr "Nödlösenordet genereras av systemet. Som ditt disklösenord låser det upp disken. Använd ditt lösenord normalt och nödlösenordet i nödlägen. Förvara det utanför denna dator."
+
+msgid "Current emergency recovery key"
+msgstr "Aktuellt nödlösenord"
+
+msgid "Replace emergency recovery key"
+msgstr "Byt ut nödlösenord"
+
+msgid "Reset forgotten disk password"
+msgstr "Återställ glömt disklösenord"
+
+msgid "Emergency recovery key"
+msgstr "Nödlösenord"
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr "Nödlösenordet är felaktigt. Inga inloggningsuppgifter ändrades."
+
+msgid "Enter the current emergency recovery key once to identify this preview's credential roles."
+msgstr "Ange det aktuella nödlösenordet en gång för att identifiera denna förhandsvisnings inloggningsuppgifts roller."
+
+msgid "New emergency recovery key"
+msgstr "Nytt nödlösenord"
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr "Jag har sparat det nya nödlösenordet utanför denna dator."
+
+msgid "This earlier preview needs the current emergency recovery key once to identify its credential roles."
+msgstr "Denna tidigare förhandsvisning kräver det aktuella nödlösenordet en gång för att identifiera dess inloggningsuppgifts roller."
+
+msgid "Emergency recovery key replaced."
+msgstr "Nödlösenord bytt ut."
+
+msgid "Enter your emergency recovery key to set a new disk password. You do not need the forgotten password. Your emergency recovery key stays valid."
+msgstr "Ange ditt nödlösenord för att ställa in ett nytt disklösenord. Du behöver inte det glömda lösenordet. Ditt nödlösenord förblir giltigt."
+
+msgid "Enabling disk encryption on an existing installation is not supported yet. Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr "Aktivering av diskkryptering i en befintlig installation stöds ännu inte. Installera om med den senaste AnduinOS-ISO-avbildningen för att aktivera diskkryptering."
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr "Pro-funktion"
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
+msgstr "Köp AnduinOS Pro"
