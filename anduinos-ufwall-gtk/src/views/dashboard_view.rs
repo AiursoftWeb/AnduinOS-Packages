@@ -258,7 +258,7 @@ impl DashboardView {
                             row.set_subtitle(&report.explanation());
                             if report.needs_attention() {
                                 row.add_css_class("error");
-                            } else if !report.errors.is_empty() || report.managers.iter().any(|m| m.installed) {
+                            } else if !report.errors.is_empty() || report.has_other_manager_installed() {
                                 row.add_css_class("warning");
                             }
                         }
