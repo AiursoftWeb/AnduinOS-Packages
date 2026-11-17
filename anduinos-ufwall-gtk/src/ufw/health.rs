@@ -18,6 +18,10 @@ pub struct Health {
     pub ufw_available: bool,
     pub managers: Vec<Manager>,
     pub errors: Vec<String>,
+    #[serde(default)]
+    pub ufw_status: Option<String>,
+    #[serde(default)]
+    pub ufw_status_error: Option<String>,
 }
 
 impl Health {
@@ -42,6 +46,20 @@ impl Health {
             i18n("Other firewall management software is installed")
         } else {
             i18n("UFW management")
+        }
+    }
+
+    pub fn summary(&self) -> String {
+        if !self.ufw_available {
+            i18n("The UFW executable is unavailable. UFW controls cannot be used until it is restored.")
+        } else if self.needs_attention() {
+            i18n("Review the other firewall manager before changing UFW. Disabling UFW does not disable these other managers.")
+        } else if !self.errors.is_empty() {
+            i18n("Some checks could not be completed. Use Refresh to retry and authorize the inspection if prompted.")
+        } else if self.has_other_manager_installed() {
+            i18n("Installation alone does not mean another firewall is active.")
+        } else {
+            i18n("This application manages UFW only.")
         }
     }
 
@@ -101,6 +119,8 @@ pub fn inspect() -> Health {
         ufw_available: ufw_available(),
         managers: Vec::new(),
         errors: vec![i18n("Firewall inspection")],
+        ufw_status: None,
+        ufw_status_error: None,
     });
     if baseline.errors.is_empty() { return baseline; }
     read_report(true).unwrap_or(baseline)
@@ -141,7 +161,7 @@ mod tests {
 
     #[test]
     fn missing_ufw_needs_attention_even_when_checks_fail() {
-        let health = Health { ufw_available: false, managers: vec![], errors: vec!["rules".into()] };
+        let health = Health { ufw_available: false, managers: vec![], errors: vec!["rules".into()], ufw_status: None, ufw_status_error: None };
         assert!(health.needs_attention());
         assert!(!health.errors.is_empty());
     }

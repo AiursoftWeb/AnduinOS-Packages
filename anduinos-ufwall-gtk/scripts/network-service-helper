@@ -128,8 +128,23 @@ def rule_owners(document: dict) -> set[str]:
 def firewall_health() -> dict:
     report = {
         "ufw_available": os.path.isfile("/usr/sbin/ufw") and os.access("/usr/sbin/ufw", os.X_OK),
-        "managers": [], "errors": [],
+        "managers": [], "errors": [], "ufw_status": None, "ufw_status_error": None,
     }
+    # One fixed read-only inspection supplies both the dashboard and status.
+    # Never run UFW write operations through this action.
+    if report["ufw_available"]:
+        if os.geteuid() != 0:
+            report["errors"].append("ufw-status")
+        else:
+            try:
+                result = query(["/usr/sbin/ufw", "status", "numbered"])
+                if result.returncode:
+                    raise ValueError(result.stderr.strip() or "UFW status query failed")
+                report["ufw_status"] = result.stdout
+            except (OSError, subprocess.TimeoutExpired, ValueError) as error:
+                report["ufw_status_error"] = str(error)
+                report["errors"].append("ufw-status")
+
     installed = set()
     try:
         result = query([

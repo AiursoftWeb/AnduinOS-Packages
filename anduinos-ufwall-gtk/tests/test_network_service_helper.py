@@ -65,15 +65,45 @@ class FirewallHealthTests(unittest.TestCase):
                 raise subprocess.TimeoutExpired(command, 5)
             if command[0] == "dpkg-query":
                 return subprocess.CompletedProcess(command, 1, packages, "")
+            if command[0] == "/usr/sbin/ufw":
+                return subprocess.CompletedProcess(command, 0, "Status: active\n", "")
             if command[0] == "systemctl":
                 state = states.get(command[2], "LoadState=not-found\nActiveState=inactive\nUnitFileState=\n")
                 return subprocess.CompletedProcess(command, 0, state, "")
             return subprocess.CompletedProcess(command, 0, json.dumps(nft), "")
-        with patch.object(helper, "query", side_effect=query), \
+        with patch.object(helper.os, "geteuid", return_value=0), \
+             patch.object(helper, "query", side_effect=query), \
              patch.object(helper.shutil, "which", return_value="/usr/sbin/nft"), \
              patch.object(helper.os.path, "isfile", return_value="ufw\tinstalled\n" in packages), \
              patch.object(helper.os, "access", return_value=True):
             return helper.firewall_health()
+
+    def test_one_inspection_returns_ufw_status_and_firewall_health(self):
+        report = self.collect()
+        self.assertEqual("Status: active\n", report["ufw_status"])
+        self.assertIsNone(report["ufw_status_error"])
+        self.assertFalse(report["errors"])
+        self.assertEqual(3, len(report["managers"]))
+
+    def test_unprivileged_inspection_does_not_launch_ufw_or_sudo(self):
+        with patch.object(helper.os, "geteuid", return_value=1000), \
+             patch.object(helper.os.path, "isfile", return_value=True), \
+             patch.object(helper.os, "access", return_value=True), \
+             patch.object(helper.shutil, "which", return_value=None), \
+             patch.object(helper, "query", return_value=subprocess.CompletedProcess(
+                 [], 0, "LoadState=not-found\nActiveState=inactive\nUnitFileState=\n", "")) as query:
+            report = helper.firewall_health()
+        self.assertIn("ufw-status", report["errors"])
+        self.assertIsNone(report["ufw_status"])
+        self.assertIsNone(report["ufw_status_error"])
+        self.assertTrue(all(c.args[0][0] in ("dpkg-query", "systemctl") for c in query.call_args_list))
+
+    def test_ufw_status_timeout_preserves_other_inspection_results(self):
+        report = self.collect(failed="/usr/sbin/ufw")
+        self.assertIn("ufw-status", report["errors"])
+        self.assertIsNotNone(report["ufw_status_error"])
+        self.assertIsNone(report["ufw_status"])
+        self.assertEqual(3, len(report["managers"]))
 
     def test_ufw_and_bottom_level_tools_are_not_conflicts(self):
         report = self.collect(packages="ufw\tinstalled\nnftables\tinstalled\n")
