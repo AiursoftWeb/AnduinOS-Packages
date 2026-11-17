@@ -25,6 +25,12 @@ impl Health {
         !self.ufw_available || self.managers.iter().any(|m| m.active || m.enabled || m.rules)
     }
 
+    pub fn has_other_manager_installed(&self) -> bool {
+        // nft is also the inspection tool and UFW's underlying rules interface.
+        // Its package alone is not evidence of a second firewall manager.
+        self.managers.iter().any(|m| m.installed && m.name != "nftables")
+    }
+
     pub fn title(&self) -> String {
         if !self.ufw_available {
             i18n("Cannot manage the firewall: UFW is missing")
@@ -32,7 +38,7 @@ impl Health {
             i18n("Firewall configuration may conflict")
         } else if !self.errors.is_empty() {
             i18n("Cannot confirm the complete firewall state")
-        } else if self.managers.iter().any(|m| m.installed) {
+        } else if self.has_other_manager_installed() {
             i18n("Other firewall management software is installed")
         } else {
             i18n("UFW management")
@@ -56,7 +62,7 @@ impl Health {
         }
         if self.needs_attention() && self.ufw_available {
             lines.push(i18n("Review the other firewall manager before changing UFW. Disabling UFW does not disable these other managers."));
-        } else if self.managers.iter().any(|m| m.installed) {
+        } else if self.has_other_manager_installed() {
             lines.push(i18n("Installation alone does not mean another firewall is active."));
         }
         if !self.errors.is_empty() {
@@ -113,6 +119,24 @@ mod tests {
         health.managers[0].enabled = false;
         health.managers[0].rules = true;
         assert!(health.needs_attention());
+    }
+
+    #[test]
+    fn nftables_tool_alone_is_not_an_installed_manager_warning() {
+        let mut health: Health = serde_json::from_str(r#"{"ufw_available":true,"managers":[{"name":"nftables","installed":true,"active":false,"enabled":false,"rules":false}],"errors":[]}"#).unwrap();
+        assert!(!health.needs_attention());
+        assert!(!health.has_other_manager_installed());
+        health.managers[0].active = true;
+        assert!(health.needs_attention());
+        health.managers[0].active = false;
+        health.managers[0].enabled = true;
+        assert!(health.needs_attention());
+        health.managers[0].enabled = false;
+        health.managers[0].rules = true;
+        assert!(health.needs_attention());
+        health.managers[0].rules = false;
+        health.managers[0].name = "firewalld".into();
+        assert!(health.has_other_manager_installed());
     }
 
     #[test]

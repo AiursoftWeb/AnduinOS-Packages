@@ -126,6 +126,75 @@ class FirewallHealthTests(unittest.TestCase):
         rule = {"family": "inet", "table": "filter", "chain": "input", "expr": [{"drop": None}]}
         self.assertEqual({"nftables"}, helper.rule_owners({"nftables": [{"chain": chain}, {"rule": rule}]}))
 
+    def docker_endpoint_rules(self, family="ip"):
+        destination = {"match": {"op": "==", "left": {
+            "payload": {"protocol": family, "field": "daddr"}},
+            "right": "172.22.0.2" if family == "ip" else "fd00::2"}}
+        ingress = {"match": {"op": "!=", "left": {
+            "meta": {"key": "iifname"}}, "right": "br-5198a73df063"}}
+        egress = {"match": {"op": "==", "left": {
+            "meta": {"key": "oifname"}}, "right": "br-5198a73df063"}}
+        return {"nftables": [
+            {"chain": {"family": family, "table": "filter", "name": "DOCKER"}},
+            {"rule": {"family": family, "table": "filter", "chain": "DOCKER",
+                      "expr": [destination, ingress, egress,
+                               {"match": {"op": "==", "left": {"payload": {
+                                   "protocol": "tcp", "field": "dport"}}, "right": 5000}},
+                               {"counter": {"packets": 12, "bytes": 720}}, {"accept": None}]}},
+            {"chain": {"family": family, "table": "raw", "name": "PREROUTING",
+                       "type": "filter", "hook": "prerouting", "prio": -300, "policy": "accept"}},
+            {"rule": {"family": family, "table": "raw", "chain": "PREROUTING",
+                      "expr": [destination.copy(), ingress.copy(),
+                               {"counter": {"packets": 0, "bytes": 0}}, {"drop": None}]}},
+        ]}
+
+    def test_docker_raw_endpoint_protection_is_not_a_second_firewall(self):
+        for family in ("ip", "ip6"):
+            with self.subTest(family=family):
+                document = self.docker_endpoint_rules(family)
+                before = json.dumps(document)
+                self.assertEqual(set(), helper.rule_owners(document))
+                self.assertEqual(before, json.dumps(document))
+
+    def test_custom_raw_rule_beside_docker_guard_still_warns(self):
+        document = self.docker_endpoint_rules()
+        document["nftables"].append({"rule": {
+            "family": "ip", "table": "raw", "chain": "PREROUTING", "expr": [{"drop": None}]}})
+        self.assertEqual({"nftables"}, helper.rule_owners(document))
+
+    def test_docker_guard_requires_matching_endpoint_evidence(self):
+        for change in ("no-docker-rule", "different-address", "different-bridge", "different-family"):
+            with self.subTest(change=change):
+                document = self.docker_endpoint_rules()
+                rule = document["nftables"][1]["rule"]
+                if change == "no-docker-rule":
+                    document["nftables"].pop(1)
+                elif change == "different-address":
+                    rule["expr"][0] = {"match": {"op": "==", "left": {"payload": {
+                        "protocol": "ip", "field": "daddr"}}, "right": "172.22.0.3"}}
+                elif change == "different-bridge":
+                    rule["expr"][2]["match"]["right"] = "br-other"
+                else:
+                    rule["family"] = "ip6"
+                self.assertEqual({"nftables"}, helper.rule_owners(document))
+
+    def test_modified_raw_chain_or_guard_keeps_warning(self):
+        for change in ("drop-policy", "different-priority", "extra-condition", "different-verdict"):
+            with self.subTest(change=change):
+                document = self.docker_endpoint_rules()
+                chain = document["nftables"][2]["chain"]
+                expressions = document["nftables"][3]["rule"]["expr"]
+                if change == "drop-policy":
+                    chain["policy"] = "drop"
+                elif change == "different-priority":
+                    chain["prio"] = -200
+                elif change == "extra-condition":
+                    expressions.insert(0, {"match": {"op": "==", "left": {
+                        "meta": {"key": "l4proto"}}, "right": "tcp"}})
+                else:
+                    expressions[-1] = {"reject": None}
+                self.assertEqual({"nftables"}, helper.rule_owners(document))
+
     def test_unmanaged_ipv4_filter_table_is_detected(self):
         chain = {"family": "ip", "table": "filter", "name": "INPUT", "hook": "input", "policy": "drop"}
         self.assertEqual({"nftables"}, helper.rule_owners({"nftables": [{"chain": chain}]}))
