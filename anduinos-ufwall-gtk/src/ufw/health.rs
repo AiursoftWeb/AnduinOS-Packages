@@ -18,6 +18,10 @@ pub struct Health {
     pub ufw_available: bool,
     pub managers: Vec<Manager>,
     pub errors: Vec<String>,
+    #[serde(default)]
+    pub ufw_status: Option<String>,
+    #[serde(default)]
+    pub ufw_status_error: Option<String>,
 }
 
 impl Health {
@@ -101,6 +105,8 @@ pub fn inspect() -> Health {
         ufw_available: ufw_available(),
         managers: Vec::new(),
         errors: vec![i18n("Firewall inspection")],
+        ufw_status: None,
+        ufw_status_error: None,
     });
     if baseline.errors.is_empty() { return baseline; }
     read_report(true).unwrap_or(baseline)
@@ -141,7 +147,7 @@ mod tests {
 
     #[test]
     fn missing_ufw_needs_attention_even_when_checks_fail() {
-        let health = Health { ufw_available: false, managers: vec![], errors: vec!["rules".into()] };
+        let health = Health { ufw_available: false, managers: vec![], errors: vec!["rules".into()], ufw_status: None, ufw_status_error: None };
         assert!(health.needs_attention());
         assert!(!health.errors.is_empty());
     }

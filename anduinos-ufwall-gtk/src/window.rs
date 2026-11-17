@@ -240,9 +240,10 @@ impl UfwallWindow {
     fn refresh_views(&self) {
         let imp = self.imp();
 
-        // Refresh dashboard data
+        // Collect privileged read-only state once; share it between views.
+        let report = crate::ufw::health::inspect();
         if let Some(view) = imp.dashboard_view.borrow().as_ref() {
-            view.refresh_data();
+            view.refresh_with_health(&report);
         }
         // mDNS state is readable without UFW authentication and must remain
         // available even if the firewall status prompt is cancelled.
@@ -268,7 +269,7 @@ impl UfwallWindow {
         }
 
         // Read status using backend
-        match backend::read_status() {
+        match backend::read_status_from_report(&report) {
             Ok(status) => {
                 // Show/hide Rules & Profiles sidebar rows based on firewall state
                 let active = status.active;
@@ -295,11 +296,13 @@ impl UfwallWindow {
                 }
             }
             Err(e) => {
-                show_error(
-                    self,
-                    &i18n("Error"),
-                    &format!("{}: {}", i18n("Failed to read firewall status"), e),
-                );
+                if report.ufw_status_error.is_some() {
+                    show_error(
+                        self,
+                        &i18n("Error"),
+                        &format!("{}: {}", i18n("Failed to read firewall status"), e),
+                    );
+                }
             }
         }
         

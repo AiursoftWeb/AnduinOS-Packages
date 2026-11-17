@@ -25,39 +25,17 @@ const NETWORK_SERVICE_HELPER: &str =
 
 // ─── Reading state (no root needed) ──────────────────────────────────────────
 
-/// Read the complete firewall status via `pkexec ufw status verbose`.
-/// ufw itself checks for root even if the config files are world-readable.
+/// Read UFW status through the same fixed inspection used by the dashboard.
 pub fn read_status() -> Result<UfwStatus, UfwError> {
-    let output = Command::new("pkexec")
-        .env("LC_ALL", "C")
-        .env("LANGUAGE", "C")
-        .args(["/usr/sbin/ufw", "status", "numbered"])
-        .output()
-        .map_err(|e| UfwError {
-            message: format!("{}: {e}", i18n("Failed to run pkexec ufw status")),
-        })?;
+    read_status_from_report(&super::health::inspect())
+}
 
-    if !output.status.success() {
-        let stderr = String::from_utf8_lossy(&output.stderr);
-        if output.status.code() == Some(126) {
-            return Err(UfwError {
-                message: i18n("Authentication cancelled"),
-            });
-        }
-        return Err(UfwError {
-            message: format!("{}: {}", i18n("pkexec failed"), stderr.trim()),
-        });
-    }
-
-    let text = String::from_utf8_lossy(&output.stdout);
-    let status = parse_ufw_status_numbered(&text)?;
-    if status.rules.is_empty() && status.active {
-        eprintln!(
-            "Warning: firewall is active but parsed 0 rules. Raw output:\n{}",
-            text
-        );
-    }
-    Ok(status)
+pub fn read_status_from_report(report: &super::health::Health) -> Result<UfwStatus, UfwError> {
+    let text = report.ufw_status.as_deref().ok_or_else(|| UfwError {
+        message: report.ufw_status_error.clone()
+            .unwrap_or_else(|| i18n("Authentication cancelled")),
+    })?;
+    parse_ufw_status_numbered(text)
 }
 
 /// Read Avahi availability and activation state without elevated privileges.
@@ -661,6 +639,18 @@ fn run_pkexec_ufw(args: &[&str]) -> Result<String, UfwError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn shared_inspection_status_is_parsed_without_another_command() {
+        let report: super::super::health::Health = serde_json::from_str(
+            r#"{"ufw_available":true,"managers":[],"errors":[],"ufw_status":"Status: active\n","ufw_status_error":null}"#
+        ).unwrap();
+        assert!(read_status_from_report(&report).unwrap().active);
+        let cancelled: super::super::health::Health = serde_json::from_str(
+            r#"{"ufw_available":true,"managers":[],"errors":["rules","ufw-status"]}"#
+        ).unwrap();
+        assert!(read_status_from_report(&cancelled).is_err());
+    }
 
     #[test]
     fn test_mdns_state_distinguishes_enabled_masked_and_missing() {
