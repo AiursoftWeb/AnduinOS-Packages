@@ -11,7 +11,10 @@ mod imp {
 
     #[derive(Default)]
     pub struct DashboardView {
-        pub health_row: RefCell<Option<adw::ActionRow>>,
+        pub health_title: RefCell<Option<gtk::Label>>,
+        pub health_summary: RefCell<Option<gtk::Label>>,
+        pub health_details: RefCell<Option<gtk::Label>>,
+        pub health_accent: RefCell<Option<gtk::DrawingArea>>,
         pub health_in_flight: Cell<bool>,
         pub total_events_label: RefCell<Option<gtk::Label>>,
         pub blocked_events_label: RefCell<Option<gtk::Label>>,
@@ -65,23 +68,69 @@ impl DashboardView {
 
         // Always show the scope and health of the firewall controls first.
         let health_group = adw::PreferencesGroup::builder().build();
-        let health_row = adw::ActionRow::builder()
-            .title(i18n("Checking firewall configuration…"))
-            .subtitle(i18n("This application manages UFW only."))
-            .title_lines(0)
-            .subtitle_lines(0)
+        // Match Swap Control's recommendation card: a clipped 4px accent,
+        // a normal heading and caption text, with evidence available on demand.
+        let card = gtk::Box::builder()
+            .orientation(gtk::Orientation::Horizontal)
+            .css_classes(["card"])
+            .overflow(gtk::Overflow::Hidden)
+            .spacing(12)
+            .valign(gtk::Align::Start)
             .build();
-        health_row.set_use_markup(false);
-        health_row.add_css_class("firewall-health");
-        let css = gtk::CssProvider::new();
-        css.load_from_data(".firewall-health .title { font-size: 1.3em; font-weight: bold; }");
-        gtk::style_context_add_provider_for_display(
-            &self.display(), &css, gtk::STYLE_PROVIDER_PRIORITY_APPLICATION,
-        );
-        health_row.add_prefix(&gtk::Image::builder().icon_name("security-high-symbolic").pixel_size(40).build());
-        health_group.add(&health_row);
+        let accent = gtk::DrawingArea::builder()
+            .content_width(4)
+            .vexpand(true)
+            .halign(gtk::Align::Fill)
+            .valign(gtk::Align::Fill)
+            .build();
+        card.append(&accent);
+        let inner = gtk::Box::builder()
+            .orientation(gtk::Orientation::Vertical)
+            .spacing(2)
+            .hexpand(true)
+            .margin_start(10)
+            .margin_end(14)
+            .margin_top(8)
+            .margin_bottom(8)
+            .build();
+        let title = gtk::Label::builder()
+            .label(i18n("Checking firewall configuration…"))
+            .css_classes(["heading"])
+            .halign(gtk::Align::Start)
+            .xalign(0.0)
+            .wrap(true)
+            .build();
+        let summary = gtk::Label::builder()
+            .label(i18n("This application manages UFW only."))
+            .css_classes(["caption"])
+            .halign(gtk::Align::Start)
+            .xalign(0.0)
+            .wrap(true)
+            .build();
+        let details = gtk::Label::builder()
+            .css_classes(["caption"])
+            .halign(gtk::Align::Start)
+            .xalign(0.0)
+            .wrap(true)
+            .selectable(true)
+            .margin_top(6)
+            .build();
+        let expander = gtk::Expander::builder()
+            .label(i18n("Details"))
+            .child(&details)
+            .margin_top(4)
+            .build();
+        inner.append(&title);
+        inner.append(&summary);
+        inner.append(&expander);
+        card.append(&inner);
+        health_group.add(&card);
         self.add(&health_group);
-        *imp.health_row.borrow_mut() = Some(health_row);
+        *imp.health_title.borrow_mut() = Some(title);
+        *imp.health_summary.borrow_mut() = Some(summary);
+        *imp.health_details.borrow_mut() = Some(details);
+        *imp.health_accent.borrow_mut() = Some(accent);
+        self.set_health_color((0.5, 0.5, 0.5));
 
         // Summary Cards
         let cards_box = gtk::Box::builder()
@@ -251,25 +300,23 @@ impl DashboardView {
     fn refresh_health(&self) {
         let imp = self.imp();
         if imp.health_in_flight.replace(true) { return; }
-        if let Some(row) = imp.health_row.borrow().as_ref() {
-            row.set_title(&i18n("Checking firewall configuration…"));
+        if let Some(title) = imp.health_title.borrow().as_ref() {
+            title.set_label(&i18n("Checking firewall configuration…"));
         }
         let weak = self.downgrade();
         glib::spawn_future_local(async move {
             let report = tokio::task::spawn_blocking(health::inspect).await;
             if let Some(view) = weak.upgrade() {
-                if let Some(row) = view.imp().health_row.borrow().as_ref() {
-                    row.remove_css_class("error");
-                    row.remove_css_class("warning");
-                    match report {
-                        Ok(report) => {
-                            view.update_health(&report);
-                        }
-                        Err(_) => {
-                            row.set_title(&i18n("Cannot confirm the complete firewall state"));
-                            row.set_subtitle(&i18n("Firewall inspection failed. Use Refresh to retry."));
-                            row.add_css_class("warning");
-                        }
+                match report {
+                    Ok(report) => view.update_health(&report),
+                    Err(_) => {
+                        let message = i18n("Firewall inspection failed. Use Refresh to retry.");
+                        view.set_health_text(
+                            &i18n("Cannot confirm the complete firewall state"),
+                            &message,
+                            &message,
+                        );
+                        view.set_health_color((0.93, 0.73, 0.0));
                     }
                 }
                 view.imp().health_in_flight.set(false);
@@ -278,16 +325,31 @@ impl DashboardView {
     }
 
     fn update_health(&self, report: &health::Health) {
-        if let Some(row) = self.imp().health_row.borrow().as_ref() {
-            row.remove_css_class("error");
-            row.remove_css_class("warning");
-            row.set_title(&report.title());
-            row.set_subtitle(&report.explanation());
-            if report.needs_attention() {
-                row.add_css_class("error");
-            } else if !report.errors.is_empty() || report.has_other_manager_installed() {
-                row.add_css_class("warning");
-            }
+        self.set_health_text(&report.title(), &report.summary(), &report.explanation());
+        let color = if report.needs_attention() {
+            (0.93, 0.20, 0.20)
+        } else if !report.errors.is_empty() || report.has_other_manager_installed() {
+            (0.93, 0.73, 0.0)
+        } else {
+            (0.15, 0.72, 0.25)
+        };
+        self.set_health_color(color);
+    }
+
+    fn set_health_text(&self, title: &str, summary: &str, details: &str) {
+        let imp = self.imp();
+        if let Some(label) = imp.health_title.borrow().as_ref() { label.set_label(title); }
+        if let Some(label) = imp.health_summary.borrow().as_ref() { label.set_label(summary); }
+        if let Some(label) = imp.health_details.borrow().as_ref() { label.set_label(details); }
+    }
+
+    fn set_health_color(&self, (r, g, b): (f64, f64, f64)) {
+        if let Some(accent) = self.imp().health_accent.borrow().as_ref() {
+            accent.set_draw_func(move |_, ctx, w, h| {
+                ctx.set_source_rgb(r, g, b);
+                ctx.rectangle(0.0, 0.0, w as f64, h as f64);
+                ctx.fill().ok();
+            });
         }
     }
 

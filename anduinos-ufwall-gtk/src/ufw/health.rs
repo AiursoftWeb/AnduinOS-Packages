@@ -49,6 +49,20 @@ impl Health {
         }
     }
 
+    pub fn summary(&self) -> String {
+        if !self.ufw_available {
+            i18n("The UFW executable is unavailable. UFW controls cannot be used until it is restored.")
+        } else if self.needs_attention() {
+            i18n("Review the other firewall manager before changing UFW. Disabling UFW does not disable these other managers.")
+        } else if !self.errors.is_empty() {
+            i18n("Some checks could not be completed. Use Refresh to retry and authorize the inspection if prompted.")
+        } else if self.has_other_manager_installed() {
+            i18n("Installation alone does not mean another firewall is active.")
+        } else {
+            i18n("This application manages UFW only.")
+        }
+    }
+
     pub fn explanation(&self) -> String {
         let mut lines = vec![i18n("This application manages UFW only. Other firewall rules may still block connections when UFW is off.")];
         if !self.ufw_available {
