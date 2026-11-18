@@ -78,6 +78,7 @@ class CarouselLayoutTests(unittest.TestCase):
                             self.assertTrue(original.get_active())
                             self.assertFalse(other.get_active())
                             self.assertFalse(apply.get_sensitive())
+                            self.assertFalse(apply.has_css_class("suggested-action"))
                             self.assertTrue(window.next_btn.get_visible())
                             self.assertTrue(window.next_btn.get_sensitive())
 
@@ -85,6 +86,7 @@ class CarouselLayoutTests(unittest.TestCase):
                             self.assertTrue(other.get_active())
                             self.assertFalse(original.get_active())
                             self.assertTrue(apply.get_sensitive())
+                            self.assertTrue(apply.has_css_class("suggested-action"))
                             window.next_btn.emit("clicked")
                             self.settle()
                             self.assertAlmostEqual(window.carousel.get_position(), 2)

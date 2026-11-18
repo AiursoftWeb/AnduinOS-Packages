@@ -1629,7 +1629,7 @@ def create_shortcuts_page():
 def create_software_sources_page(update_nav=lambda: None):
     """Keep source selection separate from applying changes and navigating."""
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0,
-                   margin_start=48, margin_end=48, margin_top=24, margin_bottom=24)
+                   margin_start=48, margin_end=48, margin_top=16, margin_bottom=16)
     page._requires_internet = True
     page._install_running = False
     page.add_css_class('oobe-software-sources')
@@ -1661,10 +1661,10 @@ def create_software_sources_page(update_nav=lambda: None):
     center.append(pin)
     title = Gtk.Label(label=_('Are you in mainland China?'), wrap=True,
                       justify=Gtk.Justification.CENTER, halign=Gtk.Align.CENTER,
-                      margin_top=12, margin_bottom=24)
+                      margin_top=12, margin_bottom=20)
     title.add_css_class('title-1')
     center.append(title)
-    choices = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+    choices = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
     center.append(choices)
 
     current_china = _software_sources.china_apt_installed()
@@ -1679,7 +1679,7 @@ def create_software_sources_page(update_nav=lambda: None):
             button.set_group(buttons[0])
         button.add_css_class('oobe-source-choice')
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20,
-                      margin_start=20, margin_end=20, margin_top=20, margin_bottom=20)
+                      margin_start=20, margin_end=20, margin_top=16, margin_bottom=16)
         image = source_icon(icon)
         row.append(image)
         text = Gtk.Label(label=message, wrap=True, xalign=0, hexpand=True,
@@ -1697,8 +1697,7 @@ def create_software_sources_page(update_nav=lambda: None):
     notice.add_css_class('caption')
     notice.set_margin_top(16)
     center.append(notice)
-    apply_button = Gtk.Button(label=_('Apply'), halign=Gtk.Align.CENTER, margin_top=16)
-    apply_button.add_css_class('suggested-action')
+    apply_button = Gtk.Button(label=_('Apply'), halign=Gtk.Align.CENTER, margin_top=12)
     apply_button.set_sensitive(False)
     center.append(apply_button)
 
@@ -1709,17 +1708,22 @@ def create_software_sources_page(update_nav=lambda: None):
     status_label.add_css_class('caption')
     status_box.append(status_label)
     status_box.set_margin_top(8)
+    status_box.set_visible(False)
     center.append(status_box)
 
     def update_apply():
-        apply_button.set_sensitive(
-            not page._install_running and (retry or buttons[1].get_active() != current_china)
+        can_apply = not page._install_running and (
+            retry or buttons[1].get_active() != current_china
         )
+        apply_button.set_sensitive(can_apply)
+        if can_apply:
+            apply_button.add_css_class('suggested-action')
+        else:
+            apply_button.remove_css_class('suggested-action')
 
     def selected(button):
         if button.get_active():
-            status_label.set_label('')
-            status_label.remove_css_class('warning')
+            status_box.set_visible(False)
             update_apply()
 
     def running(value):
@@ -1753,6 +1757,7 @@ def create_software_sources_page(update_nav=lambda: None):
         running(True)
         status_label.remove_css_class('warning')
         status_label.set_label(_('Testing software sources...'))
+        status_box.set_visible(True)
 
         def worker():
             try:
