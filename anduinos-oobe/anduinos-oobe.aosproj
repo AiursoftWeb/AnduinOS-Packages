@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-oobe</PackageName>
-    <PackageVersion>2.1.0-7+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-8+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS OOBE — First-run setup wizard and Welcome Center</PackageDescription>
     <Section>utils</Section>
@@ -25,7 +25,7 @@
     <Dependency Include="python3" />
     <Dependency Include="apt" />
     <Dependency Include="dpkg" />
-    <Suggest Include="anduinos-apt-config-for-china" />
+    <Suggest Include="anduinos-apt-config | anduinos-apt-config-for-china" />
     <Dependency Include="python3-gi" />
     <Dependency Include="curl" />
     <Dependency Include="ptyxis | gnome-terminal" />
@@ -49,12 +49,9 @@
     <IncludeFile Include="assets/anduinos-oobe-autostart.desktop" Target="/etc/xdg/autostart/anduinos-oobe.desktop" />
     <IncludeFolder Include="resources/icons" Target="/usr/share/anduinos-oobe/icons" />
     <IncludeFolder Include="locale" Target="/usr/share/locale" />
-    <IncludeFile Include="obj/china-config/noble-addon/amd64/china-apt-config.deb" Target="/usr/share/anduinos-oobe/china-config/amd64.deb" Mode="644" Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFile Include="obj/china-config/noble-addon/arm64/china-apt-config.deb" Target="/usr/share/anduinos-oobe/china-config/arm64.deb" Mode="644" Condition="'$(Suite)' == 'noble-addon'" />
-    <IncludeFile Include="obj/china-config/resolute-addon/amd64/china-apt-config.deb" Target="/usr/share/anduinos-oobe/china-config/amd64.deb" Mode="644" Condition="'$(Suite)' == 'resolute-addon'" />
-    <IncludeFile Include="obj/china-config/resolute-addon/arm64/china-apt-config.deb" Target="/usr/share/anduinos-oobe/china-config/arm64.deb" Mode="644" Condition="'$(Suite)' == 'resolute-addon'" />
-    <IncludeFile Include="obj/china-config/stonking-addon/amd64/china-apt-config.deb" Target="/usr/share/anduinos-oobe/china-config/amd64.deb" Mode="644" Condition="'$(Suite)' == 'stonking-addon'" />
-    <IncludeFile Include="obj/china-config/stonking-addon/arm64/china-apt-config.deb" Target="/usr/share/anduinos-oobe/china-config/arm64.deb" Mode="644" Condition="'$(Suite)' == 'stonking-addon'" />
+    <IncludeFolder Include="obj/source-payload/noble-addon" Target="/usr/share/anduinos-oobe/source-config" Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFolder Include="obj/source-payload/resolute-addon" Target="/usr/share/anduinos-oobe/source-config" Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFolder Include="obj/source-payload/stonking-addon" Target="/usr/share/anduinos-oobe/source-config" Condition="'$(Suite)' == 'stonking-addon'" />
 
   </ItemGroup>
 
@@ -66,9 +63,9 @@
 
   <ItemGroup>
     <PrebuildCommand Run="bash compile-locales.sh" />
-    <PrebuildCommand Run="bash bundle-china-config.sh noble-addon" Condition="'$(Suite)' == 'noble-addon'" />
-    <PrebuildCommand Run="bash bundle-china-config.sh resolute-addon" Condition="'$(Suite)' == 'resolute-addon'" />
-    <PrebuildCommand Run="bash bundle-china-config.sh stonking-addon" Condition="'$(Suite)' == 'stonking-addon'" />
+    <PrebuildCommand Run="bash bundle-source-config.sh noble-addon" Condition="'$(Suite)' == 'noble-addon'" />
+    <PrebuildCommand Run="bash bundle-source-config.sh resolute-addon" Condition="'$(Suite)' == 'resolute-addon'" />
+    <PrebuildCommand Run="bash bundle-source-config.sh stonking-addon" Condition="'$(Suite)' == 'stonking-addon'" />
 
   </ItemGroup>
   <ItemGroup>

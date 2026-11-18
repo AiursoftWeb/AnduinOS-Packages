@@ -67,10 +67,6 @@ except Exception:
     _ = lambda s: s
 
 MARKER_FILE = os.path.expanduser("~/.config/anduinos-oobe-done")
-FLATHUB_REMOTE = 'flathub'
-FLATHUB_OFFICIAL_REPO = 'https://dl.flathub.org/repo/flathub.flatpakrepo'
-FLATHUB_OFFICIAL_URL = 'https://dl.flathub.org/repo'
-FLATHUB_USTC_URL = 'https://mirrors.ustc.edu.cn/flathub'
 DRIVER_CENTER_EXECUTABLE = '/usr/bin/anduinos-driver-center'
 # ── Icon helper ────────────────────────────────────────────────────
 _ICON_BASES = [
@@ -169,27 +165,6 @@ def is_bottles_installed():
 def is_chinese_locale():
     lang = os.environ.get('LANGUAGE', os.environ.get('LANG', ''))
     return lang.replace('-', '_').startswith('zh_CN')
-
-
-def _get_flathub_url():
-    """Return the current Flathub remote URL, or empty string on failure."""
-    try:
-        r = subprocess.run(['flatpak', 'remotes', '--system',
-                            '--columns=name,url'],
-                           capture_output=True, text=True, timeout=10)
-        for line in r.stdout.splitlines():
-            cols = line.split('\t')
-            if len(cols) >= 2 and cols[0] == FLATHUB_REMOTE:
-                return cols[1]
-    except Exception:
-        pass
-    return ''
-
-
-def _is_flathub_china_mirror():
-    """True if Flathub is already pointing at a Chinese mirror."""
-    url = _get_flathub_url()
-    return 'ustc.edu.cn' in url or 'tuna.tsinghua.edu.cn' in url
 
 
 def is_live_environment():
@@ -1651,17 +1626,17 @@ def create_shortcuts_page():
 # PAGE 7: FLATHUB MIRROR — 中国源加速
 # ═══════════════════════════════════════════════════════════════════
 
-def create_flathub_mirror_page(navigate_next=lambda: None, update_nav=lambda: None):
-    """Choose a region and apply it immediately, without an extra Next click."""
+def create_software_sources_page(update_nav=lambda: None):
+    """Keep source selection separate from applying changes and navigating."""
     page = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0,
                    margin_start=48, margin_end=48, margin_top=24, margin_bottom=24)
     page._requires_internet = True
-    page._hide_next = True
     page._install_running = False
     page.add_css_class('oobe-software-sources')
     page._source_css = Gtk.CssProvider()
     page._source_css.load_from_data(b'''
         button.oobe-source-choice { padding: 0; }
+        button.oobe-source-choice:checked { box-shadow: inset 0 0 0 2px @accent_bg_color; }
     ''')
     Gtk.StyleContext.add_provider_for_display(
         page.get_display(), page._source_css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
@@ -1692,12 +1667,16 @@ def create_flathub_mirror_page(navigate_next=lambda: None, update_nav=lambda: No
     choices = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
     center.append(choices)
 
+    current_china = _software_sources.china_apt_installed()
+    retry = False
     buttons = []
     for china, icon, message in (
         (False, 'globe.svg', _('Continue with global AnduinOS operated by AIURSOFT LIMITED, obtaining software from the global service network. (not compliant in mainland China)')),
         (True, 'china-flag.svg', _('Use mainland China AnduinOS operated by Suzhou Aiursoft Technology Co., Ltd., obtaining software from software servers in China.')),
     ):
-        button = Gtk.Button()
+        button = Gtk.ToggleButton()
+        if buttons:
+            button.set_group(buttons[0])
         button.add_css_class('oobe-source-choice')
         row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20,
                       margin_start=20, margin_end=20, margin_top=20, margin_bottom=20)
@@ -1709,7 +1688,7 @@ def create_flathub_mirror_page(navigate_next=lambda: None, update_nav=lambda: No
         row.append(text)
         button.set_child(row)
         button.set_tooltip_text(message)
-        button.connect('clicked', lambda _button, selected=china: choose(selected))
+        button.set_active(china == current_china)
         buttons.append(button)
         choices.append(button)
 
@@ -1718,6 +1697,11 @@ def create_flathub_mirror_page(navigate_next=lambda: None, update_nav=lambda: No
     notice.add_css_class('caption')
     notice.set_margin_top(16)
     center.append(notice)
+    apply_button = Gtk.Button(label=_('Apply'), halign=Gtk.Align.CENTER, margin_top=16)
+    apply_button.add_css_class('suggested-action')
+    apply_button.set_sensitive(False)
+    center.append(apply_button)
+
     status_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=8)
     spinner = Gtk.Spinner()
     status_box.append(spinner)
@@ -1727,46 +1711,61 @@ def create_flathub_mirror_page(navigate_next=lambda: None, update_nav=lambda: No
     status_box.set_margin_top(8)
     center.append(status_box)
 
+    def update_apply():
+        apply_button.set_sensitive(
+            not page._install_running and (retry or buttons[1].get_active() != current_china)
+        )
+
+    def selected(button):
+        if button.get_active():
+            status_label.set_label('')
+            status_label.remove_css_class('warning')
+            update_apply()
+
     def running(value):
         page._install_running = value
         page._block_carousel = value
         for button in buttons:
             button.set_sensitive(not value)
         spinner.set_spinning(value)
+        update_apply()
         update_nav()
 
-    def finished(warnings):
-        running(False)
+    def finished(warnings, installed_china):
+        nonlocal current_china, retry
+        current_china = installed_china
+        retry = bool(warnings)
         if warnings:
             for warning in warnings:
                 print(f'Warning: {warning}', file=sys.stderr)
             status_label.set_label(_('Some software sources could not be changed. You can retry or continue.'))
             status_label.add_css_class('warning')
-            page._hide_next = False
-            update_nav()
         else:
             status_label.set_label(_('Software sources have been changed.'))
             status_label.remove_css_class('warning')
-            navigate_next()
+        running(False)
         return False
 
-    def choose(china):
-        if page._install_running:
+    def apply(_button):
+        if not apply_button.get_sensitive():
             return
-        if not china:
-            navigate_next()
-            return
+        china = buttons[1].get_active()
         running(True)
         status_label.remove_css_class('warning')
         status_label.set_label(_('Testing software sources...'))
 
         def worker():
             try:
-                warnings = _software_sources.switch_to_china()
+                warnings = _software_sources.switch_sources(china)
             except Exception as error:
                 warnings = [str(error)]
-            GLib.idle_add(finished, warnings)
+            GLib.idle_add(finished, warnings, _software_sources.china_apt_installed())
+
         threading.Thread(target=worker, daemon=True).start()
+
+    for button in buttons:
+        button.connect('toggled', selected)
+    apply_button.connect('clicked', apply)
 
     return page
 
@@ -2759,12 +2758,9 @@ class OobeWindow(Adw.ApplicationWindow):
         factories.append(
             lambda: create_hardware_drivers_page(_nav, _update_nav)
         )
-        # Let Chinese users switch Flathub to the local mirror before offering
-        # Bottles, so the large Flatpak download uses the faster source.
-        if is_chinese_locale() and not (
-            _software_sources.china_apt_configured() and _is_flathub_china_mirror()
-        ):
-            factories.append(lambda: create_flathub_mirror_page(_nav, _update_nav))
+        # Offer the regional software sources before Flatpak applications.
+        if is_chinese_locale():
+            factories.append(lambda: create_software_sources_page(_update_nav))
         # Bottles (Wine) is x86-only — no Flatpak on aarch64 and emulation
         # of x86 Windows apps on ARM is not "with ease".
         if not is_arm64():
