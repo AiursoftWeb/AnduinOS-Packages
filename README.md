@@ -554,100 +554,94 @@ For each updated package, push to `master` — CI runs `apkg publish && apkg pus
 
 #### H. One-command conversion script
 
-One-command conversion from a standard Ubuntu installation to AnduinOS.
+Convert an existing Ubuntu 26.04 LTS Desktop installation on AMD64. Run the block in Bash. Review the packages APT plans to remove before confirming the installation.
 
 ```bash
-sudo -v
+(
+    set -euo pipefail
 
-# Variables for APT repository and GPG key
-APKG_SERVER="https://packages.anduinos.com"
-CERT_NAME="anduinos"
-KEYRING_PATH="/usr/share/keyrings/anduinos-archive-keyring.gpg"
-SUITE="$(lsb_release -sc)-addon"
+    . /etc/os-release
+    if [[ "${ID:-}" != ubuntu || "${VERSION_CODENAME:-}" != resolute || "$(dpkg --print-architecture)" != amd64 ]]; then
+        echo "This recipe requires Ubuntu 26.04 LTS (Resolute) on AMD64." >&2
+        exit 1
+    fi
 
-# Make sure is Ubuntu 26.04 Resolute:
-if [[ "$(lsb_release -rs)" != "26.04" ]]; then
-    echo "This script is designed for Ubuntu 26.04 Resolute. Exiting."
-    exit 1
-fi
+    APKG_SERVER="https://packages.anduinos.com"
+    KEYRING_PATH="/usr/share/keyrings/anduinos-archive-keyring.gpg"
 
-# Update package lists and install prerequisites for adding the AnduinOS repository
-sudo apt update
-sudo apt install -y curl gnupg2 ca-certificates
+    sudo apt-get update -o APT::Update::Error-Mode=any
+    sudo apt-get install -y curl gnupg ca-certificates
 
-# Create the keyring directory and download the AnduinOS GPG key
-sudo mkdir -p /usr/share/keyrings
-curl -sL "${APKG_SERVER}/artifacts/certs/${CERT_NAME}" \
-    | sed '1s/^\xEF\xBB\xBF//' \
-    | gpg --dearmor \
-    | sudo tee "${KEYRING_PATH}" > /dev/null
+    keyring="$(mktemp)"
+    trap 'rm -f -- "$keyring"' EXIT
+    curl -fsSL "${APKG_SERVER}/artifacts/certs/anduinos" \
+        | sed '1s/^\xEF\xBB\xBF//' \
+        | gpg --dearmor > "$keyring"
+    sudo install -D -m 0644 "$keyring" "$KEYRING_PATH"
 
-# Add the AnduinOS repository to the sources list
-sudo tee /etc/apt/sources.list.d/anduinos.sources > /dev/null <<EOF
+    sudo tee /etc/apt/sources.list.d/anduinos.sources > /dev/null <<EOF
 Types: deb
 URIs: ${APKG_SERVER}/artifacts/anduinos/
-Suites: ${SUITE}
+Suites: resolute-addon
 Components: main
 Architectures: amd64
 Signed-By: ${KEYRING_PATH}
 EOF
 
-# Update the package lists and install AnduinOS packages while removing conflicting Ubuntu packages
-sudo apt update
-sudo apt install -y \
-    anduinos-desktop \
-    anduinos-desktop-apps \
-    anduinos-gnome-extensions \
-    anduinos-appstore \
-    anduinos-theme \
-    anduinos-wallpapers \
-    anduinos-fonts \
-    anduinos-no-snapd \
-    anduinos-session \
-    anduinos-software-properties-common \
-    anduinos-driver-center \
-    anduinos-system-tweaks \
-    firefox-anduinos \
-    gnome-shell-extension-appindicator-anduinos \
-    gnome-shell-extension-dash-to-panel-anduinos \
-    gnome-shell-extension-desktop-icons-ng-anduinos \
-    plymouth-anduinos \
-    alsa-ucm-conf-anduinos \
-    firmware-sof-anduinos \
-    dracut \
-    snapd- \
-    firefox- \
-    ubuntu-session- \
-    ubuntu-desktop- \
-    ubiquity-slideshow-ubuntu- \
-    yaru-theme-gnome-shell- \
-    gnome-shell-ubuntu-extensions- \
-    update-notifier- \
-    update-notifier-common- \
-    update-manager- \
-    update-manager-core- \
-    ubuntu-release-upgrader-core- \
-    ubuntu-release-upgrader-gtk- \
-    whoopsie- \
-    software-properties-gtk- \
-    software-properties-common- \
-    firmware-sof-signed- \
-    alsa-ucm-conf- \
-    plymouth-theme-spinner- \
-    gnome-shell-extension-appindicator- \
-    gnome-shell-extension-dash-to-panel- \
-    gnome-shell-extension-desktop-icons-ng- \
-    ubuntu-wallpapers- \
-    ubuntu-advantage-desktop-daemon- \
-    ubuntu-wallpapers-resolute- \
-    --install-recommends
+    sudo apt-get update -o APT::Update::Error-Mode=any
 
-sudo apt reinstall -y base-files
+    # Request replacements and removals in the same transaction.
+    # A trailing minus sign tells APT to remove that package.
+    packages=(
+        anduinos-desktop
+        anduinos-no-snapd
+        anduinos-session
+        anduinos-software-properties-common
+        anduinos-driver-center
+        anduinos-system-tweaks
+        firefox-anduinos
+        gnome-shell-extension-appindicator-anduinos
+        gnome-shell-extension-dash-to-panel-anduinos
+        gnome-shell-extension-desktop-icons-ng-anduinos
+        plymouth-anduinos
+        alsa-ucm-conf-anduinos
+        firmware-sof-anduinos
+        dracut
+        snapd-
+        firefox-
+        ubuntu-session-
+        ubuntu-desktop-
+        ubiquity-slideshow-ubuntu-
+        yaru-theme-gnome-shell-
+        gnome-shell-ubuntu-extensions-
+        update-notifier-
+        update-notifier-common-
+        update-manager-
+        update-manager-core-
+        ubuntu-release-upgrader-core-
+        ubuntu-release-upgrader-gtk-
+        whoopsie-
+        software-properties-gtk-
+        software-properties-common-
+        firmware-sof-signed-
+        alsa-ucm-conf-
+        plymouth-theme-spinner-
+        gnome-shell-extension-appindicator-
+        gnome-shell-extension-dash-to-panel-
+        gnome-shell-extension-desktop-icons-ng-
+        ubuntu-wallpapers-
+        ubuntu-advantage-desktop-daemon-
+        ubuntu-wallpapers-resolute-
+    )
 
-# Update dconf settings to apply AnduinOS defaults
-sudo dconf update
-dconf reset -f /org/gnome/
+    sudo apt-get -s install --install-recommends "${packages[@]}"
+    sudo apt-get install --install-recommends "${packages[@]}"
+    sudo apt-get install --reinstall -y base-files
+    sudo dconf update
+)
 ```
+
+Reboot and select the AnduinOS session at login. To apply AnduinOS defaults to an existing GNOME profile, you can reset that user's saved GNOME settings with `dconf reset -f /org/gnome/` from their desktop session.
 
 ## Configuration
 
