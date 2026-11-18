@@ -117,27 +117,22 @@ class NetworkTests(unittest.TestCase):
         self.assertIn("create_appearance_page", offline[2].__code__.co_names)
         self.assertIn("create_appearance_page", online[1].__code__.co_names)
 
-    def test_installer_configured_chinese_mirror_is_not_offered_again(self):
+    def test_software_sources_page_is_available_for_the_mainland_china_locale(self):
         window = types.SimpleNamespace(
             is_oobe=True, _update_nav_buttons=lambda: None, _finish_oobe=lambda: None,
         )
-        for apt_configured, url, expected in (
-            (True, "https://mirrors.ustc.edu.cn/flathub", False),
-            (False, "https://mirrors.ustc.edu.cn/flathub", True),
-            (True, "https://dl.flathub.org/repo", True),
-            (False, "", True),
-        ):
+        for chinese_locale in (True, False):
             with (
-                self.subTest(apt=apt_configured, url=url),
+                self.subTest(chinese_locale=chinese_locale),
                 mock.patch.object(oobe, "internet_connection_ready", return_value=True),
                 mock.patch.object(oobe, "is_arm64", return_value=False),
-                mock.patch.object(oobe, "is_chinese_locale", return_value=True),
-                mock.patch.object(oobe, "_get_flathub_url", return_value=url),
-                mock.patch.object(oobe._software_sources, "china_apt_configured", return_value=apt_configured),
-                mock.patch.object(oobe.subprocess, "run", return_value=subprocess.CompletedProcess([], 1, "", "")),
+                mock.patch.object(oobe, "is_chinese_locale", return_value=chinese_locale),
             ):
-                factories = oobe.OobeWindow._get_page_factories(window, navigate_next=lambda: None)
-            self.assertEqual(any("create_flathub_mirror_page" in factory.__code__.co_names for factory in factories), expected)
+                factories = oobe.OobeWindow._get_page_factories(window)
+                self.assertEqual(
+                    any("create_software_sources_page" in factory.__code__.co_names for factory in factories),
+                    chinese_locale,
+                )
 
     def test_chinese_flathub_mirror_precedes_bottles_offer(self):
         window = types.SimpleNamespace(
@@ -166,7 +161,7 @@ class NetworkTests(unittest.TestCase):
         mirror_index = next(
             index
             for index, names in enumerate(factory_names)
-            if "create_flathub_mirror_page" in names
+            if "create_software_sources_page" in names
         )
         bottles_index = next(
             index

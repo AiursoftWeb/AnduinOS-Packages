@@ -26,40 +26,96 @@ class CarouselLayoutTests(unittest.TestCase):
         oobe.GLib.timeout_add(100, lambda: (loop.quit(), False)[1])
         loop.run()
 
-    def test_source_cards_apply_on_click_and_never_require_an_extra_next(self):
+    def test_source_selection_next_apply_and_retry(self):
         def descendants(widget):
             yield widget
             child = widget.get_first_child()
             while child:
                 yield from descendants(child)
                 child = child.get_next_sibling()
-        for warnings in ([], ["unreachable"]):
-            with self.subTest(warnings=warnings):
-                navigate, update = Mock(), Mock()
-                page = oobe.create_flathub_mirror_page(navigate, update)
-                buttons = [w for w in descendants(page) if w.has_css_class("oobe-source-choice")]
-                self.assertEqual(len(buttons), 2)
-                with patch.object(oobe._software_sources, "switch_to_china", return_value=warnings) as switch, patch.object(oobe.threading, "Thread") as thread:
-                    switch.assert_not_called()
-                    buttons[0].emit("clicked")
-                    navigate.assert_called_once_with()
-                    navigate.reset_mock()
-                    buttons[1].emit("clicked")
-                    self.assertTrue(page._install_running)
-                    self.assertTrue(page._block_carousel)
-                    self.assertTrue(all(not button.get_sensitive() for button in buttons))
-                    buttons[1].emit("clicked")
-                    self.assertEqual(thread.call_count, 1)
-                    thread.call_args.kwargs["target"]()
-                    self.settle()
-                    switch.assert_called_once_with()
-                    self.assertFalse(page._install_running)
-                    self.assertTrue(all(button.get_sensitive() for button in buttons))
-                    if warnings:
-                        navigate.assert_not_called()
-                        self.assertFalse(page._hide_next)
-                    else:
-                        navigate.assert_called_once_with()
+
+        settings = oobe.Gtk.Settings.get_default()
+        animations = settings.get_property("gtk-enable-animations")
+        settings.set_property("gtk-enable-animations", False)
+        self.addCleanup(settings.set_property, "gtk-enable-animations", animations)
+
+        for current_china in (False, True):
+            for warnings in ([], ["Flathub unreachable"]):
+                with self.subTest(current_china=current_china, warnings=warnings):
+                    window = None
+                    factories = [
+                        lambda: oobe.Gtk.Label(label="Drivers"),
+                        lambda: oobe.create_software_sources_page(update_nav),
+                        lambda: oobe.Gtk.Label(label="Applications"),
+                    ]
+
+                    def update_nav():
+                        if window:
+                            window._update_nav_buttons()
+
+                    with (
+                        patch.object(oobe.OobeWindow, "_get_page_factories", return_value=factories),
+                        patch.object(oobe._software_sources, "china_apt_installed", return_value=current_china) as installed,
+                        patch.object(oobe._software_sources, "switch_sources", return_value=warnings) as switch,
+                        patch.object(oobe.threading, "Thread") as thread,
+                    ):
+                        window = oobe.OobeWindow(None, True)
+                        try:
+                            window.present()
+                            window.carousel.scroll_to(window._pages[1], False)
+                            self.settle()
+                            page = window._content_page(window._pages[1])
+                            global_card, china_card = [
+                                widget for widget in descendants(page)
+                                if widget.has_css_class("oobe-source-choice")
+                            ]
+                            apply = next(
+                                widget for widget in descendants(page)
+                                if isinstance(widget, oobe.Gtk.Button) and widget.get_label() == "Apply"
+                            )
+                            original = china_card if current_china else global_card
+                            other = global_card if current_china else china_card
+                            self.assertTrue(original.get_active())
+                            self.assertFalse(other.get_active())
+                            self.assertFalse(apply.get_sensitive())
+                            self.assertFalse(apply.has_css_class("suggested-action"))
+                            self.assertTrue(window.next_btn.get_visible())
+                            self.assertTrue(window.next_btn.get_sensitive())
+
+                            other.emit("clicked")
+                            self.assertTrue(other.get_active())
+                            self.assertFalse(original.get_active())
+                            self.assertTrue(apply.get_sensitive())
+                            self.assertTrue(apply.has_css_class("suggested-action"))
+                            window.next_btn.emit("clicked")
+                            self.settle()
+                            self.assertAlmostEqual(window.carousel.get_position(), 2)
+                            thread.assert_not_called()
+                            switch.assert_not_called()
+
+                            window.back_btn.emit("clicked")
+                            self.settle()
+                            other.set_active(True)
+                            apply.emit("clicked")
+                            self.assertFalse(apply.get_sensitive())
+                            self.assertFalse(window.next_btn.get_sensitive())
+                            self.assertTrue(window.next_btn.get_visible())
+                            self.assertFalse(window.carousel.get_interactive())
+                            apply.emit("clicked")
+                            self.assertEqual(thread.call_count, 1)
+
+                            # Even with a Flathub warning, APT may have switched.
+                            installed.return_value = not current_china
+                            thread.call_args.kwargs["target"]()
+                            self.settle()
+                            switch.assert_called_once_with(not current_china)
+                            self.assertAlmostEqual(window.carousel.get_position(), 1)
+                            self.assertTrue(other.get_active())
+                            self.assertTrue(window.next_btn.get_sensitive())
+                            self.assertTrue(window.carousel.get_interactive())
+                            self.assertEqual(apply.get_sensitive(), bool(warnings))
+                        finally:
+                            window.destroy()
 
     def test_driver_page_can_continue_before_and_after_opening_driver_center(self):
         settings = oobe.Gtk.Settings.get_default()
