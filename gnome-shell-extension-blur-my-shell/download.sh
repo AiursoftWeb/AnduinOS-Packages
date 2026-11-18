@@ -17,9 +17,8 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
     echo "[$SUITE] Resolving $UUID for GNOME $TARGET..."
     python3 "$SCRIPT_DIR/../lib/resolve-gnome-ext.py" "$UUID" --target "$TARGET" --download --out "$DEPLOY_DIR"
 
-    if [[ "$SUITE" == "stonking" ]]; then
-        # Migration presets must come from the schema, not overridden dconf defaults.
-        python3 - "$DEPLOY_DIR/settings/settings_updater.js" <<'PY'
+    # Migration presets must come from the schema, not overridden dconf defaults.
+    python3 - "$DEPLOY_DIR/settings/settings_updater.js" <<'PY'
 from pathlib import Path
 import sys
 
@@ -32,7 +31,6 @@ if source.count(old) == 1:
 elif old in source or new not in source:
     raise SystemExit("Unsupported Blur My Shell preset migration; inspect upstream changes")
 PY
-    fi
 
     # The local panel geometry fix was merged upstream in PR #907.
     # Keep the resolver-selected upstream implementation, including later fixes.
