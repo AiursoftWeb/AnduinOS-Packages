@@ -201,6 +201,54 @@ class MigrationGuardTests(unittest.TestCase):
                         "fallback-initrd.img", (paths["boot"] / "grub/grub.cfg").read_text()
                     )
 
+    def test_upgrade_defers_boot_migration_in_a_copied_installation_target(self) -> None:
+        for readable in (True, False):
+            with self.subTest(readable=readable), tempfile.TemporaryDirectory() as directory:
+                env, paths = self.migration_environment(Path(directory))
+                (paths["boot"] / "grub").rmdir()
+                executable(paths["bin"] / "systemd-detect-virt", "exit 0\n")
+                env["PATH"] = f'{paths["bin"]}:/usr/bin:/bin'
+                env["ANDUINOS_MIGRATION_INITRD_INSPECTOR"] = (
+                    "/bin/true" if readable else "/bin/false"
+                )
+                before = {path.name: path.read_bytes() for path in paths["boot"].iterdir()}
+                result = subprocess.run(
+                    ["/bin/sh", PREINST, "upgrade", "2.0.4-1+resolute", "2.1.0-2+resolute"],
+                    env=env, capture_output=True, text=True,
+                )
+                self.assertEqual(result.returncode == 0, readable, result.stderr)
+                self.assertEqual(list(paths["state"].iterdir()), [])
+                self.assertEqual({path.name for path in paths["boot"].iterdir()}, set(before))
+                self.assertEqual(
+                    {path.name: path.read_bytes() for path in paths["boot"].iterdir()}, before
+                )
+
+    def test_new_target_deferral_preserves_installed_and_sealed_guards(self) -> None:
+        for scenario in ("host", "configured-chroot", "symlink-chroot", "sealed-chroot"):
+            with self.subTest(scenario=scenario), tempfile.TemporaryDirectory() as directory:
+                env, paths = self.migration_environment(Path(directory))
+                executable(
+                    paths["bin"] / "systemd-detect-virt",
+                    "exit 1\n" if scenario == "host" else "exit 0\n",
+                )
+                env["PATH"] = f'{paths["bin"]}:/usr/bin:/bin'
+                env["ANDUINOS_MIGRATION_FAIL_AT"] = "before_fallback_kernel"
+                if scenario == "configured-chroot":
+                    (paths["boot"] / "grub/grub.cfg").write_text("existing boot menu\n")
+                elif scenario == "symlink-chroot":
+                    (paths["boot"] / "grub/grub.cfg").symlink_to("missing-grub.cfg")
+                elif scenario == "sealed-chroot":
+                    (paths["state"] / "fallback-ready").touch()
+                result = subprocess.run(
+                    ["/bin/sh", PREINST, "upgrade", "2.0.4-1+resolute", "2.1.0-2+resolute"],
+                    env=env, capture_output=True, text=True,
+                )
+                if scenario == "sealed-chroot":
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn("sealed migration fallback is incomplete", result.stderr)
+                else:
+                    self.assertEqual(result.returncode, 75, result.stderr)
+
     def test_preinst_makes_fallback_default_before_returning(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             env, paths = self.migration_environment(Path(directory))
