@@ -15,7 +15,7 @@ from .cli import running_version
 from .bundle import verify
 from .manifest import require
 from .native import paragraphs, run
-from .planning import check_targets, installed, os_release, resolve_stage
+from .planning import check_targets, configure_architectures, installed, os_release, resolve_stage, system_architectures
 
 SNAPSHOTS = Path("/.snapshots/anduinos-btrfs-snapshots-manager")
 
@@ -40,6 +40,7 @@ def configure(path, repository, architecture):
               "Acquire::Languages": "none", "Acquire::Retries": "0", "APT::Sandbox::User": "_apt",
               "Acquire::AllowInsecureRepositories": "false", "APT::Get::AllowUnauthenticated": "false"}
     for key, value in values.items(): apt_pkg.config.set(key, value)
+    configure_architectures(system_architectures(Path("/"), architecture))
     # Index hooks can refresh unrelated online application catalogs. Package
     # hooks (including AnduinOS snapshots and boot integration) remain intact.
     apt_pkg.config.clear("APT::Update")
