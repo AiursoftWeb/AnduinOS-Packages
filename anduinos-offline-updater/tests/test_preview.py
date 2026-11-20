@@ -34,17 +34,20 @@ class PreviewTests(unittest.TestCase):
         packages, index = [], []
         for name, ver, depends in [("base-files", "2.0.5-1", "base-library (>= 5)"), ("base-library", "5", None),
                                   ("vim-common", "5", None), ("anduinos-offline-updater", "2.1.0-2", "bootstrap-library (>= 2)"),
-                                  ("bootstrap-library", "2", None), ("python3-apt", "2", None)]:
+                                  ("bootstrap-library", "2", None), ("python3-apt", "2", None),
+                                  ("paired-library", "5", None)]:
             directory = cls.root / name; (directory / "DEBIAN").mkdir(parents=True)
             (directory / "DEBIAN").chmod(0o755)
-            control = f"Package: {name}\nVersion: {ver}\nArchitecture: all\nInstalled-Size: 16\nMaintainer: Test <test@example.invalid>\nDescription: Offline test\n"
+            arch = "amd64" if name == "paired-library" else "all"
+            control = f"Package: {name}\nVersion: {ver}\nArchitecture: {arch}\nInstalled-Size: 16\nMaintainer: Test <test@example.invalid>\nDescription: Offline test\n"
+            if name == "paired-library": control += "Multi-Arch: same\n"
             if depends: control += f"Depends: {depends}\n"
             (directory / "DEBIAN/control").write_text(control)
             output = cls.root / f"{name}.deb"
             run(["dpkg-deb", "--build", "--root-owner-group", str(directory), str(output)])
             data = output.read_bytes(); sha = hashlib.sha256(data).hexdigest(); path = f"repository/pool/{sha}.deb"
             (cls.contents / path).write_bytes(data)
-            packages.append({"identity": {"name": name, "version": ver, "architecture": "all"}, "path": path,
+            packages.append({"identity": {"name": name, "version": ver, "architecture": arch}, "path": path,
                              "content": {"size": len(data), "sha256": sha}})
             index.append(control + f"Filename: pool/{sha}.deb\nSize: {len(data)}\nSHA256: {sha}\n")
         index_data = "\n".join(index).encode(); (cls.contents / "repository/Packages").write_bytes(index_data)
@@ -95,8 +98,10 @@ class PreviewTests(unittest.TestCase):
     def tearDown(self): self.case.cleanup()
 
     @staticmethod
-    def package(name, version, depends="", hold=False):
-        return f"Package: {name}\nArchitecture: all\nVersion: {version}\nStatus: {'hold' if hold else 'install'} ok installed\nInstalled-Size: 16\nDescription: Test\n" + (f"Depends: {depends}\n" if depends else "") + "\n"
+    def package(name, version, depends="", hold=False, *, architecture="all", multi_arch=None):
+        return (f"Package: {name}\nArchitecture: {architecture}\nVersion: {version}\n"
+                f"Status: {'hold' if hold else 'install'} ok installed\nInstalled-Size: 16\nDescription: Test\n"
+                + (f"Depends: {depends}\n" if depends else "") + (f"Multi-Arch: {multi_arch}\n" if multi_arch else "") + "\n")
 
     def state(self, version, lib, extra="", hold=False):
         (self.system / "usr/lib/os-release").write_text(f"ID=anduinos\nVERSION_ID={version}\nUBUNTU_CODENAME=resolute\n")
@@ -116,6 +121,28 @@ class PreviewTests(unittest.TestCase):
             self.assertEqual(result["state"], "already-installed" if lib == "5" else "update-available", result)
             self.assertFalse(any(c["name"] == "docker-ce" for s in result["stages"] for c in s["changes"]))
             self.assertFalse(result["can_install"])
+
+    def test_native_update_preserves_installed_foreign_packages(self):
+        (self.system / "var/lib/dpkg/arch").write_text("amd64\ni386\n")
+        foreign = self.package("compatibility-runtime", "1", architecture="i386", multi_arch="foreign")
+        foreign += self.package("paired-library", "5", architecture="i386", multi_arch="same")
+        native = self.package("paired-library", "5", architecture="amd64", multi_arch="same")
+        self.state("2.0.0", "1", foreign + native + self.package("local-app", "1", "compatibility-runtime"))
+        result = self.inspect()
+        self.assertEqual(result["state"], "update-available", result)
+        self.assertTrue(result["stages"][0]["changes"])
+        self.assertFalse(any(c["architecture"] == "i386" for c in result["stages"][0]["changes"]))
+        self.state("2.0.5", "5", foreign + native)
+        self.assertEqual(self.inspect()["state"], "already-installed")
+
+    def test_update_requiring_the_matching_foreign_version_is_blocked(self):
+        (self.system / "var/lib/dpkg/arch").write_text("amd64\ni386\n")
+        pair = "".join(self.package("paired-library", "1", architecture=arch, multi_arch="same")
+                       for arch in ("amd64", "i386"))
+        self.state("2.0.5", "5", pair)
+        result = self.inspect()
+        self.assertEqual(result["state"], "blocked", result)
+        self.assertIn("paired-library:i386", result["blockers"][0])
 
     def test_held_and_strict_vim_dependencies_block(self):
         self.state("2.0.0", "1", hold=True); self.assertEqual(self.inspect()["state"], "blocked")
