@@ -1,20 +1,121 @@
 """Installation safety checks; these tests never call APT commit on the host."""
+import io
 import json
 import os
 import tempfile
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import call, patch
 
 import apt_pkg
 
-from anduinos_offline_updater import jobs
+from anduinos_offline_updater import cli, jobs
 from anduinos_offline_updater.install import check_targets, finish_handoff, snapshot_result, space_check
 from anduinos_offline_updater.native import BundleError
 from anduinos_offline_updater.planning import replaces_runtime
 
 
+class ApplyCommandTests(unittest.TestCase):
+    def apply(self, helper, statuses=(), answers=(), flags=()):
+        with patch.object(cli.os, "geteuid", return_value=0), \
+                patch.object(cli, "call_helper", side_effect=helper) as service, \
+                patch.object(jobs, "status", side_effect=statuses), \
+                patch.object(cli.time, "sleep"), \
+                patch("builtins.input", side_effect=answers) as prompt, \
+                redirect_stdout(io.StringIO()) as out, redirect_stderr(io.StringIO()) as err:
+            code = cli.main(["apply", *flags, "/tmp/update.atgz"])
+        return code, out.getvalue(), err.getvalue(), service.call_args_list, prompt.call_count
+
+    @staticmethod
+    def plan(plan_hash="first", state="update-available", **fields):
+        changes = [] if state == "already-installed" else [
+            {"name": "base-files", "architecture": "all", "before": "2.0.0", "after": "2.0.6"}]
+        return {"state": "prepared", "job_id": "test-job", "plan_sha256": plan_hash,
+                "preview": {"state": state, "current_version": "2.0.0", "target_version": "2.0.6",
+                            "stages": [{"changes": changes}]},
+                **fields}
+
+    def test_refusing_or_closing_input_discards_unstarted_job(self):
+        for answer in ("", "no", EOFError):
+            with self.subTest(answer=answer):
+                code, out, _, commands, prompts = self.apply([self.plan(), {}], answers=[answer])
+                self.assertEqual(code, 1)
+                self.assertEqual(prompts, 1)
+                self.assertIn("AnduinOS 2.0.0 → 2.0.6", out)
+                self.assertIn("base-files:all  2.0.0 → 2.0.6", out)
+                self.assertEqual(commands, [call("prepare", "/tmp/update.atgz"), call("discard", "test-job")])
+
+    def test_waits_for_result_and_reports_reboot(self):
+        code, out, _, commands, prompts = self.apply(
+            [self.plan(), {"state": "queued", "job_id": "test-job"}], answers=["yes"],
+            statuses=[{"state": "installing", "job_id": "test-job", "stage": 1, "stage_count": 1},
+                      {"state": "complete", "reboot_required": True}])
+        self.assertEqual(code, 0)
+        self.assertEqual(prompts, 1)
+        self.assertEqual(commands[-1], call("start", "test-job", "first"))
+        self.assertIn("Update complete.", out)
+        self.assertIn("Restart your computer", out)
+
+    def test_yes_confirms_a_new_plan_after_the_updater_handoff(self):
+        handoff = self.plan("fresh", confirmation_required=True)
+        code, out, _, commands, prompts = self.apply(
+            [self.plan(state="updater-update-required"), {"state": "handoff", "job_id": "test-job"},
+             {"state": "complete"}], flags=["-y"], statuses=[handoff])
+        self.assertEqual(code, 0)
+        self.assertEqual(prompts, 0)
+        self.assertIn("Review the remaining update", out)
+        self.assertEqual(commands[1:], [call("start", "test-job", "first"), call("start", "test-job", "fresh")])
+
+    def test_declining_after_handoff_preserves_the_pending_plan(self):
+        handoff = self.plan("fresh", confirmation_required=True)
+        code, out, _, commands, prompts = self.apply(
+            [self.plan(state="updater-update-required"), handoff], answers=["y", "n"])
+        self.assertEqual(code, 1)
+        self.assertEqual(prompts, 2)
+        self.assertIn("status test-job", out)
+        self.assertEqual(commands[1:], [call("start", "test-job", "first")])
+
+    def test_yes_does_not_override_verification_failure(self):
+        code, _, err, commands, prompts = self.apply([BundleError("Bad signature")], flags=["--yes"])
+        self.assertEqual(code, 2)
+        self.assertEqual(prompts, 0)
+        self.assertIn("Bad signature", err)
+        self.assertEqual(commands, [call("prepare", "/tmp/update.atgz")])
+
+    def test_worker_failure_reports_the_saved_job(self):
+        code, out, err, _, _ = self.apply(
+            [self.plan(), {"state": "partial", "error": "Package installation failed"}], flags=["-y"])
+        self.assertEqual(code, 2)
+        self.assertNotIn("Update complete.", out)
+        self.assertIn("Package installation failed", err)
+        self.assertIn("status test-job", err)
+
+    def test_ctrl_c_stops_following_without_discarding_a_running_job(self):
+        code, _, err, commands, _ = self.apply(
+            [self.plan(), {"state": "queued", "job_id": "test-job"}], statuses=[KeyboardInterrupt], flags=["-y"])
+        self.assertEqual(code, 130)
+        self.assertIn("status test-job", err)
+        self.assertEqual(commands[-1], call("start", "test-job", "first"))
+        self.assertEqual(len(commands), 2)
+
+    def test_already_applied_update_does_not_start_an_installation(self):
+        code, out, _, commands, prompts = self.apply([self.plan(state="already-installed"), {}])
+        self.assertEqual(code, 0)
+        self.assertEqual(prompts, 0)
+        self.assertIn("You already have this update.", out)
+        self.assertEqual(commands, [call("prepare", "/tmp/update.atgz"), call("discard", "test-job")])
+
+
 class InstallationChecks(unittest.TestCase):
+    def test_interrupted_import_removes_incomplete_job(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with patch.object(jobs, "ROOT", root), patch.object(jobs, "copy_as_user", side_effect=KeyboardInterrupt):
+                with self.assertRaises(KeyboardInterrupt):
+                    jobs.prepare(Path("/tmp/update.atgz"), 0)
+            self.assertEqual(list(root.iterdir()), [])
+
     def test_targets_are_checked_even_if_os_version_already_matches(self):
         apt_pkg.init_config(); apt_pkg.init_system()
         manifest = {"architecture": "amd64", "version_package": "base-files", "allowed_removals": [], "required_installed_targets": [
