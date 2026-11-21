@@ -49,11 +49,13 @@ class ApplyCommandTests(unittest.TestCase):
     def test_waits_for_result_and_reports_reboot(self):
         code, out, _, commands, prompts = self.apply(
             [self.plan(), {"state": "queued", "job_id": "test-job"}], answers=["yes"],
-            statuses=[{"state": "installing", "job_id": "test-job", "stage": 1, "stage_count": 1},
+            statuses=[{"state": "checking", "job_id": "test-job"},
+                      {"state": "installing", "job_id": "test-job", "stage": 1, "stage_count": 1},
                       {"state": "complete", "reboot_required": True}])
         self.assertEqual(code, 0)
         self.assertEqual(prompts, 1)
         self.assertEqual(commands[-1], call("start", "test-job", "first"))
+        self.assertEqual(out.count("Checking the installation"), 1)
         self.assertIn("Update complete.", out)
         self.assertIn("Restart your computer", out)
 
@@ -64,7 +66,7 @@ class ApplyCommandTests(unittest.TestCase):
              {"state": "complete"}], flags=["-y"], statuses=[handoff])
         self.assertEqual(code, 0)
         self.assertEqual(prompts, 0)
-        self.assertIn("Review the remaining update", out)
+        self.assertIn("Remaining update plan", out)
         self.assertEqual(commands[1:], [call("start", "test-job", "first"), call("start", "test-job", "fresh")])
 
     def test_declining_after_handoff_preserves_the_pending_plan(self):

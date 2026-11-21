@@ -52,18 +52,18 @@ def show_plan(plan):
 def wait_for_update(job):
     from . import jobs
 
-    phase = None
+    previous_message = None
     while job["state"] in {"queued", "checking", "installing", "handoff"}:
         state = job["state"]
-        current = (state, job.get("stage"))
-        if current != phase:
-            if state == "installing":
-                print(f'Installing stage {job["stage"]} of {job["stage_count"]}…', flush=True)
-            elif state == "handoff":
-                print("Restarting the updated installation worker…", flush=True)
-            else:
-                print("Checking the installation…", flush=True)
-            phase = current
+        if state == "installing":
+            message = f'Installing stage {job["stage"]} of {job["stage_count"]}…'
+        elif state == "handoff":
+            message = "Restarting the updated installation worker…"
+        else:
+            message = "Checking the installation…"
+        if message != previous_message:
+            print(message, flush=True)
+            previous_message = message
         time.sleep(1)
         job = jobs.status(job["job_id"], os.getuid())
     return job
@@ -83,7 +83,7 @@ def apply_update(file, assume_yes):
         for step in range(2):
             plan = job["preview"]
             if step:
-                print("The updater has been upgraded. Review the remaining update.")
+                print("Updater upgraded. Remaining update plan")
             show_plan(plan)
             if plan["state"] == "already-installed" and not step:
                 call_helper("discard", job_id)
