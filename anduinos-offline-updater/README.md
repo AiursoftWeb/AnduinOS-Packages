@@ -89,7 +89,23 @@ PyGObject, Xvfb and a session bus are required).
 
 ## Install from the command line
 
-Back up important files first. `prepare` requests administrator authorization,
+Back up important files first.
+
+```sh
+sudo anduinos-offline-updater apply ./update.atgz
+sudo anduinos-offline-updater apply -y ./update.atgz
+```
+
+`apply` verifies the archive, shows the current and target versions and the
+package changes, and asks for confirmation. If the updater upgrades itself,
+it shows and asks separately about the remaining plan. Use `-y` (or `--yes`)
+to confirm these plans without prompts. Both modes wait for the final result
+and say if you need to restart. Exit status is 0 on success or if the update is
+already installed, 1 if you decline, 2 on failure, and 130 if you press Ctrl+C.
+Once installation has started, Ctrl+C stops following it. Use
+`sudo anduinos-offline-updater status JOB_ID` to check the saved job.
+
+To review and confirm a plan in separate commands, `prepare` requests administrator authorization,
 imports the selected file into root-owned storage and returns a fresh plan.
 It does not install packages. Inspect the returned changes before confirming:
 
