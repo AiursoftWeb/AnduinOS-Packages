@@ -1,10 +1,11 @@
-"""Command-line entry point for read-only bundle verification and preview."""
+"""Command-line entry point for verifying and installing offline updates."""
 import argparse
 import json
 import os
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 from . import VERSION
@@ -25,6 +26,105 @@ def running_version():
     return VERSION
 
 
+def call_helper(*args):
+    from .jobs import HELPER
+
+    result = subprocess.run([HELPER, *args], capture_output=True, text=True, check=False)
+    try:
+        report = json.loads(result.stdout)
+    except json.JSONDecodeError as error:
+        raise BundleError("Could not read the installation service response") from error
+    if result.returncode:
+        raise BundleError("; ".join(report.get("blockers", [])) or "Installation service request failed")
+    return report
+
+
+def show_plan(plan):
+    print(f'AnduinOS {plan["current_version"]} → {plan["target_version"]}')
+    changes = [change for stage in plan["stages"] for change in stage["changes"]]
+    print(f"Package changes: {len(changes)}")
+    for change in changes:
+        before = change["before"] or "not installed"
+        after = change["after"] or "removed"
+        print(f'  {change["name"]}:{change["architecture"]}  {before} → {after}')
+
+
+def wait_for_update(job):
+    from . import jobs
+
+    previous_message = None
+    while job["state"] in {"queued", "checking", "installing", "handoff"}:
+        state = job["state"]
+        if state == "installing":
+            message = f'Installing stage {job["stage"]} of {job["stage_count"]}…'
+        elif state == "handoff":
+            message = "Restarting the updated installation worker…"
+        else:
+            message = "Checking the installation…"
+        if message != previous_message:
+            print(message, flush=True)
+            previous_message = message
+        time.sleep(1)
+        job = jobs.status(job["job_id"], os.getuid())
+    return job
+
+
+def apply_update(file, assume_yes):
+    if os.geteuid() != 0:
+        print("Use sudo anduinos-offline-updater apply to authorize installation.", file=sys.stderr)
+        return 2
+
+    job_id = None
+    try:
+        print("Checking the update file…", flush=True)
+        job = call_helper("prepare", str(file.absolute()))
+        job_id = job["job_id"]
+        print(f"Update job: {job_id}", flush=True)
+        for step in range(2):
+            plan = job["preview"]
+            if step:
+                print("Updater upgraded. Remaining update plan")
+            show_plan(plan)
+            if plan["state"] == "already-installed" and not step:
+                call_helper("discard", job_id)
+                print("You already have this update.")
+                if Path("/run/reboot-required").exists():
+                    print("Restart your computer to finish applying the update.")
+                return 0
+            if plan["state"] != "already-installed" and not assume_yes:
+                try:
+                    confirmed = input("Install this plan? [y/N] ").strip().lower() in {"y", "yes"}
+                except EOFError:
+                    confirmed = False
+                if not confirmed:
+                    if step:
+                        print(f"Remaining update cancelled. Review it with sudo anduinos-offline-updater status {job_id}.")
+                    else:
+                        call_helper("discard", job_id)
+                        print("Update cancelled.")
+                    return 1
+
+            job = wait_for_update(call_helper("start", job_id, job["plan_sha256"]))
+            if job["state"] in {"complete", "already-installed"}:
+                print("Update complete.")
+                if job.get("reboot_required"):
+                    print("Restart your computer to finish applying the update.")
+                return 0
+            if job["state"] != "prepared" or not job.get("confirmation_required"):
+                detail = job.get("error") or job["state"]
+                raise BundleError(detail)
+        raise BundleError("The update requested another confirmation. Review the saved job.")
+    except KeyboardInterrupt:
+        print("\nStopped following the update.", file=sys.stderr)
+        exit_code = 130
+    except (ValueError, OSError, subprocess.SubprocessError) as error:
+        print(f"Update failed: {error}", file=sys.stderr)
+        exit_code = 2
+    if job_id:
+        print(f"Check the update with sudo anduinos-offline-updater status {job_id}.", file=sys.stderr)
+    return exit_code
+
+
 def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
     if not argv or argv == ["gui"]:
@@ -34,6 +134,9 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="Inspect or install a signed AnduinOS offline update.")
     parser.add_argument("--version", action="version", version=client_version)
     sub = parser.add_subparsers(dest="command", required=True)
+    command = sub.add_parser("apply", help="Review and install a signed update in the terminal")
+    command.add_argument("file", type=Path)
+    command.add_argument("-y", "--yes", action="store_true", help="Confirm installation plans without prompting")
     command = sub.add_parser("prepare", help="Import and preview with administrator authorization; does not install")
     command.add_argument("file", type=Path)
     command = sub.add_parser("install", help="Start exactly the previously prepared and confirmed plan")
@@ -52,6 +155,8 @@ def main(argv=None):
             command.add_argument("--system-root", type=Path, default=Path("/"),
                                  help="Read captured system state from a different root; no files there are changed")
     args = parser.parse_args(argv)
+    if args.command == "apply":
+        return apply_update(args.file, args.yes)
     if args.command in ("prepare", "install", "status", "discard"):
         from . import jobs
         try:

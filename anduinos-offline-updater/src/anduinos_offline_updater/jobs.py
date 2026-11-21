@@ -191,7 +191,7 @@ def prepare(source, uid):
                         plan_sha256=plan_hash, source_version=report["current_version"],
                         target_version=report["target_version"])
         return dict(result, preview=report)
-    except Exception:
+    except (Exception, KeyboardInterrupt):
         shutil.rmtree(path)
         raise
 
