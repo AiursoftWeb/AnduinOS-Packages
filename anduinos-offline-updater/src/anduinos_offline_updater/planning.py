@@ -66,7 +66,25 @@ def installed(records):
     return result
 
 
-def configure(work, repository, keyring, system_root, architecture):
+def system_architectures(system_root, native):
+    if system_root == Path("/"):
+        registered = run(["dpkg", "--print-foreign-architectures"]).decode().split()
+    else:
+        arch_file = system_root / "var/lib/dpkg/arch"
+        registered = arch_file.read_text().split() if arch_file.is_file() else []
+    require(all(re.fullmatch(r"[a-z0-9][a-z0-9-]*", arch) for arch in registered),
+            "Invalid dpkg architecture list")
+    return list(dict.fromkeys([native, *registered]))
+
+
+def configure_architectures(architectures):
+    apt_pkg.config.set("APT::Architecture", architectures[0])
+    apt_pkg.config.clear("APT::Architectures")
+    for architecture in architectures:
+        apt_pkg.config.set("APT::Architectures::", architecture)
+
+
+def configure(work, repository, keyring, system_root, architectures):
     # Read-only simulation deliberately excludes hooks; only package policy is copied.
     for name in ("etc/parts", "etc/sources.list.d", "etc/preferences.d", "state/lists/partial", "cache/archives/partial", "log"):
         (work / name).mkdir(parents=True, exist_ok=True)
@@ -79,7 +97,7 @@ def configure(work, repository, keyring, system_root, architecture):
             dest.write_bytes(item.read_bytes())
     (work / "trusted.gpg").write_bytes(Path(keyring).read_bytes())
     (work / "etc/sources.sources").write_text(
-        f'Types: deb\nURIs: {repository.resolve().as_uri()}\nSuites: ./\nArchitectures: {architecture}\nSigned-By: {work / "trusted.gpg"}\n')
+        f'Types: deb\nURIs: {repository.resolve().as_uri()}\nSuites: ./\nArchitectures: {architectures[0]}\nSigned-By: {work / "trusted.gpg"}\n')
     for name in {key.split("::", 1)[0] for key in apt_pkg.config.keys()}:
         apt_pkg.config.clear(name)
     # Set Dir::Etc before initialization: never load caller-supplied APT_CONFIG/hooks.
@@ -97,14 +115,13 @@ def configure(work, repository, keyring, system_root, architecture):
               "Dir::Etc::preferences": "preferences", "Dir::Etc::preferencesparts": "preferences.d",
               "Dir::State": str(work / "state"), "Dir::State::status": str(work / "state/status"),
               "Dir::Cache": str(work / "cache"), "Dir::Cache::pkgcache": "", "Dir::Cache::srcpkgcache": "",
-              "Dir::Log": str(work / "log"), "APT::Architecture": architecture,
+              "Dir::Log": str(work / "log"),
               "APT::Sandbox::User": pwd.getpwuid(os.getuid()).pw_name,
               "Acquire::Languages": "none", "Acquire::Retries": "0",
               "Acquire::AllowInsecureRepositories": "false", "APT::Get::AllowUnauthenticated": "false"}
     for key, value in values.items():
         apt_pkg.config.set(key, value)
-    apt_pkg.config.clear("APT::Architectures")
-    apt_pkg.config.set("APT::Architectures::", architecture)
+    configure_architectures(architectures)
     # Preserve solver choices, not arbitrary hooks. apt-config only reads configuration.
     if system_root == Path("/"):
         dump = run(["apt-config", "dump"]).decode()
@@ -133,9 +150,12 @@ def resolve_stage(cache, stage, m, *, bootstrap_needed=False):
             cache[name].mark_install(auto_fix=True, auto_inst=True, from_user=False)
     require(cache.broken_count == 0, "Local bundle cannot resolve required dependencies")
     changes, replacements, peak_installed = [], [], 0
+    native = (m["architecture"], "all")
     for item in cache.get_changes():
         before = item.installed.version if item.installed else None
         arch = item.installed.architecture if item.marked_delete else item.candidate.architecture
+        require(arch in native and (item.installed is None or item.installed.architecture in native),
+                f"This update would change {item.fullname}, which is outside this bundle's architecture")
         require(item._pkg.selected_state != apt_pkg.SELSTATE_HOLD, f"Held package would change: {item.name}")
         if item.marked_delete:
             require(not bootstrap_needed and not item.essential and item.name in m["allowed_removals"], f"Unapproved package removal: {item.name}")
@@ -159,17 +179,24 @@ def resolve_stage(cache, stage, m, *, bootstrap_needed=False):
 
 
 def check_targets(manifest, initial, final):
-    # Foreign architectures are rejected earlier. A package may legitimately
-    # transition between Architecture: all and the native architecture.
-    initial_names = {name for name, _ in initial}
-    final_by_name = {name: record for (name, _), record in final.items()}
-    require(len(final_by_name) == len(final), "Duplicate native/all installed package identity")
+    # The bundle targets native/all packages. A foreign package with the
+    # same name must never satisfy or obscure the signed target.
+    native = (manifest["architecture"], "all")
+    initial_names = {name for name, arch in initial if arch in native}
+    final_native = {key: record for key, record in final.items() if key[1] in native}
+    final_by_name = {name: record for (name, _), record in final_native.items()}
+    require(len(final_by_name) == len(final_native), "Duplicate native/all installed package identity")
     for package in manifest["required_installed_targets"]:
         name = package["name"]
         if name not in initial_names and name not in final_by_name: continue
         if name not in final_by_name and name in manifest["allowed_removals"]: continue
-        require(name in final_by_name and apt_pkg.version_compare(final_by_name[name]["Version"], package["version"]) >= 0,
-                f"Required installed target not satisfied: {name} >= {package['version']}")
+        if name not in final_by_name or apt_pkg.version_compare(final_by_name[name]["Version"], package["version"]) < 0:
+            peers = [f"{name}:{arch}" for (peer, arch), record in final.items()
+                     if peer == name and arch not in native and record.get("Multi-Arch") == "same"]
+            reason = f"Required installed target not satisfied: {name} >= {package['version']}"
+            if peers:
+                reason += "; this bundle cannot update the matching installed package(s) " + ", ".join(sorted(peers))
+            raise BundleError(reason)
     require(manifest["version_package"] in final_by_name, "OS version package is missing")
 
 
@@ -184,6 +211,8 @@ def bootstrap_plan(cache, manifest, packages):
     # handoff, even when the manifest requests an explicit minimum version.
     packages = set(packages) | {item.name for item in cache if replaces_runtime(item.name) and
                                 item.installed is not None and item.candidate is not None and
+                                item.installed.architecture in (manifest["architecture"], "all") and
+                                item.candidate.architecture in (manifest["architecture"], "all") and
                                 apt_pkg.version_compare(item.candidate.version, item.installed.version) > 0}
     stage = {"operation": "install", "packages": sorted(packages)}
     changes, _, expanded = resolve_stage(cache, stage, manifest, bootstrap_needed=True)
@@ -196,8 +225,10 @@ def simulate(m, repository, keyring, system_root, work, *, client_version=VERSIO
     status_bytes = status_file.read_bytes()
     records = paragraphs(status_bytes.decode())
     initial = installed(records)
-    require(all(arch in (m["architecture"], "all") for _, arch in initial), "Foreign-architecture installed packages are not supported by this preview")
-    configure(work, repository, keyring, system_root, m["architecture"])
+    architectures = system_architectures(system_root, m["architecture"])
+    require(all(arch == "all" or arch in architectures for _, arch in initial),
+            "An installed package uses an architecture not registered with dpkg")
+    configure(work, repository, keyring, system_root, architectures)
     status = work / "state/status"
     status.write_bytes(status_bytes)
     with apt.Cache(progress=OpProgress(), memonly=True) as cache:
@@ -231,7 +262,10 @@ def simulate(m, repository, keyring, system_root, work, *, client_version=VERSIO
                 return bootstrap, size, True, hashlib.sha256(status_bytes).hexdigest()
             peak_installed += expanded
             changed = {c["name"] for c in changes}
-            records = [r for r in records if r.get("Package") not in changed] + replacements
+            # Replace only native/all records, allowing a native-to-all
+            # transition while preserving same-name foreign records.
+            records = [r for r in records if r.get("Package") not in changed or
+                       r.get("Architecture") not in (m["architecture"], "all")] + replacements
             status.write_text(control_text(records))
             results.append({"stage": stage, "changes": sorted(changes, key=lambda c: (c["name"], c["architecture"]))})
     final = installed(records)
