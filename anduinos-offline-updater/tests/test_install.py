@@ -111,7 +111,8 @@ class InstallationChecks(unittest.TestCase):
     def test_interrupted_import_removes_incomplete_job(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            with patch.object(jobs, "ROOT", root), patch.object(jobs, "copy_as_user", side_effect=KeyboardInterrupt):
+            with patch.object(jobs, "ROOT", root), patch.object(jobs, "trusted_directory", return_value=root), \
+                    patch.object(jobs, "copy_as_user", side_effect=KeyboardInterrupt):
                 with self.assertRaises(KeyboardInterrupt):
                     jobs.prepare(Path("/tmp/update.atgz"), 0)
             self.assertEqual(list(root.iterdir()), [])
