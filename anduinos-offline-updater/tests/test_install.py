@@ -17,7 +17,7 @@ from anduinos_offline_updater.planning import replaces_runtime
 class InstallationChecks(unittest.TestCase):
     def test_targets_are_checked_even_if_os_version_already_matches(self):
         apt_pkg.init_config(); apt_pkg.init_system()
-        manifest = {"version_package": "base-files", "allowed_removals": [], "required_installed_targets": [
+        manifest = {"architecture": "amd64", "version_package": "base-files", "allowed_removals": [], "required_installed_targets": [
             {"name": "base-files", "architecture": "all", "version": "2.0.5"},
             {"name": "vim", "architecture": "amd64", "version": "5"}]}
         initial = {("base-files", "all"): {"Version": "2.0.0"}, ("vim", "amd64"): {"Version": "1"}}
