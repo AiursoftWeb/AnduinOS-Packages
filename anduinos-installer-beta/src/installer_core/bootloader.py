@@ -13,6 +13,7 @@ from uuid import UUID
 from anduinos_secureboot.boot_chain import graphical_grub_configuration, verify_grub_configuration
 from anduinos_secureboot.defaults import atomic_write
 
+from . import display_compatibility
 from .boot_commands import build_boot_commands
 from .command import CommandRunner
 from .esp import (
@@ -166,6 +167,13 @@ class InstallBootloaderStep:
                 emit_boundary(context, f"{prefix}-boot-files", "after")
         if context.plan.storage.encryption is EncryptionMode.LUKS2:
             _configure_graphical_unlock(context, target)
+        if display_compatibility.intel_integrated_graphics_visible():
+            atomic_write(
+                target / display_compatibility.GRUB_SCRIPT,
+                Path(display_compatibility.__file__).read_bytes(),
+                0o755,
+            )
+            context.log("Adding an AnduinOS display compatibility boot entry")
         self.runner.run(commands.configure, timeout=300)
         if explicit_nvram:
             if vendor_only:

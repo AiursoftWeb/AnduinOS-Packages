@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 from fakes import FakeRunner
 from helpers import valid_plan
+from installer_core import display_compatibility
 from installer_core.bootloader import (
     InstallBootloaderStep,
     CreateFallbackBootChainStep,
@@ -93,6 +94,40 @@ def erase_context_values(target: Path) -> dict[str, object]:
 
 
 class InstallBootloaderTests(unittest.TestCase):
+    def setUp(self):
+        self.enterContext(patch.object(
+            display_compatibility, "intel_integrated_graphics_visible", return_value=False
+        ))
+
+    def test_only_intel_integrated_graphics_installs_display_compatibility_generator(self):
+        for visible in (False, True):
+            with self.subTest(visible=visible), tempfile.TemporaryDirectory() as directory:
+                target = Path(directory)
+                prepare_target(target)
+                prepare_vendor(target)
+                script = target / display_compatibility.GRUB_SCRIPT
+                script.parent.mkdir(parents=True)
+                runner = self.compatible_runner(target)
+                update_grub = ("chroot", str(target), "update-grub")
+                run = runner.run
+
+                def check_generator(command, **kwargs):
+                    if tuple(command) == update_grub:
+                        self.assertEqual(script.is_file(), visible)
+                    return run(command, **kwargs)
+
+                context = InstallContext(valid_plan(), lambda _msg: None, erase_context_values(target))
+                with patch.object(
+                    display_compatibility, "intel_integrated_graphics_visible", return_value=visible
+                ), patch.object(runner, "run", side_effect=check_generator):
+                    InstallBootloaderStep(runner).execute(context)
+                self.assertEqual(script.exists(), visible)
+                if visible:
+                    self.assertEqual(script.stat().st_mode & 0o777, 0o755)
+                    self.assertEqual(
+                        script.read_bytes(), Path(display_compatibility.__file__).read_bytes()
+                    )
+
     def test_package_upgrade_is_signed_before_final_bootloader_installation(self):
         for arch in Architecture:
             for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):
