@@ -56,7 +56,7 @@ def display_compatibility_entry(linux_entries: str) -> str:
 
     return "\n".join((
         "set timeout_style=menu",
-        'if [ "${timeout}" -ge 0 ] && [ "${timeout}" -lt 5 ]; then',
+        'if [ "${timeout}" -ge 0 -a "${timeout}" -lt 5 ]; then',
         "  set timeout=5",
         "fi",
         "menuentry 'AnduinOS (Display Compatibility)' --class anduinos "
