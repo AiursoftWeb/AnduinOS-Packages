@@ -7,9 +7,14 @@ from pathlib import Path
 
 from .china_mirrors import SwitchChinaSourcesStep
 from .command import CommandRunner
+from .display_compatibility import intel_integrated_graphics_visible
 from .encryption import EncryptionCredentials
 from .chroot_env import EnterChrootStep, LeaveChrootStep
-from .bootloader import CreateFallbackBootChainStep, InstallBootloaderStep
+from .bootloader import (
+    CreateFallbackBootChainStep,
+    InstallBootloaderStep,
+    PrepareDisplayCompatibilityStep,
+)
 from .secure_boot import (
     EnrollSecureBootStep,
     PrepareSecureBootStep,
@@ -146,12 +151,10 @@ class InstallerExecutor:
         steps.append(ProvisionRemoteAccessStep(self.runner))
         if plan.recovery_enabled:
             steps.append(DeployRecoveryEnvironmentStep(self.runner))
-        steps.extend(
-            (
-                VerifyDkmsSignaturesStep(self.runner),
-                InstallBootloaderStep(self.runner),
-            )
-        )
+        steps.append(VerifyDkmsSignaturesStep(self.runner))
+        if intel_integrated_graphics_visible():
+            steps.append(PrepareDisplayCompatibilityStep())
+        steps.append(InstallBootloaderStep(self.runner))
         if plan.platform.firmware is Firmware.UEFI and plan.boot.install_fallback_path:
             steps.append(CreateFallbackBootChainStep(self.runner))
         steps.append(EnrollSecureBootStep(self.runner))

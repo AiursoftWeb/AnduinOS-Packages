@@ -11,6 +11,7 @@ from installer_core import display_compatibility
 from installer_core.bootloader import (
     InstallBootloaderStep,
     CreateFallbackBootChainStep,
+    PrepareDisplayCompatibilityStep,
     _deploy_portable_fallback,
     _ensure_vendor_nvram_first,
     _portable_fallback_paths,
@@ -18,6 +19,7 @@ from installer_core.bootloader import (
     _verify_portable_fallback,
     _verify_grub_filesystem_modules,
 )
+from installer_core.executor import InstallerExecutor
 from installer_core.boot_commands import build_boot_commands
 from installer_core.esp import (
     NvramInspection,
@@ -94,11 +96,6 @@ def erase_context_values(target: Path) -> dict[str, object]:
 
 
 class InstallBootloaderTests(unittest.TestCase):
-    def setUp(self):
-        self.enterContext(patch.object(
-            display_compatibility, "intel_integrated_graphics_visible", return_value=False
-        ))
-
     def test_only_intel_integrated_graphics_installs_display_compatibility_generator(self):
         for visible in (False, True):
             with self.subTest(visible=visible), tempfile.TemporaryDirectory() as directory:
@@ -117,10 +114,15 @@ class InstallBootloaderTests(unittest.TestCase):
                     return run(command, **kwargs)
 
                 context = InstallContext(valid_plan(), lambda _msg: None, erase_context_values(target))
-                with patch.object(
-                    display_compatibility, "intel_integrated_graphics_visible", return_value=visible
+                with patch(
+                    "installer_core.executor.intel_integrated_graphics_visible", return_value=visible
                 ), patch.object(runner, "run", side_effect=check_generator):
-                    InstallBootloaderStep(runner).execute(context)
+                    for step in InstallerExecutor(context.log, runner=runner).build_steps(context.plan):
+                        if isinstance(step, PrepareDisplayCompatibilityStep):
+                            step.execute(context)
+                            step.verify(context)
+                        if isinstance(step, InstallBootloaderStep):
+                            step.execute(context)
                 self.assertEqual(script.exists(), visible)
                 if visible:
                     self.assertEqual(script.stat().st_mode & 0o777, 0o755)

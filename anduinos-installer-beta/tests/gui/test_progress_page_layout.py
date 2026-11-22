@@ -28,6 +28,15 @@ def _settle():
 
 
 class ProgressPageLayoutTests(unittest.TestCase):
+    def test_display_compatibility_is_listed_for_detected_intel_graphics(self):
+        for visible in (False, True):
+            with self.subTest(visible=visible), (
+                patch("installer_core.executor.intel_integrated_graphics_visible", return_value=visible)
+            ), patch("pages.threading.Thread"), patch("pages.GLib.timeout_add_seconds", return_value=0):
+                page = pages.build_progress_page(valid_plan(), {"lang": "en_US"}, Adw.NavigationView())
+                titles = [w.get_text() for w in _descendants(page) if isinstance(w, Gtk.Label)]
+                self.assertEqual("Prepare display compatibility mode" in titles, visible)
+
     def test_native_preview_uses_real_executor_and_development_stays_simulated(self):
         for development in (False, True):
             with self.subTest(development=development):

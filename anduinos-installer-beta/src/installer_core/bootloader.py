@@ -52,6 +52,32 @@ INITRD_ADVANCED_FILESYSTEM_MODULES = {
 
 
 @dataclass
+class PrepareDisplayCompatibilityStep:
+    id: str = "prepare-display-compatibility"
+    title: str = "Prepare display compatibility mode"
+    failure_policy: FailurePolicy = FailurePolicy.FATAL
+    progress_weight: int = 1
+    destructive: bool = False
+
+    def preflight(self, context: InstallContext) -> None:
+        context.validate_plan()
+
+    def execute(self, context: InstallContext) -> None:
+        atomic_write(
+            _target(context) / display_compatibility.GRUB_SCRIPT,
+            Path(display_compatibility.__file__).read_bytes(),
+            0o755,
+        )
+
+    def verify(self, context: InstallContext) -> None:
+        if not os.access(_target(context) / display_compatibility.GRUB_SCRIPT, os.X_OK):
+            raise RuntimeError("The display compatibility boot generator is missing or not executable")
+
+    def cleanup(self, context: InstallContext) -> None:
+        return None
+
+
+@dataclass
 class InstallBootloaderStep:
     runner: CommandRunner
     id: str = "install-bootloader"
@@ -167,13 +193,6 @@ class InstallBootloaderStep:
                 emit_boundary(context, f"{prefix}-boot-files", "after")
         if context.plan.storage.encryption is EncryptionMode.LUKS2:
             _configure_graphical_unlock(context, target)
-        if display_compatibility.intel_integrated_graphics_visible():
-            atomic_write(
-                target / display_compatibility.GRUB_SCRIPT,
-                Path(display_compatibility.__file__).read_bytes(),
-                0o755,
-            )
-            context.log("Adding an AnduinOS display compatibility boot entry")
         self.runner.run(commands.configure, timeout=300)
         if explicit_nvram:
             if vendor_only:
