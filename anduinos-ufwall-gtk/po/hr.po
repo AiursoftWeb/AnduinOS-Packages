@@ -1,0 +1,806 @@
+# Croatian translations for ufwall-gtk.
+# Croatian translation contributions by Viktor (drdrummie), 2026.
+# SPDX-License-Identifier: GPL-3.0-only
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ufwall-gtk 2.0.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-14 09:51+0000\n"
+"PO-Revision-Date: 2026-11-23 04:07+0000\n"
+"Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
+"Language-Team: Croatian\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: src/widgets/add_rule_dialog.rs:155
+msgid "0 = append at end"
+msgstr "0 = dodaj na kraj"
+
+#: src/window.rs:81
+msgid "About"
+msgstr "O aplikaciji"
+
+#: src/widgets/add_rule_dialog.rs:93
+msgid "Action"
+msgstr "Radnja"
+
+#: src/views/status_view.rs:396
+msgid "Active"
+msgstr "Aktivno"
+
+#: src/widgets/add_rule_dialog.rs:170
+msgid "Add"
+msgstr "Dodaj"
+
+#: src/views/rules_view.rs:93 src/widgets/add_rule_dialog.rs:57
+msgid "Add Rule"
+msgstr "Dodaj pravilo"
+
+#: src/widgets/add_rule_dialog.rs:110
+msgid "Advanced"
+msgstr "Napredno"
+
+#: src/views/network_audit_view.rs:200 src/views/network_audit_view.rs:208
+msgid "All"
+msgstr "Sve"
+
+#: src/views/profiles_view.rs:92 src/views/status_view.rs:127
+#: src/views/status_view.rs:136 src/widgets/add_rule_dialog.rs:96
+msgid "Allow"
+msgstr "Dopusti"
+
+#: src/views/profiles_view.rs:77
+msgid "Allow applications with predefined rules."
+msgstr "Dopusti aplikacije s unaprijed definiranim pravilima."
+
+#: src/views/profiles_view.rs:76
+msgid "Application Profiles"
+msgstr "Profili aplikacija"
+
+#: src/window.rs:117
+msgid "Audit"
+msgstr "Revizija"
+
+#: src/views/network_audit_view.rs:278
+msgid "Auditor Error"
+msgstr "Pogreška nadzornika"
+
+#: src/views/network_audit_view.rs:505
+msgid "Block"
+msgstr "Blokiraj"
+
+#: src/views/network_audit_view.rs:501
+msgid "Block Connection?"
+msgstr "Blokirati vezu?"
+
+#: src/views/network_audit_view.rs:494
+msgid "Block inbound traffic from"
+msgstr "Blokiraj dolazni promet od"
+
+#: src/views/network_audit_view.rs:496
+msgid "Block outbound traffic to"
+msgstr "Blokiraj odlazni promet prema"
+
+#: src/views/dashboard_view.rs:96
+msgid "Blocked Events"
+msgstr "Blokirani događaji"
+
+#: src/views/network_audit_view.rs:552
+msgid "Blocked Successfully"
+msgstr "Uspješno blokirano"
+
+#: src/widgets/add_rule_dialog.rs:124
+msgid "Both"
+msgstr "Oba smjera"
+
+#: src/views/network_audit_view.rs:504 src/views/rules_view.rs:121
+#: src/widgets/add_rule_dialog.rs:168 src/widgets/rule_row.rs:89
+msgid "Cancel"
+msgstr "Odustani"
+
+#: src/views/status_view.rs:103
+msgid "Local Network Discovery"
+msgstr "Otkrivanje lokalne mreže"
+
+#: src/views/status_view.rs:104
+msgid "Control multicast DNS discovery and .local name resolution."
+msgstr ""
+"Upravljajte otkrivanjem putem multicast DNS-a i razrješavanjem naziva .local."
+
+#: src/views/status_view.rs:110
+msgid "Local Network Discovery (mDNS)"
+msgstr "Otkrivanje lokalne mreže (mDNS)"
+
+#: src/views/status_view.rs:111
+msgid "Checking service status…"
+msgstr "Provjera stanja usluge…"
+
+#: src/views/status_view.rs:216 src/views/status_view.rs:332
+msgid "Network Discovery Error"
+msgstr "Pogreška otkrivanja mreže"
+
+#: src/views/status_view.rs:351
+msgid "Avahi is not installed."
+msgstr "Avahi nije instaliran."
+
+#: src/views/status_view.rs:353
+msgid "Avahi is running; .local names and service discovery are available."
+msgstr "Avahi je pokrenut; nazivi .local i otkrivanje usluga dostupni su."
+
+#: src/views/status_view.rs:357
+msgid "Avahi is enabled but not currently running."
+msgstr "Avahi je omogućen, ali trenutačno nije pokrenut."
+
+#: src/views/status_view.rs:359
+msgid "Avahi is blocked; .local names and service discovery are unavailable."
+msgstr "Avahi je blokiran; nazivi .local i otkrivanje usluga nisu dostupni."
+
+#: src/widgets/add_rule_dialog.rs:149
+msgid "Comment"
+msgstr "Komentar"
+
+#: src/widgets/add_rule_dialog.rs:72
+msgid "Custom"
+msgstr "Prilagođeno"
+
+#: src/views/dashboard_view.rs:56 src/window.rs:116
+msgid "Dashboard"
+msgstr "Nadzorna ploča"
+
+#: src/views/status_view.rs:119
+msgid "Default Policies"
+msgstr "Zadana pravila"
+
+#: src/widgets/rule_row.rs:90
+msgid "Delete"
+msgstr "Izbriši"
+
+#: src/views/rules_view.rs:109 src/views/rules_view.rs:122
+msgid "Delete All"
+msgstr "Izbriši sve"
+
+#: src/views/rules_view.rs:118
+msgid "Delete All Rules?"
+msgstr "Izbrisati sva pravila?"
+
+#: src/widgets/rule_row.rs:86
+msgid "Delete Rule"
+msgstr "Izbriši pravilo"
+
+#: src/widgets/rule_row.rs:87
+msgid "Delete rule"
+msgstr "Izbriši pravilo"
+
+#: src/views/status_view.rs:126 src/views/status_view.rs:135
+#: src/widgets/add_rule_dialog.rs:95
+msgid "Deny"
+msgstr "Odbij"
+
+#: src/widgets/add_rule_dialog.rs:135
+msgid "Destination IP"
+msgstr "Odredišna IP adresa"
+
+#: src/widgets/add_rule_dialog.rs:114
+msgid "Direction"
+msgstr "Smjer"
+
+#: src/views/profiles_view.rs:170 src/views/profiles_view.rs:252
+#: src/views/rules_view.rs:137 src/views/status_view.rs:185
+#: src/widgets/add_rule_dialog.rs:338 src/widgets/rule_row.rs:119
+#: src/window.rs:283 src/window.rs:299
+msgid "Error"
+msgstr "Pogreška"
+
+#: src/views/network_audit_view.rs:555
+msgid "Failed to Block"
+msgstr "Blokiranje nije uspjelo"
+
+#: src/views/status_view.rs:95 src/window.rs:64
+#: data/com.anduinos.ufwall.desktop:29 data/com.anduinos.ufwall.desktop:57
+msgid "Firewall"
+msgstr "Vatrozid"
+
+#: src/views/rules_view.rs:70
+msgid "Firewall Rules"
+msgstr "Pravila vatrozida"
+
+#: src/views/status_view.rs:156
+msgid "Full"
+msgstr "Potpuno"
+
+#: src/views/status_view.rs:155
+msgid "High"
+msgstr "Visoko"
+
+#: src/widgets/add_rule_dialog.rs:116
+msgid "In"
+msgstr "Ulaz"
+
+#: src/views/status_view.rs:96 src/views/status_view.rs:396
+msgid "Inactive"
+msgstr "Neaktivno"
+
+#: src/views/network_audit_view.rs:201
+msgid "Inbound"
+msgstr "Dolazni"
+
+#: src/views/status_view.rs:124
+msgid "Incoming"
+msgstr "Dolazni"
+
+#: src/widgets/add_rule_dialog.rs:154
+msgid "Insert Before Rule"
+msgstr "Umetni prije pravila"
+
+#: src/widgets/add_rule_dialog.rs:144
+msgid "Interface"
+msgstr "Sučelje"
+
+#: src/widgets/add_rule_dialog.rs:98
+msgid "Limit"
+msgstr "Ograniči"
+
+#: src/views/dashboard_view.rs:129
+msgid "Listening Ports"
+msgstr "Portovi koji čekaju veze"
+
+#: src/views/status_view.rs:150
+msgid "Log Level"
+msgstr "Razina zapisivanja"
+
+#: src/views/status_view.rs:146
+msgid "Logging"
+msgstr "Zapisivanje"
+
+#: src/views/status_view.rs:153
+msgid "Low"
+msgstr "Nisko"
+
+#: src/views/status_view.rs:154
+msgid "Medium"
+msgstr "Srednje"
+
+#: src/views/network_audit_view.rs:58
+msgid "Monitoring Network Activity"
+msgstr "Nadzor mrežne aktivnosti"
+
+#: src/views/profiles_view.rs:119
+msgid "No Profiles"
+msgstr "Nema profila"
+
+#: src/views/rules_view.rs:75
+msgid "No Rules"
+msgstr "Nema pravila"
+
+#: src/views/profiles_view.rs:120
+msgid "No application profiles found"
+msgstr "Nisu pronađeni profili aplikacija"
+
+#: src/views/dashboard_view.rs:247
+msgid "No blocked connections in recent events"
+msgstr "U nedavnim događajima nema blokiranih veza"
+
+#: src/views/dashboard_view.rs:296
+msgid "No blocked ports in recent events"
+msgstr "U nedavnim događajima nema blokiranih portova"
+
+#: src/views/dashboard_view.rs:344
+msgid "No listening ports detected"
+msgstr "Nisu otkriveni portovi koji čekaju veze"
+
+#: src/views/status_view.rs:152
+msgid "Off"
+msgstr "Isključeno"
+
+#: src/widgets/add_rule_dialog.rs:117
+msgid "Out"
+msgstr "Izlaz"
+
+#: src/views/network_audit_view.rs:202
+msgid "Outbound"
+msgstr "Odlazni"
+
+#: src/views/status_view.rs:133
+msgid "Outgoing"
+msgstr "Odlazni"
+
+#: src/views/network_audit_view.rs:217
+msgid "Pause list updates"
+msgstr "Pauziraj ažuriranje popisa"
+
+#: src/views/profiles_view.rs:87
+msgid "Port / Protocol"
+msgstr "Port / protokol"
+
+#: src/widgets/add_rule_dialog.rs:89
+msgid "Port / Service Name"
+msgstr "Port / naziv usluge"
+
+#: src/window.rs:120
+msgid "Profiles"
+msgstr "Profili"
+
+#: src/widgets/add_rule_dialog.rs:122
+msgid "Protocol"
+msgstr "Protokol"
+
+#: src/views/profiles_view.rs:82
+msgid "Quick Allow Port"
+msgstr "Brzo dopusti port"
+
+#: src/views/dashboard_view.rs:135
+msgid "Recent Blocked Events"
+msgstr "Nedavni blokirani događaji"
+
+#: src/views/dashboard_view.rs:78
+msgid "Recent Events Parsed"
+msgstr "Obrađeni nedavni događaji"
+
+#: src/views/dashboard_view.rs:154
+msgid "Refresh"
+msgstr "Osvježi"
+
+#: src/views/status_view.rs:128 src/views/status_view.rs:137
+#: src/widgets/add_rule_dialog.rs:97
+msgid "Reject"
+msgstr "Odbaci"
+
+#: src/views/network_audit_view.rs:195
+msgid "Resolve Domains"
+msgstr "Razriješi nazive domena"
+
+#: src/views/network_audit_view.rs:552
+msgid "Rule added to block"
+msgstr "Dodano je pravilo blokiranja"
+
+#: src/window.rs:119
+msgid "Rules"
+msgstr "Pravila"
+
+#: src/widgets/add_rule_dialog.rs:265
+msgid "Save"
+msgstr "Spremi"
+
+#: src/views/network_audit_view.rs:186
+msgid "Search Process or IP..."
+msgstr "Pretraži procese ili IP adrese..."
+
+#: src/views/rules_view.rs:62
+msgid "Search rules..."
+msgstr "Pretraži pravila..."
+
+#: src/widgets/add_rule_dialog.rs:70
+msgid "Service"
+msgstr "Usluga"
+
+#: src/views/dashboard_view.rs:139
+msgid "Show"
+msgstr "Prikaži"
+
+#: src/widgets/add_rule_dialog.rs:131
+msgid "Source IP"
+msgstr "Izvorna IP adresa"
+
+#: src/views/status_view.rs:84 src/window.rs:118
+msgid "Status"
+msgstr "Stanje"
+
+#: src/views/network_audit_view.rs:209 src/widgets/add_rule_dialog.rs:125
+msgid "TCP"
+msgstr "TCP"
+
+#: src/views/rules_view.rs:76
+msgid "There are no rules configured yet."
+msgstr "Još nema konfiguriranih pravila."
+
+#: src/views/rules_view.rs:119
+msgid "This will delete all custom rules. This action cannot be undone."
+msgstr ""
+"Time ćete izbrisati sva prilagođena pravila. Ovu radnju nije moguće "
+"poništiti."
+
+#: src/views/network_audit_view.rs:494
+msgid ""
+"This will prevent the remote host from sending any packets to your machine."
+msgstr "Time ćete spriječiti udaljeno računalo da šalje pakete vašem računalu."
+
+#: src/views/network_audit_view.rs:496
+msgid ""
+"This will prevent your machine from sending any packets to the remote host."
+msgstr ""
+"Time ćete spriječiti svoje računalo da šalje pakete udaljenom računalu."
+
+#: src/views/dashboard_view.rs:117
+msgid "Top Blocked Connections"
+msgstr "Najčešće blokirane veze"
+
+#: src/views/dashboard_view.rs:123
+msgid "Top Blocked Ports"
+msgstr "Najčešće blokirani portovi"
+
+#: src/views/network_audit_view.rs:210 src/widgets/add_rule_dialog.rs:126
+msgid "UDP"
+msgstr "UDP"
+
+#: src/views/profiles_view.rs:83
+msgid "e.g. 80,443/tcp or 8080"
+msgstr "npr. 80,443/tcp ili 8080"
+
+#: data/app_profiles/qbittorrent:3 data/app_profiles/transmission:3
+msgid "BitTorrent client"
+msgstr "BitTorrent klijent"
+
+#: data/app_profiles/cups:3
+msgid "Common UNIX Printing System server"
+msgstr "Poslužitelj sustava Common UNIX Printing System"
+
+#: data/app_profiles/syncthing:3
+msgid "Continuous file synchronization"
+msgstr "Neprekidna sinkronizacija datoteka"
+
+#: data/app_profiles/docker:3
+msgid "Docker container runtime API"
+msgstr "API okruženja za izvođenje Docker spremnika"
+
+#: data/app_profiles/dns:3
+msgid "Domain Name System server"
+msgstr "Poslužitelj sustava naziva domena (DNS)"
+
+#: data/app_profiles/xmpp:3
+msgid "Extensible Messaging and Presence Protocol"
+msgstr "Protokol za razmjenu poruka i prikaz prisutnosti (XMPP)"
+
+#: data/app_profiles/ftp:3
+msgid "File Transfer Protocol"
+msgstr "Protokol za prijenos datoteka (FTP)"
+
+#: data/app_profiles/dropbox:3
+msgid "File synchronization service"
+msgstr "Usluga sinkronizacije datoteka"
+
+#: data/app_profiles/http:3
+msgid "Hypertext Transfer Protocol for web servers"
+msgstr "Protokol za prijenos hiperteksta (HTTP) za web-poslužitelje"
+
+#: data/app_profiles/redis:3
+msgid "In-memory data structure store"
+msgstr "Spremište podatkovnih struktura u memoriji"
+
+#: data/app_profiles/imap:3
+msgid "Internet Message Access Protocol for email"
+msgstr "Protokol za pristup internetskim porukama (IMAP) za e-poštu"
+
+#: data/app_profiles/ldap:3
+msgid "Lightweight Directory Access Protocol"
+msgstr "Protokol za pristup direktorijskim uslugama (LDAP)"
+
+#: data/app_profiles/jellyfin:3
+msgid "Media streaming server"
+msgstr "Poslužitelj za multimedijski streaming"
+
+#: data/app_profiles/wireguard:3
+msgid "Modern VPN tunnel"
+msgstr "Suvremeni VPN tunel"
+
+#: data/app_profiles/mdns:3
+msgid "Multicast DNS for local network discovery"
+msgstr "Multicast DNS za otkrivanje lokalne mreže"
+
+#: data/app_profiles/mysql:3
+msgid "MySQL database server"
+msgstr "Poslužitelj baze podataka MySQL"
+
+#: data/app_profiles/nfs:3
+msgid "Network File System"
+msgstr "Mrežni datotečni sustav (NFS)"
+
+#: data/app_profiles/ntp:3
+msgid "Network Time Protocol"
+msgstr "Mrežni vremenski protokol (NTP)"
+
+#: data/app_profiles/mongodb:3
+msgid "NoSQL document database"
+msgstr "Dokumentna baza podataka NoSQL"
+
+#: data/app_profiles/kdeconnect:3
+msgid "Phone and desktop integration"
+msgstr "Povezivanje telefona s računalom"
+
+#: data/app_profiles/plex:3
+msgid "Plex media streaming server"
+msgstr "Plexov poslužitelj za multimedijski streaming"
+
+#: data/app_profiles/pop3:3
+msgid "Post Office Protocol for email retrieval"
+msgstr "Protokol za preuzimanje e-pošte (POP3)"
+
+#: data/app_profiles/postgresql:3
+msgid "PostgreSQL database server"
+msgstr "Poslužitelj baze podataka PostgreSQL"
+
+#: data/app_profiles/rdp:3
+msgid "Remote Desktop Protocol"
+msgstr "Protokol udaljene radne površine (RDP)"
+
+#: data/app_profiles/https:3
+msgid "Secure HTTP for web servers"
+msgstr "Sigurni HTTP za web-poslužitelje"
+
+#: data/app_profiles/openssh:3
+msgid "Secure shell remote access"
+msgstr "Udaljeni pristup putem Secure Shell (SSH)"
+
+#: data/app_profiles/smtp:3
+msgid "Simple Mail Transfer Protocol"
+msgstr "Jednostavni protokol za prijenos pošte (SMTP)"
+
+#: data/app_profiles/vnc:3
+msgid "Virtual Network Computing remote desktop"
+msgstr "Udaljena radna površina Virtual Network Computing (VNC)"
+
+#: data/app_profiles/samba:3
+msgid "Windows file and printer sharing"
+msgstr "Dijeljenje datoteka i pisača u sustavu Windows"
+
+#: src/views/network_audit_view.rs:535
+msgid "Audit Block"
+msgstr "Revizijsko blokiranje"
+
+#: src/ufw/backend.rs:44 src/ufw/backend.rs:391 src/ufw/backend.rs:643
+msgid "Authentication cancelled"
+msgstr "Autentifikacija je otkazana"
+
+#: src/views/network_audit_view.rs:160
+msgid "Download"
+msgstr "Preuzimanje"
+
+#: src/ufw/backend.rs:384
+msgid "Failed to execute network service helper"
+msgstr "Pokretanje pomoćnog programa za mrežne usluge nije uspjelo."
+
+#: src/ufw/backend.rs:632
+msgid "Failed to execute pkexec"
+msgstr "Pokretanje programa pkexec nije uspjelo."
+
+#: src/ufw/backend.rs:613
+msgid "Failed to inspect system service"
+msgstr "Pregled sistemske usluge nije uspio."
+
+#: src/window.rs:284
+msgid "Failed to read firewall status"
+msgstr "Čitanje stanja vatrozida nije uspjelo."
+
+#: src/window.rs:300
+msgid "Failed to read profiles"
+msgstr "Čitanje profila nije uspjelo."
+
+#: src/ufw/stats.rs:39
+msgid "Failed to run journalctl"
+msgstr "Pokretanje naredbe journalctl nije uspjelo."
+
+#: src/ufw/backend.rs:37
+msgid "Failed to run pkexec ufw status"
+msgstr "Pokretanje naredbe pkexec ufw status nije uspjelo."
+
+#: src/ufw/stats.rs:151
+msgid "Failed to run ss"
+msgstr "Pokretanje naredbe ss nije uspjelo."
+
+#: src/ufw/traffic_monitor.rs:36
+msgid "Failed to start ufwall-auditor"
+msgstr "Pokretanje ufwall-auditor nije uspjelo."
+
+#: src/ufw/traffic_monitor.rs:38
+msgid "Is it installed?"
+msgstr "Je li instalirano?"
+
+#: src/views/network_audit_view.rs:166
+msgid "Max"
+msgstr "Maks."
+
+#: src/views/network_audit_view.rs:84
+msgid ""
+"Network Traffic\n"
+"Red line: Upload speed\n"
+"Green line: Download speed"
+msgstr ""
+"Mrežni promet\n"
+"Crvena linija: brzina slanja\n"
+"Zelena linija: brzina preuzimanja"
+
+#: src/ufw/backend.rs:399
+msgid "Network service command failed"
+msgstr "Naredba mrežne usluge nije uspjela."
+
+#: src/views/network_audit_view.rs:372
+msgid "No Active Connections"
+msgstr "Nema aktivnih veza"
+
+#: src/views/network_audit_view.rs:362
+msgid "No Inbound Connections"
+msgstr "Nema dolaznih veza"
+
+#: src/views/network_audit_view.rs:367
+msgid "No Outbound Connections"
+msgstr "Nema odlaznih veza"
+
+#: src/views/network_audit_view.rs:368
+msgid "No applications are sending data to the internet."
+msgstr "Nijedna aplikacija ne šalje podatke na internet."
+
+#: src/views/network_audit_view.rs:363
+msgid "No external devices are connecting to your open ports."
+msgstr "Nijedan vanjski uređaj ne povezuje se s vašim otvorenim portovima."
+
+#: src/views/network_audit_view.rs:373
+msgid "No network activity detected."
+msgstr "Nije otkrivena mrežna aktivnost."
+
+#: src/ufw/backend.rs:528 src/ufw/backend.rs:546
+msgid "No ports defined for this profile"
+msgstr "Za ovaj profil nisu definirani portovi"
+
+#: src/ufw/backend.rs:649
+msgid "UFW command failed"
+msgstr "Naredba UFW-a nije uspjela"
+
+#: src/views/network_audit_view.rs:152
+msgid "Upload"
+msgstr "Slanje"
+
+#: src/ufw/backend.rs:48
+msgid "pkexec failed"
+msgstr "pkexec nije uspio"
+
+#: data/com.anduinos.ufwall.desktop:124
+msgid "firewall;ufw;security;network;"
+msgstr "vatrozid;ufw;sigurnost;mreža;"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:82
+msgid "Authentication is required to change local network discovery"
+msgstr "Za promjenu otkrivanja lokalne mreže potrebna je autentifikacija."
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:80
+msgid "Manage local network discovery"
+msgstr "Upravljajte otkrivanjem lokalne mreže"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:39
+msgid "Authentication is required to modify firewall settings"
+msgstr "Za izmjenu postavki vatrozida potrebna je autentifikacija."
+
+#: data/com.anduinos.ufwall.desktop:85
+msgid "Configure your firewall"
+msgstr "Konfigurirajte vatrozid"
+
+#: anduinos-ufwall-gtk/data/com.anduinos.ufwall.policy:9
+msgid "Manage UFW firewall settings"
+msgstr "Upravljajte postavkama vatrozida UFW"
+
+msgid "Authentication is required to inspect active firewall rules"
+msgstr "Za pregled aktivnih pravila vatrozida potrebna je autentifikacija."
+
+msgid "Cannot confirm the complete firewall state"
+msgstr "Nije moguće potvrditi potpuno stanje vatrozida."
+
+msgid "Cannot manage the firewall: UFW is missing"
+msgstr "Nije moguće upravljati vatrozidom: nedostaje UFW."
+
+msgid "Checking firewall configuration…"
+msgstr "Provjera konfiguracije vatrozida…"
+
+msgid "Firewall configuration may conflict"
+msgstr "Konfiguracija vatrozida može biti u sukobu"
+
+msgid "Firewall inspection"
+msgstr "Pregled vatrozida"
+
+msgid "Firewall inspection failed. Use Refresh to retry."
+msgstr "Pregled vatrozida nije uspio. Kliknite „Osvježi” za ponovni pokušaj."
+
+msgid "Incomplete checks"
+msgstr "Nepotpune provjere"
+
+msgid "Inspect firewall configuration"
+msgstr "Pregledaj konfiguraciju vatrozida"
+
+msgid "Installation alone does not mean another firewall is active."
+msgstr "Sama instalacija ne znači da je neki drugi vatrozid aktivan."
+
+msgid ""
+"No Reply Observed:\n"
+"Incoming traffic was observed without a reply. This does not prove that a "
+"firewall blocked it."
+msgstr ""
+"Nije zabilježen odgovor:\n"
+"Zabilježen je dolazni promet bez odgovora. To ne dokazuje da ga je vatrozid "
+"blokirao."
+
+msgid ""
+"No Reply Observed:\n"
+"Outgoing traffic was observed without a reply. This does not prove that a "
+"firewall blocked it."
+msgstr ""
+"Nije zabilježen odgovor:\n"
+"Zabilježen je odlazni promet bez odgovora. To ne dokazuje da ga je vatrozid "
+"blokirao."
+
+msgid "Other firewall management software is installed"
+msgstr "Instaliran je drugi softver za upravljanje vatrozidom"
+
+msgid ""
+"Reply Traffic Observed:\n"
+"Inbound traffic and a reply were observed. This does not confirm a "
+"successful application connection."
+msgstr ""
+"Zabilježen je povratni promet:\n"
+"Zabilježeni su dolazni promet i odgovor. To ne potvrđuje uspješno "
+"povezivanje aplikacije."
+
+msgid ""
+"Reply Traffic Observed:\n"
+"Outbound traffic and a reply were observed. This does not confirm a "
+"successful application connection."
+msgstr ""
+"Zabilježen je povratni promet:\n"
+"Zabilježeni su odlazni promet i odgovor. To ne potvrđuje uspješno "
+"povezivanje aplikacije."
+
+msgid ""
+"Review the other firewall manager before changing UFW. Disabling UFW does "
+"not disable these other managers."
+msgstr ""
+"Prije promjene UFW-a provjerite drugi upravitelj vatrozida. Isključivanje "
+"UFW-a ne isključuje ostale upravitelje."
+
+msgid ""
+"Some checks could not be completed. Use Refresh to retry and authorize the "
+"inspection if prompted."
+msgstr ""
+"Neke provjere nisu mogle biti dovršene. Kliknite „Osvježi” za ponovni "
+"pokušaj i odobrite pregled ako se to zatraži."
+
+msgid ""
+"The UFW executable is unavailable. UFW controls cannot be used until it is "
+"restored."
+msgstr ""
+"Izvršna datoteka UFW-a nije dostupna. Kontrole UFW-a ne mogu se koristiti "
+"dok se ona ne vrati."
+
+msgid "This application manages UFW only."
+msgstr "Ova aplikacija upravlja samo UFW-om."
+
+msgid ""
+"This application manages UFW only. Other firewall rules may still block "
+"connections when UFW is off."
+msgstr ""
+"Ova aplikacija upravlja samo UFW-om. Druga pravila vatrozida i dalje mogu "
+"blokirati veze kada je UFW isključen."
+
+msgid "UFW Firewall"
+msgstr "Vatrozid UFW"
+
+msgid "UFW is not installed"
+msgstr "UFW nije instaliran"
+
+msgid "UFW management"
+msgstr "Upravljanje UFW-om"
+
+msgid "filtering rules detected"
+msgstr "otkrivena pravila filtriranja"
+
+msgid "installed"
+msgstr "instalirano"
+
+msgid "service enabled"
+msgstr "usluga je omogućena"
+
+msgid "service running"
+msgstr "usluga je pokrenuta"
+
+msgid "Details"
+msgstr "Pojedinosti"

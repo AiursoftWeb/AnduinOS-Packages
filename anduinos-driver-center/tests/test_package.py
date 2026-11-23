@@ -40,7 +40,7 @@ class PackageTests(unittest.TestCase):
     def test_every_supported_locale_is_complete_and_matches_the_ui(self):
         expected_locales = {
             "ar", "da", "de", "el", "en_GB", "en_US", "es", "fi", "fr",
-            "hi", "id", "it", "ja", "ko", "nl", "pl", "pt", "pt_BR",
+            "hi", "hr", "id", "it", "ja", "ko", "nl", "pl", "pt", "pt_BR",
             "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh_CN", "zh_HK",
             "zh_TW",
         }

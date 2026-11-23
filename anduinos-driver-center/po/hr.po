@@ -1,0 +1,2890 @@
+# Croatian translations for anduinos-driver-center.
+# Croatian translation contributions by Viktor (drdrummie), 2026.
+# SPDX-License-Identifier: GPL-3.0-only
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: AnduinOS Driver Center 2.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-11 16:11+0800\n"
+"PO-Revision-Date: 2026-11-23 04:07+0000\n"
+"Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
+"Language-Team: Croatian\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+#: src/anduinos_driver_center/app.py:123 src/anduinos_driver_center/app.py:221
+#: src/anduinos_driver_center/app.py:295 src/anduinos_driver_center/app.py:2278
+#: data/com.anduinos.DriverCenter.desktop:2
+msgid "AnduinOS Driver Center"
+msgstr "Centar za upravljačke programe AnduinOS-a"
+
+#: src/anduinos_driver_center/app.py:242 src/anduinos_driver_center/app.py:340
+#: src/anduinos_driver_center/app.py:342
+msgid "Home"
+msgstr "Početna"
+
+#: src/anduinos_driver_center/app.py:245 src/anduinos_driver_center/app.py:802
+#: src/anduinos_driver_center/app.py:1073
+#: src/anduinos_driver_center/app.py:1641
+#: src/anduinos_driver_center/app.py:1803
+msgid "Scan again"
+msgstr "Pretraži ponovno"
+
+#: src/anduinos_driver_center/app.py:250
+msgid "About Driver Center"
+msgstr "O Centru za upravljačke programe"
+
+#: src/anduinos_driver_center/app.py:252
+msgid "Main Menu"
+msgstr "Glavni izbornik"
+
+#: src/anduinos_driver_center/app.py:297
+msgid "Scanning for drivers"
+msgstr "Pretraživanje upravljačkih programa"
+
+#: src/anduinos_driver_center/app.py:298
+msgid "Checking hardware and Secure Boot status…"
+msgstr "Provjera hardvera i stanja funkcije Secure Boot…"
+
+#: src/anduinos_driver_center/app.py:340 src/anduinos_driver_center/app.py:878
+#: src/anduinos_driver_center/app.py:1218
+#: src/anduinos_driver_center/app.py:1951
+msgid "System status"
+msgstr "Stanje sustava"
+
+#: src/anduinos_driver_center/app.py:359 src/anduinos_driver_center/app.py:363
+msgid "Audio"
+msgstr "Zvuk"
+
+#: src/anduinos_driver_center/app.py:360 src/anduinos_driver_center/app.py:942
+msgid "Audio support ready"
+msgstr "Podrška za zvuk je spremna"
+
+#: src/anduinos_driver_center/app.py:360 src/anduinos_driver_center/app.py:375
+#: src/anduinos_driver_center/app.py:402 src/anduinos_driver_center/app.py:496
+#: src/anduinos_driver_center/app.py:845 src/anduinos_driver_center/app.py:848
+#: src/anduinos_driver_center/app.py:912 src/anduinos_driver_center/app.py:942
+#: src/anduinos_driver_center/app.py:972 src/anduinos_driver_center/app.py:997
+#: src/anduinos_driver_center/app.py:1013
+msgid "Support needs attention"
+msgstr "Podrška zahtijeva pažnju"
+
+#: src/anduinos_driver_center/app.py:370
+msgid "Printing service stopped"
+msgstr "Usluga ispisa je zaustavljena"
+
+#: src/anduinos_driver_center/app.py:372 src/anduinos_driver_center/app.py:956
+#: src/anduinos_driver_center/app.py:2118
+msgid "Printing support disabled."
+msgstr "Podrška za ispis je onemogućena."
+
+#: src/anduinos_driver_center/app.py:377
+msgid "Some queues are paused"
+msgstr "Neki su redovi čekanja pauzirani"
+
+#: src/anduinos_driver_center/app.py:379 src/anduinos_driver_center/app.py:967
+msgid "No printers configured"
+msgstr "Nema konfiguriranih pisača"
+
+#: src/anduinos_driver_center/app.py:382 src/anduinos_driver_center/app.py:962
+#, python-format
+msgid "%d printer configured"
+msgid_plural "%d printers configured"
+msgstr[0] "Konfiguriran je %d pisač"
+msgstr[1] "Konfigurirana su %d pisača"
+msgstr[2] "Konfigurirano je %d pisača"
+
+#: src/anduinos_driver_center/app.py:387 src/anduinos_driver_center/app.py:390
+msgid "Printers"
+msgstr "Pisači"
+
+#: src/anduinos_driver_center/app.py:395 src/anduinos_driver_center/app.py:407
+msgid "Xbox Controller"
+msgstr "Xbox kontroler"
+
+#: src/anduinos_driver_center/app.py:397 src/anduinos_driver_center/app.py:995
+msgid "xpadneo installed"
+msgstr "xpadneo je instaliran"
+
+#: src/anduinos_driver_center/app.py:400 src/anduinos_driver_center/app.py:996
+msgid "Optional Bluetooth driver"
+msgstr "Neobavezni Bluetooth upravljački program"
+
+#: src/anduinos_driver_center/app.py:413 src/anduinos_driver_center/app.py:417
+#: src/anduinos_driver_center/app.py:807 src/anduinos_driver_center/app.py:811
+#: src/anduinos_driver_center/app.py:1011
+#: src/anduinos_driver_center/app.py:1105
+#: src/anduinos_driver_center/app.py:1570
+#: src/anduinos_driver_center/app.py:1761
+#: src/anduinos_driver_center/app.py:1766
+#: src/anduinos_driver_center/app.py:1771
+#: src/anduinos_driver_center/app.py:1782
+msgid "Secure Boot"
+msgstr "Secure Boot"
+
+#: src/anduinos_driver_center/app.py:414 src/anduinos_driver_center/app.py:1013
+msgid "Trust established"
+msgstr "Povjerenje je uspostavljeno"
+
+#: src/anduinos_driver_center/app.py:414 src/anduinos_driver_center/app.py:798
+#: src/anduinos_driver_center/app.py:805 src/anduinos_driver_center/app.py:892
+#: src/anduinos_driver_center/app.py:1012
+msgid "Action required"
+msgstr "Potrebna je vaša radnja"
+
+#: src/anduinos_driver_center/app.py:424 src/anduinos_driver_center/app.py:428
+#: src/anduinos_driver_center/app.py:1025
+#: src/anduinos_driver_center/app.py:1172
+msgid "Device Firmware"
+msgstr "Firmver uređaja"
+
+#: src/anduinos_driver_center/app.py:494 src/anduinos_driver_center/app.py:1203
+msgid "Checking for updates…"
+msgstr "Provjera ažuriranja…"
+
+#: src/anduinos_driver_center/app.py:498 src/anduinos_driver_center/app.py:520
+#: src/anduinos_driver_center/app.py:644
+msgid "Shutdown Required"
+msgstr "Potrebno je isključivanje"
+
+#: src/anduinos_driver_center/app.py:500 src/anduinos_driver_center/app.py:522
+#: src/anduinos_driver_center/app.py:840 src/anduinos_driver_center/app.py:907
+#: src/anduinos_driver_center/app.py:1052
+#: src/anduinos_driver_center/app.py:1471
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:429
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:443
+msgid "Reboot Required"
+msgstr "Potrebno je ponovno pokretanje"
+
+#: src/anduinos_driver_center/app.py:504 src/anduinos_driver_center/app.py:526
+#: src/anduinos_driver_center/app.py:627
+#, python-format
+msgid "%d firmware update available"
+msgid_plural "%d firmware updates available"
+msgstr[0] "%d dostupno ažuriranje firmvera"
+msgstr[1] "%d dostupna ažuriranja firmvera"
+msgstr[2] "%d dostupnih ažuriranja firmvera"
+
+#: src/anduinos_driver_center/app.py:509
+msgid "No supported devices"
+msgstr "Nema podržanih uređaja"
+
+#: src/anduinos_driver_center/app.py:510
+msgid "Firmware is up to date"
+msgstr "Firmver je ažuran"
+
+#: src/anduinos_driver_center/app.py:516
+msgid "Checking…"
+msgstr "Provjera…"
+
+#: src/anduinos_driver_center/app.py:516
+msgid "Contacting the firmware service"
+msgstr "Povezivanje s uslugom za firmver"
+
+#: src/anduinos_driver_center/app.py:518 src/anduinos_driver_center/app.py:941
+#: src/anduinos_driver_center/app.py:971 src/anduinos_driver_center/app.py:993
+#: src/anduinos_driver_center/app.py:1440
+msgid "Needs attention"
+msgstr "Potrebna je pažnja"
+
+#: src/anduinos_driver_center/app.py:520 src/anduinos_driver_center/app.py:601
+#: src/anduinos_driver_center/app.py:1453
+msgid "Shutdown required after installation"
+msgstr "Nakon instalacije potrebno je isključiti računalo"
+
+#: src/anduinos_driver_center/app.py:522
+msgid "Restart to finish the firmware update"
+msgstr "Ponovno pokrenite računalo da biste dovršili ažuriranje firmvera"
+
+#: src/anduinos_driver_center/app.py:530 src/anduinos_driver_center/app.py:828
+#: src/anduinos_driver_center/app.py:902 src/anduinos_driver_center/app.py:1049
+#: src/anduinos_driver_center/app.py:1269
+#: src/anduinos_driver_center/app.py:1404
+msgid "Update available"
+msgstr "Dostupno je ažuriranje"
+
+#: src/anduinos_driver_center/app.py:532 src/anduinos_driver_center/app.py:893
+#: src/anduinos_driver_center/app.py:1640
+#: src/anduinos_driver_center/app.py:1666
+#: src/anduinos_driver_center/app.py:1757
+#: src/anduinos_driver_center/app.py:1801
+#: src/anduinos_driver_center/app.py:1910
+msgid "Not detected"
+msgstr "Nije otkriveno"
+
+#: src/anduinos_driver_center/app.py:532 src/anduinos_driver_center/app.py:1341
+msgid "No supported firmware devices"
+msgstr "Nema podržanih uređaja s firmverom"
+
+#: src/anduinos_driver_center/app.py:535
+#, python-format
+msgid "%d device is up to date"
+msgid_plural "%d devices are up to date"
+msgstr[0] "%d uređaj je ažuran"
+msgstr[1] "%d uređaja su ažurna"
+msgstr[2] "%d uređaja je ažurno"
+
+#: src/anduinos_driver_center/app.py:539 src/anduinos_driver_center/app.py:853
+#: src/anduinos_driver_center/app.py:917 src/anduinos_driver_center/app.py:941
+#: src/anduinos_driver_center/app.py:959 src/anduinos_driver_center/app.py:992
+#: src/anduinos_driver_center/app.py:1055
+#: src/anduinos_driver_center/app.py:1269
+msgid "Ready"
+msgstr "Spremno"
+
+#: src/anduinos_driver_center/app.py:568
+msgid "Scheduling firmware update…"
+msgstr "Zakazivanje ažuriranja firmvera…"
+
+#: src/anduinos_driver_center/app.py:569
+msgid "Downloading firmware…"
+msgstr "Preuzimanje firmvera…"
+
+#: src/anduinos_driver_center/app.py:570
+msgid "Installing firmware…"
+msgstr "Instalacija firmvera…"
+
+#: src/anduinos_driver_center/app.py:571
+msgid "Verifying firmware…"
+msgstr "Provjera firmvera…"
+
+#: src/anduinos_driver_center/app.py:572
+msgid "Waiting for authentication…"
+msgstr "Čekanje na autentifikaciju…"
+
+#: src/anduinos_driver_center/app.py:573
+msgid "Waiting for user action…"
+msgstr "Čekanje na radnju korisnika…"
+
+#: src/anduinos_driver_center/app.py:577
+msgid "Updating firmware…"
+msgstr "Ažuriranje firmvera…"
+
+#: src/anduinos_driver_center/app.py:598 src/anduinos_driver_center/app.py:2123
+#: src/anduinos_driver_center/app.py:2252
+msgid "unknown error"
+msgstr "nepoznata pogreška"
+
+#: src/anduinos_driver_center/app.py:603 src/anduinos_driver_center/app.py:1455
+msgid "Restart required after installation"
+msgstr "Nakon instalacije potrebno je ponovno pokrenuti računalo"
+
+#: src/anduinos_driver_center/app.py:607 src/anduinos_driver_center/app.py:680
+#: src/anduinos_driver_center/app.py:686
+msgid "Firmware operation failed"
+msgstr "Operacija s firmverom nije uspjela"
+
+#: src/anduinos_driver_center/app.py:610 src/anduinos_driver_center/app.py:2260
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:478
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:526
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:544
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:552
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:560
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:576
+msgid "OK"
+msgstr "U redu"
+
+#: src/anduinos_driver_center/app.py:621
+msgid "Firmware metadata refreshed."
+msgstr "Metapodaci firmvera osvježeni su."
+
+#: src/anduinos_driver_center/app.py:632
+msgid "No firmware updates are available."
+msgstr "Nema dostupnih ažuriranja firmvera."
+
+#: src/anduinos_driver_center/app.py:639
+msgid "Firmware update completed."
+msgstr "Ažuriranje firmvera dovršeno je."
+
+#: src/anduinos_driver_center/app.py:644
+msgid "Restart Required"
+msgstr "Potrebno je ponovno pokretanje"
+
+#: src/anduinos_driver_center/app.py:647
+msgid ""
+"The firmware update has been prepared. Save your work and shut down the "
+"computer to finish installing it."
+msgstr ""
+"Ažuriranje firmvera je pripremljeno. Spremite svoj rad i isključite računalo "
+"da biste dovršili instalaciju."
+
+#: src/anduinos_driver_center/app.py:652
+msgid ""
+"The firmware update has been prepared. Save your work and restart the "
+"computer to finish installing it."
+msgstr ""
+"Ažuriranje firmvera je pripremljeno. Spremite svoj rad i ponovno pokrenite "
+"računalo da biste dovršili instalaciju."
+
+#: src/anduinos_driver_center/app.py:657
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:494
+msgid "Later"
+msgstr "Kasnije"
+
+#: src/anduinos_driver_center/app.py:660
+msgid "Shut Down Now"
+msgstr "Isključi sada"
+
+#: src/anduinos_driver_center/app.py:660
+msgid "Restart Now"
+msgstr "Ponovno pokreni sada"
+
+#: src/anduinos_driver_center/app.py:766 src/anduinos_driver_center/app.py:1361
+#: src/anduinos_driver_center/app.py:1387
+#: src/anduinos_driver_center/app.py:1616
+#: src/anduinos_driver_center/app.py:1741
+msgid "Installed"
+msgstr "Instalirano"
+
+#: src/anduinos_driver_center/app.py:768 src/anduinos_driver_center/app.py:1888
+#: src/anduinos_driver_center/app.py:1896
+msgid "Available"
+msgstr "Dostupno"
+
+#: src/anduinos_driver_center/app.py:800 src/anduinos_driver_center/app.py:858
+#: src/anduinos_driver_center/app.py:1063
+#: src/anduinos_driver_center/app.py:1736
+msgid "Driver status"
+msgstr "Stanje upravljačkog programa"
+
+#: src/anduinos_driver_center/app.py:801 src/anduinos_driver_center/app.py:1652
+#: src/anduinos_driver_center/app.py:2252
+msgid "Driver operation failed: "
+msgstr "Operacija s upravljačkim programom nije uspjela: "
+
+#: src/anduinos_driver_center/app.py:809 src/anduinos_driver_center/app.py:1568
+msgid ""
+"Secure Boot status or trust must be resolved before installing a third-party "
+"driver."
+msgstr ""
+"Prije instalacije upravljačkog programa treće strane potrebno je razriješiti "
+"stanje funkcije Secure Boot ili povjerenja."
+
+#: src/anduinos_driver_center/app.py:814 src/anduinos_driver_center/app.py:897
+#: src/anduinos_driver_center/app.py:1046
+#: src/anduinos_driver_center/app.py:1618
+msgid "Recommended"
+msgstr "Preporučeno"
+
+#: src/anduinos_driver_center/app.py:818 src/anduinos_driver_center/app.py:1557
+msgid ""
+"Choose the driver used by this device. AnduinOS marks the hardware-tested "
+"recommendation."
+msgstr ""
+"Odaberite upravljački program za ovaj uređaj. AnduinOS označava preporuku "
+"provjerenu na hardveru."
+
+#: src/anduinos_driver_center/app.py:820 src/anduinos_driver_center/app.py:832
+#: src/anduinos_driver_center/app.py:1097
+#: src/anduinos_driver_center/app.py:1533
+#: src/anduinos_driver_center/app.py:1578
+#: src/anduinos_driver_center/app.py:1654
+#: src/anduinos_driver_center/app.py:1667
+#: src/anduinos_driver_center/app.py:2007
+msgid "Apply Changes"
+msgstr "Primijeni promjene"
+
+#: src/anduinos_driver_center/app.py:843 src/anduinos_driver_center/app.py:2250
+msgid "Driver changes completed. Restart may be required."
+msgstr ""
+"Promjene upravljačkih programa dovršene su. Možda je potrebno ponovno "
+"pokrenuti računalo."
+
+#: src/anduinos_driver_center/app.py:849 src/anduinos_driver_center/app.py:928
+#: src/anduinos_driver_center/app.py:1036
+#: src/anduinos_driver_center/app.py:1563
+msgid "Available drivers"
+msgstr "Dostupni upravljački programi"
+
+#: src/anduinos_driver_center/app.py:860 src/anduinos_driver_center/app.py:921
+msgid "No additional drivers are needed."
+msgstr "Nisu potrebni dodatni upravljački programi."
+
+#: src/anduinos_driver_center/app.py:940 src/anduinos_driver_center/app.py:1846
+msgid "Audio Support"
+msgstr "Podrška za zvuk"
+
+#: src/anduinos_driver_center/app.py:955 src/anduinos_driver_center/app.py:1969
+msgid "Disabled"
+msgstr "Onemogućeno"
+
+#: src/anduinos_driver_center/app.py:977 src/anduinos_driver_center/app.py:1918
+msgid "Printing Support"
+msgstr "Podrška za ispis"
+
+#: src/anduinos_driver_center/app.py:991 src/anduinos_driver_center/app.py:1732
+msgid "Xbox Controller Support"
+msgstr "Podrška za Xbox kontroler"
+
+#: src/anduinos_driver_center/app.py:993 src/anduinos_driver_center/app.py:1741
+#: src/anduinos_driver_center/app.py:1825
+#: src/anduinos_driver_center/app.py:1869
+#: src/anduinos_driver_center/app.py:1877
+#: src/anduinos_driver_center/app.py:2059
+msgid "Not installed"
+msgstr "Nije instalirano"
+
+#: src/anduinos_driver_center/app.py:1012
+#: src/anduinos_driver_center/app.py:1749
+msgid "Trusted"
+msgstr "Pouzdano"
+
+#: src/anduinos_driver_center/app.py:1065
+msgid "Check for Driver Updates"
+msgstr "Provjeri ažuriranja upravljačkih programa"
+
+#: src/anduinos_driver_center/app.py:1067
+msgid "Refresh software sources and compare the recommended driver version."
+msgstr ""
+"Osvježi izvore softvera i usporedi preporučenu verziju upravljačkog programa."
+
+#: src/anduinos_driver_center/app.py:1079
+msgid "Driver information updated."
+msgstr "Podaci o upravljačkom programu ažurirani su."
+
+#: src/anduinos_driver_center/app.py:1088
+#: src/anduinos_driver_center/app.py:1535
+msgid ""
+"AnduinOS will update software sources and install the drivers recommended "
+"for this hardware."
+msgstr ""
+"AnduinOS će ažurirati izvore softvera i instalirati upravljačke programe "
+"preporučene za ovaj hardver."
+
+#: src/anduinos_driver_center/app.py:1174
+msgid ""
+"Keep system firmware and supported hardware up to date through the Linux "
+"Vendor Firmware Service."
+msgstr ""
+"Održavajte sistemski firmver i podržani hardver ažurnima putem usluge Linux "
+"Vendor Firmware Service."
+
+#: src/anduinos_driver_center/app.py:1186
+msgid "Firmware operation failed: "
+msgstr "Operacija s firmverom nije uspjela: "
+
+#: src/anduinos_driver_center/app.py:1187
+#: src/anduinos_driver_center/app.py:1296
+msgid "Check Again"
+msgstr "Provjeri ponovno"
+
+#: src/anduinos_driver_center/app.py:1193
+msgid "Firmware operation"
+msgstr "Operacija s firmverom"
+
+#: src/anduinos_driver_center/app.py:1220
+msgid "Firmware service"
+msgstr "Usluga za firmver"
+
+#: src/anduinos_driver_center/app.py:1224
+msgid "Not available"
+msgstr "Nije dostupno"
+
+#: src/anduinos_driver_center/app.py:1238
+msgid "Not refreshed in this session"
+msgstr "Nije osvježeno u ovoj sesiji"
+
+#: src/anduinos_driver_center/app.py:1241
+msgid "Firmware metadata"
+msgstr "Metapodaci firmvera"
+
+#: src/anduinos_driver_center/app.py:1250
+msgid "Supported devices"
+msgstr "Podržani uređaji"
+
+#: src/anduinos_driver_center/app.py:1252
+#, python-format
+msgid "%d device detected"
+msgid_plural "%d devices detected"
+msgstr[0] "Otkriven je %d uređaj"
+msgstr[1] "Otkrivena su %d uređaja"
+msgstr[2] "Otkriveno je %d uređaja"
+
+#: src/anduinos_driver_center/app.py:1262
+msgid "Available firmware updates"
+msgstr "Dostupna ažuriranja firmvera"
+
+#: src/anduinos_driver_center/app.py:1264
+#, python-format
+msgid "%d update available"
+msgid_plural "%d updates available"
+msgstr[0] "%d dostupno ažuriranje"
+msgstr[1] "%d dostupna ažuriranja"
+msgstr[2] "%d dostupnih ažuriranja"
+
+#: src/anduinos_driver_center/app.py:1276
+msgid "Firmware actions"
+msgstr "Radnje s firmverom"
+
+#: src/anduinos_driver_center/app.py:1278
+msgid "Refresh Firmware Metadata"
+msgstr "Osvježi metapodatke firmvera"
+
+#: src/anduinos_driver_center/app.py:1279
+msgid "Download the latest metadata from enabled firmware sources."
+msgstr "Preuzmi najnovije metapodatke iz omogućenih izvora firmvera."
+
+#: src/anduinos_driver_center/app.py:1282
+msgid "Refresh"
+msgstr "Osvježi"
+
+#: src/anduinos_driver_center/app.py:1292
+msgid "Check for Firmware Updates"
+msgstr "Provjeri ažuriranja firmvera"
+
+#: src/anduinos_driver_center/app.py:1293
+msgid "Compare connected devices with the available metadata."
+msgstr "Usporedi povezane uređaje s dostupnim metapodacima."
+
+#: src/anduinos_driver_center/app.py:1307
+msgid "Update All Firmware"
+msgstr "Ažuriraj sav firmver"
+
+#: src/anduinos_driver_center/app.py:1309
+#, python-format
+msgid "Install %d available update."
+msgid_plural "Install all %d available updates."
+msgstr[0] "Instalirati %d dostupno ažuriranje."
+msgstr[1] "Instalirati %d dostupna ažuriranja."
+msgstr[2] "Instalirati %d dostupnih ažuriranja."
+
+#: src/anduinos_driver_center/app.py:1315
+msgid "Update All"
+msgstr "Ažuriraj sve"
+
+#: src/anduinos_driver_center/app.py:1330
+msgid "Firmware Devices"
+msgstr "Uređaji s firmverom"
+
+#: src/anduinos_driver_center/app.py:1332
+msgid "Expand a device to inspect installed and available firmware versions."
+msgstr ""
+"Proširite uređaj da biste pregledali instalirane i dostupne verzije firmvera."
+
+#: src/anduinos_driver_center/app.py:1342
+msgid "The firmware service did not report any manageable devices."
+msgstr ""
+"Usluga za firmver nije prijavila nijedan uređaj kojim se može upravljati."
+
+#: src/anduinos_driver_center/app.py:1348
+msgid "Firmware Update History"
+msgstr "Povijest ažuriranja firmvera"
+
+#: src/anduinos_driver_center/app.py:1349
+msgid "Results reported by the fwupd service."
+msgstr "Rezultati koje je prijavila usluga fwupd."
+
+#: src/anduinos_driver_center/app.py:1357
+msgid "Unknown time"
+msgstr "Nepoznato vrijeme"
+
+#: src/anduinos_driver_center/app.py:1373
+msgid "No firmware update history"
+msgstr "Nema povijesti ažuriranja firmvera"
+
+#: src/anduinos_driver_center/app.py:1374
+msgid "Completed firmware operations will appear here."
+msgstr "Dovršene operacije s firmverom prikazat će se ovdje."
+
+#: src/anduinos_driver_center/app.py:1387
+#: src/anduinos_driver_center/app.py:1399
+#: src/anduinos_driver_center/app.py:1415
+#: src/anduinos_driver_center/app.py:1426
+#: src/anduinos_driver_center/app.py:1473
+#: src/anduinos_driver_center/app.py:1489
+#: src/anduinos_driver_center/app.py:1490
+msgid "Unknown"
+msgstr "Nepoznato"
+
+#: src/anduinos_driver_center/app.py:1398
+msgid "Current version"
+msgstr "Trenutačna verzija"
+
+#: src/anduinos_driver_center/app.py:1405
+#: src/anduinos_driver_center/app.py:1518
+msgid "Update"
+msgstr "Ažuriraj"
+
+#: src/anduinos_driver_center/app.py:1414
+msgid "Available version"
+msgstr "Dostupna verzija"
+
+#: src/anduinos_driver_center/app.py:1419
+msgid "Low"
+msgstr "Nisko"
+
+#: src/anduinos_driver_center/app.py:1420
+msgid "Medium"
+msgstr "Srednje"
+
+#: src/anduinos_driver_center/app.py:1421
+msgid "High"
+msgstr "Visoko"
+
+#: src/anduinos_driver_center/app.py:1422
+msgid "Critical"
+msgstr "Kritično"
+
+#: src/anduinos_driver_center/app.py:1425
+msgid "Update urgency"
+msgstr "Hitnost ažuriranja"
+
+#: src/anduinos_driver_center/app.py:1436
+msgid "Release notes"
+msgstr "Napomene o izdanju"
+
+#: src/anduinos_driver_center/app.py:1443
+msgid "Firmware status"
+msgstr "Stanje firmvera"
+
+#: src/anduinos_driver_center/app.py:1447
+msgid "Up to date"
+msgstr "Ažurno"
+
+#: src/anduinos_driver_center/app.py:1451
+msgid "Connect the computer to AC power"
+msgstr "Priključite računalo na napajanje"
+
+#: src/anduinos_driver_center/app.py:1459
+msgid "Installation requirements"
+msgstr "Preduvjeti za instalaciju"
+
+#: src/anduinos_driver_center/app.py:1468
+msgid "Pending"
+msgstr "Na čekanju"
+
+#: src/anduinos_driver_center/app.py:1469
+msgid "Success"
+msgstr "Uspješno"
+
+#: src/anduinos_driver_center/app.py:1470
+#: src/anduinos_driver_center/app.py:1472
+msgid "Failed"
+msgstr "Neuspjelo"
+
+#: src/anduinos_driver_center/app.py:1486
+#, python-format
+msgid "Install firmware for %(device)s from %(current)s to %(available)s?"
+msgstr ""
+"Instalirati firmver za uređaj %(device)s s verzije %(current)s na verziju "
+"%(available)s?"
+
+#: src/anduinos_driver_center/app.py:1494
+#, python-format
+msgid "Install %d available firmware update?"
+msgid_plural "Install all %d available firmware updates?"
+msgstr[0] "Instalirati %d dostupno ažuriranje firmvera?"
+msgstr[1] "Instalirati %d dostupna ažuriranja firmvera?"
+msgstr[2] "Instalirati %d dostupnih ažuriranja firmvera?"
+
+#: src/anduinos_driver_center/app.py:1500
+msgid "Keep the computer connected to AC power."
+msgstr "Ostavite računalo priključeno na napajanje."
+
+#: src/anduinos_driver_center/app.py:1504
+msgid ""
+"This update may invalidate full-disk encryption secrets. Make sure you have "
+"the volume recovery key before continuing."
+msgstr ""
+"Ovo ažuriranje može poništiti tajne za šifriranje cijelog diska. Prije "
+"nastavka provjerite imate li ključ za oporavak jedinice."
+
+#: src/anduinos_driver_center/app.py:1509
+msgid "A restart may be required to finish installation."
+msgstr ""
+"Za dovršetak instalacije možda će biti potrebno ponovno pokrenuti računalo."
+
+#: src/anduinos_driver_center/app.py:1510
+msgid "Do not disconnect devices or turn off the computer."
+msgstr "Nemojte odspajati uređaje ni isključivati računalo."
+
+#: src/anduinos_driver_center/app.py:1514
+msgid "Install Firmware Update"
+msgstr "Instaliraj ažuriranje firmvera"
+
+#: src/anduinos_driver_center/app.py:1517
+#: src/anduinos_driver_center/app.py:1539
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:432
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:446
+msgid "Cancel"
+msgstr "Odustani"
+
+#: src/anduinos_driver_center/app.py:1540
+#: src/anduinos_driver_center/app.py:2210
+msgid "Apply"
+msgstr "Primijeni"
+
+#: src/anduinos_driver_center/app.py:1587
+msgid "open source"
+msgstr "otvorenog koda"
+
+#: src/anduinos_driver_center/app.py:1587
+msgid "proprietary"
+msgstr "vlasničko"
+
+#: src/anduinos_driver_center/app.py:1589
+msgid "built in"
+msgstr "ugrađeni"
+
+#: src/anduinos_driver_center/app.py:1613
+msgid "In use"
+msgstr "U upotrebi"
+
+#: src/anduinos_driver_center/app.py:1640
+#: src/anduinos_driver_center/app.py:1651
+#: src/anduinos_driver_center/app.py:1666
+#: src/anduinos_driver_center/app.py:1831
+msgid "Kernel module"
+msgstr "Modul jezgre"
+
+#: src/anduinos_driver_center/app.py:1654
+#: src/anduinos_driver_center/app.py:1777
+#: src/anduinos_driver_center/app.py:1796
+#: src/anduinos_driver_center/app.py:1860
+#: src/anduinos_driver_center/app.py:1890
+#: src/anduinos_driver_center/app.py:1898
+msgid "Repair & Reinstall"
+msgstr "Popravi i ponovno instaliraj"
+
+#: src/anduinos_driver_center/app.py:1675
+msgid "Advanced driver versions"
+msgstr "Napredne verzije upravljačkih programa"
+
+#: src/anduinos_driver_center/app.py:1676
+msgid "Older, newer, and server-oriented packages"
+msgstr "Stariji, noviji i poslužiteljski paketi"
+
+#: src/anduinos_driver_center/app.py:1697
+msgid "Select another driver to apply changes."
+msgstr "Odaberite drugi upravljački program da biste primijenili promjene."
+
+#: src/anduinos_driver_center/app.py:1733
+msgid ""
+"xpadneo improves Bluetooth mapping, rumble, battery reporting and "
+"compatibility for modern Xbox controllers."
+msgstr ""
+"xpadneo poboljšava mapiranje Bluetooth tipki, vibraciju, prikaz stanja "
+"baterije i kompatibilnost s novijim Xbox kontrolerima."
+
+#: src/anduinos_driver_center/app.py:1740
+msgid "Driver package"
+msgstr "Paket upravljačkog programa"
+
+#: src/anduinos_driver_center/app.py:1743
+msgid "Install Driver"
+msgstr "Instaliraj upravljački program"
+
+#: src/anduinos_driver_center/app.py:1760
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:242
+msgid "Secure Boot state could not be determined"
+msgstr "Nije moguće utvrditi stanje funkcije Secure Boot"
+
+#: src/anduinos_driver_center/app.py:1765
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:285
+msgid "Pending enrollment in blue screen (MOKManager)"
+msgstr "Čeka se upis na plavom zaslonu (MOKManager)"
+
+#: src/anduinos_driver_center/app.py:1770
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:290
+msgid "Certificate is not trusted by motherboard"
+msgstr "Matična ploča ne vjeruje ovom certifikatu"
+
+#: src/anduinos_driver_center/app.py:1775
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:318
+msgid "Some DKMS modules need to be re-signed"
+msgstr "Neke DKMS module treba ponovno potpisati"
+
+#: src/anduinos_driver_center/app.py:1786
+msgid "Module signature"
+msgstr "Potpis modula"
+
+#: src/anduinos_driver_center/app.py:1794
+#: src/anduinos_driver_center/app.py:1888
+#: src/anduinos_driver_center/app.py:1896
+msgid "Missing"
+msgstr "Nedostaje"
+
+#: src/anduinos_driver_center/app.py:1806
+msgid "Loaded"
+msgstr "Učitano"
+
+#: src/anduinos_driver_center/app.py:1811
+msgid "Standing by"
+msgstr "U stanju pripravnosti"
+
+#: src/anduinos_driver_center/app.py:1838
+msgid "Bluetooth Settings"
+msgstr "Bluetooth postavke"
+
+#: src/anduinos_driver_center/app.py:1847
+msgid ""
+"AnduinOS provides Intel SOF firmware and ALSA UCM profiles for reliable "
+"audio initialization and routing."
+msgstr ""
+"AnduinOS pruža Intel SOF firmver i ALSA UCM profile za pouzdanu "
+"inicijalizaciju i usmjeravanje zvuka."
+
+#: src/anduinos_driver_center/app.py:1850
+msgid "Support packages"
+msgstr "Paketi podrške"
+
+#: src/anduinos_driver_center/app.py:1858
+msgid "Install Audio Support"
+msgstr "Instaliraj podršku za zvuk"
+
+#: src/anduinos_driver_center/app.py:1868
+msgid "Intel SOF firmware"
+msgstr "Intel SOF firmver"
+
+#: src/anduinos_driver_center/app.py:1876
+msgid "ALSA UCM profiles"
+msgstr "Profili ALSA UCM"
+
+#: src/anduinos_driver_center/app.py:1883
+msgid "Runtime status"
+msgstr "Stanje izvršavanja"
+
+#: src/anduinos_driver_center/app.py:1887
+msgid "SOF firmware files"
+msgstr "Datoteke SOF firmvera"
+
+#: src/anduinos_driver_center/app.py:1895
+msgid "UCM configuration files"
+msgstr "Konfiguracijske datoteke UCM-a"
+
+#: src/anduinos_driver_center/app.py:1903
+msgid "SOF kernel modules"
+msgstr "Moduli SOF jezgre"
+
+#: src/anduinos_driver_center/app.py:1904
+msgid "Not currently loaded"
+msgstr "Trenutačno nije učitano"
+
+#: src/anduinos_driver_center/app.py:1909
+msgid "Active audio drivers"
+msgstr "Aktivni upravljački programi za zvuk"
+
+#: src/anduinos_driver_center/app.py:1919
+msgid ""
+"Inspect the local print service, configured queues, and the packages that "
+"provide modern and legacy printer support."
+msgstr ""
+"Pregledajte lokalnu uslugu ispisa, konfigurirane redove čekanja i pakete "
+"koji pružaju podršku za moderne i naslijeđene pisače."
+
+#: src/anduinos_driver_center/app.py:1924
+#: src/anduinos_driver_center/app.py:1958
+msgid "Enable Printing Support"
+msgstr "Omogući podršku za ispis"
+
+#: src/anduinos_driver_center/app.py:1925
+msgid "Allow local, network, and USB printing services to run."
+msgstr "Dopusti rad lokalnih, mrežnih i USB usluga ispisa."
+
+#: src/anduinos_driver_center/app.py:1955
+msgid "CUPS service"
+msgstr "Usluga CUPS"
+
+#: src/anduinos_driver_center/app.py:1956
+msgid "Running"
+msgstr "U tijeku"
+
+#: src/anduinos_driver_center/app.py:1956
+msgid "Stopped"
+msgstr "Zaustavljeno"
+
+#: src/anduinos_driver_center/app.py:1968
+msgid "Start at boot"
+msgstr "Pokreni pri pokretanju sustava"
+
+#: src/anduinos_driver_center/app.py:1969
+msgid "Enabled"
+msgstr "Omogućeno"
+
+#: src/anduinos_driver_center/app.py:1974
+#, python-format
+msgid "%d configured printer"
+msgid_plural "%d configured printers"
+msgstr[0] "Konfiguriran je %d pisač"
+msgstr[1] "Konfigurirana su %d pisača"
+msgstr[2] "Konfigurirano je %d pisača"
+
+#: src/anduinos_driver_center/app.py:1980
+msgid "Configured printers"
+msgstr "Konfigurirani pisači"
+
+#: src/anduinos_driver_center/app.py:1986
+msgid "Default printer"
+msgstr "Zadani pisač"
+
+#: src/anduinos_driver_center/app.py:1987
+msgid "Not set"
+msgstr "Nije postavljeno"
+
+#: src/anduinos_driver_center/app.py:1991
+msgid "No configured queues"
+msgstr "Nema konfiguriranih redova čekanja"
+
+#: src/anduinos_driver_center/app.py:1996
+#, python-format
+msgid "%d queue paused"
+msgid_plural "%d queues paused"
+msgstr[0] "Pauziran je %d red čekanja"
+msgstr[1] "Pauzirana su %d reda čekanja"
+msgstr[2] "Pauzirano je %d redova čekanja"
+
+#: src/anduinos_driver_center/app.py:2000
+msgid "All queues enabled"
+msgstr "Svi redovi čekanja su omogućeni"
+
+#: src/anduinos_driver_center/app.py:2004
+msgid "Print queues"
+msgstr "Redovi čekanja ispisa"
+
+#: src/anduinos_driver_center/app.py:2015
+msgid "Core printing"
+msgstr "Osnovni ispis"
+
+#: src/anduinos_driver_center/app.py:2016
+msgid "Required for the local print service and command-line clients."
+msgstr "Potrebno za lokalnu uslugu ispisa i klijente naredbenog retka."
+
+#: src/anduinos_driver_center/app.py:2023
+msgid "Driverless printing"
+msgstr "Ispis bez upravljačkih programa"
+
+#: src/anduinos_driver_center/app.py:2024
+msgid "Modern IPP drivers, document filters, and capability tools."
+msgstr ""
+"Moderni IPP upravljački programi, filtri dokumenata i alati za podršku."
+
+#: src/anduinos_driver_center/app.py:2031
+msgid "Network discovery"
+msgstr "Otkrivanje mreže"
+
+#: src/anduinos_driver_center/app.py:2032
+msgid "Automatic discovery of printers advertised on the local network."
+msgstr "Automatsko otkrivanje pisača oglašenih na lokalnoj mreži."
+
+#: src/anduinos_driver_center/app.py:2039
+msgid "Optional compatibility"
+msgstr "Neobavezna kompatibilnost"
+
+#: src/anduinos_driver_center/app.py:2040
+msgid ""
+"USB IPP, administrative authorization, legacy drivers, and network scanning."
+msgstr ""
+"USB IPP, ovlaštenje administratora, naslijeđeni upravljački programi i "
+"mrežno skeniranje."
+
+#: src/anduinos_driver_center/app.py:2063
+msgid "Install Missing Packages"
+msgstr "Instaliraj pakete koji nedostaju"
+
+#: src/anduinos_driver_center/app.py:2116
+msgid "Printing support enabled."
+msgstr "Podrška za ispis je omogućena."
+
+#: src/anduinos_driver_center/app.py:2122
+msgid "Printing operation failed: "
+msgstr "Operacija ispisa nije uspjela: "
+
+#: src/anduinos_driver_center/app.py:2211
+msgid "Working…"
+msgstr "Rad u tijeku…"
+
+#: src/anduinos_driver_center/app.py:2280
+msgid "AnduinOS Team"
+msgstr "Tim AnduinOS"
+
+#: src/anduinos_driver_center/app.py:2283
+msgid "Install, inspect, and repair hardware drivers on AnduinOS."
+msgstr ""
+"Instalirajte, pregledajte i popravite upravljačke programe hardvera u "
+"sustavu AnduinOS."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:121
+msgid "Secure Boot Configuration"
+msgstr "Konfiguracija funkcije Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:129
+msgid ""
+"Secure Boot is a motherboard security standard that ensures only trusted "
+"software loads at startup."
+msgstr ""
+"Secure Boot sigurnosni je standard matične ploče koji pri pokretanju dopušta "
+"učitavanje samo pouzdanog softvera."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:132
+msgid "It protects your system from low-level malware and rootkits."
+msgstr "Štiti sustav od zlonamjernog softvera niske razine i rootkita."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:141
+msgid "System Trust Status"
+msgstr "Stanje povjerenja sustava"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:183
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:325
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:509
+msgid "Create & Enroll Certificate"
+msgstr "Izradi i upiši certifikat"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:189
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:338
+msgid "Repair Module Signatures"
+msgstr "Popravi potpise modula"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:197
+msgid "Note: Use password <b>123456</b> after rebooting."
+msgstr ""
+"Napomena: nakon ponovnog pokretanja upotrijebite lozinku <b>123456</b>."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:202
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:495
+msgid "Reboot & Configure Secure Boot"
+msgstr "Ponovno pokreni i konfiguriraj Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:210
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:419
+msgid "  Check Again  "
+msgstr "  Provjeri ponovno  "
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:236
+msgid "Motherboard hardware protection is active"
+msgstr "Zaštita matične ploče je aktivna"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:239
+msgid "Firmware does not support Secure Boot"
+msgstr "Firmver ne podržava Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:245
+msgid "Secure Boot is disabled"
+msgstr "Secure Boot je isključen"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:251
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:253
+msgid "Not required without firmware enforcement"
+msgstr "Nije potrebno kad firmver ne provjerava potpise"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:257
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:261
+msgid "Not checked because Secure Boot state is unknown"
+msgstr "Provjera nije obavljena jer stanje funkcije Secure Boot nije poznato"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:266
+msgid "Certificate generated locally"
+msgstr "Certifikat je izrađen lokalno"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:268
+msgid "Missing local certificate"
+msgstr "Nedostaje lokalni certifikat"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:281
+msgid "Certificate is trusted by motherboard"
+msgstr "Matična ploča smatra certifikat pouzdanim"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:296
+msgid "Kernel signature enforcement is inactive"
+msgstr "Jezgra ne zahtijeva valjane potpise"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:299
+msgid "Driver trust cannot be verified"
+msgstr "Pouzdanost upravljačkih programa nije moguće provjeriti"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:303
+msgid ""
+"Secure Boot trust is ready. No third-party kernel modules are currently "
+"installed."
+msgstr ""
+"Postavke povjerenja za Secure Boot spremne su. Trenutačno nema instaliranih "
+"modula jezgre drugih proizvođača."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:307
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:550
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:558
+msgid "Drivers are signed and ready to load"
+msgstr "Upravljački programi su potpisani i spremni za učitavanje"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:311
+msgid "Drivers are trusted, but automatic DKMS signing needs repair"
+msgstr ""
+"Upravljački programi su pouzdani, ali automatsko potpisivanje DKMS modula "
+"treba popraviti"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:315
+msgid "No signed third-party drivers detected"
+msgstr "Nisu pronađeni potpisani upravljački programi drugih proizvođača"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:323
+msgid "Enroll Existing Certificate"
+msgstr "Upiši postojeći certifikat"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:336
+msgid "Repair Automatic DKMS Signing"
+msgstr "Popravi automatsko potpisivanje DKMS modula"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:356
+msgid "This firmware does not provide Secure Boot. No certificate is required."
+msgstr "Ovaj firmver ne podržava Secure Boot. Certifikat nije potreban."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:363
+msgid ""
+"Secure Boot status could not be read. Driver trust operations are blocked "
+"until detection succeeds."
+msgstr ""
+"Stanje funkcije Secure Boot nije moguće očitati. Radnje za uspostavljanje "
+"povjerenja u upravljačke programe onemogućene su dok provjera ne uspije."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:369
+msgid "No certificate is required while Secure Boot is disabled."
+msgstr "Certifikat nije potreban dok je Secure Boot isključen."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:375
+msgid "System Trust Established. Third-party drivers will load securely."
+msgstr ""
+"Povjerenje je uspostavljeno. Upravljački programi drugih proizvođača sigurno "
+"će se učitavati."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:379
+msgid "The certificate is enrolled and current drivers are trusted."
+msgstr "Certifikat je upisan, a trenutačni upravljački programi su pouzdani."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:381
+msgid "Repair automatic DKMS signing before future driver updates."
+msgstr ""
+"Popravite automatsko potpisivanje DKMS modula prije sljedećeg ažuriranja "
+"upravljačkih programa."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:386
+msgid "The certificate is enrolled, but some modules are not signed with it."
+msgstr "Certifikat je upisan, ali neki moduli njime nisu potpisani."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:391
+msgid "A certificate is waiting for enrollment."
+msgstr "Certifikat čeka upis."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:393
+msgid "Restart and enter password 123456 in MOKManager."
+msgstr "Ponovno pokrenite računalo i unesite lozinku 123456 u MOKManager."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:398
+msgid "The local trust certificate is not yet enrolled."
+msgstr "Lokalni certifikat povjerenja još nije upisan."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:400
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:407
+msgid "You must configure this to use third-party drivers like NVIDIA."
+msgstr ""
+"Ovo morate konfigurirati da biste mogli koristiti upravljačke programe "
+"drugih proizvođača, primjerice NVIDIA-e."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:405
+msgid "The local trust certificate is missing."
+msgstr "Nedostaje lokalni certifikat povjerenja."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:423
+msgid "  Checking...  "
+msgstr "  Provjera…  "
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:430
+msgid "Please trust the certificate upon reboot using password 123456."
+msgstr ""
+"Pri ponovnom pokretanju potvrdite povjerenje u certifikat lozinkom 123456."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:447
+msgid "Reboot"
+msgstr "Ponovno pokreni"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:483
+msgid "Success! When you reboot, a blue screen will appear."
+msgstr "Uspješno! Pri ponovnom pokretanju pojavit će se plavi zaslon."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:487
+msgid "Select 'Enroll MOK' → 'Continue' → 'Yes', and enter password: 123456"
+msgstr "Odaberite „Enroll MOK” → „Continue” → „Yes” pa unesite lozinku: 123456"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:491
+msgid "Certificate Created"
+msgstr "Certifikat je izrađen"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:523
+msgid "Secure Boot Trust Not Required"
+msgstr "Postavke povjerenja za Secure Boot nisu potrebne"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:524
+msgid "Firmware signature enforcement is not active."
+msgstr "Firmver ne zahtijeva valjane potpise."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:534
+msgid ""
+"The certificate is ready, but one or more DKMS modules could not be rebuilt. "
+"You can repair them after enrollment."
+msgstr ""
+"Certifikat je spreman, ali jedan ili više DKMS modula nije bilo moguće "
+"ponovno izgraditi. Možete ih popraviti nakon upisa certifikata."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:542
+msgid "Configuration needs attention"
+msgstr "Potrebno je provjeriti konfiguraciju"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:549
+msgid "System Trust Established"
+msgstr "Povjerenje je uspostavljeno"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:557
+msgid "Driver Signature Trusted"
+msgstr "Potpis upravljačkog programa je pouzdan"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:573
+msgid "Configuration failed. Please try again."
+msgstr "Konfiguracija nije uspjela. Pokušajte ponovno."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:574
+msgid "Please check the advanced output."
+msgstr "Provjerite detaljan ispis."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:585
+msgid "Generating & Signing..."
+msgstr "Izrada i potpisivanje…"
+
+#: src/anduinos_driver_center/app.py:1940
+msgid "Manage Printers in System Settings"
+msgstr "Upravljaj pisačima u postavkama sustava"
+
+#: src/anduinos_driver_center/app.py:1365
+#: src/anduinos_driver_center/app.py:1390
+#: src/anduinos_driver_center/app.py:1488
+msgid "Firmware device"
+msgstr "Uređaj s firmverom"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:156
+msgid "Local MOK Certificate"
+msgstr "Lokalni MOK certifikat"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:155
+msgid "Secure Boot Enabled"
+msgstr "Secure Boot je uključen"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:158
+msgid "Third-party Drivers"
+msgstr "Upravljački programi treće strane"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py:157
+msgid "UEFI Firmware Trust"
+msgstr "Povjerenje UEFI firmvera"
+
+#: anduinos-driver-center/data/com.anduinos.DriverCenter.policy:10
+msgid "Authentication is required to change hardware drivers"
+msgstr ""
+"Za promjenu upravljačkih programa hardvera potrebna je autentifikacija."
+
+#: data/com.anduinos.DriverCenter.desktop:12
+msgid "driver;firmware;fwupd;nvidia;graphics;xbox;secure boot;hardware;"
+msgstr ""
+"upravljački program;firmver;fwupd;nvidia;grafika;xbox;sigurno "
+"pokretanje;hardver;"
+
+#: anduinos-driver-center/data/com.anduinos.DriverCenter.policy:8
+msgid "Install and repair hardware drivers"
+msgstr "Instalacija i popravak upravljačkih programa hardvera"
+
+#: data/com.anduinos.DriverCenter.desktop:4
+msgid "Manage hardware drivers and device firmware"
+msgstr "Upravljajte upravljačkim programima hardvera i firmverom uređaja"
+
+#: anduinos-secureboot-toolkit/data/com.anduinos.SecureBootToolkit.policy:8
+msgid "Configure Secure Boot trust and repair DKMS signatures"
+msgstr "Konfiguriraj povjerenje za Secure Boot i popravi potpise DKMS modula"
+
+#: anduinos-secureboot-toolkit/data/com.anduinos.SecureBootToolkit.policy:10
+msgid "Authentication is required to configure Secure Boot trust"
+msgstr ""
+"Za konfiguriranje povjerenja za Secure Boot potrebna je autentifikacija"
+
+#: src/anduinos_driver_center/app.py:437 src/anduinos_driver_center/app.py:440
+#: src/anduinos_driver_center/computer_ui.py:138
+msgid "About This Computer"
+msgstr "O ovom računalu"
+
+#: src/anduinos_driver_center/app.py:437
+#: src/anduinos_driver_center/computer_ui.py:141
+msgid "Hardware overview"
+msgstr "Pregled hardvera"
+
+#: src/anduinos_driver_center/computer_ui.py:105
+#: src/anduinos_driver_center/computer_ui.py:164
+#: src/anduinos_driver_center/computer_ui.py:188
+msgid "Display"
+msgstr "Zaslon"
+
+#: src/anduinos_driver_center/computer_ui.py:114
+msgid "Current mode"
+msgstr "Trenutačni način"
+
+#: src/anduinos_driver_center/computer_ui.py:148
+#, python-format
+msgid "%s cores"
+msgstr "%s jezgri"
+
+#: src/anduinos_driver_center/computer_ui.py:152
+#, python-format
+msgid "%s threads"
+msgstr "%s dretvi"
+
+#: src/anduinos_driver_center/computer_ui.py:153
+#: src/anduinos_driver_center/computer_ui.py:178
+msgid "Processor"
+msgstr "Procesor"
+
+#: src/anduinos_driver_center/computer_ui.py:154
+msgid "Memory"
+msgstr "Memorija"
+
+#: src/anduinos_driver_center/computer_ui.py:154
+msgid "Usable by the system"
+msgstr "Dostupno sustavu"
+
+#: src/anduinos_driver_center/computer_ui.py:156
+#: src/anduinos_driver_center/computer_ui.py:182
+msgid "Graphics"
+msgstr "Grafika"
+
+#: src/anduinos_driver_center/computer_ui.py:159
+#: src/anduinos_driver_center/computer_ui.py:162
+msgid "System disk"
+msgstr "Sistemski disk"
+
+#: src/anduinos_driver_center/computer_ui.py:165
+msgid "Motherboard"
+msgstr "Matična ploča"
+
+#: src/anduinos_driver_center/computer_ui.py:172
+msgid "Detailed specifications"
+msgstr "Detaljne specifikacije"
+
+#: src/anduinos_driver_center/computer_ui.py:173
+msgid "System"
+msgstr "Sustav"
+
+#: src/anduinos_driver_center/computer_ui.py:174
+msgid "Desktop"
+msgstr "Radna površina"
+
+#: src/anduinos_driver_center/computer_ui.py:175
+msgid "BIOS / UEFI"
+msgstr "BIOS / UEFI"
+
+#: src/anduinos_driver_center/computer_ui.py:180
+msgid "Storage"
+msgstr "Pohrana"
+
+#: src/anduinos_driver_center/computer_ui.py:183
+msgid "Network"
+msgstr "Mreža"
+
+#: src/anduinos_driver_center/computer_ui.py:190
+msgid "Memory module"
+msgstr "Memorijski modul"
+
+#: src/anduinos_driver_center/computer_ui.py:196
+msgid "Memory type and speed require optional administrator authentication."
+msgstr ""
+"Za prikaz vrste i brzine memorije potrebna je neobavezna autentifikacija "
+"administratora."
+
+#: src/anduinos_driver_center/computer_ui.py:197
+msgid "Read memory specifications"
+msgstr "Pročitaj specifikacije memorije"
+
+#: src/anduinos_driver_center/computer_ui.py:205
+msgid "Hide details"
+msgstr "Sakrij pojedinosti"
+
+#: src/anduinos_driver_center/computer_ui.py:205
+msgid "Show detailed specifications"
+msgstr "Prikaži detaljne specifikacije"
+
+#: src/anduinos_driver_center/computer_ui.py:241
+msgid ""
+"Memory specifications are unavailable. Other hardware details remain "
+"available."
+msgstr ""
+"Specifikacije memorije nisu dostupne. Ostali podaci o hardveru i dalje su "
+"dostupni."
+
+#: src/anduinos_driver_center/computer_ui.py:117
+msgid "Built-in display"
+msgstr "Ugrađeni zaslon"
+
+#: src/anduinos_driver_center/computer_ui.py:119
+msgid "External display"
+msgstr "Vanjski zaslon"
+
+#: src/anduinos_driver_center/computer_ui.py:186
+#, python-format
+msgid "Maximum frequency: %s"
+msgstr "Najveća frekvencija: %s"
+
+#: src/anduinos_driver_center/computer_ui.py:233
+#, python-format
+msgid "%(used)s used / %(total)s"
+msgstr "%(used)s zauzeto / %(total)s"
+
+#: src/anduinos_driver_center/computer_ui.py:244
+msgid "System and desktop"
+msgstr "Sustav i radna površina"
+
+#: src/anduinos_driver_center/computer_ui.py:247
+msgid "Window manager"
+msgstr "Upravitelj prozora"
+
+#: src/anduinos_driver_center/computer_ui.py:250
+msgid "Installed packages"
+msgstr "Instalirani paketi"
+
+#: src/anduinos_driver_center/computer_ui.py:253
+msgid ""
+"Applications and runtimes across user and system installations; locale and "
+"debug extensions excluded."
+msgstr ""
+"Aplikacije i izvršna okruženja u korisničkim i sistemskim instalacijama; "
+"lokalizacijska proširenja i proširenja za otklanjanje pogrešaka nisu "
+"uključena."
+
+#: src/anduinos_driver_center/computer_ui.py:255
+msgid "GTK theme"
+msgstr "GTK tema"
+
+#: src/anduinos_driver_center/computer_ui.py:255
+msgid "Shell theme"
+msgstr "Tema ljuske"
+
+#: src/anduinos_driver_center/computer_ui.py:256
+msgid "Icon theme"
+msgstr "Tema ikona"
+
+#: src/anduinos_driver_center/computer_ui.py:256
+msgid "Font"
+msgstr "Font"
+
+#: src/anduinos_driver_center/computer_ui.py:261
+msgid "Cursor"
+msgstr "Pokazivač"
+
+#: src/anduinos_driver_center/computer_ui.py:264
+msgid "Current usage"
+msgstr "Trenutačna upotreba"
+
+#: src/anduinos_driver_center/computer_ui.py:265
+msgid "Values from the latest scan. Use Scan again to refresh."
+msgstr ""
+"Vrijednosti iz posljednjeg pretraživanja. Odaberite Pretraži ponovno da "
+"biste ih osvježili."
+
+#: src/anduinos_driver_center/computer_ui.py:270
+#, python-format
+msgid "%(days)d d %(hours)d h %(minutes)d min"
+msgstr "%(days)d d, %(hours)d h i %(minutes)d min"
+
+#: src/anduinos_driver_center/computer_ui.py:272
+msgid "Uptime"
+msgstr "Vrijeme rada"
+
+#: src/anduinos_driver_center/computer_ui.py:275
+msgid "Not configured"
+msgstr "Nije konfigurirano"
+
+#: src/anduinos_driver_center/computer_ui.py:280
+#, python-format
+msgid "Available: %s"
+msgstr "Dostupno: %s"
+
+#: src/anduinos_driver_center/computer_ui.py:254
+msgid "Applications and runtimes"
+msgstr "Aplikacije i izvršna okruženja"
+
+#: src/anduinos_driver_center/computer_ui.py:273
+#, python-format
+msgid "%(hours)d h %(minutes)d min"
+msgstr "%(hours)d h i %(minutes)d min"
+
+#: src/anduinos_driver_center/computer_ui.py
+msgid "System installation date"
+msgstr "Datum instalacije sustava"
+
+msgid "Display compatibility settings take effect after restarting."
+msgstr ""
+"Postavke kompatibilnosti zaslona primjenjuju se nakon ponovnog pokretanja."
+
+msgid "Kernel version"
+msgstr "Verzija jezgre"
+
+msgid "Restart required"
+msgstr "Potrebno je ponovno pokretanje"
+
+msgid "Saved settings differ from this boot."
+msgstr "Spremljene postavke razlikuju se od onih za ovo pokretanje."
+
+msgid "External graphics configuration"
+msgstr "Konfiguracija vanjske grafičke kartice"
+
+msgid "Panel self refresh (PSR)"
+msgstr "Samostalno osvježavanje panela (PSR)"
+
+msgid "Frame buffer compression (FBC)"
+msgstr "Kompresija međuspremnika slike (FBC)"
+
+msgid "Display power-saving states"
+msgstr "Stanja uštede energije zaslona"
+
+msgid "Panel Replay"
+msgstr "Ponavljanje prikaza panela"
+
+msgid ""
+"Settings affect all GPUs using this driver. Disabling power-saving features "
+"may increase power consumption."
+msgstr ""
+"Postavke utječu na sve grafičke procesore koji koriste ovaj upravljački "
+"program. Isključivanje značajki uštede energije može povećati potrošnju."
+
+msgid "Advanced compatibility settings"
+msgstr "Napredne postavke kompatibilnosti"
+
+msgid "Automatic"
+msgstr "Automatski"
+
+#, python-format
+msgid "Loaded parameter: %s"
+msgstr "Učitani parametar: %s"
+
+msgid "Kernel driver"
+msgstr "Upravljački program jezgre"
+
+msgid "System default"
+msgstr "Zadana postavka sustava"
+
+msgid "Driver switching"
+msgstr "Promjena upravljačkog programa"
+
+msgid ""
+"Alternative drivers are available only for hardware and kernels that have "
+"passed acceptance tests."
+msgstr ""
+"Alternativni upravljački programi dostupni su samo za hardver i jezgre koje "
+"su prošle provjere prihvatljivosti."
+
+msgid "Diagnostics"
+msgstr "Dijagnostika"
+
+msgid ""
+"The boot log reports a panel refresh error. Try disabling PSR and restart."
+msgstr ""
+"Dnevnik pokretanja prijavljuje pogrešku osvježavanja panela. Pokušajte "
+"onemogućiti PSR i ponovno pokrenuti računalo."
+
+msgid ""
+"The boot log reports a firmware error. Check system and firmware updates."
+msgstr ""
+"Dnevnik pokretanja prijavljuje pogrešku firmvera. Provjerite ažuriranja "
+"sustava i firmvera."
+
+msgid ""
+"The boot log reports a GPU hang or reset. Export diagnostics before changing "
+"more settings."
+msgstr ""
+"Dnevnik pokretanja prijavljuje zastoj ili ponovno postavljanje grafičkog "
+"procesora. Prije daljnje promjene postavki izvezite dijagnostičke podatke."
+
+msgid "Display troubleshooting"
+msgstr "Rješavanje problema sa zaslonom"
+
+msgid "Diagnostic coverage"
+msgstr "Pokrivenost dijagnostikom"
+
+msgid ""
+"Module parameters describe policy, not whether a feature is currently "
+"active. Missing log evidence does not prove that graphics are healthy."
+msgstr ""
+"Parametri modula opisuju pravila, a ne je li značajka trenutačno aktivna. "
+"Nedostatak zapisa u dnevniku ne dokazuje da grafika radi ispravno."
+
+msgid "Read detailed status"
+msgstr "Pročitaj detaljno stanje"
+
+msgid "Restore default settings"
+msgstr "Vrati zadane postavke"
+
+msgid "Settings saved. Restart to apply them."
+msgstr ""
+"Postavke su spremljene. Ponovno pokrenite računalo da biste ih primijenili."
+
+msgid "Export diagnostics"
+msgstr "Izvezi dijagnostičke podatke"
+
+msgid "Apply graphics settings?"
+msgstr "Primijeniti grafičke postavke?"
+
+msgid ""
+"Changes require a restart and may affect display reliability. The boot menu "
+"will remain visible for recovery. You can restore defaults from recovery "
+"mode."
+msgstr ""
+"Za promjene je potrebno ponovno pokretanje i one mogu utjecati na pouzdanost "
+"prikaza. Izbornik za pokretanje ostat će dostupan za oporavak. Zadane "
+"postavke možete vratiti u načinu oporavka."
+
+msgid "Diagnostic access was not granted."
+msgstr "Pristup dijagnostici nije odobren."
+
+msgid "Save"
+msgstr "Spremi"
+
+msgid "A previous change was interrupted. Restore defaults before continuing."
+msgstr ""
+"Prethodna je promjena prekinuta. Vratite zadane postavke prije nastavka."
+
+#, python-format
+msgid "Experimental: %s"
+msgstr "Eksperimentalno: %s"
+
+msgid "PSR status"
+msgstr "Stanje PSR-a"
+
+msgid "In recovery mode, sign in with your normal account and run:"
+msgstr "U načinu oporavka prijavite se svojim uobičajenim računom i pokrenite:"
+
+msgid ""
+"Packages marked − will be removed. Older kernels may lose NVIDIA graphics "
+"support. Restart after updating."
+msgstr ""
+"Paketi označeni znakom − bit će uklonjeni. Starije jezgre možda će izgubiti "
+"podršku za NVIDIA grafiku. Nakon ažuriranja ponovno pokrenite računalo."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Enable Secure Boot"
+msgstr "Uključi Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security, "
+"or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Za uključivanje otvorite postavke UEFI firmvera i potražite odjeljak Boot, "
+"Security ili Secure Boot. Odaberite „Microsoft & 3rd-party CA” ili uključite "
+"Secure Boot. Nazivi stavki ovise o proizvođaču."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"AnduinOS is not yet ready for Secure Boot. Enabling it in firmware now may "
+"prevent the system from starting."
+msgstr ""
+"AnduinOS još nije spreman za Secure Boot. Ako ga sada uključite u firmveru, "
+"sustav se možda neće moći pokrenuti."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare AnduinOS for Secure Boot"
+msgstr "Pripremi AnduinOS za Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"First prepare AnduinOS and enroll its MOK certificate. Enable Secure Boot "
+"only after enrollment."
+msgstr ""
+"Prvo pripremite AnduinOS i upišite njegov MOK certifikat. Uključite Secure "
+"Boot tek nakon upisa."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Setup Mode: firmware platform keys are missing. Restore the manufacturer's "
+"factory keys in firmware settings after MOK enrollment."
+msgstr ""
+"Setup Mode: nedostaju ključevi platforme u firmveru. Nakon upisa MOK "
+"certifikata vratite tvorničke ključeve proizvođača u postavkama firmvera."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Open UEFI Settings"
+msgstr "Otvori postavke UEFI-ja"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "AnduinOS is ready. Secure Boot is not enabled."
+msgstr "AnduinOS je spreman. Secure Boot je isključen."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Firmware platform keys are not configured. This is separate from MOK "
+"certificate enrollment."
+msgstr ""
+"Ključevi platforme u firmveru nisu konfigurirani. Njihova konfiguracija ne "
+"ovisi o upisu MOK certifikata."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Configure the Secure Boot platform keys in UEFI settings before enabling "
+"Secure Boot. Use the manufacturer's factory keys for a standard setup; if "
+"you use custom keys, follow your administrator's policy."
+msgstr ""
+"Prije uključivanja funkcije Secure Boot konfigurirajte ključeve platforme u "
+"postavkama UEFI-ja. Za uobičajene postavke upotrijebite tvorničke ključeve "
+"proizvođača. Ako koristite vlastite ključeve, slijedite pravila "
+"administratora."
+
+#. Unified certificate migration.
+msgid "Can sign both GRUB and kernel modules"
+msgstr "Može potpisivati GRUB i module jezgre"
+
+#. Unified certificate migration.
+msgid "Certificate Signing Permissions"
+msgstr "Ovlasti certifikata za potpisivanje"
+
+#. Unified certificate migration.
+msgid "Certificate Update Failed"
+msgstr "Ažuriranje certifikata nije uspjelo"
+
+#. Unified certificate migration.
+msgid "Certificate Updated"
+msgstr "Certifikat je ažuriran"
+
+#. Unified certificate migration.
+msgid ""
+"Certificate permissions could not be read. Check the certificate before "
+"continuing."
+msgstr ""
+"Ovlasti certifikata nije moguće očitati. Provjerite certifikat prije "
+"nastavka."
+
+#. Unified certificate migration.
+msgid "Continue"
+msgstr "Nastavi"
+
+#. Unified certificate migration.
+msgid "Create Unified Certificate"
+msgstr "Izradi jedinstveni certifikat"
+
+#. Unified certificate migration.
+msgid ""
+"Current GRUB and existing driver signatures are unchanged. Keep the old "
+"enrolled certificate."
+msgstr ""
+"Trenutačni GRUB i postojeći potpisi upravljačkih programa ostaju "
+"nepromijenjeni. Zadržite stari upisani certifikat."
+
+#. Unified certificate migration.
+msgid ""
+"Current boot and driver trust are unchanged. A unified certificate prepares "
+"support for signing GRUB as well."
+msgstr ""
+"Trenutačni lanac pokretanja i povjerenje u upravljačke programe ostaju "
+"nepromijenjeni. Jedinstveni certifikat omogućit će i potpisivanje GRUB-a."
+
+#. Unified certificate migration.
+msgid ""
+"Drivers remain trusted by an enrolled previous certificate; no re-signing is "
+"needed."
+msgstr ""
+"Upravljački programi ostaju pouzdani zahvaljujući prethodno upisanom "
+"certifikatu. Nije ih potrebno ponovno potpisivati."
+
+#. Unified certificate migration.
+msgid "Enrollment requested. Restart and confirm in MOKManager."
+msgstr ""
+"Zatražen je upis certifikata. Ponovno pokrenite računalo i potvrdite upis u "
+"MOKManageru."
+
+#. Unified certificate migration.
+msgid "Kernel modules only; cannot sign GRUB. Create a unified certificate."
+msgstr ""
+"Može potpisivati samo module jezgre, a za potpisivanje GRUB-a izradite "
+"jedinstveni certifikat."
+
+#. Unified certificate migration.
+msgid "MOK enrollment could not be verified. Check again before continuing."
+msgstr ""
+"Nije moguće provjeriti upis MOK certifikata. Prije nastavka provjerite "
+"ponovno."
+
+#. Unified certificate migration.
+msgid "New unified certificate prepared"
+msgstr "Novi jedinstveni certifikat je pripremljen"
+
+#. Unified certificate migration.
+msgid "No signing certificate. Create one to prepare Secure Boot trust."
+msgstr ""
+"Nema certifikata za potpisivanje. Izradite ga da biste pripremili povjerenje "
+"za Secure Boot."
+
+#. Unified certificate migration.
+msgid ""
+"Please wait. Do not restart while the enrollment request is being prepared."
+msgstr ""
+"Pričekajte da se pripremi zahtjev za upis. Za to vrijeme nemojte ponovno "
+"pokretati računalo."
+
+#. Unified certificate migration.
+msgid "Preparing Signing Certificate…"
+msgstr "Priprema certifikata za potpisivanje…"
+
+#. Unified certificate migration.
+msgid "Recreate Certificate…"
+msgstr "Ponovno izradi certifikat…"
+
+#. Unified certificate migration.
+msgid ""
+"Restart to enroll the new certificate. It will be used automatically once "
+"enrolled. Current GRUB and driver signatures are unchanged."
+msgstr ""
+"Ponovno pokrenite računalo da biste upisali novi certifikat. Nakon upisa "
+"upotrebljavat će se automatski. Trenutačni potpisi GRUB-a i upravljačkih "
+"programa ostaju nepromijenjeni."
+
+#. Unified certificate migration.
+msgid ""
+"Secure Boot is disabled. Verify the boot chain and driver trust before "
+"enabling it in firmware settings."
+msgstr ""
+"Secure Boot je isključen. Prije uključivanja u postavkama firmvera "
+"provjerite lanac pokretanja i povjerenje u upravljačke programe."
+
+#. Unified certificate migration.
+msgid "Signing certificate needs attention"
+msgstr "Potrebno je provjeriti certifikat za potpisivanje"
+
+#. Unified certificate migration.
+msgid "Signing private key is missing. Recreate the certificate."
+msgstr "Nedostaje privatni ključ za potpisivanje. Ponovno izradite certifikat."
+
+#. Unified certificate migration.
+msgid "Submit Enrollment Request"
+msgstr "Pošalji zahtjev za upis"
+
+#. Unified certificate migration.
+msgid "The certificate does not allow code signing. Recreate it."
+msgstr "Certifikat ne dopušta potpisivanje koda. Ponovno ga izradite."
+
+#. Unified certificate migration.
+msgid "The certificate has expired. Recreate and enroll a new certificate."
+msgstr "Certifikat je istekao. Izradite i upišite novi certifikat."
+
+#. Unified certificate migration.
+msgid "This certificate is enrolled in MOK"
+msgstr "Ovaj je certifikat upisan u MOK"
+
+#. Unified certificate migration.
+msgid "This certificate is not enrolled. Submit an enrollment request."
+msgstr "Ovaj certifikat nije upisan. Pošaljite zahtjev za upis."
+
+msgid ""
+"Once enrolled, this certificate automatically becomes the default for future "
+"signing, including DKMS. Old signing files are backed up. GRUB, existing "
+"driver signatures and old enrolled certificates are preserved. Enrollment "
+"requires a restart and confirmation in MOKManager."
+msgstr ""
+"Nakon upisa ovaj će certifikat automatski postati zadani za buduća "
+"potpisivanja, uključujući DKMS. Stare datoteke za potpisivanje spremaju se u "
+"sigurnosnu kopiju. GRUB, postojeći potpisi upravljačkih programa i stari "
+"upisani certifikati ostaju sačuvani. Za upis je potrebno ponovno pokrenuti "
+"računalo i potvrditi ga u MOKManageru."
+
+msgid "Repair Signing Defaults"
+msgstr "Popravi zadane postavke potpisivanja"
+
+msgid "Certificate enrolled, but automatic signing configuration needs repair."
+msgstr ""
+"Certifikat je upisan, ali postavke automatskog potpisivanja treba popraviti."
+
+msgid ""
+"Automatic signing configuration failed. Repair the defaults; another "
+"enrollment is not needed."
+msgstr ""
+"Postavljanje automatskog potpisivanja nije uspjelo. Popravite zadane "
+"postavke. Ponovni upis nije potreban."
+
+#. Unified certificate migration.
+msgid ""
+"Unified certificate is trusted. Existing GRUB, old enrollments and driver "
+"signatures are preserved."
+msgstr ""
+"Jedinstveni je certifikat pouzdan. Postojeći GRUB, stari upisani certifikati "
+"i potpisi upravljačkih programa ostaju sačuvani."
+
+#. Unified certificate migration.
+msgid "Update Signing Certificate?"
+msgstr "Ažurirati certifikat za potpisivanje?"
+
+msgid "AnduinOS Bootloader"
+msgstr "AnduinOS pokretački program"
+
+msgid "Install AnduinOS Bootloader"
+msgstr "Instaliraj pokretački program AnduinOS-a"
+
+msgid "AnduinOS GRUB and shim are not installed"
+msgstr "AnduinOS GRUB i shim nisu instalirani"
+
+msgid "GRUB needs signing with the unified certificate"
+msgstr "GRUB treba potpisati jedinstvenim certifikatom"
+
+msgid "GRUB is signed, but its certificate is not enrolled"
+msgstr "GRUB je potpisan, ali njegov certifikat nije upisan"
+
+msgid "Signed GRUB needs deployment to this system's EFI partition"
+msgstr "Potpisani GRUB treba postaviti na EFI particiju ovog sustava"
+
+msgid "AnduinOS GRUB is signed, trusted and deployed"
+msgstr "AnduinOS GRUB je potpisan, pouzdan i postavljen"
+
+msgid "Repair AnduinOS Bootloader"
+msgstr "Popravi pokretački program AnduinOS-a"
+
+msgid "Complete the bootloader setup using the button above."
+msgstr "Dovršite postavljanje pokretačkog programa gornjim gumbom."
+
+msgid "Update AnduinOS Bootloader?"
+msgstr "Ažurirati pokretački program AnduinOS-a?"
+
+msgid ""
+"GRUB will be signed with your enrolled certificate. The current EFI files "
+"are backed up. Keep the computer running until the update finishes."
+msgstr ""
+"GRUB će se potpisati vašim upisanim certifikatom. Trenutačne EFI datoteke "
+"spremit će se u sigurnosnu kopiju. Ostavite računalo uključeno do završetka "
+"ažuriranja."
+
+msgid "Updating Bootloader…"
+msgstr "Ažuriranje pokretačkog programa…"
+
+msgid "Please wait while the bootloader is signed and deployed."
+msgstr "Pričekajte da se pokretački program potpiše i postavi."
+
+msgid "Bootloader Updated"
+msgstr "Pokretački program je ažuriran"
+
+msgid "Bootloader Update Failed"
+msgstr "Ažuriranje pokretačkog programa nije uspjelo"
+
+msgid ""
+"The AnduinOS bootloader has been signed and deployed. It will be used on the "
+"next restart."
+msgstr ""
+"Pokretački program AnduinOS-a potpisan je i postavljen. Upotrijebit će se "
+"pri sljedećem pokretanju."
+
+msgid ""
+"The bootloader update could not be completed. Review the details below "
+"before restarting."
+msgstr ""
+"Ažuriranje pokretačkog programa nije dovršeno. Prije ponovnog pokretanja "
+"pregledajte pojedinosti u nastavku."
+
+msgid "Details"
+msgstr "Pojedinosti"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"A certificate is waiting for enrollment. Restart and select Enroll MOK, "
+"Continue, Yes, then enter password 123456."
+msgstr ""
+"Certifikat čeka na upis. Ponovno pokrenite računalo, odaberite Enroll MOK, "
+"Continue, Yes, a zatim unesite lozinku 123456."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "AnduinOS GRUB is signed, trusted and deployed."
+msgstr "GRUB sustava AnduinOS potpisan je, pouzdan i postavljen."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Boot Recovery Help"
+msgstr "Pomoć za oporavak pokretanja"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Certificate Enrollment"
+msgstr "Upis certifikata"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Certificate Signing Purpose"
+msgstr "Namjena potpisivanja certifikatom"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Check Before Enabling Secure Boot"
+msgstr "Provjerite prije uključivanja funkcije Secure Boot"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Check the firmware and boot mode before continuing."
+msgstr "Prije nastavka provjerite firmver i način pokretanja."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Close"
+msgstr "Zatvori"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Complete This Step First"
+msgstr "Najprije dovršite ovaj korak"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Create Signing Certificate"
+msgstr "Izradi certifikat za potpisivanje"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Create a certificate that can sign both the bootloader and drivers first."
+msgstr ""
+"Najprije izradite certifikat kojim se mogu potpisivati i pokretački program "
+"i upravljački programi."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Create a local signing certificate before preparing trust."
+msgstr "Prije pripreme povjerenja izradite lokalni certifikat za potpisivanje."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"DKMS and the matching kernel headers are required. Check the driver build "
+"requirements."
+msgstr ""
+"Potrebni su DKMS i odgovarajuća zaglavlja jezgre. Provjerite preduvjete za "
+"izgradnju upravljačkog programa."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Do not restart with an invalid bootloader. Use trusted installation media to "
+"inspect and restore the EFI boot files. Keep existing enrolled certificates."
+msgstr ""
+"Ako pokretački program nije valjan, nemojte ponovno pokretati računalo. "
+"Upotrijebite pouzdan instalacijski medij za pregled i obnovu EFI datoteka za "
+"pokretanje. Zadržite postojeće upisane certifikate."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Enrollment requested. Restart and select Enroll MOK to finish trusting this "
+"certificate."
+msgstr ""
+"Zatražen je upis. Ponovno pokrenite računalo i odaberite Enroll MOK kako "
+"biste dovršili uspostavu povjerenja za ovaj certifikat."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Existing bootloader, driver signatures and old enrolled certificates are "
+"preserved."
+msgstr ""
+"Postojeći pokretački program, potpisi upravljačkih programa i stari upisani "
+"certifikati ostaju sačuvani."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware Configuration"
+msgstr "Konfiguracija firmvera"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware Help"
+msgstr "Pomoć za firmver"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware Settings Failed"
+msgstr "Promjena postavki firmvera nije uspjela"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Firmware platform keys are not configured. This is separate from MOK "
+"enrollment."
+msgstr ""
+"Platformni ključevi firmvera nisu konfigurirani. To je odvojeno od upisa MOK "
+"certifikata."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Firmware trust for the next bootloader has not been verified."
+msgstr ""
+"Nije provjereno vjeruje li firmver pokretačkom programu za sljedeće "
+"pokretanje."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Go to This Step"
+msgstr "Prijeđi na ovaj korak"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Inspection Failed"
+msgstr "Pregled nije uspio"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Installed drivers are trusted, including signatures from previously enrolled "
+"certificates."
+msgstr ""
+"Instalirani upravljački programi su pouzdani, uključujući potpise prethodno "
+"upisanih certifikata."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Motherboard Secure Boot is enabled."
+msgstr "Secure Boot je uključen na matičnoj ploči."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Next step:"
+msgstr "Sljedeći korak:"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "No repairs are required by the checks shown above."
+msgstr "Prema prikazanim provjerama nisu potrebni popravci."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "No third-party kernel modules need attention."
+msgstr "Nijedan modul jezgre treće strane ne zahtijeva pažnju."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "One or more third-party drivers need a trusted signature."
+msgstr ""
+"Jedan ili više upravljačkih programa treće strane trebaju pouzdan potpis."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Operation Failed"
+msgstr "Operacija nije uspjela"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Operation Finished"
+msgstr "Operacija je završena"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Please wait. Do not restart while this operation is running."
+msgstr ""
+"Pričekajte. Nemojte ponovno pokretati računalo dok je ova operacija u tijeku."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Prepare a valid signing certificate first."
+msgstr "Najprije pripremite valjani certifikat za potpisivanje."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Repair Automatic Signing"
+msgstr "Popravi automatsko potpisivanje"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Repair Driver Signatures"
+msgstr "Popravi potpise upravljačkih programa"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Replace Signing Certificate…"
+msgstr "Zamijeni certifikat za potpisivanje…"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restart"
+msgstr "Ponovno pokreni"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restart to Enroll Certificate"
+msgstr "Ponovno pokreni radi upisa certifikata"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Restore a Trusted Boot Path"
+msgstr "Vrati pouzdan put pokretanja"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Secure Boot is configured in UEFI settings. Platform keys and the Microsoft "
+"third-party CA are separate from your MOK certificate. Verify the actual "
+"bootloader, next kernel and required drivers before enabling Secure Boot. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Secure Boot se konfigurira u postavkama UEFI-ja. Ključevi platforme i "
+"Microsoftov CA za druge proizvođače ne ovise o vašem MOK certifikatu. Prije "
+"uključivanja funkcije Secure Boot provjerite pokretački program koji će se "
+"koristiti, sljedeću jezgru i potrebne upravljačke programe. Nazivi stavki u "
+"firmveru ovise o proizvođaču."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Secure Boot is disabled. You can still prepare certificates, drivers and the "
+"bootloader."
+msgstr ""
+"Secure Boot je isključen. I dalje možete pripremiti certifikate, "
+"upravljačke programe i pokretački program."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Secure Boot is not available in the current firmware or boot mode."
+msgstr ""
+"Secure Boot nije dostupan u trenutačnom firmveru ili načinu "
+"pokretanja."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Secure Boot state could not be determined. Check again before changing trust."
+msgstr ""
+"Nije moguće utvrditi stanje funkcije Secure Boot. Prije promjene postavki "
+"povjerenja provjerite ponovno."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Select Enroll MOK, Continue, Yes, and enter password 123456 on restart."
+msgstr ""
+"Nakon ponovnog pokretanja odaberite Enroll MOK, Continue, Yes, a zatim "
+"unesite lozinku 123456."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The AnduinOS bootloader is not installed. Replacing an existing working "
+"bootloader is optional."
+msgstr ""
+"Pokretački program AnduinOS-a nije instaliran. Postojeći pokretački program "
+"možete zadržati ako ispravno radi."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The AnduinOS bootloader needs signing or its signature could not be verified."
+msgstr ""
+"Pokretački program AnduinOS-a treba potpisati ili nije moguće provjeriti "
+"njegov potpis."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The UEFI bootloader operation is not available in the current boot mode."
+msgstr ""
+"Operacija s UEFI pokretačkim programom nije dostupna u trenutačnom načinu "
+"pokretanja."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The automatic signing configuration has not been verified. Check again "
+"before installing the bootloader."
+msgstr ""
+"Konfiguracija automatskog potpisivanja nije provjerena. Prije instalacije "
+"pokretačkog programa provjerite ponovno."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The automatic signing configuration needs attention. Another certificate "
+"enrollment is not needed."
+msgstr ""
+"Konfiguracija automatskog potpisivanja zahtijeva pažnju. Nije potreban "
+"ponovni upis certifikata."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The bootloader is signed, but its certificate is not enrolled."
+msgstr "Pokretački program je potpisan, ali njegov certifikat nije upisan."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The bootloader operation finished. The installed files will now be checked "
+"again."
+msgstr ""
+"Operacija s pokretačkim programom je dovršena. Instalirane datoteke sada će "
+"se ponovno provjeriti."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The bootloader update could not be completed. Review the details before "
+"restarting."
+msgstr ""
+"Ažuriranje pokretačkog programa nije dovršeno. Prije ponovnog pokretanja "
+"pregledajte pojedinosti."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The bootloader will be signed with your enrolled certificate and deployed. "
+"Existing EFI files are backed up. Keep the computer running until the "
+"operation finishes."
+msgstr ""
+"Pokretački program bit će potpisan vašim upisanim certifikatom i postavljen. "
+"Izradit će se sigurnosna kopija postojećih EFI datoteka. Ostavite računalo "
+"uključeno dok se operacija ne dovrši."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The certificate does not permit the required signing. Create and enroll a "
+"replacement."
+msgstr ""
+"Certifikat ne dopušta potrebno potpisivanje. Izradite zamjenski certifikat i "
+"upišite ga."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The certificate has expired. Create and enroll a replacement for future "
+"signing."
+msgstr ""
+"Certifikat je istekao. Izradite i upišite zamjenski certifikat za buduće "
+"potpisivanje."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The drivers needed by the next kernel have not been verified."
+msgstr "Upravljački programi potrebni sljedećoj jezgri nisu provjereni."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The installed bootloader could not be checked."
+msgstr "Nije moguće provjeriti instalirani pokretački program."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The installed bootloader signature is invalid. Restore a trusted boot path "
+"before restarting."
+msgstr ""
+"Potpis instaliranog pokretačkog programa nije valjan. Prije ponovnog "
+"pokretanja vratite pouzdani lanac pokretanja."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The kernel selected for the next boot has not been verified."
+msgstr "Jezgra odabrana za sljedeće pokretanje nije provjerena."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The next boot entry and kernel have not been verified. Do not enable Secure "
+"Boot until the actual boot chain is checked."
+msgstr ""
+"Stavka za sljedeće pokretanje i jezgra nisu provjerene. Nemojte uključivati "
+"Secure Boot dok ne provjerite lanac pokretanja koji će se upotrijebiti."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The next bootloader is not verified as signed, trusted and deployed."
+msgstr ""
+"Nije provjereno je li pokretački program za sljedeće pokretanje potpisan, "
+"pouzdan i postavljen."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signed bootloader needs deployment to this system's EFI partition."
+msgstr ""
+"Potpisani pokretački program treba postaviti na EFI particiju ovog sustava."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The signing certificate and private key are valid and match."
+msgstr ""
+"Certifikat za potpisivanje i privatni ključ valjani su i međusobno "
+"odgovaraju."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The signing certificate must be enrolled first. Complete the certificate "
+"enrollment step above."
+msgstr ""
+"Najprije je potrebno upisati certifikat za potpisivanje. Dovršite gornji "
+"korak upisa certifikata."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The signing identity could not be checked. Existing certificates have not "
+"been replaced."
+msgstr ""
+"Nije moguće provjeriti identitet za potpisivanje. Postojeći certifikati nisu "
+"zamijenjeni."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The signing key is missing, unreadable or does not match its certificate. "
+"Existing signatures are unchanged."
+msgstr ""
+"Ključ za potpisivanje nedostaje, nije čitljiv ili ne odgovara certifikatu. "
+"Postojeći potpisi nisu promijenjeni."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The system will now be checked again."
+msgstr "Sustav će se sada ponovno provjeriti."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Third-party drivers could not be checked. This does not mean no drivers are "
+"installed."
+msgstr ""
+"Nije moguće provjeriti upravljačke programe treće strane. To ne znači da "
+"nijedan upravljački program nije instaliran."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This certificate can sign both the bootloader and kernel modules."
+msgstr ""
+"Ovim certifikatom mogu se potpisivati pokretački program i moduli jezgre."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"This certificate can sign drivers only. A new certificate is needed for the "
+"AnduinOS bootloader."
+msgstr ""
+"Ovim certifikatom mogu se potpisivati samo upravljački programi. Za "
+"pokretački program AnduinOS-a potreban je novi certifikat."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "This certificate is enrolled in MOK."
+msgstr "Ovaj je certifikat upisan u MOK."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"This updates the selected signing configuration. Creating or replacing a "
+"certificate preserves existing boot and driver trust. A new certificate "
+"requires confirmation in MOKManager after restart."
+msgstr ""
+"Time se ažurira odabrana konfiguracija potpisivanja. Izrada ili zamjena "
+"certifikata čuva postojeće povjerenje za pokretanje sustava i upravljačke "
+"programe. Novi certifikat potrebno je potvrditi u MOKManageru nakon ponovnog "
+"pokretanja."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Do not restart until the installed EFI boot files are trusted. Restore a "
+"known-good EFI backup or use trusted installation media to repair them. Keep "
+"existing enrolled certificates."
+msgstr ""
+"Nemojte ponovno pokretati računalo dok instalirane EFI datoteke za "
+"pokretanje nisu pouzdane. Vratite provjerenu sigurnosnu kopiju EFI-ja ili ih "
+"popravite pouzdanim instalacijskim medijem. Sačuvajte postojeće upisane "
+"certifikate."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The installed EFI boot chain could not be verified as trusted. Restore a "
+"trusted boot path before restarting."
+msgstr ""
+"Nije moguće potvrditi pouzdanost instaliranog EFI lanca pokretanja. Prije "
+"ponovnog pokretanja vratite pouzdan put pokretanja."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "The AnduinOS bootloader is not installed. Installing it is recommended."
+msgstr ""
+"Pokretački program AnduinOS-a nije instaliran. Preporučujemo da ga "
+"instalirate."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Open Firmware Settings"
+msgstr "Otvori postavke firmvera"
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid "Preparation checks passed. Secure Boot is still disabled."
+msgstr ""
+"Provjere pripreme su prošle. Secure Boot je i dalje isključen."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Restart to UEFI settings, enable Secure Boot, then save your changes and "
+"start AnduinOS. Firmware wording varies by manufacturer. Platform keys and "
+"the Microsoft third-party CA are separate from your MOK certificate. The "
+"preparation checks shown here do not replace a successful boot with Secure "
+"Boot enabled."
+msgstr ""
+"Ponovno pokrenite računalo u postavke UEFI-ja, uključite Secure Boot, "
+"spremite promjene i pokrenite AnduinOS. Nazivi postavki firmvera razlikuju "
+"se ovisno o proizvođaču. Platformni ključevi i Microsoftov CA za treće "
+"strane odvojeni su od vašeg MOK certifikata. Ovdje prikazane provjere "
+"pripreme ne jamče uspješno pokretanje s uključenom funkcijom Secure Boot."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The AnduinOS automatic signing configuration will be backed up and reset to "
+"use your enrolled certificate. Other custom DKMS settings will not be "
+"changed. No certificate enrollment is needed."
+msgstr ""
+"Izradit će se sigurnosna kopija konfiguracije automatskog potpisivanja "
+"AnduinOS-a, a zatim će se ona vratiti na postavku koja koristi vaš upisani "
+"certifikat. Ostale prilagođene postavke DKMS-a neće se mijenjati. Nije "
+"potreban upis certifikata."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"The signing certificate is valid. Complete enrollment first; automatic "
+"signing will be checked afterward."
+msgstr ""
+"Certifikat za potpisivanje je valjan. Najprije dovršite upis; zatim će se "
+"provjeriti automatsko potpisivanje."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Automatic signing now uses your enrolled certificate. The previous "
+"configuration has been backed up. No further certificate enrollment is "
+"needed."
+msgstr ""
+"Automatsko potpisivanje sada koristi vaš upisani certifikat. Prethodna je "
+"konfiguracija sigurnosno kopirana. Nije potreban novi upis certifikata."
+
+#: ../anduinos-secureboot-toolkit/src/anduinos_secureboot/ui.py
+msgid ""
+"Driver signature repair is complete. The system will now check whether the "
+"installed drivers are trusted."
+msgstr ""
+"Popravak potpisa upravljačkih programa dovršen je. Sustav će sada provjeriti "
+"jesu li instalirani upravljački programi pouzdani."
+
+msgid "Recovery Environment"
+msgstr "Okruženje za oporavak"
+
+msgid "Present"
+msgstr "Prisutno"
+
+msgid "Multiple recovery partitions found"
+msgstr "Pronađeno je više particija za oporavak"
+
+msgid "Recovery partition not found"
+msgstr "Particija za oporavak nije pronađena"
+
+msgid "Recovery partition"
+msgstr "Particija za oporavak"
+
+msgid "Recovery package"
+msgstr "Paket za oporavak"
+
+msgid "GRUB menu entry"
+msgstr "Stavka izbornika GRUB-a"
+
+msgid "Recovery menu entry not found"
+msgstr "Stavka izbornika za oporavak nije pronađena"
+
+msgid "Unable to read the GRUB menu"
+msgstr "Nije moguće pročitati izbornik GRUB-a"
+
+msgid ""
+"Package status uses the local APT cache. Software sources are not refreshed."
+msgstr ""
+"Stanje paketa temelji se na lokalnoj APT predmemoriji. Izvori softvera nisu "
+"osvježeni."
+
+msgid "Read recovery boot information"
+msgstr "Pročitaj podatke o pokretanju okruženja za oporavak"
+
+msgid ""
+"A previous preparation was interrupted. Ask an administrator to inspect the "
+"saved partition table and swap header before retrying."
+msgstr ""
+"Prethodna je priprema prekinuta. Prije ponovnog pokušaja zatražite od "
+"administratora da pregleda spremljenu tablicu particija i zaglavlje swap "
+"particije."
+
+msgid ""
+"Automatic preparation is unavailable for this disk or swap configuration. "
+"Ask an administrator to prepare a 256 MiB AOS_RECOVERY ext4 partition, then "
+"scan again."
+msgstr ""
+"Automatska priprema nije dostupna za ovu konfiguraciju diska ili swap "
+"particije. Zatražite od administratora da pripremi ext4 particiju "
+"AOS_RECOVERY veličine 256 MiB, a zatim ponovno pokrenite pretraživanje."
+
+msgid ""
+"Check the configured or duplicate recovery volumes with an administrator, "
+"then scan again."
+msgstr ""
+"Zatražite od administratora da provjeri konfigurirane ili duplicirane "
+"jedinice za oporavak, a zatim ponovno pokrenite pretraživanje."
+
+msgid ""
+"Close memory-heavy applications and scan again. There is not enough "
+"available RAM to disable this swap safely."
+msgstr ""
+"Zatvorite aplikacije koje troše mnogo memorije i ponovno pokrenite "
+"pretraživanje. Nema dovoljno dostupnog RAM-a za sigurno isključivanje ovog "
+"swap prostora."
+
+msgid "Deploy the installed recovery image and regenerate the GRUB menu?"
+msgstr ""
+"Postaviti instaliranu sliku za oporavak i ponovno izraditi izbornik GRUB-a?"
+
+msgid ""
+"Install or update only the recovery package using the current software lists?"
+msgstr ""
+"Instalirati ili ažurirati samo paket za oporavak prema trenutačnim popisima "
+"softvera?"
+
+msgid "Install or update recovery package"
+msgstr "Instaliraj ili ažuriraj paket za oporavak"
+
+msgid ""
+"No package candidate could be verified from the local APT cache. Refresh "
+"sources in your software updater, then scan again."
+msgstr ""
+"Iz lokalne APT predmemorije nije moguće potvrditi nijedan paket. Osvježite "
+"izvore u programu za ažuriranje softvera, a zatim ponovno pokrenite "
+"pretraživanje."
+
+msgid "Recovery repair completed."
+msgstr "Popravak okruženja za oporavak dovršen je."
+
+msgid "Repair recovery boot menu"
+msgstr "Popravi izbornik pokretanja za oporavak"
+
+msgid ""
+"Scan again and allow the read-only inspection. If checks still fail, repair "
+"the Driver Center installation and its disk utilities."
+msgstr ""
+"Ponovno pokrenite pretraživanje i dopustite pregled samo za čitanje. Ako "
+"provjere i dalje ne uspiju, popravite instalaciju Centra za upravljačke "
+"programe i njegove diskovne alate."
+
+msgid "Shrink swap partition and create recovery partition"
+msgstr "Smanji swap particiju i izradi particiju za oporavak"
+
+msgid ""
+"Swap will be temporarily disabled. Back up your data and keep the computer "
+"powered on until this operation finishes."
+msgstr ""
+"Swap će privremeno biti onemogućen. Izradite sigurnosnu kopiju podataka i "
+"ostavite računalo uključeno dok se operacija ne dovrši."
+
+msgid ""
+"Unable to continue: no ordinary swap partition was found on the system disk."
+msgstr ""
+"Nije moguće nastaviti: na sistemskom disku nije pronađena uobičajena swap "
+"particija."
+
+msgid "Unable to continue: the swap partition is smaller than 512 MiB."
+msgstr "Nije moguće nastaviti: swap particija manja je od 512 MiB."
+
+msgid ""
+"Recovery repair requires an installed AnduinOS Btrfs @root system. Start the "
+"installed system and scan again."
+msgstr ""
+"Za popravak oporavka potreban je instalirani sustav AnduinOS s Btrfs @root "
+"particijom. Pokrenite instalirani sustav i ponovno pokrenite pretraživanje."
+
+#: src/anduinos_driver_center/core.py
+msgid "Graphics device"
+msgstr "Grafički uređaj"
+
+msgid "Encrypted"
+msgstr "Šifrirano"
+
+msgid "Not encrypted"
+msgstr "Nije šifrirano"
+
+msgid "Disk Encryption"
+msgstr "Šifriranje diska"
+
+msgid "Check encryption for system files, personal files and swap."
+msgstr "Provjeri šifriranje sistemskih i osobnih datoteka te swap prostora."
+
+msgid "Unencrypted disk swap is active"
+msgstr "Aktivna je nešifrirana swap particija"
+
+msgid "No disk swap is active"
+msgstr "Nema aktivne swap particije"
+
+msgid "Disk swap"
+msgstr "Swap particija"
+
+msgid "Encryption coverage"
+msgstr "Pokrivenost šifriranjem"
+
+msgid "System files"
+msgstr "Sistemske datoteke"
+
+msgid "Personal files (Home)"
+msgstr "Osobne datoteke (Početna mapa)"
+
+msgid "Memory-based swap; not a disk partition"
+msgstr "Swap u memoriji; nije particija diska"
+
+msgid "System recovery"
+msgstr "Oporavak sustava"
+
+msgid "Snapshot Recovery Environment"
+msgstr "Okruženje za oporavak snimke"
+
+msgid "Not applicable to ext4. Use Rescue Center from the Live USB."
+msgstr ""
+"Nije primjenjivo na ext4. Upotrijebite Rescue Center s USB medija za "
+"pokretanje."
+
+msgid "Unencrypted swap can store personal data from memory."
+msgstr "Nešifrirani swap prostor može sadržavati osobne podatke iz memorije."
+
+msgid "Disk encryption can be selected during a new installation."
+msgstr "Šifriranje diska možete odabrati pri novoj instalaciji."
+
+msgid "Configured"
+msgstr "Konfigurirano"
+
+msgid "Check recovery configuration"
+msgstr "Provjeri konfiguraciju oporavka"
+
+msgid ""
+"The credential operation did not finish. Keep your old and new credentials, "
+"then try again using the current disk password."
+msgstr ""
+"Promjena vjerodajnica nije dovršena. Zadržite stare i nove vjerodajnice pa "
+"pokušajte ponovno s trenutačnom lozinkom diska."
+
+msgid "Current disk password"
+msgstr "Trenutačna lozinka diska"
+
+msgid "Current recovery key"
+msgstr "Trenutačni ključ za oporavak"
+
+msgid "Unlock credentials"
+msgstr "Otključaj vjerodajnice"
+
+msgid "Change disk password"
+msgstr "Promijeni lozinku diska"
+
+msgid "Replace recovery key"
+msgstr "Zamijeni ključ za oporavak"
+
+msgid "Checking credential configuration…"
+msgstr "Provjera konfiguracije vjerodajnica…"
+
+msgid "New disk password"
+msgstr "Nova lozinka diska"
+
+msgid "Confirm new disk password"
+msgstr "Potvrdi novu lozinku diska"
+
+msgid "Updating the disk credential. Keep the computer powered on."
+msgstr "Ažuriranje lozinke diska. Ostavite računalo uključeno."
+
+msgid "The current disk password is incorrect. No credential was changed."
+msgstr "Trenutačna lozinka diska nije točna. Lozinka nije promijenjena."
+
+msgid "The current recovery key is incorrect. No credential was changed."
+msgstr ""
+"Trenutačni ključ za oporavak nije ispravan. Vjerodajnice nisu promijenjene."
+
+msgid ""
+"Enter the current recovery key once to identify this preview's credential "
+"roles."
+msgstr ""
+"Jednom unesite trenutačni ključ za oporavak kako bi se utvrdile uloge "
+"vjerodajnica iz ove pretpregledne verzije."
+
+msgid "Choose a new credential that is not already used by this disk."
+msgstr "Odaberite novu lozinku koju ovaj disk još ne koristi."
+
+msgid "Check the password length, characters and confirmation."
+msgstr "Provjerite duljinu, znakove i potvrdu lozinke."
+
+msgid ""
+"The internal startup credential could not be verified. Use Rescue Center "
+"from the Live USB."
+msgstr ""
+"Nije moguće provjeriti internu lozinku za pokretanje. Upotrijebite Rescue "
+"Center s USB medija za pokretanje."
+
+msgid ""
+"This credential layout cannot be managed automatically. No existing "
+"credential was removed."
+msgstr ""
+"Ovim rasporedom vjerodajnica nije moguće automatski upravljati. Nijedna "
+"postojeća vjerodajnica nije uklonjena."
+
+msgid "The disk configuration changed. Stop other disk tools and try again."
+msgstr ""
+"Konfiguracija diska promijenila se. Zaustavite druge alate za diskove i "
+"pokušajte ponovno."
+
+msgid "Another disk credential operation is running. Wait and try again."
+msgstr ""
+"U tijeku je druga operacija s vjerodajnicama diska. Pričekajte pa pokušajte "
+"ponovno."
+
+msgid "Administrator authentication was cancelled."
+msgstr "Autentifikacija administratora je otkazana."
+
+msgid ""
+"There is no free credential slot. Existing credentials remain available."
+msgstr ""
+"Nema slobodnog mjesta za vjerodajnicu. Postojeće vjerodajnice i dalje su "
+"dostupne."
+
+msgid ""
+"The new credential could not be verified. Keep your existing credentials and "
+"try again."
+msgstr ""
+"Nije moguće provjeriti novu lozinku. Sačuvajte postojeće vjerodajnice i "
+"pokušajte ponovno."
+
+msgid "Open"
+msgstr "Otvori"
+
+msgid "New recovery key"
+msgstr "Novi ključ za oporavak"
+
+msgid "I have saved the new recovery key outside this computer."
+msgstr "Novi ključ za oporavak spremio sam izvan ovog računala."
+
+msgid ""
+"This earlier preview needs the current recovery key once to identify its "
+"credential roles."
+msgstr ""
+"Ova starija pretpregledna verzija traži da jednom unesete trenutačni ključ "
+"za oporavak kako bi utvrdila uloge vjerodajnica."
+
+msgid ""
+"The internal startup credential stays unchanged. The old credential stops "
+"working after success."
+msgstr ""
+"Interna lozinka za pokretanje ostaje nepromijenjena. Nakon uspješnog "
+"završetka stara lozinka prestat će vrijediti."
+
+msgid "Disk password changed."
+msgstr "Lozinka diska je promijenjena."
+
+msgid "Recovery key replaced."
+msgstr "Ključ za oporavak je zamijenjen."
+
+msgid ""
+"Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard "
+"layout."
+msgstr ""
+"Upotrijebite 8 do 128 ispisivih ASCII znakova. Zaslon za pokretanje koristi "
+"američki raspored tipkovnice."
+
+msgid ""
+"The credential operation did not finish. Keep your old and new credentials, "
+"then try again using your disk password or emergency recovery key."
+msgstr ""
+"Operacija s vjerodajnicama nije dovršena. Sačuvajte stare i nove "
+"vjerodajnice, a zatim pokušajte ponovno koristeći lozinku diska ili ključ za "
+"hitni oporavak."
+
+msgid ""
+"The emergency recovery key is generated by the system. Like your disk "
+"password, it unlocks the disk. Use your password normally; use the key in an "
+"emergency. Keep it outside this computer."
+msgstr ""
+"Sustav je izradio ključ za hitni oporavak. Poput lozinke diska, taj ključ "
+"otključava disk. Uobičajeno koristite lozinku, a ključ samo u hitnom "
+"slučaju. Čuvajte ga izvan ovog računala."
+
+msgid "Current emergency recovery key"
+msgstr "Trenutačni ključ za hitni oporavak"
+
+msgid "Replace emergency recovery key"
+msgstr "Zamijeni ključ za hitni oporavak"
+
+msgid "Reset forgotten disk password"
+msgstr "Ponovno postavi zaboravljenu lozinku diska"
+
+msgid "Emergency recovery key"
+msgstr "Ključ za hitni oporavak"
+
+msgid "The emergency recovery key is incorrect. No credential was changed."
+msgstr "Ključ za hitni oporavak nije točan. Lozinka nije promijenjena."
+
+msgid ""
+"Enter the current emergency recovery key once to identify this preview's "
+"credential roles."
+msgstr ""
+"Jednom unesite trenutačni ključ za hitni oporavak kako biste prepoznali "
+"uloge vjerodajnica ovog pregleda."
+
+msgid "New emergency recovery key"
+msgstr "Novi ključ za hitni oporavak"
+
+msgid "I have saved the new emergency recovery key outside this computer."
+msgstr "Novi ključ za hitni oporavak spremljen je izvan ovog računala."
+
+msgid ""
+"This earlier preview needs the current emergency recovery key once to "
+"identify its credential roles."
+msgstr ""
+"Za prepoznavanje uloga vjerodajnica u ovom ranijem pregledu potrebno je "
+"jednom unijeti trenutačni ključ za hitni oporavak."
+
+msgid "Emergency recovery key replaced."
+msgstr "Ključ za hitni oporavak zamijenjen je."
+
+msgid ""
+"Enter your emergency recovery key to set a new disk password. You do not "
+"need the forgotten password. Your emergency recovery key stays valid."
+msgstr ""
+"Unesite ključ za hitni oporavak kako biste postavili novu lozinku diska. "
+"Zaboravljena lozinka nije potrebna. Ključ za hitni oporavak ostaje valjan."
+
+msgid ""
+"Enabling disk encryption on an existing installation is not supported yet. "
+"Reinstall using the latest AnduinOS ISO to enable disk encryption."
+msgstr ""
+"Šifriranje diska još nije moguće uključiti na postojećoj instalaciji. "
+"Ponovno instalirajte sustav pomoću najnovije ISO slike AnduinOS-a da biste "
+"uključili šifriranje diska."
+
+#: src/anduinos_driver_center/app.py
+msgid "Pro feature"
+msgstr "Značajka Pro"
+
+#: src/anduinos_driver_center/app.py
+msgid "Purchase AnduinOS Pro"
+msgstr "Kupite AnduinOS Pro"

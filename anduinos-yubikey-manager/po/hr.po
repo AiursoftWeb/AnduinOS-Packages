@@ -1,0 +1,1844 @@
+# Croatian translations for anduinos-yubikey-manager.
+# Croatian translation contributions by Viktor (drdrummie), 2026.
+# SPDX-License-Identifier: GPL-3.0-only
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-yubikey-manager\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-04 17:10+0000\n"
+"PO-Revision-Date: 2026-11-23 04:07+0000\n"
+"Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
+"Language-Team: Croatian\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: src/window.rs:2022
+msgid "1 identity is currently available to SSH applications."
+msgstr "SSH aplikacijama trenutačno je dostupan 1 identitet."
+
+#: src/window.rs:2306
+msgid "1 resident SSH key is available from your connected YubiKey."
+msgstr "S povezanog YubiKeya dostupan je 1 rezidentni SSH ključ."
+
+#: src/window.rs:1816
+msgid "1 resident SSH key · {0}"
+msgstr "1 rezidentni SSH ključ · {0}"
+
+#: src/window.rs:1476 src/window.rs:1654
+msgid "A key must be connected before it can be enrolled."
+msgstr "Prije registracije potrebno je povezati ključ."
+
+#: src/window.rs:173
+msgid "About"
+msgstr "O aplikaciji"
+
+#: src/home.rs:383 src/home.rs:404
+msgid "Account password"
+msgstr "Lozinka računa"
+
+#: src/window.rs:2492
+msgid "Add another SSH key"
+msgstr "Dodaj drugi SSH ključ"
+
+#: src/window.rs:1316
+msgid "Add this public key to GitHub as a Signing Key."
+msgstr "Dodajte ovaj javni ključ na GitHub kao ključ za potpisivanje."
+
+#: src/home.rs:338 src/home.rs:391
+msgid "Administrator access"
+msgstr "Administratorski pristup"
+
+#: src/window.rs:2669
+msgid "Advanced options"
+msgstr "Napredne mogućnosti"
+
+#: src/window.rs:2621
+msgid "Algorithm"
+msgstr "Algoritam"
+
+#: src/window.rs:1584
+msgid "Allow sudo without authentication"
+msgstr "Dopusti sudo bez autentifikacije"
+
+#: src/window.rs:1674
+msgid "Allowed for sudo · not currently connected"
+msgstr "Dopušteno za sudo · trenutačno nije povezano"
+
+#: src/window.rs:1676
+msgid "Allowed to authorize sudo"
+msgstr "Dopuštena je autorizacija sudo naredbi"
+
+#: src/window.rs:1496
+msgid "Allowed to unlock this user"
+msgstr "Dopušteno je otključavanje ovog korisnika"
+
+#: src/window.rs:1494
+msgid "Allowed to unlock this user · not currently connected"
+msgstr "Dopušteno je otključavanje ovog korisnika · trenutačno nije povezano"
+
+#: src/window.rs:1904
+msgid "Already loaded"
+msgstr "Već učitano"
+
+#: src/window.rs:1641
+msgid "An enrolled YubiKey or the account password can authorize sudo."
+msgstr "Sudo se može autorizirati registriranim YubiKeyem ili lozinkom računa."
+
+#: src/application.rs:68
+msgid "AnduinOS Team"
+msgstr "Tim AnduinOS-a"
+
+#: src/application.rs:66 src/progress_dialog.rs:23 src/window.rs:96
+msgid "AnduinOS YubiKey Security Center"
+msgstr "AnduinOS Centar sigurnosti YubiKeya"
+
+#: src/home.rs:128
+msgid "AnduinOS works more securely with a YubiKey"
+msgstr "AnduinOS je sigurniji uz YubiKey"
+
+#: src/window.rs:2627
+msgid "Application"
+msgstr "Aplikacija"
+
+#: src/ssh.rs:450
+msgid ""
+"Application must begin with ssh:, contain no whitespace, and be at most 253 "
+"bytes."
+msgstr ""
+"Naziv aplikacije mora počinjati s ssh:, ne smije sadržavati razmake i smije "
+"imati najviše 253 bajta."
+
+#: src/home.rs:413 src/window.rs:631
+msgid "Available"
+msgstr "Dostupno"
+
+#: src/window.rs:1257
+msgid "Available through SSH agent"
+msgstr "Dostupno putem SSH agenta"
+
+#: src/window.rs:1255
+msgid "Available through local key handle"
+msgstr "Dostupno putem lokalne datoteke ključa"
+
+#: src/home.rs:174
+msgid "Buy a YubiKey"
+msgstr "Kupite YubiKey"
+
+#: src/window.rs:2700 src/window.rs:2757 src/window.rs:3029
+msgid "Cancel"
+msgstr "Odustani"
+
+#: src/window.rs:562
+msgid "Checking SSH keys…"
+msgstr "Provjeravaju se SSH ključevi…"
+
+#: src/window.rs:574
+msgid "Checking SSH support…"
+msgstr "Provjerava se podrška za SSH…"
+
+#: src/home.rs:67 src/window.rs:478
+msgid "Checking connected YubiKeys"
+msgstr "Provjeravaju se povezani YubiKey uređaji"
+
+#: src/home.rs:430
+msgid "Choose a YubiKey-backed SSH key"
+msgstr "Odaberite SSH ključ pohranjen na YubiKeyu"
+
+#: src/window.rs:2641
+msgid "Choose a local key-handle file"
+msgstr "Odaberite lokalnu datoteku ključa"
+
+#: src/ssh.rs:441
+msgid "Choose a supported OpenSSH security-key algorithm."
+msgstr "Odaberite podržani algoritam OpenSSH sigurnosnog ključa."
+
+#: src/ssh.rs:314 src/ssh.rs:438
+msgid "Choose a valid /dev/hidrawN FIDO device."
+msgstr "Odaberite valjani FIDO uređaj /dev/hidrawN."
+
+#: src/ssh.rs:223
+msgid "Choose a valid output folder."
+msgstr "Odaberite valjanu izlaznu mapu."
+
+#: src/git_signing.rs:107
+msgid "Choose an SSH key for Git signing."
+msgstr "Odaberite SSH ključ za potpisivanje u Gitu."
+
+#: src/window.rs:2652
+msgid "Choose local SSH key-handle path"
+msgstr "Odaberite putanju lokalne datoteke SSH ključa"
+
+#: src/window.rs:1220
+msgid ""
+"Choose one SSH key. The selection takes effect immediately for this user's "
+"Git commits."
+msgstr ""
+"Odaberite jedan SSH ključ. Odabir odmah stupa na snagu za Gitove predaje "
+"ovog korisnika."
+
+#: src/window.rs:1467
+msgid ""
+"Choose which YubiKeys may unlock {0}. Password sign-in remains available."
+msgstr ""
+"Odaberite koji YubiKey uređaji mogu otključati {0}. Prijava lozinkom i dalje "
+"je dostupna."
+
+#: src/window.rs:3076 src/window.rs:3098
+msgid "Close"
+msgstr "Zatvori"
+
+#: src/ssh.rs:570
+msgid "Command exited with"
+msgstr "Naredba je završila s kodom"
+
+#: src/ssh.rs:560 src/window.rs:655
+msgid "Command exited with {0}"
+msgstr "Naredba je završila s kodom {0}"
+
+#: src/window.rs:1219
+msgid "Commit signing"
+msgstr "Potpisivanje predaja"
+
+#: src/home.rs:598
+msgid "Configured YubiKeys"
+msgstr "Konfigurirani YubiKey uređaji"
+
+#: src/home.rs:629
+msgid "Configured for {0} · Not connected"
+msgstr "Konfigurirano za {0} · Nije povezano"
+
+#: src/window.rs:2507
+msgid "Connect a FIDO security key first"
+msgstr "Najprije povežite FIDO sigurnosni ključ"
+
+#: src/window.rs:2264
+msgid "Connect a YubiKey"
+msgstr "Povežite YubiKey"
+
+#: src/home.rs:160
+msgid "Connect a YubiKey to get started"
+msgstr "Za početak povežite YubiKey"
+
+#: src/home.rs:126
+msgid "Connect your YubiKey"
+msgstr "Povežite svoj YubiKey"
+
+#: src/home.rs:245 src/home.rs:317
+msgid "Connected"
+msgstr "Povezano"
+
+#: src/home.rs:302
+msgid "Connected YubiKeys"
+msgstr "Povezani YubiKey uređaji"
+
+#: src/window.rs:2701
+msgid "Continue"
+msgstr "Nastavi"
+
+#: src/window.rs:3030
+msgid "Continue to PIN"
+msgstr "Nastavi na unos PIN-a"
+
+#: src/window.rs:1328 src/window.rs:2780
+msgid "Copy public key"
+msgstr "Kopiraj javni ključ"
+
+#: src/window.rs:597
+msgid "Could not check SSH keys"
+msgstr "Nije moguće provjeriti SSH ključeve"
+
+#: src/ssh.rs:691
+msgid "Could not create a temporary public-key file: {0}"
+msgstr "Nije moguće stvoriti privremenu datoteku javnog ključa: {0}"
+
+#: src/ssh.rs:605
+msgid "Could not create temporary Git signing data: {0}"
+msgstr "Nije moguće stvoriti privremene podatke za Gitovo potpisivanje: {0}"
+
+#: src/ssh.rs:230 src/ssh_config.rs:443
+msgid "Could not create {0}: {1}"
+msgstr "Nije moguće stvoriti {0}: {1}"
+
+#: src/window.rs:2841
+msgid "Could not export the public key: {0}"
+msgstr "Nije moguće izvesti javni ključ: {0}"
+
+#: src/window.rs:2339
+msgid "Could not find security keys"
+msgstr "Nije moguće pronaći sigurnosne ključeve"
+
+#: src/ssh.rs:703
+msgid "Could not flush the temporary public key: {0}"
+msgstr "Nije moguće zapisati privremeni javni ključ: {0}"
+
+#: src/backend.rs:137
+msgid "Could not inspect USB devices: {0}"
+msgstr "Nije moguće pregledati USB uređaje: {0}"
+
+#: src/window.rs:1993
+msgid "Could not inspect this YubiKey"
+msgstr "Nije moguće pregledati ovaj YubiKey"
+
+#: src/window.rs:540 src/window.rs:1556 src/window.rs:1736
+msgid "Could not list YubiKeys"
+msgstr "Nije moguće prikazati popis YubiKey uređaja"
+
+#: src/ssh.rs:501
+msgid "Could not locate the secure PIN helper: {0}"
+msgstr "Nije moguće pronaći sigurni pomoćni program za PIN: {0}"
+
+#: src/ssh.rs:616
+msgid "Could not prepare the Git signing test: {0}"
+msgstr "Nije moguće pripremiti test Gitova potpisivanja: {0}"
+
+#: src/ssh.rs:239 src/ssh_config.rs:445
+msgid "Could not protect {0}: {1}"
+msgstr "Nije moguće zaštititi {0}: {1}"
+
+#: src/ssh.rs:527 src/ssh.rs:533 src/ssh.rs:919 src/ssh.rs:925
+msgid "Could not provide the FIDO PIN: {0}"
+msgstr "Nije moguće poslati FIDO PIN: {0}"
+
+#: src/backend.rs:325
+msgid "Could not request administrator access: {0}"
+msgstr "Nije moguće zatražiti administratorski pristup: {0}"
+
+#: src/backend.rs:13 src/git_signing.rs:190 src/ssh.rs:911
+msgid "Could not run {0}: {1}"
+msgstr "Nije moguće pokrenuti {0}: {1}"
+
+#: src/ssh.rs:520
+msgid "Could not start {0}: {1}"
+msgstr "Nije moguće pokrenuti {0}: {1}"
+
+#: src/home.rs:103
+msgid "Could not update security keys"
+msgstr "Nije moguće ažurirati sigurnosne ključeve"
+
+#: src/ssh.rs:697
+msgid "Could not write the temporary public key: {0}"
+msgstr "Nije moguće zapisati privremeni javni ključ: {0}"
+
+#: src/window.rs:2535
+msgid "Create"
+msgstr "Stvori"
+
+#: src/window.rs:2509
+msgid "Create a resident SSH credential on a selected device"
+msgstr "Stvorite rezidentnu SSH vjerodajnicu na odabranom uređaju"
+
+#: src/window.rs:2694
+msgid "Create a resident SSH key"
+msgstr "Stvori rezidentni SSH ključ"
+
+#: src/window.rs:2503
+msgid "Create…"
+msgstr "Stvori…"
+
+#: src/window.rs:2964
+msgid "Deletion result is unknown"
+msgstr "Ishod brisanja nije poznat"
+
+#: src/window.rs:1588
+msgid "Disabled · sudo must authenticate with a YubiKey or account password"
+msgstr ""
+"Onemogućeno · sudo se mora autentificirati YubiKeyem ili lozinkom računa"
+
+#: src/window.rs:2323
+msgid "Discover SSH keys on your YubiKeys"
+msgstr "Pronađi SSH ključeve na YubiKey uređajima"
+
+#: src/ssh.rs:463
+msgid ""
+"Display label must be at most 200 bytes and contain no control characters."
+msgstr ""
+"Oznaka smije sadržavati najviše 200 bajtova i ne smije sadržavati kontrolne "
+"znakove."
+
+#: src/window.rs:1224
+msgid "Do not sign new commits by default"
+msgstr "Zadano nemoj potpisivati nove predaje"
+
+#: src/window.rs:1565
+msgid ""
+"During enrollment, disconnect all other security keys. The selected key will "
+"blink; touch it to continue. Multiple keys can be enrolled one at a time."
+msgstr ""
+"Tijekom registracije odspojite sve ostale sigurnosne ključeve. Odabrani će "
+"ključ treperiti; dodirnite ga za nastavak. Više ključeva možete registrirati "
+"jedan po jedan."
+
+#: src/window.rs:2612
+msgid "ECDSA-SK (recommended compatibility)"
+msgstr "ECDSA-SK (preporučena kompatibilnost)"
+
+#: src/window.rs:2622
+msgid "ECDSA-SK works with the widest range of YubiKeys"
+msgstr "ECDSA-SK radi s najvećim brojem YubiKey uređaja"
+
+#: src/window.rs:2499
+msgid "ECDSA-SK · resident · touch required · safe compatibility defaults"
+msgstr ""
+"ECDSA-SK · rezidentni ključ · potreban je dodir · sigurne zadane postavke "
+"kompatibilnosti"
+
+#: src/window.rs:2613
+msgid "Ed25519-SK (newer YubiKeys)"
+msgstr "Ed25519-SK (noviji YubiKey uređaji)"
+
+#: src/home.rs:376 src/home.rs:395 src/home.rs:423
+msgid "Enabled"
+msgstr "Omogućeno"
+
+#: src/window.rs:1586
+msgid ""
+"Enabled · programs can obtain administrator privileges without confirmation"
+msgstr "Omogućeno · programi mogu dobiti administratorske ovlasti bez potvrde"
+
+#: src/window.rs:1612
+msgid "Enabling passwordless sudo…"
+msgstr "Omogućuje se sudo bez lozinke…"
+
+#: src/window.rs:1614
+msgid "Enabling sudo authentication…"
+msgstr "Omogućuje se autentifikacija za sudo…"
+
+#: src/window.rs:1672
+msgid "Enrolled · inactive while sudo authentication is bypassed"
+msgstr "Registrirano · neaktivno dok se zaobilazi autentifikacija za sudo"
+
+#: src/window.rs:1564
+msgid "Enrollment safety"
+msgstr "Sigurnost registracije"
+
+#: src/window.rs:735
+msgid ""
+"Enter the FIDO PIN for {0}. Touch it if it flashes. The PIN is never stored."
+msgstr ""
+"Unesite FIDO PIN za {0}. Dodirnite ga ako počne treperiti. PIN se nikad ne "
+"pohranjuje."
+
+#: src/window.rs:1421
+msgid ""
+"Enter the FIDO PIN, then touch the selected YubiKey when it flashes. No "
+"commit will be created."
+msgstr ""
+"Unesite FIDO PIN, a zatim dodirnite odabrani YubiKey kada počne treperiti. "
+"Predaja se neće stvoriti."
+
+#: src/window.rs:1174
+msgid "Enter the FIDO PIN. Touch the YubiKey if it flashes."
+msgstr "Unesite FIDO PIN. Dodirnite YubiKey ako počne treperiti."
+
+#: src/ssh.rs:629
+msgid "Enter the YubiKey FIDO PIN to test this local key handle."
+msgstr ""
+"Unesite FIDO PIN za YubiKey da biste testirali ovu lokalnu datoteku ključa."
+
+#: src/window.rs:2533 src/window.rs:2922
+msgid "Enter the selected YubiKey FIDO PIN"
+msgstr "Unesite FIDO PIN za odabrani YubiKey"
+
+#: src/window.rs:2781
+msgid "Export .pub"
+msgstr "Izvezi .pub"
+
+#: src/window.rs:2823
+msgid "Export SSH public key"
+msgstr "Izvezi javni SSH ključ"
+
+#: src/window.rs:2747
+msgid "FIDO PIN"
+msgstr "FIDO PIN"
+
+#: src/window.rs:1202 src/window.rs:2003 src/window.rs:2508
+msgid "FIDO device discovery is unavailable"
+msgstr "Otkrivanje FIDO uređaja nije dostupno"
+
+#: src/backend.rs:162
+msgid "FIDO security key"
+msgstr "FIDO sigurnosni ključ"
+
+#: src/window.rs:2325
+msgid "Finish inspecting your YubiKeys"
+msgstr "Dovršite pregled YubiKey uređaja"
+
+#: src/home.rs:665
+msgid "Firmware {0}"
+msgstr "Firmver {0}"
+
+#: src/backend.rs:261
+msgid ""
+"For safe enrollment, disconnect every other security key and leave only the "
+"selected YubiKey connected."
+msgstr ""
+"Za sigurnu registraciju odspojite sve ostale sigurnosne ključeve i ostavite "
+"povezan samo odabrani YubiKey."
+
+#: src/home.rs:421 src/window.rs:112 src/window.rs:161 src/window.rs:239
+msgid "Git signing"
+msgstr "Gitovo potpisivanje"
+
+#: src/window.rs:1313
+msgid "Git signing is enabled"
+msgstr "Gitovo potpisivanje je omogućeno"
+
+#: src/ssh.rs:642
+msgid ""
+"Git signing test failed:\n"
+"{0}"
+msgstr ""
+"Test Gitova potpisivanja nije uspio:\n"
+"{0}"
+
+#: src/window.rs:1448
+msgid "Git signing test passed"
+msgstr "Test Gitova potpisivanja uspješan je"
+
+#: src/window.rs:1083
+msgid "Git is not installed"
+msgstr "Git nije instaliran"
+
+#: src/window.rs:1105
+msgid "The Git installation task stopped unexpectedly."
+msgstr "Zadatak instalacije Gita neočekivano je prekinut."
+
+#: src/window.rs:1084
+msgid "Git is required for commit signing. Install it to continue."
+msgstr "Za potpisivanje predaja potreban je Git. Instalirajte ga za nastavak."
+
+#: src/window.rs:108 src/window.rs:179 src/window.rs:235
+msgid "Home"
+msgstr "Početna"
+
+#: src/window.rs:1475 src/window.rs:1653
+msgid "Insert a YubiKey"
+msgstr "Umetnite YubiKey"
+
+#: src/window.rs:1131
+msgid "Insert a YubiKey, then press Refresh."
+msgstr "Umetnite YubiKey, a zatim kliknite „Osvježi”."
+
+#: src/window.rs:1787
+msgid "Insert a YubiKey. This page will detect it when you refresh."
+msgstr "Umetnite YubiKey. Ova će ga stranica prepoznati kada je osvježite."
+
+#: src/window.rs:738 src/window.rs:1842
+msgid "Inspect"
+msgstr "Pregledaj"
+
+#: src/window.rs:2393
+msgid "Inspect YubiKey"
+msgstr "Pregledaj YubiKey"
+
+#: src/window.rs:727
+msgid "Inspect YubiKey {0} of {1}"
+msgstr "Pregledaj YubiKey {0} od {1}"
+
+#: src/window.rs:1840
+msgid "Inspect again"
+msgstr "Ponovno pregledaj"
+
+#: src/window.rs:2395
+msgid "Inspect all keys"
+msgstr "Pregledaj sve ključeve"
+
+#: src/window.rs:724
+msgid "Inspect this YubiKey"
+msgstr "Pregledaj ovaj YubiKey"
+
+#: src/window.rs:1833
+msgid "Inspected"
+msgstr "Pregledano"
+
+#: src/window.rs:1823
+msgid "Inspection needs attention · {0}"
+msgstr "Pregled zahtijeva pozornost · {0}"
+
+#: src/ssh.rs:127
+msgid "Invalid FIDO device path."
+msgstr "Putanja FIDO uređaja nije valjana."
+
+#: src/window.rs:1779
+msgid "Keys stored on your YubiKeys"
+msgstr "Ključevi pohranjeni na YubiKey uređajima"
+
+#: src/window.rs:1175 src/window.rs:1882
+msgid "Load"
+msgstr "Učitaj"
+
+#: src/window.rs:1173
+msgid "Load SSH keys"
+msgstr "Učitaj SSH ključeve"
+
+#: src/window.rs:1866
+msgid "Load all"
+msgstr "Učitaj sve"
+
+#: src/window.rs:1159
+msgid "Load keys"
+msgstr "Učitaj ključeve"
+
+#: src/window.rs:1880
+msgid "Load resident SSH keys"
+msgstr "Učitaj rezidentne SSH ključeve"
+
+#: src/window.rs:1868
+msgid "Load this YubiKey's resident SSH keys into the agent"
+msgstr "Učitaj rezidentne SSH ključeve ovog YubiKeya u agenta"
+
+#: src/window.rs:1259
+msgid "Load this resident key into the SSH agent before signing"
+msgstr "Prije potpisivanja učitaj ovaj rezidentni ključ u SSH agenta"
+
+#: src/window.rs:1925
+msgid "Loaded"
+msgstr "Učitano"
+
+#: src/window.rs:1184
+msgid "Loading SSH keys… Touch the YubiKey if it flashes."
+msgstr "Učitavaju se SSH ključevi… Dodirnite YubiKey ako počne treperiti."
+
+#: src/window.rs:2635
+msgid "Local key handle path"
+msgstr "Putanja lokalne datoteke ključa"
+
+#: src/window.rs:2607
+msgid "Local key label"
+msgstr "Oznaka lokalnog ključa"
+
+#: src/window.rs:563
+msgid "Looking for your SSH agent and connected YubiKeys."
+msgstr "Traži se SSH agent i povezani YubiKey uređaji."
+
+#: src/window.rs:1834 src/window.rs:2126
+msgid "Needs attention"
+msgstr "Potrebna je pozornost"
+
+#: src/window.rs:2498
+msgid "New hardware-backed SSH key"
+msgstr "Novi SSH ključ zaštićen hardverom"
+
+#: src/window.rs:1130
+msgid "No FIDO security key detected"
+msgstr "Nije otkriven FIDO sigurnosni ključ"
+
+#: src/window.rs:2039
+msgid "No SSH agent was detected"
+msgstr "Nije otkriven SSH agent"
+
+#: src/window.rs:1786
+msgid "No YubiKey connected"
+msgstr "Nijedan YubiKey nije povezan"
+
+#: src/home.rs:655
+msgid "No hardware serial"
+msgstr "Nema hardverskog serijskog broja"
+
+#: src/window.rs:1932
+msgid "No resident SSH keys"
+msgstr "Nema rezidentnih SSH ključeva"
+
+#: src/window.rs:1146
+msgid "No resident SSH keys found"
+msgstr "Nisu pronađeni rezidentni SSH ključevi"
+
+#: src/window.rs:1813
+msgid "No resident SSH keys found · {0}"
+msgstr "Nisu pronađeni rezidentni SSH ključevi · {0}"
+
+#: src/window.rs:2304
+msgid "No resident SSH keys were found on the connected YubiKeys."
+msgstr "Na povezanim YubiKey uređajima nisu pronađeni rezidentni SSH ključevi."
+
+#: src/window.rs:1223
+msgid "No signing"
+msgstr "Bez potpisivanja"
+
+#: src/home.rs:378 src/home.rs:397 src/home.rs:425
+msgid "Not configured"
+msgstr "Nije konfigurirano"
+
+#: src/window.rs:1835
+msgid "Not inspected"
+msgstr "Nije pregledano"
+
+#: src/window.rs:1825
+msgid "Not inspected yet · {0}"
+msgstr "Još nije pregledano · {0}"
+
+#: src/home.rs:176
+msgid "Open the official Yubico Store"
+msgstr "Otvori službenu trgovinu Yubico"
+
+#: src/window.rs:1091 src/window.rs:1113
+msgid "Install Git"
+msgstr "Instaliraj Git"
+
+#: src/window.rs:1098
+msgid "Installing Git…"
+msgstr "Instalira se Git…"
+
+#: src/ssh.rs:571
+msgid ""
+"OpenSSH could not load resident keys. The SSH agent contains no newly loaded "
+"identity."
+msgstr ""
+"OpenSSH nije mogao učitati rezidentne ključeve. SSH agent ne sadrži nijedan "
+"novo učitani identitet."
+
+#: src/ssh.rs:574
+msgid ""
+"OpenSSH could not load resident keys:\n"
+"{0}"
+msgstr ""
+"OpenSSH nije mogao učitati rezidentne ključeve:\n"
+"{0}"
+
+#: src/ssh.rs:287
+msgid ""
+"OpenSSH did not create a resident key:\n"
+"{0}"
+msgstr ""
+"OpenSSH nije stvorio rezidentni ključ:\n"
+"{0}"
+
+#: src/ssh.rs:270
+msgid ""
+"OpenSSH finished creating the key, but the YubiKey could not be verified "
+"afterward: {0}\n"
+"Do not immediately retry; inspect the key first to avoid creating a "
+"duplicate."
+msgstr ""
+"OpenSSH je dovršio stvaranje ključa, ali naknadna provjera YubiKeya nije "
+"uspjela: {0}\n"
+"Nemojte odmah pokušati ponovno; najprije pregledajte ključ kako biste "
+"izbjegli stvaranje duplikata."
+
+#: src/ssh.rs:292
+msgid ""
+"OpenSSH reported success, but no new resident credential was detected. Do "
+"not retry until you inspect the YubiKey."
+msgstr ""
+"OpenSSH je prijavio uspjeh, ali nije otkrivena nova rezidentna vjerodajnica. "
+"Nemojte pokušati ponovno prije nego što pregledate YubiKey."
+
+#: src/window.rs:2670
+msgid "OpenSSH/FIDO credential metadata and local file location"
+msgstr "Metapodaci OpenSSH/FIDO vjerodajnice i lokacija lokalne datoteke"
+
+#: src/home.rs:393
+msgid "Passwordless"
+msgstr "Bez lozinke"
+
+#: src/window.rs:2924
+msgid "Permanently delete"
+msgstr "Trajno izbriši"
+
+#: src/window.rs:2784
+msgid "Permanently delete from YubiKey…"
+msgstr "Trajno izbriši s YubiKeya…"
+
+#: src/window.rs:3023
+msgid "Permanently delete this resident SSH credential?"
+msgstr "Trajno izbrisati ovu rezidentnu SSH vjerodajnicu?"
+
+#: src/home.rs:344
+msgid "Protect authentication and commit signing"
+msgstr "Zaštitite autentifikaciju i potpisivanje predaja"
+
+#: src/home.rs:195 src/home.rs:290
+msgid "Protection for {0}"
+msgstr "Zaštita za {0}"
+
+#: src/window.rs:2327
+msgid ""
+"Read the resident SSH keys already stored on your YubiKeys. You will enter "
+"each key's FIDO PIN and may need to touch it."
+msgstr ""
+"Pročitajte rezidentne SSH ključeve koji su već pohranjeni na YubiKey "
+"uređajima. Morat ćete unijeti FIDO PIN za svaki ključ, a možda ćete ga "
+"morati i dodirnuti."
+
+#: src/window.rs:748
+msgid "Reading SSH keys from {0}… Touch it if it flashes."
+msgstr ""
+"Čitaju se SSH ključevi s uređaja {0}… Dodirnite ga ako počne treperiti."
+
+#: src/window.rs:479
+msgid "Reading account security settings…"
+msgstr "Čitaju se sigurnosne postavke računa…"
+
+#: src/window.rs:2030 src/window.rs:2316
+msgid "Ready"
+msgstr "Spremno"
+
+#: src/home.rs:368
+msgid "Ready to inspect"
+msgstr "Spremno za pregled"
+
+#: src/home.rs:268
+msgid "Ready to protect {0}"
+msgstr "Spremno za zaštitu stavke {0}"
+
+#: src/window.rs:184
+msgid "Refresh connected YubiKeys"
+msgstr "Osvježi popis povezanih YubiKey uređaja"
+
+#: src/window.rs:2783
+msgid "Remove from agent"
+msgstr "Ukloni iz agenta"
+
+#: src/window.rs:2884
+msgid "Removing this key from the SSH agent…"
+msgstr "Uklanja se ovaj ključ iz SSH agenta…"
+
+#: src/window.rs:2664
+msgid "Require verification for every signature"
+msgstr "Zahtijevaj provjeru svakog potpisa"
+
+#: src/window.rs:2665
+msgid "Requires the FIDO PIN each time this key signs"
+msgstr "Zahtijeva FIDO PIN pri svakom potpisivanju ovim ključem"
+
+#: src/window.rs:2563
+msgid "Resident SSH key created"
+msgstr "Rezidentni SSH ključ je stvoren"
+
+#: src/window.rs:2957
+msgid "Resident credential permanently deleted"
+msgstr "Rezidentna vjerodajnica trajno je izbrisana"
+
+#: src/window.rs:1909
+msgid "Resident keys loaded"
+msgstr "Rezidentni ključevi su učitani"
+
+#: src/window.rs:2631
+msgid "Resident username"
+msgstr "Rezidentno korisničko ime"
+
+#: src/ssh.rs:458
+msgid "Resident username must contain 1–64 bytes and no control characters."
+msgstr ""
+"Rezidentno korisničko ime mora sadržavati 1–64 bajta i ne smije sadržavati "
+"kontrolne znakove."
+
+#: src/home.rs:343
+msgid "SSH & Git"
+msgstr "SSH i Git"
+
+#: src/window.rs:2012
+msgid "SSH agent"
+msgstr "SSH agent"
+
+#: src/window.rs:2020
+msgid "SSH agent is ready"
+msgstr "SSH agent je spreman"
+
+#: src/window.rs:2035
+msgid "SSH agent unavailable"
+msgstr "SSH agent nije dostupan"
+
+#: src/home.rs:428
+msgid "SSH commit signing"
+msgstr "Potpisivanje SSH predaja"
+
+#: src/window.rs:2799
+msgid "SSH key actions"
+msgstr "Radnje sa SSH ključevima"
+
+#: src/window.rs:2463
+msgid "SSH key for {0}"
+msgstr "SSH ključ za {0}"
+
+#: src/home.rs:412 src/window.rs:111 src/window.rs:157 src/window.rs:238
+msgid "SSH keys"
+msgstr "SSH ključevi"
+
+#: src/ssh.rs:92
+msgid "SSH_AUTH_SOCK is not set"
+msgstr "Varijabla SSH_AUTH_SOCK nije postavljena"
+
+#: src/window.rs:2695
+msgid ""
+"Safe defaults use ECDSA-SK, require touch, and store a discoverable "
+"credential on the selected YubiKey."
+msgstr ""
+"Sigurne zadane postavke koriste ECDSA-SK, zahtijevaju dodir i pohranjuju "
+"vjerodajnicu koju je moguće pronaći na odabranom YubiKeyu."
+
+#: src/home.rs:339
+msgid "Secure sudo authorization"
+msgstr "Sigurna autorizacija za sudo"
+
+#: src/window.rs:126
+msgid "Security Center"
+msgstr "Centar sigurnosti"
+
+#: src/home.rs:657
+msgid "Serial {0}"
+msgstr "Serijski broj {0}"
+
+#: src/home.rs:134
+msgid ""
+"Sign in, authorize sudo, and protect SSH and Git identities with a physical "
+"touch."
+msgstr ""
+"Prijavite se, autorizirajte sudo i zaštitite SSH i Git identitete fizičkim "
+"dodirom."
+
+#: src/home.rs:333 src/home.rs:374 src/home.rs:616
+msgid "Sign-in"
+msgstr "Prijava"
+
+#: src/window.rs:2865
+msgid "Signing test passed"
+msgstr "Test potpisivanja uspješno je prošao"
+
+#: src/ssh.rs:584 src/ssh.rs:593 src/ssh.rs:650
+msgid "Temporary public-key path is invalid."
+msgstr "Putanja privremenog javnog ključa nije valjana."
+
+#: src/window.rs:1422
+msgid "Test"
+msgstr "Testiraj"
+
+#: src/window.rs:1420
+msgid "Test Git signing"
+msgstr "Testiraj Gitovo potpisivanje"
+
+#: src/window.rs:1347 src/window.rs:2782
+msgid "Test signing"
+msgstr "Testiraj potpisivanje"
+
+#: src/backend.rs:255
+msgid ""
+"The FIDO enrollment tool is not installed. Install the libpam-u2f package, "
+"then try again."
+msgstr ""
+"Alat za registraciju FIDO uređaja nije instaliran. Instalirajte paket libpam-"
+"u2f i pokušajte ponovno."
+
+#: src/window.rs:1881
+msgid "The PIN is sent directly to ssh-add and is never stored."
+msgstr "PIN se izravno šalje naredbi ssh-add i nikad se ne pohranjuje."
+
+#: src/window.rs:2534
+msgid ""
+"The PIN is sent through a private pipe to OpenSSH. It is never stored or "
+"placed in command arguments."
+msgstr ""
+"PIN se šalje OpenSSH-u putem privatnog cjevovoda. Nikad se ne pohranjuje "
+"niti se dodaje argumentima naredbe."
+
+#: src/window.rs:2866
+msgid "The SSH agent successfully signed and verified data with this key."
+msgstr "SSH agent uspješno je potpisao i provjerio podatke ovim ključem."
+
+#: src/progress_dialog.rs:57
+msgid "The YubiKey operation stopped unexpectedly."
+msgstr "Radnja s YubiKeyom neočekivano je prekinuta."
+
+#: src/window.rs:2600
+msgid "The credential will be created only on this exact device"
+msgstr "Vjerodajnica će biti stvorena samo na ovom konkretnom uređaju"
+
+#: src/ssh.rs:368
+msgid ""
+"The deletion command finished, but the selected YubiKey could not be "
+"inspected afterward: {0}\n"
+"The credential may or may not have been deleted. Do not retry. Reconnect and "
+"inspect the YubiKey first."
+msgstr ""
+"Naredba za brisanje završila je, ali odabrani YubiKey nakon toga nije bilo "
+"moguće pregledati: {0}\n"
+"Vjerodajnica je možda izbrisana, a možda nije. Nemojte pokušati ponovno. "
+"Najprije ponovno povežite i pregledajte YubiKey."
+
+#: src/window.rs:541 src/window.rs:1538 src/window.rs:1718
+msgid "The enrollment task failed."
+msgstr "Zadatak registracije nije uspio."
+
+#: src/window.rs:2958
+msgid ""
+"The exact resident credential is no longer present on the selected YubiKey. "
+"Local .pub or key-handle files and any SSH-agent entry were not removed."
+msgstr ""
+"Odabrani YubiKey više ne sadrži navedenu rezidentnu vjerodajnicu. Lokalne "
+"datoteke .pub ili ključa te zapisi u SSH agentu nisu uklonjeni."
+
+#: src/window.rs:1905
+msgid ""
+"The inspected resident SSH credentials are already available in this agent."
+msgstr "Pregledane rezidentne SSH vjerodajnice već su dostupne u ovom agentu."
+
+#: src/ssh.rs:627
+msgid "The local SSH key-handle path is invalid."
+msgstr "Putanja lokalne datoteke SSH ključa nije valjana."
+
+#: src/git_signing.rs:76
+msgid "The local SSH key-handle path is not valid UTF-8."
+msgstr "Putanja lokalne datoteke SSH ključa nije valjano kodirana u UTF-8."
+
+#: src/ssh.rs:468
+msgid "The local key path must be absolute."
+msgstr "Putanja lokalnog ključa mora biti apsolutna."
+
+#: src/window.rs:2565
+msgid ""
+"The non-exportable private key remains protected by the selected YubiKey.\n"
+"\n"
+"Algorithm: {0}\n"
+"Application: {1}\n"
+"Resident username: {2}\n"
+"Fingerprint: {3}\n"
+"\n"
+"Local key handle: {4}\n"
+"Public key: {5}\n"
+"\n"
+"The key is not automatically loaded into the SSH agent."
+msgstr ""
+"Privatni ključ koji se ne može izvesti i dalje je zaštićen odabranim "
+"YubiKeyem.\n"
+"\n"
+"Algoritam: {0}\n"
+"Aplikacija: {1}\n"
+"Rezidentno korisničko ime: {2}\n"
+"Otisak: {3}\n"
+"\n"
+"Lokalna datoteka ključa: {4}\n"
+"Javni ključ: {5}\n"
+"\n"
+"Ključ se ne učitava automatski u SSH agenta."
+
+#: src/backend.rs:334
+msgid "The operation was cancelled or denied."
+msgstr "Radnja je otkazana ili odbijena."
+
+#: src/ssh.rs:247
+msgid "The output folder does not exist: {0}"
+msgstr "Izlazna mapa ne postoji: {0}"
+
+#: src/ssh.rs:317
+msgid "The resident credential ID is invalid. Refresh before deleting."
+msgstr ""
+"ID rezidentne vjerodajnice nije valjan. Prije brisanja osvježite prikaz."
+
+#: src/ssh.rs:744
+msgid "The resident credential did not return a public key."
+msgstr "Rezidentna vjerodajnica nije vratila javni ključ."
+
+#: src/ssh.rs:382
+msgid ""
+"The resident credential is still present. Deletion was not completed: {0}"
+msgstr "Rezidentna vjerodajnica i dalje postoji. Brisanje nije dovršeno: {0}"
+
+#: src/ssh.rs:749
+msgid "The resident credential returned an incomplete public key."
+msgstr "Rezidentna vjerodajnica vratila je nepotpun javni ključ."
+
+#: src/ssh.rs:756
+msgid "The resident credential returned malformed PEM data."
+msgstr "Rezidentna vjerodajnica vratila je neispravne PEM podatke."
+
+#: src/ssh.rs:296
+msgid ""
+"The resident credential {0} exists on the YubiKey, but its local handle "
+"files are incomplete. Do not retry creation."
+msgstr ""
+"Rezidentna vjerodajnica {0} postoji na YubiKeyu, ali njezine lokalne "
+"datoteke ključa nisu potpune. Nemojte pokušati ponovno stvoriti vjerodajnicu."
+
+#: src/ssh.rs:282
+msgid ""
+"The resident credential {0} was created on the YubiKey, but OpenSSH did not "
+"complete successfully:\n"
+"{1}\n"
+"Do not retry creation. Inspect the key and preserve any local files that "
+"were written."
+msgstr ""
+"Rezidentna vjerodajnica {0} stvorena je na YubiKeyu, ali OpenSSH nije "
+"uspješno dovršio radnju:\n"
+"{1}\n"
+"Nemojte pokušati ponovno stvoriti vjerodajnicu. Pregledajte ključ i "
+"sačuvajte sve zapisane lokalne datoteke."
+
+#: src/backend.rs:303 src/backend.rs:312
+msgid "The security key returned an invalid PAM credential."
+msgstr "Sigurnosni ključ vratio je nevaljanu PAM vjerodajnicu."
+
+#: src/ssh.rs:323
+msgid ""
+"The selected FIDO device is no longer connected. Refresh and inspect it "
+"again."
+msgstr ""
+"Odabrani FIDO uređaj više nije povezan. Osvježite prikaz i ponovno ga "
+"pregledajte."
+
+#: src/ssh.rs:216
+msgid "The selected FIDO device is no longer connected. Refresh and try again."
+msgstr ""
+"Odabrani FIDO uređaj više nije povezan. Osvježite prikaz i pokušajte ponovno."
+
+#: src/window.rs:1449
+msgid ""
+"The selected credential created a valid Git-format SSH signature. No "
+"repository or commit was changed."
+msgstr ""
+"Odabrana vjerodajnica stvorila je valjani SSH potpis u Gitovu formatu. "
+"Repozitorij ni predaja nisu promijenjeni."
+
+#: src/ssh.rs:253
+msgid ""
+"The selected private-key or .pub file already exists. Choose another name."
+msgstr ""
+"Odabrana datoteka privatnog ključa ili .pub već postoji. Odaberite drugi "
+"naziv."
+
+#: src/ssh.rs:338
+msgid ""
+"The selected resident credential changed since it was inspected. Nothing was "
+"deleted; refresh and verify the key."
+msgstr ""
+"Odabrana rezidentna vjerodajnica promijenila se nakon pregleda. Ništa nije "
+"izbrisano; osvježite prikaz i provjerite ključ."
+
+#: src/ssh.rs:335
+msgid ""
+"The selected resident credential is no longer present on this YubiKey. "
+"Nothing was deleted."
+msgstr ""
+"Odabrani YubiKey više ne sadrži rezidentnu vjerodajnicu. Ništa nije "
+"izbrisano."
+
+#: src/ssh.rs:672
+msgid "The signature was created but could not be verified: {0}"
+msgstr "Potpis je stvoren, ali nije ga bilo moguće provjeriti: {0}"
+
+#: src/window.rs:1620
+msgid "The sudo policy task failed."
+msgstr "Zadatak pravila za sudo nije uspio."
+
+#: src/ssh.rs:663
+msgid "The temporary Git signature path is invalid."
+msgstr "Putanja privremenog Git potpisa nije valjana."
+
+#: src/ssh.rs:622
+msgid "The temporary Git signing path is invalid."
+msgstr "Putanja privremenog Gitova potpisivanja nije valjana."
+
+#: src/home.rs:599
+msgid "These keys are trusted by this account but are not currently connected."
+msgstr ""
+"Ovaj račun smatra te ključeve pouzdanima, ali trenutačno nisu povezani."
+
+#: src/window.rs:2923
+msgid ""
+"This PIN authorizes permanent deletion of the exact credential shown in the "
+"previous step. It is never stored."
+msgstr ""
+"Ovaj PIN autorizira trajno brisanje točno određene vjerodajnice prikazane u "
+"prethodnom koraku. PIN se nikad ne pohranjuje."
+
+#: src/window.rs:1933
+msgid "This YubiKey has no discoverable ssh:* credentials."
+msgstr "Ovaj YubiKey ne sadrži vjerodajnice ssh:* koje je moguće pronaći."
+
+#: src/git_signing.rs:85
+msgid "This is not a supported OpenSSH security-key public key."
+msgstr "Ovo nije podržani javni ključ OpenSSH sigurnosnog ključa."
+
+#: src/window.rs:3024
+msgid ""
+"This removes the private credential from the selected YubiKey and cannot be "
+"undone. It does not remove local files or an identity already loaded in the "
+"SSH agent."
+msgstr ""
+"Time se privatna vjerodajnica uklanja s odabranog YubiKeya i radnju nije "
+"moguće poništiti. Lokalne datoteke ni identitet koji je već učitan u SSH "
+"agenta neće biti uklonjeni."
+
+#: src/window.rs:1581
+msgid "This setting applies only to the current user."
+msgstr "Ova se postavka odnosi samo na trenutačnog korisnika."
+
+#: src/home.rs:68
+msgid "This will only take a moment."
+msgstr "Ovo će potrajati samo trenutak."
+
+#: src/window.rs:1890
+msgid ""
+"Touch the YubiKey when prompted. Loading resident keys into the SSH agent…"
+msgstr ""
+"Kada se to zatraži, dodirnite YubiKey. Učitavaju se rezidentni ključevi u "
+"SSH agenta…"
+
+#: src/window.rs:1435
+msgid ""
+"Touch the YubiKey. Creating and verifying a temporary Git-format SSH "
+"signature…"
+msgstr ""
+"Dodirnite YubiKey. Stvara se i provjerava privremeni SSH potpis u Gitovu "
+"formatu…"
+
+#: src/window.rs:2858
+msgid "Touch the YubiKey. Testing SSH signing and verification…"
+msgstr "Dodirnite YubiKey. Testira se potpisivanje i provjera SSH potpisa…"
+
+#: src/window.rs:2546
+msgid ""
+"Touch the selected YubiKey. Creating an SSH resident key on {0}… Do not "
+"remove the key."
+msgstr ""
+"Dodirnite odabrani YubiKey. Stvara se rezidentni SSH ključ na uređaju {0}… "
+"Nemojte uklanjati ključ."
+
+#: src/window.rs:1498
+msgid "Touch this key when prompted to enroll it"
+msgstr "Kada se to zatraži, dodirnite ovaj ključ za registraciju"
+
+#: src/window.rs:1678
+msgid "Touch this key when prompted to enroll it for sudo"
+msgstr "Kada se to zatraži, dodirnite ovaj ključ za registraciju za sudo"
+
+#: src/window.rs:1529 src/window.rs:1709
+msgid "Touch your security key to continue."
+msgstr "Dodirnite sigurnosni ključ za nastavak."
+
+#: src/home.rs:95
+msgid "Try Again"
+msgstr "Pokušaj ponovno"
+
+#: src/window.rs:3010
+msgid "Type {0} to confirm"
+msgstr "Upišite {0} za potvrdu"
+
+#: src/window.rs:688 src/window.rs:2041 src/window.rs:2342
+msgid "Unavailable"
+msgstr "Nedostupno"
+
+#: src/backend.rs:251
+msgid "Unknown authentication purpose."
+msgstr "Nepoznata svrha autentifikacije."
+
+#: src/window.rs:109 src/window.rs:149 src/window.rs:236
+msgid "Unlock GDM"
+msgstr "Otključaj GDM"
+
+#: src/window.rs:110 src/window.rs:153 src/window.rs:237
+msgid "Unlock sudo"
+msgstr "Otključaj sudo"
+
+#: src/window.rs:1465
+msgid "Unlock the current user"
+msgstr "Otključaj trenutačnog korisnika"
+
+#: src/home.rs:334
+msgid "Unlock your account with a touch"
+msgstr "Otključajte račun dodirom"
+
+#: src/ssh.rs:735 src/window.rs:1253 src/window.rs:2469 src/window.rs:2989
+msgid "Unnamed SSH credential"
+msgstr "Neimenovana SSH vjerodajnica"
+
+#: src/ssh.rs:782
+msgid "Unsupported resident SSH public-key algorithm."
+msgstr "Nepodržani algoritam javnog ključa za rezidentni SSH ključ."
+
+#: src/window.rs:1399
+msgid "Updating Git commit signing…"
+msgstr "Ažurira se potpisivanje Gitovih predaja…"
+
+#: src/window.rs:1531
+msgid "Updating sign-in settings…"
+msgstr "Ažuriraju se postavke prijave…"
+
+#: src/window.rs:1711
+msgid "Updating sudo settings…"
+msgstr "Ažuriraju se postavke za sudo…"
+
+#: src/window.rs:1637
+msgid "Use YubiKey to unlock sudo"
+msgstr "Upotrijebi YubiKey za otključavanje sudo naredbi"
+
+#: src/window.rs:2936
+msgid ""
+"Verifying and permanently deleting the selected resident credential. Do not "
+"unplug the YubiKey…"
+msgstr ""
+"Provjerava se i trajno briše odabrana rezidentna vjerodajnica. Nemojte "
+"odspojiti YubiKey…"
+
+#: src/window.rs:695
+msgid "View in App Store"
+msgstr "Prikaži u trgovini aplikacija"
+
+#: src/window.rs:2269
+msgid "Waiting"
+msgstr "Čeka se"
+
+#: src/home.rs:158
+msgid "Waiting for a configured YubiKey"
+msgstr "Čeka se konfigurirani YubiKey"
+
+#: src/window.rs:1639
+msgid ""
+"You may enroll keys now, but sudo bypasses PAM while passwordless access is "
+"enabled."
+msgstr ""
+"Sada možete registrirati ključeve, ali sudo zaobilazi PAM dok je omogućen "
+"pristup bez lozinke."
+
+#: src/window.rs:2299
+msgid "Your YubiKeys are inspected"
+msgstr "YubiKey uređaji su pregledani"
+
+#: src/window.rs:2301
+msgid "Your hardware-backed SSH keys"
+msgstr "Vaši SSH ključevi zaštićeni hardverom"
+
+#: src/window.rs:2265
+msgid ""
+"Your resident SSH keys stay on the security key. Insert it to view and use "
+"them."
+msgstr ""
+"Rezidentni SSH ključevi ostaju na sigurnosnom ključu. Umetnite ga da biste "
+"ih pregledali i upotrijebili."
+
+#: src/home.rs:132
+msgid ""
+"Your security settings are ready. Connect a configured YubiKey when you need "
+"it."
+msgstr ""
+"Sigurnosne postavke su spremne. Povežite konfigurirani YubiKey kada vam "
+"zatreba."
+
+#: src/backend.rs:154 src/backend.rs:205 src/window.rs:1757 src/window.rs:2599
+msgid "YubiKey"
+msgstr "YubiKey"
+
+#: src/window.rs:3090
+msgid "YubiKey configuration failed"
+msgstr "Konfiguriranje YubiKeya nije uspjelo"
+
+#: src/home.rs:253
+msgid "YubiKey connected"
+msgstr "YubiKey je povezan"
+
+#: src/home.rs:381 src/home.rs:402
+msgid "YubiKey or account password"
+msgstr "YubiKey ili lozinka računa"
+
+#: src/home.rs:624
+msgid "YubiKey without hardware serial"
+msgstr "YubiKey bez hardverskog serijskog broja"
+
+#: src/home.rs:626
+msgid "YubiKey · Serial {0}"
+msgstr "YubiKey · serijski broj {0}"
+
+#: src/window.rs:2995
+msgid ""
+"YubiKey: {0}\n"
+"Device: {1}\n"
+"Application: {2}\n"
+"Resident username: {3}\n"
+"Algorithm: {4}\n"
+"Fingerprint: {5}"
+msgstr ""
+"YubiKey: {0}\n"
+"Uređaj: {1}\n"
+"Aplikacija: {2}\n"
+"Rezidentno korisničko ime: {3}\n"
+"Algoritam: {4}\n"
+"Otisak: {5}"
+
+#: src/window.rs:1126
+msgid "YubiKeys"
+msgstr "YubiKey uređaji"
+
+#: src/window.rs:1957
+msgid "agent"
+msgstr "agent"
+
+#: src/ssh.rs:386
+msgid ""
+"fido2-token reported success, but the resident credential is still present. "
+"Do not retry until you refresh and inspect the YubiKey."
+msgstr ""
+"fido2-token prijavio je uspjeh, ali rezidentna vjerodajnica i dalje postoji. "
+"Nemojte pokušati ponovno prije nego što osvježite prikaz i pregledate "
+"YubiKey."
+
+#: src/home.rs:400
+msgid "sudo authentication is bypassed"
+msgstr "Autentifikacija za sudo zaobilazi se"
+
+#: src/window.rs:1580
+msgid "sudo authentication policy"
+msgstr "Pravilo autentifikacije za sudo"
+
+#: src/window.rs:330 src/window.rs:490
+msgid "unknown"
+msgstr "nepoznato"
+
+#: src/window.rs:2521
+msgid "user"
+msgstr "korisnik"
+
+#: src/window.rs:1148
+msgid "{0} SSH keys loaded"
+msgstr "Učitano je {0} SSH ključeva"
+
+#: src/home.rs:256
+msgid "{0} YubiKeys connected"
+msgstr "Povezano je {0} YubiKey uređaja"
+
+#: src/backend.rs:18 src/git_signing.rs:200 src/ssh.rs:886
+msgid "{0} exited with {1}"
+msgstr "{0} završio je s kodom {1}"
+
+#: src/ssh.rs:540 src/ssh.rs:933
+msgid "{0} failed: {1}"
+msgstr "Radnja {0} nije uspjela: {1}"
+
+#: src/window.rs:2025
+msgid "{0} identities are currently available to SSH applications."
+msgstr "Broj SSH identiteta trenutačno dostupnih SSH aplikacijama: {0}."
+
+#: src/window.rs:1058
+msgid "{0} is enabled for this YubiKey"
+msgstr "{0} je omogućen za ovaj YubiKey"
+
+#: src/window.rs:1063
+msgid "{0} is not configured for this YubiKey"
+msgstr "{0} nije konfiguriran za ovaj YubiKey"
+
+#: src/window.rs:1913
+msgid "{0} new SSH identities were added to the agent."
+msgstr "Novi SSH identiteti dodani agentu: {0}"
+
+#: src/window.rs:1911
+msgid "{0} new SSH identity was added to the agent."
+msgstr "U agenta je dodan {0} novi SSH identitet."
+
+#: src/window.rs:2309
+msgid "{0} resident SSH keys are available from your connected YubiKeys."
+msgstr ""
+"Broj dostupnih rezidentnih SSH ključeva s povezanih YubiKey uređaja: {0}."
+
+#: src/window.rs:1819
+msgid "{0} resident SSH keys · {1}"
+msgstr "{0} rezidentnih SSH ključeva · {1}"
+
+#: src/home.rs:364
+msgid "{0} resident credentials inspected"
+msgstr "Broj pregledanih rezidentnih vjerodajnica: {0}"
+
+#: src/window.rs:2330
+msgid "{0} to inspect"
+msgstr "Za pregled: {0}"
+
+#: src/window.rs:1489 src/window.rs:1667
+msgid "{0} · no hardware serial"
+msgstr "{0} · nema hardverskog serijskog broja"
+
+#: src/window.rs:1491 src/window.rs:1669
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
+#: src/window.rs:1001
+msgid "Checking Passkeys support…"
+msgstr "Provjerava se podrška za pristupne ključeve…"
+
+#: src/window.rs:653 src/window.rs:661 src/window.rs:666 src/window.rs:667
+#: src/window.rs:676
+msgid "Could not open Yubico Authenticator"
+msgstr "Nije moguće otvoriti Yubico Authenticator"
+
+#: src/window.rs:636
+msgid "Open Yubico Authenticator"
+msgstr "Otvori Yubico Authenticator"
+
+#: src/window.rs:113 src/window.rs:240
+msgid "Passkeys"
+msgstr "Pristupni ključevi"
+
+#: src/window.rs:872
+msgid ""
+"Choose the passkey option and follow the prompt to use the same YubiKey."
+msgstr ""
+"Odaberite mogućnost pristupnog ključa i slijedite upute za upotrebu istog "
+"YubiKeya."
+
+#: src/window.rs:866
+msgid "Confirm it is you"
+msgstr "Potvrdite svoj identitet"
+
+#: src/window.rs:851
+msgid "How to use"
+msgstr "Upute za upotrebu"
+
+#: src/window.rs:867
+msgid "Insert your YubiKey, enter its FIDO PIN when asked, then touch the key."
+msgstr ""
+"Umetnite YubiKey, unesite njegov FIDO PIN kada se to zatraži, a zatim "
+"dodirnite ključ."
+
+#: src/window.rs:1780
+msgid ""
+"Inspect a connected YubiKey to reveal its resident SSH keys and available "
+"actions."
+msgstr ""
+"Pregledajte povezani YubiKey da biste prikazali njegove rezidentne SSH "
+"ključeve i dostupne radnje."
+
+#: src/window.rs:690
+msgid ""
+"Install the official Yubico Authenticator first. When installation is "
+"complete, return here and refresh this page."
+msgstr ""
+"Najprije instalirajte službeni Yubico Authenticator. Po dovršetku "
+"instalacije vratite se ovamo i osvježite ovu stranicu."
+
+#: src/window.rs:900
+msgid "Keep a recovery method or a backup security key for important accounts."
+msgstr ""
+"Za važne račune osigurajte način oporavka ili pričuvni sigurnosni ključ."
+
+#: src/window.rs:918
+msgid "Manage passkeys"
+msgstr "Upravljaj pristupnim ključevima"
+
+#: src/window.rs:860
+msgid ""
+"On a supported website or app, choose to create a passkey and select your "
+"security key."
+msgstr ""
+"Na podržanoj web-stranici ili u aplikaciji odaberite stvaranje pristupnog "
+"ključa i svoj sigurnosni ključ."
+
+#: src/window.rs:843
+msgid ""
+"Passkeys are passwordless sign-in credentials stored on compatible security "
+"keys. Registration and sign-in begin in a supported website or app; follow "
+"its prompts to insert your YubiKey, enter the FIDO PIN, and touch the key."
+msgstr ""
+"Pristupni ključevi vjerodajnice su za prijavu bez lozinke pohranjene na "
+"kompatibilnim sigurnosnim ključevima. Registracija i prijava započinju na "
+"podržanoj web-stranici ili u aplikaciji; slijedite upute za umetanje "
+"YubiKeya, unos FIDO PIN-a i dodir ključa."
+
+#: src/window.rs:839
+msgid "Protect passkeys with your YubiKey"
+msgstr "Zaštitite pristupne ključeve YubiKeyem"
+
+#: src/window.rs:859
+msgid "Register a passkey"
+msgstr "Registriraj pristupni ključ"
+
+#: src/window.rs:871
+msgid "Sign in next time"
+msgstr "Prijavi se sljedeći put"
+
+#: src/window.rs:2013
+msgid ""
+"The SSH agent makes selected keys available to SSH applications during this "
+"session."
+msgstr ""
+"SSH agent omogućuje SSH aplikacijama pristup odabranim ključevima tijekom "
+"ove sesije."
+
+#: src/window.rs:630
+msgid "Yubico Authenticator is installed"
+msgstr "Yubico Authenticator je instaliran"
+
+#: src/window.rs:687
+msgid "Yubico Authenticator is not installed"
+msgstr "Yubico Authenticator nije instaliran"
+
+#: src/window.rs:920
+msgid ""
+"Yubico Authenticator lets you view and manage passkeys stored on your "
+"YubiKey. This security center does not read, create, or delete passkeys; it "
+"only opens the installed app."
+msgstr ""
+"Yubico Authenticator omogućuje pregled i upravljanje pristupnim ključevima "
+"pohranjenima na YubiKeyu. Ovaj centar sigurnosti ne čita, ne stvara niti "
+"briše pristupne ključeve; samo otvara instaliranu aplikaciju."
+
+#: src/ssh_config.rs:185 src/ssh_config.rs:233
+msgid "A file already exists at the managed SSH configuration path: {0}"
+msgstr "Datoteka već postoji na putanji upravljane SSH konfiguracije: {0}"
+
+#: src/window.rs:2070
+msgid ""
+"After the first YubiKey authentication, later SSH sessions can reuse the "
+"connection. The last session remains available in the background for 10 "
+"minutes."
+msgstr ""
+"Nakon prve autentifikacije putem YubiKeya, naredne SSH sesije mogu ponovno "
+"upotrijebiti vezu. Posljednja sesija ostaje dostupna u pozadini 10 minuta."
+
+#: src/ssh_config.rs:530
+msgid "Could not create a temporary file in {0}: {1}"
+msgstr "Nije moguće stvoriti privremenu datoteku u {0}: {1}"
+
+#: src/ssh_config.rs:414 src/ssh_config.rs:450 src/ssh_config.rs:463
+msgid "Could not inspect {0}: {1}"
+msgstr "Nije moguće pregledati {0}: {1}"
+
+#: src/ssh_config.rs:540
+msgid "Could not protect the temporary SSH configuration in {0}: {1}"
+msgstr "Nije moguće zaštititi privremenu SSH konfiguraciju u {0}: {1}"
+
+#: src/ssh_config.rs:477 src/ssh_config.rs:577
+msgid "Could not read {0}: {1}"
+msgstr "Nije moguće pročitati {0}: {1}"
+
+#: src/ssh_config.rs:692
+msgid "Could not remove {0}: {1}"
+msgstr "Nije moguće ukloniti {0}: {1}"
+
+#: src/ssh_config.rs:570
+msgid "Could not replace {0}: {1}"
+msgstr "Nije moguće zamijeniti {0}: {1}"
+
+#: src/ssh_config.rs:702
+msgid "Could not synchronize {0}: {1}"
+msgstr "Nije moguće sinkronizirati {0}: {1}"
+
+#: src/window.rs:2175 src/window.rs:2186
+msgid "Could not update SSH connection persistence"
+msgstr "Nije moguće ažurirati trajnost SSH veza"
+
+#: src/ssh_config.rs:599
+msgid "Could not validate the SSH configuration: {0}"
+msgstr "Nije moguće provjeriti valjanost SSH konfiguracije: {0}"
+
+#: src/ssh_config.rs:551
+msgid "Could not write the temporary SSH configuration in {0}: {1}"
+msgstr "Nije moguće zapisati privremenu SSH konfiguraciju u {0}: {1}"
+
+#: src/window.rs:2088 src/window.rs:2161
+msgid "Disabled · each new connection authenticates separately"
+msgstr "Onemogućeno · svaka nova veza zasebno se autentificira"
+
+#: src/window.rs:2080 src/window.rs:2154
+msgid "Enabled · idle connections remain available for 10 minutes"
+msgstr "Omogućeno · neaktivne veze ostaju dostupne 10 minuta"
+
+#: src/ssh_config.rs:100
+msgid "HOME does not point to a valid folder: {0}"
+msgstr "Varijabla HOME ne upućuje na valjanu mapu: {0}"
+
+#: src/ssh_config.rs:97
+msgid "HOME is not set. The SSH configuration cannot be located."
+msgstr ""
+"Varijabla HOME nije postavljena. Nije moguće pronaći SSH konfiguraciju."
+
+#: src/window.rs:2107
+msgid "Main SSH configuration unavailable"
+msgstr "Glavna SSH konfiguracija nije dostupna"
+
+#: src/window.rs:2108
+msgid "Managed SSH configuration unavailable"
+msgstr "Upravljana SSH konfiguracija nije dostupna"
+
+#: src/window.rs:2224
+msgid "Managed configuration preview"
+msgstr "Pretpregled upravljane konfiguracije"
+
+#: src/window.rs:2204
+msgid "Manual review required"
+msgstr "Potreban je ručni pregled"
+
+#: src/window.rs:2096 src/window.rs:2169
+msgid "Needs attention · review the SSH configuration before continuing"
+msgstr "Potrebna je pozornost · prije nastavka pregledajte SSH konfiguraciju"
+
+#: src/window.rs:2105
+msgid "Needs attention · the SSH configuration could not be located"
+msgstr "Potrebna je pozornost · nije moguće pronaći SSH konfiguraciju"
+
+#: src/window.rs:2212
+msgid ""
+"Only new SSH connections are affected. Turning this off does not stop "
+"existing background connections. Earlier host-specific OpenSSH settings "
+"still take priority."
+msgstr ""
+"To utječe samo na nove SSH veze. Isključivanje ove postavke neće prekinuti "
+"postojeće veze u pozadini. Ranije postavke OpenSSH-a za pojedinačne "
+"poslužitelje i dalje imaju prednost."
+
+#: src/ssh_config.rs:608
+msgid "OpenSSH rejected the generated configuration."
+msgstr "OpenSSH je odbio generiranu konfiguraciju."
+
+#: src/ssh_config.rs:611
+msgid "OpenSSH rejected the generated configuration: {0}"
+msgstr "OpenSSH je odbio generiranu konfiguraciju: {0}"
+
+#: src/window.rs:2113
+msgid "Reuse SSH connections in the background"
+msgstr "Ponovno upotrijebi SSH veze u pozadini"
+
+#: src/window.rs:2069
+msgid "SSH connection persistence"
+msgstr "Trajnost SSH veza"
+
+#: src/ssh_config.rs:334
+msgid ""
+"The SSH configuration changed during rollback. No further changes were made."
+msgstr ""
+"SSH konfiguracija promijenila se tijekom vraćanja. Nisu napravljene daljnje "
+"promjene."
+
+#: src/ssh_config.rs:85 src/ssh_config.rs:560
+msgid ""
+"The SSH configuration changed while it was being updated. Refresh and try "
+"again."
+msgstr ""
+"SSH konfiguracija promijenila se tijekom ažuriranja. Osvježite i pokušajte "
+"ponovno."
+
+#: src/ssh_config.rs:385
+msgid ""
+"The SSH configuration contains duplicate or incomplete application markers. "
+"Remove or repair the marked block manually."
+msgstr ""
+"SSH konfiguracija sadrži duplicirane ili nepotpune oznake aplikacije. Ručno "
+"uklonite ili popravite označeni blok."
+
+#: src/ssh_config.rs:144 src/ssh_config.rs:219 src/ssh_config.rs:284
+msgid ""
+"The SSH configuration is not valid UTF-8 and cannot be safely managed: {0}"
+msgstr ""
+"SSH konfiguracija nije valjano kodirana u UTF-8 pa se njome ne može sigurno "
+"upravljati: {0}"
+
+#: src/ssh_config.rs:507
+msgid "The SSH configuration is writable by another user: {0}"
+msgstr "Drugi korisnik može pisati u SSH konfiguraciju: {0}"
+
+#: src/ssh_config.rs:527
+msgid "The SSH configuration path is invalid."
+msgstr "Putanja SSH konfiguracije nije valjana."
+
+#: src/ssh_config.rs:471
+msgid "The SSH configuration path is not a safe, regular file: {0}"
+msgstr "Putanja SSH konfiguracije ne upućuje na sigurnu običnu datoteku: {0}"
+
+#: src/ssh_config.rs:505
+msgid "The SSH directory is writable by another user: {0}"
+msgstr "Drugi korisnik može pisati u SSH mapu: {0}"
+
+#: src/ssh_config.rs:422 src/ssh_config.rs:434
+msgid "The SSH path is not a safe, regular directory: {0}"
+msgstr "SSH putanja ne upućuje na sigurnu običnu mapu: {0}"
+
+#: src/ssh_config.rs:498
+msgid "The SSH path is not owned by the current user: {0}"
+msgstr "Trenutačni korisnik nije vlasnik SSH putanje: {0}"
+
+#: src/window.rs:2146
+msgid "The SSH persistence update stopped unexpectedly."
+msgstr "Ažuriranje trajnosti SSH veza neočekivano je prekinuto."
+
+#: src/ssh_config.rs:392
+msgid ""
+"The application-managed block in the SSH configuration was changed. Restore "
+"or remove the marked block manually."
+msgstr ""
+"Blok SSH konfiguracije kojim upravlja aplikacija promijenjen je. Ručno "
+"vratite ili uklonite označeni blok."
+
+#: src/ssh_config.rs:579
+msgid ""
+"The generated SSH persistence configuration did not match the expected "
+"preset."
+msgstr ""
+"Generirana konfiguracija trajnosti SSH veza ne odgovara očekivanom predlošku."
+
+#: src/ssh_config.rs:278
+msgid "The managed SSH block exists but the main configuration is missing: {0}"
+msgstr "Upravljani SSH blok postoji, ali nedostaje glavna konfiguracija: {0}"
+
+#: src/ssh_config.rs:289
+msgid "The managed SSH block is no longer present. Refresh and try again."
+msgstr "Upravljani SSH blok više ne postoji. Osvježite i pokušajte ponovno."
+
+#: src/ssh_config.rs:315 src/ssh_config.rs:683
+msgid "The managed SSH configuration changed while it was being removed: {0}"
+msgstr "Upravljana SSH konfiguracija promijenila se tijekom uklanjanja: {0}"
+
+#: src/ssh_config.rs:170
+msgid "The managed SSH configuration is missing: {0}"
+msgstr "Nedostaje upravljana SSH konfiguracija: {0}"
+
+#: src/ssh_config.rs:166
+msgid "The managed SSH configuration was changed outside this application: {0}"
+msgstr "Upravljana SSH konfiguracija promijenjena je izvan ove aplikacije: {0}"
+
+#: src/ssh_config.rs:158
+msgid ""
+"The managed SSH file is also referenced outside the application-managed "
+"block. Remove the extra Include before using this setting."
+msgstr ""
+"Upravljana SSH datoteka navedena je i izvan bloka kojim upravlja aplikacija. "
+"Prije upotrebe ove postavke uklonite dodatnu direktivu Include."
+
+#: src/ssh_config.rs:177
+msgid ""
+"The managed SSH file is referenced outside the application-managed block. "
+"Remove that Include before using this setting."
+msgstr ""
+"Upravljana SSH datoteka navedena je izvan bloka kojim upravlja aplikacija. "
+"Prije upotrebe ove postavke uklonite tu direktivu Include."
+
+#: src/window.rs:2211
+msgid "What this setting changes"
+msgstr "Što ova postavka mijenja"
+
+#: src/window.rs:2226
+msgid "{0} includes {1}"
+msgstr "{0} uključuje {1}"
+
+#: src/window.rs:2493
+msgid ""
+"Optional: create a new resident key only when you need another SSH identity. "
+"Its private key never leaves the selected YubiKey."
+msgstr ""
+"Neobavezno: stvorite novi rezidentni ključ samo ako vam treba dodatni SSH "
+"identitet. Njegov privatni ključ nikad ne napušta odabrani YubiKey."
+
+#: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:10
+msgid "Authentication is required to change security settings or install Git"
+msgstr ""
+"Za promjenu sigurnosnih postavki ili instalaciju Gita potrebna je "
+"autentifikacija."
+
+#: anduinos-yubikey-manager/data/com.anduinos.yubikeymanager.policy:8
+msgid "Manage YubiKey security settings"
+msgstr "Upravljajte sigurnosnim postavkama YubiKeya"
+
+#: data/com.anduinos.yubikeymanager.desktop:114
+msgid "YubiKey;FIDO2;U2F;security;login;GDM;"
+msgstr "YubiKey;FIDO2;U2F;sigurnost;prijava;GDM;"
+
+#: data/com.anduinos.yubikeymanager.desktop:54
+msgid "Security Key Settings"
+msgstr "Postavke sigurnosnog ključa"
+
+#: data/com.anduinos.yubikeymanager.desktop:28
+msgid "YubiKey Security Center"
+msgstr "Sigurnosni centar za YubiKey"
+
+#: data/com.anduinos.yubikeymanager.desktop:82
+msgid "Protect sign-in, sudo, SSH, and Git with YubiKeys"
+msgstr "Zaštitite prijavu, sudo, SSH i Git pomoću YubiKey uređaja"

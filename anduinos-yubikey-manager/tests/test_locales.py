@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PO_DIR = ROOT / "po"
 LOCALES = {
-    "ar", "da", "de", "el", "en_GB", "en_US", "es", "fi", "fr", "hi",
+    "ar", "da", "de", "el", "en_GB", "en_US", "es", "fi", "fr", "hi", "hr",
     "id", "it", "ja", "ko", "nl", "pl", "pt", "pt_BR", "ro", "ru",
     "sv", "th", "tr", "uk", "vi", "zh_CN", "zh_HK", "zh_TW",
 }

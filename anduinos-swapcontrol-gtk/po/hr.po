@@ -1,0 +1,795 @@
+# Croatian translations for swapcontrol-gtk.
+# Croatian translation contributions by Viktor (drdrummie), 2026.
+# SPDX-License-Identifier: GPL-3.0-only
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-swapcontrol-gtk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-14 09:51+0000\n"
+"PO-Revision-Date: 2026-11-23 04:07+0000\n"
+"Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
+"Language-Team: Croatian\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+#: src/window.rs:76
+msgid "About"
+msgstr "O aplikaciji"
+
+#: src/views/swap_view.rs:305
+msgid "Accept threshold percent"
+msgstr "Postotak praga prihvaćanja"
+
+#: src/views/zram_view.rs:252
+msgid "Advanced options"
+msgstr "Napredne mogućnosti"
+
+#: src/views/stress_test_view.rs:230 src/views/swap_view.rs:230
+msgid "Advanced settings"
+msgstr "Napredne postavke"
+
+#: src/views/zram_view.rs:353
+msgid "Algorithm"
+msgstr "Algoritam"
+
+#: src/views/swap_view.rs:339
+msgid "Apply Settings"
+msgstr "Primijeni postavke"
+
+#: src/views/swap_view.rs:672
+msgid "Applying settings…"
+msgstr "Primjenjivanje postavki…"
+
+#: src/views/dashboard_view.rs:392
+msgid "Auth needed"
+msgstr "Potrebna autentifikacija"
+
+#: src/views/dashboard_view.rs:435
+msgid "Buf"
+msgstr "Međuspr."
+
+#: src/views/dashboard_view.rs:412
+msgid "Buffers"
+msgstr "Međuspremnici"
+
+#: src/views/dashboard_view.rs:436
+msgid "Cache"
+msgstr "Predmem."
+
+#: src/views/dashboard_view.rs:417
+msgid "Cached"
+msgstr "Predmemorirano"
+
+#: src/views/zram_view.rs:383
+msgid "Cancel"
+msgstr "Odustani"
+
+#: src/views/stress_test_view.rs:323
+msgid "Cancel Test"
+msgstr "Otkaži test"
+
+#: src/views/stress_test_view.rs:606
+msgid "Cancelled by user."
+msgstr "Korisnik je otkazao."
+
+#: src/views/dashboard_view.rs:209
+msgid "Channels"
+msgstr "Kanali"
+
+#: src/views/stress_test_view.rs:618
+msgid "Completed successfully — memory pressure test passed."
+msgstr "Uspješno dovršeno — test memorijskog pritiska je prošao."
+
+#: src/views/swap_view.rs:188
+msgid ""
+"Compress swap pages in a RAM pool — faster than disk swap. Use Zram or "
+"Zswap, not both."
+msgstr ""
+"Komprimiraj swap stranice u RAM poolu — brže od swapa na disku. Koristite "
+"Zram ili Zswap, ne oboje."
+
+#: src/views/zram_view.rs:73
+msgid "Compressed RAM block device — fast in-memory swap"
+msgstr "Komprimirani RAM blokovski uređaj — brzi swap u memoriji"
+
+#: src/views/swap_view.rs:271
+msgid "Compression algorithm"
+msgstr "Algoritam kompresije"
+
+#: src/views/zram_view.rs:384
+msgid "Create"
+msgstr "Stvori"
+
+#: src/views/zram_view.rs:110 src/views/zram_view.rs:195
+msgid "Create Zram Device"
+msgstr "Stvori Zram uređaj"
+
+#: src/window.rs:110
+msgid "Dashboard"
+msgstr "Nadzorna ploča"
+
+#: src/views/zram_view.rs:576
+msgid "Destroy Zram Device"
+msgstr "Ukloni Zram uređaj"
+
+#: src/views/zram_view.rs:444
+msgid "Device Created"
+msgstr "Uređaj stvoren"
+
+#: src/views/dashboard_view.rs:525
+msgid "Disabled"
+msgstr "Onemogućeno"
+
+#: src/views/swap_view.rs:526
+msgid "Disabling Zswap..."
+msgstr "Onemogućivanje Zswapa..."
+
+#: src/views/swap_view.rs:582
+msgid "Disabling swap…"
+msgstr "Onemogućivanje swapa…"
+
+#: src/views/swap_view.rs:102
+msgid "Disk Swap Configuration"
+msgstr "Konfiguracija swapa na disku"
+
+#: src/views/dashboard_view.rs:636
+msgid ""
+"Disk swap is active with memory compression — your system is well-protected "
+"against memory pressure."
+msgstr ""
+"Swap na disku je aktivan uz kompresiju memorije — sustav je dobro zaštićen "
+"od memorijskog pritiska."
+
+#: src/views/stress_test_view.rs:610 src/views/stress_test_view.rs:622
+msgid "Duration:"
+msgstr "Trajanje:"
+
+#: src/views/dashboard_view.rs:631
+msgid ""
+"Enable Zram for snappy compressed swap in RAM — it's 10× faster than disk "
+"swap and dramatically reduces I/O under memory pressure."
+msgstr ""
+"Omogućite Zram za brz komprimirani swap u RAM-u — 10× je brži od swapa na "
+"disku i znatno smanjuje I/O pod memorijskim pritiskom."
+
+#: src/views/swap_view.rs:524
+msgid "Enabling Zswap..."
+msgstr "Omogućivanje Zswapa..."
+
+#: src/views/swap_view.rs:584
+msgid "Enabling swap…"
+msgstr "Omogućivanje swapa…"
+
+#: src/views/stress_test_view.rs:614 src/views/swap_view.rs:510
+#: src/views/zram_view.rs:187
+msgid "Error"
+msgstr "Pogreška"
+
+#: src/views/dashboard_view.rs:422 src/views/dashboard_view.rs:437
+msgid "Free"
+msgstr "Slobodno"
+
+#: src/views/stress_test_view.rs:255 src/views/stress_test_view.rs:256
+#: src/views/stress_test_view.rs:406
+msgid "Growth speed"
+msgstr "Brzina rasta"
+
+#: src/views/dashboard_view.rs:291
+msgid "Hibernation"
+msgstr "Hibernacija"
+
+#: src/views/swap_view.rs:602 src/views/swap_view.rs:709
+msgid "Hibernation Warning"
+msgstr "Upozorenje o hibernaciji"
+
+#: src/views/dashboard_view.rs:539 src/views/swap_view.rs:815
+msgid "Inactive"
+msgstr "Neaktivno"
+
+#: src/views/swap_view.rs:161 src/views/swap_view.rs:175
+msgid "Loading..."
+msgstr "Učitavanje..."
+
+#: src/views/stress_test_view.rs:237
+msgid "Maximum hold time"
+msgstr "Najdulje zadržavanje"
+
+#: src/views/swap_view.rs:287
+msgid "Maximum pool percent"
+msgstr "Najveći postotak poola"
+
+#: src/views/dashboard_view.rs:147
+msgid "Memory Overview"
+msgstr "Pregled memorije"
+
+#: src/views/zram_view.rs:119
+msgid "No Zram Devices"
+msgstr "Nema Zram uređaja"
+
+#: src/views/dashboard_view.rs:478
+msgid "No device"
+msgstr "Nema uređaja"
+
+#: src/views/dashboard_view.rs:614
+msgid "No disk swap detected"
+msgstr "Nije otkriven swap na disku"
+
+#: src/views/dashboard_view.rs:630
+msgid "No memory acceleration enabled"
+msgstr "Nije omogućeno ubrzanje memorije"
+
+#: src/views/dashboard_view.rs:568
+msgid "None"
+msgstr "Nema"
+
+#: src/views/dashboard_view.rs:552 src/views/dashboard_view.rs:560
+msgid "Off"
+msgstr "Isključeno"
+
+#: src/views/dashboard_view.rs:559
+msgid "On"
+msgstr "Uključeno"
+
+#: src/views/swap_view.rs:306
+msgid ""
+"Only store pages that compress to ≤ this % of original. Higher = more pages "
+"cached. Recommended: 90%"
+msgstr ""
+"Pohranjujte samo stranice koje se komprimiraju na ≤ ovaj % izvorne veličine. "
+"Više = više predmemoriranih stranica. Preporučeno: 90 %"
+
+#: src/views/dashboard_view.rs:635
+msgid "Optimal memory configuration"
+msgstr "Optimalna konfiguracija memorije"
+
+#: src/views/stress_test_view.rs:607 src/views/stress_test_view.rs:619
+msgid "Peak allocated:"
+msgstr "Najviše zauzeto:"
+
+#: src/views/zram_view.rs:372
+msgid "Priority"
+msgstr "Prioritet"
+
+#: src/views/stress_test_view.rs:214
+msgid "RAM"
+msgstr "RAM"
+
+#: src/views/zram_view.rs:559
+msgid "Remove"
+msgstr "Ukloni"
+
+#: src/views/stress_test_view.rs:365
+msgid "Run Again"
+msgstr "Pokreni ponovno"
+
+#: src/views/stress_test_view.rs:284
+msgid "Run Stress Test"
+msgstr "Pokreni test opterećenja"
+
+#: src/views/swap_view.rs:312
+msgid "Shrinker"
+msgstr "Smanjivač"
+
+#: src/views/zram_view.rs:274
+msgid "Size (MiB)"
+msgstr "Veličina (MiB)"
+
+#: src/views/dashboard_view.rs:208
+msgid "Speed"
+msgstr "Brzina"
+
+#: src/views/stress_test_view.rs:105 src/window.rs:114
+msgid "Stress Test"
+msgstr "Test opterećenja"
+
+#: src/views/dashboard_view.rs:271 src/views/dashboard_view.rs:288
+#: src/window.rs:112
+msgid "Swap"
+msgstr "Swap"
+
+#: src/progress_dialog.rs:24 src/window.rs:59
+#: data/com.anduinos.swapcontrol.desktop:24
+msgid "Swap Control"
+msgstr "Upravljanje virtualnom memorijom"
+
+#: src/views/swap_view.rs:152
+msgid "Swap usage"
+msgstr "Iskorištenost swapa"
+
+#: src/views/dashboard_view.rs:292 src/views/swap_view.rs:262
+#: src/views/swap_view.rs:682
+msgid "Swappiness"
+msgstr "Swappiness"
+
+#: src/views/dashboard_view.rs:625
+msgid "Swappiness not optimized for Zram"
+msgstr "Swappiness nije optimiziran za Zram"
+
+#: src/views/stress_test_view.rs:211
+msgid "Target Pressure"
+msgstr "Ciljni pritisak"
+
+#: src/views/stress_test_view.rs:350
+msgid "Test Complete"
+msgstr "Test dovršen"
+
+#: src/views/dashboard_view.rs:206
+msgid "Total RAM"
+msgstr "Ukupno RAM-a"
+
+#: src/views/dashboard_view.rs:207
+msgid "Type"
+msgstr "Vrsta"
+
+#: src/views/dashboard_view.rs:407 src/views/dashboard_view.rs:434
+msgid "Used"
+msgstr "Iskorišteno"
+
+#: src/views/dashboard_view.rs:615
+msgid ""
+"When RAM is full the kernel may kill applications. Enable disk swap for a "
+"reliable safety net."
+msgstr ""
+"Kad je RAM pun, jezgra može prekinuti aplikacije. Omogućite swap na disku "
+"kao pouzdanu sigurnosnu mrežu."
+
+#: src/views/dashboard_view.rs:263 src/views/dashboard_view.rs:290
+#: src/window.rs:111
+msgid "Zram"
+msgstr "Zram"
+
+#: src/views/zram_view.rs:66
+msgid "Zram Devices"
+msgstr "Zram uređaji"
+
+#: src/views/dashboard_view.rs:619
+msgid "Zram and Zswap are both active"
+msgstr "Zram i Zswap su oba aktivna"
+
+#: src/views/dashboard_view.rs:620
+msgid ""
+"Zram and Zswap are mutually exclusive — each creates its own compressed RAM "
+"pool. Running both wastes CPU and can cause severe memory thrashing. Disable "
+"one of them."
+msgstr ""
+"Zram i Zswap se međusobno isključuju — svaki stvara vlastiti komprimirani "
+"RAM pool. Pokretanje obaju troši CPU i može uzrokovati ozbiljno prebacivanje "
+"stranica. Onemogućite jedan od njih."
+
+#: src/views/dashboard_view.rs:267 src/views/dashboard_view.rs:289
+#: src/views/swap_view.rs:190 src/views/swap_view.rs:691
+msgid "Zswap"
+msgstr "Zswap"
+
+#: src/views/stress_test_view.rs:217
+msgid "default"
+msgstr "zadano"
+
+#: src/views/swap_view.rs:272
+msgid ""
+"lz4 = fast (recommended), zstd = best ratio, lzo = legacy. Changing requires "
+"zswap restart."
+msgstr ""
+"lz4 = brz (preporučeno), zstd = najbolji omjer, lzo = naslijeđeno. Promjena "
+"zahtijeva ponovno pokretanje zswapa."
+
+#: src/views/stress_test_view.rs:216
+msgid "range"
+msgstr "raspon"
+
+#: src/views/stress_test_view.rs:238
+msgid "seconds"
+msgstr "sekunde"
+
+#: src/views/swap_view.rs:123
+msgid "with Zram"
+msgstr "sa Zramom"
+
+#: src/views/dashboard_view.rs:167
+msgid "with Zram active — prefer fast compressed RAM over disk cache"
+msgstr ""
+"uz aktivan Zram — dajte prednost brzom komprimiranom RAM-u pred "
+"predmemorijom na disku"
+
+#: src/views/dashboard_view.rs:574
+msgid "Ready"
+msgstr "Spremno"
+
+#: src/views/dashboard_view.rs:576
+msgid "Unsupported"
+msgstr "Nije podržano"
+
+#: src/views/dashboard_view.rs:578
+msgid "Not configured"
+msgstr "Nije konfigurirano"
+
+#: src/views/dashboard_view.rs:580
+msgid "Resume target missing"
+msgstr "Nedostaje cilj nastavka"
+
+#: src/views/dashboard_view.rs:582
+msgid "Resume target inactive"
+msgstr "Cilj nastavka nije aktivan"
+
+#: src/views/dashboard_view.rs:584
+msgid "Swap too small"
+msgstr "Swap je premalen"
+
+#: src/views/dashboard_view.rs:586
+msgid "Not ready"
+msgstr "Nije spremno"
+
+#: src/views/swap_view.rs:109
+msgid ""
+"Review installer-managed swap partitions and manage the legacy supplementary "
+"swap file"
+msgstr ""
+"Pregledajte swap particije kojima upravlja instalater i upravljajte "
+"naslijeđenom dopunskom swap datotekom"
+
+#: src/views/swap_view.rs:160
+msgid "Swap partition"
+msgstr "Swap particija"
+
+#: src/views/swap_view.rs:174
+msgid "Additional swap file"
+msgstr "Dodatna swap datoteka"
+
+#: src/views/swap_view.rs:200
+msgid "Additional swap file size"
+msgstr "Veličina dodatne swap datoteke"
+
+#: src/views/swap_view.rs:201
+msgid "0 GiB means no supplementary swap file"
+msgstr "0 GiB znači da nema dopunske swap datoteke"
+
+#: src/views/swap_view.rs:603
+msgid ""
+"This swap file is the configured resume target. Disabling it will break "
+"hibernation. Continue?"
+msgstr ""
+"Ova swap datoteka je konfigurirani cilj nastavka. Njezino onemogućivanje "
+"prekinut će hibernaciju. Nastaviti?"
+
+#: src/views/swap_view.rs:710
+msgid ""
+"This swap file is the configured resume target. Its physical offset would "
+"change, so resize is blocked until hibernation is disabled."
+msgstr ""
+"Ova swap datoteka je konfigurirani cilj nastavka. Njezin fizički pomak bi se "
+"promijenio pa je promjena veličine blokirana dok se hibernacija ne onemogući."
+
+#: src/views/swap_view.rs:727
+msgid "unknown"
+msgstr "nepoznatom sustavu"
+
+#: src/views/swap_view.rs:743
+msgid "No swap partition — a legacy swap file can be managed below"
+msgstr ""
+"Nema swap particije — naslijeđenom swap datotekom možete upravljati u "
+"nastavku"
+
+#: src/views/swap_view.rs:212
+msgid "Remove incompatible file"
+msgstr "Ukloni nekompatibilnu datoteku"
+
+#: src/views/swap_view.rs:382
+msgid "Removing incompatible swap file…"
+msgstr "Uklanjanje nekompatibilne swap datoteke…"
+
+#: src/views/swap_view.rs:795
+msgid "Present but inactive"
+msgstr "Postoji, ali nije aktivno"
+
+#: src/views/swap_view.rs:797
+msgid "Not created — choose a size below to add one"
+msgstr "Nije stvorena — odaberite veličinu u nastavku da je dodate"
+
+#: src/views/swap_view.rs:799
+msgid "Not created — at least 20 GiB must remain free"
+msgstr "Nije stvorena — najmanje 20 GiB mora ostati slobodno"
+
+#: src/views/swap_view.rs:835
+msgid ""
+"Resize is locked because this file is the configured hibernation resume "
+"target"
+msgstr ""
+"Promjena veličine je zaključana jer je ova datoteka konfigurirani cilj "
+"nastavka hibernacije"
+
+#: src/views/swap_view.rs:837
+msgid ""
+"Optional compatibility file; 0 GiB removes it and 20 GiB remains reserved "
+"for the system"
+msgstr ""
+"Neobvezna datoteka kompatibilnosti; 0 GiB je uklanja, a 20 GiB ostaje "
+"rezervirano za sustav"
+
+#: src/views/swap_view.rs:839
+msgid ""
+"Disabled on Btrfs because a root-subvolume swap file would prevent Disk "
+"Snapshots Manager recovery points"
+msgstr ""
+"Onemogućeno na Btrfsu jer bi swap datoteka u korijenskoj poddatoteci "
+"spriječila točke oporavka Upravitelja snimkama diska"
+
+#: src/views/zram_view.rs:120
+msgid ""
+"Create a compressed RAM swap device for faster memory pressure handling."
+msgstr ""
+"Stvorite komprimirani RAM swap uređaj za brže nošenje s memorijskim "
+"pritiskom."
+
+#: src/views/stress_test_view.rs:176
+msgid "Ensure important work is saved before running this test."
+msgstr "Prije pokretanja ovog testa spremite važan rad."
+
+#: src/views/swap_view.rs:288
+msgid "Max % of RAM the compressed pool may occupy. Recommended: 20%"
+msgstr ""
+"Najveći % RAM-a koji smije zauzeti komprimirani pool. Preporučeno: 20 %"
+
+#: src/views/dashboard_view.rs:154
+msgid "Real-time RAM, swap, and compression subsystem status"
+msgstr "Stanje RAM-a, swapa i podsustava kompresije u stvarnom vremenu"
+
+#: src/views/swap_view.rs:313
+msgid "Reclaim pool pages under memory pressure. Recommended: ON"
+msgstr ""
+"Vraćaj stranice poola pod memorijskim pritiskom. Preporučeno: UKLJUČENO"
+
+#: src/views/stress_test_view.rs:112
+msgid "Simulate memory pressure to test swap and OOM behavior"
+msgstr "Simulirajte memorijski pritisak za testiranje swapa i ponašanja OOM-a"
+
+#: src/views/stress_test_view.rs:166
+msgid "Warning: This will consume system memory and may cause instability"
+msgstr ""
+"Upozorenje: ovo će zauzeti memoriju sustava i može uzrokovati nestabilnost"
+
+#: src/views/zram_view.rs:445
+msgid "Zram configuration saved. The device will be created shortly."
+msgstr "Konfiguracija Zrama je spremljena. Uređaj će uskoro biti stvoren."
+
+#: src/views/dashboard_view.rs:178 src/views/swap_view.rs:133
+msgid "<i>Recommended swappiness: {0} ({1})</i>"
+msgstr "<i>Preporučeni swappiness: {0} ({1})</i>"
+
+#: src/views/zram_view.rs:90
+msgid "<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"
+msgstr "<i>Preporučeno: {0} MiB, lz4, prioritet 100 (za {1} GiB RAM-a)</i>"
+
+#: src/views/swap_view.rs:777
+msgid "Active — {0} GiB used / {1} GiB total"
+msgstr "Aktivno — iskorišteno {0} GiB / ukupno {1} GiB"
+
+#: src/swap/exec.rs:26 src/swap/exec.rs:68
+msgid "Authentication cancelled"
+msgstr "Autentifikacija otkazana"
+
+#: src/swap/swapfile.rs:113
+msgid "Cannot inspect the root filesystem"
+msgstr "Nije moguće pregledati korijenski datotečni sustav"
+
+#: src/swap/swapfile.rs:108
+msgid "Cannot inspect the root filesystem: {0}"
+msgstr "Nije moguće pregledati korijenski datotečni sustav: {0}"
+
+#: src/swap/sysctl.rs:79
+msgid "Cannot parse MemTotal: {0}"
+msgstr "Nije moguće analizirati MemTotal: {0}"
+
+#: src/swap/sysctl.rs:43
+msgid "Cannot parse swappiness: {0}"
+msgstr "Nije moguće analizirati swappiness: {0}"
+
+#: src/swap/zswap.rs:59
+msgid "Cannot parse {0} as u8: {1}"
+msgstr "Nije moguće analizirati {0} kao u8: {1}"
+
+#: src/swap/sysctl.rs:70
+msgid "Cannot read /proc/meminfo: {0}"
+msgstr "Nije moguće čitati /proc/meminfo: {0}"
+
+#: src/swap/swapfile.rs:39
+msgid "Cannot read /proc/swaps: {0}"
+msgstr "Nije moguće čitati /proc/swaps: {0}"
+
+#: src/swap/sysctl.rs:36 src/swap/zswap.rs:47
+msgid "Cannot read {0}: {1}"
+msgstr "Nije moguće čitati {0}: {1}"
+
+#: src/swap/exec.rs:18 src/swap/exec.rs:52
+msgid "Failed to execute pkexec: {0}"
+msgstr "Nije moguće pokrenuti pkexec: {0}"
+
+#: src/swap/persist.rs:31
+msgid "Failed to remove legacy unit {0}: {1}"
+msgstr "Nije moguće ukloniti naslijeđenu jedinicu {0}: {1}"
+
+#: src/swap/sysctl.rs:129
+msgid "Failed to set swappiness: {0} / {1}"
+msgstr "Nije moguće postaviti swappiness: {0} / {1}"
+
+#: src/swap/exec.rs:61
+msgid "Failed to wait on pkexec: {0}"
+msgstr "Nije moguće dočekati pkexec: {0}"
+
+#: src/i18n.rs:24
+msgid "Hello {0}, you have {1} messages"
+msgstr "Pozdrav {0}, imate {1} poruka"
+
+#: src/views/swap_view.rs:239
+msgid ""
+"How aggressively the kernel swaps — lower = stay in RAM longer (recommended: "
+"{0})"
+msgstr ""
+"Koliko agresivno jezgra koristi swap — niže = dulji ostanak u RAM-u "
+"(preporučeno: {0})"
+
+#: src/views/swap_view.rs:236
+msgid ""
+"How aggressively the kernel swaps — with Zram active, set to {0} to prefer "
+"fast compressed RAM over disk cache (recommended: {0})"
+msgstr ""
+"Koliko agresivno jezgra koristi swap — kad je Zram aktivan, postavite na {0} "
+"kako biste dali prednost brzom komprimiranom RAM-u pred predmemorijom na "
+"disku (preporučeno: {0})"
+
+#: src/views/dashboard_view.rs:505
+msgid "Idle ({0} GiB available)"
+msgstr "Neaktivno (dostupno {0} GiB)"
+
+#: src/views/zram_view.rs:536
+msgid "Idle — {0} MiB available"
+msgstr "Neaktivno — dostupno {0} MiB"
+
+#: src/swap/sysctl.rs:83
+msgid "MemTotal not found"
+msgstr "MemTotal nije pronađen"
+
+#: src/views/swap_view.rs:791
+msgid "Present but inactive — activation is disabled on {0}"
+msgstr "Postoji, ali nije aktivno — aktivacija je onemogućena na {0}"
+
+#: src/views/stress_test_view.rs:681
+msgid ""
+"RAM: {0} GiB total · {1} GiB used · {2} GiB avail\n"
+"Swap used: {3} GiB"
+msgstr ""
+"RAM: ukupno {0} GiB · iskorišteno {1} GiB · dostupno {2} GiB\n"
+"Iskorišteno swapa: {3} GiB"
+
+#: src/views/swap_view.rs:678
+msgid "Resize"
+msgstr "Promijeni veličinu"
+
+#: src/views/swap_view.rs:842
+msgid "Swap file resizing is unsupported on {0}"
+msgstr "Promjena veličine swap datoteke nije podržana na {0}"
+
+#: src/progress_dialog.rs:58
+msgid "Task panicked: {0}"
+msgstr "Zadatak je neočekivano prekinut: {0}"
+
+#: src/swap/persist.rs:74
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zram changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zram from this GUI."
+msgstr ""
+"Paket 'anduinos-swap-config' nije instaliran.\n"
+"\n"
+"Bez njega se promjene Zrama ne mogu primijeniti ni zadržati.\n"
+"Instalirajte 'anduinos-swap-config' za upravljanje Zramom iz ovog sučelja."
+
+#: src/swap/persist.rs:133
+msgid ""
+"The package 'anduinos-swap-config' is not installed.\n"
+"\n"
+"Zswap changes cannot be applied or persisted without it.\n"
+"Install 'anduinos-swap-config' to manage zswap from this GUI."
+msgstr ""
+"Paket 'anduinos-swap-config' nije instaliran.\n"
+"\n"
+"Bez njega se promjene Zswapa ne mogu primijeniti ni zadržati.\n"
+"Instalirajte 'anduinos-swap-config' za upravljanje Zswapom iz ovog sučelja."
+
+#: src/views/zram_view.rs:578
+msgid ""
+"This will immediately remove {0} and flush its contents to disk swap. "
+"Continue?"
+msgstr ""
+"Time ćete odmah ukloniti {0} i ispisati njegov sadržaj u swap na disku. "
+"Nastaviti?"
+
+#: src/views/swap_view.rs:802
+msgid "Unavailable on {0}; the swap partition remains active"
+msgstr "Nedostupno na {0}; swap particija ostaje aktivna"
+
+#: src/views/dashboard_view.rs:626
+msgid ""
+"Zram is active but swappiness is {0} instead of {1}. Set it to {1} to prefer "
+"fast compressed RAM swap — dropping file cache when zram is available wastes "
+"I/O performance."
+msgstr ""
+"Zram je aktivan, ali swappiness je {0} umjesto {1}. Postavite ga na {1} kako "
+"biste dali prednost brzom komprimiranom RAM swapu — odbacivanje predmemorije "
+"datoteka kad je zram dostupan troši I/O performanse."
+
+#: src/swap/persist.rs:88
+msgid "Zram persistence disabled"
+msgstr "Trajnost Zrama onemogućena"
+
+#: src/swap/persist.rs:90
+msgid "Zram persistence enabled"
+msgstr "Trajnost Zrama omogućena"
+
+#: src/swap/persist.rs:148
+msgid "Zswap persistence disabled"
+msgstr "Trajnost Zswapa onemogućena"
+
+#: src/swap/persist.rs:146
+msgid "Zswap persistence enabled"
+msgstr "Trajnost Zswapa omogućena"
+
+#: src/views/dashboard_view.rs:172 src/views/swap_view.rs:127
+msgid "for {0} GiB RAM"
+msgstr "za {0} GiB RAM-a"
+
+#: src/swap/sysctl.rs:133
+msgid "swappiness updated"
+msgstr "swappiness je ažuriran"
+
+#: src/swap/persist.rs:37
+msgid "systemctl {0} failed: {1}"
+msgstr "systemctl {0} nije uspio: {1}"
+
+#: src/views/zram_view.rs:530
+msgid "{0} MiB used (stats reset)"
+msgstr "Iskorišteno {0} MiB (statistika poništena)"
+
+#: src/views/zram_view.rs:525
+msgid "{0} MiB used · saved {1}%"
+msgstr "Iskorišteno {0} MiB · ušteda {1} %"
+
+#: src/views/dashboard_view.rs:520
+msgid "{0} · pool {1}%"
+msgstr "{0} · pool {1} %"
+
+#: src/views/dashboard_view.rs:496
+msgid "{0} · saved {1}%"
+msgstr "{0} · ušteda {1} %"
+
+#: src/views/swap_view.rs:759
+msgid ""
+"{0} — installer-managed; size cannot be changed while the system is running"
+msgstr ""
+"{0} — njime upravlja instalater; veličina se ne može mijenjati dok sustav "
+"radi"
+
+#: data/com.anduinos.swapcontrol.desktop:99
+msgid "swap;memory;zswap;zram;swappiness;virtual memory;compression;RAM;"
+msgstr "swap;memorija;zswap;zram;swappiness;virtualna memorija;kompresija;RAM;"
+
+#: data/com.anduinos.swapcontrol.desktop:70
+msgid "Manage virtual memory, compression, and swap settings"
+msgstr "Upravljajte virtualnom memorijom, kompresijom i postavkama swapa"
+
+#: data/com.anduinos.swapcontrol.desktop:47
+msgid "Virtual Memory Settings"
+msgstr "Postavke virtualne memorije"
+
+#: anduinos-swapcontrol-gtk/data/com.anduinos.swapcontrol.policy:39
+msgid "Authentication is required to modify swap, zswap, and zram settings"
+msgstr "Za izmjenu postavki swapa, zswapa i zrama potrebna je autentifikacija"
+
+#: anduinos-swapcontrol-gtk/data/com.anduinos.swapcontrol.policy:9
+msgid "Manage virtual memory settings"
+msgstr "Upravljajte postavkama virtualne memorije"

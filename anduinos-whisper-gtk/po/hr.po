@@ -1,0 +1,656 @@
+# Croatian translations for anduinos-whisper-gtk.
+# Croatian translation contributions by Viktor (drdrummie), 2026.
+# SPDX-License-Identifier: GPL-3.0-only
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-whisper-gtk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-12 12:49+0000\n"
+"PO-Revision-Date: 2026-11-23 04:07+0000\n"
+"Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
+"Language-Team: Croatian\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+#: src/anduinos_whisper_gtk/app.py:30
+msgid "Automatic detection"
+msgstr "Automatsko prepoznavanje"
+
+#: src/anduinos_whisper_gtk/app.py:31
+#: data/voice-typing@anduinos.com/extension.js:88
+#: data/voice-typing@anduinos.com/extension.js:89
+msgid "Simplified Chinese"
+msgstr "Pojednostavljeni kineski"
+
+#: src/anduinos_whisper_gtk/app.py:32
+#: data/voice-typing@anduinos.com/extension.js:89
+msgid "Traditional Chinese"
+msgstr "Tradicionalni kineski"
+
+#: src/anduinos_whisper_gtk/app.py:33
+#: data/voice-typing@anduinos.com/extension.js:90
+msgid "English"
+msgstr "Engleski"
+
+#: src/anduinos_whisper_gtk/app.py:34
+#: data/voice-typing@anduinos.com/extension.js:90
+msgid "Spanish"
+msgstr "Španjolski"
+
+#: src/anduinos_whisper_gtk/app.py:35
+#: data/voice-typing@anduinos.com/extension.js:91
+msgid "French"
+msgstr "Francuski"
+
+#: src/anduinos_whisper_gtk/app.py:36
+#: data/voice-typing@anduinos.com/extension.js:91
+msgid "German"
+msgstr "Njemački"
+
+#: src/anduinos_whisper_gtk/app.py:37
+#: data/voice-typing@anduinos.com/extension.js:91
+msgid "Japanese"
+msgstr "Japanski"
+
+#: src/anduinos_whisper_gtk/app.py:38
+#: data/voice-typing@anduinos.com/extension.js:91
+msgid "Korean"
+msgstr "Korejski"
+
+#: src/anduinos_whisper_gtk/app.py:39
+#: data/voice-typing@anduinos.com/extension.js:92
+msgid "Russian"
+msgstr "Ruski"
+
+#: src/anduinos_whisper_gtk/app.py:40
+#: data/voice-typing@anduinos.com/extension.js:92
+msgid "Portuguese"
+msgstr "Portugalski"
+
+#: src/anduinos_whisper_gtk/app.py:51
+msgid ""
+"Parakeet supports 25 European languages. Choose a supported language or a "
+"Whisper model."
+msgstr ""
+"Parakeet podržava 25 europskih jezika. Odaberite podržani jezik ili model "
+"Whisper."
+
+#: src/anduinos_whisper_gtk/app.py:54 src/anduinos_whisper_gtk/app.py:77
+#: src/anduinos_whisper_gtk/app.py:108 src/anduinos_whisper_gtk/app.py:458
+msgid "Voice Typing"
+msgstr "Glasovno tipkanje"
+
+#: src/anduinos_whisper_gtk/app.py:55
+#: data/voice-typing@anduinos.com/extension.js:71
+#: data/voice-typing@anduinos.com/extension.js:112
+#: data/voice-typing@anduinos.com/extension.js:174
+#: data/voice-typing@anduinos.com/extension.js:330
+#: data/voice-typing@anduinos.com/extension.js:446
+#: data/voice-typing@anduinos.com/extension.js:481
+#: data/voice-typing@anduinos.com/extension.js:508
+msgid "Ready"
+msgstr "Spremno"
+
+#: src/anduinos_whisper_gtk/app.py:56
+#: data/voice-typing@anduinos.com/extension.js:74
+#: data/voice-typing@anduinos.com/extension.js:397
+#: data/voice-typing@anduinos.com/extension.js:484
+msgid "Listening…"
+msgstr "Slušanje…"
+
+#: src/anduinos_whisper_gtk/app.py:57
+msgid "Sign out required"
+msgstr "Potrebna je odjava"
+
+#: src/anduinos_whisper_gtk/app.py:58
+msgid "Needs attention"
+msgstr "Potrebna je vaša intervencija"
+
+#: src/anduinos_whisper_gtk/app.py:62
+msgid "Sign out and back in to finish enabling Voice Typing."
+msgstr ""
+"Odjavite se i ponovno prijavite da biste dovršili uključivanje glasovnog "
+"tipkanja."
+
+#: src/anduinos_whisper_gtk/app.py:103
+msgid "Settings"
+msgstr "Postavke"
+
+#: src/anduinos_whisper_gtk/app.py:110
+msgid ""
+"Use the keyboard shortcut to dictate into the focused application. Speech is "
+"processed locally and is never uploaded."
+msgstr ""
+"Upotrijebite tipkovnički prečac za diktiranje u aplikaciji koja je u fokusu. "
+"Govor se obrađuje lokalno i nikad se ne prenosi."
+
+#: src/anduinos_whisper_gtk/app.py:115
+msgid "Status"
+msgstr "Stanje"
+
+#: src/anduinos_whisper_gtk/app.py:115
+msgid "Checking the local service…"
+msgstr "Provjera lokalne usluge…"
+
+#: src/anduinos_whisper_gtk/app.py:119 src/anduinos_whisper_gtk/app.py:452
+msgid "Start"
+msgstr "Pokreni"
+
+#: src/anduinos_whisper_gtk/app.py:128
+msgid "Input"
+msgstr "Ulaz"
+
+#: src/anduinos_whisper_gtk/app.py:129
+msgid "System default"
+msgstr "Zadano za sustav"
+
+#: src/anduinos_whisper_gtk/app.py:132
+msgid "Microphone"
+msgstr "Mikrofon"
+
+#: src/anduinos_whisper_gtk/app.py:143 src/anduinos_whisper_gtk/app.py:609
+msgid "Language"
+msgstr "Jezik"
+
+#: src/anduinos_whisper_gtk/app.py:154
+msgid "Behavior"
+msgstr "Ponašanje"
+
+#: src/anduinos_whisper_gtk/app.py:156
+msgid "Keyboard shortcut"
+msgstr "Tipkovnički prečac"
+
+#: src/anduinos_whisper_gtk/app.py:157
+msgid "Activate voice typing from anywhere"
+msgstr "Pokrenite glasovno tipkanje iz bilo koje aplikacije"
+
+#: src/anduinos_whisper_gtk/app.py:161
+msgid "Disabled"
+msgstr "Onemogućeno"
+
+#: src/anduinos_whisper_gtk/app.py:165
+msgid "Change…"
+msgstr "Promijeni…"
+
+#: src/anduinos_whisper_gtk/app.py:177
+msgid "Noise reduction"
+msgstr "Smanjenje buke"
+
+#: src/anduinos_whisper_gtk/app.py:178
+msgid ""
+"Reduce background noise and balance microphone level; restart listening "
+"after changing this"
+msgstr ""
+"Smanjuje pozadinsku buku i ujednačava razinu mikrofona; nakon promjene "
+"ponovno pokrenite slušanje"
+
+#: src/anduinos_whisper_gtk/app.py:182
+msgid "Automatic punctuation"
+msgstr "Automatska interpunkcija"
+
+#: src/anduinos_whisper_gtk/app.py:183
+msgid "Keep punctuation recognized from speech"
+msgstr "Zadrži interpunkciju prepoznatu iz govora"
+
+#: src/anduinos_whisper_gtk/app.py:187
+msgid "Voice commands"
+msgstr "Glasovne naredbe"
+
+#: src/anduinos_whisper_gtk/app.py:188
+msgid "Recognize commands such as “new line” and “comma”"
+msgstr "Prepoznaj naredbe poput „novi redak” i „zarez”"
+
+#: src/anduinos_whisper_gtk/app.py:192
+msgid "Final result preview"
+msgstr "Pregled konačnog rezultata"
+
+#: src/anduinos_whisper_gtk/app.py:193
+msgid "Pause briefly before inserting the completed phrase"
+msgstr "Nakratko pričekaj prije umetanja dovršene fraze"
+
+#: src/anduinos_whisper_gtk/app.py:197
+msgid "Start and stop sounds"
+msgstr "Zvukovi pokretanja i zaustavljanja"
+
+#: src/anduinos_whisper_gtk/app.py:198
+msgid "Play a subtle microphone cue"
+msgstr "Reproduciraj nenametljiv zvučni signal mikrofona"
+
+#: src/anduinos_whisper_gtk/app.py:208
+msgid "Performance diagnostics"
+msgstr "Dijagnostika performansi"
+
+#: src/anduinos_whisper_gtk/app.py:209
+msgid ""
+"Export timings from the current voice session. No recordings or recognized "
+"text are included."
+msgstr ""
+"Izvezite vremenske podatke iz trenutačne sesije glasovnog tipkanja. Izvoz ne "
+"sadrži snimke ni prepoznati tekst."
+
+#: src/anduinos_whisper_gtk/app.py:211 src/anduinos_whisper_gtk/app.py:310
+msgid "Export diagnostic report"
+msgstr "Izvezi dijagnostičko izvješće"
+
+#: src/anduinos_whisper_gtk/app.py:212
+msgid "Export"
+msgstr "Izvezi"
+
+#: src/anduinos_whisper_gtk/app.py:220
+msgid "Recognition performance"
+msgstr "Performanse prepoznavanja"
+
+#: src/anduinos_whisper_gtk/app.py:222
+msgid ""
+"Changes apply next time listening starts. Automatic selection measures "
+"bundled audio without using your microphone or changing your model."
+msgstr ""
+"Promjene se primjenjuju pri sljedećem pokretanju slušanja. Automatski odabir "
+"testira priloženi zvučni zapis bez korištenja mikrofona i bez promjene "
+"modela."
+
+#: src/anduinos_whisper_gtk/app.py:228
+msgid ""
+"First use takes at most 10 seconds and results are cached. Wait for "
+"Listening before speaking; press the microphone button again to cancel "
+"preparation."
+msgstr ""
+"Prva uporaba traje najviše 10 sekundi, a rezultati se spremaju u "
+"predmemoriju. Pričekajte da se prikaže „Slušanje” prije govora; ponovno "
+"pritisnite gumb mikrofona da biste otkazali pripremu."
+
+#: src/anduinos_whisper_gtk/app.py:234
+msgid "Recognition backend"
+msgstr "Mehanizam prepoznavanja"
+
+#: src/anduinos_whisper_gtk/app.py:235
+msgid "Automatic (measured)"
+msgstr "Automatski (izmjereno)"
+
+#: src/anduinos_whisper_gtk/app.py:235
+msgid "CPU"
+msgstr "CPU"
+
+#: src/anduinos_whisper_gtk/app.py:235
+msgid "GPU (CPU fallback)"
+msgstr "GPU (CPU kao pričuvna opcija)"
+
+#: src/anduinos_whisper_gtk/app.py:242
+msgid "Recognition threads"
+msgstr "Niti za prepoznavanje"
+
+#: src/anduinos_whisper_gtk/app.py:242
+msgid "0 selects automatically; more threads are not always faster"
+msgstr ""
+"Vrijednost 0 omogućuje automatski odabir; veći broj niti nije uvijek brži"
+
+#: src/anduinos_whisper_gtk/app.py:250
+msgid "Measure again on next start"
+msgstr "Ponovno izmjeri pri sljedećem pokretanju"
+
+#: src/anduinos_whisper_gtk/app.py:252
+msgid "A complete test may take up to one minute. The microphone remains off."
+msgstr "Cijeli test može trajati do jedne minute. Mikrofon ostaje isključen."
+
+#: src/anduinos_whisper_gtk/app.py:255
+msgid "Retest"
+msgstr "Ponovi test"
+
+#: src/anduinos_whisper_gtk/app.py:259
+msgid "Restore automatic backend and thread selection"
+msgstr "Vrati automatski odabir mehanizma i broja niti"
+
+#: src/anduinos_whisper_gtk/app.py:261
+msgid "Restore defaults"
+msgstr "Vrati zadane postavke"
+
+#: src/anduinos_whisper_gtk/app.py:282 src/anduinos_whisper_gtk/app.py:347
+#: src/anduinos_whisper_gtk/app.py:648
+msgid "25 European languages · CPU · about 1.5 GiB RAM"
+msgstr "25 europskih jezika · CPU · oko 1,5 GiB RAM-a"
+
+#: src/anduinos_whisper_gtk/app.py:289
+msgid "Performance will be measured next time listening starts"
+msgstr "Performanse će se izmjeriti pri sljedećem pokretanju slušanja"
+
+#: src/anduinos_whisper_gtk/app.py:304
+msgid "No diagnostic report available"
+msgstr "Dijagnostičko izvješće nije dostupno"
+
+#: src/anduinos_whisper_gtk/app.py:305
+msgid ""
+"Start a voice session, then export its report before closing the microphone "
+"bar."
+msgstr ""
+"Pokrenite sesiju glasovnog tipkanja, a zatim izvezite izvješće prije "
+"zatvaranja trake mikrofona."
+
+#: src/anduinos_whisper_gtk/app.py:307 src/anduinos_whisper_gtk/app.py:331
+#: src/anduinos_whisper_gtk/app.py:720
+msgid "Close"
+msgstr "Zatvori"
+
+#: src/anduinos_whisper_gtk/app.py:329
+msgid "Could not save diagnostic report"
+msgstr "Dijagnostičko izvješće nije moguće spremiti"
+
+#: src/anduinos_whisper_gtk/app.py:330
+msgid "Check that the selected folder is writable and has free space."
+msgstr ""
+"Provjerite možete li pisati u odabranu mapu i ima li dovoljno slobodnog "
+"prostora."
+
+#: src/anduinos_whisper_gtk/app.py:335
+msgid "Models"
+msgstr "Modeli"
+
+#: src/anduinos_whisper_gtk/app.py:338
+msgid "Offline speech models"
+msgstr "Izvanmrežni modeli govora"
+
+#: src/anduinos_whisper_gtk/app.py:340
+msgid ""
+"The Base multilingual model is installed with Voice Typing. Optional models "
+"are verified before use."
+msgstr ""
+"Višejezični model Base instalira se uz glasovno tipkanje. Dodatni se modeli "
+"provjeravaju prije uporabe."
+
+#: src/anduinos_whisper_gtk/app.py:350 src/anduinos_whisper_gtk/app.py:649
+#, python-format
+msgid "%(download)s download · %(installed)s installed"
+msgstr "preuzimanje: %(download)s · instalirano: %(installed)s"
+
+#: src/anduinos_whisper_gtk/app.py:357
+msgid "Remove downloaded model"
+msgstr "Ukloni preuzeti model"
+
+#: src/anduinos_whisper_gtk/app.py:360
+#, python-format
+msgid "Remove %s"
+msgstr "Ukloni %s"
+
+#: src/anduinos_whisper_gtk/app.py:374
+msgid "Microphone Training"
+msgstr "Podešavanje mikrofona"
+
+#: src/anduinos_whisper_gtk/app.py:378
+msgid "Check your speaking setup"
+msgstr "Provjerite postavke govora"
+
+#: src/anduinos_whisper_gtk/app.py:380
+msgid ""
+"Whisper does not need a personal voice profile. Use this page to check the "
+"processed microphone level, distance, and background noise. This test does "
+"not train the model or measure recognition accuracy."
+msgstr ""
+"Whisperu nije potreban osobni glasovni profil. Na ovoj stranici provjerite "
+"obrađenu razinu mikrofona, udaljenost i pozadinsku buku. Ovaj test ne "
+"trenira model niti mjeri točnost prepoznavanja."
+
+#: src/anduinos_whisper_gtk/app.py:387
+msgid "Practice phrase"
+msgstr "Rečenica za vježbu"
+
+#: src/anduinos_whisper_gtk/app.py:388
+msgid "“Voice typing makes writing faster and more accessible.”"
+msgstr "„Glasovno tipkanje ubrzava pisanje i čini ga pristupačnijim.”"
+
+#: src/anduinos_whisper_gtk/app.py:394
+msgid "Input level"
+msgstr "Razina ulaza"
+
+#: src/anduinos_whisper_gtk/app.py:395
+msgid "Speak normally; aim for the middle of the meter"
+msgstr "Govorite normalno; nastojte da mjerač pokazuje srednju razinu"
+
+#: src/anduinos_whisper_gtk/app.py:399
+msgid "Microphone input level"
+msgstr "Razina ulaznog signala mikrofona"
+
+#: src/anduinos_whisper_gtk/app.py:405
+msgid "Microphone test"
+msgstr "Test mikrofona"
+
+#: src/anduinos_whisper_gtk/app.py:406
+msgid "No audio is saved during this test"
+msgstr "Tijekom ovog testa zvuk se ne sprema"
+
+#: src/anduinos_whisper_gtk/app.py:408 src/anduinos_whisper_gtk/app.py:783
+msgid "Start Test"
+msgstr "Pokreni test"
+
+#: src/anduinos_whisper_gtk/app.py:413
+msgid "Tips for better recognition"
+msgstr "Savjeti za bolje prepoznavanje"
+
+#: src/anduinos_whisper_gtk/app.py:416
+msgid "Speak naturally"
+msgstr "Govorite prirodno"
+
+#: src/anduinos_whisper_gtk/app.py:417
+msgid "Use short phrases and pause briefly between sentences"
+msgstr "Koristite kratke fraze i nakratko zastanite između rečenica"
+
+#: src/anduinos_whisper_gtk/app.py:421
+msgid "Reduce background noise"
+msgstr "Smanjite pozadinsku buku"
+
+#: src/anduinos_whisper_gtk/app.py:422
+msgid "Keep the microphone close without speaking directly into it"
+msgstr "Držite mikrofon blizu, ali nemojte govoriti izravno u njega"
+
+#: src/anduinos_whisper_gtk/app.py:426 src/anduinos_whisper_gtk/app.py:611
+msgid "Choose the language"
+msgstr "Odaberite jezik"
+
+#: src/anduinos_whisper_gtk/app.py:427
+msgid "A fixed language is faster than automatic detection"
+msgstr "Odabir određenog jezika brži je od automatskog prepoznavanja"
+
+#: src/anduinos_whisper_gtk/app.py:450
+msgid "Stop"
+msgstr "Zaustavi"
+
+#: src/anduinos_whisper_gtk/app.py:468
+msgid "Live transcription"
+msgstr "Transkripcija uživo"
+
+#: src/anduinos_whisper_gtk/app.py:469
+msgid "Automatic enables live transcription only when performance allows"
+msgstr ""
+"Automatski način uključuje transkripciju uživo samo kada to performanse "
+"dopuštaju"
+
+#: src/anduinos_whisper_gtk/app.py:470
+msgid "Automatic"
+msgstr "Automatski"
+
+#: src/anduinos_whisper_gtk/app.py:470
+msgid "On"
+msgstr "Uključeno"
+
+#: src/anduinos_whisper_gtk/app.py:470
+#: data/voice-typing@anduinos.com/extension.js:418
+#: data/voice-typing@anduinos.com/extension.js:479
+msgid "Off"
+msgstr "Isključeno"
+
+#: src/anduinos_whisper_gtk/app.py:518
+msgid "Set Keyboard Shortcut"
+msgstr "Postavi tipkovnički prečac"
+
+#: src/anduinos_whisper_gtk/app.py:540
+msgid "Press the new shortcut"
+msgstr "Pritisnite novu kombinaciju tipki"
+
+#: src/anduinos_whisper_gtk/app.py:544
+msgid "The keys you press will be used to start or stop Voice Typing."
+msgstr ""
+"Pritisnuta kombinacija tipki koristit će se za pokretanje ili zaustavljanje "
+"glasovnog tipkanja."
+
+#: src/anduinos_whisper_gtk/app.py:552
+msgid "Waiting for input…"
+msgstr "Čekanje unosa…"
+
+#: src/anduinos_whisper_gtk/app.py:558
+msgid "Esc cancels · Backspace disables the shortcut"
+msgstr "Esc otkazuje · Backspace onemogućuje prečac"
+
+#: src/anduinos_whisper_gtk/app.py:613 src/anduinos_whisper_gtk/app.py:655
+#: src/anduinos_whisper_gtk/app.py:674 src/anduinos_whisper_gtk/app.py:697
+#: src/anduinos_whisper_gtk/app.py:731 src/anduinos_whisper_gtk/app.py:762
+msgid "Cancel"
+msgstr "Odustani"
+
+#: src/anduinos_whisper_gtk/app.py:614 src/anduinos_whisper_gtk/app.py:774
+msgid "Use"
+msgstr "Upotrijebi"
+
+#: src/anduinos_whisper_gtk/app.py:646
+#, python-format
+msgid "Download %s from GitHub?"
+msgstr "Preuzeti %s s GitHuba?"
+
+#: src/anduinos_whisper_gtk/app.py:647
+msgid ""
+"This optional model is downloaded from GitHub. GitHub receives your public "
+"IP address."
+msgstr ""
+"Ovaj dodatni model preuzima se s GitHuba. GitHub prima vašu javnu IP adresu."
+
+#: src/anduinos_whisper_gtk/app.py:656 src/anduinos_whisper_gtk/app.py:675
+msgid "Continue Download"
+msgstr "Nastavi preuzimanje"
+
+#: src/anduinos_whisper_gtk/app.py:663
+#, python-format
+msgid "Download %s from Hugging Face?"
+msgstr "Preuzeti %s s Hugging Facea?"
+
+#: src/anduinos_whisper_gtk/app.py:665
+msgid ""
+"This optional model is hosted by Hugging Face, a third-party service. "
+"AnduinOS is not affiliated with, sponsored by, or partnered with Hugging "
+"Face.\n"
+"\n"
+"If you continue, your computer will connect directly to huggingface.co. "
+"Hugging Face will receive your public IP address and that address may reveal "
+"your approximate location.\n"
+"\n"
+"Privacy policy: https://huggingface.co/privacy"
+msgstr ""
+"Ovaj dodatni model nalazi se na usluzi Hugging Face, servisu treće strane. "
+"AnduinOS nije povezan s Hugging Faceom niti ga sponzorira ili s njim "
+"surađuje.\n"
+"\n"
+"Ako nastavite, računalo će se izravno povezati s huggingface.co. Hugging "
+"Face primit će vašu javnu IP adresu koja može otkriti vašu približnu "
+"lokaciju.\n"
+"\n"
+"Pravila privatnosti: https://huggingface.co/privacy"
+
+#: src/anduinos_whisper_gtk/app.py:718
+msgid "Retry"
+msgstr "Pokušaj ponovno"
+
+#: src/anduinos_whisper_gtk/app.py:719
+msgid "Model download failed"
+msgstr "Preuzimanje modela nije uspjelo"
+
+#: src/anduinos_whisper_gtk/app.py:728
+#, python-format
+msgid "Remove %s model?"
+msgstr "Ukloniti model %s?"
+
+#: src/anduinos_whisper_gtk/app.py:729
+msgid "The model can be downloaded again later."
+msgstr "Model možete ponovno preuzeti poslije."
+
+#: src/anduinos_whisper_gtk/app.py:732
+msgid "Remove"
+msgstr "Ukloni"
+
+#: src/anduinos_whisper_gtk/app.py:771
+msgid "In Use"
+msgstr "U upotrebi"
+
+#: src/anduinos_whisper_gtk/app.py:777
+msgid "Download"
+msgstr "Preuzmi"
+
+#: src/anduinos_whisper_gtk/app.py:783
+msgid "Stop Test"
+msgstr "Zaustavi test"
+
+#: src/anduinos_whisper_gtk/app.py:819
+msgid "AnduinOS Voice Typing"
+msgstr "Glasovno tipkanje AnduinOS-a"
+
+#: src/anduinos_whisper_gtk/app.py:821
+msgid "AnduinOS Team"
+msgstr "Tim AnduinOS-a"
+
+#: src/anduinos_whisper_gtk/app.py:823
+msgid "Private, offline speech-to-text for the whole desktop."
+msgstr ""
+"Privatno izvanmrežno pretvaranje govora u tekst za cijelu radnu površinu."
+
+#: src/anduinos_whisper_gtk/app.py:831
+#, python-format
+msgid "%.0f MB"
+msgstr "%.0f MB"
+
+#: data/voice-typing@anduinos.com/extension.js:72
+msgid "Loading speech model…"
+msgstr "Učitavanje modela govora…"
+
+#: data/voice-typing@anduinos.com/extension.js:73
+msgid "Measuring performance — microphone off"
+msgstr "Mjerenje performansi — mikrofon je isključen"
+
+#: data/voice-typing@anduinos.com/extension.js:75
+msgid "Recognizing…"
+msgstr "Prepoznavanje…"
+
+#: data/voice-typing@anduinos.com/extension.js:76
+#: data/voice-typing@anduinos.com/extension.js:405
+msgid "Finishing recognition…"
+msgstr "Dovršavanje prepoznavanja…"
+
+#: data/voice-typing@anduinos.com/extension.js:77
+msgid "Testing microphone…"
+msgstr "Testiranje mikrofona…"
+
+#: data/voice-typing@anduinos.com/extension.js:78
+msgid "No speech detected"
+msgstr "Govor nije prepoznat"
+
+#: data/voice-typing@anduinos.com/extension.js:79
+msgid "Microphone unavailable"
+msgstr "Mikrofon nije dostupan"
+
+#: data/voice-typing@anduinos.com/extension.js:83
+#: data/voice-typing@anduinos.com/extension.js:84
+#, javascript-format
+msgid "Performance test… %ds"
+msgstr "Testiranje performansi… %d s"
+
+#: data/voice-typing@anduinos.com/extension.js:88
+#: data/voice-typing@anduinos.com/extension.js:348
+msgid "Auto"
+msgstr "Auto"
+
+#: data/voice-typing@anduinos.com/extension.js:601
+msgid "Voice typing is disabled in password fields"
+msgstr "Glasovno tipkanje onemogućeno je u poljima za lozinku"
+
+#: data/voice-typing@anduinos.com/extension.js:607
+msgid "Select a text field before dictating"
+msgstr "Odaberite tekstno polje prije diktiranja"
