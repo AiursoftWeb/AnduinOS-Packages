@@ -7870,6 +7870,9 @@ def build_progress_page(plan: InstallPlan, shared, nav_view, *, encryption_crede
         "verify-dkms-signatures": _(
             "Verify kernel module signatures", lang
         ),
+        "prepare-display-compatibility": _(
+            "Prepare display compatibility mode", lang
+        ),
         "install-bootloader": _("Install bootloader", lang),
         "create-fallback-boot-chain": _("Create fallback boot chain", lang),
         "deploy-recovery-environment": _("Deploy recovery environment", lang),

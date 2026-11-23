@@ -7,9 +7,11 @@ from unittest.mock import patch
 
 from fakes import FakeRunner
 from helpers import valid_plan
+from installer_core import display_compatibility
 from installer_core.bootloader import (
     InstallBootloaderStep,
     CreateFallbackBootChainStep,
+    PrepareDisplayCompatibilityStep,
     _deploy_portable_fallback,
     _ensure_vendor_nvram_first,
     _portable_fallback_paths,
@@ -17,6 +19,7 @@ from installer_core.bootloader import (
     _verify_portable_fallback,
     _verify_grub_filesystem_modules,
 )
+from installer_core.executor import InstallerExecutor
 from installer_core.boot_commands import build_boot_commands
 from installer_core.esp import (
     NvramInspection,
@@ -93,6 +96,40 @@ def erase_context_values(target: Path) -> dict[str, object]:
 
 
 class InstallBootloaderTests(unittest.TestCase):
+    def test_only_intel_integrated_graphics_installs_display_compatibility_generator(self):
+        for visible in (False, True):
+            with self.subTest(visible=visible), tempfile.TemporaryDirectory() as directory:
+                target = Path(directory)
+                prepare_target(target)
+                prepare_vendor(target)
+                script = target / display_compatibility.GRUB_SCRIPT
+                script.parent.mkdir(parents=True)
+                runner = self.compatible_runner(target)
+                update_grub = ("chroot", str(target), "update-grub")
+                run = runner.run
+
+                def check_generator(command, **kwargs):
+                    if tuple(command) == update_grub:
+                        self.assertEqual(script.is_file(), visible)
+                    return run(command, **kwargs)
+
+                context = InstallContext(valid_plan(), lambda _msg: None, erase_context_values(target))
+                with patch(
+                    "installer_core.executor.intel_integrated_graphics_visible", return_value=visible
+                ), patch.object(runner, "run", side_effect=check_generator):
+                    for step in InstallerExecutor(context.log, runner=runner).build_steps(context.plan):
+                        if isinstance(step, PrepareDisplayCompatibilityStep):
+                            step.execute(context)
+                            step.verify(context)
+                        if isinstance(step, InstallBootloaderStep):
+                            step.execute(context)
+                self.assertEqual(script.exists(), visible)
+                if visible:
+                    self.assertEqual(script.stat().st_mode & 0o777, 0o755)
+                    self.assertEqual(
+                        script.read_bytes(), Path(display_compatibility.__file__).read_bytes()
+                    )
+
     def test_package_upgrade_is_signed_before_final_bootloader_installation(self):
         for arch in Architecture:
             for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):

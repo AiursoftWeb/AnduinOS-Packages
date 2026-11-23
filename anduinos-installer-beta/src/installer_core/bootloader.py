@@ -13,6 +13,7 @@ from uuid import UUID
 from anduinos_secureboot.boot_chain import graphical_grub_configuration, verify_grub_configuration
 from anduinos_secureboot.defaults import atomic_write
 
+from . import display_compatibility
 from .boot_commands import build_boot_commands
 from .command import CommandRunner
 from .esp import (
@@ -48,6 +49,32 @@ INITRD_ADVANCED_FILESYSTEM_MODULES = {
     Filesystem.XFS: "kernel/fs/xfs/xfs.ko",
     Filesystem.F2FS: "kernel/fs/f2fs/f2fs.ko",
 }
+
+
+@dataclass
+class PrepareDisplayCompatibilityStep:
+    id: str = "prepare-display-compatibility"
+    title: str = "Prepare display compatibility mode"
+    failure_policy: FailurePolicy = FailurePolicy.FATAL
+    progress_weight: int = 1
+    destructive: bool = False
+
+    def preflight(self, context: InstallContext) -> None:
+        context.validate_plan()
+
+    def execute(self, context: InstallContext) -> None:
+        atomic_write(
+            _target(context) / display_compatibility.GRUB_SCRIPT,
+            Path(display_compatibility.__file__).read_bytes(),
+            0o755,
+        )
+
+    def verify(self, context: InstallContext) -> None:
+        if not os.access(_target(context) / display_compatibility.GRUB_SCRIPT, os.X_OK):
+            raise RuntimeError("The display compatibility boot generator is missing or not executable")
+
+    def cleanup(self, context: InstallContext) -> None:
+        return None
 
 
 @dataclass
