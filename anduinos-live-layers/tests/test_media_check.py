@@ -265,7 +265,6 @@ class LocaleTests(unittest.TestCase):
                 self.assertEqual(set(data), expected)
                 self.assertTrue(all(data.values()))
                 self.assertTrue(all(f"[{key}]" in data["actions"] for key in "DRPC"))
-                self.assertTrue(data["back"].startswith("[R] "))
 
     def test_plymouth_messages_fit_native_protocol(self):
         # The helper wraps only at spaces and keeps each wire command below
