@@ -135,6 +135,18 @@ class LocalizationTests(unittest.TestCase):
         self.assertEqual(_("Next", "hr"), "Dalje")
         self.assertEqual(_("Croatian", "hr"), "Hrvatski")
 
+    def test_croatian_unencrypted_installation_warning_is_localized(self):
+        source = (
+            "Anyone with physical access to this computer will be able to access "
+            "your data. Set a disk password to protect your data."
+        )
+        self.assertEqual(
+            _(source, "hr"),
+            "Svatko tko ima fizički pristup ovom računalu moći će pristupiti "
+            "vašim podacima. Postavite lozinku diska kako biste zaštitili "
+            "svoje podatke.",
+        )
+
     def test_external_drive_mode_explanation_is_localized(self):
         source = (
             "External drive mode — AnduinOS will add a portable UEFI boot "

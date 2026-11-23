@@ -253,9 +253,10 @@ if args and args[0] == "watch-keystroke":
 
 
 class LocaleTests(unittest.TestCase):
-    def test_all_28_live_locales_have_complete_messages(self):
+    def test_all_29_live_locales_have_complete_messages(self):
         locales = list((ROOT / "data/media-check").glob("*.txt"))
-        self.assertEqual(len(locales), 28)
+        self.assertEqual(len(locales), 29)
+        self.assertIn(ROOT / "data/media-check/hr_HR.txt", locales)
         expected = set(line.split("=", 1)[0] for line in
                        (ROOT / "data/media-check/en_US.txt").read_text().splitlines())
         for path in locales:
