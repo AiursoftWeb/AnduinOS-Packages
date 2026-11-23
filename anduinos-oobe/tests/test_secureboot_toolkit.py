@@ -98,7 +98,7 @@ class SecureBootToolkitTests(unittest.TestCase):
     def test_all_oobe_catalogs_are_complete_and_format_safe(self):
         translated_msgid = re.compile(r'^msgid "[^"].*"$', re.MULTILINE)
         po_files = sorted((ROOT / "po").glob("*.po"))
-        self.assertEqual(len(po_files), 28)
+        self.assertEqual(len(po_files), 29)
         for po_file in po_files:
             subprocess.run(
                 [

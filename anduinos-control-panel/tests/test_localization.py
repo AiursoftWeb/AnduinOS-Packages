@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY = ROOT.parent
 
 
-def official_locale_names():
+def application_locale_names():
     policy = json.loads(
         (REPOSITORY / "anduinos-installer-beta/data/languages.json").read_text(
             encoding="utf-8"
@@ -23,7 +23,7 @@ def official_locale_names():
         language["locale"].split(".", 1)[0]
         for language in policy["languages"]
         if language["code"] != policy["default_language"]
-    }
+    } | {"hr"}
 
 
 class LocalizationTests(unittest.TestCase):
@@ -45,8 +45,8 @@ class LocalizationTests(unittest.TestCase):
                 with compiled.open("rb") as stream:
                     cls.catalogs[catalog.stem] = gettext.GNUTranslations(stream)
 
-    def test_catalogs_cover_all_official_locales_and_messages(self):
-        self.assertEqual(set(self.catalogs), official_locale_names() | {"en_US"})
+    def test_catalogs_cover_all_application_locales_and_messages(self):
+        self.assertEqual(set(self.catalogs), application_locale_names() | {"en_US"})
         for locale in self.catalogs:
             with self.subTest(locale=locale):
                 # English source fallback is intentional; all other catalogs
@@ -77,6 +77,7 @@ class LocalizationTests(unittest.TestCase):
             "fi_FI": r"peilipalveli",
             "fr_FR": r"miroir",
             "hi_IN": r"मिरर",
+            "hr": r"zrcaln\w+ poslužitelj",
             "id_ID": r"server cermin",
             "it_IT": r"mirror",
             "ja_JP": r"ミラー",
@@ -139,12 +140,11 @@ class LocalizationTests(unittest.TestCase):
                         f"{locale}: {message}",
                     )
 
-    def test_boot_resolution_warning_is_localized_in_all_28_catalogs(self):
+    def test_boot_resolution_warning_is_localized_in_all_catalogs(self):
         message = (
             "High resolution can make menu text small on 4K displays; "
             "the screen's native resolution is not guaranteed at boot."
         )
-        self.assertEqual(len(self.catalogs), 28)
         for locale, translations in self.catalogs.items():
             with self.subTest(locale=locale):
                 translated = translations.gettext(message)
@@ -219,7 +219,7 @@ class LocalizationTests(unittest.TestCase):
             self.assertIn(f"msgid {json.dumps(message)}", template)
 
     def test_desktop_and_polkit_assets_cover_every_non_source_locale(self):
-        expected = official_locale_names()
+        expected = application_locale_names()
         desktop = (ROOT / "data/com.anduinos.ControlPanel.desktop").read_text(
             encoding="utf-8"
         )

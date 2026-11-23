@@ -1,0 +1,1186 @@
+# Croatian translations for anduinos-control-panel.
+# Croatian translation contributions by Viktor (drdrummie), 2026.
+# SPDX-License-Identifier: GPL-3.0-only
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-control-panel\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-28 14:56+0000\n"
+"PO-Revision-Date: 2026-11-23 04:07+0000\n"
+"Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
+"Language-Team: Croatian\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+#: src/anduinos_control_panel/app.py:80 src/anduinos_control_panel/app.py:100
+#: data/com.anduinos.ControlPanel.desktop:3
+msgid "Control Panel"
+msgstr "Upravljačka ploča"
+
+#: src/anduinos_control_panel/app.py:100
+msgid "AnduinOS"
+msgstr "AnduinOS"
+
+#: src/anduinos_control_panel/app.py:104 src/anduinos_control_panel/app.py:1926
+msgid "Search Control Panel"
+msgstr "Pretraži upravljačku ploču"
+
+#: src/anduinos_control_panel/app.py:105
+msgid "Search settings"
+msgstr "Pretraži postavke"
+
+#: src/anduinos_control_panel/app.py:112
+msgid "About Control Panel"
+msgstr "O upravljačkoj ploči"
+
+#: src/anduinos_control_panel/app.py:114
+msgid "Main Menu"
+msgstr "Glavni izbornik"
+
+#: src/anduinos_control_panel/app.py:136
+msgid "Adjust your computer's settings"
+msgstr "Prilagodite postavke računala"
+
+#: src/anduinos_control_panel/app.py:139
+msgid "Choose a category below, or search for a setting."
+msgstr "Odaberite kategoriju u nastavku ili potražite postavku."
+
+#: src/anduinos_control_panel/app.py:155
+msgid "No settings found"
+msgstr "Nema pronađenih postavki"
+
+#: src/anduinos_control_panel/app.py:156
+msgid "Try a different search."
+msgstr "Pokušajte s drukčijim pojmom."
+
+#: src/anduinos_control_panel/app.py:243
+#: src/anduinos_control_panel/topics.py:144
+msgid "Configure NetworkManager connection profiles"
+msgstr "Konfigurirajte profile povezivanja u NetworkManageru"
+
+#: src/anduinos_control_panel/app.py:245
+msgid "Install Advanced Network Configuration"
+msgstr "Instaliraj naprednu konfiguraciju mreže"
+
+#: src/anduinos_control_panel/app.py:252
+msgid "System"
+msgstr "Sustav"
+
+#: src/anduinos_control_panel/app.py:257
+msgid "Security"
+msgstr "Sigurnost"
+
+#: src/anduinos_control_panel/app.py:262
+msgid "Network and Internet"
+msgstr "Mreža i internet"
+
+#: src/anduinos_control_panel/app.py:267
+msgid "User Accounts"
+msgstr "Korisnički računi"
+
+#: src/anduinos_control_panel/app.py:275
+msgid "Hardware and Drivers"
+msgstr "Hardver i upravljački programi"
+
+#: src/anduinos_control_panel/app.py:283
+msgid "Scan documents and select a scanner"
+msgstr "Skenirajte dokumente i odaberite skener"
+
+#: src/anduinos_control_panel/app.py:285
+msgid "Install Document Scanner"
+msgstr "Instaliraj skener dokumenata"
+
+#: src/anduinos_control_panel/app.py:291
+msgid "Appearance"
+msgstr "Izgled"
+
+#: src/anduinos_control_panel/app.py:299
+msgid "Programs"
+msgstr "Programi"
+
+#: src/anduinos_control_panel/app.py:307
+#: src/anduinos_control_panel/topics.py:273
+msgid "Manage application permissions with Flatseal"
+msgstr "Upravljajte dopuštenjima aplikacija pomoću Flatseala"
+
+#: src/anduinos_control_panel/app.py:309
+msgid "Install Flatseal to manage application permissions"
+msgstr "Instalirajte Flatseal za upravljanje dopuštenjima aplikacija"
+
+#: src/anduinos_control_panel/app.py:315
+msgid "AI Stack"
+msgstr "Alati za umjetnu inteligenciju"
+
+#: src/anduinos_control_panel/app.py:320 src/anduinos_control_panel/app.py:324
+msgid "Installed"
+msgstr "Instalirano"
+
+#: src/anduinos_control_panel/app.py:320 src/anduinos_control_panel/app.py:324
+#: src/anduinos_control_panel/prediction_settings.py:44
+msgid "Not installed"
+msgstr "Nije instalirano"
+
+#: src/anduinos_control_panel/app.py:329
+msgid "Configure microphone, language, shortcut, and training"
+msgstr "Konfigurirajte mikrofon, jezik, prečac i treniranje"
+
+#: src/anduinos_control_panel/app.py:331
+msgid "Install private, offline speech-to-text"
+msgstr "Instalirajte privatno izvanmrežno pretvaranje govora u tekst"
+
+#: src/anduinos_control_panel/app.py:337 src/anduinos_control_panel/app.py:1010
+msgid "Windows Compatibility"
+msgstr "Kompatibilnost sa sustavom Windows"
+
+#: src/anduinos_control_panel/app.py:343
+msgid "Open your Windows application environments"
+msgstr "Otvorite svoja okruženja za aplikacije sustava Windows"
+
+#: src/anduinos_control_panel/app.py:345
+msgid "Install Bottles to run Windows applications"
+msgstr "Instalirajte Bottles za pokretanje aplikacija sustava Windows"
+
+#: src/anduinos_control_panel/app.py:351
+msgid "Backup and Recovery"
+msgstr "Sigurnosno kopiranje i oporavak"
+
+#: src/anduinos_control_panel/app.py:393
+msgid "Open Deja Dup backups"
+msgstr "Otvorite sigurnosne kopije u aplikaciji Deja Dup"
+
+#: src/anduinos_control_panel/app.py:395
+msgid "Install Deja Dup from the app store"
+msgstr "Instalirajte Deja Dup iz trgovine aplikacija"
+
+#: src/anduinos_control_panel/app.py:406 src/anduinos_control_panel/app.py:423
+#: src/anduinos_control_panel/app.py:437 src/anduinos_control_panel/app.py:1957
+msgid "Setting not found"
+msgstr "Postavka nije pronađena"
+
+#: src/anduinos_control_panel/app.py:556 src/anduinos_control_panel/app.py:567
+#: src/anduinos_control_panel/app.py:576
+msgid "Could not open this setting"
+msgstr "Nije moguće otvoriti ovu postavku"
+
+#: src/anduinos_control_panel/app.py:575
+msgid "The application exited before it could be opened."
+msgstr "Aplikacija se zatvorila prije otvaranja."
+
+#: src/anduinos_control_panel/app.py:582
+msgid "OK"
+msgstr "U redu"
+
+#: src/anduinos_control_panel/app.py:588 src/anduinos_control_panel/app.py:980
+#, python-format
+msgid "Install %s?"
+msgstr "Instalirati %s?"
+
+#: src/anduinos_control_panel/app.py:590
+#, python-format
+msgid ""
+"%s is a recommended component, but it is not installed. You can reinstall it "
+"now."
+msgstr ""
+"%s je preporučena komponenta, ali nije instalirana. Možete je sada ponovno "
+"instalirati."
+
+#: src/anduinos_control_panel/app.py:595 src/anduinos_control_panel/app.py:983
+#: src/anduinos_control_panel/app.py:1084
+#: src/anduinos_control_panel/app.py:1307
+#: src/anduinos_control_panel/app.py:1508
+#: src/anduinos_control_panel/app.py:1714
+#: src/anduinos_control_panel/prediction_settings.py:142
+msgid "Cancel"
+msgstr "Odustani"
+
+#: src/anduinos_control_panel/app.py:596 src/anduinos_control_panel/app.py:1510
+#: src/anduinos_control_panel/prediction_settings.py:46
+msgid "Install"
+msgstr "Instaliraj"
+
+#: src/anduinos_control_panel/app.py:605
+#, python-format
+msgid "Installing %s…"
+msgstr "Instaliranje komponente %s…"
+
+#: src/anduinos_control_panel/app.py:614
+#, python-format
+msgid "%s installed"
+msgstr "%s je instaliran"
+
+#: src/anduinos_control_panel/app.py:621 src/anduinos_control_panel/app.py:849
+#: src/anduinos_control_panel/app.py:947
+#: src/anduinos_control_panel/software_sources.py:552
+msgid "Authentication was cancelled."
+msgstr "Autentifikacija je otkazana."
+
+#: src/anduinos_control_panel/app.py:623
+msgid "The recommended component could not be installed."
+msgstr "Nije moguće instalirati preporučenu komponentu."
+
+#: src/anduinos_control_panel/app.py:624
+msgid "Installation failed"
+msgstr "Instalacija nije uspjela"
+
+#: src/anduinos_control_panel/app.py:672
+#: src/anduinos_control_panel/topics.py:86
+msgid "Startup and Boot"
+msgstr "Pokretanje sustava"
+
+#: src/anduinos_control_panel/app.py:690
+msgid "Boot menu"
+msgstr "Izbornik pokretanja"
+
+#: src/anduinos_control_panel/app.py:692
+msgid "Choose how long the boot menu waits before starting the default system."
+msgstr "Odaberite koliko dugo izbornik čeka prije pokretanja zadanog sustava."
+
+#: src/anduinos_control_panel/app.py:697
+msgid "Default operating system"
+msgstr "Zadani operacijski sustav"
+
+#: src/anduinos_control_panel/app.py:698
+msgid "Starts automatically when the boot menu wait time ends."
+msgstr "Automatski se pokreće nakon isteka vremena čekanja u izborniku."
+
+#: src/anduinos_control_panel/app.py:700 src/anduinos_control_panel/app.py:830
+msgid "Current setting (unchanged)"
+msgstr "Trenutačna postavka (nepromijenjena)"
+
+#: src/anduinos_control_panel/app.py:704 src/anduinos_control_panel/app.py:1173
+#: src/anduinos_control_panel/app.py:1396
+#: src/anduinos_control_panel/app.py:1625
+#: src/anduinos_control_panel/app.py:1820
+msgid "Retry"
+msgstr "Pokušaj ponovno"
+
+#: src/anduinos_control_panel/app.py:708
+msgid "Authentication is required to read the boot menu."
+msgstr "Za čitanje izbornika pokretanja potrebna je autentifikacija."
+
+#: src/anduinos_control_panel/app.py:711
+msgid "Boot menu wait time"
+msgstr "Vrijeme čekanja izbornika pokretanja"
+
+#: src/anduinos_control_panel/app.py:713
+msgid "The same delay is used after an interrupted or unsuccessful startup."
+msgstr ""
+"Isto vrijeme čekanja koristi se nakon prekinutog ili neuspješnog pokretanja."
+
+#: src/anduinos_control_panel/app.py:720
+#, python-format
+msgid "%d seconds"
+msgstr "%d s"
+
+#: src/anduinos_control_panel/app.py:732
+msgid "Boot display"
+msgstr "Prikaz pri pokretanju"
+
+#: src/anduinos_control_panel/app.py:734
+msgid "Choose the size of the GRUB menu and startup logo."
+msgstr "Odaberite veličinu GRUB izbornika i logotipa pri pokretanju."
+
+#: src/anduinos_control_panel/app.py:736
+msgid ""
+"High resolution can make menu text small on 4K displays; the screen's native "
+"resolution is not guaranteed at boot."
+msgstr ""
+"Visoka razlučivost može smanjiti tekst izbornika na 4K zaslonima; izvorna "
+"razlučivost zaslona nije zajamčena pri pokretanju."
+
+#: src/anduinos_control_panel/app.py:740
+msgid "Display mode"
+msgstr "Način prikaza"
+
+#: src/anduinos_control_panel/app.py:747
+msgid "High resolution (if available)"
+msgstr "Visoka razlučivost (ako je dostupna)"
+
+#: src/anduinos_control_panel/app.py:747
+#: src/anduinos_control_panel/software_sources.py:394
+msgid "Automatic"
+msgstr "Automatski"
+
+#: src/anduinos_control_panel/app.py:747
+msgid "Large text mode"
+msgstr "Način s velikim tekstom"
+
+#: src/anduinos_control_panel/app.py:769 src/anduinos_control_panel/app.py:1157
+#: src/anduinos_control_panel/app.py:1380
+#: src/anduinos_control_panel/app.py:1607
+#: src/anduinos_control_panel/app.py:1799
+msgid "Close"
+msgstr "Zatvori"
+
+#: src/anduinos_control_panel/app.py:771 src/anduinos_control_panel/app.py:1716
+#: src/anduinos_control_panel/app.py:1720
+msgid "Apply"
+msgstr "Primijeni"
+
+#: src/anduinos_control_panel/app.py:827
+msgid "Custom setting (unchanged)"
+msgstr "Prilagođena postavka (nepromijenjena)"
+
+#: src/anduinos_control_panel/app.py:842
+msgid "Only operating systems already in the boot menu are listed."
+msgstr ""
+"Prikazani su samo operacijski sustavi koji se već nalaze u izborniku "
+"pokretanja."
+
+#: src/anduinos_control_panel/app.py:843
+msgid "No supported operating systems were found in the boot menu."
+msgstr "U izborniku pokretanja nisu pronađeni podržani operacijski sustavi."
+
+#: src/anduinos_control_panel/app.py:846 src/anduinos_control_panel/app.py:850
+msgid "The boot menu could not be read."
+msgstr "Nije moguće pročitati izbornik pokretanja."
+
+#: src/anduinos_control_panel/app.py:861
+msgid "Reading the boot menu…"
+msgstr "Čitanje izbornika pokretanja…"
+
+#: src/anduinos_control_panel/app.py:916
+msgid "Updating the boot menu…"
+msgstr "Ažuriranje izbornika pokretanja…"
+
+#: src/anduinos_control_panel/app.py:939
+msgid "Boot settings updated. The change applies on the next startup."
+msgstr ""
+"Postavke pokretanja ažurirane su. Promjena se primjenjuje pri sljedećem "
+"pokretanju."
+
+#: src/anduinos_control_panel/app.py:942
+msgid "Boot settings updated"
+msgstr "Postavke pokretanja ažurirane su"
+
+#: src/anduinos_control_panel/app.py:949
+msgid "The boot setting could not be changed."
+msgstr "Nije moguće promijeniti postavku pokretanja."
+
+#: src/anduinos_control_panel/app.py:981
+msgid "This application is available from the app store."
+msgstr "Ova je aplikacija dostupna u trgovini aplikacija."
+
+#: src/anduinos_control_panel/app.py:984
+msgid "Open App Store"
+msgstr "Otvori trgovinu aplikacija"
+
+#: src/anduinos_control_panel/app.py:1028
+msgid "Bottles"
+msgstr "Bottles"
+
+#: src/anduinos_control_panel/app.py:1030
+msgid ""
+"Run Windows applications in isolated compatibility environments powered by "
+"Wine and Bottles."
+msgstr ""
+"Pokrećite aplikacije sustava Windows u izoliranim okruženjima za "
+"kompatibilnost pomoću Winea i Bottlesa."
+
+#: src/anduinos_control_panel/app.py:1035
+msgid "Install Bottles"
+msgstr "Instaliraj Bottles"
+
+#: src/anduinos_control_panel/app.py:1036
+msgid "Downloads Bottles and its runtime from Flathub"
+msgstr "Preuzima Bottles i njegovo izvršno okruženje s Flathuba"
+
+#: src/anduinos_control_panel/app.py:1052
+#: src/anduinos_control_panel/app.py:1275
+#: src/anduinos_control_panel/app.py:1478
+#: src/anduinos_control_panel/app.py:1682
+#: src/anduinos_control_panel/prediction_settings.py:84
+msgid "Advanced Output"
+msgstr "Detaljan ispis"
+
+#: src/anduinos_control_panel/app.py:1086
+#: src/anduinos_control_panel/app.py:1309
+msgid "Start"
+msgstr "Pokreni"
+
+#: src/anduinos_control_panel/app.py:1128
+#: src/anduinos_control_panel/app.py:1351
+#: src/anduinos_control_panel/app.py:1547
+msgid "Installing…"
+msgstr "Instaliranje…"
+
+#: src/anduinos_control_panel/app.py:1130
+msgid "Downloading and installing Bottles… This may take a few minutes."
+msgstr ""
+"Preuzimanje i instaliranje Bottlesa… To može potrajati nekoliko minuta."
+
+#: src/anduinos_control_panel/app.py:1135
+msgid "Preparing Flathub and Bottles installation…"
+msgstr "Priprema instalacije Flathuba i Bottlesa…"
+
+#: src/anduinos_control_panel/app.py:1149
+msgid "✓ Bottles is ready."
+msgstr "✓ Bottles je spreman."
+
+#: src/anduinos_control_panel/app.py:1153
+#: src/anduinos_control_panel/app.py:1376
+#: src/anduinos_control_panel/app.py:1574
+#: src/anduinos_control_panel/app.py:1795
+msgid "✓ Installation completed successfully."
+msgstr "✓ Instalacija je uspješno dovršena."
+
+#: src/anduinos_control_panel/app.py:1155
+msgid "Open Bottles"
+msgstr "Otvori Bottles"
+
+#: src/anduinos_control_panel/app.py:1160
+msgid "Bottles installed"
+msgstr "Bottles je instaliran"
+
+#: src/anduinos_control_panel/app.py:1166
+#: src/anduinos_control_panel/app.py:1389
+#: src/anduinos_control_panel/app.py:1618
+msgid "✗ Installation failed. Review Advanced Output."
+msgstr "✗ Instalacija nije uspjela. Provjerite detaljan ispis."
+
+#: src/anduinos_control_panel/app.py:1171
+#: src/anduinos_control_panel/app.py:1394
+#: src/anduinos_control_panel/app.py:1623
+#: src/anduinos_control_panel/app.py:1818
+msgid "✗ Operation failed: "
+msgstr "✗ Radnja nije uspjela: "
+
+#: src/anduinos_control_panel/app.py:1206
+msgid "Deja Dup Backups"
+msgstr "Sigurnosne kopije Deja Dup"
+
+#: src/anduinos_control_panel/app.py:1215
+msgid "Factory Reset Is Not Available"
+msgstr "Vraćanje na tvorničke postavke nije dostupno"
+
+#: src/anduinos_control_panel/app.py:1217
+msgid ""
+"This system does not support factory reset. Reinstall AnduinOS and choose "
+"the Btrfs filesystem to enable it."
+msgstr ""
+"Ovaj sustav ne podržava vraćanje na tvorničke postavke. Ponovno instalirajte "
+"AnduinOS i odaberite datotečni sustav Btrfs kako biste omogućili tu "
+"mogućnost."
+
+#: src/anduinos_control_panel/app.py:1233
+#: src/anduinos_control_panel/topics.py:272
+msgid "Permission Settings"
+msgstr "Postavke dopuštenja"
+
+#: src/anduinos_control_panel/app.py:1251
+msgid "Flatseal"
+msgstr "Flatseal"
+
+#: src/anduinos_control_panel/app.py:1253
+msgid ""
+"Review and control what files, devices, network connections, and services "
+"Flatpak applications can access."
+msgstr ""
+"Pregledajte i kontrolirajte kojim datotekama, uređajima, mrežnim vezama i "
+"uslugama aplikacije Flatpak mogu pristupiti."
+
+#: src/anduinos_control_panel/app.py:1258
+msgid "Install Flatseal"
+msgstr "Instaliraj Flatseal"
+
+#: src/anduinos_control_panel/app.py:1260
+msgid "Administrator authentication is required when installation starts"
+msgstr "Pri početku instalacije potrebna je administratorska autentifikacija"
+
+#: src/anduinos_control_panel/app.py:1352
+msgid "Downloading and installing Flatseal…"
+msgstr "Preuzimanje i instaliranje Flatseala…"
+
+#: src/anduinos_control_panel/app.py:1357
+msgid "Preparing Flatseal installation…"
+msgstr "Priprema instalacije Flatseala…"
+
+#: src/anduinos_control_panel/app.py:1372
+msgid "✓ Flatseal is ready."
+msgstr "✓ Flatseal je spreman."
+
+#: src/anduinos_control_panel/app.py:1378
+msgid "Open Flatseal"
+msgstr "Otvori Flatseal"
+
+#: src/anduinos_control_panel/app.py:1383
+msgid "Flatseal installed"
+msgstr "Flatseal je instaliran"
+
+#: src/anduinos_control_panel/app.py:1425
+msgid "Install Voice Typing"
+msgstr "Instaliraj glasovno tipkanje"
+
+#: src/anduinos_control_panel/app.py:1443
+msgid "Offline Voice Typing"
+msgstr "Izvanmrežno glasovno tipkanje"
+
+#: src/anduinos_control_panel/app.py:1445
+msgid ""
+"Press Super + H to dictate into browsers, editors, messages, terminals, and "
+"other applications. Audio stays on this computer."
+msgstr ""
+"Pritisnite Super + H za diktiranje u preglednicima, uređivačima, porukama, "
+"terminalima i drugim aplikacijama. Zvuk ostaje na ovom računalu."
+
+#: src/anduinos_control_panel/app.py:1450
+msgid "Private by default"
+msgstr "Privatnost je uključena prema zadanim postavkama"
+
+#: src/anduinos_control_panel/app.py:1451
+msgid "Speech is recognized locally with whisper.cpp"
+msgstr "Govor se prepoznaje lokalno pomoću whisper.cpp-a"
+
+#: src/anduinos_control_panel/app.py:1456
+msgid "About 140 MB to download"
+msgstr "Približno 140 MB za preuzimanje"
+
+#: src/anduinos_control_panel/app.py:1458
+msgid ""
+"Includes the multilingual Base model; optional models are available later"
+msgstr "Uključuje višejezični model Base; dodatni modeli dostupni su naknadno"
+
+#: src/anduinos_control_panel/app.py:1467
+#: src/anduinos_control_panel/prediction_settings.py:177
+msgid "Administrator authentication is required when installation starts."
+msgstr "Pri početku instalacije potrebna je administratorska autentifikacija."
+
+#: src/anduinos_control_panel/app.py:1552
+msgid "Downloading the local engine and multilingual speech model…"
+msgstr "Preuzimanje lokalnog mehanizma i višejezičnog modela za govor…"
+
+#: src/anduinos_control_panel/app.py:1558
+msgid "Preparing Voice Typing installation…"
+msgstr "Priprema instalacije glasovnog tipkanja…"
+
+#: src/anduinos_control_panel/app.py:1601
+msgid ""
+"✓ Installed. Sign out and back in once, then press Super + H to start Voice "
+"Typing."
+msgstr ""
+"✓ Instalirano. Odjavite se i ponovno prijavite, a zatim pritisnite Super + H "
+"za pokretanje glasovnog tipkanja."
+
+#: src/anduinos_control_panel/app.py:1605
+msgid "Open Settings"
+msgstr "Otvori postavke"
+
+#: src/anduinos_control_panel/app.py:1611
+msgid "Voice Typing installed — sign out to finish"
+msgstr "Glasovno tipkanje je instalirano — odjavite se za dovršetak"
+
+#: src/anduinos_control_panel/app.py:1642
+#: src/anduinos_control_panel/topics.py:281
+msgid "On-device AI"
+msgstr "Umjetna inteligencija na uređaju"
+
+#: src/anduinos_control_panel/app.py:1660
+msgid "Why AI"
+msgstr "Why AI"
+
+#: src/anduinos_control_panel/app.py:1662
+msgid ""
+"Run the Why AI assistant locally. The model and runtime are installed only "
+"when this option is enabled."
+msgstr ""
+"Pokrenite pomoćnika Why AI lokalno. Model i izvršno okruženje instaliraju se "
+"samo kada je ova mogućnost omogućena."
+
+#: src/anduinos_control_panel/app.py:1667
+msgid "Install on-device AI"
+msgstr "Instaliraj umjetnu inteligenciju na uređaju"
+
+#: src/anduinos_control_panel/app.py:1668
+msgid "Enable the local Why AI stack on this computer"
+msgstr "Omogućite lokalne alate Why AI na ovom računalu"
+
+#: src/anduinos_control_panel/app.py:1762
+msgid "Applying…"
+msgstr "Primjenjivanje…"
+
+#: src/anduinos_control_panel/app.py:1764
+msgid "Downloading and installing Why AI… This may take about 10 minutes."
+msgstr "Preuzimanje i instaliranje Why AI-ja… To može potrajati oko 10 minuta."
+
+#: src/anduinos_control_panel/app.py:1766
+msgid "Disabling the local Why AI stack…"
+msgstr "Onemogućavanje lokalnih alata Why AI…"
+
+#: src/anduinos_control_panel/app.py:1773
+msgid "Preparing package operation…"
+msgstr "Priprema radnje nad paketom…"
+
+#: src/anduinos_control_panel/app.py:1787
+msgid "✓ On-device AI is ready."
+msgstr "✓ Umjetna inteligencija na uređaju spremna je."
+
+#: src/anduinos_control_panel/app.py:1789
+msgid "✓ On-device AI is disabled."
+msgstr "✓ Umjetna inteligencija na uređaju onemogućena je."
+
+#: src/anduinos_control_panel/app.py:1795
+msgid "✓ Change completed successfully."
+msgstr "✓ Promjena je uspješno dovršena."
+
+#: src/anduinos_control_panel/app.py:1804
+msgid "On-device AI enabled"
+msgstr "Umjetna inteligencija na uređaju omogućena je"
+
+#: src/anduinos_control_panel/app.py:1806
+msgid "On-device AI disabled"
+msgstr "Umjetna inteligencija na uređaju onemogućena je"
+
+#: src/anduinos_control_panel/app.py:1814
+msgid "✗ Package operation failed. Review Advanced Output."
+msgstr "✗ Radnja nad paketom nije uspjela. Provjerite detaljan ispis."
+
+#: src/anduinos_control_panel/app.py:1891
+#, python-brace-format
+msgid "{command} exited with status {status}"
+msgstr "Naredba {command} završila je sa statusom {status}"
+
+#: src/anduinos_control_panel/app.py:1918
+msgid "Open a Control Panel topic"
+msgstr "Otvori temu upravljačke ploče"
+
+#: src/anduinos_control_panel/app.py:1919
+msgid "TOPIC"
+msgstr "TEMA"
+
+#: src/anduinos_control_panel/app.py:1927
+msgid "TERMS"
+msgstr "POJMOVI"
+
+#: src/anduinos_control_panel/app.py:1964
+msgid "AnduinOS Control Panel"
+msgstr "Upravljačka ploča AnduinOS-a"
+
+#: src/anduinos_control_panel/app.py:1966
+msgid "AnduinOS Team"
+msgstr "Tim AnduinOS-a"
+
+#: src/anduinos_control_panel/app.py:1968
+msgid "Find and manage AnduinOS system settings."
+msgstr "Pronađite postavke sustava AnduinOS i upravljajte njima."
+
+#: src/anduinos_control_panel/prediction_settings.py:25
+#: src/anduinos_control_panel/prediction_settings.py:41
+#: src/anduinos_control_panel/topics.py:181
+msgid "Bash Command Predictions"
+msgstr "Predviđanje naredbi u Bashu"
+
+#: src/anduinos_control_panel/prediction_settings.py:42
+msgid ""
+"Predict commands locally from your history and current context. No model "
+"download or on-device LLM is needed."
+msgstr ""
+"Predviđajte naredbe lokalno na temelju povijesti i trenutačnog konteksta. "
+"Nije potrebno preuzimanje modela ni lokalni veliki jezični model."
+
+#: src/anduinos_control_panel/prediction_settings.py:45
+msgid "Configure your preferences below, then install to use predictions."
+msgstr ""
+"Prilagodite postavke u nastavku, a zatim instalirajte komponentu za upotrebu "
+"predviđanja."
+
+#: src/anduinos_control_panel/prediction_settings.py:52
+msgid ""
+"Changes take effect in newly opened Bash terminals. Saved settings override "
+"legacy environment variables."
+msgstr ""
+"Promjene se primjenjuju u novootvorenim terminalima Basha. Spremljene "
+"postavke imaju prednost pred starim varijablama okruženja."
+
+#: src/anduinos_control_panel/prediction_settings.py:55
+msgid "Enable command predictions"
+msgstr "Omogući predviđanje naredbi"
+
+#: src/anduinos_control_panel/prediction_settings.py:55
+msgid "Show suggestions while typing in Bash."
+msgstr "Prikaži prijedloge tijekom tipkanja u Bashu."
+
+#: src/anduinos_control_panel/prediction_settings.py:56
+msgid "Learn from command history"
+msgstr "Učenje iz povijesti naredbi"
+
+#: src/anduinos_control_panel/prediction_settings.py:56
+msgid ""
+"Use Bash history, frequency, directories, and command sequences to "
+"personalize suggestions."
+msgstr ""
+"Upotrijebi povijest Basha, učestalost, direktorije i nizove naredbi za "
+"prilagodbu prijedloga."
+
+#: src/anduinos_control_panel/prediction_settings.py:57
+msgid "Remember my usage habits"
+msgstr "Zapamti moje navike korištenja"
+
+#: src/anduinos_control_panel/prediction_settings.py:57
+msgid ""
+"Save learned usage habits on this computer for predictions after closing the "
+"terminal. When off, Bash command history is still used."
+msgstr ""
+"Spremi naučene navike korištenja na ovo računalo za predviđanja nakon "
+"zatvaranja terminala. Kada je isključeno, povijest naredbi Basha i dalje se "
+"koristi."
+
+#: src/anduinos_control_panel/prediction_settings.py:67
+msgid "Clear saved learning"
+msgstr "Obriši spremljene podatke učenja"
+
+#: src/anduinos_control_panel/prediction_settings.py:68
+msgid ""
+"Keeps Bash history and your settings. Reopen existing terminals to discard "
+"their in-memory learning."
+msgstr ""
+"Zadržava povijest Basha i vaše postavke. Ponovno otvorite postojeće "
+"terminale kako biste odbacili njihove podatke učenja u memoriji."
+
+#: src/anduinos_control_panel/prediction_settings.py:69
+#: src/anduinos_control_panel/prediction_settings.py:143
+msgid "Clear"
+msgstr "Obriši"
+
+#: src/anduinos_control_panel/prediction_settings.py:73
+msgid "Restore default settings"
+msgstr "Vrati zadane postavke"
+
+#: src/anduinos_control_panel/prediction_settings.py:73
+msgid "Does not delete learned data."
+msgstr "Ne briše naučene podatke."
+
+#: src/anduinos_control_panel/prediction_settings.py:74
+msgid "Restore Defaults"
+msgstr "Vrati zadane postavke"
+
+#: src/anduinos_control_panel/prediction_settings.py:78
+msgid ""
+"At the end of a line, press Right Arrow or End to accept a suggestion. Press "
+"Enter to run the command."
+msgstr ""
+"Na kraju retka pritisnite strelicu udesno ili End za prihvaćanje prijedloga. "
+"Pritisnite Enter za izvršavanje naredbe."
+
+#: src/anduinos_control_panel/prediction_settings.py:119
+#, python-brace-format
+msgid "Could not update prediction settings: {error}"
+msgstr "Nije moguće ažurirati postavke predviđanja: {error}"
+
+#: src/anduinos_control_panel/prediction_settings.py:134
+msgid "Default settings restored. Reopen Bash terminals to apply them."
+msgstr ""
+"Zadane postavke vraćene su. Ponovno otvorite terminale Basha kako biste ih "
+"primijenili."
+
+#: src/anduinos_control_panel/prediction_settings.py:140
+msgid "Clear saved learning?"
+msgstr "Obrisati spremljene podatke učenja?"
+
+#: src/anduinos_control_panel/prediction_settings.py:141
+msgid "Only prediction learning is removed. Your Bash command history is kept."
+msgstr ""
+"Uklanjaju se samo podaci učenja za predviđanja. Povijest naredbi Basha "
+"ostaje sačuvana."
+
+#: src/anduinos_control_panel/prediction_settings.py:166
+msgid ""
+"Saved learning cleared. Older terminals cannot save it again; reopen them to "
+"resume learning persistence."
+msgstr ""
+"Spremljeni podaci učenja obrisani su. Stariji terminali ne mogu ih ponovno "
+"spremiti; ponovno ih otvorite kako biste nastavili sa spremanjem."
+
+#: src/anduinos_control_panel/prediction_settings.py:185
+msgid "Installation complete. Open a new Bash terminal to use predictions."
+msgstr ""
+"Instalacija je dovršena. Otvorite novi terminal Basha za upotrebu "
+"predviđanja."
+
+#: src/anduinos_control_panel/prediction_settings.py:185
+msgid "Package installation could not be confirmed. Please retry."
+msgstr "Nije moguće potvrditi instalaciju paketa. Pokušajte ponovno."
+
+#: src/anduinos_control_panel/prediction_settings.py:190
+#, python-brace-format
+msgid "Installation failed: {error}"
+msgstr "Instalacija nije uspjela: {error}"
+
+#: src/anduinos_control_panel/software_sources.py:334
+#: src/anduinos_control_panel/software_sources.py:396
+#: src/anduinos_control_panel/topics.py:245
+msgid "Software Source"
+msgstr "Izvor softvera"
+
+#: src/anduinos_control_panel/software_sources.py:371
+msgid "Current mirror"
+msgstr "Trenutačni zrcalni poslužitelj"
+
+#: src/anduinos_control_panel/software_sources.py:397
+msgid "  Switch to Fastest Mirror  "
+msgstr "  Prebaci na najbrži zrcalni poslužitelj  "
+
+#: src/anduinos_control_panel/software_sources.py:406
+msgid "Keep Your System Up to Date"
+msgstr "Održavajte sustav ažurnim"
+
+#: src/anduinos_control_panel/software_sources.py:407
+#: src/anduinos_control_panel/topics.py:246
+msgid "Security patches and the latest features are just a click away."
+msgstr ""
+"Sigurnosni ispravci i najnovije mogućnosti udaljeni su samo jedan klik."
+
+#: src/anduinos_control_panel/software_sources.py:409
+#: src/anduinos_control_panel/software_sources.py:701
+#: src/anduinos_control_panel/software_sources.py:752
+#: src/anduinos_control_panel/software_sources.py:766
+msgid "  Check for Updates  "
+msgstr "  Provjeri ažuriranja  "
+
+#: src/anduinos_control_panel/software_sources.py:417
+msgid "Advanced"
+msgstr "Napredno"
+
+#: src/anduinos_control_panel/software_sources.py:424
+#: src/anduinos_control_panel/software_sources.py:495
+msgid "Custom address…"
+msgstr "Prilagođena adresa…"
+
+#: src/anduinos_control_panel/software_sources.py:437
+msgid "Test mirror speeds"
+msgstr "Testiraj brzine zrcalnih poslužitelja"
+
+#: src/anduinos_control_panel/software_sources.py:440
+#: src/anduinos_control_panel/software_sources.py:668
+msgid "Apply selected mirror"
+msgstr "Primijeni odabrani zrcalni poslužitelj"
+
+#: src/anduinos_control_panel/software_sources.py:445
+msgid "Terminal Output"
+msgstr "Ispis terminala"
+
+#: src/anduinos_control_panel/software_sources.py:498
+msgid "Mirror speed test complete."
+msgstr "Testiranje brzine zrcalnih poslužitelja je dovršeno."
+
+#: src/anduinos_control_panel/software_sources.py:554
+msgid "The original source was restored, but refreshing it failed."
+msgstr "Izvorni je izvor vraćen, ali njegovo osvježavanje nije uspjelo."
+
+#: src/anduinos_control_panel/software_sources.py:556
+msgid "The original source was restored."
+msgstr "Izvorni je izvor vraćen."
+
+#: src/anduinos_control_panel/software_sources.py:557
+#: src/anduinos_control_panel/software_sources.py:615
+#: src/anduinos_control_panel/software_sources.py:744
+msgid "Review Terminal Output for details."
+msgstr "Pojedinosti potražite u ispisu terminala."
+
+#: src/anduinos_control_panel/software_sources.py:585
+#: src/anduinos_control_panel/software_sources.py:632
+msgid "Enter a valid HTTP or HTTPS mirror address."
+msgstr "Unesite valjanu HTTP ili HTTPS adresu zrcalnog poslužitelja."
+
+#: src/anduinos_control_panel/software_sources.py:593
+#: src/anduinos_control_panel/software_sources.py:638
+msgid "Testing mirrors…"
+msgstr "Testiranje zrcalnih poslužitelja…"
+
+#: src/anduinos_control_panel/software_sources.py:595
+msgid "=== Testing mirror speeds ==="
+msgstr "=== Testiranje brzine zrcalnih poslužitelja ==="
+
+#: src/anduinos_control_panel/software_sources.py:613
+msgid "No Ubuntu archive mirror is reachable."
+msgstr "Nijedan zrcalni poslužitelj Ubuntuova arhiva nije dostupan."
+
+#: src/anduinos_control_panel/software_sources.py:619
+msgid "✗ Mirror test failed: "
+msgstr "✗ Testiranje zrcalnih poslužitelja nije uspjelo: "
+
+#: src/anduinos_control_panel/software_sources.py:646
+msgid "Could not validate this mirror for the current system."
+msgstr "Nije moguće provjeriti ovaj zrcalni poslužitelj za trenutačni sustav."
+
+#: src/anduinos_control_panel/software_sources.py:657
+msgid "Latency"
+msgstr "Latencija"
+
+#: src/anduinos_control_panel/software_sources.py:658
+msgid "Bandwidth"
+msgstr "Propusnost"
+
+#: src/anduinos_control_panel/software_sources.py:663
+msgid "This is already your current mirror."
+msgstr "Ovo je već vaš trenutačni zrcalni poslužitelj."
+
+#: src/anduinos_control_panel/software_sources.py:668
+msgid "Fastest Mirror Found"
+msgstr "Pronađen je najbrži zrcalni poslužitelj"
+
+#: src/anduinos_control_panel/software_sources.py:671
+msgid "Switch to this mirror and run apt update?"
+msgstr "Prebaciti se na ovaj zrcalni poslužitelj i pokrenuti apt update?"
+
+#: src/anduinos_control_panel/software_sources.py:674
+msgid "Keep Current"
+msgstr "Zadrži trenutačni"
+
+#: src/anduinos_control_panel/software_sources.py:675
+msgid "Switch"
+msgstr "Prebaci"
+
+#: src/anduinos_control_panel/software_sources.py:684
+msgid "Switching mirror…"
+msgstr "Promjena zrcalnog poslužitelja…"
+
+#: src/anduinos_control_panel/software_sources.py:702
+msgid "✓ Mirror switched and system updated."
+msgstr "✓ Zrcalni poslužitelj je promijenjen i sustav je ažuriran."
+
+#: src/anduinos_control_panel/software_sources.py:704
+msgid "✗ Switch failed: "
+msgstr "✗ Promjena nije uspjela: "
+
+#: src/anduinos_control_panel/software_sources.py:712
+msgid "Installing updates…"
+msgstr "Instaliranje ažuriranja…"
+
+#: src/anduinos_control_panel/software_sources.py:715
+msgid "Checking for updates…"
+msgstr "Provjera ažuriranja…"
+
+#: src/anduinos_control_panel/software_sources.py:723
+#: src/anduinos_control_panel/software_sources.py:744
+msgid "✗ Check failed: "
+msgstr "✗ Provjera nije uspjela: "
+
+#: src/anduinos_control_panel/software_sources.py:752
+msgid "  Install Updates  "
+msgstr "  Instaliraj ažuriranja  "
+
+#: src/anduinos_control_panel/software_sources.py:755
+msgid "Updates are available."
+msgstr "Dostupna su ažuriranja."
+
+#: src/anduinos_control_panel/software_sources.py:757
+msgid "✓ System is up to date."
+msgstr "✓ Sustav je ažuran."
+
+#: src/anduinos_control_panel/software_sources.py:768
+msgid "✓ Updates installed successfully!"
+msgstr "✓ Ažuriranja su uspješno instalirana!"
+
+#: src/anduinos_control_panel/software_sources.py:770
+msgid "✗ Installation failed: "
+msgstr "✗ Instalacija nije uspjela: "
+
+#: src/anduinos_control_panel/topics.py:77
+msgid "System Settings"
+msgstr "Postavke sustava"
+
+#: src/anduinos_control_panel/topics.py:78
+msgid "Display, sound, power, privacy, and more"
+msgstr "Zaslon, zvuk, napajanje, privatnost i ostalo"
+
+#: src/anduinos_control_panel/topics.py:87
+msgid "Change the boot menu wait time"
+msgstr "Promijenite vrijeme čekanja izbornika pokretanja"
+
+#: src/anduinos_control_panel/topics.py:95
+msgid "Virtual Memory Settings"
+msgstr "Postavke virtualne memorije"
+
+#: src/anduinos_control_panel/topics.py:96
+msgid "Configure Zram, Zswap, swap, and memory pressure"
+msgstr "Konfigurirajte Zram, Zswap, swap i opterećenje memorije"
+
+#: src/anduinos_control_panel/topics.py:115
+msgid "Secure Boot Status"
+msgstr "Stanje funkcije Secure Boot"
+
+#: src/anduinos_control_panel/topics.py:116
+msgid "Inspect firmware trust and signed drivers"
+msgstr "Provjerite pouzdanost firmvera i potpisane upravljačke programe"
+
+#: src/anduinos_control_panel/topics.py:124
+msgid "Passwords and Keys"
+msgstr "Lozinke i ključevi"
+
+#: src/anduinos_control_panel/topics.py:125
+msgid "Manage passwords, encryption keys, and certificates"
+msgstr "Upravljajte lozinkama, ključevima za šifriranje i certifikatima"
+
+#: src/anduinos_control_panel/topics.py:134
+msgid "Firewall"
+msgstr "Vatrozid"
+
+#: src/anduinos_control_panel/topics.py:135
+msgid "Review connections, rules, and network protection"
+msgstr "Pregledajte veze, pravila i mrežnu zaštitu"
+
+#: src/anduinos_control_panel/topics.py:143
+msgid "Advanced Network Configuration"
+msgstr "Napredna konfiguracija mreže"
+
+#: src/anduinos_control_panel/topics.py:163
+msgid "User Account Settings"
+msgstr "Postavke korisničkih računa"
+
+#: src/anduinos_control_panel/topics.py:164
+msgid "Manage users, passwords, and account details"
+msgstr "Upravljajte korisnicima, lozinkama i podacima o računima"
+
+#: src/anduinos_control_panel/topics.py:172
+msgid "YubiKey Settings"
+msgstr "Postavke YubiKeya"
+
+#: src/anduinos_control_panel/topics.py:173
+msgid "Configure sign-in, sudo, SSH keys, and Git signing"
+msgstr "Konfigurirajte prijavu, sudo, SSH ključeve i potpisivanje u Gitu"
+
+#: src/anduinos_control_panel/topics.py:182
+msgid "Predict commands locally from history and current context"
+msgstr ""
+"Predviđajte naredbe lokalno na temelju povijesti i trenutačnog konteksta"
+
+#: src/anduinos_control_panel/topics.py:190
+msgid "Voice Typing"
+msgstr "Glasovno tipkanje"
+
+#: src/anduinos_control_panel/topics.py:191
+msgid "Configure private, offline speech-to-text"
+msgstr "Konfigurirajte privatno izvanmrežno pretvaranje govora u tekst"
+
+#: src/anduinos_control_panel/topics.py:199
+msgid "Driver Center"
+msgstr "Centar za upravljačke programe"
+
+#: src/anduinos_control_panel/topics.py:200
+msgid "Graphics, audio, printers, controllers, and firmware"
+msgstr "Grafika, zvuk, pisači, kontroleri i firmver"
+
+#: src/anduinos_control_panel/topics.py:208
+msgid "Printers"
+msgstr "Pisači"
+
+#: src/anduinos_control_panel/topics.py:209
+msgid "Add, remove, and configure printers"
+msgstr "Dodajte, uklonite i konfigurirajte pisače"
+
+#: src/anduinos_control_panel/topics.py:217
+msgid "Scanners"
+msgstr "Skeneri"
+
+#: src/anduinos_control_panel/topics.py:218
+msgid "Scan documents and add or select a scanner"
+msgstr "Skenirajte dokumente i dodajte ili odaberite skener"
+
+#: src/anduinos_control_panel/topics.py:227
+msgid "AnduinOS Appearance Settings"
+msgstr "Postavke izgleda AnduinOS-a"
+
+#: src/anduinos_control_panel/topics.py:228
+msgid "Configure the taskbar, panel widgets, and desktop"
+msgstr "Konfigurirajte programsku traku, elemente ploče i radnu površinu"
+
+#: src/anduinos_control_panel/topics.py:236
+msgid "Wallpaper and Accent Color"
+msgstr "Pozadina i boja naglaska"
+
+#: src/anduinos_control_panel/topics.py:237
+msgid "Choose the desktop background, style, and accent color"
+msgstr "Odaberite pozadinu radne površine, stil i boju naglaska"
+
+#: src/anduinos_control_panel/topics.py:263
+msgid "Uninstall Applications"
+msgstr "Deinstaliraj aplikacije"
+
+#: src/anduinos_control_panel/topics.py:264
+msgid "Review and remove installed applications"
+msgstr "Pregledajte i uklonite instalirane aplikacije"
+
+#: src/anduinos_control_panel/topics.py:282
+msgid "Configure private AI features that run on this device"
+msgstr ""
+"Konfigurirajte privatne značajke umjetne inteligencije koje se izvode na "
+"ovom uređaju"
+
+#: src/anduinos_control_panel/topics.py:290
+msgid "Configure Bottles"
+msgstr "Konfiguriraj Bottles"
+
+#: src/anduinos_control_panel/topics.py:291
+msgid "Run Windows applications in compatibility environments"
+msgstr "Pokrećite aplikacije sustava Windows u okruženjima za kompatibilnost"
+
+#: src/anduinos_control_panel/topics.py:299
+msgid "System Snapshots"
+msgstr "Snimke sustava"
+
+#: src/anduinos_control_panel/topics.py:300
+msgid "Create, browse, and roll back system snapshots"
+msgstr "Stvarajte i pregledavajte snimke sustava te vraćajte sustav iz njih"
+
+#: src/anduinos_control_panel/topics.py:308
+msgid "Factory Reset"
+msgstr "Vraćanje na tvorničke postavke"
+
+#: src/anduinos_control_panel/topics.py:309
+msgid "Return system files and applications to their initial state"
+msgstr "Vratite sistemske datoteke i aplikacije u početno stanje"
+
+#: src/anduinos_control_panel/topics.py:325
+msgid "Back Up Home Folder"
+msgstr "Sigurnosno kopiraj osobnu mapu"
+
+#: src/anduinos_control_panel/topics.py:326
+msgid "Protect personal files with Deja Dup backups"
+msgstr "Zaštitite osobne datoteke sigurnosnim kopijama u aplikaciji Deja Dup"
+
+#: data/com.anduinos.ControlPanel.desktop:31
+msgid "Find and manage AnduinOS system settings"
+msgstr "Pronađite postavke sustava AnduinOS i upravljajte njima"
+
+#: data/com.anduinos.ControlPanel.desktop:65
+msgid "settings;control;system;hardware;drivers;accounts;backup;"
+msgstr ""
+"postavke;upravljanje;sustav;hardver;upravljački programi;računi;sigurnosna "
+"kopija;"
+
+#: src/anduinos_control_panel/software_sources.py
+msgid "Flathub software source"
+msgstr "Izvor softvera Flathub"
+
+#: src/anduinos_control_panel/software_sources.py
+msgid "Official Flathub"
+msgstr "Službeni Flathub"
+
+#: src/anduinos_control_panel/software_sources.py
+msgid "USTC (China)"
+msgstr "USTC (Kina)"
+
+#: src/anduinos_control_panel/software_sources.py
+msgid "Could not read the Flathub source."
+msgstr "Nije moguće pročitati izvor Flathub."
+
+#: src/anduinos_control_panel/software_sources.py
+msgid "Flathub is not configured."
+msgstr "Flathub nije konfiguriran."
+
+#: src/anduinos_control_panel/software_sources.py
+msgid "Flathub source switched."
+msgstr "Izvor Flathub je promijenjen."
+
+#: src/anduinos_control_panel/topics.py
+msgid "Offline Update"
+msgstr "Izvanmrežno ažuriranje"
+
+#: src/anduinos_control_panel/topics.py
+msgid "Open an offline update package"
+msgstr "Otvorite paket za izvanmrežno ažuriranje"
