@@ -19,11 +19,15 @@ def application_locale_names():
             encoding="utf-8"
         )
     )
-    return {
-        language["locale"].split(".", 1)[0]
-        for language in policy["languages"]
-        if language["code"] != policy["default_language"]
-    } | {"hr"}
+    names = set()
+    for language in policy["languages"]:
+        code = language["code"]
+        if code == policy["default_language"]:
+            continue
+        regional_locale = language["locale"].split(".", 1)[0]
+        # Control Panel supports both regional and language-only catalog names.
+        names.add(regional_locale if (ROOT / "po" / f"{regional_locale}.po").is_file() else code)
+    return names
 
 
 class LocalizationTests(unittest.TestCase):

@@ -382,7 +382,7 @@ contracts.
 | Mounts lived in the shared Live-session namespace | The executor creates a private mount namespace and disables propagation |
 | Btrfs meant, at most, a filesystem and a single `@` subvolume | Btrfs is a documented system ABI with separate system, home, logs, snapshots, containers, and VM-image roles |
 | Secure Boot was adapted through inherited Ubiquity behavior and hooks | Secure Boot is an explicit state machine: key ownership, DKMS signing, initramfs, signed EFI verification, and only then MOK enrollment |
-| Locale and input-method policy shadowed Ubiquity's private databases | One validated `languages.json` drives 28 locales, layouts, language packs, and optional input methods without product-specific executor branches |
+| Locale and input-method policy shadowed Ubiquity's private databases | One validated `languages.json` drives 29 locales, layouts, language packs, and optional input methods without product-specific executor branches |
 | Live-only cleanup depended on dual manifests and target hooks | The executor owns a fixed cleanup policy and verifies the resulting target |
 | “It completed once” was compelling evidence | Unit, failure-injection, package-contract, and destructive VM matrices define release evidence |
 

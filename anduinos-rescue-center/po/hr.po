@@ -1,0 +1,2011 @@
+# Croatian translations for anduinos-rescue-center.
+# SPDX-License-Identifier: GPL-3.0-only
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-rescue-center\n"
+"Report-Msgid-Bugs-To: https://github.com/AiursoftWeb/AnduinOS-Packages/"
+"issues\n"
+"PO-Revision-Date: 2026-11-23 04:29+0000\n"
+"Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
+"Language-Team: Croatian\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: data/anduinos-rescue-center-live-shortcut.desktop:30
+msgid "Prepare AnduinOS Rescue Center desktop shortcut"
+msgstr "Pripremi prečac na radnoj površini za AnduinOS Centar za oporavak"
+
+#: data/com.anduinos.RescueCenter.desktop:29
+#: data/com.anduinos.RescueCenter.desktop:122
+#: src/anduinos_rescue_center/app.py:100
+#, python-brace-format
+msgid "AnduinOS Rescue Center"
+msgstr "AnduinOS Centar za oporavak"
+
+#: data/com.anduinos.RescueCenter.desktop:57
+msgid "Find and repair an installed AnduinOS system"
+msgstr "Pronađite i popravite instalirani sustav AnduinOS"
+
+#: data/com.anduinos.RescueCenter.desktop:90
+msgid "rescue;recovery;snapshot;password;files;"
+msgstr "spašavanje;oporavak;snimka stanja;lozinka;datoteke;"
+
+#: data/com.anduinos.RescueCenter.desktop:150
+msgid ""
+"Recover files, accounts, and snapshots from an offline AnduinOS installation"
+msgstr ""
+"Oporavite datoteke, račune i snimke stanja iz instalacije AnduinOS-a koja "
+"nije pokrenuta"
+
+#: data/com.anduinos.RescueCenter.desktop:181
+msgid ""
+"Find installed AnduinOS systems from a Live session and perform carefully "
+"scoped offline recovery operations."
+msgstr ""
+"Pronađite instalirane sustave AnduinOS iz pokretne sesije i izvršite ciljane "
+"radnje oporavka na sustavu koji nije pokrenut."
+
+#: scripts/anduinos-rescue-center-live-helper:12
+#, python-brace-format
+msgid "The passwordless rescue helper is restricted to AnduinOS Live"
+msgstr ""
+"Pomoćni program za oporavak bez lozinke dostupan je samo u pokretnoj sesiji "
+"AnduinOS-a"
+
+#: src/anduinos_rescue_center/app.py:35 src/anduinos_rescue_center/app.py:41
+#, python-brace-format
+msgid "Unknown size"
+msgstr "Nepoznata veličina"
+
+#: src/anduinos_rescue_center/app.py:108
+#, python-brace-format
+msgid "Offline recovery"
+msgstr "Izvanmrežni oporavak"
+
+#: src/anduinos_rescue_center/app.py:108 src/anduinos_rescue_center/app.py:159
+#, python-brace-format
+msgid "Rescue Center"
+msgstr "Centar za oporavak"
+
+#: src/anduinos_rescue_center/app.py:109
+#, python-brace-format
+msgid "Back"
+msgstr "Natrag"
+
+#: src/anduinos_rescue_center/app.py:113
+#, python-brace-format
+msgid "Scan again"
+msgstr "Pregledaj ponovno"
+
+#: src/anduinos_rescue_center/app.py:175
+#, python-brace-format
+msgid "Choose another system"
+msgstr "Odaberi drugi sustav"
+
+#: src/anduinos_rescue_center/app.py:185 src/anduinos_rescue_center/app.py:463
+#: src/anduinos_rescue_center/app.py:540
+#, python-brace-format
+msgid "Home"
+msgstr "Početna"
+
+#: src/anduinos_rescue_center/app.py:185
+#, python-brace-format
+msgid "Offline AnduinOS"
+msgstr "Izvanmrežni AnduinOS"
+
+#: src/anduinos_rescue_center/app.py:188
+#, python-brace-format
+msgid "Show recovery tools"
+msgstr "Prikaži alate za oporavak"
+
+#: src/anduinos_rescue_center/app.py:206
+#, python-brace-format
+msgid "This is not a Live session"
+msgstr "Ovo nije pokretna sesija"
+
+#: src/anduinos_rescue_center/app.py:208
+#, python-brace-format
+msgid ""
+"Rescue Center is designed for the AnduinOS Live environment. Continuing here "
+"is not recommended. The currently running system will remain unavailable as "
+"a repair target."
+msgstr ""
+"Centar za oporavak namijenjen je pokretnom okruženju AnduinOS-a. Nastavak u "
+"ovom okruženju se ne preporučuje. Trenutačno pokrenuti sustav i dalje neće "
+"biti dostupan za popravak."
+
+#: src/anduinos_rescue_center/app.py:212
+#, python-brace-format
+msgid "Continue anyway"
+msgstr "Svejedno nastavi"
+
+#: src/anduinos_rescue_center/app.py:231
+#, python-brace-format
+msgid "Looking for AnduinOS installations"
+msgstr "Traženje instalacija AnduinOS-a"
+
+#: src/anduinos_rescue_center/app.py:232
+#, python-brace-format
+msgid "Inspecting disks without changing their filesystems…"
+msgstr "Pregled diskova bez promjene njihovih datotečnih sustava…"
+
+#: src/anduinos_rescue_center/app.py:248
+#, python-brace-format
+msgid "Could not scan this computer"
+msgstr "Pregled računala nije uspio"
+
+#: src/anduinos_rescue_center/app.py:263
+#, python-brace-format
+msgid "START YOUR RECOVERY"
+msgstr "ZAPOČNITE OPORAVAK"
+
+#: src/anduinos_rescue_center/app.py:264
+#, python-brace-format
+msgid "Find the system you want to repair"
+msgstr "Pronađite sustav koji želite popraviti"
+
+#: src/anduinos_rescue_center/app.py:266
+#, python-brace-format
+msgid ""
+"Choose a detected AnduinOS installation below. We inspect disks read-only "
+"and verify the selected device again before opening it."
+msgstr ""
+"U nastavku odaberite otkrivenu instalaciju AnduinOS-a. Diskovi se "
+"pregledavaju samo za čitanje. Odabrani uređaj ponovno se provjerava prije "
+"otvaranja."
+
+#: src/anduinos_rescue_center/app.py:292
+#, python-brace-format
+msgid "Back to detected systems"
+msgstr "Natrag na otkrivene sustave"
+
+#: src/anduinos_rescue_center/app.py:297
+#, python-brace-format
+msgid "All detected disks and partitions"
+msgstr "Svi otkriveni diskovi i particije"
+
+#: src/anduinos_rescue_center/app.py:298
+#, python-brace-format
+msgid ""
+"For systems not found automatically. The selected partition is checked again "
+"before repair."
+msgstr ""
+"Za sustave koji nisu automatski pronađeni. Odabrana particija ponovno se "
+"provjerava prije popravka."
+
+#: src/anduinos_rescue_center/app.py:307
+#, python-brace-format
+msgid "No AnduinOS installation found"
+msgstr "Nije pronađena instalacija AnduinOS-a"
+
+#: src/anduinos_rescue_center/app.py:308
+#, python-brace-format
+msgid ""
+"Use Advanced selection to inspect the disks and partitions on this computer."
+msgstr ""
+"Za pregled diskova i particija na ovom računalu upotrijebite napredni odabir."
+
+#: src/anduinos_rescue_center/app.py:313
+#, python-brace-format
+msgid "Advanced selection"
+msgstr "Napredni odabir"
+
+#: src/anduinos_rescue_center/app.py:327
+#, python-brace-format
+msgid "Open {system} installation on {partition}"
+msgstr "Otvori instalaciju sustava {system} na particiji {partition}"
+
+#: src/anduinos_rescue_center/app.py:329
+#, python-brace-format
+msgid "unknown partition"
+msgstr "nepoznata particija"
+
+#: src/anduinos_rescue_center/app.py:344 src/anduinos_rescue_center/app.py:709
+#: src/anduinos_rescue_center/app.py:735 src/anduinos_rescue_center/app.py:736
+#: src/anduinos_rescue_center/app.py:737 src/anduinos_rescue_center/app.py:738
+#: src/anduinos_rescue_center/app.py:739 src/anduinos_rescue_center/app.py:1072
+#: src/anduinos_rescue_center/app.py:1080
+#, python-brace-format
+msgid "Unknown"
+msgstr "Nepoznato"
+
+#: src/anduinos_rescue_center/app.py:349 src/anduinos_rescue_center/app.py:393
+#, python-brace-format
+msgid "Running system"
+msgstr "Pokrenuti sustav"
+
+#: src/anduinos_rescue_center/app.py:350 src/anduinos_rescue_center/app.py:368
+#: src/anduinos_rescue_center/app.py:395
+#, python-brace-format
+msgid "Live installation media"
+msgstr "Pokretni instalacijski medij"
+
+#: src/anduinos_rescue_center/app.py:351
+#, python-brace-format
+msgid "Unavailable for recovery"
+msgstr "Nedostupno za oporavak"
+
+#: src/anduinos_rescue_center/app.py:363
+#, python-brace-format
+msgid "Disk"
+msgstr "Disk"
+
+#: src/anduinos_rescue_center/app.py:380
+#, python-brace-format
+msgid "Unknown filesystem"
+msgstr "Nepoznat datotečni sustav"
+
+#: src/anduinos_rescue_center/app.py:383
+#, python-brace-format
+msgid "Could not inspect"
+msgstr "Pregled nije uspio"
+
+#: src/anduinos_rescue_center/app.py:397
+#, python-brace-format
+msgid "Windows cannot be repaired here"
+msgstr "Windows ovdje nije moguće popraviti"
+
+#: src/anduinos_rescue_center/app.py:399
+#, python-brace-format
+msgid "Not available for recovery"
+msgstr "Nedostupno za oporavak"
+
+#: src/anduinos_rescue_center/app.py:407
+#, python-brace-format
+msgid "Inspecting the selected system"
+msgstr "Pregled odabranog sustava"
+
+#: src/anduinos_rescue_center/app.py:408
+#, python-brace-format
+msgid "Re-checking its disk identity and reading system information…"
+msgstr "Ponovna provjera identiteta diska i očitavanje podataka o sustavu…"
+
+#: src/anduinos_rescue_center/app.py:427 src/anduinos_rescue_center/app.py:440
+#, python-brace-format
+msgid "Could not open this installation"
+msgstr "Instalaciju nije moguće otvoriti"
+
+#: src/anduinos_rescue_center/app.py:430 src/anduinos_rescue_center/app.py:665
+#: src/anduinos_rescue_center/app.py:690 src/anduinos_rescue_center/app.py:812
+#: src/anduinos_rescue_center/app.py:981 src/anduinos_rescue_center/app.py:1224
+#: src/anduinos_rescue_center/app.py:1449
+#, python-brace-format
+msgid "Close"
+msgstr "Zatvori"
+
+#: src/anduinos_rescue_center/app.py:451
+#, python-brace-format
+msgid "SELECTED INSTALLATION"
+msgstr "ODABRANA INSTALACIJA"
+
+#: src/anduinos_rescue_center/app.py:464 src/anduinos_rescue_center/app.py:540
+#, python-brace-format
+msgid "Password reset"
+msgstr "Ponovno postavljanje lozinke"
+
+#: src/anduinos_rescue_center/app.py:465 src/anduinos_rescue_center/app.py:540
+#, python-brace-format
+msgid "File browser"
+msgstr "Preglednik datoteka"
+
+#: src/anduinos_rescue_center/app.py:469 src/anduinos_rescue_center/app.py:541
+#: src/anduinos_rescue_center/app.py:603 src/anduinos_rescue_center/app.py:1262
+#, python-brace-format
+msgid "Snapshots & restore"
+msgstr "Snimke stanja i vraćanje"
+
+#: src/anduinos_rescue_center/app.py:472 src/anduinos_rescue_center/app.py:541
+#, python-brace-format
+msgid "Boot repair"
+msgstr "Popravak pokretanja"
+
+#: src/anduinos_rescue_center/app.py:473 src/anduinos_rescue_center/app.py:542
+#: src/anduinos_rescue_center/app.py:609 src/anduinos_rescue_center/app.py:640
+#, python-brace-format
+msgid "Emergency terminal"
+msgstr "Terminal za hitne slučajeve"
+
+#: src/anduinos_rescue_center/app.py:475 src/anduinos_rescue_center/app.py:542
+#: src/anduinos_rescue_center/app.py:612
+#, python-brace-format
+msgid "System details"
+msgstr "Pojedinosti o sustavu"
+
+#: src/anduinos_rescue_center/app.py:479
+#, python-brace-format
+msgid "Open {page} page"
+msgstr "Otvori stranicu {page}"
+
+#: src/anduinos_rescue_center/app.py:578
+#, python-brace-format
+msgid "A calmer way back"
+msgstr "Oporavak korak po korak"
+
+#: src/anduinos_rescue_center/app.py:578
+#, python-brace-format
+msgid "RECOVERY WORKSPACE"
+msgstr "RADNI PROSTOR ZA OPORAVAK"
+
+#: src/anduinos_rescue_center/app.py:579
+#, python-brace-format
+msgid ""
+"Work on this offline installation. Choose a tool on the left; your running "
+"system remains untouched."
+msgstr ""
+"Odaberite alat s lijeve strane za rad na ovoj izvanmrežnoj instalaciji. "
+"Pokrenuti sustav ostaje nepromijenjen."
+
+#: src/anduinos_rescue_center/app.py:589
+#, python-brace-format
+msgid "Offline installation · {partition}"
+msgstr "Izvanmrežna instalacija · {partition}"
+
+#: src/anduinos_rescue_center/app.py:590
+#, python-brace-format
+msgid "Unknown partition"
+msgstr "Nepoznata particija"
+
+#: src/anduinos_rescue_center/app.py:596
+#, python-brace-format
+msgid "Recovery tools"
+msgstr "Alati za oporavak"
+
+#: src/anduinos_rescue_center/app.py:598
+#, python-brace-format
+msgid "Reset a password"
+msgstr "Ponovno postavi lozinku"
+
+#: src/anduinos_rescue_center/app.py:598
+#, python-brace-format
+msgid "Restore access to a local account."
+msgstr "Vrati pristup lokalnom računu."
+
+#: src/anduinos_rescue_center/app.py:599
+#, python-brace-format
+msgid "Browse and copy files"
+msgstr "Pregledaj i kopiraj datoteke"
+
+#: src/anduinos_rescue_center/app.py:599
+#, python-brace-format
+msgid "Explore the offline system and copy data out."
+msgstr "Pregledajte izvanmrežni sustav i kopirajte podatke na drugo mjesto."
+
+#: src/anduinos_rescue_center/app.py:604
+#, python-brace-format
+msgid "Create a recovery point or roll back the system."
+msgstr "Izradite točku oporavka ili vratite sustav u ranije stanje."
+
+#: src/anduinos_rescue_center/app.py:608
+#, python-brace-format
+msgid "Check the installed kernel, GRUB and EFI boot path."
+msgstr "Provjerite instaliranu jezgru, GRUB i putanju pokretanja putem EFI-ja."
+
+#: src/anduinos_rescue_center/app.py:608 src/anduinos_rescue_center/app.py:1016
+#, python-brace-format
+msgid "Diagnose and repair boot"
+msgstr "Dijagnosticiraj i popravi pokretanje"
+
+#: src/anduinos_rescue_center/app.py:609
+#, python-brace-format
+msgid "Open an expert shell in this offline system."
+msgstr "Otvorite ljusku za napredni rad u ovom izvanmrežnom sustavu."
+
+#: src/anduinos_rescue_center/app.py:612
+#, python-brace-format
+msgid "Review the installation before making changes."
+msgstr "Pregledajte instalaciju prije promjena."
+
+#: src/anduinos_rescue_center/app.py:633
+#, python-brace-format
+msgid ""
+"Snapshot restore is available only for the standard AnduinOS Btrfs layout. "
+"File recovery and password reset remain available here."
+msgstr ""
+"Vraćanje iz snimke stanja dostupno je samo uz standardni Btrfs raspored "
+"AnduinOS-a. Oporavak datoteka i ponovno postavljanje lozinke i dalje su "
+"dostupni."
+
+#: src/anduinos_rescue_center/app.py:640
+#, python-brace-format
+msgid "ADVANCED RECOVERY"
+msgstr "NAPREDNI OPORAVAK"
+
+#: src/anduinos_rescue_center/app.py:641
+#, python-brace-format
+msgid ""
+"Open a root shell inside the selected offline system. Commands can change or "
+"delete its files."
+msgstr ""
+"Otvorite ljusku s ovlastima root unutar odabranog izvanmrežnog sustava. "
+"Naredbe mogu promijeniti ili izbrisati njegove datoteke."
+
+#: src/anduinos_rescue_center/app.py:644
+#, python-brace-format
+msgid ""
+"The terminal will show the target partition before entering it. Type exit "
+"when finished. Recovery will unmount its temporary filesystems and report "
+"any cleanup failure."
+msgstr ""
+"Terminal će prikazati odredišnu particiju prije ulaska. Kad završite, "
+"upišite exit. Alat za oporavak odmontirat će privremene datotečne sustave i "
+"prijaviti eventualne probleme pri čišćenju."
+
+#: src/anduinos_rescue_center/app.py:648
+#, python-brace-format
+msgid "Open target terminal"
+msgstr "Otvori terminal odabranog sustava"
+
+#: src/anduinos_rescue_center/app.py:653
+#, python-brace-format
+msgid "Open Live terminal instead"
+msgstr "Otvori terminal pokretne sesije"
+
+#: src/anduinos_rescue_center/app.py:664 src/anduinos_rescue_center/app.py:689
+#, python-brace-format
+msgid "Could not open terminal"
+msgstr "Terminal nije moguće otvoriti"
+
+#: src/anduinos_rescue_center/app.py:674
+#, python-brace-format
+msgid "Open an expert root shell?"
+msgstr "Otvoriti ljusku s ovlastima root?"
+
+#: src/anduinos_rescue_center/app.py:675
+#, python-brace-format
+msgid ""
+"Target: {path}\n"
+"\n"
+"The shell can make unrestricted changes to this offline installation and can "
+"also access Live hardware. Use it only if you understand the commands."
+msgstr ""
+"Odredište: {path}\n"
+"\n"
+"Ljuska može bez ograničenja mijenjati ovu izvanmrežnu instalaciju te "
+"pristupati hardveru pokretne sesije. Upotrijebite je samo ako razumijete "
+"naredbe."
+
+#: src/anduinos_rescue_center/app.py:678 src/anduinos_rescue_center/app.py:760
+#: src/anduinos_rescue_center/app.py:1132
+#: src/anduinos_rescue_center/app.py:1365
+#: src/anduinos_rescue_center/app.py:1411
+#, python-brace-format
+msgid "Cancel"
+msgstr "Odustani"
+
+#: src/anduinos_rescue_center/app.py:679
+#, python-brace-format
+msgid "Open terminal"
+msgstr "Otvori terminal"
+
+#: src/anduinos_rescue_center/app.py:699
+#, python-brace-format
+msgid "ACCOUNT ACCESS"
+msgstr "PRISTUP RAČUNU"
+
+#: src/anduinos_rescue_center/app.py:699
+#, python-brace-format
+msgid "Reset a local password"
+msgstr "Ponovno postavi lokalnu lozinku"
+
+#: src/anduinos_rescue_center/app.py:700
+#, python-brace-format
+msgid ""
+"Choose an account on the offline installation. Existing encrypted login "
+"keyrings are not unlocked by a password reset."
+msgstr ""
+"Odaberite račun na izvanmrežnoj instalaciji. Ponovno postavljanje lozinke ne "
+"otključava postojeće šifrirane privjeske ključeva za prijavu."
+
+#: src/anduinos_rescue_center/app.py:702
+#, python-brace-format
+msgid "Local accounts"
+msgstr "Lokalni računi"
+
+#: src/anduinos_rescue_center/app.py:712
+#, python-brace-format
+msgid "Password locked"
+msgstr "Lozinka je zaključana"
+
+#: src/anduinos_rescue_center/app.py:715 src/anduinos_rescue_center/app.py:761
+#, python-brace-format
+msgid "Reset password"
+msgstr "Ponovno postavi lozinku"
+
+#: src/anduinos_rescue_center/app.py:721
+#, python-brace-format
+msgid "No local accounts found"
+msgstr "Nije pronađen nijedan lokalni račun"
+
+#: src/anduinos_rescue_center/app.py:728
+#, python-brace-format
+msgid "INSTALLATION DETAILS"
+msgstr "POJEDINOSTI O INSTALACIJI"
+
+#: src/anduinos_rescue_center/app.py:728
+#, python-brace-format
+msgid "Know what you are repairing"
+msgstr "Provjerite što popravljate"
+
+#: src/anduinos_rescue_center/app.py:729
+#, python-brace-format
+msgid ""
+"Information read from the selected offline installation. Its device identity "
+"is rechecked before each operation."
+msgstr ""
+"Podaci su očitani iz odabrane izvanmrežne instalacije. Identitet uređaja "
+"ponovno se provjerava prije svake radnje."
+
+#: src/anduinos_rescue_center/app.py:731
+#, python-brace-format
+msgid "System"
+msgstr "Sustav"
+
+#: src/anduinos_rescue_center/app.py:734
+#, python-brace-format
+msgid "Operating system"
+msgstr "Operacijski sustav"
+
+#: src/anduinos_rescue_center/app.py:735
+#, python-brace-format
+msgid "Version"
+msgstr "Verzija"
+
+#: src/anduinos_rescue_center/app.py:736
+#, python-brace-format
+msgid "Computer name"
+msgstr "Naziv računala"
+
+#: src/anduinos_rescue_center/app.py:737
+#, python-brace-format
+msgid "Filesystem"
+msgstr "Datotečni sustav"
+
+#: src/anduinos_rescue_center/app.py:738
+#, python-brace-format
+msgid "Partition"
+msgstr "Particija"
+
+#: src/anduinos_rescue_center/app.py:739
+#, python-brace-format
+msgid "Installed kernels"
+msgstr "Instalirane jezgre"
+
+#: src/anduinos_rescue_center/app.py:740
+#, python-brace-format
+msgid "Available"
+msgstr "Dostupno"
+
+#: src/anduinos_rescue_center/app.py:740
+#, python-brace-format
+msgid "Requires the standard AnduinOS Btrfs layout"
+msgstr "Potreban je standardni Btrfs raspored AnduinOS-a"
+
+#: src/anduinos_rescue_center/app.py:740
+#, python-brace-format
+msgid "Snapshots"
+msgstr "Snimke stanja"
+
+#: src/anduinos_rescue_center/app.py:746
+#, python-brace-format
+msgid "New password"
+msgstr "Nova lozinka"
+
+#: src/anduinos_rescue_center/app.py:747
+#, python-brace-format
+msgid "Confirm new password"
+msgstr "Potvrdi novu lozinku"
+
+#: src/anduinos_rescue_center/app.py:753
+#, python-brace-format
+msgid "Reset the password for {username}?"
+msgstr "Ponovno postaviti lozinku za {username}?"
+
+#: src/anduinos_rescue_center/app.py:755
+#, python-brace-format
+msgid ""
+"This changes the local login password on the selected offline system. It "
+"does not unlock an existing encrypted login keyring."
+msgstr ""
+"Time se mijenja lokalna lozinka za prijavu na odabranom izvanmrežnom "
+"sustavu. Postojeći šifrirani privjesak ključeva za prijavu neće se "
+"otključati."
+
+#: src/anduinos_rescue_center/app.py:782
+#, python-brace-format
+msgid "Resetting the password"
+msgstr "Ponovno postavljanje lozinke"
+
+#: src/anduinos_rescue_center/app.py:783
+#, python-brace-format
+msgid "Writing the new local account password safely…"
+msgstr "Sigurno zapisivanje nove lozinke lokalnog računa…"
+
+#: src/anduinos_rescue_center/app.py:809
+#, python-brace-format
+msgid "Password reset complete"
+msgstr "Ponovno postavljanje lozinke je dovršeno"
+
+#: src/anduinos_rescue_center/app.py:810
+#, python-brace-format
+msgid "The local login password for {username} was changed."
+msgstr "Promijenjena je lokalna lozinka za prijavu korisnika {username}."
+
+#: src/anduinos_rescue_center/app.py:834
+#, python-brace-format
+msgid "Parent folder"
+msgstr "Nadređena mapa"
+
+#: src/anduinos_rescue_center/app.py:838
+#, python-brace-format
+msgid "Offline filesystem"
+msgstr "Izvanmrežni datotečni sustav"
+
+#: src/anduinos_rescue_center/app.py:851
+#, python-brace-format
+msgid "FILE RECOVERY"
+msgstr "OPORAVAK DATOTEKA"
+
+#: src/anduinos_rescue_center/app.py:852
+#, python-brace-format
+msgid "Browse and copy your files"
+msgstr "Pregledaj i kopiraj svoje datoteke"
+
+#: src/anduinos_rescue_center/app.py:853
+#, python-brace-format
+msgid "Explore this offline installation without modifying its files."
+msgstr ""
+"Pregledajte ovu izvanmrežnu instalaciju bez mijenjanja njezinih datoteka."
+
+#: src/anduinos_rescue_center/app.py:868
+#, python-brace-format
+msgid "Opening offline files"
+msgstr "Otvaranje izvanmrežnih datoteka"
+
+#: src/anduinos_rescue_center/app.py:869
+#, python-brace-format
+msgid "Reading this folder without changing the installed system…"
+msgstr "Čitanje ove mape bez promjene instaliranog sustava…"
+
+#: src/anduinos_rescue_center/app.py:898
+#, python-brace-format
+msgid "File"
+msgstr "Datoteka"
+
+#: src/anduinos_rescue_center/app.py:898
+#, python-brace-format
+msgid "Folder"
+msgstr "Mapa"
+
+#: src/anduinos_rescue_center/app.py:898
+#, python-brace-format
+msgid "Other"
+msgstr "Ostalo"
+
+#: src/anduinos_rescue_center/app.py:906
+#, python-brace-format
+msgid "Copy out"
+msgstr "Kopiraj na drugo mjesto"
+
+#: src/anduinos_rescue_center/app.py:917
+#, python-brace-format
+msgid "This folder contains more items"
+msgstr "Ova mapa sadrži više stavki"
+
+#: src/anduinos_rescue_center/app.py:918
+#, python-brace-format
+msgid "Only the first 5,000 entries are shown."
+msgstr "Prikazano je samo prvih 5.000 stavki."
+
+#: src/anduinos_rescue_center/app.py:930
+#, python-brace-format
+msgid "Could not read offline files"
+msgstr "Izvanmrežne datoteke nije moguće pročitati"
+
+#: src/anduinos_rescue_center/app.py:932 src/anduinos_rescue_center/app.py:1347
+#, python-brace-format
+msgid "Try again"
+msgstr "Pokušaj ponovno"
+
+#: src/anduinos_rescue_center/app.py:941
+#, python-brace-format
+msgid "Choose where to copy this item"
+msgstr "Odaberite kamo želite kopirati ovu stavku"
+
+#: src/anduinos_rescue_center/app.py:956
+#, python-brace-format
+msgid "Copying rescued data"
+msgstr "Kopiranje spašenih podataka"
+
+#: src/anduinos_rescue_center/app.py:957
+#, python-brace-format
+msgid "Keep the computer powered on until copying finishes."
+msgstr "Ostavite računalo uključeno dok kopiranje ne završi."
+
+#: src/anduinos_rescue_center/app.py:978
+#, python-brace-format
+msgid "Copy complete"
+msgstr "Kopiranje je dovršeno"
+
+#: src/anduinos_rescue_center/app.py:979
+#, python-brace-format
+msgid ""
+"The rescued item was copied to:\n"
+"{path}"
+msgstr ""
+"Spašena stavka kopirana je u:\n"
+"{path}"
+
+#: src/anduinos_rescue_center/app.py:1001
+#: src/anduinos_rescue_center/app.py:1016
+#, python-brace-format
+msgid "BOOT RECOVERY"
+msgstr "OPORAVAK POKRETANJA"
+
+#: src/anduinos_rescue_center/app.py:1004
+#, python-brace-format
+msgid "Check boot again"
+msgstr "Ponovno provjeri pokretanje"
+
+#: src/anduinos_rescue_center/app.py:1017
+#, python-brace-format
+msgid ""
+"Inspect this offline installation before making changes. Repair is offered "
+"only when its EFI partition can be identified on the selected disk."
+msgstr ""
+"Pregledajte ovu izvanmrežnu instalaciju prije promjena. Popravak je dostupan "
+"samo ako se njezina EFI particija može prepoznati na odabranom disku."
+
+#: src/anduinos_rescue_center/app.py:1019
+#, python-brace-format
+msgid "Boot path"
+msgstr "Putanja pokretanja"
+
+#: src/anduinos_rescue_center/app.py:1021
+#, python-brace-format
+msgid "Findings"
+msgstr "Rezultati provjere"
+
+#: src/anduinos_rescue_center/app.py:1025
+#, python-brace-format
+msgid "Rebuild AnduinOS boot"
+msgstr "Ponovno izradi datoteke za pokretanje AnduinOS-a"
+
+#: src/anduinos_rescue_center/app.py:1030
+#, python-brace-format
+msgid "View last repair output"
+msgstr "Prikaži ispis posljednjeg popravka"
+
+#: src/anduinos_rescue_center/app.py:1051
+#, python-brace-format
+msgid "Checking the offline boot path"
+msgstr "Provjera putanje pokretanja izvanmrežnog sustava"
+
+#: src/anduinos_rescue_center/app.py:1052
+#, python-brace-format
+msgid ""
+"Reading the installed kernel, GRUB configuration, EFI files and firmware "
+"entry without changing them…"
+msgstr ""
+"Očitavanje instalirane jezgre, postavki GRUB-a, EFI datoteka i stavke "
+"firmvera bez promjena…"
+
+#: src/anduinos_rescue_center/app.py:1072
+#, python-brace-format
+msgid "Selected installation"
+msgstr "Odabrana instalacija"
+
+#: src/anduinos_rescue_center/app.py:1073
+#, python-brace-format
+msgid "EFI partition"
+msgstr "EFI particija"
+
+#: src/anduinos_rescue_center/app.py:1073
+#, python-brace-format
+msgid "Not identified"
+msgstr "Nije prepoznato"
+
+#: src/anduinos_rescue_center/app.py:1074
+#, python-brace-format
+msgid "Kernel and initrd pairs"
+msgstr "Parovi jezgre i initrd-a"
+
+#: src/anduinos_rescue_center/app.py:1074
+#, python-brace-format
+msgid "{complete} of {total}"
+msgstr "{complete} od {total}"
+
+#: src/anduinos_rescue_center/app.py:1076
+#: src/anduinos_rescue_center/app.py:1079
+#, python-brace-format
+msgid "Found"
+msgstr "Pronađeno"
+
+#: src/anduinos_rescue_center/app.py:1076
+#, python-brace-format
+msgid "GRUB kernel entry"
+msgstr "Stavka jezgre u GRUB-u"
+
+#: src/anduinos_rescue_center/app.py:1076
+#, python-brace-format
+msgid "Missing or incomplete"
+msgstr "Nedostaje ili je nepotpuno"
+
+#: src/anduinos_rescue_center/app.py:1077
+#, python-brace-format
+msgid "AnduinOS EFI loader"
+msgstr "EFI pokretački program AnduinOS-a"
+
+#: src/anduinos_rescue_center/app.py:1077
+#: src/anduinos_rescue_center/app.py:1079
+#, python-brace-format
+msgid "Missing"
+msgstr "Nedostaje"
+
+#: src/anduinos_rescue_center/app.py:1077
+#, python-brace-format
+msgid "Present"
+msgstr "Prisutno"
+
+#: src/anduinos_rescue_center/app.py:1078
+#, python-brace-format
+msgid "Firmware boot entry"
+msgstr "Stavka za pokretanje u firmveru"
+
+#: src/anduinos_rescue_center/app.py:1079
+#: src/anduinos_rescue_center/app.py:1336
+#, python-brace-format
+msgid "Unavailable"
+msgstr "Nedostupno"
+
+#: src/anduinos_rescue_center/app.py:1091
+#, python-brace-format
+msgid ""
+"Static boot checks found no missing component. A real reboot is still "
+"required."
+msgstr ""
+"Statičke provjere pokretanja nisu pronašle komponente koje nedostaju. Još je "
+"potrebno stvarno ponovno pokretanje."
+
+#: src/anduinos_rescue_center/app.py:1100
+#, python-brace-format
+msgid "Repair failed: {error}"
+msgstr "Popravak nije uspio: {error}"
+
+#: src/anduinos_rescue_center/app.py:1105
+#, python-brace-format
+msgid "Repair stopped. Review the output before trying again."
+msgstr "Popravak je zaustavljen. Pregledajte ispis prije ponovnog pokušaja."
+
+#: src/anduinos_rescue_center/app.py:1107
+#: src/anduinos_rescue_center/client.py:231
+#: src/anduinos_rescue_center/client.py:234
+#, python-brace-format
+msgid "Boot repair failed"
+msgstr "Popravak pokretanja nije uspio"
+
+#: src/anduinos_rescue_center/app.py:1112
+#, python-brace-format
+msgid "Boot check or repair failed"
+msgstr "Provjera ili popravak pokretanja nisu uspjeli"
+
+#: src/anduinos_rescue_center/app.py:1114
+#, python-brace-format
+msgid "Check again"
+msgstr "Provjeri ponovno"
+
+#: src/anduinos_rescue_center/app.py:1127
+#, python-brace-format
+msgid "Rebuild boot for this installation?"
+msgstr "Ponovno izraditi datoteke za pokretanje ove instalacije?"
+
+#: src/anduinos_rescue_center/app.py:1128
+#, python-brace-format
+msgid ""
+"System: {system}\n"
+"EFI partition: {esp}\n"
+"\n"
+"This will:\n"
+"• {changes}\n"
+"\n"
+"Other EFI vendors and the removable EFI/BOOT path will not be changed."
+msgstr ""
+"Sustav: {system}\n"
+"EFI particija: {esp}\n"
+"\n"
+"Izvršit će se sljedeće:\n"
+"• {changes}\n"
+"\n"
+"Datoteke drugih EFI proizvođača i prijenosna putanja EFI/BOOT ostat će "
+"nepromijenjene."
+
+#: src/anduinos_rescue_center/app.py:1133
+#, python-brace-format
+msgid "Repair boot"
+msgstr "Popravi pokretanje"
+
+#: src/anduinos_rescue_center/app.py:1148
+#, python-brace-format
+msgid "Rebuilding the offline boot path"
+msgstr "Ponovna izrada putanje pokretanja izvanmrežnog sustava"
+
+#: src/anduinos_rescue_center/app.py:1149
+#, python-brace-format
+msgid ""
+"Keep the computer powered on. The stage and output below update as work "
+"proceeds."
+msgstr ""
+"Ostavite računalo uključeno. Trenutačna faza i ispis u nastavku ažuriraju se "
+"tijekom popravka."
+
+#: src/anduinos_rescue_center/app.py:1168
+#, python-brace-format
+msgid "Preparing repair…"
+msgstr "Priprema popravka…"
+
+#: src/anduinos_rescue_center/app.py:1172
+#, python-brace-format
+msgid "View output"
+msgstr "Prikaži ispis"
+
+#: src/anduinos_rescue_center/app.py:1220
+#, python-brace-format
+msgid "Boot repair finished"
+msgstr "Popravak pokretanja je dovršen"
+
+#: src/anduinos_rescue_center/app.py:1220
+#, python-brace-format
+msgid "Boot repair needs review"
+msgstr "Potrebno je pregledati popravak pokretanja"
+
+#: src/anduinos_rescue_center/app.py:1221
+#, python-brace-format
+msgid ""
+"Static boot checks passed. Shut down Live, remove the installation media and "
+"test booting."
+msgstr ""
+"Statičke provjere pokretanja su prošle. Isključite pokretnu sesiju, uklonite "
+"instalacijski medij i isprobajte pokretanje."
+
+#: src/anduinos_rescue_center/app.py:1222
+#, python-brace-format
+msgid ""
+"Some checks still report a problem. Review the findings before rebooting."
+msgstr ""
+"Neke provjere još prijavljuju problem. Pregledajte rezultate prije ponovnog "
+"pokretanja."
+
+#: src/anduinos_rescue_center/app.py:1241
+#, python-brace-format
+msgid "SYSTEM RECOVERY POINTS"
+msgstr "TOČKE OPORAVKA SUSTAVA"
+
+#: src/anduinos_rescue_center/app.py:1244
+#, python-brace-format
+msgid "Create snapshot"
+msgstr "Izradi snimku stanja"
+
+#: src/anduinos_rescue_center/app.py:1261
+#, python-brace-format
+msgid "SYSTEM RECOVERY"
+msgstr "OPORAVAK SUSTAVA"
+
+#: src/anduinos_rescue_center/app.py:1263
+#, python-brace-format
+msgid ""
+"Create a recovery point or return this offline system to an earlier state. "
+"Personal files in Home are not part of system snapshots."
+msgstr ""
+"Izradite točku oporavka ili vratite ovaj izvanmrežni sustav u ranije stanje. "
+"Osobne datoteke u početnoj mapi nisu dio snimki stanja sustava."
+
+#: src/anduinos_rescue_center/app.py:1277
+#, python-brace-format
+msgid "Loading system snapshots"
+msgstr "Učitavanje snimki stanja sustava"
+
+#: src/anduinos_rescue_center/app.py:1279
+#, python-brace-format
+msgid "Checking recovery metadata and completing any interrupted restore…"
+msgstr ""
+"Provjera metapodataka oporavka i dovršavanje eventualnog prekinutog vraćanja…"
+
+#: src/anduinos_rescue_center/app.py:1299
+#, python-brace-format
+msgid "No system snapshots"
+msgstr "Nema snimki stanja sustava"
+
+#: src/anduinos_rescue_center/app.py:1300
+#, python-brace-format
+msgid "Create a snapshot before making risky system changes."
+msgstr "Izradite snimku stanja prije rizičnih promjena sustava."
+
+#: src/anduinos_rescue_center/app.py:1306
+#, python-brace-format
+msgid "System snapshot"
+msgstr "Snimka stanja sustava"
+
+#: src/anduinos_rescue_center/app.py:1311
+#, python-brace-format
+msgid "Factory"
+msgstr "Tvornička"
+
+#: src/anduinos_rescue_center/app.py:1311
+#, python-brace-format
+msgid "Manual"
+msgstr "Ručna"
+
+#: src/anduinos_rescue_center/app.py:1312
+#, python-brace-format
+msgid "Automatic"
+msgstr "Automatska"
+
+#: src/anduinos_rescue_center/app.py:1312
+#, python-brace-format
+msgid "Before update"
+msgstr "Prije ažuriranja"
+
+#: src/anduinos_rescue_center/app.py:1313
+#, python-brace-format
+msgid "After update"
+msgstr "Nakon ažuriranja"
+
+#: src/anduinos_rescue_center/app.py:1313
+#, python-brace-format
+msgid "Before restore"
+msgstr "Prije vraćanja"
+
+#: src/anduinos_rescue_center/app.py:1314
+#, python-brace-format
+msgid "Imported"
+msgstr "Uvezena"
+
+#: src/anduinos_rescue_center/app.py:1317
+#, python-brace-format
+msgid "Creating"
+msgstr "Izrada"
+
+#: src/anduinos_rescue_center/app.py:1317
+#, python-brace-format
+msgid "Ready"
+msgstr "Spremna"
+
+#: src/anduinos_rescue_center/app.py:1318
+#, python-brace-format
+msgid "Broken"
+msgstr "Oštećena"
+
+#: src/anduinos_rescue_center/app.py:1318
+#, python-brace-format
+msgid "Incomplete"
+msgstr "Nepotpuna"
+
+#: src/anduinos_rescue_center/app.py:1319
+#, python-brace-format
+msgid "Deleting"
+msgstr "Brisanje"
+
+#: src/anduinos_rescue_center/app.py:1328
+#, python-brace-format
+msgid "Restore"
+msgstr "Vrati"
+
+#: src/anduinos_rescue_center/app.py:1345
+#: src/anduinos_rescue_center/snapshots.py:124
+#, python-brace-format
+msgid "Snapshot operation failed"
+msgstr "Radnja sa snimkom stanja nije uspjela"
+
+#: src/anduinos_rescue_center/app.py:1356
+#, python-brace-format
+msgid "Snapshot name"
+msgstr "Naziv snimke stanja"
+
+#: src/anduinos_rescue_center/app.py:1361
+#, python-brace-format
+msgid "Create a snapshot of the offline system?"
+msgstr "Izraditi snimku stanja izvanmrežnog sustava?"
+
+#: src/anduinos_rescue_center/app.py:1362
+#, python-brace-format
+msgid "Personal files in Home are not included in system snapshots."
+msgstr ""
+"Osobne datoteke u početnoj mapi nisu obuhvaćene snimkama stanja sustava."
+
+#: src/anduinos_rescue_center/app.py:1366
+#, python-brace-format
+msgid "Create"
+msgstr "Izradi"
+
+#: src/anduinos_rescue_center/app.py:1384
+#, python-brace-format
+msgid "Creating system snapshot"
+msgstr "Izrada snimke stanja sustava"
+
+#: src/anduinos_rescue_center/app.py:1385
+#, python-brace-format
+msgid "Keep the computer powered on until this finishes."
+msgstr "Ostavite računalo uključeno do završetka."
+
+#: src/anduinos_rescue_center/app.py:1399
+#, python-brace-format
+msgid "Create a safety snapshot of the current system first"
+msgstr "Prvo izradi sigurnosnu snimku trenutačnog stanja sustava"
+
+#: src/anduinos_rescue_center/app.py:1403
+#, python-brace-format
+msgid "Restore {snapshot}?"
+msgstr "Vratiti {snapshot}?"
+
+#: src/anduinos_rescue_center/app.py:1404
+#, python-brace-format
+msgid "this snapshot"
+msgstr "ovu snimku stanja"
+
+#: src/anduinos_rescue_center/app.py:1406
+#, python-brace-format
+msgid ""
+"The offline system root will be replaced immediately. Personal files in Home "
+"will not be changed. Do not power off the computer during recovery."
+msgstr ""
+"Korijenski datotečni sustav izvanmrežnog sustava odmah će se zamijeniti. "
+"Osobne datoteke u početnoj mapi neće se promijeniti. Nemojte isključivati "
+"računalo tijekom oporavka."
+
+#: src/anduinos_rescue_center/app.py:1412
+#, python-brace-format
+msgid "Restore system"
+msgstr "Vrati sustav"
+
+#: src/anduinos_rescue_center/app.py:1427
+#, python-brace-format
+msgid "Restoring the offline system"
+msgstr "Vraćanje izvanmrežnog sustava"
+
+#: src/anduinos_rescue_center/app.py:1428
+#, python-brace-format
+msgid "Keep the computer powered on until recovery is complete."
+msgstr "Ostavite računalo uključeno dok oporavak ne završi."
+
+#: src/anduinos_rescue_center/app.py:1446
+#, python-brace-format
+msgid "System restore complete"
+msgstr "Vraćanje sustava je dovršeno"
+
+#: src/anduinos_rescue_center/app.py:1447
+#, python-brace-format
+msgid ""
+"Shut down the Live session, remove the installation media, and start "
+"AnduinOS."
+msgstr ""
+"Isključite pokretnu sesiju, uklonite instalacijski medij i pokrenite "
+"AnduinOS."
+
+#: src/anduinos_rescue_center/boot.py:37
+#, python-brace-format
+msgid "The installed system has no readable /etc/fstab"
+msgstr "Datoteka /etc/fstab instaliranog sustava nije čitljiva ili ne postoji"
+
+#: src/anduinos_rescue_center/boot.py:41
+#, python-brace-format
+msgid "A separate /boot partition needs manual repair"
+msgstr "Zasebna particija /boot zahtijeva ručni popravak"
+
+#: src/anduinos_rescue_center/boot.py:44
+#, python-brace-format
+msgid "Exactly one FAT EFI partition must be declared in /etc/fstab"
+msgstr "U /etc/fstab mora biti navedena točno jedna EFI particija s FAT-om"
+
+#: src/anduinos_rescue_center/boot.py:47
+#, python-brace-format
+msgid "The EFI partition must use an explicit UUID or PARTUUID"
+msgstr "EFI particija mora imati izričito naveden UUID ili PARTUUID"
+
+#: src/anduinos_rescue_center/boot.py:59
+#, python-brace-format
+msgid "Could not identify the EFI partition"
+msgstr "EFI particiju nije moguće prepoznati"
+
+#: src/anduinos_rescue_center/boot.py:63
+#, python-brace-format
+msgid "lsblk returned invalid EFI partition data"
+msgstr "Naredba lsblk vratila je nevaljane podatke o EFI particiji"
+
+#: src/anduinos_rescue_center/boot.py:72
+#, python-brace-format
+msgid "The declared EFI partition is not FAT"
+msgstr "Navedena EFI particija ne upotrebljava FAT"
+
+#: src/anduinos_rescue_center/boot.py:76
+#, python-brace-format
+msgid "The declared FAT partition is not marked as an EFI System Partition"
+msgstr "Navedena FAT particija nije označena kao sistemska particija EFI"
+
+#: src/anduinos_rescue_center/boot.py:80
+#, python-brace-format
+msgid "The EFI device or partition number is invalid"
+msgstr "EFI uređaj ili broj particije nije valjan"
+
+#: src/anduinos_rescue_center/boot.py:91
+#, python-brace-format
+msgid "The EFI partition was not uniquely found on the selected disk"
+msgstr "Na odabranom disku nije bilo moguće jednoznačno pronaći EFI particiju"
+
+#: src/anduinos_rescue_center/boot.py:151
+#, python-brace-format
+msgid "The selected installation must be offline and unmounted"
+msgstr "Odabrana instalacija mora biti izvanmrežna i odmontirana"
+
+#: src/anduinos_rescue_center/boot.py:157
+#, python-brace-format
+msgid "No installed kernel was found in /boot"
+msgstr "U /boot nije pronađena nijedna instalirana jezgra"
+
+#: src/anduinos_rescue_center/boot.py:159
+#, python-brace-format
+msgid "At least one kernel has no matching initrd"
+msgstr "Najmanje jedna jezgra nema odgovarajući initrd"
+
+#: src/anduinos_rescue_center/boot.py:161
+#, python-brace-format
+msgid ""
+"GRUB configuration is missing or does not reference a complete kernel/initrd "
+"pair"
+msgstr ""
+"Konfiguracija GRUB-a nedostaje ili ne navodi potpuni par jezgre i initrd-a"
+
+#: src/anduinos_rescue_center/boot.py:170
+#, python-brace-format
+msgid "The EFI partition is already mounted; unmount it before repair"
+msgstr "EFI particija već je montirana. Odmontirajte je prije popravka"
+
+#: src/anduinos_rescue_center/boot.py:178
+#, python-brace-format
+msgid "The AnduinOS EFI loader is missing"
+msgstr "Nedostaje EFI pokretački program AnduinOS-a"
+
+#: src/anduinos_rescue_center/boot.py:181
+#, python-brace-format
+msgid "No matching AnduinOS firmware boot entry was found"
+msgstr "Nije pronađena odgovarajuća stavka AnduinOS-a za pokretanje u firmveru"
+
+#: src/anduinos_rescue_center/boot.py:183
+#, python-brace-format
+msgid ""
+"An active AnduinOS firmware boot entry could not be verified in BootOrder"
+msgstr ""
+"U BootOrderu nije moguće potvrditi aktivnu stavku AnduinOS-a za pokretanje u "
+"firmveru"
+
+#: src/anduinos_rescue_center/boot.py:186
+#, python-brace-format
+msgid "The Live session was not booted with accessible UEFI variables"
+msgstr "Pokretna sesija nije pokrenuta s dostupnim UEFI varijablama"
+
+#: src/anduinos_rescue_center/boot.py:195
+#, python-brace-format
+msgid "Install GRUB only in EFI/AnduinOS"
+msgstr "Instaliraj GRUB samo u EFI/AnduinOS"
+
+#: src/anduinos_rescue_center/boot.py:195
+#, python-brace-format
+msgid "Rebuild installed initrds"
+msgstr "Ponovno izradi instalirane initrd datoteke"
+
+#: src/anduinos_rescue_center/boot.py:196
+#, python-brace-format
+msgid "Regenerate GRUB configuration"
+msgstr "Ponovno izradi konfiguraciju GRUB-a"
+
+#: src/anduinos_rescue_center/boot.py:197
+#, python-brace-format
+msgid "Create an AnduinOS firmware entry first in BootOrder only if missing"
+msgstr ""
+"Samo ako nedostaje, izradi stavku AnduinOS-a u firmveru i postavi je prvu u "
+"BootOrderu"
+
+#: src/anduinos_rescue_center/boot.py:205
+#: src/anduinos_rescue_center/boot.py:271
+#, python-brace-format
+msgid "Boot repair command failed: {command}"
+msgstr "Naredba za popravak pokretanja nije uspjela: {command}"
+
+#: src/anduinos_rescue_center/boot.py:222
+#: src/anduinos_rescue_center/client.py:33
+#, python-brace-format
+msgid "Completed: {command}"
+msgstr "Dovršeno: {command}"
+
+#: src/anduinos_rescue_center/boot.py:253
+#, python-brace-format
+msgid "Boot repair output is too large: {command}"
+msgstr "Ispis popravka pokretanja je prevelik: {command}"
+
+#: src/anduinos_rescue_center/boot.py:279
+#, python-brace-format
+msgid "Checking the selected system and EFI partition again"
+msgstr "Ponovna provjera odabranog sustava i EFI particije"
+
+#: src/anduinos_rescue_center/boot.py:282
+#, python-brace-format
+msgid "The selected EFI partition changed or cannot be repaired safely"
+msgstr "Odabrana EFI particija se promijenila ili se ne može sigurno popraviti"
+
+#: src/anduinos_rescue_center/boot.py:288
+#, python-brace-format
+msgid "The selected EFI partition changed before repair"
+msgstr "Odabrana EFI particija promijenila se prije popravka"
+
+#: src/anduinos_rescue_center/boot.py:292
+#: src/anduinos_rescue_center/client.py:36
+#, python-brace-format
+msgid "Opening {system} and its EFI partition {esp}"
+msgstr "Otvaranje sustava {system} i njegove EFI particije {esp}"
+
+#: src/anduinos_rescue_center/boot.py:297
+#, python-brace-format
+msgid "Installed boot repair tool is missing: /{tool}"
+msgstr "Nedostaje instalirani alat za popravak pokretanja: /{tool}"
+
+#: src/anduinos_rescue_center/boot.py:299
+#, python-brace-format
+msgid "Rebuilding installed initrds; this may take several minutes"
+msgstr ""
+"Ponovna izrada instaliranih initrd datoteka može potrajati nekoliko minuta"
+
+#: src/anduinos_rescue_center/boot.py:306
+#, python-brace-format
+msgid "Dracut produced no matching kernel/initrd pair"
+msgstr "Dracut nije izradio odgovarajući par jezgre i initrd-a"
+
+#: src/anduinos_rescue_center/boot.py:310
+#: src/anduinos_rescue_center/client.py:39
+#, python-brace-format
+msgid "Checking installed initrd for kernel {kernel}"
+msgstr "Provjera instaliranog initrd-a za jezgru {kernel}"
+
+#: src/anduinos_rescue_center/boot.py:316
+#, python-brace-format
+msgid "An installed-system initrd still contains Live boot modules"
+msgstr ""
+"Initrd instaliranog sustava još sadrži module za pokretanje pokretne sesije"
+
+#: src/anduinos_rescue_center/boot.py:318
+#, python-brace-format
+msgid "The Btrfs initrd lacks the AnduinOS recovery module"
+msgstr "Btrfs initrd ne sadrži modul za oporavak AnduinOS-a"
+
+#: src/anduinos_rescue_center/boot.py:320
+#, python-brace-format
+msgid "Installing AnduinOS GRUB on the selected EFI partition"
+msgstr "Instaliranje AnduinOS GRUB-a na odabranu EFI particiju"
+
+#: src/anduinos_rescue_center/boot.py:325
+#, python-brace-format
+msgid "Generating the installed system's GRUB menu"
+msgstr "Izrada izbornika GRUB-a instaliranog sustava"
+
+#: src/anduinos_rescue_center/boot.py:332
+#, python-brace-format
+msgid "Boot repair did not produce a complete kernel, GRUB and EFI chain"
+msgstr "Popravak nije uspostavio potpun lanac jezgre, GRUB-a i EFI-ja"
+
+#: src/anduinos_rescue_center/boot.py:335
+#, python-brace-format
+msgid "EFI files were repaired, but firmware variables are unavailable"
+msgstr "EFI datoteke su popravljene, ali varijable firmvera nisu dostupne"
+
+#: src/anduinos_rescue_center/boot.py:337
+#, python-brace-format
+msgid "Creating the missing AnduinOS firmware boot entry"
+msgstr "Izrada stavke AnduinOS-a za pokretanje koja nedostaje u firmveru"
+
+#: src/anduinos_rescue_center/boot.py:342
+#, python-brace-format
+msgid "Re-checking the complete boot path without writing"
+msgstr "Ponovna provjera cijele putanje pokretanja bez zapisivanja"
+
+#: src/anduinos_rescue_center/client.py:77
+#, python-brace-format
+msgid "Storage scan failed"
+msgstr "Pregled pohrane nije uspio"
+
+#: src/anduinos_rescue_center/client.py:81
+#: src/anduinos_rescue_center/client.py:107
+#: src/anduinos_rescue_center/client.py:310
+#: src/anduinos_rescue_center/client.py:366
+#, python-brace-format
+msgid "The rescue helper returned invalid data"
+msgstr "Pomoćni program za oporavak vratio je nevaljane podatke"
+
+#: src/anduinos_rescue_center/client.py:83
+#: src/anduinos_rescue_center/client.py:109
+#: src/anduinos_rescue_center/client.py:312
+#: src/anduinos_rescue_center/client.py:368
+#, python-brace-format
+msgid "The rescue helper protocol is incompatible"
+msgstr "Protokol pomoćnog programa za oporavak nije kompatibilan"
+
+#: src/anduinos_rescue_center/client.py:94
+#: src/anduinos_rescue_center/client.py:122
+#: src/anduinos_rescue_center/client.py:244
+#: src/anduinos_rescue_center/client.py:325
+#: src/anduinos_rescue_center/client.py:356
+#, python-brace-format
+msgid "Invalid rescue target identity"
+msgstr "Nevaljan identitet odredišta za oporavak"
+
+#: src/anduinos_rescue_center/client.py:103
+#, python-brace-format
+msgid "Target inspection failed"
+msgstr "Pregled odredišta nije uspio"
+
+#: src/anduinos_rescue_center/client.py:124
+#: src/anduinos_rescue_center/operations.py:57
+#, python-brace-format
+msgid "The new password is empty or unsupported"
+msgstr "Nova lozinka je prazna ili nije podržana"
+
+#: src/anduinos_rescue_center/client.py:134
+#: src/anduinos_rescue_center/operations.py:71
+#, python-brace-format
+msgid "Password reset failed"
+msgstr "Ponovno postavljanje lozinke nije uspjelo"
+
+#: src/anduinos_rescue_center/client.py:145
+#, python-brace-format
+msgid "File listing failed"
+msgstr "Popis datoteka nije moguće učitati"
+
+#: src/anduinos_rescue_center/client.py:158
+#, python-brace-format
+msgid "Export failed"
+msgstr "Izvoz nije uspio"
+
+#: src/anduinos_rescue_center/client.py:163
+#, python-brace-format
+msgid "The rescue helper did not report the exported file"
+msgstr "Pomoćni program za oporavak nije prijavio izvezenu datoteku"
+
+#: src/anduinos_rescue_center/client.py:173
+#, python-brace-format
+msgid "Snapshot listing failed"
+msgstr "Popis snimki stanja nije moguće učitati"
+
+#: src/anduinos_rescue_center/client.py:184
+#, python-brace-format
+msgid "Invalid snapshot name"
+msgstr "Nevaljan naziv snimke stanja"
+
+#: src/anduinos_rescue_center/client.py:186
+#, python-brace-format
+msgid "Snapshot creation failed"
+msgstr "Izrada snimke stanja nije uspjela"
+
+#: src/anduinos_rescue_center/client.py:200
+#, python-brace-format
+msgid "Invalid recovery point ID"
+msgstr "Nevaljan ID točke oporavka"
+
+#: src/anduinos_rescue_center/client.py:203
+#, python-brace-format
+msgid "System restore failed"
+msgstr "Vraćanje sustava nije uspjelo"
+
+#: src/anduinos_rescue_center/client.py:215
+#, python-brace-format
+msgid "Boot diagnosis failed"
+msgstr "Dijagnostika pokretanja nije uspjela"
+
+#: src/anduinos_rescue_center/client.py:227
+#, python-brace-format
+msgid "Invalid EFI partition identity"
+msgstr "Nevaljan identitet EFI particije"
+
+#: src/anduinos_rescue_center/client.py:288
+#, python-brace-format
+msgid "The rescue helper returned too much data"
+msgstr "Pomoćni program za oporavak vratio je previše podataka"
+
+#: src/anduinos_rescue_center/client.py:292
+#, python-brace-format
+msgid "The rescue helper returned an oversized progress line"
+msgstr "Pomoćni program za oporavak vratio je predugačak redak napretka"
+
+#: src/anduinos_rescue_center/client.py:323
+#, python-brace-format
+msgid "The emergency terminal is available only in AnduinOS Live"
+msgstr ""
+"Terminal za hitne slučajeve dostupan je samo u pokretnoj sesiji AnduinOS-a"
+
+#: src/anduinos_rescue_center/client.py:328
+#: src/anduinos_rescue_center/client.py:343
+#, python-brace-format
+msgid "Ptyxis is not installed in this Live session"
+msgstr "Ptyxis nije instaliran u ovoj pokretnoj sesiji"
+
+#: src/anduinos_rescue_center/client.py:330
+#, python-brace-format
+msgid "Offline AnduinOS recovery"
+msgstr "Izvanmrežni oporavak AnduinOS-a"
+
+#: src/anduinos_rescue_center/client.py:340
+#, python-brace-format
+msgid "A verified AnduinOS Live session is required"
+msgstr "Potrebna je provjerena pokretna sesija AnduinOS-a"
+
+#: src/anduinos_rescue_center/client.py:344
+#, python-brace-format
+msgid "AnduinOS Live terminal"
+msgstr "Terminal pokretne sesije AnduinOS-a"
+
+#: src/anduinos_rescue_center/files.py:34
+#: src/anduinos_rescue_center/files.py:87
+#: src/anduinos_rescue_center/offline_env.py:27
+#: src/anduinos_rescue_center/operations.py:43
+#: src/anduinos_rescue_center/storage.py:317
+#, python-brace-format
+msgid "The selected partition is not an AnduinOS installation"
+msgstr "Na odabranoj particiji nije instaliran AnduinOS"
+
+#: src/anduinos_rescue_center/files.py:37
+#, python-brace-format
+msgid "The selected location is not a directory"
+msgstr "Odabrana lokacija nije mapa"
+
+#: src/anduinos_rescue_center/files.py:80
+#: src/anduinos_rescue_center/privileged.py:41
+#, python-brace-format
+msgid "Could not identify the desktop user"
+msgstr "Korisnika radne površine nije moguće utvrditi"
+
+#: src/anduinos_rescue_center/files.py:90
+#, python-brace-format
+msgid "Export a file or folder instead of the whole system"
+msgstr "Umjesto cijelog sustava izvezite datoteku ili mapu"
+
+#: src/anduinos_rescue_center/files.py:93
+#, python-brace-format
+msgid "Symbolic links and special files cannot be exported"
+msgstr "Simboličke poveznice i posebne datoteke nije moguće izvesti"
+
+#: src/anduinos_rescue_center/files.py:96
+#, python-brace-format
+msgid "A file with this name already exists at the destination"
+msgstr "Na odredištu već postoji datoteka s tim nazivom"
+
+#: src/anduinos_rescue_center/files.py:105
+#, python-brace-format
+msgid "Could not sync exported data"
+msgstr "Izvezene podatke nije moguće sinkronizirati na disk"
+
+#: src/anduinos_rescue_center/files.py:125
+#, python-brace-format
+msgid "The selected path escapes the offline system"
+msgstr "Odabrana putanja vodi izvan izvanmrežnog sustava"
+
+#: src/anduinos_rescue_center/files.py:139
+#, python-brace-format
+msgid "Choose a folder in your Home directory or on your removable media"
+msgstr "Odaberite mapu u svojoj početnoj mapi ili na prijenosnom mediju"
+
+#: src/anduinos_rescue_center/files.py:148
+#, python-brace-format
+msgid "Invalid offline file path"
+msgstr "Nevaljana putanja izvanmrežne datoteke"
+
+#: src/anduinos_rescue_center/files.py:183
+#, python-brace-format
+msgid "Cannot export special file: {name}"
+msgstr "Posebnu datoteku nije moguće izvesti: {name}"
+
+#: src/anduinos_rescue_center/offline_env.py:25
+#, python-brace-format
+msgid "The selected system root is unavailable or unsafe"
+msgstr ""
+"Korijenski datotečni sustav odabrane instalacije nije dostupan ili nije "
+"siguran"
+
+#: src/anduinos_rescue_center/offline_env.py:41
+#, python-brace-format
+msgid "Unsafe target mount directory: /{path}"
+msgstr "Nesigurna odredišna mapa montiranja: /{path}"
+
+#: src/anduinos_rescue_center/offline_env.py:48
+#, python-brace-format
+msgid "Mount failed: {command}"
+msgstr "Montiranje nije uspjelo: {command}"
+
+#: src/anduinos_rescue_center/offline_env.py:87
+#, python-brace-format
+msgid "Unmount the offline installation before opening it for repair"
+msgstr "Odmontirajte izvanmrežnu instalaciju prije otvaranja radi popravka"
+
+#: src/anduinos_rescue_center/offline_env.py:134
+#, python-brace-format
+msgid "Could not unmount recovery filesystems: {details}"
+msgstr "Nije moguće odmontirati datotečne sustave za oporavak: {details}"
+
+#: src/anduinos_rescue_center/offline_env.py:142
+#, python-brace-format
+msgid "An interactive AnduinOS Live terminal is required"
+msgstr "Potreban je interaktivni terminal pokretne sesije AnduinOS-a"
+
+#: src/anduinos_rescue_center/offline_env.py:146
+#, python-brace-format
+msgid ""
+"This is a root shell in the selected offline system. Type exit to unmount "
+"it.\n"
+msgstr ""
+"Ovo je ljuska s ovlastima root u odabranom izvanmrežnom sustavu. Upišite "
+"exit za odmontiranje.\n"
+
+#: src/anduinos_rescue_center/operations.py:35
+#: src/anduinos_rescue_center/storage.py:306
+#, python-brace-format
+msgid "The currently running system cannot be a rescue target"
+msgstr "Trenutačno pokrenuti sustav ne može biti odredište oporavka"
+
+#: src/anduinos_rescue_center/operations.py:37
+#, python-brace-format
+msgid "Unmount the selected partition before changing a password"
+msgstr "Odmontirajte odabranu particiju prije promjene lozinke"
+
+#: src/anduinos_rescue_center/operations.py:55
+#, python-brace-format
+msgid "Invalid local account name"
+msgstr "Nevaljan naziv lokalnog računa"
+
+#: src/anduinos_rescue_center/operations.py:60
+#, python-brace-format
+msgid "The selected local account no longer exists"
+msgstr "Odabrani lokalni račun više ne postoji"
+
+#: src/anduinos_rescue_center/operations.py:77
+#, python-brace-format
+msgid "Could not sync the new password"
+msgstr "Novu lozinku nije moguće sinkronizirati na disk"
+
+#: src/anduinos_rescue_center/privileged.py:21
+#, python-brace-format
+msgid "The rescue helper must run as root"
+msgstr "Pomoćni program za oporavak mora se pokrenuti s ovlastima root"
+
+#: src/anduinos_rescue_center/privileged.py:33
+#, python-brace-format
+msgid "The new password is too long"
+msgstr "Nova lozinka je predugačka"
+
+#: src/anduinos_rescue_center/privileged.py:53
+#, python-brace-format
+msgid "Invalid protection choice"
+msgstr "Nevaljan odabir zaštite"
+
+#: src/anduinos_rescue_center/snapshots.py:39
+#, python-brace-format
+msgid "The snapshot name is invalid"
+msgstr "Naziv snimke stanja nije valjan"
+
+#: src/anduinos_rescue_center/snapshots.py:44
+#, python-brace-format
+msgid "Created from AnduinOS Rescue Center"
+msgstr "Izrađeno u AnduinOS Centru za oporavak"
+
+#: src/anduinos_rescue_center/snapshots.py:60
+#, python-brace-format
+msgid "The recovery point ID is invalid"
+msgstr "ID točke oporavka nije valjan"
+
+#: src/anduinos_rescue_center/snapshots.py:94
+#, python-brace-format
+msgid "The currently running system cannot be a recovery target"
+msgstr "Trenutačno pokrenuti sustav ne može biti odredište vraćanja"
+
+#: src/anduinos_rescue_center/snapshots.py:96
+#, python-brace-format
+msgid "Unmount the selected partition before managing snapshots"
+msgstr "Odmontirajte odabranu particiju prije upravljanja snimkama stanja"
+
+#: src/anduinos_rescue_center/snapshots.py:98
+#, python-brace-format
+msgid "System snapshots require the standard AnduinOS Btrfs layout"
+msgstr "Snimke stanja sustava zahtijevaju standardni Btrfs raspored AnduinOS-a"
+
+#: src/anduinos_rescue_center/snapshots.py:105
+#, python-brace-format
+msgid "The selected partition is not a standard AnduinOS Btrfs installation"
+msgstr "Odabrana particija nije standardna Btrfs instalacija AnduinOS-a"
+
+#: src/anduinos_rescue_center/snapshots.py:128
+#, python-brace-format
+msgid "The snapshot engine returned invalid data"
+msgstr "Mehanizam za snimke stanja vratio je nevaljane podatke"
+
+#: src/anduinos_rescue_center/snapshots.py:130
+#, python-brace-format
+msgid "The snapshot engine protocol is incompatible"
+msgstr "Protokol mehanizma za snimke stanja nije kompatibilan"
+
+#: src/anduinos_rescue_center/storage.py:58
+#, python-brace-format
+msgid "Could not enumerate storage"
+msgstr "Uređaje za pohranu nije moguće popisati"
+
+#: src/anduinos_rescue_center/storage.py:62
+#: src/anduinos_rescue_center/storage.py:64
+#: src/anduinos_rescue_center/storage.py:349
+#, python-brace-format
+msgid "lsblk returned invalid storage data"
+msgstr "Naredba lsblk vratila je nevaljane podatke o pohrani"
+
+#: src/anduinos_rescue_center/storage.py:196
+#: src/anduinos_rescue_center/storage.py:245
+#, python-brace-format
+msgid "Mount failed"
+msgstr "Montiranje nije uspjelo"
+
+#: src/anduinos_rescue_center/storage.py:211
+#: src/anduinos_rescue_center/storage.py:257
+#, python-brace-format
+msgid "Could not unmount {mountpoint}"
+msgstr "Nije moguće odmontirati {mountpoint}"
+
+#: src/anduinos_rescue_center/storage.py:232
+#, python-brace-format
+msgid "This filesystem is not supported for repair operations"
+msgstr "Ovaj datotečni sustav ne podržava postupke popravka"
+
+#: src/anduinos_rescue_center/storage.py:345
+#, python-brace-format
+msgid "Could not re-check the selected disk"
+msgstr "Odabrani disk nije moguće ponovno provjeriti"
+
+#: src/anduinos_rescue_center/storage.py:362
+#, python-brace-format
+msgid "The selected partition changed after it was scanned"
+msgstr "Odabrana particija promijenila se nakon pregleda"
+
+#: src/anduinos_rescue_center/storage.py:379
+#, python-brace-format
+msgid "The selected partition is no longer available"
+msgstr "Odabrana particija više nije dostupna"
+
+#: src/anduinos_rescue_center/storage.py:403
+#, python-brace-format
+msgid "Invalid block-device path"
+msgstr "Nevaljana putanja blokovnog uređaja"
+
+#: src/anduinos_rescue_center/storage.py:407
+#, python-brace-format
+msgid "Block device is unavailable"
+msgstr "Blokovni uređaj nije dostupan"
+
+#: src/anduinos_rescue_center/storage.py:409
+#, python-brace-format
+msgid "Target is not a block device"
+msgstr "Odredište nije blokovni uređaj"
+
+#: src/anduinos_rescue_center/app.py:306
+#, python-brace-format
+msgid "Closing encrypted volume"
+msgstr "Zatvaranje šifriranog volumena"
+
+#: src/anduinos_rescue_center/app.py:307
+#, python-brace-format
+msgid "Waiting for the selected volume to close…"
+msgstr "Čekanje zatvaranja odabranog volumena…"
+
+#: src/anduinos_rescue_center/app.py:430 src/anduinos_rescue_center/app.py:441
+#, python-brace-format
+msgid "Encrypted volume"
+msgstr "Šifrirani volumen"
+
+#: src/anduinos_rescue_center/app.py:507
+#, python-brace-format
+msgid "Unlock encrypted volume"
+msgstr "Otključaj šifrirani volumen"
+
+#: src/anduinos_rescue_center/app.py:508
+#, python-brace-format
+msgid ""
+"Enter the disk password or recovery key. This does not change the password."
+msgstr ""
+"Unesite lozinku diska ili ključ za oporavak. Time se lozinka ne mijenja."
+
+#: src/anduinos_rescue_center/app.py:512
+#, python-brace-format
+msgid "Disk password or recovery key"
+msgstr "Lozinka diska ili ključ za oporavak"
+
+#: src/anduinos_rescue_center/app.py:515
+#, python-brace-format
+msgid "Unlock"
+msgstr "Otključaj"
+
+#: src/anduinos_rescue_center/app.py:526
+#, python-brace-format
+msgid "Unlocking encrypted volume"
+msgstr "Otključavanje šifriranog volumena"
+
+#: src/anduinos_rescue_center/app.py:527
+#, python-brace-format
+msgid "Checking the selected volume and reading system information…"
+msgstr "Provjera odabranog volumena i očitavanje podataka o sustavu…"
+
+#: src/anduinos_rescue_center/boot.py:284
+#: src/anduinos_rescue_center/boot.py:297
+#, python-brace-format
+msgid "The encrypted root configuration is missing or inconsistent"
+msgstr ""
+"Postavke šifriranog korijenskog datotečnog sustava nedostaju ili nisu "
+"dosljedne"
+
+#: src/anduinos_rescue_center/boot.py:300
+#, python-brace-format
+msgid "The installed disk unlock key is missing or unsafe"
+msgstr "Instalirani ključ za otključavanje diska nedostaje ili nije siguran"
+
+#: src/anduinos_rescue_center/boot.py:302
+#, python-brace-format
+msgid "Encrypted boot repair requires the AnduinOS bootloader"
+msgstr ""
+"Za popravak pokretanja šifriranog sustava potreban je pokretački program "
+"AnduinOS-a"
+
+#: src/anduinos_rescue_center/boot.py:315
+#, python-brace-format
+msgid "The repaired bootloader identifies a different encrypted volume"
+msgstr "Popravljeni pokretački program navodi drugi šifrirani volumen"
+
+#: src/anduinos_rescue_center/boot.py:322
+#, python-brace-format
+msgid "The recovery volume does not match the encrypted system"
+msgstr "Volumen za oporavak ne odgovara šifriranom sustavu"
+
+#: src/anduinos_rescue_center/boot.py:326
+#, python-brace-format
+msgid "The repaired EFI configuration is missing or unsafe"
+msgstr "Popravljena EFI konfiguracija nedostaje ili nije sigurna"
+
+#: src/anduinos_rescue_center/boot.py:343
+#: src/anduinos_rescue_center/boot.py:353
+#, python-brace-format
+msgid "The repaired menu is missing the encrypted root handoff"
+msgstr ""
+"U popravljenom izborniku nedostaju postavke za predaju šifriranog "
+"korijenskog datotečnog sustava"
+
+#: src/anduinos_rescue_center/boot.py:411
+#, python-brace-format
+msgid "The rebuilt initrd is missing encrypted root support"
+msgstr ""
+"Ponovno izrađeni initrd ne podržava šifrirani korijenski datotečni sustav"
+
+#: src/anduinos_rescue_center/boot.py:420
+#, python-brace-format
+msgid "The rebuilt initrd contains a persistent disk unlock key"
+msgstr "Ponovno izrađeni initrd sadrži trajni ključ za otključavanje diska"
+
+#: src/anduinos_rescue_center/client.py:117
+#: src/anduinos_rescue_center/encryption.py:50
+#, python-brace-format
+msgid "The disk password is empty or unsupported"
+msgstr "Lozinka diska je prazna ili nije podržana"
+
+#: src/anduinos_rescue_center/client.py:121
+#, python-brace-format
+msgid "Could not unlock the volume"
+msgstr "Volumen nije moguće otključati"
+
+#: src/anduinos_rescue_center/client.py:132
+#: src/anduinos_rescue_center/encryption.py:108
+#: src/anduinos_rescue_center/encryption.py:112
+#: src/anduinos_rescue_center/encryption.py:115
+#, python-brace-format
+msgid "Invalid unlock session"
+msgstr "Nevaljana sesija otključavanja"
+
+#: src/anduinos_rescue_center/client.py:136
+#, python-brace-format
+msgid "Could not close the unlocked volume"
+msgstr "Otključani volumen nije moguće zatvoriti"
+
+#: src/anduinos_rescue_center/encryption.py:53
+#, python-brace-format
+msgid "Select an offline encrypted volume"
+msgstr "Odaberite izvanmrežni šifrirani volumen"
+
+#: src/anduinos_rescue_center/encryption.py:57
+#, python-brace-format
+msgid "Only LUKS2 volumes are supported"
+msgstr "Podržani su samo volumeni LUKS2"
+
+#: src/anduinos_rescue_center/encryption.py:68
+#, python-brace-format
+msgid "The recovery runtime directory is unsafe"
+msgstr "Radna mapa oporavka nije sigurna"
+
+#: src/anduinos_rescue_center/encryption.py:78
+#, python-brace-format
+msgid "Could not unlock the volume. Check the password or recovery key."
+msgstr ""
+"Volumen nije moguće otključati. Provjerite lozinku ili ključ za oporavak."
+
+#: src/anduinos_rescue_center/encryption.py:83
+#, python-brace-format
+msgid "The unlocked device is not ready"
+msgstr "Otključani uređaj nije spreman"
+
+#: src/anduinos_rescue_center/encryption.py:86
+#, python-brace-format
+msgid "The unlocked device does not match the selected volume"
+msgstr "Otključani uređaj ne odgovara odabranom volumenu"
+
+#: src/anduinos_rescue_center/encryption.py:100
+#: src/anduinos_rescue_center/encryption.py:122
+#, python-brace-format
+msgid "Could not close the unlocked volume; it may still be in use"
+msgstr "Otključani volumen nije moguće zatvoriti jer se možda još upotrebljava"
+
+#: src/anduinos_rescue_center/encryption.py:118
+#, python-brace-format
+msgid "Unmount the unlocked volume before closing it"
+msgstr "Prije zatvaranja odmontirajte otključani volumen"
+
+#: src/anduinos_rescue_center/storage.py:412
+#, python-brace-format
+msgid "The encrypted volume has an unsupported or ambiguous mapping"
+msgstr "Šifrirani volumen ima nepodržano ili nejednoznačno mapiranje"
+
+msgid ""
+"The emergency terminal is still running. Close it normally and try again."
+msgstr ""
+"Terminal za hitne slučajeve još radi. Zatvorite ga na uobičajen način i "
+"pokušajte ponovno."
+
+msgid ""
+"Recovery filesystems are still in use. Close programs using the disk and try "
+"again."
+msgstr ""
+"Datotečni sustavi za oporavak još se upotrebljavaju. Zatvorite programe koji "
+"koriste disk pa pokušajte ponovno."
+
+msgid "Could not release the recovery disk"
+msgstr "Disk za oporavak nije moguće osloboditi"
+
+msgid "Close the emergency terminal first"
+msgstr "Prvo zatvorite terminal za hitne slučajeve"
+
+msgid ""
+"Finish copying your files and close the emergency terminal. Rescue Center "
+"will then unmount the disk."
+msgstr ""
+"Dovršite kopiranje datoteka i zatvorite terminal za hitne slučajeve. Centar "
+"za oporavak zatim će odmontirati disk."
+
+msgid "Unmounting recovery filesystems"
+msgstr "Odmontiranje datotečnih sustava za oporavak"
+
+msgid "Please wait before closing Rescue Center or starting installation."
+msgstr ""
+"Pričekajte prije zatvaranja Centra za oporavak ili pokretanja instalacije."
+
+msgid ""
+"Enter the disk password or emergency recovery key. The system-generated key "
+"also unlocks the disk. This does not change the password."
+msgstr ""
+"Unesite lozinku diska ili ključ za hitni oporavak. Ključ koji je izradio "
+"sustav također otključava disk. Time se lozinka ne mijenja."
+
+msgid "Disk password or emergency recovery key"
+msgstr "Lozinka diska ili ključ za hitni oporavak"
+
+msgid ""
+"Could not unlock the volume. Check the password or emergency recovery key."
+msgstr ""
+"Volumen nije moguće otključati. Provjerite lozinku ili ključ za hitni "
+"oporavak."

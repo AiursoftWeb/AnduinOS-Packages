@@ -38,6 +38,7 @@ declare -A ADD=(
     ["pl"]="Dodaj do paska zadań"
     ["tr"]="Görev çubuğuna ekle"
     ["ro"]="Adăugați în bara de activități"
+    ["hr"]="Dodaj na programsku traku"
 )
 
 declare -A REMOVE=(
@@ -62,6 +63,7 @@ declare -A REMOVE=(
     ["pl"]="Usuń z paska zadań"
     ["tr"]="Görev çubuğundan kaldır"
     ["ro"]="Anulați fixarea din bara de activități"
+    ["hr"]="Ukloni s programske trake"
 )
 
 # ── Ubuntu archive URL per suite ────────────────────────────────────────
@@ -107,7 +109,7 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
         language-pack-gnome-en-base 2>/dev/null || true
 
     # For non-English: download langpacks we have translations for
-    for lang in zh-hans zh-hant ja ko vi th de fr es ru it pt nl sv pl tr ar ro; do
+    for lang in zh-hans zh-hant ja ko vi th de fr es ru it pt nl sv pl tr ar ro hr; do
         apt-get download -qq \
             -o "Dir::Etc::SourceList=$APT_DIR/sources.list" \
             -o "Dir::Etc::SourceParts=/dev/null" \

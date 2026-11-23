@@ -8,6 +8,7 @@
 
   <action id="org.anduinos.btrfs-snapshots-manager.create-snapshot">
     <description>Create an AnduinOS system snapshot</description>
+    <description xml:lang="hr">Izradi snimku stanja sustava AnduinOS</description>
     <description xml:lang="ar_SA">إنشاء لقطة النظام الفورية لـ AnduinOS</description>
     <description xml:lang="da_DK">Opret et AnduinOS-systemøjebliksbillede</description>
     <description xml:lang="de_DE">AnduinOS-System-Snapshot erstellen</description>
@@ -36,6 +37,7 @@
     <description xml:lang="zh_TW">建立 AnduinOS 系統快照</description>
     <description xml:lang="zh_CN">创建 AnduinOS 系统快照</description>
     <message>Authentication is required to create a system snapshot</message>
+    <message xml:lang="hr">Za izradu snimke stanja sustava potrebna je autentifikacija</message>
     <message xml:lang="ar_SA">المصادقة مطلوبة لإنشاء لقطة النظام الفورية</message>
     <message xml:lang="da_DK">Godkendelse er påkrævet for at oprette et systemøjebliksbillede</message>
     <message xml:lang="de_DE">Authentifizierung ist erforderlich, um einen System-Snapshot zu erstellen</message>
@@ -72,6 +74,7 @@
 
   <action id="org.anduinos.btrfs-snapshots-manager.delete-snapshot">
     <description>Delete an AnduinOS system snapshot</description>
+    <description xml:lang="hr">Izbriši snimku stanja sustava AnduinOS</description>
     <description xml:lang="ar_SA">حذف لقطة النظام الفورية لـ AnduinOS</description>
     <description xml:lang="da_DK">Slet et AnduinOS-systemøjebliksbillede</description>
     <description xml:lang="de_DE">AnduinOS-System-Snapshot löschen</description>
@@ -100,6 +103,7 @@
     <description xml:lang="zh_TW">刪除 AnduinOS 系統快照</description>
     <description xml:lang="zh_CN">删除 AnduinOS 系统快照</description>
     <message>Authentication is required to delete a system snapshot</message>
+    <message xml:lang="hr">Za brisanje snimke stanja sustava potrebna je autentifikacija</message>
     <message xml:lang="ar_SA">المصادقة مطلوبة لحذف لقطة النظام الفورية</message>
     <message xml:lang="da_DK">Godkendelse er påkrævet for at slette et systemøjebliksbillede</message>
     <message xml:lang="de_DE">Authentifizierung ist erforderlich, um einen System-Snapshot zu löschen</message>
@@ -136,6 +140,7 @@
 
   <action id="org.anduinos.btrfs-snapshots-manager.restore-snapshot">
     <description>Access or restore an AnduinOS system snapshot</description>
+    <description xml:lang="hr">Pristupi snimci stanja sustava AnduinOS ili vrati sustav iz nje</description>
     <description xml:lang="ar_SA">الوصول إلى لقطة النظام الفورية لـ AnduinOS أو استعادتها</description>
     <description xml:lang="da_DK">Få adgang til eller gendan et AnduinOS-systemøjebliksbillede</description>
     <description xml:lang="de_DE">Auf einen AnduinOS-System-Snapshot zugreifen oder ihn wiederherstellen</description>
@@ -164,6 +169,7 @@
     <description xml:lang="zh_TW">存取或復原 AnduinOS 系統快照</description>
     <description xml:lang="zh_CN">访问或还原 AnduinOS 系统快照</description>
     <message>Authentication is required to access or restore a system snapshot</message>
+    <message xml:lang="hr">Za pristup snimci stanja sustava ili vraćanje iz nje potrebna je autentifikacija</message>
     <message xml:lang="ar_SA">المصادقة مطلوبة للوصول إلى لقطة النظام الفورية أو استعادتها</message>
     <message xml:lang="da_DK">Godkendelse er påkrævet for at få adgang til eller gendanne et systemøjebliksbillede</message>
     <message xml:lang="de_DE">Authentifizierung ist erforderlich, um auf einen System-Snapshot zuzugreifen oder ihn wiederherzustellen</message>
@@ -200,6 +206,7 @@
 
   <action id="org.anduinos.btrfs-snapshots-manager.configure-system">
     <description>Configure AnduinOS recovery</description>
+    <description xml:lang="hr">Konfiguriraj oporavak AnduinOS-a</description>
     <description xml:lang="ar_SA">تكوين استرداد AnduinOS</description>
     <description xml:lang="da_DK">Konfigurer AnduinOS-gendannelse</description>
     <description xml:lang="de_DE">AnduinOS-Wiederherstellung konfigurieren</description>
@@ -228,6 +235,7 @@
     <description xml:lang="zh_TW">設定 AnduinOS 復原</description>
     <description xml:lang="zh_CN">配置 AnduinOS 系统恢复</description>
     <message>Authentication is required to change recovery settings</message>
+    <message xml:lang="hr">Za promjenu postavki oporavka potrebna je autentifikacija</message>
     <message xml:lang="ar_SA">المصادقة مطلوبة لتغيير إعدادات الاسترداد</message>
     <message xml:lang="da_DK">Godkendelse er påkrævet for at ændre gendannelsesindstillingerne</message>
     <message xml:lang="de_DE">Authentifizierung ist erforderlich, um die Wiederherstellungseinstellungen zu ändern</message>
@@ -264,6 +272,7 @@
 
   <action id="org.anduinos.btrfs-snapshots-manager.personal-files">
     <description>Browse and export historical Personal Files</description>
+    <description xml:lang="hr">Pregledaj i izvezi ranije verzije osobnih datoteka</description>
     <description xml:lang="ar_SA">تصفح وتصدير سجل الملفات الشخصية</description>
     <description xml:lang="da_DK">Gennemse og eksportér tidligere versioner af personlige filer</description>
     <description xml:lang="de_DE">Historische persönliche Dateien durchsuchen und exportieren</description>
@@ -292,6 +301,7 @@
     <description xml:lang="zh_TW">瀏覽並匯出歷史個人檔案</description>
     <description xml:lang="zh_CN">浏览和导出个人文件历史</description>
     <message>Authentication is required to access historical Personal Files</message>
+    <message xml:lang="hr">Za pristup povijesti osobnih datoteka potrebna je autentifikacija</message>
     <message xml:lang="ar_SA">المصادقة مطلوبة للوصول إلى سجل الملفات الشخصية</message>
     <message xml:lang="da_DK">Godkendelse kræves for at få adgang til tidligere versioner af personlige filer</message>
     <message xml:lang="de_DE">Authentifizierung ist erforderlich, um auf historische persönliche Dateien zuzugreifen</message>
@@ -328,6 +338,7 @@
 
   <action id="org.anduinos.btrfs-snapshots-manager.create-personal-snapshot">
     <description>Create a Home history snapshot</description>
+    <description xml:lang="hr">Izradi snimku povijesti početne mape</description>
     <description xml:lang="ar_SA">إنشاء لقطة فورية لسجل المجلد المنزلي</description>
     <description xml:lang="da_DK">Opret et øjebliksbillede af hjemmemappens historik</description>
     <description xml:lang="de_DE">Snapshot des persönlichen Ordners erstellen</description>
@@ -356,6 +367,7 @@
     <description xml:lang="zh_TW">建立家目錄歷史快照</description>
     <description xml:lang="zh_CN">创建主目录历史快照</description>
     <message>A local active user may create a Home history snapshot</message>
+    <message xml:lang="hr">Aktivan lokalni korisnik može izraditi snimku povijesti svoje početne mape</message>
     <message xml:lang="ar_SA">يمكن للمستخدم المحلي النشط إنشاء لقطة فورية لسجل المجلد المنزلي</message>
     <message xml:lang="da_DK">En lokal aktiv bruger kan oprette et øjebliksbillede af hjemmemappens historik</message>
     <message xml:lang="de_DE">Ein lokaler aktiver Benutzer kann einen Snapshot des persönlichen Ordners erstellen</message>
@@ -392,6 +404,7 @@
 
   <action id="org.anduinos.btrfs-snapshots-manager.create-personal-snapshot-override">
     <description>Override the Home snapshot creation limit</description>
+    <description xml:lang="hr">Zaobiđi ograničenje izrade snimki stanja početne mape</description>
     <description xml:lang="ar_SA">تجاوز حد إنشاء لقطات المجلد المنزلي</description>
     <description xml:lang="da_DK">Tilsidesæt grænsen for oprettelse af øjebliksbilleder af hjemmemappen</description>
     <description xml:lang="de_DE">Begrenzung für die Erstellung von Snapshots des persönlichen Ordners außer Kraft setzen</description>
@@ -420,6 +433,7 @@
     <description xml:lang="zh_TW">覆寫家目錄快照建立限制</description>
     <description xml:lang="zh_CN">绕过主目录快照创建频率限制</description>
     <message>Authentication is required to create more than four Home snapshots per minute</message>
+    <message xml:lang="hr">Za izradu više od četiri snimke stanja početne mape u minuti potrebna je autentifikacija</message>
     <message xml:lang="ar_SA">المصادقة مطلوبة لإنشاء أكثر من أربع لقطات فورية للمجلد المنزلي في الدقيقة</message>
     <message xml:lang="da_DK">Godkendelse er påkrævet for at oprette mere end fire øjebliksbilleder af hjemmemappen pr. minut</message>
     <message xml:lang="de_DE">Authentifizierung ist erforderlich, um mehr als vier Snapshots des persönlichen Ordners pro Minute zu erstellen</message>

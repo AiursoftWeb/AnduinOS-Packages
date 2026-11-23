@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-gnome-shell-locale</PackageName>
-    <PackageVersion>2.0.3-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GNOME Shell locale overrides — renames Pin to Dash/Dock → Taskbar</PackageDescription>
     <Section>admin</Section>
@@ -101,5 +101,9 @@
     <IncludeFile Include="deploy/noble/ro/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/ro/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
     <IncludeFile Include="deploy/resolute/ro/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ro/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
     <IncludeFile Include="deploy/stonking/ro/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/ro/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
+
+    <IncludeFile Include="deploy/noble/hr/LC_MESSAGES/gnome-shell.mo"      Target="/usr/share/locale/hr/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'noble-addon'" />
+    <IncludeFile Include="deploy/resolute/hr/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/hr/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'resolute-addon'" />
+    <IncludeFile Include="deploy/stonking/hr/LC_MESSAGES/gnome-shell.mo"   Target="/usr/share/locale/hr/LC_MESSAGES/gnome-shell.mo"      Condition="'$(Suite)' == 'stonking-addon'" />
   </ItemGroup>
 </Project>

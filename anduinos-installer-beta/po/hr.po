@@ -1,0 +1,2622 @@
+# Croatian translations for anduinos-installer-beta.
+# SPDX-License-Identifier: GPL-3.0-only
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: anduinos-installer-beta\n"
+"Report-Msgid-Bugs-To: https://github.com/AiursoftWeb/AnduinOS-Packages/"
+"issues\n"
+"PO-Revision-Date: 2026-11-23 04:29+0000\n"
+"Last-Translator: AnduinOS Team <anduin@aiursoft.com>\n"
+"Language-Team: Croatian\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: src/app_menu.py
+msgid "About"
+msgstr "O programu"
+
+#: src/app_menu.py
+msgid "View Source"
+msgstr "Pogledaj izvorni kod"
+
+#: src/app_menu.py
+msgid "Official Website"
+msgstr "Službeno web-mjesto"
+
+#: src/app_menu.py
+msgid "Report an Issue"
+msgstr "Prijavi problem"
+
+#: src/app_menu.py
+msgid "Main Menu"
+msgstr "Glavni izbornik"
+
+#: src/pages.py:2244
+msgid "Installing an input method requires an Internet connection."
+msgstr "Za instaliranje načina unosa potrebna je internetska veza."
+
+#: src/pages.py:2255
+msgid ""
+"No Internet connection. Input methods cannot be installed. You can install "
+"them later when connected."
+msgstr ""
+"Nema internetske veze. Načine unosa možete instalirati poslije, kad se "
+"povežete s internetom."
+
+#: src/pages.py:7174
+msgid ""
+"\n"
+"\n"
+"A real installation will create a machine-local MOK. After reboot, choose "
+"Enroll MOK → Continue → Yes in MOKManager and enter password 123456."
+msgstr ""
+"\n"
+"\n"
+"Stvarna instalacija izradit će MOK za ovo računalo. Nakon ponovnog "
+"pokretanja u MOKManageru odaberite Enroll MOK → Continue → Yes i unesite "
+"lozinku 123456."
+
+#: src/pages.py:6191
+msgid "; sudo does not require a password"
+msgstr "; sudo ne traži lozinku"
+
+#: src/pages.py:6193
+msgid "; sudo requires the account password"
+msgstr "; sudo traži lozinku računa"
+
+#: src/pages.py:160
+msgid ""
+"A partition on this disk is mounted. Unmount it and rescan storage before "
+"continuing."
+msgstr ""
+"Na ovom je disku montirana particija. Odmontirajte je i ponovno pregledajte "
+"diskove prije nastavka."
+
+#: src/pages.py:3241
+msgid "ALL DATA on {disk} will be permanently erased."
+msgstr "SVI PODACI na disku {disk} bit će trajno izbrisani."
+
+#: src/pages.py:6188
+msgid "Account security"
+msgstr "Sigurnost računa"
+
+#: src/pages.py:4066
+msgid "Advanced Storage"
+msgstr "Napredne postavke pohrane"
+
+#: src/pages.py:195
+msgid ""
+"After changing partitions or unmounting a volume, rescan storage and select "
+"the target again."
+msgstr ""
+"Nakon promjene particija ili odmontiranja volumena ponovno pregledajte "
+"diskove i odaberite odredište."
+
+#: src/pages.py:7042
+msgid ""
+"After restart, MOKManager will open. Choose Enroll MOK → Continue → Yes, "
+"then enter password 123456."
+msgstr ""
+"Nakon ponovnog pokretanja otvorit će se MOKManager. Odaberite Enroll MOK → "
+"Continue → Yes pa unesite lozinku 123456."
+
+#: src/pages.py:6636
+msgid ""
+"All partitions and data on {disk} will be destroyed.\n"
+"\n"
+msgstr ""
+"Sve particije i podaci na disku {disk} bit će izbrisani.\n"
+"\n"
+
+#: src/pages.py:186
+msgid ""
+"Alternatively, you may explicitly select one entire partition to erase. "
+"Everything in that selected partition will be destroyed; it is never "
+"selected automatically."
+msgstr ""
+"Možete i izričito odabrati cijelu jednu particiju za brisanje. Sav sadržaj "
+"te particije bit će izbrisan. Instalacijski program nikada je neće odabrati "
+"automatski."
+
+#: src/pages.py:991 src/pages.py:1053
+msgid "Battery power is too low for a safe installation."
+msgstr "Baterija je preslaba za sigurnu instalaciju."
+
+#: src/pages.py:962
+msgid "Charge to at least 80% before starting the installation."
+msgstr "Prije početka instalacije napunite bateriju na najmanje 80 %."
+
+#: src/pages.py:1108 src/pages.py:1083
+msgid "Continue Anyway"
+msgstr "Svejedno nastavi"
+
+#: src/pages.py:1067
+msgid "Current battery level: {percent}%"
+msgstr "Trenutačna napunjenost baterije: {percent} %"
+
+#: src/pages.py:1073
+msgid "External power is connected."
+msgstr "Vanjsko napajanje je priključeno."
+
+#: src/pages.py:1075
+msgid "External power is not connected."
+msgstr "Vanjsko napajanje nije priključeno."
+
+#: src/pages.py:1021
+msgid "I understand the risks and insist on installing with low battery."
+msgstr "Razumijem rizike i želim instalirati unatoč slabo napunjenoj bateriji."
+
+#: src/pages.py:961 src/pages.py:956 src/pages.py:1034 src/pages.py:1036
+msgid "Low battery"
+msgstr "Slaba baterija"
+
+#: src/pages.py:1015
+msgid "Recheck"
+msgstr "Provjeri ponovno"
+
+#: src/main.py:114 src/pages.py:794 src/pages.py:881
+#: assets/anduinos-installer-beta.desktop:30
+msgid "AnduinOS Installer"
+msgstr "Instalacijski program AnduinOS-a"
+
+#: src/main.py:112
+msgid "AnduinOS Installer (Development)"
+msgstr "Instalacijski program AnduinOS-a (razvojna verzija)"
+
+#: src/pages.py:6623
+msgid ""
+"AnduinOS will use only the selected unallocated space on {disk}. Existing "
+"partitions will be preserved.\n"
+"\n"
+msgstr ""
+"AnduinOS će upotrijebiti samo odabrani nedodijeljeni prostor na disku "
+"{disk}. Postojeće particije ostat će sačuvane.\n"
+"\n"
+
+#: src/pages.py:164
+msgid ""
+"AnduinOS will use only the selected unallocated space. The installer will "
+"not shrink or move an existing filesystem."
+msgstr ""
+"AnduinOS će upotrijebiti samo odabrani nedodijeljeni prostor. Instalacijski "
+"program neće smanjivati ni premještati postojeći datotečni sustav."
+
+#: data/languages.json:keyboard_layouts
+msgid "Arabic"
+msgstr "Arapski"
+
+#: src/pages.py:322 src/pages.py:6672 src/pages.py:6708 src/pages.py:883
+msgid "Back"
+msgstr "Natrag"
+
+#: src/pages.py:3439
+msgid ""
+"Before continuing: finish Windows updates, disable Fast Startup and "
+"hibernation, and back up the BitLocker recovery key. EFI, Secure Boot, TPM "
+"measurements and boot order can change."
+msgstr ""
+"Prije nastavka dovršite ažuriranja sustava Windows, isključite brzo "
+"pokretanje i hibernaciju te sigurnosno kopirajte BitLockerov ključ za "
+"oporavak. Mogu se promijeniti EFI, Secure Boot, TPM mjerenja i redoslijed "
+"pokretanja."
+
+#: src/pages.py:2622
+msgid "BitLocker detected"
+msgstr "Otkriven je BitLocker"
+
+#: src/pages.py:177
+msgid ""
+"BitLocker storage will be preserved. The installer will not unlock, resize, "
+"repair or otherwise modify it."
+msgstr ""
+"Pohrana zaštićena BitLockerom ostat će sačuvana. Instalacijski program neće "
+"je otključavati, mijenjati joj veličinu, popravljati je niti je mijenjati na "
+"drugi način."
+
+#: src/pages.py:6282 src/pages.py:6342
+msgid "Boot policy"
+msgstr "Pravila pokretanja"
+
+#: src/pages.py:3480 src/pages.py:5117
+msgid "Btrfs (recommended)"
+msgstr "Btrfs (preporučeno)"
+
+#: src/pages.py:3158
+msgid "Btrfs — recommended"
+msgstr "Btrfs – preporučeno"
+
+#: src/pages.py:6554
+msgid "Cannot create installation plan"
+msgstr "Izrada plana instalacije nije uspjela"
+
+#: src/pages.py:3068
+msgid "Choose Installation Method"
+msgstr "Odaberite način instalacije"
+
+#: src/pages.py:2650
+msgid "Choose one target disk. Storage settings come next."
+msgstr "Odaberite jedan odredišni disk. Zatim slijede postavke pohrane."
+
+#: src/pages.py:2351
+msgid "Choose optional software to install"
+msgstr "Odaberite dodatni softver za instalaciju"
+
+#: src/pages.py:879
+msgid "Choose your language to begin installation"
+msgstr "Za početak instalacije odaberite jezik"
+
+#: src/pages.py:5906
+msgid "Choose your location to set the system clock"
+msgstr "Odaberite lokaciju za postavljanje sata sustava"
+
+#: src/pages.py:5591 src/pages.py:5598 src/pages.py:6207 src/pages.py:5686
+#: src/pages.py:6644
+msgid "Computer Name"
+msgstr "Naziv računala"
+
+#: src/pages.py:5679
+msgid "Computer name contains invalid characters."
+msgstr "Naziv računala sadrži nedopuštene znakove."
+
+#: src/pages.py:6828
+msgid "Configure account, region, timezone, and machine identity"
+msgstr "Postavi račun, regiju, vremensku zonu i identitet računala"
+
+#: src/pages.py:3339 src/pages.py:6817 src/pages.py:3323
+msgid "Configure storage and swap"
+msgstr "Postavi pohranu i zamjenski prostor"
+
+#: src/pages.py:5565 src/pages.py:5573
+msgid "Confirm Password"
+msgstr "Potvrdi lozinku"
+
+#: src/pages.py:2003
+msgid "Confirm your keyboard layout"
+msgstr "Potvrdite raspored tipkovnice"
+
+#: src/main.py:157 src/pages.py:1978
+msgid "Continue Installation"
+msgstr "Nastavi instalaciju"
+
+#: src/pages.py:6813
+msgid "Check installation media"
+msgstr "Provjeri instalacijski medij"
+
+msgid "Copy AnduinOS system"
+msgstr "Kopiraj sustav AnduinOS"
+
+#: src/pages.py:6916
+msgid "Copy Log"
+msgstr "Kopiraj zapisnik"
+
+#: src/pages.py:3572
+msgid "Create a new 1 GiB AnduinOS EFI System Partition"
+msgstr "Izradi novu sistemsku particiju EFI za AnduinOS od 1 GiB"
+
+#: src/pages.py:6260
+msgid ""
+"Create and format a dedicated AnduinOS EFI System Partition inside the "
+"selected space."
+msgstr ""
+"Izradi i formatiraj zasebnu sistemsku particiju EFI za AnduinOS unutar "
+"odabranog prostora."
+
+#: src/pages.py:5532
+msgid "Create your user account"
+msgstr "Izradite svoj korisnički račun"
+
+#: src/pages.py:2564
+msgid "Current disk layout"
+msgstr "Trenutačni raspored diska"
+
+#: src/pages.py:6071
+msgid ""
+"DEVELOPMENT MODE — the plan will be validated and simulated. No privileged "
+"executor or disk command can run."
+msgstr ""
+"RAZVOJNI NAČIN RADA – plan će se provjeriti i simulirati. Izvršitelj s "
+"povišenim ovlastima i naredbe za rad s diskom ne mogu se pokrenuti."
+
+#: data/languages.json:keyboard_layouts
+msgid "Danish"
+msgstr "Danski"
+
+#: src/pages.py:6808
+msgid "Detect Internet connectivity"
+msgstr "Provjeri internetsku vezu"
+
+#: src/pages.py:6805
+msgid "Detect firmware and Secure Boot"
+msgstr "Provjeri firmver i Secure Boot"
+
+#: src/pages.py:6617
+msgid ""
+"Development mode will simulate installation to {disk}. No disk data will be "
+"changed.\n"
+"\n"
+msgstr ""
+"U razvojnom načinu rada instalacija na disk {disk} samo će se simulirati. "
+"Podaci na disku neće se promijeniti.\n"
+"\n"
+
+#: src/pages.py:7164
+msgid "Development simulation completed"
+msgstr "Razvojna simulacija je dovršena"
+
+#: src/pages.py:1283 src/pages.py:2370
+msgid "Download and install system updates during installation"
+msgstr "Preuzmi i instaliraj ažuriranja sustava tijekom instalacije"
+
+#: data/languages.json:keyboard_layouts
+msgid "Dutch"
+msgstr "Nizozemski"
+
+#: src/pages.py:4210 src/pages.py:3498 src/pages.py:5013
+msgid "EFI System Partition"
+msgstr "Sistemska particija EFI"
+
+#: src/pages.py:6341 src/pages.py:6281
+msgid "EFI policy"
+msgstr "Pravila za EFI"
+
+#: src/pages.py:2607
+msgid "Empty disk — no partitions"
+msgstr "Prazan disk – nema particija"
+
+#: src/pages.py:3162
+msgid "Enables shared-space subvolumes, snapshots and Disk Snapshots Manager."
+msgstr ""
+"Omogućuje podvolumene sa zajedničkim prostorom, snimke stanja i Upravitelj "
+"snimki diska."
+
+#: data/languages.json:keyboard_layouts
+msgid "English (UK)"
+msgstr "Engleski (Ujedinjeno Kraljevstvo)"
+
+#: data/languages.json:keyboard_layouts
+msgid "English (US)"
+msgstr "Engleski (SAD)"
+
+#: src/pages.py:6840
+msgid "Ensure Disk Snapshots Manager is available"
+msgstr "Osiguraj dostupnost Upravitelja snimki diska"
+
+#: src/pages.py:6610
+msgid "Erase Disk and Install"
+msgstr "Izbriši disk i instaliraj"
+
+#: src/pages.py:3154 src/pages.py:6382
+msgid "Erase every partition and all data on the selected disk."
+msgstr "Izbriši sve particije i sve podatke na odabranom disku."
+
+#: src/pages.py:6609
+msgid "Erase the entire selected disk?"
+msgstr "Izbrisati cijeli odabrani disk?"
+
+#: src/pages.py:168
+msgid ""
+"Existing Windows, recovery and data partitions remain outside the write set "
+"and will be preserved."
+msgstr ""
+"Postojeće particije sustava Windows, za oporavak i za podatke ostat će "
+"sačuvane i na njih se neće zapisivati."
+
+#: src/pages.py:3287
+msgid ""
+"Existing partitions were detected. The first two choices delete them; "
+"Advanced is the preservation path."
+msgstr ""
+"Pronađene su postojeće particije. Prva dva izbora brišu ih, a napredni način "
+"omogućuje njihovo očuvanje."
+
+#: src/pages.py:6650
+msgid ""
+"Existing partitions will be preserved. New AnduinOS partitions will be "
+"created only in the selected unallocated extent; EFI vendor files and the "
+"AnduinOS firmware boot entry may be updated."
+msgstr ""
+"Postojeće particije ostat će sačuvane. Nove particije AnduinOS-a izradit će "
+"se samo u odabranom nedodijeljenom rasponu. Datoteke proizvođača na EFI "
+"particiji i stavka za pokretanje AnduinOS-a u firmveru mogu se ažurirati."
+
+#: src/pages.py:3477 src/pages.py:6155 src/pages.py:5127
+msgid "Filesystem"
+msgstr "Datotečni sustav"
+
+#: src/pages.py:6852
+msgid "Finalize target environment"
+msgstr "Dovrši pripremu odredišnog okruženja"
+
+#: data/languages.json:keyboard_layouts
+msgid "Finnish"
+msgstr "Finski"
+
+#: src/pages.py:6340 src/pages.py:6279
+msgid "Formats"
+msgstr "Formati"
+
+#: data/languages.json:keyboard_layouts
+msgid "French"
+msgstr "Francuski"
+
+#: src/pages.py:5547 src/pages.py:5549
+msgid "Full Name"
+msgstr "Puno ime"
+
+#: data/languages.json:keyboard_layouts
+msgid "German"
+msgstr "Njemački"
+
+#: data/languages.json:keyboard_layouts
+msgid "Greek"
+msgstr "Grčki"
+
+#: src/pages.py:142
+msgid ""
+"Guided coexistence requires a system booted in UEFI mode and a GPT target "
+"disk. This disk cannot continue in guided mode."
+msgstr ""
+"Automatska instalacija uz postojeći sustav zahtijeva pokretanje u načinu "
+"UEFI i odredišni disk s GPT-om. Na ovom disku nije moguće nastaviti "
+"automatski."
+
+#: src/pages.py:6393
+msgid ""
+"Guided storage selection is missing. Rescan and select the target again."
+msgstr ""
+"Nedostaje odabir pohrane za vođenu instalaciju. Ponovno pregledajte diskove "
+"i odaberite odredište."
+
+#: data/languages.json:keyboard_layouts
+msgid "Hindi (India)"
+msgstr "Hindski (Indija)"
+
+#: src/pages.py:3082
+msgid "How should AnduinOS use this disk?"
+msgstr "Kako AnduinOS treba upotrijebiti ovaj disk?"
+
+#: data/languages.json:keyboard_layouts
+msgid "Indonesian"
+msgstr "Indonezijski"
+
+#: src/pages.py:6737
+msgid "Install"
+msgstr "Instaliraj"
+
+#: src/pages.py:6798 src/pages.py:1288 src/pages.py:6231
+msgid "Install input method"
+msgstr "Instaliraj način unosa"
+
+#: src/pages.py:684
+msgid "Install {language} input method: {name}"
+msgstr "Instaliraj način unosa za jezik {language}: {name}"
+
+#: src/pages.py:3405 src/pages.py:6604 src/pages.py:6733
+msgid "Install Alongside"
+msgstr "Instaliraj uz postojeći sustav"
+
+#: src/pages.py:6266
+msgid "Install alongside"
+msgstr "Instaliraj uz postojeći sustav"
+
+#: src/pages.py:6847
+msgid "Install bootloader"
+msgstr "Instaliraj pokretački program"
+
+#: src/pages.py:6850
+msgid "Check for Windows installations"
+msgstr "Potraži instalacije sustava Windows"
+
+#: src/pages.py:1284 src/pages.py:6842
+msgid "Install hardware drivers"
+msgstr "Instaliraj upravljačke programe"
+
+#: src/pages.py:6603
+msgid "Install in the selected free space?"
+msgstr "Instalirati u odabrani slobodni prostor?"
+
+#: src/pages.py:6835
+msgid "Ensure required language packs are installed"
+msgstr "Provjeri jesu li potrebni jezični paketi instalirani"
+
+#: src/pages.py:6838
+msgid "Install system updates"
+msgstr "Instaliraj ažuriranja sustava"
+
+#: src/pages.py:2381
+msgid "Install third-party drivers for this device"
+msgstr "Instaliraj upravljačke programe drugih proizvođača za ovaj uređaj"
+
+#: src/pages.py:7334 src/pages.py:7336 src/pages.py:7181 src/pages.py:7191
+msgid "Installation Complete"
+msgstr "Instalacija je dovršena"
+
+#: src/pages.py:7211
+msgid "Installation Failed"
+msgstr "Instalacija nije uspjela"
+
+#: src/pages.py:6878
+msgid "Installation Steps"
+msgstr "Koraci instalacije"
+
+#: src/pages.py:191
+msgid ""
+"Installation cannot continue with this selection. There is no force-continue "
+"option around storage safety checks."
+msgstr ""
+"Instalaciju nije moguće nastaviti s ovim odabirom. Sigurnosne provjere "
+"pohrane nije moguće zaobići prisilnim nastavkom."
+
+#: src/pages.py:7160 src/pages.py:7226
+msgid "Installation complete"
+msgstr "Instalacija je dovršena"
+
+#: src/pages.py:7209
+msgid "Installation failed"
+msgstr "Instalacija nije uspjela"
+
+#: src/main.py:149
+msgid "Installation in progress"
+msgstr "Instalacija je u tijeku"
+
+#: src/pages.py:6786 src/pages.py:6780
+msgid "Installing AnduinOS"
+msgstr "Instaliranje AnduinOS-a"
+
+#: data/languages.json:keyboard_layouts
+msgid "Italian"
+msgstr "Talijanski"
+
+#: data/languages.json:keyboard_layouts
+msgid "Japanese (JIS keyboard)"
+msgstr "Japanski (tipkovnica JIS)"
+
+#: src/pages.py:6147
+msgid "Keyboard"
+msgstr "Tipkovnica"
+
+#: src/pages.py:2002 src/pages.py:2075 src/pages.py:1996
+msgid "Applying keyboard layout…"
+msgstr "Primjena rasporeda tipkovnice…"
+
+msgid "The keyboard layout could not be applied. Try again."
+msgstr "Raspored tipkovnice nije bilo moguće primijeniti. Pokušajte ponovno."
+
+msgid "Keyboard Layout"
+msgstr "Raspored tipkovnice"
+
+#: src/pages.py:2077
+msgid "Layout Variant"
+msgstr "Varijanta rasporeda"
+
+#: src/pages.py:6821
+msgid "Configure physical keyboard layout"
+msgstr "Postavi raspored fizičke tipkovnice"
+
+#: data/languages.json:keyboard_layouts
+msgid "Korean"
+msgstr "Korejski"
+
+#: src/pages.py:6146
+msgid "Language"
+msgstr "Jezik"
+
+#: src/pages.py:2624
+msgid "Live USB — excluded"
+msgstr "Pokretni USB medij – izuzet"
+
+#: src/pages.py:6812
+msgid "Mount target filesystems"
+msgstr "Montiraj odredišne datotečne sustave"
+
+#: src/pages.py:918
+msgid "Navigation error"
+msgstr "Pogreška pri navigaciji"
+
+#: src/pages.py:4232 src/pages.py:6339 src/pages.py:6277 src/pages.py:6385
+msgid "New partitions"
+msgstr "Nove particije"
+
+#: src/pages.py:315 src/pages.py:884 src/pages.py:1083
+msgid "Next"
+msgstr "Dalje"
+
+#: src/pages.py:6997
+msgid "Next slide"
+msgstr "Sljedeći slajd"
+
+#: src/pages.py:2541
+msgid "No partition table"
+msgstr "Nema tablice particija"
+
+#: src/pages.py:2782
+msgid "No suitable disks found."
+msgstr "Nije pronađen prikladan disk."
+
+#: src/pages.py:201
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with Windows Disk Management, then boot the installer "
+"again and rescan the disk."
+msgstr ""
+"Nije pronađen prikladan nedodijeljeni prostor. Radi zaštite podataka "
+"oslobodite nedodijeljeni prostor u alatu za upravljanje diskovima sustava "
+"Windows. Zatim ponovno pokrenite instalacijski program i pregledajte disk."
+
+#: src/pages.py:206
+msgid ""
+"No suitable unallocated space was found. To protect your data, create "
+"unallocated space with a partitioning tool, then boot the installer again "
+"and rescan the disk."
+msgstr ""
+"Nije pronađen prikladan nedodijeljeni prostor. Radi zaštite podataka "
+"oslobodite nedodijeljeni prostor alatom za rad s particijama. Zatim ponovno "
+"pokrenite instalacijski program i pregledajte disk."
+
+#: data/languages.json:keyboard_layouts
+msgid "Norwegian"
+msgstr "Norveški"
+
+#: src/pages.py:1191 src/pages.py:1442 src/pages.py:6563 src/pages.py:921
+msgid "OK"
+msgstr "U redu"
+
+#: src/pages.py:7076
+msgid "Output"
+msgstr "Ispis"
+
+#: src/pages.py:7214 src/pages.py:7269
+msgid "Output • Error"
+msgstr "Ispis • Pogreška"
+
+#: src/pages.py:7264
+msgid "Output • {count} warning(s)"
+msgstr "Ispis • Broj upozorenja: {count}"
+
+#: src/pages.py:2605
+msgid "Partition details unavailable"
+msgstr "Pojedinosti o particiji nisu dostupne"
+
+#: src/pages.py:5561 src/pages.py:5572 src/pages.py:1533 src/pages.py:1592
+msgid "Password"
+msgstr "Lozinka"
+
+#: src/pages.py:5669
+msgid "Password must be at least 6 characters."
+msgstr "Lozinka mora imati najmanje 6 znakova."
+
+#: src/pages.py:6154
+msgid "Platform"
+msgstr "Platforma"
+
+#: src/pages.py:6787
+msgid "Please do not turn off your computer"
+msgstr "Nemojte isključivati računalo"
+
+#: src/pages.py:6055
+msgid "Please review your choices before proceeding"
+msgstr "Prije nastavka provjerite svoj odabir"
+
+#: data/languages.json:keyboard_layouts
+msgid "Polish"
+msgstr "Poljski"
+
+#: data/languages.json:keyboard_layouts
+msgid "Portuguese"
+msgstr "Portugalski"
+
+#: data/languages.json:keyboard_layouts
+msgid "Portuguese (Brazil)"
+msgstr "Portugalski (Brazil)"
+
+#: src/pages.py:6833
+msgid "Prepare Secure Boot"
+msgstr "Pripremi Secure Boot"
+
+#: src/pages.py:6811
+msgid "Prepare installation disk"
+msgstr "Pripremi disk za instalaciju"
+
+#: src/pages.py:6818
+msgid "Prepare target environment"
+msgstr "Pripremi odredišno okruženje"
+
+#: src/pages.py:7112
+msgid "Preparing installation…"
+msgstr "Priprema instalacije…"
+
+#: src/pages.py:6336 src/pages.py:6272
+msgid "Preserved partitions"
+msgstr "Sačuvane particije"
+
+#: src/pages.py:6991
+msgid "Previous slide"
+msgstr "Prethodni slajd"
+
+#: src/pages.py:6054 src/pages.py:6048
+msgid "Ready to Install"
+msgstr "Spremno za instalaciju"
+
+#: src/pages.py:7052
+msgid "Reboot Now"
+msgstr "Ponovno pokreni sada"
+
+#: src/pages.py:6837
+msgid "Refresh package indexes"
+msgstr "Osvježi indekse paketa"
+
+#: src/pages.py:6819
+msgid "Remove live-session components"
+msgstr "Ukloni komponente pokretne sesije"
+
+#: src/pages.py:7192 src/pages.py:7183
+msgid "Remove the installation media and restart your computer"
+msgstr "Uklonite instalacijski medij i ponovno pokrenite računalo"
+
+#: src/pages.py:1244 src/pages.py:1272 src/pages.py:2372 src/pages.py:734
+#: src/pages.py:1429 src/pages.py:2385
+msgid ""
+"Requires an Internet connection. The base installation remains available "
+"when offline."
+msgstr ""
+"Potrebna je internetska veza. Osnovna instalacija dostupna je i izvan mreže."
+
+#: src/pages.py:2701
+msgid "Rescan Storage"
+msgstr "Ponovno pregledaj diskove"
+
+#: src/pages.py:3526
+msgid "Rescan and Reselect Disk"
+msgstr "Ponovno pregledaj i odaberi disk"
+
+#: src/pages.py:7050
+msgid "Restart and Enroll Secure Boot Key"
+msgstr "Ponovno pokreni i upiši ključ za Secure Boot"
+
+#: src/pages.py:7201
+msgid "Restart is disabled in development protection mode"
+msgstr "Ponovno pokretanje onemogućeno je u zaštićenom razvojnom načinu rada"
+
+#: src/pages.py:3576 src/pages.py:5081
+msgid "Reuse {path} ({size})"
+msgstr "Ponovno upotrijebi {path} ({size})"
+
+#: src/pages.py:6254
+msgid ""
+"Reuse {path}; never format it; verify FAT health, identity and 64 MiB free "
+"before writing."
+msgstr ""
+"Ponovno upotrijebi {path} bez formatiranja. Prije zapisivanja provjeri "
+"ispravnost FAT-a, identitet particije i barem 64 MiB slobodnog prostora."
+
+#: data/languages.json:keyboard_layouts
+msgid "Romanian"
+msgstr "Rumunjski"
+
+#: data/languages.json:keyboard_layouts
+msgid "Russian"
+msgstr "Ruski"
+
+#: src/pages.py:6920
+msgid "Save Log"
+msgstr "Spremi zapisnik"
+
+#: src/pages.py:6848
+msgid "Schedule MOK enrollment"
+msgstr "Zakaži upis MOK-a"
+
+#: src/pages.py:5918
+msgid "Search timezones…"
+msgstr "Pretraži vremenske zone…"
+
+#: src/pages.py:6175
+msgid "Secure Boot enrollment"
+msgstr "Upis ključa za Secure Boot"
+
+#: src/pages.py:2649 src/pages.py:2643
+msgid "Select Installation Disk"
+msgstr "Odaberite instalacijski disk"
+
+#: src/pages.py:5905 src/pages.py:5899
+msgid "Select Timezone"
+msgstr "Odaberite vremensku zonu"
+
+#: src/pages.py:6831
+msgid "Select fastest package mirror"
+msgstr "Odaberi najbrži zrcalni poslužitelj paketa"
+
+#: src/pages.py:5974
+msgid "Selected timezone"
+msgstr "Odabrana vremenska zona"
+
+#: src/pages.py:6267
+msgid "Selected unallocated space"
+msgstr "Odabrani nedodijeljeni prostor"
+
+#: src/pages.py:2391
+msgid "Some drivers are proprietary or otherwise non-free software."
+msgstr ""
+"Neki upravljački programi vlasnički su ili imaju druge neslobodne licence."
+
+#: data/languages.json:keyboard_layouts
+msgid "Spanish"
+msgstr "Španjolski"
+
+#: src/pages.py:6152
+msgid "Stable disk identity"
+msgstr "Stalni identifikator diska"
+
+#: src/pages.py:6641
+msgid ""
+"Stable identity: {stable_id}\n"
+"\n"
+msgstr ""
+"Stalni identifikator: {stable_id}\n"
+"\n"
+
+#: src/pages.py:2532
+msgid "Storage Device"
+msgstr "Uređaj za pohranu"
+
+#: src/pages.py:6265 src/pages.py:6333 src/pages.py:6380
+msgid "Storage mode"
+msgstr "Način pohrane"
+
+#: src/pages.py:6156
+msgid "Subvolumes"
+msgstr "Podvolumeni"
+
+#: src/pages.py:2968 src/pages.py:3851
+msgid "Swap"
+msgstr "Zamjenski prostor"
+
+#: data/languages.json:keyboard_layouts
+msgid "Swedish"
+msgstr "Švedski"
+
+#: src/pages.py:6157
+msgid "System updates"
+msgstr "Ažuriranja sustava"
+
+#: src/pages.py:6148
+msgid "Target Disk"
+msgstr "Odredišni disk"
+
+#: src/pages.py:3418 src/pages.py:3686 src/pages.py:4091
+msgid "Target: {disk} ({size} — {model})"
+msgstr "Odredište: {disk} ({size} – {model})"
+
+#: src/pages.py:2083 src/pages.py:2228
+msgid "Test your keyboard here…"
+msgstr "Ovdje isprobajte tipkovnicu…"
+
+#: data/languages.json:keyboard_layouts
+msgid "Thai"
+msgstr "Tajlandski"
+
+#: src/pages.py:151
+msgid ""
+"The GPT disk or one of its partitions has no unique stable identifier. "
+"Guided coexistence cannot safely authorize preservation or writes on this "
+"disk."
+msgstr ""
+"GPT disk ili jedna od njegovih particija nema jedinstven stalni "
+"identifikator. Vođena instalacija ne može pouzdano utvrditi što treba "
+"sačuvati i gdje smije zapisivati na ovaj disk."
+
+#: src/pages.py:146
+msgid ""
+"The complete partition map and free-space geometry could not be read "
+"consistently. No space on this disk is authorized for installation."
+msgstr ""
+"Potpunu tablicu particija i položaj slobodnog prostora nije moguće pouzdano "
+"očitati. Na ovom disku nema prostora odobrenog za instalaciju."
+
+#: src/pages.py:172
+msgid ""
+"The existing EFI System Partition is only a candidate. Health and free-space "
+"checks must pass before it can be reused, and it will never be formatted."
+msgstr ""
+"Postojeća sistemska particija EFI zasad je samo kandidat. Prije ponovne "
+"uporabe mora proći provjeru ispravnosti i slobodnog prostora. Nikada se neće "
+"formatirati."
+
+#: src/pages.py:7167
+msgid ""
+"The installation plan is valid. No disk, filesystem, bootloader, Secure Boot "
+"state, or installed system was changed."
+msgstr ""
+"Plan instalacije je valjan. Disk, datotečni sustav, pokretački program, "
+"stanje funkcije Secure Boot i instalirani sustav nisu promijenjeni."
+
+#: src/main.py:151
+msgid "The installer cannot be closed while it is modifying the target disk."
+msgstr "Instalacijski program ne možete zatvoriti dok mijenja odredišni disk."
+
+#: src/pages.py:181
+msgid ""
+"The installer will not mount, repair or infer the safety of Windows volumes "
+"from hibernation or Fast Startup state. Any required Windows maintenance "
+"must be completed in Windows."
+msgstr ""
+"Instalacijski program neće montirati ni popravljati volumene sustava Windows "
+"niti će na temelju stanja hibernacije ili brzog pokretanja zaključiti da su "
+"sigurni za uporabu. Sve potrebno održavanje dovršite u sustavu Windows."
+
+#: src/pages.py:6647
+msgid "The privileged executor is disabled."
+msgstr "Izvršitelj s povišenim ovlastima je onemogućen."
+
+#: src/pages.py:3654
+msgid ""
+"The selected disk changed or disappeared. Return to the disk page and select "
+"it again. {error}"
+msgstr ""
+"Odabrani disk se promijenio ili nestao. Vratite se na stranicu za odabir "
+"diska i odaberite ga ponovno. {error}"
+
+#: src/pages.py:3667
+msgid "The selected disk size changed. Return and select it again."
+msgstr ""
+"Veličina odabranog diska se promijenila. Vratite se i odaberite ga ponovno."
+
+#: src/pages.py:3677
+msgid ""
+"The selected disk topology changed. Review the disk and installation method "
+"again."
+msgstr ""
+"Struktura odabranog diska se promijenila. Ponovno provjerite disk i način "
+"instalacije."
+
+#: src/pages.py:5665
+msgid "The two passwords do not match."
+msgstr "Lozinke se ne podudaraju."
+
+#: src/pages.py:6163
+msgid "Third-party drivers"
+msgstr "Upravljački programi drugih proizvođača"
+
+#: src/pages.py:3446
+msgid ""
+"This advanced path preserves existing partitions but changes the selected "
+"disk's partition table and the machine's EFI boot state."
+msgstr ""
+"Ovaj napredni postupak čuva postojeće particije, ali mijenja tablicu "
+"particija odabranog diska i stanje pokretanja putem EFI-ja."
+
+#: src/pages.py:156
+msgid ""
+"This disk contains an active mapper, array or other nested block-device "
+"topology that guided coexistence does not support."
+msgstr ""
+"Disk sadrži aktivno mapiranje, niz diskova ili drugi ugniježđeni raspored "
+"blokovnih uređaja koji vođena instalacija ne podržava."
+
+#: src/pages.py
+msgid "25 GiB minimum; 50 GiB recommended."
+msgstr "Najmanje 25 GiB, preporučeno 50 GiB."
+
+#: src/pages.py
+msgid "Below the minimum. Installation or updates may fail. Continue?"
+msgstr ""
+"Kapacitet je manji od najmanjeg preporučenog za rad. Instalacija ili "
+"ažuriranja možda neće uspjeti. Nastaviti?"
+
+#: src/pages.py
+msgid "Below the recommended capacity. Space may run out quickly. Continue?"
+msgstr ""
+"Kapacitet je manji od preporučenog. Prostor se može brzo popuniti. Nastaviti?"
+
+#: src/pages.py
+msgid "At least 6 GiB is required to install AnduinOS."
+msgstr "Za instalaciju AnduinOS-a potrebno je najmanje 6 GiB."
+
+#: src/pages.py:6665
+msgid "This installer does not shrink or preserve other systems."
+msgstr "Ovaj instalacijski program ne smanjuje niti čuva druge sustave."
+
+#: src/pages.py:6209
+msgid "Timezone"
+msgstr "Vremenska zona"
+
+#: src/pages.py:2626
+msgid "Too small"
+msgstr "Premalo"
+
+#: data/languages.json:keyboard_layouts
+msgid "Turkish"
+msgstr "Turski"
+
+#: data/languages.json:keyboard_layouts
+msgid "Ukrainian"
+msgstr "Ukrajinski"
+
+#: src/pages.py:3490
+msgid "Unallocated space"
+msgstr "Nedodijeljeni prostor"
+
+#: src/pages.py:2597
+msgid "Unallocated · {size}"
+msgstr "Nedodijeljeno · {size}"
+
+#: src/pages.py:6106 src/pages.py:1777
+msgid "Unavailable: {error}"
+msgstr "Nedostupno: {error}"
+
+#: src/pages.py:2584
+msgid "Unknown filesystem"
+msgstr "Nepoznat datotečni sustav"
+
+#: src/pages.py:6853
+msgid "Unmount installed system"
+msgstr "Odmontiraj instalirani sustav"
+
+#: src/pages.py:2350 src/pages.py:1263 src/pages.py:2344
+msgid "Updates and Drivers"
+msgstr "Ažuriranja i upravljački programi"
+
+#: src/pages.py:3411
+msgid "Use only existing unallocated space on the selected disk."
+msgstr "Upotrijebi samo postojeći nedodijeljeni prostor na odabranom disku."
+
+#: src/pages.py:6185
+msgid "User"
+msgstr "Korisnik"
+
+#: src/pages.py:5531 src/pages.py:5525
+msgid "User Account"
+msgstr "Korisnički račun"
+
+#: src/pages.py:5553 src/pages.py:5557
+msgid "Username"
+msgstr "Korisničko ime"
+
+#: src/pages.py:5653
+msgid ""
+"Username must start with a lowercase ASCII letter and contain only lowercase "
+"ASCII letters or digits (maximum 16 characters)."
+msgstr ""
+"Korisničko ime mora početi malim ASCII slovom i smije sadržavati samo mala "
+"ASCII slova ili znamenke (najviše 16 znakova)."
+
+#: src/pages.py:3173
+msgid "Uses a traditional single root filesystem."
+msgstr "Upotrebljava jedan klasični korijenski datotečni sustav."
+
+#: src/pages.py:6601
+msgid "Validate Plan (No Installation)"
+msgstr "Provjeri plan bez instalacije"
+
+#: src/pages.py:6600
+msgid "Validate this installation plan?"
+msgstr "Provjeriti ovaj plan instalacije?"
+
+#: src/pages.py:6845
+msgid "Verify kernel module signatures"
+msgstr "Provjeri potpise modula jezgre"
+
+#: src/pages.py:6810
+msgid "Verify target disk isolation"
+msgstr "Provjeri izolaciju odredišnog diska"
+
+#: data/languages.json:keyboard_layouts
+msgid "Vietnamese"
+msgstr "Vijetnamski"
+
+#: src/pages.py:877
+msgid "Welcome to AnduinOS"
+msgstr "Dobro došli u AnduinOS"
+
+#: src/pages.py:2620
+msgid "Windows detected"
+msgstr "Otkriven je Windows"
+
+#: src/pages.py:6284
+msgid ""
+"Write only EFI/AnduinOS, do not overwrite EFI/BOOT, and require a verified "
+"AnduinOS NVRAM entry."
+msgstr ""
+"Zapisuj samo u EFI/AnduinOS. Ne prepisuj EFI/BOOT i zahtijevaj provjerenu "
+"NVRAM stavku za AnduinOS."
+
+#: src/pages.py:6178
+msgid "create a machine-local MOK; enroll after reboot with password 123456"
+msgstr ""
+"izradi MOK za ovo računalo i upiši ga nakon ponovnog pokretanja lozinkom "
+"123456"
+
+#: src/pages.py:6165
+msgid "detect and install (may include non-free software)"
+msgstr "otkrij i instaliraj (može uključivati neslobodan softver)"
+
+#: src/pages.py:6227 src/pages.py:6161 src/pages.py:6167 src/pages.py:6173
+msgid "do not install"
+msgstr "ne instaliraj"
+
+#: src/pages.py:6159 src/pages.py:6171
+msgid "download and install"
+msgstr "preuzmi i instaliraj"
+
+#: src/pages.py:3480 src/pages.py:5118
+msgid "ext4 (classic)"
+msgstr "ext4 (klasično)"
+
+#: src/pages.py:3170
+msgid "ext4 — classic"
+msgstr "ext4 – klasično"
+
+#: src/pages.py:6183
+msgid "not required"
+msgstr "nije potrebno"
+
+#: src/pages.py:6189
+msgid "password required for login"
+msgstr "lozinka je obvezna za prijavu"
+
+#: src/pages.py:6117
+msgid "single ext4 root filesystem"
+msgstr "jedan korijenski datotečni sustav ext4"
+
+#: src/pages.py:6097
+msgid "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+msgstr "{architecture} / {firmware} / Secure Boot: {secure_boot}"
+
+#: src/pages.py:6273
+msgid "{count}: {paths}"
+msgstr "{count}: {paths}"
+
+#: src/pages.py:6238
+msgid "{name}: {start}–{end} MiB"
+msgstr "{name}: {start}–{end} MiB"
+
+#: src/pages.py:6246 src/pages.py:6313
+msgid "{path} as {filesystem}"
+msgstr "{path} kao {filesystem}"
+
+#: src/pages.py:6268
+msgid "{size} at {offset}"
+msgstr "{size} na položaju {offset}"
+
+#: src/pages.py:3714
+msgid "{size} unallocated at {offset}"
+msgstr "{size} nedodijeljeno na položaju {offset}"
+
+#: src/pages.py:7272
+msgid "{step} failed"
+msgstr "Korak „{step}” nije uspio"
+
+#: src/pages.py:6488
+msgid ""
+"⚠ Only the selected unallocated space will be partitioned and formatted. "
+"Existing partitions are preserved, but EFI/AnduinOS files and the AnduinOS "
+"firmware boot entry may change. This installer will not shrink Windows for "
+"you."
+msgstr ""
+"⚠ Particionirat će se i formatirati samo odabrani nedodijeljeni prostor. "
+"Postojeće particije ostat će sačuvane, ali datoteke EFI/AnduinOS i stavka za "
+"pokretanje u firmveru mogu se promijeniti. Instalacijski program neće "
+"smanjiti particije sustava Windows."
+
+#: src/pages.py:6504
+msgid ""
+"⚠ This will erase ALL data on the selected disk. This action cannot be "
+"undone."
+msgstr ""
+"⚠ Ovim ćete izbrisati SVE podatke na odabranom disku. Ovu radnju nije moguće "
+"poništiti."
+
+#: src/pages.py:1243 src/pages.py:726 src/pages.py:1238
+msgid "Connect to the Internet"
+msgstr "Povežite se s internetom"
+
+#: src/pages.py:1410
+msgid "Internet connection is ready."
+msgstr "Internetska veza je spremna."
+
+#: src/pages.py:1317
+msgid "Available Wi-Fi Networks"
+msgstr "Dostupne Wi-Fi mreže"
+
+#: src/pages.py:6815
+msgid "Preserve connected Wi-Fi network"
+msgstr "Zadrži povezanu Wi-Fi mrežu"
+
+#: src/pages.py:2691 src/pages.py:3517 src/pages.py:4166 src/pages.py:5388
+#: src/pages.py:4139 src/pages.py:4305
+msgid "Loading storage devices…"
+msgstr "Učitavanje uređaja za pohranu…"
+
+#: src/pages.py:6528
+msgid "Rechecking target disk…"
+msgstr "Ponovna provjera odredišnog diska…"
+
+#: src/pages.py:2760 src/pages.py:3639 src/pages.py:5336 src/pages.py:6557
+msgid "Storage devices could not be loaded: {error}"
+msgstr "Uređaje za pohranu nije moguće učitati: {error}"
+
+#: src/pages.py:1285 src/pages.py:6825 src/pages.py:2404
+msgid "Install extended multimedia format support"
+msgstr "Instaliraj proširenu podršku za multimedijske formate"
+
+#: src/pages.py:6169
+msgid "Extended multimedia formats"
+msgstr "Dodatni multimedijski formati"
+
+#: src/pages.py:2408
+msgid ""
+"Adds wider GStreamer compatibility and support for additional legacy and "
+"specialist media formats. Some components may be subject to patent or "
+"redistribution terms."
+msgstr ""
+"Proširuje kompatibilnost s GStreamerom i dodaje podršku za starije i posebne "
+"multimedijske formate. Neke komponente mogu podlijegati patentnim ili "
+"distribucijskim uvjetima."
+
+#: src/pages.py:1540
+msgid "A saved profile exists. Entering a password updates it securely."
+msgstr "Spremljeni profil već postoji. Unosom lozinke sigurno ga ažurirate."
+
+#: src/pages.py:1591
+msgid "Anonymous identity (optional)"
+msgstr "Anonimni identitet (neobavezno)"
+
+#: src/pages.py:1597
+msgid "CA certificate path (optional)"
+msgstr "Put do CA certifikata (neobavezno)"
+
+#: src/pages.py:1306 src/pages.py:1476 src/pages.py:1549 src/pages.py:1667
+#: src/pages.py:1883 src/pages.py:4626 src/pages.py:4845 src/pages.py:5309
+msgid "Cancel"
+msgstr "Odustani"
+
+#: src/pages.py:1853
+msgid "Cancelling Wi-Fi operation…"
+msgstr "Prekid Wi-Fi radnje…"
+
+#: src/pages.py:1599
+msgid "Client certificate path"
+msgstr "Put do klijentskog certifikata"
+
+#: src/pages.py:1550 src/pages.py:1668
+msgid "Connect"
+msgstr "Poveži se"
+
+#: src/pages.py:1884 src/pages.py:6709
+msgid "Continue"
+msgstr "Nastavi"
+
+#: src/pages.py:1326 src/pages.py:1876
+msgid "Connect to a hidden network"
+msgstr "Poveži se sa skrivenom mrežom"
+
+#: src/pages.py:1545 src/pages.py:1660
+#, python-brace-format
+msgid "Connect to {network}"
+msgstr "Poveži se s mrežom {network}"
+
+#: src/pages.py:1721
+msgid "Connected"
+msgstr "Povezano"
+
+#: src/pages.py:1520
+#, python-brace-format
+msgid "Connecting to {network}…"
+msgstr "Povezivanje s mrežom {network}…"
+
+#: src/pages.py:1822
+msgid "Could not change the Wi-Fi connection"
+msgstr "Promjena Wi-Fi veze nije uspjela"
+
+#: src/pages.py:1477
+msgid "Disconnect"
+msgstr "Prekini vezu"
+
+#: src/pages.py:1468
+#, python-brace-format
+msgid "Disconnect from {network}?"
+msgstr "Prekinuti vezu s mrežom {network}?"
+
+#: src/pages.py:1487
+#, python-brace-format
+msgid "Disconnecting from {network}…"
+msgstr "Prekid veze s mrežom {network}…"
+
+#: src/pages.py:1598
+msgid "Domain suffix match (optional)"
+msgstr "Podudaranje nastavka domene (neobavezno)"
+
+#: src/pages.py:1582
+msgid "EAP method"
+msgstr "EAP metoda"
+
+#: src/pages.py:1454 src/pages.py:1863
+msgid "Enhanced Open (OWE)"
+msgstr "Enhanced Open (OWE)"
+
+#: src/pages.py:1662
+msgid ""
+"Enter the credentials supplied by your organization. Certificate validation "
+"is strongly recommended."
+msgstr ""
+"Unesite vjerodajnice koje vam je dodijelila organizacija. Preporučujemo "
+"provjeru certifikata."
+
+#: src/pages.py:1878
+msgid "Enter the exact network name and choose its security type."
+msgstr "Unesite točan naziv mreže i odaberite vrstu zaštite."
+
+#: src/pages.py:1457 src/pages.py:1867
+msgid "Enterprise Wi-Fi"
+msgstr "Poslovna Wi-Fi mreža"
+
+#: src/pages.py:1590
+msgid "Identity"
+msgstr "Identitet"
+
+#: src/pages.py:1594
+msgid "Inner authentication"
+msgstr "Unutarnja autentifikacija"
+
+#: src/pages.py:1857
+msgid "Network name (SSID)"
+msgstr "Naziv mreže (SSID)"
+
+#: src/pages.py:1712
+msgid "No Wi-Fi networks found."
+msgstr "Nije pronađena nijedna Wi-Fi mreža."
+
+#: src/pages.py:1453 src/pages.py:1862
+msgid "Open network"
+msgstr "Otvorena mreža"
+
+#: src/pages.py:1456 src/pages.py:1864 src/pages.py:1865
+msgid "Personal Wi-Fi"
+msgstr "Osobna Wi-Fi mreža"
+
+#: src/pages.py:1602
+msgid "Private key password (optional)"
+msgstr "Lozinka privatnog ključa (neobavezno)"
+
+#: src/pages.py:1600
+msgid "Private key path"
+msgstr "Put do privatnog ključa"
+
+#: src/pages.py:1351
+msgid "Refresh Wi-Fi networks"
+msgstr "Osvježi popis Wi-Fi mreža"
+
+#: src/pages.py:1723
+msgid "Saved"
+msgstr "Spremljeno"
+
+#: src/pages.py:1859
+msgid "Security"
+msgstr "Zaštita"
+
+#: src/pages.py:1472
+msgid ""
+"The installer will keep the saved network profile so it can be used again."
+msgstr ""
+"Instalacijski program zadržat će spremljeni profil mreže za ponovnu uporabu."
+
+#: src/pages.py:1423
+msgid "The local network is connected, but Internet access is unavailable."
+msgstr ""
+"Veza s lokalnom mrežom je uspostavljena, ali pristup internetu nije dostupan."
+
+#: src/pages.py:1923
+msgid "Turning Wi-Fi off…"
+msgstr "Isključivanje Wi-Fi-ja…"
+
+#: src/pages.py:1921
+msgid "Turning Wi-Fi on…"
+msgstr "Uključivanje Wi-Fi-ja…"
+
+#: src/pages.py:1552
+msgid "Use WPS"
+msgstr "Upotrijebi WPS"
+
+#: src/pages.py:1455 src/pages.py:1866
+msgid "WEP (legacy)"
+msgstr "WEP (zastarjelo)"
+
+#: src/pages.py:1414
+msgid ""
+"Wi-Fi is connected, but the network requires sign-in through a captive "
+"portal."
+msgstr ""
+"Wi-Fi veza je uspostavljena, ali mreža zahtijeva prijavu putem pristupnog "
+"portala."
+
+#: src/pages.py:1516
+#, python-brace-format
+msgid "Waiting for WPS on {network}. Press the WPS button on the router…"
+msgstr "Čekanje WPS-a na mreži {network}. Pritisnite gumb WPS na usmjerivaču…"
+
+#: src/pages.py:5661
+msgid "A password is required."
+msgstr "Potrebna je lozinka."
+
+#: src/pages.py:5817
+msgid "Administrative commands will no longer ask for your password."
+msgstr "Administratorske naredbe više neće tražiti lozinku."
+
+#: src/pages.py:5767 src/pages.py:5761
+msgid "Advanced Options"
+msgstr "Napredne mogućnosti"
+
+#: src/pages.py:5833
+msgid "Allow SSH login with the account password"
+msgstr "Dopusti SSH prijavu lozinkom računa"
+
+#: src/pages.py:6195
+msgid "Automatic desktop login"
+msgstr "Automatska prijava u radnu površinu"
+
+#: src/pages.py:5787
+msgid ""
+"Choose how the local administrator account signs in and authorizes system "
+"changes."
+msgstr ""
+"Odaberite kako se lokalni administratorski račun prijavljuje i odobrava "
+"promjene sustava."
+
+#: src/pages.py:5768
+msgid "Choose optional access and sign-in policies"
+msgstr "Odaberite dodatna pravila pristupa i prijave"
+
+#: src/pages.py:5795
+msgid "Choose whether this computer accepts remote Secure Shell connections."
+msgstr "Odaberite prihvaća li računalo udaljene veze putem SSH-a."
+
+#: src/pages.py:6843
+msgid "Configure Secure Shell"
+msgstr "Postavi SSH"
+
+#: src/pages.py:5785
+msgid "Local Access"
+msgstr "Lokalni pristup"
+
+#: src/pages.py:5823
+msgid "Log in to the desktop without a password"
+msgstr "Prijavi se u radnu površinu bez lozinke"
+
+#: src/pages.py:5825
+msgid "Open this account's desktop automatically when the computer starts."
+msgstr "Automatski otvori radnu površinu ovog računa pri pokretanju računala."
+
+#: src/pages.py:5793
+msgid "Remote Access"
+msgstr "Udaljeni pristup"
+
+#: src/pages.py:5816
+msgid "Run sudo commands without a password"
+msgstr "Pokreći naredbe sudo bez lozinke"
+
+#: src/pages.py:6201
+msgid "SSH password login"
+msgstr "SSH prijava lozinkom"
+
+#: src/pages.py:5835
+msgid "Start Secure Shell and accept this account password over the network."
+msgstr "Pokreni SSH i prihvaćaj lozinku ovog računa preko mreže."
+
+#: src/pages.py:5845
+msgid "This will reduce the security of the installed system."
+msgstr "Time se smanjuje sigurnost instaliranog sustava."
+
+#: src/pages.py:6199 src/pages.py:6205
+msgid "disabled"
+msgstr "onemogućeno"
+
+#: src/pages.py:6197 src/pages.py:6203
+msgid "enabled"
+msgstr "omogućeno"
+
+#: src/pages.py:403
+msgid ""
+"AnduinOS has comprehensive Secure Boot support. Secure Boot is not currently "
+"enabled on this computer, and we recommend enabling it for additional "
+"protection."
+msgstr ""
+"AnduinOS u potpunosti podržava Secure Boot. Secure Boot trenutačno je "
+"isključen na ovom računalu. Preporučujemo da ga uključite radi dodatne "
+"zaštite."
+
+#: src/pages.py:385
+msgid "AnduinOS supports Secure Boot"
+msgstr "AnduinOS podržava Secure Boot"
+
+#: src/pages.py:414
+msgid ""
+"Battery power is sufficient or reliable power is connected. You can continue "
+"with the installation."
+msgstr ""
+"Baterija je dovoljno napunjena ili je priključeno pouzdano napajanje. Možete "
+"nastaviti instalaciju."
+
+#: src/pages.py:420
+msgid ""
+"Connect reliable external power and charge above 25%, or charge above 45% "
+"while unplugged."
+msgstr ""
+"Priključite pouzdano vanjsko napajanje i napunite bateriju iznad 25 % ili je "
+"napunite iznad 45 % dok je računalo odspojeno."
+
+#: src/pages.py:392
+msgid "Could not open UEFI firmware settings"
+msgstr "Postavke UEFI firmvera nije moguće otvoriti"
+
+#: src/pages.py:387
+msgid "Get additional protection before installing AnduinOS."
+msgstr "Dodatno zaštitite računalo prije instaliranja AnduinOS-a."
+
+#: src/pages.py:418
+msgid "Power conditions are safe for installation."
+msgstr "Napajanje je dovoljno za sigurnu instalaciju."
+
+#: src/pages.py:417
+msgid "Power ready"
+msgstr "Napajanje je spremno"
+
+#: src/pages.py:389
+msgid "Restart to UEFI Firmware Settings"
+msgstr "Ponovno pokreni u postavke UEFI firmvera"
+
+#: src/pages.py:399
+msgid ""
+"Secure Boot is a UEFI security feature that verifies trusted, digitally "
+"signed software while your computer starts."
+msgstr ""
+"Secure Boot sigurnosna je funkcija UEFI-ja koja pri pokretanju računala "
+"provjerava pouzdanost digitalno potpisanog softvera."
+
+#: src/pages.py:390
+msgid "Skip"
+msgstr "Preskoči"
+
+#: src/pages.py:395
+msgid "The firmware settings could not be opened on this computer."
+msgstr "Na ovom računalu nije moguće otvoriti postavke firmvera."
+
+#: src/pages.py:408
+msgid ""
+"To enable it, open the UEFI firmware settings and look under Boot, Security, "
+"or Secure Boot. Select Microsoft & 3rd-party CA or turn Secure Boot on. "
+"Firmware wording varies by manufacturer."
+msgstr ""
+"Za uključivanje otvorite postavke UEFI firmvera i potražite odjeljak Boot, "
+"Security ili Secure Boot. Odaberite „Microsoft & 3rd-party CA” ili uključite "
+"Secure Boot. Nazivi stavki ovise o proizvođaču."
+
+#: src/pages.py:3179
+msgid "Advanced"
+msgstr "Napredno"
+
+#: src/pages.py:3181
+msgid ""
+"Keep Windows or other partitions, reuse or create an ESP, and design Root "
+"and Swap partitions with exact sizes."
+msgstr ""
+"Zadržite Windows ili druge particije, ponovno upotrijebite ili izradite "
+"sistemsku particiju EFI te odredite točne veličine korijenske particije i "
+"zamjenskog prostora."
+
+#: src/pages.py:3230
+msgid ""
+"Manual changes are destructive. Existing partition starts are never moved. "
+"Plain NTFS/ext4 can be shrunk only after strict safety checks; encrypted, "
+"mounted or unclean volumes are never resized."
+msgstr ""
+"Ručne promjene mogu izbrisati podatke. Početni položaji postojećih particija "
+"nikada se ne pomiču. Obične particije NTFS/ext4 mogu se smanjiti tek nakon "
+"strogih sigurnosnih provjera. Veličina šifriranih, montiranih ili nepravilno "
+"odmontiranih volumena nikada se ne mijenja."
+
+#: src/pages.py:3410
+msgid "Install Alongside Automatically"
+msgstr "Automatski instaliraj uz postojeći sustav"
+
+#: src/pages.py:3849
+msgid "ESP"
+msgstr "EFI"
+
+#: src/pages.py:3850
+msgid "Root"
+msgstr "Korijenska particija"
+
+#: src/pages.py:3866
+msgid "Unallocated"
+msgstr "Nedodijeljeno"
+
+#: src/pages.py:3973
+#, python-brace-format
+msgid "{name} · {size} · {start}–{end} MiB"
+msgstr "{name} · {size} · {start}–{end} MiB"
+
+#: src/pages.py:4045
+msgid "Current disk"
+msgstr "Trenutačni disk"
+
+#: src/pages.py:4151 src/pages.py:4047
+msgid "Planned result"
+msgstr "Planirani rezultat"
+
+#: src/pages.py:4071
+msgid "Advanced: Manual Partitioning"
+msgstr "Napredno: ručno particioniranje"
+
+#: src/pages.py:4104
+msgid ""
+"Windows was detected. Its partitions remain preserved unless you explicitly "
+"mark them for deletion."
+msgstr ""
+"Otkriven je Windows. Njegove će particije ostati sačuvane ako ih izričito ne "
+"označite za brisanje."
+
+#: src/pages.py:4173 src/pages.py:4958
+msgid "Initialize New GPT"
+msgstr "Inicijaliziraj novi GPT"
+
+#: src/pages.py:4193
+msgid "Existing partitions"
+msgstr "Postojeće particije"
+
+#: src/pages.py:4214
+msgid ""
+"Reuse a healthy existing ESP without formatting it, or create a new one in "
+"available space."
+msgstr ""
+"Ponovno upotrijebite postojeću ispravnu particiju EFI bez formatiranja ili "
+"izradite novu u slobodnom prostoru."
+
+#: src/pages.py:4248
+msgid "Add a partition"
+msgstr "Dodaj particiju"
+
+#: src/pages.py:4252
+msgid ""
+"Choose an available range, exact start position, and size. Nothing is "
+"written until installation begins."
+msgstr ""
+"Odaberite raspoloživi raspon, točan početni položaj i veličinu. Ništa se ne "
+"zapisuje dok instalacija ne počne."
+
+#: src/pages.py:4266
+msgid "Role"
+msgstr "Namjena"
+
+#: src/pages.py:4267
+msgid "Available space"
+msgstr "Raspoloživi prostor"
+
+#: src/pages.py:4268 src/pages.py:4560
+msgid "Start (MiB)"
+msgstr "Početak (MiB)"
+
+#: src/pages.py:4269 src/pages.py:4574
+msgid "Size (MiB)"
+msgstr "Veličina (MiB)"
+
+#: src/pages.py:4283
+msgid "Use All"
+msgstr "Upotrijebi sve"
+
+#: src/pages.py:4287
+msgid "Add Partition"
+msgstr "Dodaj particiju"
+
+#: src/pages.py:4321 src/pages.py:5146
+msgid "Edit"
+msgstr "Uredi"
+
+#: src/pages.py:4548
+msgid "That partition can no longer be edited safely."
+msgstr "Tu particiju više nije moguće sigurno urediti."
+
+#: src/pages.py:4587
+msgid "Use All Available Space"
+msgstr "Upotrijebi sav raspoloživi prostor"
+
+#: src/pages.py:4616
+#, python-brace-format
+msgid "Edit {role} partition"
+msgstr "Uredi particiju: {role}"
+
+#: src/pages.py:4620
+msgid ""
+"Choose an exact position and size inside the available range. Other planned "
+"partitions are not moved."
+msgstr ""
+"Odaberite točan položaj i veličinu unutar raspoloživog raspona. Ostale "
+"planirane particije neće se pomicati."
+
+#: src/pages.py:4627
+msgid "Apply Changes"
+msgstr "Primijeni promjene"
+
+#: src/pages.py:4665
+msgid "Close"
+msgstr "Zatvori"
+
+#: src/pages.py:4673 src/pages.py:4897
+msgid ""
+"BitLocker was detected. Return to Windows, open Manage BitLocker, choose "
+"Turn off BitLocker, and wait until decryption reaches 100%. Suspending "
+"protection is not enough. Back up the recovery key, fully shut Windows down, "
+"then start the installer again."
+msgstr ""
+"Otkriven je BitLocker. Vratite se u Windows, otvorite „Upravljanje "
+"BitLockerom”, odaberite „Isključi BitLocker” i pričekajte da dešifriranje "
+"dosegne 100 %. Privremena obustava zaštite nije dovoljna. Sigurnosno "
+"kopirajte ključ za oporavak, potpuno isključite Windows pa ponovno pokrenite "
+"instalacijski program."
+
+#: src/pages.py:4682
+msgid ""
+"Windows is hibernated or Fast Startup is active. In an Administrator "
+"Terminal run 'powercfg /h off', disable Fast Startup, then run 'shutdown /s /"
+"t 0'. Start the installer again only after Windows has fully shut down."
+msgstr ""
+"Windows je u hibernaciji ili je uključeno brzo pokretanje. U "
+"administratorskom terminalu pokrenite 'powercfg /h off', isključite brzo "
+"pokretanje pa pokrenite 'shutdown /s /t 0'. Ponovno pokrenite instalacijski "
+"program tek kad se Windows potpuno isključi."
+
+#: src/pages.py:4694
+msgid ""
+"Windows did not leave this NTFS volume clean. Return to Windows, run 'chkdsk "
+"C: /f', allow every requested reboot to finish, then fully shut Windows down "
+"before trying again."
+msgstr ""
+"Windows nije ostavio ovaj NTFS volumen u ispravnom stanju. Vratite se u "
+"Windows i pokrenite 'chkdsk C: /f'. Dopustite da se dovrše sva zatražena "
+"ponovna pokretanja, zatim potpuno isključite Windows i pokušajte ponovno."
+
+#: src/pages.py:4701
+msgid ""
+"This target would require moving critical NTFS MFT metadata through a "
+"currently unsafe upstream code path. Choose a larger Windows size or shrink "
+"the volume from Windows."
+msgstr ""
+"Ova bi veličina zahtijevala premještanje ključnih NTFS MFT metapodataka "
+"putem trenutačno nesigurnog postupka u izvornom alatu. Odaberite veću "
+"veličinu za Windows ili smanjite volumen iz sustava Windows."
+
+#: src/pages.py:4711
+msgid ""
+"This NTFS volume is mounted or in use. Unmount it and rescan storage before "
+"continuing."
+msgstr ""
+"Ovaj je NTFS volumen montiran ili se upotrebljava. Odmontirajte ga i ponovno "
+"pregledajte diskove prije nastavka."
+
+#: src/pages.py:4736
+msgid ""
+"This operation moves NTFS data and changes the GPT partition boundary. A "
+"power loss, failing drive, firmware fault or filesystem bug can cause "
+"permanent data loss. Back up all important Windows files before continuing."
+msgstr ""
+"Ova radnja premješta NTFS podatke i mijenja granicu GPT particije. Nestanak "
+"struje, neispravan disk, pogreška firmvera ili greška datotečnog sustava "
+"može izazvati trajan gubitak podataka. Prije nastavka sigurnosno kopirajte "
+"sve važne datoteke iz sustava Windows."
+
+#: src/pages.py:4749
+msgid "New Windows partition size"
+msgstr "Nova veličina particije sustava Windows"
+
+#: src/pages.py:4772
+msgid "MiB"
+msgstr "MiB"
+
+#: src/pages.py:4774
+#, python-brace-format
+msgid "Allowed: {minimum}–{maximum}"
+msgstr "Dopušteno: {minimum}–{maximum}"
+
+#: src/pages.py:4794
+#, python-brace-format
+msgid "Windows: {windows} · New unallocated space: {free}"
+msgstr "Windows: {windows} · Novi nedodijeljeni prostor: {free}"
+
+#: src/pages.py:4826
+msgid ""
+"I have backed up my data and understand that shrinking an existing Windows "
+"partition can cause permanent data loss."
+msgstr ""
+"Izradio sam sigurnosnu kopiju podataka i razumijem da smanjivanje postojeće "
+"particije sustava Windows može trajno izbrisati podatke."
+
+#: src/pages.py:4835
+#, python-brace-format
+msgid "Change the size of {partition}?"
+msgstr "Promijeniti veličinu particije {partition}?"
+
+#: src/pages.py:4839
+msgid ""
+"The partition start will not move. Only its end will move left, creating "
+"unallocated space immediately after it."
+msgstr ""
+"Početak particije neće se pomicati. Samo će se kraj pomaknuti ulijevo, čime "
+"će se odmah nakon particije osloboditi nedodijeljeni prostor."
+
+#: src/pages.py:4847
+msgid "Undo Planned Resize"
+msgstr "Poništi planiranu promjenu veličine"
+
+#: src/pages.py:4848
+msgid "Plan Resize"
+msgstr "Planiraj promjenu veličine"
+
+#: src/pages.py:4895
+msgid "Turn off BitLocker before shrinking"
+msgstr "Isključite BitLocker prije smanjivanja"
+
+#: src/pages.py:4907
+#, python-brace-format
+msgid "Checking whether {partition} can be resized safely…"
+msgstr ""
+"Provjera može li se sigurno promijeniti veličina particije {partition}…"
+
+#: src/pages.py:4918
+msgid "NTFS safety check failed"
+msgstr "Provjera sigurnosti NTFS-a nije uspjela"
+
+#: src/pages.py:4925
+msgid "This partition cannot be resized safely"
+msgstr "Veličinu ove particije nije moguće sigurno promijeniti"
+
+#: src/pages.py:4951
+msgid "New empty GPT — every existing partition will be deleted"
+msgstr "Novi prazni GPT – sve će se postojeće particije izbrisati"
+
+#: src/pages.py:4953
+msgid "Keep current GPT — only marked partitions are deleted"
+msgstr "Zadrži trenutačni GPT – brisanje samo označenih particija"
+
+#: src/pages.py:4956
+msgid "Keep Current GPT"
+msgstr "Zadrži trenutačni GPT"
+
+#: src/pages.py:4969
+msgid "unknown"
+msgstr "nepoznato"
+
+#: src/pages.py:4970
+msgid "WILL DELETE"
+msgstr "BRISANJE"
+
+#: src/pages.py:4970
+msgid "Preserve"
+msgstr "Sačuvaj"
+
+#: src/pages.py:5005
+#, python-brace-format
+msgid "Planned size: {size}"
+msgstr "Planirana veličina: {size}"
+
+#: src/pages.py:5020
+msgid "Deleted by new GPT"
+msgstr "Briše se zbog novog GPT-a"
+
+#: src/pages.py:5022
+msgid "Undo"
+msgstr "Poništi"
+
+#: src/pages.py:5024
+msgid "Delete"
+msgstr "Izbriši"
+
+#: src/pages.py:5029
+msgid "RESIZE"
+msgstr "PROMJENA VELIČINE"
+
+#: src/pages.py:5047
+msgid "Change Size"
+msgstr "Promijeni veličinu"
+
+#: src/pages.py:5062
+msgid "This disk has no existing partitions."
+msgstr "Ovaj disk nema postojećih particija."
+
+#: src/pages.py:5079
+msgid "Create a new ESP partition"
+msgstr "Izradi novu sistemsku particiju EFI"
+
+#: src/pages.py:5136
+#, python-brace-format
+msgid "{size} · {start}–{end} MiB"
+msgstr "{size} · {start}–{end} MiB"
+
+#: src/pages.py:5141
+msgid "Remove"
+msgstr "Ukloni"
+
+#: src/pages.py:3914 src/pages.py:3925 src/pages.py:5143
+msgid "New"
+msgstr "Novo"
+
+#: src/pages.py:5170
+#, python-brace-format
+msgid "{size} at {start} MiB"
+msgstr "{size} na položaju {start} MiB"
+
+#: src/pages.py:5205
+msgid "an ESP of at least 512 MiB"
+msgstr "sistemska particija EFI od najmanje 512 MiB"
+
+#: src/pages.py:5209
+#, python-brace-format
+msgid "Complete the plan: {requirements}."
+msgstr "Dovršite plan: {requirements}."
+
+#: src/pages.py:5222
+msgid ""
+"Layout is valid. Only the listed resizes, deletes, creates and formats will "
+"be sent to the privileged executor."
+msgstr ""
+"Raspored je valjan. Izvršitelju s povišenim ovlastima poslat će se samo "
+"navedene promjene veličine, brisanja, stvaranja i formatiranja."
+
+#: src/pages.py:5262
+msgid "That partition role already exists."
+msgstr "Ta namjena particije već postoji."
+
+#: src/pages.py:5302
+msgid "Initialize a new GPT?"
+msgstr "Inicijalizirati novi GPT?"
+
+#: src/pages.py:5304
+msgid ""
+"Every existing partition and all data on this disk will be deleted. You must "
+"then create a new ESP and Root partition."
+msgstr ""
+"Sve postojeće particije i podaci na ovom disku bit će izbrisani. Zatim "
+"morate izraditi novu sistemsku particiju EFI i korijensku particiju."
+
+#: src/pages.py:5310
+msgid "Initialize GPT"
+msgstr "Inicijaliziraj GPT"
+
+#: src/pages.py:5346
+msgid "The selected disk changed or disappeared."
+msgstr "Odabrani disk se promijenio ili nestao."
+
+#: src/pages.py:5351
+msgid "The selected disk topology changed. Select it again."
+msgstr "Struktura odabranog diska se promijenila. Odaberite ga ponovno."
+
+#: src/pages.py:6292 src/pages.py:6293 src/pages.py:6302
+msgid "none"
+msgstr "ništa"
+
+#: src/pages.py:6295
+#, python-brace-format
+msgid "{path}: {before} → {after} (free {reclaimed})"
+msgstr "{path}: {before} → {after} (oslobođeno {reclaimed})"
+
+#: src/pages.py:6304
+#, python-brace-format
+msgid "{name}: {size} MiB ({start}–{end})"
+msgstr "{name}: {size} MiB ({start}–{end})"
+
+#: src/pages.py:6320
+msgid "Initialize a new empty GPT"
+msgstr "Inicijaliziraj novi prazni GPT"
+
+#: src/pages.py:6322
+msgid "Keep the current GPT"
+msgstr "Zadrži trenutačni GPT"
+
+#: src/pages.py:6326
+#, python-brace-format
+msgid "Reuse {path}; inspect it and never format it."
+msgstr "Ponovno upotrijebi {path}. Provjeri ga i nikada ga ne formatiraj."
+
+#: src/pages.py:6330
+msgid "Create and format a new EFI System Partition."
+msgstr "Izradi i formatiraj novu sistemsku particiju EFI."
+
+#: src/pages.py:6334
+msgid "Advanced manual GPT"
+msgstr "Napredno ručno particioniranje GPT-a"
+
+#: src/pages.py:6335
+msgid "Partition table"
+msgstr "Tablica particija"
+
+#: src/pages.py:6337
+msgid "Deleted partitions"
+msgstr "Izbrisane particije"
+
+#: src/pages.py:6338
+msgid "Resized partitions"
+msgstr "Particije s promijenjenom veličinom"
+
+#: src/pages.py:6344
+msgid ""
+"Write only EFI/AnduinOS, preserve EFI/BOOT, and create a verified AnduinOS "
+"NVRAM entry."
+msgstr ""
+"Zapisuj samo u EFI/AnduinOS, sačuvaj EFI/BOOT i izradi provjerenu NVRAM "
+"stavku za AnduinOS."
+
+#: src/pages.py:6402
+msgid "Manual storage selection is missing. Return and review it."
+msgstr "Nedostaje ručni odabir pohrane. Vratite se i provjerite ga."
+
+#: src/pages.py:6496
+msgid ""
+"⚠ Listed NTFS/ext4 resizes will move filesystem data and partition "
+"boundaries. Listed partitions will be deleted and every listed new partition "
+"will be formatted. Back up important data first; these partitioning "
+"operations cannot be undone."
+msgstr ""
+"⚠ Navedene promjene veličine NTFS/ext4 premjestit će podatke datotečnih "
+"sustava i granice particija. Navedene particije bit će izbrisane, a svaka "
+"navedena nova particija formatirana. Prvo sigurnosno kopirajte važne "
+"podatke. Ove promjene particija nije moguće poništiti."
+
+#: src/pages.py:6606
+msgid "Apply this manual disk layout?"
+msgstr "Primijeniti ovaj ručni raspored diska?"
+
+#: src/pages.py:6607 src/pages.py:6735
+msgid "Apply Layout and Install"
+msgstr "Primijeni raspored i instaliraj"
+
+#: src/pages.py:6630
+#, python-brace-format
+msgid ""
+"AnduinOS will apply only the reviewed manual changes to {disk}.\n"
+"\n"
+msgstr ""
+"AnduinOS će na disku {disk} primijeniti samo pregledane ručne promjene.\n"
+"\n"
+
+#: src/pages.py:6658
+msgid ""
+"Only the explicitly listed partitions will be deleted or formatted. "
+"Uninvolved partitions remain unchanged; EFI/BOOT is not overwritten."
+msgstr ""
+"Izbrisat će se ili formatirati samo izričito navedene particije. Ostale "
+"particije ostat će nepromijenjene, a EFI/BOOT neće se prepisati."
+
+#: src/pages.py:4072
+msgid ""
+"Edit one GPT disk. Partition starts are never moved; plain NTFS/ext4 may be "
+"shrunk after safety checks."
+msgstr ""
+"Uredite jedan GPT disk. Počeci particija nikada se ne pomiču. Obične "
+"particije NTFS/ext4 mogu se smanjiti nakon sigurnosnih provjera."
+
+msgid ""
+"Shrinking ext4 can cause permanent data loss. Back up important files. The "
+"minimum size is an estimate; filesystem checks run before and after resizing."
+msgstr ""
+"Smanjivanje ext4 može dovesti do trajnog gubitka podataka. Sigurnosno "
+"kopirajte važne datoteke. Najmanja veličina je procjena. Datotečni sustav "
+"provjerava se prije i nakon promjene veličine."
+
+msgid "I have backed up my data."
+msgstr "Izradio sam sigurnosnu kopiju podataka."
+
+msgid "Btrfs shrinking is not supported."
+msgstr "Smanjivanje Btrfs-a nije podržano."
+
+#: src/pages.py:5119
+msgid "XFS (classic, scalable)"
+msgstr "XFS (klasičan, skalabilan)"
+
+#: src/pages.py:5120
+msgid "F2FS (flash-optimized)"
+msgstr "F2FS (prilagođen flash memoriji)"
+
+#: src/pages.py:3004
+msgid "0 GiB · ZRAM only"
+msgstr "0 GiB · Samo ZRAM"
+
+#: src/pages.py:2900
+msgid ""
+"Disk Swap will not be created. ZRAM remains enabled, but sustained memory "
+"pressure can terminate applications and hibernation is unavailable. This is "
+"strongly discouraged."
+msgstr ""
+"Zamjenski prostor na disku neće se izraditi. ZRAM ostaje uključen, ali "
+"dugotrajni nedostatak memorije može prekinuti rad aplikacija, a hibernacija "
+"nije dostupna. Ovaj se odabir ne preporučuje."
+
+#: src/pages.py:6702
+msgid "Review your custom Swap size"
+msgstr "Provjerite prilagođenu veličinu zamjenskog prostora"
+
+#: src/pages.py:2927
+msgid ""
+"This exceeds the AnduinOS recommendation. It consumes more disk space and "
+"normally does not improve runtime performance."
+msgstr ""
+"Ovo premašuje preporuku za AnduinOS. Zauzima više prostora na disku i obično "
+"ne poboljšava performanse tijekom rada."
+
+#: src/pages.py:2913
+msgid ""
+"This is below AnduinOS's runtime safety target. ZRAM still works, but heavy "
+"browser or application workloads can run out of backing memory sooner; "
+"hibernation is also unavailable."
+msgstr ""
+"Ova je veličina ispod sigurnosne preporuke AnduinOS-a. ZRAM će raditi, ali "
+"zahtjevni preglednici ili aplikacije mogu ranije ostati bez memorije, a "
+"hibernacija neće biti dostupna."
+
+#: src/pages.py:2920
+msgid ""
+"This size protects ordinary memory pressure, but is smaller than the "
+"hibernation target. Hibernation may fail or be unavailable."
+msgstr ""
+"Ova je veličina dovoljna za uobičajeno opterećenje memorije, ali manja od "
+"preporučene za hibernaciju. Hibernacija možda neće uspjeti ili neće biti "
+"dostupna."
+
+#: src/pages.py:3028
+msgid ""
+"ZRAM always remains enabled: 50% of RAM · LZ4 · priority 100. Disk Swap uses "
+"priority 10."
+msgstr ""
+"ZRAM uvijek ostaje uključen: 50 % RAM-a · LZ4 · prioritet 100. Zamjenski "
+"prostor na disku ima prioritet 10."
+
+#: src/pages.py:6705
+msgid "ZRAM will remain enabled regardless of this choice."
+msgstr "ZRAM će ostati uključen bez obzira na ovaj odabir."
+
+#: src/pages.py:3008
+msgid "{size} GiB · Max"
+msgstr "{size} GiB · Najviše"
+
+#: src/pages.py:2895
+msgid "✓ Best performance — AnduinOS recommended Swap size."
+msgstr ""
+"✓ Najbolje performanse – veličina zamjenskog prostora koju preporučuje "
+"AnduinOS."
+
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:11
+msgid "Authorization is required to inspect disk partition geometry"
+msgstr "Za pregled položaja i veličina particija potrebno je odobrenje"
+
+#: anduinos-installer-beta/assets/com.anduinos.installer-beta.policy:10
+msgid "Read exact disk partition geometry for the AnduinOS installer"
+msgstr ""
+"Očitaj točne položaje i veličine particija za instalacijski program AnduinOS-"
+"a"
+
+#: assets/anduinos-installer-beta-live-shortcut.desktop:3
+msgid "Prepare and start AnduinOS Installer"
+msgstr "Pripremi i pokreni instalacijski program AnduinOS-a"
+
+#: assets/anduinos-installer-beta.desktop:59
+msgid "Install AnduinOS to your computer"
+msgstr "Instalirajte AnduinOS na računalo"
+
+#: src/pages.py
+msgid "System installed, but some features could not be completed"
+msgstr "Sustav je instaliran, ali neke značajke nisu dovršene"
+
+#: src/pages.py
+msgid "Btrfs file compression"
+msgstr "Kompresija datoteka na Btrfs-u"
+
+#: src/pages.py
+msgid "No compression"
+msgstr "Bez kompresije"
+
+#: src/pages.py
+msgid "Fast compression"
+msgstr "Brza kompresija"
+
+#: src/pages.py
+msgid "Balanced (default)"
+msgstr "Uravnoteženo (zadano)"
+
+#: src/pages.py
+msgid "Save space"
+msgstr "Uštedi prostor"
+
+#: src/pages.py
+msgid "Store files without compression."
+msgstr "Pohranjuj datoteke bez kompresije."
+
+#: src/pages.py
+msgid "Prioritize speed and reduce CPU usage."
+msgstr "Daj prednost brzini i smanji opterećenje procesora."
+
+#: src/pages.py
+msgid "Balance compression speed and disk space usage."
+msgstr "Uravnoteži brzinu kompresije i zauzeće diska."
+
+#: src/pages.py
+msgid "Compress more to save space, using more CPU when writing."
+msgstr ""
+"Jače komprimiraj radi uštede prostora, uz veće opterećenje procesora pri "
+"zapisivanju."
+
+#: src/pages.py
+msgid "External drive"
+msgstr "Vanjski disk"
+
+#: src/pages.py
+msgid "Read-only"
+msgstr "Samo za čitanje"
+
+#: src/pages.py
+msgid "Show External Drives"
+msgstr "Prikaži vanjske diskove"
+
+#: src/pages.py
+msgid ""
+"Disconnecting an external drive can cause installation failure or data loss. "
+"Booting on another computer may require additional setup. For portable use, "
+"consider AnduinOS ToGo."
+msgstr ""
+"Odspajanje vanjskog diska može prekinuti instalaciju ili dovesti do gubitka "
+"podataka. Pokretanje na drugom računalu može zahtijevati dodatno "
+"postavljanje. Za prijenosnu uporabu razmislite o AnduinOS ToGo."
+
+#: src/pages.py
+msgid "Create initial system recovery point"
+msgstr "Izradi početnu točku oporavka sustava"
+
+#: src/pages.py
+msgid ""
+"This NTFS volume requires a disk check. In Windows, back up important files "
+"and run 'chkdsk X: /f' as administrator (replace X with this volume's drive "
+"letter). If prompted, schedule the check, then restart into Windows. Let the "
+"check finish and fully shut down Windows before trying again."
+msgstr ""
+"Ovaj NTFS volumen treba provjeriti. U sustavu Windows sigurnosno kopirajte "
+"važne datoteke i kao administrator pokrenite 'chkdsk X: /f' (zamijenite X "
+"slovom ovog volumena). Ako se zatraži, zakažite provjeru pa ponovno "
+"pokrenite Windows. Pričekajte da provjera završi i potpuno isključite "
+"Windows prije ponovnog pokušaja."
+
+#: src/pages.py
+msgid "View Repair Steps"
+msgstr "Prikaži korake za popravak"
+
+#: src/pages.py
+msgid "Repair Steps"
+msgstr "Koraci za popravak"
+
+#: src/pages.py
+msgid ""
+"This NTFS volume requires a disk check in Windows before it can be resized "
+"safely."
+msgstr ""
+"Ovaj NTFS volumen treba provjeriti u sustavu Windows prije sigurne promjene "
+"veličine."
+
+#: src/pages.py
+msgid ""
+"External drive mode — AnduinOS will add a portable UEFI boot path so this "
+"drive can boot on another UEFI computer without an existing AnduinOS "
+"firmware boot entry."
+msgstr ""
+"Način za vanjski disk – AnduinOS će dodati prijenosnu putanju za pokretanje "
+"putem UEFI-ja. Disk će se tako moći pokrenuti na drugom računalu s UEFI-jem "
+"bez postojeće stavke za pokretanje AnduinOS-a u firmveru."
+
+#: src/pages.py
+msgid "Checking firmware"
+msgstr "Provjera firmvera"
+
+#: src/pages.py
+msgid "Checking Secure Boot support…"
+msgstr "Provjera podrške za Secure Boot…"
+
+#: src/pages.py
+msgid "Unable to determine Secure Boot support"
+msgstr "Podršku za Secure Boot nije moguće utvrditi"
+
+#: src/pages.py
+msgid ""
+"You can continue configuring the installation. Firmware detection must "
+"succeed before any changes are made to your disks."
+msgstr ""
+"Možete nastaviti s postavljanjem instalacije. Prepoznavanje firmvera mora "
+"uspjeti prije bilo kakvih promjena na diskovima."
+
+#: src/pages.py
+msgid "Firmware check complete"
+msgstr "Provjera firmvera je dovršena"
+
+#: src/pages.py
+msgid "Checking EFI System Partition…"
+msgstr "Provjera sistemske particije EFI…"
+
+#: src/pages.py
+msgid "Check for other Linux installations"
+msgstr "Potraži druge instalacije Linuxa"
+
+#: src/pages.py
+msgid "Compare ESP options"
+msgstr "Usporedi mogućnosti za sistemsku particiju EFI"
+
+#: src/pages.py
+msgid "Separate ESP"
+msgstr "Zasebna sistemska particija EFI"
+
+#: src/pages.py
+msgid "Shared ESP"
+msgstr "Zajednička sistemska particija EFI"
+
+#: src/pages.py
+msgid ""
+"Create and format a new FAT32 ESP in unallocated space (at least 512 MiB). "
+"Existing ESPs stay unchanged."
+msgstr ""
+"Izradi i formatiraj novu sistemsku particiju EFI s FAT32 u nedodijeljenom "
+"prostoru (najmanje 512 MiB). Postojeće sistemske particije EFI ostaju "
+"nepromijenjene."
+
+#: src/pages.py
+msgid ""
+"Both options install boot files in EFI/AnduinOS and put the new AnduinOS "
+"UEFI boot entry first. Detected supported systems get entries in the new "
+"GRUB menu; their files and menus are not changed."
+msgstr ""
+"Obje mogućnosti instaliraju datoteke za pokretanje u EFI/AnduinOS i "
+"postavljaju novu UEFI stavku za AnduinOS na prvo mjesto. Za otkrivene "
+"podržane sustave dodaju se stavke u novi izbornik GRUB-a. Njihove se "
+"datoteke i izbornici ne mijenjaju."
+
+#: src/pages.py
+msgid "Retry"
+msgstr "Pokušaj ponovno"
+
+msgid "Replace existing AnduinOS boot files?"
+msgstr "Zamijeniti postojeće datoteke za pokretanje AnduinOS-a?"
+
+msgid ""
+"Reuse a healthy ESP with enough free space, without formatting it. Other "
+"systems' boot files are preserved. If EFI/AnduinOS already exists, "
+"replacement requires explicit confirmation. To keep both installations "
+"independently bootable, choose another ESP or create a new one."
+msgstr ""
+"Ponovno upotrijebi ispravnu sistemsku particiju EFI s dovoljno slobodnog "
+"prostora, bez formatiranja. Datoteke za pokretanje drugih sustava ostat će "
+"sačuvane. Ako EFI/AnduinOS već postoji, zamjenu morate izričito potvrditi. "
+"Da bi se obje instalacije mogle pokrenuti neovisno, odaberite drugu "
+"sistemsku particiju EFI ili izradite novu."
+
+msgid "Use this ESP and replace"
+msgstr "Upotrijebi ovu sistemsku particiju EFI i zamijeni datoteke"
+
+msgid ""
+"Will replace EFI/AnduinOS on {path}. Old boot files will be backed up; the "
+"previous AnduinOS boot entry may no longer start the old system."
+msgstr ""
+"Zamijenit će se EFI/AnduinOS na {path}. Stare datoteke za pokretanje spremit "
+"će se u sigurnosnu kopiju, ali prethodna stavka za AnduinOS možda više neće "
+"moći pokrenuti stari sustav."
+
+msgid ""
+"{path} already contains AnduinOS boot files. Continuing will replace EFI/"
+"AnduinOS to start the new installation. Windows and other systems' boot "
+"files will be preserved; this ESP will not be formatted.\n"
+"\n"
+"This replacement does not delete the old system partition, but the old "
+"AnduinOS may no longer start through its existing boot entry. To keep both "
+"installations, go back and create a separate ESP (at least 512 MiB). Old "
+"boot files will be backed up before replacement."
+msgstr ""
+"{path} već sadrži datoteke za pokretanje AnduinOS-a. Nastavkom ćete "
+"zamijeniti EFI/AnduinOS kako bi se pokretala nova instalacija. Datoteke za "
+"pokretanje sustava Windows i drugih sustava ostat će sačuvane, a ova "
+"sistemska particija EFI neće se formatirati.\n"
+"\n"
+"Ova zamjena ne briše particiju starog sustava, ali se stari AnduinOS možda "
+"više neće moći pokrenuti putem postojeće stavke za pokretanje. Da biste "
+"zadržali obje instalacije, vratite se i izradite zasebnu sistemsku particiju "
+"EFI (najmanje 512 MiB). Stare datoteke za pokretanje spremit će se u "
+"sigurnosnu kopiju prije zamjene."
+
+#: src/pages.py
+msgid "Create fallback boot chain"
+msgstr "Izradi pričuvni lanac pokretanja"
+
+#: src/pages.py
+msgid "Deploy recovery environment"
+msgstr "Postavi okruženje za oporavak"
+
+msgid "Confirm disk password"
+msgstr "Potvrdi lozinku diska"
+
+msgid "Disk encryption"
+msgstr "Šifriranje diska"
+
+msgid "Disk password (optional)"
+msgstr "Lozinka diska (neobavezno)"
+
+msgid "Disk password must contain 8 to 128 printable ASCII characters"
+msgstr "Lozinka diska mora sadržavati od 8 do 128 ispisivih ASCII znakova"
+
+msgid "Disk swap is encrypted; hibernation is unavailable"
+msgstr "Zamjenski prostor na disku je šifriran. Hibernacija nije dostupna"
+
+msgid "Disk swap is unencrypted"
+msgstr "Zamjenski prostor na disku nije šifriran"
+
+msgid "Disk swap will store data without encryption."
+msgstr ""
+"Podaci u zamjenskom prostoru na disku pohranjivat će se bez šifriranja."
+
+msgid "Encrypt disk swap"
+msgstr "Šifriraj zamjenski prostor na disku"
+
+msgid ""
+"Leave blank to keep the disk unencrypted. Use 8–128 ASCII characters; the "
+"boot password uses the US keyboard layout."
+msgstr ""
+"Ostavite prazno ako disk želite ostaviti nešifriranim. Upotrijebite od 8 do "
+"128 ASCII znakova. Pri unosu lozinke tijekom pokretanja koristi se američki "
+"raspored tipkovnice."
+
+msgid "Reduce disk swap to leave room for encryption."
+msgstr ""
+"Smanjite zamjenski prostor na disku da biste ostavili mjesta za šifriranje."
+
+msgid "Review disk encryption settings."
+msgstr "Provjerite postavke šifriranja diska."
+
+msgid "The disk passwords do not match"
+msgstr "Lozinke diska se ne podudaraju"
+
+msgid "Uses a new random key at each startup. Hibernation is unavailable."
+msgstr ""
+"Upotrebljava novi nasumični ključ pri svakom pokretanju. Hibernacija nije "
+"dostupna."
+
+msgid "Close Rescue Center before installing"
+msgstr "Prije instalacije zatvorite Centar za oporavak"
+
+msgid ""
+"Please close Rescue Center normally, including its emergency terminal, and "
+"wait for disk cleanup before installing."
+msgstr ""
+"Prije početka instalacije zatvorite Centar za oporavak na uobičajen način, "
+"uključujući njegov terminal za hitne slučajeve, i pričekajte da završi "
+"čišćenje diska."
+
+msgid "Save the emergency recovery key before continuing"
+msgstr "Prije nastavka spremite ključ za hitni oporavak"
+
+msgid ""
+"The emergency recovery key is generated by the system. Like your disk "
+"password, it unlocks the disk. Use your password normally; use the key in an "
+"emergency. Save it on another device."
+msgstr ""
+"Ključ za hitni oporavak generira sustav. Kao i lozinka diska, služi za "
+"otključavanje diska. Uobičajeno se služite lozinkom, a ključem u hitnom "
+"slučaju. Spremite ga na drugi uređaj."
+
+msgid "I saved the emergency recovery key outside this computer."
+msgstr "Spremio sam ključ za hitni oporavak izvan ovog računala."
+
+msgid "Emergency recovery key saved"
+msgstr "Ključ za hitni oporavak je spremljen"
+
+msgid ""
+"No RE partition. If the system cannot start, you will need a Live USB for "
+"rescue."
+msgstr ""
+"Nema particije RE. Ako se sustav ne može pokrenuti, za oporavak će vam "
+"trebati pokretni USB medij."
+
+msgid ""
+"No disk swap. ZRAM will still be available, but there will be no disk swap "
+"space."
+msgstr "Nema zamjenskog prostora na disku. ZRAM će i dalje biti dostupan."
+
+msgid ""
+"No new partitions yet. Add an ESP if needed, one Root partition, and "
+"optionally Swap and RE."
+msgstr ""
+"Još nema novih particija. Po potrebi dodajte sistemsku particiju EFI te "
+"dodajte jednu korijensku particiju. Zamjenski prostor i particija RE nisu "
+"obavezni."
+
+msgid "RE must be at least 256 MiB"
+msgstr "Particija RE mora imati najmanje 256 MiB"
+
+msgid "Recovery environment (RE)"
+msgstr "Okruženje za oporavak (RE)"
+
+msgid "Review optional partitions"
+msgstr "Provjerite neobavezne particije"
+
+msgid "Force continue"
+msgstr "Prisilno nastavi"
+
+msgid ""
+"RE needs at least 256 MiB. It can show system information even when the "
+"installed system cannot start. Snapshot recovery is available only with "
+"Btrfs. RE is optional; use a Live USB for rescue if it is not configured."
+msgstr ""
+"Za RE treba najmanje 256 MiB. Može prikazati informacije o sustavu čak i kad "
+"se instalirani sustav ne može pokrenuti. Oporavak pomoću snimki stanja "
+"dostupan je samo s Btrfs-om. RE je neobavezan. Ako ga ne postavite, za "
+"oporavak upotrijebite pokretni USB medij."
+
+#: src/pages.py
+msgid "Are you in mainland China?"
+msgstr "Nalazite li se u kontinentalnoj Kini?"
+
+#: src/pages.py
+msgid "Choose where to obtain software during installation and future updates"
+msgstr "Odaberite izvore softvera za instalaciju i buduća ažuriranja"
+
+#: src/pages.py
+msgid ""
+"Continue with global AnduinOS operated by AIURSOFT LIMITED, obtaining "
+"software from the global service network. (not compliant in mainland China)"
+msgstr ""
+"Nastavite s globalnim AnduinOS-om kojim upravlja AIURSOFT LIMITED i "
+"preuzimajte softver iz globalne mreže usluga. (Nije usklađeno s propisima "
+"kontinentalne Kine.)"
+
+#: src/pages.py
+msgid ""
+"Use mainland China AnduinOS operated by Suzhou Aiursoft Technology Co., "
+"Ltd., obtaining software from software servers in China."
+msgstr ""
+"Upotrijebite AnduinOS za kontinentalnu Kinu kojim upravlja Suzhou Aiursoft "
+"Technology Co., Ltd. i preuzimajte softver s poslužitelja u Kini."
+
+#: src/pages.py
+msgid ""
+"This option changes how software is obtained. The mainland China version may "
+"not provide access to some software."
+msgstr ""
+"Ovaj odabir mijenja izvore softvera. U izdanju za kontinentalnu Kinu neki "
+"softver možda neće biti dostupan."
+
+#: src/pages.py
+msgid "Software sources"
+msgstr "Izvori softvera"
+
+#: src/pages.py
+msgid "Mainland China — packages.aiursoft.cn and USTC Flathub"
+msgstr "Kontinentalna Kina – packages.aiursoft.cn i USTC Flathub"
+
+#: src/pages.py
+msgid "Keep existing software sources"
+msgstr "Zadrži postojeće izvore softvera"
+
+#: src/pages.py
+msgid "Switch to mainland China software sources"
+msgstr "Prebaci se na izvore softvera za kontinentalnu Kinu"
+
+#: src/pages.py
+msgid ""
+"Some Chinese software sources could not be configured. Installation will "
+"continue with the available sources."
+msgstr ""
+"Neke izvore softvera za Kinu nije bilo moguće postaviti. Instalacija će se "
+"nastaviti s dostupnim izvorima."
+
+msgid "Disk encryption is a Pro feature. Visit https://www.anduinos.com/pro"
+msgstr ""
+"Šifriranje diska dostupno je u izdanju Pro. Posjetite https://"
+"www.anduinos.com/pro"
+
+msgid "Prepare display compatibility mode"
+msgstr "Pripremi način rada kompatibilan sa zaslonom"
+
+#: data/languages.json
+msgid "Croatian"
+msgstr "Hrvatski"

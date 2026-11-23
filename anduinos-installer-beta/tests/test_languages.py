@@ -33,6 +33,7 @@ class LanguageDefaultsTests(unittest.TestCase):
                 "fr",
                 "de",
                 "el",
+                "hr",
                 "hi",
                 "id",
                 "it",
@@ -52,6 +53,15 @@ class LanguageDefaultsTests(unittest.TestCase):
             }
             <= {language.code for language in LANGUAGES}
         )
+
+    def test_croatian_uses_its_native_keyboard_without_an_extra_input_method(self):
+        language = language_for_locale("hr_HR.UTF-8")
+        self.assertEqual(language.code, "hr")
+        self.assertEqual(language.native_name, "Hrvatski")
+        self.assertEqual(language.keyboard, "hr")
+        self.assertEqual(language.timezone, "Europe/Zagreb")
+        self.assertEqual(language.language_pack_code, "hr")
+        self.assertEqual(language.recommended_input_methods, ())
 
     def test_chinese_locales_use_us_physical_keyboard(self):
         chinese = {

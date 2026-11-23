@@ -13,6 +13,7 @@
   <name xml:lang="fi">Tilannekuvien hallinta</name>
   <name xml:lang="fr">Gestionnaire d'instantanés de disque</name>
   <name xml:lang="hi">डिस्क स्नैपशॉट मैनेजर</name>
+  <name xml:lang="hr">Upravitelj snimki diska</name>
   <name xml:lang="id">Manajer Snapshot Disk</name>
   <name xml:lang="it">Gestore delle istantanee del disco</name>
   <name xml:lang="ja">ディスクスナップショットマネージャー</name>
@@ -41,6 +42,7 @@
   <summary xml:lang="fi">Palauta AnduinOS ja poistetut Omat tiedostot</summary>
   <summary xml:lang="fr">Récupérer AnduinOS et restaurer les fichiers personnels supprimés</summary>
   <summary xml:lang="hi">AnduinOS को पुनर्प्राप्त करें और हटाई गई व्यक्तिगत फ़ाइलें पुनर्स्थापित करें</summary>
+  <summary xml:lang="hr">Oporavi AnduinOS i vrati izbrisane osobne datoteke</summary>
   <summary xml:lang="id">Pulihkan AnduinOS dan kembalikan Berkas Pribadi yang terhapus</summary>
   <summary xml:lang="it">Recupera AnduinOS e ripristina i file personali eliminati</summary>
   <summary xml:lang="ja">AnduinOS を復旧し、削除された個人ファイルを復元します</summary>
@@ -70,6 +72,7 @@
     <p xml:lang="fi">Tilannekuvien hallinta luo AnduinOS-järjestelmälle muuttumattomia Btrfs-järjestelmätilannekuvia sekä erillisiä tilannekuvia omista tiedostoista.</p>
     <p xml:lang="fr">Le Gestionnaire d'instantanés de disque crée des instantanés système Btrfs immuables pour le système AnduinOS et des instantanés indépendants pour les fichiers personnels.</p>
     <p xml:lang="hi">डिस्क स्नैपशॉट प्रबंधक AnduinOS सिस्टम के लिए अपरिवर्तनीय Btrfs सिस्टम स्नैपशॉट और व्यक्तिगत फ़ाइलों के लिए स्वतंत्र स्नैपशॉट बनाता है।</p>
+    <p xml:lang="hr">Upravitelj snimki diska izrađuje nepromjenjive Btrfs snimke stanja sustava AnduinOS i neovisne snimke stanja osobnih datoteka.</p>
     <p xml:lang="id">Manajer Snapshot Disk membuat snapshot sistem Btrfs yang tidak dapat diubah untuk sistem AnduinOS dan snapshot independen untuk Berkas Pribadi.</p>
     <p xml:lang="it">Gestore delle istantanee del disco crea istantanee di sistema Btrfs immutabili per il sistema AnduinOS e istantanee indipendenti per i file personali.</p>
     <p xml:lang="ja">ディスクスナップショットマネージャーは、AnduinOS システム用の不変の Btrfs システムスナップショットと、個人ファイル用の独立したスナップショットを作成します。</p>
@@ -98,6 +101,7 @@
     <p xml:lang="fi">Järjestelmäpalautus tarkistaa valitun tilannekuvan, turvaa mahdollisuuden palata nykyiseen järjestelmään palautuksen ollessa vireillä ja valmistelee varmennetun kertakäyttöisen GRUB-käynnistysmerkinnän. Omat tiedostot jätetään nimenomaisesti muuttamatta.</p>
     <p xml:lang="fr">Une restauration du système valide l’instantané sélectionné, conserve le système actuel comme solution de repli jusqu’à la fin de l’opération et prépare une entrée GRUB vérifiée utilisable uniquement au prochain démarrage. Les fichiers personnels restent explicitement inchangés.</p>
     <p xml:lang="hi">सिस्टम रोलबैक चयनित स्नैपशॉट को सत्यापित करता है, कार्रवाई पूरी होने तक मौजूदा सिस्टम को पुनर्प्राप्ति विकल्प के रूप में सुरक्षित रखता है, और केवल अगले बूट पर उपयोग के लिए सत्यापित GRUB प्रविष्टि तैयार करता है। व्यक्तिगत फ़ाइलों में कोई बदलाव नहीं किया जाता।</p>
+    <p xml:lang="hr">Vraćanje sustava provjerava odabranu snimku stanja, štiti pričuvno stanje trenutačnog sustava dok je postupak na čekanju i priprema provjerenu GRUB stavku za jednokratno pokretanje. Osobne datoteke ostaju nepromijenjene.</p>
     <p xml:lang="id">Pengembalian sistem ke keadaan sebelumnya memvalidasi snapshot yang dipilih, mempertahankan sistem saat ini sebagai opsi pemulihan sampai operasi selesai, dan menyiapkan entri GRUB terverifikasi yang hanya digunakan pada boot berikutnya. Berkas Pribadi tidak diubah.</p>
     <p xml:lang="it">Un ripristino del sistema convalida l’istantanea selezionata, conserva il sistema attuale come soluzione di ripristino fino al completamento dell’operazione e prepara una voce GRUB verificata utilizzabile solo al prossimo avvio. I file personali rimangono esplicitamente invariati.</p>
     <p xml:lang="ja">システムロールバックでは、選択したスナップショットを検証し、トランザクションが保留中の間、現在のシステムをフォールバックとして保護し、検証済みのワンショット GRUB エントリを準備します。個人ファイルは明示的に変更されません。</p>
@@ -126,6 +130,7 @@
     <p xml:lang="fi">Erilliset Koti-tilannekuvat tallentavat @home-alitaltion tilan oman aikataulunsa mukaan. Käyttäjät voivat selata aiempia versioita ja palauttaa tiedostoja tai kansioita palauttamatta koko käyttöjärjestelmää aiempaan tilaan.</p>
     <p xml:lang="fr">Les instantanés indépendants du dossier personnel capturent le sous-volume @home selon un calendrier distinct. Les utilisateurs peuvent parcourir des versions antérieures et récupérer des fichiers ou des dossiers sans restaurer le système d’exploitation.</p>
     <p xml:lang="hi">स्वतंत्र होम स्नैपशॉट अलग शेड्यूल पर @home सबवॉल्यूम के स्नैपशॉट बनाते हैं। उपयोगकर्ता ऑपरेटिंग सिस्टम को पिछली स्थिति में लौटाए बिना पुराने संस्करण देख सकते हैं और फ़ाइलें या फ़ोल्डर पुनर्प्राप्त कर सकते हैं।</p>
+    <p xml:lang="hr">Neovisne snimke početne mape bilježe stanje podvolumena @home prema zasebnom rasporedu. Korisnici mogu pregledati ranije verzije i oporaviti datoteke ili mape bez vraćanja operacijskog sustava.</p>
     <p xml:lang="id">Snapshot Beranda independen menangkap subvolume @home pada jadwal terpisah. Pengguna dapat menjelajahi versi sebelumnya dan memulihkan berkas atau folder tanpa mengembalikan sistem operasi ke keadaan sebelumnya.</p>
     <p xml:lang="it">Le istantanee indipendenti di Home catturano il sottovolume @home secondo una pianificazione separata. Gli utenti possono sfogliare le versioni precedenti e recuperare file o cartelle senza effettuare un rollback del sistema operativo.</p>
     <p xml:lang="ja">個別のホームスナップショットは、別のスケジュールで @home サブボリュームのスナップショットを作成します。ユーザーは過去の版を参照し、オペレーティングシステム全体をロールバックせずにファイルやフォルダーを復元できます。</p>
@@ -154,6 +159,7 @@
     <p xml:lang="fi">Nautilus tarjoaa Tiedostohistoria-toiminnot yhdelle valitulle kotihakemiston kohteelle ja kansion taustalle sekä avaa Tilannekuvien hallinnan erillisen ikkunan aiempien versioiden ja poistettujen tiedostojen selaamista varten.</p>
     <p xml:lang="fr">Nautilus propose des actions d'historique des fichiers pour un élément sélectionné du dossier personnel et pour l'arrière-plan d'un dossier, ouvrant une fenêtre dédiée du Gestionnaire d'instantanés de disque pour les versions antérieures et les fichiers supprimés.</p>
     <p xml:lang="hi">Nautilus चयनित होम फ़ोल्डर के एक आइटम और किसी फ़ोल्डर की पृष्ठभूमि के लिए फ़ाइल इतिहास कार्रवाइयाँ उपलब्ध कराता है और पुराने संस्करणों तथा हटाई गई फ़ाइलों को दिखाने के लिए डिस्क स्नैपशॉट प्रबंधक की एक समर्पित विंडो खोलता है।</p>
+    <p xml:lang="hr">Nautilus nudi radnje povijesti datoteka za jednu odabranu stavku u početnoj mapi i za pozadinu mape. Otvaraju zaseban prozor Upravitelja snimki diska s ranijim verzijama i izbrisanim datotekama.</p>
     <p xml:lang="id">Nautilus menyediakan aksi Riwayat Berkas untuk satu item Beranda yang dipilih dan latar belakang folder, serta membuka jendela khusus Manajer Snapshot Disk untuk versi sebelumnya dan berkas yang terhapus.</p>
     <p xml:lang="it">Nautilus offre azioni di cronologia file per un singolo elemento selezionato nella cartella personale e per lo sfondo di una cartella, aprendo una finestra dedicata del Gestore delle istantanee del disco per le versioni precedenti e i file eliminati.</p>
     <p xml:lang="ja">Nautilus は、ホーム内で選択した 1 つの項目とフォルダーの背景に「ファイル履歴」操作を提供し、以前のバージョンや削除されたファイルを参照するための専用の「ディスクスナップショットマネージャー」ウィンドウを開きます。</p>
@@ -182,6 +188,7 @@
     <p xml:lang="fi">Automaattiset aikataulut voivat näyttää työpöytäilmoituksen, kun tilannekuva on luotu onnistuneesti, kun taas säilytyskäytännön mukaisesta siivouksesta ilmoitetaan yhdellä huomaamattomalla yhteenvetoilmoituksella.</p>
     <p xml:lang="fr">Les planifications automatiques peuvent afficher des notifications sur le bureau après la création réussie d’un instantané, tandis que le nettoyage selon la politique de conservation est signalé par une seule notification récapitulative discrète.</p>
     <p xml:lang="hi">स्वचालित शेड्यूल सफलतापूर्वक स्नैपशॉट बनाए जाने के बाद डेस्कटॉप सूचनाएँ दिखा सकते हैं, जबकि प्रतिधारण नीति के अनुसार पुराने स्नैपशॉट की सफाई की सूचना एक ही बिना बाधा डालने वाली सारांश सूचना में दी जाती है।</p>
+    <p xml:lang="hr">Automatski zadaci mogu prikazati obavijest radne površine nakon uspješne izrade snimke stanja. Čišćenje prema pravilima zadržavanja prijavljuje se jednom tihom zbirnom obavijesti.</p>
     <p xml:lang="id">Jadwal otomatis dapat menampilkan pemberitahuan desktop setelah pembuatan berhasil, sedangkan pembersihan retensi dilaporkan sebagai satu pemberitahuan agregat yang senyap.</p>
     <p xml:lang="it">Le pianificazioni automatiche possono mostrare notifiche desktop dopo la creazione riuscita, mentre la pulizia della ritenzione viene riportata come una singola notifica aggregata silenziosa.</p>
     <p xml:lang="ja">自動スケジュールでは、スナップショットの作成に成功した後にデスクトップ通知を表示できます。一方、保持ポリシーに基づくクリーンアップの結果は、控えめな通知1件にまとめて報告されます。</p>
@@ -224,6 +231,7 @@
     <keyword xml:lang="fi">tilannekuva</keyword>
     <keyword xml:lang="fr">instantané</keyword>
     <keyword xml:lang="hi">स्नैपशॉट</keyword>
+    <keyword xml:lang="hr">snimka stanja</keyword>
     <keyword xml:lang="id">snapshot</keyword>
     <keyword xml:lang="it">istantanea</keyword>
     <keyword xml:lang="ja">スナップショット</keyword>
@@ -252,6 +260,7 @@
     <keyword xml:lang="fi">palauttaminen</keyword>
     <keyword xml:lang="fr">restauration</keyword>
     <keyword xml:lang="hi">पुनर्स्थापित</keyword>
+    <keyword xml:lang="hr">vraćanje</keyword>
     <keyword xml:lang="id">memulihkan</keyword>
     <keyword xml:lang="it">ripristino</keyword>
     <keyword xml:lang="ja">復元</keyword>
@@ -280,6 +289,7 @@
     <keyword xml:lang="fi">palautus</keyword>
     <keyword xml:lang="fr">récupération</keyword>
     <keyword xml:lang="hi">पुनर्प्राप्ति</keyword>
+    <keyword xml:lang="hr">oporavak</keyword>
     <keyword xml:lang="id">pemulihan</keyword>
     <keyword xml:lang="it">recupero</keyword>
     <keyword xml:lang="ja">復旧</keyword>
@@ -308,6 +318,7 @@
     <keyword xml:lang="fi">btrfs</keyword>
     <keyword xml:lang="fr">btrfs</keyword>
     <keyword xml:lang="hi">btrfs</keyword>
+    <keyword xml:lang="hr">btrfs</keyword>
     <keyword xml:lang="id">btrfs</keyword>
     <keyword xml:lang="it">btrfs</keyword>
     <keyword xml:lang="ja">btrfs</keyword>
@@ -336,6 +347,7 @@
     <keyword xml:lang="fi">varmuuskopiointi</keyword>
     <keyword xml:lang="fr">sauvegarde</keyword>
     <keyword xml:lang="hi">बैकअप</keyword>
+    <keyword xml:lang="hr">sigurnosna kopija</keyword>
     <keyword xml:lang="id">cadangan</keyword>
     <keyword xml:lang="it">backup</keyword>
     <keyword xml:lang="ja">バックアップ</keyword>

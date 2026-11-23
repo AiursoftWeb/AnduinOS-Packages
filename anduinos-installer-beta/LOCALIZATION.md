@@ -1,7 +1,7 @@
 # Installer localization
 
-The installer presents 28 official language and region choices. American
-English (`en_US`) is the source language; the other 27 choices have GNU
+The installer presents 29 official language and region choices. American
+English (`en_US`) is the source language; the other 28 choices have GNU
 gettext catalogs under `po/`.
 
 `data/languages.json` is the installer-owned regional policy source. Each
@@ -29,6 +29,7 @@ never reads or modifies
 | `fr` | `fr_FR.UTF-8` | Français |
 | `de` | `de_DE.UTF-8` | Deutsch |
 | `el` | `el_GR.UTF-8` | Ελληνικά |
+| `hr` | `hr_HR.UTF-8` | Hrvatski |
 | `hi` | `hi_IN.UTF-8` | हिन्दी |
 | `id` | `id_ID.UTF-8` | Bahasa Indonesia |
 | `it` | `it_IT.UTF-8` | Italiano |
