@@ -26,6 +26,7 @@ LANG_NAMES = {
     "fi_FI": "Finnish",
     "fr_FR": "French",
     "hi_IN": "Hindi",
+    "hr": "Croatian",
     "id_ID": "Indonesian",
     "it_IT": "Italian",
     "ja_JP": "Japanese",

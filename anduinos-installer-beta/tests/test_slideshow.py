@@ -17,6 +17,15 @@ class SlideshowAssetsTests(unittest.TestCase):
             self.assertTrue(all(slide.body for slide in slides))
             self.assertTrue(all(slide.image.is_file() for slide in slides))
 
+    def test_croatian_loads_localized_slides_without_english_fallback(self):
+        croatian = load_slides("hr")
+        english = load_slides("en_US")
+        self.assertEqual(croatian[0].title, "Dobro došli u AnduinOS")
+        for localized, source in zip(croatian, english, strict=True):
+            with self.subTest(slide=localized.key):
+                self.assertNotEqual(localized.title, source.title)
+                self.assertNotEqual(localized.body, source.body)
+
     def test_unknown_language_falls_back_to_english(self):
         root = Path(__file__).resolve().parent.parent / "assets/slideshow"
         slides = load_slides("unknown", root)

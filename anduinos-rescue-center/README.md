@@ -98,7 +98,7 @@ that Home data remains unchanged.
 
 ## Localization
 
-The English source and 27 translated locales provide 28 language choices. The
+The English source and 28 translated locales provide 29 language choices. The
 GTK interface, helper diagnostics, desktop launcher, Live shortcut, and Polkit
 prompts are localized. When changing user-visible text, mark it with `_()` in
 the interface or `tr()` in the helper, then regenerate and merge the catalog:

@@ -55,7 +55,7 @@ class LocalizationTests(unittest.TestCase):
             block_reason=NtfsResizeBlockReason.CHECK_REQUIRED,
             message="Run chkdsk /f and please try again, or see option -f.",
         )
-        self.assertEqual(len(LANGUAGES), 28)
+        self.assertEqual(len(LANGUAGES), 29)
         for language in LANGUAGES:
             with self.subTest(language=language.code):
                 namespace = {"_": _, "lang": language.code,
@@ -132,6 +132,8 @@ class LocalizationTests(unittest.TestCase):
         self.assertEqual(_("Next", DEFAULT_LANGUAGE), "Next")
         self.assertNotEqual(_("Next", "zh_CN"), "Next")
         self.assertNotEqual(_("Next", "de"), "Next")
+        self.assertEqual(_("Next", "hr"), "Dalje")
+        self.assertEqual(_("Croatian", "hr"), "Hrvatski")
 
     def test_external_drive_mode_explanation_is_localized(self):
         source = (

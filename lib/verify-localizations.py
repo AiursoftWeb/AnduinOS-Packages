@@ -23,8 +23,8 @@ def official_catalog_names() -> dict[str, tuple[str, ...]]:
         code = language["code"]
         locale = language["locale"].split(".", 1)[0]
         result[code] = tuple(dict.fromkeys((code, locale)))
-    if policy["default_language"] != SOURCE_LANGUAGE or len(result) != 28:
-        raise RuntimeError("The installer must define the 28-language policy")
+    if policy["default_language"] != SOURCE_LANGUAGE or len(result) != 29:
+        raise RuntimeError("The installer must define the 29-language policy")
     return result
 
 

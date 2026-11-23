@@ -91,8 +91,7 @@ class NtfsRepairDialogTests(unittest.TestCase):
         dialog.add_response.assert_called_once_with("close", "关闭")
         dialog.connect.assert_not_called()
 
-    def test_new_labels_are_translated_in_all_28_languages(self):
-        self.assertEqual(len(LANGUAGES), 28)
+    def test_new_labels_are_translated_in_all_languages(self):
         for language in LANGUAGES:
             for source in SOURCES:
                 with self.subTest(language=language.code, source=source):
