@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-grub</PackageName>
-    <PackageVersion>2.1.0-5+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-6+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS GRUB with Btrfs, LUKS2, Argon2id and local unified-MOK signing</PackageDescription>
     <Section>admin</Section>
@@ -27,13 +27,15 @@
          This works on either Linux build host without foreign-architecture execution. -->
     <BuildInput Include="grub2-common" Id="tools-amd64" Sources="ubuntu-amd64" Arch="amd64" />
     <BuildInput Include="grub2-common" Id="tools-arm64" Sources="ubuntu-arm64" Arch="arm64" />
+    <BuildInput Include="console-setup" Id="console-setup" Sources="ubuntu-amd64" Arch="amd64" />
+    <BuildInput Include="xkb-data" Id="xkb-data" Sources="ubuntu-amd64" Arch="amd64" />
     <BuildInput Include="grub-efi-$(Arch)-bin" Id="modules" Sources="ubuntu-amd64" Arch="$(Arch)" Condition="'$(Arch)' == 'amd64'" />
     <BuildInput Include="grub-efi-$(Arch)-bin" Id="modules" Sources="ubuntu-arm64" Arch="$(Arch)" Condition="'$(Arch)' == 'arm64'" />
     <BuildInput Include="grub-efi-$(Arch)-unsigned" Id="baseline" Sources="ubuntu-amd64" Arch="$(Arch)" Condition="'$(Arch)' == 'amd64'" />
     <BuildInput Include="grub-efi-$(Arch)-unsigned" Id="baseline" Sources="ubuntu-arm64" Arch="$(Arch)" Condition="'$(Arch)' == 'arm64'" />
     <BuildInput Include="grub-pc-bin" Id="bios" Sources="ubuntu-amd64" Arch="amd64" Condition="'$(Arch)' == 'amd64'" />
     <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute stonking-addon=stonking" />
-    <Dependency Include="anduinos-secureboot-toolkit (&gt;= 2.1.0-4)" />
+    <Dependency Include="anduinos-secureboot-toolkit (&gt;= 2.1.0-7)" />
     <Dependency Include="libc6" />
     <Dependency Include="libdevmapper1.02.1" />
     <Dependency Include="libefiboot1t64" />

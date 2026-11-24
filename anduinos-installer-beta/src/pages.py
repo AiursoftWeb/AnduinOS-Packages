@@ -25,6 +25,7 @@ gi.require_version("Gdk", "4.0")
 gi.require_version("Adw", "1")
 
 from gi.repository import Gtk, Gdk, Adw, GLib, Gio, Pango, GObject
+from anduinos_secureboot.boot_chain import unlock_keyboards
 from anduinos_secureboot.enrollment import EnrollmentTutorial
 
 from languages import (
@@ -3787,9 +3788,14 @@ def _disk_encryption_available(shared):
 
 def _disk_encryption_control(shared, lang, changed):
     group = Adw.PreferencesGroup(title=_("Disk encryption", lang))
-    group.set_description(_(
-        "Leave blank to keep the disk unencrypted. Use 8–128 ASCII characters; "
-        "the boot password uses the US keyboard layout.", lang))
+    layout = str(shared.get("keyboard", "us"))
+    layouts = unlock_keyboards()
+    help_text = _("Leave blank to keep the disk unencrypted. Use 8–128 printable ASCII characters.", lang)
+    if not shared.get("keyboard_variant") and layout in layouts:
+        help_text += "\n" + _("Boot unlock will offer the selected keyboard layout and the firmware keyboard.", lang)
+    else:
+        help_text += "\n" + _("Boot unlock uses the firmware keyboard layout, usually US.", lang)
+    group.set_description(help_text)
     password = Adw.PasswordEntryRow(title=_("Disk password (optional)", lang))
     confirmation = Adw.PasswordEntryRow(title=_("Confirm disk password", lang))
     password.set_text(str(shared.get("disk_password") or ""))

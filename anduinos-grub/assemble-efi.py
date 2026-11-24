@@ -95,7 +95,36 @@ def sbat_with_identity(data, module_version):
     return output.getvalue()
 
 
-def unlock_memdisk(original, mkimage, resources, destination, work):
+def keyboard_maps(mkimage, resources, work, inputs, available):
+    tools = Path(mkimage).parent
+    console = inputs / "console-setup/usr/bin/ckbcomp"
+    xkb = inputs / "xkb-data/usr/share/X11/xkb"
+    table = resources / "keyboards.tsv"
+    layouts = table.read_text() if available else ""
+    (work / table.name).write_text(layouts)
+    files = []
+    descriptions = work / "keyboards.cfg"
+    with descriptions.open("w") as script:
+        script.write("function anduinos_keyboard_description {\n")
+        for line in layouts.splitlines():
+            layout, name = line.split("\t")
+            if not re.fullmatch(r"[a-z]{2}", layout) or not re.fullmatch(r"[A-Za-z ()]+", name):
+                raise ValueError("Invalid signed keyboard layout entry")
+            path = work / (layout + ".gkb")
+            layout_data = subprocess.check_output(
+                ["perl", str(console), f"-I{xkb}", "-model", "pc105", "-layout", layout])
+            subprocess.run([str(tools / "grub-mklayout"), "-o", str(path)], input=layout_data, check=True)
+            if not path.is_file() or path.stat().st_size < 300:
+                raise ValueError(f"Incomplete GRUB keymap: {layout}")
+            files.append(path)
+            script.write(f'    if [ "$anduinos_unlock_keyboard" = "{layout}" ]; then\n'
+                         f'        set anduinos_keyboard_name="{name}"\n'
+                         f'    fi\n')
+        script.write("    return 0\n}\n")
+    return [descriptions, *files]
+
+
+def unlock_memdisk(original, mkimage, resources, destination, work, inputs, keyboards):
     """Keep Ubuntu's exact font while adding the pre-decryption interface.
 
     grub-fstest comes from the same already verified native tools input as
@@ -117,6 +146,8 @@ def unlock_memdisk(original, mkimage, resources, destination, work):
         files += [("anduinos-unlock/" + path.name, path)
                   for path in sorted(resources.iterdir())
                   if path.is_file() and path.suffix in (".cfg", ".txt", ".png", ".pf2")]
+        files += [("anduinos-unlock/" + path.name, path)
+                  for path in keyboard_maps(mkimage, resources, work, inputs, keyboards)]
         for name, path in files:
             content = path.read_bytes()
             entry = tarfile.TarInfo(name)
@@ -126,8 +157,8 @@ def unlock_memdisk(original, mkimage, resources, destination, work):
     return font.read_bytes()
 
 
-def assemble(mkimage, modules, baseline, config, output, work):
-    modules, baseline, config, output, work = map(Path, (modules, baseline, config, output, work))
+def assemble(mkimage, modules, baseline, config, output, work, inputs):
+    modules, baseline, config, output, work, inputs = map(Path, (modules, baseline, config, output, work, inputs))
     platform = modules.name
     machine = {"x86_64-efi": 0x8664, "arm64-efi": 0xAA64}[platform]
     base_machine, sections = pe_sections(baseline.read_bytes())
@@ -138,6 +169,13 @@ def assemble(mkimage, modules, baseline, config, output, work):
         raise ValueError("New upstream embedded object type: review before repacking")
     base_names = {elf_module_name(data) for kind, data in objects if kind == 0}
     names = base_names | {"btrfs", "luks2", "argon2", "tar"}
+    # Native USB host controllers can take over firmware-owned storage during
+    # EFI startup. Keep firmware in control of those devices.
+    keyboard_modules = {"at_keyboard", "keylayouts", "sleep"}
+    keyboards = platform == "x86_64-efi" and all(
+        (modules / (name + ".mod")).is_file() for name in keyboard_modules)
+    if keyboards:
+        names.update(keyboard_modules)
     if "peimage" not in base_names:
         raise ValueError("Missing Ubuntu shim verification module")
     for name in names:
@@ -160,7 +198,7 @@ def assemble(mkimage, modules, baseline, config, output, work):
     if len(memdisks) != 1:
         raise ValueError("Expected one upstream font memdisk")
     memdisk = work / "memdisk.img"
-    font = unlock_memdisk(memdisks[0], mkimage, config.parent / "unlock", memdisk, work)
+    font = unlock_memdisk(memdisks[0], mkimage, config.parent / "unlock", memdisk, work, inputs, keyboards)
     command += ["-m", str(memdisk), *sorted(names)]
     subprocess.run(command, check=True)
     actual_machine, actual = pe_sections(output.read_bytes())

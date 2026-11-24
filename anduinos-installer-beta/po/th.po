@@ -2053,10 +2053,6 @@ msgid "Encrypt disk swap"
 msgstr "เข้ารหัสพื้นที่สว็อปของดิสก์"
 
 
-msgid "Leave blank to keep the disk unencrypted. Use 8–128 ASCII characters; the boot password uses the US keyboard layout."
-msgstr "เว้นว่างไว้เพื่อไม่เข้ารหัสดิสก์ ใช้อักขระ ASCII 8-128 ตัว; รหัสผ่านตอนบูตใช้รูปแบบแป้นพิมพ์ US"
-
-
 msgid "Reduce disk swap to leave room for encryption."
 msgstr "ลดพื้นที่สว็อปของดิสก์เพื่อให้มีพื้นที่สำหรับการเข้ารหัส"
 
@@ -2167,3 +2163,12 @@ msgstr "เตรียมโหมดความเข้ากันได้
 #: data/languages.json
 msgid "Croatian"
 msgstr "ภาษาโครเอเชีย"
+
+msgid "Leave blank to keep the disk unencrypted. Use 8–128 printable ASCII characters."
+msgstr "เว้นว่างไว้เพื่อไม่เข้ารหัสดิสก์ ใช้อักขระ ASCII ที่พิมพ์ได้ 8 ถึง 128 ตัว"
+
+msgid "Boot unlock will offer the selected keyboard layout and the firmware keyboard."
+msgstr "เมื่อปลดล็อกตอนเริ่มระบบ คุณสามารถใช้รูปแบบแป้นพิมพ์ที่เลือกหรือของเฟิร์มแวร์ได้"
+
+msgid "Boot unlock uses the firmware keyboard layout, usually US."
+msgstr "การปลดล็อกตอนเริ่มระบบใช้รูปแบบแป้นพิมพ์ของเฟิร์มแวร์ โดยทั่วไปคือสหรัฐฯ"

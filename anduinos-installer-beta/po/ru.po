@@ -2053,10 +2053,6 @@ msgid "Encrypt disk swap"
 msgstr "Зашифровать раздел подкачки на диске"
 
 
-msgid "Leave blank to keep the disk unencrypted. Use 8–128 ASCII characters; the boot password uses the US keyboard layout."
-msgstr "Оставьте поле пустым, чтобы не шифровать диск. Используйте от 8 до 128 символов ASCII; для пароля при загрузке используется раскладка клавиатуры US."
-
-
 msgid "Reduce disk swap to leave room for encryption."
 msgstr "Уменьшите раздел подкачки на диске, чтобы освободить место для шифрования."
 
@@ -2167,3 +2163,12 @@ msgstr "Подготовить режим совместимости диспл�
 #: data/languages.json
 msgid "Croatian"
 msgstr "Хорватский"
+
+msgid "Leave blank to keep the disk unencrypted. Use 8–128 printable ASCII characters."
+msgstr "Оставьте поле пустым, чтобы не шифровать диск. Используйте 8–128 печатных символов ASCII."
+
+msgid "Boot unlock will offer the selected keyboard layout and the firmware keyboard."
+msgstr "При разблокировке во время запуска можно выбрать заданную раскладку или раскладку прошивки."
+
+msgid "Boot unlock uses the firmware keyboard layout, usually US."
+msgstr "При разблокировке во время запуска используется раскладка прошивки, обычно США."

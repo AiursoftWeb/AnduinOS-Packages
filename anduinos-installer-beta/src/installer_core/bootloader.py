@@ -10,7 +10,7 @@ import shutil
 import tempfile
 from uuid import UUID
 
-from anduinos_secureboot.boot_chain import graphical_grub_configuration, verify_grub_configuration
+from anduinos_secureboot.boot_chain import graphical_grub_configuration, unlock_keyboards, verify_grub_configuration
 from anduinos_secureboot.defaults import atomic_write
 
 from . import display_compatibility
@@ -411,10 +411,14 @@ def _configure_graphical_unlock(context: InstallContext, target: Path) -> None:
     stub = target / "boot/efi/EFI/AnduinOS/grub.cfg"
     if stub.is_symlink() or not stub.is_file():
         raise RuntimeError("Encrypted EFI configuration is missing or redirected")
+    keyboard = context.plan.regional.keyboard
+    layouts = unlock_keyboards(target / "usr/share/anduinos-grub/unlock-keyboards.tsv")
+    layout = keyboard.layout if not keyboard.variant and keyboard.layout in layouts else ""
     configured = graphical_grub_configuration(
         stub.read_text(), context.values["root_filesystem_uuid"],
         _encrypted_root_prefix(context) + "/boot/grub", context.values["root_luks_uuid"],
         context.values.get("recovery_volume_uuid", ""),
+        keyboard=layout,
     )
     atomic_write(stub, configured.encode(), 0o644)
 

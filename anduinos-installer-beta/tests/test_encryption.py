@@ -170,7 +170,11 @@ class EncryptedStorageTests(unittest.TestCase):
     def test_encrypted_linux_menu_and_efi_stub_use_both_volume_identities(self):
         inner_uuid = "abcdef01-1234-1234-1234-123456789abc"
         for filesystem in (Filesystem.BTRFS, Filesystem.EXT4):
-            context = InstallContext(encrypted_plan(filesystem=filesystem), lambda _: None, values={
+            plan = encrypted_plan(filesystem=filesystem)
+            if filesystem is Filesystem.EXT4:
+                keyboard = replace(plan.regional.keyboard, layout="it", variant="")
+                plan = replace(plan, regional=replace(plan.regional, keyboard=keyboard))
+            context = InstallContext(plan, lambda _: None, values={
                 "root_luks_uuid": LUKS_UUID, "root_filesystem_uuid": inner_uuid,
             })
             prefix = "/@root" if filesystem is Filesystem.BTRFS else ""
@@ -178,6 +182,9 @@ class EncryptedStorageTests(unittest.TestCase):
                 target = Path(directory)
                 stub = target / "boot/efi/EFI/AnduinOS/grub.cfg"
                 stub.parent.mkdir(parents=True)
+                table = target / "usr/share/anduinos-grub/unlock-keyboards.tsv"
+                table.parent.mkdir(parents=True)
+                table.write_text("it\tItalian\n")
                 # The actual upstream grub-install format, including its
                 # cryptouuid search hint and quoted relative prefix.
                 stub.write_text(
@@ -197,7 +204,7 @@ class EncryptedStorageTests(unittest.TestCase):
                 self.assertEqual(stub.read_text().split(), [
                     "anduinos_unlock", LUKS_UUID.replace("-", ""),
                     inner_uuid, prefix + "/boot/grub",
-                ])
+                ] + (["-", "it"] if filesystem is Filesystem.EXT4 else []))
                 _verify_encrypted_boot_output(context, target, menu)
                 if filesystem is Filesystem.BTRFS:
                     recovery = "87654321-1234-1234-1234-123456789abc"

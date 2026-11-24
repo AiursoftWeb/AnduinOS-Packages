@@ -8,6 +8,7 @@ import subprocess
 import threading
 
 from gi.repository import Adw, GLib, Gtk
+from anduinos_secureboot.boot_chain import unlock_keyboards
 
 from .encryption import EncryptionState
 from .operation_ui import OperationWindow
@@ -112,6 +113,12 @@ def create_encryption_page(window, state: EncryptionState, recovery):
             "key in an emergency. Keep it outside this computer."
         ))
         content.append(management)
+        if unlock_keyboards():
+            row = Adw.ActionRow(title=_("Boot unlock keyboard layout"))
+            button = Gtk.Button(label=_("Open"), valign=Gtk.Align.CENTER)
+            button.connect("clicked", lambda *_: BootKeyboardDialog(window).present())
+            row.add_suffix(button)
+            management.add(row)
         for role, authentication, label in (
             ("password", "password", _("Change disk password")),
             ("recovery", "password", _("Replace emergency recovery key")),
@@ -124,6 +131,89 @@ def create_encryption_page(window, state: EncryptionState, recovery):
             row.add_suffix(button)
             management.add(row)
     return page
+
+
+class BootKeyboardDialog(Adw.Window):
+    def __init__(self, window):
+        super().__init__(transient_for=window, modal=True, default_width=480,
+                         title=_("Boot unlock keyboard layout"))
+        self.window = window
+        self.busy = False
+        self.selected = ""
+        self.layouts = []
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+        for edge in ("top", "bottom", "start", "end"):
+            getattr(box, "set_margin_" + edge)(24)
+        self.set_content(box)
+        heading = Gtk.Label(label=self.get_title(), xalign=0)
+        heading.add_css_class("title-2")
+        box.append(heading)
+        self.message = Gtk.Label(wrap=True, xalign=0)
+        box.append(self.message)
+        group = Adw.PreferencesGroup()
+        self.combo = Adw.ComboRow(title=_("Keyboard"))
+        group.add(self.combo)
+        box.append(group)
+        footer = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12, halign=Gtk.Align.END)
+        box.append(footer)
+        cancel = Gtk.Button(label=_("Close"))
+        cancel.connect("clicked", lambda *_: self.close())
+        footer.append(cancel)
+        self.apply = Gtk.Button(label=_("Apply"), sensitive=False)
+        self.apply.add_css_class("suggested-action")
+        self.apply.connect("clicked", lambda *_: self.request(self.layouts[self.combo.get_selected()]))
+        footer.append(self.apply)
+        self.combo.connect("notify::selected", lambda *_: self.update_apply())
+        self.connect("close-request", lambda *_: self.busy)
+        self.request()
+
+    def update_apply(self):
+        index = self.combo.get_selected()
+        self.apply.set_sensitive(not self.busy and index < len(self.layouts)
+                                 and self.layouts[index] != self.selected)
+
+    def request(self, layout=None):
+        if self.busy or getattr(self.window, "_operation_running", False):
+            return
+        self.busy = True
+        self.window._operation_running = True
+        self.combo.set_sensitive(False)
+        self.update_apply()
+        self.message.set_label(_("Waiting for authentication…") if layout is None
+                               else _("Please wait. Do not restart while this operation is running."))
+        args = ["pkexec", HELPER, "encryption-keyboard"]
+        if layout is not None:
+            args.append(layout)
+
+        def worker():
+            try:
+                result = subprocess.run(args, capture_output=True, text=True, check=False)
+                data = json.loads(result.stdout) if result.returncode == 0 else None
+            except (OSError, ValueError):
+                data = None
+            GLib.idle_add(self.done, data)
+
+        threading.Thread(target=worker, daemon=True).start()
+
+    def done(self, data):
+        self.busy = False
+        self.window._operation_running = False
+        if not data:
+            self.message.set_label(_("Operation Failed"))
+            self.combo.set_sensitive(bool(self.layouts))
+            self.update_apply()
+            return GLib.SOURCE_REMOVE
+        translations = {"de": _("German"), "fr": _("French"), "gb": _("English (UK)"), "it": _("Italian")}
+        labels = {"": _("Firmware default (usually US)"),
+                  **{key: translations.get(key, name) for key, name in data["layouts"].items()}}
+        self.selected = data["selected"]
+        self.layouts = list(labels)
+        self.combo.set_model(Gtk.StringList.new(list(labels.values())))
+        self.combo.set_selected(self.layouts.index(self.selected) if self.selected in self.layouts else 0)
+        self.combo.set_sensitive(True)
+        self.update_apply()
+        self.message.set_label(_("Boot unlock will offer the selected keyboard layout and the firmware keyboard."))
+        return GLib.SOURCE_REMOVE
 
 
 class CredentialDialog(Adw.Window):
@@ -164,7 +254,7 @@ class CredentialDialog(Adw.Window):
         if role == "password":
             self.replacement = self.entry("replacement", _("New disk password"))
             self.confirmation = self.entry("confirmation", _("Confirm new disk password"))
-            box.append(Gtk.Label(label=_("Use 8 to 128 printable ASCII characters. The boot screen uses a US keyboard layout."), wrap=True, xalign=0))
+            box.append(Gtk.Label(label=_("Use 8 to 128 printable ASCII characters. The unlock screen shows the keyboard layout in use."), wrap=True, xalign=0))
         else:
             # Show the generated key before changing the disk, so the user can
             # save it even if the machine stops before the success response.

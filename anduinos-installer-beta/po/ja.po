@@ -2053,10 +2053,6 @@ msgid "Encrypt disk swap"
 msgstr "ディスクスワップを暗号化"
 
 
-msgid "Leave blank to keep the disk unencrypted. Use 8–128 ASCII characters; the boot password uses the US keyboard layout."
-msgstr "ディスクを暗号化しない場合は空欄にしてください。ASCII文字を8～128文字使用してください。起動時のパスワード入力にはUSキーボード配列が使用されます。"
-
-
 msgid "Reduce disk swap to leave room for encryption."
 msgstr "暗号化のための空き領域を確保するには、ディスクスワップを縮小してください。"
 
@@ -2167,3 +2163,12 @@ msgstr "ディスプレイ互換モードを準備"
 #: data/languages.json
 msgid "Croatian"
 msgstr "クロアチア語"
+
+msgid "Leave blank to keep the disk unencrypted. Use 8–128 printable ASCII characters."
+msgstr "ディスクを暗号化しない場合は空欄にします。印刷可能な ASCII 文字を 8～128 文字使用してください。"
+
+msgid "Boot unlock will offer the selected keyboard layout and the firmware keyboard."
+msgstr "起動時のロック解除には、選択したキーボード配列とファームウェアの配列を使用できます。"
+
+msgid "Boot unlock uses the firmware keyboard layout, usually US."
+msgstr "起動時のロック解除には、ファームウェアのキーボード配列（通常は US 配列）が使われます。"

@@ -106,7 +106,10 @@ class WindowScanTests(unittest.TestCase):
             try:
                 for state, recovery, expected, navigation in cases:
                     with self.subTest(state=state):
-                        with patch.object(window, "_add_state_row", wraps=window._add_state_row) as add_row:
+                        with (
+                            patch.object(window, "_add_state_row", wraps=window._add_state_row) as add_row,
+                            patch("anduinos_driver_center.encryption_ui.unlock_keyboards", return_value={"it": "Italian"}),
+                        ):
                             page = create_encryption_page(window, state, recovery)
                         self.assertEqual([call.args[2] for call in add_row.call_args_list], expected)
                         self.assertTrue(all(call.args[3] is not False for call in add_row.call_args_list))
@@ -123,7 +126,7 @@ class WindowScanTests(unittest.TestCase):
                         visit(page)
                         self.assertEqual([button.get_label() for button in buttons],
                                          (["Recovery Environment"] if navigation else [])
-                                         + (["Open", "Open", "Open"] if state.root.encrypted is True else []))
+                                         + (["Open", "Open", "Open", "Open"] if state.root.encrypted is True else []))
                         labels = []
                         def collect_labels(widget):
                             if isinstance(widget, Gtk.Label):
@@ -142,6 +145,36 @@ class WindowScanTests(unittest.TestCase):
                                 buttons[0].emit("clicked")
                                 select.assert_called_once_with("recovery")
             finally:
+                window.destroy()
+
+    def test_boot_keyboard_dialog_applies_only_the_selected_id(self):
+        import json
+        from anduinos_driver_center.encryption_ui import BootKeyboardDialog, HELPER
+
+        def result(arguments, **kwargs):
+            selected = arguments[3] if len(arguments) == 4 else ""
+            return Mock(returncode=0, stdout=json.dumps({
+                "selected": selected, "layouts": {"it": "Italian"},
+            }))
+
+        window = Adw.ApplicationWindow(application=self.application)
+        with (
+            patch("anduinos_driver_center.encryption_ui.threading.Thread") as thread,
+            patch("anduinos_driver_center.encryption_ui.GLib.idle_add", side_effect=lambda fn, *args: fn(*args)),
+            patch("anduinos_driver_center.encryption_ui.subprocess.run", side_effect=result) as run,
+        ):
+            thread.side_effect = lambda *, target, **kwargs: Mock(start=target)
+            dialog = BootKeyboardDialog(window)
+            try:
+                self.assertFalse(dialog.apply.get_sensitive())
+                dialog.combo.set_selected(1)
+                self.assertTrue(dialog.apply.get_sensitive())
+                dialog.apply.emit("clicked")
+                self.assertEqual(run.call_args.args[0], ["pkexec", HELPER, "encryption-keyboard", "it"])
+                self.assertEqual(dialog.selected, "it")
+                self.assertFalse(dialog.apply.get_sensitive())
+            finally:
+                dialog.destroy()
                 window.destroy()
 
     def test_password_and_recovery_forms_validate_before_sending_secrets(self):
