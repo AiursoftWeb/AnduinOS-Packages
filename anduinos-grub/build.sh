@@ -57,7 +57,7 @@ assemble_efi() {
     cat bootstrap.cfg unlock/functions.cfg unlock/menu.cfg > "$work/check.cfg"
     "$check" "$work/check.cfg"
     python3 assemble-efi.py "$mkimage" "$modules" "$baseline" bootstrap.cfg \
-        "$work/grub$suffix.efi" "$work"
+        "$work/grub$suffix.efi" "$work" "$inputs"
 }
 
 stage_package_files() {
@@ -72,6 +72,7 @@ stage_package_files() {
         cp -a "$inputs/bios/usr/." "$APKG_STAGE_DIR/usr/"
     fi
     install -Dm644 "$work/grub$suffix.efi" "$APKG_STAGE_DIR/usr/lib/anduinos-grub/grub$suffix.efi"
+    install -Dm644 "$work/keyboards.tsv" "$APKG_STAGE_DIR/usr/share/anduinos-grub/unlock-keyboards.tsv"
     install -m755 scripts/grub-multi-install "$APKG_STAGE_DIR/usr/lib/grub/grub-multi-install"
     mkdir -p "$doc" deploy
     cp "$APKG_INPUTS_DIR/manifest.json" "$work/sbat.csv" "$work/modules.txt" "$doc/"

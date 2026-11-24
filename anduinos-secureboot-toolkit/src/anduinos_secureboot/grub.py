@@ -4,6 +4,7 @@ No generic signing arguments, certificate generation, fallback-loader writes,
 or deletion of firmware trust. Package hooks and interactive repairs share this
 implementation. Generated EFI and public certificates are not signing keys.
 """
+from contextlib import ExitStack
 from dataclasses import replace
 import fcntl
 import hashlib
@@ -11,6 +12,7 @@ import json
 import os
 from pathlib import Path
 import re
+import subprocess
 import tempfile
 
 from . import boot_chain, identity
@@ -194,6 +196,72 @@ def verify_first_install(runner, esp=boot_chain.ESP):
         if deployed.read_bytes() != source.read_bytes():
             raise ValueError(f"Installed EFI image differs from its package payload: {deployed}")
         boot_chain.verify_image(deployed, machine, runner)
+
+
+def unlock_keyboard_settings(layout=None, runner=None, esp=boot_chain.ESP):
+    """Read or update only the verified local encrypted EFI configuration."""
+    from .operations import LOCK_FILE
+
+    if os.geteuid() != 0:
+        raise PermissionError("Boot keyboard settings require authorization")
+    layouts = boot_chain.unlock_keyboards()
+    if not layouts or (layout is not None and layout not in {"", *layouts}):
+        raise ValueError("Unsupported boot keyboard layout")
+    runner = runner or SubprocessRunner()
+    with ExitStack() as stack:
+        lock = stack.enter_context(LOCK_FILE.open("a+"))
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        if layout is not None:
+            for name in ("lock-frontend", "lock"):
+                package_lock = stack.enter_context(open(f"/var/lib/dpkg/{name}", "r+"))
+                fcntl.lockf(package_lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        target = boot_chain.resolve_target(runner, esp)
+        vendor = boot_chain.vendor_path(esp, target.entry)
+        path = vendor / "grub.cfg"
+        safe_path(path)
+        uuid, prefix, outer, recovery, current = boot_chain.verify_local_esp_binding(
+            runner, esp, target.device, path,
+        )
+        if not outer or not path.read_text().lstrip().startswith("anduinos_unlock "):
+            raise ValueError("This system does not use the graphical encrypted GRUB")
+        suffix, _, _ = boot_chain.efi_architecture(runner)
+        deployed = vendor / f"grub{suffix}.efi"
+        safe_path(deployed)
+        if b"set anduinos_unlock_keyboard=$5" not in deployed.read_bytes():
+            raise ValueError("Install the GRUB update before changing the keyboard layout")
+        if layout is None or layout == current:
+            return {"selected": current, "layouts": layouts}
+        _, certificate = signing_material(runner)
+        verify_signature(deployed, certificate, runner)
+        fallback = boot_chain.owned_fallback(
+            runner, esp, target, shim_companions(runner)[f"shim{suffix}.efi"],
+        )
+        updates = {path: path.read_bytes()}
+        if fallback is not None:
+            alternate = fallback / deployed.name
+            safe_path(alternate)
+            if alternate.read_bytes() != deployed.read_bytes():
+                raise ValueError("The portable GRUB needs deployment before changing its keyboard layout")
+            fallback_config = fallback / "grub.cfg"
+            safe_path(fallback_config)
+            updates[fallback_config] = fallback_config.read_bytes()
+        replacement = boot_chain.graphical_grub_configuration(
+            updates[path].decode(), uuid, prefix, outer, recovery, keyboard=layout,
+        ).encode()
+        written = []
+        try:
+            for destination in updates:
+                if destination.read_bytes() != updates[destination]:
+                    raise ValueError("EFI configuration changed during keyboard setup")
+                written.append(destination)
+                atomic_write(destination, replacement, 0o644)
+            boot_chain.command(runner, ["sync", "-f", str(esp)])
+        except (OSError, ValueError, subprocess.TimeoutExpired):
+            for destination in written:
+                atomic_write(destination, updates[destination], 0o644)
+            boot_chain.command(runner, ["sync", "-f", str(esp)])
+            raise
+        return {"selected": layout, "layouts": layouts}
 
 
 def deploy(runner, *, package_transaction=False, esp=boot_chain.ESP):

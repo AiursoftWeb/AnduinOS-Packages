@@ -2053,10 +2053,6 @@ msgid "Encrypt disk swap"
 msgstr "Chiffrer l'espace d'échange du disque"
 
 
-msgid "Leave blank to keep the disk unencrypted. Use 8–128 ASCII characters; the boot password uses the US keyboard layout."
-msgstr "Laissez ce champ vide pour ne pas chiffrer le disque. Utilisez entre 8 et 128 caractères ASCII ; le mot de passe de démarrage utilise la disposition de clavier américaine."
-
-
 msgid "Reduce disk swap to leave room for encryption."
 msgstr "Réduisez l'espace d'échange du disque pour laisser de la place au chiffrement."
 
@@ -2167,3 +2163,12 @@ msgstr "Préparer le mode de compatibilité de l’affichage"
 #: data/languages.json
 msgid "Croatian"
 msgstr "Croate"
+
+msgid "Leave blank to keep the disk unencrypted. Use 8–128 printable ASCII characters."
+msgstr "Laissez ce champ vide pour garder le disque non chiffré. Utilisez de 8 à 128 caractères ASCII imprimables."
+
+msgid "Boot unlock will offer the selected keyboard layout and the firmware keyboard."
+msgstr "Au démarrage, vous pourrez déverrouiller le disque avec la disposition sélectionnée ou celle du micrologiciel."
+
+msgid "Boot unlock uses the firmware keyboard layout, usually US."
+msgstr "Au démarrage, le déverrouillage utilise la disposition du micrologiciel, généralement la disposition américaine."

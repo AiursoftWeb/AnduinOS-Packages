@@ -45,10 +45,19 @@ retains a text prompt; configured serial output is preserved. The native prompt 
 Artwork and small ASCII fonts ship inside the EFI, available before decrypting
 `/boot`. The native `grub-fstest` from the existing tools input extracts Ubuntu's
 Unicode font unchanged. The build puts it and the UI resources in a tar memdisk;
-the tar filesystem module is embedded too. No source GRUB fork, mounted image or
-new build/runtime dependency is needed. `unlock/render.py` regenerates artwork
+the tar filesystem module is embedded too. `unlock/render.py` regenerates artwork
 only when changing the design, using existing `ffmpeg` and `grub-mkfont` tools;
 it is not run when building a package. DejaVu's license ships in the package.
+
+On amd64 the EFI additionally embeds the default German, French, British
+English, and Italian keymaps built from Ubuntu's verified `console-setup` and
+`xkb-data` inputs. The installer carries over a supported layout. Driver Center
+can change the saved choice without changing the disk password. At startup,
+press Esc to confirm that GRUB can receive keys through its native PC keyboard
+driver. The firmware keyboard remains available from the menu and automatically
+resumes if the confirmation times out. ARM64 and keyboards serviced only by
+firmware use the firmware layout. The password prompt identifies which layout
+is active. EFI firmware keeps control of USB host controllers.
 
 This component does not open the release installer's encryption controls or
 implement encrypted Recovery Environment support; those have separate gates.

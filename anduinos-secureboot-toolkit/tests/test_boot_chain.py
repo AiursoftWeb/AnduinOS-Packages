@@ -11,6 +11,7 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from anduinos_secureboot import boot_chain as boot
+from anduinos_secureboot import grub
 from anduinos_secureboot import operations
 from anduinos_secureboot.firmware import FirmwareEvidence
 from anduinos_secureboot.model import SecureBootStatus
@@ -108,6 +109,34 @@ class BootChainTests(unittest.TestCase):
                   patch.object(boot, "verify_image"),
                   patch.object(boot, "open", side_effect=lambda *a: (root / "lock").open("a+"))):
                 yield firmware, esp, vendor
+
+    def test_keyboard_setting_updates_both_local_boot_stubs_and_preserves_loaders(self):
+        with self.fixture() as (firmware, esp, vendor):
+            original = f"anduinos_unlock {firmware.crypt_uuid.replace('-', '')} {firmware.boot_uuid} /boot/grub\n"
+            fallback = esp / "EFI/BOOT"
+            binary = b"set anduinos_unlock_keyboard=$5"
+            for path in (vendor, fallback):
+                (path / "grub.cfg").write_text(original)
+                (path / "grubx64.efi").write_bytes(binary)
+            shutil.copyfile(vendor / "shimx64.efi", fallback / "BOOTX64.EFI")
+            with (
+                patch.object(grub.os, "geteuid", return_value=0),
+                patch.object(operations, "LOCK_FILE", esp.parent / "operation-lock"),
+                patch.object(grub, "open", side_effect=lambda *_: (esp.parent / "dpkg-lock").open("a+"), create=True),
+                patch.object(grub, "safe_path"),
+                patch.object(grub, "signing_material", return_value=(None, esp.parent / "public-cert")),
+                patch.object(grub, "verify_signature") as verify,
+                patch.object(boot, "unlock_keyboards", return_value={"it": "Italian"}),
+            ):
+                self.assertEqual(grub.unlock_keyboard_settings("it", firmware, esp)["selected"], "it")
+                self.assertEqual(grub.unlock_keyboard_settings(runner=firmware, esp=esp)["selected"], "it")
+                verify.assert_called_once()
+                for path in (vendor, fallback):
+                    self.assertEqual((path / "grub.cfg").read_text(), original.rstrip() + " - it\n")
+                    self.assertEqual((path / "grubx64.efi").read_bytes(), binary)
+                self.assertEqual(grub.unlock_keyboard_settings("", firmware, esp)["selected"], "")
+                for path in (vendor, fallback):
+                    self.assertEqual((path / "grub.cfg").read_text(), original)
 
     def test_both_architectures_deploy_update_and_preserve_other_loaders(self):
         for suffix in ("x64", "aa64"):
@@ -340,6 +369,22 @@ class BootChainTests(unittest.TestCase):
                 self.assertEqual(boot.resolve_target(firmware, esp).entry.number, "0009")
                 boot.prepare_boot_chain(firmware, esp)
                 self.assertEqual(sum(c[:2] == ["efibootmgr", "--create-only"] for c in firmware.calls), 1)
+
+    def test_graphical_unlock_keyboard_is_data_and_preserves_recovery_binding(self):
+        inner = "12345678-1234-1234-1234-123456789abc"
+        outer = "87654321-4321-4321-4321-cba987654321"
+        recovery = "e7777777-4444-4444-4444-444444444444"
+        prefix = "/@root/boot/grub"
+        original = (f"cryptomount -u {outer}\nsearch.fs_uuid {inner} root\n"
+                    f"set prefix=($root){prefix}\nconfigfile $prefix/grub.cfg\n")
+        for recovery_id in ("", recovery):
+            new = boot.graphical_grub_configuration(original, inner, prefix, outer, recovery_id, keyboard="it")
+            self.assertEqual(boot.verify_grub_configuration(new, inner, prefix, outer, recovery_id), "it")
+            self.assertEqual(new.split()[-2], recovery_id or "-")
+            reset = boot.graphical_grub_configuration(new, inner, prefix, outer, recovery_id)
+            self.assertEqual(boot.verify_grub_configuration(reset, inner, prefix, outer, recovery_id), "")
+            with self.assertRaises(ValueError):
+                boot.verify_grub_configuration(new.replace(" it\n", " ../it\n"), inner, prefix, outer, recovery_id)
 
     def test_graphical_unlock_keeps_local_binding_and_owned_fallback(self):
         for prefix in ("/boot/grub", "/@root/boot/grub"):

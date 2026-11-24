@@ -23,6 +23,16 @@ ESP = Path("/boot/efi")
 EFI = Path("/sys/firmware/efi")
 ESP_TYPE = "c12a7328-f81f-11d2-ba4b-00a0c93ec93b"
 EFI_GLOBAL = "8be4df61-93ca-11d2-aa0d-00e098032b8c"
+KEYBOARD_TABLE = Path("/usr/share/anduinos-grub/unlock-keyboards.tsv")
+
+
+def unlock_keyboards(path=None):
+    table = path or KEYBOARD_TABLE
+    if not table.is_file():
+        return {}
+    return {layout: name for layout, name in
+            (line.split("\t") for line in table.read_text().splitlines())
+            if re.fullmatch(r"[a-z]{2}", layout)}
 
 
 def setup_mode(efi: Path) -> bool | None:
@@ -120,7 +130,7 @@ def partition_number(device: str) -> int:
     return int((Path("/sys/class/block") / Path(device).name / "partition").read_text())
 
 
-def verify_local_esp_binding(runner: Runner, esp: Path, device: str, cfg: Path) -> None:
+def verify_local_esp_binding(runner: Runner, esp: Path, device: str, cfg: Path) -> tuple[str, ...]:
     """Require fstab and the standard Ubuntu EFI stub to identify this OS.
 
     No foreign GRUB code is executed. Nonstandard stubs require manual review;
@@ -139,25 +149,26 @@ def verify_local_esp_binding(runner: Runner, esp: Path, device: str, cfg: Path) 
     if not uuid or not prefix.startswith("/") or cfg.stat().st_size > 16384:
         raise ValueError("Cannot identify this system's GRUB directory")
     text = cfg.read_text()
-    encrypted = any(shlex.split(line, comments=True)[:1] in (["cryptomount"], ["anduinos_unlock"])
-                    for line in text.splitlines())
+    entries = [shlex.split(line, comments=True) for line in text.splitlines()]
+    encrypted = any(entry[:1] in (["cryptomount"], ["anduinos_unlock"]) for entry in entries)
     outer = (command(runner, ["grub-probe", "--target=cryptodisk_uuid", "/boot/grub"]).strip()
              if encrypted else "")
     recovery_uuid = ""
-    if any(shlex.split(line, comments=True)[:1] == ["anduinos_unlock"]
-           and len(shlex.split(line, comments=True)) == 5 for line in text.splitlines()):
+    if any(entry[:1] == ["anduinos_unlock"] and len(entry) in (5, 6) and entry[4] != "-"
+           for entry in entries):
         binding = json.loads(Path("/var/lib/anduinos-recovery-env/volume.json").read_text())
         if (binding.get("schema") != 1 or binding.get("root_uuid") != uuid
                 or UUID(binding.get("luks_uuid", "")) != UUID(outer)):
             raise ValueError("EFI recovery entry does not match this system")
         recovery_uuid = str(UUID(binding["volume_uuid"]))
-    verify_grub_configuration(text, uuid, prefix, outer, recovery_uuid)
+    keyboard = verify_grub_configuration(text, uuid, prefix, outer, recovery_uuid)
+    return uuid, prefix, outer, recovery_uuid, keyboard
 
 
 def verify_grub_configuration(
     text: str, filesystem_uuid: str, prefix: str, cryptodisk_uuid: str = "",
     recovery_uuid: str = "",
-) -> None:
+) -> str:
     """Bind the Ubuntu or native graphical stub without executing its contents.
 
     Used by both first installation and existing-system deployment. Encrypted
@@ -171,11 +182,17 @@ def verify_grub_configuration(
     lines = [line for line in lines if line]
     if len(lines) == 1 and lines[0][:1] == ["anduinos_unlock"] and cryptodisk_uuid:
         expected = ["anduinos_unlock", UUID(cryptodisk_uuid).hex, filesystem_uuid, prefix]
-        if len(lines[0]) == 5 and recovery_uuid:
+        keyboard = ""
+        if len(lines[0]) == 6:
+            keyboard = lines[0][5]
+            if not re.fullmatch(r"[a-z]{2}", keyboard):
+                raise ValueError("Invalid EFI unlock keyboard layout")
+            expected += [str(UUID(recovery_uuid)) if recovery_uuid else "-", keyboard]
+        elif len(lines[0]) == 5 and recovery_uuid:
             expected.append(str(UUID(recovery_uuid)))
         if lines[0] != expected:
             raise ValueError("EFI graphical unlock does not match this system")
-        return
+        return keyboard
     crypt_hint = ""
     if cryptodisk_uuid:
         try:
@@ -196,11 +213,12 @@ def verify_grub_configuration(
             or lines[1] != ["set", f"prefix=($root){prefix}"]
             or lines[2] != ["configfile", "$prefix/grub.cfg"]):
         raise ValueError("EFI GRUB configuration does not uniquely identify this system; manual review required")
+    return ""
 
 
 def graphical_grub_configuration(
     text: str, filesystem_uuid: str, prefix: str, cryptodisk_uuid: str,
-    recovery_uuid: str = "",
+    recovery_uuid: str = "", keyboard: str = "",
 ) -> str:
     """Convert only a verified encrypted-root stub to the EFI's built-in UI.
 
@@ -212,7 +230,11 @@ def graphical_grub_configuration(
         raise ValueError("Graphical unlock requires an encrypted root")
     verify_grub_configuration(text, filesystem_uuid, prefix, cryptodisk_uuid, recovery_uuid)
     arguments = ["anduinos_unlock", UUID(cryptodisk_uuid).hex, filesystem_uuid, prefix]
-    if recovery_uuid:
+    if keyboard:
+        if not re.fullmatch(r"[a-z]{2}", keyboard):
+            raise ValueError("Invalid EFI unlock keyboard layout")
+        arguments += [str(UUID(recovery_uuid)) if recovery_uuid else "-", keyboard]
+    elif recovery_uuid:
         arguments.append(str(UUID(recovery_uuid)))
     return " ".join(shlex.quote(value) for value in arguments) + "\n"
 
