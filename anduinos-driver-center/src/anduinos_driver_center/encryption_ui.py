@@ -151,7 +151,7 @@ class BootKeyboardDialog(Adw.Window):
         self.message = Gtk.Label(wrap=True, xalign=0)
         box.append(self.message)
         group = Adw.PreferencesGroup()
-        self.combo = Adw.ComboRow(title=self.get_title())
+        self.combo = Adw.ComboRow(title=_("Keyboard"))
         group.add(self.combo)
         box.append(group)
         footer = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12, halign=Gtk.Align.END)
