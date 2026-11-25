@@ -50,6 +50,8 @@
     <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
     <IncludeFile Include="deploy/usr/lib/systemd/system/uresourced.service" Target="/usr/lib/systemd/system/uresourced.service" />
     <ConfFile Include="deploy/etc/uresourced.conf" Target="/etc/uresourced.conf" />
+    <PostInstallScript Include="scripts/postinst.sh" />
     <PreRemoveScript Include="scripts/prerm.sh" />
+    <PostRemoveScript Include="scripts/postrm.sh" />
   </ItemGroup>
 </Project>
