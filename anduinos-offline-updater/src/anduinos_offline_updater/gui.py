@@ -295,7 +295,8 @@ class UpdateWindow(Adw.ApplicationWindow):
         headings = {"update-available": _("Review your update"),
                     "already-installed": _("You already have this update"),
                     "updater-update-required": _("A newer updater is required"),
-                    "blocked": _("Cannot install this update")}
+                    "blocked": _("Cannot install this update"),
+                    "foreign-removal-required": _("Some software must be removed to continue")}
         if state not in headings:
             raise ValueError(_("The update could not be checked. Try choosing the file again."))
         self.report = report
@@ -305,6 +306,20 @@ class UpdateWindow(Adw.ApplicationWindow):
         if state == "blocked":
             self.content.append(text(self.incompatibility(report), "dim-label"))
         self.package_information(file, report)
+        if report.get("foreign_removals"):
+            self.content.append(text(
+                _("This update cannot update the following software for another architecture. Removing it may affect your applications or development tools."),
+                "warning"))
+            removals = Adw.PreferencesGroup(title=_("Packages to remove"))
+            for package in report["foreign_removals"]:
+                removals.add(Adw.ActionRow(title=package["name"] + ":" + package["architecture"],
+                                          subtitle=package["before"]))
+            self.content.append(removals)
+        if state == "foreign-removal-required":
+            self.button(_("Review removal and update"), self.prepare, True)
+            self.button(_("Cancel"), self.choose_file)
+            self.details(report)
+            return
         if state == "blocked":
             self.button(_("Choose another file"), self.choose_file, True)
             self.button(_("Close"), lambda *_: self.close())
@@ -381,14 +396,17 @@ class UpdateWindow(Adw.ApplicationWindow):
 
     def prepare(self, *_args):
         if (self.busy or self.job or not self.file or not self.report or
-                self.report["state"] not in ("update-available", "updater-update-required")):
+                self.report["state"] not in ("update-available", "updater-update-required", "foreign-removal-required")):
             return
         self.busy = True
         self.back.set_visible(False)
         self.page(_("Preparing your update…"),
                   _("Authorize importing the file and checking the installation plan. No packages are installed yet."))
         self.content.append(Gtk.Spinner(spinning=True, halign=Gtk.Align.CENTER))
-        self.command(["prepare", str(self.file)], self.prepared)
+        arguments = ["prepare", str(self.file)]
+        if self.report.get("foreign_removals"):
+            arguments.append("--allow-foreign-removals")
+        self.command(arguments, self.prepared)
 
     def remember(self):
         self.bookmark.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
@@ -421,6 +439,25 @@ class UpdateWindow(Adw.ApplicationWindow):
             self.show_job(report)
 
     def start_update(self, *_args):
+        if self.busy or not self.job or not self.report:
+            return
+        if self.report.get("foreign_removals"):
+            packages = "\n".join(p["name"] + ":" + p["architecture"]
+                                  for p in self.report["foreign_removals"])
+            dialog = Adw.AlertDialog(
+                heading=_("Remove the listed software and update?"),
+                body=_("These packages will be removed. Applications or development tools that depend on them may stop working.") + "\n\n" + packages)
+            dialog.add_response("cancel", _("Cancel"))
+            dialog.add_response("remove", _("Remove and update"))
+            dialog.set_response_appearance("remove", Adw.ResponseAppearance.DESTRUCTIVE)
+            dialog.set_default_response("cancel")
+            dialog.set_close_response("cancel")
+            dialog.connect("response", lambda _dialog, response: self.start_confirmed() if response == "remove" else None)
+            dialog.present(self)
+            return
+        self.start_confirmed()
+
+    def start_confirmed(self):
         if self.busy or not self.job or not self.report:
             return
         self.busy = True

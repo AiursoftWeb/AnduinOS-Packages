@@ -241,6 +241,36 @@ class DesktopTests(unittest.TestCase):
             self.window.start_update()
             self.assertEqual(command.call_count, 2, "Double click must not start another request")
 
+    def test_foreign_removal_lists_dependencies_and_requires_destructive_confirmation(self):
+        self.fixture.foreign_pair(extra=self.fixture.package(
+            "foreign-dev", "1", "paired-library (= 1)", architecture="arm64"))
+        preview = self.complete(self.fixture.bundle)
+        self.assertEqual(preview["state"], "foreign-removal-required", preview)
+        self.assertIn("paired-library:arm64", self.labels())
+        self.assertIn("foreign-dev:arm64", self.labels())
+        with patch.object(self.window, "command") as command:
+            self.window.prepare()
+            self.assertEqual(command.call_args.args[0],
+                             ["prepare", str(self.fixture.bundle), "--allow-foreign-removals"])
+            approved = dict(preview, state="update-available", blockers=[])
+            self.window.prepared(self.job_report(approved), None)
+            command.reset_mock()
+            self.window.start_update()
+            dialog = self.window.get_visible_dialog()
+            self.assertIsInstance(dialog, self.gui.Adw.AlertDialog)
+            self.assertEqual(dialog.get_default_response(), "cancel")
+            self.assertIn("foreign-dev:arm64", dialog.get_body())
+            dialog.emit("response", "cancel")
+            dialog.force_close()
+            command.assert_not_called()
+            self.assertFalse(self.window.busy)
+            self.window.start_update()
+            dialog = self.window.get_visible_dialog()
+            dialog.emit("response", "remove")
+            self.assertEqual(command.call_args.args[0],
+                             ["install", "a" * 32, "--confirm-plan", "b" * 64])
+            dialog.force_close()
+
     def test_cancelled_import_does_not_create_a_session_or_offer_install(self):
         self.window.busy = True
         self.window.prepared(None, "Authorization cancelled")
